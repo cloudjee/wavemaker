@@ -58,15 +58,13 @@ public class HibernateSpringConfigExporter extends GenericExporter {
     private final String serviceClass;
 
     private final boolean useIndividualCRUDOperations;
-    
+
     private final boolean impersonateUser;
-    
+
     private final String activeDirectoryDomain;
 
-    public HibernateSpringConfigExporter(String serviceName,
-            String packageName, String dataPackage, String serviceClass,
-            boolean useIndividualCRUDOperations, boolean impersonateUser, 
-            String activeDirectoryDomain) {
+    public HibernateSpringConfigExporter(String serviceName, String packageName, String dataPackage, String serviceClass,
+        boolean useIndividualCRUDOperations, boolean impersonateUser, String activeDirectoryDomain) {
 
         this.serviceName = serviceName;
         this.dataPackage = dataPackage;
@@ -81,22 +79,19 @@ public class HibernateSpringConfigExporter extends GenericExporter {
     @Override
     public void doStart() {
 
-        File path = new File(getOutputDirectory(), DataServiceUtils
-                .getCfgFileName(serviceName));
+        File path = new File(getOutputDirectory(), DataServiceUtils.getCfgFileName(this.serviceName));
 
-        TemplateProducer producer = new TemplateProducer(getTemplateHelper(),
-                getArtifactCollector());
+        TemplateProducer producer = new TemplateProducer(getTemplateHelper(), getArtifactCollector());
 
         Map<String, Context> additionalContext = new HashMap<String, Context>(1);
 
-        Context ctx = new Context(serviceName, serviceClass, impersonateUser, activeDirectoryDomain);
+        Context ctx = new Context(this.serviceName, this.serviceClass, this.impersonateUser, this.activeDirectoryDomain);
 
         try {
 
             additionalContext.put(GenerationContext.CONTEXT_NAME, ctx);
 
-            producer.produce(additionalContext, getTemplateName(), path,
-                    getTemplateName());
+            producer.produce(additionalContext, getTemplateName(), path, getTemplateName());
 
         } finally {
             ctx.dispose();
@@ -111,14 +106,14 @@ public class HibernateSpringConfigExporter extends GenericExporter {
     public class Context extends GenerationContext {
 
         private final String serviceClass;
-        
+
         private final boolean impersonateUser;
-        
+
         private final String activeDirectoryDomain;
 
         Context(String serviceName, String serviceClass, boolean impersonateUser, String activeDirectoryDomain) {
 
-            super(serviceName, getConfiguration(), useIndividualCRUDOperations);
+            super(serviceName, getConfiguration(), HibernateSpringConfigExporter.this.useIndividualCRUDOperations);
             this.serviceClass = XMLUtils.escape(serviceClass);
             this.impersonateUser = impersonateUser;
             this.activeDirectoryDomain = activeDirectoryDomain;
@@ -129,31 +124,26 @@ public class HibernateSpringConfigExporter extends GenericExporter {
         }
 
         public String getHbmFiles() {
-            List<Class<?>> entityClasses = def.getMetaData().getEntityClasses();
-            return getFileList(entityClasses, DataServiceConstants.HBM_EXT,
-                    false);
+            List<Class<?>> entityClasses = this.def.getMetaData().getEntityClasses();
+            return getFileList(entityClasses, DataServiceConstants.HBM_EXT, false);
         }
 
         public String getQueryFiles() {
-            List<Class<?>> entityClasses = DataServiceUtils.getTypesForGeneratedQueries(def
-                    .getMetaData());
-            return getFileList(entityClasses, DataServiceConstants.QUERY_EXT,
-                    true);
+            List<Class<?>> entityClasses = DataServiceUtils.getTypesForGeneratedQueries(this.def.getMetaData());
+            return getFileList(entityClasses, DataServiceConstants.QUERY_EXT, true);
         }
-        
+
         public boolean isImpersonateUser() {
-        	return this.impersonateUser;
+            return this.impersonateUser;
         }
 
         public String getActiveDirectoryDomain() {
-			return activeDirectoryDomain != null ? activeDirectoryDomain : "";
-		}
+            return this.activeDirectoryDomain != null ? this.activeDirectoryDomain : "";
+        }
 
-		private String getFileList(List<Class<?>> entityClasses, String ext,
-                boolean addDefaultQueryFile) {
+        private String getFileList(List<Class<?>> entityClasses, String ext, boolean addDefaultQueryFile) {
 
-            Collection<String> fileNames = new HashSet<String>(entityClasses
-                    .size());
+            Collection<String> fileNames = new HashSet<String>(entityClasses.size());
 
             StringWriter sw = new StringWriter();
             XMLWriter xmlWriter = XMLUtils.newXMLWriter(new PrintWriter(sw));
@@ -165,7 +155,7 @@ public class HibernateSpringConfigExporter extends GenericExporter {
             }
 
             if (addDefaultQueryFile) {
-                String relPath = StringUtils.packageToSrcFilePath(dataPackage);
+                String relPath = StringUtils.packageToSrcFilePath(HibernateSpringConfigExporter.this.dataPackage);
                 relPath = addDefaultQueriesFile(fileNames, relPath);
                 xmlWriter.addElement(SpringUtils.VALUE_ELEMENT, relPath);
             }
@@ -176,8 +166,7 @@ public class HibernateSpringConfigExporter extends GenericExporter {
         }
     }
 
-    private String addDefaultQueriesFile(Collection<String> reservedNames,
-            String relPath) {
+    private String addDefaultQueriesFile(Collection<String> reservedNames, String relPath) {
 
         InputStream is = null;
         OutputStream os = null;
@@ -186,8 +175,7 @@ public class HibernateSpringConfigExporter extends GenericExporter {
 
             is = ClassLoaderUtils.getResourceAsStream(DEFAULT_QUERIES_FILE);
 
-            String name = DataServiceUtils
-                    .getDefaultQueryFileName(reservedNames);
+            String name = DataServiceUtils.getDefaultQueryFileName(reservedNames);
 
             name = relPath + "/" + name;
 

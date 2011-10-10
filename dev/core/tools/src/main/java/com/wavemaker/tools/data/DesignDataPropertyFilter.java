@@ -26,8 +26,7 @@ import com.wavemaker.runtime.data.DataPropertyFilter;
  * @version $Rev$ - $Date$
  * 
  */
-public class DesignDataPropertyFilter extends DataPropertyFilter implements
-        PropertyFilter {
+public class DesignDataPropertyFilter extends DataPropertyFilter implements PropertyFilter {
 
     public static DesignDataPropertyFilter getInstance() {
         return instance;
@@ -45,15 +44,15 @@ public class DesignDataPropertyFilter extends DataPropertyFilter implements
 
     private DesignDataPropertyFilter() {
         super();
-        addFilteredProperty(EntityInfo.class, "columnsMap", filterProps);
-        addFilteredProperty(EntityInfo.class, "id", filterProps);
-        addFilteredProperty(EntityInfo.class, "properties", filterProps);
-        addFilteredProperty(EntityInfo.class, "propertiesMap", filterProps);
-        addFilteredProperty(EntityInfo.class, "propertyNames", filterProps);
-        addFilteredProperty(EntityInfo.class, "relatedProperties", filterProps);
-        
-        addFilteredProperty(ColumnInfo.class, "length", nullFilterProps);
-        addFilteredProperty(ColumnInfo.class, "precision", nullFilterProps);
+        addFilteredProperty(EntityInfo.class, "columnsMap", this.filterProps);
+        addFilteredProperty(EntityInfo.class, "id", this.filterProps);
+        addFilteredProperty(EntityInfo.class, "properties", this.filterProps);
+        addFilteredProperty(EntityInfo.class, "propertiesMap", this.filterProps);
+        addFilteredProperty(EntityInfo.class, "propertyNames", this.filterProps);
+        addFilteredProperty(EntityInfo.class, "relatedProperties", this.filterProps);
+
+        addFilteredProperty(ColumnInfo.class, "length", this.nullFilterProps);
+        addFilteredProperty(ColumnInfo.class, "precision", this.nullFilterProps);
     }
 
     @Override
@@ -62,29 +61,27 @@ public class DesignDataPropertyFilter extends DataPropertyFilter implements
         if (checkFilterProps(source, name)) {
             return true;
         }
-        
+
         if (value == null && checkNullFilterProps(source, name)) {
             return true;
         }
 
         return super.filter(source, name, value);
     }
-    
+
     private boolean checkFilterProps(Object source, String name) {
-        Collection<String> c = filterProps.get(source.getClass());
+        Collection<String> c = this.filterProps.get(source.getClass());
         return c != null && c.contains(name);
     }
-    
+
     private boolean checkNullFilterProps(Object source, String name) {
-        Collection<String> c = nullFilterProps.get(source.getClass());
+        Collection<String> c = this.nullFilterProps.get(source.getClass());
         return c != null && c.contains(name);
     }
-    
-    private void addFilteredProperty(Class<?> clazz, String propertyName,
-            OneToManyMap<Class<?>, String> m) {
-        if (!objectAccess.hasProperty(clazz, propertyName)) {
-            throw new AssertionError("property " + propertyName
-                    + " doesn't exist on " + clazz.getName());
+
+    private void addFilteredProperty(Class<?> clazz, String propertyName, OneToManyMap<Class<?>, String> m) {
+        if (!this.objectAccess.hasProperty(clazz, propertyName)) {
+            throw new AssertionError("property " + propertyName + " doesn't exist on " + clazz.getName());
         }
         m.put(clazz, propertyName);
     }

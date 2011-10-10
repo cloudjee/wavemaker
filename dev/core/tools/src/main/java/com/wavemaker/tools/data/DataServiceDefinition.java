@@ -48,8 +48,7 @@ import com.wavemaker.tools.service.definitions.Operation;
  * @author Simon Toens
  * @version $Rev$ - $Date$
  */
-public class DataServiceDefinition  extends AbstractDeprecatedServiceDefinition
-        implements DataServiceInternal, ReflectServiceDefinition {
+public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition implements DataServiceInternal, ReflectServiceDefinition {
 
     private final String serviceId;
 
@@ -67,31 +66,25 @@ public class DataServiceDefinition  extends AbstractDeprecatedServiceDefinition
 
     private ElementTypeFactory elementTypeFactory = DEFAULT_ELEMENT_TYPE_FACTORY;
 
-    public DataServiceDefinition(String serviceId,
-            ExternalDataModelConfig externalConfig,
-            DesignServiceManager serviceManager, File serviceDir)
-            throws IOException {
+    public DataServiceDefinition(String serviceId, ExternalDataModelConfig externalConfig, DesignServiceManager serviceManager, File serviceDir)
+        throws IOException {
 
         this.owner = true;
         this.serviceId = serviceId;
         this.serviceManager = serviceManager;
-        this.dataCfg = new DataModelConfiguration(serviceDir, serviceManager
-                .getProjectManager().getCurrentProject(), serviceId,
-                externalConfig, null, null);
+        this.dataCfg = new DataModelConfiguration(serviceDir, serviceManager.getProjectManager().getCurrentProject(), serviceId, externalConfig,
+            null, null);
         this.serviceClass = serviceManager.getService(serviceId).getClazz();
-        this.packageName = StringUtils.splitPackageAndClass(serviceClass).v1;
+        this.packageName = StringUtils.splitPackageAndClass(this.serviceClass).v1;
         initOperationManager();
     }
 
-    public DataServiceDefinition(String serviceId,
-            DataModelConfiguration dataCfg, DesignServiceManager serviceManager) {
-        this(serviceId, dataCfg, serviceManager, serviceManager.getService(
-                serviceId).getClazz());
+    public DataServiceDefinition(String serviceId, DataModelConfiguration dataCfg, DesignServiceManager serviceManager) {
+        this(serviceId, dataCfg, serviceManager, serviceManager.getService(serviceId).getClazz());
     }
 
-    public DataServiceDefinition(final String serviceId,
-            final DataModelConfiguration dataCfg,
-            final DesignServiceManager serviceManager, final String serviceClass) {
+    public DataServiceDefinition(final String serviceId, final DataModelConfiguration dataCfg, final DesignServiceManager serviceManager,
+        final String serviceClass) {
 
         this.owner = false;
         this.serviceId = serviceId;
@@ -107,23 +100,23 @@ public class DataServiceDefinition  extends AbstractDeprecatedServiceDefinition
     }
 
     public String getServiceClass() {
-        return serviceClass;
+        return this.serviceClass;
     }
 
     public String getServiceId() {
-        return serviceId;
+        return this.serviceId;
     }
 
     public String getPackageName() {
-        return packageName;
+        return this.packageName;
     }
 
     public String getDataPackage() {
-        return dataCfg.getDataPackage();
+        return this.dataCfg.getDataPackage();
     }
 
     public DataModelConfiguration getDataModelConfiguration() {
-        return dataCfg;
+        return this.dataCfg;
     }
 
     public ServiceType getServiceType() {
@@ -131,11 +124,11 @@ public class DataServiceDefinition  extends AbstractDeprecatedServiceDefinition
     }
 
     public List<String> getOperationNames() {
-        return serviceManager.getOperationNames(serviceId);
+        return this.serviceManager.getOperationNames(this.serviceId);
     }
 
     public List<ElementType> getInputTypes(String operationName) {
-        Operation op = serviceManager.getOperation(serviceId, operationName);
+        Operation op = this.serviceManager.getOperation(this.serviceId, operationName);
         List<Operation.Parameter> params = op.getParameter();
         List<ElementType> rtn = new ArrayList<ElementType>(params.size());
         for (Operation.Parameter p : params) {
@@ -145,30 +138,28 @@ public class DataServiceDefinition  extends AbstractDeprecatedServiceDefinition
     }
 
     public ElementType getOutputType(String operationName) {
-        Operation op = serviceManager.getOperation(serviceId, operationName);
+        Operation op = this.serviceManager.getOperation(this.serviceId, operationName);
         if (op.getReturn() == null) {
             return null;
         }
         Operation.Return opRtn = op.getReturn();
-        ElementType rtn = new ElementType("rtn", opRtn.getTypeRef(), opRtn
-                .isIsList());
+        ElementType rtn = new ElementType("rtn", opRtn.getTypeRef(), opRtn.isIsList());
         return rtn;
     }
 
     public List<ElementType> getTypes() {
         Collection<String> entities = getEntityClassNames();
         Collection<String> otherTypes = getHelperTypes();
-        return DataServiceUtils.getTypes(entities, otherTypes,
-                elementTypeFactory);
+        return DataServiceUtils.getTypes(entities, otherTypes, this.elementTypeFactory);
     }
 
     public String getRuntimeConfiguration() {
-        return serviceId + DataServiceConstants.SPRING_CFG_EXT;
+        return this.serviceId + DataServiceConstants.SPRING_CFG_EXT;
     }
 
     public void dispose() {
-        if (owner) {
-            dataCfg.dispose();
+        if (this.owner) {
+            this.dataCfg.dispose();
         }
     }
 
@@ -177,11 +168,10 @@ public class DataServiceDefinition  extends AbstractDeprecatedServiceDefinition
     }
 
     public DataServiceOperation getOperation(String operationName) {
-        DataServiceOperation rtn = operationManager.getOperation(operationName);
+        DataServiceOperation rtn = this.operationManager.getOperation(operationName);
         if (rtn == null) {
-            throw new DataServiceRuntimeException(MessageResource.OPERATION_NOT_FOUND,
-                    serviceId, operationName, operationManager
-                            .getOperationNames());
+            throw new DataServiceRuntimeException(MessageResource.OPERATION_NOT_FOUND, this.serviceId, operationName,
+                this.operationManager.getOperationNames());
         }
         return rtn;
     }
@@ -193,14 +183,15 @@ public class DataServiceDefinition  extends AbstractDeprecatedServiceDefinition
         return true;
     }
 
+    @Override
     public String getPartnerName() {
         return null;
     }
 
     private Collection<String> getEntityClassNames() {
         Collection<String> rtn = new TreeSet<String>();
-        for (String s : dataCfg.getEntityNames()) {
-            rtn.add(StringUtils.fq(dataCfg.getDataPackage(), s));
+        for (String s : this.dataCfg.getEntityNames()) {
+            rtn.add(StringUtils.fq(this.dataCfg.getDataPackage(), s));
         }
         return rtn;
     }
@@ -211,12 +202,10 @@ public class DataServiceDefinition  extends AbstractDeprecatedServiceDefinition
     }
 
     private void initOperationManager() {
-        if (!this.serviceId.equals(CommonConstants.SALESFORCE_SERVICE)) { //salesforce
-            this.operationManager = new DataServiceOperationManager(initFactory(),
-                dataCfg.useIndividualCRUDOperations());
+        if (!this.serviceId.equals(CommonConstants.SALESFORCE_SERVICE)) { // salesforce
+            this.operationManager = new DataServiceOperationManager(initFactory(), this.dataCfg.useIndividualCRUDOperations());
         } else {
-            this.operationManager = new DataServiceOperationManager(initFactory(),
-                false);
+            this.operationManager = new DataServiceOperationManager(initFactory(), false);
         }
     }
 
@@ -228,61 +217,50 @@ public class DataServiceDefinition  extends AbstractDeprecatedServiceDefinition
                 return DataServiceDefinition.this.getEntityClassNames();
             }
 
-            public Collection<Tuple.Three<String, String, Boolean>> getQueryInputs(
-                    String queryName) {
+            public Collection<Tuple.Three<String, String, Boolean>> getQueryInputs(String queryName) {
                 Collection<Tuple.Three<String, String, Boolean>> rtn = new ArrayList<Tuple.Three<String, String, Boolean>>();
-                QueryInfo qi = dataCfg.getQuery(queryName);
+                QueryInfo qi = DataServiceDefinition.this.dataCfg.getQuery(queryName);
                 for (Input in : qi.getInputs()) {
-                    rtn.add(Tuple.tuple(in.getParamName(), in.getParamType(),
-                            in.getList()));
+                    rtn.add(Tuple.tuple(in.getParamName(), in.getParamType(), in.getList()));
                 }
                 return rtn;
             }
 
             public Collection<String> getQueryNames() {
-                return dataCfg.getQueryNames();
+                return DataServiceDefinition.this.dataCfg.getQueryNames();
             }
 
-            public List<String> getQueryReturnTypes(String operationName,
-                    String queryName) {
+            public List<String> getQueryReturnTypes(String operationName, String queryName) {
                 List<String> rtn = new ArrayList<String>();
-                Operation op = serviceManager.getOperation(serviceId,
-                        operationName);
+                Operation op = DataServiceDefinition.this.serviceManager.getOperation(DataServiceDefinition.this.serviceId, operationName);
                 if (op == null) {
-                    throw new ConfigurationException(
-                            MessageResource.OPERATION_NOT_FOUND, serviceId,
-                            operationName, getOperationNames());
+                    throw new ConfigurationException(MessageResource.OPERATION_NOT_FOUND, DataServiceDefinition.this.serviceId, operationName,
+                        getOperationNames());
                 }
                 if (op.getReturn() != null) {
                     String type = op.getReturn().getTypeRef();
                     String shortName = StringUtils.getClassName(type);
-                    if (!dataCfg.isEntityType(shortName)
-                            && !dataCfg.isValueType(shortName)) {
+                    if (!DataServiceDefinition.this.dataCfg.isEntityType(shortName) && !DataServiceDefinition.this.dataCfg.isValueType(shortName)) {
                     }
                     rtn.add(type);
                 }
                 return rtn;
             }
 
-            public boolean requiresResultWrapper(String operationName,
-                    String queryName) {
-                QueryInfo query = dataCfg.getQuery(queryName);
+            public boolean requiresResultWrapper(String operationName, String queryName) {
+                QueryInfo query = DataServiceDefinition.this.dataCfg.getQuery(queryName);
                 return DataServiceUtils.requiresResultWrapper(query.getQuery());
             }
 
-            public List<String> getQueryReturnNames(String operationName,
-                    String queryName) {
+            public List<String> getQueryReturnNames(String operationName, String queryName) {
                 return Collections.emptyList();
             }
 
-            public boolean queryReturnsSingleResult(String operationName,
-                    String queryName) {
-                Operation op = serviceManager.getOperation(serviceId,
-                        operationName);
+            public boolean queryReturnsSingleResult(String operationName, String queryName) {
+                Operation op = DataServiceDefinition.this.serviceManager.getOperation(DataServiceDefinition.this.serviceId, operationName);
                 if (op == null) {
-                    throw new ConfigurationException(
-                            MessageResource.OPERATION_NOT_FOUND, serviceId,
-                            operationName, getOperationNames());
+                    throw new ConfigurationException(MessageResource.OPERATION_NOT_FOUND, DataServiceDefinition.this.serviceId, operationName,
+                        getOperationNames());
                 }
                 if (op.getReturn() == null) {
                     return false;

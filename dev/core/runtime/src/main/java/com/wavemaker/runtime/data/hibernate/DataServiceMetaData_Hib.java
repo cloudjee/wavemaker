@@ -32,52 +32,57 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.engine.NamedQueryDefinition;
-import org.hibernate.mapping.*;
+import org.hibernate.mapping.Component;
+import org.hibernate.mapping.Property;
+import org.hibernate.mapping.RootClass;
+import org.hibernate.mapping.Subclass;
+import org.hibernate.mapping.Value;
 import org.hibernate.type.Type;
 
 import com.wavemaker.common.MessageResource;
-import com.wavemaker.common.util.*;
+import com.wavemaker.common.util.CastUtils;
+import com.wavemaker.common.util.OneToManyMap;
+import com.wavemaker.common.util.StringUtils;
+import com.wavemaker.common.util.Tuple;
+import com.wavemaker.runtime.data.DataOperationFactory;
+import com.wavemaker.runtime.data.DataServiceLoggers;
+import com.wavemaker.runtime.data.DataServiceMetaData;
+import com.wavemaker.runtime.data.DataServiceOperation;
+import com.wavemaker.runtime.data.DataServiceOperationManager;
+import com.wavemaker.runtime.data.DataServiceRuntimeException;
 import com.wavemaker.runtime.data.spring.ConfigurationRegistry;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.data.util.DataServiceUtils;
-import com.wavemaker.runtime.data.*;
 
 /**
  * Wraps a Hibernate Configuration with convenience methods.
  * 
  * @author Simon Toens
  */
-public class DataServiceMetaData_Hib implements DataServiceMetaData { //salesforce
+public class DataServiceMetaData_Hib implements DataServiceMetaData { // salesforce
 
     private final Configuration cfg;
 
     private DataServiceOperationManager operationManager = null;
 
     // entity classes
-    private final List<Class<?>> entityClasses = 
-        new ArrayList<Class<?>>();
+    private final List<Class<?>> entityClasses = new ArrayList<Class<?>>();
 
     // RootClass (String) -> RootClass
-    private final Map<Class<?>, RootClass> rootClasses = 
-        new HashMap<Class<?>, RootClass>();
+    private final Map<Class<?>, RootClass> rootClasses = new HashMap<Class<?>, RootClass>();
 
     // RootClass -> all properties
-    private final OneToManyMap<String, Property> allProperties = 
-        new OneToManyMap<String, Property>();
+    private final OneToManyMap<String, Property> allProperties = new OneToManyMap<String, Property>();
 
-    private final OneToManyMap<String, String> allPropertyNames = 
-        new OneToManyMap<String, String>();
+    private final OneToManyMap<String, String> allPropertyNames = new OneToManyMap<String, String>();
 
     // RootClass -> properties for related objects
-    private final OneToManyMap<String, Property> relProperties = 
-        new OneToManyMap<String, Property>();
+    private final OneToManyMap<String, Property> relProperties = new OneToManyMap<String, Property>();
 
-    private final OneToManyMap<String, String> relPropertyNames = 
-        new OneToManyMap<String, String>();
+    private final OneToManyMap<String, String> relPropertyNames = new OneToManyMap<String, String>();
 
     // RootClass -> all properties in a Map for lookup by property name
-    private final Map<String, Map<String, Property>> allPropertiesMap = 
-        new HashMap<String, Map<String, Property>>();
+    private final Map<String, Map<String, Property>> allPropertiesMap = new HashMap<String, Map<String, Property>>();
 
     // Entity class names in alphabetical order
     private final SortedSet<String> entityClassNames = new TreeSet<String>();
@@ -103,20 +108,16 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { //salesfor
         this(configurationName, cfg, Collections.<String, String> emptyMap());
     }
 
-    public DataServiceMetaData_Hib(String configurationName,
-                               Configuration cfg,
-                               Map<String, String> properties) 
-    {
+    public DataServiceMetaData_Hib(String configurationName, Configuration cfg, Map<String, String> properties) {
         this.configurationName = configurationName;
         this.cfg = cfg;
 
-        String s = 
-            properties.get(DataServiceConstants.REFRESH_ENTITIES_PROPERTY);
+        String s = properties.get(DataServiceConstants.REFRESH_ENTITIES_PROPERTY);
 
         if (s == null) {
-            refreshEntities = Collections.emptySet();
+            this.refreshEntities = Collections.emptySet();
         } else {
-            refreshEntities = new HashSet<String>(StringUtils.split(s));
+            this.refreshEntities = new HashSet<String>(StringUtils.split(s));
         }
 
         initMappingData();
@@ -125,27 +126,27 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { //salesfor
     /**
      * Must be called before calling any other methods on this instance.
      * 
-     * @param session
-     *                A valid session for this Configuration.
+     * @param session A valid session for this Configuration.
      */
     public void init(Session session, boolean useIndividualCRUDOperations) {
 
         DataOperationFactory fac = initFactory(session);
 
-        operationManager = new DataServiceOperationManager(fac,
-                useIndividualCRUDOperations);
+        this.operationManager = new DataServiceOperationManager(fac, useIndividualCRUDOperations);
     }
 
-    public void init(String configurationName) {} //salesforce
+    public void init(String configurationName) {
+    } // salesforce
 
-    public void dispose() {}
+    public void dispose() {
+    }
 
     public String getName() {
-        return configurationName;
+        return this.configurationName;
     }
 
     public String getServiceClassName() {
-        return serviceClassName;
+        return this.serviceClassName;
     }
 
     public void setHelperClassNames(Collection<String> helperClassNames) {
@@ -153,7 +154,7 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { //salesfor
     }
 
     public Collection<String> getHelperClassNames() {
-        return helperClassNames;
+        return this.helperClassNames;
     }
 
     public void setServiceClassName(String serviceClassName) {
@@ -161,38 +162,36 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { //salesfor
     }
 
     public Configuration getConfiguration() {
-        return cfg;
+        return this.cfg;
     }
 
     private void initMappingData() {
 
         RootClass rc;
-        //for (Iterator<RootClass> iter = CastUtils.cast(getConfiguration()
-        for (Iterator iter = CastUtils.cast(getConfiguration()
-                .getClassMappings()); iter.hasNext();) {
+        // for (Iterator<RootClass> iter = CastUtils.cast(getConfiguration()
+        for (Iterator iter = CastUtils.cast(getConfiguration().getClassMappings()); iter.hasNext();) {
 
-            //RootClass rc = iter.next();
+            // RootClass rc = iter.next();
             Object obj = iter.next();
-            if (obj instanceof RootClass)
-                rc = (RootClass)obj;
-            else
-                rc = ((Subclass)obj).getRootClass();
+            if (obj instanceof RootClass) {
+                rc = (RootClass) obj;
+            } else {
+                rc = ((Subclass) obj).getRootClass();
+            }
 
             String s = rc.getClassName();
-            entityClassNames.add(s);
-            entityNames.add(StringUtils.splitPackageAndClass(s).v2);
+            this.entityClassNames.add(s);
+            this.entityNames.add(StringUtils.splitPackageAndClass(s).v2);
 
-            rootClasses.put(rc.getMappedClass(), rc);
-            entityClasses.add(rc.getMappedClass());
+            this.rootClasses.put(rc.getMappedClass(), rc);
+            this.entityClasses.add(rc.getMappedClass());
 
-            Map<String, Property> propertiesMap = 
-                new HashMap<String, Property>();
-            allPropertiesMap.put(rc.getClassName(), propertiesMap);
+            Map<String, Property> propertiesMap = new HashMap<String, Property>();
+            this.allPropertiesMap.put(rc.getClassName(), propertiesMap);
 
-            for (Iterator<Property> iter2 = CastUtils.cast(rc
-                    .getPropertyIterator()); iter2.hasNext();) {
+            for (Iterator<Property> iter2 = CastUtils.cast(rc.getPropertyIterator()); iter2.hasNext();) {
 
-                Property p = (Property) iter2.next();
+                Property p = iter2.next();
                 initProperty(rc.getClassName(), p, propertiesMap);
             }
 
@@ -201,16 +200,15 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { //salesfor
         }
     }
 
-    private void initProperty(String owningClassName, Property p,
-            Map<String, Property> propertiesMap) {
-        allProperties.put(owningClassName, p);
+    private void initProperty(String owningClassName, Property p, Map<String, Property> propertiesMap) {
+        this.allProperties.put(owningClassName, p);
         if (p != null) {
-            allPropertyNames.put(owningClassName, p.getName());
+            this.allPropertyNames.put(owningClassName, p.getName());
             propertiesMap.put(p.getName(), p);
             Value v = p.getValue();
             if (v.getType().isEntityType() || !v.isSimpleValue()) {
-                relProperties.put(owningClassName, p);
-                relPropertyNames.put(owningClassName, p.getName());
+                this.relProperties.put(owningClassName, p);
+                this.relPropertyNames.put(owningClassName, p.getName());
             }
 
             if (p.getType().isComponentType()) {
@@ -221,24 +219,23 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { //salesfor
 
     private void addComponentProperties(Property p) {
         String s = p.getType().getReturnedClass().getName();
-        componentClassNames.add(s);
+        this.componentClassNames.add(s);
         Value v = p.getValue();
         Component comp = (Component) v;
         Map<String, Property> propertiesMap = new HashMap<String, Property>();
-        allPropertiesMap.put(s, propertiesMap);
-        for (Iterator<Property> iter = CastUtils.cast(comp
-                .getPropertyIterator()); iter.hasNext();) {
+        this.allPropertiesMap.put(s, propertiesMap);
+        for (Iterator<Property> iter = CastUtils.cast(comp.getPropertyIterator()); iter.hasNext();) {
             Property p2 = iter.next();
             initProperty(s, p2, propertiesMap);
         }
     }
 
     public Collection<String> getEntityClassNames() {
-        return entityClassNames;
+        return this.entityClassNames;
     }
 
     public List<Class<?>> getEntityClasses() {
-        return entityClasses;
+        return this.entityClasses;
     }
 
     public boolean refreshEntity(Class<?> c) {
@@ -247,7 +244,7 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { //salesfor
             throw new DataServiceRuntimeException(c + " is not an entity");
         }
 
-        return refreshEntities.contains(c.getName());
+        return this.refreshEntities.contains(c.getName());
     }
 
     public String getIdPropertyName(Class<?> c) {
@@ -282,7 +279,7 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { //salesfor
             throw new DataServiceRuntimeException(c + " is not an entity");
         }
 
-        Collection<String> rtn = relPropertyNames.get(c.getName());
+        Collection<String> rtn = this.relPropertyNames.get(c.getName());
 
         if (rtn == null) {
             return Collections.emptyList();
@@ -295,7 +292,7 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { //salesfor
 
         ensureEntityOrComponent(className);
 
-        return allPropertiesMap.get(className).get(propertyName);
+        return this.allPropertiesMap.get(className).get(propertyName);
     }
 
     public String getDataPackage() {
@@ -310,47 +307,39 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { //salesfor
     }
 
     public Collection<String> getOperationNames() {
-        return operationManager.getOperationNames();
+        return this.operationManager.getOperationNames();
     }
 
     public NamedQueryDefinition getQueryDefinition(String queryName) {
         Configuration cfg = getConfiguration();
-        NamedQueryDefinition rtn = (NamedQueryDefinition) cfg.getNamedQueries()
-                .get(queryName);
+        NamedQueryDefinition rtn = (NamedQueryDefinition) cfg.getNamedQueries().get(queryName);
         if (rtn == null) {
-            rtn = (NamedQueryDefinition) cfg.getNamedSQLQueries()
-                    .get(queryName);
+            rtn = (NamedQueryDefinition) cfg.getNamedSQLQueries().get(queryName);
         }
         return rtn;
     }
 
     public DataServiceOperation getOperation(String operationName) {
-        DataServiceOperation rtn = operationManager.getOperation(operationName);
+        DataServiceOperation rtn = this.operationManager.getOperation(operationName);
         if (rtn == null) {
-            throw new DataServiceRuntimeException(
-                MessageResource.OPERATION_NOT_FOUND,
-                configurationName, 
-                operationName, 
-                operationManager.getOperationNames());
+            throw new DataServiceRuntimeException(MessageResource.OPERATION_NOT_FOUND, this.configurationName, operationName,
+                this.operationManager.getOperationNames());
         }
         return rtn;
     }
 
     private RootClass getRootClass(Class<?> c) {
-        return rootClasses.get(c);
+        return this.rootClasses.get(c);
     }
 
     private String getJavaTypeName(Type type) {
-        SessionFactory fac = ConfigurationRegistry.getInstance()
-            .getSessionFactory(configurationName);
+        SessionFactory fac = ConfigurationRegistry.getInstance().getSessionFactory(this.configurationName);
         return DataServiceUtils.getJavaTypeName(type, fac);
     }
 
     private void ensureEntityOrComponent(String className) {
-        if (!entityClassNames.contains(className)
-                && !componentClassNames.contains(className)) {
-            throw new IllegalArgumentException(
-                    "Unknown Entity or Component class: " + className);
+        if (!this.entityClassNames.contains(className) && !this.componentClassNames.contains(className)) {
+            throw new IllegalArgumentException("Unknown Entity or Component class: " + className);
         }
     }
 
@@ -359,26 +348,22 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { //salesfor
 
             // this is magic, and has to match the name of the
             // generated example query(ies).
-            private static final String GENERATED_QUERY_NAME = 
-                "ExampleHQLQuery1";
+            private static final String GENERATED_QUERY_NAME = "ExampleHQLQuery1";
 
             public Collection<String> getEntityClassNames() {
-                return entityClassNames;
+                return DataServiceMetaData_Hib.this.entityClassNames;
             }
 
-            public List<Tuple.Three<String, String, Boolean>> getQueryInputs(
-                    String queryName) {
+            public List<Tuple.Three<String, String, Boolean>> getQueryInputs(String queryName) {
 
-                List<Tuple.Three<String, String, Boolean>> rtn = 
-                    new ArrayList<Tuple.Three<String, String, Boolean>>();
+                List<Tuple.Three<String, String, Boolean>> rtn = new ArrayList<Tuple.Three<String, String, Boolean>>();
 
                 NamedQueryDefinition def = getQueryDefinition(queryName);
 
                 Map<String, String> m = CastUtils.cast(def.getParameterTypes());
 
                 for (Map.Entry<String, String> e : m.entrySet()) {
-                    Tuple.Two<String, Boolean> t = DataServiceUtils
-                            .getQueryType(e.getValue());
+                    Tuple.Two<String, Boolean> t = DataServiceUtils.getQueryType(e.getValue());
                     rtn.add(Tuple.tuple(e.getKey(), t.v1, t.v2));
                 }
 
@@ -398,8 +383,7 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { //salesfor
                 return rtn;
             }
 
-            public List<String> getQueryReturnNames(String operationName,
-                    String queryName) {
+            public List<String> getQueryReturnNames(String operationName, String queryName) {
 
                 Query query = session.getNamedQuery(queryName);
 
@@ -415,14 +399,12 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { //salesfor
 
             }
 
-            public boolean requiresResultWrapper(String operationName,
-                    String queryName) {
+            public boolean requiresResultWrapper(String operationName, String queryName) {
                 NamedQueryDefinition query = getQueryDefinition(queryName);
                 return DataServiceUtils.requiresResultWrapper(query.getQuery());
             }
 
-            public List<String> getQueryReturnTypes(String operationName,
-                    String queryName) {
+            public List<String> getQueryReturnTypes(String operationName, String queryName) {
 
                 List<String> rtn = new ArrayList<String>();
 
@@ -438,19 +420,15 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { //salesfor
                         // actually if it is a sql query we also end up here -
                         // the tests have at least one...
                     }
-                    rtn.add(DataServiceConstants.DML_OPERATION_RTN_TYPE
-                            .getName());
+                    rtn.add(DataServiceConstants.DML_OPERATION_RTN_TYPE.getName());
                 } else {
 
-                    if (DataServiceUtils
-                            .isDynamicInstantiationQuery(queryString)) {
-                        String className = DataServiceUtils
-                                .getDynamicInstantiationClassName(queryString);
+                    if (DataServiceUtils.isDynamicInstantiationQuery(queryString)) {
+                        String className = DataServiceUtils.getDynamicInstantiationClassName(queryString);
 
                         if (!StringUtils.isFullyQualified(className)) {
-                            if (entityNames.contains(className)) {
-                                className = StringUtils.fq(getDataPackage(),
-                                        className);
+                            if (DataServiceMetaData_Hib.this.entityNames.contains(className)) {
+                                className = StringUtils.fq(getDataPackage(), className);
                             }
                         }
                         rtn.add(className);
@@ -464,8 +442,7 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { //salesfor
                 return rtn;
             }
 
-            public boolean queryReturnsSingleResult(String operationName,
-                    String queryName) {
+            public boolean queryReturnsSingleResult(String operationName, String queryName) {
 
                 // hack for generated queries - only required for initial
                 // ServiceDefinition instance that is used to add the service
@@ -474,7 +451,7 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { //salesfor
                 }
 
                 // to make existing tests happy
-                if (queryName.startsWith("get") && queryName.endsWith(("ById"))) {
+                if (queryName.startsWith("get") && queryName.endsWith("ById")) {
                     return true;
                 }
 
@@ -494,9 +471,7 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { //salesfor
                     rtn = query.getReturnTypes();
                 } catch (RuntimeException ex) {
                     if (DataServiceLoggers.metaDataLogger.isDebugEnabled()) {
-                        DataServiceLoggers.metaDataLogger
-                            .debug("Failed to determine rtn type for query \""
-                                   + queryName + "\"");
+                        DataServiceLoggers.metaDataLogger.debug("Failed to determine rtn type for query \"" + queryName + "\"");
                     }
                 }
                 return rtn;

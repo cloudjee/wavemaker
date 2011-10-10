@@ -26,21 +26,23 @@ import com.wavemaker.json.type.MapTypeDefinition;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
-public class MapReflectTypeDefinition extends ReflectTypeDefinition
-        implements MapTypeDefinition {
-    
+public class MapReflectTypeDefinition extends ReflectTypeDefinition implements MapTypeDefinition {
+
     private FieldDefinition keyFieldDefinition;
+
     private FieldDefinition valueFieldDefinition;
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.type.reflect.ReflectTypeDefinition#newInstance(java.lang.Object[])
      */
     @Override
     public Object newInstance(Object... args) {
-        
-        if (null==getKlass()) {
+
+        if (null == getKlass()) {
             return new HashMap<Object, Object>();
         } else if (getKlass().isInterface()) {
             if (getKlass().isAssignableFrom(HashMap.class)) {
@@ -48,18 +50,15 @@ public class MapReflectTypeDefinition extends ReflectTypeDefinition
             } else if (getKlass().isAssignableFrom(SortedMap.class)) {
                 return new TreeMap<Object, Object>();
             } else {
-                throw new WMRuntimeException(MessageResource.JSON_FAILEDINSTANCE_MAP,
-                        getKlass());
+                throw new WMRuntimeException(MessageResource.JSON_FAILEDINSTANCE_MAP, getKlass());
             }
         } else {
             return super.newInstance();
         }
     }
 
-    
-    
     public FieldDefinition getValueFieldDefinition() {
-        return valueFieldDefinition;
+        return this.valueFieldDefinition;
     }
 
     public void setValueFieldDefinition(FieldDefinition valueFieldDefinition) {
@@ -67,7 +66,7 @@ public class MapReflectTypeDefinition extends ReflectTypeDefinition
     }
 
     public FieldDefinition getKeyFieldDefinition() {
-        return keyFieldDefinition;
+        return this.keyFieldDefinition;
     }
 
     public void setKeyFieldDefinition(FieldDefinition keyFieldDefinition) {

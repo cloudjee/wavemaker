@@ -27,31 +27,35 @@ import com.wavemaker.json.type.TypeState;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class ReflectTypeState implements TypeState {
-    
+
     private final Map<String, TypeDefinition> knownTypes = new HashMap<String, TypeDefinition>();
+
     private final PropertyUtilsBean propertyUtilsBean = new PropertyUtilsBean();
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.type.TypeState#addType(com.wavemaker.json.type.TypeDefinition)
      */
     public void addType(TypeDefinition typeDefinition) {
-        knownTypes.put(typeDefinition.getTypeName(), typeDefinition);
+        this.knownTypes.put(typeDefinition.getTypeName(), typeDefinition);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.type.TypeState#getType(java.lang.String)
      */
     public TypeDefinition getType(String typeName) {
-        
-        if (knownTypes.containsKey(typeName)) {
-            return knownTypes.get(typeName);
+
+        if (this.knownTypes.containsKey(typeName)) {
+            return this.knownTypes.get(typeName);
         } else {
             try {
-                TypeDefinition td = ReflectTypeUtils.getTypeDefinition(
-                        ClassUtils.forName(typeName), this, false);
+                TypeDefinition td = ReflectTypeUtils.getTypeDefinition(ClassUtils.forName(typeName), this, false);
                 addType(td);
                 return td;
             } catch (ClassNotFoundException e) {
@@ -62,20 +66,20 @@ public class ReflectTypeState implements TypeState {
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.type.TypeState#isTypeKnown(java.lang.String)
      */
     public boolean isTypeKnown(String typeName) {
-        
-        return knownTypes.containsKey(typeName);
-    }
-    
 
+        return this.knownTypes.containsKey(typeName);
+    }
 
     public PropertyUtilsBean getPropertyUtilsBean() {
-        return propertyUtilsBean;
+        return this.propertyUtilsBean;
     }
-    
+
     public Map<String, TypeDefinition> getKnownTypes() {
         return this.knownTypes;
     }

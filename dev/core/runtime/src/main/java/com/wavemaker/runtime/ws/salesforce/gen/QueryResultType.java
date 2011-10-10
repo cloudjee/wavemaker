@@ -11,23 +11,23 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for QueryResult complex type.
+ * <p>
+ * Java class for QueryResult complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="QueryResult">
@@ -47,20 +47,18 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "QueryResult", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "done",
-    "queryLocator",
-    "records",
-    "size"
-})
+@XmlType(name = "QueryResult", namespace = "urn:partner.soap.sforce.com", propOrder = { "done", "queryLocator", "records", "size" })
 public class QueryResultType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean done;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String queryLocator;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", nillable = true)
     protected List<SObjectType> records;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected int size;
 
@@ -69,7 +67,7 @@ public class QueryResultType {
      * 
      */
     public boolean isDone() {
-        return done;
+        return this.done;
     }
 
     /**
@@ -83,22 +81,18 @@ public class QueryResultType {
     /**
      * Gets the value of the queryLocator property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getQueryLocator() {
-        return queryLocator;
+        return this.queryLocator;
     }
 
     /**
      * Sets the value of the queryLocator property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setQueryLocator(String value) {
         this.queryLocator = value;
@@ -108,27 +102,26 @@ public class QueryResultType {
      * Gets the value of the records property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the records property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the records property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getRecords().add(newItem);
+     * getRecords().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link SObjectType }
+     * Objects of the following type(s) are allowed in the list {@link SObjectType }
      * 
      * 
      */
     public List<SObjectType> getRecords() {
-        if (records == null) {
-            records = new ArrayList<SObjectType>();
+        if (this.records == null) {
+            this.records = new ArrayList<SObjectType>();
         }
         return this.records;
     }
@@ -138,7 +131,7 @@ public class QueryResultType {
      * 
      */
     public int getSize() {
-        return size;
+        return this.size;
     }
 
     /**
@@ -152,10 +145,8 @@ public class QueryResultType {
     /**
      * Sets the value of the records property.
      * 
-     * @param records
-     *     allowed object is
-     *     {@link SObjectType }
-     *     
+     * @param records allowed object is {@link SObjectType }
+     * 
      */
     public void setRecords(List<SObjectType> records) {
         this.records = records;

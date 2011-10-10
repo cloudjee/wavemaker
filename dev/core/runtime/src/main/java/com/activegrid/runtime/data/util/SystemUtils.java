@@ -29,9 +29,8 @@ import com.wavemaker.runtime.server.InternalRuntime;
  * @author Simon Toens
  * @version $Rev$ - $Date$
  * 
- * @deprecated This is now deprecated; see
- *             {@link com.wavemaker.runtime.data.util.SystemUtils}. This will
- *             be removed in a future release.
+ * @deprecated This is now deprecated; see {@link com.wavemaker.runtime.data.util.SystemUtils}. This will be removed in
+ *             a future release.
  */
 @Deprecated
 public class SystemUtils {
@@ -44,8 +43,7 @@ public class SystemUtils {
         return clientPrepare(o, null);
     }
 
-    public static Object clientPrepare(Object o,
-            DataServiceManagerAccess mgrAccess) {
+    public static Object clientPrepare(Object o, DataServiceManagerAccess mgrAccess) {
 
         registerPropertyFilter();
 
@@ -53,20 +51,18 @@ public class SystemUtils {
     }
 
     public static void registerPropertyFilter() {
-        
+
         com.wavemaker.runtime.data.util.SystemUtils.registerPropertyFilter();
     }
 
-    public static Object serverMergeForUpdate(Object o,
-            DataServiceManagerAccess mgrAccess) {
+    public static Object serverMergeForUpdate(Object o, DataServiceManagerAccess mgrAccess) {
 
         DataServiceManager mgr = mgrAccess.getDataServiceManager();
 
         return serverMergeForUpdate(o, mgr.getSession(), mgr.getMetaData());
     }
 
-    public static Object serverMergeForUpdate(Object o, Session session,
-            DataServiceMetaData metaData) {
+    public static Object serverMergeForUpdate(Object o, Session session, DataServiceMetaData metaData) {
 
         if (o == null) {
             return null;
@@ -82,8 +78,7 @@ public class SystemUtils {
 
         List<String> populatedProperties = args.get(0); // hardcoded first arg?
 
-        return DataServiceUtils.mergeForUpdate(o, session, metaData,
-                populatedProperties);
+        return DataServiceUtils.mergeForUpdate(o, session, metaData, populatedProperties);
 
     }
 }

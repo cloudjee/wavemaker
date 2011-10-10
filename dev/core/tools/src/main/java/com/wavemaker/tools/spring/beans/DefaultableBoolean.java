@@ -19,19 +19,20 @@
 // Generated on: 2008.02.26 at 04:39:33 PM PST 
 //
 
-
 package com.wavemaker.tools.spring.beans;
 
 import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for defaultable-boolean.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
+ * Java class for defaultable-boolean.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * 
  * <pre>
  * &lt;simpleType name="defaultable-boolean">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}NMTOKEN">
@@ -48,23 +49,22 @@ import javax.xml.bind.annotation.XmlType;
 public enum DefaultableBoolean {
 
     @XmlEnumValue("default")
-    DEFAULT("default"),
-    @XmlEnumValue("true")
-    TRUE("true"),
-    @XmlEnumValue("false")
+    DEFAULT("default"), @XmlEnumValue("true")
+    TRUE("true"), @XmlEnumValue("false")
     FALSE("false");
+
     private final String value;
 
     DefaultableBoolean(String v) {
-        value = v;
+        this.value = v;
     }
 
     public String value() {
-        return value;
+        return this.value;
     }
 
     public static DefaultableBoolean fromValue(String v) {
-        for (DefaultableBoolean c: DefaultableBoolean.values()) {
+        for (DefaultableBoolean c : DefaultableBoolean.values()) {
             if (c.value.equals(v)) {
                 return c;
             }

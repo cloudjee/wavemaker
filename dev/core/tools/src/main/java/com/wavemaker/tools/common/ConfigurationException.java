@@ -20,23 +20,23 @@ import com.wavemaker.common.WMRuntimeException;
 /**
  * @author Simon Toens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 @SuppressWarnings("serial")
 public class ConfigurationException extends WMRuntimeException {
-    
+
     public ConfigurationException(MessageResource r) {
         super(r);
     }
-    
+
     public ConfigurationException(MessageResource r, Object... values) {
         super(r, values);
-    }    
-    
+    }
+
     public ConfigurationException(String s) {
         super(s);
     }
-    
+
     public ConfigurationException(Throwable th) {
         super(th);
     }

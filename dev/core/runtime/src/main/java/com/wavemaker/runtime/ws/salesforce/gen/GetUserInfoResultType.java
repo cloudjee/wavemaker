@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -21,11 +19,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for GetUserInfoResult complex type.
+ * <p>
+ * Java class for GetUserInfoResult complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="GetUserInfoResult">
@@ -61,68 +60,69 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GetUserInfoResult", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "accessibilityMode",
-    "currencySymbol",
-    "orgDefaultCurrencyIsoCode",
-    "orgDisallowHtmlAttachments",
-    "orgHasPersonAccounts",
-    "organizationId",
-    "organizationMultiCurrency",
-    "organizationName",
-    "profileId",
-    "roleId",
-    "userDefaultCurrencyIsoCode",
-    "userEmail",
-    "userFullName",
-    "userId",
-    "userLanguage",
-    "userLocale",
-    "userName",
-    "userTimeZone",
-    "userType",
-    "userUiSkin"
-})
+@XmlType(name = "GetUserInfoResult", namespace = "urn:partner.soap.sforce.com", propOrder = { "accessibilityMode", "currencySymbol",
+    "orgDefaultCurrencyIsoCode", "orgDisallowHtmlAttachments", "orgHasPersonAccounts", "organizationId", "organizationMultiCurrency",
+    "organizationName", "profileId", "roleId", "userDefaultCurrencyIsoCode", "userEmail", "userFullName", "userId", "userLanguage", "userLocale",
+    "userName", "userTimeZone", "userType", "userUiSkin" })
 public class GetUserInfoResultType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean accessibilityMode;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String currencySymbol;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String orgDefaultCurrencyIsoCode;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean orgDisallowHtmlAttachments;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean orgHasPersonAccounts;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String organizationId;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean organizationMultiCurrency;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String organizationName;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String profileId;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String roleId;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String userDefaultCurrencyIsoCode;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String userEmail;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String userFullName;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String userId;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String userLanguage;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String userLocale;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String userName;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String userTimeZone;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String userType;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String userUiSkin;
 
@@ -131,7 +131,7 @@ public class GetUserInfoResultType {
      * 
      */
     public boolean isAccessibilityMode() {
-        return accessibilityMode;
+        return this.accessibilityMode;
     }
 
     /**
@@ -145,22 +145,18 @@ public class GetUserInfoResultType {
     /**
      * Gets the value of the currencySymbol property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getCurrencySymbol() {
-        return currencySymbol;
+        return this.currencySymbol;
     }
 
     /**
      * Sets the value of the currencySymbol property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setCurrencySymbol(String value) {
         this.currencySymbol = value;
@@ -169,22 +165,18 @@ public class GetUserInfoResultType {
     /**
      * Gets the value of the orgDefaultCurrencyIsoCode property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getOrgDefaultCurrencyIsoCode() {
-        return orgDefaultCurrencyIsoCode;
+        return this.orgDefaultCurrencyIsoCode;
     }
 
     /**
      * Sets the value of the orgDefaultCurrencyIsoCode property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setOrgDefaultCurrencyIsoCode(String value) {
         this.orgDefaultCurrencyIsoCode = value;
@@ -195,7 +187,7 @@ public class GetUserInfoResultType {
      * 
      */
     public boolean isOrgDisallowHtmlAttachments() {
-        return orgDisallowHtmlAttachments;
+        return this.orgDisallowHtmlAttachments;
     }
 
     /**
@@ -211,7 +203,7 @@ public class GetUserInfoResultType {
      * 
      */
     public boolean isOrgHasPersonAccounts() {
-        return orgHasPersonAccounts;
+        return this.orgHasPersonAccounts;
     }
 
     /**
@@ -225,22 +217,18 @@ public class GetUserInfoResultType {
     /**
      * Gets the value of the organizationId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getOrganizationId() {
-        return organizationId;
+        return this.organizationId;
     }
 
     /**
      * Sets the value of the organizationId property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setOrganizationId(String value) {
         this.organizationId = value;
@@ -251,7 +239,7 @@ public class GetUserInfoResultType {
      * 
      */
     public boolean isOrganizationMultiCurrency() {
-        return organizationMultiCurrency;
+        return this.organizationMultiCurrency;
     }
 
     /**
@@ -265,22 +253,18 @@ public class GetUserInfoResultType {
     /**
      * Gets the value of the organizationName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getOrganizationName() {
-        return organizationName;
+        return this.organizationName;
     }
 
     /**
      * Sets the value of the organizationName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setOrganizationName(String value) {
         this.organizationName = value;
@@ -289,22 +273,18 @@ public class GetUserInfoResultType {
     /**
      * Gets the value of the profileId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getProfileId() {
-        return profileId;
+        return this.profileId;
     }
 
     /**
      * Sets the value of the profileId property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setProfileId(String value) {
         this.profileId = value;
@@ -313,22 +293,18 @@ public class GetUserInfoResultType {
     /**
      * Gets the value of the roleId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getRoleId() {
-        return roleId;
+        return this.roleId;
     }
 
     /**
      * Sets the value of the roleId property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setRoleId(String value) {
         this.roleId = value;
@@ -337,22 +313,18 @@ public class GetUserInfoResultType {
     /**
      * Gets the value of the userDefaultCurrencyIsoCode property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getUserDefaultCurrencyIsoCode() {
-        return userDefaultCurrencyIsoCode;
+        return this.userDefaultCurrencyIsoCode;
     }
 
     /**
      * Sets the value of the userDefaultCurrencyIsoCode property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setUserDefaultCurrencyIsoCode(String value) {
         this.userDefaultCurrencyIsoCode = value;
@@ -361,22 +333,18 @@ public class GetUserInfoResultType {
     /**
      * Gets the value of the userEmail property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getUserEmail() {
-        return userEmail;
+        return this.userEmail;
     }
 
     /**
      * Sets the value of the userEmail property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setUserEmail(String value) {
         this.userEmail = value;
@@ -385,22 +353,18 @@ public class GetUserInfoResultType {
     /**
      * Gets the value of the userFullName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getUserFullName() {
-        return userFullName;
+        return this.userFullName;
     }
 
     /**
      * Sets the value of the userFullName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setUserFullName(String value) {
         this.userFullName = value;
@@ -409,22 +373,18 @@ public class GetUserInfoResultType {
     /**
      * Gets the value of the userId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getUserId() {
-        return userId;
+        return this.userId;
     }
 
     /**
      * Sets the value of the userId property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setUserId(String value) {
         this.userId = value;
@@ -433,22 +393,18 @@ public class GetUserInfoResultType {
     /**
      * Gets the value of the userLanguage property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getUserLanguage() {
-        return userLanguage;
+        return this.userLanguage;
     }
 
     /**
      * Sets the value of the userLanguage property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setUserLanguage(String value) {
         this.userLanguage = value;
@@ -457,22 +413,18 @@ public class GetUserInfoResultType {
     /**
      * Gets the value of the userLocale property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getUserLocale() {
-        return userLocale;
+        return this.userLocale;
     }
 
     /**
      * Sets the value of the userLocale property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setUserLocale(String value) {
         this.userLocale = value;
@@ -481,22 +433,18 @@ public class GetUserInfoResultType {
     /**
      * Gets the value of the userName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getUserName() {
-        return userName;
+        return this.userName;
     }
 
     /**
      * Sets the value of the userName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setUserName(String value) {
         this.userName = value;
@@ -505,22 +453,18 @@ public class GetUserInfoResultType {
     /**
      * Gets the value of the userTimeZone property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getUserTimeZone() {
-        return userTimeZone;
+        return this.userTimeZone;
     }
 
     /**
      * Sets the value of the userTimeZone property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setUserTimeZone(String value) {
         this.userTimeZone = value;
@@ -529,22 +473,18 @@ public class GetUserInfoResultType {
     /**
      * Gets the value of the userType property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getUserType() {
-        return userType;
+        return this.userType;
     }
 
     /**
      * Sets the value of the userType property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setUserType(String value) {
         this.userType = value;
@@ -553,22 +493,18 @@ public class GetUserInfoResultType {
     /**
      * Gets the value of the userUiSkin property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getUserUiSkin() {
-        return userUiSkin;
+        return this.userUiSkin;
     }
 
     /**
      * Sets the value of the userUiSkin property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setUserUiSkin(String value) {
         this.userUiSkin = value;

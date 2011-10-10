@@ -74,41 +74,36 @@ public class DataServiceUtils {
 
     private static final String CONSTANTS_CLASS_SUFFIX = "Constants";
 
-    private static List<OperationEnumeration> NO_CHANGE_OPERATIONS = 
-        new ArrayList<OperationEnumeration>(3);
+    private static List<OperationEnumeration> NO_CHANGE_OPERATIONS = new ArrayList<OperationEnumeration>(3);
     static {
         NO_CHANGE_OPERATIONS.add(OperationEnumeration.delete);
         NO_CHANGE_OPERATIONS.add(OperationEnumeration.read);
         NO_CHANGE_OPERATIONS.add(OperationEnumeration.update);
     }
 
-    private static List<OperationEnumeration> EXCLUDE_OPERATIONS =
-        new ArrayList<OperationEnumeration>(1);
+    private static List<OperationEnumeration> EXCLUDE_OPERATIONS = new ArrayList<OperationEnumeration>(1);
     static {
         EXCLUDE_OPERATIONS.add(OperationEnumeration.insert);
     }
 
-    private static final Collection<String> QUERY_ANNOTATIONS =
-        new HashSet<String>(1);
+    private static final Collection<String> QUERY_ANNOTATIONS = new HashSet<String>(1);
     static {
         QUERY_ANNOTATIONS.add(DataServiceConstants.GENERATED_QUERY);
     }
 
-    public static final DataModelConfiguration.UpdateCallback 
-        NOOP_UPDATE_CALLBACK = new DataModelConfiguration.UpdateCallback() {
-        public void update(DataServiceDefinition dataServiceDefinition) {}
+    public static final DataModelConfiguration.UpdateCallback NOOP_UPDATE_CALLBACK = new DataModelConfiguration.UpdateCallback() {
+
+        public void update(DataServiceDefinition dataServiceDefinition) {
+        }
     };
 
-    public final static Collection<String> RESERVED_WORDS = 
-        new HashSet<String>(1);
+    public final static Collection<String> RESERVED_WORDS = new HashSet<String>(1);
 
     static {
         RESERVED_WORDS.add(DataServiceConstants.DATA_PACKAGE_NAME);
     }
 
-    public static List<Class<?>> 
-        getTypesForGeneratedQueries(DataServiceMetaData metaData) 
-    {
+    public static List<Class<?>> getTypesForGeneratedQueries(DataServiceMetaData metaData) {
         if (metaData.getEntityClasses().isEmpty()) {
             return Collections.emptyList();
         }
@@ -129,80 +124,72 @@ public class DataServiceUtils {
         return serviceId + DataServiceConstants.SPRING_CFG_EXT;
     }
 
-    public static void setupElementTypeFactory(
-            final DataModelConfiguration mgr,
-            DataServiceInternal dataServiceDefinition) {
+    public static void setupElementTypeFactory(final DataModelConfiguration mgr, DataServiceInternal dataServiceDefinition) {
 
-        dataServiceDefinition.setElementTypeFactory(
-            new DataServiceDefinition.ElementTypeFactory() {
-                public ElementType getElementType(String javaType) {
+        dataServiceDefinition.setElementTypeFactory(new DataServiceDefinition.ElementTypeFactory() {
 
-                    ElementType rtn = new ElementType(javaType);
+            public ElementType getElementType(String javaType) {
 
-                    if (!mgr.isKnownType(javaType)) {
-                        return rtn;
-                    }
+                ElementType rtn = new ElementType(javaType);
 
-                    String s = mgr.getEntityName(javaType);
-
-                    if (mgr.isHelperType(javaType)) {
-
-                        // query output wrapper
-                        BeanInfo bi = mgr.getBean(s);
-
-                        if (bi == null) {
-                            throw new AssertionError("BeanInfo for " + s
-                                                     + " cannot be null");
-                        }
-
-                        Map<String, String> props = bi.getProperties();
-
-                        for (Map.Entry<String, String> e : props.entrySet()) {
-                            String propName = e.getKey();
-                            String propType = e.getValue();
-                            boolean isList = false;
-
-                            Tuple.Two<String, String> t = 
-                                GenerationUtils.splitGenericType(propType);
-                            if (t != null) {
-                                propType = t.v2;
-                                isList = true;
-                            }
-
-                            ElementType el = new ElementType(propName, propType,
-                                                             isList);
-                            rtn.addProperty(el);
-                        }
-
-                    } else {
-
-                        rtn.setSupportsQuickData(true);
-                        
-                        EntityInfo ei = mgr.getEntity(s);
-
-                        Collection<PropertyInfo> properties = 
-                            mgr.getProperties(s);
-
-                        for (PropertyInfo p : properties) {
-
-                            ElementType el = 
-                                new ElementType(p.getName(), 
-                                                getJavaTypeName(p), isList(p));
-
-                            configureElementType(p, el);
-
-                            rtn.addProperty(el);
-
-                            if (mgr.isValueType(el.getJavaType())) {
-                                el.setTopLevel(true);
-                            }
-                            
-                            addCompositeProperties(ei, p, el);
-                        }
-                    }
+                if (!mgr.isKnownType(javaType)) {
                     return rtn;
                 }
-            });
+
+                String s = mgr.getEntityName(javaType);
+
+                if (mgr.isHelperType(javaType)) {
+
+                    // query output wrapper
+                    BeanInfo bi = mgr.getBean(s);
+
+                    if (bi == null) {
+                        throw new AssertionError("BeanInfo for " + s + " cannot be null");
+                    }
+
+                    Map<String, String> props = bi.getProperties();
+
+                    for (Map.Entry<String, String> e : props.entrySet()) {
+                        String propName = e.getKey();
+                        String propType = e.getValue();
+                        boolean isList = false;
+
+                        Tuple.Two<String, String> t = GenerationUtils.splitGenericType(propType);
+                        if (t != null) {
+                            propType = t.v2;
+                            isList = true;
+                        }
+
+                        ElementType el = new ElementType(propName, propType, isList);
+                        rtn.addProperty(el);
+                    }
+
+                } else {
+
+                    rtn.setSupportsQuickData(true);
+
+                    EntityInfo ei = mgr.getEntity(s);
+
+                    Collection<PropertyInfo> properties = mgr.getProperties(s);
+
+                    for (PropertyInfo p : properties) {
+
+                        ElementType el = new ElementType(p.getName(), getJavaTypeName(p), isList(p));
+
+                        configureElementType(p, el);
+
+                        rtn.addProperty(el);
+
+                        if (mgr.isValueType(el.getJavaType())) {
+                            el.setTopLevel(true);
+                        }
+
+                        addCompositeProperties(ei, p, el);
+                    }
+                }
+                return rtn;
+            }
+        });
     }
 
     public static ServiceDefinition unwrap(ServiceDefinition def) {
@@ -224,16 +211,14 @@ public class DataServiceUtils {
     }
 
     public static String getDefaultDataPackage(String serviceName) {
-        return StringUtils.fq(getDefaultPackage(serviceName),
-                DataServiceConstants.DATA_PACKAGE_NAME);
+        return StringUtils.fq(getDefaultPackage(serviceName), DataServiceConstants.DATA_PACKAGE_NAME);
     }
 
     public static String removePrefix(Properties p) {
 
         String rtn = null;
 
-        for (String key : new HashSet<String>(CastUtils.<String> cast(p
-                .keySet()))) {
+        for (String key : new HashSet<String>(CastUtils.<String> cast(p.keySet()))) {
 
             String newKey = key;
 
@@ -267,8 +252,7 @@ public class DataServiceUtils {
             prefix += DataServiceConstants.PROP_SEP;
         }
 
-        for (String key : new HashSet<String>(CastUtils.<String> cast(p
-                .keySet()))) {
+        for (String key : new HashSet<String>(CastUtils.<String> cast(p.keySet()))) {
 
             String newKey = key;
             if (!newKey.startsWith(prefix)) {
@@ -284,11 +268,9 @@ public class DataServiceUtils {
         return SystemUtils.loadPropertiesFromStream(is);
     }
 
-    public static void writeProperties(Properties p, File destdir,
-            String serviceName) {
+    public static void writeProperties(Properties p, File destdir, String serviceName) {
 
-        File f = new File(destdir, serviceName
-                + DataServiceConstants.PROPERTIES_FILE_EXT);
+        File f = new File(destdir, serviceName + DataServiceConstants.PROPERTIES_FILE_EXT);
 
         FileOutputStream fos = null;
         try {
@@ -304,8 +286,7 @@ public class DataServiceUtils {
         }
     }
 
-    public static void writeProperties(Properties p, OutputStream os,
-            String serviceName) {
+    public static void writeProperties(Properties p, OutputStream os, String serviceName) {
 
         String comment = getPropertiesFileComment(serviceName);
 
@@ -330,14 +311,11 @@ public class DataServiceUtils {
         return addPrefix(prefix, p);
     }
 
-    public static File createEmptyDataModel(File destDir, String serviceId,
-            String packageName) {
-        return createEmptyDataModel(destDir, serviceId, packageName,
-                packageName);
+    public static File createEmptyDataModel(File destDir, String serviceId, String packageName) {
+        return createEmptyDataModel(destDir, serviceId, packageName, packageName);
     }
 
-    public static File createEmptyDataModel(File destDir, String serviceId,
-            String packageName, String dataPackage) {
+    public static File createEmptyDataModel(File destDir, String serviceId, String packageName, String dataPackage) {
 
         File rtn = new File(destDir, getCfgFileName(serviceId));
 
@@ -379,35 +357,27 @@ public class DataServiceUtils {
         return comment.trim();
     }
 
-    public static String getDefaultQueryFileName(
-            Collection<String> reservedNames) {
-        return StringUtils.getUniqueName(
-                DataServiceConstants.DEFAULT_QUERY_FILE, reservedNames);
+    public static String getDefaultQueryFileName(Collection<String> reservedNames) {
+        return StringUtils.getUniqueName(DataServiceConstants.DEFAULT_QUERY_FILE, reservedNames);
     }
 
     public static boolean isDefaultQueryStore(String comment) {
-        return queryHasAnnotation(comment,
-                DataServiceConstants.DEFAULT_QUERY_STORE);
+        return queryHasAnnotation(comment, DataServiceConstants.DEFAULT_QUERY_STORE);
     }
 
     public static boolean isGeneratedQuery(String comment) {
-        return queryHasAnnotation(comment, 
-                                  DataServiceConstants.GENERATED_QUERY);
+        return queryHasAnnotation(comment, DataServiceConstants.GENERATED_QUERY);
     }
 
-    public static String addGeneratedAnnotation(String comment, 
-                                                XMLWriter writer) 
-    {
-        return addAnnotation(comment, DataServiceConstants.GENERATED_QUERY,
-                writer);
+    public static String addGeneratedAnnotation(String comment, XMLWriter writer) {
+        return addAnnotation(comment, DataServiceConstants.GENERATED_QUERY, writer);
     }
 
     public static Service toService(Collection<EntityInfo> entities) {
         Service rtn = new Service();
         rtn.setDataobjects(new DataObjects());
         for (EntityInfo ei : entities) {
-            String javaType = StringUtils.fq(ei.getPackageName(), ei
-                    .getEntityName());
+            String javaType = StringUtils.fq(ei.getPackageName(), ei.getEntityName());
             List<PropertyInfo> properties = new ArrayList<PropertyInfo>();
 
             if (ei.getId() == null) {
@@ -421,12 +391,9 @@ public class DataServiceUtils {
         return rtn;
     }
 
-    public static Collection<String> getServiceClassNames(String packageName,
-                                                          String serviceName) 
-    {
+    public static Collection<String> getServiceClassNames(String packageName, String serviceName) {
         Collection<String> rtn = new HashSet<String>(2);
-        String serviceClassName = 
-            StringUtils.fq(packageName, getServiceClassName(serviceName));
+        String serviceClassName = StringUtils.fq(packageName, getServiceClassName(serviceName));
         rtn.add(serviceClassName);
         rtn.add(getConstantsClassName(serviceClassName));
         return rtn;
@@ -434,6 +401,7 @@ public class DataServiceUtils {
 
     public static ExternalDataModelConfig getDummyExternalConfig() {
         return new ExternalDataModelConfig() {
+
             public boolean returnsSingleResult(String operationName) {
                 return false;
             }
@@ -474,8 +442,7 @@ public class DataServiceUtils {
         }
     }
 
-    public static void writeBeans(Beans beans, FileService fileService,
-            String path) {
+    public static void writeBeans(Beans beans, FileService fileService, String path) {
         Writer writer = null;
         try {
             writer = fileService.getWriter(path);
@@ -508,8 +475,7 @@ public class DataServiceUtils {
         return false;
     }
 
-    public static List<OperationEnumeration> getExcludedOperations(
-            PropertyInfo p) {
+    public static List<OperationEnumeration> getExcludedOperations(PropertyInfo p) {
 
         ColumnInfo ci = p.getColumn();
 
@@ -522,8 +488,7 @@ public class DataServiceUtils {
         return Collections.emptyList();
     }
 
-    public static List<OperationEnumeration> getNoChangeOperations(
-            PropertyInfo p) {
+    public static List<OperationEnumeration> getNoChangeOperations(PropertyInfo p) {
 
         if (p.getIsId()) {
             return NO_CHANGE_OPERATIONS;
@@ -531,8 +496,7 @@ public class DataServiceUtils {
         return Collections.emptyList();
     }
 
-    public static List<OperationEnumeration> getRequiredOperations(
-            PropertyInfo p) {
+    public static List<OperationEnumeration> getRequiredOperations(PropertyInfo p) {
 
         List<OperationEnumeration> rtn = new ArrayList<OperationEnumeration>();
 
@@ -556,15 +520,14 @@ public class DataServiceUtils {
     }
 
     public static String getServiceClassName(String serviceName) {
-        return StringUtils.upperCaseFirstLetter(serviceName);        
+        return StringUtils.upperCaseFirstLetter(serviceName);
     }
 
     public static String getConstantsClassName(String serviceClassName) {
         return serviceClassName + CONSTANTS_CLASS_SUFFIX;
     }
-    
-    private static void addTypeToService(String javaType, Service service,
-            Collection<PropertyInfo> properties) {
+
+    private static void addTypeToService(String javaType, Service service, Collection<PropertyInfo> properties) {
         DataObject o = new DataObject();
         service.getDataobjects().getDataobject().add(o);
         o.setJavaType(javaType);
@@ -577,8 +540,7 @@ public class DataServiceUtils {
             addProperty(pi, o);
             added.add(pi);
             if (!pi.getIsRelated() && pi.hasCompositeProperties()) {
-                addTypeToService(pi.getFullyQualifiedType(), service, pi
-                        .getCompositeProperties());
+                addTypeToService(pi.getFullyQualifiedType(), service, pi.getCompositeProperties());
             }
         }
     }
@@ -615,8 +577,7 @@ public class DataServiceUtils {
         return comment.substring(i + anno.length(), j).trim();
     }
 
-    private static String addAnnotation(String comment, String anno,
-            XMLWriter writer) {
+    private static String addAnnotation(String comment, String anno, XMLWriter writer) {
 
         if (comment == null) {
             comment = "";
@@ -633,8 +594,7 @@ public class DataServiceUtils {
     }
 
     private static boolean isList(PropertyInfo p) {
-        return (p.getCardinality() != null && 
-                p.getCardinality() == RelatedInfo.Cardinality.OneToMany);
+        return p.getCardinality() != null && p.getCardinality() == RelatedInfo.Cardinality.OneToMany;
     }
 
     private static String getJavaTypeName(PropertyInfo p) {
@@ -649,16 +609,14 @@ public class DataServiceUtils {
         el.setExclude(getExcludedOperations(p));
     }
 
-    private static void addCompositeProperties(EntityInfo ei, PropertyInfo p,
-            ElementType el) {
+    private static void addCompositeProperties(EntityInfo ei, PropertyInfo p, ElementType el) {
 
         if (p.getCompositeProperties() == null) {
             return;
         }
 
         for (PropertyInfo p2 : p.getCompositeProperties()) {
-            ElementType el2 = new ElementType(p2.getName(),
-                    getJavaTypeName(p2), isList(p2));
+            ElementType el2 = new ElementType(p2.getName(), getJavaTypeName(p2), isList(p2));
             configureElementType(p2, el2);
             el.addProperty(el2);
             addCompositeProperties(ei, p2, el2);

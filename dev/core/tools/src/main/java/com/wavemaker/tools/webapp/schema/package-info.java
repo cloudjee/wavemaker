@@ -21,3 +21,4 @@
 
 @javax.xml.bind.annotation.XmlSchema(namespace = "http://java.sun.com/xml/ns/j2ee", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package com.wavemaker.tools.webapp.schema;
+

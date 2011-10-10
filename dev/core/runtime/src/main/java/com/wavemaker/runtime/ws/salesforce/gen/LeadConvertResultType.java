@@ -11,23 +11,23 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for LeadConvertResult complex type.
+ * <p>
+ * Java class for LeadConvertResult complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="LeadConvertResult">
@@ -49,48 +49,43 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "LeadConvertResult", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "accountId",
-    "contactId",
-    "errors",
-    "leadId",
-    "opportunityId",
-    "success"
-})
+@XmlType(name = "LeadConvertResult", namespace = "urn:partner.soap.sforce.com", propOrder = { "accountId", "contactId", "errors", "leadId",
+    "opportunityId", "success" })
 public class LeadConvertResultType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String accountId;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String contactId;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected List<ErrorType> errors;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String leadId;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String opportunityId;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean success;
 
     /**
      * Gets the value of the accountId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getAccountId() {
-        return accountId;
+        return this.accountId;
     }
 
     /**
      * Sets the value of the accountId property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setAccountId(String value) {
         this.accountId = value;
@@ -99,22 +94,18 @@ public class LeadConvertResultType {
     /**
      * Gets the value of the contactId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getContactId() {
-        return contactId;
+        return this.contactId;
     }
 
     /**
      * Sets the value of the contactId property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setContactId(String value) {
         this.contactId = value;
@@ -124,27 +115,26 @@ public class LeadConvertResultType {
      * Gets the value of the errors property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the errors property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the errors property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getErrors().add(newItem);
+     * getErrors().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link ErrorType }
+     * Objects of the following type(s) are allowed in the list {@link ErrorType }
      * 
      * 
      */
     public List<ErrorType> getErrors() {
-        if (errors == null) {
-            errors = new ArrayList<ErrorType>();
+        if (this.errors == null) {
+            this.errors = new ArrayList<ErrorType>();
         }
         return this.errors;
     }
@@ -152,22 +142,18 @@ public class LeadConvertResultType {
     /**
      * Gets the value of the leadId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getLeadId() {
-        return leadId;
+        return this.leadId;
     }
 
     /**
      * Sets the value of the leadId property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setLeadId(String value) {
         this.leadId = value;
@@ -176,22 +162,18 @@ public class LeadConvertResultType {
     /**
      * Gets the value of the opportunityId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getOpportunityId() {
-        return opportunityId;
+        return this.opportunityId;
     }
 
     /**
      * Sets the value of the opportunityId property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setOpportunityId(String value) {
         this.opportunityId = value;
@@ -202,7 +184,7 @@ public class LeadConvertResultType {
      * 
      */
     public boolean isSuccess() {
-        return success;
+        return this.success;
     }
 
     /**
@@ -216,10 +198,8 @@ public class LeadConvertResultType {
     /**
      * Sets the value of the errors property.
      * 
-     * @param errors
-     *     allowed object is
-     *     {@link ErrorType }
-     *     
+     * @param errors allowed object is {@link ErrorType }
+     * 
      */
     public void setErrors(List<ErrorType> errors) {
         this.errors = errors;

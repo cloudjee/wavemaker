@@ -44,53 +44,51 @@ public class DataServiceOperationManager {
 
     private static final String LIST_OP = "get%sList";
 
-    private static final String COUNT_OP = "get%s"
-            + DataServiceConstants.COUNT_OP_SUFFIX;
+    private static final String COUNT_OP = "get%s" + DataServiceConstants.COUNT_OP_SUFFIX;
 
     private static final String SEARCH_QBE_ARG = "searchInstance";
 
     private static final String SEARCH_OPTIONS_ARG = "searchOptions";
 
-    private Map<String, DataServiceOperation> queries = new HashMap<String, DataServiceOperation>();
+    private final Map<String, DataServiceOperation> queries = new HashMap<String, DataServiceOperation>();
 
-    private Map<String, DataServiceOperation> operations = new HashMap<String, DataServiceOperation>();
+    private final Map<String, DataServiceOperation> operations = new HashMap<String, DataServiceOperation>();
 
     // list of queries that are also operations
-    private Collection<String> queryOperations = new HashSet<String>();
+    private final Collection<String> queryOperations = new HashSet<String>();
 
     private final DataOperationFactory factory;
-    
-    public DataServiceOperationManager(DataOperationFactory factory,
-            boolean useIndividualCRUDOperations) {
-                
+
+    public DataServiceOperationManager(DataOperationFactory factory, boolean useIndividualCRUDOperations) {
+
         this.factory = factory;
         initQueries();
         if (useIndividualCRUDOperations) {
-            initAPIOperations();            
+            initAPIOperations();
         }
         initQueryOperations();
     }
 
     public Map<String, DataServiceOperation> getOperations() {
-        return operations;
+        return this.operations;
     }
 
     public DataServiceOperation getOperation(String name) {
-        DataServiceOperation rtn = operations.get(name);
+        DataServiceOperation rtn = this.operations.get(name);
         if (rtn == null) {
             // NamedQueryTask uses the query name
-            rtn = queries.get(name);
+            rtn = this.queries.get(name);
         }
         return rtn;
     }
 
     public Collection<String> getOperationNames() {
-        return operations.keySet();
+        return this.operations.keySet();
     }
 
     private void initQueries() {
 
-        for (String s : factory.getQueryNames()) {
+        for (String s : this.factory.getQueryNames()) {
 
             addQueryOperation(s);
         }
@@ -100,41 +98,33 @@ public class DataServiceOperationManager {
 
         String operationName = DataServiceUtils.queryToOperationName(queryName);
 
-        DataServiceOperation op = new DataServiceOperation(operationName,
-                queryName, DefaultTaskManager.GET_QUERY_TASK);
+        DataServiceOperation op = new DataServiceOperation(operationName, queryName, DefaultTaskManager.GET_QUERY_TASK);
 
         if (DataServiceLoggers.metaDataLogger.isDebugEnabled()) {
-            DataServiceLoggers.metaDataLogger.debug("Processing query "
-                    + queryName);
+            DataServiceLoggers.metaDataLogger.debug("Processing query " + queryName);
         }
 
-        op.setReturnsSingleResult(factory.queryReturnsSingleResult(
-                operationName, queryName));
+        op.setReturnsSingleResult(this.factory.queryReturnsSingleResult(operationName, queryName));
 
-        for (Tuple.Three<String, String, Boolean> input : factory
-                .getQueryInputs(queryName)) {
+        for (Tuple.Three<String, String, Boolean> input : this.factory.getQueryInputs(queryName)) {
             op.addInput(input.v1, input.v2, input.v3);
         }
 
-        op
-                .setOutputTypes(factory.getQueryReturnTypes(operationName,
-                        queryName));
-        op
-                .setOutputNames(factory.getQueryReturnNames(operationName,
-                        queryName));
-        
-        op.setRequiresResultWrapper(factory.requiresResultWrapper(operationName, queryName));
+        op.setOutputTypes(this.factory.getQueryReturnTypes(operationName, queryName));
+        op.setOutputNames(this.factory.getQueryReturnNames(operationName, queryName));
 
-        queries.put(queryName, op);
+        op.setRequiresResultWrapper(this.factory.requiresResultWrapper(operationName, queryName));
+
+        this.queries.put(queryName, op);
     }
 
     // go through queries, and add any query to the operations that has not
     // already been included as a CRUD operation (see initCRUDOperations).
     private void initQueryOperations() {
 
-        for (DataServiceOperation op : queries.values()) {
+        for (DataServiceOperation op : this.queries.values()) {
 
-            if (!queryOperations.contains(op.getName())) {
+            if (!this.queryOperations.contains(op.getName())) {
                 addOperation(op);
             }
         }
@@ -142,10 +132,9 @@ public class DataServiceOperationManager {
 
     private void initAPIOperations() {
 
-        for (String fullyQualifiedClassName : factory.getEntityClassNames()) {
+        for (String fullyQualifiedClassName : this.factory.getEntityClassNames()) {
 
-            String name = StringUtils.fromLastOccurrence(
-                    fullyQualifiedClassName, ".");
+            String name = StringUtils.fromLastOccurrence(fullyQualifiedClassName, ".");
 
             // create
             addCreateOp(name, fullyQualifiedClassName);
@@ -163,14 +152,12 @@ public class DataServiceOperationManager {
             addUpdateOp(name, fullyQualifiedClassName);
 
             // delete
-            addGenericOp(name, fullyQualifiedClassName, DELETE_OP,
-                    DefaultTaskManager.GET_DELETE_TASK);
+            addGenericOp(name, fullyQualifiedClassName, DELETE_OP, DefaultTaskManager.GET_DELETE_TASK);
         }
     }
 
     private void addCreateOp(String name, String fullyQualifiedClassName) {
-        DataServiceOperation op = addGenericOp(name, fullyQualifiedClassName,
-                INSERT_OP, DefaultTaskManager.GET_INSERT_TASK);
+        DataServiceOperation op = addGenericOp(name, fullyQualifiedClassName, INSERT_OP, DefaultTaskManager.GET_INSERT_TASK);
         op.setOutputType(fullyQualifiedClassName);
         op.setReturnsSingleResult(Boolean.TRUE);
     }
@@ -179,20 +166,17 @@ public class DataServiceOperationManager {
 
         String opName = String.format(UPDATE_OP, name);
 
-        DataServiceOperation op = new DataServiceOperation(opName,
-                DefaultTaskManager.GET_UPDATE_TASK);
+        DataServiceOperation op = new DataServiceOperation(opName, DefaultTaskManager.GET_UPDATE_TASK);
         String argName = StringUtils.lowerCaseFirstLetter(name);
         op.addInput(argName, fullyQualifiedClassName);
         addOperation(op);
     }
 
-    private DataServiceOperation addGenericOp(String name,
-            String fullyQualifiedClassName, String crudOp, String taskGetter) {
+    private DataServiceOperation addGenericOp(String name, String fullyQualifiedClassName, String crudOp, String taskGetter) {
         String opName = String.format(crudOp, name);
 
         DataServiceOperation op = new DataServiceOperation(opName, taskGetter);
-        op.addInput(StringUtils.lowerCaseFirstLetter(name),
-                fullyQualifiedClassName);
+        op.addInput(StringUtils.lowerCaseFirstLetter(name), fullyQualifiedClassName);
 
         addOperation(op);
 
@@ -202,8 +186,7 @@ public class DataServiceOperationManager {
     private void addSearchOperation(String name, String fullyQualifiedClassName) {
         String opName = String.format(LIST_OP, name);
 
-        DataServiceOperation op = new DataServiceOperation(opName,
-                DefaultTaskManager.GET_SEARCH_TASK);
+        DataServiceOperation op = new DataServiceOperation(opName, DefaultTaskManager.GET_SEARCH_TASK);
 
         op.setOutputType(fullyQualifiedClassName);
         op.setReturnsSingleResult(Boolean.FALSE);
@@ -221,28 +204,22 @@ public class DataServiceOperationManager {
         addNullToInstanceCode(op1, SEARCH_QBE_ARG, fullyQualifiedClassName);
 
         // no args operation
-        op.addOverloadedOperation()
-                .addTaskInput(
-                        new ElementType(fullyQualifiedClassName, Class.class
-                                .getName()));
+        op.addOverloadedOperation().addTaskInput(new ElementType(fullyQualifiedClassName, Class.class.getName()));
     }
 
-    private void addNullToInstanceCode(DataServiceOperation op, String argName,
-            String className) {
+    private void addNullToInstanceCode(DataServiceOperation op, String argName, String className) {
 
         String eol = SystemUtils.getLineBreak();
 
         // maybe this should move into DataServiceGenerator
-        op.setCode("if (" + argName + " == null) {" + eol + "            "
-                + argName + " = new " + className + "();" + eol + "        }");
+        op.setCode("if (" + argName + " == null) {" + eol + "            " + argName + " = new " + className + "();" + eol + "        }");
     }
 
     private void addCountOperation(String name, String fullyQualifiedClassName) {
 
         String opName = String.format(COUNT_OP, name);
 
-        DataServiceOperation op = new DataServiceOperation(opName,
-                DefaultTaskManager.GET_COUNT_TASK);
+        DataServiceOperation op = new DataServiceOperation(opName, DefaultTaskManager.GET_COUNT_TASK);
 
         op.setReturnsSingleResult(true);
 
@@ -261,23 +238,19 @@ public class DataServiceOperationManager {
         addNullToInstanceCode(op1, SEARCH_QBE_ARG, fullyQualifiedClassName);
 
         // no args operation
-        op.addOverloadedOperation()
-                .addTaskInput(
-                        new ElementType(fullyQualifiedClassName, Class.class
-                                .getName()));
+        op.addOverloadedOperation().addTaskInput(new ElementType(fullyQualifiedClassName, Class.class.getName()));
     }
 
     private void addOperation(DataServiceOperation op) {
 
-        if (operations.containsKey(op.getName())) {
-            throw new DataServiceRuntimeException(MessageResource.DUPLICATE_OPERATION,
-                    op.getName());
+        if (this.operations.containsKey(op.getName())) {
+            throw new DataServiceRuntimeException(MessageResource.DUPLICATE_OPERATION, op.getName());
         }
 
-        operations.put(op.getName(), op);
+        this.operations.put(op.getName(), op);
 
         if (op.isQuery()) {
-            queryOperations.add(op.getName());
+            this.queryOperations.add(op.getName());
         }
     }
 
@@ -285,7 +258,7 @@ public class DataServiceOperationManager {
 
         List<DataServiceOperation> rtn = new ArrayList<DataServiceOperation>();
 
-        for (DataServiceOperation op : queries.values()) {
+        for (DataServiceOperation op : this.queries.values()) {
             if (type.equals(op.getOutputType())) {
                 rtn.add(op);
             }

@@ -17,12 +17,11 @@ package com.wavemaker.runtime.service.response;
 import com.wavemaker.runtime.server.JSONRPCController;
 
 /**
- * Marks the successful return of an operation, and avoid processing from
- * {@link JSONRPCController}.
+ * Marks the successful return of an operation, and avoid processing from {@link JSONRPCController}.
  * 
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public interface SuccessResponse extends RootServiceResponse {
 

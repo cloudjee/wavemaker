@@ -24,7 +24,6 @@ import com.sun.syndication.feed.synd.SyndEntry;
 import com.sun.syndication.feed.synd.SyndFeed;
 import com.sun.syndication.feed.synd.SyndImage;
 import com.sun.syndication.feed.synd.SyndLink;
-import com.wavemaker.runtime.ws.Entry;
 
 /**
  * The class represents a Feed object for all types of feeds.
@@ -33,12 +32,12 @@ import com.wavemaker.runtime.ws.Entry;
  * 
  * @author ffu
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class Feed {
 
-    private SyndFeed syndFeed;
-    
+    private final SyndFeed syndFeed;
+
     public Feed(SyndFeed syndFeed) {
         this.syndFeed = syndFeed;
     }
@@ -48,7 +47,7 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#getAuthor()
      */
     public String getAuthor() {
-        return syndFeed.getAuthor();
+        return this.syndFeed.getAuthor();
     }
 
     /**
@@ -56,7 +55,7 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#getCopyright()
      */
     public String getCopyright() {
-        return syndFeed.getCopyright();
+        return this.syndFeed.getCopyright();
     }
 
     /**
@@ -64,7 +63,7 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#getDescription()
      */
     public String getDescription() {
-        return syndFeed.getDescription();
+        return this.syndFeed.getDescription();
     }
 
     /**
@@ -72,7 +71,7 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#getDescriptionEx()
      */
     public SyndContent getDescriptionEx() {
-        return syndFeed.getDescriptionEx();
+        return this.syndFeed.getDescriptionEx();
     }
 
     /**
@@ -80,7 +79,7 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#getEncoding()
      */
     public String getEncoding() {
-        return syndFeed.getEncoding();
+        return this.syndFeed.getEncoding();
     }
 
     /**
@@ -89,7 +88,7 @@ public class Feed {
      */
     @SuppressWarnings("unchecked")
     public Entry[] getEntries() {
-        List<SyndEntry> list = syndFeed.getEntries();
+        List<SyndEntry> list = this.syndFeed.getEntries();
         List<Entry> nlist = new ArrayList();
         for (SyndEntry syndEntry : list) {
             Entry entry = new Entry(syndEntry);
@@ -103,7 +102,7 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#getFeedType()
      */
     public String getFeedType() {
-        return syndFeed.getFeedType();
+        return this.syndFeed.getFeedType();
     }
 
     /**
@@ -111,7 +110,7 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#getImage()
      */
     public SyndImage getImage() {
-        return syndFeed.getImage();
+        return this.syndFeed.getImage();
     }
 
     /**
@@ -119,7 +118,7 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#getLanguage()
      */
     public String getLanguage() {
-        return syndFeed.getLanguage();
+        return this.syndFeed.getLanguage();
     }
 
     /**
@@ -127,7 +126,7 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#getLink()
      */
     public String getLink() {
-        return syndFeed.getLink();
+        return this.syndFeed.getLink();
     }
 
     /**
@@ -136,7 +135,7 @@ public class Feed {
      */
     @SuppressWarnings("unchecked")
     public SyndLink[] getLinks() {
-        List<SyndLink> list = syndFeed.getLinks();
+        List<SyndLink> list = this.syndFeed.getLinks();
         if (list != null) {
             return list.toArray(new SyndLink[list.size()]);
         } else {
@@ -149,7 +148,7 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#getPublishedDate()
      */
     public Date getPublishedDate() {
-        return syndFeed.getPublishedDate();
+        return this.syndFeed.getPublishedDate();
     }
 
     /**
@@ -157,7 +156,7 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#getTitle()
      */
     public String getTitle() {
-        return syndFeed.getTitle();
+        return this.syndFeed.getTitle();
     }
 
     /**
@@ -165,7 +164,7 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#getTitleEx()
      */
     public SyndContent getTitleEx() {
-        return syndFeed.getTitleEx();
+        return this.syndFeed.getTitleEx();
     }
 
     /**
@@ -173,7 +172,7 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#getUri()
      */
     public String getUri() {
-        return syndFeed.getUri();
+        return this.syndFeed.getUri();
     }
 
     /**
@@ -181,7 +180,7 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#setAuthor(java.lang.String)
      */
     public void setAuthor(String author) {
-        syndFeed.setAuthor(author);
+        this.syndFeed.setAuthor(author);
     }
 
     /**
@@ -189,7 +188,7 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#setCopyright(java.lang.String)
      */
     public void setCopyright(String copyright) {
-        syndFeed.setCopyright(copyright);
+        this.syndFeed.setCopyright(copyright);
     }
 
     /**
@@ -197,7 +196,7 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#setDescription(java.lang.String)
      */
     public void setDescription(String description) {
-        syndFeed.setDescription(description);
+        this.syndFeed.setDescription(description);
     }
 
     /**
@@ -205,7 +204,7 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#setDescriptionEx(com.sun.syndication.feed.synd.SyndContent)
      */
     public void setDescriptionEx(SyndContent description) {
-        syndFeed.setDescriptionEx(description);
+        this.syndFeed.setDescriptionEx(description);
     }
 
     /**
@@ -213,7 +212,7 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#setEncoding(java.lang.String)
      */
     public void setEncoding(String encoding) {
-        syndFeed.setEncoding(encoding);
+        this.syndFeed.setEncoding(encoding);
     }
 
     /**
@@ -226,7 +225,7 @@ public class Feed {
         for (Entry entry : entries) {
             syndEntries[i] = entry.toSyndEntry();
         }
-        syndFeed.setEntries(Arrays.asList(syndEntries));
+        this.syndFeed.setEntries(Arrays.asList(syndEntries));
     }
 
     /**
@@ -234,7 +233,7 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#setFeedType(java.lang.String)
      */
     public void setFeedType(String feedType) {
-        syndFeed.setFeedType(feedType);
+        this.syndFeed.setFeedType(feedType);
     }
 
     /**
@@ -242,7 +241,7 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#setImage(com.sun.syndication.feed.synd.SyndImage)
      */
     public void setImage(SyndImage image) {
-        syndFeed.setImage(image);
+        this.syndFeed.setImage(image);
     }
 
     /**
@@ -250,7 +249,7 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#setLanguage(java.lang.String)
      */
     public void setLanguage(String language) {
-        syndFeed.setLanguage(language);
+        this.syndFeed.setLanguage(language);
     }
 
     /**
@@ -258,7 +257,7 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#setLink(java.lang.String)
      */
     public void setLink(String link) {
-        syndFeed.setLink(link);
+        this.syndFeed.setLink(link);
     }
 
     /**
@@ -266,7 +265,7 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#setLinks(java.util.List)
      */
     public void setLinks(SyndLink[] links) {
-        syndFeed.setLinks(Arrays.asList(links));
+        this.syndFeed.setLinks(Arrays.asList(links));
     }
 
     /**
@@ -274,7 +273,7 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#setPublishedDate(java.util.Date)
      */
     public void setPublishedDate(Date publishedDate) {
-        syndFeed.setPublishedDate(publishedDate);
+        this.syndFeed.setPublishedDate(publishedDate);
     }
 
     /**
@@ -282,7 +281,7 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#setTitle(java.lang.String)
      */
     public void setTitle(String title) {
-        syndFeed.setTitle(title);
+        this.syndFeed.setTitle(title);
     }
 
     /**
@@ -290,7 +289,7 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#setTitleEx(com.sun.syndication.feed.synd.SyndContent)
      */
     public void setTitleEx(SyndContent title) {
-        syndFeed.setTitleEx(title);
+        this.syndFeed.setTitleEx(title);
     }
 
     /**
@@ -298,6 +297,6 @@ public class Feed {
      * @see com.sun.syndication.feed.synd.SyndFeed#setUri(java.lang.String)
      */
     public void setUri(String uri) {
-        syndFeed.setUri(uri);
+        this.syndFeed.setUri(uri);
     }
 }

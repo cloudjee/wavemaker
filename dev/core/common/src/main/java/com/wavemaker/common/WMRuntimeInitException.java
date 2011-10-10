@@ -24,34 +24,23 @@ public class WMRuntimeInitException extends WMRuntimeException {
 
     private final Integer msgId;
 
-    /*public WMRuntimeException(Resource resource) {
-        this(resource.getMessage(), resource.getDetailMessage(), resource
-                .getId());
-    }
-
-    public WMRuntimeException(Resource resource, Throwable cause) {
-        this(resource.getMessage(), resource.getDetailMessage(), resource
-                .getId(), cause);
-    }
-
-    public WMRuntimeException(Resource resource, Object... args) {
-        this(resource.getMessage(args), resource.getDetailMessage(args),
-                resource.getId());
-    }
-
-    public WMRuntimeException(Resource resource, Throwable cause,
-            Object... args) {
-        this(resource.getMessage(args), resource.getDetailMessage(args),
-                resource.getId(), cause);
-    }
-
-    public WMRuntimeInitException(String message) {
-        this(message, (String) null);
-    }
-
-    public WMRuntimeException(String message, Throwable cause) {
-        this(message, (String) null, cause);
-    }*/
+    /*
+     * public WMRuntimeException(Resource resource) { this(resource.getMessage(), resource.getDetailMessage(), resource
+     * .getId()); }
+     * 
+     * public WMRuntimeException(Resource resource, Throwable cause) { this(resource.getMessage(),
+     * resource.getDetailMessage(), resource .getId(), cause); }
+     * 
+     * public WMRuntimeException(Resource resource, Object... args) { this(resource.getMessage(args),
+     * resource.getDetailMessage(args), resource.getId()); }
+     * 
+     * public WMRuntimeException(Resource resource, Throwable cause, Object... args) { this(resource.getMessage(args),
+     * resource.getDetailMessage(args), resource.getId(), cause); }
+     * 
+     * public WMRuntimeInitException(String message) { this(message, (String) null); }
+     * 
+     * public WMRuntimeException(String message, Throwable cause) { this(message, (String) null, cause); }
+     */
 
     public WMRuntimeInitException(String message) {
         this(message, (String) null);
@@ -61,32 +50,32 @@ public class WMRuntimeInitException extends WMRuntimeException {
         this(message, detailedMessage, (Throwable) null);
     }
 
-    //public WMRuntimeException(String message, String detailedMessage,
-    //        Integer msgId) {
-    //    this(message, detailedMessage, msgId, (Throwable) null);
-    //}
+    // public WMRuntimeException(String message, String detailedMessage,
+    // Integer msgId) {
+    // this(message, detailedMessage, msgId, (Throwable) null);
+    // }
 
-    public WMRuntimeInitException(String message, String detailedMessage,
-            Throwable cause) {
+    public WMRuntimeInitException(String message, String detailedMessage, Throwable cause) {
         this(message, detailedMessage, null, cause);
     }
 
-    public WMRuntimeInitException(String message, String detailedMessage,
-            Integer msgId, Throwable cause) {
+    public WMRuntimeInitException(String message, String detailedMessage, Integer msgId, Throwable cause) {
         super(message, cause);
         this.detailedMessage = detailedMessage;
         this.msgId = msgId;
     }
 
-    //public WMRuntimeException(Throwable cause) {
-    //    this((String) null, cause);
-    //}
+    // public WMRuntimeException(Throwable cause) {
+    // this((String) null, cause);
+    // }
 
+    @Override
     public String getDetailedMesage() {
-        return detailedMessage;
+        return this.detailedMessage;
     }
 
+    @Override
     public Integer getMessageId() {
-        return msgId;
+        return this.msgId;
     }
 }

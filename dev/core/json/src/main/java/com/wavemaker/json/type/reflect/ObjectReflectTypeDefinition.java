@@ -22,20 +22,17 @@ import com.wavemaker.json.type.ObjectTypeDefinition;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
-public class ObjectReflectTypeDefinition extends ReflectTypeDefinition
-        implements ObjectTypeDefinition {
+public class ObjectReflectTypeDefinition extends ReflectTypeDefinition implements ObjectTypeDefinition {
 
     /**
-     * Map of all fields; this should be entered by the natural order of the
-     * fields.
+     * Map of all fields; this should be entered by the natural order of the fields.
      */
     private LinkedHashMap<String, FieldDefinition> fields = new LinkedHashMap<String, FieldDefinition>();
-    
-    
+
     public LinkedHashMap<String, FieldDefinition> getFields() {
-        return fields;
+        return this.fields;
     }
 
     public void setFields(LinkedHashMap<String, FieldDefinition> fields) {

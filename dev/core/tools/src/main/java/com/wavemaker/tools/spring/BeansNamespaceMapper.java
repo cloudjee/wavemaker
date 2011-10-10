@@ -19,13 +19,12 @@ import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 /**
  * @author ffu
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class BeansNamespaceMapper extends NamespacePrefixMapper {
 
     @Override
-    public String getPreferredPrefix(String namespaceUri,
-            String suggestion, boolean requirePrefix) {
+    public String getPreferredPrefix(String namespaceUri, String suggestion, boolean requirePrefix) {
         if ("http://www.springframework.org/schema/beans".equals(namespaceUri)) {
             return "";
         } else if ("http://www.w3.org/2001/XMLSchema-instance".equals(namespaceUri)) {

@@ -31,8 +31,7 @@ public class ImmutableEntryMap<K, V> extends HashMap<K, V> implements Map<K, V> 
     @Override
     public V put(K key, V value) {
         if (containsKey(key)) {
-            throw new IllegalStateException("Entry for key \"" + key
-                    + "\" already exists");
+            throw new IllegalStateException("Entry for key \"" + key + "\" already exists");
         }
         return super.put(key, value);
     }

@@ -22,13 +22,13 @@ import java.lang.annotation.Target;
 /**
  * @author Simon Toens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ResourceConstraint {
 
     int numArgs() default 0;
-    
+
     boolean hasDetailMsg() default false;
 }

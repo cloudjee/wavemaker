@@ -19,21 +19,21 @@ package com.wavemaker.tools.project;
  * 
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public interface ProjectEventListener {
 
     /**
-     * Called when a project is closed.  Note that this is not guaranteed;
-     * the user can simply go away, and this may never be called.
+     * Called when a project is closed. Note that this is not guaranteed; the user can simply go away, and this may
+     * never be called.
      * 
      * @param p
      */
     public void closeProject(Project p);
-    
+
     /**
-     * Called when a project is opened (after the project is created, but before
-     * it is set as the ProjectManager's currentProject).
+     * Called when a project is opened (after the project is created, but before it is set as the ProjectManager's
+     * currentProject).
      * 
      * @param p
      */

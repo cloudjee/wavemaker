@@ -21,6 +21,7 @@ import org.springframework.core.io.Resource;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
+
 /**
  * Changes to use custom class in place of InMemoryDaoImpl
  * 
@@ -31,28 +32,30 @@ public class ProjSecurityXmlUpgradeTask1 implements UpgradeTask {
 
     private boolean error = false;
 
-    private String toStr = "com.wavemaker.runtime.security.EnhancedInMemoryDaoImpl";
+    private final String toStr = "com.wavemaker.runtime.security.EnhancedInMemoryDaoImpl";
 
-    private String fromStr = "org.acegisecurity.userdetails.memory.InMemoryDaoImpl";
+    private final String fromStr = "org.acegisecurity.userdetails.memory.InMemoryDaoImpl";
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
+     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
      */
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
         Resource secxml = project.getSecurityXml();
 
         try {
             String content = project.readFile(secxml);
-            content = content.replace(fromStr, toStr);
+            content = content.replace(this.fromStr, this.toStr);
             project.writeFile(secxml, content);
         } catch (IOException ioe) {
             ioe.printStackTrace();
-            error = true;
+            this.error = true;
         }
 
-        if (error) {
-            upgradeInfo.addMessage("*** Terminated with error while upgrading project-security.xml. " +
-                    "Please check the console message.***");
+        if (this.error) {
+            upgradeInfo.addMessage("*** Terminated with error while upgrading project-security.xml. " + "Please check the console message.***");
         } else {
             upgradeInfo.addMessage("Upgrading project-security.xml completed successfully.");
         }

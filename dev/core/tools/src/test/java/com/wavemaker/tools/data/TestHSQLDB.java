@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.data;
 
 import static org.junit.Assert.assertFalse;
@@ -37,7 +38,7 @@ import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.data.DataServiceRuntimeException;
 
 public class TestHSQLDB {
-    
+
     private static final String HSQLDB_PATH = "com/wavemaker/tools/data/hsqldb";
 
     @Test
@@ -75,8 +76,7 @@ public class TestHSQLDB {
             t.run();
         } catch (DataServiceRuntimeException ex) {
             Throwable cause = ex.getCause();
-            assertTrue(cause.getMessage()
-                    .startsWith("Database does not exists"));
+            assertTrue(cause.getMessage().startsWith("Database does not exists"));
             return;
         }
         fail("Expected this to not work");
@@ -101,8 +101,7 @@ public class TestHSQLDB {
             t.run();
         } catch (DataServiceRuntimeException ex) {
             Throwable cause = ex.getCause();
-            assertTrue(cause.getMessage()
-                    .startsWith("Database does not exists"));
+            assertTrue(cause.getMessage().startsWith("Database does not exists"));
             return;
         }
         fail("Expected this to not work");
@@ -123,8 +122,7 @@ public class TestHSQLDB {
 
         Statement s = c.createStatement();
 
-        s.executeUpdate("create table foo22(id int identity primary key, "
-                + "name varchar(50))");
+        s.executeUpdate("create table foo22(id int identity primary key, " + "name varchar(50))");
         s.executeUpdate("insert into foo22 (name) values ('ed')");
         s.executeUpdate("insert into foo22 (name) values ('ed2')");
 
@@ -201,7 +199,7 @@ public class TestHSQLDB {
     }
 
     // MAV-1534 - ensure no .lck file is left around after import
-    //TODO - revisit this after ensuring ImportDB works with new compiler infrastructure
+    // TODO - revisit this after ensuring ImportDB works with new compiler infrastructure
     @Ignore
     @Test
     public void testImportNoLock() throws Exception {
@@ -242,8 +240,7 @@ public class TestHSQLDB {
             // the existence of the lockfile indicates we don't
             // shut down correctly and leave connections to the db
             // open
-            assertFalse("Lock file exists after import: "
-                    + lockfile.getAbsolutePath(), lockfile.exists());
+            assertFalse("Lock file exists after import: " + lockfile.getAbsolutePath(), lockfile.exists());
 
         } finally {
             IOUtils.deleteRecursive(outputDir);

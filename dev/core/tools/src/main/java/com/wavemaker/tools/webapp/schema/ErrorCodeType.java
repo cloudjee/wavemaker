@@ -19,26 +19,26 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * 
  * 
- * 	The error-code contains an HTTP error code, ex: 404
+ * The error-code contains an HTTP error code, ex: 404
  * 
- * 	Used in: error-page
+ * Used in: error-page
  * 
- *       
  * 
- * <p>Java class for error-codeType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for error-codeType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="error-codeType">
@@ -54,9 +54,6 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "error-codeType")
-public class ErrorCodeType
-    extends XsdPositiveIntegerType
-{
-
+public class ErrorCodeType extends XsdPositiveIntegerType {
 
 }

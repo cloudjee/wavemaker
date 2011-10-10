@@ -14,7 +14,6 @@
 
 package com.wavemaker.tools.service;
 
-
 import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.MessageResource;
@@ -30,11 +29,9 @@ import com.wavemaker.tools.service.codegen.ServiceGenerator;
  */
 public class ServiceUtils {
 
-    private static final ServiceFactoryManager factoryManager = ServiceFactoryManager
-            .getInstance();
+    private static final ServiceFactoryManager factoryManager = ServiceFactoryManager.getInstance();
 
-    public static DeprecatedServiceDefinition getServiceDefinition(Resource f,
-            String serviceId, DesignServiceManager serviceMgr) {
+    public static DeprecatedServiceDefinition getServiceDefinition(Resource f, String serviceId, DesignServiceManager serviceMgr) {
 
         if (f == null) {
             throw new IllegalArgumentException("File cannot be null");
@@ -45,32 +42,26 @@ public class ServiceUtils {
         DeprecatedServiceDefinition rtn = (DeprecatedServiceDefinition) factoryManager.getServiceDefinition(f, serviceId, serviceMgr);
 
         /*
-         * XXX allow any non-service files to pass through. simon: this is a bit
-         * overdesigned anyway, since at this time only data services use this
-         * infrastructure
+         * XXX allow any non-service files to pass through. simon: this is a bit overdesigned anyway, since at this time
+         * only data services use this infrastructure
          * 
-         * if (rtn == null) { throw new
-         * WMRuntimeException(Resource.UNKNOWN_SERVICE_DEFINITION, f
-         * .getAbsolutePath()); }
+         * if (rtn == null) { throw new WMRuntimeException(Resource.UNKNOWN_SERVICE_DEFINITION, f .getAbsolutePath()); }
          */
 
         return rtn;
 
     }
 
-    public static ServiceGenerator getServiceGenerator(
-            GenerationConfiguration cfg) {
+    public static ServiceGenerator getServiceGenerator(GenerationConfiguration cfg) {
 
         if (cfg.getServiceDefinition() == null) {
-            throw new IllegalArgumentException(
-                    "ServiceDefinition cannot be null");
+            throw new IllegalArgumentException("ServiceDefinition cannot be null");
         }
 
         ServiceGenerator rtn = factoryManager.getServiceGenerator(cfg);
 
         if (rtn == null) {
-            throw new WMRuntimeException(MessageResource.NO_SERVICE_GENERATOR, cfg
-                    .getServiceDefinition().getServiceId());
+            throw new WMRuntimeException(MessageResource.NO_SERVICE_GENERATOR, cfg.getServiceDefinition().getServiceId());
         }
 
         return rtn;

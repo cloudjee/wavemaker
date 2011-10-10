@@ -37,9 +37,8 @@ import com.wavemaker.runtime.data.util.DataServiceConstants;
  * @author Simon Toens
  * @version $Rev$ - $Date$
  * 
- * @deprecated This is now deprecated; see
- *             {@link com.wavemaker.runtime.data.util.DataServiceUtils}. This
- *             will be removed in a future release.
+ * @deprecated This is now deprecated; see {@link com.wavemaker.runtime.data.util.DataServiceUtils}. This will be
+ *             removed in a future release.
  */
 @Deprecated
 public class DataServiceUtils {
@@ -61,74 +60,59 @@ public class DataServiceUtils {
         return clazz;
     }
 
-    public static Object loadById(Object o, Session session,
-            DataServiceMetaData metaData) {
+    public static Object loadById(Object o, Session session, DataServiceMetaData metaData) {
         return loadById(o, session, metaData, null);
     }
 
-    public static Object loadById(Object originalInstance, Session session,
-            DataServiceMetaData metaData, Log logger) {
+    public static Object loadById(Object originalInstance, Session session, DataServiceMetaData metaData, Log logger) {
 
         if (originalInstance == null) {
-            throw new IllegalArgumentException(
-                    "instance to reload cannot be null");
+            throw new IllegalArgumentException("instance to reload cannot be null");
         }
 
         Class<?> clazz = originalInstance.getClass();
 
         String s = metaData.getIdPropertyName(clazz);
 
-        Serializable id = (Serializable) objectAccess.getProperty(
-                originalInstance, s);
+        Serializable id = (Serializable) objectAccess.getProperty(originalInstance, s);
 
         Object rtn = session.get(getEntityClass(clazz), id);
 
         if (logger != null && logger.isDebugEnabled()) {
-            logger.debug("reloadById: " + ObjectUtils.getId(originalInstance)
-                    + " " + s + ":" + id);
+            logger.debug("reloadById: " + ObjectUtils.getId(originalInstance) + " " + s + ":" + id);
         }
 
         return rtn;
     }
 
     public static boolean isRelatedMany(Class<?> c) {
-        return Map.class.isAssignableFrom(c)
-                || Collection.class.isAssignableFrom(c);
+        return Map.class.isAssignableFrom(c) || Collection.class.isAssignableFrom(c);
     }
 
-    public static Object mergeForUpdate(Object o,
-            DataServiceManagerAccess mgrAccess,
-            Collection<String> populatedProperties) {
+    public static Object mergeForUpdate(Object o, DataServiceManagerAccess mgrAccess, Collection<String> populatedProperties) {
 
-        return mergeForUpdate(o,
-                mgrAccess.getDataServiceManager().getSession(), mgrAccess
-                        .getDataServiceManager().getMetaData(),
-                populatedProperties);
+        return mergeForUpdate(o, mgrAccess.getDataServiceManager().getSession(), mgrAccess.getDataServiceManager().getMetaData(), populatedProperties);
     }
 
-    public static Object mergeForUpdate(Object source, Session session,
-            DataServiceMetaData metaData, Collection<String> populatedProperties) {
+    public static Object mergeForUpdate(Object source, Session session, DataServiceMetaData metaData, Collection<String> populatedProperties) {
 
         // load instance from db, and copy in values from client
 
         // ensure id has been set
         String idPropName = metaData.getIdPropertyName(source.getClass());
         if (!populatedProperties.contains(idPropName)) {
-            throw new DataServiceRuntimeException("id property \"" + idPropName
-                    + "\" must be set");
+            throw new DataServiceRuntimeException("id property \"" + idPropName + "\" must be set");
         }
 
         Object rtn = loadById(source, session, metaData);
 
         if (rtn == null) {
-            throw new DataServiceRuntimeException(
-                    "Failed to load instance to update");
+            throw new DataServiceRuntimeException("Failed to load instance to update");
         }
 
         // add optimistic concurrency check here
 
-        Collection<String> relatedPropertyNames = metaData
-                .getRelPropertyNames(source.getClass());
+        Collection<String> relatedPropertyNames = metaData.getRelPropertyNames(source.getClass());
 
         Collection<String> handledPropertyPrefixes = new HashSet<String>();
 
@@ -147,8 +131,7 @@ public class DataServiceUtils {
 
             if (relatedPropertyNames.contains(propertyName)) {
 
-                if (isRelatedMany(objectAccess.getPropertyType(source
-                        .getClass(), propertyName))) {
+                if (isRelatedMany(objectAccess.getPropertyType(source.getClass(), propertyName))) {
                     continue;
                 }
 
@@ -156,15 +139,11 @@ public class DataServiceUtils {
 
                 if (clientValue != null) {
 
-                    String prefix = propertyName
-                            + DataServiceConstants.PROP_SEP;
+                    String prefix = propertyName + DataServiceConstants.PROP_SEP;
 
-                    List<String> populatedPropertiesForRelated = StringUtils
-                            .getItemsStartingWith(populatedProperties, prefix,
-                                    true);
+                    List<String> populatedPropertiesForRelated = StringUtils.getItemsStartingWith(populatedProperties, prefix, true);
 
-                    clientValue = mergeForUpdate(clientValue, session,
-                            metaData, populatedPropertiesForRelated);
+                    clientValue = mergeForUpdate(clientValue, session, metaData, populatedPropertiesForRelated);
                 }
             }
 

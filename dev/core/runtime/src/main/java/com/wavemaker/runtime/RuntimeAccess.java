@@ -14,31 +14,29 @@
 
 package com.wavemaker.runtime;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.servlet.ServletContext;
 
-import com.wavemaker.common.WMRuntimeException;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+
 import com.wavemaker.common.CommonConstants;
+import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.WMRuntimeInitException;
 import com.wavemaker.runtime.service.ServiceManager;
 import com.wavemaker.runtime.service.ServiceWire;
 import com.wavemaker.runtime.service.reflect.ReflectServiceWire;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.support.WebApplicationContextUtils;
 
 /**
- * Runtime bean.  Provides an interface to the session, request and response
- * objects, and other WaveMaker interfaces.  This is the primary interface
- * point for any WaveMaker system access.
+ * Runtime bean. Provides an interface to the session, request and response objects, and other WaveMaker interfaces.
+ * This is the primary interface point for any WaveMaker system access.
  * 
  * This class supersedes the old AGRuntime class.
  * 
- * This should only be used as a bean property or through the static
- * {@link #getInstance()} method; other instantiation methods are unsupported.
- * Using it as a bean property is recommended (see {@link #getInstance()} for
- * more information).  The RuntimeAccess bean is named runtimeAccess, an
- * example:
+ * This should only be used as a bean property or through the static {@link #getInstance()} method; other instantiation
+ * methods are unsupported. Using it as a bean property is recommended (see {@link #getInstance()} for more
+ * information). The RuntimeAccess bean is named runtimeAccess, an example:
  * 
  * <pre>
  * &lt;bean id="myServiceBeanId" class="myServiceBeanClass"
@@ -51,127 +49,113 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
  * 
  * @author Matt Small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class RuntimeAccess {
 
     private HttpServletRequest request = null;
+
     private static RuntimeAccess staticRuntime = null;
+
     private ServiceManager serviceManager = null;
-    private int tenantId = -1;
-    
+
     /**
-     * Do not use this constructor; instead, use either {@link #getInstance()}
-     * or access this class through bean properties.
+     * Do not use this constructor; instead, use either {@link #getInstance()} or access this class through bean
+     * properties.
      */
     public RuntimeAccess() {
     }
-    
+
     /**
-     * Statically return the current instance of RuntimeAccess. This depends 
-     * on the Spring bean being already loaded.
+     * Statically return the current instance of RuntimeAccess. This depends on the Spring bean being already loaded.
      * 
-     * This will only return valid values after a request has already been
-     * initialized; for this reason, it is inappropriate to use this in a
-     * constructor or static initializer. Either call {@link #getInstance()} in
-     * your service call, or use a Spring property on your service class to
-     * reference the runtime bean. Using a Spring property is recommended.
+     * This will only return valid values after a request has already been initialized; for this reason, it is
+     * inappropriate to use this in a constructor or static initializer. Either call {@link #getInstance()} in your
+     * service call, or use a Spring property on your service class to reference the runtime bean. Using a Spring
+     * property is recommended.
      * 
      * @return The RuntimeAccess instance.
      */
     public static RuntimeAccess getInstance() {
-        
-        if (null==RuntimeAccess.staticRuntime) {
-            throw new WMRuntimeInitException(
-                    "RuntimeAccess uninitialized; request init failed.");
+
+        if (null == RuntimeAccess.staticRuntime) {
+            throw new WMRuntimeInitException("RuntimeAccess uninitialized; request init failed.");
         }
-        
+
         return RuntimeAccess.staticRuntime;
     }
-    
+
     /**
-     * Retrieve the current HttpSession.  This call is only valid after the
-     * request has been initialized.
+     * Retrieve the current HttpSession. This call is only valid after the request has been initialized.
      * 
      * @return The current session (from the request object).
      */
     public HttpSession getSession() {
         return this.request.getSession();
     }
-    
+
     /**
-     * Get the current HttpServletRequest.  This call is only valid after the
-     * request has been initialized.
+     * Get the current HttpServletRequest. This call is only valid after the request has been initialized.
      * 
      * @return The current request.
      */
     public HttpServletRequest getRequest() {
         return this.request;
     }
-    
+
     /**
      * Get the service with the specified service id.
      * 
-     * @param serviceId
-     *                The service ID to look for.
+     * @param serviceId The service ID to look for.
      * @return The service bean (if a bean with the id exists).
-     * @throws WMRuntimeException
-     *                 If a bean with the specified id is not found, or if
-     *                 Spring has not yet initialized this bean.
+     * @throws WMRuntimeException If a bean with the specified id is not found, or if Spring has not yet initialized
+     *         this bean.
      */
     public Object getService(String serviceId) {
         return this.serviceManager.getService(serviceId);
     }
-    
+
     /**
-     * Deprecated. Use {@link #getService(String)}
-     * Get the service (of the corresponding serviceType). An WMRuntimeException
-     * will be thrown if more than one bean matches the serviceType class. It
-     * may be better to use {@link #getService(String)}, since the serviceId is
-     * guaranteed unique (whereas the service class is not).
+     * Deprecated. Use {@link #getService(String)} Get the service (of the corresponding serviceType). An
+     * WMRuntimeException will be thrown if more than one bean matches the serviceType class. It may be better to use
+     * {@link #getService(String)}, since the serviceId is guaranteed unique (whereas the service class is not).
      * 
-     * @param serviceType
-     *                The class of the service to search for.
+     * @param serviceType The class of the service to search for.
      * @return The service bean.
-     * @throws WMRuntimeException
-     *                 If a bean with the specified class is not found, more
-     *                 than one bean with the specified class is found, or if
-     *                 Spring has not yet initialized this bean.
+     * @throws WMRuntimeException If a bean with the specified class is not found, more than one bean with the specified
+     *         class is found, or if Spring has not yet initialized this bean.
      */
     @Deprecated
     public Object getService(Class<?> serviceType) {
         return this.serviceManager.getService(serviceType);
     }
-    
+
     public ServiceWire getServiceWire(String serviceId) {
         return this.serviceManager.getServiceWire(serviceId);
     }
 
     /**
-     * Get the service of the corresponding service id. An WMRuntimeException
-     * will be thrown if more than one bean matches the serviceType class. 
+     * Get the service of the corresponding service id. An WMRuntimeException will be thrown if more than one bean
+     * matches the serviceType class.
      * 
-     * @param serviceId
-     *                The id of the service to search for.
+     * @param serviceId The id of the service to search for.
      * @return The service bean.
-     * @throws WMRuntimeException
-     *                 If a bean with the specified class is not found, more
-     *                 than one bean with the specified class is found, or if
-     *                 Spring has not yet initialized this bean.
+     * @throws WMRuntimeException If a bean with the specified class is not found, more than one bean with the specified
+     *         class is found, or if Spring has not yet initialized this bean.
      */
     public Object getServiceBean(String serviceId) {
         return ((ReflectServiceWire) this.getServiceWire(serviceId)).getServiceBean();
     }
-    
+
     // bean accessors
     public static void setRuntimeBean(RuntimeAccess bean) {
         RuntimeAccess.staticRuntime = bean;
     }
-    
+
     public void setRequest(HttpServletRequest request) {
         this.request = request;
     }
-    
+
     public void setServiceManager(ServiceManager serviceManager) {
         this.serviceManager = serviceManager;
     }
@@ -182,13 +166,15 @@ public class RuntimeAccess {
 
     public int getTenantId() {
         Object o = this.getSession().getAttribute(CommonConstants.LOGON_TENANT_ID);
-        if (o == null) return -1;
+        if (o == null) {
+            return -1;
+        }
 
-        return (Integer)o;
+        return (Integer) o;
     }
 
-    public Object getSpringBean(String beanId) { //salesforce
-        ServletContext context = request.getSession().getServletContext();
+    public Object getSpringBean(String beanId) { // salesforce
+        ServletContext context = this.request.getSession().getServletContext();
         WebApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(context);
 
         return applicationContext.getBean(beanId);

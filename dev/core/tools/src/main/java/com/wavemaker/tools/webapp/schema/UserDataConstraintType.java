@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import java.util.ArrayList;
@@ -35,21 +34,21 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
  * 
  * 
- * 	The user-data-constraintType is used to indicate how
- * 	data communicated between the client and container should be
- * 	protected.
+ * The user-data-constraintType is used to indicate how data communicated between the client and container should be
+ * protected.
  * 
- * 	Used in: security-constraint
+ * Used in: security-constraint
  * 
- *       
  * 
- * <p>Java class for user-data-constraintType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for user-data-constraintType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="user-data-constraintType">
@@ -68,15 +67,14 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "user-data-constraintType", propOrder = {
-    "description",
-    "transportGuarantee"
-})
+@XmlType(name = "user-data-constraintType", propOrder = { "description", "transportGuarantee" })
 public class UserDataConstraintType {
 
     protected List<DescriptionType> description;
+
     @XmlElement(name = "transport-guarantee", required = true)
     protected TransportGuaranteeType transportGuarantee;
+
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -87,27 +85,26 @@ public class UserDataConstraintType {
      * Gets the value of the description property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the description property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the description property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getDescription().add(newItem);
+     * getDescription().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DescriptionType }
+     * Objects of the following type(s) are allowed in the list {@link DescriptionType }
      * 
      * 
      */
     public List<DescriptionType> getDescription() {
-        if (description == null) {
-            description = new ArrayList<DescriptionType>();
+        if (this.description == null) {
+            this.description = new ArrayList<DescriptionType>();
         }
         return this.description;
     }
@@ -115,22 +112,18 @@ public class UserDataConstraintType {
     /**
      * Gets the value of the transportGuarantee property.
      * 
-     * @return
-     *     possible object is
-     *     {@link TransportGuaranteeType }
-     *     
+     * @return possible object is {@link TransportGuaranteeType }
+     * 
      */
     public TransportGuaranteeType getTransportGuarantee() {
-        return transportGuarantee;
+        return this.transportGuarantee;
     }
 
     /**
      * Sets the value of the transportGuarantee property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link TransportGuaranteeType }
-     *     
+     * @param value allowed object is {@link TransportGuaranteeType }
+     * 
      */
     public void setTransportGuarantee(TransportGuaranteeType value) {
         this.transportGuarantee = value;
@@ -139,22 +132,18 @@ public class UserDataConstraintType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setId(java.lang.String value) {
         this.id = value;

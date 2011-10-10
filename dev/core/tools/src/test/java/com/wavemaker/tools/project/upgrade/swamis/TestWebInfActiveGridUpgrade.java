@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.project.upgrade.swamis;
 
 import java.io.File;
@@ -36,56 +37,54 @@ import com.wavemaker.tools.service.ConfigurationCompiler;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestWebInfActiveGridUpgrade extends WMTestCase {
 
     public void testWebInfUpgrade() throws Exception {
-        
-    	StudioConfiguration config = new LocalStudioConfiguration();
-    	
-        File sourceProjectRoot = (new ClassPathResource("com/wavemaker/tools/project/upgrade/swamis/webinfactivegridupgrade/")).getFile();
+
+        StudioConfiguration config = new LocalStudioConfiguration();
+
+        File sourceProjectRoot = new ClassPathResource("com/wavemaker/tools/project/upgrade/swamis/webinfactivegridupgrade/").getFile();
         assertTrue(sourceProjectRoot.exists());
-        
+
         File projectRoot = IOUtils.createTempDirectory("testWebInfUpgrade", "_dir");
-        config.copyRecursive(new FileSystemResource(sourceProjectRoot.getAbsolutePath()), new FileSystemResource(projectRoot.getAbsolutePath()+"/"), new ArrayList<String>());
-        //FileUtils.copyDirectory(sourceProjectRoot, projectRoot);
-        
-        Project p = new Project(new FileSystemResource(projectRoot.getAbsolutePath()+"/"), new LocalStudioConfiguration());
+        config.copyRecursive(new FileSystemResource(sourceProjectRoot.getAbsolutePath()),
+            new FileSystemResource(projectRoot.getAbsolutePath() + "/"), new ArrayList<String>());
+        // FileUtils.copyDirectory(sourceProjectRoot, projectRoot);
+
+        Project p = new Project(new FileSystemResource(projectRoot.getAbsolutePath() + "/"), new LocalStudioConfiguration());
         File webinf = p.getWebInf().getFile();
         assertTrue(webinf.exists());
-        
-        File servicesConfig = new File(webinf,
-                ConfigurationCompiler.RUNTIME_SERVICES);
-        File managersConfig = new File(webinf,
-                ConfigurationCompiler.RUNTIME_MANAGERS);
+
+        File servicesConfig = new File(webinf, ConfigurationCompiler.RUNTIME_SERVICES);
+        File managersConfig = new File(webinf, ConfigurationCompiler.RUNTIME_MANAGERS);
         File webxml = new File(webinf, ProjectConstants.WEB_XML);
         assertTrue(servicesConfig.exists());
         assertTrue(managersConfig.exists());
         assertTrue(webxml.exists());
-        
+
         String webxmlContents = FileUtils.readFileToString(webxml);
         assertTrue(webxmlContents.contains("com.activegrid.runtime.server.CleanupListener"));
         assertFalse(webxmlContents.contains("com.wavemaker.runtime.server.CleanupListener"));
-        
+
         WebInfActiveGridUpgrade upgrade = new WebInfActiveGridUpgrade();
         UpgradeInfo upgradeInfo = new UpgradeInfo();
         upgrade.doUpgrade(p, upgradeInfo);
-        assertEquals("verbose was: "+upgradeInfo.getVerbose()+", messages: "+
-                upgradeInfo.getMessages(),
-                "Removed com.activegrid references from web.xml\nRe-generated files: project-services.xml, project-managers.xml",
-                upgradeInfo.getVerbose().get("-1.0").get(0));
-        
+        assertEquals("verbose was: " + upgradeInfo.getVerbose() + ", messages: " + upgradeInfo.getMessages(),
+            "Removed com.activegrid references from web.xml\nRe-generated files: project-services.xml, project-managers.xml",
+            upgradeInfo.getVerbose().get("-1.0").get(0));
+
         webxmlContents = FileUtils.readFileToString(webxml);
         assertFalse(webxmlContents.contains("com.activegrid.runtime.server.CleanupListener"));
         assertTrue(webxmlContents.contains("com.wavemaker.runtime.server.CleanupListener"));
 
         assertTrue(servicesConfig.exists());
         assertTrue(managersConfig.exists());
-        
+
         String servicesConfigContents = FileUtils.readFileToString(servicesConfig);
         String managersConfigContents = FileUtils.readFileToString(managersConfig);
-        
+
         assertFalse(servicesConfigContents.contains("activegrid"));
         assertFalse(managersConfigContents.contains("activegrid"));
     }

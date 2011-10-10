@@ -42,9 +42,9 @@ import com.wavemaker.tools.service.FileService;
 public class DataModelDeploymentConfiguration implements ServiceDeployment {
 
     public static final String JNDI_NAME_PROPERTY = "jndi.dsname";
-    
+
     public static final String DB_ALIAS_PROPERTY = "alias";
-    
+
     public static final String UPDATE_SCHEMA_PROPERTY = "updateschema";
 
     private static final String COMP_ENV = "java:comp/env/";
@@ -68,20 +68,17 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
     // do we already have constants for the web-app xml elements?
     private static final String WEB_XML_INSERT_BEFORE = "</web-app>";
 
-    public void prepare(String serviceName, Map<String, String> properties,
-            DesignServiceManager mgr, int indx) {
+    public void prepare(String serviceName, Map<String, String> properties, DesignServiceManager mgr, int indx) {
 
-        String rootPath = DesignServiceManager
-                .getRuntimeRelativeDir(serviceName);
+        String rootPath = DesignServiceManager.getRuntimeRelativeDir(serviceName);
         String cfgFile = DataServiceUtils.getCfgFileName(serviceName);
         FileService fs = mgr.getProjectManager().getCurrentProject();
-        DataServiceSpringConfiguration cfg = new DataServiceSpringConfiguration(
-                fs, rootPath, cfgFile, serviceName);
+        DataServiceSpringConfiguration cfg = new DataServiceSpringConfiguration(fs, rootPath, cfgFile, serviceName);
 
         if (properties.containsKey(JNDI_NAME_PROPERTY)) {
-           
+
             String jndiName = properties.get(JNDI_NAME_PROPERTY);
-    
+
             configureJNDI(cfg, jndiName);
             configureJNDIProperties(cfg);
             modifyWebSphereBindings(mgr, jndiName, indx);
@@ -105,10 +102,8 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
         }
 
         String fromStr = "</com.ibm.ejs.models.base.bindings.webappbnd:WebAppBinding>";
-        String toStr = "\t<resRefBindings xmi:id=\"ResourceRefBinding_" + indx + "\" jndiName=\"" + dsrcName + "\">" +
-                "\r\n\t\t<bindingResourceRef href=\"WEB-INF/web.xml#" + drefName + "\"/>" +
-                "\r\n\t</resRefBindings>" +
-                "\r\n" + fromStr;
+        String toStr = "\t<resRefBindings xmi:id=\"ResourceRefBinding_" + indx + "\" jndiName=\"" + dsrcName + "\">"
+            + "\r\n\t\t<bindingResourceRef href=\"WEB-INF/web.xml#" + drefName + "\"/>" + "\r\n\t</resRefBindings>" + "\r\n" + fromStr;
 
         try {
             String content = project.readFile(wsBindings);
@@ -119,8 +114,7 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
         }
     }
 
-    private void configureJNDI(DataServiceSpringConfiguration cfg,
-            String jndiName) {
+    private void configureJNDI(DataServiceSpringConfiguration cfg, String jndiName) {
         cfg.configureJNDIDataSource(jndiName);
         cfg.write();
     }
@@ -131,9 +125,8 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
 
         Properties props = cfg.readProperties();
         Properties newProps = new Properties();
-        for (Iterator<String> iter = CastUtils.cast(props.keySet().iterator()); iter
-                .hasNext();) {
-            String key = (String) iter.next();
+        for (Iterator<String> iter = CastUtils.cast(props.keySet().iterator()); iter.hasNext();) {
+            String key = iter.next();
             if (key.endsWith(DataServiceConstants.DB_DIALECT)) {
                 newProps.setProperty(key, props.getProperty(key));
             }
@@ -141,7 +134,7 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
 
         cfg.writeProperties(newProps, false);
     }
-    
+
     private void configureDeploymentProperties(DataServiceSpringConfiguration cfg, Map<String, String> deploymentProperties) {
         Properties existingProps = cfg.readProperties(true);
         for (Entry<String, String> prop : deploymentProperties.entrySet()) {
@@ -169,25 +162,22 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
         XMLWriter writer = XMLUtils.newXMLWriter(pw);
         writer.setStartIndent(4);
 
-        writer.addElement(RESOURCE_REF, "id", appScopedJndiName.replace("/",
-                "_"));
+        writer.addElement(RESOURCE_REF, "id", appScopedJndiName.replace("/", "_"));
         writer.addElement(RESOURCE_NAME, appScopedJndiName);
         writer.addElement(RESOURCE_TYPE, DEFAULT_RESOURCE_TYPE);
         writer.addElement(RESOURCE_AUTH, DEFAULT_RESOURCE_AUTH);
-        writer.addElement(RESOURCE_SHARING_SCOPE,
-                DEFAULT_RESOURCE_SHARING_SCOPE);
+        writer.addElement(RESOURCE_SHARING_SCOPE, DEFAULT_RESOURCE_SHARING_SCOPE);
 
         writer.finish();
 
-        addToWebXml(mgr, writer.getLineSep() + sw.toString()
-                + writer.getLineSep());
+        addToWebXml(mgr, writer.getLineSep() + sw.toString() + writer.getLineSep());
 
         pw.close();
     }
 
     private void addToWebXml(DesignServiceManager mgr, String xmlSnippet) {
 
-    	com.wavemaker.tools.project.Project project = mgr.getProjectManager().getCurrentProject();
+        com.wavemaker.tools.project.Project project = mgr.getProjectManager().getCurrentProject();
         Resource webXml = project.getWebXml();
 
         try {
@@ -196,8 +186,7 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
             int i = s.indexOf(WEB_XML_INSERT_BEFORE);
 
             if (i == -1) {
-                throw new AssertionError("Could not find marker in web.xml: "
-                        + WEB_XML_INSERT_BEFORE);
+                throw new AssertionError("Could not find marker in web.xml: " + WEB_XML_INSERT_BEFORE);
             }
 
             s = s.substring(0, i) + xmlSnippet + s.substring(i);

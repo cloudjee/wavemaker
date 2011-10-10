@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.wavemaker.studio.project.upgrade.five_dot_zero;
 
 import static org.junit.Assert.assertFalse;
@@ -42,58 +43,58 @@ import com.wavemaker.tools.service.DesignServiceManager;
  */
 public class TestWebXmlUpgradeTask extends StudioTestCase {
 
-	@Test
-	public void testUpgradeWebXml() throws Exception {
+    @Test
+    public void testUpgradeWebXml() throws Exception {
 
-		makeProject("testUpgradeWebXml", false);
+        makeProject("testUpgradeWebXml", false);
 
-		DesignServiceManager dsm = (DesignServiceManager) getBean("designServiceManager");
-		Project project = dsm.getProjectManager().getCurrentProject();
+        DesignServiceManager dsm = (DesignServiceManager) getBean("designServiceManager");
+        Project project = dsm.getProjectManager().getCurrentProject();
 
-		File webInf = project.getWebInf().getFile();
-		File webXml = new File(webInf, "web.xml");
-		File userWebXml = new File(webInf, "user-web.xml");
-		File bakWebXml = new File(webInf, "web.xml.4_5_bak");
+        File webInf = project.getWebInf().getFile();
+        File webXml = new File(webInf, "web.xml");
+        File userWebXml = new File(webInf, "user-web.xml");
+        File bakWebXml = new File(webInf, "web.xml.4_5_bak");
 
-		// default project
-		assertTrue(userWebXml.exists());
-		assertFalse(webXml.exists());
-		assertFalse(bakWebXml.exists());
+        // default project
+        assertTrue(userWebXml.exists());
+        assertFalse(webXml.exists());
+        assertFalse(bakWebXml.exists());
 
-		userWebXml.delete();
-		IOUtils.touch(webXml);
-		assertFalse(userWebXml.exists());
-		assertTrue(webXml.exists());
-		assertFalse(bakWebXml.exists());
+        userWebXml.delete();
+        IOUtils.touch(webXml);
+        assertFalse(userWebXml.exists());
+        assertTrue(webXml.exists());
+        assertFalse(bakWebXml.exists());
 
-		UpgradeTask ut = new WebXmlUpgradeTask();
-		UpgradeInfo info = new UpgradeInfo();
-		ut.doUpgrade(project, info);
+        UpgradeTask ut = new WebXmlUpgradeTask();
+        UpgradeInfo info = new UpgradeInfo();
+        ut.doUpgrade(project, info);
 
-		assertTrue(userWebXml.exists());
-		assertFalse(webXml.exists());
-		assertTrue(bakWebXml.exists());
+        assertTrue(userWebXml.exists());
+        assertFalse(webXml.exists());
+        assertTrue(bakWebXml.exists());
 
-		String userWebXmlContents = FileUtils.readFileToString(userWebXml);
-		assertTrue(userWebXmlContents.contains("display-name"));
-	}
+        String userWebXmlContents = FileUtils.readFileToString(userWebXml);
+        assertTrue(userWebXmlContents.contains("display-name"));
+    }
 
-	@Test
-	public void testUpgradeTaskPresent() throws Exception {
+    @Test
+    public void testUpgradeTaskPresent() throws Exception {
 
-		boolean foundTask = false;
+        boolean foundTask = false;
 
-		UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
+        UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
 
-		outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
-			for (UpgradeTask ut : uts) {
-				if (ut instanceof WebXmlUpgradeTask) {
-					foundTask = true;
-					break outer;
-				}
-			}
-		}
+        outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
+            for (UpgradeTask ut : uts) {
+                if (ut instanceof WebXmlUpgradeTask) {
+                    foundTask = true;
+                    break outer;
+                }
+            }
+        }
 
-		assertTrue(foundTask);
-	}
+        assertTrue(foundTask);
+    }
 }

@@ -15,31 +15,31 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.common.util;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.wavemaker.common.util.EntryComparator;
 import com.wavemaker.infra.WMTestCase;
 
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestEntryComparator extends WMTestCase {
 
     public void testComparator() throws Exception {
-        
+
         Map<String, String> map = new HashMap<String, String>();
         map.put("c", "foobar");
         map.put("a", "foobar");
-        
+
         Entry<String, String> entryC = null;
         Entry<String, String> entryA = null;
-        for (Entry<String, String> entry: map.entrySet()) {
+        for (Entry<String, String> entry : map.entrySet()) {
             if ("a".equals(entry.getKey())) {
                 entryA = entry;
             } else if ("c".equals(entry.getKey())) {
@@ -48,7 +48,7 @@ public class TestEntryComparator extends WMTestCase {
         }
         assertNotNull(entryC);
         assertNotNull(entryA);
-        
+
         EntryComparator ec = new EntryComparator();
         assertTrue(ec.compare(entryA, entryC) < 0);
         assertTrue(ec.compare(entryC, entryA) > 0);

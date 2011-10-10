@@ -19,31 +19,30 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * 
- * 	
  * 
- * 	  The remote element contains the fully-qualified name
- * 	  of the enterprise bean's remote interface.
  * 
- * 	  Example:
+ * The remote element contains the fully-qualified name of the enterprise bean's remote interface.
  * 
- * 	      <remote>com.wombat.empl.EmployeeService</remote>
+ * Example:
  * 
- * 	  
- *       
+ * <remote>com.wombat.empl.EmployeeService</remote>
  * 
- * <p>Java class for remoteType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * 
+ * 
+ * <p>
+ * Java class for remoteType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="remoteType">
@@ -58,9 +57,6 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "remoteType")
-public class RemoteType
-    extends FullyQualifiedClassType
-{
-
+public class RemoteType extends FullyQualifiedClassType {
 
 }

@@ -11,24 +11,24 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
+ * <p>
+ * Java class for anonymous complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType>
@@ -45,9 +45,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "sessionIds"
-})
+@XmlType(name = "", propOrder = { "sessionIds" })
 @XmlRootElement(name = "invalidateSessions", namespace = "urn:partner.soap.sforce.com")
 public class InvalidateSessions {
 
@@ -58,27 +56,26 @@ public class InvalidateSessions {
      * Gets the value of the sessionIds property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the sessionIds property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the sessionIds property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getSessionIds().add(newItem);
+     * getSessionIds().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link String }
+     * Objects of the following type(s) are allowed in the list {@link String }
      * 
      * 
      */
     public List<String> getSessionIds() {
-        if (sessionIds == null) {
-            sessionIds = new ArrayList<String>();
+        if (this.sessionIds == null) {
+            this.sessionIds = new ArrayList<String>();
         }
         return this.sessionIds;
     }
@@ -86,10 +83,8 @@ public class InvalidateSessions {
     /**
      * Sets the value of the sessionIds property.
      * 
-     * @param sessionIds
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param sessionIds allowed object is {@link String }
+     * 
      */
     public void setSessionIds(List<String> sessionIds) {
         this.sessionIds = sessionIds;

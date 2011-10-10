@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.service;
 
 import static org.junit.Assert.assertNotNull;
@@ -26,20 +27,20 @@ import org.springframework.test.context.ContextConfiguration;
 import com.wavemaker.runtime.test.TestSpringContextTestCase;
 
 /**
- * Test the entire server init with some bad service beans (without classes),
- * this should enforce a lazy load.
+ * Test the entire server init with some bad service beans (without classes), this should enforce a lazy load.
  * 
  * @author small
  * @version $Rev$ - $Date$
  */
-@ContextConfiguration(locations="classpath:com/wavemaker/runtime/server/WEB-INF/service-badbean.xml")
+@ContextConfiguration(locations = "classpath:com/wavemaker/runtime/server/WEB-INF/service-badbean.xml")
 public class TestServerInitWithBadBeans extends TestSpringContextTestCase {
-    
-    @Test public void testLoad() {
-        
+
+    @Test
+    public void testLoad() {
+
         ServiceManager sm = (ServiceManager) getBean("serviceManager");
         assertNotNull(sm.getServiceWire("testservice"));
-        
+
         try {
             getBean("badBean");
             fail("expected exception");

@@ -16,16 +16,19 @@ package com.wavemaker.tools.cloudmgr;
 
 /**
  * This class represents a security group for cloud server access
- *
+ * 
  * @author slee
  */
 public class CloudSecurityGroup {
 
     private String name;
-    private String description;
-	private String owner;
 
-    public CloudSecurityGroup() {}
+    private String description;
+
+    private String owner;
+
+    public CloudSecurityGroup() {
+    }
 
     public CloudSecurityGroup(String owner, String name, String description) {
         this.owner = owner;

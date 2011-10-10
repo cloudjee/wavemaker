@@ -27,11 +27,11 @@ import com.sun.syndication.feed.synd.SyndLink;
  * 
  * @author ffu
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class Entry {
 
-    private SyndEntry syndEntry;
+    private final SyndEntry syndEntry;
 
     public Entry(SyndEntry syndEntry) {
         this.syndEntry = syndEntry;
@@ -42,7 +42,7 @@ public class Entry {
      * @see com.sun.syndication.feed.synd.SyndEntry#getAuthor()
      */
     public String getAuthor() {
-        return syndEntry.getAuthor();
+        return this.syndEntry.getAuthor();
     }
 
     /**
@@ -51,7 +51,7 @@ public class Entry {
      */
     @SuppressWarnings("unchecked")
     public SyndContent[] getContents() {
-        List<SyndContent> list = syndEntry.getContents();
+        List<SyndContent> list = this.syndEntry.getContents();
         if (list != null) {
             return list.toArray(new SyndContent[list.size()]);
         } else {
@@ -64,7 +64,7 @@ public class Entry {
      * @see com.sun.syndication.feed.synd.SyndEntry#getDescription()
      */
     public SyndContent getDescription() {
-        SyndContent description = syndEntry.getDescription();
+        SyndContent description = this.syndEntry.getDescription();
         if (description != null) {
             description.setValue(FeedUtils.stripBadTags(description.getValue()));
         }
@@ -76,7 +76,7 @@ public class Entry {
      * @see com.sun.syndication.feed.synd.SyndEntry#getLink()
      */
     public String getLink() {
-        return syndEntry.getLink();
+        return this.syndEntry.getLink();
     }
 
     /**
@@ -85,7 +85,7 @@ public class Entry {
      */
     @SuppressWarnings("unchecked")
     public SyndLink[] getLinks() {
-        List<SyndLink> list = syndEntry.getLinks();
+        List<SyndLink> list = this.syndEntry.getLinks();
         if (list != null) {
             return list.toArray(new SyndLink[list.size()]);
         } else {
@@ -98,7 +98,7 @@ public class Entry {
      * @see com.sun.syndication.feed.synd.SyndEntry#getPublishedDate()
      */
     public Date getPublishedDate() {
-        return syndEntry.getPublishedDate();
+        return this.syndEntry.getPublishedDate();
     }
 
     /**
@@ -106,7 +106,7 @@ public class Entry {
      * @see com.sun.syndication.feed.synd.SyndEntry#getTitle()
      */
     public String getTitle() {
-        return syndEntry.getTitle();
+        return this.syndEntry.getTitle();
     }
 
     /**
@@ -114,7 +114,7 @@ public class Entry {
      * @see com.sun.syndication.feed.synd.SyndEntry#getTitleEx()
      */
     public SyndContent getTitleEx() {
-        return syndEntry.getTitleEx();
+        return this.syndEntry.getTitleEx();
     }
 
     /**
@@ -122,7 +122,7 @@ public class Entry {
      * @see com.sun.syndication.feed.synd.SyndEntry#getUpdatedDate()
      */
     public Date getUpdatedDate() {
-        return syndEntry.getUpdatedDate();
+        return this.syndEntry.getUpdatedDate();
     }
 
     /**
@@ -130,7 +130,7 @@ public class Entry {
      * @see com.sun.syndication.feed.synd.SyndEntry#getUri()
      */
     public String getUri() {
-        return syndEntry.getUri();
+        return this.syndEntry.getUri();
     }
 
     /**
@@ -138,7 +138,7 @@ public class Entry {
      * @see com.sun.syndication.feed.synd.SyndEntry#setAuthor(java.lang.String)
      */
     public void setAuthor(String author) {
-        syndEntry.setAuthor(author);
+        this.syndEntry.setAuthor(author);
     }
 
     /**
@@ -146,7 +146,7 @@ public class Entry {
      * @see com.sun.syndication.feed.synd.SyndEntry#setContents(java.util.List)
      */
     public void setContents(SyndContent[] contents) {
-        syndEntry.setContents(Arrays.asList(contents));
+        this.syndEntry.setContents(Arrays.asList(contents));
     }
 
     /**
@@ -154,7 +154,7 @@ public class Entry {
      * @see com.sun.syndication.feed.synd.SyndEntry#setDescription(com.sun.syndication.feed.synd.SyndContent)
      */
     public void setDescription(SyndContent description) {
-        syndEntry.setDescription(description);
+        this.syndEntry.setDescription(description);
     }
 
     /**
@@ -162,7 +162,7 @@ public class Entry {
      * @see com.sun.syndication.feed.synd.SyndEntry#setLink(java.lang.String)
      */
     public void setLink(String link) {
-        syndEntry.setLink(link);
+        this.syndEntry.setLink(link);
     }
 
     /**
@@ -170,7 +170,7 @@ public class Entry {
      * @see com.sun.syndication.feed.synd.SyndEntry#setLinks(java.util.List)
      */
     public void setLinks(SyndLink[] links) {
-        syndEntry.setLinks(Arrays.asList(links));
+        this.syndEntry.setLinks(Arrays.asList(links));
     }
 
     /**
@@ -178,7 +178,7 @@ public class Entry {
      * @see com.sun.syndication.feed.synd.SyndEntry#setPublishedDate(java.util.Date)
      */
     public void setPublishedDate(Date publishedDate) {
-        syndEntry.setPublishedDate(publishedDate);
+        this.syndEntry.setPublishedDate(publishedDate);
     }
 
     /**
@@ -186,7 +186,7 @@ public class Entry {
      * @see com.sun.syndication.feed.synd.SyndEntry#setTitle(java.lang.String)
      */
     public void setTitle(String title) {
-        syndEntry.setTitle(title);
+        this.syndEntry.setTitle(title);
     }
 
     /**
@@ -194,7 +194,7 @@ public class Entry {
      * @see com.sun.syndication.feed.synd.SyndEntry#setTitleEx(com.sun.syndication.feed.synd.SyndContent)
      */
     public void setTitleEx(SyndContent title) {
-        syndEntry.setTitleEx(title);
+        this.syndEntry.setTitleEx(title);
     }
 
     /**
@@ -202,7 +202,7 @@ public class Entry {
      * @see com.sun.syndication.feed.synd.SyndEntry#setUpdatedDate(java.util.Date)
      */
     public void setUpdatedDate(Date updatedDate) {
-        syndEntry.setUpdatedDate(updatedDate);
+        this.syndEntry.setUpdatedDate(updatedDate);
     }
 
     /**
@@ -210,9 +210,9 @@ public class Entry {
      * @see com.sun.syndication.feed.synd.SyndEntry#setUri(java.lang.String)
      */
     public void setUri(String uri) {
-        syndEntry.setUri(uri);
+        this.syndEntry.setUri(uri);
     }
-    
+
     public SyndEntry toSyndEntry() {
         return this.syndEntry;
     }

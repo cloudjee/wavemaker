@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 package com.wavemaker.studio;
 
 import java.io.IOException;
@@ -28,84 +28,79 @@ import com.wavemaker.tools.project.PagesManager;
  */
 @HideFromClient
 public class PagesService {
-    
+
     /**
-     * Return a list of pages in the current application.  Currently, this is
-     * every directory in the pages directory.
+     * Return a list of pages in the current application. Currently, this is every directory in the pages directory.
+     * 
      * @return
      * @throws FileAccessException
      */
     @ExposeToClient
     public SortedSet<String> listPages() throws FileAccessException {
-        
-        return pagesManager.listPages();
+
+        return this.pagesManager.listPages();
     }
-    
+
     /**
      * Return a list of all pages in the specified project.
+     * 
      * @param projectName
      * @return
      * @throws FileAccessException
      */
     @ExposeToClient
     public SortedSet<String> listPages(String projectName) throws FileAccessException {
-        
-        return pagesManager.listPages(pagesManager.getProjectManager().getUserProjectPrefix() + projectName);
+
+        return this.pagesManager.listPages(this.pagesManager.getProjectManager().getUserProjectPrefix() + projectName);
     }
-    
+
     /**
      * Delete a page.
      * 
-     * @param pageName
-     *                The page to delete.
+     * @param pageName The page to delete.
      * @throws IOException
      */
     @ExposeToClient
     public void deletePage(String pageName) throws IOException {
 
-        pagesManager.deletePage(pageName);
+        this.pagesManager.deletePage(pageName);
     }
-    
+
     /**
-     * Copy a page from a project to the current project. A page with the
-     * specified name must not already exist in the current project.
+     * Copy a page from a project to the current project. A page with the specified name must not already exist in the
+     * current project.
      * 
-     * @param sourceProjectName
-     *                The project to copy from.
-     * @param sourcePageName
-     *                The name of the page to copy from.
-     * @param destPageName
-     *                The name of the page to copy to (must not exist in the
-     *                current project).
+     * @param sourceProjectName The project to copy from.
+     * @param sourcePageName The name of the page to copy from.
+     * @param destPageName The name of the page to copy to (must not exist in the current project).
      * @throws IOException
      */
     @ExposeToClient
-    public void copyPage(String sourceProjectName, String sourcePageName,
-            String destPageName) throws IOException {
-        
-        pagesManager.copyPage(pagesManager.getProjectManager().getUserProjectPrefix() + sourceProjectName, sourcePageName, destPageName);
+    public void copyPage(String sourceProjectName, String sourcePageName, String destPageName) throws IOException {
+
+        this.pagesManager.copyPage(this.pagesManager.getProjectManager().getUserProjectPrefix() + sourceProjectName, sourcePageName, destPageName);
     }
-    
-    
+
     /**
-     * Return a list of dictionaries in the current application.  Currently, this is
-     * every directory in the dictionaries directory.
+     * Return a list of dictionaries in the current application. Currently, this is every directory in the dictionaries
+     * directory.
+     * 
      * @return
      * @throws FileAccessException
      */
     @ExposeToClient
     public SortedSet<String> listDictionaries() throws FileAccessException {
-        
-        return pagesManager.listDictionaries();
-    }
 
+        return this.pagesManager.listDictionaries();
+    }
 
     // spring-controlled bean properties
     PagesManager pagesManager;
 
     public PagesManager getPagesManager() {
-        return pagesManager;
+        return this.pagesManager;
     }
+
     public void setPagesManager(PagesManager pagesManager) {
         this.pagesManager = pagesManager;
     }

@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.webapp;
 
 import java.io.File;
@@ -34,19 +35,18 @@ import com.wavemaker.tools.webapp.schema.WebAppType;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestWebXmlSupport extends WMTestCase {
 
     public void testReadWrite() throws Exception {
-        
-        File f = (new ClassPathResource("com/wavemaker/tools/webapp/"+
-                ProjectConstants.WEB_XML)).getFile();
+
+        File f = new ClassPathResource("com/wavemaker/tools/webapp/" + ProjectConstants.WEB_XML).getFile();
         assertTrue(f.exists());
-        
+
         WebAppType wat = WebXmlSupport.readWebXml(new FileSystemResource(f));
-        
-        for (Object o: wat.getDescriptionAndDisplayNameAndIcon()) {
+
+        for (Object o : wat.getDescriptionAndDisplayNameAndIcon()) {
             if (o instanceof DisplayNameType) {
                 DisplayNameType dnt = (DisplayNameType) o;
                 assertEquals("ActiveGrid Studio", dnt.getValue());
@@ -57,18 +57,18 @@ public class TestWebXmlSupport extends WMTestCase {
                 // System.out.println("o: "+o);
             }
         }
-        
-        File fp =
-            File.createTempFile("TestWebXmlSupport_testReadWrite", ".xml");
+
+        File fp = File.createTempFile("TestWebXmlSupport_testReadWrite", ".xml");
         fp.deleteOnExit();
-        
+
         try {
-            WebXmlSupport.writeWebXml(new Project(new FileSystemResource(fp.getParentFile()), new LocalStudioConfiguration()), wat, new FileSystemResource(fp));
+            WebXmlSupport.writeWebXml(new Project(new FileSystemResource(fp.getParentFile()), new LocalStudioConfiguration()), wat,
+                new FileSystemResource(fp));
             String fpContents = FileUtils.readFileToString(fp);
-            
+
             assertTrue(fpContents.contains("ActiveGrid Studio"));
             assertTrue(fpContents.contains("springapp"));
-            
+
             WebXmlSupport.readWebXml(new FileSystemResource(fp));
         } finally {
             fp.delete();

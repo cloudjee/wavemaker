@@ -20,10 +20,10 @@ import com.wavemaker.common.WMRuntimeException;
 /**
  * @author Simon Toens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class InvalidServiceIdException extends WMRuntimeException {
-    
+
     private static final long serialVersionUID = 1L;
 
     public InvalidServiceIdException(String serviceId, String reason) {

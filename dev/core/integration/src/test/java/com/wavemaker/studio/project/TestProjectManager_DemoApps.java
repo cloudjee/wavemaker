@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.wavemaker.studio.project;
 
 import static org.junit.Assert.assertEquals;
@@ -32,120 +33,125 @@ import org.junit.Test;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.studio.infra.StudioTestCase;
-import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.project.LocalStudioConfiguration;
+import com.wavemaker.tools.project.ProjectManager;
 
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestProjectManager_DemoApps extends StudioTestCase {
+
     private static String PROJECT_TYPE = System.getProperty("test.project.type");
-    
+
     ProjectManager pm = null;
+
     File demoDir = null;
-    
+
     String demoPA;
+
     String demoPB;
+
     File demoPAF;
+
     File demoPBF;
-    
+
     @Before
     @Override
     public void setUp() throws Exception {
-        
+
         super.setUp();
-        
-        pm = (ProjectManager) getBean("projectManager");
-        
+
+        this.pm = (ProjectManager) getBean("projectManager");
+
         LocalStudioConfiguration sc = (LocalStudioConfiguration) getBean("studioConfiguration");
-        demoDir = IOUtils.createTempDirectory();
-        sc.setTestDemoDir(demoDir);
-        
+        this.demoDir = IOUtils.createTempDirectory();
+        sc.setTestDemoDir(this.demoDir);
+
         // make some demo apps
-        
-        demoPA = "demoPA";
-        demoPB = "demoPB";
-        demoPAF = new File(demoDir, demoPA);
-        demoPBF = new File(demoDir, demoPB);
-        demoPAF.mkdir();
-        demoPBF.mkdir();
+
+        this.demoPA = "demoPA";
+        this.demoPB = "demoPB";
+        this.demoPAF = new File(this.demoDir, this.demoPA);
+        this.demoPBF = new File(this.demoDir, this.demoPB);
+        this.demoPAF.mkdir();
+        this.demoPBF.mkdir();
     }
-    
+
     @After
     @Override
     public void tearDown() throws Exception {
-        
-        LocalStudioConfiguration sc =
-            (LocalStudioConfiguration) getBean("studioConfiguration");
+
+        LocalStudioConfiguration sc = (LocalStudioConfiguration) getBean("studioConfiguration");
         sc.setTestDemoDir(null);
-        
-        FileUtils.forceDelete(demoDir);
+
+        FileUtils.forceDelete(this.demoDir);
     }
 
-    @Test public void testListDemos() throws Exception {
-        if (!"cloud".equals(PROJECT_TYPE)) {        
-        
-        String regA = "testListProjects_regA";
-        String regB = "testListProjects_regB";
-        
-        makeProject(regA);
-        makeProject(regB);
-        
-        SortedSet<String> projects = pm.listProjects("");
-        assertEquals(4, projects.size());
-        assertTrue(projects.contains(demoPA));
-        assertTrue(projects.contains(demoPB));
-        assertTrue(projects.contains(regA));
-        assertTrue(projects.contains(regB));
-	}
-    }
-    
-    @Test public void testNewProjectConflict() throws Exception {
-        if (!"cloud".equals(PROJECT_TYPE)) {        
-        
-        boolean gotException = false;
-        try {
-            pm.newProject(demoPA, true);
-        } catch (WMRuntimeException e) {
-            gotException = true;
-            assertTrue(e.getMessage().endsWith(
-                    "conflicts with existing project or demo"));
+    @Test
+    public void testListDemos() throws Exception {
+        if (!"cloud".equals(PROJECT_TYPE)) {
+
+            String regA = "testListProjects_regA";
+            String regB = "testListProjects_regB";
+
+            makeProject(regA);
+            makeProject(regB);
+
+            SortedSet<String> projects = this.pm.listProjects("");
+            assertEquals(4, projects.size());
+            assertTrue(projects.contains(this.demoPA));
+            assertTrue(projects.contains(this.demoPB));
+            assertTrue(projects.contains(regA));
+            assertTrue(projects.contains(regB));
         }
-        assertTrue(gotException);
-	}
     }
-    
-    @Test public void testOpenDemos() throws Exception {
-        if (!"cloud".equals(PROJECT_TYPE)) {        
-        
-        String regA = "testOpenProjects_regA";
-        String regB = "testOpenProjects_regB";
-        
-        makeProject(regA);
-        makeProject(regB);
-        
-        pm.openProject(demoPA);
-        assertEquals(demoPAF, pm.getCurrentProject().getProjectRoot());
-        pm.openProject(demoPB);
-        assertEquals(demoPBF, pm.getCurrentProject().getProjectRoot());
-        
-        pm.openProject(regA);
-        assertEquals(pm.getProjectDir(regA, true),
-                pm.getCurrentProject().getProjectRoot());
-        pm.openProject(regB);
-        assertEquals(pm.getProjectDir(regB, true),
-                pm.getCurrentProject().getProjectRoot());
-	}
+
+    @Test
+    public void testNewProjectConflict() throws Exception {
+        if (!"cloud".equals(PROJECT_TYPE)) {
+
+            boolean gotException = false;
+            try {
+                this.pm.newProject(this.demoPA, true);
+            } catch (WMRuntimeException e) {
+                gotException = true;
+                assertTrue(e.getMessage().endsWith("conflicts with existing project or demo"));
+            }
+            assertTrue(gotException);
+        }
     }
-    
-    @Test public void testDeleteDemos() throws Exception {
-        if (!"cloud".equals(PROJECT_TYPE)) {        
-        
-        assertTrue(demoPAF.exists());
-        pm.deleteProject(demoPA);
-        assertFalse(demoPAF.exists());
-	}
+
+    @Test
+    public void testOpenDemos() throws Exception {
+        if (!"cloud".equals(PROJECT_TYPE)) {
+
+            String regA = "testOpenProjects_regA";
+            String regB = "testOpenProjects_regB";
+
+            makeProject(regA);
+            makeProject(regB);
+
+            this.pm.openProject(this.demoPA);
+            assertEquals(this.demoPAF, this.pm.getCurrentProject().getProjectRoot());
+            this.pm.openProject(this.demoPB);
+            assertEquals(this.demoPBF, this.pm.getCurrentProject().getProjectRoot());
+
+            this.pm.openProject(regA);
+            assertEquals(this.pm.getProjectDir(regA, true), this.pm.getCurrentProject().getProjectRoot());
+            this.pm.openProject(regB);
+            assertEquals(this.pm.getProjectDir(regB, true), this.pm.getCurrentProject().getProjectRoot());
+        }
+    }
+
+    @Test
+    public void testDeleteDemos() throws Exception {
+        if (!"cloud".equals(PROJECT_TYPE)) {
+
+            assertTrue(this.demoPAF.exists());
+            this.pm.deleteProject(this.demoPA);
+            assertFalse(this.demoPAF.exists());
+        }
     }
 }

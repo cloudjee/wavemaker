@@ -17,13 +17,12 @@ package com.wavemaker.runtime.service.definition;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public interface ReflectServiceDefinition extends ServiceDefinition {
-    
+
     /**
-     * Return the service's fully qualified class name (equivalent to
-     * Class.getCanonicalName()).
+     * Return the service's fully qualified class name (equivalent to Class.getCanonicalName()).
      * 
      * @return The fully qualified class name.
      */

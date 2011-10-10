@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.data;
 
 import static org.junit.Assert.assertEquals;
@@ -54,216 +55,204 @@ import com.wavemaker.runtime.test.TestSpringContextTestCase;
  * 
  *         Required modifications to Customer.hbm.xml:
  * 
- *         generator has to be set to identity rowguid: insert="false",
- *         update="false", optionally generated="true" for auto-refresh from
- *         Hibernate
+ *         generator has to be set to identity rowguid: insert="false", update="false", optionally generated="true" for
+ *         auto-refresh from Hibernate
  * 
- *         modified date is being set manually because versionning is not
- *         enabled in Hibernate
+ *         modified date is being set manually because versionning is not enabled in Hibernate
  * 
  */
 public class TestAdventureCRUD extends TestSpringContextTestCase {
 
-	static class TestData {
+    static class TestData {
 
-		private String dependentTestName = null;
+        private String dependentTestName = null;
 
-		private boolean skipRemaining = false;
+        private boolean skipRemaining = false;
 
-		private Adventure adventure = null;
+        private Adventure adventure = null;
 
-		private Customer newCustomer = null;
+        private Customer newCustomer = null;
 
-		void setService(Adventure adventure) {
-			this.adventure = adventure;
-		}
+        void setService(Adventure adventure) {
+            this.adventure = adventure;
+        }
 
-		Adventure getAdventure() {
-			return adventure;
-		}
+        Adventure getAdventure() {
+            return this.adventure;
+        }
 
-		void setNewCustomer(Customer newCustomer) {
-			this.newCustomer = newCustomer;
-		}
+        void setNewCustomer(Customer newCustomer) {
+            this.newCustomer = newCustomer;
+        }
 
-		Customer getNewCustomer() {
-			return newCustomer;
-		}
+        Customer getNewCustomer() {
+            return this.newCustomer;
+        }
 
-		void setSkipRemaining(String dependentTestName) {
-			this.skipRemaining = true;
-			this.dependentTestName = dependentTestName;
-		}
+        void setSkipRemaining(String dependentTestName) {
+            this.skipRemaining = true;
+            this.dependentTestName = dependentTestName;
+        }
 
-		boolean skipRemaining() {
-			return skipRemaining;
-		}
+        boolean skipRemaining() {
+            return this.skipRemaining;
+        }
 
-		String getDependentTestName() {
-			return dependentTestName;
-		}
+        String getDependentTestName() {
+            return this.dependentTestName;
+        }
 
-	}
+    }
 
-	protected static TestData testData;
+    protected static TestData testData;
 
-	@BeforeClass
-	public static void initData() {
-		testData = new TestData();
-	}
+    @BeforeClass
+    public static void initData() {
+        testData = new TestData();
+    }
 
-	protected void checkShouldSkip() {
-		if (testData.skipRemaining) {
-			throw new DependentTestFailureException(
-					testData.getDependentTestName());
-		}
-	}
+    protected void checkShouldSkip() {
+        if (testData.skipRemaining) {
+            throw new DependentTestFailureException(testData.getDependentTestName());
+        }
+    }
 
-	@Test
-	public void testCountCustomers() {
+    @Test
+    public void testCountCustomers() {
 
-		try {
+        try {
 
-			ApplicationContext ctx = getApplicationContext();
+            ApplicationContext ctx = getApplicationContext();
 
-			ServiceManager serviceMgr = (ServiceManager) ctx
-					.getBean(ServiceConstants.SERVICE_MANAGER_NAME);
+            ServiceManager serviceMgr = (ServiceManager) ctx.getBean(ServiceConstants.SERVICE_MANAGER_NAME);
 
-			Adventure adventure = (Adventure) ((ReflectServiceWire) serviceMgr
-					.getServiceWire(DataServiceTestConstants.SQL_SERVER_ADVENTURE_SERVICE_ID))
-					.getServiceBean();
+            Adventure adventure = (Adventure) ((ReflectServiceWire) serviceMgr.getServiceWire(DataServiceTestConstants.SQL_SERVER_ADVENTURE_SERVICE_ID)).getServiceBean();
 
-			assertTrue(adventure.getCustomerCount(new Customer(),
-					new QueryOptions()) == (long) 440);
+            assertTrue(adventure.getCustomerCount(new Customer(), new QueryOptions()) == (long) 440);
 
-			testData.setService(adventure);
+            testData.setService(adventure);
 
-		} catch (RuntimeException ex) {
-			testData.setSkipRemaining("testCountCustomers");
-			throw ex;
-		}
-	}
+        } catch (RuntimeException ex) {
+            testData.setSkipRemaining("testCountCustomers");
+            throw ex;
+        }
+    }
 
-	@Test
-	public void testScrollableResultSet() {
+    @Test
+    public void testScrollableResultSet() {
 
-		checkShouldSkip();
+        checkShouldSkip();
 
-		Adventure adventure = testData.getAdventure();
+        Adventure adventure = testData.getAdventure();
 
-		adventure.getDataServiceManager().begin();
+        adventure.getDataServiceManager().begin();
 
-		ScrollableResults sr = null;
+        ScrollableResults sr = null;
 
-		try {
+        try {
 
-			Session session = adventure.getDataServiceManager().getSession();
+            Session session = adventure.getDataServiceManager().getSession();
 
-			Query q = session
-					.createQuery("from Customer where lastName like 'A%'");
+            Query q = session.createQuery("from Customer where lastName like 'A%'");
 
-			sr = q.scroll();
-			sr.last();
-			assertEquals(23, sr.getRowNumber() + 1);
+            sr = q.scroll();
+            sr.last();
+            assertEquals(23, sr.getRowNumber() + 1);
 
-		} finally {
-			try {
-				sr.close();
-			} catch (Exception ignore) {
-			}
+        } finally {
+            try {
+                sr.close();
+            } catch (Exception ignore) {
+            }
 
-			adventure.getDataServiceManager().rollback();
-		}
-	}
+            adventure.getDataServiceManager().rollback();
+        }
+    }
 
-	@Test
-	public void testAddNewCustomer() {
+    @Test
+    public void testAddNewCustomer() {
 
-		checkShouldSkip();
+        checkShouldSkip();
 
-		Customer c = new Customer();
+        Customer c = new Customer();
 
-		c.setFirstName("f");
-		c.setLastName("Rasputin");
-		c.setPasswordHash("a");
-		c.setPasswordSalt("s");
-		c.setModifiedDate(new Date());
+        c.setFirstName("f");
+        c.setLastName("Rasputin");
+        c.setPasswordHash("a");
+        c.setPasswordSalt("s");
+        c.setModifiedDate(new Date());
 
-		try {
-			testData.getAdventure().insertCustomer(c);
-		} catch (RuntimeException ex) {
-			testData.setSkipRemaining("testAddNewCustomer");
-			throw ex;
-		}
-	}
+        try {
+            testData.getAdventure().insertCustomer(c);
+        } catch (RuntimeException ex) {
+            testData.setSkipRemaining("testAddNewCustomer");
+            throw ex;
+        }
+    }
 
-	@Test
-	public void testFindNewCustomer() {
+    @Test
+    public void testFindNewCustomer() {
 
-		checkShouldSkip();
+        checkShouldSkip();
 
-		Customer qbe = new Customer();
+        Customer qbe = new Customer();
 
-		qbe.setLastName("Rasputin");
+        qbe.setLastName("Rasputin");
 
-		try {
-			List<Customer> l = testData.getAdventure().getCustomerList(qbe,
-					new QueryOptions());
+        try {
+            List<Customer> l = testData.getAdventure().getCustomerList(qbe, new QueryOptions());
 
-			assertTrue(l.size() == 1);
+            assertTrue(l.size() == 1);
 
-			assertTrue(l.get(0).getLastName().equals("Rasputin"));
+            assertTrue(l.get(0).getLastName().equals("Rasputin"));
 
-			testData.setNewCustomer(l.get(0));
+            testData.setNewCustomer(l.get(0));
 
-		} catch (RuntimeException ex) {
-			testData.setSkipRemaining("testFindNewCustomer");
-			throw ex;
-		}
+        } catch (RuntimeException ex) {
+            testData.setSkipRemaining("testFindNewCustomer");
+            throw ex;
+        }
 
-	}
+    }
 
-	@Test
-	public void testDeleteNewCustomer() {
+    @Test
+    public void testDeleteNewCustomer() {
 
-		checkShouldSkip();
+        checkShouldSkip();
 
-		testData.getAdventure().deleteCustomer(testData.getNewCustomer());
+        testData.getAdventure().deleteCustomer(testData.getNewCustomer());
 
-	}
+    }
 
-	@Test
-	public void testConnection() throws IOException {
+    @Test
+    public void testConnection() throws IOException {
 
-		File props = ClassLoaderUtils.getClasspathFile(
-				"sqlserver_adventure.properties").getFile();
+        File props = ClassLoaderUtils.getClasspathFile("sqlserver_adventure.properties").getFile();
 
-		Properties p = DataServiceUtils.loadDBProperties(props);
+        Properties p = DataServiceUtils.loadDBProperties(props);
 
-		TestDBConnection t = new TestDBConnection();
-		t.setProperties(p);
-		t.run();
-	}
+        TestDBConnection t = new TestDBConnection();
+        t.setProperties(p);
+        t.run();
+    }
 
-	@Test
-	public void testConnection2() throws IOException {
+    @Test
+    public void testConnection2() throws IOException {
 
-		File props = ClassLoaderUtils.getClasspathFile(
-				"sqlserver_adventure.properties").getFile();
+        File props = ClassLoaderUtils.getClasspathFile("sqlserver_adventure.properties").getFile();
 
-		Properties p = DataServiceUtils.loadDBProperties(props);
+        Properties p = DataServiceUtils.loadDBProperties(props);
 
-		TestDBConnection t = new TestDBConnection();
-		t.setProperties(p);
-		t.setUsername("__blah__");
-		try {
-			t.run();
-		} catch (Exception ex) {
-			assertTrue(ex.getCause().getMessage()
-					.equals("Login failed for user '__blah__'."));
-			return;
-		}
-		fail("Expected this to fail");
-	}
+        TestDBConnection t = new TestDBConnection();
+        t.setProperties(p);
+        t.setUsername("__blah__");
+        try {
+            t.run();
+        } catch (Exception ex) {
+            assertTrue(ex.getCause().getMessage().equals("Login failed for user '__blah__'."));
+            return;
+        }
+        fail("Expected this to fail");
+    }
 
 }

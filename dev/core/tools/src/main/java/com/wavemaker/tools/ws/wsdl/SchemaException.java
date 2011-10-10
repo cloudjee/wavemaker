@@ -32,7 +32,7 @@ public class SchemaException extends WMException {
     public SchemaException(Throwable cause) {
         super(cause);
     }
-    
+
     public SchemaException(String message, Throwable cause) {
         super(message, cause);
     }

@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.server.nonbean.types;
 
 import java.util.ArrayList;
@@ -26,39 +27,47 @@ import com.wavemaker.runtime.server.nonbean.NonBeanTypeFactory;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class FooArg3TypeDefinition extends NonBeanPrimitiveTypeDefinition {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.type.TypeDefinition#getTypeName()
      */
     public String getTypeName() {
         return NonBeanTypeFactory.FOO_ARG_3;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.type.TypeDefinition#getShortName()
      */
     public String getShortName() {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.type.TypeDefinition#isLiveService()
      */
     public boolean isLiveService() {
         return false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.type.TypeDefinition#newInstance(java.lang.Object[])
      */
     public Object newInstance(Object... args) {
         if (!(args[0] instanceof String)) {
-            throw new WMRuntimeException("bad args: "+args[0]+" ("+args[0].getClass()+")");
+            throw new WMRuntimeException("bad args: " + args[0] + " (" + args[0].getClass() + ")");
         }
-        
+
         List<String> ret = new ArrayList<String>();
         ret.add(args[0].toString());
         return ret;

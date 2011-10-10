@@ -31,27 +31,27 @@ public class PropertyOptions {
     private List<String> properties = new ArrayList<String>();
 
     /** filters to apply: property path -> expr. */
-    private List<Filter> filters = new ArrayList<Filter>();
-    
+    private final List<Filter> filters = new ArrayList<Filter>();
+
     private String matchMode = "start";
-    
+
     private boolean ignoreCase;
 
     public List<String> getProperties() {
-        return properties;
+        return this.properties;
     }
 
     public void setProperties(List<String> properties) {
         this.properties = properties;
     }
-    
+
     public List<Filter> getFilterList() {
-        return filters;
+        return this.filters;
     }
-    
+
     public List<String> getFilters() {
-        List<String> rtn = new ArrayList<String>(filters.size());
-        for (Filter f : filters) {
+        List<String> rtn = new ArrayList<String>(this.filters.size());
+        for (Filter f : this.filters) {
             rtn.add(f.toString());
         }
         return Collections.unmodifiableList(rtn);
@@ -59,23 +59,23 @@ public class PropertyOptions {
 
     public void setFilters(List<String> filterStrings) {
         for (String s : filterStrings) {
-            filters.add(Filter.newInstance(s));
+            this.filters.add(Filter.newInstance(s));
         }
     }
-    
+
     public String getMatchMode() {
-        return matchMode;
+        return this.matchMode;
     }
-    
+
     public void setMatchMode(String matchMode) {
         this.matchMode = matchMode;
     }
-    
+
     public void setIgnoreCase(boolean ignoreCase) {
         this.ignoreCase = ignoreCase;
     }
-    
+
     public boolean isIgnoreCase() {
-        return ignoreCase;
+        return this.ignoreCase;
     }
 }

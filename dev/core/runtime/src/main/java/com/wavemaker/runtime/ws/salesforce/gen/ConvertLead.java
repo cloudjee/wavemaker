@@ -11,24 +11,24 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
+ * <p>
+ * Java class for anonymous complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType>
@@ -45,9 +45,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "leadConverts"
-})
+@XmlType(name = "", propOrder = { "leadConverts" })
 @XmlRootElement(name = "convertLead", namespace = "urn:partner.soap.sforce.com")
 public class ConvertLead {
 
@@ -58,27 +56,26 @@ public class ConvertLead {
      * Gets the value of the leadConverts property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the leadConverts property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the leadConverts property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getLeadConverts().add(newItem);
+     * getLeadConverts().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link LeadConvertType }
+     * Objects of the following type(s) are allowed in the list {@link LeadConvertType }
      * 
      * 
      */
     public List<LeadConvertType> getLeadConverts() {
-        if (leadConverts == null) {
-            leadConverts = new ArrayList<LeadConvertType>();
+        if (this.leadConverts == null) {
+            this.leadConverts = new ArrayList<LeadConvertType>();
         }
         return this.leadConverts;
     }
@@ -86,10 +83,8 @@ public class ConvertLead {
     /**
      * Sets the value of the leadConverts property.
      * 
-     * @param leadConverts
-     *     allowed object is
-     *     {@link LeadConvertType }
-     *     
+     * @param leadConverts allowed object is {@link LeadConvertType }
+     * 
      */
     public void setLeadConverts(List<LeadConvertType> leadConverts) {
         this.leadConverts = leadConverts;

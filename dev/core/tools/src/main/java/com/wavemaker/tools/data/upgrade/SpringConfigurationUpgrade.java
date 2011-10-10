@@ -43,8 +43,7 @@ import com.wavemaker.tools.spring.beans.Map;
  * @author Jeremy Grelle
  * 
  */
-public class SpringConfigurationUpgrade extends BaseDataUpgradeTask implements
-        UpgradeTask {
+public class SpringConfigurationUpgrade extends BaseDataUpgradeTask implements UpgradeTask {
 
     @Override
     protected void upgrade(Service service) {
@@ -63,6 +62,7 @@ public class SpringConfigurationUpgrade extends BaseDataUpgradeTask implements
         final DesignServiceManager mgr = getDesignServiceManager();
 
         FileService fileService = new AbstractFileService(new LocalStudioConfiguration()) {
+
             public Resource getFileServiceRoot() {
                 return mgr.getServiceHome(id);
             }
@@ -77,15 +77,13 @@ public class SpringConfigurationUpgrade extends BaseDataUpgradeTask implements
         upgradeSpringDataServiceManager(beans);
         upgradeTaskManager(beans);
 
-        String path = cfgFile.getParentFile().getName() + "/"
-                + cfgFile.getName();
+        String path = cfgFile.getParentFile().getName() + "/" + cfgFile.getName();
         DataServiceUtils.writeBeans(beans, fileService, path);
     }
 
     private void upgradePropertyPlaceholderConfigurer(Beans beans) {
 
-        List<Bean> ppcs = beans
-                .getBeansByType(PropertyPlaceholderConfigurer.class.getName());
+        List<Bean> ppcs = beans.getBeansByType(PropertyPlaceholderConfigurer.class.getName());
 
         for (Bean b : ppcs) {
             b.setClazz(WMPropertyPlaceholderConfigurer.class.getName());
@@ -93,8 +91,7 @@ public class SpringConfigurationUpgrade extends BaseDataUpgradeTask implements
     }
 
     private void upgradeLocalSessionFactory(Beans beans) {
-        List<Bean> ppcs = beans
-                .getBeansByType(DataServiceConstants.OLD_SESSION_FACTORY_CLASS_NAME);
+        List<Bean> ppcs = beans.getBeansByType(DataServiceConstants.OLD_SESSION_FACTORY_CLASS_NAME);
 
         for (Bean b : ppcs) {
             b.setClazz(ConfigurationAndSessionFactoryBean.class.getName());
@@ -102,35 +99,33 @@ public class SpringConfigurationUpgrade extends BaseDataUpgradeTask implements
     }
 
     private void upgradeSpringDataServiceManager(Beans beans) {
-        List<Bean> ppcs = beans.getBeansByType(DataServiceConstants
-	    .OLD_SPRING_DATA_SERVICE_MANAGER_NAME);
+        List<Bean> ppcs = beans.getBeansByType(DataServiceConstants.OLD_SPRING_DATA_SERVICE_MANAGER_NAME);
 
         if (ppcs.isEmpty()) {
             // this upgrades 4.0 alpha projects
-	    boolean isAlphaProject = false;
-            ppcs = beans.getBeansByType(SpringDataServiceManager.class
-                    .getName());
+            boolean isAlphaProject = false;
+            ppcs = beans.getBeansByType(SpringDataServiceManager.class.getName());
             for (Bean b : ppcs) {
                 ConstructorArg arg = new ConstructorArg();
                 boolean useIndividualCRUDOps = false;
                 if (b.getConstructorArgs().size() > 4) {
                     arg = b.getConstructorArgs().get(4);
-		    if (arg.getValueElement() != null) {
-			List<String> cl = arg.getValueElement().getContent();
-			if (!cl.isEmpty()) {
-			    useIndividualCRUDOps = Boolean.valueOf(cl.get(0));
-			    isAlphaProject = true;
-			}
-		    }
-                    
+                    if (arg.getValueElement() != null) {
+                        List<String> cl = arg.getValueElement().getContent();
+                        if (!cl.isEmpty()) {
+                            useIndividualCRUDOps = Boolean.valueOf(cl.get(0));
+                            isAlphaProject = true;
+                        }
+                    }
+
                 }
 
-		if (isAlphaProject) {
-		    b.getMetasAndConstructorArgsAndProperties().remove(arg);
-		    arg = new ConstructorArg();
-		    b.getMetasAndConstructorArgsAndProperties().add(arg);
-		    addGenerateCRUDOps(arg, useIndividualCRUDOps);
-		}
+                if (isAlphaProject) {
+                    b.getMetasAndConstructorArgsAndProperties().remove(arg);
+                    arg = new ConstructorArg();
+                    b.getMetasAndConstructorArgsAndProperties().add(arg);
+                    addGenerateCRUDOps(arg, useIndividualCRUDOps);
+                }
             }
         } else {
             for (Bean b : ppcs) {
@@ -154,8 +149,7 @@ public class SpringConfigurationUpgrade extends BaseDataUpgradeTask implements
     }
 
     private void upgradeTaskManager(Beans beans) {
-        List<Bean> ppcs = beans
-                .getBeansByType(DataServiceConstants.OLD_TASK_MANAGER_NAME);
+        List<Bean> ppcs = beans.getBeansByType(DataServiceConstants.OLD_TASK_MANAGER_NAME);
 
         for (Bean b : ppcs) {
             b.setClazz(DefaultTaskManager.class.getName());

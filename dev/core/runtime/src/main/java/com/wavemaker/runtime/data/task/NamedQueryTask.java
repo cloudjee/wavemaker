@@ -44,7 +44,7 @@ import com.wavemaker.runtime.data.util.DataServiceUtils;
  */
 public class NamedQueryTask extends BaseTask implements Task {
 
-    private Log logger = DataServiceLoggers.taskLogger;
+    private final Log logger = DataServiceLoggers.taskLogger;
 
     /**
      * First element in input array is the query name
@@ -78,16 +78,14 @@ public class NamedQueryTask extends BaseTask implements Task {
             NamedQueryDefinition def = meta.getQueryDefinition(queryName);
             boolean supportsReturnType = !(def instanceof NamedSQLQueryDefinition);
 
-            if (supportsReturnType
-                    && DataServiceUtils.requiresResultWrapper(queryString)
-                    && !DataServiceUtils
-                            .isDynamicInstantiationQuery(queryString)) {
+            if (supportsReturnType && DataServiceUtils.requiresResultWrapper(queryString)
+                && !DataServiceUtils.isDynamicInstantiationQuery(queryString)) {
                 rtn = marshalIntoCustomType(queryName, meta, query, rtn);
             }
         }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("rtn for query \"" + queryName + "\": " + rtn);
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("rtn for query \"" + queryName + "\": " + rtn);
         }
 
         return rtn;
@@ -98,8 +96,7 @@ public class NamedQueryTask extends BaseTask implements Task {
     }
 
     @SuppressWarnings("unchecked")
-    private void handleBindParams(Query query, String queryName,
-            Object[] paramValues, DataServiceMetaData meta) {
+    private void handleBindParams(Query query, String queryName, Object[] paramValues, DataServiceMetaData meta) {
 
         NamedQueryDefinition def = meta.getQueryDefinition(queryName);
 
@@ -121,9 +118,7 @@ public class NamedQueryTask extends BaseTask implements Task {
             }
         } else {
             if (paramValues.length == 0) {
-                throw new DataServiceRuntimeException(
-                        MessageResource.QUERY_REQUIRES_PARAMS, queryName, ObjectUtils
-                                .toString(paramTypes));
+                throw new DataServiceRuntimeException(MessageResource.QUERY_REQUIRES_PARAMS, queryName, ObjectUtils.toString(paramTypes));
             }
 
             // REVIEW 09-Sep-07 stoens@activegrid.com --
@@ -131,8 +126,7 @@ public class NamedQueryTask extends BaseTask implements Task {
             for (int j = 0; j < paramValues.length; j++) {
                 String name = paramNames[j];
                 Object value = paramValues[j];
-                if (value != null
-                        && Collection.class.isAssignableFrom(value.getClass())) {
+                if (value != null && Collection.class.isAssignableFrom(value.getClass())) {
                     query.setParameterList(name, (Collection) value);
                 } else {
                     query.setParameter(name, value);
@@ -142,19 +136,16 @@ public class NamedQueryTask extends BaseTask implements Task {
     }
 
     private void logExtraParam(String queryName, Object[] bindParams) {
-        if (logger.isWarnEnabled()) {
+        if (this.logger.isWarnEnabled()) {
             String val = ObjectUtils.toString(bindParams);
-            logger.warn(MessageResource.QUERY_NO_PARMS.getMessage(queryName, val));
-            if (bindParams.length == 1 && bindParams[0] == null
-                    && logger.isDebugEnabled()) {
-                logger.debug(queryName + " invoked with input (Object)null "
-                        + "instead of (Object[])null?");
+            this.logger.warn(MessageResource.QUERY_NO_PARMS.getMessage(queryName, val));
+            if (bindParams.length == 1 && bindParams[0] == null && this.logger.isDebugEnabled()) {
+                this.logger.debug(queryName + " invoked with input (Object)null " + "instead of (Object[])null?");
             }
         }
     }
 
-    private Object marshalIntoCustomType(String queryName,
-            DataServiceMetaData meta, Query query, Object rtn) {
+    private Object marshalIntoCustomType(String queryName, DataServiceMetaData meta, Query query, Object rtn) {
 
         Type[] types = query.getReturnTypes();
         String[] returnAliases = query.getReturnAliases();
@@ -163,8 +154,7 @@ public class NamedQueryTask extends BaseTask implements Task {
             returnAliases = new String[] {};
         }
 
-        List<String> propertyNames = DataServiceUtils.getColumnNames(
-                types.length, Arrays.asList(returnAliases));
+        List<String> propertyNames = DataServiceUtils.getColumnNames(types.length, Arrays.asList(returnAliases));
 
         @SuppressWarnings("unchecked")
         List<Object> rows = (List<Object>) rtn;
@@ -174,8 +164,7 @@ public class NamedQueryTask extends BaseTask implements Task {
         ObjectAccess oa = getObjectAccess();
 
         for (Object o : rows) {
-            Object bean = instantiateOutputType(meta.getDataPackage(),
-                    queryName);
+            Object bean = instantiateOutputType(meta.getDataPackage(), queryName);
             newRtn.add(bean);
             if (o instanceof Object[]) {
                 Object[] row = (Object[]) o;
@@ -200,13 +189,10 @@ public class NamedQueryTask extends BaseTask implements Task {
 
     private Object instantiateOutputType(String dataPackage, String queryName) {
         try {
-            return getObjectAccess().newInstance(
-                    DataServiceUtils.getOutputType(dataPackage, queryName));
+            return getObjectAccess().newInstance(DataServiceUtils.getOutputType(dataPackage, queryName));
         } catch (RuntimeException ex) {
             try {
-                return getObjectAccess().newInstance(
-                        DataServiceUtils.getOldOutputType(dataPackage,
-                                queryName));
+                return getObjectAccess().newInstance(DataServiceUtils.getOldOutputType(dataPackage, queryName));
             } catch (RuntimeException ex2) {
                 throw ex;
             }

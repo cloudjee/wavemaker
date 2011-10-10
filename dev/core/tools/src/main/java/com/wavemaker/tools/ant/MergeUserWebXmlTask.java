@@ -33,53 +33,65 @@ public class MergeUserWebXmlTask extends Task {
 
     private String workdir;
 
-    private String servletStr = "<servlet>";
-    private String blockStart = "<!-- start of user xml contents -->";
-    private String blockEnd = "<!-- end of user xml contents -->";
-    private String root1 = "<web-app";
-    private String root2 = ">";
-    private String root3 = "</web-app>";
+    private final String servletStr = "<servlet>";
+
+    private final String blockStart = "<!-- start of user xml contents -->";
+
+    private final String blockEnd = "<!-- end of user xml contents -->";
+
+    private final String root1 = "<web-app";
+
+    private final String root2 = ">";
+
+    private final String root3 = "</web-app>";
 
     @Override
     public void execute() {
-        if (null == workdir) {
+        if (null == this.workdir) {
             throw new IllegalArgumentException("private String workDir; is not set");
         }
 
-        File userwebxml = new File(workdir, ProjectConstants.USER_WEB_XML);
-        File webxml = new File(workdir, ProjectConstants.WEB_XML);
+        File userwebxml = new File(this.workdir, ProjectConstants.USER_WEB_XML);
+        File webxml = new File(this.workdir, ProjectConstants.WEB_XML);
 
         try {
             int indx1, indx2, indx3;
             String content = FileUtils.readFileToString(webxml, ServerConstants.DEFAULT_ENCODING);
-            String customcontent = FileUtils.readFileToString(userwebxml, ServerConstants.DEFAULT_ENCODING) +
-                    "\r\n";
+            String customcontent = FileUtils.readFileToString(userwebxml, ServerConstants.DEFAULT_ENCODING) + "\r\n";
 
-            indx1 = customcontent.indexOf(root1);
-            if (indx1 < 0) throw new RuntimeException("ERROR: Corrupted web.xml");
-
-            indx2 = customcontent.indexOf(root2, indx1 + root1.length());
-            if (indx2 < 0 || indx2 >= customcontent.length() - root3.length() - 1)
+            indx1 = customcontent.indexOf(this.root1);
+            if (indx1 < 0) {
                 throw new RuntimeException("ERROR: Corrupted web.xml");
+            }
 
-            indx3 = customcontent.indexOf(root3, indx2);
-            if (indx3 < 0) throw new RuntimeException("ERROR: Corrupted web.xml");
+            indx2 = customcontent.indexOf(this.root2, indx1 + this.root1.length());
+            if (indx2 < 0 || indx2 >= customcontent.length() - this.root3.length() - 1) {
+                throw new RuntimeException("ERROR: Corrupted web.xml");
+            }
 
-            customcontent = customcontent.substring(indx2+root2.length(), indx3);
+            indx3 = customcontent.indexOf(this.root3, indx2);
+            if (indx3 < 0) {
+                throw new RuntimeException("ERROR: Corrupted web.xml");
+            }
 
-            indx1 = content.indexOf(blockStart);
+            customcontent = customcontent.substring(indx2 + this.root2.length(), indx3);
+
+            indx1 = content.indexOf(this.blockStart);
             String targetStr;
             if (indx1 > 0) {
-                indx2 = content.indexOf(blockEnd, indx1);
-                if (indx2 < 0) throw new RuntimeException("ERROR: Corrupted web.xml");
-                targetStr = content.substring(indx1, indx2+blockEnd.length());
-                customcontent = blockStart + "\r\n" + customcontent + "\r\n" + blockEnd;
+                indx2 = content.indexOf(this.blockEnd, indx1);
+                if (indx2 < 0) {
+                    throw new RuntimeException("ERROR: Corrupted web.xml");
+                }
+                targetStr = content.substring(indx1, indx2 + this.blockEnd.length());
+                customcontent = this.blockStart + "\r\n" + customcontent + "\r\n" + this.blockEnd;
             } else {
-                indx1 = content.indexOf(servletStr);
-                if (indx1 < 0) throw new RuntimeException("ERROR: Corrupted web.xml");
-                targetStr = servletStr;
-                customcontent = "\r\n" + blockStart + "\r\n" + customcontent + "\r\n" + blockEnd +
-                                "\r\n\r\n" + "\t" + servletStr;
+                indx1 = content.indexOf(this.servletStr);
+                if (indx1 < 0) {
+                    throw new RuntimeException("ERROR: Corrupted web.xml");
+                }
+                targetStr = this.servletStr;
+                customcontent = "\r\n" + this.blockStart + "\r\n" + customcontent + "\r\n" + this.blockEnd + "\r\n\r\n" + "\t" + this.servletStr;
             }
             content = content.replace(targetStr, customcontent);
             FileUtils.writeStringToFile(webxml, content, ServerConstants.DEFAULT_ENCODING);

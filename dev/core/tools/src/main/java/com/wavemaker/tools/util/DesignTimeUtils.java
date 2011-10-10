@@ -38,121 +38,105 @@ import com.wavemaker.tools.service.DesignServiceType;
  */
 public class DesignTimeUtils {
 
-	private DesignTimeUtils() {
-	}
+    private DesignTimeUtils() {
+    }
 
-	private static String getDefaultProjectHome() {
-		String home;
-		if (isRuntime()) {
-			home = (String) RuntimeAccess
-					.getInstance()
-					.getSession()
-					.getAttribute(LocalStudioConfiguration.PROJECTHOME_PROP_KEY);
-		} else {
-			home = System
-					.getProperty(LocalStudioConfiguration.PROJECTHOME_PROP_KEY);
-		}
-		// System.out.println("GET HOME IS " + home);
-		return home;
-	}
+    private static String getDefaultProjectHome() {
+        String home;
+        if (isRuntime()) {
+            home = (String) RuntimeAccess.getInstance().getSession().getAttribute(LocalStudioConfiguration.PROJECTHOME_PROP_KEY);
+        } else {
+            home = System.getProperty(LocalStudioConfiguration.PROJECTHOME_PROP_KEY);
+        }
+        // System.out.println("GET HOME IS " + home);
+        return home;
+    }
 
-	private static void setDefaultProjectHome(String home) {
-		if (isRuntime()) {
-			RuntimeAccess
-					.getInstance()
-					.getSession()
-					.setAttribute(
-							LocalStudioConfiguration.PROJECTHOME_PROP_KEY, home);
-		} else {
-			System.setProperty(LocalStudioConfiguration.PROJECTHOME_PROP_KEY,
-					home);
-		}
-		// System.out.println("SET HOME IS " + home);
-	}
+    private static void setDefaultProjectHome(String home) {
+        if (isRuntime()) {
+            RuntimeAccess.getInstance().getSession().setAttribute(LocalStudioConfiguration.PROJECTHOME_PROP_KEY, home);
+        } else {
+            System.setProperty(LocalStudioConfiguration.PROJECTHOME_PROP_KEY, home);
+        }
+        // System.out.println("SET HOME IS " + home);
+    }
 
-	private static void deleteDefaultProjectHomeProp() {
-		if (isRuntime()) {
-			RuntimeAccess
-					.getInstance()
-					.getSession()
-					.removeAttribute(
-							LocalStudioConfiguration.PROJECTHOME_PROP_KEY);
-		} else {
-			Properties props = System.getProperties();
-			props.remove(LocalStudioConfiguration.PROJECTHOME_PROP_KEY);
-			System.setProperties(props);
-		}
-		// System.out.println("DELETE HOME");
-	}
+    private static void deleteDefaultProjectHomeProp() {
+        if (isRuntime()) {
+            RuntimeAccess.getInstance().getSession().removeAttribute(LocalStudioConfiguration.PROJECTHOME_PROP_KEY);
+        } else {
+            Properties props = System.getProperties();
+            props.remove(LocalStudioConfiguration.PROJECTHOME_PROP_KEY);
+            System.setProperties(props);
+        }
+        // System.out.println("DELETE HOME");
+    }
 
-	private static boolean isRuntime() {
+    private static boolean isRuntime() {
 
-		try {
-			if (RuntimeAccess.getInstance() != null
-					&& RuntimeAccess.getInstance().getRequest() != null)
-				return true;
-		} catch (Exception e) {
-		}
-		return false;
-	}
+        try {
+            if (RuntimeAccess.getInstance() != null && RuntimeAccess.getInstance().getRequest() != null) {
+                return true;
+            }
+        } catch (Exception e) {
+        }
+        return false;
+    }
 
-	/**
-	 * Return a DesignServiceManager instance; this sets up an internal
-	 * ProjectManager, and creates a Project based on the projectRoot parameter.
-	 * This may not be very fast, so should be avoided when possible.
-	 * 
-	 * @param projectRoot
-	 * @return DesignServiceManager instance
-	 */
-	public static DesignServiceManager getDSMForProjectRoot(Resource projectRoot) {
-		try {
-			String oldProp = getDefaultProjectHome();
+    /**
+     * Return a DesignServiceManager instance; this sets up an internal ProjectManager, and creates a Project based on
+     * the projectRoot parameter. This may not be very fast, so should be avoided when possible.
+     * 
+     * @param projectRoot
+     * @return DesignServiceManager instance
+     */
+    public static DesignServiceManager getDSMForProjectRoot(Resource projectRoot) {
+        try {
+            String oldProp = getDefaultProjectHome();
 
-			try {
-				// override configuration
-				setDefaultProjectHome(projectRoot.getFile().getParentFile()
-						.getAbsolutePath());
+            try {
+                // override configuration
+                setDefaultProjectHome(projectRoot.getFile().getParentFile().getAbsolutePath());
 
-				DesignServiceManager dsm = new DesignServiceManager();
+                DesignServiceManager dsm = new DesignServiceManager();
 
-				// get out our DesignServiceType configuration
-				ClassPathXmlApplicationContext ac = new ClassPathXmlApplicationContext(
-						new String[] { "springapp.xml",
-								"designservicetypes.xml", "servicetypes.xml" });
-				Map<?, ?> dsts = ac.getBeansOfType(DesignServiceType.class);
+                // get out our DesignServiceType configuration
+                ClassPathXmlApplicationContext ac = new ClassPathXmlApplicationContext(new String[] { "springapp.xml", "designservicetypes.xml",
+                    "servicetypes.xml" });
+                Map<?, ?> dsts = ac.getBeansOfType(DesignServiceType.class);
 
-				dsm.setDesignServiceTypes(new ArrayList<DesignServiceType>());
-				for (Object o : dsts.values()) {
-					dsm.getDesignServiceTypes().add((DesignServiceType) o);
-				}
+                dsm.setDesignServiceTypes(new ArrayList<DesignServiceType>());
+                for (Object o : dsts.values()) {
+                    dsm.getDesignServiceTypes().add((DesignServiceType) o);
+                }
 
-				LocalStudioConfiguration sc = new LocalStudioConfiguration();
-				sc.setTestWaveMakerHome(projectRoot.getFile().getParentFile());
+                LocalStudioConfiguration sc = new LocalStudioConfiguration();
+                sc.setTestWaveMakerHome(projectRoot.getFile().getParentFile());
 
-				ProjectManager pm = new ProjectManager();
-				pm.setStudioConfiguration(sc);
-				pm.openProject(projectRoot.getFilename(), true);
-				dsm.setProjectManager(pm);
+                ProjectManager pm = new ProjectManager();
+                pm.setStudioConfiguration(sc);
+                pm.openProject(projectRoot.getFilename(), true);
+                dsm.setProjectManager(pm);
 
-				DeploymentManager dep = new DeploymentManager();
-				dep.setProjectManager(pm);
-				dep.setStudioConfiguration(sc);
-				dsm.setStudioConfiguration(sc);
-				dsm.setDeploymentManager(dep);
+                DeploymentManager dep = new DeploymentManager();
+                dep.setProjectManager(pm);
+                dep.setStudioConfiguration(sc);
+                dsm.setStudioConfiguration(sc);
+                dsm.setDeploymentManager(dep);
 
-				return dsm;
-			} finally {
-				if (null != oldProp) {
-					setDefaultProjectHome(oldProp);
-				} else {
-					deleteDefaultProjectHomeProp();
-				}
-			}
-		} catch (JAXBException ex) {
-			throw new ConfigurationException(ex);
-		} catch (IOException ex) {
-			throw new ConfigurationException(ex);
-		}
-	}
+                return dsm;
+            } finally {
+                if (null != oldProp) {
+                    setDefaultProjectHome(oldProp);
+                } else {
+                    deleteDefaultProjectHomeProp();
+                }
+            }
+        } catch (JAXBException ex) {
+            throw new ConfigurationException(ex);
+        } catch (IOException ex) {
+            throw new ConfigurationException(ex);
+        }
+    }
 
 }

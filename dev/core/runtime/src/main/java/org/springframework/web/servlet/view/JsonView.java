@@ -31,78 +31,78 @@ import com.wavemaker.runtime.server.view.TypedView;
 
 /**
  * A View that renders its model as a JSON object.
- *
+ * 
  * @author Andres Almiray <aalmiray@users.sourceforge.net>
  * 
- * Modified by ActiveGrid.
+ *         Modified by ActiveGrid.
  * @author small
  * @version $Rev$ - $Date$
  */
 public class JsonView extends AbstractView implements TypedView {
-    
-   /** Default content type. Overridable as bean property. */
-   private static final String DEFAULT_JSON_CONTENT_TYPE = ServerConstants.JSON_CONTENT_TYPE;
 
-   /** JsonConfig instance; defaults to null */
-   private JSONState jsonConfig = null;
-   
-   private FieldDefinition rootType = null;
+    /** Default content type. Overridable as bean property. */
+    private static final String DEFAULT_JSON_CONTENT_TYPE = ServerConstants.JSON_CONTENT_TYPE;
 
-   public JsonView() {
-      super();
-      setContentType( DEFAULT_JSON_CONTENT_TYPE );
-   }
+    /** JsonConfig instance; defaults to null */
+    private JSONState jsonConfig = null;
 
+    private FieldDefinition rootType = null;
 
-   /**
-    * Creates a JSON [JSONObject,JSONArray,JSONNUll] from the model values.
-    */
-   protected void createJSON( Map<?, ?> model, Writer writer )
-           throws IOException {
-       
-       if (model.size()==1 && model.containsKey(ServerConstants.ROOT_MODEL_OBJECT_KEY)) {
-           defaultCreateJSON( writer, model.get(ServerConstants.ROOT_MODEL_OBJECT_KEY) );
-       } else {
-           defaultCreateJSON( writer, model );
-       }
-   }
+    public JsonView() {
+        super();
+        setContentType(DEFAULT_JSON_CONTENT_TYPE);
+    }
 
-   /**
-    * Creates a JSON [JSONObject,JSONArray,JSONNUll] from the model values.
-    */
-   protected final void defaultCreateJSON( Writer writer, Object obj )
-           throws IOException {
-      JSONMarshaller.marshal( writer, obj, jsonConfig, rootType, false, false );
-   }
+    /**
+     * Creates a JSON [JSONObject,JSONArray,JSONNUll] from the model values.
+     */
+    protected void createJSON(Map<?, ?> model, Writer writer) throws IOException {
 
-   @Override
-   @SuppressWarnings("unchecked")
-   protected void renderMergedOutputModel( Map model, HttpServletRequest request,
-         HttpServletResponse response ) throws Exception {
-       
-      response.setContentType( getContentType() );
-      
-      Writer w = response.getWriter();
-      createJSON( model, w );
-      w.close();
-   }
+        if (model.size() == 1 && model.containsKey(ServerConstants.ROOT_MODEL_OBJECT_KEY)) {
+            defaultCreateJSON(writer, model.get(ServerConstants.ROOT_MODEL_OBJECT_KEY));
+        } else {
+            defaultCreateJSON(writer, model);
+        }
+    }
 
-   public JSONState getJsonConfig() {
-       return jsonConfig;
-   }
+    /**
+     * Creates a JSON [JSONObject,JSONArray,JSONNUll] from the model values.
+     */
+    protected final void defaultCreateJSON(Writer writer, Object obj) throws IOException {
+        JSONMarshaller.marshal(writer, obj, this.jsonConfig, this.rootType, false, false);
+    }
 
-   public void setJsonConfig(JSONState jsonConfig) {
-       this.jsonConfig = jsonConfig;
-   }
+    @Override
+    @SuppressWarnings("unchecked")
+    protected void renderMergedOutputModel(Map model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-   /* (non-Javadoc)
-    * @see com.wavemaker.runtime.server.view.TypedView#getRootType()
-    */
-   public FieldDefinition getRootType() {
+        response.setContentType(getContentType());
+
+        Writer w = response.getWriter();
+        createJSON(model, w);
+        w.close();
+    }
+
+    public JSONState getJsonConfig() {
+        return this.jsonConfig;
+    }
+
+    public void setJsonConfig(JSONState jsonConfig) {
+        this.jsonConfig = jsonConfig;
+    }
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.runtime.server.view.TypedView#getRootType()
+     */
+    public FieldDefinition getRootType() {
         return this.rootType;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.runtime.server.view.TypedView#setRootType(com.wavemaker.json.type.FieldDefinition)
      */
     public void setRootType(FieldDefinition type) {

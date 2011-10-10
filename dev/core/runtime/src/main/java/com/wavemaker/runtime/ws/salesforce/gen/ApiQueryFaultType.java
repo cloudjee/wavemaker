@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -22,11 +20,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for ApiQueryFault complex type.
+ * <p>
+ * Java class for ApiQueryFault complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="ApiQueryFault">
@@ -44,22 +43,13 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ApiQueryFault", namespace = "urn:fault.partner.soap.sforce.com", propOrder = {
-    "row",
-    "column"
-})
-@XmlSeeAlso({
-    InvalidFieldFault.class,
-    MalformedQueryFault.class,
-    InvalidSObjectFault.class,
-    MalformedSearchFault.class
-})
-public class ApiQueryFaultType
-    extends ApiFaultType
-{
+@XmlType(name = "ApiQueryFault", namespace = "urn:fault.partner.soap.sforce.com", propOrder = { "row", "column" })
+@XmlSeeAlso({ InvalidFieldFault.class, MalformedQueryFault.class, InvalidSObjectFault.class, MalformedSearchFault.class })
+public class ApiQueryFaultType extends ApiFaultType {
 
     @XmlElement(namespace = "urn:fault.partner.soap.sforce.com")
     protected int row;
+
     @XmlElement(namespace = "urn:fault.partner.soap.sforce.com")
     protected int column;
 
@@ -68,7 +58,7 @@ public class ApiQueryFaultType
      * 
      */
     public int getRow() {
-        return row;
+        return this.row;
     }
 
     /**
@@ -84,7 +74,7 @@ public class ApiQueryFaultType
      * 
      */
     public int getColumn() {
-        return column;
+        return this.column;
     }
 
     /**

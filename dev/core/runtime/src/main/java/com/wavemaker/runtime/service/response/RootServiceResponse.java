@@ -16,13 +16,10 @@ package com.wavemaker.runtime.service.response;
 
 import com.wavemaker.runtime.server.JSONRPCController;
 
-
 /**
- * Objects that implement this interface avoid some processing by the
- * {@link JSONRPCController}. Ordinarily, when a service method returns, the
- * result is placed in the ModelMap with a "result" key (on success) or an
- * "error" key on failure. Results that implement this interface avoid that
- * step.
+ * Objects that implement this interface avoid some processing by the {@link JSONRPCController}. Ordinarily, when a
+ * service method returns, the result is placed in the ModelMap with a "result" key (on success) or an "error" key on
+ * failure. Results that implement this interface avoid that step.
  * 
  * @author small
  * @version $Rev$ - $Date$

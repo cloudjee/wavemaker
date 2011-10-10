@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.spring;
 
 import java.io.File;
@@ -47,9 +48,8 @@ import com.wavemaker.tools.spring.beans.Property;
 public class TestSpringConfigSupport extends WMTestCase {
 
     public void testReadBeans() throws Exception {
-        
-        File configFile = ClassLoaderUtils
-                .getClasspathFile("com/wavemaker/tools/spring/spring-test1.xml").getFile();
+
+        File configFile = ClassLoaderUtils.getClasspathFile("com/wavemaker/tools/spring/spring-test1.xml").getFile();
         Project project = new Project(new FileSystemResource(configFile.getParentFile()), new LocalStudioConfiguration());
         Beans beans = SpringConfigSupport.readBeans(new FileSystemResource(configFile), project);
         List<Object> beansChildren = beans.getImportsAndAliasAndBean();
@@ -59,11 +59,9 @@ public class TestSpringConfigSupport extends WMTestCase {
                 Bean bean = (Bean) o1;
                 String beanId = bean.getId();
                 if (beanId.equals("book1")) {
-                    assertEquals("com.wavemaker.tools.spring.Book", bean
-                            .getClazz());
+                    assertEquals("com.wavemaker.tools.spring.Book", bean.getClazz());
                 } else if (beanId.equals("bookManager")) {
-                    List<Object> beanChildren = bean
-                            .getMetasAndConstructorArgsAndProperties();
+                    List<Object> beanChildren = bean.getMetasAndConstructorArgsAndProperties();
                     assertEquals(1, beanChildren.size());
                     for (Object o2 : beanChildren) {
                         if (o2 instanceof Property) {
@@ -88,17 +86,14 @@ public class TestSpringConfigSupport extends WMTestCase {
         File configFile = null;
         try {
             configFile = File.createTempFile("spring-text", ".xml");
-            Writer writer = new OutputStreamWriter(
-                    new FileOutputStream(configFile),
-                    ServerConstants.DEFAULT_ENCODING);
+            Writer writer = new OutputStreamWriter(new FileOutputStream(configFile), ServerConstants.DEFAULT_ENCODING);
             SpringConfigSupport.writeBeans(beans, writer);
             writer.close();
 
             // Need to use MockFileSystemXmlApplicationContext since
             // FileSystemXmlApplicatinoContext turns "/tmp/abc.xml" to a
             // relative path "tmp/abc.xml"
-            ApplicationContext ctx = new MockFileSystemXmlApplicationContext(
-                    configFile.getPath());
+            ApplicationContext ctx = new MockFileSystemXmlApplicationContext(configFile.getPath());
             Object bean = ctx.getBean("book1");
             assertEquals(Book.class, bean.getClass());
         } finally {
@@ -108,11 +103,9 @@ public class TestSpringConfigSupport extends WMTestCase {
         }
     }
 
-    public static class MockFileSystemXmlApplicationContext extends
-            FileSystemXmlApplicationContext {
+    public static class MockFileSystemXmlApplicationContext extends FileSystemXmlApplicationContext {
 
-        public MockFileSystemXmlApplicationContext(String configLocation)
-                throws BeansException {
+        public MockFileSystemXmlApplicationContext(String configLocation) throws BeansException {
             super(configLocation);
         }
 

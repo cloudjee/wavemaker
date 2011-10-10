@@ -15,8 +15,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.wavemaker.runtime.data;
 
+package com.wavemaker.runtime.data;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -54,9 +54,9 @@ public class TestSakilaAOP extends RuntimeDataSpringContextTestCase {
 
     @BeforeClass
     public static void initTestData() {
-    	testData = new TestData();
+        testData = new TestData();
     }
-    
+
     protected void checkShouldSkip() {
         if (testData.skipRemaining) {
             throw new DependentTestFailureException(testData.dependentTestName);
@@ -70,11 +70,9 @@ public class TestSakilaAOP extends RuntimeDataSpringContextTestCase {
 
             ApplicationContext ctx = getApplicationContext();
 
-            ServiceManager serviceMgr = (ServiceManager) ctx
-                    .getBean(ServiceConstants.SERVICE_MANAGER_NAME);
+            ServiceManager serviceMgr = (ServiceManager) ctx.getBean(ServiceConstants.SERVICE_MANAGER_NAME);
 
-            Sakila sakila = (Sakila) ((ReflectServiceWire) serviceMgr
-                    .getServiceWire(DataServiceTestConstants.SAKILA_SERVICE_SPRING_ID_2)).getServiceBean();
+            Sakila sakila = (Sakila) ((ReflectServiceWire) serviceMgr.getServiceWire(DataServiceTestConstants.SAKILA_SERVICE_SPRING_ID_2)).getServiceBean();
 
             sakila.getActorById(Short.valueOf("1")); // test connection
 

@@ -30,8 +30,7 @@ import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.Project;
 
 /**
- * The upgrade manager. Provides methods to upgrade projects to the current
- * version.
+ * The upgrade manager. Provides methods to upgrade projects to the current version.
  * 
  * @author small
  * @author Jeremy Grelle
@@ -39,171 +38,158 @@ import com.wavemaker.tools.project.Project;
  */
 public class UpgradeManager implements InitializingBean {
 
-	/** Logger for this class and subclasses */
-	protected final Logger logger = Logger.getLogger(getClass());
+    /** Logger for this class and subclasses */
+    protected final Logger logger = Logger.getLogger(getClass());
 
-	protected static final String STUDIO_VERSION_KEY = "StudioVersion";
+    protected static final String STUDIO_VERSION_KEY = "StudioVersion";
 
-	/**
-	 * Perform the upgrades; this will run through the list of potential
-	 * upgrades iteratively until the project is at the current version.
-	 * 
-	 * @param project
-	 *            The project to upgrade.
-	 * @return A String containing any information regarding the upgrades. This
-	 *         may be passed back to the user as information. If no upgrades
-	 *         were performed, this will be null.
-	 */
-	public UpgradeInfo doUpgrades(Project project) {
+    /**
+     * Perform the upgrades; this will run through the list of potential upgrades iteratively until the project is at
+     * the current version.
+     * 
+     * @param project The project to upgrade.
+     * @return A String containing any information regarding the upgrades. This may be passed back to the user as
+     *         information. If no upgrades were performed, this will be null.
+     */
+    public UpgradeInfo doUpgrades(Project project) {
 
-		double projectVersion = project.getProjectVersion();
-		double projectMaxVersion = getCurrentVersion();
+        double projectVersion = project.getProjectVersion();
+        double projectMaxVersion = getCurrentVersion();
 
-		if (projectVersion > projectMaxVersion) {
-			throw new WMRuntimeException(
-					MessageResource.PROJECT_NEWER_THAN_STUDIO,
-					project.getProjectName(), projectVersion, projectMaxVersion);
-		} else if (projectVersion < projectMaxVersion) {
-			UpgradeInfo ret = new UpgradeInfo();
+        if (projectVersion > projectMaxVersion) {
+            throw new WMRuntimeException(MessageResource.PROJECT_NEWER_THAN_STUDIO, project.getProjectName(), projectVersion, projectMaxVersion);
+        } else if (projectVersion < projectMaxVersion) {
+            UpgradeInfo ret = new UpgradeInfo();
 
-			try {
-				Resource exportFile = project.getProjectRoot().createRelative(
-						DeploymentManager.EXPORT_DIR_DEFAULT
-								+ project.getProjectName() + "-upgrade-"
-								+ projectVersion + ".zip");
-				deploymentManager.exportProject(exportFile.getURI().toString());
-				ret.setBackupExportFile(exportFile);
-			} catch (IOException ex) {
-				throw new WMRuntimeException(ex);
-			}
+            try {
+                Resource exportFile = project.getProjectRoot().createRelative(
+                    DeploymentManager.EXPORT_DIR_DEFAULT + project.getProjectName() + "-upgrade-" + projectVersion + ".zip");
+                this.deploymentManager.exportProject(exportFile.getURI().toString());
+                ret.setBackupExportFile(exportFile);
+            } catch (IOException ex) {
+                throw new WMRuntimeException(ex);
+            }
 
-			deploymentManager.testRunClean();
+            this.deploymentManager.testRunClean();
 
-			for (Entry<Double, List<UpgradeTask>> entry : getUpgrades()
-					.entrySet()) {
+            for (Entry<Double, List<UpgradeTask>> entry : getUpgrades().entrySet()) {
 
-				if (entry.getKey() <= projectVersion) {
-					continue;
-				}
+                if (entry.getKey() <= projectVersion) {
+                    continue;
+                }
 
-				ret.setVersion(entry.getKey());
+                ret.setVersion(entry.getKey());
 
-				for (UpgradeTask task : entry.getValue()) {
-					logger.debug("Running upgrade task " + task
-							+ " on project " + project);
-					task.doUpgrade(project, ret);
-				}
+                for (UpgradeTask task : entry.getValue()) {
+                    this.logger.debug("Running upgrade task " + task + " on project " + project);
+                    task.doUpgrade(project, ret);
+                }
 
-				project.setProjectVersion(entry.getKey());
-			}
+                project.setProjectVersion(entry.getKey());
+            }
 
-			return ret;
-		} else {
-			return null;
-		}
-	}
+            return ret;
+        } else {
+            return null;
+        }
+    }
 
-	/**
-	 * Get the current version, according to the UpgradeManager configuration.
-	 * 
-	 * @return The current version.
-	 */
-	public double getCurrentVersion() {
+    /**
+     * Get the current version, according to the UpgradeManager configuration.
+     * 
+     * @return The current version.
+     */
+    public double getCurrentVersion() {
 
-		return getUpgrades().lastKey();
-	}
+        return getUpgrades().lastKey();
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
-	 */
-	public void afterPropertiesSet() {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
+     */
+    public void afterPropertiesSet() {
 
-		doStudioUpgrade();
-	}
+        doStudioUpgrade();
+    }
 
-	/**
-	 * If needed, upgrade the studio. Checks the registry for
-	 * STUDIO_VERSION_KEY; if not present or if it's older than the configured
-	 * studio upgrades, do those upgrades.
-	 */
-	public void doStudioUpgrade() {
+    /**
+     * If needed, upgrade the studio. Checks the registry for STUDIO_VERSION_KEY; if not present or if it's older than
+     * the configured studio upgrades, do those upgrades.
+     */
+    public void doStudioUpgrade() {
 
-		double studioVersion = getStudioVersion();
-		double studioMaxVersion = studioUpgrades.lastKey();
+        double studioVersion = getStudioVersion();
+        double studioMaxVersion = this.studioUpgrades.lastKey();
 
-		if (studioVersion > studioMaxVersion) {
-			logger.error("Configured studio version (" + studioVersion
-					+ ") is older than currently running version ("
-					+ studioMaxVersion + "); have you downgraded your studio?");
-		} else if (studioVersion < studioMaxVersion) {
-			UpgradeInfo ret = new UpgradeInfo();
+        if (studioVersion > studioMaxVersion) {
+            this.logger.error("Configured studio version (" + studioVersion + ") is older than currently running version (" + studioMaxVersion
+                + "); have you downgraded your studio?");
+        } else if (studioVersion < studioMaxVersion) {
+            UpgradeInfo ret = new UpgradeInfo();
 
-			for (Entry<Double, List<StudioUpgradeTask>> entry : getStudioUpgrades()
-					.entrySet()) {
+            for (Entry<Double, List<StudioUpgradeTask>> entry : getStudioUpgrades().entrySet()) {
 
-				if (entry.getKey() <= studioVersion) {
-					continue;
-				}
+                if (entry.getKey() <= studioVersion) {
+                    continue;
+                }
 
-				ret.setVersion(entry.getKey());
+                ret.setVersion(entry.getKey());
 
-				for (StudioUpgradeTask task : entry.getValue()) {
-					task.doUpgrade(ret);
-				}
+                for (StudioUpgradeTask task : entry.getValue()) {
+                    task.doUpgrade(ret);
+                }
 
-				// update the stored version
-				setStudioVersion(entry.getKey());
-			}
+                // update the stored version
+                setStudioVersion(entry.getKey());
+            }
 
-			for (String version : ret.getMessages().keySet()) {
-				for (String message : ret.getMessages().get(version)) {
-					logger.warn("Upgraded to " + version + ": " + message);
-				}
-			}
-		}
-	}
+            for (String version : ret.getMessages().keySet()) {
+                for (String message : ret.getMessages().get(version)) {
+                    this.logger.warn("Upgraded to " + version + ": " + message);
+                }
+            }
+        }
+    }
 
-	public static double getStudioVersion() {
-		String prefString = ConfigurationStore.getPreference(
-				UpgradeManager.class, STUDIO_VERSION_KEY, "0.0");
-		return Double.parseDouble(prefString);
-	}
+    public static double getStudioVersion() {
+        String prefString = ConfigurationStore.getPreference(UpgradeManager.class, STUDIO_VERSION_KEY, "0.0");
+        return Double.parseDouble(prefString);
+    }
 
-	public static void setStudioVersion(double version) {
-		ConfigurationStore.setPreference(UpgradeManager.class,
-				STUDIO_VERSION_KEY, "" + version);
-	}
+    public static void setStudioVersion(double version) {
+        ConfigurationStore.setPreference(UpgradeManager.class, STUDIO_VERSION_KEY, "" + version);
+    }
 
-	// bean properties
-	private SortedMap<Double, List<UpgradeTask>> upgrades;
-	private SortedMap<Double, List<StudioUpgradeTask>> studioUpgrades;
-	private DeploymentManager deploymentManager;
+    // bean properties
+    private SortedMap<Double, List<UpgradeTask>> upgrades;
 
-	public SortedMap<Double, List<UpgradeTask>> getUpgrades() {
-		return upgrades;
-	}
+    private SortedMap<Double, List<StudioUpgradeTask>> studioUpgrades;
 
-	public void setUpgrades(SortedMap<Double, List<UpgradeTask>> upgrades) {
-		this.upgrades = upgrades;
-	}
+    private DeploymentManager deploymentManager;
 
-	public DeploymentManager getDeploymentManager() {
-		return deploymentManager;
-	}
+    public SortedMap<Double, List<UpgradeTask>> getUpgrades() {
+        return this.upgrades;
+    }
 
-	public void setDeploymentManager(DeploymentManager deploymentManager) {
-		this.deploymentManager = deploymentManager;
-	}
+    public void setUpgrades(SortedMap<Double, List<UpgradeTask>> upgrades) {
+        this.upgrades = upgrades;
+    }
 
-	public SortedMap<Double, List<StudioUpgradeTask>> getStudioUpgrades() {
-		return studioUpgrades;
-	}
+    public DeploymentManager getDeploymentManager() {
+        return this.deploymentManager;
+    }
 
-	public void setStudioUpgrades(
-			SortedMap<Double, List<StudioUpgradeTask>> studioUpgrades) {
-		this.studioUpgrades = studioUpgrades;
-	}
+    public void setDeploymentManager(DeploymentManager deploymentManager) {
+        this.deploymentManager = deploymentManager;
+    }
+
+    public SortedMap<Double, List<StudioUpgradeTask>> getStudioUpgrades() {
+        return this.studioUpgrades;
+    }
+
+    public void setStudioUpgrades(SortedMap<Double, List<StudioUpgradeTask>> studioUpgrades) {
+        this.studioUpgrades = studioUpgrades;
+    }
 }

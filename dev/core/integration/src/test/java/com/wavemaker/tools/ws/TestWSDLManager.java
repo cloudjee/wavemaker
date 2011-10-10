@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.ws;
 
 import static org.junit.Assert.assertEquals;
@@ -30,7 +31,7 @@ import com.wavemaker.tools.ws.wsdl.WSDLManager;
 
 /**
  * Test WSDLManager.
- *
+ * 
  * @author Frankie Fu
  * @version $Rev:22673 $ - $Date:2008-05-30 14:45:46 -0700 (Fri, 30 May 2008) $
  */
@@ -46,8 +47,7 @@ public class TestWSDLManager extends TestSpringContextTestCase {
     public void testRegisterWSDL() throws WSDLException {
         WSDLManager manager = WSDLManager.getInstance();
         manager.registerWSDL(ClassLoaderUtils.getResource(STOCKQUOTE_WSDL), null);
-        manager.registerWSDL(ClassLoaderUtils
-                .getResource(YAHOO_STOCKQUOTE_WSDL), null);
+        manager.registerWSDL(ClassLoaderUtils.getResource(YAHOO_STOCKQUOTE_WSDL), null);
         manager.registerWSDL(ClassLoaderUtils.getResource(YAHOO_TRAFFIC_WSDL), null);
         String[] allServiceIds = manager.getAllServiceIds();
         assertEquals(3, allServiceIds.length);
@@ -59,8 +59,7 @@ public class TestWSDLManager extends TestSpringContextTestCase {
         try {
             manager.registerWSDL(null, null);
         } catch (IllegalArgumentException e) {
-            assertTrue(e.getMessage().equals(
-                    MessageResource.WS_NULL_WSDL_URI.getMessage()));
+            assertTrue(e.getMessage().equals(MessageResource.WS_NULL_WSDL_URI.getMessage()));
         }
     }
 }

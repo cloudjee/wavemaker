@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.json;
 
 import java.io.File;
@@ -48,7 +49,7 @@ import com.wavemaker.json.type.reflect.converters.FileTypeDefinition;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestAlternateJSONTransformer extends WMTestCase {
 
@@ -130,26 +131,23 @@ public class TestAlternateJSONTransformer extends WMTestCase {
         assertEquals("b", map.get("a"));
         assertEquals("d", map.get("c"));
     }
-    
+
     public void testDates() throws Exception {
 
         JSONState jsonState = new JSONState();
-        
+
         jsonState.getTypeState().addType(new DateTypeDefinition(java.util.Date.class));
-        FieldDefinition fd = ReflectTypeUtils.getFieldDefinition(HasDate.class,
-                jsonState.getTypeState(), false, null);
+        FieldDefinition fd = ReflectTypeUtils.getFieldDefinition(HasDate.class, jsonState.getTypeState(), false, null);
         assertTrue(fd.getTypeDefinition() instanceof ObjectTypeDefinition);
         ObjectTypeDefinition otd = (ObjectTypeDefinition) fd.getTypeDefinition();
-        
+
         assertTrue(otd.getFields().containsKey("date"));
         FieldDefinition dateFD = otd.getFields().get("date");
-        assertTrue("dateFD: "+dateFD,
-                dateFD.getTypeDefinition() instanceof DateTypeDefinition);
-        
+        assertTrue("dateFD: " + dateFD, dateFD.getTypeDefinition() instanceof DateTypeDefinition);
 
-        long now = System.currentTimeMillis()-30000;
+        long now = System.currentTimeMillis() - 30000;
 
-        JSONObject jo = (JSONObject) JSONUnmarshaller.unmarshal("{\"date\":"+now+"}");
+        JSONObject jo = (JSONObject) JSONUnmarshaller.unmarshal("{\"date\":" + now + "}");
 
         Object o = AlternateJSONTransformer.toObject(jsonState, jo, fd);
         assertTrue(o instanceof HasDate);
@@ -164,7 +162,7 @@ public class TestAlternateJSONTransformer extends WMTestCase {
 
         assertTrue(o instanceof HasMap);
         HasMap hlo = (HasMap) o;
-        assertNull("map wasA: "+hlo.getMap(), hlo.getMap());
+        assertNull("map wasA: " + hlo.getMap(), hlo.getMap());
     }
 
     public void testHasArray() throws Exception {
@@ -183,13 +181,13 @@ public class TestAlternateJSONTransformer extends WMTestCase {
         HasSomePrimitives hsp = new HasSomePrimitives();
         hsp.setBooleanVal(false);
         hsp.setCharVal('b');
-        hsp.setShortVal((short)12);
-        
+        hsp.setShortVal((short) 12);
+
         String js = JSONMarshaller.marshal(hsp);
         JSONObject jo = (JSONObject) JSONUnmarshaller.unmarshal(js);
-        assertEquals(hsp.getShortVal(), ((Long)jo.get("shortVal")).shortValue());
-        assertEquals(hsp.getCharVal()+"", jo.get("charVal").toString());
-        
+        assertEquals(hsp.getShortVal(), ((Long) jo.get("shortVal")).shortValue());
+        assertEquals(hsp.getCharVal() + "", jo.get("charVal").toString());
+
         Object o = AlternateJSONTransformer.toObject(jo, HasSomePrimitives.class);
 
         assertTrue(o instanceof HasSomePrimitives);
@@ -217,8 +215,7 @@ public class TestAlternateJSONTransformer extends WMTestCase {
 
         IsNested in = new IsNested();
         in.setDeeper(ind);
-        
-        
+
         String js = JSONMarshaller.marshal(in);
 
         JSONObject jo = (JSONObject) JSONUnmarshaller.unmarshal(js);
@@ -240,8 +237,7 @@ public class TestAlternateJSONTransformer extends WMTestCase {
     public void testNoGenerics() throws Exception {
 
         JSONObject jo = (JSONObject) JSONUnmarshaller.unmarshal("{\"strings\":[\"a\",\"b\"]}");
-        HasNoGenericsList hng =
-            (HasNoGenericsList) AlternateJSONTransformer.toObject(jo, HasNoGenericsList.class);
+        HasNoGenericsList hng = (HasNoGenericsList) AlternateJSONTransformer.toObject(jo, HasNoGenericsList.class);
         assertEquals(2, hng.getStrings().size());
         assertEquals("a", hng.getStrings().get(0));
         assertEquals("b", hng.getStrings().get(1));
@@ -257,103 +253,99 @@ public class TestAlternateJSONTransformer extends WMTestCase {
         assertNotNull(hp.getProps());
         assertEquals("b", hp.getProps().getProperty("a"));
     }
-    
+
     // MAV-1037
     public void testEnumeration() throws Exception {
 
         String js = "{\"days\":\"MONDAY\"}";
-        
+
         JSONObject jo = (JSONObject) JSONUnmarshaller.unmarshal(js);
         Object o = AlternateJSONTransformer.toObject(jo, ClassWithEnum.class);
         assertTrue(o instanceof ClassWithEnum);
         ClassWithEnum cwe = (ClassWithEnum) o;
-        
+
         assertEquals(ClassWithEnum.DAYS.MONDAY, cwe.getDays());
     }
-    
+
     // MAV-1037
     public void testOverridenEnums() throws Exception {
 
         String js = "{\"month\":\"january\"}";
-        
+
         JSONObject jo = (JSONObject) JSONUnmarshaller.unmarshal(js);
         Object o = AlternateJSONTransformer.toObject(jo, ClassWithOverridenEnums.class);
         assertTrue(o instanceof ClassWithOverridenEnums);
         ClassWithOverridenEnums cwe = (ClassWithOverridenEnums) o;
-        
+
         assertEquals(ClassWithOverridenEnums.MONTHS.JANUARY, cwe.getMonth());
     }
-    
+
     public void testObjectWithClass() throws Exception {
-        
+
         String js = "{\"klass\":\"com.wavemaker.json.TestJSONMarshaller\"}";
-        
+
         JSONObject jo = (JSONObject) JSONUnmarshaller.unmarshal(js);
         Object o = AlternateJSONTransformer.toObject(jo, ObjectWithClass.class);
         assertTrue(o instanceof ObjectWithClass);
         ObjectWithClass owc = (ObjectWithClass) o;
-        
+
         assertEquals(TestJSONMarshaller.class, owc.getKlass());
     }
-    
+
     // MAV-669
     public void testStringToFile() throws Exception {
-        
+
         File expected = new File("/foo");
         JSONState jc = new JSONState();
-        
+
         String js = "{\"file\":\"/foo\"}";
-        
+
         JSONObject jo = (JSONObject) JSONUnmarshaller.unmarshal(js);
         try {
             AlternateJSONTransformer.toObject(jc, jo, HasFile.class);
             fail("expected exception");
         } catch (WMRuntimeException e) {
-            assertEquals(MessageResource.JSON_UNKNOWN_OBJECT_TYPE.getId(),
-                    e.getMessageId());
+            assertEquals(MessageResource.JSON_UNKNOWN_OBJECT_TYPE.getId(), e.getMessageId());
         }
-        
+
         jc.setTypeState(new ReflectTypeState());
         jc.getTypeState().addType(new FileTypeDefinition(File.class));
-        
+
         Object o = AlternateJSONTransformer.toObject(jc, jo, HasFile.class);
-        
+
         assertTrue(o instanceof HasFile);
         HasFile owc = (HasFile) o;
-        
-        assertEquals(expected.getAbsolutePath(),
-                owc.getFile().getAbsolutePath());
+
+        assertEquals(expected.getAbsolutePath(), owc.getFile().getAbsolutePath());
     }
-    
+
     public void testValueTransformer() throws Exception {
-        
+
         JSONState state = new JSONState();
-        
+
         String jsonString = "{\"shortVal\":\"hi\"}";
-        
+
         JSONObject json = (JSONObject) JSONUnmarshaller.unmarshal(jsonString, state);
-        
+
         try {
             AlternateJSONTransformer.toObject(state, json, HasSomePrimitives.class);
             fail("no exception");
         } catch (WMRuntimeException e) {
             assertTrue(e.getCause() instanceof NumberFormatException);
         }
-        
-        state.setValueTransformer(new ValueTransformer(){
 
-            public Tuple.Three<Object, FieldDefinition, Integer> transformToJSON(
-                    Object input, FieldDefinition fieldDefinition, int arrayLevel,
-                    Object root, String path, TypeState typeState) {
-                
+        state.setValueTransformer(new ValueTransformer() {
+
+            public Tuple.Three<Object, FieldDefinition, Integer> transformToJSON(Object input, FieldDefinition fieldDefinition, int arrayLevel,
+                Object root, String path, TypeState typeState) {
+
                 // unused in this test
                 return null;
             }
 
-            public Tuple.Three<Object, FieldDefinition, Integer> transformToJava(
-                    Object input, FieldDefinition fieldDefinition, int arrayLevel,
-                    Object root, String path, TypeState typeState) {
-                
+            public Tuple.Three<Object, FieldDefinition, Integer> transformToJava(Object input, FieldDefinition fieldDefinition, int arrayLevel,
+                Object root, String path, TypeState typeState) {
+
                 if ("shortVal".equals(path)) {
                     GenericFieldDefinition fd = new GenericFieldDefinition();
                     fd.setTypeDefinition(typeState.getType(Short.TYPE.getName()));
@@ -363,37 +355,34 @@ public class TestAlternateJSONTransformer extends WMTestCase {
                 }
             }
         });
-        
+
         HasSomePrimitives hsp = (HasSomePrimitives) AlternateJSONTransformer.toObject(state, json, HasSomePrimitives.class);
         assertEquals(12, hsp.getShortVal());
     }
 
-
-
-
-
-
-
-
-
-
     public static class HasList {
+
         private List<String> strings;
+
         public List<String> getStrings() {
-            return strings;
+            return this.strings;
         }
+
         public void setStrings(List<String> strings) {
             this.strings = strings;
         }
     }
 
     public static class HasNoGenericsList {
+
         @SuppressWarnings("unchecked")
         private List strings;
+
         @SuppressWarnings("unchecked")
         public List getStrings() {
-            return strings;
+            return this.strings;
         }
+
         @SuppressWarnings("unchecked")
         public void setStrings(List strings) {
             this.strings = strings;
@@ -401,79 +390,103 @@ public class TestAlternateJSONTransformer extends WMTestCase {
     }
 
     public static class HasNestedList {
+
         private List<List<String>> listOfStrings;
+
         public List<List<String>> getListOfStrings() {
-            return listOfStrings;
+            return this.listOfStrings;
         }
+
         public void setListOfStrings(List<List<String>> listOfStrings) {
             this.listOfStrings = listOfStrings;
         }
     }
 
     public static class HasMap {
-        private Map<String,String> map;
+
+        private Map<String, String> map;
+
         public Map<String, String> getMap() {
-            return map;
+            return this.map;
         }
+
         public void setMap(Map<String, String> map) {
             this.map = map;
         }
     }
 
     public static class HasNestedMap {
-        private Map<String, Map<String,String>> map;
-        public Map<String, Map<String,String>> getMap() {
-            return map;
+
+        private Map<String, Map<String, String>> map;
+
+        public Map<String, Map<String, String>> getMap() {
+            return this.map;
         }
-        public void setMap(Map<String, Map<String,String>> map) {
+
+        public void setMap(Map<String, Map<String, String>> map) {
             this.map = map;
         }
     }
 
     public static class HasSomePrimitives {
+
         private short shortVal;
+
         private boolean booleanVal;
+
         private char charVal;
 
         public short getShortVal() {
-            return shortVal;
+            return this.shortVal;
         }
+
         public void setShortVal(short shortVal) {
             this.shortVal = shortVal;
         }
+
         public boolean isBooleanVal() {
-            return booleanVal;
+            return this.booleanVal;
         }
+
         public void setBooleanVal(boolean booleanVal) {
             this.booleanVal = booleanVal;
         }
+
         public char getCharVal() {
-            return charVal;
+            return this.charVal;
         }
+
         public void setCharVal(char charVal) {
             this.charVal = charVal;
         }
 
         // bad property, for testBadProperty
-        public int getBadProp() { return 21; }
+        public int getBadProp() {
+            return 21;
+        }
     }
 
     public static class HasProperties {
+
         private Properties props;
+
         public Properties getProps() {
-            return props;
+            return this.props;
         }
+
         public void setProps(Properties props) {
             this.props = props;
         }
     }
-    
+
     public static class HasFile {
+
         private File file;
 
         public File getFile() {
-            return file;
+            return this.file;
         }
+
         public void setFile(File file) {
             this.file = file;
         }
@@ -482,9 +495,11 @@ public class TestAlternateJSONTransformer extends WMTestCase {
     public static class IsNested {
 
         private IsNestedDeeper deeper;
+
         public IsNestedDeeper getDeeper() {
-            return deeper;
+            return this.deeper;
         }
+
         public void setDeeper(IsNestedDeeper deeper) {
             this.deeper = deeper;
         }
@@ -492,16 +507,21 @@ public class TestAlternateJSONTransformer extends WMTestCase {
         public static class IsNestedDeeper {
 
             private IsNestedEvenDeeper evenDeeper;
+
             private IsNestedEvenDeeper evenDeeper2;
+
             public IsNestedEvenDeeper getEvenDeeper() {
-                return evenDeeper;
+                return this.evenDeeper;
             }
+
             public void setEvenDeeper(IsNestedEvenDeeper evenDeeper) {
                 this.evenDeeper = evenDeeper;
             }
+
             public IsNestedEvenDeeper getEvenDeeper2() {
-                return evenDeeper2;
+                return this.evenDeeper2;
             }
+
             public void setEvenDeeper2(IsNestedEvenDeeper evenDeeper2) {
                 this.evenDeeper2 = evenDeeper2;
             }
@@ -509,18 +529,23 @@ public class TestAlternateJSONTransformer extends WMTestCase {
             public static class IsNestedEvenDeeper {
 
                 private IsNestedDeepest deepest;
+
                 public IsNestedDeepest getDeepest() {
-                    return deepest;
+                    return this.deepest;
                 }
+
                 public void setDeepest(IsNestedDeepest deepest) {
                     this.deepest = deepest;
                 }
 
                 public static class IsNestedDeepest {
+
                     private int intVal;
+
                     public int getIntVal() {
-                        return intVal;
+                        return this.intVal;
                     }
+
                     public void setIntVal(int intVal) {
                         this.intVal = intVal;
                     }

@@ -19,33 +19,29 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * 
  * 
- * 	The dispatcher has four legal values: FORWARD, REQUEST, INCLUDE,
- * 	and ERROR. A value of FORWARD means the Filter will be applied
- * 	under RequestDispatcher.forward() calls.  A value of REQUEST
- * 	means the Filter will be applied under ordinary client calls to
- * 	the path or servlet. A value of INCLUDE means the Filter will be
- * 	applied under RequestDispatcher.include() calls.  A value of
- * 	ERROR means the Filter will be applied under the error page
- * 	mechanism.  The absence of any dispatcher elements in a
- * 	filter-mapping indicates a default of applying filters only under
- * 	ordinary client calls to the path or servlet.
+ * The dispatcher has four legal values: FORWARD, REQUEST, INCLUDE, and ERROR. A value of FORWARD means the Filter will
+ * be applied under RequestDispatcher.forward() calls. A value of REQUEST means the Filter will be applied under
+ * ordinary client calls to the path or servlet. A value of INCLUDE means the Filter will be applied under
+ * RequestDispatcher.include() calls. A value of ERROR means the Filter will be applied under the error page mechanism.
+ * The absence of any dispatcher elements in a filter-mapping indicates a default of applying filters only under
+ * ordinary client calls to the path or servlet.
  * 
- *       
  * 
- * <p>Java class for dispatcherType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for dispatcherType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="dispatcherType">
@@ -60,9 +56,6 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "dispatcherType")
-public class DispatcherType
-    extends String
-{
-
+public class DispatcherType extends String {
 
 }

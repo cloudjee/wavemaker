@@ -20,60 +20,58 @@ import com.wavemaker.tools.ws.wsdl.PortTypeInfo;
 
 public class JAXWSPortTypeInfo {
 
-    private PortTypeInfo portTypeInfo;
-    
-    private String seiClassName;
-    
-    private String pkg;
-    
-    private boolean isSeiClassNameModified;
-    
-    protected JAXWSPortTypeInfo(PortTypeInfo portTypeInfo, String seiClassName,
-            String pkg, boolean isSeiClassNameModified) {
+    private final PortTypeInfo portTypeInfo;
+
+    private final String seiClassName;
+
+    private final String pkg;
+
+    private final boolean isSeiClassNameModified;
+
+    protected JAXWSPortTypeInfo(PortTypeInfo portTypeInfo, String seiClassName, String pkg, boolean isSeiClassNameModified) {
         this.portTypeInfo = portTypeInfo;
         this.seiClassName = seiClassName;
         this.pkg = pkg;
         this.isSeiClassNameModified = isSeiClassNameModified;
     }
-    
+
     public String getName() {
-        return portTypeInfo.getName();
+        return this.portTypeInfo.getName();
     }
 
     public String getPortName() {
-        return portTypeInfo.getPortName();
+        return this.portTypeInfo.getPortName();
     }
 
     public Set<String> getOperationNames() {
-        return portTypeInfo.getOperationMap().keySet();
+        return this.portTypeInfo.getOperationMap().keySet();
     }
 
     /**
-     * Returns the JAXWS generated service (@WebService) class name.  The
-     * package is omitted.
+     * Returns the JAXWS generated service (@WebService) class name. The package is omitted.
      * 
      * @return The generated service class name.
      */
     public String getSeiClassName() {
-        return seiClassName;
+        return this.seiClassName;
     }
 
     public String getSeiFQClassName() {
-        return pkg + "." + getSeiClassName();
+        return this.pkg + "." + getSeiClassName();
     }
 
     /**
      * If the SEI class name was modified because of name collision.
      */
     public boolean isSeiClassNameModified() {
-        return isSeiClassNameModified;
+        return this.isSeiClassNameModified;
     }
-    
+
     public <T> T getProperty(String name, Class<T> cls) {
-        return portTypeInfo.getProperty(name, cls);
+        return this.portTypeInfo.getProperty(name, cls);
     }
-    
+
     public void setProperty(String name, Object v) {
-        portTypeInfo.setProperty(name, v);
+        this.portTypeInfo.setProperty(name, v);
     }
 }

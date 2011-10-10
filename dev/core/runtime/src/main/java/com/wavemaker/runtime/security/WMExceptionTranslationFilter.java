@@ -26,24 +26,22 @@ import javax.servlet.ServletResponse;
  * Overrides standard Acegi filter's doFilter method, to
  * 
  * @author slee
- *
+ * 
  */
 public class WMExceptionTranslationFilter extends JSONExceptionTranslationFilter {
 
-    //public WMExceptionTranslationFilter() throws ServletException {
-    //    super();
-    //}
+    // public WMExceptionTranslationFilter() throws ServletException {
+    // super();
+    // }
 
     @Override
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException,
-            ServletException {
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
         boolean designTime = false;
         Enumeration e = req.getParameterNames();
-        while(e != null && e.hasMoreElements())
-        {
-            String name=(String)e.nextElement();
+        while (e != null && e.hasMoreElements()) {
+            String name = (String) e.nextElement();
             if (name != null && name.equals("designTime")) {
-                String [] values = req.getParameterValues(name);
+                String[] values = req.getParameterValues(name);
                 if (values != null && values.length > 0) {
                     designTime = values[0].equals("true");
                 }

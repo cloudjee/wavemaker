@@ -34,20 +34,21 @@ import com.wavemaker.runtime.data.util.DataServiceUtils;
  */
 public abstract class BaseTask implements Task {
 
-    private Log logger = DataServiceLoggers.taskLogger;
+    private final Log logger = DataServiceLoggers.taskLogger;
 
     private final ObjectAccess objectAccess = ObjectAccess.getInstance();
 
     protected ObjectAccess getObjectAccess() {
-        return objectAccess;
+        return this.objectAccess;
     }
 
-    /*protected static DataServiceMetaData getMetaData() {
-
-        ThreadContext.Context ctx = ThreadContext.getContext();
-
-        return ctx.getMetaData();
-    }*/
+    /*
+     * protected static DataServiceMetaData getMetaData() {
+     * 
+     * ThreadContext.Context ctx = ThreadContext.getContext();
+     * 
+     * return ctx.getMetaData(); }
+     */
 
     protected static DataServiceMetaData getMetaData(String dbName) {
 
@@ -55,7 +56,7 @@ public abstract class BaseTask implements Task {
 
         return ctx.getMetaData();
     }
-    
+
     protected static SessionFactory getSessionFactory(String dbName) {
 
         ThreadContext.Context ctx = ThreadContext.getContext(dbName);
@@ -71,41 +72,40 @@ public abstract class BaseTask implements Task {
     }
 
     protected boolean isRelatedMany(Class<?> c) {
-        
+
         return DataServiceUtils.isRelatedMany(c);
-        
+
     }
 
     protected Object loadById(Object o, Session session, String dbName) {
 
-        //return DataServiceUtils.loadById(o, session, getMetaData(), logger);
-        return DataServiceUtils.loadById(o, session, getMetaData(dbName), logger);
+        // return DataServiceUtils.loadById(o, session, getMetaData(), logger);
+        return DataServiceUtils.loadById(o, session, getMetaData(dbName), this.logger);
     }
-    
+
     protected Object loadIntoSession(Object o, Session session, String dbname) {
 
         Object rtn = loadById(o, session, dbname);
 
         if (rtn == null) {
             if (DataServiceLoggers.taskLogger.isInfoEnabled()) {
-                DataServiceLoggers.taskLogger.info("Skipping instance "
-                        + ObjectUtils.getId(o) + " because it is transient");
+                DataServiceLoggers.taskLogger.info("Skipping instance " + ObjectUtils.getId(o) + " because it is transient");
             }
         }
 
         return rtn;
-    }    
+    }
 
     protected Object emptyInstanceWithId(Object o, DataServiceMetaData metaData) {
 
-        //String s = getMetaData().getIdPropertyName(o.getClass());
+        // String s = getMetaData().getIdPropertyName(o.getClass());
         String s = metaData.getIdPropertyName(o.getClass());
 
         Object id = getObjectAccess().getProperty(o, s);
 
-        Object rtn = objectAccess.newInstance(getEntityClass(o));
+        Object rtn = this.objectAccess.newInstance(getEntityClass(o));
 
-        objectAccess.setProperty(rtn, s, id);
+        this.objectAccess.setProperty(rtn, s, id);
 
         return rtn;
     }
@@ -114,14 +114,14 @@ public abstract class BaseTask implements Task {
 
         return DataServiceUtils.getEntityClass(entityInstance.getClass());
 
-    } 
-    
+    }
+
     protected void maybeRefreshEntity(Object o, Session session, String dbName) {
-        
+
         if (getMetaData(dbName).refreshEntity(o.getClass())) {
             session.flush();
             session.refresh(o);
         }
-        
+
     }
 }

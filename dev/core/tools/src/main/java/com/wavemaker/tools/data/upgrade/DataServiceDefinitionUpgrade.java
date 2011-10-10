@@ -32,14 +32,11 @@ import com.wavemaker.tools.service.definitions.Service;
  * @version $Rev$ - $Date$
  * 
  */
-public class DataServiceDefinitionUpgrade extends BaseDataUpgradeTask implements
-        UpgradeTask {
+public class DataServiceDefinitionUpgrade extends BaseDataUpgradeTask implements UpgradeTask {
 
-    private static final String OLD_QUERY_OPTIONS = 
-	"com.activegrid.runtime.data.QueryOptions";
+    private static final String OLD_QUERY_OPTIONS = "com.activegrid.runtime.data.QueryOptions";
 
-    private static final String OLD_EVENT_NOTIFIER = 
-	"com.activegrid.runtime.data.DataServiceEventListener";
+    private static final String OLD_EVENT_NOTIFIER = "com.activegrid.runtime.data.DataServiceEventListener";
 
     @Override
     protected void upgrade(Service service) {
@@ -65,21 +62,19 @@ public class DataServiceDefinitionUpgrade extends BaseDataUpgradeTask implements
 
         try {
             for (DataObject o : service.getDataobjects().getDataobject()) {
-                String name = 
-		    StringUtils.splitPackageAndClass(o.getJavaType()).v2;
+                String name = StringUtils.splitPackageAndClass(o.getJavaType()).v2;
 
-		if (cfg.isEntityType(name)) {
+                if (cfg.isEntityType(name)) {
 
                     o.setSupportsQuickData(Boolean.TRUE);
 
-		    for (DataObject.Element el : o.getElement()) {
+                    for (DataObject.Element el : o.getElement()) {
 
-			PropertyInfo property = 
-			    cfg.getProperty(name, el.getName());
+                        PropertyInfo property = cfg.getProperty(name, el.getName());
 
-			setupDataConstraints(el, property);
+                        setupDataConstraints(el, property);
 
-		    }
+                    }
                 }
             }
             return true;
@@ -130,12 +125,11 @@ public class DataServiceDefinitionUpgrade extends BaseDataUpgradeTask implements
         return changed;
     }
 
-    private void setupDataConstraints(DataObject.Element el, 
-				      PropertyInfo p) {
+    private void setupDataConstraints(DataObject.Element el, PropertyInfo p) {
 
-	el.setAllowNull(DataServiceUtils.isAllowNull(p));
-	el.getRequire().addAll(DataServiceUtils.getRequiredOperations(p));
-	el.getNoChange().addAll(DataServiceUtils.getNoChangeOperations(p));
-	el.getExclude().addAll(DataServiceUtils.getExcludedOperations(p));
+        el.setAllowNull(DataServiceUtils.isAllowNull(p));
+        el.getRequire().addAll(DataServiceUtils.getRequiredOperations(p));
+        el.getNoChange().addAll(DataServiceUtils.getNoChangeOperations(p));
+        el.getExclude().addAll(DataServiceUtils.getExcludedOperations(p));
     }
 }

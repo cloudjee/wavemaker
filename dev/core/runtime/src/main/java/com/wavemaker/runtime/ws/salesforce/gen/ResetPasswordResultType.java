@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -21,11 +19,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for ResetPasswordResult complex type.
+ * <p>
+ * Java class for ResetPasswordResult complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="ResetPasswordResult">
@@ -42,9 +41,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ResetPasswordResult", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "password"
-})
+@XmlType(name = "ResetPasswordResult", namespace = "urn:partner.soap.sforce.com", propOrder = { "password" })
 public class ResetPasswordResultType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
@@ -53,22 +50,18 @@ public class ResetPasswordResultType {
     /**
      * Gets the value of the password property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     /**
      * Sets the value of the password property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setPassword(String value) {
         this.password = value;

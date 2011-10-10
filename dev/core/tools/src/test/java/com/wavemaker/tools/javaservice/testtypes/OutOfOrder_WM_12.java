@@ -15,22 +15,23 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.javaservice.testtypes;
 
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class OutOfOrder_WM_12 {
 
     public long testFunction(long one, int two, String something) {
-        
-            @SuppressWarnings("unused")
-            String sOne =  Long.toString(one);
-            @SuppressWarnings("unused")
-            String sTwo = Integer.toString(two);
-            
-            return one; 
+
+        @SuppressWarnings("unused")
+        String sOne = Long.toString(one);
+        @SuppressWarnings("unused")
+        String sTwo = Integer.toString(two);
+
+        return one;
     }
 }

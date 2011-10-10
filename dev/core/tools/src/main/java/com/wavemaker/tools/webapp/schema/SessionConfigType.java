@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -32,20 +31,20 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
  * 
  * 
- * 	The session-configType defines the session parameters
- * 	for this web application.
+ * The session-configType defines the session parameters for this web application.
  * 
- * 	Used in: web-app
+ * Used in: web-app
  * 
- *       
  * 
- * <p>Java class for session-configType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for session-configType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="session-configType">
@@ -63,13 +62,12 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "session-configType", propOrder = {
-    "sessionTimeout"
-})
+@XmlType(name = "session-configType", propOrder = { "sessionTimeout" })
 public class SessionConfigType {
 
     @XmlElement(name = "session-timeout")
     protected XsdIntegerType sessionTimeout;
+
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -79,22 +77,18 @@ public class SessionConfigType {
     /**
      * Gets the value of the sessionTimeout property.
      * 
-     * @return
-     *     possible object is
-     *     {@link XsdIntegerType }
-     *     
+     * @return possible object is {@link XsdIntegerType }
+     * 
      */
     public XsdIntegerType getSessionTimeout() {
-        return sessionTimeout;
+        return this.sessionTimeout;
     }
 
     /**
      * Sets the value of the sessionTimeout property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link XsdIntegerType }
-     *     
+     * @param value allowed object is {@link XsdIntegerType }
+     * 
      */
     public void setSessionTimeout(XsdIntegerType value) {
         this.sessionTimeout = value;
@@ -103,22 +97,18 @@ public class SessionConfigType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setId(java.lang.String value) {
         this.id = value;

@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.project.upgrade.swamis;
 
 import java.io.File;
@@ -32,15 +33,15 @@ import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestPanesRenameUpgrade extends WMTestCase {
 
     public void testUpgrade() throws Exception {
-        
+
         File root = IOUtils.createTempDirectory("testUpgrade", "_dir");
-        
-        Project p = new  Project(new FileSystemResource(root.getAbsolutePath()+"/"), new LocalStudioConfiguration());
+
+        Project p = new Project(new FileSystemResource(root.getAbsolutePath() + "/"), new LocalStudioConfiguration());
         p.getWebAppRoot().getFile().mkdir();
         File panes = new File(p.getWebAppRoot().getFile(), "panes");
         panes.mkdir();
@@ -48,31 +49,31 @@ public class TestPanesRenameUpgrade extends WMTestCase {
         FileUtils.writeStringToFile(panesFile, "foo");
         File pages = new File(p.getWebAppRoot().getFile(), ProjectConstants.PAGES_DIR);
         assertFalse(pages.exists());
-        
+
         PanesRenameUpgrade pru = new PanesRenameUpgrade();
         pru.doUpgrade(p, new UpgradeInfo());
-        
+
         assertTrue(pages.exists());
         assertFalse(panes.exists());
-        
+
         File pagesFile = new File(pages, "foo.txt");
         assertTrue(pagesFile.exists());
         assertEquals("foo", FileUtils.readFileToString(pagesFile));
     }
-    
+
     public void testUpgradeEmpty() throws Exception {
-        
+
         File root = IOUtils.createTempDirectory("testUpgrade", "_dir");
-        
-        Project p = new  Project(new FileSystemResource(root.getAbsolutePath()+"/"), new LocalStudioConfiguration());
+
+        Project p = new Project(new FileSystemResource(root.getAbsolutePath() + "/"), new LocalStudioConfiguration());
         p.getWebAppRoot().getFile().mkdir();
         File panes = new File(p.getWebAppRoot().getFile(), "panes");
         File pages = new File(p.getWebAppRoot().getFile(), ProjectConstants.PAGES_DIR);
         assertFalse(pages.exists());
-        
+
         PanesRenameUpgrade pru = new PanesRenameUpgrade();
         pru.doUpgrade(p, new UpgradeInfo());
-        
+
         assertFalse(pages.exists());
         assertFalse(panes.exists());
     }

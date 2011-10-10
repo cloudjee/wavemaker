@@ -19,25 +19,24 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * 
  * 
- * 	The jsp-file element contains the full path to a JSP file
- * 	within the web application beginning with a `/'.
+ * The jsp-file element contains the full path to a JSP file within the web application beginning with a `/'.
  * 
- *       
  * 
- * <p>Java class for jsp-fileType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for jsp-fileType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="jsp-fileType">
@@ -52,9 +51,6 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "jsp-fileType")
-public class JspFileType
-    extends PathType
-{
-
+public class JspFileType extends PathType {
 
 }

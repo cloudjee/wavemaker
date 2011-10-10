@@ -14,10 +14,10 @@
 
 package com.wavemaker.runtime.data.spring;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.HashMap;
 import java.lang.reflect.Proxy;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.hibernate.Session;
@@ -28,8 +28,8 @@ import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
-import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.runtime.WMAppContext;
@@ -68,22 +68,13 @@ public class SpringDataServiceManager implements DataServiceManager {
 
     private final SessionFactory sessionFactory;
 
+    public SpringDataServiceManager(String configurationName, HibernateTemplate hibernateTemplate, PlatformTransactionManager txMgr) {
 
-    public SpringDataServiceManager(String configurationName,
-                                    HibernateTemplate hibernateTemplate,
-                                    PlatformTransactionManager txMgr) 
-    {
-
-        this(configurationName, hibernateTemplate, txMgr, DefaultTaskManager
-                .getInstance(), Collections.<String, String> emptyMap());
+        this(configurationName, hibernateTemplate, txMgr, DefaultTaskManager.getInstance(), Collections.<String, String> emptyMap());
     }
 
-    public SpringDataServiceManager(String configurationName,
-                                    HibernateTemplate hibernateTemplate,
-                                    PlatformTransactionManager txMgr, 
-                                    TaskManager taskMgr,
-                                    Map<String, String> properties) 
-    {
+    public SpringDataServiceManager(String configurationName, HibernateTemplate hibernateTemplate, PlatformTransactionManager txMgr,
+        TaskManager taskMgr, Map<String, String> properties) {
         if (configurationName == null) {
             throw new IllegalArgumentException("configurationName must be set");
         }
@@ -93,8 +84,7 @@ public class SpringDataServiceManager implements DataServiceManager {
         }
 
         if (txMgr == null) {
-            throw new IllegalArgumentException(
-                    "platformTransactionManager must be set");
+            throw new IllegalArgumentException("platformTransactionManager must be set");
         }
 
         if (taskMgr == null) {
@@ -108,34 +98,30 @@ public class SpringDataServiceManager implements DataServiceManager {
         ConfigurationRegistry reg = ConfigurationRegistry.getInstance();
         this.cfg = reg.getConfiguration(configurationName);
         if (this.cfg == null) {
-            throw new DataServiceRuntimeException(
-                    "Cannot find configuration for " + configurationName);
+            throw new DataServiceRuntimeException("Cannot find configuration for " + configurationName);
         }
 
         this.sessionFactory = reg.getSessionFactory(configurationName);
         if (this.sessionFactory == null) {
-            throw new DataServiceRuntimeException(
-                    "Cannot find session factory for " + configurationName);
+            throw new DataServiceRuntimeException("Cannot find session factory for " + configurationName);
         }
 
-        String s = (String) properties
-            .get(DataServiceConstants.GENERATE_OLD_STYLE_OPRS_PROPERTY);
+        String s = properties.get(DataServiceConstants.GENERATE_OLD_STYLE_OPRS_PROPERTY);
 
         boolean useIndividualCRUDOperations = Boolean.valueOf(s);
 
-        this.metaData = initMetaData(configurationName, cfg, hibernateTemplate,
-                useIndividualCRUDOperations, properties);
+        this.metaData = initMetaData(configurationName, this.cfg, hibernateTemplate, useIndividualCRUDOperations, properties);
     }
 
     public DataServiceMetaData getMetaData() {
-        return metaData;
+        return this.metaData;
     }
 
     public Session getSession() {
         if (!isTxRunning()) {
             txLogger.warn("begin a tx before accessing the session");
         }
-        return (Session) invoke(taskMgr.getSessionTask());
+        return (Session) invoke(this.taskMgr.getSessionTask());
     }
 
     public void begin() {
@@ -143,16 +129,15 @@ public class SpringDataServiceManager implements DataServiceManager {
             txLogger.info("begin");
         }
 
-        ThreadContext.Context ctx = ThreadContext.getContext(metaData.getName());
+        ThreadContext.Context ctx = ThreadContext.getContext(this.metaData.getName());
         if (ctx == null) {
-            ctx = new ThreadContext.Context(txMgr, metaData, cfg,
-                    sessionFactory);
+            ctx = new ThreadContext.Context(this.txMgr, this.metaData, this.cfg, this.sessionFactory);
         }
 
         TransactionStatus txStatus = ctx.getTransactionStatus();
 
         if (txStatus == null) {
-            txStatus = txMgr.getTransaction(null);
+            txStatus = this.txMgr.getTransaction(null);
             ctx.setTransactionStatus(txStatus);
         } else {
             if (txLogger.isWarnEnabled()) {
@@ -170,7 +155,7 @@ public class SpringDataServiceManager implements DataServiceManager {
             txLogger.info("commit");
         }
 
-        ThreadContext.Context ctx = ThreadContext.getContext(metaData.getName());
+        ThreadContext.Context ctx = ThreadContext.getContext(this.metaData.getName());
 
         if (ctx == null) {
             if (txLogger.isWarnEnabled()) {
@@ -193,11 +178,11 @@ public class SpringDataServiceManager implements DataServiceManager {
                     }
                 }
             } else {
-                txMgr.commit(txStatus);
+                this.txMgr.commit(txStatus);
             }
         } finally {
             ctx.setTransactionStatus(null);
-            ThreadContext.unsetContext(metaData.getName());
+            ThreadContext.unsetContext(this.metaData.getName());
             HashMap<String, ThreadContext.Context> contextHash = ThreadContext.getThreadLocalHash();
 
             if (contextHash != null && contextHash.size() > 0) {
@@ -209,7 +194,7 @@ public class SpringDataServiceManager implements DataServiceManager {
                     TransactionSynchronizationManager.clear();
                     Map map = TransactionSynchronizationManager.getResourceMap();
                     for (Object entry : map.keySet()) {
-                        TransactionSynchronizationManager.unbindResource(entry);        
+                        TransactionSynchronizationManager.unbindResource(entry);
                     }
                 }
             }
@@ -222,7 +207,7 @@ public class SpringDataServiceManager implements DataServiceManager {
             txLogger.info("rollback");
         }
 
-        ThreadContext.Context ctx = ThreadContext.getContext(metaData.getName());
+        ThreadContext.Context ctx = ThreadContext.getContext(this.metaData.getName());
 
         if (ctx == null) {
             if (txLogger.isWarnEnabled()) {
@@ -246,27 +231,26 @@ public class SpringDataServiceManager implements DataServiceManager {
                     }
                 }
             } else {
-                txMgr.rollback(txStatus);
+                this.txMgr.rollback(txStatus);
             }
         } finally {
             ctx.setTransactionStatus(null);
-            ThreadContext.unsetContext(metaData.getName());
+            ThreadContext.unsetContext(this.metaData.getName());
         }
     }
 
     public Object invoke(Task task, Object... input) {
         boolean unset = false;
-        ThreadContext.Context ctx = ThreadContext.getContext(metaData.getName());
+        ThreadContext.Context ctx = ThreadContext.getContext(this.metaData.getName());
         if (ctx == null) {
-            ctx = new ThreadContext.Context(txMgr, metaData, cfg,
-                    sessionFactory);
+            ctx = new ThreadContext.Context(this.txMgr, this.metaData, this.cfg, this.sessionFactory);
             unset = true;
         }
         try {
             return runInTx(task, input);
         } finally {
             if (unset) {
-                ThreadContext.unsetContext(metaData.getName());
+                ThreadContext.unsetContext(this.metaData.getName());
             }
         }
     }
@@ -283,40 +267,34 @@ public class SpringDataServiceManager implements DataServiceManager {
     }
 
     private boolean isTxRunning() {
-        ThreadContext.Context ctx = ThreadContext.getContext(metaData.getName());
+        ThreadContext.Context ctx = ThreadContext.getContext(this.metaData.getName());
         if (ctx == null) {
             return false;
         }
-        return (ctx.getTransactionStatus() != null);
+        return ctx.getTransactionStatus() != null;
     }
 
     private Object runInTx(Task task, Object... input) {
         HibernateCallback action = new RunInHibernate(task, input);
-        TransactionTemplate txTemplate = new TransactionTemplate(txMgr);
-        boolean rollbackOnly = 
-            ((task instanceof DefaultRollback) && !isTxRunning());
+        TransactionTemplate txTemplate = new TransactionTemplate(this.txMgr);
+        boolean rollbackOnly = task instanceof DefaultRollback && !isTxRunning();
         RunInTx tx = new RunInTx(action, rollbackOnly);
         if (txLogger.isInfoEnabled()) {
             if (isTxRunning()) {
-                txLogger.info("tx is running executing \"" + task.getName()
-                        + "\" in current tx");
+                txLogger.info("tx is running executing \"" + task.getName() + "\" in current tx");
             } else {
-                txLogger.info("no tx running, wrapping execution of \""
-                        + task.getName() + "\" in tx");
+                txLogger.info("no tx running, wrapping execution of \"" + task.getName() + "\" in tx");
                 if (rollbackOnly) {
-                    txLogger.info("rollback enabled for \"" + task.getName()
-                            + "\"");
+                    txLogger.info("rollback enabled for \"" + task.getName() + "\"");
                 }
             }
         }
         Object rtn = txTemplate.execute(tx);
         if (txLogger.isInfoEnabled()) {
             if (isTxRunning()) {
-                txLogger.info("tx is running after execution of \""
-                        + task.getName() + "\"");
+                txLogger.info("tx is running after execution of \"" + task.getName() + "\"");
             } else {
-                txLogger.info("tx is not running after execution of \""
-                        + task.getName() + "\"");
+                txLogger.info("tx is not running after execution of \"" + task.getName() + "\"");
             }
 
         }
@@ -342,24 +320,23 @@ public class SpringDataServiceManager implements DataServiceManager {
 
             Task preProcessorTask = ThreadContext.getPreProcessorTask();
 
-            if (preProcessorTask != null && (task instanceof PreProcessor)) {
+            if (preProcessorTask != null && this.task instanceof PreProcessor) {
                 if (txLogger.isInfoEnabled()) {
-                    txLogger.info("Running preprocessor task "
-                            + preProcessorTask.getName());
+                    txLogger.info("Running preprocessor task " + preProcessorTask.getName());
                 }
-                input = (Object[]) preProcessorTask.run(session, metaData.getName(), input, task,
-                        taskMgr);
+                this.input = (Object[]) preProcessorTask.run(session, SpringDataServiceManager.this.metaData.getName(), this.input, this.task,
+                    SpringDataServiceManager.this.taskMgr);
             }
 
             WMAppContext wmApp = WMAppContext.getInstance();
             if (wmApp != null && wmApp.isMultiTenant()) {
-                Class[] clsArr = new Class[] {Session.class};
+                Class[] clsArr = new Class[] { Session.class };
                 ClassLoader cl = Session.class.getClassLoader();
-                QueryHandler qh = new QueryHandler(session, metaData.getConfiguration());
+                QueryHandler qh = new QueryHandler(session, SpringDataServiceManager.this.metaData.getConfiguration());
                 session = (Session) Proxy.newProxyInstance(cl, clsArr, qh);
             }
 
-            return task.run(session, metaData.getName(), input);
+            return this.task.run(session, SpringDataServiceManager.this.metaData.getName(), this.input);
         }
 
     }
@@ -376,22 +353,19 @@ public class SpringDataServiceManager implements DataServiceManager {
         }
 
         public Object doInTransaction(TransactionStatus status) {
-            if (rollbackOnly) {
+            if (this.rollbackOnly) {
                 status.setRollbackOnly();
             }
-            return hibernateTemplate.execute(action);
+            return SpringDataServiceManager.this.hibernateTemplate.execute(this.action);
         }
     }
 
-    private static DataServiceMetaData initMetaData(String configurationName,
-            Configuration cfg, HibernateTemplate htemp,
-            final boolean useIndividualCRUDOperations,
-            final Map<String, String> properties) 
-    {
-        final DataServiceMetaData rtn = 
-            new DataServiceMetaData_Hib(configurationName, cfg, properties); //salesforce
+    private static DataServiceMetaData initMetaData(String configurationName, Configuration cfg, HibernateTemplate htemp,
+        final boolean useIndividualCRUDOperations, final Map<String, String> properties) {
+        final DataServiceMetaData rtn = new DataServiceMetaData_Hib(configurationName, cfg, properties); // salesforce
 
         htemp.execute(new HibernateCallback() {
+
             public Object doInHibernate(Session session) {
                 rtn.init(session, useIndividualCRUDOperations);
                 return null;
@@ -401,7 +375,7 @@ public class SpringDataServiceManager implements DataServiceManager {
         return rtn;
     }
 
-    public Object invoke(Task task, Map<String, Class<?>> types, boolean named, Object... input) { //salesforce
+    public Object invoke(Task task, Map<String, Class<?>> types, boolean named, Object... input) { // salesforce
         return null;
     }
 

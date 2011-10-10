@@ -42,14 +42,12 @@ public class XsdGenerator {
         File tempDir = IOUtils.createTempDirectory();
         try {
             File xmlFile = new File(tempDir, "instance.xml");
-            org.apache.commons.io.FileUtils.writeStringToFile(xmlFile, xml,
-                    ServerConstants.DEFAULT_ENCODING);
+            org.apache.commons.io.FileUtils.writeStringToFile(xmlFile, xml, ServerConstants.DEFAULT_ENCODING);
 
             List<File> schemaFiles = generate(xmlFile, tempDir);
             List<String> schemas = new ArrayList<String>();
             for (File schemaFile : schemaFiles) {
-                schemas.add(FileUtils.readFileToString(schemaFile,
-                        ServerConstants.DEFAULT_ENCODING));
+                schemas.add(FileUtils.readFileToString(schemaFile, ServerConstants.DEFAULT_ENCODING));
             }
             return schemas;
         } finally {
@@ -57,19 +55,16 @@ public class XsdGenerator {
         }
     }
 
-    public static List<File> generate(File xmlFile, File outputDir)
-            throws IOException, XmlException {
+    public static List<File> generate(File xmlFile, File outputDir) throws IOException, XmlException {
 
         Inst2XsdOptions inst2XsdOptions = new Inst2XsdOptions();
-        inst2XsdOptions.setSimpleContentTypes(
-                Inst2XsdOptions.SIMPLE_CONTENT_TYPES_STRING);
+        inst2XsdOptions.setSimpleContentTypes(Inst2XsdOptions.SIMPLE_CONTENT_TYPES_STRING);
         inst2XsdOptions.setUseEnumerations(Inst2XsdOptions.ENUMERATION_NEVER);
 
         XmlObject[] xmlInstances = new XmlObject[1];
         xmlInstances[0] = XmlObject.Factory.parse(xmlFile);
 
-        SchemaDocument[] schemaDocs = Inst2Xsd.inst2xsd(xmlInstances,
-                inst2XsdOptions);
+        SchemaDocument[] schemaDocs = Inst2Xsd.inst2xsd(xmlInstances, inst2XsdOptions);
         List<File> schemaFiles = new ArrayList<File>();
         for (int i = 0; i < schemaDocs.length; i++) {
             SchemaDocument schema = schemaDocs[i];

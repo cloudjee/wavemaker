@@ -18,40 +18,44 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
 /**
- * Bean post processor that listens in to bean creation, and adds any events to
- * the EventManager singleton.
+ * Bean post processor that listens in to bean creation, and adds any events to the EventManager singleton.
  * 
  * @author small
  * @version $Rev$ - $Date$
  */
 public class EventManagerBeanPostProcessor implements BeanPostProcessor {
 
-    /* (non-Javadoc)
-     * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(java.lang.Object, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(java.lang.Object,
+     * java.lang.String)
      */
-    public Object postProcessAfterInitialization(Object bean, String beanName)
-            throws BeansException {
-        
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+
         if (bean instanceof EventWire) {
-            eventManager.addEventWire((EventWire) bean);
+            this.eventManager.addEventWire((EventWire) bean);
         }
-        
+
         return bean;
     }
 
-    /* (non-Javadoc)
-     * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessBeforeInitialization(java.lang.Object, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessBeforeInitialization(java.lang.Object,
+     * java.lang.String)
      */
-    public Object postProcessBeforeInitialization(Object bean, String beanName)
-            throws BeansException {
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         return bean;
     }
 
     private EventManager eventManager;
-    
+
     public void setEventManager(EventManager eventManager) {
         this.eventManager = eventManager;
     }
+
     public EventManager getEventManager() {
         return this.eventManager;
     }

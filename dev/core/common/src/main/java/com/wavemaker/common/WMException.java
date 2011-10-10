@@ -21,27 +21,27 @@ package com.wavemaker.common;
  * 
  */
 public abstract class WMException extends Exception {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
     private final String detailedMessage;
-    
+
     public WMException(Throwable cause) {
-        this((String)null, cause);
+        this((String) null, cause);
     }
 
     public WMException(String message) {
-        this((String)message, (String)null);
+        this(message, (String) null);
     }
 
     public WMException(String message, Throwable cause) {
         this(message, (String) null, cause);
     }
-    
+
     public WMException(String message, String detailedMessage) {
-        this(message, detailedMessage, (Throwable)null);
+        this(message, detailedMessage, (Throwable) null);
     }
-    
+
     public WMException(String message, String detailedMessage, Throwable cause) {
         super(message, cause);
         this.detailedMessage = detailedMessage;
@@ -50,20 +50,20 @@ public abstract class WMException extends Exception {
     public WMException(MessageResource resource) {
         this(resource.getMessage(), resource.getDetailMessage());
     }
-    
+
     public WMException(MessageResource resource, Throwable cause) {
         this(resource.getMessage(), resource.getDetailMessage(), cause);
     }
-    
+
     public WMException(MessageResource resource, Object... args) {
         this(resource.getMessage(args), resource.getDetailMessage(args));
     }
-    
+
     public WMException(MessageResource resource, Throwable cause, Object... args) {
         this(resource.getMessage(args), resource.getDetailMessage(args), cause);
     }
-    
+
     public String getDetailedMessage() {
-        return detailedMessage;
+        return this.detailedMessage;
     }
 }

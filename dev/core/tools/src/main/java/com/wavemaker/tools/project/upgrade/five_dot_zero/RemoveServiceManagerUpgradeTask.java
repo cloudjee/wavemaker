@@ -30,40 +30,36 @@ import com.wavemaker.tools.spring.SpringConfigSupport;
 import com.wavemaker.tools.spring.beans.Beans;
 
 /**
- * Removes the serviceManager bean definition from the individual project. This
- * is now defined at the top-level, in managers.xml.
+ * Removes the serviceManager bean definition from the individual project. This is now defined at the top-level, in
+ * managers.xml.
  * 
  * @author small
  * @author Jeremy Grelle
  */
 public class RemoveServiceManagerUpgradeTask implements UpgradeTask {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker
-	 * .tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
-	 */
-	public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
-		try {
-			File managersXml = ConfigurationCompiler.getRuntimeManagersXml(
-					project).getFile();
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker .tools.project.Project,
+     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
+     */
+    public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
+        try {
+            File managersXml = ConfigurationCompiler.getRuntimeManagersXml(project).getFile();
 
-			Beans beans = SpringConfigSupport.readBeans(new FileSystemResource(managersXml), project);
+            Beans beans = SpringConfigSupport.readBeans(new FileSystemResource(managersXml), project);
 
-			if (null != beans
-					.getBeanById(ConfigurationCompiler.SERVICE_MANAGER_BEAN_ID)) {
-				beans.removeBeanById(ConfigurationCompiler.SERVICE_MANAGER_BEAN_ID);
-				SpringConfigSupport.writeBeans(beans, new FileSystemResource(managersXml), project);
+            if (null != beans.getBeanById(ConfigurationCompiler.SERVICE_MANAGER_BEAN_ID)) {
+                beans.removeBeanById(ConfigurationCompiler.SERVICE_MANAGER_BEAN_ID);
+                SpringConfigSupport.writeBeans(beans, new FileSystemResource(managersXml), project);
 
-				upgradeInfo.addMessage("Removed servicesManager from "
-						+ ConfigurationCompiler.RUNTIME_SERVICES);
-			}
-		} catch (JAXBException e) {
-			throw new WMRuntimeException(e);
-		} catch (IOException e) {
-			throw new WMRuntimeException(e);
-		}
-	}
+                upgradeInfo.addMessage("Removed servicesManager from " + ConfigurationCompiler.RUNTIME_SERVICES);
+            }
+        } catch (JAXBException e) {
+            throw new WMRuntimeException(e);
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        }
+    }
 }

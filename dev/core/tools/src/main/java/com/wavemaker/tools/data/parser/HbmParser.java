@@ -29,8 +29,7 @@ import com.wavemaker.tools.data.EntityInfo;
 import com.wavemaker.tools.data.PropertyInfo;
 
 /**
- * Written at the Oakland Airport, waiting for a plane to Portland, continued at
- * SFO, waiting for a plane to Frankfurt.
+ * Written at the Oakland Airport, waiting for a plane to Portland, continued at SFO, waiting for a plane to Frankfurt.
  * 
  * @author Simon Toens
  * @version $Rev$ - $Date$
@@ -57,52 +56,49 @@ public class HbmParser extends BaseHbmParser {
         super(reader);
     }
 
+    @Override
     public synchronized void initAll() {
         getProperties();
     }
 
     public synchronized EntityInfo getEntity() {
-        if (entity == null) {
+        if (this.entity == null) {
             initEntity();
         }
-        return entity;
+        return this.entity;
     }
 
     public synchronized Map<String, PropertyInfo> getPropertiesMap() {
         getProperties();
-        return entity.getPropertiesMap();
+        return this.entity.getPropertiesMap();
     }
 
     public synchronized Collection<PropertyInfo> getProperties() {
         getEntity(); // init
-        if (!initializedProperties) {
-            initializedProperties = true;
+        if (!this.initializedProperties) {
+            this.initializedProperties = true;
             initProperties();
             close();
         }
-        return entity.getProperties();
+        return this.entity.getProperties();
     }
 
     private void initEntity() {
-        
+
         next(HbmConstants.CLASS_EL);
-        
-        Map<String, String> attrs = XMLUtils.attributesToMap(xmlReader);
-        Tuple.Two<String, String> t = StringUtils.splitPackageAndClass(attrs
-                .get(HbmConstants.NAME_ATTR));
-        
+
+        Map<String, String> attrs = XMLUtils.attributesToMap(this.xmlReader);
+        Tuple.Two<String, String> t = StringUtils.splitPackageAndClass(attrs.get(HbmConstants.NAME_ATTR));
+
         String schema = attrs.get(HbmConstants.SCHEMA_ATTR);
         String catalog = attrs.get(HbmConstants.CATALOG_ATTR);
-        
-        entity = new EntityInfo(t.v1, t.v2, attrs.get(HbmConstants.TABLE_ATTR),
-                schema, catalog);
-        
-        entity.setDynamicInsert(getBoolValue(HbmConstants.DYNAMIC_INSERT, 
-                                             attrs));
-        entity.setDynamicUpdate(getBoolValue(HbmConstants.DYNAMIC_UPDATE, 
-                                             attrs));
+
+        this.entity = new EntityInfo(t.v1, t.v2, attrs.get(HbmConstants.TABLE_ATTR), schema, catalog);
+
+        this.entity.setDynamicInsert(getBoolValue(HbmConstants.DYNAMIC_INSERT, attrs));
+        this.entity.setDynamicUpdate(getBoolValue(HbmConstants.DYNAMIC_UPDATE, attrs));
     }
-    
+
     private boolean getBoolValue(String key, Map<String, String> attrs) {
         boolean rtn = false;
         if (attrs.containsKey(key)) {
@@ -117,9 +113,8 @@ public class HbmParser extends BaseHbmParser {
 
         while (propertyKind != null) {
 
-            propertyKind = next(HbmConstants.COMP_ID_EL, HbmConstants.ID_EL,
-                    HbmConstants.TO_ONE_EL, HbmConstants.PROP_EL,
-                    HbmConstants.SET_EL, HbmConstants.COMPONENT_EL);
+            propertyKind = next(HbmConstants.COMP_ID_EL, HbmConstants.ID_EL, HbmConstants.TO_ONE_EL, HbmConstants.PROP_EL, HbmConstants.SET_EL,
+                HbmConstants.COMPONENT_EL);
 
             if (propertyKind == null) {
                 break;
@@ -128,21 +123,20 @@ public class HbmParser extends BaseHbmParser {
             PropertyInfo p = initProperty(propertyKind);
 
             if (p.getIsRelated()) {
-                entity.addRelatedProperty(p);
+                this.entity.addRelatedProperty(p);
             } else {
-                entity.addProperty(p);
+                this.entity.addProperty(p);
             }
 
             if (p.getIsId()) {
-                entity.setId(p);
+                this.entity.setId(p);
             }
         }
     }
 
     private PropertyInfo initProperty(String propertyKind) {
 
-        Map<String, String> propertyAttrs = 
-            XMLUtils.attributesToMap(xmlReader);
+        Map<String, String> propertyAttrs = XMLUtils.attributesToMap(this.xmlReader);
 
         PropertyInfo rtn = PropertyInfo.fromKind(propertyKind, propertyAttrs);
 
@@ -152,8 +146,7 @@ public class HbmParser extends BaseHbmParser {
 
             while (nestedPropertyKind != null) {
 
-                nestedPropertyKind = nextNested(propertyKind,
-                        HbmConstants.KEY_PROP_EL, HbmConstants.PROP_EL);
+                nestedPropertyKind = nextNested(propertyKind, HbmConstants.KEY_PROP_EL, HbmConstants.PROP_EL);
 
                 if (nestedPropertyKind == null) {
                     break;
@@ -167,8 +160,7 @@ public class HbmParser extends BaseHbmParser {
 
         } else {
 
-            Tuple.Two<Collection<ColumnInfo>, Map<String, String>> t = 
-                initColumns(rtn, propertyKind);
+            Tuple.Two<Collection<ColumnInfo>, Map<String, String>> t = initColumns(rtn, propertyKind);
             Collection<ColumnInfo> columns = t.v1;
             Map<String, String> nestedAttributes = t.v2;
 
@@ -176,8 +168,7 @@ public class HbmParser extends BaseHbmParser {
                 rtn.setColumn(columns.iterator().next());
             } else {
                 for (ColumnInfo ci : columns) {
-                    PropertyInfo p = PropertyInfo.fromKind(propertyKind,
-                            nestedAttributes);
+                    PropertyInfo p = PropertyInfo.fromKind(propertyKind, nestedAttributes);
                     p.setName(ci.getName());
                     p.setColumn(ci);
                     rtn.addCompositeProperty(p);
@@ -185,28 +176,24 @@ public class HbmParser extends BaseHbmParser {
             }
 
             if (rtn.getIsInverse()) {
-                rtn.types(nestedAttributes
-                        .get(HbmConstants.FQ_TO_MANY_TYPE_ATTR));
+                rtn.types(nestedAttributes.get(HbmConstants.FQ_TO_MANY_TYPE_ATTR));
             }
         }
 
         return rtn;
     }
 
-    private Tuple.Two<Collection<ColumnInfo>, Map<String, String>> initColumns(
-            PropertyInfo parentProperty, String parentElementName) {
+    private Tuple.Two<Collection<ColumnInfo>, Map<String, String>> initColumns(PropertyInfo parentProperty, String parentElementName) {
 
         String nestedElement = "";
 
-        Map<String, ColumnInfo> 
-	    rtnMap = new LinkedHashMap<String, ColumnInfo>();
+        Map<String, ColumnInfo> rtnMap = new LinkedHashMap<String, ColumnInfo>();
 
         Map<String, String> attributes = new HashMap<String, String>();
 
         while (nestedElement != null) {
 
-            nestedElement = nextNested(parentElementName, HbmConstants.COL_EL,
-                    HbmConstants.GEN_EL, HbmConstants.TO_MANY_EL);
+            nestedElement = nextNested(parentElementName, HbmConstants.COL_EL, HbmConstants.GEN_EL, HbmConstants.TO_MANY_EL);
 
             if (nestedElement == null) {
 
@@ -214,16 +201,13 @@ public class HbmParser extends BaseHbmParser {
 
             } else {
 
-                Map<String, String> attrs = XMLUtils.attributesToMap(
-                        nestedElement, xmlReader);
+                Map<String, String> attrs = XMLUtils.attributesToMap(nestedElement, this.xmlReader);
 
-                if (parentElementName.equals(HbmConstants.TO_ONE_EL)
-                        || parentElementName.equals(HbmConstants.SET_EL)) {
+                if (parentElementName.equals(HbmConstants.TO_ONE_EL) || parentElementName.equals(HbmConstants.SET_EL)) {
 
                     if (attrs.containsKey(HbmConstants.FQ_COL_NAME_ATTR)) {
 
-                        ColumnInfo ci = ColumnInfo.newColumnInfo(
-                                parentProperty, attrs);
+                        ColumnInfo ci = ColumnInfo.newColumnInfo(parentProperty, attrs);
 
                         rtnMap.put(ci.getName(), ci);
                     }
@@ -239,28 +223,24 @@ public class HbmParser extends BaseHbmParser {
 
                     while (s != null) {
 
-                        s = nextNested(HbmConstants.GEN_EL,
-                                HbmConstants.GEN_PARAM_EL);
+                        s = nextNested(HbmConstants.GEN_EL, HbmConstants.GEN_PARAM_EL);
 
                         if (s == null) {
                             break;
                         }
 
-                        Map<String, String> m = XMLUtils
-                                .attributesToMap(xmlReader);
+                        Map<String, String> m = XMLUtils.attributesToMap(this.xmlReader);
 
                         String paramName = null;
 
                         if (m.containsKey(HbmConstants.NAME_ATTR)) {
-                            paramName = HbmConstants.GEN_PARAM_EL
-                                    + XMLUtils.SCOPE_SEP
-                                    + m.get(HbmConstants.NAME_ATTR);
+                            paramName = HbmConstants.GEN_PARAM_EL + XMLUtils.SCOPE_SEP + m.get(HbmConstants.NAME_ATTR);
                         }
 
                         nextCharacterData();
 
-                        if (paramName != null && currentText.length() > 0) {
-                            attributes.put(paramName, currentText.toString());
+                        if (paramName != null && this.currentText.length() > 0) {
+                            attributes.put(paramName, this.currentText.toString());
                         }
                     }
                 }

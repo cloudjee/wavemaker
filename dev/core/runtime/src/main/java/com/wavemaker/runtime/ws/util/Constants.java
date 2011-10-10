@@ -21,7 +21,8 @@ package com.wavemaker.runtime.ws.util;
  */
 public class Constants {
 
-    private Constants() {}
+    private Constants() {
+    }
 
     public static final String XSD_NS = "http://www.w3.org/2001/XMLSchema";
 
@@ -36,40 +37,41 @@ public class Constants {
     public static final String XSI_NS = "http://www.w3.org/2001/XMLSchema-instance";
 
     public static final String SOAP12_ENVELOPE_NS = "http://www.w3.org/2003/05/soap-envelope";
-    
+
     public static final String JAXWS_NS = "http://java.sun.com/xml/ns/jaxws";
-    
+
     public static final String JAXB_NS = "http://java.sun.com/xml/ns/jaxb";
-    
+
     public static final String XJC_NS = "http://java.sun.com/xml/ns/jaxb/xjc";
-    
+
     public static final String JAVAEE_NS = "http://java.sun.com/xml/ns/javaee";
-    
+
     public static final String TARGET_NAMESPACE = "targetNamespace";
-    
+
     public static final String SOAP_STYLE_DOCUMENT = "document";
-    
+
     public static final String SOAP_STYLE_RPC = "rpc";
-    
+
     public static final String WSDL_EXT = ".wsdl";
-    
+
     public static final String XSD_EXT = ".xsd";
 
     public static final String JAXB_BINDING_FILE_EXT = ".xjb";
 
     public static final String JAXWS_BINDING_FILE_EXT = ".xml";
-    
+
     public static final String JAXB_GLOBAL_BINDING_FILE = "global-binding.xjb";
-    
+
     public static final String SOAP_ENCODING_SCHEMA_FILE = "soapenc.xsd";
-    
+
     public static final String REQUEST_PROPERTY_MAP_VAR_NAME = "requestPropertyMap";
-    
+
     public static final String REST_ENDPOINT_LOCATION_PREFIX = "endpoint=";
-    
+
     public static final String HTTP_METHOD_POST = "POST";
 
     public static final String MIME_TYPE_TEXT_XML = "text/xml";
+
     public static final String MIME_TYPE_FORM = "application/x-www-form-urlencoded";
 
     public static final String SERVICE_PROVIDER_INFOTERIA = "infoteria";

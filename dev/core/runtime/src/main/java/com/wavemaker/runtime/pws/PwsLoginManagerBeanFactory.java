@@ -18,40 +18,38 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.wavemaker.common.ConfigurationException;
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.util.SpringUtils;
-import com.wavemaker.common.ConfigurationException;
 
 /**
  * @author slee
- *
+ * 
  */
 public class PwsLoginManagerBeanFactory {
 
     private Map<String, IPwsLoginManager> pwsLoginManagers = new HashMap<String, IPwsLoginManager>();
 
-
     public Collection<String> getPwsLoginManagerNames() {
-        return pwsLoginManagers.keySet();
+        return this.pwsLoginManagers.keySet();
     }
-    
+
     public IPwsLoginManager getPwsLoginManager(String partnerName) {
-        
-        if (pwsLoginManagers == null) {
+
+        if (this.pwsLoginManagers == null) {
             SpringUtils.throwSpringNotInitializedError(this.getClass());
         }
-        
-        if (!pwsLoginManagers.containsKey(partnerName)) {
-            throw new ConfigurationException(
-                MessageResource.UNKNOWN_PWS_LOGIN_MANAGER, partnerName);
+
+        if (!this.pwsLoginManagers.containsKey(partnerName)) {
+            throw new ConfigurationException(MessageResource.UNKNOWN_PWS_LOGIN_MANAGER, partnerName);
         }
-        
-        return pwsLoginManagers.get(partnerName);
+
+        return this.pwsLoginManagers.get(partnerName);
     }
 
     public void setPwsLoginManagers(Map<String, IPwsLoginManager> pwsLoginManagers) {
         this.pwsLoginManagers = pwsLoginManagers;
 
     }
-    
+
 }

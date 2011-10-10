@@ -21,29 +21,36 @@ import com.wavemaker.json.type.FieldDefinition;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class ServiceOperation {
 
     private List<FieldDefinition> parameterTypes;
+
     private FieldDefinition returnType;
+
     private String name;
-    
+
     public List<FieldDefinition> getParameterTypes() {
-        return parameterTypes;
+        return this.parameterTypes;
     }
+
     public void setParameterTypes(List<FieldDefinition> parameterTypes) {
         this.parameterTypes = parameterTypes;
     }
+
     public FieldDefinition getReturnType() {
-        return returnType;
+        return this.returnType;
     }
+
     public void setReturnType(FieldDefinition returnType) {
         this.returnType = returnType;
     }
+
     public String getName() {
-        return name;
+        return this.name;
     }
+
     public void setName(String name) {
         this.name = name;
     }

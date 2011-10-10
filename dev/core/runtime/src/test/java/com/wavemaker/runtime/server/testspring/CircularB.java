@@ -15,19 +15,20 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.server.testspring;
 
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class CircularB {
 
     private CircularA a;
 
     public CircularA getA() {
-        return a;
+        return this.a;
     }
 
     public void setA(CircularA a) {

@@ -17,44 +17,51 @@ package com.wavemaker.runtime.server;
 import java.io.InputStream;
 
 /**
- * A class containing a download response. This should be used as the return
- * type for any operation which handles download requests.
+ * A class containing a download response. This should be used as the return type for any operation which handles
+ * download requests.
  * 
  * @author Matt Small
  * @version $Rev$ - $Date$
  * 
  */
 public class DownloadResponse {
-    
+
     public DownloadResponse() {
         // empty constructor
     }
-    
-    public DownloadResponse(InputStream contents, String contentType,
-            String fileName) {
+
+    public DownloadResponse(InputStream contents, String contentType, String fileName) {
         this.contents = contents;
         this.contentType = contentType;
         this.fileName = fileName;
     }
 
     private InputStream contents;
+
     private String contentType;
+
     private String fileName;
+
     public InputStream getContents() {
-        return contents;
+        return this.contents;
     }
+
     public void setContents(InputStream contents) {
         this.contents = contents;
     }
+
     public String getContentType() {
-        return contentType;
+        return this.contentType;
     }
+
     public void setContentType(String contentType) {
         this.contentType = contentType;
     }
+
     public String getFileName() {
-        return fileName;
+        return this.fileName;
     }
+
     public void setFileName(String fileName) {
         this.fileName = fileName;
     }

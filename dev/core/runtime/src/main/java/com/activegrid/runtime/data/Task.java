@@ -22,17 +22,16 @@ import org.hibernate.Session;
  * @author Simon Toens
  * @version $Rev$ - $Date$
  * 
- * @deprecated This is now deprecated; see
- *             {@link com.wavemaker.runtime.data.Task}. This will be removed in
- *             a future release.
+ * @deprecated This is now deprecated; see {@link com.wavemaker.runtime.data.Task}. This will be removed in a future
+ *             release.
  */
 @Deprecated
 public interface Task {
-    
+
     Object run(Session session, Object... input);
-    
+
     String getName();
 
     Task getNestedTask();
-    
+
 }

@@ -19,8 +19,8 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 
 /**
- * During bean creation, this intercepts the events and adds any ServiceManager-
- * managed beans to the ServiceManager singleton.
+ * During bean creation, this intercepts the events and adds any ServiceManager- managed beans to the ServiceManager
+ * singleton.
  * 
  * @author small
  * @version $Rev$ - $Date$
@@ -29,37 +29,41 @@ public class ServiceManagerBeanPostProcessor implements BeanPostProcessor {
 
     /** Logger for this class and subclasses */
     protected final Logger logger = Logger.getLogger(getClass());
-    
-    /* (non-Javadoc)
-     * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(java.lang.Object, java.lang.String)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(java.lang.Object,
+     * java.lang.String)
      */
-    public Object postProcessAfterInitialization(Object bean, String beanName)
-            throws BeansException {
-        
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+
         if (bean instanceof ServiceType) {
-            serviceManager.addServiceType((ServiceType) bean);
+            this.serviceManager.addServiceType((ServiceType) bean);
         } else if (bean instanceof ServiceWire) {
-            serviceManager.addServiceWire((ServiceWire) bean);
+            this.serviceManager.addServiceWire((ServiceWire) bean);
         }
-        
+
         return bean;
     }
 
-    /* (non-Javadoc)
-     * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessBeforeInitialization(java.lang.Object, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessBeforeInitialization(java.lang.Object,
+     * java.lang.String)
      */
-    public Object postProcessBeforeInitialization(Object bean, String beanName)
-            throws BeansException {
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         return bean;
     }
 
     private ServiceManager serviceManager;
-    
-    
+
     public void setServiceManager(ServiceManager serviceManager) {
         this.serviceManager = serviceManager;
     }
+
     public ServiceManager getServiceManager() {
-        return serviceManager;
+        return this.serviceManager;
     }
 }

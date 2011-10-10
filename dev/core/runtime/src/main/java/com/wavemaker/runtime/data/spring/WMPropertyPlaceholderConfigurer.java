@@ -16,20 +16,18 @@ package com.wavemaker.runtime.data.spring;
 
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 
-import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.common.util.StringUtils;
-import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.runtime.data.util.DataServiceConstants;
+import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.WMAppContext;
+import com.wavemaker.runtime.data.util.DataServiceConstants;
 
 /**
  * @author Simon Toens
  * @version $Rev: 26365 $ - $Date: 2009-04-29 20:04:57 -0700 (Wed, 29 Apr 2009) $
  * 
  */
-public class WMPropertyPlaceholderConfigurer extends
-        PropertyPlaceholderConfigurer {
+public class WMPropertyPlaceholderConfigurer extends PropertyPlaceholderConfigurer {
 
     @Override
     protected String convertPropertyValue(String value) {
@@ -37,16 +35,15 @@ public class WMPropertyPlaceholderConfigurer extends
             return SystemUtils.decrypt(value);
         }
 
-        //In case of HSQLDB, replace the web root token with the web application root path
+        // In case of HSQLDB, replace the web root token with the web application root path
         String path;
-        if (value.contains(DataServiceConstants.WEB_ROOT_TOKEN))
-        {       
+        if (value.contains(DataServiceConstants.WEB_ROOT_TOKEN)) {
             String appName = WMAppContext.getInstance().getAppName();
-            if (appName.equals(DataServiceConstants.WAVEMAKER_STUDIO))
-                path = (String)RuntimeAccess.getInstance().getSession().
-                        getAttribute(DataServiceConstants.CURRENT_PROJECT_APP_ROOT);
-            else
+            if (appName.equals(DataServiceConstants.WAVEMAKER_STUDIO)) {
+                path = (String) RuntimeAccess.getInstance().getSession().getAttribute(DataServiceConstants.CURRENT_PROJECT_APP_ROOT);
+            } else {
                 path = WMAppContext.getInstance().getAppContextRoot();
+            }
             value = StringUtils.replacePlainStr(value, DataServiceConstants.WEB_ROOT_TOKEN, path);
         }
         return value;

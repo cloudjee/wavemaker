@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data.json;
 
 import static org.junit.Assert.assertEquals;
@@ -36,7 +37,8 @@ import com.wavemaker.runtime.data.sample.sakila.Country;
  */
 public class TestLazyLoading extends BaseJSONDataTest {
 
-    @Test public void testLazyLoadCountry() {
+    @Test
+    public void testLazyLoadCountry() {
 
         String s = runSakilaOpMarshalledResponse("getCityById", "1");
 
@@ -50,20 +52,19 @@ public class TestLazyLoading extends BaseJSONDataTest {
         City c = new City();
         c.setCityId(Short.valueOf("1"));
         c.setAddresses(null); // workaround for MAV-901
-        s = runRuntimeOpMarshalledResponse("getProperty", c, c.getClass()
-                .getName(), "country");
-        
+        s = runRuntimeOpMarshalledResponse("getProperty", c, c.getClass().getName(), "country");
+
         attrs = tokenizeObjectLiteral(s);
 
         assertEquals("87", attrs.get("countryId"));
         assertEquals("Spain", attrs.get("country"));
 
         // cities should not be here
-        assertFalse("cities should not have been marchalled", attrs
-                .containsKey("cities"));
+        assertFalse("cities should not have been marchalled", attrs.containsKey("cities"));
     }
 
-    @Test public void testLazyLoadCities() {
+    @Test
+    public void testLazyLoadCities() {
 
         String s = runSakilaOpMarshalledResponse("getCountryById", "1");
 
@@ -78,20 +79,20 @@ public class TestLazyLoading extends BaseJSONDataTest {
         c.setCities(null); // workaround for MAV-901
 
         // lazy load related cities
-        s = runRuntimeOpMarshalledResponse("getProperty", c, c.getClass()
-                .getName(), "cities");
-        
-        List<Map<String, String>> cities = tokenizeObjectLiteralList(s);        
-        
+        s = runRuntimeOpMarshalledResponse("getProperty", c, c.getClass().getName(), "cities");
+
+        List<Map<String, String>> cities = tokenizeObjectLiteralList(s);
+
         assertEquals(1, cities.size());
-        
+
         Map<String, String> m = cities.iterator().next();
-        
+
         assertEquals("251", m.get("cityId"));
         assertEquals("Kabul", m.get("city"));
     }
 
-    @Test public void testLazyLoadCountryFromAddress() {
+    @Test
+    public void testLazyLoadCountryFromAddress() {
 
         String s = runSakilaOpMarshalledResponse("getAddressById", "1");
 
@@ -106,15 +107,15 @@ public class TestLazyLoading extends BaseJSONDataTest {
         a.setStores(null); // workaround for MAV-901
 
         // lazy load related city.country
-        s = runRuntimeOpMarshalledResponse("getProperty", a, a.getClass()
-                .getName(), "city.country");
+        s = runRuntimeOpMarshalledResponse("getProperty", a, a.getClass().getName(), "city.country");
 
         attrs = tokenizeObjectLiteral(s);
 
         verifyCountryAttributes(attrs, false);
     }
 
-    @Test public void testLazyLoadCountryCitiesFromAddress() {
+    @Test
+    public void testLazyLoadCountryCitiesFromAddress() {
 
         String s = runSakilaOpMarshalledResponse("getAddressById", "1");
 
@@ -129,13 +130,12 @@ public class TestLazyLoading extends BaseJSONDataTest {
         a.setStores(null); // workaround for MAV-901
 
         // lazy load related city.country.cities
-        s = runRuntimeOpMarshalledResponse("getProperty", a, a.getClass()
-                .getName(), "city.country.cities");
+        s = runRuntimeOpMarshalledResponse("getProperty", a, a.getClass().getName(), "city.country.cities");
 
         List<Map<String, String>> cities = tokenizeObjectLiteralList(s);
-        
+
         assertEquals(7, cities.size());
-        
+
         for (Map<String, String> m : cities) {
             verifyCityAttributes(m, false, false);
         }

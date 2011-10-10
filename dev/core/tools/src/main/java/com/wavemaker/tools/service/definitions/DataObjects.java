@@ -19,7 +19,6 @@
 // Generated on: 2008.10.23 at 10:17:33 AM PDT 
 //
 
-
 package com.wavemaker.tools.service.definitions;
 
 import java.util.ArrayList;
@@ -29,11 +28,12 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for dataobjects complex type.
+ * <p>
+ * Java class for dataobjects complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="dataobjects">
@@ -50,9 +50,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "dataobjects", propOrder = {
-    "dataobject"
-})
+@XmlType(name = "dataobjects", propOrder = { "dataobject" })
 public class DataObjects {
 
     protected List<DataObject> dataobject;
@@ -61,27 +59,26 @@ public class DataObjects {
      * Gets the value of the dataobject property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the dataobject property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the dataobject property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getDataobject().add(newItem);
+     * getDataobject().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DataObject }
+     * Objects of the following type(s) are allowed in the list {@link DataObject }
      * 
      * 
      */
     public List<DataObject> getDataobject() {
-        if (dataobject == null) {
-            dataobject = new ArrayList<DataObject>();
+        if (this.dataobject == null) {
+            this.dataobject = new ArrayList<DataObject>();
         }
         return this.dataobject;
     }

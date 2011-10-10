@@ -15,14 +15,15 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.server.testspring;
 
 public class BeanClass {
-    
+
     String name = null;
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {

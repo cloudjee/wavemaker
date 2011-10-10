@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.ant;
 
 import com.wavemaker.infra.WMTestCase;
@@ -22,10 +23,10 @@ import com.wavemaker.infra.WMTestCase;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestServiceCompilerTask extends WMTestCase {
-    
+
     public void testNothing() {
     }
 

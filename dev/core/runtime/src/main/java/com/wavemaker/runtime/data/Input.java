@@ -17,32 +17,46 @@ package com.wavemaker.runtime.data;
 public class Input {
 
     private String paramName = null;
+
     private String paramType = null;
+
     private Boolean isList = Boolean.FALSE;
 
-    public Input() {}
+    public Input() {
+    }
 
     public Input(String paramName, String paramType, Boolean isList) {
         this.paramName = paramName;
         this.paramType = paramType;
-	this.isList = isList;
-    }
- 
-    public String getParamName() { return paramName; }
-    public void setParamName(String paramName) { 
-        this.paramName = paramName; 
+        this.isList = isList;
     }
 
-    public String getParamType() { return paramType; }
-    public void setParamType(String paramType) { 
-        this.paramType = paramType; 
+    public String getParamName() {
+        return this.paramName;
     }
 
-    public Boolean getList() { return isList; }
-    public void setList(Boolean isList) { this.isList = isList; }
+    public void setParamName(String paramName) {
+        this.paramName = paramName;
+    }
 
-    public String toString() { 
-	return paramName + ":" + paramType + ":" + isList;
+    public String getParamType() {
+        return this.paramType;
+    }
+
+    public void setParamType(String paramType) {
+        this.paramType = paramType;
+    }
+
+    public Boolean getList() {
+        return this.isList;
+    }
+
+    public void setList(Boolean isList) {
+        this.isList = isList;
+    }
+
+    @Override
+    public String toString() {
+        return this.paramName + ":" + this.paramType + ":" + this.isList;
     }
 }
-

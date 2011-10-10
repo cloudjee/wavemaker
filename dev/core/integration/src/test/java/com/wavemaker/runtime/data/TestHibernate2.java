@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data;
 
 import org.hibernate.Transaction;
@@ -31,13 +32,12 @@ public class TestHibernate2 extends BaseHibernateTest {
 
         Transaction tx = session.beginTransaction();
 
-        TestStaff s = (TestStaff)session.get(TestStaff.class, 
-                                             Byte.valueOf("1"));
+        TestStaff s = (TestStaff) session.get(TestStaff.class, Byte.valueOf("1"));
         tx.rollback();
         session.close();
 
         double length = s.getPicture().length();
-        
+
         assertEquals(36365d, length);
     }
 }

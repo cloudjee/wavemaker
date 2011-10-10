@@ -20,20 +20,20 @@ import java.util.List;
 /**
  * @author ffu
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class DemoOptions {
 
     private List<DemoUser> users;
 
     public List<DemoUser> getUsers() {
-        if (users == null) {
+        if (this.users == null) {
             return Collections.emptyList();
         }
-        return users;
+        return this.users;
     }
 
     public void setUsers(List<DemoUser> users) {
         this.users = users;
-    } 
+    }
 }

@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -20,12 +18,14 @@ import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for soapType.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
+ * Java class for soapType.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * 
  * <pre>
  * &lt;simpleType name="soapType">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
@@ -49,37 +49,29 @@ import javax.xml.bind.annotation.XmlType;
 public enum SoapTypeType {
 
     @XmlEnumValue("tns:ID")
-    TNS_ID("tns:ID"),
-    @XmlEnumValue("xsd:base64Binary")
-    XSD_BASE_64_BINARY("xsd:base64Binary"),
-    @XmlEnumValue("xsd:boolean")
-    XSD_BOOLEAN("xsd:boolean"),
-    @XmlEnumValue("xsd:double")
-    XSD_DOUBLE("xsd:double"),
-    @XmlEnumValue("xsd:int")
-    XSD_INT("xsd:int"),
-    @XmlEnumValue("xsd:string")
-    XSD_STRING("xsd:string"),
-    @XmlEnumValue("xsd:date")
-    XSD_DATE("xsd:date"),
-    @XmlEnumValue("xsd:dateTime")
-    XSD_DATE_TIME("xsd:dateTime"),
-    @XmlEnumValue("xsd:time")
-    XSD_TIME("xsd:time"),
-    @XmlEnumValue("xsd:anyType")
+    TNS_ID("tns:ID"), @XmlEnumValue("xsd:base64Binary")
+    XSD_BASE_64_BINARY("xsd:base64Binary"), @XmlEnumValue("xsd:boolean")
+    XSD_BOOLEAN("xsd:boolean"), @XmlEnumValue("xsd:double")
+    XSD_DOUBLE("xsd:double"), @XmlEnumValue("xsd:int")
+    XSD_INT("xsd:int"), @XmlEnumValue("xsd:string")
+    XSD_STRING("xsd:string"), @XmlEnumValue("xsd:date")
+    XSD_DATE("xsd:date"), @XmlEnumValue("xsd:dateTime")
+    XSD_DATE_TIME("xsd:dateTime"), @XmlEnumValue("xsd:time")
+    XSD_TIME("xsd:time"), @XmlEnumValue("xsd:anyType")
     XSD_ANY_TYPE("xsd:anyType");
+
     private final String value;
 
     SoapTypeType(String v) {
-        value = v;
+        this.value = v;
     }
 
     public String value() {
-        return value;
+        return this.value;
     }
 
     public static SoapTypeType fromValue(String v) {
-        for (SoapTypeType c: SoapTypeType.values()) {
+        for (SoapTypeType c : SoapTypeType.values()) {
             if (c.value.equals(v)) {
                 return c;
             }

@@ -29,57 +29,49 @@ import com.wavemaker.common.util.Tuple;
  */
 public class ConfigurationRegistry {
 
-    private static final ConfigurationRegistry instance = 
-        new ConfigurationRegistry();
+    private static final ConfigurationRegistry instance = new ConfigurationRegistry();
 
     public static ConfigurationRegistry getInstance() {
         return instance;
     }
 
-    private Map<String, Tuple.Two<Configuration, SessionFactory>> reg = 
-        new HashMap<String, Tuple.Two<Configuration, SessionFactory>>();
+    private final Map<String, Tuple.Two<Configuration, SessionFactory>> reg = new HashMap<String, Tuple.Two<Configuration, SessionFactory>>();
 
     private ConfigurationRegistry() {
     }
 
-    public synchronized void register(String name, 
-                                      Configuration configuration) 
-    {
+    public synchronized void register(String name, Configuration configuration) {
         getEntry(name).v1 = configuration;
     }
 
-    public synchronized void register(String name, 
-                                      SessionFactory sessionFactory) 
-    {
+    public synchronized void register(String name, SessionFactory sessionFactory) {
         getEntry(name).v2 = sessionFactory;
     }
 
     public synchronized Configuration getConfiguration(String name) {
-        if (reg.get(name) == null) {
+        if (this.reg.get(name) == null) {
             return null;
         }
-        return reg.get(name).v1;
+        return this.reg.get(name).v1;
     }
-    
+
     public synchronized SessionFactory getSessionFactory(String name) {
-        if (reg.get(name) == null) {
+        if (this.reg.get(name) == null) {
             return null;
         }
-        return reg.get(name).v2;
+        return this.reg.get(name).v2;
     }
 
     public synchronized void remove(String name) {
-        reg.remove(name);
+        this.reg.remove(name);
     }
 
-    private synchronized Tuple.Two<Configuration, SessionFactory>
-        getEntry(String name) 
-    {
-        Tuple.Two<Configuration, SessionFactory> rtn = reg.get(name);
+    private synchronized Tuple.Two<Configuration, SessionFactory> getEntry(String name) {
+        Tuple.Two<Configuration, SessionFactory> rtn = this.reg.get(name);
         if (rtn == null) {
             rtn = Tuple.tuple(null, null);
-        reg.put(name, rtn);
-        } 
+            this.reg.put(name, rtn);
+        }
         return rtn;
     }
 }

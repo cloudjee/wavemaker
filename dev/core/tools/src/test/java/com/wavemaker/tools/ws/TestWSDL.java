@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.ws;
 
 import java.io.File;
@@ -38,23 +39,22 @@ import com.wavemaker.tools.ws.wsdl.WSDLManager;
  */
 public class TestWSDL extends WMTestCase {
 
-	private static final Log log = LogFactory.getLog(TestWSDL.class);
-	
+    private static final Log log = LogFactory.getLog(TestWSDL.class);
+
     public static WSDL buildWSDL(String wsdlResource) throws Exception {
         String resource = ClassLoaderUtils.getResource(wsdlResource);
         WSDL wsdl = WSDLManager.processWSDL(resource, null);
         return wsdl;
     }
 
-    public static JAXBTypeMapper buildJAXBTypeMapper(WSDL wsdl,
-            List<String> bindingResources) throws Exception {
+    public static JAXBTypeMapper buildJAXBTypeMapper(WSDL wsdl, List<String> bindingResources) throws Exception {
         List<File> bindingFiles = new ArrayList<File>();
         if (bindingResources != null) {
             for (String bindingResource : bindingResources) {
-            	if (log.isDebugEnabled()) {
-            		log.debug("Loading resource "+bindingResource+" for JAXB type mapper.");
-            	}
-                File bindingFile = ResourceUtils.getFile("classpath:"+bindingResource);
+                if (log.isDebugEnabled()) {
+                    log.debug("Loading resource " + bindingResource + " for JAXB type mapper.");
+                }
+                File bindingFile = ResourceUtils.getFile("classpath:" + bindingResource);
                 bindingFiles.add(bindingFile);
             }
         }
@@ -62,8 +62,7 @@ public class TestWSDL extends WMTestCase {
         return mapper;
     }
 
-    public static WSDL getWSDL(String wsdlResource,
-            List<String> bindingResources) throws Exception {
+    public static WSDL getWSDL(String wsdlResource, List<String> bindingResources) throws Exception {
         WSDL wsdl = buildWSDL(wsdlResource);
         JAXBTypeMapper mapper = buildJAXBTypeMapper(wsdl, bindingResources);
         wsdl.setTypeMapper(mapper);
@@ -84,7 +83,7 @@ public class TestWSDL extends WMTestCase {
         JAXBTypeMapper mapper = buildJAXBTypeMapper(wsdl, null);
         assertNotNull(mapper);
     }
-    
+
     public void testRPCEncodedWSDL() throws Exception {
         try {
             buildWSDL("com/wavemaker/tools/ws/GoogleSearch.wsdl");

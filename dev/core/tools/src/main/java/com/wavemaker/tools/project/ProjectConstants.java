@@ -36,7 +36,7 @@ public class ProjectConstants {
     public static final String WEB_INF = "WEB-INF/";
 
     public static final String LIB_DIR = "lib/";
-    
+
     public static final String CLASSES_DIR = "classes/";
 
     public static final String WEB_XML = "web.xml";
@@ -48,9 +48,8 @@ public class ProjectConstants {
     public static final String USER_WEB_XML = "user-web.xml";
 
     public static final String INDEX_HTML = "index.html";
-    
+
     public static final String POM_XML = "pom.xml";
 
-    public static final String PROP_SEP = ""
-            + AlternateJSONTransformer.PROP_SEP;
+    public static final String PROP_SEP = "" + AlternateJSONTransformer.PROP_SEP;
 }

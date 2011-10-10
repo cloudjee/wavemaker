@@ -36,199 +36,196 @@ import com.wavemaker.common.WMRuntimeException;
  */
 public class ClassLoaderUtils {
 
-	private ClassLoaderUtils() {
-	}
+    private ClassLoaderUtils() {
+    }
 
-	/**
-	 * Loads class specified by className from the ContextClassLoader.
-	 */
-	public static Class<?> loadClass(String className) {
-		return loadClass(className, getClassLoader());
-	}
+    /**
+     * Loads class specified by className from the ContextClassLoader.
+     */
+    public static Class<?> loadClass(String className) {
+        return loadClass(className, getClassLoader());
+    }
 
-	/**
-	 * Loads class specified by className from the ContextClassLoader.
-	 */
-	public static Class<?> loadClass(String className, boolean initialize) {
-		return loadClass(className, initialize, getClassLoader());
-	}
+    /**
+     * Loads class specified by className from the ContextClassLoader.
+     */
+    public static Class<?> loadClass(String className, boolean initialize) {
+        return loadClass(className, initialize, getClassLoader());
+    }
 
-	/**
-	 * Loads class specified by className, using passed ClassLoader, and
-	 * initializing the class.
-	 */
-	public static Class<?> loadClass(String className, ClassLoader loader) {
-		return loadClass(className, true, loader);
-	}
+    /**
+     * Loads class specified by className, using passed ClassLoader, and initializing the class.
+     */
+    public static Class<?> loadClass(String className, ClassLoader loader) {
+        return loadClass(className, true, loader);
+    }
 
-	/**
-	 * Loads class specified by className, using passed ClassLoader.
-	 */
-	public static Class<?> loadClass(String className, boolean initialize,
-			ClassLoader loader) {
-		try {
-			Class<?> rtn = TypeConversionUtils.primitiveForName(className);
-			if (rtn == null) {
-				// On Windows, if the class has been loaded from a jar, this
-				// may hold an open reference to the jar.
-				rtn = Class.forName(className, initialize, loader);
-			}
-			return rtn;
-		} catch (ClassNotFoundException ex) {
-			String s = ex.getMessage();
-			if (s == null || s.equals("")) {
-				s = "Cannot find class " + className;
-			}
-			throw new WMRuntimeException(s, ex);
-		}
-	}
+    /**
+     * Loads class specified by className, using passed ClassLoader.
+     */
+    public static Class<?> loadClass(String className, boolean initialize, ClassLoader loader) {
+        try {
+            Class<?> rtn = TypeConversionUtils.primitiveForName(className);
+            if (rtn == null) {
+                // On Windows, if the class has been loaded from a jar, this
+                // may hold an open reference to the jar.
+                rtn = Class.forName(className, initialize, loader);
+            }
+            return rtn;
+        } catch (ClassNotFoundException ex) {
+            String s = ex.getMessage();
+            if (s == null || s.equals("")) {
+                s = "Cannot find class " + className;
+            }
+            throw new WMRuntimeException(s, ex);
+        }
+    }
 
-	/**
-	 * Returns the context ClassLoader.
-	 */
-	public static ClassLoader getClassLoader() {
-		return Thread.currentThread().getContextClassLoader();
-	}
+    /**
+     * Returns the context ClassLoader.
+     */
+    public static ClassLoader getClassLoader() {
+        return Thread.currentThread().getContextClassLoader();
+    }
 
-	/**
-	 * Returns path to resource, loaded from classpath.
-	 * 
-	 * @param path
-	 *            The relative path to the resource.
-	 * @return Path on disk to the resource, or null if not found.
-	 */
-	public static String getResource(String path) {
-		URL url = ClassLoaderUtils.getClassLoader().getResource(path);
-		if (url == null) {
-			return null;
-		}
-		return url.toString();
-	}
+    /**
+     * Returns path to resource, loaded from classpath.
+     * 
+     * @param path The relative path to the resource.
+     * @return Path on disk to the resource, or null if not found.
+     */
+    public static String getResource(String path) {
+        URL url = ClassLoaderUtils.getClassLoader().getResource(path);
+        if (url == null) {
+            return null;
+        }
+        return url.toString();
+    }
 
-	public static InputStream getResourceAsStream(String path) {
-		return getClassLoader().getResourceAsStream(path);
-	}
+    public static InputStream getResourceAsStream(String path) {
+        return getClassLoader().getResourceAsStream(path);
+    }
 
-	public static InputStream getResourceAsStream(String path, ClassLoader cl) {
-		return cl.getResourceAsStream(path);
-	}
+    public static InputStream getResourceAsStream(String path, ClassLoader cl) {
+        return cl.getResourceAsStream(path);
+    }
 
-	public static ClassLoader getClassLoaderForResources(Resource... files) {
-		return getClassLoaderForResources(getClassLoader(), files);
-	}
-	
-	/**
-	 * @deprecated - use {@link #getClassLoaderForResources(Resource...)}
-	 */
-	public static ClassLoader getClassLoaderForFile(java.io.File... files) {
-		return getClassLoaderForResources(getClassLoader(), ConversionUtils.convertToResourceList(Arrays.asList(files)).toArray(new Resource[files.length]));
-	}
+    public static ClassLoader getClassLoaderForResources(Resource... files) {
+        return getClassLoaderForResources(getClassLoader(), files);
+    }
 
-	public static ClassLoader getClassLoaderForResources(ClassLoader parent,
-			Resource... files) {
-		try {
-			final ClassLoader parentF = parent;
-			final URL[] urls = new URL[files.length];
-			for (int i = 0; i < files.length; i++) {
-				urls[i] = files[i].getURL();
-			}
+    /**
+     * @deprecated - use {@link #getClassLoaderForResources(Resource...)}
+     */
+    @Deprecated
+    public static ClassLoader getClassLoaderForFile(java.io.File... files) {
+        return getClassLoaderForResources(getClassLoader(),
+            ConversionUtils.convertToResourceList(Arrays.asList(files)).toArray(new Resource[files.length]));
+    }
 
-			URLClassLoader ret = AccessController
-					.doPrivileged(new PrivilegedAction<URLClassLoader>() {
-						public URLClassLoader run() {
-							return new URLClassLoader(urls, parentF);
-						}
-					});
-			return ret;
-		} catch (MalformedURLException ex) {
-			throw new AssertionError(ex);
-		} catch (IOException ex) {
-			throw new WMRuntimeException(ex);
-		}
-	}
-	
-	public static ClassLoader getClassLoaderForFile(ClassLoader parent, java.io.File... files) {
-		return getClassLoaderForResources(parent, ConversionUtils.convertToResourceList(Arrays.asList(files)).toArray(new Resource[files.length]));
-	}
+    public static ClassLoader getClassLoaderForResources(ClassLoader parent, Resource... files) {
+        try {
+            final ClassLoader parentF = parent;
+            final URL[] urls = new URL[files.length];
+            for (int i = 0; i < files.length; i++) {
+                urls[i] = files[i].getURL();
+            }
 
-	/**
-	 * Get a temporary classloader. By default, this will use the parent
-	 * classloader as a base.
-	 * 
-	 * @param files
-	 * @return
-	 */
-	public static ClassLoader getTempClassLoaderForResources(Resource... files) {
+            URLClassLoader ret = AccessController.doPrivileged(new PrivilegedAction<URLClassLoader>() {
 
-		final List<Resource> filesList = Arrays.asList(files);
+                public URLClassLoader run() {
+                    return new URLClassLoader(urls, parentF);
+                }
+            });
+            return ret;
+        } catch (MalformedURLException ex) {
+            throw new AssertionError(ex);
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
+    }
 
-		ClassLoader ret = AccessController
-				.doPrivileged(new PrivilegedAction<ThrowawayFileClassLoader>() {
-					public ThrowawayFileClassLoader run() {
-						return new ThrowawayFileClassLoader(filesList,
-								getClassLoader().getParent());
-					}
-				});
-		return ret;
-	}
-	
-	/**
-	 * @deprecated - use {@link #getTempClassLoaderForResources(Resource...)}
-	 */
-	public static ClassLoader getTempClassLoaderForFile(java.io.File... files) {
-		return getTempClassLoaderForResources(ConversionUtils.convertToResourceList(Arrays.asList(files)).toArray(new Resource[files.length]));
-	}
+    public static ClassLoader getClassLoaderForFile(ClassLoader parent, java.io.File... files) {
+        return getClassLoaderForResources(parent, ConversionUtils.convertToResourceList(Arrays.asList(files)).toArray(new Resource[files.length]));
+    }
 
-	/**
-	 * Returns the File object associated with the given classpath-based path.
-	 * 
-	 * Note that this method won't work as expected if the file exists in a jar.
-	 * This method will throw an IOException in that case.
-	 * 
-	 * @param path
-	 *            The path to search for.
-	 * @return The File object associated with the given path.
-	 * @throws IOException
-	 */
-	public static Resource getClasspathFile(String path) throws IOException {
-		Resource ret = new ClassPathResource(path);
-		if (!ret.exists()) {
-			// must have come from a jar or some other obscure location
-			// that we didn't expect
-			throw new IOException("Cannot access " + ret.toString());
-		}
-		return ret;
-	}
+    /**
+     * Get a temporary classloader. By default, this will use the parent classloader as a base.
+     * 
+     * @param files
+     * @return
+     */
+    public static ClassLoader getTempClassLoaderForResources(Resource... files) {
 
-	public static Object runInClassLoaderContext(TaskType task,
-			Resource... files) {
-		return runInClassLoaderContext(task, getClassLoaderForResources(files));
-	}
+        final List<Resource> filesList = Arrays.asList(files);
 
-	public static Object runInClassLoaderContext(TaskType task, ClassLoader cl) {
-		ClassLoader c = Thread.currentThread().getContextClassLoader();
-		try {
-			Thread.currentThread().setContextClassLoader(cl);
+        ClassLoader ret = AccessController.doPrivileged(new PrivilegedAction<ThrowawayFileClassLoader>() {
 
-			if (task instanceof TaskRtn) {
-				return ((TaskRtn) task).run();
-			} else {
-				((TaskNoRtn) task).run();
-				return null;
-			}
-		} finally {
-			Thread.currentThread().setContextClassLoader(c);
-		}
-	}
+            public ThrowawayFileClassLoader run() {
+                return new ThrowawayFileClassLoader(filesList, getClassLoader().getParent());
+            }
+        });
+        return ret;
+    }
 
-	private static interface TaskType {
-	}
+    /**
+     * @deprecated - use {@link #getTempClassLoaderForResources(Resource...)}
+     */
+    @Deprecated
+    public static ClassLoader getTempClassLoaderForFile(java.io.File... files) {
+        return getTempClassLoaderForResources(ConversionUtils.convertToResourceList(Arrays.asList(files)).toArray(new Resource[files.length]));
+    }
 
-	public static interface TaskNoRtn extends TaskType {
-		void run();
-	}
+    /**
+     * Returns the File object associated with the given classpath-based path.
+     * 
+     * Note that this method won't work as expected if the file exists in a jar. This method will throw an IOException
+     * in that case.
+     * 
+     * @param path The path to search for.
+     * @return The File object associated with the given path.
+     * @throws IOException
+     */
+    public static Resource getClasspathFile(String path) throws IOException {
+        Resource ret = new ClassPathResource(path);
+        if (!ret.exists()) {
+            // must have come from a jar or some other obscure location
+            // that we didn't expect
+            throw new IOException("Cannot access " + ret.toString());
+        }
+        return ret;
+    }
 
-	public static interface TaskRtn extends TaskType {
-		Object run();
-	}
+    public static Object runInClassLoaderContext(TaskType task, Resource... files) {
+        return runInClassLoaderContext(task, getClassLoaderForResources(files));
+    }
+
+    public static Object runInClassLoaderContext(TaskType task, ClassLoader cl) {
+        ClassLoader c = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(cl);
+
+            if (task instanceof TaskRtn) {
+                return ((TaskRtn) task).run();
+            } else {
+                ((TaskNoRtn) task).run();
+                return null;
+            }
+        } finally {
+            Thread.currentThread().setContextClassLoader(c);
+        }
+    }
+
+    private static interface TaskType {
+    }
+
+    public static interface TaskNoRtn extends TaskType {
+
+        void run();
+    }
+
+    public static interface TaskRtn extends TaskType {
+
+        Object run();
+    }
 }

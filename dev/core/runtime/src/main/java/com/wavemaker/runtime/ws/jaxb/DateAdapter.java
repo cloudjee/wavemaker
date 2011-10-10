@@ -14,17 +14,14 @@
 
 package com.wavemaker.runtime.ws.jaxb;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.xml.bind.DatatypeConverter;
 
 /**
- * JAXB customization to use <code>java.util.Date</code> for xs:date, xs:time
- * and xs:dateTime.
+ * JAXB customization to use <code>java.util.Date</code> for xs:date, xs:time and xs:dateTime.
  * 
  * @author ffu
  * @version $Rev$ - $Date$
@@ -37,9 +34,9 @@ public class DateAdapter {
     }
 
     public static String printDate(Date dt) {
-        /*Calendar cal = new GregorianCalendar();
-        cal.setTime(dt);
-        return DatatypeConverter.printDate(cal);*/
+        /*
+         * Calendar cal = new GregorianCalendar(); cal.setTime(dt); return DatatypeConverter.printDate(cal);
+         */
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
         String sdate = df.format(dt);
         return sdate;

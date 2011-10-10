@@ -21,35 +21,33 @@ import com.wavemaker.json.type.OperationEnumeration;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class Field {
 
     private String type;
+
     private boolean isList;
-    
+
     /**
-     * Data the user must provide; this must be present in any valid
-     * ComplexType, in any operation.  The client shouldn't invoke server
-     * operations until the user has filled in all required fields.
+     * Data the user must provide; this must be present in any valid ComplexType, in any operation. The client shouldn't
+     * invoke server operations until the user has filled in all required fields.
      */
     private boolean required;
-    
+
     /**
-     * List of operations that this field must be present for (must be included
-     * in any ComplexTypes sent to the server).
+     * List of operations that this field must be present for (must be included in any ComplexTypes sent to the server).
      */
     private List<OperationEnumeration> include;
-    
+
     /**
-     * List of operations this field must not be changed for (must be the same
-     * as the version sent by the server when it's sent to the server).
+     * List of operations this field must not be changed for (must be the same as the version sent by the server when
+     * it's sent to the server).
      */
     private List<OperationEnumeration> noChange;
-    
+
     /**
-     * List of operations this field must not be present for (must not be sent
-     * to the server).
+     * List of operations this field must not be present for (must not be sent to the server).
      */
     private List<OperationEnumeration> exclude;
 
@@ -59,60 +57,72 @@ public class Field {
     private int fieldOrder;
 
     /**
-     * the type of of html object to be created when a live form is created, such as editor, select editor and
-     * text area.  Reserved only for Salesforce integration.
+     * the type of of html object to be created when a live form is created, such as editor, select editor and text
+     * area. Reserved only for Salesforce integration.
      */
-    private String fieldSubType; //salesforce
-    
+    private String fieldSubType; // salesforce
+
     public String getType() {
-        return type;
+        return this.type;
     }
+
     public void setType(String type) {
         this.type = type;
     }
+
     public boolean isIsList() {
-        return isList;
+        return this.isList;
     }
+
     public void setIsList(boolean isList) {
         this.isList = isList;
     }
+
     public boolean isRequired() {
-        return required;
+        return this.required;
     }
+
     public void setRequired(boolean required) {
         this.required = required;
     }
+
     public List<OperationEnumeration> getInclude() {
-        return include;
+        return this.include;
     }
+
     public void setInclude(List<OperationEnumeration> include) {
         this.include = include;
     }
+
     public List<OperationEnumeration> getNoChange() {
-        return noChange;
+        return this.noChange;
     }
+
     public void setNoChange(List<OperationEnumeration> noChange) {
         this.noChange = noChange;
     }
+
     public List<OperationEnumeration> getExclude() {
-        return exclude;
+        return this.exclude;
     }
+
     public void setExclude(List<OperationEnumeration> exclude) {
         this.exclude = exclude;
     }
 
     public int getFieldOrder() {
-        return fieldOrder;
+        return this.fieldOrder;
     }
+
     public void setFieldOrder(int fieldOrder) {
         this.fieldOrder = fieldOrder;
     }
 
-    public String getFieldSubType() { //salesforce
-        return fieldSubType;
+    public String getFieldSubType() { // salesforce
+        return this.fieldSubType;
     }
-    
-    public void setFieldSubType(String subType) { //salesforce
+
+    public void setFieldSubType(String subType) { // salesforce
         this.fieldSubType = subType;
     }
 }

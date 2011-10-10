@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data.json;
 
 import static org.junit.Assert.assertEquals;
@@ -37,10 +38,10 @@ public class TestInsertAndDelete extends BaseJSONDataTest {
 
     private static Short countryId = null;
 
-    @Test public void testInsertCountry() {
+    @Test
+    public void testInsertCountry() {
 
-        String post = "{\"params\": [" + "{\"country\": \"newcountry\", }], "
-                + "\"method\": \"insertCountry\", \"id\": 9}";
+        String post = "{\"params\": [" + "{\"country\": \"newcountry\", }], " + "\"method\": \"insertCountry\", \"id\": 9}";
 
         String s = runSakilaOpMarshalledResponse(post);
 
@@ -61,7 +62,8 @@ public class TestInsertAndDelete extends BaseJSONDataTest {
         inserted = true;
     }
 
-    @Test public void testDeleteCountry() {
+    @Test
+    public void testDeleteCountry() {
 
         if (!inserted) {
             return;
@@ -76,7 +78,8 @@ public class TestInsertAndDelete extends BaseJSONDataTest {
         assertEquals("null", s);
     }
 
-    @Test public void testDeleteCountryNotInDB() {
+    @Test
+    public void testDeleteCountryNotInDB() {
 
         Country c = new Country();
         c.setCountryId(Short.valueOf("1111"));

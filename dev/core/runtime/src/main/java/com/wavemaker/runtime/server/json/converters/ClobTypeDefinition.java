@@ -36,22 +36,24 @@ import com.wavemaker.json.type.reflect.ReflectTypeUtils;
  * @author small
  * @version $Rev$ - $Date$
  */
-public class ClobTypeDefinition extends PrimitiveReflectTypeDefinition
-        implements ReadObjectConverter, WriteObjectConverter {
-    
+public class ClobTypeDefinition extends PrimitiveReflectTypeDefinition implements ReadObjectConverter, WriteObjectConverter {
+
     public ClobTypeDefinition(Class<? extends Clob> klass) {
-        
+
         super();
         this.setKlass(klass);
         this.setTypeName(ReflectTypeUtils.getTypeName(this.getKlass()));
     }
-    
-    /* (non-Javadoc)
-     * @see com.wavemaker.json.type.converters.ReadObjectConverter#readObject(java.lang.Object, java.lang.Object, java.lang.String)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.json.type.converters.ReadObjectConverter#readObject(java.lang.Object, java.lang.Object,
+     * java.lang.String)
      */
     public Object readObject(Object input, Object root, String path) {
-        
-        if (null==input) {
+
+        if (null == input) {
             return null;
         } else if (String.class.isAssignableFrom(input.getClass())) {
             return new ClobImpl((String) input);
@@ -60,10 +62,9 @@ public class ClobTypeDefinition extends PrimitiveReflectTypeDefinition
         }
     }
 
-    public void writeObject(Object input, Object root, String path,
-            Writer writer) throws IOException {
-        
-        if (null==input) {
+    public void writeObject(Object input, Object root, String path, Writer writer) throws IOException {
+
+        if (null == input) {
             JSONMarshaller.marshal(writer, input);
         } else if (input instanceof Clob) {
             try {
@@ -73,8 +74,7 @@ public class ClobTypeDefinition extends PrimitiveReflectTypeDefinition
                 throw new WMRuntimeException(e);
             }
         } else {
-            throw new WMRuntimeException(MessageResource.JSON_UNHANDLED_TYPE, input,
-                    input.getClass());
+            throw new WMRuntimeException(MessageResource.JSON_UNHANDLED_TYPE, input, input.getClass());
         }
     }
 }

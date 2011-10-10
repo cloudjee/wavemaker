@@ -23,25 +23,26 @@ import org.apache.commons.logging.Log;
  * 
  * @author stoens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class OutputStreamLogger extends OutputStream {
-    
+
     private final Log log;
-    
-    ByteArrayOutputStream bos = new ByteArrayOutputStream();    
-    
+
+    ByteArrayOutputStream bos = new ByteArrayOutputStream();
+
     public OutputStreamLogger(Log log) {
         this.log = log;
     }
 
     @Override
     public void write(int b) {
-        bos.write(b);
+        this.bos.write(b);
     }
-    
+
+    @Override
     public void flush() {
-        log.error(bos.toString()); 
-        bos = new ByteArrayOutputStream();
+        this.log.error(this.bos.toString());
+        this.bos = new ByteArrayOutputStream();
     }
 }

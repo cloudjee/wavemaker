@@ -30,23 +30,22 @@ public abstract class GenerationContext {
     public static final String CONTEXT_NAME = "agcontext";
 
     protected final DataServiceDefinition def;
-    
+
     private final String serviceName;
-    
+
     private final boolean useIndividualCRUDOperations;
 
-    public GenerationContext(String serviceName, Configuration cfg,
-            boolean useIndividualCRUDOperations) {
+    public GenerationContext(String serviceName, Configuration cfg, boolean useIndividualCRUDOperations) {
 
         this.def = new DataServiceDefinition(serviceName, cfg, true, useIndividualCRUDOperations);
 
         this.serviceName = XMLUtils.escape(serviceName);
-        
+
         this.useIndividualCRUDOperations = useIndividualCRUDOperations;
     }
 
     public DataServiceDefinition getDataServiceDefinition() {
-        return def;
+        return this.def;
     }
 
     public String getDate() {
@@ -54,18 +53,18 @@ public abstract class GenerationContext {
     }
 
     public String getServiceName() {
-        return serviceName;
+        return this.serviceName;
     }
 
     public void dispose() {
-        def.dispose();
+        this.def.dispose();
     }
 
     public String getPropref() {
         return "${";
     }
-    
+
     public String getUseIndividualCRUDOperations() {
-        return String.valueOf(useIndividualCRUDOperations);
+        return String.valueOf(this.useIndividualCRUDOperations);
     }
 }

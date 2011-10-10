@@ -19,7 +19,6 @@
 // Generated on: 2008.02.26 at 04:39:33 PM PST 
 //
 
-
 package com.wavemaker.tools.spring.beans;
 
 import java.util.ArrayList;
@@ -32,11 +31,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
+ * <p>
+ * Java class for anonymous complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType>
@@ -57,16 +57,16 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "argTypes"
-})
+@XmlType(name = "", propOrder = { "argTypes" })
 @XmlRootElement(name = "replaced-method")
 public class ReplacedMethod {
 
     @XmlElement(name = "arg-type")
     protected List<ArgType> argTypes;
+
     @XmlAttribute
     protected String name;
+
     @XmlAttribute
     protected String replacer;
 
@@ -74,27 +74,26 @@ public class ReplacedMethod {
      * Gets the value of the argTypes property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the argTypes property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the argTypes property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getArgTypes().add(newItem);
+     * getArgTypes().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link ArgType }
+     * Objects of the following type(s) are allowed in the list {@link ArgType }
      * 
      * 
      */
     public List<ArgType> getArgTypes() {
-        if (argTypes == null) {
-            argTypes = new ArrayList<ArgType>();
+        if (this.argTypes == null) {
+            this.argTypes = new ArrayList<ArgType>();
         }
         return this.argTypes;
     }
@@ -102,22 +101,18 @@ public class ReplacedMethod {
     /**
      * Gets the value of the name property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**
      * Sets the value of the name property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setName(String value) {
         this.name = value;
@@ -126,22 +121,18 @@ public class ReplacedMethod {
     /**
      * Gets the value of the replacer property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getReplacer() {
-        return replacer;
+        return this.replacer;
     }
 
     /**
      * Sets the value of the replacer property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setReplacer(String value) {
         this.replacer = value;
@@ -150,10 +141,8 @@ public class ReplacedMethod {
     /**
      * Sets the value of the argTypes property.
      * 
-     * @param argTypes
-     *     allowed object is
-     *     {@link ArgType }
-     *     
+     * @param argTypes allowed object is {@link ArgType }
+     * 
      */
     public void setArgTypes(List<ArgType> argTypes) {
         this.argTypes = argTypes;

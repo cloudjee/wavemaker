@@ -25,15 +25,15 @@ import com.wavemaker.tools.service.definitions.Service;
 /**
  * @author Simon Toens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class HibernateMappingUpgrade extends BaseDataUpgradeTask {
-    
+
     @Override
     protected void upgrade(Service service) {
-        
+
         DataModelConfiguration cfg = getDataModelConfiguration(service);
-        
+
         try {
             for (EntityInfo entity : cfg.getEntities()) {
                 boolean modified = addSaveUpdate(entity);
@@ -44,24 +44,24 @@ public class HibernateMappingUpgrade extends BaseDataUpgradeTask {
         } finally {
             cfg.dispose();
         }
-        
+
         cfg.saveEntities();
     }
-    
+
     @Override
     protected String getUpgradeMsg() {
         return "Upgraded Hibernate mapping files";
     }
-    
+
     private boolean addSaveUpdate(EntityInfo entity) {
-        
+
         boolean modified = false;
-        
+
         for (PropertyInfo property : entity.getProperties()) {
             if (!property.getIsRelated() || property.getIsInverse()) {
                 continue;
             }
-            
+
             List<RelatedInfo.CascadeOption> cascadeOptions = property.getCascadeOptions();
             boolean found = false;
             for (RelatedInfo.CascadeOption co : cascadeOptions) {
@@ -75,7 +75,7 @@ public class HibernateMappingUpgrade extends BaseDataUpgradeTask {
                 modified = true;
             }
         }
-        
+
         return modified;
     }
 }

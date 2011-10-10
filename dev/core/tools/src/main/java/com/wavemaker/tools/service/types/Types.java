@@ -26,13 +26,12 @@ import java.util.Map;
 public class Types {
 
     /**
-     * Mapping between the fully-qualified type name and the detail information
-     * about the type.
+     * Mapping between the fully-qualified type name and the detail information about the type.
      */
     private Map<String, Type> types = new HashMap<String, Type>();
 
     public Map<String, Type> getTypes() {
-        return types;
+        return this.types;
     }
 
     public void setTypes(Map<String, Type> types) {

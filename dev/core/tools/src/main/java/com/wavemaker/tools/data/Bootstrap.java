@@ -27,9 +27,10 @@ public class Bootstrap {
         ServiceFactoryManager mgr = ServiceFactoryManager.getInstance();
         DataServiceDefinitionFactory fac = new DataServiceDefinitionFactory();
         mgr.addServiceDefinitionFactory(fac);
-        mgr.addServiceGeneratorFactory(fac);        
+        mgr.addServiceGeneratorFactory(fac);
     }
 
-    private Bootstrap() {}
+    private Bootstrap() {
+    }
 
 }

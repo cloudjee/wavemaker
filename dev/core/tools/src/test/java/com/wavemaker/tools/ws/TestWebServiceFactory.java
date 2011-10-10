@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.ws;
 
 import java.net.MalformedURLException;
@@ -37,47 +38,42 @@ import com.wavemaker.tools.ws.wsdl.WSDL;
  */
 public class TestWebServiceFactory extends WMTestCase {
 
-	private static final String STOCKQUOTE_WSDL = "com/wavemaker/tools/ws/stockquote.wsdl";
+    private static final String STOCKQUOTE_WSDL = "com/wavemaker/tools/ws/stockquote.wsdl";
 
-	private static final String YAHOO_STOCKQUOTE_WSDL = "com/wavemaker/tools/ws/YahooStockQuote.wsdl";
+    private static final String YAHOO_STOCKQUOTE_WSDL = "com/wavemaker/tools/ws/YahooStockQuote.wsdl";
 
-	public void testForSOAP() throws MalformedURLException {
-		Resource wsdl = new ClassPathResource(STOCKQUOTE_WSDL);
-		WebServiceFactory factory = new WebServiceFactory();
-		DeprecatedServiceDefinition serviceDefinition = null;
+    public void testForSOAP() throws MalformedURLException {
+        Resource wsdl = new ClassPathResource(STOCKQUOTE_WSDL);
+        WebServiceFactory factory = new WebServiceFactory();
+        DeprecatedServiceDefinition serviceDefinition = null;
 
-		serviceDefinition = factory.getServiceDefinition(wsdl);
-		if (!(serviceDefinition instanceof WSDL)) {
-			fail("The service definition should be a WSDL.");
-		}
-		GenerationConfiguration cfg = new GenerationConfiguration(
-				serviceDefinition,
-				new LocalStudioConfiguration().createTempDir());
-		ServiceGenerator serviceGenerator = factory.getServiceGenerator(cfg);
-		if (!(serviceGenerator instanceof SOAPServiceGenerator)) {
-			fail("ServiceGenerator should be an instance of SOAPServiceGenerator, but was getting "
-					+ serviceGenerator.getClass().getName());
-		}
-	}
+        serviceDefinition = factory.getServiceDefinition(wsdl);
+        if (!(serviceDefinition instanceof WSDL)) {
+            fail("The service definition should be a WSDL.");
+        }
+        GenerationConfiguration cfg = new GenerationConfiguration(serviceDefinition, new LocalStudioConfiguration().createTempDir());
+        ServiceGenerator serviceGenerator = factory.getServiceGenerator(cfg);
+        if (!(serviceGenerator instanceof SOAPServiceGenerator)) {
+            fail("ServiceGenerator should be an instance of SOAPServiceGenerator, but was getting " + serviceGenerator.getClass().getName());
+        }
+    }
 
-	public void testForREST() throws MalformedURLException {
-		Resource wsdl = new ClassPathResource(YAHOO_STOCKQUOTE_WSDL);
-		WebServiceFactory factory = new WebServiceFactory();
-		DeprecatedServiceDefinition serviceDefinition = null;
-		try {
-			serviceDefinition = factory.getServiceDefinition(wsdl);
-			if (!(serviceDefinition instanceof WSDL)) {
-				fail("The service definition should be a WSDL.");
-			}
-		} catch (WMRuntimeException e) {
-			fail("Exception occurred during getServiceDefiniton." + e);
-		}
-		GenerationConfiguration cfg = new GenerationConfiguration(
-				serviceDefinition, null);
-		ServiceGenerator serviceGenerator = factory.getServiceGenerator(cfg);
-		if (!(serviceGenerator instanceof RESTServiceGenerator)) {
-			fail("ServiceGenerator should be an instance of RESTServiceGenerator, but was getting "
-					+ serviceGenerator.getClass().getName());
-		}
-	}
+    public void testForREST() throws MalformedURLException {
+        Resource wsdl = new ClassPathResource(YAHOO_STOCKQUOTE_WSDL);
+        WebServiceFactory factory = new WebServiceFactory();
+        DeprecatedServiceDefinition serviceDefinition = null;
+        try {
+            serviceDefinition = factory.getServiceDefinition(wsdl);
+            if (!(serviceDefinition instanceof WSDL)) {
+                fail("The service definition should be a WSDL.");
+            }
+        } catch (WMRuntimeException e) {
+            fail("Exception occurred during getServiceDefiniton." + e);
+        }
+        GenerationConfiguration cfg = new GenerationConfiguration(serviceDefinition, null);
+        ServiceGenerator serviceGenerator = factory.getServiceGenerator(cfg);
+        if (!(serviceGenerator instanceof RESTServiceGenerator)) {
+            fail("ServiceGenerator should be an instance of RESTServiceGenerator, but was getting " + serviceGenerator.getClass().getName());
+        }
+    }
 }

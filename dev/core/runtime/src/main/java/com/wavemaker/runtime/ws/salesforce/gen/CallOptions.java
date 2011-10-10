@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -22,11 +20,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
+ * <p>
+ * Java class for anonymous complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType>
@@ -44,37 +43,31 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "client",
-    "defaultNamespace"
-})
+@XmlType(name = "", propOrder = { "client", "defaultNamespace" })
 @XmlRootElement(name = "CallOptions", namespace = "urn:partner.soap.sforce.com")
 public class CallOptions {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String client;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String defaultNamespace;
 
     /**
      * Gets the value of the client property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getClient() {
-        return client;
+        return this.client;
     }
 
     /**
      * Sets the value of the client property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setClient(String value) {
         this.client = value;
@@ -83,22 +76,18 @@ public class CallOptions {
     /**
      * Gets the value of the defaultNamespace property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getDefaultNamespace() {
-        return defaultNamespace;
+        return this.defaultNamespace;
     }
 
     /**
      * Sets the value of the defaultNamespace property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setDefaultNamespace(String value) {
         this.defaultNamespace = value;

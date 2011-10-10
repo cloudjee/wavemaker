@@ -26,15 +26,11 @@ import com.wavemaker.runtime.data.DataServiceLoggers;
  * @version $Rev$ - $Date$
  * 
  */
-public class ThreadLocalDriverManagerDataSource 
-    extends DriverManagerDataSource 
-{
+public class ThreadLocalDriverManagerDataSource extends DriverManagerDataSource {
 
-    private static ThreadLocal<ConnectionProperties> threadLocal = 
-        new ThreadLocal<ConnectionProperties>();
+    private static ThreadLocal<ConnectionProperties> threadLocal = new ThreadLocal<ConnectionProperties>();
 
-    public static void setConnectionProperties(
-            ConnectionProperties connectionProperties) {
+    public static void setConnectionProperties(ConnectionProperties connectionProperties) {
         threadLocal.set(connectionProperties);
     }
 
@@ -42,21 +38,21 @@ public class ThreadLocalDriverManagerDataSource
         threadLocal.set(null);
     }
 
-    //@Override
+    // @Override
     public String getDriverClassName() {
         ConnectionProperties props = threadLocal.get();
         if (props == null) {
-            //return super.getDriverClassName(); //commented out when upgrading to spring 2.5.6
+            // return super.getDriverClassName(); //commented out when upgrading to spring 2.5.6
             return "";
         }
 
         String rtn = props.getDriverClassName();
 
         if (rtn == null) {
-            //return super.getDriverClassName(); //commented out when upgrading to spring 2.5.6
+            // return super.getDriverClassName(); //commented out when upgrading to spring 2.5.6
             return "";
         }
-        
+
         // loads driver class
         super.setDriverClassName(rtn);
 
@@ -114,9 +110,8 @@ public class ThreadLocalDriverManagerDataSource
     @Override
     public Connection getConnection() throws SQLException {
         if (DataServiceLoggers.connectionLogger.isDebugEnabled()) {
-            DataServiceLoggers.connectionLogger.debug("getConnection: "
-                    + getUrl() + " " + getUsername() + "/" + getPassword()
-                    + " " + getDriverClassName());
+            DataServiceLoggers.connectionLogger.debug("getConnection: " + getUrl() + " " + getUsername() + "/" + getPassword() + " "
+                + getDriverClassName());
         }
         return super.getConnection();
     }
@@ -140,7 +135,7 @@ public class ThreadLocalDriverManagerDataSource
         }
 
         public String getDriverClassName() {
-            return driver;
+            return this.driver;
         }
 
         public void setUsername(String username) {
@@ -148,7 +143,7 @@ public class ThreadLocalDriverManagerDataSource
         }
 
         public String getUsername() {
-            return username;
+            return this.username;
         }
 
         public void setPassword(String password) {
@@ -156,7 +151,7 @@ public class ThreadLocalDriverManagerDataSource
         }
 
         public String getPassword() {
-            return password;
+            return this.password;
         }
 
         public void setUrl(String url) {
@@ -164,7 +159,7 @@ public class ThreadLocalDriverManagerDataSource
         }
 
         public String getUrl() {
-            return url;
+            return this.url;
         }
     }
 }

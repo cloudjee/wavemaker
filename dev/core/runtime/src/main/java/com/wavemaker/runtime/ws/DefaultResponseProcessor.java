@@ -11,23 +11,25 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 package com.wavemaker.runtime.ws;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+
 import com.wavemaker.runtime.pws.IPwsResponseProcessor;
 import com.wavemaker.runtime.pws.PwsException;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.Unmarshaller;
-import javax.xml.bind.JAXBException;
-
-import java.io.*;
 
 /**
  * Default Http Response processor
  */
 public class DefaultResponseProcessor implements IPwsResponseProcessor {
 
-     public <T extends Object> T processServiceResponse(byte[] bytes, Class<T> responseType)
-                throws WebServiceException {
+    public <T extends Object> T processServiceResponse(byte[] bytes, Class<T> responseType) throws WebServiceException {
         ByteArrayInputStream is = new ByteArrayInputStream(bytes);
         try {
             if (responseType == Void.class) {

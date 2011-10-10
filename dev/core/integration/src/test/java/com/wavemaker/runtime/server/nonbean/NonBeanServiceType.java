@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.server.nonbean;
 
 import java.util.ArrayList;
@@ -37,78 +38,85 @@ import com.wavemaker.runtime.service.TypedServiceReturn;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class NonBeanServiceType implements ServiceType {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.runtime.service.ServiceType#getTypeName()
      */
     public String getTypeName() {
         return "NonBeanService";
     }
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.service.ServiceType#invokeMethod(com.wavemaker.runtime.service.ServiceWire, java.lang.String, com.wavemaker.runtime.service.ParsedServiceArguments, com.wavemaker.json.JSONState)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.runtime.service.ServiceType#invokeMethod(com.wavemaker.runtime.service.ServiceWire,
+     * java.lang.String, com.wavemaker.runtime.service.ParsedServiceArguments, com.wavemaker.json.JSONState)
      */
-    public TypedServiceReturn invokeMethod(ServiceWire serviceWire,
-            String methodName, ParsedServiceArguments args, JSONState jsonState) {
-        
+    public TypedServiceReturn invokeMethod(ServiceWire serviceWire, String methodName, ParsedServiceArguments args, JSONState jsonState) {
+
         if ("foo".equals(methodName)) {
             Object[] os = args.getArguments();
-            Class<?>[] klasses = new Class<?>[]{Integer.class, String.class, List.class};
-            
-            if (os.length!=klasses.length) {
-                throw new WMRuntimeException("os "+os+"!= klasses "+klasses);
+            Class<?>[] klasses = new Class<?>[] { Integer.class, String.class, List.class };
+
+            if (os.length != klasses.length) {
+                throw new WMRuntimeException("os " + os + "!= klasses " + klasses);
             }
-            for (int i=0;i<os.length;i++) {
+            for (int i = 0; i < os.length; i++) {
                 if (!klasses[i].isAssignableFrom(os[i].getClass())) {
-                    throw new WMRuntimeException("bad os["+i+"]: "+os[i]+" ("+
-                            os[i].getClass()+"), expected: "+klasses[i]);
-                    
+                    throw new WMRuntimeException("bad os[" + i + "]: " + os[i] + " (" + os[i].getClass() + "), expected: " + klasses[i]);
+
                 }
             }
-            
-            return new TypedServiceReturn(
-                    ""+(((Integer)os[0])+1)+os[1]+((List<?>)os[2]).get(0),
-                    new GenericFieldDefinition(jsonState.getTypeState().
-                            getType(NonBeanTypeFactory.FOO_ARG_1)));
+
+            return new TypedServiceReturn("" + ((Integer) os[0] + 1) + os[1] + ((List<?>) os[2]).get(0), new GenericFieldDefinition(
+                jsonState.getTypeState().getType(NonBeanTypeFactory.FOO_ARG_1)));
         } else {
             throw new WMRuntimeException("unhandled method");
         }
     }
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.service.ServiceType#parseServiceArgs(com.wavemaker.runtime.service.ServiceWire, java.lang.String, com.wavemaker.json.JSONArray, com.wavemaker.json.JSONState)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.runtime.service.ServiceType#parseServiceArgs(com.wavemaker.runtime.service.ServiceWire,
+     * java.lang.String, com.wavemaker.json.JSONArray, com.wavemaker.json.JSONState)
      */
-    public ParsedServiceArguments parseServiceArgs(ServiceWire serviceWire,
-            String methodName, JSONArray args, JSONState jsonState) {
-        
+    public ParsedServiceArguments parseServiceArgs(ServiceWire serviceWire, String methodName, JSONArray args, JSONState jsonState) {
+
         List<FieldDefinition> fields = new ArrayList<FieldDefinition>();
-        
+
         if ("foo".equals(methodName)) {
             fields.add(new GenericFieldDefinition(jsonState.getTypeState().getType(NonBeanTypeFactory.FOO_ARG_1)));
             fields.add(new GenericFieldDefinition(jsonState.getTypeState().getType(NonBeanTypeFactory.FOO_ARG_2)));
             fields.add(new GenericFieldDefinition(jsonState.getTypeState().getType(NonBeanTypeFactory.FOO_ARG_3)));
         }
-        
+
         return JSONUtils.convertJSONToObjects(args, fields, jsonState);
     }
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.service.ServiceType#parseServiceArgs(com.wavemaker.runtime.service.ServiceWire, java.lang.String, java.util.Map, com.wavemaker.json.JSONState)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.runtime.service.ServiceType#parseServiceArgs(com.wavemaker.runtime.service.ServiceWire,
+     * java.lang.String, java.util.Map, com.wavemaker.json.JSONState)
      */
-    public ParsedServiceArguments parseServiceArgs(ServiceWire serviceWire,
-            String methodName, Map<String, Object[]> args, JSONState jsonState) {
+    public ParsedServiceArguments parseServiceArgs(ServiceWire serviceWire, String methodName, Map<String, Object[]> args, JSONState jsonState) {
         // TODO Auto-generated method stub
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.service.ServiceType#setup(com.wavemaker.runtime.service.ServiceWire, com.wavemaker.runtime.server.InternalRuntime, com.wavemaker.runtime.RuntimeAccess)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.runtime.service.ServiceType#setup(com.wavemaker.runtime.service.ServiceWire,
+     * com.wavemaker.runtime.server.InternalRuntime, com.wavemaker.runtime.RuntimeAccess)
      */
-    public void setup(ServiceWire serviceWire, InternalRuntime internalRuntime,
-            RuntimeAccess runtimeAccess) {
+    public void setup(ServiceWire serviceWire, InternalRuntime internalRuntime, RuntimeAccess runtimeAccess) {
         internalRuntime.getJSONState().setTypeState(new NonBeanTypeFactory());
     }
 }

@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.server.nonbean.types;
 
 import java.io.IOException;
@@ -25,14 +26,16 @@ import com.wavemaker.json.type.PrimitiveTypeDefinition;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public abstract class NonBeanPrimitiveTypeDefinition implements PrimitiveTypeDefinition {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.type.PrimitiveTypeDefinition#toJson(java.io.Writer, java.lang.Object)
      */
     public void toJson(Writer writer, Object obj) throws IOException {
-        writer.write("unimplemented toJson for class "+getClass());
+        writer.write("unimplemented toJson for class " + getClass());
     }
 }

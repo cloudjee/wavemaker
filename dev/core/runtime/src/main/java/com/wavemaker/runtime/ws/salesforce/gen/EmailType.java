@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -22,11 +20,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for Email complex type.
+ * <p>
+ * Java class for Email complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="Email">
@@ -49,55 +48,47 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Email", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "bccSender",
-    "emailPriority",
-    "replyTo",
-    "saveAsActivity",
-    "senderDisplayName",
-    "subject",
-    "useSignature"
-})
-@XmlSeeAlso({
-    MassEmailMessageType.class,
-    SingleEmailMessageType.class
-})
+@XmlType(name = "Email", namespace = "urn:partner.soap.sforce.com", propOrder = { "bccSender", "emailPriority", "replyTo", "saveAsActivity",
+    "senderDisplayName", "subject", "useSignature" })
+@XmlSeeAlso({ MassEmailMessageType.class, SingleEmailMessageType.class })
 public class EmailType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, type = Boolean.class, nillable = true)
     protected Boolean bccSender;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected EmailPriorityType emailPriority;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String replyTo;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, type = Boolean.class, nillable = true)
     protected Boolean saveAsActivity;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String senderDisplayName;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String subject;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, type = Boolean.class, nillable = true)
     protected Boolean useSignature;
 
     /**
      * Gets the value of the bccSender property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     * @return possible object is {@link Boolean }
+     * 
      */
     public Boolean getBccSender() {
-        return bccSender;
+        return this.bccSender;
     }
 
     /**
      * Sets the value of the bccSender property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     * @param value allowed object is {@link Boolean }
+     * 
      */
     public void setBccSender(Boolean value) {
         this.bccSender = value;
@@ -106,22 +97,18 @@ public class EmailType {
     /**
      * Gets the value of the emailPriority property.
      * 
-     * @return
-     *     possible object is
-     *     {@link EmailPriorityType }
-     *     
+     * @return possible object is {@link EmailPriorityType }
+     * 
      */
     public EmailPriorityType getEmailPriority() {
-        return emailPriority;
+        return this.emailPriority;
     }
 
     /**
      * Sets the value of the emailPriority property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link EmailPriorityType }
-     *     
+     * @param value allowed object is {@link EmailPriorityType }
+     * 
      */
     public void setEmailPriority(EmailPriorityType value) {
         this.emailPriority = value;
@@ -130,22 +117,18 @@ public class EmailType {
     /**
      * Gets the value of the replyTo property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getReplyTo() {
-        return replyTo;
+        return this.replyTo;
     }
 
     /**
      * Sets the value of the replyTo property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setReplyTo(String value) {
         this.replyTo = value;
@@ -154,22 +137,18 @@ public class EmailType {
     /**
      * Gets the value of the saveAsActivity property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     * @return possible object is {@link Boolean }
+     * 
      */
     public Boolean getSaveAsActivity() {
-        return saveAsActivity;
+        return this.saveAsActivity;
     }
 
     /**
      * Sets the value of the saveAsActivity property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     * @param value allowed object is {@link Boolean }
+     * 
      */
     public void setSaveAsActivity(Boolean value) {
         this.saveAsActivity = value;
@@ -178,22 +157,18 @@ public class EmailType {
     /**
      * Gets the value of the senderDisplayName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getSenderDisplayName() {
-        return senderDisplayName;
+        return this.senderDisplayName;
     }
 
     /**
      * Sets the value of the senderDisplayName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setSenderDisplayName(String value) {
         this.senderDisplayName = value;
@@ -202,22 +177,18 @@ public class EmailType {
     /**
      * Gets the value of the subject property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getSubject() {
-        return subject;
+        return this.subject;
     }
 
     /**
      * Sets the value of the subject property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setSubject(String value) {
         this.subject = value;
@@ -226,22 +197,18 @@ public class EmailType {
     /**
      * Gets the value of the useSignature property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     * @return possible object is {@link Boolean }
+     * 
      */
     public Boolean getUseSignature() {
-        return useSignature;
+        return this.useSignature;
     }
 
     /**
      * Sets the value of the useSignature property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     * @param value allowed object is {@link Boolean }
+     * 
      */
     public void setUseSignature(Boolean value) {
         this.useSignature = value;

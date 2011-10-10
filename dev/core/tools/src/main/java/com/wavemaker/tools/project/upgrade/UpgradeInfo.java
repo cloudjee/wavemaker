@@ -22,29 +22,28 @@ import java.util.Map;
 import org.springframework.core.io.Resource;
 
 /**
- * A type describing the return of a series of upgrades.  Messages will always
- * be displayed to the user; verbose will only be displayed if the user
- * selects a "More Info" option.  Therefore, info which requires user action
- * should be placed into messages; informational info should go into verbose.
+ * A type describing the return of a series of upgrades. Messages will always be displayed to the user; verbose will
+ * only be displayed if the user selects a "More Info" option. Therefore, info which requires user action should be
+ * placed into messages; informational info should go into verbose.
  * 
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class UpgradeInfo {
-    
+
     public void addMessage(String message) {
 
-        String versionStr = ""+version;
+        String versionStr = "" + this.version;
         if (!this.messages.containsKey(versionStr)) {
             this.messages.put(versionStr, new ArrayList<String>());
         }
         this.messages.get(versionStr).add(message);
     }
-    
+
     public void addVerbose(String message) {
-        
-        String versionStr = ""+version;
+
+        String versionStr = "" + this.version;
         if (!this.verbose.containsKey(versionStr)) {
             this.verbose.put(versionStr, new ArrayList<String>());
         }
@@ -53,34 +52,41 @@ public class UpgradeInfo {
 
     // bean properties
     private Map<String, List<String>> messages = new HashMap<String, List<String>>();
+
     private Map<String, List<String>> verbose = new HashMap<String, List<String>>();
+
     private Resource backupExportFile;
+
     private double version = -1;
 
     public Resource getBackupExportFile() {
-        return backupExportFile;
+        return this.backupExportFile;
     }
+
     public void setBackupExportFile(Resource backupExportFile) {
         this.backupExportFile = backupExportFile;
     }
 
     public double getVersion() {
-        return version;
+        return this.version;
     }
+
     public void setVersion(double version) {
         this.version = version;
     }
 
     public Map<String, List<String>> getMessages() {
-        return messages;
+        return this.messages;
     }
+
     public void setMessages(Map<String, List<String>> messages) {
         this.messages = messages;
     }
 
     public Map<String, List<String>> getVerbose() {
-        return verbose;
+        return this.verbose;
     }
+
     public void setVerbose(Map<String, List<String>> verbose) {
         this.verbose = verbose;
     }

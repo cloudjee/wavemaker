@@ -42,8 +42,7 @@ public class FeedServiceDefinition extends JavaServiceDefinition {
 
     public static final String FEED_SERVICE_NAME = "FeedService";
 
-    private static final Class<?>[] ALL_TYPES = new Class[] { Feed.class,
-            Entry.class, SyndLink.class, SyndContent.class, SyndImage.class };
+    private static final Class<?>[] ALL_TYPES = new Class[] { Feed.class, Entry.class, SyndLink.class, SyndContent.class, SyndImage.class };
 
     private String runtimeConfiguration;
 
@@ -53,10 +52,10 @@ public class FeedServiceDefinition extends JavaServiceDefinition {
         super(SyndFeedService.class, FEED_SERVICE_NAME);
         // TODO: the following is a workaround for bug 1192
         TypeState typeState = new ReflectTypeState();
-        types = new ArrayList<TypeDefinition>();
+        this.types = new ArrayList<TypeDefinition>();
         for (Class<?> c : ALL_TYPES) {
             TypeDefinition ft = ReflectTypeUtils.getTypeDefinition(c, typeState, false);
-            types.add(ft);
+            this.types.add(ft);
         }
     }
 
@@ -67,11 +66,11 @@ public class FeedServiceDefinition extends JavaServiceDefinition {
 
     @Override
     public List<TypeDefinition> getLocalTypes() {
-        return types;
+        return this.types;
     }
 
     @Override
-    public List<TypeDefinition> getLocalTypes(String username, String password) { //salesforce
+    public List<TypeDefinition> getLocalTypes(String username, String password) { // salesforce
         return null;
     }
 

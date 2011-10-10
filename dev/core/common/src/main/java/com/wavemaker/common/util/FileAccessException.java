@@ -21,7 +21,7 @@ import com.wavemaker.common.MessageResource;
 /**
  * @author Matt Small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class FileAccessException extends IOException {
 

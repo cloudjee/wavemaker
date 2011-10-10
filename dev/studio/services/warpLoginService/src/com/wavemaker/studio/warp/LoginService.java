@@ -11,23 +11,22 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-package com.wavemaker.studio.warp;
 
-import com.wavemaker.runtime.ws.HTTPBindingSupport;
-import com.wavemaker.runtime.ws.util.Constants;
+package com.wavemaker.studio.warp;
 
 import javax.xml.namespace.QName;
 
 import org.json.JSONObject;
+
+import com.wavemaker.runtime.ws.HTTPBindingSupport;
+import com.wavemaker.runtime.ws.util.Constants;
 
 /**
  * Login service class for Asteria Flow Designer Server
  */
 public class LoginService {
 
-    public String logIn(String host, String port, String userName, String password, String domain)
-            throws Exception {
+    public String logIn(String host, String port, String userName, String password, String domain) throws Exception {
         String result;
         String sessionId;
 
@@ -36,14 +35,14 @@ public class LoginService {
         QName thisQName = new QName(endPointAddress, "asteriaServer");
 
         result = HTTPBindingSupport.getResponseObject(thisQName, thisQName, endPointAddress, HTTPBindingSupport.HTTPRequestMethod.POST,
-                    Constants.MIME_TYPE_FORM, postData, String.class, null);
+            Constants.MIME_TYPE_FORM, postData, String.class, null);
 
         JSONObject returnObj = new JSONObject(result);
 
-        JSONObject sessionObj = (JSONObject)returnObj.get("result");
-        String status = (String)sessionObj.get("status");
+        JSONObject sessionObj = (JSONObject) returnObj.get("result");
+        String status = (String) sessionObj.get("status");
         if (status.equals("true")) {
-            sessionId = (String)sessionObj.get("id");
+            sessionId = (String) sessionObj.get("id");
         } else {
             throw new Exception("Login falied");
         }
@@ -51,7 +50,7 @@ public class LoginService {
         return sessionId;
     }
 
-    //This method logs out the user/password passed in and returns the session id that is invalidated.
+    // This method logs out the user/password passed in and returns the session id that is invalidated.
     public String logOut(String host, String port, String sessId) throws Exception {
         String result;
         String oldSessionId;
@@ -65,15 +64,15 @@ public class LoginService {
         QName thisQName = new QName(endPointAddress, "asteriaServer");
 
         result = HTTPBindingSupport.getResponseObject(thisQName, thisQName, endPointAddress, HTTPBindingSupport.HTTPRequestMethod.POST,
-                    Constants.MIME_TYPE_FORM, postData, String.class, null);
+            Constants.MIME_TYPE_FORM, postData, String.class, null);
 
         JSONObject returnObj = new JSONObject(result);
 
-        JSONObject sessionObj = (JSONObject)returnObj.get("result");
-        String status = (String)sessionObj.get("status");
+        JSONObject sessionObj = (JSONObject) returnObj.get("result");
+        String status = (String) sessionObj.get("status");
         if (status.equals("true")) {
-            //sessionId = null;
-            oldSessionId = (String)sessionObj.get("id");
+            // sessionId = null;
+            oldSessionId = (String) sessionObj.get("id");
         } else {
             throw new Exception("Logout falied.");
         }

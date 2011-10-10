@@ -21,18 +21,20 @@ import com.wavemaker.json.type.FieldDefinition;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public interface TypedView extends View {
 
     /**
      * Get the current root type for this view.
+     * 
      * @return The root type.
      */
     public FieldDefinition getRootType();
-    
+
     /**
      * Set the current root type for this view.
+     * 
      * @param type The new type.
      */
     public void setRootType(FieldDefinition type);

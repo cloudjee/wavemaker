@@ -15,13 +15,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import com.wavemaker.infra.WMTestCase;
-import com.wavemaker.runtime.service.PagingOptions;
 
 /**
  * @author Simon Toens
@@ -42,7 +42,7 @@ public class TestPagingOptions extends WMTestCase {
 
     public void testOrderBy2() {
         PagingOptions po = new PagingOptions();
-        
+
         List<String> l = new ArrayList<String>(2);
         l.add("asc:name");
         l.add("desc:foo");
@@ -59,7 +59,7 @@ public class TestPagingOptions extends WMTestCase {
     public void testOrderBy3() {
         PagingOptions po = new PagingOptions();
         // String s = "asc:name, desc:foo, desc:foo.blah.goo";
-        
+
         List<String> l = new ArrayList<String>(3);
         l.add("asc:name");
         l.add("desc:foo");
@@ -75,7 +75,6 @@ public class TestPagingOptions extends WMTestCase {
         assertTrue(po.getOrderByList().get(1).getPropertyPath().equals("foo"));
 
         assertTrue(po.getOrderByList().get(2).isDesc());
-        assertTrue(po.getOrderByList().get(2).getPropertyPath()
-                   .equals("foo.blah.goo"));
+        assertTrue(po.getOrderByList().get(2).getPropertyPath().equals("foo.blah.goo"));
     }
 }

@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -32,20 +31,20 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
  * 
  * 
- * 	The servlet-mappingType defines a mapping between a
- * 	servlet and a url pattern.
+ * The servlet-mappingType defines a mapping between a servlet and a url pattern.
  * 
- * 	Used in: web-app
+ * Used in: web-app
  * 
- *       
  * 
- * <p>Java class for servlet-mappingType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for servlet-mappingType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="servlet-mappingType">
@@ -64,16 +63,15 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "servlet-mappingType", propOrder = {
-    "servletName",
-    "urlPattern"
-})
+@XmlType(name = "servlet-mappingType", propOrder = { "servletName", "urlPattern" })
 public class ServletMappingType {
 
     @XmlElement(name = "servlet-name", required = true)
     protected ServletNameType servletName;
+
     @XmlElement(name = "url-pattern", required = true)
     protected UrlPatternType urlPattern;
+
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -83,22 +81,18 @@ public class ServletMappingType {
     /**
      * Gets the value of the servletName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ServletNameType }
-     *     
+     * @return possible object is {@link ServletNameType }
+     * 
      */
     public ServletNameType getServletName() {
-        return servletName;
+        return this.servletName;
     }
 
     /**
      * Sets the value of the servletName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link ServletNameType }
-     *     
+     * @param value allowed object is {@link ServletNameType }
+     * 
      */
     public void setServletName(ServletNameType value) {
         this.servletName = value;
@@ -107,22 +101,18 @@ public class ServletMappingType {
     /**
      * Gets the value of the urlPattern property.
      * 
-     * @return
-     *     possible object is
-     *     {@link UrlPatternType }
-     *     
+     * @return possible object is {@link UrlPatternType }
+     * 
      */
     public UrlPatternType getUrlPattern() {
-        return urlPattern;
+        return this.urlPattern;
     }
 
     /**
      * Sets the value of the urlPattern property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link UrlPatternType }
-     *     
+     * @param value allowed object is {@link UrlPatternType }
+     * 
      */
     public void setUrlPattern(UrlPatternType value) {
         this.urlPattern = value;
@@ -131,22 +121,18 @@ public class ServletMappingType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setId(java.lang.String value) {
         this.id = value;

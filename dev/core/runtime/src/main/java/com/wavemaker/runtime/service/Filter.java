@@ -22,9 +22,9 @@ package com.wavemaker.runtime.service;
 public class Filter {
 
     private static final String FORMAT_ERROR = "filter must be of format: <property>=<value>";
-    
+
     private static final String FILTER_SEP = "=";
-    
+
     public static Filter newInstance(String filter) {
         if (filter == null) {
             throw new IllegalArgumentException("filter cannot be null");
@@ -33,36 +33,37 @@ public class Filter {
         if (i == -1 || i == 0) {
             throw new IllegalArgumentException(FORMAT_ERROR);
         }
-        
+
         String propertyPath = filter.substring(0, i);
         String expression = "";
-        
-        if (i < filter.length()-1) {
-            expression = filter.substring(i+1);
+
+        if (i < filter.length() - 1) {
+            expression = filter.substring(i + 1);
         }
 
-        return new Filter(propertyPath, expression);        
+        return new Filter(propertyPath, expression);
     }
 
     private final String propertyPath;
 
     private final String expression;
-    
+
     public Filter(String propertyPath, String expression) {
         this.propertyPath = propertyPath;
         this.expression = expression;
     }
 
     public String getPropertyPath() {
-        return propertyPath;
+        return this.propertyPath;
     }
 
     public String getExpression() {
-        return expression;
+        return this.expression;
     }
 
+    @Override
     public String toString() {
-        return propertyPath + FILTER_SEP + expression;
+        return this.propertyPath + FILTER_SEP + this.expression;
     }
 
 }

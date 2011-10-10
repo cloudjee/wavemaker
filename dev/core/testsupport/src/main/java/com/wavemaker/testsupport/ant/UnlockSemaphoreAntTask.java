@@ -22,33 +22,33 @@ import com.wavemaker.testsupport.UtilTest;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class UnlockSemaphoreAntTask extends Task {
 
+    @Override
     public void execute() throws BuildException {
-        
-        if (null==semaphoreReturn) {
+
+        if (null == this.semaphoreReturn) {
             throw new BuildException("semaphoreReturn parameter must be set");
         }
-        
+
         try {
-            UtilTest.unlockSemaphore(semaphoreReturn);
-            System.out.println("unlocked semaphore with key "+semaphoreReturn);
+            UtilTest.unlockSemaphore(this.semaphoreReturn);
+            System.out.println("unlocked semaphore with key " + this.semaphoreReturn);
         } catch (Exception e) {
             throw new BuildException(e);
         }
     }
-    
-
 
     // bean properties
     private String semaphoreReturn;
-    
+
     public void setSemaphoreReturn(String semaphoreReturn) {
         this.semaphoreReturn = semaphoreReturn;
     }
+
     public String getSemaphoreReturn() {
-        return semaphoreReturn;
+        return this.semaphoreReturn;
     }
 }

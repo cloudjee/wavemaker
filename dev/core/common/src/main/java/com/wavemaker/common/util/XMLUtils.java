@@ -33,11 +33,11 @@ public class XMLUtils {
     private XMLUtils() {
         throw new UnsupportedOperationException();
     }
-    
+
     public static String escape(String s) {
         return StringEscapeUtils.escapeXml(s);
     }
-    
+
     public static XMLWriter newXMLWriter(PrintWriter pw) {
         XMLWriter rtn = new XMLWriter(pw, 4 /* indent */, 4 /* attrs on line */);
         rtn.setTextOnSameLineAsParentElement(true);
@@ -48,8 +48,7 @@ public class XMLUtils {
         return attributesToMap("", reader);
     }
 
-    public static Map<String, String> attributesToMap(String scope,
-            XMLStreamReader reader) {
+    public static Map<String, String> attributesToMap(String scope, XMLStreamReader reader) {
         int numAttrs = reader.getAttributeCount();
         if (numAttrs == 0) {
             return Collections.emptyMap();

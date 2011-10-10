@@ -15,15 +15,17 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data.sample.sakila.output;
 
 public class GetActorNames {
 
     private String firstName;
+
     private String lastName;
 
     public String getFirstName() {
-        return firstName;
+        return this.firstName;
     }
 
     public void setFirstName(String firstName) {
@@ -31,7 +33,7 @@ public class GetActorNames {
     }
 
     public String getLastName() {
-        return lastName;
+        return this.lastName;
     }
 
     public void setLastName(String lastName) {

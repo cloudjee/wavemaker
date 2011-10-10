@@ -44,13 +44,13 @@ import com.wavemaker.tools.cloudmgr.opsource.startserver.proc.StartServerProc;
 
 /**
  * This class is to manage opSource cloud server instances.
- *
+ * 
  * @author slee
  */
 public class DeployServerProc {
 
-    public ProcStatus deployServer(String orgId, String name, String desc, String networkId, String image, String adminPasswd,
-                               String userName, String passWord) {
+    public ProcStatus deployServer(String orgId, String name, String desc, String networkId, String image, String adminPasswd, String userName,
+        String passWord) {
 
         String endPointAddress = "https://api.opsourcecloud.net/oec/0.9/" + orgId + "/server";
         QName thisQName = new QName(endPointAddress, "opsourcecloud");
@@ -99,8 +99,8 @@ public class DeployServerProc {
 
             boolean serverCreated = false;
             int n = 0;
-            StartServerProc startServerProc = new StartServerProc(); //xxx
-            ListServersProc listServersProc = new ListServersProc(); //xxx
+            StartServerProc startServerProc = new StartServerProc(); // xxx
+            ListServersProc listServersProc = new ListServersProc(); // xxx
             String serverId = null;
 
             while (!serverCreated && n < 600) {
@@ -120,11 +120,12 @@ public class DeployServerProc {
             }
 
             if (!serverCreated) {
-                throw new WMRuntimeException("Timed out - Failure creating a new OpSource server instance");    
+                throw new WMRuntimeException("Timed out - Failure creating a new OpSource server instance");
             }
 
             // Somehow, if we try to start the server right away, it fails to start the server.
-            // It cannot even be deleted after the problem.  So, let's wait for 5 seconds before we try to start the server.
+            // It cannot even be deleted after the problem. So, let's wait for 5 seconds before we try to start the
+            // server.
             Thread.sleep(5000);
 
             status1 = startServerProc.startServer(serverId, orgId, userName, passWord);

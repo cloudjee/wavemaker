@@ -41,7 +41,8 @@ import com.wavemaker.tools.project.ResourceFilter;
 import com.wavemaker.tools.project.StudioConfiguration;
 
 /**
- * {@link Resource}-based {@link FileManager} implementation that provides file reading and writing services to the compiler.
+ * {@link Resource}-based {@link FileManager} implementation that provides file reading and writing services to the
+ * compiler.
  * 
  * @author slee
  * @author Jeremy Grelle
@@ -50,11 +51,11 @@ import com.wavemaker.tools.project.StudioConfiguration;
 
 public class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> implements StandardJavaFileManager {
 
-    private Project project;
+    private final Project project;
 
-    private Resource sourceLocation;
+    private final Resource sourceLocation;
 
-    private StudioConfiguration studioConfiguration;
+    private final StudioConfiguration studioConfiguration;
 
     public ClassFileManager(StandardJavaFileManager standardManager, StudioConfiguration studioConfiguration, Project project, Resource sourceLocation) {
         super(standardManager);
@@ -68,7 +69,7 @@ public class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFile
         Assert.isTrue(hasLocation(location), location + " is not a known location to this FileManager");
         Assert.isTrue(location == StandardLocation.CLASS_OUTPUT, location + " is an invalid location for output by this FileManager.");
         Assert.isTrue(kind == Kind.CLASS, kind + " is an invalid kind for output by this FileManager.");
-        return new ClassResourceObject(kind, project, getOutputClassResource(className));
+        return new ClassResourceObject(kind, this.project, getOutputClassResource(className));
     }
 
     @Override
@@ -78,11 +79,11 @@ public class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFile
         if (outputFile == null) {
             return null;
         } else if (outputFile.getFilename().endsWith(Kind.SOURCE.extension)) {
-            return new JavaResourceObject(Kind.SOURCE, project, outputFile);
+            return new JavaResourceObject(Kind.SOURCE, this.project, outputFile);
         } else if (outputFile.getFilename().endsWith(Kind.CLASS.extension)) {
-            return new ClassResourceObject(Kind.CLASS, project, outputFile);
+            return new ClassResourceObject(Kind.CLASS, this.project, outputFile);
         } else {
-            return new GenericResourceFileObject(project, outputFile);
+            return new GenericResourceFileObject(this.project, outputFile);
         }
     }
 
@@ -91,7 +92,7 @@ public class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFile
         Assert.isTrue(hasLocation(location), location + " is not a known location to this FileManager");
         Assert.isTrue(location == StandardLocation.SOURCE_PATH, location + " is an invalid location for Java source input by this FileManager.");
         Assert.isTrue(kind == Kind.SOURCE, kind + " is an invalid kind for Java source input by this FileManager.");
-        return new JavaResourceObject(kind, project, getInputJavaSourceResource(className));
+        return new JavaResourceObject(kind, this.project, getInputJavaSourceResource(className));
     }
 
     @Override
@@ -101,11 +102,11 @@ public class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFile
         if (inputFile == null) {
             return null;
         } else if (inputFile.getFilename().endsWith(Kind.SOURCE.extension)) {
-            return new JavaResourceObject(Kind.SOURCE, project, inputFile);
+            return new JavaResourceObject(Kind.SOURCE, this.project, inputFile);
         } else if (inputFile.getFilename().endsWith(Kind.CLASS.extension)) {
-            return new ClassResourceObject(Kind.CLASS, project, inputFile);
+            return new ClassResourceObject(Kind.CLASS, this.project, inputFile);
         } else {
-            return new GenericResourceFileObject(project, inputFile);
+            return new GenericResourceFileObject(this.project, inputFile);
         }
     }
 
@@ -158,16 +159,16 @@ public class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFile
         String path = packageName.replaceAll(".", "/") + "/";
         List<JavaFileObject> fileObjects = new ArrayList<JavaFileObject>();
         if (location == StandardLocation.SOURCE_PATH) {
-            Resource rootPath = sourceLocation.createRelative(path);
+            Resource rootPath = this.sourceLocation.createRelative(path);
             List<Resource> resources = locateResources(extensions, rootPath, recurse);
             for (Resource resource : resources) {
-                fileObjects.add(new JavaResourceObject(Kind.SOURCE, project, resource));
+                fileObjects.add(new JavaResourceObject(Kind.SOURCE, this.project, resource));
             }
         } else if (location == StandardLocation.CLASS_OUTPUT) {
-            Resource rootPath = project.getWebInfClasses().createRelative(path);
+            Resource rootPath = this.project.getWebInfClasses().createRelative(path);
             List<Resource> resources = locateResources(extensions, rootPath, recurse);
             for (Resource resource : resources) {
-                fileObjects.add(new ClassResourceObject(Kind.CLASS, project, resource));
+                fileObjects.add(new ClassResourceObject(Kind.CLASS, this.project, resource));
             }
         }
         return fileObjects;
@@ -175,17 +176,17 @@ public class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFile
 
     private Resource getInputJavaSourceResource(String className) throws IOException {
         String resourcePath = className.replace(".", "/") + Kind.SOURCE.extension;
-        return sourceLocation.createRelative(resourcePath);
+        return this.sourceLocation.createRelative(resourcePath);
     }
 
     private Resource getOutputClassResource(String className) throws IOException {
         String resourcePath = className.replace(".", "/") + Kind.CLASS.extension;
-        return project.getWebInfClasses().createRelative(resourcePath);
+        return this.project.getWebInfClasses().createRelative(resourcePath);
     }
 
     private List<Resource> locateResources(final Set<String> extensions, Resource rootPath, final boolean recurse) {
         final List<Resource> javaResources = new ArrayList<Resource>();
-        javaResources.addAll(studioConfiguration.listChildren(rootPath, new ResourceFilter() {
+        javaResources.addAll(this.studioConfiguration.listChildren(rootPath, new ResourceFilter() {
 
             public boolean accept(Resource resource) {
                 String extension = StringUtils.getFilenameExtension(resource.getFilename());
@@ -202,9 +203,9 @@ public class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFile
 
     private Resource fromLocation(Location location) {
         if (location == StandardLocation.SOURCE_PATH) {
-            return sourceLocation;
+            return this.sourceLocation;
         } else if (location == StandardLocation.CLASS_OUTPUT) {
-            return project.getWebInfClasses();
+            return this.project.getWebInfClasses();
         } else {
             throw new IllegalArgumentException("Cannot convert location " + location + " to a known resource.");
         }
@@ -249,7 +250,7 @@ public class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFile
     public Iterable<? extends File> getLocation(Location location) {
         if (location == StandardLocation.CLASS_PATH) {
             try {
-                File[] jars = studioConfiguration.getStudioWebAppRoot().createRelative("WEB-INF/lib/").getFile().listFiles(new FilenameFilter() {
+                File[] jars = this.studioConfiguration.getStudioWebAppRoot().createRelative("WEB-INF/lib/").getFile().listFiles(new FilenameFilter() {
 
                     public boolean accept(File dir, String name) {
                         return StringUtils.getFilenameExtension(name).equals("jar");
@@ -261,7 +262,7 @@ public class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFile
                 throw new WMRuntimeException(e);
             }
         } else if (location != StandardLocation.SOURCE_PATH && location != StandardLocation.CLASS_OUTPUT) {
-            Iterable<? extends File> result = fileManager.getLocation(location);
+            Iterable<? extends File> result = this.fileManager.getLocation(location);
             return result;
         } else {
             return null;

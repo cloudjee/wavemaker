@@ -15,20 +15,22 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools;
 
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
-public class ServerUtilsParamNameConcrete implements
-        ServerUtilsParamNameInterface {
+public class ServerUtilsParamNameConcrete implements ServerUtilsParamNameInterface {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.tools.ServerUtilsParamNameInterface#getCalculatedString(java.lang.String, java.lang.String)
      */
     public String getCalculatedString(String param1, String param2) {
-        return "calculated: "+param1+", "+param2;
+        return "calculated: " + param1 + ", " + param2;
     }
 }

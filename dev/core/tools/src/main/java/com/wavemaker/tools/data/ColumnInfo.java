@@ -57,17 +57,14 @@ public class ColumnInfo implements Cloneable {
     private boolean persistType = true;
 
     public static ColumnInfo newColumnInfo(PropertyInfo parentProperty) {
-        return newColumnInfo(parentProperty, Collections
-                .<String, String> emptyMap());
+        return newColumnInfo(parentProperty, Collections.<String, String> emptyMap());
     }
 
-    public static ColumnInfo newColumnInfo(PropertyInfo parentProperty,
-            Map<String, String> attributes) {
+    public static ColumnInfo newColumnInfo(PropertyInfo parentProperty, Map<String, String> attributes) {
 
         ColumnInfo rtn = new ColumnInfo();
 
-        rtn.setNotNull(Boolean.parseBoolean(attributes
-                .get(HbmConstants.FQ_COL_NOT_NULL_ATTR)));
+        rtn.setNotNull(Boolean.parseBoolean(attributes.get(HbmConstants.FQ_COL_NOT_NULL_ATTR)));
         String name = attributes.get(HbmConstants.FQ_COL_NAME_ATTR);
         if (ObjectUtils.isNullOrEmpty(name)) {
             rtn.setName(parentProperty.getName());
@@ -115,11 +112,10 @@ public class ColumnInfo implements Cloneable {
                 rtn.setGenerator(generator);
 
                 if (generator.equals(HbmConstants.SEQUENCE_GENERATOR)) {
-                    
-                    String prefix = HbmConstants.GEN_PARAM_EL + XMLUtils.SCOPE_SEP;                    
 
-                    Collection<String> c = ObjectUtils.getKeysStartingWith(
-                            prefix, attributes);
+                    String prefix = HbmConstants.GEN_PARAM_EL + XMLUtils.SCOPE_SEP;
+
+                    Collection<String> c = ObjectUtils.getKeysStartingWith(prefix, attributes);
 
                     for (String s : c) {
                         String paramName = s.substring(prefix.length());
@@ -139,7 +135,7 @@ public class ColumnInfo implements Cloneable {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -151,7 +147,7 @@ public class ColumnInfo implements Cloneable {
     }
 
     public String getSqlType() {
-        return sqlType;
+        return this.sqlType;
     }
 
     public void setLength(Integer length) {
@@ -159,7 +155,7 @@ public class ColumnInfo implements Cloneable {
     }
 
     public Integer getLength() {
-        return length;
+        return this.length;
     }
 
     public void setPrecision(Integer precision) {
@@ -167,59 +163,59 @@ public class ColumnInfo implements Cloneable {
     }
 
     public Integer getPrecision() {
-        return precision;
+        return this.precision;
     }
 
     public boolean getNotNull() {
-        return notNull;
+        return this.notNull;
     }
 
     public void setNotNull(boolean b) {
         this.notNull = b;
     }
-    
+
     public boolean generated() {
-        return generator != null && !generator.equals(DataServiceConstants.GENERATOR_ASSIGNED);
+        return this.generator != null && !this.generator.equals(DataServiceConstants.GENERATOR_ASSIGNED);
     }
 
     public String getGenerator() {
-        return generator;
+        return this.generator;
     }
 
     public void setGenerator(String s) {
-        generator = s;
+        this.generator = s;
     }
 
     public boolean getIsPk() {
-        return isPk;
+        return this.isPk;
     }
 
     public void setIsPk(boolean b) {
-        isPk = b;
+        this.isPk = b;
     }
 
     public boolean getIsFk() {
-        return isFk;
+        return this.isFk;
     }
 
     public void setGeneratorParam(String s) {
-        sequenceName = s;
+        this.sequenceName = s;
     }
 
     public String getGeneratorParam() {
-        return sequenceName;
+        return this.sequenceName;
     }
 
     public void setIsFk(boolean b) {
-        isFk = b;
+        this.isFk = b;
     }
 
     public void persistType(boolean b) {
-        persistType = b;
+        this.persistType = b;
     }
 
     public boolean shouldPersistType() {
-        return persistType;
+        return this.persistType;
     }
 
     @Override
@@ -230,55 +226,53 @@ public class ColumnInfo implements Cloneable {
             throw new AssertionError(ex);
         }
     }
-    
+
     public boolean onlyGeneratorHasChanged(ColumnInfo o) {
         return isEqualTo(o, true);
     }
-    
+
     public boolean isEqualTo(ColumnInfo o) {
         return isEqualTo(o, false);
     }
-    
 
     private boolean isEqualTo(ColumnInfo o, boolean ignoreGenerator) {
         if (o == null) {
             return false;
         }
         boolean rtn = true;
-        
+
         if (!ignoreGenerator) {
-            rtn &= String.valueOf(generator).equals(
-                    String.valueOf(o.generator));
-            rtn &= String.valueOf(sequenceName).equals(
-                    String.valueOf(o.sequenceName));
+            rtn &= String.valueOf(this.generator).equals(String.valueOf(o.generator));
+            rtn &= String.valueOf(this.sequenceName).equals(String.valueOf(o.sequenceName));
         }
-        
+
         // don't check for fk - fk boolean is read only on client
-        //rtn &= String.valueOf(isFk).equals(String.valueOf(o.isFk));
-        
-        rtn &= String.valueOf(isPk).equals(String.valueOf(o.isPk));
-        rtn &= String.valueOf(length).equals(String.valueOf(o.length));
-        rtn &= String.valueOf(name).equals(String.valueOf(o.name));
-        rtn &= String.valueOf(notNull).equals(String.valueOf(o.notNull));
-        rtn &= String.valueOf(precision).equals(String.valueOf(o.precision));
-        rtn &= String.valueOf(sqlType).equals(String.valueOf(o.sqlType));
+        // rtn &= String.valueOf(isFk).equals(String.valueOf(o.isFk));
+
+        rtn &= String.valueOf(this.isPk).equals(String.valueOf(o.isPk));
+        rtn &= String.valueOf(this.length).equals(String.valueOf(o.length));
+        rtn &= String.valueOf(this.name).equals(String.valueOf(o.name));
+        rtn &= String.valueOf(this.notNull).equals(String.valueOf(o.notNull));
+        rtn &= String.valueOf(this.precision).equals(String.valueOf(o.precision));
+        rtn &= String.valueOf(this.sqlType).equals(String.valueOf(o.sqlType));
 
         return rtn;
     }
-    
+
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(name);
-        if (generator != null) {
+        sb.append(this.name);
+        if (this.generator != null) {
             sb.append(" generator:");
-            sb.append(generator);
-            if (sequenceName != null) {
-                sb.append(sequenceName);
+            sb.append(this.generator);
+            if (this.sequenceName != null) {
+                sb.append(this.sequenceName);
             }
         }
-        sb.append(" not-null:" + notNull);
-        if (length != null) {
-            sb.append(" length:" + length);
+        sb.append(" not-null:" + this.notNull);
+        if (this.length != null) {
+            sb.append(" length:" + this.length);
         }
         return sb.toString();
     }

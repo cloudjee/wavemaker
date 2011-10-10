@@ -15,34 +15,42 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.server.testspring;
 
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class ComplexScopedBean {
-    
+
     private BeanClass bc;
+
     private String str;
+
     private BeanClass bc2;
-    
+
     public BeanClass getBc() {
-        return bc;
+        return this.bc;
     }
+
     public void setBc(BeanClass bc) {
         this.bc = bc;
     }
+
     public String getStr() {
-        return str;
+        return this.str;
     }
+
     public void setStr(String str) {
         this.str = str;
     }
+
     public BeanClass getBc2() {
-        return bc2;
+        return this.bc2;
     }
+
     public void setBc2(BeanClass bc2) {
         this.bc2 = bc2;
     }

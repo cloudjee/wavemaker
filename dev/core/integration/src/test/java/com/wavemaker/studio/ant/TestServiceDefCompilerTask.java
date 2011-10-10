@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.wavemaker.studio.ant;
 
 import static org.junit.Assert.assertEquals;
@@ -46,98 +47,86 @@ import com.wavemaker.tools.util.DesignTimeUtils;
  */
 public class TestServiceDefCompilerTask extends StudioTestCase {
 
-	ProjectManager pm;
-	DeploymentManager dm;
+    ProjectManager pm;
 
-	@Before
-	@Override
-	public void setUp() throws Exception {
+    DeploymentManager dm;
 
-		super.setUp();
+    @Before
+    @Override
+    public void setUp() throws Exception {
 
-		pm = (ProjectManager) getApplicationContext().getBean("projectManager");
-		dm = (DeploymentManager) getApplicationContext().getBean(
-				"deploymentManager");
-	}
+        super.setUp();
 
-	@Test
-	public void testCreateServiceDef() throws Exception {
+        this.pm = (ProjectManager) getApplicationContext().getBean("projectManager");
+        this.dm = (DeploymentManager) getApplicationContext().getBean("deploymentManager");
+    }
 
-		makeProject("testCreateServiceDef", false);
-		String serviceId = "serviceA";
-		File projectRoot = pm.getCurrentProject().getProjectRoot().getFile();
+    @Test
+    public void testCreateServiceDef() throws Exception {
 
-		File serviceASrc = new File(projectRoot,
-				DesignServiceManager.getRuntimeRelativeDir(serviceId));
-		File javaSrc = new File(serviceASrc, "Foo.java");
-		FileUtils.forceMkdir(serviceASrc);
-		FileUtils.writeStringToFile(javaSrc,
-				"public class Foo{public int getInt(){return 12;}}");
+        makeProject("testCreateServiceDef", false);
+        String serviceId = "serviceA";
+        File projectRoot = this.pm.getCurrentProject().getProjectRoot().getFile();
 
-		File classesDir = pm.getCurrentProject().getWebInfClasses().getFile();
-		FileUtils.forceMkdir(classesDir);
+        File serviceASrc = new File(projectRoot, DesignServiceManager.getRuntimeRelativeDir(serviceId));
+        File javaSrc = new File(serviceASrc, "Foo.java");
+        FileUtils.forceMkdir(serviceASrc);
+        FileUtils.writeStringToFile(javaSrc, "public class Foo{public int getInt(){return 12;}}");
 
-		dm.build();
+        File classesDir = this.pm.getCurrentProject().getWebInfClasses().getFile();
+        FileUtils.forceMkdir(classesDir);
 
-		File serviceDesignDir = new File(projectRoot,
-				DesignServiceManager.getDesigntimeRelativeDir(serviceId));
-		assertFalse(serviceDesignDir.exists());
+        this.dm.build();
 
-		ServiceDefCompilerTask sdct = new ServiceDefCompilerTask();
-		sdct.setProject(new Project());
-		sdct.addService(new ServiceDefCompilerTask.NestedService(serviceId));
-		sdct.setProjectRoot(projectRoot);
-		sdct.perform();
+        File serviceDesignDir = new File(projectRoot, DesignServiceManager.getDesigntimeRelativeDir(serviceId));
+        assertFalse(serviceDesignDir.exists());
 
-		assertTrue(serviceDesignDir.exists());
+        ServiceDefCompilerTask sdct = new ServiceDefCompilerTask();
+        sdct.setProject(new Project());
+        sdct.addService(new ServiceDefCompilerTask.NestedService(serviceId));
+        sdct.setProjectRoot(projectRoot);
+        sdct.perform();
 
-		DesignServiceManager localDSM = DesignTimeUtils
-				.getDSMForProjectRoot(new FileSystemResource(projectRoot
-						.getAbsolutePath() + "/"));
-		Service service = localDSM.getService(serviceId);
-		assertEquals("Foo", service.getClazz());
-		assertEquals(1, service.getOperation().size());
+        assertTrue(serviceDesignDir.exists());
 
-		Thread.sleep(2000);
-		FileUtils.writeStringToFile(javaSrc,
-				"public class Foo{public int getInt(){return 12;}\n"
-						+ "\tpublic int getInt2(){return 13;}\n}");
-		dm.build();
+        DesignServiceManager localDSM = DesignTimeUtils.getDSMForProjectRoot(new FileSystemResource(projectRoot.getAbsolutePath() + "/"));
+        Service service = localDSM.getService(serviceId);
+        assertEquals("Foo", service.getClazz());
+        assertEquals(1, service.getOperation().size());
 
-		sdct.perform();
-		localDSM = DesignTimeUtils.getDSMForProjectRoot(new FileSystemResource(
-				projectRoot.getAbsolutePath() + "/"));
-		service = localDSM.getService(serviceId);
-		assertEquals("Foo", service.getClazz());
-		assertEquals(2, service.getOperation().size());
+        Thread.sleep(2000);
+        FileUtils.writeStringToFile(javaSrc, "public class Foo{public int getInt(){return 12;}\n" + "\tpublic int getInt2(){return 13;}\n}");
+        this.dm.build();
 
-		// test arrays
-		Thread.sleep(2000);
-		FileUtils
-				.writeStringToFile(
-						javaSrc,
-						"public class Foo{public int getInt(){return 12;}\n"
-								+ "\tpublic int getInt2(Integer[] ints){return 13+ints[0];}\n}");
-		dm.build();
+        sdct.perform();
+        localDSM = DesignTimeUtils.getDSMForProjectRoot(new FileSystemResource(projectRoot.getAbsolutePath() + "/"));
+        service = localDSM.getService(serviceId);
+        assertEquals("Foo", service.getClazz());
+        assertEquals(2, service.getOperation().size());
 
-		sdct.perform();
-		localDSM = DesignTimeUtils.getDSMForProjectRoot(new FileSystemResource(
-				projectRoot.getAbsolutePath() + "/"));
-		service = localDSM.getService(serviceId);
-		assertEquals("Foo", service.getClazz());
-		assertEquals(2, service.getOperation().size());
+        // test arrays
+        Thread.sleep(2000);
+        FileUtils.writeStringToFile(javaSrc, "public class Foo{public int getInt(){return 12;}\n"
+            + "\tpublic int getInt2(Integer[] ints){return 13+ints[0];}\n}");
+        this.dm.build();
 
-		boolean foundGetInt2 = false;
-		for (Operation op : service.getOperation()) {
-			if (op.getName().equals("getInt2")) {
-				foundGetInt2 = true;
+        sdct.perform();
+        localDSM = DesignTimeUtils.getDSMForProjectRoot(new FileSystemResource(projectRoot.getAbsolutePath() + "/"));
+        service = localDSM.getService(serviceId);
+        assertEquals("Foo", service.getClazz());
+        assertEquals(2, service.getOperation().size());
 
-				assertEquals(1, op.getParameter().size());
-				Parameter param = op.getParameter().get(0);
-				assertTrue(param.isIsList());
-				assertEquals("java.lang.Integer", param.getTypeRef());
-			}
-		}
-		assertTrue("" + service.getOperation(), foundGetInt2);
-	}
+        boolean foundGetInt2 = false;
+        for (Operation op : service.getOperation()) {
+            if (op.getName().equals("getInt2")) {
+                foundGetInt2 = true;
+
+                assertEquals(1, op.getParameter().size());
+                Parameter param = op.getParameter().get(0);
+                assertTrue(param.isIsList());
+                assertEquals("java.lang.Integer", param.getTypeRef());
+            }
+        }
+        assertTrue("" + service.getOperation(), foundGetInt2);
+    }
 }

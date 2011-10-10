@@ -29,36 +29,36 @@ import com.wavemaker.json.type.reflect.PrimitiveReflectTypeDefinition;
 import com.wavemaker.json.type.reflect.ReflectTypeUtils;
 
 /**
- * Date primitive type.  This includes all known subclasses of {@link Date},
- * including {@link java.sql.Date}, {@link Time}, and {@link Timestamp}.  These
- * will serialize to and from Number objects sent from the client, assuming that
- * the numbers represent milliseconds since the epoch (standard Java time, as
- * well).
+ * Date primitive type. This includes all known subclasses of {@link Date}, including {@link java.sql.Date},
+ * {@link Time}, and {@link Timestamp}. These will serialize to and from Number objects sent from the client, assuming
+ * that the numbers represent milliseconds since the epoch (standard Java time, as well).
  * 
  * @author small
  * @version $Rev$ - $Date$
  */
-public class DateTypeDefinition extends PrimitiveReflectTypeDefinition
-        implements ReadObjectConverter, WriteObjectConverter {
-    
+public class DateTypeDefinition extends PrimitiveReflectTypeDefinition implements ReadObjectConverter, WriteObjectConverter {
+
     public DateTypeDefinition(Class<? extends Date> klass) {
-        
+
         super();
         this.setKlass(klass);
         this.setTypeName(ReflectTypeUtils.getTypeName(this.getKlass()));
     }
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.json.type.converters.ReadObjectConverter#readObject(java.lang.Object, java.lang.Object, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.json.type.converters.ReadObjectConverter#readObject(java.lang.Object, java.lang.Object,
+     * java.lang.String)
      */
     public Object readObject(Object input, Object root, String path) {
-        
-        if (null==input) {
+
+        if (null == input) {
             return null;
         } else if (Number.class.isAssignableFrom(input.getClass())) {
 
             Number num = (Number) input;
-            
+
             if (java.util.Date.class.equals(this.getKlass())) {
                 return new java.util.Date(num.longValue());
             } else if (java.sql.Date.class.equals(this.getKlass())) {
@@ -68,27 +68,27 @@ public class DateTypeDefinition extends PrimitiveReflectTypeDefinition
             } else if (java.sql.Time.class.equals(this.getKlass())) {
                 return new java.sql.Time(num.longValue());
             } else {
-                throw new WMRuntimeException(MessageResource.JSON_UNHANDLED_TYPE,
-                        input, input.getClass());
+                throw new WMRuntimeException(MessageResource.JSON_UNHANDLED_TYPE, input, input.getClass());
             }
         } else {
             return input;
         }
     }
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.json.type.converters.WriteObjectConverter#writeObject(java.lang.Object, java.lang.Object, java.lang.String, java.io.Writer)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.json.type.converters.WriteObjectConverter#writeObject(java.lang.Object, java.lang.Object,
+     * java.lang.String, java.io.Writer)
      */
-    public void writeObject(Object input, Object root, String path,
-            Writer writer) throws IOException {
-        
-        if (null==input) {
+    public void writeObject(Object input, Object root, String path, Writer writer) throws IOException {
+
+        if (null == input) {
             JSONMarshaller.marshal(writer, input);
         } else if (java.util.Date.class.isAssignableFrom(input.getClass())) {
-            writer.write(""+((java.util.Date) input).getTime());
+            writer.write("" + ((java.util.Date) input).getTime());
         } else {
-            throw new WMRuntimeException(MessageResource.JSON_UNHANDLED_TYPE,
-                    input, input.getClass());
+            throw new WMRuntimeException(MessageResource.JSON_UNHANDLED_TYPE, input, input.getClass());
         }
     }
 }

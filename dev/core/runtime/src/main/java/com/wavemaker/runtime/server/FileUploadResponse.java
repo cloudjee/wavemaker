@@ -12,27 +12,50 @@
  *  limitations under the License.
  */
 
-
 package com.wavemaker.runtime.server;
 
 /* Response object to return when sending a file via the "html" version of the DojoFileUpload widget */
 
 public class FileUploadResponse {
+
     private String path;
+
     private String error;
+
     private String width;
+
     private String height;
 
-    public String getPath() {return path;}
-    public void setPath(String path) {this.path = path;}
+    public String getPath() {
+        return this.path;
+    }
 
-    public String getError() {return error;}
-    public void setError(String error) {this.error = error;}
+    public void setPath(String path) {
+        this.path = path;
+    }
 
-    public String getWidth() {return width;}
-    public void setWidth(String width) {this.width = width;}
+    public String getError() {
+        return this.error;
+    }
 
-    public String getHeight() {return height;}
-    public void setHeight(String height) {this.height = height;}
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public String getWidth() {
+        return this.width;
+    }
+
+    public void setWidth(String width) {
+        this.width = width;
+    }
+
+    public String getHeight() {
+        return this.height;
+    }
+
+    public void setHeight(String height) {
+        this.height = height;
+    }
 
 };

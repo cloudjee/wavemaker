@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data;
 
 import java.util.Iterator;
@@ -43,11 +44,9 @@ public class TestFetchStrategy extends WMTestCase {
     private static SessionFactory sessionFactory = null;
 
     static {
-        Properties p = DataServiceUtils
-                .loadDBProperties(DataServiceTestConstants.MYSQL_SAKILA_PROPERTIES);
+        Properties p = DataServiceUtils.loadDBProperties(DataServiceTestConstants.MYSQL_SAKILA_PROPERTIES);
 
-        Configuration cfg = com.wavemaker.runtime.data.util.DataServiceUtils.initConfiguration(
-                DataServiceTestConstants.SAKILA_HIBERNATE_CFG, p);
+        Configuration cfg = com.wavemaker.runtime.data.util.DataServiceUtils.initConfiguration(DataServiceTestConstants.SAKILA_HIBERNATE_CFG, p);
 
         sessionFactory = cfg.buildSessionFactory();
     }
@@ -87,8 +86,7 @@ public class TestFetchStrategy extends WMTestCase {
 
         try {
 
-            Query q = session
-                    .createQuery("from ExtendedCountry c join fetch c.cities");
+            Query q = session.createQuery("from ExtendedCountry c join fetch c.cities");
 
             l = q.list();
 
@@ -115,8 +113,7 @@ public class TestFetchStrategy extends WMTestCase {
 
         try {
 
-            Query q = session.createQuery("from ExtendedCountry c join "
-                    + "fetch c.cities ci join fetch ci.addresses");
+            Query q = session.createQuery("from ExtendedCountry c join " + "fetch c.cities ci join fetch ci.addresses");
 
             l = q.list();
 
@@ -141,7 +138,7 @@ public class TestFetchStrategy extends WMTestCase {
             assertTrue(Hibernate.isInitialized(country));
             assertTrue(Hibernate.isInitialized(city));
             assertTrue(Hibernate.isInitialized(a));
-            
+
             assertTrue(!Hibernate.isInitialized(a.getCustomers()));
         }
     }

@@ -19,7 +19,6 @@
 // Generated on: 2008.02.26 at 04:39:33 PM PST 
 //
 
-
 package com.wavemaker.tools.spring.beans;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -28,11 +27,12 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for baseCollectionType complex type.
+ * <p>
+ * Java class for baseCollectionType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="baseCollectionType">
@@ -48,10 +48,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "baseCollectionType")
-@XmlSeeAlso({
-    Props.class,
-    TypedCollectionType.class
-})
+@XmlSeeAlso({ Props.class, TypedCollectionType.class })
 public class BaseCollectionType {
 
     @XmlAttribute
@@ -60,22 +57,18 @@ public class BaseCollectionType {
     /**
      * Gets the value of the merge property.
      * 
-     * @return
-     *     possible object is
-     *     {@link DefaultableBoolean }
-     *     
+     * @return possible object is {@link DefaultableBoolean }
+     * 
      */
     public DefaultableBoolean getMerge() {
-        return merge;
+        return this.merge;
     }
 
     /**
      * Sets the value of the merge property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link DefaultableBoolean }
-     *     
+     * @param value allowed object is {@link DefaultableBoolean }
+     * 
      */
     public void setMerge(DefaultableBoolean value) {
         this.merge = value;

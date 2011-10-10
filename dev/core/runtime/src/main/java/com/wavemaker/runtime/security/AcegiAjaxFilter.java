@@ -39,23 +39,22 @@ public class AcegiAjaxFilter extends OncePerRequestFilter {
     private static final String SUCCESS_URL = "url";
 
     private static final String FAILURE_ERROR_MESSAGE = "error";
-    
+
     private static final String FAILURE_INDICATOR = "login_error=1";
 
-    protected void doFilterInternal(HttpServletRequest httpServletRequest,
-            HttpServletResponse httpServletResponse, FilterChain filterChain)
-            throws ServletException, IOException {
+    @Override
+    protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain)
+        throws ServletException, IOException {
 
-        HttpServletRequest request = (HttpServletRequest) httpServletRequest;
-        HttpServletResponse response = (HttpServletResponse) httpServletResponse;
+        HttpServletRequest request = httpServletRequest;
+        HttpServletResponse response = httpServletResponse;
 
         if (!isAjaxRequest(request)) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        RedirectResponseWrapper redirectResponseWrapper =
-            new RedirectResponseWrapper(response);
+        RedirectResponseWrapper redirectResponseWrapper = new RedirectResponseWrapper(response);
 
         filterChain.doFilter(request, redirectResponseWrapper);
 
@@ -68,14 +67,13 @@ public class AcegiAjaxFilter extends OncePerRequestFilter {
             response.setHeader("Pragma", "no-cache");
 
             String redirectURL = redirectResponseWrapper.getRedirect();
-            
+
             String jsonContent;
             if (redirectURL.indexOf(FAILURE_INDICATOR) == -1) {
                 jsonContent = "{\"" + SUCCESS_URL + "\":\"" + redirectURL + "\"}";
             } else {
-                String errorMsg = ((AuthenticationException) request.getSession()
-                        .getAttribute(AbstractProcessingFilter.ACEGI_SECURITY_LAST_EXCEPTION_KEY))
-                                .getMessage();
+                String errorMsg = ((AuthenticationException) request.getSession().getAttribute(
+                    AbstractProcessingFilter.ACEGI_SECURITY_LAST_EXCEPTION_KEY)).getMessage();
                 jsonContent = "{\"" + FAILURE_ERROR_MESSAGE + "\":\"" + errorMsg + "\"}";
             }
             response.getOutputStream().write(jsonContent.getBytes());

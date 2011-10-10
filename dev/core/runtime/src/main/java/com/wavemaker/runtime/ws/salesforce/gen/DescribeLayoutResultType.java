@@ -11,23 +11,23 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for DescribeLayoutResult complex type.
+ * <p>
+ * Java class for DescribeLayoutResult complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="DescribeLayoutResult">
@@ -46,17 +46,16 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DescribeLayoutResult", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "layouts",
-    "recordTypeMappings",
-    "recordTypeSelectorRequired"
-})
+@XmlType(name = "DescribeLayoutResult", namespace = "urn:partner.soap.sforce.com", propOrder = { "layouts", "recordTypeMappings",
+    "recordTypeSelectorRequired" })
 public class DescribeLayoutResultType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected List<DescribeLayoutType> layouts;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected List<RecordTypeMappingType> recordTypeMappings;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean recordTypeSelectorRequired;
 
@@ -64,27 +63,26 @@ public class DescribeLayoutResultType {
      * Gets the value of the layouts property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the layouts property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the layouts property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getLayouts().add(newItem);
+     * getLayouts().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DescribeLayoutType }
+     * Objects of the following type(s) are allowed in the list {@link DescribeLayoutType }
      * 
      * 
      */
     public List<DescribeLayoutType> getLayouts() {
-        if (layouts == null) {
-            layouts = new ArrayList<DescribeLayoutType>();
+        if (this.layouts == null) {
+            this.layouts = new ArrayList<DescribeLayoutType>();
         }
         return this.layouts;
     }
@@ -93,27 +91,26 @@ public class DescribeLayoutResultType {
      * Gets the value of the recordTypeMappings property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the recordTypeMappings property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the recordTypeMappings property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getRecordTypeMappings().add(newItem);
+     * getRecordTypeMappings().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link RecordTypeMappingType }
+     * Objects of the following type(s) are allowed in the list {@link RecordTypeMappingType }
      * 
      * 
      */
     public List<RecordTypeMappingType> getRecordTypeMappings() {
-        if (recordTypeMappings == null) {
-            recordTypeMappings = new ArrayList<RecordTypeMappingType>();
+        if (this.recordTypeMappings == null) {
+            this.recordTypeMappings = new ArrayList<RecordTypeMappingType>();
         }
         return this.recordTypeMappings;
     }
@@ -123,7 +120,7 @@ public class DescribeLayoutResultType {
      * 
      */
     public boolean isRecordTypeSelectorRequired() {
-        return recordTypeSelectorRequired;
+        return this.recordTypeSelectorRequired;
     }
 
     /**
@@ -137,10 +134,8 @@ public class DescribeLayoutResultType {
     /**
      * Sets the value of the layouts property.
      * 
-     * @param layouts
-     *     allowed object is
-     *     {@link DescribeLayoutType }
-     *     
+     * @param layouts allowed object is {@link DescribeLayoutType }
+     * 
      */
     public void setLayouts(List<DescribeLayoutType> layouts) {
         this.layouts = layouts;
@@ -149,10 +144,8 @@ public class DescribeLayoutResultType {
     /**
      * Sets the value of the recordTypeMappings property.
      * 
-     * @param recordTypeMappings
-     *     allowed object is
-     *     {@link RecordTypeMappingType }
-     *     
+     * @param recordTypeMappings allowed object is {@link RecordTypeMappingType }
+     * 
      */
     public void setRecordTypeMappings(List<RecordTypeMappingType> recordTypeMappings) {
         this.recordTypeMappings = recordTypeMappings;

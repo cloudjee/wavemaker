@@ -36,7 +36,7 @@ public class ServiceGeneratorConfig {
 
     private String destinationPackage = null;
 
-    private List<FileSet> filesets = new ArrayList<FileSet>();
+    private final List<FileSet> filesets = new ArrayList<FileSet>();
 
     private List<File> serviceFiles = null;
 
@@ -48,79 +48,75 @@ public class ServiceGeneratorConfig {
 
     public void validate() {
 
-        if (service != null) {
-            if (service.exists()) {
-                if (service.isDirectory()) {
-                    throw new BuildException(
-                            "Service cannot be a directory: "
-                                    + service.getAbsolutePath()
-                                    + ".  Use a nested fileset to load all files within a directory.");
+        if (this.service != null) {
+            if (this.service.exists()) {
+                if (this.service.isDirectory()) {
+                    throw new BuildException("Service cannot be a directory: " + this.service.getAbsolutePath()
+                        + ".  Use a nested fileset to load all files within a directory.");
                 }
             } else {
-                throw new BuildException(service.getAbsolutePath()
-                        + " doesn't exist");
+                throw new BuildException(this.service.getAbsolutePath() + " doesn't exist");
             }
         }
 
         if (getServiceFiles().size() == 0) {
-            throw new BuildException(
-                    "Either \"service\" must be set, or use a nested fileset");
+            throw new BuildException("Either \"service\" must be set, or use a nested fileset");
         }
 
-        if (destDir == null) {
+        if (this.destDir == null) {
             throw new BuildException("\"destDir\" must be set");
         }
 
     }
-    
+
     public void addServiceFile(File f) {
-        
+
     }
 
     public void addFileset(FileSet fileset) {
-        filesets.add(fileset);
+        this.filesets.add(fileset);
     }
 
     public List<File> getServiceFiles() {
 
-        if (serviceFiles != null) {
-            return serviceFiles;
+        if (this.serviceFiles != null) {
+            return this.serviceFiles;
         }
 
-        serviceFiles = new ArrayList<File>();
+        this.serviceFiles = new ArrayList<File>();
 
-        for (FileSet fs : filesets) {
-            DirectoryScanner ds = fs.getDirectoryScanner(parent.getProject());
+        for (FileSet fs : this.filesets) {
+            DirectoryScanner ds = fs.getDirectoryScanner(this.parent.getProject());
             String[] includedFiles = ds.getIncludedFiles();
             for (int i = 0; i < includedFiles.length; i++) {
-                serviceFiles.add(new File(ds.getBasedir(), includedFiles[i]));
+                this.serviceFiles.add(new File(ds.getBasedir(), includedFiles[i]));
             }
         }
 
-        if (service != null) {
-            serviceFiles.add(service);
+        if (this.service != null) {
+            this.serviceFiles.add(this.service);
         }
 
-        return serviceFiles;
+        return this.serviceFiles;
     }
 
     public void setPackage(String s) {
-        destinationPackage = s;
+        this.destinationPackage = s;
     }
 
     public String getPackage() {
-        return destinationPackage;
+        return this.destinationPackage;
     }
 
     public void setService(File f) {
-        service = f;
+        this.service = f;
     }
 
     public void setDestDir(File f) {
-        destDir = f;
+        this.destDir = f;
     }
 
     public File getOutputDirectory() {
-        return destDir;
+        return this.destDir;
     }
 }

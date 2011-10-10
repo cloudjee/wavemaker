@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import java.util.ArrayList;
@@ -35,20 +34,20 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
  * 
  * 
- * 	The welcome-file-list contains an ordered list of welcome
- * 	files elements.
+ * The welcome-file-list contains an ordered list of welcome files elements.
  * 
- * 	Used in: web-app
+ * Used in: web-app
  * 
- *       
  * 
- * <p>Java class for welcome-file-listType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for welcome-file-listType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="welcome-file-listType">
@@ -66,13 +65,12 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "welcome-file-listType", propOrder = {
-    "welcomeFile"
-})
+@XmlType(name = "welcome-file-listType", propOrder = { "welcomeFile" })
 public class WelcomeFileListType {
 
     @XmlElement(name = "welcome-file", required = true)
     protected List<java.lang.String> welcomeFile;
+
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -83,27 +81,26 @@ public class WelcomeFileListType {
      * Gets the value of the welcomeFile property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the welcomeFile property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the welcomeFile property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getWelcomeFile().add(newItem);
+     * getWelcomeFile().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link java.lang.String }
+     * Objects of the following type(s) are allowed in the list {@link java.lang.String }
      * 
      * 
      */
     public List<java.lang.String> getWelcomeFile() {
-        if (welcomeFile == null) {
-            welcomeFile = new ArrayList<java.lang.String>();
+        if (this.welcomeFile == null) {
+            this.welcomeFile = new ArrayList<java.lang.String>();
         }
         return this.welcomeFile;
     }
@@ -111,22 +108,18 @@ public class WelcomeFileListType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setId(java.lang.String value) {
         this.id = value;

@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.json;
 
 import com.wavemaker.infra.WMTestCase;
@@ -22,12 +23,12 @@ import com.wavemaker.infra.WMTestCase;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestOrder extends WMTestCase {
 
     public void testRoundTripOrder() throws Exception {
-        
+
         String inputString = "{\"b\":12,\"a\":14,\"c\":19}";
         JSONObject jo = (JSONObject) JSONUnmarshaller.unmarshal(inputString);
         String outputString = JSONMarshaller.marshal(jo);

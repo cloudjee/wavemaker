@@ -52,12 +52,12 @@ public class CloudFoundryDataServiceBeanFactoryPostProcessor implements BeanFact
     private static final Log log = LogFactory.getLog(CloudFoundryDataServiceBeanFactoryPostProcessor.class);
 
     private static final String DS_BEAN_SUFFIX = "DataSource";
-    
+
     private static final String POSTGRES_DRIVER = "org.postgresql.Driver";
-    
+
     private static final String MYSQL_DRIVER = "com.mysql.jdbc.Driver";
 
-    private CloudEnvironment cloudEnvironment = new CloudEnvironment();
+    private final CloudEnvironment cloudEnvironment = new CloudEnvironment();
 
     /**
      * {@inheritDoc}
@@ -65,7 +65,7 @@ public class CloudFoundryDataServiceBeanFactoryPostProcessor implements BeanFact
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) beanFactory;
 
-        if (CollectionUtils.isEmpty(cloudEnvironment.getServices())) {
+        if (CollectionUtils.isEmpty(this.cloudEnvironment.getServices())) {
             return;
         }
         processDataSources(defaultListableBeanFactory);
@@ -83,7 +83,7 @@ public class CloudFoundryDataServiceBeanFactoryPostProcessor implements BeanFact
             beanDefinition.setLazyInit(false);
             MutablePropertyValues propertyValues = beanDefinition.getPropertyValues();
             PropertyValue hibernateProperties = propertyValues.getPropertyValue("hibernateProperties");
-            
+
             ManagedProperties hibernatePropsPropertyValue = null;
             if (hibernateProperties != null) {
                 Object value = hibernateProperties.getValue();
@@ -91,7 +91,8 @@ public class CloudFoundryDataServiceBeanFactoryPostProcessor implements BeanFact
                     hibernatePropsPropertyValue = (ManagedProperties) hibernateProperties.getValue();
                     TypedStringValue dialect = (TypedStringValue) hibernatePropsPropertyValue.get(new TypedStringValue("hibernate.dialect"));
                     if (dialect != null && dialect.equals(new TypedStringValue("com.wavemaker.runtime.data.dialect.MySQLDialect"))) {
-                        hibernatePropsPropertyValue.put(new TypedStringValue("hibernate.dialect"), new TypedStringValue("org.hibernate.dialect.MySQLDialect"));          
+                        hibernatePropsPropertyValue.put(new TypedStringValue("hibernate.dialect"), new TypedStringValue(
+                            "org.hibernate.dialect.MySQLDialect"));
                     }
                 }
             } else {
@@ -114,10 +115,10 @@ public class CloudFoundryDataServiceBeanFactoryPostProcessor implements BeanFact
         String[] dataSourceBeanNames = defaultListableBeanFactory.getBeanNamesForType(DataSource.class);
 
         if (dataSourceBeanNames.length <= 1) {
-            //When there is only 1 DataSource, the provided auto-staging should be sufficient
+            // When there is only 1 DataSource, the provided auto-staging should be sufficient
             return;
         }
-        
+
         for (String dsBean : dataSourceBeanNames) {
             if (!dsBean.endsWith(DS_BEAN_SUFFIX)) {
                 continue;
@@ -144,22 +145,22 @@ public class CloudFoundryDataServiceBeanFactoryPostProcessor implements BeanFact
             PropertyValue driverProp = dsBeanDef.getPropertyValues().getPropertyValue("driverClassName");
             if (driverProp.getValue() != null) {
                 Assert.isInstanceOf(TypedStringValue.class, driverProp.getValue(), "driverClassName property value is of an unexpected type.");
-                String driverClassName = ((TypedStringValue)driverProp.getValue()).getValue();
+                String driverClassName = ((TypedStringValue) driverProp.getValue()).getValue();
                 if (POSTGRES_DRIVER.equals(driverClassName)) {
-                    PostgresqlServiceInfo service = cloudEnvironment.getServiceInfo(serviceName, PostgresqlServiceInfo.class);
+                    PostgresqlServiceInfo service = this.cloudEnvironment.getServiceInfo(serviceName, PostgresqlServiceInfo.class);
                     if (service != null) {
                         defaultListableBeanFactory.removeBeanDefinition(dsBean);
-                        PostgresqlServiceCreator postgresCreationHelper = new PostgresqlServiceCreator(cloudEnvironment);
+                        PostgresqlServiceCreator postgresCreationHelper = new PostgresqlServiceCreator(this.cloudEnvironment);
                         DataSource cfDataSource = postgresCreationHelper.createService(serviceName);
                         defaultListableBeanFactory.registerSingleton(dsBean, cfDataSource);
                     } else {
                         log.warn("Service '" + serviceName + "' found, but it is not a PostgreSQL service as expected.");
                     }
                 } else if (MYSQL_DRIVER.equals(driverClassName)) {
-                    MysqlServiceInfo service = cloudEnvironment.getServiceInfo(serviceName, MysqlServiceInfo.class);
+                    MysqlServiceInfo service = this.cloudEnvironment.getServiceInfo(serviceName, MysqlServiceInfo.class);
                     if (service != null) {
                         defaultListableBeanFactory.removeBeanDefinition(dsBean);
-                        MysqlServiceCreator mysqlCreationHelper = new MysqlServiceCreator(cloudEnvironment);
+                        MysqlServiceCreator mysqlCreationHelper = new MysqlServiceCreator(this.cloudEnvironment);
                         DataSource cfDataSource = mysqlCreationHelper.createService(serviceName);
                         defaultListableBeanFactory.registerSingleton(dsBean, cfDataSource);
                     } else {
@@ -177,7 +178,7 @@ public class CloudFoundryDataServiceBeanFactoryPostProcessor implements BeanFact
      * @return
      */
     private boolean serviceExists(String serviceName) {
-        List<Map<String, Object>> services = cloudEnvironment.getServices();
+        List<Map<String, Object>> services = this.cloudEnvironment.getServices();
         for (Map<String, Object> serviceProps : services) {
             if (serviceName.equals(serviceProps.get("name"))) {
                 return true;

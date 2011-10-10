@@ -14,22 +14,22 @@
 
 package com.wavemaker.runtime.service;
 
-import com.wavemaker.common.WMException;
 import com.wavemaker.common.MessageResource;
+import com.wavemaker.common.WMException;
 
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TypeNotFoundException extends WMException {
 
     private static final long serialVersionUID = 1L;
-    
+
     public TypeNotFoundException(MessageResource resource) {
         super(resource);
     }
-    
+
     public TypeNotFoundException(MessageResource resource, Object... args) {
         super(resource, args);
     }

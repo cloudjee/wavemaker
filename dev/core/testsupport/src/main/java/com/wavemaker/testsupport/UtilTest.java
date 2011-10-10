@@ -19,7 +19,6 @@ import java.io.IOException;
 
 import org.apache.commons.lang.NullArgumentException;
 
-
 /**
  * Static utilities for tests.
  * 
@@ -29,24 +28,22 @@ import org.apache.commons.lang.NullArgumentException;
 public class UtilTest {
 
     /**
-     * An optional file-based semaphore.  Mostly used to lock tests (or test
-     * classes, in setUp()) from executing at the same time in hudson.  This
-     * locks the semaphore, and returns a lock object to be passed in to
+     * An optional file-based semaphore. Mostly used to lock tests (or test classes, in setUp()) from executing at the
+     * same time in hudson. This locks the semaphore, and returns a lock object to be passed in to
      * {@link UtilTest#unlockSemaphore(Object)}.
      */
     public static String lockSemaphore(String semaphoreName) throws Exception {
-    
+
         return lockSemaphore(semaphoreName, 50, 500);
     }
-    
-    public static String lockSemaphore(String semaphoreName, int iter, int sleep)
-            throws Exception {
-        
+
+    public static String lockSemaphore(String semaphoreName, int iter, int sleep) throws Exception {
+
         String tmpdir = System.getProperty("java.io.tmpdir");
-        File tempFile = new File(new File(tmpdir), semaphoreName+".lock");
-        
+        File tempFile = new File(new File(tmpdir), semaphoreName + ".lock");
+
         int slept = 0;
-        while (slept<iter) {
+        while (slept < iter) {
             if (!tempFile.exists()) {
                 try {
                     tempFile.createNewFile();
@@ -56,20 +53,20 @@ public class UtilTest {
                     // ignore
                 }
             }
-            
+
             Thread.sleep(sleep);
             slept++;
         }
-        
+
         return tempFile.getAbsolutePath();
     }
 
     public static void unlockSemaphore(String semaphoreLock) throws Exception {
-        
-        if (null==semaphoreLock) {
+
+        if (null == semaphoreLock) {
             throw new NullArgumentException("semaphoreLock");
         }
-        
-        (new File(semaphoreLock)).delete();
+
+        new File(semaphoreLock).delete();
     }
 }

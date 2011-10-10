@@ -15,9 +15,8 @@
 package com.wavemaker.json.type;
 
 /**
- * The TypeDefinition class holds type information about individual types in the
- * system.  Each instance also allows for new Objects to be created, and for
- * transformations to and from JSON.
+ * The TypeDefinition class holds type information about individual types in the system. Each instance also allows for
+ * new Objects to be created, and for transformations to and from JSON.
  * 
  * @author small
  * @version $Rev$ - $Date$
@@ -25,11 +24,10 @@ package com.wavemaker.json.type;
 public interface TypeDefinition {
 
     /**
-     * Checks if the TypeDefinition can be accessed through the
-     * {@link com.wavemaker.runtime.service.LiveDataService} APIs.
+     * Checks if the TypeDefinition can be accessed through the {@link com.wavemaker.runtime.service.LiveDataService}
+     * APIs.
      * 
-     * @return True iff this type can be accessed through the LiveService
-     *         interface.
+     * @return True iff this type can be accessed through the LiveService interface.
      */
     public boolean isLiveService();
 
@@ -41,8 +39,8 @@ public interface TypeDefinition {
     public String getTypeName();
 
     /**
-     * Get a short name for this type (for instance, the typeName might be
-     * java.lang.String, while the short name might be String).
+     * Get a short name for this type (for instance, the typeName might be java.lang.String, while the short name might
+     * be String).
      * 
      * @return The type short name.
      */
@@ -51,11 +49,8 @@ public interface TypeDefinition {
     /**
      * Return a new instance of the objects associated with this type.
      * 
-     * @param args
-     *            Any arguments associated with this newInstance. If the method
-     *            doesn't take them, or they're the wrong type, they should be
-     *            ignored, or if they're required, an exception should be
-     *            thrown.
+     * @param args Any arguments associated with this newInstance. If the method doesn't take them, or they're the wrong
+     *        type, they should be ignored, or if they're required, an exception should be thrown.
      * @return The new, unpopulated instance.
      */
     public Object newInstance(Object... args);

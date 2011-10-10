@@ -42,8 +42,7 @@ public class SpringConfigSupport {
 
     private static JAXBContext jaxbContext;
 
-    public static synchronized JAXBContext getJAXBContext()
-            throws JAXBException {
+    public static synchronized JAXBContext getJAXBContext() throws JAXBException {
         if (jaxbContext == null) {
             jaxbContext = JAXBContext.newInstance(SPRING_BEANS_PACKAGE);
         }
@@ -56,38 +55,33 @@ public class SpringConfigSupport {
         reader.close();
         return ret;
     }
-    
-    public static Beans readBeans(Resource configFile, FileService fileService)
-            throws JAXBException, IOException {
+
+    public static Beans readBeans(Resource configFile, FileService fileService) throws JAXBException, IOException {
         Reader reader = fileService.getReader(configFile);
         Beans ret = readBeans(reader);
         reader.close();
         return ret;
     }
-    
+
     public static Beans readBeans(Reader reader) throws JAXBException {
         Unmarshaller unmarshaller = getJAXBContext().createUnmarshaller();
         return (Beans) unmarshaller.unmarshal(reader);
     }
 
-    public static void writeBeans(Beans beans, Resource configFile,
-            FileService fileService) throws JAXBException, IOException {
+    public static void writeBeans(Beans beans, Resource configFile, FileService fileService) throws JAXBException, IOException {
         Writer writer = fileService.getWriter(configFile);
         writeBeans(beans, writer);
         writer.close();
     }
-    
+
     /**
-     * This writer should be initialized with an appropriate encoding, ideally
-     * through a FileService.
+     * This writer should be initialized with an appropriate encoding, ideally through a FileService.
      */
-    public static void writeBeans(Beans beans, Writer writer)
-            throws JAXBException, IOException {
+    public static void writeBeans(Beans beans, Writer writer) throws JAXBException, IOException {
         Marshaller marshaller = getJAXBContext().createMarshaller();
         marshaller.setProperty("jaxb.formatted.output", true);
         marshaller.setProperty("jaxb.schemaLocation", SPRING_SCHEMA_LOCATION);
-        marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper",
-                new BeansNamespaceMapper());
+        marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new BeansNamespaceMapper());
         marshaller.marshal(beans, writer);
     }
 }

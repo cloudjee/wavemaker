@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -21,11 +19,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for PackageVersion complex type.
+ * <p>
+ * Java class for PackageVersion complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="PackageVersion">
@@ -44,17 +43,15 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "PackageVersion", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "majorNumber",
-    "minorNumber",
-    "namespace"
-})
+@XmlType(name = "PackageVersion", namespace = "urn:partner.soap.sforce.com", propOrder = { "majorNumber", "minorNumber", "namespace" })
 public class PackageVersionType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected int majorNumber;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected int minorNumber;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String namespace;
 
@@ -63,7 +60,7 @@ public class PackageVersionType {
      * 
      */
     public int getMajorNumber() {
-        return majorNumber;
+        return this.majorNumber;
     }
 
     /**
@@ -79,7 +76,7 @@ public class PackageVersionType {
      * 
      */
     public int getMinorNumber() {
-        return minorNumber;
+        return this.minorNumber;
     }
 
     /**
@@ -93,22 +90,18 @@ public class PackageVersionType {
     /**
      * Gets the value of the namespace property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getNamespace() {
-        return namespace;
+        return this.namespace;
     }
 
     /**
      * Sets the value of the namespace property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setNamespace(String value) {
         this.namespace = value;

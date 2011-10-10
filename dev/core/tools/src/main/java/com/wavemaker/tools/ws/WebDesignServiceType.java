@@ -19,7 +19,7 @@ import com.wavemaker.tools.service.reflect.ReflectDesignServiceType;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class WebDesignServiceType extends ReflectDesignServiceType {
 

@@ -11,23 +11,23 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for DescribeLayoutSection complex type.
+ * <p>
+ * Java class for DescribeLayoutSection complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="DescribeLayoutSection">
@@ -49,26 +49,25 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DescribeLayoutSection", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "columns",
-    "heading",
-    "layoutRows",
-    "rows",
-    "useCollapsibleSection",
-    "useHeading"
-})
+@XmlType(name = "DescribeLayoutSection", namespace = "urn:partner.soap.sforce.com", propOrder = { "columns", "heading", "layoutRows", "rows",
+    "useCollapsibleSection", "useHeading" })
 public class DescribeLayoutSectionType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected int columns;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String heading;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected List<DescribeLayoutRowType> layoutRows;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected int rows;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean useCollapsibleSection;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean useHeading;
 
@@ -77,7 +76,7 @@ public class DescribeLayoutSectionType {
      * 
      */
     public int getColumns() {
-        return columns;
+        return this.columns;
     }
 
     /**
@@ -91,22 +90,18 @@ public class DescribeLayoutSectionType {
     /**
      * Gets the value of the heading property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getHeading() {
-        return heading;
+        return this.heading;
     }
 
     /**
      * Sets the value of the heading property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setHeading(String value) {
         this.heading = value;
@@ -116,27 +111,26 @@ public class DescribeLayoutSectionType {
      * Gets the value of the layoutRows property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the layoutRows property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the layoutRows property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getLayoutRows().add(newItem);
+     * getLayoutRows().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DescribeLayoutRowType }
+     * Objects of the following type(s) are allowed in the list {@link DescribeLayoutRowType }
      * 
      * 
      */
     public List<DescribeLayoutRowType> getLayoutRows() {
-        if (layoutRows == null) {
-            layoutRows = new ArrayList<DescribeLayoutRowType>();
+        if (this.layoutRows == null) {
+            this.layoutRows = new ArrayList<DescribeLayoutRowType>();
         }
         return this.layoutRows;
     }
@@ -146,7 +140,7 @@ public class DescribeLayoutSectionType {
      * 
      */
     public int getRows() {
-        return rows;
+        return this.rows;
     }
 
     /**
@@ -162,7 +156,7 @@ public class DescribeLayoutSectionType {
      * 
      */
     public boolean isUseCollapsibleSection() {
-        return useCollapsibleSection;
+        return this.useCollapsibleSection;
     }
 
     /**
@@ -178,7 +172,7 @@ public class DescribeLayoutSectionType {
      * 
      */
     public boolean isUseHeading() {
-        return useHeading;
+        return this.useHeading;
     }
 
     /**
@@ -192,10 +186,8 @@ public class DescribeLayoutSectionType {
     /**
      * Sets the value of the layoutRows property.
      * 
-     * @param layoutRows
-     *     allowed object is
-     *     {@link DescribeLayoutRowType }
-     *     
+     * @param layoutRows allowed object is {@link DescribeLayoutRowType }
+     * 
      */
     public void setLayoutRows(List<DescribeLayoutRowType> layoutRows) {
         this.layoutRows = layoutRows;

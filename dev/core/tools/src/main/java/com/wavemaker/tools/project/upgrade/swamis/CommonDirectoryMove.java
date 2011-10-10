@@ -26,8 +26,7 @@ import com.wavemaker.tools.project.upgrade.StudioUpgradeTask;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 
 /**
- * Not so much of a project upgrade, this moves the old common directory to a
- * backup directory.
+ * Not so much of a project upgrade, this moves the old common directory to a backup directory.
  * 
  * @author small
  * @author Jeremy Grelle
@@ -35,59 +34,51 @@ import com.wavemaker.tools.project.upgrade.UpgradeInfo;
  */
 public class CommonDirectoryMove implements StudioUpgradeTask {
 
-	public static final String UPGRADED_KEY = "COMMON_DIR_UPGRADED";
+    public static final String UPGRADED_KEY = "COMMON_DIR_UPGRADED";
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker
-	 * .tools.project.upgrade.UpgradeInfo)
-	 */
-	public void doUpgrade(UpgradeInfo upgradeInfo) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker .tools.project.upgrade.UpgradeInfo)
+     */
+    public void doUpgrade(UpgradeInfo upgradeInfo) {
 
-		try {
-			Resource commonDir = studioConfiguration.getCommonDir();
-			boolean isUpgraded = ConfigurationStore.getPreferenceBoolean(
-					getClass(), UPGRADED_KEY, false);
+        try {
+            Resource commonDir = this.studioConfiguration.getCommonDir();
+            boolean isUpgraded = ConfigurationStore.getPreferenceBoolean(getClass(), UPGRADED_KEY, false);
 
-			if (commonDir.exists() && !isUpgraded) {
-				Resource commonBakDir = studioConfiguration
-						.getStudioWebAppRoot().createRelative(
-								"lib/wm/" + LocalStudioConfiguration.COMMON_DIR
-										+ ".bak");
-				if (commonBakDir.exists()) {
-					upgradeInfo.addMessage("Common backup directory ("
-							+ commonBakDir + ") already exists");
-					return;
-				}
+            if (commonDir.exists() && !isUpgraded) {
+                Resource commonBakDir = this.studioConfiguration.getStudioWebAppRoot().createRelative(
+                    "lib/wm/" + LocalStudioConfiguration.COMMON_DIR + ".bak");
+                if (commonBakDir.exists()) {
+                    upgradeInfo.addMessage("Common backup directory (" + commonBakDir + ") already exists");
+                    return;
+                }
 
-				// FileUtils.copyDirectory(commonDir, commonBakDir);
-				// FileUtils.forceDelete(commonDir);
-				upgradeInfo.addMessage("Common directory is now: (" + commonDir
-						+ ") ");
-				// force common directory recreation
-				studioConfiguration.getCommonDir();
+                // FileUtils.copyDirectory(commonDir, commonBakDir);
+                // FileUtils.forceDelete(commonDir);
+                upgradeInfo.addMessage("Common directory is now: (" + commonDir + ") ");
+                // force common directory recreation
+                this.studioConfiguration.getCommonDir();
 
-				// if we had an old-style preference key, remove it
-				ConfigurationStore.removePreference(getClass(), UPGRADED_KEY);
+                // if we had an old-style preference key, remove it
+                ConfigurationStore.removePreference(getClass(), UPGRADED_KEY);
 
-				upgradeInfo
-						.addMessage("Your common directory has been moved to avoid conflicts and the template version copied in; if you have custom widgets, upgrade them manually from the backup at "
-								+ commonBakDir + ".");
-			}
-		} catch (IOException e) {
-			throw new WMRuntimeException(e);
-		}
-	}
+                upgradeInfo.addMessage("Your common directory has been moved to avoid conflicts and the template version copied in; if you have custom widgets, upgrade them manually from the backup at "
+                    + commonBakDir + ".");
+            }
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        }
+    }
 
-	private StudioConfiguration studioConfiguration;
+    private StudioConfiguration studioConfiguration;
 
-	public StudioConfiguration getStudioConfiguration() {
-		return studioConfiguration;
-	}
+    public StudioConfiguration getStudioConfiguration() {
+        return this.studioConfiguration;
+    }
 
-	public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-		this.studioConfiguration = studioConfiguration;
-	}
+    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
+        this.studioConfiguration = studioConfiguration;
+    }
 }

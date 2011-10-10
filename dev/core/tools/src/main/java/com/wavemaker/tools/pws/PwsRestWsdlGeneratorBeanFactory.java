@@ -24,34 +24,32 @@ import com.wavemaker.common.util.SpringUtils;
 
 /**
  * @author slee
- *
+ * 
  */
 public class PwsRestWsdlGeneratorBeanFactory {
 
     private Map<String, IPwsRestWsdlGenerator> pwsRestWsdlGenerators = new HashMap<String, IPwsRestWsdlGenerator>();
 
-
     public Collection<String> getRestWsdlGeneratorNames() {
-        return pwsRestWsdlGenerators.keySet();
+        return this.pwsRestWsdlGenerators.keySet();
     }
-    
+
     public IPwsRestWsdlGenerator getPwsRestWsdlGenerator(String partnerName) {
-        
-        if (pwsRestWsdlGenerators == null) {
+
+        if (this.pwsRestWsdlGenerators == null) {
             SpringUtils.throwSpringNotInitializedError(this.getClass());
         }
-        
-        if (!pwsRestWsdlGenerators.containsKey(partnerName)) {
-            throw new ConfigurationException(
-                MessageResource.UNKNOWN_PWS_TOOLS_MANAGER, partnerName);
+
+        if (!this.pwsRestWsdlGenerators.containsKey(partnerName)) {
+            throw new ConfigurationException(MessageResource.UNKNOWN_PWS_TOOLS_MANAGER, partnerName);
         }
-        
-        return pwsRestWsdlGenerators.get(partnerName);
+
+        return this.pwsRestWsdlGenerators.get(partnerName);
     }
 
     public void setPwsRestWsdlGenerators(Map<String, IPwsRestWsdlGenerator> pwsRestWsdlGenerators) {
         this.pwsRestWsdlGenerators = pwsRestWsdlGenerators;
 
     }
-    
+
 }

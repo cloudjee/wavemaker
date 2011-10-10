@@ -40,8 +40,8 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.HandlerExecutionChain;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
 import org.springframework.web.servlet.mvc.Controller;
+import org.springframework.web.servlet.support.WebContentGenerator;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.CastUtils;
@@ -64,90 +64,84 @@ import com.wavemaker.runtime.service.events.EventManager;
 import com.wavemaker.runtime.service.response.LiveDataServiceResponse;
 
 /**
- * Provides a test framework for WaveMaker applications' spring configuration.
- * This will load all required spring files, and provide hooks to specify any
- * others.
- *
+ * Provides a test framework for WaveMaker applications' spring configuration. This will load all required spring files,
+ * and provide hooks to specify any others.
+ * 
  * @author Matt Small
  * @version $Rev:22675 $ - $Date:2008-05-30 14:53:23 -0700 (Fri, 30 May 2008) $
- *
+ * 
  */
-@ContextConfiguration(locations="/springapp.xml", loader=SpringTestCaseContextSupport.class)
+@ContextConfiguration(locations = "/springapp.xml", loader = SpringTestCaseContextSupport.class)
 public abstract class SpringTestCase extends AbstractJUnit4SpringContextTests implements MockMvcAware {
 
     private static final String URL_MAPPING_BEAN_ID = "urlMapping";
 
     protected MockMvc mockMvc;
-    
+
     @After
     public void tearDown() throws Exception {
         RequestContextHolder.resetRequestAttributes();
     }
-    
+
     public void setMockMvc(MockMvc mockMvc) {
-    	this.mockMvc = mockMvc;
+        this.mockMvc = mockMvc;
     }
-    
+
     protected ApplicationContext getApplicationContext() {
-    	return applicationContext;
+        return this.applicationContext;
     }
-    
+
     /**
      * Get the current http session.
      */
     protected abstract HttpSession getHttpSession();
-    
+
     protected ServiceManager getServiceManager() {
-    	return (ServiceManager) getBean("foo");
+        return (ServiceManager) getBean("foo");
     }
-    
+
     protected EventManager getEventManager() {
-    	return (EventManager) getBean("bar");
+        return (EventManager) getBean("bar");
     }
-    
+
     protected Object getBean(String beanID) {
-        return applicationContext.getBean(beanID);
+        return this.applicationContext.getBean(beanID);
     }
 
     /**
-     * If the current context needs to know about the request attributes, set
-     * them through this interface.
-     *
+     * If the current context needs to know about the request attributes, set them through this interface.
+     * 
      * @param request
      */
     protected void setRequestAttributes(HttpServletRequest request) {
 
-        ServletRequestAttributes attributes = new ServletRequestAttributes(
-                request);
+        ServletRequestAttributes attributes = new ServletRequestAttributes(request);
         RequestContextHolder.setRequestAttributes(attributes);
     }
 
     /**
-     * Invoke a service, and translate the return into the an object of type
-     * returnClass (with generics information provided in returnTypes).
+     * Invoke a service, and translate the return into the an object of type returnClass (with generics information
+     * provided in returnTypes).
      */
-    public Object invokeService_toObject(String service, String operation,
-            Object[] parameters) throws Exception {
-        
+    public Object invokeService_toObject(String service, String operation, Object[] parameters) throws Exception {
+
         MockHttpServletResponse mhresp = new MockHttpServletResponse();
-        FieldDefinition returnFD = invokeService(service, operation, parameters,
-                mhresp);
+        FieldDefinition returnFD = invokeService(service, operation, parameters, mhresp);
 
         String content = mhresp.getContentAsString();
         JSON jsonResult = JSONUnmarshaller.unmarshal(content);
         if (!jsonResult.isObject()) {
-            throw new WMRuntimeException("json wasn't an object: "+content);
+            throw new WMRuntimeException("json wasn't an object: " + content);
         }
         JSONObject json = (JSONObject) jsonResult;
-        
+
         if (json.containsKey(ServerConstants.ERROR_PART)) {
-            throw new WMRuntimeException(json.get(ServerConstants.ERROR_PART)
-                    .toString());
+            throw new WMRuntimeException(json.get(ServerConstants.ERROR_PART).toString());
         }
-        
+
         InternalRuntime ir = InternalRuntime.getInstance();
         JSONState jsonState = ir.getJSONState();
-        
+
         Object result = JSONUtils.toBean(json, returnFD, jsonState);
         if (result instanceof Map) {
             Map<String, Object> map = CastUtils.cast((Map<?, ?>) result);
@@ -155,74 +149,59 @@ public abstract class SpringTestCase extends AbstractJUnit4SpringContextTests im
         } else if (result instanceof LiveDataServiceResponse) {
             return ((LiveDataServiceResponse) result).getResult();
         } else {
-            throw new WMRuntimeException("unknown result: "+result+" ("+
-                    result.getClass()+")");
+            throw new WMRuntimeException("unknown result: " + result + " (" + result.getClass() + ")");
         }
     }
-    
-    public FieldDefinition invokeService(String service, String operation,
-            Object[] parameters, HttpServletResponse response) throws Exception {
 
-        MockHttpServletRequest mhr = new MockHttpServletRequest(
-                AbstractController.METHOD_POST,
-                "/" + service + ".json");
+    public FieldDefinition invokeService(String service, String operation, Object[] parameters, HttpServletResponse response) throws Exception {
+
+        MockHttpServletRequest mhr = new MockHttpServletRequest(WebContentGenerator.METHOD_POST, "/" + service + ".json");
         mhr.setServerPort(8080);
-        //mhr.setServerPort(StudioConfiguration.TOMCAT_PORT_DEFAULT);
-        String content = createJSONRPCCall(operation, parameters,
-                applicationContext);
+        // mhr.setServerPort(StudioConfiguration.TOMCAT_PORT_DEFAULT);
+        String content = createJSONRPCCall(operation, parameters, this.applicationContext);
         mhr.setContent(content.getBytes());
         mhr.setSession(getHttpSession());
-        
+
         return invokeService(mhr, response);
     }
-    
-    public FieldDefinition invokeService(HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+
+    public FieldDefinition invokeService(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         FieldDefinition ret = null;
-        
+
         setRequestAttributes(request);
-        
-        HandlerMapping mapping = (HandlerMapping) applicationContext.getBean(URL_MAPPING_BEAN_ID);
+
+        HandlerMapping mapping = (HandlerMapping) this.applicationContext.getBean(URL_MAPPING_BEAN_ID);
         HandlerExecutionChain executionChain = mapping.getHandler(request);
         Object handler = executionChain.getHandler();
-        
+
         if (!(handler instanceof Controller)) {
-            fail("handler must be an instance of Controller; was: "+
-                    handler.getClass());
+            fail("handler must be an instance of Controller; was: " + handler.getClass());
         }
-        
+
         Controller control = (Controller) handler;
-        ModelAndView mav =  control.handleRequest(request, response);
+        ModelAndView mav = control.handleRequest(request, response);
         if (mav.getView() instanceof TypedView) {
             ret = ((TypedView) mav.getView()).getRootType();
         }
         mav.getView().render(mav.getModel(), request, response);
-        
+
         return ret;
     }
-    
-    
-    
-
 
     /**
      * ID accumulation, used in createJSONRPCCall().
      */
     private static int createJSONRPCCallId = 1;
-    
+
     /**
      * Create a JSONRPC formatted call (formatted as Dojo would do it).
      * 
-     * @param operation
-     *            The operation to call.
-     * @param parameters
-     *            The parameters for the operation.
+     * @param operation The operation to call.
+     * @param parameters The parameters for the operation.
      * @return The JSON-formatted String representing the call.
      */
-    public static String createJSONRPCCall(String operation,
-            Object[] parameters, ApplicationContext ac)
-            throws IOException, ClassNotFoundException {
+    public static String createJSONRPCCall(String operation, Object[] parameters, ApplicationContext ac) throws IOException, ClassNotFoundException {
 
         Map<String, Object> req = new HashMap<String, Object>(3);
         req.put(ServerConstants.METHOD, operation);
@@ -234,13 +213,10 @@ public abstract class SpringTestCase extends AbstractJUnit4SpringContextTests im
 
         JSONState js = ControllerBase.createJSONState();
 
-        FieldDefinition stringFD = ReflectTypeUtils.getFieldDefinition(
-                String.class, js.getTypeState(), false, null);
-        FieldDefinition intFD = ReflectTypeUtils.getFieldDefinition(
-                Integer.class, js.getTypeState(), false, null);
-        FieldDefinition objectArrFD = ReflectTypeUtils.getFieldDefinition(
-                ClassUtils.forName("java.lang.Object[]", null), js.getTypeState(),
-                false, null);
+        FieldDefinition stringFD = ReflectTypeUtils.getFieldDefinition(String.class, js.getTypeState(), false, null);
+        FieldDefinition intFD = ReflectTypeUtils.getFieldDefinition(Integer.class, js.getTypeState(), false, null);
+        FieldDefinition objectArrFD = ReflectTypeUtils.getFieldDefinition(ClassUtils.forName("java.lang.Object[]", null), js.getTypeState(), false,
+            null);
 
         ObjectReflectTypeDefinition ortd = new ObjectReflectTypeDefinition();
 
@@ -251,10 +227,10 @@ public abstract class SpringTestCase extends AbstractJUnit4SpringContextTests im
         FieldDefinition fd = new GenericFieldDefinition(ortd);
 
         String ret = JSONMarshaller.marshal(req, js, fd, false);
-        
+
         return ret;
     }
-    
+
     /**
      * Compares a list to a set.
      * 
@@ -262,12 +238,10 @@ public abstract class SpringTestCase extends AbstractJUnit4SpringContextTests im
      * @param actualSet
      */
     public static void assertCollectionContentEquals(List<?> expectedList, Set<?> actualSet) {
-    	Assert.assertEquals("list size: "+expectedList.size()+
-                " != set size "+actualSet.size(),
-                expectedList.size(), actualSet.size());
-        
+        Assert.assertEquals("list size: " + expectedList.size() + " != set size " + actualSet.size(), expectedList.size(), actualSet.size());
+
         int i = 0;
-        for(Object o: actualSet) {
+        for (Object o : actualSet) {
             Assert.assertEquals(expectedList.get(i), o);
             i++;
         }

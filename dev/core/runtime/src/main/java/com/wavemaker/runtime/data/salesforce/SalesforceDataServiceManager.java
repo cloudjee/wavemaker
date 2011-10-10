@@ -14,24 +14,24 @@
 
 package com.wavemaker.runtime.data.salesforce;
 
-import com.wavemaker.runtime.data.*;
-import com.wavemaker.runtime.data.util.DataServiceConstants;
-import com.wavemaker.runtime.data.task.DefaultRollback;
-import com.wavemaker.runtime.WMAppContext;
-import com.wavemaker.runtime.ws.salesforce.SalesforceSupport;
-import com.wavemaker.common.util.IOUtils;
-import com.wavemaker.common.CommonConstants;
+import java.util.Map;
+
+import org.apache.commons.logging.Log;
 import org.hibernate.Session;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.transaction.support.TransactionCallback;
-import org.apache.commons.logging.Log;
+import org.springframework.transaction.support.TransactionTemplate;
 
-import java.util.Map;
-import java.lang.reflect.Method;
-import java.io.InputStream;
-import java.io.IOException;
+import com.wavemaker.common.CommonConstants;
+import com.wavemaker.runtime.data.DataServiceLoggers;
+import com.wavemaker.runtime.data.DataServiceManager;
+import com.wavemaker.runtime.data.DataServiceMetaData;
+import com.wavemaker.runtime.data.Task;
+import com.wavemaker.runtime.data.TaskManager;
+import com.wavemaker.runtime.data.ThreadContext;
+import com.wavemaker.runtime.data.task.DefaultRollback;
+import com.wavemaker.runtime.ws.salesforce.SalesforceSupport;
 
 /**
  * @author slee
@@ -43,67 +43,65 @@ public class SalesforceDataServiceManager implements DataServiceManager {
 
     private final PlatformTransactionManager txMgr;
 
-    private final TaskManager taskMgr;
-
     private final DataServiceMetaData metaData;
 
-    public SalesforceDataServiceManager(PlatformTransactionManager txMgr, TaskManager taskMgr,
-                                        Map<String, String> properties) {
+    public SalesforceDataServiceManager(PlatformTransactionManager txMgr, TaskManager taskMgr, Map<String, String> properties) {
         this.txMgr = txMgr;
-        this.taskMgr = taskMgr;
-
         this.metaData = initMetaData(CommonConstants.SALESFORCE_SERVICE, properties);
     }
 
-    public void begin() {}
-
-    public void commit() {}
-
-    public void rollback() {}
-
-    public Session getSession() {return null;}
-
-    public DataServiceMetaData getMetaData() {
-        return metaData;
+    public void begin() {
     }
 
-    public void dispose() {}
+    public void commit() {
+    }
 
-    public Object invoke(Task task, Object... input) {return null;}
+    public void rollback() {
+    }
+
+    public Session getSession() {
+        return null;
+    }
+
+    public DataServiceMetaData getMetaData() {
+        return this.metaData;
+    }
+
+    public void dispose() {
+    }
+
+    public Object invoke(Task task, Object... input) {
+        return null;
+    }
 
     public Object invoke(Task task, Map<String, Class<?>> types, boolean named, Object... input) {
 
         boolean unset = false;
-        ThreadContext.Context ctx = ThreadContext.getContext(metaData.getName());
+        ThreadContext.Context ctx = ThreadContext.getContext(this.metaData.getName());
         if (ctx == null) {
-            ctx = new ThreadContext.Context(txMgr, metaData, null,
-                    null);
+            ctx = new ThreadContext.Context(this.txMgr, this.metaData, null, null);
             unset = true;
         }
         try {
             return runInTx(task, types, named, input);
         } finally {
             if (unset) {
-                ThreadContext.unsetContext(metaData.getName());
+                ThreadContext.unsetContext(this.metaData.getName());
             }
         }
     }
 
     private Object runInTx(Task task, Map<String, Class<?>> types, boolean named, Object... input) {
-        TransactionTemplate txTemplate = new TransactionTemplate(txMgr);
-        boolean rollbackOnly =
-            ((task instanceof DefaultRollback) && !isTxRunning());
+        TransactionTemplate txTemplate = new TransactionTemplate(this.txMgr);
+        boolean rollbackOnly = task instanceof DefaultRollback && !isTxRunning();
         RunInTx tx = new RunInTx(rollbackOnly, types, named, input);
         if (txLogger.isInfoEnabled()) {
             if (isTxRunning()) {
-                txLogger.info("tx is running executing \"" + task.getName()
-                        + "\" in current tx");
+                txLogger.info("tx is running executing \"" + task.getName() + "\" in current tx");
             } else {
-                txLogger.info("no tx running, wrapping execution of \""
-                        + task.getName() + "\" in tx");
+                txLogger.info("no tx running, wrapping execution of \"" + task.getName() + "\" in tx");
                 if (rollbackOnly) {
-                    txLogger.info("rollback enabled for \"" + task.getName()
-                            + "\"");
+                    txLogger.info("rollback enabled for \"" + task.getName() + "\"");
                 }
             }
         }
@@ -111,11 +109,9 @@ public class SalesforceDataServiceManager implements DataServiceManager {
         Object rtn = txTemplate.execute(tx);
         if (txLogger.isInfoEnabled()) {
             if (isTxRunning()) {
-                txLogger.info("tx is running after execution of \""
-                        + task.getName() + "\"");
+                txLogger.info("tx is running after execution of \"" + task.getName() + "\"");
             } else {
-                txLogger.info("tx is not running after execution of \""
-                        + task.getName() + "\"");
+                txLogger.info("tx is not running after execution of \"" + task.getName() + "\"");
             }
         }
 
@@ -125,8 +121,11 @@ public class SalesforceDataServiceManager implements DataServiceManager {
     private class RunInTx implements TransactionCallback {
 
         private final boolean rollbackOnly;
+
         private final Map<String, Class<?>> types;
+
         private final boolean named;
+
         private final Object[] input;
 
         RunInTx(boolean rollbackOnly, Map<String, Class<?>> types, boolean named, Object... input) {
@@ -137,38 +136,36 @@ public class SalesforceDataServiceManager implements DataServiceManager {
         }
 
         public Object doInTransaction(TransactionStatus status) {
-            if (rollbackOnly) {
+            if (this.rollbackOnly) {
                 status.setRollbackOnly();
             }
             Object rtn;
 
             SalesforceSupport sfs = new SalesforceSupport();
-            if (named)
-                rtn = sfs.runNamedQuery(types, input);
-            else
-                rtn = sfs.runQuery(types, input);
+            if (this.named) {
+                rtn = sfs.runNamedQuery(this.types, this.input);
+            } else {
+                rtn = sfs.runQuery(this.types, this.input);
+            }
 
             return rtn;
         }
     }
 
     private boolean isTxRunning() {
-        ThreadContext.Context ctx = ThreadContext.getContext(metaData.getName());
+        ThreadContext.Context ctx = ThreadContext.getContext(this.metaData.getName());
         if (ctx == null) {
             return false;
         }
-        return (ctx.getTransactionStatus() != null);
+        return ctx.getTransactionStatus() != null;
     }
 
-    private static DataServiceMetaData initMetaData(String configurationName,
-                                                    final Map<String, String> properties)
-        {
-            final DataServiceMetaData rtn =
-                new DataServiceMetaData_SF(configurationName, properties);
+    private static DataServiceMetaData initMetaData(String configurationName, final Map<String, String> properties) {
+        final DataServiceMetaData rtn = new DataServiceMetaData_SF(configurationName, properties);
 
-            rtn.init(configurationName);
+        rtn.init(configurationName);
 
-            return rtn;
-        }
+        return rtn;
+    }
 
 }

@@ -15,14 +15,16 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data.sample.sakila;
+
 // Generated Jan 9, 2008 4:21:59 PM by Hibernate Tools 3.2.0.CR1
 
-
-@SuppressWarnings({"serial"})
+@SuppressWarnings({ "serial" })
 public class CompositepkId implements java.io.Serializable {
 
     private String id;
+
     private String id2;
 
     public String getId() {
@@ -32,29 +34,29 @@ public class CompositepkId implements java.io.Serializable {
     public String getId2() {
         return this.id2;
     }
-    
+
     public void setId(String id) {
         this.id = id;
     }
 
     public void setId2(String id2) {
-	this.id2 = id2;
+        this.id2 = id2;
     }
 
+    @Override
     public boolean equals(Object other) {
-	if (!(other instanceof CompositepkId)) {
-	    return false;
-	}
+        if (!(other instanceof CompositepkId)) {
+            return false;
+        }
         return hashCode() == other.hashCode();
     }
 
+    @Override
     public int hashCode() {
-         int result = 17;
-         
-         result = 37 * result + ( getId() == null ? 0 : this.getId().hashCode() );
-         result = 37 * result + ( getId2() == null ? 0 : this.getId2().hashCode() );
-         return result;
+        int result = 17;
+
+        result = 37 * result + (getId() == null ? 0 : this.getId().hashCode());
+        result = 37 * result + (getId2() == null ? 0 : this.getId2().hashCode());
+        return result;
     }
 }
-
-

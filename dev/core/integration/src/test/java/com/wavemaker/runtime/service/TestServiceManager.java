@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.service;
 
 import static org.junit.Assert.assertEquals;
@@ -40,20 +41,25 @@ import com.wavemaker.runtime.test.TestSpringContextTestCase;
 
 /**
  * Test ServiceManager and TypeManager.
- *
+ * 
  * @author Matt Small
  * @version $Rev:22673 $ - $Date:2008-05-30 14:45:46 -0700 (Fri, 30 May 2008) $
- *
+ * 
  */
 public class TestServiceManager extends TestSpringContextTestCase {
 
     public static final String SAMPLE_PRODUCT_SERVICE_ID = "sampleProductService";
+
     public static final String LAZY_INIT_SERVICE_ID = "lazyInitTestBean";
+
     public static final String LIFECYCLE_TEST_SERVICE_ID = "lifecycleTestBean";
+
     public static final String COMPLEX_BEAN_SERVICE_ID = "complexReturnBean";
 
     private ServiceManager serviceManager;
+
     private TypeManager typeManager;
+
     private Set<ServiceWire> originalServiceWiresSet;
 
     public void addServiceId(String id) {
@@ -67,27 +73,20 @@ public class TestServiceManager extends TestSpringContextTestCase {
     @Before
     public void setUp() {
 
-        Object serviceMgrObj = getApplicationContext().getBean(
-                ServiceConstants.SERVICE_MANAGER_NAME);
-        assertTrue(ServiceConstants.SERVICE_MANAGER_NAME
-                + " must be instance of ServiceManager; type: "
-                + serviceMgrObj.getClass(),
-                (serviceMgrObj instanceof ServiceManager));
+        Object serviceMgrObj = getApplicationContext().getBean(ServiceConstants.SERVICE_MANAGER_NAME);
+        assertTrue(ServiceConstants.SERVICE_MANAGER_NAME + " must be instance of ServiceManager; type: " + serviceMgrObj.getClass(),
+            serviceMgrObj instanceof ServiceManager);
 
         this.serviceManager = (ServiceManager) serviceMgrObj;
 
-        Object typeMgrObj = getApplicationContext().getBean(
-                ServiceConstants.TYPE_MANAGER_NAME);
-        assertTrue(ServiceConstants.TYPE_MANAGER_NAME
-                + " must be instance of TypeManager; type: "
-                + typeMgrObj.getClass(),
-                (typeMgrObj instanceof TypeManager));
+        Object typeMgrObj = getApplicationContext().getBean(ServiceConstants.TYPE_MANAGER_NAME);
+        assertTrue(ServiceConstants.TYPE_MANAGER_NAME + " must be instance of TypeManager; type: " + typeMgrObj.getClass(),
+            typeMgrObj instanceof TypeManager);
 
         this.typeManager = (TypeManager) typeMgrObj;
 
-
         // strip out all services but the one we're looking for
-        originalServiceWiresSet = this.serviceManager.getServiceWires();
+        this.originalServiceWiresSet = this.serviceManager.getServiceWires();
         this.serviceManager.getServiceWires().clear();
         addServiceId(SAMPLE_PRODUCT_SERVICE_ID);
         addServiceId(LIFECYCLE_TEST_SERVICE_ID);
@@ -101,7 +100,7 @@ public class TestServiceManager extends TestSpringContextTestCase {
     @Override
     public void tearDown() throws Exception {
         this.serviceManager.getServiceWires().clear();
-        for (ServiceWire sw: originalServiceWiresSet) {
+        for (ServiceWire sw : this.originalServiceWiresSet) {
             this.serviceManager.addServiceWire(sw);
         }
     }
@@ -109,56 +108,59 @@ public class TestServiceManager extends TestSpringContextTestCase {
     // -------------------------------------------------------------------------
     // ServiceManager tests
     // -------------------------------------------------------------------------
-    @Test public void testGetServiceWire() {
-        
-        ServiceWire sw = serviceManager.getServiceWire(SAMPLE_PRODUCT_SERVICE_ID);
+    @Test
+    public void testGetServiceWire() {
+
+        ServiceWire sw = this.serviceManager.getServiceWire(SAMPLE_PRODUCT_SERVICE_ID);
         assertNotNull(sw);
         assertEquals(SAMPLE_PRODUCT_SERVICE_ID, sw.getServiceId());
         assertEquals(JavaServiceType.TYPE_NAME, sw.getServiceType().getTypeName());
     }
-    
+
     @SuppressWarnings("deprecation")
-    @Test public void testUnknownService() {
-        
+    @Test
+    public void testUnknownService() {
+
         try {
-            serviceManager.getService("foo");
+            this.serviceManager.getService("foo");
             fail("expected exception");
         } catch (WMRuntimeException ex) {
             assertEquals(MessageResource.UNKNOWN_SERVICE.getId(), ex.getMessageId());
         }
-        
+
         try {
-            serviceManager.getService(this.getClass());
+            this.serviceManager.getService(this.getClass());
             fail("expected exception");
         } catch (WMRuntimeException e) {
-            assertEquals(e.getMessage(),
-                    MessageResource.UNKNOWN_SERVICE_TYPE.getId(), e.getMessageId());
+            assertEquals(e.getMessage(), MessageResource.UNKNOWN_SERVICE_TYPE.getId(), e.getMessageId());
         }
-        
-        assertNull(serviceManager.getServiceWire("foo"));
+
+        assertNull(this.serviceManager.getServiceWire("foo"));
     }
-    
+
     @SuppressWarnings("deprecation")
-    @Test public void testDuplicateClasses() {
-        
+    @Test
+    public void testDuplicateClasses() {
+
         try {
-            serviceManager.getService(DuplicateServiceClassBean.class);
+            this.serviceManager.getService(DuplicateServiceClassBean.class);
             fail("expected exception");
         } catch (WMRuntimeException e) {
-            assertEquals(e.getMessage(),
-                    MessageResource.MULTIPLE_SERVICE_BEANS.getId(), e.getMessageId());
+            assertEquals(e.getMessage(), MessageResource.MULTIPLE_SERVICE_BEANS.getId(), e.getMessageId());
         }
     }
-    
+
     @SuppressWarnings("deprecation")
-    @Test public void testFauxDuplicateClasses() {
-        Object o = serviceManager.getService(FauxDuplicateServiceClassBean.class);
+    @Test
+    public void testFauxDuplicateClasses() {
+        Object o = this.serviceManager.getService(FauxDuplicateServiceClassBean.class);
         assertTrue(o instanceof FauxDuplicateServiceClassBean);
     }
 
     @SuppressWarnings("deprecation")
     @DirtiesContext
-    @Test public void testLazyInit() {
+    @Test
+    public void testLazyInit() {
 
         assertFalse(LazyInitTestBeanLoaded);
 
@@ -171,58 +173,55 @@ public class TestServiceManager extends TestSpringContextTestCase {
         Object o = this.serviceManager.getService(LAZY_INIT_SERVICE_ID);
         assertNotNull(o);
         assertTrue(o instanceof LazyInitTestBean);
-        
+
         assertTrue(LazyInitTestBeanLoaded);
     }
-
 
     // -------------------------------------------------------------------------
     // TypeManager tests
     // -------------------------------------------------------------------------
-    @Test public void testGetTypes() {
+    @Test
+    public void testGetTypes() {
 
-        List<String> types = typeManager.getTypes(COMPLEX_BEAN_SERVICE_ID);
+        List<String> types = this.typeManager.getTypes(COMPLEX_BEAN_SERVICE_ID);
         assertEquals(1, types.size());
-        assertEquals(
-                "com.wavemaker.runtime.server.testspring.ComplexReturnBean",
-                types.get(0));
+        assertEquals("com.wavemaker.runtime.server.testspring.ComplexReturnBean", types.get(0));
     }
 
     @SuppressWarnings("deprecation")
-    @Test public void testGetServiceForTypes() throws TypeNotFoundException {
+    @Test
+    public void testGetServiceForTypes() throws TypeNotFoundException {
 
-        Object expectedService = serviceManager.getService(COMPLEX_BEAN_SERVICE_ID);
+        Object expectedService = this.serviceManager.getService(COMPLEX_BEAN_SERVICE_ID);
 
-        List<String> types = typeManager.getTypes(COMPLEX_BEAN_SERVICE_ID);
+        List<String> types = this.typeManager.getTypes(COMPLEX_BEAN_SERVICE_ID);
         assertEquals(1, types.size());
         String type = types.get(0);
 
-        Object actualService = typeManager.getServiceForType(type);
+        Object actualService = this.typeManager.getServiceForType(type);
         assertEquals(expectedService, actualService);
 
-        String actualServiceId = typeManager.getServiceIdForType(type);
+        String actualServiceId = this.typeManager.getServiceIdForType(type);
         assertEquals(COMPLEX_BEAN_SERVICE_ID, actualServiceId);
     }
-
-
 
     // -------------------------------------------------------------------------
     // classes
     // -------------------------------------------------------------------------
     public static class DuplicateServiceClassBean {
-        
+
     }
-    
+
     public static class FauxDuplicateServiceClassBean {
-        
+
     }
-    
+
     public static class LazyInitTestBean {
 
         static {
             TestServiceManager.LazyInitTestBeanLoaded = true;
         }
-        
+
         public LazyInitTestBean() {
 
             if (!afterSpringInit) {
@@ -232,7 +231,7 @@ public class TestServiceManager extends TestSpringContextTestCase {
 
         public static boolean afterSpringInit = false;
     }
-    
+
     /**
      * Used to tell if the LazyInitTestBean has been loaded yet.
      */

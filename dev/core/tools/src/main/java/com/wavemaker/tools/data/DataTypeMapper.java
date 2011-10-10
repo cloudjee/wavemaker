@@ -34,11 +34,11 @@ public class DataTypeMapper {
     public static Class<?> getJavaType(Type type) {
         return HB_TYPE_TO_JAVA_TYPE.get(type);
     }
-    
+
     public static Class<?> getJavaType(String type) {
         return HB_STR_TYPE_TO_JAVA_TYPE.get(type);
     }
-    
+
     public static String getHibernateType(String type) {
         Type t = JAVA_TYPE_TO_HB_TYPE.get(type);
         if (t == null) {
@@ -46,7 +46,7 @@ public class DataTypeMapper {
         }
         return t.getName();
     }
-    
+
     public static String getFQHibernateType(String type) {
         Type t = JAVA_TYPE_TO_HB_TYPE.get(type);
         if (t == null) {
@@ -55,8 +55,7 @@ public class DataTypeMapper {
         return t.getName();
     }
 
-    private static final Collection<Type> HB_TYPES = 
-	new LinkedHashSet<Type>(31);
+    private static final Collection<Type> HB_TYPES = new LinkedHashSet<Type>(31);
     static {
         HB_TYPES.add(Hibernate.BIG_DECIMAL);
         HB_TYPES.add(Hibernate.BIG_INTEGER);
@@ -90,37 +89,33 @@ public class DataTypeMapper {
         HB_TYPES.add(Hibernate.WRAPPER_BINARY);
         HB_TYPES.add(Hibernate.YES_NO);
     }
-    
-    private static final Map<String, Type> JAVA_TYPE_TO_HB_TYPE = 
-	new HashMap<String, Type>(HB_TYPES.size() + 2);
-    static {
-	for (Type t : HB_TYPES) {
-	    
-	    // don't map java boolean type to Hibernate's 
-	    // TRUE_FALSE/YES_NO types by default
-	    if (t == Hibernate.TRUE_FALSE || t == Hibernate.YES_NO) {
-	        continue;
-	    }
-	    
-	    JAVA_TYPE_TO_HB_TYPE.put(t.getReturnedClass().getName(), t);
-	}
 
-	JAVA_TYPE_TO_HB_TYPE.put("java.lang.String", Hibernate.STRING);
-        JAVA_TYPE_TO_HB_TYPE.put("int", Hibernate.INTEGER);
-        JAVA_TYPE_TO_HB_TYPE.put(java.sql.Date.class.getName(), 
-				 Hibernate.DATE);        
-    }
-        
-    private static final Map<Type, Class<?>> HB_TYPE_TO_JAVA_TYPE = 
-	new HashMap<Type, Class<?>>(HB_TYPES.size());
+    private static final Map<String, Type> JAVA_TYPE_TO_HB_TYPE = new HashMap<String, Type>(HB_TYPES.size() + 2);
     static {
-	for (Type t : HB_TYPES) {
-	    HB_TYPE_TO_JAVA_TYPE.put(t, t.getReturnedClass());
-	}
+        for (Type t : HB_TYPES) {
+
+            // don't map java boolean type to Hibernate's
+            // TRUE_FALSE/YES_NO types by default
+            if (t == Hibernate.TRUE_FALSE || t == Hibernate.YES_NO) {
+                continue;
+            }
+
+            JAVA_TYPE_TO_HB_TYPE.put(t.getReturnedClass().getName(), t);
+        }
+
+        JAVA_TYPE_TO_HB_TYPE.put("java.lang.String", Hibernate.STRING);
+        JAVA_TYPE_TO_HB_TYPE.put("int", Hibernate.INTEGER);
+        JAVA_TYPE_TO_HB_TYPE.put(java.sql.Date.class.getName(), Hibernate.DATE);
     }
-    
-    private static final Map<String, Class<?>> HB_STR_TYPE_TO_JAVA_TYPE = 
-	new HashMap<String, Class<?>>(HB_TYPE_TO_JAVA_TYPE.size());
+
+    private static final Map<Type, Class<?>> HB_TYPE_TO_JAVA_TYPE = new HashMap<Type, Class<?>>(HB_TYPES.size());
+    static {
+        for (Type t : HB_TYPES) {
+            HB_TYPE_TO_JAVA_TYPE.put(t, t.getReturnedClass());
+        }
+    }
+
+    private static final Map<String, Class<?>> HB_STR_TYPE_TO_JAVA_TYPE = new HashMap<String, Class<?>>(HB_TYPE_TO_JAVA_TYPE.size());
     static {
         for (Map.Entry<Type, Class<?>> e : HB_TYPE_TO_JAVA_TYPE.entrySet()) {
             HB_STR_TYPE_TO_JAVA_TYPE.put(e.getKey().getName(), e.getValue());

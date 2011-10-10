@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.server.testspring;
 
 import java.util.Map;
@@ -24,7 +25,7 @@ public class BeanMap {
     public Map<String, Object> mapping = null;
 
     public Map<String, Object> getMapping() {
-        return mapping;
+        return this.mapping;
     }
 
     public void setMapping(Map<String, Object> mapping) {

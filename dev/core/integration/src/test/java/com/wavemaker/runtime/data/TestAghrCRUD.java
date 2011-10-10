@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data;
 
 import static org.junit.Assert.assertTrue;
@@ -43,64 +44,58 @@ import com.wavemaker.runtime.service.reflect.ReflectServiceWire;
  */
 public class TestAghrCRUD extends RuntimeDataSpringContextTestCase {
 
-	@Test
+    @Test
     public void testGetAllEmployees() {
 
         Aghr aghr = getAghr();
 
         aghr.getDataServiceManager().begin();
-        
+
         Session session = aghr.getDataServiceManager().getSession();
         assertTrue("Session cannot be null", session != null);
 
-        Integer numEmployees = (Integer) session.createCriteria(Employee.class)
-                .setProjection(Projections.rowCount()).uniqueResult();
+        Integer numEmployees = (Integer) session.createCriteria(Employee.class).setProjection(Projections.rowCount()).uniqueResult();
 
         aghr.getDataServiceManager().rollback();
 
         // get all employees using service class list operation
-       List<Employee> employees = aghr.getEmployeeList(new Employee(),
-               new QueryOptions());
+        List<Employee> employees = aghr.getEmployeeList(new Employee(), new QueryOptions());
 
-       assertTrue(employees.size() == numEmployees.intValue());
+        assertTrue(employees.size() == numEmployees.intValue());
     }
 
-	@Test
+    @Test
     public void testCount() {
-        assertTrue(getAghr().getEmployeeCount(
-            new Employee(), new QueryOptions()).equals(Integer.valueOf("4")));
+        assertTrue(getAghr().getEmployeeCount(new Employee(), new QueryOptions()).equals(Integer.valueOf("4")));
     }
 
-	@Test
+    @Test
     public void testPageCompkey() {
         QueryOptions options = new QueryOptions(1, 0);
         List<Compkey> l = getAghr().getCompkeyList(new Compkey(), options);
         assertTrue(l.get(0).getName().equals("name1"));
     }
 
-	@Test
+    @Test
     public void testGetCompKeyById() {
-        Compkey k = getAghr().getCompkeyById(new CompkeyId((short) 0,
-                (short) 1));
+        Compkey k = getAghr().getCompkeyById(new CompkeyId((short) 0, (short) 1));
         assertTrue(k.getName().equals("name2"));
     }
 
     // MAV-2065
-	@Test
+    @Test
     public void testInsertDuplicatePK() {
         Aghr aghr = getAghr();
         Person p = new Person();
         p.setId(Short.valueOf("1"));
         p.setLastName("Fu");
-        ThreadContext.setPreProcessorTask(DefaultTaskManager.getInstance()
-                                          .getPreProcessorRouterTask());
+        ThreadContext.setPreProcessorTask(DefaultTaskManager.getInstance().getPreProcessorRouterTask());
         try {
             aghr.insertPerson(p);
 
             try {
                 aghr.insertPerson(p);
-                fail("Second insert should have caused a " + 
-                     "\"key already exists\" exception");
+                fail("Second insert should have caused a " + "\"key already exists\" exception");
             } catch (RuntimeException ex) {
                 // ok
             }
@@ -109,16 +104,15 @@ public class TestAghrCRUD extends RuntimeDataSpringContextTestCase {
             ThreadContext.unsetPreProcessorTask();
             try {
                 aghr.deletePerson(p);
-            } catch (RuntimeException ignore) {}
+            } catch (RuntimeException ignore) {
+            }
         }
     }
 
     private Aghr getAghr() {
         ApplicationContext ctx = getApplicationContext();
-        ServiceManager serviceMgr = (ServiceManager) ctx
-                .getBean(ServiceConstants.SERVICE_MANAGER_NAME);
+        ServiceManager serviceMgr = (ServiceManager) ctx.getBean(ServiceConstants.SERVICE_MANAGER_NAME);
 
-        return (Aghr) ((ReflectServiceWire) serviceMgr
-                .getServiceWire(DataServiceTestConstants.AG_HR_SERVICE_ID)).getServiceBean();
+        return (Aghr) ((ReflectServiceWire) serviceMgr.getServiceWire(DataServiceTestConstants.AG_HR_SERVICE_ID)).getServiceBean();
     }
 }

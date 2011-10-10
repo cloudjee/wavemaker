@@ -14,6 +14,8 @@
 
 package com.wavemaker.runtime.data.salesforce;
 
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -23,9 +25,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-
 
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
@@ -33,10 +32,18 @@ import org.hibernate.engine.NamedQueryDefinition;
 import org.hibernate.mapping.Property;
 
 import com.wavemaker.common.MessageResource;
-import com.wavemaker.common.util.*;
-import com.wavemaker.runtime.data.util.DataServiceConstants;
+import com.wavemaker.common.util.ClassLoaderUtils;
+import com.wavemaker.common.util.StringUtils;
+import com.wavemaker.common.util.Tuple;
+import com.wavemaker.runtime.data.DataOperationFactory;
+import com.wavemaker.runtime.data.DataServiceMetaData;
+import com.wavemaker.runtime.data.DataServiceOperation;
+import com.wavemaker.runtime.data.DataServiceOperationManager;
+import com.wavemaker.runtime.data.DataServiceRuntimeException;
+import com.wavemaker.runtime.data.Input;
+import com.wavemaker.runtime.data.QueryInfo;
 import com.wavemaker.runtime.data.parser.HbmQueryParser;
-import com.wavemaker.runtime.data.*;
+import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.ws.salesforce.SalesforceSupport;
 
 /**
@@ -46,13 +53,12 @@ import com.wavemaker.runtime.ws.salesforce.SalesforceSupport;
  */
 public class DataServiceMetaData_SF implements DataServiceMetaData {
 
-    //private final Configuration cfg;
+    // private final Configuration cfg;
 
     private DataServiceOperationManager operationManager = null;
 
     // entity classes
-    private final List<Class<?>> entityClasses = 
-        new ArrayList<Class<?>>();
+    private final List<Class<?>> entityClasses = new ArrayList<Class<?>>();
 
     // Entity class names in alphabetical order
     private final SortedSet<String> entityClassNames = new TreeSet<String>();
@@ -75,55 +81,53 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
     private String serviceClassName = null;
 
     public DataServiceMetaData_SF(String configurationName
-                                  //Configuration cfg
-                                    ) {
+    // Configuration cfg
+    ) {
         this(configurationName, Collections.<String, String> emptyMap());
     }
 
     public DataServiceMetaData_SF(String configurationName,
-                               //Configuration cfg,
-                               Map<String, String> properties) 
-    {
+    // Configuration cfg,
+        Map<String, String> properties) {
         this.configurationName = configurationName;
-        //this.cfg = cfg;
+        // this.cfg = cfg;
 
-        String s = 
-            properties.get(DataServiceConstants.REFRESH_ENTITIES_PROPERTY);
+        String s = properties.get(DataServiceConstants.REFRESH_ENTITIES_PROPERTY);
 
         if (s == null) {
-            refreshEntities = Collections.emptySet();
+            this.refreshEntities = Collections.emptySet();
         } else {
-            refreshEntities = new HashSet<String>(StringUtils.split(s));
+            this.refreshEntities = new HashSet<String>(StringUtils.split(s));
         }
 
         initMappingData();
 
     }
 
-
-    public void init(Session session, boolean useIndividualCRUDOperations) {}
+    public void init(Session session, boolean useIndividualCRUDOperations) {
+    }
 
     /**
      * Must be called before calling any other methods on this instance.
      * 
-     * @param configurationName
-     *                A valid configuration name.
+     * @param configurationName A valid configuration name.
      */
     public void init(String configurationName) {
 
         DataOperationFactory fac = initFactory(configurationName);
 
-        operationManager = new DataServiceOperationManager(fac, false);
+        this.operationManager = new DataServiceOperationManager(fac, false);
     }
 
-    public void dispose() {}
+    public void dispose() {
+    }
 
     public String getName() {
-        return configurationName;
+        return this.configurationName;
     }
 
     public String getServiceClassName() {
-        return serviceClassName;
+        return this.serviceClassName;
     }
 
     public void setHelperClassNames(Collection<String> helperClassNames) {
@@ -131,7 +135,7 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
     }
 
     public Collection<String> getHelperClassNames() {
-        return helperClassNames;
+        return this.helperClassNames;
     }
 
     public void setServiceClassName(String serviceClassName) {
@@ -145,13 +149,12 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
     private void initMappingData() {
     }
 
-
     public Collection<String> getEntityClassNames() {
-        return entityClassNames;
+        return this.entityClassNames;
     }
 
     public List<Class<?>> getEntityClasses() {
-        return entityClasses;
+        return this.entityClasses;
     }
 
     public boolean refreshEntity(Class<?> c) {
@@ -160,7 +163,7 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
             throw new DataServiceRuntimeException(c + " is not an entity");
         }
 
-        return refreshEntities.contains(c.getName());
+        return this.refreshEntities.contains(c.getName());
     }
 
     public String getIdPropertyName(Class<?> c) {
@@ -193,7 +196,7 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
     }
 
     public Collection<String> getOperationNames() {
-        return operationManager.getOperationNames();
+        return this.operationManager.getOperationNames();
     }
 
     public NamedQueryDefinition getQueryDefinition(String queryName) {
@@ -202,13 +205,10 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
     }
 
     public DataServiceOperation getOperation(String operationName) {
-        DataServiceOperation rtn = operationManager.getOperation(operationName);
+        DataServiceOperation rtn = this.operationManager.getOperation(operationName);
         if (rtn == null) {
-            throw new DataServiceRuntimeException(
-                MessageResource.OPERATION_NOT_FOUND,
-                configurationName, 
-                operationName, 
-                operationManager.getOperationNames());
+            throw new DataServiceRuntimeException(MessageResource.OPERATION_NOT_FOUND, this.configurationName, operationName,
+                this.operationManager.getOperationNames());
         }
         return rtn;
     }
@@ -216,38 +216,32 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
     private DataOperationFactory initFactory(String configurationName) {
         return new DataOperationFactory() {
 
-            // this is magic, and has to match the name of the
-            // generated example query(ies).
-            private static final String GENERATED_QUERY_NAME =
-                "ExampleHQLQuery1";
-
             private static final String qfname = "com/sforce/queries/sforce-queries.xml";
+
             private HbmQueryParser p;
+
             private Map<String, QueryInfo> queries = null;
 
             {
                 InputStream is = ClassLoaderUtils.getResourceAsStream(qfname);
-                p = new HbmQueryParser(new InputStreamReader(is));
+                this.p = new HbmQueryParser(new InputStreamReader(is));
 
-                queries = p.getQueries();
+                this.queries = this.p.getQueries();
             }
 
             public Collection<String> getEntityClassNames() {
-                return entityClassNames;
+                return DataServiceMetaData_SF.this.entityClassNames;
             }
 
-            public List<Tuple.Three<String, String, Boolean>> getQueryInputs(
-                    String queryName) {
+            public List<Tuple.Three<String, String, Boolean>> getQueryInputs(String queryName) {
 
-                List<Tuple.Three<String, String, Boolean>> rtn =
-                    new ArrayList<Tuple.Three<String, String, Boolean>>();
+                List<Tuple.Three<String, String, Boolean>> rtn = new ArrayList<Tuple.Three<String, String, Boolean>>();
 
-                Input[] inputs = queries.get(queryName).getInputs();
+                Input[] inputs = this.queries.get(queryName).getInputs();
 
                 for (Input input : inputs) {
-                    Tuple.Three<String, String, Boolean> t =
-                            new Tuple.Three<String, String, Boolean>(input.getParamName(), input.getParamType(),
-                                    input.getList());
+                    Tuple.Three<String, String, Boolean> t = new Tuple.Three<String, String, Boolean>(input.getParamName(), input.getParamType(),
+                        input.getList());
                     rtn.add(t);
                 }
 
@@ -259,23 +253,23 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
 
                 Collection<String> rtn = new HashSet<String>();
 
-                rtn.addAll(queries.keySet());
+                rtn.addAll(this.queries.keySet());
 
                 return rtn;
             }
 
-            public List<String> getQueryReturnNames(String operationName,
-                    String queryName) {
+            public List<String> getQueryReturnNames(String operationName, String queryName) {
 
-                String query = queries.get(queryName).getQuery();
+                String query = this.queries.get(queryName).getQuery();
 
                 List<String> fldList;
 
                 SalesforceSupport sfs = new SalesforceSupport();
                 fldList = sfs.getColumns(query);
 
-                if (fldList == null || fldList.size() == 0)
+                if (fldList == null || fldList.size() == 0) {
                     return Collections.emptyList();
+                }
 
                 List<String> rtn = new ArrayList<String>();
                 int num = 0;
@@ -288,15 +282,13 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
                 return rtn;
             }
 
-            public boolean requiresResultWrapper(String operationName,
-                    String queryName) {
+            public boolean requiresResultWrapper(String operationName, String queryName) {
                 return true;
             }
 
-            public List<String> getQueryReturnTypes(String operationName,
-                    String queryName) {
+            public List<String> getQueryReturnTypes(String operationName, String queryName) {
 
-                String query = queries.get(queryName).getQuery();
+                String query = this.queries.get(queryName).getQuery();
 
                 List<String> types;
 
@@ -311,19 +303,16 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
                 return types;
             }
 
-            public boolean queryReturnsSingleResult(String operationName,
-                    String queryName) {
+            public boolean queryReturnsSingleResult(String operationName, String queryName) {
 
                 // hack for generated queries - only required for initial
                 // ServiceDefinition instance that is used to add the service
-                /*if (queryName.equals(GENERATED_QUERY_NAME)) {
-                    return true;
-                }
-
-                // to make existing tests happy
-                if (queryName.startsWith("get") && queryName.endsWith(("ById"))) {
-                    return true;
-                }*/
+                /*
+                 * if (queryName.equals(GENERATED_QUERY_NAME)) { return true; }
+                 * 
+                 * // to make existing tests happy if (queryName.startsWith("get") && queryName.endsWith(("ById"))) {
+                 * return true; }
+                 */
 
                 return false;
             }

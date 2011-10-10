@@ -11,27 +11,28 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import com.wavemaker.runtime.ws.jaxb.DateXmlAdapter;
 
-
 /**
- * <p>Java class for GetUpdatedResult complex type.
+ * <p>
+ * Java class for GetUpdatedResult complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="GetUpdatedResult">
@@ -50,19 +51,17 @@ import com.wavemaker.runtime.ws.jaxb.DateXmlAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "GetUpdatedResult", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "ids",
-    "latestDateCovered",
-    "sforceReserved"
-})
+@XmlType(name = "GetUpdatedResult", namespace = "urn:partner.soap.sforce.com", propOrder = { "ids", "latestDateCovered", "sforceReserved" })
 public class GetUpdatedResultType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected List<String> ids;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, type = String.class)
     @XmlJavaTypeAdapter(DateXmlAdapter.class)
     @XmlSchemaType(name = "dateTime")
     protected Date latestDateCovered;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected String sforceReserved;
 
@@ -70,27 +69,26 @@ public class GetUpdatedResultType {
      * Gets the value of the ids property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the ids property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the ids property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getIds().add(newItem);
+     * getIds().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link String }
+     * Objects of the following type(s) are allowed in the list {@link String }
      * 
      * 
      */
     public List<String> getIds() {
-        if (ids == null) {
-            ids = new ArrayList<String>();
+        if (this.ids == null) {
+            this.ids = new ArrayList<String>();
         }
         return this.ids;
     }
@@ -98,22 +96,18 @@ public class GetUpdatedResultType {
     /**
      * Gets the value of the latestDateCovered property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public Date getLatestDateCovered() {
-        return latestDateCovered;
+        return this.latestDateCovered;
     }
 
     /**
      * Sets the value of the latestDateCovered property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setLatestDateCovered(Date value) {
         this.latestDateCovered = value;
@@ -122,22 +116,18 @@ public class GetUpdatedResultType {
     /**
      * Gets the value of the sforceReserved property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getSforceReserved() {
-        return sforceReserved;
+        return this.sforceReserved;
     }
 
     /**
      * Sets the value of the sforceReserved property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setSforceReserved(String value) {
         this.sforceReserved = value;
@@ -146,10 +136,8 @@ public class GetUpdatedResultType {
     /**
      * Sets the value of the ids property.
      * 
-     * @param ids
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param ids allowed object is {@link String }
+     * 
      */
     public void setIds(List<String> ids) {
         this.ids = ids;

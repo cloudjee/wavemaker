@@ -39,11 +39,10 @@ public class MergeForUpdateTask extends BaseTask implements Task {
         DataServiceMetaData metaData = getMetaData(dbName);
 
         for (int i = 0; i < input.length; i++) {
-            
-            rtn[i] = SystemUtils.serverMergeForUpdate(input[i], session,
-                        metaData);
+
+            rtn[i] = SystemUtils.serverMergeForUpdate(input[i], session, metaData);
         }
-        
+
         return rtn;
 
     }

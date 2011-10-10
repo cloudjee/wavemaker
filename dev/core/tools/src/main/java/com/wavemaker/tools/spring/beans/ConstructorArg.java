@@ -19,7 +19,6 @@
 // Generated on: 2008.02.26 at 04:39:33 PM PST 
 //
 
-
 package com.wavemaker.tools.spring.beans;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -30,11 +29,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
+ * <p>
+ * Java class for anonymous complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType>
@@ -67,65 +67,63 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "description",
-    "any",
-    "props",
-    "map",
-    "set",
-    "list",
-    "_null",
-    "valueElement",
-    "idref",
-    "refElement",
-    "bean"
-})
+@XmlType(name = "", propOrder = { "description", "any", "props", "map", "set", "list", "_null", "valueElement", "idref", "refElement", "bean" })
 @XmlRootElement(name = "constructor-arg")
 public class ConstructorArg {
 
     protected Description description;
+
     @XmlAnyElement(lax = true)
     protected Object any;
+
     protected Props props;
+
     protected Map map;
+
     protected Set set;
+
     protected List list;
+
     @XmlElement(name = "null")
     protected Null _null;
+
     @XmlElement(name = "value")
     protected Value valueElement;
+
     protected Idref idref;
+
     @XmlElement(name = "ref")
     protected Ref refElement;
+
     protected Bean bean;
+
     @XmlAttribute
     protected String index;
+
     @XmlAttribute
     protected String type;
+
     @XmlAttribute
     protected String ref;
+
     @XmlAttribute
     protected String value;
 
     /**
      * Gets the value of the description property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Description }
-     *     
+     * @return possible object is {@link Description }
+     * 
      */
     public Description getDescription() {
-        return description;
+        return this.description;
     }
 
     /**
      * Sets the value of the description property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Description }
-     *     
+     * @param value allowed object is {@link Description }
+     * 
      */
     public void setDescription(Description value) {
         this.description = value;
@@ -134,22 +132,18 @@ public class ConstructorArg {
     /**
      * Gets the value of the any property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Object }
-     *     
+     * @return possible object is {@link Object }
+     * 
      */
     public Object getAny() {
-        return any;
+        return this.any;
     }
 
     /**
      * Sets the value of the any property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Object }
-     *     
+     * @param value allowed object is {@link Object }
+     * 
      */
     public void setAny(Object value) {
         this.any = value;
@@ -158,22 +152,18 @@ public class ConstructorArg {
     /**
      * Gets the value of the props property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Props }
-     *     
+     * @return possible object is {@link Props }
+     * 
      */
     public Props getProps() {
-        return props;
+        return this.props;
     }
 
     /**
      * Sets the value of the props property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Props }
-     *     
+     * @param value allowed object is {@link Props }
+     * 
      */
     public void setProps(Props value) {
         this.props = value;
@@ -182,22 +172,18 @@ public class ConstructorArg {
     /**
      * Gets the value of the map property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Map }
-     *     
+     * @return possible object is {@link Map }
+     * 
      */
     public Map getMap() {
-        return map;
+        return this.map;
     }
 
     /**
      * Sets the value of the map property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Map }
-     *     
+     * @param value allowed object is {@link Map }
+     * 
      */
     public void setMap(Map value) {
         this.map = value;
@@ -206,22 +192,18 @@ public class ConstructorArg {
     /**
      * Gets the value of the set property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Set }
-     *     
+     * @return possible object is {@link Set }
+     * 
      */
     public Set getSet() {
-        return set;
+        return this.set;
     }
 
     /**
      * Sets the value of the set property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Set }
-     *     
+     * @param value allowed object is {@link Set }
+     * 
      */
     public void setSet(Set value) {
         this.set = value;
@@ -230,22 +212,18 @@ public class ConstructorArg {
     /**
      * Gets the value of the list property.
      * 
-     * @return
-     *     possible object is
-     *     {@link List }
-     *     
+     * @return possible object is {@link List }
+     * 
      */
     public List getList() {
-        return list;
+        return this.list;
     }
 
     /**
      * Sets the value of the list property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link List }
-     *     
+     * @param value allowed object is {@link List }
+     * 
      */
     public void setList(List value) {
         this.list = value;
@@ -254,22 +232,18 @@ public class ConstructorArg {
     /**
      * Gets the value of the null property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Null }
-     *     
+     * @return possible object is {@link Null }
+     * 
      */
     public Null getNull() {
-        return _null;
+        return this._null;
     }
 
     /**
      * Sets the value of the null property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Null }
-     *     
+     * @param value allowed object is {@link Null }
+     * 
      */
     public void setNull(Null value) {
         this._null = value;
@@ -278,22 +252,18 @@ public class ConstructorArg {
     /**
      * Gets the value of the valueElement property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Value }
-     *     
+     * @return possible object is {@link Value }
+     * 
      */
     public Value getValueElement() {
-        return valueElement;
+        return this.valueElement;
     }
 
     /**
      * Sets the value of the valueElement property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Value }
-     *     
+     * @param value allowed object is {@link Value }
+     * 
      */
     public void setValueElement(Value value) {
         this.valueElement = value;
@@ -302,22 +272,18 @@ public class ConstructorArg {
     /**
      * Gets the value of the idref property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Idref }
-     *     
+     * @return possible object is {@link Idref }
+     * 
      */
     public Idref getIdref() {
-        return idref;
+        return this.idref;
     }
 
     /**
      * Sets the value of the idref property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Idref }
-     *     
+     * @param value allowed object is {@link Idref }
+     * 
      */
     public void setIdref(Idref value) {
         this.idref = value;
@@ -326,22 +292,18 @@ public class ConstructorArg {
     /**
      * Gets the value of the refElement property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Ref }
-     *     
+     * @return possible object is {@link Ref }
+     * 
      */
     public Ref getRefElement() {
-        return refElement;
+        return this.refElement;
     }
 
     /**
      * Sets the value of the refElement property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Ref }
-     *     
+     * @param value allowed object is {@link Ref }
+     * 
      */
     public void setRefElement(Ref value) {
         this.refElement = value;
@@ -350,22 +312,18 @@ public class ConstructorArg {
     /**
      * Gets the value of the bean property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Bean }
-     *     
+     * @return possible object is {@link Bean }
+     * 
      */
     public Bean getBean() {
-        return bean;
+        return this.bean;
     }
 
     /**
      * Sets the value of the bean property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Bean }
-     *     
+     * @param value allowed object is {@link Bean }
+     * 
      */
     public void setBean(Bean value) {
         this.bean = value;
@@ -374,22 +332,18 @@ public class ConstructorArg {
     /**
      * Gets the value of the index property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getIndex() {
-        return index;
+        return this.index;
     }
 
     /**
      * Sets the value of the index property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setIndex(String value) {
         this.index = value;
@@ -398,22 +352,18 @@ public class ConstructorArg {
     /**
      * Gets the value of the type property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getType() {
-        return type;
+        return this.type;
     }
 
     /**
      * Sets the value of the type property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setType(String value) {
         this.type = value;
@@ -422,22 +372,18 @@ public class ConstructorArg {
     /**
      * Gets the value of the ref property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getRef() {
-        return ref;
+        return this.ref;
     }
 
     /**
      * Sets the value of the ref property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setRef(String value) {
         this.ref = value;
@@ -446,22 +392,18 @@ public class ConstructorArg {
     /**
      * Gets the value of the value property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getValue() {
-        return value;
+        return this.value;
     }
 
     /**
      * Sets the value of the value property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setValue(String value) {
         this.value = value;

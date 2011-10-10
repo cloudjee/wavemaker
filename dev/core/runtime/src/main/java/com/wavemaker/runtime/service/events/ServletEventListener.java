@@ -17,21 +17,18 @@ package com.wavemaker.runtime.service.events;
 import com.wavemaker.runtime.service.ServiceWire;
 
 /**
- * ServletEventListener provides an interface for EventListeners that want to
- * be concerned with Servlet-level events (such as start/end request,
- * start/end session, etc).
+ * ServletEventListener provides an interface for EventListeners that want to be concerned with Servlet-level events
+ * (such as start/end request, start/end session, etc).
  * 
- * EventListener provides a base interface for services (or groups of services)
- * to handle system events. The EventListener defines a series of callback
- * functions; each callback is called when the system enters that state, with
+ * EventListener provides a base interface for services (or groups of services) to handle system events. The
+ * EventListener defines a series of callback functions; each callback is called when the system enters that state, with
  * the associated Service as the only parameter.
  * 
- * Each EventListener can listen for multiple events, and multiple types of
- * services. When a request changes state, all registered EventListeners are
- * called with each of their services, in order.
+ * Each EventListener can listen for multiple events, and multiple types of services. When a request changes state, all
+ * registered EventListeners are called with each of their services, in order.
  * 
- * It is also possible for an individual Service to be registered with multiple
- * EventListeners, although the order they'll be called in is not guaranteed.
+ * It is also possible for an individual Service to be registered with multiple EventListeners, although the order
+ * they'll be called in is not guaranteed.
  * 
  * @author Matt Small
  * @version $Rev$ - $Date$
@@ -41,16 +38,14 @@ public interface ServletEventListener {
     /**
      * Callback for when a request is ending.
      * 
-     * @param serviceWire
-     *            A ServiceWire associated with this listener & request.
+     * @param serviceWire A ServiceWire associated with this listener & request.
      */
     public void endRequest(ServiceWire serviceWire);
 
     /**
      * Callback for when a request is starting.
      * 
-     * @param serviceWire
-     *            A ServiceWire associated with this listener & request.
+     * @param serviceWire A ServiceWire associated with this listener & request.
      */
     public void startRequest(ServiceWire service);
 }

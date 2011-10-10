@@ -33,8 +33,8 @@ import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.util.DesignTimeUtils;
 
 /**
- * Removes com.activegrid references from files in WEB-INF (specifically,
- * project-managers.xml, project-services.xml, and web.xml).
+ * Removes com.activegrid references from files in WEB-INF (specifically, project-managers.xml, project-services.xml,
+ * and web.xml).
  * 
  * In web.xml, upgrade references to CleanupListener.
  * 
@@ -48,73 +48,63 @@ import com.wavemaker.tools.util.DesignTimeUtils;
  */
 public class WebInfActiveGridUpgrade implements UpgradeTask {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker
-	 * .tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
-	 */
-	public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker .tools.project.Project,
+     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
+     */
+    public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
-		Resource servicesConfig = ConfigurationCompiler
-				.getRuntimeServicesXml(project);
-		Resource managersConfig = ConfigurationCompiler
-				.getRuntimeManagersXml(project);
-		Resource webxml = project.getWebXml();
+        Resource servicesConfig = ConfigurationCompiler.getRuntimeServicesXml(project);
+        Resource managersConfig = ConfigurationCompiler.getRuntimeManagersXml(project);
+        Resource webxml = project.getWebXml();
 
-		List<String> changedFiles = new ArrayList<String>();
-		List<String> regenedFiles = new ArrayList<String>();
+        List<String> changedFiles = new ArrayList<String>();
+        List<String> regenedFiles = new ArrayList<String>();
 
-		DesignServiceManager dsm = DesignTimeUtils.getDSMForProjectRoot(project
-				.getProjectRoot());
+        DesignServiceManager dsm = DesignTimeUtils.getDSMForProjectRoot(project.getProjectRoot());
 
-		try {
-			if (servicesConfig.exists()) {
-				ConfigurationCompiler.generateServices(project, servicesConfig,
-						dsm.getServices());
-				regenedFiles.add(ConfigurationCompiler.RUNTIME_SERVICES);
-			}
+        try {
+            if (servicesConfig.exists()) {
+                ConfigurationCompiler.generateServices(project, servicesConfig, dsm.getServices());
+                regenedFiles.add(ConfigurationCompiler.RUNTIME_SERVICES);
+            }
 
-			if (managersConfig.exists()) {
-				ConfigurationCompiler.generateManagers(project, managersConfig,
-						dsm.getServices());
-				regenedFiles.add(ConfigurationCompiler.RUNTIME_MANAGERS);
-			}
+            if (managersConfig.exists()) {
+                ConfigurationCompiler.generateManagers(project, managersConfig, dsm.getServices());
+                regenedFiles.add(ConfigurationCompiler.RUNTIME_MANAGERS);
+            }
 
-			if (webxml.exists()) {
-				String webxmlContents = project.readFile(webxml);
-				webxmlContents = webxmlContents.replace(
-						"com.activegrid.runtime.server.CleanupListener",
-						"com.wavemaker.runtime.server.CleanupListener");
-				webxmlContents = webxmlContents.replace(
-						"com.activegrid.runtime.security.AcegiAjaxFilter",
-						"com.wavemaker.runtime.security.AcegiAjaxFilter");
-				project.writeFile(webxml, webxmlContents);
-				changedFiles.add(ProjectConstants.WEB_XML);
-			}
-		} catch (IOException e) {
-			throw new WMRuntimeException(e);
-		} catch (JAXBException e2) {
-			throw new WMRuntimeException(e2);
-		}
+            if (webxml.exists()) {
+                String webxmlContents = project.readFile(webxml);
+                webxmlContents = webxmlContents.replace("com.activegrid.runtime.server.CleanupListener",
+                    "com.wavemaker.runtime.server.CleanupListener");
+                webxmlContents = webxmlContents.replace("com.activegrid.runtime.security.AcegiAjaxFilter",
+                    "com.wavemaker.runtime.security.AcegiAjaxFilter");
+                project.writeFile(webxml, webxmlContents);
+                changedFiles.add(ProjectConstants.WEB_XML);
+            }
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        } catch (JAXBException e2) {
+            throw new WMRuntimeException(e2);
+        }
 
-		String ret = null;
-		if (!changedFiles.isEmpty()) {
-			ret = "Removed com.activegrid references from "
-					+ StringUtils.join(changedFiles, ", ");
-		}
-		if (!regenedFiles.isEmpty()) {
-			if (null != ret) {
-				ret += "\n";
-			} else {
-				ret = "";
-			}
+        String ret = null;
+        if (!changedFiles.isEmpty()) {
+            ret = "Removed com.activegrid references from " + StringUtils.join(changedFiles, ", ");
+        }
+        if (!regenedFiles.isEmpty()) {
+            if (null != ret) {
+                ret += "\n";
+            } else {
+                ret = "";
+            }
 
-			ret += "Re-generated files: "
-					+ StringUtils.join(regenedFiles, ", ");
-		}
+            ret += "Re-generated files: " + StringUtils.join(regenedFiles, ", ");
+        }
 
-		upgradeInfo.addVerbose(ret);
-	}
+        upgradeInfo.addVerbose(ret);
+    }
 }

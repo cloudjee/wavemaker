@@ -16,13 +16,15 @@ package com.wavemaker.tools.cloudmgr;
 
 /**
  * This class represents a cloud network.
- *
+ * 
  * @author slee
  */
 public class CloudNetwork {
 
     private String id;
+
     private String name;
+
     private String description;
 
     public CloudNetwork(String id, String name, String description) {

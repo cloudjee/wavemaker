@@ -19,8 +19,7 @@ import org.springframework.core.io.Resource;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
 
 /**
- * Contains generic configurations used by <code>ServiceGenerator</code> to
- * generate service stubs.
+ * Contains generic configurations used by <code>ServiceGenerator</code> to generate service stubs.
  * 
  * @author Frankie Fu
  * @author Jeremy Grelle
@@ -33,14 +32,13 @@ public class GenerationConfiguration {
 
     private String partnerName;
 
-    public GenerationConfiguration(DeprecatedServiceDefinition serviceDefinition,
-            Resource outputDirectory) {
+    public GenerationConfiguration(DeprecatedServiceDefinition serviceDefinition, Resource outputDirectory) {
         this.serviceDefinition = serviceDefinition;
         this.outputDirectory = outputDirectory;
     }
 
     public DeprecatedServiceDefinition getServiceDefinition() {
-        return serviceDefinition;
+        return this.serviceDefinition;
     }
 
     public void setServiceDefinition(DeprecatedServiceDefinition serviceDefinition) {
@@ -48,7 +46,7 @@ public class GenerationConfiguration {
     }
 
     public Resource getOutputDirectory() {
-        return outputDirectory;
+        return this.outputDirectory;
     }
 
     public void setOuputDirectory(Resource outputDirectory) {
@@ -56,7 +54,7 @@ public class GenerationConfiguration {
     }
 
     public String getPartnerName() {
-        return partnerName;
+        return this.partnerName;
     }
 
     public void setPartnerName(String partnerName) {

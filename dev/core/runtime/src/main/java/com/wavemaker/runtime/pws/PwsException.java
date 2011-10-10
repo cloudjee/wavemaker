@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) 2011 VMWare, Inc. All rights reserved.
  *
@@ -17,15 +16,19 @@ package com.wavemaker.runtime.pws;
 
 /**
  * Exception class for Partner Web Service module
+ * 
  * @author slee
  */
 
 public class PwsException extends RuntimeException {
+
+    private static final long serialVersionUID = -1079899189574588869L;
+
     private String reason;
 
     /**
      * constructor
-     *
+     * 
      * @param ex exception object
      */
     public PwsException(Exception ex) {
@@ -34,7 +37,7 @@ public class PwsException extends RuntimeException {
 
     /**
      * constructor
-     *
+     * 
      * @param message exception message
      * @param reason exception code
      */
@@ -45,7 +48,7 @@ public class PwsException extends RuntimeException {
 
     /**
      * Returns the reason code
-     *
+     * 
      * @return the reason code
      */
     public String getReason() {
@@ -54,10 +57,10 @@ public class PwsException extends RuntimeException {
 
     /**
      * Sets the reason code
+     * 
      * @param reason reason code
      */
     public void setReason(String reason) {
         this.reason = reason;
     }
 }
-

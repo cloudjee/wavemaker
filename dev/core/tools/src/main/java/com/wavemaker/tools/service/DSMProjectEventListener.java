@@ -23,21 +23,24 @@ import com.wavemaker.tools.service.definitions.Service;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class DSMProjectEventListener implements ProjectEventListener {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.tools.project.ProjectEventListener#closeProject(com.wavemaker.tools.project.Project)
      */
     public void closeProject(Project p) {
-        
-        Map<Project, Map<String, Service>> serviceDefinitions =
-            designServiceManager.getAllServiceDefinitions();
+
+        Map<Project, Map<String, Service>> serviceDefinitions = this.designServiceManager.getAllServiceDefinitions();
         serviceDefinitions.remove(p);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.tools.project.ProjectEventListener#openProject(com.wavemaker.tools.project.Project)
      */
     public void openProject(Project p) {
@@ -48,7 +51,7 @@ public class DSMProjectEventListener implements ProjectEventListener {
     private DesignServiceManager designServiceManager;
 
     public DesignServiceManager getDesignServiceManager() {
-        return designServiceManager;
+        return this.designServiceManager;
     }
 
     public void setDesignServiceManager(DesignServiceManager designServiceManager) {

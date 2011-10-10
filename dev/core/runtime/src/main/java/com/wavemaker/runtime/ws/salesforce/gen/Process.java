@@ -11,24 +11,24 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
+ * <p>
+ * Java class for anonymous complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType>
@@ -45,9 +45,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "actions"
-})
+@XmlType(name = "", propOrder = { "actions" })
 @XmlRootElement(name = "process", namespace = "urn:partner.soap.sforce.com")
 public class Process {
 
@@ -58,27 +56,26 @@ public class Process {
      * Gets the value of the actions property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the actions property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the actions property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getActions().add(newItem);
+     * getActions().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link ProcessRequestType }
+     * Objects of the following type(s) are allowed in the list {@link ProcessRequestType }
      * 
      * 
      */
     public List<ProcessRequestType> getActions() {
-        if (actions == null) {
-            actions = new ArrayList<ProcessRequestType>();
+        if (this.actions == null) {
+            this.actions = new ArrayList<ProcessRequestType>();
         }
         return this.actions;
     }
@@ -86,10 +83,8 @@ public class Process {
     /**
      * Sets the value of the actions property.
      * 
-     * @param actions
-     *     allowed object is
-     *     {@link ProcessRequestType }
-     *     
+     * @param actions allowed object is {@link ProcessRequestType }
+     * 
      */
     public void setActions(List<ProcessRequestType> actions) {
         this.actions = actions;

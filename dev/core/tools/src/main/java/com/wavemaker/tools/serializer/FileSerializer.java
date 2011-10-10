@@ -30,27 +30,20 @@ public interface FileSerializer {
     /**
      * Reads a file and return an object representing contents of the file.
      * 
-     * @param file
-     *                The file.
-     * @param fileService
-     *                A FileService for the current context.
+     * @param file The file.
+     * @param fileService A FileService for the current context.
      * @return An object representing contents of the file.
      * @throws FileSerializerException
      */
-    public Object readObject(FileService fileService, Resource file)
-            throws FileSerializerException;
+    public Object readObject(FileService fileService, Resource file) throws FileSerializerException;
 
     /**
      * Writes the object to a file.
      * 
-     * @param fileService
-     *                A FileService for the current context.
-     * @param object
-     *            The object to be serialized and written to a file.
-     * @param file
-     *            The file.
+     * @param fileService A FileService for the current context.
+     * @param object The object to be serialized and written to a file.
+     * @param file The file.
      * @throws FileSerializerException
      */
-    public void writeObject(FileService fileService, Object object, Resource file)
-            throws FileSerializerException;
+    public void writeObject(FileService fileService, Object object, Resource file) throws FileSerializerException;
 }

@@ -15,7 +15,12 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data.sample.sakila;
+
+import java.util.Date;
+
+import org.hibernate.Session;
 
 import com.wavemaker.common.util.ObjectAccess;
 import com.wavemaker.runtime.data.DefaultTaskManager;
@@ -24,16 +29,11 @@ import com.wavemaker.runtime.data.TaskManager;
 import com.wavemaker.runtime.data.task.InsertTask;
 import com.wavemaker.runtime.data.task.UpdateTask;
 
-import java.util.Date;
+public class SakilaTaskManager extends DefaultTaskManager implements TaskManager {
 
-import org.hibernate.Session;
+    private final ObjectAccess objectInvoker = ObjectAccess.getInstance();
 
-public class SakilaTaskManager extends DefaultTaskManager implements
-        TaskManager {
-
-    private ObjectAccess objectInvoker = ObjectAccess.getInstance();
-
-    private Task insertTask = new InsertTask() {
+    private final Task insertTask = new InsertTask() {
 
         @Override
         public Object run(Session session, String dbName, Object... input) {
@@ -44,7 +44,7 @@ public class SakilaTaskManager extends DefaultTaskManager implements
         }
     };
 
-    private Task updateTask = new UpdateTask() {
+    private final Task updateTask = new UpdateTask() {
 
         @Override
         public Object run(Session session, String dbName, Object... input) {
@@ -57,24 +57,24 @@ public class SakilaTaskManager extends DefaultTaskManager implements
 
     @Override
     public Task getInsertTask() {
-        return insertTask;
+        return this.insertTask;
     }
 
     @Override
     public Task getUpdateTask() {
-        return updateTask;
+        return this.updateTask;
     }
 
     private void maybeSetLastUpdate(Object o) {
 
-        if (!objectInvoker.hasProperty(o.getClass(), "lastUpdate")) {
+        if (!this.objectInvoker.hasProperty(o.getClass(), "lastUpdate")) {
             return;
         }
 
-        Date lastUpdate = objectInvoker.getProperty(o, "lastUpdate");
+        Date lastUpdate = this.objectInvoker.getProperty(o, "lastUpdate");
 
         if (lastUpdate == null) {
-            objectInvoker.setProperty(o, "lastUpdate", new Date());
+            this.objectInvoker.setProperty(o, "lastUpdate", new Date());
         }
 
     }

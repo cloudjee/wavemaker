@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -20,12 +18,14 @@ import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for EmailPriority.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
+ * Java class for EmailPriority.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * 
  * <pre>
  * &lt;simpleType name="EmailPriority">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
@@ -44,27 +44,24 @@ import javax.xml.bind.annotation.XmlType;
 public enum EmailPriorityType {
 
     @XmlEnumValue("Highest")
-    HIGHEST("Highest"),
-    @XmlEnumValue("High")
-    HIGH("High"),
-    @XmlEnumValue("Normal")
-    NORMAL("Normal"),
-    @XmlEnumValue("Low")
-    LOW("Low"),
-    @XmlEnumValue("Lowest")
+    HIGHEST("Highest"), @XmlEnumValue("High")
+    HIGH("High"), @XmlEnumValue("Normal")
+    NORMAL("Normal"), @XmlEnumValue("Low")
+    LOW("Low"), @XmlEnumValue("Lowest")
     LOWEST("Lowest");
+
     private final String value;
 
     EmailPriorityType(String v) {
-        value = v;
+        this.value = v;
     }
 
     public String value() {
-        return value;
+        return this.value;
     }
 
     public static EmailPriorityType fromValue(String v) {
-        for (EmailPriorityType c: EmailPriorityType.values()) {
+        for (EmailPriorityType c : EmailPriorityType.values()) {
             if (c.value.equals(v)) {
                 return c;
             }

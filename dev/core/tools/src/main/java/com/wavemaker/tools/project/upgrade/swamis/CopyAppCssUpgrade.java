@@ -32,28 +32,31 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
  */
 public class CopyAppCssUpgrade implements UpgradeTask {
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
+     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
      */
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
-        
+
         try {
-            Resource appCssTemplate = studioConfiguration.getStudioWebAppRoot().createRelative("app/templates/project/app.css");
+            Resource appCssTemplate = this.studioConfiguration.getStudioWebAppRoot().createRelative("app/templates/project/app.css");
             Resource destCss = project.getWebAppRoot().createRelative("app.css");
-            
+
             if (!destCss.exists()) {
-            	project.writeFile(destCss, project.readFile(appCssTemplate));
+                project.writeFile(destCss, project.readFile(appCssTemplate));
             }
         } catch (IOException e) {
             throw new WMRuntimeException(e);
         }
     }
-    
+
     // bean properties
     private StudioConfiguration studioConfiguration;
 
     public StudioConfiguration getStudioConfiguration() {
-        return studioConfiguration;
+        return this.studioConfiguration;
     }
 
     public void setStudioConfiguration(StudioConfiguration studioConfiguration) {

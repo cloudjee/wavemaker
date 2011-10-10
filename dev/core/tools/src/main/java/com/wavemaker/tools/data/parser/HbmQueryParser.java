@@ -25,8 +25,7 @@ import com.wavemaker.runtime.data.util.DataServiceUtils;
 import com.wavemaker.tools.data.QueryInfo;
 
 /**
- * Eventually this should move into HbmParser so we can handle generic hbm files
- * with both mappings and queries.
+ * Eventually this should move into HbmParser so we can handle generic hbm files with both mappings and queries.
  * 
  * @author Simon Toens
  * @version $Rev$ - $Date$
@@ -57,21 +56,21 @@ public class HbmQueryParser extends BaseHbmParser {
     }
 
     public synchronized String getMeta() {
-        if (!metaInitialized) {
-            metaInitialized = true;
+        if (!this.metaInitialized) {
+            this.metaInitialized = true;
             initMeta();
         }
-        return meta;
+        return this.meta;
     }
 
     public synchronized Map<String, QueryInfo> getQueries() {
         getMeta(); // init
-        if (queries == null) {
-            queries = new LinkedHashMap<String, QueryInfo>();
+        if (this.queries == null) {
+            this.queries = new LinkedHashMap<String, QueryInfo>();
             initQueries();
             close();
         }
-        return queries;
+        return this.queries;
     }
 
     private void initMeta() {
@@ -84,26 +83,25 @@ public class HbmQueryParser extends BaseHbmParser {
             return;
         }
 
-        Map<String, String> attrs = XMLUtils.attributesToMap(xmlReader);
+        Map<String, String> attrs = XMLUtils.attributesToMap(this.xmlReader);
 
-        meta = attrs.get(HbmConstants.META_VALUE_ATTR);
+        this.meta = attrs.get(HbmConstants.META_VALUE_ATTR);
     }
 
     private void initQueries() {
 
         QueryInfo q = null;
 
-        if (HbmConstants.QUERY_EL.equals(String.valueOf(currentElementName))) {
-            q = initQuery(currentElementName);
-            queries.put(q.getName(), q);
+        if (HbmConstants.QUERY_EL.equals(String.valueOf(this.currentElementName))) {
+            q = initQuery(this.currentElementName);
+            this.queries.put(q.getName(), q);
         }
 
         String queryKind = "";
 
         while (queryKind != null) {
 
-            queryKind = nextNested(HbmConstants.MAPPING_EL,
-                    HbmConstants.QUERY_EL);
+            queryKind = nextNested(HbmConstants.MAPPING_EL, HbmConstants.QUERY_EL);
 
             if (queryKind == null) {
                 break;
@@ -111,13 +109,13 @@ public class HbmQueryParser extends BaseHbmParser {
 
             q = initQuery(queryKind);
 
-            queries.put(q.getName(), q);
+            this.queries.put(q.getName(), q);
         }
     }
 
     private QueryInfo initQuery(String queryKind) {
 
-        Map<String, String> queryAttrs = XMLUtils.attributesToMap(xmlReader);
+        Map<String, String> queryAttrs = XMLUtils.attributesToMap(this.xmlReader);
 
         QueryInfo rtn = new QueryInfo();
 
@@ -125,14 +123,12 @@ public class HbmQueryParser extends BaseHbmParser {
         rtn.setName(queryAttrs.get(HbmConstants.NAME_ATTR));
 
         String comment = queryAttrs.get(HbmConstants.COMMENT_ATTR);
-        rtn.setIsGenerated(com.wavemaker.tools.data.util.DataServiceUtils
-                .isGeneratedQuery(comment));
-        rtn.setComment(com.wavemaker.tools.data.util.DataServiceUtils
-                .sanitizeComment(comment));
+        rtn.setIsGenerated(com.wavemaker.tools.data.util.DataServiceUtils.isGeneratedQuery(comment));
+        rtn.setComment(com.wavemaker.tools.data.util.DataServiceUtils.sanitizeComment(comment));
 
         addQueryParams(queryKind, rtn);
 
-        rtn.setQuery(currentText.toString().trim());
+        rtn.setQuery(this.currentText.toString().trim());
 
         return rtn;
     }
@@ -149,7 +145,7 @@ public class HbmQueryParser extends BaseHbmParser {
                 break;
             }
 
-            Map<String, String> attrs = XMLUtils.attributesToMap(xmlReader);
+            Map<String, String> attrs = XMLUtils.attributesToMap(this.xmlReader);
 
             String name = attrs.get(HbmConstants.NAME_ATTR);
             String type = attrs.get(HbmConstants.TYPE_ATTR);

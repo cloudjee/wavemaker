@@ -49,78 +49,63 @@ public/* static */class JSONUtils {
     private JSONUtils() {
         throw new UnsupportedOperationException();
     }
-    
+
     private static final Log logger = LogFactory.getLog(JSONUtils.class);
-    
+
     /**
-     * Convert a JSONArray into an array of objects, with types as specified in
-     * the paramTypes argument.
+     * Convert a JSONArray into an array of objects, with types as specified in the paramTypes argument.
      * 
-     * @param params
-     *            JSONArray of data to convert.
-     * @param paramTypes
-     *            An array of Class objects, specifying the output types.
-     * @return An array of Objects; data is from params, and the types match
-     *         those of paramTypes.
+     * @param params JSONArray of data to convert.
+     * @param paramTypes An array of Class objects, specifying the output types.
+     * @return An array of Objects; data is from params, and the types match those of paramTypes.
      * @throws WMException
      */
-    public static ParsedServiceArguments convertJSONToObjects(JSONArray params,
-            Method method, JSONState jsonState) {
-        
-        return convertJSONToObjects(params,
-                getParameterTypes(method, params, jsonState.getTypeState()),
-                jsonState);
+    public static ParsedServiceArguments convertJSONToObjects(JSONArray params, Method method, JSONState jsonState) {
+
+        return convertJSONToObjects(params, getParameterTypes(method, params, jsonState.getTypeState()), jsonState);
     }
 
     /**
-     * Convert a JSONArray into an array of objects, with types as specified in
-     * the paramTypes argument.
+     * Convert a JSONArray into an array of objects, with types as specified in the paramTypes argument.
      * 
-     * @param params
-     *            JSONArray of data to convert.
-     * @param fieldDefinitions
-     *            A List of FieldDefinitions, specifying the type of each
-     *            argument (in an order matching that of the arguments).
-     * @return An array of Objects; data is from params, and the types match
-     *         those of paramTypes.
+     * @param params JSONArray of data to convert.
+     * @param fieldDefinitions A List of FieldDefinitions, specifying the type of each argument (in an order matching
+     *        that of the arguments).
+     * @return An array of Objects; data is from params, and the types match those of paramTypes.
      * @throws WMException
      */
-    public static ParsedServiceArguments convertJSONToObjects(JSONArray params,
-            List<FieldDefinition> fieldDefinitions, JSONState jsonState) {
-        
+    public static ParsedServiceArguments convertJSONToObjects(JSONArray params, List<FieldDefinition> fieldDefinitions, JSONState jsonState) {
+
         Object[] objects = new Object[fieldDefinitions.size()];
         List<List<String>> deserializedProps = new ArrayList<List<String>>(fieldDefinitions.size());
-        
-        for (int i=0;i<fieldDefinitions.size();i++) {
+
+        for (int i = 0; i < fieldDefinitions.size(); i++) {
             Object elem = params.get(i);
             FieldDefinition fieldDefinition = fieldDefinitions.get(i);
-            
-            objects[i] = AlternateJSONTransformer.toObject(jsonState,
-                    elem, fieldDefinition);
-            
+
+            objects[i] = AlternateJSONTransformer.toObject(jsonState, elem, fieldDefinition);
+
             deserializedProps.add(i, jsonState.getSettersCalled());
             jsonState.setSettersCalled(new ArrayList<String>());
         }
-        
+
         if (logger.isDebugEnabled()) {
             logger.debug("Deserialized properties " + deserializedProps);
         }
-        
+
         ParsedServiceArguments psa = new ParsedServiceArguments();
         psa.setArguments(objects);
         psa.setGettersCalled(deserializedProps);
         return psa;
     }
 
-    public static List<FieldDefinition> getParameterTypes(Method m,
-            JSONArray params, TypeState typeState) {
+    public static List<FieldDefinition> getParameterTypes(Method m, JSONArray params, TypeState typeState) {
 
         List<FieldDefinition> fieldDefinitions = new ArrayList<FieldDefinition>();
-        for (Type type: m.getGenericParameterTypes()) {
-            fieldDefinitions.add(ReflectTypeUtils.getFieldDefinition(type,
-                    typeState, false, null));
+        for (Type type : m.getGenericParameterTypes()) {
+            fieldDefinitions.add(ReflectTypeUtils.getFieldDefinition(type, typeState, false, null));
         }
-        
+
         Annotation[][] paramAnnotations = m.getParameterAnnotations();
 
         for (int i = 0; i < paramAnnotations.length; i++) {
@@ -133,19 +118,14 @@ public/* static */class JSONUtils {
 
                     try {
                         Class<?> newType = org.springframework.util.ClassUtils.forName(typeString);
-                        
+
                         if (Collection.class.isAssignableFrom(newType)) {
-                            throw new WMRuntimeException(
-                                    MessageResource.JSONUTILS_PARAMTYPEGENERIC, i, m.getName());
+                            throw new WMRuntimeException(MessageResource.JSONUTILS_PARAMTYPEGENERIC, i, m.getName());
                         }
-                        
-                        fieldDefinitions.set(i,
-                                ReflectTypeUtils.getFieldDefinition(newType,
-                                        typeState, false, null));
+
+                        fieldDefinitions.set(i, ReflectTypeUtils.getFieldDefinition(newType, typeState, false, null));
                     } catch (ClassNotFoundException e) {
-                        throw new WMRuntimeException(
-                                MessageResource.JSONPARAMETER_COULD_NOTLLOAD_TYPE, e,
-                                typeString, m.getName(), i);
+                        throw new WMRuntimeException(MessageResource.JSONPARAMETER_COULD_NOTLLOAD_TYPE, e, typeString, m.getName(), i);
                     } catch (LinkageError e) {
                         throw new WMRuntimeException(e);
                     }
@@ -155,21 +135,19 @@ public/* static */class JSONUtils {
 
         return fieldDefinitions;
     }
-    
+
     public static Object toBean(JSONObject jo, Class<?> klass) {
-        
+
         return AlternateJSONTransformer.toObject(jo, klass);
     }
-    
+
     public static Object toBean(Object jo, Class<?> klass) {
 
         return AlternateJSONTransformer.toObject(new JSONState(), jo, klass);
     }
-    
-    public static Object toBean(Object jo, FieldDefinition fieldDefinition,
-            JSONState jsonState) {
 
-        return AlternateJSONTransformer.toObject(jsonState, jo,
-                fieldDefinition);
+    public static Object toBean(Object jo, FieldDefinition fieldDefinition, JSONState jsonState) {
+
+        return AlternateJSONTransformer.toObject(jsonState, jo, fieldDefinition);
     }
 }

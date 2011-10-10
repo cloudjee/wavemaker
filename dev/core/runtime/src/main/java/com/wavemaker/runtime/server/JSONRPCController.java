@@ -36,9 +36,8 @@ import com.wavemaker.runtime.service.TypedServiceReturn;
 import com.wavemaker.runtime.service.response.ErrorResponse;
 
 /**
- * Controller (in the MVC sense) implementing a JSON interface and view onto the
- * AG framework.
- *
+ * Controller (in the MVC sense) implementing a JSON interface and view onto the AG framework.
+ * 
  * @author Matt Small
  * @version $Rev$ - $Date$
  */
@@ -47,12 +46,14 @@ public class JSONRPCController extends ControllerBase {
     /** Logger for this class and subclasses */
     protected final Logger logger = Logger.getLogger(getClass());
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.server.ControllerBase#executeRequest(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.runtime.server.ControllerBase#executeRequest(javax.servlet.http.HttpServletRequest,
+     * javax.servlet.http.HttpServletResponse)
      */
     @Override
-    protected ModelAndView executeRequest(HttpServletRequest request,
-            HttpServletResponse response) throws IOException, WMException {
+    protected ModelAndView executeRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, WMException {
 
         String serviceName = ServerUtils.getServiceName(request);
         ModelAndView ret = null;
@@ -67,17 +68,15 @@ public class JSONRPCController extends ControllerBase {
             input = ServerUtils.readInput(request);
         }
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Request body: '" + input + "'");
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("Request body: '" + input + "'");
         }
 
-	    JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(input,
-                getInternalRuntime().getJSONState());
-        
-        if (null==jsonReq) {
+        JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(input, getInternalRuntime().getJSONState());
+
+        if (null == jsonReq) {
             throw new WMRuntimeException(MessageResource.FAILED_TO_PARSE_REQUEST, input);
-        } else if ((!jsonReq.containsKey(ServerConstants.METHOD) ||
-                (!jsonReq.containsKey(ServerConstants.ID)))) {
+        } else if (!jsonReq.containsKey(ServerConstants.METHOD) || !jsonReq.containsKey(ServerConstants.ID)) {
             throw new WMRuntimeException(MessageResource.SERVER_NOMETHODORID, input);
         }
 
@@ -96,34 +95,30 @@ public class JSONRPCController extends ControllerBase {
                 if (tjo.isEmpty()) {
                     params = new JSONArray();
                 } else {
-                    throw new WMRuntimeException(
-                            MessageResource.JSONRPC_CONTROLLER_BAD_PARAMS_NON_EMPTY,
-                            tjo, jsonReq);
+                    throw new WMRuntimeException(MessageResource.JSONRPC_CONTROLLER_BAD_PARAMS_NON_EMPTY, tjo, jsonReq);
                 }
             } else {
-                throw new WMRuntimeException(
-                        MessageResource.JSONRPC_CONTROLLER_BAD_PARAMS_UNKNOWN_TYPE,
-                        rawParams.getClass(), jsonReq);
+                throw new WMRuntimeException(MessageResource.JSONRPC_CONTROLLER_BAD_PARAMS_UNKNOWN_TYPE, rawParams.getClass(), jsonReq);
             }
         } else {
             params = new JSONArray();
         }
 
-        if (logger.isInfoEnabled()) {
-            logger.info("Invoke Service: " + serviceName + ", Method: " + method);
-            if (logger.isDebugEnabled()) {
-                logger.debug("Method "+method+" Parameters: "+params);
+        if (this.logger.isInfoEnabled()) {
+            this.logger.info("Invoke Service: " + serviceName + ", Method: " + method);
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("Method " + method + " Parameters: " + params);
             }
         }
-        
+
         ServiceWire sw = this.getServiceManager().getServiceWire(serviceName);
-        if (null==sw) {
+        if (null == sw) {
             throw new WMRuntimeException(MessageResource.NO_SERVICEWIRE, serviceName);
         }
         TypedServiceReturn reflInvokeRef = invokeMethod(sw, method, params, null);
-        
-        if (logger.isDebugEnabled()) {
-            logger.debug("method "+method+" result: "+reflInvokeRef);
+
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("method " + method + " result: " + reflInvokeRef);
         }
 
         JsonView jv = getView();
@@ -132,7 +127,9 @@ public class JSONRPCController extends ControllerBase {
         return ret;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.runtime.server.ControllerBase#getView()
      */
     @Override
@@ -143,26 +140,27 @@ public class JSONRPCController extends ControllerBase {
         return ret;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.runtime.server.ControllerBase#handleError(java.lang.String, java.lang.Throwable)
      */
     @Override
     protected ModelAndView handleError(final String message, Throwable t) {
 
         TypedView view = getView();
-        
+
         ErrorResponse er = new ErrorResponse() {
+
             public String getError() {
                 return message;
             }
         };
-        
+
         TypedServiceReturn tsr = new TypedServiceReturn();
         tsr.setReturnValue(er);
-        tsr.setReturnType(ReflectTypeUtils.getFieldDefinition(er.getClass(),
-                getInternalRuntime().getJSONState().getTypeState(), false,
-                null));
-        
+        tsr.setReturnType(ReflectTypeUtils.getFieldDefinition(er.getClass(), getInternalRuntime().getJSONState().getTypeState(), false, null));
+
         return getModelAndView(view, tsr);
     }
 }

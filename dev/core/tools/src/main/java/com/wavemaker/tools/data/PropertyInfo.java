@@ -26,8 +26,8 @@ import com.wavemaker.tools.data.RelatedInfo.CascadeOption;
 import com.wavemaker.tools.data.parser.HbmConstants;
 
 /**
- * Wrapper around Property. If a Property is not a simple java type (related
- * object, component), compositeProperties has the "backing" PropertyInfos.
+ * Wrapper around Property. If a Property is not a simple java type (related object, component), compositeProperties has
+ * the "backing" PropertyInfos.
  * 
  * Also has ColumnInfo instance if backed by a db column.
  * 
@@ -53,24 +53,19 @@ public class PropertyInfo {
 
     private RelatedInfo.Cardinality cardinality = null;
 
-    private List<RelatedInfo.CascadeOption> cascadeOptions = 
-	new ArrayList<RelatedInfo.CascadeOption>();
+    private List<RelatedInfo.CascadeOption> cascadeOptions = new ArrayList<RelatedInfo.CascadeOption>();
 
-    private List<PropertyInfo> compositeProperties = 
-	new ArrayList<PropertyInfo>();
+    private List<PropertyInfo> compositeProperties = new ArrayList<PropertyInfo>();
 
     private ColumnInfo columnInfo = null;
 
-    public static PropertyInfo newToManyProperty(EntityInfo parentEntity,
-            PropertyInfo toOneProperty) {
+    public static PropertyInfo newToManyProperty(EntityInfo parentEntity, PropertyInfo toOneProperty) {
         PropertyInfo rtn = newToManyProperty();
-        rtn.types(parentEntity.getPackageName() + "."
-                + parentEntity.getEntityName());
+        rtn.types(parentEntity.getPackageName() + "." + parentEntity.getEntityName());
         return rtn;
     }
 
-    public static PropertyInfo fromKind(String kind,
-            Map<String, String> attributes) {
+    public static PropertyInfo fromKind(String kind, Map<String, String> attributes) {
 
         PropertyInfo rtn = null;
 
@@ -78,8 +73,7 @@ public class PropertyInfo {
             rtn = newCompositeIdProperty(attributes);
         } else if (kind.equals(HbmConstants.COMPONENT_EL)) {
             rtn = newComponentProperty(attributes);
-        } else if (kind.equals(HbmConstants.ID_EL)
-                || kind.equals(HbmConstants.KEY_PROP_EL)) {
+        } else if (kind.equals(HbmConstants.ID_EL) || kind.equals(HbmConstants.KEY_PROP_EL)) {
             rtn = newIdProperty();
         } else if (kind.equals(HbmConstants.TO_ONE_EL)) {
             rtn = newToOneProperty(attributes);
@@ -117,15 +111,13 @@ public class PropertyInfo {
         return rtn;
     }
 
-    public static PropertyInfo newComponentProperty(
-            Map<String, String> attributes) {
+    public static PropertyInfo newComponentProperty(Map<String, String> attributes) {
         PropertyInfo rtn = newCompositeProperty();
         rtn.types(attributes.get(HbmConstants.COMPONENT_TYPE_ATTR));
         return rtn;
     }
 
-    public static PropertyInfo newCompositeIdProperty(
-            Map<String, String> attributes) {
+    public static PropertyInfo newCompositeIdProperty(Map<String, String> attributes) {
         PropertyInfo rtn = newCompositeProperty();
         rtn.setIsId(true);
         rtn.types(attributes.get(HbmConstants.COMP_ID_TYPE_ATTR));
@@ -175,8 +167,7 @@ public class PropertyInfo {
             setType(null);
         } else {
             setFullyQualifiedType(DataTypeMapper.getFQHibernateType(type));
-            setType(DataTypeMapper.getHibernateType(DataTypeMapper
-                    .getHibernateType(type)));
+            setType(DataTypeMapper.getHibernateType(DataTypeMapper.getHibernateType(type)));
         }
     }
 
@@ -185,11 +176,11 @@ public class PropertyInfo {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public String getFullyQualifiedType() {
-        return fullyQualifiedType;
+        return this.fullyQualifiedType;
     }
 
     public void setType(String type) {
@@ -197,7 +188,7 @@ public class PropertyInfo {
     }
 
     public String getType() {
-        return type;
+        return this.type;
     }
 
     public void setIsId(boolean isId) {
@@ -205,7 +196,7 @@ public class PropertyInfo {
     }
 
     public boolean getIsId() {
-        return isId;
+        return this.isId;
     }
 
     public void setIsRelated(boolean isRelated) {
@@ -213,7 +204,7 @@ public class PropertyInfo {
     }
 
     public boolean getIsRelated() {
-        return isRelated;
+        return this.isRelated;
     }
 
     public void setIsInverse(boolean isInverse) {
@@ -221,7 +212,7 @@ public class PropertyInfo {
     }
 
     public boolean getIsInverse() {
-        return isInverse;
+        return this.isInverse;
     }
 
     public void setCompositeProperties(List<PropertyInfo> compositeProperties) {
@@ -229,11 +220,11 @@ public class PropertyInfo {
     }
 
     public List<PropertyInfo> getCompositeProperties() {
-        return compositeProperties;
+        return this.compositeProperties;
     }
 
     public void addCompositeProperty(PropertyInfo property) {
-        compositeProperties.add(property);
+        this.compositeProperties.add(property);
     }
 
     public void setColumn(ColumnInfo columnInfo) {
@@ -241,7 +232,7 @@ public class PropertyInfo {
     }
 
     public ColumnInfo getColumn() {
-        return columnInfo;
+        return this.columnInfo;
     }
 
     public void setCardinality(String cardinality) {
@@ -253,19 +244,19 @@ public class PropertyInfo {
     }
 
     public RelatedInfo.Cardinality getCardinality() {
-        return cardinality;
+        return this.cardinality;
     }
 
     public boolean hasCompositeProperties() {
-        return compositeProperties.size() > 0;
+        return this.compositeProperties.size() > 0;
     }
 
     public PropertyInfo getCompositeProperty(String name) {
         // REVIEW 13-Sep-07 stoens@activegrid.com -- should be a lookup
-        if (compositeProperties == null) {
+        if (this.compositeProperties == null) {
             throw new AssertionError("No composite properties");
         }
-        for (PropertyInfo p : compositeProperties) {
+        for (PropertyInfo p : this.compositeProperties) {
             if (p.getName().equals(name)) {
                 return p;
             }
@@ -300,7 +291,7 @@ public class PropertyInfo {
     public List<String> allColumnNames() {
         if (!hasCompositeProperties()) {
             List<String> rtn = new ArrayList<String>(1);
-            rtn.add(columnInfo.getName());
+            rtn.add(this.columnInfo.getName());
             return rtn;
         }
         List<ColumnInfo> cols = new ArrayList<ColumnInfo>();
@@ -325,10 +316,9 @@ public class PropertyInfo {
             }
         }
 
-        RelatedInfo rtn = new RelatedInfo(name, type, tableName, c);
-        rtn.setFullyQualifiedType(fullyQualifiedType);
-        rtn.foreignKeyColumns(columns
-                .toArray((ColumnInfo[]) new ColumnInfo[columns.size()]));
+        RelatedInfo rtn = new RelatedInfo(this.name, this.type, tableName, c);
+        rtn.setFullyQualifiedType(this.fullyQualifiedType);
+        rtn.foreignKeyColumns(columns.toArray(new ColumnInfo[columns.size()]));
 
         if (!getCascadeOptions().isEmpty()) {
             rtn.setCascadeOptions(getCascadeOptions().get(0));
@@ -342,7 +332,7 @@ public class PropertyInfo {
     }
 
     public List<CascadeOption> getCascadeOptions() {
-        return cascadeOptions;
+        return this.cascadeOptions;
     }
 
     private void typeFromColumn(ColumnInfo column) {
@@ -350,8 +340,7 @@ public class PropertyInfo {
             throw new AssertionError("Type must be set");
         }
         this.type = DataTypeMapper.getHibernateType(column.getSqlType());
-        this.fullyQualifiedType = DataTypeMapper.getFQHibernateType(column
-                .getSqlType());
+        this.fullyQualifiedType = DataTypeMapper.getFQHibernateType(column.getSqlType());
 
         column.persistType(false);
     }
@@ -364,8 +353,7 @@ public class PropertyInfo {
         this.columnInfo = column;
     }
 
-    public void fromRelated(RelatedInfo rel, EntityInfo owningEntity,
-            DataModelConfiguration cfg) {
+    public void fromRelated(RelatedInfo rel, EntityInfo owningEntity, DataModelConfiguration cfg) {
         this.name = rel.getName();
         this.type = rel.getRelatedType();
         this.fullyQualifiedType = rel.getFullyQualifiedType();
@@ -386,9 +374,7 @@ public class PropertyInfo {
         for (String s : rel.getColumnNames()) {
             ColumnInfo ci = owningEntity.getColumn(s);
             if (ci == null) {
-                throw new ConfigurationException(
-                        "Unable to find foreign key column "
-                                + owningEntity.getTableName() + "." + s);
+                throw new ConfigurationException("Unable to find foreign key column " + owningEntity.getTableName() + "." + s);
             }
             ColumnInfo clone = (ColumnInfo) ci.clone();
             clone.setIsFk(true);
@@ -414,31 +400,29 @@ public class PropertyInfo {
         if (o == null) {
             return false;
         }
-        boolean rtn = String.valueOf(cardinality).equals(
-                String.valueOf(o.cardinality));
-        rtn &= String.valueOf(fullyQualifiedType).equals(
-                String.valueOf(o.fullyQualifiedType));
-        rtn &= String.valueOf(isId).equals(String.valueOf(o.isId));
-        rtn &= String.valueOf(isInverse).equals(String.valueOf(o.isInverse));
-        rtn &= String.valueOf(isRelated).equals(String.valueOf(o.isRelated));
-        rtn &= String.valueOf(name).equals(String.valueOf(o.name));
-        rtn &= String.valueOf(type).equals(String.valueOf(o.type));
+        boolean rtn = String.valueOf(this.cardinality).equals(String.valueOf(o.cardinality));
+        rtn &= String.valueOf(this.fullyQualifiedType).equals(String.valueOf(o.fullyQualifiedType));
+        rtn &= String.valueOf(this.isId).equals(String.valueOf(o.isId));
+        rtn &= String.valueOf(this.isInverse).equals(String.valueOf(o.isInverse));
+        rtn &= String.valueOf(this.isRelated).equals(String.valueOf(o.isRelated));
+        rtn &= String.valueOf(this.name).equals(String.valueOf(o.name));
+        rtn &= String.valueOf(this.type).equals(String.valueOf(o.type));
 
-        if (columnInfo == null && o.columnInfo != null) {
+        if (this.columnInfo == null && o.columnInfo != null) {
             return false;
-        } else if (columnInfo != null && o.columnInfo == null) {
+        } else if (this.columnInfo != null && o.columnInfo == null) {
             return false;
-        } else if (columnInfo == null && o.columnInfo == null) {
+        } else if (this.columnInfo == null && o.columnInfo == null) {
 
         } else {
-            rtn &= columnInfo.isEqualTo(o.columnInfo);
+            rtn &= this.columnInfo.isEqualTo(o.columnInfo);
         }
 
-        if (compositeProperties.size() != o.compositeProperties.size()) {
+        if (this.compositeProperties.size() != o.compositeProperties.size()) {
             return false;
         } else {
             int i = 0;
-            for (PropertyInfo p : compositeProperties) {
+            for (PropertyInfo p : this.compositeProperties) {
                 rtn &= p.isEqualTo(o.compositeProperties.get(i++));
                 if (!rtn) {
                     return false;
@@ -450,9 +434,9 @@ public class PropertyInfo {
     }
 
     public String javaType() {
-        Class<?> rtn = DataTypeMapper.getJavaType(fullyQualifiedType);
+        Class<?> rtn = DataTypeMapper.getJavaType(this.fullyQualifiedType);
         if (rtn == null) {
-            return fullyQualifiedType;
+            return this.fullyQualifiedType;
         }
 
         return rtn.getName();
@@ -465,7 +449,7 @@ public class PropertyInfo {
 
         propertyToString(sb, this, "");
 
-        for (PropertyInfo p : compositeProperties) {
+        for (PropertyInfo p : this.compositeProperties) {
             sb.append("\n");
             propertyToString(sb, p, "  ");
         }
@@ -473,8 +457,7 @@ public class PropertyInfo {
         return sb.toString();
     }
 
-    private void propertyToString(StringBuilder sb, PropertyInfo property,
-            String indent) {
+    private void propertyToString(StringBuilder sb, PropertyInfo property, String indent) {
         sb.append(indent);
         if (property.getIsId()) {
             sb.append("*");
@@ -520,16 +503,15 @@ public class PropertyInfo {
         if (ObjectUtils.isNullOrEmpty(co)) {
             return;
         }
-        
+
         List<String> t = StringUtils.split(co);
-        List<RelatedInfo.CascadeOption> cascadeOptions = new ArrayList<RelatedInfo.CascadeOption>(
-                t.size());
+        List<RelatedInfo.CascadeOption> cascadeOptions = new ArrayList<RelatedInfo.CascadeOption>(t.size());
         for (String s : t) {
             cascadeOptions.add(RelatedInfo.CascadeOption.fromString(s));
         }
         setCascadeOptions(cascadeOptions);
     }
-    
+
     private void setFullyQualifiedType(String fullyQualifiedType) {
         this.fullyQualifiedType = fullyQualifiedType;
     }

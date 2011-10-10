@@ -22,46 +22,46 @@ import com.wavemaker.tools.project.upgrade.AbstractWidgetsJSUpgradeTask;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
-public class LiveVariableMethodNameUpgradeTask extends
-        AbstractWidgetsJSUpgradeTask {
+public class LiveVariableMethodNameUpgradeTask extends AbstractWidgetsJSUpgradeTask {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.tools.project.upgrade.AbstractWidgetsJSUpgradeTask#upgradeWidgetsJS(com.wavemaker.json.JSON)
      */
     @Override
     public void upgradeWidgetsJS(JSON j) {
         recurseWidgets(j);
     }
-    
+
     private void recurseWidgets(JSON j) {
-        
+
         if (j instanceof JSONObject) {
             JSONObject jo = (JSONObject) j;
-            
-            for (Object o: jo.values()) {
+
+            for (Object o : jo.values()) {
                 if (o instanceof JSON) {
                     recurseWidgets((JSON) o);
                 }
             }
         } else if (j instanceof JSONArray) {
             JSONArray ja = (JSONArray) j;
-            
-            if (ja.size()>=2 && ja.get(0) instanceof String &&
-                    ja.get(1) instanceof JSONObject) {
-                if (0=="wm.LiveVariable".compareTo((String) ja.get(0))) {
+
+            if (ja.size() >= 2 && ja.get(0) instanceof String && ja.get(1) instanceof JSONObject) {
+                if (0 == "wm.LiveVariable".compareTo((String) ja.get(0))) {
                     JSONObject jo = (JSONObject) ja.get(1);
                     if (jo.containsKey("operation")) {
                         String op = (String) jo.get("operation");
                         if (op.endsWith("Data")) {
-                            jo.put("operation", op.substring(0, op.length()-4));
+                            jo.put("operation", op.substring(0, op.length() - 4));
                         }
                     }
                 }
             }
-            
-            for (Object o: ja) {
+
+            for (Object o : ja) {
                 if (o instanceof JSON) {
                     recurseWidgets((JSON) o);
                 }
@@ -69,7 +69,9 @@ public class LiveVariableMethodNameUpgradeTask extends
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.tools.project.upgrade.AbstractWidgetsJSUpgradeTask#doUpgradeAppJS()
      */
     @Override

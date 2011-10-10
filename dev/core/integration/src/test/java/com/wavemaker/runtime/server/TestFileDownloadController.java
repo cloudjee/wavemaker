@@ -15,69 +15,72 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.server;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.web.servlet.support.WebContentGenerator;
 
 import com.wavemaker.runtime.test.TestSpringContextTestCase;
 
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestFileDownloadController extends TestSpringContextTestCase {
 
-    @Test public void testBasic() throws Exception {
+    @Test
+    public void testBasic() throws Exception {
 
         String contents = "foo";
 
         MockHttpServletRequest req = new MockHttpServletRequest();
         MockHttpServletResponse resp = new MockHttpServletResponse();
-        req.setMethod(FileDownloadController.METHOD_GET);
-        req.setRequestURI("/services/complexReturnBean."+ServerConstants.DOWNLOAD_EXTENSION);
+        req.setMethod(WebContentGenerator.METHOD_GET);
+        req.setRequestURI("/services/complexReturnBean." + ServerConstants.DOWNLOAD_EXTENSION);
         req.setParameter("param1", contents);
         req.setParameter(ServerConstants.METHOD, "testDownload");
-        
+
         invokeService(req, resp);
 
         assertEquals("text/foo", resp.getContentType());
         assertEquals(contents, resp.getContentAsString());
     }
 
-    @Test public void testBasicNoReturn() throws Exception {
+    @Test
+    public void testBasicNoReturn() throws Exception {
 
         String contents = "foo";
 
         MockHttpServletRequest req = new MockHttpServletRequest();
         setRequestAttributes(req);
         MockHttpServletResponse resp = new MockHttpServletResponse();
-        req.setMethod(FileDownloadController.METHOD_GET);
-        req.setRequestURI("/services/complexReturnBean."+
-                ServerConstants.DOWNLOAD_EXTENSION);
+        req.setMethod(WebContentGenerator.METHOD_GET);
+        req.setRequestURI("/services/complexReturnBean." + ServerConstants.DOWNLOAD_EXTENSION);
         req.setParameter("param1", contents);
         req.setParameter(ServerConstants.METHOD, "testDownloadNoReturn");
-        
+
         invokeService(req, resp);
 
         assertEquals("", resp.getContentAsString());
     }
 
     // MAV-2229 - test calling a method that calls LiveData.read()
-    @Test public void testDownloadLiveDataValue() throws Exception {
+    @Test
+    public void testDownloadLiveDataValue() throws Exception {
 
         MockHttpServletRequest req = new MockHttpServletRequest();
         setRequestAttributes(req);
         MockHttpServletResponse resp = new MockHttpServletResponse();
-        req.setMethod(FileDownloadController.METHOD_GET);
-        req.setRequestURI("/services/complexReturnBean."+
-                ServerConstants.DOWNLOAD_EXTENSION);
+        req.setMethod(WebContentGenerator.METHOD_GET);
+        req.setRequestURI("/services/complexReturnBean." + ServerConstants.DOWNLOAD_EXTENSION);
         req.setParameter(ServerConstants.METHOD, "getLiveDataValue");
-        
+
         invokeService(req, resp);
 
         assertEquals("return: 50", resp.getContentAsString());

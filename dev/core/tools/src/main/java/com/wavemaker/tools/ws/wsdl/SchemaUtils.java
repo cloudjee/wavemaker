@@ -35,8 +35,7 @@ import com.wavemaker.common.util.CastUtils;
  */
 public class SchemaUtils {
 
-    public static List<XmlSchemaElement> getChildElements(
-            XmlSchemaType schemaType) {
+    public static List<XmlSchemaElement> getChildElements(XmlSchemaType schemaType) {
         List<XmlSchemaElement> childElements = new ArrayList<XmlSchemaElement>();
         if (schemaType instanceof XmlSchemaComplexType) {
             XmlSchemaComplexType cmplxType = (XmlSchemaComplexType) schemaType;

@@ -151,7 +151,7 @@ public class VmcDeploymentTarget implements DeploymentTarget {
                 doStart(deploymentInfo, client);
             }
         } catch (CloudFoundryException ex) {
-            return "ERROR: Could not start application. "+ex.getDescription();
+            return "ERROR: Could not start application. " + ex.getDescription();
         }
         return SUCCESS_RESULT;
     }
@@ -173,7 +173,7 @@ public class VmcDeploymentTarget implements DeploymentTarget {
             }
 
             String dbType = "NONE";
-            DataModelConfiguration config = dataModelManager.getDataModel(db.getDataModelId());
+            DataModelConfiguration config = this.dataModelManager.getDataModel(db.getDataModelId());
             String url = config.readConnectionProperties().getProperty(DataServiceConstants.DB_URL_KEY, "");
             if (StringUtils.hasText(url)) {
                 dbType = BaseDataModelSetup.getDBTypeFromURL(url);
@@ -337,7 +337,7 @@ public class VmcDeploymentTarget implements DeploymentTarget {
 
     private static final class LoggingStatusCallback implements UploadStatusCallback {
 
-        private Timer timer;
+        private final Timer timer;
 
         public LoggingStatusCallback(Timer timer) {
             this.timer = timer;
@@ -353,7 +353,7 @@ public class VmcDeploymentTarget implements DeploymentTarget {
 
         public void onProcessMatchedResources(int length) {
             log.info("Uploading " + length + " bytes...");
-            timer.start();
+            this.timer.start();
         }
     }
 
@@ -362,11 +362,11 @@ public class VmcDeploymentTarget implements DeploymentTarget {
         private long startTime;
 
         public void start() {
-            startTime = System.currentTimeMillis();
+            this.startTime = System.currentTimeMillis();
         }
 
         public long stop() {
-            return System.currentTimeMillis() - startTime;
+            return System.currentTimeMillis() - this.startTime;
         }
     }
 

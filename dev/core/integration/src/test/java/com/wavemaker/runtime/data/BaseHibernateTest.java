@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data;
 
 import java.util.Properties;
@@ -39,13 +40,9 @@ public abstract class BaseHibernateTest extends WMTestCase {
     protected static Session session = null;
 
     static {
-        Properties p = DataServiceUtils
-                .loadDBProperties(DataServiceTestConstants
-                                  .MYSQL_SAKILA_PROPERTIES);
+        Properties p = DataServiceUtils.loadDBProperties(DataServiceTestConstants.MYSQL_SAKILA_PROPERTIES);
 
-        Configuration cfg = 
-            DataServiceUtils.initConfiguration(DataServiceTestConstants
-                                               .SAKILA_HIBERNATE_CFG, p);
+        Configuration cfg = DataServiceUtils.initConfiguration(DataServiceTestConstants.SAKILA_HIBERNATE_CFG, p);
 
         sessionFactory = cfg.buildSessionFactory();
     }
@@ -67,6 +64,4 @@ public abstract class BaseHibernateTest extends WMTestCase {
         SpringUtils.initSpringConfig();
     }
 
-
 }
-

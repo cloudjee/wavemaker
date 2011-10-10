@@ -22,44 +22,45 @@ import com.wavemaker.tools.project.upgrade.AbstractWidgetsJSUpgradeTask;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class ConvertAutosizeUpgradeTask extends AbstractWidgetsJSUpgradeTask {
 
     public static final String DEFAULT_WIDTH = "70px";
+
     public static final String DEFAULT_HEIGHT = "30px";
 
     @Override
     public void upgradeWidgetsJS(JSON j) {
-        
+
         recurseJSONReplaceAutoSize(j);
         recurseButtonLabel(j);
     }
-    
+
     private void recurseJSONReplaceAutoSize(JSON j) {
-        
+
         if (j instanceof JSONObject) {
             JSONObject jo = (JSONObject) j;
-            
+
             replaceAutosize(jo);
-            
-            for (Object o: jo.values()) {
+
+            for (Object o : jo.values()) {
                 if (o instanceof JSON) {
-                    recurseJSONReplaceAutoSize((JSON)o);
+                    recurseJSONReplaceAutoSize((JSON) o);
                 }
             }
         } else if (j instanceof JSONArray) {
             JSONArray ja = (JSONArray) j;
-            for (Object o: ja) {
+            for (Object o : ja) {
                 if (o instanceof JSON) {
-                    recurseJSONReplaceAutoSize((JSON)o);
+                    recurseJSONReplaceAutoSize((JSON) o);
                 }
             }
         }
     }
-    
+
     private void replaceAutosize(JSONObject jo) {
-        
+
         if (jo.containsKey("autoSize")) {
             jo.remove("autoSize");
 
@@ -71,46 +72,46 @@ public class ConvertAutosizeUpgradeTask extends AbstractWidgetsJSUpgradeTask {
             }
         }
     }
-    
+
     private void recurseButtonLabel(JSON j) {
-        
+
         if (j instanceof JSONObject) {
             JSONObject jo = (JSONObject) j;
-            
-            for (Object o: jo.values()) {
+
+            for (Object o : jo.values()) {
                 if (o instanceof JSON) {
-                    recurseButtonLabel((JSON)o);
+                    recurseButtonLabel((JSON) o);
                 }
             }
         } else if (j instanceof JSONArray) {
             JSONArray ja = (JSONArray) j;
-            
-            if (ja.size()>=2 && ja.get(0) instanceof String) {
+
+            if (ja.size() >= 2 && ja.get(0) instanceof String) {
                 String possibleType = (String) ja.get(0);
-                
-                if (0=="wm.Label".compareTo(possibleType)) {
+
+                if (0 == "wm.Label".compareTo(possibleType)) {
                     if (ja.get(1) instanceof JSONObject) {
-                        JSONObject jo = (JSONObject)ja.get(1);
+                        JSONObject jo = (JSONObject) ja.get(1);
                         addMissingDimensions(jo);
                     }
-                } else if (0=="wm.Button".compareTo(possibleType)) {
+                } else if (0 == "wm.Button".compareTo(possibleType)) {
                     if (ja.get(1) instanceof JSONObject) {
-                        JSONObject jo = (JSONObject)ja.get(1);
+                        JSONObject jo = (JSONObject) ja.get(1);
                         addMissingDimensions(jo);
                     }
                 }
             }
-            
-            for (Object o: ja) {
+
+            for (Object o : ja) {
                 if (o instanceof JSON) {
-                    recurseButtonLabel((JSON)o);
+                    recurseButtonLabel((JSON) o);
                 }
             }
         }
     }
-    
+
     private void addMissingDimensions(JSONObject jo) {
-        
+
         if (!jo.containsKey("width")) {
             jo.put("width", DEFAULT_WIDTH);
         }
@@ -119,7 +120,9 @@ public class ConvertAutosizeUpgradeTask extends AbstractWidgetsJSUpgradeTask {
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.tools.project.upgrade.AbstractWidgetsJSUpgradeTask#doUpgradeAppJS()
      */
     @Override

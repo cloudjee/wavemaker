@@ -15,21 +15,20 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data.sample.sakila;
 
-@SuppressWarnings({"serial"})
+@SuppressWarnings({ "serial" })
 public class CustomerListFixed extends CustomerList {
 
     private Integer id = null;
 
     public Integer getDummyId() {
-	return id;
+        return this.id;
     }
 
     public void setDummyId(Integer id) {
-	this.id = id;
+        this.id = id;
     }
 
 }
-
-

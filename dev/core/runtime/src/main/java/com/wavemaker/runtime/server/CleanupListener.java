@@ -26,32 +26,29 @@ import org.apache.commons.logging.LogFactory;
 
 import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.runtime.WMAppContext;
-//import com.wavemaker.tools.project.StudioConfiguration;
 
 /**
- * Listener that flushes all of the Introspector's interna l caches and
- * deregisters all JDBC drivers on web app shutdown.
- *
+ * Listener that flushes all of the Introspector's interna l caches and deregisters all JDBC drivers on web app
+ * shutdown.
+ * 
  * @author ffu
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class CleanupListener implements ServletContextListener {
 
     public void contextInitialized(ServletContextEvent event) {
         WMAppContext.getInstance(event);
-        //StudioConfiguration.setupDeploymentTargetXML();
+        // StudioConfiguration.setupDeploymentTargetXML();
     }
 
     public void contextDestroyed(ServletContextEvent event) {
         try {
             // remove from the system DriverManager the JDBC drivers registered
             // by this web app
-            for (Enumeration<Driver> e = CastUtils.cast(DriverManager.getDrivers()); e
-                    .hasMoreElements();) {
+            for (Enumeration<Driver> e = CastUtils.cast(DriverManager.getDrivers()); e.hasMoreElements();) {
                 Driver driver = e.nextElement();
-                if (driver.getClass().getClassLoader() == getClass()
-                        .getClassLoader()) {
+                if (driver.getClass().getClassLoader() == getClass().getClassLoader()) {
                     DriverManager.deregisterDriver(driver);
                 }
             }

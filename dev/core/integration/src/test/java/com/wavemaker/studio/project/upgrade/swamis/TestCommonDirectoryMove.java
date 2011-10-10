@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.wavemaker.studio.project.upgrade.swamis;
 
 import static org.junit.Assert.assertEquals;
@@ -43,70 +44,64 @@ import com.wavemaker.tools.project.upgrade.swamis.CommonDirectoryMove;
  */
 public class TestCommonDirectoryMove extends StudioTestCase {
 
-	@Test
-	public void testCommonDirMove_YesOldKey_NoNewKey() throws Exception {
+    @Test
+    public void testCommonDirMove_YesOldKey_NoNewKey() throws Exception {
 
-		StudioConfiguration sc = (StudioConfiguration) getBean("studioConfiguration");
+        StudioConfiguration sc = (StudioConfiguration) getBean("studioConfiguration");
 
-		boolean oldIsUpgrade = ConfigurationStore.getPreferenceBoolean(
-				CommonDirectoryMove.class, CommonDirectoryMove.UPGRADED_KEY,
-				false);
-		double oldStudioVersion = UpgradeManager.getStudioVersion();
-		File commonDirBak = new File(sc.getStudioWebAppRoot().getFile(),
-				"lib/wm/" + LocalStudioConfiguration.COMMON_DIR + ".bak");
-		File commonDirBakBak = new File(sc.getStudioWebAppRoot().getFile(),
-				"lib/wm/" + LocalStudioConfiguration.COMMON_DIR + ".bak.bak");
-		if (commonDirBak.exists()) {
-			FileUtils.copyDirectory(commonDirBak, commonDirBakBak);
-			FileUtils.forceDelete(commonDirBak);
-		}
+        boolean oldIsUpgrade = ConfigurationStore.getPreferenceBoolean(CommonDirectoryMove.class, CommonDirectoryMove.UPGRADED_KEY, false);
+        double oldStudioVersion = UpgradeManager.getStudioVersion();
+        File commonDirBak = new File(sc.getStudioWebAppRoot().getFile(), "lib/wm/" + LocalStudioConfiguration.COMMON_DIR + ".bak");
+        File commonDirBakBak = new File(sc.getStudioWebAppRoot().getFile(), "lib/wm/" + LocalStudioConfiguration.COMMON_DIR + ".bak.bak");
+        if (commonDirBak.exists()) {
+            FileUtils.copyDirectory(commonDirBak, commonDirBakBak);
+            FileUtils.forceDelete(commonDirBak);
+        }
 
-		try {
-			UpgradeManager.setStudioVersion(0.0);
+        try {
+            UpgradeManager.setStudioVersion(0.0);
 
-			ConfigurationStore.setPreferenceBoolean(CommonDirectoryMove.class,
-					CommonDirectoryMove.UPGRADED_KEY, false);
+            ConfigurationStore.setPreferenceBoolean(CommonDirectoryMove.class, CommonDirectoryMove.UPGRADED_KEY, false);
 
-			File commonDir = sc.getCommonDir().getFile();
-			assertTrue(commonDir.exists());
+            File commonDir = sc.getCommonDir().getFile();
+            assertTrue(commonDir.exists());
 
-			File commonDirFile = new File(commonDir, "foo.txt");
-			IOUtils.touch(commonDirFile);
-			assertTrue(commonDirFile.exists());
+            File commonDirFile = new File(commonDir, "foo.txt");
+            IOUtils.touch(commonDirFile);
+            assertTrue(commonDirFile.exists());
 
-			CommonDirectoryMove cdm = new CommonDirectoryMove();
-			cdm.setStudioConfiguration(sc);
-			UpgradeInfo ui = new UpgradeInfo();
-			cdm.doUpgrade(ui);
+            CommonDirectoryMove cdm = new CommonDirectoryMove();
+            cdm.setStudioConfiguration(sc);
+            UpgradeInfo ui = new UpgradeInfo();
+            cdm.doUpgrade(ui);
 
-			assertTrue(commonDir.exists());
-			assertFalse(commonDirFile.exists());
+            assertTrue(commonDir.exists());
+            assertFalse(commonDirFile.exists());
 
-			File commonDirFileTwo = new File(commonDir, "foo.2.txt");
-			IOUtils.touch(commonDirFileTwo);
+            File commonDirFileTwo = new File(commonDir, "foo.2.txt");
+            IOUtils.touch(commonDirFileTwo);
 
-			// this should work, but the directory won't be updated
-			UpgradeManager.setStudioVersion(0.0);
-			ui = new UpgradeInfo();
-			ui.setVersion(1.0);
-			cdm.doUpgrade(ui);
-			assertEquals(1, ui.getMessages().size());
-			assertTrue(ui.getMessages().containsKey("1.0"));
-			List<String> messages = ui.getMessages().get("1.0");
-			assertEquals(1, messages.size());
-			assertTrue(messages.get(0).endsWith("already exists"));
+            // this should work, but the directory won't be updated
+            UpgradeManager.setStudioVersion(0.0);
+            ui = new UpgradeInfo();
+            ui.setVersion(1.0);
+            cdm.doUpgrade(ui);
+            assertEquals(1, ui.getMessages().size());
+            assertTrue(ui.getMessages().containsKey("1.0"));
+            List<String> messages = ui.getMessages().get("1.0");
+            assertEquals(1, messages.size());
+            assertTrue(messages.get(0).endsWith("already exists"));
 
-			assertTrue(commonDirFileTwo.exists());
-		} finally {
-			UpgradeManager.setStudioVersion(oldStudioVersion);
+            assertTrue(commonDirFileTwo.exists());
+        } finally {
+            UpgradeManager.setStudioVersion(oldStudioVersion);
 
-			ConfigurationStore.setPreferenceBoolean(CommonDirectoryMove.class,
-					CommonDirectoryMove.UPGRADED_KEY, oldIsUpgrade);
-			FileUtils.forceDelete(commonDirBak);
-			if (commonDirBakBak.exists()) {
-				FileUtils.copyDirectory(commonDirBakBak, commonDirBak);
-				FileUtils.forceDelete(commonDirBakBak);
-			}
-		}
-	}
+            ConfigurationStore.setPreferenceBoolean(CommonDirectoryMove.class, CommonDirectoryMove.UPGRADED_KEY, oldIsUpgrade);
+            FileUtils.forceDelete(commonDirBak);
+            if (commonDirBakBak.exists()) {
+                FileUtils.copyDirectory(commonDirBakBak, commonDirBak);
+                FileUtils.forceDelete(commonDirBakBak);
+            }
+        }
+    }
 }

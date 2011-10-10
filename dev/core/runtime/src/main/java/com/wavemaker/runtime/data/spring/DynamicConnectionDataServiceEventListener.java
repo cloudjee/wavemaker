@@ -23,21 +23,21 @@ import com.wavemaker.runtime.service.TypedServiceReturn;
  * @version $Rev$ - $Date$
  * 
  */
-public class DynamicConnectionDataServiceEventListener extends
-        DataServiceEventListener {
+public class DynamicConnectionDataServiceEventListener extends DataServiceEventListener {
 
     private static int counter = 0;
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.data.DataServiceEventListener#preOperation(com.wavemaker.runtime.service.ServiceWire, java.lang.String, java.lang.Object[])
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.runtime.data.DataServiceEventListener#preOperation(com.wavemaker.runtime.service.ServiceWire,
+     * java.lang.String, java.lang.Object[])
      */
     @Override
-    public Object[] preOperation(ServiceWire serviceWire, String operationName,
-            Object[] params) {
+    public Object[] preOperation(ServiceWire serviceWire, String operationName, Object[] params) {
 
-        ThreadLocalDriverManagerDataSource.ConnectionProperties props =
-            new ThreadLocalDriverManagerDataSource.ConnectionProperties();
-        if ((counter++ % 2) == 0) {
+        ThreadLocalDriverManagerDataSource.ConnectionProperties props = new ThreadLocalDriverManagerDataSource.ConnectionProperties();
+        if (counter++ % 2 == 0) {
             props.setUrl("jdbc:mysql://localhost:3306/test");
         } else {
             props.setUrl("jdbc:mysql://quad:3306/test");
@@ -46,15 +46,15 @@ public class DynamicConnectionDataServiceEventListener extends
         return super.preOperation(serviceWire, operationName, params);
     }
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.data.DataServiceEventListener#postOperation(com.wavemaker.runtime.service.ServiceWire, java.lang.String, com.wavemaker.runtime.service.TypedServiceReturn, java.lang.Throwable)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.runtime.data.DataServiceEventListener#postOperation(com.wavemaker.runtime.service.ServiceWire,
+     * java.lang.String, com.wavemaker.runtime.service.TypedServiceReturn, java.lang.Throwable)
      */
     @Override
-    public TypedServiceReturn postOperation(
-            ServiceWire serviceWire, String operationName,
-            TypedServiceReturn result, Throwable th)
-            throws Throwable {
-        
+    public TypedServiceReturn postOperation(ServiceWire serviceWire, String operationName, TypedServiceReturn result, Throwable th) throws Throwable {
+
         ThreadLocalDriverManagerDataSource.unsetConnectionProperties();
         return super.postOperation(serviceWire, operationName, result, th);
     }

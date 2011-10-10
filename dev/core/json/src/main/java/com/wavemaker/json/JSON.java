@@ -17,11 +17,11 @@ package com.wavemaker.json;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public interface JSON {
 
     public boolean isObject();
-    
+
     public boolean isList();
 }

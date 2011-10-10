@@ -17,14 +17,13 @@ package com.wavemaker.runtime.data.task;
 import org.hibernate.Session;
 
 import com.wavemaker.runtime.data.Task;
-import com.wavemaker.runtime.data.DataServiceMetaData;
 
 /**
  * @author Simon Toens
  */
 public class GetSessionTask extends BaseTask implements Task, DefaultRollback {
 
-    public Object run(Session session, String dbName, Object... input) {        
+    public Object run(Session session, String dbName, Object... input) {
         return session;
     }
 

@@ -11,23 +11,23 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for PicklistForRecordType complex type.
+ * <p>
+ * Java class for PicklistForRecordType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="PicklistForRecordType">
@@ -45,36 +45,30 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "PicklistForRecordType", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "picklistName",
-    "picklistValues"
-})
+@XmlType(name = "PicklistForRecordType", namespace = "urn:partner.soap.sforce.com", propOrder = { "picklistName", "picklistValues" })
 public class PicklistForRecordTypeType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String picklistName;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", nillable = true)
     protected List<PicklistEntryType> picklistValues;
 
     /**
      * Gets the value of the picklistName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getPicklistName() {
-        return picklistName;
+        return this.picklistName;
     }
 
     /**
      * Sets the value of the picklistName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setPicklistName(String value) {
         this.picklistName = value;
@@ -84,27 +78,26 @@ public class PicklistForRecordTypeType {
      * Gets the value of the picklistValues property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the picklistValues property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the picklistValues property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getPicklistValues().add(newItem);
+     * getPicklistValues().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link PicklistEntryType }
+     * Objects of the following type(s) are allowed in the list {@link PicklistEntryType }
      * 
      * 
      */
     public List<PicklistEntryType> getPicklistValues() {
-        if (picklistValues == null) {
-            picklistValues = new ArrayList<PicklistEntryType>();
+        if (this.picklistValues == null) {
+            this.picklistValues = new ArrayList<PicklistEntryType>();
         }
         return this.picklistValues;
     }
@@ -112,10 +105,8 @@ public class PicklistForRecordTypeType {
     /**
      * Sets the value of the picklistValues property.
      * 
-     * @param picklistValues
-     *     allowed object is
-     *     {@link PicklistEntryType }
-     *     
+     * @param picklistValues allowed object is {@link PicklistEntryType }
+     * 
      */
     public void setPicklistValues(List<PicklistEntryType> picklistValues) {
         this.picklistValues = picklistValues;

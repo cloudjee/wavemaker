@@ -24,22 +24,21 @@ import org.hibernate.cfg.reveng.TableIdentifier;
  * 
  */
 public class MSSQLRevengNamingStrategy extends DefaultRevengNamingStrategy {
-    
+
     public MSSQLRevengNamingStrategy(ReverseEngineeringStrategy delegate) {
         super(delegate);
     }
-    
-    //Convert TEXT type in MS SQL Server into STRING type
+
+    // Convert TEXT type in MS SQL Server into STRING type
     @Override
-    public String columnToHibernateTypeName(TableIdentifier table, String columnName, int sqlType, int length,
-                                            int precision, int scale, boolean nullable, boolean generatedIdentifier) {
+    public String columnToHibernateTypeName(TableIdentifier table, String columnName, int sqlType, int length, int precision, int scale,
+        boolean nullable, boolean generatedIdentifier) {
         String type;
 
         if (sqlType == Types.CLOB) {
             type = "string";
         } else {
-            type = super.columnToHibernateTypeName(table, columnName, sqlType, length, precision, scale,
-                                                    nullable, generatedIdentifier);
+            type = super.columnToHibernateTypeName(table, columnName, sqlType, length, precision, scale, nullable, generatedIdentifier);
         }
 
         return type;

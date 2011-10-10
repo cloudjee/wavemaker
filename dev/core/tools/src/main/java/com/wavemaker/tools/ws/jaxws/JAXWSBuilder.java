@@ -51,55 +51,52 @@ import com.wavemaker.tools.ws.wsdl.WSDL;
 public class JAXWSBuilder {
 
     private final static String SEI_CLASS_NAME_SUFFIX = "Soap";
-    
-    private WSDL wsdl;
 
-    private File outputSrcDir;
+    private final WSDL wsdl;
 
-    private File outputClassDir;
+    private final File outputSrcDir;
 
-    private List<JAXWSServiceInfo> serviceInfoList = new ArrayList<JAXWSServiceInfo>();
+    private final File outputClassDir;
+
+    private final List<JAXWSServiceInfo> serviceInfoList = new ArrayList<JAXWSServiceInfo>();
 
     public JAXWSBuilder(WSDL wsdl, File outputSrcDir, File outputClassDir) {
         this.wsdl = wsdl;
         this.outputSrcDir = outputSrcDir;
         this.outputClassDir = outputClassDir;
-        
+
         for (ServiceInfo sInfo : wsdl.getServiceInfoList()) {
-            serviceInfoList.add(generateJAXWSServiceInfo(sInfo, wsdl));
+            this.serviceInfoList.add(generateJAXWSServiceInfo(sInfo, wsdl));
         }
     }
 
     public List<JAXWSServiceInfo> getServiceInfoList() {
-        return serviceInfoList;
+        return this.serviceInfoList;
     }
 
     /**
-     * Generates necessary client files for SOAP service. This will generate
-     * JAXWS binding file and service client Java files, including JAXB Java
-     * files.
+     * Generates necessary client files for SOAP service. This will generate JAXWS binding file and service client Java
+     * files, including JAXB Java files.
      * 
-     * @param jaxbBindingFiles
-     *            A list of JAXB binding files to be used for code generation.
+     * @param jaxbBindingFiles A list of JAXB binding files to be used for code generation.
      * @throws GenerationException
      */
-    public void generate(List<File> jaxbBindingFiles)
-            throws GenerationException {
+    public void generate(List<File> jaxbBindingFiles) throws GenerationException {
         File jaxwsBindingFile = generateJAXWSBindingFile();
         generate(jaxwsBindingFile, jaxbBindingFiles);
     }
 
-    private void generate(File jaxwsBindingFile, List<File> jaxbBindingFiles)
-            throws GenerationException {
-        String wsdlUri = wsdl.getURI();
-        
+    private void generate(File jaxwsBindingFile, List<File> jaxbBindingFiles) throws GenerationException {
+        String wsdlUri = this.wsdl.getURI();
+
         WsImport2 wsImport = new WsImport2();
         wsImport.setProject(new Project());
-        wsImport.setSourcedestdir(outputSrcDir);
-        wsImport.setDestdir(outputClassDir);  // handler chain xml file gets generated here
-        wsImport.createXjcarg().setValue("-Xcollection-setter-injector");  // generate setter methods for Collection based properties
-        wsImport.createXjcarg().setValue("-Xboolean-getter");  // replace isXXX with getXXX for Boolean type properties
-        wsImport.createXjcarg().setValue("-npa");  // suppress generation of package level annotations
+        wsImport.setSourcedestdir(this.outputSrcDir);
+        wsImport.setDestdir(this.outputClassDir); // handler chain xml file gets generated here
+        wsImport.createXjcarg().setValue("-Xcollection-setter-injector"); // generate setter methods for Collection
+                                                                          // based properties
+        wsImport.createXjcarg().setValue("-Xboolean-getter"); // replace isXXX with getXXX for Boolean type properties
+        wsImport.createXjcarg().setValue("-npa"); // suppress generation of package level annotations
         wsImport.setKeep(true);
         wsImport.setQuiet(true);
         wsImport.setXnocompile(true);
@@ -108,25 +105,24 @@ public class JAXWSBuilder {
         // is in the direcotry relative to the output package directory
         String wsdlFileName = getFileNameFromURI(wsdlUri);
         if (wsdlFileName != null) {
-            File f = new File(CodeGenUtils.getPackageDir(
-                    outputSrcDir, wsdl.getPackageName()), wsdlFileName);
+            File f = new File(CodeGenUtils.getPackageDir(this.outputSrcDir, this.wsdl.getPackageName()), wsdlFileName);
             if (f.exists()) {
                 wsImport.setWsdllocation(wsdlFileName);
             }
         }
-        
+
         // set JAX-WS binding
         FileSet fs = new FileSet();
         fs.setFile(jaxwsBindingFile);
         wsImport.addConfiguredBinding(fs);
-        
+
         // set JAXB bindings
         for (File jaxbBindingFile : jaxbBindingFiles) {
             fs = new FileSet();
             fs.setFile(jaxbBindingFile);
             wsImport.addConfiguredBinding(fs);
         }
-        
+
         // set WSDL file to be used to generate client-side artifacts
         wsImport.setWsdl(wsdlUri);
 
@@ -143,9 +139,8 @@ public class JAXWSBuilder {
      * @return The JAXWS binding customization file.
      */
     private File generateJAXWSBindingFile() {
-        File bindingFile = new File(CodeGenUtils.getPackageDir(outputSrcDir,
-                wsdl.getPackageName()), wsdl.getServiceId()
-                + Constants.JAXWS_BINDING_FILE_EXT);
+        File bindingFile = new File(CodeGenUtils.getPackageDir(this.outputSrcDir, this.wsdl.getPackageName()), this.wsdl.getServiceId()
+            + Constants.JAXWS_BINDING_FILE_EXT);
         PrintWriter pw = null;
         try {
             pw = new PrintWriter(new FileWriter(bindingFile));
@@ -163,21 +158,20 @@ public class JAXWSBuilder {
         // root bindings element
         xw.setCurrentShortNS("jaxws");
         xw.addElement("bindings");
-        xw.addAttribute("wsdlLocation", wsdl.getURI());
+        xw.addAttribute("wsdlLocation", this.wsdl.getURI());
 
         // specify Java package name to be used for the generated service classes
         xw.addElement("package");
-        xw.addAttribute("name", wsdl.getPackageName());
+        xw.addAttribute("name", this.wsdl.getPackageName());
         xw.closeElement();
-        
+
         // disable Wrapper style
         xw.addElement("enableWrapperStyle", "false");
 
-        for (JAXWSServiceInfo serviceInfo : serviceInfoList) {
+        for (JAXWSServiceInfo serviceInfo : this.serviceInfoList) {
             // change JAXWS generated service client (@WebServiceClient) class name
             xw.addElement("bindings");
-            xw.addAttribute("node", "wsdl:definitions/wsdl:service[@name='"
-                    + serviceInfo.getName() + "']");
+            xw.addAttribute("node", "wsdl:definitions/wsdl:service[@name='" + serviceInfo.getName() + "']");
             xw.addElement("class");
             xw.addAttribute("name", serviceInfo.getServiceClientClassName());
             xw.closeElement();
@@ -189,8 +183,7 @@ public class JAXWSBuilder {
                 // name during wsimport.
                 if (portTypeInfo.isSeiClassNameModified()) {
                     xw.addElement("bindings");
-                    xw.addAttribute("node", "wsdl:definitions/wsdl:portType[@name='"
-                            + portTypeInfo.getName() + "']");
+                    xw.addAttribute("node", "wsdl:definitions/wsdl:portType[@name='" + portTypeInfo.getName() + "']");
                     xw.addElement("class");
                     xw.addAttribute("name", portTypeInfo.getSeiClassName());
                     xw.closeElement();
@@ -201,7 +194,7 @@ public class JAXWSBuilder {
 
         // add handler(s) to do additional processing of the inbound and
         // outbound messages
-        List<String> handlerClassNames = wsdl.getInterceptorClassNames();
+        List<String> handlerClassNames = this.wsdl.getInterceptorClassNames();
         if (handlerClassNames != null && !handlerClassNames.isEmpty()) {
             xw.addElement("bindings");
             xw.addAttribute("node", "wsdl:definitions");
@@ -225,8 +218,7 @@ public class JAXWSBuilder {
     /**
      * Returns the Java method name for the specific operation name.
      * 
-     * @param operationName
-     *            The operation name to be converted.
+     * @param operationName The operation name to be converted.
      * @return Method name according to JAXWS generated service class format.
      */
     public static String getJavaMethodName(String operationName) {
@@ -234,11 +226,9 @@ public class JAXWSBuilder {
     }
 
     /**
-     * Returns the JAXWS generated Java class name. The returned name does not
-     * include the package portion.
+     * Returns the JAXWS generated Java class name. The returned name does not include the package portion.
      * 
-     * @param localName
-     *                The local name.
+     * @param localName The local name.
      * @return The JAXWS generated Java class name.
      */
     public static String getJaxwsGeneratedClassName(String localName) {
@@ -246,8 +236,7 @@ public class JAXWSBuilder {
     }
 
     /**
-     * Returns the file name given the URI string.  If the given URI's scheme
-     * is not "file", then null is returned.
+     * Returns the file name given the URI string. If the given URI's scheme is not "file", then null is returned.
      * 
      * @param uriString The URI string.
      * @return The file name.
@@ -263,21 +252,17 @@ public class JAXWSBuilder {
         }
         return null;
     }
-    
-    private static JAXWSServiceInfo generateJAXWSServiceInfo(
-            ServiceInfo serviceInfo, WSDL wsdl) {
+
+    private static JAXWSServiceInfo generateJAXWSServiceInfo(ServiceInfo serviceInfo, WSDL wsdl) {
         List<JAXWSPortTypeInfo> portTypeInfoList = new ArrayList<JAXWSPortTypeInfo>();
         for (PortTypeInfo portTypeInfo : serviceInfo.getPortTypeInfoList()) {
             portTypeInfoList.add(generateJAXWSPortTypeInfo(portTypeInfo, wsdl));
         }
-        return new JAXWSServiceInfo(serviceInfo, wsdl.getPackageName(),
-                portTypeInfoList);
+        return new JAXWSServiceInfo(serviceInfo, wsdl.getPackageName(), portTypeInfoList);
     }
 
-    private static JAXWSPortTypeInfo generateJAXWSPortTypeInfo(
-            PortTypeInfo portTypeInfo, WSDL wsdl) {
-        String seiClassName = JAXWSBuilder
-                .getJaxwsGeneratedClassName(portTypeInfo.getName());
+    private static JAXWSPortTypeInfo generateJAXWSPortTypeInfo(PortTypeInfo portTypeInfo, WSDL wsdl) {
+        String seiClassName = JAXWSBuilder.getJaxwsGeneratedClassName(portTypeInfo.getName());
         boolean isSeiClassNameModified = false;
         // check if there is any class name collision
         if (wsdl.getServiceClassName().equals(seiClassName)) {
@@ -285,10 +270,9 @@ public class JAXWSBuilder {
             seiClassName = seiClassName + SEI_CLASS_NAME_SUFFIX;
         }
 
-        return new JAXWSPortTypeInfo(portTypeInfo, seiClassName, wsdl
-                .getPackageName(), isSeiClassNameModified);
+        return new JAXWSPortTypeInfo(portTypeInfo, seiClassName, wsdl.getPackageName(), isSeiClassNameModified);
     }
-    
+
     public static Set<String> getGeneratedSeiClasses(WSDL wsdl) {
         Set<String> seiClasses = new HashSet<String>();
         for (ServiceInfo sInfo : wsdl.getServiceInfoList()) {

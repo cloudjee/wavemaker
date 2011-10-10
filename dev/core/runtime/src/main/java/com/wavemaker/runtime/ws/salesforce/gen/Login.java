@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -22,11 +20,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
+ * <p>
+ * Java class for anonymous complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType>
@@ -44,37 +43,31 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "username",
-    "password"
-})
+@XmlType(name = "", propOrder = { "username", "password" })
 @XmlRootElement(name = "login", namespace = "urn:partner.soap.sforce.com")
 public class Login {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String username;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String password;
 
     /**
      * Gets the value of the username property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     /**
      * Sets the value of the username property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setUsername(String value) {
         this.username = value;
@@ -83,22 +76,18 @@ public class Login {
     /**
      * Gets the value of the password property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     /**
      * Sets the value of the password property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setPassword(String value) {
         this.password = value;

@@ -15,29 +15,30 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.server.testspring;
 
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class ServiceEventBean {
 
     private long count = 0;
-    
+
     public void increment() {
-        count++;
+        this.count++;
     }
-    
+
     public long getCount() {
-        return count;
+        return this.count;
     }
-    
+
     public long getValue(long input) {
         return input;
     }
-    
+
     public void throwsException() throws Exception {
         throw new Exception("bla");
     }

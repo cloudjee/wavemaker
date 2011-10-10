@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.wavemaker.studio.project.upgrade;
 
 import static org.junit.Assert.assertFalse;
@@ -41,50 +42,50 @@ import com.wavemaker.tools.service.DesignServiceManager;
  */
 public class TestUpgradeTemplateFile extends StudioTestCase {
 
-	@Test
-	public void testUpgradeWebXml() throws Exception {
+    @Test
+    public void testUpgradeWebXml() throws Exception {
 
-		makeProject("testUpgradeWebXml", false);
+        makeProject("testUpgradeWebXml", false);
 
-		DesignServiceManager dsm = (DesignServiceManager) getBean("designServiceManager");
-		Project project = dsm.getProjectManager().getCurrentProject();
+        DesignServiceManager dsm = (DesignServiceManager) getBean("designServiceManager");
+        Project project = dsm.getProjectManager().getCurrentProject();
 
-		File webInf = project.getWebInf().getFile();
-		File userWebXml = new File(webInf, "user-web.xml");
+        File webInf = project.getWebInf().getFile();
+        File userWebXml = new File(webInf, "user-web.xml");
 
-		// default project
-		assertTrue(userWebXml.exists());
+        // default project
+        assertTrue(userWebXml.exists());
 
-		userWebXml.delete();
-		assertFalse(userWebXml.exists());
+        userWebXml.delete();
+        assertFalse(userWebXml.exists());
 
-		UpgradeTemplateFile ut = new UpgradeTemplateFile();
-		ut.setFile("webapproot/WEB-INF/user-web.xml");
-		UpgradeInfo info = new UpgradeInfo();
-		ut.doUpgrade(project, info);
+        UpgradeTemplateFile ut = new UpgradeTemplateFile();
+        ut.setFile("webapproot/WEB-INF/user-web.xml");
+        UpgradeInfo info = new UpgradeInfo();
+        ut.doUpgrade(project, info);
 
-		assertTrue(userWebXml.exists());
+        assertTrue(userWebXml.exists());
 
-		String userWebXmlContents = FileUtils.readFileToString(userWebXml);
-		assertTrue(userWebXmlContents.contains("display-name"));
-	}
+        String userWebXmlContents = FileUtils.readFileToString(userWebXml);
+        assertTrue(userWebXmlContents.contains("display-name"));
+    }
 
-	@Test
-	public void testUpgradeTaskPresent() throws Exception {
+    @Test
+    public void testUpgradeTaskPresent() throws Exception {
 
-		boolean foundTask = false;
+        boolean foundTask = false;
 
-		UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
+        UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
 
-		outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
-			for (UpgradeTask ut : uts) {
-				if (ut instanceof UpgradeTemplateFile) {
-					foundTask = true;
-					break outer;
-				}
-			}
-		}
+        outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
+            for (UpgradeTask ut : uts) {
+                if (ut instanceof UpgradeTemplateFile) {
+                    foundTask = true;
+                    break outer;
+                }
+            }
+        }
 
-		assertTrue(foundTask);
-	}
+        assertTrue(foundTask);
+    }
 }

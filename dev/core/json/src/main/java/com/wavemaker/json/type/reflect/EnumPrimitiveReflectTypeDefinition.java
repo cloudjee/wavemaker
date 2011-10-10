@@ -22,50 +22,50 @@ import com.wavemaker.json.core.JSONUtils;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
-public class EnumPrimitiveReflectTypeDefinition extends
-        PrimitiveReflectTypeDefinition {
+public class EnumPrimitiveReflectTypeDefinition extends PrimitiveReflectTypeDefinition {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.type.reflect.ReflectTypeDefinition#newInstance(java.lang.Object[])
      */
     @Override
     @SuppressWarnings("unchecked")
     public Object newInstance(Object... args) {
-        
+
         Class<?> klass = getKlass();
 
-        Object ret = fromStringValue((Class<Enum>)klass,
-                (String) super.newInstance(args[0], String.class));
-        
-        if (null==ret) {
-            ret = Enum.valueOf((Class<Enum>)klass,
-                    (String) super.newInstance(args[0], String.class));
+        Object ret = fromStringValue((Class<Enum>) klass, (String) super.newInstance(args[0], String.class));
+
+        if (null == ret) {
+            ret = Enum.valueOf((Class<Enum>) klass, (String) super.newInstance(args[0], String.class));
         }
-        
+
         return ret;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.type.reflect.PrimitiveReflectTypeDefinition#toJson(java.io.Writer, java.lang.Object)
      */
     @Override
     public void toJson(Writer writer, Object obj) throws IOException {
         writer.write(JSONUtils.quote(obj.toString()));
     }
-    
-    private static <T extends Enum<T>> T fromStringValue(Class<T> enumType,
-            String value) {
-        
+
+    private static <T extends Enum<T>> T fromStringValue(Class<T> enumType, String value) {
+
         T[] constants = enumType.getEnumConstants();
-        
-        for (T constant: constants) {
+
+        for (T constant : constants) {
             if (value.equals(constant.toString())) {
                 return constant;
             }
         }
-        
+
         return null;
     }
 }

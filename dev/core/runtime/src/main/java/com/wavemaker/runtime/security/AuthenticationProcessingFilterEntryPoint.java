@@ -20,22 +20,18 @@ import javax.servlet.http.HttpServletResponse;
 import org.acegisecurity.AuthenticationException;
 
 /**
- * This allows passing the query string from the original URL to the login URL.
- * This is required since in debug mode, "debug" is added to the query string of
- * the app URL (e.g. http://localhost:8080/app1/?debug) and we want to have
- * login URL to be loaded in debug mode as well. (e.g.
- * http://localhost:8080/app1/login.html?debug)
+ * This allows passing the query string from the original URL to the login URL. This is required since in debug mode,
+ * "debug" is added to the query string of the app URL (e.g. http://localhost:8080/app1/?debug) and we want to have
+ * login URL to be loaded in debug mode as well. (e.g. http://localhost:8080/app1/login.html?debug)
  * 
  * @author ffu
  * @version $Rev$ - $Date$
  * 
  */
-public class AuthenticationProcessingFilterEntryPoint extends
-        org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint {
+public class AuthenticationProcessingFilterEntryPoint extends org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint {
 
-    protected String determineUrlToUseForThisRequest(
-            HttpServletRequest request, HttpServletResponse response,
-            AuthenticationException exception) {
+    @Override
+    protected String determineUrlToUseForThisRequest(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) {
         String loginFormUrl = getLoginFormUrl();
         String queryString = request.getQueryString();
         if (queryString == null || queryString.length() == 0) {

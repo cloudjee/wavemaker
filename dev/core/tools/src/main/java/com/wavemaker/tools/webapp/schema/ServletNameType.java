@@ -19,26 +19,25 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * 
  * 
- * 	The servlet-name element contains the canonical name of the
- * 	servlet. Each servlet name is unique within the web
- * 	application.
+ * The servlet-name element contains the canonical name of the servlet. Each servlet name is unique within the web
+ * application.
  * 
- *       
  * 
- * <p>Java class for servlet-nameType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for servlet-nameType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="servlet-nameType">
@@ -53,9 +52,6 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "servlet-nameType")
-public class ServletNameType
-    extends NonEmptyStringType
-{
-
+public class ServletNameType extends NonEmptyStringType {
 
 }

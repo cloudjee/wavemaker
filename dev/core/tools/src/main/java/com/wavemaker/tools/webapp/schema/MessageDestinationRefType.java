@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import java.util.ArrayList;
@@ -35,43 +34,32 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
  * 
- * 	
  * 
- * 	  The message-destination-ref element contains a declaration
- * 	  of Deployment Component's reference to a message destination
- * 	  associated with a resource in Deployment Component's
- * 	  environment. It consists of:
  * 
- * 		  - an optional description
- * 		  - the message destination reference name
- * 		  - the message destination type
- * 		  - a specification as to whether the
- * 		    destination is used for
- * 		    consuming or producing messages, or both
- * 		  - a link to the message destination
+ * The message-destination-ref element contains a declaration of Deployment Component's reference to a message
+ * destination associated with a resource in Deployment Component's environment. It consists of:
  * 
- * 	  Examples:
+ * - an optional description - the message destination reference name - the message destination type - a specification
+ * as to whether the destination is used for consuming or producing messages, or both - a link to the message
+ * destination
  * 
- * 	  <message-destination-ref>
- * 		  <message-destination-ref-name>jms/StockQueue
- * 		  </message-destination-ref-name>
- * 		  <message-destination-type>javax.jms.Queue
- * 		  </message-destination-type>
- * 		  <message-destination-usage>Consumes
- * 		  </message-destination-usage>
- * 		  <message-destination-link>CorporateStocks
- * 		  </message-destination-link>
- * 	  </message-destination-ref>
+ * Examples:
  * 
- * 	  
- *       
+ * <message-destination-ref> <message-destination-ref-name>jms/StockQueue </message-destination-ref-name>
+ * <message-destination-type>javax.jms.Queue </message-destination-type> <message-destination-usage>Consumes
+ * </message-destination-usage> <message-destination-link>CorporateStocks </message-destination-link>
+ * </message-destination-ref>
  * 
- * <p>Java class for message-destination-refType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * 
+ * 
+ * <p>
+ * Java class for message-destination-refType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="message-destination-refType">
@@ -93,24 +81,24 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "message-destination-refType", propOrder = {
-    "description",
-    "messageDestinationRefName",
-    "messageDestinationType",
-    "messageDestinationUsage",
-    "messageDestinationLink"
-})
+@XmlType(name = "message-destination-refType", propOrder = { "description", "messageDestinationRefName", "messageDestinationType",
+    "messageDestinationUsage", "messageDestinationLink" })
 public class MessageDestinationRefType {
 
     protected List<DescriptionType> description;
+
     @XmlElement(name = "message-destination-ref-name", required = true)
     protected JndiNameType messageDestinationRefName;
+
     @XmlElement(name = "message-destination-type", required = true)
     protected MessageDestinationTypeType messageDestinationType;
+
     @XmlElement(name = "message-destination-usage", required = true)
     protected MessageDestinationUsageType messageDestinationUsage;
+
     @XmlElement(name = "message-destination-link")
     protected MessageDestinationLinkType messageDestinationLink;
+
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -121,27 +109,26 @@ public class MessageDestinationRefType {
      * Gets the value of the description property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the description property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the description property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getDescription().add(newItem);
+     * getDescription().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DescriptionType }
+     * Objects of the following type(s) are allowed in the list {@link DescriptionType }
      * 
      * 
      */
     public List<DescriptionType> getDescription() {
-        if (description == null) {
-            description = new ArrayList<DescriptionType>();
+        if (this.description == null) {
+            this.description = new ArrayList<DescriptionType>();
         }
         return this.description;
     }
@@ -149,22 +136,18 @@ public class MessageDestinationRefType {
     /**
      * Gets the value of the messageDestinationRefName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link JndiNameType }
-     *     
+     * @return possible object is {@link JndiNameType }
+     * 
      */
     public JndiNameType getMessageDestinationRefName() {
-        return messageDestinationRefName;
+        return this.messageDestinationRefName;
     }
 
     /**
      * Sets the value of the messageDestinationRefName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link JndiNameType }
-     *     
+     * @param value allowed object is {@link JndiNameType }
+     * 
      */
     public void setMessageDestinationRefName(JndiNameType value) {
         this.messageDestinationRefName = value;
@@ -173,22 +156,18 @@ public class MessageDestinationRefType {
     /**
      * Gets the value of the messageDestinationType property.
      * 
-     * @return
-     *     possible object is
-     *     {@link MessageDestinationTypeType }
-     *     
+     * @return possible object is {@link MessageDestinationTypeType }
+     * 
      */
     public MessageDestinationTypeType getMessageDestinationType() {
-        return messageDestinationType;
+        return this.messageDestinationType;
     }
 
     /**
      * Sets the value of the messageDestinationType property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link MessageDestinationTypeType }
-     *     
+     * @param value allowed object is {@link MessageDestinationTypeType }
+     * 
      */
     public void setMessageDestinationType(MessageDestinationTypeType value) {
         this.messageDestinationType = value;
@@ -197,22 +176,18 @@ public class MessageDestinationRefType {
     /**
      * Gets the value of the messageDestinationUsage property.
      * 
-     * @return
-     *     possible object is
-     *     {@link MessageDestinationUsageType }
-     *     
+     * @return possible object is {@link MessageDestinationUsageType }
+     * 
      */
     public MessageDestinationUsageType getMessageDestinationUsage() {
-        return messageDestinationUsage;
+        return this.messageDestinationUsage;
     }
 
     /**
      * Sets the value of the messageDestinationUsage property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link MessageDestinationUsageType }
-     *     
+     * @param value allowed object is {@link MessageDestinationUsageType }
+     * 
      */
     public void setMessageDestinationUsage(MessageDestinationUsageType value) {
         this.messageDestinationUsage = value;
@@ -221,22 +196,18 @@ public class MessageDestinationRefType {
     /**
      * Gets the value of the messageDestinationLink property.
      * 
-     * @return
-     *     possible object is
-     *     {@link MessageDestinationLinkType }
-     *     
+     * @return possible object is {@link MessageDestinationLinkType }
+     * 
      */
     public MessageDestinationLinkType getMessageDestinationLink() {
-        return messageDestinationLink;
+        return this.messageDestinationLink;
     }
 
     /**
      * Sets the value of the messageDestinationLink property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link MessageDestinationLinkType }
-     *     
+     * @param value allowed object is {@link MessageDestinationLinkType }
+     * 
      */
     public void setMessageDestinationLink(MessageDestinationLinkType value) {
         this.messageDestinationLink = value;
@@ -245,22 +216,18 @@ public class MessageDestinationRefType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setId(java.lang.String value) {
         this.id = value;

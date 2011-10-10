@@ -16,11 +16,9 @@ package com.wavemaker.json.type;
 
 import java.util.List;
 
-
 /**
- * Provide definitions for individual fields.  Each field contains a type,
- * information on it's array dimensions, as well as metadata describing the
- * values that may be placed there (for instance, if null is allowed).
+ * Provide definitions for individual fields. Each field contains a type, information on it's array dimensions, as well
+ * as metadata describing the values that may be placed there (for instance, if null is allowed).
  * 
  * @author small
  * @version $Rev$ - $Date$
@@ -28,29 +26,26 @@ import java.util.List;
 public interface FieldDefinition {
 
     /**
-     * Get the TypeDefinition associated with this field.  This can be null if
-     * there is no specified type (for instance, if the field is of type Object,
-     * or if it's an untyped generic list List&lt;?&gt;).
+     * Get the TypeDefinition associated with this field. This can be null if there is no specified type (for instance,
+     * if the field is of type Object, or if it's an untyped generic list List&lt;?&gt;).
      * 
      * @return The TypeDefinition for this field.
      */
     public TypeDefinition getTypeDefinition();
 
     /**
-     * Return the dimensions of this FieldDefinition.  This number should match
-     * the number of dimensions in the return from {@link #getArrayTypes()}.
+     * Return the dimensions of this FieldDefinition. This number should match the number of dimensions in the return
+     * from {@link #getArrayTypes()}.
      * 
      * @return The number of dimensions.
      */
     public int getDimensions();
 
     /**
-     * Get the list of array types, in order. For instance, if this field is a
-     * multi-dimensional array declared like this: List<String[]>, this method
-     * would return ListTypeDefinitions in this order: [List, String[]].
+     * Get the list of array types, in order. For instance, if this field is a multi-dimensional array declared like
+     * this: List<String[]>, this method would return ListTypeDefinitions in this order: [List, String[]].
      * 
-     * The number of dimensions of this list should match those returned by
-     * {@link #getDimensions()}.
+     * The number of dimensions of this list should match those returned by {@link #getDimensions()}.
      * 
      * @return The list of array types.
      */
@@ -65,15 +60,14 @@ public interface FieldDefinition {
 
     /**
      * Sub type for Salesforce.
-     *
+     * 
      * @return Sub type.
      */
-    public String getSubType(); //salesforce
+    public String getSubType(); // salesforce
 
     /**
      * Get the list of operations this field is required for. See the
-     * {@link com.wavemaker.runtime.service.LiveDataService} API for more
-     * information.
+     * {@link com.wavemaker.runtime.service.LiveDataService} API for more information.
      * 
      * @return The list of operations this field is required for.
      */
@@ -81,8 +75,7 @@ public interface FieldDefinition {
 
     /**
      * Get the list of operations this field cannot be changed during. See the
-     * {@link com.wavemaker.runtime.service.LiveDataService} API for more
-     * information.
+     * {@link com.wavemaker.runtime.service.LiveDataService} API for more information.
      * 
      * @return The list of operations this field cannot be changed during.
      */
@@ -90,16 +83,14 @@ public interface FieldDefinition {
 
     /**
      * Get the list of operations this field must be excluded from. See the
-     * {@link com.wavemaker.runtime.service.LiveDataService} API for more
-     * information.
+     * {@link com.wavemaker.runtime.service.LiveDataService} API for more information.
      * 
      * @return The list of operations this field must be excluded from.
      */
     public List<OperationEnumeration> getExclude();
 
     /**
-     * Retrieves an (optional) name associated with this field. When known, this
-     * should always be set.
+     * Retrieves an (optional) name associated with this field. When known, this should always be set.
      * 
      * @return The name for this field, or null if there is no name.
      */

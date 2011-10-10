@@ -19,44 +19,36 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * 
- * 	
  * 
- * 	  This type contains the fully-qualified Java type of the
- * 	  environment entry value that is expected by the
- * 	  application's code.
  * 
- * 	  The following are the legal values of env-entry-type-valuesType:
+ * This type contains the fully-qualified Java type of the environment entry value that is expected by the application's
+ * code.
  * 
- * 	      java.lang.Boolean
- * 	      java.lang.Byte
- * 	      java.lang.Character
- * 	      java.lang.String
- * 	      java.lang.Short
- * 	      java.lang.Integer
- * 	      java.lang.Long
- * 	      java.lang.Float
- * 	      java.lang.Double
+ * The following are the legal values of env-entry-type-valuesType:
  * 
- * 	  Example:
+ * java.lang.Boolean java.lang.Byte java.lang.Character java.lang.String java.lang.Short java.lang.Integer
+ * java.lang.Long java.lang.Float java.lang.Double
  * 
- * 	  <env-entry-type>java.lang.Boolean</env-entry-type>
+ * Example:
  * 
- * 	  
- *       
+ * <env-entry-type>java.lang.Boolean</env-entry-type>
  * 
- * <p>Java class for env-entry-type-valuesType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * 
+ * 
+ * <p>
+ * Java class for env-entry-type-valuesType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="env-entry-type-valuesType">
@@ -71,9 +63,6 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "env-entry-type-valuesType")
-public class EnvEntryTypeValuesType
-    extends String
-{
-
+public class EnvEntryTypeValuesType extends String {
 
 }

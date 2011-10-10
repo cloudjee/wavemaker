@@ -21,76 +21,78 @@ import java.util.Map;
 /**
  * @author Simon Toens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public interface DeploymentTarget {
-    
+
     /**
-     * Validate the deployment info prior to WAR generation 
+     * Validate the deployment info prior to WAR generation
+     * 
      * @param deploymentInfo
      * @return status message
      */
     String validateDeployment(DeploymentInfo deploymentInfo);
-    
+
     /**
-     * Deploy an app. 
-     *
-     * @param webapp  Either exploded or archived webapp to deploy
+     * Deploy an app.
+     * 
+     * @param webapp Either exploded or archived webapp to deploy
      * @param deploymentInfo
      * @return status message
      */
-    String deploy(File webapp, 
-                  DeploymentInfo deploymentInfo);
+    String deploy(File webapp, DeploymentInfo deploymentInfo);
 
     /**
      * Undeploy an app.
+     * 
      * @param deploymentInfo
-     * @param deleteServices 
-     *
+     * @param deleteServices
+     * 
      * @return status message
      */
     String undeploy(DeploymentInfo deploymentInfo, boolean deleteServices);
 
     /**
      * Redeploy an already deployed app.
-     * @param deploymentInfo 
-     *
+     * 
+     * @param deploymentInfo
+     * 
      * @return status message
      */
     String redeploy(DeploymentInfo deploymentInfo);
 
     /**
      * start a deployed app.
-     * @param deploymentInfo 
-     *
+     * 
+     * @param deploymentInfo
+     * 
      * @return status message
      */
     String start(DeploymentInfo deploymentInfo);
 
     /**
      * stop a deployed app.
-     * @param deploymentInfo 
-     *
+     * 
+     * @param deploymentInfo
+     * 
      * @return status message
      */
     String stop(DeploymentInfo deploymentInfo);
 
     /**
-     * @param deploymentInfo 
-     * @return  current deployments
+     * @param deploymentInfo
+     * @return current deployments
      */
-    List<AppInfo> listDeploymentNames(DeploymentInfo deploymentInfo); 
+    List<AppInfo> listDeploymentNames(DeploymentInfo deploymentInfo);
 
     /**
-     * @return Properties that can be configured for this DeploymentTarget,
-     * optionally with default values.
-     * for example:
-     * <ul>
-     * <li> hostname </li>
-     * <li> port </li>
-     * <li> etc </li>
-     * </ul>
-     * The property values are passed into the deployment methods.
+     * @return Properties that can be configured for this DeploymentTarget, optionally with default values. for example:
+     *         <ul>
+     *         <li>hostname</li>
+     *         <li>port</li>
+     *         <li>etc</li>
+     *         </ul>
+     *         The property values are passed into the deployment methods.
      */
     Map<String, String> getConfigurableProperties();
 }

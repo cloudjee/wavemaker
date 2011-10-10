@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data.sample.sakila;
 
 import java.lang.reflect.Method;
@@ -22,15 +23,10 @@ import java.util.Date;
 
 import org.springframework.aop.MethodBeforeAdvice;
 
+public class SakilaAdvice implements MethodBeforeAdvice {
 
-public class SakilaAdvice 
-    implements MethodBeforeAdvice 
-{
-
-    public void before(Method method, Object[] args, Object target) 
-        throws Throwable 
-    {
-        Actor actor = (Actor)args[0];
+    public void before(Method method, Object[] args, Object target) throws Throwable {
+        Actor actor = (Actor) args[0];
         actor.setLastUpdate(new Date());
     }
 }

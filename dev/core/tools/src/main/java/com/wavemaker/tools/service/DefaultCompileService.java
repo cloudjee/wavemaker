@@ -21,33 +21,33 @@ import com.wavemaker.tools.util.AntUtils;
 /**
  * @author Simon Toens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class DefaultCompileService implements CompileService {
-    
+
     private final File srcdir;
+
     private final File destdir;
-    
+
     public DefaultCompileService(File srcdir) {
         this(srcdir, srcdir);
     }
-    
-    
+
     public DefaultCompileService(File srcdir, File destdir) {
         this.srcdir = srcdir;
         this.destdir = destdir;
     }
 
     public void compile(boolean clean) {
-        AntUtils.javac(srcdir.getAbsolutePath(), destdir);
+        AntUtils.javac(this.srcdir.getAbsolutePath(), this.destdir);
 
-
-	if (System.getProperty("os.name").equalsIgnoreCase("linux")) {
-	    // workaround linux race condition
-	    try {
-		Thread.sleep(1000);
-	    } catch (InterruptedException ignore) {}
-	}
+        if (System.getProperty("os.name").equalsIgnoreCase("linux")) {
+            // workaround linux race condition
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ignore) {
+            }
+        }
     }
 
 }

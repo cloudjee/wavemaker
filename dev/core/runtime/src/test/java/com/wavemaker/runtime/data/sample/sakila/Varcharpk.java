@@ -15,22 +15,22 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data.sample.sakila;
+
 // Generated Jan 9, 2008 4:21:59 PM by Hibernate Tools 3.2.0.CR1
 
-
-
-@SuppressWarnings({"serial"})
+@SuppressWarnings({ "serial" })
 public class Varcharpk implements java.io.Serializable {
 
-
     private String id;
+
     private String name;
 
     public String getId() {
         return this.id;
     }
-    
+
     public void setId(String id) {
         this.id = id;
     }
@@ -38,10 +38,8 @@ public class Varcharpk implements java.io.Serializable {
     public String getName() {
         return this.name;
     }
-    
+
     public void setName(String name) {
-	this.name = name;
+        this.name = name;
     }
 }
-
-

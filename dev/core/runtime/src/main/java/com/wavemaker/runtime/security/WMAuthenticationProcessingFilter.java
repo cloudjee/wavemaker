@@ -15,49 +15,40 @@
 package com.wavemaker.runtime.security;
 
 import java.io.IOException;
-import java.util.Enumeration;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+
 import org.acegisecurity.ui.webapp.AuthenticationProcessingFilter;
 
 /**
  * Overrides standard Acegi filter's doFilter method, to
  * 
  * @author slee
- *
+ * 
  */
 public class WMAuthenticationProcessingFilter extends AuthenticationProcessingFilter {
 
-    //public WMAuthenticationProcessingFilter() throws ServletException {
-    //    super();
-    //}
+    // public WMAuthenticationProcessingFilter() throws ServletException {
+    // super();
+    // }
 
     @Override
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException,
-            ServletException {
-        //Since it is decided to back out changes for WM-1715, this class serves only for the potential wrapper
-        //for corresponding Acegi class if needed in the future.
-        /*boolean designTime = false;
-        Enumeration e = req.getParameterNames();
-        while(e != null && e.hasMoreElements())
-        {
-            String name=(String)e.nextElement();
-            if (name != null && name.equals("designTime")) {
-                String [] values = req.getParameterValues(name);
-                if (values != null && values.length > 0) {
-                    designTime = values[0].equals("true");
-                }
-            }
-        }
-
-        if (designTime) {
-            chain.doFilter(req, res);
-        } else {*/
-            super.doFilter(req, res, chain);
-        //}
+    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+        // Since it is decided to back out changes for WM-1715, this class serves only for the potential wrapper
+        // for corresponding Acegi class if needed in the future.
+        /*
+         * boolean designTime = false; Enumeration e = req.getParameterNames(); while(e != null && e.hasMoreElements())
+         * { String name=(String)e.nextElement(); if (name != null && name.equals("designTime")) { String [] values =
+         * req.getParameterValues(name); if (values != null && values.length > 0) { designTime =
+         * values[0].equals("true"); } } }
+         * 
+         * if (designTime) { chain.doFilter(req, res); } else {
+         */
+        super.doFilter(req, res, chain);
+        // }
     }
 
 }

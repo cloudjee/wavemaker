@@ -15,9 +15,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.common.util;
 
-/** 
+/**
  * @author Matt Small
  * @version $Rev$ - $Date$
  */
@@ -33,11 +34,11 @@ public class ClassUtilsObject extends ClassUtilsObjectSuper {
     }
 
     private void testPrivate() {
-        fieldPrivate = 1;
+        this.fieldPrivate = 1;
     }
 
     public int fieldPublic;
-    
+
     @SuppressWarnings("unused")
     private int fieldPrivate;
 }

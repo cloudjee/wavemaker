@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.data;
 
 import java.io.File;
@@ -36,64 +37,63 @@ import com.wavemaker.tools.data.util.DataServiceTestUtils;
 /**
  * 
  * @author Jeremy Grelle
- *
+ * 
  */
 public class TestQueryRunner extends WMTestCase {
 
-	private File f = null;
+    private File f = null;
 
-	private QueryRunner runner = null;
+    private QueryRunner runner = null;
 
-	@Override
-	public void setUp() throws IOException {
-		f = DataServiceTestUtils.setupSakilaConfiguration().getParentFile();
-		ClassLoaderUtils.TaskRtn task = new ClassLoaderUtils.TaskRtn() {
-			public Object run() {
-				return SpringService
-						.initQueryRunner(DataServiceTestConstants.SAKILA_SPRING_CFG);
-			}
+    @Override
+    public void setUp() throws IOException {
+        this.f = DataServiceTestUtils.setupSakilaConfiguration().getParentFile();
+        ClassLoaderUtils.TaskRtn task = new ClassLoaderUtils.TaskRtn() {
 
-		};
-		runner = (QueryRunner) ClassLoaderUtils.runInClassLoaderContext(task,
-				new FileSystemResource(f.getAbsolutePath() + "/"));
-	}
+            public Object run() {
+                return SpringService.initQueryRunner(DataServiceTestConstants.SAKILA_SPRING_CFG);
+            }
 
-	@Override
-	public void tearDown() throws IOException {
-		try {
-			runner.dispose();
-		} finally {
-			IOUtils.deleteRecursive(f);
-		}
-	}
+        };
+        this.runner = (QueryRunner) ClassLoaderUtils.runInClassLoaderContext(task, new FileSystemResource(this.f.getAbsolutePath() + "/"));
+    }
 
-	public TestQueryRunner() {
-		InternalRuntime.setInternalRuntimeBean(new InternalRuntime());
-		InternalRuntime.getInstance().setJSONState(new JSONState());
-	}
+    @Override
+    public void tearDown() throws IOException {
+        try {
+            this.runner.dispose();
+        } finally {
+            IOUtils.deleteRecursive(this.f);
+        }
+    }
 
-	public void testQueryRunner1() {
+    public TestQueryRunner() {
+        InternalRuntime.setInternalRuntimeBean(new InternalRuntime());
+        InternalRuntime.getInstance().setJSONState(new JSONState());
+    }
 
-		Object o = runner.run("select count(a) from Actor a");
+    public void testQueryRunner1() {
 
-		assertTrue(o instanceof Collection);
-		assertTrue(((Collection<?>) o).iterator().next().equals(new Long(200)));
-	}
+        Object o = this.runner.run("select count(a) from Actor a");
 
-	public void testQueryRunner2() {
+        assertTrue(o instanceof Collection);
+        assertTrue(((Collection<?>) o).iterator().next().equals(new Long(200)));
+    }
 
-		Object o = runner.run("from Actor");
+    public void testQueryRunner2() {
 
-		assertTrue(o instanceof Collection);
-		assertTrue(((Collection<?>) o).size() == 200);
-	}
+        Object o = this.runner.run("from Actor");
 
-	public void testQueryRunner3() {
+        assertTrue(o instanceof Collection);
+        assertTrue(((Collection<?>) o).size() == 200);
+    }
 
-		runner.addBindParameter("id", "java.lang.Short", "2");
-		Object o = runner.run("from Actor _a where _a.id=:id");
+    public void testQueryRunner3() {
 
-		assertTrue(o instanceof Collection);
-		assertTrue(((Collection<?>) o).size() == 1);
-	}
+        this.runner.addBindParameter("id", "java.lang.Short", "2");
+        Object o = this.runner.run("from Actor _a where _a.id=:id");
+
+        assertTrue(o instanceof Collection);
+        assertTrue(((Collection<?>) o).size() == 1);
+    }
 }

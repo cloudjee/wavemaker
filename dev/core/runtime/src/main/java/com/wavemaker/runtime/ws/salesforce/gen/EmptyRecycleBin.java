@@ -11,24 +11,24 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
+ * <p>
+ * Java class for anonymous complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType>
@@ -45,9 +45,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "ids"
-})
+@XmlType(name = "", propOrder = { "ids" })
 @XmlRootElement(name = "emptyRecycleBin", namespace = "urn:partner.soap.sforce.com")
 public class EmptyRecycleBin {
 
@@ -58,27 +56,26 @@ public class EmptyRecycleBin {
      * Gets the value of the ids property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the ids property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the ids property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getIds().add(newItem);
+     * getIds().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link String }
+     * Objects of the following type(s) are allowed in the list {@link String }
      * 
      * 
      */
     public List<String> getIds() {
-        if (ids == null) {
-            ids = new ArrayList<String>();
+        if (this.ids == null) {
+            this.ids = new ArrayList<String>();
         }
         return this.ids;
     }
@@ -86,10 +83,8 @@ public class EmptyRecycleBin {
     /**
      * Sets the value of the ids property.
      * 
-     * @param ids
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param ids allowed object is {@link String }
+     * 
      */
     public void setIds(List<String> ids) {
         this.ids = ids;

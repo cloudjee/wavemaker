@@ -61,11 +61,11 @@ public abstract class CompilerTask extends Task {
     // REVIEW 25-Sep-07 stoens@activegrid.com -- We also need to handle
     // classpathref
     public void setClassPath(String s) {
-        classpath = s;
+        this.classpath = s;
     }
 
     public File getProjectRoot() {
-        return projectRoot;
+        return this.projectRoot;
     }
 
     public void setProjectRoot(File projectRoot) {
@@ -86,12 +86,12 @@ public abstract class CompilerTask extends Task {
     }
 
     protected synchronized DesignServiceManager getDesignServiceManager() {
-        if (designServiceManager == null) {
-            if (projectRoot != null) {
-                designServiceManager = DesignTimeUtils.getDSMForProjectRoot(new FileSystemResource(projectRoot));
+        if (this.designServiceManager == null) {
+            if (this.projectRoot != null) {
+                this.designServiceManager = DesignTimeUtils.getDSMForProjectRoot(new FileSystemResource(this.projectRoot));
             }
         }
-        return designServiceManager;
+        return this.designServiceManager;
     }
 
     protected void setProjectRootRequired(boolean projectRootRequired) {
@@ -117,18 +117,18 @@ public abstract class CompilerTask extends Task {
 
     protected void validate() {
 
-        if (projectRootRequired) {
+        if (this.projectRootRequired) {
 
-            if (projectRoot == null) {
+            if (this.projectRoot == null) {
                 throw new BuildException("projectRoot must be set");
             }
 
-            if (!projectRoot.exists()) {
-                throw new BuildException("projectRoot: " + projectRoot + "doesn't exist");
+            if (!this.projectRoot.exists()) {
+                throw new BuildException("projectRoot: " + this.projectRoot + "doesn't exist");
             }
 
-            if (!projectRoot.isDirectory()) {
-                throw new BuildException("projectRoot: " + projectRoot + "is not a directory");
+            if (!this.projectRoot.isDirectory()) {
+                throw new BuildException("projectRoot: " + this.projectRoot + "is not a directory");
             }
         }
     }
@@ -139,7 +139,7 @@ public abstract class CompilerTask extends Task {
 
     private ClassLoader getClassLoader() {
 
-        if (classpath == null) {
+        if (this.classpath == null) {
             // REVIEW 25-Sep-07 stoens@activegrid.com -- this is a hack for
             // running in Ant, so that we can get the taskdef's classloader
             // for this task. All this because Ant doesn't set the Thread's
@@ -156,7 +156,7 @@ public abstract class CompilerTask extends Task {
             if (getClass().getClassLoader().getClass().getName().endsWith("AntClassLoader")) {
                 parent = getClass().getClassLoader();
             }
-            String[] paths = classpath.split(":");
+            String[] paths = this.classpath.split(":");
             File[] classPathFiles = new File[paths.length];
             for (int i = 0; i < paths.length; i++) {
                 classPathFiles[i] = new File(paths[i]);

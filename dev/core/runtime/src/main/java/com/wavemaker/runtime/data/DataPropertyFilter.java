@@ -35,8 +35,7 @@ public class DataPropertyFilter implements PropertyFilter {
 
     private static final DataPropertyFilter instance = new DataPropertyFilter();
 
-    private static final Collection<String> ALWAYS_FILTERED
-        = new HashSet<String>(1);
+    private static final Collection<String> ALWAYS_FILTERED = new HashSet<String>(1);
     static {
         ALWAYS_FILTERED.add("hibernateLazyInitializer");
     }

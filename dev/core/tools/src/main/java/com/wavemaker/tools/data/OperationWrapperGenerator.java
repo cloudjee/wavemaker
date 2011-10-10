@@ -32,49 +32,43 @@ import com.wavemaker.tools.service.codegen.BeanGenerator;
 public class OperationWrapperGenerator {
 
     private BeanInfo beanInfo = null;
-    
+
     private static final String CLOB_TYPE = "java.sql.Clob";
-    
+
     private static final String BLOB_TYPE = "java.sql.Blob";
 
     public String generate(String className, DataServiceOperation operation) {
 
-        beanInfo = new BeanInfo(className);
+        this.beanInfo = new BeanInfo(className);
 
         BeanGenerator generator = new BeanGenerator(className);
 
-        generator.addClassJavadoc("Generated for query \""
-                + operation.getQueryName() + "\" on "
-                + StringUtils.getFormattedDate());
+        generator.addClassJavadoc("Generated for query \"" + operation.getQueryName() + "\" on " + StringUtils.getFormattedDate());
 
         List<String> outputTypes = operation.getOutputTypes();
-        List<String> outputNames = DataServiceUtils.getColumnNames(outputTypes
-                .size(), operation.getOutputNames());
+        List<String> outputNames = DataServiceUtils.getColumnNames(outputTypes.size(), operation.getOutputNames());
 
         int i = 0;
         boolean addSerializableMember = false;
         for (String type : operation.getOutputTypes()) {
             String name = outputNames.get(i);
             generator.addProperty(name, type);
-            beanInfo.addProperty(name, type);
+            this.beanInfo.addProperty(name, type);
             i++;
-            
-            if (type.equals(CLOB_TYPE) 
-            	|| type.equals(BLOB_TYPE))
-            {
-            	addSerializableMember = true;
+
+            if (type.equals(CLOB_TYPE) || type.equals(BLOB_TYPE)) {
+                addSerializableMember = true;
             }
         }
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
 
         try {
-        	if (addSerializableMember == false) {
+            if (addSerializableMember == false) {
                 generator.generate(os);
-        	}
-        	else {
-        		generator.generateAux(os);
-        	}
+            } else {
+                generator.generateAux(os);
+            }
         } catch (IOException ex) {
             throw new AssertionError(ex);
         }
@@ -82,6 +76,6 @@ public class OperationWrapperGenerator {
     }
 
     public BeanInfo getBeanInfo() {
-        return beanInfo;
+        return this.beanInfo;
     }
 }

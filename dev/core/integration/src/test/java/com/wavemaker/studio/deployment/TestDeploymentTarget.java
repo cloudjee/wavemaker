@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.wavemaker.studio.deployment;
 
 import static org.junit.Assert.assertTrue;
@@ -37,8 +38,8 @@ public class TestDeploymentTarget extends StudioTestCase {
 
     private static final String DPL_TARGET_MGR = "deploymentTargetManager";
 
-
-    @Test public void testConfigurableProperties() {
+    @Test
+    public void testConfigurableProperties() {
         DeploymentTargetManager dpl = getDeploymentTargetManager();
         DeploymentTarget tomcat = dpl.getDeploymentTarget(DeploymentType.TOMCAT);
         assertTrue("Cannot find Tomcat DeploymentTarget impl", tomcat != null);
@@ -49,7 +50,7 @@ public class TestDeploymentTarget extends StudioTestCase {
     }
 
     private DeploymentTargetManager getDeploymentTargetManager() {
-        return (DeploymentTargetManager)getBean(DPL_TARGET_MGR);
+        return (DeploymentTargetManager) getBean(DPL_TARGET_MGR);
     }
 
 }

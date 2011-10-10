@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import java.util.ArrayList;
@@ -35,36 +34,29 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
  * 
- * 	
  * 
- * 	  The resource-refType contains a declaration of a
- * 	  Deployment Component's reference to an external resource. It
- * 	  consists of an optional description, the resource manager
- * 	  connection factory reference name, the indication of the
- * 	  resource manager connection factory type expected by the
- * 	  Deployment Component code, the type of authentication
- * 	  (Application or Container), and an optional specification of
- * 	  the shareability of connections obtained from the resource
- * 	  (Shareable or Unshareable).
  * 
- * 	  Example:
+ * The resource-refType contains a declaration of a Deployment Component's reference to an external resource. It
+ * consists of an optional description, the resource manager connection factory reference name, the indication of the
+ * resource manager connection factory type expected by the Deployment Component code, the type of authentication
+ * (Application or Container), and an optional specification of the shareability of connections obtained from the
+ * resource (Shareable or Unshareable).
  * 
- * 	  <resource-ref>
- * 	      <res-ref-name>jdbc/EmployeeAppDB</res-ref-name>
- * 	      <res-type>javax.sql.DataSource</res-type>
- * 	      <res-auth>Container</res-auth>
- * 	      <res-sharing-scope>Shareable</res-sharing-scope>
- * 	  </resource-ref>
+ * Example:
  * 
- * 	  
- *       
+ * <resource-ref> <res-ref-name>jdbc/EmployeeAppDB</res-ref-name> <res-type>javax.sql.DataSource</res-type>
+ * <res-auth>Container</res-auth> <res-sharing-scope>Shareable</res-sharing-scope> </resource-ref>
  * 
- * <p>Java class for resource-refType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * 
+ * 
+ * <p>
+ * Java class for resource-refType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="resource-refType">
@@ -86,24 +78,23 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "resource-refType", propOrder = {
-    "description",
-    "resRefName",
-    "resType",
-    "resAuth",
-    "resSharingScope"
-})
+@XmlType(name = "resource-refType", propOrder = { "description", "resRefName", "resType", "resAuth", "resSharingScope" })
 public class ResourceRefType {
 
     protected List<DescriptionType> description;
+
     @XmlElement(name = "res-ref-name", required = true)
     protected JndiNameType resRefName;
+
     @XmlElement(name = "res-type", required = true)
     protected FullyQualifiedClassType resType;
+
     @XmlElement(name = "res-auth", required = true)
     protected ResAuthType resAuth;
+
     @XmlElement(name = "res-sharing-scope")
     protected ResSharingScopeType resSharingScope;
+
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -114,27 +105,26 @@ public class ResourceRefType {
      * Gets the value of the description property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the description property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the description property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getDescription().add(newItem);
+     * getDescription().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DescriptionType }
+     * Objects of the following type(s) are allowed in the list {@link DescriptionType }
      * 
      * 
      */
     public List<DescriptionType> getDescription() {
-        if (description == null) {
-            description = new ArrayList<DescriptionType>();
+        if (this.description == null) {
+            this.description = new ArrayList<DescriptionType>();
         }
         return this.description;
     }
@@ -142,22 +132,18 @@ public class ResourceRefType {
     /**
      * Gets the value of the resRefName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link JndiNameType }
-     *     
+     * @return possible object is {@link JndiNameType }
+     * 
      */
     public JndiNameType getResRefName() {
-        return resRefName;
+        return this.resRefName;
     }
 
     /**
      * Sets the value of the resRefName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link JndiNameType }
-     *     
+     * @param value allowed object is {@link JndiNameType }
+     * 
      */
     public void setResRefName(JndiNameType value) {
         this.resRefName = value;
@@ -166,22 +152,18 @@ public class ResourceRefType {
     /**
      * Gets the value of the resType property.
      * 
-     * @return
-     *     possible object is
-     *     {@link FullyQualifiedClassType }
-     *     
+     * @return possible object is {@link FullyQualifiedClassType }
+     * 
      */
     public FullyQualifiedClassType getResType() {
-        return resType;
+        return this.resType;
     }
 
     /**
      * Sets the value of the resType property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link FullyQualifiedClassType }
-     *     
+     * @param value allowed object is {@link FullyQualifiedClassType }
+     * 
      */
     public void setResType(FullyQualifiedClassType value) {
         this.resType = value;
@@ -190,22 +172,18 @@ public class ResourceRefType {
     /**
      * Gets the value of the resAuth property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ResAuthType }
-     *     
+     * @return possible object is {@link ResAuthType }
+     * 
      */
     public ResAuthType getResAuth() {
-        return resAuth;
+        return this.resAuth;
     }
 
     /**
      * Sets the value of the resAuth property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link ResAuthType }
-     *     
+     * @param value allowed object is {@link ResAuthType }
+     * 
      */
     public void setResAuth(ResAuthType value) {
         this.resAuth = value;
@@ -214,22 +192,18 @@ public class ResourceRefType {
     /**
      * Gets the value of the resSharingScope property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ResSharingScopeType }
-     *     
+     * @return possible object is {@link ResSharingScopeType }
+     * 
      */
     public ResSharingScopeType getResSharingScope() {
-        return resSharingScope;
+        return this.resSharingScope;
     }
 
     /**
      * Sets the value of the resSharingScope property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link ResSharingScopeType }
-     *     
+     * @param value allowed object is {@link ResSharingScopeType }
+     * 
      */
     public void setResSharingScope(ResSharingScopeType value) {
         this.resSharingScope = value;
@@ -238,22 +212,18 @@ public class ResourceRefType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setId(java.lang.String value) {
         this.id = value;

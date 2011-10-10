@@ -25,24 +25,19 @@ public class WMRuntimeException extends RuntimeException {
     private final Integer msgId;
 
     public WMRuntimeException(MessageResource resource) {
-        this(resource.getMessage(), resource.getDetailMessage(), resource
-                .getId());
+        this(resource.getMessage(), resource.getDetailMessage(), resource.getId());
     }
 
     public WMRuntimeException(MessageResource resource, Throwable cause) {
-        this(resource.getMessage(), resource.getDetailMessage(), resource
-                .getId(), cause);
+        this(resource.getMessage(), resource.getDetailMessage(), resource.getId(), cause);
     }
 
     public WMRuntimeException(MessageResource resource, Object... args) {
-        this(resource.getMessage(args), resource.getDetailMessage(args),
-                resource.getId());
+        this(resource.getMessage(args), resource.getDetailMessage(args), resource.getId());
     }
 
-    public WMRuntimeException(MessageResource resource, Throwable cause,
-            Object... args) {
-        this(resource.getMessage(args), resource.getDetailMessage(args),
-                resource.getId(), cause);
+    public WMRuntimeException(MessageResource resource, Throwable cause, Object... args) {
+        this(resource.getMessage(args), resource.getDetailMessage(args), resource.getId(), cause);
     }
 
     public WMRuntimeException(String message) {
@@ -57,18 +52,15 @@ public class WMRuntimeException extends RuntimeException {
         this(message, detailedMessage, (Throwable) null);
     }
 
-    public WMRuntimeException(String message, String detailedMessage,
-            Integer msgId) {
+    public WMRuntimeException(String message, String detailedMessage, Integer msgId) {
         this(message, detailedMessage, msgId, (Throwable) null);
     }
 
-    public WMRuntimeException(String message, String detailedMessage,
-            Throwable cause) {
+    public WMRuntimeException(String message, String detailedMessage, Throwable cause) {
         this(message, detailedMessage, null, cause);
     }
 
-    public WMRuntimeException(String message, String detailedMessage,
-            Integer msgId, Throwable cause) {
+    public WMRuntimeException(String message, String detailedMessage, Integer msgId, Throwable cause) {
         super(message, cause);
         this.detailedMessage = detailedMessage;
         this.msgId = msgId;
@@ -79,10 +71,10 @@ public class WMRuntimeException extends RuntimeException {
     }
 
     public String getDetailedMesage() {
-        return detailedMessage;
+        return this.detailedMessage;
     }
 
     public Integer getMessageId() {
-        return msgId;
+        return this.msgId;
     }
 }

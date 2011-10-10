@@ -56,19 +56,19 @@ import com.wavemaker.tools.project.ProjectManager;
 public class TestServiceDeploymentManager {
 
     private static File homeDir;
-    
+
     private LocalStudioConfiguration studioConfig;
-    
-    @Mock 
+
+    @Mock
     private ProjectManager projectManager;
-    
+
     private ServiceDeploymentManager mgr;
-    
+
     @BeforeClass
     public static void initHomeDir() throws IOException {
         homeDir = IOUtils.createTempDirectory(TestServiceDeploymentManager.class.getName(), "tmp");
     }
-    
+
     @Before
     public void setUp() {
         assertTrue(homeDir.exists());
@@ -77,20 +77,20 @@ public class TestServiceDeploymentManager {
         commonDir.mkdir();
         assertTrue(commonDir.exists());
         assertTrue(commonDir.isDirectory());
-        studioConfig = new LocalStudioConfiguration();
-        studioConfig.setTestWaveMakerHome(homeDir);
+        this.studioConfig = new LocalStudioConfiguration();
+        this.studioConfig.setTestWaveMakerHome(homeDir);
         MockitoAnnotations.initMocks(this);
-        mgr = new ServiceDeploymentManager();
-        mgr.setProjectManager(projectManager);
-        mgr.setStudioConfiguration(studioConfig);
-        
+        this.mgr = new ServiceDeploymentManager();
+        this.mgr.setProjectManager(this.projectManager);
+        this.mgr.setStudioConfiguration(this.studioConfig);
+
         File projectDir = new File(homeDir, "projects/foo");
         projectDir.mkdirs();
         assertTrue(projectDir.isDirectory());
         Project proj = new Project(new FileSystemResource(projectDir), new LocalStudioConfiguration());
-        when(projectManager.getCurrentProject()).thenReturn(proj);
+        when(this.projectManager.getCurrentProject()).thenReturn(proj);
     }
-    
+
     @After
     public void cleanUp() throws IOException {
         logContents();
@@ -100,7 +100,7 @@ public class TestServiceDeploymentManager {
         }
         assertFalse(deploymentsFile.exists());
     }
-    
+
     private void logContents() throws IOException {
         File deploymentsFile = new File(homeDir, "common/deployments.js");
         byte[] contents = FileCopyUtils.copyToByteArray(deploymentsFile);
@@ -113,26 +113,26 @@ public class TestServiceDeploymentManager {
         DeploymentInfo deployment2 = stubDeployment2();
         DeploymentInfo deployment3 = stubDeployment3();
         DeploymentInfo deployment4 = stubDeployment1();
-        
-        String result = mgr.saveDeploymentInfo(deployment1);
+
+        String result = this.mgr.saveDeploymentInfo(deployment1);
         assertEquals("foo0", result);
-        result = mgr.saveDeploymentInfo(deployment2);
+        result = this.mgr.saveDeploymentInfo(deployment2);
         assertEquals("foo1", result);
-        result = mgr.saveDeploymentInfo(deployment3);
+        result = this.mgr.saveDeploymentInfo(deployment3);
         assertEquals("foo2", result);
-        
+
         File projectDir = new File(homeDir, "projects/bar");
         projectDir.mkdirs();
         assertTrue(projectDir.isDirectory());
         Project proj = new Project(new FileSystemResource(projectDir), new LocalStudioConfiguration());
-        when(projectManager.getCurrentProject()).thenReturn(proj);
-        
-        result = mgr.saveDeploymentInfo(deployment4);
+        when(this.projectManager.getCurrentProject()).thenReturn(proj);
+
+        result = this.mgr.saveDeploymentInfo(deployment4);
         assertEquals("bar0", result);
-        
-        Resource deploymentsFile = new FileSystemResource(homeDir.getPath()+"/").createRelative("common/deployments.js");
+
+        Resource deploymentsFile = new FileSystemResource(homeDir.getPath() + "/").createRelative("common/deployments.js");
         assertTrue(deploymentsFile.exists());
-        
+
         Deployments deployments = readDeploymentsFile();
         DeploymentInfo saved1 = deployments.forProject("foo").get(0);
         assertEquals(deployment1, saved1);
@@ -146,7 +146,7 @@ public class TestServiceDeploymentManager {
         DeploymentInfo saved4 = deployments.forProject("bar").get(0);
         assertEquals(deployment4, saved4);
         assertTrue(StringUtils.hasText(saved4.getDeploymentId()));
-        
+
         Set<String> ids = new HashSet<String>();
         ids.add(saved1.getDeploymentId());
         ids.add(saved2.getDeploymentId());
@@ -154,44 +154,44 @@ public class TestServiceDeploymentManager {
         ids.add(saved4.getDeploymentId());
         assertEquals(4, ids.size());
     }
-    
+
     @Test
     public void testSaveDeploymentInfo_UpdatedDeploymentInfo() throws IOException {
         DeploymentInfo originalDeployment = stubDeployment1();
-        
-        String result = mgr.saveDeploymentInfo(originalDeployment);
+
+        String result = this.mgr.saveDeploymentInfo(originalDeployment);
         assertEquals("foo0", result);
-        
-        Resource deploymentsFile = new FileSystemResource(homeDir.getPath()+"/").createRelative("common/deployments.js");
+
+        Resource deploymentsFile = new FileSystemResource(homeDir.getPath() + "/").createRelative("common/deployments.js");
         assertTrue(deploymentsFile.exists());
-        
+
         Deployments deployments = readDeploymentsFile();
         DeploymentInfo deploymentToUpdate = deployments.forProject("foo").get(0);
         deploymentToUpdate.setName("Bar Deployment");
-        result = mgr.saveDeploymentInfo(deploymentToUpdate);
+        result = this.mgr.saveDeploymentInfo(deploymentToUpdate);
         assertEquals("foo0", result);
         deployments = readDeploymentsFile();
         assertEquals(deploymentToUpdate, deployments.forProject("foo").get(0));
     }
-    
+
     @Test
     public void testGetDeploymentInfo() throws FileNotFoundException, IOException {
         Resource testFile = new ClassPathResource("com/wavemaker/tools/deployment/deployments.js");
         assertTrue(testFile.exists());
-        Resource deploymentsFile = new FileSystemResource(homeDir.getPath()+"/").createRelative("common/deployments.js");
+        Resource deploymentsFile = new FileSystemResource(homeDir.getPath() + "/").createRelative("common/deployments.js");
         FileCopyUtils.copy(testFile.getFile(), deploymentsFile.getFile());
         assertTrue(deploymentsFile.exists());
-        
-        List<DeploymentInfo> result = mgr.getDeploymentInfo();
+
+        List<DeploymentInfo> result = this.mgr.getDeploymentInfo();
         assertEquals(3, result.size());
     }
 
     private Deployments readDeploymentsFile() throws FileNotFoundException, IOException {
         JSON result = JSONUnmarshaller.unmarshal(FileCopyUtils.copyToString(new FileReader(new File(homeDir, "common/deployments.js"))));
         Assert.isTrue(result instanceof JSONObject, "deployments.js is in an unexpected format.");
-        return (Deployments) JSONUtils.toBean((JSONObject)result, Deployments.class);
+        return (Deployments) JSONUtils.toBean((JSONObject) result, Deployments.class);
     }
-    
+
     private DeploymentInfo stubDeployment1() {
         DeploymentInfo deployment1 = new DeploymentInfo();
         deployment1.setApplicationName("stubby1");
@@ -214,7 +214,7 @@ public class TestServiceDeploymentManager {
 
         return deployment1;
     }
-    
+
     private DeploymentInfo stubDeployment2() {
         DeploymentInfo deployment2 = new DeploymentInfo();
         deployment2.setApplicationName("stubby1");
@@ -231,7 +231,7 @@ public class TestServiceDeploymentManager {
         db2.setDbName("foo");
         dbs2.add(db2);
         deployment2.setDatabases(dbs2);
-        
+
         return deployment2;
     }
 
@@ -248,7 +248,7 @@ public class TestServiceDeploymentManager {
         db3.setDbName("foo");
         db3.setJndiName("/foo/bar/db");
         deployment3.setDatabases(dbs3);
-        
+
         return deployment3;
     }
 }

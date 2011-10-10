@@ -73,29 +73,24 @@ public class Reveng {
         }
 
         try {
-            for (int event = xmlReader.next(); event != XMLStreamConstants.END_DOCUMENT; event = xmlReader
-                    .next()) {
+            for (int event = xmlReader.next(); event != XMLStreamConstants.END_DOCUMENT; event = xmlReader.next()) {
 
                 switch (event) {
-                case XMLStreamConstants.START_ELEMENT:
-                    if (xmlReader.getName().toString().equals(
-                            TABLE_FILTER_ELEMENT)) {
-                        Map<String, String> attrs = XMLUtils
-                                .attributesToMap(xmlReader);
-                        rtn.packageName = attrs.get("package");
-                        rtn.tableFilters = new ArrayList<String>();
-                        rtn.tableFilters.add(attrs.get(MATCH_NAME_ATTR));
-                        break;
-                    }
+                    case XMLStreamConstants.START_ELEMENT:
+                        if (xmlReader.getName().toString().equals(TABLE_FILTER_ELEMENT)) {
+                            Map<String, String> attrs = XMLUtils.attributesToMap(xmlReader);
+                            rtn.packageName = attrs.get("package");
+                            rtn.tableFilters = new ArrayList<String>();
+                            rtn.tableFilters.add(attrs.get(MATCH_NAME_ATTR));
+                            break;
+                        }
 
-                    else if (xmlReader.getName().toString().equals(
-                            SCHEMA_SELECTION_ELEMENT)) {
-                        Map<String, String> attrs = XMLUtils
-                                .attributesToMap(xmlReader);
-                        rtn.schemaFilters = new ArrayList<String>();
-                        rtn.schemaFilters.add(attrs.get(MATCH_SCHEMA_ATTR));
-                        break;
-                    }
+                        else if (xmlReader.getName().toString().equals(SCHEMA_SELECTION_ELEMENT)) {
+                            Map<String, String> attrs = XMLUtils.attributesToMap(xmlReader);
+                            rtn.schemaFilters = new ArrayList<String>();
+                            rtn.schemaFilters.add(attrs.get(MATCH_SCHEMA_ATTR));
+                            break;
+                        }
                 }
             }
 
@@ -110,8 +105,8 @@ public class Reveng {
     }
 
     public Reveng() {
-        tableFilters.add(DataServiceConstants.DEFAULT_FILTER);
-        schemaFilters.add(DataServiceConstants.DEFAULT_FILTER);
+        this.tableFilters.add(DataServiceConstants.DEFAULT_FILTER);
+        this.schemaFilters.add(DataServiceConstants.DEFAULT_FILTER);
     }
 
     public void setPackageName(String packageName) {
@@ -127,28 +122,25 @@ public class Reveng {
     }
 
     public List<String> getTableFilters() {
-        return tableFilters;
+        return this.tableFilters;
     }
 
     public List<String> getSchemaFilters() {
-        return schemaFilters;
+        return this.schemaFilters;
     }
 
     public String getPackage() {
-        return packageName;
+        return this.packageName;
     }
 
     public void write(PrintWriter writer) {
 
         XMLWriter xmlWriter = XMLUtils.newXMLWriter(writer);
-        xmlWriter
-                .addDoctype("hibernate-reverse-engineering", null,
-                        "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd");
+        xmlWriter.addDoctype("hibernate-reverse-engineering", null, "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd");
         xmlWriter.addElement("hibernate-reverse-engineering");
 
-        for (String s : schemaFilters) {
-            xmlWriter.addClosedElement(SCHEMA_SELECTION_ELEMENT,
-                    MATCH_SCHEMA_ATTR, XMLUtils.escape(s));
+        for (String s : this.schemaFilters) {
+            xmlWriter.addClosedElement(SCHEMA_SELECTION_ELEMENT, MATCH_SCHEMA_ATTR, XMLUtils.escape(s));
         }
 
         List<String> includeFilters = new ArrayList<String>();
@@ -173,23 +165,20 @@ public class Reveng {
         xmlWriter.finish();
     }
 
-    private void addTableFilterElement(XMLWriter xmlWriter, String filter,
-            boolean exclude) {
+    private void addTableFilterElement(XMLWriter xmlWriter, String filter, boolean exclude) {
 
-        xmlWriter.addElement(TABLE_FILTER_ELEMENT, MATCH_NAME_ATTR, XMLUtils
-                .escape(filter), EXCLUDE_ATTR, String.valueOf(exclude));
+        xmlWriter.addElement(TABLE_FILTER_ELEMENT, MATCH_NAME_ATTR, XMLUtils.escape(filter), EXCLUDE_ATTR, String.valueOf(exclude));
 
         if (!exclude) {
-            xmlWriter.addAttribute(PACKAGE_ATTR, XMLUtils.escape(packageName));
+            xmlWriter.addAttribute(PACKAGE_ATTR, XMLUtils.escape(this.packageName));
         }
 
         xmlWriter.closeElement();
     }
 
-    private void populateTableFilters(List<String> includeFilters,
-            List<String> excludeFilters) {
+    private void populateTableFilters(List<String> includeFilters, List<String> excludeFilters) {
 
-        for (String filter : tableFilters) {
+        for (String filter : this.tableFilters) {
 
             boolean exclude = false;
 

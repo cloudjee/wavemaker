@@ -19,38 +19,44 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 
 /**
  * Listen to bean creation, and add any ModuleWire beans to the ModuleManager.
+ * 
  * @author small
  * @version $Rev$ - $Date$
  */
 public class ModuleManagerBeanPostProcessor implements BeanPostProcessor {
 
-    /* (non-Javadoc)
-     * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(java.lang.Object, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(java.lang.Object,
+     * java.lang.String)
      */
-    public Object postProcessAfterInitialization(Object bean, String beanName)
-            throws BeansException {
-        
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+
         if (bean instanceof ModuleWire) {
-            moduleManager.addModuleWire((ModuleWire) bean);
+            this.moduleManager.addModuleWire((ModuleWire) bean);
         }
-        
+
         return bean;
     }
 
-    /* (non-Javadoc)
-     * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessBeforeInitialization(java.lang.Object, java.lang.String)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessBeforeInitialization(java.lang.Object,
+     * java.lang.String)
      */
-    public Object postProcessBeforeInitialization(Object bean, String beanName)
-            throws BeansException {
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         return bean;
     }
 
     private ModuleManager moduleManager;
-    
+
     public void setModuleManager(ModuleManager moduleManager) {
         this.moduleManager = moduleManager;
     }
+
     public ModuleManager getModuleManager() {
-        return moduleManager;
+        return this.moduleManager;
     }
 }

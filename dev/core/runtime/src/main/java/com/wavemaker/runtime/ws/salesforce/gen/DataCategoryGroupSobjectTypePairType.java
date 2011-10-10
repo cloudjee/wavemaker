@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -21,11 +19,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for DataCategoryGroupSobjectTypePair complex type.
+ * <p>
+ * Java class for DataCategoryGroupSobjectTypePair complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="DataCategoryGroupSobjectTypePair">
@@ -43,36 +42,30 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DataCategoryGroupSobjectTypePair", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "dataCategoryGroupName",
-    "sobject"
-})
+@XmlType(name = "DataCategoryGroupSobjectTypePair", namespace = "urn:partner.soap.sforce.com", propOrder = { "dataCategoryGroupName", "sobject" })
 public class DataCategoryGroupSobjectTypePairType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String dataCategoryGroupName;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String sobject;
 
     /**
      * Gets the value of the dataCategoryGroupName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getDataCategoryGroupName() {
-        return dataCategoryGroupName;
+        return this.dataCategoryGroupName;
     }
 
     /**
      * Sets the value of the dataCategoryGroupName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setDataCategoryGroupName(String value) {
         this.dataCategoryGroupName = value;
@@ -81,22 +74,18 @@ public class DataCategoryGroupSobjectTypePairType {
     /**
      * Gets the value of the sobject property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getSobject() {
-        return sobject;
+        return this.sobject;
     }
 
     /**
      * Sets the value of the sobject property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setSobject(String value) {
         this.sobject = value;

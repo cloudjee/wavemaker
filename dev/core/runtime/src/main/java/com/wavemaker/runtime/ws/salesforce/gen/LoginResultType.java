@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -21,11 +19,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for LoginResult complex type.
+ * <p>
+ * Java class for LoginResult complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="LoginResult">
@@ -48,51 +47,46 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "LoginResult", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "metadataServerUrl",
-    "passwordExpired",
-    "sandbox",
-    "serverUrl",
-    "sessionId",
-    "userId",
-    "userInfo"
-})
+@XmlType(name = "LoginResult", namespace = "urn:partner.soap.sforce.com", propOrder = { "metadataServerUrl", "passwordExpired", "sandbox",
+    "serverUrl", "sessionId", "userId", "userInfo" })
 public class LoginResultType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String metadataServerUrl;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean passwordExpired;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean sandbox;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String serverUrl;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String sessionId;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String userId;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected GetUserInfoResultType userInfo;
 
     /**
      * Gets the value of the metadataServerUrl property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getMetadataServerUrl() {
-        return metadataServerUrl;
+        return this.metadataServerUrl;
     }
 
     /**
      * Sets the value of the metadataServerUrl property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setMetadataServerUrl(String value) {
         this.metadataServerUrl = value;
@@ -103,7 +97,7 @@ public class LoginResultType {
      * 
      */
     public boolean isPasswordExpired() {
-        return passwordExpired;
+        return this.passwordExpired;
     }
 
     /**
@@ -119,7 +113,7 @@ public class LoginResultType {
      * 
      */
     public boolean isSandbox() {
-        return sandbox;
+        return this.sandbox;
     }
 
     /**
@@ -133,22 +127,18 @@ public class LoginResultType {
     /**
      * Gets the value of the serverUrl property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getServerUrl() {
-        return serverUrl;
+        return this.serverUrl;
     }
 
     /**
      * Sets the value of the serverUrl property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setServerUrl(String value) {
         this.serverUrl = value;
@@ -157,22 +147,18 @@ public class LoginResultType {
     /**
      * Gets the value of the sessionId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getSessionId() {
-        return sessionId;
+        return this.sessionId;
     }
 
     /**
      * Sets the value of the sessionId property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setSessionId(String value) {
         this.sessionId = value;
@@ -181,22 +167,18 @@ public class LoginResultType {
     /**
      * Gets the value of the userId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getUserId() {
-        return userId;
+        return this.userId;
     }
 
     /**
      * Sets the value of the userId property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setUserId(String value) {
         this.userId = value;
@@ -205,22 +187,18 @@ public class LoginResultType {
     /**
      * Gets the value of the userInfo property.
      * 
-     * @return
-     *     possible object is
-     *     {@link GetUserInfoResultType }
-     *     
+     * @return possible object is {@link GetUserInfoResultType }
+     * 
      */
     public GetUserInfoResultType getUserInfo() {
-        return userInfo;
+        return this.userInfo;
     }
 
     /**
      * Sets the value of the userInfo property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link GetUserInfoResultType }
-     *     
+     * @param value allowed object is {@link GetUserInfoResultType }
+     * 
      */
     public void setUserInfo(GetUserInfoResultType value) {
         this.userInfo = value;

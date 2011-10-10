@@ -32,13 +32,13 @@ import com.wavemaker.tools.service.ServiceClassGenerator;
  * @version $Rev$ - $Date$
  */
 public class ServiceCompilerTask extends CompilerTask {
-    
+
     private File destDir = null;
 
     public ServiceCompilerTask() {
         super(true);
     }
-    
+
     public void setDestDir(File destDir) {
         this.destDir = destDir;
     }
@@ -63,30 +63,28 @@ public class ServiceCompilerTask extends CompilerTask {
 
     @Override
     protected void doExecute() {
-        
+
         for (String serviceId : getDesignServiceManager().getServiceIds()) {
-            
+
             File srcDir;
-			try {
-				srcDir = getDesignServiceManager().getServiceRuntimeDirectory(
-				        serviceId).getFile();
-			} catch (IOException ex) {
-				throw new BuildException(ex);
-			}
+            try {
+                srcDir = getDesignServiceManager().getServiceRuntimeDirectory(serviceId).getFile();
+            } catch (IOException ex) {
+                throw new BuildException(ex);
+            }
 
             if (srcDir == null) {
-                throw new BuildException("Could not locate service home for "
-                        + serviceId);
+                throw new BuildException("Could not locate service home for " + serviceId);
             }
 
             ServiceClassGenerator generator = new ServiceClassGenerator();
 
             generator.addServiceFiles(getServiceFiles(srcDir), serviceId);
 
-            if (destDir == null) {
+            if (this.destDir == null) {
                 generator.setOutputDirectory(new FileSystemResource(srcDir));
             } else {
-                generator.setOutputDirectory(new FileSystemResource(destDir));
+                generator.setOutputDirectory(new FileSystemResource(this.destDir));
             }
 
             generator.setDesignServiceManager(getDesignServiceManager());
@@ -94,19 +92,19 @@ public class ServiceCompilerTask extends CompilerTask {
             generator.run();
         }
     }
-    
+
     @Override
     protected void validate() {
-        
+
         super.validate();
-        
-        if (destDir != null) {
-            if (destDir.exists()) {
-                if (!destDir.isDirectory()) {
+
+        if (this.destDir != null) {
+            if (this.destDir.exists()) {
+                if (!this.destDir.isDirectory()) {
                     throw new BuildException("destdir must be a directory");
                 }
             } else {
-                destDir.mkdirs();
+                this.destDir.mkdirs();
             }
         }
     }

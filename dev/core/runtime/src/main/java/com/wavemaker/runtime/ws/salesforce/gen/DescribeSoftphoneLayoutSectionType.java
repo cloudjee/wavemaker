@@ -11,23 +11,23 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for DescribeSoftphoneLayoutSection complex type.
+ * <p>
+ * Java class for DescribeSoftphoneLayoutSection complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="DescribeSoftphoneLayoutSection">
@@ -45,36 +45,30 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DescribeSoftphoneLayoutSection", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "entityApiName",
-    "items"
-})
+@XmlType(name = "DescribeSoftphoneLayoutSection", namespace = "urn:partner.soap.sforce.com", propOrder = { "entityApiName", "items" })
 public class DescribeSoftphoneLayoutSectionType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String entityApiName;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected List<DescribeSoftphoneLayoutItemType> items;
 
     /**
      * Gets the value of the entityApiName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getEntityApiName() {
-        return entityApiName;
+        return this.entityApiName;
     }
 
     /**
      * Sets the value of the entityApiName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setEntityApiName(String value) {
         this.entityApiName = value;
@@ -84,27 +78,26 @@ public class DescribeSoftphoneLayoutSectionType {
      * Gets the value of the items property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the items property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the items property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getItems().add(newItem);
+     * getItems().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DescribeSoftphoneLayoutItemType }
+     * Objects of the following type(s) are allowed in the list {@link DescribeSoftphoneLayoutItemType }
      * 
      * 
      */
     public List<DescribeSoftphoneLayoutItemType> getItems() {
-        if (items == null) {
-            items = new ArrayList<DescribeSoftphoneLayoutItemType>();
+        if (this.items == null) {
+            this.items = new ArrayList<DescribeSoftphoneLayoutItemType>();
         }
         return this.items;
     }
@@ -112,10 +105,8 @@ public class DescribeSoftphoneLayoutSectionType {
     /**
      * Sets the value of the items property.
      * 
-     * @param items
-     *     allowed object is
-     *     {@link DescribeSoftphoneLayoutItemType }
-     *     
+     * @param items allowed object is {@link DescribeSoftphoneLayoutItemType }
+     * 
      */
     public void setItems(List<DescribeSoftphoneLayoutItemType> items) {
         this.items = items;

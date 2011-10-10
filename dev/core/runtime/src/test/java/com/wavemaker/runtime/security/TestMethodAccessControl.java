@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.security;
 
 import org.acegisecurity.AccessDeniedException;
@@ -33,23 +34,19 @@ import com.wavemaker.infra.WMTestCase;
 /**
  * 
  * @author Frankie Fu
- *
+ * 
  */
 public class TestMethodAccessControl extends WMTestCase {
 
-    private static ApplicationContext ctx = new ClassPathXmlApplicationContext(
-            "com/wavemaker/runtime/security/security-test1.xml");
+    private static ApplicationContext ctx = new ClassPathXmlApplicationContext("com/wavemaker/runtime/security/security-test1.xml");
 
-    private static void createSecureContext(final ApplicationContext ctx,
-            final String username, final String password) {
-        AuthenticationProvider provider = (AuthenticationProvider) ctx
-                .getBean("authenticationProvider");
-        Authentication auth = provider
-                .authenticate(new UsernamePasswordAuthenticationToken(username,
-                        password));
+    private static void createSecureContext(final ApplicationContext ctx, final String username, final String password) {
+        AuthenticationProvider provider = (AuthenticationProvider) ctx.getBean("authenticationProvider");
+        Authentication auth = provider.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         SecurityContextHolder.getContext().setAuthentication(auth);
     }
 
+    @Override
     public void tearDown() {
         // clear the security context after each test.
         SecurityContextHolder.setContext(new SecurityContextImpl());

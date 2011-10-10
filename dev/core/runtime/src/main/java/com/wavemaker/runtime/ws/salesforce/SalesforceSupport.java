@@ -11,25 +11,42 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce;
 
-import com.wavemaker.json.JSONArray;
-import com.wavemaker.json.JSONObject;
-import com.wavemaker.runtime.data.util.QueryHandler;
-import com.wavemaker.runtime.RuntimeAccess;
-import com.wavemaker.runtime.WMAppContext;
-import com.wavemaker.runtime.ws.salesforce.gen.*;
-import com.wavemaker.runtime.service.PagingOptions;
-import com.wavemaker.common.util.*;
-import com.wavemaker.common.WMRuntimeException;
-
-import java.util.*;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 
 import org.apache.commons.collections.map.MultiValueMap;
+
+import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.util.CastUtils;
+import com.wavemaker.common.util.Tuple;
+import com.wavemaker.common.util.TypeConversionUtils;
+import com.wavemaker.json.JSONArray;
+import com.wavemaker.json.JSONObject;
+import com.wavemaker.runtime.RuntimeAccess;
+import com.wavemaker.runtime.WMAppContext;
+import com.wavemaker.runtime.data.util.QueryHandler;
+import com.wavemaker.runtime.service.PagingOptions;
+import com.wavemaker.runtime.ws.salesforce.gen.DescribeGlobal;
+import com.wavemaker.runtime.ws.salesforce.gen.DescribeGlobalResponse;
+import com.wavemaker.runtime.ws.salesforce.gen.DescribeGlobalSObjectResultType;
+import com.wavemaker.runtime.ws.salesforce.gen.DescribeSObject;
+import com.wavemaker.runtime.ws.salesforce.gen.DescribeSObjectResponse;
+import com.wavemaker.runtime.ws.salesforce.gen.FieldType;
+import com.wavemaker.runtime.ws.salesforce.gen.PicklistEntryType;
+import com.wavemaker.runtime.ws.salesforce.gen.QueryResultType;
+import com.wavemaker.runtime.ws.salesforce.gen.SObjectType;
+import com.wavemaker.runtime.ws.salesforce.gen.SessionHeader;
+import com.wavemaker.runtime.ws.salesforce.gen.SforceService;
 
 /**
  * Helper class for Salesforce.
@@ -38,23 +55,26 @@ import org.apache.commons.collections.map.MultiValueMap;
  */
 public class SalesforceSupport {
 
-    private static final String[] SYS_MAINT_FIELDS =
-            {"CreatedBy", "CreatedById", "CreatedDate", "LastModifiedBy", "LastModifiedById", "LastModifiedDate",
-             "SystemModstamp", "IsDeleted", "FieldsToNulls"};
+    private static final String[] SYS_MAINT_FIELDS = { "CreatedBy", "CreatedById", "CreatedDate", "LastModifiedBy", "LastModifiedById",
+        "LastModifiedDate", "SystemModstamp", "IsDeleted", "FieldsToNulls" };
 
-    private static final String[] OPTIONAL_FIELDS =
-            {"ActivityHistories", "Attachments", "Events", "FeedSubscriptionsForEntity", "Histories", "LastActivityDate",
-             "Notes", "NotesAndAttachments", "OpenActivities", "Owner", "OwnerId", "ProcessInstances", "ProcessSteps",
-             "Tasks"};
+    private static final String[] OPTIONAL_FIELDS = { "ActivityHistories", "Attachments", "Events", "FeedSubscriptionsForEntity", "Histories",
+        "LastActivityDate", "Notes", "NotesAndAttachments", "OpenActivities", "Owner", "OwnerId", "ProcessInstances", "ProcessSteps", "Tasks" };
 
     private Map<String, List<FieldType>> fieldsMap = null;
-    private LoginService loginSvcBean = (LoginService) RuntimeAccess.getInstance().getSpringBean("sfLoginService");
+
+    private final LoginService loginSvcBean = (LoginService) RuntimeAccess.getInstance().getSpringBean("sfLoginService");
 
     private int lastQryId = 0;
-    private Map<Integer, SingleQuery> queryMap = new TreeMap<Integer, SingleQuery>(); //id, single query obj
-    private MultiValueMap parentQueryMap = new MultiValueMap(); // parent id, single query obj
+
+    private final Map<Integer, SingleQuery> queryMap = new TreeMap<Integer, SingleQuery>(); // id, single query obj
+
+    private final MultiValueMap parentQueryMap = new MultiValueMap(); // parent id, single query obj
+
     private MultiValueMap resultRows; // key = row (List<Object>), value = Object(Rec ID + SObject)
+
     private Map<List<Object>, JSONObject> resultJsonObjs;
+
     Long recId;
 
     public JSONObject getPickLists(String objClassName, JSONObject fieldAndValuePairs) throws Exception {
@@ -62,15 +82,19 @@ public class SalesforceSupport {
         String objName = getSalesforceObjName(objClassName);
 
         Set<Map.Entry<String, Object>> entries = fieldAndValuePairs.entrySet();
-        
+
         for (Map.Entry e : entries) {
-            String fieldName = (String)e.getKey();
-            if (carrier.containsKey(fieldName)) continue;
+            String fieldName = (String) e.getKey();
+            if (carrier.containsKey(fieldName)) {
+                continue;
+            }
 
             FieldType field = getField(objName, fieldName);
 
-            //for boolean, we don't need to get the pick list.  boolean is only needed as controller.
-            if (field.getType().value().equals("boolean")) continue;
+            // for boolean, we don't need to get the pick list. boolean is only needed as controller.
+            if (field.getType().value().equals("boolean")) {
+                continue;
+            }
 
             JSONObject result = getPickList(objName, field, fieldAndValuePairs, carrier);
             carrier.put(fieldName, result);
@@ -85,40 +109,49 @@ public class SalesforceSupport {
 
         Map<String, FieldType> fieldMap = new HashMap<String, FieldType>();
 
-        for (FieldType fld: fields) {
+        for (FieldType fld : fields) {
             fieldMap.put(fld.getName(), fld);
         }
 
         List<FieldType> controlPath = getControlPath(currentField, fieldMap, null);
 
-        //if no controller fields are found, get the pick list for the current field and return.
+        // if no controller fields are found, get the pick list for the current field and return.
         if (controlPath == null) {
             List<PicklistEntryType> picklistValues = currentField.getPicklistValues();
-            if (picklistValues != null && picklistValues.size() > 0)
+            if (picklistValues != null && picklistValues.size() > 0) {
                 return prepareJSONObject(picklistValues, fieldAndValuePairs, currentField);
-            else
+            } else {
                 return null;
+            }
         }
 
         Collections.reverse(controlPath);
 
-        if (carrier == null) carrier = new JSONObject();
+        if (carrier == null) {
+            carrier = new JSONObject();
+        }
 
         JSONObject plist = null;
         for (int i = 0; i < controlPath.size(); i++) {
             FieldType fld = controlPath.get(i);
 
-            if (fld.getType().value().equals("boolean")) continue;
-            if (carrier.containsKey(downShiftFirstChar(fld.getName()))) continue;
-            
+            if (fld.getType().value().equals("boolean")) {
+                continue;
+            }
+            if (carrier.containsKey(downShiftFirstChar(fld.getName()))) {
+                continue;
+            }
+
             FieldType controller;
 
-            //the first field does not have any controller
-            controller = i == 0 ? null : controlPath.get(i-1);
+            // the first field does not have any controller
+            controller = i == 0 ? null : controlPath.get(i - 1);
             plist = getRestrictedPickList(objName, fld, controller, fieldAndValuePairs);
 
-            //do not add the last entry to carrier bcz it will be added in the caller (getPiclLists)
-            if (i < controlPath.size()-1) carrier.put(downShiftFirstChar(currentField.getName()), plist);
+            // do not add the last entry to carrier bcz it will be added in the caller (getPiclLists)
+            if (i < controlPath.size() - 1) {
+                carrier.put(downShiftFirstChar(currentField.getName()), plist);
+            }
         }
 
         return plist;
@@ -127,9 +160,9 @@ public class SalesforceSupport {
     private void setupFields(String objName) throws Exception {
         DescribeSObject parameters = new DescribeSObject();
         parameters.setSObjectType(getSalesforceObjName(objName));
-        String result = loginSvcBean.logIn("sammysm@wavemaker.com", "Silver77Surfer");
+        this.loginSvcBean.logIn("sammysm@wavemaker.com", "Silver77Surfer");
         SessionHeader sessionHeader = LoginService.getSessionHeader();
-        SforceService service= LoginService.getSforceService();
+        SforceService service = LoginService.getSforceService();
 
         DescribeSObjectResponse dresponse = service.describeSObject(parameters, sessionHeader, null, null, null);
         List<FieldType> flds = dresponse.getResult().getFields();
@@ -137,26 +170,30 @@ public class SalesforceSupport {
 
         if (flds != null && flds.size() > 0) {
             fields = new ArrayList<FieldType>();
-            for (FieldType fld: flds) {
-                if (isSystemMaintained(fld.getName()) || isOptional(fld.getName())) continue;
+            for (FieldType fld : flds) {
+                if (isSystemMaintained(fld.getName()) || isOptional(fld.getName())) {
+                    continue;
+                }
                 fields.add(fld);
             }
         }
 
-        if (fieldsMap == null) fieldsMap = new HashMap<String, List<FieldType>>();
-        fieldsMap.put(objName, fields);
+        if (this.fieldsMap == null) {
+            this.fieldsMap = new HashMap<String, List<FieldType>>();
+        }
+        this.fieldsMap.put(objName, fields);
     }
 
-    private List<FieldType> getFields(String objName) throws Exception{
+    private List<FieldType> getFields(String objName) throws Exception {
         List<FieldType> fields;
-        if (fieldsMap == null) {
+        if (this.fieldsMap == null) {
             setupFields(objName);
-            fields = fieldsMap.get(objName);
+            fields = this.fieldsMap.get(objName);
         } else {
-            fields = fieldsMap.get(objName);
+            fields = this.fieldsMap.get(objName);
             if (fields == null) {
                 setupFields(objName);
-                fields = fieldsMap.get(objName);
+                fields = this.fieldsMap.get(objName);
             }
         }
 
@@ -166,14 +203,15 @@ public class SalesforceSupport {
     public static String getSalesforceObjName(String className) {
         String name = className;
         int pos = name.lastIndexOf(".");
-        if (pos > 0)
-            name = name.substring(pos+1);
+        if (pos > 0) {
+            name = name.substring(pos + 1);
+        }
 
         pos = name.lastIndexOf("Type");
         if (pos > 0) {
             name = name.substring(0, pos);
-            if (name.substring(pos-1).equals("C")) { //custom object
-                name = name.substring(0, pos-1) + "__c";    
+            if (name.substring(pos - 1).equals("C")) { // custom object
+                name = name.substring(0, pos - 1) + "__c";
             }
         }
 
@@ -186,17 +224,17 @@ public class SalesforceSupport {
 
         List<List<Object>> rtn = new ArrayList<List<Object>>();
         TreeMap<Long, List<Object>> tmap = new TreeMap<Long, List<Object>>();
-        Set<Map.Entry<List<Object>, List<Tuple.Two<Long, Object>>>> entries = CastUtils.cast(resultRows.entrySet());
+        Set<Map.Entry<List<Object>, List<Tuple.Two<Long, Object>>>> entries = CastUtils.cast(this.resultRows.entrySet());
         for (Map.Entry<List<Object>, List<Tuple.Two<Long, Object>>> entry : entries) {
             List<Tuple.Two<Long, Object>> list = entry.getValue();
-            tmap.put(list.get(0).v1,  entry.getKey());
+            tmap.put(list.get(0).v1, entry.getKey());
         }
 
         Set<Map.Entry<Long, List<Object>>> tmapEntries = tmap.entrySet();
         for (Map.Entry<Long, List<Object>> entry : tmapEntries) {
             rtn.add(entry.getValue());
         }
-        
+
         return rtn;
     }
 
@@ -206,31 +244,31 @@ public class SalesforceSupport {
 
         List<JSONObject> rtn = new ArrayList<JSONObject>();
         TreeMap<Long, List<Object>> tmap = new TreeMap<Long, List<Object>>();
-        Set<Map.Entry<List<Object>, List<Tuple.Two<Long, Object>>>> entries = CastUtils.cast(resultRows.entrySet());
+        Set<Map.Entry<List<Object>, List<Tuple.Two<Long, Object>>>> entries = CastUtils.cast(this.resultRows.entrySet());
         for (Map.Entry<List<Object>, List<Tuple.Two<Long, Object>>> entry : entries) {
             List<Tuple.Two<Long, Object>> list = entry.getValue();
-            tmap.put(list.get(0).v1,  entry.getKey());
+            tmap.put(list.get(0).v1, entry.getKey());
         }
 
         Set<Map.Entry<Long, List<Object>>> tmapEntries = tmap.entrySet();
         for (Map.Entry<Long, List<Object>> entry : tmapEntries) {
-            rtn.add(resultJsonObjs.get(entry.getValue()));
+            rtn.add(this.resultJsonObjs.get(entry.getValue()));
         }
 
         return rtn;
     }
 
     private void executeQuery(Map<String, Class<?>> types, String merhodName, Object... input) {
-        
+
         try {
             String qry = buildQueryString(types, input);
 
-            lastQryId = 0;
+            this.lastQryId = 0;
 
             splitQueries(0, qry, 0);
 
             int len = input.length;
-            PagingOptions po = (PagingOptions)input[len-1];
+            PagingOptions po = (PagingOptions) input[len - 1];
             Long psize = po.getMaxResults();
             long firstrec = po.getFirstResult();
 
@@ -239,64 +277,63 @@ public class SalesforceSupport {
             try {
                 cls = Class.forName("com.sforce.SalesforceCalls");
                 Object obj = cls.newInstance();
-                //String mn = "executeSforceQuery";
-                Method method = cls.getMethod(merhodName, new Class[]{java.lang.String.class, java.util.Map.class,
-                                                java.lang.Object[].class});
-                Object[] args = {qry, types, input};
-                sobjs = (List<SObjectType>)method.invoke(obj, args);
+                // String mn = "executeSforceQuery";
+                Method method = cls.getMethod(merhodName, new Class[] { java.lang.String.class, java.util.Map.class, java.lang.Object[].class });
+                Object[] args = { qry, types, input };
+                sobjs = (List<SObjectType>) method.invoke(obj, args);
             } catch (Exception e) {
                 e.printStackTrace();
                 return;
             }
 
             long lastrec;
-            if (psize != null)
+            if (psize != null) {
                 lastrec = psize > sobjs.size() - firstrec ? sobjs.size() : psize + firstrec;
-            else
+            } else {
                 lastrec = sobjs.size();
+            }
 
             List<Object> row;
             JSONObject jsonVal;
-            resultRows = new MultiValueMap();
-            resultJsonObjs = new HashMap<List<Object>, JSONObject>();
-            //resultRowJsonObjMap = new HashMap();
+            this.resultRows = new MultiValueMap();
+            this.resultJsonObjs = new HashMap<List<Object>, JSONObject>();
+            // resultRowJsonObjMap = new HashMap();
 
-            recId = 0L;
+            this.recId = 0L;
 
-            for (long k=firstrec; k<lastrec; k++) {
-                int ik = (new Long(k).intValue());
+            for (long k = firstrec; k < lastrec; k++) {
+                int ik = new Long(k).intValue();
                 Object sobj = sobjs.get(ik);
 
-                SingleQuery sq = queryMap.get(1);
+                SingleQuery sq = this.queryMap.get(1);
                 sq.thisObjects.add(sobj);
-                //row = getFieldValues(sq, sobj);
+                // row = getFieldValues(sq, sobj);
                 Tuple.Two<List<Object>, JSONObject> tval = getFieldValues(sq, sobj);
                 row = tval.v1;
                 jsonVal = tval.v2;
-                recId++;
-                Tuple.Two<Long, Object> t = new Tuple.Two<Long, Object>(recId, sobj);
-                resultRows.put(row, t);
-                resultJsonObjs.put(row, jsonVal);
+                this.recId++;
+                Tuple.Two<Long, Object> t = new Tuple.Two<Long, Object>(this.recId, sobj);
+                this.resultRows.put(row, t);
+                this.resultJsonObjs.put(row, jsonVal);
                 setRowsForSubQueries(sq, sobj);
             }
         } catch (Exception ex) {
             throw new RuntimeException(ex);
         }
 
-
     }
 
     // pobj: the parent object
-    // psq:  the parent query object
+    // psq: the parent query object
     private void setRowsForSubQueries(SingleQuery psq, Object pobj) throws Exception {
         List<SingleQuery> subQueries = getSubqueries(psq);
 
         if (subQueries != null && subQueries.size() > 0) {
             for (SingleQuery subq : subQueries) {
-                setQueryResult(subq, pobj); //set rows and thisObjects
+                setQueryResult(subq, pobj); // set rows and thisObjects
             }
 
-            setSiblingQueryResult(pobj, subQueries); //modify rows based on rows of the parent and other siblings
+            setSiblingQueryResult(pobj, subQueries); // modify rows based on rows of the parent and other siblings
 
             for (SingleQuery subq : subQueries) {
                 for (Object obj : subq.thisObjects) {
@@ -308,7 +345,7 @@ public class SalesforceSupport {
 
     private List<List<Object>> getRowsForSforceObject(Object obj) {
         List<List<Object>> rtn = new ArrayList<List<Object>>();
-        Set<Map.Entry<List<Object>, List<Tuple.Two<Long, Object>>>> entries = CastUtils.cast(resultRows.entrySet());
+        Set<Map.Entry<List<Object>, List<Tuple.Two<Long, Object>>>> entries = CastUtils.cast(this.resultRows.entrySet());
         for (Map.Entry<List<Object>, List<Tuple.Two<Long, Object>>> entry : entries) {
             List<Tuple.Two<Long, Object>> list = entry.getValue();
             for (Tuple.Two<Long, Object> elem : list) {
@@ -346,7 +383,7 @@ public class SalesforceSupport {
                 for (List<Object> trow : temprows) {
 
                     // Don't we need to get rows only for specific object??
-                    //List<List<Object>> subqRows = qry.rows.get(pobj);
+                    // List<List<Object>> subqRows = qry.rows.get(pobj);
                     List<Tuple.Two<List<Object>, JSONObject>> subqRows = qry.rows.get(pobj);
                     if (subqRows != null) {
                         for (Tuple.Two<List<Object>, JSONObject> subqRow : subqRows) {
@@ -359,40 +396,42 @@ public class SalesforceSupport {
                             }
                             rowsArray.add(rec);
                             indx++;
-                            Collection<Object> objs = CastUtils.cast(resultRows.getCollection(trow));
-                            recId++;
+                            Collection<Object> objs = CastUtils.cast(this.resultRows.getCollection(trow));
+                            this.recId++;
                             for (Object obj : objs) {
-                                //recId++;
-                                Tuple.Two<Long, Object> t = new Tuple.Two<Long, Object>(recId, obj);
-                                resultRows.put(rec, t);
-                                resultJsonObjs.put(rec, subqRow.v2);
+                                // recId++;
+                                Tuple.Two<Long, Object> t = new Tuple.Two<Long, Object>(this.recId, obj);
+                                this.resultRows.put(rec, t);
+                                this.resultJsonObjs.put(rec, subqRow.v2);
                             }
 
-                            //recId++;
-                            Tuple.Two<Long, Object> t = new Tuple.Two<Long, Object>(recId, qry.rowObject.get(subqRow));
-                            resultRows.put(rec, t);
-                            resultJsonObjs.put(rec, subqRow.v2);
+                            // recId++;
+                            Tuple.Two<Long, Object> t = new Tuple.Two<Long, Object>(this.recId, qry.rowObject.get(subqRow));
+                            this.resultRows.put(rec, t);
+                            this.resultJsonObjs.put(rec, subqRow.v2);
                         }
-                        resultRows.remove(trow);
-                        resultJsonObjs.remove(trow);
+                        this.resultRows.remove(trow);
+                        this.resultJsonObjs.remove(trow);
                     }
                 }
                 temprows = new ArrayList<List<Object>>();
-                for (int i=startIndx; i<indx; i++) {
+                for (int i = startIndx; i < indx; i++) {
                     temprows.add(rowsArray.get(i));
                 }
             }
         }
     }
 
-    //Get all parent position and add them up
+    // Get all parent position and add them up
     private int getCumFieldPosition(SingleQuery sq, List<SingleQuery> siblings, int pos) {
         pos = traverseParentFieldPosition(sq, pos);
 
-        //once the cum position is calculated for all parents, calculate the cum position for all preceding siblings.
+        // once the cum position is calculated for all parents, calculate the cum position for all preceding siblings.
         for (SingleQuery qry : siblings) {
-            if (qry.equals(sq)) break;
-            pos = pos + (qry.fieldList.size() -1);
+            if (qry.equals(sq)) {
+                break;
+            }
+            pos = pos + qry.fieldList.size() - 1;
         }
 
         return pos;
@@ -400,34 +439,32 @@ public class SalesforceSupport {
 
     private int traverseParentFieldPosition(SingleQuery sq, int pos) {
         pos = pos + sq.fieldPosition;
-        SingleQuery psq = queryMap.get(sq.parentQryId);
-        if (psq != null) pos = traverseParentFieldPosition(psq, pos);
+        SingleQuery psq = this.queryMap.get(sq.parentQryId);
+        if (psq != null) {
+            pos = traverseParentFieldPosition(psq, pos);
+        }
 
         return pos;
     }
 
     private void setQueryResult(SingleQuery sq, Object pobj) throws Exception {
 
-        SingleQuery parentsq = queryMap.get(sq.parentQryId);
+        SingleQuery parentsq = this.queryMap.get(sq.parentQryId);
         Class cls = getSforceObjectClass(parentsq.objectName);
 
         String myObjName = getAPISforceObjectShortName(sq.objectName);
         String methodName = "get" + myObjName.substring(0, 1).toUpperCase() + myObjName.substring(1);
-        Method method = cls.getMethod(methodName,new Class[]{});
-        List<Object> rec;
-        JSONObject jsonObj;
-
-        QueryResultType qryResult = (QueryResultType)method.invoke(pobj, new Object[]{});
+        Method method = cls.getMethod(methodName, new Class[] {});
+        QueryResultType qryResult = (QueryResultType) method.invoke(pobj, new Object[] {});
         if (qryResult != null) {
             List<SObjectType> rsobjs = qryResult.getRecords();
 
-            //List<List<Object>> rows = new ArrayList<List<Object>>();
-            List<Tuple.Two<List<Object>, JSONObject>> rows =
-                    new ArrayList<Tuple.Two<List<Object>, JSONObject>>();
+            // List<List<Object>> rows = new ArrayList<List<Object>>();
+            List<Tuple.Two<List<Object>, JSONObject>> rows = new ArrayList<Tuple.Two<List<Object>, JSONObject>>();
             for (SObjectType rsobj : rsobjs) {
                 sq.thisObjects.add(rsobj);
                 Tuple.Two<List<Object>, JSONObject> tval = getFieldValues(sq, rsobj);
-                //rows.add(getFieldValues(sq, rsobj));
+                // rows.add(getFieldValues(sq, rsobj));
                 rows.add(tval);
             }
             sq.rows.put(pobj, rows);
@@ -435,33 +472,35 @@ public class SalesforceSupport {
     }
 
     private List<SingleQuery> getSubqueries(SingleQuery sq) {
-        List list = (List)parentQueryMap.get(sq.qryId);
+        List list = (List) this.parentQueryMap.get(sq.qryId);
         return CastUtils.cast(list);
     }
 
     private String getSforceAPIObjectName(String objName) {
 
         int indx = objName.lastIndexOf(".");
-        if (indx > 0)
-            objName = objName.substring(indx+1);
+        if (indx > 0) {
+            objName = objName.substring(indx + 1);
+        }
 
         objName = objName.replace("__c", "C");
         objName = objName.replace("__r", "R");
 
-        //FeedTrackedChanges and FeedComments are exceptions
-        if (objName.equals("FeedTrackedChanges"))
+        // FeedTrackedChanges and FeedComments are exceptions
+        if (objName.equals("FeedTrackedChanges")) {
             objName = "FeedTrackedChange";
-        else if (objName.equals("FeedComments"))
+        } else if (objName.equals("FeedComments")) {
             objName = "FeedComment";
+        }
 
         return objName;
     }
 
-    /*private String getSforceObjectClassname(String objName) {
-        objName = getSforceAPIObjectName(objName);
-
-        return "com.sforce.soap.enterprise.salesforceservice." + objName + "Type";
-    }*/
+    /*
+     * private String getSforceObjectClassname(String objName) { objName = getSforceAPIObjectName(objName);
+     * 
+     * return "com.sforce.soap.enterprise.salesforceservice." + objName + "Type"; }
+     */
 
     private Class getSforceObjectClass(String objName) throws Exception {
         String apiObjName = getSforceAPIObjectName(objName);
@@ -472,39 +511,41 @@ public class SalesforceSupport {
         try {
             cls = Class.forName(className);
         } catch (ClassNotFoundException ex) {
-            String result = loginSvcBean.logIn("sammysm@wavemaker.com", "Silver77Surfer");
+            this.loginSvcBean.logIn("sammysm@wavemaker.com", "Silver77Surfer");
             SessionHeader sessionHeader = LoginService.getSessionHeader();
-            SforceService service= LoginService.getSforceService();
+            SforceService service = LoginService.getSforceService();
             DescribeGlobal parameters = new DescribeGlobal();
             DescribeGlobalResponse dresponse = service.describeGlobal(parameters, sessionHeader, null, null);
             List<DescribeGlobalSObjectResultType> sObjects = dresponse.getResult().getSobjects();
 
             boolean found = false;
-            /*int len = objName.length();
-            if (len > 3 && (objName.substring(len-3).equalsIgnoreCase("__c")
-                            || objName.substring(len-3).equalsIgnoreCase("__r"))) {
-                objName = objName.substring(0, len-3);
-            }*/
+            /*
+             * int len = objName.length(); if (len > 3 && (objName.substring(len-3).equalsIgnoreCase("__c") ||
+             * objName.substring(len-3).equalsIgnoreCase("__r"))) { objName = objName.substring(0, len-3); }
+             */
             objName = getAPISforceObjectShortName(objName);
 
             for (DescribeGlobalSObjectResultType obj : sObjects) {
                 if (objName.equals(obj.getLabelPlural())) {
                     found = true;
-                    //apiObjName = obj.getName();
+                    // apiObjName = obj.getName();
                     apiObjName = getAPISforceObjectShortName(obj.getName());
-                    /*if (len > 3 && (apiObjName.substring(len-3).equalsIgnoreCase("__c")
-                            || apiObjName.substring(len-3).equalsIgnoreCase("__r"))) {
-                        apiObjName = apiObjName.substring(0, len-3);
-                    }*/
+                    /*
+                     * if (len > 3 && (apiObjName.substring(len-3).equalsIgnoreCase("__c") ||
+                     * apiObjName.substring(len-3).equalsIgnoreCase("__r"))) { apiObjName = apiObjName.substring(0,
+                     * len-3); }
+                     */
                 }
             }
 
-            if (!found) throw new ClassNotFoundException();
+            if (!found) {
+                throw new ClassNotFoundException();
+            }
 
-            /*len = apiObjName.length();
-            if (len > 3 && (apiObjName.substring(len-3).equalsIgnoreCase("__c"))) {
-                apiObjName = apiObjName.substring(0, len-3) + "C";
-            }*/
+            /*
+             * len = apiObjName.length(); if (len > 3 && (apiObjName.substring(len-3).equalsIgnoreCase("__c"))) {
+             * apiObjName = apiObjName.substring(0, len-3) + "C"; }
+             */
 
             className = "com.sforce.soap.enterprise.salesforceservice." + apiObjName + "Type";
 
@@ -514,7 +555,7 @@ public class SalesforceSupport {
         return cls;
     }
 
-    //private List<Object> getFieldValues(SingleQuery sq, Object sobj) throws Exception {
+    // private List<Object> getFieldValues(SingleQuery sq, Object sobj) throws Exception {
     private Tuple.Two<List<Object>, JSONObject> getFieldValues(SingleQuery sq, Object sobj) throws Exception {
         Class cls = getSforceObjectClass(sq.objectName);
         List<Object> values = new ArrayList<Object>();
@@ -522,8 +563,8 @@ public class SalesforceSupport {
         for (String fld : sq.fieldList) {
             String apifld = getAPIFieldName(fld);
             String methodName = "get" + apifld.substring(0, 1).toUpperCase() + apifld.substring(1);
-            Method method = cls.getMethod(methodName,new Class[]{});
-            Object val = method.invoke(sobj, new Object[]{});
+            Method method = cls.getMethod(methodName, new Class[] {});
+            Object val = method.invoke(sobj, new Object[] {});
             if (val != null) {
                 values.add(val.toString());
                 jsonValues.put(fld, val);
@@ -538,8 +579,8 @@ public class SalesforceSupport {
             for (Map.Entry<String, List<String>> fldEntry : entries) {
                 String objName = getAPISforceObjectShortName(fldEntry.getKey());
                 String methodName = "get" + objName.substring(0, 1).toUpperCase() + objName.substring(1);
-                Method method = cls.getMethod(methodName,new Class[]{});
-                Object obj = method.invoke(sobj, new Object[]{});
+                Method method = cls.getMethod(methodName, new Class[] {});
+                Object obj = method.invoke(sobj, new Object[] {});
 
                 List<String> fldList = fldEntry.getValue();
                 if (obj != null) {
@@ -547,8 +588,8 @@ public class SalesforceSupport {
                     for (String fld : fldList) {
                         String apifld = getAPIFieldName(fld);
                         methodName = "get" + apifld.substring(0, 1).toUpperCase() + apifld.substring(1);
-                        method = subcls.getMethod(methodName,new Class[]{});
-                        Object val = method.invoke(obj, new Object[]{});
+                        method = subcls.getMethod(methodName, new Class[] {});
+                        Object val = method.invoke(obj, new Object[] {});
                         if (val != null) {
                             values.add(val.toString());
                             jsonValues.put(fld, val);
@@ -557,7 +598,7 @@ public class SalesforceSupport {
                             jsonValues.put(fld, val);
                         }
                     }
-                } else { //Even though obj is null, we need to add null
+                } else { // Even though obj is null, we need to add null
                     for (String fld : fldList) {
                         values.add(null);
                         jsonValues.put(fld, null);
@@ -570,19 +611,19 @@ public class SalesforceSupport {
 
         Tuple.Two<List<Object>, JSONObject> rtn = new Tuple.Two<List<Object>, JSONObject>(values, jsonValues);
 
-        //return values;
+        // return values;
         return rtn;
     }
 
     private void splitQueries(int parentId, String qry, int pfnum) {
-      
+
         Tuple.Two<Integer, List<Tuple.Two<String, Integer>>> iqueries = getInitSubQueries(parentId, qry, pfnum);
 
         int pid = iqueries.v1;
         List<Tuple.Two<String, Integer>> subqueries = iqueries.v2;
 
         for (Tuple.Two<String, Integer> subqry : subqueries) {
-            splitQueries(pid, subqry.v1, subqry.v2); //recursive call
+            splitQueries(pid, subqry.v1, subqry.v2); // recursive call
         }
     }
 
@@ -591,7 +632,7 @@ public class SalesforceSupport {
         List<Tuple.Two<String, Integer>> qryList = new ArrayList<Tuple.Two<String, Integer>>();
         List<String> fieldList = new ArrayList<String>();
         MultiValueMap relFieldList = new MultiValueMap();
-        lastQryId = lastQryId + 1;
+        this.lastQryId = this.lastQryId + 1;
         String objName = null;
         int depth = 0;
         int remainingOpens = 0;
@@ -599,14 +640,14 @@ public class SalesforceSupport {
         int qryStartPos = 0;
         boolean inSubQuery = false;
         boolean inFrom = false;
-        StringBuffer subQry =  new StringBuffer();
+        StringBuffer subQry = new StringBuffer();
 
         for (String word : words) {
             if (word.equalsIgnoreCase("select")) {
                 if (!inSubQuery) {
                     if (depth == 0) {
                         depth++;
-                    } else { //select statement of a subquery
+                    } else { // select statement of a subquery
                         qryStartPos = counter;
                         subQry.append(word);
                         subQry.append(" ");
@@ -634,7 +675,7 @@ public class SalesforceSupport {
                     inFrom = true;
                 } else {
                     subQry.append(word);
-                    subQry.append(" ");    
+                    subQry.append(" ");
                 }
             } else {
                 if (inSubQuery) {
@@ -651,7 +692,7 @@ public class SalesforceSupport {
                             if (indx < 0) {
                                 fieldList.add(word);
                             } else {
-                                relFieldList.put(word.substring(0, indx), word.substring(indx+1));
+                                relFieldList.put(word.substring(0, indx), word.substring(indx + 1));
                             }
                             counter++;
                         }
@@ -660,46 +701,52 @@ public class SalesforceSupport {
             }
         }
 
-        SingleQuery sq = new SingleQuery(lastQryId, parentId, objName, fieldList, relFieldList, pfnum);
-        queryMap.put(lastQryId, sq);
-        parentQueryMap.put(parentId, sq);
+        SingleQuery sq = new SingleQuery(this.lastQryId, parentId, objName, fieldList, relFieldList, pfnum);
+        this.queryMap.put(this.lastQryId, sq);
+        this.parentQueryMap.put(parentId, sq);
 
-        Tuple.Two<Integer, List<Tuple.Two<String, Integer>>> rtn
-                = new Tuple.Two<Integer, List<Tuple.Two<String, Integer>>>(lastQryId, qryList);
+        Tuple.Two<Integer, List<Tuple.Two<String, Integer>>> rtn = new Tuple.Two<Integer, List<Tuple.Two<String, Integer>>>(this.lastQryId, qryList);
 
         return rtn;
     }
 
     class SingleQuery {
-        int parentQryId;
-        int qryId;
-        String objectName;
-        MultiValueMap relFieldList; //parent object name, field name
-        List<String> fieldList;
-        List<Object> thisObjects = new ArrayList<Object>();
-        //Map<Object, List<List<Object>>> rows = new HashMap<Object, List<List<Object>>>();
-        Map<Object, List<Tuple.Two<List<Object>, JSONObject>>> rows =
-                new HashMap<Object, List<Tuple.Two<List<Object>, JSONObject>>>();
-        Map<List<Object>, Object> rowObject = new HashMap<List<Object>, Object>();
-        int fieldPosition; //position of this subquery in the immediate parent field list
 
-        private SingleQuery(int qid, int pqid, String objname, List<String> fldlist,
-                            MultiValueMap relfldlist, int pfnum) {
-            qryId = qid;
-            parentQryId = pqid;
-            objectName = objname;
-            relFieldList = relfldlist;
-            fieldList = fldlist;
-            fieldPosition = pfnum;
+        int parentQryId;
+
+        int qryId;
+
+        String objectName;
+
+        MultiValueMap relFieldList; // parent object name, field name
+
+        List<String> fieldList;
+
+        List<Object> thisObjects = new ArrayList<Object>();
+
+        // Map<Object, List<List<Object>>> rows = new HashMap<Object, List<List<Object>>>();
+        Map<Object, List<Tuple.Two<List<Object>, JSONObject>>> rows = new HashMap<Object, List<Tuple.Two<List<Object>, JSONObject>>>();
+
+        Map<List<Object>, Object> rowObject = new HashMap<List<Object>, Object>();
+
+        int fieldPosition; // position of this subquery in the immediate parent field list
+
+        private SingleQuery(int qid, int pqid, String objname, List<String> fldlist, MultiValueMap relfldlist, int pfnum) {
+            this.qryId = qid;
+            this.parentQryId = pqid;
+            this.objectName = objname;
+            this.relFieldList = relfldlist;
+            this.fieldList = fldlist;
+            this.fieldPosition = pfnum;
         }
 
         public List<String> getQueryFields() {
             List<String> rtn = new ArrayList<String>();
-            for (String fld : fieldList) {
+            for (String fld : this.fieldList) {
                 rtn.add(fld);
             }
 
-            Set<Map.Entry<String, List<String>>> entries = relFieldList.entrySet();
+            Set<Map.Entry<String, List<String>>> entries = this.relFieldList.entrySet();
             for (Map.Entry<String, List<String>> entry : entries) {
                 List<String> relflds = entry.getValue();
                 for (String fld : relflds) {
@@ -719,9 +766,10 @@ public class SalesforceSupport {
 
     public static String getAPISforceObjectShortName(String objName) {
         int indx = objName.lastIndexOf(".");
-        if (indx > 0)
-            objName = objName.substring(indx+1);
-        
+        if (indx > 0) {
+            objName = objName.substring(indx + 1);
+        }
+
         objName = objName.replace("__c", "C");
         objName = objName.replace("__r", "R");
         objName = objName.replace("__C", "C");
@@ -729,29 +777,31 @@ public class SalesforceSupport {
         return objName;
     }
 
-    public static String buildQueryString(Map<String, Class<?>> types, Object...input) {
-        PagingOptions po = (PagingOptions)input[input.length-1];
+    public static String buildQueryString(Map<String, Class<?>> types, Object... input) {
+        PagingOptions po = (PagingOptions) input[input.length - 1];
 
         Long firstResult = po.getFirstResult();
         Long maxResult = po.getMaxResults();
         if (maxResult != null) {
             maxResult = maxResult - 1L;
-            if (maxResult < 0L) maxResult = 0L;
+            if (maxResult < 0L) {
+                maxResult = 0L;
+            }
         }
         List<String> orderBys = po.getOrderBy();
 
-        String qry = (String)input[0];
+        String qry = (String) input[0];
         if (input.length > 2) {
             boolean isField = true;
             String field = null;
-            for (int i=1; i<input.length-1; i++) {
+            for (int i = 1; i < input.length - 1; i++) {
                 if (isField) {
-                    field = (String)input[i];
+                    field = (String) input[i];
                     isField = false;
                 } else {
                     Class<?> type = types.get(field);
                     String val = TypeConversionUtils.getValueString(type, input[i].toString());
-                    qry = qry.replace(":"+field, val);
+                    qry = qry.replace(":" + field, val);
                     isField = true;
                 }
             }
@@ -770,8 +820,9 @@ public class SalesforceSupport {
             }
         }
 
-        if (maxResult != null)
+        if (maxResult != null) {
             qry = qry + " limit " + maxResult + firstResult;
+        }
 
         return qry;
     }
@@ -782,22 +833,26 @@ public class SalesforceSupport {
         return val;
     }
 
-    //Find the control field of the current field. Find the next control field of the control field just found.
-    //Repeat this until there is no more control field found. Store control fields in an array list.
+    // Find the control field of the current field. Find the next control field of the control field just found.
+    // Repeat this until there is no more control field found. Store control fields in an array list.
     private List<FieldType> getControlPath(FieldType field, Map<String, FieldType> fieldMap, List<FieldType> list) {
         Boolean dependent = field.getDependentPicklist();
-        if (dependent == null || !dependent) return list;
+        if (dependent == null || !dependent) {
+            return list;
+        }
 
         FieldType controller = fieldMap.get(field.getControllerName());
 
-        if (controller == null) return list;
+        if (controller == null) {
+            return list;
+        }
 
         if (list == null) {
             list = new ArrayList<FieldType>();
             list.add(field);
         }
         list.add(controller);
-        
+
         return getControlPath(controller, fieldMap, list);
     }
 
@@ -836,11 +891,12 @@ public class SalesforceSupport {
         throw new Exception("Undefined field " + fieldName + " in " + objName);
     }
 
-    private JSONObject getRestrictedPickList(String objName, FieldType currentField, FieldType controller,
-                                           JSONObject fieldAndValuePairs) throws Exception {
+    private JSONObject getRestrictedPickList(String objName, FieldType currentField, FieldType controller, JSONObject fieldAndValuePairs)
+        throws Exception {
 
         // helper class to decode a "validFor" bitset
         class Bitset {
+
             byte[] data;
 
             public Bitset(byte[] data) {
@@ -848,35 +904,42 @@ public class SalesforceSupport {
             }
 
             public boolean testBit(int n) {
-                return (data[n >> 3] & (0x80 >> n % 8)) != 0;
+                return (this.data[n >> 3] & 0x80 >> n % 8) != 0;
             }
 
             public int size() {
-                return data.length * 8;
+                return this.data.length * 8;
             }
         }
 
         List<PicklistEntryType> picklistValues = currentField.getPicklistValues();
 
-        if (picklistValues ==null || picklistValues.size() == 0) return null;
+        if (picklistValues == null || picklistValues.size() == 0) {
+            return null;
+        }
 
-        //picklist is not dependent on a controller.
+        // picklist is not dependent on a controller.
 
-        if (controller == null)
+        if (controller == null) {
             return prepareJSONObject(picklistValues, fieldAndValuePairs, currentField);
+        }
 
-        //picklist is dependent on a controller.
+        // picklist is dependent on a controller.
 
         List<FieldType> fields = getFields(objName);
 
-        if (fields == null) return null;
+        if (fields == null) {
+            return null;
+        }
 
         List<PicklistEntryType> validValues = new ArrayList<PicklistEntryType>();
 
-        String controlValue = (String)fieldAndValuePairs.get(downShiftFirstChar(controller.getName()));
-        if (controlValue == null) controlValue = getDefaultControlValue(controller);
+        String controlValue = (String) fieldAndValuePairs.get(downShiftFirstChar(controller.getName()));
+        if (controlValue == null) {
+            controlValue = getDefaultControlValue(controller);
+        }
 
-        for (PicklistEntryType picklistValue: picklistValues) {
+        for (PicklistEntryType picklistValue : picklistValues) {
             Bitset validFor = new Bitset(picklistValue.getValidFor());
             if ("picklist".equals(controller.getType().value())) {
                 // if the controller is a picklist, list all
@@ -897,8 +960,7 @@ public class SalesforceSupport {
                 // the controller is a checkbox
                 // if bit 1 is set this entry is valid if the controller is checked
                 // if bit 0 is set this entry is valid if the controller is unchecked
-                if ((validFor.testBit(1) && "true".equals(controlValue)) ||
-                    (validFor.testBit(0) && "false".equals(controlValue))) {
+                if (validFor.testBit(1) && "true".equals(controlValue) || validFor.testBit(0) && "false".equals(controlValue)) {
                     validValues.add(picklistValue);
                 }
             }
@@ -913,7 +975,7 @@ public class SalesforceSupport {
 
         if ("boolean".equals(controller.getType().value())) {
             rtn = "false";
-        } else { //the field type is picklist
+        } else { // the field type is picklist
             List<PicklistEntryType> picklistValues = controller.getPicklistValues();
             for (PicklistEntryType entry : picklistValues) {
                 if (entry.isDefaultValue()) {
@@ -922,37 +984,41 @@ public class SalesforceSupport {
                 }
             }
 
-            //if no default value is flagged, choose the first entry as the default.
-            if (rtn == null) rtn = picklistValues.get(0).getValue();
+            // if no default value is flagged, choose the first entry as the default.
+            if (rtn == null) {
+                rtn = picklistValues.get(0).getValue();
+            }
         }
 
         return rtn;
     }
 
-    private JSONObject prepareJSONObject(List<PicklistEntryType> picklistValues, JSONObject fieldAndValuePairs,
-                                         FieldType currentField) {
+    private JSONObject prepareJSONObject(List<PicklistEntryType> picklistValues, JSONObject fieldAndValuePairs, FieldType currentField) {
         JSONObject rtn;
         JSONArray valArray;
 
         rtn = new JSONObject();
         valArray = new JSONArray();
         JSONObject defaultObj = null;
-        for (PicklistEntryType picklistValue: picklistValues) {
+        for (PicklistEntryType picklistValue : picklistValues) {
             JSONObject obj = new JSONObject();
             obj.put("name", picklistValue.getLabel());
             obj.put("dataValue", picklistValue.getValue());
             valArray.add(obj);
-            if (picklistValue.isDefaultValue()) defaultObj = obj;
+            if (picklistValue.isDefaultValue()) {
+                defaultObj = obj;
+            }
         }
 
         rtn.put("options", valArray);
-        if (defaultObj == null) defaultObj = (JSONObject)valArray.get(0);
+        if (defaultObj == null) {
+            defaultObj = (JSONObject) valArray.get(0);
+        }
         rtn.put("default", defaultObj);
 
         // Because the current field's picklist values have been reset and because it can be used as a controller for
         // other picklist, "fieldAndValuePairs" must be updated with the default value of the current picklist values.
-        String defaultValue = defaultObj == null ?
-                picklistValues.get(0).getValue() : (String)defaultObj.get("dataValue");
+        String defaultValue = defaultObj == null ? picklistValues.get(0).getValue() : (String) defaultObj.get("dataValue");
         fieldAndValuePairs.put(downShiftFirstChar(currentField.getName()), defaultValue);
 
         return rtn;
@@ -998,7 +1064,7 @@ public class SalesforceSupport {
 
         splitQueries(0, qry, 0);
 
-        Set<Map.Entry<Integer, SingleQuery>> entries = queryMap.entrySet();
+        Set<Map.Entry<Integer, SingleQuery>> entries = this.queryMap.entrySet();
         for (Map.Entry<Integer, SingleQuery> entry : entries) {
             SingleQuery sq = entry.getValue();
             rtn.addAll(sq.getQueryFields());
@@ -1012,7 +1078,7 @@ public class SalesforceSupport {
 
         splitQueries(0, qry, 0);
 
-        Set<Map.Entry<Integer, SingleQuery>> entries = queryMap.entrySet();
+        Set<Map.Entry<Integer, SingleQuery>> entries = this.queryMap.entrySet();
         for (Map.Entry<Integer, SingleQuery> entry : entries) {
             SingleQuery sq = entry.getValue();
             setupFields(sq.objectName);
@@ -1030,28 +1096,11 @@ public class SalesforceSupport {
                 org.json.JSONObject fieldObj = fieldsObj.getJSONObject(fld);
                 String type = fieldObj.getString("type");
                 rtn.add(type);
-                //FieldType ftype = getFieldInfo(sq.objectName, fld);
-                //rtn.add(ftype.getType().value());
+                // FieldType ftype = getFieldInfo(sq.objectName, fld);
+                // rtn.add(ftype.getType().value());
             }
         }
 
         return rtn;
-    }
-
-    private FieldType getFieldInfo(String objName, String fld) {
-        List<FieldType> fields = fieldsMap.get(objName);
-        FieldType target = null;
-        for (FieldType ftype : fields) {
-            if (fld.equals(ftype.getName())) {
-                target = ftype;
-                break;
-            }
-        }
-
-        if (target == null) {
-            throw new WMRuntimeException("ERROR: Invalid field name - " + fld);
-        }
-
-        return target;        
     }
 }

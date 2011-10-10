@@ -19,7 +19,6 @@
 // Generated on: 2008.02.26 at 04:39:33 PM PST 
 //
 
-
 package com.wavemaker.tools.spring.beans;
 
 import java.util.ArrayList;
@@ -36,11 +35,12 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
- * <p>Java class for anonymous complex type.
+ * <p>
+ * Java class for anonymous complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType>
@@ -88,55 +88,53 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "description",
-    "importsAndAliasAndBeen"
-})
+@XmlType(name = "", propOrder = { "description", "importsAndAliasAndBeen" })
 @XmlRootElement(name = "beans")
 public class Beans {
 
     protected Description description;
-    @XmlElementRefs({
-        @XmlElementRef(name = "import", namespace = "http://www.springframework.org/schema/beans", type = Import.class),
+
+    @XmlElementRefs({ @XmlElementRef(name = "import", namespace = "http://www.springframework.org/schema/beans", type = Import.class),
         @XmlElementRef(name = "bean", namespace = "http://www.springframework.org/schema/beans", type = Bean.class),
-        @XmlElementRef(name = "alias", namespace = "http://www.springframework.org/schema/beans", type = Alias.class)
-    })
+        @XmlElementRef(name = "alias", namespace = "http://www.springframework.org/schema/beans", type = Alias.class) })
     @XmlAnyElement(lax = true)
     protected List<Object> importsAndAliasAndBeen;
+
     @XmlAttribute(name = "default-lazy-init")
     protected Boolean defaultLazyInit;
+
     @XmlAttribute(name = "default-merge")
     protected Boolean defaultMerge;
+
     @XmlAttribute(name = "default-dependency-check")
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     protected String defaultDependencyCheck;
+
     @XmlAttribute(name = "default-autowire")
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     protected String defaultAutowire;
+
     @XmlAttribute(name = "default-init-method")
     protected String defaultInitMethod;
+
     @XmlAttribute(name = "default-destroy-method")
     protected String defaultDestroyMethod;
 
     /**
      * Gets the value of the description property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Description }
-     *     
+     * @return possible object is {@link Description }
+     * 
      */
     public Description getDescription() {
-        return description;
+        return this.description;
     }
 
     /**
      * Sets the value of the description property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Description }
-     *     
+     * @param value allowed object is {@link Description }
+     * 
      */
     public void setDescription(Description value) {
         this.description = value;
@@ -146,30 +144,26 @@ public class Beans {
      * Gets the value of the importsAndAliasAndBeen property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the importsAndAliasAndBeen property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the importsAndAliasAndBeen property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getImportsAndAliasAndBeen().add(newItem);
+     * getImportsAndAliasAndBeen().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Import }
-     * {@link Alias }
-     * {@link Bean }
-     * {@link Object }
+     * Objects of the following type(s) are allowed in the list {@link Import } {@link Alias } {@link Bean } {@link Object }
      * 
      * 
      */
     public List<Object> getImportsAndAliasAndBean() {
-        if (importsAndAliasAndBeen == null) {
-            importsAndAliasAndBeen = new ArrayList<Object>();
+        if (this.importsAndAliasAndBeen == null) {
+            this.importsAndAliasAndBeen = new ArrayList<Object>();
         }
         return this.importsAndAliasAndBeen;
     }
@@ -177,26 +171,22 @@ public class Beans {
     /**
      * Gets the value of the defaultLazyInit property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     * @return possible object is {@link Boolean }
+     * 
      */
     public boolean isDefaultLazyInit() {
-        if (defaultLazyInit == null) {
+        if (this.defaultLazyInit == null) {
             return false;
         } else {
-            return defaultLazyInit;
+            return this.defaultLazyInit;
         }
     }
 
     /**
      * Sets the value of the defaultLazyInit property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     * @param value allowed object is {@link Boolean }
+     * 
      */
     public void setDefaultLazyInit(Boolean value) {
         this.defaultLazyInit = value;
@@ -205,26 +195,22 @@ public class Beans {
     /**
      * Gets the value of the defaultMerge property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     * @return possible object is {@link Boolean }
+     * 
      */
     public boolean isDefaultMerge() {
-        if (defaultMerge == null) {
+        if (this.defaultMerge == null) {
             return false;
         } else {
-            return defaultMerge;
+            return this.defaultMerge;
         }
     }
 
     /**
      * Sets the value of the defaultMerge property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     * @param value allowed object is {@link Boolean }
+     * 
      */
     public void setDefaultMerge(Boolean value) {
         this.defaultMerge = value;
@@ -233,26 +219,22 @@ public class Beans {
     /**
      * Gets the value of the defaultDependencyCheck property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getDefaultDependencyCheck() {
-        if (defaultDependencyCheck == null) {
+        if (this.defaultDependencyCheck == null) {
             return "none";
         } else {
-            return defaultDependencyCheck;
+            return this.defaultDependencyCheck;
         }
     }
 
     /**
      * Sets the value of the defaultDependencyCheck property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setDefaultDependencyCheck(String value) {
         this.defaultDependencyCheck = value;
@@ -261,26 +243,22 @@ public class Beans {
     /**
      * Gets the value of the defaultAutowire property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getDefaultAutowire() {
-        if (defaultAutowire == null) {
+        if (this.defaultAutowire == null) {
             return "no";
         } else {
-            return defaultAutowire;
+            return this.defaultAutowire;
         }
     }
 
     /**
      * Sets the value of the defaultAutowire property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setDefaultAutowire(String value) {
         this.defaultAutowire = value;
@@ -289,22 +267,18 @@ public class Beans {
     /**
      * Gets the value of the defaultInitMethod property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getDefaultInitMethod() {
-        return defaultInitMethod;
+        return this.defaultInitMethod;
     }
 
     /**
      * Sets the value of the defaultInitMethod property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setDefaultInitMethod(String value) {
         this.defaultInitMethod = value;
@@ -313,22 +287,18 @@ public class Beans {
     /**
      * Gets the value of the defaultDestroyMethod property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getDefaultDestroyMethod() {
-        return defaultDestroyMethod;
+        return this.defaultDestroyMethod;
     }
 
     /**
      * Sets the value of the defaultDestroyMethod property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setDefaultDestroyMethod(String value) {
         this.defaultDestroyMethod = value;
@@ -337,19 +307,14 @@ public class Beans {
     /**
      * Sets the value of the importsAndAliasAndBeen property.
      * 
-     * @param importsAndAliasAndBeen
-     *     allowed object is
-     *     {@link Import }
-     *     {@link Alias }
-     *     {@link Bean }
-     *     {@link Object }
-     *     
+     * @param importsAndAliasAndBeen allowed object is {@link Import } {@link Alias } {@link Bean } {@link Object }
+     * 
      */
     public void setImportsAndAliasAndBeen(List<Object> importsAndAliasAndBeen) {
         this.importsAndAliasAndBeen = importsAndAliasAndBeen;
     }
-    
-//--simple--preserve
+
+    // --simple--preserve
     /**
      * Returns the Bean for the specified bean ID.
      * 
@@ -377,7 +342,7 @@ public class Beans {
         List<Bean> rtn = new ArrayList<Bean>();
         for (Object o : importOrAliasOrBeanList) {
             if (o instanceof Bean) {
-                Bean b = (Bean)o;
+                Bean b = (Bean) o;
                 if (clazz.equals(b.getClazz())) {
                     rtn.add(b);
                 }
@@ -385,7 +350,7 @@ public class Beans {
         }
         return rtn;
     }
-    
+
     /**
      * Returns a list of Beans that are of the specified type.
      * 
@@ -395,7 +360,7 @@ public class Beans {
     public List<Bean> getBeansByType(Class<?> clazz) {
         return getBeansByType(clazz.getName());
     }
-    
+
     /**
      * Adds a bean to this <code>Beans</code>.
      * 
@@ -405,7 +370,7 @@ public class Beans {
         List<Object> importOrAliasOrBeanList = getImportsAndAliasAndBean();
         importOrAliasOrBeanList.add(bean);
     }
-    
+
     /**
      * Adds an alias to this <code>Beans</code>.
      * 
@@ -415,13 +380,12 @@ public class Beans {
         List<Object> importOrAliasOrBeanList = getImportsAndAliasAndBean();
         importOrAliasOrBeanList.add(alias);
     }
-    
+
     /**
      * Removes the specified bean from this <code>Beans</code>.
      * 
      * @param id The bean ID of the bean to be removed.
-     * @return <tt>true</tt> if this <code>Bean</code> contained the specified 
-     * bean.
+     * @return <tt>true</tt> if this <code>Bean</code> contained the specified bean.
      */
     public boolean removeBeanById(String id) {
         List<Object> importOrAliasOrBeanList = getImportsAndAliasAndBean();
@@ -432,7 +396,7 @@ public class Beans {
         }
         return false;
     }
-    
+
     /**
      * Returns a list of <code>Bean</code> in this <code>Beans</code>.
      * 
@@ -448,12 +412,11 @@ public class Beans {
         }
         return beans;
     }
-    
+
     /**
      * Sets the given bean list to this <code>Beans</code>.
      * 
-     * @param beans A list of <code>Bean</code> to be added to this
-     * <code>Beans</code>.
+     * @param beans A list of <code>Bean</code> to be added to this <code>Beans</code>.
      */
     public void setBeanList(List<Bean> beans) {
         List<Object> importOrAliasOrBeanList = getImportsAndAliasAndBean();
@@ -463,5 +426,5 @@ public class Beans {
             }
         }
     }
-//--simple--preserve
+    // --simple--preserve
 }

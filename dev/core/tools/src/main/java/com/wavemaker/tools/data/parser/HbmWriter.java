@@ -51,46 +51,41 @@ public class HbmWriter extends BaseHbmWriter {
     @Override
     public void writeCustom() {
 
-        if (entity == null) {
+        if (this.entity == null) {
             throw new IllegalArgumentException("entity must be set");
         }
 
-        String className = StringUtils.fq(entity.getPackageName(), entity
-                .getEntityName());
+        String className = StringUtils.fq(this.entity.getPackageName(), this.entity.getEntityName());
 
-        xmlWriter.addElement(HbmConstants.CLASS_EL, HbmConstants.NAME_ATTR,
-                className, HbmConstants.TABLE_ATTR, entity.getTableName());
+        this.xmlWriter.addElement(HbmConstants.CLASS_EL, HbmConstants.NAME_ATTR, className, HbmConstants.TABLE_ATTR, this.entity.getTableName());
 
-        String catalog = entity.getCatalogName();
+        String catalog = this.entity.getCatalogName();
         if (!ObjectUtils.isNullOrEmpty(catalog)) {
-            xmlWriter.addAttribute(HbmConstants.CATALOG_ATTR, catalog);
+            this.xmlWriter.addAttribute(HbmConstants.CATALOG_ATTR, catalog);
         }
 
-        String schema = entity.getSchemaName();
+        String schema = this.entity.getSchemaName();
         if (!ObjectUtils.isNullOrEmpty(schema)) {
-            xmlWriter.addAttribute(HbmConstants.SCHEMA_ATTR, schema);
+            this.xmlWriter.addAttribute(HbmConstants.SCHEMA_ATTR, schema);
         }
 
-        xmlWriter.addAttribute(HbmConstants.DYNAMIC_INSERT, String
-                .valueOf(entity.isDynamicInsert()));
-        
-        xmlWriter.addAttribute(HbmConstants.DYNAMIC_UPDATE, String
-                .valueOf(entity.isDynamicUpdate()));
+        this.xmlWriter.addAttribute(HbmConstants.DYNAMIC_INSERT, String.valueOf(this.entity.isDynamicInsert()));
 
-        Collection<PropertyInfo> writtenProperties = 
-            new HashSet<PropertyInfo>();
+        this.xmlWriter.addAttribute(HbmConstants.DYNAMIC_UPDATE, String.valueOf(this.entity.isDynamicUpdate()));
+
+        Collection<PropertyInfo> writtenProperties = new HashSet<PropertyInfo>();
 
         // a column mapped more than once will be mapped with
         // insert="false" update="false"
         Collection<String> mappedColumns = new HashSet<String>();
 
-        PropertyInfo id = entity.getId();
+        PropertyInfo id = this.entity.getId();
 
         if (id != null) {
             writeProperty(id, writtenProperties, mappedColumns);
         }
 
-        for (PropertyInfo property : entity.getProperties()) {
+        for (PropertyInfo property : this.entity.getProperties()) {
 
             // write related last
             if (property.getIsRelated()) {
@@ -100,20 +95,17 @@ public class HbmWriter extends BaseHbmWriter {
             writeProperty(property, writtenProperties, mappedColumns);
         }
 
-        for (PropertyInfo property : entity.getRelatedProperties()) {
+        for (PropertyInfo property : this.entity.getRelatedProperties()) {
             writeProperty(property, writtenProperties, mappedColumns);
         }
     }
 
-    private void writeProperty(PropertyInfo property,
-            Collection<PropertyInfo> writtenProperties,
-            Collection<String> mappedColumns) {
+    private void writeProperty(PropertyInfo property, Collection<PropertyInfo> writtenProperties, Collection<String> mappedColumns) {
         writeProperty(property, writtenProperties, mappedColumns, false);
     }
 
-    private void writeProperty(PropertyInfo property,
-            Collection<PropertyInfo> writtenProperties,
-            Collection<String> mappedColumns, boolean isComposite) {
+    private void writeProperty(PropertyInfo property, Collection<PropertyInfo> writtenProperties, Collection<String> mappedColumns,
+        boolean isComposite) {
 
         if (writtenProperties.contains(property)) {
             return;
@@ -122,8 +114,7 @@ public class HbmWriter extends BaseHbmWriter {
         writtenProperties.add(property);
 
         if (property.getIsId()) {
-            writeIdProperty(property, writtenProperties, mappedColumns,
-                    isComposite);
+            writeIdProperty(property, writtenProperties, mappedColumns, isComposite);
         } else if (property.getIsRelated()) {
             if (property.getIsInverse()) {
                 writeToManyProperty(property, writtenProperties, mappedColumns);
@@ -137,9 +128,8 @@ public class HbmWriter extends BaseHbmWriter {
         }
     }
 
-    private void writeIdProperty(PropertyInfo property,
-            Collection<PropertyInfo> writtenProperties,
-            Collection<String> mappedColumns, boolean isComposite) {
+    private void writeIdProperty(PropertyInfo property, Collection<PropertyInfo> writtenProperties, Collection<String> mappedColumns,
+        boolean isComposite) {
 
         if (property.getCompositeProperties().isEmpty()) {
 
@@ -147,11 +137,11 @@ public class HbmWriter extends BaseHbmWriter {
 
             if (isComposite) {
 
-                xmlWriter.addElement(HbmConstants.KEY_PROP_EL, propertyAttrs);
+                this.xmlWriter.addElement(HbmConstants.KEY_PROP_EL, propertyAttrs);
 
             } else {
 
-                xmlWriter.addElement(HbmConstants.ID_EL, propertyAttrs);
+                this.xmlWriter.addElement(HbmConstants.ID_EL, propertyAttrs);
 
             }
 
@@ -162,35 +152,30 @@ public class HbmWriter extends BaseHbmWriter {
             String generator = column.getGenerator();
 
             if (!ObjectUtils.isNullOrEmpty(generator)) {
-                xmlWriter.addElement(HbmConstants.GEN_EL,
-                        HbmConstants.GEN_TYPE_ATTR, generator);
+                this.xmlWriter.addElement(HbmConstants.GEN_EL, HbmConstants.GEN_TYPE_ATTR, generator);
 
                 if (generator.equals(HbmConstants.SEQUENCE_GENERATOR)) {
                     if (!ObjectUtils.isNullOrEmpty(column.getGeneratorParam())) {
-                        xmlWriter.addClosedTextElement(
-                                HbmConstants.GEN_PARAM_EL, column
-                                        .getGeneratorParam(),
-                                HbmConstants.NAME_ATTR,
-                                HbmConstants.SEQUENCE_NAME_PARAM);
+                        this.xmlWriter.addClosedTextElement(HbmConstants.GEN_PARAM_EL, column.getGeneratorParam(), HbmConstants.NAME_ATTR,
+                            HbmConstants.SEQUENCE_NAME_PARAM);
                     }
                 }
 
-                xmlWriter.closeElement();
+                this.xmlWriter.closeElement();
             }
 
-            xmlWriter.closeElement();
+            this.xmlWriter.closeElement();
 
         } else {
 
-            Map<String, String> propertyAttrs = getPropertyAttributes(property,
-                    HbmConstants.COMP_ID_TYPE_ATTR);
+            Map<String, String> propertyAttrs = getPropertyAttributes(property, HbmConstants.COMP_ID_TYPE_ATTR);
 
-            xmlWriter.addElement(HbmConstants.COMP_ID_EL, propertyAttrs);
+            this.xmlWriter.addElement(HbmConstants.COMP_ID_EL, propertyAttrs);
 
             for (PropertyInfo p : property.getCompositeProperties()) {
                 writeProperty(p, writtenProperties, null, true);
             }
-            xmlWriter.closeElement();
+            this.xmlWriter.closeElement();
         }
     }
 
@@ -199,44 +184,35 @@ public class HbmWriter extends BaseHbmWriter {
         if (mappedColumns != null) {
             mappedColumns.add(attrs.get(HbmConstants.NAME_ATTR));
         }
-        xmlWriter.addElement(HbmConstants.COL_EL, attrs);
-        xmlWriter.closeElement();
+        this.xmlWriter.addElement(HbmConstants.COL_EL, attrs);
+        this.xmlWriter.closeElement();
     }
 
-    private void writeToManyProperty(PropertyInfo property,
-            Collection<PropertyInfo> writtenProperties,
-            Collection<String> mappedColumns) {
+    private void writeToManyProperty(PropertyInfo property, Collection<PropertyInfo> writtenProperties, Collection<String> mappedColumns) {
 
-        xmlWriter.addElement(HbmConstants.SET_EL, HbmConstants.NAME_ATTR,
-                property.getName(), HbmConstants.INVERSE_ATTR, "true");
+        this.xmlWriter.addElement(HbmConstants.SET_EL, HbmConstants.NAME_ATTR, property.getName(), HbmConstants.INVERSE_ATTR, "true");
 
-        xmlWriter.addElement(HbmConstants.KEY_EL);
+        this.xmlWriter.addElement(HbmConstants.KEY_EL);
         for (ColumnInfo ci : property.allColumns()) {
             writeColumn(ci, mappedColumns);
         }
-        xmlWriter.closeElement();
+        this.xmlWriter.closeElement();
 
-        xmlWriter.addClosedElement(HbmConstants.TO_MANY_EL,
-                HbmConstants.TO_MANY_TYPE_ATTR, property
-                        .getFullyQualifiedType());
+        this.xmlWriter.addClosedElement(HbmConstants.TO_MANY_EL, HbmConstants.TO_MANY_TYPE_ATTR, property.getFullyQualifiedType());
 
-        xmlWriter.closeElement();
+        this.xmlWriter.closeElement();
     }
 
-    private void writeToOneProperty(PropertyInfo property,
-            Collection<PropertyInfo> writtenProperties,
-            Collection<String> mappedColumns) {
+    private void writeToOneProperty(PropertyInfo property, Collection<PropertyInfo> writtenProperties, Collection<String> mappedColumns) {
 
-        Map<String, String> propertyAttrs = getPropertyAttributes(property,
-                HbmConstants.TO_ONE_TYPE_ATTR);
+        Map<String, String> propertyAttrs = getPropertyAttributes(property, HbmConstants.TO_ONE_TYPE_ATTR);
 
         // need to set "read only" if the foreign key col
         // is also the primary key col
         boolean isReadOnly = false;
-        PropertyInfo id = entity.getId();
+        PropertyInfo id = this.entity.getId();
         if (id != null) {
-            Collection<String> allIdColumnNames = new HashSet<String>(id
-                    .allColumnNames());
+            Collection<String> allIdColumnNames = new HashSet<String>(id.allColumnNames());
             boolean fkColIsPkCol = false;
             for (ColumnInfo ci : property.allColumns()) {
                 if (allIdColumnNames.contains(ci.getName())) {
@@ -255,17 +231,16 @@ public class HbmWriter extends BaseHbmWriter {
         }
 
         if (!ObjectUtils.isNullOrEmpty(property.getCascadeOptions())) {
-            propertyAttrs.put(HbmConstants.CASCADE_ATTR, ObjectUtils
-                    .toString(property.getCascadeOptions()));
+            propertyAttrs.put(HbmConstants.CASCADE_ATTR, ObjectUtils.toString(property.getCascadeOptions()));
         }
 
-        xmlWriter.addElement(HbmConstants.TO_ONE_EL, propertyAttrs);
+        this.xmlWriter.addElement(HbmConstants.TO_ONE_EL, propertyAttrs);
 
         for (ColumnInfo ci : property.allColumns()) {
             writeColumn(ci, mappedColumns);
         }
 
-        xmlWriter.closeElement();
+        this.xmlWriter.closeElement();
     }
 
     private void insertUpdateFalse(Map<String, String> attrs) {
@@ -273,25 +248,20 @@ public class HbmWriter extends BaseHbmWriter {
         attrs.put(HbmConstants.INSERT_ATTR, "false");
     }
 
-    private void writeComponent(PropertyInfo property,
-            Collection<PropertyInfo> writtenProperties,
-            Collection<String> mappedColumns) {
+    private void writeComponent(PropertyInfo property, Collection<PropertyInfo> writtenProperties, Collection<String> mappedColumns) {
 
-        Map<String, String> propertyAttrs = getPropertyAttributes(property,
-                HbmConstants.COMPONENT_TYPE_ATTR);
+        Map<String, String> propertyAttrs = getPropertyAttributes(property, HbmConstants.COMPONENT_TYPE_ATTR);
 
-        xmlWriter.addElement(HbmConstants.COMPONENT_EL, propertyAttrs);
+        this.xmlWriter.addElement(HbmConstants.COMPONENT_EL, propertyAttrs);
 
         for (PropertyInfo p : property.getCompositeProperties()) {
             writeProperty(p, writtenProperties, mappedColumns, true);
         }
 
-        xmlWriter.closeElement();
+        this.xmlWriter.closeElement();
     }
 
-    private void writeSimpleProperty(PropertyInfo property,
-            Collection<PropertyInfo> writtenProperties,
-            Collection<String> mappedColumns) {
+    private void writeSimpleProperty(PropertyInfo property, Collection<PropertyInfo> writtenProperties, Collection<String> mappedColumns) {
 
         Map<String, String> propertyAttrs = getPropertyAttributes(property);
 
@@ -299,19 +269,18 @@ public class HbmWriter extends BaseHbmWriter {
             insertUpdateFalse(propertyAttrs);
         }
 
-        xmlWriter.addElement(HbmConstants.PROP_EL, propertyAttrs);
+        this.xmlWriter.addElement(HbmConstants.PROP_EL, propertyAttrs);
 
         writeColumn(property.getColumn(), mappedColumns);
 
-        xmlWriter.closeElement();
+        this.xmlWriter.closeElement();
     }
 
     private Map<String, String> getPropertyAttributes(PropertyInfo property) {
         return getPropertyAttributes(property, HbmConstants.TYPE_ATTR);
     }
 
-    private Map<String, String> getPropertyAttributes(PropertyInfo property,
-            String typeAttr) {
+    private Map<String, String> getPropertyAttributes(PropertyInfo property, String typeAttr) {
         Map<String, String> attrs = new LinkedHashMap<String, String>();
         attrs.put(HbmConstants.NAME_ATTR, property.getName());
         if (!ObjectUtils.isNullOrEmpty(property.getFullyQualifiedType())) {
@@ -324,28 +293,24 @@ public class HbmWriter extends BaseHbmWriter {
         Map<String, String> attrs = new LinkedHashMap<String, String>();
         attrs.put(HbmConstants.NAME_ATTR, column.getName());
 
-        if (column.shouldPersistType()
-                && !ObjectUtils.isNullOrEmpty(column.getSqlType())) {
+        if (column.shouldPersistType() && !ObjectUtils.isNullOrEmpty(column.getSqlType())) {
             attrs.put(HbmConstants.COL_TYPE_ATTR, column.getSqlType());
         }
 
         if (!isNullOrZero(column.getLength())) {
             // don't write 0 length out until we figure out why a null
             // length becomes 0 on the client
-            attrs.put(HbmConstants.LENGTH_ATTR, String.valueOf(column
-                    .getLength()));
+            attrs.put(HbmConstants.LENGTH_ATTR, String.valueOf(column.getLength()));
         }
 
         if (!isNullOrZero(column.getPrecision())) {
             // don't write 0 precision out until we figure out why a null
             // precision beomes 0 on the client
-            attrs.put(HbmConstants.PRECISION_ATTR, String.valueOf(column
-                    .getPrecision()));
+            attrs.put(HbmConstants.PRECISION_ATTR, String.valueOf(column.getPrecision()));
         }
 
         if (!column.getIsPk() && column.getNotNull()) {
-            attrs.put(HbmConstants.NOT_NULL_ATTR, String.valueOf(column
-                    .getNotNull()));
+            attrs.put(HbmConstants.NOT_NULL_ATTR, String.valueOf(column.getNotNull()));
         }
 
         return attrs;

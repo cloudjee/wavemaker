@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.data;
 
 import java.io.IOException;
@@ -31,7 +32,7 @@ import com.wavemaker.tools.data.util.DataServiceTestUtils;
  * 
  */
 public class TestMySQLConnection extends WMTestCase {
-    
+
     private static final Properties p = DataServiceTestUtils.loadSakilaConnectionProperties();
 
     public void testConnection1() throws IOException {
@@ -54,12 +55,12 @@ public class TestMySQLConnection extends WMTestCase {
 
         fail("connection should have failed");
     }
-    
-    //http://dev.wavemaker.com/forums/?q=node/1482#comment-4464
+
+    // http://dev.wavemaker.com/forums/?q=node/1482#comment-4464
     public void testConnection3() throws IOException {
-        
+
         SpringUtils.initSpringConfig();
-        
+
         // this should fail because there's no suitable driver,
         // *not* because dialect has not been set
         p.setProperty("mysql.connectionUrl", "jdbc:foo");
@@ -67,13 +68,13 @@ public class TestMySQLConnection extends WMTestCase {
         TestDBConnection t = new TestDBConnection();
         t.setProperties(p);
         try {
-        t.run();
+            t.run();
         } catch (DataServiceRuntimeException ex) {
             Throwable cause = ex.getCause();
             assertTrue(cause.getMessage().startsWith("No suitable driver"));
             return;
         }
-        
+
         fail("connection should have failed");
     }
 

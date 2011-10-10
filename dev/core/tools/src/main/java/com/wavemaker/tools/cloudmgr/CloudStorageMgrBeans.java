@@ -24,36 +24,32 @@ import com.wavemaker.tools.common.ConfigurationException;
 
 /**
  * @author slee
- *
+ * 
  */
 public class CloudStorageMgrBeans {
 
-    private Map<String, CloudStorageMgr>
-        cloudStorageMgrs = new HashMap<String, CloudStorageMgr>();
-
+    private Map<String, CloudStorageMgr> cloudStorageMgrs = new HashMap<String, CloudStorageMgr>();
 
     public Collection<String> getCloudNames() {
-        return cloudStorageMgrs.keySet();
-    }
-    
-    public CloudStorageMgr getCloudStorageMgr(String serviceProvider) {
-        
-        if (cloudStorageMgrs == null) {
-            SpringUtils.throwSpringNotInitializedError(this.getClass());
-        }
-        
-        if (!cloudStorageMgrs.containsKey(serviceProvider)) {
-            throw new ConfigurationException(
-                MessageResource.UNKNOWN_CLOUDSTORAGE_MGR, serviceProvider);
-        }
-        
-        return cloudStorageMgrs.get(serviceProvider);
+        return this.cloudStorageMgrs.keySet();
     }
 
-    public void setCloudStorageMgrs(Map<String, CloudStorageMgr>
-                                     cloudStorageMgrs) {
+    public CloudStorageMgr getCloudStorageMgr(String serviceProvider) {
+
+        if (this.cloudStorageMgrs == null) {
+            SpringUtils.throwSpringNotInitializedError(this.getClass());
+        }
+
+        if (!this.cloudStorageMgrs.containsKey(serviceProvider)) {
+            throw new ConfigurationException(MessageResource.UNKNOWN_CLOUDSTORAGE_MGR, serviceProvider);
+        }
+
+        return this.cloudStorageMgrs.get(serviceProvider);
+    }
+
+    public void setCloudStorageMgrs(Map<String, CloudStorageMgr> cloudStorageMgrs) {
         this.cloudStorageMgrs = cloudStorageMgrs;
 
     }
-    
+
 }

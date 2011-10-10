@@ -37,13 +37,13 @@ import com.wavemaker.tools.cloudmgr.opsource.stopserver.proc.StopServerProc;
 
 /**
  * This class is to manage opSource cloud server instances.
- *
+ * 
  * @author slee
  */
 public class DeleteServerProc {
 
     public Status deleteServer(String orgId, String serverId, String userName, String passWord) {
-        
+
         String endPointAddress = "https://api.opsourcecloud.net/oec/0.9/" + orgId + "/server/" + serverId + "?delete";
         QName thisQName = new QName(endPointAddress, "opsourcecloud");
         Service s = Service.create(thisQName);
@@ -83,7 +83,7 @@ public class DeleteServerProc {
         } catch (JAXBException ex2) {
             throw new WMRuntimeException(ex2);
         } catch (IOException ex3) {
-            throw new WMRuntimeException(ex3);    
+            throw new WMRuntimeException(ex3);
         }
 
         return status;

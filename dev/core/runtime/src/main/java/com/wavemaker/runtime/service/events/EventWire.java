@@ -17,8 +17,7 @@ package com.wavemaker.runtime.service.events;
 import com.wavemaker.runtime.service.ServiceWire;
 
 /**
- * Provides configuration wiring between EventListeners and the ServiceWires
- * they operate on.
+ * Provides configuration wiring between EventListeners and the ServiceWires they operate on.
  * 
  * @author small
  * @version $Rev$ - $Date$
@@ -26,18 +25,22 @@ import com.wavemaker.runtime.service.ServiceWire;
 public class EventWire {
 
     private Object eventListener;
+
     private ServiceWire serviceWire;
-    
+
     public Object getEventListener() {
-        return eventListener;
+        return this.eventListener;
     }
+
     public void setEventListener(Object eventListener) {
         this.eventListener = eventListener;
     }
+
     public void setServiceWire(ServiceWire serviceWire) {
         this.serviceWire = serviceWire;
     }
+
     public ServiceWire getServiceWire() {
-        return serviceWire;
+        return this.serviceWire;
     }
 }

@@ -36,9 +36,8 @@ import com.wavemaker.tools.ws.WebServiceToolsManager;
 import com.wavemaker.tools.ws.wsdl.WSDLException;
 
 /**
- * This upgrade task will perform the followings:
- * <li> Delete and re-import FeedService. </li>
- * <li> Detete and re-import all SOAP and REST services in the project. </li>
+ * This upgrade task will perform the followings: <li>Delete and re-import FeedService.</li> <li>Detete and re-import
+ * all SOAP and REST services in the project.</li>
  * 
  * @author ffu
  * @version $Rev$ - $Date$
@@ -49,19 +48,21 @@ public class WebServiceUpgrade implements UpgradeTask {
     private DesignServiceManager dsm;
 
     public DesignServiceManager getDesignServiceManager() {
-        return dsm;
+        return this.dsm;
     }
 
     public void setDesignServiceManager(DesignServiceManager dsm) {
         this.dsm = dsm;
     }
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
+     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
      */
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
-        WebServiceToolsManager wstm = new WebServiceToolsManager(dsm
-                .getProjectManager(), dsm);
+        WebServiceToolsManager wstm = new WebServiceToolsManager(this.dsm.getProjectManager(), this.dsm);
         try {
             upgradeWebServices(wstm, upgradeInfo);
         } catch (IOException e) {
@@ -80,16 +81,14 @@ public class WebServiceUpgrade implements UpgradeTask {
             throw new WMRuntimeException(e);
         }
     }
-    
-    private void upgradeWebServices(WebServiceToolsManager wstm,
-            UpgradeInfo upgradeInfo) throws IOException, JAXBException,
-            WSDLException, NoSuchMethodException, ParserConfigurationException, SAXException, TransformerException {
-        for (String serviceId : dsm.getServiceIds()) {
-            Service service = dsm.getService(serviceId);
-            if (service != null
-                    && WebServiceType.TYPE_NAME.equals(service.getType())) {
+
+    private void upgradeWebServices(WebServiceToolsManager wstm, UpgradeInfo upgradeInfo) throws IOException, JAXBException, WSDLException,
+        NoSuchMethodException, ParserConfigurationException, SAXException, TransformerException {
+        for (String serviceId : this.dsm.getServiceIds()) {
+            Service service = this.dsm.getService(serviceId);
+            if (service != null && WebServiceType.TYPE_NAME.equals(service.getType())) {
                 if (serviceId.equals(FeedServiceDefinition.FEED_SERVICE_NAME)) {
-                    dsm.deleteService(FeedServiceDefinition.FEED_SERVICE_NAME);
+                    this.dsm.deleteService(FeedServiceDefinition.FEED_SERVICE_NAME);
                     wstm.registerFeedService();
                 } else {
                     File wsdlFile = wstm.getWSDLFile(serviceId);
@@ -99,9 +98,8 @@ public class WebServiceUpgrade implements UpgradeTask {
                             File tempWsdlFile = new File(tempDir, "temp.wsdl");
                             IOUtils.copy(wsdlFile, tempWsdlFile);
 
-                            dsm.deleteService(serviceId);
-                            wstm.importWSDL(tempWsdlFile.getCanonicalPath(),
-                                    null, true, null, null, null);
+                            this.dsm.deleteService(serviceId);
+                            wstm.importWSDL(tempWsdlFile.getCanonicalPath(), null, true, null, null, null);
                         } finally {
                             try {
                                 IOUtils.deleteRecursive(tempDir);

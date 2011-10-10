@@ -15,34 +15,37 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.wavemaker.runtime.data.sample.sakila;
 
-import com.wavemaker.runtime.data.DataServiceManager;
-import com.wavemaker.runtime.data.QueryOptions;
+package com.wavemaker.runtime.data.sample.sakila;
 
 import java.util.Date;
 import java.util.List;
 
+import com.wavemaker.runtime.data.DataServiceManager;
+import com.wavemaker.runtime.data.QueryOptions;
+
 public class Sakila2Extension extends Sakila {
 
-    public Sakila2Extension() {}
+    public Sakila2Extension() {
+    }
 
     public Sakila2Extension(DataServiceManager ds) {
         super(ds);
     }
 
+    @Override
     public Actor getActorById(Short id) {
         return super.getActorById(id);
-    }    
+    }
 
-    public List<Actor> getActorList(Actor qbeInstance, 
-                                    QueryOptions queryOptions) 
-    {
+    @Override
+    public List<Actor> getActorList(Actor qbeInstance, QueryOptions queryOptions) {
         return super.getActorList(qbeInstance, queryOptions);
     }
 
+    @Override
     public void updateActor(Actor actor) {
         actor.setLastUpdate(new Date());
         super.updateActor(actor);
-    }    
+    }
 }

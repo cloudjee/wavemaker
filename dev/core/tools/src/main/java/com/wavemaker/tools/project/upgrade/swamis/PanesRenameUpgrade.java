@@ -34,36 +34,31 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
  */
 public class PanesRenameUpgrade implements UpgradeTask {
 
-	private static final String OLD_PANES_DIR = "panes";
+    private static final String OLD_PANES_DIR = "panes";
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker
-	 * .tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
-	 */
-	public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker .tools.project.Project,
+     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
+     */
+    public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
-		try {
-			Resource oldPanesDir = project.getWebAppRoot().createRelative(
-					OLD_PANES_DIR);
+        try {
+            Resource oldPanesDir = project.getWebAppRoot().createRelative(OLD_PANES_DIR);
 
-			// if the project doesn't contain any panes, don't do the upgrade
-			if (!oldPanesDir.exists()) {
-				return;
-			}
+            // if the project doesn't contain any panes, don't do the upgrade
+            if (!oldPanesDir.exists()) {
+                return;
+            }
 
-			FileUtils.copyDirectory(oldPanesDir.getFile(), project
-					.getWebAppRoot().createRelative(ProjectConstants.PAGES_DIR)
-					.getFile());
-			FileUtils.forceDelete(oldPanesDir.getFile());
-		} catch (IOException e) {
-			throw new WMRuntimeException(e);
-		}
+            FileUtils.copyDirectory(oldPanesDir.getFile(), project.getWebAppRoot().createRelative(ProjectConstants.PAGES_DIR).getFile());
+            FileUtils.forceDelete(oldPanesDir.getFile());
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        }
 
-		upgradeInfo.addMessage("Moved old " + OLD_PANES_DIR + " to new "
-				+ ProjectConstants.PAGES_DIR + "; static references to "
-				+ OLD_PANES_DIR + " will have to be updated");
-	}
+        upgradeInfo.addMessage("Moved old " + OLD_PANES_DIR + " to new " + ProjectConstants.PAGES_DIR + "; static references to " + OLD_PANES_DIR
+            + " will have to be updated");
+    }
 }

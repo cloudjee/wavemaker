@@ -51,9 +51,8 @@ import com.wavemaker.tools.ws.wsdl.WSDLUtils.Soap11Address;
 import com.wavemaker.tools.ws.wsdl.WSDLUtils.SoapAddress;
 
 /**
- * This class builds a <code>WSDL</code> object from a WSDL file. The
- * <code>WSDL</code> object represents the Web Service definition that the
- * framework could process.
+ * This class builds a <code>WSDL</code> object from a WSDL file. The <code>WSDL</code> object represents the Web
+ * Service definition that the framework could process.
  * 
  * @author ffu
  * @version $Rev$ - $Date$
@@ -61,43 +60,42 @@ import com.wavemaker.tools.ws.wsdl.WSDLUtils.SoapAddress;
  */
 public class WSDLBuilder {
 
-    private List<XmlSchema> xmlSchemas = new ArrayList<XmlSchema>();
+    private final List<XmlSchema> xmlSchemas = new ArrayList<XmlSchema>();
 
-    private Map<String, Element> schemaMap = new LinkedHashMap<String, Element>();
+    private final Map<String, Element> schemaMap = new LinkedHashMap<String, Element>();
 
-    private List<String> importedSchemas = new ArrayList<String>();
-    
-    private List<String> importedNoRefSchemas = new ArrayList<String>();
+    private final List<String> importedSchemas = new ArrayList<String>();
 
-    private String wsdlURI;
+    private final List<String> importedNoRefSchemas = new ArrayList<String>();
 
-    private Definition definition;
-    
-    private WebServiceType serviceType;
+    private final String wsdlURI;
+
+    private final Definition definition;
+
+    private final WebServiceType serviceType;
 
     public WSDLBuilder(String wsdlURI) throws WSDLException {
         this.wsdlURI = wsdlURI;
-        definition = WSDLUtils.readDefinition(wsdlURI);
-        serviceType = getWebServiceType();
+        this.definition = WSDLUtils.readDefinition(wsdlURI);
+        this.serviceType = getWebServiceType();
     }
 
     public WSDL buildWSDL(String serviceId) throws WSDLException {
         List<PortTypeInfo> portTypeInfoList = buildServices();
-        processSchemas(definition);
+        processSchemas(this.definition);
         Map<String, Element> schemas = buildSchemas();
-        
-        String name = WSDLUtils.generateServiceName(definition);
+
+        String name = WSDLUtils.generateServiceName(this.definition);
         String serviceClassName = CodeGenUtils.toClassName(name);
         if (serviceId == null || serviceId.length() == 0) {
             serviceId = toValidServiceId(name);
         }
-        
-        List<ServiceInfo> serviceInfoList = buildServiceInfoList(serviceId,
-                portTypeInfoList);
-        
+
+        List<ServiceInfo> serviceInfoList = buildServiceInfoList(serviceId, portTypeInfoList);
+
         try {
-            WSDL wsdl = new WSDL(serviceId, serviceClassName, serviceInfoList,
-                    definition, wsdlURI, serviceType, schemas, xmlSchemas);
+            WSDL wsdl = new WSDL(serviceId, serviceClassName, serviceInfoList, this.definition, this.wsdlURI, this.serviceType, schemas,
+                this.xmlSchemas);
             populateWSDL(wsdl);
             return wsdl;
         } catch (SchemaException e) {
@@ -106,22 +104,20 @@ public class WSDLBuilder {
     }
 
     private void populateWSDL(WSDL wsdl) throws WSDLException {
-        String packageName = CodeGenUtils.constructPackageName(
-                wsdl.getTargetNamespace(), wsdl.getServiceId());
+        String packageName = CodeGenUtils.constructPackageName(wsdl.getTargetNamespace(), wsdl.getServiceId());
         wsdl.setPackageName(packageName);
-        
-        wsdl.setImportedNoRefSchemas(importedNoRefSchemas);
+
+        wsdl.setImportedNoRefSchemas(this.importedNoRefSchemas);
 
         if (wsdl.getWebServiceType() == WebServiceType.REST) {
             String restParameterizedURL = null;
-            Element element = definition.getDocumentationElement();
+            Element element = this.definition.getDocumentationElement();
             if (element != null && element.getFirstChild() != null) {
                 String s = element.getFirstChild().getTextContent();
                 s = s.trim();
                 int i = s.indexOf(Constants.REST_ENDPOINT_LOCATION_PREFIX);
                 if (i > -1) {
-                    restParameterizedURL = s.substring(
-                            Constants.REST_ENDPOINT_LOCATION_PREFIX.length());
+                    restParameterizedURL = s.substring(Constants.REST_ENDPOINT_LOCATION_PREFIX.length());
                     if (restParameterizedURL.charAt(0) == '[') {
                         int j = restParameterizedURL.indexOf(']');
                         String httpMethod = restParameterizedURL.substring(1, j);
@@ -129,11 +125,11 @@ public class WSDLBuilder {
                         if (v != null) {
                             wsdl.setHttpRequestMethod(v);
                         }
-                        restParameterizedURL = restParameterizedURL.substring(j+1);
+                        restParameterizedURL = restParameterizedURL.substring(j + 1);
                     }
                 }
             }
-            
+
             if (restParameterizedURL != null) {
                 wsdl.setEndpointLocation(restParameterizedURL);
             } else {
@@ -141,12 +137,12 @@ public class WSDLBuilder {
             }
 
         } else {
-            String style = WSDLUtils.getStyle(definition);
+            String style = WSDLUtils.getStyle(this.definition);
             boolean isRPC = style != null && style.equals(Constants.SOAP_STYLE_RPC);
             wsdl.setRPC(isRPC);
 
-            wsdl.setSOAPEncoded(WSDLUtils.isSOAPEncoded(definition));
-            
+            wsdl.setSOAPEncoded(WSDLUtils.isSOAPEncoded(this.definition));
+
             wsdl.setAuxiliaryClasses(JAXWSBuilder.getGeneratedSeiClasses(wsdl));
         }
 
@@ -157,11 +153,10 @@ public class WSDLBuilder {
             }
         }
         wsdl.setOperationsMap(operationMap);
-        
+
         // check with MessageInterceptorManager to see if there are
         // interceptors need to be set into the WSDL object.
-        List<String> interceptorClassNames = MessageInterceptorManager.
-            getInstance().getInterceptorClassNames(wsdl.getServiceId());
+        List<String> interceptorClassNames = MessageInterceptorManager.getInstance().getInterceptorClassNames(wsdl.getServiceId());
         if (interceptorClassNames != null) {
             wsdl.setInterceptorClassNames(interceptorClassNames);
         }
@@ -169,26 +164,23 @@ public class WSDLBuilder {
 
     private WebServiceType getWebServiceType() {
         WebServiceType serviceType = WebServiceType.SOAP;
-        if (WSDLUtils.getBindingForSOAP(definition, null) == null) {
+        if (WSDLUtils.getBindingForSOAP(this.definition, null) == null) {
             serviceType = WebServiceType.REST;
         }
         return serviceType;
     }
 
-    private List<ServiceInfo> buildServiceInfoList(String serviceId,
-            List<PortTypeInfo> portTypeInfoList) {
+    private List<ServiceInfo> buildServiceInfoList(String serviceId, List<PortTypeInfo> portTypeInfoList) {
         List<ServiceInfo> serviceInfoList = new ArrayList<ServiceInfo>();
-        if (serviceType == WebServiceType.REST) {
-            ServiceInfo serviceInfo = new ServiceInfo(new QName(definition
-                    .getTargetNamespace(), serviceId));
+        if (this.serviceType == WebServiceType.REST) {
+            ServiceInfo serviceInfo = new ServiceInfo(new QName(this.definition.getTargetNamespace(), serviceId));
             serviceInfo.setPortTypeInfoList(portTypeInfoList);
             serviceInfoList.add(serviceInfo);
         } else {
             for (PortTypeInfo portTypeInfo : portTypeInfoList) {
                 Service serv = portTypeInfo.getService();
                 if (serv != null) {
-                    ServiceInfo serviceInfo = getOrCreateServiceInfo(serv
-                            .getQName(), serviceInfoList);
+                    ServiceInfo serviceInfo = getOrCreateServiceInfo(serv.getQName(), serviceInfoList);
                     serviceInfo.addPortTypeInfo(portTypeInfo);
                 }
             }
@@ -199,28 +191,28 @@ public class WSDLBuilder {
     private Map<String, Element> buildSchemas() {
         Map<String, Element> schemas = new HashMap<String, Element>();
         int schemaElementCount = 1;
-        for (String id : schemaMap.keySet()) {
-            Element schema = schemaMap.get(id);
+        for (String id : this.schemaMap.keySet()) {
+            Element schema = this.schemaMap.get(id);
             String location = schema.getOwnerDocument().getDocumentURI();
             String systemId;
-            if (serviceType == WebServiceType.REST) {
+            if (this.serviceType == WebServiceType.REST) {
                 systemId = location;
 
                 // this is for the case if there is more than one <schema> in
                 // the WSDL. For example,
                 // <wsdl:types>
-                //     <xs:schema>
-                //         ...
-                //     </xs:schema>
-                //     <xs:schema>
-                //         ...
-                //     </xs:schema>
+                // <xs:schema>
+                // ...
+                // </xs:schema>
+                // <xs:schema>
+                // ...
+                // </xs:schema>
                 // </wsdl:types>
                 if (schemas.containsKey(systemId)) {
                     systemId = location + "#types?schema" + schemaElementCount++;
                 }
             } else {
-                if (importedSchemas.contains(location)) {
+                if (this.importedSchemas.contains(location)) {
                     // the schema document is an XSD file, so just use that as
                     // the location.
                     systemId = location;
@@ -235,17 +227,15 @@ public class WSDLBuilder {
 
     private List<PortTypeInfo> buildServices() {
         List<PortTypeInfo> portTypeInfoList = new ArrayList<PortTypeInfo>();
-        if (definition.getServices().isEmpty()) {
-            Collection<PortType> portTypes = CastUtils.cast(
-                    definition.getAllPortTypes().values());
+        if (this.definition.getServices().isEmpty()) {
+            Collection<PortType> portTypes = CastUtils.cast(this.definition.getAllPortTypes().values());
             for (PortType portType : portTypes) {
-                portTypeInfoList.addAll(buildServices(definition, portType));
+                portTypeInfoList.addAll(buildServices(this.definition, portType));
             }
         } else {
-            for (Iterator<QName> ite = CastUtils.cast(definition.getServices()
-                    .keySet().iterator()); ite.hasNext();) {
+            for (Iterator<QName> ite = CastUtils.cast(this.definition.getServices().keySet().iterator()); ite.hasNext();) {
                 QName qn = ite.next();
-                portTypeInfoList.addAll(buildServices(definition, qn));
+                portTypeInfoList.addAll(buildServices(this.definition, qn));
             }
         }
         return portTypeInfoList;
@@ -274,8 +264,7 @@ public class WSDLBuilder {
         return new ArrayList<PortTypeInfo>(services.values());
     }
 
-    private void buildServices(Map<QName, PortTypeInfo> services,
-            Definition def, PortType pt, Port p, Service serv) {
+    private void buildServices(Map<QName, PortTypeInfo> services, Definition def, PortType pt, Port p, Service serv) {
         PortTypeInfo portTypeInfo = services.get(pt.getQName());
         if (portTypeInfo == null) {
             portTypeInfo = new PortTypeInfo(pt);
@@ -309,8 +298,7 @@ public class WSDLBuilder {
     private void parseImports(Definition def, List<Definition> defList) {
         List<Import> importList = new ArrayList<Import>();
 
-        Collection<List<Import>> ilist = CastUtils.cast(def.getImports()
-                .values());
+        Collection<List<Import>> ilist = CastUtils.cast(def.getImports().values());
         for (List<Import> list : ilist) {
             importList.addAll(list);
         }
@@ -330,8 +318,7 @@ public class WSDLBuilder {
                     Schema schema = (Schema) obj;
                     schemaElem = schema.getElement();
                 } else if (obj instanceof UnknownExtensibilityElement) {
-                    org.w3c.dom.Element elem = 
-                        ((UnknownExtensibilityElement) obj).getElement();
+                    org.w3c.dom.Element elem = ((UnknownExtensibilityElement) obj).getElement();
                     if (elem.getLocalName().equals("schema")) {
                         schemaElem = elem;
                     }
@@ -339,19 +326,15 @@ public class WSDLBuilder {
                 if (schemaElem != null) {
                     for (Object prefix : def.getNamespaces().keySet()) {
                         String ns = (String) def.getNamespaces().get(prefix);
-                        if (!"".equals(prefix)
-                                && !schemaElem.hasAttribute("xmlns:" + prefix)) {
-                            schemaElem.setAttributeNS(
-                                    javax.xml.XMLConstants.XMLNS_ATTRIBUTE_NS_URI,
-                                    "xmlns:" + prefix, ns);
+                        if (!"".equals(prefix) && !schemaElem.hasAttribute("xmlns:" + prefix)) {
+                            schemaElem.setAttributeNS(javax.xml.XMLConstants.XMLNS_ATTRIBUTE_NS_URI, "xmlns:" + prefix, ns);
                         }
                     }
-                    String systemId = def.getDocumentBaseURI()
-                            + "#types?schema" + schemaCount;
+                    String systemId = def.getDocumentBaseURI() + "#types?schema" + schemaCount;
 
                     schemaCol.setBaseUri(def.getDocumentBaseURI());
                     XmlSchema xmlSchema = schemaCol.read(schemaElem, systemId);
-                    xmlSchemas.add(xmlSchema);
+                    this.xmlSchemas.add(xmlSchema);
                     schemaCount++;
                 }
             }
@@ -361,8 +344,7 @@ public class WSDLBuilder {
     private void processSchemaList(Definition def) {
         Types typesElement = def.getTypes();
         if (typesElement != null) {
-            Iterator<Object> ite = CastUtils.cast(
-                    typesElement.getExtensibilityElements().iterator());
+            Iterator<Object> ite = CastUtils.cast(typesElement.getExtensibilityElements().iterator());
             while (ite.hasNext()) {
                 Object obj = ite.next();
                 if (obj instanceof Schema) {
@@ -376,20 +358,17 @@ public class WSDLBuilder {
     private void addSchema(Schema schema, boolean isImport) {
         String docBaseURI = schema.getDocumentBaseURI();
         Element schemaEle = schema.getElement();
-        if (schemaMap.get(docBaseURI) == null) {
-            schemaMap.put(docBaseURI, schemaEle);
+        if (this.schemaMap.get(docBaseURI) == null) {
+            this.schemaMap.put(docBaseURI, schemaEle);
             if (isImport) {
-                importedSchemas.add(docBaseURI);
+                this.importedSchemas.add(docBaseURI);
             }
-        } else if (schemaMap.get(docBaseURI) != null
-                && schemaMap.containsValue(schemaEle)) {
+        } else if (this.schemaMap.get(docBaseURI) != null && this.schemaMap.containsValue(schemaEle)) {
             // do nothing
         } else {
-            String tns = schema.getDocumentBaseURI()
-                    + "#"
-                    + schema.getElement().getAttribute(Constants.TARGET_NAMESPACE);
-            if (schemaMap.get(tns) == null) {
-                schemaMap.put(tns, schema.getElement());
+            String tns = schema.getDocumentBaseURI() + "#" + schema.getElement().getAttribute(Constants.TARGET_NAMESPACE);
+            if (this.schemaMap.get(tns) == null) {
+                this.schemaMap.put(tns, schema.getElement());
             }
         }
 
@@ -397,18 +376,14 @@ public class WSDLBuilder {
         if (imports != null && imports.size() > 0) {
             Collection<String> importKeys = imports.keySet();
             for (String importNamespace : importKeys) {
-                if (!isSchemaParsed(schema.getDocumentBaseURI(),
-                        importNamespace)) {
-                    List<SchemaImport> schemaImports = CastUtils.cast(imports
-                            .get(importNamespace));
+                if (!isSchemaParsed(schema.getDocumentBaseURI(), importNamespace)) {
+                    List<SchemaImport> schemaImports = CastUtils.cast(imports.get(importNamespace));
                     for (SchemaImport schemaImport : schemaImports) {
                         Schema tempImport = schemaImport.getReferencedSchema();
-                        if (tempImport != null
-                                && !schemaMap.containsValue(tempImport
-                                        .getElement())) {
+                        if (tempImport != null && !this.schemaMap.containsValue(tempImport.getElement())) {
                             addSchema(tempImport, true);
                         } else {
-                            importedNoRefSchemas.add(schemaImport.getNamespaceURI());
+                            this.importedNoRefSchemas.add(schemaImport.getNamespaceURI());
                         }
                     }
                 }
@@ -417,8 +392,8 @@ public class WSDLBuilder {
     }
 
     private boolean isSchemaParsed(String baseUri, String ns) {
-        if (schemaMap.get(baseUri) != null) {
-            Element ele = schemaMap.get(baseUri);
+        if (this.schemaMap.get(baseUri) != null) {
+            Element ele = this.schemaMap.get(baseUri);
             String tns = ele.getAttribute(Constants.TARGET_NAMESPACE);
             if (ns.equals(tns)) {
                 return true;
@@ -427,8 +402,7 @@ public class WSDLBuilder {
         return false;
     }
 
-    private static ServiceInfo getOrCreateServiceInfo(QName servQName,
-            List<ServiceInfo> serviceInfoList) {
+    private static ServiceInfo getOrCreateServiceInfo(QName servQName, List<ServiceInfo> serviceInfoList) {
         for (ServiceInfo serviceInfo : serviceInfoList) {
             if (serviceInfo.getQName().equals(servQName)) {
                 return serviceInfo;
@@ -460,14 +434,13 @@ public class WSDLBuilder {
 
     private static Port findPortWithSamePortType(List<Port> ports, Port p) {
         for (Port port : ports) {
-            if (p.getBinding().getPortType().getQName().equals(
-                    port.getBinding().getPortType().getQName())) {
+            if (p.getBinding().getPortType().getQName().equals(port.getBinding().getPortType().getQName())) {
                 return port;
             }
         }
         return null;
     }
-    
+
     /**
      * Converts a name to a valid service ID.
      */

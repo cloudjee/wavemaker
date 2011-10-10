@@ -17,14 +17,12 @@ package com.wavemaker.runtime.ws;
 /**
  * @author ffu
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class FeedUtils {
 
-    private static final String[] BAD_TAGS_REGEX = new String[] {
-        "<script[^>]*>[^<]*(</script>)?"
-    };
-    
+    private static final String[] BAD_TAGS_REGEX = new String[] { "<script[^>]*>[^<]*(</script>)?" };
+
     /**
      * Strip out bad tags such as <script> tags in the given HTML string.
      * 

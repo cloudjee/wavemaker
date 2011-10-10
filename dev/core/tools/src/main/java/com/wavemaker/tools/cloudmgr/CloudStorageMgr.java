@@ -19,79 +19,72 @@ import java.util.Collection;
 
 /**
  * @author slee
- *
+ * 
  */
 public interface CloudStorageMgr {
 
     /**
      * Gets the list of all available cloud file containers.
-     *
-     * @param authObj  the authetication credential info, such as access key, user id, password etc...
-     * @return Collection  the collection of file containers owned by the user.
+     * 
+     * @param authObj the authetication credential info, such as access key, user id, password etc...
+     * @return Collection the collection of file containers owned by the user.
      */
     Collection<CloudContainer> getContainerList(CloudAuth authObj);
 
     /**
      * Gets the container object for the container name passed.
-     *
-     * @param containerName  the container name
-     * @param authObj  the authetication credential info, such as access key, user id, password etc...
-     * @return CloudContainer  the cloud container object.
+     * 
+     * @param containerName the container name
+     * @param authObj the authetication credential info, such as access key, user id, password etc...
+     * @return CloudContainer the cloud container object.
      */
     CloudContainer getContainer(String containerName, CloudAuth authObj);
 
     /**
      * Gets the list of files for the container name passed.
-     *
-     * @param containerName  the container name
-     * @param authObj  the authetication credential info, such as access key, user id, password etc...
-     * @return Collection  the collection of cloud files
+     * 
+     * @param containerName the container name
+     * @param authObj the authetication credential info, such as access key, user id, password etc...
+     * @return Collection the collection of cloud files
      */
     Collection<CloudFile> getCloudFiles(String containerName, CloudAuth authObj);
 
     /**
      * Creates a file container.
-     *
-     * @param containerName  the file container name
-     * @param location  the name of the location (eg. EU or US)
-     * @param authObj  the authetication credential info, such as access key, user id, password etc...
-     * @return Collection  the collection of file containers owned by the user.
+     * 
+     * @param containerName the file container name
+     * @param location the name of the location (eg. EU or US)
+     * @param authObj the authetication credential info, such as access key, user id, password etc...
+     * @return Collection the collection of file containers owned by the user.
      */
-    Collection<CloudContainer> createContainer(String containerName,
-                          String location,
-                          CloudAuth authObj);
+    Collection<CloudContainer> createContainer(String containerName, String location, CloudAuth authObj);
 
     /**
      * Removes a file container.
-     *
-     * @param containerName  the file container name to be deleted
-     * @param authObj  the authetication credential info, such as access key, user id, password etc...
-     * @return Collection  the collection of file containers owned by the user.
+     * 
+     * @param containerName the file container name to be deleted
+     * @param authObj the authetication credential info, such as access key, user id, password etc...
+     * @return Collection the collection of file containers owned by the user.
      */
-    Collection<CloudContainer> deleteContainer(String containerName,
-                          CloudAuth authObj);
+    Collection<CloudContainer> deleteContainer(String containerName, CloudAuth authObj);
 
     /**
      * Copies a file to the cloud storage.
-     *
-     * @param containerName  the file container name
-     * @param file  the file opject of the WAR file
-     * @param authObj  the authetication credential info
-     * @return Collection  the collection of file objects for a specific container
+     * 
+     * @param containerName the file container name
+     * @param file the file opject of the WAR file
+     * @param authObj the authetication credential info
+     * @return Collection the collection of file objects for a specific container
      */
-    Collection<CloudFile> copyFileToCloudStorage(String containerName,
-                           File file,
-                           CloudAuth authObj);
+    Collection<CloudFile> copyFileToCloudStorage(String containerName, File file, CloudAuth authObj);
 
     /**
      * Deletes a file in the cloud storage.
-     *
-     * @param containerName  the file container name
-     * @param fileName  the WAR file name to be deleted
-     * @param authObj  the authetication credential info
-     * @return Collection  the collection of file objects for a specific container
+     * 
+     * @param containerName the file container name
+     * @param fileName the WAR file name to be deleted
+     * @param authObj the authetication credential info
+     * @return Collection the collection of file objects for a specific container
      */
-    Collection<CloudFile> deleteFileInCloudStorage(String containerName,
-                             String fileName,
-                             CloudAuth authObj);
+    Collection<CloudFile> deleteFileInCloudStorage(String containerName, String fileName, CloudAuth authObj);
 }

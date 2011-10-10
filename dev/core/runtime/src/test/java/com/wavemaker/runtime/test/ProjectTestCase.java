@@ -19,16 +19,14 @@ import javax.servlet.http.HttpSession;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.ContextConfiguration;
 
-
 /**
- * A concrete implementation of SpringTestCase, defaulting to WaveMaker projects
- * default paths.
+ * A concrete implementation of SpringTestCase, defaulting to WaveMaker projects default paths.
  * 
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
-@ContextConfiguration(locations="webapproot/WEB-INF/project-springapp.xml")
+@ContextConfiguration(locations = "webapproot/WEB-INF/project-springapp.xml")
 public abstract class ProjectTestCase extends SpringTestCase {
 
     @Override

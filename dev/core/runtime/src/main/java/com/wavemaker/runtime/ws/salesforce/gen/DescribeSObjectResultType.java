@@ -11,23 +11,23 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for DescribeSObjectResult complex type.
+ * <p>
+ * Java class for DescribeSObjectResult complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="DescribeSObjectResult">
@@ -68,83 +68,84 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DescribeSObjectResult", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "activateable",
-    "childRelationships",
-    "createable",
-    "custom",
-    "customSetting",
-    "deletable",
-    "deprecatedAndHidden",
-    "fields",
-    "keyPrefix",
-    "label",
-    "labelPlural",
-    "layoutable",
-    "mergeable",
-    "name",
-    "queryable",
-    "recordTypeInfos",
-    "replicateable",
-    "retrieveable",
-    "searchable",
-    "triggerable",
-    "undeletable",
-    "updateable",
-    "urlDetail",
-    "urlEdit",
-    "urlNew"
-})
+@XmlType(name = "DescribeSObjectResult", namespace = "urn:partner.soap.sforce.com", propOrder = { "activateable", "childRelationships", "createable",
+    "custom", "customSetting", "deletable", "deprecatedAndHidden", "fields", "keyPrefix", "label", "labelPlural", "layoutable", "mergeable", "name",
+    "queryable", "recordTypeInfos", "replicateable", "retrieveable", "searchable", "triggerable", "undeletable", "updateable", "urlDetail",
+    "urlEdit", "urlNew" })
 public class DescribeSObjectResultType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean activateable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected List<ChildRelationshipType> childRelationships;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean createable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean custom;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean customSetting;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean deletable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean deprecatedAndHidden;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", nillable = true)
     protected List<FieldType> fields;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String keyPrefix;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String label;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String labelPlural;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean layoutable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean mergeable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String name;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean queryable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected List<RecordTypeInfoType> recordTypeInfos;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean replicateable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean retrieveable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean searchable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected Boolean triggerable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean undeletable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean updateable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String urlDetail;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String urlEdit;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String urlNew;
 
@@ -153,7 +154,7 @@ public class DescribeSObjectResultType {
      * 
      */
     public boolean isActivateable() {
-        return activateable;
+        return this.activateable;
     }
 
     /**
@@ -168,27 +169,26 @@ public class DescribeSObjectResultType {
      * Gets the value of the childRelationships property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the childRelationships property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the childRelationships property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getChildRelationships().add(newItem);
+     * getChildRelationships().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link ChildRelationshipType }
+     * Objects of the following type(s) are allowed in the list {@link ChildRelationshipType }
      * 
      * 
      */
     public List<ChildRelationshipType> getChildRelationships() {
-        if (childRelationships == null) {
-            childRelationships = new ArrayList<ChildRelationshipType>();
+        if (this.childRelationships == null) {
+            this.childRelationships = new ArrayList<ChildRelationshipType>();
         }
         return this.childRelationships;
     }
@@ -198,7 +198,7 @@ public class DescribeSObjectResultType {
      * 
      */
     public boolean isCreateable() {
-        return createable;
+        return this.createable;
     }
 
     /**
@@ -214,7 +214,7 @@ public class DescribeSObjectResultType {
      * 
      */
     public boolean isCustom() {
-        return custom;
+        return this.custom;
     }
 
     /**
@@ -230,7 +230,7 @@ public class DescribeSObjectResultType {
      * 
      */
     public boolean isCustomSetting() {
-        return customSetting;
+        return this.customSetting;
     }
 
     /**
@@ -246,7 +246,7 @@ public class DescribeSObjectResultType {
      * 
      */
     public boolean isDeletable() {
-        return deletable;
+        return this.deletable;
     }
 
     /**
@@ -262,7 +262,7 @@ public class DescribeSObjectResultType {
      * 
      */
     public boolean isDeprecatedAndHidden() {
-        return deprecatedAndHidden;
+        return this.deprecatedAndHidden;
     }
 
     /**
@@ -277,27 +277,26 @@ public class DescribeSObjectResultType {
      * Gets the value of the fields property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the fields property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the fields property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getFields().add(newItem);
+     * getFields().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link FieldType }
+     * Objects of the following type(s) are allowed in the list {@link FieldType }
      * 
      * 
      */
     public List<FieldType> getFields() {
-        if (fields == null) {
-            fields = new ArrayList<FieldType>();
+        if (this.fields == null) {
+            this.fields = new ArrayList<FieldType>();
         }
         return this.fields;
     }
@@ -305,22 +304,18 @@ public class DescribeSObjectResultType {
     /**
      * Gets the value of the keyPrefix property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getKeyPrefix() {
-        return keyPrefix;
+        return this.keyPrefix;
     }
 
     /**
      * Sets the value of the keyPrefix property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setKeyPrefix(String value) {
         this.keyPrefix = value;
@@ -329,22 +324,18 @@ public class DescribeSObjectResultType {
     /**
      * Gets the value of the label property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getLabel() {
-        return label;
+        return this.label;
     }
 
     /**
      * Sets the value of the label property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setLabel(String value) {
         this.label = value;
@@ -353,22 +344,18 @@ public class DescribeSObjectResultType {
     /**
      * Gets the value of the labelPlural property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getLabelPlural() {
-        return labelPlural;
+        return this.labelPlural;
     }
 
     /**
      * Sets the value of the labelPlural property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setLabelPlural(String value) {
         this.labelPlural = value;
@@ -379,7 +366,7 @@ public class DescribeSObjectResultType {
      * 
      */
     public boolean isLayoutable() {
-        return layoutable;
+        return this.layoutable;
     }
 
     /**
@@ -395,7 +382,7 @@ public class DescribeSObjectResultType {
      * 
      */
     public boolean isMergeable() {
-        return mergeable;
+        return this.mergeable;
     }
 
     /**
@@ -409,22 +396,18 @@ public class DescribeSObjectResultType {
     /**
      * Gets the value of the name property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**
      * Sets the value of the name property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setName(String value) {
         this.name = value;
@@ -435,7 +418,7 @@ public class DescribeSObjectResultType {
      * 
      */
     public boolean isQueryable() {
-        return queryable;
+        return this.queryable;
     }
 
     /**
@@ -450,27 +433,26 @@ public class DescribeSObjectResultType {
      * Gets the value of the recordTypeInfos property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the recordTypeInfos property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the recordTypeInfos property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getRecordTypeInfos().add(newItem);
+     * getRecordTypeInfos().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link RecordTypeInfoType }
+     * Objects of the following type(s) are allowed in the list {@link RecordTypeInfoType }
      * 
      * 
      */
     public List<RecordTypeInfoType> getRecordTypeInfos() {
-        if (recordTypeInfos == null) {
-            recordTypeInfos = new ArrayList<RecordTypeInfoType>();
+        if (this.recordTypeInfos == null) {
+            this.recordTypeInfos = new ArrayList<RecordTypeInfoType>();
         }
         return this.recordTypeInfos;
     }
@@ -480,7 +462,7 @@ public class DescribeSObjectResultType {
      * 
      */
     public boolean isReplicateable() {
-        return replicateable;
+        return this.replicateable;
     }
 
     /**
@@ -496,7 +478,7 @@ public class DescribeSObjectResultType {
      * 
      */
     public boolean isRetrieveable() {
-        return retrieveable;
+        return this.retrieveable;
     }
 
     /**
@@ -512,7 +494,7 @@ public class DescribeSObjectResultType {
      * 
      */
     public boolean isSearchable() {
-        return searchable;
+        return this.searchable;
     }
 
     /**
@@ -526,22 +508,18 @@ public class DescribeSObjectResultType {
     /**
      * Gets the value of the triggerable property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     * @return possible object is {@link Boolean }
+     * 
      */
     public Boolean getTriggerable() {
-        return triggerable;
+        return this.triggerable;
     }
 
     /**
      * Sets the value of the triggerable property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     * @param value allowed object is {@link Boolean }
+     * 
      */
     public void setTriggerable(Boolean value) {
         this.triggerable = value;
@@ -552,7 +530,7 @@ public class DescribeSObjectResultType {
      * 
      */
     public boolean isUndeletable() {
-        return undeletable;
+        return this.undeletable;
     }
 
     /**
@@ -568,7 +546,7 @@ public class DescribeSObjectResultType {
      * 
      */
     public boolean isUpdateable() {
-        return updateable;
+        return this.updateable;
     }
 
     /**
@@ -582,22 +560,18 @@ public class DescribeSObjectResultType {
     /**
      * Gets the value of the urlDetail property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getUrlDetail() {
-        return urlDetail;
+        return this.urlDetail;
     }
 
     /**
      * Sets the value of the urlDetail property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setUrlDetail(String value) {
         this.urlDetail = value;
@@ -606,22 +580,18 @@ public class DescribeSObjectResultType {
     /**
      * Gets the value of the urlEdit property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getUrlEdit() {
-        return urlEdit;
+        return this.urlEdit;
     }
 
     /**
      * Sets the value of the urlEdit property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setUrlEdit(String value) {
         this.urlEdit = value;
@@ -630,22 +600,18 @@ public class DescribeSObjectResultType {
     /**
      * Gets the value of the urlNew property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getUrlNew() {
-        return urlNew;
+        return this.urlNew;
     }
 
     /**
      * Sets the value of the urlNew property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setUrlNew(String value) {
         this.urlNew = value;
@@ -654,10 +620,8 @@ public class DescribeSObjectResultType {
     /**
      * Sets the value of the childRelationships property.
      * 
-     * @param childRelationships
-     *     allowed object is
-     *     {@link ChildRelationshipType }
-     *     
+     * @param childRelationships allowed object is {@link ChildRelationshipType }
+     * 
      */
     public void setChildRelationships(List<ChildRelationshipType> childRelationships) {
         this.childRelationships = childRelationships;
@@ -666,10 +630,8 @@ public class DescribeSObjectResultType {
     /**
      * Sets the value of the fields property.
      * 
-     * @param fields
-     *     allowed object is
-     *     {@link FieldType }
-     *     
+     * @param fields allowed object is {@link FieldType }
+     * 
      */
     public void setFields(List<FieldType> fields) {
         this.fields = fields;
@@ -678,10 +640,8 @@ public class DescribeSObjectResultType {
     /**
      * Sets the value of the recordTypeInfos property.
      * 
-     * @param recordTypeInfos
-     *     allowed object is
-     *     {@link RecordTypeInfoType }
-     *     
+     * @param recordTypeInfos allowed object is {@link RecordTypeInfoType }
+     * 
      */
     public void setRecordTypeInfos(List<RecordTypeInfoType> recordTypeInfos) {
         this.recordTypeInfos = recordTypeInfos;

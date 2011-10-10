@@ -25,25 +25,26 @@ import com.wavemaker.runtime.service.events.ServiceEventListener;
  */
 public class JavaServiceEventListener implements ServiceEventListener {
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.service.events.ServiceEventListener#postOperation(com.wavemaker.runtime.service.ServiceWire, java.lang.String, com.wavemaker.runtime.service.TypedServiceReturn, java.lang.Throwable)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.wavemaker.runtime.service.events.ServiceEventListener#postOperation(com.wavemaker.runtime.service.ServiceWire
+     * , java.lang.String, com.wavemaker.runtime.service.TypedServiceReturn, java.lang.Throwable)
      */
-    public TypedServiceReturn postOperation(
-            ServiceWire serviceWire, String operationName,
-            TypedServiceReturn result, Throwable throwable)
-            throws Throwable {
+    public TypedServiceReturn postOperation(ServiceWire serviceWire, String operationName, TypedServiceReturn result, Throwable throwable)
+        throws Throwable {
 
         if (throwable != null) {
             throw throwable;
         }
 
         SystemUtils.clientPrepare();
-        
+
         return result;
     }
 
-    public Object[] preOperation(ServiceWire serviceWire, String operationName,
-            Object[] params) {
+    public Object[] preOperation(ServiceWire serviceWire, String operationName, Object[] params) {
         return params;
     }
 }

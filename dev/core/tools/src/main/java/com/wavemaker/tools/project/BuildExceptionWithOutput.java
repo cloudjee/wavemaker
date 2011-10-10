@@ -38,9 +38,7 @@ public class BuildExceptionWithOutput extends BuildException {
     /**
      * Constructs an exception with the given descriptive message.
      * 
-     * @param message
-     *                A description of or information about the exception.
-     *                Should not be <code>null</code>.
+     * @param message A description of or information about the exception. Should not be <code>null</code>.
      */
     public BuildExceptionWithOutput(String message) {
         super(message);
@@ -49,9 +47,7 @@ public class BuildExceptionWithOutput extends BuildException {
     /**
      * Constructs an exception with the given descriptive message.
      * 
-     * @param message
-     *                A description of or information about the exception.
-     *                Should not be <code>null</code>.
+     * @param message A description of or information about the exception. Should not be <code>null</code>.
      */
     public BuildExceptionWithOutput(String message, String compilerOutput) {
         super(message);
@@ -59,35 +55,24 @@ public class BuildExceptionWithOutput extends BuildException {
     }
 
     /**
-     * Constructs an exception with the given message and exception as a root
-     * cause.
+     * Constructs an exception with the given message and exception as a root cause.
      * 
-     * @param message
-     *                A description of or information about the exception.
-     *                Should not be <code>null</code> unless a cause is
-     *                specified.
-     * @param cause
-     *                The exception that might have caused this one. May be
-     *                <code>null</code>.
+     * @param message A description of or information about the exception. Should not be <code>null</code> unless a
+     *        cause is specified.
+     * @param cause The exception that might have caused this one. May be <code>null</code>.
      */
     public BuildExceptionWithOutput(String message, Throwable cause) {
         super(message, cause);
     }
 
     /**
-     * Constructs an exception with the given message and exception as a root
-     * cause.
+     * Constructs an exception with the given message and exception as a root cause.
      * 
-     * @param message
-     *                A description of or information about the exception.
-     *                Should not be <code>null</code> unless a cause is
-     *                specified.
-     * @param cause
-     *                The exception that might have caused this one. May be
-     *                <code>null</code>.
+     * @param message A description of or information about the exception. Should not be <code>null</code> unless a
+     *        cause is specified.
+     * @param cause The exception that might have caused this one. May be <code>null</code>.
      */
-    public BuildExceptionWithOutput(String message, String compilerOutput,
-            Throwable cause) {
+    public BuildExceptionWithOutput(String message, String compilerOutput, Throwable cause) {
         super(message, cause);
         this.compilerOutput = compilerOutput;
     }

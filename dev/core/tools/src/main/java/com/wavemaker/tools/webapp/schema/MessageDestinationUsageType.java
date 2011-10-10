@@ -19,35 +19,28 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * 
  * 
- * 	The message-destination-usageType specifies the use of the
- * 	message destination indicated by the reference.  The value
- * 	indicates whether messages are consumed from the message
- * 	destination, produced for the destination, or both.  The
- * 	Assembler makes use of this information in linking producers
- * 	of a destination with its consumers.
+ * The message-destination-usageType specifies the use of the message destination indicated by the reference. The value
+ * indicates whether messages are consumed from the message destination, produced for the destination, or both. The
+ * Assembler makes use of this information in linking producers of a destination with its consumers.
  * 
- * 	The value of the message-destination-usage element must be
- * 	one of the following:
- * 	    Consumes
- * 	    Produces
- * 	    ConsumesProduces
+ * The value of the message-destination-usage element must be one of the following: Consumes Produces ConsumesProduces
  * 
- *       
  * 
- * <p>Java class for message-destination-usageType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for message-destination-usageType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="message-destination-usageType">
@@ -62,9 +55,6 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "message-destination-usageType")
-public class MessageDestinationUsageType
-    extends String
-{
-
+public class MessageDestinationUsageType extends String {
 
 }

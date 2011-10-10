@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -20,12 +18,14 @@ import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for fieldType.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
+ * Java class for fieldType.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * 
  * <pre>
  * &lt;simpleType name="fieldType">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
@@ -60,59 +60,40 @@ import javax.xml.bind.annotation.XmlType;
 public enum FieldTypeType {
 
     @XmlEnumValue("string")
-    STRING("string"),
-    @XmlEnumValue("picklist")
-    PICKLIST("picklist"),
-    @XmlEnumValue("multipicklist")
-    MULTIPICKLIST("multipicklist"),
-    @XmlEnumValue("combobox")
-    COMBOBOX("combobox"),
-    @XmlEnumValue("reference")
-    REFERENCE("reference"),
-    @XmlEnumValue("base64")
-    BASE_64("base64"),
-    @XmlEnumValue("boolean")
-    BOOLEAN("boolean"),
-    @XmlEnumValue("currency")
-    CURRENCY("currency"),
-    @XmlEnumValue("textarea")
-    TEXTAREA("textarea"),
-    @XmlEnumValue("int")
-    INT("int"),
-    @XmlEnumValue("double")
-    DOUBLE("double"),
-    @XmlEnumValue("percent")
-    PERCENT("percent"),
-    @XmlEnumValue("phone")
-    PHONE("phone"),
-    @XmlEnumValue("id")
-    ID("id"),
-    @XmlEnumValue("date")
-    DATE("date"),
-    @XmlEnumValue("datetime")
-    DATETIME("datetime"),
-    @XmlEnumValue("time")
-    TIME("time"),
-    @XmlEnumValue("url")
-    URL("url"),
-    @XmlEnumValue("email")
-    EMAIL("email"),
-    @XmlEnumValue("encryptedstring")
-    ENCRYPTEDSTRING("encryptedstring"),
-    @XmlEnumValue("anyType")
+    STRING("string"), @XmlEnumValue("picklist")
+    PICKLIST("picklist"), @XmlEnumValue("multipicklist")
+    MULTIPICKLIST("multipicklist"), @XmlEnumValue("combobox")
+    COMBOBOX("combobox"), @XmlEnumValue("reference")
+    REFERENCE("reference"), @XmlEnumValue("base64")
+    BASE_64("base64"), @XmlEnumValue("boolean")
+    BOOLEAN("boolean"), @XmlEnumValue("currency")
+    CURRENCY("currency"), @XmlEnumValue("textarea")
+    TEXTAREA("textarea"), @XmlEnumValue("int")
+    INT("int"), @XmlEnumValue("double")
+    DOUBLE("double"), @XmlEnumValue("percent")
+    PERCENT("percent"), @XmlEnumValue("phone")
+    PHONE("phone"), @XmlEnumValue("id")
+    ID("id"), @XmlEnumValue("date")
+    DATE("date"), @XmlEnumValue("datetime")
+    DATETIME("datetime"), @XmlEnumValue("time")
+    TIME("time"), @XmlEnumValue("url")
+    URL("url"), @XmlEnumValue("email")
+    EMAIL("email"), @XmlEnumValue("encryptedstring")
+    ENCRYPTEDSTRING("encryptedstring"), @XmlEnumValue("anyType")
     ANY_TYPE("anyType");
+
     private final String value;
 
     FieldTypeType(String v) {
-        value = v;
+        this.value = v;
     }
 
     public String value() {
-        return value;
+        return this.value;
     }
 
     public static FieldTypeType fromValue(String v) {
-        for (FieldTypeType c: FieldTypeType.values()) {
+        for (FieldTypeType c : FieldTypeType.values()) {
             if (c.value.equals(v)) {
                 return c;
             }

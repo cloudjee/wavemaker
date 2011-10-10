@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -32,21 +31,21 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
  * 
  * 
- * 	The form-login-configType specifies the login and error
- * 	pages that should be used in form based login. If form based
- * 	authentication is not used, these elements are ignored.
+ * The form-login-configType specifies the login and error pages that should be used in form based login. If form based
+ * authentication is not used, these elements are ignored.
  * 
- * 	Used in: login-config
+ * Used in: login-config
  * 
- *       
  * 
- * <p>Java class for form-login-configType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for form-login-configType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="form-login-configType">
@@ -65,16 +64,15 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "form-login-configType", propOrder = {
-    "formLoginPage",
-    "formErrorPage"
-})
+@XmlType(name = "form-login-configType", propOrder = { "formLoginPage", "formErrorPage" })
 public class FormLoginConfigType {
 
     @XmlElement(name = "form-login-page", required = true)
     protected WarPathType formLoginPage;
+
     @XmlElement(name = "form-error-page", required = true)
     protected WarPathType formErrorPage;
+
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -84,22 +82,18 @@ public class FormLoginConfigType {
     /**
      * Gets the value of the formLoginPage property.
      * 
-     * @return
-     *     possible object is
-     *     {@link WarPathType }
-     *     
+     * @return possible object is {@link WarPathType }
+     * 
      */
     public WarPathType getFormLoginPage() {
-        return formLoginPage;
+        return this.formLoginPage;
     }
 
     /**
      * Sets the value of the formLoginPage property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link WarPathType }
-     *     
+     * @param value allowed object is {@link WarPathType }
+     * 
      */
     public void setFormLoginPage(WarPathType value) {
         this.formLoginPage = value;
@@ -108,22 +102,18 @@ public class FormLoginConfigType {
     /**
      * Gets the value of the formErrorPage property.
      * 
-     * @return
-     *     possible object is
-     *     {@link WarPathType }
-     *     
+     * @return possible object is {@link WarPathType }
+     * 
      */
     public WarPathType getFormErrorPage() {
-        return formErrorPage;
+        return this.formErrorPage;
     }
 
     /**
      * Sets the value of the formErrorPage property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link WarPathType }
-     *     
+     * @param value allowed object is {@link WarPathType }
+     * 
      */
     public void setFormErrorPage(WarPathType value) {
         this.formErrorPage = value;
@@ -132,22 +122,18 @@ public class FormLoginConfigType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setId(java.lang.String value) {
         this.id = value;

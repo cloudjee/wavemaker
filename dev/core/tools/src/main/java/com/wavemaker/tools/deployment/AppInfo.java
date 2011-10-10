@@ -19,7 +19,7 @@ package com.wavemaker.tools.deployment;
  * 
  * @author Simon Toens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class AppInfo implements Comparable<AppInfo> {
 
@@ -31,7 +31,6 @@ public class AppInfo implements Comparable<AppInfo> {
 
     // optional description
     private final String description;
-
 
     public AppInfo(String name) {
         this(name, "");
@@ -53,18 +52,18 @@ public class AppInfo implements Comparable<AppInfo> {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public String getHref() {
-        return href;
+        return this.href;
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public int compareTo(AppInfo appInfo) {
-        return name.compareTo(appInfo.name);
+        return this.name.compareTo(appInfo.name);
     }
 }

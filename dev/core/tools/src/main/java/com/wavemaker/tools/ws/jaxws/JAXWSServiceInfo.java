@@ -26,42 +26,40 @@ import com.wavemaker.tools.ws.wsdl.ServiceInfo;
  */
 public class JAXWSServiceInfo {
 
-    private ServiceInfo serviceInfo;
+    private final ServiceInfo serviceInfo;
 
-    private String pkg;
+    private final String pkg;
 
-    private List<JAXWSPortTypeInfo> portTypeInfoList;
+    private final List<JAXWSPortTypeInfo> portTypeInfoList;
 
-    public JAXWSServiceInfo(ServiceInfo serviceInfo, String pkg,
-            List<JAXWSPortTypeInfo> portTypeInfoList) {
+    public JAXWSServiceInfo(ServiceInfo serviceInfo, String pkg, List<JAXWSPortTypeInfo> portTypeInfoList) {
         this.serviceInfo = serviceInfo;
         this.pkg = pkg;
         this.portTypeInfoList = portTypeInfoList;
     }
 
     public String getName() {
-        return serviceInfo.getName();
+        return this.serviceInfo.getName();
     }
 
     /**
-     * Returns the JAXWS generated service client (@WebServiceClient) class
-     * name. The package is omitted.
+     * Returns the JAXWS generated service client (@WebServiceClient) class name. The package is omitted.
      * 
      * @return The generated service client class name.
      */
     public String getServiceClientClassName() {
-        return CodeGenUtils.toClassName(serviceInfo.getName()) + "Client";
+        return CodeGenUtils.toClassName(this.serviceInfo.getName()) + "Client";
     }
 
     public String getServiceClientFQClassName() {
-        return pkg + "." + getServiceClientClassName();
+        return this.pkg + "." + getServiceClientClassName();
     }
 
     public List<JAXWSPortTypeInfo> getPortTypeInfoList() {
-        return portTypeInfoList;
+        return this.portTypeInfoList;
     }
-    
+
     public <T> T getProperty(String name, Class<T> cls) {
-        return serviceInfo.getProperty(name, cls);
+        return this.serviceInfo.getProperty(name, cls);
     }
 }

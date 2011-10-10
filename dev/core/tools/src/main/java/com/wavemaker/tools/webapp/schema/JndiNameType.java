@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -27,20 +26,19 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * 
  * 
- * 	The jndi-nameType type designates a JNDI name in the
- * 	Deployment Component's environment and is relative to the
- * 	java:comp/env context.  A JNDI name must be unique within the
- * 	Deployment Component.
+ * The jndi-nameType type designates a JNDI name in the Deployment Component's environment and is relative to the
+ * java:comp/env context. A JNDI name must be unique within the Deployment Component.
  * 
- *       
  * 
- * <p>Java class for jndi-nameType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for jndi-nameType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="jndi-nameType">
@@ -55,12 +53,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "jndi-nameType")
-@XmlSeeAlso({
-    EjbRefNameType.class
-})
-public class JndiNameType
-    extends String
-{
-
+@XmlSeeAlso({ EjbRefNameType.class })
+public class JndiNameType extends String {
 
 }

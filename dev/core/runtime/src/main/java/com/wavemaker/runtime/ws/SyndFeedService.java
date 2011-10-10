@@ -38,26 +38,24 @@ import com.wavemaker.runtime.service.annotations.HideFromClient;
  */
 @HideFromClient
 public class SyndFeedService {
-   
+
     private static final String USER_AGENT_KEY = "User-Agent";
 
     private static final String USER_AGENT_VALUE = "WaveMaker http://dev.wavemaker.com";
-    
+
     private static final String BASIC_AUTH_KEY = "Authorization";
-    
+
     private static final String BASIC_AUTH_VALUE_PREFIX = "Basic ";
-    
+
     private BindingProperties bindingProperties;
-    
+
     public SyndFeedService() {
     }
 
     /**
-     * Reads from the InputStream of the specified URL and builds the feed
-     * object from the returned XML.
+     * Reads from the InputStream of the specified URL and builds the feed object from the returned XML.
      * 
-     * @param feedURL
-     *            The URL to read feed from.
+     * @param feedURL The URL to read feed from.
      * @return A feed object.
      */
     @ExposeToClient
@@ -66,37 +64,28 @@ public class SyndFeedService {
         String httpBasicAuthPassword = null;
         int connectionTimeout = 0;
 
-        if (bindingProperties != null) {
-            connectionTimeout = bindingProperties.getConnectionTimeout();
+        if (this.bindingProperties != null) {
+            connectionTimeout = this.bindingProperties.getConnectionTimeout();
 
-            httpBasicAuthUsername = bindingProperties
-                    .getHttpBasicAuthUsername();
+            httpBasicAuthUsername = this.bindingProperties.getHttpBasicAuthUsername();
             if (httpBasicAuthUsername != null) {
-                httpBasicAuthPassword = bindingProperties
-                        .getHttpBasicAuthPassword();
+                httpBasicAuthPassword = this.bindingProperties.getHttpBasicAuthPassword();
             }
         }
-        return getFeedWithHttpConfig(feedURL, httpBasicAuthUsername,
-                httpBasicAuthPassword, connectionTimeout);
+        return getFeedWithHttpConfig(feedURL, httpBasicAuthUsername, httpBasicAuthPassword, connectionTimeout);
     }
 
     /**
-     * Reads from the InputStream of the specified URL and builds the feed
-     * object from the returned XML.
+     * Reads from the InputStream of the specified URL and builds the feed object from the returned XML.
      * 
-     * @param feedURL
-     *            The URL to read feed from.
-     * @param httpBasicAuthUsername
-     *            The username for HTTP Basic Authentication.
-     * @param httpBasicAuthPassword
-     *            The password for HTTP Basic Authentication.
-     * @param connectionTimeout
-     *            HTTP connection timeout.
+     * @param feedURL The URL to read feed from.
+     * @param httpBasicAuthUsername The username for HTTP Basic Authentication.
+     * @param httpBasicAuthPassword The password for HTTP Basic Authentication.
+     * @param connectionTimeout HTTP connection timeout.
      * @return A feed object.
      */
     @ExposeToClient
-    public Feed getFeedWithHttpConfig(String feedURL, String httpBasicAuthUsername,
-            String httpBasicAuthPassword, int connectionTimeout) {
+    public Feed getFeedWithHttpConfig(String feedURL, String httpBasicAuthUsername, String httpBasicAuthPassword, int connectionTimeout) {
         URL url = null;
         try {
             url = new URL(feedURL);
@@ -117,14 +106,9 @@ public class SyndFeedService {
 
                 urlConn.setConnectTimeout(connectionTimeout);
 
-                if (httpBasicAuthUsername != null
-                        && httpBasicAuthUsername.length() > 0) {
-                    String auth = (httpBasicAuthPassword == null) ? httpBasicAuthUsername
-                            : httpBasicAuthUsername + ":"
-                                    + httpBasicAuthPassword;
-                    urlConn.setRequestProperty(BASIC_AUTH_KEY,
-                            BASIC_AUTH_VALUE_PREFIX
-                                    + Base64.encodeBase64URLSafeString(auth.getBytes()));
+                if (httpBasicAuthUsername != null && httpBasicAuthUsername.length() > 0) {
+                    String auth = httpBasicAuthPassword == null ? httpBasicAuthUsername : httpBasicAuthUsername + ":" + httpBasicAuthPassword;
+                    urlConn.setRequestProperty(BASIC_AUTH_KEY, BASIC_AUTH_VALUE_PREFIX + Base64.encodeBase64URLSafeString(auth.getBytes()));
                 }
             }
             SyndFeed feed = input.build(new XmlReader(urlConn));
@@ -144,17 +128,16 @@ public class SyndFeedService {
      * @return The bindingProperties.
      */
     public BindingProperties getBindingProperties() {
-        return bindingProperties;
+        return this.bindingProperties;
     }
 
     /**
      * Sets the binding properties.
      * 
-     * @param bindingProperties
-     *            The bindingProperties to set.
+     * @param bindingProperties The bindingProperties to set.
      */
     public void setBindingProperties(BindingProperties bindingProperties) {
         this.bindingProperties = bindingProperties;
     }
-    
+
 }

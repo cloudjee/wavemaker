@@ -15,8 +15,7 @@
 package com.wavemaker.runtime.security;
 
 /**
- * This class represents a simple string resource. The string "*" could be used
- * to represent any resource string.
+ * This class represents a simple string resource. The string "*" could be used to represent any resource string.
  * 
  * @author Frankie Fu
  * @version $Rev$ - $Date$
@@ -33,20 +32,17 @@ public class SimpleResource implements Resource {
 
     public boolean matchResource(Resource resource) {
         if (resource instanceof SimpleResource) {
-            if (getResourceName().equals(ANY_RESOURCE)
-                    || ((SimpleResource) resource).getResourceName().equals(
-                            ANY_RESOURCE)) {
+            if (getResourceName().equals(ANY_RESOURCE) || ((SimpleResource) resource).getResourceName().equals(ANY_RESOURCE)) {
                 return true;
             }
-            return this.getResourceName().equals(
-                    ((SimpleResource) resource).getResourceName());
+            return this.getResourceName().equals(((SimpleResource) resource).getResourceName());
         } else {
             return false;
         }
     }
 
     public String getResourceName() {
-        return resourceName;
+        return this.resourceName;
     }
 
     public void setResourceName(String resourceName) {

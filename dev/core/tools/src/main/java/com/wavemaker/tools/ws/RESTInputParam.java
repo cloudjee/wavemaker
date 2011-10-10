@@ -14,7 +14,6 @@
 
 package com.wavemaker.tools.ws;
 
-
 /**
  * @author ffu
  * @version $Rev$ - $Date$
@@ -48,7 +47,7 @@ public class RESTInputParam {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -56,18 +55,18 @@ public class RESTInputParam {
     }
 
     public String getType() {
-        return type;
+        return this.type;
     }
 
     public void setType(String type) {
         this.type = type;
     }
-    
+
     public InputType toType() {
         InputType inputType = InputType.OTHER;
-        if ("string".equals(type)) {
+        if ("string".equals(this.type)) {
             inputType = InputType.STRING;
-        } else if ("int".equals(type)) {
+        } else if ("int".equals(this.type)) {
             inputType = InputType.INTEGER;
         }
         return inputType;

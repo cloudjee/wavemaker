@@ -1,6 +1,7 @@
 /**
  * 
  */
+
 package com.wavemaker.tools.project.upgrade.six_dot_four;
 
 import java.io.File;
@@ -15,17 +16,21 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
 
 /**
  * @author ecallahan
- *
+ * 
  */
 public class ProjSpringServicesXmlUpgradeTask implements UpgradeTask {
 
-	private static String fromStr ="</beans>";
-	private static String toStr = "    <import resource=\"classpath:com/wavemaker/runtime/service/waveMakerServiceBean.xml\"/>\r\n</beans>";
-    
-	/* (non-Javadoc)
-	 * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
-	 */
-	public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
+    private static String fromStr = "</beans>";
+
+    private static String toStr = "    <import resource=\"classpath:com/wavemaker/runtime/service/waveMakerServiceBean.xml\"/>\r\n</beans>";
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
+     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
+     */
+    public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
         File file = new File(project.getWebInf() + "/project-services.xml");
 
@@ -36,10 +41,8 @@ public class ProjSpringServicesXmlUpgradeTask implements UpgradeTask {
             upgradeInfo.addMessage("\nUpgrading project-services.xml completed successfully.");
         } catch (IOException ioe) {
             ioe.printStackTrace();
-            upgradeInfo.addMessage("\n*** Terminated with error while upgrading project-services.xml. " +
-            "Please check the console message.***");
-            }
-	}
+            upgradeInfo.addMessage("\n*** Terminated with error while upgrading project-services.xml. " + "Please check the console message.***");
+        }
+    }
 
 }
-

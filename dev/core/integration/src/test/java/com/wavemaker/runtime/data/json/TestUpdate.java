@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data.json;
 
 import static org.junit.Assert.assertEquals;
@@ -37,14 +38,12 @@ import com.wavemaker.runtime.data.sample.sakila.Defaults;
 public class TestUpdate extends BaseJSONDataTest {
 
     // check handling of default values
-    @Test public void testInsertUpdateCRUDDefaults() {
+    @Test
+    public void testInsertUpdateCRUDDefaults() {
 
         try {
-            String post = "{\"params\": [" + "\""
-                    + DataServiceTestConstants.SAKILA_SERVICE_SPRING_ID_2 + "\"," + "\""
-                    + Defaults.class.getName() + "\","
-                    + "{\"id\": 1, \"firstName\": \"foo\"}], "
-                    + "\"method\": \"insert\", \"id\": 9}";
+            String post = "{\"params\": [" + "\"" + DataServiceTestConstants.SAKILA_SERVICE_SPRING_ID_2 + "\"," + "\"" + Defaults.class.getName()
+                + "\"," + "{\"id\": 1, \"firstName\": \"foo\"}], " + "\"method\": \"insert\", \"id\": 9}";
 
             String s = runRuntimeOpMarshalledResponse(post);
 
@@ -55,11 +54,8 @@ public class TestUpdate extends BaseJSONDataTest {
             assertEquals("default ln", m.get("lastName")); // default from db
 
             // try update - last_name has a trigger
-            post = "{\"params\": [" + "\""
-                    + DataServiceTestConstants.SAKILA_SERVICE_SPRING_ID_2 + "\"," + "\""
-                    + Defaults.class.getName() + "\","
-                    + "{\"id\": 1, \"lastName\": null}], "
-                    + "\"method\": \"update\", \"id\": 9}";
+            post = "{\"params\": [" + "\"" + DataServiceTestConstants.SAKILA_SERVICE_SPRING_ID_2 + "\"," + "\"" + Defaults.class.getName() + "\","
+                + "{\"id\": 1, \"lastName\": null}], " + "\"method\": \"update\", \"id\": 9}";
 
             s = runRuntimeOpMarshalledResponse(post);
 
@@ -69,10 +65,8 @@ public class TestUpdate extends BaseJSONDataTest {
             assertEquals("trigger ln", m.get("lastName")); // default from db
 
         } finally {
-            String post = "{\"params\": [" + "\""
-                    + DataServiceTestConstants.SAKILA_SERVICE_SPRING_ID_2 + "\"," + "\""
-                    + Defaults.class.getName() + "\"," + "{\"id\": 1}], "
-                    + "\"method\": \"delete\", \"id\": 9}";
+            String post = "{\"params\": [" + "\"" + DataServiceTestConstants.SAKILA_SERVICE_SPRING_ID_2 + "\"," + "\"" + Defaults.class.getName()
+                + "\"," + "{\"id\": 1}], " + "\"method\": \"delete\", \"id\": 9}";
             try {
                 runRuntimeOpMarshalledResponse(post);
             } catch (RuntimeException ignore) {
@@ -80,12 +74,12 @@ public class TestUpdate extends BaseJSONDataTest {
         }
     }
 
-    @Test public void testUpdateCityName() {
+    @Test
+    public void testUpdateCityName() {
 
         String newCityName = "ffcity";
 
-        String s = runSakilaOpMarshalledResponse("getCityById", Short
-                .valueOf("1"));
+        String s = runSakilaOpMarshalledResponse("getCityById", Short.valueOf("1"));
 
         Map<String, String> org = tokenizeObjectLiteral(s);
 
@@ -121,7 +115,8 @@ public class TestUpdate extends BaseJSONDataTest {
     // With save-update enabled on Address.city
     // expecting Address.address and related City.city changed
     // City.country will not change
-    @Test public void testUpdateAddressAndRelatedCity() {
+    @Test
+    public void testUpdateAddressAndRelatedCity() {
 
         String addressId = "1";
         String cityId = "300";
@@ -142,8 +137,7 @@ public class TestUpdate extends BaseJSONDataTest {
         Map<String, String> orgCountry = tokenizeObjectLiteral(s);
         assertEquals(countryId, orgCountry.get("countryId"));
 
-        String post = getUpdateAddressAndCityPost(addressId, cityId,
-                newAddress, newCity);
+        String post = getUpdateAddressAndCityPost(addressId, cityId, newAddress, newCity);
         runSakilaOpMarshalledResponse(post);
 
         // verify
@@ -161,19 +155,18 @@ public class TestUpdate extends BaseJSONDataTest {
         assertEquals(countryId, m.get("countryId"));
 
         // revert changes
-        post = getUpdateAddressAndCityPost(addressId, cityId, orgAddress
-                .get("address"), orgCity.get("city"));
+        post = getUpdateAddressAndCityPost(addressId, cityId, orgAddress.get("address"), orgCity.get("city"));
         runSakilaOpMarshalledResponse(post);
     }
 
-    @Test public void testUpdateRelatedCountry() {
+    @Test
+    public void testUpdateRelatedCountry() {
 
         String cityId = "1";
 
         String newCountryId = "1";
 
-        String s = runSakilaOpMarshalledResponse("getCityById", Short
-                .valueOf(cityId));
+        String s = runSakilaOpMarshalledResponse("getCityById", Short.valueOf(cityId));
 
         Map<String, String> org = tokenizeObjectLiteral(s);
 
@@ -191,8 +184,7 @@ public class TestUpdate extends BaseJSONDataTest {
 
             assertEquals("null", s);
 
-            s = runSakilaOpMarshalledResponse("getCityById", Short
-                    .valueOf(cityId));
+            s = runSakilaOpMarshalledResponse("getCityById", Short.valueOf(cityId));
 
             Map<String, String> mod = tokenizeObjectLiteral(s);
 
@@ -208,53 +200,42 @@ public class TestUpdate extends BaseJSONDataTest {
 
         } finally {
 
-            runSakilaOpMarshalledResponse(getUpdateRelatedCountryPost(cityId,
-                    orgCountry.get("countryId")));
+            runSakilaOpMarshalledResponse(getUpdateRelatedCountryPost(cityId, orgCountry.get("countryId")));
         }
 
     }
 
-    @Test public void testUpdateEmptyInstance() {
+    @Test
+    public void testUpdateEmptyInstance() {
 
-        String post = "{\"params\": [{}], "
-                + "\"method\": \"updateCity\", \"id\": 9}";
+        String post = "{\"params\": [{}], " + "\"method\": \"updateCity\", \"id\": 9}";
 
         String s = runSakilaOpMarshalledResponse(post);
 
-        assertEquals("{\"error\":\"id property \\\"cityId\\\" must be set\"}",
-                s);
+        assertEquals("{\"error\":\"id property \\\"cityId\\\" must be set\"}", s);
     }
 
     private String getUpdateCityPost(String cityName) {
-        return "{\"params\": [" + "{\"cityId\": \"1\"," + "\"city\": \""
-                + cityName + "\"}], "
-                + "\"method\": \"updateCity\", \"id\": 9}";
+        return "{\"params\": [" + "{\"cityId\": \"1\"," + "\"city\": \"" + cityName + "\"}], " + "\"method\": \"updateCity\", \"id\": 9}";
     }
 
     private String getUpdateRelatedCountryPost(String cityId, String countryId) {
-        return "{\"params\": [" + "{\"cityId\": \"" + cityId + "\","
-                + "\"country\":{\"countryId\": \"" + countryId + "\" }}], "
-                + "\"method\": \"updateCity\", \"id\": 9}";
+        return "{\"params\": [" + "{\"cityId\": \"" + cityId + "\"," + "\"country\":{\"countryId\": \"" + countryId + "\" }}], "
+            + "\"method\": \"updateCity\", \"id\": 9}";
     }
 
-    private String getUpdateAddressAndCityPost(String addressId, String cityId,
-            String newAddress, String newCity) {
-        return "{\"params\": [" + "{\"addressId\": \"" + addressId + "\","
-                + "\"address\":\"" + newAddress + "\","
-                + "\"city\":{\"cityId\": \"" + cityId + "\", \"city\": \""
-                + newCity + "\" }}], "
-                + "\"method\": \"updateAddress\", \"id\": 9}";
+    private String getUpdateAddressAndCityPost(String addressId, String cityId, String newAddress, String newCity) {
+        return "{\"params\": [" + "{\"addressId\": \"" + addressId + "\"," + "\"address\":\"" + newAddress + "\"," + "\"city\":{\"cityId\": \""
+            + cityId + "\", \"city\": \"" + newCity + "\" }}], " + "\"method\": \"updateAddress\", \"id\": 9}";
     }
 
     private String getRelatedCityPost(String addressId) {
-        return "{\"params\":[" + "{\"addressId\":\"" + addressId + "\"},\""
-                + Address.class.getName() + "\",\"city\"],"
-                + "\"method\":\"getProperty\", \"id\":9}";
+        return "{\"params\":[" + "{\"addressId\":\"" + addressId + "\"},\"" + Address.class.getName() + "\",\"city\"],"
+            + "\"method\":\"getProperty\", \"id\":9}";
     }
 
     private String getRelatedCountryPost(String cityId) {
-        return "{\"params\":[" + "{\"cityId\":\"" + cityId + "\"},\""
-                + City.class.getName() + "\",\"country\"],"
-                + "\"method\":\"getProperty\", \"id\":9}";
+        return "{\"params\":[" + "{\"cityId\":\"" + cityId + "\"},\"" + City.class.getName() + "\",\"country\"],"
+            + "\"method\":\"getProperty\", \"id\":9}";
     }
 }

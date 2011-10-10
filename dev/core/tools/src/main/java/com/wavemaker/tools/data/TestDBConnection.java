@@ -19,7 +19,7 @@ import java.util.Collection;
 /**
  * @author stoens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestDBConnection extends BaseDataModelSetup {
 
@@ -32,8 +32,9 @@ public class TestDBConnection extends BaseDataModelSetup {
     protected void customRun() {
         testConnection();
     }
-    
+
     @Override
-    protected void customDispose() {}
+    protected void customDispose() {
+    }
 
 }

@@ -11,23 +11,23 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for DescribeTabSetResult complex type.
+ * <p>
+ * Java class for DescribeTabSetResult complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="DescribeTabSetResult">
@@ -48,45 +48,39 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DescribeTabSetResult", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "label",
-    "logoUrl",
-    "namespace",
-    "selected",
-    "tabs"
-})
+@XmlType(name = "DescribeTabSetResult", namespace = "urn:partner.soap.sforce.com", propOrder = { "label", "logoUrl", "namespace", "selected", "tabs" })
 public class DescribeTabSetResultType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String label;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String logoUrl;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected String namespace;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean selected;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected List<DescribeTabType> tabs;
 
     /**
      * Gets the value of the label property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getLabel() {
-        return label;
+        return this.label;
     }
 
     /**
      * Sets the value of the label property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setLabel(String value) {
         this.label = value;
@@ -95,22 +89,18 @@ public class DescribeTabSetResultType {
     /**
      * Gets the value of the logoUrl property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getLogoUrl() {
-        return logoUrl;
+        return this.logoUrl;
     }
 
     /**
      * Sets the value of the logoUrl property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setLogoUrl(String value) {
         this.logoUrl = value;
@@ -119,22 +109,18 @@ public class DescribeTabSetResultType {
     /**
      * Gets the value of the namespace property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getNamespace() {
-        return namespace;
+        return this.namespace;
     }
 
     /**
      * Sets the value of the namespace property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setNamespace(String value) {
         this.namespace = value;
@@ -145,7 +131,7 @@ public class DescribeTabSetResultType {
      * 
      */
     public boolean isSelected() {
-        return selected;
+        return this.selected;
     }
 
     /**
@@ -160,27 +146,26 @@ public class DescribeTabSetResultType {
      * Gets the value of the tabs property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the tabs property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the tabs property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getTabs().add(newItem);
+     * getTabs().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DescribeTabType }
+     * Objects of the following type(s) are allowed in the list {@link DescribeTabType }
      * 
      * 
      */
     public List<DescribeTabType> getTabs() {
-        if (tabs == null) {
-            tabs = new ArrayList<DescribeTabType>();
+        if (this.tabs == null) {
+            this.tabs = new ArrayList<DescribeTabType>();
         }
         return this.tabs;
     }
@@ -188,10 +173,8 @@ public class DescribeTabSetResultType {
     /**
      * Sets the value of the tabs property.
      * 
-     * @param tabs
-     *     allowed object is
-     *     {@link DescribeTabType }
-     *     
+     * @param tabs allowed object is {@link DescribeTabType }
+     * 
      */
     public void setTabs(List<DescribeTabType> tabs) {
         this.tabs = tabs;

@@ -16,49 +16,55 @@
  * @copyright (c) ${year} ActiveGrid, Inc.
  * @license   ASL 2.0  http://apache.org/licenses/LICENSE-2.0
  */
+
 package com.wavemaker.runtime.data;
 
 import com.wavemaker.runtime.service.ServiceWire;
 import com.wavemaker.runtime.service.events.ServletEventListener;
 
 /**
- *
+ * 
  * @author Simon Toens
  * @version $$Rev$$ - $$Date$$
  * 
  */
 public class DataServiceServletEventListener implements ServletEventListener {
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.service.events.ServletEventListener#startRequest(com.wavemaker.runtime.service.ServiceWire)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.wavemaker.runtime.service.events.ServletEventListener#startRequest(com.wavemaker.runtime.service.ServiceWire)
      */
     public void startRequest(ServiceWire serviceWire) {
-//         DataServiceManager mgr = getDataServiceManager(service);
-//         if (DataServiceLoggers.eventLogger.isInfoEnabled()) {
-//             log("startRequest", "start request transaction", mgr);
-//         }
-//         mgr.begin();
+        // DataServiceManager mgr = getDataServiceManager(service);
+        // if (DataServiceLoggers.eventLogger.isInfoEnabled()) {
+        // log("startRequest", "start request transaction", mgr);
+        // }
+        // mgr.begin();
     }
 
-    
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.service.events.ServletEventListener#endRequest(com.wavemaker.runtime.service.ServiceWire)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.wavemaker.runtime.service.events.ServletEventListener#endRequest(com.wavemaker.runtime.service.ServiceWire)
      */
     public void endRequest(ServiceWire serviceWire) {
-//         DataServiceManager mgr = getDataServiceManager(service);
-//         if (DataServiceLoggers.eventLogger.isInfoEnabled()) {
-//             log("endRequest", "end request transaction", mgr);
-//         }
-//         mgr.commit();
+        // DataServiceManager mgr = getDataServiceManager(service);
+        // if (DataServiceLoggers.eventLogger.isInfoEnabled()) {
+        // log("endRequest", "end request transaction", mgr);
+        // }
+        // mgr.commit();
     }
 
-//    private void log(String event, String msg, DataServiceManager mgr) {
-//        DataServiceLoggers.eventLogger
-//            .info(event + " " + mgr.getMetaData().getName() + " - " + msg);
-//    }
-//
-//    private DataServiceManager getDataServiceManager(Object service) {
-//        return ((DataServiceManagerAccess)service).getDataServiceManager();
-//    }
+    // private void log(String event, String msg, DataServiceManager mgr) {
+    // DataServiceLoggers.eventLogger
+    // .info(event + " " + mgr.getMetaData().getName() + " - " + msg);
+    // }
+    //
+    // private DataServiceManager getDataServiceManager(Object service) {
+    // return ((DataServiceManagerAccess)service).getDataServiceManager();
+    // }
 
 }

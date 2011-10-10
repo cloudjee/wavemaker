@@ -36,34 +36,45 @@ import com.wavemaker.runtime.data.task.UpdateTask;
 public class DefaultTaskManager implements TaskManager {
 
     public static final String GET_READ_TASK = "getReadTask";
+
     private static final Task READ_TASK = new HQLReadTask();
 
     public static final String GET_QUERY_TASK = "getQueryTask";
+
     private static final Task NAMED_QUERY = new NamedQueryTask();
 
     public static final String GET_INSERT_TASK = "getInsertTask";
+
     private static final Task INSERT = new InsertTask();
 
     public static final String GET_DELETE_TASK = "getDeleteTask";
+
     private static final Task DELETE = new DeleteTask();
 
     public static final String GET_UPDATE_TASK = "getUpdateTask";
+
     private static final Task UPDATE = new UpdateTask();
 
     public static final String GET_SEARCH_TASK = "getSearchTask";
+
     private static final Task SEARCH = new SearchTask();
 
     public static final String GET_COUNT_TASK = "getCountTask";
+
     private static final Task COUNT = new CountTask();
 
     public static final String GET_SESSION_TASK = "getSessionTask";
+
     private static final Task SESSION = new GetSessionTask();
 
     private static final Task RUN_QUERY_TASK = new QueryTask();
+
     private static final Task CHECK_QUERY_TASK = new CheckQueryTask();
 
     private static final Task MERGE_FOR_UPDATE_TASK = new MergeForUpdateTask();
+
     private static final Task MERGE_FOR_INSERT_TASK = new MergeForInsertTask();
+
     private static final Task PRE_PROCESSOR_TASK = new PreProcessorRouterTask();
 
     // need to investigate why this static initializer doesn't run in tests
@@ -79,7 +90,8 @@ public class DefaultTaskManager implements TaskManager {
         return instance;
     }
 
-    public DefaultTaskManager() {}
+    public DefaultTaskManager() {
+    }
 
     public Task getQueryTask() {
         return NAMED_QUERY;

@@ -25,9 +25,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 import com.wavemaker.common.util.StringUtils;
+import com.wavemaker.runtime.data.hibernate.DataServiceMetaData_Hib;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.data.util.DataServiceUtils;
-import com.wavemaker.runtime.data.hibernate.DataServiceMetaData_Hib;
 import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.runtime.service.ServiceType;
 import com.wavemaker.runtime.service.definition.AbstractDeprecatedServiceDefinition;
@@ -37,11 +37,9 @@ import com.wavemaker.runtime.service.definition.ReflectServiceDefinition;
  * @author Simon Toens
  * @version $Rev$ - $Date$
  */
-public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition
-        implements DataServiceInternal, ReflectServiceDefinition {
-    
-    private ElementTypeFactory elementTypeFactory =
-	DEFAULT_ELEMENT_TYPE_FACTORY;
+public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition implements DataServiceInternal, ReflectServiceDefinition {
+
+    private ElementTypeFactory elementTypeFactory = DEFAULT_ELEMENT_TYPE_FACTORY;
 
     private final DataServiceMetaData metaData;
 
@@ -60,26 +58,23 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition
     /**
      * Load configuration from classpath, using given resource name.
      */
-    public DataServiceDefinition(String hbConfFile, Properties p,
-            boolean useIndividualCRUDOperations) {
-        this(getName(hbConfFile), DataServiceUtils.initConfiguration(
-                hbConfFile, p), useIndividualCRUDOperations);
+    public DataServiceDefinition(String hbConfFile, Properties p, boolean useIndividualCRUDOperations) {
+        this(getName(hbConfFile), DataServiceUtils.initConfiguration(hbConfFile, p), useIndividualCRUDOperations);
     }
 
     public DataServiceDefinition(DataServiceMetaData metaData) {
         this.metaData = metaData;
     }
 
-    public DataServiceDefinition(String serviceName, Configuration hbcfg,
-            boolean isImportDB, boolean useIndividualCRUDOperations) {
+    public DataServiceDefinition(String serviceName, Configuration hbcfg, boolean isImportDB, boolean useIndividualCRUDOperations) {
         this.metaData = new DataServiceMetaData_Hib(serviceName, hbcfg);
 
         try {
             this.sessionFactory = hbcfg.buildSessionFactory();
             Session session = null;
             try {
-                session = sessionFactory.openSession();
-                metaData.init(session, useIndividualCRUDOperations);
+                session = this.sessionFactory.openSession();
+                this.metaData.init(session, useIndividualCRUDOperations);
             } finally {
                 try {
                     session.close();
@@ -98,9 +93,8 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition
             }
         }
     }
-    
-    private DataServiceDefinition(String serviceName, Configuration hbcfg,
-            boolean useIndividualCRUDOperations) {
+
+    private DataServiceDefinition(String serviceName, Configuration hbcfg, boolean useIndividualCRUDOperations) {
         this(serviceName, hbcfg, false, useIndividualCRUDOperations);
     }
 
@@ -109,7 +103,7 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition
     }
 
     public DataServiceMetaData getMetaData() {
-        return metaData;
+        return this.metaData;
     }
 
     public void setElementTypeFactory(ElementTypeFactory elementTypeFactory) {
@@ -118,7 +112,7 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition
 
     public List<ElementType> getInputTypes(String operationName) {
 
-        DataServiceOperation op = metaData.getOperation(operationName);
+        DataServiceOperation op = this.metaData.getOperation(operationName);
 
         List<String> inputNames = op.getInputNames();
         List<String> inputTypes = op.getInputTypes();
@@ -127,8 +121,7 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition
         List<ElementType> rtn = new ArrayList<ElementType>(inputTypes.size());
 
         for (int i = 0; i < inputTypes.size(); i++) {
-            ElementType et = DEFAULT_ELEMENT_TYPE_FACTORY
-                    .getElementType(inputTypes.get(i));
+            ElementType et = DEFAULT_ELEMENT_TYPE_FACTORY.getElementType(inputTypes.get(i));
             et.setName(inputNames.get(i));
             et.setList(inputIsList.get(i));
             rtn.add(et);
@@ -138,12 +131,12 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition
     }
 
     public List<String> getOperationNames() {
-        return new ArrayList<String>(metaData.getOperationNames());
+        return new ArrayList<String>(this.metaData.getOperationNames());
     }
 
     public ElementType getOutputType(String operationName) {
 
-        DataServiceOperation op = metaData.getOperation(operationName);
+        DataServiceOperation op = this.metaData.getOperation(operationName);
 
         String outputType = op.getOutputType();
 
@@ -151,14 +144,13 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition
             return null;
         }
 
-        ElementType rtn = DEFAULT_ELEMENT_TYPE_FACTORY
-                .getElementType(outputType);
+        ElementType rtn = DEFAULT_ELEMENT_TYPE_FACTORY.getElementType(outputType);
         rtn.setName("rtn");
 
         // this is quite confusing
         // get returnsSingleResult from DataModelConfig
-        if (op.isQuery() && externalConfig != null) {
-            rtn.setList(!externalConfig.returnsSingleResult(operationName));
+        if (op.isQuery() && this.externalConfig != null) {
+            rtn.setList(!this.externalConfig.returnsSingleResult(operationName));
         } else {
             rtn.setList(!op.getReturnsSingleResult());
         }
@@ -166,20 +158,19 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition
     }
 
     public String getPackageName() {
-        if (metaData.getServiceClassName() != null) {
-            return StringUtils.splitPackageAndClass(metaData
-                    .getServiceClassName()).v1;
+        if (this.metaData.getServiceClassName() != null) {
+            return StringUtils.splitPackageAndClass(this.metaData.getServiceClassName()).v1;
         } else {
             throw new AssertionError("Metadata service class must be set");
         }
     }
 
     public String getDataPackage() {
-        return metaData.getDataPackage();
+        return this.metaData.getDataPackage();
     }
 
     public String getServiceId() {
-        return metaData.getName();
+        return this.metaData.getName();
     }
 
     public ServiceType getServiceType() {
@@ -191,10 +182,10 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition
     }
 
     public void dispose() {
-        metaData.dispose();
+        this.metaData.dispose();
         try {
-            if (sessionFactory != null) {
-                sessionFactory.close();
+            if (this.sessionFactory != null) {
+                this.sessionFactory.close();
             }
         } catch (RuntimeException ignore) {
         }
@@ -207,25 +198,24 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition
         // we may not need this, since the tooling is
         // built such that the class name is always the
         // same as the serviceid.
-        if (metaData.getServiceClassName() != null) {
-            return metaData.getServiceClassName();
+        if (this.metaData.getServiceClassName() != null) {
+            return this.metaData.getServiceClassName();
         } else {
             throw new AssertionError("Metadata service class must be set");
         }
     }
 
     public List<ElementType> getTypes() {
-        Collection<String> entities = metaData.getEntityClassNames();
-        Collection<String> helperTypes = metaData.getHelperClassNames();
-        return DataServiceUtils.getTypes(entities, helperTypes,
-                elementTypeFactory);
+        Collection<String> entities = this.metaData.getEntityClassNames();
+        Collection<String> helperTypes = this.metaData.getHelperClassNames();
+        return DataServiceUtils.getTypes(entities, helperTypes, this.elementTypeFactory);
     }
 
-    public List<ElementType> getTypes(String username, String password) { //salesforce - just to avoid compile error
-        Collection<String> entities = metaData.getEntityClassNames();
-        Collection<String> helperTypes = metaData.getHelperClassNames();
-        return DataServiceUtils.getTypes(entities, helperTypes,
-                elementTypeFactory);
+    @Override
+    public List<ElementType> getTypes(String username, String password) { // salesforce - just to avoid compile error
+        Collection<String> entities = this.metaData.getEntityClassNames();
+        Collection<String> helperTypes = this.metaData.getHelperClassNames();
+        return DataServiceUtils.getTypes(entities, helperTypes, this.elementTypeFactory);
     }
 
     public String outputTypeToString(String operationName) {
@@ -247,13 +237,14 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition
     }
 
     public DataServiceOperation getOperation(String operationName) {
-        return metaData.getOperation(operationName);
+        return this.metaData.getOperation(operationName);
     }
 
     public boolean isLiveDataService() {
         return true;
     }
 
+    @Override
     public String getPartnerName() {
         return null;
     }

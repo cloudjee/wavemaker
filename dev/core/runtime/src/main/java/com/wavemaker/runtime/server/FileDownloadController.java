@@ -14,8 +14,6 @@
 
 package com.wavemaker.runtime.server;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Map;
 
@@ -35,60 +33,58 @@ import com.wavemaker.runtime.service.TypedServiceReturn;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class FileDownloadController extends ControllerBase {
 
     /** Logger for this class and subclasses */
     protected final Logger logger = Logger.getLogger(getClass());
-    
-      /** UPLOADS stores the location of files on disk.  Windows 
-	  users 
-	  * must update this; Mac & Linux should be fine. */ 
-      /*
-      private File UPLOADS = new File("uploads");	    
-      //System.getProperty("user.dir") + "/uploads"); 
-      
-      public DownloadResponse doDownload(@ParamName(name="filename") 
-					 String filename) throws IOException { 
-	    if (!UPLOADS.isDirectory()) UPLOADS.mkdirs();
-	    
-	    DownloadResponse ret = new DownloadResponse(); 
-	    
-	    File localFile = new File(UPLOADS, filename); 
-	    FileInputStream fis = new FileInputStream(localFile); 
-	    
-	    ret.setContents(fis); 
-	    ret.setFileName(filename); 
-	    return ret; 
-      }
-      */
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.server.ControllerBase#executeRequest(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+    /**
+     * UPLOADS stores the location of files on disk. Windows users must update this; Mac & Linux should be fine.
+     */
+    /*
+     * private File UPLOADS = new File("uploads"); //System.getProperty("user.dir") + "/uploads");
+     * 
+     * public DownloadResponse doDownload(@ParamName(name="filename") String filename) throws IOException { if
+     * (!UPLOADS.isDirectory()) UPLOADS.mkdirs();
+     * 
+     * DownloadResponse ret = new DownloadResponse();
+     * 
+     * File localFile = new File(UPLOADS, filename); FileInputStream fis = new FileInputStream(localFile);
+     * 
+     * ret.setContents(fis); ret.setFileName(filename); return ret; }
+     */
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.runtime.server.ControllerBase#executeRequest(javax.servlet.http.HttpServletRequest,
+     * javax.servlet.http.HttpServletResponse)
      */
     @Override
-    protected ModelAndView executeRequest(HttpServletRequest request,
-            HttpServletResponse response) throws IOException, WMException {
-        
+    protected ModelAndView executeRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, WMException {
+
         String serviceName = ServerUtils.getServiceName(request);
         Map<String, Object[]> params = ServerUtils.mergeParams(request);
         String method = ServerUtils.getMethod(params);
-	//logger.debug("MICHAEL: invoke service: " + serviceName + ", method: " + method);
-        if (logger.isInfoEnabled()) {
-            logger.info("invoke service: " + serviceName + ", method: " + method);
-            if (logger.isDebugEnabled()) {
-                logger.debug("method "+method+" parameters: "+params);
+        // logger.debug("MICHAEL: invoke service: " + serviceName + ", method: " + method);
+        if (this.logger.isInfoEnabled()) {
+            this.logger.info("invoke service: " + serviceName + ", method: " + method);
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("method " + method + " parameters: " + params);
             }
         }
-        
+
         ServiceWire sw = this.getServiceManager().getServiceWire(serviceName);
         TypedServiceReturn reflInvokeRef = invokeMethod(sw, method, null, params);
-        
+
         return getModelAndView(getView(), reflInvokeRef);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.runtime.server.ControllerBase#getView()
      */
     @Override
@@ -96,7 +92,9 @@ public class FileDownloadController extends ControllerBase {
         return new DownloadView();
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.runtime.server.ControllerBase#handleError(java.lang.String, java.lang.Throwable)
      */
     @Override

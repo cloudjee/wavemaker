@@ -19,7 +19,6 @@
 // Generated on: 2008.02.26 at 04:39:33 PM PST 
 //
 
-
 package com.wavemaker.tools.spring.beans;
 
 import java.util.ArrayList;
@@ -31,11 +30,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for propsType complex type.
+ * <p>
+ * Java class for propsType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="propsType">
@@ -54,13 +54,9 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "propsType", propOrder = {
-    "props"
-})
+@XmlType(name = "propsType", propOrder = { "props" })
 @XmlRootElement(name = "props")
-public class Props
-    extends BaseCollectionType
-{
+public class Props extends BaseCollectionType {
 
     @XmlElement(name = "prop")
     protected List<Prop> props;
@@ -69,27 +65,26 @@ public class Props
      * Gets the value of the props property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the props property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the props property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getProps().add(newItem);
+     * getProps().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Prop }
+     * Objects of the following type(s) are allowed in the list {@link Prop }
      * 
      * 
      */
     public List<Prop> getProps() {
-        if (props == null) {
-            props = new ArrayList<Prop>();
+        if (this.props == null) {
+            this.props = new ArrayList<Prop>();
         }
         return this.props;
     }
@@ -97,10 +92,8 @@ public class Props
     /**
      * Sets the value of the props property.
      * 
-     * @param props
-     *     allowed object is
-     *     {@link Prop }
-     *     
+     * @param props allowed object is {@link Prop }
+     * 
      */
     public void setProps(List<Prop> props) {
         this.props = props;

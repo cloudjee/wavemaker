@@ -11,32 +11,32 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-package com.wavemaker.studio.pws;
 
-import com.wavemaker.runtime.service.annotations.HideFromClient;
-import com.wavemaker.runtime.pws.IPwsLoginManager;
-import com.wavemaker.runtime.pws.PwsLoginManagerBeanFactory;
-import com.wavemaker.runtime.pws.PwsLoginInfo;
-import com.wavemaker.tools.pws.PwsRestImporterBeanFactory;
-import com.wavemaker.tools.pws.IPwsRestImporter;
+package com.wavemaker.studio.pws;
 
 import java.util.List;
 
+import com.wavemaker.runtime.pws.IPwsLoginManager;
+import com.wavemaker.runtime.pws.PwsLoginInfo;
+import com.wavemaker.runtime.pws.PwsLoginManagerBeanFactory;
+import com.wavemaker.runtime.service.annotations.HideFromClient;
+import com.wavemaker.tools.pws.IPwsRestImporter;
+import com.wavemaker.tools.pws.PwsRestImporterBeanFactory;
+
 /**
- * @author slee
- * Partner Web Service class
- * This class provides the list of services and operations and import web services
+ * @author slee Partner Web Service class This class provides the list of services and operations and import web
+ *         services
  */
 public class PwsImportService {
 
     private PwsLoginManagerBeanFactory pwsLoginManagerBeanFactory;
+
     private PwsRestImporterBeanFactory pwsRestImporterBeanFactory;
 
     public String listProjects(PwsLoginInfo loginInfo) throws Exception {
-        
-        IPwsLoginManager loginMgr = pwsLoginManagerBeanFactory.getPwsLoginManager(loginInfo.getPartnerName());
-        IPwsRestImporter importer = pwsRestImporterBeanFactory.getPwsRestImporter(loginInfo.getPartnerName());
+
+        IPwsLoginManager loginMgr = this.pwsLoginManagerBeanFactory.getPwsLoginManager(loginInfo.getPartnerName());
+        IPwsRestImporter importer = this.pwsRestImporterBeanFactory.getPwsRestImporter(loginInfo.getPartnerName());
 
         String sessionId = loginMgr.logIn(loginInfo);
         loginInfo.setSessionId(sessionId);
@@ -44,10 +44,9 @@ public class PwsImportService {
         return importer.listServices(loginInfo);
     }
 
-    public String listOperations(PwsLoginInfo loginInfo, String serviceName)
-            throws Exception {
-        IPwsLoginManager loginMgr = pwsLoginManagerBeanFactory.getPwsLoginManager(loginInfo.getPartnerName());
-        IPwsRestImporter importer = pwsRestImporterBeanFactory.getPwsRestImporter(loginInfo.getPartnerName());
+    public String listOperations(PwsLoginInfo loginInfo, String serviceName) throws Exception {
+        IPwsLoginManager loginMgr = this.pwsLoginManagerBeanFactory.getPwsLoginManager(loginInfo.getPartnerName());
+        IPwsRestImporter importer = this.pwsRestImporterBeanFactory.getPwsRestImporter(loginInfo.getPartnerName());
 
         String sessionId = loginMgr.logIn(loginInfo);
         loginInfo.setSessionId(sessionId);
@@ -56,8 +55,8 @@ public class PwsImportService {
     }
 
     public String listAllOperations(PwsLoginInfo loginInfo) throws Exception {
-        IPwsLoginManager loginMgr = pwsLoginManagerBeanFactory.getPwsLoginManager(loginInfo.getPartnerName());
-        IPwsRestImporter importer = pwsRestImporterBeanFactory.getPwsRestImporter(loginInfo.getPartnerName());
+        IPwsLoginManager loginMgr = this.pwsLoginManagerBeanFactory.getPwsLoginManager(loginInfo.getPartnerName());
+        IPwsRestImporter importer = this.pwsRestImporterBeanFactory.getPwsRestImporter(loginInfo.getPartnerName());
 
         String sessionId = loginMgr.logIn(loginInfo);
         loginInfo.setSessionId(sessionId);
@@ -66,8 +65,8 @@ public class PwsImportService {
     }
 
     public void importOperations(PwsLoginInfo loginInfo, String serviceName, List<String> operations) throws Exception {
-        IPwsLoginManager loginMgr = pwsLoginManagerBeanFactory.getPwsLoginManager(loginInfo.getPartnerName());
-        IPwsRestImporter importer = pwsRestImporterBeanFactory.getPwsRestImporter(loginInfo.getPartnerName());
+        IPwsLoginManager loginMgr = this.pwsLoginManagerBeanFactory.getPwsLoginManager(loginInfo.getPartnerName());
+        IPwsRestImporter importer = this.pwsRestImporterBeanFactory.getPwsRestImporter(loginInfo.getPartnerName());
 
         String sessionId = loginMgr.logIn(loginInfo);
         loginInfo.setSessionId(sessionId);

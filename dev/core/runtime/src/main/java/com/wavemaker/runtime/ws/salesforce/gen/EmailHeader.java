@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -22,11 +20,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
+ * <p>
+ * Java class for anonymous complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType>
@@ -45,18 +44,16 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "triggerAutoResponseEmail",
-    "triggerOtherEmail",
-    "triggerUserEmail"
-})
+@XmlType(name = "", propOrder = { "triggerAutoResponseEmail", "triggerOtherEmail", "triggerUserEmail" })
 @XmlRootElement(name = "EmailHeader", namespace = "urn:partner.soap.sforce.com")
 public class EmailHeader {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean triggerAutoResponseEmail;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean triggerOtherEmail;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean triggerUserEmail;
 
@@ -65,7 +62,7 @@ public class EmailHeader {
      * 
      */
     public boolean isTriggerAutoResponseEmail() {
-        return triggerAutoResponseEmail;
+        return this.triggerAutoResponseEmail;
     }
 
     /**
@@ -81,7 +78,7 @@ public class EmailHeader {
      * 
      */
     public boolean isTriggerOtherEmail() {
-        return triggerOtherEmail;
+        return this.triggerOtherEmail;
     }
 
     /**
@@ -97,7 +94,7 @@ public class EmailHeader {
      * 
      */
     public boolean isTriggerUserEmail() {
-        return triggerUserEmail;
+        return this.triggerUserEmail;
     }
 
     /**

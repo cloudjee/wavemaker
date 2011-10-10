@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.JAXBElement;
@@ -27,19 +26,14 @@ import javax.xml.bind.annotation.XmlElementDecl;
 import javax.xml.bind.annotation.XmlRegistry;
 import javax.xml.namespace.QName;
 
-
 /**
- * This object contains factory methods for each 
- * Java content interface and Java element interface 
- * generated in the com.wavemaker.tools.webapp.schema package. 
- * <p>An ObjectFactory allows you to programatically 
- * construct new instances of the Java representation 
- * for XML content. The Java representation of XML 
- * content can consist of schema derived interfaces 
- * and classes representing the binding of schema 
- * type definitions, element declarations and model 
- * groups.  Factory methods for each of these are 
- * provided in this class.
+ * This object contains factory methods for each Java content interface and Java element interface generated in the
+ * com.wavemaker.tools.webapp.schema package.
+ * <p>
+ * An ObjectFactory allows you to programatically construct new instances of the Java representation for XML content.
+ * The Java representation of XML content can consist of schema derived interfaces and classes representing the binding
+ * of schema type definitions, element declarations and model groups. Factory methods for each of these are provided in
+ * this class.
  * 
  */
 @XmlRegistry
@@ -48,7 +42,8 @@ public class ObjectFactory {
     private final static QName _WebApp_QNAME = new QName("http://java.sun.com/xml/ns/j2ee", "web-app");
 
     /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: com.wavemaker.tools.webapp.schema
+     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package:
+     * com.wavemaker.tools.webapp.schema
      * 
      */
     public ObjectFactory() {
@@ -703,7 +698,7 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link JAXBElement }{@code <}{@link WebAppType }{@code >}}
+     * Create an instance of {@link JAXBElement }{@code <}{@link WebAppType }{@code >}
      * 
      */
     @XmlElementDecl(namespace = "http://java.sun.com/xml/ns/j2ee", name = "web-app")

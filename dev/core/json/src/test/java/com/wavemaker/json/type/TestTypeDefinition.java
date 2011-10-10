@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.json.type;
 
 import java.lang.reflect.ParameterizedType;
@@ -30,7 +31,7 @@ import com.wavemaker.json.type.reflect.TestReflectTypeUtils.MapListType;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestTypeDefinition extends WMTestCase {
 
@@ -38,37 +39,32 @@ public class TestTypeDefinition extends WMTestCase {
     public void setUp() throws Exception {
         SpringUtils.initSpringConfig();
     }
-    
+
     public void testGetTypeName() throws Exception {
-        
+
         String arr[] = new String[1];
         String arr2[][] = new String[1][];
 
         assertEquals("java.lang.String", ReflectTypeUtils.getTypeName(String.class));
         assertEquals("[Ljava.lang.String;", ReflectTypeUtils.getTypeName(arr.getClass()));
         assertEquals("[[Ljava.lang.String;", ReflectTypeUtils.getTypeName(arr2.getClass()));
-        
-        Type returnType = BasicMapTypes.class.getMethod("getStringStringMap").
-                getGenericReturnType();
+
+        Type returnType = BasicMapTypes.class.getMethod("getStringStringMap").getGenericReturnType();
         assertTrue(returnType instanceof ParameterizedType);
-        
+
         ParameterizedType pt = (ParameterizedType) returnType;
         assertEquals(Map.class, pt.getRawType());
         assertEquals(2, pt.getActualTypeArguments().length);
-        
-        assertEquals("java.util.Map<java.lang.String,java.lang.String>",
-                ReflectTypeUtils.getTypeName(pt));
-        
-        
-        returnType = MapListType.class.getMethod("getMapListString").
-                getGenericReturnType();
+
+        assertEquals("java.util.Map<java.lang.String,java.lang.String>", ReflectTypeUtils.getTypeName(pt));
+
+        returnType = MapListType.class.getMethod("getMapListString").getGenericReturnType();
         assertTrue(returnType instanceof ParameterizedType);
-        
+
         pt = (ParameterizedType) returnType;
         assertEquals(Map.class, pt.getRawType());
         assertEquals(2, pt.getActualTypeArguments().length);
-        
-        assertEquals("java.util.Map<java.lang.String,java.util.List<java.util.List<java.lang.String>>>",
-                ReflectTypeUtils.getTypeName(pt));
+
+        assertEquals("java.util.Map<java.lang.String,java.util.List<java.util.List<java.lang.String>>>", ReflectTypeUtils.getTypeName(pt));
     }
 }

@@ -27,7 +27,7 @@ import com.wavemaker.tools.javaservice.JavaServiceDefinition;
 public class SecurityServiceDefinition extends JavaServiceDefinition {
 
     public static final String DEFAULT_SERVICE_ID = "securityService";
-    
+
     public SecurityServiceDefinition(String serviceId) {
         super(SecurityService.class, serviceId);
     }

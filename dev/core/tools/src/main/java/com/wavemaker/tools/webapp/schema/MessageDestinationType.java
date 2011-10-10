@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import java.util.ArrayList;
@@ -35,37 +34,30 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
  * 
- * 	
  * 
- * 	  The message-destinationType specifies a message
- * 	  destination. The logical destination described by this
- * 	  element is mapped to a physical destination by the Deployer.
  * 
- * 	  The message destination element contains:
+ * The message-destinationType specifies a message destination. The logical destination described by this element is
+ * mapped to a physical destination by the Deployer.
  * 
- * 		  - an optional description
- * 		  - an optional display-name
- * 		  - an optional icon
- * 		  - a message destination name which must be unique
- * 		    among message destination names within the same
- * 		    Deployment File.
+ * The message destination element contains:
  * 
- * 	  Example:
+ * - an optional description - an optional display-name - an optional icon - a message destination name which must be
+ * unique among message destination names within the same Deployment File.
  * 
- * 	  <message-destination>
- * 		  <message-destination-name>CorporateStocks
- * 		  </message-destination-name>
- * 	  </message-destination>
+ * Example:
  * 
- * 	  
- *       
+ * <message-destination> <message-destination-name>CorporateStocks </message-destination-name> </message-destination>
  * 
- * <p>Java class for message-destinationType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * 
+ * 
+ * <p>
+ * Java class for message-destinationType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="message-destinationType">
@@ -84,20 +76,19 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "message-destinationType", propOrder = {
-    "description",
-    "displayName",
-    "icon",
-    "messageDestinationName"
-})
+@XmlType(name = "message-destinationType", propOrder = { "description", "displayName", "icon", "messageDestinationName" })
 public class MessageDestinationType {
 
     protected List<DescriptionType> description;
+
     @XmlElement(name = "display-name")
     protected List<DisplayNameType> displayName;
+
     protected List<IconType> icon;
+
     @XmlElement(name = "message-destination-name", required = true)
     protected com.wavemaker.tools.webapp.schema.String messageDestinationName;
+
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -108,27 +99,26 @@ public class MessageDestinationType {
      * Gets the value of the description property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the description property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the description property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getDescription().add(newItem);
+     * getDescription().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DescriptionType }
+     * Objects of the following type(s) are allowed in the list {@link DescriptionType }
      * 
      * 
      */
     public List<DescriptionType> getDescription() {
-        if (description == null) {
-            description = new ArrayList<DescriptionType>();
+        if (this.description == null) {
+            this.description = new ArrayList<DescriptionType>();
         }
         return this.description;
     }
@@ -137,27 +127,26 @@ public class MessageDestinationType {
      * Gets the value of the displayName property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the displayName property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the displayName property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getDisplayName().add(newItem);
+     * getDisplayName().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DisplayNameType }
+     * Objects of the following type(s) are allowed in the list {@link DisplayNameType }
      * 
      * 
      */
     public List<DisplayNameType> getDisplayName() {
-        if (displayName == null) {
-            displayName = new ArrayList<DisplayNameType>();
+        if (this.displayName == null) {
+            this.displayName = new ArrayList<DisplayNameType>();
         }
         return this.displayName;
     }
@@ -166,27 +155,26 @@ public class MessageDestinationType {
      * Gets the value of the icon property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the icon property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the icon property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getIcon().add(newItem);
+     * getIcon().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link IconType }
+     * Objects of the following type(s) are allowed in the list {@link IconType }
      * 
      * 
      */
     public List<IconType> getIcon() {
-        if (icon == null) {
-            icon = new ArrayList<IconType>();
+        if (this.icon == null) {
+            this.icon = new ArrayList<IconType>();
         }
         return this.icon;
     }
@@ -194,22 +182,18 @@ public class MessageDestinationType {
     /**
      * Gets the value of the messageDestinationName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link com.wavemaker.tools.webapp.schema.String }
-     *     
+     * @return possible object is {@link com.wavemaker.tools.webapp.schema.String }
+     * 
      */
     public com.wavemaker.tools.webapp.schema.String getMessageDestinationName() {
-        return messageDestinationName;
+        return this.messageDestinationName;
     }
 
     /**
      * Sets the value of the messageDestinationName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link com.wavemaker.tools.webapp.schema.String }
-     *     
+     * @param value allowed object is {@link com.wavemaker.tools.webapp.schema.String }
+     * 
      */
     public void setMessageDestinationName(com.wavemaker.tools.webapp.schema.String value) {
         this.messageDestinationName = value;
@@ -218,22 +202,18 @@ public class MessageDestinationType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setId(java.lang.String value) {
         this.id = value;

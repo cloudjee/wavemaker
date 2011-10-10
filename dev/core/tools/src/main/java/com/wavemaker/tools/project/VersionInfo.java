@@ -15,49 +15,52 @@
 package com.wavemaker.tools.project;
 
 /**
- * Contains info on the current version.  Assumes versions are of the format:
- * major.minor.revision[releaseStatus], where the release status can be
- * something like ALPHA or BETA.
- *
+ * Contains info on the current version. Assumes versions are of the format: major.minor.revision[releaseStatus], where
+ * the release status can be something like ALPHA or BETA.
+ * 
  * @author Matt Small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class VersionInfo implements Comparable<VersionInfo> {
 
-    private int major;
-    private int minor;
+    private final int major;
+
+    private final int minor;
+
     private int revision;
+
     private boolean isRelease;
+
     private String releaseStatus;
 
     public VersionInfo(String versionString) {
 
         int firstDot = versionString.indexOf('.');
-        int secondDot = versionString.indexOf('.', firstDot+1);
+        int secondDot = versionString.indexOf('.', firstDot + 1);
 
         String major = versionString.substring(0, firstDot);
-        String minor = versionString.substring(firstDot+1, secondDot);
-        String revisionStatus = versionString.substring(secondDot+1);
+        String minor = versionString.substring(firstDot + 1, secondDot);
+        String revisionStatus = versionString.substring(secondDot + 1);
 
         this.major = Integer.parseInt(major);
         this.minor = Integer.parseInt(minor);
 
         this.revision = Integer.parseInt(revisionStatus.substring(0, 1));
-        for (int i=1;i<revisionStatus.length();i++) {
+        for (int i = 1; i < revisionStatus.length(); i++) {
 
             try {
                 this.revision = Integer.parseInt(revisionStatus.substring(0, i));
             } catch (NumberFormatException e) {
-                this.releaseStatus = revisionStatus.substring(i-1);
+                this.releaseStatus = revisionStatus.substring(i - 1);
                 break;
             }
         }
 
-        if (null!=this.releaseStatus) {
-            isRelease = false;
+        if (null != this.releaseStatus) {
+            this.isRelease = false;
         } else {
-            isRelease = true;
+            this.isRelease = true;
         }
     }
 
@@ -84,27 +87,27 @@ public class VersionInfo implements Comparable<VersionInfo> {
         return this.releaseStatus;
     }
 
+    @Override
     public String toString() {
-        return this.getMajor()+"."+this.getMinor()+"."+this.getRevision()+
-            ((null!=this.getReleaseStatus())?this.getReleaseStatus():"");
+        return this.getMajor() + "." + this.getMinor() + "." + this.getRevision() + (null != this.getReleaseStatus() ? this.getReleaseStatus() : "");
     }
 
     public int compareTo(VersionInfo o) {
 
-        VersionInfo other = (VersionInfo) o;
+        VersionInfo other = o;
 
         int majorDiff = this.getMajor() - other.getMajor();
-        if (0!=majorDiff) {
+        if (0 != majorDiff) {
             return majorDiff;
         }
 
         int minorDiff = this.getMinor() - other.getMinor();
-        if (0!=minorDiff) {
+        if (0 != minorDiff) {
             return minorDiff;
         }
 
         int revisionDiff = this.getRevision() - other.getRevision();
-        if (0!=revisionDiff) {
+        if (0 != revisionDiff) {
             return revisionDiff;
         }
 
@@ -112,9 +115,9 @@ public class VersionInfo implements Comparable<VersionInfo> {
             return 0;
         }
 
-        if (null==this.getReleaseStatus() && null!=other.getReleaseStatus()) {
+        if (null == this.getReleaseStatus() && null != other.getReleaseStatus()) {
             return 1;
-        } else if (null!=this.getReleaseStatus() && null==other.getReleaseStatus()) {
+        } else if (null != this.getReleaseStatus() && null == other.getReleaseStatus()) {
             return -1;
         } else {
             return this.getReleaseStatus().compareTo(other.getReleaseStatus());

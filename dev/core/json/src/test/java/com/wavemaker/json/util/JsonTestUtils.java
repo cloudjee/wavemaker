@@ -1,7 +1,8 @@
+
 package com.wavemaker.json.util;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import org.antlr.runtime.RecognitionException;
 
@@ -16,18 +17,14 @@ import com.wavemaker.json.JSONUnmarshaller;
  */
 public abstract class JsonTestUtils {
 
-	/**
-     * Compare two JSON-formatted strings; make sure the objects they return are
-     * equivalent.
+    /**
+     * Compare two JSON-formatted strings; make sure the objects they return are equivalent.
      * 
-     * @param expected
-     *            The first JSON-format string to compare.
-     * @param actual
-     *            The second JSON-format string to compare.
+     * @param expected The first JSON-format string to compare.
+     * @param actual The second JSON-format string to compare.
      * @throws RecognitionException
      */
-    public static void assertJSONStringsEquals(String expected, String actual)
-            throws RecognitionException {
+    public static void assertJSONStringsEquals(String expected, String actual) throws RecognitionException {
 
         JSON jo1 = JSONUnmarshaller.unmarshal(expected);
         assertTrue(jo1.isObject());

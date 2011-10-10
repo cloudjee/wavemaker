@@ -19,7 +19,6 @@
 // Generated on: 2008.10.23 at 10:17:33 AM PDT 
 //
 
-
 package com.wavemaker.tools.service.definitions;
 
 import java.util.ArrayList;
@@ -31,11 +30,12 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
+ * <p>
+ * Java class for anonymous complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType>
@@ -61,25 +61,28 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "operation",
-    "dataobjects",
-    "eventnotifier"
-})
+@XmlType(name = "", propOrder = { "operation", "dataobjects", "eventnotifier" })
 @XmlRootElement(name = "service")
 public class Service {
 
     protected List<Operation> operation;
+
     protected DataObjects dataobjects;
+
     protected List<EventNotifier> eventnotifier;
+
     @XmlAttribute(required = true)
     protected String id;
+
     @XmlAttribute(name = "class", required = true)
     protected String clazz;
+
     @XmlAttribute(name = "CRUDService")
     protected Boolean crudService;
+
     @XmlAttribute(required = true)
     protected String type;
+
     @XmlAttribute
     protected String springFile;
 
@@ -87,32 +90,31 @@ public class Service {
      * Gets the value of the operation property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the operation property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the operation property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getOperation().add(newItem);
+     * getOperation().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Operation }
+     * Objects of the following type(s) are allowed in the list {@link Operation }
      * 
      * 
      */
     public List<Operation> getOperation() {
-        if (operation == null) {
-            operation = new ArrayList<Operation>();
+        if (this.operation == null) {
+            this.operation = new ArrayList<Operation>();
         }
         return this.operation;
     }
 
-    public List<Operation> addOperation(Operation operation) { //salesforce
+    public List<Operation> addOperation(Operation operation) { // salesforce
         if (this.operation == null) {
             this.operation = new ArrayList<Operation>();
         }
@@ -124,22 +126,18 @@ public class Service {
     /**
      * Gets the value of the dataobjects property.
      * 
-     * @return
-     *     possible object is
-     *     {@link DataObjects }
-     *     
+     * @return possible object is {@link DataObjects }
+     * 
      */
     public DataObjects getDataobjects() {
-        return dataobjects;
+        return this.dataobjects;
     }
 
     /**
      * Sets the value of the dataobjects property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link DataObjects }
-     *     
+     * @param value allowed object is {@link DataObjects }
+     * 
      */
     public void setDataobjects(DataObjects value) {
         this.dataobjects = value;
@@ -149,27 +147,26 @@ public class Service {
      * Gets the value of the eventnotifier property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the eventnotifier property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the eventnotifier property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getEventnotifier().add(newItem);
+     * getEventnotifier().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link EventNotifier }
+     * Objects of the following type(s) are allowed in the list {@link EventNotifier }
      * 
      * 
      */
     public List<EventNotifier> getEventnotifier() {
-        if (eventnotifier == null) {
-            eventnotifier = new ArrayList<EventNotifier>();
+        if (this.eventnotifier == null) {
+            this.eventnotifier = new ArrayList<EventNotifier>();
         }
         return this.eventnotifier;
     }
@@ -177,22 +174,18 @@ public class Service {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setId(String value) {
         this.id = value;
@@ -201,22 +194,18 @@ public class Service {
     /**
      * Gets the value of the clazz property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getClazz() {
-        return clazz;
+        return this.clazz;
     }
 
     /**
      * Sets the value of the clazz property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setClazz(String value) {
         this.clazz = value;
@@ -225,22 +214,18 @@ public class Service {
     /**
      * Gets the value of the crudService property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     * @return possible object is {@link Boolean }
+     * 
      */
     public Boolean getCRUDService() {
-        return crudService;
+        return this.crudService;
     }
 
     /**
      * Sets the value of the crudService property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     * @param value allowed object is {@link Boolean }
+     * 
      */
     public void setCRUDService(Boolean value) {
         this.crudService = value;
@@ -249,22 +234,18 @@ public class Service {
     /**
      * Gets the value of the type property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getType() {
-        return type;
+        return this.type;
     }
 
     /**
      * Sets the value of the type property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setType(String value) {
         this.type = value;
@@ -273,22 +254,18 @@ public class Service {
     /**
      * Gets the value of the springFile property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getSpringFile() {
-        return springFile;
+        return this.springFile;
     }
 
     /**
      * Sets the value of the springFile property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setSpringFile(String value) {
         this.springFile = value;

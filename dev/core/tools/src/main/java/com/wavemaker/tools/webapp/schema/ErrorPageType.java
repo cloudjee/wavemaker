@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -32,21 +31,21 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
  * 
  * 
- * 	The error-pageType contains a mapping between an error code
- * 	or exception type to the path of a resource in the web
- * 	application.
+ * The error-pageType contains a mapping between an error code or exception type to the path of a resource in the web
+ * application.
  * 
- * 	Used in: web-app
+ * Used in: web-app
  * 
- *       
  * 
- * <p>Java class for error-pageType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for error-pageType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="error-pageType">
@@ -68,19 +67,18 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "error-pageType", propOrder = {
-    "errorCode",
-    "exceptionType",
-    "location"
-})
+@XmlType(name = "error-pageType", propOrder = { "errorCode", "exceptionType", "location" })
 public class ErrorPageType {
 
     @XmlElement(name = "error-code")
     protected ErrorCodeType errorCode;
+
     @XmlElement(name = "exception-type")
     protected FullyQualifiedClassType exceptionType;
+
     @XmlElement(required = true)
     protected WarPathType location;
+
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -90,22 +88,18 @@ public class ErrorPageType {
     /**
      * Gets the value of the errorCode property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ErrorCodeType }
-     *     
+     * @return possible object is {@link ErrorCodeType }
+     * 
      */
     public ErrorCodeType getErrorCode() {
-        return errorCode;
+        return this.errorCode;
     }
 
     /**
      * Sets the value of the errorCode property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link ErrorCodeType }
-     *     
+     * @param value allowed object is {@link ErrorCodeType }
+     * 
      */
     public void setErrorCode(ErrorCodeType value) {
         this.errorCode = value;
@@ -114,22 +108,18 @@ public class ErrorPageType {
     /**
      * Gets the value of the exceptionType property.
      * 
-     * @return
-     *     possible object is
-     *     {@link FullyQualifiedClassType }
-     *     
+     * @return possible object is {@link FullyQualifiedClassType }
+     * 
      */
     public FullyQualifiedClassType getExceptionType() {
-        return exceptionType;
+        return this.exceptionType;
     }
 
     /**
      * Sets the value of the exceptionType property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link FullyQualifiedClassType }
-     *     
+     * @param value allowed object is {@link FullyQualifiedClassType }
+     * 
      */
     public void setExceptionType(FullyQualifiedClassType value) {
         this.exceptionType = value;
@@ -138,22 +128,18 @@ public class ErrorPageType {
     /**
      * Gets the value of the location property.
      * 
-     * @return
-     *     possible object is
-     *     {@link WarPathType }
-     *     
+     * @return possible object is {@link WarPathType }
+     * 
      */
     public WarPathType getLocation() {
-        return location;
+        return this.location;
     }
 
     /**
      * Sets the value of the location property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link WarPathType }
-     *     
+     * @param value allowed object is {@link WarPathType }
+     * 
      */
     public void setLocation(WarPathType value) {
         this.location = value;
@@ -162,22 +148,18 @@ public class ErrorPageType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setId(java.lang.String value) {
         this.id = value;

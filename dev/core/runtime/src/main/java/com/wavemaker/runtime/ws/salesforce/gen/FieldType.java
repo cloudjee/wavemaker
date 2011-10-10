@@ -11,23 +11,23 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for Field complex type.
+ * <p>
+ * Java class for Field complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="Field">
@@ -81,122 +81,124 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Field", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "autoNumber",
-    "byteLength",
-    "calculated",
-    "calculatedFormula",
-    "caseSensitive",
-    "controllerName",
-    "createable",
-    "custom",
-    "defaultValueFormula",
-    "defaultedOnCreate",
-    "dependentPicklist",
-    "deprecatedAndHidden",
-    "digits",
-    "externalId",
-    "filterable",
-    "groupable",
-    "htmlFormatted",
-    "idLookup",
-    "inlineHelpText",
-    "label",
-    "length",
-    "name",
-    "nameField",
-    "namePointing",
-    "nillable",
-    "picklistValues",
-    "precision",
-    "referenceTos",
-    "relationshipName",
-    "relationshipOrder",
-    "restrictedPicklist",
-    "scale",
-    "soapType",
-    "sortable",
-    "type",
-    "unique",
-    "updateable",
-    "writeRequiresMasterRead"
-})
+@XmlType(name = "Field", namespace = "urn:partner.soap.sforce.com", propOrder = { "autoNumber", "byteLength", "calculated", "calculatedFormula",
+    "caseSensitive", "controllerName", "createable", "custom", "defaultValueFormula", "defaultedOnCreate", "dependentPicklist",
+    "deprecatedAndHidden", "digits", "externalId", "filterable", "groupable", "htmlFormatted", "idLookup", "inlineHelpText", "label", "length",
+    "name", "nameField", "namePointing", "nillable", "picklistValues", "precision", "referenceTos", "relationshipName", "relationshipOrder",
+    "restrictedPicklist", "scale", "soapType", "sortable", "type", "unique", "updateable", "writeRequiresMasterRead" })
 public class FieldType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean autoNumber;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected int byteLength;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean calculated;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected String calculatedFormula;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean caseSensitive;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected String controllerName;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean createable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean custom;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected String defaultValueFormula;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean defaultedOnCreate;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected Boolean dependentPicklist;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean deprecatedAndHidden;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected int digits;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected Boolean externalId;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean filterable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean groupable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected Boolean htmlFormatted;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean idLookup;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected String inlineHelpText;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String label;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected int length;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String name;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean nameField;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected Boolean namePointing;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean nillable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", nillable = true)
     protected List<PicklistEntryType> picklistValues;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected int precision;
+
     @XmlElement(name = "referenceTo", namespace = "urn:partner.soap.sforce.com", nillable = true)
     protected List<String> referenceTos;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected String relationshipName;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected Integer relationshipOrder;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean restrictedPicklist;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected int scale;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected SoapTypeType soapType;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected Boolean sortable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected FieldTypeType type;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean unique;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean updateable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected Boolean writeRequiresMasterRead;
 
@@ -205,7 +207,7 @@ public class FieldType {
      * 
      */
     public boolean isAutoNumber() {
-        return autoNumber;
+        return this.autoNumber;
     }
 
     /**
@@ -221,7 +223,7 @@ public class FieldType {
      * 
      */
     public int getByteLength() {
-        return byteLength;
+        return this.byteLength;
     }
 
     /**
@@ -237,7 +239,7 @@ public class FieldType {
      * 
      */
     public boolean isCalculated() {
-        return calculated;
+        return this.calculated;
     }
 
     /**
@@ -251,22 +253,18 @@ public class FieldType {
     /**
      * Gets the value of the calculatedFormula property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getCalculatedFormula() {
-        return calculatedFormula;
+        return this.calculatedFormula;
     }
 
     /**
      * Sets the value of the calculatedFormula property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setCalculatedFormula(String value) {
         this.calculatedFormula = value;
@@ -277,7 +275,7 @@ public class FieldType {
      * 
      */
     public boolean isCaseSensitive() {
-        return caseSensitive;
+        return this.caseSensitive;
     }
 
     /**
@@ -291,22 +289,18 @@ public class FieldType {
     /**
      * Gets the value of the controllerName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getControllerName() {
-        return controllerName;
+        return this.controllerName;
     }
 
     /**
      * Sets the value of the controllerName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setControllerName(String value) {
         this.controllerName = value;
@@ -317,7 +311,7 @@ public class FieldType {
      * 
      */
     public boolean isCreateable() {
-        return createable;
+        return this.createable;
     }
 
     /**
@@ -333,7 +327,7 @@ public class FieldType {
      * 
      */
     public boolean isCustom() {
-        return custom;
+        return this.custom;
     }
 
     /**
@@ -347,22 +341,18 @@ public class FieldType {
     /**
      * Gets the value of the defaultValueFormula property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getDefaultValueFormula() {
-        return defaultValueFormula;
+        return this.defaultValueFormula;
     }
 
     /**
      * Sets the value of the defaultValueFormula property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setDefaultValueFormula(String value) {
         this.defaultValueFormula = value;
@@ -373,7 +363,7 @@ public class FieldType {
      * 
      */
     public boolean isDefaultedOnCreate() {
-        return defaultedOnCreate;
+        return this.defaultedOnCreate;
     }
 
     /**
@@ -387,22 +377,18 @@ public class FieldType {
     /**
      * Gets the value of the dependentPicklist property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     * @return possible object is {@link Boolean }
+     * 
      */
     public Boolean getDependentPicklist() {
-        return dependentPicklist;
+        return this.dependentPicklist;
     }
 
     /**
      * Sets the value of the dependentPicklist property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     * @param value allowed object is {@link Boolean }
+     * 
      */
     public void setDependentPicklist(Boolean value) {
         this.dependentPicklist = value;
@@ -413,7 +399,7 @@ public class FieldType {
      * 
      */
     public boolean isDeprecatedAndHidden() {
-        return deprecatedAndHidden;
+        return this.deprecatedAndHidden;
     }
 
     /**
@@ -429,7 +415,7 @@ public class FieldType {
      * 
      */
     public int getDigits() {
-        return digits;
+        return this.digits;
     }
 
     /**
@@ -443,22 +429,18 @@ public class FieldType {
     /**
      * Gets the value of the externalId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     * @return possible object is {@link Boolean }
+     * 
      */
     public Boolean getExternalId() {
-        return externalId;
+        return this.externalId;
     }
 
     /**
      * Sets the value of the externalId property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     * @param value allowed object is {@link Boolean }
+     * 
      */
     public void setExternalId(Boolean value) {
         this.externalId = value;
@@ -469,7 +451,7 @@ public class FieldType {
      * 
      */
     public boolean isFilterable() {
-        return filterable;
+        return this.filterable;
     }
 
     /**
@@ -485,7 +467,7 @@ public class FieldType {
      * 
      */
     public boolean isGroupable() {
-        return groupable;
+        return this.groupable;
     }
 
     /**
@@ -499,22 +481,18 @@ public class FieldType {
     /**
      * Gets the value of the htmlFormatted property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     * @return possible object is {@link Boolean }
+     * 
      */
     public Boolean getHtmlFormatted() {
-        return htmlFormatted;
+        return this.htmlFormatted;
     }
 
     /**
      * Sets the value of the htmlFormatted property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     * @param value allowed object is {@link Boolean }
+     * 
      */
     public void setHtmlFormatted(Boolean value) {
         this.htmlFormatted = value;
@@ -525,7 +503,7 @@ public class FieldType {
      * 
      */
     public boolean isIdLookup() {
-        return idLookup;
+        return this.idLookup;
     }
 
     /**
@@ -539,22 +517,18 @@ public class FieldType {
     /**
      * Gets the value of the inlineHelpText property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getInlineHelpText() {
-        return inlineHelpText;
+        return this.inlineHelpText;
     }
 
     /**
      * Sets the value of the inlineHelpText property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setInlineHelpText(String value) {
         this.inlineHelpText = value;
@@ -563,22 +537,18 @@ public class FieldType {
     /**
      * Gets the value of the label property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getLabel() {
-        return label;
+        return this.label;
     }
 
     /**
      * Sets the value of the label property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setLabel(String value) {
         this.label = value;
@@ -589,7 +559,7 @@ public class FieldType {
      * 
      */
     public int getLength() {
-        return length;
+        return this.length;
     }
 
     /**
@@ -603,22 +573,18 @@ public class FieldType {
     /**
      * Gets the value of the name property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**
      * Sets the value of the name property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setName(String value) {
         this.name = value;
@@ -629,7 +595,7 @@ public class FieldType {
      * 
      */
     public boolean isNameField() {
-        return nameField;
+        return this.nameField;
     }
 
     /**
@@ -643,22 +609,18 @@ public class FieldType {
     /**
      * Gets the value of the namePointing property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     * @return possible object is {@link Boolean }
+     * 
      */
     public Boolean getNamePointing() {
-        return namePointing;
+        return this.namePointing;
     }
 
     /**
      * Sets the value of the namePointing property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     * @param value allowed object is {@link Boolean }
+     * 
      */
     public void setNamePointing(Boolean value) {
         this.namePointing = value;
@@ -669,7 +631,7 @@ public class FieldType {
      * 
      */
     public boolean isNillable() {
-        return nillable;
+        return this.nillable;
     }
 
     /**
@@ -684,27 +646,26 @@ public class FieldType {
      * Gets the value of the picklistValues property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the picklistValues property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the picklistValues property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getPicklistValues().add(newItem);
+     * getPicklistValues().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link PicklistEntryType }
+     * Objects of the following type(s) are allowed in the list {@link PicklistEntryType }
      * 
      * 
      */
     public List<PicklistEntryType> getPicklistValues() {
-        if (picklistValues == null) {
-            picklistValues = new ArrayList<PicklistEntryType>();
+        if (this.picklistValues == null) {
+            this.picklistValues = new ArrayList<PicklistEntryType>();
         }
         return this.picklistValues;
     }
@@ -714,7 +675,7 @@ public class FieldType {
      * 
      */
     public int getPrecision() {
-        return precision;
+        return this.precision;
     }
 
     /**
@@ -729,27 +690,26 @@ public class FieldType {
      * Gets the value of the referenceTos property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the referenceTos property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the referenceTos property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getReferenceTos().add(newItem);
+     * getReferenceTos().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link String }
+     * Objects of the following type(s) are allowed in the list {@link String }
      * 
      * 
      */
     public List<String> getReferenceTos() {
-        if (referenceTos == null) {
-            referenceTos = new ArrayList<String>();
+        if (this.referenceTos == null) {
+            this.referenceTos = new ArrayList<String>();
         }
         return this.referenceTos;
     }
@@ -757,22 +717,18 @@ public class FieldType {
     /**
      * Gets the value of the relationshipName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getRelationshipName() {
-        return relationshipName;
+        return this.relationshipName;
     }
 
     /**
      * Sets the value of the relationshipName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setRelationshipName(String value) {
         this.relationshipName = value;
@@ -781,22 +737,18 @@ public class FieldType {
     /**
      * Gets the value of the relationshipOrder property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Integer }
-     *     
+     * @return possible object is {@link Integer }
+     * 
      */
     public Integer getRelationshipOrder() {
-        return relationshipOrder;
+        return this.relationshipOrder;
     }
 
     /**
      * Sets the value of the relationshipOrder property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Integer }
-     *     
+     * @param value allowed object is {@link Integer }
+     * 
      */
     public void setRelationshipOrder(Integer value) {
         this.relationshipOrder = value;
@@ -807,7 +759,7 @@ public class FieldType {
      * 
      */
     public boolean isRestrictedPicklist() {
-        return restrictedPicklist;
+        return this.restrictedPicklist;
     }
 
     /**
@@ -823,7 +775,7 @@ public class FieldType {
      * 
      */
     public int getScale() {
-        return scale;
+        return this.scale;
     }
 
     /**
@@ -837,22 +789,18 @@ public class FieldType {
     /**
      * Gets the value of the soapType property.
      * 
-     * @return
-     *     possible object is
-     *     {@link SoapTypeType }
-     *     
+     * @return possible object is {@link SoapTypeType }
+     * 
      */
     public SoapTypeType getSoapType() {
-        return soapType;
+        return this.soapType;
     }
 
     /**
      * Sets the value of the soapType property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link SoapTypeType }
-     *     
+     * @param value allowed object is {@link SoapTypeType }
+     * 
      */
     public void setSoapType(SoapTypeType value) {
         this.soapType = value;
@@ -861,22 +809,18 @@ public class FieldType {
     /**
      * Gets the value of the sortable property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     * @return possible object is {@link Boolean }
+     * 
      */
     public Boolean getSortable() {
-        return sortable;
+        return this.sortable;
     }
 
     /**
      * Sets the value of the sortable property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     * @param value allowed object is {@link Boolean }
+     * 
      */
     public void setSortable(Boolean value) {
         this.sortable = value;
@@ -885,22 +829,18 @@ public class FieldType {
     /**
      * Gets the value of the type property.
      * 
-     * @return
-     *     possible object is
-     *     {@link FieldTypeType }
-     *     
+     * @return possible object is {@link FieldTypeType }
+     * 
      */
     public FieldTypeType getType() {
-        return type;
+        return this.type;
     }
 
     /**
      * Sets the value of the type property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link FieldTypeType }
-     *     
+     * @param value allowed object is {@link FieldTypeType }
+     * 
      */
     public void setType(FieldTypeType value) {
         this.type = value;
@@ -911,7 +851,7 @@ public class FieldType {
      * 
      */
     public boolean isUnique() {
-        return unique;
+        return this.unique;
     }
 
     /**
@@ -927,7 +867,7 @@ public class FieldType {
      * 
      */
     public boolean isUpdateable() {
-        return updateable;
+        return this.updateable;
     }
 
     /**
@@ -941,22 +881,18 @@ public class FieldType {
     /**
      * Gets the value of the writeRequiresMasterRead property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     * @return possible object is {@link Boolean }
+     * 
      */
     public Boolean getWriteRequiresMasterRead() {
-        return writeRequiresMasterRead;
+        return this.writeRequiresMasterRead;
     }
 
     /**
      * Sets the value of the writeRequiresMasterRead property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     * @param value allowed object is {@link Boolean }
+     * 
      */
     public void setWriteRequiresMasterRead(Boolean value) {
         this.writeRequiresMasterRead = value;
@@ -965,10 +901,8 @@ public class FieldType {
     /**
      * Sets the value of the picklistValues property.
      * 
-     * @param picklistValues
-     *     allowed object is
-     *     {@link PicklistEntryType }
-     *     
+     * @param picklistValues allowed object is {@link PicklistEntryType }
+     * 
      */
     public void setPicklistValues(List<PicklistEntryType> picklistValues) {
         this.picklistValues = picklistValues;
@@ -977,10 +911,8 @@ public class FieldType {
     /**
      * Sets the value of the referenceTos property.
      * 
-     * @param referenceTos
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param referenceTos allowed object is {@link String }
+     * 
      */
     public void setReferenceTos(List<String> referenceTos) {
         this.referenceTos = referenceTos;

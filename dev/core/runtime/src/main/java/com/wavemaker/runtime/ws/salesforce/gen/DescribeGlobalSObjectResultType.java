@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -21,11 +19,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for DescribeGlobalSObjectResult complex type.
+ * <p>
+ * Java class for DescribeGlobalSObjectResult complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="DescribeGlobalSObjectResult">
@@ -60,65 +59,65 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DescribeGlobalSObjectResult", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "activateable",
-    "createable",
-    "custom",
-    "customSetting",
-    "deletable",
-    "deprecatedAndHidden",
-    "keyPrefix",
-    "label",
-    "labelPlural",
-    "layoutable",
-    "mergeable",
-    "name",
-    "queryable",
-    "replicateable",
-    "retrieveable",
-    "searchable",
-    "triggerable",
-    "undeletable",
-    "updateable"
-})
+@XmlType(name = "DescribeGlobalSObjectResult", namespace = "urn:partner.soap.sforce.com", propOrder = { "activateable", "createable", "custom",
+    "customSetting", "deletable", "deprecatedAndHidden", "keyPrefix", "label", "labelPlural", "layoutable", "mergeable", "name", "queryable",
+    "replicateable", "retrieveable", "searchable", "triggerable", "undeletable", "updateable" })
 public class DescribeGlobalSObjectResultType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean activateable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean createable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean custom;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean customSetting;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean deletable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean deprecatedAndHidden;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String keyPrefix;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String label;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String labelPlural;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean layoutable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean mergeable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String name;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean queryable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean replicateable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean retrieveable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean searchable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean triggerable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean undeletable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean updateable;
 
@@ -127,7 +126,7 @@ public class DescribeGlobalSObjectResultType {
      * 
      */
     public boolean isActivateable() {
-        return activateable;
+        return this.activateable;
     }
 
     /**
@@ -143,7 +142,7 @@ public class DescribeGlobalSObjectResultType {
      * 
      */
     public boolean isCreateable() {
-        return createable;
+        return this.createable;
     }
 
     /**
@@ -159,7 +158,7 @@ public class DescribeGlobalSObjectResultType {
      * 
      */
     public boolean isCustom() {
-        return custom;
+        return this.custom;
     }
 
     /**
@@ -175,7 +174,7 @@ public class DescribeGlobalSObjectResultType {
      * 
      */
     public boolean isCustomSetting() {
-        return customSetting;
+        return this.customSetting;
     }
 
     /**
@@ -191,7 +190,7 @@ public class DescribeGlobalSObjectResultType {
      * 
      */
     public boolean isDeletable() {
-        return deletable;
+        return this.deletable;
     }
 
     /**
@@ -207,7 +206,7 @@ public class DescribeGlobalSObjectResultType {
      * 
      */
     public boolean isDeprecatedAndHidden() {
-        return deprecatedAndHidden;
+        return this.deprecatedAndHidden;
     }
 
     /**
@@ -221,22 +220,18 @@ public class DescribeGlobalSObjectResultType {
     /**
      * Gets the value of the keyPrefix property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getKeyPrefix() {
-        return keyPrefix;
+        return this.keyPrefix;
     }
 
     /**
      * Sets the value of the keyPrefix property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setKeyPrefix(String value) {
         this.keyPrefix = value;
@@ -245,22 +240,18 @@ public class DescribeGlobalSObjectResultType {
     /**
      * Gets the value of the label property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getLabel() {
-        return label;
+        return this.label;
     }
 
     /**
      * Sets the value of the label property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setLabel(String value) {
         this.label = value;
@@ -269,22 +260,18 @@ public class DescribeGlobalSObjectResultType {
     /**
      * Gets the value of the labelPlural property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getLabelPlural() {
-        return labelPlural;
+        return this.labelPlural;
     }
 
     /**
      * Sets the value of the labelPlural property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setLabelPlural(String value) {
         this.labelPlural = value;
@@ -295,7 +282,7 @@ public class DescribeGlobalSObjectResultType {
      * 
      */
     public boolean isLayoutable() {
-        return layoutable;
+        return this.layoutable;
     }
 
     /**
@@ -311,7 +298,7 @@ public class DescribeGlobalSObjectResultType {
      * 
      */
     public boolean isMergeable() {
-        return mergeable;
+        return this.mergeable;
     }
 
     /**
@@ -325,22 +312,18 @@ public class DescribeGlobalSObjectResultType {
     /**
      * Gets the value of the name property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**
      * Sets the value of the name property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setName(String value) {
         this.name = value;
@@ -351,7 +334,7 @@ public class DescribeGlobalSObjectResultType {
      * 
      */
     public boolean isQueryable() {
-        return queryable;
+        return this.queryable;
     }
 
     /**
@@ -367,7 +350,7 @@ public class DescribeGlobalSObjectResultType {
      * 
      */
     public boolean isReplicateable() {
-        return replicateable;
+        return this.replicateable;
     }
 
     /**
@@ -383,7 +366,7 @@ public class DescribeGlobalSObjectResultType {
      * 
      */
     public boolean isRetrieveable() {
-        return retrieveable;
+        return this.retrieveable;
     }
 
     /**
@@ -399,7 +382,7 @@ public class DescribeGlobalSObjectResultType {
      * 
      */
     public boolean isSearchable() {
-        return searchable;
+        return this.searchable;
     }
 
     /**
@@ -415,7 +398,7 @@ public class DescribeGlobalSObjectResultType {
      * 
      */
     public boolean isTriggerable() {
-        return triggerable;
+        return this.triggerable;
     }
 
     /**
@@ -431,7 +414,7 @@ public class DescribeGlobalSObjectResultType {
      * 
      */
     public boolean isUndeletable() {
-        return undeletable;
+        return this.undeletable;
     }
 
     /**
@@ -447,7 +430,7 @@ public class DescribeGlobalSObjectResultType {
      * 
      */
     public boolean isUpdateable() {
-        return updateable;
+        return this.updateable;
     }
 
     /**

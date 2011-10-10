@@ -31,48 +31,51 @@ import com.wavemaker.runtime.service.TypedServiceReturn;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class FileUploadController extends JSONRPCController {
 
     /** Logger for this class and subclasses */
     protected final Logger logger = Logger.getLogger(getClass());
-    
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.server.ControllerBase#executeRequest(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.runtime.server.ControllerBase#executeRequest(javax.servlet.http.HttpServletRequest,
+     * javax.servlet.http.HttpServletResponse)
      */
     @Override
-    protected ModelAndView executeRequest(HttpServletRequest request,
-            HttpServletResponse response) throws IOException, WMException {
-        
+    protected ModelAndView executeRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, WMException {
+
         String serviceName = ServerUtils.getServiceName(request);
         Map<String, Object[]> params = ServerUtils.mergeParams(request);
         String method = ServerUtils.getMethod(params);
-        
-        if (logger.isInfoEnabled()) {
-            logger.info("invoke service: " + serviceName + ", method: " + method);
-            if (logger.isDebugEnabled()) {
-                logger.debug("method "+method+" parameters: "+params);
+
+        if (this.logger.isInfoEnabled()) {
+            this.logger.info("invoke service: " + serviceName + ", method: " + method);
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("method " + method + " parameters: " + params);
             }
         }
-        
+
         ServiceWire sw = this.getServiceManager().getServiceWire(serviceName);
         TypedServiceReturn reflInvokeRef = invokeMethod(sw, method, null, params);
-        
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("method "+method+" result: "+reflInvokeRef);
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("method " + method + " result: " + reflInvokeRef);
         }
 
         return getModelAndView(getView(), reflInvokeRef);
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.runtime.server.ControllerBase#getView()
      */
     @Override
     protected UploadResponseView getView() {
-        
+
         UploadResponseView ret = new UploadResponseView();
         ret.setJsonConfig(getInternalRuntime().getJSONState());
 

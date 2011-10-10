@@ -42,55 +42,48 @@ import com.wavemaker.tools.ws.wsdl.WSDL;
  */
 public class XJBBuilder {
 
-    private static final String[] XML_DATE_TYPES = 
-        new String[] {"xs:date", "xs:dateTime", "xs:time"};
-    
+    private static final String[] XML_DATE_TYPES = new String[] { "xs:date", "xs:dateTime", "xs:time" };
+
     private static final String SOAPENC_FILE_CLASSPATH = "com/wavemaker/tools/ws/soapenc.xsd";
 
-    private WSDL wsdl;
+    private final WSDL wsdl;
 
     public XJBBuilder(WSDL wsdl) {
         this.wsdl = wsdl;
     }
 
-    public List<File> generate(File baseDir, boolean useDifferentPackage)
-            throws GenerationException {
+    public List<File> generate(File baseDir, boolean useDifferentPackage) throws GenerationException {
         List<File> jaxbBindingFiles = new ArrayList<File>();
 
         jaxbBindingFiles.add(generateGlobalBindingFile(baseDir));
-        jaxbBindingFiles.addAll(generateSchemaBindingFiles(baseDir,
-                useDifferentPackage));
+        jaxbBindingFiles.addAll(generateSchemaBindingFiles(baseDir, useDifferentPackage));
 
         // if one of the schema imports SOAP Encoding (http://schemas.xmlsoap.org/soap/encoding/),
         // usually using it as type soapenc:Array, then we have tell the XJC where
         // to locate the SOAP encoding schema.
-        if (wsdl.getImportedNoRefSchemas().contains(Constants.SOAP_ENCODING_NS)) {
+        if (this.wsdl.getImportedNoRefSchemas().contains(Constants.SOAP_ENCODING_NS)) {
             jaxbBindingFiles.add(getSoapEncSchemaFile(baseDir));
         }
 
         return jaxbBindingFiles;
     }
-    
-    private List<File> generateSchemaBindingFiles(File baseDir,
-            boolean useDifferentPackage) {
+
+    private List<File> generateSchemaBindingFiles(File baseDir, boolean useDifferentPackage) {
         List<File> jaxbBindingFiles = new ArrayList<File>();
 
         int schemaCount = 1;
-        for (String schemaLocation : wsdl.getSchemas().keySet()) {
-            jaxbBindingFiles.add(generateSchemaBindingFile(schemaLocation,
-                    schemaCount++, baseDir, useDifferentPackage));
+        for (String schemaLocation : this.wsdl.getSchemas().keySet()) {
+            jaxbBindingFiles.add(generateSchemaBindingFile(schemaLocation, schemaCount++, baseDir, useDifferentPackage));
         }
 
         return jaxbBindingFiles;
     }
 
-    private File generateSchemaBindingFile(String schemaLocation,
-            int schemaCount, File baseDir, boolean useDifferentPackage) {
-        File bindingFile = new File(CodeGenUtils.getPackageDir(baseDir,
-                wsdl.getPackageName()), wsdl.getServiceId() + schemaCount
-                + Constants.JAXB_BINDING_FILE_EXT);
+    private File generateSchemaBindingFile(String schemaLocation, int schemaCount, File baseDir, boolean useDifferentPackage) {
+        File bindingFile = new File(CodeGenUtils.getPackageDir(baseDir, this.wsdl.getPackageName()), this.wsdl.getServiceId() + schemaCount
+            + Constants.JAXB_BINDING_FILE_EXT);
 
-        if (wsdl.isNoOverwriteCustomizationFiles() && bindingFile.exists()) {
+        if (this.wsdl.isNoOverwriteCustomizationFiles() && bindingFile.exists()) {
             return bindingFile;
         }
 
@@ -115,16 +108,16 @@ public class XJBBuilder {
         xw.addAttribute("node", "//xsd:schema[1]");
 
         xw.addElement("schemaBindings");
-        
+
         // specify Java package name to be used for this schema
         xw.addElement("package");
-        String pkgName = wsdl.getPackageName();
+        String pkgName = this.wsdl.getPackageName();
         if (useDifferentPackage && schemaCount > 1) {
             pkgName = pkgName + "." + "schema" + schemaCount;
         }
         xw.addAttribute("name", pkgName);
         xw.closeElement();
-        
+
         // appending a suffix "Type" to all ComplexType Java class. This is
         // to avoid name conflicts between named type definitions and global
         // element declarations.
@@ -139,17 +132,15 @@ public class XJBBuilder {
     }
 
     private File generateGlobalBindingFile(File baseDir) {
-        File globalBindingFile = new File(CodeGenUtils.getPackageDir(baseDir,
-                wsdl.getPackageName()), Constants.JAXB_GLOBAL_BINDING_FILE);
+        File globalBindingFile = new File(CodeGenUtils.getPackageDir(baseDir, this.wsdl.getPackageName()), Constants.JAXB_GLOBAL_BINDING_FILE);
 
-        if (wsdl.isNoOverwriteCustomizationFiles()
-                && globalBindingFile.exists()) {
+        if (this.wsdl.isNoOverwriteCustomizationFiles() && globalBindingFile.exists()) {
             return globalBindingFile;
         }
 
         PrintWriter pw = null;
         try {
-        	globalBindingFile.getParentFile().mkdirs();
+            globalBindingFile.getParentFile().mkdirs();
             pw = new PrintWriter(new FileWriter(globalBindingFile));
         } catch (IOException ex) {
             throw new BuildException(ex);
@@ -169,7 +160,7 @@ public class XJBBuilder {
 
         // globalBindings element
         xw.addElement("globalBindings");
-        
+
         // generate an alternate developer friendly but lossy binding; JAXB
         // will try to eliminate the generation of JAXBElement, but can't
         // eliminate JAXBElement completely. There are still certain situations
@@ -181,7 +172,7 @@ public class XJBBuilder {
         xw.setCurrentShortNS("xjc");
         xw.addElement("simple");
         xw.closeElement();
-        
+
         // use java.util.Date instead of the default XMLGregorianCalendar for
         // xs:date, xs:dateTime and xs:time
         xw.setCurrentShortNS("xjc");
@@ -201,10 +192,8 @@ public class XJBBuilder {
 
     private File getSoapEncSchemaFile(File baseDir) throws GenerationException {
         try {
-            File schemaFile = new File(CodeGenUtils.getPackageDir(baseDir, wsdl
-                    .getPackageName()), Constants.SOAP_ENCODING_SCHEMA_FILE);
-            InputStream is = (new ClassPathResource(SOAPENC_FILE_CLASSPATH))
-                    .getInputStream();
+            File schemaFile = new File(CodeGenUtils.getPackageDir(baseDir, this.wsdl.getPackageName()), Constants.SOAP_ENCODING_SCHEMA_FILE);
+            InputStream is = new ClassPathResource(SOAPENC_FILE_CLASSPATH).getInputStream();
             OutputStream os = new FileOutputStream(schemaFile);
             IOUtils.copy(is, os);
             return schemaFile;

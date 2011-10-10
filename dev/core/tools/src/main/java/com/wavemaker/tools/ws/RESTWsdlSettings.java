@@ -36,7 +36,7 @@ public class RESTWsdlSettings {
     private String xmlSchemaText;
 
     public String getServiceName() {
-        return serviceName;
+        return this.serviceName;
     }
 
     public void setServiceName(String serviceName) {
@@ -44,7 +44,7 @@ public class RESTWsdlSettings {
     }
 
     public String getOperationName() {
-        return operationName;
+        return this.operationName;
     }
 
     public void setOperationName(String operationName) {
@@ -52,7 +52,7 @@ public class RESTWsdlSettings {
     }
 
     public List<RESTInputParam> getInputs() {
-        return inputs;
+        return this.inputs;
     }
 
     public void setInputs(List<RESTInputParam> inputs) {
@@ -60,7 +60,7 @@ public class RESTWsdlSettings {
     }
 
     public String getParameterizedUrl() {
-        return parameterizedUrl;
+        return this.parameterizedUrl;
     }
 
     public void setParameterizedUrl(String parameterizedUrl) {
@@ -68,7 +68,7 @@ public class RESTWsdlSettings {
     }
 
     public String getOutputType() {
-        return outputType;
+        return this.outputType;
     }
 
     public void setOutputType(String outputType) {
@@ -76,7 +76,7 @@ public class RESTWsdlSettings {
     }
 
     public String getXmlSchemaText() {
-        return xmlSchemaText;
+        return this.xmlSchemaText;
     }
 
     public void setXmlSchemaText(String xmlSchemaText) {

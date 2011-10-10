@@ -20,7 +20,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.IOUtils;
 import org.springframework.web.servlet.view.AbstractView;
 
 import com.wavemaker.json.type.FieldDefinition;
@@ -28,9 +27,8 @@ import com.wavemaker.runtime.server.DojoFileUploaderResponse;
 import com.wavemaker.runtime.server.ServerConstants;
 
 /**
- * Provides a suitable view for download servlets. If a DownloadObject is
- * present, it will send the pieces from that; if not, the String representation
- * of the result will be sent.
+ * Provides a suitable view for download servlets. If a DownloadObject is present, it will send the pieces from that; if
+ * not, the String representation of the result will be sent.
  * 
  * @author small
  * @version $Rev: 29059 $ - $Date: 2010-04-29 17:19:33 -0700 (Thu, 29 Apr 2010) $
@@ -42,22 +40,21 @@ public class FlashUploadResponseView extends AbstractView implements TypedView {
      * (non-Javadoc)
      * 
      * @see org.springframework.web.servlet.view.AbstractView#renderMergedOutputModel(java.util.Map,
-     *      javax.servlet.http.HttpServletRequest,
-     *      javax.servlet.http.HttpServletResponse)
+     * javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
     @Override
-    protected void renderMergedOutputModel(@SuppressWarnings("unchecked")
-            Map model, HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
+    protected void renderMergedOutputModel(@SuppressWarnings("unchecked") Map model, HttpServletRequest request, HttpServletResponse response)
+        throws Exception {
 
         Object result = model.get(ServerConstants.RESULTS_PART);
 
-        if (null==result) {
+        if (null == result) {
             // no response string
         } else if (result instanceof DojoFileUploaderResponse) {
             DojoFileUploaderResponse dr = (DojoFileUploaderResponse) result;
 
-            String responseStr = "file=" + dr.getPath() + ",name=" + dr.getName() + ",type=" + dr.getType() + ",error=" + dr.getError() +",width=" + dr.getWidth() + ",height=" + dr.getHeight();
+            String responseStr = "file=" + dr.getPath() + ",name=" + dr.getName() + ",type=" + dr.getType() + ",error=" + dr.getError() + ",width="
+                + dr.getWidth() + ",height=" + dr.getHeight();
 
             Writer output = response.getWriter();
             output.write(responseStr);

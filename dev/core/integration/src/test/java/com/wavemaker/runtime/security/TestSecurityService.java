@@ -15,9 +15,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.security;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 import java.util.HashSet;
 import java.util.List;
@@ -34,10 +38,10 @@ import com.wavemaker.runtime.test.TestSpringContextTestCase;
 
 /**
  * Test for the Security Service.
- *
+ * 
  * @author Frankie Fu
  * @version $Rev:22673 $ - $Date:2008-05-30 14:45:46 -0700 (Fri, 30 May 2008) $
- *
+ * 
  */
 public class TestSecurityService extends TestSpringContextTestCase {
 
@@ -46,27 +50,28 @@ public class TestSecurityService extends TestSpringContextTestCase {
     @Before
     public void setUp() {
 
-        Object serviceMgrObj = getApplicationContext()
-                .getBean(ServiceConstants.SERVICE_MANAGER_NAME);
+        Object serviceMgrObj = getApplicationContext().getBean(ServiceConstants.SERVICE_MANAGER_NAME);
         ServiceManager serviceManager = (ServiceManager) serviceMgrObj;
-        securityService = (SecurityService) ((ReflectServiceWire) serviceManager
-                .getServiceWire("securityService")).getServiceBean();
+        this.securityService = (SecurityService) ((ReflectServiceWire) serviceManager.getServiceWire("securityService")).getServiceBean();
     }
 
-    @Test public void testGetUserName() throws Exception {
-        securityService.authenticate("demo", "demo");
-        assertEquals("demo", securityService.getUserId());
+    @Test
+    public void testGetUserName() throws Exception {
+        this.securityService.authenticate("demo", "demo");
+        assertEquals("demo", this.securityService.getUserId());
     }
 
-    @Test public void testGetUserRoles() throws Exception {
-        securityService.authenticate("demo", "demo");
-        String[] userRoles = securityService.getUserRoles();
+    @Test
+    public void testGetUserRoles() throws Exception {
+        this.securityService.authenticate("demo", "demo");
+        String[] userRoles = this.securityService.getUserRoles();
         assertEquals(1, userRoles.length);
         assertEquals("ROLE_Employee", userRoles[0]);
     }
 
-    @Test public void testGetRoleMap() {
-        Map<String, List<Rule>> roleMap = securityService.getRoleMap();
+    @Test
+    public void testGetRoleMap() {
+        Map<String, List<Rule>> roleMap = this.securityService.getRoleMap();
         assertNotNull(roleMap);
         Set<String> roleNames = roleMap.keySet();
         assertEquals(1, roleNames.size());
@@ -75,9 +80,10 @@ public class TestSecurityService extends TestSpringContextTestCase {
         assertEquals(2, rules.get(0).getResources().size());
     }
 
-    @Test public void testAuthUsingValidCredential() {
+    @Test
+    public void testAuthUsingValidCredential() {
         try {
-            securityService.authenticate("demo", "demo");
+            this.securityService.authenticate("demo", "demo");
         } catch (InvalidCredentialsException e) {
             fail("The credentials are valid, should not throw an exception here.");
         } catch (SecurityException e) {
@@ -85,9 +91,10 @@ public class TestSecurityService extends TestSpringContextTestCase {
         }
     }
 
-    @Test public void testAuthUsingInvalidCredential() {
+    @Test
+    public void testAuthUsingInvalidCredential() {
         try {
-            securityService.authenticate("demo", "xxx");
+            this.securityService.authenticate("demo", "xxx");
             fail("Expected InvalidCredentialsException.");
         } catch (InvalidCredentialsException e) {
             // expected exception
@@ -96,36 +103,38 @@ public class TestSecurityService extends TestSpringContextTestCase {
         }
     }
 
-    @Test public void testLogout() throws Exception {
-        securityService.authenticate("demo", "demo");
-        assertNotNull(securityService.getUserId());
-        securityService.logout();
-        assertNull(securityService.getUserId());
+    @Test
+    public void testLogout() throws Exception {
+        this.securityService.authenticate("demo", "demo");
+        assertNotNull(this.securityService.getUserId());
+        this.securityService.logout();
+        assertNull(this.securityService.getUserId());
     }
 
-    @Test public void testIsAllowed1() {
+    @Test
+    public void testIsAllowed1() {
         String roleName = "ROLE_Employee";
         String action = "visibility";
         Set<Resource> resources = new HashSet<Resource>();
         SimpleResource resource = new SimpleResource();
         resource.setResourceName("salaryWidget");
         resources.add(resource);
-        assertEquals(false, securityService.isAllowed(roleName, resources,
-                action));
+        assertEquals(false, this.securityService.isAllowed(roleName, resources, action));
     }
 
-    @Test public void testIsAllowed2() {
+    @Test
+    public void testIsAllowed2() {
         String roleName = "ROLE_Employee";
         String action = "visibility";
         Set<Resource> resources = new HashSet<Resource>();
         SimpleResource resource = new SimpleResource();
         resource.setResourceName("searchWidget");
         resources.add(resource);
-        assertEquals(true, securityService.isAllowed(roleName, resources,
-                action));
+        assertEquals(true, this.securityService.isAllowed(roleName, resources, action));
     }
 
-    @Test public void testIsAllowed3() {
+    @Test
+    public void testIsAllowed3() {
         String roleName = "ROLE_Employee";
         String action = "visibility";
         Set<Resource> resources = new HashSet<Resource>();
@@ -135,18 +144,17 @@ public class TestSecurityService extends TestSpringContextTestCase {
         resource = new SimpleResource();
         resource.setResourceName("searchWidget");
         resources.add(resource);
-        assertEquals(false, securityService.isAllowed(roleName, resources,
-                action));
+        assertEquals(false, this.securityService.isAllowed(roleName, resources, action));
     }
 
-    @Test public void testIsAllowed4() {
+    @Test
+    public void testIsAllowed4() {
         String roleName = "ROLE_Manager";
         String action = "visibility";
         Set<Resource> resources = new HashSet<Resource>();
         SimpleResource resource = new SimpleResource();
         resource.setResourceName("salaryWidget");
         resources.add(resource);
-        assertEquals(true, securityService.isAllowed(roleName, resources,
-                action));
+        assertEquals(true, this.securityService.isAllowed(roleName, resources, action));
     }
 }

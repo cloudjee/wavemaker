@@ -11,7 +11,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 package com.wavemaker.studio;
 
 import java.io.IOException;
@@ -21,10 +21,10 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.Map.Entry;
 
 import javax.xml.bind.JAXBException;
 
@@ -38,8 +38,8 @@ import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.service.ConfigurationCompiler;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.DataObject;
-import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.service.definitions.DataObject.Element;
+import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.service.types.ComplexType;
 import com.wavemaker.tools.service.types.Field;
 import com.wavemaker.tools.service.types.PrimitiveType;
@@ -52,34 +52,33 @@ import com.wavemaker.tools.service.types.Types;
  * 
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 @HideFromClient
 public class ServicesService {
-    
+
     public static final String SUPPORTS_RUNTIME_ACCESS_KEY = "supportsRuntimeAccess";
-    
+
     /**
      * Return a list of services registered with the current application.
      * 
-     * @return The set of all service ids associated with the current
-     *         application. Removes runtime and wavemaker services from return.
+     * @return The set of all service ids associated with the current application. Removes runtime and wavemaker
+     *         services from return.
      */
     @ExposeToClient
     public Set<String> listServices() {
-        Set<String> services = designServiceManager.getServiceIds();
+        Set<String> services = this.designServiceManager.getServiceIds();
         services.remove(DesignServiceManager.RUNTIME_SERVICE_ID);
         services.remove(DesignServiceManager.RUNTIME_DATA_SERVICE_ID);
         return services;
     }
 
     /**
-     * Return a list of services (as from {@link #listServices()}), but include
-     * the type of the service (DataService, WebService, JavaService) as well.
+     * Return a list of services (as from {@link #listServices()}), but include the type of the service (DataService,
+     * WebService, JavaService) as well.
      * 
-     * @return A Map<String,String> from service ids (the same set as from
-     *         {@link #listServices()}) to their service type (DataService,
-     *         JavaService, WebService).
+     * @return A Map<String,String> from service ids (the same set as from {@link #listServices()}) to their service
+     *         type (DataService, JavaService, WebService).
      */
     @ExposeToClient
     public Map<String, String> listServicesWithType() {
@@ -99,193 +98,180 @@ public class ServicesService {
      * @throws JAXBException
      */
     @ExposeToClient
-    public void deleteService(String serviceId)
-            throws IOException, JAXBException, NoSuchMethodException {
-        
-        designServiceManager.deleteService(serviceId);
+    public void deleteService(String serviceId) throws IOException, JAXBException, NoSuchMethodException {
+
+        this.designServiceManager.deleteService(serviceId);
     }
-    
+
     /**
      * Return a list of operations associated with a given service id.
+     * 
      * @param serviceId
      * @return
      */
     @ExposeToClient
     public List<String> listOperations(String serviceId) {
-        
-        List<String> ops = designServiceManager.getOperationNames(serviceId);
+
+        List<String> ops = this.designServiceManager.getOperationNames(serviceId);
         Collections.sort(ops);
         return ops;
     }
 
     /**
      * Returns the list of primitives.
+     * 
      * @return
      */
     @ExposeToClient
     public Map<String, String> listPrimitives() {
-        
-        return designServiceManager.getPrimitives();
+
+        return this.designServiceManager.getPrimitives();
     }
-    
+
     /**
-     * Return a list of all dataobjects (contained in all known services), with
-     * no primitive types.
+     * Return a list of all dataobjects (contained in all known services), with no primitive types.
+     * 
      * @return
      */
     @ExposeToClient
     public Map<String, Map<String, Map<String, Object>>> listDataObjects() {
-        
-        List<DataObject> allDataObjects =
-            designServiceManager.getLocalDataObjects();
-        return convertDataObjects(allDataObjects, designServiceManager.getServices());
+
+        List<DataObject> allDataObjects = this.designServiceManager.getLocalDataObjects();
+        return convertDataObjects(allDataObjects, this.designServiceManager.getServices());
     }
-    
+
     /**
      * Return a list of all types, including service types and primitive types.
+     * 
      * @return
      */
     @ExposeToClient
     public Types listTypes() {
-        
+
         InternalRuntime.getInstance().getJSONState().setValueTransformer(new TypeValueTransformer());
-        
-        Types types = ConfigurationCompiler.getTypesFromServices(
-                designServiceManager.getServices(),
-                designServiceManager.getPrimitiveDataObjects());
-        
+
+        Types types = ConfigurationCompiler.getTypesFromServices(this.designServiceManager.getServices(),
+            this.designServiceManager.getPrimitiveDataObjects());
+
         return types;
     }
-    
+
     /**
      * Get types in a tree, sorted by their service.
+     * 
      * @return
      */
     @ExposeToClient
     public InitData listTypesTree() {
-        
-        Set<Service> services = designServiceManager.getServices();
+
+        Set<Service> services = this.designServiceManager.getServices();
         List<TreeNode> serviceNodes = new ArrayList<TreeNode>(services.size());
         SortedSet<Service> singleService;
-        for (Service service: services) {
+        for (Service service : services) {
             TreeNode node = new TreeNode();
             node.setContent(service.getId());
             serviceNodes.add(node);
-            
+
             singleService = new TreeSet<Service>();
             singleService.add(service);
-            Types types = ConfigurationCompiler.getTypesFromServices(
-                    singleService, null);
-            
-            for (Entry<String, Type> entry: types.getTypes().entrySet()) {
+            Types types = ConfigurationCompiler.getTypesFromServices(singleService, null);
+
+            for (Entry<String, Type> entry : types.getTypes().entrySet()) {
                 TreeNode typeNode = new TreeNode();
                 typeNode.setContent(entry.getKey());
-                
+
                 if (entry.getValue() instanceof ComplexType) {
                     ComplexType ct = (ComplexType) entry.getValue();
-                    for (Entry<String, Field> fieldEntry:
-                            ct.getFields().entrySet()) {
+                    for (Entry<String, Field> fieldEntry : ct.getFields().entrySet()) {
                         TreeNode fieldNode = new TreeNode();
                         fieldNode.setContent(fieldEntry.getKey());
-                        
+
                         TreeNode javaTypeNode = new TreeNode();
-                        javaTypeNode.setContent("type: "+
-                                fieldEntry.getValue().getType());
+                        javaTypeNode.setContent("type: " + fieldEntry.getValue().getType());
                         fieldNode.addChild(javaTypeNode);
-                        
+
                         TreeNode isListNode = new TreeNode();
-                        isListNode.setContent("is list: "+
-                                fieldEntry.getValue().isIsList());
+                        isListNode.setContent("is list: " + fieldEntry.getValue().isIsList());
                         fieldNode.addChild(isListNode);
-                        
+
                         typeNode.addChild(fieldNode);
                     }
                 } else if (entry.getValue() instanceof PrimitiveType) {
-                    
+
                 } else {
-                    throw new WMRuntimeException("unknown type: "+
-                            entry.getValue().getClass());
+                    throw new WMRuntimeException("unknown type: " + entry.getValue().getClass());
                 }
-                
+
                 node.addChild(typeNode);
             }
         }
-        
+
         return new InitData(serviceNodes);
     }
 
     /**
      * Returns the service type for the given service ID.
+     * 
      * @param serviceId The service ID.
      * @return The service type.
      */
     @ExposeToClient
     public String getServiceType(String serviceId) {
-        
-        Service service = designServiceManager.getService(serviceId);
+
+        Service service = this.designServiceManager.getService(serviceId);
         if (service != null) {
             return service.getType();
         }
         return null;
     }
-    
+
     /**
-     * Convert from internal, service-side DataObjects to the correct client
-     * format.  It should look like this:
+     * Convert from internal, service-side DataObjects to the correct client format. It should look like this:
      * 
-     * {typeName:
-     *          { componentName: {type: fqJavaType, isList: true},
-     *            componentName2: {type: fqJavaType, isList: false}},
-     *  typeName2: ...
-     * }
+     * {typeName: { componentName: {type: fqJavaType, isList: true}, componentName2: {type: fqJavaType, isList: false}},
+     * typeName2: ... }
      * 
      * @param daos The DataObjects to convert
      * @param allServices All the current services
      */
-    protected static Map<String, Map<String, Map<String, Object>>>
-            convertDataObjects(List<DataObject> daos,
-                    Set<Service> allServices) {
-        
-        Map<String, Map<String, Map<String, Object>>> ret =
-            new HashMap<String, Map<String, Map<String, Object>>>(daos.size());
-        
-        for (DataObject dao: daos) {
-            Map<String, Map<String, Object>> entry =
-                new HashMap<String, Map<String, Object>>();
-            for (Element elem: dao.getElement()) {
+    protected static Map<String, Map<String, Map<String, Object>>> convertDataObjects(List<DataObject> daos, Set<Service> allServices) {
+
+        Map<String, Map<String, Map<String, Object>>> ret = new HashMap<String, Map<String, Map<String, Object>>>(daos.size());
+
+        for (DataObject dao : daos) {
+            Map<String, Map<String, Object>> entry = new HashMap<String, Map<String, Object>>();
+            for (Element elem : dao.getElement()) {
                 Map<String, Object> type = new HashMap<String, Object>();
                 type.put("type", elem.getTypeRef());
                 type.put("isList", elem.isIsList());
                 type.put(SUPPORTS_RUNTIME_ACCESS_KEY, false);
                 type.put("isObject", Boolean.FALSE);
 
-                for (Service service: allServices) {
-                    for (DataObject daoT:
-                            service.getDataobjects().getDataobject()) {
+                for (Service service : allServices) {
+                    for (DataObject daoT : service.getDataobjects().getDataobject()) {
                         if (daoT.getJavaType().equals(elem.getTypeRef())) {
-                            type.put(SUPPORTS_RUNTIME_ACCESS_KEY,
-                                    service.getCRUDService());
+                            type.put(SUPPORTS_RUNTIME_ACCESS_KEY, service.getCRUDService());
                             type.put("isObject", true);
                         }
                     }
                 }
-                
+
                 entry.put(elem.getName(), type);
             }
-            
+
             ret.put(dao.getJavaType(), entry);
         }
-        
+
         return ret;
     }
 
-    
     // spring-managed beans
     private DesignServiceManager designServiceManager;
+
     private DeploymentManager deploymentManager;
 
     public DesignServiceManager getDesignServiceManager() {
-        return designServiceManager;
+        return this.designServiceManager;
     }
 
     public void setDesignServiceManager(DesignServiceManager designServiceManager) {
@@ -293,7 +279,7 @@ public class ServicesService {
     }
 
     public DeploymentManager getDeploymentManager() {
-        return deploymentManager;
+        return this.deploymentManager;
     }
 
     public void setDeploymentManager(DeploymentManager deploymentManager) {

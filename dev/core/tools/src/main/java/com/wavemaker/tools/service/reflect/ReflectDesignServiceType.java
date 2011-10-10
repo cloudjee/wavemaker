@@ -21,24 +21,28 @@ import com.wavemaker.tools.service.DesignServiceType;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public abstract class ReflectDesignServiceType implements DesignServiceType {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.tools.service.DesignServiceType#getServiceWire()
      */
     public Class<? extends ServiceWire> getServiceWire() {
         return ReflectServiceWire.class;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.tools.service.DesignServiceType#getServiceType()
      */
     public String getServiceType() {
         return this.serviceType;
     }
-    
+
     // bean properties
     private String serviceType;
 

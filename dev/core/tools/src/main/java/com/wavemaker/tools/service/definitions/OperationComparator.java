@@ -20,19 +20,21 @@ import java.util.Comparator;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class OperationComparator implements Comparator<Operation>, Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
     public int compare(Operation o1, Operation o2) {
 
         int ret = o1.getName().compareTo(o2.getName());
-        if (0==ret) {
+        if (0 == ret) {
             ret = o1.getParameter().size() - o2.getParameter().size();
         }
         return ret;

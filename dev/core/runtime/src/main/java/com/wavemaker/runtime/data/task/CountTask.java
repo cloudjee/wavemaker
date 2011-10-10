@@ -20,7 +20,6 @@ import org.hibernate.criterion.Projections;
 
 import com.wavemaker.runtime.data.QueryOptions;
 import com.wavemaker.runtime.data.Task;
-import com.wavemaker.runtime.data.DataServiceMetaData;
 
 /**
  * @author Simon Toens
@@ -35,21 +34,22 @@ public class CountTask extends SearchTask implements Task, DefaultRollback {
         if (input == null || input.length == 0) {
             throw new IllegalArgumentException("Need Class instance");
         }
-        
+
         QueryOptions options = getQueryOptions(input);
 
         Criteria criteria = getCritieria(session, input[0], options, dbName);
-        
-        criteria.setProjection(Projections.rowCount());        
-        
+
+        criteria.setProjection(Projections.rowCount());
+
         return criteria.uniqueResult();
     }
-    
+
     @Override
     protected boolean addOrder() {
         return false;
     }
-        
+
+    @Override
     public String getName() {
         return "Built-in Num Pages Task";
     }

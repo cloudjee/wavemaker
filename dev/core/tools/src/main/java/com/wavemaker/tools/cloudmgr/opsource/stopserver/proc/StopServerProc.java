@@ -36,7 +36,7 @@ import com.wavemaker.tools.cloudmgr.opsource.stopserver.response.Status;
 
 /**
  * This class is to manage opSource cloud server instances.
- *
+ * 
  * @author slee
  */
 public class StopServerProc {
@@ -74,7 +74,7 @@ public class StopServerProc {
         } catch (JAXBException ex2) {
             throw new WMRuntimeException(ex2);
         } catch (IOException ex3) {
-            throw new WMRuntimeException(ex3);    
+            throw new WMRuntimeException(ex3);
         }
 
         return status;

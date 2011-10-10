@@ -27,12 +27,12 @@ import org.acegisecurity.AuthenticationException;
 import org.acegisecurity.ui.ExceptionTranslationFilter;
 
 /**
- * Extends from the normal <code>ExceptionTranslationFilter</code>, this filter
- * will send 403 if the request is a JSON service request.
+ * Extends from the normal <code>ExceptionTranslationFilter</code>, this filter will send 403 if the request is a JSON
+ * service request.
  * 
  * @author ffu
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class JSONExceptionTranslationFilter extends ExceptionTranslationFilter {
 
@@ -40,23 +40,18 @@ public class JSONExceptionTranslationFilter extends ExceptionTranslationFilter {
      * (non-Javadoc)
      * 
      * @see org.acegisecurity.ui.ExceptionTranslationFilter#sendStartAuthentication(javax.servlet.ServletRequest,
-     *      javax.servlet.ServletResponse, javax.servlet.FilterChain,
-     *      org.acegisecurity.AuthenticationException)
+     * javax.servlet.ServletResponse, javax.servlet.FilterChain, org.acegisecurity.AuthenticationException)
      */
     @Override
-    protected void sendStartAuthentication(ServletRequest request,
-            ServletResponse response, FilterChain chain,
-            AuthenticationException reason) throws ServletException,
-            IOException {
+    protected void sendStartAuthentication(ServletRequest request, ServletResponse response, FilterChain chain, AuthenticationException reason)
+        throws ServletException, IOException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         String requestPath = httpRequest.getServletPath();
         if (requestPath != null && requestPath.endsWith(".json")) {
-            SecurityService.logger.error("Access to '" + requestPath
-                    + "' is denied.  Reason: " + reason.getMessage());
-            
+            SecurityService.logger.error("Access to '" + requestPath + "' is denied.  Reason: " + reason.getMessage());
+
             // send 403
-            ((HttpServletResponse) response).sendError(
-                    HttpServletResponse.SC_FORBIDDEN, requestPath);
+            ((HttpServletResponse) response).sendError(HttpServletResponse.SC_FORBIDDEN, requestPath);
         } else {
             // do normal processing
             super.sendStartAuthentication(request, response, chain, reason);

@@ -19,7 +19,7 @@ import com.wavemaker.runtime.service.ServiceWire;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public interface DesignServiceType {
 
@@ -29,10 +29,10 @@ public interface DesignServiceType {
      * @return The bean name of the associated ServiceType.
      */
     public String getServiceType();
-    
+
     /**
-     * The ServiceWire for use with this ServiceType.  This will be used to add
-     * the correct configuration to the service spring files.
+     * The ServiceWire for use with this ServiceType. This will be used to add the correct configuration to the service
+     * spring files.
      * 
      * @return The associated ServiceWire class.
      */

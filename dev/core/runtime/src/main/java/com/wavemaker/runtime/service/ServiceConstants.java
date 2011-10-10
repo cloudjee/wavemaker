@@ -18,11 +18,13 @@ package com.wavemaker.runtime.service;
  * @author Matt Small
  * @version $Rev$ - $Date$
  */
-public /* static */ class ServiceConstants {
-    
-    private ServiceConstants() {}
-    
+public/* static */class ServiceConstants {
+
+    private ServiceConstants() {
+    }
+
     public static final String SERVICE_MANAGER_NAME = "serviceManager";
+
     public static final String TYPE_MANAGER_NAME = "typeManager";
 
     public static final String PROPERTY_SEP = ".";

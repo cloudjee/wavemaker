@@ -27,6 +27,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.wavemaker.json.core;
 
 import java.math.BigDecimal;
@@ -40,63 +41,61 @@ import com.wavemaker.common.WMRuntimeException;
  * @author Andres Almiray <aalmiray@users.sourceforge.net>
  * @version 6
  * 
- * Modified by Matt Small <msmall@wavemaker.com>, as well as parts added.
+ *          Modified by Matt Small <msmall@wavemaker.com>, as well as parts added.
  * @version $Rev$ - $Date$
  */
 public class JSONUtils {
 
     public static String quote(String string) {
-        
-        StringBuffer ret = new StringBuffer(string.length()+2);
+
+        StringBuffer ret = new StringBuffer(string.length() + 2);
         ret.append('\"');
-        for (char character: string.toCharArray()) {
+        for (char character : string.toCharArray()) {
             switch (character) {
-            
-            case '"':
-                ret.append('\\');
-                ret.append('"');
-                break;
-            case '\\':
-                ret.append('\\');
-                ret.append('\\');
-                break;
-            case '\b':
-                ret.append('\\');
-                ret.append('b');
-                break;
-            case '\f':
-                ret.append('\\');
-                ret.append('f');
-                break;
-            case '\n':
-                ret.append('\\');
-                ret.append('n');
-                break;
-            case '\r':
-                ret.append('\\');
-                ret.append('r');
-                break;
-            case '\t':
-                ret.append('\\');
-                ret.append('t');
-                break;
-            default:
-                ret.append(character);
+
+                case '"':
+                    ret.append('\\');
+                    ret.append('"');
+                    break;
+                case '\\':
+                    ret.append('\\');
+                    ret.append('\\');
+                    break;
+                case '\b':
+                    ret.append('\\');
+                    ret.append('b');
+                    break;
+                case '\f':
+                    ret.append('\\');
+                    ret.append('f');
+                    break;
+                case '\n':
+                    ret.append('\\');
+                    ret.append('n');
+                    break;
+                case '\r':
+                    ret.append('\\');
+                    ret.append('r');
+                    break;
+                case '\t':
+                    ret.append('\\');
+                    ret.append('t');
+                    break;
+                default:
+                    ret.append(character);
             }
         }
         ret.append('\"');
-        
+
         return ret.toString();
     }
 
     /**
      * Produce a string from a Number.
      * 
-     * @param n
-     *                A Number
+     * @param n A Number
      * @return A String.
-     * @throws Exception
-     *                 If n is a non-finite number.
+     * @throws Exception If n is a non-finite number.
      */
     public static String numberToString(Number n) {
         if (n == null) {
@@ -121,22 +120,18 @@ public class JSONUtils {
     /**
      * Throw an exception if the object is an NaN or infinite number.
      * 
-     * @param o
-     *                The object to test.
-     * @throws Exception
-     *                 If o is a non-finite number.
+     * @param o The object to test.
+     * @throws Exception If o is a non-finite number.
      */
     public static void testValidity(Object o) {
         if (o != null) {
             if (o instanceof Double) {
                 if (((Double) o).isInfinite() || ((Double) o).isNaN()) {
-                    throw new WMRuntimeException(
-                            "JSON does not allow non-finite numbers");
+                    throw new WMRuntimeException("JSON does not allow non-finite numbers");
                 }
             } else if (o instanceof Float) {
                 if (((Float) o).isInfinite() || ((Float) o).isNaN()) {
-                    throw new WMRuntimeException(
-                            "JSON does not allow non-finite numbers.");
+                    throw new WMRuntimeException("JSON does not allow non-finite numbers.");
                 }
             } else if (o instanceof BigDecimal || o instanceof BigInteger) {
                 // ok
@@ -150,53 +145,40 @@ public class JSONUtils {
      */
     public static boolean isNumber(Class<?> clazz) {
         return clazz != null
-                && (Byte.TYPE.isAssignableFrom(clazz)
-                        || Short.TYPE.isAssignableFrom(clazz)
-                        || Integer.TYPE.isAssignableFrom(clazz)
-                        || Long.TYPE.isAssignableFrom(clazz)
-                        || Float.TYPE.isAssignableFrom(clazz)
-                        || Double.TYPE.isAssignableFrom(clazz)
-                        || Number.class.isAssignableFrom(clazz));
+            && (Byte.TYPE.isAssignableFrom(clazz) || Short.TYPE.isAssignableFrom(clazz) || Integer.TYPE.isAssignableFrom(clazz)
+                || Long.TYPE.isAssignableFrom(clazz) || Float.TYPE.isAssignableFrom(clazz) || Double.TYPE.isAssignableFrom(clazz) || Number.class.isAssignableFrom(clazz));
     }
 
     /**
      * Tests if Class represents a primitive double or wrapper.<br>
      */
     public static boolean isDouble(Class<?> clazz) {
-        return clazz != null
-                && (Double.TYPE.isAssignableFrom(clazz) || Double.class
-                        .isAssignableFrom(clazz));
+        return clazz != null && (Double.TYPE.isAssignableFrom(clazz) || Double.class.isAssignableFrom(clazz));
     }
 
     /**
      * Tests if Class represents a Boolean or primitive boolean
      */
     public static boolean isBoolean(Class<?> clazz) {
-        return clazz != null
-                && (Boolean.TYPE.isAssignableFrom(clazz) || Boolean.class
-                        .isAssignableFrom(clazz));
+        return clazz != null && (Boolean.TYPE.isAssignableFrom(clazz) || Boolean.class.isAssignableFrom(clazz));
     }
-    
+
     /**
-     * Tests if the Class represents a json primitive, including enums and Class
-     * objects.
+     * Tests if the Class represents a json primitive, including enums and Class objects.
      */
     public static boolean isPrimitive(Class<?> klass) {
-        
+
         if (CharSequence.class.isAssignableFrom(klass)) {
             return true;
-        
-        // no special method for char yet, do we need it?
-        } else if (Character.TYPE.isAssignableFrom(klass) ||
-                Character.class.isAssignableFrom(klass)) {
+
+            // no special method for char yet, do we need it?
+        } else if (Character.TYPE.isAssignableFrom(klass) || Character.class.isAssignableFrom(klass)) {
             return true;
         } else if (isNumber(klass)) {
             return true;
         } else if (isBoolean(klass)) {
             return true;
-        } else if (klass.isEnum()
-                || (null != klass.getDeclaringClass() && klass
-                        .getDeclaringClass().isEnum())) {
+        } else if (klass.isEnum() || null != klass.getDeclaringClass() && klass.getDeclaringClass().isEnum()) {
             return true;
         } else if (Class.class.isAssignableFrom(klass)) {
             return true;

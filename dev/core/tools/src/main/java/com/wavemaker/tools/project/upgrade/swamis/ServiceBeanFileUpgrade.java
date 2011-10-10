@@ -44,76 +44,67 @@ import com.wavemaker.tools.util.DesignTimeUtils;
  */
 public class ServiceBeanFileUpgrade implements UpgradeTask {
 
-	private static final JAXBContext definitionsContext;
+    private static final JAXBContext definitionsContext;
 
-	static {
-		try {
-			definitionsContext = JAXBContext
-					.newInstance("com.wavemaker.tools.service.definitions");
-		} catch (JAXBException e) {
-			throw new WMRuntimeException(e);
-		}
-	}
+    static {
+        try {
+            definitionsContext = JAXBContext.newInstance("com.wavemaker.tools.service.definitions");
+        } catch (JAXBException e) {
+            throw new WMRuntimeException(e);
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker
-	 * .tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
-	 */
-	public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker .tools.project.Project,
+     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
+     */
+    public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
-		DesignServiceManager dsm = DesignTimeUtils.getDSMForProjectRoot(project
-				.getProjectRoot());
-		List<String> touchedProjects = new ArrayList<String>();
+        DesignServiceManager dsm = DesignTimeUtils.getDSMForProjectRoot(project.getProjectRoot());
+        List<String> touchedProjects = new ArrayList<String>();
 
-		for (Service service : dsm.getServices()) {
-			if (null == service.getSpringFile()) {
-				// create the service bean file
-				Resource serviceBeanFile = dsm.getServiceBeanXml(service
-						.getId());
-				if (!serviceBeanFile.exists()) {
-					try {
-						DesignServiceManager.generateSpringServiceConfig(
-								service.getId(), service.getClazz(),
-								dsm.getDesignServiceType(service.getType()),
-								serviceBeanFile, project);
-					} catch (JAXBException e) {
-						throw new WMRuntimeException(e);
-					} catch (IOException e) {
-						throw new WMRuntimeException(e);
-					}
+        for (Service service : dsm.getServices()) {
+            if (null == service.getSpringFile()) {
+                // create the service bean file
+                Resource serviceBeanFile = dsm.getServiceBeanXml(service.getId());
+                if (!serviceBeanFile.exists()) {
+                    try {
+                        DesignServiceManager.generateSpringServiceConfig(service.getId(), service.getClazz(),
+                            dsm.getDesignServiceType(service.getType()), serviceBeanFile, project);
+                    } catch (JAXBException e) {
+                        throw new WMRuntimeException(e);
+                    } catch (IOException e) {
+                        throw new WMRuntimeException(e);
+                    }
 
-				}
+                }
 
-				// edit the servicedef
-				Resource serviceDefFile = dsm.getServiceDefXml(service.getId());
-				service.setSpringFile(serviceBeanFile.getFilename());
+                // edit the servicedef
+                Resource serviceDefFile = dsm.getServiceDefXml(service.getId());
+                service.setSpringFile(serviceBeanFile.getFilename());
 
-				Marshaller marshaller;
-				try {
-					marshaller = definitionsContext.createMarshaller();
-					marshaller.setProperty("jaxb.formatted.output", true);
-					marshaller.marshal(service,
-							project.getWriter(serviceDefFile));
-				} catch (JAXBException e) {
-					throw new WMRuntimeException(e);
-				} catch (UnsupportedEncodingException e) {
-					throw new WMRuntimeException(e);
-				} catch (FileNotFoundException e) {
-					throw new WMRuntimeException(e);
-				}
+                Marshaller marshaller;
+                try {
+                    marshaller = definitionsContext.createMarshaller();
+                    marshaller.setProperty("jaxb.formatted.output", true);
+                    marshaller.marshal(service, project.getWriter(serviceDefFile));
+                } catch (JAXBException e) {
+                    throw new WMRuntimeException(e);
+                } catch (UnsupportedEncodingException e) {
+                    throw new WMRuntimeException(e);
+                } catch (FileNotFoundException e) {
+                    throw new WMRuntimeException(e);
+                }
 
-				// finally, add this to the list of modified services
-				touchedProjects.add(service.getId());
-			}
-		}
+                // finally, add this to the list of modified services
+                touchedProjects.add(service.getId());
+            }
+        }
 
-		if (!touchedProjects.isEmpty()) {
-			upgradeInfo
-					.addVerbose("Converted bean definitions to a separate file for services: "
-							+ StringUtils.join(touchedProjects, ", "));
-		}
-	}
+        if (!touchedProjects.isEmpty()) {
+            upgradeInfo.addVerbose("Converted bean definitions to a separate file for services: " + StringUtils.join(touchedProjects, ", "));
+        }
+    }
 }

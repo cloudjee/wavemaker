@@ -40,17 +40,19 @@ import com.wavemaker.runtime.server.ServerConstants;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class ModuleController extends AbstractController {
-    
+
     public static final String MODULES_PREFIX = "modules";
+
     public static final String MODULES_JS = "modules.js";
+
     public static final String EXTENSION_PATH = "ep";
+
     public static final String ID_PATH = "id";
-    
-    protected Tuple.Two<ModuleWire, String> parseRequestPath(
-            String requestURI) {
+
+    protected Tuple.Two<ModuleWire, String> parseRequestPath(String requestURI) {
 
         final String prefixEP = "/" + MODULES_PREFIX + "/" + EXTENSION_PATH + "/";
         final String prefixID = "/" + MODULES_PREFIX + "/" + ID_PATH + "/";
@@ -62,79 +64,77 @@ public class ModuleController extends AbstractController {
             final int prefixEPLen = prefixEP.length();
             int endExtLoc = requestURI.indexOf('/', prefixEPLen);
             String ep = requestURI.substring(prefixEPLen, endExtLoc);
-            path = requestURI.substring(endExtLoc+1);
+            path = requestURI.substring(endExtLoc + 1);
 
-            mw = moduleManager.getModule(ep);
+            mw = this.moduleManager.getModule(ep);
         } else if (requestURI.startsWith(prefixID)) {
             final int prefixIDLen = prefixID.length();
             int endExtLoc = requestURI.indexOf('/', prefixIDLen);
-	    String id;
-	    if (endExtLoc == -1)
-		 id = requestURI.substring(prefixIDLen);
-	    else
-		 id = requestURI.substring(prefixIDLen, endExtLoc);
+            String id;
+            if (endExtLoc == -1) {
+                id = requestURI.substring(prefixIDLen);
+            } else {
+                id = requestURI.substring(prefixIDLen, endExtLoc);
+            }
 
-            mw = moduleManager.getModuleByName(id);
-            path = requestURI.substring(endExtLoc+1);
+            mw = this.moduleManager.getModuleByName(id);
+            path = requestURI.substring(endExtLoc + 1);
         } else {
-            throw new WMRuntimeException(MessageResource.NO_MODULE_LOOKUP,
-                    requestURI);
+            throw new WMRuntimeException(MessageResource.NO_MODULE_LOOKUP, requestURI);
         }
 
         return new Tuple.Two<ModuleWire, String>(mw, path);
     }
 
     @Override
-    protected ModelAndView handleRequestInternal(HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         String requestURI = request.getRequestURI();
-        final String moduleURI = "/"+MODULES_PREFIX;
-        final String moduleURIAbs = moduleURI+"/";
-        final String moduleJsURI = moduleURIAbs+MODULES_JS;
-        final String epURI = moduleURIAbs+EXTENSION_PATH;
-        final String epURIAbs = epURI+"/";
-        final String idURI = moduleURIAbs+ID_PATH;
-        final String idURIAbs = idURI+"/";
+        final String moduleURI = "/" + MODULES_PREFIX;
+        final String moduleURIAbs = moduleURI + "/";
+        final String moduleJsURI = moduleURIAbs + MODULES_JS;
+        final String epURI = moduleURIAbs + EXTENSION_PATH;
+        final String epURIAbs = epURI + "/";
+        final String idURI = moduleURIAbs + ID_PATH;
+        final String idURIAbs = idURI + "/";
 
         // trim off the servlet name
         requestURI = requestURI.substring(requestURI.indexOf('/', 1));
 
-        if (moduleURI.equals(requestURI) ||
-                moduleURIAbs.equals(requestURI)) {
+        if (moduleURI.equals(requestURI) || moduleURIAbs.equals(requestURI)) {
         } else if (epURI.equals(requestURI) || epURIAbs.equals(requestURI)) {
-            Set<String> names = moduleManager.listExtensionPoints();
+            Set<String> names = this.moduleManager.listExtensionPoints();
 
             response.setContentType("text/html");
             Writer writer = response.getWriter();
             writer.write("<html><body>\n");
-            for (String ext: names) {
-                writer.write(ext+"<br />\n");
+            for (String ext : names) {
+                writer.write(ext + "<br />\n");
             }
             writer.write("</body></html>\n");
             writer.close();
         } else if (idURI.equals(requestURI) || idURIAbs.equals(requestURI)) {
-            Set<String> names = moduleManager.listModules();
+            Set<String> names = this.moduleManager.listModules();
 
             response.setContentType("text/html");
             Writer writer = response.getWriter();
             writer.write("<html><body>\n");
-            for (String ext: names) {
-                writer.write(ext+"<br />\n");
+            for (String ext : names) {
+                writer.write(ext + "<br />\n");
             }
             writer.write("</body></html>\n");
             writer.close();
         } else if (moduleJsURI.equals(requestURI)) {
-            Set<String> extensions = moduleManager.listExtensionPoints();
+            Set<String> extensions = this.moduleManager.listExtensionPoints();
 
             JSONObject jo = new JSONObject();
 
             JSONObject extJO = new JSONObject();
-            for (String extension: extensions) {
+            for (String extension : extensions) {
                 JSONArray ja = new JSONArray();
 
-                List<ModuleWire> wires = moduleManager.getModules(extension);
-                for (ModuleWire wire: wires) {
+                List<ModuleWire> wires = this.moduleManager.getModules(extension);
+                for (ModuleWire wire : wires) {
                     ja.add(wire.getName());
                 }
 
@@ -149,19 +149,18 @@ public class ModuleController extends AbstractController {
             writer.close();
         } else {
             Tuple.Two<ModuleWire, String> tuple = parseRequestPath(requestURI);
-            if (null==tuple.v1) {
-                String message = MessageResource.NO_MODULE_RESOURCE.getMessage(
-                        requestURI, tuple.v2);
-                logger.error(message);
-                
+            if (null == tuple.v1) {
+                String message = MessageResource.NO_MODULE_RESOURCE.getMessage(requestURI, tuple.v2);
+                this.logger.error(message);
+
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 Writer outputWriter = response.getWriter();
                 outputWriter.write(message);
-                
+
                 return null;
             }
-            
-            URL url = moduleManager.getModuleResource(tuple.v1, tuple.v2);
+
+            URL url = this.moduleManager.getModuleResource(tuple.v1, tuple.v2);
             URLConnection conn = url.openConnection();
             if (SystemUtils.IS_OS_WINDOWS) {
                 conn.setDefaultUseCaches(false);
@@ -177,26 +176,26 @@ public class ModuleController extends AbstractController {
 
                 IOUtils.copy(conn.getInputStream(), os);
             } finally {
-                if (null!=os)
+                if (null != os) {
                     os.close();
-                if (null!=is)
+                }
+                if (null != is) {
                     is.close();
+                }
             }
         }
-        
+
         return null;
     }
-    
-    
-
 
     // bean properties
     private ModuleManager moduleManager;
-    
+
     public void setModuleManager(ModuleManager moduleManager) {
         this.moduleManager = moduleManager;
     }
+
     public ModuleManager getModuleManager() {
-        return moduleManager;
+        return this.moduleManager;
     }
 }

@@ -17,7 +17,7 @@ package com.wavemaker.runtime.data;
 /**
  * @author Simon Toens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public interface TaskManager {
 
@@ -28,12 +28,12 @@ public interface TaskManager {
     Task getDeleteTask();
 
     Task getQueryTask();
-    
+
     Task getSearchTask();
 
     Task getCountTask();
 
     Task getSessionTask();
-    
+
     Task getReadTask();
 }

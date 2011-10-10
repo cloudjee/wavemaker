@@ -36,16 +36,14 @@ public class SystemUtils {
         registerPropertyFilter();
     }
 
-    public static Object serverMergeForUpdate(Object o,
-            DataServiceManagerAccess mgrAccess) {
+    public static Object serverMergeForUpdate(Object o, DataServiceManagerAccess mgrAccess) {
 
         DataServiceManager mgr = mgrAccess.getDataServiceManager();
 
         return serverMergeForUpdate(o, mgr.getSession(), mgr.getMetaData());
     }
 
-    public static Object serverMergeForUpdate(Object o, Session session,
-            DataServiceMetaData metaData) {
+    public static Object serverMergeForUpdate(Object o, Session session, DataServiceMetaData metaData) {
 
         if (o == null) {
             return null;
@@ -61,13 +59,11 @@ public class SystemUtils {
 
         List<String> populatedProperties = args.get(0); // hardcoded first arg?
 
-        return DataServiceUtils.mergeForUpdate(o, session, metaData,
-                populatedProperties);
+        return DataServiceUtils.mergeForUpdate(o, session, metaData, populatedProperties);
 
     }
 
-    public static Object serverMergeForInsert(Object o, Session session,
-            DataServiceMetaData metaData) {
+    public static Object serverMergeForInsert(Object o, Session session, DataServiceMetaData metaData) {
         return DataServiceUtils.mergeForInsert(o, session, metaData);
     }
 
@@ -76,8 +72,7 @@ public class SystemUtils {
 
         InternalRuntime internalRuntime = InternalRuntime.getInstance();
 
-        internalRuntime.getJSONState().setPropertyFilter(
-                DataPropertyFilter.getInstance());
+        internalRuntime.getJSONState().setPropertyFilter(DataPropertyFilter.getInstance());
     }
 
     /**
@@ -93,8 +88,7 @@ public class SystemUtils {
      * @deprecated
      */
     @Deprecated
-    public static Object clientPrepare(Object o,
-            DataServiceManagerAccess mgrAccess) {
+    public static Object clientPrepare(Object o, DataServiceManagerAccess mgrAccess) {
 
         registerPropertyFilter();
 

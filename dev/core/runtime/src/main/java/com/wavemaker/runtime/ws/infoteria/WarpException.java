@@ -1,4 +1,3 @@
-
 /*
  * Copyright (C) 2011 VMWare, Inc. All rights reserved.
  *
@@ -16,11 +15,15 @@
 package com.wavemaker.runtime.ws.infoteria;
 
 public class WarpException extends RuntimeException {
+
+    private static final long serialVersionUID = -5301724723208031217L;
+
     private String reason;
 
     public WarpException(Exception ex) {
         super(ex);
     }
+
     public WarpException(String message, String reason) {
         super("Warp Error: " + message);
         this.reason = reason;
@@ -34,4 +37,3 @@ public class WarpException extends RuntimeException {
         this.reason = reason;
     }
 }
-

@@ -57,17 +57,16 @@ public class EntityInfo implements Cloneable {
 
     private PropertyInfo id = null;
 
-    private Map<String, PropertyInfo> properties = new LinkedHashMap<String, PropertyInfo>();
+    private final Map<String, PropertyInfo> properties = new LinkedHashMap<String, PropertyInfo>();
 
-    private Map<String, PropertyInfo> relatedProperties = new LinkedHashMap<String, PropertyInfo>();
+    private final Map<String, PropertyInfo> relatedProperties = new LinkedHashMap<String, PropertyInfo>();
 
     private Map<String, ColumnInfo> columns = new LinkedHashMap<String, ColumnInfo>();
 
     public EntityInfo() {
     }
 
-    public EntityInfo(String packageName, String entity, String table,
-            String schema, String catalog) {
+    public EntityInfo(String packageName, String entity, String table, String schema, String catalog) {
         this.entity = entity;
         this.table = table;
         this.schema = schema;
@@ -76,7 +75,7 @@ public class EntityInfo implements Cloneable {
     }
 
     public String getPackageName() {
-        return packageName;
+        return this.packageName;
     }
 
     public void setPackageName(String packageName) {
@@ -84,7 +83,7 @@ public class EntityInfo implements Cloneable {
     }
 
     public String getEntityName() {
-        return entity;
+        return this.entity;
     }
 
     public void setEntityName(String entity) {
@@ -92,7 +91,7 @@ public class EntityInfo implements Cloneable {
     }
 
     public String getTableName() {
-        return table;
+        return this.table;
     }
 
     public void setTableName(String table) {
@@ -100,11 +99,11 @@ public class EntityInfo implements Cloneable {
     }
 
     public String getCatalogName() {
-        return catalog;
+        return this.catalog;
     }
 
     public String getSchemaName() {
-        return schema;
+        return this.schema;
     }
 
     public void setSchemaName(String schema) {
@@ -116,7 +115,7 @@ public class EntityInfo implements Cloneable {
     }
 
     public PropertyInfo getId() {
-        return id;
+        return this.id;
     }
 
     public void setId(PropertyInfo id) {
@@ -124,7 +123,7 @@ public class EntityInfo implements Cloneable {
     }
 
     public boolean isDynamicInsert() {
-        return dynamicInsert;
+        return this.dynamicInsert;
     }
 
     public void setDynamicInsert(boolean dynamicInsert) {
@@ -132,7 +131,7 @@ public class EntityInfo implements Cloneable {
     }
 
     public boolean isDynamicUpdate() {
-        return dynamicUpdate;
+        return this.dynamicUpdate;
     }
 
     public void setDynamicUpdate(boolean dynamicUpdate) {
@@ -140,7 +139,7 @@ public class EntityInfo implements Cloneable {
     }
 
     public boolean isRefreshEntity() {
-        return refreshEntity;
+        return this.refreshEntity;
     }
 
     public void setRefreshEntity(boolean refreshEntity) {
@@ -148,19 +147,19 @@ public class EntityInfo implements Cloneable {
     }
 
     public PropertyInfo getProperty(String property) {
-        return properties.get(property);
+        return this.properties.get(property);
     }
 
     public Collection<String> getPropertyNames() {
-        return properties.keySet();
+        return this.properties.keySet();
     }
 
     public Collection<PropertyInfo> getProperties() {
-        return properties.values();
+        return this.properties.values();
     }
 
     public Map<String, PropertyInfo> getPropertiesMap() {
-        return properties;
+        return this.properties;
     }
 
     public void setProperties(List<PropertyInfo> properties) {
@@ -179,7 +178,7 @@ public class EntityInfo implements Cloneable {
     }
 
     public void initFkColumnTypes(DataModelConfiguration cfg) {
-        for (PropertyInfo p : properties.values()) {
+        for (PropertyInfo p : this.properties.values()) {
             if (p.getIsRelated() && !p.getIsInverse()) {
                 int i = 0;
                 for (ColumnInfo ci : p.allColumns()) {
@@ -192,7 +191,7 @@ public class EntityInfo implements Cloneable {
     }
 
     public Collection<PropertyInfo> getRelatedProperties() {
-        return relatedProperties.values();
+        return this.relatedProperties.values();
     }
 
     public void setRelatedProperties(List<PropertyInfo> relatedProperties) {
@@ -208,11 +207,11 @@ public class EntityInfo implements Cloneable {
     }
 
     public Collection<ColumnInfo> getColumns() {
-        return columns.values();
+        return this.columns.values();
     }
 
     public ColumnInfo getColumn(String name) {
-        return columns.get(name);
+        return this.columns.get(name);
     }
 
     public void setColumns(Map<String, ColumnInfo> columns) {
@@ -220,19 +219,18 @@ public class EntityInfo implements Cloneable {
     }
 
     public Map<String, ColumnInfo> getColumnsMap() {
-        return columns;
+        return this.columns;
     }
 
     public void addColumn(ColumnInfo column) {
-        columns.put(column.getName(), column);
+        this.columns.put(column.getName(), column);
     }
 
     public void removeColumn(ColumnInfo column) {
-        columns.remove(column.getName());
+        this.columns.remove(column.getName());
     }
 
-    public Collection<EntityInfo> updateRelated(List<PropertyInfo> rels,
-            DataModelConfiguration mgr) {
+    public Collection<EntityInfo> updateRelated(List<PropertyInfo> rels, DataModelConfiguration mgr) {
 
         // check referenced types exist
         for (PropertyInfo p : rels) {
@@ -254,8 +252,7 @@ public class EntityInfo implements Cloneable {
 
                 boolean found = false;
 
-                for (PropertyInfo currentRelated : new HashSet<PropertyInfo>(
-                        relatedProperties.values())) {
+                for (PropertyInfo currentRelated : new HashSet<PropertyInfo>(this.relatedProperties.values())) {
                     if (currentRelated.getIsInverse()) {
                         if (matches(rel, currentRelated)) {
                             removeProperty(currentRelated);
@@ -288,8 +285,7 @@ public class EntityInfo implements Cloneable {
             // also re-use its cascade options settings
             if (removedProperties.containsKey(relatedEntity)) {
                 for (PropertyInfo p : removedProperties.get(relatedEntity)) {
-                    if (p.getColumn().getName().equals(
-                            rel.getColumn().getName())) {
+                    if (p.getColumn().getName().equals(rel.getColumn().getName())) {
                         toManyName = p.getName();
                         toMany.setCascadeOptions(p.getCascadeOptions());
                     }
@@ -297,12 +293,9 @@ public class EntityInfo implements Cloneable {
             }
 
             if (toManyName == null) {
-                toManyName = relatedEntity.getUniquePropertyName(
-                        toMany.getType() + "s").toLowerCase();
+                toManyName = relatedEntity.getUniquePropertyName(toMany.getType() + "s").toLowerCase();
                 if (toManyName.endsWith("ys")) {
-                    toManyName = toManyName.substring(0,
-                            toManyName.length() - 2)
-                            + "ies";
+                    toManyName = toManyName.substring(0, toManyName.length() - 2) + "ies";
                 }
             }
 
@@ -330,7 +323,7 @@ public class EntityInfo implements Cloneable {
     }
 
     public String getUniquePropertyName(String name) {
-        return StringUtils.getUniqueName(name, properties.keySet());
+        return StringUtils.getUniqueName(name, this.properties.keySet());
     }
 
     public void updateColumnGenerator(List<ColumnInfo> columns) {
@@ -342,8 +335,7 @@ public class EntityInfo implements Cloneable {
         }
     }
 
-    public void updateColumns(List<ColumnInfo> columns,
-            List<PropertyInfo> properties, DataModelConfiguration config) {
+    public void updateColumns(List<ColumnInfo> columns, List<PropertyInfo> properties, DataModelConfiguration config) {
 
         ensureIdColumnExists(columns);
 
@@ -356,7 +348,7 @@ public class EntityInfo implements Cloneable {
 
         // unit tests ref passed in list
         columns = new ArrayList<ColumnInfo>(columns);
-        
+
         // find pk columns
         List<ColumnInfo> primaryKeyColumns = new ArrayList<ColumnInfo>();
         for (ColumnInfo ci : new ArrayList<ColumnInfo>(columns)) {
@@ -364,7 +356,7 @@ public class EntityInfo implements Cloneable {
                 primaryKeyColumns.add(ci);
                 columns.remove(ci);
             }
-        }        
+        }
 
         addIdColumns(primaryKeyColumns, properties, compIdType, config);
 
@@ -381,30 +373,29 @@ public class EntityInfo implements Cloneable {
     }
 
     public void update(EntityInfo o) {
-        entity = o.entity;
-        packageName = o.packageName;
-        table = o.table;
-        schema = o.schema;
-        catalog = o.catalog;
-        dynamicInsert = o.dynamicInsert;
-        dynamicUpdate = o.dynamicUpdate;
-        refreshEntity = o.refreshEntity;
+        this.entity = o.entity;
+        this.packageName = o.packageName;
+        this.table = o.table;
+        this.schema = o.schema;
+        this.catalog = o.catalog;
+        this.dynamicInsert = o.dynamicInsert;
+        this.dynamicUpdate = o.dynamicUpdate;
+        this.refreshEntity = o.refreshEntity;
     }
 
     public boolean isEqualTo(EntityInfo o) {
         if (o == null) {
             return false;
         }
-        boolean rtn = String.valueOf(entity).equals(String.valueOf(o.entity));
-        rtn &= String.valueOf(packageName)
-                .equals(String.valueOf(o.packageName));
-        rtn &= String.valueOf(table).equals(String.valueOf(o.table));
-        rtn &= String.valueOf(schema).equals(String.valueOf(o.schema));
-        rtn &= String.valueOf(catalog).equals(String.valueOf(o.catalog));
-        rtn &= String.valueOf(entity).equals(String.valueOf(o.entity));
-        rtn &= dynamicInsert == o.dynamicInsert;
-        rtn &= dynamicUpdate == o.dynamicUpdate;
-        rtn &= refreshEntity == o.refreshEntity;
+        boolean rtn = String.valueOf(this.entity).equals(String.valueOf(o.entity));
+        rtn &= String.valueOf(this.packageName).equals(String.valueOf(o.packageName));
+        rtn &= String.valueOf(this.table).equals(String.valueOf(o.table));
+        rtn &= String.valueOf(this.schema).equals(String.valueOf(o.schema));
+        rtn &= String.valueOf(this.catalog).equals(String.valueOf(o.catalog));
+        rtn &= String.valueOf(this.entity).equals(String.valueOf(o.entity));
+        rtn &= this.dynamicInsert == o.dynamicInsert;
+        rtn &= this.dynamicUpdate == o.dynamicUpdate;
+        rtn &= this.refreshEntity == o.refreshEntity;
 
         return rtn;
     }
@@ -420,10 +411,9 @@ public class EntityInfo implements Cloneable {
 
     @Override
     public String toString() {
-        return "entity: " + entity + ", package: " + packageName + ", table: "
-                + table + ", catalog: " + catalog;
+        return "entity: " + this.entity + ", package: " + this.packageName + ", table: " + this.table + ", catalog: " + this.catalog;
     }
-    
+
     private void ensureIdColumnExists(Collection<ColumnInfo> columns) {
         // make sure we have at least one pk column
         boolean foundId = false;
@@ -440,12 +430,10 @@ public class EntityInfo implements Cloneable {
     }
 
     private boolean matches(PropertyInfo p1, PropertyInfo p2) {
-        return p1.getType().equals(p2.getType())
-                && p1.getColumn().getName().equals(p2.getColumn().getName());
+        return p1.getType().equals(p2.getType()) && p1.getColumn().getName().equals(p2.getColumn().getName());
     }
 
-    private String getReferencedPkType(PropertyInfo p,
-            DataModelConfiguration cfg, int fkColIndex) {
+    private String getReferencedPkType(PropertyInfo p, DataModelConfiguration cfg, int fkColIndex) {
 
         EntityInfo other = cfg.getEntity(p.getType());
         PropertyInfo id = other.getId();
@@ -464,8 +452,7 @@ public class EntityInfo implements Cloneable {
     }
 
     // input: property that is currently a related property
-    private void moveRelatedToProperty(PropertyInfo property,
-            DataModelConfiguration cfg) {
+    private void moveRelatedToProperty(PropertyInfo property, DataModelConfiguration cfg) {
 
         removeProperty(property);
 
@@ -503,7 +490,7 @@ public class EntityInfo implements Cloneable {
     }
 
     private void removeSimpleProperties() {
-        for (PropertyInfo p : new HashSet<PropertyInfo>(properties.values())) {
+        for (PropertyInfo p : new HashSet<PropertyInfo>(this.properties.values())) {
             if (p.getIsRelated()) {
                 continue;
             }
@@ -514,23 +501,18 @@ public class EntityInfo implements Cloneable {
         }
     }
 
-    private OneToManyMap<EntityInfo, PropertyInfo> removeAllOwnedRelated(
-            DataModelConfiguration mgr, List<PropertyInfo> rels) {
+    private OneToManyMap<EntityInfo, PropertyInfo> removeAllOwnedRelated(DataModelConfiguration mgr, List<PropertyInfo> rels) {
 
         OneToManyMap<EntityInfo, PropertyInfo> rtn = new OneToManyMap<EntityInfo, PropertyInfo>();
 
-        for (PropertyInfo p : new HashSet<PropertyInfo>(relatedProperties
-                .values())) {
+        for (PropertyInfo p : new HashSet<PropertyInfo>(this.relatedProperties.values())) {
             if (p.getIsInverse() && existsInRels(p, rels)) {
                 continue;
             }
             EntityInfo other = mgr.getEntity(p.getType());
-            for (PropertyInfo op : new HashSet<PropertyInfo>(other
-                    .getRelatedProperties())) {
+            for (PropertyInfo op : new HashSet<PropertyInfo>(other.getRelatedProperties())) {
 
-                if (op.getType().equals(entity)
-                        && op.getColumn().getName().equals(
-                                p.getColumn().getName())) {
+                if (op.getType().equals(this.entity) && op.getColumn().getName().equals(p.getColumn().getName())) {
                     other.removeProperty(op);
                     rtn.put(other, op);
                 }
@@ -544,9 +526,8 @@ public class EntityInfo implements Cloneable {
 
     private boolean existsInRels(PropertyInfo propInfo, List<PropertyInfo> rels) {
         boolean rtn = false;
-        for (PropertyInfo p: rels) {
-            if (propInfo.getType().equals(p.getType()) &&
-                    propInfo.getColumn().getName().equals(p.getColumn().getName())) {
+        for (PropertyInfo p : rels) {
+            if (propInfo.getType().equals(p.getType()) && propInfo.getColumn().getName().equals(p.getColumn().getName())) {
                 rtn = true;
                 break;
             }
@@ -555,8 +536,7 @@ public class EntityInfo implements Cloneable {
         return rtn;
     }
 
-    private String getPropertyNameForColumn(ColumnInfo column,
-            List<PropertyInfo> properties) {
+    private String getPropertyNameForColumn(ColumnInfo column, List<PropertyInfo> properties) {
 
         // do we have a different property name?
         for (PropertyInfo p : properties) {
@@ -574,8 +554,7 @@ public class EntityInfo implements Cloneable {
         return null;
     }
 
-    private PropertyInfo getPropertyForColumn(ColumnInfo column,
-            List<PropertyInfo> properties) {
+    private PropertyInfo getPropertyForColumn(ColumnInfo column, List<PropertyInfo> properties) {
 
         PropertyInfo rtn = PropertyInfo.newProperty();
         rtn.fromColumn(column);
@@ -590,8 +569,7 @@ public class EntityInfo implements Cloneable {
     }
 
     // type name, is new composite key?
-    private Tuple.Two<String, Boolean> getCompositeIdType(
-            List<PropertyInfo> properties) {
+    private Tuple.Two<String, Boolean> getCompositeIdType(List<PropertyInfo> properties) {
 
         String typeName = null;
         Boolean isNewKey = Boolean.FALSE;
@@ -606,17 +584,14 @@ public class EntityInfo implements Cloneable {
         if (typeName == null) {
             isNewKey = Boolean.TRUE;
             // create a new composite key type
-            typeName = StringUtils.fq(getPackageName(), getEntityName())
-                    + DEFAULT_ID_NAME;
+            typeName = StringUtils.fq(getPackageName(), getEntityName()) + DEFAULT_ID_NAME;
         }
 
         return Tuple.tuple(typeName, isNewKey);
 
     }
 
-    private void addIdColumns(List<ColumnInfo> primaryKeyColumns,
-            List<PropertyInfo> properties, String prevCompIdType,
-            DataModelConfiguration config) {
+    private void addIdColumns(List<ColumnInfo> primaryKeyColumns, List<PropertyInfo> properties, String prevCompIdType, DataModelConfiguration config) {
 
         PropertyInfo id = null;
 
@@ -624,8 +599,7 @@ public class EntityInfo implements Cloneable {
             Tuple.Two<String, Boolean> t = getCompositeIdType(properties);
             String compositeIdType = t.v1;
             Boolean isNewType = t.v2;
-            id = PropertyInfo.newCompositeIdProperty(Collections
-                    .<String, String> emptyMap());
+            id = PropertyInfo.newCompositeIdProperty(Collections.<String, String> emptyMap());
             id.types(compositeIdType);
             for (ColumnInfo ci : primaryKeyColumns) {
                 ci.setGenerator(null); // no generator for composite keys
@@ -662,7 +636,7 @@ public class EntityInfo implements Cloneable {
             if (prevCompIdType != null) {
                 config.deleteValueType(prevCompIdType);
             }
-            
+
             // if generator is unset, default to assigned
             if (ObjectUtils.isNullOrEmpty(ci.getGenerator())) {
                 ci.setGenerator(DataServiceConstants.GENERATOR_ASSIGNED);
@@ -683,14 +657,13 @@ public class EntityInfo implements Cloneable {
         }
     }
 
-    private List<PropertyInfo> getPropertiesMatchingColumnNames(
-            PropertyInfo property) {
+    private List<PropertyInfo> getPropertiesMatchingColumnNames(PropertyInfo property) {
 
         Collection<String> colNamesToFind = property.allColumnNames();
 
         List<PropertyInfo> rtn = new ArrayList<PropertyInfo>();
 
-        for (PropertyInfo p : properties.values()) {
+        for (PropertyInfo p : this.properties.values()) {
             if (p.hasCompositeProperties()) {
                 continue;
             }

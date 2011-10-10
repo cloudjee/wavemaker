@@ -22,13 +22,11 @@ import org.hibernate.cfg.Configuration;
  * @author Simon Toens
  * @version $Rev$ - $Date$
  * 
- * @deprecated This is now deprecated; see
- *             {@link com.wavemaker.runtime.data.DataServiceMetaData}. This
- *             will be removed in a future release.
+ * @deprecated This is now deprecated; see {@link com.wavemaker.runtime.data.DataServiceMetaData}. This will be removed
+ *             in a future release.
  */
 @Deprecated
-public class DataServiceMetaData extends
-        com.wavemaker.runtime.data.hibernate.DataServiceMetaData_Hib { //salesforce
+public class DataServiceMetaData extends com.wavemaker.runtime.data.hibernate.DataServiceMetaData_Hib { // salesforce
 
     public DataServiceMetaData(String name, Configuration cfg) {
         super(name, cfg);

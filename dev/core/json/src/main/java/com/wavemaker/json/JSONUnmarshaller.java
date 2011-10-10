@@ -26,13 +26,12 @@ import com.wavemaker.json.core.jsonParser;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class JSONUnmarshaller {
-    
+
     /**
-     * Transform a JSON-formatted string into an object hierarchy.  Takes the
-     * type at the head of the hierarchy.
+     * Transform a JSON-formatted string into an object hierarchy. Takes the type at the head of the hierarchy.
      * 
      * @param jsonString
      * @return
@@ -44,8 +43,7 @@ public class JSONUnmarshaller {
     }
 
     /**
-     * Transform a JSON-formatted string into an object hierarchy.  Takes the
-     * type at the head of the hierarchy.
+     * Transform a JSON-formatted string into an object hierarchy. Takes the type at the head of the hierarchy.
      * 
      * @param jsonString
      * @param jsonConfig
@@ -59,15 +57,14 @@ public class JSONUnmarshaller {
         jsonLexer lex = new jsonLexer(stringStream);
         CommonTokenStream tokens = new CommonTokenStream(lex);
         jsonParser parser = new jsonParser(tokens);
-        
+
         JSON jsonRet;
         try {
             jsonRet = parser.json();
         } catch (RecognitionException e) {
-            throw new WMRuntimeException(MessageResource.JSON_FAILED_PARSING, e,
-                    jsonString);
+            throw new WMRuntimeException(MessageResource.JSON_FAILED_PARSING, e, jsonString);
         }
-        
+
         return jsonRet;
     }
 }

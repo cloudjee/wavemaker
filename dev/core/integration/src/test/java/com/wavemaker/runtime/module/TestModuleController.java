@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.module;
 
 import static org.junit.Assert.assertEquals;
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.web.servlet.support.WebContentGenerator;
 
 import com.wavemaker.common.util.Tuple;
 import com.wavemaker.json.JSON;
@@ -38,40 +40,36 @@ import com.wavemaker.runtime.test.TestSpringContextTestCase;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestModuleController extends TestSpringContextTestCase {
 
-    @Test public void testParseRequestPath() throws Exception {
+    @Test
+    public void testParseRequestPath() throws Exception {
 
         ModuleController mc = (ModuleController) getBean("wmModuleController");
         assertNotNull(mc);
 
-        MockHttpServletRequest mhsr = new MockHttpServletRequest(
-                ModuleController.METHOD_GET,
-                "/modules/id/barModule/module-configuration.xml");
-        Tuple.Two<ModuleWire, String> result = mc.parseRequestPath(
-                mhsr.getRequestURI());
+        MockHttpServletRequest mhsr = new MockHttpServletRequest(WebContentGenerator.METHOD_GET, "/modules/id/barModule/module-configuration.xml");
+        Tuple.Two<ModuleWire, String> result = mc.parseRequestPath(mhsr.getRequestURI());
         assertNotNull(result);
         assertEquals("barModule", result.v1.getName());
         assertEquals("module-configuration.xml", result.v2);
 
-        mhsr = new MockHttpServletRequest(
-                ModuleController.METHOD_GET,
-                "/modules/ep/bar/module-configuration.xml");
+        mhsr = new MockHttpServletRequest(WebContentGenerator.METHOD_GET, "/modules/ep/bar/module-configuration.xml");
         result = mc.parseRequestPath(mhsr.getRequestURI());
         assertNotNull(result);
         assertEquals("barModule", result.v1.getName());
         assertEquals("module-configuration.xml", result.v2);
     }
 
-    @Test public void testListExtensions() throws Exception {
+    @Test
+    public void testListExtensions() throws Exception {
 
         ModuleController mc = (ModuleController) getBean("wmModuleController");
         assertNotNull(mc);
 
-        MockHttpServletRequest req = new MockHttpServletRequest(
-                ModuleController.METHOD_GET, "/wavemaker/modules/ep/");
+        MockHttpServletRequest req = new MockHttpServletRequest(WebContentGenerator.METHOD_GET, "/wavemaker/modules/ep/");
         MockHttpServletResponse resp = new MockHttpServletResponse();
 
         mc.handleRequest(req, resp);
@@ -86,9 +84,7 @@ public class TestModuleController extends TestSpringContextTestCase {
         assertTrue(contents.contains("\nconflict<br />\n"));
         assertTrue(contents.contains("\nbar<br />\n"));
 
-
-        req = new MockHttpServletRequest(
-                ModuleController.METHOD_GET, "/wavemaker/modules/ep");
+        req = new MockHttpServletRequest(WebContentGenerator.METHOD_GET, "/wavemaker/modules/ep");
         resp = new MockHttpServletResponse();
 
         mc.handleRequest(req, resp);
@@ -96,13 +92,13 @@ public class TestModuleController extends TestSpringContextTestCase {
         assertEquals(contents, resp.getContentAsString());
     }
 
-    @Test public void testListIds() throws Exception {
+    @Test
+    public void testListIds() throws Exception {
 
         ModuleController mc = (ModuleController) getBean("wmModuleController");
         assertNotNull(mc);
 
-        MockHttpServletRequest req = new MockHttpServletRequest(
-                ModuleController.METHOD_GET, "/wavemaker/modules/id/");
+        MockHttpServletRequest req = new MockHttpServletRequest(WebContentGenerator.METHOD_GET, "/wavemaker/modules/id/");
         MockHttpServletResponse resp = new MockHttpServletResponse();
 
         mc.handleRequest(req, resp);
@@ -117,9 +113,7 @@ public class TestModuleController extends TestSpringContextTestCase {
         assertFalse(contents.contains("\nconflict<br />\n"));
         assertFalse(contents.contains("\nbar<br />\n"));
 
-
-        req = new MockHttpServletRequest(
-                ModuleController.METHOD_GET, "/wavemaker/modules/id");
+        req = new MockHttpServletRequest(WebContentGenerator.METHOD_GET, "/wavemaker/modules/id");
         resp = new MockHttpServletResponse();
 
         mc.handleRequest(req, resp);
@@ -127,14 +121,14 @@ public class TestModuleController extends TestSpringContextTestCase {
         assertEquals(contents, resp.getContentAsString());
     }
 
-    @Test public void testGetModuleFiles() throws Exception {
+    @Test
+    public void testGetModuleFiles() throws Exception {
 
         ModuleController mc = (ModuleController) getBean("wmModuleController");
         assertNotNull(mc);
 
-        MockHttpServletRequest req = new MockHttpServletRequest(
-                ModuleController.METHOD_GET,
-                "/wavemaker/modules/id/fooModule/foo-module-contents.txt");
+        MockHttpServletRequest req = new MockHttpServletRequest(WebContentGenerator.METHOD_GET,
+            "/wavemaker/modules/id/fooModule/foo-module-contents.txt");
         MockHttpServletResponse resp = new MockHttpServletResponse();
 
         mc.handleRequest(req, resp);
@@ -144,10 +138,7 @@ public class TestModuleController extends TestSpringContextTestCase {
         String contents = resp.getContentAsString();
         assertEquals("foo module contents\n", contents);
 
-
-
-        req = new MockHttpServletRequest(ModuleController.METHOD_GET,
-                "/wavemaker/modules/ep/foo/foo-module-contents.txt");
+        req = new MockHttpServletRequest(WebContentGenerator.METHOD_GET, "/wavemaker/modules/ep/foo/foo-module-contents.txt");
         resp = new MockHttpServletResponse();
 
         mc.handleRequest(req, resp);
@@ -155,11 +146,8 @@ public class TestModuleController extends TestSpringContextTestCase {
         assertEquals(HttpServletResponse.SC_OK, resp.getStatus());
         assertEquals("text/plain", resp.getContentType());
         assertEquals(contents, resp.getContentAsString());
-        
-        
-        
-        req = new MockHttpServletRequest(ModuleController.METHOD_GET,
-                "/wavemaker/modules/ep/fooDNE/foo-module-contents.txt");
+
+        req = new MockHttpServletRequest(WebContentGenerator.METHOD_GET, "/wavemaker/modules/ep/fooDNE/foo-module-contents.txt");
         resp = new MockHttpServletResponse();
 
         mc.handleRequest(req, resp);
@@ -167,14 +155,13 @@ public class TestModuleController extends TestSpringContextTestCase {
         assertEquals(HttpServletResponse.SC_NOT_FOUND, resp.getStatus());
     }
 
-    @Test public void testGetModuleJS() throws Exception {
+    @Test
+    public void testGetModuleJS() throws Exception {
 
         ModuleController mc = (ModuleController) getBean("wmModuleController");
         assertNotNull(mc);
 
-        MockHttpServletRequest req = new MockHttpServletRequest(
-                ModuleController.METHOD_GET,
-                "/wavemaker/modules/modules.js");
+        MockHttpServletRequest req = new MockHttpServletRequest(WebContentGenerator.METHOD_GET, "/wavemaker/modules/modules.js");
         MockHttpServletResponse resp = new MockHttpServletResponse();
 
         mc.handleRequest(req, resp);
@@ -191,6 +178,6 @@ public class TestModuleController extends TestSpringContextTestCase {
         assertTrue(jo.containsKey("conflict"));
 
         assertTrue(jo.get("conflict") instanceof JSONArray);
-        assertTrue(((JSONArray)jo.get("conflict")).contains("conflictModuleOne"));
+        assertTrue(((JSONArray) jo.get("conflict")).contains("conflictModuleOne"));
     }
 }

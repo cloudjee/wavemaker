@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.data.parser;
 
 import java.io.IOException;
@@ -38,7 +39,7 @@ import com.wavemaker.tools.data.PropertyInfo;
  */
 public class TestHbmParser extends WMTestCase {
 
-     public void testGetGeneratorParams() throws Exception {
+    public void testGetGeneratorParams() throws Exception {
         HbmParser p = buildParser("com/wavemaker/runtime/data/sample/sakila/GeneratorParams.hbm.xml");
         EntityInfo ei = p.getEntity();
         assertTrue(ei.getEntityName().equals("Foo"));
@@ -53,17 +54,15 @@ public class TestHbmParser extends WMTestCase {
         HbmParser p = buildParser("com/wavemaker/runtime/data/sample/sakila/Actor.hbm.xml");
         EntityInfo ei = p.getEntity();
         assertTrue(ei.getEntityName().equals("Actor"));
-        assertTrue(ei.getPackageName().equals(
-                "com.wavemaker.runtime.data.sample.sakila"));
+        assertTrue(ei.getPackageName().equals("com.wavemaker.runtime.data.sample.sakila"));
         assertTrue(ei.getTableName().equals("actor"));
         assertTrue(ei.getCatalogName().equals("sakila"));
     }
 
     public void testGetPropertiesAndColumns1() throws Exception {
-    	HbmParser p = buildParser("com/wavemaker/runtime/data/sample/sakila/Actor.hbm.xml");
-    
-        List<PropertyInfo> props = new ArrayList<PropertyInfo>(p
-                .getProperties());
+        HbmParser p = buildParser("com/wavemaker/runtime/data/sample/sakila/Actor.hbm.xml");
+
+        List<PropertyInfo> props = new ArrayList<PropertyInfo>(p.getProperties());
         assertTrue(props.size() == 5);
 
         assertTrue(props.get(0).getName().equals("actorId"));
@@ -96,8 +95,7 @@ public class TestHbmParser extends WMTestCase {
         assertTrue(!props.get(1).getColumn().getIsPk());
         assertTrue(!props.get(1).getColumn().getIsFk());
         assertTrue(props.get(1).getColumn().getNotNull());
-        assertTrue(props.get(1).getColumn().getLength().equals(
-                Integer.valueOf(45)));
+        assertTrue(props.get(1).getColumn().getLength().equals(Integer.valueOf(45)));
 
         assertTrue(props.get(2).getName().equals("lastName"));
         assertTrue(props.get(2).getType().equals("string"));
@@ -113,8 +111,7 @@ public class TestHbmParser extends WMTestCase {
         assertTrue(!props.get(2).getColumn().getIsPk());
         assertTrue(!props.get(2).getColumn().getIsFk());
         assertTrue(props.get(2).getColumn().getNotNull());
-        assertTrue(props.get(2).getColumn().getLength().equals(
-                Integer.valueOf(45)));
+        assertTrue(props.get(2).getColumn().getLength().equals(Integer.valueOf(45)));
 
         assertTrue(props.get(3).getName().equals("lastUpdate"));
         assertTrue(props.get(3).getType().equals("timestamp"));
@@ -130,13 +127,11 @@ public class TestHbmParser extends WMTestCase {
         assertTrue(!props.get(3).getColumn().getIsPk());
         assertTrue(!props.get(3).getColumn().getIsFk());
         assertTrue(props.get(3).getColumn().getNotNull());
-        assertTrue(props.get(3).getColumn().getLength().equals(
-                Integer.valueOf(19)));
+        assertTrue(props.get(3).getColumn().getLength().equals(Integer.valueOf(19)));
 
         assertTrue(props.get(4).getName().equals("filmActors"));
         assertTrue(props.get(4).getType().equals("FilmActor"));
-        assertTrue(props.get(4).getFullyQualifiedType().equals(
-                "com.wavemaker.runtime.data.sample.sakila.FilmActor"));
+        assertTrue(props.get(4).getFullyQualifiedType().equals("com.wavemaker.runtime.data.sample.sakila.FilmActor"));
         assertTrue(!props.get(4).getIsId());
         assertTrue(props.get(4).getIsRelated());
         assertTrue(props.get(4).getIsInverse());
@@ -164,19 +159,19 @@ public class TestHbmParser extends WMTestCase {
         assertTrue(pr.getColumn() != null);
         assertTrue(pr.getColumn().getPrecision().equals(4));
     }
-    
+
     public void testComponent() throws Exception {
         HbmParser p = buildParser("com/wavemaker/runtime/data/sample/sakila/CustomerListFixed.hbm.xml");
-        
+
         PropertyInfo pr = p.getPropertiesMap().get("id");
         assertFalse(pr.getIsId());
         assertTrue(pr.hasCompositeProperties());
         Collection<PropertyInfo> props = pr.getCompositeProperties();
         assertEquals(9, props.size());
     }
-    
+
     private HbmParser buildParser(String path) throws IOException {
-    	ClassPathResource hbmResource = new ClassPathResource(path);
+        ClassPathResource hbmResource = new ClassPathResource(path);
         return new HbmParser(new InputStreamReader(hbmResource.getInputStream()));
     }
 }

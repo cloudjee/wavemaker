@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.spring;
 
 import java.io.IOException;
@@ -24,21 +25,21 @@ import org.springframework.web.multipart.MultipartFile;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class AopAdvised {
-    
+
     private int ival = 10;
 
     public int getIval() {
-        return ival;
+        return this.ival;
     }
+
     public void setIval(int ival) {
         this.ival = ival;
     }
-    
-    public String testUpload(String param1, MultipartFile param2)
-            throws IOException {
-        return param1+new String(param2.getBytes())+getIval();
+
+    public String testUpload(String param1, MultipartFile param2) throws IOException {
+        return param1 + new String(param2.getBytes()) + getIval();
     }
 }

@@ -39,9 +39,16 @@ public class TypeInfo {
         this.fqName = StringUtils.fq(packageName, name);
     }
 
-    public String getName() { return name; }
+    public String getName() {
+        return this.name;
+    }
 
-    public String getFullyQualifiedName() { return fqName; }
+    public String getFullyQualifiedName() {
+        return this.fqName;
+    }
 
-    public String toString() { return fqName; }
+    @Override
+    public String toString() {
+        return this.fqName;
+    }
 }

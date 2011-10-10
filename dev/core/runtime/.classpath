@@ -80,8 +80,8 @@
   <classpathentry kind="var" path="M2_REPO/com/sun/xml/stream/buffer/streambuffer/1.2/streambuffer-1.2.jar" sourcepath="M2_REPO/com/sun/xml/stream/buffer/streambuffer/1.2/streambuffer-1.2-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/antlr/stringtemplate/3.2/stringtemplate-3.2.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/sun/xml/txw2/txw2/20090102/txw2-20090102.jar" sourcepath="M2_REPO/com/sun/xml/txw2/txw2/20090102/txw2-20090102-sources.jar"/>
-  <classpathentry kind="src" path="/wm-common"/>
-  <classpathentry kind="src" path="/wm-json"/>
+  <classpathentry kind="var" path="M2_REPO/com/wavemaker/wm-common/6.4.0.BUILD-SNAPSHOT/wm-common-6.4.0.BUILD-SNAPSHOT.jar" sourcepath="M2_REPO/com/wavemaker/wm-common/6.4.0.BUILD-SNAPSHOT/wm-common-6.4.0.BUILD-SNAPSHOT-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/com/wavemaker/wm-json/6.4.0.BUILD-SNAPSHOT/wm-json-6.4.0.BUILD-SNAPSHOT.jar" sourcepath="M2_REPO/com/wavemaker/wm-json/6.4.0.BUILD-SNAPSHOT/wm-json-6.4.0.BUILD-SNAPSHOT-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/wsdl4j/wsdl4j/1.6.2/wsdl4j-1.6.2.jar" sourcepath="M2_REPO/wsdl4j/wsdl4j/1.6.2/wsdl4j-1.6.2-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/codehaus/woodstox/wstx-asl/3.2.1/wstx-asl-3.2.1.jar" sourcepath="M2_REPO/org/codehaus/woodstox/wstx-asl/3.2.1/wstx-asl-3.2.1-sources.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/apache/ws/commons/schema/XmlSchema/1.3.1/XmlSchema-1.3.1.jar" sourcepath="M2_REPO/org/apache/ws/commons/schema/XmlSchema/1.3.1/XmlSchema-1.3.1-sources.jar"/>

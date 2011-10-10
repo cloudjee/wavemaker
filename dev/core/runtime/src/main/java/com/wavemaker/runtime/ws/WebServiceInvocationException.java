@@ -19,7 +19,7 @@ import com.wavemaker.common.WMRuntimeException;
 /**
  * @author ffu
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class WebServiceInvocationException extends WMRuntimeException {
 
@@ -28,11 +28,11 @@ public class WebServiceInvocationException extends WMRuntimeException {
     public WebServiceInvocationException(String message) {
         super(message);
     }
-    
+
     public WebServiceInvocationException(Throwable cause) {
         super(cause);
     }
-    
+
     public WebServiceInvocationException(String message, Throwable cause) {
         super(message, cause);
     }

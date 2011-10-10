@@ -19,31 +19,28 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * 
  * 
- * 	The ejb-ref-typeType contains the expected type of the
- * 	referenced enterprise bean.
+ * The ejb-ref-typeType contains the expected type of the referenced enterprise bean.
  * 
- * 	The ejb-ref-type designates a value
- * 	that must be one of the following:
+ * The ejb-ref-type designates a value that must be one of the following:
  * 
- * 	    Entity
- * 	    Session
+ * Entity Session
  * 
- *       
  * 
- * <p>Java class for ejb-ref-typeType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for ejb-ref-typeType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="ejb-ref-typeType">
@@ -58,9 +55,6 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ejb-ref-typeType")
-public class EjbRefTypeType
-    extends String
-{
-
+public class EjbRefTypeType extends String {
 
 }

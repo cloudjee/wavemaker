@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.wavemaker.studio.project.upgrade;
 
 import static org.junit.Assert.assertFalse;
@@ -42,52 +43,51 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
  */
 public class TestRemoveObsoleteFilesUpgradeTask extends StudioTestCase {
 
-	@Test
-	public void testRemoveConfigIndex() throws Exception {
+    @Test
+    public void testRemoveConfigIndex() throws Exception {
 
-		String projectName = "testOutOfOrderUpgrade_Autosize";
+        String projectName = "testOutOfOrderUpgrade_Autosize";
 
-		makeProject(projectName, false);
-		ProjectManager pm = (ProjectManager) getBean("projectManager");
-		Project project = pm.getCurrentProject();
+        makeProject(projectName, false);
+        ProjectManager pm = (ProjectManager) getBean("projectManager");
+        Project project = pm.getCurrentProject();
 
-		File webapproot = new File(project.getProjectRoot().getFile(),
-				"webapproot");
-		assertTrue(webapproot.exists());
-		File indexhtml = new File(webapproot, "index.html");
-		File configjs = new File(webapproot, "config.js");
-		IOUtils.touch(indexhtml);
-		IOUtils.touch(configjs);
-		assertTrue(indexhtml.exists());
-		assertTrue(configjs.exists());
+        File webapproot = new File(project.getProjectRoot().getFile(), "webapproot");
+        assertTrue(webapproot.exists());
+        File indexhtml = new File(webapproot, "index.html");
+        File configjs = new File(webapproot, "config.js");
+        IOUtils.touch(indexhtml);
+        IOUtils.touch(configjs);
+        assertTrue(indexhtml.exists());
+        assertTrue(configjs.exists());
 
-		RemoveObsoleteFilesUpgradeTask ut = new RemoveObsoleteFilesUpgradeTask();
-		ut.setFiles(new ArrayList<String>());
-		ut.getFiles().add("webapproot/config.js");
-		ut.getFiles().add("webapproot/index.html");
-		UpgradeInfo info = new UpgradeInfo();
-		ut.doUpgrade(project, info);
+        RemoveObsoleteFilesUpgradeTask ut = new RemoveObsoleteFilesUpgradeTask();
+        ut.setFiles(new ArrayList<String>());
+        ut.getFiles().add("webapproot/config.js");
+        ut.getFiles().add("webapproot/index.html");
+        UpgradeInfo info = new UpgradeInfo();
+        ut.doUpgrade(project, info);
 
-		assertFalse(indexhtml.exists());
-		assertFalse(configjs.exists());
-	}
+        assertFalse(indexhtml.exists());
+        assertFalse(configjs.exists());
+    }
 
-	@Test
-	public void testUpgradeTaskPresent() throws Exception {
+    @Test
+    public void testUpgradeTaskPresent() throws Exception {
 
-		boolean foundTask = false;
+        boolean foundTask = false;
 
-		UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
+        UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
 
-		outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
-			for (UpgradeTask ut : uts) {
-				if (ut instanceof RemoveObsoleteFilesUpgradeTask) {
-					foundTask = true;
-					break outer;
-				}
-			}
-		}
+        outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
+            for (UpgradeTask ut : uts) {
+                if (ut instanceof RemoveObsoleteFilesUpgradeTask) {
+                    foundTask = true;
+                    break outer;
+                }
+            }
+        }
 
-		assertTrue(foundTask);
-	}
+        assertTrue(foundTask);
+    }
 }

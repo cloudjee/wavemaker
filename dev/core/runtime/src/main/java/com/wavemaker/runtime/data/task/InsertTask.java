@@ -18,7 +18,6 @@ import org.hibernate.Session;
 
 import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.runtime.data.Task;
-import com.wavemaker.runtime.data.DataServiceMetaData;
 
 /**
  * @author Simon Toens
@@ -34,8 +33,7 @@ public class InsertTask extends BaseTask implements PreProcessor, Task {
         Object o = input[0];
 
         if (o == null) {
-            throw new IllegalArgumentException(
-                    "Instance to insert cannot be null");
+            throw new IllegalArgumentException("Instance to insert cannot be null");
         }
 
         session.save(o);

@@ -15,13 +15,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.common.util;
 
 import com.wavemaker.infra.WMTestCase;
 
 /**
- * Used to debug CC failures.  Prints out some information about the
- * environment of this test run.
+ * Used to debug CC failures. Prints out some information about the environment of this test run.
  * 
  * @author small
  * @version $Rev$ - $Date$
@@ -29,9 +29,8 @@ import com.wavemaker.infra.WMTestCase;
 public class TestEnvironment extends WMTestCase {
 
     public void testEnvironment() throws Exception {
-        
+
         Runtime runtime = Runtime.getRuntime();
-        System.out.println("maxMemory: "+runtime.maxMemory()+", totalMemory: "+
-                runtime.totalMemory()+", freeMemory: "+runtime.freeMemory());
+        System.out.println("maxMemory: " + runtime.maxMemory() + ", totalMemory: " + runtime.totalMemory() + ", freeMemory: " + runtime.freeMemory());
     }
 }

@@ -21,6 +21,7 @@ import org.springframework.core.io.Resource;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
+
 /**
  * Changes the package of WMPropertyPlaceholderConfigurer.
  * 
@@ -29,36 +30,41 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
  */
 public class WebXmlUpgradeTask implements UpgradeTask {
 
-    private String wmListenerStr =
-            "<listener-class>com.wavemaker.runtime.server.CleanupListener</listener-class>";
-    private String springListenerStr =
-            "<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>";
-    private String dummyStr = "xxx123456789yyy";
+    private final String wmListenerStr = "<listener-class>com.wavemaker.runtime.server.CleanupListener</listener-class>";
+
+    private final String springListenerStr = "<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>";
+
+    private final String dummyStr = "xxx123456789yyy";
+
     private boolean error = false;
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
+     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
      */
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
         Resource webxml = project.getWebXml();
 
         try {
             String content = project.readFile(webxml);
-            int indxwm = content.indexOf(wmListenerStr);
-            int indxspring = content.indexOf(springListenerStr);
-            if (indxwm < indxspring) return;
-            content = content.replace(wmListenerStr, dummyStr);
-            content = content.replace(springListenerStr, wmListenerStr);
-            content = content.replace(dummyStr, springListenerStr);
+            int indxwm = content.indexOf(this.wmListenerStr);
+            int indxspring = content.indexOf(this.springListenerStr);
+            if (indxwm < indxspring) {
+                return;
+            }
+            content = content.replace(this.wmListenerStr, this.dummyStr);
+            content = content.replace(this.springListenerStr, this.wmListenerStr);
+            content = content.replace(this.dummyStr, this.springListenerStr);
             project.writeFile(webxml, content);
         } catch (IOException ioe) {
             ioe.printStackTrace();
-            error = true;
+            this.error = true;
         }
 
-        if (error) {
-            upgradeInfo.addMessage("*** Terminated with error while upgrading web.xml. " +
-                    "Please check the console message.***");
+        if (this.error) {
+            upgradeInfo.addMessage("*** Terminated with error while upgrading web.xml. " + "Please check the console message.***");
         } else {
             upgradeInfo.addMessage("Upgrading web.xml completed successfully.");
         }

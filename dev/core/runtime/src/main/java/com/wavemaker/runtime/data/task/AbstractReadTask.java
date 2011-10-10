@@ -49,20 +49,19 @@ import com.wavemaker.runtime.service.ServiceConstants;
 public abstract class AbstractReadTask extends BaseTask implements Task {
 
     private interface PropertyTraversal {
+
         boolean keepGoing(Type type);
     }
 
-    private static final PropertyTraversal NOOP_PROPERTY_TRAVERSAL =
-        new PropertyTraversal()
-    {
+    private static final PropertyTraversal NOOP_PROPERTY_TRAVERSAL = new PropertyTraversal() {
+
         public boolean keepGoing(Type type) {
             return true;
         }
     };
 
-    private static final PropertyTraversal COMPONENT_PROPERTY_TRAVERSAL =
-        new PropertyTraversal()
-    {
+    private static final PropertyTraversal COMPONENT_PROPERTY_TRAVERSAL = new PropertyTraversal() {
+
         public boolean keepGoing(Type type) {
             return !type.isComponentType();
         }
@@ -70,12 +69,10 @@ public abstract class AbstractReadTask extends BaseTask implements Task {
 
     private static final String ROOT_CRITERIA_KEY = "";
 
-    protected Criteria initCriteriasMap(Map<String, Criteria> criterias,
-            Class<?> rootType, Session session) {
+    protected Criteria initCriteriasMap(Map<String, Criteria> criterias, Class<?> rootType, Session session) {
         Criteria rtn = session.createCriteria(rootType);
         if (DataServiceLoggers.taskLogger.isDebugEnabled()) {
-            DataServiceLoggers.taskLogger.debug("Created root criteria for "
-                    + rootType.getName());
+            DataServiceLoggers.taskLogger.debug("Created root criteria for " + rootType.getName());
         }
         criterias.put(ROOT_CRITERIA_KEY, rtn);
         return rtn;
@@ -89,13 +86,11 @@ public abstract class AbstractReadTask extends BaseTask implements Task {
         criteria.setFetchMode(propertyName, FetchMode.JOIN);
     }
 
-    protected Criteria getCriteriaForPath(String path,
-            Map<String, Criteria> criterias) {
+    protected Criteria getCriteriaForPath(String path, Map<String, Criteria> criterias) {
         return getCriteriaForPath(path, criterias, false);
     }
 
-    protected Criteria getCriteriaForPath(String path,
-            Map<String, Criteria> criterias, boolean fetch) {
+    protected Criteria getCriteriaForPath(String path, Map<String, Criteria> criterias, boolean fetch) {
 
         Criteria rtn = criterias.get(path);
         if (rtn != null) {
@@ -166,8 +161,7 @@ public abstract class AbstractReadTask extends BaseTask implements Task {
         options.nextPage();
     }
 
-    protected void applyOrderBy(PagingOptions options,
-            Map<String, Criteria> criterias) {
+    protected void applyOrderBy(PagingOptions options, Map<String, Criteria> criterias) {
 
         if (options == null) {
             return;
@@ -196,8 +190,7 @@ public abstract class AbstractReadTask extends BaseTask implements Task {
             }
 
             if (DataServiceLoggers.taskLogger.isDebugEnabled()) {
-                DataServiceLoggers.taskLogger
-                    .debug("Added order by " + orderBy);
+                DataServiceLoggers.taskLogger.debug("Added order by " + orderBy);
             }
 
             c.addOrder(o);
@@ -216,21 +209,18 @@ public abstract class AbstractReadTask extends BaseTask implements Task {
     }
 
     protected Class<?> getPropertyType(Class<?> rootType, String propertyPath, String dbName) {
-        Property p = getProperty(rootType, propertyPath,
-                                 NOOP_PROPERTY_TRAVERSAL, dbName);
+        Property p = getProperty(rootType, propertyPath, NOOP_PROPERTY_TRAVERSAL, dbName);
         Type hbmType = p.getType();
         return hbmType.getReturnedClass();
     }
 
     protected boolean isComponentType(Class<?> rootType, String propertyPath, String dbName) {
-        Property p = getProperty(rootType, propertyPath,
-                                 COMPONENT_PROPERTY_TRAVERSAL, dbName);
-        return (p == null);
+        Property p = getProperty(rootType, propertyPath, COMPONENT_PROPERTY_TRAVERSAL, dbName);
+        return p == null;
     }
 
     protected boolean isNulleable(Class<?> rootType, String propertyPath, String dbName) {
-        Property p = getProperty(rootType, propertyPath,
-                                 NOOP_PROPERTY_TRAVERSAL, dbName);
+        Property p = getProperty(rootType, propertyPath, NOOP_PROPERTY_TRAVERSAL, dbName);
         if (isRelatedMany(p.getType().getReturnedClass())) {
             return true;
         }
@@ -255,47 +245,42 @@ public abstract class AbstractReadTask extends BaseTask implements Task {
         if (singleResult) {
             return query.uniqueResult();
         } else {
-        	
+
             List<?> rs = query.list();
-        	
+
             SessionFactory sessFact = getSessionFactory(dbName);
             Type[] returnTypes = query.getReturnTypes();
-        	Class<?> returnedClass = returnTypes[0].getReturnedClass();
-        	String[] propertyNames = sessFact.getClassMetadata(returnedClass).getPropertyNames();
-        	Type[] propertyTypes = sessFact.getClassMetadata(returnedClass).getPropertyTypes();
+            Class<?> returnedClass = returnTypes[0].getReturnedClass();
+            String[] propertyNames = sessFact.getClassMetadata(returnedClass).getPropertyNames();
+            Type[] propertyTypes = sessFact.getClassMetadata(returnedClass).getPropertyTypes();
 
-        	ObjectAccess oa = ObjectAccess.getInstance();
-        	
-        	//
+            ObjectAccess oa = ObjectAccess.getInstance();
+
+            //
             // To eliminate possible duplicates and construct a new list
             // with orders preserved for the final results
             //
             Iterator<?> rsItr = rs.iterator();
             List<Object> finalResultSet = new ArrayList<Object>();
-            while (rsItr.hasNext())
-            {
-            	Object obj = rsItr.next();
-            	if (finalResultSet.contains(obj))
-            	{
-            	   continue;
-            	}
-            	
-            	for (int i = 0; i < propertyTypes.length; i++) 
-                {
-                	if (propertyTypes[i].getName().contains("lob") || propertyTypes[i].getName().toLowerCase().contains("binary"))
-                	{
-                        oa.setProperty(obj, propertyNames[i], null);
-                	}
+            while (rsItr.hasNext()) {
+                Object obj = rsItr.next();
+                if (finalResultSet.contains(obj)) {
+                    continue;
                 }
-            	finalResultSet.add(obj);
+
+                for (int i = 0; i < propertyTypes.length; i++) {
+                    if (propertyTypes[i].getName().contains("lob") || propertyTypes[i].getName().toLowerCase().contains("binary")) {
+                        oa.setProperty(obj, propertyNames[i], null);
+                    }
+                }
+                finalResultSet.add(obj);
             }
-            
+
             return finalResultSet;
         }
     }
 
-    private Property getProperty(Class<?> rootType, String propertyPath,
-            PropertyTraversal traversalStrategy, String dbName) {
+    private Property getProperty(Class<?> rootType, String propertyPath, PropertyTraversal traversalStrategy, String dbName) {
 
         Property rtn = null;
 

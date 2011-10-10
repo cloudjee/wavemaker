@@ -30,77 +30,77 @@ import com.wavemaker.tools.project.Project;
 
 /**
  * {@link FileObject} implementation meant to work with any generic {@link Resource}.
- *
+ * 
  * @author Jeremy Grelle
  */
 public class GenericResourceFileObject implements FileObject {
 
-	protected Project project;
-	protected Resource resource;
+    protected Project project;
 
-	protected GenericResourceFileObject(Project project,
-			Resource resource) throws IOException {
-		this.project = project;
-		this.resource = resource;
-	}
-	
-	/**
-	 * Returns the source text content of the Java resource.
-	 */
-	public CharSequence getCharContent(boolean ignoreEncodingErrors) {
-		try {
-			return project.readFile(resource);
-		} catch (IOException e) {
-			throw new WMRuntimeException(e);
-		}
-	}
+    protected Resource resource;
 
-	public boolean delete() {
-		try {
-			return project.deleteFile(resource);
-		} catch (IOException e) {
-			return false;
-		}
-	}
+    protected GenericResourceFileObject(Project project, Resource resource) throws IOException {
+        this.project = project;
+        this.resource = resource;
+    }
 
-	public long getLastModified() {
-		try {
-			return resource.lastModified();
-		} catch (IOException e) {
-			throw new WMRuntimeException(e);
-		}
-	}
+    /**
+     * Returns the source text content of the Java resource.
+     */
+    public CharSequence getCharContent(boolean ignoreEncodingErrors) {
+        try {
+            return this.project.readFile(this.resource);
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        }
+    }
 
-	public InputStream openInputStream() throws IOException {
-		return resource.getInputStream();
-	}
+    public boolean delete() {
+        try {
+            return this.project.deleteFile(this.resource);
+        } catch (IOException e) {
+            return false;
+        }
+    }
 
-	public OutputStream openOutputStream() throws IOException {
-		return project.getOutputStream(resource);
-	}
+    public long getLastModified() {
+        try {
+            return this.resource.lastModified();
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        }
+    }
 
-	public Reader openReader(boolean ignoreEncodingErrors) throws IOException {
-		return project.getReader(resource);
-	}
+    public InputStream openInputStream() throws IOException {
+        return this.resource.getInputStream();
+    }
 
-	public Writer openWriter() throws IOException {
-		return project.getWriter(resource);
-	}
+    public OutputStream openOutputStream() throws IOException {
+        return this.project.getOutputStream(this.resource);
+    }
 
-	public URI toUri() {
-		try {
-			return resource.getURI();
-		} catch (IOException e) {
-			throw new WMRuntimeException(e);
-		}
-	}
+    public Reader openReader(boolean ignoreEncodingErrors) throws IOException {
+        return this.project.getReader(this.resource);
+    }
 
-	public String getName() {
-		return resource.getDescription();
-	}
+    public Writer openWriter() throws IOException {
+        return this.project.getWriter(this.resource);
+    }
 
-	@Override
-	public String toString() {
-		return getClass().getName() + "[" + resource.getDescription() + "]";
-	}
+    public URI toUri() {
+        try {
+            return this.resource.getURI();
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        }
+    }
+
+    public String getName() {
+        return this.resource.getDescription();
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getName() + "[" + this.resource.getDescription() + "]";
+    }
 }

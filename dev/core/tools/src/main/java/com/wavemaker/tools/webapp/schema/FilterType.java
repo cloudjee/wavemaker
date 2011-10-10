@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import java.util.ArrayList;
@@ -35,24 +34,22 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
  * 
  * 
- * 	The filterType is used to declare a filter in the web
- * 	application. The filter is mapped to either a servlet or a
- * 	URL pattern in the filter-mapping element, using the
- * 	filter-name value to reference. Filters can access the
- * 	initialization parameters declared in the deployment
- * 	descriptor at runtime via the FilterConfig interface.
+ * The filterType is used to declare a filter in the web application. The filter is mapped to either a servlet or a URL
+ * pattern in the filter-mapping element, using the filter-name value to reference. Filters can access the
+ * initialization parameters declared in the deployment descriptor at runtime via the FilterConfig interface.
  * 
- * 	Used in: web-app
+ * Used in: web-app
  * 
- *       
  * 
- * <p>Java class for filterType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for filterType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="filterType">
@@ -73,26 +70,25 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "filterType", propOrder = {
-    "description",
-    "displayName",
-    "icon",
-    "filterName",
-    "filterClass",
-    "initParam"
-})
+@XmlType(name = "filterType", propOrder = { "description", "displayName", "icon", "filterName", "filterClass", "initParam" })
 public class FilterType {
 
     protected List<DescriptionType> description;
+
     @XmlElement(name = "display-name")
     protected List<DisplayNameType> displayName;
+
     protected List<IconType> icon;
+
     @XmlElement(name = "filter-name", required = true)
     protected FilterNameType filterName;
+
     @XmlElement(name = "filter-class", required = true)
     protected FullyQualifiedClassType filterClass;
+
     @XmlElement(name = "init-param")
     protected List<ParamValueType> initParam;
+
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -103,27 +99,26 @@ public class FilterType {
      * Gets the value of the description property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the description property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the description property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getDescription().add(newItem);
+     * getDescription().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DescriptionType }
+     * Objects of the following type(s) are allowed in the list {@link DescriptionType }
      * 
      * 
      */
     public List<DescriptionType> getDescription() {
-        if (description == null) {
-            description = new ArrayList<DescriptionType>();
+        if (this.description == null) {
+            this.description = new ArrayList<DescriptionType>();
         }
         return this.description;
     }
@@ -132,27 +127,26 @@ public class FilterType {
      * Gets the value of the displayName property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the displayName property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the displayName property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getDisplayName().add(newItem);
+     * getDisplayName().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DisplayNameType }
+     * Objects of the following type(s) are allowed in the list {@link DisplayNameType }
      * 
      * 
      */
     public List<DisplayNameType> getDisplayName() {
-        if (displayName == null) {
-            displayName = new ArrayList<DisplayNameType>();
+        if (this.displayName == null) {
+            this.displayName = new ArrayList<DisplayNameType>();
         }
         return this.displayName;
     }
@@ -161,27 +155,26 @@ public class FilterType {
      * Gets the value of the icon property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the icon property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the icon property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getIcon().add(newItem);
+     * getIcon().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link IconType }
+     * Objects of the following type(s) are allowed in the list {@link IconType }
      * 
      * 
      */
     public List<IconType> getIcon() {
-        if (icon == null) {
-            icon = new ArrayList<IconType>();
+        if (this.icon == null) {
+            this.icon = new ArrayList<IconType>();
         }
         return this.icon;
     }
@@ -189,22 +182,18 @@ public class FilterType {
     /**
      * Gets the value of the filterName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link FilterNameType }
-     *     
+     * @return possible object is {@link FilterNameType }
+     * 
      */
     public FilterNameType getFilterName() {
-        return filterName;
+        return this.filterName;
     }
 
     /**
      * Sets the value of the filterName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link FilterNameType }
-     *     
+     * @param value allowed object is {@link FilterNameType }
+     * 
      */
     public void setFilterName(FilterNameType value) {
         this.filterName = value;
@@ -213,22 +202,18 @@ public class FilterType {
     /**
      * Gets the value of the filterClass property.
      * 
-     * @return
-     *     possible object is
-     *     {@link FullyQualifiedClassType }
-     *     
+     * @return possible object is {@link FullyQualifiedClassType }
+     * 
      */
     public FullyQualifiedClassType getFilterClass() {
-        return filterClass;
+        return this.filterClass;
     }
 
     /**
      * Sets the value of the filterClass property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link FullyQualifiedClassType }
-     *     
+     * @param value allowed object is {@link FullyQualifiedClassType }
+     * 
      */
     public void setFilterClass(FullyQualifiedClassType value) {
         this.filterClass = value;
@@ -238,27 +223,26 @@ public class FilterType {
      * Gets the value of the initParam property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the initParam property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the initParam property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getInitParam().add(newItem);
+     * getInitParam().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link ParamValueType }
+     * Objects of the following type(s) are allowed in the list {@link ParamValueType }
      * 
      * 
      */
     public List<ParamValueType> getInitParam() {
-        if (initParam == null) {
-            initParam = new ArrayList<ParamValueType>();
+        if (this.initParam == null) {
+            this.initParam = new ArrayList<ParamValueType>();
         }
         return this.initParam;
     }
@@ -266,22 +250,18 @@ public class FilterType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setId(java.lang.String value) {
         this.id = value;

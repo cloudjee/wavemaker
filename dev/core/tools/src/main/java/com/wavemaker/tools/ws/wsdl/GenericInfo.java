@@ -25,13 +25,13 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public abstract class GenericInfo {
 
-    private AtomicReference<Map<String, Object>> propertyMap = new AtomicReference<Map<String, Object>>();
+    private final AtomicReference<Map<String, Object>> propertyMap = new AtomicReference<Map<String, Object>>();
 
     public Object getProperty(String name) {
-        if (null == propertyMap.get()) {
+        if (null == this.propertyMap.get()) {
             return null;
         }
-        return propertyMap.get().get(name);
+        return this.propertyMap.get().get(name);
     }
 
     public <T> T getProperty(String name, Class<T> cls) {
@@ -39,14 +39,13 @@ public abstract class GenericInfo {
     }
 
     public void setProperty(String name, Object v) {
-        if (null == propertyMap.get()) {
-            propertyMap.compareAndSet(null,
-                    new ConcurrentHashMap<String, Object>(4));
+        if (null == this.propertyMap.get()) {
+            this.propertyMap.compareAndSet(null, new ConcurrentHashMap<String, Object>(4));
         }
         if (v == null) {
-            propertyMap.get().remove(name);
+            this.propertyMap.get().remove(name);
         } else {
-            propertyMap.get().put(name, v);
+            this.propertyMap.get().put(name, v);
         }
     }
 

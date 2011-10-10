@@ -22,7 +22,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 
 import com.wavemaker.runtime.data.Task;
-import com.wavemaker.runtime.data.DataServiceMetaData;
 import com.wavemaker.runtime.data.util.DataServiceUtils;
 import com.wavemaker.runtime.service.PagingOptions;
 
@@ -33,23 +32,22 @@ import com.wavemaker.runtime.service.PagingOptions;
  */
 public class QueryTask extends AbstractReadTask implements Task {
 
-    
     /**
      * First element in input array is the query.
      */
     public Object run(Session session, String dbName, Object... input) {
-        
+
         PagingOptions pagingOptions = null;
-        
+
         if (input.length > 0) {
             Object o = input[input.length - 1];
             if (o instanceof PagingOptions) {
-                pagingOptions = (PagingOptions)o;
+                pagingOptions = (PagingOptions) o;
                 Object[] ar = new Object[input.length - 1];
                 System.arraycopy(input, 0, ar, 0, ar.length);
                 input = ar;
             }
-        }        
+        }
 
         Map<String, BindParameter> bindParams = handleBindParameters(input);
 
@@ -61,16 +59,16 @@ public class QueryTask extends AbstractReadTask implements Task {
     }
 
     protected Map<String, BindParameter> handleBindParameters(Object... input) {
-        
+
         Map<String, BindParameter> rtn = new HashMap<String, BindParameter>();
-        
+
         if (input.length > 1) {
             for (int i = 1; i < input.length; i += 2) {
-                String name = (String)input[i];
-                rtn.put(name, new BindParameter(name, input[i+1]));
+                String name = (String) input[i];
+                rtn.put(name, new BindParameter(name, input[i + 1]));
             }
         }
-        
+
         return rtn;
     }
 
@@ -80,7 +78,7 @@ public class QueryTask extends AbstractReadTask implements Task {
     }
 
     protected Object runQuery(Query query) {
-        
+
         if (DataServiceUtils.isDML(query.getQueryString())) {
 
             return query.executeUpdate();
@@ -90,23 +88,20 @@ public class QueryTask extends AbstractReadTask implements Task {
     }
 
     @SuppressWarnings("unchecked")
-    protected void prepareQuery(Query query, Map<String, 
-				BindParameter> bindParams, 
-				PagingOptions pagingOptions) {
+    protected void prepareQuery(Query query, Map<String, BindParameter> bindParams, PagingOptions pagingOptions) {
 
         for (Map.Entry<String, BindParameter> e : bindParams.entrySet()) {
 
             String name = e.getKey();
             Object value = e.getValue().value;
 
-            if (value != null && 
-                Collection.class.isAssignableFrom(value.getClass())) {
-                query.setParameterList(name, (Collection<Object>)value);
+            if (value != null && Collection.class.isAssignableFrom(value.getClass())) {
+                query.setParameterList(name, (Collection<Object>) value);
             } else {
                 query.setParameter(name, value);
             }
         }
-        
+
         applyPaging(pagingOptions, query);
 
     }

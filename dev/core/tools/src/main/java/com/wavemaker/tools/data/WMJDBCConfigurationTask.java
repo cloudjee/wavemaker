@@ -21,30 +21,30 @@ import org.hibernate.tool.ant.JDBCConfigurationTask;
 /**
  * @author Simon Toens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class WMJDBCConfigurationTask extends JDBCConfigurationTask {
-    
+
     private Properties properties = null;
-    
+
     public WMJDBCConfigurationTask() {
         super();
     }
-    
+
     public void setProperties(Properties properties) {
         this.properties = properties;
     }
-    
+
     @Override
     protected Properties getProperties() {
-        
+
         Properties p = super.getProperties();
-        
+
         if (p == null) {
-            return properties;
+            return this.properties;
         }
-        
-        p.putAll(properties);
+
+        p.putAll(this.properties);
         return p;
-    } 
+    }
 }

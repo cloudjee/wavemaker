@@ -19,26 +19,25 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * 
  * 
- * 	The java-identifierType defines a Java identifier.
- * 	The users of this type should further verify that
- * 	the content does not contain Java reserved keywords.
+ * The java-identifierType defines a Java identifier. The users of this type should further verify that the content does
+ * not contain Java reserved keywords.
  * 
- *       
  * 
- * <p>Java class for java-identifierType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for java-identifierType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="java-identifierType">
@@ -53,9 +52,6 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "java-identifierType")
-public class JavaIdentifierType
-    extends String
-{
-
+public class JavaIdentifierType extends String {
 
 }

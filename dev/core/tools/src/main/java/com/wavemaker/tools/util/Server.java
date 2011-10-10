@@ -27,7 +27,7 @@ import com.wavemaker.tools.common.ConfigurationException;
 
 /**
  * This class represents a generic server on the network.
- *
+ * 
  * @author Simon Toens
  * @version $Rev$ - $Date$
  */
@@ -39,7 +39,7 @@ public class Server {
 
     public Server() {
         try {
-            ip = InetAddress.getLocalHost();
+            this.ip = InetAddress.getLocalHost();
         } catch (UnknownHostException ex) {
             throw new ConfigurationException(ex);
         }
@@ -52,18 +52,18 @@ public class Server {
 
     public void setHost(String host) {
         try {
-            ip = InetAddress.getByName(host);
+            this.ip = InetAddress.getByName(host);
         } catch (UnknownHostException ex) {
             throw new ConfigurationException(ex);
-        }        
+        }
     }
 
     public String getHostName() {
-        return ip.getHostName();
+        return this.ip.getHostName();
     }
 
     public String getIP() {
-        return ip.getHostAddress();
+        return this.ip.getHostAddress();
     }
 
     public void setPort(int port) {
@@ -71,12 +71,12 @@ public class Server {
     }
 
     public int getPort() {
-        return port;
+        return this.port;
     }
 
     public boolean isListening() {
         try {
-            new Socket(ip, port);
+            new Socket(this.ip, this.port);
         } catch (Exception ex) {
             return false;
         }
@@ -119,9 +119,8 @@ public class Server {
         HttpURLConnection rtn = null;
 
         try {
-            String url = "http://" + getHostName() + ":" + getPort() + "/" + 
-                uri;
-            rtn = (HttpURLConnection)new URL(url).openConnection();
+            String url = "http://" + getHostName() + ":" + getPort() + "/" + uri;
+            rtn = (HttpURLConnection) new URL(url).openConnection();
         } catch (MalformedURLException ex) {
             throw new AssertionError(ex);
         } catch (IOException ex) {
@@ -134,5 +133,5 @@ public class Server {
 
         return rtn;
     }
-    
+
 }

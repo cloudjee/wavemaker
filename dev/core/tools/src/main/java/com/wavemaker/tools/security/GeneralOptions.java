@@ -34,7 +34,7 @@ public class GeneralOptions {
     private String dataSourceType;
 
     public boolean isEnforceSecurity() {
-        return enforceSecurity;
+        return this.enforceSecurity;
     }
 
     public void setEnforceSecurity(boolean enforceSecurity) {
@@ -42,7 +42,7 @@ public class GeneralOptions {
     }
 
     public boolean isEnforceIndexHtml() {
-        return enforceIndexHtml;
+        return this.enforceIndexHtml;
     }
 
     public void setEnforceIndexHtml(boolean enforceIndexHtml) {
@@ -50,7 +50,7 @@ public class GeneralOptions {
     }
 
     public String getDataSourceType() {
-        return dataSourceType;
+        return this.dataSourceType;
     }
 
     public void setDataSourceType(String dataSourceType) {

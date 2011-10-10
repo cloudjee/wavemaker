@@ -21,19 +21,17 @@ package com.wavemaker.tools.service.types;
  * @version $Rev$ - $Date$
  */
 public class PrimitiveType implements Type {
-    
+
     public enum PRIMITIVES {
-        
-        STRING("String"),
-        NUMBER("Number"),
-        BOOLEAN("Boolean"),
-        DATE("Date");
-        
+
+        STRING("String"), NUMBER("Number"), BOOLEAN("Boolean"), DATE("Date");
+
         private final String primitive;
+
         PRIMITIVES(String string) {
             this.primitive = string;
         }
-        
+
         @Override
         public String toString() {
             return this.primitive;
@@ -41,29 +39,33 @@ public class PrimitiveType implements Type {
     }
 
     private PRIMITIVES primitiveType;
+
     private boolean internal;
 
     public PRIMITIVES getPrimitiveType() {
-        return primitiveType;
+        return this.primitiveType;
     }
+
     public void setPrimitiveType(PRIMITIVES primitiveType) {
         this.primitiveType = primitiveType;
     }
+
     public void setPrimitiveType(String primitiveType) {
-        
-        for (PRIMITIVES val: PRIMITIVES.values()) {
+
+        for (PRIMITIVES val : PRIMITIVES.values()) {
             if (val.primitive.equals(primitiveType)) {
                 this.primitiveType = val;
                 return;
             }
         }
-        
+
         this.primitiveType = PRIMITIVES.valueOf(primitiveType);
     }
-    
+
     public boolean isInternal() {
-        return internal;
+        return this.internal;
     }
+
     public void setInternal(boolean internal) {
         this.internal = internal;
     }

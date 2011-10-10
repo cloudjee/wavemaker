@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.data.parser;
 
 import java.io.IOException;
@@ -35,7 +36,7 @@ import com.wavemaker.tools.data.QueryInfo;
  */
 public class TestHbmQueryParser extends WMTestCase {
 
-	public void testMetaExists() throws Exception {
+    public void testMetaExists() throws Exception {
         HbmQueryParser p = buildParser("com/wavemaker/runtime/data/sample/sakila/Actor.crud.hql.xml");
         try {
             assertTrue(p.getMeta().equals("test123"));
@@ -83,20 +84,18 @@ public class TestHbmQueryParser extends WMTestCase {
 
         assertEquals(5, queries.size());
         assertTrue(queries.get(0).getName().equals("getActorById"));
-        assertTrue(queries.get(0).getQuery().equals(
-                "from Actor _a where _a.id=:id"));
+        assertTrue(queries.get(0).getQuery().equals("from Actor _a where _a.id=:id"));
         assertTrue(queries.get(0).getInputs().length == 1);
         assertTrue(queries.get(0).getInputs()[0].getParamName().equals("id"));
-        assertTrue(queries.get(0).getInputs()[0].getParamType().equals(
-                "java.lang.Short"));
+        assertTrue(queries.get(0).getInputs()[0].getParamType().equals("java.lang.Short"));
 
         assertTrue(queries.get(1).getName().equals("getEverySingleActor"));
         assertTrue(queries.get(1).getQuery().equals("from Actor"));
         assertTrue(queries.get(1).getInputs().length == 0);
     }
-    
+
     private HbmQueryParser buildParser(String path) throws IOException {
-    	ClassPathResource hqlResource = new ClassPathResource(path);
+        ClassPathResource hqlResource = new ClassPathResource(path);
         return new HbmQueryParser(new InputStreamReader(hqlResource.getInputStream()));
     }
 }

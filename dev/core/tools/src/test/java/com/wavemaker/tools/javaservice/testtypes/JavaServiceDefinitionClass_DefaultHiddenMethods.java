@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.javaservice.testtypes;
 
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
@@ -26,11 +27,11 @@ import com.wavemaker.runtime.service.annotations.HideFromClient;
  */
 @HideFromClient
 public class JavaServiceDefinitionClass_DefaultHiddenMethods {
-    
+
     public String hidden() {
         return "";
     }
-    
+
     @ExposeToClient
     public String exposed() {
         return "";

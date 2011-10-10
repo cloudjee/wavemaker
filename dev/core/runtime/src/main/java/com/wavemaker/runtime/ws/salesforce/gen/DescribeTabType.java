@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -21,11 +19,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for DescribeTab complex type.
+ * <p>
+ * Java class for DescribeTab complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="DescribeTab">
@@ -47,26 +46,25 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DescribeTab", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "custom",
-    "iconUrl",
-    "label",
-    "miniIconUrl",
-    "sobjectName",
-    "url"
-})
+@XmlType(name = "DescribeTab", namespace = "urn:partner.soap.sforce.com", propOrder = { "custom", "iconUrl", "label", "miniIconUrl", "sobjectName",
+    "url" })
 public class DescribeTabType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean custom;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String iconUrl;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String label;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String miniIconUrl;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String sobjectName;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String url;
 
@@ -75,7 +73,7 @@ public class DescribeTabType {
      * 
      */
     public boolean isCustom() {
-        return custom;
+        return this.custom;
     }
 
     /**
@@ -89,22 +87,18 @@ public class DescribeTabType {
     /**
      * Gets the value of the iconUrl property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getIconUrl() {
-        return iconUrl;
+        return this.iconUrl;
     }
 
     /**
      * Sets the value of the iconUrl property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setIconUrl(String value) {
         this.iconUrl = value;
@@ -113,22 +107,18 @@ public class DescribeTabType {
     /**
      * Gets the value of the label property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getLabel() {
-        return label;
+        return this.label;
     }
 
     /**
      * Sets the value of the label property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setLabel(String value) {
         this.label = value;
@@ -137,22 +127,18 @@ public class DescribeTabType {
     /**
      * Gets the value of the miniIconUrl property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getMiniIconUrl() {
-        return miniIconUrl;
+        return this.miniIconUrl;
     }
 
     /**
      * Sets the value of the miniIconUrl property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setMiniIconUrl(String value) {
         this.miniIconUrl = value;
@@ -161,22 +147,18 @@ public class DescribeTabType {
     /**
      * Gets the value of the sobjectName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getSobjectName() {
-        return sobjectName;
+        return this.sobjectName;
     }
 
     /**
      * Sets the value of the sobjectName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setSobjectName(String value) {
         this.sobjectName = value;
@@ -185,22 +167,18 @@ public class DescribeTabType {
     /**
      * Gets the value of the url property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getUrl() {
-        return url;
+        return this.url;
     }
 
     /**
      * Sets the value of the url property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setUrl(String value) {
         this.url = value;

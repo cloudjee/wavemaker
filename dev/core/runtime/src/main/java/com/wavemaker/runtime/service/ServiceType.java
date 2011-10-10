@@ -40,83 +40,54 @@ public interface ServiceType {
     /**
      * Parse the service arguments into the proper format.
      * 
-     * See
-     * {@link JSONUtils#convertJSONToObjects(JSONArray, java.util.List, JSONState)}
-     * for a utility method to help with this.
+     * See {@link JSONUtils#convertJSONToObjects(JSONArray, java.util.List, JSONState)} for a utility method to help
+     * with this.
      * 
-     * @param serviceWire
-     *            The ServiceWire for this service.
-     * @param methodName
-     *            The method name to invoke.
-     * @param args
-     *            The JSONArray of arguments to this service.
-     * @param jsonState
-     *            The current JSONState object.
-     * @return The populated ParsedServiceArguments object (or a ServiceType-
-     *         specific subclass).
+     * @param serviceWire The ServiceWire for this service.
+     * @param methodName The method name to invoke.
+     * @param args The JSONArray of arguments to this service.
+     * @param jsonState The current JSONState object.
+     * @return The populated ParsedServiceArguments object (or a ServiceType- specific subclass).
      */
-    public ParsedServiceArguments parseServiceArgs(ServiceWire serviceWire,
-            String methodName, JSONArray args, JSONState jsonState);
+    public ParsedServiceArguments parseServiceArgs(ServiceWire serviceWire, String methodName, JSONArray args, JSONState jsonState);
 
     /**
-     * Translate the Map<String,Object[]> argument list into a native Java
-     * Object[] array.  Some service invocation methods (such as FileUpload)
-     * transmit their arguments as name-value pairs; this method translates
-     * those to the expected order for a regular method invocation.
+     * Translate the Map<String,Object[]> argument list into a native Java Object[] array. Some service invocation
+     * methods (such as FileUpload) transmit their arguments as name-value pairs; this method translates those to the
+     * expected order for a regular method invocation.
      * 
-     * @param serviceWire
-     *            The ServiceWire for this service.
-     * @param methodName
-     *            The method name to invoke.
-     * @param args
-     *            The Map<String, Object[]> list of named arguments to this
-     *            service.
-     * @param jsonState
-     *            The current JSONState object.
-     * @return The populated ParsedServiceArguments object (or a ServiceType-
-     *         specific subclass).
+     * @param serviceWire The ServiceWire for this service.
+     * @param methodName The method name to invoke.
+     * @param args The Map<String, Object[]> list of named arguments to this service.
+     * @param jsonState The current JSONState object.
+     * @return The populated ParsedServiceArguments object (or a ServiceType- specific subclass).
      */
-    public ParsedServiceArguments parseServiceArgs(ServiceWire serviceWire,
-            String methodName, Map<String, Object[]> args, JSONState jsonState);
+    public ParsedServiceArguments parseServiceArgs(ServiceWire serviceWire, String methodName, Map<String, Object[]> args, JSONState jsonState);
 
     /**
-     * Invoke a method. This must properly process events; see
-     * {@link AbstractServiceType} for a sample of how to do that (or extend
-     * {@link AbstractServiceType}).
+     * Invoke a method. This must properly process events; see {@link AbstractServiceType} for a sample of how to do
+     * that (or extend {@link AbstractServiceType}).
      * 
-     * @param serviceWire
-     *            The ServiceWire for this service.
-     * @param methodName
-     *            The method name.
-     * @param args
-     *            The parsed service arguments.
-     * @param jsonState
-     *            The current JSONState object.
-     * @return The TypedServiceReturn containing the return value for the
-     *         service, as well as the type information.
+     * @param serviceWire The ServiceWire for this service.
+     * @param methodName The method name.
+     * @param args The parsed service arguments.
+     * @param jsonState The current JSONState object.
+     * @return The TypedServiceReturn containing the return value for the service, as well as the type information.
      */
-    public TypedServiceReturn invokeMethod(
-            ServiceWire serviceWire, String methodName,
-            ParsedServiceArguments args, JSONState jsonState);
-    
+    public TypedServiceReturn invokeMethod(ServiceWire serviceWire, String methodName, ParsedServiceArguments args, JSONState jsonState);
+
     /**
-     * An initial setup call. This is called before any method invocations or
-     * json translations happen (although it will happen after the initial
-     * json-formatted-String to JSONObject deserialization, this is before any
-     * JSONObject -> Java Object translation).
+     * An initial setup call. This is called before any method invocations or json translations happen (although it will
+     * happen after the initial json-formatted-String to JSONObject deserialization, this is before any JSONObject ->
+     * Java Object translation).
      * 
-     * This an appropriate place to initialize the JSONState or TypeState
-     * information.
+     * This an appropriate place to initialize the JSONState or TypeState information.
      * 
-     * Optionally, this could delegate setup() duties down into the ServiceWire
-     * to allow individual services to perform service instance-specific
-     * initialization.
+     * Optionally, this could delegate setup() duties down into the ServiceWire to allow individual services to perform
+     * service instance-specific initialization.
      * 
-     * @param internalRuntime
-     *            The internal runtime state.
-     * @param runtimeAccess
-     *            The runtime state.
+     * @param internalRuntime The internal runtime state.
+     * @param runtimeAccess The runtime state.
      */
-    public void setup(ServiceWire serviceWire, InternalRuntime internalRuntime,
-            RuntimeAccess runtimeAccess);
+    public void setup(ServiceWire serviceWire, InternalRuntime internalRuntime, RuntimeAccess runtimeAccess);
 }

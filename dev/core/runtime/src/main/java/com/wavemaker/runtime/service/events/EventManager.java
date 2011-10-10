@@ -32,56 +32,53 @@ public class EventManager {
     /** Logger for this class and subclasses */
     protected final Logger logger = Logger.getLogger(getClass());
 
-    private List<EventWire> eventWires = new ArrayList<EventWire>();
-    
+    private final List<EventWire> eventWires = new ArrayList<EventWire>();
+
     /**
-     * Return a map from EventListener to a List of the beans to be triggered
-     * by that EventListener.
+     * Return a map from EventListener to a List of the beans to be triggered by that EventListener.
      * 
      * @param listenerClass
      * @return
      */
     @SuppressWarnings("unchecked")
-    public<T> Map<T, List<ServiceWire>> getEventListeners(Class<?> T) {
-        
+    public <T> Map<T, List<ServiceWire>> getEventListeners(Class<?> T) {
+
         Map<T, List<ServiceWire>> ret = new HashMap<T, List<ServiceWire>>();
-        
-        if (null != eventWires && !eventWires.isEmpty()) {
-            for (EventWire wire : eventWires) {
+
+        if (null != this.eventWires && !this.eventWires.isEmpty()) {
+            for (EventWire wire : this.eventWires) {
                 if (T.isAssignableFrom(wire.getEventListener().getClass())) {
                     if (!ret.containsKey(wire.getEventListener())) {
-                        ret.put((T)wire.getEventListener(),
-                                new ArrayList<ServiceWire>());
+                        ret.put((T) wire.getEventListener(), new ArrayList<ServiceWire>());
                     }
                     ret.get(wire.getEventListener()).add(wire.getServiceWire());
                 }
             }
         }
-        
+
         return ret;
     }
-    
+
     public void addEvent(Object eventListener, ServiceWire serviceWire) {
-        
+
         EventWire wire = new EventWire();
         wire.setServiceWire(serviceWire);
         wire.setEventListener(eventListener);
-        eventWires.add(wire);
+        this.eventWires.add(wire);
     }
 
     /**
      * Add an EventWire to the eventWire list.
      * 
-     * @param eventWire
-     *            The EventWire to add.
+     * @param eventWire The EventWire to add.
      */
     public void addEventWire(EventWire eventWire) {
-        
-        logger.info("Adding EventWire "+eventWire);
+
+        this.logger.info("Adding EventWire " + eventWire);
         getEventWires().add(eventWire);
     }
 
     protected List<EventWire> getEventWires() {
-        return eventWires;
+        return this.eventWires;
     }
 }

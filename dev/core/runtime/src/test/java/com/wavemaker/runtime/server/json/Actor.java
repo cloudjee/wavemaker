@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.server.json;
 
 // Generated Jul 5, 2007 6:21:54 PM by Hibernate Tools 3.2.0.b9

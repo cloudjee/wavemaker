@@ -31,32 +31,33 @@ import com.wavemaker.tools.project.Project;
  * 
  * @author small
  * @author Jeremy Grelle
- *
+ * 
  */
 public abstract class AbstractWidgetsJSUpgradeTask implements UpgradeTask {
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
+     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
      */
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
-        
-        if (null==getPagesManager()) {
+
+        if (null == getPagesManager()) {
             throw new WMRuntimeException("No pagesManager in doUpgrade()");
         }
-        
+
         try {
-            for (String page: getPagesManager().listPages()) {
-                Resource pageDir = getPagesManager().getPageDir(
-                        project.getProjectName(), page);
-                Resource widgetsJS = pageDir.createRelative(page+"."+
-                        PagesManager.PAGE_WIDGETS);
+            for (String page : getPagesManager().listPages()) {
+                Resource pageDir = getPagesManager().getPageDir(project.getProjectName(), page);
+                Resource widgetsJS = pageDir.createRelative(page + "." + PagesManager.PAGE_WIDGETS);
 
                 if (widgetsJS.exists()) {
                     readAndUpgradeWidgets(project, widgetsJS);
                 }
             }
-            
-            Resource appJs = project.getWebAppRoot().createRelative(project.getProjectName()+".js");
+
+            Resource appJs = project.getWebAppRoot().createRelative(project.getProjectName() + ".js");
             if (doUpgradeAppJS() && appJs.exists()) {
                 readAndUpgradeWidgets(project, appJs);
             }
@@ -64,14 +65,12 @@ public abstract class AbstractWidgetsJSUpgradeTask implements UpgradeTask {
             throw new WMRuntimeException(e);
         }
     }
-    
-    private void readAndUpgradeWidgets(Project project, Resource widgetsJS)
-            throws IOException {
-        
+
+    private void readAndUpgradeWidgets(Project project, Resource widgetsJS) throws IOException {
+
         String contents = project.readFile(widgetsJS);
-        
-        String jsonString = contents.substring(contents.indexOf('{'),
-                contents.lastIndexOf('}')+1);
+
+        String jsonString = contents.substring(contents.indexOf('{'), contents.lastIndexOf('}') + 1);
 
         JSON j = JSONUnmarshaller.unmarshal(jsonString);
         upgradeWidgetsJS(j);
@@ -79,26 +78,23 @@ public abstract class AbstractWidgetsJSUpgradeTask implements UpgradeTask {
         JSONState js = new JSONState();
         js.setUnquoteKeys(true);
 
-        String ret = contents.substring(0, contents.indexOf('{')) + 
-                JSONMarshaller.marshal(j, js, false, true) +
-                contents.substring(contents.lastIndexOf('}')+1);
+        String ret = contents.substring(0, contents.indexOf('{')) + JSONMarshaller.marshal(j, js, false, true)
+            + contents.substring(contents.lastIndexOf('}') + 1);
         project.writeFile(widgetsJS, ret);
     }
-    
+
     public abstract void upgradeWidgetsJS(JSON j);
-    
+
     /**
      * @return true iff the application js file should be upgraded as well.
      */
     public abstract boolean doUpgradeAppJS();
-    
-    
-    
+
     // bean properties
     private PagesManager pagesManager;
 
     public PagesManager getPagesManager() {
-        return pagesManager;
+        return this.pagesManager;
     }
 
     public void setPagesManager(PagesManager pagesManager) {

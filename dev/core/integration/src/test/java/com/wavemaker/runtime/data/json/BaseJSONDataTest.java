@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data.json;
 
 import static org.junit.Assert.assertFalse;
@@ -34,7 +35,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.web.servlet.mvc.AbstractController;
+import org.springframework.web.servlet.support.WebContentGenerator;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.StringUtils;
@@ -51,52 +52,44 @@ import com.wavemaker.runtime.service.events.EventManager;
  */
 @DirtiesContext
 public abstract class BaseJSONDataTest extends RuntimeDataSpringContextTestCase {
-    
+
     @Before
     public void setUp() throws Exception {
-        
-//    do this in code:
-//
-//    <entry key-ref="dataServiceEventListener">
-//        <list>
-//            <ref bean="sakiladb2springEventWire"/>
-//        </list>
-//    </entry>
+
+        // do this in code:
+        //
+        // <entry key-ref="dataServiceEventListener">
+        // <list>
+        // <ref bean="sakiladb2springEventWire"/>
+        // </list>
+        // </entry>
 
         EventManager eventMgr = getEventManager();
-        ServiceWire sakilaServiceWire = (ServiceWire) getBean(
-                DataServiceTestConstants.SAKILA_SERVICE_SPRING_EVENT_WIRE_ID_2);
+        ServiceWire sakilaServiceWire = (ServiceWire) getBean(DataServiceTestConstants.SAKILA_SERVICE_SPRING_EVENT_WIRE_ID_2);
         Object eventListener = getBean(DataServiceTestConstants.EVENT_LISTENER_BEAN_ID);
         eventMgr.addEvent(eventListener, sakilaServiceWire);
     }
 
-    protected String runSakilaOpMarshalledResponse(String opName,
-            Object... args) {
-        return runOpMarshalledResponse(DataServiceTestConstants.SAKILA_SERVICE_SPRING_ID_2,
-                opName, args);
+    protected String runSakilaOpMarshalledResponse(String opName, Object... args) {
+        return runOpMarshalledResponse(DataServiceTestConstants.SAKILA_SERVICE_SPRING_ID_2, opName, args);
     }
 
     protected String runSakilaOpMarshalledResponse(String post) {
-        return runOpMarshalledResponse(DataServiceTestConstants.SAKILA_SERVICE_SPRING_ID_2,
-                post);
+        return runOpMarshalledResponse(DataServiceTestConstants.SAKILA_SERVICE_SPRING_ID_2, post);
     }
 
-    protected String runRuntimeOpMarshalledResponse(String opName,
-            Object... args) {
-        return runOpMarshalledResponse(DataServiceTestConstants.RUNTIME_SERVICE_ID, opName,
-                args);
+    protected String runRuntimeOpMarshalledResponse(String opName, Object... args) {
+        return runOpMarshalledResponse(DataServiceTestConstants.RUNTIME_SERVICE_ID, opName, args);
     }
-    
+
     protected String runRuntimeOpMarshalledResponse(String post) {
         return runOpMarshalledResponse(DataServiceTestConstants.RUNTIME_SERVICE_ID, post);
     }
-    
 
-    protected String runOpMarshalledResponse(String serviceName, String opName,
-            Object... args) {
+    protected String runOpMarshalledResponse(String serviceName, String opName, Object... args) {
 
         MockHttpServletResponse resp = new MockHttpServletResponse();
-        
+
         try {
             invokeService(serviceName, opName, args, resp);
         } catch (Exception e) {
@@ -108,13 +101,11 @@ public abstract class BaseJSONDataTest extends RuntimeDataSpringContextTestCase 
 
     protected String runOpMarshalledResponse(String serviceName, String post) {
 
-        MockHttpServletRequest request = new MockHttpServletRequest(
-                AbstractController.METHOD_POST,
-                "/" + serviceName + ".json");
+        MockHttpServletRequest request = new MockHttpServletRequest(WebContentGenerator.METHOD_POST, "/" + serviceName + ".json");
         request.setSession(new MockHttpSession());
         request.setContent(post.getBytes());
         MockHttpServletResponse response = new MockHttpServletResponse();
-        
+
         try {
             invokeService(request, response);
         } catch (Exception e) {
@@ -134,8 +125,7 @@ public abstract class BaseJSONDataTest extends RuntimeDataSpringContextTestCase 
 
         List<String> tokens = StringUtils.split(s);
 
-        List<Map<String, String>> rtn = new ArrayList<Map<String, String>>(
-                tokens.size());
+        List<Map<String, String>> rtn = new ArrayList<Map<String, String>>(tokens.size());
 
         for (String i : tokens) {
             rtn.add(tokenizeObjectLiteral(i));
@@ -168,63 +158,47 @@ public abstract class BaseJSONDataTest extends RuntimeDataSpringContextTestCase 
         return rtn;
     }
 
-    protected void verifyCityAttributes(Map<String, String> attrs,
-            boolean checkRelated) {
+    protected void verifyCityAttributes(Map<String, String> attrs, boolean checkRelated) {
         verifyCityAttributes(attrs, false, false);
     }
 
-    protected void verifyCityAttributes(Map<String, String> attrs,
-            boolean checkRelated, boolean relatedShouldBeThere) {
-        assertTrue("cityId has not been marshalled", attrs
-                .containsKey("cityId"));
+    protected void verifyCityAttributes(Map<String, String> attrs, boolean checkRelated, boolean relatedShouldBeThere) {
+        assertTrue("cityId has not been marshalled", attrs.containsKey("cityId"));
         assertTrue("city has not been marshalled", attrs.containsKey("city"));
-        assertTrue("lastUpdate has not been marshalled", attrs
-                .containsKey("lastUpdate"));
+        assertTrue("lastUpdate has not been marshalled", attrs.containsKey("lastUpdate"));
 
         if (!checkRelated) {
             return;
         }
 
         if (relatedShouldBeThere) {
-            assertTrue("addresses has not been marshalled", attrs
-                    .containsKey("addresses"));
-            assertTrue("country has not been marshalled", attrs
-                    .containsKey("country"));
+            assertTrue("addresses has not been marshalled", attrs.containsKey("addresses"));
+            assertTrue("country has not been marshalled", attrs.containsKey("country"));
         } else {
-            assertFalse("addresses should not have been marshalled", attrs
-                    .containsKey("addresses"));
-            assertFalse("country should not have been marshalled", attrs
-                    .containsKey("country"));
+            assertFalse("addresses should not have been marshalled", attrs.containsKey("addresses"));
+            assertFalse("country should not have been marshalled", attrs.containsKey("country"));
         }
     }
 
-    protected void verifyCountryAttributes(Map<String, String> attrs,
-            boolean relatedShouldBeThere) {
-        assertTrue("countryId has not been marshalled", attrs
-                .containsKey("countryId"));
-        assertTrue("country has not been marshalled", attrs
-                .containsKey("country"));
-        assertTrue("lastUpdate has not been marshalled", attrs
-                .containsKey("lastUpdate"));
+    protected void verifyCountryAttributes(Map<String, String> attrs, boolean relatedShouldBeThere) {
+        assertTrue("countryId has not been marshalled", attrs.containsKey("countryId"));
+        assertTrue("country has not been marshalled", attrs.containsKey("country"));
+        assertTrue("lastUpdate has not been marshalled", attrs.containsKey("lastUpdate"));
 
         if (relatedShouldBeThere) {
-            assertTrue("cities has not been marshalled", attrs
-                    .containsKey("cities"));
+            assertTrue("cities has not been marshalled", attrs.containsKey("cities"));
         } else {
-            assertFalse("cities should not have been marshalled", attrs
-                    .containsKey("cities"));
+            assertFalse("cities should not have been marshalled", attrs.containsKey("cities"));
         }
     }
 
-    protected Map<String, String> getModifiedProperties(Map<String, String> m1,
-            Map<String, String> m2) {
+    protected Map<String, String> getModifiedProperties(Map<String, String> m1, Map<String, String> m2) {
 
         Map<String, String> rtn = new HashMap<String, String>();
 
         for (Map.Entry<String, String> e : m1.entrySet()) {
             if (m2.containsKey(e.getKey())) {
-                if (!String.valueOf(e.getValue()).equals(
-                        String.valueOf(m2.get(e.getKey())))) {
+                if (!String.valueOf(e.getValue()).equals(String.valueOf(m2.get(e.getKey())))) {
                     rtn.put(e.getKey(), m2.get(e.getKey()));
                 }
             } else {
@@ -244,8 +218,7 @@ public abstract class BaseJSONDataTest extends RuntimeDataSpringContextTestCase 
             throw new WMRuntimeException(ex);
         }
 
-        String result = "{"
-                + StringUtils.doubleQuote(ServerConstants.RESULTS_PART) + ":";
+        String result = "{" + StringUtils.doubleQuote(ServerConstants.RESULTS_PART) + ":";
 
         int i = rtn.indexOf(result);
         if (i != -1) {

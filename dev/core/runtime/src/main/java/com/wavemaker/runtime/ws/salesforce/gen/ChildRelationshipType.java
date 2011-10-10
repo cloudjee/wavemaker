@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -21,11 +19,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for ChildRelationship complex type.
+ * <p>
+ * Java class for ChildRelationship complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="ChildRelationship">
@@ -46,23 +45,22 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ChildRelationship", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "cascadeDelete",
-    "childSObject",
-    "deprecatedAndHidden",
-    "field",
-    "relationshipName"
-})
+@XmlType(name = "ChildRelationship", namespace = "urn:partner.soap.sforce.com", propOrder = { "cascadeDelete", "childSObject", "deprecatedAndHidden",
+    "field", "relationshipName" })
 public class ChildRelationshipType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean cascadeDelete;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String childSObject;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean deprecatedAndHidden;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String field;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected String relationshipName;
 
@@ -71,7 +69,7 @@ public class ChildRelationshipType {
      * 
      */
     public boolean isCascadeDelete() {
-        return cascadeDelete;
+        return this.cascadeDelete;
     }
 
     /**
@@ -85,22 +83,18 @@ public class ChildRelationshipType {
     /**
      * Gets the value of the childSObject property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getChildSObject() {
-        return childSObject;
+        return this.childSObject;
     }
 
     /**
      * Sets the value of the childSObject property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setChildSObject(String value) {
         this.childSObject = value;
@@ -111,7 +105,7 @@ public class ChildRelationshipType {
      * 
      */
     public boolean isDeprecatedAndHidden() {
-        return deprecatedAndHidden;
+        return this.deprecatedAndHidden;
     }
 
     /**
@@ -125,22 +119,18 @@ public class ChildRelationshipType {
     /**
      * Gets the value of the field property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getField() {
-        return field;
+        return this.field;
     }
 
     /**
      * Sets the value of the field property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setField(String value) {
         this.field = value;
@@ -149,22 +139,18 @@ public class ChildRelationshipType {
     /**
      * Gets the value of the relationshipName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getRelationshipName() {
-        return relationshipName;
+        return this.relationshipName;
     }
 
     /**
      * Sets the value of the relationshipName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setRelationshipName(String value) {
         this.relationshipName = value;

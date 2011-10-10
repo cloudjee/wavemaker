@@ -26,13 +26,12 @@ import com.wavemaker.common.util.Tuple;
  * @version $Rev$ - $Date$
  * 
  */
-public class DefaultRevengNamingStrategy extends DelegatingReverseEngineeringStrategy
-        implements ReverseEngineeringStrategy {
-    
+public class DefaultRevengNamingStrategy extends DelegatingReverseEngineeringStrategy implements ReverseEngineeringStrategy {
+
     public DefaultRevengNamingStrategy(ReverseEngineeringStrategy delegate) {
         super(delegate);
     }
-    
+
     @Override
     public String columnToPropertyName(TableIdentifier table, String columnName) {
         String rtn = super.columnToPropertyName(table, columnName);

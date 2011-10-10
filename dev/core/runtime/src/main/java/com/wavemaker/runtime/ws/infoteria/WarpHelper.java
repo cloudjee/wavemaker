@@ -11,18 +11,19 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 package com.wavemaker.runtime.ws.infoteria;
 
-import javax.xml.parsers.DocumentBuilderFactory;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
-
-import java.io.*;
 
 /**
  * Web service support for Asteria Flow Designer Server
@@ -30,24 +31,31 @@ import java.io.*;
 public class WarpHelper {
 
     public static final String WARP_HOST = ".host";
+
     public static final String WARP_PORT = ".port";
+
     public static final String WARP_USERNAME = ".username";
+
     public static final String WARP_PASS = ".password";
+
     public static final String WARP_DOMAIN = ".domain";
 
     public static final String WARP_ERROR_AUTH = "Auth";
+
     public static final String WARP_ERROR_ROLE = "Role";
+
     public static final String WARP_ERROR_NOT_FOUND = "NotFound";
+
     public static final String WARP_ERROR_ERROR = "Error";
+
     public static final String WARP_ERROR_SERVER_ERROR = "ServerError";
 
-    public static boolean authenticationError(byte[] bytes)
-            throws IOException, ParserConfigurationException, SAXException {
+    public static boolean authenticationError(byte[] bytes) throws IOException, ParserConfigurationException, SAXException {
         ByteArrayInputStream is = new ByteArrayInputStream(bytes);
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
         DocumentBuilder docBuilder = dbf.newDocumentBuilder();
-        Document doc = docBuilder.parse (is);
+        Document doc = docBuilder.parse(is);
         Node errorNode = doc.getFirstChild();
         if (!errorNode.getNodeName().equals("error")) {
             return false;

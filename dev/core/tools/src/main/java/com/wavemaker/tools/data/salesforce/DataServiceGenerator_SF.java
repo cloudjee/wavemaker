@@ -54,22 +54,21 @@ import com.wavemaker.tools.ws.salesforce.SalesforceHelper;
  */
 public class DataServiceGenerator_SF extends DataServiceGenerator {
 
-    private DesignServiceManager dsm;
+    private final DesignServiceManager dsm;
 
     public DataServiceGenerator_SF(GenerationConfiguration configuration) {
 
         super(configuration, "com.sforce.SalesforceQueries");
 
-        useNDCLogging = false;
+        this.useNDCLogging = false;
 
-        ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().
-                getAttribute(DataServiceConstants.CURRENT_PROJECT_MANAGER);
-        dsm = DesignTimeUtils.getDSMForProjectRoot(projMgr.getCurrentProject().getProjectRoot());
+        ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().getAttribute(DataServiceConstants.CURRENT_PROJECT_MANAGER);
+        this.dsm = DesignTimeUtils.getDSMForProjectRoot(projMgr.getCurrentProject().getProjectRoot());
     }
 
     /**
      * Generates service stubs.
-     *
+     * 
      * @throws GenerationException
      */
     @SuppressWarnings("deprecation")
@@ -90,26 +89,25 @@ public class DataServiceGenerator_SF extends DataServiceGenerator {
             generateDefaultConstructorBody(defaultConstBody);
         }
 
-        List<String> operationNames = serviceDefinition.getOperationNames();
+        List<String> operationNames = this.serviceDefinition.getOperationNames();
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Generating service class with operations: "
-                    + operationNames);
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("Generating service class with operations: " + operationNames);
         }
 
         for (int i = 0; i < operationNames.size(); i++) {
             String operationName = operationNames.get(i);
-            if (isSalesForceMethod(operationName)) continue;
-            List<ElementType> inputTypes = serviceDefinition
-                    .getInputTypes(operationName);
+            if (isSalesForceMethod(operationName)) {
+                continue;
+            }
+            List<ElementType> inputTypes = this.serviceDefinition.getInputTypes(operationName);
             generateOperationMethod(serviceCls, operationName, inputTypes, null);
 
             // add overloaded versions for this method
             int j = 0;
             List<List<ElementType>> overloadedVersions = getOverloadedVersions(operationName);
             for (List<ElementType> overloadedInputTypes : overloadedVersions) {
-                generateOperationMethod(serviceCls, operationName,
-                        overloadedInputTypes, j++);
+                generateOperationMethod(serviceCls, operationName, overloadedInputTypes, j++);
             }
 
         }
@@ -119,9 +117,8 @@ public class DataServiceGenerator_SF extends DataServiceGenerator {
         postGenerateClassBody(serviceCls);
 
         try {
-            configuration.getOutputDirectory().getFile().mkdirs();
-            codeModel.build(configuration.getOutputDirectory().getFile(), configuration
-                    .getOutputDirectory().getFile(), null);
+            this.configuration.getOutputDirectory().getFile().mkdirs();
+            this.codeModel.build(this.configuration.getOutputDirectory().getFile(), this.configuration.getOutputDirectory().getFile(), null);
         } catch (IOException e) {
             throw new GenerationException("Unable to write service stub", e);
         }
@@ -130,11 +127,11 @@ public class DataServiceGenerator_SF extends DataServiceGenerator {
     }
 
     public void generateOthers(JDefinedClass serviceCls) {
-        serviceCls.direct(
-                "public Object runNamedQuery(String dataModelName, String queryName, Class cls, Object ... values) {");
+        serviceCls.direct("public Object runNamedQuery(String dataModelName, String queryName, Class cls, Object ... values) {");
         serviceCls.direct("return null;}");
     }
 
+    @Override
     public void setGenerateMain(boolean generateMain) {
         this.generateMain = generateMain;
     }
@@ -146,7 +143,7 @@ public class DataServiceGenerator_SF extends DataServiceGenerator {
 
     @Override
     public String getClassName() {
-        return serviceClass;
+        return this.serviceClass;
     }
 
     @Override
@@ -159,7 +156,7 @@ public class DataServiceGenerator_SF extends DataServiceGenerator {
     @Override
     protected List<List<ElementType>> getOverloadedVersions(String operationName) {
 
-        DataServiceOperation op = ds.getOperation(operationName);
+        DataServiceOperation op = this.ds.getOperation(operationName);
 
         List<List<ElementType>> rtn = new ArrayList<List<ElementType>>();
 
@@ -179,19 +176,17 @@ public class DataServiceGenerator_SF extends DataServiceGenerator {
     }
 
     @Override
-    protected void generateOperationMethodBody(JMethod method, JBlock body,
-            String operationName, Map<String, JType> inputJTypeMap,
-            ElementType outputType, JType outputJType, Integer overloadCount) {
+    protected void generateOperationMethodBody(JMethod method, JBlock body, String operationName, Map<String, JType> inputJTypeMap,
+        ElementType outputType, JType outputJType, Integer overloadCount) {
 
-        DataServiceOperation op = ds.getOperation(operationName);
+        DataServiceOperation op = this.ds.getOperation(operationName);
 
         if (overloadCount != null) {
             op = op.getOverloadedOperations().get(overloadCount);
         }
 
-        if (firstCountOperation == null
-                && op.getName().endsWith(DataServiceConstants.COUNT_OP_SUFFIX)) {
-            firstCountOperation = op;
+        if (this.firstCountOperation == null && op.getName().endsWith(DataServiceConstants.COUNT_OP_SUFFIX)) {
+            this.firstCountOperation = op;
         }
 
         addOperation(op, inputJTypeMap, outputType, outputJType, body);
@@ -202,37 +197,32 @@ public class DataServiceGenerator_SF extends DataServiceGenerator {
 
         writeConstantsClass();
 
-        if (generateMain) {
+        if (this.generateMain) {
 
-            JMethod main = cls.method(JMod.PUBLIC | JMod.STATIC | JMod.FINAL,
-                    codeModel.VOID, "main");
+            JMethod main = cls.method(JMod.PUBLIC | JMod.STATIC | JMod.FINAL, this.codeModel.VOID, "main");
             main.param(String[].class, "args");
 
-            JType t = codeModel.ref(getClassName());
+            JType t = this.codeModel.ref(getClassName());
             JBlock b = main.body();
 
-            if (firstCountOperation == null) {
-                JFieldRef sysout = codeModel.ref(System.class).staticRef("out");
-                b.add(sysout.invoke("print").arg(
-                        JExpr.lit("Don't know what to do")));
+            if (this.firstCountOperation == null) {
+                JFieldRef sysout = this.codeModel.ref(System.class).staticRef("out");
+                b.add(sysout.invoke("print").arg(JExpr.lit("Don't know what to do")));
                 return;
             }
 
-            JVar springConfig = b.decl(codeModel.ref(String.class), "cfg",
-                    JExpr.lit(serviceId + DataServiceConstants.SPRING_CFG_EXT));
+            JVar springConfig = b.decl(this.codeModel.ref(String.class), "cfg", JExpr.lit(this.serviceId + DataServiceConstants.SPRING_CFG_EXT));
 
-            JVar beanName = b.decl(codeModel.ref(String.class), "beanName",
-                    JExpr.lit(serviceId));
+            JVar beanName = b.decl(this.codeModel.ref(String.class), "beanName", JExpr.lit(this.serviceId));
 
-            JVar v = b.decl(t, "s", JExpr.cast(t, codeModel.ref(
-                    SpringUtils.class).staticInvoke(GET_BEAN_METHOD_NAME).arg(
-                    springConfig).arg(beanName)));
+            JVar v = b.decl(t, "s",
+                JExpr.cast(t, this.codeModel.ref(SpringUtils.class).staticInvoke(GET_BEAN_METHOD_NAME).arg(springConfig).arg(beanName)));
 
-            String name = firstCountOperation.getName();
+            String name = this.firstCountOperation.getName();
 
             JInvocation i = v.invoke(name);
 
-            JFieldRef sysout = codeModel.ref(System.class).staticRef("out");
+            JFieldRef sysout = this.codeModel.ref(System.class).staticRef("out");
             b.add(sysout.invoke("print").arg(JExpr.lit(name + ": ")));
             b.add(sysout.invoke("println").arg(i));
         }
@@ -240,25 +230,25 @@ public class DataServiceGenerator_SF extends DataServiceGenerator {
 
     private boolean isSalesForceMethod(String operationName) throws GenerationException {
         boolean rtn = false;
-        if (serviceId.equals(CommonConstants.SALESFORCE_SERVICE)) {
-            rtn = SalesforceHelper.isSalesForceMethod(dsm, operationName);
+        if (this.serviceId.equals(CommonConstants.SALESFORCE_SERVICE)) {
+            rtn = SalesforceHelper.isSalesForceMethod(this.dsm, operationName);
         }
 
         return rtn;
     }
 
     /**
-     * The <code>ServiceGenerator</code> implementation should override this
-     * method to customize the class level javadoc.
-     *
+     * The <code>ServiceGenerator</code> implementation should override this method to customize the class level
+     * javadoc.
+     * 
      * @param jdoc
      */
+    @Override
     protected void generateClassJavadoc(JDocComment jdoc) {
         addJavadoc(jdoc);
     }
 
-    private void addOperation(DataServiceOperation op,
-            Map<String, JType> inputJTypeMap, ElementType outputType, JType outputJType, JBlock body) {
+    private void addOperation(DataServiceOperation op, Map<String, JType> inputJTypeMap, ElementType outputType, JType outputJType, JBlock body) {
 
         JExpression thisObj = JExpr._this();
         JInvocation exp = thisObj.invoke("runNamedQuery");
@@ -268,9 +258,8 @@ public class DataServiceGenerator_SF extends DataServiceGenerator {
         if (op.isQuery()) {
             String queryName = op.getQueryName();
             String constantName = queryName + QUERY_NAME_CONSTANT_SUFFIX;
-            constantsClass.addStringConstant(constantName, queryName);
-            exp.arg(JExpr.direct(constantsClass.getClassName() + "."
-                    + constantName));
+            this.constantsClass.addStringConstant(constantName, queryName);
+            exp.arg(JExpr.direct(this.constantsClass.getClassName() + "." + constantName));
 
             String returnClassName = outputType.getJavaType() + ".class";
             exp.arg(JExpr.direct(returnClassName));
@@ -287,13 +276,12 @@ public class DataServiceGenerator_SF extends DataServiceGenerator {
             if (el.getJavaType().equals(String.class.getName())) {
                 exp.arg(JExpr.lit(el.getName()));
             } else if (el.getJavaType().equals(Class.class.getName())) {
-                JClass jc = codeModel.ref(el.getName());
+                JClass jc = this.codeModel.ref(el.getName());
                 exp.arg(jc.dotclass());
             } else if (el.getJavaType().equals(Boolean.class.getName())) {
                 exp.arg(JExpr.lit(Boolean.parseBoolean(el.getName())));
             } else {
-                throw new AssertionError("Unknown input type "
-                        + el.getJavaType());
+                throw new AssertionError("Unknown input type " + el.getJavaType());
             }
         }
 
@@ -311,20 +299,18 @@ public class DataServiceGenerator_SF extends DataServiceGenerator {
             JVar rtn = body.decl(jt, "rtn", JExpr.cast(jt, exp));
             JConditional ifstmt = body._if(rtn.invoke(IS_EMPTY_METHOD_NAME));
             ifstmt._then()._return(JExpr._null());
-            ifstmt._else()._return(
-                    rtn.invoke(GET_METHOD_NAME).arg(JExpr.lit(0)));
+            ifstmt._else()._return(rtn.invoke(GET_METHOD_NAME).arg(JExpr.lit(0)));
         } else {
-            if (outputJType == codeModel.VOID) {
+            if (outputJType == this.codeModel.VOID) {
                 body.add(exp);
             } else {
                 body._return(JExpr.cast(outputJType, exp));
             }
         }
     }
-    
+
     @Override
     protected void addJavadoc(JDocComment jdoc) {
-        jdoc.add(" This class holds all named queries for SalesForce.\n"
-                + StringUtils.getFormattedDate());
+        jdoc.add(" This class holds all named queries for SalesForce.\n" + StringUtils.getFormattedDate());
     }
 }

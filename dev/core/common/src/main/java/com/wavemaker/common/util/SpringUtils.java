@@ -14,7 +14,6 @@
 
 package com.wavemaker.common.util;
 
-
 import java.io.File;
 
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
@@ -23,7 +22,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
-
 /**
  * Helper methods for initializing and configuring Spring.
  * 
@@ -31,7 +29,7 @@ import org.springframework.core.io.Resource;
  * 
  */
 public class SpringUtils {
-    
+
     public static final String VALUE_ELEMENT = "value";
 
     private SpringUtils() {
@@ -48,17 +46,16 @@ public class SpringUtils {
     }
 
     /**
-     * Initializes Spring with config.xml. Statically initializes
-     * com.wavemaker.common.ResourceManager, used for msg lookup.
+     * Initializes Spring with config.xml. Statically initializes com.wavemaker.common.ResourceManager, used for msg
+     * lookup.
      * 
-     * When runnung outside of a webapp container, this method needs to run 
-     * once at startup before accessing Resources defined in 
-     * com.wavemaker.common.Resource.
+     * When runnung outside of a webapp container, this method needs to run once at startup before accessing Resources
+     * defined in com.wavemaker.common.Resource.
      */
     public static GenericApplicationContext initSpringConfig() {
         return initSpringConfig(true);
     }
-    
+
     public static Object getBean(File cfg, String beanName) {
         return getBean(new FileSystemResource(cfg), beanName);
     }
@@ -66,7 +63,7 @@ public class SpringUtils {
     public static Object getBean(String cfg, String beanName) {
         return getBean(new ClassPathResource(cfg), beanName);
     }
-    
+
     public static Object getBean(Resource resource, String beanName) {
         GenericApplicationContext ctx = initSpringConfig(false);
         XmlBeanDefinitionReader xmlReader = new XmlBeanDefinitionReader(ctx);
@@ -74,13 +71,11 @@ public class SpringUtils {
         ctx.refresh();
         return ctx.getBean(beanName);
     }
-    
-    private static GenericApplicationContext initSpringConfig(boolean refresh) 
-    {
+
+    private static GenericApplicationContext initSpringConfig(boolean refresh) {
         GenericApplicationContext ctx = new GenericApplicationContext();
         XmlBeanDefinitionReader xmlReader = new XmlBeanDefinitionReader(ctx);
-        xmlReader.loadBeanDefinitions(new ClassPathResource(
-                "config.xml"));
+        xmlReader.loadBeanDefinitions(new ClassPathResource("config.xml"));
 
         if (refresh) {
             ctx.refresh();
@@ -89,11 +84,8 @@ public class SpringUtils {
         return ctx;
     }
 
-    public static void throwSpringNotInitializedError(
-        Class<?> uninitializedBean) 
-    {
-        throw new AssertionError("Spring has not initialized "
-                + uninitializedBean.getName());
+    public static void throwSpringNotInitializedError(Class<?> uninitializedBean) {
+        throw new AssertionError("Spring has not initialized " + uninitializedBean.getName());
     }
 
 }

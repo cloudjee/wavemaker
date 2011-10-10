@@ -17,7 +17,7 @@ package com.wavemaker.tools.ws.jaxb.boolean_getter;
 /**
  * @author ffu
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class Const {
 

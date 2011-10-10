@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -21,11 +19,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for RelatedListSort complex type.
+ * <p>
+ * Java class for RelatedListSort complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="RelatedListSort">
@@ -43,14 +42,12 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "RelatedListSort", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "ascending",
-    "column"
-})
+@XmlType(name = "RelatedListSort", namespace = "urn:partner.soap.sforce.com", propOrder = { "ascending", "column" })
 public class RelatedListSortType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean ascending;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String column;
 
@@ -59,7 +56,7 @@ public class RelatedListSortType {
      * 
      */
     public boolean isAscending() {
-        return ascending;
+        return this.ascending;
     }
 
     /**
@@ -73,22 +70,18 @@ public class RelatedListSortType {
     /**
      * Gets the value of the column property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getColumn() {
-        return column;
+        return this.column;
     }
 
     /**
      * Sets the value of the column property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setColumn(String value) {
         this.column = value;

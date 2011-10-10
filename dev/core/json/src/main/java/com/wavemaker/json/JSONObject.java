@@ -22,26 +22,30 @@ import com.wavemaker.common.WMRuntimeException;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
-public class JSONObject extends LinkedHashMap<String,Object> implements JSON {
+public class JSONObject extends LinkedHashMap<String, Object> implements JSON {
 
     private static final long serialVersionUID = 1L;
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.JSON#isList()
      */
     public boolean isList() {
         return false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.JSON#isObject()
      */
     public boolean isObject() {
         return true;
     }
-    
+
     @Override
     public String toString() {
         try {

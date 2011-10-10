@@ -51,23 +51,22 @@ public class HbmQueryWriter extends BaseHbmWriter {
     @Override
     public void writeCustom() {
         writeMeta();
-        for (QueryInfo query : queries) {
+        for (QueryInfo query : this.queries) {
             writeQuery(query);
         }
     }
 
     private void writeMeta() {
-        if (meta == null) {
+        if (this.meta == null) {
             return;
         }
-        xmlWriter.addElement(HbmConstants.META_EL,
-                HbmConstants.META_VALUE_ATTR, meta);
-        xmlWriter.closeElement();
+        this.xmlWriter.addElement(HbmConstants.META_EL, HbmConstants.META_VALUE_ATTR, this.meta);
+        this.xmlWriter.closeElement();
     }
 
     private void writeQuery(QueryInfo query) {
 
-        xmlWriter.addElement(HbmConstants.QUERY_EL);
+        this.xmlWriter.addElement(HbmConstants.QUERY_EL);
 
         String comment = null;
 
@@ -76,17 +75,15 @@ public class HbmQueryWriter extends BaseHbmWriter {
         }
         if (query.getIsGenerated()) {
             if (comment != null) {
-                xmlWriter.forceCloseOnNewLine();
+                this.xmlWriter.forceCloseOnNewLine();
             }
-            comment = DataServiceUtils.addGeneratedAnnotation(comment,
-                    xmlWriter);
+            comment = DataServiceUtils.addGeneratedAnnotation(comment, this.xmlWriter);
         }
 
-        xmlWriter.addAttribute(HbmConstants.NAME_ATTR, query.getName());
+        this.xmlWriter.addAttribute(HbmConstants.NAME_ATTR, query.getName());
 
         if (comment != null) {
-            xmlWriter.addAttribute(HbmConstants.COMMENT_ATTR, XMLUtils
-                    .escape(comment));
+            this.xmlWriter.addAttribute(HbmConstants.COMMENT_ATTR, XMLUtils.escape(comment));
         }
 
         for (Input input : query.getInputs()) {
@@ -98,12 +95,11 @@ public class HbmQueryWriter extends BaseHbmWriter {
 
             type = XMLUtils.escape(type);
 
-            xmlWriter.addClosedElement(HbmConstants.QUERY_PARAM_EL,
-                    HbmConstants.NAME_ATTR, name, HbmConstants.TYPE_ATTR, type);
+            this.xmlWriter.addClosedElement(HbmConstants.QUERY_PARAM_EL, HbmConstants.NAME_ATTR, name, HbmConstants.TYPE_ATTR, type);
         }
 
-        xmlWriter.addText(query.getQuery());
+        this.xmlWriter.addText(query.getQuery());
 
-        xmlWriter.closeElement();
+        this.xmlWriter.closeElement();
     }
 }

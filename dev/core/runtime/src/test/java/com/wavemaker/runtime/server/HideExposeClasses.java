@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.server;
 
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
@@ -23,57 +24,68 @@ import com.wavemaker.runtime.service.annotations.HideFromClient;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class HideExposeClasses {
-    
+
     public static class Default {
-        
-        public void foo() { }
-        
+
+        public void foo() {
+        }
+
         @HideFromClient
-        public void hide() { }
-        
+        public void hide() {
+        }
+
         @ExposeToClient
-        public void expose() { }
+        public void expose() {
+        }
     }
-    
+
     @ExposeToClient
     public static class Expose {
-        
-        public void foo() { }
-        
+
+        public void foo() {
+        }
+
         @HideFromClient
-        public void hide() { }
-        
+        public void hide() {
+        }
+
         @ExposeToClient
-        public void expose() { }
+        public void expose() {
+        }
     }
-    
+
     @HideFromClient
     public static class Hide {
-        
-        public void foo() { }
-        
+
+        public void foo() {
+        }
+
         @HideFromClient
-        public void hide() { }
-        
+        public void hide() {
+        }
+
         @ExposeToClient
-        public void expose() { }
+        public void expose() {
+        }
     }
-    
+
     public static class Conflict {
-        
+
         @HideFromClient
         @ExposeToClient
-        public void conflict() { }
+        public void conflict() {
+        }
     }
-    
+
     @HideFromClient
     public static class DefaultConflict {
-        
+
         @HideFromClient
         @ExposeToClient
-        public void conflict() { }
+        public void conflict() {
+        }
     }
 }

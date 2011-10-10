@@ -15,42 +15,39 @@
 package com.wavemaker.json.type;
 
 /**
- * Enumeration of operation types (currently, just the LiveService operations).
- * When changing this, be sure to change servicedef.xsd, too.
+ * Enumeration of operation types (currently, just the LiveService operations). When changing this, be sure to change
+ * servicedef.xsd, too.
  * 
- * @see com.wavemaker.runtime.service.LiveDataService for more information, and
- *      the interface providing the operations enumerated here.
+ * @see com.wavemaker.runtime.service.LiveDataService for more information, and the interface providing the operations
+ *      enumerated here.
  * 
  * @author small
  * @version $Rev$ - $Date$
  */
 public enum OperationEnumeration {
-    
+
     // XXX bad - should be uppercase
-    read("read"),
-    update("update"),
-    delete("delete"),
-    insert("insert");
+    read("read"), update("update"), delete("delete"), insert("insert");
 
     private String value;
-    
+
     private OperationEnumeration(String v) {
         this.value = v;
     }
-    
+
     public String value() {
         return this.value;
     }
-    
+
     public static OperationEnumeration fromValue(String v) {
-        for (OperationEnumeration c: OperationEnumeration.values()) {
+        for (OperationEnumeration c : OperationEnumeration.values()) {
             if (c.value.equals(v)) {
                 return c;
             }
         }
         throw new IllegalArgumentException(v);
     }
-    
+
     public static String toString(OperationEnumeration v) {
         return v.value();
     }

@@ -36,7 +36,7 @@ import com.wavemaker.tools.cloudmgr.opsource.listservers.response.Servers;
 
 /**
  * This class is to manage opSource cloud server instances.
- *
+ * 
  * @author slee
  */
 public class ListServersProc {
@@ -67,14 +67,14 @@ public class ListServersProc {
             JAXBContext context = JAXBContext.newInstance(Servers.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             Object object = unmarshaller.unmarshal(inputStream);
-            servers =  Servers.class.cast(object);
+            servers = Servers.class.cast(object);
 
         } catch (URISyntaxException ex1) {
             throw new WMRuntimeException(ex1);
         } catch (JAXBException ex2) {
             throw new WMRuntimeException(ex2);
         } catch (IOException ex3) {
-            throw new WMRuntimeException(ex3);    
+            throw new WMRuntimeException(ex3);
         }
 
         return servers;

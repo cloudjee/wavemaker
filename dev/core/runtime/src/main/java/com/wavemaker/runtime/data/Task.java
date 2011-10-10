@@ -23,8 +23,8 @@ import org.hibernate.Session;
  * @version $Rev$ - $Date$
  */
 public interface Task {
-    
+
     Object run(Session session, String dbName, Object... input);
-    
+
     String getName();
 }

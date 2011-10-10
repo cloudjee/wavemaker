@@ -32,27 +32,25 @@ import com.wavemaker.json.type.PrimitiveTypeDefinition;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
-public class PrimitiveReflectTypeDefinition extends ReflectTypeDefinition
-        implements PrimitiveTypeDefinition {
+public class PrimitiveReflectTypeDefinition extends ReflectTypeDefinition implements PrimitiveTypeDefinition {
 
     @Override
     public Object newInstance(Object... args) {
-        
-        if (!(1==args.length || (2==args.length && args[1] instanceof Class))) {
-            throw new IllegalArgumentException(
-                    MessageResource.JSON_PRIM_NEWINSTANCE_ARG_REQ.getMessage(Arrays.toString(args)));
+
+        if (!(1 == args.length || 2 == args.length && args[1] instanceof Class)) {
+            throw new IllegalArgumentException(MessageResource.JSON_PRIM_NEWINSTANCE_ARG_REQ.getMessage(Arrays.toString(args)));
         }
         Object obj = args[0];
-        
+
         Class<?> klass;
-        if (args.length>1) {
+        if (args.length > 1) {
             klass = (Class<?>) args[1];
         } else {
             klass = getKlass();
         }
-        
+
         Object ret;
         if (Class.class.isAssignableFrom(klass)) {
             try {
@@ -81,8 +79,7 @@ public class PrimitiveReflectTypeDefinition extends ReflectTypeDefinition
                 } else if (double.class.equals(klass)) {
                     ret = number.doubleValue();
                 } else {
-                    throw new WMRuntimeException(
-                            MessageResource.JSON_UNKNOWN_NUMBER_TYPE, klass, obj);
+                    throw new WMRuntimeException(MessageResource.JSON_UNKNOWN_NUMBER_TYPE, klass, obj);
                 }
             } else {
                 String string = obj.toString();
@@ -104,18 +101,16 @@ public class PrimitiveReflectTypeDefinition extends ReflectTypeDefinition
                     } else if (char.class.equals(klass)) {
                         ret = string.charAt(0);
                     } else {
-                        throw new WMRuntimeException(
-                                MessageResource.JSON_UNKNOWN_NUMBER_TYPE, klass, string);
+                        throw new WMRuntimeException(MessageResource.JSON_UNKNOWN_NUMBER_TYPE, klass, string);
                     }
                 } catch (NumberFormatException e) {
-                    throw new WMRuntimeException(
-                            MessageResource.JSON_FAILED_TO_CONVERT, e, string, klass);
+                    throw new WMRuntimeException(MessageResource.JSON_FAILED_TO_CONVERT, e, string, klass);
                 }
             }
-        } else if (klass.equals(AtomicInteger.class) && (obj instanceof Number)) {
+        } else if (klass.equals(AtomicInteger.class) && obj instanceof Number) {
             Number number = (Number) obj;
             ret = new AtomicInteger(number.intValue());
-        } else if (klass.equals(AtomicLong.class) && (obj instanceof Number)) {
+        } else if (klass.equals(AtomicLong.class) && obj instanceof Number) {
             Number number = (Number) obj;
             ret = new AtomicLong(number.longValue());
         } else {
@@ -141,24 +136,25 @@ public class PrimitiveReflectTypeDefinition extends ReflectTypeDefinition
         return ret;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.type.PrimitiveTypeDefinition#toJson(java.io.Writer, java.lang.Object)
      */
     public void toJson(Writer writer, Object obj) throws IOException {
-        
-        if ( CharSequence.class.isAssignableFrom(obj.getClass()) ) {
+
+        if (CharSequence.class.isAssignableFrom(obj.getClass())) {
             writer.write(JSONUtils.quote(obj.toString()));
-        } else if ( Character.class.isAssignableFrom(obj.getClass()) ) {
+        } else if (Character.class.isAssignableFrom(obj.getClass())) {
             writer.write(JSONUtils.quote(obj.toString()));
-        } else if ( Number.class.isAssignableFrom(obj.getClass()) ) {
+        } else if (Number.class.isAssignableFrom(obj.getClass())) {
             writer.write(JSONUtils.numberToString((Number) obj));
-        } else if ( Boolean.class.isAssignableFrom(obj.getClass()) ) {
+        } else if (Boolean.class.isAssignableFrom(obj.getClass())) {
             writer.write(obj.toString());
-        } else if ( Class.class.isAssignableFrom(obj.getClass()) ) {
-            writer.write(JSONUtils.quote(((Class<?>)obj).getName()));
+        } else if (Class.class.isAssignableFrom(obj.getClass())) {
+            writer.write(JSONUtils.quote(((Class<?>) obj).getName()));
         } else {
-            throw new WMRuntimeException(MessageResource.JSON_UNKNOWN_PRIMITIVE_TYPE,
-                    obj, obj.getClass());
+            throw new WMRuntimeException(MessageResource.JSON_UNKNOWN_PRIMITIVE_TYPE, obj, obj.getClass());
         }
     }
 }

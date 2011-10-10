@@ -19,7 +19,6 @@
 // Generated on: 2008.10.23 at 10:17:33 AM PDT 
 //
 
-
 package com.wavemaker.tools.service.definitions;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -27,11 +26,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for EventNotifier complex type.
+ * <p>
+ * Java class for EventNotifier complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="EventNotifier">
@@ -55,22 +55,18 @@ public class EventNotifier {
     /**
      * Gets the value of the name property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**
      * Sets the value of the name property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setName(String value) {
         this.name = value;

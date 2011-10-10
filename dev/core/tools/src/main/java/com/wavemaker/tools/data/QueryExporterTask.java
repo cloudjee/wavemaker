@@ -33,7 +33,7 @@ public class QueryExporterTask extends GenericExporterTask {
 
     @Override
     public Exporter createExporter() {
-        return new QueryExporter(serviceName);
+        return new QueryExporter(this.serviceName);
     }
 
     @Override

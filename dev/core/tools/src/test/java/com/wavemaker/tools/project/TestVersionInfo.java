@@ -15,10 +15,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.project;
 
 import com.wavemaker.infra.WMTestCase;
-
 
 /**
  * @author Matt Small
@@ -65,27 +65,27 @@ public class TestVersionInfo extends WMTestCase {
         VersionInfo vi = new VersionInfo("1.2.3ALPHA");
 
         VersionInfo other = new VersionInfo("2.2.3");
-        assertTrue(vi.compareTo(other)<0);
-        assertTrue(other.compareTo(vi)>0);
+        assertTrue(vi.compareTo(other) < 0);
+        assertTrue(other.compareTo(vi) > 0);
 
         other = new VersionInfo("1.3.3");
-        assertTrue(vi.compareTo(other)<0);
-        assertTrue(other.compareTo(vi)>0);
+        assertTrue(vi.compareTo(other) < 0);
+        assertTrue(other.compareTo(vi) > 0);
 
         other = new VersionInfo("1.2.4");
-        assertTrue(vi.compareTo(other)<0);
-        assertTrue(other.compareTo(vi)>0);
+        assertTrue(vi.compareTo(other) < 0);
+        assertTrue(other.compareTo(vi) > 0);
 
         other = new VersionInfo("1.2.3ALPHA");
         assertEquals(0, vi.compareTo(other));
         assertEquals(0, other.compareTo(vi));
 
         other = new VersionInfo("1.2.3BETA");
-        assertTrue(vi.compareTo(other)<0);
-        assertTrue(other.compareTo(vi)>0);
-        
+        assertTrue(vi.compareTo(other) < 0);
+        assertTrue(other.compareTo(vi) > 0);
+
         other = new VersionInfo("1.2.3ALPHA2");
-        assertTrue(vi.compareTo(other)<0);
-        assertTrue(other.compareTo(vi)>0);
+        assertTrue(vi.compareTo(other) < 0);
+        assertTrue(other.compareTo(vi) > 0);
     }
 }

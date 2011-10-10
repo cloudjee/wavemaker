@@ -19,7 +19,6 @@
 // Generated on: 2008.02.26 at 04:39:33 PM PST 
 //
 
-
 package com.wavemaker.tools.spring.beans;
 
 import java.util.ArrayList;
@@ -40,11 +39,12 @@ import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import javax.xml.namespace.QName;
 
-
 /**
- * <p>Java class for anonymous complex type.
+ * <p>
+ * Java class for anonymous complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType>
@@ -60,77 +60,83 @@ import javax.xml.namespace.QName;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "description",
-    "metasAndConstructorArgsAndProperties"
-})
+@XmlType(name = "", propOrder = { "description", "metasAndConstructorArgsAndProperties" })
 @XmlRootElement(name = "bean")
-public class Bean
-    extends IdentifiedType
-{
+public class Bean extends IdentifiedType {
 
     protected Description description;
+
     @XmlElementRefs({
         @XmlElementRef(name = "replaced-method", namespace = "http://www.springframework.org/schema/beans", type = ReplacedMethod.class),
         @XmlElementRef(name = "property", namespace = "http://www.springframework.org/schema/beans", type = Property.class),
         @XmlElementRef(name = "meta", namespace = "http://www.springframework.org/schema/beans", type = Meta.class),
         @XmlElementRef(name = "lookup-method", namespace = "http://www.springframework.org/schema/beans", type = LookupMethod.class),
-        @XmlElementRef(name = "constructor-arg", namespace = "http://www.springframework.org/schema/beans", type = ConstructorArg.class)
-    })
+        @XmlElementRef(name = "constructor-arg", namespace = "http://www.springframework.org/schema/beans", type = ConstructorArg.class) })
     @XmlAnyElement(lax = true)
     protected List<Object> metasAndConstructorArgsAndProperties;
+
     @XmlAttribute
     protected String name;
+
     @XmlAttribute(name = "class")
     protected String clazz;
+
     @XmlAttribute
     protected String parent;
+
     @XmlAttribute
     protected String scope;
+
     @XmlAttribute(name = "abstract")
     protected Boolean _abstract;
+
     @XmlAttribute(name = "lazy-init")
     protected DefaultableBoolean lazyInit;
+
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     protected String autowire;
+
     @XmlAttribute(name = "dependency-check")
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     protected String dependencyCheck;
+
     @XmlAttribute(name = "depends-on")
     protected String dependsOn;
+
     @XmlAttribute(name = "init-method")
     protected String initMethod;
+
     @XmlAttribute(name = "destroy-method")
     protected String destroyMethod;
+
     @XmlAttribute(name = "factory-method")
     protected String factoryMethod;
+
     @XmlAttribute(name = "factory-bean")
     protected String factoryBean;
+
     @XmlAttribute(name = "autowire-candidate")
     protected Boolean autowireCandidate;
+
     @XmlAnyAttribute
-    private Map<QName, String> otherAttributes = new HashMap<QName, String>();
+    private final Map<QName, String> otherAttributes = new HashMap<QName, String>();
 
     /**
      * Gets the value of the description property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Description }
-     *     
+     * @return possible object is {@link Description }
+     * 
      */
     public Description getDescription() {
-        return description;
+        return this.description;
     }
 
     /**
      * Sets the value of the description property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Description }
-     *     
+     * @param value allowed object is {@link Description }
+     * 
      */
     public void setDescription(Description value) {
         this.description = value;
@@ -140,32 +146,27 @@ public class Bean
      * Gets the value of the metasAndConstructorArgsAndProperties property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the metasAndConstructorArgsAndProperties property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the metasAndConstructorArgsAndProperties property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getMetasAndConstructorArgsAndProperties().add(newItem);
+     * getMetasAndConstructorArgsAndProperties().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Property }
-     * {@link Meta }
-     * {@link ReplacedMethod }
-     * {@link Object }
-     * {@link ConstructorArg }
-     * {@link LookupMethod }
+     * Objects of the following type(s) are allowed in the list {@link Property } {@link Meta } {@link ReplacedMethod }
+     * {@link Object } {@link ConstructorArg } {@link LookupMethod }
      * 
      * 
      */
     public List<Object> getMetasAndConstructorArgsAndProperties() {
-        if (metasAndConstructorArgsAndProperties == null) {
-            metasAndConstructorArgsAndProperties = new ArrayList<Object>();
+        if (this.metasAndConstructorArgsAndProperties == null) {
+            this.metasAndConstructorArgsAndProperties = new ArrayList<Object>();
         }
         return this.metasAndConstructorArgsAndProperties;
     }
@@ -173,22 +174,18 @@ public class Bean
     /**
      * Gets the value of the name property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**
      * Sets the value of the name property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setName(String value) {
         this.name = value;
@@ -197,22 +194,18 @@ public class Bean
     /**
      * Gets the value of the clazz property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getClazz() {
-        return clazz;
+        return this.clazz;
     }
 
     /**
      * Sets the value of the clazz property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setClazz(String value) {
         this.clazz = value;
@@ -221,22 +214,18 @@ public class Bean
     /**
      * Gets the value of the parent property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getParent() {
-        return parent;
+        return this.parent;
     }
 
     /**
      * Sets the value of the parent property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setParent(String value) {
         this.parent = value;
@@ -245,22 +234,18 @@ public class Bean
     /**
      * Gets the value of the scope property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getScope() {
-        return scope;
+        return this.scope;
     }
 
     /**
      * Sets the value of the scope property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setScope(String value) {
         this.scope = value;
@@ -269,22 +254,18 @@ public class Bean
     /**
      * Gets the value of the abstract property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     * @return possible object is {@link Boolean }
+     * 
      */
     public Boolean getAbstract() {
-        return _abstract;
+        return this._abstract;
     }
 
     /**
      * Sets the value of the abstract property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     * @param value allowed object is {@link Boolean }
+     * 
      */
     public void setAbstract(Boolean value) {
         this._abstract = value;
@@ -293,26 +274,22 @@ public class Bean
     /**
      * Gets the value of the lazyInit property.
      * 
-     * @return
-     *     possible object is
-     *     {@link DefaultableBoolean }
-     *     
+     * @return possible object is {@link DefaultableBoolean }
+     * 
      */
     public DefaultableBoolean getLazyInit() {
-        if (lazyInit == null) {
+        if (this.lazyInit == null) {
             return DefaultableBoolean.DEFAULT;
         } else {
-            return lazyInit;
+            return this.lazyInit;
         }
     }
 
     /**
      * Sets the value of the lazyInit property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link DefaultableBoolean }
-     *     
+     * @param value allowed object is {@link DefaultableBoolean }
+     * 
      */
     public void setLazyInit(DefaultableBoolean value) {
         this.lazyInit = value;
@@ -321,26 +298,22 @@ public class Bean
     /**
      * Gets the value of the autowire property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getAutowire() {
-        if (autowire == null) {
+        if (this.autowire == null) {
             return "default";
         } else {
-            return autowire;
+            return this.autowire;
         }
     }
 
     /**
      * Sets the value of the autowire property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setAutowire(String value) {
         this.autowire = value;
@@ -349,26 +322,22 @@ public class Bean
     /**
      * Gets the value of the dependencyCheck property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getDependencyCheck() {
-        if (dependencyCheck == null) {
+        if (this.dependencyCheck == null) {
             return "default";
         } else {
-            return dependencyCheck;
+            return this.dependencyCheck;
         }
     }
 
     /**
      * Sets the value of the dependencyCheck property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setDependencyCheck(String value) {
         this.dependencyCheck = value;
@@ -377,22 +346,18 @@ public class Bean
     /**
      * Gets the value of the dependsOn property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getDependsOn() {
-        return dependsOn;
+        return this.dependsOn;
     }
 
     /**
      * Sets the value of the dependsOn property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setDependsOn(String value) {
         this.dependsOn = value;
@@ -401,22 +366,18 @@ public class Bean
     /**
      * Gets the value of the initMethod property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getInitMethod() {
-        return initMethod;
+        return this.initMethod;
     }
 
     /**
      * Sets the value of the initMethod property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setInitMethod(String value) {
         this.initMethod = value;
@@ -425,22 +386,18 @@ public class Bean
     /**
      * Gets the value of the destroyMethod property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getDestroyMethod() {
-        return destroyMethod;
+        return this.destroyMethod;
     }
 
     /**
      * Sets the value of the destroyMethod property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setDestroyMethod(String value) {
         this.destroyMethod = value;
@@ -449,22 +406,18 @@ public class Bean
     /**
      * Gets the value of the factoryMethod property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getFactoryMethod() {
-        return factoryMethod;
+        return this.factoryMethod;
     }
 
     /**
      * Sets the value of the factoryMethod property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setFactoryMethod(String value) {
         this.factoryMethod = value;
@@ -473,22 +426,18 @@ public class Bean
     /**
      * Gets the value of the factoryBean property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getFactoryBean() {
-        return factoryBean;
+        return this.factoryBean;
     }
 
     /**
      * Sets the value of the factoryBean property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setFactoryBean(String value) {
         this.factoryBean = value;
@@ -497,22 +446,18 @@ public class Bean
     /**
      * Gets the value of the autowireCandidate property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     * @return possible object is {@link Boolean }
+     * 
      */
     public Boolean getAutowireCandidate() {
-        return autowireCandidate;
+        return this.autowireCandidate;
     }
 
     /**
      * Sets the value of the autowireCandidate property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     * @param value allowed object is {@link Boolean }
+     * 
      */
     public void setAutowireCandidate(Boolean value) {
         this.autowireCandidate = value;
@@ -522,38 +467,30 @@ public class Bean
      * Gets a map that contains attributes that aren't bound to any typed property on this class.
      * 
      * <p>
-     * the map is keyed by the name of the attribute and 
-     * the value is the string value of the attribute.
+     * the map is keyed by the name of the attribute and the value is the string value of the attribute.
      * 
-     * the map returned by this method is live, and you can add new attribute
-     * by updating the map directly. Because of this design, there's no setter.
+     * the map returned by this method is live, and you can add new attribute by updating the map directly. Because of
+     * this design, there's no setter.
      * 
      * 
-     * @return
-     *     always non-null
+     * @return always non-null
      */
     public Map<QName, String> getOtherAttributes() {
-        return otherAttributes;
+        return this.otherAttributes;
     }
 
     /**
      * Sets the value of the metasAndConstructorArgsAndProperties property.
      * 
-     * @param metasAndConstructorArgsAndProperties
-     *     allowed object is
-     *     {@link Property }
-     *     {@link Meta }
-     *     {@link ReplacedMethod }
-     *     {@link Object }
-     *     {@link ConstructorArg }
-     *     {@link LookupMethod }
-     *     
+     * @param metasAndConstructorArgsAndProperties allowed object is {@link Property } {@link Meta }
+     *        {@link ReplacedMethod } {@link Object } {@link ConstructorArg } {@link LookupMethod }
+     * 
      */
     public void setMetasAndConstructorArgsAndProperties(List<Object> metasAndConstructorArgsAndProperties) {
         this.metasAndConstructorArgsAndProperties = metasAndConstructorArgsAndProperties;
     }
-    
-//--simple--preserve
+
+    // --simple--preserve
 
     /**
      * Returns the Property with the specified name.
@@ -570,12 +507,12 @@ public class Bean
         }
         return null;
     }
-    
+
     /**
      * Adds a property to this bean.
      * 
      * @param name The property name
-     * @param value The property value     
+     * @param value The property value
      */
     public void addProperty(String name, String value) {
         Property property = new Property();
@@ -583,8 +520,7 @@ public class Bean
         property.setValue(value);
         addProperty(property);
     }
-    
-    
+
     /**
      * Adds a property to this bean.
      * 
@@ -593,7 +529,7 @@ public class Bean
     public void addProperty(Property property) {
         getMetasAndConstructorArgsAndProperties().add(property);
     }
-    
+
     /**
      * Remove all bean properties.
      */
@@ -622,6 +558,6 @@ public class Bean
         return constructorArgs;
     }
 
-//--simple--preserve
+    // --simple--preserve
 
 }

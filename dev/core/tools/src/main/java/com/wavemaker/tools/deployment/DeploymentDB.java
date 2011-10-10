@@ -41,11 +41,11 @@ public class DeploymentDB {
     private String jndiName;
 
     private String connectionUrl;
-    
+
     private boolean updateSchema = false;
 
     public String getDataModelId() {
-        return dataModelId;
+        return this.dataModelId;
     }
 
     public void setDataModelId(String dataModelId) {
@@ -53,7 +53,7 @@ public class DeploymentDB {
     }
 
     public String getDbName() {
-        return dbName;
+        return this.dbName;
     }
 
     public void setDbName(String dbName) {
@@ -61,7 +61,7 @@ public class DeploymentDB {
     }
 
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     public void setUsername(String username) {
@@ -69,7 +69,7 @@ public class DeploymentDB {
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     public void setPassword(String password) {
@@ -77,7 +77,7 @@ public class DeploymentDB {
     }
 
     public String getJndiName() {
-        return jndiName;
+        return this.jndiName;
     }
 
     public void setJndiName(String jndiName) {
@@ -85,7 +85,7 @@ public class DeploymentDB {
     }
 
     public String getConnectionUrl() {
-        return connectionUrl;
+        return this.connectionUrl;
     }
 
     public void setConnectionUrl(String connectionUrl) {
@@ -93,7 +93,7 @@ public class DeploymentDB {
     }
 
     public boolean isUpdateSchema() {
-        return updateSchema;
+        return this.updateSchema;
     }
 
     public void setUpdateSchema(boolean updateSchema) {
@@ -103,19 +103,24 @@ public class DeploymentDB {
     public Map<String, String> asProperties() {
         String prefix = this.dataModelId;
         Map<String, String> props = new HashMap<String, String>();
-        if (StringUtils.hasText(jndiName)) {
-            props.put(prefix + ProjectConstants.PROP_SEP + DataModelDeploymentConfiguration.JNDI_NAME_PROPERTY, jndiName);
+        if (StringUtils.hasText(this.jndiName)) {
+            props.put(prefix + ProjectConstants.PROP_SEP + DataModelDeploymentConfiguration.JNDI_NAME_PROPERTY, this.jndiName);
         } else {
-            if (StringUtils.hasText(username))
-                props.put(prefix + DataServiceConstants.DB_USERNAME, username);
-            if (StringUtils.hasText(password))
-                props.put(prefix + DataServiceConstants.DB_PASS, password);
-            if (StringUtils.hasText(connectionUrl))
-                props.put(prefix + DataServiceConstants.DB_URL, connectionUrl);
-            if (StringUtils.hasText(dbName))
-                props.put(prefix + ProjectConstants.PROP_SEP + DataModelDeploymentConfiguration.DB_ALIAS_PROPERTY, dbName);
-            if (this.updateSchema)
+            if (StringUtils.hasText(this.username)) {
+                props.put(prefix + DataServiceConstants.DB_USERNAME, this.username);
+            }
+            if (StringUtils.hasText(this.password)) {
+                props.put(prefix + DataServiceConstants.DB_PASS, this.password);
+            }
+            if (StringUtils.hasText(this.connectionUrl)) {
+                props.put(prefix + DataServiceConstants.DB_URL, this.connectionUrl);
+            }
+            if (StringUtils.hasText(this.dbName)) {
+                props.put(prefix + ProjectConstants.PROP_SEP + DataModelDeploymentConfiguration.DB_ALIAS_PROPERTY, this.dbName);
+            }
+            if (this.updateSchema) {
                 props.put(prefix + ProjectConstants.PROP_SEP + DataModelDeploymentConfiguration.UPDATE_SCHEMA_PROPERTY, "true");
+            }
         }
         return props;
     }
@@ -124,54 +129,69 @@ public class DeploymentDB {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((connectionUrl == null) ? 0 : connectionUrl.hashCode());
-        result = prime * result + ((dataModelId == null) ? 0 : dataModelId.hashCode());
-        result = prime * result + ((dbName == null) ? 0 : dbName.hashCode());
-        result = prime * result + ((jndiName == null) ? 0 : jndiName.hashCode());
-        result = prime * result + ((password == null) ? 0 : password.hashCode());
-        result = prime * result + ((username == null) ? 0 : username.hashCode());
+        result = prime * result + (this.connectionUrl == null ? 0 : this.connectionUrl.hashCode());
+        result = prime * result + (this.dataModelId == null ? 0 : this.dataModelId.hashCode());
+        result = prime * result + (this.dbName == null ? 0 : this.dbName.hashCode());
+        result = prime * result + (this.jndiName == null ? 0 : this.jndiName.hashCode());
+        result = prime * result + (this.password == null ? 0 : this.password.hashCode());
+        result = prime * result + (this.username == null ? 0 : this.username.hashCode());
         return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         DeploymentDB other = (DeploymentDB) obj;
-        if (connectionUrl == null) {
-            if (other.connectionUrl != null)
+        if (this.connectionUrl == null) {
+            if (other.connectionUrl != null) {
                 return false;
-        } else if (!connectionUrl.equals(other.connectionUrl))
+            }
+        } else if (!this.connectionUrl.equals(other.connectionUrl)) {
             return false;
-        if (dataModelId == null) {
-            if (other.dataModelId != null)
+        }
+        if (this.dataModelId == null) {
+            if (other.dataModelId != null) {
                 return false;
-        } else if (!dataModelId.equals(other.dataModelId))
+            }
+        } else if (!this.dataModelId.equals(other.dataModelId)) {
             return false;
-        if (dbName == null) {
-            if (other.dbName != null)
+        }
+        if (this.dbName == null) {
+            if (other.dbName != null) {
                 return false;
-        } else if (!dbName.equals(other.dbName))
+            }
+        } else if (!this.dbName.equals(other.dbName)) {
             return false;
-        if (jndiName == null) {
-            if (other.jndiName != null)
+        }
+        if (this.jndiName == null) {
+            if (other.jndiName != null) {
                 return false;
-        } else if (!jndiName.equals(other.jndiName))
+            }
+        } else if (!this.jndiName.equals(other.jndiName)) {
             return false;
-        if (password == null) {
-            if (other.password != null)
+        }
+        if (this.password == null) {
+            if (other.password != null) {
                 return false;
-        } else if (!password.equals(other.password))
+            }
+        } else if (!this.password.equals(other.password)) {
             return false;
-        if (username == null) {
-            if (other.username != null)
+        }
+        if (this.username == null) {
+            if (other.username != null) {
                 return false;
-        } else if (!username.equals(other.username))
+            }
+        } else if (!this.username.equals(other.username)) {
             return false;
+        }
         return true;
     }
 

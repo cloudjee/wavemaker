@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import java.util.ArrayList;
@@ -35,22 +34,21 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
  * 
  * 
- * 	Declares the handler for a port-component. Handlers can access the
- * 	init-param name/value pairs using the HandlerInfo interface. If
- * 	port-name is not specified, the handler is assumed to be associated
- * 	with all ports of the service.
+ * Declares the handler for a port-component. Handlers can access the init-param name/value pairs using the HandlerInfo
+ * interface. If port-name is not specified, the handler is assumed to be associated with all ports of the service.
  * 
- * 	Used in: service-ref
+ * Used in: service-ref
  * 
- *       
  * 
- * <p>Java class for service-ref_handlerType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for service-ref_handlerType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="service-ref_handlerType">
@@ -74,35 +72,35 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "service-ref_handlerType", propOrder = {
-    "description",
-    "displayName",
-    "icon",
-    "handlerName",
-    "handlerClass",
-    "initParam",
-    "soapHeader",
-    "soapRole",
-    "portName"
-})
+@XmlType(name = "service-ref_handlerType", propOrder = { "description", "displayName", "icon", "handlerName", "handlerClass", "initParam",
+    "soapHeader", "soapRole", "portName" })
 public class ServiceRefHandlerType {
 
     protected List<DescriptionType> description;
+
     @XmlElement(name = "display-name")
     protected List<DisplayNameType> displayName;
+
     protected List<IconType> icon;
+
     @XmlElement(name = "handler-name", required = true)
     protected com.wavemaker.tools.webapp.schema.String handlerName;
+
     @XmlElement(name = "handler-class", required = true)
     protected FullyQualifiedClassType handlerClass;
+
     @XmlElement(name = "init-param")
     protected List<ParamValueType> initParam;
+
     @XmlElement(name = "soap-header")
     protected List<XsdQNameType> soapHeader;
+
     @XmlElement(name = "soap-role")
     protected List<com.wavemaker.tools.webapp.schema.String> soapRole;
+
     @XmlElement(name = "port-name")
     protected List<com.wavemaker.tools.webapp.schema.String> portName;
+
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -113,27 +111,26 @@ public class ServiceRefHandlerType {
      * Gets the value of the description property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the description property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the description property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getDescription().add(newItem);
+     * getDescription().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DescriptionType }
+     * Objects of the following type(s) are allowed in the list {@link DescriptionType }
      * 
      * 
      */
     public List<DescriptionType> getDescription() {
-        if (description == null) {
-            description = new ArrayList<DescriptionType>();
+        if (this.description == null) {
+            this.description = new ArrayList<DescriptionType>();
         }
         return this.description;
     }
@@ -142,27 +139,26 @@ public class ServiceRefHandlerType {
      * Gets the value of the displayName property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the displayName property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the displayName property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getDisplayName().add(newItem);
+     * getDisplayName().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DisplayNameType }
+     * Objects of the following type(s) are allowed in the list {@link DisplayNameType }
      * 
      * 
      */
     public List<DisplayNameType> getDisplayName() {
-        if (displayName == null) {
-            displayName = new ArrayList<DisplayNameType>();
+        if (this.displayName == null) {
+            this.displayName = new ArrayList<DisplayNameType>();
         }
         return this.displayName;
     }
@@ -171,27 +167,26 @@ public class ServiceRefHandlerType {
      * Gets the value of the icon property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the icon property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the icon property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getIcon().add(newItem);
+     * getIcon().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link IconType }
+     * Objects of the following type(s) are allowed in the list {@link IconType }
      * 
      * 
      */
     public List<IconType> getIcon() {
-        if (icon == null) {
-            icon = new ArrayList<IconType>();
+        if (this.icon == null) {
+            this.icon = new ArrayList<IconType>();
         }
         return this.icon;
     }
@@ -199,22 +194,18 @@ public class ServiceRefHandlerType {
     /**
      * Gets the value of the handlerName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link com.wavemaker.tools.webapp.schema.String }
-     *     
+     * @return possible object is {@link com.wavemaker.tools.webapp.schema.String }
+     * 
      */
     public com.wavemaker.tools.webapp.schema.String getHandlerName() {
-        return handlerName;
+        return this.handlerName;
     }
 
     /**
      * Sets the value of the handlerName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link com.wavemaker.tools.webapp.schema.String }
-     *     
+     * @param value allowed object is {@link com.wavemaker.tools.webapp.schema.String }
+     * 
      */
     public void setHandlerName(com.wavemaker.tools.webapp.schema.String value) {
         this.handlerName = value;
@@ -223,22 +214,18 @@ public class ServiceRefHandlerType {
     /**
      * Gets the value of the handlerClass property.
      * 
-     * @return
-     *     possible object is
-     *     {@link FullyQualifiedClassType }
-     *     
+     * @return possible object is {@link FullyQualifiedClassType }
+     * 
      */
     public FullyQualifiedClassType getHandlerClass() {
-        return handlerClass;
+        return this.handlerClass;
     }
 
     /**
      * Sets the value of the handlerClass property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link FullyQualifiedClassType }
-     *     
+     * @param value allowed object is {@link FullyQualifiedClassType }
+     * 
      */
     public void setHandlerClass(FullyQualifiedClassType value) {
         this.handlerClass = value;
@@ -248,27 +235,26 @@ public class ServiceRefHandlerType {
      * Gets the value of the initParam property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the initParam property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the initParam property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getInitParam().add(newItem);
+     * getInitParam().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link ParamValueType }
+     * Objects of the following type(s) are allowed in the list {@link ParamValueType }
      * 
      * 
      */
     public List<ParamValueType> getInitParam() {
-        if (initParam == null) {
-            initParam = new ArrayList<ParamValueType>();
+        if (this.initParam == null) {
+            this.initParam = new ArrayList<ParamValueType>();
         }
         return this.initParam;
     }
@@ -277,27 +263,26 @@ public class ServiceRefHandlerType {
      * Gets the value of the soapHeader property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the soapHeader property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the soapHeader property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getSoapHeader().add(newItem);
+     * getSoapHeader().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link XsdQNameType }
+     * Objects of the following type(s) are allowed in the list {@link XsdQNameType }
      * 
      * 
      */
     public List<XsdQNameType> getSoapHeader() {
-        if (soapHeader == null) {
-            soapHeader = new ArrayList<XsdQNameType>();
+        if (this.soapHeader == null) {
+            this.soapHeader = new ArrayList<XsdQNameType>();
         }
         return this.soapHeader;
     }
@@ -306,27 +291,26 @@ public class ServiceRefHandlerType {
      * Gets the value of the soapRole property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the soapRole property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the soapRole property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getSoapRole().add(newItem);
+     * getSoapRole().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link com.wavemaker.tools.webapp.schema.String }
+     * Objects of the following type(s) are allowed in the list {@link com.wavemaker.tools.webapp.schema.String }
      * 
      * 
      */
     public List<com.wavemaker.tools.webapp.schema.String> getSoapRole() {
-        if (soapRole == null) {
-            soapRole = new ArrayList<com.wavemaker.tools.webapp.schema.String>();
+        if (this.soapRole == null) {
+            this.soapRole = new ArrayList<com.wavemaker.tools.webapp.schema.String>();
         }
         return this.soapRole;
     }
@@ -335,27 +319,26 @@ public class ServiceRefHandlerType {
      * Gets the value of the portName property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the portName property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the portName property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getPortName().add(newItem);
+     * getPortName().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link com.wavemaker.tools.webapp.schema.String }
+     * Objects of the following type(s) are allowed in the list {@link com.wavemaker.tools.webapp.schema.String }
      * 
      * 
      */
     public List<com.wavemaker.tools.webapp.schema.String> getPortName() {
-        if (portName == null) {
-            portName = new ArrayList<com.wavemaker.tools.webapp.schema.String>();
+        if (this.portName == null) {
+            this.portName = new ArrayList<com.wavemaker.tools.webapp.schema.String>();
         }
         return this.portName;
     }
@@ -363,22 +346,18 @@ public class ServiceRefHandlerType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setId(java.lang.String value) {
         this.id = value;

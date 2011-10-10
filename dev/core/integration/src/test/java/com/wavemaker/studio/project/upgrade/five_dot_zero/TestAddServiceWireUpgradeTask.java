@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.wavemaker.studio.project.upgrade.five_dot_zero;
 
 import static org.junit.Assert.assertEquals;
@@ -51,291 +52,254 @@ import com.wavemaker.tools.service.DesignServiceManager;
  */
 public class TestAddServiceWireUpgradeTask extends StudioTestCase {
 
-	@Test
-	public void testBasicUpgrade() throws Exception {
+    @Test
+    public void testBasicUpgrade() throws Exception {
 
-		String projectName = "testBasicUpgrade";
+        String projectName = "testBasicUpgrade";
 
-		makeProject(projectName, false);
-		DesignServiceManager dsm = (DesignServiceManager) getBean("designServiceManager");
-		Project project = dsm.getProjectManager().getCurrentProject();
+        makeProject(projectName, false);
+        DesignServiceManager dsm = (DesignServiceManager) getBean("designServiceManager");
+        Project project = dsm.getProjectManager().getCurrentProject();
 
-		// create services
-		ServiceDefinition javaSD = createJavaService();
-		dsm.defineService(javaSD);
+        // create services
+        ServiceDefinition javaSD = createJavaService();
+        dsm.defineService(javaSD);
 
-		ServiceDefinition webSD = createWebService();
-		dsm.defineService(webSD);
+        ServiceDefinition webSD = createWebService();
+        dsm.defineService(webSD);
 
-		ServiceDefinition dataSD = createDataService();
-		dsm.defineService(dataSD);
+        ServiceDefinition dataSD = createDataService();
+        dsm.defineService(dataSD);
 
-		ServiceDefinition javaSD2 = createJavaService2();
-		dsm.defineService(javaSD2);
+        ServiceDefinition javaSD2 = createJavaService2();
+        dsm.defineService(javaSD2);
 
-		// copy those spring files (complete with service wires) out
-		File tempSDDir = new File(project.getProjectRoot().getFile(), "tempSD");
-		tempSDDir.mkdir();
-		File expectedJavaSD = new File(tempSDDir, "javaSD.xml");
-		File expectedWebSD = new File(tempSDDir, "webSD.xml");
-		File expectedDataSD = new File(tempSDDir, "dataSD.xml");
-		File expectedJavaSD2 = new File(tempSDDir, "javaSD2.xml");
-		FileUtils.copyFile(dsm.getServiceBeanXml(javaSD.getServiceId())
-				.getFile(), expectedJavaSD);
-		FileUtils.copyFile(dsm.getServiceBeanXml(webSD.getServiceId())
-				.getFile(), expectedWebSD);
-		FileUtils.copyFile(dsm.getServiceBeanXml(dataSD.getServiceId())
-				.getFile(), expectedDataSD);
-		FileUtils.copyFile(dsm.getServiceBeanXml(javaSD2.getServiceId())
-				.getFile(), expectedJavaSD2);
+        // copy those spring files (complete with service wires) out
+        File tempSDDir = new File(project.getProjectRoot().getFile(), "tempSD");
+        tempSDDir.mkdir();
+        File expectedJavaSD = new File(tempSDDir, "javaSD.xml");
+        File expectedWebSD = new File(tempSDDir, "webSD.xml");
+        File expectedDataSD = new File(tempSDDir, "dataSD.xml");
+        File expectedJavaSD2 = new File(tempSDDir, "javaSD2.xml");
+        FileUtils.copyFile(dsm.getServiceBeanXml(javaSD.getServiceId()).getFile(), expectedJavaSD);
+        FileUtils.copyFile(dsm.getServiceBeanXml(webSD.getServiceId()).getFile(), expectedWebSD);
+        FileUtils.copyFile(dsm.getServiceBeanXml(dataSD.getServiceId()).getFile(), expectedDataSD);
+        FileUtils.copyFile(dsm.getServiceBeanXml(javaSD2.getServiceId()).getFile(), expectedJavaSD2);
 
-		// copy in spring xml files without ServiceWires
-		File cpr = (new ClassPathResource(
-				"com/wavemaker/studio/project/upgrade/five_dot_zero"))
-				.getFile();
-		assertTrue(cpr.exists());
+        // copy in spring xml files without ServiceWires
+        File cpr = new ClassPathResource("com/wavemaker/studio/project/upgrade/five_dot_zero").getFile();
+        assertTrue(cpr.exists());
 
-		FileUtils.copyFile(new File(cpr,
-				"addservicewireupgrade.files/input/javaSD.xml"), dsm
-				.getServiceBeanXml(javaSD.getServiceId()).getFile());
-		FileUtils.copyFile(new File(cpr,
-				"addservicewireupgrade.files/input/webSD.xml"), dsm
-				.getServiceBeanXml(webSD.getServiceId()).getFile());
-		FileUtils.copyFile(new File(cpr,
-				"addservicewireupgrade.files/input/dataSD.xml"), dsm
-				.getServiceBeanXml(dataSD.getServiceId()).getFile());
+        FileUtils.copyFile(new File(cpr, "addservicewireupgrade.files/input/javaSD.xml"), dsm.getServiceBeanXml(javaSD.getServiceId()).getFile());
+        FileUtils.copyFile(new File(cpr, "addservicewireupgrade.files/input/webSD.xml"), dsm.getServiceBeanXml(webSD.getServiceId()).getFile());
+        FileUtils.copyFile(new File(cpr, "addservicewireupgrade.files/input/dataSD.xml"), dsm.getServiceBeanXml(dataSD.getServiceId()).getFile());
 
-		UpgradeTask ut = new AddServiceWireUpgradeTask();
-		UpgradeInfo info = new UpgradeInfo();
-		ut.doUpgrade(project, info);
+        UpgradeTask ut = new AddServiceWireUpgradeTask();
+        UpgradeInfo info = new UpgradeInfo();
+        ut.doUpgrade(project, info);
 
-		assertEquals(
-				FileUtils.readFileToString(expectedJavaSD),
-				FileUtils.readFileToString(dsm.getServiceBeanXml(
-						javaSD.getServiceId()).getFile()));
-		assertEquals(
-				FileUtils.readFileToString(expectedWebSD),
-				FileUtils.readFileToString(dsm.getServiceBeanXml(
-						webSD.getServiceId()).getFile()));
-		assertEquals(
-				FileUtils.readFileToString(expectedDataSD),
-				FileUtils.readFileToString(dsm.getServiceBeanXml(
-						dataSD.getServiceId()).getFile()));
-		assertEquals(
-				FileUtils.readFileToString(expectedJavaSD2),
-				FileUtils.readFileToString(dsm.getServiceBeanXml(
-						javaSD2.getServiceId()).getFile()));
+        assertEquals(FileUtils.readFileToString(expectedJavaSD), FileUtils.readFileToString(dsm.getServiceBeanXml(javaSD.getServiceId()).getFile()));
+        assertEquals(FileUtils.readFileToString(expectedWebSD), FileUtils.readFileToString(dsm.getServiceBeanXml(webSD.getServiceId()).getFile()));
+        assertEquals(FileUtils.readFileToString(expectedDataSD), FileUtils.readFileToString(dsm.getServiceBeanXml(dataSD.getServiceId()).getFile()));
+        assertEquals(FileUtils.readFileToString(expectedJavaSD2), FileUtils.readFileToString(dsm.getServiceBeanXml(javaSD2.getServiceId()).getFile()));
 
-		assertEquals(
-				"New ServiceWire added to services: " + dataSD.getServiceId()
-						+ ", " + javaSD.getServiceId() + ", "
-						+ webSD.getServiceId(),
-				info.getMessages()
-						.get(info.getMessages().keySet().iterator().next())
-						.get(0));
-	}
+        assertEquals("New ServiceWire added to services: " + dataSD.getServiceId() + ", " + javaSD.getServiceId() + ", " + webSD.getServiceId(),
+            info.getMessages().get(info.getMessages().keySet().iterator().next()).get(0));
+    }
 
-	@Test
-	public void testSpringXmlAlternateLocation() throws Exception {
+    @Test
+    public void testSpringXmlAlternateLocation() throws Exception {
 
-		String projectName = "testSpringXmlAlternateLocation";
+        String projectName = "testSpringXmlAlternateLocation";
 
-		makeProject(projectName, false);
-		DesignServiceManager dsm = (DesignServiceManager) getBean("designServiceManager");
-		Project project = dsm.getProjectManager().getCurrentProject();
+        makeProject(projectName, false);
+        DesignServiceManager dsm = (DesignServiceManager) getBean("designServiceManager");
+        Project project = dsm.getProjectManager().getCurrentProject();
 
-		// create services
-		ServiceDefinition javaSD = createJavaServiceAlternateSpring();
-		dsm.defineService(javaSD);
+        // create services
+        ServiceDefinition javaSD = createJavaServiceAlternateSpring();
+        dsm.defineService(javaSD);
 
-		File regularSpringXml = dsm.getServiceBeanXml(javaSD.getServiceId())
-				.getFile();
-		assertFalse("regular spring: " + regularSpringXml,
-				regularSpringXml.exists());
+        File regularSpringXml = dsm.getServiceBeanXml(javaSD.getServiceId()).getFile();
+        assertFalse("regular spring: " + regularSpringXml, regularSpringXml.exists());
 
-		File abnormalSpringXml = new File(dsm.getServiceRuntimeDirectory(
-				javaSD.getServiceId()).getFile(),
-				javaSD.getRuntimeConfiguration());
-		assertFalse("abnormal spring: " + abnormalSpringXml,
-				abnormalSpringXml.exists());
+        File abnormalSpringXml = new File(dsm.getServiceRuntimeDirectory(javaSD.getServiceId()).getFile(), javaSD.getRuntimeConfiguration());
+        assertFalse("abnormal spring: " + abnormalSpringXml, abnormalSpringXml.exists());
 
-		File cpr = (new ClassPathResource(
-				"com/wavemaker/studio/project/upgrade/five_dot_zero"))
-				.getFile();
-		assertTrue(cpr.exists());
-		FileUtils.copyFile(new File(cpr,
-				"addservicewireupgrade.files/input/javaSD.xml"),
-				abnormalSpringXml);
-		assertFalse(FileUtils.readFileToString(abnormalSpringXml).contains(
-				"ServiceWire"));
+        File cpr = new ClassPathResource("com/wavemaker/studio/project/upgrade/five_dot_zero").getFile();
+        assertTrue(cpr.exists());
+        FileUtils.copyFile(new File(cpr, "addservicewireupgrade.files/input/javaSD.xml"), abnormalSpringXml);
+        assertFalse(FileUtils.readFileToString(abnormalSpringXml).contains("ServiceWire"));
 
-		UpgradeTask ut = new AddServiceWireUpgradeTask();
-		UpgradeInfo info = new UpgradeInfo();
-		ut.doUpgrade(project, info);
+        UpgradeTask ut = new AddServiceWireUpgradeTask();
+        UpgradeInfo info = new UpgradeInfo();
+        ut.doUpgrade(project, info);
 
-		assertFalse(regularSpringXml.exists());
-		assertTrue(FileUtils.readFileToString(abnormalSpringXml).contains(
-				"ServiceWire"));
-	}
+        assertFalse(regularSpringXml.exists());
+        assertTrue(FileUtils.readFileToString(abnormalSpringXml).contains("ServiceWire"));
+    }
 
-	@Test
-	public void testUpgradeTaskPresent() throws Exception {
+    @Test
+    public void testUpgradeTaskPresent() throws Exception {
 
-		boolean foundTask = false;
+        boolean foundTask = false;
 
-		UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
+        UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
 
-		outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
-			for (UpgradeTask ut : uts) {
-				if (ut instanceof AddServiceWireUpgradeTask) {
-					foundTask = true;
-					break outer;
-				}
-			}
-		}
+        outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
+            for (UpgradeTask ut : uts) {
+                if (ut instanceof AddServiceWireUpgradeTask) {
+                    foundTask = true;
+                    break outer;
+                }
+            }
+        }
 
-		assertTrue(foundTask);
-	}
+        assertTrue(foundTask);
+    }
 
-	protected static ServiceDefinition createJavaService() throws Exception {
+    protected static ServiceDefinition createJavaService() throws Exception {
 
-		ServiceDefinition sd = new AbstractTestServiceDefinition() {
-			@Override
-			public String getServiceId() {
-				return "javaService";
-			}
+        ServiceDefinition sd = new AbstractTestServiceDefinition() {
 
-			@Override
-			public ServiceType getServiceType() {
-				return new JavaServiceType();
-			}
-		};
+            @Override
+            public String getServiceId() {
+                return "javaService";
+            }
 
-		return sd;
-	}
+            @Override
+            public ServiceType getServiceType() {
+                return new JavaServiceType();
+            }
+        };
 
-	protected static ServiceDefinition createWebService() throws Exception {
+        return sd;
+    }
 
-		ServiceDefinition sd = new AbstractTestServiceDefinition() {
-			@Override
-			public String getServiceId() {
-				return "webService";
-			}
+    protected static ServiceDefinition createWebService() throws Exception {
 
-			@Override
-			public ServiceType getServiceType() {
-				return new WebServiceType();
-			}
-		};
+        ServiceDefinition sd = new AbstractTestServiceDefinition() {
 
-		return sd;
-	}
+            @Override
+            public String getServiceId() {
+                return "webService";
+            }
 
-	protected static ServiceDefinition createDataService() throws Exception {
+            @Override
+            public ServiceType getServiceType() {
+                return new WebServiceType();
+            }
+        };
 
-		ServiceDefinition sd = new AbstractTestServiceDefinition() {
-			@Override
-			public String getServiceId() {
-				return "dataService";
-			}
+        return sd;
+    }
 
-			@Override
-			public ServiceType getServiceType() {
-				return new DataServiceType();
-			}
-		};
+    protected static ServiceDefinition createDataService() throws Exception {
 
-		return sd;
-	}
+        ServiceDefinition sd = new AbstractTestServiceDefinition() {
 
-	protected static ServiceDefinition createJavaService2() throws Exception {
+            @Override
+            public String getServiceId() {
+                return "dataService";
+            }
 
-		ServiceDefinition sd = new AbstractTestServiceDefinition() {
-			@Override
-			public String getServiceId() {
-				return "javaService2";
-			}
+            @Override
+            public ServiceType getServiceType() {
+                return new DataServiceType();
+            }
+        };
 
-			@Override
-			public ServiceType getServiceType() {
-				return new JavaServiceType();
-			}
-		};
+        return sd;
+    }
 
-		return sd;
-	}
+    protected static ServiceDefinition createJavaService2() throws Exception {
 
-	protected static ServiceDefinition createJavaServiceAlternateSpring()
-			throws Exception {
+        ServiceDefinition sd = new AbstractTestServiceDefinition() {
 
-		ServiceDefinition sd = new AbstractTestServiceDefinition() {
-			@Override
-			public String getServiceId() {
-				return "javaService";
-			}
+            @Override
+            public String getServiceId() {
+                return "javaService2";
+            }
 
-			@Override
-			public ServiceType getServiceType() {
-				return new JavaServiceType();
-			}
+            @Override
+            public ServiceType getServiceType() {
+                return new JavaServiceType();
+            }
+        };
 
-			@Override
-			public String getRuntimeConfiguration() {
-				return "com/wm/foo.spring.xml";
-			}
-		};
+        return sd;
+    }
 
-		return sd;
-	}
+    protected static ServiceDefinition createJavaServiceAlternateSpring() throws Exception {
 
-	protected static class AbstractTestServiceDefinition extends
-			AbstractDeprecatedServiceDefinition {
+        ServiceDefinition sd = new AbstractTestServiceDefinition() {
 
-		public void dispose() {
-		}
+            @Override
+            public String getServiceId() {
+                return "javaService";
+            }
 
-		public List<String> getEventNotifiers() {
-			return new ArrayList<String>();
-		}
+            @Override
+            public ServiceType getServiceType() {
+                return new JavaServiceType();
+            }
 
-		public List<ElementType> getInputTypes(String operationName) {
-			return new ArrayList<ElementType>();
-		}
+            @Override
+            public String getRuntimeConfiguration() {
+                return "com/wm/foo.spring.xml";
+            }
+        };
 
-		public List<String> getOperationNames() {
-			return new ArrayList<String>();
-		}
+        return sd;
+    }
 
-		public ElementType getOutputType(String operationName) {
-			return null;
-		}
+    protected static class AbstractTestServiceDefinition extends AbstractDeprecatedServiceDefinition {
 
-		public String getPackageName() {
-			return null;
-		}
+        public void dispose() {
+        }
 
-		public String getRuntimeConfiguration() {
-			return null;
-		}
+        public List<String> getEventNotifiers() {
+            return new ArrayList<String>();
+        }
 
-		public String getServiceClass() {
-			return null;
-		}
+        public List<ElementType> getInputTypes(String operationName) {
+            return new ArrayList<ElementType>();
+        }
 
-		public String getServiceId() {
-			return null;
-		}
+        public List<String> getOperationNames() {
+            return new ArrayList<String>();
+        }
 
-		public ServiceType getServiceType() {
-			return null;
-		}
+        public ElementType getOutputType(String operationName) {
+            return null;
+        }
 
-		public List<ElementType> getTypes() {
-			return new ArrayList<ElementType>();
-		}
+        public String getPackageName() {
+            return null;
+        }
 
-		public boolean isLiveDataService() {
-			return false;
-		}
-	}
+        public String getRuntimeConfiguration() {
+            return null;
+        }
+
+        public String getServiceClass() {
+            return null;
+        }
+
+        public String getServiceId() {
+            return null;
+        }
+
+        public ServiceType getServiceType() {
+            return null;
+        }
+
+        public List<ElementType> getTypes() {
+            return new ArrayList<ElementType>();
+        }
+
+        public boolean isLiveDataService() {
+            return false;
+        }
+    }
 }

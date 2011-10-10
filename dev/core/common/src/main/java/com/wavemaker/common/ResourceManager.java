@@ -22,9 +22,8 @@ import org.springframework.context.support.ReloadableResourceBundleMessageSource
 /**
  * Handles the logic for looking up values from resource bundles.
  * 
- * This class uses Spring's MesageSource, which is actually implemented by
- * Spring's ApplicationContext. Therefore this class is ApplicationContextAware
- * and hence coupled to Spring.
+ * This class uses Spring's MesageSource, which is actually implemented by Spring's ApplicationContext. Therefore this
+ * class is ApplicationContextAware and hence coupled to Spring.
  * 
  * @author Simon Toens
  */
@@ -39,16 +38,16 @@ public class ResourceManager {
     }
 
     private ResourceManager() {
-        messageSource = new ReloadableResourceBundleMessageSource();
-        ((ReloadableResourceBundleMessageSource)messageSource).setBasename("wm_resource");
+        this.messageSource = new ReloadableResourceBundleMessageSource();
+        ((ReloadableResourceBundleMessageSource) this.messageSource).setBasename("wm_resource");
     }
 
     public String getMessage(String key) {
-        return getMessage(key, (Object)null);
+        return getMessage(key, (Object) null);
     }
 
     public String getMessage(String key, Object... args) {
         // passing null as default, so null is returned if msg can't be resolved
-        return messageSource.getMessage(key, args, null, Locale.getDefault());
+        return this.messageSource.getMessage(key, args, null, Locale.getDefault());
     }
 }

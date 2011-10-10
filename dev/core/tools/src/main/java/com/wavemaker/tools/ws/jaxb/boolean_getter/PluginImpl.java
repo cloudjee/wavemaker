@@ -28,14 +28,11 @@ import com.sun.tools.xjc.outline.ClassOutline;
 import com.sun.tools.xjc.outline.Outline;
 
 /**
- * This Plugin will rename isXXX methods to getXXX methods for
- * <code>java.lang.Boolean</code> type properties. If the element is of type
- * xsd:boolean and optional, JAXB would generate <code>java.lang.Boolean</code>
- * type for the element and the getter method would be named isXXX. But
- * according to JavaBeans spec, the getter method for
- * <code>java.lange.Boolean</code> should be named getXXX. This plugin is
- * handy if you want to use your XJC generated classes in frameworks that need
- * to deal with JavaBeans.
+ * This Plugin will rename isXXX methods to getXXX methods for <code>java.lang.Boolean</code> type properties. If the
+ * element is of type xsd:boolean and optional, JAXB would generate <code>java.lang.Boolean</code> type for the element
+ * and the getter method would be named isXXX. But according to JavaBeans spec, the getter method for
+ * <code>java.lange.Boolean</code> should be named getXXX. This plugin is handy if you want to use your XJC generated
+ * classes in frameworks that need to deal with JavaBeans.
  * 
  * @author ffu
  * @version $Rev$ - $Date$
@@ -43,23 +40,29 @@ import com.sun.tools.xjc.outline.Outline;
  */
 public class PluginImpl extends Plugin {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.sun.tools.xjc.Plugin#getOptionName()
      */
     @Override
     public String getOptionName() {
         return "Xboolean-getter";
     }
-    
+
+    @Override
     public List<String> getCustomizationURIs() {
         return Collections.singletonList(Const.NS);
     }
-    
+
+    @Override
     public boolean isCustomizationTagName(String nsUri, String localName) {
         return nsUri.equals(Const.NS) && localName.equals("boolean");
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.sun.tools.xjc.Plugin#getUsage()
      */
     @Override
@@ -67,12 +70,14 @@ public class PluginImpl extends Plugin {
         return "  -Xboolean-getter\t:  replace isXXX method to getXXX method for Boolean type properties";
     }
 
-    /* (non-Javadoc)
-     * @see com.sun.tools.xjc.Plugin#run(com.sun.tools.xjc.outline.Outline, com.sun.tools.xjc.Options, org.xml.sax.ErrorHandler)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.sun.tools.xjc.Plugin#run(com.sun.tools.xjc.outline.Outline, com.sun.tools.xjc.Options,
+     * org.xml.sax.ErrorHandler)
      */
     @Override
-    public boolean run(Outline model, Options opt, ErrorHandler errorHandler)
-            throws SAXException {
+    public boolean run(Outline model, Options opt, ErrorHandler errorHandler) throws SAXException {
         for (ClassOutline co : model.getClasses()) {
             Collection<JMethod> methods = co.implClass.methods();
             for (JMethod method : methods) {

@@ -22,20 +22,23 @@ import com.wavemaker.tools.service.definitions.Service;
 
 /**
  * 
- * Upgrade the Java service class.  Currently, this touches the Spring
- * file so the next build will regenerate the service's Java class.
+ * Upgrade the Java service class. Currently, this touches the Spring file so the next build will regenerate the
+ * service's Java class.
  * 
  * @author small
  * @version $Rev$ - $Date$
  */
 public class DataServiceJavaUpgrade extends BaseDataUpgradeTask {
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.tools.data.upgrade.BaseDataUpgradeTask#upgrade(com.wavemaker.tools.service.definitions.Service)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.wavemaker.tools.data.upgrade.BaseDataUpgradeTask#upgrade(com.wavemaker.tools.service.definitions.Service)
      */
     @Override
     protected void upgrade(Service service) {
-        
+
         try {
             IOUtils.touch(getCfgFile(service.getId()));
             Thread.sleep(1000);

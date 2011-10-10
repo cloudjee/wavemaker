@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.javaservice.testtypes;
 
 import com.wavemaker.runtime.server.ParamName;
@@ -25,8 +26,7 @@ import com.wavemaker.runtime.server.ParamName;
  */
 public class JavaServiceDefinitionClass_ParamName {
 
-    public void doSomething(@ParamName(name="foo") int foo,
-            @ParamName(name="bar") boolean bar) {
+    public void doSomething(@ParamName(name = "foo") int foo, @ParamName(name = "bar") boolean bar) {
         // do nothing
     }
 }

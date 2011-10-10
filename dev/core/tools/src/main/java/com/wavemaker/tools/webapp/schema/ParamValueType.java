@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import java.util.ArrayList;
@@ -35,18 +34,18 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
  * 
  * 
- * 	This type is a general type that can be used to declare
- * 	parameter/value lists.
+ * This type is a general type that can be used to declare parameter/value lists.
  * 
- *       
  * 
- * <p>Java class for param-valueType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for param-valueType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="param-valueType">
@@ -66,18 +65,17 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "param-valueType", propOrder = {
-    "description",
-    "paramName",
-    "paramValue"
-})
+@XmlType(name = "param-valueType", propOrder = { "description", "paramName", "paramValue" })
 public class ParamValueType {
 
     protected List<DescriptionType> description;
+
     @XmlElement(name = "param-name", required = true)
     protected com.wavemaker.tools.webapp.schema.String paramName;
+
     @XmlElement(name = "param-value", required = true)
     protected XsdStringType paramValue;
+
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -88,27 +86,26 @@ public class ParamValueType {
      * Gets the value of the description property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the description property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the description property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getDescription().add(newItem);
+     * getDescription().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DescriptionType }
+     * Objects of the following type(s) are allowed in the list {@link DescriptionType }
      * 
      * 
      */
     public List<DescriptionType> getDescription() {
-        if (description == null) {
-            description = new ArrayList<DescriptionType>();
+        if (this.description == null) {
+            this.description = new ArrayList<DescriptionType>();
         }
         return this.description;
     }
@@ -116,22 +113,18 @@ public class ParamValueType {
     /**
      * Gets the value of the paramName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link com.wavemaker.tools.webapp.schema.String }
-     *     
+     * @return possible object is {@link com.wavemaker.tools.webapp.schema.String }
+     * 
      */
     public com.wavemaker.tools.webapp.schema.String getParamName() {
-        return paramName;
+        return this.paramName;
     }
 
     /**
      * Sets the value of the paramName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link com.wavemaker.tools.webapp.schema.String }
-     *     
+     * @param value allowed object is {@link com.wavemaker.tools.webapp.schema.String }
+     * 
      */
     public void setParamName(com.wavemaker.tools.webapp.schema.String value) {
         this.paramName = value;
@@ -140,22 +133,18 @@ public class ParamValueType {
     /**
      * Gets the value of the paramValue property.
      * 
-     * @return
-     *     possible object is
-     *     {@link XsdStringType }
-     *     
+     * @return possible object is {@link XsdStringType }
+     * 
      */
     public XsdStringType getParamValue() {
-        return paramValue;
+        return this.paramValue;
     }
 
     /**
      * Sets the value of the paramValue property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link XsdStringType }
-     *     
+     * @param value allowed object is {@link XsdStringType }
+     * 
      */
     public void setParamValue(XsdStringType value) {
         this.paramValue = value;
@@ -164,22 +153,18 @@ public class ParamValueType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setId(java.lang.String value) {
         this.id = value;

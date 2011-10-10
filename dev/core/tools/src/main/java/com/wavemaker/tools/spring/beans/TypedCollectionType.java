@@ -19,7 +19,6 @@
 // Generated on: 2008.02.26 at 04:39:33 PM PST 
 //
 
-
 package com.wavemaker.tools.spring.beans;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -28,11 +27,12 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for typedCollectionType complex type.
+ * <p>
+ * Java class for typedCollectionType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="typedCollectionType">
@@ -48,13 +48,8 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "typedCollectionType")
-@XmlSeeAlso({
-    Map.class,
-    ListOrSetType.class
-})
-public class TypedCollectionType
-    extends BaseCollectionType
-{
+@XmlSeeAlso({ Map.class, ListOrSetType.class })
+public class TypedCollectionType extends BaseCollectionType {
 
     @XmlAttribute(name = "value-type")
     protected String valueType;
@@ -62,22 +57,18 @@ public class TypedCollectionType
     /**
      * Gets the value of the valueType property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getValueType() {
-        return valueType;
+        return this.valueType;
     }
 
     /**
      * Sets the value of the valueType property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setValueType(String value) {
         this.valueType = value;

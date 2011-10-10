@@ -38,8 +38,7 @@ import com.wavemaker.tools.data.DataServiceLoggers;
 public class MetaDataDialect extends BasicMetaDataDialect {
 
     @Override
-    public Iterator<Map<String, String>> getSuggestedPrimaryKeyStrategyName(
-            String catalog, String schema, String table) {
+    public Iterator<Map<String, String>> getSuggestedPrimaryKeyStrategyName(String catalog, String schema, String table) {
 
         String pkStrategy = null;
 
@@ -54,8 +53,7 @@ public class MetaDataDialect extends BasicMetaDataDialect {
             String sql = getSQL(catalog, schema, table);
 
             if (DataServiceLoggers.importLogger.isDebugEnabled()) {
-                DataServiceLoggers.importLogger
-                        .debug("getSuggestedPrimaryKeyStrategyName: " + sql);
+                DataServiceLoggers.importLogger.debug("getSuggestedPrimaryKeyStrategyName: " + sql);
             }
 
             rs = stmt.executeQuery(sql);

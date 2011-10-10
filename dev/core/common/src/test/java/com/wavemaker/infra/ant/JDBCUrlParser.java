@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.infra.ant;
 
 import org.apache.tools.ant.BuildException;
@@ -23,8 +24,7 @@ import org.apache.tools.ant.Task;
 import com.wavemaker.common.util.StringUtils;
 
 /**
- * Dumb task that parses a jdbc url. Only parses out the host at this point,
- * since that's what I need.
+ * Dumb task that parses a jdbc url. Only parses out the host at this point, since that's what I need.
  * 
  * @author Simon Toens
  * @version $Rev$ - $Date$
@@ -53,37 +53,35 @@ public class JDBCUrlParser extends Task {
     @Override
     public void execute() {
 
-        if (url == null) {
+        if (this.url == null) {
             throw new BuildException("jdbcurl must be set");
         }
 
-        if (hostProperty == null && portProperty == null) {
-            throw new BuildException(
-                    "Either hostproperty or portproperty must be set");
+        if (this.hostProperty == null && this.portProperty == null) {
+            throw new BuildException("Either hostproperty or portproperty must be set");
         }
 
         // take the bit following "://"
-        String hostport = StringUtils.fromFirstOccurrence(url, "://");
-        if (hostport.equals(url)) {
-            throw new BuildException("Can't parse " + url);
+        String hostport = StringUtils.fromFirstOccurrence(this.url, "://");
+        if (hostport.equals(this.url)) {
+            throw new BuildException("Can't parse " + this.url);
         }
 
         // up to the next ':'
         String host = StringUtils.fromFirstOccurrence(hostport, ":", -1);
         if (host.equals(hostport)) {
-            throw new BuildException("Can't parse " + url);
+            throw new BuildException("Can't parse " + this.url);
         }
-        
+
         String port = StringUtils.fromFirstOccurrence(hostport, ":");
         port = StringUtils.fromFirstOccurrence(port, "/", -1);
-        
 
-        if (hostProperty != null) {
-        getProject().setProperty(hostProperty, host);
+        if (this.hostProperty != null) {
+            getProject().setProperty(this.hostProperty, host);
         }
-        
-        if (portProperty != null) {
-            getProject().setProperty(portProperty, port);
+
+        if (this.portProperty != null) {
+            getProject().setProperty(this.portProperty, port);
         }
     }
 

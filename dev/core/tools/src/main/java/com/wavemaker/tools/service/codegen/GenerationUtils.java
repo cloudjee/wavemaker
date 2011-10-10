@@ -29,19 +29,16 @@ public class GenerationUtils {
         int i = type.indexOf("<");
         int j = type.indexOf(">");
         if (i != -1 && j != -1) {
-            return Tuple.tuple(type.substring(0, i), type.substring(i+1, j));
-        } 
+            return Tuple.tuple(type.substring(0, i), type.substring(i + 1, j));
+        }
         return null;
     }
 
-    public static JType getGenericCollectionType(JCodeModel codeModel,
-            String collectionType, JType type) throws ClassNotFoundException {
-        return getGenericCollectionType(codeModel, collectionType, type
-                .fullName());
+    public static JType getGenericCollectionType(JCodeModel codeModel, String collectionType, JType type) throws ClassNotFoundException {
+        return getGenericCollectionType(codeModel, collectionType, type.fullName());
     }
 
-    public static JType getGenericCollectionType(JCodeModel codeModel,
-            String collectionType, String type) throws ClassNotFoundException {
+    public static JType getGenericCollectionType(JCodeModel codeModel, String collectionType, String type) throws ClassNotFoundException {
         return codeModel.parseType(collectionType + "<" + type + ">");
     }
 

@@ -37,15 +37,14 @@ public class SchemaElementType extends ElementType {
         this.schemaType = schemaType;
     }
 
-    public SchemaElementType(String name, QName schemaType, String javaType,
-            long minOccurs, long maxOccurs) {
+    public SchemaElementType(String name, QName schemaType, String javaType, long minOccurs, long maxOccurs) {
         this(name, schemaType, javaType);
         this.minOccurs = minOccurs;
         this.maxOccurs = maxOccurs;
     }
 
     public QName getSchemaType() {
-        return schemaType;
+        return this.schemaType;
     }
 
     public void setSchemaTypeType(QName schemaType) {
@@ -53,7 +52,7 @@ public class SchemaElementType extends ElementType {
     }
 
     public long getMinOccurs() {
-        return minOccurs;
+        return this.minOccurs;
     }
 
     public void setMinOccurs(long minOccurs) {
@@ -61,15 +60,16 @@ public class SchemaElementType extends ElementType {
     }
 
     public long getMaxOccurs() {
-        return maxOccurs;
+        return this.maxOccurs;
     }
 
     public void setMaxOccurs(long maxOccurs) {
         this.maxOccurs = maxOccurs;
     }
 
+    @Override
     public boolean isList() {
-        return maxOccurs > 1;
+        return this.maxOccurs > 1;
     }
 
 }

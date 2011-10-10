@@ -24,21 +24,17 @@ import com.wavemaker.tools.service.DesignServiceManager;
  * 
  */
 public interface ServiceDeployment {
-    
+
     /**
-     * For a service type implementing this interface, this method is called
-     * once with each service instance belonging to the implementing service
-     * type.
+     * For a service type implementing this interface, this method is called once with each service instance belonging
+     * to the implementing service type.
      * 
      * @param serviceName
-     * @param properties
-     *                Generic deployment properties that a service type may know
-     *                about For example: {jndiname:
-     *                "java:comp/env/jdbc/sakiladb"}. Typically these would be
-     *                sent from the client to configure various deployment
-     *                options They could be prefixed with the service name.
-     * @param mgr     DesignServiceManager
-     * @param indx    Serial number to ensures unique reference binding ID 
+     * @param properties Generic deployment properties that a service type may know about For example: {jndiname:
+     *        "java:comp/env/jdbc/sakiladb"}. Typically these would be sent from the client to configure various
+     *        deployment options They could be prefixed with the service name.
+     * @param mgr DesignServiceManager
+     * @param indx Serial number to ensures unique reference binding ID
      * 
      */
     void prepare(String serviceName, Map<String, String> properties, DesignServiceManager mgr, int indx);

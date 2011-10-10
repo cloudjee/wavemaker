@@ -36,7 +36,7 @@ import com.wavemaker.tools.ws.wsdl.WSDLUtils.SoapAddress;
  */
 public class PortTypeInfo extends GenericInfo {
 
-    private PortType portType;
+    private final PortType portType;
 
     private Port port;
 
@@ -44,21 +44,20 @@ public class PortTypeInfo extends GenericInfo {
 
     private String targetNamespace;
 
-    private Map<String, Operation> operationMap = new TreeMap<String, Operation>();
+    private final Map<String, Operation> operationMap = new TreeMap<String, Operation>();
 
     protected PortTypeInfo(PortType portType) {
         this.portType = portType;
-        
-        for (Operation op : CastUtils.cast(portType.getOperations(),
-                Operation.class)) {
-            operationMap.put(CodeGenUtils.toJavaMethodName(op.getName()), op);
+
+        for (Operation op : CastUtils.cast(portType.getOperations(), Operation.class)) {
+            this.operationMap.put(CodeGenUtils.toJavaMethodName(op.getName()), op);
         }
     }
 
     public QName getQName() {
-        return portType.getQName();
+        return this.portType.getQName();
     }
-    
+
     public String getName() {
         return getQName().getLocalPart();
     }
@@ -68,16 +67,16 @@ public class PortTypeInfo extends GenericInfo {
     }
 
     public String getPortName() {
-        return port.getName();
+        return this.port.getName();
     }
 
     public Map<String, Operation> getOperationMap() {
-        return operationMap;
+        return this.operationMap;
     }
 
     public String getSoapAddress() {
-        if (port != null) {
-            SoapAddress soapAddress = WSDLUtils.getSoapAddress(port);
+        if (this.port != null) {
+            SoapAddress soapAddress = WSDLUtils.getSoapAddress(this.port);
             if (soapAddress != null) {
                 return soapAddress.getLocationURI();
             }
@@ -86,11 +85,11 @@ public class PortTypeInfo extends GenericInfo {
     }
 
     protected String getTargetNamespace() {
-        return targetNamespace;
+        return this.targetNamespace;
     }
 
     protected void setTargetNamespace(String ns) {
-        targetNamespace = ns;
+        this.targetNamespace = ns;
     }
 
     protected void setPort(Port port) {
@@ -98,7 +97,7 @@ public class PortTypeInfo extends GenericInfo {
     }
 
     protected Service getService() {
-        return service;
+        return this.service;
     }
 
     protected void setService(Service service) {

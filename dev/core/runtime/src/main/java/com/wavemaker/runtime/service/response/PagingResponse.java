@@ -19,15 +19,14 @@ package com.wavemaker.runtime.service.response;
  * 
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public interface PagingResponse extends RootServiceResponse {
 
     public static final long PAGING_NOT_USED = -1;
-    
+
     /**
-     * Get the dataSetSize; {@value #PAGING_NOT_USED} indicates that no paging
-     * was used.
+     * Get the dataSetSize; {@value #PAGING_NOT_USED} indicates that no paging was used.
      */
     public long getDataSetSize();
 }

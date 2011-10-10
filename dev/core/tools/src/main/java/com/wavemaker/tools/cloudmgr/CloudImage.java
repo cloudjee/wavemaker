@@ -16,27 +16,35 @@ package com.wavemaker.tools.cloudmgr;
 
 /**
  * This class represents a cloud server image.
- *
+ * 
  * @author slee
  */
 public class CloudImage {
 
     private String id;
+
     private String name;
+
     private String description;
+
     private String cpuCount;
+
     private String memory;
+
     private String osStorage;
+
     private String extraStorage;
+
     private String OS;
+
     private String created;
 
     public CloudImage() {
 
     }
 
-    public CloudImage (String id, String name, String description, String cpuCount, String memory,
-                       String osStorage, String extraStorage, String OS, String created) {
+    public CloudImage(String id, String name, String description, String cpuCount, String memory, String osStorage, String extraStorage, String OS,
+        String created) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -45,7 +53,7 @@ public class CloudImage {
         this.osStorage = osStorage;
         this.extraStorage = extraStorage;
         this.OS = OS;
-        this.created = created;       
+        this.created = created;
     }
 
     public void setId(String val) {

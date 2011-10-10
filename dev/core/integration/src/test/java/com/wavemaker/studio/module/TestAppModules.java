@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.wavemaker.studio.module;
 
 import java.io.File;
@@ -29,9 +30,10 @@ import com.wavemaker.tools.project.DeploymentManager;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestAppModules extends StudioTestCase {
+
     private static String PROJECT_TYPE = System.getProperty("test.project.type");
 
     protected DeploymentManager deploymentManager;
@@ -42,32 +44,27 @@ public class TestAppModules extends StudioTestCase {
 
         super.setUp();
 
-        deploymentManager = (DeploymentManager) getBean("deploymentManager");
+        this.deploymentManager = (DeploymentManager) getBean("deploymentManager");
     }
 
-    @Test public void testAppModules() throws Exception {
+    @Test
+    public void testAppModules() throws Exception {
 
         File testTestRunDir = makeProject("testTestRun", /* noTemplate= */false);
         String deployName = getTestWaveMakerHome().getName() + "-testTestRun";
 
-        deploymentManager.testRunStart(testTestRunDir.getAbsolutePath(),
-                deployName);
+        this.deploymentManager.testRunStart(testTestRunDir.getAbsolutePath(), deployName);
 
         try {
-	    if ("cloud".equals(PROJECT_TYPE)) {
-		TestDeploymentManager.checkURLContent(testTestRunDir, deployName,
-						      "modules/id/wm.cloud/cloud.src.resource", "",
-						      TestDeploymentManager.RETRY_SECONDS,
-						      deploymentManager);
-	    } else {
-		TestDeploymentManager.checkURLContent(testTestRunDir, deployName,
-						      "modules/id/wm.local/local.src.resource", "",
-						      TestDeploymentManager.RETRY_SECONDS,
-						      deploymentManager);
-	    }
+            if ("cloud".equals(PROJECT_TYPE)) {
+                TestDeploymentManager.checkURLContent(testTestRunDir, deployName, "modules/id/wm.cloud/cloud.src.resource", "",
+                    TestDeploymentManager.RETRY_SECONDS, this.deploymentManager);
+            } else {
+                TestDeploymentManager.checkURLContent(testTestRunDir, deployName, "modules/id/wm.local/local.src.resource", "",
+                    TestDeploymentManager.RETRY_SECONDS, this.deploymentManager);
+            }
         } finally {
-            deploymentManager.testRunClean(testTestRunDir.getAbsolutePath(),
-                    deployName);
+            this.deploymentManager.testRunClean(testTestRunDir.getAbsolutePath(), deployName);
         }
     }
 }

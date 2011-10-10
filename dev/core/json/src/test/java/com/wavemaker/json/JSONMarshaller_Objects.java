@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.json;
 
 import java.math.BigDecimal;
@@ -30,12 +31,13 @@ import java.util.Map;
 public class JSONMarshaller_Objects {
 
     public static class ComplexObject {
+
         private ObjectWithMap objectWithMap;
 
         private SimpleObject simpleObject;
 
         public ObjectWithMap getObjectWithMap() {
-            return objectWithMap;
+            return this.objectWithMap;
         }
 
         public void setObjectWithMap(ObjectWithMap objectWithMap) {
@@ -43,189 +45,209 @@ public class JSONMarshaller_Objects {
         }
 
         public SimpleObject getSimpleObject() {
-            return simpleObject;
+            return this.simpleObject;
         }
 
         public void setSimpleObject(SimpleObject simpleObject) {
             this.simpleObject = simpleObject;
         }
     }
-    
+
     public static class ObjectWithMap {
-        
+
         private Map<String, Double> stringDoubleMap;
 
         public Map<String, Double> getStringDoubleMap() {
-            return stringDoubleMap;
+            return this.stringDoubleMap;
         }
 
         public void setStringDoubleMap(Map<String, Double> stringDoubleMap) {
             this.stringDoubleMap = stringDoubleMap;
         }
     }
-    
+
     public static class SimpleObject {
-        
+
         private String str;
 
         public String getStr() {
-            return str;
+            return this.str;
         }
 
         public void setStr(String str) {
             this.str = str;
         }
     }
-    
+
     public static class ObjectWithList {
-        
+
         private List<String> stringList;
 
         public List<String> getStringList() {
-            return stringList;
+            return this.stringList;
         }
 
         public void setStringList(List<String> stringList) {
             this.stringList = stringList;
         }
     }
-    
+
     public static class ObjectWithArray {
-        
+
         private String[] stringArray;
 
         public String[] getStringArray() {
-            return stringArray;
+            return this.stringArray;
         }
 
         public void setStringArray(String[] stringArray) {
             this.stringArray = stringArray;
         }
     }
-    
+
     public static class ObjectWithClass {
-        
+
         private Class<?> klass;
 
         public Class<?> getKlass() {
-            return klass;
+            return this.klass;
         }
 
         public void setKlass(Class<?> klass) {
             this.klass = klass;
         }
     }
-    
+
     public static class ObjectWithTypes {
-        
+
         private BigDecimal bigDecimal;
+
         private int intVal;
+
         private Float floatVal;
+
         private BigInteger bigInteger;
+
         private boolean boolVal;
-        
+
         public BigDecimal getBigDecimal() {
-            return bigDecimal;
+            return this.bigDecimal;
         }
+
         public void setBigDecimal(BigDecimal bigDecimal) {
             this.bigDecimal = bigDecimal;
         }
+
         public int getIntVal() {
-            return intVal;
+            return this.intVal;
         }
+
         public void setIntVal(int intVal) {
             this.intVal = intVal;
         }
+
         public Float getFloatVal() {
-            return floatVal;
+            return this.floatVal;
         }
+
         public void setFloatVal(Float floatVal) {
             this.floatVal = floatVal;
         }
+
         public BigInteger getBigInteger() {
-            return bigInteger;
+            return this.bigInteger;
         }
+
         public void setBigInteger(BigInteger bigInteger) {
             this.bigInteger = bigInteger;
         }
+
         public boolean isBoolVal() {
-            return boolVal;
+            return this.boolVal;
         }
+
         public void setBoolVal(boolean boolVal) {
             this.boolVal = boolVal;
         }
     }
-    
+
     public static class ClassWithEnum {
-        
-        public enum DAYS {MONDAY, TUESDAY, WEDNESDAY};
-        
+
+        public enum DAYS {
+            MONDAY, TUESDAY, WEDNESDAY
+        };
+
         private DAYS days;
-        
+
         public void setDays(DAYS days) {
             this.days = days;
         }
-        
+
         public DAYS getDays() {
             return this.days;
         }
     }
-    
+
     public static class ClassWithEnumList {
-        
+
         private List<ClassWithEnum.DAYS> days;
 
         public List<ClassWithEnum.DAYS> getDays() {
-            return days;
+            return this.days;
         }
 
         public void setDays(List<ClassWithEnum.DAYS> days) {
             this.days = days;
         }
     }
-    
+
     public static class ClassWithOverridenEnums {
-        
+
         public enum MONTHS {
-            
-            JANUARY("january"),
-            FEBRUARY("february");
-            
+
+            JANUARY("january"), FEBRUARY("february");
+
             private final String month;
+
             MONTHS(String string) {
                 this.month = string;
             }
-            
+
             @Override
             public String toString() {
                 return this.month;
             }
         }
-        
+
         private MONTHS month;
 
         public MONTHS getMonth() {
-            return month;
+            return this.month;
         }
 
         public void setMonth(MONTHS month) {
             this.month = month;
         }
     }
-    
+
     public static class ObjectWithRecursiveArray {
-        
+
         private List<ObjectWithRecursiveArray> list = new ArrayList<ObjectWithRecursiveArray>();
+
         private String str;
+
         public List<ObjectWithRecursiveArray> getList() {
-            return list;
+            return this.list;
         }
+
         public void setList(List<ObjectWithRecursiveArray> list) {
             this.list = list;
         }
+
         public String getStr() {
-            return str;
+            return this.str;
         }
+
         public void setStr(String str) {
             this.str = str;
         }

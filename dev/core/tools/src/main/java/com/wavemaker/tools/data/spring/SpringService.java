@@ -76,8 +76,7 @@ public class SpringService {
 
     }
 
-    private static DeprecatedServiceDefinition getDataServiceDefinition(
-            GenericApplicationContext ctx) {
+    private static DeprecatedServiceDefinition getDataServiceDefinition(GenericApplicationContext ctx) {
 
         DataServiceManager mgr = getDataServiceManager(ctx);
 
@@ -86,20 +85,16 @@ public class SpringService {
         return new SpringServiceDefinitionWrapper(def, ctx);
     }
 
-    private static DataServiceManager getDataServiceManager(
-            GenericApplicationContext ctx) {
+    private static DataServiceManager getDataServiceManager(GenericApplicationContext ctx) {
 
         DataServiceManager mgr = null;
 
         try {
-            String[] beanNames = ctx.getBeanNamesForType(
-                    DataServiceManager.class, true, false);
-            if (null==beanNames || 1!=beanNames.length) {
-                throw new WMRuntimeException(
-                        com.wavemaker.common.MessageResource.NO_DATA_SERVICE_MGR_BEAN_FOUND,
-                        Arrays.toString(beanNames));
+            String[] beanNames = ctx.getBeanNamesForType(DataServiceManager.class, true, false);
+            if (null == beanNames || 1 != beanNames.length) {
+                throw new WMRuntimeException(com.wavemaker.common.MessageResource.NO_DATA_SERVICE_MGR_BEAN_FOUND, Arrays.toString(beanNames));
             }
-            
+
             mgr = (DataServiceManager) ctx.getBean(beanNames[0]);
         } catch (RuntimeException ex) {
             try {
@@ -113,11 +108,11 @@ public class SpringService {
     }
 
     private static GenericApplicationContext initAppCtx(Resource r) {
-        
+
         ClassPathResource servicetypes = new ClassPathResource("servicetypes.xml");
 
         GenericApplicationContext ctx = new GenericApplicationContext();
-        
+
         XmlBeanDefinitionReader xmlReader = new XmlBeanDefinitionReader(ctx);
 
         xmlReader.setValidationMode(XmlBeanDefinitionReader.VALIDATION_NONE);

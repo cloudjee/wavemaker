@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -32,22 +31,21 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
  * 
  * 
- * 	The login-configType is used to configure the authentication
- * 	method that should be used, the realm name that should be
- * 	used for this application, and the attributes that are
- * 	needed by the form login mechanism.
+ * The login-configType is used to configure the authentication method that should be used, the realm name that should
+ * be used for this application, and the attributes that are needed by the form login mechanism.
  * 
- * 	Used in: web-app
+ * Used in: web-app
  * 
- *       
  * 
- * <p>Java class for login-configType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for login-configType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="login-configType">
@@ -67,19 +65,18 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "login-configType", propOrder = {
-    "authMethod",
-    "realmName",
-    "formLoginConfig"
-})
+@XmlType(name = "login-configType", propOrder = { "authMethod", "realmName", "formLoginConfig" })
 public class LoginConfigType {
 
     @XmlElement(name = "auth-method")
     protected AuthMethodType authMethod;
+
     @XmlElement(name = "realm-name")
     protected com.wavemaker.tools.webapp.schema.String realmName;
+
     @XmlElement(name = "form-login-config")
     protected FormLoginConfigType formLoginConfig;
+
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -89,22 +86,18 @@ public class LoginConfigType {
     /**
      * Gets the value of the authMethod property.
      * 
-     * @return
-     *     possible object is
-     *     {@link AuthMethodType }
-     *     
+     * @return possible object is {@link AuthMethodType }
+     * 
      */
     public AuthMethodType getAuthMethod() {
-        return authMethod;
+        return this.authMethod;
     }
 
     /**
      * Sets the value of the authMethod property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link AuthMethodType }
-     *     
+     * @param value allowed object is {@link AuthMethodType }
+     * 
      */
     public void setAuthMethod(AuthMethodType value) {
         this.authMethod = value;
@@ -113,22 +106,18 @@ public class LoginConfigType {
     /**
      * Gets the value of the realmName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link com.wavemaker.tools.webapp.schema.String }
-     *     
+     * @return possible object is {@link com.wavemaker.tools.webapp.schema.String }
+     * 
      */
     public com.wavemaker.tools.webapp.schema.String getRealmName() {
-        return realmName;
+        return this.realmName;
     }
 
     /**
      * Sets the value of the realmName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link com.wavemaker.tools.webapp.schema.String }
-     *     
+     * @param value allowed object is {@link com.wavemaker.tools.webapp.schema.String }
+     * 
      */
     public void setRealmName(com.wavemaker.tools.webapp.schema.String value) {
         this.realmName = value;
@@ -137,22 +126,18 @@ public class LoginConfigType {
     /**
      * Gets the value of the formLoginConfig property.
      * 
-     * @return
-     *     possible object is
-     *     {@link FormLoginConfigType }
-     *     
+     * @return possible object is {@link FormLoginConfigType }
+     * 
      */
     public FormLoginConfigType getFormLoginConfig() {
-        return formLoginConfig;
+        return this.formLoginConfig;
     }
 
     /**
      * Sets the value of the formLoginConfig property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link FormLoginConfigType }
-     *     
+     * @param value allowed object is {@link FormLoginConfigType }
+     * 
      */
     public void setFormLoginConfig(FormLoginConfigType value) {
         this.formLoginConfig = value;
@@ -161,22 +146,18 @@ public class LoginConfigType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setId(java.lang.String value) {
         this.id = value;

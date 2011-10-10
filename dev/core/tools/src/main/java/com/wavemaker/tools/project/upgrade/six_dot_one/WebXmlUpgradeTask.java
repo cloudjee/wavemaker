@@ -21,6 +21,7 @@ import org.springframework.core.io.Resource;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
+
 /**
  * Changes for dynamic loading.
  * 
@@ -29,69 +30,55 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
  */
 public class WebXmlUpgradeTask implements UpgradeTask {
 
-    private String str1 =
-            "<url-pattern>*.upload</url-pattern>";
+    private final String str1 = "<url-pattern>*.upload</url-pattern>";
 
-    private String str2 =
-            "</servlet-mapping>";
+    private final String str2 = "</servlet-mapping>";
 
-    private String toStr =
-            "<url-pattern>*.upload</url-pattern>" +
-            "\r\n\t</servlet-mapping>" +
-                    
-            "\r\n\r\n\t<servlet-mapping>" +
-            "\r\n\t\t<servlet-name>springapp</servlet-name>" +
-            "\r\n\t\t<url-pattern>/lib/build/Gzipped/*</url-pattern>" +
-            "\r\n\t</servlet-mapping>" +
+    private final String toStr = "<url-pattern>*.upload</url-pattern>" + "\r\n\t</servlet-mapping>" +
 
-            "\r\n\r\n\t<servlet-mapping>" +
-            "\r\n\t\t<servlet-name>springapp</servlet-name>" +
-            "\r\n\t\t<url-pattern>/lib/build/themes/*</url-pattern>" +
-            "\r\n\t</servlet-mapping>" +
+    "\r\n\r\n\t<servlet-mapping>" + "\r\n\t\t<servlet-name>springapp</servlet-name>" + "\r\n\t\t<url-pattern>/lib/build/Gzipped/*</url-pattern>"
+        + "\r\n\t</servlet-mapping>" +
 
-            "\r\n\r\n\t<servlet-mapping>" +
-            "\r\n\t\t<servlet-name>springapp</servlet-name>" +
-            "\r\n\t\t<url-pattern>/lib/wm/base/widget/themes/*</url-pattern>" +
-            "\r\n\t</servlet-mapping>" +
+        "\r\n\r\n\t<servlet-mapping>" + "\r\n\t\t<servlet-name>springapp</servlet-name>" + "\r\n\t\t<url-pattern>/lib/build/themes/*</url-pattern>"
+        + "\r\n\t</servlet-mapping>" +
 
-            "\r\n\r\n\t<servlet-mapping>" +
-            "\r\n\t\t<servlet-name>springapp</servlet-name>" +
-            "\r\n\t\t<url-pattern>/lib/dojo/*</url-pattern>" +
-            "\r\n\t</servlet-mapping>" +
+        "\r\n\r\n\t<servlet-mapping>" + "\r\n\t\t<servlet-name>springapp</servlet-name>"
+        + "\r\n\t\t<url-pattern>/lib/wm/base/widget/themes/*</url-pattern>" + "\r\n\t</servlet-mapping>" +
 
-            "\r\n\r\n\t<servlet-mapping>" +
-            "\r\n\t\t<servlet-name>springapp</servlet-name>" +
-            "\r\n\t\t<url-pattern>/lib/boot/boot.js</url-pattern>" +
-            "\r\n\t</servlet-mapping>" +
+        "\r\n\r\n\t<servlet-mapping>" + "\r\n\t\t<servlet-name>springapp</servlet-name>" + "\r\n\t\t<url-pattern>/lib/dojo/*</url-pattern>"
+        + "\r\n\t</servlet-mapping>" +
 
-            "\r\n\r\n\t<servlet-mapping>" +
-            "\r\n\t\t<servlet-name>springapp</servlet-name>" +
-            "\r\n\t\t<url-pattern>/lib/runtimeLoader.js</url-pattern>" +
-            "\r\n\t</servlet-mapping>";
+        "\r\n\r\n\t<servlet-mapping>" + "\r\n\t\t<servlet-name>springapp</servlet-name>" + "\r\n\t\t<url-pattern>/lib/boot/boot.js</url-pattern>"
+        + "\r\n\t</servlet-mapping>" +
+
+        "\r\n\r\n\t<servlet-mapping>" + "\r\n\t\t<servlet-name>springapp</servlet-name>" + "\r\n\t\t<url-pattern>/lib/runtimeLoader.js</url-pattern>"
+        + "\r\n\t</servlet-mapping>";
 
     private boolean error = false;
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
+     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
      */
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
         Resource webxml = project.getWebXml();
 
         try {
             String content = project.readFile(webxml);
-            int indx1 = content.indexOf(str1);
-            int indx2 = content.indexOf(str2, indx1);
-            String fromStr = content.substring(indx1, indx2 + str2.length());
-            content = content.replace(fromStr, toStr);
+            int indx1 = content.indexOf(this.str1);
+            int indx2 = content.indexOf(this.str2, indx1);
+            String fromStr = content.substring(indx1, indx2 + this.str2.length());
+            content = content.replace(fromStr, this.toStr);
             project.writeFile(webxml, content);
         } catch (IOException ioe) {
             ioe.printStackTrace();
-            error = true;
+            this.error = true;
         }
 
-        if (error) {
-            upgradeInfo.addMessage("*** Terminated with error while upgrading web.xml. " +
-                    "Please check the console message.***");
+        if (this.error) {
+            upgradeInfo.addMessage("*** Terminated with error while upgrading web.xml. " + "Please check the console message.***");
         } else {
             upgradeInfo.addMessage("Upgrading web.xml completed successfully.");
         }

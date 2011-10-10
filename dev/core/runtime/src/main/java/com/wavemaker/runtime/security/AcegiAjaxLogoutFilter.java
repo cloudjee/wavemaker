@@ -35,13 +35,12 @@ public class AcegiAjaxLogoutFilter extends LogoutFilter {
 
     private static final String SUCCESS_URL = "url";
 
-    public AcegiAjaxLogoutFilter(String logoutSuccessUrl,
-            LogoutHandler[] handlers) {
+    public AcegiAjaxLogoutFilter(String logoutSuccessUrl, LogoutHandler[] handlers) {
         super(logoutSuccessUrl, handlers);
     }
 
-    protected void sendRedirect(HttpServletRequest request,
-            HttpServletResponse response, String url) throws IOException {
+    @Override
+    protected void sendRedirect(HttpServletRequest request, HttpServletResponse response, String url) throws IOException {
         if (isAjaxRequest(request)) {
             if (!url.startsWith("http://") && !url.startsWith("https://")) {
                 url = request.getContextPath() + url;

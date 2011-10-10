@@ -14,7 +14,11 @@
 
 package com.wavemaker.common.util;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.List;
@@ -59,8 +63,7 @@ public class SystemUtils {
         }
         String d = new String(rtn);
         if (removeMarkers && hasMarkers(d)) {
-            return d.substring(ENCRYPTED_PREFIX.length(), d.length()
-                    - ENCRYPTED_SUFFIX.length());
+            return d.substring(ENCRYPTED_PREFIX.length(), d.length() - ENCRYPTED_SUFFIX.length());
         }
         return d;
     }
@@ -109,7 +112,7 @@ public class SystemUtils {
                 rtn |= 128;
             }
 
-            if (i < (bytes.length - 1)) {
+            if (i < bytes.length - 1) {
                 rtn <<= 8; // 8 because unsigned
             }
         }
@@ -118,8 +121,7 @@ public class SystemUtils {
     }
 
     /**
-     * Remove all wrapping Exceptions that have been "artificially" added to the
-     * top-level root Exception.
+     * Remove all wrapping Exceptions that have been "artificially" added to the top-level root Exception.
      */
     public static Throwable unwrapInternalException(Throwable th) {
 
@@ -165,8 +167,7 @@ public class SystemUtils {
         return allPropertiesAreSet(System.getProperties(), propertyNames);
     }
 
-    public static boolean allPropertiesAreSet(Properties properties,
-            String... propertyNames) {
+    public static boolean allPropertiesAreSet(Properties properties, String... propertyNames) {
         for (String s : propertyNames) {
             if (properties.getProperty(s) == null) {
                 return false;
@@ -178,8 +179,7 @@ public class SystemUtils {
     public static Properties loadPropertiesFromResource(String name) {
         InputStream is = null;
         try {
-            is = Thread.currentThread().getContextClassLoader()
-                    .getResourceAsStream(name);
+            is = Thread.currentThread().getContextClassLoader().getResourceAsStream(name);
             return loadPropertiesFromStream(is);
         } finally {
             try {
@@ -218,13 +218,11 @@ public class SystemUtils {
         writePropertiesFile(os, props, null, null);
     }
 
-    public static void writePropertiesFile(OutputStream os, Properties props,
-            String comment) {
+    public static void writePropertiesFile(OutputStream os, Properties props, String comment) {
         writePropertiesFile(os, props, null, comment);
     }
 
-    public static void writePropertiesFile(OutputStream os, Properties props,
-            List<String> includePropertyNames, String comment) {
+    public static void writePropertiesFile(OutputStream os, Properties props, List<String> includePropertyNames, String comment) {
         try {
             if (includePropertyNames != null) {
                 Properties p = new Properties();
@@ -260,7 +258,7 @@ public class SystemUtils {
             return "127.0.0.1";
         }
     }
-    
+
     private SystemUtils() {
         throw new UnsupportedOperationException();
     }
@@ -268,7 +266,7 @@ public class SystemUtils {
     public static boolean isLinux() {
         return System.getProperty("os.name").equalsIgnoreCase("linux");
     }
-    
+
     public static boolean isMacOSX() {
         // see http://developer.apple.com/technotes/tn2002/tn2110.html
         return System.getProperty("os.name").toLowerCase().startsWith("mac os x");
@@ -276,10 +274,9 @@ public class SystemUtils {
 
     public static String getWavemakerRoot() {
         String jdkPath = System.getProperty("java.home");
-        String wmRoot = (new File(jdkPath)).getParentFile().getParentFile().getAbsolutePath();
+        String wmRoot = new File(jdkPath).getParentFile().getParentFile().getAbsolutePath();
 
         return wmRoot;
     }
 
-    
 }

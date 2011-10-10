@@ -59,7 +59,7 @@ import com.wavemaker.runtime.service.response.RootServiceResponse;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public abstract class ControllerBase extends AbstractController {
 
@@ -68,37 +68,41 @@ public abstract class ControllerBase extends AbstractController {
 
     /**
      * Create the default JSONState.
+     * 
      * @return
      */
     public static JSONState createJSONState() {
-    
+
         JSONState jsonState = new JSONState();
-    
+
         jsonState.setCycleHandler(JSONState.CycleHandler.NO_PROPERTY);
-        
+
         // value conversions
         jsonState.getTypeState().addType(new DateTypeDefinition(java.util.Date.class));
         jsonState.getTypeState().addType(new DateTypeDefinition(java.sql.Date.class));
         jsonState.getTypeState().addType(new DateTypeDefinition(java.sql.Timestamp.class));
         jsonState.getTypeState().addType(new DateTypeDefinition(java.sql.Time.class));
-        
+
         jsonState.getTypeState().addType(new FileTypeDefinition(File.class));
         jsonState.getTypeState().addType(new BlobTypeDefinition(Blob.class));
         jsonState.getTypeState().addType(new ClobTypeDefinition(Clob.class));
-    
+
         return jsonState;
     }
-    
-    /* (non-Javadoc)
-     * @see org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest
+     * , javax.servlet.http.HttpServletResponse)
      */
     @Override
-    public ModelAndView handleRequestInternal(HttpServletRequest request,
-            HttpServletResponse response) {
-        
+    public ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) {
+
         if (null == request) {
             throw new WMRuntimeException(MessageResource.SERVER_NOREQUEST);
-        } else if (null==response) {
+        } else if (null == response) {
             throw new WMRuntimeException(MessageResource.SERVER_NORESPONSE);
         }
 
@@ -107,33 +111,31 @@ public abstract class ControllerBase extends AbstractController {
             // add logging
             StringBuilder logEntry = new StringBuilder();
             HttpSession session = request.getSession(false);
-            if (null!=session) {
-                logEntry.append("session "+session.getId()+", ");
+            if (null != session) {
+                logEntry.append("session " + session.getId() + ", ");
             }
-            logEntry.append("thread "+Thread.currentThread().getId());
+            logEntry.append("thread " + Thread.currentThread().getId());
             NDC.push(logEntry.toString());
-            
+
             // default responses to the DEFAULT_ENCODING
             response.setCharacterEncoding(ServerConstants.DEFAULT_ENCODING);
 
-
             getServletEventNotifier().executeStartRequest();
             initializeRuntime(request);
-            
-            
+
             // execute the request
             ret = executeRequest(request, response);
 
             getServletEventNotifier().executeEndRequest();
         } catch (Throwable t) {
-            logger.error(t.getMessage(), t);
+            this.logger.error(t.getMessage(), t);
 
             String message;
-            while (null!=t.getCause()) {
+            while (null != t.getCause()) {
                 t = t.getCause();
             }
 
-            if (null != t.getMessage() && t.getMessage().length()>0) {
+            if (null != t.getMessage() && t.getMessage().length() > 0) {
                 message = t.getMessage();
             } else {
                 message = t.toString();
@@ -147,10 +149,10 @@ public abstract class ControllerBase extends AbstractController {
 
         return ret;
     }
-    
+
     /**
-     * Perform runtime initialization, after the base runtime has been
-     * initialized.
+     * Perform runtime initialization, after the base runtime has been initialized.
+     * 
      * @param request The current request.
      */
     protected void initializeRuntimeController(HttpServletRequest request) {
@@ -161,8 +163,7 @@ public abstract class ControllerBase extends AbstractController {
     }
 
     /**
-     * Actually handle the request; control is passed to this from
-     * handleRequestInternal.
+     * Actually handle the request; control is passed to this from handleRequestInternal.
      * 
      * @param request The current request.
      * @param response The current response.
@@ -170,170 +171,163 @@ public abstract class ControllerBase extends AbstractController {
      * @throws IOException
      * @throws WMException
      */
-    protected abstract ModelAndView executeRequest(HttpServletRequest request,
-            HttpServletResponse response) throws IOException, WMException;
-    
+    protected abstract ModelAndView executeRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, WMException;
+
     /**
-     * Handle an error, either by returning a ModelAndView, or by throwing an
-     * WMRuntimeException.
+     * Handle an error, either by returning a ModelAndView, or by throwing an WMRuntimeException.
+     * 
      * @param message The error message.
      * @param t The throwable that cause the exception.
      * @return
      */
     protected abstract ModelAndView handleError(String message, Throwable t);
-    
+
     /**
      * Get a view appropriate for this controller.
+     * 
      * @return The view.
      */
     protected abstract View getView();
-    
+
     /**
-     * Return the ModelAndView object, with the key set appropriately for the
-     * type of resultObject.
+     * Return the ModelAndView object, with the key set appropriately for the type of resultObject.
      * 
      * Current behaviour:
      * <ul>
-     * <li>If resultObject is an instance of {@link RootServiceResponse}, set
-     * resultObject in the Model with a key of
+     * <li>If resultObject is an instance of {@link RootServiceResponse}, set resultObject in the Model with a key of
      * {@link ServerConstants#ROOT_MODEL_OBJECT_KEY}.</li>
-     * <li>Otherwise, set resultObject into the Model with a key of
-     * {@link ServerConstants#RESULTS_PART}.</li>
+     * <li>Otherwise, set resultObject into the Model with a key of {@link ServerConstants#RESULTS_PART}.</li>
      * </ul>
      * 
-     * @param view
-     *                The current view.
-     * @param resultObject
-     *                The result of the method invocation.
-     * @return A new ModelAndView object, set up properly depending on the type
-     *         of resultObject.
+     * @param view The current view.
+     * @param resultObject The result of the method invocation.
+     * @return A new ModelAndView object, set up properly depending on the type of resultObject.
      */
-    protected ModelAndView getModelAndView(TypedView view,
-            TypedServiceReturn typedServiceReturn) {
-        
+    protected ModelAndView getModelAndView(TypedView view, TypedServiceReturn typedServiceReturn) {
+
         ModelAndView ret;
-        
+
         FieldDefinition fd;
-        if (null!=typedServiceReturn.getReturnType()) {
+        if (null != typedServiceReturn.getReturnType()) {
             fd = typedServiceReturn.getReturnType();
         } else {
             fd = new GenericFieldDefinition();
         }
-        
+
         Object resultObject = typedServiceReturn.getReturnValue();
-        if (null!=resultObject && resultObject instanceof RootServiceResponse) {
+        if (null != resultObject && resultObject instanceof RootServiceResponse) {
             view.setRootType(fd);
-            ret = new ModelAndView(view, ServerConstants.ROOT_MODEL_OBJECT_KEY,
-                    resultObject);
+            ret = new ModelAndView(view, ServerConstants.ROOT_MODEL_OBJECT_KEY, resultObject);
         } else {
             MapReflectTypeDefinition mrtd = new MapReflectTypeDefinition();
-            mrtd.setKeyFieldDefinition(ReflectTypeUtils.getFieldDefinition(
-                    String.class, new ReflectTypeState(), false, null));
+            mrtd.setKeyFieldDefinition(ReflectTypeUtils.getFieldDefinition(String.class, new ReflectTypeState(), false, null));
             mrtd.setValueFieldDefinition(fd);
-            
+
             view.setRootType(new GenericFieldDefinition(mrtd));
-            
-            ret = new ModelAndView(view, ServerConstants.RESULTS_PART,
-                    resultObject);
+
+            ret = new ModelAndView(view, ServerConstants.RESULTS_PART, resultObject);
         }
-        
+
         return ret;
     }
-    
-    protected TypedServiceReturn invokeMethod(ServiceWire sw,
-            String method, JSONArray jsonArgs, Map<String, Object[]> mapParams)
-            throws WMException {
-        
-        if (null!=jsonArgs && null!=mapParams) {
-            throw new WMRuntimeException(MessageResource.BOTH_ARGUMENT_TYPES, jsonArgs,
-                    mapParams);
-        } else if (null==sw) {
+
+    protected TypedServiceReturn invokeMethod(ServiceWire sw, String method, JSONArray jsonArgs, Map<String, Object[]> mapParams) throws WMException {
+
+        if (null != jsonArgs && null != mapParams) {
+            throw new WMRuntimeException(MessageResource.BOTH_ARGUMENT_TYPES, jsonArgs, mapParams);
+        } else if (null == sw) {
             throw new NullArgumentException("sw");
         }
 
-        sw.getServiceType().setup(sw, internalRuntime, runtimeAccess);
+        sw.getServiceType().setup(sw, this.internalRuntime, this.runtimeAccess);
 
         JSONState jsonState = getInternalRuntime().getJSONState();
-        
+
         ParsedServiceArguments args;
-        if (null!=mapParams) {
-            args = sw.getServiceType().parseServiceArgs(sw, method, mapParams,
-                    jsonState);
+        if (null != mapParams) {
+            args = sw.getServiceType().parseServiceArgs(sw, method, mapParams, jsonState);
         } else {
-            args = sw.getServiceType().parseServiceArgs(sw, method, jsonArgs,
-                    jsonState);
+            args = sw.getServiceType().parseServiceArgs(sw, method, jsonArgs, jsonState);
         }
-        
+
         getInternalRuntime().setDeserializedProperties(args.getGettersCalled());
-        
-        return ServerUtils.invokeMethodWithEvents(getServiceEventNotifier(), sw,
-                method, args, jsonState, false);
+
+        return ServerUtils.invokeMethodWithEvents(getServiceEventNotifier(), sw, method, args, jsonState, false);
     }
-    
+
     @SuppressWarnings("deprecation")
     private void initializeRuntime(HttpServletRequest request) {
-        
+
         RuntimeAccess.setRuntimeBean(getRuntimeAccess());
         InternalRuntime.setInternalRuntimeBean(getInternalRuntime());
-        
+
         // when you remove this, also remove the SuppressWarnings anno
         com.activegrid.runtime.AGRuntime.setRuntimeBean(getRuntime());
-        
+
         getRuntimeAccess().setRequest(request);
         initializeRuntimeController(request);
     }
-    
+
     // bean properties
     private ServiceManager serviceManager;
+
     private ServiceEventNotifier serviceEventNotifier;
+
     private ServletEventNotifier servletEventNotifier;
+
     @SuppressWarnings("deprecation")
     private com.activegrid.runtime.AGRuntime runtime;
+
     private InternalRuntime internalRuntime;
+
     private RuntimeAccess runtimeAccess;
 
     public void setServiceManager(ServiceManager spm) {
         this.serviceManager = spm;
     }
+
     public ServiceManager getServiceManager() {
         return this.serviceManager;
     }
-    
+
     public ServletEventNotifier getServletEventNotifier() {
-        return servletEventNotifier;
+        return this.servletEventNotifier;
     }
-    public void setServletEventNotifier(
-            ServletEventNotifier servletEventNotifier) {
+
+    public void setServletEventNotifier(ServletEventNotifier servletEventNotifier) {
         this.servletEventNotifier = servletEventNotifier;
     }
-    
+
     public ServiceEventNotifier getServiceEventNotifier() {
-        return serviceEventNotifier;
+        return this.serviceEventNotifier;
     }
-    public void setServiceEventNotifier(
-            ServiceEventNotifier serviceEventNotifier) {
+
+    public void setServiceEventNotifier(ServiceEventNotifier serviceEventNotifier) {
         this.serviceEventNotifier = serviceEventNotifier;
     }
-    
+
     @SuppressWarnings("deprecation")
     public com.activegrid.runtime.AGRuntime getRuntime() {
-        return runtime;
+        return this.runtime;
     }
+
     @SuppressWarnings("deprecation")
     public void setRuntime(com.activegrid.runtime.AGRuntime runtime) {
         this.runtime = runtime;
     }
 
     public InternalRuntime getInternalRuntime() {
-        return internalRuntime;
+        return this.internalRuntime;
     }
+
     public void setInternalRuntime(InternalRuntime internalRuntime) {
         this.internalRuntime = internalRuntime;
     }
 
     public RuntimeAccess getRuntimeAccess() {
-        return runtimeAccess;
+        return this.runtimeAccess;
     }
+
     public void setRuntimeAccess(RuntimeAccess runtimeAccess) {
         this.runtimeAccess = runtimeAccess;
     }

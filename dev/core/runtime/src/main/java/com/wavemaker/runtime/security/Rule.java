@@ -17,9 +17,8 @@ package com.wavemaker.runtime.security;
 import java.util.List;
 
 /**
- * This represents a rule which defines the access control permission. A role
- * could have 0 or more rules.
- *  
+ * This represents a rule which defines the access control permission. A role could have 0 or more rules.
+ * 
  * @author Frankie Fu
  * @version $Rev$ - $Date$
  * 
@@ -35,7 +34,7 @@ public class Rule {
     private String action;
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -43,7 +42,7 @@ public class Rule {
     }
 
     public boolean isAllowed() {
-        return isAllowed;
+        return this.isAllowed;
     }
 
     public void setAllowed(boolean isAllowed) {
@@ -51,7 +50,7 @@ public class Rule {
     }
 
     public List<Resource> getResources() {
-        return resources;
+        return this.resources;
     }
 
     public void setResources(List<Resource> resources) {
@@ -59,7 +58,7 @@ public class Rule {
     }
 
     public String getAction() {
-        return action;
+        return this.action;
     }
 
     public void setAction(String action) {

@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -21,11 +19,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for EmailFileAttachment complex type.
+ * <p>
+ * Java class for EmailFileAttachment complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="EmailFileAttachment">
@@ -45,64 +44,54 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "EmailFileAttachment", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "body",
-    "contentType",
-    "fileName",
-    "inline"
-})
+@XmlType(name = "EmailFileAttachment", namespace = "urn:partner.soap.sforce.com", propOrder = { "body", "contentType", "fileName", "inline" })
 public class EmailFileAttachmentType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com", nillable = true)
     protected byte[] body;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", nillable = true)
     protected String contentType;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String fileName;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected Boolean inline;
 
     /**
      * Gets the value of the body property.
      * 
-     * @return
-     *     possible object is
-     *     byte[]
+     * @return possible object is byte[]
      */
     public byte[] getBody() {
-        return body;
+        return this.body;
     }
 
     /**
      * Sets the value of the body property.
      * 
-     * @param value
-     *     allowed object is
-     *     byte[]
+     * @param value allowed object is byte[]
      */
     public void setBody(byte[] value) {
-        this.body = ((byte[]) value);
+        this.body = value;
     }
 
     /**
      * Gets the value of the contentType property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getContentType() {
-        return contentType;
+        return this.contentType;
     }
 
     /**
      * Sets the value of the contentType property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setContentType(String value) {
         this.contentType = value;
@@ -111,22 +100,18 @@ public class EmailFileAttachmentType {
     /**
      * Gets the value of the fileName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getFileName() {
-        return fileName;
+        return this.fileName;
     }
 
     /**
      * Sets the value of the fileName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setFileName(String value) {
         this.fileName = value;
@@ -135,22 +120,18 @@ public class EmailFileAttachmentType {
     /**
      * Gets the value of the inline property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     * @return possible object is {@link Boolean }
+     * 
      */
     public Boolean getInline() {
-        return inline;
+        return this.inline;
     }
 
     /**
      * Sets the value of the inline property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     * @param value allowed object is {@link Boolean }
+     * 
      */
     public void setInline(Boolean value) {
         this.inline = value;

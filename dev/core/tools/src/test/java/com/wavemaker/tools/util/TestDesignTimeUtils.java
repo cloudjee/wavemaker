@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.util;
 
 import org.springframework.core.io.Resource;
@@ -26,15 +27,15 @@ import com.wavemaker.tools.service.DesignServiceManager;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestDesignTimeUtils extends WMTestCase {
 
     public void testGetDSM() throws Exception {
-        
+
         Resource tempDir = new LocalStudioConfiguration().createTempDir();
         assertTrue(tempDir.exists());
-        
+
         DesignServiceManager dsm = DesignTimeUtils.getDSMForProjectRoot(tempDir);
         assertEquals(tempDir.getURI(), dsm.getProjectManager().getCurrentProject().getProjectRoot().getURI());
         assertNotNull(dsm.getDesignServiceTypes());

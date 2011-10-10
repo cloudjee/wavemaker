@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data.sample.sakila;
 
 import java.util.List;
@@ -34,13 +35,15 @@ import com.wavemaker.runtime.service.TypedServiceReturn;
  * Generated for Service "sakila2" on 07/07/2007 15:52:39
  * 
  */
-@SuppressWarnings({"unchecked"})
+@SuppressWarnings({ "unchecked" })
 public class Sakila implements DataServiceManagerAccess, LiveDataService {
 
     private DataServiceManager ds = null;
+
     private TaskManager taskMgr = null;
 
-    public Sakila() {}
+    public Sakila() {
+    }
 
     public Sakila(DataServiceManager ds) {
         this.ds = ds;
@@ -55,39 +58,37 @@ public class Sakila implements DataServiceManagerAccess, LiveDataService {
     }
 
     public List getFilmInStock(Short filmId, Byte storeId) {
-        return (List) ds.invoke(taskMgr.getQueryTask(), "FilmInStock", filmId,
-                storeId);
+        return (List) this.ds.invoke(this.taskMgr.getQueryTask(), "FilmInStock", filmId, storeId);
     }
 
     public void insertCity(City city) {
-        ds.invoke(taskMgr.getInsertTask(), city);
+        this.ds.invoke(this.taskMgr.getInsertTask(), city);
     }
-    
+
     public City testLoadCityAndCountryAndAddresses() {
-        List<City> rtn = ((List<City>) ds.invoke(taskMgr.getQueryTask(), "testLoadCityAndCountryAndAddresses"));
+        List<City> rtn = (List<City>) this.ds.invoke(this.taskMgr.getQueryTask(), "testLoadCityAndCountryAndAddresses");
         if (rtn.isEmpty()) {
             return null;
         } else {
             return rtn.get(0);
         }
     }
-    
+
     public City testLoadCityAndCountryAndCities() {
-        List<City> rtn = ((List<City>) ds.invoke(taskMgr.getQueryTask(), "testLoadCityAndCountryAndCities"));
+        List<City> rtn = (List<City>) this.ds.invoke(this.taskMgr.getQueryTask(), "testLoadCityAndCountryAndCities");
         if (rtn.isEmpty()) {
             return null;
         } else {
             return rtn.get(0);
         }
     }
-    
+
     public List<Actor> testLoadActorsFilmActorsFilms() {
-        return ((List<Actor>) ds.invoke(taskMgr.getQueryTask(), "testLoadActorsFilmActorsFilms"));
+        return (List<Actor>) this.ds.invoke(this.taskMgr.getQueryTask(), "testLoadActorsFilmActorsFilms");
     }
-    
 
     public City getCityById(Short id) {
-        List<City> rtn = ((List<City>) ds.invoke(taskMgr.getQueryTask(), "getCityById", id));
+        List<City> rtn = (List<City>) this.ds.invoke(this.taskMgr.getQueryTask(), "getCityById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -96,47 +97,46 @@ public class Sakila implements DataServiceManagerAccess, LiveDataService {
     }
 
     public Long getCityCount() {
-        return ((Long) ds.invoke(taskMgr.getQueryTask(), "getCityCount"));
+        return (Long) this.ds.invoke(this.taskMgr.getQueryTask(), "getCityCount");
     }
 
     public List<City> getCityList(City qbeInstance, QueryOptions queryOptions) {
-        return ((List<City>) ds.invoke(taskMgr.getSearchTask(), qbeInstance,
-                queryOptions));
+        return (List<City>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance, queryOptions);
     }
 
     // added manually
     public List<City> getCityList(City qbeInstance) {
-        return ((List<City>) ds.invoke(taskMgr.getSearchTask(), qbeInstance));
+        return (List<City>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance);
     }
-    
+
     // added manually
     public List<Varcharpk> getVarcharpkList(Varcharpk qbeInstance, QueryOptions options) {
-        return ((List<Varcharpk>) ds.invoke(taskMgr.getSearchTask(), qbeInstance, options));
+        return (List<Varcharpk>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance, options);
     }
-    
+
     // added manually
     public List<Compositepk> getCompositepkList(Compositepk qbeInstance, QueryOptions options) {
-        return ((List<Compositepk>) ds.invoke(taskMgr.getSearchTask(), qbeInstance, options));
+        return (List<Compositepk>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance, options);
     }
 
     public void updateCity(City city) {
-        ds.invoke(taskMgr.getUpdateTask(), city);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), city);
     }
-    
+
     public void updateCity(City city, boolean updateRelated) {
-        ds.invoke(taskMgr.getUpdateTask(), city, updateRelated);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), city, updateRelated);
     }
 
     public void deleteCity(City city) {
-        ds.invoke(taskMgr.getDeleteTask(), city);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), city);
     }
 
     public void insertPayment(Payment payment) {
-        ds.invoke(taskMgr.getInsertTask(), payment);
+        this.ds.invoke(this.taskMgr.getInsertTask(), payment);
     }
 
     public Payment getPaymentById(Short id) {
-        List<Payment> rtn = ((List<Payment>) ds.invoke(taskMgr.getQueryTask(), "getPaymentById", id));
+        List<Payment> rtn = (List<Payment>) this.ds.invoke(this.taskMgr.getQueryTask(), "getPaymentById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -145,33 +145,31 @@ public class Sakila implements DataServiceManagerAccess, LiveDataService {
     }
 
     public Long getPaymentCount() {
-        return ((Long) ds.invoke(taskMgr.getQueryTask(), "getPaymentCount"));
+        return (Long) this.ds.invoke(this.taskMgr.getQueryTask(), "getPaymentCount");
     }
 
-    public List<Payment> getPaymentList(Payment qbeInstance,
-            QueryOptions queryOptions) {
-        return ((List<Payment>) ds.invoke(taskMgr.getSearchTask(), qbeInstance,
-                queryOptions));
+    public List<Payment> getPaymentList(Payment qbeInstance, QueryOptions queryOptions) {
+        return (List<Payment>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance, queryOptions);
     }
 
     public void updatePayment(Payment payment) {
-        ds.invoke(taskMgr.getUpdateTask(), payment);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), payment);
     }
 
     public void deletePayment(Payment payment) {
-        ds.invoke(taskMgr.getDeleteTask(), payment);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), payment);
     }
 
     public void insertStore(Store store) {
-        ds.invoke(taskMgr.getInsertTask(), store);
+        this.ds.invoke(this.taskMgr.getInsertTask(), store);
     }
 
     public Long getStoreCount() {
-        return ((Long) ds.invoke(taskMgr.getQueryTask(), "getStoreCount"));
+        return (Long) this.ds.invoke(this.taskMgr.getQueryTask(), "getStoreCount");
     }
 
     public Store getStoreById(Byte id) {
-        List<Store> rtn = ((List<Store>) ds.invoke(taskMgr.getQueryTask(), "getStoreById", id));
+        List<Store> rtn = (List<Store>) this.ds.invoke(this.taskMgr.getQueryTask(), "getStoreById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -180,24 +178,23 @@ public class Sakila implements DataServiceManagerAccess, LiveDataService {
     }
 
     public List<Store> getStoreList(Store qbeInstance, QueryOptions queryOptions) {
-        return ((List<Store>) ds.invoke(taskMgr.getSearchTask(), qbeInstance,
-                queryOptions));
+        return (List<Store>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance, queryOptions);
     }
 
     public void updateStore(Store store) {
-        ds.invoke(taskMgr.getUpdateTask(), store);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), store);
     }
 
     public void deleteStore(Store store) {
-        ds.invoke(taskMgr.getDeleteTask(), store);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), store);
     }
 
     public void insertAddress(Address address) {
-        ds.invoke(taskMgr.getInsertTask(), address);
+        this.ds.invoke(this.taskMgr.getInsertTask(), address);
     }
 
     public Address getAddressById(Short id) {
-        List<Address> rtn = ((List<Address>) ds.invoke(taskMgr.getQueryTask(), "getAddressById", id));
+        List<Address> rtn = (List<Address>) this.ds.invoke(this.taskMgr.getQueryTask(), "getAddressById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -206,33 +203,31 @@ public class Sakila implements DataServiceManagerAccess, LiveDataService {
     }
 
     public Long getAddressCount() {
-        return ((Long) ds.invoke(taskMgr.getQueryTask(), "getAddressCount"));
+        return (Long) this.ds.invoke(this.taskMgr.getQueryTask(), "getAddressCount");
     }
 
-    public List<Address> getAddressList(Address qbeInstance,
-            QueryOptions queryOptions) {
-        return ((List<Address>) ds.invoke(taskMgr.getSearchTask(), qbeInstance,
-                queryOptions));
+    public List<Address> getAddressList(Address qbeInstance, QueryOptions queryOptions) {
+        return (List<Address>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance, queryOptions);
     }
 
     public void updateAddress(Address address) {
-        ds.invoke(taskMgr.getUpdateTask(), address);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), address);
     }
 
     public void deleteAddress(Address address) {
-        ds.invoke(taskMgr.getDeleteTask(), address);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), address);
     }
 
     public void insertRental(Rental rental) {
-        ds.invoke(taskMgr.getInsertTask(), rental);
+        this.ds.invoke(this.taskMgr.getInsertTask(), rental);
     }
 
     public Long getRentalCount() {
-        return ((Long) ds.invoke(taskMgr.getQueryTask(), "getRentalCount"));
+        return (Long) this.ds.invoke(this.taskMgr.getQueryTask(), "getRentalCount");
     }
 
     public Rental getRentalById(Integer id) {
-        List<Rental> rtn = ((List<Rental>) ds.invoke(taskMgr.getQueryTask(), "getRentalById", id));
+        List<Rental> rtn = (List<Rental>) this.ds.invoke(this.taskMgr.getQueryTask(), "getRentalById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -240,33 +235,29 @@ public class Sakila implements DataServiceManagerAccess, LiveDataService {
         }
     }
 
-    public List<Rental> getRentalList(Rental qbeInstance,
-            QueryOptions queryOptions) {
-        return ((List<Rental>) ds.invoke(taskMgr.getSearchTask(), qbeInstance,
-                queryOptions));
+    public List<Rental> getRentalList(Rental qbeInstance, QueryOptions queryOptions) {
+        return (List<Rental>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance, queryOptions);
     }
 
     public void updateRental(Rental rental) {
-        ds.invoke(taskMgr.getUpdateTask(), rental);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), rental);
     }
 
     public void deleteRental(Rental rental) {
-        ds.invoke(taskMgr.getDeleteTask(), rental);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), rental);
     }
 
-    public void insertNicerButSlowerFilmList(
-            NicerButSlowerFilmList nicerButSlowerFilmList) {
-        ds.invoke(taskMgr.getInsertTask(), nicerButSlowerFilmList);
+    public void insertNicerButSlowerFilmList(NicerButSlowerFilmList nicerButSlowerFilmList) {
+        this.ds.invoke(this.taskMgr.getInsertTask(), nicerButSlowerFilmList);
     }
 
     public Long getNicerButSlowerFilmListCount() {
-        return ((Long) ds.invoke(taskMgr.getQueryTask(),
-                "getNicerButSlowerFilmListCount"));
+        return (Long) this.ds.invoke(this.taskMgr.getQueryTask(), "getNicerButSlowerFilmListCount");
     }
 
-    public NicerButSlowerFilmList getNicerButSlowerFilmListById(
-            NicerButSlowerFilmListId id) {
-        List<NicerButSlowerFilmList> rtn = ((List<NicerButSlowerFilmList>) ds.invoke(taskMgr.getQueryTask(), "getNicerButSlowerFilmListById", id));
+    public NicerButSlowerFilmList getNicerButSlowerFilmListById(NicerButSlowerFilmListId id) {
+        List<NicerButSlowerFilmList> rtn = (List<NicerButSlowerFilmList>) this.ds.invoke(this.taskMgr.getQueryTask(),
+            "getNicerButSlowerFilmListById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -274,32 +265,28 @@ public class Sakila implements DataServiceManagerAccess, LiveDataService {
         }
     }
 
-    public List<NicerButSlowerFilmList> getNicerButSlowerFilmListList(
-            NicerButSlowerFilmList qbeInstance, QueryOptions queryOptions) {
-        return ((List<NicerButSlowerFilmList>) ds.invoke(taskMgr.getSearchTask(),
-                qbeInstance, queryOptions));
+    public List<NicerButSlowerFilmList> getNicerButSlowerFilmListList(NicerButSlowerFilmList qbeInstance, QueryOptions queryOptions) {
+        return (List<NicerButSlowerFilmList>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance, queryOptions);
     }
 
-    public void updateNicerButSlowerFilmList(
-            NicerButSlowerFilmList nicerButSlowerFilmList) {
-        ds.invoke(taskMgr.getUpdateTask(), nicerButSlowerFilmList);
+    public void updateNicerButSlowerFilmList(NicerButSlowerFilmList nicerButSlowerFilmList) {
+        this.ds.invoke(this.taskMgr.getUpdateTask(), nicerButSlowerFilmList);
     }
 
-    public void deleteNicerButSlowerFilmList(
-            NicerButSlowerFilmList nicerButSlowerFilmList) {
-        ds.invoke(taskMgr.getDeleteTask(), nicerButSlowerFilmList);
+    public void deleteNicerButSlowerFilmList(NicerButSlowerFilmList nicerButSlowerFilmList) {
+        this.ds.invoke(this.taskMgr.getDeleteTask(), nicerButSlowerFilmList);
     }
 
     public void insertFilmText(FilmText filmText) {
-        ds.invoke(taskMgr.getInsertTask(), filmText);
+        this.ds.invoke(this.taskMgr.getInsertTask(), filmText);
     }
 
     public Long getFilmTextCount() {
-        return ((Long) ds.invoke(taskMgr.getQueryTask(), "getFilmTextCount"));
+        return (Long) this.ds.invoke(this.taskMgr.getQueryTask(), "getFilmTextCount");
     }
 
     public FilmText getFilmTextById(Short id) {
-        List<FilmText> rtn = ((List<FilmText>) ds.invoke(taskMgr.getQueryTask(), "getFilmTextById", id));
+        List<FilmText> rtn = (List<FilmText>) this.ds.invoke(this.taskMgr.getQueryTask(), "getFilmTextById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -307,26 +294,24 @@ public class Sakila implements DataServiceManagerAccess, LiveDataService {
         }
     }
 
-    public List<FilmText> getFilmTextList(FilmText qbeInstance,
-            QueryOptions queryOptions) {
-        return ((List<FilmText>) ds.invoke(taskMgr.getSearchTask(), qbeInstance,
-                queryOptions));
+    public List<FilmText> getFilmTextList(FilmText qbeInstance, QueryOptions queryOptions) {
+        return (List<FilmText>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance, queryOptions);
     }
 
     public void updateFilmText(FilmText filmText) {
-        ds.invoke(taskMgr.getUpdateTask(), filmText);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), filmText);
     }
 
     public void deleteFilmText(FilmText filmText) {
-        ds.invoke(taskMgr.getDeleteTask(), filmText);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), filmText);
     }
 
     public void insertInventory(Inventory inventory) {
-        ds.invoke(taskMgr.getInsertTask(), inventory);
+        this.ds.invoke(this.taskMgr.getInsertTask(), inventory);
     }
 
     public Inventory getInventoryById(Integer id) {
-        List<Inventory> rtn = ((List<Inventory>) ds.invoke(taskMgr.getQueryTask(), "getInventoryById", id));
+        List<Inventory> rtn = (List<Inventory>) this.ds.invoke(this.taskMgr.getQueryTask(), "getInventoryById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -335,33 +320,31 @@ public class Sakila implements DataServiceManagerAccess, LiveDataService {
     }
 
     public Long getInventoryCount() {
-        return ((Long) ds.invoke(taskMgr.getQueryTask(), "getInventoryCount"));
+        return (Long) this.ds.invoke(this.taskMgr.getQueryTask(), "getInventoryCount");
     }
 
-    public List<Inventory> getInventoryList(Inventory qbeInstance,
-            QueryOptions queryOptions) {
-        return ((List<Inventory>) ds.invoke(taskMgr.getSearchTask(), qbeInstance,
-                queryOptions));
+    public List<Inventory> getInventoryList(Inventory qbeInstance, QueryOptions queryOptions) {
+        return (List<Inventory>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance, queryOptions);
     }
 
     public void updateInventory(Inventory inventory) {
-        ds.invoke(taskMgr.getUpdateTask(), inventory);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), inventory);
     }
 
     public void deleteInventory(Inventory inventory) {
-        ds.invoke(taskMgr.getDeleteTask(), inventory);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), inventory);
     }
 
     public void insertFilm(Film film) {
-        ds.invoke(taskMgr.getInsertTask(), film);
+        this.ds.invoke(this.taskMgr.getInsertTask(), film);
     }
 
     public Long getFilmCount() {
-        return ((Long) ds.invoke(taskMgr.getQueryTask(), "getFilmCount"));
+        return (Long) this.ds.invoke(this.taskMgr.getQueryTask(), "getFilmCount");
     }
 
     public Film getFilmById(Short id) {
-        List<Film> rtn = ((List<Film>) ds.invoke(taskMgr.getQueryTask(), "getFilmById", id));
+        List<Film> rtn = (List<Film>) this.ds.invoke(this.taskMgr.getQueryTask(), "getFilmById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -370,24 +353,23 @@ public class Sakila implements DataServiceManagerAccess, LiveDataService {
     }
 
     public List<Film> getFilmList(Film qbeInstance, QueryOptions queryOptions) {
-        return ((List<Film>) ds.invoke(taskMgr.getSearchTask(), qbeInstance,
-                queryOptions));
+        return (List<Film>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance, queryOptions);
     }
 
     public void updateFilm(Film film) {
-        ds.invoke(taskMgr.getUpdateTask(), film);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), film);
     }
 
     public void deleteFilm(Film film) {
-        ds.invoke(taskMgr.getDeleteTask(), film);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), film);
     }
 
     public void insertStaffList(StaffList staffList) {
-        ds.invoke(taskMgr.getInsertTask(), staffList);
+        this.ds.invoke(this.taskMgr.getInsertTask(), staffList);
     }
 
     public StaffList getStaffListById(StaffListId id) {
-        List<StaffList> rtn = ((List<StaffList>) ds.invoke(taskMgr.getQueryTask(), "getStaffListById", id));
+        List<StaffList> rtn = (List<StaffList>) this.ds.invoke(this.taskMgr.getQueryTask(), "getStaffListById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -396,33 +378,31 @@ public class Sakila implements DataServiceManagerAccess, LiveDataService {
     }
 
     public Long getStaffListCount() {
-        return ((Long) ds.invoke(taskMgr.getQueryTask(), "getStaffListCount"));
+        return (Long) this.ds.invoke(this.taskMgr.getQueryTask(), "getStaffListCount");
     }
 
-    public List<StaffList> getStaffListList(StaffList qbeInstance,
-            QueryOptions queryOptions) {
-        return ((List<StaffList>) ds.invoke(taskMgr.getSearchTask(), qbeInstance,
-                queryOptions));
+    public List<StaffList> getStaffListList(StaffList qbeInstance, QueryOptions queryOptions) {
+        return (List<StaffList>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance, queryOptions);
     }
 
     public void updateStaffList(StaffList staffList) {
-        ds.invoke(taskMgr.getUpdateTask(), staffList);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), staffList);
     }
 
     public void deleteStaffList(StaffList staffList) {
-        ds.invoke(taskMgr.getDeleteTask(), staffList);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), staffList);
     }
 
     public void insertFilmList(FilmList filmList) {
-        ds.invoke(taskMgr.getInsertTask(), filmList);
+        this.ds.invoke(this.taskMgr.getInsertTask(), filmList);
     }
 
     public Long getFilmListCount() {
-        return ((Long) ds.invoke(taskMgr.getQueryTask(), "getFilmListCount"));
+        return (Long) this.ds.invoke(this.taskMgr.getQueryTask(), "getFilmListCount");
     }
 
     public FilmList getFilmListById(FilmListId id) {
-        List<FilmList> rtn = ((List<FilmList>) ds.invoke(taskMgr.getQueryTask(), "getFilmListById", id));
+        List<FilmList> rtn = (List<FilmList>) this.ds.invoke(this.taskMgr.getQueryTask(), "getFilmListById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -430,30 +410,28 @@ public class Sakila implements DataServiceManagerAccess, LiveDataService {
         }
     }
 
-    public List<FilmList> getFilmListList(FilmList qbeInstance,
-            QueryOptions queryOptions) {
-        return ((List<FilmList>) ds.invoke(taskMgr.getSearchTask(), qbeInstance,
-                queryOptions));
+    public List<FilmList> getFilmListList(FilmList qbeInstance, QueryOptions queryOptions) {
+        return (List<FilmList>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance, queryOptions);
     }
-    
+
     public List<FilmList> getFilmListList() {
-        return ((List<FilmList>) ds.invoke(taskMgr.getSearchTask(), FilmList.class));
+        return (List<FilmList>) this.ds.invoke(this.taskMgr.getSearchTask(), FilmList.class);
     }
 
     public void updateFilmList(FilmList filmList) {
-        ds.invoke(taskMgr.getUpdateTask(), filmList);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), filmList);
     }
 
     public void deleteFilmList(FilmList filmList) {
-        ds.invoke(taskMgr.getDeleteTask(), filmList);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), filmList);
     }
 
     public void insertActor(Actor actor) {
-        ds.invoke(taskMgr.getInsertTask(), actor);
+        this.ds.invoke(this.taskMgr.getInsertTask(), actor);
     }
 
     public Actor getActorById(Short id) {
-        List<Actor> rtn = ((List<Actor>) ds.invoke(taskMgr.getQueryTask(), "getActorById", id));
+        List<Actor> rtn = (List<Actor>) this.ds.invoke(this.taskMgr.getQueryTask(), "getActorById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -462,28 +440,27 @@ public class Sakila implements DataServiceManagerAccess, LiveDataService {
     }
 
     public Long getActorCount() {
-        return ((Long) ds.invoke(taskMgr.getQueryTask(), "getActorCount"));
+        return (Long) this.ds.invoke(this.taskMgr.getQueryTask(), "getActorCount");
     }
 
     public List<Actor> getActorList(Actor qbeInstance, QueryOptions queryOptions) {
-        return ((List<Actor>) ds.invoke(taskMgr.getSearchTask(), qbeInstance,
-                queryOptions));
+        return (List<Actor>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance, queryOptions);
     }
 
     public void updateActor(Actor actor) {
-        ds.invoke(taskMgr.getUpdateTask(), actor);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), actor);
     }
 
     public void deleteActor(Actor actor) {
-        ds.invoke(taskMgr.getDeleteTask(), actor);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), actor);
     }
 
     public void insertFilmCategory(FilmCategory filmCategory) {
-        ds.invoke(taskMgr.getInsertTask(), filmCategory);
+        this.ds.invoke(this.taskMgr.getInsertTask(), filmCategory);
     }
 
     public FilmCategory getFilmCategoryById(FilmCategoryId id) {
-        List<FilmCategory> rtn = ((List<FilmCategory>) ds.invoke(taskMgr.getQueryTask(), "getFilmCategoryById", id));
+        List<FilmCategory> rtn = (List<FilmCategory>) this.ds.invoke(this.taskMgr.getQueryTask(), "getFilmCategoryById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -492,65 +469,61 @@ public class Sakila implements DataServiceManagerAccess, LiveDataService {
     }
 
     public Long getFilmCategoryCount() {
-        return ((Long) ds.invoke(taskMgr.getQueryTask(), "getFilmCategoryCount"));
+        return (Long) this.ds.invoke(this.taskMgr.getQueryTask(), "getFilmCategoryCount");
     }
 
-    public List<FilmCategory> getFilmCategoryList(FilmCategory qbeInstance,
-            QueryOptions queryOptions) {
-        return ((List<FilmCategory>) ds.invoke(taskMgr.getSearchTask(), qbeInstance,
-                queryOptions));
+    public List<FilmCategory> getFilmCategoryList(FilmCategory qbeInstance, QueryOptions queryOptions) {
+        return (List<FilmCategory>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance, queryOptions);
     }
 
     public void updateFilmCategory(FilmCategory filmCategory) {
-        ds.invoke(taskMgr.getUpdateTask(), filmCategory);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), filmCategory);
     }
 
     public void deleteFilmCategory(FilmCategory filmCategory) {
-        ds.invoke(taskMgr.getDeleteTask(), filmCategory);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), filmCategory);
     }
 
     public void insertCustomer(Customer customer) {
-        ds.invoke(taskMgr.getInsertTask(), customer);
+        this.ds.invoke(this.taskMgr.getInsertTask(), customer);
     }
 
     public Long getCustomerCount() {
-        return ((Long) ds.invoke(taskMgr.getQueryTask(), "getCustomerCount"));
+        return (Long) this.ds.invoke(this.taskMgr.getQueryTask(), "getCustomerCount");
     }
 
     public Customer getCustomerById(Short id) {
-        List<Customer> rtn = ((List<Customer>) ds.invoke(taskMgr.getQueryTask(), "getCustomerById", id));
+        List<Customer> rtn = (List<Customer>) this.ds.invoke(this.taskMgr.getQueryTask(), "getCustomerById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
             return rtn.get(0);
         }
     }
-    
+
     public List<Customer> getCustomerList(Customer qbeInstance) {
-        return ((List<Customer>) ds.invoke(taskMgr.getSearchTask(), qbeInstance));
-        
+        return (List<Customer>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance);
+
     }
 
-    public List<Customer> getCustomerList(Customer qbeInstance,
-            QueryOptions queryOptions) {
-        return ((List<Customer>) ds.invoke(taskMgr.getSearchTask(), qbeInstance,
-                queryOptions));
+    public List<Customer> getCustomerList(Customer qbeInstance, QueryOptions queryOptions) {
+        return (List<Customer>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance, queryOptions);
     }
 
     public void updateCustomer(Customer customer) {
-        ds.invoke(taskMgr.getUpdateTask(), customer);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), customer);
     }
 
     public void deleteCustomer(Customer customer) {
-        ds.invoke(taskMgr.getDeleteTask(), customer);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), customer);
     }
 
     public void insertStaff(Staff staff) {
-        ds.invoke(taskMgr.getInsertTask(), staff);
+        this.ds.invoke(this.taskMgr.getInsertTask(), staff);
     }
 
     public Staff getStaffById(Byte id) {
-        List<Staff> rtn = ((List<Staff>) ds.invoke(taskMgr.getQueryTask(), "getStaffById", id));
+        List<Staff> rtn = (List<Staff>) this.ds.invoke(this.taskMgr.getQueryTask(), "getStaffById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -559,28 +532,27 @@ public class Sakila implements DataServiceManagerAccess, LiveDataService {
     }
 
     public Long getStaffCount() {
-        return ((Long) ds.invoke(taskMgr.getQueryTask(), "getStaffCount"));
+        return (Long) this.ds.invoke(this.taskMgr.getQueryTask(), "getStaffCount");
     }
 
     public List<Staff> getStaffList(Staff qbeInstance, QueryOptions queryOptions) {
-        return ((List<Staff>) ds.invoke(taskMgr.getSearchTask(), qbeInstance,
-                queryOptions));
+        return (List<Staff>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance, queryOptions);
     }
 
     public void updateStaff(Staff staff) {
-        ds.invoke(taskMgr.getUpdateTask(), staff);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), staff);
     }
 
     public void deleteStaff(Staff staff) {
-        ds.invoke(taskMgr.getDeleteTask(), staff);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), staff);
     }
 
     public Country insertCountry(Country country) {
-        return (Country)ds.invoke(taskMgr.getInsertTask(), country);
+        return (Country) this.ds.invoke(this.taskMgr.getInsertTask(), country);
     }
 
     public Country getCountryById(Short id) {
-        List<Country> rtn = ((List<Country>) ds.invoke(taskMgr.getQueryTask(), "getCountryById", id));
+        List<Country> rtn = (List<Country>) this.ds.invoke(this.taskMgr.getQueryTask(), "getCountryById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -589,33 +561,31 @@ public class Sakila implements DataServiceManagerAccess, LiveDataService {
     }
 
     public Long getCountryCount() {
-        return ((Long) ds.invoke(taskMgr.getQueryTask(), "getCountryCount"));
+        return (Long) this.ds.invoke(this.taskMgr.getQueryTask(), "getCountryCount");
     }
 
-    public List<Country> getCountryList(Country qbeInstance,
-            QueryOptions queryOptions) {
-        return ((List<Country>) ds.invoke(taskMgr.getSearchTask(), qbeInstance,
-                queryOptions));
+    public List<Country> getCountryList(Country qbeInstance, QueryOptions queryOptions) {
+        return (List<Country>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance, queryOptions);
     }
 
     public void updateCountry(Country country) {
-        ds.invoke(taskMgr.getUpdateTask(), country);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), country);
     }
 
     public void deleteCountry(Country country) {
-        ds.invoke(taskMgr.getDeleteTask(), country);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), country);
     }
 
     public void insertCategory(Category category) {
-        ds.invoke(taskMgr.getInsertTask(), category);
+        this.ds.invoke(this.taskMgr.getInsertTask(), category);
     }
 
     public Long getCategoryCount() {
-        return ((Long) ds.invoke(taskMgr.getQueryTask(), "getCategoryCount"));
+        return (Long) this.ds.invoke(this.taskMgr.getQueryTask(), "getCategoryCount");
     }
 
     public Category getCategoryById(Byte id) {
-        List<Category> rtn = ((List<Category>) ds.invoke(taskMgr.getQueryTask(), "getCategoryById", id));
+        List<Category> rtn = (List<Category>) this.ds.invoke(this.taskMgr.getQueryTask(), "getCategoryById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -623,30 +593,28 @@ public class Sakila implements DataServiceManagerAccess, LiveDataService {
         }
     }
 
-    public List<Category> getCategoryList(Category qbeInstance,
-            QueryOptions queryOptions) {
-        return ((List<Category>) ds.invoke(taskMgr.getSearchTask(), qbeInstance,
-                queryOptions));
+    public List<Category> getCategoryList(Category qbeInstance, QueryOptions queryOptions) {
+        return (List<Category>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance, queryOptions);
     }
 
     public void updateCategory(Category category) {
-        ds.invoke(taskMgr.getUpdateTask(), category);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), category);
     }
 
     public void deleteCategory(Category category) {
-        ds.invoke(taskMgr.getDeleteTask(), category);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), category);
     }
 
     public void insertActorInfo(ActorInfo actorInfo) {
-        ds.invoke(taskMgr.getInsertTask(), actorInfo);
+        this.ds.invoke(this.taskMgr.getInsertTask(), actorInfo);
     }
 
     public Long getActorInfoCount() {
-        return ((Long) ds.invoke(taskMgr.getQueryTask(), "getActorInfoCount"));
+        return (Long) this.ds.invoke(this.taskMgr.getQueryTask(), "getActorInfoCount");
     }
 
     public ActorInfo getActorInfoById(ActorInfoId id) {
-        List<ActorInfo> rtn = ((List<ActorInfo>) ds.invoke(taskMgr.getQueryTask(), "getActorInfoById", id));
+        List<ActorInfo> rtn = (List<ActorInfo>) this.ds.invoke(this.taskMgr.getQueryTask(), "getActorInfoById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -654,26 +622,24 @@ public class Sakila implements DataServiceManagerAccess, LiveDataService {
         }
     }
 
-    public List<ActorInfo> getActorInfoList(ActorInfo qbeInstance,
-            QueryOptions queryOptions) {
-        return ((List<ActorInfo>) ds.invoke(taskMgr.getSearchTask(), qbeInstance,
-                queryOptions));
+    public List<ActorInfo> getActorInfoList(ActorInfo qbeInstance, QueryOptions queryOptions) {
+        return (List<ActorInfo>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance, queryOptions);
     }
 
     public void updateActorInfo(ActorInfo actorInfo) {
-        ds.invoke(taskMgr.getUpdateTask(), actorInfo);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), actorInfo);
     }
 
     public void deleteActorInfo(ActorInfo actorInfo) {
-        ds.invoke(taskMgr.getDeleteTask(), actorInfo);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), actorInfo);
     }
 
     public void insertCustomerList(CustomerList customerList) {
-        ds.invoke(taskMgr.getInsertTask(), customerList);
+        this.ds.invoke(this.taskMgr.getInsertTask(), customerList);
     }
 
     public CustomerList getCustomerListById(CustomerListId id) {
-        List<CustomerList> rtn = ((List<CustomerList>) ds.invoke(taskMgr.getQueryTask(), "getCustomerListById", id));
+        List<CustomerList> rtn = (List<CustomerList>) this.ds.invoke(this.taskMgr.getQueryTask(), "getCustomerListById", id);
 
         if (rtn.isEmpty()) {
             return null;
@@ -683,37 +649,31 @@ public class Sakila implements DataServiceManagerAccess, LiveDataService {
     }
 
     public Long getCustomerListCount() {
-        return ((Long) ds.invoke(taskMgr.getQueryTask(), "getCustomerListCount"));
+        return (Long) this.ds.invoke(this.taskMgr.getQueryTask(), "getCustomerListCount");
     }
 
-    public List<CustomerList> getCustomerListList(CustomerList qbeInstance,
-            QueryOptions queryOptions) {
-        return ((List<CustomerList>) ds.invoke(taskMgr.getSearchTask(), qbeInstance,
-                queryOptions));
+    public List<CustomerList> getCustomerListList(CustomerList qbeInstance, QueryOptions queryOptions) {
+        return (List<CustomerList>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance, queryOptions);
     }
 
-    public List<CustomerListFixed> getCustomerListFixedList(
-            CustomerListFixed qbeInstance, QueryOptions queryOptions) {
-        return ((List<CustomerListFixed>) ds.invoke(taskMgr.getSearchTask(),
-                qbeInstance, queryOptions));
+    public List<CustomerListFixed> getCustomerListFixedList(CustomerListFixed qbeInstance, QueryOptions queryOptions) {
+        return (List<CustomerListFixed>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance, queryOptions);
     }
 
     public void updateCustomerList(CustomerList customerList) {
-        ds.invoke(taskMgr.getUpdateTask(), customerList);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), customerList);
     }
 
     public void deleteCustomerList(CustomerList customerList) {
-        ds.invoke(taskMgr.getDeleteTask(), customerList);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), customerList);
     }
 
-    public void insertSalesByFilmCategory(
-            SalesByFilmCategory salesByFilmCategory) {
-        ds.invoke(taskMgr.getInsertTask(), salesByFilmCategory);
+    public void insertSalesByFilmCategory(SalesByFilmCategory salesByFilmCategory) {
+        this.ds.invoke(this.taskMgr.getInsertTask(), salesByFilmCategory);
     }
 
-    public SalesByFilmCategory getSalesByFilmCategoryById(
-            SalesByFilmCategoryId id) {
-        List<SalesByFilmCategory> rtn = ((List<SalesByFilmCategory>) ds.invoke(taskMgr.getQueryTask(), "getSalesByFilmCategoryById", id));
+    public SalesByFilmCategory getSalesByFilmCategoryById(SalesByFilmCategoryId id) {
+        List<SalesByFilmCategory> rtn = (List<SalesByFilmCategory>) this.ds.invoke(this.taskMgr.getQueryTask(), "getSalesByFilmCategoryById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -722,36 +682,31 @@ public class Sakila implements DataServiceManagerAccess, LiveDataService {
     }
 
     public Long getSalesByFilmCategoryCount() {
-        return ((Long) ds.invoke(taskMgr.getQueryTask(),
-                "getSalesByFilmCategoryCount"));
+        return (Long) this.ds.invoke(this.taskMgr.getQueryTask(), "getSalesByFilmCategoryCount");
     }
 
-    public List<SalesByFilmCategory> getSalesByFilmCategoryList(
-            SalesByFilmCategory qbeInstance, QueryOptions queryOptions) {
-        return ((List<SalesByFilmCategory>) ds.invoke(taskMgr.getSearchTask(),
-                qbeInstance, queryOptions));
+    public List<SalesByFilmCategory> getSalesByFilmCategoryList(SalesByFilmCategory qbeInstance, QueryOptions queryOptions) {
+        return (List<SalesByFilmCategory>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance, queryOptions);
     }
 
-    public void updateSalesByFilmCategory(
-            SalesByFilmCategory salesByFilmCategory) {
-        ds.invoke(taskMgr.getUpdateTask(), salesByFilmCategory);
+    public void updateSalesByFilmCategory(SalesByFilmCategory salesByFilmCategory) {
+        this.ds.invoke(this.taskMgr.getUpdateTask(), salesByFilmCategory);
     }
 
-    public void deleteSalesByFilmCategory(
-            SalesByFilmCategory salesByFilmCategory) {
-        ds.invoke(taskMgr.getDeleteTask(), salesByFilmCategory);
+    public void deleteSalesByFilmCategory(SalesByFilmCategory salesByFilmCategory) {
+        this.ds.invoke(this.taskMgr.getDeleteTask(), salesByFilmCategory);
     }
 
     public void insertFilmActor(FilmActor filmActor) {
-        ds.invoke(taskMgr.getInsertTask(), filmActor);
+        this.ds.invoke(this.taskMgr.getInsertTask(), filmActor);
     }
 
     public Long getFilmActorCount() {
-        return ((Long) ds.invoke(taskMgr.getQueryTask(), "getFilmActorCount"));
+        return (Long) this.ds.invoke(this.taskMgr.getQueryTask(), "getFilmActorCount");
     }
 
     public FilmActor getFilmActorById(FilmActorId id) {
-        List<FilmActor> rtn = ((List<FilmActor>) ds.invoke(taskMgr.getQueryTask(), "getFilmActorById", id));
+        List<FilmActor> rtn = (List<FilmActor>) this.ds.invoke(this.taskMgr.getQueryTask(), "getFilmActorById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -759,30 +714,28 @@ public class Sakila implements DataServiceManagerAccess, LiveDataService {
         }
     }
 
-    public List<FilmActor> getFilmActorList(FilmActor qbeInstance,
-            QueryOptions queryOptions) {
-        return ((List<FilmActor>) ds.invoke(taskMgr.getSearchTask(), qbeInstance,
-                queryOptions));
+    public List<FilmActor> getFilmActorList(FilmActor qbeInstance, QueryOptions queryOptions) {
+        return (List<FilmActor>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance, queryOptions);
     }
 
     public void updateFilmActor(FilmActor filmActor) {
-        ds.invoke(taskMgr.getUpdateTask(), filmActor);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), filmActor);
     }
 
     public void deleteFilmActor(FilmActor filmActor) {
-        ds.invoke(taskMgr.getDeleteTask(), filmActor);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), filmActor);
     }
 
     public void insertSalesByStore(SalesByStore salesByStore) {
-        ds.invoke(taskMgr.getInsertTask(), salesByStore);
+        this.ds.invoke(this.taskMgr.getInsertTask(), salesByStore);
     }
 
     public Long getSalesByStoreCount() {
-        return ((Long) ds.invoke(taskMgr.getQueryTask(), "getSalesByStoreCount"));
+        return (Long) this.ds.invoke(this.taskMgr.getQueryTask(), "getSalesByStoreCount");
     }
 
     public SalesByStore getSalesByStoreById(SalesByStoreId id) {
-        List<SalesByStore> rtn = ((List<SalesByStore>) ds.invoke(taskMgr.getQueryTask(), "getSalesByStoreById", id));
+        List<SalesByStore> rtn = (List<SalesByStore>) this.ds.invoke(this.taskMgr.getQueryTask(), "getSalesByStoreById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -790,26 +743,24 @@ public class Sakila implements DataServiceManagerAccess, LiveDataService {
         }
     }
 
-    public List<SalesByStore> getSalesByStoreList(SalesByStore qbeInstance,
-            QueryOptions queryOptions) {
-        return ((List<SalesByStore>) ds.invoke(taskMgr.getSearchTask(), qbeInstance,
-                queryOptions));
+    public List<SalesByStore> getSalesByStoreList(SalesByStore qbeInstance, QueryOptions queryOptions) {
+        return (List<SalesByStore>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance, queryOptions);
     }
 
     public void updateSalesByStore(SalesByStore salesByStore) {
-        ds.invoke(taskMgr.getUpdateTask(), salesByStore);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), salesByStore);
     }
 
     public void deleteSalesByStore(SalesByStore salesByStore) {
-        ds.invoke(taskMgr.getDeleteTask(), salesByStore);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), salesByStore);
     }
 
     public void insertLanguage(Language language) {
-        ds.invoke(taskMgr.getInsertTask(), language);
+        this.ds.invoke(this.taskMgr.getInsertTask(), language);
     }
 
     public Language getLanguageById(Byte id) {
-        List<Language> rtn = ((List<Language>) ds.invoke(taskMgr.getQueryTask(), "getLanguageById", id));
+        List<Language> rtn = (List<Language>) this.ds.invoke(this.taskMgr.getQueryTask(), "getLanguageById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -818,62 +769,59 @@ public class Sakila implements DataServiceManagerAccess, LiveDataService {
     }
 
     public Long getLanguageCount() {
-        return ((Long) ds.invoke(taskMgr.getQueryTask(), "getLanguageCount"));
+        return (Long) this.ds.invoke(this.taskMgr.getQueryTask(), "getLanguageCount");
     }
 
-    public List<Language> getLanguageList(Language qbeInstance,
-            QueryOptions queryOptions) {
-        return ((List<Language>) ds.invoke(taskMgr.getSearchTask(), qbeInstance,
-                queryOptions));
+    public List<Language> getLanguageList(Language qbeInstance, QueryOptions queryOptions) {
+        return (List<Language>) this.ds.invoke(this.taskMgr.getSearchTask(), qbeInstance, queryOptions);
     }
 
     // manually added
     public List<GetActorNames> getActorNames() {
-        return ((List<GetActorNames>) ds.invoke(taskMgr.getQueryTask(), "getActorNames"));
+        return (List<GetActorNames>) this.ds.invoke(this.taskMgr.getQueryTask(), "getActorNames");
     }
 
     public List<Actor> getActorsByFirstNames(List<String> names) {
-        return ((List<Actor>) ds.invoke(taskMgr.getQueryTask(), "getActorsByFirstNames", names));
+        return (List<Actor>) this.ds.invoke(this.taskMgr.getQueryTask(), "getActorsByFirstNames", names);
     }
 
     public void begin() {
-        ds.begin();
+        this.ds.begin();
     }
 
     public void commit() {
-        ds.commit();
+        this.ds.commit();
     }
 
     public void rollback() {
-        ds.rollback();
+        this.ds.rollback();
     }
 
     public void updateLanguage(Language language) {
-        ds.invoke(taskMgr.getUpdateTask(), language);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), language);
     }
 
     public void deleteLanguage(Language language) {
-        ds.invoke(taskMgr.getDeleteTask(), language);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), language);
     }
 
     public DataServiceManager getDataServiceManager() {
-        return ds;
+        return this.ds;
     }
 
-    public TypedServiceReturn read(TypeDefinition type, Object instance,
-            PropertyOptions propertyOptions, PagingOptions pagingOptions) {
-        return ((TypedServiceReturn) ds.invoke(taskMgr.getReadTask(), type, instance, propertyOptions, pagingOptions));
+    public TypedServiceReturn read(TypeDefinition type, Object instance, PropertyOptions propertyOptions, PagingOptions pagingOptions) {
+        return (TypedServiceReturn) this.ds.invoke(this.taskMgr.getReadTask(), type, instance, propertyOptions, pagingOptions);
     }
 
     public void delete(Object o) {
-        ds.invoke(taskMgr.getDeleteTask(), o);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), o);
     }
 
     public Object insert(Object o) {
-        return ds.invoke(taskMgr.getInsertTask(), o);
+        return this.ds.invoke(this.taskMgr.getInsertTask(), o);
     }
 
     public Object update(Object o) {
-        return ds.invoke(taskMgr.getUpdateTask(), o);
+        return this.ds.invoke(this.taskMgr.getUpdateTask(), o);
     }
 }

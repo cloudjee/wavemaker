@@ -15,21 +15,21 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data.sample;
 
-import java.util.List;
 import java.util.ArrayList;
-import junit.framework.TestCase;
+import java.util.List;
 
-import com.wavemaker.runtime.data.sample.Product;
-import com.wavemaker.runtime.data.sample.ProductManager;
+import junit.framework.TestCase;
 
 public class TestProductManager extends TestCase {
 
     private ProductManager pm;
 
+    @Override
     public void setUp() {
-        pm = new ProductManager();
+        this.pm = new ProductManager();
         Product p = new Product();
         p.setDescription("Chair");
         p.setPrice(new Double("20.50"));
@@ -39,23 +39,23 @@ public class TestProductManager extends TestCase {
         p.setDescription("Table");
         p.setPrice(new Double("150.10"));
         al.add(p);
-        pm.setProducts(al);
+        this.pm.setProducts(al);
     }
 
     public void testGetProducs() {
-        List<Product> l = pm.getProducts();
-        Product p1 = (Product) l.get(0);
+        List<Product> l = this.pm.getProducts();
+        Product p1 = l.get(0);
         assertEquals("Chair", p1.getDescription());
-        Product p2 = (Product) l.get(1);
+        Product p2 = l.get(1);
         assertEquals("Table", p2.getDescription());
     }
 
     public void testIncreasePrice() {
-        pm.increasePrice(10);
-        List<Product> l = pm.getProducts();
-        Product p = (Product) l.get(0);
+        this.pm.increasePrice(10);
+        List<Product> l = this.pm.getProducts();
+        Product p = l.get(0);
         assertEquals(new Double("22.55"), p.getPrice());
-        p = (Product) l.get(1);
+        p = l.get(1);
         assertEquals(new Double("165.11"), p.getPrice());
     }
 

@@ -28,7 +28,6 @@ import com.wavemaker.runtime.data.DataServiceManager;
 import com.wavemaker.runtime.data.DataServiceQueryException;
 import com.wavemaker.runtime.data.DefaultTaskManager;
 import com.wavemaker.runtime.data.Task;
-import com.wavemaker.runtime.data.util.SystemUtils;
 import com.wavemaker.runtime.service.PagingOptions;
 
 /**
@@ -49,11 +48,10 @@ public class QueryRunner {
 
     private final DataServiceManager mgr;
 
-    private final Map<String, Object> bindParameters =
-        new HashMap<String, Object>();
+    private final Map<String, Object> bindParameters = new HashMap<String, Object>();
 
-    private final Map<String, Class<?>> bindParameterTypes =  //salesforce
-        new HashMap<String, Class<?>>();
+    private final Map<String, Class<?>> bindParameterTypes = // salesforce
+    new HashMap<String, Class<?>>();
 
     private Long maxResults = null;
 
@@ -62,9 +60,8 @@ public class QueryRunner {
     }
 
     // value has not been split yet
-    @SuppressWarnings("unused")    
-    public void addBindParameters(List<String> names, List<String> types,
-            String value, List<Boolean> isList) {
+    @SuppressWarnings("unused")
+    public void addBindParameters(List<String> names, List<String> types, String value, List<Boolean> isList) {
 
         List<String> values = new ArrayList<String>(names.size());
         if (value == null) {
@@ -76,8 +73,7 @@ public class QueryRunner {
         }
 
         for (int i = 0; i < names.size(); i++) {
-            addBindParameter(names.get(i), types.get(i), values.get(i), isList
-                    .get(i));
+            addBindParameter(names.get(i), types.get(i), values.get(i), isList.get(i));
         }
     }
 
@@ -85,21 +81,18 @@ public class QueryRunner {
         addBindParameter(name, type, value, false);
     }
 
-    public void addBindParameter(String name, String type, String value,
-            boolean isList) {
-        addBindParameter(name, ClassLoaderUtils.loadClass(type, false), value,
-                isList);
+    public void addBindParameter(String name, String type, String value, boolean isList) {
+        addBindParameter(name, ClassLoaderUtils.loadClass(type, false), value, isList);
     }
 
     public void addBindParameter(String name, Class<?> type, String value) {
         addBindParameter(name, type, value, false);
     }
 
-    public void addBindParameter(String name, Class<?> type, String value,
-            boolean isList) {
+    public void addBindParameter(String name, Class<?> type, String value, boolean isList) {
         Object o = TypeConversionUtils.fromString(type, value, isList);
-        bindParameters.put(name, o);
-        bindParameterTypes.put(name, type);
+        this.bindParameters.put(name, o);
+        this.bindParameterTypes.put(name, type);
     }
 
     public void setMaxResults(Long maxResults) {
@@ -112,12 +105,11 @@ public class QueryRunner {
 
         try {
 
-            mgr.invoke(checkQueryTask, args);
+            this.mgr.invoke(checkQueryTask, args);
 
         } catch (RuntimeException ex) {
             ex = DataServiceUtils.unwrap(ex);
-            if (ex instanceof QuerySyntaxException
-                    || ex instanceof DataServiceQueryException) {
+            if (ex instanceof QuerySyntaxException || ex instanceof DataServiceQueryException) {
                 // ignore connection errors
                 throw ex;
             }
@@ -132,18 +124,18 @@ public class QueryRunner {
 
             Object[] args = setupTaskArgs(query, true);
 
-            Object rtn = mgr.invoke(runQueryTask, args);
+            Object rtn = this.mgr.invoke(runQueryTask, args);
 
             SystemUtils.clientPrepare();
 
             return rtn;
 
         } finally {
-            bindParameters.clear();
+            this.bindParameters.clear();
         }
     }
 
-    //salesforce-s
+    // salesforce-s
     public Object run(String query, boolean named) {
 
         try {
@@ -151,26 +143,27 @@ public class QueryRunner {
             Object[] args = setupTaskArgs(query, true);
 
             Object rtn;
-            rtn = mgr.invoke(runQueryTask, bindParameterTypes, named, args);
+            rtn = this.mgr.invoke(runQueryTask, this.bindParameterTypes, named, args);
 
             SystemUtils.clientPrepare();
 
             return rtn;
 
         } finally {
-            bindParameters.clear();
-            bindParameterTypes.clear();
+            this.bindParameters.clear();
+            this.bindParameterTypes.clear();
         }
     }
-    //salesforce-e
+
+    // salesforce-e
 
     public void dispose() {
-        mgr.dispose();
+        this.mgr.dispose();
     }
 
     private Object[] setupTaskArgs(String query, boolean includePagingOptions) {
 
-        int size = (bindParameters.size() * 2) + 1;
+        int size = this.bindParameters.size() * 2 + 1;
 
         if (includePagingOptions) {
             size++;
@@ -182,15 +175,15 @@ public class QueryRunner {
 
         int i = 1;
 
-        for (String paramName : bindParameters.keySet()) {
+        for (String paramName : this.bindParameters.keySet()) {
             args[i] = paramName;
-            args[i + 1] = bindParameters.get(paramName);
+            args[i + 1] = this.bindParameters.get(paramName);
             i += 2;
         }
 
         if (includePagingOptions) {
             PagingOptions pagingOptions = new PagingOptions();
-            pagingOptions.setMaxResults(maxResults);
+            pagingOptions.setMaxResults(this.maxResults);
             args[i] = pagingOptions;
         }
 

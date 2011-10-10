@@ -24,21 +24,18 @@ import org.acegisecurity.AuthenticationException;
 import org.acegisecurity.AuthenticationManager;
 import org.acegisecurity.BadCredentialsException;
 import org.acegisecurity.GrantedAuthority;
-import org.acegisecurity.userdetails.UserDetails;
 import org.acegisecurity.context.SecurityContextHolder;
 import org.acegisecurity.providers.UsernamePasswordAuthenticationToken;
 import org.acegisecurity.providers.anonymous.AnonymousAuthenticationToken;
 import org.apache.log4j.Logger;
 
-import com.wavemaker.runtime.service.annotations.ExposeToClient;
-import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.WMAppContext;
-import com.wavemaker.common.CommonConstants;
+import com.wavemaker.runtime.service.annotations.ExposeToClient;
+import com.wavemaker.runtime.service.annotations.HideFromClient;
 
 /**
- * The Security Service provides interfaces to access authentication and
- * authorization information in the system.
+ * The Security Service provides interfaces to access authentication and authorization information in the system.
  * 
  * @author Frankie Fu
  * @version $Rev$ - $Date$
@@ -46,43 +43,33 @@ import com.wavemaker.common.CommonConstants;
  */
 @HideFromClient
 public class SecurityService {
-    
+
     static final Logger logger = Logger.getLogger(SecurityService.class);
 
     private AuthenticationManager authenticationManager;
-    
+
     private String rolePrefix;
-    
+
     private String noRolesMarkerRole;
-    
+
     private List<String> roles;
 
     private Map<String, List<Rule>> roleMap;
 
     /**
-     * Provides a simple username/password authentication. It uses the
-     * authentication provider(s) specified in the security spring config file.
-     * Upon successful authentication, the Authentication object would be set
-     * into SecurityContext and could be accessible thru
-     * SecurityContext.getAuthentication() later on.
+     * Provides a simple username/password authentication. It uses the authentication provider(s) specified in the
+     * security spring config file. Upon successful authentication, the Authentication object would be set into
+     * SecurityContext and could be accessible thru SecurityContext.getAuthentication() later on.
      * 
-     * @param username
-     *            The user name.
-     * @param password
-     *            The user password.
-     * @throws InvalidCredentialsException
-     *             If the supplied credentials are invalid.
-     * @throws SecurityException
-     *             if authentication failed for some reasons other than invalid
-     *             credentials.
+     * @param username The user name.
+     * @param password The user password.
+     * @throws InvalidCredentialsException If the supplied credentials are invalid.
+     * @throws SecurityException if authentication failed for some reasons other than invalid credentials.
      */
-    public void authenticate(String username, String password)
-            throws InvalidCredentialsException, SecurityException {
+    public void authenticate(String username, String password) throws InvalidCredentialsException, SecurityException {
         Authentication auth = null;
         try {
-            auth = authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(
-                            username, password));
+            auth = this.authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         } catch (BadCredentialsException e) {
             throw new InvalidCredentialsException(e);
         } catch (AuthenticationException e) {
@@ -92,8 +79,7 @@ public class SecurityService {
     }
 
     /**
-     * Logs the current principal out. The principal is the one in the security
-     * context.
+     * Logs the current principal out. The principal is the one in the security context.
      * 
      */
     @ExposeToClient
@@ -102,10 +88,8 @@ public class SecurityService {
     }
 
     private Authentication getAuthenticatedAuthentication() {
-        Authentication authentication = SecurityContextHolder.getContext()
-                .getAuthentication();
-        return authentication instanceof AnonymousAuthenticationToken ? null
-                : authentication;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication instanceof AnonymousAuthenticationToken ? null : authentication;
     }
 
     /**
@@ -126,7 +110,7 @@ public class SecurityService {
     @ExposeToClient
     public String getUserName() {
         WMAppContext wmApp = WMAppContext.getInstance();
-        return wmApp.getUserNameForUserID(this.getUserId());      
+        return wmApp.getUserNameForUserID(this.getUserId());
     }
 
     /**
@@ -142,7 +126,7 @@ public class SecurityService {
         }
         return null;
     }
-    
+
     /**
      * Returns the user roles of the principal in the current security context.
      * 
@@ -159,21 +143,19 @@ public class SecurityService {
         for (GrantedAuthority authority : authorities) {
             String roleName = authority.getAuthority();
             String realRoleName = null;
-            if (rolePrefix == null) {
+            if (this.rolePrefix == null) {
                 realRoleName = roleName;
             } else {
-                if (roleName.startsWith(rolePrefix)) {
+                if (roleName.startsWith(this.rolePrefix)) {
                     // take out the prefix and get the actual role name
-                    realRoleName = roleName.substring(rolePrefix.length());
-                    
+                    realRoleName = roleName.substring(this.rolePrefix.length());
+
                 } else {
-                    logger.warn("Skipping Role " + roleName
-                            + ". It should be prefix with " + rolePrefix
-                            + ". Something is wrong!");
+                    logger.warn("Skipping Role " + roleName + ". It should be prefix with " + this.rolePrefix + ". Something is wrong!");
                 }
             }
             // make sure the role is not the maker for no roles
-            if (realRoleName != null && !realRoleName.equals(noRolesMarkerRole)) {
+            if (realRoleName != null && !realRoleName.equals(this.noRolesMarkerRole)) {
                 roleNames.add(realRoleName);
             }
         }
@@ -188,16 +170,12 @@ public class SecurityService {
     }
 
     /**
-     * Checks if the Principal is allowed to perform the specified action on the
-     * specified resources. The Principal is obtained from the SecurityContext
-     * in the current execution thread.
+     * Checks if the Principal is allowed to perform the specified action on the specified resources. The Principal is
+     * obtained from the SecurityContext in the current execution thread.
      * 
-     * @param resources
-     *            A set of resources.
-     * @param action
-     *            The action to be checked.
-     * @return True if the Principal is allowed to perform such action; false
-     *         otherwise.
+     * @param resources A set of resources.
+     * @param action The action to be checked.
+     * @return True if the Principal is allowed to perform such action; false otherwise.
      */
     public boolean isAllowed(Set<Resource> resources, String action) {
         String[] roleNames = getUserRoles();
@@ -210,21 +188,15 @@ public class SecurityService {
     }
 
     /**
-     * Checks if the specified role has permission to perform the specified
-     * action on the specified resources.
+     * Checks if the specified role has permission to perform the specified action on the specified resources.
      * 
-     * @param roleName
-     *            The name of the role to be checked for permission.
-     * @param resources
-     *            A set of resources.
-     * @param action
-     *            The action to be checked.
-     * @return True if the role is allowed to perform such action; false
-     *         otherwise.
+     * @param roleName The name of the role to be checked for permission.
+     * @param resources A set of resources.
+     * @param action The action to be checked.
+     * @return True if the role is allowed to perform such action; false otherwise.
      */
-    public boolean isAllowed(String roleName, Set<Resource> resources,
-            String action) {
-        List<Rule> rules = roleMap.get(roleName);
+    public boolean isAllowed(String roleName, Set<Resource> resources, String action) {
+        List<Rule> rules = this.roleMap.get(roleName);
         if (rules != null) {
             for (Rule rule : rules) {
                 if (action.equals(rule.getAction())) {
@@ -245,16 +217,15 @@ public class SecurityService {
     }
 
     public AuthenticationManager getAuthenticationManager() {
-        return authenticationManager;
+        return this.authenticationManager;
     }
 
-    public void setAuthenticationManager(
-            AuthenticationManager authenticationManager) {
+    public void setAuthenticationManager(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }
 
     public String getRolePrefix() {
-        return rolePrefix;
+        return this.rolePrefix;
     }
 
     public void setRolePrefix(String rolePrefix) {
@@ -262,7 +233,7 @@ public class SecurityService {
     }
 
     public String getNoRolesMarkerRole() {
-        return noRolesMarkerRole;
+        return this.noRolesMarkerRole;
     }
 
     public void setNoRolesMarkerRole(String noRolesMarkerRole) {
@@ -270,19 +241,19 @@ public class SecurityService {
     }
 
     public List<String> getRoles() {
-        return roles;
+        return this.roles;
     }
 
     public void setRoles(List<String> roles) {
         this.roles = roles;
     }
-    
+
     public Map<String, List<Rule>> getRoleMap() {
-        return roleMap;
+        return this.roleMap;
     }
 
     public void setRoleMap(Map<String, List<Rule>> roleMap) {
         this.roleMap = roleMap;
     }
-    
+
 }

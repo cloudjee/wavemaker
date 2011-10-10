@@ -43,245 +43,229 @@ import com.wavemaker.tools.service.definitions.Service;
 @HideFromClient
 public class JavaService {
 
-	@ExposeToClient
-	public String newClass(String serviceId, String fqClassName)
-			throws IOException, ClassNotFoundException, LinkageError {
+    @ExposeToClient
+    public String newClass(String serviceId, String fqClassName) throws IOException, ClassNotFoundException, LinkageError {
 
-		designServiceManager.validateServiceId(serviceId);
+        this.designServiceManager.validateServiceId(serviceId);
 
-		String packageName = JavaServiceDefinition.getPackage(fqClassName);
-		String className = JavaServiceDefinition.getClass(fqClassName);
+        String packageName = JavaServiceDefinition.getPackage(fqClassName);
+        String className = JavaServiceDefinition.getClass(fqClassName);
 
-		Resource classFile = designServiceManager.getServiceRuntimeDirectory(
-				serviceId).createRelative(
-				JavaServiceDefinition.getRelPathFromClass(fqClassName));
+        Resource classFile = this.designServiceManager.getServiceRuntimeDirectory(serviceId).createRelative(
+            JavaServiceDefinition.getRelPathFromClass(fqClassName));
 
-		Writer classFileWriter = getProjectManager().getCurrentProject()
-				.getWriter(classFile);
-		BufferedWriter bw = new BufferedWriter(classFileWriter);
+        Writer classFileWriter = getProjectManager().getCurrentProject().getWriter(classFile);
+        BufferedWriter bw = new BufferedWriter(classFileWriter);
 
-		if (null != packageName) {
-			bw.write("package " + packageName + ";");
-			bw.newLine();
-			bw.newLine();
-		}
+        if (null != packageName) {
+            bw.write("package " + packageName + ";");
+            bw.newLine();
+            bw.newLine();
+        }
 
-		bw.write("/**");
-		bw.newLine();
-		bw.write(" * This is a client-facing service class.  All");
-		bw.newLine();
-		bw.write(" * public methods will be exposed to the client.  Their return");
-		bw.newLine();
-		bw.write(" * values and parameters will be passed to the client or taken");
-		bw.newLine();
-		bw.write(" * from the client, respectively.  This will be a singleton");
-		bw.newLine();
-		bw.write(" * instance, shared between all requests. ");
-		bw.newLine();
-		bw.write(" * ");
-		bw.newLine();
-		bw.write(" * To log, call the superclass method log(LOG_LEVEL, String) or log(LOG_LEVEL, String, Exception).");
-		bw.newLine();
-		bw.write(" * LOG_LEVEL is one of FATAL, ERROR, WARN, INFO and DEBUG to modify your log level.");
-		bw.newLine();
-		bw.write(" * For info on these levels, look for tomcat/log4j documentation");
-		bw.newLine();
-		bw.write(" */");
-		bw.newLine();
-		bw.write("public class "
-				+ className
-				+ " extends com.wavemaker.runtime.javaservice.JavaServiceSuperClass {");
-		bw.newLine();
-		bw.write("    /* Pass in one of FATAL, ERROR, WARN,  INFO and DEBUG to modify your log level;");
-		bw.newLine();
-		bw.write("     *  recommend changing this to FATAL or ERROR before deploying.  For info on these levels, look for tomcat/log4j documentation");
-		bw.newLine();
-		bw.write("     */");
-		bw.newLine();
-		bw.write("    public " + className + "() {");
-		bw.newLine();
-		bw.write("       super(INFO);");
-		bw.newLine();
-		bw.write("    }");
-		bw.newLine();
-		bw.newLine();
-		bw.write("    public String sampleJavaOperation() {");
-		bw.newLine();
-		bw.write("       String result  = null;");
-		bw.newLine();
-		bw.write("       try {");
-		bw.newLine();
-		bw.write("          log(INFO, \"Starting sample operation\");");
-		bw.newLine();
-		bw.write("          result = \"Hello World\";");
-		bw.newLine();
-		bw.write("          log(INFO, \"Returning \" + result);");
-		bw.newLine();
-		bw.write("       } catch(Exception e) {");
-		bw.newLine();
-		bw.write("          log(ERROR, \"The sample java service operation has failed\", e);");
-		bw.newLine();
-		bw.write("       }");
-		bw.newLine();
-		bw.write("       return result;");
-		bw.newLine();
-		bw.write("    }");
-		bw.newLine();
-		bw.newLine();
-		bw.write("}");
-		bw.newLine();
-		bw.close();
+        bw.write("/**");
+        bw.newLine();
+        bw.write(" * This is a client-facing service class.  All");
+        bw.newLine();
+        bw.write(" * public methods will be exposed to the client.  Their return");
+        bw.newLine();
+        bw.write(" * values and parameters will be passed to the client or taken");
+        bw.newLine();
+        bw.write(" * from the client, respectively.  This will be a singleton");
+        bw.newLine();
+        bw.write(" * instance, shared between all requests. ");
+        bw.newLine();
+        bw.write(" * ");
+        bw.newLine();
+        bw.write(" * To log, call the superclass method log(LOG_LEVEL, String) or log(LOG_LEVEL, String, Exception).");
+        bw.newLine();
+        bw.write(" * LOG_LEVEL is one of FATAL, ERROR, WARN, INFO and DEBUG to modify your log level.");
+        bw.newLine();
+        bw.write(" * For info on these levels, look for tomcat/log4j documentation");
+        bw.newLine();
+        bw.write(" */");
+        bw.newLine();
+        bw.write("public class " + className + " extends com.wavemaker.runtime.javaservice.JavaServiceSuperClass {");
+        bw.newLine();
+        bw.write("    /* Pass in one of FATAL, ERROR, WARN,  INFO and DEBUG to modify your log level;");
+        bw.newLine();
+        bw.write("     *  recommend changing this to FATAL or ERROR before deploying.  For info on these levels, look for tomcat/log4j documentation");
+        bw.newLine();
+        bw.write("     */");
+        bw.newLine();
+        bw.write("    public " + className + "() {");
+        bw.newLine();
+        bw.write("       super(INFO);");
+        bw.newLine();
+        bw.write("    }");
+        bw.newLine();
+        bw.newLine();
+        bw.write("    public String sampleJavaOperation() {");
+        bw.newLine();
+        bw.write("       String result  = null;");
+        bw.newLine();
+        bw.write("       try {");
+        bw.newLine();
+        bw.write("          log(INFO, \"Starting sample operation\");");
+        bw.newLine();
+        bw.write("          result = \"Hello World\";");
+        bw.newLine();
+        bw.write("          log(INFO, \"Returning \" + result);");
+        bw.newLine();
+        bw.write("       } catch(Exception e) {");
+        bw.newLine();
+        bw.write("          log(ERROR, \"The sample java service operation has failed\", e);");
+        bw.newLine();
+        bw.write("       }");
+        bw.newLine();
+        bw.write("       return result;");
+        bw.newLine();
+        bw.write("    }");
+        bw.newLine();
+        bw.newLine();
+        bw.write("}");
+        bw.newLine();
+        bw.close();
 
-		deploymentManager.compile();
-		
-		return getProjectManager().getCurrentProject().readFile(classFile);
-	}
+        this.deploymentManager.compile();
 
-	/**
-	 * Saves &amp; compiles the class. Returns the output of the compile.
-	 */
-	@ExposeToClient
-	public CompileOutput saveClass(String serviceId, String contents)
-			throws IOException, ClassNotFoundException, LinkageError {
+        return getProjectManager().getCurrentProject().readFile(classFile);
+    }
 
-		if (!designServiceManager.getServiceIds().contains(serviceId)) {
-			throw new WMRuntimeException(
-					MessageResource.STUDIO_UNKNOWN_SERVICE, serviceId);
-		}
+    /**
+     * Saves &amp; compiles the class. Returns the output of the compile.
+     */
+    @ExposeToClient
+    public CompileOutput saveClass(String serviceId, String contents) throws IOException, ClassNotFoundException, LinkageError {
 
-		Service service = designServiceManager.getService(serviceId);
-		String klass = service.getClazz();
+        if (!this.designServiceManager.getServiceIds().contains(serviceId)) {
+            throw new WMRuntimeException(MessageResource.STUDIO_UNKNOWN_SERVICE, serviceId);
+        }
 
-		Resource classFile = designServiceManager.getServiceRuntimeDirectory(
-				serviceId).createRelative(
-				JavaServiceDefinition.getRelPathFromClass(klass));
+        Service service = this.designServiceManager.getService(serviceId);
+        String klass = service.getClazz();
 
-		getProjectManager().getCurrentProject().writeFile(classFile, contents);
+        Resource classFile = this.designServiceManager.getServiceRuntimeDirectory(serviceId).createRelative(
+            JavaServiceDefinition.getRelPathFromClass(klass));
 
-		CompileOutput ret = new CompileOutput();
-		try {
-			String compileOutput = deploymentManager.compile();
-			ret.setBuildSucceeded(true);
-			ret.setCompileOutput(compileOutput);
-		} catch (Throwable e) {
-			ret.setBuildSucceeded(false);
-			ret.setCompileOutput(e.getMessage());
-		}
-		return ret;
-	}
+        getProjectManager().getCurrentProject().writeFile(classFile, contents);
 
-	@ExposeToClient
-	public String openClass(String serviceId) throws IOException {
+        CompileOutput ret = new CompileOutput();
+        try {
+            String compileOutput = this.deploymentManager.compile();
+            ret.setBuildSucceeded(true);
+            ret.setCompileOutput(compileOutput);
+        } catch (Throwable e) {
+            ret.setBuildSucceeded(false);
+            ret.setCompileOutput(e.getMessage());
+        }
+        return ret;
+    }
 
-		Service service = designServiceManager.getService(serviceId);
-		String klass = service.getClazz();
+    @ExposeToClient
+    public String openClass(String serviceId) throws IOException {
 
-		Resource classFile = designServiceManager.getServiceRuntimeDirectory(
-				serviceId).createRelative(
-				JavaServiceDefinition.getRelPathFromClass(klass));
-		return getProjectManager().getCurrentProject().readFile(classFile);
-	}
+        Service service = this.designServiceManager.getService(serviceId);
+        String klass = service.getClazz();
 
-	/**
-	 * Get the service definition (JavaServiceDefinition). You must have
-	 * compiled before calling this method.
-	 * 
-	 * @throws IOException
-	 */
-	protected ServiceDefinition getServiceDefinition(String serviceId,
-			String className) throws ClassNotFoundException, LinkageError,
-			IOException {
+        Resource classFile = this.designServiceManager.getServiceRuntimeDirectory(serviceId).createRelative(
+            JavaServiceDefinition.getRelPathFromClass(klass));
+        return getProjectManager().getCurrentProject().readFile(classFile);
+    }
 
-		Resource buildDir = projectManager.getCurrentProject()
-				.getWebInfClasses();
+    /**
+     * Get the service definition (JavaServiceDefinition). You must have compiled before calling this method.
+     * 
+     * @throws IOException
+     */
+    protected ServiceDefinition getServiceDefinition(String serviceId, String className) throws ClassNotFoundException, LinkageError, IOException {
 
-		// assemble a list of types to be excluded
-		List<String> excludeTypeNames = new ArrayList<String>();
-		Collection<String> serviceIds = designServiceManager.getServiceIds();
-		for (String id : serviceIds) {
-			if (serviceId.equals(id)) {
-				// ignore this services' types
-			} else {
-				List<DataObject> dos = designServiceManager
-						.getLocalDataObjects(id);
-				for (DataObject d : dos) {
-					excludeTypeNames.add(d.getJavaType());
-				}
-			}
-		}
+        Resource buildDir = this.projectManager.getCurrentProject().getWebInfClasses();
 
-		ServiceDefinition serviceDef = new JavaServiceDefinition(className,
-				serviceId, buildDir, projectManager.getCurrentProject()
-						.getWebInfLib(), excludeTypeNames);
+        // assemble a list of types to be excluded
+        List<String> excludeTypeNames = new ArrayList<String>();
+        Collection<String> serviceIds = this.designServiceManager.getServiceIds();
+        for (String id : serviceIds) {
+            if (serviceId.equals(id)) {
+                // ignore this services' types
+            } else {
+                List<DataObject> dos = this.designServiceManager.getLocalDataObjects(id);
+                for (DataObject d : dos) {
+                    excludeTypeNames.add(d.getJavaType());
+                }
+            }
+        }
 
-		return serviceDef;
-	}
+        ServiceDefinition serviceDef = new JavaServiceDefinition(className, serviceId, buildDir,
+            this.projectManager.getCurrentProject().getWebInfLib(), excludeTypeNames);
 
-	// spring bean attrs
-	private DesignServiceManager designServiceManager;
+        return serviceDef;
+    }
 
-	private DeploymentManager deploymentManager;
+    // spring bean attrs
+    private DesignServiceManager designServiceManager;
 
-	private ProjectManager projectManager;
+    private DeploymentManager deploymentManager;
 
-	public DesignServiceManager getDesignServiceManager() {
-		return designServiceManager;
-	}
+    private ProjectManager projectManager;
 
-	public void setDesignServiceManager(
-			DesignServiceManager designServiceManager) {
-		this.designServiceManager = designServiceManager;
-	}
+    public DesignServiceManager getDesignServiceManager() {
+        return this.designServiceManager;
+    }
 
-	public DeploymentManager getDeploymentManager() {
-		return deploymentManager;
-	}
+    public void setDesignServiceManager(DesignServiceManager designServiceManager) {
+        this.designServiceManager = designServiceManager;
+    }
 
-	public void setDeploymentManager(DeploymentManager deploymentManager) {
-		this.deploymentManager = deploymentManager;
-	}
+    public DeploymentManager getDeploymentManager() {
+        return this.deploymentManager;
+    }
 
-	public ProjectManager getProjectManager() {
-		return projectManager;
-	}
+    public void setDeploymentManager(DeploymentManager deploymentManager) {
+        this.deploymentManager = deploymentManager;
+    }
 
-	public void setProjectManager(ProjectManager projectManager) {
-		this.projectManager = projectManager;
-	}
+    public ProjectManager getProjectManager() {
+        return this.projectManager;
+    }
 
-	/**
-	 * Class containing compiler output, for the client to parse.
-	 */
-	public static class CompileOutput {
+    public void setProjectManager(ProjectManager projectManager) {
+        this.projectManager = projectManager;
+    }
 
-		private boolean buildSucceeded;
+    /**
+     * Class containing compiler output, for the client to parse.
+     */
+    public static class CompileOutput {
 
-		private String compileOutput;
+        private boolean buildSucceeded;
 
-		public CompileOutput() {
-		}
+        private String compileOutput;
 
-		public CompileOutput(boolean buildSucceeded, String compileOutput) {
+        public CompileOutput() {
+        }
 
-			this();
-			this.buildSucceeded = buildSucceeded;
-			this.compileOutput = compileOutput;
-		}
+        public CompileOutput(boolean buildSucceeded, String compileOutput) {
 
-		public boolean isBuildSucceeded() {
-			return buildSucceeded;
-		}
+            this();
+            this.buildSucceeded = buildSucceeded;
+            this.compileOutput = compileOutput;
+        }
 
-		public void setBuildSucceeded(boolean buildSucceeded) {
-			this.buildSucceeded = buildSucceeded;
-		}
+        public boolean isBuildSucceeded() {
+            return this.buildSucceeded;
+        }
 
-		public String getCompileOutput() {
-			return compileOutput;
-		}
+        public void setBuildSucceeded(boolean buildSucceeded) {
+            this.buildSucceeded = buildSucceeded;
+        }
 
-		public void setCompileOutput(String compileOutput) {
-			this.compileOutput = compileOutput;
-		}
-	}
+        public String getCompileOutput() {
+            return this.compileOutput;
+        }
+
+        public void setCompileOutput(String compileOutput) {
+            this.compileOutput = compileOutput;
+        }
+    }
 }

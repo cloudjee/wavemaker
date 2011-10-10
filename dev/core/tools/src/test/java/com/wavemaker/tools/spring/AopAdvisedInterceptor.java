@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.spring;
 
 import org.aopalliance.intercept.Interceptor;
@@ -24,37 +25,33 @@ import org.aopalliance.intercept.MethodInvocation;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class AopAdvisedInterceptor implements Interceptor, MethodInterceptor {
 
     public Object invoke(MethodInvocation invocation) throws Throwable {
-        
-        if (invocation.getThis() instanceof AopAdvised &&
-                0==invocation.getMethod().getName().compareTo("getIval")) {
+
+        if (invocation.getThis() instanceof AopAdvised && 0 == invocation.getMethod().getName().compareTo("getIval")) {
             AopAdvised aa = (AopAdvised) invocation.getThis();
-            aa.setIval(aa.getIval()+2);
-        } else if (invocation.getThis() instanceof AopAdvised &&
-                0==invocation.getMethod().getName().compareTo("testUpload")) {
+            aa.setIval(aa.getIval() + 2);
+        } else if (invocation.getThis() instanceof AopAdvised && 0 == invocation.getMethod().getName().compareTo("testUpload")) {
             AopAdvised aa = (AopAdvised) invocation.getThis();
-            aa.setIval(aa.getIval()+3);
+            aa.setIval(aa.getIval() + 3);
         }
-        
+
         Object retVal;
         try {
             retVal = invocation.proceed();
         } finally {
-            if (invocation.getThis() instanceof AopAdvised &&
-                    0==invocation.getMethod().getName().compareTo("getIval")) {
+            if (invocation.getThis() instanceof AopAdvised && 0 == invocation.getMethod().getName().compareTo("getIval")) {
                 AopAdvised aa = (AopAdvised) invocation.getThis();
-                aa.setIval(aa.getIval()-2);
-            } else if (invocation.getThis() instanceof AopAdvised &&
-                    0==invocation.getMethod().getName().compareTo("testUpload")) {
+                aa.setIval(aa.getIval() - 2);
+            } else if (invocation.getThis() instanceof AopAdvised && 0 == invocation.getMethod().getName().compareTo("testUpload")) {
                 AopAdvised aa = (AopAdvised) invocation.getThis();
-                aa.setIval(aa.getIval()-3);
+                aa.setIval(aa.getIval() - 3);
             }
         }
-        
+
         return retVal;
     }
 }

@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import java.util.ArrayList;
@@ -35,23 +34,22 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
  * 
  * 
- * 	The env-entryType is used to declare an application's
- * 	environment entry. The declaration consists of an optional
- * 	description, the name of the environment entry, and an
- * 	optional value.  If a value is not specified, one must be
- * 	supplied during deployment.
+ * The env-entryType is used to declare an application's environment entry. The declaration consists of an optional
+ * description, the name of the environment entry, and an optional value. If a value is not specified, one must be
+ * supplied during deployment.
  * 
- * 	It is used by env-entry elements.
+ * It is used by env-entry elements.
  * 
- *       
  * 
- * <p>Java class for env-entryType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for env-entryType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="env-entryType">
@@ -72,21 +70,20 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "env-entryType", propOrder = {
-    "description",
-    "envEntryName",
-    "envEntryType",
-    "envEntryValue"
-})
+@XmlType(name = "env-entryType", propOrder = { "description", "envEntryName", "envEntryType", "envEntryValue" })
 public class EnvEntryType {
 
     protected List<DescriptionType> description;
+
     @XmlElement(name = "env-entry-name", required = true)
     protected JndiNameType envEntryName;
+
     @XmlElement(name = "env-entry-type", required = true)
     protected EnvEntryTypeValuesType envEntryType;
+
     @XmlElement(name = "env-entry-value")
     protected XsdStringType envEntryValue;
+
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -97,27 +94,26 @@ public class EnvEntryType {
      * Gets the value of the description property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the description property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the description property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getDescription().add(newItem);
+     * getDescription().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DescriptionType }
+     * Objects of the following type(s) are allowed in the list {@link DescriptionType }
      * 
      * 
      */
     public List<DescriptionType> getDescription() {
-        if (description == null) {
-            description = new ArrayList<DescriptionType>();
+        if (this.description == null) {
+            this.description = new ArrayList<DescriptionType>();
         }
         return this.description;
     }
@@ -125,22 +121,18 @@ public class EnvEntryType {
     /**
      * Gets the value of the envEntryName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link JndiNameType }
-     *     
+     * @return possible object is {@link JndiNameType }
+     * 
      */
     public JndiNameType getEnvEntryName() {
-        return envEntryName;
+        return this.envEntryName;
     }
 
     /**
      * Sets the value of the envEntryName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link JndiNameType }
-     *     
+     * @param value allowed object is {@link JndiNameType }
+     * 
      */
     public void setEnvEntryName(JndiNameType value) {
         this.envEntryName = value;
@@ -149,22 +141,18 @@ public class EnvEntryType {
     /**
      * Gets the value of the envEntryType property.
      * 
-     * @return
-     *     possible object is
-     *     {@link EnvEntryTypeValuesType }
-     *     
+     * @return possible object is {@link EnvEntryTypeValuesType }
+     * 
      */
     public EnvEntryTypeValuesType getEnvEntryType() {
-        return envEntryType;
+        return this.envEntryType;
     }
 
     /**
      * Sets the value of the envEntryType property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link EnvEntryTypeValuesType }
-     *     
+     * @param value allowed object is {@link EnvEntryTypeValuesType }
+     * 
      */
     public void setEnvEntryType(EnvEntryTypeValuesType value) {
         this.envEntryType = value;
@@ -173,22 +161,18 @@ public class EnvEntryType {
     /**
      * Gets the value of the envEntryValue property.
      * 
-     * @return
-     *     possible object is
-     *     {@link XsdStringType }
-     *     
+     * @return possible object is {@link XsdStringType }
+     * 
      */
     public XsdStringType getEnvEntryValue() {
-        return envEntryValue;
+        return this.envEntryValue;
     }
 
     /**
      * Sets the value of the envEntryValue property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link XsdStringType }
-     *     
+     * @param value allowed object is {@link XsdStringType }
+     * 
      */
     public void setEnvEntryValue(XsdStringType value) {
         this.envEntryValue = value;
@@ -197,22 +181,18 @@ public class EnvEntryType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setId(java.lang.String value) {
         this.id = value;

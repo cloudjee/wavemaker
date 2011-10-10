@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data.util;
 
 import static org.junit.Assert.assertEquals;
@@ -45,7 +46,7 @@ import com.wavemaker.runtime.service.reflect.ReflectServiceWire;
 /**
  * @author stoens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestDataServiceUtils extends RuntimeDataSpringContextTestCase {
 
@@ -59,28 +60,28 @@ public class TestDataServiceUtils extends RuntimeDataSpringContextTestCase {
 
     @BeforeClass
     public static void initData() {
-    	data = new TestData();
+        data = new TestData();
     }
 
     /**
      * Get connection, validate it
      */
-    @Test public void testConnection() {
+    @Test
+    public void testConnection() {
 
         ApplicationContext ctx = getApplicationContext();
 
-        ServiceManager serviceMgr = (ServiceManager) ctx
-                .getBean(ServiceConstants.SERVICE_MANAGER_NAME);
+        ServiceManager serviceMgr = (ServiceManager) ctx.getBean(ServiceConstants.SERVICE_MANAGER_NAME);
 
-        Sakila sakila = (Sakila) ((ReflectServiceWire) serviceMgr
-                .getServiceWire(DataServiceTestConstants.SAKILA_SERVICE_SPRING_ID_2)).getServiceBean();
+        Sakila sakila = (Sakila) ((ReflectServiceWire) serviceMgr.getServiceWire(DataServiceTestConstants.SAKILA_SERVICE_SPRING_ID_2)).getServiceBean();
 
         sakila.getActorById(Short.valueOf("1")); // test connection
 
         data.sakila = sakila;
     }
 
-    @Test public void testReloadById() {
+    @Test
+    public void testReloadById() {
 
         data.sakila.begin();
         Session session = data.sakila.getDataServiceManager().getSession();
@@ -90,8 +91,7 @@ public class TestDataServiceUtils extends RuntimeDataSpringContextTestCase {
 
         data.sakila.begin();
         session = data.sakila.getDataServiceManager().getSession();
-        DataServiceMetaData meta = data.sakila.getDataServiceManager()
-                .getMetaData();
+        DataServiceMetaData meta = data.sakila.getDataServiceManager().getMetaData();
         Actor b = (Actor) DataServiceUtils.loadById(a, session, meta);
         assertTrue(b != null);
         data.sakila.rollback();
@@ -102,7 +102,8 @@ public class TestDataServiceUtils extends RuntimeDataSpringContextTestCase {
         assertEquals(a.getLastUpdate(), b.getLastUpdate());
     }
 
-    @Test public void testMergeForUpdateSimpleProperties() {
+    @Test
+    public void testMergeForUpdateSimpleProperties() {
 
         Actor org = data.sakila.getActorById(new Short("1"));
 
@@ -114,8 +115,7 @@ public class TestDataServiceUtils extends RuntimeDataSpringContextTestCase {
         try {
             // causes warning about starting a tx before accessing session
             // that's ok since we don't use the session here
-            DataServiceUtils.mergeForUpdate(fromClient, data.sakila,
-                    populatedProperties);
+            DataServiceUtils.mergeForUpdate(fromClient, data.sakila, populatedProperties);
             fail();
         } catch (DataServiceRuntimeException ex) {
             assertEquals("id property \"actorId\" must be set", ex.getMessage());
@@ -128,8 +128,7 @@ public class TestDataServiceUtils extends RuntimeDataSpringContextTestCase {
 
         data.sakila.begin();
         Session session = data.sakila.getDataServiceManager().getSession();
-        fromClient = (Actor) DataServiceUtils.mergeForUpdate(fromClient,
-                data.sakila, populatedProperties);
+        fromClient = (Actor) DataServiceUtils.mergeForUpdate(fromClient, data.sakila, populatedProperties);
 
         assertTrue(session.contains(fromClient));
         assertEquals("foo", fromClient.getLastName());
@@ -140,7 +139,8 @@ public class TestDataServiceUtils extends RuntimeDataSpringContextTestCase {
         data.sakila.rollback();
     }
 
-    @Test public void testMergeForUpdateRelatedProperty() {
+    @Test
+    public void testMergeForUpdateRelatedProperty() {
 
         City orgCity = data.sakila.getCityById(Short.valueOf("1"));
 
@@ -161,34 +161,29 @@ public class TestDataServiceUtils extends RuntimeDataSpringContextTestCase {
 
         data.sakila.begin();
 
-        fromClient = (City) DataServiceUtils.mergeForUpdate(fromClient,
-                data.sakila, populatedProperties);
+        fromClient = (City) DataServiceUtils.mergeForUpdate(fromClient, data.sakila, populatedProperties);
 
         Session session = data.sakila.getDataServiceManager().getSession();
         assertTrue(session.contains(fromClient));
-        assertEquals(newCountryId, fromClient.getCountry()
-                .getCountryId());
+        assertEquals(newCountryId, fromClient.getCountry().getCountryId());
 
         data.sakila.commit();
 
         data.sakila.begin();
 
-        fromClient.getCountry().setCountryId(
-                orgCity.getCountry().getCountryId());
+        fromClient.getCountry().setCountryId(orgCity.getCountry().getCountryId());
 
         populatedProperties = new HashSet<String>(1);
         populatedProperties.add("cityId");
         populatedProperties.add("country");
         populatedProperties.add("country.countryId");
 
-        fromClient = (City) DataServiceUtils.mergeForUpdate(fromClient,
-                data.sakila, populatedProperties);
+        fromClient = (City) DataServiceUtils.mergeForUpdate(fromClient, data.sakila, populatedProperties);
 
         data.sakila.commit();
 
         City c = data.sakila.getCityById(Short.valueOf("1"));
-        assertEquals(orgCity.getCountry().getCountryId(), c.getCountry()
-                .getCountryId());
+        assertEquals(orgCity.getCountry().getCountryId(), c.getCountry().getCountryId());
     }
 
 }

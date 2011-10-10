@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.service;
 
 import java.util.Properties;
@@ -28,19 +29,16 @@ import org.apache.log4j.Logger;
  */
 public class GetParameterNamesFromEmailServiceClass {
 
-    private static Logger logger = Logger
-            .getLogger(GetParameterNamesFromEmailServiceClass.class);
+    private static Logger logger = Logger.getLogger(GetParameterNamesFromEmailServiceClass.class);
 
-    public static String sendMail(String Host, String Port, String User,
-            String Pass, String To, String Cc, String From, String Subject,
-            String Message) {
+    public static String sendMail(String Host, String Port, String User, String Pass, String To, String Cc, String From, String Subject,
+        String Message) {
         // Get Logger and Log Params
         // Output to tomcat stdout log file
 
         logger.info("com.wavemaker.emailService.sendMail");
         logger.info("Host: " + Host + " Port: " + Port + " User: " + User);
-        logger.info("To: " + To + " CC: " + Cc + " From: " + From
-                + " Subject: " + Subject);
+        logger.info("To: " + To + " CC: " + Cc + " From: " + From + " Subject: " + Subject);
         logger.info("Message: " + Message);
 
         try {
@@ -54,6 +52,6 @@ public class GetParameterNamesFromEmailServiceClass {
 
         }
 
-        return Host+" "+Port;
+        return Host + " " + Port;
     }
 }

@@ -15,11 +15,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.common.util;
 
 import java.util.List;
 
-import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.infra.WMTestCase;
 
 /**
@@ -33,18 +33,17 @@ public class TestStringUtils extends WMTestCase {
         String s = StringUtils.toJavaIdentifier("1234", '_');
         assertEquals("_1234", s);
     }
-    
+
     public void testToJavaIdentifier2() {
         String s = StringUtils.toJavaIdentifier("import", '_');
         assertEquals("_import", s);
     }
-    
+
     public void testToJavaIdentifier3() {
         String s = StringUtils.toJavaIdentifier("my&name", '_');
         assertEquals("my_name", s);
-    }    
-    
-    
+    }
+
     public void testSplit1() {
         List<String> l = StringUtils.split("a,b,c");
         assertTrue(l.size() == 3);

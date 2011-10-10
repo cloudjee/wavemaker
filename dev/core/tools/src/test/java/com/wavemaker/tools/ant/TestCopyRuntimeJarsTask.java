@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.ant;
 
 import java.io.File;
@@ -29,23 +30,23 @@ import com.wavemaker.infra.WMTestCase;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestCopyRuntimeJarsTask extends WMTestCase {
-    
+
     public void testGetModuleLocations() throws Exception {
-        
-        ClassPathResource cpr = new ClassPathResource(this.getClass().getName().replace(".", "/")+".class");
+
+        ClassPathResource cpr = new ClassPathResource(this.getClass().getName().replace(".", "/") + ".class");
         File jarOne = new File(cpr.getFile().getParentFile(), "copyruntime_module_jar_one.jar");
         assertTrue(jarOne.exists());
         ClassLoader cl = ClassLoaderUtils.getClassLoaderForResources(new FileSystemResource(jarOne));
-        
+
         CopyRuntimeJarsTask crjt = new CopyRuntimeJarsTask();
         List<File> modules = crjt.getModuleLocations(cl);
         assertTrue(modules.size() > 0);
-        
+
         boolean gotExpectedModule = false;
-        for (File f: modules) {
+        for (File f : modules) {
             if (f.getAbsoluteFile().equals(jarOne.getAbsoluteFile())) {
                 gotExpectedModule = true;
                 break;

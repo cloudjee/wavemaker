@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import java.util.ArrayList;
@@ -35,23 +34,21 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
  * 
  * 
- * 	The security-role-refType contains the declaration of a
- * 	security role reference in a component's or a
- * 	Deployment Component's code. The declaration consists of an
- * 	optional description, the security role name used in the
- * 	code, and an optional link to a security role. If the
- * 	security role is not specified, the Deployer must choose an
- * 	appropriate security role.
+ * The security-role-refType contains the declaration of a security role reference in a component's or a Deployment
+ * Component's code. The declaration consists of an optional description, the security role name used in the code, and
+ * an optional link to a security role. If the security role is not specified, the Deployer must choose an appropriate
+ * security role.
  * 
- *       
  * 
- * <p>Java class for security-role-refType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for security-role-refType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="security-role-refType">
@@ -71,18 +68,17 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "security-role-refType", propOrder = {
-    "description",
-    "roleName",
-    "roleLink"
-})
+@XmlType(name = "security-role-refType", propOrder = { "description", "roleName", "roleLink" })
 public class SecurityRoleRefType {
 
     protected List<DescriptionType> description;
+
     @XmlElement(name = "role-name", required = true)
     protected RoleNameType roleName;
+
     @XmlElement(name = "role-link")
     protected RoleNameType roleLink;
+
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -93,27 +89,26 @@ public class SecurityRoleRefType {
      * Gets the value of the description property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the description property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the description property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getDescription().add(newItem);
+     * getDescription().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DescriptionType }
+     * Objects of the following type(s) are allowed in the list {@link DescriptionType }
      * 
      * 
      */
     public List<DescriptionType> getDescription() {
-        if (description == null) {
-            description = new ArrayList<DescriptionType>();
+        if (this.description == null) {
+            this.description = new ArrayList<DescriptionType>();
         }
         return this.description;
     }
@@ -121,22 +116,18 @@ public class SecurityRoleRefType {
     /**
      * Gets the value of the roleName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link RoleNameType }
-     *     
+     * @return possible object is {@link RoleNameType }
+     * 
      */
     public RoleNameType getRoleName() {
-        return roleName;
+        return this.roleName;
     }
 
     /**
      * Sets the value of the roleName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link RoleNameType }
-     *     
+     * @param value allowed object is {@link RoleNameType }
+     * 
      */
     public void setRoleName(RoleNameType value) {
         this.roleName = value;
@@ -145,22 +136,18 @@ public class SecurityRoleRefType {
     /**
      * Gets the value of the roleLink property.
      * 
-     * @return
-     *     possible object is
-     *     {@link RoleNameType }
-     *     
+     * @return possible object is {@link RoleNameType }
+     * 
      */
     public RoleNameType getRoleLink() {
-        return roleLink;
+        return this.roleLink;
     }
 
     /**
      * Sets the value of the roleLink property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link RoleNameType }
-     *     
+     * @param value allowed object is {@link RoleNameType }
+     * 
      */
     public void setRoleLink(RoleNameType value) {
         this.roleLink = value;
@@ -169,22 +156,18 @@ public class SecurityRoleRefType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setId(java.lang.String value) {
         this.id = value;

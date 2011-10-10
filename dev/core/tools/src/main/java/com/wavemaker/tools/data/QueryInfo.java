@@ -19,26 +19,26 @@ import com.wavemaker.runtime.data.Input;
 
 /**
  * Partially written on a flight to Las Vegas.
- *
+ * 
  * @author Simon Toens
  * @version $Rev$ - $Date$
  * 
  */
 public class QueryInfo {
 
-    private DataServiceOperation op = new DataServiceOperation();
+    private final DataServiceOperation op = new DataServiceOperation();
 
     private String query = null;
-    
+
     private String comment = null;
 
     private boolean isHQL = false;
-    
+
     private boolean isGenerated = false;
-    
-    
-    public QueryInfo() {}
-    
+
+    public QueryInfo() {
+    }
+
     public QueryInfo(String name, String query) {
         this(name, query, true, false);
     }
@@ -50,20 +50,20 @@ public class QueryInfo {
         setName(name);
 
         setQuery(query);
-        
+
         this.isGenerated = isGenerated;
     }
 
     public String getName() {
-	return op.getQueryName();
+        return this.op.getQueryName();
     }
-    
+
     public void setName(String name) {
-        op.setQueryName(name);
+        this.op.setQueryName(name);
     }
 
     public String getQuery() {
-        return query;
+        return this.query;
     }
 
     public void setQuery(String query) {
@@ -72,9 +72,9 @@ public class QueryInfo {
             this.query = this.query.trim();
         }
     }
-    
+
     public boolean getIsHQL() {
-        return isHQL;
+        return this.isHQL;
     }
 
     public void setIsHQL(boolean isHQL) {
@@ -82,54 +82,51 @@ public class QueryInfo {
     }
 
     public void setReturnsSingleResult(boolean b) {
-	op.setReturnsSingleResult(b);
+        this.op.setReturnsSingleResult(b);
     }
-    
+
     public boolean getReturnsSingleResult() {
-	return op.getReturnsSingleResult();
+        return this.op.getReturnsSingleResult();
     }
 
     public void addInput(String inputName, String inputType, Boolean isList) {
-	op.addInput(inputName, inputType, isList);
+        this.op.addInput(inputName, inputType, isList);
     }
 
     public void setOutputType(String outputType) {
-	op.setOutputType(outputType);
+        this.op.setOutputType(outputType);
     }
 
     public String getOutputType() {
-	return op.getOutputType();
+        return this.op.getOutputType();
     }
 
     public Input[] getInputs() {
-        Input[] rtn = new Input[op.getInputNames().size()];
-        for (int i = 0; i < op.getInputNames().size(); i++) {
-            rtn[i] = new Input(op.getInputNames().get(i),
-                               op.getInputTypes().get(i),
-			       op.getInputIsList().get(i));
+        Input[] rtn = new Input[this.op.getInputNames().size()];
+        for (int i = 0; i < this.op.getInputNames().size(); i++) {
+            rtn[i] = new Input(this.op.getInputNames().get(i), this.op.getInputTypes().get(i), this.op.getInputIsList().get(i));
         }
         return rtn;
     }
 
     public void setInputs(Input[] inputs) {
-        for (int i = 0; i < inputs.length; i++ ) {
-            addInput(inputs[i].getParamName(), inputs[i].getParamType(),
-		     inputs[i].getList());
+        for (int i = 0; i < inputs.length; i++) {
+            addInput(inputs[i].getParamName(), inputs[i].getParamType(), inputs[i].getList());
         }
     }
-    
+
     public void setComment(String comment) {
         this.comment = comment;
     }
-    
+
     public String getComment() {
-        return comment;
+        return this.comment;
     }
-    
+
     public boolean getIsGenerated() {
-        return isGenerated;
+        return this.isGenerated;
     }
-    
+
     public void setIsGenerated(boolean isGenerated) {
         this.isGenerated = isGenerated;
     }

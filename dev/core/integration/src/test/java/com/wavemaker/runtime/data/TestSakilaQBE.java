@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data;
 
 import static org.junit.Assert.assertEquals;
@@ -70,10 +71,10 @@ public class TestSakilaQBE extends RuntimeDataSpringContextTestCase {
     private static TestData testData;
 
     private final TaskManager taskMgr = DefaultTaskManager.getInstance();
-    
+
     @BeforeClass
     public void initData() {
-    	testData = new TestData();
+        testData = new TestData();
     }
 
     protected void checkShouldSkip() {
@@ -82,17 +83,16 @@ public class TestSakilaQBE extends RuntimeDataSpringContextTestCase {
         }
     }
 
-    @Test public void testInitService() {
+    @Test
+    public void testInitService() {
 
         try {
 
             ApplicationContext ctx = getApplicationContext();
 
-            ServiceManager serviceMgr = (ServiceManager) ctx
-                    .getBean(ServiceConstants.SERVICE_MANAGER_NAME);
+            ServiceManager serviceMgr = (ServiceManager) ctx.getBean(ServiceConstants.SERVICE_MANAGER_NAME);
 
-            Sakila sakila = (Sakila) ((ReflectServiceWire) serviceMgr
-                    .getServiceWire(DataServiceTestConstants.SAKILA_SERVICE_SPRING_ID_2)).getServiceBean();
+            Sakila sakila = (Sakila) ((ReflectServiceWire) serviceMgr.getServiceWire(DataServiceTestConstants.SAKILA_SERVICE_SPRING_ID_2)).getServiceBean();
 
             sakila.getActorById(Short.valueOf("1")); // test connection
 
@@ -104,42 +104,43 @@ public class TestSakilaQBE extends RuntimeDataSpringContextTestCase {
         }
     }
 
-    @Test public void testGetAllActorsWithClass() {
+    @Test
+    public void testGetAllActorsWithClass() {
 
         checkShouldSkip();
 
-        List<?> actors = (List<?>) testData.sakila.getDataServiceManager()
-                .invoke(taskMgr.getSearchTask(), Actor.class);
+        List<?> actors = (List<?>) testData.sakila.getDataServiceManager().invoke(this.taskMgr.getSearchTask(), Actor.class);
 
         assertTrue(actors.size() == 200);
     }
 
-    @Test public void testGetAllActorsWithInstance() {
+    @Test
+    public void testGetAllActorsWithInstance() {
 
         checkShouldSkip();
 
-        List<?> actors = (List<?>) testData.sakila.getDataServiceManager()
-                .invoke(taskMgr.getSearchTask(), new Actor());
+        List<?> actors = (List<?>) testData.sakila.getDataServiceManager().invoke(this.taskMgr.getSearchTask(), new Actor());
 
         assertTrue(actors.size() == 200);
     }
 
-    @Test public void testSearchById() {
+    @Test
+    public void testSearchById() {
 
         checkShouldSkip();
 
         Actor a = new Actor();
         a.setActorId(Short.valueOf("2"));
 
-        List<Actor> actors = testData.sakila
-                .getActorList(a, new QueryOptions());
+        List<Actor> actors = testData.sakila.getActorList(a, new QueryOptions());
         if (actors.size() != 1) {
             fail("Expected 1 Actor, but got " + actors.size());
         }
         assertEquals(Short.valueOf("2"), actors.get(0).getActorId());
     }
 
-    @Test public void testSearchById2() {
+    @Test
+    public void testSearchById2() {
 
         checkShouldSkip();
 
@@ -147,29 +148,29 @@ public class TestSakilaQBE extends RuntimeDataSpringContextTestCase {
         a.setActorId(Short.valueOf("2"));
         a.setFirstName("NICK");
 
-        List<Actor> actors = testData.sakila
-                .getActorList(a, new QueryOptions());
+        List<Actor> actors = testData.sakila.getActorList(a, new QueryOptions());
         if (actors.size() != 1) {
             fail("Expected 1 Actor, but got " + actors.size());
         }
         assertEquals(Short.valueOf("2"), actors.get(0).getActorId());
     }
 
-    @Test public void testSearchById3() {
+    @Test
+    public void testSearchById3() {
 
         checkShouldSkip();
 
         Varcharpk v = new Varcharpk();
         v.setId("AAA01");
 
-        List<Varcharpk> vs = testData.sakila.getVarcharpkList(v,
-                new QueryOptions());
+        List<Varcharpk> vs = testData.sakila.getVarcharpkList(v, new QueryOptions());
 
         assertEquals(new Integer(1), new Integer(vs.size()));
         assertEquals("AAA01", vs.get(0).getId());
     }
 
-    @Test public void testSearchById4() {
+    @Test
+    public void testSearchById4() {
 
         checkShouldSkip();
 
@@ -211,7 +212,8 @@ public class TestSakilaQBE extends RuntimeDataSpringContextTestCase {
         assertEquals(1, vs.size());
     }
 
-    @Test public void testSearchByCompositeId() {
+    @Test
+    public void testSearchByCompositeId() {
 
         checkShouldSkip();
 
@@ -221,15 +223,15 @@ public class TestSakilaQBE extends RuntimeDataSpringContextTestCase {
         id.setId2("000");
         cp.setId(id);
 
-        List<Compositepk> l = testData.sakila.getCompositepkList(cp,
-                new QueryOptions());
+        List<Compositepk> l = testData.sakila.getCompositepkList(cp, new QueryOptions());
 
         assertEquals(1, l.size());
         assertEquals("AAA", l.get(0).getId().getId());
         assertEquals("000", l.get(0).getId().getId2());
     }
 
-    @Test public void testSearchByCompositeId2() {
+    @Test
+    public void testSearchByCompositeId2() {
 
         checkShouldSkip();
 
@@ -262,7 +264,8 @@ public class TestSakilaQBE extends RuntimeDataSpringContextTestCase {
         }
     }
 
-    @Test public void testOrderBySimple() {
+    @Test
+    public void testOrderBySimple() {
 
         checkShouldSkip();
 
@@ -289,7 +292,8 @@ public class TestSakilaQBE extends RuntimeDataSpringContextTestCase {
     }
 
     // order by with explicit search instance
-    @Test public void testOrderByRelated1() {
+    @Test
+    public void testOrderByRelated1() {
 
         checkShouldSkip();
 
@@ -319,7 +323,8 @@ public class TestSakilaQBE extends RuntimeDataSpringContextTestCase {
     }
 
     // order by without explicit search instance
-    @Test public void testOrderByRelated2() {
+    @Test
+    public void testOrderByRelated2() {
 
         checkShouldSkip();
 
@@ -347,7 +352,8 @@ public class TestSakilaQBE extends RuntimeDataSpringContextTestCase {
     }
 
     @SuppressWarnings("unchecked")
-    @Test public void testToManySearch() {
+    @Test
+    public void testToManySearch() {
 
         checkShouldSkip();
 
@@ -359,16 +365,16 @@ public class TestSakilaQBE extends RuntimeDataSpringContextTestCase {
         QueryOptions options = new QueryOptions();
         options.matchMode(MatchMode.EXACT);
         testData.sakila.getDataServiceManager().begin();
-        List<Country> countries = testData.sakila.getCountryList(country,
-                options);
+        List<Country> countries = testData.sakila.getCountryList(country, options);
 
         assertTrue(countries.size() == 1);
-        assertTrue((countries.get(0)).getCountry().equals("South Africa"));
+        assertTrue(countries.get(0).getCountry().equals("South Africa"));
 
         testData.sakila.getDataServiceManager().rollback();
     }
 
-    @Test public void testSubstringSearch() {
+    @Test
+    public void testSubstringSearch() {
 
         checkShouldSkip();
 
@@ -394,7 +400,8 @@ public class TestSakilaQBE extends RuntimeDataSpringContextTestCase {
         }
     }
 
-    @Test public void testCityNameSearch() {
+    @Test
+    public void testCityNameSearch() {
 
         checkShouldSkip();
 
@@ -410,7 +417,8 @@ public class TestSakilaQBE extends RuntimeDataSpringContextTestCase {
         assertTrue(cities.size() == 4);
     }
 
-    @Test public void testCityByCountrySearch() {
+    @Test
+    public void testCityByCountrySearch() {
 
         checkShouldSkip();
 
@@ -422,7 +430,8 @@ public class TestSakilaQBE extends RuntimeDataSpringContextTestCase {
         assertTrue(cities.size() == 7);
     }
 
-    @Test public void testGetActorsPaging() {
+    @Test
+    public void testGetActorsPaging() {
 
         checkShouldSkip();
 
@@ -430,8 +439,7 @@ public class TestSakilaQBE extends RuntimeDataSpringContextTestCase {
 
         DataServiceManager ds = testData.sakila.getDataServiceManager();
 
-        List<?> actors = (List<?>) ds.invoke(taskMgr.getSearchTask(),
-                new Actor(), options);
+        List<?> actors = (List<?>) ds.invoke(this.taskMgr.getSearchTask(), new Actor(), options);
 
         assertTrue(actors.size() == 5);
 
@@ -441,28 +449,24 @@ public class TestSakilaQBE extends RuntimeDataSpringContextTestCase {
 
         options = new QueryOptions(192, 5);
 
-        actors = (List<?>) ds.invoke(taskMgr.getSearchTask(), Actor.class,
-                options);
+        actors = (List<?>) ds.invoke(this.taskMgr.getSearchTask(), Actor.class, options);
 
         assertTrue(actors.size() == 192);
 
         int i = lastActorId.shortValue() + 1;
-        assertTrue(((Actor) actors.get(0)).getActorId().equals(
-                Short.valueOf(String.valueOf(i))));
+        assertTrue(((Actor) actors.get(0)).getActorId().equals(Short.valueOf(String.valueOf(i))));
 
         lastActorId = checkActorIds(actors, 5);
 
         // get 10 more. we should only get the last 3
         options = new QueryOptions(Integer.valueOf(3), Integer.valueOf(197));
 
-        actors = (List<?>) ds.invoke(taskMgr.getSearchTask(), Actor.class,
-                options);
+        actors = (List<?>) ds.invoke(this.taskMgr.getSearchTask(), Actor.class, options);
 
         assertTrue(actors.size() == 3);
 
         i = lastActorId.shortValue() + 1;
-        assertTrue(((Actor) actors.get(0)).getActorId().equals(
-                Short.valueOf(String.valueOf(i))));
+        assertTrue(((Actor) actors.get(0)).getActorId().equals(Short.valueOf(String.valueOf(i))));
 
         checkActorIds(actors, 197);
 
@@ -472,14 +476,14 @@ public class TestSakilaQBE extends RuntimeDataSpringContextTestCase {
         Short lastActorId = null;
         for (int i = 0; i < actors.size(); i++) {
             Actor a = (Actor) actors.get(i);
-            assertTrue(a.getActorId().equals(
-                    Short.valueOf(String.valueOf(i + 1 + offset))));
+            assertTrue(a.getActorId().equals(Short.valueOf(String.valueOf(i + 1 + offset))));
             lastActorId = a.getActorId();
         }
         return lastActorId;
     }
 
-    @Test public void testSakilaServiceAutoPaging() {
+    @Test
+    public void testSakilaServiceAutoPaging() {
 
         checkShouldSkip();
 
@@ -527,8 +531,7 @@ public class TestSakilaQBE extends RuntimeDataSpringContextTestCase {
                 }
 
                 if (a.getAddressId().shortValue() != (short) i) {
-                    fail("Expected address id to be " + i + " but it was "
-                            + a.getAddressId());
+                    fail("Expected address id to be " + i + " but it was " + a.getAddressId());
                 }
             }
 
@@ -537,12 +540,12 @@ public class TestSakilaQBE extends RuntimeDataSpringContextTestCase {
         ds.commit();
 
         if (numPages != 61) {
-            fail("Expected 61 pages with a 10 row page size, but got "
-                    + numPages);
+            fail("Expected 61 pages with a 10 row page size, but got " + numPages);
         }
     }
 
-    @Test public void testMAV101() {
+    @Test
+    public void testMAV101() {
 
         checkShouldSkip();
 
@@ -555,7 +558,8 @@ public class TestSakilaQBE extends RuntimeDataSpringContextTestCase {
     }
 
     // MAV-291
-    @Test public void testSearchOnTwoForeignKeys() {
+    @Test
+    public void testSearchOnTwoForeignKeys() {
 
         checkShouldSkip();
 
@@ -568,10 +572,8 @@ public class TestSakilaQBE extends RuntimeDataSpringContextTestCase {
         customer.setStore(s);
         List<Customer> l = testData.sakila.getCustomerList(customer);
 
-        assertTrue(l.size() == 1
-                && l.get(0).getCustomerId().equals(Short.valueOf("16")));
-        assertTrue(l.get(0).getAddress().getAddressId().equals(
-                Short.valueOf("20")));
+        assertTrue(l.size() == 1 && l.get(0).getCustomerId().equals(Short.valueOf("16")));
+        assertTrue(l.get(0).getAddress().getAddressId().equals(Short.valueOf("20")));
         assertTrue(l.get(0).getStore().getStoreId().equals(Byte.valueOf("2")));
 
         // sanity checks
@@ -580,7 +582,8 @@ public class TestSakilaQBE extends RuntimeDataSpringContextTestCase {
         l.get(0).getStore().getLastUpdate(); // ensure store has been loaded
     }
 
-    @Test public void testLoadCityAndCountry() {
+    @Test
+    public void testLoadCityAndCountry() {
 
         checkShouldSkip();
 
@@ -595,7 +598,8 @@ public class TestSakilaQBE extends RuntimeDataSpringContextTestCase {
 
     }
 
-    @Test public void testLoadCityAndAddresses() {
+    @Test
+    public void testLoadCityAndAddresses() {
 
         checkShouldSkip();
 
@@ -609,10 +613,12 @@ public class TestSakilaQBE extends RuntimeDataSpringContextTestCase {
             // ordering on to-many doesn't eagerly loads the instances
             l.get(0).getAddresses().iterator().next();
             fail();
-        } catch (RuntimeException ex) {}
+        } catch (RuntimeException ex) {
+        }
     }
 
-    @Test public void testSqlRestrictionWhereClause() {
+    @Test
+    public void testSqlRestrictionWhereClause() {
 
         checkShouldSkip();
 

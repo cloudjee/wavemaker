@@ -20,8 +20,8 @@ import java.io.Writer;
 import com.wavemaker.json.JSONMarshaller;
 
 /**
- * A TypeDefinition representing primitive types, such as String, int, and
- * enum classes.  Any individual values are considered primitives.
+ * A TypeDefinition representing primitive types, such as String, int, and enum classes. Any individual values are
+ * considered primitives.
  * 
  * @author small
  * @version $Rev$ - $Date$
@@ -29,16 +29,12 @@ import com.wavemaker.json.JSONMarshaller;
 public interface PrimitiveTypeDefinition extends TypeDefinition {
 
     /**
-     * Transform the object (of this PrimitiveType) into its JSON
-     * representation.
+     * Transform the object (of this PrimitiveType) into its JSON representation.
      * 
-     * @see JSONMarshaller#marshal(Writer, Object) may be handy for serializing
-     *      the objects.
+     * @see JSONMarshaller#marshal(Writer, Object) may be handy for serializing the objects.
      * 
-     * @param writer
-     *            The writer to write the transformation output to.
-     * @param obj
-     *            The object to transform.
+     * @param writer The writer to write the transformation output to.
+     * @param obj The object to transform.
      */
     public void toJson(Writer writer, Object obj) throws IOException;
 }

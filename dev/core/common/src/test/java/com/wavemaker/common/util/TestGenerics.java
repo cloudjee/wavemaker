@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.common.util;
 
 import java.lang.reflect.Field;
@@ -28,21 +29,21 @@ import com.wavemaker.infra.WMTestCase;
 /**
  * @author small
  * @version $Rev:22672 $ - $Date:2008-05-30 14:37:26 -0700 (Fri, 30 May 2008) $
- *
+ * 
  */
 public class TestGenerics extends WMTestCase {
-    
+
     public void testGenericReflection() throws Exception {
-        
+
         Field stringListField = GenericSample.class.getField("stringList");
         ParameterizedType type = (ParameterizedType) stringListField.getGenericType();
         assertEquals(String.class, type.getActualTypeArguments()[0]);
-        
+
         Field stringIntMapField = GenericSample.class.getField("stringIntMap");
         type = (ParameterizedType) stringIntMapField.getGenericType();
         assertEquals(String.class, type.getActualTypeArguments()[0]);
         assertEquals(Integer.class, type.getActualTypeArguments()[1]);
-        
+
         Method getBoolShortMapMethod = GenericSample.class.getMethod("getBoolShortMap");
         assertEquals(Map.class, getBoolShortMapMethod.getReturnType());
         type = (ParameterizedType) getBoolShortMapMethod.getGenericReturnType();
@@ -57,14 +58,17 @@ public class TestGenerics extends WMTestCase {
     }
 
     public static class GenericSample {
-        
+
         public List<String> stringList;
-        public Map<String,Integer> stringIntMap;
-        
-        public Map<Boolean, Short> getBoolShortMap() { return null; }
-        
+
+        public Map<String, Integer> stringIntMap;
+
+        public Map<Boolean, Short> getBoolShortMap() {
+            return null;
+        }
+
         public void setStringIntMap(Map<String, Integer> in) {
-            stringIntMap = in;
+            this.stringIntMap = in;
         }
     }
 }

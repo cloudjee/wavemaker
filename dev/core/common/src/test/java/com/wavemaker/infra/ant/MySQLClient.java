@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.infra.ant;
 
 import org.apache.tools.ant.taskdefs.ExecTask;
@@ -22,46 +23,46 @@ import org.apache.tools.ant.taskdefs.ExecTask;
 /**
  * @author stoens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class MySQLClient extends ExecTask {
-    
+
     public void setPort(String port) {
         if (port.trim().length() == 0) {
             return;
         }
         createArg().setValue("-P" + port);
     }
-    
+
     public void setUser(String user) {
         setUsername(user);
     }
-    
+
     public void setUsername(String user) {
         if (user.trim().length() == 0) {
             return;
         }
         createArg().setValue("-u" + user);
-    }    
-    
+    }
+
     public void setPass(String pass) {
         setPassword(pass);
     }
-    
+
     public void setHost(String host) {
         if (host.trim().length() == 0) {
             return;
         }
         createArg().setValue("-h" + host);
     }
-    
+
     public void setPassword(String pass) {
         if (pass.trim().length() == 0) {
             return;
         }
         createArg().setValue("-p" + pass);
     }
-    
+
     @Override
     public void execute() {
         setExecutable("mysql");

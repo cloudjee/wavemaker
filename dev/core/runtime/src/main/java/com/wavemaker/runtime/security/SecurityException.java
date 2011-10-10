@@ -14,8 +14,8 @@
 
 package com.wavemaker.runtime.security;
 
-import com.wavemaker.common.WMException;
 import com.wavemaker.common.MessageResource;
+import com.wavemaker.common.WMException;
 
 /**
  * Security related exception.
@@ -31,10 +31,10 @@ public class SecurityException extends WMException {
     public SecurityException(String msg) {
         super(msg);
     }
-    
+
     public SecurityException(Throwable cause) {
         super(cause);
-    }    
+    }
 
     public SecurityException(MessageResource resource, Object... args) {
         super(resource, args);

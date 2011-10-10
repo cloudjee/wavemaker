@@ -24,21 +24,18 @@ import java.util.Map;
 /**
  * Utility for traversing an arbitrary Object graph.
  * 
- * Implement PropertyFactory to provide the names of the getters to call on each
- * node in the graph.
+ * Implement PropertyFactory to provide the names of the getters to call on each node in the graph.
  * 
  * Implement ObjectVisitor to get information about each node visited.
  * 
- * For nodes that are instanceof Collection, all child nodes are visited. For
- * nodes instance of Map, all values are visited. Keys are ignored.
+ * For nodes that are instanceof Collection, all child nodes are visited. For nodes instance of Map, all values are
+ * visited. Keys are ignored.
  * 
  * Keeps track of previously visited nodes to break out of circular references.
  * 
- * setBeanProperties(true) for all properties to be treated as "bean" properties
- * (default).
+ * setBeanProperties(true) for all properties to be treated as "bean" properties (default).
  * 
- * Note that "visit" is not called for the root node - the first callback is
- * PropertyFactory.getProperties.
+ * Note that "visit" is not called for the root node - the first callback is PropertyFactory.getProperties.
  * 
  * See javadoc for inner Context class.
  * 
@@ -49,77 +46,72 @@ import java.util.Map;
 public class ObjectGraphTraversal {
 
     public interface ObjectVisitor {
+
         /**
-         * Called for each node that has not yet been visited. Traversing
-         * continues after this call, and PropertyFactry.getProperties will be
-         * called for this instance.
+         * Called for each node that has not yet been visited. Traversing continues after this call, and
+         * PropertyFactry.getProperties will be called for this instance.
          */
         void visit(Object o, Context ctx);
 
         /**
-         * Called for a node that has already been visited. Does not continue
-         * traversing, since this node has been visited previously.
-         * PropertyFactory.getProperties will not be called. Note that a pointer
-         * back to the root node is considered a cycle, although visit is not
-         * called for the root node.
+         * Called for a node that has already been visited. Does not continue traversing, since this node has been
+         * visited previously. PropertyFactory.getProperties will not be called. Note that a pointer back to the root
+         * node is considered a cycle, although visit is not called for the root node.
          */
         void cycle(Object o, Context ctx);
     }
 
     public interface PropertyFactory {
+
         Collection<String> getProperties(Object o, Context ctx);
     }
 
     /**
      * The following Context information is available for each node:
      * 
-     * The parent instances of the current node (stack). The direct parent is at
-     * position 0.
+     * The parent instances of the current node (stack). The direct parent is at position 0.
      * 
-     * The properties (getters) chain traversed to get to this node (stack). The
-     * property name used to access this node is at position 0. For example if
-     * the current node is a Country instance and the root Object is a Person
-     * instance: (["country", "city", "address", "person"]).
-     * Use getPropertyPath to get a string representation.
+     * The properties (getters) chain traversed to get to this node (stack). The property name used to access this node
+     * is at position 0. For example if the current node is a Country instance and the root Object is a Person instance:
+     * (["country", "city", "address", "person"]). Use getPropertyPath to get a string representation.
      * 
-     * Arbitrary context information that can be used to associate state
-     * with a visited Node (stack). Child nodes visited have access to the state of all
-     * of their parent nodes.  
-     * A new null value is pushed for each visited node - therefore a node 
-     * should use ctx.getValues().set(0, <value>) to override the default null value.
+     * Arbitrary context information that can be used to associate state with a visited Node (stack). Child nodes
+     * visited have access to the state of all of their parent nodes. A new null value is pushed for each visited node -
+     * therefore a node should use ctx.getValues().set(0, <value>) to override the default null value.
      */
     public class Context {
 
         // parent nodes
-        private List<Object> parents = new ArrayList<Object>();
+        private final List<Object> parents = new ArrayList<Object>();
 
         // properties traversed to get to current node
-        private List<String> properties = new ArrayList<String>();
+        private final List<String> properties = new ArrayList<String>();
 
         // arbitrary storage for clients
-        private List<Object> valueStack = new ArrayList<Object>();
+        private final List<Object> valueStack = new ArrayList<Object>();
 
         public List<?> getParents() {
-            return parents;
+            return this.parents;
         }
 
         public List<String> getProperties() {
-            return properties;
+            return this.properties;
         }
 
         public List<Object> getValues() {
-            return valueStack;
+            return this.valueStack;
         }
-        
+
         public String getPropertyPath() {
             List<String> l = new ArrayList<String>(getProperties());
             Collections.reverse(l);
-            return ObjectUtils.toString(l ,".");            
+            return ObjectUtils.toString(l, ".");
         }
 
     }
 
     private static final ObjectVisitor NOOP_VISITOR = new ObjectVisitor() {
+
         public void visit(Object o, Context ctx) {
         }
 
@@ -139,25 +131,22 @@ public class ObjectGraphTraversal {
         this(propertyFactory, NOOP_VISITOR);
     }
 
-    public ObjectGraphTraversal(PropertyFactory propertyFactory,
-            ObjectAccess objectAccess) {
+    public ObjectGraphTraversal(PropertyFactory propertyFactory, ObjectAccess objectAccess) {
         this(propertyFactory, NOOP_VISITOR, objectAccess);
     }
 
-    public ObjectGraphTraversal(PropertyFactory propertyFactory,
-            ObjectVisitor objectVisitor) {
+    public ObjectGraphTraversal(PropertyFactory propertyFactory, ObjectVisitor objectVisitor) {
         this(propertyFactory, objectVisitor, ObjectAccess.getInstance());
     }
 
-    public ObjectGraphTraversal(PropertyFactory propertyFactory,
-            ObjectVisitor objectVisitor, ObjectAccess objectAccess) {
+    public ObjectGraphTraversal(PropertyFactory propertyFactory, ObjectVisitor objectVisitor, ObjectAccess objectAccess) {
         this.propertyFactory = propertyFactory;
         this.objectVisitor = objectVisitor;
         this.objectAccess = objectAccess;
     }
 
     public void setBeanProperties(boolean b) {
-        propertiesAreBeanProperties = b;
+        this.propertiesAreBeanProperties = b;
     }
 
     public void traverse(Object root) {
@@ -173,10 +162,9 @@ public class ObjectGraphTraversal {
     }
 
     @SuppressWarnings("unchecked")
-    private void traverseInternal(Object o, Context ctx,
-            Collection<Object> alreadyVisited) {
+    private void traverseInternal(Object o, Context ctx, Collection<Object> alreadyVisited) {
 
-        Collection<String> properties = propertyFactory.getProperties(o, ctx);
+        Collection<String> properties = this.propertyFactory.getProperties(o, ctx);
 
         for (String property : properties) {
 
@@ -184,10 +172,10 @@ public class ObjectGraphTraversal {
 
             Object propval = null;
 
-            if (propertiesAreBeanProperties) {
-                propval = objectAccess.getProperty(o, methodName);
+            if (this.propertiesAreBeanProperties) {
+                propval = this.objectAccess.getProperty(o, methodName);
             } else {
-                propval = objectAccess.invoke(o, methodName);
+                propval = this.objectAccess.invoke(o, methodName);
             }
 
             if (propval == null) {
@@ -220,23 +208,22 @@ public class ObjectGraphTraversal {
         }
     }
 
-    private void visitAndRecurse(Object o, Context ctx,
-            Collection<Object> alreadyVisited) {
-        
-        //REVIEW - if o happens to be in a Map/Collection, we don't
+    private void visitAndRecurse(Object o, Context ctx, Collection<Object> alreadyVisited) {
+
+        // REVIEW - if o happens to be in a Map/Collection, we don't
         // pass the Map/Collection into visit or cycle or make clients
-        // otherwise aware of the fact that we're visiting stuff in 
+        // otherwise aware of the fact that we're visiting stuff in
         // a Map or Collection.
 
         if (!TypeConversionUtils.isPrimitiveOrWrapper(o.getClass())) {
             if (alreadyVisited.contains(o)) {
-                objectVisitor.cycle(o, ctx);
+                this.objectVisitor.cycle(o, ctx);
                 return;
             }
-            alreadyVisited.add(o);            
+            alreadyVisited.add(o);
         }
 
-        objectVisitor.visit(o, ctx);
+        this.objectVisitor.visit(o, ctx);
         traverseInternal(o, ctx, alreadyVisited);
     }
 

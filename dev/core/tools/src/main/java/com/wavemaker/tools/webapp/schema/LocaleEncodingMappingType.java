@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -32,20 +31,20 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
  * 
  * 
- * 	The locale-encoding-mapping contains locale name and
- * 	encoding name. The locale name must be either "Language-code",
- * 	such as "ja", defined by ISO-639 or "Language-code_Country-code",
- * 	such as "ja_JP".  "Country code" is defined by ISO-3166.
+ * The locale-encoding-mapping contains locale name and encoding name. The locale name must be either "Language-code",
+ * such as "ja", defined by ISO-639 or "Language-code_Country-code", such as "ja_JP". "Country code" is defined by
+ * ISO-3166.
  * 
- *       
  * 
- * <p>Java class for locale-encoding-mappingType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for locale-encoding-mappingType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="locale-encoding-mappingType">
@@ -64,16 +63,15 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "locale-encoding-mappingType", propOrder = {
-    "locale",
-    "encoding"
-})
+@XmlType(name = "locale-encoding-mappingType", propOrder = { "locale", "encoding" })
 public class LocaleEncodingMappingType {
 
     @XmlElement(required = true)
     protected java.lang.String locale;
+
     @XmlElement(required = true)
     protected java.lang.String encoding;
+
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -83,22 +81,18 @@ public class LocaleEncodingMappingType {
     /**
      * Gets the value of the locale property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getLocale() {
-        return locale;
+        return this.locale;
     }
 
     /**
      * Sets the value of the locale property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setLocale(java.lang.String value) {
         this.locale = value;
@@ -107,22 +101,18 @@ public class LocaleEncodingMappingType {
     /**
      * Gets the value of the encoding property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getEncoding() {
-        return encoding;
+        return this.encoding;
     }
 
     /**
      * Sets the value of the encoding property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setEncoding(java.lang.String value) {
         this.encoding = value;
@@ -131,22 +121,18 @@ public class LocaleEncodingMappingType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setId(java.lang.String value) {
         this.id = value;

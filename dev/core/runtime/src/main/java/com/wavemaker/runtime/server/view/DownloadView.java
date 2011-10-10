@@ -28,9 +28,8 @@ import com.wavemaker.runtime.server.DownloadResponse;
 import com.wavemaker.runtime.server.ServerConstants;
 
 /**
- * Provides a suitable view for download servlets. If a DownloadObject is
- * present, it will send the pieces from that; if not, the String representation
- * of the result will be sent.
+ * Provides a suitable view for download servlets. If a DownloadObject is present, it will send the pieces from that; if
+ * not, the String representation of the result will be sent.
  * 
  * @author small
  * @version $Rev$ - $Date$
@@ -42,26 +41,23 @@ public class DownloadView extends AbstractView implements TypedView {
      * (non-Javadoc)
      * 
      * @see org.springframework.web.servlet.view.AbstractView#renderMergedOutputModel(java.util.Map,
-     *      javax.servlet.http.HttpServletRequest,
-     *      javax.servlet.http.HttpServletResponse)
+     * javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
     @Override
-    protected void renderMergedOutputModel(@SuppressWarnings("unchecked")
-            Map model, HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
+    protected void renderMergedOutputModel(@SuppressWarnings("unchecked") Map model, HttpServletRequest request, HttpServletResponse response)
+        throws Exception {
 
         Object result = model.get(ServerConstants.RESULTS_PART);
 
-        if (null==result) {
+        if (null == result) {
             // no response string
         } else if (result instanceof DownloadResponse) {
             DownloadResponse dr = (DownloadResponse) result;
 
             response.setContentType(dr.getContentType());
             response.setContentLength(dr.getContents().available());
-            if (null!=dr.getFileName()) {
-                response.setHeader("Content-disposition",
-                        "attachment; filename=\""+dr.getFileName()+"\"");
+            if (null != dr.getFileName()) {
+                response.setHeader("Content-disposition", "attachment; filename=\"" + dr.getFileName() + "\"");
             }
 
             IOUtils.copy(dr.getContents(), response.getOutputStream());

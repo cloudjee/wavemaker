@@ -26,8 +26,8 @@ import javax.xml.namespace.QName;
  */
 public class ServiceInfo extends GenericInfo {
 
-    private QName name;
-    
+    private final QName name;
+
     private List<PortTypeInfo> portTypeInfoList;
 
     protected ServiceInfo(QName name) {
@@ -35,7 +35,7 @@ public class ServiceInfo extends GenericInfo {
     }
 
     public QName getQName() {
-        return name;
+        return this.name;
     }
 
     public String getName() {
@@ -43,17 +43,17 @@ public class ServiceInfo extends GenericInfo {
     }
 
     public List<PortTypeInfo> getPortTypeInfoList() {
-        return portTypeInfoList;
+        return this.portTypeInfoList;
     }
-    
+
     protected void setPortTypeInfoList(List<PortTypeInfo> portTypeInfoList) {
         this.portTypeInfoList = portTypeInfoList;
     }
 
     protected void addPortTypeInfo(PortTypeInfo portTypeInfo) {
-        if (portTypeInfoList == null) {
-            portTypeInfoList = new ArrayList<PortTypeInfo>();
+        if (this.portTypeInfoList == null) {
+            this.portTypeInfoList = new ArrayList<PortTypeInfo>();
         }
-        portTypeInfoList.add(portTypeInfo);
+        this.portTypeInfoList.add(portTypeInfo);
     }
 }

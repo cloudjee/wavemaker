@@ -15,9 +15,9 @@
 package com.wavemaker.runtime.data.salesforce;
 
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionException;
+import org.springframework.transaction.TransactionStatus;
 
 /**
  * @author slee
@@ -29,7 +29,9 @@ public class SalesforceTransactionManager implements PlatformTransactionManager 
         return null;
     }
 
-    public void commit(TransactionStatus transactionStatus) throws TransactionException {}
+    public void commit(TransactionStatus transactionStatus) throws TransactionException {
+    }
 
-    public void rollback(TransactionStatus transactionStatus) throws TransactionException{}
+    public void rollback(TransactionStatus transactionStatus) throws TransactionException {
+    }
 }

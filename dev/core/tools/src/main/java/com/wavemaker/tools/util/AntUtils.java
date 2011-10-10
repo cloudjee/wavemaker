@@ -46,6 +46,7 @@ public class AntUtils {
         // Ant doesn't set the context classloader, and Spring depends on
         // it for loading files
         ClassLoaderUtils.runInClassLoaderContext(new TaskNoRtn() {
+
             public void run() {
                 Bootstrap.main(null);
             }
@@ -60,8 +61,7 @@ public class AntUtils {
         javac(srcdir, destdir, null, includes);
     }
 
-    public static void javac(String srcdir, File destdir, String classpath,
-            String includes) {
+    public static void javac(String srcdir, File destdir, String classpath, String includes) {
 
         Javac javac = new Javac();
         Project project = getProject();
@@ -74,16 +74,16 @@ public class AntUtils {
             javac.setIncludes(includes);
         }
 
-        //For Maven tests, if classpath is null, check for generated one
+        // For Maven tests, if classpath is null, check for generated one
         try {
-			File classPathFile = ResourceUtils.getFile("classpath:test-cp");
-			if (classPathFile.exists()) {
-				classpath = FileCopyUtils.copyToString(new FileReader(classPathFile));
-			}
-		} catch (IOException e) {
-			//Continue
-		}
-        
+            File classPathFile = ResourceUtils.getFile("classpath:test-cp");
+            if (classPathFile.exists()) {
+                classpath = FileCopyUtils.copyToString(new FileReader(classPathFile));
+            }
+        } catch (IOException e) {
+            // Continue
+        }
+
         if (classpath != null) {
             javac.setClasspath(new Path(project, classpath));
         }
@@ -95,8 +95,7 @@ public class AntUtils {
         copyDir(srcdir, destdir, (List<String>) null, (List<String>) null);
     }
 
-    public static void copyDir(File srcdir, File destdir, String include,
-            String exclude) {
+    public static void copyDir(File srcdir, File destdir, String include, String exclude) {
         List<String> i = new ArrayList<String>(1);
         if (include != null) {
             i.add(include);
@@ -109,8 +108,7 @@ public class AntUtils {
         copyDir(srcdir, destdir, i, e);
     }
 
-    public static void copyDir(File srcdir, File destdir,
-            List<String> includes, List<String> excludes) {
+    public static void copyDir(File srcdir, File destdir, List<String> includes, List<String> excludes) {
         Copy cp = new Copy();
         cp.setProject(getProject());
         cp.setTodir(destdir);

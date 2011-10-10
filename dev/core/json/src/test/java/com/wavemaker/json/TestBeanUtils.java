@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.json;
 
 import java.util.ArrayList;
@@ -29,49 +30,46 @@ import com.wavemaker.infra.WMTestCase;
  * 
  * @author small
  * @version $Rev$ - $Date:2008-05-30 14:29:23 -0700 (Fri, 30 May 2008) $
- *
+ * 
  */
 public class TestBeanUtils extends WMTestCase {
 
     public void testBasic() throws Exception {
-        
+
         SampleClass sc = new SampleClass();
 
-        assertEquals(sc.getSingleString(),
-                PropertyUtils.getProperty(sc, "singleString"));
-        assertEquals(sc.getStrings().get(1),
-                PropertyUtils.getProperty(sc, "strings[1]"));
+        assertEquals(sc.getSingleString(), PropertyUtils.getProperty(sc, "singleString"));
+        assertEquals(sc.getStrings().get(1), PropertyUtils.getProperty(sc, "strings[1]"));
     }
-    
+
     public void testNested() throws Exception {
-        
+
         SampleNestingClass snc = new SampleNestingClass();
-        assertEquals(snc.getSc().getSingleString(),
-                PropertyUtils.getProperty(snc, "sc.singleString"));
-        assertEquals(snc.getSc().getStrings().get(1),
-                PropertyUtils.getProperty(snc, "sc.strings[1]"));
+        assertEquals(snc.getSc().getSingleString(), PropertyUtils.getProperty(snc, "sc.singleString"));
+        assertEquals(snc.getSc().getStrings().get(1), PropertyUtils.getProperty(snc, "sc.strings[1]"));
     }
-    
+
     public static class SampleNestingClass {
-        
+
         public SampleNestingClass() {
             this.sc = new SampleClass();
         }
-        
+
         private SampleClass sc;
 
         public SampleClass getSc() {
-            return sc;
+            return this.sc;
         }
+
         public void setSc(SampleClass sc) {
             this.sc = sc;
         }
     }
-    
+
     public static class SampleClass {
-        
+
         public SampleClass() {
-            
+
             List<String> l = new ArrayList<String>();
             l.add("a");
             l.add("b");
@@ -79,19 +77,23 @@ public class TestBeanUtils extends WMTestCase {
             this.setStrings(l);
             this.setSingleString("foo");
         }
-        
+
         private List<String> strings;
+
         private String singleString;
-        
+
         public List<String> getStrings() {
-            return strings;
+            return this.strings;
         }
+
         public void setStrings(List<String> strings) {
             this.strings = strings;
         }
+
         public String getSingleString() {
-            return singleString;
+            return this.singleString;
         }
+
         public void setSingleString(String singleString) {
             this.singleString = singleString;
         }

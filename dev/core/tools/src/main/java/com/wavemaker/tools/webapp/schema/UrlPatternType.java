@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -27,23 +26,21 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.XmlValue;
 
-
 /**
  * 
  * 
- * 	The url-patternType contains the url pattern of the mapping.
- * 	It must follow the rules specified in Section 11.2 of the
- * 	Servlet API Specification. This pattern is assumed to be in
- * 	URL-decoded form and must not contain CR(#xD) or LF(#xA).
- * 	If it contains those characters, the container must inform
- * 	the developer with a descriptive error message.
- * 	The container must preserve all characters including whitespaces.
+ * The url-patternType contains the url pattern of the mapping. It must follow the rules specified in Section 11.2 of
+ * the Servlet API Specification. This pattern is assumed to be in URL-decoded form and must not contain CR(#xD) or
+ * LF(#xA). If it contains those characters, the container must inform the developer with a descriptive error message.
+ * The container must preserve all characters including whitespaces.
  * 
- *       
  * 
- * <p>Java class for url-patternType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for url-patternType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="url-patternType">
@@ -57,9 +54,7 @@ import javax.xml.bind.annotation.XmlValue;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "url-patternType", propOrder = {
-    "value"
-})
+@XmlType(name = "url-patternType", propOrder = { "value" })
 public class UrlPatternType {
 
     @XmlValue
@@ -68,22 +63,18 @@ public class UrlPatternType {
     /**
      * Gets the value of the value property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getValue() {
-        return value;
+        return this.value;
     }
 
     /**
      * Sets the value of the value property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setValue(java.lang.String value) {
         this.value = value;

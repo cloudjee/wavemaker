@@ -64,21 +64,25 @@ import com.wavemaker.tools.ws.salesforce.SalesforceHelper;
 
 /**
  * Responsible for generating the runtime configuration files.
- *
+ * 
  * @author small
  * @version $Rev$ - $Date$
  */
-public /*static*/ class ConfigurationCompiler {
+public/* static */class ConfigurationCompiler {
 
-    private ConfigurationCompiler() {}
+    private ConfigurationCompiler() {
+    }
 
     public static final String SERVICE_MANAGER_BEAN_ID = "serviceManager";
+
     public static final String SERVICE_SMD_EXTENSION = "smd";
-    
+
     public static final String EVENT_MANAGER_BEAN_ID = "eventManager";
 
     public static final String TYPE_MANAGER_BEAN_ID = "typeManager";
+
     public static final String TYPE_MANAGER_PARENT = "typeManagerBase";
+
     public static final String TYPE_MANAGER_TYPES = "types";
 
     public static final String TYPE_RUNTIME_FILE = "types.js";
@@ -99,16 +103,14 @@ public /*static*/ class ConfigurationCompiler {
     public static final String RUNTIME_MANAGERS = "project-managers.xml";
 
     public static final String SINGLETON = "singleton";
-    
+
     public static final String WM_TYPES_PREPEND = "wm.types = ";
+
     public static final String WM_TYPES_APPEND = ";";
 
-
-
     /**
-     * Converts a type name to an array type name (suitable to send through an
-     * SMD).
-     *
+     * Converts a type name to an array type name (suitable to send through an SMD).
+     * 
      * @param type
      * @return
      */
@@ -118,82 +120,82 @@ public /*static*/ class ConfigurationCompiler {
 
     /**
      * Get the runtime projectname-services.xml file.
+     * 
      * @param p
      * @return
      */
     public static Resource getRuntimeServicesXml(Project p) {
         try {
-			return p.getWebInf().createRelative(RUNTIME_SERVICES);
-		} catch (IOException ex) {
-			throw new WMRuntimeException(ex);
-		}
+            return p.getWebInf().createRelative(RUNTIME_SERVICES);
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
     }
 
     /**
      * Get the runtime projectname-managers.xml file.
+     * 
      * @param p
      * @return
      */
     public static Resource getRuntimeManagersXml(Project p) {
         try {
-			return p.getWebInf().createRelative(RUNTIME_MANAGERS);
-		} catch (IOException ex) {
-			throw new WMRuntimeException(ex);
-		}
+            return p.getWebInf().createRelative(RUNTIME_MANAGERS);
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
     }
 
     /**
      * Get the runtime SMD directory.
+     * 
      * @param servicesDir service directory
      * @param serviceName service name
      * @return
      */
     public static Resource getSmdFile(Resource servicesDir, String serviceName) {
         try {
-			return servicesDir.createRelative(serviceName+"."+SERVICE_SMD_EXTENSION);
-		} catch (IOException ex) {
-			throw new WMRuntimeException(ex);
-		}
+            return servicesDir.createRelative(serviceName + "." + SERVICE_SMD_EXTENSION);
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
     }
 
     public static Resource getSmdFile(Project currentProject, String serviceName) {
         try {
-			return getSmdFile(currentProject.getWebAppRoot().createRelative(RUNTIME_SERVICES_DIR),serviceName);
-		} catch (IOException ex) {
-			throw new WMRuntimeException(ex);
-		}
+            return getSmdFile(currentProject.getWebAppRoot().createRelative(RUNTIME_SERVICES_DIR), serviceName);
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
     }
-    
+
     public static Resource getTypesFile(Resource webAppRoot) {
         try {
-			return webAppRoot.createRelative(TYPE_RUNTIME_FILE);
-		} catch (IOException ex) {
-			throw new WMRuntimeException(ex);
-		}
+            return webAppRoot.createRelative(TYPE_RUNTIME_FILE);
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
     }
-    
+
     public static Resource getTypesFile(Project project) {
         return getTypesFile(project.getWebAppRoot());
     }
 
-    public static void generateServices(FileService fileService, Resource servicesXml,
-            SortedSet<Service> services) throws JAXBException, IOException {
+    public static void generateServices(FileService fileService, Resource servicesXml, SortedSet<Service> services) throws JAXBException, IOException {
 
-        SortedSet<Service> allServices =
-            new TreeSet<Service>(new ServiceComparator());
+        SortedSet<Service> allServices = new TreeSet<Service>(new ServiceComparator());
         allServices.addAll(services);
 
         Beans beans = new Beans();
         List<Object> imports = beans.getImportsAndAliasAndBean();
 
-        for (Service service: allServices) {
+        for (Service service : allServices) {
 
-            if (null==service.getSpringFile()) {
-                throw new WMRuntimeException(MessageResource.NO_EXTERNAL_BEAN_DEF,
-                        service.getId());
+            if (null == service.getSpringFile()) {
+                throw new WMRuntimeException(MessageResource.NO_EXTERNAL_BEAN_DEF, service.getId());
             } else {
                 Import i = new Import();
-                i.setResource("classpath:"+service.getSpringFile());
+                i.setResource("classpath:" + service.getSpringFile());
 
                 imports.add(i);
             }
@@ -202,9 +204,7 @@ public /*static*/ class ConfigurationCompiler {
         SpringConfigSupport.writeBeans(beans, servicesXml, fileService);
     }
 
-
-    public static SortedSet<Method> getMethods(
-            List<Operation> ops, String serviceName) {
+    public static SortedSet<Method> getMethods(List<Operation> ops, String serviceName) {
 
         Collections.sort(ops, new OperationComparator());
 
@@ -218,7 +218,7 @@ public /*static*/ class ConfigurationCompiler {
             String methodName = op.getName();
             meth.setName(methodName);
 
-            if (null!=op.getReturn() && null!=op.getReturn().getTypeRef()) {
+            if (null != op.getReturn() && null != op.getReturn().getTypeRef()) {
                 String type = op.getReturn().getTypeRef();
 
                 if (op.getReturn().isIsList()) {
@@ -232,7 +232,7 @@ public /*static*/ class ConfigurationCompiler {
             if (params.size() > 0) {
                 List<Param> methArgs = new ArrayList<Param>();
 
-                for (Parameter param: params) {
+                for (Parameter param : params) {
                     Param p = new Param();
                     p.setName(param.getName());
 
@@ -248,20 +248,18 @@ public /*static*/ class ConfigurationCompiler {
                 meth.setParameters(methArgs);
             }
 
-            if (params.size()>0 && null!=methodMap.get(methodName)) {
+            if (params.size() > 0 && null != methodMap.get(methodName)) {
                 Method oldMethod = methodMap.get(methodName);
                 List<Param> oldMapParams = oldMethod.getParameters();
                 List<Param> curMapParams = meth.getParameters();
 
-                if (null==oldMapParams) {
+                if (null == oldMapParams) {
                     // hard to beat no parameters; leave the old one in the
                     // list
-                } else if (oldMapParams.size()>curMapParams.size()) {
+                } else if (oldMapParams.size() > curMapParams.size()) {
                     methodMap.put(methodName, meth);
-                } else if (oldMapParams.size()==curMapParams.size()) {
-                    throw new WMRuntimeException(
-                            MessageResource.JSONUTILS_BADMETHODOVERLOAD,
-                            serviceName, methodName);
+                } else if (oldMapParams.size() == curMapParams.size()) {
+                    throw new WMRuntimeException(MessageResource.JSONUTILS_BADMETHODOVERLOAD, serviceName, methodName);
                 } else {
                     // the existing method has fewer parameters than this one,
                     // so leave that one
@@ -273,7 +271,7 @@ public /*static*/ class ConfigurationCompiler {
 
         // convert from the methodMap to a list of method definitions
         SortedSet<Method> methods = new TreeSet<Method>();
-        for (Method elem: methodMap.values()) {
+        for (Method elem : methodMap.values()) {
             methods.add(elem);
         }
 
@@ -291,46 +289,41 @@ public /*static*/ class ConfigurationCompiler {
         return ret;
     }
 
-    public static void generateSMDs(Project currentProject,
-            SortedSet<Service> services)
-            throws IOException, NoSuchMethodException {
-        
+    public static void generateSMDs(Project currentProject, SortedSet<Service> services) throws IOException, NoSuchMethodException {
+
         Resource servicesDir = currentProject.getWebAppRoot().createRelative(RUNTIME_SERVICES_DIR);
         generateSMDs(currentProject, servicesDir, services);
     }
 
-    public static void generateSMDs(FileService fileService, Resource servicesDir,
-            SortedSet<Service> services)
-            throws IOException, NoSuchMethodException {
+    public static void generateSMDs(FileService fileService, Resource servicesDir, SortedSet<Service> services) throws IOException,
+        NoSuchMethodException {
 
-        for (Service service: services) {
+        for (Service service : services) {
             SMD smd = getSMD(service);
 
             Resource smdFile = getSmdFile(servicesDir, service.getId());
 
             JSONState js = new JSONState();
-          
+
             Writer writer = fileService.getWriter(smdFile);
             JSONMarshaller.marshal(writer, smd, js, true, true);
             writer.close();
         }
     }
-    
+
     public static void generateSMD(Project project, Service service) throws IOException, NoSuchMethodException {
-    	SMD smd = getSMD(service);
-    	Resource smdFile = getSmdFile(project, service.getId());
-    	JSONState js = new JSONState();
+        SMD smd = getSMD(service);
+        Resource smdFile = getSmdFile(project, service.getId());
+        JSONState js = new JSONState();
         Writer writer = project.getWriter(smdFile);
         JSONMarshaller.marshal(writer, smd, js, true, true);
         writer.close();
     }
 
-    public static void generateManagers(FileService fileService, Resource managersXml,
-            SortedSet<Service> services)
-            throws JAXBException, IOException {
+    public static void generateManagers(FileService fileService, Resource managersXml, SortedSet<Service> services) throws JAXBException, IOException {
 
         Beans beans = new Beans();
-        
+
         // create a type manager
         Bean tm = new Bean();
         tm.setScope(SINGLETON);
@@ -340,16 +333,14 @@ public /*static*/ class ConfigurationCompiler {
 
         Property prop = new Property();
         prop.setName(TYPE_MANAGER_TYPES);
-        com.wavemaker.tools.spring.beans.Map typesMap =
-            new com.wavemaker.tools.spring.beans.Map();
+        com.wavemaker.tools.spring.beans.Map typesMap = new com.wavemaker.tools.spring.beans.Map();
         typesMap.setMerge(DefaultableBoolean.TRUE);
 
-        for (Service service: services) {
+        for (Service service : services) {
             if (null != service.getDataobjects()) {
                 Entry entry = new Entry();
                 entry.setKey(service.getId());
-                com.wavemaker.tools.spring.beans.List typesList =
-                    new com.wavemaker.tools.spring.beans.List();
+                com.wavemaker.tools.spring.beans.List typesList = new com.wavemaker.tools.spring.beans.List();
 
                 for (DataObject dao : service.getDataobjects().getDataobject()) {
                     Value val = new Value();
@@ -372,47 +363,42 @@ public /*static*/ class ConfigurationCompiler {
 
         SpringConfigSupport.writeBeans(beans, managersXml, fileService);
     }
-    
-    public static void generateTypes(FileService fileService, Resource typesFile,
-            SortedSet<Service> services, List<DataObject> primitiveTypes)
-            throws IOException {
-        
+
+    public static void generateTypes(FileService fileService, Resource typesFile, SortedSet<Service> services, List<DataObject> primitiveTypes)
+        throws IOException {
+
         Types types = getTypesFromServices(services, primitiveTypes);
-        
+
         Writer writer = fileService.getWriter(typesFile);
         writer.write(WM_TYPES_PREPEND);
-        
+
         JSONState js = new JSONState();
         js.setValueTransformer(new TypeValueTransformer());
-        
+
         JSONMarshaller.marshal(writer, types, js, true, true);
         writer.write(WM_TYPES_APPEND);
         writer.close();
     }
-    
-    public static Types getTypesFromServices(SortedSet<Service> services,
-            List<DataObject> primitiveTypes) {
-        
+
+    public static Types getTypesFromServices(SortedSet<Service> services, List<DataObject> primitiveTypes) {
+
         Types ret = new Types();
-        for (Service service: services) {
+        for (Service service : services) {
             DataObjects objs = service.getDataobjects();
-            if (null!=objs) {
-                getTypesFromDataObjects(service.getId(),
-                        objs.getDataobject(), ret);
+            if (null != objs) {
+                getTypesFromDataObjects(service.getId(), objs.getDataobject(), ret);
             }
         }
-        if (null!=primitiveTypes) {
-            getTypesFromDataObjects("noServicePrimitiveType", primitiveTypes,
-                    ret);
+        if (null != primitiveTypes) {
+            getTypesFromDataObjects("noServicePrimitiveType", primitiveTypes, ret);
         }
-        
+
         return ret;
     }
-    
-    public static void getTypesFromDataObjects(String serviceId,
-            List<DataObject> daos, Types types) {
-        
-        for (DataObject dao: daos) {
+
+    public static void getTypesFromDataObjects(String serviceId, List<DataObject> daos, Types types) {
+
+        for (DataObject dao : daos) {
             if (null == dao.getJsType()) {
                 ComplexType type = new ComplexType();
 
@@ -425,7 +411,9 @@ public /*static*/ class ConfigurationCompiler {
                 int fieldOrder = 0;
                 for (Element et : dao.getElement()) {
                     if (serviceId.equals(CommonConstants.SALESFORCE_SERVICE)) {
-                        if (SalesforceHelper.skipElement(et, serviceId)) continue; //salesforce
+                        if (SalesforceHelper.skipElement(et, serviceId)) {
+                            continue; // salesforce
+                        }
                     }
                     Field f = new Field();
                     f.setType(et.getTypeRef());
@@ -435,12 +423,12 @@ public /*static*/ class ConfigurationCompiler {
                     f.setNoChange(et.getNoChange());
                     f.setInclude(et.getRequire());
                     f.setFieldOrder(fieldOrder);
-                    f.setFieldSubType(et.getSubType()); //salesforce
+                    f.setFieldSubType(et.getSubType()); // salesforce
 
                     type.getFields().put(et.getName(), f);
                     fieldOrder++;
                 }
-                
+
                 types.getTypes().put(dao.getJavaType(), type);
             } else {
                 PrimitiveType type = new PrimitiveType();

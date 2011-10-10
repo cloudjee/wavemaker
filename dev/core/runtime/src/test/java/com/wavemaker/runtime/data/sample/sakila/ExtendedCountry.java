@@ -15,16 +15,17 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data.sample.sakila;
 
 /**
  * Custom logic for Country
-  */
-@SuppressWarnings({"serial"})
+ */
+@SuppressWarnings({ "serial" })
 public class ExtendedCountry extends Country {
 
-   public String getInfo() {
-       return super.getCountry() + " is somewhere in the world";
-   }
-    
+    public String getInfo() {
+        return super.getCountry() + " is somewhere in the world";
+    }
+
 }

@@ -59,48 +59,42 @@ public class JAXBTypeMapper implements TypeMapper {
         Map<NType, CBuiltinLeafInfo> leaves = CBuiltinLeafInfo.LEAVES;
         Collection<CBuiltinLeafInfo> builtinTypes = leaves.values();
         for (CBuiltinLeafInfo builtinType : builtinTypes) {
-            builtinTypeMap.put(builtinType.getTypeName(), builtinType.getType()
-                    .fullName());
+            builtinTypeMap.put(builtinType.getTypeName(), builtinType.getType().fullName());
         }
     }
 
-    private S2JJAXBModel jaxbModel;
-    
-    private Map<QName, String> jaxbMappings;
-    
+    private final S2JJAXBModel jaxbModel;
+
+    private final Map<QName, String> jaxbMappings;
+
     public JAXBTypeMapper(WSDL wsdl) throws GenerationException {
         this(wsdl, new ArrayList<Resource>());
     }
 
-    public JAXBTypeMapper(WSDL wsdl, List<Resource> bindingFiles)
-            throws GenerationException {
-        this(wsdl.getSchemas(), bindingFiles, wsdl.getPackageName(),
-                wsdl.getAuxiliaryClasses(), wsdl.getWebServiceType());
+    public JAXBTypeMapper(WSDL wsdl, List<Resource> bindingFiles) throws GenerationException {
+        this(wsdl.getSchemas(), bindingFiles, wsdl.getPackageName(), wsdl.getAuxiliaryClasses(), wsdl.getWebServiceType());
     }
 
-    public JAXBTypeMapper(Map<String, Element> schemas,
-            List<Resource> bindingFiles, String packageName,
-            Set<String> auxiliaryClasses, WebServiceType type)
-            throws GenerationException {
-        jaxbModel = XJCCompiler.createSchemaModel(schemas, bindingFiles,
-                packageName, auxiliaryClasses, type);
-        jaxbMappings = getMappings();
+    public JAXBTypeMapper(Map<String, Element> schemas, List<Resource> bindingFiles, String packageName, Set<String> auxiliaryClasses,
+        WebServiceType type) throws GenerationException {
+        this.jaxbModel = XJCCompiler.createSchemaModel(schemas, bindingFiles, packageName, auxiliaryClasses, type);
+        this.jaxbMappings = getMappings();
     }
 
     public S2JJAXBModel getJAXBModel() {
-        return jaxbModel;
+        return this.jaxbModel;
     }
 
     public String getJavaType(QName schemaType, boolean isElement) {
         String javaType = null;
-        if (jaxbModel != null) {
+        if (this.jaxbModel != null) {
             // SimpleTypes or ComplexTypes or any builtin types
-            TypeAndAnnotation jt = jaxbModel.getJavaType(schemaType);
+            TypeAndAnnotation jt = this.jaxbModel.getJavaType(schemaType);
             if (jt == null || isElement) {
                 // Element
-                Mapping mapping = jaxbModel.get(schemaType);
+                Mapping mapping = this.jaxbModel.get(schemaType);
                 if (mapping == null) {
-                    javaType = jaxbMappings.get(schemaType);
+                    javaType = this.jaxbMappings.get(schemaType);
                 } else {
                     jt = mapping.getType();
                 }
@@ -119,9 +113,9 @@ public class JAXBTypeMapper implements TypeMapper {
     }
 
     public boolean isSimpleType(QName qname) {
-        TypeAndAnnotation javaType = jaxbModel.getJavaType(qname);
+        TypeAndAnnotation javaType = this.jaxbModel.getJavaType(qname);
         if (javaType == null) {
-            javaType = jaxbModel.get(qname).getType();
+            javaType = this.jaxbModel.get(qname).getType();
         }
         if (javaType.getTypeClass().isPrimitive()) {
             return true;
@@ -131,19 +125,19 @@ public class JAXBTypeMapper implements TypeMapper {
     }
 
     protected Model getInternalModel() {
-        if (jaxbModel == null) {
+        if (this.jaxbModel == null) {
             return null;
         }
         try {
-            Field field = jaxbModel.getClass().getDeclaredField("model");
+            Field field = this.jaxbModel.getClass().getDeclaredField("model");
             field.setAccessible(true);
-            Model model = (Model) field.get(jaxbModel);
+            Model model = (Model) field.get(this.jaxbModel);
             return model;
         } catch (Exception e) {
             throw new WMRuntimeException(e);
         }
     }
-    
+
     private Map<QName, String> getMappings() {
         Map<QName, String> mappings = new HashMap<QName, String>();
         Model internalModel = getInternalModel();
@@ -160,7 +154,7 @@ public class JAXBTypeMapper implements TypeMapper {
         }
         return mappings;
     }
-    
+
     public List<ElementType> getAllTypes(String serviceId) {
         List<ElementType> allTypes = new ArrayList<ElementType>();
         Model internalModel = getInternalModel();
@@ -182,7 +176,7 @@ public class JAXBTypeMapper implements TypeMapper {
         return allTypes;
     }
 
-    public List<ElementType> getAllTypes(String serviceId, String username, String password) { //salesforce
+    public List<ElementType> getAllTypes(String serviceId, String username, String password) { // salesforce
         return null;
     }
 
@@ -191,18 +185,14 @@ public class JAXBTypeMapper implements TypeMapper {
         for (CPropertyInfo prop : ci.getProperties()) {
             Collection<? extends CTypeInfo> ref = prop.ref();
             String propJavaType = null;
-            if (prop instanceof CElementPropertyInfo
-                    && ((CElementPropertyInfo) prop).getSchemaType() != null) {
-                propJavaType = getJavaType(((CElementPropertyInfo) prop)
-                        .getSchemaType(), true);
+            if (prop instanceof CElementPropertyInfo && ((CElementPropertyInfo) prop).getSchemaType() != null) {
+                propJavaType = getJavaType(((CElementPropertyInfo) prop).getSchemaType(), true);
             } else {
                 for (CTypeInfo ct : ref) {
                     propJavaType = ct.getType().fullName();
                 }
             }
-            ElementType propType = new ElementType(
-                    toPropertyName(prop.getName(true)), 
-                    propJavaType, prop.isCollection());
+            ElementType propType = new ElementType(toPropertyName(prop.getName(true)), propJavaType, prop.isCollection());
             properties.add(propType);
         }
         return properties;

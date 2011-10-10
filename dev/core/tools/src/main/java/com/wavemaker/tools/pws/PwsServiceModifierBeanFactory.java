@@ -24,34 +24,32 @@ import com.wavemaker.common.util.SpringUtils;
 
 /**
  * @author slee
- *
+ * 
  */
 public class PwsServiceModifierBeanFactory {
 
     private Map<String, IPwsServiceModifier> pwsServiceModifiers = new HashMap<String, IPwsServiceModifier>();
 
-
     public Collection<String> getPwsServiceModifierNames() {
-        return pwsServiceModifiers.keySet();
+        return this.pwsServiceModifiers.keySet();
     }
-    
+
     public IPwsServiceModifier getPwsServiceModifier(String partnerName) {
-        
-        if (pwsServiceModifiers == null) {
+
+        if (this.pwsServiceModifiers == null) {
             SpringUtils.throwSpringNotInitializedError(this.getClass());
         }
-        
-        if (!pwsServiceModifiers.containsKey(partnerName)) {
-            throw new ConfigurationException(
-                MessageResource.UNKNOWN_PWS_TOOLS_MANAGER, partnerName);
+
+        if (!this.pwsServiceModifiers.containsKey(partnerName)) {
+            throw new ConfigurationException(MessageResource.UNKNOWN_PWS_TOOLS_MANAGER, partnerName);
         }
-        
-        return pwsServiceModifiers.get(partnerName);
+
+        return this.pwsServiceModifiers.get(partnerName);
     }
 
     public void setPwsServiceModifiers(Map<String, IPwsServiceModifier> pwsServiceModifiers) {
         this.pwsServiceModifiers = pwsServiceModifiers;
 
     }
-    
+
 }

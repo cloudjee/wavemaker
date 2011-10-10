@@ -28,11 +28,11 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.util.ClassLoaderUtils;
-//import com.wavemaker.tools.data.DataServiceLoggers; //salesforce
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.util.ClassLoaderUtils;
 
 /**
  * @author Simon Toens
@@ -40,7 +40,7 @@ import org.apache.commons.logging.LogFactory;
  * 
  */
 public abstract class BaseHbmParser {
-    
+
     private Reader reader = null;
 
     protected XMLStreamReader xmlReader = null;
@@ -50,8 +50,9 @@ public abstract class BaseHbmParser {
     protected StringBuilder currentText = new StringBuilder();
 
     public abstract void initAll();
-    
-    protected BaseHbmParser() {}
+
+    protected BaseHbmParser() {
+    }
 
     protected BaseHbmParser(String s) {
         this(new StringReader(s));
@@ -69,14 +70,13 @@ public abstract class BaseHbmParser {
         try {
             XMLInputFactory factory = XMLInputFactory.newInstance();
             setupEntityResolver(factory);
-            xmlReader = factory.createXMLStreamReader(reader);
+            this.xmlReader = factory.createXMLStreamReader(reader);
         } catch (XMLStreamException ex) {
             throw new WMRuntimeException(ex);
         }
     }
 
-    protected String nextNested(String parentElementName,
-            String... elementNames) {
+    protected String nextNested(String parentElementName, String... elementNames) {
         if (elementNames.length == 0) {
             // called like this by accident: nextNested("foo")
             // compiles because of varargs
@@ -91,67 +91,66 @@ public abstract class BaseHbmParser {
 
     public void close() {
         try {
-            xmlReader.close();
-        } catch (Exception ignore) {}
+            this.xmlReader.close();
+        } catch (Exception ignore) {
+        }
         try {
-            reader.close();
-        } catch (Exception ignore) {}
+            this.reader.close();
+        } catch (Exception ignore) {
+        }
     }
 
     protected String next() {
         return nextInternal(null, 1, (String[]) null);
     }
-    
+
     protected String nextCharacterData() {
-        return nextInternal(currentElementName, -1, (String[])null);
+        return nextInternal(this.currentElementName, -1, (String[]) null);
     }
 
-    protected String nextInternal(String parentElementName, int numTries,
-            String... elementNames) {
+    protected String nextInternal(String parentElementName, int numTries, String... elementNames) {
 
         int i = 1;
 
         try {
 
-            for (int event = xmlReader.next(); 
-                 event != XMLStreamConstants.END_DOCUMENT; 
-                 event = xmlReader.next()) {
+            for (int event = this.xmlReader.next(); event != XMLStreamConstants.END_DOCUMENT; event = this.xmlReader.next()) {
 
                 switch (event) {
-                case XMLStreamConstants.START_ELEMENT:
+                    case XMLStreamConstants.START_ELEMENT:
 
-                    currentText.delete(0, currentText.length());
-                    currentElementName = xmlReader.getName().toString();
+                        this.currentText.delete(0, this.currentText.length());
+                        this.currentElementName = this.xmlReader.getName().toString();
 
-                    if (numTries > -1) {
-                        if (i == numTries) {
-                            return currentElementName;
-                        } else if (i > numTries) {
-                            return null;
-                        }
-                    }
-
-                    i++;
-
-                    if (elementNames != null) {
-                        for (String s : elementNames) {
-                            if (s.equals(currentElementName)) {
-                                return currentElementName;
+                        if (numTries > -1) {
+                            if (i == numTries) {
+                                return this.currentElementName;
+                            } else if (i > numTries) {
+                                return null;
                             }
                         }
-                    }
-                    break;
-                case XMLStreamConstants.END_ELEMENT:
-                    String endElementName = xmlReader.getName().toString();
-                    if (endElementName.equals(parentElementName)) {
-                        return null;
-                    }
-                    break;
-                case XMLStreamConstants.CHARACTERS:
-                    currentText.append(xmlReader.getText());
-                    break;
-                case XMLStreamConstants.CDATA:
-                    break;
+
+                        i++;
+
+                        if (elementNames != null) {
+                            for (String s : elementNames) {
+                                if (s.equals(this.currentElementName)) {
+                                    return this.currentElementName;
+                                }
+                            }
+                        }
+                        break;
+                    case XMLStreamConstants.END_ELEMENT:
+                        String endElementName = this.xmlReader.getName().toString();
+                        if (endElementName.equals(parentElementName)) {
+                            return null;
+                        }
+                        break;
+                    case XMLStreamConstants.CHARACTERS:
+                        this.currentText.append(this.xmlReader.getText());
+                        break;
+                    case XMLStreamConstants.CDATA:
+                        break;
                 }
             }
 
@@ -174,19 +173,16 @@ public abstract class BaseHbmParser {
     private static void setupEntityResolver(XMLInputFactory factory) {
 
         factory.setXMLResolver(new XMLResolver() {
-            public Object resolveEntity(String publicId, String systemId,
-                    String s1, String s2) {
+
+            public Object resolveEntity(String publicId, String systemId, String s1, String s2) {
                 if (HbmConstants.HBM_SYSTEM_ID.equals(systemId)) {
-                    InputStream rtn = 
-                        ClassLoaderUtils.getResourceAsStream(
-                        "com/wavemaker/tools/data/hibernate-mapping-3.0.dtd");
+                    InputStream rtn = ClassLoaderUtils.getResourceAsStream("com/wavemaker/tools/data/hibernate-mapping-3.0.dtd");
                     if (rtn == null) {
-                        //get rid of references to "tools" package
+                        // get rid of references to "tools" package
                         Log parserLogger = LogFactory.getLog("com.wavemaker.tools.data.parser");
-                        parserLogger.warn(
-                        "Did not find local copy of \"hibernate-mapping-3.0.dtd\"");
-                        //DataServiceLoggers.parserLogger.warn( //
-                        //"Did not find local copy of \"hibernate-mapping-3.0.dtd\"");
+                        parserLogger.warn("Did not find local copy of \"hibernate-mapping-3.0.dtd\"");
+                        // DataServiceLoggers.parserLogger.warn( //
+                        // "Did not find local copy of \"hibernate-mapping-3.0.dtd\"");
                     } else {
                         return rtn;
                     }

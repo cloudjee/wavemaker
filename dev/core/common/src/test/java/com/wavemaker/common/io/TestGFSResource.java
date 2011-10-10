@@ -37,54 +37,53 @@ import com.mongodb.gridfs.GridFSInputFile;
  * 
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@IfProfileValue(name="spring.profiles", value="cloud-test")
+@IfProfileValue(name = "spring.profiles", value = "cloud-test")
 @TestExecutionListeners({})
 public class TestGFSResource {
 
-	private static final Log log = LogFactory.getLog(TestGFSResource.class);
-	
-	private static GridFS mygridfs;
-	private static MongoDbFactory mongoFactory;
+    private static final Log log = LogFactory.getLog(TestGFSResource.class);
 
-	@Before
-	public void setUp() throws Exception {
-		ApplicationContext ctx = new AnnotationConfigApplicationContext(
-				TestMongoConfig.class);
-		mongoFactory = (MongoDbFactory) ctx.getBean("mongoFactory");
-		log.info("Connected to: " // use factory to ensure mongo is running
-				+ mongoFactory.getDb().getMongo().getAddress().getHost());
-		mygridfs = new GridFS(mongoFactory.getDb());
-	}
+    private static GridFS mygridfs;
 
-	@After
-	public void tearDown() throws Exception {
-		mongoFactory.getDb().dropDatabase();
-	}
+    private static MongoDbFactory mongoFactory;
 
-	@Test
-	public void testGetPath() {
-		String newPath = "/project/testOne/WEB-INF/classes/";
-		GFSResource gfsRes = new GFSResource(mygridfs, newPath);
-		assertEquals(newPath, gfsRes.getPath());
-	}
+    @Before
+    public void setUp() throws Exception {
+        ApplicationContext ctx = new AnnotationConfigApplicationContext(TestMongoConfig.class);
+        mongoFactory = (MongoDbFactory) ctx.getBean("mongoFactory");
+        log.info("Connected to: " // use factory to ensure mongo is running
+            + mongoFactory.getDb().getMongo().getAddress().getHost());
+        mygridfs = new GridFS(mongoFactory.getDb());
+    }
 
+    @After
+    public void tearDown() throws Exception {
+        mongoFactory.getDb().dropDatabase();
+    }
 
-	@Test 
-	public void testCreateRelative() { 
-		GFSResource newRes = null;
-		String relPath = "WEB-INF/";
-		String s = "Hello World <br> ! Good bye for now.";
-		byte[] testData = s.getBytes();
-		String fn = "foo.js";
-		String path = "/wavemaker/projects/Project1/webapproot/";
-		GridFSInputFile file = mygridfs.createFile(testData);
-		file.setFilename(fn);
-		GFSResource gfsres = new GFSResource(mygridfs, path);
-		try{
-			newRes = gfsres.createRelative(mygridfs, relPath );
-		} catch (Exception e) { }
-		assertEquals(newRes.getPath(), path + relPath );		 
-	}
-	
+    @Test
+    public void testGetPath() {
+        String newPath = "/project/testOne/WEB-INF/classes/";
+        GFSResource gfsRes = new GFSResource(mygridfs, newPath);
+        assertEquals(newPath, gfsRes.getPath());
+    }
+
+    @Test
+    public void testCreateRelative() {
+        GFSResource newRes = null;
+        String relPath = "WEB-INF/";
+        String s = "Hello World <br> ! Good bye for now.";
+        byte[] testData = s.getBytes();
+        String fn = "foo.js";
+        String path = "/wavemaker/projects/Project1/webapproot/";
+        GridFSInputFile file = mygridfs.createFile(testData);
+        file.setFilename(fn);
+        GFSResource gfsres = new GFSResource(mygridfs, path);
+        try {
+            newRes = gfsres.createRelative(mygridfs, relPath);
+        } catch (Exception e) {
+        }
+        assertEquals(newRes.getPath(), path + relPath);
+    }
 
 }

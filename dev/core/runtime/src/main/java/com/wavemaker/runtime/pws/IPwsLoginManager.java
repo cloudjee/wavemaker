@@ -14,35 +14,29 @@
 
 package com.wavemaker.runtime.pws;
 
-import javax.xml.namespace.QName;
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-import java.util.ArrayList;
-
 /**
  * This interface provides methods to log in/out to/from partner web service sites. It also defines methods to manage
  * session and relevant information.
  * 
  * @author slee
- *
+ * 
  */
 public interface IPwsLoginManager {
 
     /**
      * Logs in to partner web service site
-     *
+     * 
      * @param serviceName the service name
      * @return the session id or equivalence
      * @throws Exception if the login fails
      */
     String logIn(String serviceName) throws Exception;
-    
+
     /**
      * Logs in to partner web service site
-     *
+     * 
      * @param loginInfo the object of <tt>PwsLoginInfo</tt> containing information such as host, posrt, user name and
-     * password
+     *        password
      * @return the session id or equivalence
      * @throws Exception if the login fails
      */
@@ -50,7 +44,7 @@ public interface IPwsLoginManager {
 
     /**
      * Logs out from the current connection to a partner web service
-     *
+     * 
      * @param host the host name for the web sevice
      * @param port the port number for the web sevice
      * @param sessionId the session id
@@ -61,28 +55,28 @@ public interface IPwsLoginManager {
 
     /**
      * Returns the login information object of the current session
-     *
+     * 
      * @return the object of <tt>PwsLoginInfo</tt> containing information such as host, posrt, user name and password
      */
     PwsLoginInfo getPwsLoginInfo();
 
     /**
      * Returns the current session id
-     *
+     * 
      * @return the session id
      */
     String getSessionId();
 
     /**
      * Sets the partner name of the current session
-     *
+     * 
      * @param partnerName the partner name
      */
     void setPartnerName(String partnerName);
 
     /**
      * Returns the partner name of the current session
-     *
+     * 
      * @return the partner name
      */
     public String getPartnerName();

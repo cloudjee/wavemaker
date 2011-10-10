@@ -20,32 +20,38 @@ package com.wavemaker.runtime.server;
  * @author Matt Small
  * @version $Rev$ - $Date$
  */
-public /*static*/ class ServerConstants {
+public/* static */class ServerConstants {
 
     public static final String SERVICE_JSON_RPC = "JSON-RPC";
+
     public static final String JSON_CONTENT_TYPE = "application/json";
 
     /**
-     * The name of the root result in the results set returned to the client.
-     * See constants.js for the corresponding client-side constant.
+     * The name of the root result in the results set returned to the client. See constants.js for the corresponding
+     * client-side constant.
      */
     public static final String RESULTS_PART = "result";
-    
+
     /**
      * The name of the root error in the results set returned to the client.
      */
     public static final String ERROR_PART = "error";
-    
+
     public static final String METHOD = "method";
+
     public static final String PARAMETERS = "params";
+
     public static final String ID = "id";
-    
+
     public static final String JSON_EXTENSION = "json";
+
     public static final String UPLOAD_EXTENSION = "upload";
+
     public static final String FLASH_UPLOAD_EXTENSION = "flashUploader";
+
     public static final String DOWNLOAD_EXTENSION = "download";
-    
+
     public static final String DEFAULT_ENCODING = "UTF-8";
-    
+
     public static final String ROOT_MODEL_OBJECT_KEY = "WM_ROOT_MODEL_OBJECT_KEY";
 }

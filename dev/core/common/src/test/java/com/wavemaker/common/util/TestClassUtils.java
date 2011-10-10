@@ -15,13 +15,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.common.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import com.wavemaker.common.util.ClassUtils;
 import com.wavemaker.infra.WMTestCase;
 
 /**
@@ -40,7 +40,7 @@ public class TestClassUtils extends WMTestCase {
 
         List<Method> methods = ClassUtils.getPublicMethods(ClassUtilsObject.class);
 
-        for (Method meth: methods) {
+        for (Method meth : methods) {
             if (meth.getName().equals("testPublic")) {
                 hadPublicMethod_testPublic = true;
             } else if (meth.getName().equals("testPrivate")) {
@@ -57,16 +57,16 @@ public class TestClassUtils extends WMTestCase {
         assertFalse(hadToString);
         assertTrue(hadHashCode);
     }
-    
+
     public void testGetPublicFields() {
-        
+
         List<Field> fields = ClassUtils.getPublicFields(ClassUtilsObject.class);
-        
+
         boolean hadPublicField = false;
         boolean hadPrivateField = false;
         boolean hadFieldInherited = false;
-        
-        for (Field field: fields) {
+
+        for (Field field : fields) {
             if (field.getName().equals("fieldPublic")) {
                 hadPublicField = true;
             } else if (field.getName().equals("fieldPrivate")) {
@@ -75,7 +75,7 @@ public class TestClassUtils extends WMTestCase {
                 hadFieldInherited = true;
             }
         }
-        
+
         assertTrue(hadPublicField);
         assertFalse(hadPrivateField);
         assertTrue(hadFieldInherited);

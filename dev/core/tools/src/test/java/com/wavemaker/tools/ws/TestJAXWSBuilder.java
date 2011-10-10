@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.ws;
 
 import java.util.List;
@@ -32,11 +33,11 @@ import com.wavemaker.tools.ws.wsdl.WSDL;
 public class TestJAXWSBuilder extends WMTestCase {
 
     public void testGetServiceInfoList() throws Exception {
-    	WSDL wsdl = null;
+        WSDL wsdl = null;
         try {
             wsdl = TestWSDLSoap.getSalesforceWSDL();
         } catch (Exception e) {
-        	e.printStackTrace();
+            e.printStackTrace();
             fail(e.getMessage());
         }
         JAXWSBuilder jaxwsBuilder = new JAXWSBuilder(wsdl, null, null);
@@ -44,7 +45,7 @@ public class TestJAXWSBuilder extends WMTestCase {
         assertEquals(1, serviceInfoList.size());
         assertEquals(1, serviceInfoList.get(0).getPortTypeInfoList().size());
     }
-    
+
     public void testGetJavaMethodName() throws Exception {
         String javaMethodName = JAXWSBuilder.getJavaMethodName("login");
         assertEquals("login", javaMethodName);
@@ -55,7 +56,7 @@ public class TestJAXWSBuilder extends WMTestCase {
         javaMethodName = JAXWSBuilder.getJavaMethodName("biblio-retrieval");
         assertEquals("biblioRetrieval", javaMethodName);
     }
-    
+
     public void testGetJaxwsGeneratedClassName() throws Exception {
         String className = JAXWSBuilder.getJaxwsGeneratedClassName("BasicRealTimeQuotesSoap");
         assertEquals("BasicRealTimeQuotesSoap", className);

@@ -1,5 +1,5 @@
 /*
-  * Copyright (C) 2007-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2007-2011 VMWare, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -53,16 +53,15 @@ public class WebService {
     private DesignServiceManager designServiceManager;
 
     public ProjectManager getProjectManager() {
-        return projectManager;
+        return this.projectManager;
     }
 
-    public void setProjectManager(ProjectManager projectMgr)
-            throws WSDLException {
+    public void setProjectManager(ProjectManager projectMgr) throws WSDLException {
         this.projectManager = projectMgr;
     }
 
     public DesignServiceManager getDesignServiceManager() {
-        return designServiceManager;
+        return this.designServiceManager;
     }
 
     public void setDesignServiceManager(DesignServiceManager designServiceMgr) {
@@ -70,64 +69,52 @@ public class WebService {
     }
 
     private WebServiceToolsManager getWSToolsMgr() {
-        if (wsToolsMgr == null) {
-            if (projectManager == null) {
+        if (this.wsToolsMgr == null) {
+            if (this.projectManager == null) {
                 SpringUtils.throwSpringNotInitializedError(ProjectManager.class);
             }
-            if (designServiceManager == null) {
+            if (this.designServiceManager == null) {
                 SpringUtils.throwSpringNotInitializedError(DesignServiceManager.class);
             }
-            wsToolsMgr = new WebServiceToolsManager(projectManager,
-                    designServiceManager);
+            this.wsToolsMgr = new WebServiceToolsManager(this.projectManager, this.designServiceManager);
         }
-        return wsToolsMgr;
+        return this.wsToolsMgr;
     }
 
-    /*public String importWSDL(String path, String serviceId, boolean overwrite)
-            throws WSDLException, IOException, JAXBException {
-        //if (path.toLowerCase().endsWith("wadl")) {
-        //    return getWSToolsMgr().importWADL(path, serviceId, overwrite);
-        //}
-        return importWSDL(path, serviceId, overwrite, null, null);
-    }*/
+    /*
+     * public String importWSDL(String path, String serviceId, boolean overwrite) throws WSDLException, IOException,
+     * JAXBException { //if (path.toLowerCase().endsWith("wadl")) { // return getWSToolsMgr().importWADL(path,
+     * serviceId, overwrite); //} return importWSDL(path, serviceId, overwrite, null, null); }
+     */
 
-    public String importWSDL(String path, String serviceId, boolean overwrite, String username, String password)
-           throws WSDLException, IOException, JAXBException, ParserConfigurationException, SAXException, TransformerException { //salesforce
+    public String importWSDL(String path, String serviceId, boolean overwrite, String username, String password) throws WSDLException, IOException,
+        JAXBException, ParserConfigurationException, SAXException, TransformerException { // salesforce
         if (path.toLowerCase().endsWith("wadl")) {
             return getWSToolsMgr().importWADL(path, serviceId, overwrite);
         }
         return getWSToolsMgr().importWSDL(path, serviceId, overwrite, username, password, null);
     }
 
-    /*public String uploadWSDL(@ParamName(name = "file")
-            MultipartFile file, String serviceId, String overwrite)
-            throws IOException, WSDLException, JAXBException {
-        return uploadWSDL(file, serviceId, overwrite, null, null);
-    }*/
+    /*
+     * public String uploadWSDL(@ParamName(name = "file") MultipartFile file, String serviceId, String overwrite) throws
+     * IOException, WSDLException, JAXBException { return uploadWSDL(file, serviceId, overwrite, null, null); }
+     */
 
-    public String uploadWSDL(@ParamName(name = "file")
-            MultipartFile file, String serviceId, String overwrite, String username, String password) //salesforce
-            throws IOException, WSDLException, JAXBException {
+    public String uploadWSDL(@ParamName(name = "file") MultipartFile file, String serviceId, String overwrite, String username, String password) // salesforce
+        throws IOException, WSDLException, JAXBException {
         return getWSToolsMgr().importUploadedFile(file, serviceId, overwrite, username, password);
     }
 
-    public String buildRestService(String serviceName, String operationName,
-            List<RESTInputParam> inputs, String parameterizedUrl,
-            String method, String contentType, String outputType,
-            String xmlSchema, String xmlSchemaPath, boolean overwrite)
-            throws WSDLException, IOException, javax.wsdl.WSDLException,
-            SAXException, ParserConfigurationException, JAXBException,
-            TransformerException {
-        return getWSToolsMgr().buildRestService(serviceName, operationName,
-                inputs, parameterizedUrl, method, contentType, outputType,
-                xmlSchema, xmlSchemaPath, overwrite);
+    public String buildRestService(String serviceName, String operationName, List<RESTInputParam> inputs, String parameterizedUrl, String method,
+        String contentType, String outputType, String xmlSchema, String xmlSchemaPath, boolean overwrite) throws WSDLException, IOException,
+        javax.wsdl.WSDLException, SAXException, ParserConfigurationException, JAXBException, TransformerException {
+        return getWSToolsMgr().buildRestService(serviceName, operationName, inputs, parameterizedUrl, method, contentType, outputType, xmlSchema,
+            xmlSchemaPath, overwrite);
     }
 
-    public List<String> getSchemaElementTypes(String xmlSchemaPath,
-            String xmlSchemaText) throws IOException,
-            ParserConfigurationException, SAXException {
-        return getWSToolsMgr().getSchemaElementTypes(xmlSchemaPath,
-                xmlSchemaText);
+    public List<String> getSchemaElementTypes(String xmlSchemaPath, String xmlSchemaText) throws IOException, ParserConfigurationException,
+        SAXException {
+        return getWSToolsMgr().getSchemaElementTypes(xmlSchemaPath, xmlSchemaText);
     }
 
     public String convertXmlToSchema(String xml) throws IOException, XmlException {
@@ -143,30 +130,24 @@ public class WebService {
         List<String> rtn = getWSToolsMgr().invokeRestCall(endpointAddress, basicAuth, userName, password);
         return rtn;
     }
-    
-    public List<String> invokeRestCall(String endpointAddress, String method, String contentType,
-                                       String postData, boolean basicAuth, String userName, String password) {
-        return getWSToolsMgr().invokeRestCall(endpointAddress, method, contentType, postData, basicAuth,
-                userName, password);
+
+    public List<String> invokeRestCall(String endpointAddress, String method, String contentType, String postData, boolean basicAuth,
+        String userName, String password) {
+        return getWSToolsMgr().invokeRestCall(endpointAddress, method, contentType, postData, basicAuth, userName, password);
     }
 
-    public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress)
-            throws WebServiceException, IOException, XmlException {
+    public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress) throws WebServiceException, IOException, XmlException {
         return getWSToolsMgr().generateRESTWsdlSettings(endpointAddress);
     }
 
-    public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress,
-                               boolean basicAuth, String userName, String password)
-            throws WebServiceException, IOException, XmlException {
-        return getWSToolsMgr().generateRESTWsdlSettings(endpointAddress, basicAuth,
-                                                userName, password);
+    public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress, boolean basicAuth, String userName, String password)
+        throws WebServiceException, IOException, XmlException {
+        return getWSToolsMgr().generateRESTWsdlSettings(endpointAddress, basicAuth, userName, password);
     }
 
-    public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress, String method, String contentType,
-                                 String postData, boolean basicAuth, String userName, String password)
-            throws WebServiceException, IOException, XmlException {
-        return getWSToolsMgr().generateRESTWsdlSettings(endpointAddress, method, contentType,
-                postData, basicAuth, userName, password);
+    public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress, String method, String contentType, String postData, boolean basicAuth,
+        String userName, String password) throws WebServiceException, IOException, XmlException {
+        return getWSToolsMgr().generateRESTWsdlSettings(endpointAddress, method, contentType, postData, basicAuth, userName, password);
     }
 
     public String registerFeedService() throws JAXBException, IOException {
@@ -177,19 +158,15 @@ public class WebService {
         return getWSToolsMgr().getWSDL(serviceId);
     }
 
-    public DownloadResponse downloadWSDL(@ParamName(name = "serviceId")
-            String serviceId) throws IOException {
+    public DownloadResponse downloadWSDL(@ParamName(name = "serviceId") String serviceId) throws IOException {
         return getWSToolsMgr().downloadWSDL(serviceId);
     }
 
-    public BindingProperties getBindingProperties(String serviceId)
-            throws JAXBException, IOException {
+    public BindingProperties getBindingProperties(String serviceId) throws JAXBException, IOException {
         return getWSToolsMgr().getBindingProperties(serviceId);
     }
 
-    public void setBindingProperties(String serviceId,
-            BindingProperties bindingProperties) throws JAXBException,
-            IOException {
+    public void setBindingProperties(String serviceId, BindingProperties bindingProperties) throws JAXBException, IOException {
         getWSToolsMgr().setBindingProperties(serviceId, bindingProperties);
     }
 }

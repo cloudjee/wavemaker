@@ -21,6 +21,7 @@ import org.springframework.core.io.Resource;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
+
 /**
  * Changes for setting server time offset.
  * 
@@ -29,35 +30,34 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
  */
 public class WebXmlUpgradeTask implements UpgradeTask {
 
-    private String fromStr = "<url-pattern>/lib/runtimeLoader.js</url-pattern>";
+    private final String fromStr = "<url-pattern>/lib/runtimeLoader.js</url-pattern>";
 
-    private String toStr = fromStr +
-            "\r\n\t</servlet-mapping>" +
+    private final String toStr = this.fromStr + "\r\n\t</servlet-mapping>" +
 
-            "\r\n\r\n\t<servlet-mapping>" +
-            "\r\n\t\t<servlet-name>springapp</servlet-name>" +
-            "\r\n\t\t<url-pattern>/config.js</url-pattern>";
+    "\r\n\r\n\t<servlet-mapping>" + "\r\n\t\t<servlet-name>springapp</servlet-name>" + "\r\n\t\t<url-pattern>/config.js</url-pattern>";
 
     private boolean error = false;
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
+     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
      */
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
         Resource webxml = project.getWebXml();
 
         try {
             String content = project.readFile(webxml);
-            content = content.replace(fromStr, toStr);
+            content = content.replace(this.fromStr, this.toStr);
             project.writeFile(webxml, content);
         } catch (IOException ioe) {
             ioe.printStackTrace();
-            error = true;
+            this.error = true;
         }
 
-        if (error) {
-            upgradeInfo.addMessage("*** Terminated with error while upgrading web.xml. " +
-                    "Please check the console message.***");
+        if (this.error) {
+            upgradeInfo.addMessage("*** Terminated with error while upgrading web.xml. " + "Please check the console message.***");
         } else {
             upgradeInfo.addMessage("Upgrading web.xml completed successfully.");
         }

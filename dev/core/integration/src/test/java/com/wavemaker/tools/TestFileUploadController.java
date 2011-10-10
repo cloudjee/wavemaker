@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools;
 
 import static org.junit.Assert.assertEquals;
@@ -29,7 +30,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.AbstractController;
+import org.springframework.web.servlet.support.WebContentGenerator;
 
 import com.wavemaker.runtime.server.FileUploadController;
 import com.wavemaker.runtime.server.ServerConstants;
@@ -39,48 +40,48 @@ import com.wavemaker.tools.spring.ComplexReturnBean;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestFileUploadController extends TestSpringContextTestCase {
 
-    @Test public void testUpload() throws Exception {
+    @Test
+    public void testUpload() throws Exception {
 
         String contents = "foo";
 
         MockMultipartHttpServletRequest req = new MockMultipartHttpServletRequest();
         setRequestAttributes(req);
         MockHttpServletResponse resp = new MockHttpServletResponse();
-        req.setMethod(AbstractController.METHOD_POST);
+        req.setMethod(WebContentGenerator.METHOD_POST);
         req.setParameter("param1", "bar");
         req.setParameter(ServerConstants.METHOD, "testUpload");
         req.addFile(new MockMultipartFile("param2", contents.getBytes()));
-        req.setRequestURI("/services/complexReturnBean."+ServerConstants.UPLOAD_EXTENSION);
+        req.setRequestURI("/services/complexReturnBean." + ServerConstants.UPLOAD_EXTENSION);
 
-        FileUploadController sc = (FileUploadController) getApplicationContext()
-            .getBean("agFileUploadController");
+        FileUploadController sc = (FileUploadController) getApplicationContext().getBean("agFileUploadController");
         ModelAndView mav = sc.handleRequest(req, resp);
         assertNotNull(mav);
         assertNotNull(mav.getModel());
-        Map<?,?> model = mav.getModel();
+        Map<?, ?> model = mav.getModel();
         assertTrue(model.containsKey(ServerConstants.RESULTS_PART));
-        assertEquals("bar"+contents, model.get(ServerConstants.RESULTS_PART));
+        assertEquals("bar" + contents, model.get(ServerConstants.RESULTS_PART));
     }
 
-    @Test public void testUploadNoRet() throws Exception {
+    @Test
+    public void testUploadNoRet() throws Exception {
 
         String contents = "foo";
 
         MockMultipartHttpServletRequest req = new MockMultipartHttpServletRequest();
         setRequestAttributes(req);
         MockHttpServletResponse resp = new MockHttpServletResponse();
-        req.setMethod(AbstractController.METHOD_POST);
+        req.setMethod(WebContentGenerator.METHOD_POST);
         req.setParameter("param1", "bar");
         req.setParameter(ServerConstants.METHOD, "testUploadNoRet");
         req.addFile(new MockMultipartFile("param2", contents.getBytes()));
-        req.setRequestURI("/services/complexReturnBean."+ServerConstants.UPLOAD_EXTENSION);
+        req.setRequestURI("/services/complexReturnBean." + ServerConstants.UPLOAD_EXTENSION);
 
-        FileUploadController sc = (FileUploadController) getApplicationContext()
-            .getBean("agFileUploadController");
+        FileUploadController sc = (FileUploadController) getApplicationContext().getBean("agFileUploadController");
         ModelAndView mav = sc.handleRequest(req, resp);
         assertNotNull(mav);
         assertNotNull(mav.getModel());
@@ -88,47 +89,43 @@ public class TestFileUploadController extends TestSpringContextTestCase {
         assertNull(mav.getModel().get(ServerConstants.RESULTS_PART));
     }
 
-    @Test public void testExtendedCharsStringResponse() throws Exception {
+    @Test
+    public void testExtendedCharsStringResponse() throws Exception {
 
         MockMultipartHttpServletRequest req = new MockMultipartHttpServletRequest();
         setRequestAttributes(req);
         MockHttpServletResponse resp = new MockHttpServletResponse();
-        req.setMethod(AbstractController.METHOD_POST);
+        req.setMethod(WebContentGenerator.METHOD_POST);
         req.setParameter(ServerConstants.METHOD, "getExtendedCharsString");
-        req.setRequestURI("/services/complexReturnBean."+ServerConstants.UPLOAD_EXTENSION);
+        req.setRequestURI("/services/complexReturnBean." + ServerConstants.UPLOAD_EXTENSION);
 
-        FileUploadController sc = (FileUploadController) getApplicationContext()
-            .getBean("agFileUploadController");
+        FileUploadController sc = (FileUploadController) getApplicationContext().getBean("agFileUploadController");
         ModelAndView mav = sc.handleRequest(req, resp);
 
         mav.getView().render(mav.getModel(), req, resp);
         String result = resp.getContentAsString();
-        assertEquals("<html><textarea>{\"result\":\""+
-                ComplexReturnBean.EXTENDED_CHARS_TEST_STR+"\"}</textarea></html>",
-                result);
+        assertEquals("<html><textarea>{\"result\":\"" + ComplexReturnBean.EXTENDED_CHARS_TEST_STR + "\"}</textarea></html>", result);
     }
-    
-    @Test public void testAopAdvised() throws Exception {
-        
+
+    @Test
+    public void testAopAdvised() throws Exception {
+
         String contents = "foo";
-        
+
         MockMultipartHttpServletRequest req = new MockMultipartHttpServletRequest();
         setRequestAttributes(req);
         MockHttpServletResponse resp = new MockHttpServletResponse();
-        req.setMethod(AbstractController.METHOD_POST);
+        req.setMethod(WebContentGenerator.METHOD_POST);
         req.setParameter("param1", "bar");
         req.setParameter(ServerConstants.METHOD, "testUpload");
         req.addFile(new MockMultipartFile("param2", contents.getBytes()));
-        req.setRequestURI("/services/aopAdvisedServiceBean."+ServerConstants.UPLOAD_EXTENSION);
+        req.setRequestURI("/services/aopAdvisedServiceBean." + ServerConstants.UPLOAD_EXTENSION);
 
-        FileUploadController sc = (FileUploadController) getApplicationContext()
-            .getBean("agFileUploadController");
+        FileUploadController sc = (FileUploadController) getApplicationContext().getBean("agFileUploadController");
         ModelAndView mav = sc.handleRequest(req, resp);
-        
+
         mav.getView().render(mav.getModel(), req, resp);
         String result = resp.getContentAsString();
-        assertEquals("<html><textarea>{\"result\":\""+
-                "bar"+contents+"13"+"\"}</textarea></html>",
-                result);
+        assertEquals("<html><textarea>{\"result\":\"" + "bar" + contents + "13" + "\"}</textarea></html>", result);
     }
 }

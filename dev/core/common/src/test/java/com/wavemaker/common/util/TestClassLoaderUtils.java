@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.common.util;
 
 import java.io.File;
@@ -23,23 +24,22 @@ import java.io.InputStream;
 import org.apache.commons.io.FileUtils;
 import org.springframework.core.io.ClassPathResource;
 
-import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.infra.WMTestCase;
 
 /**
  * @author small
  * @version $Rev:22672 $ - $Date:2008-05-30 14:37:26 -0700 (Fri, 30 May 2008) $
- *
+ * 
  */
 public class TestClassLoaderUtils extends WMTestCase {
 
     public void testTempClassLoader_getClass() throws Exception {
-        
-        File sourceJar = (new ClassPathResource("com/wavemaker/common/foojar.jar")).getFile();
+
+        File sourceJar = new ClassPathResource("com/wavemaker/common/foojar.jar").getFile();
         File jar = File.createTempFile("testTempClassLoader_getClass", ".jar");
         jar.deleteOnExit();
         FileUtils.copyFile(sourceJar, jar);
-        
+
         try {
             ClassLoader cl = ClassLoaderUtils.getTempClassLoaderForFile(jar);
             Class<?> klass = ClassLoaderUtils.loadClass("foo.bar.baz.JarType", cl);
@@ -48,19 +48,19 @@ public class TestClassLoaderUtils extends WMTestCase {
             jar.delete();
         }
     }
-    
+
     public void testTempClassLoader_getResource() throws Exception {
-        
-        File sourceJar = (new ClassPathResource("com/wavemaker/common/foojar.jar")).getFile();
+
+        File sourceJar = new ClassPathResource("com/wavemaker/common/foojar.jar").getFile();
         File jar = File.createTempFile("testTempClassLoader_getClass", ".jar");
         jar.deleteOnExit();
         FileUtils.copyFile(sourceJar, jar);
-        
+
         try {
             ClassLoader cl = ClassLoaderUtils.getTempClassLoaderForFile(jar);
             InputStream is = ClassLoaderUtils.getResourceAsStream("foo/bar/baz/JarType.java", cl);
             assertNotNull(is);
-            assertTrue(is.available()>0);
+            assertTrue(is.available() > 0);
             is.close();
         } finally {
             jar.delete();

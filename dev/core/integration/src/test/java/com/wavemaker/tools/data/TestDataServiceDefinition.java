@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.data;
 
 import java.io.File;
@@ -26,10 +27,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 
-import org.springframework.core.io.FileSystemResource;
-
 import junit.framework.Test;
 import junit.framework.TestSuite;
+
+import org.springframework.core.io.FileSystemResource;
 
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.common.util.ConversionUtils;
@@ -43,13 +44,12 @@ import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.runtime.service.definition.ReflectServiceDefinition;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
 import com.wavemaker.runtime.service.definition.ServiceOperation;
+import com.wavemaker.tools.compiler.ProjectCompiler;
 import com.wavemaker.tools.data.util.DataServiceTestUtils;
 import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.ServiceClassGenerator;
-import com.wavemaker.tools.util.AntUtils;
 import com.wavemaker.tools.util.DesignTimeUtils;
-import com.wavemaker.tools.compiler.ProjectCompiler;
 
 /**
  * @author Simon Toens
@@ -58,538 +58,492 @@ import com.wavemaker.tools.compiler.ProjectCompiler;
  */
 public class TestDataServiceDefinition extends WMTestCase {
 
-	private static Properties connectionProperties = DataServiceTestUtils
-			.loadSakilaConnectionProperties();
+    private static Properties connectionProperties = DataServiceTestUtils.loadSakilaConnectionProperties();
 
-	static {
-		Bootstrap.main(null);
-	}
+    static {
+        Bootstrap.main(null);
+    }
 
-	@Override
-	public void setUp() throws Exception {
-		SpringUtils.initSpringConfig();
-	}
+    @Override
+    public void setUp() throws Exception {
+        SpringUtils.initSpringConfig();
+    }
 
-	static class TestData {
+    static class TestData {
 
-		private String dependentTestName = null;
+        private String dependentTestName = null;
 
-		private File projectRoot = null;
+        private File projectRoot = null;
 
-		private ServiceDefinition rtServiceDefinition = null;
+        private ServiceDefinition rtServiceDefinition = null;
 
-		private ServiceDefinition dtServiceDefinition = null;
+        private ServiceDefinition dtServiceDefinition = null;
 
-		private DesignServiceManager serviceMgr = null;
+        private DesignServiceManager serviceMgr = null;
 
-		private boolean skipRemaining = false;
+        private boolean skipRemaining = false;
 
-		DesignServiceManager getDesignServiceManager() {
-			return serviceMgr;
-		}
+        DesignServiceManager getDesignServiceManager() {
+            return this.serviceMgr;
+        }
 
-		void setDesignServiceManager(DesignServiceManager serviceMgr) {
-			this.serviceMgr = serviceMgr;
-		}
+        void setDesignServiceManager(DesignServiceManager serviceMgr) {
+            this.serviceMgr = serviceMgr;
+        }
 
-		ServiceDefinition getRuntimeServiceDefinition() {
-			return rtServiceDefinition;
-		}
+        ServiceDefinition getRuntimeServiceDefinition() {
+            return this.rtServiceDefinition;
+        }
 
-		void setRuntimeServiceDefinition(ServiceDefinition s) {
-			rtServiceDefinition = s;
-		}
+        void setRuntimeServiceDefinition(ServiceDefinition s) {
+            this.rtServiceDefinition = s;
+        }
 
-		ServiceDefinition getDesignTimeServiceDefinition() {
-			return dtServiceDefinition;
-		}
+        ServiceDefinition getDesignTimeServiceDefinition() {
+            return this.dtServiceDefinition;
+        }
 
-		void setDesignTimeServiceDefinition(ServiceDefinition s) {
-			dtServiceDefinition = s;
-		}
+        void setDesignTimeServiceDefinition(ServiceDefinition s) {
+            this.dtServiceDefinition = s;
+        }
 
-		void setProjectRoot(File projectRoot) {
-			this.projectRoot = projectRoot;
-		}
+        void setProjectRoot(File projectRoot) {
+            this.projectRoot = projectRoot;
+        }
 
-		File getProjectRoot() {
-			return projectRoot;
-		}
+        File getProjectRoot() {
+            return this.projectRoot;
+        }
 
-		void setSkipRemaining(String dependentTestName) {
-			this.skipRemaining = true;
-			this.dependentTestName = dependentTestName;
-		}
+        void setSkipRemaining(String dependentTestName) {
+            this.skipRemaining = true;
+            this.dependentTestName = dependentTestName;
+        }
 
-		boolean skipRemaining() {
-			return skipRemaining;
-		}
+        boolean skipRemaining() {
+            return this.skipRemaining;
+        }
 
-		String getDependentTestName() {
-			return dependentTestName;
-		}
+        String getDependentTestName() {
+            return this.dependentTestName;
+        }
 
-		String getServiceName() {
-			return "testservice";
-		}
+        String getServiceName() {
+            return "testservice";
+        }
 
-	}
+    }
 
-	public static Test suite() {
+    public static Test suite() {
 
-		TestData testData = new TestData();
+        TestData testData = new TestData();
 
-		TestSuite testsToRun = new TestSuite();
+        TestSuite testsToRun = new TestSuite();
 
-		testsToRun.addTest(new TestDataServiceDefinition("testImportDB",
-				testData));
+        testsToRun.addTest(new TestDataServiceDefinition("testImportDB", testData));
 
-		testsToRun.addTest(new TestDataServiceDefinition(
-				"testGetServiceConfigurationRuntime", testData));
+        testsToRun.addTest(new TestDataServiceDefinition("testGetServiceConfigurationRuntime", testData));
 
-		testsToRun.addTest(new TestDataServiceDefinition(
-				"testInitDesignTimeServiceDefinition", testData));
+        testsToRun.addTest(new TestDataServiceDefinition("testInitDesignTimeServiceDefinition", testData));
 
-		testsToRun.addTest(new TestDataServiceDefinition(
-				"testCompareServiceNameAndIdAndType", testData));
+        testsToRun.addTest(new TestDataServiceDefinition("testCompareServiceNameAndIdAndType", testData));
 
-		testsToRun.addTest(new TestDataServiceDefinition(
-				"testCompareServiceClassAndPackage", testData));
+        testsToRun.addTest(new TestDataServiceDefinition("testCompareServiceClassAndPackage", testData));
 
-		testsToRun.addTest(new TestDataServiceDefinition(
-				"testRuntimeElementTypeProperties", testData));
+        testsToRun.addTest(new TestDataServiceDefinition("testRuntimeElementTypeProperties", testData));
 
-		testsToRun.addTest(new TestDataServiceDefinition(
-				"testValueTypesAreTopLevel", testData));
+        testsToRun.addTest(new TestDataServiceDefinition("testValueTypesAreTopLevel", testData));
 
-		testsToRun.addTest(new TestDataServiceDefinition(
-				"testCompareOperationNames", testData));
+        testsToRun.addTest(new TestDataServiceDefinition("testCompareOperationNames", testData));
 
-		testsToRun.addTest(new TestDataServiceDefinition(
-				"testGenerateServiceClassDesignTime", testData));
+        testsToRun.addTest(new TestDataServiceDefinition("testGenerateServiceClassDesignTime", testData));
 
-		testsToRun.addTest(new TestDataServiceDefinition("testQueryMetaData",
-				testData));
+        testsToRun.addTest(new TestDataServiceDefinition("testQueryMetaData", testData));
 
-		testsToRun.addTest(new TestDataServiceDefinition(
-				"testImportDBVersionCol", testData));
+        testsToRun.addTest(new TestDataServiceDefinition("testImportDBVersionCol", testData));
 
-		// must be last
-		testsToRun.addTest(new TestDataServiceDefinition("testCleanup",
-				testData));
+        // must be last
+        testsToRun.addTest(new TestDataServiceDefinition("testCleanup", testData));
 
-		return testsToRun;
-	}
+        return testsToRun;
+    }
 
-	protected final TestData testData;
+    protected final TestData testData;
 
-	public TestDataServiceDefinition(String testMethod, TestData testData) {
-		super(testMethod);
-		this.testData = testData;
-	}
+    public TestDataServiceDefinition(String testMethod, TestData testData) {
+        super(testMethod);
+        this.testData = testData;
+    }
 
-	protected void checkShouldSkip() {
-		if (testData.skipRemaining) {
-			throw new DependentTestFailureException(
-					testData.getDependentTestName());
-		}
-	}
+    protected void checkShouldSkip() {
+        if (this.testData.skipRemaining) {
+            throw new DependentTestFailureException(this.testData.getDependentTestName());
+        }
+    }
 
-	public void testImportDBVersionCol() throws Exception {
+    public void testImportDBVersionCol() throws Exception {
 
-		File outputDir = IOUtils.createTempDirectory();
+        File outputDir = IOUtils.createTempDirectory();
 
-		try {
+        try {
 
-			ImportDB importer = new ImportDB(false);
-			importer.setProperties(connectionProperties);
-			importer.setDestDir(outputDir);
-			importer.setServiceName("ver");
-			importer.setTableFilter("v1");
-			importer.setPackage("hh.gg.qq");
-			importer.setDataPackage("hh.gg.qq.data");
-			importer.setGenerateServiceClass(true);
-			importer.setCompileServiceClass(true);
-			importer.setCatalogName(null);
-
-			File javaDir = DataModelManager.getJavaDir(outputDir, "hh.gg.qq");
-			importer.setJavaDir(javaDir);
-
-			importer.run();
-
-			Collection<String> expectedFiles = new HashSet<String>();
+            ImportDB importer = new ImportDB(false);
+            importer.setProperties(connectionProperties);
+            importer.setDestDir(outputDir);
+            importer.setServiceName("ver");
+            importer.setTableFilter("v1");
+            importer.setPackage("hh.gg.qq");
+            importer.setDataPackage("hh.gg.qq.data");
+            importer.setGenerateServiceClass(true);
+            importer.setCompileServiceClass(true);
+            importer.setCatalogName(null);
 
-			String s = outputDir.getAbsolutePath().replace("\\", "/");
+            File javaDir = DataModelManager.getJavaDir(outputDir, "hh.gg.qq");
+            importer.setJavaDir(javaDir);
 
-			String springFile = s + "/ver.spring.xml";
+            importer.run();
 
-			expectedFiles.add(s + "/hh/gg/qq/data/V1.java");
-			expectedFiles.add(s + "/hh/gg/qq/data/V1.ql.xml");
-			expectedFiles.add(s + "/hh/gg/qq/data/V1.hbm.xml");
-			expectedFiles.add(s + "/hh/gg/qq/Ver.java");
-			expectedFiles.add(s + "/ver.properties");
-			expectedFiles.add(springFile);
+            Collection<String> expectedFiles = new HashSet<String>();
 
-			Collection<File> files = IOUtils.getFiles(outputDir);
+            String s = outputDir.getAbsolutePath().replace("\\", "/");
 
-			for (File f : files) {
-				expectedFiles.remove(f.getAbsolutePath().replace("\\", "/"));
-			}
-			if (!expectedFiles.isEmpty()) {
-				fail("Also expected files " + expectedFiles);
-			}
+            String springFile = s + "/ver.spring.xml";
 
-			// check a property with name "version" exists as expected
-			DataModelConfiguration cfg = new DataModelConfiguration(new File(
-					springFile));
-			PropertyInfo prop = cfg.getProperty("V1", "version");
-			assertTrue(prop.getType().equals("string"));
-			cfg.dispose();
+            expectedFiles.add(s + "/hh/gg/qq/data/V1.java");
+            expectedFiles.add(s + "/hh/gg/qq/data/V1.ql.xml");
+            expectedFiles.add(s + "/hh/gg/qq/data/V1.hbm.xml");
+            expectedFiles.add(s + "/hh/gg/qq/Ver.java");
+            expectedFiles.add(s + "/ver.properties");
+            expectedFiles.add(springFile);
 
-		} catch (RuntimeException ex) {
-			testData.setSkipRemaining("testImportDB");
-			throw ex;
-		} finally {
-			IOUtils.deleteRecursive(outputDir);
-		}
-	}
+            Collection<File> files = IOUtils.getFiles(outputDir);
 
-	public void testImportDB() throws Exception {
+            for (File f : files) {
+                expectedFiles.remove(f.getAbsolutePath().replace("\\", "/"));
+            }
+            if (!expectedFiles.isEmpty()) {
+                fail("Also expected files " + expectedFiles);
+            }
 
-		File wmHome = IOUtils.createTempDirectory();
-		File projectRoot = new File(wmHome,
-				LocalStudioConfiguration.PROJECTS_DIR);
+            // check a property with name "version" exists as expected
+            DataModelConfiguration cfg = new DataModelConfiguration(new File(springFile));
+            PropertyInfo prop = cfg.getProperty("V1", "version");
+            assertTrue(prop.getType().equals("string"));
+            cfg.dispose();
 
-		File outputDir = new File(projectRoot,
-				DesignServiceManager.getRuntimeRelativeDir(testData
-						.getServiceName()));
+        } catch (RuntimeException ex) {
+            this.testData.setSkipRemaining("testImportDB");
+            throw ex;
+        } finally {
+            IOUtils.deleteRecursive(outputDir);
+        }
+    }
 
-		try {
+    public void testImportDB() throws Exception {
 
-			testData.setProjectRoot(projectRoot);
+        File wmHome = IOUtils.createTempDirectory();
+        File projectRoot = new File(wmHome, LocalStudioConfiguration.PROJECTS_DIR);
 
-			ImportDB importer = new ImportDB(false);
-			importer.setProperties(connectionProperties);
-			importer.setDestDir(outputDir);
-			importer.setServiceName(testData.getServiceName());
-			importer.setPackage("com.wavemaker.data.test");
-			importer.setGenerateServiceClass(true);
-			importer.setCompileServiceClass(true);
-			importer.setCatalogName(null);
+        File outputDir = new File(projectRoot, DesignServiceManager.getRuntimeRelativeDir(this.testData.getServiceName()));
 
-			// backward compat
-			importer.setUseIndividualCRUDOperations(true);
+        try {
 
-			File javaDir = DataModelManager.getJavaDir(outputDir,
-					"com.wavemaker.data.test");
-			importer.setJavaDir(javaDir);
+            this.testData.setProjectRoot(projectRoot);
 
-			importer.run();
+            ImportDB importer = new ImportDB(false);
+            importer.setProperties(connectionProperties);
+            importer.setDestDir(outputDir);
+            importer.setServiceName(this.testData.getServiceName());
+            importer.setPackage("com.wavemaker.data.test");
+            importer.setGenerateServiceClass(true);
+            importer.setCompileServiceClass(true);
+            importer.setCatalogName(null);
 
-			Collection<String> expectedFiles = new HashSet<String>();
-			String s = outputDir.getAbsolutePath().replace("\\", "/");
-			expectedFiles.add(s + "/com/wavemaker/data/test/Actor.java");
-			expectedFiles.add(s + "/com/wavemaker/data/test/Actor.hbm.xml");
-			expectedFiles.add(s + "/testservice.properties");
-			expectedFiles.add(s + "/testservice.spring.xml");
+            // backward compat
+            importer.setUseIndividualCRUDOperations(true);
 
-			Collection<File> files = IOUtils.getFiles(outputDir);
+            File javaDir = DataModelManager.getJavaDir(outputDir, "com.wavemaker.data.test");
+            importer.setJavaDir(javaDir);
 
-			for (File f : files) {
-				expectedFiles.remove(f.getAbsolutePath().replace("\\", "/"));
-			}
-			if (!expectedFiles.isEmpty()) {
-				fail("Also expected files " + expectedFiles);
-			}
+            importer.run();
 
-			// clean up generated service class
-			String sn = StringUtils.upperCaseFirstLetter(testData
-					.getServiceName());
-			File f = new File(outputDir, "com/wavemaker/data/test/" + sn
-					+ ".java");
-			assertTrue(f.exists());
-			f.delete();
-			f = new File(outputDir, "com/wavemaker/data/test/" + sn + ".class");
-			assertTrue(f.exists());
-			f.delete();
+            Collection<String> expectedFiles = new HashSet<String>();
+            String s = outputDir.getAbsolutePath().replace("\\", "/");
+            expectedFiles.add(s + "/com/wavemaker/data/test/Actor.java");
+            expectedFiles.add(s + "/com/wavemaker/data/test/Actor.hbm.xml");
+            expectedFiles.add(s + "/testservice.properties");
+            expectedFiles.add(s + "/testservice.spring.xml");
 
-			ServiceDefinition def = importer.getServiceDefinition();
+            Collection<File> files = IOUtils.getFiles(outputDir);
 
-			assertTrue(def != null);
+            for (File f : files) {
+                expectedFiles.remove(f.getAbsolutePath().replace("\\", "/"));
+            }
+            if (!expectedFiles.isEmpty()) {
+                fail("Also expected files " + expectedFiles);
+            }
 
-			def = com.wavemaker.tools.data.util.DataServiceUtils
-					.unwrapAndCast(def);
+            // clean up generated service class
+            String sn = StringUtils.upperCaseFirstLetter(this.testData.getServiceName());
+            File f = new File(outputDir, "com/wavemaker/data/test/" + sn + ".java");
+            assertTrue(f.exists());
+            f.delete();
+            f = new File(outputDir, "com/wavemaker/data/test/" + sn + ".class");
+            assertTrue(f.exists());
+            f.delete();
 
-			testData.setRuntimeServiceDefinition(def);
+            ServiceDefinition def = importer.getServiceDefinition();
 
-		} catch (RuntimeException ex) {
-			testData.setSkipRemaining("testImportDB");
-			throw ex;
-		}
-	}
+            assertTrue(def != null);
 
-	public void testGetServiceConfigurationRuntime() {
+            def = com.wavemaker.tools.data.util.DataServiceUtils.unwrapAndCast(def);
 
-		checkShouldSkip();
+            this.testData.setRuntimeServiceDefinition(def);
 
-		ServiceDefinition d = testData.getRuntimeServiceDefinition();
+        } catch (RuntimeException ex) {
+            this.testData.setSkipRemaining("testImportDB");
+            throw ex;
+        }
+    }
 
-		assertNotNull(d);
-		assertEquals("testservice.spring.xml", d.getRuntimeConfiguration());
-	}
+    public void testGetServiceConfigurationRuntime() {
 
-	public void testRuntimeElementTypeProperties() {
+        checkShouldSkip();
 
-		checkShouldSkip();
+        ServiceDefinition d = this.testData.getRuntimeServiceDefinition();
 
-		com.wavemaker.runtime.data.DataServiceDefinition d = (com.wavemaker.runtime.data.DataServiceDefinition) testData
-				.getRuntimeServiceDefinition();
+        assertNotNull(d);
+        assertEquals("testservice.spring.xml", d.getRuntimeConfiguration());
+    }
 
-		DataModelConfiguration mgr = getHibernateCfgMgr();
+    public void testRuntimeElementTypeProperties() {
 
-		com.wavemaker.tools.data.util.DataServiceUtils.setupElementTypeFactory(
-				mgr, d);
+        checkShouldSkip();
 
-		List<ElementType> types = d.getTypes();
+        com.wavemaker.runtime.data.DataServiceDefinition d = (com.wavemaker.runtime.data.DataServiceDefinition) this.testData.getRuntimeServiceDefinition();
 
-		ElementType filmActor = null;
+        DataModelConfiguration mgr = getHibernateCfgMgr();
 
-		for (ElementType t : types) {
-			if (t.getJavaType().endsWith("FilmActor")) {
-				filmActor = t;
-				break;
-			}
-		}
+        com.wavemaker.tools.data.util.DataServiceUtils.setupElementTypeFactory(mgr, d);
 
-		assertTrue(filmActor != null);
+        List<ElementType> types = d.getTypes();
 
-		ElementType id = null;
+        ElementType filmActor = null;
 
-		for (ElementType p : filmActor.getProperties()) {
-			if (p.getName().equals("id")) {
-				id = p;
-				break;
-			}
-		}
+        for (ElementType t : types) {
+            if (t.getJavaType().endsWith("FilmActor")) {
+                filmActor = t;
+                break;
+            }
+        }
 
-		assertTrue(id != null);
-		assertTrue(id.getJavaType().equals(
-				"com.wavemaker.data.test.FilmActorId"));
+        assertTrue(filmActor != null);
 
-		assertTrue(id.getProperties().size() == 2);
-		assertEquals("actorId", id.getProperties().get(0).getName());
-		assertEquals("filmId", id.getProperties().get(1).getName());
-	}
+        ElementType id = null;
 
-	public void testValueTypesAreTopLevel() {
+        for (ElementType p : filmActor.getProperties()) {
+            if (p.getName().equals("id")) {
+                id = p;
+                break;
+            }
+        }
 
-		checkShouldSkip();
+        assertTrue(id != null);
+        assertTrue(id.getJavaType().equals("com.wavemaker.data.test.FilmActorId"));
 
-		com.wavemaker.runtime.data.DataServiceDefinition d = (com.wavemaker.runtime.data.DataServiceDefinition) testData
-				.getRuntimeServiceDefinition();
+        assertTrue(id.getProperties().size() == 2);
+        assertEquals("actorId", id.getProperties().get(0).getName());
+        assertEquals("filmId", id.getProperties().get(1).getName());
+    }
 
-		DataModelConfiguration mgr = getHibernateCfgMgr();
+    public void testValueTypesAreTopLevel() {
 
-		com.wavemaker.tools.data.util.DataServiceUtils.setupElementTypeFactory(
-				mgr, d);
+        checkShouldSkip();
 
-		List<ElementType> types = d.getTypes();
+        com.wavemaker.runtime.data.DataServiceDefinition d = (com.wavemaker.runtime.data.DataServiceDefinition) this.testData.getRuntimeServiceDefinition();
 
-		ElementType filmActorId = null;
+        DataModelConfiguration mgr = getHibernateCfgMgr();
 
-		for (ElementType t : types) {
-			if (t.getJavaType().endsWith(".FilmActorId")) {
-				filmActorId = t;
-				break;
-			}
-		}
+        com.wavemaker.tools.data.util.DataServiceUtils.setupElementTypeFactory(mgr, d);
 
-		assertTrue(filmActorId != null);
-	}
+        List<ElementType> types = d.getTypes();
 
-	private DataModelConfiguration getHibernateCfgMgr() {
-		File f = new File(testData.getProjectRoot(),
-				DesignServiceManager.getRuntimeRelativeDir(testData
-						.getServiceName()));
-		f = new File(f, testData.getRuntimeServiceDefinition()
-				.getRuntimeConfiguration());
+        ElementType filmActorId = null;
 
-		ExternalDataModelConfig e = new DesignExternalDataModelConfig(
-				testData.getServiceName(), testData.getDesignServiceManager());
+        for (ElementType t : types) {
+            if (t.getJavaType().endsWith(".FilmActorId")) {
+                filmActorId = t;
+                break;
+            }
+        }
 
-		return new DataModelConfiguration(f, e);
-	}
+        assertTrue(filmActorId != null);
+    }
 
-	public void testInitDesignTimeServiceDefinition() {
+    private DataModelConfiguration getHibernateCfgMgr() {
+        File f = new File(this.testData.getProjectRoot(), DesignServiceManager.getRuntimeRelativeDir(this.testData.getServiceName()));
+        f = new File(f, this.testData.getRuntimeServiceDefinition().getRuntimeConfiguration());
 
-		checkShouldSkip();
+        ExternalDataModelConfig e = new DesignExternalDataModelConfig(this.testData.getServiceName(), this.testData.getDesignServiceManager());
 
-		try {
+        return new DataModelConfiguration(f, e);
+    }
 
-			DesignServiceManager dsm = DesignTimeUtils
-					.getDSMForProjectRoot(new FileSystemResource(testData
-							.getProjectRoot().getAbsolutePath() + "/"));
-			testData.setDesignServiceManager(dsm);
+    public void testInitDesignTimeServiceDefinition() {
 
-			DataModelConfiguration mgr = getHibernateCfgMgr();
+        checkShouldSkip();
 
-			assertEquals("mgr entity names: " + mgr.getEntityNames()
-					+ " length: " + mgr.getEntityNames().size(), 29, mgr
-					.getEntityNames().size());
+        try {
 
-			// register new service from runtime definition - required
-			// because the following information is only available at
-			// db import, and stored with the design service manager:
-			// - whether an operation returns a single result
-			// - the operation output type
-			// this is for query operations
+            DesignServiceManager dsm = DesignTimeUtils.getDSMForProjectRoot(new FileSystemResource(this.testData.getProjectRoot().getAbsolutePath()
+                + "/"));
+            this.testData.setDesignServiceManager(dsm);
 
-			dsm.defineService(testData.getRuntimeServiceDefinition());
+            DataModelConfiguration mgr = getHibernateCfgMgr();
 
-			ServiceDefinition def = new com.wavemaker.tools.data.DataServiceDefinition(
-					"testservice", mgr, dsm);
+            assertEquals("mgr entity names: " + mgr.getEntityNames() + " length: " + mgr.getEntityNames().size(), 29, mgr.getEntityNames().size());
 
-			assertTrue(def.getServiceId().equals("testservice"));
+            // register new service from runtime definition - required
+            // because the following information is only available at
+            // db import, and stored with the design service manager:
+            // - whether an operation returns a single result
+            // - the operation output type
+            // this is for query operations
 
-			testData.setDesignTimeServiceDefinition(def);
+            dsm.defineService(this.testData.getRuntimeServiceDefinition());
 
-		} catch (RuntimeException ex) {
-			testData.setSkipRemaining("testInitDesignTimeServiceDefinition");
-			throw ex;
-		}
-	}
+            ServiceDefinition def = new com.wavemaker.tools.data.DataServiceDefinition("testservice", mgr, dsm);
 
-	public void testCompareServiceNameAndIdAndType() {
+            assertTrue(def.getServiceId().equals("testservice"));
 
-		checkShouldSkip();
+            this.testData.setDesignTimeServiceDefinition(def);
 
-		ServiceDefinition rt = testData.getRuntimeServiceDefinition();
-		ServiceDefinition dt = testData.getDesignTimeServiceDefinition();
+        } catch (RuntimeException ex) {
+            this.testData.setSkipRemaining("testInitDesignTimeServiceDefinition");
+            throw ex;
+        }
+    }
 
-		try {
+    public void testCompareServiceNameAndIdAndType() {
 
-			assertTrue(!rt.getClass().equals(dt.getClass()));
+        checkShouldSkip();
 
-			assertTrue(rt.getServiceId().equals(dt.getServiceId()));
+        ServiceDefinition rt = this.testData.getRuntimeServiceDefinition();
+        ServiceDefinition dt = this.testData.getDesignTimeServiceDefinition();
 
-			assertEquals(rt.getServiceType().getTypeName(), dt.getServiceType()
-					.getTypeName());
+        try {
 
-		} catch (RuntimeException ex) {
-			testData.setSkipRemaining("testCompareServiceNameAndId");
-			throw ex;
-		}
-	}
+            assertTrue(!rt.getClass().equals(dt.getClass()));
 
-	public void testCompareServiceClassAndPackage() {
+            assertTrue(rt.getServiceId().equals(dt.getServiceId()));
 
-		checkShouldSkip();
+            assertEquals(rt.getServiceType().getTypeName(), dt.getServiceType().getTypeName());
 
-		ReflectServiceDefinition rt = (ReflectServiceDefinition) testData
-				.getRuntimeServiceDefinition();
-		ReflectServiceDefinition dt = (ReflectServiceDefinition) testData
-				.getDesignTimeServiceDefinition();
+        } catch (RuntimeException ex) {
+            this.testData.setSkipRemaining("testCompareServiceNameAndId");
+            throw ex;
+        }
+    }
 
-		try {
+    public void testCompareServiceClassAndPackage() {
 
-			assertTrue(rt.getServiceClass().equals(dt.getServiceClass()));
+        checkShouldSkip();
 
-			assertTrue(rt.getPackageName().equals(dt.getPackageName()));
+        ReflectServiceDefinition rt = (ReflectServiceDefinition) this.testData.getRuntimeServiceDefinition();
+        ReflectServiceDefinition dt = (ReflectServiceDefinition) this.testData.getDesignTimeServiceDefinition();
 
-		} catch (RuntimeException ex) {
-			testData.setSkipRemaining("testCompareServiceNameAndId");
-			throw ex;
-		}
-	}
+        try {
 
-	public void testCompareOperationNames() {
+            assertTrue(rt.getServiceClass().equals(dt.getServiceClass()));
 
-		checkShouldSkip();
+            assertTrue(rt.getPackageName().equals(dt.getPackageName()));
 
-		ServiceDefinition rt = testData.getRuntimeServiceDefinition();
-		ServiceDefinition dt = testData.getDesignTimeServiceDefinition();
-		assertEquals(rt.getServiceOperations().size(), dt
-				.getServiceOperations().size());
+        } catch (RuntimeException ex) {
+            this.testData.setSkipRemaining("testCompareServiceNameAndId");
+            throw ex;
+        }
+    }
 
-		List<String> rtOpNames = new ArrayList<String>(rt
-				.getServiceOperations().size());
-		for (ServiceOperation so : rt.getServiceOperations()) {
-			rtOpNames.add(so.getName());
-		}
+    public void testCompareOperationNames() {
 
-		for (ServiceOperation so : dt.getServiceOperations()) {
-			if (!rtOpNames.remove(so.getName())) {
-				fail(so.getName() + " not in runtime service def");
-			}
-		}
-		if (!rtOpNames.isEmpty()) {
-			fail("Also expected " + rtOpNames + " in design service def");
-		}
-	}
+        checkShouldSkip();
 
-	public void testGenerateServiceClassDesignTime() throws Exception {
+        ServiceDefinition rt = this.testData.getRuntimeServiceDefinition();
+        ServiceDefinition dt = this.testData.getDesignTimeServiceDefinition();
+        assertEquals(rt.getServiceOperations().size(), dt.getServiceOperations().size());
 
-		checkShouldSkip();
+        List<String> rtOpNames = new ArrayList<String>(rt.getServiceOperations().size());
+        for (ServiceOperation so : rt.getServiceOperations()) {
+            rtOpNames.add(so.getName());
+        }
 
-		ReflectServiceDefinition dt = (ReflectServiceDefinition) testData
-				.getDesignTimeServiceDefinition();
+        for (ServiceOperation so : dt.getServiceOperations()) {
+            if (!rtOpNames.remove(so.getName())) {
+                fail(so.getName() + " not in runtime service def");
+            }
+        }
+        if (!rtOpNames.isEmpty()) {
+            fail("Also expected " + rtOpNames + " in design service def");
+        }
+    }
 
-		String clazz = dt.getServiceClass();
+    public void testGenerateServiceClassDesignTime() throws Exception {
 
-		File f = new File(testData.getProjectRoot(),
-				DesignServiceManager.getRuntimeRelativeDir(testData
-						.getServiceName()));
+        checkShouldSkip();
 
-		String path = StringUtils.classNameToSrcFilePath(clazz);
+        ReflectServiceDefinition dt = (ReflectServiceDefinition) this.testData.getDesignTimeServiceDefinition();
 
-		assertTrue(!(new File(f, path).exists()));
+        String clazz = dt.getServiceClass();
 
-		ServiceClassGenerator g = new ServiceClassGenerator();
-		g.addService(ConversionUtils.convertToResourceList(Arrays
-				.asList(new File[] { f })), testData.getServiceName());
-		g.setDesignServiceManager(testData.getDesignServiceManager());
-		g.setOutputDirectory(new FileSystemResource(f.getAbsolutePath() + "/"));
-		g.run();
+        File f = new File(this.testData.getProjectRoot(), DesignServiceManager.getRuntimeRelativeDir(this.testData.getServiceName()));
 
-		assertTrue(new File(f, path).exists());
+        String path = StringUtils.classNameToSrcFilePath(clazz);
 
-		String projectName = testData.getDesignServiceManager().getProjectManager().getCurrentProject().getProjectName();
-        String serviceName = testData.getServiceName();
-        ProjectCompiler projectCompiler = testData.getDesignServiceManager().getProjectCompiler();
+        assertTrue(!new File(f, path).exists());
+
+        ServiceClassGenerator g = new ServiceClassGenerator();
+        g.addService(ConversionUtils.convertToResourceList(Arrays.asList(new File[] { f })), this.testData.getServiceName());
+        g.setDesignServiceManager(this.testData.getDesignServiceManager());
+        g.setOutputDirectory(new FileSystemResource(f.getAbsolutePath() + "/"));
+        g.run();
+
+        assertTrue(new File(f, path).exists());
+
+        String projectName = this.testData.getDesignServiceManager().getProjectManager().getCurrentProject().getProjectName();
+        String serviceName = this.testData.getServiceName();
+        ProjectCompiler projectCompiler = this.testData.getDesignServiceManager().getProjectCompiler();
         projectCompiler.compileService(projectName, serviceName);
 
-        //AntUtils.javac(f.getAbsolutePath(), f);
+        // AntUtils.javac(f.getAbsolutePath(), f);
 
-		ClassLoader cl = ClassLoaderUtils
-				.getClassLoaderForFile(new File[] { f });
+        ClassLoader cl = ClassLoaderUtils.getClassLoaderForFile(new File[] { f });
 
-		Class<?> c = ClassLoaderUtils.loadClass(clazz, cl);
+        Class<?> c = ClassLoaderUtils.loadClass(clazz, cl);
 
-		Class<?> actor = ClassLoaderUtils.loadClass(
-				StringUtils.fq(dt.getPackageName(), "Actor"), cl);
+        Class<?> actor = ClassLoaderUtils.loadClass(StringUtils.fq(dt.getPackageName(), "Actor"), cl);
 
-		CheckGeneratedServiceMethods.checkType(c, actor, true);
+        CheckGeneratedServiceMethods.checkType(c, actor, true);
 
-		assertEquals(282, c.getMethods().length);
-	}
+        assertEquals(282, c.getMethods().length);
+    }
 
-	public void testQueryMetaData() {
+    public void testQueryMetaData() {
 
-		checkShouldSkip();
+        checkShouldSkip();
 
-		DataModelConfiguration cfg = getHibernateCfgMgr();
+        DataModelConfiguration cfg = getHibernateCfgMgr();
 
-		Collection<String> names = cfg.getQueryNames();
+        Collection<String> names = cfg.getQueryNames();
 
-		assertEquals(1, names.size());
+        assertEquals(1, names.size());
 
-		QueryInfo qi = cfg.getQuery(names.iterator().next());
+        QueryInfo qi = cfg.getQuery(names.iterator().next());
 
-		assertTrue(qi.getReturnsSingleResult());
-	}
+        assertTrue(qi.getReturnsSingleResult());
+    }
 
-	public void testCleanup() throws IOException {
-		IOUtils.deleteRecursive(testData.getProjectRoot());
-	}
+    public void testCleanup() throws IOException {
+        IOUtils.deleteRecursive(this.testData.getProjectRoot());
+    }
 
 }

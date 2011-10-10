@@ -43,87 +43,74 @@ import com.wavemaker.tools.service.definitions.ServiceComparator;
 @SupportedOptions({ ServiceProcessorConstants.PROJECT_NAME_PROP, ServiceProcessorConstants.PROJECT_ROOT_PROP })
 public class ServiceConfigurationProcessor extends AbstractStudioServiceProcessor {
 
-	private Resource servicesXml;
+    private Resource servicesXml;
 
-	private Resource managersXml;
+    private Resource managersXml;
 
-	private Resource typesJs;
+    private Resource typesJs;
 
-	private Project project;
+    private Project project;
 
-	@Override
-	protected void doInit(ProcessingEnvironment processingEnv) {
-		project = designServiceManager.getProjectManager()
-				.getCurrentProject();
-		try {
-			servicesXml = project.getWebInf().createRelative(
-					ConfigurationCompiler.RUNTIME_SERVICES);
-			managersXml = project.getWebInf().createRelative(
-					ConfigurationCompiler.RUNTIME_MANAGERS);
-			typesJs = project.getWebAppRoot().createRelative(
-					ConfigurationCompiler.TYPE_RUNTIME_FILE);
-		} catch (IOException e) {
-			throw new WMRuntimeException(e);
-		}
-	}
+    @Override
+    protected void doInit(ProcessingEnvironment processingEnv) {
+        this.project = this.designServiceManager.getProjectManager().getCurrentProject();
+        try {
+            this.servicesXml = this.project.getWebInf().createRelative(ConfigurationCompiler.RUNTIME_SERVICES);
+            this.managersXml = this.project.getWebInf().createRelative(ConfigurationCompiler.RUNTIME_MANAGERS);
+            this.typesJs = this.project.getWebAppRoot().createRelative(ConfigurationCompiler.TYPE_RUNTIME_FILE);
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        }
+    }
 
-	@Override
-	protected boolean doProcess(Set<? extends TypeElement> annotations,
-			RoundEnvironment roundEnv) {
-		boolean modifiedSMD = false;
-		boolean modifiedXML = false;
+    @Override
+    protected boolean doProcess(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        boolean modifiedSMD = false;
+        boolean modifiedXML = false;
 
-		try {
-			SortedSet<Service> services = new TreeSet<Service>(new ServiceComparator());
-			Set<String> serviceIds = designServiceManager.getServiceIds();
-			for (String serviceId : serviceIds) {
-				Resource serviceDef = designServiceManager
-						.getServiceDefXml(serviceId);
-				Service service = DesignServiceManager
-						.loadServiceDefinition(serviceDef.getInputStream());
-				services.add(service);
-				Resource smd = ConfigurationCompiler.getSmdFile(project,
-						serviceId);
-				if (!smd.exists()
-						|| smd.lastModified() < serviceDef.lastModified()) {
-					processingEnv.getMessager().printMessage(Kind.NOTE, "Generating SMD for "+serviceId);
-					ConfigurationCompiler.generateSMD(project, service);
-					modifiedSMD = true;
-				}
-			}
+        try {
+            SortedSet<Service> services = new TreeSet<Service>(new ServiceComparator());
+            Set<String> serviceIds = this.designServiceManager.getServiceIds();
+            for (String serviceId : serviceIds) {
+                Resource serviceDef = this.designServiceManager.getServiceDefXml(serviceId);
+                Service service = DesignServiceManager.loadServiceDefinition(serviceDef.getInputStream());
+                services.add(service);
+                Resource smd = ConfigurationCompiler.getSmdFile(this.project, serviceId);
+                if (!smd.exists() || smd.lastModified() < serviceDef.lastModified()) {
+                    this.processingEnv.getMessager().printMessage(Kind.NOTE, "Generating SMD for " + serviceId);
+                    ConfigurationCompiler.generateSMD(this.project, service);
+                    modifiedSMD = true;
+                }
+            }
 
-			if (!servicesXml.exists() || !managersXml.exists()
-					|| !typesJs.exists() || modifiedSMD) {
-				processingEnv.getMessager().printMessage(Kind.NOTE, "Generating "+ConfigurationCompiler.RUNTIME_SERVICES);
-				ConfigurationCompiler.generateServices(project, servicesXml,
-						services);
-				processingEnv.getMessager().printMessage(Kind.NOTE, "Generating "+ConfigurationCompiler.RUNTIME_MANAGERS);
-				ConfigurationCompiler.generateManagers(project, managersXml,
-						services);
-				modifiedXML = true;
-			}
+            if (!this.servicesXml.exists() || !this.managersXml.exists() || !this.typesJs.exists() || modifiedSMD) {
+                this.processingEnv.getMessager().printMessage(Kind.NOTE, "Generating " + ConfigurationCompiler.RUNTIME_SERVICES);
+                ConfigurationCompiler.generateServices(this.project, this.servicesXml, services);
+                this.processingEnv.getMessager().printMessage(Kind.NOTE, "Generating " + ConfigurationCompiler.RUNTIME_MANAGERS);
+                ConfigurationCompiler.generateManagers(this.project, this.managersXml, services);
+                modifiedXML = true;
+            }
 
-			if (modifiedSMD || modifiedXML) {
-				processingEnv.getMessager().printMessage(Kind.NOTE, "Generating "+ConfigurationCompiler.TYPE_RUNTIME_FILE);
-				ConfigurationCompiler.generateTypes(project, typesJs, services,
-						designServiceManager.getPrimitiveDataObjects());
-			}
+            if (modifiedSMD || modifiedXML) {
+                this.processingEnv.getMessager().printMessage(Kind.NOTE, "Generating " + ConfigurationCompiler.TYPE_RUNTIME_FILE);
+                ConfigurationCompiler.generateTypes(this.project, this.typesJs, services, this.designServiceManager.getPrimitiveDataObjects());
+            }
 
-		} catch (IOException e) {
-			e.printStackTrace();
-			throw new WMRuntimeException(e);
-		} catch (JAXBException e) {
-			e.printStackTrace();
-			throw new WMRuntimeException(e);
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-			throw new WMRuntimeException(e);
-		} catch (RuntimeException e) {
-			e.printStackTrace();
-			throw e;
-		}
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new WMRuntimeException(e);
+        } catch (JAXBException e) {
+            e.printStackTrace();
+            throw new WMRuntimeException(e);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+            throw new WMRuntimeException(e);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            throw e;
+        }
 
-		return false;
-	}
+        return false;
+    }
 
 }

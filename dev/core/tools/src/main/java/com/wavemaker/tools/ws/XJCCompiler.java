@@ -57,15 +57,14 @@ public class XJCCompiler {
 
     private static Log log = LogFactory.getLog(XJCCompiler.class);
 
-    public static void generate(S2JJAXBModel model, Resource outputDir)
-            throws GenerationException {
+    public static void generate(S2JJAXBModel model, Resource outputDir) throws GenerationException {
         JAXBCompilerErrorListener listener = new JAXBCompilerErrorListener();
         JCodeModel generateCode = model.generateCode(null, listener);
         if (listener.hasError) {
             throw listener.getException();
         }
         try {
-        	//TODO - Cheating for now, as the com.sun.* stuff will potentially need to be replaced on CF
+            // TODO - Cheating for now, as the com.sun.* stuff will potentially need to be replaced on CF
             generateCode.build(outputDir.getFile(), outputDir.getFile(), null);
         } catch (IOException e) {
             throw new GenerationException(e);
@@ -76,10 +75,8 @@ public class XJCCompiler {
     }
 
     @SuppressWarnings("deprecation")
-    public static S2JJAXBModel createSchemaModel(Map<String, Element> schemas,
-            List<Resource> bindingFiles, String packageName,
-            Set<String> auxiliaryClasses, WebServiceType type)
-            throws GenerationException {
+    public static S2JJAXBModel createSchemaModel(Map<String, Element> schemas, List<Resource> bindingFiles, String packageName,
+        Set<String> auxiliaryClasses, WebServiceType type) throws GenerationException {
         if (schemas == null || schemas.isEmpty()) {
             return null;
         }
@@ -87,8 +84,7 @@ public class XJCCompiler {
         if (type == WebServiceType.SOAP) {
             // mimic what JAXWS's WsimportTool would do for SEI class name and
             // JAXB class name collision.
-            ClassNameAllocator allocator = new ClassNameAllocatorImpl(
-                    new SimpleClassNameCollector(auxiliaryClasses));
+            ClassNameAllocator allocator = new ClassNameAllocatorImpl(new SimpleClassNameCollector(auxiliaryClasses));
             sc.setClassNameAllocator(allocator);
         }
         JAXBCompilerErrorListener listener = new JAXBCompilerErrorListener();
@@ -123,21 +119,19 @@ public class XJCCompiler {
                 } catch (FileNotFoundException e) {
                     throw new GenerationException(e);
                 } catch (IOException e) {
-                	throw new GenerationException(e);
+                    throw new GenerationException(e);
                 }
             }
         }
-        
+
         Options options = sc.getOptions();
         options.target = SpecVersion.V2_1;
         // suppress generation of package level annotations
         options.packageLevelAnnotations = false;
         // generate setter methods for Collection based properties
-        options.activePlugins.add(
-                new com.sun.tools.xjc.addon.collection_setter_injector.PluginImpl());
+        options.activePlugins.add(new com.sun.tools.xjc.addon.collection_setter_injector.PluginImpl());
         // replace isXXX with getXXX for Boolean type properties
-        options.activePlugins.add(
-                new com.wavemaker.tools.ws.jaxb.boolean_getter.PluginImpl());
+        options.activePlugins.add(new com.wavemaker.tools.ws.jaxb.boolean_getter.PluginImpl());
 
         S2JJAXBModel model = sc.bind();
         if (listener.hasError) {
@@ -147,8 +141,7 @@ public class XJCCompiler {
     }
 
     private static Element removeImportElement(Element element) {
-        NodeList nodeList = element.getElementsByTagNameNS(Constants.XSD_NS,
-                "import");
+        NodeList nodeList = element.getElementsByTagNameNS(Constants.XSD_NS, "import");
         if (nodeList.getLength() == 0) {
             return element; // simply returns the original one
         }
@@ -156,8 +149,7 @@ public class XJCCompiler {
         // do a clone since we are going to remove the import stuffs from the
         // element
         Element elementClone = (Element) element.cloneNode(true);
-        nodeList = elementClone.getElementsByTagNameNS(Constants.XSD_NS,
-                "import");
+        nodeList = elementClone.getElementsByTagNameNS(Constants.XSD_NS, "import");
         List<Node> ns = new ArrayList<Node>();
         for (int tmp = 0; tmp < nodeList.getLength(); tmp++) {
             Node importNode = nodeList.item(tmp);
@@ -171,41 +163,38 @@ public class XJCCompiler {
     }
 
     static class JAXBCompilerErrorListener implements ErrorListener {
-        
+
         private boolean hasError;
-        
-        private List<SAXParseException> saxParseExceptions = 
-            new ArrayList<SAXParseException>();
-        
+
+        private final List<SAXParseException> saxParseExceptions = new ArrayList<SAXParseException>();
+
         public boolean hasError() {
-            return hasError;
+            return this.hasError;
         }
-        
+
         public GenerationException getException() {
-            if (saxParseExceptions == null || saxParseExceptions.isEmpty()) {
+            if (this.saxParseExceptions == null || this.saxParseExceptions.isEmpty()) {
                 return null;
-            } else if (saxParseExceptions.size() == 1) {
-                return new GenerationException(
-                        getErrorMessage(saxParseExceptions.get(0)),
-                        saxParseExceptions.get(0));
+            } else if (this.saxParseExceptions.size() == 1) {
+                return new GenerationException(getErrorMessage(this.saxParseExceptions.get(0)), this.saxParseExceptions.get(0));
             } else {
                 StringBuilder sb = new StringBuilder();
-                for (SAXParseException saxEx : saxParseExceptions) {
+                for (SAXParseException saxEx : this.saxParseExceptions) {
                     sb.append(getErrorMessage(saxEx));
                     sb.append('\n');
                 }
                 return new GenerationException(sb.toString());
             }
         }
-        
+
         public void resetError() {
-            hasError = false;
-            saxParseExceptions.clear();
+            this.hasError = false;
+            this.saxParseExceptions.clear();
         }
 
         public void error(SAXParseException exception) {
-            hasError = true;
-            saxParseExceptions.add(exception);
+            this.hasError = true;
+            this.saxParseExceptions.add(exception);
             log.warn(getErrorMessage(exception), exception);
         }
 
@@ -220,7 +209,7 @@ public class XJCCompiler {
         public void warning(SAXParseException exception) {
             info(exception);
         }
-        
+
         private String getErrorMessage(SAXParseException exception) {
             return exception.getLocalizedMessage();
         }

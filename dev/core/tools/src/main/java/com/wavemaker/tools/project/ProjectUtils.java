@@ -35,45 +35,37 @@ import com.wavemaker.runtime.WMAppContext;
  */
 public class ProjectUtils {
 
-	/**
-	 * Gets a temporary classloader for this project. The project should already
-	 * be built; classes and libraries should be present in WEB-INF/classes &
-	 * WEB-INF/lib, respectively.
-	 * 
-	 * @param project
-	 *            The project to get a ClassLoader for.
-	 * @return A temporary ClassLoader for the given project.
-	 */
-	@SuppressWarnings("unchecked")
-	public static ClassLoader getClassLoaderForProject(Project project) {
+    /**
+     * Gets a temporary classloader for this project. The project should already be built; classes and libraries should
+     * be present in WEB-INF/classes & WEB-INF/lib, respectively.
+     * 
+     * @param project The project to get a ClassLoader for.
+     * @return A temporary ClassLoader for the given project.
+     */
+    @SuppressWarnings("unchecked")
+    public static ClassLoader getClassLoaderForProject(Project project) {
 
-		// TODO - This may get ripped out entirely later, so for now we just
-		// need to ensure it does not get used in Cloud Foundry
-		Assert.isTrue(!WMAppContext.getInstance().isCloudFoundry(),
-				"This class should not get used in CloudFoundry");
+        // TODO - This may get ripped out entirely later, so for now we just
+        // need to ensure it does not get used in Cloud Foundry
+        Assert.isTrue(!WMAppContext.getInstance().isCloudFoundry(), "This class should not get used in CloudFoundry");
 
-		try {
-			List<File> classpath = new ArrayList<File>();
-			if (null != project.getWebInfClasses()) {
-				classpath.add(project.getWebInfClasses().getFile());
-			}
+        try {
+            List<File> classpath = new ArrayList<File>();
+            if (null != project.getWebInfClasses()) {
+                classpath.add(project.getWebInfClasses().getFile());
+            }
 
-			if (null != project.getWebInfLib()
-					&& project.getWebInfLib().exists()) {
-				if (!project.getWebInfLib().getFile().isDirectory()) {
-					throw new WMRuntimeException(
-							MessageResource.LIB_DIR_NOT_DIR,
-							project.getWebInfLib());
-				}
+            if (null != project.getWebInfLib() && project.getWebInfLib().exists()) {
+                if (!project.getWebInfLib().getFile().isDirectory()) {
+                    throw new WMRuntimeException(MessageResource.LIB_DIR_NOT_DIR, project.getWebInfLib());
+                }
 
-				classpath.addAll(FileUtils.listFiles(project.getWebInfLib()
-						.getFile(), new String[] { "jar" }, false));
-			}
-			
-			return ClassLoaderUtils.getTempClassLoaderForFile(classpath
-					.toArray(new File[] {}));
-		} catch (IOException ex) {
-			throw new WMRuntimeException(ex);
-		}
-	}
+                classpath.addAll(FileUtils.listFiles(project.getWebInfLib().getFile(), new String[] { "jar" }, false));
+            }
+
+            return ClassLoaderUtils.getTempClassLoaderForFile(classpath.toArray(new File[] {}));
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
+    }
 }

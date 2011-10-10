@@ -24,13 +24,13 @@ import com.wavemaker.runtime.service.ElementType;
  * Used by <code>WSDL</code> to do QName to Java type conversion.
  * 
  * @author Frankie Fu
- *
+ * 
  */
 public interface TypeMapper {
 
     /**
      * Returns the Java type name.
-     *
+     * 
      * @param schemaType The name of the XML element to be mapped.
      * @param isElement True if the QName represents an element.
      * @return Returns a string that represents the particular type.
@@ -44,7 +44,7 @@ public interface TypeMapper {
      * @return A string identifier suitable for bean properties.
      */
     public String toPropertyName(String name);
-    
+
     /**
      * Returns <code>true</code> if the <code>QName</code> is a simple type.
      * 
@@ -53,20 +53,18 @@ public interface TypeMapper {
     public boolean isSimpleType(QName schemaType);
 
     /**
-     * Returns a list of all types in this mapper.  The returned list should
-     * not include simple types like int, String...
-     *
+     * Returns a list of all types in this mapper. The returned list should not include simple types like int, String...
+     * 
      * @param serviceId The service Id. //salesforce
      * @return A list of all types.
      */
     public List<ElementType> getAllTypes(String serviceId);
 
     /**
-     * Returns a list of all types in this mapper.  The returned list should
-     * not include simple types like int, String...
-     *
+     * Returns a list of all types in this mapper. The returned list should not include simple types like int, String...
+     * 
      * @param serviceId The service Id. //salesforce
      * @return A list of all types.
      */
-    public List<ElementType> getAllTypes(String serviceId, String username, String password);  //salesforce
+    public List<ElementType> getAllTypes(String serviceId, String username, String password); // salesforce
 }

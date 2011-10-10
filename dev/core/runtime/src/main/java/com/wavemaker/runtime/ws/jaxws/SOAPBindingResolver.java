@@ -35,50 +35,37 @@ import com.wavemaker.runtime.ws.BindingProperties;
 public class SOAPBindingResolver {
 
     @SuppressWarnings("unchecked")
-    public static void setBindingProperties(BindingProvider service, 
-            BindingProperties bindingProperties) {
+    public static void setBindingProperties(BindingProvider service, BindingProperties bindingProperties) {
         if (bindingProperties != null) {
             Map<String, Object> requestContext = service.getRequestContext();
 
             String endpointAddress = bindingProperties.getEndpointAddress();
             if (endpointAddress != null) {
-                requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-                        endpointAddress);
+                requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointAddress);
             }
 
-            String httpBasicAuthUsername = bindingProperties
-                    .getHttpBasicAuthUsername();
+            String httpBasicAuthUsername = bindingProperties.getHttpBasicAuthUsername();
             if (httpBasicAuthUsername != null) {
-                requestContext.put(BindingProvider.USERNAME_PROPERTY,
-                        httpBasicAuthUsername);
-                String httpBasicAuthPassword = bindingProperties
-                        .getHttpBasicAuthPassword();
-                requestContext.put(BindingProvider.PASSWORD_PROPERTY,
-                        httpBasicAuthPassword);
+                requestContext.put(BindingProvider.USERNAME_PROPERTY, httpBasicAuthUsername);
+                String httpBasicAuthPassword = bindingProperties.getHttpBasicAuthPassword();
+                requestContext.put(BindingProvider.PASSWORD_PROPERTY, httpBasicAuthPassword);
             }
-            
+
             int connectionTimeout = bindingProperties.getConnectionTimeout();
-            requestContext.put(JAXWSProperties.CONNECT_TIMEOUT, 
-                    Integer.valueOf(connectionTimeout));
-            
+            requestContext.put(JAXWSProperties.CONNECT_TIMEOUT, Integer.valueOf(connectionTimeout));
+
             int requestTimeout = bindingProperties.getRequestTimeout();
-            requestContext.put(JAXWSProperties.REQUEST_TIMEOUT,
-                    Integer.valueOf(requestTimeout));
+            requestContext.put(JAXWSProperties.REQUEST_TIMEOUT, Integer.valueOf(requestTimeout));
 
             String soapActionURI = bindingProperties.getSoapActionURI();
             if (soapActionURI != null) {
-                requestContext.put(BindingProvider.SOAPACTION_USE_PROPERTY,
-                        true);
-                requestContext.put(BindingProvider.SOAPACTION_URI_PROPERTY,
-                        soapActionURI);
+                requestContext.put(BindingProvider.SOAPACTION_USE_PROPERTY, true);
+                requestContext.put(BindingProvider.SOAPACTION_URI_PROPERTY, soapActionURI);
             }
-            
-            Map<String, List<String>> httpHeaders = 
-                bindingProperties.getHttpHeaders();
+
+            Map<String, List<String>> httpHeaders = bindingProperties.getHttpHeaders();
             if (httpHeaders != null && !httpHeaders.isEmpty()) {
-                Map<String, List<String>> reqHeaders = 
-                     (Map<String, List<String>>) requestContext.get(
-                             MessageContext.HTTP_REQUEST_HEADERS);
+                Map<String, List<String>> reqHeaders = (Map<String, List<String>>) requestContext.get(MessageContext.HTTP_REQUEST_HEADERS);
                 if (reqHeaders == null) {
                     reqHeaders = new HashMap<String, List<String>>();
                     requestContext.put(MessageContext.HTTP_REQUEST_HEADERS, reqHeaders);
@@ -91,8 +78,7 @@ public class SOAPBindingResolver {
     }
 
     @Deprecated
-    public static void resolve(BindingProvider service,
-            BindingProperties bindingProperties) {
+    public static void resolve(BindingProvider service, BindingProperties bindingProperties) {
         setBindingProperties(service, bindingProperties);
     }
 

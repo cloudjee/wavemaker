@@ -29,7 +29,7 @@ import com.wavemaker.tools.project.Project;
  * 
  * @author slee
  * @author Jeremy Grelle
- *
+ * 
  */
 public class ClassResourceObject extends AbstractResourceJavaFileObject {
 
@@ -39,32 +39,29 @@ public class ClassResourceObject extends AbstractResourceJavaFileObject {
      * @param kind the kind of the resource, required to be CLASS in this case.
      * @param project the project containing the class
      * @param classFile the class file resource
-     * @throws IOException 
+     * @throws IOException
      */
     public ClassResourceObject(JavaFileObject.Kind kind, Project project, Resource classFile) throws IOException {
-    	super(kind, project, classFile);
-        Assert.isTrue(kind == Kind.CLASS, "Expected a to be kind "+Kind.CLASS);
+        super(kind, project, classFile);
+        Assert.isTrue(kind == Kind.CLASS, "Expected a to be kind " + Kind.CLASS);
     }
 
     /**
-    * Will be used by our file manager to get the byte code that
-    * can be put into memory to instantiate our class
-    *
-    * @return compiled byte code
-    */
+     * Will be used by our file manager to get the byte code that can be put into memory to instantiate our class
+     * 
+     * @return compiled byte code
+     */
     public byte[] getBytes() throws IOException {
-        return IOUtils.toByteArray(resource.getInputStream());
+        return IOUtils.toByteArray(this.resource.getInputStream());
     }
-    
+
     @Override
     public Kind getKind() {
-		return Kind.CLASS;
-	}
+        return Kind.CLASS;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		return (obj == this ||
-			    (obj instanceof ClassResourceObject && this.resource.equals(((ClassResourceObject) obj).resource)));
-	}    
+    @Override
+    public boolean equals(Object obj) {
+        return obj == this || obj instanceof ClassResourceObject && this.resource.equals(((ClassResourceObject) obj).resource);
+    }
 }
-

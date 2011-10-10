@@ -19,28 +19,26 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * 
  * 
- * 	This simple type designates a boolean with only two
- * 	permissible values
+ * This simple type designates a boolean with only two permissible values
  * 
- * 	- true
- * 	- false
+ * - true - false
  * 
- *       
  * 
- * <p>Java class for true-falseType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for true-falseType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="true-falseType">
@@ -55,9 +53,6 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "true-falseType")
-public class TrueFalseType
-    extends XsdBooleanType
-{
-
+public class TrueFalseType extends XsdBooleanType {
 
 }

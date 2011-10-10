@@ -45,6 +45,7 @@ public class HQLGenerator {
 
             INNER_JOIN(), LEFT_OUTER_JOIN();
 
+            @Override
             public String toString() {
                 if (this == INNER_JOIN) {
                     return "join";
@@ -62,6 +63,7 @@ public class HQLGenerator {
 
         AND(), OR();
 
+        @Override
         public String toString() {
             if (this == OR) {
                 return "or";
@@ -74,7 +76,7 @@ public class HQLGenerator {
 
     private static final String SELECT = DataServiceConstants.SELECT_KEYWORD;
 
-//    private static final String DISTINCT = "distinct";
+    // private static final String DISTINCT = "distinct";
 
     private static final String FROM = "from";
 
@@ -99,6 +101,7 @@ public class HQLGenerator {
     private static final String ROOT_PATH = "";
 
     private static final HQLGenerator.JoinStrategy DEFAULT_JOIN_STRATEGY = new HQLGenerator.JoinStrategy() {
+
         public Join getJoin(String propertyPath, String dbName) {
             return Join.INNER_JOIN;
         }
@@ -116,8 +119,8 @@ public class HQLGenerator {
 
     // selection property paths that should be passed to lower()
     private final Collection<String> lowerPropertyPaths = new HashSet<String>();
-    
-    private final Collection<String> lowerOrders = new HashSet<String>();    
+
+    private final Collection<String> lowerOrders = new HashSet<String>();
 
     private final JoinStrategy joinStrategy;
 
@@ -129,6 +132,7 @@ public class HQLGenerator {
 
     public HQLGenerator(Class<?> rootEntity) {
         this(rootEntity, DEFAULT_JOIN_STRATEGY, new TypeManager() {
+
             public boolean isComponentPath(String propertyPath, String dbName) {
                 return false;
             }
@@ -139,8 +143,7 @@ public class HQLGenerator {
         this(rootEntity, DEFAULT_JOIN_STRATEGY, typeManager);
     }
 
-    public HQLGenerator(Class<?> rootEntity, JoinStrategy joinStrategy,
-            TypeManager typeManager) {
+    public HQLGenerator(Class<?> rootEntity, JoinStrategy joinStrategy, TypeManager typeManager) {
         this.rootEntity = rootEntity;
         this.joinStrategy = joinStrategy;
         this.typeManager = typeManager;
@@ -158,12 +161,12 @@ public class HQLGenerator {
 
         validatePropertyPath(propertyPath);
 
-        eagerPropertyPaths.add(propertyPath);
+        this.eagerPropertyPaths.add(propertyPath);
 
         int i = 0;
         while ((i = propertyPath.lastIndexOf(DataServiceConstants.PROP_SEP)) != -1) {
             propertyPath = propertyPath.substring(0, i);
-            eagerPropertyPaths.add(propertyPath);
+            this.eagerPropertyPaths.add(propertyPath);
         }
 
         return this;
@@ -178,8 +181,7 @@ public class HQLGenerator {
         return addSelection(propertyPath, expression, false);
     }
 
-    public HQLGenerator addSelection(String propertyPath, String expression,
-            boolean lower) {
+    public HQLGenerator addSelection(String propertyPath, String expression, boolean lower) {
 
         if (expression == null) {
             throw new IllegalArgumentException("expression cannot be null");
@@ -189,56 +191,56 @@ public class HQLGenerator {
 
         Filter f = new Filter(propertyPath, expression);
 
-        selections.add(f);
+        this.selections.add(f);
 
         if (lower) {
-            lowerPropertyPaths.add(propertyPath);
+            this.lowerPropertyPaths.add(propertyPath);
         }
 
         return this;
     }
-    
+
     public HQLGenerator setOrderBy(Collection<OrderBy> orders) {
-    	return setOrderBy(orders, false);
+        return setOrderBy(orders, false);
     }
-    
+
     public HQLGenerator setOrderBy(Collection<OrderBy> orders, boolean lower) {
         this.orders = orders;
-        
+
         if (lower) {
-        	for (OrderBy order : orders) {
-        		lowerOrders.add(order.getPropertyPath());
-        	}
+            for (OrderBy order : orders) {
+                this.lowerOrders.add(order.getPropertyPath());
+            }
         }
-        
+
         return this;
     }
-    
+
     public HQLGenerator addAscOrder(String propertyPath) {
-    	return addAscOrder(propertyPath, false);
+        return addAscOrder(propertyPath, false);
     }
 
     public HQLGenerator addAscOrder(String propertyPath, boolean lower) {
         OrderBy o = new OrderBy();
         o.setAsc(propertyPath);
-        orders.add(o);
+        this.orders.add(o);
         if (lower) {
-        	lowerOrders.add(propertyPath);
+            this.lowerOrders.add(propertyPath);
         }
         return this;
     }
-    
+
     public HQLGenerator addDescOrder(String propertyPath) {
-    	return addDescOrder(propertyPath, false);
+        return addDescOrder(propertyPath, false);
     }
 
     public HQLGenerator addDescOrder(String propertyPath, boolean lower) {
         OrderBy o = new OrderBy();
         o.setDesc(propertyPath);
-        orders.add(o);
+        this.orders.add(o);
         if (lower) {
-        	lowerOrders.add(propertyPath);
-        }        
+            this.lowerOrders.add(propertyPath);
+        }
         return this;
     }
 
@@ -264,20 +266,19 @@ public class HQLGenerator {
         }
 
         boolean isFirst = true;
-        for (Filter f : selections) {
+        for (Filter f : this.selections) {
             if (isFirst) {
                 where(rtn);
                 condition(rtn, f.getPropertyPath(), f.getExpression());
                 isFirst = false;
             } else {
-                condition(rtn, f.getPropertyPath(), f.getExpression(),
-                        Operator.AND);
+                condition(rtn, f.getPropertyPath(), f.getExpression(), Operator.AND);
             }
         }
 
         if (!count) {
             isFirst = true;
-            for (OrderBy o : orders) {
+            for (OrderBy o : this.orders) {
                 order(rtn, o, isFirst);
                 isFirst = false;
             }
@@ -287,20 +288,20 @@ public class HQLGenerator {
     }
 
     private void reset() {
-        propPathToAlias.clear();
-        aliasToPropPath.clear();
-        aliases.clear();
-        propPathToAlias.put(ROOT_PATH, getNextAlias());
+        this.propPathToAlias.clear();
+        this.aliasToPropPath.clear();
+        this.aliases.clear();
+        this.propPathToAlias.put(ROOT_PATH, getNextAlias());
     }
 
     private Collection<String> getJoinPropertyPaths(boolean count) {
         Collection<String> rtn = new HashSet<String>();
         if (!count) {
-            for (String s : eagerPropertyPaths) {
+            for (String s : this.eagerPropertyPaths) {
                 rtn.add(s);
             }
         }
-        for (Filter f : selections) {
+        for (Filter f : this.selections) {
             String s = splitProperty(f.getPropertyPath()).v1;
             if (s.length() > 0) {
                 rtn.add(s);
@@ -308,7 +309,7 @@ public class HQLGenerator {
         }
 
         if (!count) {
-            for (OrderBy o : orders) {
+            for (OrderBy o : this.orders) {
                 String s = splitProperty(o.getPropertyPath()).v1;
                 if (s.length() > 0) {
                     rtn.add(s);
@@ -320,7 +321,7 @@ public class HQLGenerator {
     }
 
     private boolean isComponentPath(String propertyPath, String dbName) {
-        return typeManager.isComponentPath(propertyPath, dbName);
+        return this.typeManager.isComponentPath(propertyPath, dbName);
     }
 
     private void validatePropertyPath(String propertyPath) {
@@ -328,19 +329,16 @@ public class HQLGenerator {
             throw new IllegalArgumentException("propertyPath cannot be null");
         }
         if (propertyPath.startsWith(DataServiceConstants.PROP_SEP)) {
-            throw new IllegalArgumentException(
-                    "propertyPath cannot start with "
-                            + DataServiceConstants.PROP_SEP);
+            throw new IllegalArgumentException("propertyPath cannot start with " + DataServiceConstants.PROP_SEP);
         }
         if (propertyPath.endsWith(DataServiceConstants.PROP_SEP)) {
-            throw new IllegalArgumentException("propertyPath cannot end with "
-                    + DataServiceConstants.PROP_SEP);
+            throw new IllegalArgumentException("propertyPath cannot end with " + DataServiceConstants.PROP_SEP);
         }
     }
 
     private void select(StringBuilder sb, boolean count) {
-    	sb.append(SELECT).append(" ");
-    	
+        sb.append(SELECT).append(" ");
+
         if (count) {
             sb.append(COUNT).append("(");
             // MAV-1288 - use '*' instead of the root alias
@@ -352,8 +350,7 @@ public class HQLGenerator {
     }
 
     private void from(StringBuilder sb) {
-        sb.append(" ").append(FROM).append(" ").append(rootEntity.getName())
-                .append(" ").append(getRootAlias());
+        sb.append(" ").append(FROM).append(" ").append(this.rootEntity.getName()).append(" ").append(getRootAlias());
     }
 
     private void where(StringBuilder sb) {
@@ -361,21 +358,19 @@ public class HQLGenerator {
         sb.append(WHERE);
     }
 
-    private void condition(StringBuilder sb, String propertyPath,
-            String expression) {
+    private void condition(StringBuilder sb, String propertyPath, String expression) {
         condition(sb, propertyPath, expression, null);
     }
 
-    private void condition(StringBuilder sb, String propertyPath,
-            String expression, Operator op) {
+    private void condition(StringBuilder sb, String propertyPath, String expression, Operator op) {
         sb.append(" ");
         if (op != null) {
             sb.append(op);
             sb.append(" ");
         }
         String alias = getAliasedPropertyPath(propertyPath);
-        
-        if (lowerPropertyPaths.contains(propertyPath)) {
+
+        if (this.lowerPropertyPaths.contains(propertyPath)) {
             applyFunction(sb, LOWER, alias);
         } else {
             sb.append(alias);
@@ -392,15 +387,15 @@ public class HQLGenerator {
         } else {
             sb.append(", ");
         }
-        
+
         String alias = getAliasedPropertyPath(order.getPropertyPath());
-        
-        if (lowerOrders.contains(order.getPropertyPath())) {
-        	applyFunction(sb, LOWER, alias);
+
+        if (this.lowerOrders.contains(order.getPropertyPath())) {
+            applyFunction(sb, LOWER, alias);
         } else {
-        	sb.append(alias);        	
+            sb.append(alias);
         }
-        
+
         sb.append(" ");
         if (order.isAsc()) {
             sb.append(ASC);
@@ -409,8 +404,7 @@ public class HQLGenerator {
         }
     }
 
-    private void join(StringBuilder sb, String propertyPath, String alias,
-            String join, boolean eager) {
+    private void join(StringBuilder sb, String propertyPath, String alias, String join, boolean eager) {
 
         sb.append(" ").append(join).append(" ");
 
@@ -429,7 +423,7 @@ public class HQLGenerator {
     }
 
     private String getRootAlias() {
-        return propPathToAlias.get(ROOT_PATH);
+        return this.propPathToAlias.get(ROOT_PATH);
     }
 
     private String getAliasedPropertyPath(String propertyPath) {
@@ -446,12 +440,11 @@ public class HQLGenerator {
     }
 
     private String getAlias(String propertyPath) {
-        return propPathToAlias.get(propertyPath);
+        return this.propPathToAlias.get(propertyPath);
     }
 
     // create alias and add joins
-    private String createAlias(StringBuilder sb, String propertyPath,
-            boolean count, String dbName) {
+    private String createAlias(StringBuilder sb, String propertyPath, boolean count, String dbName) {
         Tuple.Three<String, String, String> t = resolvePropertyPath(propertyPath);
         String resolvedPath = t.v1;
         String alias = t.v2;
@@ -483,8 +476,7 @@ public class HQLGenerator {
 
                     Tuple.Three<String, String, String> rp = resolvePropertyPath(resolvedPath);
 
-                    String aliasedComponentPath = rp.v2
-                            + DataServiceConstants.PROP_SEP + rp.v3;
+                    String aliasedComponentPath = rp.v2 + DataServiceConstants.PROP_SEP + rp.v3;
                     addAlias(aliasedComponentPath, resolvedPath);
 
                 } else {
@@ -493,10 +485,9 @@ public class HQLGenerator {
 
                     addAlias(alias, resolvedPath);
 
-                    boolean eager = (!count && eagerPropertyPaths
-                            .contains(resolvedPath));
+                    boolean eager = !count && this.eagerPropertyPaths.contains(resolvedPath);
 
-                    String join = joinStrategy.getJoin(resolvedPath, dbName).toString();
+                    String join = this.joinStrategy.getJoin(resolvedPath, dbName).toString();
 
                     join(sb, path, alias, join, eager);
 
@@ -508,14 +499,13 @@ public class HQLGenerator {
     }
 
     private void addAlias(String alias, String path) {
-        propPathToAlias.put(path, alias);
-        aliasToPropPath.put(alias, path);
+        this.propPathToAlias.put(path, alias);
+        this.aliasToPropPath.put(alias, path);
     }
 
     // returns resolved property path, alias for that resolved path,
     // and unresolved part of property path
-    private Tuple.Three<String, String, String> resolvePropertyPath(
-            String propertyPath) {
+    private Tuple.Three<String, String, String> resolvePropertyPath(String propertyPath) {
         String alias = null;
         String path = propertyPath;
         int i = 0;
@@ -546,8 +536,8 @@ public class HQLGenerator {
     }
 
     private String getNextAlias() {
-        String rtn = StringUtils.getUniqueName(ALIAS_PREFIX, aliases);
-        aliases.add(rtn);
+        String rtn = StringUtils.getUniqueName(ALIAS_PREFIX, this.aliases);
+        this.aliases.add(rtn);
         return rtn;
     }
 }

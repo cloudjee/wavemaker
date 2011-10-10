@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data.json;
 
 import static org.junit.Assert.assertEquals;
@@ -36,7 +37,8 @@ import com.wavemaker.runtime.data.sample.sakila.City;
  */
 public class TestLoading extends BaseJSONDataTest {
 
-    @Test public void testLoadCity() {
+    @Test
+    public void testLoadCity() {
 
         // load a single city - related properties should not be marshalled,
         // to indicate they have not been loaded
@@ -48,7 +50,8 @@ public class TestLoading extends BaseJSONDataTest {
         verifyCityAttributes(attrs, true, false);
     }
 
-    @Test public void testLoadCityAndCountry() {
+    @Test
+    public void testLoadCityAndCountry() {
 
         // use getCityList with ordering on related city to force loading
         // of the city eagerly.
@@ -64,69 +67,59 @@ public class TestLoading extends BaseJSONDataTest {
 
         verifyCityAttributes(attrs, false);
 
-        assertFalse("related addresses should not have been marshalled", attrs
-                .containsKey("addresses"));
-        assertTrue("country has not been marshalled", attrs
-                .containsKey("country"));
+        assertFalse("related addresses should not have been marshalled", attrs.containsKey("addresses"));
+        assertTrue("country has not been marshalled", attrs.containsKey("country"));
 
-        Map<String, String> countryAttrs = tokenizeObjectLiteral(attrs
-                .get("country"));
+        Map<String, String> countryAttrs = tokenizeObjectLiteral(attrs.get("country"));
 
         verifyCountryAttributes(countryAttrs, false);
     }
 
-    @Test public void testLoadCityAndCountryAndAddresses() {
+    @Test
+    public void testLoadCityAndCountryAndAddresses() {
 
         // eagerly load country and addresses
 
-        String s = runSakilaOpMarshalledResponse(
-                "testLoadCityAndCountryAndAddresses", (Object[]) null);
+        String s = runSakilaOpMarshalledResponse("testLoadCityAndCountryAndAddresses", (Object[]) null);
 
         Map<String, String> attrs = tokenizeObjectLiteral(s);
 
         verifyCityAttributes(attrs, true, true);
 
-        Map<String, String> countryAttrs = tokenizeObjectLiteral(attrs
-                .get("country"));
+        Map<String, String> countryAttrs = tokenizeObjectLiteral(attrs.get("country"));
 
         verifyCountryAttributes(countryAttrs, false);
 
-        Map<String, String> addresses = tokenizeObjectLiteral(attrs
-                .get("addresses"));
+        Map<String, String> addresses = tokenizeObjectLiteral(attrs.get("addresses"));
 
-        assertTrue("addressId has not been marshalled", addresses
-                .containsKey("addressId"));
-        assertFalse("related city has been marshalled", addresses
-                .containsKey("city"));
+        assertTrue("addressId has not been marshalled", addresses.containsKey("addressId"));
+        assertFalse("related city has been marshalled", addresses.containsKey("city"));
     }
 
-    @Test public void testLoadCityAndCountryAndCities() {
+    @Test
+    public void testLoadCityAndCountryAndCities() {
 
         // eagerly load country and addresses
 
-        String s = runSakilaOpMarshalledResponse(
-                "testLoadCityAndCountryAndCities", (Object[]) null);
+        String s = runSakilaOpMarshalledResponse("testLoadCityAndCountryAndCities", (Object[]) null);
 
         Map<String, String> attrs = tokenizeObjectLiteral(s);
 
         verifyCityAttributes(attrs, false);
 
-        assertFalse("related addresses should not have been marshalled", attrs
-                .containsKey("addresses"));
+        assertFalse("related addresses should not have been marshalled", attrs.containsKey("addresses"));
 
-        assertTrue("country has not been marshalled", attrs
-                .containsKey("country"));
+        assertTrue("country has not been marshalled", attrs.containsKey("country"));
 
-        Map<String, String> countryAttrs = tokenizeObjectLiteral(attrs
-                .get("country"));
+        Map<String, String> countryAttrs = tokenizeObjectLiteral(attrs.get("country"));
 
         verifyCountryAttributes(countryAttrs, true);
     }
 
-    @Test public void testLoadAddressNotInDB() {
+    @Test
+    public void testLoadAddressNotInDB() {
 
-        String s = runSakilaOpMarshalledResponse("getAddressById", Short
-                .valueOf("1111"));
+        String s = runSakilaOpMarshalledResponse("getAddressById", Short.valueOf("1111"));
 
         assertEquals("null", s);
     }
@@ -134,10 +127,9 @@ public class TestLoading extends BaseJSONDataTest {
     // this currently hits OOM in JSON
     public void xxxtestLoadActorsFilmActorsFilms() {
 
-        String s = runSakilaOpMarshalledResponse(
-                "testLoadActorsFilmActorsFilms", (Object[]) null);
+        String s = runSakilaOpMarshalledResponse("testLoadActorsFilmActorsFilms", (Object[]) null);
 
-        @SuppressWarnings("unused")        
+        @SuppressWarnings("unused")
         List<Map<String, String>> actors = tokenizeObjectLiteralList(s);
     }
 }

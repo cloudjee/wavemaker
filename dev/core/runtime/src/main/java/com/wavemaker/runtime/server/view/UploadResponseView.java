@@ -23,12 +23,12 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.web.servlet.view.JsonView;
 
 /**
- * Render the model contents straight to the browser.  Takes the value of every
- * key in the model, and renders it out as text.
+ * Render the model contents straight to the browser. Takes the value of every key in the model, and renders it out as
+ * text.
  * 
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class UploadResponseView extends JsonView {
 
@@ -36,15 +36,16 @@ public class UploadResponseView extends JsonView {
         super();
         setContentType("text/html");
     }
-    
-    /* (non-Javadoc)
-     * @see org.springframework.web.servlet.view.AbstractView#renderMergedOutputModel(java.util.Map, javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.web.servlet.view.AbstractView#renderMergedOutputModel(java.util.Map,
+     * javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
      */
     @Override
-    protected void renderMergedOutputModel(
-            @SuppressWarnings("unchecked") Map model,
-            HttpServletRequest request, HttpServletResponse response)
-            throws Exception {
+    protected void renderMergedOutputModel(@SuppressWarnings("unchecked") Map model, HttpServletRequest request, HttpServletResponse response)
+        throws Exception {
 
         response.setContentType(getContentType());
         Writer output = response.getWriter();

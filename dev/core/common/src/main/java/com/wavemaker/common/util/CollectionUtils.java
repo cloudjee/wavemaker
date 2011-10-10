@@ -22,23 +22,23 @@ import java.util.Set;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class CollectionUtils {
 
     public static <T> Set<T> createSet(T... args) {
-        
+
         Set<T> set = new HashSet<T>();
-        for (T arg: args) {
+        for (T arg : args) {
             set.add(arg);
         }
         return set;
     }
-    
+
     public static <T> List<T> createList(T... args) {
-        
+
         List<T> list = new ArrayList<T>();
-        for (T arg: args) {
+        for (T arg : args) {
             list.add(arg);
         }
         return list;

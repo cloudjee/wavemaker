@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data;
 
 import java.util.Properties;
@@ -36,21 +37,18 @@ import com.wavemaker.runtime.data.util.DataServiceUtils;
  * 
  * @author stoens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestPagingRelated extends WMTestCase {
-    
+
     private static SessionFactory sessionFactory = null;
 
     private static Session session = null;
 
     static {
-        Properties p = DataServiceUtils
-                .loadDBProperties(DataServiceTestConstants.MYSQL_SAKILA_PROPERTIES);
+        Properties p = DataServiceUtils.loadDBProperties(DataServiceTestConstants.MYSQL_SAKILA_PROPERTIES);
 
-        Configuration cfg = 
-            com.wavemaker.runtime.data.util.DataServiceUtils.initConfiguration(
-                DataServiceTestConstants.SAKILA_HIBERNATE_CFG, p);
+        Configuration cfg = com.wavemaker.runtime.data.util.DataServiceUtils.initConfiguration(DataServiceTestConstants.SAKILA_HIBERNATE_CFG, p);
 
         sessionFactory = cfg.buildSessionFactory();
     }
@@ -65,31 +63,29 @@ public class TestPagingRelated extends WMTestCase {
         if (session.isOpen()) {
             session.close();
         }
-    }    
-    
+    }
+
     public void testPageActorFilms() {
-        
-        TestActor actor = 
-            (TestActor)session.get(TestActor.class, new Short("1"));
-        
+
+        TestActor actor = (TestActor) session.get(TestActor.class, new Short("1"));
+
         Set<TestFilmActor> l = CastUtils.cast(actor.getFilmActors());
-        
-        // get total size of data set - for this to not hit the db, the 
+
+        // get total size of data set - for this to not hit the db, the
         // collection has to mapped with lazy="extra":
-//        <set name="filmActors" inverse="true" lazy="extra">
-//          <key>
-//            <column name="actor_id" not-null="true">
-//            </column>
-//          </key>
-//          <one-to-many class="com.wavemaker.runtime.data.sample.sakila.FilmActor" />
-//        </set>
-        
+        // <set name="filmActors" inverse="true" lazy="extra">
+        // <key>
+        // <column name="actor_id" not-null="true">
+        // </column>
+        // </key>
+        // <one-to-many class="com.wavemaker.runtime.data.sample.sakila.FilmActor" />
+        // </set>
+
         assertEquals(19, l.size());
-        
+
         // page through related film actors:
 
-        Query q = 
-            session.createFilter(actor.getFilmActors(), "order by id.actorId");
+        Query q = session.createFilter(actor.getFilmActors(), "order by id.actorId");
         q.setMaxResults(5);
         assertEquals(5, q.list().size());
     }

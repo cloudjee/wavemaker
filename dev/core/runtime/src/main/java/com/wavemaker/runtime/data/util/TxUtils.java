@@ -20,18 +20,17 @@ import com.wavemaker.runtime.data.DataServiceManager;
  * @author Simon Toens
  */
 public class TxUtils {
-    
+
     public static boolean rollbackTx(DataServiceManager o) {
-        
+
         try {
             o.rollback();
             return true;
         } catch (RuntimeException ex) {
-            LoggingUtils.logCannotRollbackTx(ex);            
+            LoggingUtils.logCannotRollbackTx(ex);
         }
-        
+
         return false;
     }
-    
 
 }

@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -21,11 +19,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for DescribeLayoutComponent complex type.
+ * <p>
+ * Java class for DescribeLayoutComponent complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="DescribeLayoutComponent">
@@ -45,20 +44,18 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DescribeLayoutComponent", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "displayLines",
-    "tabOrder",
-    "type",
-    "value"
-})
+@XmlType(name = "DescribeLayoutComponent", namespace = "urn:partner.soap.sforce.com", propOrder = { "displayLines", "tabOrder", "type", "value" })
 public class DescribeLayoutComponentType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected int displayLines;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected int tabOrder;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected LayoutComponentTypeType type;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String value;
 
@@ -67,7 +64,7 @@ public class DescribeLayoutComponentType {
      * 
      */
     public int getDisplayLines() {
-        return displayLines;
+        return this.displayLines;
     }
 
     /**
@@ -83,7 +80,7 @@ public class DescribeLayoutComponentType {
      * 
      */
     public int getTabOrder() {
-        return tabOrder;
+        return this.tabOrder;
     }
 
     /**
@@ -97,22 +94,18 @@ public class DescribeLayoutComponentType {
     /**
      * Gets the value of the type property.
      * 
-     * @return
-     *     possible object is
-     *     {@link LayoutComponentTypeType }
-     *     
+     * @return possible object is {@link LayoutComponentTypeType }
+     * 
      */
     public LayoutComponentTypeType getType() {
-        return type;
+        return this.type;
     }
 
     /**
      * Sets the value of the type property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link LayoutComponentTypeType }
-     *     
+     * @param value allowed object is {@link LayoutComponentTypeType }
+     * 
      */
     public void setType(LayoutComponentTypeType value) {
         this.type = value;
@@ -121,22 +114,18 @@ public class DescribeLayoutComponentType {
     /**
      * Gets the value of the value property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getValue() {
-        return value;
+        return this.value;
     }
 
     /**
      * Sets the value of the value property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setValue(String value) {
         this.value = value;

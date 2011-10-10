@@ -17,19 +17,19 @@ package com.wavemaker.runtime.service;
 import com.wavemaker.json.type.FieldDefinition;
 
 /**
- * This is an optional return type for services which would like to indicate
- * their return type (instead of using ServiceType-specific methods to discover
- * it).  This is
+ * This is an optional return type for services which would like to indicate their return type (instead of using
+ * ServiceType-specific methods to discover it). This is
+ * 
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TypedServiceReturn {
-    
+
     public TypedServiceReturn() {
-        
+
     }
-    
+
     public TypedServiceReturn(Object returnValue, FieldDefinition returnType) {
         this();
         setReturnValue(returnValue);
@@ -40,27 +40,30 @@ public class TypedServiceReturn {
      * The return value.
      */
     private Object returnValue;
-    
+
     /**
      * The type of the return.
      */
     private FieldDefinition returnType;
-    
+
     public Object getReturnValue() {
-        return returnValue;
+        return this.returnValue;
     }
+
     public void setReturnValue(Object returnValue) {
         this.returnValue = returnValue;
     }
+
     public FieldDefinition getReturnType() {
-        return returnType;
+        return this.returnType;
     }
+
     public void setReturnType(FieldDefinition returnType) {
         this.returnType = returnType;
     }
-    
+
     @Override
     public String toString() {
-        return "value "+getReturnValue()+" of type "+getReturnType();
+        return "value " + getReturnValue() + " of type " + getReturnType();
     }
 }

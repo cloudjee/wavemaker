@@ -30,10 +30,10 @@ public class InvalidCredentialsException extends SecurityException {
     public InvalidCredentialsException(String msg) {
         super(msg);
     }
-    
+
     public InvalidCredentialsException(Throwable cause) {
         super(cause);
-    }    
+    }
 
     public InvalidCredentialsException(MessageResource resource, Object... args) {
         super(resource, args);

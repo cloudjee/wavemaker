@@ -17,10 +17,10 @@ package com.wavemaker.tools.service;
 /**
  * @author Simon Toens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class DuplicateServiceIdException extends InvalidServiceIdException {
-    
+
     private static final long serialVersionUID = 862636827848906755L;
 
     public DuplicateServiceIdException(String serviceId) {

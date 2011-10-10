@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data.crud;
 
 import static org.junit.Assert.assertEquals;
@@ -45,10 +46,11 @@ public class TestInsertOperation extends BaseCRUDServiceTest {
     public void setUp() throws Exception {
         super.setUp();
 
-        insertTask = taskMgr.getInsertTask();
+        this.insertTask = this.taskMgr.getInsertTask();
     }
 
-    @Test public void testInsertCascadeToMany() {
+    @Test
+    public void testInsertCascadeToMany() {
         Country california = new Country();
         try {
             california = new Country();
@@ -65,22 +67,23 @@ public class TestInsertOperation extends BaseCRUDServiceTest {
             c.setCountry(california);
             cities.add(c);
             california.setCities(cities);
-            sakila.getDataServiceManager().invoke(insertTask, california);
+            this.sakila.getDataServiceManager().invoke(this.insertTask, california);
             try {
-                sakila.begin();
-                california = sakila.getCountryById(california.getCountryId());
+                this.sakila.begin();
+                california = this.sakila.getCountryById(california.getCountryId());
                 assertEquals(2, california.getCities().size());
             } finally {
-                sakila.rollback();
+                this.sakila.rollback();
             }
         } finally {
             // uses cascade="delete"
-            sakila.delete(california);
+            this.sakila.delete(california);
         }
     }
 
     // MAV-1557 - breaks with save-update on Address.city
-    @Test public void testInsertAddress() {
+    @Test
+    public void testInsertAddress() {
 
         Address a = new Address();
 
@@ -98,24 +101,25 @@ public class TestInsertOperation extends BaseCRUDServiceTest {
 
         a.setCity(york);
 
-        a = (Address) sakila.getDataServiceManager().invoke(insertTask, a);
+        a = (Address) this.sakila.getDataServiceManager().invoke(this.insertTask, a);
 
         Short newAddressId = a.getAddressId();
 
         try {
-            a = sakila.getAddressById(newAddressId);
+            a = this.sakila.getAddressById(newAddressId);
             assertEquals(newAddress, a.getAddress());
             assertEquals(cityId, a.getCity().getCityId());
         } finally {
             try {
                 a.setAddressId(newAddressId);
-                sakila.delete(a);
+                this.sakila.delete(a);
             } catch (RuntimeException ignore) {
             }
         }
     }
 
-    @Test public void testInsertAddressAndCity() {
+    @Test
+    public void testInsertAddressAndCity() {
 
         Address a = new Address();
         Short countryId = Short.valueOf("1"); // this country exists
@@ -137,28 +141,28 @@ public class TestInsertOperation extends BaseCRUDServiceTest {
         country.setCountryId(countryId);
         city.setCountry(country);
 
-        a = (Address) sakila.getDataServiceManager().invoke(insertTask, a);
+        a = (Address) this.sakila.getDataServiceManager().invoke(this.insertTask, a);
 
         Short newAddressId = a.getAddressId();
         Short newCityId = null;
 
         try {
-            a = sakila.getAddressById(newAddressId);
+            a = this.sakila.getAddressById(newAddressId);
             assertEquals(newAddress, a.getAddress());
 
-            city = sakila.getCityById(a.getCity().getCityId());
+            city = this.sakila.getCityById(a.getCity().getCityId());
             newCityId = city.getCityId();
             assertEquals(newCity, city.getCity());
             assertEquals(countryId, city.getCountry().getCountryId());
         } finally {
             try {
                 a.setAddressId(newAddressId);
-                sakila.delete(a);
+                this.sakila.delete(a);
             } catch (RuntimeException ignore) {
             }
             try {
                 city.setCityId(newCityId);
-                sakila.delete(city);
+                this.sakila.delete(city);
             } catch (RuntimeException ignore) {
             }
 

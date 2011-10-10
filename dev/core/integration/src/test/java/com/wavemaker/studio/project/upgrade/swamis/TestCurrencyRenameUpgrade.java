@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.wavemaker.studio.project.upgrade.swamis;
 
 import static org.junit.Assert.assertEquals;
@@ -44,59 +45,52 @@ import com.wavemaker.tools.project.upgrade.swamis.CurrencyRenameUpgrade;
  */
 public class TestCurrencyRenameUpgrade extends StudioTestCase {
 
-	@Test
-	public void testEventUpgrade() throws Exception {
+    @Test
+    public void testEventUpgrade() throws Exception {
 
-		ProjectManager pm = (ProjectManager) getBean("projectManager");
+        ProjectManager pm = (ProjectManager) getBean("projectManager");
 
-		makeProject("testEventUpgrade", false);
-		pm.getCurrentProject().setProjectVersion(0.22);
+        makeProject("testEventUpgrade", false);
+        pm.getCurrentProject().setProjectVersion(0.22);
 
-		pm.getCurrentProject().getWebAppRoot().getFile().mkdir();
-		assertTrue(pm.getCurrentProject().getWebAppRoot().exists());
-		File pages = new File(pm.getCurrentProject().getWebAppRoot().getFile(),
-				ProjectConstants.PAGES_DIR);
-		pages.mkdir();
-		File page = new File(pages, "Main");
-		page.mkdir();
-		assertTrue(page.exists());
-		File destWidgets = new File(page, "Main." + PagesManager.PAGE_WIDGETS);
+        pm.getCurrentProject().getWebAppRoot().getFile().mkdir();
+        assertTrue(pm.getCurrentProject().getWebAppRoot().exists());
+        File pages = new File(pm.getCurrentProject().getWebAppRoot().getFile(), ProjectConstants.PAGES_DIR);
+        pages.mkdir();
+        File page = new File(pages, "Main");
+        page.mkdir();
+        assertTrue(page.exists());
+        File destWidgets = new File(page, "Main." + PagesManager.PAGE_WIDGETS);
 
-		File sourceWidgets = (new ClassPathResource(
-				"com/wavemaker/tools/project/upgrade/swamis/currencyrename.widgets.js"))
-				.getFile();
-		FileUtils.copyFile(sourceWidgets, destWidgets);
+        File sourceWidgets = new ClassPathResource("com/wavemaker/tools/project/upgrade/swamis/currencyrename.widgets.js").getFile();
+        FileUtils.copyFile(sourceWidgets, destWidgets);
 
-		CurrencyRenameUpgrade cru = new CurrencyRenameUpgrade();
-		cru.setPagesManager((PagesManager) getBean("pagesManager"));
-		UpgradeInfo ui = new UpgradeInfo();
-		cru.doUpgrade(pm.getCurrentProject(), ui);
+        CurrencyRenameUpgrade cru = new CurrencyRenameUpgrade();
+        cru.setPagesManager((PagesManager) getBean("pagesManager"));
+        UpgradeInfo ui = new UpgradeInfo();
+        cru.doUpgrade(pm.getCurrentProject(), ui);
 
-		File expectedWidgets = (new ClassPathResource(
-				"com/wavemaker/tools/project/upgrade/swamis/currencyrename.widgets.js.expected"))
-				.getFile();
-		assertEquals(StringUtils.deleteWhitespace(FileUtils
-				.readFileToString(expectedWidgets)),
-				StringUtils.deleteWhitespace(FileUtils
-						.readFileToString(destWidgets)));
-	}
+        File expectedWidgets = new ClassPathResource("com/wavemaker/tools/project/upgrade/swamis/currencyrename.widgets.js.expected").getFile();
+        assertEquals(StringUtils.deleteWhitespace(FileUtils.readFileToString(expectedWidgets)),
+            StringUtils.deleteWhitespace(FileUtils.readFileToString(destWidgets)));
+    }
 
-	@Test
-	public void testUpgradeTaskPresent() throws Exception {
+    @Test
+    public void testUpgradeTaskPresent() throws Exception {
 
-		boolean foundTask = false;
+        boolean foundTask = false;
 
-		UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
+        UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
 
-		outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
-			for (UpgradeTask ut : uts) {
-				if (ut instanceof CurrencyRenameUpgrade) {
-					foundTask = true;
-					break outer;
-				}
-			}
-		}
+        outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
+            for (UpgradeTask ut : uts) {
+                if (ut instanceof CurrencyRenameUpgrade) {
+                    foundTask = true;
+                    break outer;
+                }
+            }
+        }
 
-		assertTrue(foundTask);
-	}
+        assertTrue(foundTask);
+    }
 }

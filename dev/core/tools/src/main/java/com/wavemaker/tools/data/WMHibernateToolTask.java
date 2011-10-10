@@ -18,15 +18,15 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.ant.HibernateToolTask;
 
 public class WMHibernateToolTask extends HibernateToolTask {
-    
+
     private Configuration cfg = null;
-    
+
     public void setConfiguration(Configuration cfg) {
         this.cfg = cfg;
     }
 
     @Override
     public Configuration getConfiguration() {
-        return cfg;
+        return this.cfg;
     }
 }

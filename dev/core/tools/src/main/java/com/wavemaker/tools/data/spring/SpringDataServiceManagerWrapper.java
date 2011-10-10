@@ -31,47 +31,47 @@ import com.wavemaker.runtime.data.Task;
 public class SpringDataServiceManagerWrapper implements DataServiceManager {
 
     private final DataServiceManager delegate;
+
     private final GenericApplicationContext ctx;
 
-    public SpringDataServiceManagerWrapper(DataServiceManager delegate,
-            GenericApplicationContext ctx) {
+    public SpringDataServiceManagerWrapper(DataServiceManager delegate, GenericApplicationContext ctx) {
         this.delegate = delegate;
         this.ctx = ctx;
     }
 
     public void begin() {
-        delegate.begin();
+        this.delegate.begin();
     }
 
     public void commit() {
-        delegate.commit();
+        this.delegate.commit();
     }
 
     public void dispose() {
         try {
-            delegate.dispose();
+            this.delegate.dispose();
         } finally {
-            ctx.close();
+            this.ctx.close();
         }
     }
 
     public DataServiceMetaData getMetaData() {
-        return delegate.getMetaData();
+        return this.delegate.getMetaData();
     }
 
     public Session getSession() {
-        return delegate.getSession();
+        return this.delegate.getSession();
     }
 
     public Object invoke(Task task, Object... input) {
-        return delegate.invoke(task, (Object[])input);
+        return this.delegate.invoke(task, input);
     }
 
     public Object invoke(Task task, Map<String, Class<?>> types, boolean named, Object... input) {
-        return delegate.invoke(task, types, named, (Object[])input); //salesforce
+        return this.delegate.invoke(task, types, named, input); // salesforce
     }
 
     public void rollback() {
-        delegate.rollback();
+        this.delegate.rollback();
     }
 }

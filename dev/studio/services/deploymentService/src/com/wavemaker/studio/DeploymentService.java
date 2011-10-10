@@ -40,250 +40,229 @@ import com.wavemaker.tools.project.ProjectManager;
  */
 public class DeploymentService {
 
-	private DeploymentManager deploymentManager;
+    private DeploymentManager deploymentManager;
 
-	private DeploymentTargetManager deploymentTargetManager;
+    private DeploymentTargetManager deploymentTargetManager;
 
-	private ServiceDeploymentManager serviceDeploymentManager;
+    private ServiceDeploymentManager serviceDeploymentManager;
 
-	public void testRunStart() {
-		deploymentManager.testRunStart();
-	}
+    public void testRunStart() {
+        this.deploymentManager.testRunStart();
+    }
 
-	public void testRunClean() {
-		deploymentManager.testRunClean();
-	}
+    public void testRunClean() {
+        this.deploymentManager.testRunClean();
+    }
 
-	public String buildWar(Map<String, String> properties) {
-		File war;
-		try {
-			war = serviceDeploymentManager.generateWebapp(properties).getFile();
-		} catch (IOException e) {
-			throw new WMRuntimeException(e);
-		}
-		return war.getAbsolutePath();
-	}
+    public String buildWar(Map<String, String> properties) {
+        File war;
+        try {
+            war = this.serviceDeploymentManager.generateWebapp(properties).getFile();
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        }
+        return war.getAbsolutePath();
+    }
 
-	public java.util.Date getWarDate() {
-		File warFile;
-		try {
-			warFile = serviceDeploymentManager.getWarFile().getFile();
-		} catch (IOException e) {
-			throw new WMRuntimeException(e);
-		}
-		if (!warFile.exists())
-			return null;
-		long wartime = warFile.lastModified();
-		return new java.util.Date(wartime);
-	}
+    public java.util.Date getWarDate() {
+        File warFile;
+        try {
+            warFile = this.serviceDeploymentManager.getWarFile().getFile();
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        }
+        if (!warFile.exists()) {
+            return null;
+        }
+        long wartime = warFile.lastModified();
+        return new java.util.Date(wartime);
+    }
 
-	public boolean isWarUpToDate() {
-		try {
-			File warFile = serviceDeploymentManager.getWarFile().getFile();
-			if (!warFile.exists())
-				return false;
-			long wartime = warFile.lastModified();
-			ProjectManager projectMgr = serviceDeploymentManager
-					.getProjectManager();
-			long lastModTime = projectMgr.getCurrentProject().getProjectRoot()
-					.lastModified();
-			// System.out.println("WAR TIME: " + wartime);
-			// System.out.println("LAS TIME: " + lastModTime);
-			return wartime >= lastModTime;
-		} catch (IOException e) {
-			throw new WMRuntimeException(e);
-		}
-	}
+    public boolean isWarUpToDate() {
+        try {
+            File warFile = this.serviceDeploymentManager.getWarFile().getFile();
+            if (!warFile.exists()) {
+                return false;
+            }
+            long wartime = warFile.lastModified();
+            ProjectManager projectMgr = this.serviceDeploymentManager.getProjectManager();
+            long lastModTime = projectMgr.getCurrentProject().getProjectRoot().lastModified();
+            // System.out.println("WAR TIME: " + wartime);
+            // System.out.println("LAS TIME: " + lastModTime);
+            return wartime >= lastModTime;
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        }
+    }
 
-	public String exportProject() {
-		String result = deploymentManager.exportProject();
-		return (DeploymentManager.isCloud()) ? "" : result;
-	}
+    public String exportProject() {
+        String result = this.deploymentManager.exportProject();
+        return DeploymentManager.isCloud() ? "" : result;
+    }
 
-	/*
-	 * THIS ASSUMES exportProject has already been called, and the war file is
-	 * already prepared. Why don't we just let the client pass in a path to the
-	 * file they want? Because we're dealing with files internal to the studio
-	 * where they should not be able to just download anything they want to pass
-	 * as a parameter.
-	 */
-	public DownloadResponse downloadProjectWar() {
-		try {
-			File localFile = serviceDeploymentManager.getWarFile().getFile();
-			String filename = localFile.getAbsolutePath();
-			DownloadResponse ret = new DownloadResponse();
+    /*
+     * THIS ASSUMES exportProject has already been called, and the war file is already prepared. Why don't we just let
+     * the client pass in a path to the file they want? Because we're dealing with files internal to the studio where
+     * they should not be able to just download anything they want to pass as a parameter.
+     */
+    public DownloadResponse downloadProjectWar() {
+        try {
+            File localFile = this.serviceDeploymentManager.getWarFile().getFile();
+            String filename = localFile.getAbsolutePath();
+            DownloadResponse ret = new DownloadResponse();
 
-			FileInputStream fis = new FileInputStream(localFile);
+            FileInputStream fis = new FileInputStream(localFile);
 
-			ret.setContents(fis);
-			ret.setContentType("application/unknown");
-			ret.setFileName(filename.substring(filename
-					.lastIndexOf(File.separator) + 1));
-			return ret;
-		} catch (IOException e) {
-			throw new WMRuntimeException(e);
-		}
-	}
+            ret.setContents(fis);
+            ret.setContentType("application/unknown");
+            ret.setFileName(filename.substring(filename.lastIndexOf(File.separator) + 1));
+            return ret;
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        }
+    }
 
-	/*
-	 * THIS ASSUMES exportProject has already been called, and the war file is
-	 * already prepared. Why don't we just let the client pass in a path to the
-	 * file they want? Because we're dealing with files internal to the studio
-	 * where they should not be able to just download anything they want to pass
-	 * as a parameter.
-	 */
-	public DownloadResponse downloadProjectEar() {
-		try {
-			File localFile = serviceDeploymentManager.getEarFile().getFile();
-			String filename = localFile.getAbsolutePath();
-			DownloadResponse ret = new DownloadResponse();
+    /*
+     * THIS ASSUMES exportProject has already been called, and the war file is already prepared. Why don't we just let
+     * the client pass in a path to the file they want? Because we're dealing with files internal to the studio where
+     * they should not be able to just download anything they want to pass as a parameter.
+     */
+    public DownloadResponse downloadProjectEar() {
+        try {
+            File localFile = this.serviceDeploymentManager.getEarFile().getFile();
+            String filename = localFile.getAbsolutePath();
+            DownloadResponse ret = new DownloadResponse();
 
-			FileInputStream fis = new FileInputStream(localFile);
+            FileInputStream fis = new FileInputStream(localFile);
 
-			ret.setContents(fis);
-			ret.setContentType("application/unknown");
-			ret.setFileName(filename.substring(filename
-					.lastIndexOf(File.separator) + 1));
-			return ret;
-		} catch (IOException e) {
-			throw new WMRuntimeException(e);
-		}
-	}
+            ret.setContents(fis);
+            ret.setContentType("application/unknown");
+            ret.setFileName(filename.substring(filename.lastIndexOf(File.separator) + 1));
+            return ret;
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        }
+    }
 
-	/*
-	 * THIS ASSUMES exportProject has already been called, and the zip file is
-	 * already prepared
-	 */
-	public DownloadResponse downloadProjectZip() {
+    /*
+     * THIS ASSUMES exportProject has already been called, and the zip file is already prepared
+     */
+    public DownloadResponse downloadProjectZip() {
 
-		String filename = deploymentManager.getExportPath();
+        String filename = this.deploymentManager.getExportPath();
 
-		try {
-			DownloadResponse ret = new DownloadResponse();
+        try {
+            DownloadResponse ret = new DownloadResponse();
 
-			File localFile = new File(filename);
-			FileInputStream fis = new FileInputStream(localFile);
+            File localFile = new File(filename);
+            FileInputStream fis = new FileInputStream(localFile);
 
-			ret.setContents(fis);
-			filename = filename
-					.substring(filename.lastIndexOf(File.separator) + 1);
-			ret.setContentType("application/zip");
-			ret.setFileName(filename);
-			return ret;
-		} catch (IOException e) {
+            ret.setContents(fis);
+            filename = filename.substring(filename.lastIndexOf(File.separator) + 1);
+            ret.setContentType("application/zip");
+            ret.setFileName(filename);
+            return ret;
+        } catch (IOException e) {
 
-		}
-		return (DownloadResponse) null;
-	}
+        }
+        return null;
+    }
 
-	public String exportProject(String zipFileName) {
-		System.out.println("ZIP FILE NAME SERVCIE:" + zipFileName);
-		File f = new File(deploymentManager.getExportPath());
-		f = new File(f.getParentFile(), zipFileName);
-		String path = f.getAbsolutePath();
-		deploymentManager.exportProject(path);
-		return path;
-	}
+    public String exportProject(String zipFileName) {
+        System.out.println("ZIP FILE NAME SERVCIE:" + zipFileName);
+        File f = new File(this.deploymentManager.getExportPath());
+        f = new File(f.getParentFile(), zipFileName);
+        String path = f.getAbsolutePath();
+        this.deploymentManager.exportProject(path);
+        return path;
+    }
 
-	public FileUploadResponse uploadProjectZipFile(
-			@ParamName(name = "file") MultipartFile file) throws IOException {
-		return deploymentManager.importFromZip(file);
-	}
+    public FileUploadResponse uploadProjectZipFile(@ParamName(name = "file") MultipartFile file) throws IOException {
+        return this.deploymentManager.importFromZip(file);
+    }
 
-	public List<DeploymentInfo> getDeploymentInfo() {
-		return serviceDeploymentManager.getDeploymentInfo();
-	}
+    public List<DeploymentInfo> getDeploymentInfo() {
+        return this.serviceDeploymentManager.getDeploymentInfo();
+    }
 
-	public String deploy(DeploymentInfo deploymentInfo) throws IOException {
-		if (deploymentInfo.getDeploymentType() != DeploymentType.FILE) {
-			String validateResult = deploymentTargetManager
-					.getDeploymentTarget(deploymentInfo.getDeploymentType())
-					.validateDeployment(deploymentInfo);
-			if (!validateResult.equals("SUCCESS")) {
-				return validateResult;
-			}
-		}
-		File f = serviceDeploymentManager.generateWebapp(deploymentInfo).getFile();
-		if (!f.exists()) {
-			throw new AssertionError(
-					"Application archive file doesn't exist at "
-							+ f.getAbsolutePath());
-		}
-		if (deploymentInfo.getDeploymentType() == DeploymentType.FILE) {
-			return "SUCCESS";
-		}
-		return deploymentTargetManager.getDeploymentTarget(
-				deploymentInfo.getDeploymentType()).deploy(f, deploymentInfo);
-	}
+    public String deploy(DeploymentInfo deploymentInfo) throws IOException {
+        if (deploymentInfo.getDeploymentType() != DeploymentType.FILE) {
+            String validateResult = this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).validateDeployment(
+                deploymentInfo);
+            if (!validateResult.equals("SUCCESS")) {
+                return validateResult;
+            }
+        }
+        File f = this.serviceDeploymentManager.generateWebapp(deploymentInfo).getFile();
+        if (!f.exists()) {
+            throw new AssertionError("Application archive file doesn't exist at " + f.getAbsolutePath());
+        }
+        if (deploymentInfo.getDeploymentType() == DeploymentType.FILE) {
+            return "SUCCESS";
+        }
+        return this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).deploy(f, deploymentInfo);
+    }
 
-	public String undeploy(DeploymentInfo deploymentInfo, boolean deleteServices) {
-		if (deploymentInfo.getDeploymentType() != DeploymentType.FILE) {
-			deploymentTargetManager.getDeploymentTarget(
-					deploymentInfo.getDeploymentType()).undeploy(
-					deploymentInfo, deleteServices);
-		}
-		return "SUCCESS";
-	}
+    public String undeploy(DeploymentInfo deploymentInfo, boolean deleteServices) {
+        if (deploymentInfo.getDeploymentType() != DeploymentType.FILE) {
+            this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).undeploy(deploymentInfo, deleteServices);
+        }
+        return "SUCCESS";
+    }
 
-	public String save(DeploymentInfo deploymentInfo) {
-		return serviceDeploymentManager.saveDeploymentInfo(deploymentInfo);
-	}
+    public String save(DeploymentInfo deploymentInfo) {
+        return this.serviceDeploymentManager.saveDeploymentInfo(deploymentInfo);
+    }
 
-	public String delete(String deploymentId) {
-		serviceDeploymentManager.deleteDeploymentInfo(deploymentId);
-		return "SUCCESS";
-	}
+    public String delete(String deploymentId) {
+        this.serviceDeploymentManager.deleteDeploymentInfo(deploymentId);
+        return "SUCCESS";
+    }
 
-	public void deployClientComponent(String className, String folder,
-			String data) throws IOException {
-		deploymentManager.deployClientComponent(className, folder, data);
-	}
+    public void deployClientComponent(String className, String folder, String data) throws IOException {
+        this.deploymentManager.deployClientComponent(className, folder, data);
+    }
 
-	public boolean undeployClientComponent(String className, String folder,
-			boolean removeSource) throws IOException {
-		return deploymentManager.undeployClientComponent(className, folder,
-				removeSource);
-	}
+    public boolean undeployClientComponent(String className, String folder, boolean removeSource) throws IOException {
+        return this.deploymentManager.undeployClientComponent(className, folder, removeSource);
+    }
 
-	public void deployTheme(String themename, String filename, String data)
-			throws IOException {
-		deploymentManager.deployTheme(themename, filename, data);
-	}
+    public void deployTheme(String themename, String filename, String data) throws IOException {
+        this.deploymentManager.deployTheme(themename, filename, data);
+    }
 
-	public boolean undeployTheme(String themename) throws IOException {
-		return deploymentManager.undeployTheme(themename);
-	}
+    public boolean undeployTheme(String themename) throws IOException {
+        return this.deploymentManager.undeployTheme(themename);
+    }
 
-	public String[] listThemes() throws IOException {
-		return deploymentManager.listThemes();
-	}
+    public String[] listThemes() throws IOException {
+        return this.deploymentManager.listThemes();
+    }
 
-	public void copyTheme(String oldName, String newName) throws IOException {
-		deploymentManager.copyTheme(oldName, newName);
-	}
+    public void copyTheme(String oldName, String newName) throws IOException {
+        this.deploymentManager.copyTheme(oldName, newName);
+    }
 
-	public void deleteTheme(String name) throws IOException {
-		deploymentManager.deleteTheme(name);
-	}
+    public void deleteTheme(String name) throws IOException {
+        this.deploymentManager.deleteTheme(name);
+    }
 
-	public String[] listThemeImages(String themename) throws IOException {
-		return deploymentManager.listThemeImages(themename);
-	}
+    public String[] listThemeImages(String themename) throws IOException {
+        return this.deploymentManager.listThemeImages(themename);
+    }
 
-	@HideFromClient
-	public void setDeploymentManager(DeploymentManager deploymentManager) {
-		this.deploymentManager = deploymentManager;
-	}
+    @HideFromClient
+    public void setDeploymentManager(DeploymentManager deploymentManager) {
+        this.deploymentManager = deploymentManager;
+    }
 
-	@HideFromClient
-	public void setServiceDeploymentManager(
-			ServiceDeploymentManager serviceDeploymentManager) {
-		this.serviceDeploymentManager = serviceDeploymentManager;
-	}
+    @HideFromClient
+    public void setServiceDeploymentManager(ServiceDeploymentManager serviceDeploymentManager) {
+        this.serviceDeploymentManager = serviceDeploymentManager;
+    }
 
-	@HideFromClient
-	public void setDeploymentTargetManager(
-			DeploymentTargetManager deploymentTargetManager) {
-		this.deploymentTargetManager = deploymentTargetManager;
-	}
+    @HideFromClient
+    public void setDeploymentTargetManager(DeploymentTargetManager deploymentTargetManager) {
+        this.deploymentTargetManager = deploymentTargetManager;
+    }
 }

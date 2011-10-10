@@ -17,22 +17,26 @@ package com.wavemaker.tools.service.smd;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class Param {
 
     private String name;
+
     private String type;
-    
+
     public String getName() {
-        return name;
+        return this.name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
+
     public String getType() {
-        return type;
+        return this.type;
     }
+
     public void setType(String type) {
         this.type = type;
     }

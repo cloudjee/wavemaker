@@ -19,26 +19,25 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * 
  * 
- * 	The elements that use this type designate a path starting
- * 	with a "/" and interpreted relative to the root of a WAR
- * 	file.
+ * The elements that use this type designate a path starting with a "/" and interpreted relative to the root of a WAR
+ * file.
  * 
- *       
  * 
- * <p>Java class for war-pathType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for war-pathType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="war-pathType">
@@ -53,9 +52,6 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "war-pathType")
-public class WarPathType
-    extends String
-{
-
+public class WarPathType extends String {
 
 }

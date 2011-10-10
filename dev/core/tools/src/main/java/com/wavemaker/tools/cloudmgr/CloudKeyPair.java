@@ -16,16 +16,19 @@ package com.wavemaker.tools.cloudmgr;
 
 /**
  * This class represents a cloud network.
- *
+ * 
  * @author slee
  */
 public class CloudKeyPair {
 
     private String keyname;
+
     private String fingerprint;
+
     private String material;
 
-    public CloudKeyPair() {}
+    public CloudKeyPair() {
+    }
 
     public CloudKeyPair(String keyname, String fingerprint, String material) {
         this.keyname = keyname;

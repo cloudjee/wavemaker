@@ -41,8 +41,8 @@ import com.wavemaker.tools.project.StudioConfiguration;
 import com.wavemaker.tools.service.DesignServiceManager;
 
 /**
- * Compiler main class. This class compiles all java class source files in a
- * project and executes annotation processors post-compilation
+ * Compiler main class. This class compiles all java class source files in a project and executes annotation processors
+ * post-compilation
  * 
  * @author slee
  * @author Jeremy Grelle
@@ -50,152 +50,130 @@ import com.wavemaker.tools.service.DesignServiceManager;
 
 public class ProjectCompiler {
 
-	private StudioConfiguration studioConfiguration;
+    private StudioConfiguration studioConfiguration;
 
-	private ProjectManager projectManager;
+    private ProjectManager projectManager;
 
-	private DesignServiceManager designServiceManager;
+    private DesignServiceManager designServiceManager;
 
-	public void compileProject(String projectName) {
+    public void compileProject(String projectName) {
 
-		Project project = projectManager.getProject(projectName, true);
+        Project project = this.projectManager.getProject(projectName, true);
 
-		JavaCompiler compiler = ServiceLoader.load(JavaCompiler.class)
-				.iterator().next();
-		ClassFileManager projectFileManager;
-		Iterable<JavaFileObject> sourceFiles = null;
-		try {
-			projectFileManager = new ClassFileManager(
-					compiler.getStandardFileManager(null, null, null),
-					studioConfiguration, project, project.getProjectRoot()
-							.createRelative("src/"));
-			sourceFiles = projectFileManager.list(StandardLocation.SOURCE_PATH,
-					"", Collections.singleton(Kind.SOURCE), true);
+        JavaCompiler compiler = ServiceLoader.load(JavaCompiler.class).iterator().next();
+        ClassFileManager projectFileManager;
+        Iterable<JavaFileObject> sourceFiles = null;
+        try {
+            projectFileManager = new ClassFileManager(compiler.getStandardFileManager(null, null, null), this.studioConfiguration, project,
+                project.getProjectRoot().createRelative("src/"));
+            sourceFiles = projectFileManager.list(StandardLocation.SOURCE_PATH, "", Collections.singleton(Kind.SOURCE), true);
 
-		} catch (IOException e) {
-			throw new WMRuntimeException(
-					"Could not create Java file manager for project "
-							+ projectName, e);
-		}
+        } catch (IOException e) {
+            throw new WMRuntimeException("Could not create Java file manager for project " + projectName, e);
+        }
 
-		List<String> options = new ArrayList<String>();
+        List<String> options = new ArrayList<String>();
 
-		options.add("-encoding");
-		options.add("utf8");
+        options.add("-encoding");
+        options.add("utf8");
 
-		if (sourceFiles.iterator().hasNext()) {
-			JavaCompiler.CompilationTask task = compiler.getTask(null,
-					projectFileManager, null, options, null, sourceFiles);
-			if (!task.call()) {
-				return;
-			}
-		}
+        if (sourceFiles.iterator().hasNext()) {
+            JavaCompiler.CompilationTask task = compiler.getTask(null, projectFileManager, null, options, null, sourceFiles);
+            if (!task.call()) {
+                return;
+            }
+        }
 
-		try {
-			List<Resource> serviceDirs = studioConfiguration.listChildren(
-					project.getProjectRoot().createRelative("services/"),
-					new ResourceFilter() {
-						public boolean accept(Resource resource) {
-							return StringUtils.getFilenameExtension(resource
-									.getFilename()) == null;
-						}
-					});
-			for (Resource serviceDir : serviceDirs) {
-				compileService(projectName, serviceDir.getFilename());
-			}
-		} catch (IOException e) {
-			throw new WMRuntimeException(e);
-		}
-		executeConfigurationProcessor(compiler, projectFileManager, projectName);
+        try {
+            List<Resource> serviceDirs = this.studioConfiguration.listChildren(project.getProjectRoot().createRelative("services/"),
+                new ResourceFilter() {
 
-	}
+                    public boolean accept(Resource resource) {
+                        return StringUtils.getFilenameExtension(resource.getFilename()) == null;
+                    }
+                });
+            for (Resource serviceDir : serviceDirs) {
+                compileService(projectName, serviceDir.getFilename());
+            }
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        }
+        executeConfigurationProcessor(compiler, projectFileManager, projectName);
 
-	public void compileService(String projectName, String serviceId) {
+    }
 
-		Project project = projectManager.getProject(projectName, true);
+    public void compileService(String projectName, String serviceId) {
 
-		JavaCompiler compiler = ServiceLoader.load(JavaCompiler.class)
-				.iterator().next();
-		ClassFileManager projectFileManager;
-		Iterable<JavaFileObject> sourceFiles;
-		try {
-			projectFileManager = new ClassFileManager(
-					compiler.getStandardFileManager(null, null, null),
-					studioConfiguration, project, project.getProjectRoot()
-							.createRelative("services/" + serviceId + "/src/"));
-			sourceFiles = projectFileManager.list(StandardLocation.SOURCE_PATH,
-					"", Collections.singleton(Kind.SOURCE), true);
-		} catch (IOException e) {
-			throw new WMRuntimeException(
-					"Could not create Java file manager for project "
-							+ projectName, e);
-		}
+        Project project = this.projectManager.getProject(projectName, true);
 
-		List<String> options = new ArrayList<String>();
+        JavaCompiler compiler = ServiceLoader.load(JavaCompiler.class).iterator().next();
+        ClassFileManager projectFileManager;
+        Iterable<JavaFileObject> sourceFiles;
+        try {
+            projectFileManager = new ClassFileManager(compiler.getStandardFileManager(null, null, null), this.studioConfiguration, project,
+                project.getProjectRoot().createRelative("services/" + serviceId + "/src/"));
+            sourceFiles = projectFileManager.list(StandardLocation.SOURCE_PATH, "", Collections.singleton(Kind.SOURCE), true);
+        } catch (IOException e) {
+            throw new WMRuntimeException("Could not create Java file manager for project " + projectName, e);
+        }
 
-		options.add("-encoding");
-		options.add("utf8");
+        List<String> options = new ArrayList<String>();
 
-		options.add("-A" + ServiceProcessorConstants.PROJECT_NAME_PROP + "="
-				+ projectName);
-		options.add("-A" + ServiceProcessorConstants.SERVICE_ID_PROP + "="
-				+ serviceId);
+        options.add("-encoding");
+        options.add("utf8");
 
-		if (sourceFiles.iterator().hasNext()) {
-			JavaCompiler.CompilationTask task = compiler.getTask(null,
-					projectFileManager, null, options, null, sourceFiles);
-			task.setProcessors(Collections.singleton(createServiceDefProcessor()));
-			task.call();
-		}
-	}
+        options.add("-A" + ServiceProcessorConstants.PROJECT_NAME_PROP + "=" + projectName);
+        options.add("-A" + ServiceProcessorConstants.SERVICE_ID_PROP + "=" + serviceId);
 
-	public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-		this.studioConfiguration = studioConfiguration;
-	}
+        if (sourceFiles.iterator().hasNext()) {
+            JavaCompiler.CompilationTask task = compiler.getTask(null, projectFileManager, null, options, null, sourceFiles);
+            task.setProcessors(Collections.singleton(createServiceDefProcessor()));
+            task.call();
+        }
+    }
 
-	public void setProjectManager(ProjectManager projectManager) {
-		this.projectManager = projectManager;
-	}
+    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
+        this.studioConfiguration = studioConfiguration;
+    }
 
-	public void setDesignServiceManager(
-			DesignServiceManager designServiceManager) {
-		this.designServiceManager = designServiceManager;
-	}
+    public void setProjectManager(ProjectManager projectManager) {
+        this.projectManager = projectManager;
+    }
 
-	@SuppressWarnings("unchecked")
-	private void executeConfigurationProcessor(JavaCompiler compiler,
-			JavaFileManager projectFileManager, String projectName) {
-		List<String> options = new ArrayList<String>();
+    public void setDesignServiceManager(DesignServiceManager designServiceManager) {
+        this.designServiceManager = designServiceManager;
+    }
 
-		options.add("-encoding");
-		options.add("utf8");
+    @SuppressWarnings("unchecked")
+    private void executeConfigurationProcessor(JavaCompiler compiler, JavaFileManager projectFileManager, String projectName) {
+        List<String> options = new ArrayList<String>();
 
-		options.add("-proc:only");
+        options.add("-encoding");
+        options.add("utf8");
 
-		options.add("-classNames");
-		options.add("java.lang.Object");
+        options.add("-proc:only");
 
-		options.add("-A" + ServiceProcessorConstants.PROJECT_NAME_PROP + "="
-				+ projectName);
+        options.add("-classNames");
+        options.add("java.lang.Object");
 
-		JavaCompiler.CompilationTask task = compiler.getTask(null,
-				projectFileManager, null, options, null, Collections.EMPTY_SET);
-		task.setProcessors(Collections
-				.singleton(createServiceConfigProcessor()));
-		task.call();
-	}
+        options.add("-A" + ServiceProcessorConstants.PROJECT_NAME_PROP + "=" + projectName);
 
-	private Processor createServiceConfigProcessor() {
-		ServiceConfigurationProcessor processor = new ServiceConfigurationProcessor();
-		processor.setStudioConfiguration(studioConfiguration);
-		processor.setDesignServiceManager(designServiceManager);
-		return processor;
-	}
+        JavaCompiler.CompilationTask task = compiler.getTask(null, projectFileManager, null, options, null, Collections.EMPTY_SET);
+        task.setProcessors(Collections.singleton(createServiceConfigProcessor()));
+        task.call();
+    }
 
-	private Processor createServiceDefProcessor() {
-		ServiceDefProcessor processor = new ServiceDefProcessor();
-		processor.setStudioConfiguration(studioConfiguration);
-		processor.setDesignServiceManager(designServiceManager);
-		return processor;
-	}
+    private Processor createServiceConfigProcessor() {
+        ServiceConfigurationProcessor processor = new ServiceConfigurationProcessor();
+        processor.setStudioConfiguration(this.studioConfiguration);
+        processor.setDesignServiceManager(this.designServiceManager);
+        return processor;
+    }
+
+    private Processor createServiceDefProcessor() {
+        ServiceDefProcessor processor = new ServiceDefProcessor();
+        processor.setStudioConfiguration(this.studioConfiguration);
+        processor.setDesignServiceManager(this.designServiceManager);
+        return processor;
+    }
 }

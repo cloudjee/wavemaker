@@ -23,15 +23,15 @@ import com.wavemaker.common.util.ObjectUtils;
  */
 public class OrderBy {
 
-    private static final String ERROR_MSG = 
-	"orderBy format must be: asc|desc:<propertyPath>";
+    private static final String ERROR_MSG = "orderBy format must be: asc|desc:<propertyPath>";
 
     private static final String ORDER_BY_SEP = ":";
-    
+
     public static enum SortOrder {
-        
+
         ASC(), DESC();
-        
+
+        @Override
         public String toString() {
             if (this == ASC) {
                 return "asc:";
@@ -44,14 +44,13 @@ public class OrderBy {
     public static OrderBy newInstance(String orderBy) {
 
         if (ObjectUtils.isNullOrEmpty(orderBy)) {
-            throw new IllegalArgumentException(
-                    "orderBy cannot be null or empty");
+            throw new IllegalArgumentException("orderBy cannot be null or empty");
         }
 
-	orderBy = orderBy.trim();
+        orderBy = orderBy.trim();
 
         int i = orderBy.indexOf(ORDER_BY_SEP);
-        if (i == -1 || i == 0 || i == (orderBy.length()-1)) {
+        if (i == -1 || i == 0 || i == orderBy.length() - 1) {
             throw new IllegalArgumentException(ERROR_MSG);
         }
 
@@ -65,8 +64,7 @@ public class OrderBy {
         } else if (order.equals("desc")) {
             rtn.setDesc(propertyPath);
         } else {
-            throw new IllegalArgumentException("\"" + orderBy + "\" " + 
-					       ERROR_MSG);
+            throw new IllegalArgumentException("\"" + orderBy + "\" " + ERROR_MSG);
         }
 
         return rtn;
@@ -80,7 +78,7 @@ public class OrderBy {
     }
 
     public String getPropertyPath() {
-        return propertyPath;
+        return this.propertyPath;
     }
 
     public void setAsc(String propertyPath) {
@@ -94,19 +92,20 @@ public class OrderBy {
     }
 
     public boolean isAsc() {
-        return sortOrder == SortOrder.ASC;
+        return this.sortOrder == SortOrder.ASC;
     }
 
     public boolean isDesc() {
-        return sortOrder == SortOrder.DESC;
+        return this.sortOrder == SortOrder.DESC;
     }
-    
+
+    @Override
     public String toString() {
         StringBuilder rtn = new StringBuilder();
-        if (sortOrder != null) {
-            rtn.append(sortOrder.toString());
+        if (this.sortOrder != null) {
+            rtn.append(this.sortOrder.toString());
         }
-        rtn.append(propertyPath);
+        rtn.append(this.propertyPath);
         return rtn.toString();
     }
 }

@@ -15,8 +15,8 @@
 package com.wavemaker.json.type;
 
 /**
- * Holds the state of current types, and knows how to discover new types
- * (associated with the individual type of this TypeState).
+ * Holds the state of current types, and knows how to discover new types (associated with the individual type of this
+ * TypeState).
  * 
  * @author small
  * @version $Rev$ - $Date$
@@ -24,12 +24,10 @@ package com.wavemaker.json.type;
 public interface TypeState {
 
     /**
-     * Get the type specified by typeName. If it's in the list of known types,
-     * return the known version, else use an implementation-specific method to
-     * try to get the TypeDefinition.
+     * Get the type specified by typeName. If it's in the list of known types, return the known version, else use an
+     * implementation-specific method to try to get the TypeDefinition.
      * 
-     * @param typeName
-     *            The unique type name.
+     * @param typeName The unique type name.
      * @return The corresponding TypeDefinition.
      */
     public TypeDefinition getType(String typeName);
@@ -37,8 +35,7 @@ public interface TypeState {
     /**
      * Checks to see if the specified type is known by this TypeState.
      * 
-     * @param typeName
-     *            The type to find.
+     * @param typeName The type to find.
      * @return True iff the type is known by this TypeState.
      */
     public boolean isTypeKnown(String typeName);
@@ -46,8 +43,7 @@ public interface TypeState {
     /**
      * Add the type to the list of types known by this TypeState.
      * 
-     * @param typeDefinition
-     *            The TypeDefinition to add.
+     * @param typeDefinition The TypeDefinition to add.
      */
     public void addType(TypeDefinition typeDefinition);
 }

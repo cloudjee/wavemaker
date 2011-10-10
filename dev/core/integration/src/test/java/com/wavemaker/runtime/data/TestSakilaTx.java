@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data;
 
 import static org.junit.Assert.fail;
@@ -56,7 +57,7 @@ public class TestSakilaTx extends RuntimeDataSpringContextTestCase {
 
     @BeforeClass
     public static void initData() {
-    	testData = new TestData();
+        testData = new TestData();
     }
 
     protected void checkShouldSkip() {
@@ -65,17 +66,16 @@ public class TestSakilaTx extends RuntimeDataSpringContextTestCase {
         }
     }
 
-    @Test public void testInitService() {
+    @Test
+    public void testInitService() {
 
         try {
 
             ApplicationContext ctx = getApplicationContext();
 
-            ServiceManager serviceMgr = (ServiceManager) ctx
-                    .getBean(ServiceConstants.SERVICE_MANAGER_NAME);
+            ServiceManager serviceMgr = (ServiceManager) ctx.getBean(ServiceConstants.SERVICE_MANAGER_NAME);
 
-            Sakila sakila = (Sakila) ((ReflectServiceWire) serviceMgr
-                    .getServiceWire(DataServiceTestConstants.SAKILA_SERVICE_SPRING_ID_2)).getServiceBean();
+            Sakila sakila = (Sakila) ((ReflectServiceWire) serviceMgr.getServiceWire(DataServiceTestConstants.SAKILA_SERVICE_SPRING_ID_2)).getServiceBean();
 
             sakila.getActorById(Short.valueOf("1")); // test connection
 
@@ -87,30 +87,31 @@ public class TestSakilaTx extends RuntimeDataSpringContextTestCase {
         }
     }
 
-    @Test public void testCommitNoTx() {
+    @Test
+    public void testCommitNoTx() {
 
         checkShouldSkip();
 
         testData.sakila.getDataServiceManager().commit();
     }
 
-    @Test public void testGetSessionTx() {
+    @Test
+    public void testGetSessionTx() {
 
         checkShouldSkip();
 
         testData.sakila.begin();
-        testData.sakila.getDataServiceManager().getSession().get(Actor.class,
-                Short.valueOf("1"));
+        testData.sakila.getDataServiceManager().getSession().get(Actor.class, Short.valueOf("1"));
         testData.sakila.rollback();
     }
 
-    @Test public void testGetSessionNoTx() {
+    @Test
+    public void testGetSessionNoTx() {
 
         checkShouldSkip();
 
         try {
-        testData.sakila.getDataServiceManager().getSession().get(Actor.class,
-                Short.valueOf("1"));
+            testData.sakila.getDataServiceManager().getSession().get(Actor.class, Short.valueOf("1"));
         } catch (SessionException ex) {
             return;
         }

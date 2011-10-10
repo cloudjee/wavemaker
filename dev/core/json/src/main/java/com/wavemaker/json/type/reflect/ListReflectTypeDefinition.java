@@ -31,55 +31,55 @@ import com.wavemaker.json.type.ListTypeDefinition;
  * @author small
  * @version $Rev$ - $Date$
  */
-public class ListReflectTypeDefinition extends ReflectTypeDefinition implements
-        ListTypeDefinition {
-    
-    /* (non-Javadoc)
+public class ListReflectTypeDefinition extends ReflectTypeDefinition implements ListTypeDefinition {
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.type.TypeDefinition#newInstance(java.lang.Object[])
      */
     @Override
     public Object newInstance(Object... args) {
-        
+
         int length = 0;
-        if (args.length==1 &&
-                Integer.class.isAssignableFrom(args[0].getClass())) {
+        if (args.length == 1 && Integer.class.isAssignableFrom(args[0].getClass())) {
             length = (Integer) args[0];
         }
-        
+
         if (getKlass().isInterface()) {
             if (getKlass().equals(List.class)) {
                 return new ArrayList<Object>(length);
             } else if (getKlass().equals(Set.class)) {
-               return new HashSet<Object>(length);
+                return new HashSet<Object>(length);
             } else if (getKlass().equals(SortedSet.class)) {
                 return new TreeSet<Object>();
             } else if (getKlass().equals(Collection.class)) {
                 return new ArrayList<Object>(length);
             } else {
-                throw new WMRuntimeException(
-                        MessageResource.JSON_FAILEDINSTANCE_COLLECTION, getKlass());
+                throw new WMRuntimeException(MessageResource.JSON_FAILEDINSTANCE_COLLECTION, getKlass());
             }
         } else if (getKlass().isArray()) {
             Class<?> componentType = getKlass().getComponentType();
             return Array.newInstance(componentType, length);
         } else {
-            throw new WMRuntimeException(MessageResource.JSON_UNKNOWN_COLL_OR_ARRAY,
-                    getKlass());
+            throw new WMRuntimeException(MessageResource.JSON_UNKNOWN_COLL_OR_ARRAY, getKlass());
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.type.ListTypeDefinition#set(java.lang.Object, int, java.lang.Object)
      */
     @SuppressWarnings("unchecked")
     public void add(Object list, int index, Object o) {
-        
+
         if (list.getClass().isArray()) {
             Array.set(list, index, o);
         } else if (list instanceof List) {
             List tempList = (List) list;
-            
-            if (index>=tempList.size()) {
+
+            if (index >= tempList.size()) {
                 tempList.add(o);
             } else {
                 tempList.set(index, o);
@@ -87,8 +87,7 @@ public class ListReflectTypeDefinition extends ReflectTypeDefinition implements
         } else if (list instanceof Collection) {
             ((Collection) list).add(o);
         } else {
-            throw new WMRuntimeException(MessageResource.JSON_UNKNOWN_COLL_IN_SET,
-                    list, list.getClass());
+            throw new WMRuntimeException(MessageResource.JSON_UNKNOWN_COLL_IN_SET, list, list.getClass());
         }
     }
 }

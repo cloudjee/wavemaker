@@ -19,29 +19,36 @@ import java.util.SortedSet;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class SMD {
 
     private String serviceType;
+
     private String serviceURL;
+
     private SortedSet<Method> methods;
-    
+
     public String getServiceType() {
-        return serviceType;
+        return this.serviceType;
     }
+
     public void setServiceType(String serviceType) {
         this.serviceType = serviceType;
     }
+
     public String getServiceURL() {
-        return serviceURL;
+        return this.serviceURL;
     }
+
     public void setServiceURL(String serviceURL) {
         this.serviceURL = serviceURL;
     }
+
     public SortedSet<Method> getMethods() {
-        return methods;
+        return this.methods;
     }
+
     public void setMethods(SortedSet<Method> methods) {
         this.methods = methods;
     }

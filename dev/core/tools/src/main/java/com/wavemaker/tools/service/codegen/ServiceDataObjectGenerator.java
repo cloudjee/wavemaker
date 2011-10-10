@@ -25,8 +25,7 @@ import com.wavemaker.tools.service.definitions.DataObject;
 import com.wavemaker.tools.service.definitions.Service;
 
 /**
- * Generate DataObjects based on a
- * com.wavemaker.tools.service.definitions.Service
+ * Generate DataObjects based on a com.wavemaker.tools.service.definitions.Service
  * 
  * @author Simon Toens
  * @version $Rev$ - $Date$
@@ -39,7 +38,8 @@ public class ServiceDataObjectGenerator {
     private final Class<?> collectionType;
 
     private Collection<String> serializableTypes = Collections.emptySet();
-    private Collection<String> equalsHashCodeTypes = Collections.emptySet();    
+
+    private Collection<String> equalsHashCodeTypes = Collections.emptySet();
 
     private int index = 0;
 
@@ -58,43 +58,42 @@ public class ServiceDataObjectGenerator {
     }
 
     public boolean hasNext() {
-        return index < service.getDataobjects().getDataobject().size();
+        return this.index < this.service.getDataobjects().getDataobject().size();
     }
 
     public void generateNext(OutputStream os) throws IOException {
         DataObject o = getCurrentDataObject();
         setupGenerator(o).generate(os);
-        index++;
+        this.index++;
     }
 
     public void setSerializableTypes(Collection<String> serializableTypes) {
         this.serializableTypes = serializableTypes;
     }
-    
+
     public void setEqualsHashCodeTypes(Collection<String> equalsHashCodeTypes) {
         this.equalsHashCodeTypes = equalsHashCodeTypes;
     }
 
     private DataObject getCurrentDataObject() {
-        List<DataObject> l = service.getDataobjects().getDataobject();
-        if (index == l.size()) {
+        List<DataObject> l = this.service.getDataobjects().getDataobject();
+        if (this.index == l.size()) {
             throw new IndexOutOfBoundsException();
         }
-        return l.get(index);
+        return l.get(this.index);
     }
 
     private BeanGenerator setupGenerator(DataObject o) {
         BeanGenerator rtn = new BeanGenerator(o.getJavaType());
         rtn.addSimpleTypesOnlyCtor();
         rtn.initCollections();
-        rtn.addClassJavadoc(" " + service.getId() + "." + o.getName() + "\n"
-                + StringUtils.getFormattedDate());
+        rtn.addClassJavadoc(" " + this.service.getId() + "." + o.getName() + "\n" + StringUtils.getFormattedDate());
 
-        if (serializableTypes.contains(o.getJavaType())) {
+        if (this.serializableTypes.contains(o.getJavaType())) {
             rtn.implSerializable();
         }
-        
-        if (equalsHashCodeTypes.contains(o.getJavaType())) {
+
+        if (this.equalsHashCodeTypes.contains(o.getJavaType())) {
             rtn.addEqualsHashCode();
         }
 
@@ -103,7 +102,7 @@ public class ServiceDataObjectGenerator {
             String type = element.getTypeRef();
             BeanGenerator.PropertyDescriptor pd = rtn.addProperty(name, type);
             if (element.isIsList()) {
-                pd.setCollectionType(collectionType);
+                pd.setCollectionType(this.collectionType);
             }
         }
         return rtn;

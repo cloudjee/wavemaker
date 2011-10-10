@@ -14,7 +14,6 @@
 
 package com.wavemaker.tools.project.upgrade;
 
-
 /**
  * An individual studio upgrade task.
  * 
@@ -25,11 +24,9 @@ package com.wavemaker.tools.project.upgrade;
 public interface StudioUpgradeTask {
 
     /**
-     * Perform a single upgrade action on the studio. This should only do a
-     * single task.
+     * Perform a single upgrade action on the studio. This should only do a single task.
      * 
-     * @param upgradeInfo
-     *                Contains information about the upgrade in progress.
+     * @param upgradeInfo Contains information about the upgrade in progress.
      */
     public void doUpgrade(UpgradeInfo upgradeInfo);
 }

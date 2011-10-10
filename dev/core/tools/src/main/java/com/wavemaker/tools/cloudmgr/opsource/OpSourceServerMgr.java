@@ -41,44 +41,41 @@ import com.wavemaker.tools.cloudmgr.opsource.myaccount.response.Account;
 
 /**
  * This class is to manage OpSource cloud server instances.
- *
+ * 
  * @author slee
  */
 public class OpSourceServerMgr implements CloudServerMgr {
 
-    private DeployServerProc deployServerProc = new DeployServerProc();
-    private DeleteServerProc deleteServerProc = new DeleteServerProc();
-    private ListServersProc listServersProc = new ListServersProc();
-    private ListImagesProc listImagesProc = new ListImagesProc();
-    private ListNetworksProc listNetworksProc = new ListNetworksProc();
+    private final DeployServerProc deployServerProc = new DeployServerProc();
+
+    private final DeleteServerProc deleteServerProc = new DeleteServerProc();
+
+    private final ListServersProc listServersProc = new ListServersProc();
+
+    private final ListImagesProc listImagesProc = new ListImagesProc();
+
+    private final ListNetworksProc listNetworksProc = new ListNetworksProc();
+
     private String userName = null;
+
     private String passWord = null;
 
     private String orgId = null;
 
-    public Collection<CloudServer> createServer(String serverName,
-                                                String desc,
-                                                String image,
-                                                String flavorId,
-                                                String network,
-                                                String adminPass,
-                                                String keyPair,
-                                                String vmType,
-                                                List<String> securityGroup,
-                                                CloudAuth auth) {
+    public Collection<CloudServer> createServer(String serverName, String desc, String image, String flavorId, String network, String adminPass,
+        String keyPair, String vmType, List<String> securityGroup, CloudAuth auth) {
 
         if (!loggedIn(auth)) {
             String un = auth.getUsername();
             String pw = auth.getPassword();
             MyAccountProc proc = new MyAccountProc();
             Account acct = proc.getMyAccount(un, pw);
-            orgId = acct.getOrgId();
-            userName = un;
-            passWord = pw;
+            this.orgId = acct.getOrgId();
+            this.userName = un;
+            this.passWord = pw;
         }
 
-        ProcStatus status = deployServerProc.deployServer(orgId, serverName, desc, network, image, adminPass,
-                userName, passWord);
+        ProcStatus status = this.deployServerProc.deployServer(this.orgId, serverName, desc, network, image, adminPass, this.userName, this.passWord);
 
         if (!status.getResultCode().equals("REASON_0")) {
             throw new WMRuntimeException(status.getResultDetail());
@@ -87,19 +84,18 @@ public class OpSourceServerMgr implements CloudServerMgr {
         return getServerList(null, auth);
     }
 
-    public Collection<CloudServer> deleteServer(String serverId,
-                                                CloudAuth auth) {
+    public Collection<CloudServer> deleteServer(String serverId, CloudAuth auth) {
         if (!loggedIn(auth)) {
             String un = auth.getUsername();
             String pw = auth.getPassword();
             MyAccountProc proc = new MyAccountProc();
             Account acct = proc.getMyAccount(un, pw);
-            orgId = acct.getOrgId();
-            userName = un;
-            passWord = pw;
+            this.orgId = acct.getOrgId();
+            this.userName = un;
+            this.passWord = pw;
         }
 
-        Status status = deleteServerProc.deleteServer(orgId, serverId, userName, passWord);
+        Status status = this.deleteServerProc.deleteServer(this.orgId, serverId, this.userName, this.passWord);
 
         if (!status.getResultCode().equals("REASON_0")) {
             throw new WMRuntimeException(status.getResultDetail());
@@ -108,33 +104,24 @@ public class OpSourceServerMgr implements CloudServerMgr {
         return getServerList(null, auth);
     }
 
-    public Collection<CloudServer> getServerList(String image,
-                                                CloudAuth auth) {
+    public Collection<CloudServer> getServerList(String image, CloudAuth auth) {
         if (!loggedIn(auth)) {
             String un = auth.getUsername();
             String pw = auth.getPassword();
             MyAccountProc proc = new MyAccountProc();
             Account acct = proc.getMyAccount(un, pw);
-            orgId = acct.getOrgId();
-            userName = un;
-            passWord = pw;
+            this.orgId = acct.getOrgId();
+            this.userName = un;
+            this.passWord = pw;
         }
 
-        Servers svrs = listServersProc.listServers(orgId, userName, passWord);
+        Servers svrs = this.listServersProc.listServers(this.orgId, this.userName, this.passWord);
 
         List<Servers.Server> servers = svrs.getServer();
         Collection<CloudServer> rtn = new ArrayList<CloudServer>();
         for (Servers.Server server : servers) {
-            CloudServer cloudServer = new CloudServer(server.getName(),
-                                                    server.getDescription(),
-                                                    server.getId(),
-                                                    server.getImageResourcePath(),
-                                                    null,
-                                                    server.getVlanResourcePath(),
-                                                    null,
-                                                    null,
-                                                    server.getPrivateIPAddress(),
-                                                    server.getCreated());
+            CloudServer cloudServer = new CloudServer(server.getName(), server.getDescription(), server.getId(), server.getImageResourcePath(), null,
+                server.getVlanResourcePath(), null, null, server.getPrivateIPAddress(), server.getCreated());
             rtn.add(cloudServer);
         }
 
@@ -147,12 +134,12 @@ public class OpSourceServerMgr implements CloudServerMgr {
             String pw = auth.getPassword();
             MyAccountProc proc = new MyAccountProc();
             Account acct = proc.getMyAccount(un, pw);
-            orgId = acct.getOrgId();
-            userName = un;
-            passWord = pw;
+            this.orgId = acct.getOrgId();
+            this.userName = un;
+            this.passWord = pw;
         }
 
-        ServerImages imgs = listImagesProc.listImages(orgId, userName, passWord);
+        ServerImages imgs = this.listImagesProc.listImages(this.orgId, this.userName, this.passWord);
 
         List<ServerImages.ServerImage> images = imgs.getServerImage();
         Collection<CloudImage> rtn = new ArrayList<CloudImage>();
@@ -162,15 +149,8 @@ public class OpSourceServerMgr implements CloudServerMgr {
             if (osl != null && osl.size() > 0) {
                 osName = osl.get(0).getDisplayName();
             }
-            CloudImage cloudImage = new CloudImage(image.getId(),
-                                                    image.getName(),
-                                                    image.getDescription(),
-                                                    image.getCpuCount(),
-                                                    image.getMemory(),
-                                                    image.getOsStorage(),
-                                                    null,
-                                                    osName,
-                                                    image.getCreated());
+            CloudImage cloudImage = new CloudImage(image.getId(), image.getName(), image.getDescription(), image.getCpuCount(), image.getMemory(),
+                image.getOsStorage(), null, osName, image.getCreated());
             rtn.add(cloudImage);
         }
 
@@ -183,19 +163,17 @@ public class OpSourceServerMgr implements CloudServerMgr {
             String pw = auth.getPassword();
             MyAccountProc proc = new MyAccountProc();
             Account acct = proc.getMyAccount(un, pw);
-            orgId = acct.getOrgId();
-            userName = un;
-            passWord = pw;
+            this.orgId = acct.getOrgId();
+            this.userName = un;
+            this.passWord = pw;
         }
 
-        Networks nets = listNetworksProc.listNetworks(orgId, userName, passWord);
+        Networks nets = this.listNetworksProc.listNetworks(this.orgId, this.userName, this.passWord);
 
         List<Networks.Network> networks = nets.getNetwork();
         Collection<CloudNetwork> rtn = new ArrayList<CloudNetwork>();
         for (Networks.Network network : networks) {
-            CloudNetwork cloudNetwork = new CloudNetwork(network.getId(),
-                                                    network.getName(),
-                                                    network.getDescription());
+            CloudNetwork cloudNetwork = new CloudNetwork(network.getId(), network.getName(), network.getDescription());
             rtn.add(cloudNetwork);
         }
 
@@ -205,16 +183,22 @@ public class OpSourceServerMgr implements CloudServerMgr {
     private boolean loggedIn(CloudAuth auth) {
         String un = auth.getUsername();
         String pw = auth.getPassword();
-        if (orgId != null && userName != null && passWord != null && userName.equals(un) && passWord.equals(pw))
+        if (this.orgId != null && this.userName != null && this.passWord != null && this.userName.equals(un) && this.passWord.equals(pw)) {
             return true;
-        else
+        } else {
             return false;
+        }
     }
 
-    public Collection<CloudFlavor> getFlavorList(CloudAuth authObj) {return null;}
+    public Collection<CloudFlavor> getFlavorList(CloudAuth authObj) {
+        return null;
+    }
 
-    public Collection<CloudSecurityGroup> getSecurityGroupList(CloudAuth authObj) {return null;}
+    public Collection<CloudSecurityGroup> getSecurityGroupList(CloudAuth authObj) {
+        return null;
+    }
 
-    public Collection<CloudKeyPair> getKeyPairList(CloudAuth authObj) {return null;}
+    public Collection<CloudKeyPair> getKeyPairList(CloudAuth authObj) {
+        return null;
+    }
 }
-

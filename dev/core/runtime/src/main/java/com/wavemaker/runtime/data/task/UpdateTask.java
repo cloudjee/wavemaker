@@ -17,9 +17,8 @@ package com.wavemaker.runtime.data.task;
 import org.hibernate.Session;
 
 import com.wavemaker.common.util.ObjectUtils;
-import com.wavemaker.runtime.data.Task;
-import com.wavemaker.runtime.data.DataServiceMetaData;
 import com.wavemaker.runtime.WMAppContext;
+import com.wavemaker.runtime.data.Task;
 
 /**
  * @author Simon Toens
@@ -27,14 +26,13 @@ import com.wavemaker.runtime.WMAppContext;
 public class UpdateTask extends BaseTask implements PreProcessor, Task {
 
     /**
-     * Update each object in input. This is a noop when invoked directly from
-     * the client - all work is done in the PreProcessor task.
+     * Update each object in input. This is a noop when invoked directly from the client - all work is done in the
+     * PreProcessor task.
      */
     public Object run(Session session, String dbName, Object... input) {
 
         if (ObjectUtils.isNullOrEmpty(input)) {
-            throw new IllegalArgumentException(
-                    "Need a least one instance to update");
+            throw new IllegalArgumentException("Need a least one instance to update");
         }
 
         Object o = input[0];
@@ -44,7 +42,7 @@ public class UpdateTask extends BaseTask implements PreProcessor, Task {
             Object rtn = loadIntoSession(o, session, dbName);
 
             if (rtn != null) {
-                //session.update(o);
+                // session.update(o);
                 if (!session.contains(o)) {
                     session.update(o);
                 }
@@ -54,7 +52,7 @@ public class UpdateTask extends BaseTask implements PreProcessor, Task {
                 session.update(o);
             }
         }
-        
+
         maybeRefreshEntity(o, session, dbName);
 
         return o;

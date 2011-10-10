@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.ws;
 
 import com.wavemaker.common.util.ClassLoaderUtils;
@@ -29,53 +30,44 @@ import com.wavemaker.json.JSONMarshaller;
 public class TestSyndFeedService extends WMTestCase {
 
     /**
-     * URL: http://www.wavemaker.com/rss/wavemaker.xml
-     * Type: RSS 0.91
+     * URL: http://www.wavemaker.com/rss/wavemaker.xml Type: RSS 0.91
      */
     private static final String ActiveGridInTheNewsFeed = "com/wavemaker/runtime/ws/ActiveGridInTheNews.xml";
 
     /**
-     * URL: http://newsrss.bbc.co.uk/rss/newsonline_world_edition/front_page/rss.xml
-     * Type: RSS 2.0
+     * URL: http://newsrss.bbc.co.uk/rss/newsonline_world_edition/front_page/rss.xml Type: RSS 2.0
      */
     private static final String BBCNewsWorldEditionFeed = "com/wavemaker/runtime/ws/BBCNewsWorldEdition.xml";
 
     /**
-     * URL: http://news.google.com/news?ned=us&topic=h&output=atom
-     * Type: Atom 0.3
+     * URL: http://news.google.com/news?ned=us&topic=h&output=atom Type: Atom 0.3
      */
     private static final String GoogleNewsTopStoriesFeed = "com/wavemaker/runtime/ws/GoogleNewsTopStories.xml";
 
     /**
-     * URL: http://jpn.icicom.up.pt/xml/noticias.xml
-     * Type: Atom 1.0
+     * URL: http://jpn.icicom.up.pt/xml/noticias.xml Type: Atom 1.0
      */
     private static final String JornalismoPortoNetFeed = "com/wavemaker/runtime/ws/JornalismoPortoNet.xml";
-    
+
     /**
-     * URL: http://syndication.boston.com/news?mode=rss_10
-     * Type: RSS/RDF 1.0
+     * URL: http://syndication.boston.com/news?mode=rss_10 Type: RSS/RDF 1.0
      */
     private static final String BostonNewsFeed = "com/wavemaker/runtime/ws/BostonNews.xml";
-    
+
     /**
-     * URL: http://feeds.feedburner.jp/japantimes
-     * Type: RSS 2.0
+     * URL: http://feeds.feedburner.jp/japantimes Type: RSS 2.0
      */
     private static final String JapanTimesAllStoriesFeed = "com/wavemaker/runtime/ws/JapanTimesAllStories.xml";
 
     /**
-     * URL: http://sports.espn.go.com/espn/rss/news
-     * Type: RSS 2.0
+     * URL: http://sports.espn.go.com/espn/rss/news Type: RSS 2.0
      */
     private static final String ESPNNewsFeed = "com/wavemaker/runtime/ws/ESPNNews.xml";
 
     /**
-     * URL: http://digg.com/rss/index.xml
-     * Type: RSS 2.0
+     * URL: http://digg.com/rss/index.xml Type: RSS 2.0
      */
     private static final String DiggFeed = "com/wavemaker/runtime/ws/Digg.xml";
-
 
     private static Feed getFeed(String resource) {
         SyndFeedService feedService = new SyndFeedService();
@@ -83,7 +75,7 @@ public class TestSyndFeedService extends WMTestCase {
         assertNotNull(feed);
         return feed;
     }
-    
+
     private static void checkJSONTransformation(Feed feed) throws Exception {
         String json = JSONMarshaller.marshal(feed);
         assertNotNull(json);
@@ -118,19 +110,19 @@ public class TestSyndFeedService extends WMTestCase {
         assertEquals("rss_1.0", feed.getFeedType());
         checkJSONTransformation(feed);
     }
-    
+
     public void testJapanTimesAllStories() throws Exception {
         Feed feed = getFeed(JapanTimesAllStoriesFeed);
         assertEquals("rss_2.0", feed.getFeedType());
         checkJSONTransformation(feed);
     }
-    
+
     public void testESPNNews() throws Exception {
         Feed feed = getFeed(ESPNNewsFeed);
         assertEquals("rss_2.0", feed.getFeedType());
         checkJSONTransformation(feed);
     }
-    
+
     public void testDigg() throws Exception {
         Feed feed = getFeed(DiggFeed);
         assertEquals("rss_2.0", feed.getFeedType());

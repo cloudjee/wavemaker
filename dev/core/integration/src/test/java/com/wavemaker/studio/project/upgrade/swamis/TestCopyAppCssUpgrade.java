@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.wavemaker.studio.project.upgrade.swamis;
 
 import static org.junit.Assert.assertFalse;
@@ -35,22 +36,21 @@ import com.wavemaker.tools.project.upgrade.UpgradeManager;
  */
 public class TestCopyAppCssUpgrade extends StudioTestCase {
 
-	@Test
-	public void testCopyAppCssUpgrade() throws Exception {
+    @Test
+    public void testCopyAppCssUpgrade() throws Exception {
 
-		ProjectManager pm = (ProjectManager) getBean("projectManager");
-		UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
+        ProjectManager pm = (ProjectManager) getBean("projectManager");
+        UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
 
-		makeProject("testCopyAppCssUpgrade", false);
+        makeProject("testCopyAppCssUpgrade", false);
 
-		File expectedAppCss = new File(pm.getCurrentProject().getWebAppRoot()
-				.getFile(), "app.css");
-		expectedAppCss.delete();
-		assertFalse(expectedAppCss.exists());
-		pm.getCurrentProject().setProjectVersion(0.19);
+        File expectedAppCss = new File(pm.getCurrentProject().getWebAppRoot().getFile(), "app.css");
+        expectedAppCss.delete();
+        assertFalse(expectedAppCss.exists());
+        pm.getCurrentProject().setProjectVersion(0.19);
 
-		um.doUpgrades(pm.getCurrentProject());
+        um.doUpgrades(pm.getCurrentProject());
 
-		assertTrue(expectedAppCss.exists());
-	}
+        assertTrue(expectedAppCss.exists());
+    }
 }

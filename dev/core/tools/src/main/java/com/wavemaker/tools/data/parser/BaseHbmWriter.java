@@ -27,16 +27,15 @@ import com.wavemaker.tools.common.ConfigurationException;
 /**
  * @author Simon Toens
  * @version $Rev:22685 $ - $Date:2008-05-30 16:19:36 -0700 (Fri, 30 May 2008) $
- *
+ * 
  */
 public abstract class BaseHbmWriter {
-    
+
     protected XMLWriter xmlWriter = null;
-    
+
     public BaseHbmWriter(File f) {
         try {
-            xmlWriter = XMLUtils.newXMLWriter(
-                new PrintWriter(new BufferedWriter(new FileWriter(f))));
+            this.xmlWriter = XMLUtils.newXMLWriter(new PrintWriter(new BufferedWriter(new FileWriter(f))));
         } catch (IOException ex) {
             throw new ConfigurationException(ex);
         }
@@ -44,21 +43,19 @@ public abstract class BaseHbmWriter {
     }
 
     public BaseHbmWriter(PrintWriter pw) {
-        xmlWriter = XMLUtils.newXMLWriter(pw);
+        this.xmlWriter = XMLUtils.newXMLWriter(pw);
         init();
     }
-    
+
     private void init() {
-        xmlWriter.addDoctype(HbmConstants.MAPPING_EL,
-                             HbmConstants.HBM_PUBLIC_ID, 
-                             HbmConstants.HBM_SYSTEM_ID);
+        this.xmlWriter.addDoctype(HbmConstants.MAPPING_EL, HbmConstants.HBM_PUBLIC_ID, HbmConstants.HBM_SYSTEM_ID);
     }
-    
+
     public void write() {
-        xmlWriter.addElement(HbmConstants.MAPPING_EL);
+        this.xmlWriter.addElement(HbmConstants.MAPPING_EL);
         writeCustom();
-        xmlWriter.finish();
+        this.xmlWriter.finish();
     }
-    
+
     protected abstract void writeCustom();
 }

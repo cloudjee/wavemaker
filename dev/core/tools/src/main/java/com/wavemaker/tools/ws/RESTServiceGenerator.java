@@ -52,276 +52,261 @@ import com.wavemaker.tools.ws.wsdl.WSDL;
  */
 public class RESTServiceGenerator extends WebServiceGenerator {
 
-	private JFieldVar parameterizedURIVar;
+    private JFieldVar parameterizedURIVar;
 
-	private JFieldVar restServiceVar;
+    private JFieldVar restServiceVar;
 
-	private JVar inputMapVar;
+    private JVar inputMapVar;
 
-	private ServiceInfo serviceInfo;
+    private ServiceInfo serviceInfo;
 
-	public RESTServiceGenerator() {
-	}
+    public RESTServiceGenerator() {
+    }
 
-	public RESTServiceGenerator(GenerationConfiguration configuration) {
-		// super(configuration);
+    public RESTServiceGenerator(GenerationConfiguration configuration) {
+        // super(configuration);
 
-		// each REST service should has one and only one ServiceInfo
-		// serviceInfo = wsdl.getServiceInfoList().get(0);
-		this.init(configuration);
-	}
+        // each REST service should has one and only one ServiceInfo
+        // serviceInfo = wsdl.getServiceInfoList().get(0);
+        this.init(configuration);
+    }
 
-	public void init(GenerationConfiguration configuration) {
-		super.init(configuration);
-		serviceInfo = wsdl.getServiceInfoList().get(0);
-	}
+    @Override
+    public void init(GenerationConfiguration configuration) {
+        super.init(configuration);
+        this.serviceInfo = this.wsdl.getServiceInfoList().get(0);
+    }
 
-	@Override
-	protected void preGeneration() throws GenerationException {
-		super.preGeneration();
+    @Override
+    protected void preGeneration() throws GenerationException {
+        super.preGeneration();
 
-		// compile schema and generate JAXB Java files
-		List<String> wsdlFilePaths = new ArrayList<String>();
-		wsdlFilePaths.add(wsdl.getURI());
-		List<String> jaxbBindingFilePaths = new ArrayList<String>();
-		for (Resource jaxbBindingFile : jaxbBindingFiles) {
-			try {
-				jaxbBindingFilePaths.add(jaxbBindingFile.getURI().toString());
-			} catch (IOException ex) {
-				throw new GenerationException(ex);
-			}
-		}
-		S2JJAXBModel model = ((JAXBTypeMapper) wsdl.getTypeMapper())
-				.getJAXBModel();
-		if (model != null) {
-			XJCCompiler.generate(model, configuration.getOutputDirectory());
-			afterClassGeneration(jaxbBindingFilePaths.get(0));
-		}
-	}
+        // compile schema and generate JAXB Java files
+        List<String> wsdlFilePaths = new ArrayList<String>();
+        wsdlFilePaths.add(this.wsdl.getURI());
+        List<String> jaxbBindingFilePaths = new ArrayList<String>();
+        for (Resource jaxbBindingFile : this.jaxbBindingFiles) {
+            try {
+                jaxbBindingFilePaths.add(jaxbBindingFile.getURI().toString());
+            } catch (IOException ex) {
+                throw new GenerationException(ex);
+            }
+        }
+        S2JJAXBModel model = ((JAXBTypeMapper) this.wsdl.getTypeMapper()).getJAXBModel();
+        if (model != null) {
+            XJCCompiler.generate(model, this.configuration.getOutputDirectory());
+            afterClassGeneration(jaxbBindingFilePaths.get(0));
+        }
+    }
 
-	// Extend this class and override this method if generated java classes need
-	// to be customized.
-	protected void afterClassGeneration(String path) throws GenerationException {
-	}
+    // Extend this class and override this method if generated java classes need
+    // to be customized.
+    @Override
+    protected void afterClassGeneration(String path) throws GenerationException {
+    }
 
-	@Override
-	protected void preGenerateClassBody(JDefinedClass cls)
-			throws GenerationException {
-		super.preGenerateClassBody(cls);
+    @Override
+    protected void preGenerateClassBody(JDefinedClass cls) throws GenerationException {
+        super.preGenerateClassBody(cls);
 
-		// [RESULT]
-		// private String parameterizedURI = <parameterizedURI>;
-		parameterizedURIVar = cls.field(JMod.PRIVATE,
-				codeModel.ref(String.class), "parameterizedURI",
-				JExpr.lit(wsdl.getEndpointLocation()));
+        // [RESULT]
+        // private String parameterizedURI = <parameterizedURI>;
+        this.parameterizedURIVar = cls.field(JMod.PRIVATE, this.codeModel.ref(String.class), "parameterizedURI",
+            JExpr.lit(this.wsdl.getEndpointLocation()));
 
-		restServiceVar = defineRestServiceVariable(cls, codeModel);
-	}
+        this.restServiceVar = defineRestServiceVariable(cls, this.codeModel);
+    }
 
-	protected JFieldVar defineRestServiceVariable(JDefinedClass cls,
-			JCodeModel codeModel) {
-		// [RESULT]
-		// private RESTService restService;
-		JFieldVar var = cls.field(JMod.PRIVATE,
-				codeModel.ref(RESTService.class), "restService");
+    @Override
+    protected JFieldVar defineRestServiceVariable(JDefinedClass cls, JCodeModel codeModel) {
+        // [RESULT]
+        // private RESTService restService;
+        JFieldVar var = cls.field(JMod.PRIVATE, codeModel.ref(RESTService.class), "restService");
 
-		return var;
-	}
+        return var;
+    }
 
-	@Override
-	protected void generateDefaultConstructorBody(JBlock body)
-			throws GenerationException {
-		JFieldVar serviceQNameVar = serviceInfo.getProperty(
-				SERVICE_QNAME_VAR_PROP_NAME, JFieldVar.class);
+    @Override
+    protected void generateDefaultConstructorBody(JBlock body) throws GenerationException {
+        JFieldVar serviceQNameVar = this.serviceInfo.getProperty(SERVICE_QNAME_VAR_PROP_NAME, JFieldVar.class);
 
-		// [RESULT]
-		// restService = new RESTService(serviceId, serviceQName,
-		// parameterizedURI);
-		JInvocation invocation = defineServiceInvocation(codeModel);
-		invocation.arg(serviceIdVar);
-		invocation.arg(serviceQNameVar);
-		invocation.arg(parameterizedURIVar);
-		body.assign(restServiceVar, invocation);
-	}
+        // [RESULT]
+        // restService = new RESTService(serviceId, serviceQName,
+        // parameterizedURI);
+        JInvocation invocation = defineServiceInvocation(this.codeModel);
+        invocation.arg(this.serviceIdVar);
+        invocation.arg(serviceQNameVar);
+        invocation.arg(this.parameterizedURIVar);
+        body.assign(this.restServiceVar, invocation);
+    }
 
-	protected JInvocation defineServiceInvocation(JCodeModel codeModel) {
-		JInvocation invocation = JExpr._new(codeModel.ref(RESTService.class));
-		return invocation;
-	}
+    @Override
+    protected JInvocation defineServiceInvocation(JCodeModel codeModel) {
+        JInvocation invocation = JExpr._new(codeModel.ref(RESTService.class));
+        return invocation;
+    }
 
-	@Override
-	protected void generateOperationMethodBody(JMethod method, JBlock body,
-			String operationName, Map<String, JType> inputJTypeMap,
-			ElementType outputType1, // salesforce
-			JType outputJType, Integer overloadCount)
-			throws GenerationException {
-		super.generateOperationMethodBody(method, body, operationName,
-				inputJTypeMap, outputType1, outputJType, overloadCount);
+    @Override
+    protected void generateOperationMethodBody(JMethod method, JBlock body, String operationName, Map<String, JType> inputJTypeMap,
+        ElementType outputType1, // salesforce
+        JType outputJType, Integer overloadCount) throws GenerationException {
+        super.generateOperationMethodBody(method, body, operationName, inputJTypeMap, outputType1, outputJType, overloadCount);
 
-		// [RESULT]
-		// Map<String,Object> inputMap = new HashMap<String,Object>();
-		inputMapVar = body.decl(parseType("java.util.Map<String,Object>"),
-				"inputMap",
-				JExpr._new(parseType("java.util.HashMap<String,Object>")));
+        // [RESULT]
+        // Map<String,Object> inputMap = new HashMap<String,Object>();
+        this.inputMapVar = body.decl(parseType("java.util.Map<String,Object>"), "inputMap", JExpr._new(parseType("java.util.HashMap<String,Object>")));
 
-		for (String paramName : inputJTypeMap.keySet()) {
-			// [RESULT]
-			// inputMap.put("<paramName>", <paramName>);
-			JInvocation invocation = inputMapVar.invoke("put");
-			invocation.arg(JExpr.lit(paramName));
-			invocation.arg(JExpr.ref(paramName));
-			body.add(invocation);
-		}
+        for (String paramName : inputJTypeMap.keySet()) {
+            // [RESULT]
+            // inputMap.put("<paramName>", <paramName>);
+            JInvocation invocation = this.inputMapVar.invoke("put");
+            invocation.arg(JExpr.lit(paramName));
+            invocation.arg(JExpr.ref(paramName));
+            body.add(invocation);
+        }
 
-		body = addExtraInputParameters(body, serviceInfo, wsdl, operationName);
+        body = addExtraInputParameters(body, this.serviceInfo, this.wsdl, operationName);
 
-		ElementType type = wsdl.getOutputType(operationName);
-		ElementType outputType = getAdjustedOutputType(type);
+        ElementType type = this.wsdl.getOutputType(operationName);
+        ElementType outputType = getAdjustedOutputType(type);
 
-		if (wsdl.getHttpRequestMethod() != null) {
-			// [RESULT]
-			// restService.setHttpRequestMethod(<httpRequestMethod>);
-			JInvocation setHttpRequestInvoke = restServiceVar
-					.invoke("setHttpRequestMethod");
-			setHttpRequestInvoke.arg(wsdl.getHttpRequestMethod().name());
-			body.add(setHttpRequestInvoke);
-		}
+        if (this.wsdl.getHttpRequestMethod() != null) {
+            // [RESULT]
+            // restService.setHttpRequestMethod(<httpRequestMethod>);
+            JInvocation setHttpRequestInvoke = this.restServiceVar.invoke("setHttpRequestMethod");
+            setHttpRequestInvoke.arg(this.wsdl.getHttpRequestMethod().name());
+            body.add(setHttpRequestInvoke);
+        }
 
-		// [RESULT]
-		// restService.setBindingProperties(bindingProperties);
-		JInvocation setBindingInvoke = restServiceVar
-				.invoke("setBindingProperties");
-		setBindingInvoke.arg(bindingPropertiesVar);
-		body.add(setBindingInvoke);
+        // [RESULT]
+        // restService.setBindingProperties(bindingProperties);
+        JInvocation setBindingInvoke = this.restServiceVar.invoke("setBindingProperties");
+        setBindingInvoke.arg(this.bindingPropertiesVar);
+        body.add(setBindingInvoke);
 
-		JInvocation invocation = restServiceVar.invoke("invoke");
-		invocation.arg(inputMapVar);
+        JInvocation invocation = this.restServiceVar.invoke("invoke");
+        invocation.arg(this.inputMapVar);
 
-		InvokeParams params = extraceInvokeParams(operationName);
-		if (params != null) {
-			if (params.getMethod() == null) {
-				invocation.arg(JExpr._null());
-			} else {
-				invocation.arg(params.getMethod());
-			}
-			if (params.getContentType() == null) {
-				invocation.arg(JExpr._null());
-			} else {
-				invocation.arg(params.getContentType());
-			}
-			if (params.getEndpoint() == null) {
-				invocation.arg(JExpr._null());
-			} else {
-				invocation.arg(params.getEndpoint());
-			}
-		}
+        InvokeParams params = extraceInvokeParams(operationName);
+        if (params != null) {
+            if (params.getMethod() == null) {
+                invocation.arg(JExpr._null());
+            } else {
+                invocation.arg(params.getMethod());
+            }
+            if (params.getContentType() == null) {
+                invocation.arg(JExpr._null());
+            } else {
+                invocation.arg(params.getContentType());
+            }
+            if (params.getEndpoint() == null) {
+                invocation.arg(JExpr._null());
+            } else {
+                invocation.arg(params.getEndpoint());
+            }
+        }
 
-		if (outputType == null) {
-			// [RESULT]
-			// restService.invoke(inputMap, Void.class);
-			invocation.arg(codeModel.ref("Void").dotclass());
-			body.add(invocation);
-		} else {
-			String javaType1 = getOutputJavaType(outputType);
-			String javaType = outputJType.name();
-			// [RESULT]
-			// <outputType> result = restService.invoke(inputMap, <outputType>);
-			invocation.arg(codeModel.ref(javaType1).dotclass());
-			invocation = addExtraInputArgsInMethodInvocation(invocation, wsdl,
-					operationName);
-			JVar var = body.decl(codeModel.ref(javaType), "result", invocation);
+        if (outputType == null) {
+            // [RESULT]
+            // restService.invoke(inputMap, Void.class);
+            invocation.arg(this.codeModel.ref("Void").dotclass());
+            body.add(invocation);
+        } else {
+            String javaType1 = getOutputJavaType(outputType);
+            String javaType = outputJType.name();
+            // [RESULT]
+            // <outputType> result = restService.invoke(inputMap, <outputType>);
+            invocation.arg(this.codeModel.ref(javaType1).dotclass());
+            invocation = addExtraInputArgsInMethodInvocation(invocation, this.wsdl, operationName);
+            JVar var = body.decl(this.codeModel.ref(javaType), "result", invocation);
 
-			// [RESULT]
-			// return ((<outputType>) result);
-			body._return(JExpr.cast(codeModel.ref(javaType), var));
-		}
-	}
+            // [RESULT]
+            // return ((<outputType>) result);
+            body._return(JExpr.cast(this.codeModel.ref(javaType), var));
+        }
+    }
 
-	protected JBlock addExtraInputParameters(JBlock body,
-			ServiceInfo serviceInfo, WSDL wsdl, String operationName) {
-		return body;
-	}
+    @Override
+    protected JBlock addExtraInputParameters(JBlock body, ServiceInfo serviceInfo, WSDL wsdl, String operationName) {
+        return body;
+    }
 
-	protected JBlock addInputParameters(JBlock body,
-			Map<String, String> paramMap, boolean isRef) {
-		for (Map.Entry<String, String> entry : paramMap.entrySet()) {
-			String key = entry.getKey();
-			String value = entry.getValue();
-			JInvocation invocation = inputMapVar.invoke("put");
-			invocation.arg(JExpr.lit(key));
-			if (isRef)
-				invocation.arg(JExpr.ref(value));
-			else
-				invocation.arg(JExpr.lit(value));
-			body.add(invocation);
-		}
+    protected JBlock addInputParameters(JBlock body, Map<String, String> paramMap, boolean isRef) {
+        for (Map.Entry<String, String> entry : paramMap.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            JInvocation invocation = this.inputMapVar.invoke("put");
+            invocation.arg(JExpr.lit(key));
+            if (isRef) {
+                invocation.arg(JExpr.ref(value));
+            } else {
+                invocation.arg(JExpr.lit(value));
+            }
+            body.add(invocation);
+        }
 
-		return body;
-	}
+        return body;
+    }
 
-	private InvokeParams extraceInvokeParams(String operationName) {
-		PortTypeInfo portTypeInfo = serviceInfo.getPortTypeInfoList().get(0);
-		Operation op = portTypeInfo.getOperationMap().get(operationName);
-		InvokeParams params = null;
-		if (op != null) {
-			Element element = op.getDocumentationElement();
-			if (element != null && element.getFirstChild() != null) {
-				String doc = element.getFirstChild().getTextContent();
-				params = new InvokeParams(doc);
-			}
-		}
-		return params;
-	}
+    private InvokeParams extraceInvokeParams(String operationName) {
+        PortTypeInfo portTypeInfo = this.serviceInfo.getPortTypeInfoList().get(0);
+        Operation op = portTypeInfo.getOperationMap().get(operationName);
+        InvokeParams params = null;
+        if (op != null) {
+            Element element = op.getDocumentationElement();
+            if (element != null && element.getFirstChild() != null) {
+                String doc = element.getFirstChild().getTextContent();
+                params = new InvokeParams(doc);
+            }
+        }
+        return params;
+    }
 
-	private static class InvokeParams {
+    private static class InvokeParams {
 
-		private String method;
+        private String method;
 
-		private String contentType;
+        private String contentType;
 
-		private String endpoint;
+        private String endpoint;
 
-		public InvokeParams(String s) {
-			s = s.trim();
-			String[] args = s.split(" ");
-			if (args != null) {
-				switch (args.length) {
-				case 3:
-					endpoint = args[2];
-				case 2:
-					contentType = args[1];
-				case 1:
-					method = args[0];
-				}
-			}
-		}
+        public InvokeParams(String s) {
+            s = s.trim();
+            String[] args = s.split(" ");
+            if (args != null) {
+                switch (args.length) {
+                    case 3:
+                        this.endpoint = args[2];
+                    case 2:
+                        this.contentType = args[1];
+                    case 1:
+                        this.method = args[0];
+                }
+            }
+        }
 
-		public String getMethod() {
-			return method;
-		}
+        public String getMethod() {
+            return this.method;
+        }
 
-		public String getContentType() {
-			return contentType;
-		}
+        public String getContentType() {
+            return this.contentType;
+        }
 
-		public String getEndpoint() {
-			return endpoint;
-		}
-	}
+        public String getEndpoint() {
+            return this.endpoint;
+        }
+    }
 
-	/**
-	 * Implement this method if the output type of the service invocation
-	 * method, which is originated from WSDL, needs to be customized for any
-	 * reason.
-	 * 
-	 * @param invocation
-	 *            the java code object for method invocation
-	 * @param wsdl
-	 *            the WSDL object
-	 * @return the java code object for method invocation
-	 */
-	protected JInvocation addExtraInputArgsInMethodInvocation(
-			JInvocation invocation, WSDL wsdl, String operName) {
-		return invocation;
-	}
+    /**
+     * Implement this method if the output type of the service invocation method, which is originated from WSDL, needs
+     * to be customized for any reason.
+     * 
+     * @param invocation the java code object for method invocation
+     * @param wsdl the WSDL object
+     * @return the java code object for method invocation
+     */
+    protected JInvocation addExtraInputArgsInMethodInvocation(JInvocation invocation, WSDL wsdl, String operName) {
+        return invocation;
+    }
 }

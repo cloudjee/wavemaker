@@ -15,15 +15,15 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data.sample.sakila;
+
 // Generated Jan 9, 2008 4:21:59 PM by Hibernate Tools 3.2.0.CR1
 
-
-@SuppressWarnings({"serial"})
+@SuppressWarnings({ "serial" })
 public class Compositepk implements java.io.Serializable {
 
     private CompositepkId id;
-
 
     public CompositepkId getId() {
         return this.id;
@@ -33,5 +33,3 @@ public class Compositepk implements java.io.Serializable {
         this.id = id;
     }
 }
-
-

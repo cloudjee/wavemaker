@@ -28,7 +28,6 @@ import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.runtime.data.DataServiceQueryException;
 import com.wavemaker.runtime.data.Task;
-import com.wavemaker.runtime.data.DataServiceMetaData;
 import com.wavemaker.runtime.data.util.DataServiceUtils;
 
 /**
@@ -69,12 +68,10 @@ public class CheckQueryTask extends QueryTask implements Task {
             }
         }
         if (!illegalIdentifiers.isEmpty()) {
-            throw new DataServiceQueryException(
-                    "Bind parameter names must be legal java identifiers: "
-                            + ObjectUtils.toString(illegalIdentifiers));
+            throw new DataServiceQueryException("Bind parameter names must be legal java identifiers: " + ObjectUtils.toString(illegalIdentifiers));
         }
     }
-    
+
     private void checkQueryReturnAliases(Query query) {
 
         if (query.getReturnAliases() == null) {
@@ -86,9 +83,7 @@ public class CheckQueryTask extends QueryTask implements Task {
 
         Type[] types = query.getReturnTypes();
 
-        List<String> names = DataServiceUtils
-            .getColumnNames(types.length, 
-                            Arrays.asList(query.getReturnAliases()));
+        List<String> names = DataServiceUtils.getColumnNames(types.length, Arrays.asList(query.getReturnAliases()));
 
         for (String name : names) {
             if (Character.isUpperCase(name.charAt(0))) {
@@ -99,14 +94,11 @@ public class CheckQueryTask extends QueryTask implements Task {
             }
         }
         if (!upperCaseAliases.isEmpty()) {
-            throw new DataServiceQueryException(
-                    "Query return aliases cannot start with upper-case letters: "
-                            + ObjectUtils.toString(upperCaseAliases));
+            throw new DataServiceQueryException("Query return aliases cannot start with upper-case letters: "
+                + ObjectUtils.toString(upperCaseAliases));
         }
         if (!illegalIdentifiers.isEmpty()) {
-            throw new DataServiceQueryException(
-                    "Query return aliases must be legal java identifiers: "
-                            + ObjectUtils.toString(illegalIdentifiers));
+            throw new DataServiceQueryException("Query return aliases must be legal java identifiers: " + ObjectUtils.toString(illegalIdentifiers));
         }
     }
 }

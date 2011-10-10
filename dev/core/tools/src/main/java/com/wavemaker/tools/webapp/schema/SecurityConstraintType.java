@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import java.util.ArrayList;
@@ -35,21 +34,20 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
  * 
  * 
- * 	The security-constraintType is used to associate
- * 	security constraints with one or more web resource
- * 	collections
+ * The security-constraintType is used to associate security constraints with one or more web resource collections
  * 
- * 	Used in: web-app
+ * Used in: web-app
  * 
- *       
  * 
- * <p>Java class for security-constraintType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for security-constraintType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="security-constraintType">
@@ -70,22 +68,21 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "security-constraintType", propOrder = {
-    "displayName",
-    "webResourceCollection",
-    "authConstraint",
-    "userDataConstraint"
-})
+@XmlType(name = "security-constraintType", propOrder = { "displayName", "webResourceCollection", "authConstraint", "userDataConstraint" })
 public class SecurityConstraintType {
 
     @XmlElement(name = "display-name")
     protected List<DisplayNameType> displayName;
+
     @XmlElement(name = "web-resource-collection", required = true)
     protected List<WebResourceCollectionType> webResourceCollection;
+
     @XmlElement(name = "auth-constraint")
     protected AuthConstraintType authConstraint;
+
     @XmlElement(name = "user-data-constraint")
     protected UserDataConstraintType userDataConstraint;
+
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -96,27 +93,26 @@ public class SecurityConstraintType {
      * Gets the value of the displayName property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the displayName property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the displayName property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getDisplayName().add(newItem);
+     * getDisplayName().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DisplayNameType }
+     * Objects of the following type(s) are allowed in the list {@link DisplayNameType }
      * 
      * 
      */
     public List<DisplayNameType> getDisplayName() {
-        if (displayName == null) {
-            displayName = new ArrayList<DisplayNameType>();
+        if (this.displayName == null) {
+            this.displayName = new ArrayList<DisplayNameType>();
         }
         return this.displayName;
     }
@@ -125,27 +121,26 @@ public class SecurityConstraintType {
      * Gets the value of the webResourceCollection property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the webResourceCollection property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the webResourceCollection property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getWebResourceCollection().add(newItem);
+     * getWebResourceCollection().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link WebResourceCollectionType }
+     * Objects of the following type(s) are allowed in the list {@link WebResourceCollectionType }
      * 
      * 
      */
     public List<WebResourceCollectionType> getWebResourceCollection() {
-        if (webResourceCollection == null) {
-            webResourceCollection = new ArrayList<WebResourceCollectionType>();
+        if (this.webResourceCollection == null) {
+            this.webResourceCollection = new ArrayList<WebResourceCollectionType>();
         }
         return this.webResourceCollection;
     }
@@ -153,22 +148,18 @@ public class SecurityConstraintType {
     /**
      * Gets the value of the authConstraint property.
      * 
-     * @return
-     *     possible object is
-     *     {@link AuthConstraintType }
-     *     
+     * @return possible object is {@link AuthConstraintType }
+     * 
      */
     public AuthConstraintType getAuthConstraint() {
-        return authConstraint;
+        return this.authConstraint;
     }
 
     /**
      * Sets the value of the authConstraint property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link AuthConstraintType }
-     *     
+     * @param value allowed object is {@link AuthConstraintType }
+     * 
      */
     public void setAuthConstraint(AuthConstraintType value) {
         this.authConstraint = value;
@@ -177,22 +168,18 @@ public class SecurityConstraintType {
     /**
      * Gets the value of the userDataConstraint property.
      * 
-     * @return
-     *     possible object is
-     *     {@link UserDataConstraintType }
-     *     
+     * @return possible object is {@link UserDataConstraintType }
+     * 
      */
     public UserDataConstraintType getUserDataConstraint() {
-        return userDataConstraint;
+        return this.userDataConstraint;
     }
 
     /**
      * Sets the value of the userDataConstraint property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link UserDataConstraintType }
-     *     
+     * @param value allowed object is {@link UserDataConstraintType }
+     * 
      */
     public void setUserDataConstraint(UserDataConstraintType value) {
         this.userDataConstraint = value;
@@ -201,22 +188,18 @@ public class SecurityConstraintType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setId(java.lang.String value) {
         this.id = value;

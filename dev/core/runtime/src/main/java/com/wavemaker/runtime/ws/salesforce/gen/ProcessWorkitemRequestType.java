@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -21,11 +19,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for ProcessWorkitemRequest complex type.
+ * <p>
+ * Java class for ProcessWorkitemRequest complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="ProcessWorkitemRequest">
@@ -43,38 +42,30 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ProcessWorkitemRequest", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "action",
-    "workitemId"
-})
-public class ProcessWorkitemRequestType
-    extends ProcessRequestType
-{
+@XmlType(name = "ProcessWorkitemRequest", namespace = "urn:partner.soap.sforce.com", propOrder = { "action", "workitemId" })
+public class ProcessWorkitemRequestType extends ProcessRequestType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String action;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String workitemId;
 
     /**
      * Gets the value of the action property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getAction() {
-        return action;
+        return this.action;
     }
 
     /**
      * Sets the value of the action property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setAction(String value) {
         this.action = value;
@@ -83,22 +74,18 @@ public class ProcessWorkitemRequestType
     /**
      * Gets the value of the workitemId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getWorkitemId() {
-        return workitemId;
+        return this.workitemId;
     }
 
     /**
      * Sets the value of the workitemId property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setWorkitemId(String value) {
         this.workitemId = value;

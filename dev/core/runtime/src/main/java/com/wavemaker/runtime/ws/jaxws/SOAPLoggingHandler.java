@@ -55,8 +55,7 @@ public class SOAPLoggingHandler implements SOAPHandler<SOAPMessageContext> {
     }
 
     private void log(SOAPMessageContext context) {
-        Boolean outboundProperty = (Boolean) context
-                .get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
+        Boolean outboundProperty = (Boolean) context.get(MessageContext.MESSAGE_OUTBOUND_PROPERTY);
         String messageText;
         if (outboundProperty.booleanValue()) {
             messageText = "Outbound SOAP message:\n";

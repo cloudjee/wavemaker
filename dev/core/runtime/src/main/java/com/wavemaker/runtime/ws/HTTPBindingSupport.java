@@ -14,7 +14,14 @@
 
 package com.wavemaker.runtime.ws;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
@@ -26,7 +33,6 @@ import javax.activation.DataSource;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Dispatch;
@@ -34,15 +40,15 @@ import javax.xml.ws.Service;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.http.HTTPBinding;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.io.IOUtils;
 
 import com.sun.xml.ws.developer.JAXWSProperties;
 import com.sun.xml.ws.encoding.xml.XMLMessage;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.pws.IPwsResponseProcessor;
 import com.wavemaker.runtime.pws.PwsResponseProcessorBeanFactory;
-import com.wavemaker.runtime.RuntimeAccess;
 
 /**
  * This class provides helper methods for HTTP binding.
@@ -59,31 +65,23 @@ public class HTTPBindingSupport {
 
     private static Log logger = LogFactory.getLog(HTTPBindingSupport.class);
 
-    public static <T extends Object> T getResponseObject(QName serviceQName,
-            QName portQName, String endpointAddress, HTTPRequestMethod method,
-            String contentType, Object postData, Class<T> responseType,
-            BindingProperties bindingProperties) throws WebServiceException {
-        return getResponseObject(serviceQName, portQName, endpointAddress, method, contentType, postData,
-                                responseType, bindingProperties, null);
+    public static <T extends Object> T getResponseObject(QName serviceQName, QName portQName, String endpointAddress, HTTPRequestMethod method,
+        String contentType, Object postData, Class<T> responseType, BindingProperties bindingProperties) throws WebServiceException {
+        return getResponseObject(serviceQName, portQName, endpointAddress, method, contentType, postData, responseType, bindingProperties, null);
     }
 
-    public static <T extends Object> T getResponseObject(QName serviceQName,
-            QName portQName, String endpointAddress, HTTPRequestMethod method,
-            String contentType, Object postData, Class<T> responseType,
-            BindingProperties bindingProperties, String partnerName) throws WebServiceException {
+    public static <T extends Object> T getResponseObject(QName serviceQName, QName portQName, String endpointAddress, HTTPRequestMethod method,
+        String contentType, Object postData, Class<T> responseType, BindingProperties bindingProperties, String partnerName)
+        throws WebServiceException {
 
-        String msg = (postData == null ? null
-                : (postData instanceof String) ? (String) postData
-                        : convertToXMLString(postData));
+        String msg = postData == null ? null : postData instanceof String ? (String) postData : convertToXMLString(postData);
 
         DataSource postSource = null;
         byte[] bytes = null;
         if (method == HTTPRequestMethod.POST) {
             postSource = createDataSource(contentType, msg);
         }
-        DataSource response = getResponse(serviceQName, portQName,
-                endpointAddress, method, postSource, bindingProperties,
-                DataSource.class);
+        DataSource response = getResponse(serviceQName, portQName, endpointAddress, method, postSource, bindingProperties, DataSource.class);
 
         try {
             InputStream is = new BufferedInputStream(response.getInputStream());
@@ -96,8 +94,8 @@ public class HTTPBindingSupport {
         if (partnerName == null || partnerName.length() == 0) {
             respProcessor = new DefaultResponseProcessor();
         } else {
-            PwsResponseProcessorBeanFactory factory = (PwsResponseProcessorBeanFactory) RuntimeAccess.getInstance()
-                    .getSpringBean("pwsResponseProcessorBeanFactory");
+            PwsResponseProcessorBeanFactory factory = (PwsResponseProcessorBeanFactory) RuntimeAccess.getInstance().getSpringBean(
+                "pwsResponseProcessorBeanFactory");
             respProcessor = factory.getPwsResponseProcessor(partnerName);
         }
 
@@ -118,8 +116,7 @@ public class HTTPBindingSupport {
         }
     }
 
-    public static DataSource createDataSource(String contentType, String msg)
-            throws WebServiceException {
+    public static DataSource createDataSource(String contentType, String msg) throws WebServiceException {
         ByteArrayInputStream is = null;
         if (msg != null) {
             try {
@@ -133,10 +130,8 @@ public class HTTPBindingSupport {
     }
 
     @SuppressWarnings("unchecked")
-    private static <T extends Object> T getResponse(QName serviceQName,
-            QName portQName, String endpointAddress, HTTPRequestMethod method,
-            T postSource, BindingProperties bindingProperties, Class<T> type)
-            throws WebServiceException {
+    private static <T extends Object> T getResponse(QName serviceQName, QName portQName, String endpointAddress, HTTPRequestMethod method,
+        T postSource, BindingProperties bindingProperties, Class<T> type) throws WebServiceException {
 
         Service service = Service.create(serviceQName);
         URI endpointURI;
@@ -163,41 +158,30 @@ public class HTTPBindingSupport {
 
         service.addPort(portQName, HTTPBinding.HTTP_BINDING, endpointAddress);
 
-        Dispatch<T> d = service.createDispatch(portQName, type,
-                Service.Mode.MESSAGE);
+        Dispatch<T> d = service.createDispatch(portQName, type, Service.Mode.MESSAGE);
 
         Map<String, Object> requestContext = d.getRequestContext();
-        requestContext.put(MessageContext.HTTP_REQUEST_METHOD, method
-                .toString());
+        requestContext.put(MessageContext.HTTP_REQUEST_METHOD, method.toString());
         requestContext.put(MessageContext.QUERY_STRING, endpointQueryString);
         requestContext.put(MessageContext.PATH_INFO, endpointPath);
 
         if (bindingProperties != null) {
-            String httpBasicAuthUsername = bindingProperties
-                    .getHttpBasicAuthUsername();
+            String httpBasicAuthUsername = bindingProperties.getHttpBasicAuthUsername();
             if (httpBasicAuthUsername != null) {
-                requestContext.put(BindingProvider.USERNAME_PROPERTY,
-                        httpBasicAuthUsername);
-                String httpBasicAuthPassword = bindingProperties
-                        .getHttpBasicAuthPassword();
-                requestContext.put(BindingProvider.PASSWORD_PROPERTY,
-                        httpBasicAuthPassword);
+                requestContext.put(BindingProvider.USERNAME_PROPERTY, httpBasicAuthUsername);
+                String httpBasicAuthPassword = bindingProperties.getHttpBasicAuthPassword();
+                requestContext.put(BindingProvider.PASSWORD_PROPERTY, httpBasicAuthPassword);
             }
-            
+
             int connectionTimeout = bindingProperties.getConnectionTimeout();
-            requestContext.put(JAXWSProperties.CONNECT_TIMEOUT, 
-                    Integer.valueOf(connectionTimeout));
-            
+            requestContext.put(JAXWSProperties.CONNECT_TIMEOUT, Integer.valueOf(connectionTimeout));
+
             int requestTimeout = bindingProperties.getRequestTimeout();
-            requestContext.put(JAXWSProperties.REQUEST_TIMEOUT, 
-                    Integer.valueOf(requestTimeout));
-            
-            Map<String, List<String>> httpHeaders = 
-                bindingProperties.getHttpHeaders();
+            requestContext.put(JAXWSProperties.REQUEST_TIMEOUT, Integer.valueOf(requestTimeout));
+
+            Map<String, List<String>> httpHeaders = bindingProperties.getHttpHeaders();
             if (httpHeaders != null && !httpHeaders.isEmpty()) {
-                Map<String, List<String>> reqHeaders = 
-                     (Map<String, List<String>>) requestContext.get(
-                             MessageContext.HTTP_REQUEST_HEADERS);
+                Map<String, List<String>> reqHeaders = (Map<String, List<String>>) requestContext.get(MessageContext.HTTP_REQUEST_HEADERS);
                 if (reqHeaders == null) {
                     reqHeaders = new HashMap<String, List<String>>();
                     requestContext.put(MessageContext.HTTP_REQUEST_HEADERS, reqHeaders);
@@ -208,21 +192,16 @@ public class HTTPBindingSupport {
             }
         }
 
-        logger.info("Invoking HTTP '" + method
-                + "' request with URL: " + endpointAddress);
+        logger.info("Invoking HTTP '" + method + "' request with URL: " + endpointAddress);
 
         T result = d.invoke(postSource);
         return result;
     }
 
-    public static String getResponseString(QName serviceQName, QName portQName,
-            String endpointAddress, HTTPRequestMethod method,
-            DataSource postSource, BindingProperties bindingProperties)
-            throws WebServiceException {
+    public static String getResponseString(QName serviceQName, QName portQName, String endpointAddress, HTTPRequestMethod method,
+        DataSource postSource, BindingProperties bindingProperties) throws WebServiceException {
 
-        DataSource response = getResponse(serviceQName, portQName,
-                endpointAddress, method, postSource, bindingProperties,
-                DataSource.class);
+        DataSource response = getResponse(serviceQName, portQName, endpointAddress, method, postSource, bindingProperties, DataSource.class);
         try {
             InputStream inputStream = response.getInputStream();
             return convertStreamToString(inputStream);
@@ -230,9 +209,8 @@ public class HTTPBindingSupport {
             throw new WebServiceException(e);
         }
     }
-    
-    public static String convertStreamToString(InputStream is)
-            throws IOException {
+
+    public static String convertStreamToString(InputStream is) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
         String line = null;

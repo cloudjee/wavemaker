@@ -43,16 +43,16 @@ public class BasicMetaDataDialect extends MySQLMetaDataDialect {
             return true;
         }
 
-// MAV-1932
-//         try {
-//             // MAV-1835
-//             if (getMetaData().storesLowerCaseIdentifiers()
-//                     && StringUtils.hasUpperCase(name)) {
-//                 return true;
-//             }
-//         } catch (SQLException ex) {
-//             throw new ConfigurationException(ex);
-//         }
+        // MAV-1932
+        // try {
+        // // MAV-1835
+        // if (getMetaData().storesLowerCaseIdentifiers()
+        // && StringUtils.hasUpperCase(name)) {
+        // return true;
+        // }
+        // } catch (SQLException ex) {
+        // throw new ConfigurationException(ex);
+        // }
 
         Collection<Character> charsNoQuote = getCharsNoQuote();
 
@@ -64,17 +64,14 @@ public class BasicMetaDataDialect extends MySQLMetaDataDialect {
             if (c.equals(Character.valueOf('_'))) {
                 continue;
             }
-            if (c.equals(Character.valueOf('#'))
-                    || c.equals(Character.valueOf('@'))) {
+            if (c.equals(Character.valueOf('#')) || c.equals(Character.valueOf('@'))) {
                 return true;
             }
             int type = Character.getType(name.charAt(i));
-            if (type == Character.UPPERCASE_LETTER
-                    || type == Character.LOWERCASE_LETTER
-                    || type == Character.DECIMAL_DIGIT_NUMBER) {
+            if (type == Character.UPPERCASE_LETTER || type == Character.LOWERCASE_LETTER || type == Character.DECIMAL_DIGIT_NUMBER) {
                 continue;
             }
-            
+
             // ask the jdbc driver what other chars don't require quoting,
             // and hope it is right
             if (!charsNoQuote.contains(c)) {

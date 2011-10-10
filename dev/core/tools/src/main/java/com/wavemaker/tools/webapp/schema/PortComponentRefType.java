@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -32,21 +31,20 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
  * 
  * 
- * 	The port-component-ref element declares a client dependency
- * 	on the container for resolving a Service Endpoint Interface
- * 	to a WSDL port. It optionally associates the Service Endpoint
- * 	Interface with a particular port-component. This is only used
- * 	by the container for a Service.getPort(Class) method call.
+ * The port-component-ref element declares a client dependency on the container for resolving a Service Endpoint
+ * Interface to a WSDL port. It optionally associates the Service Endpoint Interface with a particular port-component.
+ * This is only used by the container for a Service.getPort(Class) method call.
  * 
- *       
  * 
- * <p>Java class for port-component-refType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for port-component-refType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="port-component-refType">
@@ -65,16 +63,15 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "port-component-refType", propOrder = {
-    "serviceEndpointInterface",
-    "portComponentLink"
-})
+@XmlType(name = "port-component-refType", propOrder = { "serviceEndpointInterface", "portComponentLink" })
 public class PortComponentRefType {
 
     @XmlElement(name = "service-endpoint-interface", required = true)
     protected FullyQualifiedClassType serviceEndpointInterface;
+
     @XmlElement(name = "port-component-link")
     protected com.wavemaker.tools.webapp.schema.String portComponentLink;
+
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -84,22 +81,18 @@ public class PortComponentRefType {
     /**
      * Gets the value of the serviceEndpointInterface property.
      * 
-     * @return
-     *     possible object is
-     *     {@link FullyQualifiedClassType }
-     *     
+     * @return possible object is {@link FullyQualifiedClassType }
+     * 
      */
     public FullyQualifiedClassType getServiceEndpointInterface() {
-        return serviceEndpointInterface;
+        return this.serviceEndpointInterface;
     }
 
     /**
      * Sets the value of the serviceEndpointInterface property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link FullyQualifiedClassType }
-     *     
+     * @param value allowed object is {@link FullyQualifiedClassType }
+     * 
      */
     public void setServiceEndpointInterface(FullyQualifiedClassType value) {
         this.serviceEndpointInterface = value;
@@ -108,22 +101,18 @@ public class PortComponentRefType {
     /**
      * Gets the value of the portComponentLink property.
      * 
-     * @return
-     *     possible object is
-     *     {@link com.wavemaker.tools.webapp.schema.String }
-     *     
+     * @return possible object is {@link com.wavemaker.tools.webapp.schema.String }
+     * 
      */
     public com.wavemaker.tools.webapp.schema.String getPortComponentLink() {
-        return portComponentLink;
+        return this.portComponentLink;
     }
 
     /**
      * Sets the value of the portComponentLink property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link com.wavemaker.tools.webapp.schema.String }
-     *     
+     * @param value allowed object is {@link com.wavemaker.tools.webapp.schema.String }
+     * 
      */
     public void setPortComponentLink(com.wavemaker.tools.webapp.schema.String value) {
         this.portComponentLink = value;
@@ -132,22 +121,18 @@ public class PortComponentRefType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setId(java.lang.String value) {
         this.id = value;

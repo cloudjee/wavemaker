@@ -14,13 +14,11 @@
 
 package com.wavemaker.runtime.pws;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * This class is used to store a web service's login information.  This onbject must be set in the front-end service client
- * when a web service is called. Requred fields that must be set vary per different partners and the type of operation.
- *
+ * This class is used to store a web service's login information. This onbject must be set in the front-end service
+ * client when a web service is called. Requred fields that must be set vary per different partners and the type of
+ * operation.
+ * 
  * @author slee
  */
 public class PwsLoginInfo {
@@ -42,7 +40,7 @@ public class PwsLoginInfo {
     private String url;
 
     public String getPartnerName() {
-        return partnerName;
+        return this.partnerName;
     }
 
     public void setPartnerName(String partnerName) {
@@ -50,7 +48,7 @@ public class PwsLoginInfo {
     }
 
     public String getUserName() {
-        return userName;
+        return this.userName;
     }
 
     public void setUserName(String userName) {
@@ -58,7 +56,7 @@ public class PwsLoginInfo {
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     public void setPassword(String password) {
@@ -66,7 +64,7 @@ public class PwsLoginInfo {
     }
 
     public String getHost() {
-        return host;
+        return this.host;
     }
 
     public void setHost(String host) {
@@ -74,7 +72,7 @@ public class PwsLoginInfo {
     }
 
     public String getPort() {
-        return port;
+        return this.port;
     }
 
     public void setPort(String port) {
@@ -82,7 +80,7 @@ public class PwsLoginInfo {
     }
 
     public String getMiscInfo() {
-        return miscInfo;
+        return this.miscInfo;
     }
 
     public void setMiscInfo(String miscInfo) {
@@ -90,7 +88,7 @@ public class PwsLoginInfo {
     }
 
     public String getSessionId() {
-        return sessionId;
+        return this.sessionId;
     }
 
     public void setSessionId(String sessionId) {
@@ -98,7 +96,7 @@ public class PwsLoginInfo {
     }
 
     public String getUrl() {
-        return url;
+        return this.url;
     }
 
     public void setUrl(String url) {
@@ -106,57 +104,70 @@ public class PwsLoginInfo {
     }
 
     @Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((host == null) ? 0 : host.hashCode());
-		result = prime * result + ((port == null) ? 0 : port.hashCode());
-		result = prime * result + ((userName == null) ? 0 : userName.hashCode());
-		result = prime * result + ((miscInfo == null) ? 0 : miscInfo.hashCode());
-        result = prime * result + ((url == null) ? 0 : url.hashCode());
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (this.host == null ? 0 : this.host.hashCode());
+        result = prime * result + (this.port == null ? 0 : this.port.hashCode());
+        result = prime * result + (this.userName == null ? 0 : this.userName.hashCode());
+        result = prime * result + (this.miscInfo == null ? 0 : this.miscInfo.hashCode());
+        result = prime * result + (this.url == null ? 0 : this.url.hashCode());
         return result;
-	}
+    }
 
     @Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		PwsLoginInfo other = (PwsLoginInfo) obj;
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        PwsLoginInfo other = (PwsLoginInfo) obj;
 
-        if (host == null) {
-			if (other.host != null)
-				return false;
-		} else if (!host.equals(other.host))
-			return false;
+        if (this.host == null) {
+            if (other.host != null) {
+                return false;
+            }
+        } else if (!this.host.equals(other.host)) {
+            return false;
+        }
 
-        if (port == null) {
-			if (other.host != null)
-				return false;
-		} else if (!port.equals(other.port))
-			return false;
+        if (this.port == null) {
+            if (other.host != null) {
+                return false;
+            }
+        } else if (!this.port.equals(other.port)) {
+            return false;
+        }
 
-        if (userName == null) {
-			if (other.userName != null)
-				return false;
-		} else if (!userName.equals(other.userName))
-			return false;
+        if (this.userName == null) {
+            if (other.userName != null) {
+                return false;
+            }
+        } else if (!this.userName.equals(other.userName)) {
+            return false;
+        }
 
-        if (miscInfo == null) {
-			if (other.miscInfo != null)
-				return false;
-		} else if (!miscInfo.equals(other.miscInfo))
-			return false;
+        if (this.miscInfo == null) {
+            if (other.miscInfo != null) {
+                return false;
+            }
+        } else if (!this.miscInfo.equals(other.miscInfo)) {
+            return false;
+        }
 
-        if (url == null) {
-			if (other.url != null)
-				return false;
-		} else if (!url.equals(other.url))
-			return false;
+        if (this.url == null) {
+            if (other.url != null) {
+                return false;
+            }
+        } else if (!this.url.equals(other.url)) {
+            return false;
+        }
 
         return true;
-	}
+    }
 }

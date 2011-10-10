@@ -36,7 +36,7 @@ public class PagingOptions {
 
     public PagingOptions(PagingOptions po) {
         this(po.getMaxResults(), po.getFirstResult());
-        orderbys = po.getOrderByList();
+        this.orderbys = po.getOrderByList();
     }
 
     public PagingOptions(Long limit) {
@@ -57,23 +57,23 @@ public class PagingOptions {
     }
 
     public Long getMaxResults() {
-        return maxResults;
+        return this.maxResults;
     }
 
     public Long getFirstResult() {
-        return firstResult;
+        return this.firstResult;
     }
 
     public void addAscOrder(String propertyPath) {
         OrderBy o = new OrderBy();
         o.setAsc(propertyPath);
-        orderbys.add(o);
+        this.orderbys.add(o);
     }
 
     public void addDescOrder(String propertyPath) {
         OrderBy o = new OrderBy();
         o.setDesc(propertyPath);
-        orderbys.add(o);
+        this.orderbys.add(o);
     }
 
     /**
@@ -84,25 +84,25 @@ public class PagingOptions {
             throw new IllegalArgumentException("orderbys cannot be null");
         }
         for (String s : orderByStrings) {
-            orderbys.add(OrderBy.newInstance(s));
+            this.orderbys.add(OrderBy.newInstance(s));
         }
     }
 
     public List<String> getOrderBy() {
-        List<String> rtn = new ArrayList<String>(orderbys.size());
-        for (OrderBy o : orderbys) {
+        List<String> rtn = new ArrayList<String>(this.orderbys.size());
+        for (OrderBy o : this.orderbys) {
             rtn.add(o.toString());
         }
         return Collections.unmodifiableList(rtn);
     }
 
     public List<OrderBy> getOrderByList() {
-        return orderbys;
+        return this.orderbys;
     }
 
     public void nextPage() {
-        if (maxResults != null) {
-            firstResult += maxResults;
+        if (this.maxResults != null) {
+            this.firstResult += this.maxResults;
         }
     }
 }

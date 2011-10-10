@@ -18,8 +18,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This class contains properties used to configure the client binding through
- * request context.
+ * This class contains properties used to configure the client binding through request context.
  * 
  * @author ffu
  * @version $Rev$ - $Date$
@@ -32,9 +31,9 @@ public class BindingProperties {
     private String httpBasicAuthUsername;
 
     private String httpBasicAuthPassword;
-    
+
     private int connectionTimeout;
-    
+
     private int requestTimeout;
 
     private String soapActionURI;
@@ -47,14 +46,13 @@ public class BindingProperties {
      * @return The service endpoint address.
      */
     public String getEndpointAddress() {
-        return endpointAddress;
+        return this.endpointAddress;
     }
 
     /**
      * Sets the target service endpoint address.
      * 
-     * @param endpointAddress
-     *            The service endpoint address.
+     * @param endpointAddress The service endpoint address.
      */
     public void setEndpointAddress(String endpointAddress) {
         this.endpointAddress = endpointAddress;
@@ -66,14 +64,13 @@ public class BindingProperties {
      * @return The username for authentication.
      */
     public String getHttpBasicAuthUsername() {
-        return httpBasicAuthUsername;
+        return this.httpBasicAuthUsername;
     }
 
     /**
      * Sets the username to be used for HTTP basic authentication.
      * 
-     * @param httpBasicAuthUsername
-     *            The username for authentication.
+     * @param httpBasicAuthUsername The username for authentication.
      */
     public void setHttpBasicAuthUsername(String httpBasicAuthUsername) {
         this.httpBasicAuthUsername = httpBasicAuthUsername;
@@ -85,14 +82,13 @@ public class BindingProperties {
      * @return The password for authentication.
      */
     public String getHttpBasicAuthPassword() {
-        return httpBasicAuthPassword;
+        return this.httpBasicAuthPassword;
     }
 
     /**
      * Sets the password to be used for HTTP basic authentication.
      * 
-     * @param httpBasicAuthPassword
-     *            The password for authentication.
+     * @param httpBasicAuthPassword The password for authentication.
      */
     public void setHttpBasicAuthPassword(String httpBasicAuthPassword) {
         this.httpBasicAuthPassword = httpBasicAuthPassword;
@@ -104,7 +100,7 @@ public class BindingProperties {
      * @return The connection timeout value
      */
     public int getConnectionTimeout() {
-        return connectionTimeout;
+        return this.connectionTimeout;
     }
 
     /**
@@ -122,7 +118,7 @@ public class BindingProperties {
      * @return The request timeout value.
      */
     public int getRequestTimeout() {
-        return requestTimeout;
+        return this.requestTimeout;
     }
 
     /**
@@ -140,14 +136,13 @@ public class BindingProperties {
      * @return The SOAPAction URI.
      */
     public String getSoapActionURI() {
-        return soapActionURI;
+        return this.soapActionURI;
     }
 
     /**
      * Sets the SOAPAction URI.
      * 
-     * @param soapActionURI
-     *            The SOAPAction URI.
+     * @param soapActionURI The SOAPAction URI.
      */
     public void setSoapActionURI(String soapActionURI) {
         this.soapActionURI = soapActionURI;
@@ -159,7 +154,7 @@ public class BindingProperties {
      * @return The additional HTTP headers.
      */
     public Map<String, List<String>> getHttpHeaders() {
-        return httpHeaders;
+        return this.httpHeaders;
     }
 
     /**

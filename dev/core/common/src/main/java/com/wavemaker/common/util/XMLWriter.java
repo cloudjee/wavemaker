@@ -36,10 +36,10 @@ public class XMLWriter {
     private final static int DEFAULT_INDENT = 2;
 
     private final static int DEFAULT_MAX_ATTRS_ON_SAME_LINE = 2;
-    
+
     private int startIndent = 0;
 
-    private String encoding = "utf-8";
+    private final String encoding = "utf-8";
 
     private String currentShortNS = null;
 
@@ -51,7 +51,7 @@ public class XMLWriter {
 
     private boolean hasAttributes = false;
 
-    private SortedMap<String, String> namespaces = new TreeMap<String, String>();
+    private final SortedMap<String, String> namespaces = new TreeMap<String, String>();
 
     // decides if we write closing element on same line as opening element
     // or on new line. this applies for both </foo> and .../>
@@ -92,20 +92,18 @@ public class XMLWriter {
      * Calls flush on underlying PrintWriter.
      */
     public void flush() {
-        pw.flush();
+        this.pw.flush();
     }
 
     /**
-     * Writes DOCTYPE, publicID, privateID. Can only be called before adding any
-     * elements.
+     * Writes DOCTYPE, publicID, privateID. Can only be called before adding any elements.
      * 
      * @param publicID
      * @param privateID
      */
     public void addDoctype(String doctypeName, String publicID, String systemID) {
-        if (hasElements) {
-            throw new MalformedXMLRuntimeException(
-                    "Cannot init document after elements have been added");
+        if (this.hasElements) {
+            throw new MalformedXMLRuntimeException("Cannot init document after elements have been added");
         }
 
         StringBuilder dtdString = new StringBuilder();
@@ -115,10 +113,11 @@ public class XMLWriter {
             dtdString.append(" PUBLIC \"").append(publicID).append("\"");
         }
 
-        if (systemID != null)
+        if (systemID != null) {
             if (publicID == null) {
                 dtdString.append(" SYSTEM");
             }
+        }
         dtdString.append(" \"").append(systemID).append("\"");
 
         dtdString.append(">").append(sep);
@@ -134,73 +133,68 @@ public class XMLWriter {
     }
 
     public void addVersion(boolean standalone) {
-        if (hasElements) {
-            throw new MalformedXMLRuntimeException(
-                    "Cannot write version after elements have been added");
+        if (this.hasElements) {
+            throw new MalformedXMLRuntimeException("Cannot write version after elements have been added");
         }
 
-        pw.print("<?xml version=\"1.0\" encoding=\"" + encoding + "\"");
+        this.pw.print("<?xml version=\"1.0\" encoding=\"" + this.encoding + "\"");
         if (standalone) {
-            pw.print(" standalone=\"yes\"");
+            this.pw.print(" standalone=\"yes\"");
         }
-        pw.print("?>");
-        pw.print(sep);
+        this.pw.print("?>");
+        this.pw.print(sep);
     }
 
     public void setCurrentShortNS(String s) {
-        if (!namespaces.containsKey(s)) {
-            throw new MalformedXMLRuntimeException("Short NS \"" + s
-                    + "\" has not been declared.  Known short NS: "
-                    + namespaces.keySet());
+        if (!this.namespaces.containsKey(s)) {
+            throw new MalformedXMLRuntimeException("Short NS \"" + s + "\" has not been declared.  Known short NS: " + this.namespaces.keySet());
         }
-        currentShortNS = s;
+        this.currentShortNS = s;
     }
 
     public void unsetCurrentShortNS() {
-        currentShortNS = null;
+        this.currentShortNS = null;
     }
 
     /**
-     * The current element will be closed on a new line, and attributes added
-     * will each be on a new line.
+     * The current element will be closed on a new line, and attributes added will each be on a new line.
      */
     public void forceCloseOnNewLine() {
-        closeOnNewLine = true;
+        this.closeOnNewLine = true;
     }
 
     public boolean willCloseOnNewLine() {
-        return closeOnNewLine;
+        return this.closeOnNewLine;
     }
-    
+
     public void setStartIndent(int startIndent) {
         this.startIndent = startIndent;
     }
 
     /**
-     * Switches the behavior for addElementWithTextChild. <foo>a</foo> vs.
-     * <foo><br>
+     * Switches the behavior for addElementWithTextChild. <foo>a</foo> vs. <foo><br>
      * a<br>
      * </foo>
      */
     public void setTextOnSameLineAsParentElement(boolean b) {
-        textOnSameLineAsParentElement = b;
+        this.textOnSameLineAsParentElement = b;
     }
 
     public void addNamespace(String shortNS, String longNS) {
-        namespaces.put(shortNS, longNS);
+        this.namespaces.put(shortNS, longNS);
     }
 
     public void addComment(String comment) {
         StringBuilder sb = new StringBuilder();
 
-        if (hasElements) {
+        if (this.hasElements) {
             finishIncompleteTag();
             sb.append(sep);
         }
 
         sb.append(getIndent()).append("<!-- ").append(comment).append(" -->");
 
-        if (!hasElements) {
+        if (!this.hasElements) {
             sb.append(sep);
         }
         writeGeneric(sb.toString());
@@ -210,29 +204,27 @@ public class XMLWriter {
      * Adds attribute (name and value) to current XML element.
      */
     public void addAttribute(String name, String value) {
-        if (!incompleteOpenTag) {
-            throw new MalformedXMLRuntimeException(
-                    "Illegal call to addAttribute");
+        if (!this.incompleteOpenTag) {
+            throw new MalformedXMLRuntimeException("Illegal call to addAttribute");
         }
 
-        hasAttributes = true;
-        if (closeOnNewLine) {
-            pw.print(sep);
-            pw.print(getIndent());
+        this.hasAttributes = true;
+        if (this.closeOnNewLine) {
+            this.pw.print(sep);
+            this.pw.print(getIndent());
         } else {
-            pw.print(" ");
+            this.pw.print(" ");
         }
 
-        pw.print(name);
-        pw.print("=\"");
-        pw.print(value);
-        pw.print("\"");
+        this.pw.print(name);
+        this.pw.print("=\"");
+        this.pw.print(value);
+        this.pw.print("\"");
     }
 
     /**
-     * Adds attributes to current XML element, represented as Map. Uses the keys
-     * as atttribute names and corresponding elements as attribute values. Calls
-     * String.valueOf(...) on keys and values.
+     * Adds attributes to current XML element, represented as Map. Uses the keys as atttribute names and corresponding
+     * elements as attribute values. Calls String.valueOf(...) on keys and values.
      */
     @SuppressWarnings("unchecked")
     public void addAttribute(Map attributes) {
@@ -248,15 +240,14 @@ public class XMLWriter {
     }
 
     /**
-     * Adds attributes to current XML element. Attribute names and values are
-     * passed in as String Array, using the following format: {n1, v1, n2, v2,
-     * n3, v3, ...}
+     * Adds attributes to current XML element. Attribute names and values are passed in as String Array, using the
+     * following format: {n1, v1, n2, v2, n3, v3, ...}
      */
     public void addAttribute(String... attributes) {
         // if no attributes yet for this element, we can decided
         // on the formatting (all attributes on same line or not)
-        if (!hasAttributes && (attributes.length / 2) > maxAttrsOnSameLine) {
-            closeOnNewLine = true;
+        if (!this.hasAttributes && attributes.length / 2 > this.maxAttrsOnSameLine) {
+            this.closeOnNewLine = true;
         }
 
         for (int i = 0; i < attributes.length; i += 2) {
@@ -270,8 +261,9 @@ public class XMLWriter {
      * Adds nested closed elements.
      */
     public void addNestedElements(String... elementNames) {
-        for (int i = 0; i < elementNames.length; i++)
+        for (int i = 0; i < elementNames.length; i++) {
             addElement(elementNames[i]);
+        }
     }
 
     /**
@@ -300,56 +292,54 @@ public class XMLWriter {
     }
 
     /**
-     * Writes a new XML element to PrintWriter. If another XML element has been
-     * written and not closed, writes this element as a child.
+     * Writes a new XML element to PrintWriter. If another XML element has been written and not closed, writes this
+     * element as a child.
      */
     public void addElement(String elementName) {
-        hasElements = true;
+        this.hasElements = true;
         finishIncompleteTag();
 
-        boolean addNamespaces = !wroteFirstElement;
+        boolean addNamespaces = !this.wroteFirstElement;
 
-        if (wroteFirstElement) {
-            pw.print(sep);
+        if (this.wroteFirstElement) {
+            this.pw.print(sep);
         } else {
-            wroteFirstElement = true;
+            this.wroteFirstElement = true;
         }
 
-        pw.print(getIndent());
-        pw.print("<");
+        this.pw.print(getIndent());
+        this.pw.print("<");
 
-        if (currentShortNS != null) {
-            elementName = qualify(elementName, currentShortNS);
+        if (this.currentShortNS != null) {
+            elementName = qualify(elementName, this.currentShortNS);
         }
 
-        pw.print(elementName);
+        this.pw.print(elementName);
 
-        elementStack.push(elementName);
-        incompleteOpenTag = true;
-        hasAttributes = false;
-        closeOnNewLine = false;
+        this.elementStack.push(elementName);
+        this.incompleteOpenTag = true;
+        this.hasAttributes = false;
+        this.closeOnNewLine = false;
 
-        if (addNamespaces && !namespaces.isEmpty()) {
+        if (addNamespaces && !this.namespaces.isEmpty()) {
             // prepend short NS with "xmlns:", then add as attributes
-            String[] ns = new String[namespaces.size() * 2];
+            String[] ns = new String[this.namespaces.size() * 2];
             int i = 0;
-            for (Map.Entry<String, String> e : namespaces.entrySet()) {
+            for (Map.Entry<String, String> e : this.namespaces.entrySet()) {
                 ns[i] = qualify(e.getKey(), "xmlns");
                 ns[i + 1] = e.getValue();
                 i += 2;
             }
             // for short->long ns mappings, put each attr on a new line
-            closeOnNewLine = true;
+            this.closeOnNewLine = true;
             addAttribute(ns);
         }
     }
 
     /**
-     * Convenience method for passing parent and child text element. The result
-     * is<br>
+     * Convenience method for passing parent and child text element. The result is<br>
      * &ltelementName&gttextChild&lt/elementName&gt<br>
-     * if setTextOnSameLineAsParentElement is set to true on this instance of
-     * XMLWriter.<br>
+     * if setTextOnSameLineAsParentElement is set to true on this instance of XMLWriter.<br>
      * 
      * Otherwise the result is:<br>
      * &ltelementName&gt<br>
@@ -358,14 +348,13 @@ public class XMLWriter {
      */
     public void addElement(String elementName, String textChild) {
         addElement(elementName);
-        addText(textChild, !textOnSameLineAsParentElement);
-        closeElement(!textOnSameLineAsParentElement);
+        addText(textChild, !this.textOnSameLineAsParentElement);
+        closeElement(!this.textOnSameLineAsParentElement);
     }
 
     /**
-     * Writes a new XML element to PrintWriter. If another XML element has been
-     * written and not closed, writes this element as a child. Also adds passed
-     * attributes.
+     * Writes a new XML element to PrintWriter. If another XML element has been written and not closed, writes this
+     * element as a child. Also adds passed attributes.
      */
     public void addElement(String elementName, String... attributes) {
         addElement(elementName);
@@ -373,12 +362,10 @@ public class XMLWriter {
     }
 
     /**
-     * Writes a new, closed, XML element to PrintWriter. If another XML element
-     * has been written and not closed, writes this element as a child. Adds
-     * passed attributes and character data.
+     * Writes a new, closed, XML element to PrintWriter. If another XML element has been written and not closed, writes
+     * this element as a child. Adds passed attributes and character data.
      */
-    public void addClosedTextElement(String elementName, String text,
-            String... attributes) {
+    public void addClosedTextElement(String elementName, String text, String... attributes) {
         addElement(elementName);
         addAttribute(attributes);
         addText(text, false);
@@ -386,9 +373,8 @@ public class XMLWriter {
     }
 
     /**
-     * Writes a new XML element to PrintWriter. If another XML element has been
-     * written and not closed, writes this element as a child. Also adds passed
-     * attributes.
+     * Writes a new XML element to PrintWriter. If another XML element has been written and not closed, writes this
+     * element as a child. Also adds passed attributes.
      */
     public void addElement(String elementName, Map<String, String> attributes) {
         addElement(elementName);
@@ -403,31 +389,30 @@ public class XMLWriter {
     }
 
     public void closeElement(boolean elementOnNewLine) {
-        if (elementStack.isEmpty()) {
-            throw new MalformedXMLRuntimeException(
-                    "Illegal call to closeElement");
+        if (this.elementStack.isEmpty()) {
+            throw new MalformedXMLRuntimeException("Illegal call to closeElement");
         }
 
-        String element = elementStack.pop();
+        String element = this.elementStack.pop();
 
-        if (incompleteOpenTag) {
-            if (closeOnNewLine) {
-                pw.print(sep);
-                pw.print(getIndent());
+        if (this.incompleteOpenTag) {
+            if (this.closeOnNewLine) {
+                this.pw.print(sep);
+                this.pw.print(getIndent());
             }
-            pw.print("/>");
-            incompleteOpenTag = false;
+            this.pw.print("/>");
+            this.incompleteOpenTag = false;
         } else {
             if (elementOnNewLine) {
-                pw.print(sep);
-                pw.print(getIndent());
+                this.pw.print(sep);
+                this.pw.print(getIndent());
             }
-            pw.print("</");
-            pw.print(element);
-            pw.print(">");
+            this.pw.print("</");
+            this.pw.print(element);
+            this.pw.print(">");
         }
 
-        hasAttributes = false;
+        this.hasAttributes = false;
     }
 
     /**
@@ -438,20 +423,22 @@ public class XMLWriter {
     }
 
     public void addText(String in, boolean onNewLine) {
-        if (in.trim().length() == 0)
+        if (in.trim().length() == 0) {
             return;
+        }
 
         finishIncompleteTag();
         if (onNewLine) {
-            pw.print(sep);
-            pw.print(getIndent());
+            this.pw.print(sep);
+            this.pw.print(getIndent());
         }
-        pw.print(StringEscapeUtils.escapeXml(in.trim()));
+        this.pw.print(StringEscapeUtils.escapeXml(in.trim()));
     }
 
     public void addCDATA(String in) {
-        if (in.trim().length() == 0)
+        if (in.trim().length() == 0) {
             return;
+        }
         finishIncompleteTag();
         StringBuilder sb = new StringBuilder();
         sb.append(sep).append(getIndent()).append("<![CDATA[");
@@ -460,8 +447,7 @@ public class XMLWriter {
 
         // indentation
         for (String token : data.split(sep)) {
-            sb.append(sep).append(getIndent()).append(getDefaultIndent())
-                    .append(token.trim());
+            sb.append(sep).append(getIndent()).append(getDefaultIndent()).append(token.trim());
         }
 
         sb.append(sep).append(getIndent()).append("]]>");
@@ -469,12 +455,11 @@ public class XMLWriter {
     }
 
     /**
-     * Closes all XML elements that have been added, and not yet closed, and
-     * flushes the underlying PrintWriter.
+     * Closes all XML elements that have been added, and not yet closed, and flushes the underlying PrintWriter.
      */
     public void finish() {
         closeAll();
-        pw.flush();
+        this.pw.flush();
     }
 
     /**
@@ -489,24 +474,25 @@ public class XMLWriter {
     }
 
     private void closeAll() {
-        while (!elementStack.isEmpty())
+        while (!this.elementStack.isEmpty()) {
             closeElement();
+        }
     }
 
     private void finishIncompleteTag() {
-        if (incompleteOpenTag) {
-            pw.print(">");
-            incompleteOpenTag = false;
+        if (this.incompleteOpenTag) {
+            this.pw.print(">");
+            this.incompleteOpenTag = false;
         }
     }
 
     private void writeGeneric(String in) {
-        pw.print(in);
+        this.pw.print(in);
     }
 
     private String getIndent(int numUnits) {
         StringBuilder indentString = new StringBuilder();
-        int max = startIndent + (numUnits * indent);
+        int max = this.startIndent + numUnits * this.indent;
         for (int i = 0; i < max; i++) {
             indentString.append(" ");
         }
@@ -518,7 +504,7 @@ public class XMLWriter {
     }
 
     private int getStackSize() {
-        return elementStack.size();
+        return this.elementStack.size();
     }
 
     private String qualify(String name, String ns) {

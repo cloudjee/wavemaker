@@ -19,7 +19,6 @@
 // Generated on: 2008.02.26 at 04:39:33 PM PST 
 //
 
-
 package com.wavemaker.tools.spring.beans;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -30,11 +29,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
+ * <p>
+ * Java class for anonymous complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType>
@@ -57,32 +57,30 @@ public class Ref {
 
     @XmlAttribute
     protected String bean;
+
     @XmlAttribute
     @XmlIDREF
     @XmlSchemaType(name = "IDREF")
     protected Object local;
+
     @XmlAttribute
     protected String parent;
 
     /**
      * Gets the value of the bean property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getBean() {
-        return bean;
+        return this.bean;
     }
 
     /**
      * Sets the value of the bean property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setBean(String value) {
         this.bean = value;
@@ -91,22 +89,18 @@ public class Ref {
     /**
      * Gets the value of the local property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Object }
-     *     
+     * @return possible object is {@link Object }
+     * 
      */
     public Object getLocal() {
-        return local;
+        return this.local;
     }
 
     /**
      * Sets the value of the local property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Object }
-     *     
+     * @param value allowed object is {@link Object }
+     * 
      */
     public void setLocal(Object value) {
         this.local = value;
@@ -115,22 +109,18 @@ public class Ref {
     /**
      * Gets the value of the parent property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getParent() {
-        return parent;
+        return this.parent;
     }
 
     /**
      * Sets the value of the parent property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setParent(String value) {
         this.parent = value;

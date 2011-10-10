@@ -26,52 +26,49 @@ import com.wavemaker.tools.project.upgrade.AbstractWidgetsJSUpgradeTask;
  * @author small
  * @version $Rev$ - $Date$
  */
-public class ConvertVariableToServiceInputUpgradeTask extends
-        AbstractWidgetsJSUpgradeTask {
-    
-    /* (non-Javadoc)
+public class ConvertVariableToServiceInputUpgradeTask extends AbstractWidgetsJSUpgradeTask {
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.tools.project.upgrade.AbstractWidgetsJSUpgradeTask#upgradeWidgetsJS(com.wavemaker.json.JSON)
      */
     @Override
     public void upgradeWidgetsJS(JSON j) {
-        
+
         recurseJSON(j, false, false);
     }
-    
-    public void recurseJSON(JSON j, boolean insideServiceOrNavigation,
-            boolean insideInput) {
-        
+
+    public void recurseJSON(JSON j, boolean insideServiceOrNavigation, boolean insideInput) {
+
         if (j instanceof JSONObject) {
             JSONObject jo = (JSONObject) j;
-            
-            for (Map.Entry<String, Object> entry: jo.entrySet()) {
+
+            for (Map.Entry<String, Object> entry : jo.entrySet()) {
                 boolean inp = false;
                 if (entry.getValue() instanceof JSON) {
-                    if (0=="input".compareTo(entry.getKey())) {
+                    if (0 == "input".compareTo(entry.getKey())) {
                         inp = true;
                     }
-                    
-                    recurseJSON((JSON) entry.getValue(),
-                            insideServiceOrNavigation, inp);
+
+                    recurseJSON((JSON) entry.getValue(), insideServiceOrNavigation, inp);
                 }
             }
         } else if (j instanceof JSONArray) {
             JSONArray ja = (JSONArray) j;
-            
+
             boolean navi = false;
-            if (ja.size()>1 && ja.get(0) instanceof String) {
-                if ((0=="wm.ServiceVariable".compareTo((String)ja.get(0)) ||
-                            (0=="wm.NavigationCall".compareTo((String)ja.get(0))))) {
+            if (ja.size() > 1 && ja.get(0) instanceof String) {
+                if (0 == "wm.ServiceVariable".compareTo((String) ja.get(0)) || 0 == "wm.NavigationCall".compareTo((String) ja.get(0))) {
                     navi = true;
                 }
-                
-                if (insideServiceOrNavigation && insideInput &&
-                        0=="wm.Variable".compareTo((String)ja.get(0))) {
+
+                if (insideServiceOrNavigation && insideInput && 0 == "wm.Variable".compareTo((String) ja.get(0))) {
                     ja.set(0, "wm.ServiceInput");
                 }
             }
-            
-            for (Object o: ja) {
+
+            for (Object o : ja) {
                 if (o instanceof JSON) {
                     recurseJSON((JSON) o, navi, insideInput);
                 }
@@ -79,7 +76,9 @@ public class ConvertVariableToServiceInputUpgradeTask extends
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.tools.project.upgrade.AbstractWidgetsJSUpgradeTask#doUpgradeAppJS()
      */
     @Override

@@ -17,8 +17,8 @@ package com.wavemaker.runtime.ws;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -26,8 +26,8 @@ import com.wavemaker.runtime.ws.HTTPBindingSupport.HTTPRequestMethod;
 import com.wavemaker.runtime.ws.util.Constants;
 
 /**
- * REST service caller. This class provides interface to call a REST style Web service. This class can be extended
- * and customized to support patrner specific web service requirements.
+ * REST service caller. This class provides interface to call a REST style Web service. This class can be extended and
+ * customized to support patrner specific web service requirements.
  * 
  * @author ffu
  * @version $Rev$ - $Date$
@@ -48,57 +48,42 @@ public class RESTService {
     /**
      * Constructs a REST style Web service.
      * 
-     * @param serviceId
-     *                The service ID.
-     * @param serviceQName
-     *                The Qualified name of the service in the WSDL service
-     *                description.
-     * @param parameterizedURI
-     *                The parameterized URI used to call the REST service.
+     * @param serviceId The service ID.
+     * @param serviceQName The Qualified name of the service in the WSDL service description.
+     * @param parameterizedURI The parameterized URI used to call the REST service.
      */
-    public RESTService(String serviceId, QName serviceQName,
-            String parameterizedURI) {
+    public RESTService(String serviceId, QName serviceQName, String parameterizedURI) {
         this(serviceId, serviceQName, parameterizedURI, null);
     }
 
     /**
      * Constucts a REST style Web service.
      * 
-     * @param serviceId
-     *            The service ID.
-     * @param serviceQName
-     *            The Qualified name of the service in the WSDL service
-     *            description.
-     * @param parameterizedURI
-     *            The parameterized URI used to call the REST service.
-     * @param bindingProperties
-     *            The optional properties for the HTTP binding. For example,
-     *            this could contain the HTTP Basic Auth username and password.
-     *            This param could be null.
+     * @param serviceId The service ID.
+     * @param serviceQName The Qualified name of the service in the WSDL service description.
+     * @param parameterizedURI The parameterized URI used to call the REST service.
+     * @param bindingProperties The optional properties for the HTTP binding. For example, this could contain the HTTP
+     *        Basic Auth username and password. This param could be null.
      * 
      */
-    public RESTService(String serviceId, QName serviceQName,
-            String parameterizedURI, BindingProperties bindingProperties) {
+    public RESTService(String serviceId, QName serviceQName, String parameterizedURI, BindingProperties bindingProperties) {
         this.serviceId = serviceId;
         this.serviceQName = serviceQName;
         this.parameterizedURI = parameterizedURI;
         this.bindingProperties = bindingProperties;
     }
 
-    public <T extends Object> T invoke(Map<String, Object> inputs,
-            Class<T> responseType) {
+    public <T extends Object> T invoke(Map<String, Object> inputs, Class<T> responseType) {
         return invoke(inputs, null, null, null, responseType);
     }
 
-    public <T extends Object> T invoke(Map<String, Object> inputs,
-            String method, String contentType, String endpoint,
-            Class<T> responseType) {
+    public <T extends Object> T invoke(Map<String, Object> inputs, String method, String contentType, String endpoint, Class<T> responseType) {
         return invoke(inputs, method, contentType, endpoint, responseType, null);
     }
 
     /**
      * invoke a REST style web service
-     *
+     * 
      * @param inputs the map containing all input parameters <parameter name, value>
      * @param method the http request method (<tt>GET</tt>, <tt>POST</tt>, <tt>PUT</tt>, <tt>DELETE</tt> and etc.)
      * @param contentType the content type of the request body
@@ -107,41 +92,38 @@ public class RESTService {
      * @param partnerName the name of the partner
      * @return the object of <i>responseType</i>
      */
-    public <T extends Object> T invoke(Map<String, Object> inputs,
-            String method, String contentType, String endpoint,
-            Class<T> responseType, String partnerName) {
+    public <T extends Object> T invoke(Map<String, Object> inputs, String method, String contentType, String endpoint, Class<T> responseType,
+        String partnerName) {
         String endpointAddress = null;
 
         if (endpoint != null) {
             endpointAddress = endpoint;
         } else {
-            endpointAddress = parameterizedURI;
+            endpointAddress = this.parameterizedURI;
         }
-        
+
         String postData = "";
         if (method != null && method.equals(Constants.HTTP_METHOD_POST)) {
-            httpRequestMethod = HTTPRequestMethod.POST;
+            this.httpRequestMethod = HTTPRequestMethod.POST;
             if (inputs.size() == 1) {
                 for (Object o : inputs.values()) {
-                    postData = (String)o;
+                    postData = (String) o;
                 }
             } else if (inputs.size() > 1) {
                 if (contentType.equalsIgnoreCase(Constants.MIME_TYPE_FORM)) {
                     postData = createFormData(inputs);
                 } else {
-                    throw new WebServiceInvocationException(
-                        "REST service call with HTTP POST should not have more than 1 input.");
+                    throw new WebServiceInvocationException("REST service call with HTTP POST should not have more than 1 input.");
                 }
             }
         } else {
-            httpRequestMethod = HTTPRequestMethod.GET;
+            this.httpRequestMethod = HTTPRequestMethod.GET;
             endpointAddress = parameterize(endpointAddress, inputs);
         }
 
         try {
-            return HTTPBindingSupport.getResponseObject(serviceQName,
-                    serviceQName, endpointAddress, httpRequestMethod,
-                    contentType, postData, responseType, bindingProperties, partnerName);
+            return HTTPBindingSupport.getResponseObject(this.serviceQName, this.serviceQName, endpointAddress, this.httpRequestMethod, contentType,
+                postData, responseType, this.bindingProperties, partnerName);
         } catch (WebServiceException e) {
             throw new WebServiceInvocationException(e);
         }
@@ -153,29 +135,26 @@ public class RESTService {
         for (Map.Entry<String, Object> entry : entries) {
             sb.append(entry.getKey());
             sb.append("=");
-            sb.append((String)entry.getValue());
+            sb.append((String) entry.getValue());
             sb.append("&");
         }
 
         return sb.toString();
     }
 
-    private static String parameterize(String parameterizedURI,
-            Map<String, Object> inputs) {
+    private static String parameterize(String parameterizedURI, Map<String, Object> inputs) {
         StringBuilder endpointAddress = new StringBuilder(parameterizedURI);
         for (Entry<String, Object> entry : inputs.entrySet()) {
             String param = entry.getKey();
             int index = endpointAddress.indexOf("{" + param + "}");
             if (index > -1) {
                 try {
-                    String v = entry.getValue() != null ? entry.getValue()
-                            .toString() : "";
+                    String v = entry.getValue() != null ? entry.getValue().toString() : "";
                     v = URLEncoder.encode(v, "UTF-8");
                     // java.net.URLEncoder.encode() encodes space " " as "+"
                     // instead of "%20".
                     v = v.replaceAll("\\+", "%20");
-                    endpointAddress.replace(index, index + param.length() + 2,
-                            v);
+                    endpointAddress.replace(index, index + param.length() + 2, v);
                 } catch (UnsupportedEncodingException e) {
                     throw new WebServiceInvocationException(e);
                 }
@@ -183,9 +162,9 @@ public class RESTService {
         }
         return endpointAddress.toString();
     }
-    
+
     public String getServiceId() {
-        return serviceId;
+        return this.serviceId;
     }
 
     public void setHttpRequestMethod(String method) {
@@ -198,7 +177,7 @@ public class RESTService {
      * @return The bindingProperties.
      */
     public BindingProperties getBindingProperties() {
-        return bindingProperties;
+        return this.bindingProperties;
     }
 
     /**

@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -20,12 +18,14 @@ import javax.xml.bind.annotation.XmlEnum;
 import javax.xml.bind.annotation.XmlEnumValue;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for layoutComponentType.
- * 
- * <p>The following schema fragment specifies the expected content contained within this class.
  * <p>
+ * Java class for layoutComponentType.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * 
  * <pre>
  * &lt;simpleType name="layoutComponentType">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
@@ -43,25 +43,23 @@ import javax.xml.bind.annotation.XmlType;
 public enum LayoutComponentTypeType {
 
     @XmlEnumValue("Field")
-    FIELD("Field"),
-    @XmlEnumValue("Separator")
-    SEPARATOR("Separator"),
-    @XmlEnumValue("SControl")
-    S_CONTROL("SControl"),
-    @XmlEnumValue("EmptySpace")
+    FIELD("Field"), @XmlEnumValue("Separator")
+    SEPARATOR("Separator"), @XmlEnumValue("SControl")
+    S_CONTROL("SControl"), @XmlEnumValue("EmptySpace")
     EMPTY_SPACE("EmptySpace");
+
     private final String value;
 
     LayoutComponentTypeType(String v) {
-        value = v;
+        this.value = v;
     }
 
     public String value() {
-        return value;
+        return this.value;
     }
 
     public static LayoutComponentTypeType fromValue(String v) {
-        for (LayoutComponentTypeType c: LayoutComponentTypeType.values()) {
+        for (LayoutComponentTypeType c : LayoutComponentTypeType.values()) {
             if (c.value.equals(v)) {
                 return c;
             }

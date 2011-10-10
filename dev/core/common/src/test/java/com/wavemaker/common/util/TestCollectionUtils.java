@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.common.util;
 
 import java.util.List;
@@ -25,19 +26,19 @@ import com.wavemaker.infra.WMTestCase;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestCollectionUtils extends WMTestCase {
 
     public void testCreateList() {
-        
+
         List<String> strList = CollectionUtils.createList("foo", "bar");
         assertEquals(2, strList.size());
         assertEquals("foo", strList.get(0));
     }
-    
+
     public void testCreateSet() {
-        
+
         Set<String> strSet = CollectionUtils.createSet("foo", "bar");
         assertEquals(2, strSet.size());
         assertEquals("foo", strSet.iterator().next());

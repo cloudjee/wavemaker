@@ -18,8 +18,8 @@ import com.wavemaker.json.JSON;
 import com.wavemaker.json.type.TypeDefinition;
 
 /**
- * Provides an interface for TypeDefinitions wishing to provide type conversions
- * in the readObject (JSON String -&gt; Java or de-serialization) direction.
+ * Provides an interface for TypeDefinitions wishing to provide type conversions in the readObject (JSON String -&gt;
+ * Java or de-serialization) direction.
  * 
  * @author small
  * @version $Rev$ - $Date$
@@ -27,21 +27,13 @@ import com.wavemaker.json.type.TypeDefinition;
 public interface ReadObjectConverter extends TypeDefinition {
 
     /**
-     * Perform the transformation, in a JSON String -&gt; Java direction
-     * (de-serialization).
+     * Perform the transformation, in a JSON String -&gt; Java direction (de-serialization).
      * 
-     * @param input
-     *            The input Object, whose value is to be transformed (the value
-     *            in the tree with the indicated root, at the indicated path).
-     *            This is often a JSON type, or a primitive Java type (although
-     *            not necessarily of the correct type represented by this
-     *            TypeDefinition).  Note that this may be null.
-     * @param root
-     *            The root of the Object tree being transformed (usually, this
-     *            is a {@link JSON} type.)
-     * @param path
-     *            The beanutils-formatted path to the current value within the
-     *            object tree indicated by root.
+     * @param input The input Object, whose value is to be transformed (the value in the tree with the indicated root,
+     *        at the indicated path). This is often a JSON type, or a primitive Java type (although not necessarily of
+     *        the correct type represented by this TypeDefinition). Note that this may be null.
+     * @param root The root of the Object tree being transformed (usually, this is a {@link JSON} type.)
+     * @param path The beanutils-formatted path to the current value within the object tree indicated by root.
      * @return The new value to be set at the path indicated by path.
      */
     public Object readObject(Object input, Object root, String path);

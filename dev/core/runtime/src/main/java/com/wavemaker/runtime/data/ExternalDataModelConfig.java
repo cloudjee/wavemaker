@@ -17,14 +17,14 @@ package com.wavemaker.runtime.data;
 /**
  * @author stoens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public interface ExternalDataModelConfig {
-    
+
     String getServiceClass();
-    
+
     boolean returnsSingleResult(String operationName);
-    
+
     String getOutputType(String operationName);
 
 }

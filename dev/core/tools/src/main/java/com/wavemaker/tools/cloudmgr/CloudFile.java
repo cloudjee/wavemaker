@@ -16,27 +16,32 @@ package com.wavemaker.tools.cloudmgr;
 
 /**
  * This class represents a cloud file.
- *
+ * 
  * @author slee
  */
 public class CloudFile {
 
     private String fileName;
+
     private String containerName;
+
     private String lastModified;
+
     private long size;
+
     private String sizeString;
+
     private String owner;
 
-    public CloudFile(){}
+    public CloudFile() {
+    }
 
-    public CloudFile(String containerName, String fileName, String sizeString,
-                      String owner, String  lastModified) {
+    public CloudFile(String containerName, String fileName, String sizeString, String owner, String lastModified) {
         this.containerName = containerName;
         this.fileName = fileName;
         this.sizeString = sizeString;
         this.owner = owner;
-        this.lastModified = lastModified;    
+        this.lastModified = lastModified;
     }
 
     public void setFileName(String val) {

@@ -17,7 +17,6 @@ package com.wavemaker.runtime.data.task;
 import org.hibernate.Session;
 
 import com.wavemaker.common.util.ObjectUtils;
-import com.wavemaker.runtime.data.DataServiceMetaData;
 
 public class DeleteTask extends BaseTask {
 

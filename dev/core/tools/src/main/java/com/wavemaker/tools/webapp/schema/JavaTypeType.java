@@ -19,26 +19,25 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * 
  * 
- * 	This is a generic type that designates a Java primitive
- * 	type or a fully qualified name of a Java interface/type,
- * 	or an array of such types.
+ * This is a generic type that designates a Java primitive type or a fully qualified name of a Java interface/type, or
+ * an array of such types.
  * 
- *       
  * 
- * <p>Java class for java-typeType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for java-typeType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="java-typeType">
@@ -53,9 +52,6 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "java-typeType")
-public class JavaTypeType
-    extends String
-{
-
+public class JavaTypeType extends String {
 
 }

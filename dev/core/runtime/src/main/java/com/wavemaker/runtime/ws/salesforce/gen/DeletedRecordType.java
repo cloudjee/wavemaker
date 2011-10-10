@@ -11,25 +11,26 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
 import java.util.Date;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
 import com.wavemaker.runtime.ws.jaxb.DateXmlAdapter;
 
-
 /**
- * <p>Java class for DeletedRecord complex type.
+ * <p>
+ * Java class for DeletedRecord complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="DeletedRecord">
@@ -47,38 +48,32 @@ import com.wavemaker.runtime.ws.jaxb.DateXmlAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DeletedRecord", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "deletedDate",
-    "id"
-})
+@XmlType(name = "DeletedRecord", namespace = "urn:partner.soap.sforce.com", propOrder = { "deletedDate", "id" })
 public class DeletedRecordType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, type = String.class)
     @XmlJavaTypeAdapter(DateXmlAdapter.class)
     @XmlSchemaType(name = "dateTime")
     protected Date deletedDate;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String id;
 
     /**
      * Gets the value of the deletedDate property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public Date getDeletedDate() {
-        return deletedDate;
+        return this.deletedDate;
     }
 
     /**
      * Sets the value of the deletedDate property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setDeletedDate(Date value) {
         this.deletedDate = value;
@@ -87,22 +82,18 @@ public class DeletedRecordType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setId(String value) {
         this.id = value;

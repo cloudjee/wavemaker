@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.javaservice.testtypes;
 
 /**
@@ -22,11 +23,11 @@ package com.wavemaker.tools.javaservice.testtypes;
  * @version $Rev$ - $Date:2008-05-30 14:45:46 -0700 (Fri, 30 May 2008) $
  */
 public class JavaServiceDefinitionClass_ParamNamesWithVariables {
-    
+
     public String testMe(String firstName, String lastName) {
         try {
             String s = "hello world";
-            System.out.println("s: "+s);
+            System.out.println("s: " + s);
         } catch (Exception e) {
         }
         return null;

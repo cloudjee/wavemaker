@@ -19,37 +19,31 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * 
  * 
- * 	The transport-guaranteeType specifies that the communication
- * 	between client and server should be NONE, INTEGRAL, or
- * 	CONFIDENTIAL. NONE means that the application does not
- * 	require any transport guarantees. A value of INTEGRAL means
- * 	that the application requires that the data sent between the
- * 	client and server be sent in such a way that it can't be
- * 	changed in transit. CONFIDENTIAL means that the application
- * 	requires that the data be transmitted in a fashion that
- * 	prevents other entities from observing the contents of the
- * 	transmission. In most cases, the presence of the INTEGRAL or
- * 	CONFIDENTIAL flag will indicate that the use of SSL is
- * 	required.
+ * The transport-guaranteeType specifies that the communication between client and server should be NONE, INTEGRAL, or
+ * CONFIDENTIAL. NONE means that the application does not require any transport guarantees. A value of INTEGRAL means
+ * that the application requires that the data sent between the client and server be sent in such a way that it can't be
+ * changed in transit. CONFIDENTIAL means that the application requires that the data be transmitted in a fashion that
+ * prevents other entities from observing the contents of the transmission. In most cases, the presence of the INTEGRAL
+ * or CONFIDENTIAL flag will indicate that the use of SSL is required.
  * 
- * 	Used in: user-data-constraint
+ * Used in: user-data-constraint
  * 
- *       
  * 
- * <p>Java class for transport-guaranteeType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for transport-guaranteeType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="transport-guaranteeType">
@@ -64,9 +58,6 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "transport-guaranteeType")
-public class TransportGuaranteeType
-    extends String
-{
-
+public class TransportGuaranteeType extends String {
 
 }

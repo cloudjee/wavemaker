@@ -24,11 +24,10 @@ import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
 
 /**
- * Manages known ServiceDefinitionFactory instances and ServiceGeneratorFactory
- * instances.
+ * Manages known ServiceDefinitionFactory instances and ServiceGeneratorFactory instances.
  * 
- * Has convenience methods to get a ServiceDefinition instance given a File, and
- * a ServiceGenerator instance, given a GenerationConfiguration.
+ * Has convenience methods to get a ServiceDefinition instance given a File, and a ServiceGenerator instance, given a
+ * GenerationConfiguration.
  * 
  * Could be instantiated and managed by Spring.
  * 
@@ -43,26 +42,24 @@ public class ServiceFactoryManager {
 
     private static final ServiceFactoryManager instance = new ServiceFactoryManager();
 
-    private List<ServiceDefinitionFactory> sdf = new ArrayList<ServiceDefinitionFactory>();
+    private final List<ServiceDefinitionFactory> sdf = new ArrayList<ServiceDefinitionFactory>();
 
-    private List<ServiceGeneratorFactory> sgf = new ArrayList<ServiceGeneratorFactory>();
+    private final List<ServiceGeneratorFactory> sgf = new ArrayList<ServiceGeneratorFactory>();
 
     private ServiceFactoryManager() {
     }
 
     public void addServiceDefinitionFactory(ServiceDefinitionFactory f) {
-        sdf.add(f);
+        this.sdf.add(f);
     }
 
     public void addServiceGeneratorFactory(ServiceGeneratorFactory f) {
-        sgf.add(f);
+        this.sgf.add(f);
     }
 
-    public ServiceDefinition getServiceDefinition(Resource f, String serviceId,
-            DesignServiceManager serviceManager) {
-        for (ServiceDefinitionFactory fac : sdf) {
-            ServiceDefinition rtn = fac.getServiceDefinition(f, serviceId,
-                    serviceManager);
+    public ServiceDefinition getServiceDefinition(Resource f, String serviceId, DesignServiceManager serviceManager) {
+        for (ServiceDefinitionFactory fac : this.sdf) {
+            ServiceDefinition rtn = fac.getServiceDefinition(f, serviceId, serviceManager);
             if (rtn != null) {
                 return rtn;
             }
@@ -71,7 +68,7 @@ public class ServiceFactoryManager {
     }
 
     public ServiceGenerator getServiceGenerator(GenerationConfiguration cfg) {
-        for (ServiceGeneratorFactory fac : sgf) {
+        for (ServiceGeneratorFactory fac : this.sgf) {
             ServiceGenerator rtn = fac.getServiceGenerator(cfg);
             if (rtn != null) {
                 return rtn;

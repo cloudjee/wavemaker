@@ -50,7 +50,7 @@ public class DeploymentInfo {
     private ArchiveType archiveType = ArchiveType.WAR;
 
     public String getDeploymentId() {
-        return deploymentId;
+        return this.deploymentId;
     }
 
     public void setDeploymentId(String deploymentId) {
@@ -58,7 +58,7 @@ public class DeploymentInfo {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -66,7 +66,7 @@ public class DeploymentInfo {
     }
 
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     public void setUsername(String username) {
@@ -74,7 +74,7 @@ public class DeploymentInfo {
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     public void setPassword(String password) {
@@ -82,7 +82,7 @@ public class DeploymentInfo {
     }
 
     public String getToken() {
-        return token;
+        return this.token;
     }
 
     public void setToken(String token) {
@@ -90,7 +90,7 @@ public class DeploymentInfo {
     }
 
     public DeploymentType getDeploymentType() {
-        return deploymentType;
+        return this.deploymentType;
     }
 
     public void setDeploymentType(DeploymentType deploymentType) {
@@ -98,7 +98,7 @@ public class DeploymentInfo {
     }
 
     public List<DeploymentDB> getDatabases() {
-        return databases;
+        return this.databases;
     }
 
     public void setDatabases(List<DeploymentDB> databases) {
@@ -106,7 +106,7 @@ public class DeploymentInfo {
     }
 
     public String getApplicationName() {
-        return applicationName;
+        return this.applicationName;
     }
 
     public void setApplicationName(String applicationName) {
@@ -114,7 +114,7 @@ public class DeploymentInfo {
     }
 
     public String getHost() {
-        return host;
+        return this.host;
     }
 
     public void setHost(String host) {
@@ -122,7 +122,7 @@ public class DeploymentInfo {
     }
 
     public int getPort() {
-        return port;
+        return this.port;
     }
 
     public void setPort(int port) {
@@ -130,7 +130,7 @@ public class DeploymentInfo {
     }
 
     public String getTarget() {
-        return target;
+        return this.target;
     }
 
     public void setTarget(String target) {
@@ -138,7 +138,7 @@ public class DeploymentInfo {
     }
 
     public ArchiveType getArchiveType() {
-        return archiveType;
+        return this.archiveType;
     }
 
     public void setArchiveType(ArchiveType archiveType) {
@@ -149,75 +149,97 @@ public class DeploymentInfo {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((applicationName == null) ? 0 : applicationName.hashCode());
-        result = prime * result + ((archiveType == null) ? 0 : archiveType.hashCode());
-        result = prime * result + ((databases == null) ? 0 : databases.hashCode());
-        result = prime * result + ((deploymentType == null) ? 0 : deploymentType.hashCode());
-        result = prime * result + ((host == null) ? 0 : host.hashCode());
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        result = prime * result + ((password == null) ? 0 : password.hashCode());
-        result = prime * result + port;
-        result = prime * result + ((target == null) ? 0 : target.hashCode());
-        result = prime * result + ((token == null) ? 0 : token.hashCode());
-        result = prime * result + ((username == null) ? 0 : username.hashCode());
+        result = prime * result + (this.applicationName == null ? 0 : this.applicationName.hashCode());
+        result = prime * result + (this.archiveType == null ? 0 : this.archiveType.hashCode());
+        result = prime * result + (this.databases == null ? 0 : this.databases.hashCode());
+        result = prime * result + (this.deploymentType == null ? 0 : this.deploymentType.hashCode());
+        result = prime * result + (this.host == null ? 0 : this.host.hashCode());
+        result = prime * result + (this.name == null ? 0 : this.name.hashCode());
+        result = prime * result + (this.password == null ? 0 : this.password.hashCode());
+        result = prime * result + this.port;
+        result = prime * result + (this.target == null ? 0 : this.target.hashCode());
+        result = prime * result + (this.token == null ? 0 : this.token.hashCode());
+        result = prime * result + (this.username == null ? 0 : this.username.hashCode());
         return result;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        }
+        if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        }
+        if (getClass() != obj.getClass()) {
             return false;
+        }
         DeploymentInfo other = (DeploymentInfo) obj;
-        if (applicationName == null) {
-            if (other.applicationName != null)
+        if (this.applicationName == null) {
+            if (other.applicationName != null) {
                 return false;
-        } else if (!applicationName.equals(other.applicationName))
+            }
+        } else if (!this.applicationName.equals(other.applicationName)) {
             return false;
-        if (archiveType != other.archiveType)
+        }
+        if (this.archiveType != other.archiveType) {
             return false;
-        if (databases == null) {
-            if (other.databases != null)
+        }
+        if (this.databases == null) {
+            if (other.databases != null) {
                 return false;
-        } else if (!databases.equals(other.databases))
+            }
+        } else if (!this.databases.equals(other.databases)) {
             return false;
-        if (deploymentType != other.deploymentType)
+        }
+        if (this.deploymentType != other.deploymentType) {
             return false;
-        if (host == null) {
-            if (other.host != null)
+        }
+        if (this.host == null) {
+            if (other.host != null) {
                 return false;
-        } else if (!host.equals(other.host))
+            }
+        } else if (!this.host.equals(other.host)) {
             return false;
-        if (name == null) {
-            if (other.name != null)
+        }
+        if (this.name == null) {
+            if (other.name != null) {
                 return false;
-        } else if (!name.equals(other.name))
+            }
+        } else if (!this.name.equals(other.name)) {
             return false;
-        if (password == null) {
-            if (other.password != null)
+        }
+        if (this.password == null) {
+            if (other.password != null) {
                 return false;
-        } else if (!password.equals(other.password))
+            }
+        } else if (!this.password.equals(other.password)) {
             return false;
-        if (port != other.port)
+        }
+        if (this.port != other.port) {
             return false;
-        if (target == null) {
-            if (other.target != null)
+        }
+        if (this.target == null) {
+            if (other.target != null) {
                 return false;
-        } else if (!target.equals(other.target))
+            }
+        } else if (!this.target.equals(other.target)) {
             return false;
-        if (token == null) {
-            if (other.token != null)
+        }
+        if (this.token == null) {
+            if (other.token != null) {
                 return false;
-        } else if (!token.equals(other.token))
+            }
+        } else if (!this.token.equals(other.token)) {
             return false;
-        if (username == null) {
-            if (other.username != null)
+        }
+        if (this.username == null) {
+            if (other.username != null) {
                 return false;
-        } else if (!username.equals(other.username))
+            }
+        } else if (!this.username.equals(other.username)) {
             return false;
+        }
         return true;
     }
 

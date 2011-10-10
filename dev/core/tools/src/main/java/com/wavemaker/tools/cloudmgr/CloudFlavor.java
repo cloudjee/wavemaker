@@ -16,20 +16,24 @@ package com.wavemaker.tools.cloudmgr;
 
 /**
  * This class represents a cloud server flavor.
- *
+ * 
  * @author slee
  */
 public class CloudFlavor {
 
     private String id;
+
     private String name;
+
     private String description;
+
     private String memory;
+
     private String osStorage;
+
     private String extraStorage;
 
-    public CloudFlavor (String id, String name, String description, String memory,
-                       String osStorage, String extraStorage) {
+    public CloudFlavor(String id, String name, String description, String memory, String osStorage, String extraStorage) {
         this.id = id;
         this.name = name;
         this.description = description;

@@ -93,40 +93,33 @@ public class RESTWsdlGenerator implements IPwsRestWsdlGenerator {
 
     private QName outputElementType = null;
 
-    private Set<QName> additionalNamespaces = new HashSet<QName>();
-    
+    private final Set<QName> additionalNamespaces = new HashSet<QName>();
+
     private String httpMethod;
-    
+
     private String contentType;
 
     private String outputType = null;
 
-     public RESTWsdlGenerator() {
-     }
+    public RESTWsdlGenerator() {
+    }
 
     /**
      * Constructor.
      * 
-     * @param serviceName
-     *                The name of the service.
-     * @param namespace
-     *                The namespace for this service. This is mainly used for
-     *                generating Java package.
-     * @param operationName_list
-     *                The list of the operation names.
-     * @param parameterizedUrl
-     *                The URL with parameters.
+     * @param serviceName The name of the service.
+     * @param namespace The namespace for this service. This is mainly used for generating Java package.
+     * @param operationName_list The list of the operation names.
+     * @param parameterizedUrl The URL with parameters.
      */
-    public RESTWsdlGenerator(String serviceName, String namespace,
-            List<String> operationName_list, String parameterizedUrl) {
+    public RESTWsdlGenerator(String serviceName, String namespace, List<String> operationName_list, String parameterizedUrl) {
         this.serviceName = serviceName;
         this.namespace = namespace;
         this.operationName_list = operationName_list;
         this.parameterizedUrl = parameterizedUrl;
     }
 
-    public RESTWsdlGenerator(String serviceName, String namespace,
-            String operationName, String parameterizedUrl) {
+    public RESTWsdlGenerator(String serviceName, String namespace, String operationName, String parameterizedUrl) {
         this.serviceName = serviceName;
         this.namespace = namespace;
         this.operationName_list = new ArrayList<String>();
@@ -160,7 +153,7 @@ public class RESTWsdlGenerator implements IPwsRestWsdlGenerator {
 
     public void setInputParts(List<RESTInputParam> inputParts) {
         this.inputParts_list = new ArrayList<List<RESTInputParam>>();
-        inputParts_list.add(inputParts);
+        this.inputParts_list.add(inputParts);
     }
 
     public void setInputParts_list(List<List<RESTInputParam>> inputParts_list) {
@@ -169,7 +162,7 @@ public class RESTWsdlGenerator implements IPwsRestWsdlGenerator {
 
     public void setOutputElementType(QName outputElementType) {
         this.outputElementType = outputElementType;
-        additionalNamespaces.add(outputElementType);
+        this.additionalNamespaces.add(outputElementType);
     }
 
     public void setStringOutput(boolean isStringOutput) {
@@ -191,26 +184,22 @@ public class RESTWsdlGenerator implements IPwsRestWsdlGenerator {
     public void setPartnerName(String partnerName) {
     }
 
-    protected Definition generate() throws SAXException, IOException,
-            ParserConfigurationException, WSDLException {
+    protected Definition generate() throws SAXException, IOException, ParserConfigurationException, WSDLException {
         Definition definition = WSDLFactory.newInstance().newDefinition();
         definition.addNamespace("wsdl", Constants.WSDL11_NS);
         definition.addNamespace("xs", Constants.XSD_NS);
-        definition.addNamespace("tns", namespace);
-        definition.setTargetNamespace(namespace);
+        definition.addNamespace("tns", this.namespace);
+        definition.setTargetNamespace(this.namespace);
 
         fixInputParamNames();
-        
-        definition.setDocumentationElement(
-                generateDocumentation(Constants.REST_ENDPOINT_LOCATION_PREFIX
-                        + parameterizedUrl));
 
-        /*if (xmlSchema_list == null && xmlSchemaPath_list == null) {
-            Types types = new TypesImpl();
-            definition.setTypes(generateTypes(types, this.schemaStrings, this.schemaElements));
-        } else {
-            definition.setTypes(generateTypes());
-        }*/
+        definition.setDocumentationElement(generateDocumentation(Constants.REST_ENDPOINT_LOCATION_PREFIX + this.parameterizedUrl));
+
+        /*
+         * if (xmlSchema_list == null && xmlSchemaPath_list == null) { Types types = new TypesImpl();
+         * definition.setTypes(generateTypes(types, this.schemaStrings, this.schemaElements)); } else {
+         * definition.setTypes(generateTypes()); }
+         */
 
         definition.setTypes(generateTypes());
 
@@ -219,14 +208,14 @@ public class RESTWsdlGenerator implements IPwsRestWsdlGenerator {
 
         PortType portType = new PortTypeImpl();
         portType.setUndefined(false);
-        portType.setQName(new QName(serviceName));
+        portType.setQName(new QName(this.serviceName));
 
         int indx = 0;
-        for (String operationName : operationName_list) {
-            inputMessage = generateInputMessage(operationName, inputParts_list.get(indx));
+        for (String operationName : this.operationName_list) {
+            inputMessage = generateInputMessage(operationName, this.inputParts_list.get(indx));
             outputMessage = generateOutputMessage(operationName);
-        
-            for (QName q : additionalNamespaces) {
+
+            for (QName q : this.additionalNamespaces) {
                 if (q.getNamespaceURI() != null && q.getNamespaceURI().length() > 0) {
                     definition.addNamespace(q.getPrefix(), q.getNamespaceURI());
                 }
@@ -238,10 +227,10 @@ public class RESTWsdlGenerator implements IPwsRestWsdlGenerator {
             Operation operation = new OperationImpl();
             operation.setUndefined(false);
             operation.setName(operationName);
-            if (httpMethod != null && httpMethod.equals("POST")) {
+            if (this.httpMethod != null && this.httpMethod.equals("POST")) {
                 String content = "POST";
-                if (contentType != null && contentType.length() > 0) {
-                    content += " " + contentType;
+                if (this.contentType != null && this.contentType.length() > 0) {
+                    content += " " + this.contentType;
                 }
                 operation.setDocumentationElement(generateDocumentation(content));
             }
@@ -257,29 +246,26 @@ public class RESTWsdlGenerator implements IPwsRestWsdlGenerator {
         }
 
         definition.addPortType(portType);
-        
+
         return definition;
     }
 
     private void fixInputParamNames() {
-        for (List<RESTInputParam> inputParts : inputParts_list) {
+        for (List<RESTInputParam> inputParts : this.inputParts_list) {
             fixInputParamNamesForOper(inputParts);
-        }        
+        }
     }
 
     private void fixInputParamNamesForOper(List<RESTInputParam> inputParts) {
         if (inputParts != null) {
             for (RESTInputParam param : inputParts) {
                 String paramName = param.getName();
-                String newParamName = CodeGenUtils.toPropertyName(paramName
-                        .replace(" ", ""));
+                String newParamName = CodeGenUtils.toPropertyName(paramName.replace(" ", ""));
                 if (!paramName.equals(newParamName)) {
-                    int i = parameterizedUrl.indexOf("{" + paramName + "}");
+                    int i = this.parameterizedUrl.indexOf("{" + paramName + "}");
                     if (i > -1) {
                         int j = i + paramName.length() + 2;
-                        parameterizedUrl = parameterizedUrl.substring(0, i)
-                                + "{" + newParamName + "}"
-                                + parameterizedUrl.substring(j);
+                        this.parameterizedUrl = this.parameterizedUrl.substring(0, i) + "{" + newParamName + "}" + this.parameterizedUrl.substring(j);
                         param.setName(newParamName);
                     }
                 }
@@ -287,30 +273,26 @@ public class RESTWsdlGenerator implements IPwsRestWsdlGenerator {
         }
     }
 
-    private Element generateDocumentation(String content)
-            throws ParserConfigurationException {
+    private Element generateDocumentation(String content) throws ParserConfigurationException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
         DocumentBuilder db = dbf.newDocumentBuilder();
         Document document = db.newDocument();
-        Element element = document.createElementNS(Constants.WSDL11_NS,
-                "documentation");
+        Element element = document.createElementNS(Constants.WSDL11_NS, "documentation");
         element.setPrefix("wsdl");
         element.setTextContent(content);
         return element;
     }
 
-    private Types generateTypes() throws SAXException, IOException,
-            ParserConfigurationException {
+    private Types generateTypes() throws SAXException, IOException, ParserConfigurationException {
         Types types = new TypesImpl();
 
-        if (schemaStrings != null) {
-            for (String schemaString : schemaStrings) {
+        if (this.schemaStrings != null) {
+            for (String schemaString : this.schemaStrings) {
                 Schema schema = new SchemaImpl();
                 schema.setElementType(new QName(Constants.XSD_NS, "schema"));
 
-                DocumentBuilderFactory dbf = DocumentBuilderFactory
-                        .newInstance();
+                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
                 DocumentBuilder db = dbf.newDocumentBuilder();
                 Reader reader = new StringReader(schemaString);
                 Document doc = db.parse(new InputSource(reader));
@@ -319,8 +301,8 @@ public class RESTWsdlGenerator implements IPwsRestWsdlGenerator {
                 types.addExtensibilityElement(schema);
             }
         }
-        if (schemaElements != null) {
-            for (Element schemaElement : schemaElements) {
+        if (this.schemaElements != null) {
+            for (Element schemaElement : this.schemaElements) {
                 Schema schema = new SchemaImpl();
                 schema.setElementType(new QName(Constants.XSD_NS, "schema"));
                 schema.setElement(schemaElement);
@@ -333,8 +315,8 @@ public class RESTWsdlGenerator implements IPwsRestWsdlGenerator {
     protected Message generateInputMessage(String operName, List<RESTInputParam> inputParts) {
         Message message = new MessageImpl();
         message.setUndefined(false);
-        message.setQName(buildQName(namespace, operName, "RequestMsg"));
-        
+        message.setQName(buildQName(this.namespace, operName, "RequestMsg"));
+
         if (inputParts != null) {
             for (RESTInputParam entry : inputParts) {
                 Part part = new PartImpl();
@@ -345,13 +327,12 @@ public class RESTWsdlGenerator implements IPwsRestWsdlGenerator {
                     int i = inputType.lastIndexOf(':');
                     QName inType = null;
                     if (i > -1) {
-                        inType = new QName(inputType.substring(0, i),
-                                inputType.substring(i + 1));
+                        inType = new QName(inputType.substring(0, i), inputType.substring(i + 1));
                     } else {
                         inType = new QName(inputType);
                     }
                     part.setElementName(inType);
-                    additionalNamespaces.add(inType);
+                    this.additionalNamespaces.add(inType);
                 } else {
                     part.setTypeName(constructInputSimpleTypeQName(type));
                 }
@@ -364,25 +345,24 @@ public class RESTWsdlGenerator implements IPwsRestWsdlGenerator {
     protected Message generateOutputMessage(String operName) {
         Message message = new MessageImpl();
         message.setUndefined(false);
-        message.setQName(buildQName(namespace, operName, "ResponseMsg"));
+        message.setQName(buildQName(this.namespace, operName, "ResponseMsg"));
 
         QName outType = null;
-        if (outputType != null) { //called from WebServiceToolsManager
-            int i = outputType.lastIndexOf(':');
+        if (this.outputType != null) { // called from WebServiceToolsManager
+            int i = this.outputType.lastIndexOf(':');
             if (i > -1) {
-                outType = new QName(outputType.substring(0, i),
-                        outputType.substring(i + 1));
+                outType = new QName(this.outputType.substring(0, i), this.outputType.substring(i + 1));
             } else {
-                outType = buildQName(null, operName, outputType);
+                outType = buildQName(null, operName, this.outputType);
             }
-            additionalNamespaces.add(outType);
-        } else if (outputElementType != null) { //callled from Wadl2Wsdl
-            outType = outputElementType;
+            this.additionalNamespaces.add(outType);
+        } else if (this.outputElementType != null) { // callled from Wadl2Wsdl
+            outType = this.outputElementType;
         }
 
         Part part = new PartImpl();
         part.setName("body");
-        if (isStringOutput) {
+        if (this.isStringOutput) {
             part.setTypeName(new QName(Constants.XSD_NS, "string"));
             message.addPart(part);
         } else if (outType != null) {
@@ -403,27 +383,25 @@ public class RESTWsdlGenerator implements IPwsRestWsdlGenerator {
         }
     }
 
-     public QName buildQName(String namespace, String operationName, String suffix) {
+    public QName buildQName(String namespace, String operationName, String suffix) {
         if (namespace == null || namespace.length() == 0) {
-            return (new QName(suffix));
+            return new QName(suffix);
         } else {
-            return (new QName(namespace, suffix));
+            return new QName(namespace, suffix);
         }
     }
 
     /**
      * Writes the generated WSDL into the specified file.
      * 
-     * @param wsdlFile
-     *                The file to be written to.
+     * @param wsdlFile The file to be written to.
      * @throws WSDLException
      * @throws IOException
      * @throws SAXException
      * @throws ParserConfigurationException
-     * @throws TransformerException 
+     * @throws TransformerException
      */
-    public void write(File wsdlFile) throws WSDLException, IOException,
-            SAXException, ParserConfigurationException, TransformerException {
+    public void write(File wsdlFile) throws WSDLException, IOException, SAXException, ParserConfigurationException, TransformerException {
         WSDLWriter writer = WSDLFactory.newInstance().newWSDLWriter();
         Definition definition = generate();
         Document document = writer.getDocument(definition);
@@ -432,12 +410,10 @@ public class RESTWsdlGenerator implements IPwsRestWsdlGenerator {
         Transformer transformer = tFactory.newTransformer();
         transformer.setOutputProperty(OutputKeys.METHOD, "xml");
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-        transformer.setOutputProperty(
-                "{http://xml.apache.org/xslt}indent-amount", "2");
+        transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
         transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
 
-        IndentingWriter p = new IndentingWriter(new OutputStreamWriter(
-                new FileOutputStream(wsdlFile)));
+        IndentingWriter p = new IndentingWriter(new OutputStreamWriter(new FileOutputStream(wsdlFile)));
 
         DOMSource source = new DOMSource(document);
         StreamResult result = new StreamResult(p);

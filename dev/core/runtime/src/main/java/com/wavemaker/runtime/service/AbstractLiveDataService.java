@@ -28,21 +28,14 @@ import com.wavemaker.runtime.service.reflect.ReflectServiceType;
 public abstract class AbstractLiveDataService implements LiveDataService {
 
     /**
-     * Get a method in the current object with the specified name which can take
-     * the arguments passed in (number of arguments is checked, types are not).
-     * This method follows the same rules as for a JSON-RPC invoke; if there is
-     * more than one possible match with the same number of arguments, an
-     * exception is thrown.
+     * Get a method in the current object with the specified name which can take the arguments passed in (number of
+     * arguments is checked, types are not). This method follows the same rules as for a JSON-RPC invoke; if there is
+     * more than one possible match with the same number of arguments, an exception is thrown.
      * 
-     * @param methodName
-     *                The method to search for.
-     * @param arguments
-     *                The arguments which will be passed in; only the number of
-     *                arguments is checked, not the type.
-     * @return The Method instance corresponding with the methodName and
-     *         arguments parameters.
-     * @throws MethodInvokeException
-     *                 If the method is not found or the match isn't strict.
+     * @param methodName The method to search for.
+     * @param arguments The arguments which will be passed in; only the number of arguments is checked, not the type.
+     * @return The Method instance corresponding with the methodName and arguments parameters.
+     * @throws MethodInvokeException If the method is not found or the match isn't strict.
      */
     protected Method findMethod(String methodName, Object[] arguments) {
 

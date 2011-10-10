@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -21,11 +19,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for InvalidFieldFault complex type.
+ * <p>
+ * Java class for InvalidFieldFault complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="InvalidFieldFault">
@@ -41,9 +40,6 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "InvalidFieldFault", namespace = "urn:fault.partner.soap.sforce.com")
 @XmlRootElement(name = "InvalidFieldFault", namespace = "urn:fault.partner.soap.sforce.com")
-public class InvalidFieldFault
-    extends ApiQueryFaultType
-{
-
+public class InvalidFieldFault extends ApiQueryFaultType {
 
 }

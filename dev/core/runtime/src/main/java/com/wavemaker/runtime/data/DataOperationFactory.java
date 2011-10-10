@@ -22,20 +22,22 @@ import com.wavemaker.common.util.Tuple;
 /**
  * @author Simon Toens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public interface DataOperationFactory {
-    
+
     Collection<String> getQueryNames();
-    
+
     List<String> getQueryReturnTypes(String operationName, String queryName);
-    List<String> getQueryReturnNames(String operationName, String queryName);           
-            
+
+    List<String> getQueryReturnNames(String operationName, String queryName);
+
     boolean queryReturnsSingleResult(String operationName, String queryName);
+
     boolean requiresResultWrapper(String operationName, String queryName);
-    Collection<Tuple.Three<String, String, Boolean>> 
-	getQueryInputs(String queryName);
-    
+
+    Collection<Tuple.Three<String, String, Boolean>> getQueryInputs(String queryName);
+
     Collection<String> getEntityClassNames();
 
 }

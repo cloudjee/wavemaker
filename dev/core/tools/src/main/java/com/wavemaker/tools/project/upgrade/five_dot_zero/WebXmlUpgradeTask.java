@@ -40,68 +40,55 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
  */
 public class WebXmlUpgradeTask implements UpgradeTask {
 
-	protected static final String WEB_XML_BACKUP = ProjectConstants.WEB_XML
-			+ ".4_5_bak";
+    protected static final String WEB_XML_BACKUP = ProjectConstants.WEB_XML + ".4_5_bak";
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker
-	 * .tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
-	 */
-	public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker .tools.project.Project,
+     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
+     */
+    public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
-		Resource webXml = project.getWebXml();
-		if (webXml.exists()) {
-			try {
-				Resource webXmlBak = project.getWebInf().createRelative(
-						WEB_XML_BACKUP);
-				FileCopyUtils.copy(webXml.getInputStream(),
-						studioConfiguration.getOutputStream(webXmlBak));
-				studioConfiguration.deleteFile(webXml);
+        Resource webXml = project.getWebXml();
+        if (webXml.exists()) {
+            try {
+                Resource webXmlBak = project.getWebInf().createRelative(WEB_XML_BACKUP);
+                FileCopyUtils.copy(webXml.getInputStream(), this.studioConfiguration.getOutputStream(webXmlBak));
+                this.studioConfiguration.deleteFile(webXml);
 
-				Resource userWebXml = project.getWebInf().createRelative(
-						ProjectConstants.USER_WEB_XML);
-				InputStream resourceStream = this
-						.getClass()
-						.getClassLoader()
-						.getResourceAsStream(
-								ProjectManager._TEMPLATE_APP_RESOURCE_NAME);
-				ZipInputStream resourceZipStream = new ZipInputStream(
-						resourceStream);
+                Resource userWebXml = project.getWebInf().createRelative(ProjectConstants.USER_WEB_XML);
+                InputStream resourceStream = this.getClass().getClassLoader().getResourceAsStream(ProjectManager._TEMPLATE_APP_RESOURCE_NAME);
+                ZipInputStream resourceZipStream = new ZipInputStream(resourceStream);
 
-				ZipEntry zipEntry = null;
+                ZipEntry zipEntry = null;
 
-				while ((zipEntry = resourceZipStream.getNextEntry()) != null) {
-					if ("webapproot/WEB-INF/user-web.xml".equals(zipEntry
-							.getName())) {
-						Writer writer = project.getWriter(userWebXml);
-						IOUtils.copy(resourceZipStream, writer);
-						writer.close();
-					}
-				}
+                while ((zipEntry = resourceZipStream.getNextEntry()) != null) {
+                    if ("webapproot/WEB-INF/user-web.xml".equals(zipEntry.getName())) {
+                        Writer writer = project.getWriter(userWebXml);
+                        IOUtils.copy(resourceZipStream, writer);
+                        writer.close();
+                    }
+                }
 
-				resourceZipStream.close();
-				resourceStream.close();
-			} catch (IOException e) {
-				throw new WMRuntimeException(e);
-			}
+                resourceZipStream.close();
+                resourceStream.close();
+            } catch (IOException e) {
+                throw new WMRuntimeException(e);
+            }
 
-			upgradeInfo
-					.addMessage("The web.xml file has changed.  If you have custom"
-							+ "modifications, please copy them from "
-							+ WEB_XML_BACKUP + " to the new user-web.xml.");
-		}
-	}
+            upgradeInfo.addMessage("The web.xml file has changed.  If you have custom" + "modifications, please copy them from " + WEB_XML_BACKUP
+                + " to the new user-web.xml.");
+        }
+    }
 
-	private StudioConfiguration studioConfiguration;
+    private StudioConfiguration studioConfiguration;
 
-	public StudioConfiguration getStudioConfiguration() {
-		return studioConfiguration;
-	}
+    public StudioConfiguration getStudioConfiguration() {
+        return this.studioConfiguration;
+    }
 
-	public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-		this.studioConfiguration = studioConfiguration;
-	}
+    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
+        this.studioConfiguration = studioConfiguration;
+    }
 }

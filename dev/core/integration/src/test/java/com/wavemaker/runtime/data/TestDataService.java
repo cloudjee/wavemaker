@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data;
 
 import static org.junit.Assert.assertEquals;
@@ -49,7 +50,7 @@ public class TestDataService extends RuntimeDataSpringContextTestCase {
     @Before
     public void setUp() {
 
-        ds = getSakilaService().getDataServiceManager();
+        this.ds = getSakilaService().getDataServiceManager();
     }
 
     @Test
@@ -58,14 +59,14 @@ public class TestDataService extends RuntimeDataSpringContextTestCase {
         actor.setFirstName("N");
         QueryOptions options = new QueryOptions(3);
         options.matchMode(MatchMode.START);
-        int count = (Integer) ds.invoke(taskMgr.getCountTask(), actor, options);
+        int count = (Integer) this.ds.invoke(this.taskMgr.getCountTask(), actor, options);
         assertTrue(count == 4);
     }
 
     @Test
     public void testUknownQuery() throws Throwable {
         try {
-            ds.invoke(taskMgr.getQueryTask(), "GetFoo");
+            this.ds.invoke(this.taskMgr.getQueryTask(), "GetFoo");
         } catch (HibernateSystemException ex) {
             assertTrue(ex.getCause().getClass() == MappingException.class);
             return;
@@ -76,8 +77,7 @@ public class TestDataService extends RuntimeDataSpringContextTestCase {
     @SuppressWarnings("unchecked")
     @Test
     public void testGetActorById() {
-        List<Actor> l = (List<Actor>) ds.invoke(taskMgr.getQueryTask(),
-                "getActorById", Short.valueOf("2"));
+        List<Actor> l = (List<Actor>) this.ds.invoke(this.taskMgr.getQueryTask(), "getActorById", Short.valueOf("2"));
 
         assertTrue(l.size() == 1);
         assertTrue(l.get(0).getActorId().equals(Short.valueOf("2")));
@@ -146,8 +146,7 @@ public class TestDataService extends RuntimeDataSpringContextTestCase {
         Session session = sakila.getDataServiceManager().getSession();
         assertTrue("Session cannot be null", session != null);
 
-        Integer numActors = (Integer) session.createCriteria(Actor.class)
-                .setProjection(Projections.rowCount()).uniqueResult();
+        Integer numActors = (Integer) session.createCriteria(Actor.class).setProjection(Projections.rowCount()).uniqueResult();
 
         sakila.getDataServiceManager().rollback();
 
@@ -156,10 +155,8 @@ public class TestDataService extends RuntimeDataSpringContextTestCase {
 
     private Sakila getSakilaService() {
         ApplicationContext ctx = getApplicationContext();
-        ServiceManager serviceMgr = (ServiceManager) ctx
-                .getBean(ServiceConstants.SERVICE_MANAGER_NAME);
+        ServiceManager serviceMgr = (ServiceManager) ctx.getBean(ServiceConstants.SERVICE_MANAGER_NAME);
 
-        return (Sakila) ((ReflectServiceWire) serviceMgr
-                .getServiceWire(DataServiceTestConstants.SAKILA_SERVICE_SPRING_ID_2)).getServiceBean();
+        return (Sakila) ((ReflectServiceWire) serviceMgr.getServiceWire(DataServiceTestConstants.SAKILA_SERVICE_SPRING_ID_2)).getServiceBean();
     }
 }

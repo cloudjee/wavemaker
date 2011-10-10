@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.spring;
 
 import com.wavemaker.common.WMRuntimeException;
@@ -33,110 +34,115 @@ import com.wavemaker.runtime.service.response.LiveDataServiceResponse;
 /**
  * @author small
  * @version $Rev:22671 $ - $Date:2008-05-30 14:29:23 -0700 (Fri, 30 May 2008) $
- *
+ * 
  */
 public class ComplexRuntimeServiceBean extends AbstractLiveDataService {
-    
+
     // service methods
     public int getInt(int input) {
         return input + 1000;
     }
+
     public int getInt() {
         return -1;
     }
+
     public void setInt(int in) {
     }
-    
-    
-    private int i=0;
+
+    private int i = 0;
+
     private boolean eventCalled = false;
-    
+
     public void setI(int i) {
         this.i = i;
     }
+
     public int getI() {
         return this.i;
     }
-    
+
     public boolean getEventCalled() {
         return this.eventCalled;
     }
+
     public void setEventCalled(boolean eventCalled) {
         this.eventCalled = eventCalled;
     }
-    
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.service.LiveDataService#read(com.wavemaker.json.type.TypeDefinition, java.lang.Object, com.wavemaker.runtime.service.PropertyOptions, com.wavemaker.runtime.service.PagingOptions)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.runtime.service.LiveDataService#read(com.wavemaker.json.type.TypeDefinition, java.lang.Object,
+     * com.wavemaker.runtime.service.PropertyOptions, com.wavemaker.runtime.service.PagingOptions)
      */
-    public TypedServiceReturn read(TypeDefinition type, Object instance,
-            PropertyOptions propertyOptions, PagingOptions pagingOptions) {
+    public TypedServiceReturn read(TypeDefinition type, Object instance, PropertyOptions propertyOptions, PagingOptions pagingOptions) {
         Object ret;
         ComplexRuntimeServiceBean crsb = (ComplexRuntimeServiceBean) instance;
         FieldDefinition retFD;
-        
-        if (null==instance &&
-                type.getTypeName().equals(Integer.class.getName())) {
+
+        if (null == instance && type.getTypeName().equals(Integer.class.getName())) {
             crsb = new ComplexRuntimeServiceBean();
             crsb.setI(50);
             ret = crsb;
-        } else if (null==instance &&
-                type.getTypeName().equals(ComplexRuntimeServiceBean.class.getName())) {
+        } else if (null == instance && type.getTypeName().equals(ComplexRuntimeServiceBean.class.getName())) {
             crsb = new ComplexRuntimeServiceBean();
             crsb.setI(60);
             ret = crsb;
-        } else if (null==instance &&
-                type.getTypeName().equals(CycleA.class.getName())) {
+        } else if (null == instance && type.getTypeName().equals(CycleA.class.getName())) {
             ret = ComplexReturnBean.getCycle();
-        } else if (null==instance) {
-            throw new WMRuntimeException("unknown type: "+type);
+        } else if (null == instance) {
+            throw new WMRuntimeException("unknown type: " + type);
         } else if (instance instanceof ComplexRuntimeServiceBean) {
-            crsb.setI(crsb.getI()+1000);
+            crsb.setI(crsb.getI() + 1000);
             ret = crsb;
         } else {
             ret = crsb;
         }
-        
-        retFD = ReflectTypeUtils.getFieldDefinition(ret.getClass(),
-                new ReflectTypeState(), false, null);
-        
-        if (eventCalled) {
-            crsb.setI(crsb.getI()+500);
+
+        retFD = ReflectTypeUtils.getFieldDefinition(ret.getClass(), new ReflectTypeState(), false, null);
+
+        if (this.eventCalled) {
+            crsb.setI(crsb.getI() + 500);
         }
-        
+
         LiveDataServiceResponse response = new LiveDataServiceResponse();
         response.setResult(ret);
-        
+
         TypedServiceReturn tsr = new TypedServiceReturn();
         tsr.setReturnValue(response);
-        
-        FieldDefinition fd = ReflectTypeUtils.getFieldDefinition(
-                LiveDataServiceResponse.class, new ReflectTypeState(), false,
-                null);
+
+        FieldDefinition fd = ReflectTypeUtils.getFieldDefinition(LiveDataServiceResponse.class, new ReflectTypeState(), false, null);
         ObjectTypeDefinition otd = (ObjectTypeDefinition) fd.getTypeDefinition();
         otd.getFields().put("result", retFD);
         tsr.setReturnType(fd);
-        
+
         return tsr;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.runtime.service.LiveDataService#delete(java.lang.Object)
      */
     public void delete(Object objectToDelete) {
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.runtime.service.LiveDataService#insert(java.lang.Object)
      */
     public Object insert(Object objectToInsert) {
         return null;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.runtime.service.LiveDataService#update(java.lang.Object)
      */
-    public Object update(Object objectToUpdate)  {
+    public Object update(Object objectToUpdate) {
         return null;
     }
 }

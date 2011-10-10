@@ -23,6 +23,7 @@ import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
+
 /**
  * Changes for setting server time offset.
  * 
@@ -30,14 +31,17 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
  */
 public class ProjSpringAppXmlUpgradeTask implements UpgradeTask {
 
-    private String fromStr = "/resources/gzipped/**=fileController";
+    private final String fromStr = "/resources/gzipped/**=fileController";
 
-    private String toStr = fromStr + "\r\n\t\t\t\t/config.js=fileController";
+    private final String toStr = this.fromStr + "\r\n\t\t\t\t/config.js=fileController";
 
     private boolean error = false;
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
+     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
      */
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
@@ -45,16 +49,15 @@ public class ProjSpringAppXmlUpgradeTask implements UpgradeTask {
 
         try {
             String content = FileUtils.readFileToString(file, ServerConstants.DEFAULT_ENCODING);
-            content = content.replace(fromStr, toStr);
+            content = content.replace(this.fromStr, this.toStr);
             FileUtils.writeStringToFile(file, content, ServerConstants.DEFAULT_ENCODING);
         } catch (IOException ioe) {
             ioe.printStackTrace();
-            error = true;
+            this.error = true;
         }
 
-        if (error) {
-            upgradeInfo.addMessage("*** Terminated with error while upgrading project-springapp.xml. " +
-                    "Please check the console message.***");
+        if (this.error) {
+            upgradeInfo.addMessage("*** Terminated with error while upgrading project-springapp.xml. " + "Please check the console message.***");
         } else {
             upgradeInfo.addMessage("Upgrading project-springapp.xml completed successfully.");
         }

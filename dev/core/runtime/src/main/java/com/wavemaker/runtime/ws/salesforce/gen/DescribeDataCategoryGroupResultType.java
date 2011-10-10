@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -21,11 +19,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for DescribeDataCategoryGroupResult complex type.
+ * <p>
+ * Java class for DescribeDataCategoryGroupResult complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="DescribeDataCategoryGroupResult">
@@ -46,23 +45,22 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DescribeDataCategoryGroupResult", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "categoryCount",
-    "description",
-    "label",
-    "name",
-    "sobject"
-})
+@XmlType(name = "DescribeDataCategoryGroupResult", namespace = "urn:partner.soap.sforce.com", propOrder = { "categoryCount", "description", "label",
+    "name", "sobject" })
 public class DescribeDataCategoryGroupResultType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected int categoryCount;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String description;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String label;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String name;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String sobject;
 
@@ -71,7 +69,7 @@ public class DescribeDataCategoryGroupResultType {
      * 
      */
     public int getCategoryCount() {
-        return categoryCount;
+        return this.categoryCount;
     }
 
     /**
@@ -85,22 +83,18 @@ public class DescribeDataCategoryGroupResultType {
     /**
      * Gets the value of the description property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     /**
      * Sets the value of the description property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setDescription(String value) {
         this.description = value;
@@ -109,22 +103,18 @@ public class DescribeDataCategoryGroupResultType {
     /**
      * Gets the value of the label property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getLabel() {
-        return label;
+        return this.label;
     }
 
     /**
      * Sets the value of the label property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setLabel(String value) {
         this.label = value;
@@ -133,22 +123,18 @@ public class DescribeDataCategoryGroupResultType {
     /**
      * Gets the value of the name property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**
      * Sets the value of the name property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setName(String value) {
         this.name = value;
@@ -157,22 +143,18 @@ public class DescribeDataCategoryGroupResultType {
     /**
      * Gets the value of the sobject property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getSobject() {
-        return sobject;
+        return this.sobject;
     }
 
     /**
      * Sets the value of the sobject property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setSobject(String value) {
         this.sobject = value;

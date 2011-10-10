@@ -19,25 +19,24 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * 
  * 
- * 	The http-method contains an HTTP method recognized by the
- * 	web-app, for example GET, POST, ...
+ * The http-method contains an HTTP method recognized by the web-app, for example GET, POST, ...
  * 
- *       
  * 
- * <p>Java class for http-methodType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for http-methodType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="http-methodType">
@@ -52,9 +51,6 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "http-methodType")
-public class HttpMethodType
-    extends String
-{
-
+public class HttpMethodType extends String {
 
 }

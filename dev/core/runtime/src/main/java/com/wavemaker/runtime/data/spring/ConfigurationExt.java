@@ -30,37 +30,41 @@ import com.wavemaker.runtime.data.util.QueryHandler;
  */
 public class ConfigurationExt extends Configuration {
 
+    private static final long serialVersionUID = 2733041879945822764L;
+
     public static String projectName;
 
     public ConfigurationExt() {
-		super();
-	}
+        super();
+    }
 
     @Override
     protected void add(org.dom4j.Document doc) throws MappingException {
         Element hmNode = doc.getRootElement();
-		Iterator rootChildren = hmNode.elementIterator();
+        Iterator rootChildren = hmNode.elementIterator();
 
-        while ( rootChildren.hasNext() ) {
-			final Element element = (Element) rootChildren.next();
-			final String elementName = element.getName();
+        while (rootChildren.hasNext()) {
+            final Element element = (Element) rootChildren.next();
+            final String elementName = element.getName();
 
-			if ( "query".equals( elementName ) ) {
+            if ("query".equals(elementName)) {
                 String query = element.getText();
                 query = insertTenantIdInQuery(query);
                 element.setText(query);
             }
-		}
+        }
 
         super.add(doc);
-	}
+    }
 
     private String insertTenantIdInQuery(String query) {
         QueryHandler qh = new QueryHandler(this);
         WMAppContext wmApp = WMAppContext.getInstance();
         String tFldName = wmApp.getTenantFieldName();
         int tid = RuntimeAccess.getInstance().getTenantId();
-        if (tid == -1) tid = wmApp.getDefaultTenantID();
+        if (tid == -1) {
+            tid = wmApp.getDefaultTenantID();
+        }
 
         return qh.modifySQL(query, tFldName, tid);
     }

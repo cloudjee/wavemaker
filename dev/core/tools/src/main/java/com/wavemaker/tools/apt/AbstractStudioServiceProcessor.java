@@ -37,101 +37,87 @@ import com.wavemaker.tools.service.DesignServiceType;
 
 public abstract class AbstractStudioServiceProcessor extends AbstractProcessor {
 
-	protected String projectName;
+    protected String projectName;
 
-	protected StudioConfiguration studioConfiguration;
+    protected StudioConfiguration studioConfiguration;
 
-	protected DesignServiceManager designServiceManager;
+    protected DesignServiceManager designServiceManager;
 
-	private boolean initialized;
+    private boolean initialized;
 
-	@Override
-	public synchronized final void init(ProcessingEnvironment processingEnv) {
-		super.init(processingEnv);
-		ClassLoader originalLoader = ClassUtils.getDefaultClassLoader();
-		ClassUtils
-				.overrideThreadContextClassLoader(getClass().getClassLoader());
-		try {
-			projectName = processingEnv.getOptions().get(
-					ServiceProcessorConstants.PROJECT_NAME_PROP);
-			if (studioConfiguration == null) {
-				studioConfiguration = new LocalStudioConfiguration();
-			}
-			if (designServiceManager == null) {
+    @Override
+    public synchronized final void init(ProcessingEnvironment processingEnv) {
+        super.init(processingEnv);
+        ClassLoader originalLoader = ClassUtils.getDefaultClassLoader();
+        ClassUtils.overrideThreadContextClassLoader(getClass().getClassLoader());
+        try {
+            this.projectName = processingEnv.getOptions().get(ServiceProcessorConstants.PROJECT_NAME_PROP);
+            if (this.studioConfiguration == null) {
+                this.studioConfiguration = new LocalStudioConfiguration();
+            }
+            if (this.designServiceManager == null) {
 
-				ProjectManager projectManager = new ProjectManager();
-				projectManager.setStudioConfiguration(studioConfiguration);
-				String projectRoot = processingEnv.getOptions().get(
-						ServiceProcessorConstants.PROJECT_ROOT_PROP);
-				if (StringUtils.hasText(projectRoot)) {
-					projectRoot = projectRoot.endsWith("/") ? projectRoot
-							: projectRoot + "/";
-					Resource projectDir = studioConfiguration
-							.getResourceForURI(projectRoot);
-					projectName = projectDir.getFilename();
-					projectManager.openProject(projectDir, true);
-				} else {
-					projectManager.openProject(projectName, true);
-				}
-				designServiceManager = new DesignServiceManager();
-				designServiceManager.setProjectManager(projectManager);
-				designServiceManager
-						.setStudioConfiguration(studioConfiguration);
+                ProjectManager projectManager = new ProjectManager();
+                projectManager.setStudioConfiguration(this.studioConfiguration);
+                String projectRoot = processingEnv.getOptions().get(ServiceProcessorConstants.PROJECT_ROOT_PROP);
+                if (StringUtils.hasText(projectRoot)) {
+                    projectRoot = projectRoot.endsWith("/") ? projectRoot : projectRoot + "/";
+                    Resource projectDir = this.studioConfiguration.getResourceForURI(projectRoot);
+                    this.projectName = projectDir.getFilename();
+                    projectManager.openProject(projectDir, true);
+                } else {
+                    projectManager.openProject(this.projectName, true);
+                }
+                this.designServiceManager = new DesignServiceManager();
+                this.designServiceManager.setProjectManager(projectManager);
+                this.designServiceManager.setStudioConfiguration(this.studioConfiguration);
 
-				JavaDesignServiceType designServiceType = new JavaDesignServiceType();
-				designServiceType.setServiceType("JavaService");
-				List<DesignServiceType> designServiceTypes = new ArrayList<DesignServiceType>();
-				designServiceTypes.add(designServiceType);
-				designServiceManager.setDesignServiceTypes(designServiceTypes);
+                JavaDesignServiceType designServiceType = new JavaDesignServiceType();
+                designServiceType.setServiceType("JavaService");
+                List<DesignServiceType> designServiceTypes = new ArrayList<DesignServiceType>();
+                designServiceTypes.add(designServiceType);
+                this.designServiceManager.setDesignServiceTypes(designServiceTypes);
 
-			}
-			doInit(processingEnv);
-		} catch (Throwable e) {
-			processingEnv
-					.getMessager()
-					.printMessage(
-							Kind.ERROR,
-							"Failed to initialize ServiceDefProcessor - could not create DesignServiceManager due to: "
-									+ e.getMessage());
-			this.initialized = false;
-			e.printStackTrace();
-			return;
-		} finally {
-			ClassUtils.overrideThreadContextClassLoader(originalLoader);
-		}
-		this.initialized = true;
-	}
+            }
+            doInit(processingEnv);
+        } catch (Throwable e) {
+            processingEnv.getMessager().printMessage(Kind.ERROR,
+                "Failed to initialize ServiceDefProcessor - could not create DesignServiceManager due to: " + e.getMessage());
+            this.initialized = false;
+            e.printStackTrace();
+            return;
+        } finally {
+            ClassUtils.overrideThreadContextClassLoader(originalLoader);
+        }
+        this.initialized = true;
+    }
 
-	protected abstract void doInit(ProcessingEnvironment processingEnv);
+    protected abstract void doInit(ProcessingEnvironment processingEnv);
 
-	public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-		this.studioConfiguration = studioConfiguration;
-	}
+    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
+        this.studioConfiguration = studioConfiguration;
+    }
 
-	public void setDesignServiceManager(
-			DesignServiceManager designServiceManager) {
-		this.designServiceManager = designServiceManager;
-	}
+    public void setDesignServiceManager(DesignServiceManager designServiceManager) {
+        this.designServiceManager = designServiceManager;
+    }
 
-	@Override
-	protected synchronized boolean isInitialized() {
-		return this.initialized && super.isInitialized();
-	}
+    @Override
+    protected synchronized boolean isInitialized() {
+        return this.initialized && super.isInitialized();
+    }
 
-	@Override
-	public final boolean process(Set<? extends TypeElement> annotations,
-			RoundEnvironment roundEnv) {
-		ClassLoader originalLoader = ClassUtils.getDefaultClassLoader();
-		ClassUtils
-				.overrideThreadContextClassLoader(getClass().getClassLoader());
-		try {
-			return doProcess(annotations, roundEnv);
-		} finally {
-			ClassUtils.overrideThreadContextClassLoader(originalLoader);
-		}
-	}
+    @Override
+    public final boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        ClassLoader originalLoader = ClassUtils.getDefaultClassLoader();
+        ClassUtils.overrideThreadContextClassLoader(getClass().getClassLoader());
+        try {
+            return doProcess(annotations, roundEnv);
+        } finally {
+            ClassUtils.overrideThreadContextClassLoader(originalLoader);
+        }
+    }
 
-	protected abstract boolean doProcess(Set<? extends TypeElement> annotations,
-			RoundEnvironment roundEnv);
+    protected abstract boolean doProcess(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv);
 
 }

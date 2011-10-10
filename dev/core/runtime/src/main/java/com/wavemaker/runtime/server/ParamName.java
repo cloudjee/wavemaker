@@ -20,14 +20,13 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * ParamName provides a way to expose the name of method parameters at runtime.
- * It is recommended that the exposed name match the actual parameter name; for
- * instance:
+ * ParamName provides a way to expose the name of method parameters at runtime. It is recommended that the exposed name
+ * match the actual parameter name; for instance:
  * 
  * <code>
  *      public String doUpload(@ParamName(name="file") MultipartFile file,
- *              @ParamName(name="str") String str)
- * </code>
+ * 
+ * @ParamName(name="str") String str) </code>
  * 
  * @author small
  * @version $Rev$ - $Date$
@@ -37,8 +36,8 @@ import java.lang.annotation.Target;
 public @interface ParamName {
 
     /**
-     * The name of the parameter.  This must match the name in the GET or POST
-     * parameters, and should match the Java method signature, as well.
+     * The name of the parameter. This must match the name in the GET or POST parameters, and should match the Java
+     * method signature, as well.
      */
     String name();
 }

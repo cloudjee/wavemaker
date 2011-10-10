@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -27,22 +26,20 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * 
  * 
- * 	The elements that use this type designate the name of a
- * 	Java class or interface.  The name is in the form of a
- * 	"binary name", as defined in the JLS.  This is the form
- * 	of name used in Class.forName().  Tools that need the
- * 	canonical name (the name used in source code) will need
- * 	to convert this binary name to the canonical name.
+ * The elements that use this type designate the name of a Java class or interface. The name is in the form of a
+ * "binary name", as defined in the JLS. This is the form of name used in Class.forName(). Tools that need the canonical
+ * name (the name used in source code) will need to convert this binary name to the canonical name.
  * 
- *       
  * 
- * <p>Java class for fully-qualified-classType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for fully-qualified-classType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="fully-qualified-classType">
@@ -57,16 +54,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "fully-qualified-classType")
-@XmlSeeAlso({
-    LocalType.class,
-    MessageDestinationTypeType.class,
-    RemoteType.class,
-    HomeType.class,
-    LocalHomeType.class
-})
-public class FullyQualifiedClassType
-    extends String
-{
-
+@XmlSeeAlso({ LocalType.class, MessageDestinationTypeType.class, RemoteType.class, HomeType.class, LocalHomeType.class })
+public class FullyQualifiedClassType extends String {
 
 }

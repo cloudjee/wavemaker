@@ -24,7 +24,7 @@ import com.wavemaker.runtime.data.util.SystemUtils;
 /**
  * @author Simon Toens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class MergeForInsertTask extends BaseTask implements Task {
 
@@ -40,17 +40,16 @@ public class MergeForInsertTask extends BaseTask implements Task {
 
         for (int i = 0; i < input.length; i++) {
 
-            rtn[i] = SystemUtils.serverMergeForInsert(input[i], session,
-                    metaData);
+            rtn[i] = SystemUtils.serverMergeForInsert(input[i], session, metaData);
 
         }
-        
+
         return rtn;
 
     }
 
     public String getName() {
         return "Built-in MergeForInsert Task";
-    }    
-    
+    }
+
 }

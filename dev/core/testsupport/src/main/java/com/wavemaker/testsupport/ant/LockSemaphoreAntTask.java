@@ -23,60 +23,70 @@ import com.wavemaker.testsupport.UtilTest;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class LockSemaphoreAntTask extends Task {
 
+    @Override
     public void execute() throws BuildException {
-        
-        if (null==semaphoreName) {
+
+        if (null == this.semaphoreName) {
             throw new BuildException("semaphoreName parameter must be set");
-        } else if (null==propName) {
+        } else if (null == this.propName) {
             throw new BuildException("propName parameter must be set");
         }
-        
+
         try {
-            String s = UtilTest.lockSemaphore(semaphoreName, iterations, sleepTime);
-            System.out.println("locked semaphore "+semaphoreName);
-            
+            String s = UtilTest.lockSemaphore(this.semaphoreName, this.iterations, this.sleepTime);
+            System.out.println("locked semaphore " + this.semaphoreName);
+
             Property pTask = new Property();
             pTask.setProject(getProject());
-            pTask.setName(propName);
+            pTask.setName(this.propName);
             pTask.setValue(s);
             pTask.execute();
         } catch (Exception e) {
             throw new BuildException(e);
         }
     }
-    
 
     // bean properties
     private String semaphoreName;
+
     private String propName;
+
     private int iterations = 50;
+
     private int sleepTime = 50;
-    
+
     public void setSemaphoreName(String s) {
         this.semaphoreName = s;
     }
+
     public String getSemaphoreName() {
         return this.semaphoreName;
     }
+
     public void setPropName(String propName) {
         this.propName = propName;
     }
+
     public String getPropName() {
-        return propName;
+        return this.propName;
     }
+
     public int getIterations() {
-        return iterations;
+        return this.iterations;
     }
+
     public void setIterations(int iterations) {
         this.iterations = iterations;
     }
+
     public int getSleepTime() {
-        return sleepTime;
+        return this.sleepTime;
     }
+
     public void setSleepTime(int sleepTime) {
         this.sleepTime = sleepTime;
     }

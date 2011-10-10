@@ -35,7 +35,6 @@ import org.hibernate.exception.SQLGrammarException;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.type.AssociationType;
 import org.hibernate.type.Type;
-
 import org.springframework.dao.InvalidDataAccessResourceUsageException;
 
 import com.wavemaker.common.util.ObjectAccess;
@@ -44,10 +43,10 @@ import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.common.util.Tuple;
+import com.wavemaker.runtime.data.DataServiceInternal.ElementTypeFactory;
 import com.wavemaker.runtime.data.DataServiceManagerAccess;
 import com.wavemaker.runtime.data.DataServiceMetaData;
 import com.wavemaker.runtime.data.DataServiceRuntimeException;
-import com.wavemaker.runtime.data.DataServiceInternal.ElementTypeFactory;
 import com.wavemaker.runtime.service.ElementType;
 
 /**
@@ -70,10 +69,8 @@ public class DataServiceUtils {
 
         th = SystemUtils.getRootException(th);
 
-        if (InvalidDataAccessResourceUsageException.class.isAssignableFrom(th
-                .getClass())) {
-            InvalidDataAccessResourceUsageException e = 
-                (InvalidDataAccessResourceUsageException) th;
+        if (InvalidDataAccessResourceUsageException.class.isAssignableFrom(th.getClass())) {
+            InvalidDataAccessResourceUsageException e = (InvalidDataAccessResourceUsageException) th;
             if (e.getRootCause() != null) {
                 th = e.getRootCause();
             }
@@ -96,25 +93,23 @@ public class DataServiceUtils {
 
     public static String getJavaTypeName(Type type, SessionFactory factory) {
         if (type.isCollectionType()) {
-            AssociationType ass = (AssociationType)type;
-            SessionFactoryImplementor fai = (SessionFactoryImplementor)factory;
+            AssociationType ass = (AssociationType) type;
+            SessionFactoryImplementor fai = (SessionFactoryImplementor) factory;
             return ass.getAssociatedEntityName(fai);
         } else {
             return type.getReturnedClass().getName();
-        } 
+        }
     }
 
     public static boolean requiresResultWrapper(String queryString) {
-        return queryString.trim().toLowerCase().startsWith(
-                DataServiceConstants.SELECT_KEYWORD);
+        return queryString.trim().toLowerCase().startsWith(DataServiceConstants.SELECT_KEYWORD);
     }
 
     public static String queryToOperationName(String queryName) {
         return StringUtils.lowerCaseFirstLetter(queryName);
     }
 
-    public static String operationToQueryName(String operationName,
-            Collection<String> queryNames) {
+    public static String operationToQueryName(String operationName, Collection<String> queryNames) {
         if (queryNames.contains(operationName)) {
             return operationName;
         }
@@ -136,31 +131,25 @@ public class DataServiceUtils {
         return clazz;
     }
 
-    public static ObjectGraphTraversal getRelatedTraversal(
-            ObjectGraphTraversal.ObjectVisitor visitor,
-            final ObjectAccess objectAccess,
-            final DataServiceMetaData metaData, final boolean skipToMany) {
-        ObjectGraphTraversal.PropertyFactory pf = 
-            new ObjectGraphTraversal.PropertyFactory() {
+    public static ObjectGraphTraversal getRelatedTraversal(ObjectGraphTraversal.ObjectVisitor visitor, final ObjectAccess objectAccess,
+        final DataServiceMetaData metaData, final boolean skipToMany) {
+        ObjectGraphTraversal.PropertyFactory pf = new ObjectGraphTraversal.PropertyFactory() {
 
-            public Collection<String> getProperties(Object o,
-                    ObjectGraphTraversal.Context ctx) {
+            public Collection<String> getProperties(Object o, ObjectGraphTraversal.Context ctx) {
                 Class<?> entityClass = getEntityClass(o.getClass());
 
                 if (!metaData.isEntity(entityClass)) {
                     return Collections.emptySet();
                 }
 
-                Collection<String> relPropNames = metaData
-                        .getRelPropertyNames(entityClass);
+                Collection<String> relPropNames = metaData.getRelPropertyNames(entityClass);
 
                 if (!skipToMany) {
                     return relPropNames;
                 } else {
                     Collection<String> rtn = new HashSet<String>();
                     for (String propertyName : relPropNames) {
-                        if (!isRelatedMany(objectAccess.getPropertyType(
-                                entityClass, propertyName))) {
+                        if (!isRelatedMany(objectAccess.getPropertyType(entityClass, propertyName))) {
                             rtn.add(propertyName);
                         }
                     }
@@ -172,8 +161,7 @@ public class DataServiceUtils {
         return new ObjectGraphTraversal(pf, visitor, objectAccess);
     }
 
-    public static List<String> getColumnNames(int numOutputTypes,
-            List<String> outputNames) {
+    public static List<String> getColumnNames(int numOutputTypes, List<String> outputNames) {
 
         Collection<String> usedNames = new HashSet<String>(numOutputTypes);
         List<String> rtn = new ArrayList<String>(numOutputTypes);
@@ -196,34 +184,26 @@ public class DataServiceUtils {
 
     public static boolean isOutputType(String fqName) {
         // kind of lame check: does package end with ".output?"
-        return StringUtils.getPackage(fqName).endsWith(
-                StringUtils.fq("", DataServiceConstants.OUTPUT_PACKAGE_NAME));
+        return StringUtils.getPackage(fqName).endsWith(StringUtils.fq("", DataServiceConstants.OUTPUT_PACKAGE_NAME));
     }
 
     public static String getOutputPackage(String dataPackage) {
-        return StringUtils.fq(dataPackage,
-                DataServiceConstants.OUTPUT_PACKAGE_NAME);
+        return StringUtils.fq(dataPackage, DataServiceConstants.OUTPUT_PACKAGE_NAME);
     }
 
-    public static String getOutputType(String dataPackage, 
-                                       String operationName) 
-    {
-        return getOldOutputType(dataPackage, operationName)
-                + WRAPPER_TYPE_SUFFX;
+    public static String getOutputType(String dataPackage, String operationName) {
+        return getOldOutputType(dataPackage, operationName) + WRAPPER_TYPE_SUFFX;
     }
 
-    public static String getOldOutputType(String dataPackage,
-            String operationName) {
-        return StringUtils.fq(getOutputPackage(dataPackage), StringUtils
-                .upperCaseFirstLetter(operationName));
+    public static String getOldOutputType(String dataPackage, String operationName) {
+        return StringUtils.fq(getOutputPackage(dataPackage), StringUtils.upperCaseFirstLetter(operationName));
     }
 
     public static Configuration initConfiguration(String hbConfFile) {
         return initConfiguration(hbConfFile, EMPTY_PROPERTIES);
     }
 
-    public static Configuration initConfiguration(String hbConfFile,
-            Properties p) {
+    public static Configuration initConfiguration(String hbConfFile, Properties p) {
         Configuration cfg = new Configuration().configure(hbConfFile);
         setup(cfg, p);
         return cfg;
@@ -233,9 +213,7 @@ public class DataServiceUtils {
         return initConfiguration(hbConfFile, EMPTY_PROPERTIES);
     }
 
-    public static Configuration initConfiguration(File hbConfFile, 
-                                                  Properties p) 
-    {
+    public static Configuration initConfiguration(File hbConfFile, Properties p) {
         Configuration cfg = new Configuration().configure(hbConfFile);
         setup(cfg, p);
         return cfg;
@@ -269,8 +247,7 @@ public class DataServiceUtils {
         return rtn;
     }
 
-    public static List<ElementType> getTypes(Collection<String> entities,
-            Collection<String> otherTypes, ElementTypeFactory factory) {
+    public static List<ElementType> getTypes(Collection<String> entities, Collection<String> otherTypes, ElementTypeFactory factory) {
 
         List<ElementType> rtn = new ArrayList<ElementType>(entities.size());
         for (String s : entities) {
@@ -299,13 +276,12 @@ public class DataServiceUtils {
 
         String q = query.trim().toLowerCase();
 
-        return q.startsWith("update") || q.startsWith("insert")
-                || q.startsWith("delete");
+        return q.startsWith("update") || q.startsWith("insert") || q.startsWith("delete");
     }
 
     public static boolean isDynamicInstantiationQuery(String query) {
 
-        return (getDynamicInstantiationClassName(query) != null);
+        return getDynamicInstantiationClassName(query) != null;
     }
 
     public static String getDynamicInstantiationClassName(String query) {
@@ -316,8 +292,7 @@ public class DataServiceUtils {
             return null;
         }
 
-        if (!tokens[0].trim().equalsIgnoreCase(
-                DataServiceConstants.SELECT_KEYWORD)) {
+        if (!tokens[0].trim().equalsIgnoreCase(DataServiceConstants.SELECT_KEYWORD)) {
             return null;
         }
 
@@ -336,74 +311,59 @@ public class DataServiceUtils {
         return s.substring(0, i);
     }
 
-    public static Object loadById(Object o, Session session,
-            DataServiceMetaData metaData) {
+    public static Object loadById(Object o, Session session, DataServiceMetaData metaData) {
         return loadById(o, session, metaData, null);
     }
 
-    public static Object loadById(Object originalInstance, Session session,
-            DataServiceMetaData metaData, Log logger) {
+    public static Object loadById(Object originalInstance, Session session, DataServiceMetaData metaData, Log logger) {
 
         if (originalInstance == null) {
-            throw new IllegalArgumentException(
-                    "instance to reload cannot be null");
+            throw new IllegalArgumentException("instance to reload cannot be null");
         }
 
         Class<?> clazz = getEntityClass(originalInstance.getClass());
 
         String s = metaData.getIdPropertyName(clazz);
 
-        Serializable id = (Serializable) objectAccess.getProperty(
-                originalInstance, s);
+        Serializable id = (Serializable) objectAccess.getProperty(originalInstance, s);
 
         Object rtn = session.get(clazz, id);
 
         if (logger != null && logger.isDebugEnabled()) {
-            logger.debug("reloadById: " + ObjectUtils.getId(originalInstance)
-                    + " " + s + ":" + id);
+            logger.debug("reloadById: " + ObjectUtils.getId(originalInstance) + " " + s + ":" + id);
         }
 
         return rtn;
     }
 
     public static boolean isRelatedMany(Class<?> c) {
-        return Map.class.isAssignableFrom(c)
-                || Collection.class.isAssignableFrom(c);
+        return Map.class.isAssignableFrom(c) || Collection.class.isAssignableFrom(c);
     }
 
-    public static Object mergeForUpdate(Object o,
-            DataServiceManagerAccess mgrAccess,
-            Collection<String> populatedProperties) {
+    public static Object mergeForUpdate(Object o, DataServiceManagerAccess mgrAccess, Collection<String> populatedProperties) {
 
-        return mergeForUpdate(o,
-                mgrAccess.getDataServiceManager().getSession(), mgrAccess
-                        .getDataServiceManager().getMetaData(),
-                populatedProperties);
+        return mergeForUpdate(o, mgrAccess.getDataServiceManager().getSession(), mgrAccess.getDataServiceManager().getMetaData(), populatedProperties);
     }
 
-    public static Object mergeForUpdate(Object source, Session session,
-            DataServiceMetaData metaData, Collection<String> populatedProperties) {
+    public static Object mergeForUpdate(Object source, Session session, DataServiceMetaData metaData, Collection<String> populatedProperties) {
 
         // load instance from db, and copy in values from client
 
         // ensure id has been set
         String idPropName = metaData.getIdPropertyName(source.getClass());
         if (!populatedProperties.contains(idPropName)) {
-            throw new DataServiceRuntimeException("id property \"" + idPropName
-                    + "\" must be set");
+            throw new DataServiceRuntimeException("id property \"" + idPropName + "\" must be set");
         }
 
         Object rtn = loadById(source, session, metaData);
 
         if (rtn == null) {
-            throw new DataServiceRuntimeException(
-                    "Failed to load instance to update");
+            throw new DataServiceRuntimeException("Failed to load instance to update");
         }
 
         // add optimistic concurrency check here
 
-        Collection<String> relatedPropertyNames = metaData
-                .getRelPropertyNames(source.getClass());
+        Collection<String> relatedPropertyNames = metaData.getRelPropertyNames(source.getClass());
 
         Collection<String> handledPropertyPrefixes = new HashSet<String>();
 
@@ -422,8 +382,7 @@ public class DataServiceUtils {
 
             if (relatedPropertyNames.contains(propertyName)) {
 
-                if (isRelatedMany(objectAccess.getPropertyType(source
-                        .getClass(), propertyName))) {
+                if (isRelatedMany(objectAccess.getPropertyType(source.getClass(), propertyName))) {
                     continue;
                 }
 
@@ -431,15 +390,11 @@ public class DataServiceUtils {
 
                 if (clientValue != null) {
 
-                    String prefix = propertyName
-                            + DataServiceConstants.PROP_SEP;
+                    String prefix = propertyName + DataServiceConstants.PROP_SEP;
 
-                    List<String> populatedPropertiesForRelated = StringUtils
-                            .getItemsStartingWith(populatedProperties, prefix,
-                                    true);
+                    List<String> populatedPropertiesForRelated = StringUtils.getItemsStartingWith(populatedProperties, prefix, true);
 
-                    clientValue = mergeForUpdate(clientValue, session,
-                            metaData, populatedPropertiesForRelated);
+                    clientValue = mergeForUpdate(clientValue, session, metaData, populatedPropertiesForRelated);
                 }
             }
 
@@ -449,22 +404,12 @@ public class DataServiceUtils {
         return rtn;
     }
 
-    public static Object mergeForInsert(Object source, Session session,
-                                        DataServiceMetaData metaData) 
-    {
-        return mergeForInsert(source, 
-                              session, 
-                              metaData,
-                              true,
-                              new HashSet<Object>());
+    public static Object mergeForInsert(Object source, Session session, DataServiceMetaData metaData) {
+        return mergeForInsert(source, session, metaData, true, new HashSet<Object>());
     }
 
-    private static Object mergeForInsert(Object source, 
-                                         Session session,
-                                         DataServiceMetaData metaData, 
-                                         boolean isRoot,
-                                         Collection<Object> handledInstances) 
-    {
+    private static Object mergeForInsert(Object source, Session session, DataServiceMetaData metaData, boolean isRoot,
+        Collection<Object> handledInstances) {
         if (handledInstances.contains(source)) {
             return source;
         }
@@ -475,7 +420,7 @@ public class DataServiceUtils {
 
         if (idPropVal != null) {
             if (isRoot) {
-                //MAV-2065
+                // MAV-2065
                 return source;
             }
             Object o = loadById(source, session, metaData);
@@ -487,26 +432,19 @@ public class DataServiceUtils {
 
         handledInstances.add(source);
 
-        Collection<String> relatedPropertyNames = metaData
-                .getRelPropertyNames(source.getClass());
+        Collection<String> relatedPropertyNames = metaData.getRelPropertyNames(source.getClass());
 
         for (String propertyName : relatedPropertyNames) {
 
-            if (isRelatedMany(objectAccess.getPropertyType(source.getClass(),
-                    propertyName))) {
+            if (isRelatedMany(objectAccess.getPropertyType(source.getClass(), propertyName))) {
                 continue;
             }
 
-            Object clientValue 
-                = objectAccess.getProperty(source, propertyName);
+            Object clientValue = objectAccess.getProperty(source, propertyName);
 
             if (clientValue != null) {
 
-                clientValue = mergeForInsert(clientValue, 
-                                             session, 
-                                             metaData,
-                                             false,
-                                             handledInstances);
+                clientValue = mergeForInsert(clientValue, session, metaData, false, handledInstances);
 
                 objectAccess.setProperty(source, propertyName, clientValue);
             }
@@ -544,34 +482,28 @@ public class DataServiceUtils {
         } else if (matchMode.equalsIgnoreCase("end")) {
             rtn = MatchMode.END;
         } else {
-            throw new IllegalArgumentException("MatchMode must be "
-                    + "anywhere|exact|start|end");
+            throw new IllegalArgumentException("MatchMode must be " + "anywhere|exact|start|end");
         }
 
         return rtn;
     }
-    
+
     public static Properties loadDBProperties(String resourcename) {
-        return loadDBProperties(resourcename,
-                DataServiceConstants.PROPERTIES_FILE_BASENAME_SEP);
+        return loadDBProperties(resourcename, DataServiceConstants.PROPERTIES_FILE_BASENAME_SEP);
     }
 
     public static Properties loadDBProperties(File file) {
-        return loadDBProperties(file,
-                DataServiceConstants.PROPERTIES_FILE_BASENAME_SEP);
+        return loadDBProperties(file, DataServiceConstants.PROPERTIES_FILE_BASENAME_SEP);
     }
 
-    private static Properties loadDBProperties(String resourcename, 
-                                               String sep) 
-    {
+    private static Properties loadDBProperties(String resourcename, String sep) {
         Tuple.Two<String, String> t = getBaseName(resourcename, sep);
-        Properties base = SystemUtils.loadPropertiesFromResource(t.v1 + "."
-                + t.v2);
+        Properties base = SystemUtils.loadPropertiesFromResource(t.v1 + "." + t.v2);
         Properties rtn = SystemUtils.loadPropertiesFromResource(resourcename);
         rtn.putAll(base);
         return rtn;
-    }    
-    
+    }
+
     private static Properties loadDBProperties(File file, String sep) {
 
         String filepath = file.getAbsolutePath();
@@ -583,29 +515,26 @@ public class DataServiceUtils {
         File basefile = new File(t.v1 + "." + t.v2);
 
         if (basefile.exists()) {
-            rtn = SystemUtils
-                    .loadPropertiesFromFile(basefile.getAbsolutePath());
+            rtn = SystemUtils.loadPropertiesFromFile(basefile.getAbsolutePath());
         }
 
         rtn.putAll(SystemUtils.loadPropertiesFromFile(filepath));
 
         return rtn;
     }
-    
-    private static Tuple.Two<String, String> getBaseName(String resourcename,
-            String sep) {
+
+    private static Tuple.Two<String, String> getBaseName(String resourcename, String sep) {
         String ext = StringUtils.fromLastOccurrence(resourcename, ".");
         String s = StringUtils.fromLastOccurrence(resourcename, ".", -1);
         return Tuple.tuple(StringUtils.fromLastOccurrence(s, sep, -1), ext);
-    }    
+    }
 
     private static void setup(Configuration cfg, Properties p) {
         p = DataServiceUtils.toHibernateConnectionProperties(p);
         cfg.setProperties(p);
     }
 
-    private static boolean containsElementType(
-            Collection<ElementType> elementTypes, ElementType elementType) {
+    private static boolean containsElementType(Collection<ElementType> elementTypes, ElementType elementType) {
         for (ElementType et : elementTypes) {
             if (elementType.getJavaType().equals(et.getJavaType())) {
                 return true;

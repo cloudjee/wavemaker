@@ -21,15 +21,15 @@ import org.hibernate.dialect.function.NoArgSQLFunction;
 /**
  * @author Simon Toens
  * @version $Rev$ - $Date$
- *
- * Added in Shibuya.
- *
+ * 
+ *          Added in Shibuya.
+ * 
  */
 public class MySQLDialect extends MySQL5Dialect {
-    
+
     public MySQLDialect() {
         super();
-        registerFunction("uuid", new NoArgSQLFunction("uuid", Hibernate.STRING) );        
+        registerFunction("uuid", new NoArgSQLFunction("uuid", Hibernate.STRING));
     }
 
 }

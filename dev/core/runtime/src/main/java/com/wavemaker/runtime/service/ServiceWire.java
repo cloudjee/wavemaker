@@ -14,11 +14,9 @@
 
 package com.wavemaker.runtime.service;
 
-
 /**
- * ServiceWire binds service objects into the ServiceManager.  Different
- * implementations may have different requirements, but the ServiceType and
- * serviceId are always required.
+ * ServiceWire binds service objects into the ServiceManager. Different implementations may have different requirements,
+ * but the ServiceType and serviceId are always required.
  * 
  * @author small
  * @version $Rev$ - $Date$
@@ -28,8 +26,7 @@ public interface ServiceWire {
     /**
      * Sets the ServiceType.
      * 
-     * @param serviceType
-     *            The ServiceType to set.
+     * @param serviceType The ServiceType to set.
      */
     public void setServiceType(ServiceType serviceType);
 
@@ -43,8 +40,7 @@ public interface ServiceWire {
     /**
      * Sets the unique service ID for this service.
      * 
-     * @param serviceId
-     *            The unique service ID.
+     * @param serviceId The unique service ID.
      */
     public void setServiceId(String serviceId);
 
@@ -54,9 +50,10 @@ public interface ServiceWire {
      * @return The unique service ID (or null if none has been set).
      */
     public String getServiceId();
-    
+
     /**
      * Returns true iff this service is a LiveDataService.
+     * 
      * @return True iff this is a LiveDataService.
      */
     public boolean isLiveDataService();

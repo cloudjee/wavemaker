@@ -11,23 +11,23 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for DescribeLayoutItem complex type.
+ * <p>
+ * Java class for DescribeLayoutItem complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="DescribeLayoutItem">
@@ -48,23 +48,22 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DescribeLayoutItem", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "editable",
-    "label",
-    "layoutComponents",
-    "placeholder",
-    "required"
-})
+@XmlType(name = "DescribeLayoutItem", namespace = "urn:partner.soap.sforce.com", propOrder = { "editable", "label", "layoutComponents",
+    "placeholder", "required" })
 public class DescribeLayoutItemType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean editable;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String label;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected List<DescribeLayoutComponentType> layoutComponents;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean placeholder;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean required;
 
@@ -73,7 +72,7 @@ public class DescribeLayoutItemType {
      * 
      */
     public boolean isEditable() {
-        return editable;
+        return this.editable;
     }
 
     /**
@@ -87,22 +86,18 @@ public class DescribeLayoutItemType {
     /**
      * Gets the value of the label property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getLabel() {
-        return label;
+        return this.label;
     }
 
     /**
      * Sets the value of the label property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setLabel(String value) {
         this.label = value;
@@ -112,27 +107,26 @@ public class DescribeLayoutItemType {
      * Gets the value of the layoutComponents property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the layoutComponents property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the layoutComponents property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getLayoutComponents().add(newItem);
+     * getLayoutComponents().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DescribeLayoutComponentType }
+     * Objects of the following type(s) are allowed in the list {@link DescribeLayoutComponentType }
      * 
      * 
      */
     public List<DescribeLayoutComponentType> getLayoutComponents() {
-        if (layoutComponents == null) {
-            layoutComponents = new ArrayList<DescribeLayoutComponentType>();
+        if (this.layoutComponents == null) {
+            this.layoutComponents = new ArrayList<DescribeLayoutComponentType>();
         }
         return this.layoutComponents;
     }
@@ -142,7 +136,7 @@ public class DescribeLayoutItemType {
      * 
      */
     public boolean isPlaceholder() {
-        return placeholder;
+        return this.placeholder;
     }
 
     /**
@@ -158,7 +152,7 @@ public class DescribeLayoutItemType {
      * 
      */
     public boolean isRequired() {
-        return required;
+        return this.required;
     }
 
     /**
@@ -172,10 +166,8 @@ public class DescribeLayoutItemType {
     /**
      * Sets the value of the layoutComponents property.
      * 
-     * @param layoutComponents
-     *     allowed object is
-     *     {@link DescribeLayoutComponentType }
-     *     
+     * @param layoutComponents allowed object is {@link DescribeLayoutComponentType }
+     * 
      */
     public void setLayoutComponents(List<DescribeLayoutComponentType> layoutComponents) {
         this.layoutComponents = layoutComponents;

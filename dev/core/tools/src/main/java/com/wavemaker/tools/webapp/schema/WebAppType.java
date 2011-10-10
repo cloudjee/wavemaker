@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import java.util.ArrayList;
@@ -36,11 +35,12 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
- * <p>Java class for web-appType complex type.
+ * <p>
+ * Java class for web-appType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="web-appType">
@@ -77,44 +77,31 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "web-appType", propOrder = {
-    "descriptionAndDisplayNameAndIcon"
-})
+@XmlType(name = "web-appType", propOrder = { "descriptionAndDisplayNameAndIcon" })
 public class WebAppType {
 
-    @XmlElements({
-        @XmlElement(name = "locale-encoding-mapping-list", type = LocaleEncodingMappingListType.class),
-        @XmlElement(name = "icon", type = IconType.class),
-        @XmlElement(name = "ejb-ref", type = EjbRefType.class),
+    @XmlElements({ @XmlElement(name = "locale-encoding-mapping-list", type = LocaleEncodingMappingListType.class),
+        @XmlElement(name = "icon", type = IconType.class), @XmlElement(name = "ejb-ref", type = EjbRefType.class),
         @XmlElement(name = "context-param", type = ParamValueType.class),
         @XmlElement(name = "message-destination-ref", type = MessageDestinationRefType.class),
-        @XmlElement(name = "session-config", type = SessionConfigType.class),
-        @XmlElement(name = "servlet", type = ServletType.class),
-        @XmlElement(name = "security-constraint", type = SecurityConstraintType.class),
-        @XmlElement(name = "error-page", type = ErrorPageType.class),
-        @XmlElement(name = "jsp-config", type = JspConfigType.class),
-        @XmlElement(name = "resource-env-ref", type = ResourceEnvRefType.class),
-        @XmlElement(name = "distributable", type = EmptyType.class),
-        @XmlElement(name = "filter-mapping", type = FilterMappingType.class),
-        @XmlElement(name = "listener", type = ListenerType.class),
-        @XmlElement(name = "mime-mapping", type = MimeMappingType.class),
-        @XmlElement(name = "servlet-mapping", type = ServletMappingType.class),
-        @XmlElement(name = "service-ref", type = ServiceRefType.class),
-        @XmlElement(name = "filter", type = FilterType.class),
-        @XmlElement(name = "login-config", type = LoginConfigType.class),
-        @XmlElement(name = "env-entry", type = EnvEntryType.class),
-        @XmlElement(name = "security-role", type = SecurityRoleType.class),
-        @XmlElement(name = "ejb-local-ref", type = EjbLocalRefType.class),
-        @XmlElement(name = "resource-ref", type = ResourceRefType.class),
-        @XmlElement(name = "welcome-file-list", type = WelcomeFileListType.class),
-        @XmlElement(name = "display-name", type = DisplayNameType.class),
+        @XmlElement(name = "session-config", type = SessionConfigType.class), @XmlElement(name = "servlet", type = ServletType.class),
+        @XmlElement(name = "security-constraint", type = SecurityConstraintType.class), @XmlElement(name = "error-page", type = ErrorPageType.class),
+        @XmlElement(name = "jsp-config", type = JspConfigType.class), @XmlElement(name = "resource-env-ref", type = ResourceEnvRefType.class),
+        @XmlElement(name = "distributable", type = EmptyType.class), @XmlElement(name = "filter-mapping", type = FilterMappingType.class),
+        @XmlElement(name = "listener", type = ListenerType.class), @XmlElement(name = "mime-mapping", type = MimeMappingType.class),
+        @XmlElement(name = "servlet-mapping", type = ServletMappingType.class), @XmlElement(name = "service-ref", type = ServiceRefType.class),
+        @XmlElement(name = "filter", type = FilterType.class), @XmlElement(name = "login-config", type = LoginConfigType.class),
+        @XmlElement(name = "env-entry", type = EnvEntryType.class), @XmlElement(name = "security-role", type = SecurityRoleType.class),
+        @XmlElement(name = "ejb-local-ref", type = EjbLocalRefType.class), @XmlElement(name = "resource-ref", type = ResourceRefType.class),
+        @XmlElement(name = "welcome-file-list", type = WelcomeFileListType.class), @XmlElement(name = "display-name", type = DisplayNameType.class),
         @XmlElement(name = "description", type = DescriptionType.class),
-        @XmlElement(name = "message-destination", type = MessageDestinationType.class)
-    })
+        @XmlElement(name = "message-destination", type = MessageDestinationType.class) })
     protected List<Object> descriptionAndDisplayNameAndIcon;
+
     @XmlAttribute(required = true)
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     protected java.lang.String version;
+
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -125,53 +112,33 @@ public class WebAppType {
      * Gets the value of the descriptionAndDisplayNameAndIcon property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the descriptionAndDisplayNameAndIcon property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the descriptionAndDisplayNameAndIcon property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getDescriptionAndDisplayNameAndIcon().add(newItem);
+     * getDescriptionAndDisplayNameAndIcon().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link LocaleEncodingMappingListType }
-     * {@link IconType }
-     * {@link EjbRefType }
-     * {@link ParamValueType }
-     * {@link MessageDestinationRefType }
-     * {@link SessionConfigType }
-     * {@link ServletType }
-     * {@link SecurityConstraintType }
-     * {@link ErrorPageType }
-     * {@link JspConfigType }
-     * {@link ResourceEnvRefType }
-     * {@link EmptyType }
-     * {@link FilterMappingType }
-     * {@link ListenerType }
-     * {@link MimeMappingType }
-     * {@link ServletMappingType }
-     * {@link ServiceRefType }
-     * {@link FilterType }
-     * {@link LoginConfigType }
-     * {@link EnvEntryType }
-     * {@link SecurityRoleType }
-     * {@link EjbLocalRefType }
-     * {@link ResourceRefType }
-     * {@link WelcomeFileListType }
-     * {@link DisplayNameType }
-     * {@link DescriptionType }
+     * Objects of the following type(s) are allowed in the list {@link LocaleEncodingMappingListType } {@link IconType }
+     * {@link EjbRefType } {@link ParamValueType } {@link MessageDestinationRefType } {@link SessionConfigType }
+     * {@link ServletType } {@link SecurityConstraintType } {@link ErrorPageType } {@link JspConfigType }
+     * {@link ResourceEnvRefType } {@link EmptyType } {@link FilterMappingType } {@link ListenerType }
+     * {@link MimeMappingType } {@link ServletMappingType } {@link ServiceRefType } {@link FilterType }
+     * {@link LoginConfigType } {@link EnvEntryType } {@link SecurityRoleType } {@link EjbLocalRefType }
+     * {@link ResourceRefType } {@link WelcomeFileListType } {@link DisplayNameType } {@link DescriptionType }
      * {@link MessageDestinationType }
      * 
      * 
      */
     public List<Object> getDescriptionAndDisplayNameAndIcon() {
-        if (descriptionAndDisplayNameAndIcon == null) {
-            descriptionAndDisplayNameAndIcon = new ArrayList<Object>();
+        if (this.descriptionAndDisplayNameAndIcon == null) {
+            this.descriptionAndDisplayNameAndIcon = new ArrayList<Object>();
         }
         return this.descriptionAndDisplayNameAndIcon;
     }
@@ -179,22 +146,18 @@ public class WebAppType {
     /**
      * Gets the value of the version property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getVersion() {
-        return version;
+        return this.version;
     }
 
     /**
      * Sets the value of the version property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setVersion(java.lang.String value) {
         this.version = value;
@@ -203,22 +166,18 @@ public class WebAppType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setId(java.lang.String value) {
         this.id = value;

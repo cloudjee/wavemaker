@@ -11,24 +11,24 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
+ * <p>
+ * Java class for anonymous complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType>
@@ -46,15 +46,13 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "pairs",
-    "topCategoriesOnly"
-})
+@XmlType(name = "", propOrder = { "pairs", "topCategoriesOnly" })
 @XmlRootElement(name = "describeDataCategoryGroupStructures", namespace = "urn:partner.soap.sforce.com")
 public class DescribeDataCategoryGroupStructures {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected List<DataCategoryGroupSobjectTypePairType> pairs;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean topCategoriesOnly;
 
@@ -62,27 +60,26 @@ public class DescribeDataCategoryGroupStructures {
      * Gets the value of the pairs property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the pairs property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the pairs property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getPairs().add(newItem);
+     * getPairs().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DataCategoryGroupSobjectTypePairType }
+     * Objects of the following type(s) are allowed in the list {@link DataCategoryGroupSobjectTypePairType }
      * 
      * 
      */
     public List<DataCategoryGroupSobjectTypePairType> getPairs() {
-        if (pairs == null) {
-            pairs = new ArrayList<DataCategoryGroupSobjectTypePairType>();
+        if (this.pairs == null) {
+            this.pairs = new ArrayList<DataCategoryGroupSobjectTypePairType>();
         }
         return this.pairs;
     }
@@ -92,7 +89,7 @@ public class DescribeDataCategoryGroupStructures {
      * 
      */
     public boolean isTopCategoriesOnly() {
-        return topCategoriesOnly;
+        return this.topCategoriesOnly;
     }
 
     /**
@@ -106,10 +103,8 @@ public class DescribeDataCategoryGroupStructures {
     /**
      * Sets the value of the pairs property.
      * 
-     * @param pairs
-     *     allowed object is
-     *     {@link DataCategoryGroupSobjectTypePairType }
-     *     
+     * @param pairs allowed object is {@link DataCategoryGroupSobjectTypePairType }
+     * 
      */
     public void setPairs(List<DataCategoryGroupSobjectTypePairType> pairs) {
         this.pairs = pairs;

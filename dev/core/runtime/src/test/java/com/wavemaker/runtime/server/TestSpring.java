@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.server;
 
 import java.util.Map;
@@ -38,22 +39,27 @@ import com.wavemaker.runtime.server.testspring.UtilMapBeanClass;
 public class TestSpring extends WMTestCase {
 
     private static final String BEAN_MAP1_NAME = "mapBean1";
+
     private static final String BEAN_MAP2_NAME = "mapBean2";
+
     private static final String BEAN1_MAPKEY = "bean1";
+
     private static final String OBJECT_BEAN1_NAME = "ObjectBean1";
+
     private static final String OBJECT_BEAN1 = "objectBean1";
+
     private static final String BEAN2_MAPKEY = "bean2";
+
     private static final String OBJECT_BEAN2_NAME = "ObjectBean2";
+
     private static final String OBJECT_BEAN2 = "objectBean2";
 
     public void testMapSingle() {
-        
+
         GenericApplicationContext ctx = new GenericApplicationContext();
         XmlBeanDefinitionReader xmlReader = new XmlBeanDefinitionReader(ctx);
-        xmlReader.loadBeanDefinitions(new ClassPathResource(
-                "com/wavemaker/runtime/server/testspring/one.xml"));
-        xmlReader.loadBeanDefinitions(new ClassPathResource(
-                "com/wavemaker/runtime/server/testspring/beanclass.xml"));
+        xmlReader.loadBeanDefinitions(new ClassPathResource("com/wavemaker/runtime/server/testspring/one.xml"));
+        xmlReader.loadBeanDefinitions(new ClassPathResource("com/wavemaker/runtime/server/testspring/beanclass.xml"));
 
         assertNotNull(ctx);
         assertTrue(ctx.containsBean(OBJECT_BEAN1));
@@ -61,7 +67,7 @@ public class TestSpring extends WMTestCase {
 
         BeanMap bm = (BeanMap) ctx.getBean(BEAN_MAP1_NAME);
         assertNotNull(bm);
-        Map<?,?> bmMap = bm.getMapping();
+        Map<?, ?> bmMap = bm.getMapping();
 
         assertTrue(bmMap.containsKey(BEAN1_MAPKEY));
         BeanClass bc = (BeanClass) bmMap.get(BEAN1_MAPKEY);
@@ -69,15 +75,12 @@ public class TestSpring extends WMTestCase {
     }
 
     public void testMapMerge() {
-        
+
         GenericApplicationContext ctx = new GenericApplicationContext();
         XmlBeanDefinitionReader xmlReader = new XmlBeanDefinitionReader(ctx);
-        xmlReader.loadBeanDefinitions(new ClassPathResource(
-                "com/wavemaker/runtime/server/testspring/one.xml"));
-        xmlReader.loadBeanDefinitions(new ClassPathResource(
-                "com/wavemaker/runtime/server/testspring/two.xml"));
-        xmlReader.loadBeanDefinitions(new ClassPathResource(
-                "com/wavemaker/runtime/server/testspring/beanclass.xml"));
+        xmlReader.loadBeanDefinitions(new ClassPathResource("com/wavemaker/runtime/server/testspring/one.xml"));
+        xmlReader.loadBeanDefinitions(new ClassPathResource("com/wavemaker/runtime/server/testspring/two.xml"));
+        xmlReader.loadBeanDefinitions(new ClassPathResource("com/wavemaker/runtime/server/testspring/beanclass.xml"));
 
         assertNotNull(ctx);
         assertTrue(ctx.containsBean(BEAN_MAP1_NAME));
@@ -87,7 +90,7 @@ public class TestSpring extends WMTestCase {
         {
             BeanMap bm = (BeanMap) ctx.getBean(BEAN_MAP1_NAME);
             assertNotNull(bm);
-            Map<?,?> bmMap = bm.getMapping();
+            Map<?, ?> bmMap = bm.getMapping();
             assertNotNull(bmMap);
 
             assertTrue(bmMap.containsKey(BEAN1_MAPKEY));
@@ -98,7 +101,7 @@ public class TestSpring extends WMTestCase {
         {
             BeanMap bm2 = (BeanMap) ctx.getBean(BEAN_MAP2_NAME);
             assertNotNull(bm2);
-            Map<?,?> bmMap2 = bm2.getMapping();
+            Map<?, ?> bmMap2 = bm2.getMapping();
             assertNotNull(bmMap2);
 
             assertTrue(bmMap2.containsKey(BEAN1_MAPKEY));
@@ -110,78 +113,75 @@ public class TestSpring extends WMTestCase {
             assertEquals(OBJECT_BEAN2_NAME, bc2_2.getName());
         }
     }
-    
+
     public void testUtilMap() throws Exception {
-        
+
         GenericApplicationContext ctx = new GenericApplicationContext();
         XmlBeanDefinitionReader xmlReader = new XmlBeanDefinitionReader(ctx);
-        xmlReader.loadBeanDefinitions(new ClassPathResource(
-                "com/wavemaker/runtime/server/testspring/test-utilmap.xml"));
-        
+        xmlReader.loadBeanDefinitions(new ClassPathResource("com/wavemaker/runtime/server/testspring/test-utilmap.xml"));
+
         assertNotNull(ctx);
         assertTrue(ctx.containsBean("utilMapBeanClass"));
         UtilMapBeanClass umbc = (UtilMapBeanClass) ctx.getBean("utilMapBeanClass");
-        
+
         Map<String, String> configMap = umbc.getMap();
         assertTrue(configMap.containsKey("activeGridHome"));
         assertEquals("fooBar", configMap.get("activeGridHome"));
     }
-    
+
     public void testCircular() throws Exception {
-        
+
         GenericApplicationContext ctx = new GenericApplicationContext();
         XmlBeanDefinitionReader xmlReader = new XmlBeanDefinitionReader(ctx);
-        xmlReader.loadBeanDefinitions(new ClassPathResource(
-                "com/wavemaker/runtime/server/testspring/circular.xml"));
-        
+        xmlReader.loadBeanDefinitions(new ClassPathResource("com/wavemaker/runtime/server/testspring/circular.xml"));
+
         assertNotNull(ctx);
         assertTrue(ctx.containsBean("a"));
         assertTrue(ctx.containsBean("b"));
         CircularA a = (CircularA) ctx.getBean("a");
         CircularB b = (CircularB) ctx.getBean("b");
-        
+
         assertSame(a, b.getA());
         assertSame(b, a.getB());
     }
-    
+
     public void testLazyLoading() throws Exception {
-        
+
         GenericApplicationContext ctx = new GenericApplicationContext();
         XmlBeanDefinitionReader xmlReader = new XmlBeanDefinitionReader(ctx);
-        xmlReader.loadBeanDefinitions(new ClassPathResource(
-                "com/wavemaker/runtime/server/testspring/test-lazybeans.xml"));
-        
+        xmlReader.loadBeanDefinitions(new ClassPathResource("com/wavemaker/runtime/server/testspring/test-lazybeans.xml"));
+
         try {
             ctx.getBean("badConstructor");
             fail("should have failed");
         } catch (RuntimeException e) {
             // good
         }
-        
+
         try {
             ctx.getBean("fixableConstructor");
             fail("should have failed");
         } catch (RuntimeException e) {
             // good
         }
-        
+
         FixableConstructor.fixConstructor = true;
         ctx.getBean("fixableConstructor");
     }
-    
+
     public static class BadConstructor {
-        
+
         public BadConstructor() {
             throw new RuntimeException("bad constructor");
         }
     }
-    
+
     public static class FixableConstructor {
-        
+
         public static boolean fixConstructor = false;
-        
+
         public FixableConstructor() {
-            
+
             if (!fixConstructor) {
                 throw new RuntimeException("bad constructor");
             }

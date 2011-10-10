@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data.sample;
 
 import java.io.Serializable;
@@ -27,20 +28,20 @@ public class ProductManager implements Serializable {
     private List<Product> products;
 
     public void setProducts(List<Product> p) {
-        products = p;
+        this.products = p;
     }
 
     public void addProduct(Product p) {
-        products.add(p);
+        this.products.add(p);
     }
 
     public List<Product> getProducts() {
-        return products;
+        return this.products;
     }
 
     public void increasePrice(int pct) {
-        
-        for (Product p: products) {
+
+        for (Product p : this.products) {
             double newPrice = p.getPrice().doubleValue() * (100 + pct) / 100;
             p.setPrice(new Double(newPrice));
         }

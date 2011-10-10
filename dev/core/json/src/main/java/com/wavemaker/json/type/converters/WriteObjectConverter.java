@@ -20,8 +20,8 @@ import java.io.Writer;
 import com.wavemaker.json.type.TypeDefinition;
 
 /**
- * Provides an interface for TypeDefinitions wishing to provide type conversions
- * in the writeObject (Java -&gt; JSON String or serialization) direction.
+ * Provides an interface for TypeDefinitions wishing to provide type conversions in the writeObject (Java -&gt; JSON
+ * String or serialization) direction.
  * 
  * @author small
  * @version $Rev$ - $Date$
@@ -29,20 +29,14 @@ import com.wavemaker.json.type.TypeDefinition;
 public interface WriteObjectConverter extends TypeDefinition {
 
     /**
-     * Perform the transformation, in a Java -&gt; JSON String (serialization).
-     * The output of the transformation should be written directly to the
-     * writer parameter.
+     * Perform the transformation, in a Java -&gt; JSON String (serialization). The output of the transformation should
+     * be written directly to the writer parameter.
      * 
-     * @param input
-     *            The input Object, whose value is to be transformed (the value
-     *            in the tree with the indicated root, at the indicated path).
-     * @param root
-     *            The root of the Object tree being transformed.
-     * @param path
-     *            The beanutils-formatted path to the current value within the
-     *            object tree indicated by root.
+     * @param input The input Object, whose value is to be transformed (the value in the tree with the indicated root,
+     *        at the indicated path).
+     * @param root The root of the Object tree being transformed.
+     * @param path The beanutils-formatted path to the current value within the object tree indicated by root.
      * @return The new value to be set at the path indicated by path.
      */
-    public void writeObject(Object input, Object root, String path,
-            Writer writer) throws IOException;
+    public void writeObject(Object input, Object root, String path, Writer writer) throws IOException;
 }

@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.wavemaker.studio.data;
 
 import java.io.File;
@@ -30,7 +31,6 @@ import org.springframework.core.io.FileSystemResource;
 
 import com.wavemaker.studio.infra.StudioTestCase;
 import com.wavemaker.tools.data.DataModelDeploymentConfiguration;
-//import com.wavemaker.tools.data.util.DataServiceTestUtils;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.util.DesignTimeUtils;
 
@@ -42,69 +42,64 @@ import com.wavemaker.tools.util.DesignTimeUtils;
 @Ignore
 public class TestDataModelDeploymentConfiguration extends StudioTestCase {
 
-	private static final String serviceId = "sakila";
+    private static final String serviceId = "sakila";
 
-	private DesignServiceManager designMgr = null;
+    private DesignServiceManager designMgr = null;
 
-	@Before
-	@Override
-	public void setUp() throws Exception {
-		super.setUp();
-		File root = makeProject("foo");
-		populateProject(root, true);
-		designMgr = DesignTimeUtils
-				.getDSMForProjectRoot(new FileSystemResource(root
-						.getAbsolutePath() + "/"));
-		// DataServiceTestUtils.setupSakilaConfiguration(new File(root,
-		// DesignServiceManager.getRuntimeRelativeDir(serviceId)));
-	}
+    @Before
+    @Override
+    public void setUp() throws Exception {
+        super.setUp();
+        File root = makeProject("foo");
+        populateProject(root, true);
+        this.designMgr = DesignTimeUtils.getDSMForProjectRoot(new FileSystemResource(root.getAbsolutePath() + "/"));
+        // DataServiceTestUtils.setupSakilaConfiguration(new File(root,
+        // DesignServiceManager.getRuntimeRelativeDir(serviceId)));
+    }
 
-	@Test
-	public void testConfigureGlobalJndiDataSource() throws Exception {
+    @Test
+    public void testConfigureGlobalJndiDataSource() throws Exception {
 
-		String jndiName = "jdbc/sakilads";
-		Map<String, String> m = new HashMap<String, String>(1);
-		m.put(DataModelDeploymentConfiguration.JNDI_NAME_PROPERTY, jndiName);
-		DataModelDeploymentConfiguration cfg = new DataModelDeploymentConfiguration();
-		cfg.prepare(serviceId, m, designMgr, 1);
+        String jndiName = "jdbc/sakilads";
+        Map<String, String> m = new HashMap<String, String>(1);
+        m.put(DataModelDeploymentConfiguration.JNDI_NAME_PROPERTY, jndiName);
+        DataModelDeploymentConfiguration cfg = new DataModelDeploymentConfiguration();
+        cfg.prepare(serviceId, m, this.designMgr, 1);
 
-		// DataServiceTestUtils.verifyJNDIDataSource(serviceId, designMgr,
-		// jndiName);
-		checkResourceRef(false);
-	}
+        // DataServiceTestUtils.verifyJNDIDataSource(serviceId, designMgr,
+        // jndiName);
+        checkResourceRef(false);
+    }
 
-	@Test
-	public void testConfigureAppScopedJndiDataSource() throws Exception {
+    @Test
+    public void testConfigureAppScopedJndiDataSource() throws Exception {
 
-		String jndiName = "java:comp/env/local/jdbc/sakilads";
-		Map<String, String> m = new HashMap<String, String>(1);
-		m.put(DataModelDeploymentConfiguration.JNDI_NAME_PROPERTY, jndiName);
-		DataModelDeploymentConfiguration cfg = new DataModelDeploymentConfiguration();
-		cfg.prepare(serviceId, m, designMgr, 1);
+        String jndiName = "java:comp/env/local/jdbc/sakilads";
+        Map<String, String> m = new HashMap<String, String>(1);
+        m.put(DataModelDeploymentConfiguration.JNDI_NAME_PROPERTY, jndiName);
+        DataModelDeploymentConfiguration cfg = new DataModelDeploymentConfiguration();
+        cfg.prepare(serviceId, m, this.designMgr, 1);
 
-		// DataServiceTestUtils.verifyJNDIDataSource(serviceId, designMgr,
-		// jndiName);
+        // DataServiceTestUtils.verifyJNDIDataSource(serviceId, designMgr,
+        // jndiName);
 
-		checkResourceRef(true);
-	}
+        checkResourceRef(true);
+    }
 
-	private void checkResourceRef(boolean shouldExist) throws IOException {
-		File webXml = designMgr.getProjectManager().getCurrentProject()
-				.getWebXml().getFile();
-		String s = FileUtils.readFileToString(webXml);
+    private void checkResourceRef(boolean shouldExist) throws IOException {
+        File webXml = this.designMgr.getProjectManager().getCurrentProject().getWebXml().getFile();
+        String s = FileUtils.readFileToString(webXml);
 
-		// simplistic check that only works as long as we only have
-		// datasource resource refs
-		int i = s.indexOf(DataModelDeploymentConfiguration.RESOURCE_REF);
-		if (i == -1 && shouldExist) {
-			throw new AssertionError("web.xml should have "
-					+ DataModelDeploymentConfiguration.RESOURCE_REF);
-		}
+        // simplistic check that only works as long as we only have
+        // datasource resource refs
+        int i = s.indexOf(DataModelDeploymentConfiguration.RESOURCE_REF);
+        if (i == -1 && shouldExist) {
+            throw new AssertionError("web.xml should have " + DataModelDeploymentConfiguration.RESOURCE_REF);
+        }
 
-		if (i != -1 && !shouldExist) {
-			throw new AssertionError("web.xml shouldn't have "
-					+ DataModelDeploymentConfiguration.RESOURCE_REF);
-		}
-	}
+        if (i != -1 && !shouldExist) {
+            throw new AssertionError("web.xml shouldn't have " + DataModelDeploymentConfiguration.RESOURCE_REF);
+        }
+    }
 
 }

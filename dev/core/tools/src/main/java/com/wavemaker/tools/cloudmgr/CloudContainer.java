@@ -18,16 +18,19 @@ import java.util.Collection;
 
 /**
  * This class represents a cloud container.
- *
+ * 
  * @author slee
  */
 public class CloudContainer {
 
     private String containerName;
+
     private String created;
+
     private Collection<CloudFile> files = null;
 
-    public CloudContainer() {}
+    public CloudContainer() {
+    }
 
     public CloudContainer(String containerName, String created, Collection<CloudFile> files) {
         this.containerName = containerName;

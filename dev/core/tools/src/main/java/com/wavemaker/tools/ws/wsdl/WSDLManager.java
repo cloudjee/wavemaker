@@ -32,10 +32,10 @@ public class WSDLManager {
 
     private static WSDLManager instance;
 
-    private Map<String, WSDL> wsdlMap;
+    private final Map<String, WSDL> wsdlMap;
 
     private WSDLManager() {
-        wsdlMap = new HashMap<String, WSDL>();
+        this.wsdlMap = new HashMap<String, WSDL>();
     }
 
     public static synchronized WSDLManager getInstance() {
@@ -48,32 +48,23 @@ public class WSDLManager {
     /**
      * Registers the WSDL via the specified URI.
      * 
-     * @param wsdlURI
-     *                A URI (can be a filename or URL) poiniting to a WSDL
-     *                definition.
-     * @param serviceId
-     *                The service ID for this WSDL. If this is null, a generated
-     *                one will be set in the WSDL.
+     * @param wsdlURI A URI (can be a filename or URL) poiniting to a WSDL definition.
+     * @param serviceId The service ID for this WSDL. If this is null, a generated one will be set in the WSDL.
      * @return The imported WSDL object.
      * @throws WSDLException
      */
     public WSDL registerWSDL(String wsdlURI, String serviceId) throws WSDLException {
         WSDL wsdl = processWSDL(wsdlURI, serviceId);
-        wsdlMap.put(wsdl.getServiceId(), wsdl);
+        this.wsdlMap.put(wsdl.getServiceId(), wsdl);
         return wsdl;
     }
 
     /**
-     * Returns a WSDL object via the specified URI. This does not register the
-     * WSDL to the manager. An exception will be thrown if the WSDL is
-     * PRC/encoded style.
+     * Returns a WSDL object via the specified URI. This does not register the WSDL to the manager. An exception will be
+     * thrown if the WSDL is PRC/encoded style.
      * 
-     * @param wsdlURI
-     *                A URI (can be a filename or URL) poiniting to a WSDL
-     *                definition.
-     * @param serviceId
-     *                The service ID for this WSDL. If this is null, a generated
-     *                one will be set in the WSDL.
+     * @param wsdlURI A URI (can be a filename or URL) poiniting to a WSDL definition.
+     * @param serviceId The service ID for this WSDL. If this is null, a generated one will be set in the WSDL.
      * @return The WSDL object.
      * @throws WSDLException
      */
@@ -81,7 +72,7 @@ public class WSDLManager {
         if (wsdlURI == null) {
             throw new IllegalArgumentException(MessageResource.WS_NULL_WSDL_URI.getMessage());
         }
-        WSDL wsdl = (new WSDLBuilder(wsdlURI)).buildWSDL(serviceId);
+        WSDL wsdl = new WSDLBuilder(wsdlURI).buildWSDL(serviceId);
         if (wsdl.isRPC() && wsdl.isSOAPEncoded()) {
             throw new ConfigurationException(MessageResource.WS_RPC_ENCODED_NOT_SUPPORTED);
         }
@@ -91,24 +82,22 @@ public class WSDLManager {
     /**
      * Returns the WSDL corresponding to the given service ID.
      * 
-     * @param serviceId
-     *            The service ID for the desired WSDL.
+     * @param serviceId The service ID for the desired WSDL.
      * @return The WSDL.
      */
     public WSDL getWSDL(String serviceId) {
-        return wsdlMap.get(serviceId);
+        return this.wsdlMap.get(serviceId);
     }
 
     /**
      * Removes the specified WSDL.
      * 
-     * @param serviceId
-     *            The service ID of the WSDL to be removed.
+     * @param serviceId The service ID of the WSDL to be removed.
      */
     public void removeWSDL(String serviceId) {
-        wsdlMap.remove(serviceId);
+        this.wsdlMap.remove(serviceId);
     }
-    
+
     /**
      * Writes the WSDL to the specified file.
      * 
@@ -126,7 +115,7 @@ public class WSDLManager {
      * @return An array of service IDs.
      */
     public String[] getAllServiceIds() {
-        return (String[]) wsdlMap.keySet().toArray(new String[wsdlMap.size()]);
+        return this.wsdlMap.keySet().toArray(new String[this.wsdlMap.size()]);
     }
 
 }

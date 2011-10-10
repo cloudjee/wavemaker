@@ -14,15 +14,14 @@
 
 package com.wavemaker.runtime.data;
 
-import org.hibernate.Session;
-
 import java.util.Map;
+
+import org.hibernate.Session;
 
 /**
  * Entry point of Data Service API.
  * 
- * Every service that is a "Data Service" has one associated DataServiceManager
- * instance.
+ * Every service that is a "Data Service" has one associated DataServiceManager instance.
  * 
  * @author Simon Toens
  * @version $Rev$ - $Date$
@@ -46,8 +45,8 @@ public interface DataServiceManager {
     void rollback();
 
     /**
-     * Run a Task instance within a Transaction. 
-     *  
+     * Run a Task instance within a Transaction.
+     * 
      * @param task The task to run
      * @param input Generic input the task may use
      * @return Return value, may be null
@@ -56,22 +55,21 @@ public interface DataServiceManager {
 
     /**
      * Run a Task instance within a Transaction.
-     *
+     * 
      * @param task The task to run
      * @param types The field type map
      * @param named True if a named query is being executed at run time
      * @param input Generic input the task may use
      * @return Return value, may be null
      */
-    Object invoke(Task task, Map<String, Class<?>> types, boolean named, Object... input); //salesforce
+    Object invoke(Task task, Map<String, Class<?>> types, boolean named, Object... input); // salesforce
 
     /**
      * @return The Hibernate Session.
      */
     Session getSession();
-    
 
     DataServiceMetaData getMetaData();
-    
+
     void dispose();
 }

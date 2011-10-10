@@ -41,10 +41,10 @@ public class HibernateConfigExporterTask extends Hbm2CfgXmlExporterTask {
     @Override
     public String getName() {
         String s = "hbm2cfgxml (Generates ";
-        if (configurationFile == null) {
+        if (this.configurationFile == null) {
             s += "hibernate.cfg.xml)";
         } else {
-            s += configurationFile + ")";
+            s += this.configurationFile + ")";
         }
         return s;
     }
@@ -52,9 +52,9 @@ public class HibernateConfigExporterTask extends Hbm2CfgXmlExporterTask {
     @Override
     public Exporter createExporter() {
         WMHibernateConfigurationExporter rtn = new WMHibernateConfigurationExporter();
-        if (configurationFile != null) {
+        if (this.configurationFile != null) {
             try {
-                rtn.setOutput(new FileWriter(configurationFile));
+                rtn.setOutput(new FileWriter(this.configurationFile));
             } catch (IOException ex) {
                 throw new BuildException(ex);
             }

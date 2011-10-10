@@ -25,11 +25,9 @@ import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.tools.service.FileService;
 
 /**
- * A utility class which provides factory methods for obtaining
- * <code>FileSerializer</code> instances. Convenience methods similar
- * to those defined in the <code>FileSerializer</code> class are also
- * provided. This class uses Spring for instantiation and to populate its
- * serializer map.
+ * A utility class which provides factory methods for obtaining <code>FileSerializer</code> instances. Convenience
+ * methods similar to those defined in the <code>FileSerializer</code> class are also provided. This class uses Spring
+ * for instantiation and to populate its serializer map.
  * 
  * @author ffu
  * @author Jeremy Grelle
@@ -47,21 +45,17 @@ public class FileSerializerFactory {
 
     public static FileSerializerFactory getInstance() {
         if (instance == null) {
-            SpringUtils.throwSpringNotInitializedError(
-                    FileSerializerFactory.class);
+            SpringUtils.throwSpringNotInitializedError(FileSerializerFactory.class);
         }
         return instance;
     }
 
     /**
-     * Returns a <code>FileSerializer</code> for the given file
-     * extension. If more than one <code>FileSerializer</code> is
-     * available for the file extension, the first one will be returned.
+     * Returns a <code>FileSerializer</code> for the given file extension. If more than one <code>FileSerializer</code>
+     * is available for the file extension, the first one will be returned.
      * 
-     * @param fileExt
-     *            The file extension.
-     * @return A <code>FileSerializer</code> which corresponds to the
-     *         given file extension.
+     * @param fileExt The file extension.
+     * @return A <code>FileSerializer</code> which corresponds to the given file extension.
      */
     public FileSerializer getSerializer(String fileExt) {
         List<FileSerializer> serializers = getSerializers(fileExt);
@@ -72,31 +66,25 @@ public class FileSerializerFactory {
     }
 
     /**
-     * Returns a list of all <code>FileSerializer</code>s for the
-     * given file extension.
+     * Returns a list of all <code>FileSerializer</code>s for the given file extension.
      * 
-     * @param fileExt
-     *            The file extension.
+     * @param fileExt The file extension.
      * @return A list of all <code>FileSerializer</code>s.
      */
     public List<FileSerializer> getSerializers(String fileExt) {
-        return serializerMap.get(fileExt);
+        return this.serializerMap.get(fileExt);
     }
 
     /**
-     * Reads a file and returns an object representing contents of the file.
-     * Using the file extension of the given file, it will look for a registered
-     * serializer and use the serializer to perform the task. If more than one
-     * serializer registered for the file extension, the logic will try each
-     * serializer until an object is successfully obtained.
+     * Reads a file and returns an object representing contents of the file. Using the file extension of the given file,
+     * it will look for a registered serializer and use the serializer to perform the task. If more than one serializer
+     * registered for the file extension, the logic will try each serializer until an object is successfully obtained.
      * 
-     * @param file
-     *            The file.
+     * @param file The file.
      * @return An object representing contents of the file.
      * @throws FileSerializerException
      */
-    public Object readObject(FileService fileService, Resource file)
-            throws FileSerializerException {
+    public Object readObject(FileService fileService, Resource file) throws FileSerializerException {
         List<FileSerializer> serializers = getSerializers(file);
         FileSerializerException serializerException = null;
         for (FileSerializer serializer : serializers) {
@@ -118,20 +106,15 @@ public class FileSerializerFactory {
     }
 
     /**
-     * Writes the object to a file. Using the file extension of the given file,
-     * it will look for a registered serializer and use the serializer to
-     * perform the task. If more than one serializer registered for the file
-     * extension, the logic will try each serializer until an object is
-     * successfully written to a file.
+     * Writes the object to a file. Using the file extension of the given file, it will look for a registered serializer
+     * and use the serializer to perform the task. If more than one serializer registered for the file extension, the
+     * logic will try each serializer until an object is successfully written to a file.
      * 
-     * @param object
-     *            The object to be serialized and written to a file.
-     * @param file
-     *            The file.
+     * @param object The object to be serialized and written to a file.
+     * @param file The file.
      * @throws FileSerializerException
      */
-    public void writeObject(FileService fileService, Object object, Resource file)
-            throws FileSerializerException {
+    public void writeObject(FileService fileService, Object object, Resource file) throws FileSerializerException {
         List<FileSerializer> serializers = getSerializers(file);
         FileSerializerException serializerException = null;
         for (FileSerializer serializer : serializers) {
@@ -146,13 +129,11 @@ public class FileSerializerFactory {
         }
     }
 
-    private List<FileSerializer> getSerializers(Resource file)
-            throws FileSerializerException {
+    private List<FileSerializer> getSerializers(Resource file) throws FileSerializerException {
         String fileExt = getFileExtension(file);
-        List<FileSerializer> serializers = serializerMap.get(fileExt);
+        List<FileSerializer> serializers = this.serializerMap.get(fileExt);
         if (serializers == null || serializers.isEmpty()) {
-            throw new FileSerializerException(
-                    MessageResource.STUDIO_PROJECT_UNKNOWN_TYPE + file.getFilename());
+            throw new FileSerializerException(MessageResource.STUDIO_PROJECT_UNKNOWN_TYPE + file.getFilename());
         }
         return serializers;
     }
@@ -162,11 +143,10 @@ public class FileSerializerFactory {
     }
 
     public Map<String, List<FileSerializer>> getSerializerMap() {
-        return serializerMap;
+        return this.serializerMap;
     }
 
-    public void setSerializerMap(
-            Map<String, List<FileSerializer>> serializerMap) {
+    public void setSerializerMap(Map<String, List<FileSerializer>> serializerMap) {
         this.serializerMap = serializerMap;
     }
 }

@@ -19,7 +19,6 @@ import org.hibernate.Session;
 import com.wavemaker.runtime.data.DefaultTaskManager;
 import com.wavemaker.runtime.data.Task;
 import com.wavemaker.runtime.data.TaskManager;
-import com.wavemaker.runtime.data.DataServiceMetaData;
 
 /**
  * @author Simon Toens
@@ -28,8 +27,7 @@ import com.wavemaker.runtime.data.DataServiceMetaData;
  */
 public class PreProcessorRouterTask extends BaseTask implements Task {
 
-    private static final DefaultTaskManager dfltTaskMgr = DefaultTaskManager
-            .getInstance();
+    private static final DefaultTaskManager dfltTaskMgr = DefaultTaskManager.getInstance();
 
     public Object run(Session session, String dbName, Object... input) {
 
@@ -38,8 +36,7 @@ public class PreProcessorRouterTask extends BaseTask implements Task {
         }
 
         if (!(input[0] instanceof Object[])) {
-            throw new IllegalArgumentException(
-                    "Expected input[0] to be an Object array");
+            throw new IllegalArgumentException("Expected input[0] to be an Object array");
         }
 
         if (!(input[1] instanceof Task)) {
@@ -47,8 +44,7 @@ public class PreProcessorRouterTask extends BaseTask implements Task {
         }
 
         if (!(input[2] instanceof TaskManager)) {
-            throw new IllegalArgumentException(
-                    "Expected input[2] to be a TaskManager");
+            throw new IllegalArgumentException("Expected input[2] to be a TaskManager");
         }
 
         Object[] args = (Object[]) input[0];

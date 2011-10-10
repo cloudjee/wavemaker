@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.javaservice;
 
 import java.util.List;
@@ -22,10 +23,10 @@ import java.util.List;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class JavaServiceDefinitionClass {
-    
+
     // test MAV-897 by throwing an exception in the static initializer
     static {
         if (!false) {
@@ -45,20 +46,20 @@ public class JavaServiceDefinitionClass {
     public JavaServiceDefinitionClass op3() {
         return null;
     }
-    
+
     public List<JavaServiceDefinitionClass> op4() {
         return null;
     }
-    
+
     public JavaServiceDefinitionClass[] op5() {
         return null;
     }
-    
+
     public FooClass getQO() {
         return null;
     }
-    
+
     public static class FooClass {
-        
+
     }
 }

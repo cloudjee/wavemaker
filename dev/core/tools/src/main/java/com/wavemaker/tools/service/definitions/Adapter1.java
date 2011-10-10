@@ -19,24 +19,22 @@
 // Generated on: 2008.10.23 at 10:17:33 AM PDT 
 //
 
-
 package com.wavemaker.tools.service.definitions;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 import com.wavemaker.json.type.OperationEnumeration;
 
-public class Adapter1
-    extends XmlAdapter<String, OperationEnumeration>
-{
+public class Adapter1 extends XmlAdapter<String, OperationEnumeration> {
 
-
+    @Override
     public OperationEnumeration unmarshal(String value) {
-        return (com.wavemaker.json.type.OperationEnumeration.fromValue(value));
+        return com.wavemaker.json.type.OperationEnumeration.fromValue(value);
     }
 
+    @Override
     public String marshal(OperationEnumeration value) {
-        return (com.wavemaker.json.type.OperationEnumeration.toString(value));
+        return com.wavemaker.json.type.OperationEnumeration.toString(value);
     }
 
 }

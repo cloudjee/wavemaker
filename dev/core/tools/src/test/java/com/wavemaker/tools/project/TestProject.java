@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.project;
 
 import java.io.File;
@@ -43,138 +44,126 @@ import com.wavemaker.tools.spring.ComplexReturnBean;
  */
 public class TestProject extends WMTestCase {
 
-	private File tempDir = null;
+    private File tempDir = null;
 
-	private StudioConfiguration studioConfiguration = new LocalStudioConfiguration();
+    private final StudioConfiguration studioConfiguration = new LocalStudioConfiguration();
 
-	@Override
-	public void setUp() throws Exception {
-		SpringUtils.initSpringConfig();
-		tempDir = IOUtils.createTempDirectory();
-	}
+    @Override
+    public void setUp() throws Exception {
+        SpringUtils.initSpringConfig();
+        this.tempDir = IOUtils.createTempDirectory();
+    }
 
-	@Override
-	public void tearDown() throws Exception {
-		IOUtils.deleteRecursive(tempDir);
-	}
+    @Override
+    public void tearDown() throws Exception {
+        IOUtils.deleteRecursive(this.tempDir);
+    }
 
-	public void testProjectName() {
+    public void testProjectName() {
 
-		String projectName = "foo";
+        String projectName = "foo";
 
-		Resource projectRoot = new FileSystemResource(tempDir.getPath() + "/")
-				.createRelative(projectName + "/");
+        Resource projectRoot = new FileSystemResource(this.tempDir.getPath() + "/").createRelative(projectName + "/");
 
-		Project p = new Project(projectRoot, studioConfiguration);
-		assertEquals(projectName, p.getProjectName());
-	}
+        Project p = new Project(projectRoot, this.studioConfiguration);
+        assertEquals(projectName, p.getProjectName());
+    }
 
-	public void testProjectUnicode() throws IOException {
+    public void testProjectUnicode() throws IOException {
 
-		String projectName = "foo";
-		Resource projectRoot = new FileSystemResource(tempDir.getPath() + "/")
-				.createRelative(projectName + "/");
-		projectRoot.getFile().mkdir();
-		Project p = new Project(projectRoot, studioConfiguration);
+        String projectName = "foo";
+        Resource projectRoot = new FileSystemResource(this.tempDir.getPath() + "/").createRelative(projectName + "/");
+        projectRoot.getFile().mkdir();
+        Project p = new Project(projectRoot, this.studioConfiguration);
 
-		assertTrue(projectRoot.getFile().exists());
-		assertTrue(projectRoot.getFile().isDirectory());
+        assertTrue(projectRoot.getFile().exists());
+        assertTrue(projectRoot.getFile().isDirectory());
 
-		p.writeFile("foo.txt", "école マット");
+        p.writeFile("foo.txt", "école マット");
 
-		byte[] bytes = FileCopyUtils.copyToByteArray(projectRoot
-				.createRelative("foo.txt").getInputStream());
-		String str = new String(bytes, ServerConstants.DEFAULT_ENCODING);
-		assertEquals('\u00E9', str.charAt(0));
-		assertEquals('\u30DE', str.charAt(6));
+        byte[] bytes = FileCopyUtils.copyToByteArray(projectRoot.createRelative("foo.txt").getInputStream());
+        String str = new String(bytes, ServerConstants.DEFAULT_ENCODING);
+        assertEquals('\u00E9', str.charAt(0));
+        assertEquals('\u30DE', str.charAt(6));
 
-		String str2 = p.readFile("foo.txt");
-		assertEquals(str, str2);
-		assertEquals('\u00E9', str2.charAt(0));
-		assertEquals('\u30DE', str2.charAt(6));
-	}
+        String str2 = p.readFile("foo.txt");
+        assertEquals(str, str2);
+        assertEquals('\u00E9', str2.charAt(0));
+        assertEquals('\u30DE', str2.charAt(6));
+    }
 
-	public void testProjectVersion() throws Exception {
+    public void testProjectVersion() throws Exception {
 
-		String projectName = "foo";
-		File tempDir = IOUtils.createTempDirectory();
+        String projectName = "foo";
+        File tempDir = IOUtils.createTempDirectory();
 
-		Resource projectRoot = new FileSystemResource(tempDir.getPath() + "/")
-				.createRelative(projectName + "/");
-		projectRoot.getFile().mkdir();
-		Project p = new Project(projectRoot, studioConfiguration);
+        Resource projectRoot = new FileSystemResource(tempDir.getPath() + "/").createRelative(projectName + "/");
+        projectRoot.getFile().mkdir();
+        Project p = new Project(projectRoot, this.studioConfiguration);
 
-		assertEquals(Double.valueOf(Project.PROPERTY_PROJECT_VERSION_DEFAULT),
-				p.getProjectVersion());
+        assertEquals(Double.valueOf(Project.PROPERTY_PROJECT_VERSION_DEFAULT), p.getProjectVersion());
 
-		Properties props = p.getProperties();
-		props.setProperty(Project.PROPERTY_PROJECT_VERSION, "12.2");
-		p.setProperties(props);
+        Properties props = p.getProperties();
+        props.setProperty(Project.PROPERTY_PROJECT_VERSION, "12.2");
+        p.setProperties(props);
 
-		assertEquals(12.2, p.getProjectVersion());
+        assertEquals(12.2, p.getProjectVersion());
 
-	}
+    }
 
-	public void testGetWebInfClasses() throws Exception {
+    public void testGetWebInfClasses() throws Exception {
 
-		String projectName = "testGetWebInfClasses";
+        String projectName = "testGetWebInfClasses";
 
-		File tempDir = IOUtils.createTempDirectory();
-		Resource projectRoot = new FileSystemResource(tempDir.getPath() + "/")
-				.createRelative(projectName + "/");
-		projectRoot.getFile().mkdir();
-		Project p = new Project(projectRoot, studioConfiguration);
+        File tempDir = IOUtils.createTempDirectory();
+        Resource projectRoot = new FileSystemResource(tempDir.getPath() + "/").createRelative(projectName + "/");
+        projectRoot.getFile().mkdir();
+        Project p = new Project(projectRoot, this.studioConfiguration);
 
-		Resource webinfClasses = projectRoot
-				.createRelative("webapproot/WEB-INF/classes/");
-		assertEquals(webinfClasses, p.getWebInfClasses());
-	}
+        Resource webinfClasses = projectRoot.createRelative("webapproot/WEB-INF/classes/");
+        assertEquals(webinfClasses, p.getWebInfClasses());
+    }
 
-	public void testProjectBasicEncoding() throws Exception {
+    public void testProjectBasicEncoding() throws Exception {
 
-		File tempDir = IOUtils.createTempDirectory();
-		FileService fs = new Project(new FileSystemResource(tempDir.getPath()
-				+ "/"), studioConfiguration);
-		fs.writeFile("foo.txt", ComplexReturnBean.EXTENDED_CHARS_TEST_STR);
+        File tempDir = IOUtils.createTempDirectory();
+        FileService fs = new Project(new FileSystemResource(tempDir.getPath() + "/"), this.studioConfiguration);
+        fs.writeFile("foo.txt", ComplexReturnBean.EXTENDED_CHARS_TEST_STR);
 
-		File expectedFile = new File(tempDir, "foo.txt");
-		assertTrue(expectedFile.exists());
+        File expectedFile = new File(tempDir, "foo.txt");
+        assertTrue(expectedFile.exists());
 
-		InputStream is = new FileInputStream(expectedFile);
-		byte[] bytes = new byte[ComplexReturnBean.EXTENDED_CHARS_TEST_STR
-				.length() * 2 + 1];
-		int len = is.read(bytes);
-		String str = new String(bytes, 0, len, "UTF-8");
-		assertEquals(ComplexReturnBean.EXTENDED_CHARS_TEST_STR, str);
-	}
+        InputStream is = new FileInputStream(expectedFile);
+        byte[] bytes = new byte[ComplexReturnBean.EXTENDED_CHARS_TEST_STR.length() * 2 + 1];
+        int len = is.read(bytes);
+        String str = new String(bytes, 0, len, "UTF-8");
+        assertEquals(ComplexReturnBean.EXTENDED_CHARS_TEST_STR, str);
+    }
 
-	public void testProjectBasicWriterReaderEncoding() throws Exception {
+    public void testProjectBasicWriterReaderEncoding() throws Exception {
 
-		File tempDir = IOUtils.createTempDirectory();
-		FileService fs = new Project(new FileSystemResource(tempDir.getPath()
-				+ "/"), studioConfiguration);
+        File tempDir = IOUtils.createTempDirectory();
+        FileService fs = new Project(new FileSystemResource(tempDir.getPath() + "/"), this.studioConfiguration);
 
-		Writer writer = fs.getWriter("foo.txt");
-		writer.write(ComplexReturnBean.EXTENDED_CHARS_TEST_STR);
-		writer.close();
+        Writer writer = fs.getWriter("foo.txt");
+        writer.write(ComplexReturnBean.EXTENDED_CHARS_TEST_STR);
+        writer.close();
 
-		File expectedFile = new File(tempDir, "foo.txt");
-		assertTrue(expectedFile.exists());
+        File expectedFile = new File(tempDir, "foo.txt");
+        assertTrue(expectedFile.exists());
 
-		InputStream is = new FileInputStream(expectedFile);
-		byte[] bytes = new byte[ComplexReturnBean.EXTENDED_CHARS_TEST_STR
-				.length() * 2 + 1];
-		int len = is.read(bytes);
-		String str = new String(bytes, 0, len, "UTF-8");
-		assertEquals(ComplexReturnBean.EXTENDED_CHARS_TEST_STR, str);
+        InputStream is = new FileInputStream(expectedFile);
+        byte[] bytes = new byte[ComplexReturnBean.EXTENDED_CHARS_TEST_STR.length() * 2 + 1];
+        int len = is.read(bytes);
+        String str = new String(bytes, 0, len, "UTF-8");
+        assertEquals(ComplexReturnBean.EXTENDED_CHARS_TEST_STR, str);
 
-		CharBuffer cb = CharBuffer
-				.allocate(ComplexReturnBean.EXTENDED_CHARS_TEST_STR.length());
-		Reader reader = fs.getReader("foo.txt");
-		reader.read(cb);
-		reader.close();
-		cb.rewind();
+        CharBuffer cb = CharBuffer.allocate(ComplexReturnBean.EXTENDED_CHARS_TEST_STR.length());
+        Reader reader = fs.getReader("foo.txt");
+        reader.read(cb);
+        reader.close();
+        cb.rewind();
 
-		assertEquals(ComplexReturnBean.EXTENDED_CHARS_TEST_STR, cb.toString());
-	}
+        assertEquals(ComplexReturnBean.EXTENDED_CHARS_TEST_STR, cb.toString());
+    }
 }

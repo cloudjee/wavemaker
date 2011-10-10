@@ -18,24 +18,25 @@ import java.util.Comparator;
 import java.util.Map.Entry;
 
 /**
- * Compares Map.Entry objects, using their keys.  The keys will be converted
- * to Strings (using toString()), and the Strings will be compared, and that
- * result returned.
+ * Compares Map.Entry objects, using their keys. The keys will be converted to Strings (using toString()), and the
+ * Strings will be compared, and that result returned.
  * 
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class EntryComparator implements Comparator<Entry<?, ?>> {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
     public int compare(Entry<?, ?> o1, Entry<?, ?> o2) {
-        
+
         String s1 = o1.getKey().toString();
         String s2 = o2.getKey().toString();
-        
+
         return s1.compareTo(s2);
     }
 }

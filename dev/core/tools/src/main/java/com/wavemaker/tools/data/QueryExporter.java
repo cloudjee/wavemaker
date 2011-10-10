@@ -41,11 +41,12 @@ public class QueryExporter extends GenericExporter {
         this.serviceName = serviceName;
     }
 
+    @Override
     public void doStart() {
 
         Map<String, Context> additionalContext = new HashMap<String, Context>(1);
 
-        Context ctx = new Context(serviceName);
+        Context ctx = new Context(this.serviceName);
 
         additionalContext.put(GenerationContext.CONTEXT_NAME, ctx);
 
@@ -53,22 +54,20 @@ public class QueryExporter extends GenericExporter {
 
             Class<?> entity = ctx.getEntity();
 
-            String s = StringUtils.packageToSrcFilePath(entity.getName())
-                    + DataServiceConstants.QUERY_EXT;
+            String s = StringUtils.packageToSrcFilePath(entity.getName()) + DataServiceConstants.QUERY_EXT;
 
-            TemplateProducer producer = new TemplateProducer(
-                    getTemplateHelper(), getArtifactCollector());
+            TemplateProducer producer = new TemplateProducer(getTemplateHelper(), getArtifactCollector());
 
             File path = new File(getOutputDirectory(), s);
 
-            producer.produce(additionalContext, getTemplateName(), path,
-                    getTemplateName());
+            producer.produce(additionalContext, getTemplateName(), path, getTemplateName());
 
         } finally {
             ctx.dispose();
         }
     }
 
+    @Override
     public String getName() {
         return "query exporter";
     }
@@ -81,26 +80,25 @@ public class QueryExporter extends GenericExporter {
 
             super(serviceName, getConfiguration(), false);
 
-            this.entity = DataServiceUtils.getTypesForGeneratedQueries(def.getMetaData())
-                    .iterator().next();
+            this.entity = DataServiceUtils.getTypesForGeneratedQueries(this.def.getMetaData()).iterator().next();
         }
 
         public String getEntityName() {
-            return XMLUtils.escape(entity.getSimpleName());
+            return XMLUtils.escape(this.entity.getSimpleName());
         }
 
         public String getEntityType() {
-            return XMLUtils.escape(entity.getName());
+            return XMLUtils.escape(this.entity.getName());
         }
 
         public Class<?> getEntity() {
-            return entity;
+            return this.entity;
         }
 
         public String getIdType() {
             DataServiceMetaData m = getDataServiceDefinition().getMetaData();
-            String id = m.getIdPropertyName(entity);
-            Property p = m.getProperty(entity.getName(), id);
+            String id = m.getIdPropertyName(this.entity);
+            Property p = m.getProperty(this.entity.getName(), id);
             return XMLUtils.escape(p.getType().getReturnedClass().getName());
         }
     }

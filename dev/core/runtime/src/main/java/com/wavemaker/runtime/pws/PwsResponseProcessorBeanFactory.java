@@ -18,40 +18,38 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.wavemaker.common.ConfigurationException;
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.util.SpringUtils;
-import com.wavemaker.common.ConfigurationException;
 
 /**
  * @author slee
- *
+ * 
  */
 public class PwsResponseProcessorBeanFactory {
 
     private Map<String, IPwsResponseProcessor> pwsResponseProcessors = new HashMap<String, IPwsResponseProcessor>();
 
-
     public Collection<String> getPwsResponseProcessorNames() {
-        return pwsResponseProcessors.keySet();
+        return this.pwsResponseProcessors.keySet();
     }
-    
+
     public IPwsResponseProcessor getPwsResponseProcessor(String partnerName) {
-        
-        if (pwsResponseProcessors == null) {
+
+        if (this.pwsResponseProcessors == null) {
             SpringUtils.throwSpringNotInitializedError(this.getClass());
         }
-        
-        if (!pwsResponseProcessors.containsKey(partnerName)) {
-            throw new ConfigurationException(
-                MessageResource.UNKNOWN_PWS_LOGIN_MANAGER, partnerName);
+
+        if (!this.pwsResponseProcessors.containsKey(partnerName)) {
+            throw new ConfigurationException(MessageResource.UNKNOWN_PWS_LOGIN_MANAGER, partnerName);
         }
-        
-        return pwsResponseProcessors.get(partnerName);
+
+        return this.pwsResponseProcessors.get(partnerName);
     }
 
     public void setPwsResponseProcessors(Map<String, IPwsResponseProcessor> pwsResponseProcessors) {
         this.pwsResponseProcessors = pwsResponseProcessors;
 
     }
-    
+
 }

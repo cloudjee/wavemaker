@@ -19,12 +19,10 @@ import com.wavemaker.json.type.FieldDefinition;
 import com.wavemaker.json.type.TypeState;
 
 /**
- * Provides a mechanism for end-users to transform values before they are
- * serialized or de-serialized.  These transforms run before any type conversion
- * is performed, so the end type can be changed here as well.
+ * Provides a mechanism for end-users to transform values before they are serialized or de-serialized. These transforms
+ * run before any type conversion is performed, so the end type can be changed here as well.
  * 
- * For instance, a templating ValueTransformer could change a value of "$foo"
- * to "bar" or to the number 12.
+ * For instance, a templating ValueTransformer could change a value of "$foo" to "bar" or to the number 12.
  * 
  * @author small
  * @version $Rev$ - $Date$
@@ -32,61 +30,38 @@ import com.wavemaker.json.type.TypeState;
 public interface ValueTransformer {
 
     /**
-     * Perform the transformation, in a JSON String -&gt; Java direction
-     * (deserialization).
+     * Perform the transformation, in a JSON String -&gt; Java direction (deserialization).
      * 
-     * @param input
-     *            The input Object, whose value is to be transformed (the value
-     *            in the tree with the indicated root, at the indicated path).
-     * @param fieldDefinition
-     *            The FieldDefinition indicating the expected type of input (if
-     *            the transform is from JSON to Java) or the current type of
-     *            input (if the transform is from Java to JSON).
-     * @param arrayLevel
-     *            The current arrayLevel (if this is equal to the number of
-     *            dimensions in the fieldDefinition, this is the raw type of the
-     *            array.
-     * @param root
-     *            The root of the Object tree being transformed (usually, this
-     *            is a {@link JSON} type.)
-     * @param path
-     *            The beanutils-formatted path to the current value within the
-     *            object tree indicated by root.
-     * @param typeState
-     *            The current typeState.
-     * @return The new value to be set at the path indicated by path, the
-     *         fieldDefinition and the arrayLevel, or null if no transform was
-     *         performed.
+     * @param input The input Object, whose value is to be transformed (the value in the tree with the indicated root,
+     *        at the indicated path).
+     * @param fieldDefinition The FieldDefinition indicating the expected type of input (if the transform is from JSON
+     *        to Java) or the current type of input (if the transform is from Java to JSON).
+     * @param arrayLevel The current arrayLevel (if this is equal to the number of dimensions in the fieldDefinition,
+     *        this is the raw type of the array.
+     * @param root The root of the Object tree being transformed (usually, this is a {@link JSON} type.)
+     * @param path The beanutils-formatted path to the current value within the object tree indicated by root.
+     * @param typeState The current typeState.
+     * @return The new value to be set at the path indicated by path, the fieldDefinition and the arrayLevel, or null if
+     *         no transform was performed.
      */
-    public Tuple.Three<Object, FieldDefinition, Integer> transformToJava(
-            Object input, FieldDefinition fieldDefinition, int arrayLevel,
-            Object root, String path, TypeState typeState);
+    public Tuple.Three<Object, FieldDefinition, Integer> transformToJava(Object input, FieldDefinition fieldDefinition, int arrayLevel, Object root,
+        String path, TypeState typeState);
 
     /**
      * Perform the transformation, in a Java -&gt; JSON String (serialization).
      * 
-     * @param input
-     *            The input Object, whose value is to be transformed (the value
-     *            in the tree with the indicated root, at the indicated path).
-     * @param fieldDefinition
-     *            The FieldDefinition indicating the current type. of input (if
-     *            the transform is from Java to JSON).
-     * @param arrayLevel
-     *            The current arrayLevel (if this is equal to the number of
-     *            dimensions in the fieldDefinition, this is the raw type of the
-     *            array.
-     * @param root
-     *            The root of the Object tree being transformed.
-     * @param path
-     *            The beanutils-formatted path to the current value within the
-     *            object tree indicated by root.
-     * @param typeState
-     *            The current typeState.
-     * @return The new value to be set at the path indicated by path, the
-     *         fieldDefinition and the arrayLevel, or null if no transform was
-     *         performed.
+     * @param input The input Object, whose value is to be transformed (the value in the tree with the indicated root,
+     *        at the indicated path).
+     * @param fieldDefinition The FieldDefinition indicating the current type. of input (if the transform is from Java
+     *        to JSON).
+     * @param arrayLevel The current arrayLevel (if this is equal to the number of dimensions in the fieldDefinition,
+     *        this is the raw type of the array.
+     * @param root The root of the Object tree being transformed.
+     * @param path The beanutils-formatted path to the current value within the object tree indicated by root.
+     * @param typeState The current typeState.
+     * @return The new value to be set at the path indicated by path, the fieldDefinition and the arrayLevel, or null if
+     *         no transform was performed.
      */
-    public Tuple.Three<Object, FieldDefinition, Integer> transformToJSON(
-            Object input, FieldDefinition fieldDefinition, int arrayLevel,
-            Object root, String path, TypeState typeState);
+    public Tuple.Three<Object, FieldDefinition, Integer> transformToJSON(Object input, FieldDefinition fieldDefinition, int arrayLevel, Object root,
+        String path, TypeState typeState);
 }

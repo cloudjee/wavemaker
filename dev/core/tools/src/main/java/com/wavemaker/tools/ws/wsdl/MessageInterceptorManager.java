@@ -19,9 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Provides interfaces to access message interceptors.  Message interceptors
- * are used to plug in to the Web Service runtime to do additional processing
- * of the inbound and outbound messages.
+ * Provides interfaces to access message interceptors. Message interceptors are used to plug in to the Web Service
+ * runtime to do additional processing of the inbound and outbound messages.
  * 
  * @author ffu
  * @version $Rev$ - $Date$
@@ -34,7 +33,7 @@ public class MessageInterceptorManager {
     private static MessageInterceptorManager instance;
 
     private MessageInterceptorManager() {
-        interceptorMap = new HashMap<String, List<String>>();
+        this.interceptorMap = new HashMap<String, List<String>>();
     }
 
     public static synchronized MessageInterceptorManager getInstance() {
@@ -45,23 +44,21 @@ public class MessageInterceptorManager {
     }
 
     /**
-     * Returns a list of message interceptor class names for the specified
-     * service ID.
+     * Returns a list of message interceptor class names for the specified service ID.
      * 
      * @param serviceId The service ID.
-     * @return A list of message interceptor class names.  This may return null.
+     * @return A list of message interceptor class names. This may return null.
      */
     public List<String> getInterceptorClassNames(String serviceId) {
-        return interceptorMap.get(serviceId);
+        return this.interceptorMap.get(serviceId);
     }
 
     public Map<String, List<String>> getInterceptorMap() {
-        return interceptorMap;
+        return this.interceptorMap;
     }
 
-    public void setInterceptorClassNames(String serviceId,
-            List<String> classNames) {
-        interceptorMap.put(serviceId, classNames);
+    public void setInterceptorClassNames(String serviceId, List<String> classNames) {
+        this.interceptorMap.put(serviceId, classNames);
     }
 
     public void setInterceptorMap(Map<String, List<String>> interceptorMap) {

@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.data.hibernate;
 
 import java.io.File;
@@ -48,22 +49,19 @@ public class TestCreateDataModel extends WMTestCase {
         TestSuite testsToRun = new TestSuite();
 
         /*
-         * These tests are disabled in UNIX; when fixing MAV-2098, remove the
-         * if statement and the testDummy() method.
+         * These tests are disabled in UNIX; when fixing MAV-2098, remove the if statement and the testDummy() method.
          */
         if (SystemUtils.isLinux() || SystemUtils.isMacOSX()) {
             testsToRun.addTest(new TestCreateDataModel("testDummy"));
         } else {
             testsToRun.addTest(new TestCreateDataModel("testAddSingleEntity"));
-            testsToRun
-                    .addTest(new TestCreateDataModel("testAddRelatedEntities"));
+            testsToRun.addTest(new TestCreateDataModel("testAddRelatedEntities"));
             testsToRun.addTest(new TestCreateDataModel("testAddRelatedPkIsFk"));
             testsToRun.addTest(new TestCreateDataModel("testDeleteColumn"));
             testsToRun.addTest(new TestCreateDataModel("testDeleteColumn2"));
-            testsToRun.addTest(new TestCreateDataModel(
-                    "testAddRelatedEntitiesCompositePkFk"));
+            testsToRun.addTest(new TestCreateDataModel("testAddRelatedEntitiesCompositePkFk"));
         }
-  
+
         return testsToRun;
     }
 
@@ -95,8 +93,7 @@ public class TestCreateDataModel extends WMTestCase {
 
         File tmp = IOUtils.createTempDirectory();
 
-        File f = DataServiceUtils.createEmptyDataModel(tmp, "foo", ei
-                .getPackageName());
+        File f = DataServiceUtils.createEmptyDataModel(tmp, "foo", ei.getPackageName());
 
         try {
             DataModelConfiguration mgr = new DataModelConfiguration(f);
@@ -138,9 +135,8 @@ public class TestCreateDataModel extends WMTestCase {
             mgr.save();
 
             // make sure types are still on the columns
-            ColumnInfo colinfo = mgr.getColumn(ei.getEntityName(), name
-                    .getName());
-            
+            ColumnInfo colinfo = mgr.getColumn(ei.getEntityName(), name.getName());
+
             assertEquals("string", colinfo.getSqlType());
 
             // verify
@@ -152,17 +148,14 @@ public class TestCreateDataModel extends WMTestCase {
             assertTrue(ei.getPackageName().equals("com.blah"));
             assertTrue(ei.getEntityName().equals("Foo"));
 
-            List<PropertyInfo> properties = new ArrayList<PropertyInfo>(ei
-                    .getProperties());
+            List<PropertyInfo> properties = new ArrayList<PropertyInfo>(ei.getProperties());
 
             assertTrue(properties.size() == 3);
             assertTrue(properties.get(0).getIsId());
-            assertTrue(properties.get(1).getFullyQualifiedType().equals(
-                    "string"));
+            assertTrue(properties.get(1).getFullyQualifiedType().equals("string"));
 
             assertTrue(!properties.get(2).getColumn().getNotNull());
-            assertTrue(properties.get(2).getFullyQualifiedType().equals(
-                    "string"));
+            assertTrue(properties.get(2).getFullyQualifiedType().equals("string"));
 
         } finally {
             IOUtils.deleteRecursive(tmp);
@@ -208,8 +201,7 @@ public class TestCreateDataModel extends WMTestCase {
         r1.setName("r1");
         r1.setCardinality(RelatedInfo.Cardinality.OneToOne.toString());
         r1.setColumnNames(new String[] { ei2fk.getColumn().getName() });
-        r1.setFullyQualifiedType(ei2.getPackageName() + "."
-                + ei2.getEntityName());
+        r1.setFullyQualifiedType(ei2.getPackageName() + "." + ei2.getEntityName());
         r1.setRelatedType(ei2.getEntityName());
         r1.setTableName(ei.getTableName());
 
@@ -217,8 +209,7 @@ public class TestCreateDataModel extends WMTestCase {
 
         File tmp = IOUtils.createTempDirectory();
 
-        File f = DataServiceUtils.createEmptyDataModel(tmp, "foo", ei
-                .getPackageName());
+        File f = DataServiceUtils.createEmptyDataModel(tmp, "foo", ei.getPackageName());
 
         try {
             DataModelConfiguration mgr = new DataModelConfiguration(f);
@@ -256,58 +247,53 @@ public class TestCreateDataModel extends WMTestCase {
 
             String toManyRelatedName = "foos";
             RelatedInfo toMany = mgr.getRelated("Blah", toManyRelatedName);
-            assertTrue(toMany.getCardinality().equals(
-                    RelatedInfo.Cardinality.OneToMany.toString()));
+            assertTrue(toMany.getCardinality().equals(RelatedInfo.Cardinality.OneToMany.toString()));
 
             checkKeys(mgr);
 
             // verify
             mgr = new DataModelConfiguration(f);
             assertTrue(mgr.getEntityNames().size() == 2);
-            
+
             // MAV 2120
             Iterator<EntityInfo> itr = mgr.getEntities().iterator();
-            while (itr.hasNext())
-            {
-            	ei = (EntityInfo) itr.next();
-            	if (ei.getTableName().equals("t1"))
-            		break;
+            while (itr.hasNext()) {
+                ei = itr.next();
+                if (ei.getTableName().equals("t1")) {
+                    break;
+                }
             }
-            
+
             assertTrue(ei.getCatalogName().equals("db"));
-            
+
             List<PropertyInfo> properties = null;
             List<PropertyInfo> relproperties = null;
-            
+
             assertTrue(ei.getPackageName().equals("com.blah"));
             assertTrue(ei.getEntityName().equals("Foo"));
-            	
-            properties = new ArrayList<PropertyInfo>(ei
-                    .getProperties());
+
+            properties = new ArrayList<PropertyInfo>(ei.getProperties());
 
             assertTrue(properties.size() == 3);
             assertTrue(properties.get(0).getIsId());
-            assertTrue(properties.get(1).getFullyQualifiedType().equals(
-                    "string"));
+            assertTrue(properties.get(1).getFullyQualifiedType().equals("string"));
 
-            relproperties = new ArrayList<PropertyInfo>(ei
-                   .getRelatedProperties());
+            relproperties = new ArrayList<PropertyInfo>(ei.getRelatedProperties());
             assertTrue(relproperties.size() == 1);
             assertTrue(relproperties.get(0).getIsRelated());
             assertEquals(1, relproperties.get(0).getCascadeOptions().size());
-            assertEquals(RelatedInfo.CascadeOption.Delete, relproperties.get(0)
-                    .getCascadeOptions().get(0));
+            assertEquals(RelatedInfo.CascadeOption.Delete, relproperties.get(0).getCascadeOptions().get(0));
             assertTrue(!relproperties.get(0).getIsInverse());
 
             // MAV 2120
             Iterator<EntityInfo> iter = mgr.getEntities().iterator();
-            while (iter.hasNext())
-            {
-            	ei = (EntityInfo) iter.next();
-            	if (ei.getTableName().equals("t2"))
-            		break;
+            while (iter.hasNext()) {
+                ei = iter.next();
+                if (ei.getTableName().equals("t2")) {
+                    break;
+                }
             }
-            
+
             assertTrue(ei.getCatalogName().equals("db"));
             assertTrue(ei.getTableName().equals("t2"));
             assertTrue(ei.getPackageName().equals("com.blah"));
@@ -317,11 +303,9 @@ public class TestCreateDataModel extends WMTestCase {
 
             assertTrue(properties.size() == 2);
             assertTrue(properties.get(0).getIsId());
-            assertTrue(properties.get(0).getFullyQualifiedType().equals(
-                    "integer"));
+            assertTrue(properties.get(0).getFullyQualifiedType().equals("integer"));
 
-            relproperties = new ArrayList<PropertyInfo>(ei
-                    .getRelatedProperties());
+            relproperties = new ArrayList<PropertyInfo>(ei.getRelatedProperties());
             assertTrue(ei.getRelatedProperties().size() == 1);
             assertTrue(relproperties.get(0).getIsRelated());
             assertTrue(relproperties.get(0).getIsInverse());
@@ -390,8 +374,7 @@ public class TestCreateDataModel extends WMTestCase {
         l2.add(t2id);
 
         File tmp = IOUtils.createTempDirectory();
-        File f = DataServiceUtils.createEmptyDataModel(tmp, "foo", t1
-                .getPackageName());
+        File f = DataServiceUtils.createEmptyDataModel(tmp, "foo", t1.getPackageName());
 
         try {
             DataModelConfiguration mgr = new DataModelConfiguration(f);
@@ -430,8 +413,7 @@ public class TestCreateDataModel extends WMTestCase {
             ri.setName("reft1");
             ri.setCardinality(RelatedInfo.Cardinality.OneToOne.toString());
             ri.setRelatedType(t1.getEntityName());
-            ri.setFullyQualifiedType(StringUtils.fq(t1.getPackageName(), t1
-                    .getEntityName()));
+            ri.setFullyQualifiedType(StringUtils.fq(t1.getPackageName(), t1.getEntityName()));
             ri.setTableName(t1.getTableName());
             ri.setColumnNames(new String[] { "fk1", "fk2" });
             List<RelatedInfo> rl = new ArrayList<RelatedInfo>();
@@ -454,15 +436,13 @@ public class TestCreateDataModel extends WMTestCase {
 
             RelatedInfo r1 = mgr.getRelated(t2.getEntityName(), "reft1");
             assertEquals(2, r1.getColumnNames().length);
-            assertEquals(RelatedInfo.Cardinality.OneToZeroOrOne.toString(), r1
-                    .getCardinality());
+            assertEquals(RelatedInfo.Cardinality.OneToZeroOrOne.toString(), r1.getCardinality());
             assertEquals("fk1", r1.getColumnNames()[0]);
             assertEquals("fk2", r1.getColumnNames()[1]);
 
             RelatedInfo r2 = mgr.getRelated(t1.getEntityName(), "t2s");
             assertEquals(2, r2.getColumnNames().length);
-            assertEquals(RelatedInfo.Cardinality.OneToMany.toString(), r2
-                    .getCardinality());
+            assertEquals(RelatedInfo.Cardinality.OneToMany.toString(), r2.getCardinality());
             assertEquals("fk1", r2.getColumnNames()[0]);
             assertEquals("fk2", r2.getColumnNames()[1]);
 
@@ -483,8 +463,7 @@ public class TestCreateDataModel extends WMTestCase {
 
     private void checkForeignKeyCol(DataModelConfiguration mgr) {
         // the foreign key column should only exist in in Foo
-        List<ColumnInfo> cols = new ArrayList<ColumnInfo>(mgr.getEntity("Foo")
-                .getColumns());
+        List<ColumnInfo> cols = new ArrayList<ColumnInfo>(mgr.getEntity("Foo").getColumns());
         boolean found = false;
         for (ColumnInfo c : cols) {
             if (c.getIsFk()) {
@@ -538,14 +517,12 @@ public class TestCreateDataModel extends WMTestCase {
         r1.setName("r1");
         r1.setCardinality(RelatedInfo.Cardinality.OneToOne.toString());
         r1.setColumnNames(new String[] { id.getColumn().getName() });
-        r1.setFullyQualifiedType(ei2.getPackageName() + "."
-                + ei2.getEntityName());
+        r1.setFullyQualifiedType(ei2.getPackageName() + "." + ei2.getEntityName());
         r1.setRelatedType(ei2.getEntityName());
         r1.setTableName(ei.getTableName());
 
         File tmp = IOUtils.createTempDirectory();
-        File f = DataServiceUtils.createEmptyDataModel(tmp, "foo", ei
-                .getPackageName());
+        File f = DataServiceUtils.createEmptyDataModel(tmp, "foo", ei.getPackageName());
 
         try {
             DataModelConfiguration mgr = new DataModelConfiguration(f);
@@ -581,8 +558,7 @@ public class TestCreateDataModel extends WMTestCase {
             assertTrue(ei.getEntityName().equals("Foo"));
 
             assertTrue(ei.getProperties().size() == 2);
-            List<PropertyInfo> l10 = new ArrayList<PropertyInfo>(ei
-                    .getProperties());
+            List<PropertyInfo> l10 = new ArrayList<PropertyInfo>(ei.getProperties());
             assertTrue(l10.get(0).getName().equals("id"));
             assertTrue(l10.get(1).getName().equals("r1"));
             assertTrue(ei.getColumns().size() == 1);
@@ -634,8 +610,7 @@ public class TestCreateDataModel extends WMTestCase {
         name.setColumn(ColumnInfo.newColumnInfo(name));
 
         File tmp = IOUtils.createTempDirectory();
-        File f = DataServiceUtils.createEmptyDataModel(tmp, "foo", ei
-                .getPackageName());
+        File f = DataServiceUtils.createEmptyDataModel(tmp, "foo", ei.getPackageName());
 
         try {
             DataModelConfiguration mgr = new DataModelConfiguration(f);
@@ -695,8 +670,7 @@ public class TestCreateDataModel extends WMTestCase {
         name.setColumn(ColumnInfo.newColumnInfo(name));
 
         File tmp = IOUtils.createTempDirectory();
-        File f = DataServiceUtils.createEmptyDataModel(tmp, "foo", ei
-                .getPackageName());
+        File f = DataServiceUtils.createEmptyDataModel(tmp, "foo", ei.getPackageName());
 
         try {
             DataModelConfiguration mgr = new DataModelConfiguration(f);

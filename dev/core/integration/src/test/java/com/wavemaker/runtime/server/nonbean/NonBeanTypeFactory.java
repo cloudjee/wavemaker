@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.server.nonbean;
 
 import com.wavemaker.common.WMRuntimeException;
@@ -27,26 +28,32 @@ import com.wavemaker.runtime.server.nonbean.types.FooArg3TypeDefinition;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class NonBeanTypeFactory implements TypeState {
-    
+
     public static final String FOO_ARG_1 = "fooArg1Type";
+
     public static final String FOO_ARG_2 = "fooArg2Type";
+
     public static final String FOO_ARG_3 = "fooArg3Type";
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.type.TypeState#addType(com.wavemaker.json.type.TypeDefinition)
      */
     public void addType(TypeDefinition typeDefinition) {
         // not used
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.type.TypeState#getType(java.lang.String)
      */
     public TypeDefinition getType(String typeName) {
-        
+
         if (FOO_ARG_1.equals(typeName)) {
             return new FooArg1TypeDefinition();
         } else if (FOO_ARG_2.equals(typeName)) {
@@ -54,15 +61,17 @@ public class NonBeanTypeFactory implements TypeState {
         } else if (FOO_ARG_3.equals(typeName)) {
             return new FooArg3TypeDefinition();
         } else {
-            throw new WMRuntimeException("unknown type name: "+typeName);
+            throw new WMRuntimeException("unknown type name: " + typeName);
         }
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.type.TypeState#isTypeKnown(java.lang.String)
      */
     public boolean isTypeKnown(String typeName) {
-        
+
         try {
             getType(typeName);
             return true;

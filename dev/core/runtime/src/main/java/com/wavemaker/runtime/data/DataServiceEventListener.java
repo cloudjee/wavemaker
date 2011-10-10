@@ -26,46 +26,46 @@ import com.wavemaker.runtime.service.events.ServiceEventListener;
  */
 public class DataServiceEventListener implements ServiceEventListener {
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.service.events.ServiceEventListener#preOperation(com.wavemaker.runtime.service.ServiceWire, java.lang.String, java.lang.Object[])
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.wavemaker.runtime.service.events.ServiceEventListener#preOperation(com.wavemaker.runtime.service.ServiceWire,
+     * java.lang.String, java.lang.Object[])
      */
-    public Object[] preOperation(ServiceWire serviceWire, String operationName,
-            Object[] params) {
+    public Object[] preOperation(ServiceWire serviceWire, String operationName, Object[] params) {
 
         if (DataServiceLoggers.eventLogger.isInfoEnabled()) {
-            DataServiceLoggers.eventLogger.info("startOperation "
-                    + operationName);
+            DataServiceLoggers.eventLogger.info("startOperation " + operationName);
         }
 
         if (DataServiceLoggers.eventLogger.isDebugEnabled()) {
             if (params.length == 0) {
                 DataServiceLoggers.eventLogger.debug("No input");
             } else {
-                DataServiceLoggers.eventLogger.debug("Input "
-                        + ObjectUtils.objectToStringRecursive(params[0]));
+                DataServiceLoggers.eventLogger.debug("Input " + ObjectUtils.objectToStringRecursive(params[0]));
             }
         }
 
-        ThreadContext.setPreProcessorTask(DefaultTaskManager.getInstance()
-                .getPreProcessorRouterTask());
+        ThreadContext.setPreProcessorTask(DefaultTaskManager.getInstance().getPreProcessorRouterTask());
 
         return params;
     }
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.service.events.ServiceEventListener#postOperation(com.wavemaker.runtime.service.ServiceWire, java.lang.String, com.wavemaker.runtime.service.TypedServiceReturn, java.lang.Throwable)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.wavemaker.runtime.service.events.ServiceEventListener#postOperation(com.wavemaker.runtime.service.ServiceWire
+     * , java.lang.String, com.wavemaker.runtime.service.TypedServiceReturn, java.lang.Throwable)
      */
-    public TypedServiceReturn postOperation(
-            ServiceWire serviceWire, String operationName,
-            TypedServiceReturn result, Throwable th)
-            throws Throwable {
+    public TypedServiceReturn postOperation(ServiceWire serviceWire, String operationName, TypedServiceReturn result, Throwable th) throws Throwable {
 
         cleanup();
 
         if (th != null) {
             if (DataServiceLoggers.eventLogger.isInfoEnabled()) {
-                DataServiceLoggers.eventLogger.info("failedOperation "
-                        + operationName + ": " + th);
+                DataServiceLoggers.eventLogger.info("failedOperation " + operationName + ": " + th);
             }
 
             throw th;
@@ -74,8 +74,7 @@ public class DataServiceEventListener implements ServiceEventListener {
         SystemUtils.clientPrepare();
 
         if (DataServiceLoggers.eventLogger.isInfoEnabled()) {
-            DataServiceLoggers.eventLogger.info("postOperation "
-                    + operationName);
+            DataServiceLoggers.eventLogger.info("postOperation " + operationName);
         }
 
         return result;

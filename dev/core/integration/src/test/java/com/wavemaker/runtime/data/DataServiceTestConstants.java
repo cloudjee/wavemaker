@@ -15,10 +15,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data;
 
 public abstract class DataServiceTestConstants {
-    
+
     public static final String RUNTIME_SERVICE_ID = "runtimeService";
 
     public static final String SQL_SERVER_ADVENTURE_SERVICE_ID = "adventure";
@@ -28,20 +29,20 @@ public abstract class DataServiceTestConstants {
     public static final String AG_HR_SERVICE_ID = "aghr";
 
     public static final String SAKILA_SPRING_CFG = "sakila.spring.xml";
-    
+
     public static final String PK_FK_SPRING_CFG = "pkfk.spring.xml";
-    
+
     public static final String SAKILA_SERVICE_SPRING_ID_2 = "sakiladbspring";
-    
+
     public static final String SAKILA_SERVICE_SPRING_EVENT_WIRE_ID_2 = "sakiladbspringServiceWire";
 
     public static final String SAKILA_HIBERNATE_CFG = "sakila.cfg.xml";
-    
+
     public static final String MYSQL_SAKILA_PROPERTIES = "mysql_sakila.properties";
-    
+
     public static final String EVENT_LISTENER_BEAN_ID = "dataServiceEventListener";
-    
+
     public static final String DB2_SAMPLE_BEAN_ID = "db2sample";
-    
+
     public static final String SAKILA_TASK_MGR = "sakilaTaskMgr";
 }

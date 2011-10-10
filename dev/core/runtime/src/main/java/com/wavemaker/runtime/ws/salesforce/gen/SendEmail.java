@@ -11,24 +11,24 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
+ * <p>
+ * Java class for anonymous complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType>
@@ -45,9 +45,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "messages"
-})
+@XmlType(name = "", propOrder = { "messages" })
 @XmlRootElement(name = "sendEmail", namespace = "urn:partner.soap.sforce.com")
 public class SendEmail {
 
@@ -58,27 +56,26 @@ public class SendEmail {
      * Gets the value of the messages property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the messages property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the messages property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getMessages().add(newItem);
+     * getMessages().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link EmailType }
+     * Objects of the following type(s) are allowed in the list {@link EmailType }
      * 
      * 
      */
     public List<EmailType> getMessages() {
-        if (messages == null) {
-            messages = new ArrayList<EmailType>();
+        if (this.messages == null) {
+            this.messages = new ArrayList<EmailType>();
         }
         return this.messages;
     }
@@ -86,10 +83,8 @@ public class SendEmail {
     /**
      * Sets the value of the messages property.
      * 
-     * @param messages
-     *     allowed object is
-     *     {@link EmailType }
-     *     
+     * @param messages allowed object is {@link EmailType }
+     * 
      */
     public void setMessages(List<EmailType> messages) {
         this.messages = messages;

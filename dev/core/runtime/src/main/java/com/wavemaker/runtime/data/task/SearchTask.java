@@ -26,8 +26,8 @@ import org.hibernate.criterion.Restrictions;
 import com.wavemaker.common.util.ImmutableEntryMap;
 import com.wavemaker.common.util.ObjectAccess;
 import com.wavemaker.common.util.ObjectGraphTraversal;
-import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.ObjectGraphTraversal.Context;
+import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.runtime.data.DataServiceLoggers;
 import com.wavemaker.runtime.data.DataServiceMetaData;
 import com.wavemaker.runtime.data.QueryOptions;
@@ -53,7 +53,7 @@ public class SearchTask extends AbstractReadTask implements Task, DefaultRollbac
         }
 
         QueryOptions options = getQueryOptions(input);
-        
+
         Criteria criteria = getCritieria(session, input[0], options, dbName);
 
         applyPaging(options, criteria);
@@ -75,16 +75,14 @@ public class SearchTask extends AbstractReadTask implements Task, DefaultRollbac
             }
             if (input[1] instanceof PagingOptions) {
                 if (input[1] instanceof QueryOptions) {
-                    rtn = ((QueryOptions) input[1]);
+                    rtn = (QueryOptions) input[1];
                 } else {
                     PagingOptions po = (PagingOptions) input[1];
                     rtn = new QueryOptions(po);
                 }
             } else {
-                throw new IllegalArgumentException(
-                        "Second input argument must be a "
-                                + PagingOptions.class.getName() + " or "
-                                + QueryOptions.class.getName() + " instance");
+                throw new IllegalArgumentException("Second input argument must be a " + PagingOptions.class.getName() + " or "
+                    + QueryOptions.class.getName() + " instance");
             }
         }
         return rtn;
@@ -94,8 +92,7 @@ public class SearchTask extends AbstractReadTask implements Task, DefaultRollbac
     // Store all Criteria instances, using properties as key
     // Go over order by, use stored Criteria instances, create new one only if
     // necessary
-    protected Criteria getCritieria(Session session, Object rootSearchObject,
-            final QueryOptions options, String dbName) {
+    protected Criteria getCritieria(Session session, Object rootSearchObject, final QueryOptions options, String dbName) {
 
         final DataServiceMetaData metaData = getMetaData(dbName);
 
@@ -107,7 +104,7 @@ public class SearchTask extends AbstractReadTask implements Task, DefaultRollbac
             rootCriteria = initCriteriasMap(criterias, (Class<?>) rootSearchObject, session);
         } else {
 
-            rootCriteria = initCriteriasMap(criterias, rootSearchObject.getClass(), session);            
+            rootCriteria = initCriteriasMap(criterias, rootSearchObject.getClass(), session);
 
             addExample(rootSearchObject, rootCriteria, options);
 
@@ -123,22 +120,18 @@ public class SearchTask extends AbstractReadTask implements Task, DefaultRollbac
                     String propertyName = ctx.getProperties().get(0);
 
                     if (DataServiceLoggers.taskLogger.isDebugEnabled()) {
-                        DataServiceLoggers.taskLogger
-                                .debug("Adding criteria on property "
-                                        + propertyName);
+                        DataServiceLoggers.taskLogger.debug("Adding criteria on property " + propertyName);
                     }
 
                     Criteria parentCriteria = (Criteria) ctx.getValues().get(1);
 
                     if (DataServiceLoggers.taskLogger.isDebugEnabled()) {
-                        DataServiceLoggers.taskLogger
-                                .debug("Parent criteria is " + parentCriteria);
+                        DataServiceLoggers.taskLogger.debug("Parent criteria is " + parentCriteria);
                     }
 
                     Criteria c = parentCriteria.createCriteria(propertyName);
 
-                    String k = ObjectUtils.toString(ctx.getProperties(),
-                            ServiceConstants.PROPERTY_SEP);
+                    String k = ObjectUtils.toString(ctx.getProperties(), ServiceConstants.PROPERTY_SEP);
 
                     criterias.put(k, c);
 
@@ -149,8 +142,7 @@ public class SearchTask extends AbstractReadTask implements Task, DefaultRollbac
                 }
             };
 
-            ObjectGraphTraversal tr = DataServiceUtils.getRelatedTraversal(ov,
-                    getObjectAccess(), metaData, false);
+            ObjectGraphTraversal tr = DataServiceUtils.getRelatedTraversal(ov, getObjectAccess(), metaData, false);
 
             tr.traverse(rootSearchObject, rootCriteria);
         }
@@ -162,7 +154,7 @@ public class SearchTask extends AbstractReadTask implements Task, DefaultRollbac
         for (String s : options.getSqlRestrictions()) {
             rootCriteria.add(Restrictions.sqlRestriction(s));
         }
-        
+
         return rootCriteria;
     }
 
@@ -172,8 +164,7 @@ public class SearchTask extends AbstractReadTask implements Task, DefaultRollbac
 
     // this is here because Hibernate's QBE skips over id properties
     // http://opensource.atlassian.com/projects/hibernate/browse/HB-1437
-    private void handleIdInSearch(Object o, Criteria c, QueryOptions options,
-            DataServiceMetaData metaData) {
+    private void handleIdInSearch(Object o, Criteria c, QueryOptions options, DataServiceMetaData metaData) {
 
         String idPropName = metaData.getIdPropertyName(o.getClass());
 
@@ -187,11 +178,9 @@ public class SearchTask extends AbstractReadTask implements Task, DefaultRollbac
 
         if (metaData.isCompositeProperty(o.getClass(), idPropName)) {
             if (value != null) {
-                Collection<String> propNames = oa.getPropertyNames(value
-                        .getClass());
+                Collection<String> propNames = oa.getPropertyNames(value.getClass());
                 for (String p : propNames) {
-                    String compPropName = idPropName
-                            + DataServiceConstants.PROP_SEP + p;
+                    String compPropName = idPropName + DataServiceConstants.PROP_SEP + p;
                     Object pv = getObjectAccess().getProperty(value, p);
                     addRestriction(c, compPropName, pv, options);
                 }
@@ -201,8 +190,7 @@ public class SearchTask extends AbstractReadTask implements Task, DefaultRollbac
         }
     }
 
-    private static void addRestriction(Criteria c, String propName,
-            Object value, QueryOptions options) {
+    private static void addRestriction(Criteria c, String propName, Object value, QueryOptions options) {
 
         if (value == null && options.getExcludeNone()) {
             return;
@@ -233,8 +221,7 @@ public class SearchTask extends AbstractReadTask implements Task, DefaultRollbac
         c.add(e);
 
         if (DataServiceLoggers.taskLogger.isDebugEnabled()) {
-            DataServiceLoggers.taskLogger.debug("Added example for "
-                    + ObjectUtils.objectToString(o));
+            DataServiceLoggers.taskLogger.debug("Added example for " + ObjectUtils.objectToString(o));
         }
 
         if (options.getTypedMatchMode() != null) {

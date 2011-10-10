@@ -47,6 +47,7 @@ import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
 import com.wavemaker.tools.common.Bootstrap;
 import com.wavemaker.tools.common.ConfigurationException;
+import com.wavemaker.tools.compiler.ProjectCompiler;
 import com.wavemaker.tools.data.reveng.BasicMetaDataDialect;
 import com.wavemaker.tools.data.reveng.MetaDataDialect;
 import com.wavemaker.tools.data.spring.SpringService;
@@ -56,48 +57,37 @@ import com.wavemaker.tools.service.DefaultCompileService;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.util.AntUtils;
-import com.wavemaker.tools.compiler.ProjectCompiler;
 
 /**
  * Database import.
  * 
- * Although this class does not require to be run from within Ant, and although it is
- * not an Ant Task, it has dependencies on Ant.
+ * Although this class does not require to be run from within Ant, and although it is not an Ant Task, it has
+ * dependencies on Ant.
  * 
  * @author Simon Toens
  * @version $Rev$ - $Date$
  */
 public class ImportDB extends BaseDataModelSetup {
 
-    private static final String REVENG_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX
-            + "reveng";
+    private static final String REVENG_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "reveng";
 
-    private static final String CLASSES_DIR_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX
-            + "classesDir";
+    private static final String CLASSES_DIR_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "classesDir";
 
-    private static final String SERVICE_CLASS_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX
-            + "serviceClass";
+    private static final String SERVICE_CLASS_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "serviceClass";
 
-    private static final String IMPORT_DATABASE_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX
-            + "genCfg";
+    private static final String IMPORT_DATABASE_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "genCfg";
 
-    private static final String GENERATE_SERVICE_CLASS_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX
-            + "genServiceClass";
+    private static final String GENERATE_SERVICE_CLASS_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "genServiceClass";
 
-    private static final String CREATE_JAR_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX
-            + "jar";
+    private static final String CREATE_JAR_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "jar";
 
-    private static final String GENERATE_HIBERNATE_CONFIG_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX
-            + "genHibernateCfg";
+    private static final String GENERATE_HIBERNATE_CONFIG_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "genHibernateCfg";
 
-    private static final String GENERATE_SERVICE_MAIN_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX
-            + "genServiceMain";
+    private static final String GENERATE_SERVICE_MAIN_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "genServiceMain";
 
-    private static final String REGENERATE_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX
-            + "regenerate";
+    private static final String REGENERATE_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "regenerate";
 
-    private static final String GENERATE_OLD_STYLE_OPRS_PROPERTY = SYSTEM_PROPERTY_PREFIX
-            + DataServiceConstants.GENERATE_OLD_STYLE_OPRS_PROPERTY;
+    private static final String GENERATE_OLD_STYLE_OPRS_PROPERTY = SYSTEM_PROPERTY_PREFIX + DataServiceConstants.GENERATE_OLD_STYLE_OPRS_PROPERTY;
 
     private static final String REVENG_METADATA_DIALECT_SYSTEM_PROPERTY = "hibernatetool.metadatadialect";
 
@@ -121,7 +111,7 @@ public class ImportDB extends BaseDataModelSetup {
 
     private boolean compile = true;
 
-    private boolean compileServiceClass = compile;
+    private boolean compileServiceClass = this.compile;
 
     private boolean generateServiceMain = false;
 
@@ -154,21 +144,20 @@ public class ImportDB extends BaseDataModelSetup {
         this(false, project, resolveSystemProperties);
     }
 
-    private ImportDB(boolean internal, Project project,
-            boolean resolveSystemProperties) {
+    private ImportDB(boolean internal, Project project, boolean resolveSystemProperties) {
 
         super(project);
         if (resolveSystemProperties) {
-            properties.putAll(System.getProperties());
+            this.properties.putAll(System.getProperties());
         }
 
         // MAV-26
-        jdbcConf.setDetectOptimisticLock(false);
+        this.jdbcConf.setDetectOptimisticLock(false);
 
         // MAV-311
-        jdbcConf.setDetectManyToMany(false);
+        this.jdbcConf.setDetectManyToMany(false);
 
-        jdbcConf.setProject(project);
+        this.jdbcConf.setProject(project);
     }
 
     private static boolean bootstrap() {
@@ -176,14 +165,13 @@ public class ImportDB extends BaseDataModelSetup {
         return true;
     }
 
-    public void setUseIndividualCRUDOperations(
-            boolean useIndividualCRUDOperations) {
+    public void setUseIndividualCRUDOperations(boolean useIndividualCRUDOperations) {
         this.useIndividualCRUDOperations = useIndividualCRUDOperations;
     }
 
     @Override
     public boolean getUseIndividualCRUDOperations() {
-        return useIndividualCRUDOperations;
+        return this.useIndividualCRUDOperations;
     }
 
     public void setRegenerate(boolean regenerate) {
@@ -195,7 +183,7 @@ public class ImportDB extends BaseDataModelSetup {
     }
 
     public ServiceDefinition getServiceDefinition() {
-        return serviceDefinition;
+        return this.serviceDefinition;
     }
 
     public void setCompile(boolean compile) {
@@ -212,8 +200,7 @@ public class ImportDB extends BaseDataModelSetup {
     }
 
     /**
-     * Generate a Hibernate configuration. There's no reason to do this since we use
-     * Spring.
+     * Generate a Hibernate configuration. There's no reason to do this since we use Spring.
      */
     public void setGenerateHibernateCfg(boolean generateHibernateCfg) {
         this.generateHibernateCfg = generateHibernateCfg;
@@ -232,7 +219,7 @@ public class ImportDB extends BaseDataModelSetup {
     }
 
     public void addRevengFile(File f) {
-        revengFiles.add(f);
+        this.revengFiles.add(f);
     }
 
     public void setClassesDir(File classesDir) {
@@ -250,24 +237,25 @@ public class ImportDB extends BaseDataModelSetup {
     @Override
     protected void customRun() {
 
-        if (importDatabase) {
+        if (this.importDatabase) {
             generateBaseConfigFiles();
         }
 
         ClassLoaderUtils.TaskRtn t = new ClassLoaderUtils.TaskRtn() {
+
             public ServiceDefinition run() {
 
-                if (importDatabase) {
+                if (ImportDB.this.importDatabase) {
                     generateConfigFiles();
                 }
 
                 DeprecatedServiceDefinition def = loadServiceDefinition();
 
-                if (generateServiceClass) {
+                if (ImportDB.this.generateServiceClass) {
                     generateServiceClass(def);
                 }
 
-                if (compile && compileServiceClass) {
+                if (ImportDB.this.compile && ImportDB.this.compileServiceClass) {
                     compile();
                 }
 
@@ -277,36 +265,34 @@ public class ImportDB extends BaseDataModelSetup {
 
         // need classloader with compiled classes and property files,
         // which are in destdir by now
-        serviceDefinition = (DeprecatedServiceDefinition) ClassLoaderUtils
-                .runInClassLoaderContext(t, new FileSystemResource(destdir), new FileSystemResource(classesdir));
+        this.serviceDefinition = (DeprecatedServiceDefinition) ClassLoaderUtils.runInClassLoaderContext(t, new FileSystemResource(this.destdir),
+            new FileSystemResource(this.classesdir));
 
-        if (importDatabase && regenerate) {
+        if (this.importDatabase && this.regenerate) {
             // regenerate java types (and mapping files). this gives us
             // java types using generics.
             regenerate();
         }
 
-        if (createJar) {
-            AntUtils.jar(new File(serviceName + ".jar"), destdir);
+        if (this.createJar) {
+            AntUtils.jar(new File(this.serviceName + ".jar"), this.destdir);
         }
 
     }
 
     @Override
     protected void customDispose() {
-        if (serviceDefinition != null) {
-            serviceDefinition.dispose();
+        if (this.serviceDefinition != null) {
+            this.serviceDefinition.dispose();
         }
     }
 
     private void regenerate() {
 
-        File springCfg = new File(destdir, DataServiceUtils
-                .getCfgFileName(serviceName));
+        File springCfg = new File(this.destdir, DataServiceUtils.getCfgFileName(this.serviceName));
 
-        DataModelConfiguration cfg = new DataModelConfiguration(springCfg,
-                new DefaultClassLoaderFactory(destdir, classesdir),
-                new DefaultCompileService(destdir, classesdir));
+        DataModelConfiguration cfg = new DataModelConfiguration(springCfg, new DefaultClassLoaderFactory(this.destdir, this.classesdir),
+            new DefaultCompileService(this.destdir, this.classesdir));
 
         try {
 
@@ -327,19 +313,19 @@ public class ImportDB extends BaseDataModelSetup {
 
         Properties connectionProperties = getHibernateConnectionProperties();
 
-        properties.putAll(connectionProperties);
+        this.properties.putAll(connectionProperties);
 
-        jdbcConf.setProperties(properties);
+        this.jdbcConf.setProperties(this.properties);
 
-        jdbcConf.setReverseStrategy(revengNamingStrategy);
+        this.jdbcConf.setReverseStrategy(this.revengNamingStrategy);
 
-        Configuration cfg = jdbcConf.getConfiguration();
+        Configuration cfg = this.jdbcConf.getConfiguration();
 
         getParentTask().setConfiguration(cfg);
 
         checkTables(cfg);
 
-        destdir.mkdirs();
+        this.destdir.mkdirs();
 
         writePropertiesFile(cfg);
 
@@ -347,21 +333,22 @@ public class ImportDB extends BaseDataModelSetup {
 
         removeConstructor();
 
-        if (compile) {
+        if (this.compile) {
             compile();
         }
     }
 
-    private void removeConstructor(){
+    private void removeConstructor() {
 
         FilenameFilter filter = new FilenameFilter() {
+
             public boolean accept(File dir, String name) {
                 int len = name.length();
-                return name.substring(len-5).equals(".java");
-            }          
+                return name.substring(len - 5).equals(".java");
+            }
         };
 
-        File[] javafiles = javadir.listFiles(filter);
+        File[] javafiles = this.javadir.listFiles(filter);
 
         if (javafiles != null) {
             try {
@@ -370,7 +357,7 @@ public class ImportDB extends BaseDataModelSetup {
 
                     String fileName = file.getName();
                     int len = fileName.length();
-                    fileName = fileName.substring(0, len-5);
+                    fileName = fileName.substring(0, len - 5);
                     String regExp = "public\\s+" + fileName + "\\s*\\([^\\)]*\\)\\s*\\{[^\\}]*\\}";
                     Pattern pattern = Pattern.compile(regExp);
                     Matcher matcher = pattern.matcher(content);
@@ -408,17 +395,16 @@ public class ImportDB extends BaseDataModelSetup {
     }
 
     private void compile() {
-        if (!classesdir.exists()) {
-            classesdir.mkdirs();
+        if (!this.classesdir.exists()) {
+            this.classesdir.mkdirs();
         }
 
-        projectCompiler.compileService(currentProjectName, serviceName);
+        this.projectCompiler.compileService(this.currentProjectName, this.serviceName);
 
-        /*String includes = packageName.replace(".", "/") + "/* ";
-        if (!packageName.equals(dataPackage)) {
-            includes += dataPackage.replace(".", "/") + "/*";
-        }
-        AntUtils.javac(destdir.getAbsolutePath(), classesdir, includes);*/
+        /*
+         * String includes = packageName.replace(".", "/") + "/* "; if (!packageName.equals(dataPackage)) { includes +=
+         * dataPackage.replace(".", "/") + "/*"; } AntUtils.javac(destdir.getAbsolutePath(), classesdir, includes);
+         */
 
     }
 
@@ -426,19 +412,18 @@ public class ImportDB extends BaseDataModelSetup {
 
         Properties p = getProperties();
 
-        p = DataServiceUtils.addServiceName(p, serviceName);
+        p = DataServiceUtils.addServiceName(p, this.serviceName);
 
-        DataServiceUtils.writeProperties(p, destdir, serviceName);
+        DataServiceUtils.writeProperties(p, this.destdir, this.serviceName);
     }
 
     protected void generateServiceClass(DeprecatedServiceDefinition def) {
 
-        GenerationConfiguration genconf = new GenerationConfiguration(def,
-                new FileSystemResource(destdir));
+        GenerationConfiguration genconf = new GenerationConfiguration(def, new FileSystemResource(this.destdir));
 
         DataServiceGenerator generator = new DataServiceGenerator(genconf);
 
-        generator.setGenerateMain(generateServiceMain);
+        generator.setGenerateMain(this.generateServiceMain);
 
         try {
             generator.generate();
@@ -451,10 +436,10 @@ public class ImportDB extends BaseDataModelSetup {
         List<ExporterTask> rtn = new ArrayList<ExporterTask>();
         rtn.add(getMappingExporter());
         rtn.add(getConfigurationExporter());
-        if (importDatabase) {
+        if (this.importDatabase) {
             rtn.add(getHQLExporter());
         }
-        if (generateHibernateCfg) {
+        if (this.generateHibernateCfg) {
             rtn.add(getHibernateCfgExporter());
         }
         return rtn;
@@ -469,7 +454,7 @@ public class ImportDB extends BaseDataModelSetup {
     }
 
     protected ExporterTask getHQLExporter() {
-        return new QueryExporterTask(getParentTask(), serviceName);
+        return new QueryExporterTask(getParentTask(), this.serviceName);
     }
 
     protected ExporterTask getMappingExporter() {
@@ -492,41 +477,36 @@ public class ImportDB extends BaseDataModelSetup {
 
     private void checkRevengMetaDataDialect() {
 
-        if (revengMetaDataDialect == null) {
+        if (this.revengMetaDataDialect == null) {
 
-            revengMetaDataDialect = properties
-                    .getProperty(REVENG_METADATA_DIALECT_SYSTEM_PROPERTY);
+            this.revengMetaDataDialect = this.properties.getProperty(REVENG_METADATA_DIALECT_SYSTEM_PROPERTY);
 
-            if (revengMetaDataDialect == null) {
-                revengMetaDataDialect = getDefaultRevengMetaDataDialect();
+            if (this.revengMetaDataDialect == null) {
+                this.revengMetaDataDialect = getDefaultRevengMetaDataDialect();
 
             }
 
         }
 
-        if (revengMetaDataDialect != null) {
+        if (this.revengMetaDataDialect != null) {
 
             if (DataServiceLoggers.importLogger.isInfoEnabled()) {
-                DataServiceLoggers.importLogger.info("Using metadata dialect: "
-                        + revengMetaDataDialect);
+                DataServiceLoggers.importLogger.info("Using metadata dialect: " + this.revengMetaDataDialect);
             }
 
             // these properties are passed to Hibernate Reveng.
-            properties.setProperty(REVENG_METADATA_DIALECT_SYSTEM_PROPERTY,
-                    revengMetaDataDialect);
+            this.properties.setProperty(REVENG_METADATA_DIALECT_SYSTEM_PROPERTY, this.revengMetaDataDialect);
         }
 
     }
 
     private DeprecatedServiceDefinition loadServiceDefinition() {
-        File f = new File(destdir, serviceName
-                + DataServiceConstants.SPRING_CFG_EXT);
+        File f = new File(this.destdir, this.serviceName + DataServiceConstants.SPRING_CFG_EXT);
         DeprecatedServiceDefinition rtn = null;
         try {
             rtn = SpringService.initialize(f);
-            String s = StringUtils.fq(packageName, className);
-            DataServiceUtils.unwrapAndCast(rtn).getMetaData()
-                    .setServiceClassName(s);
+            String s = StringUtils.fq(this.packageName, this.className);
+            DataServiceUtils.unwrapAndCast(rtn).getMetaData().setServiceClassName(s);
             return rtn;
         } catch (RuntimeException ex) {
             try {
@@ -540,48 +520,46 @@ public class ImportDB extends BaseDataModelSetup {
 
     private void checkClassesDir() {
 
-        if (classesdir == null) {
-            String s = properties.getProperty(CLASSES_DIR_SYSTEM_PROPERTY);
+        if (this.classesdir == null) {
+            String s = this.properties.getProperty(CLASSES_DIR_SYSTEM_PROPERTY);
             if (s != null) {
                 setClassesDir(new File(s));
             }
         }
 
-        if (classesdir == null) {
-            classesdir = destdir;
+        if (this.classesdir == null) {
+            this.classesdir = this.destdir;
         }
     }
 
     private void checkImportMode() {
 
-        if (properties.getProperty(IMPORT_DATABASE_SYSTEM_PROPERTY) != null) {
-            setImportDatabase(Boolean
-                    .getBoolean(IMPORT_DATABASE_SYSTEM_PROPERTY));
+        if (this.properties.getProperty(IMPORT_DATABASE_SYSTEM_PROPERTY) != null) {
+            setImportDatabase(Boolean.getBoolean(IMPORT_DATABASE_SYSTEM_PROPERTY));
         }
 
-        if (properties.getProperty(GENERATE_SERVICE_CLASS_SYSTEM_PROPERTY) != null) {
-            setGenerateServiceClass(Boolean
-                    .getBoolean(GENERATE_SERVICE_CLASS_SYSTEM_PROPERTY));
+        if (this.properties.getProperty(GENERATE_SERVICE_CLASS_SYSTEM_PROPERTY) != null) {
+            setGenerateServiceClass(Boolean.getBoolean(GENERATE_SERVICE_CLASS_SYSTEM_PROPERTY));
         }
     }
 
     private void checkServiceClass() {
-        if (serviceName == null || packageName == null) {
+        if (this.serviceName == null || this.packageName == null) {
 
-            String s = properties.getProperty(SERVICE_CLASS_SYSTEM_PROPERTY);
+            String s = this.properties.getProperty(SERVICE_CLASS_SYSTEM_PROPERTY);
             if (s != null) {
                 String p = StringUtils.fromLastOccurrence(s, ".", -1);
                 String n = StringUtils.fromLastOccurrence(s, ".");
 
-                if (packageName == null) {
+                if (this.packageName == null) {
                     setPackage(p);
                 }
 
-                if (serviceName == null) {
+                if (this.serviceName == null) {
                     setServiceName(n.toLowerCase());
                 }
 
-                if (className == null) {
+                if (this.className == null) {
                     setClassName(n);
                 }
             }
@@ -590,7 +568,7 @@ public class ImportDB extends BaseDataModelSetup {
 
     private void checkRevengFiles() {
 
-        String s = properties.getProperty(REVENG_SYSTEM_PROPERTY);
+        String s = this.properties.getProperty(REVENG_SYSTEM_PROPERTY);
 
         if (s != null) {
 
@@ -600,9 +578,7 @@ public class ImportDB extends BaseDataModelSetup {
                 File f = new File(path);
                 if (!f.exists() || f.isDirectory()) {
                     if (DataServiceLoggers.importLogger.isWarnEnabled()) {
-                        DataServiceLoggers.importLogger
-                                .warn("reverse engineering file "
-                                        + f.getAbsolutePath() + " is not valid");
+                        DataServiceLoggers.importLogger.warn("reverse engineering file " + f.getAbsolutePath() + " is not valid");
                     }
                     continue;
                 }
@@ -613,19 +589,19 @@ public class ImportDB extends BaseDataModelSetup {
     }
 
     private void registerRevEngFiles() {
-        if (!revengFiles.isEmpty()) {
+        if (!this.revengFiles.isEmpty()) {
             Path revengPaths = new Path(getProject());
-            for (File f : revengFiles) {
+            for (File f : this.revengFiles) {
                 Path p = new Path(getProject(), f.getAbsolutePath());
                 revengPaths.add(p);
             }
-            jdbcConf.setRevEngFile(revengPaths);
+            this.jdbcConf.setRevEngFile(revengPaths);
         }
     }
 
     private void checkCreateJar() {
 
-        String s = properties.getProperty(CREATE_JAR_SYSTEM_PROPERTY);
+        String s = this.properties.getProperty(CREATE_JAR_SYSTEM_PROPERTY);
 
         if (s != null) {
             setCreateJar(Boolean.getBoolean(CREATE_JAR_SYSTEM_PROPERTY));
@@ -634,22 +610,19 @@ public class ImportDB extends BaseDataModelSetup {
 
     private void checkGenerateServiceMain() {
 
-        String s = properties
-                .getProperty(GENERATE_SERVICE_MAIN_SYSTEM_PROPERTY);
+        String s = this.properties.getProperty(GENERATE_SERVICE_MAIN_SYSTEM_PROPERTY);
 
         if (s != null) {
-            setGenerateServiceMain(Boolean
-                    .getBoolean(GENERATE_SERVICE_MAIN_SYSTEM_PROPERTY));
+            setGenerateServiceMain(Boolean.getBoolean(GENERATE_SERVICE_MAIN_SYSTEM_PROPERTY));
         }
     }
 
     private void maybeGenerateRevEng() {
 
-        if (!valuesFromReveng) {
+        if (!this.valuesFromReveng) {
 
-            if (!revengFiles.isEmpty()) {
-                throw new ConfigurationException(
-                        "Please specify a package name in your reveng file");
+            if (!this.revengFiles.isEmpty()) {
+                throw new ConfigurationException("Please specify a package name in your reveng file");
             }
 
             File generatedRevEngFile = null;
@@ -663,18 +636,18 @@ public class ImportDB extends BaseDataModelSetup {
             registerTmpFileForCleanup(generatedRevEngFile);
 
             Reveng r = new Reveng();
-            r.setPackageName(dataPackage);
-            if (tableFilters.isEmpty()) {
+            r.setPackageName(this.dataPackage);
+            if (this.tableFilters.isEmpty()) {
                 // get default value from reveng for potential error msg
                 setTableFilters(r.getTableFilters());
             } else {
-                r.setTableFilters(tableFilters);
+                r.setTableFilters(this.tableFilters);
             }
-            if (schemaFilters.isEmpty()) {
+            if (this.schemaFilters.isEmpty()) {
                 // get default value from reveng for potential error msg
                 setSchemaFilters(r.getSchemaFilters());
             } else {
-                r.setSchemaFilters(schemaFilters);
+                r.setSchemaFilters(this.schemaFilters);
             }
 
             StringWriter sw = new StringWriter();
@@ -686,8 +659,7 @@ public class ImportDB extends BaseDataModelSetup {
                 pw.close();
 
                 if (DataServiceLoggers.importLogger.isDebugEnabled()) {
-                    DataServiceLoggers.importLogger
-                            .debug("Using reveng file:\n" + sw.toString());
+                    DataServiceLoggers.importLogger.debug("Using reveng file:\n" + sw.toString());
                 }
 
                 FileWriter fw = new FileWriter(generatedRevEngFile);
@@ -707,7 +679,7 @@ public class ImportDB extends BaseDataModelSetup {
     }
 
     private void setValuesFromRevEngFilesIfNotSet() {
-        if (packageName != null) {
+        if (this.packageName != null) {
             return;
         }
 
@@ -715,23 +687,23 @@ public class ImportDB extends BaseDataModelSetup {
         boolean tableFilterSet = false;
         boolean schemaFilterSet = false;
 
-        for (File f : revengFiles) {
+        for (File f : this.revengFiles) {
             try {
                 FileReader reader = new FileReader(f);
                 Reveng r = Reveng.load(reader);
                 if (r.getPackage() != null && !packageSet) {
                     setPackage(r.getPackage());
-                    valuesFromReveng = true;
+                    this.valuesFromReveng = true;
                     packageSet = true;
                 }
                 if (r.getTableFilters() != null && !tableFilterSet) {
                     setTableFilters(r.getTableFilters());
-                    valuesFromReveng = true;
+                    this.valuesFromReveng = true;
                     tableFilterSet = true;
                 }
                 if (r.getSchemaFilters() != null && !schemaFilterSet) {
                     setSchemaFilters(r.getSchemaFilters());
-                    valuesFromReveng = true;
+                    this.valuesFromReveng = true;
                     schemaFilterSet = true;
                 }
                 reader.close();
@@ -742,18 +714,16 @@ public class ImportDB extends BaseDataModelSetup {
 
     private void checkGenerateHibernateConfig() {
 
-        String s = properties
-                .getProperty(GENERATE_HIBERNATE_CONFIG_SYSTEM_PROPERTY);
+        String s = this.properties.getProperty(GENERATE_HIBERNATE_CONFIG_SYSTEM_PROPERTY);
 
         if (s != null) {
-            setGenerateHibernateCfg(Boolean
-                    .getBoolean(GENERATE_HIBERNATE_CONFIG_SYSTEM_PROPERTY));
+            setGenerateHibernateCfg(Boolean.getBoolean(GENERATE_HIBERNATE_CONFIG_SYSTEM_PROPERTY));
         }
     }
 
     private void checkRegenerate() {
 
-        String s = properties.getProperty(REGENERATE_SYSTEM_PROPERTY);
+        String s = this.properties.getProperty(REGENERATE_SYSTEM_PROPERTY);
 
         if (s != null) {
             setRegenerate(Boolean.getBoolean(REGENERATE_SYSTEM_PROPERTY));
@@ -763,11 +733,10 @@ public class ImportDB extends BaseDataModelSetup {
 
     private void checkGenerateOldStyleOps() {
 
-        String s = properties.getProperty(GENERATE_OLD_STYLE_OPRS_PROPERTY);
+        String s = this.properties.getProperty(GENERATE_OLD_STYLE_OPRS_PROPERTY);
 
         if (s != null) {
-            setUseIndividualCRUDOperations(Boolean
-                    .getBoolean(GENERATE_OLD_STYLE_OPRS_PROPERTY));
+            setUseIndividualCRUDOperations(Boolean.getBoolean(GENERATE_OLD_STYLE_OPRS_PROPERTY));
         }
 
     }
@@ -779,7 +748,7 @@ public class ImportDB extends BaseDataModelSetup {
 
         checkImportMode(); // sets importDatabase and generateServiceClass
 
-        if (importDatabase) {
+        if (this.importDatabase) {
             checkAlternateConnectionProperties();
 
             checkUser(requiredProperties);
@@ -795,7 +764,7 @@ public class ImportDB extends BaseDataModelSetup {
         checkServiceName(true, requiredProperties);
         checkDataPackage();
 
-        if (importDatabase) {
+        if (this.importDatabase) {
             checkDBType();
             checkDialect(requiredProperties, false);
             checkDialectAndDBType(requiredProperties);
@@ -830,8 +799,7 @@ public class ImportDB extends BaseDataModelSetup {
 
         Arrays.sort(args);
 
-        if (Arrays.binarySearch(args, "--help") > -1
-                || Arrays.binarySearch(args, "-h") > -1) {
+        if (Arrays.binarySearch(args, "--help") > -1 || Arrays.binarySearch(args, "-h") > -1) {
             System.out.println(getHelp(ImportDB.class));
             return;
         }
@@ -844,8 +812,7 @@ public class ImportDB extends BaseDataModelSetup {
 
                 File f = new File(args[i]);
 
-                Properties p = com.wavemaker.runtime.data.util.DataServiceUtils
-                        .loadDBProperties(f);
+                Properties p = com.wavemaker.runtime.data.util.DataServiceUtils.loadDBProperties(f);
 
                 importer.setProperties(p);
             }
@@ -856,8 +823,7 @@ public class ImportDB extends BaseDataModelSetup {
             return;
         }
 
-        if (Arrays.binarySearch(args, "--values") > -1
-                || Arrays.binarySearch(args, "-v") > -1) {
+        if (Arrays.binarySearch(args, "--values") > -1 || Arrays.binarySearch(args, "-v") > -1) {
             System.out.println(getValues(importer));
             return;
         }
@@ -905,55 +871,15 @@ public class ImportDB extends BaseDataModelSetup {
 
     public static String getHelp(Class<?> mainClass) {
 
-        return "\nUsage:\n\n" + "System Properties (optional in brackets):\n"
-                + "  -D"
-                + DESTDIR_SYSTEM_PROPERTY
-                + "=<root output dir>\n"
-                + "  -D"
-                + SERVICE_CLASS_SYSTEM_PROPERTY
-                + "=<fully qualified service class name>\n"
-                + "  -D"
-                + USER_SYSTEM_PROPERTY
-                + "=<db user>\n"
-                + "  -D"
-                + CONNECTION_URL_SYSTEM_PROPERTY
-                + "=<jdbc connection url>\n"
-                + "  [-D"
-                + PASS_SYSTEM_PROPERTY
-                + "=<db password>]\n"
-                + "  [-D"
-                + TABLE_FILTER_SYSTEM_PROPERTY
-                + "=<regular expression>]\n"
-                + "  [-D"
-                + SCHEMA_FILTER_SYSTEM_PROPERTY
-                + "=<regular expression>]\n"
-                + "  [-D"
-                + CLASSES_DIR_SYSTEM_PROPERTY
-                + "=<directory for generated classes>]\n"
-                + "\n"
-                + "Arguments (all optional):\n\n"
-                + "  path to properties file\n"
-                + "  -v|--values: show runtime values of properties\n"
-                + "  -h|--help: this message\n\n"
-                + "Example:\n\n"
-                + "  java \\\n"
-                + "    -D"
-                + DESTDIR_SYSTEM_PROPERTY
-                + "=servicedir \\\n"
-                + "    -D"
-                + SERVICE_CLASS_SYSTEM_PROPERTY
-                + "=com.test.DBService \\\n"
-                + "    -D"
-                + USER_SYSTEM_PROPERTY
-                + "=root \\\n"
-                + "    -D"
-                + CONNECTION_URL_SYSTEM_PROPERTY
-                + "=jdbc:mysql://localhost:3306/sakila \\\n"
-                + "    -D"
-                + DRIVER_CLASS_NAME_SYSTEM_PROPERTY
-                + "=com.mysql.jdbc.Driver \\\n"
-                + "    "
-                + mainClass.getName()
-                + "\n";
+        return "\nUsage:\n\n" + "System Properties (optional in brackets):\n" + "  -D" + DESTDIR_SYSTEM_PROPERTY + "=<root output dir>\n" + "  -D"
+            + SERVICE_CLASS_SYSTEM_PROPERTY + "=<fully qualified service class name>\n" + "  -D" + USER_SYSTEM_PROPERTY + "=<db user>\n" + "  -D"
+            + CONNECTION_URL_SYSTEM_PROPERTY + "=<jdbc connection url>\n" + "  [-D" + PASS_SYSTEM_PROPERTY + "=<db password>]\n" + "  [-D"
+            + TABLE_FILTER_SYSTEM_PROPERTY + "=<regular expression>]\n" + "  [-D" + SCHEMA_FILTER_SYSTEM_PROPERTY + "=<regular expression>]\n"
+            + "  [-D" + CLASSES_DIR_SYSTEM_PROPERTY + "=<directory for generated classes>]\n" + "\n" + "Arguments (all optional):\n\n"
+            + "  path to properties file\n" + "  -v|--values: show runtime values of properties\n" + "  -h|--help: this message\n\n" + "Example:\n\n"
+            + "  java \\\n" + "    -D" + DESTDIR_SYSTEM_PROPERTY + "=servicedir \\\n" + "    -D" + SERVICE_CLASS_SYSTEM_PROPERTY
+            + "=com.test.DBService \\\n" + "    -D" + USER_SYSTEM_PROPERTY + "=root \\\n" + "    -D" + CONNECTION_URL_SYSTEM_PROPERTY
+            + "=jdbc:mysql://localhost:3306/sakila \\\n" + "    -D" + DRIVER_CLASS_NAME_SYSTEM_PROPERTY + "=com.mysql.jdbc.Driver \\\n" + "    "
+            + mainClass.getName() + "\n";
     }
 }

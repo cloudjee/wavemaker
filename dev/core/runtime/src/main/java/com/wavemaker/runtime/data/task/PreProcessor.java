@@ -17,8 +17,7 @@ package com.wavemaker.runtime.data.task;
 /**
  * Marker interface.
  * 
- * A Task implementing this interface indicates that it requires preprocessing
- * of its input.
+ * A Task implementing this interface indicates that it requires preprocessing of its input.
  * 
  * @author Simon Toens
  * @version $Rev$ - $Date$

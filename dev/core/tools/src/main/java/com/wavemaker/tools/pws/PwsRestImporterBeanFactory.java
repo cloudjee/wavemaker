@@ -24,34 +24,32 @@ import com.wavemaker.common.util.SpringUtils;
 
 /**
  * @author slee
- *
+ * 
  */
 public class PwsRestImporterBeanFactory {
 
     private Map<String, IPwsRestImporter> pwsRestImporters = new HashMap<String, IPwsRestImporter>();
 
-
     public Collection<String> getPwsRestImporterNames() {
-        return pwsRestImporters.keySet();
+        return this.pwsRestImporters.keySet();
     }
-    
+
     public IPwsRestImporter getPwsRestImporter(String partnerName) {
-        
-        if (pwsRestImporters == null) {
+
+        if (this.pwsRestImporters == null) {
             SpringUtils.throwSpringNotInitializedError(this.getClass());
         }
-        
-        if (!pwsRestImporters.containsKey(partnerName)) {
-            throw new ConfigurationException(
-                MessageResource.UNKNOWN_PWS_TOOLS_MANAGER, partnerName);
+
+        if (!this.pwsRestImporters.containsKey(partnerName)) {
+            throw new ConfigurationException(MessageResource.UNKNOWN_PWS_TOOLS_MANAGER, partnerName);
         }
-        
-        return pwsRestImporters.get(partnerName);
+
+        return this.pwsRestImporters.get(partnerName);
     }
 
     public void setPwsRestImporters(Map<String, IPwsRestImporter> pwsRestImporters) {
         this.pwsRestImporters = pwsRestImporters;
 
     }
-    
+
 }

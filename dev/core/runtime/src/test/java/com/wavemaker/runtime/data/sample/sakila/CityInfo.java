@@ -15,38 +15,42 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data.sample.sakila;
 
-
-@SuppressWarnings({"unused"})
+@SuppressWarnings({ "unused" })
 public class CityInfo {
-    
+
     private short cityId;
+
     private short countryId;
+
     private String city;
+
     private String country;
-    
-   public CityInfo() {}
-    
-   public CityInfo(String city, String country) {
-       this.city = city;
-       this.country = country;
-   }
-   
-   public String getCountry() {
-       return this.country;
-   }
-   
-   public void setCountry(String country) {
-       this.country = country;
-   }
-   
-   public String getCity() {
-       return this.city;
-   }
-   
-   public void setCity(String city) {
-       this.city = city;
-   }
+
+    public CityInfo() {
+    }
+
+    public CityInfo(String city, String country) {
+        this.city = city;
+        this.country = country;
+    }
+
+    public String getCountry() {
+        return this.country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCity() {
+        return this.city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
 
 }

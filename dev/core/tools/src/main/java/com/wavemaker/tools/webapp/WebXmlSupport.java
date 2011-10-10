@@ -38,57 +38,53 @@ import com.wavemaker.tools.webapp.schema.WebAppType;
  */
 public class WebXmlSupport {
 
-	public static final String WEBAPP_SCHEMA_LOCATION = "http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd";
+    public static final String WEBAPP_SCHEMA_LOCATION = "http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd";
 
-	public static final String WEBAPP_PACKAGE = "com.wavemaker.tools.webapp.schema";
+    public static final String WEBAPP_PACKAGE = "com.wavemaker.tools.webapp.schema";
 
-	private static JAXBContext jaxbContext;
+    private static JAXBContext jaxbContext;
 
-	public static synchronized JAXBContext getJAXBContext()
-			throws JAXBException {
-		if (jaxbContext == null) {
-			jaxbContext = JAXBContext.newInstance(WEBAPP_PACKAGE);
-		}
-		return jaxbContext;
-	}
+    public static synchronized JAXBContext getJAXBContext() throws JAXBException {
+        if (jaxbContext == null) {
+            jaxbContext = JAXBContext.newInstance(WEBAPP_PACKAGE);
+        }
+        return jaxbContext;
+    }
 
-	public static WebAppType readWebXml(Resource webxmlFile)
-			throws JAXBException, IOException {
+    public static WebAppType readWebXml(Resource webxmlFile) throws JAXBException, IOException {
 
-		BufferedInputStream bis = null;
+        BufferedInputStream bis = null;
 
-		try {
-			bis = new BufferedInputStream(webxmlFile.getInputStream());
-			return readWebXml(bis);
-		} finally {
-			try {
-				bis.close();
-			} catch (Exception ignore) {
-			}
-		}
-	}
+        try {
+            bis = new BufferedInputStream(webxmlFile.getInputStream());
+            return readWebXml(bis);
+        } finally {
+            try {
+                bis.close();
+            } catch (Exception ignore) {
+            }
+        }
+    }
 
-	public static WebAppType readWebXml(InputStream is) throws JAXBException {
-		Unmarshaller unmarshaller = getJAXBContext().createUnmarshaller();
-		JAXBElement<?> je = (JAXBElement<?>) unmarshaller.unmarshal(is);
-		WebAppType wat = (WebAppType) je.getValue();
-		return wat;
-	}
+    public static WebAppType readWebXml(InputStream is) throws JAXBException {
+        Unmarshaller unmarshaller = getJAXBContext().createUnmarshaller();
+        JAXBElement<?> je = (JAXBElement<?>) unmarshaller.unmarshal(is);
+        WebAppType wat = (WebAppType) je.getValue();
+        return wat;
+    }
 
-	public static void writeWebXml(Project project, WebAppType webapp,
-			Resource configFile) throws JAXBException, IOException {
-		writeWebXml(webapp, project.getWriter(configFile));
-	}
+    public static void writeWebXml(Project project, WebAppType webapp, Resource configFile) throws JAXBException, IOException {
+        writeWebXml(webapp, project.getWriter(configFile));
+    }
 
-	public static void writeWebXml(WebAppType webapp, Writer os)
-			throws JAXBException, IOException {
+    public static void writeWebXml(WebAppType webapp, Writer os) throws JAXBException, IOException {
 
-		ObjectFactory of = new ObjectFactory();
-		JAXBElement<WebAppType> je = of.createWebApp(webapp);
+        ObjectFactory of = new ObjectFactory();
+        JAXBElement<WebAppType> je = of.createWebApp(webapp);
 
-		Marshaller marshaller = getJAXBContext().createMarshaller();
-		marshaller.setProperty("jaxb.formatted.output", true);
-		marshaller.setProperty("jaxb.schemaLocation", WEBAPP_SCHEMA_LOCATION);
-		marshaller.marshal(je, os);
-	}
+        Marshaller marshaller = getJAXBContext().createMarshaller();
+        marshaller.setProperty("jaxb.formatted.output", true);
+        marshaller.setProperty("jaxb.schemaLocation", WEBAPP_SCHEMA_LOCATION);
+        marshaller.marshal(je, os);
+    }
 }

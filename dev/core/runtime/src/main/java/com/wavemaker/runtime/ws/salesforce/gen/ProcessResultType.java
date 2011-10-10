@@ -11,23 +11,23 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for ProcessResult complex type.
+ * <p>
+ * Java class for ProcessResult complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="ProcessResult">
@@ -50,29 +50,28 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ProcessResult", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "actorIds",
-    "entityId",
-    "errors",
-    "instanceId",
-    "instanceStatus",
-    "newWorkitemIds",
-    "success"
-})
+@XmlType(name = "ProcessResult", namespace = "urn:partner.soap.sforce.com", propOrder = { "actorIds", "entityId", "errors", "instanceId",
+    "instanceStatus", "newWorkitemIds", "success" })
 public class ProcessResultType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected List<String> actorIds;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String entityId;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected List<ErrorType> errors;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String instanceId;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String instanceStatus;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", nillable = true)
     protected List<String> newWorkitemIds;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean success;
 
@@ -80,27 +79,26 @@ public class ProcessResultType {
      * Gets the value of the actorIds property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the actorIds property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the actorIds property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getActorIds().add(newItem);
+     * getActorIds().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link String }
+     * Objects of the following type(s) are allowed in the list {@link String }
      * 
      * 
      */
     public List<String> getActorIds() {
-        if (actorIds == null) {
-            actorIds = new ArrayList<String>();
+        if (this.actorIds == null) {
+            this.actorIds = new ArrayList<String>();
         }
         return this.actorIds;
     }
@@ -108,22 +106,18 @@ public class ProcessResultType {
     /**
      * Gets the value of the entityId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getEntityId() {
-        return entityId;
+        return this.entityId;
     }
 
     /**
      * Sets the value of the entityId property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setEntityId(String value) {
         this.entityId = value;
@@ -133,27 +127,26 @@ public class ProcessResultType {
      * Gets the value of the errors property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the errors property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the errors property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getErrors().add(newItem);
+     * getErrors().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link ErrorType }
+     * Objects of the following type(s) are allowed in the list {@link ErrorType }
      * 
      * 
      */
     public List<ErrorType> getErrors() {
-        if (errors == null) {
-            errors = new ArrayList<ErrorType>();
+        if (this.errors == null) {
+            this.errors = new ArrayList<ErrorType>();
         }
         return this.errors;
     }
@@ -161,22 +154,18 @@ public class ProcessResultType {
     /**
      * Gets the value of the instanceId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getInstanceId() {
-        return instanceId;
+        return this.instanceId;
     }
 
     /**
      * Sets the value of the instanceId property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setInstanceId(String value) {
         this.instanceId = value;
@@ -185,22 +174,18 @@ public class ProcessResultType {
     /**
      * Gets the value of the instanceStatus property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getInstanceStatus() {
-        return instanceStatus;
+        return this.instanceStatus;
     }
 
     /**
      * Sets the value of the instanceStatus property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setInstanceStatus(String value) {
         this.instanceStatus = value;
@@ -210,27 +195,26 @@ public class ProcessResultType {
      * Gets the value of the newWorkitemIds property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the newWorkitemIds property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the newWorkitemIds property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getNewWorkitemIds().add(newItem);
+     * getNewWorkitemIds().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link String }
+     * Objects of the following type(s) are allowed in the list {@link String }
      * 
      * 
      */
     public List<String> getNewWorkitemIds() {
-        if (newWorkitemIds == null) {
-            newWorkitemIds = new ArrayList<String>();
+        if (this.newWorkitemIds == null) {
+            this.newWorkitemIds = new ArrayList<String>();
         }
         return this.newWorkitemIds;
     }
@@ -240,7 +224,7 @@ public class ProcessResultType {
      * 
      */
     public boolean isSuccess() {
-        return success;
+        return this.success;
     }
 
     /**
@@ -254,10 +238,8 @@ public class ProcessResultType {
     /**
      * Sets the value of the actorIds property.
      * 
-     * @param actorIds
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param actorIds allowed object is {@link String }
+     * 
      */
     public void setActorIds(List<String> actorIds) {
         this.actorIds = actorIds;
@@ -266,10 +248,8 @@ public class ProcessResultType {
     /**
      * Sets the value of the errors property.
      * 
-     * @param errors
-     *     allowed object is
-     *     {@link ErrorType }
-     *     
+     * @param errors allowed object is {@link ErrorType }
+     * 
      */
     public void setErrors(List<ErrorType> errors) {
         this.errors = errors;
@@ -278,10 +258,8 @@ public class ProcessResultType {
     /**
      * Sets the value of the newWorkitemIds property.
      * 
-     * @param newWorkitemIds
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param newWorkitemIds allowed object is {@link String }
+     * 
      */
     public void setNewWorkitemIds(List<String> newWorkitemIds) {
         this.newWorkitemIds = newWorkitemIds;

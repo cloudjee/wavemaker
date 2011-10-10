@@ -27,27 +27,29 @@ import com.wavemaker.json.type.reflect.PrimitiveReflectTypeDefinition;
 import com.wavemaker.json.type.reflect.ReflectTypeUtils;
 
 /**
- * TypeDefinition for {@link File} objects.  This includes type conversion,
- * and will serialize File objects to and from String types.
+ * TypeDefinition for {@link File} objects. This includes type conversion, and will serialize File objects to and from
+ * String types.
  * 
  * @author small
  * @version $Rev$ - $Date$
  */
-public class FileTypeDefinition extends PrimitiveReflectTypeDefinition
-        implements ReadObjectConverter, WriteObjectConverter {
-    
+public class FileTypeDefinition extends PrimitiveReflectTypeDefinition implements ReadObjectConverter, WriteObjectConverter {
+
     public FileTypeDefinition(Class<? extends File> klass) {
         super();
         this.setKlass(klass);
         this.setTypeName(ReflectTypeUtils.getTypeName(this.getKlass()));
     }
-    
-    /* (non-Javadoc)
-     * @see com.wavemaker.json.type.converters.ReadObjectConverter#readObject(java.lang.Object, java.lang.Object, java.lang.String)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.json.type.converters.ReadObjectConverter#readObject(java.lang.Object, java.lang.Object,
+     * java.lang.String)
      */
     public Object readObject(Object input, Object root, String path) {
-        
-        if (null==input) {
+
+        if (null == input) {
             return null;
         } else if (String.class.isAssignableFrom(input.getClass())) {
             return new File((String) input);
@@ -56,20 +58,21 @@ public class FileTypeDefinition extends PrimitiveReflectTypeDefinition
         }
     }
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.json.type.converters.WriteObjectConverter#writeObject(java.lang.Object, java.lang.Object, java.lang.String, java.io.Writer)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.json.type.converters.WriteObjectConverter#writeObject(java.lang.Object, java.lang.Object,
+     * java.lang.String, java.io.Writer)
      */
-    public void writeObject(Object input, Object root, String path,
-            Writer writer) throws IOException {
-        
-        if (null==input) {
+    public void writeObject(Object input, Object root, String path, Writer writer) throws IOException {
+
+        if (null == input) {
             JSONMarshaller.marshal(writer, input);
         } else if (input instanceof File) {
             String abspath = ((File) input).getAbsolutePath();
             JSONMarshaller.marshal(writer, abspath);
         } else {
-            throw new WMRuntimeException(MessageResource.JSON_UNHANDLED_TYPE, input,
-                    input.getClass());
+            throw new WMRuntimeException(MessageResource.JSON_UNHANDLED_TYPE, input, input.getClass());
         }
     }
 }

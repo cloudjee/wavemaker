@@ -15,21 +15,27 @@
 package com.wavemaker.tools.cloudmgr;
 
 /**
- * This class contains credentials for cloud server & storage management, such as access key id,
- * secret access key, user id and password.
- *
+ * This class contains credentials for cloud server & storage management, such as access key id, secret access key, user
+ * id and password.
+ * 
  * @author slee
  */
 public class CloudAuth {
 
     private String username;
+
     private String password;
+
     private String accessKeyId;
+
     private String seceretAccessKey;
-    private String ec2SignatureVersion; //1=eucalyptus, 2=amazon
+
+    private String ec2SignatureVersion; // 1=eucalyptus, 2=amazon
+
     private String ec2ServiceURL;
 
-    public CloudAuth() {}
+    public CloudAuth() {
+    }
 
     public CloudAuth(String username, String password, String accessKeyId, String seceretAccessKey) {
         this.username = username;
@@ -38,8 +44,7 @@ public class CloudAuth {
         this.seceretAccessKey = seceretAccessKey;
     }
 
-    public CloudAuth(String username, String password, String accessKeyId, String seceretAccessKey,
-                     String ec2SignatureVersion, String ec2ServiceURL) {
+    public CloudAuth(String username, String password, String accessKeyId, String seceretAccessKey, String ec2SignatureVersion, String ec2ServiceURL) {
         this.username = username;
         this.password = password;
         this.accessKeyId = accessKeyId;

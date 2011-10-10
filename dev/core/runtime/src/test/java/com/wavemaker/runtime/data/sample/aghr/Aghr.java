@@ -20,31 +20,29 @@ package com.wavemaker.runtime.data.sample.aghr;
 
 import java.util.List;
 
+import org.apache.log4j.NDC;
+
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.runtime.data.DataServiceManager;
 import com.wavemaker.runtime.data.DataServiceManagerAccess;
 import com.wavemaker.runtime.data.QueryOptions;
 import com.wavemaker.runtime.data.TaskManager;
 
-import org.apache.log4j.NDC;
-
-
 /**
  * Generated for Service "aghr" on 08/28/2007 16:37:08
  * 
  */
-@SuppressWarnings({"unchecked"})
-public class Aghr
-    implements DataServiceManagerAccess
-{
+@SuppressWarnings({ "unchecked" })
+public class Aghr implements DataServiceManagerAccess {
 
     private DataServiceManager dsMgr;
+
     private TaskManager taskMgr;
 
     public void insertCompkey(Compkey compkey) {
         try {
             NDC.push("Aghr.insertCompkey");
-            dsMgr.invoke(taskMgr.getInsertTask(), compkey);
+            this.dsMgr.invoke(this.taskMgr.getInsertTask(), compkey);
         } finally {
             NDC.pop();
         }
@@ -53,7 +51,7 @@ public class Aghr
     public Compkey getCompkeyById(CompkeyId id) {
         try {
             NDC.push("Aghr.getCompkeyById");
-            List<Compkey> rtn = ((List<Compkey>) dsMgr.invoke(taskMgr.getQueryTask(), "getCompkeyById", id));
+            List<Compkey> rtn = (List<Compkey>) this.dsMgr.invoke(this.taskMgr.getQueryTask(), "getCompkeyById", id);
             if (rtn.isEmpty()) {
                 return null;
             } else {
@@ -67,7 +65,7 @@ public class Aghr
     public List<Compkey> getCompkeyList(Compkey searchInstance, QueryOptions options) {
         try {
             NDC.push("Aghr.getCompkeyList");
-            return ((List<Compkey> ) dsMgr.invoke(taskMgr.getSearchTask(), searchInstance, options));
+            return (List<Compkey>) this.dsMgr.invoke(this.taskMgr.getSearchTask(), searchInstance, options);
         } finally {
             NDC.pop();
         }
@@ -76,7 +74,7 @@ public class Aghr
     public Integer getCompkeyCount(Compkey searchInstance, QueryOptions options) {
         try {
             NDC.push("Aghr.getCompkeyCount");
-            return ((Integer) dsMgr.invoke(taskMgr.getCountTask(), searchInstance, options));
+            return (Integer) this.dsMgr.invoke(this.taskMgr.getCountTask(), searchInstance, options);
         } finally {
             NDC.pop();
         }
@@ -85,7 +83,7 @@ public class Aghr
     public void updateCompkey(Compkey compkey) {
         try {
             NDC.push("Aghr.updateCompkey");
-            dsMgr.invoke(taskMgr.getUpdateTask(), compkey);
+            this.dsMgr.invoke(this.taskMgr.getUpdateTask(), compkey);
         } finally {
             NDC.pop();
         }
@@ -94,7 +92,7 @@ public class Aghr
     public void deleteCompkey(Compkey compkey) {
         try {
             NDC.push("Aghr.deleteCompkey");
-            dsMgr.invoke(taskMgr.getDeleteTask(), compkey);
+            this.dsMgr.invoke(this.taskMgr.getDeleteTask(), compkey);
         } finally {
             NDC.pop();
         }
@@ -103,24 +101,24 @@ public class Aghr
     public void insertEmployee(Employee employee) {
         try {
             NDC.push("Aghr.insertEmployee");
-            dsMgr.invoke(taskMgr.getInsertTask(), employee);
+            this.dsMgr.invoke(this.taskMgr.getInsertTask(), employee);
         } finally {
             NDC.pop();
         }
     }
 
     public Person insertPerson(Person person) {
-        return (Person)dsMgr.invoke(taskMgr.getInsertTask(), person);
+        return (Person) this.dsMgr.invoke(this.taskMgr.getInsertTask(), person);
     }
 
     public void deletePerson(Person person) {
-        dsMgr.invoke(taskMgr.getDeleteTask(), person);
+        this.dsMgr.invoke(this.taskMgr.getDeleteTask(), person);
     }
 
     public Employee getEmployeeById(Short id) {
         try {
             NDC.push("Aghr.getEmployeeById");
-            List<Employee> rtn = ((List<Employee>) dsMgr.invoke(taskMgr.getQueryTask(), "getEmployeeById", id));
+            List<Employee> rtn = (List<Employee>) this.dsMgr.invoke(this.taskMgr.getQueryTask(), "getEmployeeById", id);
             if (rtn.isEmpty()) {
                 return null;
             } else {
@@ -134,7 +132,7 @@ public class Aghr
     public List<Employee> getEmployeeList(Employee searchInstance, QueryOptions options) {
         try {
             NDC.push("Aghr.getEmployeeList");
-            return ((List<Employee> ) dsMgr.invoke(taskMgr.getSearchTask(), searchInstance, options));
+            return (List<Employee>) this.dsMgr.invoke(this.taskMgr.getSearchTask(), searchInstance, options);
         } finally {
             NDC.pop();
         }
@@ -143,7 +141,7 @@ public class Aghr
     public Integer getEmployeeCount(Employee searchInstance, QueryOptions options) {
         try {
             NDC.push("Aghr.getEmployeeCount");
-            return ((Integer) dsMgr.invoke(taskMgr.getCountTask(), searchInstance, options));
+            return (Integer) this.dsMgr.invoke(this.taskMgr.getCountTask(), searchInstance, options);
         } finally {
             NDC.pop();
         }
@@ -152,7 +150,7 @@ public class Aghr
     public void updateEmployee(Employee employee) {
         try {
             NDC.push("Aghr.updateEmployee");
-            dsMgr.invoke(taskMgr.getUpdateTask(), employee);
+            this.dsMgr.invoke(this.taskMgr.getUpdateTask(), employee);
         } finally {
             NDC.pop();
         }
@@ -161,14 +159,14 @@ public class Aghr
     public void deleteEmployee(Employee employee) {
         try {
             NDC.push("Aghr.deleteEmployee");
-            dsMgr.invoke(taskMgr.getDeleteTask(), employee);
+            this.dsMgr.invoke(this.taskMgr.getDeleteTask(), employee);
         } finally {
             NDC.pop();
         }
     }
 
     public DataServiceManager getDataServiceManager() {
-        return dsMgr;
+        return this.dsMgr;
     }
 
     public void setDataServiceManager(DataServiceManager dsMgr) {
@@ -176,7 +174,7 @@ public class Aghr
     }
 
     public TaskManager getTaskManager() {
-        return taskMgr;
+        return this.taskMgr;
     }
 
     public void setTaskManager(TaskManager taskMgr) {
@@ -186,7 +184,7 @@ public class Aghr
     public void begin() {
         try {
             NDC.push("Aghr.begin");
-            dsMgr.begin();
+            this.dsMgr.begin();
         } finally {
             NDC.pop();
         }
@@ -195,7 +193,7 @@ public class Aghr
     public void commit() {
         try {
             NDC.push("Aghr.commit");
-            dsMgr.commit();
+            this.dsMgr.commit();
         } finally {
             NDC.pop();
         }
@@ -204,7 +202,7 @@ public class Aghr
     public void rollback() {
         try {
             NDC.push("Aghr.rollback");
-            dsMgr.rollback();
+            this.dsMgr.rollback();
         } finally {
             NDC.pop();
         }
@@ -213,7 +211,7 @@ public class Aghr
     public final static void main(String[] args) {
         String cfg = "aghr.spring.xml";
         String beanName = "aghr";
-        Aghr s = ((Aghr) SpringUtils.getBean(cfg, beanName));
+        Aghr s = (Aghr) SpringUtils.getBean(cfg, beanName);
         System.out.print("getCompkeyCount: ");
         System.out.println(s.getCompkeyCount(new Compkey(), new QueryOptions()));
     }

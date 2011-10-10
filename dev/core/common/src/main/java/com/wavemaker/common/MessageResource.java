@@ -21,12 +21,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.wavemaker.common.util.ClassUtils;
-import com.wavemaker.common.util.SpringUtils;
 
 /**
- * All known resources defined in our resource bundles. These constants are
- * meant to be used when instantiating a WM(Runtime)Exception. The underlying
- * message can be accessed using getMessage/getDetailMessage.
+ * All known resources defined in our resource bundles. These constants are meant to be used when instantiating a
+ * WM(Runtime)Exception. The underlying message can be accessed using getMessage/getDetailMessage.
  * 
  * @author Simon Toens
  * 
@@ -35,511 +33,390 @@ public class MessageResource {
 
     // input: service name, operation name, known operations
     @ResourceConstraint(numArgs = 3, hasDetailMsg = true)
-    public final static MessageResource OPERATION_NOT_FOUND = new MessageResource(
-            "com.wavemaker.runtime.service$OperationNotFound");
+    public final static MessageResource OPERATION_NOT_FOUND = new MessageResource("com.wavemaker.runtime.service$OperationNotFound");
 
     // input: operation name
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource DUPLICATE_OPERATION = new MessageResource(
-            "com.wavemaker.runtime.service$DuplicateOperation");
+    public final static MessageResource DUPLICATE_OPERATION = new MessageResource("com.wavemaker.runtime.service$DuplicateOperation");
 
     // input:
     @ResourceConstraint(numArgs = 0, hasDetailMsg = false)
-    public final static MessageResource CANNOT_ROLLBACK_TX = new MessageResource(
-            "com.wavemaker.runtime.data$CannotRollback");
+    public final static MessageResource CANNOT_ROLLBACK_TX = new MessageResource("com.wavemaker.runtime.data$CannotRollback");
 
     // input: query name, arguments passed to the query
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource QUERY_NO_PARMS = new MessageResource(
-            "com.wavemaker.runtime.data$QueryDoesntTakeParams");
+    public final static MessageResource QUERY_NO_PARMS = new MessageResource("com.wavemaker.runtime.data$QueryDoesntTakeParams");
 
     // input: query name, required params
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource QUERY_REQUIRES_PARAMS = new MessageResource(
-            "com.wavemaker.runtime.data$QueryRequiresParams");
+    public final static MessageResource QUERY_REQUIRES_PARAMS = new MessageResource("com.wavemaker.runtime.data$QueryRequiresParams");
 
     @ResourceConstraint(numArgs = 3, hasDetailMsg = false)
-    public final static MessageResource JSONRPC_CONTROLLER_METHOD_NOT_FOUND = new MessageResource(
-            "com.wavemaker.runtime.server$MethodNotFound");
-    
+    public final static MessageResource JSONRPC_CONTROLLER_METHOD_NOT_FOUND = new MessageResource("com.wavemaker.runtime.server$MethodNotFound");
+
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource JSONRPC_CONTROLLER_BAD_PARAMS_NON_EMPTY =
-        new MessageResource("com.wavemaker.runtime.server$BadParamsNonEmpty");
-    
+    public final static MessageResource JSONRPC_CONTROLLER_BAD_PARAMS_NON_EMPTY = new MessageResource(
+        "com.wavemaker.runtime.server$BadParamsNonEmpty");
+
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource JSONRPC_CONTROLLER_BAD_PARAMS_UNKNOWN_TYPE =
-        new MessageResource("com.wavemaker.runtime.server$BadParamsUnknownType");
+    public final static MessageResource JSONRPC_CONTROLLER_BAD_PARAMS_UNKNOWN_TYPE = new MessageResource(
+        "com.wavemaker.runtime.server$BadParamsUnknownType");
 
     // input: service name, length of classes list
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource JSONUTILS_LISTSNOTEQUAL = new MessageResource(
-            "com.wavemaker.runtime.server$ListsNotEqual");
+    public final static MessageResource JSONUTILS_LISTSNOTEQUAL = new MessageResource("com.wavemaker.runtime.server$ListsNotEqual");
 
     // input: name of unhandled primitive type
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource JSONUTILS_BADPRIMITIVETYPE = new MessageResource(
-            "com.wavemaker.runtime.server$CantHandlePrimitiveType");
+    public final static MessageResource JSONUTILS_BADPRIMITIVETYPE = new MessageResource("com.wavemaker.runtime.server$CantHandlePrimitiveType");
 
     // input: value attempted to convert, type of value, destination type
     @ResourceConstraint(numArgs = 3, hasDetailMsg = false)
-    public final static MessageResource JSONUTILS_FAILEDCONVERSION = new MessageResource(
-            "com.wavemaker.runtime.server$FailedConversion");
+    public final static MessageResource JSONUTILS_FAILEDCONVERSION = new MessageResource("com.wavemaker.runtime.server$FailedConversion");
 
     // input: value attempted to convert, type of value, destination type
     @ResourceConstraint(numArgs = 3, hasDetailMsg = false)
-    public static final MessageResource JSONUTILS_BADNUMBERCONVERSION = new MessageResource(
-            "com.wavemaker.runtime.server$BadNumberConversion");
+    public static final MessageResource JSONUTILS_BADNUMBERCONVERSION = new MessageResource("com.wavemaker.runtime.server$BadNumberConversion");
 
     // input: value, type
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public static final MessageResource JSONUTILS_BADNUMBERFORMAT = new MessageResource(
-            "com.wavemaker.runtime.server$BadNumberFormat");
+    public static final MessageResource JSONUTILS_BADNUMBERFORMAT = new MessageResource("com.wavemaker.runtime.server$BadNumberFormat");
 
     // input: method name, class name
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public static final MessageResource JSONUTILS_BADMETHODOVERLOAD = new MessageResource(
-            "com.wavemaker.runtime.server$BadMethodOverload");
-    
+    public static final MessageResource JSONUTILS_BADMETHODOVERLOAD = new MessageResource("com.wavemaker.runtime.server$BadMethodOverload");
+
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public static final MessageResource JSONUTILS_NONHOMOGENEOUSARRAY = new MessageResource(
-            "com.wavemaker.runtime.server$NonHomogeneousReturn");
+    public static final MessageResource JSONUTILS_NONHOMOGENEOUSARRAY = new MessageResource("com.wavemaker.runtime.server$NonHomogeneousReturn");
 
     // input name of method, name of declaring class (maybe through
     // ((Method)obj).getDeclaringClass())
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource JSONUTILS_FAILEDINVOKE = new MessageResource(
-            "com.wavemaker.runtime.server$InvokeMethodFailed");
-    
-    @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource JSONUTILS_NONARRAYSEQ = new MessageResource(
-            "com.wavemaker.runtime.server$NonArraySequenceConversion");
+    public final static MessageResource JSONUTILS_FAILEDINVOKE = new MessageResource("com.wavemaker.runtime.server$InvokeMethodFailed");
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource JSONUTILS_PARAMTYPEGENERIC = new MessageResource(
-            "com.wavemaker.runtime.server$JSONParamTypeNoGenerics");
+    public final static MessageResource JSONUTILS_NONARRAYSEQ = new MessageResource("com.wavemaker.runtime.server$NonArraySequenceConversion");
+
+    @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
+    public final static MessageResource JSONUTILS_PARAMTYPEGENERIC = new MessageResource("com.wavemaker.runtime.server$JSONParamTypeNoGenerics");
 
     @ResourceConstraint(numArgs = 0, hasDetailMsg = false)
-    public final static MessageResource JSONUTILS_NOGET = new MessageResource(
-            "com.wavemaker.runtime.server$JSONGetNotSupported");
+    public final static MessageResource JSONUTILS_NOGET = new MessageResource("com.wavemaker.runtime.server$JSONGetNotSupported");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource SERVER_NOMETHODORID = new MessageResource(
-            "com.wavemaker.runtime.server$NoMethodIdFound");
+    public final static MessageResource SERVER_NOMETHODORID = new MessageResource("com.wavemaker.runtime.server$NoMethodIdFound");
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource SERVER_NOPARAMNAME = new MessageResource(
-            "com.wavemaker.runtime.server$NoParamNameFound");
+    public final static MessageResource SERVER_NOPARAMNAME = new MessageResource("com.wavemaker.runtime.server$NoParamNameFound");
 
     @ResourceConstraint(numArgs = 0, hasDetailMsg = false)
-    public final static MessageResource SERVER_NOREQUEST = new MessageResource(
-            "com.wavemaker.runtime.server$NoRequestFound");
+    public final static MessageResource SERVER_NOREQUEST = new MessageResource("com.wavemaker.runtime.server$NoRequestFound");
 
     @ResourceConstraint(numArgs = 0, hasDetailMsg = false)
-    public final static MessageResource SERVER_NORESPONSE = new MessageResource(
-            "com.wavemaker.runtime.server$NoResponseFound");
+    public final static MessageResource SERVER_NORESPONSE = new MessageResource("com.wavemaker.runtime.server$NoResponseFound");
 
     @ResourceConstraint(numArgs = 3, hasDetailMsg = false)
-    public final static MessageResource JSONPARAMETER_COULD_NOTLLOAD_TYPE =
-        new MessageResource("com.wavemaker.runtime.server$JSONParameterCouldNotLoadType");
+    public final static MessageResource JSONPARAMETER_COULD_NOTLLOAD_TYPE = new MessageResource(
+        "com.wavemaker.runtime.server$JSONParameterCouldNotLoadType");
 
     @ResourceConstraint(numArgs = 0, hasDetailMsg = false)
-    public final static MessageResource RUNTIME_UNINITIALIZED =
-        new MessageResource("com.wavemaker.runtime.server$RuntimeUninitialized");
+    public final static MessageResource RUNTIME_UNINITIALIZED = new MessageResource("com.wavemaker.runtime.server$RuntimeUninitialized");
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource BOTH_ARGUMENT_TYPES =
-        new MessageResource("com.wavemaker.runtime.server$BothArgumentTypes");
+    public final static MessageResource BOTH_ARGUMENT_TYPES = new MessageResource("com.wavemaker.runtime.server$BothArgumentTypes");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource FAILED_TO_PARSE_REQUEST =
-        new MessageResource("com.wavemaker.runtime.server$FailedToParseRequest");
-    
+    public final static MessageResource FAILED_TO_PARSE_REQUEST = new MessageResource("com.wavemaker.runtime.server$FailedToParseRequest");
+
     @ResourceConstraint(numArgs = 1, hasDetailMsg = true)
-    public final static MessageResource UNKNOWN_SERVICE_DEFINITION =
-        new MessageResource("com.wavemaker.runtime.service$UnknownServiceDefinition");
-    
+    public final static MessageResource UNKNOWN_SERVICE_DEFINITION = new MessageResource("com.wavemaker.runtime.service$UnknownServiceDefinition");
+
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource TYPE_NOT_FOUND = new MessageResource(
-            "com.wavemaker.runtime.service$TypeNotFound");
+    public final static MessageResource TYPE_NOT_FOUND = new MessageResource("com.wavemaker.runtime.service$TypeNotFound");
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource NO_SERVICE_FROM_ID_TYPE = new MessageResource(
-            "com.wavemaker.runtime.service$NoServiceFromIdType");
-    
+    public final static MessageResource NO_SERVICE_FROM_ID_TYPE = new MessageResource("com.wavemaker.runtime.service$NoServiceFromIdType");
+
     // input: service id
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource UNKNOWN_SERVICE = new MessageResource(
-            "com.wavemaker.runtime.service$UnknownService");
-    
+    public final static MessageResource UNKNOWN_SERVICE = new MessageResource("com.wavemaker.runtime.service$UnknownService");
+
     // input: service type
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource UNKNOWN_SERVICE_TYPE = new MessageResource(
-            "com.wavemaker.runtime.service$UnknownServiceType");
-    
+    public final static MessageResource UNKNOWN_SERVICE_TYPE = new MessageResource("com.wavemaker.runtime.service$UnknownServiceType");
+
     // input: service type
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource MULTIPLE_SERVICE_BEANS = new MessageResource(
-            "com.wavemaker.runtime.service$MultipleServiceBeans");
-    
+    public final static MessageResource MULTIPLE_SERVICE_BEANS = new MessageResource("com.wavemaker.runtime.service$MultipleServiceBeans");
+
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource TOO_MANY_MODULES_FOR_EXTENSION_POINT =
-        new MessageResource("com.wavemaker.runtime.module$MoreThanOneModule");
+    public final static MessageResource TOO_MANY_MODULES_FOR_EXTENSION_POINT = new MessageResource("com.wavemaker.runtime.module$MoreThanOneModule");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource MODULEWIRE_MISSING_NAME = new MessageResource(
-            "com.wavemaker.runtime.module$ModuleWireMissingName");
+    public final static MessageResource MODULEWIRE_MISSING_NAME = new MessageResource("com.wavemaker.runtime.module$ModuleWireMissingName");
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource MODULE_UNKNOWN_RESOURCE_TYPE= new MessageResource(
-            "com.wavemaker.runtime.module$ModuleUnknownResourceType");
+    public final static MessageResource MODULE_UNKNOWN_RESOURCE_TYPE = new MessageResource("com.wavemaker.runtime.module$ModuleUnknownResourceType");
 
     @ResourceConstraint(numArgs = 3, hasDetailMsg = false)
-    public final static MessageResource MODULE_BAD_NAME= new MessageResource(
-            "com.wavemaker.runtime.module$ModuleBadName");
+    public final static MessageResource MODULE_BAD_NAME = new MessageResource("com.wavemaker.runtime.module$ModuleBadName");
 
     @ResourceConstraint(numArgs = 3, hasDetailMsg = false)
-    public final static MessageResource MODULE_DUPLICATE= new MessageResource(
-            "com.wavemaker.runtime.module$ModuleDuplicates");
+    public final static MessageResource MODULE_DUPLICATE = new MessageResource("com.wavemaker.runtime.module$ModuleDuplicates");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource SERVICEWIRE_ID_DUP= new MessageResource(
-            "com.wavemaker.runtime.service$DuplicateServiceIDs");
+    public final static MessageResource SERVICEWIRE_ID_DUP = new MessageResource("com.wavemaker.runtime.service$DuplicateServiceIDs");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource EXPECTED_REFLECT_SW = new MessageResource(
-            "com.wavemaker.runtime.service.reflect$ExpectedReflectSW");
+    public final static MessageResource EXPECTED_REFLECT_SW = new MessageResource("com.wavemaker.runtime.service.reflect$ExpectedReflectSW");
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource MODULE_NOT_FOUND = new MessageResource(
-            "com.wavemaker.runtime.module$ModuleNotFound");
+    public final static MessageResource MODULE_NOT_FOUND = new MessageResource("com.wavemaker.runtime.module$ModuleNotFound");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource MODULE_UNINITIALIZED = new MessageResource(
-            "com.wavemaker.runtime.module$ModuleUninitialized");
+    public final static MessageResource MODULE_UNINITIALIZED = new MessageResource("com.wavemaker.runtime.module$ModuleUninitialized");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource NO_MODULE_LOOKUP = new MessageResource(
-            "com.wavemaker.runtime.module$NoModuleLookupForURL");
+    public final static MessageResource NO_MODULE_LOOKUP = new MessageResource("com.wavemaker.runtime.module$NoModuleLookupForURL");
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource NO_MODULE_RESOURCE = new MessageResource(
-            "com.wavemaker.runtime.module$NoModuleResourceFound");
+    public final static MessageResource NO_MODULE_RESOURCE = new MessageResource("com.wavemaker.runtime.module$NoModuleResourceFound");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource NO_SERVICEWIRE = new MessageResource(
-            "com.wavemaker.runtime.service$NoServiceWireForService");
-    
-    
+    public final static MessageResource NO_SERVICEWIRE = new MessageResource("com.wavemaker.runtime.service$NoServiceWireForService");
+
     // input: service id
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource NO_SERVICE_GENERATOR = new MessageResource(
-            "com.wavemaker.runtime.service$NoServiceGenerator");
-    
+    public final static MessageResource NO_SERVICE_GENERATOR = new MessageResource("com.wavemaker.runtime.service$NoServiceGenerator");
+
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource LIB_DIR_NOT_DIR = new MessageResource(
-            "com.wavemaker.runtime.service$LibDirNotDir");
+    public final static MessageResource LIB_DIR_NOT_DIR = new MessageResource("com.wavemaker.runtime.service$LibDirNotDir");
 
     @ResourceConstraint(numArgs = 0, hasDetailMsg = false)
-    public final static MessageResource WS_NULL_WSDL_URI = new MessageResource(
-            "com.wavemaker.runtime.ws$NullWsdlUri");
+    public final static MessageResource WS_NULL_WSDL_URI = new MessageResource("com.wavemaker.runtime.ws$NullWsdlUri");
 
     @ResourceConstraint(numArgs = 0, hasDetailMsg = false)
-    public final static MessageResource WS_MISSING_TYPEMAPPER = new MessageResource(
-            "com.wavemaker.runtime.ws$MissingTypeMapper");
-    
-    @ResourceConstraint(numArgs = 0, hasDetailMsg = false)
-    public final static MessageResource WS_RPC_ENCODED_NOT_SUPPORTED = new MessageResource(
-            "com.wavemaker.runtime.ws$RpcEncodedNotSupported");
+    public final static MessageResource WS_MISSING_TYPEMAPPER = new MessageResource("com.wavemaker.runtime.ws$MissingTypeMapper");
 
     @ResourceConstraint(numArgs = 0, hasDetailMsg = false)
-    public final static MessageResource WS_REST_WSDL_MISSING_URL = new MessageResource(
-            "com.wavemaker.runtime.ws$RestWsdlMissingUrl");
+    public final static MessageResource WS_RPC_ENCODED_NOT_SUPPORTED = new MessageResource("com.wavemaker.runtime.ws$RpcEncodedNotSupported");
 
     @ResourceConstraint(numArgs = 0, hasDetailMsg = false)
-    public final static MessageResource WS_WADL_METHOD_NOT_FOUND = new MessageResource(
-            "com.wavemaker.runtime.ws$WadlMethodNotFound");
+    public final static MessageResource WS_REST_WSDL_MISSING_URL = new MessageResource("com.wavemaker.runtime.ws$RestWsdlMissingUrl");
+
+    @ResourceConstraint(numArgs = 0, hasDetailMsg = false)
+    public final static MessageResource WS_WADL_METHOD_NOT_FOUND = new MessageResource("com.wavemaker.runtime.ws$WadlMethodNotFound");
 
     // input: name(s) of required property(ies) (String)
     @ResourceConstraint(numArgs = 1, hasDetailMsg = true)
-    public final static MessageResource MISSING_SYS_PROPERTIES = new MessageResource(
-            "com.wavemaker.tools$SysPropertyNotSet");
-    
+    public final static MessageResource MISSING_SYS_PROPERTIES = new MessageResource("com.wavemaker.tools$SysPropertyNotSet");
+
     // input: property name, path to file
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource PROPERTY_MUST_BE_DIR = new MessageResource(
-            "com.wavemaker.tools$PropertyMustBeDir");
-    
-    @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource PROJECTCOPY_SOURCE_DNE = new MessageResource(
-            "com.wavemaker.tools$ProjectCopySourceDNE");
+    public final static MessageResource PROPERTY_MUST_BE_DIR = new MessageResource("com.wavemaker.tools$PropertyMustBeDir");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource PROJECTCOPY_DEST_DE = new MessageResource(
-            "com.wavemaker.tools$ProjectCopyDestDE");
+    public final static MessageResource PROJECTCOPY_SOURCE_DNE = new MessageResource("com.wavemaker.tools$ProjectCopySourceDNE");
+
+    @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
+    public final static MessageResource PROJECTCOPY_DEST_DE = new MessageResource("com.wavemaker.tools$ProjectCopyDestDE");
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource PROJECT_DNE = new MessageResource(
-            "com.wavemaker.tools$ProjectDNE");
+    public final static MessageResource PROJECT_DNE = new MessageResource("com.wavemaker.tools$ProjectDNE");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource PROJECT_CONFLICT = new MessageResource(
-            "com.wavemaker.tools$ProjectConflict");
+    public final static MessageResource PROJECT_CONFLICT = new MessageResource("com.wavemaker.tools$ProjectConflict");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource PROJECT_INVALID_NAME = new MessageResource(
-            "com.wavemaker.tools$ProjectInvalidName");
+    public final static MessageResource PROJECT_INVALID_NAME = new MessageResource("com.wavemaker.tools$ProjectInvalidName");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource PROJECT_USERHOMEDNE = new MessageResource(
-            "com.wavemaker.tools$Project_UserHomeDNE");
+    public final static MessageResource PROJECT_USERHOMEDNE = new MessageResource("com.wavemaker.tools$Project_UserHomeDNE");
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource PAGECP_SOURCEDNE = new MessageResource(
-            "com.wavemaker.tools$Pages_Copy_SourcePageDNE");
+    public final static MessageResource PAGECP_SOURCEDNE = new MessageResource("com.wavemaker.tools$Pages_Copy_SourcePageDNE");
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource PAGECP_TARGET_EXISTS = new MessageResource(
-            "com.wavemaker.tools$Pages_Copy_TargetExists");
+    public final static MessageResource PAGECP_TARGET_EXISTS = new MessageResource("com.wavemaker.tools$Pages_Copy_TargetExists");
 
     @ResourceConstraint(numArgs = 3, hasDetailMsg = false)
-    public final static MessageResource PROJECT_NEWER_THAN_STUDIO = new MessageResource(
-            "com.wavemaker.tools$ProjectNewerThanStudio");
+    public final static MessageResource PROJECT_NEWER_THAN_STUDIO = new MessageResource("com.wavemaker.tools$ProjectNewerThanStudio");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource NO_DATA_SERVICE_MGR_BEAN_FOUND = new MessageResource(
-            "com.wavemaker.tools$NoDataServiceMgrBeanFound");
+    public final static MessageResource NO_DATA_SERVICE_MGR_BEAN_FOUND = new MessageResource("com.wavemaker.tools$NoDataServiceMgrBeanFound");
 
     @ResourceConstraint(numArgs = 0, hasDetailMsg = false)
-    public final static MessageResource NO_PROJECT_FROM_SESSION = new MessageResource(
-            "com.wavemaker.tools$NoProjectFromSession");
+    public final static MessageResource NO_PROJECT_FROM_SESSION = new MessageResource("com.wavemaker.tools$NoProjectFromSession");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource ADD_SRV_UPGRADE_NO_SPRING_FILE = new MessageResource(
-            "com.wavemaker.tools$AddServiceUpgrade_NoSpringFile");
+    public final static MessageResource ADD_SRV_UPGRADE_NO_SPRING_FILE = new MessageResource("com.wavemaker.tools$AddServiceUpgrade_NoSpringFile");
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource PROJECT_TOO_MANY_SERVICE_WIRES = new MessageResource(
-            "com.wavemaker.tools.project$TooManyServiceWires");
-    
+    public final static MessageResource PROJECT_TOO_MANY_SERVICE_WIRES = new MessageResource("com.wavemaker.tools.project$TooManyServiceWires");
+
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource UTIL_FILEUTILS_PATHDNE = new MessageResource(
-            "com.wavemaker.common.util$FileUtils_PathDNE");
-    
+    public final static MessageResource UTIL_FILEUTILS_PATHDNE = new MessageResource("com.wavemaker.common.util$FileUtils_PathDNE");
+
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource UTIL_FILEUTILS_PATHNOTDIR = new MessageResource(
-            "com.wavemaker.common.util$FileUtils_PathNotDir");
-    
+    public final static MessageResource UTIL_FILEUTILS_PATHNOTDIR = new MessageResource("com.wavemaker.common.util$FileUtils_PathNotDir");
+
     @ResourceConstraint(numArgs = 0, hasDetailMsg = false)
-    public final static MessageResource NULL_CLASS = new MessageResource(
-            "com.wavemaker.common.util$NullClass");
-    
+    public final static MessageResource NULL_CLASS = new MessageResource("com.wavemaker.common.util$NullClass");
+
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource STUDIO_PROJECT_UNKNOWN_TYPE = new MessageResource(
-            "com.wavemaker.studio$Project_UnknownType");
-    
+    public final static MessageResource STUDIO_PROJECT_UNKNOWN_TYPE = new MessageResource("com.wavemaker.studio$Project_UnknownType");
+
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource STUDIO_UNKNOWN_SERVICE = new MessageResource(
-            "com.wavemaker.studio$ServiceUnknown");
+    public final static MessageResource STUDIO_UNKNOWN_SERVICE = new MessageResource("com.wavemaker.studio$ServiceUnknown");
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource STUDIO_UNKNOWN_LOCATION = new MessageResource(
-            "com.wavemaker.studio$UnknownStaticFileLocation");
-    
+    public final static MessageResource STUDIO_UNKNOWN_LOCATION = new MessageResource("com.wavemaker.studio$UnknownStaticFileLocation");
+
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource UTIL_FILEUTILS_REACHEDROOT = new MessageResource(
-            "com.wavemaker.common.util$FileUtils_ReachedRoot");
+    public final static MessageResource UTIL_FILEUTILS_REACHEDROOT = new MessageResource("com.wavemaker.common.util$FileUtils_ReachedRoot");
 
     // input: invalid service id, reason
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource INVALID_SERVICE_ID = new MessageResource(
-            "com.wavemaker.tools$InvalidServiceId");
-    
+    public final static MessageResource INVALID_SERVICE_ID = new MessageResource("com.wavemaker.tools$InvalidServiceId");
+
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource INVALID_SERVICE_DEF_NO_ID = new MessageResource(
-            "com.wavemaker.tools$InvalidServiceNoId");
+    public final static MessageResource INVALID_SERVICE_DEF_NO_ID = new MessageResource("com.wavemaker.tools$InvalidServiceNoId");
 
     @ResourceConstraint(numArgs = 3, hasDetailMsg = false)
-    public final static MessageResource ERROR_LOADING_SERVICEDEF = new MessageResource(
-            "com.wavemaker.tools$ErrorLoadingServiceDef");
+    public final static MessageResource ERROR_LOADING_SERVICEDEF = new MessageResource("com.wavemaker.tools$ErrorLoadingServiceDef");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource NO_EXTERNAL_BEAN_DEF = new MessageResource(
-            "com.wavemaker.tools.service$NoExternalBeanDef");
+    public final static MessageResource NO_EXTERNAL_BEAN_DEF = new MessageResource("com.wavemaker.tools.service$NoExternalBeanDef");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource NO_DESIGN_SERVICE_TYPE_FOUND = new MessageResource(
-            "com.wavemaker.tools.service$NoDesignServiceTypeFound");
+    public final static MessageResource NO_DESIGN_SERVICE_TYPE_FOUND = new MessageResource("com.wavemaker.tools.service$NoDesignServiceTypeFound");
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource UNKNOWN_TYPE_OF_TYPE = new MessageResource(
-            "com.wavemaker.tools.service$UnknownTypeOfType");
+    public final static MessageResource UNKNOWN_TYPE_OF_TYPE = new MessageResource("com.wavemaker.tools.service$UnknownTypeOfType");
 
     @ResourceConstraint(numArgs = 0, hasDetailMsg = false)
-    public final static MessageResource NO_PRIMARY_KEY = new MessageResource(
-            "com.wavemaker.tools.data$NoPrimaryKey");
-    
-    @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource UNKNOWN_DEPLOYMENT_TARGET= new MessageResource(
-            "com.wavemaker.tools.deployment$UnknownDeploymentTarget");
-
+    public final static MessageResource NO_PRIMARY_KEY = new MessageResource("com.wavemaker.tools.data$NoPrimaryKey");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource UNKNOWN_PWS_TOOLS_MANAGER= new MessageResource(
-            "com.wavemaker.tools.pwst$UnknownPwsToolsManager");
+    public final static MessageResource UNKNOWN_DEPLOYMENT_TARGET = new MessageResource("com.wavemaker.tools.deployment$UnknownDeploymentTarget");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource UNKNOWN_PWS_LOGIN_MANAGER= new MessageResource(
-            "com.wavemaker.tools.pwst$UnknownPwsLoginManager");
+    public final static MessageResource UNKNOWN_PWS_TOOLS_MANAGER = new MessageResource("com.wavemaker.tools.pwst$UnknownPwsToolsManager");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource UNKNOWN_CLOUDSERVER_MGR= new MessageResource(
-            "com.wavemaker.tools.cloudmgr$UnknownCloudServerMgr");
+    public final static MessageResource UNKNOWN_PWS_LOGIN_MANAGER = new MessageResource("com.wavemaker.tools.pwst$UnknownPwsLoginManager");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource UNKNOWN_CLOUDSTORAGE_MGR= new MessageResource(
-            "com.wavemaker.tools.cloudmgr$UnknownCloudStorageMgr");
+    public final static MessageResource UNKNOWN_CLOUDSERVER_MGR = new MessageResource("com.wavemaker.tools.cloudmgr$UnknownCloudServerMgr");
+
+    @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
+    public final static MessageResource UNKNOWN_CLOUDSTORAGE_MGR = new MessageResource("com.wavemaker.tools.cloudmgr$UnknownCloudStorageMgr");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = true)
-    public final static MessageResource UNSET_SCHEMA= new MessageResource(
-            "com.wavemaker.tools.data$SchemaShouldNotBeSet");
+    public final static MessageResource UNSET_SCHEMA = new MessageResource("com.wavemaker.tools.data$SchemaShouldNotBeSet");
 
     @ResourceConstraint(numArgs = 0, hasDetailMsg = false)
-    public final static MessageResource CATALOG_SHOULD_BE_SET = new MessageResource(
-            "com.wavemaker.tools.data$CatalogShouldBeSet");
+    public final static MessageResource CATALOG_SHOULD_BE_SET = new MessageResource("com.wavemaker.tools.data$CatalogShouldBeSet");
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource MISMATCH_CATALOG_DBNAME = new MessageResource(
-            "com.wavemaker.tools.data$CatalogDoesNotMatchDBName");
+    public final static MessageResource MISMATCH_CATALOG_DBNAME = new MessageResource("com.wavemaker.tools.data$CatalogDoesNotMatchDBName");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource JSON_FAILED_PARSING = new MessageResource(
-            "com.wavemaker.json$FailedParsing");
+    public final static MessageResource JSON_FAILED_PARSING = new MessageResource("com.wavemaker.json$FailedParsing");
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource JSON_TYPE_UNKNOWNRAWTYPE = new MessageResource(
-            "com.wavemaker.json$Type_UnknownRawType");
+    public final static MessageResource JSON_TYPE_UNKNOWNRAWTYPE = new MessageResource("com.wavemaker.json$Type_UnknownRawType");
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource JSON_TYPE_UNKNOWNPARAMTYPE = new MessageResource(
-            "com.wavemaker.json$Type_UnknownParameterType");
+    public final static MessageResource JSON_TYPE_UNKNOWNPARAMTYPE = new MessageResource("com.wavemaker.json$Type_UnknownParameterType");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource JSON_TYPE_NOGENERICS = new MessageResource(
-            "com.wavemaker.json$Type_NoGenerics");
+    public final static MessageResource JSON_TYPE_NOGENERICS = new MessageResource("com.wavemaker.json$Type_NoGenerics");
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource JSON_FAILED_GENERICARRAYTYPE = new MessageResource(
-            "com.wavemaker.json$FailedGenericArrayType");
+    public final static MessageResource JSON_FAILED_GENERICARRAYTYPE = new MessageResource("com.wavemaker.json$FailedGenericArrayType");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource JSON_FAILEDINSTANCE_MAP = new MessageResource(
-            "com.wavemaker.json$FailedInstantiationMap");
+    public final static MessageResource JSON_FAILEDINSTANCE_MAP = new MessageResource("com.wavemaker.json$FailedInstantiationMap");
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource JSON_OBJECT_REQUIRED_FOR_MAP_CONVERSION =
-            new MessageResource("com.wavemaker.json$JSONObjectRequiredForMap");
+    public final static MessageResource JSON_OBJECT_REQUIRED_FOR_MAP_CONVERSION = new MessageResource("com.wavemaker.json$JSONObjectRequiredForMap");
 
     @ResourceConstraint(numArgs = 0, hasDetailMsg = false)
-    public final static MessageResource JSON_TYPEDEF_REQUIRED = new MessageResource(
-            "com.wavemaker.json$TypeDefRequired");
+    public final static MessageResource JSON_TYPEDEF_REQUIRED = new MessageResource("com.wavemaker.json$TypeDefRequired");
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource JSON_OBJECTTYPEDEF_REQUIRED = new MessageResource(
-            "com.wavemaker.json$ObjectTypeDefRequired");
+    public final static MessageResource JSON_OBJECTTYPEDEF_REQUIRED = new MessageResource("com.wavemaker.json$ObjectTypeDefRequired");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource JSON_FAILEDINSTANCE_COLLECTION = new MessageResource(
-            "com.wavemaker.json$FailedInstantiationCollection");
+    public final static MessageResource JSON_FAILEDINSTANCE_COLLECTION = new MessageResource("com.wavemaker.json$FailedInstantiationCollection");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource JSON_UNKNOWN_COLL_OR_ARRAY = new MessageResource(
-            "com.wavemaker.json$UnknownCollectionType");
+    public final static MessageResource JSON_UNKNOWN_COLL_OR_ARRAY = new MessageResource("com.wavemaker.json$UnknownCollectionType");
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource JSON_UNKNOWN_COLL_IN_SET = new MessageResource(
-            "com.wavemaker.json$UnknownCollInSet");
+    public final static MessageResource JSON_UNKNOWN_COLL_IN_SET = new MessageResource("com.wavemaker.json$UnknownCollInSet");
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource JSON_UNHANDLED_TYPE = new MessageResource(
-            "com.wavemaker.json$UnhandledType");
+    public final static MessageResource JSON_UNHANDLED_TYPE = new MessageResource("com.wavemaker.json$UnhandledType");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource JSON_PRIM_NEWINSTANCE_ARG_REQ = new MessageResource(
-            "com.wavemaker.json$PrimitiveNewInstanceRequiresArg");
+    public final static MessageResource JSON_PRIM_NEWINSTANCE_ARG_REQ = new MessageResource("com.wavemaker.json$PrimitiveNewInstanceRequiresArg");
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource JSON_UNKNOWN_NUMBER_TYPE = new MessageResource(
-            "com.wavemaker.json$UnknownNumberType");
+    public final static MessageResource JSON_UNKNOWN_NUMBER_TYPE = new MessageResource("com.wavemaker.json$UnknownNumberType");
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource JSON_FAILED_TO_CONVERT = new MessageResource(
-            "com.wavemaker.json$FailedToConvert");
+    public final static MessageResource JSON_FAILED_TO_CONVERT = new MessageResource("com.wavemaker.json$FailedToConvert");
 
     @ResourceConstraint(numArgs = 3, hasDetailMsg = false)
-    public final static MessageResource JSON_UNKNOWN_OBJECT_TYPE = new MessageResource(
-            "com.wavemaker.json$UnknownObjectType");
+    public final static MessageResource JSON_UNKNOWN_OBJECT_TYPE = new MessageResource("com.wavemaker.json$UnknownObjectType");
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource JSON_NO_PROP_MATCHES_KEY = new MessageResource(
-            "com.wavemaker.json$NoPropertyMatchKey");
+    public final static MessageResource JSON_NO_PROP_MATCHES_KEY = new MessageResource("com.wavemaker.json$NoPropertyMatchKey");
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource JSON_NO_WRITE_METHOD = new MessageResource(
-            "com.wavemaker.json$NoWriteMethod");
+    public final static MessageResource JSON_NO_WRITE_METHOD = new MessageResource("com.wavemaker.json$NoWriteMethod");
 
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource JSON_UNKNOWN_PRIMITIVE_TYPE = new MessageResource(
-            "com.wavemaker.json$UnknownPrimitiveType");
+    public final static MessageResource JSON_UNKNOWN_PRIMITIVE_TYPE = new MessageResource("com.wavemaker.json$UnknownPrimitiveType");
 
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource JSON_RAW_TYPE_NOT_CLASS = new MessageResource(
-            "com.wavemaker.json$RawTypeNotClass");
- 
+    public final static MessageResource JSON_RAW_TYPE_NOT_CLASS = new MessageResource("com.wavemaker.json$RawTypeNotClass");
+
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource JSON_EXPECTED_COLLECTION = new MessageResource(
-            "com.wavemaker.json$ExpectedCollection");
- 
+    public final static MessageResource JSON_EXPECTED_COLLECTION = new MessageResource("com.wavemaker.json$ExpectedCollection");
+
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource JSON_UNKNOWN_TYPE = new MessageResource(
-            "com.wavemaker.json$UnknownType");
- 
+    public final static MessageResource JSON_UNKNOWN_TYPE = new MessageResource("com.wavemaker.json$UnknownType");
+
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource JSON_USE_FIELD_FOR_ARRAY = new MessageResource(
-            "com.wavemaker.json$UseFieldForArray");
- 
+    public final static MessageResource JSON_USE_FIELD_FOR_ARRAY = new MessageResource("com.wavemaker.json$UseFieldForArray");
+
     @ResourceConstraint(numArgs = 3, hasDetailMsg = false)
-    public final static MessageResource JSON_NO_GETTER_IN_TYPE = new MessageResource(
-            "com.wavemaker.json$NoGetterInType");
- 
+    public final static MessageResource JSON_NO_GETTER_IN_TYPE = new MessageResource("com.wavemaker.json$NoGetterInType");
+
     @ResourceConstraint(numArgs = 3, hasDetailMsg = false)
-    public final static MessageResource ERROR_GETTING_PROPERTY = new MessageResource(
-            "com.wavemaker.json$ErrorGettingProperty");
- 
+    public final static MessageResource ERROR_GETTING_PROPERTY = new MessageResource("com.wavemaker.json$ErrorGettingProperty");
+
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource JSON_BAD_HANDLE_TYPE = new MessageResource(
-            "com.wavemaker.json$UnexpectedHandleType");
- 
+    public final static MessageResource JSON_BAD_HANDLE_TYPE = new MessageResource("com.wavemaker.json$UnexpectedHandleType");
+
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
-    public final static MessageResource JSON_CYCLE_FOUND = new MessageResource(
-            "com.wavemaker.json$CycleFound");
- 
+    public final static MessageResource JSON_CYCLE_FOUND = new MessageResource("com.wavemaker.json$CycleFound");
+
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
-    public final static MessageResource JSON_BAD_CYCLE_HANDLER = new MessageResource(
-            "com.wavemaker.json$UnknownCycleHandler");
-    
-    
+    public final static MessageResource JSON_BAD_CYCLE_HANDLER = new MessageResource("com.wavemaker.json$UnknownCycleHandler");
+
     private static final Map<MessageResource, ResourceConstraint> annos;
     static {
 
-        Map<MessageResource, ResourceConstraint> m =
-            new HashMap<MessageResource, ResourceConstraint>();
+        Map<MessageResource, ResourceConstraint> m = new HashMap<MessageResource, ResourceConstraint>();
 
         try {
-            List<Field> fields = ClassUtils.getPublicFields(MessageResource.class,
-                    MessageResource.class);
+            List<Field> fields = ClassUtils.getPublicFields(MessageResource.class, MessageResource.class);
             for (Field f : fields) {
-                m.put((MessageResource) f.get(null), f
-                        .getAnnotation(ResourceConstraint.class));
+                m.put((MessageResource) f.get(null), f.getAnnotation(ResourceConstraint.class));
             }
         } catch (IllegalAccessException ex) {
             throw new AssertionError(ex);
@@ -563,8 +440,7 @@ public class MessageResource {
     }
 
     public Integer getId() {
-        return Integer.parseInt(MessageResource.getMessage(((String) key)
-                + MessageResource.ID_KEY, 0));
+        return Integer.parseInt(MessageResource.getMessage((String) this.key + MessageResource.ID_KEY, 0));
     }
 
     public String getMessage() {
@@ -572,7 +448,7 @@ public class MessageResource {
     }
 
     public String getMessage(Object... args) {
-        return MessageResource.getMessage((String) key, getNumArgsRequired(), args);
+        return MessageResource.getMessage((String) this.key, getNumArgsRequired(), args);
     }
 
     public String getDetailMessage() {
@@ -580,12 +456,11 @@ public class MessageResource {
     }
 
     public String getDetailMessage(Object... args) {
-        return MessageResource.getMessage(((String) key) + MessageResource.DETAIL_KEY,
-                getNumDetailArgsRequired(), args);
+        return MessageResource.getMessage((String) this.key + MessageResource.DETAIL_KEY, getNumDetailArgsRequired(), args);
     }
 
     public String getMessageKey() {
-        return (String) key;
+        return (String) this.key;
     }
 
     public int getNumArgsRequired() {
@@ -600,14 +475,11 @@ public class MessageResource {
         return annos.get(this).hasDetailMsg();
     }
 
-    private static String getMessage(String key, int numArgsRequired,
-            Object... args) {
+    private static String getMessage(String key, int numArgsRequired, Object... args) {
         if (numArgsRequired > 0) {
             if (args == null || args.length != numArgsRequired) {
-                throw new IllegalArgumentException(key + ": "
-                        + "args don't match.  msg requires: " + numArgsRequired
-                        + " " + "passed in: "
-                        + (args == null ? "null" : args.length));
+                throw new IllegalArgumentException(key + ": " + "args don't match.  msg requires: " + numArgsRequired + " " + "passed in: "
+                    + (args == null ? "null" : args.length));
             }
         }
         return ResourceManager.getInstance().getMessage(key, args);

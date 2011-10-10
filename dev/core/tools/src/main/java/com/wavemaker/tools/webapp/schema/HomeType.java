@@ -19,31 +19,30 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * 
- * 	
  * 
- * 	  The homeType defines the fully-qualified name of
- * 	  an enterprise bean's home interface.
  * 
- * 	  Example:
+ * The homeType defines the fully-qualified name of an enterprise bean's home interface.
  * 
- * 	      <home>com.aardvark.payroll.PayrollHome</home>
+ * Example:
  * 
- * 	  
- *       
+ * <home>com.aardvark.payroll.PayrollHome</home>
  * 
- * <p>Java class for homeType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * 
+ * 
+ * <p>
+ * Java class for homeType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="homeType">
@@ -58,9 +57,6 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "homeType")
-public class HomeType
-    extends FullyQualifiedClassType
-{
-
+public class HomeType extends FullyQualifiedClassType {
 
 }

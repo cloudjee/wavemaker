@@ -27,14 +27,14 @@ import com.wavemaker.runtime.service.events.EventWire;
  * @version $Rev$ - $Date$
  */
 public interface ServiceDefinition {
-    
+
     /**
      * Returns the unique ID that can be used to identify the service.
      * 
      * @return The unique ID.
      */
     public String getServiceId();
-     
+
     /**
      * Return the service type.
      * 
@@ -50,16 +50,15 @@ public interface ServiceDefinition {
     public List<ServiceOperation> getServiceOperations();
 
     /**
-     * Get all types associated with this service (instead of referenced in
-     * other services).
+     * Get all types associated with this service (instead of referenced in other services).
      * 
      * @return The list of types contained within this service.
      */
     public List<TypeDefinition> getLocalTypes();
 
     /**
-     * Get all types associated with this service (instead of referenced in
-     * other services).
+     * Get all types associated with this service (instead of referenced in other services).
+     * 
      * @param username The user name for SalesForce account
      * @param password The password for SalesForce account
      * 
@@ -68,40 +67,39 @@ public interface ServiceDefinition {
     public List<TypeDefinition> getLocalTypes(String username, String password);
 
     /**
-     * Return this service's runtime configuration, typically a Spring file,
-     * or null if this service does not have its own runtime file.
-     *
+     * Return this service's runtime configuration, typically a Spring file, or null if this service does not have its
+     * own runtime file.
+     * 
      * The path has to be loadable from the ClassPath.
      * 
-     * @return The service's entry point runtime configuration as a classpath
-     *         resource.
+     * @return The service's entry point runtime configuration as a classpath resource.
      */
     public String getRuntimeConfiguration();
 
     /**
      * Return a list of all event notifier classes.
      * 
-     * The return values of this are now ignored; configure {@link EventWire}
-     * elements in the bean files for events.
+     * The return values of this are now ignored; configure {@link EventWire} elements in the bean files for events.
      * 
-     * @deprecated This has been deprecated in favor of {@link EventWire}
-     *             entries places into the Spring file. This will be removed in
-     *             the next release.
+     * @deprecated This has been deprecated in favor of {@link EventWire} entries places into the Spring file. This will
+     *             be removed in the next release.
      * 
      * @return
      */
     @Deprecated
     public List<String> getEventNotifiers();
-    
+
     /**
      * Indicates if this service supports LiveDataService access, by implementing
      * com.wavemaker.runtime.service.LiveDataService.
+     * 
      * @return
      */
     public boolean isLiveDataService();
 
     /**
      * Gets the web service partner name
+     * 
      * @return the partner name
      */
     public String getPartnerName();

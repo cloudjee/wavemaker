@@ -11,13 +11,17 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
 
 package com.wavemaker.runtime.ws.salesforce;
 
 //import com.sforce.soap.enterprise.salesforceservice.*;
 import com.wavemaker.runtime.ws.BindingProperties;
-import com.wavemaker.runtime.ws.salesforce.gen.*;
+import com.wavemaker.runtime.ws.salesforce.gen.Login;
+import com.wavemaker.runtime.ws.salesforce.gen.LoginResponse;
+import com.wavemaker.runtime.ws.salesforce.gen.LoginScopeHeader;
+import com.wavemaker.runtime.ws.salesforce.gen.Logout;
+import com.wavemaker.runtime.ws.salesforce.gen.SessionHeader;
+import com.wavemaker.runtime.ws.salesforce.gen.SforceService;
 
 public class LoginObject {
 
@@ -26,29 +30,31 @@ public class LoginObject {
     private SessionHeader sessionHeader = null;
 
     public String logIn(String userName, String password) throws Exception {
-        if (sessionHeader != null) return "You are already logged in";
+        if (this.sessionHeader != null) {
+            return "You are already logged in";
+        }
 
         Login parameters = new Login();
         parameters.setUsername(userName);
         parameters.setPassword(password);
-        LoginResponse response = service.login(parameters, new LoginScopeHeader(), null);
+        LoginResponse response = this.service.login(parameters, new LoginScopeHeader(), null);
 
         BindingProperties bindingProperties = new BindingProperties();
         bindingProperties.setEndpointAddress(response.getResult().getServerUrl());
-        service.setBindingProperties(bindingProperties);
+        this.service.setBindingProperties(bindingProperties);
         String sessionId = response.getResult().getSessionId();
 
-        sessionHeader = new SessionHeader();
-        sessionHeader.setSessionId(sessionId);
+        this.sessionHeader = new SessionHeader();
+        this.sessionHeader.setSessionId(sessionId);
 
         return "Logged in successfully";
     }
 
     public String logOut() throws Exception {
         Logout parameters = new Logout();
-        if (sessionHeader != null) {
-            LogoutResponse response = service.logout(parameters, sessionHeader, null);
-            sessionHeader = null;
+        if (this.sessionHeader != null) {
+            this.service.logout(parameters, this.sessionHeader, null);
+            this.sessionHeader = null;
         } else {
             return "You are not logged in yet";
         }
@@ -57,20 +63,20 @@ public class LoginObject {
     }
 
     public SessionHeader getSessionHeader() throws Exception {
-        if (sessionHeader == null) {
+        if (this.sessionHeader == null) {
             throw new Exception("You must log in first");
         }
-        return sessionHeader;
+        return this.sessionHeader;
     }
 
     public SforceService getSforceService() throws Exception {
-        if (service == null) {
+        if (this.service == null) {
             throw new Exception("You must log in first");
         }
-        return service;
+        return this.service;
     }
 
     public void setSforceService(SforceService svc) {
-        service = svc;
+        this.service = svc;
     }
 }

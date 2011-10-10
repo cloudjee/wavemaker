@@ -40,255 +40,230 @@ import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.project.StudioConfiguration;
 
 /**
- * Controller (in the MVC sense) providing the studio access to project files.
- * Based off of the old StaticFileServlet.
+ * Controller (in the MVC sense) providing the studio access to project files. Based off of the old StaticFileServlet.
  * 
  * @author Matt Small
  * @author Jeremy Grelle
  */
 public final class StaticFileController extends AbstractController {
 
-	private static final String WM_COMMON_URL = "lib/wm/common";
-	private static final String WM_PROJECTS_PATH = "projects";
-	private static final String WM_BUILD_GZIPPED_URL = "/lib//build/Gzipped/";
-	private static final String WM_BUILD_DOJO_THEMES_URL = "/lib/build/themes/";
-	private static final String WM_BUILD_WM_THEMES_URL = "/lib/wm/base/widget/themes/";
-	private static final String WM_BUILD_DOJO_FOLDER_URL = "/lib/dojo/";
-	private static final String WM_BUILD_DOJO_JS_URL = "/lib/dojo/dojo/dojo_build.js";
-	private static final String WM_BOOT_URL = "/lib/boot/boot.js";
-	private static final String WM_RUNTIME_LOADER_URL = "/lib/runtimeLoader.js";
+    private static final String WM_COMMON_URL = "lib/wm/common";
 
-	@Override
-	protected ModelAndView handleRequestInternal(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+    private static final String WM_PROJECTS_PATH = "projects";
 
-		boolean isGzipped = false;
-		boolean addExpiresTag = false;
-		String reqPath = request.getRequestURI();
-		reqPath = reqPath.replaceAll("%20", " ");
-		// trim off the servlet name
-		reqPath = reqPath.substring(reqPath.indexOf('/', 1));
-		if (reqPath.matches("\\/projects\\/.+")) {
-			String userprefix = getProjectManager().getUserProjectPrefix();
-			reqPath = "/projects/" + userprefix + reqPath.substring(10);
-		}
-		Resource sendFile = null;
+    private static final String WM_BUILD_GZIPPED_URL = "/lib//build/Gzipped/";
 
-		if (reqPath.startsWith(WM_BUILD_GZIPPED_URL)
-				|| reqPath.equals(WM_BUILD_DOJO_JS_URL)) {
-			isGzipped = true;
-			addExpiresTag = true;
-			reqPath += ".gz";
-			sendFile = getStudioConfiguration().getStudioWebAppRoot()
-					.createRelative(reqPath);
-		} else if (reqPath.startsWith(WM_BUILD_DOJO_THEMES_URL)
-				|| reqPath.startsWith(WM_BUILD_WM_THEMES_URL)
-				|| reqPath.startsWith(WM_BUILD_DOJO_FOLDER_URL)
-				|| reqPath.equals(WM_BOOT_URL)
-				|| reqPath.equals(WM_RUNTIME_LOADER_URL)) {
+    private static final String WM_BUILD_DOJO_THEMES_URL = "/lib/build/themes/";
 
-			sendFile = getStudioConfiguration().getStudioWebAppRoot()
-					.createRelative(reqPath);
-			addExpiresTag = true;
+    private static final String WM_BUILD_WM_THEMES_URL = "/lib/wm/base/widget/themes/";
 
-		} else if (reqPath.equals("/" + WM_PROJECTS_PATH)
-				|| reqPath.startsWith("/" + WM_PROJECTS_PATH + "/")) {
-			if (reqPath.equals("/" + WM_PROJECTS_PATH)) {
-				reqPath = "";
-			} else {
-				reqPath = reqPath.substring(WM_PROJECTS_PATH.length() + 2);
-			}
+    private static final String WM_BUILD_DOJO_FOLDER_URL = "/lib/dojo/";
 
-			// see if we're doing a list of projects
-			if (0 == reqPath.length()) {
-				handleProjectsList(request.getRequestURL().toString(), response);
-				return null;
-			}
+    private static final String WM_BUILD_DOJO_JS_URL = "/lib/dojo/dojo/dojo_build.js";
 
-			String projectName;
-			if (-1 != reqPath.indexOf('/')) {
-				projectName = reqPath.substring(0, reqPath.indexOf('/'));
-				reqPath = reqPath.substring(reqPath.indexOf('/') + 1);
-			} else {
-				projectName = reqPath;
-				reqPath = "";
-			}
+    private static final String WM_BOOT_URL = "/lib/boot/boot.js";
 
-			Resource projectPath = getProjectManager().getProjectDir(
-					projectName, false);
-			if (!projectPath.exists()) {
-				handleError(response, "Project " + projectName + " not found",
-						HttpServletResponse.SC_NOT_FOUND);
-				return null;
-			} else if (!projectPath.getFilename().equals(projectName)) {
-				handleError(response, "Project " + projectName + " not found",
-						HttpServletResponse.SC_NOT_FOUND);
-				return null;
-			}
+    private static final String WM_RUNTIME_LOADER_URL = "/lib/runtimeLoader.js";
 
-			Resource webapproot = projectPath
-					.createRelative(ProjectConstants.WEB_DIR);
-			sendFile = webapproot.createRelative(reqPath);
-		} else if (reqPath.equals("/" + WM_COMMON_URL)
-				|| reqPath.startsWith("/" + WM_COMMON_URL + "/")) {
-			reqPath = reqPath.substring(("/" + WM_COMMON_URL).length());
-			Resource userWmDir = getStudioConfiguration().getCommonDir();
-			if (!userWmDir.exists()) {
-				handleError(response, "Expected wm directory does not exist: "
-						+ userWmDir, HttpServletResponse.SC_NOT_FOUND);
-				return null;
-			}
+    @Override
+    protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-			sendFile = userWmDir.createRelative(reqPath);
-		} else {
-			throw new WMRuntimeException(
-					MessageResource.STUDIO_UNKNOWN_LOCATION, reqPath,
-					request.getRequestURI());
-		}
+        boolean isGzipped = false;
+        boolean addExpiresTag = false;
+        String reqPath = request.getRequestURI();
+        reqPath = reqPath.replaceAll("%20", " ");
+        // trim off the servlet name
+        reqPath = reqPath.substring(reqPath.indexOf('/', 1));
+        if (reqPath.matches("\\/projects\\/.+")) {
+            String userprefix = getProjectManager().getUserProjectPrefix();
+            reqPath = "/projects/" + userprefix + reqPath.substring(10);
+        }
+        Resource sendFile = null;
 
-		if (null != sendFile && !sendFile.exists()) {
-			handleError(response, "File " + reqPath
-					+ " not found in expected path: " + sendFile,
-					HttpServletResponse.SC_NOT_FOUND);
-		} else if (null != sendFile
-				&& StringUtils.getFilenameExtension(sendFile.getFilename()) == null) {
-			handleDirectoryList(sendFile, request.getRequestURL().toString(),
-					response);
-		} else if (null != sendFile) {
-			if (addExpiresTag) {
-				// setting cache expire to one year.
-				setCacheExpireDate(response, 365 * 24 * 60 * 60);
-			}
+        if (reqPath.startsWith(WM_BUILD_GZIPPED_URL) || reqPath.equals(WM_BUILD_DOJO_JS_URL)) {
+            isGzipped = true;
+            addExpiresTag = true;
+            reqPath += ".gz";
+            sendFile = getStudioConfiguration().getStudioWebAppRoot().createRelative(reqPath);
+        } else if (reqPath.startsWith(WM_BUILD_DOJO_THEMES_URL) || reqPath.startsWith(WM_BUILD_WM_THEMES_URL)
+            || reqPath.startsWith(WM_BUILD_DOJO_FOLDER_URL) || reqPath.equals(WM_BOOT_URL) || reqPath.equals(WM_RUNTIME_LOADER_URL)) {
 
-			if (!isGzipped) {
-				setContentType(response, sendFile);
-			} else {
-				response.setHeader("Content-Encoding", "gzip");
-			}
+            sendFile = getStudioConfiguration().getStudioWebAppRoot().createRelative(reqPath);
+            addExpiresTag = true;
 
-			FileCopyUtils.copy(sendFile.getInputStream(),
-					response.getOutputStream());
-		}
+        } else if (reqPath.equals("/" + WM_PROJECTS_PATH) || reqPath.startsWith("/" + WM_PROJECTS_PATH + "/")) {
+            if (reqPath.equals("/" + WM_PROJECTS_PATH)) {
+                reqPath = "";
+            } else {
+                reqPath = reqPath.substring(WM_PROJECTS_PATH.length() + 2);
+            }
 
-		// we've already written our response
-		return null;
-	}
+            // see if we're doing a list of projects
+            if (0 == reqPath.length()) {
+                handleProjectsList(request.getRequestURL().toString(), response);
+                return null;
+            }
 
-	public static void setCacheExpireDate(HttpServletResponse response,
-			int seconds) {
-		if (response != null) {
-			Calendar cal = new GregorianCalendar();
-			cal.add(Calendar.SECOND, seconds);
-			response.setHeader("Cache-Control", "PUBLIC, max-age=" + seconds
-					+ ", must-revalidate");
-			response.setHeader("Expires",
-					htmlExpiresDateFormat().format(cal.getTime()));
-		}
-	}
+            String projectName;
+            if (-1 != reqPath.indexOf('/')) {
+                projectName = reqPath.substring(0, reqPath.indexOf('/'));
+                reqPath = reqPath.substring(reqPath.indexOf('/') + 1);
+            } else {
+                projectName = reqPath;
+                reqPath = "";
+            }
 
-	public static DateFormat htmlExpiresDateFormat() {
-		DateFormat httpDateFormat = new SimpleDateFormat(
-				"EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
-		httpDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
-		return httpDateFormat;
-	}
+            Resource projectPath = getProjectManager().getProjectDir(projectName, false);
+            if (!projectPath.exists()) {
+                handleError(response, "Project " + projectName + " not found", HttpServletResponse.SC_NOT_FOUND);
+                return null;
+            } else if (!projectPath.getFilename().equals(projectName)) {
+                handleError(response, "Project " + projectName + " not found", HttpServletResponse.SC_NOT_FOUND);
+                return null;
+            }
 
-	/**
-	 * Sets the content type based on filename extension.
-	 */
-	protected void setContentType(HttpServletResponse response, Resource file) {
-		response.setContentType(getMediaType(file).toString());
-	}
+            Resource webapproot = projectPath.createRelative(ProjectConstants.WEB_DIR);
+            sendFile = webapproot.createRelative(reqPath);
+        } else if (reqPath.equals("/" + WM_COMMON_URL) || reqPath.startsWith("/" + WM_COMMON_URL + "/")) {
+            reqPath = reqPath.substring(("/" + WM_COMMON_URL).length());
+            Resource userWmDir = getStudioConfiguration().getCommonDir();
+            if (!userWmDir.exists()) {
+                handleError(response, "Expected wm directory does not exist: " + userWmDir, HttpServletResponse.SC_NOT_FOUND);
+                return null;
+            }
 
-	protected void handleError(HttpServletResponse response,
-			String errorMessage, int code) throws IOException {
+            sendFile = userWmDir.createRelative(reqPath);
+        } else {
+            throw new WMRuntimeException(MessageResource.STUDIO_UNKNOWN_LOCATION, reqPath, request.getRequestURI());
+        }
 
-		response.setStatus(code);
-		Writer outputWriter = response.getWriter();
-		outputWriter.write(errorMessage);
-	}
+        if (null != sendFile && !sendFile.exists()) {
+            handleError(response, "File " + reqPath + " not found in expected path: " + sendFile, HttpServletResponse.SC_NOT_FOUND);
+        } else if (null != sendFile && StringUtils.getFilenameExtension(sendFile.getFilename()) == null) {
+            handleDirectoryList(sendFile, request.getRequestURL().toString(), response);
+        } else if (null != sendFile) {
+            if (addExpiresTag) {
+                // setting cache expire to one year.
+                setCacheExpireDate(response, 365 * 24 * 60 * 60);
+            }
 
-	protected void handleProjectsList(String reqFqURL,
-			HttpServletResponse response) throws IOException {
-		// System.out.println("handleProjectList");
-		if (!reqFqURL.endsWith("/")) {
-			reqFqURL += "/";
-		}
+            if (!isGzipped) {
+                setContentType(response, sendFile);
+            } else {
+                response.setHeader("Content-Encoding", "gzip");
+            }
 
-		response.setContentType("text/html");
-		Writer writer = response.getWriter();
-		writer.write("<html><body>\n");
-		String userprefix = getProjectManager().getUserProjectPrefix();
-		for (String project : getProjectManager().listProjects(userprefix)) {
-			project = project.substring(userprefix.length());
-			writer.write("\t<a href=\"" + reqFqURL + project + "/\">" + project
-					+ "/</a>\n");
-			writer.write("\t<br/>\n");
-		}
-		writer.write("</body></html>\n");
-		writer.close();
-	}
+            FileCopyUtils.copy(sendFile.getInputStream(), response.getOutputStream());
+        }
 
-	protected void handleDirectoryList(Resource dir, String reqFqURL,
-			HttpServletResponse response) throws IOException {
-		// System.out.println("handleDirectoryList");
-		if (!reqFqURL.endsWith("/")) {
-			reqFqURL += "/";
-		}
+        // we've already written our response
+        return null;
+    }
 
-		response.setContentType("text/html");
-		Writer writer = response.getWriter();
-		writer.write("<html><body>\n");
+    public static void setCacheExpireDate(HttpServletResponse response, int seconds) {
+        if (response != null) {
+            Calendar cal = new GregorianCalendar();
+            cal.add(Calendar.SECOND, seconds);
+            response.setHeader("Cache-Control", "PUBLIC, max-age=" + seconds + ", must-revalidate");
+            response.setHeader("Expires", htmlExpiresDateFormat().format(cal.getTime()));
+        }
+    }
 
-		for (Resource file : studioConfiguration.listChildren(dir)) {
-			writer.write("\t<a href=\"" + reqFqURL + file.getFilename());
-			if (StringUtils.getFilenameExtension(file.getFilename()) == null) {
-				writer.write("/");
-			}
-			writer.write("\">" + file.getFilename());
-			if (StringUtils.getFilenameExtension(file.getFilename()) == null) {
-				writer.write("/");
-			}
-			writer.write("</a>\n");
-			writer.write("\t    <br/>\n");
-		}
+    public static DateFormat htmlExpiresDateFormat() {
+        DateFormat httpDateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
+        httpDateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return httpDateFormat;
+    }
 
-		writer.write("</body></html>\n");
-		writer.close();
-	}
+    /**
+     * Sets the content type based on filename extension.
+     */
+    protected void setContentType(HttpServletResponse response, Resource file) {
+        response.setContentType(getMediaType(file).toString());
+    }
 
-	/**
-	 * Determine an appropriate media type for the given resource.
-	 * 
-	 * @param resource
-	 *            the resource to check
-	 * @return the corresponding media type, or <code>null</code> if none found
-	 */
-	protected MediaType getMediaType(Resource resource) {
-		String mimeType = getServletContext().getMimeType(
-				resource.getFilename());
-		return (StringUtils.hasText(mimeType) ? MediaType
-				.parseMediaType(mimeType) : null);
-	}
+    protected void handleError(HttpServletResponse response, String errorMessage, int code) throws IOException {
 
-	// spring-managed bean properties
-	private ProjectManager projectManager;
+        response.setStatus(code);
+        Writer outputWriter = response.getWriter();
+        outputWriter.write(errorMessage);
+    }
 
-	private StudioConfiguration studioConfiguration;
+    protected void handleProjectsList(String reqFqURL, HttpServletResponse response) throws IOException {
+        // System.out.println("handleProjectList");
+        if (!reqFqURL.endsWith("/")) {
+            reqFqURL += "/";
+        }
 
-	public ProjectManager getProjectManager() {
-		return projectManager;
-	}
+        response.setContentType("text/html");
+        Writer writer = response.getWriter();
+        writer.write("<html><body>\n");
+        String userprefix = getProjectManager().getUserProjectPrefix();
+        for (String project : getProjectManager().listProjects(userprefix)) {
+            project = project.substring(userprefix.length());
+            writer.write("\t<a href=\"" + reqFqURL + project + "/\">" + project + "/</a>\n");
+            writer.write("\t<br/>\n");
+        }
+        writer.write("</body></html>\n");
+        writer.close();
+    }
 
-	public void setProjectManager(ProjectManager projectManager) {
-		this.projectManager = projectManager;
-	}
+    protected void handleDirectoryList(Resource dir, String reqFqURL, HttpServletResponse response) throws IOException {
+        // System.out.println("handleDirectoryList");
+        if (!reqFqURL.endsWith("/")) {
+            reqFqURL += "/";
+        }
 
-	public StudioConfiguration getStudioConfiguration() {
-		return studioConfiguration;
-	}
+        response.setContentType("text/html");
+        Writer writer = response.getWriter();
+        writer.write("<html><body>\n");
 
-	public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-		this.studioConfiguration = studioConfiguration;
-	}
+        for (Resource file : this.studioConfiguration.listChildren(dir)) {
+            writer.write("\t<a href=\"" + reqFqURL + file.getFilename());
+            if (StringUtils.getFilenameExtension(file.getFilename()) == null) {
+                writer.write("/");
+            }
+            writer.write("\">" + file.getFilename());
+            if (StringUtils.getFilenameExtension(file.getFilename()) == null) {
+                writer.write("/");
+            }
+            writer.write("</a>\n");
+            writer.write("\t    <br/>\n");
+        }
+
+        writer.write("</body></html>\n");
+        writer.close();
+    }
+
+    /**
+     * Determine an appropriate media type for the given resource.
+     * 
+     * @param resource the resource to check
+     * @return the corresponding media type, or <code>null</code> if none found
+     */
+    protected MediaType getMediaType(Resource resource) {
+        String mimeType = getServletContext().getMimeType(resource.getFilename());
+        return StringUtils.hasText(mimeType) ? MediaType.parseMediaType(mimeType) : null;
+    }
+
+    // spring-managed bean properties
+    private ProjectManager projectManager;
+
+    private StudioConfiguration studioConfiguration;
+
+    public ProjectManager getProjectManager() {
+        return this.projectManager;
+    }
+
+    public void setProjectManager(ProjectManager projectManager) {
+        this.projectManager = projectManager;
+    }
+
+    public StudioConfiguration getStudioConfiguration() {
+        return this.studioConfiguration;
+    }
+
+    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
+        this.studioConfiguration = studioConfiguration;
+    }
 }

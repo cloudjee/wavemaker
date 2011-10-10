@@ -16,37 +16,34 @@ package com.wavemaker.runtime.service.definition;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Collections;
 
 import com.wavemaker.json.type.FieldDefinition;
 import com.wavemaker.json.type.TypeDefinition;
 import com.wavemaker.runtime.service.ElementType;
 
 /**
- * An abstract ReflectServiceDefinition with the new methods implemented,
- * to help aid in the transition.
+ * An abstract ReflectServiceDefinition with the new methods implemented, to help aid in the transition.
  * 
  * @author small
  * @version $Rev$ - $Date$
  */
-public abstract class AbstractDeprecatedServiceDefinition implements
-        DeprecatedServiceDefinition {
+public abstract class AbstractDeprecatedServiceDefinition implements DeprecatedServiceDefinition {
 
     @SuppressWarnings("deprecation")
     public List<ServiceOperation> getServiceOperations() {
 
         List<String> operationNames = getOperationNames();
         List<ServiceOperation> ret = new ArrayList<ServiceOperation>(operationNames.size());
-        
-        for(String operationName: operationNames) {
+
+        for (String operationName : operationNames) {
             ServiceOperation so = new ServiceOperation();
             so.setName(operationName);
             ret.add(so);
-            
-            if (null!=getOutputType(operationName)) {
+
+            if (null != getOutputType(operationName)) {
                 so.setReturnType(getOutputType(operationName).toFieldDefinition());
             }
-            
+
             List<FieldDefinition> fdPT = new ArrayList<FieldDefinition>();
             so.setParameterTypes(fdPT);
             if (null != getInputTypes(operationName)) {
@@ -57,35 +54,35 @@ public abstract class AbstractDeprecatedServiceDefinition implements
                 }
             }
         }
-        
-        return ret;
-    }
-    
-    @SuppressWarnings("deprecation")
-    public List<TypeDefinition> getLocalTypes() {
-        
-        List<ElementType> types = getTypes();
-        List<TypeDefinition> ret = new ArrayList<TypeDefinition>(types.size());
-        
-        for (ElementType type: types) {
-            FieldDefinition fd = type.toFieldDefinition();
-            if (null!=fd.getTypeDefinition()) {
-                ret.add(fd.getTypeDefinition());
-            }
-        }
-        
+
         return ret;
     }
 
     @SuppressWarnings("deprecation")
-    public List<TypeDefinition> getLocalTypes(String username, String password) { //salesforce
+    public List<TypeDefinition> getLocalTypes() {
+
+        List<ElementType> types = getTypes();
+        List<TypeDefinition> ret = new ArrayList<TypeDefinition>(types.size());
+
+        for (ElementType type : types) {
+            FieldDefinition fd = type.toFieldDefinition();
+            if (null != fd.getTypeDefinition()) {
+                ret.add(fd.getTypeDefinition());
+            }
+        }
+
+        return ret;
+    }
+
+    @SuppressWarnings("deprecation")
+    public List<TypeDefinition> getLocalTypes(String username, String password) { // salesforce
 
         List<ElementType> types = getTypes(username, password);
         List<TypeDefinition> ret = new ArrayList<TypeDefinition>(types.size());
 
-        for (ElementType type: types) {
+        for (ElementType type : types) {
             FieldDefinition fd = type.toFieldDefinition();
-            if (null!=fd.getTypeDefinition()) {
+            if (null != fd.getTypeDefinition()) {
                 ret.add(fd.getTypeDefinition());
             }
         }
@@ -93,7 +90,7 @@ public abstract class AbstractDeprecatedServiceDefinition implements
         return ret;
     }
 
-    public List<ElementType> getTypes(String username, String password) { //xxx
+    public List<ElementType> getTypes(String username, String password) { // xxx
         return null;
     }
 

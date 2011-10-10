@@ -21,16 +21,18 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 /**
  * @author ffu
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class DateXmlAdapter extends XmlAdapter<String, Date> {
 
+    @Override
     public String marshal(Date value) {
-        return (com.wavemaker.runtime.ws.jaxb.DateAdapter.printDate(value));
+        return com.wavemaker.runtime.ws.jaxb.DateAdapter.printDate(value);
     }
 
+    @Override
     public Date unmarshal(String value) {
-        return (com.wavemaker.runtime.ws.jaxb.DateAdapter.parseDate(value));
+        return com.wavemaker.runtime.ws.jaxb.DateAdapter.parseDate(value);
     }
 
 }

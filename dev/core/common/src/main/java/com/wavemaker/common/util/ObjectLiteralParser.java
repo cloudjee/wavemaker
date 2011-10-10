@@ -21,15 +21,13 @@ import com.wavemaker.common.WMRuntimeException;
 
 /**
  * Parses an object literal (javascript syntax) into an object graph.
- *
+ * 
  * {a:a,b:{c:c},d:d}
  * 
- * To do:  
- * Lists [a,b,c] are not supported.
- * The literal "null" is not supported...
- *
+ * To do: Lists [a,b,c] are not supported. The literal "null" is not supported...
+ * 
  * ...and replace whole thing with antlr generated parser.
- *
+ * 
  * @author Simon Toens
  * @version $Rev$ - $Date$
  * 
@@ -37,7 +35,7 @@ import com.wavemaker.common.WMRuntimeException;
 public class ObjectLiteralParser {
 
     private final ObjectAccess objectAccess = ObjectAccess.getInstance();
-    
+
     private final Class<?> type;
 
     private final String literal;
@@ -61,17 +59,17 @@ public class ObjectLiteralParser {
 
     public Object parse() {
 
-        return buildObjectGraph(0, type);
+        return buildObjectGraph(0, this.type);
     }
 
     private Object buildObjectGraph(int start, Class<?> type) {
 
-	// hack to support simple lists - no nesting! use antlr instead!
-	if (literal.charAt(start) == '[') {
-	    return buildList(start, type);
-	}
+        // hack to support simple lists - no nesting! use antlr instead!
+        if (this.literal.charAt(start) == '[') {
+            return buildList(start, type);
+        }
 
-        Object rtn = objectAccess.newInstance(type);
+        Object rtn = this.objectAccess.newInstance(type);
 
         StringBuilder propertyName = new StringBuilder();
         boolean isPropertyName = true;
@@ -80,12 +78,12 @@ public class ObjectLiteralParser {
 
         Object value = null;
 
-        int i = start+1;
+        int i = start + 1;
         int nesting = 0;
 
-        while (i < literal.length()) {
-            
-            char c = literal.charAt(i);
+        while (i < this.literal.length()) {
+
+            char c = this.literal.charAt(i);
 
             if (c == '{') {
                 if (nesting == 0) {
@@ -96,7 +94,7 @@ public class ObjectLiteralParser {
                 nesting++;
             } else if (c == '}') {
                 if (nesting == 1) {
-                    start = i+1;
+                    start = i + 1;
                 }
                 nesting--;
             } else if (c == ':' && nesting == 0) {
@@ -113,9 +111,9 @@ public class ObjectLiteralParser {
                 }
             }
 
-            boolean done = (nesting == -1 && c == '}');
+            boolean done = nesting == -1 && c == '}';
 
-            boolean shouldSetProperty = (nesting == 0 && c == ',') || done;
+            boolean shouldSetProperty = nesting == 0 && c == ',' || done;
 
             if (shouldSetProperty) {
                 // was this a str value or an 'object' value?
@@ -126,8 +124,7 @@ public class ObjectLiteralParser {
                     value = strValue.toString().trim();
                 }
 
-                String propName = 
-		    StringUtils.unquote(propertyName.toString().trim());
+                String propName = StringUtils.unquote(propertyName.toString().trim());
 
                 if (propName.length() == 0) {
                     // it is an empty instance: {}
@@ -148,34 +145,30 @@ public class ObjectLiteralParser {
 
             i++;
         }
-        throw new WMRuntimeException("Mismatched braces in \"" 
-                                     + literal + "\"");
+        throw new WMRuntimeException("Mismatched braces in \"" + this.literal + "\"");
     }
 
     private Class<?> getPropertyType(Class<?> clazz, String propertyName) {
 
-        Class<?> rtn = objectAccess.getPropertyType(clazz, propertyName);
+        Class<?> rtn = this.objectAccess.getPropertyType(clazz, propertyName);
         if (rtn == null) {
-            throw new WMRuntimeException("\"" + clazz.getName() + 
-                                         "\" does not have a property \"" + 
-                                         propertyName + "\"");
+            throw new WMRuntimeException("\"" + clazz.getName() + "\" does not have a property \"" + propertyName + "\"");
         }
         return rtn;
     }
 
-    private void setProperty(Object o, String propertyName, Object value) 
-    {
+    private void setProperty(Object o, String propertyName, Object value) {
         if (value instanceof String) {
 
-            String strValue = (String)value;
-            
+            String strValue = (String) value;
+
             strValue = StringUtils.unquote(strValue);
 
             Class<?> t = getPropertyType(o.getClass(), propertyName);
             value = TypeConversionUtils.fromString(t, strValue);
         }
-    
-        objectAccess.setProperty(o, propertyName, value);
+
+        this.objectAccess.setProperty(o, propertyName, value);
     }
 
     @SuppressWarnings("unchecked")
@@ -183,30 +176,29 @@ public class ObjectLiteralParser {
 
         int i = start;
 
-	if (literal.charAt(i) != '[') {
-	    throw new IllegalArgumentException("List must start with '['");
-	}
+        if (this.literal.charAt(i) != '[') {
+            throw new IllegalArgumentException("List must start with '['");
+        }
 
-	int j = literal.indexOf("]", i+1);
+        int j = this.literal.indexOf("]", i + 1);
 
-	if (j == -1) {
-	    throw new IllegalArgumentException("List must end with ']'");
-	}
+        if (j == -1) {
+            throw new IllegalArgumentException("List must end with ']'");
+        }
 
-	List rtn = new ArrayList();
+        List rtn = new ArrayList();
 
-	String s = literal.substring(i+1, j);
+        String s = this.literal.substring(i + 1, j);
 
-	for (String token : s.split(",")) {
+        for (String token : s.split(",")) {
 
-	    Object o = TypeConversionUtils.fromString(type, token.trim());
+            Object o = TypeConversionUtils.fromString(type, token.trim());
 
-	    rtn.add(o);
-	}
+            rtn.add(o);
+        }
 
-	return rtn;
+        return rtn;
 
     }
 
-   
 }

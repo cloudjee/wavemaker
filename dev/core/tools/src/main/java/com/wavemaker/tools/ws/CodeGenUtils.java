@@ -26,36 +26,28 @@ import com.sun.xml.bind.api.impl.NameConverter;
 public class CodeGenUtils {
 
     /**
-     * Constructs a Java package name based on the given namespace and service
-     * ID.
+     * Constructs a Java package name based on the given namespace and service ID.
      * 
-     * @param namespaceURI
-     *            The namespace URI to be converted.
-     * @param serviceId
-     *            The service ID.
+     * @param namespaceURI The namespace URI to be converted.
+     * @param serviceId The service ID.
      * @return A Java package name.
      */
-    public static String constructPackageName(String namespaceURI,
-            String serviceId) {
-        return NameConverter.standard.toPackageName(namespaceURI) + "."
-                + serviceId.toLowerCase();
+    public static String constructPackageName(String namespaceURI, String serviceId) {
+        return NameConverter.standard.toPackageName(namespaceURI) + "." + serviceId.toLowerCase();
     }
 
     /**
      * Converts the package name to directory path equivalent.
      * 
-     * @param baseDir
-     *            The base directory.
-     * @param packageName
-     *            The Java package name.
+     * @param baseDir The base directory.
+     * @param packageName The Java package name.
      * @return The equivalent Directory for the WSDL's package name.
      */
     public static File getPackageDir(File baseDir, String packageName) {
         if (packageName == null) {
             return baseDir;
         } else {
-            return new File(baseDir, packageName.replace('.',
-                    File.separatorChar));
+            return new File(baseDir, packageName.replace('.', File.separatorChar));
         }
     }
 
@@ -68,7 +60,7 @@ public class CodeGenUtils {
     public static String toClassName(String name) {
         return NameConverter.standard.toClassName(name);
     }
-    
+
     /**
      * Converts a string suitable for properties.
      * 
@@ -87,7 +79,7 @@ public class CodeGenUtils {
         }
         return s;
     }
-    
+
     /**
      * Converts a string into an identifier suitable for variables.
      * 
@@ -97,7 +89,7 @@ public class CodeGenUtils {
     public static String toVariableName(String name) {
         return NameConverter.standard.toVariableName(name);
     }
-    
+
     /**
      * Converts a string suitable for Java methods.
      * 

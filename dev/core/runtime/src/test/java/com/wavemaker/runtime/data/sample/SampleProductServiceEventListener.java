@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data.sample;
 
 import java.util.List;
@@ -34,35 +35,39 @@ public class SampleProductServiceEventListener implements ServletEventListener {
 
     public SampleProductServiceEventListener() {
 
-        p = new Product("pmelProduct", 12399.8, 10);
+        this.p = new Product("pmelProduct", 12399.8, 10);
     }
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.service.events.ServletEventListener#endRequest(com.wavemaker.runtime.service.ServiceWire)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.wavemaker.runtime.service.events.ServletEventListener#endRequest(com.wavemaker.runtime.service.ServiceWire)
      */
     public void endRequest(ServiceWire serviceWire) {
-        
+
         Object service = ((ReflectServiceWire) serviceWire).getServiceBean();
 
-        ProductManager pm = ((SampleProductService) service)
-                .getProductManager();
+        ProductManager pm = ((SampleProductService) service).getProductManager();
 
         List<Product> products = pm.getProducts();
-        products.remove(p);
+        products.remove(this.p);
         pm.setProducts(products);
     }
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.service.events.ServletEventListener#startRequest(com.wavemaker.runtime.service.ServiceWire)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.wavemaker.runtime.service.events.ServletEventListener#startRequest(com.wavemaker.runtime.service.ServiceWire)
      */
     public void startRequest(ServiceWire serviceWire) {
 
         Object service = ((ReflectServiceWire) serviceWire).getServiceBean();
-        
-        ProductManager pm = ((SampleProductService) service)
-                .getProductManager();
 
-        pm.addProduct(p);
+        ProductManager pm = ((SampleProductService) service).getProductManager();
+
+        pm.addProduct(this.p);
     }
 
 }

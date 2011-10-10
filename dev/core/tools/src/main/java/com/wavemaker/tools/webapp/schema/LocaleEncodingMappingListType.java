@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import java.util.ArrayList;
@@ -35,18 +34,18 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
  * 
  * 
- * 	The locale-encoding-mapping-list contains one or more
- * 	locale-encoding-mapping(s).
+ * The locale-encoding-mapping-list contains one or more locale-encoding-mapping(s).
  * 
- *       
  * 
- * <p>Java class for locale-encoding-mapping-listType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for locale-encoding-mapping-listType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="locale-encoding-mapping-listType">
@@ -64,13 +63,12 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "locale-encoding-mapping-listType", propOrder = {
-    "localeEncodingMapping"
-})
+@XmlType(name = "locale-encoding-mapping-listType", propOrder = { "localeEncodingMapping" })
 public class LocaleEncodingMappingListType {
 
     @XmlElement(name = "locale-encoding-mapping", required = true)
     protected List<LocaleEncodingMappingType> localeEncodingMapping;
+
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -81,27 +79,26 @@ public class LocaleEncodingMappingListType {
      * Gets the value of the localeEncodingMapping property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the localeEncodingMapping property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the localeEncodingMapping property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getLocaleEncodingMapping().add(newItem);
+     * getLocaleEncodingMapping().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link LocaleEncodingMappingType }
+     * Objects of the following type(s) are allowed in the list {@link LocaleEncodingMappingType }
      * 
      * 
      */
     public List<LocaleEncodingMappingType> getLocaleEncodingMapping() {
-        if (localeEncodingMapping == null) {
-            localeEncodingMapping = new ArrayList<LocaleEncodingMappingType>();
+        if (this.localeEncodingMapping == null) {
+            this.localeEncodingMapping = new ArrayList<LocaleEncodingMappingType>();
         }
         return this.localeEncodingMapping;
     }
@@ -109,22 +106,18 @@ public class LocaleEncodingMappingListType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setId(java.lang.String value) {
         this.id = value;

@@ -27,31 +27,27 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package com.wavemaker.json;
 
 /**
  * Provides a method to filter out properties.
  * 
- * Based on net.sf.json.util.PropertyFilter by Andres Almiray, (c) 2002-2007 and
- * licensed under ASL 2.0.
+ * Based on net.sf.json.util.PropertyFilter by Andres Almiray, (c) 2002-2007 and licensed under ASL 2.0.
  * 
  * Modified by Matt Small <msmall@wavemaker.com>
+ * 
  * @version $Rev$ - $Date$
  */
 public interface PropertyFilter {
 
     /**
-     * Interface method; returns true iff the property with the specified name
-     * should be filtered out.
+     * Interface method; returns true iff the property with the specified name should be filtered out.
      * 
-     * @param object
-     *            The Java object being serialized or de-serialized.
-     * @param name
-     *            The name of the property to check for.
-     * @param value
-     *            The value of the property.
-     * @return True iff the property should be filtered out; false if it should
-     *         be included.
+     * @param object The Java object being serialized or de-serialized.
+     * @param name The name of the property to check for.
+     * @param value The value of the property.
+     * @return True iff the property should be filtered out; false if it should be included.
      */
     public boolean filter(Object object, String name, Object value);
 }

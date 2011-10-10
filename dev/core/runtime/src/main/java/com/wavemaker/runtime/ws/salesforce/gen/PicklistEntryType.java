@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -21,11 +19,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for PicklistEntry complex type.
+ * <p>
+ * Java class for PicklistEntry complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="PicklistEntry">
@@ -46,23 +45,21 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "PicklistEntry", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "active",
-    "defaultValue",
-    "label",
-    "validFor",
-    "value"
-})
+@XmlType(name = "PicklistEntry", namespace = "urn:partner.soap.sforce.com", propOrder = { "active", "defaultValue", "label", "validFor", "value" })
 public class PicklistEntryType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean active;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean defaultValue;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String label;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected byte[] validFor;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String value;
 
@@ -71,7 +68,7 @@ public class PicklistEntryType {
      * 
      */
     public boolean isActive() {
-        return active;
+        return this.active;
     }
 
     /**
@@ -87,7 +84,7 @@ public class PicklistEntryType {
      * 
      */
     public boolean isDefaultValue() {
-        return defaultValue;
+        return this.defaultValue;
     }
 
     /**
@@ -101,22 +98,18 @@ public class PicklistEntryType {
     /**
      * Gets the value of the label property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getLabel() {
-        return label;
+        return this.label;
     }
 
     /**
      * Sets the value of the label property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setLabel(String value) {
         this.label = value;
@@ -125,44 +118,36 @@ public class PicklistEntryType {
     /**
      * Gets the value of the validFor property.
      * 
-     * @return
-     *     possible object is
-     *     byte[]
+     * @return possible object is byte[]
      */
     public byte[] getValidFor() {
-        return validFor;
+        return this.validFor;
     }
 
     /**
      * Sets the value of the validFor property.
      * 
-     * @param value
-     *     allowed object is
-     *     byte[]
+     * @param value allowed object is byte[]
      */
     public void setValidFor(byte[] value) {
-        this.validFor = ((byte[]) value);
+        this.validFor = value;
     }
 
     /**
      * Gets the value of the value property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getValue() {
-        return value;
+        return this.value;
     }
 
     /**
      * Sets the value of the value property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setValue(String value) {
         this.value = value;

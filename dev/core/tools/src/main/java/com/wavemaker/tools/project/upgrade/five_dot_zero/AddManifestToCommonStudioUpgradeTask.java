@@ -31,38 +31,34 @@ import com.wavemaker.tools.project.upgrade.UpgradeInfo;
  */
 public class AddManifestToCommonStudioUpgradeTask implements StudioUpgradeTask {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.wavemaker.tools.project.upgrade.StudioUpgradeTask#doUpgrade(com.wavemaker
-	 * .tools.project.upgrade.UpgradeInfo)
-	 */
-	public void doUpgrade(UpgradeInfo upgradeInfo) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.tools.project.upgrade.StudioUpgradeTask#doUpgrade(com.wavemaker
+     * .tools.project.upgrade.UpgradeInfo)
+     */
+    public void doUpgrade(UpgradeInfo upgradeInfo) {
 
-		try {
-			Resource commonDir = studioConfiguration.getCommonDir();
-			Resource userManifest = commonDir.createRelative("manifest.js");
+        try {
+            Resource commonDir = this.studioConfiguration.getCommonDir();
+            Resource userManifest = commonDir.createRelative("manifest.js");
 
-			if (commonDir.exists() && !userManifest.exists()) {
-				Resource templateManifest = studioConfiguration
-						.getStudioWebAppRoot().createRelative(
-								"lib/wm/common/manifest.js");
-				FileCopyUtils.copy(templateManifest.getInputStream(),
-						studioConfiguration.getOutputStream(userManifest));
-			}
-		} catch (IOException e) {
-			throw new WMRuntimeException(e);
-		}
-	}
+            if (commonDir.exists() && !userManifest.exists()) {
+                Resource templateManifest = this.studioConfiguration.getStudioWebAppRoot().createRelative("lib/wm/common/manifest.js");
+                FileCopyUtils.copy(templateManifest.getInputStream(), this.studioConfiguration.getOutputStream(userManifest));
+            }
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        }
+    }
 
-	private StudioConfiguration studioConfiguration;
+    private StudioConfiguration studioConfiguration;
 
-	public StudioConfiguration getStudioConfiguration() {
-		return studioConfiguration;
-	}
+    public StudioConfiguration getStudioConfiguration() {
+        return this.studioConfiguration;
+    }
 
-	public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-		this.studioConfiguration = studioConfiguration;
-	}
+    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
+        this.studioConfiguration = studioConfiguration;
+    }
 }

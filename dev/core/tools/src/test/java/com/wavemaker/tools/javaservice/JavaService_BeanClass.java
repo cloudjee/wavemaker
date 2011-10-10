@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.javaservice;
 
 import java.util.List;
@@ -22,11 +23,12 @@ import java.util.List;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class JavaService_BeanClass {
 
     private InputClass input;
+
     private List<InputClass> inputs;
 
     public void setInput(InputClass input) {
@@ -34,21 +36,18 @@ public class JavaService_BeanClass {
     }
 
     public InputClass getInput() {
-        return input;
+        return this.input;
     }
-    
+
     public void setInputs(List<InputClass> inputs) {
         this.inputs = inputs;
     }
 
     public List<InputClass> getInputs() {
-        return inputs;
+        return this.inputs;
     }
 
-
-
-
     public static class InputClass {
-        
+
     }
 }

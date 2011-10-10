@@ -16,6 +16,8 @@ package com.wavemaker.common.util;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -23,8 +25,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import java.sql.Timestamp;
-import java.sql.Time;
 
 /**
  * @author Simon Toens
@@ -32,31 +32,27 @@ import java.sql.Time;
  */
 public class TypeConversionUtils {
 
-
     private TypeConversionUtils() {
         throw new UnsupportedOperationException();
     }
 
-    private static final Map<String, Class<?>> PRIMITIVES = 
-	new HashMap<String, Class<?>>(8);
+    private static final Map<String, Class<?>> PRIMITIVES = new HashMap<String, Class<?>>(8);
     static {
-	PRIMITIVES.put(boolean.class.getName(), boolean.class);
-	PRIMITIVES.put(byte.class.getName(), byte.class);
-	PRIMITIVES.put(char.class.getName(), char.class);
-	PRIMITIVES.put(double.class.getName(), double.class);
-	PRIMITIVES.put(float.class.getName(), float.class);
-	PRIMITIVES.put(int.class.getName(), int.class);
-	PRIMITIVES.put(long.class.getName(), long.class);
-	PRIMITIVES.put(short.class.getName(), short.class);
+        PRIMITIVES.put(boolean.class.getName(), boolean.class);
+        PRIMITIVES.put(byte.class.getName(), byte.class);
+        PRIMITIVES.put(char.class.getName(), char.class);
+        PRIMITIVES.put(double.class.getName(), double.class);
+        PRIMITIVES.put(float.class.getName(), float.class);
+        PRIMITIVES.put(int.class.getName(), int.class);
+        PRIMITIVES.put(long.class.getName(), long.class);
+        PRIMITIVES.put(short.class.getName(), short.class);
     }
 
-
-   /**
-     * List of primitive wrappers (Integer, etc), including Atomic numbers.
-     * All standard subclasses of Number are included, and Boolean.
+    /**
+     * List of primitive wrappers (Integer, etc), including Atomic numbers. All standard subclasses of Number are
+     * included, and Boolean.
      */
-    private static final Collection<Class<?>> PRIMITIVE_WRAPPERS = 
-        new HashSet<Class<?>>(11);
+    private static final Collection<Class<?>> PRIMITIVE_WRAPPERS = new HashSet<Class<?>>(11);
     static {
         PRIMITIVE_WRAPPERS.add(AtomicInteger.class);
         PRIMITIVE_WRAPPERS.add(AtomicLong.class);
@@ -72,23 +68,22 @@ public class TypeConversionUtils {
     }
 
     public static Class<?> primitiveForName(String className) {
-	return PRIMITIVES.get(className);
+        return PRIMITIVES.get(className);
     }
 
     /**
-     * Returns true iff the Class clazz represents a primitive (boolean, int) or
-     * a primitive wrapper (Integer), including Big{Integer,Decimal} and
-     * Atomic{Integer,Long}.  Also, Strings and Dates are included.
+     * Returns true iff the Class clazz represents a primitive (boolean, int) or a primitive wrapper (Integer),
+     * including Big{Integer,Decimal} and Atomic{Integer,Long}. Also, Strings and Dates are included.
      * 
      * @param clazz
      * @return
      */
     public static boolean isPrimitiveOrWrapper(Class<?> clazz) {
-        
+
         if (clazz.isPrimitive()) {
             return true;
         }
-        
+
         if (clazz.equals(String.class)) {
             return true;
         }
@@ -103,43 +98,45 @@ public class TypeConversionUtils {
 
         return false;
     }
-    
+
     /**
      * Return true iff the parameter is an Array or a Collection.
+     * 
      * @param clazz
      * @return
      */
     public static boolean isArray(Class<?> clazz) {
-        
-        return clazz!=null &&
-                (Collection.class.isAssignableFrom(clazz) || clazz.isArray());
+
+        return clazz != null && (Collection.class.isAssignableFrom(clazz) || clazz.isArray());
     }
-    
+
     /**
      * Return true iff the parameter is a Map.
+     * 
      * @param clazz
      * @return
      */
     public static boolean isMap(Class<?> clazz) {
-        
-        return clazz!=null &&
-                (Map.class.isAssignableFrom(clazz));
+
+        return clazz != null && Map.class.isAssignableFrom(clazz);
     }
 
     public static Object fromString(Class<?> type, String s) {
-	return fromString(type, s, false);
+        return fromString(type, s, false);
     }
 
     public static Object fromString(Class<?> type, String s, boolean isList) {
 
         if (isList || !isPrimitiveOrWrapper(type)) {
-            if (s == null) return null;
+            if (s == null) {
+                return null;
+            }
             ObjectLiteralParser p = new ObjectLiteralParser(s, type);
-	        Object o = p.parse();
+            Object o = p.parse();
             return o;
         }
 
-        if (s == null) { 
+        if (s == null) {
             return null;
         } else if (type == AtomicInteger.class) {
             return null;
@@ -157,8 +154,7 @@ public class TypeConversionUtils {
             if (StringUtils.isNumber(s)) {
                 return new Date(Long.valueOf(s));
             } else {
-                throw new IllegalArgumentException(
-                    "Unable to convert " + s + " to " + Date.class.getName());
+                throw new IllegalArgumentException("Unable to convert " + s + " to " + Date.class.getName());
             }
         } else if (type == Double.class || type == double.class) {
             return Double.valueOf(s);
@@ -173,20 +169,17 @@ public class TypeConversionUtils {
         } else if (type == String.class) {
             return s;
         } else {
-            throw new AssertionError(
-                "Unable to convert \"" + s + "\" to " + type + 
-                " - unknown type: " + type);
+            throw new AssertionError("Unable to convert \"" + s + "\" to " + type + " - unknown type: " + type);
         }
     }
 
-    public static String getValueString(Class<?> type, String s) {  //salesforce
+    public static String getValueString(Class<?> type, String s) { // salesforce
 
         if (s == null) {
             return "null";
         } else if (type == String.class || type == StringBuffer.class) {
             return "'" + s + "'";
-        } else if (type == Date.class || type == java.sql.Date.class || type == Timestamp.class ||
-                   type == Time.class) {
+        } else if (type == Date.class || type == java.sql.Date.class || type == Timestamp.class || type == Time.class) {
             return "'" + s + "'";
         } else {
             return s;
@@ -224,8 +217,7 @@ public class TypeConversionUtils {
         return false;
     }
 
-    private static boolean compare(Class<?> p1, Class<?> p2, Class<?> t1,
-            Class<?> t2) {
+    private static boolean compare(Class<?> p1, Class<?> p2, Class<?> t1, Class<?> t2) {
 
         if (p1 == t1 && p2 == t2) {
             return true;

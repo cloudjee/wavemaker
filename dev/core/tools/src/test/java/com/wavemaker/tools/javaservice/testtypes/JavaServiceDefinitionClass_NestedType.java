@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.javaservice.testtypes;
 
 import com.wavemaker.tools.javaservice.JavaService_BeanClass;
@@ -24,7 +25,7 @@ import com.wavemaker.tools.javaservice.JavaService_BeanClass;
  * @version $Rev$ - $Date:2008-05-30 14:45:46 -0700 (Fri, 30 May 2008) $
  */
 public class JavaServiceDefinitionClass_NestedType {
-    
+
     public JavaService_BeanClass getNestedType() {
         return null;
     }

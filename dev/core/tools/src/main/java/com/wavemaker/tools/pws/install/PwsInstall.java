@@ -54,23 +54,26 @@ import com.wavemaker.tools.project.ProjectManager;
 public class PwsInstall {
 
     private static final String LOGIN_MANAGER = "LoginManager";
+
     private static final String REST_IMPORTER = "RestImporter";
+
     private static final String REST_WSDL_GENERATOR = "RestWsdlGenerator";
+
     private static final String REST_SERVICE_IMPORTER = "RestServiceGenerator";
+
     private static final String RESPONSE_PROCESSOR = "ResponseProcessor";
+
     private static final String SERVICE_MODIFIER = "ServiceModifier";
 
-     public static void setupPwsProject(ProjectManager mgr, String partnerName) {
+    public static void setupPwsProject(ProjectManager mgr, String partnerName) {
         File destf;
         try {
-            File srcf = new File(mgr.getStudioConfiguration().getStudioWebAppRoot().getFile(),
-                    "app/templates/pws/" + partnerName);
+            File srcf = new File(mgr.getStudioConfiguration().getStudioWebAppRoot().getFile(), "app/templates/pws/" + partnerName);
 
             destf = mgr.getCurrentProject().getProjectRoot().getFile();
 
             IOUtils.copy(srcf, destf);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new WMRuntimeException(e);
         }
@@ -94,7 +97,7 @@ public class PwsInstall {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
         DocumentBuilder docBuilder = dbf.newDocumentBuilder();
-        Document doc = docBuilder.parse (is);
+        Document doc = docBuilder.parse(is);
 
         doc = insertImport(doc, resource);
 
@@ -112,14 +115,14 @@ public class PwsInstall {
         FileUtils.writeStringToFile(xmlFile, content, "UTF-8");
     }
 
-    public static Document insertImport (Document doc, String resource) {
+    public static Document insertImport(Document doc, String resource) {
         List<Node> targetList = new ArrayList<Node>();
 
-        //First, delete old lines if any.
+        // First, delete old lines if any.
 
         NodeList list = doc.getElementsByTagName("import");
         Node node = null;
-        for (int i=0; i<list.getLength(); i++) {
+        for (int i = 0; i < list.getLength(); i++) {
             node = list.item(i);
             NamedNodeMap attributes = node.getAttributes();
             for (int j = 0; j < attributes.getLength(); j++) {
@@ -140,11 +143,11 @@ public class PwsInstall {
             }
         }
 
-        //Now, add the new line
+        // Now, add the new line
 
         NodeList list1 = beans_node.getChildNodes();
         Node bean_node = null;
-        for (int i=0; i<list1.getLength(); i++) {
+        for (int i = 0; i < list1.getLength(); i++) {
             Node node1 = list1.item(i);
             if (node1.getNodeName().equals("bean")) {
                 bean_node = node1;
@@ -186,7 +189,7 @@ public class PwsInstall {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
         DocumentBuilder docBuilder = dbf.newDocumentBuilder();
-        Document doc = docBuilder.parse (is);
+        Document doc = docBuilder.parse(is);
 
         insertEntryKey(doc, runtimeJarFiles, toolsJarFiles, partnerName);
 
@@ -204,22 +207,22 @@ public class PwsInstall {
         FileUtils.writeStringToFile(xmlFile, content, "UTF-8");
     }
 
-    private static Document insertEntryKey (Document doc, File[] runtimeJarFiles, File[] toolsJarFiles, String partnerName) throws IOException {
+    private static Document insertEntryKey(Document doc, File[] runtimeJarFiles, File[] toolsJarFiles, String partnerName) throws IOException {
 
         NodeList beans_list = doc.getElementsByTagName("beans");
         Node beans_node = beans_list.item(0);
 
-        //First delete old entries
+        // First delete old entries
 
         NodeList beansChildren = beans_node.getChildNodes();
-        Node bean_node=null, prop_node=null, map_node=null;
-        for (int i=0; i<beansChildren.getLength(); i++) {
+        Node bean_node = null, prop_node = null, map_node = null;
+        for (int i = 0; i < beansChildren.getLength(); i++) {
             if (!beansChildren.item(i).getNodeName().equals("bean")) {
                 continue;
             }
             bean_node = beansChildren.item(i);
             NodeList beanChildren = bean_node.getChildNodes();
-            for (int j=0; j<beanChildren.getLength(); j++) {
+            for (int j = 0; j < beanChildren.getLength(); j++) {
                 if (!beanChildren.item(j).getNodeName().equals("property")) {
                     continue;
                 }
@@ -233,7 +236,7 @@ public class PwsInstall {
             }
 
             NodeList propChildren = prop_node.getChildNodes();
-            for (int k=0; k<propChildren.getLength(); k++) {
+            for (int k = 0; k < propChildren.getLength(); k++) {
                 if (!propChildren.item(k).getNodeName().equals("map")) {
                     continue;
                 }
@@ -249,13 +252,13 @@ public class PwsInstall {
             NodeList mapChildren = map_node.getChildNodes();
             List<Node> oldEntryList = new ArrayList<Node>();
 
-            for (int l=0; l<mapChildren.getLength(); l++) {
+            for (int l = 0; l < mapChildren.getLength(); l++) {
                 if (!mapChildren.item(l).getNodeName().equals("entry")) {
                     continue;
                 }
                 Node target = mapChildren.item(l);
                 NamedNodeMap entry_attributes = target.getAttributes();
-                for (int m=0; m < entry_attributes.getLength(); m++) {
+                for (int m = 0; m < entry_attributes.getLength(); m++) {
                     Node entryAttr = entry_attributes.item(m);
                     if (entryAttr.getNodeName().equals("key") && entryAttr.getNodeValue().equals(partnerName)) {
                         oldEntryList.add(target);
@@ -270,10 +273,10 @@ public class PwsInstall {
                 }
             }
 
-            //Now, add new entries
+            // Now, add new entries
 
             NamedNodeMap bean_attributes = bean_node.getAttributes();
-            for (int m=0; m<bean_attributes.getLength(); m++) {
+            for (int m = 0; m < bean_attributes.getLength(); m++) {
                 Node beanAttr = bean_attributes.item(m);
                 if (beanAttr.getNodeName().equals("id") && beanAttr.getNodeValue().equals("pwsLoginManagerBeanFactory")) {
                     if (classExistsInJar(runtimeJarFiles, partnerName, LOGIN_MANAGER) || classExistsInJar(toolsJarFiles, partnerName, LOGIN_MANAGER)) {
@@ -292,7 +295,8 @@ public class PwsInstall {
                     }
                     break;
                 } else if (beanAttr.getNodeName().equals("id") && beanAttr.getNodeValue().equals("pwsRestWsdlGeneratorBeanFactory")) {
-                    if (classExistsInJar(runtimeJarFiles, partnerName, REST_WSDL_GENERATOR) || classExistsInJar(toolsJarFiles, partnerName, REST_WSDL_GENERATOR)) {
+                    if (classExistsInJar(runtimeJarFiles, partnerName, REST_WSDL_GENERATOR)
+                        || classExistsInJar(toolsJarFiles, partnerName, REST_WSDL_GENERATOR)) {
                         Element newEntry = doc.createElement("entry");
                         newEntry.setAttribute("key", partnerName);
                         newEntry.setAttribute("value-ref", partnerName + REST_WSDL_GENERATOR);
@@ -300,7 +304,8 @@ public class PwsInstall {
                     }
                     break;
                 } else if (beanAttr.getNodeName().equals("id") && beanAttr.getNodeValue().equals("pwsServiceModifierBeanFactory")) {
-                    if (classExistsInJar(runtimeJarFiles, partnerName, SERVICE_MODIFIER) || classExistsInJar(toolsJarFiles, partnerName, SERVICE_MODIFIER)) {
+                    if (classExistsInJar(runtimeJarFiles, partnerName, SERVICE_MODIFIER)
+                        || classExistsInJar(toolsJarFiles, partnerName, SERVICE_MODIFIER)) {
                         Element newEntry = doc.createElement("entry");
                         newEntry.setAttribute("key", partnerName);
                         newEntry.setAttribute("value-ref", partnerName + SERVICE_MODIFIER);
@@ -308,7 +313,8 @@ public class PwsInstall {
                     }
                     break;
                 } else if (beanAttr.getNodeName().equals("id") && beanAttr.getNodeValue().equals("pwsRestServiceGeneratorBeanFactory")) {
-                    if (classExistsInJar(runtimeJarFiles, partnerName, REST_SERVICE_IMPORTER) || classExistsInJar(toolsJarFiles, partnerName, REST_SERVICE_IMPORTER)) {
+                    if (classExistsInJar(runtimeJarFiles, partnerName, REST_SERVICE_IMPORTER)
+                        || classExistsInJar(toolsJarFiles, partnerName, REST_SERVICE_IMPORTER)) {
                         Element newEntry = doc.createElement("entry");
                         newEntry.setAttribute("key", partnerName);
                         newEntry.setAttribute("value-ref", partnerName + REST_SERVICE_IMPORTER);
@@ -316,7 +322,8 @@ public class PwsInstall {
                     }
                     break;
                 } else if (beanAttr.getNodeName().equals("id") && beanAttr.getNodeValue().equals("pwsResponseProcessorBeanFactory")) {
-                    if (classExistsInJar(runtimeJarFiles, partnerName, RESPONSE_PROCESSOR) || classExistsInJar(toolsJarFiles, partnerName, RESPONSE_PROCESSOR)) {
+                    if (classExistsInJar(runtimeJarFiles, partnerName, RESPONSE_PROCESSOR)
+                        || classExistsInJar(toolsJarFiles, partnerName, RESPONSE_PROCESSOR)) {
                         Element newEntry = doc.createElement("entry");
                         newEntry.setAttribute("key", partnerName);
                         newEntry.setAttribute("value-ref", partnerName + RESPONSE_PROCESSOR);
@@ -352,20 +359,19 @@ public class PwsInstall {
         return exists;
     }
 
-    private static String getTrimmedXML(File xmlFile) throws Exception
-    {
+    private static String getTrimmedXML(File xmlFile) throws Exception {
         BufferedReader in = new BufferedReader(new FileReader(xmlFile));
         String str;
         StringBuffer sb = new StringBuffer();
         boolean inBracket = false;
         while ((str = in.readLine()) != null) {
             String str1 = str.trim();
-            if (str1.length()>0) {
-                if(str1.charAt(0) == '<') {
+            if (str1.length() > 0) {
+                if (str1.charAt(0) == '<') {
                     inBracket = true;
                 }
-                //System.out.println("*** str1 = " + str1);
-                if(str1.charAt(0) == '<') {
+                // System.out.println("*** str1 = " + str1);
+                if (str1.charAt(0) == '<') {
                     inBracket = true;
                     sb.append(str.trim());
                 } else {
@@ -378,7 +384,7 @@ public class PwsInstall {
                     }
                 }
 
-                if(str1.charAt(str1.length()-1) == '>') {
+                if (str1.charAt(str1.length() - 1) == '>') {
                     inBracket = false;
                 }
             }

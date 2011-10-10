@@ -25,15 +25,14 @@ import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.Tuple;
 import com.wavemaker.common.util.TypeConversionUtils;
 import com.wavemaker.runtime.data.Task;
-import com.wavemaker.runtime.data.DataServiceMetaData;
 import com.wavemaker.runtime.service.Filter;
 import com.wavemaker.runtime.service.PagingOptions;
 import com.wavemaker.runtime.service.PropertyOptions;
 import com.wavemaker.runtime.service.response.LiveDataServiceResponse;
 
 /**
- * Attempt to implement LiveDataService.read using Hibernate Criteria API. This
- * is not a complete implementation, and has been replaced by HQLReadTask.
+ * Attempt to implement LiveDataService.read using Hibernate Criteria API. This is not a complete implementation, and
+ * has been replaced by HQLReadTask.
  * 
  * This class remains unused.
  * 
@@ -41,8 +40,7 @@ import com.wavemaker.runtime.service.response.LiveDataServiceResponse;
  * @version $Rev$ - $Date$
  * 
  */
-public class CriteriaReadTask extends AbstractReadTask implements Task,
-        DefaultRollback {
+public class CriteriaReadTask extends AbstractReadTask implements Task, DefaultRollback {
 
     // Class (type), Object (instance)
     public Object run(Session session, String dbName, Object... input) {
@@ -72,8 +70,7 @@ public class CriteriaReadTask extends AbstractReadTask implements Task,
         }
 
         if (type == null && instance == null) {
-            throw new IllegalArgumentException(
-                    "Either root type or instance must be set");
+            throw new IllegalArgumentException("Either root type or instance must be set");
         }
 
         if (type == null) {
@@ -117,8 +114,7 @@ public class CriteriaReadTask extends AbstractReadTask implements Task,
         return "Built-in CRUD Read Task";
     }
 
-    private void applyPropertyOptions(Class<?> type, PropertyOptions options,
-            Map<String, Criteria> criterias, String dbName) {
+    private void applyPropertyOptions(Class<?> type, PropertyOptions options, Map<String, Criteria> criterias, String dbName) {
 
         for (String s : options.getProperties()) {
             getCriteriaForPath(s, criterias, true);
@@ -126,8 +122,7 @@ public class CriteriaReadTask extends AbstractReadTask implements Task,
 
         for (Filter f : options.getFilterList()) {
             Class<?> propType = getPropertyType(type, f.getPropertyPath(), dbName);
-            Object value = TypeConversionUtils.fromString(propType, f
-                    .getExpression());
+            Object value = TypeConversionUtils.fromString(propType, f.getExpression());
             Tuple.Two<String, String> p = splitPath(f.getPropertyPath());
             Criteria c = getCriteriaForPath(p.v1, criterias);
             applyFilter(c, p.v2, value);
@@ -138,8 +133,7 @@ public class CriteriaReadTask extends AbstractReadTask implements Task,
         addEqualsFilter(criteria, property, value);
     }
 
-    private void addEqualsFilter(Criteria criteria, String property,
-            Object value) {
+    private void addEqualsFilter(Criteria criteria, String property, Object value) {
         criteria.add(Restrictions.eq(property, value));
     }
 }

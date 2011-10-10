@@ -38,48 +38,44 @@ import com.wavemaker.tools.ws.wsdl.WSDLManager;
  * @author Jeremy Grelle
  * 
  */
-public class WebServiceFactory implements ServiceDefinitionFactory,
-		ServiceGeneratorFactory {
+public class WebServiceFactory implements ServiceDefinitionFactory, ServiceGeneratorFactory {
 
-	public DeprecatedServiceDefinition getServiceDefinition(Resource f) {
-		return getServiceDefinition(f, null, null);
-	}
+    public DeprecatedServiceDefinition getServiceDefinition(Resource f) {
+        return getServiceDefinition(f, null, null);
+    }
 
-	public DeprecatedServiceDefinition getServiceDefinition(Resource f,
-			String serviceId, DesignServiceManager serviceMgr) {
-		if (f.getFilename().endsWith(Constants.WSDL_EXT)) {
-			try {
-				return WSDLManager.processWSDL(f.getURL().toString(), serviceId);
-			} catch (WSDLException e) {
-				throw new WMRuntimeException(e);
-			} catch (IOException e) {
-				throw new WMRuntimeException(e);
-			}
-		}
-		return null;
-	}
+    public DeprecatedServiceDefinition getServiceDefinition(Resource f, String serviceId, DesignServiceManager serviceMgr) {
+        if (f.getFilename().endsWith(Constants.WSDL_EXT)) {
+            try {
+                return WSDLManager.processWSDL(f.getURL().toString(), serviceId);
+            } catch (WSDLException e) {
+                throw new WMRuntimeException(e);
+            } catch (IOException e) {
+                throw new WMRuntimeException(e);
+            }
+        }
+        return null;
+    }
 
-	public ServiceGenerator getServiceGenerator(GenerationConfiguration cfg) {
-		if (cfg.getServiceDefinition() instanceof WSDL) {
-			WSDL wsdl = (WSDL) cfg.getServiceDefinition();
-			WSDL.WebServiceType serviceType = wsdl.getWebServiceType();
-			if (serviceType == WSDL.WebServiceType.SOAP) {
-				return new SOAPServiceGenerator(cfg);
-			} else if (serviceType == WSDL.WebServiceType.REST) {
-				String partnerName = cfg.getPartnerName();
-				if (partnerName == null || partnerName.length() == 0) {
-					return new RESTServiceGenerator(cfg);
-				} else {
-					PwsRestServiceGeneratorBeanFactory factory = (PwsRestServiceGeneratorBeanFactory) RuntimeAccess
-							.getInstance().getSpringBean(
-									"pwsRestServiceGeneratorBeanFactory");
-					ServiceGenerator restServiceGenerator = factory
-							.getPwsRestServiceGenerator(partnerName);
-					restServiceGenerator.init(cfg);
-					return restServiceGenerator;
-				}
-			}
-		}
-		return null;
-	}
+    public ServiceGenerator getServiceGenerator(GenerationConfiguration cfg) {
+        if (cfg.getServiceDefinition() instanceof WSDL) {
+            WSDL wsdl = (WSDL) cfg.getServiceDefinition();
+            WSDL.WebServiceType serviceType = wsdl.getWebServiceType();
+            if (serviceType == WSDL.WebServiceType.SOAP) {
+                return new SOAPServiceGenerator(cfg);
+            } else if (serviceType == WSDL.WebServiceType.REST) {
+                String partnerName = cfg.getPartnerName();
+                if (partnerName == null || partnerName.length() == 0) {
+                    return new RESTServiceGenerator(cfg);
+                } else {
+                    PwsRestServiceGeneratorBeanFactory factory = (PwsRestServiceGeneratorBeanFactory) RuntimeAccess.getInstance().getSpringBean(
+                        "pwsRestServiceGeneratorBeanFactory");
+                    ServiceGenerator restServiceGenerator = factory.getPwsRestServiceGenerator(partnerName);
+                    restServiceGenerator.init(cfg);
+                    return restServiceGenerator;
+                }
+            }
+        }
+        return null;
+    }
 }

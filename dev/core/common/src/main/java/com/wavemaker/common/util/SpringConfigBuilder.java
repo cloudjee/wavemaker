@@ -42,7 +42,7 @@ public class SpringConfigBuilder {
     private Bean savedBean = null;
 
     private Bean currentBean = null;
-    
+
     private final Map<Bean, String> knownBeans = new HashMap<Bean, String>();
 
     public SpringConfigBuilder() {
@@ -52,28 +52,28 @@ public class SpringConfigBuilder {
     public SpringConfigBuilder(GenericApplicationContext ctx) {
         this.ctx = ctx;
     }
-   
+
     public Bean getCurrentBean() {
-        if (currentBean == null) {
+        if (this.currentBean == null) {
             throw new IllegalStateException("no current bean");
         }
-        return currentBean;
+        return this.currentBean;
     }
 
     public Bean getPreviousBean() {
-        if (previousBean == null) {
+        if (this.previousBean == null) {
             throw new IllegalStateException("no previous bean");
         }
-        return previousBean;
+        return this.previousBean;
     }
 
     public Bean getSavedBean() {
-        if (savedBean == null) {
+        if (this.savedBean == null) {
             throw new IllegalStateException("no saved bean");
         }
-        return savedBean;
+        return this.savedBean;
     }
-    
+
     public Bean addBean(String beanName, String beanClass) {
         try {
             return addBean(beanName, Class.forName(beanClass));
@@ -83,16 +83,16 @@ public class SpringConfigBuilder {
     }
 
     public Bean addBean(String beanName, Class<?> beanClass) {
-        previousBean = currentBean;
+        this.previousBean = this.currentBean;
         RootBeanDefinition beanDefinition = new RootBeanDefinition(beanClass);
 
         beanDefinition.setScope(BeanDefinition.SCOPE_SINGLETON);
         beanDefinition.setLazyInit(true);
 
-        ctx.registerBeanDefinition(beanName, beanDefinition);
-        currentBean = new Bean(beanDefinition);
-        knownBeans.put(currentBean, beanName);
-        return currentBean;
+        this.ctx.registerBeanDefinition(beanName, beanDefinition);
+        this.currentBean = new Bean(beanDefinition);
+        this.knownBeans.put(this.currentBean, beanName);
+        return this.currentBean;
     }
 
     public class Bean {
@@ -102,32 +102,33 @@ public class SpringConfigBuilder {
         private final MutablePropertyValues props = new MutablePropertyValues();
 
         private final ConstructorArgumentValues ctorArgs = new ConstructorArgumentValues();
-        
+
         private Bean(RootBeanDefinition def) {
             this.def = def;
 
-            def.setPropertyValues(props);
-            def.setConstructorArgumentValues(ctorArgs);
+            def.setPropertyValues(this.props);
+            def.setConstructorArgumentValues(this.ctorArgs);
         }
 
         public Bean setLazyInit(boolean b) {
-            def.setLazyInit(b);
+            this.def.setLazyInit(b);
             return this;
         }
 
         public Bean addConstructorArg(Object value) {
             if (value instanceof Bean) {
-                RuntimeBeanReference ref = new RuntimeBeanReference(knownBeans.get(value));
+                RuntimeBeanReference ref = new RuntimeBeanReference(SpringConfigBuilder.this.knownBeans.get(value));
                 value = ref;
             }
-            
-            ctorArgs.addGenericArgumentValue(value);
-            
+
+            this.ctorArgs.addGenericArgumentValue(value);
+
             return this;
         }
 
         public Bean addFiles(String name, String path) {
             return addFiles(name, path, new FilenameFilter() {
+
                 public boolean accept(File dir, String name) {
                     return true;
                 }
@@ -138,8 +139,7 @@ public class SpringConfigBuilder {
             return addFiles(name, path, filter, path);
         }
 
-        public Bean addFiles(String name, String path, FilenameFilter filter,
-                String root) {
+        public Bean addFiles(String name, String path, FilenameFilter filter, String root) {
             String[] filenames = new File(path).list(filter);
             String[] paths = new String[filenames.length];
             for (int i = 0; i < filenames.length; i++) {
@@ -157,15 +157,15 @@ public class SpringConfigBuilder {
         public Bean addProperty(String name, Object value) {
 
             if (value instanceof Bean) {
-                value = new RuntimeBeanReference(knownBeans.get(value));
+                value = new RuntimeBeanReference(SpringConfigBuilder.this.knownBeans.get(value));
             }
 
-            props.addPropertyValue(name, value);
+            this.props.addPropertyValue(name, value);
             return this;
         }
 
         public RootBeanDefinition unwrap() {
-            return def;
+            return this.def;
         }
     }
 

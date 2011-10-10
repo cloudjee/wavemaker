@@ -23,8 +23,8 @@ import com.wavemaker.runtime.service.ServiceType;
 import com.wavemaker.runtime.service.ServiceWire;
 
 /**
- * ServiceWire for ServiceTypes supporting default reflection.  This ServiceWire
- * type adds a property to hold the service bean object.
+ * ServiceWire for ServiceTypes supporting default reflection. This ServiceWire type adds a property to hold the service
+ * bean object.
  * 
  * @author small
  * @version $Rev$ - $Date$
@@ -35,7 +35,7 @@ public class ReflectServiceWire implements ServiceWire, ApplicationContextAware 
      * The serviceType associated with this ServiceWire.
      */
     private ServiceType serviceType;
-    
+
     /**
      * The ID of the service.
      */
@@ -45,17 +45,16 @@ public class ReflectServiceWire implements ServiceWire, ApplicationContextAware 
      * The bean of the associated service.
      */
     private Object serviceBean;
-    
+
     private ApplicationContext applicationContext;
 
     /**
      * Get the service bean object.
      * 
-     * @return Gets the service bean associated with this ReflectServiceWire's
-     *         service id.
+     * @return Gets the service bean associated with this ReflectServiceWire's service id.
      */
     public Object getServiceBean() {
-        if (null!=this.serviceBean) {
+        if (null != this.serviceBean) {
             return this.serviceBean;
         } else {
             Object bean = this.applicationContext.getBean(getServiceId());
@@ -63,64 +62,74 @@ public class ReflectServiceWire implements ServiceWire, ApplicationContextAware 
             return bean;
         }
     }
-    
+
     @Override
     public String toString() {
-        return ""+super.toString()+"("+this.getServiceId()+", "+
-                this.getServiceType()+")";
+        return "" + super.toString() + "(" + this.getServiceId() + ", " + this.getServiceType() + ")";
     }
 
     /**
      * Sets the service bean object.
      * 
-     * @param obj
-     *            The service bean object.
+     * @param obj The service bean object.
      */
     public void setServiceBean(Object obj) {
         this.serviceBean = obj;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.runtime.service.ServiceWire#setServiceType(com.wavemaker.runtime.service.ServiceType)
      */
     public void setServiceType(ServiceType serviceType) {
         this.serviceType = serviceType;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.runtime.service.ServiceWire#getServiceType()
      */
     public ServiceType getServiceType() {
-        return serviceType;
+        return this.serviceType;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.runtime.service.ServiceWire#setServiceId(java.lang.String)
      */
     public void setServiceId(String serviceId) {
         this.serviceId = serviceId;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.runtime.service.ServiceWire#getServiceId()
      */
     public String getServiceId() {
-        return serviceId;
+        return this.serviceId;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.runtime.service.ServiceWire#isLiveDataService()
      */
     public boolean isLiveDataService() {
-        
+
         return this.getServiceBean() instanceof LiveDataService;
     }
-    
-    /* (non-Javadoc)
-     * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.ApplicationContext)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.
+     * ApplicationContext)
      */
-    public void setApplicationContext(ApplicationContext applicationContext)
-            throws BeansException {
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
 }

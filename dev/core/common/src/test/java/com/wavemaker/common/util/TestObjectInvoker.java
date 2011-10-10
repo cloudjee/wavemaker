@@ -15,12 +15,11 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.common.util;
 
 import java.util.Map;
 
-import com.wavemaker.common.util.MethodNotFoundRuntimeException;
-import com.wavemaker.common.util.ObjectAccess;
 import com.wavemaker.infra.WMTestCase;
 
 /**
@@ -30,8 +29,9 @@ import com.wavemaker.infra.WMTestCase;
  */
 public class TestObjectInvoker extends WMTestCase {
 
-    private ObjectAccess oi = ObjectAccess.getInstance();
+    private final ObjectAccess oi = ObjectAccess.getInstance();
 
+    @Override
     public void setUp() {
         A.RTN = null;
         A.RTN_OBJ = null;
@@ -79,61 +79,69 @@ public class TestObjectInvoker extends WMTestCase {
         }
 
     }
-    
+
     class B extends A {
 
         private String foo;
-        
+
         public String methodInChildClass(Integer i) {
             return i.toString();
         }
 
-        public void setFoo(String foo) { this.foo = foo; }
-        public String getFoo() { return foo; }
-        
+        public void setFoo(String foo) {
+            this.foo = foo;
+        }
+
+        public String getFoo() {
+            return this.foo;
+        }
+
     }
 
     class AnnotationClass {
-        public void annotatedMethod() {}
 
-        public void notAnnotatedMethod() {}
+        public void annotatedMethod() {
+        }
+
+        public void notAnnotatedMethod() {
+        }
 
     }
 
     public void testMethodNoArg() {
-        String rtn = oi.invoke(new A(), "simpleMethod");
+        String rtn = this.oi.invoke(new A(), "simpleMethod");
         assertTrue(rtn == A.SIMPLE_METHOD_RTN);
     }
 
     public void testMethodArg() {
         Integer i = Integer.valueOf(2);
-        Integer rtn = oi.invoke(new A(), "simpleMethodArg", i);
+        Integer rtn = this.oi.invoke(new A(), "simpleMethodArg", i);
         assertTrue(rtn == i);
     }
 
     public void testMethodArgOverloaded() {
         Integer i = Integer.valueOf(2);
-        ObjectAccess rtn = oi.invoke(new A(), "simpleMethodArg", i, oi);
-        assertTrue(rtn == oi);
+        ObjectAccess rtn = this.oi.invoke(new A(), "simpleMethodArg", i, this.oi);
+        assertTrue(rtn == this.oi);
     }
 
     public void testMethodArg1() {
         Arg1 a = new Arg1();
         assertTrue(A.RTN == null);
-        oi.invoke(new A(), "methodArg1", a);
+        this.oi.invoke(new A(), "methodArg1", a);
         assertTrue(A.RTN == a);
     }
 
     public void testMethodObject() {
         Arg1 a = new Arg1();
         assertTrue(A.RTN_OBJ == null);
-        oi.invoke(new A(), "methodObject", a);
+        this.oi.invoke(new A(), "methodObject", a);
         assertTrue(A.RTN_OBJ == a);
     }
 
     public void testCannotCallPrivateMethod() {
         try {
-            oi.invoke(new A(), "privateMethod");
+            this.oi.invoke(new A(), "privateMethod");
         } catch (MethodNotFoundRuntimeException ex) {
             return;
         }
@@ -142,7 +150,7 @@ public class TestObjectInvoker extends WMTestCase {
 
     public void testCannotCallProtectedMethod() {
         try {
-            oi.invoke(new A(), "protectedMethod");
+            this.oi.invoke(new A(), "protectedMethod");
         } catch (MethodNotFoundRuntimeException ex) {
             return;
         }
@@ -151,44 +159,43 @@ public class TestObjectInvoker extends WMTestCase {
 
     public void testCannotCallPackageProtectedMethod() {
         try {
-          oi.invoke(new A(), "packageProtectedMethod");
+            this.oi.invoke(new A(), "packageProtectedMethod");
         } catch (MethodNotFoundRuntimeException ex) {
             return;
         }
         fail();
     }
-    
+
     public void testMethodInChildClass() {
-        String s = oi.invoke(new B(), "methodInChildClass", 2);
+        String s = this.oi.invoke(new B(), "methodInChildClass", 2);
         assertTrue(s.equals("2"));
     }
-    
+
     public void testMethodInParentClass() {
-        String rtn = oi.invoke(new B(), "simpleMethod");
-        assertTrue(rtn == A.SIMPLE_METHOD_RTN);        
+        String rtn = this.oi.invoke(new B(), "simpleMethod");
+        assertTrue(rtn == A.SIMPLE_METHOD_RTN);
     }
 
     public void testGetProperties() {
-        Map<String, Class<?>> properties = oi.getProperties(B.class);
+        Map<String, Class<?>> properties = this.oi.getProperties(B.class);
         assertTrue(properties.size() == 1);
         assertTrue(properties.get("foo") == String.class);
     }
 
     public void testNewInstance() {
-        TestObjectInvoker t = (TestObjectInvoker)
-            oi.newInstance("com.wavemaker.common.util.TestObjectInvoker");
+        TestObjectInvoker t = (TestObjectInvoker) this.oi.newInstance("com.wavemaker.common.util.TestObjectInvoker");
         assertTrue(t != null);
     }
 
     public void testSetProperty() {
         B b = new B();
-        oi.setProperty(b, "foo", "test");
+        this.oi.setProperty(b, "foo", "test");
         assertTrue(b.getFoo().equals("test"));
     }
 
     public void testSetPropertyToNull() {
         B b = new B();
-        oi.setProperty(b, "foo", null);
+        this.oi.setProperty(b, "foo", null);
         assertTrue(b.getFoo() == null);
     }
 

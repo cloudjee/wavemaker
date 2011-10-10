@@ -20,7 +20,7 @@ import com.wavemaker.common.WMException;
 /**
  * @author ffu
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class FileSerializerException extends WMException {
 
@@ -29,7 +29,7 @@ public class FileSerializerException extends WMException {
     public FileSerializerException(String message) {
         super(message);
     }
-    
+
     public FileSerializerException(Throwable e) {
         super(e);
     }

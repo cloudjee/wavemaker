@@ -17,14 +17,13 @@ package com.wavemaker.tools.service;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
 
-
 public interface ServiceGeneratorFactory {
 
     /**
      * Returns ServiceGenerator instance for the given GenerationConfiguration.
      * 
      * @param cfg The GenerationConfiguration for this ServiceGenerator
-     */    
+     */
     ServiceGenerator getServiceGenerator(GenerationConfiguration cfg);
 
 }

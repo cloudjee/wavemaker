@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import java.util.ArrayList;
@@ -35,23 +34,22 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
  * 
  * 
- * 	The web-resource-collectionType is used to identify a subset
- * 	of the resources and HTTP methods on those resources within
- * 	a web application to which a security constraint applies. If
- * 	no HTTP methods are specified, then the security constraint
- * 	applies to all HTTP methods.
+ * The web-resource-collectionType is used to identify a subset of the resources and HTTP methods on those resources
+ * within a web application to which a security constraint applies. If no HTTP methods are specified, then the security
+ * constraint applies to all HTTP methods.
  * 
- * 	Used in: security-constraint
+ * Used in: security-constraint
  * 
- *       
  * 
- * <p>Java class for web-resource-collectionType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for web-resource-collectionType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="web-resource-collectionType">
@@ -72,21 +70,20 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "web-resource-collectionType", propOrder = {
-    "webResourceName",
-    "description",
-    "urlPattern",
-    "httpMethod"
-})
+@XmlType(name = "web-resource-collectionType", propOrder = { "webResourceName", "description", "urlPattern", "httpMethod" })
 public class WebResourceCollectionType {
 
     @XmlElement(name = "web-resource-name", required = true)
     protected com.wavemaker.tools.webapp.schema.String webResourceName;
+
     protected List<DescriptionType> description;
+
     @XmlElement(name = "url-pattern", required = true)
     protected List<UrlPatternType> urlPattern;
+
     @XmlElement(name = "http-method")
     protected List<HttpMethodType> httpMethod;
+
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -96,22 +93,18 @@ public class WebResourceCollectionType {
     /**
      * Gets the value of the webResourceName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link com.wavemaker.tools.webapp.schema.String }
-     *     
+     * @return possible object is {@link com.wavemaker.tools.webapp.schema.String }
+     * 
      */
     public com.wavemaker.tools.webapp.schema.String getWebResourceName() {
-        return webResourceName;
+        return this.webResourceName;
     }
 
     /**
      * Sets the value of the webResourceName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link com.wavemaker.tools.webapp.schema.String }
-     *     
+     * @param value allowed object is {@link com.wavemaker.tools.webapp.schema.String }
+     * 
      */
     public void setWebResourceName(com.wavemaker.tools.webapp.schema.String value) {
         this.webResourceName = value;
@@ -121,27 +114,26 @@ public class WebResourceCollectionType {
      * Gets the value of the description property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the description property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the description property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getDescription().add(newItem);
+     * getDescription().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DescriptionType }
+     * Objects of the following type(s) are allowed in the list {@link DescriptionType }
      * 
      * 
      */
     public List<DescriptionType> getDescription() {
-        if (description == null) {
-            description = new ArrayList<DescriptionType>();
+        if (this.description == null) {
+            this.description = new ArrayList<DescriptionType>();
         }
         return this.description;
     }
@@ -150,27 +142,26 @@ public class WebResourceCollectionType {
      * Gets the value of the urlPattern property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the urlPattern property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the urlPattern property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getUrlPattern().add(newItem);
+     * getUrlPattern().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link UrlPatternType }
+     * Objects of the following type(s) are allowed in the list {@link UrlPatternType }
      * 
      * 
      */
     public List<UrlPatternType> getUrlPattern() {
-        if (urlPattern == null) {
-            urlPattern = new ArrayList<UrlPatternType>();
+        if (this.urlPattern == null) {
+            this.urlPattern = new ArrayList<UrlPatternType>();
         }
         return this.urlPattern;
     }
@@ -179,27 +170,26 @@ public class WebResourceCollectionType {
      * Gets the value of the httpMethod property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the httpMethod property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the httpMethod property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getHttpMethod().add(newItem);
+     * getHttpMethod().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link HttpMethodType }
+     * Objects of the following type(s) are allowed in the list {@link HttpMethodType }
      * 
      * 
      */
     public List<HttpMethodType> getHttpMethod() {
-        if (httpMethod == null) {
-            httpMethod = new ArrayList<HttpMethodType>();
+        if (this.httpMethod == null) {
+            this.httpMethod = new ArrayList<HttpMethodType>();
         }
         return this.httpMethod;
     }
@@ -207,22 +197,18 @@ public class WebResourceCollectionType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setId(java.lang.String value) {
         this.id = value;

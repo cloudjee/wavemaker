@@ -19,25 +19,24 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * 
  * 
- * 	The local-homeType defines the fully-qualified
- * 	name of an enterprise bean's local home interface.
+ * The local-homeType defines the fully-qualified name of an enterprise bean's local home interface.
  * 
- *       
  * 
- * <p>Java class for local-homeType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for local-homeType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="local-homeType">
@@ -52,9 +51,6 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "local-homeType")
-public class LocalHomeType
-    extends FullyQualifiedClassType
-{
-
+public class LocalHomeType extends FullyQualifiedClassType {
 
 }

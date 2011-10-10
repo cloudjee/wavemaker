@@ -17,54 +17,57 @@ package com.wavemaker.common.util;
 /**
  * @author Simon Toens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class Tuple {
-    
-    private Tuple() {}
-    
+
+    private Tuple() {
+    }
+
     /**
      * Convenience methods for creating tuple instances.
      */
-    public static<T1, T2> Two<T1, T2> tuple(T1 v1, T2 v2) {
+    public static <T1, T2> Two<T1, T2> tuple(T1 v1, T2 v2) {
         return new Two<T1, T2>(v1, v2);
     }
-    public static<T1, T2, T3> Three<T1, T2, T3> tuple(T1 v1, T2 v2, T3 v3) {
+
+    public static <T1, T2, T3> Three<T1, T2, T3> tuple(T1 v1, T2 v2, T3 v3) {
         return new Three<T1, T2, T3>(v1, v2, v3);
-    }    
-    
-    
-    
+    }
+
     public static class Two<T1, T2> {
-        
+
         public T1 v1;
+
         public T2 v2;
-        
+
         public Two(T1 v1, T2 v2) {
             this.v1 = v1;
             this.v2 = v2;
         }
-        
+
         protected String toString(Object... values) {
             return "(" + ObjectUtils.toString(values, ", ") + ")";
         }
-        
+
+        @Override
         public String toString() {
-            return toString(v1, v2);
+            return toString(this.v1, this.v2);
         }
     }
-    
+
     public static class Three<T1, T2, T3> extends Two<T1, T2> {
-        
+
         public final T3 v3;
-        
+
         public Three(T1 v1, T2 v2, T3 v3) {
             super(v1, v2);
             this.v3 = v3;
         }
-        
+
+        @Override
         public String toString() {
-            return toString(v1, v2, v3);
+            return toString(this.v1, this.v2, this.v3);
         }
 
     }
@@ -78,8 +81,9 @@ public class Tuple {
             this.v4 = v4;
         }
 
+        @Override
         public String toString() {
-            return toString(v1, v2, v3, v4);
+            return toString(this.v1, this.v2, this.v3, this.v4);
         }
 
     }

@@ -23,21 +23,15 @@ package com.wavemaker.json.type;
 public interface ListTypeDefinition extends TypeDefinition {
 
     /**
-     * Sets or appends the value to the list (if possible, at the index
-     * specified). The list must match the type of list definition. For
-     * instance, if the concrete ListTypeDefinition uses Reflection, than an
-     * array or Collection instance might be allowable.
+     * Sets or appends the value to the list (if possible, at the index specified). The list must match the type of list
+     * definition. For instance, if the concrete ListTypeDefinition uses Reflection, than an array or Collection
+     * instance might be allowable.
      * 
-     * @param list
-     *            The list to set in. This must match the type of
-     *            ListTypeDefinition.
-     * @param index
-     *            The index to set. If the Collection type doesn't support
-     *            setting values via indices, or a set operation would be beyond
-     *            the bounds of the current array, this parameter may be
-     *            ignored, and an append will be performed.
-     * @param o
-     *            The object to append.
+     * @param list The list to set in. This must match the type of ListTypeDefinition.
+     * @param index The index to set. If the Collection type doesn't support setting values via indices, or a set
+     *        operation would be beyond the bounds of the current array, this parameter may be ignored, and an append
+     *        will be performed.
+     * @param o The object to append.
      */
     public void add(Object list, int index, Object o);
 }

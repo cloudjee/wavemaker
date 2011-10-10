@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.wavemaker.studio.project.upgrade.five_dot_zero;
 
 import static org.junit.Assert.assertTrue;
@@ -42,68 +43,58 @@ import com.wavemaker.tools.service.DesignServiceManager;
  */
 public class TestEventWireUpgradeTask extends StudioTestCase {
 
-	@Test
-	public void testChangeEventWire() throws Exception {
+    @Test
+    public void testChangeEventWire() throws Exception {
 
-		makeProject("testChangeEventWire", false);
+        makeProject("testChangeEventWire", false);
 
-		DesignServiceManager dsm = (DesignServiceManager) getBean("designServiceManager");
-		Project project = dsm.getProjectManager().getCurrentProject();
+        DesignServiceManager dsm = (DesignServiceManager) getBean("designServiceManager");
+        Project project = dsm.getProjectManager().getCurrentProject();
 
-		ServiceDefinition javaSD = TestAddServiceWireUpgradeTask
-				.createJavaService();
-		dsm.defineService(javaSD);
+        ServiceDefinition javaSD = TestAddServiceWireUpgradeTask.createJavaService();
+        dsm.defineService(javaSD);
 
-		ServiceDefinition dataSD = TestAddServiceWireUpgradeTask
-				.createDataService();
-		dsm.defineService(dataSD);
+        ServiceDefinition dataSD = TestAddServiceWireUpgradeTask.createDataService();
+        dsm.defineService(dataSD);
 
-		File cpr = (new ClassPathResource(
-				"com/wavemaker/studio/project/upgrade/five_dot_zero"))
-				.getFile();
-		assertTrue(cpr.exists());
+        File cpr = new ClassPathResource("com/wavemaker/studio/project/upgrade/five_dot_zero").getFile();
+        assertTrue(cpr.exists());
 
-		FileUtils.copyFile(new File(cpr,
-				"eventwireupgrade.files/dataservicespring_input.xml"), dsm
-				.getServiceBeanXml(dataSD.getServiceId()).getFile());
-		FileUtils.copyFile(new File(cpr,
-				"eventwireupgrade.files/javaservicespring_input.xml"), dsm
-				.getServiceBeanXml(javaSD.getServiceId()).getFile());
+        FileUtils.copyFile(new File(cpr, "eventwireupgrade.files/dataservicespring_input.xml"),
+            dsm.getServiceBeanXml(dataSD.getServiceId()).getFile());
+        FileUtils.copyFile(new File(cpr, "eventwireupgrade.files/javaservicespring_input.xml"),
+            dsm.getServiceBeanXml(javaSD.getServiceId()).getFile());
 
-		UpgradeTask ut = new EventWireUpgradeTask();
-		UpgradeInfo info = new UpgradeInfo();
-		ut.doUpgrade(project, info);
+        UpgradeTask ut = new EventWireUpgradeTask();
+        UpgradeInfo info = new UpgradeInfo();
+        ut.doUpgrade(project, info);
 
-		// both fail - null expected
-		/*
-		 * assertEquals(
-		 * StringUtils.deleteWhitespace(FileUtils.readFileToString( new
-		 * File(cpr, "eventwireupgrade.files/dataservicespring_expected.xml"))),
-		 * StringUtils.deleteWhitespace(
-		 * FileUtils.readFileToString(dsm.getServiceBeanXml
-		 * (dataSD.getServiceId())))); assertEquals(
-		 * StringUtils.deleteWhitespace(FileUtils.readFileToString( new
-		 * File(cpr, "eventwireupgrade.files/javaservicespring_expected.xml"))),
-		 * StringUtils.deleteWhitespace(FileUtils.readFileToString(
-		 * dsm.getServiceBeanXml(javaSD.getServiceId()))));
-		 */}
+        // both fail - null expected
+        /*
+         * assertEquals( StringUtils.deleteWhitespace(FileUtils.readFileToString( new File(cpr,
+         * "eventwireupgrade.files/dataservicespring_expected.xml"))), StringUtils.deleteWhitespace(
+         * FileUtils.readFileToString(dsm.getServiceBeanXml (dataSD.getServiceId())))); assertEquals(
+         * StringUtils.deleteWhitespace(FileUtils.readFileToString( new File(cpr,
+         * "eventwireupgrade.files/javaservicespring_expected.xml"))),
+         * StringUtils.deleteWhitespace(FileUtils.readFileToString( dsm.getServiceBeanXml(javaSD.getServiceId()))));
+         */}
 
-	@Test
-	public void testUpgradeTaskPresent() throws Exception {
+    @Test
+    public void testUpgradeTaskPresent() throws Exception {
 
-		boolean foundTask = false;
+        boolean foundTask = false;
 
-		UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
+        UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
 
-		outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
-			for (UpgradeTask ut : uts) {
-				if (ut instanceof EventWireUpgradeTask) {
-					foundTask = true;
-					break outer;
-				}
-			}
-		}
+        outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
+            for (UpgradeTask ut : uts) {
+                if (ut instanceof EventWireUpgradeTask) {
+                    foundTask = true;
+                    break outer;
+                }
+            }
+        }
 
-		assertTrue(foundTask);
-	}
+        assertTrue(foundTask);
+    }
 }

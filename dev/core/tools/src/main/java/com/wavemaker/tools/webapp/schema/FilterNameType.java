@@ -19,29 +19,27 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * 
  * 
- * 	The logical name of the filter is declare
- * 	by using filter-nameType. This name is used to map the
- * 	filter.  Each filter name is unique within the web
- * 	application.
+ * The logical name of the filter is declare by using filter-nameType. This name is used to map the filter. Each filter
+ * name is unique within the web application.
  * 
- * 	Used in: filter, filter-mapping
+ * Used in: filter, filter-mapping
  * 
- *       
  * 
- * <p>Java class for filter-nameType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for filter-nameType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="filter-nameType">
@@ -56,9 +54,6 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "filter-nameType")
-public class FilterNameType
-    extends NonEmptyStringType
-{
-
+public class FilterNameType extends NonEmptyStringType {
 
 }

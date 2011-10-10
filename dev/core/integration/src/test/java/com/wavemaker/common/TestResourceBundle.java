@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.common;
 
 import static org.junit.Assert.fail;
@@ -28,35 +29,30 @@ import org.junit.Test;
 import com.wavemaker.common.util.ClassUtils;
 import com.wavemaker.runtime.test.TestSpringContextTestCase;
 
-
 /**
  * @author Simon Toens
  */
 public class TestResourceBundle extends TestSpringContextTestCase {
 
     /**
-     * o Make sure that all Resource constants defined in
-     * com.wavemaker.common.Resource have a msg defined in a resource bundle
-     *
-     * o Make sure the bundle resources are referenced by a single constant in
-     * Resource
-     *
+     * o Make sure that all Resource constants defined in com.wavemaker.common.Resource have a msg defined in a resource
+     * bundle
+     * 
+     * o Make sure the bundle resources are referenced by a single constant in Resource
+     * 
      * o Ensure msg params get substituted.
-     *
-     * o If a Resource constant claims it has a detailed msg, make sure that is
-     * true.
-     *
+     * 
+     * o If a Resource constant claims it has a detailed msg, make sure that is true.
+     * 
      * o Checks each msg has a unique id.
-     *
-     * Could add a check to ensure all messages defined in the bundle are
-     * referenced by constants.
-     *
+     * 
+     * Could add a check to ensure all messages defined in the bundle are referenced by constants.
+     * 
      */
-	@Test
+    @Test
     public void testResolveMessages() throws Exception {
 
-        List<Field> l = ClassUtils.getPublicFields(MessageResource.class,
-                MessageResource.class);
+        List<Field> l = ClassUtils.getPublicFields(MessageResource.class, MessageResource.class);
 
         List<String> checkedNames = new ArrayList<String>();
 
@@ -68,16 +64,14 @@ public class TestResourceBundle extends TestSpringContextTestCase {
 
             String resourceName = "\"" + r.getMessageKey() + "\"";
             if (checkedNames.contains(resourceName)) {
-                fail("Resource " + resourceName
-                        + " is referenced more than once");
+                fail("Resource " + resourceName + " is referenced more than once");
             }
             checkedNames.add(resourceName);
 
             try {
                 int id = r.getId();
                 if (checkedIds.contains(Integer.valueOf(id))) {
-                    fail("Resource " + resourceName
-                            + " doesn't have a unique id");
+                    fail("Resource " + resourceName + " doesn't have a unique id");
                 }
                 checkedIds.add(Integer.valueOf(id));
             } catch (NumberFormatException ex) {
@@ -93,16 +87,14 @@ public class TestResourceBundle extends TestSpringContextTestCase {
             for (int i = 0; i < args.length; i++) {
                 String s = "{" + i + "}";
                 if (msg.indexOf(s) > -1) {
-                    fail("Found unresolved msg param " + s + " for resource "
-                            + resourceName+"\nmsg: "+msg+"\nlooking for: "+s+"\nCheck your ' characters!");
+                    fail("Found unresolved msg param " + s + " for resource " + resourceName + "\nmsg: " + msg + "\nlooking for: " + s
+                        + "\nCheck your ' characters!");
                 }
             }
 
             String detailedMsg = r.getDetailMessage(args);
             if (r.hasDetailedMsg() && detailedMsg == null) {
-                throw new AssertionError("Resource " + resourceName
-                        + " says it has a "
-                        + "detailed message, but it doesn't");
+                throw new AssertionError("Resource " + resourceName + " says it has a " + "detailed message, but it doesn't");
             }
         }
     }

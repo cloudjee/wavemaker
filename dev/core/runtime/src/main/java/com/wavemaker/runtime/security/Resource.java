@@ -15,9 +15,8 @@
 package com.wavemaker.runtime.security;
 
 /**
- * This represents a resource that needs to be protected in the access control
- * system. A resource could be anything. For example a resource could be a url,
- * an identifier, or a pojo.
+ * This represents a resource that needs to be protected in the access control system. A resource could be anything. For
+ * example a resource could be a url, an identifier, or a pojo.
  * 
  * @author Frankie Fu
  * @version $Rev$ - $Date$
@@ -28,8 +27,7 @@ public interface Resource {
     /**
      * Checks if this resource matches the specified resource.
      * 
-     * @param resource
-     *            The resource to be checked.
+     * @param resource The resource to be checked.
      * @return True if this resource matches the specified resource.
      */
     public boolean matchResource(Resource resource);

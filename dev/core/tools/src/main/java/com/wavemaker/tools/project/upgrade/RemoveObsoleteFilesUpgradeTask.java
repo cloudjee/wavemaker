@@ -23,39 +23,41 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.project.Project;
 
 /**
- * This task removes old & obsolete files (according to a list set via spring).
- * All files to remove are relative to the project root.
+ * This task removes old & obsolete files (according to a list set via spring). All files to remove are relative to the
+ * project root.
  * 
  * @author small
  * @author Jeremy Grelle
  */
 public class RemoveObsoleteFilesUpgradeTask implements UpgradeTask {
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
+     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
      */
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
-        for (String file: files) {
+        for (String file : this.files) {
             try {
-				project.deleteFile(file);
-			} catch (IOException ex) {
-				throw new WMRuntimeException(ex);
-			}
+                project.deleteFile(file);
+            } catch (IOException ex) {
+                throw new WMRuntimeException(ex);
+            }
         }
-        
-        upgradeInfo.addMessage("Removed obsolete files: "+
-                StringUtils.join(files, ", "));
+
+        upgradeInfo.addMessage("Removed obsolete files: " + StringUtils.join(this.files, ", "));
     }
-    
 
     // bean properties
     private List<String> files;
-    
+
     public void setFiles(List<String> files) {
         this.files = files;
     }
+
     public List<String> getFiles() {
-        return files;
+        return this.files;
     }
 }

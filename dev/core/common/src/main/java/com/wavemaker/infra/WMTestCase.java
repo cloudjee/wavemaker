@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.infra;
 
 import java.io.File;
@@ -47,16 +48,16 @@ public abstract class WMTestCase extends TestCase {
     protected WMTestCase() {
         super();
     }
-    
+
     protected WMTestCase(String methodName) {
         super(methodName);
     }
-    
+
     protected WMTestCase(String methodName, Level logLevel) {
         super(methodName);
         logger.setLevel(logLevel);
     }
-    
+
     protected WMTestCase(Level logLevel) {
         super();
         logger.setLevel(logLevel);
@@ -69,7 +70,7 @@ public abstract class WMTestCase extends TestCase {
     protected void warn(Object o) {
         logger.warning(String.valueOf(o));
     }
-    
+
     protected File createTempDir() {
         try {
             return IOUtils.createTempDirectory();
@@ -77,7 +78,7 @@ public abstract class WMTestCase extends TestCase {
             throw new WMRuntimeException(ex);
         }
     }
-    
+
     /**
      * By default, initialize Spring (so we can get our error messages).
      */
@@ -85,7 +86,7 @@ public abstract class WMTestCase extends TestCase {
     public void setUp() throws Exception {
         SpringUtils.initSpringConfig();
     }
-    
+
     /**
      * Compare the contents of two files; display the message.
      * 
@@ -93,12 +94,11 @@ public abstract class WMTestCase extends TestCase {
      * @param actual The File containing the resulting contents.
      * @throws IOException
      */
-    public static void assertEquals(File expected, File actual)
-            throws IOException {
-        
+    public static void assertEquals(File expected, File actual) throws IOException {
+
         assertEquals(null, expected, actual);
     }
-    
+
     /**
      * Compare the contents of two files; display the message.
      * 
@@ -107,15 +107,13 @@ public abstract class WMTestCase extends TestCase {
      * @param actual The File containing the resulting contents.
      * @throws IOException
      */
-    public static void assertEquals(String message, File expected, File actual)
-            throws IOException {
+    public static void assertEquals(String message, File expected, File actual) throws IOException {
 
-        String msg = "mismatch between expected file \"" + expected
-                + "\" and actual \"" + actual + "\"";
+        String msg = "mismatch between expected file \"" + expected + "\" and actual \"" + actual + "\"";
         if (null != message) {
             msg = message + ": " + msg;
         }
-        
+
         if (expected.equals(actual)) {
             // pass
         } else if (expected.isFile() && actual.isFile()) {
@@ -124,8 +122,7 @@ public abstract class WMTestCase extends TestCase {
 
             assertEquals(msg, expectedStr, actualStr);
         } else if (expected.isDirectory() && actual.isDirectory()) {
-            assertEquals(msg, expected.getAbsolutePath(),
-                    actual.getAbsolutePath());
+            assertEquals(msg, expected.getAbsolutePath(), actual.getAbsolutePath());
         } else {
             fail(msg);
         }

@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.data.parser;
 
 import com.wavemaker.infra.WMTestCase;
@@ -27,38 +28,38 @@ import com.wavemaker.infra.WMTestCase;
 public class TestHbmWriter extends WMTestCase {
 
     public void testReadWriteActor() throws Exception {
-//        File f = ClassLoaderUtils.getClasspathFile("com/activegrid/runtime/data/sample/sakila2/Actor.hbm.xml");
-//        HbmParser p = new HbmParser(f);
-//        p.initAll();
-//        EntityInfo ei = p.getEntity();
-//        
-//        HbmWriter w = new HbmWriter(new PrintWriter(System.out));
-//        w.setEntity(ei);
-//        w.write();        
-   }
-    
-    public void testReadWriteFilmActor() throws Exception {
-//        File f = ClassLoaderUtils.getClasspathFile("com/activegrid/runtime/data/sample/sakila2/FilmActor.hbm.xml");
-//        HbmParser p = new HbmParser(f);
-//        p.initAll();
-//        EntityInfo ei = p.getEntity();
-//        
-//        HbmWriter w = new HbmWriter(new PrintWriter(System.out));
-//        w.setEntity(ei);
-//        w.write();        
-   }
-    
-    public void testReadWriteActorQueries() throws Exception {
-//      File f = ClassLoaderUtils.getClasspathFile("com/activegrid/runtime/data/sample/sakila2/Actor.crud.hql.xml");
-//      HbmQueryParser p = new HbmQueryParser(f);
-//      p.initAll();
-//      List<QueryInfo> queries = p.getQueries();
-//      
-//      warn("got queries: " + queries);
-//      
-//      HbmQueryWriter w = new HbmQueryWriter(new PrintWriter(System.out));
-//      w.setQueries(queries);
-//      w.write();        
+        // File f = ClassLoaderUtils.getClasspathFile("com/activegrid/runtime/data/sample/sakila2/Actor.hbm.xml");
+        // HbmParser p = new HbmParser(f);
+        // p.initAll();
+        // EntityInfo ei = p.getEntity();
+        //
+        // HbmWriter w = new HbmWriter(new PrintWriter(System.out));
+        // w.setEntity(ei);
+        // w.write();
     }
-    
+
+    public void testReadWriteFilmActor() throws Exception {
+        // File f = ClassLoaderUtils.getClasspathFile("com/activegrid/runtime/data/sample/sakila2/FilmActor.hbm.xml");
+        // HbmParser p = new HbmParser(f);
+        // p.initAll();
+        // EntityInfo ei = p.getEntity();
+        //
+        // HbmWriter w = new HbmWriter(new PrintWriter(System.out));
+        // w.setEntity(ei);
+        // w.write();
+    }
+
+    public void testReadWriteActorQueries() throws Exception {
+        // File f = ClassLoaderUtils.getClasspathFile("com/activegrid/runtime/data/sample/sakila2/Actor.crud.hql.xml");
+        // HbmQueryParser p = new HbmQueryParser(f);
+        // p.initAll();
+        // List<QueryInfo> queries = p.getQueries();
+        //
+        // warn("got queries: " + queries);
+        //
+        // HbmQueryWriter w = new HbmQueryWriter(new PrintWriter(System.out));
+        // w.setQueries(queries);
+        // w.write();
+    }
+
 }

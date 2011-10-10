@@ -27,13 +27,11 @@ import com.wavemaker.tools.common.ConfigurationException;
 /**
  * @author Simon Toens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class DeploymentTargetManager {
 
-    private Map<DeploymentType, DeploymentTarget>
-        deploymentTargets = new HashMap<DeploymentType, DeploymentTarget>();
-
+    private Map<DeploymentType, DeploymentTarget> deploymentTargets = new HashMap<DeploymentType, DeploymentTarget>();
 
     public Collection<String> getDeploymentTargetNames() {
         Set<String> names = new HashSet<String>();
@@ -42,25 +40,23 @@ public class DeploymentTargetManager {
         }
         return names;
     }
-    
+
     public DeploymentTarget getDeploymentTarget(DeploymentType deploymentType) {
-        
-        if (deploymentTargets == null) {
+
+        if (this.deploymentTargets == null) {
             SpringUtils.throwSpringNotInitializedError(this.getClass());
         }
-        
-        if (!deploymentTargets.containsKey(deploymentType)) {
-            throw new ConfigurationException(
-                MessageResource.UNKNOWN_DEPLOYMENT_TARGET, deploymentType);
+
+        if (!this.deploymentTargets.containsKey(deploymentType)) {
+            throw new ConfigurationException(MessageResource.UNKNOWN_DEPLOYMENT_TARGET, deploymentType);
         }
-        
-        return deploymentTargets.get(deploymentType);
+
+        return this.deploymentTargets.get(deploymentType);
     }
 
-    public void setDeploymentTargets(Map<DeploymentType, DeploymentTarget> 
-                                     deploymentTargets) {
+    public void setDeploymentTargets(Map<DeploymentType, DeploymentTarget> deploymentTargets) {
         this.deploymentTargets = deploymentTargets;
 
     }
-    
+
 }

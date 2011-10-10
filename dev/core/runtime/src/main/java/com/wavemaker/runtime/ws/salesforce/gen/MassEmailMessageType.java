@@ -11,23 +11,23 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for MassEmailMessage complex type.
+ * <p>
+ * Java class for MassEmailMessage complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="MassEmailMessage">
@@ -47,44 +47,37 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "MassEmailMessage", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "description",
-    "targetObjectIds",
-    "templateId",
-    "whatIds"
-})
-public class MassEmailMessageType
-    extends EmailType
-{
+@XmlType(name = "MassEmailMessage", namespace = "urn:partner.soap.sforce.com", propOrder = { "description", "targetObjectIds", "templateId",
+    "whatIds" })
+public class MassEmailMessageType extends EmailType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String description;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected List<String> targetObjectIds;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String templateId;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected List<String> whatIds;
 
     /**
      * Gets the value of the description property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     /**
      * Sets the value of the description property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setDescription(String value) {
         this.description = value;
@@ -94,27 +87,26 @@ public class MassEmailMessageType
      * Gets the value of the targetObjectIds property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the targetObjectIds property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the targetObjectIds property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getTargetObjectIds().add(newItem);
+     * getTargetObjectIds().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link String }
+     * Objects of the following type(s) are allowed in the list {@link String }
      * 
      * 
      */
     public List<String> getTargetObjectIds() {
-        if (targetObjectIds == null) {
-            targetObjectIds = new ArrayList<String>();
+        if (this.targetObjectIds == null) {
+            this.targetObjectIds = new ArrayList<String>();
         }
         return this.targetObjectIds;
     }
@@ -122,22 +114,18 @@ public class MassEmailMessageType
     /**
      * Gets the value of the templateId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getTemplateId() {
-        return templateId;
+        return this.templateId;
     }
 
     /**
      * Sets the value of the templateId property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setTemplateId(String value) {
         this.templateId = value;
@@ -147,27 +135,26 @@ public class MassEmailMessageType
      * Gets the value of the whatIds property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the whatIds property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the whatIds property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getWhatIds().add(newItem);
+     * getWhatIds().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link String }
+     * Objects of the following type(s) are allowed in the list {@link String }
      * 
      * 
      */
     public List<String> getWhatIds() {
-        if (whatIds == null) {
-            whatIds = new ArrayList<String>();
+        if (this.whatIds == null) {
+            this.whatIds = new ArrayList<String>();
         }
         return this.whatIds;
     }
@@ -175,10 +162,8 @@ public class MassEmailMessageType
     /**
      * Sets the value of the targetObjectIds property.
      * 
-     * @param targetObjectIds
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param targetObjectIds allowed object is {@link String }
+     * 
      */
     public void setTargetObjectIds(List<String> targetObjectIds) {
         this.targetObjectIds = targetObjectIds;
@@ -187,10 +172,8 @@ public class MassEmailMessageType
     /**
      * Sets the value of the whatIds property.
      * 
-     * @param whatIds
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param whatIds allowed object is {@link String }
+     * 
      */
     public void setWhatIds(List<String> whatIds) {
         this.whatIds = whatIds;

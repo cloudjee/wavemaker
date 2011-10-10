@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.spring;
 
 public class Book {
@@ -22,12 +23,12 @@ public class Book {
     private String title;
 
     private String price;
-    
+
     public Book() {
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     public void setTitle(String title) {
@@ -35,7 +36,7 @@ public class Book {
     }
 
     public String getPrice() {
-        return price;
+        return this.price;
     }
 
     public void setPrice(String price) {

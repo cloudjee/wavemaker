@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -21,11 +19,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for InvalidNewPasswordFault complex type.
+ * <p>
+ * Java class for InvalidNewPasswordFault complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="InvalidNewPasswordFault">
@@ -41,9 +40,6 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "InvalidNewPasswordFault", namespace = "urn:fault.partner.soap.sforce.com")
 @XmlRootElement(name = "InvalidNewPasswordFault", namespace = "urn:fault.partner.soap.sforce.com")
-public class InvalidNewPasswordFault
-    extends ApiFaultType
-{
-
+public class InvalidNewPasswordFault extends ApiFaultType {
 
 }

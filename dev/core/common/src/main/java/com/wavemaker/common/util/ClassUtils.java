@@ -28,7 +28,7 @@ import com.wavemaker.common.WMRuntimeException;
  * @version $Rev$ - $Date$
  */
 public class ClassUtils {
-    
+
     public static Object newInstance(Class<?> c) {
         try {
             return c.newInstance();
@@ -39,25 +39,24 @@ public class ClassUtils {
             }
             throw new WMRuntimeException(s, ex);
         } catch (IllegalAccessException ex) {
-           throw new WMRuntimeException(ex);
+            throw new WMRuntimeException(ex);
         }
     }
 
     /**
-     * Get all public methods of a class, except for methods contained in
-     * Object.
+     * Get all public methods of a class, except for methods contained in Object.
      */
     public static List<Method> getPublicMethods(Class<?> c) {
 
         Method[] allMethods = c.getMethods();
         List<Method> ret = new ArrayList<Method>(allMethods.length);
-        
-        for (int i=0;i<allMethods.length;i++) {
+
+        for (int i = 0; i < allMethods.length; i++) {
             if (!allMethods[i].getDeclaringClass().equals(Object.class)) {
                 ret.add(allMethods[i]);
             }
         }
-        
+
         return ret;
     }
 
@@ -82,7 +81,7 @@ public class ClassUtils {
 
         return rtn;
     }
-    
+
     public static String getPropertyGetterName(String propertyName) {
         return "get" + StringUtils.upperCaseFirstLetter(propertyName);
     }
@@ -94,8 +93,8 @@ public class ClassUtils {
     public static String getPropertySetterName(String propertyName) {
         return "set" + StringUtils.upperCaseFirstLetter(propertyName);
     }
-    
+
     private ClassUtils() {
         throw new UnsupportedOperationException();
     }
- }
+}

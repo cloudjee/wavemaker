@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -32,20 +31,20 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
  * 
  * 
- * 	The mime-mappingType defines a mapping between an extension
- * 	and a mime type.
+ * The mime-mappingType defines a mapping between an extension and a mime type.
  * 
- * 	Used in: web-app
+ * Used in: web-app
  * 
- *       
  * 
- * <p>Java class for mime-mappingType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for mime-mappingType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="mime-mappingType">
@@ -64,16 +63,15 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "mime-mappingType", propOrder = {
-    "extension",
-    "mimeType"
-})
+@XmlType(name = "mime-mappingType", propOrder = { "extension", "mimeType" })
 public class MimeMappingType {
 
     @XmlElement(required = true)
     protected com.wavemaker.tools.webapp.schema.String extension;
+
     @XmlElement(name = "mime-type", required = true)
     protected MimeTypeType mimeType;
+
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -83,22 +81,18 @@ public class MimeMappingType {
     /**
      * Gets the value of the extension property.
      * 
-     * @return
-     *     possible object is
-     *     {@link com.wavemaker.tools.webapp.schema.String }
-     *     
+     * @return possible object is {@link com.wavemaker.tools.webapp.schema.String }
+     * 
      */
     public com.wavemaker.tools.webapp.schema.String getExtension() {
-        return extension;
+        return this.extension;
     }
 
     /**
      * Sets the value of the extension property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link com.wavemaker.tools.webapp.schema.String }
-     *     
+     * @param value allowed object is {@link com.wavemaker.tools.webapp.schema.String }
+     * 
      */
     public void setExtension(com.wavemaker.tools.webapp.schema.String value) {
         this.extension = value;
@@ -107,22 +101,18 @@ public class MimeMappingType {
     /**
      * Gets the value of the mimeType property.
      * 
-     * @return
-     *     possible object is
-     *     {@link MimeTypeType }
-     *     
+     * @return possible object is {@link MimeTypeType }
+     * 
      */
     public MimeTypeType getMimeType() {
-        return mimeType;
+        return this.mimeType;
     }
 
     /**
      * Sets the value of the mimeType property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link MimeTypeType }
-     *     
+     * @param value allowed object is {@link MimeTypeType }
+     * 
      */
     public void setMimeType(MimeTypeType value) {
         this.mimeType = value;
@@ -131,22 +121,18 @@ public class MimeMappingType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setId(java.lang.String value) {
         this.id = value;

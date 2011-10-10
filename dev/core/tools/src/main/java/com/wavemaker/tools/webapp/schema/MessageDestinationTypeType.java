@@ -19,33 +19,31 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * 
- * 	
  * 
- * 	  The message-destination-typeType specifies the type of
- * 	  the destination. The type is specified by the Java interface
- * 	  expected to be implemented by the destination.
  * 
- * 	  Example:
+ * The message-destination-typeType specifies the type of the destination. The type is specified by the Java interface
+ * expected to be implemented by the destination.
  * 
- * 	    <message-destination-type>javax.jms.Queue
- * 	    </message-destination-type>
+ * Example:
  * 
- * 	  
- *       
+ * <message-destination-type>javax.jms.Queue </message-destination-type>
  * 
- * <p>Java class for message-destination-typeType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * 
+ * 
+ * <p>
+ * Java class for message-destination-typeType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="message-destination-typeType">
@@ -60,9 +58,6 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "message-destination-typeType")
-public class MessageDestinationTypeType
-    extends FullyQualifiedClassType
-{
-
+public class MessageDestinationTypeType extends FullyQualifiedClassType {
 
 }

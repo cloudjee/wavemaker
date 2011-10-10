@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.server.testspring;
 
 import java.util.Map;
@@ -22,14 +23,14 @@ import java.util.Map;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class UtilMapBeanClass {
 
     private Map<String, String> map;
 
     public Map<String, String> getMap() {
-        return map;
+        return this.map;
     }
 
     public void setMap(Map<String, String> map) {

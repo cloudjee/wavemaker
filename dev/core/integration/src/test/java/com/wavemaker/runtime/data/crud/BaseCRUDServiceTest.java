@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data.crud;
 
 import org.junit.After;
@@ -36,8 +37,7 @@ import com.wavemaker.runtime.service.reflect.ReflectServiceWire;
  * @version $Rev$ - $Date$
  * 
  */
-public abstract class BaseCRUDServiceTest extends
-        RuntimeDataSpringContextTestCase {
+public abstract class BaseCRUDServiceTest extends RuntimeDataSpringContextTestCase {
 
     protected Sakila sakila = null;
 
@@ -46,16 +46,13 @@ public abstract class BaseCRUDServiceTest extends
     @Before
     public void setUp() throws Exception {
 
-        ThreadContext.setPreProcessorTask(DefaultTaskManager.getInstance()
-                .getPreProcessorRouterTask());
+        ThreadContext.setPreProcessorTask(DefaultTaskManager.getInstance().getPreProcessorRouterTask());
 
         ApplicationContext ctx = getApplicationContext();
-        ServiceManager serviceMgr = (ServiceManager) ctx
-                .getBean(ServiceConstants.SERVICE_MANAGER_NAME);
-        sakila = (Sakila) ((ReflectServiceWire) serviceMgr
-                .getServiceWire(DataServiceTestConstants.SAKILA_SERVICE_SPRING_ID_2)).getServiceBean();
+        ServiceManager serviceMgr = (ServiceManager) ctx.getBean(ServiceConstants.SERVICE_MANAGER_NAME);
+        this.sakila = (Sakila) ((ReflectServiceWire) serviceMgr.getServiceWire(DataServiceTestConstants.SAKILA_SERVICE_SPRING_ID_2)).getServiceBean();
 
-        taskMgr = (TaskManager) getBean(DataServiceTestConstants.SAKILA_TASK_MGR);
+        this.taskMgr = (TaskManager) getBean(DataServiceTestConstants.SAKILA_TASK_MGR);
     }
 
     @After
@@ -65,7 +62,7 @@ public abstract class BaseCRUDServiceTest extends
 
         ThreadContext.unsetPreProcessorTask();
 
-        sakila.getDataServiceManager().dispose();
+        this.sakila.getDataServiceManager().dispose();
     }
 
 }

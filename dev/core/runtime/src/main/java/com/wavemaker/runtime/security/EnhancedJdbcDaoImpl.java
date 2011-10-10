@@ -27,34 +27,34 @@ import org.acegisecurity.userdetails.UserDetails;
 import org.acegisecurity.userdetails.jdbc.JdbcDaoImpl;
 import org.springframework.jdbc.core.SqlParameter;
 import org.springframework.jdbc.object.MappingSqlQuery;
+
 import com.wavemaker.runtime.WMAppContext;
-import com.wavemaker.runtime.RuntimeAccess;
-import com.wavemaker.common.WMRuntimeInitException;
 
 /**
- * In the default <code>org.acegisecurity.userdetails.jdbc.JdbcDaoImpl</code>
- * the SQL parameter type for authoritiesByUsernameQuery is hardcoded to
- * <code>Types.VARCHAR</code>.  This doesn't work well if the actual type for
- * the parameter is something else like <code>Types.INTEGER</code>.  This seems
- * to be a problem only in PostgreSQL, other databases like MySQL seems to will
- * just covert the parameter value to the right type.
- *  
+ * In the default <code>org.acegisecurity.userdetails.jdbc.JdbcDaoImpl</code> the SQL parameter type for
+ * authoritiesByUsernameQuery is hardcoded to <code>Types.VARCHAR</code>. This doesn't work well if the actual type for
+ * the parameter is something else like <code>Types.INTEGER</code>. This seems to be a problem only in PostgreSQL, other
+ * databases like MySQL seems to will just covert the parameter value to the right type.
+ * 
  * @author ffu
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class EnhancedJdbcDaoImpl extends JdbcDaoImpl {
 
     private String authoritiesByUsernameQueryParamType;
-    
+
+    @Override
     protected void initMappingSqlQueries() {
         String qryStr = getUsersByUsernameQuery();
         try {
             WMAppContext wmApp = WMAppContext.getInstance();
-            if (wmApp != null && WMAppContext.getInstance().isMultiTenant())
+            if (wmApp != null && WMAppContext.getInstance().isMultiTenant()) {
                 qryStr = insertTenantIdField(getUsersByUsernameQuery(), wmApp.getTenantColumnName());
-        //} catch (WMRuntimeInitException ex) {}
-        } catch (Exception ex) {}
+                // } catch (WMRuntimeInitException ex) {}
+            }
+        } catch (Exception ex) {
+        }
 
         this.usersByUsernameMapping = new UsersByUsernameMapping(getDataSource(), qryStr);
         this.authoritiesByUsernameMapping = new AuthoritiesByUsernameMapping(getDataSource());
@@ -64,18 +64,23 @@ public class EnhancedJdbcDaoImpl extends JdbcDaoImpl {
         StringBuffer sb = new StringBuffer(str);
 
         int indx = sb.lastIndexOf("FROM");
-        if (indx < 0) indx = sb.lastIndexOf("from");
-        if (indx < 0) return str;
-        
+        if (indx < 0) {
+            indx = sb.lastIndexOf("from");
+        }
+        if (indx < 0) {
+            return str;
+        }
+
         sb.insert(indx, ", " + colName + " ");
 
         return sb.toString();
     }
-    
+
     /**
      * Query object to look up a user's authorities.
      */
     protected class AuthoritiesByUsernameMapping extends MappingSqlQuery {
+
         protected AuthoritiesByUsernameMapping(DataSource ds) {
             super(ds, getAuthoritiesByUsernameQuery());
             int type = Types.VARCHAR;
@@ -88,8 +93,8 @@ public class EnhancedJdbcDaoImpl extends JdbcDaoImpl {
             compile();
         }
 
-        protected Object mapRow(ResultSet rs, int rownum)
-            throws SQLException {
+        @Override
+        protected Object mapRow(ResultSet rs, int rownum) throws SQLException {
             String roleName = getRolePrefix() + rs.getString(2);
             GrantedAuthorityImpl authority = new GrantedAuthorityImpl(roleName);
 
@@ -101,23 +106,25 @@ public class EnhancedJdbcDaoImpl extends JdbcDaoImpl {
      * Query object to look up a user.
      */
     protected class UsersByUsernameMapping extends MappingSqlQuery {
+
         protected UsersByUsernameMapping(DataSource ds, String str) {
-            //super(ds, getUsersByUsernameQuery());
+            // super(ds, getUsersByUsernameQuery());
             super(ds, str);
             declareParameter(new SqlParameter(Types.VARCHAR));
             compile();
         }
 
-        protected Object mapRow(ResultSet rs, int rownum)
-            throws SQLException {
+        @Override
+        protected Object mapRow(ResultSet rs, int rownum) throws SQLException {
 
-            String userid   = rs.getString(1);
+            String userid = rs.getString(1);
             String password = rs.getString(2);
             boolean enabled = rs.getBoolean(3);
             String username = null;
             try {
                 username = rs.getString(4);
-            } catch (SQLException e) {}
+            } catch (SQLException e) {
+            }
 
             try {
                 int tenantId = -1;
@@ -126,23 +133,22 @@ public class EnhancedJdbcDaoImpl extends JdbcDaoImpl {
                     tenantId = rs.getInt(5);
                     wmApp.setTenantIdForUser(username, tenantId);
                 }
-            //} catch (WMRuntimeInitException ex) {}
-            } catch (Exception ex) {}
+                // } catch (WMRuntimeInitException ex) {}
+            } catch (Exception ex) {
+            }
 
             WMAppContext.getInstance().setUserNameForUserID(userid, username);
 
-            UserDetails user = new User(userid, password, enabled, true, true, true,
-                    new GrantedAuthority[] {new GrantedAuthorityImpl("HOLDER")});
+            UserDetails user = new User(userid, password, enabled, true, true, true, new GrantedAuthority[] { new GrantedAuthorityImpl("HOLDER") });
             return user;
         }
     }
 
     public String getAuthoritiesByUsernameQueryParamType() {
-        return authoritiesByUsernameQueryParamType;
+        return this.authoritiesByUsernameQueryParamType;
     }
 
-    public void setAuthoritiesByUsernameQueryParamType(
-            String authoritiesByUsernameQueryParamType) {
+    public void setAuthoritiesByUsernameQueryParamType(String authoritiesByUsernameQueryParamType) {
         this.authoritiesByUsernameQueryParamType = authoritiesByUsernameQueryParamType;
     }
 }

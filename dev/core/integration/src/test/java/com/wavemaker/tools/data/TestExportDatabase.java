@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.data;
 
 import java.io.File;
@@ -33,35 +34,35 @@ import com.wavemaker.tools.data.util.DataServiceTestUtils;
  */
 public class TestExportDatabase extends WMTestCase {
 
-	public void testExportNewDB() throws IOException {
+    public void testExportNewDB() throws IOException {
 
-		SpringUtils.initSpringConfig();
+        SpringUtils.initSpringConfig();
 
-		Properties p = DataServiceTestUtils.loadSakilaConnectionProperties();
+        Properties p = DataServiceTestUtils.loadSakilaConnectionProperties();
 
-		ExportDB e = new ExportDB();
+        ExportDB e = new ExportDB();
 
-		e.addProperties(p);
+        e.addProperties(p);
 
-		String s = "com/wavemaker/tools/data/exporttest/Actor.hbm.xml";
+        String s = "com/wavemaker/tools/data/exporttest/Actor.hbm.xml";
 
-		File f = ClassLoaderUtils.getClasspathFile(s).getFile();
+        File f = ClassLoaderUtils.getClasspathFile(s).getFile();
 
-		assertTrue(f.exists());
+        assertTrue(f.exists());
 
-		e.setHbmFilesDir(f.getParentFile());
+        e.setHbmFilesDir(f.getParentFile());
 
-		e.setVerbose(false);
+        e.setVerbose(false);
 
-		e.setOverrideTable(true);
+        e.setOverrideTable(true);
 
-		e.init();
+        e.init();
 
-		e.run();
+        e.run();
 
-		int i = e.getDDL().indexOf("create table sakila.actor (");
+        int i = e.getDDL().indexOf("create table sakila.actor (");
 
-		assertTrue(i > -1);
-	}
+        assertTrue(i > -1);
+    }
 
 }

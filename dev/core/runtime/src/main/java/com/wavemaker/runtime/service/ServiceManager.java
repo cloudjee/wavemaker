@@ -17,8 +17,8 @@ package com.wavemaker.runtime.service;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.ApplicationContext;
@@ -31,9 +31,8 @@ import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.runtime.RuntimeAccess;
 
 /**
- * The ServiceManager provides access to the system's current services.  As this
- * is a Spring-managed bean, access should be through Spring bean properties or
- * {@link RuntimeAccess}.
+ * The ServiceManager provides access to the system's current services. As this is a Spring-managed bean, access should
+ * be through Spring bean properties or {@link RuntimeAccess}.
  * 
  * @author Matt Small
  * @version $Rev$ - $Date$
@@ -42,154 +41,144 @@ public class ServiceManager implements ApplicationContextAware {
 
     /** Logger for this class and subclasses */
     protected final Logger logger = Logger.getLogger(getClass());
-    
+
     private ApplicationContext applicationContext = null;
-    private Set<ServiceType> serviceTypes = new HashSet<ServiceType>();
-    private Set<ServiceWire> serviceWires = new HashSet<ServiceWire>();
+
+    private final Set<ServiceType> serviceTypes = new HashSet<ServiceType>();
+
+    private final Set<ServiceWire> serviceWires = new HashSet<ServiceWire>();
 
     /**
-     * Return the service bean for the given service id. Note that if the id
-     * refers to a ServiceWire without an associated bean, this may return null,
-     * or an unrelated bean with the same name.
+     * Return the service bean for the given service id. Note that if the id refers to a ServiceWire without an
+     * associated bean, this may return null, or an unrelated bean with the same name.
      * 
-     * @param serviceId
-     *            The unique service id of the requested service class (this
-     *            much match the bean id, as well)
+     * @param serviceId The unique service id of the requested service class (this much match the bean id, as well)
      * 
      * @return the service, or null if the service does not exist
-     * @deprecated Use {@link #getServiceWire(String)} instead. This method will
-     *             be removed in two releases.
+     * @deprecated Use {@link #getServiceWire(String)} instead. This method will be removed in two releases.
      */
+    @Deprecated
     public Object getService(String serviceId) {
 
-        if (serviceWires == null) {
+        if (this.serviceWires == null) {
             SpringUtils.throwSpringNotInitializedError(this.getClass());
         }
-        
+
         if (!getServices().contains(serviceId)) {
             throw new WMRuntimeException(MessageResource.UNKNOWN_SERVICE, serviceId);
         }
 
-        return applicationContext.getBean(serviceId);
+        return this.applicationContext.getBean(serviceId);
     }
 
     /**
-     * Return the service bean for the given service type. Note that if the id
-     * refers to a ServiceWire without an associated bean, this may return null,
-     * or an unrelated bean with the same name.
+     * Return the service bean for the given service type. Note that if the id refers to a ServiceWire without an
+     * associated bean, this may return null, or an unrelated bean with the same name.
      * 
-     * @param serviceType
-     *            The class of the service for which to retrieve the service
-     *            instance.
+     * @param serviceType The class of the service for which to retrieve the service instance.
      * 
      * @return the service, or null if the service does not exist
-     * @deprecated Use {@link #getServiceWire(String)} instead. This method will
-     *             be removed in two releases.
+     * @deprecated Use {@link #getServiceWire(String)} instead. This method will be removed in two releases.
      */
+    @Deprecated
     public Object getService(Class<?> serviceType) {
 
-        if (serviceWires == null) {
+        if (this.serviceWires == null) {
             SpringUtils.throwSpringNotInitializedError(this.getClass());
         }
 
-        Map<String, Object> m = CastUtils.cast(applicationContext
-                .getBeansOfType(serviceType));
-        
+        Map<String, Object> m = CastUtils.cast(this.applicationContext.getBeansOfType(serviceType));
+
         if (m.isEmpty()) {
-            throw new WMRuntimeException(MessageResource.UNKNOWN_SERVICE_TYPE,
-                    serviceType.getName());
+            throw new WMRuntimeException(MessageResource.UNKNOWN_SERVICE_TYPE, serviceType.getName());
         }
-        
+
         Map<String, Object> foundServices = new HashMap<String, Object>();
-        for (Entry<String, Object> entry: m.entrySet()) {
+        for (Entry<String, Object> entry : m.entrySet()) {
             if (getServices().contains(entry.getKey())) {
                 foundServices.put(entry.getKey(), entry.getValue());
             }
         }
-        
-        if (foundServices.isEmpty() || 0==foundServices.size()) {
-            throw new WMRuntimeException(MessageResource.UNKNOWN_SERVICE_TYPE,
-                    serviceType.getName());
+
+        if (foundServices.isEmpty() || 0 == foundServices.size()) {
+            throw new WMRuntimeException(MessageResource.UNKNOWN_SERVICE_TYPE, serviceType.getName());
         } else if (foundServices.size() > 1) {
-            throw new WMRuntimeException(MessageResource.MULTIPLE_SERVICE_BEANS,
-                    serviceType.getName());
+            throw new WMRuntimeException(MessageResource.MULTIPLE_SERVICE_BEANS, serviceType.getName());
         }
-        
+
         Entry<String, Object> entry = foundServices.entrySet().iterator().next();
         return entry.getValue();
     }
-    
+
     public ServiceWire getServiceWire(String serviceId) {
-        if (serviceWires == null) {
+        if (this.serviceWires == null) {
             SpringUtils.throwSpringNotInitializedError(this.getClass());
         }
-        
+
         ServiceWire ret = null;
-        for (ServiceWire sw: serviceWires) {
+        for (ServiceWire sw : this.serviceWires) {
             if (sw.getServiceId().equals(serviceId)) {
                 if (null == ret) {
                     ret = sw;
                 } else {
-                    throw new WMRuntimeException(MessageResource.SERVICEWIRE_ID_DUP,
-                            serviceId);
+                    throw new WMRuntimeException(MessageResource.SERVICEWIRE_ID_DUP, serviceId);
                 }
             }
         }
-        
+
         return ret;
     }
 
     public Set<String> getServices() {
 
-        if (serviceWires == null) {
+        if (this.serviceWires == null) {
             SpringUtils.throwSpringNotInitializedError(this.getClass());
         }
-        
+
         Set<String> ret = new HashSet<String>();
-        
-        for (ServiceWire wire: serviceWires) {
+
+        for (ServiceWire wire : this.serviceWires) {
             ret.add(wire.getServiceId());
         }
-        
+
         return ret;
     }
 
     /**
      * Add the new ServiceType only if that service type doesn't already exist.
      * 
-     * @param serviceType
-     *            The ServiceType to add.
+     * @param serviceType The ServiceType to add.
      */
     public void addServiceType(ServiceType serviceType) {
 
-        for (ServiceType st: serviceTypes) {
+        for (ServiceType st : this.serviceTypes) {
             if (st.getTypeName().equals(serviceType.getTypeName())) {
-                logger.warn("redefining ServiceType "+serviceType.getTypeName());
+                this.logger.warn("redefining ServiceType " + serviceType.getTypeName());
                 return;
             }
         }
-        
-        logger.info("Adding ServiceType "+serviceType.getTypeName());
-        serviceTypes.add(serviceType);
+
+        this.logger.info("Adding ServiceType " + serviceType.getTypeName());
+        this.serviceTypes.add(serviceType);
     }
-    
+
     public void addServiceWire(ServiceWire serviceWire) {
-        
-        if (null==getServiceWire(serviceWire.getServiceId())) {
-            logger.info("Adding ServiceWire "+serviceWire);
-            serviceWires.add(serviceWire);
+
+        if (null == getServiceWire(serviceWire.getServiceId())) {
+            this.logger.info("Adding ServiceWire " + serviceWire);
+            this.serviceWires.add(serviceWire);
         } else {
-            logger.warn("Attempt to re-add ServiceWire "+serviceWire);
-            serviceWires.add(serviceWire);
+            this.logger.warn("Attempt to re-add ServiceWire " + serviceWire);
+            this.serviceWires.add(serviceWire);
         }
     }
 
     public Set<ServiceType> getServiceTypes() {
-        return serviceTypes;
+        return this.serviceTypes;
     }
 
     protected Set<ServiceWire> getServiceWires() {
-        return serviceWires;
+        return this.serviceWires;
     }
 
     public void setApplicationContext(ApplicationContext applicationContext) {

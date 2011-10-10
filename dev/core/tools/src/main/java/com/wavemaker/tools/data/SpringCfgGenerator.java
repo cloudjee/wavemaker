@@ -47,22 +47,18 @@ public class SpringCfgGenerator extends BaseDataModelSetup {
     }
 
     @Override
-    protected void customDispose() {}
+    protected void customDispose() {
+    }
 
     private void writeConnectionPropertiesTemplate() {
         Properties p = new Properties();
 
-        p.setProperty(serviceName + DataServiceConstants.DB_USERNAME,
-                (getUsername() == null ? "" : getUsername()));
-        p.setProperty(serviceName + DataServiceConstants.DB_PASS,
-                (getPassword() == null ? "" : getPassword()));
-        p.setProperty(serviceName + DataServiceConstants.DB_URL,
-                (getConnectionUrl() == null ? "" : getConnectionUrl()));
-        p.setProperty(serviceName + DataServiceConstants.DB_DRIVER_CLASS_NAME,
-                (getDriverClassName() == null ? "" : getDriverClassName()));
-        p.setProperty(serviceName + DataServiceConstants.DB_DIALECT,
-                (getDialect() == null ? "" : getDialect()));
+        p.setProperty(this.serviceName + DataServiceConstants.DB_USERNAME, getUsername() == null ? "" : getUsername());
+        p.setProperty(this.serviceName + DataServiceConstants.DB_PASS, getPassword() == null ? "" : getPassword());
+        p.setProperty(this.serviceName + DataServiceConstants.DB_URL, getConnectionUrl() == null ? "" : getConnectionUrl());
+        p.setProperty(this.serviceName + DataServiceConstants.DB_DRIVER_CLASS_NAME, getDriverClassName() == null ? "" : getDriverClassName());
+        p.setProperty(this.serviceName + DataServiceConstants.DB_DIALECT, getDialect() == null ? "" : getDialect());
 
-        DataServiceUtils.writeProperties(p, destdir, serviceName);
+        DataServiceUtils.writeProperties(p, this.destdir, this.serviceName);
     }
 }

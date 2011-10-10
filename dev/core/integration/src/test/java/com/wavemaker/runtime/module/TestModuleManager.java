@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.module;
 
 import static org.junit.Assert.assertEquals;
@@ -39,18 +40,19 @@ import com.wavemaker.runtime.test.TestSpringContextTestCase;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestModuleManager extends TestSpringContextTestCase {
-    
-    @Test public void testBootstrapLoad() throws Exception {
-        
+
+    @Test
+    public void testBootstrapLoad() throws Exception {
+
         ModuleManager mm = (ModuleManager) getBean("moduleManager");
-        
+
         boolean gotFoo = false;
         boolean gotBar = false;
         boolean gotBaz = false;
-        for (Tuple.Two<URL, ModuleWire> tuple: mm.getModuleLocations().values()) {
+        for (Tuple.Two<URL, ModuleWire> tuple : mm.getModuleLocations().values()) {
             if ("foo".equals(tuple.v2.getExtensionPoint())) {
                 gotFoo = true;
             } else if ("bar".equals(tuple.v2.getExtensionPoint())) {
@@ -62,28 +64,28 @@ public class TestModuleManager extends TestSpringContextTestCase {
         assertTrue(gotFoo);
         assertTrue(gotBar);
         assertTrue(gotBaz);
-        
+
         ModuleWire fooMW = mm.getModule("foo");
         ModuleWire barMW = mm.getModule("bar");
-        
+
         File barFile = mm.getModuleRoot(barMW.getName());
         assertTrue(barFile.exists());
         assertFalse(barFile.getName().toLowerCase().endsWith(".jar"));
-        
+
         File fooFile = mm.getModuleRoot(fooMW.getName());
         assertTrue(fooFile.exists());
         assertTrue(fooFile.getName().toLowerCase().endsWith(".jar"));
-        
+
         try {
             mm.getModule("conflict");
         } catch (WMRuntimeException e) {
-            assertEquals(MessageResource.TOO_MANY_MODULES_FOR_EXTENSION_POINT.getId(),
-                    e.getMessageId());
+            assertEquals(MessageResource.TOO_MANY_MODULES_FOR_EXTENSION_POINT.getId(), e.getMessageId());
         }
         assertEquals(2, mm.getModules("conflict").size());
     }
 
-    @Test public void testListExtensionPoints() throws Exception {
+    @Test
+    public void testListExtensionPoints() throws Exception {
 
         ModuleManager mm = (ModuleManager) getBean("moduleManager");
 
@@ -92,7 +94,8 @@ public class TestModuleManager extends TestSpringContextTestCase {
         assertTrue(extensionPoints.contains("bar"));
     }
 
-    @Test public void testListModules() throws Exception {
+    @Test
+    public void testListModules() throws Exception {
 
         ModuleManager mm = (ModuleManager) getBean("moduleManager");
 
@@ -101,7 +104,8 @@ public class TestModuleManager extends TestSpringContextTestCase {
         assertTrue(modules.contains("barModule"));
     }
 
-    @Test public void testGetModuleRoot() throws Exception {
+    @Test
+    public void testGetModuleRoot() throws Exception {
 
         ModuleManager mm = (ModuleManager) getBean("moduleManager");
 
@@ -109,17 +113,17 @@ public class TestModuleManager extends TestSpringContextTestCase {
         assertNotNull(mw);
         File f = mm.getModuleRoot(mw.getName());
         assertTrue(f.isDirectory());
-        assertTrue("f.list: "+Arrays.toString(f.list())+"\nf: "+f,
-                Arrays.asList(f.list()).contains("bar-module-contents.txt"));
+        assertTrue("f.list: " + Arrays.toString(f.list()) + "\nf: " + f, Arrays.asList(f.list()).contains("bar-module-contents.txt"));
 
         mw = mm.getModule("foo");
         assertNotNull(mw);
         f = mm.getModuleRoot(mw.getName());
         assertFalse(f.isDirectory());
-        assertTrue("f: "+f, f.toString().endsWith(".jar"));
+        assertTrue("f: " + f, f.toString().endsWith(".jar"));
     }
 
-    @Test public void testGetModuleResource() throws Exception {
+    @Test
+    public void testGetModuleResource() throws Exception {
 
         ModuleManager mm = (ModuleManager) getBean("moduleManager");
 
@@ -131,8 +135,6 @@ public class TestModuleManager extends TestSpringContextTestCase {
         String contents = IOUtils.toString(conn.getInputStream());
         assertEquals("bar module contents\n", contents);
 
-
-
         mw = mm.getModule("foo");
         assertNotNull(mw);
 
@@ -141,17 +143,18 @@ public class TestModuleManager extends TestSpringContextTestCase {
         contents = IOUtils.toString(conn.getInputStream());
         assertEquals("foo module contents\n", contents);
     }
-    
-    @Test public void testGetModuleByName() throws Exception {
+
+    @Test
+    public void testGetModuleByName() throws Exception {
 
         ModuleManager mm = (ModuleManager) getBean("moduleManager");
-        
+
         ModuleWire fooMW = mm.getModuleByName("fooModule");
         assertNotNull(fooMW);
 
         ModuleWire barMW = mm.getModuleByName("barModule");
         assertNotNull(barMW);
-        
+
         ModuleWire conflictMW = mm.getModuleByName("conflictModuleOne");
         assertNotNull(conflictMW);
     }

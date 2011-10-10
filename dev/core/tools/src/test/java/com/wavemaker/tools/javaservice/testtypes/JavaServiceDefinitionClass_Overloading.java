@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.javaservice.testtypes;
 
 /**
@@ -23,7 +24,15 @@ package com.wavemaker.tools.javaservice.testtypes;
  */
 public class JavaServiceDefinitionClass_Overloading {
 
-    public int getInt(int in, int in2) { return getInt()+in+in2; }
-    public int getInt() { return 12; }
-    public int getInt(int in) { return getInt()+in; }
+    public int getInt(int in, int in2) {
+        return getInt() + in + in2;
+    }
+
+    public int getInt() {
+        return 12;
+    }
+
+    public int getInt(int in) {
+        return getInt() + in;
+    }
 }

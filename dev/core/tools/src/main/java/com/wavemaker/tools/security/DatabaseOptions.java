@@ -28,9 +28,9 @@ public class DatabaseOptions {
     private String tableName;
 
     private String unamePropertyName;
-    
+
     private String unameColumnName;
-    
+
     private String uidPropertyName;
 
     private String uidColumnName;
@@ -42,7 +42,7 @@ public class DatabaseOptions {
     private String rolePropertyName;
 
     private String roleColumnName;
-    
+
     private boolean useRolesQuery;
 
     private String rolesByUsernameQuery;
@@ -52,7 +52,7 @@ public class DatabaseOptions {
     private int defTenantId;
 
     public String getModelName() {
-        return modelName;
+        return this.modelName;
     }
 
     public void setModelName(String modelName) {
@@ -60,7 +60,7 @@ public class DatabaseOptions {
     }
 
     public String getEntityName() {
-        return entityName;
+        return this.entityName;
     }
 
     public void setEntityName(String entityName) {
@@ -68,7 +68,7 @@ public class DatabaseOptions {
     }
 
     public String getTableName() {
-        return tableName;
+        return this.tableName;
     }
 
     public void setTableName(String tableName) {
@@ -76,7 +76,7 @@ public class DatabaseOptions {
     }
 
     public String getUnamePropertyName() {
-        return unamePropertyName;
+        return this.unamePropertyName;
     }
 
     public void setUnamePropertyName(String unamePropertyName) {
@@ -84,7 +84,7 @@ public class DatabaseOptions {
     }
 
     public String getUnameColumnName() {
-        return unameColumnName;
+        return this.unameColumnName;
     }
 
     public void setUnameColumnName(String unameColumnName) {
@@ -92,7 +92,7 @@ public class DatabaseOptions {
     }
 
     public String getUidPropertyName() {
-        return uidPropertyName;
+        return this.uidPropertyName;
     }
 
     public void setUidPropertyName(String uidPropertyName) {
@@ -100,7 +100,7 @@ public class DatabaseOptions {
     }
 
     public String getUidColumnName() {
-        return uidColumnName;
+        return this.uidColumnName;
     }
 
     public void setUidColumnName(String uidColumnName) {
@@ -108,7 +108,7 @@ public class DatabaseOptions {
     }
 
     public String getPwPropertyName() {
-        return pwPropertyName;
+        return this.pwPropertyName;
     }
 
     public void setPwPropertyName(String pwPropertyName) {
@@ -116,7 +116,7 @@ public class DatabaseOptions {
     }
 
     public String getPwColumnName() {
-        return pwColumnName;
+        return this.pwColumnName;
     }
 
     public void setPwColumnName(String pwColumnName) {
@@ -124,7 +124,7 @@ public class DatabaseOptions {
     }
 
     public String getRolePropertyName() {
-        return rolePropertyName;
+        return this.rolePropertyName;
     }
 
     public void setRolePropertyName(String rolePropertName) {
@@ -132,7 +132,7 @@ public class DatabaseOptions {
     }
 
     public String getRoleColumnName() {
-        return roleColumnName;
+        return this.roleColumnName;
     }
 
     public void setRoleColumnName(String roleColumnName) {
@@ -140,7 +140,7 @@ public class DatabaseOptions {
     }
 
     public boolean isUseRolesQuery() {
-        return useRolesQuery;
+        return this.useRolesQuery;
     }
 
     public void setUseRolesQuery(boolean useRolesQuery) {
@@ -148,7 +148,7 @@ public class DatabaseOptions {
     }
 
     public String getRolesByUsernameQuery() {
-        return rolesByUsernameQuery;
+        return this.rolesByUsernameQuery;
     }
 
     public void setRolesByUsernameQuery(String rolesByUsernameQuery) {
@@ -156,19 +156,19 @@ public class DatabaseOptions {
     }
 
     public String getTenantIdField() {
-        return tenantIdField;
+        return this.tenantIdField;
     }
 
     public void setTenantIdField(String val) {
-        tenantIdField = val;
+        this.tenantIdField = val;
     }
 
     public int getDefTenantId() {
-        return defTenantId;
+        return this.defTenantId;
     }
 
     public void setDefTenantId(int val) {
-        defTenantId = val;
+        this.defTenantId = val;
     }
 
 }

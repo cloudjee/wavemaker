@@ -32,29 +32,26 @@ import com.wavemaker.tools.project.Project;
  */
 public abstract class AbstractResourceJavaFileObject extends GenericResourceFileObject implements JavaFileObject {
 
-	private Kind kind;
+    private final Kind kind;
 
-	protected AbstractResourceJavaFileObject(Kind kind, Project project,
-			Resource resource) throws IOException {
-		super(project, resource);
-		this.kind = kind;
-	}
+    protected AbstractResourceJavaFileObject(Kind kind, Project project, Resource resource) throws IOException {
+        super(project, resource);
+        this.kind = kind;
+    }
 
-	public Modifier getAccessLevel() {
-		return null;
-	}
+    public Modifier getAccessLevel() {
+        return null;
+    }
 
-	public Kind getKind() {
-		return kind;
-	}
+    public Kind getKind() {
+        return this.kind;
+    }
 
-	public NestingKind getNestingKind() {
-		return null;
-	}
+    public NestingKind getNestingKind() {
+        return null;
+    }
 
-	public boolean isNameCompatible(String name, Kind kind) {
-		return resource.getFilename().equals(name)
-				&& kind.extension.replaceFirst(".", "").equals(
-						StringUtils.getFilenameExtension(name));
-	}
+    public boolean isNameCompatible(String name, Kind kind) {
+        return this.resource.getFilename().equals(name) && kind.extension.replaceFirst(".", "").equals(StringUtils.getFilenameExtension(name));
+    }
 }

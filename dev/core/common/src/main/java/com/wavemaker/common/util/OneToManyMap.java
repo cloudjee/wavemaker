@@ -22,8 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * one:many map.  Has all required Map methods, but doesn't
- * implement Map because of slight signature mismatches.
+ * one:many map. Has all required Map methods, but doesn't implement Map because of slight signature mismatches.
  * 
  * Collections returned by this Map are read only.
  * 
@@ -46,15 +45,15 @@ public class OneToManyMap<K, V> {
      */
     @SuppressWarnings("unchecked")
     public OneToManyMap(Class<?> mapType) {
-        m = CastUtils.cast((Map) ClassUtils.newInstance(mapType));
+        this.m = CastUtils.cast((Map) ClassUtils.newInstance(mapType));
     }
 
     public V put(K key, V value) {
 
-        Set<V> l = m.get(key);
+        Set<V> l = this.m.get(key);
         if (l == null) {
             l = new HashSet<V>();
-            m.put(key, l);
+            this.m.put(key, l);
         }
         V rtn = null;
         if (l.contains(value)) {
@@ -66,15 +65,15 @@ public class OneToManyMap<K, V> {
     }
 
     public Collection<V> get(Object key) {
-        return m.get(key);
+        return this.m.get(key);
     }
 
     public void clear() {
-        m.clear();
+        this.m.clear();
     }
 
     public boolean containsKey(Object key) {
-        return m.containsKey(key);
+        return this.m.containsKey(key);
     }
 
     public boolean containsValue(Object value) {
@@ -82,22 +81,22 @@ public class OneToManyMap<K, V> {
     }
 
     public void removeValue(Object key, Object value) {
-        Collection<?> c = m.get(key);
+        Collection<?> c = this.m.get(key);
         if (c != null) {
             c.remove(value);
         }
     }
 
     public Set<Map.Entry<K, Set<V>>> entrySet() {
-        return Collections.unmodifiableSet(m.entrySet());
+        return Collections.unmodifiableSet(this.m.entrySet());
     }
 
     public boolean isEmpty() {
-        return m.isEmpty();
+        return this.m.isEmpty();
     }
 
     public Set<K> keySet() {
-        return Collections.unmodifiableSet(m.keySet());
+        return Collections.unmodifiableSet(this.m.keySet());
     }
 
     public void putAll(Map<? extends K, ? extends V> t) {
@@ -107,23 +106,23 @@ public class OneToManyMap<K, V> {
     }
 
     public Object remove(Object key) {
-        return m.remove(key);
+        return this.m.remove(key);
     }
 
     public int size() {
-        return m.size();
+        return this.m.size();
     }
 
     public Collection<V> values() {
         return Collections.unmodifiableCollection(getValues());
     }
-    
+
     private Collection<V> getValues() {
         Collection<V> rtn = new HashSet<V>();
-        for (Set<V> s : m.values()) {
+        for (Set<V> s : this.m.values()) {
             rtn.addAll(s);
         }
         return rtn;
     }
-     
+
 }

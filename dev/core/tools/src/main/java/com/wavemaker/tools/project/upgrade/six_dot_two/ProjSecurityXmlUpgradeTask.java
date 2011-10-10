@@ -21,6 +21,7 @@ import org.springframework.core.io.Resource;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
+
 /**
  * Changes for enabling live data even when security is on
  * 
@@ -31,40 +32,38 @@ public class ProjSecurityXmlUpgradeTask implements UpgradeTask {
 
     private boolean error = false;
 
-    private String[] fromStrs = {"org.acegisecurity.context.HttpSessionContextIntegrationFilter",
-                                 "com.wavemaker.runtime.security.AcegiAjaxLogoutFilter",
-                                 "org.acegisecurity.ui.webapp.AuthenticationProcessingFilter",
-                                 "org.acegisecurity.providers.anonymous.AnonymousProcessingFilter",
-                                 "com.wavemaker.runtime.security.JSONExceptionTranslationFilter",
-                                 "org.acegisecurity.intercept.web.FilterSecurityInterceptor"};
+    private final String[] fromStrs = { "org.acegisecurity.context.HttpSessionContextIntegrationFilter",
+        "com.wavemaker.runtime.security.AcegiAjaxLogoutFilter", "org.acegisecurity.ui.webapp.AuthenticationProcessingFilter",
+        "org.acegisecurity.providers.anonymous.AnonymousProcessingFilter", "com.wavemaker.runtime.security.JSONExceptionTranslationFilter",
+        "org.acegisecurity.intercept.web.FilterSecurityInterceptor" };
 
-    private String[] toStrs =   {"com.wavemaker.runtime.security.WMHttpSessionContextIntegrationFilter",
-                                 "com.wavemaker.runtime.security.WMAcegiAjaxLogoutFilter",
-                                 "com.wavemaker.runtime.security.WMAuthenticationProcessingFilter",
-                                 "com.wavemaker.runtime.security.WMAnonymousProcessingFilter",
-                                 "com.wavemaker.runtime.security.WMExceptionTranslationFilter",
-                                 "com.wavemaker.runtime.security.WMFilterSecurityInterceptor"};
+    private final String[] toStrs = { "com.wavemaker.runtime.security.WMHttpSessionContextIntegrationFilter",
+        "com.wavemaker.runtime.security.WMAcegiAjaxLogoutFilter", "com.wavemaker.runtime.security.WMAuthenticationProcessingFilter",
+        "com.wavemaker.runtime.security.WMAnonymousProcessingFilter", "com.wavemaker.runtime.security.WMExceptionTranslationFilter",
+        "com.wavemaker.runtime.security.WMFilterSecurityInterceptor" };
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
+     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
      */
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
         Resource secxml = project.getSecurityXml();
 
         try {
             String content = project.readFile(secxml);
-            for (int i=0; i<6; i++) {
-                content = content.replace(fromStrs[i], toStrs[i]);
+            for (int i = 0; i < 6; i++) {
+                content = content.replace(this.fromStrs[i], this.toStrs[i]);
             }
             project.writeFile(secxml, content);
         } catch (IOException ioe) {
             ioe.printStackTrace();
-            error = true;
+            this.error = true;
         }
 
-        if (error) {
-            upgradeInfo.addMessage("*** Terminated with error while upgrading project-security.xml. " +
-                    "Please check the console message.***");
+        if (this.error) {
+            upgradeInfo.addMessage("*** Terminated with error while upgrading project-security.xml. " + "Please check the console message.***");
         } else {
             upgradeInfo.addMessage("Upgrading project-security.xml completed successfully.");
         }

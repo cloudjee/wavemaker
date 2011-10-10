@@ -26,15 +26,11 @@ import com.wavemaker.tools.project.Project;
 public interface UpgradeTask {
 
     /**
-     * Perform a single upgrade action on a project. This should only do a
-     * single task.
+     * Perform a single upgrade action on a project. This should only do a single task.
      * 
-     * @param project
-     *                The project to upgrade. This will be the current project
-     *                in the available ProjectManager (available through bean
-     *                properties).
-     * @param upgradeInfo
-     *                Contains information about the upgrade in progress.
+     * @param project The project to upgrade. This will be the current project in the available ProjectManager
+     *        (available through bean properties).
+     * @param upgradeInfo Contains information about the upgrade in progress.
      */
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo);
 }

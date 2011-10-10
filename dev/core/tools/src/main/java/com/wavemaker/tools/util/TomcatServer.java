@@ -37,9 +37,9 @@ import com.wavemaker.tools.common.ConfigurationException;
 
 /**
  * This class represents a Tomcat server somewhere on the network.
- *
+ * 
  * It uses the manager webapp to deploy,undeploy and list deployed apps.
- *
+ * 
  * @author Simon Toens
  * @version $Rev$ - $Date$
  */
@@ -48,7 +48,7 @@ public class TomcatServer extends Server {
     private static final String MANAGER_CHARSET = "utf-8";
 
     // from catalina ant task
-    private static final String URL_ENCODE_CHARSET = "ISO-8859-1"; 
+    private static final String URL_ENCODE_CHARSET = "ISO-8859-1";
 
     private String username = "manager";
 
@@ -56,15 +56,15 @@ public class TomcatServer extends Server {
 
     private String managerUri = "manager";
 
-
-    public TomcatServer() {}
+    public TomcatServer() {
+    }
 
     public TomcatServer(String host, int port) {
         super(host, port);
     }
 
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     public void setUsername(String username) {
@@ -72,7 +72,7 @@ public class TomcatServer extends Server {
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     public void setPassword(String password) {
@@ -80,7 +80,7 @@ public class TomcatServer extends Server {
     }
 
     public String getManagerUri() {
-        return managerUri;
+        return this.managerUri;
     }
 
     public void setManagerUrl(String managerUri) {
@@ -106,12 +106,11 @@ public class TomcatServer extends Server {
         }
 
         if (contextRoot == null) {
-            contextRoot = 
-                StringUtils.fromFirstOccurrence(war.getName(), ".", -1);
+            contextRoot = StringUtils.fromFirstOccurrence(war.getName(), ".", -1);
         }
 
         contextRoot = checkContextRoot(contextRoot);
-        
+
         if (isDeployed(contextRoot)) {
             undeploy(contextRoot);
         }
@@ -126,16 +125,14 @@ public class TomcatServer extends Server {
         prepareConnection(con);
 
         try {
-            BufferedInputStream bis = 
-                new BufferedInputStream(new FileInputStream(war));
-            BufferedOutputStream bos = 
-                new BufferedOutputStream(con.getOutputStream());
+            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(war));
+            BufferedOutputStream bos = new BufferedOutputStream(con.getOutputStream());
             IOUtils.copy(bis, bos);
             bis.close();
             bos.close();
         } catch (IOException ex) {
             throw new ConfigurationException(ex);
-        } 
+        }
 
         return ObjectUtils.toString(getResponse(con), "");
     }
@@ -158,48 +155,37 @@ public class TomcatServer extends Server {
 
         contextRoot = checkContextRoot(contextRoot);
 
-        return ObjectUtils.toString(
-            getResponse(getManagerGetConnection("undeploy?" + 
-                getPathParam(contextRoot))), "");
+        return ObjectUtils.toString(getResponse(getManagerGetConnection("undeploy?" + getPathParam(contextRoot))), "");
     }
 
     public String redeploy(String contextRoot) {
 
         contextRoot = checkContextRoot(contextRoot);
 
-        return ObjectUtils.toString(
-            getResponse(getManagerGetConnection("reload?" + 
-                getPathParam(contextRoot))), "");
+        return ObjectUtils.toString(getResponse(getManagerGetConnection("reload?" + getPathParam(contextRoot))), "");
     }
 
-	public String start(String contextRoot) {
+    public String start(String contextRoot) {
 
         contextRoot = checkContextRoot(contextRoot);
 
-        return ObjectUtils.toString(
-            getResponse(getManagerGetConnection("start?" + 
-                getPathParam(contextRoot))), "");
+        return ObjectUtils.toString(getResponse(getManagerGetConnection("start?" + getPathParam(contextRoot))), "");
     }
 
     public String stop(String contextRoot) {
 
         contextRoot = checkContextRoot(contextRoot);
 
-        return ObjectUtils.toString(
-            getResponse(getManagerGetConnection("stop?" + 
-                getPathParam(contextRoot))), "");
+        return ObjectUtils.toString(getResponse(getManagerGetConnection("stop?" + getPathParam(contextRoot))), "");
     }
 
     public List<Tuple.Two<String, String>> listDeployments() {
         return listDeployments(true);
     }
 
-    public List<Tuple.Two<String, String>> listDeployments(
-            boolean excludeRootWebApp) 
-    {
+    public List<Tuple.Two<String, String>> listDeployments(boolean excludeRootWebApp) {
         List<String> resp = getResponse(getManagerGetConnection("list"), false);
-        List<Tuple.Two<String, String>> rtn = 
-            new ArrayList<Tuple.Two<String, String>>(resp.size());
+        List<Tuple.Two<String, String>> rtn = new ArrayList<Tuple.Two<String, String>>(resp.size());
 
         for (int i = 0; i < resp.size(); i++) {
             String name = StringUtils.fromFirstOccurrence(resp.get(i), ":", -1);
@@ -225,8 +211,7 @@ public class TomcatServer extends Server {
 
     private HttpURLConnection getManagerGetConnection(String command) {
 
-        HttpURLConnection rtn = 
-            super.getGetConnection(getManagerUri() + "/" + command);
+        HttpURLConnection rtn = super.getGetConnection(getManagerUri() + "/" + command);
 
         return prepareConnection(rtn);
     }
@@ -234,10 +219,9 @@ public class TomcatServer extends Server {
     private HttpURLConnection prepareConnection(HttpURLConnection con) {
 
         // Copied from Catalina's DeployTask
-        con.setRequestProperty("User-Agent",
-                               "Catalina-Ant-Task/1.0");
+        con.setRequestProperty("User-Agent", "Catalina-Ant-Task/1.0");
 
-        String input = username + ":" + password;
+        String input = this.username + ":" + this.password;
         String output = new String(Base64.encode(input.getBytes()));
         con.setRequestProperty("Authorization", "Basic " + output);
 
@@ -253,15 +237,11 @@ public class TomcatServer extends Server {
         return getResponse(con, true);
     }
 
-    private List<String> getResponse(HttpURLConnection con, 
-                                     boolean includeStatus) 
-    {
+    private List<String> getResponse(HttpURLConnection con, boolean includeStatus) {
         List<String> rtn = new ArrayList<String>();
 
         try {
-            BufferedReader br = 
-                new BufferedReader(new InputStreamReader(con.getInputStream(), 
-                                                         MANAGER_CHARSET));
+            BufferedReader br = new BufferedReader(new InputStreamReader(con.getInputStream(), MANAGER_CHARSET));
 
             String line = "";
             boolean isFirst = true;

@@ -1,3 +1,4 @@
+
 package com.wavemaker.tools.compiler;
 
 import static org.junit.Assert.assertTrue;
@@ -24,183 +25,168 @@ import com.wavemaker.tools.service.DesignServiceManager;
 
 public class TestProjectCompiler {
 
-	private LocalStudioConfiguration studioConfiguration;
-	
-	private ProjectManager projectManager;
-	
-	private ProjectCompiler projectCompiler;
-	
-	private static MockServletContext servletContext;
-	
-	private static File webInfLib;
-	
-	@BeforeClass
-	public static void init() throws IOException {
-		File studioWebApp = IOUtils.createTempDirectory();
-		String basePath = studioWebApp.toURI().toURL().toString();
-		servletContext = new MockServletContext(basePath);
-		webInfLib = new File(studioWebApp, "WEB-INF/lib/");
-		webInfLib.mkdirs();
-		Assert.isTrue(webInfLib.exists());
-		Assert.notNull(servletContext.getResource("/WEB-INF/lib/"));
-	}
+    private LocalStudioConfiguration studioConfiguration;
 
-	@Before
-	public void setUp() throws IOException {
-		RuntimeAccess.setRuntimeBean(new RuntimeAccess());
-		studioConfiguration = new LocalStudioConfiguration();
-		studioConfiguration.setServletContext(servletContext);
-		Resource wmHome = studioConfiguration.createTempDir();
-		studioConfiguration.setTestWaveMakerHome(wmHome.getFile());
-		Resource projectDir = wmHome
-				.createRelative("/projects/ProjectCompilerProject/");
-		studioConfiguration.copyRecursive(new ClassPathResource(
-				"templates/templateapp/"), projectDir, new ArrayList<String>());
-		assertTrue(projectDir.exists());
-		assertTrue(projectDir.createRelative("file_map_readme.txt").exists());
-		
-		projectManager = new ProjectManager();
-		projectManager.setStudioConfiguration(studioConfiguration);
-		projectManager.openProject(projectDir, true);
-		
-		projectCompiler = new ProjectCompiler();
-		projectCompiler.setProjectManager(projectManager);
-		projectCompiler.setStudioConfiguration(studioConfiguration);
-	}
+    private ProjectManager projectManager;
 
-	@After
-	public void tearDown() {
-		studioConfiguration.deleteFile(projectManager.getCurrentProject().getProjectRoot());
-	}
-	
-	@Test
-	public void testCompileProjectSingleClass() throws IOException {
-		Project project = projectManager.getCurrentProject();
+    private ProjectCompiler projectCompiler;
 
-		Resource fooSrc = project.getProjectRoot().createRelative("src/Foo.java");
-		project.writeFile(fooSrc,
-				"public class Foo{public int getInt(){return 12;}}");
-		
-		projectCompiler.compileProject("ProjectCompilerProject");
-		
-		Resource fooClass = project.getWebInfClasses().createRelative("Foo.class");
-		assertTrue(fooClass.exists());
-	}
-	
-	@Test
-	public void testCompileProjectMultipleClasses() throws IOException {
-		Project project = projectManager.getCurrentProject();
+    private static MockServletContext servletContext;
 
-		Resource fooSrc = project.getProjectRoot().createRelative("src/com/mycompany/foo/Foo.java");
-		project.writeFile(fooSrc,
-				"package com.mycompany.foo;\n\npublic class Foo{public int getInt(){return 12;}}");
-		
-		Resource barSrc = project.getProjectRoot().createRelative("src/com/mycompany/bar/Bar.java");
-		project.writeFile(barSrc,
-				"package com.mycompany.bar;\n\npublic class Bar{public String getString(){return \"blah blah\";}}");
-		
-		projectCompiler.compileProject("ProjectCompilerProject");
-		
-		Resource fooClass = project.getWebInfClasses().createRelative("com/mycompany/foo/Foo.class");
-		assertTrue(fooClass.exists());
-		
-		Resource barClass = project.getWebInfClasses().createRelative("com/mycompany/bar/Bar.class");
-		assertTrue(barClass.exists());
-	}
-	
-	@Test
-	public void testCompileProjectWithServices() throws IOException {
-		Project project = projectManager.getCurrentProject();
+    private static File webInfLib;
 
-		Resource fooSrc = project.getProjectRoot().createRelative("src/com/mycompany/foo/Foo.java");
-		project.writeFile(fooSrc,
-				"package com.mycompany.foo;\n\npublic class Foo{public int getInt(){return 12;}}");
-		
-		Resource barSrc = project.getProjectRoot().createRelative("src/com/mycompany/bar/Bar.java");
-		project.writeFile(barSrc,
-				"package com.mycompany.bar;\n\npublic class Bar{public String getString(){return \"blah blah\";}}");
-		
-		String serviceId = "serviceA";
-		Resource serviceASrc = project.getProjectRoot().createRelative(DesignServiceManager
-				.getRuntimeRelativeDir(serviceId));
-		Resource javaSrc = serviceASrc.createRelative("FooService.java");
-		project.writeFile(
-				javaSrc,
-				"public class FooService{public int getInt(){return 12;}\n"
-						+ "\tpublic int getInt2(java.util.List<String[]> strings){return 0;}\n}");
-		
-		projectCompiler.compileProject("ProjectCompilerProject");
-		
-		Resource fooClass = project.getWebInfClasses().createRelative("com/mycompany/foo/Foo.class");
-		assertTrue(fooClass.exists());
-		
-		Resource barClass = project.getWebInfClasses().createRelative("com/mycompany/bar/Bar.class");
-		assertTrue(barClass.exists());
-		
-		Resource serviceClass = project.getWebInfClasses().createRelative("FooService.class");
-		assertTrue(serviceClass.exists());
-		
-		Resource serviceDef = project.getProjectRoot().createRelative(DesignServiceManager.getDesigntimeRelativeDir(serviceId)+"servicedef.xml");
-		assertTrue(serviceDef.exists());
-		
-		Resource types = project.getWebAppRoot().createRelative("types.js");
-		assertTrue(types.exists());
-	}
-	
-	@Test
-	public void testCompileProjectWithServiceOnly() throws IOException {
-		Project project = projectManager.getCurrentProject();
+    @BeforeClass
+    public static void init() throws IOException {
+        File studioWebApp = IOUtils.createTempDirectory();
+        String basePath = studioWebApp.toURI().toURL().toString();
+        servletContext = new MockServletContext(basePath);
+        webInfLib = new File(studioWebApp, "WEB-INF/lib/");
+        webInfLib.mkdirs();
+        Assert.isTrue(webInfLib.exists());
+        Assert.notNull(servletContext.getResource("/WEB-INF/lib/"));
+    }
 
-		String serviceId = "serviceA";
-		Resource serviceASrc = project.getProjectRoot().createRelative(DesignServiceManager
-				.getRuntimeRelativeDir(serviceId));
-		Resource javaSrc = serviceASrc.createRelative("FooService.java");
-		project.writeFile(
-				javaSrc,
-				"public class FooService{public int getInt(){return 12;}\n"
-						+ "\tpublic int getInt2(java.util.List<String[]> strings){return 0;}\n}");
-		
-		projectCompiler.compileProject("ProjectCompilerProject");
-		
-		Resource serviceClass = project.getWebInfClasses().createRelative("FooService.class");
-		assertTrue(serviceClass.exists());
-		
-		Resource serviceDef = project.getProjectRoot().createRelative(DesignServiceManager.getDesigntimeRelativeDir(serviceId)+"servicedef.xml");
-		assertTrue(serviceDef.exists());
-		
-		Resource types = project.getWebAppRoot().createRelative("types.js");
-		assertTrue(types.exists());
-	}
-	
-	@Test
-	public void testCompileProjectRequiringExternalClasspath() throws IOException {
-		Project project = projectManager.getCurrentProject();
+    @Before
+    public void setUp() throws IOException {
+        RuntimeAccess.setRuntimeBean(new RuntimeAccess());
+        this.studioConfiguration = new LocalStudioConfiguration();
+        this.studioConfiguration.setServletContext(servletContext);
+        Resource wmHome = this.studioConfiguration.createTempDir();
+        this.studioConfiguration.setTestWaveMakerHome(wmHome.getFile());
+        Resource projectDir = wmHome.createRelative("/projects/ProjectCompilerProject/");
+        this.studioConfiguration.copyRecursive(new ClassPathResource("templates/templateapp/"), projectDir, new ArrayList<String>());
+        assertTrue(projectDir.exists());
+        assertTrue(projectDir.createRelative("file_map_readme.txt").exists());
 
-		Resource fooSrc = project.getProjectRoot().createRelative("src/com/foo/FooSubClass.java");
-		project.writeFile(fooSrc,
-				"package com.foo;\n\npublic class FooSubClass extends com.wavemaker.runtime.javaservice.JavaServiceSuperClass {public int getInt(){return 12;}}");
-		
-		projectCompiler.compileProject("ProjectCompilerProject");
-		
-		Resource fooClass = project.getWebInfClasses().createRelative("com/foo/FooSubclass.class");
-		assertTrue(fooClass.exists());
-	}
-	
-	@Test
-	public void testCompileProjectRequiringExternalClasspathForService() throws IOException {
-		Project project = projectManager.getCurrentProject();
+        this.projectManager = new ProjectManager();
+        this.projectManager.setStudioConfiguration(this.studioConfiguration);
+        this.projectManager.openProject(projectDir, true);
 
-		String serviceId = "serviceA";
-		Resource serviceASrc = project.getProjectRoot().createRelative(DesignServiceManager
-				.getRuntimeRelativeDir(serviceId));
-		Resource javaSrc = serviceASrc.createRelative("com/foo/FooService.java");
-		project.writeFile(
-				javaSrc,
-				"package com.foo;\n\npublic class FooService extends com.wavemaker.runtime.javaservice.JavaServiceSuperClass {public int getInt(){return 12;}}");
-		
-		projectCompiler.compileProject("ProjectCompilerProject");
-		
-		Resource fooClass = project.getWebInfClasses().createRelative("com/foo/FooService.class");
-		assertTrue(fooClass.exists());
-	}
+        this.projectCompiler = new ProjectCompiler();
+        this.projectCompiler.setProjectManager(this.projectManager);
+        this.projectCompiler.setStudioConfiguration(this.studioConfiguration);
+    }
+
+    @After
+    public void tearDown() {
+        this.studioConfiguration.deleteFile(this.projectManager.getCurrentProject().getProjectRoot());
+    }
+
+    @Test
+    public void testCompileProjectSingleClass() throws IOException {
+        Project project = this.projectManager.getCurrentProject();
+
+        Resource fooSrc = project.getProjectRoot().createRelative("src/Foo.java");
+        project.writeFile(fooSrc, "public class Foo{public int getInt(){return 12;}}");
+
+        this.projectCompiler.compileProject("ProjectCompilerProject");
+
+        Resource fooClass = project.getWebInfClasses().createRelative("Foo.class");
+        assertTrue(fooClass.exists());
+    }
+
+    @Test
+    public void testCompileProjectMultipleClasses() throws IOException {
+        Project project = this.projectManager.getCurrentProject();
+
+        Resource fooSrc = project.getProjectRoot().createRelative("src/com/mycompany/foo/Foo.java");
+        project.writeFile(fooSrc, "package com.mycompany.foo;\n\npublic class Foo{public int getInt(){return 12;}}");
+
+        Resource barSrc = project.getProjectRoot().createRelative("src/com/mycompany/bar/Bar.java");
+        project.writeFile(barSrc, "package com.mycompany.bar;\n\npublic class Bar{public String getString(){return \"blah blah\";}}");
+
+        this.projectCompiler.compileProject("ProjectCompilerProject");
+
+        Resource fooClass = project.getWebInfClasses().createRelative("com/mycompany/foo/Foo.class");
+        assertTrue(fooClass.exists());
+
+        Resource barClass = project.getWebInfClasses().createRelative("com/mycompany/bar/Bar.class");
+        assertTrue(barClass.exists());
+    }
+
+    @Test
+    public void testCompileProjectWithServices() throws IOException {
+        Project project = this.projectManager.getCurrentProject();
+
+        Resource fooSrc = project.getProjectRoot().createRelative("src/com/mycompany/foo/Foo.java");
+        project.writeFile(fooSrc, "package com.mycompany.foo;\n\npublic class Foo{public int getInt(){return 12;}}");
+
+        Resource barSrc = project.getProjectRoot().createRelative("src/com/mycompany/bar/Bar.java");
+        project.writeFile(barSrc, "package com.mycompany.bar;\n\npublic class Bar{public String getString(){return \"blah blah\";}}");
+
+        String serviceId = "serviceA";
+        Resource serviceASrc = project.getProjectRoot().createRelative(DesignServiceManager.getRuntimeRelativeDir(serviceId));
+        Resource javaSrc = serviceASrc.createRelative("FooService.java");
+        project.writeFile(javaSrc, "public class FooService{public int getInt(){return 12;}\n"
+            + "\tpublic int getInt2(java.util.List<String[]> strings){return 0;}\n}");
+
+        this.projectCompiler.compileProject("ProjectCompilerProject");
+
+        Resource fooClass = project.getWebInfClasses().createRelative("com/mycompany/foo/Foo.class");
+        assertTrue(fooClass.exists());
+
+        Resource barClass = project.getWebInfClasses().createRelative("com/mycompany/bar/Bar.class");
+        assertTrue(barClass.exists());
+
+        Resource serviceClass = project.getWebInfClasses().createRelative("FooService.class");
+        assertTrue(serviceClass.exists());
+
+        Resource serviceDef = project.getProjectRoot().createRelative(DesignServiceManager.getDesigntimeRelativeDir(serviceId) + "servicedef.xml");
+        assertTrue(serviceDef.exists());
+
+        Resource types = project.getWebAppRoot().createRelative("types.js");
+        assertTrue(types.exists());
+    }
+
+    @Test
+    public void testCompileProjectWithServiceOnly() throws IOException {
+        Project project = this.projectManager.getCurrentProject();
+
+        String serviceId = "serviceA";
+        Resource serviceASrc = project.getProjectRoot().createRelative(DesignServiceManager.getRuntimeRelativeDir(serviceId));
+        Resource javaSrc = serviceASrc.createRelative("FooService.java");
+        project.writeFile(javaSrc, "public class FooService{public int getInt(){return 12;}\n"
+            + "\tpublic int getInt2(java.util.List<String[]> strings){return 0;}\n}");
+
+        this.projectCompiler.compileProject("ProjectCompilerProject");
+
+        Resource serviceClass = project.getWebInfClasses().createRelative("FooService.class");
+        assertTrue(serviceClass.exists());
+
+        Resource serviceDef = project.getProjectRoot().createRelative(DesignServiceManager.getDesigntimeRelativeDir(serviceId) + "servicedef.xml");
+        assertTrue(serviceDef.exists());
+
+        Resource types = project.getWebAppRoot().createRelative("types.js");
+        assertTrue(types.exists());
+    }
+
+    @Test
+    public void testCompileProjectRequiringExternalClasspath() throws IOException {
+        Project project = this.projectManager.getCurrentProject();
+
+        Resource fooSrc = project.getProjectRoot().createRelative("src/com/foo/FooSubClass.java");
+        project.writeFile(fooSrc,
+            "package com.foo;\n\npublic class FooSubClass extends com.wavemaker.runtime.javaservice.JavaServiceSuperClass {public int getInt(){return 12;}}");
+
+        this.projectCompiler.compileProject("ProjectCompilerProject");
+
+        Resource fooClass = project.getWebInfClasses().createRelative("com/foo/FooSubclass.class");
+        assertTrue(fooClass.exists());
+    }
+
+    @Test
+    public void testCompileProjectRequiringExternalClasspathForService() throws IOException {
+        Project project = this.projectManager.getCurrentProject();
+
+        String serviceId = "serviceA";
+        Resource serviceASrc = project.getProjectRoot().createRelative(DesignServiceManager.getRuntimeRelativeDir(serviceId));
+        Resource javaSrc = serviceASrc.createRelative("com/foo/FooService.java");
+        project.writeFile(javaSrc,
+            "package com.foo;\n\npublic class FooService extends com.wavemaker.runtime.javaservice.JavaServiceSuperClass {public int getInt(){return 12;}}");
+
+        this.projectCompiler.compileProject("ProjectCompilerProject");
+
+        Resource fooClass = project.getWebInfClasses().createRelative("com/foo/FooService.class");
+        assertTrue(fooClass.exists());
+    }
 }

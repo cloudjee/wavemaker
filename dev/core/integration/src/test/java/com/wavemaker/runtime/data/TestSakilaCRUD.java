@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data;
 
 import static org.junit.Assert.assertEquals;
@@ -60,23 +61,19 @@ import com.wavemaker.runtime.service.reflect.ReflectServiceWire;
 /**
  * Overview:
  * 
- * Check if any stores are located in San Francisco. If there aren't any, add a
- * new San Francisco store, with manager 'Stephens'. Check out his picture
- * (blob). NOTE: turns out there's no picture for Stephens. Try Mike's picture -
+ * Check if any stores are located in San Francisco. If there aren't any, add a new San Francisco store, with manager
+ * 'Stephens'. Check out his picture (blob). NOTE: turns out there's no picture for Stephens. Try Mike's picture -
  * staff_id=1.
  * 
- * Lookup his staff_id, and get his picture. Trying to add a new store with
- * Stephens as manager will fail because he's already a manager at a different
- * store. Catch the Exception and rollback. Make sure the store was not added.
+ * Lookup his staff_id, and get his picture. Trying to add a new store with Stephens as manager will fail because he's
+ * already a manager at a different store. Catch the Exception and rollback. Make sure the store was not added.
  * 
- * Add a new customer to one of the Woodridge stores, called 'Fred Fu' (with
- * same address as the store). Find the Woodridge store using a QBE search, with
- * related city set to 'Woodridge'.
+ * Add a new customer to one of the Woodridge stores, called 'Fred Fu' (with same address as the store). Find the
+ * Woodridge store using a QBE search, with related city set to 'Woodridge'.
  * 
  * User the customer_list view to confirm the new customer is there.
  * 
- * Add a new film (with language_id 3, which is japanese) and inventory to the
- * store.
+ * Add a new film (with language_id 3, which is japanese) and inventory to the store.
  * 
  * Call the film_in_stock procedure to confirm the inventory is there.
  * 
@@ -89,30 +86,24 @@ import com.wavemaker.runtime.service.reflect.ReflectServiceWire;
  * Note that these tests are using com.wavemaker.runtime.data.sample.sakila
  * 
  * 
- * Issues: - The date for each DataObject needs to be set explicitly, since the
- * import doesn't automatically identify it as "version col". We will need
- * tooling to identify columns as "version columns" or some algorithm that
- * automatically marks them as such given some naming convention.
+ * Issues: - The date for each DataObject needs to be set explicitly, since the import doesn't automatically identify it
+ * as "version col". We will need tooling to identify columns as "version columns" or some algorithm that automatically
+ * marks them as such given some naming convention.
  * 
  * 
- * The QueryOptions API is annoying to use. It requires instantiating
- * QueryOption instances all over. UPDATE: This has been fixed. A QueryOptions
- * instance is now optional.
+ * The QueryOptions API is annoying to use. It requires instantiating QueryOption instances all over. UPDATE: This has
+ * been fixed. A QueryOptions instance is now optional.
  * 
- * insert...(session.save()) needs to be called on each instance, unless
- * cascade-save is enabled in the mapping meta data. UPDATE: It is also possible
- * now to call begin()/rollback() on the service class, so this is no longer a
- * real problem. Same issue with delete. cascade-delete.
+ * insert...(session.save()) needs to be called on each instance, unless cascade-save is enabled in the mapping meta
+ * data. UPDATE: It is also possible now to call begin()/rollback() on the service class, so this is no longer a real
+ * problem. Same issue with delete. cascade-delete.
  * 
- * Hibernate QBE ignores ids:
- * http://opensource.atlassian.com/projects/hibernate/browse/HB-1437 This is a
- * problem if everything imported is an id, which happens when Hibernate Tools
- * can't figure out the id, which in turn happens for views for sure. I am
- * modifying the CustomerList mapping file for now (CustomerListFixed.hbm.xml).
+ * Hibernate QBE ignores ids: http://opensource.atlassian.com/projects/hibernate/browse/HB-1437 This is a problem if
+ * everything imported is an id, which happens when Hibernate Tools can't figure out the id, which in turn happens for
+ * views for sure. I am modifying the CustomerList mapping file for now (CustomerListFixed.hbm.xml).
  * 
  * 
- * Stored procedures have to return a single result set as the first out param
- * to work with Hibernate
+ * Stored procedures have to return a single result set as the first out param to work with Hibernate
  * http://www.hibernate.org/hib_docs/v3/reference/en/html_single/#sp_query
  * 
  * 
@@ -145,11 +136,11 @@ public class TestSakilaCRUD extends RuntimeDataSpringContextTestCase {
         }
 
         Store getWoodridge() {
-            return woodridge;
+            return this.woodridge;
         }
 
         Sakila getSakila() {
-            return sakila;
+            return this.sakila;
         }
 
         void setStephens(Staff stephens) {
@@ -157,7 +148,7 @@ public class TestSakilaCRUD extends RuntimeDataSpringContextTestCase {
         }
 
         Staff getStephens() {
-            return stephens;
+            return this.stephens;
         }
 
         void setFred(Customer fred) {
@@ -165,11 +156,11 @@ public class TestSakilaCRUD extends RuntimeDataSpringContextTestCase {
         }
 
         Customer getFred() {
-            return fred;
+            return this.fred;
         }
 
         Rental getRental() {
-            return rental;
+            return this.rental;
         }
 
         void setRenal(Rental rental) {
@@ -177,7 +168,7 @@ public class TestSakilaCRUD extends RuntimeDataSpringContextTestCase {
         }
 
         Inventory getInventory() {
-            return inventory;
+            return this.inventory;
         }
 
         void setInventory(Inventory inventory) {
@@ -190,7 +181,7 @@ public class TestSakilaCRUD extends RuntimeDataSpringContextTestCase {
 
     @BeforeClass
     public static void initData() {
-    	data = new TestData();
+        data = new TestData();
     }
 
     protected String getSakilaBeanId() {
@@ -200,22 +191,22 @@ public class TestSakilaCRUD extends RuntimeDataSpringContextTestCase {
     /**
      * Get connection, validate it
      */
-    @Test public void testConnection() {
+    @Test
+    public void testConnection() {
 
         ApplicationContext ctx = getApplicationContext();
 
-        ServiceManager serviceMgr = (ServiceManager) ctx
-                .getBean(ServiceConstants.SERVICE_MANAGER_NAME);
+        ServiceManager serviceMgr = (ServiceManager) ctx.getBean(ServiceConstants.SERVICE_MANAGER_NAME);
 
-        Sakila sakila = (Sakila) ((ReflectServiceWire) serviceMgr
-                .getServiceWire(getSakilaBeanId())).getServiceBean();
+        Sakila sakila = (Sakila) ((ReflectServiceWire) serviceMgr.getServiceWire(getSakilaBeanId())).getServiceBean();
 
         sakila.getActorById(Short.valueOf("1")); // test connection
 
         data.setSakila(sakila);
     }
 
-    @Test public void testNoSanFrancisco() {
+    @Test
+    public void testNoSanFrancisco() {
 
         if (data.getSakila() == null) {
             fail("sakila cannot be null");
@@ -235,7 +226,8 @@ public class TestSakilaCRUD extends RuntimeDataSpringContextTestCase {
         }
     }
 
-    @Test public void testGetStephens() {
+    @Test
+    public void testGetStephens() {
 
         if (data.getSakila() == null) {
             fail("sakila cannot be null");
@@ -251,15 +243,15 @@ public class TestSakilaCRUD extends RuntimeDataSpringContextTestCase {
 
         // here it would be nice if I could get a single Staff instance
         // instead of having to unwrap
-        List<Staff> l = sakila.getStaffList(qbeStaff, new QueryOptions(
-                MatchMode.START));
+        List<Staff> l = sakila.getStaffList(qbeStaff, new QueryOptions(MatchMode.START));
 
         assertTrue(l.size() == 1);
 
         data.setStephens(l.iterator().next());
     }
 
-    @Test public void testAddStore() {
+    @Test
+    public void testAddStore() {
 
         if (data.getStephens() == null) {
             fail("Staff Stephens cannot be null");
@@ -323,7 +315,8 @@ public class TestSakilaCRUD extends RuntimeDataSpringContextTestCase {
         fail();
     }
 
-    @Test public void testGetWoodridgeAddress() {
+    @Test
+    public void testGetWoodridgeAddress() {
 
         Sakila sakila = data.getSakila();
         if (sakila == null) {
@@ -353,7 +346,8 @@ public class TestSakilaCRUD extends RuntimeDataSpringContextTestCase {
 
     }
 
-    @Test public void testAddCustomer() {
+    @Test
+    public void testAddCustomer() {
 
         Sakila sakila = data.getSakila();
         if (sakila == null) {
@@ -393,7 +387,8 @@ public class TestSakilaCRUD extends RuntimeDataSpringContextTestCase {
         data.setFred(fred);
     }
 
-    @Test public void testCustomerInserted() {
+    @Test
+    public void testCustomerInserted() {
 
         Sakila sakila = data.getSakila();
         if (sakila == null) {
@@ -411,7 +406,8 @@ public class TestSakilaCRUD extends RuntimeDataSpringContextTestCase {
         assertTrue(c.getFirstName().equals("FRED"));
     }
 
-    @Test public void testAddFilmAndInventory() {
+    @Test
+    public void testAddFilmAndInventory() {
 
         Sakila sakila = data.getSakila();
         if (sakila == null) {
@@ -456,7 +452,7 @@ public class TestSakilaCRUD extends RuntimeDataSpringContextTestCase {
 
             sakila.getDataServiceManager().commit();
 
-            logger.info("added new inventory " + inventory.getInventoryId());
+            this.logger.info("added new inventory " + inventory.getInventoryId());
             data.setInventory(inventory);
 
         } catch (RuntimeException ex) {
@@ -465,7 +461,8 @@ public class TestSakilaCRUD extends RuntimeDataSpringContextTestCase {
         }
     }
 
-    @Test public void testAddRental() {
+    @Test
+    public void testAddRental() {
 
         Sakila sakila = data.getSakila();
         if (sakila == null) {
@@ -497,13 +494,14 @@ public class TestSakilaCRUD extends RuntimeDataSpringContextTestCase {
 
         sakila.insertRental(rental);
 
-        logger.info("added rental " + rental.getRentalId());
+        this.logger.info("added rental " + rental.getRentalId());
 
         data.setRenal(rental);
 
     }
 
-    @Test public void testCustomerListView() {
+    @Test
+    public void testCustomerListView() {
         Sakila sakila = data.getSakila();
         if (sakila == null) {
             fail("sakila cannot be null");
@@ -523,7 +521,8 @@ public class TestSakilaCRUD extends RuntimeDataSpringContextTestCase {
         assertTrue(l.get(2).getId().getName().equals("FRED FU"));
     }
 
-    @Test public void testFilmListView() {
+    @Test
+    public void testFilmListView() {
         Sakila sakila = data.getSakila();
         if (sakila == null) {
             fail("sakila cannot be null");
@@ -548,7 +547,8 @@ public class TestSakilaCRUD extends RuntimeDataSpringContextTestCase {
         }
     }
 
-    @Test public void testFilmInStockProcedure() {
+    @Test
+    public void testFilmInStockProcedure() {
 
         Sakila sakila = data.getSakila();
         if (sakila == null) {
@@ -566,19 +566,17 @@ public class TestSakilaCRUD extends RuntimeDataSpringContextTestCase {
             fail("The inventory cannot be null");
         }
 
-        logger.info("Calling film_not_in_stock with "
-                + inventory.getFilm().getFilmId() + ", "
-                + woodridgeStore.getStoreId());
+        this.logger.info("Calling film_not_in_stock with " + inventory.getFilm().getFilmId() + ", " + woodridgeStore.getStoreId());
 
-        List<?> l = sakila.getFilmInStock(inventory.getFilm().getFilmId(),
-                woodridgeStore.getStoreId());
+        List<?> l = sakila.getFilmInStock(inventory.getFilm().getFilmId(), woodridgeStore.getStoreId());
 
         assertTrue(l.size() == 1);
 
         assertTrue(l.get(0).equals(inventory.getInventoryId()));
     }
 
-    @Test public void testDeleteCustomer() {
+    @Test
+    public void testDeleteCustomer() {
 
         Sakila sakila = data.getSakila();
         if (sakila == null) {
@@ -595,7 +593,8 @@ public class TestSakilaCRUD extends RuntimeDataSpringContextTestCase {
 
     }
 
-    @Test public void testDeleteFilmAndRental() {
+    @Test
+    public void testDeleteFilmAndRental() {
 
         Sakila sakila = data.getSakila();
         if (sakila == null) {
@@ -614,18 +613,17 @@ public class TestSakilaCRUD extends RuntimeDataSpringContextTestCase {
             sakila.deleteInventory(rental.getInventory());
             sakila.deleteFilm(rental.getInventory().getFilm());
             sakila.getDataServiceManager().commit();
-            logger.info("Deleted Film "
-                    + rental.getInventory().getFilm().getFilmId());
-            logger.info("Deleted Inventory "
-                    + rental.getInventory().getInventoryId());
-            logger.info("Deleted Rental " + rental.getRentalId());
+            this.logger.info("Deleted Film " + rental.getInventory().getFilm().getFilmId());
+            this.logger.info("Deleted Inventory " + rental.getInventory().getInventoryId());
+            this.logger.info("Deleted Rental " + rental.getRentalId());
         } catch (RuntimeException ex) {
             TxUtils.rollbackTx(sakila.getDataServiceManager());
             throw ex;
         }
     }
 
-    @Test public void testBlob() throws Exception {
+    @Test
+    public void testBlob() throws Exception {
 
         Sakila sakila = data.getSakila();
         if (sakila == null) {
@@ -636,17 +634,16 @@ public class TestSakilaCRUD extends RuntimeDataSpringContextTestCase {
 
         byte[] picture = staff.getPicture();
 
-        InputStream is = this.getClass().getClassLoader().getResourceAsStream(
-                "com/wavemaker/runtime/data/mike.pic");
+        InputStream is = this.getClass().getClassLoader().getResourceAsStream("com/wavemaker/runtime/data/mike.pic");
 
         assertTrue("Resource mike.pic doesn't exist", is != null);
 
-        assertTrue("Files are not equal", IOUtils.compare(
-                new ByteArrayInputStream(picture), is));
+        assertTrue("Files are not equal", IOUtils.compare(new ByteArrayInputStream(picture), is));
 
     }
 
-    @Test public void testDeleteDetachedCity() {
+    @Test
+    public void testDeleteDetachedCity() {
 
         Sakila sakila = data.getSakila();
         if (sakila == null) {
@@ -678,7 +675,8 @@ public class TestSakilaCRUD extends RuntimeDataSpringContextTestCase {
 
     }
 
-    @Test public void testUpdateCity() {
+    @Test
+    public void testUpdateCity() {
 
         Sakila sakila = data.getSakila();
         if (sakila == null) {
@@ -703,7 +701,8 @@ public class TestSakilaCRUD extends RuntimeDataSpringContextTestCase {
 
     }
 
-    @Test public void testSelectClause() {
+    @Test
+    public void testSelectClause() {
 
         Sakila sakila = data.getSakila();
         if (sakila == null) {
@@ -719,7 +718,8 @@ public class TestSakilaCRUD extends RuntimeDataSpringContextTestCase {
 
     }
 
-    @Test public void testUpdateCityAndCountry() {
+    @Test
+    public void testUpdateCityAndCountry() {
 
         Sakila sakila = data.getSakila();
         if (sakila == null) {
@@ -764,7 +764,8 @@ public class TestSakilaCRUD extends RuntimeDataSpringContextTestCase {
         }
     }
 
-    @Test public void testListBindParameter() {
+    @Test
+    public void testListBindParameter() {
 
         Sakila sakila = data.getSakila();
         if (sakila == null) {
@@ -780,7 +781,8 @@ public class TestSakilaCRUD extends RuntimeDataSpringContextTestCase {
         assertEquals(6, actors.size());
     }
 
-    @Test public void testCascadeSave() {
+    @Test
+    public void testCascadeSave() {
 
         Sakila sakila = data.getSakila();
         if (sakila == null) {

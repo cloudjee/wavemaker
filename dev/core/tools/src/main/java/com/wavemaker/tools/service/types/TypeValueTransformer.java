@@ -32,12 +32,15 @@ import com.wavemaker.json.type.TypeState;
  */
 public class TypeValueTransformer implements ValueTransformer {
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.json.ValueTransformer#transformToJSON(java.lang.Object, com.wavemaker.json.type.FieldDefinition, int, java.lang.Object, java.lang.String, com.wavemaker.json.type.TypeState)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.json.ValueTransformer#transformToJSON(java.lang.Object,
+     * com.wavemaker.json.type.FieldDefinition, int, java.lang.Object, java.lang.String,
+     * com.wavemaker.json.type.TypeState)
      */
-    public Three<Object, FieldDefinition, Integer> transformToJSON(
-            Object input, FieldDefinition fieldDefinition, int arrayLevel,
-            Object root, String path, TypeState typeState) {
+    public Three<Object, FieldDefinition, Integer> transformToJSON(Object input, FieldDefinition fieldDefinition, int arrayLevel, Object root,
+        String path, TypeState typeState) {
 
         if (arrayLevel != fieldDefinition.getDimensions()) {
             return null;
@@ -48,26 +51,27 @@ public class TypeValueTransformer implements ValueTransformer {
             } else if (input instanceof PrimitiveType) {
                 td = typeState.getType(PrimitiveType.class.getName());
             } else {
-                throw new WMRuntimeException(MessageResource.UNKNOWN_TYPE_OF_TYPE,
-                        input, input.getClass());
+                throw new WMRuntimeException(MessageResource.UNKNOWN_TYPE_OF_TYPE, input, input.getClass());
             }
 
             GenericFieldDefinition fd = new GenericFieldDefinition();
             fd.setTypeDefinition(td);
 
-            return new Tuple.Three<Object, FieldDefinition, Integer>(input, fd,
-                    arrayLevel);
+            return new Tuple.Three<Object, FieldDefinition, Integer>(input, fd, arrayLevel);
         } else {
             return null;
         }
     }
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.json.ValueTransformer#transformToJava(java.lang.Object, com.wavemaker.json.type.FieldDefinition, int, java.lang.Object, java.lang.String, com.wavemaker.json.type.TypeState)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.json.ValueTransformer#transformToJava(java.lang.Object,
+     * com.wavemaker.json.type.FieldDefinition, int, java.lang.Object, java.lang.String,
+     * com.wavemaker.json.type.TypeState)
      */
-    public Three<Object, FieldDefinition, Integer> transformToJava(
-            Object input, FieldDefinition fieldDefinition, int arrayLevel,
-            Object root, String path, TypeState typeState) {
+    public Three<Object, FieldDefinition, Integer> transformToJava(Object input, FieldDefinition fieldDefinition, int arrayLevel, Object root,
+        String path, TypeState typeState) {
         throw new NotYetImplementedException();
     }
 }

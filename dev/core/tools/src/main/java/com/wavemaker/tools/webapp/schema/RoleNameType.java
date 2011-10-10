@@ -19,26 +19,26 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * 
  * 
- * 	The role-nameType designates the name of a security role.
+ * The role-nameType designates the name of a security role.
  * 
- * 	The name must conform to the lexical rules for a token.
+ * The name must conform to the lexical rules for a token.
  * 
- *       
  * 
- * <p>Java class for role-nameType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for role-nameType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="role-nameType">
@@ -53,9 +53,6 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "role-nameType")
-public class RoleNameType
-    extends String
-{
-
+public class RoleNameType extends String {
 
 }

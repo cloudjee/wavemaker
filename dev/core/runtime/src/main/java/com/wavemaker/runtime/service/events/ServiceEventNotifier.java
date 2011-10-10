@@ -21,62 +21,54 @@ import java.util.Map.Entry;
 import com.wavemaker.runtime.service.ServiceWire;
 import com.wavemaker.runtime.service.TypedServiceReturn;
 
-
 /**
- * The notifier aspect to ServiceEventListener.  This will interface with
- * EventManager to get the current ServletEventListeners, and their related
- * objects, and it will invoke the specific events.
+ * The notifier aspect to ServiceEventListener. This will interface with EventManager to get the current
+ * ServletEventListeners, and their related objects, and it will invoke the specific events.
  * 
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class ServiceEventNotifier extends EventNotifier {
 
-    public Object[] executePreOperation(ServiceWire serviceWire,
-            String operationName, Object[] params) {
-        
-        Map<ServiceEventListener, List<ServiceWire>> listeners =
-            getEventManager().getEventListeners(ServiceEventListener.class);
-        for (Entry<ServiceEventListener, List<ServiceWire>> entry: listeners.entrySet()) {
+    public Object[] executePreOperation(ServiceWire serviceWire, String operationName, Object[] params) {
+
+        Map<ServiceEventListener, List<ServiceWire>> listeners = getEventManager().getEventListeners(ServiceEventListener.class);
+        for (Entry<ServiceEventListener, List<ServiceWire>> entry : listeners.entrySet()) {
             List<ServiceWire> serviceWires = entry.getValue();
             ServiceEventListener sel = entry.getKey();
-            
-            for (ServiceWire sw: serviceWires) {
-                if (serviceWire==sw) {
+
+            for (ServiceWire sw : serviceWires) {
+                if (serviceWire == sw) {
                     params = sel.preOperation(sw, operationName, params);
                 }
             }
         }
-        
+
         return params;
     }
-    
-    public TypedServiceReturn executePostOperation(
-            ServiceWire serviceWire, String operationName,
-            TypedServiceReturn result, Throwable exception)
-            throws Throwable {
-        
-        Map<ServiceEventListener, List<ServiceWire>> listeners =
-            getEventManager().getEventListeners(ServiceEventListener.class);
-        for (Entry<ServiceEventListener, List<ServiceWire>> entry: listeners.entrySet()) {
+
+    public TypedServiceReturn executePostOperation(ServiceWire serviceWire, String operationName, TypedServiceReturn result, Throwable exception)
+        throws Throwable {
+
+        Map<ServiceEventListener, List<ServiceWire>> listeners = getEventManager().getEventListeners(ServiceEventListener.class);
+        for (Entry<ServiceEventListener, List<ServiceWire>> entry : listeners.entrySet()) {
             List<ServiceWire> serviceWires = entry.getValue();
             ServiceEventListener sel = entry.getKey();
-            
-            for (ServiceWire sw: serviceWires) {
-                if (serviceWire==sw) {
-                    result = sel.postOperation(sw, operationName, result,
-                            exception);
+
+            for (ServiceWire sw : serviceWires) {
+                if (serviceWire == sw) {
+                    result = sel.postOperation(sw, operationName, result, exception);
                     exception = null;
                 }
             }
         }
-        
+
         // if the exception hasn't been corrected, throw it out
-        if (null!=exception) {
+        if (null != exception) {
             throw exception;
         }
-        
+
         return result;
     }
 }

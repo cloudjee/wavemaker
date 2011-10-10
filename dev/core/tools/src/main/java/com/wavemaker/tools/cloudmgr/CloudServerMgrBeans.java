@@ -24,36 +24,32 @@ import com.wavemaker.tools.common.ConfigurationException;
 
 /**
  * @author slee
- *
+ * 
  */
 public class CloudServerMgrBeans {
 
-    private Map<String, CloudServerMgr>
-        cloudServerMgrs = new HashMap<String, CloudServerMgr>();
-
+    private Map<String, CloudServerMgr> cloudServerMgrs = new HashMap<String, CloudServerMgr>();
 
     public Collection<String> getCloudNames() {
-        return cloudServerMgrs.keySet();
-    }
-    
-    public CloudServerMgr getCloudServerMgr(String serviceProvider) {
-        
-        if (cloudServerMgrs == null) {
-            SpringUtils.throwSpringNotInitializedError(this.getClass());
-        }
-        
-        if (!cloudServerMgrs.containsKey(serviceProvider)) {
-            throw new ConfigurationException(
-                MessageResource.UNKNOWN_CLOUDSTORAGE_MGR, serviceProvider);
-        }
-        
-        return cloudServerMgrs.get(serviceProvider);
+        return this.cloudServerMgrs.keySet();
     }
 
-    public void setCloudServerMgrs(Map<String, CloudServerMgr>
-                                     cloudServerMgrs) {
+    public CloudServerMgr getCloudServerMgr(String serviceProvider) {
+
+        if (this.cloudServerMgrs == null) {
+            SpringUtils.throwSpringNotInitializedError(this.getClass());
+        }
+
+        if (!this.cloudServerMgrs.containsKey(serviceProvider)) {
+            throw new ConfigurationException(MessageResource.UNKNOWN_CLOUDSTORAGE_MGR, serviceProvider);
+        }
+
+        return this.cloudServerMgrs.get(serviceProvider);
+    }
+
+    public void setCloudServerMgrs(Map<String, CloudServerMgr> cloudServerMgrs) {
         this.cloudServerMgrs = cloudServerMgrs;
 
     }
-    
+
 }

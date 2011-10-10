@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.wavemaker.studio.project.upgrade.swamis;
 
 import static org.junit.Assert.assertEquals;
@@ -48,111 +49,89 @@ import com.wavemaker.tools.service.DesignServiceManager;
  */
 public class TestEventRefactorUpgrade extends StudioTestCase {
 
-	@SuppressWarnings("deprecation")
-	@Test
-	public void testEventUpgrade() throws Exception {
+    @SuppressWarnings("deprecation")
+    @Test
+    public void testEventUpgrade() throws Exception {
 
-		DesignServiceManager dsm = (DesignServiceManager) getBean("designServiceManager");
-		ProjectManager pm = (ProjectManager) getBean("projectManager");
+        DesignServiceManager dsm = (DesignServiceManager) getBean("designServiceManager");
+        ProjectManager pm = (ProjectManager) getBean("projectManager");
 
-		makeProject("testEventUpgrade", false);
+        makeProject("testEventUpgrade", false);
 
-		ReflectServiceDefinition sd = new ServiceClass();
-		sd.getEventNotifiers().add(sd.getServiceClass());
-		dsm.defineService(sd);
+        ReflectServiceDefinition sd = new ServiceClass();
+        sd.getEventNotifiers().add(sd.getServiceClass());
+        dsm.defineService(sd);
 
-		File sdXml = dsm.getServiceDefXml(sd.getServiceId()).getFile();
-		File beanXml = dsm.getServiceBeanXml(sd.getServiceId()).getFile();
-		assertTrue(beanXml.exists());
-		assertTrue(sdXml.exists());
+        File sdXml = dsm.getServiceDefXml(sd.getServiceId()).getFile();
+        File beanXml = dsm.getServiceBeanXml(sd.getServiceId()).getFile();
+        assertTrue(beanXml.exists());
+        assertTrue(sdXml.exists());
 
-		File sourceServiceDef = (new ClassPathResource(
-				"com/wavemaker/studio/project/upgrade/swamis/eventrefactorupgrade/servicedef.xml"))
-				.getFile();
-		FileUtils.copyFile(sourceServiceDef, sdXml);
+        File sourceServiceDef = new ClassPathResource("com/wavemaker/studio/project/upgrade/swamis/eventrefactorupgrade/servicedef.xml").getFile();
+        FileUtils.copyFile(sourceServiceDef, sdXml);
 
-		String sdXmlContents = FileUtils.readFileToString(sdXml);
-		assertTrue(sdXmlContents,
-				sdXmlContents.contains(sd.getEventNotifiers().get(0)));
+        String sdXmlContents = FileUtils.readFileToString(sdXml);
+        assertTrue(sdXmlContents, sdXmlContents.contains(sd.getEventNotifiers().get(0)));
 
-		// copy in a sample project-managers.xml
-		File sampleManagers = (new ClassPathResource(
-				"com/wavemaker/studio/project/upgrade/swamis/eventrefactorupgrade/project-managers.xml"))
-				.getFile();
-		assertTrue(sampleManagers.exists());
-		File destManagers = ConfigurationCompiler.getRuntimeManagersXml(
-				pm.getCurrentProject()).getFile();
-		FileUtils.copyFile(sampleManagers, destManagers);
+        // copy in a sample project-managers.xml
+        File sampleManagers = new ClassPathResource("com/wavemaker/studio/project/upgrade/swamis/eventrefactorupgrade/project-managers.xml").getFile();
+        assertTrue(sampleManagers.exists());
+        File destManagers = ConfigurationCompiler.getRuntimeManagersXml(pm.getCurrentProject()).getFile();
+        FileUtils.copyFile(sampleManagers, destManagers);
 
-		// trigger upgrade
-		UpgradeTask ut = new EventRefactorUpgrade();
-		UpgradeInfo info = new UpgradeInfo();
-		ut.doUpgrade(pm.getCurrentProject(), info);
+        // trigger upgrade
+        UpgradeTask ut = new EventRefactorUpgrade();
+        UpgradeInfo info = new UpgradeInfo();
+        ut.doUpgrade(pm.getCurrentProject(), info);
 
-		assertFalse(
-				"" + sdXml + "had event notifiers, contents:\n"
-						+ FileUtils.readFileToString(sdXml),
-				FileUtils.readFileToString(sdXml).contains(
-						sd.getEventNotifiers().get(0)));
+        assertFalse("" + sdXml + "had event notifiers, contents:\n" + FileUtils.readFileToString(sdXml),
+            FileUtils.readFileToString(sdXml).contains(sd.getEventNotifiers().get(0)));
 
-		assertTrue(beanXml.exists());
-		String beanXmlContents = FileUtils.readFileToString(beanXml);
-		assertTrue(
-				"sdXml:\n" + beanXmlContents,
-				beanXmlContents.contains("\"" + sd.getEventNotifiers().get(0)
-						+ "\""));
+        assertTrue(beanXml.exists());
+        String beanXmlContents = FileUtils.readFileToString(beanXml);
+        assertTrue("sdXml:\n" + beanXmlContents, beanXmlContents.contains("\"" + sd.getEventNotifiers().get(0) + "\""));
 
-		assertTrue(destManagers.exists());
-		String managersContents = FileUtils.readFileToString(destManagers);
-		assertFalse(managersContents, managersContents.contains("eventManager"));
+        assertTrue(destManagers.exists());
+        String managersContents = FileUtils.readFileToString(destManagers);
+        assertFalse(managersContents, managersContents.contains("eventManager"));
 
-		File expectedBeanDef = (new ClassPathResource(
-				"com/wavemaker/studio/project/upgrade/swamis/eventrefactorupgrade/expected_beans.xml"))
-				.getFile();
-		assertTrue(expectedBeanDef.exists());
-		String expectedBeanDefContents = FileUtils
-				.readFileToString(expectedBeanDef);
+        File expectedBeanDef = new ClassPathResource("com/wavemaker/studio/project/upgrade/swamis/eventrefactorupgrade/expected_beans.xml").getFile();
+        assertTrue(expectedBeanDef.exists());
+        String expectedBeanDefContents = FileUtils.readFileToString(expectedBeanDef);
 
-		String shortenedBeanXmlContents = StringUtils.deleteWhitespace(
-				beanXmlContents).replaceAll("<beans.*?>", "");
-		String shortenedExpectedBeanDefContents = StringUtils.deleteWhitespace(
-				expectedBeanDefContents).replaceAll("<beans.*?>", "");
-		assertTrue(
-				"shortenedBeanXmlContents:\n" + shortenedBeanXmlContents,
-				shortenedBeanXmlContents.contains("\""
-						+ sd.getEventNotifiers().get(0) + "\""));
-		assertTrue(
-				"shortenedExpectedBeanDefContents:\n"
-						+ shortenedExpectedBeanDefContents,
-				shortenedExpectedBeanDefContents.contains("\""
-						+ sd.getEventNotifiers().get(0) + "\""));
-		assertEquals(shortenedExpectedBeanDefContents, shortenedBeanXmlContents);
-	}
+        String shortenedBeanXmlContents = StringUtils.deleteWhitespace(beanXmlContents).replaceAll("<beans.*?>", "");
+        String shortenedExpectedBeanDefContents = StringUtils.deleteWhitespace(expectedBeanDefContents).replaceAll("<beans.*?>", "");
+        assertTrue("shortenedBeanXmlContents:\n" + shortenedBeanXmlContents,
+            shortenedBeanXmlContents.contains("\"" + sd.getEventNotifiers().get(0) + "\""));
+        assertTrue("shortenedExpectedBeanDefContents:\n" + shortenedExpectedBeanDefContents,
+            shortenedExpectedBeanDefContents.contains("\"" + sd.getEventNotifiers().get(0) + "\""));
+        assertEquals(shortenedExpectedBeanDefContents, shortenedBeanXmlContents);
+    }
 
-	@Test
-	public void testUpgradeTaskPresent() throws Exception {
+    @Test
+    public void testUpgradeTaskPresent() throws Exception {
 
-		boolean foundTask = false;
+        boolean foundTask = false;
 
-		UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
+        UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
 
-		outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
-			for (UpgradeTask ut : uts) {
-				if (ut instanceof EventRefactorUpgrade) {
-					foundTask = true;
-					break outer;
-				}
-			}
-		}
+        outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
+            for (UpgradeTask ut : uts) {
+                if (ut instanceof EventRefactorUpgrade) {
+                    foundTask = true;
+                    break outer;
+                }
+            }
+        }
 
-		assertTrue(foundTask);
-	}
+        assertTrue(foundTask);
+    }
 
-	public static class ServiceClass extends testEvents_SD {
+    public static class ServiceClass extends testEvents_SD {
 
-		@Override
-		public String getServiceClass() {
-			return RuntimeService.class.getName();
-		}
-	}
+        @Override
+        public String getServiceClass() {
+            return RuntimeService.class.getName();
+        }
+    }
 }

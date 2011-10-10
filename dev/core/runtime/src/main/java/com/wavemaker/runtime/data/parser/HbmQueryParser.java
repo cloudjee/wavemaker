@@ -16,19 +16,18 @@ package com.wavemaker.runtime.data.parser;
 
 import java.io.File;
 import java.io.Reader;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import com.wavemaker.common.util.Tuple;
 import com.wavemaker.common.util.XMLUtils;
-import com.wavemaker.runtime.data.util.DataServiceUtils;
 import com.wavemaker.runtime.data.QueryInfo;
+import com.wavemaker.runtime.data.util.DataServiceUtils;
 
 /**
- * Eventually this should move into HbmParser so we can handle generic hbm files
- * with both mappings and queries.
+ * Eventually this should move into HbmParser so we can handle generic hbm files with both mappings and queries.
  * 
  * @author Simon Toens
  * @version $Rev: 29063 $ - $Date: 2010-04-29 17:56:29 -0700 (Thu, 29 Apr 2010) $
@@ -36,11 +35,12 @@ import com.wavemaker.runtime.data.QueryInfo;
 public class HbmQueryParser extends BaseHbmParser {
 
     public static final String ANNO_CHAR = "@";
+
     public static final String DESIGN_ANNO_CHAR = ANNO_CHAR + "design.";
+
     public static final String GENERATED_QUERY = DESIGN_ANNO_CHAR + "generated";
 
-    private static final Collection<String> QUERY_ANNOTATIONS =
-        new HashSet<String>(1);
+    private static final Collection<String> QUERY_ANNOTATIONS = new HashSet<String>(1);
     static {
         QUERY_ANNOTATIONS.add(GENERATED_QUERY);
     }
@@ -69,21 +69,21 @@ public class HbmQueryParser extends BaseHbmParser {
     }
 
     public synchronized String getMeta() {
-        if (!metaInitialized) {
-            metaInitialized = true;
+        if (!this.metaInitialized) {
+            this.metaInitialized = true;
             initMeta();
         }
-        return meta;
+        return this.meta;
     }
 
     public synchronized Map<String, QueryInfo> getQueries() {
         getMeta(); // init
-        if (queries == null) {
-            queries = new LinkedHashMap<String, QueryInfo>();
+        if (this.queries == null) {
+            this.queries = new LinkedHashMap<String, QueryInfo>();
             initQueries();
             close();
         }
-        return queries;
+        return this.queries;
     }
 
     private void initMeta() {
@@ -96,26 +96,25 @@ public class HbmQueryParser extends BaseHbmParser {
             return;
         }
 
-        Map<String, String> attrs = XMLUtils.attributesToMap(xmlReader);
+        Map<String, String> attrs = XMLUtils.attributesToMap(this.xmlReader);
 
-        meta = attrs.get(HbmConstants.META_VALUE_ATTR);
+        this.meta = attrs.get(HbmConstants.META_VALUE_ATTR);
     }
 
     private void initQueries() {
 
         QueryInfo q = null;
 
-        if (HbmConstants.QUERY_EL.equals(String.valueOf(currentElementName))) {
-            q = initQuery(currentElementName);
-            queries.put(q.getName(), q);
+        if (HbmConstants.QUERY_EL.equals(String.valueOf(this.currentElementName))) {
+            q = initQuery(this.currentElementName);
+            this.queries.put(q.getName(), q);
         }
 
         String queryKind = "";
 
         while (queryKind != null) {
 
-            queryKind = nextNested(HbmConstants.MAPPING_EL,
-                    HbmConstants.QUERY_EL);
+            queryKind = nextNested(HbmConstants.MAPPING_EL, HbmConstants.QUERY_EL);
 
             if (queryKind == null) {
                 break;
@@ -123,13 +122,13 @@ public class HbmQueryParser extends BaseHbmParser {
 
             q = initQuery(queryKind);
 
-            queries.put(q.getName(), q);
+            this.queries.put(q.getName(), q);
         }
     }
 
     private QueryInfo initQuery(String queryKind) {
 
-        Map<String, String> queryAttrs = XMLUtils.attributesToMap(xmlReader);
+        Map<String, String> queryAttrs = XMLUtils.attributesToMap(this.xmlReader);
 
         QueryInfo rtn = new QueryInfo();
 
@@ -142,7 +141,7 @@ public class HbmQueryParser extends BaseHbmParser {
 
         addQueryParams(queryKind, rtn);
 
-        rtn.setQuery(currentText.toString().trim());
+        rtn.setQuery(this.currentText.toString().trim());
 
         return rtn;
     }
@@ -159,7 +158,7 @@ public class HbmQueryParser extends BaseHbmParser {
                 break;
             }
 
-            Map<String, String> attrs = XMLUtils.attributesToMap(xmlReader);
+            Map<String, String> attrs = XMLUtils.attributesToMap(this.xmlReader);
 
             String name = attrs.get(HbmConstants.NAME_ATTR);
             String type = attrs.get(HbmConstants.TYPE_ATTR);

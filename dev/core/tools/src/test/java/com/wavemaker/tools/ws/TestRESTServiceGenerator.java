@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.ws;
 
 import java.io.File;
@@ -42,7 +43,7 @@ import com.wavemaker.tools.ws.wsdl.WSDLManager;
 /**
  * @author ffu
  * @version $Rev:22673 $ - $Date:2008-05-30 14:45:46 -0700 (Fri, 30 May 2008) $
- *
+ * 
  */
 public class TestRESTServiceGenerator extends WMTestCase {
 
@@ -50,12 +51,14 @@ public class TestRESTServiceGenerator extends WMTestCase {
 
     private File outputDir;
 
+    @Override
     public void setUp() throws IOException {
-    	outputDir = IOUtils.createTempDirectory();
+        this.outputDir = IOUtils.createTempDirectory();
     }
 
+    @Override
     public void tearDown() throws IOException {
-        IOUtils.deleteRecursive(outputDir);
+        IOUtils.deleteRecursive(this.outputDir);
     }
 
     protected Class<?> generate(String wsdlResource) throws Exception {
@@ -65,16 +68,13 @@ public class TestRESTServiceGenerator extends WMTestCase {
         String resource = ClassLoaderUtils.getResource(wsdlResource);
         WSDL wsdl = WSDLManager.processWSDL(resource, null);
 
-        GenerationConfiguration genConfig = new GenerationConfiguration(wsdl,
-                new FileSystemResource(outputDir));
+        GenerationConfiguration genConfig = new GenerationConfiguration(wsdl, new FileSystemResource(this.outputDir));
         RESTServiceGenerator generator = new RESTServiceGenerator(genConfig);
         generator.generate();
 
-        AntUtils.javac(outputDir.getAbsolutePath(), outputDir);
-        URLClassLoader cl = new URLClassLoader(
-                new URL[] { outputDir.toURI().toURL() });
-        Class<?> serviceClass = Class.forName(wsdl.getPackageName() + "."
-                + wsdl.getServiceId(), true, cl);
+        AntUtils.javac(this.outputDir.getAbsolutePath(), this.outputDir);
+        URLClassLoader cl = new URLClassLoader(new URL[] { this.outputDir.toURI().toURL() });
+        Class<?> serviceClass = Class.forName(wsdl.getPackageName() + "." + wsdl.getServiceId(), true, cl);
         return serviceClass;
     }
 

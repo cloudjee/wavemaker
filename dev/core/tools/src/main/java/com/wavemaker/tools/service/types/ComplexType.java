@@ -26,31 +26,41 @@ import java.util.Map;
 public class ComplexType implements Type {
 
     Map<String, Field> fields = new HashMap<String, Field>();
+
     private boolean internal;
+
     private boolean liveService;
+
     private String service;
-    
+
     public Map<String, Field> getFields() {
-        return fields;
+        return this.fields;
     }
+
     public void setFields(Map<String, Field> fields) {
         this.fields = fields;
     }
+
     public boolean isInternal() {
-        return internal;
+        return this.internal;
     }
+
     public void setInternal(boolean internal) {
         this.internal = internal;
     }
+
     public boolean isLiveService() {
-        return liveService;
+        return this.liveService;
     }
+
     public void setLiveService(boolean liveService) {
         this.liveService = liveService;
     }
+
     public String getService() {
-        return service;
+        return this.service;
     }
+
     public void setService(String service) {
         this.service = service;
     }

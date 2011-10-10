@@ -11,23 +11,23 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for DescribeSoftphoneLayoutResult complex type.
+ * <p>
+ * Java class for DescribeSoftphoneLayoutResult complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="DescribeSoftphoneLayoutResult">
@@ -46,17 +46,15 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DescribeSoftphoneLayoutResult", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "callTypes",
-    "id",
-    "name"
-})
+@XmlType(name = "DescribeSoftphoneLayoutResult", namespace = "urn:partner.soap.sforce.com", propOrder = { "callTypes", "id", "name" })
 public class DescribeSoftphoneLayoutResultType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected List<DescribeSoftphoneLayoutCallTypeType> callTypes;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String id;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String name;
 
@@ -64,27 +62,26 @@ public class DescribeSoftphoneLayoutResultType {
      * Gets the value of the callTypes property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the callTypes property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the callTypes property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getCallTypes().add(newItem);
+     * getCallTypes().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DescribeSoftphoneLayoutCallTypeType }
+     * Objects of the following type(s) are allowed in the list {@link DescribeSoftphoneLayoutCallTypeType }
      * 
      * 
      */
     public List<DescribeSoftphoneLayoutCallTypeType> getCallTypes() {
-        if (callTypes == null) {
-            callTypes = new ArrayList<DescribeSoftphoneLayoutCallTypeType>();
+        if (this.callTypes == null) {
+            this.callTypes = new ArrayList<DescribeSoftphoneLayoutCallTypeType>();
         }
         return this.callTypes;
     }
@@ -92,22 +89,18 @@ public class DescribeSoftphoneLayoutResultType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setId(String value) {
         this.id = value;
@@ -116,22 +109,18 @@ public class DescribeSoftphoneLayoutResultType {
     /**
      * Gets the value of the name property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**
      * Sets the value of the name property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setName(String value) {
         this.name = value;
@@ -140,10 +129,8 @@ public class DescribeSoftphoneLayoutResultType {
     /**
      * Sets the value of the callTypes property.
      * 
-     * @param callTypes
-     *     allowed object is
-     *     {@link DescribeSoftphoneLayoutCallTypeType }
-     *     
+     * @param callTypes allowed object is {@link DescribeSoftphoneLayoutCallTypeType }
+     * 
      */
     public void setCallTypes(List<DescribeSoftphoneLayoutCallTypeType> callTypes) {
         this.callTypes = callTypes;

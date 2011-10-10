@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data;
 
 import java.io.Serializable;
@@ -133,8 +134,7 @@ public class TestHibernate extends BaseHibernateTest {
         assertTrue(Hibernate.CALENDAR_DATE.getReturnedClass() == java.util.Calendar.class);
 
         assertTrue(Hibernate.CHARACTER_ARRAY.getReturnedClass().isArray());
-        assertTrue(Hibernate.CHARACTER_ARRAY.getReturnedClass()
-                .getComponentType() == Character.class);
+        assertTrue(Hibernate.CHARACTER_ARRAY.getReturnedClass().getComponentType() == Character.class);
         assertTrue(Hibernate.CHAR_ARRAY.getReturnedClass().isArray());
         assertTrue(Hibernate.CHAR_ARRAY.getReturnedClass().getComponentType() == char.class);
         assertTrue(Hibernate.BINARY.getReturnedClass().isArray());
@@ -151,9 +151,8 @@ public class TestHibernate extends BaseHibernateTest {
     }
 
     /**
-     * N+1 select problem, because default fetching strategy uses lazy loading
-     * of related Objects. For a to-many relationship, all related Objects are
-     * fetched when the manys (the Collection) is accessed for this first time.
+     * N+1 select problem, because default fetching strategy uses lazy loading of related Objects. For a to-many
+     * relationship, all related Objects are fetched when the manys (the Collection) is accessed for this first time.
      */
 
     public void testNPlus1SelectToMany() {
@@ -164,8 +163,7 @@ public class TestHibernate extends BaseHibernateTest {
 
         for (int i = 0; i < 3; i++) {
             TestActor a = (TestActor) actors.get(i);
-            warn("Actor " + a.getLastName() + "# Films: "
-                    + a.getFilmActors().size());
+            warn("Actor " + a.getLastName() + "# Films: " + a.getFilmActors().size());
         }
 
         tx.commit();
@@ -178,8 +176,7 @@ public class TestHibernate extends BaseHibernateTest {
         assertTrue(count == 200);
 
         // how about using criteria?
-        Integer count2 = (Integer) session.createCriteria(TestActor.class)
-                .setProjection(Projections.rowCount()).uniqueResult();
+        Integer count2 = (Integer) session.createCriteria(TestActor.class).setProjection(Projections.rowCount()).uniqueResult();
         assertTrue(count2 == 200);
     }
 
@@ -198,8 +195,7 @@ public class TestHibernate extends BaseHibernateTest {
     }
 
     public void testPaging() {
-        assertTrue(session.createQuery("from TestCity").setFirstResult(1)
-                .setMaxResults(10).list().size() == 10);
+        assertTrue(session.createQuery("from TestCity").setFirstResult(1).setMaxResults(10).list().size() == 10);
     }
 
     public void testNPlus1SelectToOne() {
@@ -214,8 +210,7 @@ public class TestHibernate extends BaseHibernateTest {
 
         for (int i = 0; i < 3; i++) {
             TestCustomer c = (TestCustomer) customers.get(i);
-            warn("Customer " + c.getLastName() + " Phone: "
-                    + c.getAddress().getPhone());
+            warn("Customer " + c.getLastName() + " Phone: " + c.getAddress().getPhone());
         }
 
         tx.commit();
@@ -226,19 +221,18 @@ public class TestHibernate extends BaseHibernateTest {
         String hql = "from TestActor where firstName in (:inList)";
         Query q = session.createQuery(hql);
 
-	Collection names = new ArrayList();
-	names.add("ED");
-	names.add("NICK");
-	q.setParameterList("inList", names);
+        Collection names = new ArrayList();
+        names.add("ED");
+        names.add("NICK");
+        q.setParameterList("inList", names);
 
         List l = q.list();
-	assertEquals(l.size(), 6);
+        assertEquals(l.size(), 6);
         tx.commit();
     }
 
     /**
-     * Using join, can be used for eager loading to resolve the N+1 select
-     * problem.
+     * Using join, can be used for eager loading to resolve the N+1 select problem.
      * 
      * In mapping: fetch="join" | fetch="subselect"
      * 
@@ -261,8 +255,7 @@ public class TestHibernate extends BaseHibernateTest {
 
         for (int i = 0; i < 3; i++) {
             TestActor a = (TestActor) actors.get(i);
-            warn("Actor " + a.getLastName() + "# Films: "
-                    + a.getFilmActors().size());
+            warn("Actor " + a.getLastName() + "# Films: " + a.getFilmActors().size());
         }
 
         tx.commit();
@@ -313,13 +306,10 @@ public class TestHibernate extends BaseHibernateTest {
         }
 
         // This returns all cities, ignoring the original join condition
-        warn("Cities in USA "
-                + ObjectUtils.map(new String[] { "getCity" }, USA.getCities()));
+        warn("Cities in USA " + ObjectUtils.map(new String[] { "getCity" }, USA.getCities()));
 
-        List cities = session.createFilter(USA.getCities(),
-                "where city like 'A%'").list();
-        warn("Cities in USA starting with A "
-                + ObjectUtils.map(new String[] { "getCity" }, cities));
+        List cities = session.createFilter(USA.getCities(), "where city like 'A%'").list();
+        warn("Cities in USA starting with A " + ObjectUtils.map(new String[] { "getCity" }, cities));
 
         tx.commit();
     }
@@ -353,9 +343,7 @@ public class TestHibernate extends BaseHibernateTest {
 
         Transaction tx = session.beginTransaction();
 
-        List l = session.createQuery(
-                "select new CityInfo(c.city, c.country.country) "
-                        + "from TestCity c").list();
+        List l = session.createQuery("select new CityInfo(c.city, c.country.country) " + "from TestCity c").list();
 
         warn(l.size());
         for (Iterator iter = l.iterator(); iter.hasNext();) {
@@ -371,11 +359,9 @@ public class TestHibernate extends BaseHibernateTest {
 
         Transaction tx = session.beginTransaction();
 
-        List l = session
-                .createSQLQuery(
-                        "select distinct country.country_id, country.country, country.last_update from country, city where city.city like "
-                                + "'A%' and city.country_id = country.country_id")
-                .addEntity(ExtendedCountry.class).list();
+        List l = session.createSQLQuery(
+            "select distinct country.country_id, country.country, country.last_update from country, city where city.city like "
+                + "'A%' and city.country_id = country.country_id").addEntity(ExtendedCountry.class).list();
 
         ExtendedCountry c = (ExtendedCountry) l.get(2);
 
@@ -395,8 +381,7 @@ public class TestHibernate extends BaseHibernateTest {
         List customerIds = new ArrayList(customers.size());
 
         for (Iterator iter = customers.iterator(); iter.hasNext();) {
-            customerIds
-                    .add(new Short(((TestCustomer) iter.next()).getCustomerId()));
+            customerIds.add(new Short(((TestCustomer) iter.next()).getCustomerId()));
         }
 
         // no cached objects returned here
@@ -404,24 +389,21 @@ public class TestHibernate extends BaseHibernateTest {
         // List customers2 = q.list();
 
         warn("getting customer 2");
-        TestCustomer c = (TestCustomer) session.get(TestCustomer.class,
-                (Serializable) customerIds.get(2));
+        TestCustomer c = (TestCustomer) session.get(TestCustomer.class, (Serializable) customerIds.get(2));
         warn("got " + c.getLastName());
 
         // evit 3rd customer
         session.evict(customers.get(2));
 
         warn("getting customer 2 after evict");
-        TestCustomer c2 = (TestCustomer) session.get(TestCustomer.class,
-                (Serializable) customerIds.get(2));
+        TestCustomer c2 = (TestCustomer) session.get(TestCustomer.class, (Serializable) customerIds.get(2));
         warn("got " + c2.getLastName());
 
         tx.commit();
     }
 
     /**
-     * Interactions with the first level cache. HQL queries goes to db, but
-     * cached instance is returned regardless.
+     * Interactions with the first level cache. HQL queries goes to db, but cached instance is returned regardless.
      */
     public void testCacheWithQuery() {
 
@@ -433,9 +415,7 @@ public class TestHibernate extends BaseHibernateTest {
 
         assertTrue(session.contains(c));
 
-        TestCustomer c2 = (TestCustomer) session.createQuery(
-                "from TestCustomer where customer_id = :customerId")
-            .setProperties(c).uniqueResult();
+        TestCustomer c2 = (TestCustomer) session.createQuery("from TestCustomer where customer_id = :customerId").setProperties(c).uniqueResult();
 
         warn("Got customer again: " + c2.getFirstName());
 
@@ -448,19 +428,16 @@ public class TestHibernate extends BaseHibernateTest {
     }
 
     /**
-     * Persistent objects - entity instance with a database identity set. Always
-     * associated with a persistence context.
+     * Persistent objects - entity instance with a database identity set. Always associated with a persistence context.
      * 
      * Detached objects - persistent object without active persistence context.
      * 
      * Dirty Checking - custom algorith in org.hibernate.Interceptor.
      * 
-     * Options for reattaching: - update(): re-attaches and marks object as
-     * "dirty". select-before-update may be set in meta data. Object cannot have
-     * been loaded into session. - lock(): re-attach. Object is now managed by
-     * hibernate again. May do version check for optimistc concurrency. Object
-     * cannot have been loaded into session - merge(): Merges detaches object
-     * with persistent version, returns persistent one.
+     * Options for reattaching: - update(): re-attaches and marks object as "dirty". select-before-update may be set in
+     * meta data. Object cannot have been loaded into session. - lock(): re-attach. Object is now managed by hibernate
+     * again. May do version check for optimistc concurrency. Object cannot have been loaded into session - merge():
+     * Merges detaches object with persistent version, returns persistent one.
      * 
      */
     public void testAttach() {
@@ -491,8 +468,7 @@ public class TestHibernate extends BaseHibernateTest {
     }
 
     /**
-     * Optimistic Concurrency check has to use version col when we there's more
-     * than one session during a conversation.
+     * Optimistic Concurrency check has to use version col when we there's more than one session during a conversation.
      */
     public void testAttachOpCon() {
 
@@ -589,8 +565,7 @@ public class TestHibernate extends BaseHibernateTest {
     /**
      * Can we query against modified objects?
      * 
-     * Yes, running a query seems to force an update, without committing the db
-     * transaction. Joel was right.
+     * Yes, running a query seems to force an update, without committing the db transaction. Joel was right.
      * 
      */
     public void testQueryModifiedObject() {
@@ -601,9 +576,7 @@ public class TestHibernate extends BaseHibernateTest {
 
         c.setFirstName("NELSON22");
 
-        TestCustomer c2 = (TestCustomer) session.createQuery(
-                "from TestCustomer where firstName = :name")
-            .setParameter("name", "NELSON22").uniqueResult();
+        TestCustomer c2 = (TestCustomer) session.createQuery("from TestCustomer where firstName = :name").setParameter("name", "NELSON22").uniqueResult();
 
         warn("Query result " + c2 + " " + c2.getFirstName());
 
@@ -623,11 +596,8 @@ public class TestHibernate extends BaseHibernateTest {
 
         session.save(a);
 
-        TestActor a2 = (TestActor) session
-                .createQuery(
-                        "from TestActor where firstName = :first and "
-                                + "lastName = :last").setParameter("first",
-                        "Frankie").setParameter("last", "Fu").uniqueResult();
+        TestActor a2 = (TestActor) session.createQuery("from TestActor where firstName = :first and " + "lastName = :last").setParameter("first",
+            "Frankie").setParameter("last", "Fu").uniqueResult();
 
         warn("Query result " + a2 + " " + a2.getFirstName());
 
@@ -637,13 +607,11 @@ public class TestHibernate extends BaseHibernateTest {
     /**
      * Optimistic Concurrency Check using DB values in where clause.
      * 
-     * This test shows one of the complications when using this method for
-     * optimistic concurrency checking: default values set by the database are
-     * not picked up unless the object is explicitly refreshed. Stale values
-     * cause the concurrency check to fail.
+     * This test shows one of the complications when using this method for optimistic concurrency checking: default
+     * values set by the database are not picked up unless the object is explicitly refreshed. Stale values cause the
+     * concurrency check to fail.
      * 
-     * The other requirement here is that we always use the same Hibernate
-     * session.
+     * The other requirement here is that we always use the same Hibernate session.
      */
     public void testOptConWithDBValues() {
 
@@ -675,13 +643,11 @@ public class TestHibernate extends BaseHibernateTest {
     }
 
     /**
-     * Options: specify order-by in meta data, such as: <set name="customers"
-     * inverse="true" order-by="last_name asc">
+     * Options: specify order-by in meta data, such as: <set name="customers" inverse="true" order-by="last_name asc">
      * 
      * Run an hql query with a join and an order by.
      * 
-     * Use a collection filter: session.createFilter - can also be used for
-     * paging related objects
+     * Use a collection filter: session.createFilter - can also be used for paging related objects
      * 
      * 
      */
@@ -697,26 +663,17 @@ public class TestHibernate extends BaseHibernateTest {
         for (Iterator iter = customers.iterator(); iter.hasNext();) {
             l.add(((TestCustomer) iter.next()).getLastName());
         }
-        compareOrdering(
-                session
-                        .createQuery(
-                                "select lastName from TestCustomer where store.id=1 order by lastName asc")
-                        .list(), l);
+        compareOrdering(session.createQuery("select lastName from TestCustomer where store.id=1 order by lastName asc").list(), l);
 
         // a Filter can be used for ordering, and to provide other restrictions
-        customers = session.createFilter(s.getCustomers(),
-                "order by lastName desc").list();
+        customers = session.createFilter(s.getCustomers(), "order by lastName desc").list();
 
         l = new ArrayList(customers.size());
         for (Iterator iter = customers.iterator(); iter.hasNext();) {
             l.add(((TestCustomer) iter.next()).getLastName());
         }
 
-        compareOrdering(
-                session
-                        .createQuery(
-                                "select lastName from TestCustomer where store.id=1 order by lastName desc")
-                        .list(), l);
+        compareOrdering(session.createQuery("select lastName from TestCustomer where store.id=1 order by lastName desc").list(), l);
 
         tx.commit();
     }
@@ -741,17 +698,14 @@ public class TestHibernate extends BaseHibernateTest {
 
         Transaction tx = session.beginTransaction();
 
-        TestActor a = 
-            (TestActor) session.createQuery("from TestActor where actor_id=1")
-                .uniqueResult();
+        TestActor a = (TestActor) session.createQuery("from TestActor where actor_id=1").uniqueResult();
 
         a.setFirstName("Matt");
         a.setLastName("Small");
 
         warn("Original values " + interceptor.getDBValue(a));
 
-        assertTrue(interceptor.getDBValue(a).get("firstName")
-                .equals("PENELOPE"));
+        assertTrue(interceptor.getDBValue(a).get("firstName").equals("PENELOPE"));
         session.flush();
         tx.rollback();
         session.close();
@@ -814,12 +768,10 @@ public class TestHibernate extends BaseHibernateTest {
         actors = q.list();
         info("additional actors " + actors.size());
 
-        assertTrue(interceptor.getCachedEntities().size() == total
-                && total == session.getStatistics().getEntityCount());
+        assertTrue(interceptor.getCachedEntities().size() == total && total == session.getStatistics().getEntityCount());
 
         // evict all
-        for (Iterator iter = interceptor.getCachedEntities().iterator(); iter
-                .hasNext();) {
+        for (Iterator iter = interceptor.getCachedEntities().iterator(); iter.hasNext();) {
             session.evict(iter.next());
         }
 
@@ -836,8 +788,7 @@ public class TestHibernate extends BaseHibernateTest {
         List l = session.createQuery("from TestActor order by fullName").list();
 
         assertTrue(((TestActor) l.get(0)).getFullName().equals("ADAM GRANT"));
-        assertTrue(((TestActor) l.get(l.size() - 1)).getFullName().equals(
-                "ZERO CAGE"));
+        assertTrue(((TestActor) l.get(l.size() - 1)).getFullName().equals("ZERO CAGE"));
 
         tx.commit();
     }
@@ -846,8 +797,7 @@ public class TestHibernate extends BaseHibernateTest {
 
         Transaction tx = session.beginTransaction();
 
-        ExtendedCountry ec = (ExtendedCountry) session.get(
-                ExtendedCountry.class, new Short("1"));
+        ExtendedCountry ec = (ExtendedCountry) session.get(ExtendedCountry.class, new Short("1"));
 
         warn(ec.getInfo());
 
@@ -858,10 +808,7 @@ public class TestHibernate extends BaseHibernateTest {
 
         Transaction tx = session.beginTransaction();
 
-        List l = session
-                .createQuery(
-                        "select new com.wavemaker.runtime.data.TestHibernate$Person(firstName, lastName) from TestCustomer")
-                .list();
+        List l = session.createQuery("select new com.wavemaker.runtime.data.TestHibernate$Person(firstName, lastName) from TestCustomer").list();
 
         for (Iterator iter = l.iterator(); iter.hasNext();) {
             warn(iter.next());
@@ -875,8 +822,7 @@ public class TestHibernate extends BaseHibernateTest {
 
         Transaction tx = session.beginTransaction();
 
-        Query q = session
-                .createQuery("select new TestActor(actorId, firstName, lastName, lastUpdate) from TestActor");
+        Query q = session.createQuery("select new TestActor(actorId, firstName, lastName, lastUpdate) from TestActor");
 
         // for (Type t : q.getReturnTypes()) {
         // System.out.println(t.getName());
@@ -892,7 +838,7 @@ public class TestHibernate extends BaseHibernateTest {
 
     }
 
-    @SuppressWarnings("unused")    
+    @SuppressWarnings("unused")
     public void testDynamicMapMode() {
 
         Session session = sessionFactory.openSession();
@@ -902,22 +848,22 @@ public class TestHibernate extends BaseHibernateTest {
         Transaction tx = session.beginTransaction();
 
         // this query doesn't work with map mode
-        //Query q = s.createQuery("from Actor a join fetch a.filmActors fa");
+        // Query q = s.createQuery("from Actor a join fetch a.filmActors fa");
         Query q = s.createQuery("from TestActor a");
-        
+
         long startTime = System.currentTimeMillis();
 
         List actors = q.list();
-        
+
         long queryEndTime = System.currentTimeMillis();
-        
+
         for (Object o : actors) {
             Map m = (Map) o;
             detach(m);
         }
 
         long total = System.currentTimeMillis();
-        
+
         tx.rollback();
     }
 
@@ -974,30 +920,32 @@ public class TestHibernate extends BaseHibernateTest {
             this.lastName = lastName;
         }
 
-        public void setFirstName(String s) {}
+        public void setFirstName(String s) {
+        }
 
-        public void setLastName(String s) {}
+        public void setLastName(String s) {
+        }
 
+        @Override
         public String toString() {
-            return firstName + " " + lastName;
+            return this.firstName + " " + this.lastName;
         }
 
     }
 
-    private class TestInterceptor extends EmptyInterceptor implements
-            Interceptor {
+    private class TestInterceptor extends EmptyInterceptor implements Interceptor {
 
         private static final long serialVersionUID = 1L;
 
-        private Set<Object> cachedEntities = new HashSet<Object>();
+        private final Set<Object> cachedEntities = new HashSet<Object>();
 
-        private Map<String, Map> dbValues = new HashMap<String, Map>();
+        private final Map<String, Map> dbValues = new HashMap<String, Map>();
 
-        public boolean onLoad(Object entity, Serializable id, Object[] state,
-                String[] propertyNames, Type[] types) {
+        @Override
+        public boolean onLoad(Object entity, Serializable id, Object[] state, String[] propertyNames, Type[] types) {
 
             // cachedEntities.add(new WeakReference(entity));
-            cachedEntities.add(entity);
+            this.cachedEntities.add(entity);
 
             Map valueMapping = null;
 
@@ -1013,11 +961,11 @@ public class TestHibernate extends BaseHibernateTest {
                 if (valueMapping == null) {
                     valueMapping = new HashMap();
 
-                    if (dbValues.containsKey(keyValue)) {
+                    if (this.dbValues.containsKey(keyValue)) {
                         // throw new AssertionError(keyValue
                         // + " has already been loaded");
                     } else {
-                        dbValues.put(keyValue, valueMapping);
+                        this.dbValues.put(keyValue, valueMapping);
                     }
                 }
 
@@ -1027,8 +975,7 @@ public class TestHibernate extends BaseHibernateTest {
         }
 
         private Object getKeyValue(Object entity) {
-            ClassMetadata m = sessionFactory
-                    .getClassMetadata(entity.getClass());
+            ClassMetadata m = sessionFactory.getClassMetadata(entity.getClass());
             Serializable id = m.getIdentifier(entity, EntityMode.POJO);
             return getKeyValue(entity, id);
         }
@@ -1039,16 +986,16 @@ public class TestHibernate extends BaseHibernateTest {
         }
 
         public Map getDBValue(Object entity) {
-            return (Map) dbValues.get(getKeyValue(entity));
+            return this.dbValues.get(getKeyValue(entity));
         }
 
         public Set getCachedEntities() {
-            return cachedEntities;
+            return this.cachedEntities;
         }
 
         public void close() {
-            cachedEntities.clear();
-            dbValues.clear();
+            this.cachedEntities.clear();
+            this.dbValues.clear();
         }
 
     }

@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -22,11 +20,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
+ * <p>
+ * Java class for anonymous complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType>
@@ -44,37 +43,31 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "assignmentRuleId",
-    "useDefaultRule"
-})
+@XmlType(name = "", propOrder = { "assignmentRuleId", "useDefaultRule" })
 @XmlRootElement(name = "AssignmentRuleHeader", namespace = "urn:partner.soap.sforce.com")
 public class AssignmentRuleHeader {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String assignmentRuleId;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, type = Boolean.class, nillable = true)
     protected Boolean useDefaultRule;
 
     /**
      * Gets the value of the assignmentRuleId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getAssignmentRuleId() {
-        return assignmentRuleId;
+        return this.assignmentRuleId;
     }
 
     /**
      * Sets the value of the assignmentRuleId property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setAssignmentRuleId(String value) {
         this.assignmentRuleId = value;
@@ -83,22 +76,18 @@ public class AssignmentRuleHeader {
     /**
      * Gets the value of the useDefaultRule property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Boolean }
-     *     
+     * @return possible object is {@link Boolean }
+     * 
      */
     public Boolean getUseDefaultRule() {
-        return useDefaultRule;
+        return this.useDefaultRule;
     }
 
     /**
      * Sets the value of the useDefaultRule property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Boolean }
-     *     
+     * @param value allowed object is {@link Boolean }
+     * 
      */
     public void setUseDefaultRule(Boolean value) {
         this.useDefaultRule = value;

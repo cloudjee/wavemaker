@@ -64,7 +64,7 @@ public class ObjectUtils {
 
         return false;
     }
-    
+
     public static boolean isNullOrEmpty(List<?> l) {
         if (l == null) {
             return true;
@@ -76,7 +76,6 @@ public class ObjectUtils {
 
         return false;
     }
-    
 
     /**
      * Return new array that contains the elements of all input arrays.
@@ -108,8 +107,8 @@ public class ObjectUtils {
     }
 
     /**
-     * Like Collection.toArray, but without "type checking" warnings if the
-     * Collection instance is not typed using generics.
+     * Like Collection.toArray, but without "type checking" warnings if the Collection instance is not typed using
+     * generics.
      */
     public static Object[] toArray(Collection<?> c, Class<?> arrayType) {
         Object[] rtn = (Object[]) Array.newInstance(arrayType, c.size());
@@ -131,7 +130,7 @@ public class ObjectUtils {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < array.length; i++) {
             sb.append(String.valueOf(array[i]));
-            if (i < (array.length - 1)) {
+            if (i < array.length - 1) {
                 sb.append(sep);
             }
         }
@@ -166,8 +165,7 @@ public class ObjectUtils {
             for (int i = 0; i < funcNames.length; i++) {
                 if (methods[i] == null) {
                     try {
-                        methods[i] = o.getClass().getMethod(funcNames[i],
-                                (Class[]) null);
+                        methods[i] = o.getClass().getMethod(funcNames[i], (Class[]) null);
                     } catch (Exception ex) {
                         throw new WMRuntimeException(ex);
                     }
@@ -200,8 +198,7 @@ public class ObjectUtils {
             Collection<?> c = (Collection<?>) o;
             int i = 0;
             for (Object item : c) {
-                sb.append("element ").append(i)
-                        .append(" in root Collection:\n");
+                sb.append("element ").append(i).append(" in root Collection:\n");
                 sb.append(objectToStringRecursive(item));
                 sb.append("\n");
             }
@@ -216,20 +213,17 @@ public class ObjectUtils {
 
         final ObjectAccess oa = ObjectAccess.getInstance();
 
-        ObjectGraphTraversal.ObjectVisitor v = 
-	    new ObjectGraphTraversal.ObjectVisitor() {
+        ObjectGraphTraversal.ObjectVisitor v = new ObjectGraphTraversal.ObjectVisitor() {
 
             public void visit(Object o, Context ctx) {
-                sb.append("\n" + ctx.getPropertyPath() + ": "
-                        + objectToString(o));
+                sb.append("\n" + ctx.getPropertyPath() + ": " + objectToString(o));
             }
 
             public void cycle(Object o, Context ctx) {
                 sb.append("\n" + ctx.getPropertyPath() + ": Cycle");
             }
         };
-        ObjectGraphTraversal.PropertyFactory p = 
-	    new ObjectGraphTraversal.PropertyFactory() {
+        ObjectGraphTraversal.PropertyFactory p = new ObjectGraphTraversal.PropertyFactory() {
 
             public List<String> getProperties(Object o, Context ctx) {
                 return oa.getPropertyNames(o.getClass());
@@ -246,8 +240,7 @@ public class ObjectUtils {
      */
     public static String diffObjects(Object o1, Object o2) {
         if (o1.getClass() != o2.getClass()) {
-            throw new IllegalArgumentException("Arguments o1 and o2 must "
-                    + "be of same type");
+            throw new IllegalArgumentException("Arguments o1 and o2 must " + "be of same type");
         }
 
         StringBuilder rtn = new StringBuilder();
@@ -259,9 +252,8 @@ public class ObjectUtils {
             try {
                 Object r1 = m.invoke(o1, (Object[]) null);
                 Object r2 = m.invoke(o2, (Object[]) null);
-                if ((r1 == null && r2 != null) || !r1.equals(r2)) {
-                    rtn.append(m.getName()).append(": ").append(r1).append(
-                            " != ").append(r2).append("\n");
+                if (r1 == null && r2 != null || !r1.equals(r2)) {
+                    rtn.append(m.getName()).append(": ").append(r1).append(" != ").append(r2).append("\n");
                 }
             } catch (Exception ex) {
                 throw new WMRuntimeException(ex);
@@ -272,16 +264,13 @@ public class ObjectUtils {
         return rtn.toString();
     }
 
-    private static final Class<?>[] simpleTypes = new Class<?>[] { int.class,
-            Integer.class, String.class, Date.class };
+    private static final Class<?>[] simpleTypes = new Class<?>[] { int.class, Integer.class, String.class, Date.class };
 
     private static List<?> getSimpleGetters(Class<?> c) {
-        return filterMethods(c.getDeclaredMethods(), new String[] { "get" },
-                simpleTypes);
+        return filterMethods(c.getDeclaredMethods(), new String[] { "get" }, simpleTypes);
     }
 
-    private static List<Method> filterMethods(Method[] methods, String[] names,
-            Class<?>[] rtnTypes) {
+    private static List<Method> filterMethods(Method[] methods, String[] names, Class<?>[] rtnTypes) {
 
         List<Method> rtn = new ArrayList<Method>();
 
@@ -316,22 +305,18 @@ public class ObjectUtils {
     }
 
     /**
-     * Get the type of an array or collection (passed in as obj). If the array
-     * isn't homogeneous, return null. If obj is not an array or a collection, a
-     * runtime exception is thrown. All Collections and Object[] are checked for
+     * Get the type of an array or collection (passed in as obj). If the array isn't homogeneous, return null. If obj is
+     * not an array or a collection, a runtime exception is thrown. All Collections and Object[] are checked for
      * homogeneity, but nothing else.
      * 
      * @param array
-     * @return The type of a homogeneous array or Collection, or null if the
-     *         array or Collection is not homogeneous.
-     * @throws IllegalArgumentException
-     *                 If the argument array is not an array or Collection.
+     * @return The type of a homogeneous array or Collection, or null if the array or Collection is not homogeneous.
+     * @throws IllegalArgumentException If the argument array is not an array or Collection.
      */
     public static Class<?> getArrayType(Object array) {
 
         if (null == array) {
-            throw new IllegalArgumentException(
-                    "Argument must be an array or a collection, not " + array);
+            throw new IllegalArgumentException("Argument must be an array or a collection, not " + array);
         }
 
         Class<?> arrayType;
@@ -344,8 +329,7 @@ public class ObjectUtils {
                 arrayType = null;
 
                 for (Object elem : (Object[]) array) {
-                    arrayType = getArrayType_ClassMatch(arrayType, elem
-                            .getClass());
+                    arrayType = getArrayType_ClassMatch(arrayType, elem.getClass());
                     if (null == arrayType) {
                         break;
                     }
@@ -369,16 +353,13 @@ public class ObjectUtils {
                 }
             }
         } else {
-            throw new IllegalArgumentException(
-                    "Argument must be an array or a collection, not "
-                            + array.getClass());
+            throw new IllegalArgumentException("Argument must be an array or a collection, not " + array.getClass());
         }
 
         return arrayType;
     }
 
-    public static Collection<String> getKeysStartingWith(String prefix,
-            Map<String, ?> m) {
+    public static Collection<String> getKeysStartingWith(String prefix, Map<String, ?> m) {
 
         Collection<String> rtn = new HashSet<String>();
         for (String s : m.keySet()) {
@@ -388,11 +369,11 @@ public class ObjectUtils {
         }
         return rtn;
     }
-    
+
     public static boolean strCmp(Object o1, Object o2) {
         return String.valueOf(o1).equals(String.valueOf(o2));
     }
-    
+
     private ObjectUtils() {
         throw new UnsupportedOperationException();
     }

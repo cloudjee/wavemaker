@@ -29,8 +29,8 @@ import org.apache.commons.lang.math.NumberUtils;
  * @author Simon Toens
  */
 public class StringUtils {
-    
-    public static final String JAVA_SRC_EXT = ".java";    
+
+    public static final String JAVA_SRC_EXT = ".java";
 
     public static String toString(Throwable th) {
         StringWriter sw = new StringWriter();
@@ -40,7 +40,7 @@ public class StringUtils {
         pw.close();
         return rtn;
     }
-    
+
     public static boolean hasUpperCase(String s) {
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
@@ -50,21 +50,21 @@ public class StringUtils {
         }
         return false;
     }
-    
+
     public static boolean isValidJavaIdentifier(String s) {
         return toJavaIdentifier(s).equals(s);
     }
-    
+
     public static String toJavaIdentifier(String s) {
         return toJavaIdentifier(s, '_');
     }
 
     public static String toJavaIdentifier(String s, char replacementChar) {
-        
+
         if (ObjectUtils.isNullOrEmpty(s)) {
             throw new IllegalArgumentException("input cannot be null or empty");
         }
-        
+
         String unquoted = unquote(s);
         if (unquoted.length() > 0) {
             s = unquoted;
@@ -73,18 +73,17 @@ public class StringUtils {
         // although '$' is ok, it causes issues with type generation
         // because of inner class confusion
         s = s.replace("$", "");
-        
+
         if (s.length() == 0) {
             s = "" + replacementChar;
         }
-        
+
         StringBuilder rtn = new StringBuilder();
-        
-        if (JAVA_KEYWORDS.contains(s.toLowerCase()) || 
-            !Character.isJavaIdentifierStart(s.charAt(0))) {
+
+        if (JAVA_KEYWORDS.contains(s.toLowerCase()) || !Character.isJavaIdentifierStart(s.charAt(0))) {
             rtn.append(replacementChar);
         }
-        
+
         if (s.length() == 1) {
             if (rtn.length() > 0) {
                 return rtn.toString();
@@ -92,7 +91,7 @@ public class StringUtils {
                 return s;
             }
         }
-        
+
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             if (!Character.isJavaIdentifierPart(c)) {
@@ -100,12 +99,11 @@ public class StringUtils {
             }
             rtn.append(c);
         }
-        
+
         return rtn.toString();
     }
 
-    public static List<String> getItemsStartingWith(Collection<String> items,
-            String prefix, boolean removePrefix) {
+    public static List<String> getItemsStartingWith(Collection<String> items, String prefix, boolean removePrefix) {
         List<String> rtn = new ArrayList<String>();
         for (String s : items) {
             if (s.startsWith(prefix)) {
@@ -124,8 +122,8 @@ public class StringUtils {
     }
 
     /**
-     * Given a fully qualified class name a.b.c, returns a Tuple.Two instance
-     * with the package and the class name: (a.b, c).
+     * Given a fully qualified class name a.b.c, returns a Tuple.Two instance with the package and the class name: (a.b,
+     * c).
      */
     public static Tuple.Two<String, String> splitPackageAndClass(String s) {
         int i = s.lastIndexOf(".");
@@ -167,7 +165,7 @@ public class StringUtils {
         boolean inDoubleQuotes = false;
         boolean inSingleQuotes = false;
         int bracesDepth = 0;
-	int bracketsDepth = 0;
+        int bracketsDepth = 0;
 
         StringBuilder sb = new StringBuilder();
 
@@ -179,10 +177,10 @@ public class StringUtils {
                 bracesDepth++;
             } else if (c == '}') {
                 bracesDepth--;
-	    } else if (c == '[') {
-		bracketsDepth++;
-	    } else if (c == ']') {
-		bracketsDepth--;
+            } else if (c == '[') {
+                bracketsDepth++;
+            } else if (c == ']') {
+                bracketsDepth--;
             } else if (c == '\'') {
                 if (inSingleQuotes) {
                     inSingleQuotes = false;
@@ -199,8 +197,7 @@ public class StringUtils {
 
             boolean add = true;
             if (sep.contains(c)) {
-                if (!inDoubleQuotes && !inSingleQuotes && 
-		    bracesDepth == 0 && bracketsDepth == 0) {
+                if (!inDoubleQuotes && !inSingleQuotes && bracesDepth == 0 && bracketsDepth == 0) {
                     add = false;
                     rtn.add(sb.toString().trim());
                     sb.delete(0, sb.length());
@@ -258,10 +255,10 @@ public class StringUtils {
     public static String getPackage(String className) {
         return fromLastOccurrence(className, ".", -1);
     }
-    
+
     public static String getClassName(String className) {
         return fromLastOccurrence(className, ".", 1);
-    }    
+    }
 
     public static boolean isFullyQualified(String className) {
         return className.indexOf(".") != -1;
@@ -297,8 +294,7 @@ public class StringUtils {
         return fromFirstOccurrence(s, substring, 1);
     }
 
-    public static String fromFirstOccurrence(String s, String substring,
-            int direction) {
+    public static String fromFirstOccurrence(String s, String substring, int direction) {
         int i = s.indexOf(substring);
         if (i == -1) {
             return s;
@@ -311,8 +307,7 @@ public class StringUtils {
         return fromLastOccurrence(s, substring, 1);
     }
 
-    public static String fromLastOccurrence(String s, String substring,
-            int direction) {
+    public static String fromLastOccurrence(String s, String substring, int direction) {
         int i = s.lastIndexOf(substring);
         if (i == -1) {
             return s;
@@ -331,68 +326,63 @@ public class StringUtils {
     }
 
     public static String unquote(String s) {
-        
+
         if (s == null) {
             return null;
         }
-        if ((s.startsWith("'") && s.endsWith("'"))
-                || (s.startsWith("\"") && s.endsWith("\""))
-                || (s.startsWith("`") && s.endsWith("`"))) {
+        if (s.startsWith("'") && s.endsWith("'") || s.startsWith("\"") && s.endsWith("\"") || s.startsWith("`") && s.endsWith("`")) {
             s = s.substring(1, s.length() - 1);
         }
         return s;
     }
 
     /**
-     * Return a String with all occurrences of the "from" String
-     * within "original" replaced with the "to" String.
-     * If the "original" string contains no occurrences of "from",
-     * "original" is itself returned, rather than a copy.
-     *
+     * Return a String with all occurrences of the "from" String within "original" replaced with the "to" String. If the
+     * "original" string contains no occurrences of "from", "original" is itself returned, rather than a copy.
+     * 
      * @param original the original String
      * @param from the String to replace within "original"
      * @param to the String to replace "from" with
-     *
-     * @returns a version of "original" with all occurrences of
-     * the "from" parameter being replaced with the "to" parameter.
+     * 
+     * @returns a version of "original" with all occurrences of the "from" parameter being replaced with the "to"
+     *          parameter.
      */
     public static String replacePlainStr(String original, String from, String to) {
-    	int from_length = from.length();
+        int from_length = from.length();
 
-    	if (from_length != to.length()) {
-        	if (from_length == 0) {
-               if (to.length() != 0) {
-                  throw new IllegalArgumentException("Replacing the empty string with something was attempted");
-               }
+        if (from_length != to.length()) {
+            if (from_length == 0) {
+                if (to.length() != 0) {
+                    throw new IllegalArgumentException("Replacing the empty string with something was attempted");
+                }
             }
             int start = original.indexOf(from);
             if (start == -1) {
-               return original;
+                return original;
             }
             char[] original_chars = original.toCharArray();
             StringBuffer buffer = new StringBuffer(original.length());
             int copy_from = 0;
             while (start != -1) {
-               buffer.append(original_chars, copy_from, start - copy_from);
-               buffer.append(to);
-               copy_from = start + from_length;
-               start = original.indexOf(from, copy_from);
+                buffer.append(original_chars, copy_from, start - copy_from);
+                buffer.append(to);
+                copy_from = start + from_length;
+                start = original.indexOf(from, copy_from);
             }
             buffer.append(original_chars, copy_from, original_chars.length - copy_from);
             return buffer.toString();
-         }
-         else {
+        } else {
             if (from.equals(to)) {
-               return original;
+                return original;
             }
             int start = original.indexOf(from);
             if (start == -1) {
-               return original;
+                return original;
             }
             StringBuffer buffer = new StringBuffer(original);
             while (start != -1) {
-               buffer.replace(start, start + from_length, to);
-               start = original.indexOf(from, start + from_length);
+                buffer.replace(start, start + from_length, to);
+                start = original.indexOf(from, start + from_length);
             }
             return buffer.toString();
         }
@@ -402,9 +392,9 @@ public class StringUtils {
         char last = str.charAt(0);
         StringBuffer argBuf = new StringBuffer();
 
-        for (int cIdx = 0 ; cIdx < str.length(); cIdx++) {
+        for (int cIdx = 0; cIdx < str.length(); cIdx++) {
             char ch = str.charAt(cIdx);
-            if (ch != ' ' || last != ' ') {           
+            if (ch != ' ' || last != ' ') {
                 argBuf.append(ch);
                 last = ch;
             }
@@ -414,17 +404,15 @@ public class StringUtils {
 
     }
 
-    private static String substring(String s, int i, String substring,
-            int direction) {
+    private static String substring(String s, int i, String substring, int direction) {
         if (direction >= 0) {
             return s.substring(i + substring.length());
         } else {
             return s.substring(0, i);
         }
     }
-    
-    private static final Collection<String> JAVA_KEYWORDS = new HashSet<String>(
-            50);
+
+    private static final Collection<String> JAVA_KEYWORDS = new HashSet<String>(50);
     static {
         JAVA_KEYWORDS.add("abstract");
         JAVA_KEYWORDS.add("assert");
@@ -477,10 +465,9 @@ public class StringUtils {
         JAVA_KEYWORDS.add("volatile");
         JAVA_KEYWORDS.add("while");
     }
-    
-    
+
     private StringUtils() {
         throw new UnsupportedOperationException();
     }
-    
+
 }

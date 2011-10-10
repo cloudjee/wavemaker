@@ -28,11 +28,11 @@ public class GenerationException extends WMException {
     public GenerationException(String message) {
         super(message);
     }
-    
+
     public GenerationException(Throwable cause) {
         super(cause);
     }
-    
+
     public GenerationException(String message, Throwable cause) {
         super(message, cause);
     }

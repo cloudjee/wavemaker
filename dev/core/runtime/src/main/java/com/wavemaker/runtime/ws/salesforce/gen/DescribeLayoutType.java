@@ -11,23 +11,23 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for DescribeLayout complex type.
+ * <p>
+ * Java class for DescribeLayout complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="DescribeLayout">
@@ -48,45 +48,40 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DescribeLayout", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "buttonLayoutSection",
-    "detailLayoutSections",
-    "editLayoutSections",
-    "id",
-    "relatedLists"
-})
+@XmlType(name = "DescribeLayout", namespace = "urn:partner.soap.sforce.com", propOrder = { "buttonLayoutSection", "detailLayoutSections",
+    "editLayoutSections", "id", "relatedLists" })
 public class DescribeLayoutType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected DescribeLayoutButtonSectionType buttonLayoutSection;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected List<DescribeLayoutSectionType> detailLayoutSections;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected List<DescribeLayoutSectionType> editLayoutSections;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String id;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected List<RelatedListType> relatedLists;
 
     /**
      * Gets the value of the buttonLayoutSection property.
      * 
-     * @return
-     *     possible object is
-     *     {@link DescribeLayoutButtonSectionType }
-     *     
+     * @return possible object is {@link DescribeLayoutButtonSectionType }
+     * 
      */
     public DescribeLayoutButtonSectionType getButtonLayoutSection() {
-        return buttonLayoutSection;
+        return this.buttonLayoutSection;
     }
 
     /**
      * Sets the value of the buttonLayoutSection property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link DescribeLayoutButtonSectionType }
-     *     
+     * @param value allowed object is {@link DescribeLayoutButtonSectionType }
+     * 
      */
     public void setButtonLayoutSection(DescribeLayoutButtonSectionType value) {
         this.buttonLayoutSection = value;
@@ -96,27 +91,26 @@ public class DescribeLayoutType {
      * Gets the value of the detailLayoutSections property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the detailLayoutSections property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the detailLayoutSections property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getDetailLayoutSections().add(newItem);
+     * getDetailLayoutSections().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DescribeLayoutSectionType }
+     * Objects of the following type(s) are allowed in the list {@link DescribeLayoutSectionType }
      * 
      * 
      */
     public List<DescribeLayoutSectionType> getDetailLayoutSections() {
-        if (detailLayoutSections == null) {
-            detailLayoutSections = new ArrayList<DescribeLayoutSectionType>();
+        if (this.detailLayoutSections == null) {
+            this.detailLayoutSections = new ArrayList<DescribeLayoutSectionType>();
         }
         return this.detailLayoutSections;
     }
@@ -125,27 +119,26 @@ public class DescribeLayoutType {
      * Gets the value of the editLayoutSections property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the editLayoutSections property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the editLayoutSections property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getEditLayoutSections().add(newItem);
+     * getEditLayoutSections().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DescribeLayoutSectionType }
+     * Objects of the following type(s) are allowed in the list {@link DescribeLayoutSectionType }
      * 
      * 
      */
     public List<DescribeLayoutSectionType> getEditLayoutSections() {
-        if (editLayoutSections == null) {
-            editLayoutSections = new ArrayList<DescribeLayoutSectionType>();
+        if (this.editLayoutSections == null) {
+            this.editLayoutSections = new ArrayList<DescribeLayoutSectionType>();
         }
         return this.editLayoutSections;
     }
@@ -153,22 +146,18 @@ public class DescribeLayoutType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setId(String value) {
         this.id = value;
@@ -178,27 +167,26 @@ public class DescribeLayoutType {
      * Gets the value of the relatedLists property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the relatedLists property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the relatedLists property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getRelatedLists().add(newItem);
+     * getRelatedLists().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link RelatedListType }
+     * Objects of the following type(s) are allowed in the list {@link RelatedListType }
      * 
      * 
      */
     public List<RelatedListType> getRelatedLists() {
-        if (relatedLists == null) {
-            relatedLists = new ArrayList<RelatedListType>();
+        if (this.relatedLists == null) {
+            this.relatedLists = new ArrayList<RelatedListType>();
         }
         return this.relatedLists;
     }
@@ -206,10 +194,8 @@ public class DescribeLayoutType {
     /**
      * Sets the value of the detailLayoutSections property.
      * 
-     * @param detailLayoutSections
-     *     allowed object is
-     *     {@link DescribeLayoutSectionType }
-     *     
+     * @param detailLayoutSections allowed object is {@link DescribeLayoutSectionType }
+     * 
      */
     public void setDetailLayoutSections(List<DescribeLayoutSectionType> detailLayoutSections) {
         this.detailLayoutSections = detailLayoutSections;
@@ -218,10 +204,8 @@ public class DescribeLayoutType {
     /**
      * Sets the value of the editLayoutSections property.
      * 
-     * @param editLayoutSections
-     *     allowed object is
-     *     {@link DescribeLayoutSectionType }
-     *     
+     * @param editLayoutSections allowed object is {@link DescribeLayoutSectionType }
+     * 
      */
     public void setEditLayoutSections(List<DescribeLayoutSectionType> editLayoutSections) {
         this.editLayoutSections = editLayoutSections;
@@ -230,10 +214,8 @@ public class DescribeLayoutType {
     /**
      * Sets the value of the relatedLists property.
      * 
-     * @param relatedLists
-     *     allowed object is
-     *     {@link RelatedListType }
-     *     
+     * @param relatedLists allowed object is {@link RelatedListType }
+     * 
      */
     public void setRelatedLists(List<RelatedListType> relatedLists) {
         this.relatedLists = relatedLists;

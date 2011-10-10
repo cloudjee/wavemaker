@@ -21,22 +21,22 @@ import com.wavemaker.common.util.ClassLoaderUtils;
 /**
  * @author Simon Toens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class DefaultClassLoaderFactory implements ClassLoaderFactory {
-    
+
     private final File[] paths;
-    
+
     public DefaultClassLoaderFactory(File path) {
-        this(new File[]{path});
+        this(new File[] { path });
     }
-    
+
     public DefaultClassLoaderFactory(File... paths) {
         this.paths = paths;
     }
 
     public ClassLoader getClassLoader() {
-        return ClassLoaderUtils.getClassLoaderForFile(paths);
+        return ClassLoaderUtils.getClassLoaderForFile(this.paths);
     }
 
 }

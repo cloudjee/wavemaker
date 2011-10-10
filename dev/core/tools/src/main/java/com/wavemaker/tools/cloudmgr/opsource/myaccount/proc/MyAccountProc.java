@@ -36,13 +36,13 @@ import com.wavemaker.tools.cloudmgr.opsource.myaccount.response.Account;
 
 /**
  * This class is to manage opSource cloud server instances.
- *
+ * 
  * @author slee
  */
 public class MyAccountProc {
 
     public Account getMyAccount(String userName, String passWord) {
-        
+
         String endPointAddress = "https://api.opsourcecloud.net/oec/0.9/myaccount";
         QName thisQName = new QName(endPointAddress, "opsourcecloud");
         Service s = Service.create(thisQName);
@@ -67,14 +67,14 @@ public class MyAccountProc {
             JAXBContext context = JAXBContext.newInstance(Account.class);
             Unmarshaller unmarshaller = context.createUnmarshaller();
             Object object = unmarshaller.unmarshal(inputStream);
-            acct =  Account.class.cast(object);
+            acct = Account.class.cast(object);
 
         } catch (URISyntaxException ex1) {
             throw new WMRuntimeException(ex1);
         } catch (JAXBException ex2) {
             throw new WMRuntimeException(ex2);
         } catch (IOException ex3) {
-            throw new WMRuntimeException(ex3);    
+            throw new WMRuntimeException(ex3);
         }
 
         return acct;

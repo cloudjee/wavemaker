@@ -27,28 +27,25 @@ import com.wavemaker.common.util.SpringUtils;
 
 /**
  * Helper methods for the launcher.
- *
+ * 
  * @author Matt Small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class LauncherHelper {
-    
+
     /**
-     * Invoke a method.  It's expected that the ClassLoader cl will be the same
-     * as the context classloader, or else the Spring init will likely fail (or
-     * otherwise be bad).
+     * Invoke a method. It's expected that the ClassLoader cl will be the same as the context classloader, or else the
+     * Spring init will likely fail (or otherwise be bad).
      */
-    public static Object invoke(ClassLoader cl, String fqClass, String methodName,
-            Class<?>[] argTypes, Object[] args, boolean isStatic)
-            throws ClassNotFoundException, SecurityException,
-            NoSuchMethodException, InstantiationException, IllegalAccessException,
-            IllegalArgumentException, InvocationTargetException {
-        
-        if (null==ResourceManager.getInstance()) {
+    public static Object invoke(ClassLoader cl, String fqClass, String methodName, Class<?>[] argTypes, Object[] args, boolean isStatic)
+        throws ClassNotFoundException, SecurityException, NoSuchMethodException, InstantiationException, IllegalAccessException,
+        IllegalArgumentException, InvocationTargetException {
+
+        if (null == ResourceManager.getInstance()) {
             SpringUtils.initSpringConfig();
         }
-        
+
         Class<?> klass = cl.loadClass(fqClass);
         Method m = klass.getMethod(methodName, argTypes);
 
@@ -63,11 +60,11 @@ public class LauncherHelper {
     }
 
     public static boolean isStudioUpgrade() throws IOException {
-        
+
         VersionInfo viRegistered = LocalStudioConfiguration.getRegisteredVersionInfo();
         VersionInfo viCurrent = LocalStudioConfiguration.getCurrentVersionInfo();
 
-        return viRegistered.compareTo(viCurrent)<0;
+        return viRegistered.compareTo(viCurrent) < 0;
     }
 
     public static boolean isMajorUpgrade() throws IOException {
@@ -90,18 +87,18 @@ public class LauncherHelper {
         LocalStudioConfiguration.setRegisteredVersionInfo(vi);
 
         Resource oldWMHome = LocalStudioConfiguration.staticGetWaveMakerHome();
-        if (0!=oldWMHome.getFile().compareTo(waveMakerHome.getFile())) {
+        if (0 != oldWMHome.getFile().compareTo(waveMakerHome.getFile())) {
             FileUtils.copyDirectory(oldWMHome.getFile(), waveMakerHome.getFile());
             LocalStudioConfiguration.setWaveMakerHome(waveMakerHome);
         }
     }
-    
+
     public static String getCurrentVersionString() throws IOException {
         return LocalStudioConfiguration.getCurrentVersionInfo().toString();
     }
-    
+
     public static String getNewDefaultWMHome() throws IOException {
         FileSystemResource oldDefault = (FileSystemResource) LocalStudioConfiguration.getDefaultWaveMakerHome();
-        return oldDefault.getFile().getAbsolutePath()+" "+getCurrentVersionString();
+        return oldDefault.getFile().getAbsolutePath() + " " + getCurrentVersionString();
     }
 }

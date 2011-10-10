@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.service;
 
 import static org.junit.Assert.assertEquals;
@@ -50,147 +51,129 @@ import com.wavemaker.tools.spring.MultipleReturnsRuntimeServiceBean.WrappedObjec
 /**
  * @author small
  * @version $Rev:22673 $ - $Date:2008-05-30 14:45:46 -0700 (Fri, 30 May 2008) $
- *
+ * 
  */
 public class TestRuntimeService extends TestSpringContextTestCase {
 
-    @Test public void testGetPropertyDelegate() throws Exception {
-        
+    @Test
+    public void testGetPropertyDelegate() throws Exception {
+
         ComplexRuntimeServiceBean crb = new ComplexRuntimeServiceBean();
 
-        Object o = invokeService_toObject(
-                "runtimeService", "getProperty", new Object[]{
-                    crb, ComplexRuntimeServiceBean.class.getName(), "i"});
+        Object o = invokeService_toObject("runtimeService", "getProperty", new Object[] { crb, ComplexRuntimeServiceBean.class.getName(), "i" });
 
         assertTrue(o instanceof Number);
-        assertTrue("o was: "+o.getClass(), o instanceof Long);
+        assertTrue("o was: " + o.getClass(), o instanceof Long);
         assertEquals(1000L, o);
 
         try {
-            o = invokeService_toObject(
-                    "runtimeService", "getProperty", new Object[]{
-                            crb, ComplexRuntimeServiceBean.class.getName(),
-                        "fooDNE"});
+            o = invokeService_toObject("runtimeService", "getProperty", new Object[] { crb, ComplexRuntimeServiceBean.class.getName(), "fooDNE" });
             fail("didn't get an exception");
         } catch (WMRuntimeException e) {
             assertTrue(e.getMessage().startsWith("Unknown"));
         }
     }
-    
-    @Test public void testReadInvoke() throws Exception {
 
-        Object o = invokeService_toObject(
-                "runtimeService", "read", new Object[]{
-                        "complexRuntimeServiceBean",    // service name
-                        "java.lang.Integer",            // type to load
-                        null,                           // instance
-                        null,                   // propertyOptions
-                        null                    // pagingOptions
-                });
-        
+    @Test
+    public void testReadInvoke() throws Exception {
+
+        Object o = invokeService_toObject("runtimeService", "read", new Object[] { "complexRuntimeServiceBean", // service
+                                                                                                                // name
+            "java.lang.Integer", // type to load
+            null, // instance
+            null, // propertyOptions
+            null // pagingOptions
+            });
+
         ComplexRuntimeServiceBean crsb = (ComplexRuntimeServiceBean) o;
         assertEquals(50, crsb.getI());
     }
-    
-    @Test public void testReadInvoke_NoServiceName() throws Exception {
-        
-        Object o = invokeService_toObject(
-                "runtimeService", "read", new Object[]{
-                        null,    // service name
-                        "com.wavemaker.tools.spring.ComplexRuntimeServiceBean",            // type to load
-                        null,                           // instance
-                        null,                   // propertyOptions
-                        null                    // pagingOptions
-                });
-        
+
+    @Test
+    public void testReadInvoke_NoServiceName() throws Exception {
+
+        Object o = invokeService_toObject("runtimeService", "read", new Object[] { null, // service name
+            "com.wavemaker.tools.spring.ComplexRuntimeServiceBean", // type to load
+            null, // instance
+            null, // propertyOptions
+            null // pagingOptions
+            });
+
         ComplexRuntimeServiceBean crsb = (ComplexRuntimeServiceBean) o;
         assertEquals(60, crsb.getI());
     }
-    
+
     @DirtiesContext
-    @Test public void testReadEventListener() throws Exception {
-        
+    @Test
+    public void testReadEventListener() throws Exception {
+
         ServiceEventListener eventListener = new ComplexRuntimeServiceBeanEventListener();
         List<ServiceWire> serviceWires = new ArrayList<ServiceWire>();
         serviceWires.add((ServiceWire) getBean("complexRuntimeServiceBeanServiceWire"));
-        
+
         EventManager em = (EventManager) getBean(ConfigurationCompiler.EVENT_MANAGER_BEAN_ID);
-        for (ServiceWire sw: serviceWires) {
+        for (ServiceWire sw : serviceWires) {
             em.addEvent(eventListener, sw);
         }
-        
-        Object o = invokeService_toObject(
-                "runtimeService", "read", new Object[]{
-                        "complexRuntimeServiceBean",    // service name
-                        "java.lang.Integer",            // type to load
-                        null,                           // instance
-                        null,                   // propertyOptions
-                        null                    // pagingOptions
-                });
-        
+
+        Object o = invokeService_toObject("runtimeService", "read", new Object[] { "complexRuntimeServiceBean", // service
+                                                                                                                // name
+            "java.lang.Integer", // type to load
+            null, // instance
+            null, // propertyOptions
+            null // pagingOptions
+            });
+
         ComplexRuntimeServiceBean crsb = (ComplexRuntimeServiceBean) o;
         assertNotNull(crsb);
         assertEquals(550, crsb.getI());
     }
-    
-    @Test public void testGetService() throws Exception {
-        
+
+    @Test
+    public void testGetService() throws Exception {
+
         RuntimeService rs = (RuntimeService) getBean("runtimeService");
         assertNotNull(rs);
         Object crsb = rs.getServiceWire("complexRuntimeServiceBean", "foo.bar");
         assertNotNull(crsb);
-        
-        Object crsbp = rs.getServiceWire(null,
-                "com.wavemaker.tools.spring.ComplexRuntimeServiceBean");
+
+        Object crsbp = rs.getServiceWire(null, "com.wavemaker.tools.spring.ComplexRuntimeServiceBean");
         assertNotNull(crsbp);
         assertEquals(crsb, crsbp);
-        
-        crsbp = rs.getServiceWire("",
-                "com.wavemaker.tools.spring.ComplexRuntimeServiceBean");
+
+        crsbp = rs.getServiceWire("", "com.wavemaker.tools.spring.ComplexRuntimeServiceBean");
         assertNotNull(crsbp);
         assertEquals(crsb, crsbp);
-        
+
         try {
             crsbp = rs.getServiceWire("", "com.foo.bar");
             fail("expected exception");
         } catch (WMRuntimeException e) {
-            assertEquals(MessageResource.NO_SERVICE_FROM_ID_TYPE.getId(),
-                    e.getMessageId());
+            assertEquals(MessageResource.NO_SERVICE_FROM_ID_TYPE.getId(), e.getMessageId());
         }
     }
-    
-    @Test public void testReadWithCycles() throws Exception {
-        
-        CycleA pl = (CycleA) invokeService_toObject(
-                "complexReturnBean", "getCycle", new Object[]{});
+
+    @Test
+    public void testReadWithCycles() throws Exception {
+
+        CycleA pl = (CycleA) invokeService_toObject("complexReturnBean", "getCycle", new Object[] {});
         assertEquals("a", pl.getAString());
         assertNotNull(pl.getCycleB());
         assertEquals("b", pl.getCycleB().getBString());
         assertNull(pl.getCycleB().getCycleA());
-        
-        pl = (CycleA) invokeService_toObject(
-                "runtimeService", "read", new Object[]{
-                        "complexRuntimeServiceBean",
-                        CycleA.class.getName(),
-                        null,
-                        null, // propertyOptions
-                        null
-                });
+
+        pl = (CycleA) invokeService_toObject("runtimeService", "read", new Object[] { "complexRuntimeServiceBean", CycleA.class.getName(), null,
+            null, // propertyOptions
+            null });
         assertEquals("a", pl.getAString());
         assertNotNull(pl.getCycleB());
         assertEquals("b", pl.getCycleB().getBString());
         assertNull(pl.getCycleB().getCycleA());
-        
+
         PropertyOptions po = new PropertyOptions();
         po.getProperties().add("cycleB.cycleA");
-        pl = (CycleA) invokeService_toObject(
-                "runtimeService", "read", new Object[]{
-                        "complexRuntimeServiceBean",
-                        CycleA.class.getName(),
-                        null,
-                        po, // propertyOptions
-                        null
-                });
+        pl = (CycleA) invokeService_toObject("runtimeService", "read", new Object[] { "complexRuntimeServiceBean", CycleA.class.getName(), null, po, // propertyOptions
+            null });
         assertEquals("a", pl.getAString());
         assertNotNull(pl.getCycleB());
         assertEquals("b", pl.getCycleB().getBString());
@@ -198,92 +181,87 @@ public class TestRuntimeService extends TestSpringContextTestCase {
         assertEquals("a", pl.getCycleB().getCycleA().getAString());
         assertNull(pl.getCycleB().getCycleA().getCycleB());
     }
-    
-    @Test public void testMultipleReturn_RawObjectNoType() throws Exception {
-        
-        Object o = invokeService_toObject(
-                "runtimeService", "read", new Object[]{
-                        "multipleReturnsRuntimeServiceBean",    // service name
-                        RawObjectNoType.class.getName(),        // type to load
-                        null,                                   // instance
-                        null,                                   // propertyOptions
-                        null                                    // pagingOptions
-                });
+
+    @Test
+    public void testMultipleReturn_RawObjectNoType() throws Exception {
+
+        Object o = invokeService_toObject("runtimeService", "read", new Object[] { "multipleReturnsRuntimeServiceBean", // service
+                                                                                                                        // name
+            RawObjectNoType.class.getName(), // type to load
+            null, // instance
+            null, // propertyOptions
+            null // pagingOptions
+            });
 
         assertTrue(o instanceof JSONObject);
-        assertTrue(((JSONObject)o).containsKey("a"));
-        assertEquals("aVal", ((JSONObject)o).get("a"));
+        assertTrue(((JSONObject) o).containsKey("a"));
+        assertEquals("aVal", ((JSONObject) o).get("a"));
     }
-    
-    @Test public void testMultipleReturn_RawObjectType() throws Exception {
-        
-        Object o = invokeService_toObject(
-                "runtimeService", "read", new Object[]{
-                        "multipleReturnsRuntimeServiceBean",    // service name
-                        RawObjectType.class.getName(),    // type to load
-                        null,                                   // instance
-                        null,                                   // propertyOptions
-                        null                                    // pagingOptions
-                });
-        
+
+    @Test
+    public void testMultipleReturn_RawObjectType() throws Exception {
+
+        Object o = invokeService_toObject("runtimeService", "read", new Object[] { "multipleReturnsRuntimeServiceBean", // service
+                                                                                                                        // name
+            RawObjectType.class.getName(), // type to load
+            null, // instance
+            null, // propertyOptions
+            null // pagingOptions
+            });
+
         assertTrue(o instanceof RawObjectType);
-        assertEquals("bVal", ((RawObjectType)o).getB());
+        assertEquals("bVal", ((RawObjectType) o).getB());
     }
-    
-    @Test public void testMultipleReturn_WrappedObjectNoType() throws Exception {
-        
-        Object o = invokeService_toObject(
-                "runtimeService", "read", new Object[]{
-                        "multipleReturnsRuntimeServiceBean",    // service name
-                        WrappedObjectNoType.class.getName(),    // type to load
-                        null,                                   // instance
-                        null,                                   // propertyOptions
-                        null                                    // pagingOptions
-                });
-        
+
+    @Test
+    public void testMultipleReturn_WrappedObjectNoType() throws Exception {
+
+        Object o = invokeService_toObject("runtimeService", "read", new Object[] { "multipleReturnsRuntimeServiceBean", // service
+                                                                                                                        // name
+            WrappedObjectNoType.class.getName(), // type to load
+            null, // instance
+            null, // propertyOptions
+            null // pagingOptions
+            });
+
         assertTrue(o instanceof JSONObject);
-        assertTrue(((JSONObject)o).containsKey("c"));
-        assertEquals("cVal", ((JSONObject)o).get("c"));
+        assertTrue(((JSONObject) o).containsKey("c"));
+        assertEquals("cVal", ((JSONObject) o).get("c"));
     }
-    
-    @Test public void testMultipleReturn_WrappedObjectType() throws Exception {
 
-        
-        Object o = invokeService_toObject(
-                "runtimeService", "read", new Object[]{
-                        "multipleReturnsRuntimeServiceBean",    // service name
-                        WrappedObjectType.class.getName(),      // type to load
-                        null,                                   // instance
-                        null,                                   // propertyOptions
-                        null                                    // pagingOptions
-                });
-        
+    @Test
+    public void testMultipleReturn_WrappedObjectType() throws Exception {
+
+        Object o = invokeService_toObject("runtimeService", "read", new Object[] { "multipleReturnsRuntimeServiceBean", // service
+                                                                                                                        // name
+            WrappedObjectType.class.getName(), // type to load
+            null, // instance
+            null, // propertyOptions
+            null // pagingOptions
+            });
+
         assertTrue(o instanceof WrappedObjectType);
-        assertEquals("dVal", ((WrappedObjectType)o).getD());
+        assertEquals("dVal", ((WrappedObjectType) o).getD());
     }
-    
-    public static class ComplexRuntimeServiceBeanEventListener
-            implements ServiceEventListener {
 
-        public TypedServiceReturn postOperation(
-                ServiceWire serviceWire, String operationName,
-                TypedServiceReturn result, Throwable throwable)
-                throws Throwable {
+    public static class ComplexRuntimeServiceBeanEventListener implements ServiceEventListener {
+
+        public TypedServiceReturn postOperation(ServiceWire serviceWire, String operationName, TypedServiceReturn result, Throwable throwable)
+            throws Throwable {
             return result;
         }
 
-        public Object[] preOperation(ServiceWire serviceWire,
-                String operationName, Object[] params) {
-            
+        public Object[] preOperation(ServiceWire serviceWire, String operationName, Object[] params) {
+
             Object service = ((ReflectServiceWire) serviceWire).getServiceBean();
-            
+
             if (service instanceof ComplexRuntimeServiceBean) {
                 ComplexRuntimeServiceBean crsb = (ComplexRuntimeServiceBean) service;
                 crsb.setEventCalled(true);
             }
-            
+
             return params;
         }
-        
+
     }
 }

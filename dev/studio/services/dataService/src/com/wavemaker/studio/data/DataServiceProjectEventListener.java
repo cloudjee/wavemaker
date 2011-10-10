@@ -11,28 +11,28 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 package com.wavemaker.studio.data;
 
+import com.wavemaker.tools.data.DataModelManager;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectEventListener;
-import com.wavemaker.tools.data.DataModelManager;
 
 /**
  * @author stoens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class DataServiceProjectEventListener implements ProjectEventListener {
-    
+
     private DataModelManager dataModelManager = null;
-    
+
     public void setDataModelManager(DataModelManager dataModelManager) {
         this.dataModelManager = dataModelManager;
     }
 
     public void closeProject(Project p) {
-        dataModelManager.dispose(p.getProjectName());
+        this.dataModelManager.dispose(p.getProjectName());
     }
 
     public void openProject(Project p) {

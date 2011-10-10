@@ -21,66 +21,66 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.JSONState;
 
 /**
- * Provides request-scoped runtime information; for internal use only.  If
- * contact with eyes or mucus membranes occurs, flush with water for 15 minutes.
+ * Provides request-scoped runtime information; for internal use only. If contact with eyes or mucus membranes occurs,
+ * flush with water for 15 minutes.
  * 
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class InternalRuntime {
 
     private JSONState jsonState;
+
     private static InternalRuntime internalRuntime;
+
     private List<List<String>> deserializedProperties;
-    
+
     /**
-     * Statically return the current instance of RuntimeAccess.  This depends on the
-     * Spring bean being already loaded.
+     * Statically return the current instance of RuntimeAccess. This depends on the Spring bean being already loaded.
      * 
      * @return
      */
     public static InternalRuntime getInstance() {
-        
-        if (null==InternalRuntime.internalRuntime) {
+
+        if (null == InternalRuntime.internalRuntime) {
             throw new WMRuntimeException(MessageResource.RUNTIME_UNINITIALIZED);
         }
-        
+
         return InternalRuntime.internalRuntime;
     }
-    
+
     public static void setInternalRuntimeBean(InternalRuntime bean) {
         InternalRuntime.internalRuntime = bean;
     }
 
     /**
-     * @deprecated This will be removed in a a few releases. Use
-     *             {@link #getJSONState()} instead.
+     * @deprecated This will be removed in a a few releases. Use {@link #getJSONState()} instead.
      */
+    @Deprecated
     public JSONState getJsonConfig() {
         return this.jsonState;
     }
 
     /**
-     * @deprecated This will be removed in a few releases. Use
-     *             {@link #setJSONState(JSONState)} instead.
+     * @deprecated This will be removed in a few releases. Use {@link #setJSONState(JSONState)} instead.
      */
+    @Deprecated
     public void setJsonConfig(JSONState jsonConfig) {
         this.jsonState = jsonConfig;
     }
-    
+
     public JSONState getJSONState() {
         return this.jsonState;
     }
+
     public void setJSONState(JSONState jsonState) {
         this.jsonState = jsonState;
     }
-    
+
     /**
-     * Returns a list of properties that were de-serialized during transmission
-     * (in effect, a list of all setters that were called during the JSON ->
-     * Objects de-serialization).  The list elements will be in Apache beanutils
-     * format.
+     * Returns a list of properties that were de-serialized during transmission (in effect, a list of all setters that
+     * were called during the JSON -> Objects de-serialization). The list elements will be in Apache beanutils format.
      * 
      * A method with a signature:
      * 
@@ -94,18 +94,16 @@ public class InternalRuntime {
      *  [ ["foo", "foo.bar"], ["[0]", "[1]", "[0].foo", "[1].foo"], [] ]
      * </code>
      * 
-     * Which indicates that setFoo() and getFoo().setBar() were called for the
-     * first argument, the first and second array indices were set (and their
-     * setter setFoo() was called), and no modifications were done to the third
-     * argument (or, in this case, it's a simple type, so no setters were
-     * invoked).
+     * Which indicates that setFoo() and getFoo().setBar() were called for the first argument, the first and second
+     * array indices were set (and their setter setFoo() was called), and no modifications were done to the third
+     * argument (or, in this case, it's a simple type, so no setters were invoked).
      * 
      * @return the modified attributes
      */
     public List<List<String>> getDeserializedProperties() {
         return this.deserializedProperties;
     }
-    
+
     public void setDeserializedProperties(List<List<String>> modifiedAttrs) {
         this.deserializedProperties = modifiedAttrs;
     }

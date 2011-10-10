@@ -15,11 +15,14 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
+
+import junit.framework.Assert;
 
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.infra.WMTestCase;
@@ -35,59 +38,56 @@ public class TestDataServiceMetaData extends WMTestCase {
 
     private DataServiceDefinition def = null;
 
+    @Override
     public void setUp() {
         SpringUtils.initSpringConfig();
 
-        Properties p = DataServiceUtils
-                .loadDBProperties(DataServiceTestConstants.MYSQL_SAKILA_PROPERTIES);
+        Properties p = DataServiceUtils.loadDBProperties(DataServiceTestConstants.MYSQL_SAKILA_PROPERTIES);
 
-        def = new DataServiceDefinition(DataServiceTestConstants.SAKILA_HIBERNATE_CFG, p, true);
+        this.def = new DataServiceDefinition(DataServiceTestConstants.SAKILA_HIBERNATE_CFG, p, true);
     }
 
+    @Override
     public void tearDown() {
-        def.dispose();
+        this.def.dispose();
     }
 
     public void testQueryReturnType() {
-        DataServiceMetaData cfg = def.getMetaData();
+        DataServiceMetaData cfg = this.def.getMetaData();
 
         String outputType = cfg.getOperation("getCountryById").getOutputType();
 
-        assertTrue(outputType.equals(
-            "com.wavemaker.runtime.data.sample.sakila.ExtendedCountry"));
+        assertTrue(outputType.equals("com.wavemaker.runtime.data.sample.sakila.ExtendedCountry"));
     }
 
     public void testPackageName() {
-        DataServiceMetaData cfg = def.getMetaData();
-        assertTrue("com.wavemaker.runtime.data.sample.sakila".equals(cfg
-                .getDataPackage()));
+        DataServiceMetaData cfg = this.def.getMetaData();
+        assertTrue("com.wavemaker.runtime.data.sample.sakila".equals(cfg.getDataPackage()));
 
     }
 
     public void testQueryInputTypes() {
-        DataServiceMetaData cfg = def.getMetaData();
+        DataServiceMetaData cfg = this.def.getMetaData();
 
-        List<String> inputTypes = cfg.getOperation("getCountryById")
-                .getInputTypes();
+        List<String> inputTypes = cfg.getOperation("getCountryById").getInputTypes();
 
         assertTrue(inputTypes.size() == 1);
         assertTrue(inputTypes.get(0).equals("java.lang.Short"));
 
-        List<String> inputNames = cfg.getOperation("getCountryById")
-                .getInputNames();
+        List<String> inputNames = cfg.getOperation("getCountryById").getInputNames();
 
         assertTrue(inputNames.size() == 1);
         assertTrue(inputNames.get(0).equals("id"));
     }
 
     public void testIsEntity() {
-        DataServiceMetaData cfg = def.getMetaData();
+        DataServiceMetaData cfg = this.def.getMetaData();
         assertTrue(cfg.isEntity(TestActor.class));
         assertFalse(cfg.isEntity(String.class));
     }
 
     public void testRelPropertyNames() {
-        DataServiceMetaData cfg = def.getMetaData();
+        DataServiceMetaData cfg = this.def.getMetaData();
         try {
             Collection<String> names = cfg.getRelPropertyNames(TestCity.class);
             assertTrue(names.size() == 2);
@@ -99,7 +99,7 @@ public class TestDataServiceMetaData extends WMTestCase {
     }
 
     public void testIdPropertyNames() {
-        DataServiceMetaData cfg = def.getMetaData();
+        DataServiceMetaData cfg = this.def.getMetaData();
         try {
             String id = cfg.getIdPropertyName(TestCity.class);
             assertTrue(id.equals("cityId"));
@@ -110,16 +110,15 @@ public class TestDataServiceMetaData extends WMTestCase {
 
     public void testGetTypes() {
         boolean found = false;
-        assertEquals(10, def.getTypes().size());
-        for (ElementType el : def.getTypes()) {
-            if (el.getJavaType().equals(
-                    "com.wavemaker.runtime.data.sample.sakila.TestActor")) {
+        assertEquals(10, this.def.getTypes().size());
+        for (ElementType el : this.def.getTypes()) {
+            if (el.getJavaType().equals("com.wavemaker.runtime.data.sample.sakila.TestActor")) {
                 found = true;
                 break;
             }
         }
         if (!found) {
-            WMTestCase.fail("Didn't find Actor type");
+            Assert.fail("Didn't find Actor type");
         }
     }
 }

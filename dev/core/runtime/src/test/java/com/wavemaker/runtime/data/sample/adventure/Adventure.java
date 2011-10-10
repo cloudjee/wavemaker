@@ -27,17 +27,15 @@ import com.wavemaker.runtime.data.DefaultTaskManager;
 import com.wavemaker.runtime.data.QueryOptions;
 import com.wavemaker.runtime.data.TaskManager;
 
-
 /**
  * Generated for Service "adventure" on 08/18/2007 17:20:18
  * 
  */
 @SuppressWarnings("unchecked")
-public class Adventure
-    implements DataServiceManagerAccess
-{
+public class Adventure implements DataServiceManagerAccess {
 
     private final DataServiceManager ds;
+
     private final TaskManager taskMgr = DefaultTaskManager.getInstance();
 
     public Adventure(DataServiceManager ds) {
@@ -45,11 +43,11 @@ public class Adventure
     }
 
     public void insertAddress(Address address) {
-        ds.invoke(taskMgr.getInsertTask(), address);
+        this.ds.invoke(this.taskMgr.getInsertTask(), address);
     }
 
     public Address getAddressById(Integer id) {
-        List<Address> rtn = ((List<Address>) ds.invoke(taskMgr.getQueryTask(), "getAddressById", id));
+        List<Address> rtn = (List<Address>) this.ds.invoke(this.taskMgr.getQueryTask(), "getAddressById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -58,27 +56,27 @@ public class Adventure
     }
 
     public List<Address> getAddressList(Address searchInstance, QueryOptions options) {
-        return ((List<Address> ) ds.invoke(taskMgr.getSearchTask(), searchInstance, options));
+        return (List<Address>) this.ds.invoke(this.taskMgr.getSearchTask(), searchInstance, options);
     }
 
     public Integer getAddressCount(Address searchInstance, QueryOptions options) {
-        return ((Integer) ds.invoke(taskMgr.getCountTask(), searchInstance, options));
+        return (Integer) this.ds.invoke(this.taskMgr.getCountTask(), searchInstance, options);
     }
 
     public void updateAddress(Address address) {
-        ds.invoke(taskMgr.getUpdateTask(), address);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), address);
     }
 
     public void deleteAddress(Address address) {
-        ds.invoke(taskMgr.getDeleteTask(), address);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), address);
     }
 
     public void insertCustomer(Customer customer) {
-        ds.invoke(taskMgr.getInsertTask(), customer);
+        this.ds.invoke(this.taskMgr.getInsertTask(), customer);
     }
 
     public Customer getCustomerById(Integer id) {
-        List<Customer> rtn = ((List<Customer>) ds.invoke(taskMgr.getQueryTask(), "getCustomerById", id));
+        List<Customer> rtn = (List<Customer>) this.ds.invoke(this.taskMgr.getQueryTask(), "getCustomerById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -87,27 +85,27 @@ public class Adventure
     }
 
     public List<Customer> getCustomerList(Customer searchInstance, QueryOptions options) {
-        return ((List<Customer> ) ds.invoke(taskMgr.getSearchTask(), searchInstance, options));
+        return (List<Customer>) this.ds.invoke(this.taskMgr.getSearchTask(), searchInstance, options);
     }
 
     public Integer getCustomerCount(Customer searchInstance, QueryOptions options) {
-        return ((Integer) ds.invoke(taskMgr.getCountTask(), searchInstance, options));
+        return (Integer) this.ds.invoke(this.taskMgr.getCountTask(), searchInstance, options);
     }
 
     public void updateCustomer(Customer customer) {
-        ds.invoke(taskMgr.getUpdateTask(), customer);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), customer);
     }
 
     public void deleteCustomer(Customer customer) {
-        ds.invoke(taskMgr.getDeleteTask(), customer);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), customer);
     }
 
     public void insertCustomerAddress(CustomerAddress customerAddress) {
-        ds.invoke(taskMgr.getInsertTask(), customerAddress);
+        this.ds.invoke(this.taskMgr.getInsertTask(), customerAddress);
     }
 
     public CustomerAddress getCustomerAddressById(CustomerAddressId id) {
-        List<CustomerAddress> rtn = ((List<CustomerAddress>) ds.invoke(taskMgr.getQueryTask(), "getCustomerAddressById", id));
+        List<CustomerAddress> rtn = (List<CustomerAddress>) this.ds.invoke(this.taskMgr.getQueryTask(), "getCustomerAddressById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -116,27 +114,27 @@ public class Adventure
     }
 
     public List<CustomerAddress> getCustomerAddressList(CustomerAddress searchInstance, QueryOptions options) {
-        return ((List<CustomerAddress> ) ds.invoke(taskMgr.getSearchTask(), searchInstance, options));
+        return (List<CustomerAddress>) this.ds.invoke(this.taskMgr.getSearchTask(), searchInstance, options);
     }
 
     public Integer getCustomerAddressCount(CustomerAddress searchInstance, QueryOptions options) {
-        return ((Integer) ds.invoke(taskMgr.getCountTask(), searchInstance, options));
+        return (Integer) this.ds.invoke(this.taskMgr.getCountTask(), searchInstance, options);
     }
 
     public void updateCustomerAddress(CustomerAddress customerAddress) {
-        ds.invoke(taskMgr.getUpdateTask(), customerAddress);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), customerAddress);
     }
 
     public void deleteCustomerAddress(CustomerAddress customerAddress) {
-        ds.invoke(taskMgr.getDeleteTask(), customerAddress);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), customerAddress);
     }
 
     public void insertProduct(Product product) {
-        ds.invoke(taskMgr.getInsertTask(), product);
+        this.ds.invoke(this.taskMgr.getInsertTask(), product);
     }
 
     public Product getProductById(Integer id) {
-        List<Product> rtn = ((List<Product>) ds.invoke(taskMgr.getQueryTask(), "getProductById", id));
+        List<Product> rtn = (List<Product>) this.ds.invoke(this.taskMgr.getQueryTask(), "getProductById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -145,27 +143,27 @@ public class Adventure
     }
 
     public List<Product> getProductList(Product searchInstance, QueryOptions options) {
-        return ((List<Product> ) ds.invoke(taskMgr.getSearchTask(), searchInstance, options));
+        return (List<Product>) this.ds.invoke(this.taskMgr.getSearchTask(), searchInstance, options);
     }
 
     public Integer getProductCount(Product searchInstance, QueryOptions options) {
-        return ((Integer) ds.invoke(taskMgr.getCountTask(), searchInstance, options));
+        return (Integer) this.ds.invoke(this.taskMgr.getCountTask(), searchInstance, options);
     }
 
     public void updateProduct(Product product) {
-        ds.invoke(taskMgr.getUpdateTask(), product);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), product);
     }
 
     public void deleteProduct(Product product) {
-        ds.invoke(taskMgr.getDeleteTask(), product);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), product);
     }
 
     public void insertProductCategory(ProductCategory productCategory) {
-        ds.invoke(taskMgr.getInsertTask(), productCategory);
+        this.ds.invoke(this.taskMgr.getInsertTask(), productCategory);
     }
 
     public ProductCategory getProductCategoryById(Integer id) {
-        List<ProductCategory> rtn = ((List<ProductCategory>) ds.invoke(taskMgr.getQueryTask(), "getProductCategoryById", id));
+        List<ProductCategory> rtn = (List<ProductCategory>) this.ds.invoke(this.taskMgr.getQueryTask(), "getProductCategoryById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -174,27 +172,27 @@ public class Adventure
     }
 
     public List<ProductCategory> getProductCategoryList(ProductCategory searchInstance, QueryOptions options) {
-        return ((List<ProductCategory> ) ds.invoke(taskMgr.getSearchTask(), searchInstance, options));
+        return (List<ProductCategory>) this.ds.invoke(this.taskMgr.getSearchTask(), searchInstance, options);
     }
 
     public Integer getProductCategoryCount(ProductCategory searchInstance, QueryOptions options) {
-        return ((Integer) ds.invoke(taskMgr.getCountTask(), searchInstance, options));
+        return (Integer) this.ds.invoke(this.taskMgr.getCountTask(), searchInstance, options);
     }
 
     public void updateProductCategory(ProductCategory productCategory) {
-        ds.invoke(taskMgr.getUpdateTask(), productCategory);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), productCategory);
     }
 
     public void deleteProductCategory(ProductCategory productCategory) {
-        ds.invoke(taskMgr.getDeleteTask(), productCategory);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), productCategory);
     }
 
     public void insertProductDescription(ProductDescription productDescription) {
-        ds.invoke(taskMgr.getInsertTask(), productDescription);
+        this.ds.invoke(this.taskMgr.getInsertTask(), productDescription);
     }
 
     public ProductDescription getProductDescriptionById(Integer id) {
-        List<ProductDescription> rtn = ((List<ProductDescription>) ds.invoke(taskMgr.getQueryTask(), "getProductDescriptionById", id));
+        List<ProductDescription> rtn = (List<ProductDescription>) this.ds.invoke(this.taskMgr.getQueryTask(), "getProductDescriptionById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -203,27 +201,27 @@ public class Adventure
     }
 
     public List<ProductDescription> getProductDescriptionList(ProductDescription searchInstance, QueryOptions options) {
-        return ((List<ProductDescription> ) ds.invoke(taskMgr.getSearchTask(), searchInstance, options));
+        return (List<ProductDescription>) this.ds.invoke(this.taskMgr.getSearchTask(), searchInstance, options);
     }
 
     public Integer getProductDescriptionCount(ProductDescription searchInstance, QueryOptions options) {
-        return ((Integer) ds.invoke(taskMgr.getCountTask(), searchInstance, options));
+        return (Integer) this.ds.invoke(this.taskMgr.getCountTask(), searchInstance, options);
     }
 
     public void updateProductDescription(ProductDescription productDescription) {
-        ds.invoke(taskMgr.getUpdateTask(), productDescription);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), productDescription);
     }
 
     public void deleteProductDescription(ProductDescription productDescription) {
-        ds.invoke(taskMgr.getDeleteTask(), productDescription);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), productDescription);
     }
 
     public void insertProductModel(ProductModel productModel) {
-        ds.invoke(taskMgr.getInsertTask(), productModel);
+        this.ds.invoke(this.taskMgr.getInsertTask(), productModel);
     }
 
     public ProductModel getProductModelById(Integer id) {
-        List<ProductModel> rtn = ((List<ProductModel>) ds.invoke(taskMgr.getQueryTask(), "getProductModelById", id));
+        List<ProductModel> rtn = (List<ProductModel>) this.ds.invoke(this.taskMgr.getQueryTask(), "getProductModelById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -232,27 +230,28 @@ public class Adventure
     }
 
     public List<ProductModel> getProductModelList(ProductModel searchInstance, QueryOptions options) {
-        return ((List<ProductModel> ) ds.invoke(taskMgr.getSearchTask(), searchInstance, options));
+        return (List<ProductModel>) this.ds.invoke(this.taskMgr.getSearchTask(), searchInstance, options);
     }
 
     public Integer getProductModelCount(ProductModel searchInstance, QueryOptions options) {
-        return ((Integer) ds.invoke(taskMgr.getCountTask(), searchInstance, options));
+        return (Integer) this.ds.invoke(this.taskMgr.getCountTask(), searchInstance, options);
     }
 
     public void updateProductModel(ProductModel productModel) {
-        ds.invoke(taskMgr.getUpdateTask(), productModel);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), productModel);
     }
 
     public void deleteProductModel(ProductModel productModel) {
-        ds.invoke(taskMgr.getDeleteTask(), productModel);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), productModel);
     }
 
     public void insertProductModelProductDescription(ProductModelProductDescription productModelProductDescription) {
-        ds.invoke(taskMgr.getInsertTask(), productModelProductDescription);
+        this.ds.invoke(this.taskMgr.getInsertTask(), productModelProductDescription);
     }
 
     public ProductModelProductDescription getProductModelProductDescriptionById(ProductModelProductDescriptionId id) {
-        List<ProductModelProductDescription> rtn = ((List<ProductModelProductDescription>) ds.invoke(taskMgr.getQueryTask(), "getProductModelProductDescriptionById", id));
+        List<ProductModelProductDescription> rtn = (List<ProductModelProductDescription>) this.ds.invoke(this.taskMgr.getQueryTask(),
+            "getProductModelProductDescriptionById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -260,28 +259,29 @@ public class Adventure
         }
     }
 
-    public List<ProductModelProductDescription> getProductModelProductDescriptionList(ProductModelProductDescription searchInstance, QueryOptions options) {
-        return ((List<ProductModelProductDescription> ) ds.invoke(taskMgr.getSearchTask(), searchInstance, options));
+    public List<ProductModelProductDescription> getProductModelProductDescriptionList(ProductModelProductDescription searchInstance,
+        QueryOptions options) {
+        return (List<ProductModelProductDescription>) this.ds.invoke(this.taskMgr.getSearchTask(), searchInstance, options);
     }
 
     public Integer getProductModelProductDescriptionCount(ProductModelProductDescription searchInstance, QueryOptions options) {
-        return ((Integer) ds.invoke(taskMgr.getCountTask(), searchInstance, options));
+        return (Integer) this.ds.invoke(this.taskMgr.getCountTask(), searchInstance, options);
     }
 
     public void updateProductModelProductDescription(ProductModelProductDescription productModelProductDescription) {
-        ds.invoke(taskMgr.getUpdateTask(), productModelProductDescription);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), productModelProductDescription);
     }
 
     public void deleteProductModelProductDescription(ProductModelProductDescription productModelProductDescription) {
-        ds.invoke(taskMgr.getDeleteTask(), productModelProductDescription);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), productModelProductDescription);
     }
 
     public void insertSalesOrderDetail(SalesOrderDetail salesOrderDetail) {
-        ds.invoke(taskMgr.getInsertTask(), salesOrderDetail);
+        this.ds.invoke(this.taskMgr.getInsertTask(), salesOrderDetail);
     }
 
     public SalesOrderDetail getSalesOrderDetailById(SalesOrderDetailId id) {
-        List<SalesOrderDetail> rtn = ((List<SalesOrderDetail>) ds.invoke(taskMgr.getQueryTask(), "getSalesOrderDetailById", id));
+        List<SalesOrderDetail> rtn = (List<SalesOrderDetail>) this.ds.invoke(this.taskMgr.getQueryTask(), "getSalesOrderDetailById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -290,27 +290,27 @@ public class Adventure
     }
 
     public List<SalesOrderDetail> getSalesOrderDetailList(SalesOrderDetail searchInstance, QueryOptions options) {
-        return ((List<SalesOrderDetail> ) ds.invoke(taskMgr.getSearchTask(), searchInstance, options));
+        return (List<SalesOrderDetail>) this.ds.invoke(this.taskMgr.getSearchTask(), searchInstance, options);
     }
 
     public Integer getSalesOrderDetailCount(SalesOrderDetail searchInstance, QueryOptions options) {
-        return ((Integer) ds.invoke(taskMgr.getCountTask(), searchInstance, options));
+        return (Integer) this.ds.invoke(this.taskMgr.getCountTask(), searchInstance, options);
     }
 
     public void updateSalesOrderDetail(SalesOrderDetail salesOrderDetail) {
-        ds.invoke(taskMgr.getUpdateTask(), salesOrderDetail);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), salesOrderDetail);
     }
 
     public void deleteSalesOrderDetail(SalesOrderDetail salesOrderDetail) {
-        ds.invoke(taskMgr.getDeleteTask(), salesOrderDetail);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), salesOrderDetail);
     }
 
     public void insertSalesOrderHeader(SalesOrderHeader salesOrderHeader) {
-        ds.invoke(taskMgr.getInsertTask(), salesOrderHeader);
+        this.ds.invoke(this.taskMgr.getInsertTask(), salesOrderHeader);
     }
 
     public SalesOrderHeader getSalesOrderHeaderById(Integer id) {
-        List<SalesOrderHeader> rtn = ((List<SalesOrderHeader>) ds.invoke(taskMgr.getQueryTask(), "getSalesOrderHeaderById", id));
+        List<SalesOrderHeader> rtn = (List<SalesOrderHeader>) this.ds.invoke(this.taskMgr.getQueryTask(), "getSalesOrderHeaderById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -319,27 +319,27 @@ public class Adventure
     }
 
     public List<SalesOrderHeader> getSalesOrderHeaderList(SalesOrderHeader searchInstance, QueryOptions options) {
-        return ((List<SalesOrderHeader> ) ds.invoke(taskMgr.getSearchTask(), searchInstance, options));
+        return (List<SalesOrderHeader>) this.ds.invoke(this.taskMgr.getSearchTask(), searchInstance, options);
     }
 
     public Integer getSalesOrderHeaderCount(SalesOrderHeader searchInstance, QueryOptions options) {
-        return ((Integer) ds.invoke(taskMgr.getCountTask(), searchInstance, options));
+        return (Integer) this.ds.invoke(this.taskMgr.getCountTask(), searchInstance, options);
     }
 
     public void updateSalesOrderHeader(SalesOrderHeader salesOrderHeader) {
-        ds.invoke(taskMgr.getUpdateTask(), salesOrderHeader);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), salesOrderHeader);
     }
 
     public void deleteSalesOrderHeader(SalesOrderHeader salesOrderHeader) {
-        ds.invoke(taskMgr.getDeleteTask(), salesOrderHeader);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), salesOrderHeader);
     }
 
     public void insertVgetAllCategories(VgetAllCategories vgetAllCategories) {
-        ds.invoke(taskMgr.getInsertTask(), vgetAllCategories);
+        this.ds.invoke(this.taskMgr.getInsertTask(), vgetAllCategories);
     }
 
     public VgetAllCategories getVgetAllCategoriesById(VgetAllCategoriesId id) {
-        List<VgetAllCategories> rtn = ((List<VgetAllCategories>) ds.invoke(taskMgr.getQueryTask(), "getVgetAllCategoriesById", id));
+        List<VgetAllCategories> rtn = (List<VgetAllCategories>) this.ds.invoke(this.taskMgr.getQueryTask(), "getVgetAllCategoriesById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -348,27 +348,28 @@ public class Adventure
     }
 
     public List<VgetAllCategories> getVgetAllCategoriesList(VgetAllCategories searchInstance, QueryOptions options) {
-        return ((List<VgetAllCategories> ) ds.invoke(taskMgr.getSearchTask(), searchInstance, options));
+        return (List<VgetAllCategories>) this.ds.invoke(this.taskMgr.getSearchTask(), searchInstance, options);
     }
 
     public Integer getVgetAllCategoriesCount(VgetAllCategories searchInstance, QueryOptions options) {
-        return ((Integer) ds.invoke(taskMgr.getCountTask(), searchInstance, options));
+        return (Integer) this.ds.invoke(this.taskMgr.getCountTask(), searchInstance, options);
     }
 
     public void updateVgetAllCategories(VgetAllCategories vgetAllCategories) {
-        ds.invoke(taskMgr.getUpdateTask(), vgetAllCategories);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), vgetAllCategories);
     }
 
     public void deleteVgetAllCategories(VgetAllCategories vgetAllCategories) {
-        ds.invoke(taskMgr.getDeleteTask(), vgetAllCategories);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), vgetAllCategories);
     }
 
     public void insertVproductAndDescription(VproductAndDescription vproductAndDescription) {
-        ds.invoke(taskMgr.getInsertTask(), vproductAndDescription);
+        this.ds.invoke(this.taskMgr.getInsertTask(), vproductAndDescription);
     }
 
     public VproductAndDescription getVproductAndDescriptionById(VproductAndDescriptionId id) {
-        List<VproductAndDescription> rtn = ((List<VproductAndDescription>) ds.invoke(taskMgr.getQueryTask(), "getVproductAndDescriptionById", id));
+        List<VproductAndDescription> rtn = (List<VproductAndDescription>) this.ds.invoke(this.taskMgr.getQueryTask(),
+            "getVproductAndDescriptionById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -377,27 +378,28 @@ public class Adventure
     }
 
     public List<VproductAndDescription> getVproductAndDescriptionList(VproductAndDescription searchInstance, QueryOptions options) {
-        return ((List<VproductAndDescription> ) ds.invoke(taskMgr.getSearchTask(), searchInstance, options));
+        return (List<VproductAndDescription>) this.ds.invoke(this.taskMgr.getSearchTask(), searchInstance, options);
     }
 
     public Integer getVproductAndDescriptionCount(VproductAndDescription searchInstance, QueryOptions options) {
-        return ((Integer) ds.invoke(taskMgr.getCountTask(), searchInstance, options));
+        return (Integer) this.ds.invoke(this.taskMgr.getCountTask(), searchInstance, options);
     }
 
     public void updateVproductAndDescription(VproductAndDescription vproductAndDescription) {
-        ds.invoke(taskMgr.getUpdateTask(), vproductAndDescription);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), vproductAndDescription);
     }
 
     public void deleteVproductAndDescription(VproductAndDescription vproductAndDescription) {
-        ds.invoke(taskMgr.getDeleteTask(), vproductAndDescription);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), vproductAndDescription);
     }
 
     public void insertVproductModelCatalogDescription(VproductModelCatalogDescription vproductModelCatalogDescription) {
-        ds.invoke(taskMgr.getInsertTask(), vproductModelCatalogDescription);
+        this.ds.invoke(this.taskMgr.getInsertTask(), vproductModelCatalogDescription);
     }
 
     public VproductModelCatalogDescription getVproductModelCatalogDescriptionById(VproductModelCatalogDescriptionId id) {
-        List<VproductModelCatalogDescription> rtn = ((List<VproductModelCatalogDescription>) ds.invoke(taskMgr.getQueryTask(), "getVproductModelCatalogDescriptionById", id));
+        List<VproductModelCatalogDescription> rtn = (List<VproductModelCatalogDescription>) this.ds.invoke(this.taskMgr.getQueryTask(),
+            "getVproductModelCatalogDescriptionById", id);
         if (rtn.isEmpty()) {
             return null;
         } else {
@@ -405,30 +407,31 @@ public class Adventure
         }
     }
 
-    public List<VproductModelCatalogDescription> getVproductModelCatalogDescriptionList(VproductModelCatalogDescription searchInstance, QueryOptions options) {
-        return ((List<VproductModelCatalogDescription> ) ds.invoke(taskMgr.getSearchTask(), searchInstance, options));
+    public List<VproductModelCatalogDescription> getVproductModelCatalogDescriptionList(VproductModelCatalogDescription searchInstance,
+        QueryOptions options) {
+        return (List<VproductModelCatalogDescription>) this.ds.invoke(this.taskMgr.getSearchTask(), searchInstance, options);
     }
 
     public Integer getVproductModelCatalogDescriptionCount(VproductModelCatalogDescription searchInstance, QueryOptions options) {
-        return ((Integer) ds.invoke(taskMgr.getCountTask(), searchInstance, options));
+        return (Integer) this.ds.invoke(this.taskMgr.getCountTask(), searchInstance, options);
     }
 
     public void updateVproductModelCatalogDescription(VproductModelCatalogDescription vproductModelCatalogDescription) {
-        ds.invoke(taskMgr.getUpdateTask(), vproductModelCatalogDescription);
+        this.ds.invoke(this.taskMgr.getUpdateTask(), vproductModelCatalogDescription);
     }
 
     public void deleteVproductModelCatalogDescription(VproductModelCatalogDescription vproductModelCatalogDescription) {
-        ds.invoke(taskMgr.getDeleteTask(), vproductModelCatalogDescription);
+        this.ds.invoke(this.taskMgr.getDeleteTask(), vproductModelCatalogDescription);
     }
 
     public DataServiceManager getDataServiceManager() {
-        return ds;
+        return this.ds;
     }
 
     public final static void main(String[] args) {
         String cfg = "adventure.spring.xml";
         String beanName = "adventure";
-        Adventure s = ((Adventure) SpringUtils.getBean(cfg, beanName));
+        Adventure s = (Adventure) SpringUtils.getBean(cfg, beanName);
         System.out.print("getAddressCount: ");
         System.out.println(s.getAddressCount(new Address(), new QueryOptions()));
     }

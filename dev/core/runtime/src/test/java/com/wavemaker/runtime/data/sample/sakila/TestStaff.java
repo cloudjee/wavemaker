@@ -15,9 +15,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.wavemaker.runtime.data.sample.sakila;
-// Generated Jul 5, 2007 6:21:54 PM by Hibernate Tools 3.2.0.b9
 
+package com.wavemaker.runtime.data.sample.sakila;
+
+// Generated Jul 5, 2007 6:21:54 PM by Hibernate Tools 3.2.0.b9
 
 import java.sql.Blob;
 
@@ -27,13 +28,17 @@ import java.sql.Blob;
 public class TestStaff {
 
     private Byte staffId;
+
     private String firstName;
+
     private String lastName;
+
     private Blob picture;
 
     public Byte getStaffId() {
         return this.staffId;
     }
+
     public void setStaffId(Byte staffId) {
         this.staffId = staffId;
     }
@@ -41,24 +46,24 @@ public class TestStaff {
     public String getFirstName() {
         return this.firstName;
     }
-    
+
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
+
     public String getLastName() {
         return this.lastName;
     }
-    
+
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
+
     public Blob getPicture() {
         return this.picture;
     }
-    
+
     public void setPicture(Blob picture) {
         this.picture = picture;
     }
 }
-
-

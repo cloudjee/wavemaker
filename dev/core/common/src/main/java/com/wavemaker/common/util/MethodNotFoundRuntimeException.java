@@ -21,25 +21,20 @@ import com.wavemaker.common.WMRuntimeException;
  * 
  * @author Simon Toens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class MethodNotFoundRuntimeException extends WMRuntimeException {
-    
+
     private static final long serialVersionUID = 8357388984474566566L;
 
-    public MethodNotFoundRuntimeException(String name, Class<?> clazz, 
-                                          Class<?>[] paramTypes) 
-    {
+    public MethodNotFoundRuntimeException(String name, Class<?> clazz, Class<?>[] paramTypes) {
         super(getExMessage(name, clazz, paramTypes));
     }
 
-    public static String getExMessage(String name, Class<?> clazz, 
-                                      Class<?>[] paramTypes) 
-    {
+    public static String getExMessage(String name, Class<?> clazz, Class<?>[] paramTypes) {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("\"" + clazz.getName() + "\" does not have method \"" 
-                  + name +"\"");
+        sb.append("\"" + clazz.getName() + "\" does not have method \"" + name + "\"");
 
         if (paramTypes != null) {
 
@@ -49,7 +44,7 @@ public class MethodNotFoundRuntimeException extends WMRuntimeException {
 
                 for (int i = 0; i < paramTypes.length; i++) {
                     sb.append(paramTypes[i].getName());
-                    if (i < (paramTypes.length - 1)) {
+                    if (i < paramTypes.length - 1) {
                         sb.append(",");
                     }
                 }

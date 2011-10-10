@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data.sample;
 
 import java.io.Serializable;
@@ -39,26 +40,26 @@ public class Product implements Serializable {
     }
 
     public void setDescription(String s) {
-        description = s;
+        this.description = s;
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public void setPrice(Double d) {
-        price = d;
+        this.price = d;
     }
 
     public Double getPrice() {
-        return price;
+        return this.price;
     }
 
     public void setId(int i) {
-        id = i;
+        this.id = i;
     }
 
     public int getId() {
-        return id;
+        return this.id;
     }
 }

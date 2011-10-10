@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.service.events;
 
 import static org.junit.Assert.assertEquals;
@@ -36,40 +37,40 @@ import com.wavemaker.runtime.test.TestSpringContextTestCase;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestEventManager extends TestSpringContextTestCase {
 
-    @Test public void testListEvents() throws Exception {
-        
+    @Test
+    public void testListEvents() throws Exception {
+
         EventManager em = (EventManager) getBean("eventManager");
         assertNotNull(em);
-        
+
         assertFalse(em.getEventWires().isEmpty());
-        
-        Map<Object, List<ServiceWire>> eventMap =
-            em.getEventListeners(ServiceEventBeanListener.class);
-        
+
+        Map<Object, List<ServiceWire>> eventMap = em.getEventListeners(ServiceEventBeanListener.class);
+
         boolean gotTwo = false;
-        for (List<ServiceWire> value: eventMap.values()) {
-            if (2==value.size()) {
+        for (List<ServiceWire> value : eventMap.values()) {
+            if (2 == value.size()) {
                 gotTwo = true;
                 assertNotSame(value.get(0), value.get(1));
             }
         }
         assertTrue(gotTwo);
     }
-    
-    @Test public void testEventsWithoutABean() throws Exception {
+
+    @Test
+    public void testEventsWithoutABean() throws Exception {
 
         EventManager em = (EventManager) getBean("eventManager");
         assertNotNull(em);
-        
-        Map<Object, List<ServiceWire>> eventMap =
-            em.getEventListeners(ServiceEventBeanListener.class);
-        
+
+        Map<Object, List<ServiceWire>> eventMap = em.getEventListeners(ServiceEventBeanListener.class);
+
         boolean gotNull = false;
-        for (List<ServiceWire> value: eventMap.values()) {
+        for (List<ServiceWire> value : eventMap.values()) {
             assertEquals(2, value.size());
             if (value.contains(null) && gotNull) {
                 fail("got 2 nulls?");

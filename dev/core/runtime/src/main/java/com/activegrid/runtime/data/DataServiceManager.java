@@ -19,15 +19,13 @@ import org.hibernate.Session;
 /**
  * Entry point of Data Service API.
  * 
- * Every service that is a "Data Service" has one associated DataServiceManager
- * instance.
+ * Every service that is a "Data Service" has one associated DataServiceManager instance.
  * 
  * @author Simon Toens
  * @version $Rev$ - $Date$
  * 
- * @deprecated This is now deprecated; see
- *             {@link com.wavemaker.runtime.data.DataServiceManager}. This will
- *             be removed in a future release.
+ * @deprecated This is now deprecated; see {@link com.wavemaker.runtime.data.DataServiceManager}. This will be removed
+ *             in a future release.
  */
 @Deprecated
 public interface DataServiceManager {
@@ -60,9 +58,8 @@ public interface DataServiceManager {
      * @return The Hibernate Session.
      */
     Session getSession();
-    
 
     DataServiceMetaData getMetaData();
-    
+
     void dispose();
 }

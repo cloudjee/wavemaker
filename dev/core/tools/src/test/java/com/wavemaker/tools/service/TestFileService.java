@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.service;
 
 import java.io.File;
@@ -32,45 +33,46 @@ import com.wavemaker.tools.spring.ComplexReturnBean;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestFileService extends WMTestCase {
-    
-	public void testBasicEncoding() throws Exception {
-        
-        File f = IOUtils.createTempDirectory(
-                "testDirFor_"+this.getName(), ".tmp");
+
+    public void testBasicEncoding() throws Exception {
+
+        File f = IOUtils.createTempDirectory("testDirFor_" + this.getName(), ".tmp");
         SampleFileService fs = new SampleFileService(f, "UTF-8");
         fs.setStudioConfiguration(new LocalStudioConfiguration());
         fs.writeFile("foo.txt", ComplexReturnBean.EXTENDED_CHARS_TEST_STR);
-        
+
         File expectedFile = new File(f, "foo.txt");
         assertTrue(expectedFile.exists());
-        
+
         InputStream is = new FileInputStream(expectedFile);
-        byte[] bytes = new byte[ComplexReturnBean.EXTENDED_CHARS_TEST_STR.length()*2+1];
+        byte[] bytes = new byte[ComplexReturnBean.EXTENDED_CHARS_TEST_STR.length() * 2 + 1];
         int len = is.read(bytes);
         String str = new String(bytes, 0, len, "UTF-8");
         assertEquals(ComplexReturnBean.EXTENDED_CHARS_TEST_STR, str);
     }
-    
+
     public static class SampleFileService extends AbstractFileService {
-        
+
         private final String encoding;
+
         private final File basedir;
-        
+
         public SampleFileService(File basedir, String encoding) {
-        	super(new LocalStudioConfiguration());
+            super(new LocalStudioConfiguration());
             this.encoding = encoding;
             this.basedir = basedir;
         }
-        
+
+        @Override
         public String getEncoding() {
             return this.encoding;
         }
 
         public Resource getFileServiceRoot() {
-            return new FileSystemResource(this.basedir.getPath()+"/");
+            return new FileSystemResource(this.basedir.getPath() + "/");
         }
     }
 }

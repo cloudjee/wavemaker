@@ -59,24 +59,25 @@ public abstract class WebServiceGenerator extends ServiceGenerator {
     protected static final String SERVICE_QNAME_VAR_PROP_NAME = "serviceQNameVar";
 
     protected List<Resource> jaxbBindingFiles;
-    
+
     protected JFieldVar serviceIdVar;
-    
+
     protected JFieldVar bindingPropertiesVar;
 
-    public WebServiceGenerator() {}
+    public WebServiceGenerator() {
+    }
 
     public WebServiceGenerator(GenerationConfiguration configuration) {
         this.init(configuration);
     }
 
+    @Override
     public void init(GenerationConfiguration configuration) {
         super.init(configuration);
-        if (serviceDefinition instanceof WSDL) {
-            wsdl = (WSDL) serviceDefinition;
+        if (this.serviceDefinition instanceof WSDL) {
+            this.wsdl = (WSDL) this.serviceDefinition;
         } else {
-            throw new WMRuntimeException(
-                    "Service Generator can be used with WSDL only!");
+            throw new WMRuntimeException("Service Generator can be used with WSDL only!");
         }
     }
 
@@ -84,45 +85,43 @@ public abstract class WebServiceGenerator extends ServiceGenerator {
     protected void preGeneration() throws GenerationException {
         // create package directory if it is not already exists
         getPackageDir();
-        
+
         // generate JAXB binding customization files
-        XJBBuilder builder = new XJBBuilder(wsdl);
+        XJBBuilder builder = new XJBBuilder(this.wsdl);
 
         // set JAXB TypeMapper
         TypeMapper typeMapper = null;
-        
+
         try {
-            jaxbBindingFiles = ConversionUtils.convertToResourceList(builder.generate(configuration.getOutputDirectory().getFile(),
-                    false));
-        
-            typeMapper = new JAXBTypeMapper_SF(wsdl, jaxbBindingFiles);
+            this.jaxbBindingFiles = ConversionUtils.convertToResourceList(builder.generate(this.configuration.getOutputDirectory().getFile(), false));
+
+            typeMapper = new JAXBTypeMapper_SF(this.wsdl, this.jaxbBindingFiles);
         } catch (GenerationException e) {
             try {
-            	// it may due to class/interface names collision, try to put
+                // it may due to class/interface names collision, try to put
                 // schemas in seperate packages.
-                jaxbBindingFiles = ConversionUtils.convertToResourceList(builder.generate(
-                        configuration.getOutputDirectory().getFile(), true));
-                typeMapper = new JAXBTypeMapper_SF(wsdl, jaxbBindingFiles);
+                this.jaxbBindingFiles = ConversionUtils.convertToResourceList(builder.generate(this.configuration.getOutputDirectory().getFile(),
+                    true));
+                typeMapper = new JAXBTypeMapper_SF(this.wsdl, this.jaxbBindingFiles);
             } catch (GenerationException ex) {
                 // for some WSDLs, the global binding file causes some issues;
                 // so remove global binding file and try again.
                 removeGlobalBindingFile();
-                typeMapper = new JAXBTypeMapper_SF(wsdl, jaxbBindingFiles);
+                typeMapper = new JAXBTypeMapper_SF(this.wsdl, this.jaxbBindingFiles);
             } catch (IOException ex) {
-				throw new GenerationException(ex);
-			}
+                throw new GenerationException(ex);
+            }
         } catch (IOException ex) {
-        	throw new GenerationException(ex);
-		}
-        wsdl.setTypeMapper(typeMapper);
+            throw new GenerationException(ex);
+        }
+        this.wsdl.setTypeMapper(typeMapper);
     }
 
     private void removeGlobalBindingFile() {
         int index = 0;
-        for (Resource jaxbBindingFile : jaxbBindingFiles) {
-            if (jaxbBindingFile.getFilename().equals(
-                    Constants.JAXB_GLOBAL_BINDING_FILE)) {
-                jaxbBindingFiles.remove(index);
+        for (Resource jaxbBindingFile : this.jaxbBindingFiles) {
+            if (jaxbBindingFile.getFilename().equals(Constants.JAXB_GLOBAL_BINDING_FILE)) {
+                this.jaxbBindingFiles.remove(index);
                 break;
             }
             index++;
@@ -134,57 +133,49 @@ public abstract class WebServiceGenerator extends ServiceGenerator {
     }
 
     @Override
-    protected void preGenerateClassBody(JDefinedClass cls)
-            throws GenerationException {
-        
+    protected void preGenerateClassBody(JDefinedClass cls) throws GenerationException {
+
         // [RESULT]
         // public String serviceId = <serviceId>;
-        serviceIdVar = cls.field(JMod.PUBLIC, codeModel.ref(String.class),
-                "serviceId", JExpr.lit(wsdl.getServiceId()));
-        
-        for (ServiceInfo serviceInfo : wsdl.getServiceInfoList()) {
+        this.serviceIdVar = cls.field(JMod.PUBLIC, this.codeModel.ref(String.class), "serviceId", JExpr.lit(this.wsdl.getServiceId()));
+
+        for (ServiceInfo serviceInfo : this.wsdl.getServiceInfoList()) {
             String sname = serviceInfo.getName();
             // [RESULT]
             // private QName <sname>QName = new QName(<namespaceURI>, <sname>);
-            JInvocation invocation = JExpr._new(codeModel.ref(QName.class));
+            JInvocation invocation = JExpr._new(this.codeModel.ref(QName.class));
             invocation.arg(JExpr.lit(serviceInfo.getQName().getNamespaceURI()));
             invocation.arg(JExpr.lit(sname));
-            JFieldVar serviceQNameVar = cls.field(JMod.PRIVATE, codeModel.ref(QName.class),
-                    CodeGenUtils.toVariableName(sname) + "QName", invocation);
-            
+            JFieldVar serviceQNameVar = cls.field(JMod.PRIVATE, this.codeModel.ref(QName.class), CodeGenUtils.toVariableName(sname) + "QName",
+                invocation);
+
             serviceInfo.setProperty(SERVICE_QNAME_VAR_PROP_NAME, serviceQNameVar);
         }
-        
+
         // [RESULT]
         // private BindingProperties bindingProperties;
-        bindingPropertiesVar = cls.field(JMod.PRIVATE, 
-                codeModel.ref(BindingProperties.class), "bindingProperties");
+        this.bindingPropertiesVar = cls.field(JMod.PRIVATE, this.codeModel.ref(BindingProperties.class), "bindingProperties");
     }
-    
-    @Override
-    protected void postGenerateClassBody(JDefinedClass cls)
-        throws GenerationException {
-        
-        JMethod getBindingPropsMethod = cls.method(JMod.PUBLIC, 
-                codeModel.ref(BindingProperties.class),
-                "getBindingProperties");
-        JBlock getBlock = getBindingPropsMethod.body();
-        getBlock._return(bindingPropertiesVar);
-        
-        JMethod setBindingPropsMethod = cls.method(JMod.PUBLIC, codeModel.VOID, 
-                "setBindingProperties");
-        JVar var = setBindingPropsMethod.param(codeModel.ref(BindingProperties.class), 
-                "bindingProperties");
-        JBlock setBlock = setBindingPropsMethod.body();
-        setBlock.assign(JExpr._this().ref(bindingPropertiesVar), var);
 
-        //special requirements for Salesforce
-        if (serviceDefinition.getServiceId().equals(CommonConstants.SALESFORCE_SERVICE)) { //salesforce
+    @Override
+    protected void postGenerateClassBody(JDefinedClass cls) throws GenerationException {
+
+        JMethod getBindingPropsMethod = cls.method(JMod.PUBLIC, this.codeModel.ref(BindingProperties.class), "getBindingProperties");
+        JBlock getBlock = getBindingPropsMethod.body();
+        getBlock._return(this.bindingPropertiesVar);
+
+        JMethod setBindingPropsMethod = cls.method(JMod.PUBLIC, this.codeModel.VOID, "setBindingProperties");
+        JVar var = setBindingPropsMethod.param(this.codeModel.ref(BindingProperties.class), "bindingProperties");
+        JBlock setBlock = setBindingPropsMethod.body();
+        setBlock.assign(JExpr._this().ref(this.bindingPropertiesVar), var);
+
+        // special requirements for Salesforce
+        if (this.serviceDefinition.getServiceId().equals(CommonConstants.SALESFORCE_SERVICE)) { // salesforce
             JCodeModel mdl = new JCodeModel();
             JDefinedClass liveDataSvcCls;
 
             try {
-                liveDataSvcCls = mdl._class("com.sforce.LiveDataServiceImpl_SF"); //salesforce
+                liveDataSvcCls = mdl._class("com.sforce.LiveDataServiceImpl_SF"); // salesforce
             } catch (Exception e) {
                 throw new GenerationException(e);
             }
@@ -194,23 +185,22 @@ public abstract class WebServiceGenerator extends ServiceGenerator {
     }
 
     @Override
-    protected void generateOperationMethodBody(JMethod method, JBlock body,
-            String operationName, Map<String, JType> inputJTypeMap, ElementType outputType, //salesforce
-            JType outputJType, Integer overloadCount) throws GenerationException {
+    protected void generateOperationMethodBody(JMethod method, JBlock body, String operationName, Map<String, JType> inputJTypeMap,
+        ElementType outputType, // salesforce
+        JType outputJType, Integer overloadCount) throws GenerationException {
     }
 
     /**
      * Obtains a type object from the type string.
      * 
-     * @param type
-     *            The type string. This could be simple Java type like
-     *            "java.io.File", or generic type like "java.util.Map<String,String>".
+     * @param type The type string. This could be simple Java type like "java.io.File", or generic type like
+     *        "java.util.Map<String,String>".
      * @return A type object.
      * @throws GenerationException
      */
     protected JType parseType(String type) throws GenerationException {
         try {
-            return codeModel.parseType(type);
+            return this.codeModel.parseType(type);
         } catch (ClassNotFoundException e) {
             throw new GenerationException(e);
         }
@@ -223,21 +213,20 @@ public abstract class WebServiceGenerator extends ServiceGenerator {
      */
     protected File getPackageDir() {
         try {
-			return CodeGenUtils.getPackageDir(configuration.getOutputDirectory().getFile(), 
-			        wsdl.getPackageName());
-		} catch (IOException e) {
-			throw new WMRuntimeException(e);
-		}
+            return CodeGenUtils.getPackageDir(this.configuration.getOutputDirectory().getFile(), this.wsdl.getPackageName());
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        }
     }
-    
+
     /**
-     * Returns the path to the WSDL file relative to the src directory.  For
-     * example: net/webservicex/stockquote/stockquote.wsdl
+     * Returns the path to the WSDL file relative to the src directory. For example:
+     * net/webservicex/stockquote/stockquote.wsdl
+     * 
      * @return
      */
     protected String getRelativeWSDLPath() {
-        return wsdl.getPackageName().replace('.', '/') + "/"
-                + new File(wsdl.getURI()).getName();
+        return this.wsdl.getPackageName().replace('.', '/') + "/" + new File(this.wsdl.getURI()).getName();
     }
 
 }

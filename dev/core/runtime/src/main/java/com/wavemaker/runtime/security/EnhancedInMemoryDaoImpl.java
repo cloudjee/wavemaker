@@ -19,19 +19,19 @@ import org.acegisecurity.userdetails.UsernameNotFoundException;
 import org.acegisecurity.userdetails.memory.InMemoryDaoImpl;
 import org.acegisecurity.userdetails.memory.UserMap;
 import org.springframework.dao.DataAccessException;
+
 import com.wavemaker.runtime.WMAppContext;
 
 /**
  * Created to set user name table so that getUserName() can return a proper value
- *  
+ * 
  * @author slee
- *
+ * 
  */
 public class EnhancedInMemoryDaoImpl extends InMemoryDaoImpl {
 
     @Override
-    public UserDetails loadUserByUsername(String username)
-        throws UsernameNotFoundException, DataAccessException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException, DataAccessException {
         UserMap userMap = super.getUserMap();
 
         UserDetails details = userMap.getUser(username);

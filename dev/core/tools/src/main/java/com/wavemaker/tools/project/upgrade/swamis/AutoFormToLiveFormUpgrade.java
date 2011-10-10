@@ -33,44 +33,40 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
  */
 public class AutoFormToLiveFormUpgrade implements UpgradeTask {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker
-	 * .tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
-	 */
-	public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker .tools.project.Project,
+     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
+     */
+    public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
-		try {
-			Set<String> pages = getPagesManager().listPages();
+        try {
+            Set<String> pages = getPagesManager().listPages();
 
-			for (String page : pages) {
-				Resource pageDir = getPagesManager().getPageDir(
-						project.getProjectName(), page);
+            for (String page : pages) {
+                Resource pageDir = getPagesManager().getPageDir(project.getProjectName(), page);
 
-				Resource widgetsJS = pageDir.createRelative(page + "."
-						+ PagesManager.PAGE_WIDGETS);
-				if (widgetsJS.exists()) {
-					String contents = project.readFile(widgetsJS);
-					contents = contents.replace("wm.AutoForm\"",
-							"wm.LiveForm\"");
-					project.writeFile(widgetsJS, contents);
-				}
-			}
-		} catch (IOException e) {
-			throw new WMRuntimeException(e);
-		}
-	}
+                Resource widgetsJS = pageDir.createRelative(page + "." + PagesManager.PAGE_WIDGETS);
+                if (widgetsJS.exists()) {
+                    String contents = project.readFile(widgetsJS);
+                    contents = contents.replace("wm.AutoForm\"", "wm.LiveForm\"");
+                    project.writeFile(widgetsJS, contents);
+                }
+            }
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        }
+    }
 
-	// bean properties
-	private PagesManager pagesManager;
+    // bean properties
+    private PagesManager pagesManager;
 
-	public PagesManager getPagesManager() {
-		return pagesManager;
-	}
+    public PagesManager getPagesManager() {
+        return this.pagesManager;
+    }
 
-	public void setPagesManager(PagesManager pagesManager) {
-		this.pagesManager = pagesManager;
-	}
+    public void setPagesManager(PagesManager pagesManager) {
+        this.pagesManager = pagesManager;
+    }
 }

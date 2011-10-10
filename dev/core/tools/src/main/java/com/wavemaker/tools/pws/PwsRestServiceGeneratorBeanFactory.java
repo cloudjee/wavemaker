@@ -25,34 +25,32 @@ import com.wavemaker.tools.service.codegen.ServiceGenerator;
 
 /**
  * @author slee
- *
+ * 
  */
 public class PwsRestServiceGeneratorBeanFactory {
 
     private Map<String, ServiceGenerator> pwsRestServiceGenerators = new HashMap<String, ServiceGenerator>();
 
-
     public Collection<String> getRestServiceGeneratorNames() {
-        return pwsRestServiceGenerators.keySet();
+        return this.pwsRestServiceGenerators.keySet();
     }
-    
+
     public ServiceGenerator getPwsRestServiceGenerator(String partnerName) {
-        
-        if (pwsRestServiceGenerators == null) {
+
+        if (this.pwsRestServiceGenerators == null) {
             SpringUtils.throwSpringNotInitializedError(this.getClass());
         }
-        
-        if (!pwsRestServiceGenerators.containsKey(partnerName)) {
-            throw new ConfigurationException(
-                MessageResource.UNKNOWN_PWS_TOOLS_MANAGER, partnerName);
+
+        if (!this.pwsRestServiceGenerators.containsKey(partnerName)) {
+            throw new ConfigurationException(MessageResource.UNKNOWN_PWS_TOOLS_MANAGER, partnerName);
         }
-        
-        return pwsRestServiceGenerators.get(partnerName);
+
+        return this.pwsRestServiceGenerators.get(partnerName);
     }
 
     public void setPwsRestServiceGenerators(Map<String, ServiceGenerator> pwsRestServiceGenerators) {
         this.pwsRestServiceGenerators = pwsRestServiceGenerators;
 
     }
-    
+
 }

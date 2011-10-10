@@ -18,21 +18,21 @@ import com.wavemaker.json.type.FieldDefinition;
 import com.wavemaker.runtime.service.definition.ServiceOperation;
 
 /**
- * This interface defines methods to modify the service definition before generating the service definition file
- * and the types definition script, but after generating java classes.
- *
+ * This interface defines methods to modify the service definition before generating the service definition file and the
+ * types definition script, but after generating java classes.
+ * 
  * @author slee
- *
+ * 
  */
 public interface IPwsServiceModifier {
 
     /**
-     * Gets the return type for the operation passed in. The default implementation of this method just returns
-     * the default retur type defined in the Service Operation object (= so.getReturnType()).  However, if needed,
-     * implement this method per specific requirement.
-     *
+     * Gets the return type for the operation passed in. The default implementation of this method just returns the
+     * default retur type defined in the Service Operation object (= so.getReturnType()). However, if needed, implement
+     * this method per specific requirement.
+     * 
      * @param so the service operation
-     * @return an instance of FieldDefinition for the return type 
+     * @return an instance of FieldDefinition for the return type
      */
     public FieldDefinition getOperationReturnType(ServiceOperation so);
 }

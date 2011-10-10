@@ -20,13 +20,15 @@ import java.util.Comparator;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class ServiceComparator implements Comparator<Service>, Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
     public int compare(Service o1, Service o2) {

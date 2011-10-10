@@ -15,9 +15,14 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.wavemaker.studio.module;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.List;
 
@@ -31,65 +36,66 @@ import com.wavemaker.studio.infra.StudioTestCase;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestStudioModules extends StudioTestCase {
-    
+
     private static String PROJECT_TYPE = System.getProperty("test.project.type");
 
-    @Test public void testLoadedJars() throws Exception {
-        
-        
-        String[] localResources = new String[]{"local.src.resource", "local.jar.resource"};
-        String[] cloudResources = new String[]{"cloud.src.resource", "cloud.jar.resource"};
-        
+    @Test
+    public void testLoadedJars() throws Exception {
+
+        String[] localResources = new String[] { "local.src.resource", "local.jar.resource" };
+        String[] cloudResources = new String[] { "cloud.src.resource", "cloud.jar.resource" };
+
         if ("community".equals(PROJECT_TYPE)) {
-            for (String str: localResources) {
+            for (String str : localResources) {
                 ClassPathResource cpr = new ClassPathResource(str);
-                assertTrue("cpr not found: "+cpr, cpr.exists());
+                assertTrue("cpr not found: " + cpr, cpr.exists());
             }
-            
-            for (String str: cloudResources) {
+
+            for (String str : cloudResources) {
                 ClassPathResource cpr = new ClassPathResource(str);
-                assertFalse("cpr found: "+cpr, cpr.exists());
+                assertFalse("cpr found: " + cpr, cpr.exists());
             }
         } else if ("enterprise".equals(PROJECT_TYPE)) {
-            for (String str: localResources) {
+            for (String str : localResources) {
                 ClassPathResource cpr = new ClassPathResource(str);
-                assertTrue("cpr not found: "+cpr, cpr.exists());
+                assertTrue("cpr not found: " + cpr, cpr.exists());
             }
-            
-            for (String str: cloudResources) {
+
+            for (String str : cloudResources) {
                 ClassPathResource cpr = new ClassPathResource(str);
-                assertFalse("cpr found: "+cpr, cpr.exists());
+                assertFalse("cpr found: " + cpr, cpr.exists());
             }
         } else if ("cloud".equals(PROJECT_TYPE)) {
-            for (String str: cloudResources) {
+            for (String str : cloudResources) {
                 ClassPathResource cpr = new ClassPathResource(str);
-                assertTrue("cpr not found: "+cpr, cpr.exists());
+                assertTrue("cpr not found: " + cpr, cpr.exists());
             }
-            
-            for (String str: localResources) {
+
+            for (String str : localResources) {
                 ClassPathResource cpr = new ClassPathResource(str);
-                assertFalse("cpr found: "+cpr, cpr.exists());
+                assertFalse("cpr found: " + cpr, cpr.exists());
             }
         } else {
-            fail("unknown project type: "+PROJECT_TYPE);
+            fail("unknown project type: " + PROJECT_TYPE);
         }
     }
-    
-    @Test public void testLoadedModules() throws Exception {
-        
+
+    @Test
+    public void testLoadedModules() throws Exception {
+
         ModuleManager mm = (ModuleManager) getBean("moduleManager");
         assertNotNull(mm);
-        
+
         if ("community".equals(PROJECT_TYPE)) {
             List<ModuleWire> modules = mm.getModules("local");
             assertNotNull(modules);
-            assertTrue(modules.size()>0);
-            
+            assertTrue(modules.size() > 0);
+
             boolean foundModule = false;
-            for (ModuleWire mw: modules) {
+            for (ModuleWire mw : modules) {
                 if (mw.getName().equals("wm.local")) {
                     foundModule = true;
                 }
@@ -102,10 +108,10 @@ public class TestStudioModules extends StudioTestCase {
         } else if ("enterprise".equals(PROJECT_TYPE)) {
             List<ModuleWire> modules = mm.getModules("local");
             assertNotNull(modules);
-            assertTrue(modules.size()>0);
-            
+            assertTrue(modules.size() > 0);
+
             boolean foundModule = false;
-            for (ModuleWire mw: modules) {
+            for (ModuleWire mw : modules) {
                 if (mw.getName().equals("wm.local")) {
                     foundModule = true;
                 }
@@ -118,10 +124,10 @@ public class TestStudioModules extends StudioTestCase {
         } else if ("cloud".equals(PROJECT_TYPE)) {
             List<ModuleWire> modules = mm.getModules("cloud");
             assertNotNull(modules);
-            assertTrue(modules.size()>0);
+            assertTrue(modules.size() > 0);
 
             boolean foundModule = false;
-            for (ModuleWire mw: modules) {
+            for (ModuleWire mw : modules) {
                 if (mw.getName().equals("wm.cloud")) {
                     foundModule = true;
                 }
@@ -132,7 +138,7 @@ public class TestStudioModules extends StudioTestCase {
             assertNotNull(modules);
             assertEquals(0, modules.size());
         } else {
-            fail("unknown project type: "+PROJECT_TYPE);
+            fail("unknown project type: " + PROJECT_TYPE);
         }
     }
 }

@@ -19,10 +19,8 @@ import java.util.Set;
 import com.sun.tools.ws.processor.util.ClassNameCollector;
 
 /**
- * This class is intended to be used by 
- * <code>com.sun.tools.ws.processor.modeler.wsdl.ClassNameAllocatorImpl</code> 
- * to get a a list of generated SEI service class names so JAXB could use
- * something else if there is a name collision.
+ * This class is intended to be used by <code>com.sun.tools.ws.processor.modeler.wsdl.ClassNameAllocatorImpl</code> to
+ * get a a list of generated SEI service class names so JAXB could use something else if there is a name collision.
  * 
  * @author ffu
  * @version $Rev$ - $Date$
@@ -30,7 +28,7 @@ import com.sun.tools.ws.processor.util.ClassNameCollector;
  */
 public class SimpleClassNameCollector extends ClassNameCollector {
 
-    private Set<String> seiClasses;
+    private final Set<String> seiClasses;
 
     /**
      * Constructor.
@@ -41,7 +39,8 @@ public class SimpleClassNameCollector extends ClassNameCollector {
         this.seiClasses = seiClasses;
     }
 
+    @Override
     public Set<String> getSeiClassNames() {
-        return seiClasses;
+        return this.seiClasses;
     }
 }

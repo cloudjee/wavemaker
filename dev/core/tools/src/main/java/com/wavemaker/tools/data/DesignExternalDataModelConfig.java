@@ -23,54 +23,55 @@ import com.wavemaker.tools.service.definitions.Operation;
 /**
  * @author stoens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class DesignExternalDataModelConfig implements ExternalDataModelConfig {
-    
+
     private final String serviceId;
+
     private final DesignServiceManager serviceMgr;
-    
+
     public DesignExternalDataModelConfig(String serviceId, DesignServiceManager serviceMgr) {
         this.serviceId = serviceId;
         this.serviceMgr = serviceMgr;
     }
 
     public boolean returnsSingleResult(String operationName) {
-        
+
         Operation.Return rtn = getReturn(operationName);
-        
+
         if (rtn == null) {
             return false;
         }
-        
-        return (!rtn.isIsList());
+
+        return !rtn.isIsList();
     }
-    
+
     public String getServiceClass() {
-        return serviceMgr.getService(serviceId).getClazz();
+        return this.serviceMgr.getService(this.serviceId).getClazz();
     }
-    
+
     public String getOutputType(String operationName) {
 
         Operation.Return rtn = getReturn(operationName);
-        
+
         if (rtn == null) {
             return null;
         }
-        
+
         return rtn.getTypeRef();
-        
+
     }
-    
+
     private Operation.Return getReturn(String operationName) {
-        
-        Operation o = serviceMgr.getOperation(serviceId, operationName);
-        
+
+        Operation o = this.serviceMgr.getOperation(this.serviceId, operationName);
+
         if (o == null) {
-            throw new ConfigurationException(MessageResource.OPERATION_NOT_FOUND, serviceId,
-                    operationName, serviceMgr.getOperationNames(serviceId)); 
+            throw new ConfigurationException(MessageResource.OPERATION_NOT_FOUND, this.serviceId, operationName,
+                this.serviceMgr.getOperationNames(this.serviceId));
         }
-        
+
         return o.getReturn();
     }
 

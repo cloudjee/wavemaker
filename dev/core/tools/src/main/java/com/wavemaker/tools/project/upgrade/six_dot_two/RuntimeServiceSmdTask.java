@@ -23,6 +23,7 @@ import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.StudioConfiguration;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
+
 /**
  * Delete runtimeService.smd so that it can be re-created reflecting changes (if any) in Runtime Service.
  * 
@@ -35,32 +36,32 @@ public class RuntimeServiceSmdTask implements UpgradeTask {
 
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
         Resource rtsmd;
-		try {
-			rtsmd = project.getWebAppRoot().createRelative("services/runtimeService.smd");
-		} catch (IOException ex) {
-			throw new WMRuntimeException(ex);
-		}
+        try {
+            rtsmd = project.getWebAppRoot().createRelative("services/runtimeService.smd");
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
 
-        if (studioConfiguration.deleteFile(rtsmd)) {
+        if (this.studioConfiguration.deleteFile(rtsmd)) {
             upgradeInfo.addMessage("runtimeService.smd is successfully deleted for re-creation.");
         } else {
-            upgradeInfo.addMessage("*** Cannot delete runtimeService.smd. Upgrade has failed ***"); 
+            upgradeInfo.addMessage("*** Cannot delete runtimeService.smd. Upgrade has failed ***");
             return;
         }
 
         Resource webxml = project.getWebXml();
-        if (studioConfiguration.deleteFile(webxml)) {
+        if (this.studioConfiguration.deleteFile(webxml)) {
             upgradeInfo.addMessage("\r\n\tweb.xml is successfully deleted for re-creation.");
         } else {
             upgradeInfo.addMessage("*** Cannot delete web.xml. Upgrade has failed ***");
         }
     }
 
-	public StudioConfiguration getStudioConfiguration() {
-		return studioConfiguration;
-	}
+    public StudioConfiguration getStudioConfiguration() {
+        return this.studioConfiguration;
+    }
 
-	public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-		this.studioConfiguration = studioConfiguration;
-	}
+    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
+        this.studioConfiguration = studioConfiguration;
+    }
 }

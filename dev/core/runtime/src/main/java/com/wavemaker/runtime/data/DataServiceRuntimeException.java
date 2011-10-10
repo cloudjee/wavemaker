@@ -14,16 +14,16 @@
 
 package com.wavemaker.runtime.data;
 
-import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.MessageResource;
+import com.wavemaker.common.WMRuntimeException;
 
 @SuppressWarnings("serial")
 public class DataServiceRuntimeException extends WMRuntimeException {
-    
+
     public DataServiceRuntimeException(String msg) {
         super(msg);
     }
-    
+
     public DataServiceRuntimeException(Throwable th) {
         super(th);
     }

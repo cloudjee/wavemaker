@@ -20,43 +20,39 @@ import java.util.Map.Entry;
 
 import com.wavemaker.runtime.service.ServiceWire;
 
-
 /**
- * The notifier aspect to ServletEventListener.  This will interface with
- * EventManager to get the current ServletEventListeners, and their related
- * objects, and it will invoke the specific events.
+ * The notifier aspect to ServletEventListener. This will interface with EventManager to get the current
+ * ServletEventListeners, and their related objects, and it will invoke the specific events.
  * 
  * When an event is triggered, the Notifier should be called.
  * 
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class ServletEventNotifier extends EventNotifier {
-    
+
     public void executeEndRequest() {
-        
-        Map<ServletEventListener, List<ServiceWire>> listeners =
-            getEventManager().getEventListeners(ServletEventListener.class);
-        for (Entry<ServletEventListener, List<ServiceWire>> entry: listeners.entrySet()) {
+
+        Map<ServletEventListener, List<ServiceWire>> listeners = getEventManager().getEventListeners(ServletEventListener.class);
+        for (Entry<ServletEventListener, List<ServiceWire>> entry : listeners.entrySet()) {
             List<ServiceWire> objects = entry.getValue();
             ServletEventListener sel = entry.getKey();
-            
-            for (ServiceWire serviceWire: objects) {
+
+            for (ServiceWire serviceWire : objects) {
                 sel.endRequest(serviceWire);
             }
         }
     }
-    
+
     public void executeStartRequest() {
-        
-        Map<ServletEventListener, List<ServiceWire>> listeners =
-            getEventManager().getEventListeners(ServletEventListener.class);
-        for (Entry<ServletEventListener, List<ServiceWire>> entry: listeners.entrySet()) {
+
+        Map<ServletEventListener, List<ServiceWire>> listeners = getEventManager().getEventListeners(ServletEventListener.class);
+        for (Entry<ServletEventListener, List<ServiceWire>> entry : listeners.entrySet()) {
             List<ServiceWire> objects = entry.getValue();
             ServletEventListener sel = entry.getKey();
-            
-            for (ServiceWire object: objects) {
+
+            for (ServiceWire object : objects) {
                 sel.startRequest(object);
             }
         }

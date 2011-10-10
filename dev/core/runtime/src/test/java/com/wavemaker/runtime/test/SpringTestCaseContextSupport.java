@@ -1,3 +1,4 @@
+
 package com.wavemaker.runtime.test;
 
 import java.io.InputStream;
@@ -25,266 +26,261 @@ import org.springframework.web.context.support.XmlWebApplicationContext;
 
 public class SpringTestCaseContextSupport extends AbstractContextLoader implements TestExecutionListener {
 
-	private MockMvc mockMvc;
-	
-	public ApplicationContext loadContext(MergedContextConfiguration mergedConfig) throws Exception {
-		WrapperContextMockMvcBuilder builder = createBuilder(mergedConfig.getLocations());
-		builder.activateProfiles(mergedConfig.getActiveProfiles());
-		this.mockMvc = builder.build();
-		return builder.context;
-	}
+    private MockMvc mockMvc;
 
-	public ApplicationContext loadContext(String... locations) throws Exception {
-		WrapperContextMockMvcBuilder builder = createBuilder(locations);
-		builder.activateProfiles(builder.context.getEnvironment().getActiveProfiles());
-		this.mockMvc = builder.build();
-		return builder.context;
-	}
+    public ApplicationContext loadContext(MergedContextConfiguration mergedConfig) throws Exception {
+        WrapperContextMockMvcBuilder builder = createBuilder(mergedConfig.getLocations());
+        builder.activateProfiles(mergedConfig.getActiveProfiles());
+        this.mockMvc = builder.build();
+        return builder.context;
+    }
 
-	@Override
-	protected String getResourceSuffix() {
-		return "-context.xml";
-	}
-	
-	private WrapperContextMockMvcBuilder createBuilder(String... configLocations) {
-		Assert.notEmpty(configLocations, "At least one XML config location is required");
-		XmlWebApplicationContext context = new XmlWebApplicationContext();
-		context.setConfigLocations(configLocations);
-		return new WrapperContextMockMvcBuilder(context);
-	}
-	
-	private class WrapperContextMockMvcBuilder extends ContextMockMvcBuilder {
+    public ApplicationContext loadContext(String... locations) throws Exception {
+        WrapperContextMockMvcBuilder builder = createBuilder(locations);
+        builder.activateProfiles(builder.context.getEnvironment().getActiveProfiles());
+        this.mockMvc = builder.build();
+        return builder.context;
+    }
 
-		private ConfigurableWebApplicationContext context;
-		
-		private WrapperContextMockMvcBuilder(
-				ConfigurableWebApplicationContext applicationContext) {
-			super(applicationContext);
-			configureWebAppRootDir("../../studio/src/main/webapp", false);
-			this.context = applicationContext;
-		}
+    @Override
+    protected String getResourceSuffix() {
+        return "-context.xml";
+    }
 
-		@Override
-		protected ServletContext initServletContext() {
+    private WrapperContextMockMvcBuilder createBuilder(String... configLocations) {
+        Assert.notEmpty(configLocations, "At least one XML config location is required");
+        XmlWebApplicationContext context = new XmlWebApplicationContext();
+        context.setConfigLocations(configLocations);
+        return new WrapperContextMockMvcBuilder(context);
+    }
 
-			return new MockServletContextWrapper((MockServletContext)super.initServletContext()){
+    private class WrapperContextMockMvcBuilder extends ContextMockMvcBuilder {
 
-				@Override
-				public String getMimeType(String filePath) {
-					String extension = StringUtils.getFilenameExtension(filePath);
-					if (extension.equals("smd")) {
-						return "application/json";
-					} else if (extension.equals("css")) {
-						return "text/css";
-					} else if (extension.equals("js")) {
-						return "text/javascript";
-					}
-					return super.getMimeType(filePath);
-				}
-	        	
-	        };
-		}
-		
-		
-	}
+        private final ConfigurableWebApplicationContext context;
 
-	public void prepareTestInstance(TestContext testContext) throws Exception {
-		Object test = testContext.getTestInstance();
-		if (test instanceof MockMvcAware) {
-			((MockMvcAware)test).setMockMvc(this.mockMvc);
-		}
-	}
-	
-	public void beforeTestClass(TestContext testContext) throws Exception {
-		//no-op
-	}
+        private WrapperContextMockMvcBuilder(ConfigurableWebApplicationContext applicationContext) {
+            super(applicationContext);
+            configureWebAppRootDir("../../studio/src/main/webapp", false);
+            this.context = applicationContext;
+        }
 
-	public void beforeTestMethod(TestContext testContext) throws Exception {
-		//no-op
-	}
+        @Override
+        protected ServletContext initServletContext() {
 
-	public void afterTestMethod(TestContext testContext) throws Exception {
-		//no-op
-	}
+            return new MockServletContextWrapper((MockServletContext) super.initServletContext()) {
 
-	public void afterTestClass(TestContext testContext) throws Exception {
-		//no-op
-	}
-	
-	private static class MockServletContextWrapper extends MockServletContext {
-		
-		private MockServletContext delegate;
-		
-		private MockServletContextWrapper(MockServletContext delegate) {
-			this.delegate = delegate;
-		}
+                @Override
+                public String getMimeType(String filePath) {
+                    String extension = StringUtils.getFilenameExtension(filePath);
+                    if (extension.equals("smd")) {
+                        return "application/json";
+                    } else if (extension.equals("css")) {
+                        return "text/css";
+                    } else if (extension.equals("js")) {
+                        return "text/javascript";
+                    }
+                    return super.getMimeType(filePath);
+                }
 
-		public void setContextPath(String contextPath) {
-			delegate.setContextPath(contextPath);
-		}
+            };
+        }
 
-		public String getContextPath() {
-			return delegate.getContextPath();
-		}
+    }
 
-		public void registerContext(String contextPath, ServletContext context) {
-			delegate.registerContext(contextPath, context);
-		}
+    public void prepareTestInstance(TestContext testContext) throws Exception {
+        Object test = testContext.getTestInstance();
+        if (test instanceof MockMvcAware) {
+            ((MockMvcAware) test).setMockMvc(this.mockMvc);
+        }
+    }
 
-		public ServletContext getContext(String contextPath) {
-			return delegate.getContext(contextPath);
-		}
+    public void beforeTestClass(TestContext testContext) throws Exception {
+        // no-op
+    }
 
-		public void setMajorVersion(int majorVersion) {
-			((MockServletContextWrapper) delegate).setMajorVersion(majorVersion);
-		}
+    public void beforeTestMethod(TestContext testContext) throws Exception {
+        // no-op
+    }
 
-		public int getMajorVersion() {
-			return delegate.getMajorVersion();
-		}
+    public void afterTestMethod(TestContext testContext) throws Exception {
+        // no-op
+    }
 
-		public void setMinorVersion(int minorVersion) {
-			delegate.setMinorVersion(minorVersion);
-		}
+    public void afterTestClass(TestContext testContext) throws Exception {
+        // no-op
+    }
 
-		public int getMinorVersion() {
-			return delegate.getMinorVersion();
-		}
+    private static class MockServletContextWrapper extends MockServletContext {
 
-		public void setEffectiveMajorVersion(int effectiveMajorVersion) {
-			((MockServletContextWrapper) delegate).setEffectiveMajorVersion(effectiveMajorVersion);
-		}
+        private final MockServletContext delegate;
 
-		public int getEffectiveMajorVersion() {
-			return ((MockServletContextWrapper) delegate).getEffectiveMajorVersion();
-		}
+        private MockServletContextWrapper(MockServletContext delegate) {
+            this.delegate = delegate;
+        }
 
-		public void setEffectiveMinorVersion(int effectiveMinorVersion) {
-			((MockServletContextWrapper) delegate).setEffectiveMinorVersion(effectiveMinorVersion);
-		}
+        @Override
+        public void setContextPath(String contextPath) {
+            this.delegate.setContextPath(contextPath);
+        }
 
-		public int getEffectiveMinorVersion() {
-			return ((MockServletContextWrapper) delegate).getEffectiveMinorVersion();
-		}
+        @Override
+        public String getContextPath() {
+            return this.delegate.getContextPath();
+        }
 
-		public String getMimeType(String filePath) {
-			return delegate.getMimeType(filePath);
-		}
+        @Override
+        public void registerContext(String contextPath, ServletContext context) {
+            this.delegate.registerContext(contextPath, context);
+        }
 
-		public Set<String> getResourcePaths(String path) {
-			return delegate.getResourcePaths(path);
-		}
+        @Override
+        public ServletContext getContext(String contextPath) {
+            return this.delegate.getContext(contextPath);
+        }
 
-		public URL getResource(String path) throws MalformedURLException {
-			return delegate.getResource(path);
-		}
+        @Override
+        public int getMajorVersion() {
+            return this.delegate.getMajorVersion();
+        }
 
-		public InputStream getResourceAsStream(String path) {
-			return delegate.getResourceAsStream(path);
-		}
+        @Override
+        public void setMinorVersion(int minorVersion) {
+            this.delegate.setMinorVersion(minorVersion);
+        }
 
-		public RequestDispatcher getRequestDispatcher(String path) {
-			return delegate.getRequestDispatcher(path);
-		}
+        @Override
+        public int getMinorVersion() {
+            return this.delegate.getMinorVersion();
+        }
 
-		public RequestDispatcher getNamedDispatcher(String path) {
-			return delegate.getNamedDispatcher(path);
-		}
+        @Override
+        public String getMimeType(String filePath) {
+            return this.delegate.getMimeType(filePath);
+        }
 
-		public Servlet getServlet(String name) {
-			return delegate.getServlet(name);
-		}
+        @Override
+        public Set<String> getResourcePaths(String path) {
+            return this.delegate.getResourcePaths(path);
+        }
 
-		public Enumeration<Servlet> getServlets() {
-			return delegate.getServlets();
-		}
+        @Override
+        public URL getResource(String path) throws MalformedURLException {
+            return this.delegate.getResource(path);
+        }
 
-		public Enumeration<String> getServletNames() {
-			return delegate.getServletNames();
-		}
+        @Override
+        public InputStream getResourceAsStream(String path) {
+            return this.delegate.getResourceAsStream(path);
+        }
 
-		public String getRealPath(String path) {
-			return delegate.getRealPath(path);
-		}
+        @Override
+        public RequestDispatcher getRequestDispatcher(String path) {
+            return this.delegate.getRequestDispatcher(path);
+        }
 
-		public String getServerInfo() {
-			return delegate.getServerInfo();
-		}
+        @Override
+        public RequestDispatcher getNamedDispatcher(String path) {
+            return this.delegate.getNamedDispatcher(path);
+        }
 
-		public String getInitParameter(String name) {
-			return delegate.getInitParameter(name);
-		}
+        @Override
+        public Servlet getServlet(String name) {
+            return this.delegate.getServlet(name);
+        }
 
-		public Enumeration<String> getInitParameterNames() {
-			return delegate.getInitParameterNames();
-		}
+        @Override
+        public Enumeration<Servlet> getServlets() {
+            return this.delegate.getServlets();
+        }
 
-		public boolean setInitParameter(String name, String value) {
-			return ((MockServletContextWrapper) delegate).setInitParameter(name, value);
-		}
+        @Override
+        public Enumeration<String> getServletNames() {
+            return this.delegate.getServletNames();
+        }
 
-		public void addInitParameter(String name, String value) {
-			delegate.addInitParameter(name, value);
-		}
+        @Override
+        public String getRealPath(String path) {
+            return this.delegate.getRealPath(path);
+        }
 
-		public void setAttribute(String name, Object value) {
-			delegate.setAttribute(name, value);
-		}
+        @Override
+        public String getServerInfo() {
+            return this.delegate.getServerInfo();
+        }
 
-		public void removeAttribute(String name) {
-			delegate.removeAttribute(name);
-		}
+        @Override
+        public String getInitParameter(String name) {
+            return this.delegate.getInitParameter(name);
+        }
 
-		public void setServletContextName(String servletContextName) {
-			delegate.setServletContextName(servletContextName);
-		}
+        @Override
+        public Enumeration<String> getInitParameterNames() {
+            return this.delegate.getInitParameterNames();
+        }
 
-		public String getServletContextName() {
-			return delegate.getServletContextName();
-		}
+        @Override
+        public void addInitParameter(String name, String value) {
+            this.delegate.addInitParameter(name, value);
+        }
 
-		public ClassLoader getClassLoader() {
-			return ((MockServletContextWrapper) delegate).getClassLoader();
-		}
+        @Override
+        public void setAttribute(String name, Object value) {
+            this.delegate.setAttribute(name, value);
+        }
 
-		public void declareRoles(String... roleNames) {
-			((MockServletContextWrapper) delegate).declareRoles(roleNames);
-		}
+        @Override
+        public void removeAttribute(String name) {
+            this.delegate.removeAttribute(name);
+        }
 
-		public boolean equals(Object arg0) {
-			return delegate.equals(arg0);
-		}
+        @Override
+        public void setServletContextName(String servletContextName) {
+            this.delegate.setServletContextName(servletContextName);
+        }
 
-		public Object getAttribute(String name) {
-			return delegate.getAttribute(name);
-		}
+        @Override
+        public String getServletContextName() {
+            return this.delegate.getServletContextName();
+        }
 
-		public Enumeration<String> getAttributeNames() {
-			return delegate.getAttributeNames();
-		}
+        @Override
+        public boolean equals(Object arg0) {
+            return this.delegate.equals(arg0);
+        }
 
-		public Set<String> getDeclaredRoles() {
-			return ((MockServletContextWrapper) delegate).getDeclaredRoles();
-		}
+        @Override
+        public Object getAttribute(String name) {
+            return this.delegate.getAttribute(name);
+        }
 
-		public int hashCode() {
-			return delegate.hashCode();
-		}
+        @Override
+        public Enumeration<String> getAttributeNames() {
+            return this.delegate.getAttributeNames();
+        }
 
-		public void log(String message) {
-			delegate.log(message);
-		}
+        @Override
+        public int hashCode() {
+            return this.delegate.hashCode();
+        }
 
-		public void log(Exception ex, String message) {
-			delegate.log(ex, message);
-		}
+        @Override
+        public void log(String message) {
+            this.delegate.log(message);
+        }
 
-		public void log(String message, Throwable ex) {
-			delegate.log(message, ex);
-		}
+        @Override
+        public void log(Exception ex, String message) {
+            this.delegate.log(ex, message);
+        }
 
-		public String toString() {
-			return delegate.toString();
-		}
-	}
+        @Override
+        public void log(String message, Throwable ex) {
+            this.delegate.log(message, ex);
+        }
+
+        @Override
+        public String toString() {
+            return this.delegate.toString();
+        }
+    }
 }

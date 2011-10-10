@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.data;
 
 import com.wavemaker.infra.WMTestCase;
@@ -23,26 +24,26 @@ import com.wavemaker.runtime.data.util.JDBCUtils;
 /**
  * @author Simon Toens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestJDBCUtils extends WMTestCase {
-    
+
     public void testMySQLUrl() {
         String url = "jdbc:mysql://localhost:3306/sakila?a=b&c=?d";
         String dbname = JDBCUtils.getMySQLDatabaseName(url);
         assertEquals("sakila", dbname);
     }
-    
+
     public void testMySQLUrl2() {
         String url = "jdbc:mysql://localhost:3306";
         String dbname = JDBCUtils.getMySQLDatabaseName(url);
         assertEquals(null, dbname);
     }
-    
+
     public void testMySQLUrl3() {
         String url = "jdbc:mysql://localhost:3306/";
         String dbname = JDBCUtils.getMySQLDatabaseName(url);
         assertEquals(null, dbname);
-    }    
-    
+    }
+
 }

@@ -21,32 +21,36 @@ import com.wavemaker.runtime.service.ParsedServiceArguments;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class ReflectParsedServiceArguments extends ParsedServiceArguments {
 
     public ReflectParsedServiceArguments() {
-        
+
     }
-    
+
     public ReflectParsedServiceArguments(ParsedServiceArguments psa) {
         this();
         this.setArguments(psa.getArguments());
         this.setGettersCalled(psa.getGettersCalled());
     }
-    
+
     private Method method;
+
     private Object serviceObject;
-    
+
     public Method getMethod() {
-        return method;
+        return this.method;
     }
+
     public void setMethod(Method method) {
         this.method = method;
     }
+
     public Object getServiceObject() {
-        return serviceObject;
+        return this.serviceObject;
     }
+
     public void setServiceObject(Object serviceObject) {
         this.serviceObject = serviceObject;
     }

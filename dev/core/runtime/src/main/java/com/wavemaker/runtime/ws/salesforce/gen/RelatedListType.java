@@ -11,23 +11,23 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for RelatedList complex type.
+ * <p>
+ * Java class for RelatedList complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="RelatedList">
@@ -51,32 +51,31 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "RelatedList", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "columns",
-    "custom",
-    "field",
-    "label",
-    "limitRows",
-    "name",
-    "sobject",
-    "sorts"
-})
+@XmlType(name = "RelatedList", namespace = "urn:partner.soap.sforce.com", propOrder = { "columns", "custom", "field", "label", "limitRows", "name",
+    "sobject", "sorts" })
 public class RelatedListType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected List<RelatedListColumnType> columns;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean custom;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String field;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String label;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected int limitRows;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String name;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String sobject;
+
     @XmlElement(name = "sort", namespace = "urn:partner.soap.sforce.com")
     protected List<RelatedListSortType> sorts;
 
@@ -84,27 +83,26 @@ public class RelatedListType {
      * Gets the value of the columns property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the columns property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the columns property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getColumns().add(newItem);
+     * getColumns().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link RelatedListColumnType }
+     * Objects of the following type(s) are allowed in the list {@link RelatedListColumnType }
      * 
      * 
      */
     public List<RelatedListColumnType> getColumns() {
-        if (columns == null) {
-            columns = new ArrayList<RelatedListColumnType>();
+        if (this.columns == null) {
+            this.columns = new ArrayList<RelatedListColumnType>();
         }
         return this.columns;
     }
@@ -114,7 +112,7 @@ public class RelatedListType {
      * 
      */
     public boolean isCustom() {
-        return custom;
+        return this.custom;
     }
 
     /**
@@ -128,22 +126,18 @@ public class RelatedListType {
     /**
      * Gets the value of the field property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getField() {
-        return field;
+        return this.field;
     }
 
     /**
      * Sets the value of the field property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setField(String value) {
         this.field = value;
@@ -152,22 +146,18 @@ public class RelatedListType {
     /**
      * Gets the value of the label property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getLabel() {
-        return label;
+        return this.label;
     }
 
     /**
      * Sets the value of the label property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setLabel(String value) {
         this.label = value;
@@ -178,7 +168,7 @@ public class RelatedListType {
      * 
      */
     public int getLimitRows() {
-        return limitRows;
+        return this.limitRows;
     }
 
     /**
@@ -192,22 +182,18 @@ public class RelatedListType {
     /**
      * Gets the value of the name property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**
      * Sets the value of the name property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setName(String value) {
         this.name = value;
@@ -216,22 +202,18 @@ public class RelatedListType {
     /**
      * Gets the value of the sobject property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getSobject() {
-        return sobject;
+        return this.sobject;
     }
 
     /**
      * Sets the value of the sobject property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setSobject(String value) {
         this.sobject = value;
@@ -241,27 +223,26 @@ public class RelatedListType {
      * Gets the value of the sorts property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the sorts property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the sorts property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getSorts().add(newItem);
+     * getSorts().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link RelatedListSortType }
+     * Objects of the following type(s) are allowed in the list {@link RelatedListSortType }
      * 
      * 
      */
     public List<RelatedListSortType> getSorts() {
-        if (sorts == null) {
-            sorts = new ArrayList<RelatedListSortType>();
+        if (this.sorts == null) {
+            this.sorts = new ArrayList<RelatedListSortType>();
         }
         return this.sorts;
     }
@@ -269,10 +250,8 @@ public class RelatedListType {
     /**
      * Sets the value of the columns property.
      * 
-     * @param columns
-     *     allowed object is
-     *     {@link RelatedListColumnType }
-     *     
+     * @param columns allowed object is {@link RelatedListColumnType }
+     * 
      */
     public void setColumns(List<RelatedListColumnType> columns) {
         this.columns = columns;
@@ -281,10 +260,8 @@ public class RelatedListType {
     /**
      * Sets the value of the sorts property.
      * 
-     * @param sorts
-     *     allowed object is
-     *     {@link RelatedListSortType }
-     *     
+     * @param sorts allowed object is {@link RelatedListSortType }
+     * 
      */
     public void setSorts(List<RelatedListSortType> sorts) {
         this.sorts = sorts;

@@ -20,23 +20,22 @@ import java.util.Map;
 /**
  * @author stoens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class BeanInfo extends TypeInfo {
-    
-    private Map<String, String> properties = new LinkedHashMap<String, String>();
-    
+
+    private final Map<String, String> properties = new LinkedHashMap<String, String>();
+
     public BeanInfo(String fqName) {
         super(fqName);
     }
-    
+
     public void addProperty(String name, String type) {
-        properties.put(name, type);
+        this.properties.put(name, type);
     }
-    
+
     public Map<String, String> getProperties() {
-        return properties;
+        return this.properties;
     }
-    
 
 }

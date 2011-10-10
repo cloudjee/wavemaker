@@ -36,220 +36,192 @@ import com.wavemaker.common.util.IOUtils;
  */
 public class PagesManager {
 
-	public static final String PAGE_CSS = "css";
-	public static final String PAGE_HTML = "html";
-	public static final String PAGE_WIDGETS = "widgets.js";
-	public static final String PAGE_JS = "js";
+    public static final String PAGE_CSS = "css";
 
-	/**
-	 * List all pages in the current project.
-	 * 
-	 * @return
-	 * @throws FileAccessException
-	 */
-	public SortedSet<String> listPages() throws FileAccessException {
-		return listPages(getProjectManager().getCurrentProject()
-				.getProjectName());
-	}
+    public static final String PAGE_HTML = "html";
 
-	/**
-	 * Return a list of all pages in the specified project.
-	 * 
-	 * @param projectName
-	 * @return
-	 * @throws FileAccessException
-	 */
-	public SortedSet<String> listPages(String projectName)
-			throws FileAccessException {
+    public static final String PAGE_WIDGETS = "widgets.js";
 
-		SortedSet<String> ret = new TreeSet<String>();
+    public static final String PAGE_JS = "js";
 
-		Resource pagesDir = getPagesDir(projectName);
+    /**
+     * List all pages in the current project.
+     * 
+     * @return
+     * @throws FileAccessException
+     */
+    public SortedSet<String> listPages() throws FileAccessException {
+        return listPages(getProjectManager().getCurrentProject().getProjectName());
+    }
 
-		List<Resource> children = studioConfiguration.listChildren(pagesDir);
-		if (null != children) {
-			for (Resource child : children) {
-				if (StringUtils.getFilenameExtension(child.getFilename()) == null
-						&& !IOUtils.DEFAULT_EXCLUSION.contains(child
-								.getFilename())) {
-					ret.add(child.getFilename());
-				}
-			}
-		}
+    /**
+     * Return a list of all pages in the specified project.
+     * 
+     * @param projectName
+     * @return
+     * @throws FileAccessException
+     */
+    public SortedSet<String> listPages(String projectName) throws FileAccessException {
 
-		return ret;
-	}
+        SortedSet<String> ret = new TreeSet<String>();
 
-	/**
-	 * Delete a page.
-	 * 
-	 * @param pageName
-	 *            The pane to delete.
-	 * @throws IOException
-	 */
-	public void deletePage(String pageName) throws IOException {
+        Resource pagesDir = getPagesDir(projectName);
 
-		Resource removePage = getPageDir(projectManager.getCurrentProject()
-				.getProjectName(), pageName);
-		if (removePage.exists()) {
-			studioConfiguration.deleteFile(removePage);
-		}
-	}
+        List<Resource> children = this.studioConfiguration.listChildren(pagesDir);
+        if (null != children) {
+            for (Resource child : children) {
+                if (StringUtils.getFilenameExtension(child.getFilename()) == null && !IOUtils.DEFAULT_EXCLUSION.contains(child.getFilename())) {
+                    ret.add(child.getFilename());
+                }
+            }
+        }
 
-	/**
-	 * Copy a page from a project to the current project. A page with that name
-	 * must not already exist in the current project.
-	 * 
-	 * @param sourceProjectName
-	 *            The project to copy from.
-	 * @param sourcePaneName
-	 *            The name of the page to copy.
-	 * @param destPageName
-	 *            The name of the page in the destination project to copy to.
-	 * @throws IOException
-	 */
-	public void copyPage(String sourceProjectName, String sourcePaneName,
-			String destPageName) throws IOException {
+        return ret;
+    }
 
-		copyPage(sourceProjectName, sourcePaneName, getProjectManager()
-				.getCurrentProject().getProjectName(), destPageName);
-	}
+    /**
+     * Delete a page.
+     * 
+     * @param pageName The pane to delete.
+     * @throws IOException
+     */
+    public void deletePage(String pageName) throws IOException {
 
-	/**
-	 * Copy a page between two arbitrary projects; allows for a rename to occur,
-	 * as well.
-	 * 
-	 * @param sourceProjectName
-	 *            The project to copy from.
-	 * @param pageName
-	 *            The name of the page to copy.
-	 * @throws IOException
-	 */
-	public void copyPage(String sourceProjectName, String sourcePageName,
-			String destProjectName, String destPageName) throws IOException {
+        Resource removePage = getPageDir(this.projectManager.getCurrentProject().getProjectName(), pageName);
+        if (removePage.exists()) {
+            this.studioConfiguration.deleteFile(removePage);
+        }
+    }
 
-		Resource sourcePane = getPageDir(sourceProjectName, sourcePageName);
-		if (!sourcePane.exists()) {
-			throw new WMRuntimeException(MessageResource.PAGECP_SOURCEDNE,
-					sourcePageName, sourceProjectName);
-		}
+    /**
+     * Copy a page from a project to the current project. A page with that name must not already exist in the current
+     * project.
+     * 
+     * @param sourceProjectName The project to copy from.
+     * @param sourcePaneName The name of the page to copy.
+     * @param destPageName The name of the page in the destination project to copy to.
+     * @throws IOException
+     */
+    public void copyPage(String sourceProjectName, String sourcePaneName, String destPageName) throws IOException {
 
-		Resource destPane = getPageDir(destProjectName, destPageName);
-		if (destPane.exists()) {
-			throw new WMRuntimeException(MessageResource.PAGECP_TARGET_EXISTS,
-					destPageName, destProjectName);
-		}
+        copyPage(sourceProjectName, sourcePaneName, getProjectManager().getCurrentProject().getProjectName(), destPageName);
+    }
 
-		Project sourceProject = projectManager.getProject(sourceProjectName,
-				false);
-		Project destProject = projectManager.getProject(destProjectName, false);
+    /**
+     * Copy a page between two arbitrary projects; allows for a rename to occur, as well.
+     * 
+     * @param sourceProjectName The project to copy from.
+     * @param pageName The name of the page to copy.
+     * @throws IOException
+     */
+    public void copyPage(String sourceProjectName, String sourcePageName, String destProjectName, String destPageName) throws IOException {
 
-		destProject.writeFile(
-				destPane.createRelative(destPageName + "." + PAGE_HTML),
-				sourceProject.readFile(sourcePane.createRelative(sourcePageName
-						+ "." + PAGE_HTML)));
+        Resource sourcePane = getPageDir(sourceProjectName, sourcePageName);
+        if (!sourcePane.exists()) {
+            throw new WMRuntimeException(MessageResource.PAGECP_SOURCEDNE, sourcePageName, sourceProjectName);
+        }
 
-		String cssContents = sourceProject.readFile(sourcePane
-				.createRelative(sourcePageName + "." + PAGE_CSS));
-		cssContents = cssContents.replace("." + sourcePageName, "."
-				+ destPageName);
-		destProject.writeFile(destPane.createRelative(destPageName
-								+ "." + PAGE_CSS), cssContents);
+        Resource destPane = getPageDir(destProjectName, destPageName);
+        if (destPane.exists()) {
+            throw new WMRuntimeException(MessageResource.PAGECP_TARGET_EXISTS, destPageName, destProjectName);
+        }
 
-		String jsContents = sourceProject.readFile(sourcePane.createRelative(sourcePageName+"."+PAGE_JS));
-		jsContents = jsContents.replaceAll("^dojo.declare\\(\""
-				+ sourcePageName + "\"", "dojo.declare(\"" + destPageName
-				+ "\"");
-		destProject.writeFile(destPane.createRelative(destPageName+"."+PAGE_JS), jsContents);
-		
-		String widgetsContents = sourceProject.readFile(sourcePane.createRelative(sourcePageName+"."+PAGE_WIDGETS));
-		widgetsContents = widgetsContents.replaceAll("^" + sourcePageName
-				+ ".widgets ", destPageName + ".widgets ");
-		destProject.writeFile(destPane.createRelative(destPageName+"."+PAGE_WIDGETS), widgetsContents);
-	}
+        Project sourceProject = this.projectManager.getProject(sourceProjectName, false);
+        Project destProject = this.projectManager.getProject(destProjectName, false);
 
-	public Resource getPagesDir(String projectName) {
-		Project project = projectManager.getProject(projectName, false);
-		try {
-			return project.getWebAppRoot().createRelative(
-					ProjectConstants.PAGES_DIR);
-		} catch (IOException ex) {
-			throw new WMRuntimeException(ex);
-		}
-	}
+        destProject.writeFile(destPane.createRelative(destPageName + "." + PAGE_HTML),
+            sourceProject.readFile(sourcePane.createRelative(sourcePageName + "." + PAGE_HTML)));
 
-	public Resource getPageDir(String projectName, String pageName) {
-		try {
-			return getPagesDir(projectName).createRelative(pageName + "/");
-		} catch (IOException ex) {
-			throw new WMRuntimeException(ex);
-		}
-	}
+        String cssContents = sourceProject.readFile(sourcePane.createRelative(sourcePageName + "." + PAGE_CSS));
+        cssContents = cssContents.replace("." + sourcePageName, "." + destPageName);
+        destProject.writeFile(destPane.createRelative(destPageName + "." + PAGE_CSS), cssContents);
 
-	public Resource getDictionariesDir(String projectName) {
-		Project projectRoot = projectManager.getProject(projectName, false);
-		try {
-			return projectRoot.getWebAppRoot().createRelative(
-					ProjectConstants.I18N_DIR);
-		} catch (IOException ex) {
-			throw new WMRuntimeException(ex);
-		}
-	}
+        String jsContents = sourceProject.readFile(sourcePane.createRelative(sourcePageName + "." + PAGE_JS));
+        jsContents = jsContents.replaceAll("^dojo.declare\\(\"" + sourcePageName + "\"", "dojo.declare(\"" + destPageName + "\"");
+        destProject.writeFile(destPane.createRelative(destPageName + "." + PAGE_JS), jsContents);
 
-	/**
-	 * List all dictionaries in the current project
-	 * 
-	 * @return
-	 * @throws FileAccessException
-	 */
-	public SortedSet<String> listDictionaries() throws FileAccessException {
-		return listDictionaries(getProjectManager().getCurrentProject()
-				.getProjectName());
-	}
+        String widgetsContents = sourceProject.readFile(sourcePane.createRelative(sourcePageName + "." + PAGE_WIDGETS));
+        widgetsContents = widgetsContents.replaceAll("^" + sourcePageName + ".widgets ", destPageName + ".widgets ");
+        destProject.writeFile(destPane.createRelative(destPageName + "." + PAGE_WIDGETS), widgetsContents);
+    }
 
-	/**
-	 * Return a list of all dictionaries in the specified project.
-	 * 
-	 * @param projectName
-	 * @return
-	 * @throws FileAccessException
-	 */
-	public SortedSet<String> listDictionaries(String projectName)
-			throws FileAccessException {
+    public Resource getPagesDir(String projectName) {
+        Project project = this.projectManager.getProject(projectName, false);
+        try {
+            return project.getWebAppRoot().createRelative(ProjectConstants.PAGES_DIR);
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
+    }
 
-		SortedSet<String> ret = new TreeSet<String>();
+    public Resource getPageDir(String projectName, String pageName) {
+        try {
+            return getPagesDir(projectName).createRelative(pageName + "/");
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
+    }
 
-		Resource dictionariesDir = getDictionariesDir(projectName);
+    public Resource getDictionariesDir(String projectName) {
+        Project projectRoot = this.projectManager.getProject(projectName, false);
+        try {
+            return projectRoot.getWebAppRoot().createRelative(ProjectConstants.I18N_DIR);
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
+    }
 
-		List<Resource> children = studioConfiguration
-				.listChildren(dictionariesDir);
-		for (Resource child : children) {
-			if (IOUtils.DEFAULT_EXCLUSION.contains(child.getFilename())) {
-				ret.add(child.getFilename());
-			}
-		}
+    /**
+     * List all dictionaries in the current project
+     * 
+     * @return
+     * @throws FileAccessException
+     */
+    public SortedSet<String> listDictionaries() throws FileAccessException {
+        return listDictionaries(getProjectManager().getCurrentProject().getProjectName());
+    }
 
-		return ret;
-	}
+    /**
+     * Return a list of all dictionaries in the specified project.
+     * 
+     * @param projectName
+     * @return
+     * @throws FileAccessException
+     */
+    public SortedSet<String> listDictionaries(String projectName) throws FileAccessException {
 
-	// spring-controlled bean properties
-	private ProjectManager projectManager;
+        SortedSet<String> ret = new TreeSet<String>();
 
-	private StudioConfiguration studioConfiguration;
+        Resource dictionariesDir = getDictionariesDir(projectName);
 
-	public ProjectManager getProjectManager() {
-		return projectManager;
-	}
+        List<Resource> children = this.studioConfiguration.listChildren(dictionariesDir);
+        for (Resource child : children) {
+            if (IOUtils.DEFAULT_EXCLUSION.contains(child.getFilename())) {
+                ret.add(child.getFilename());
+            }
+        }
 
-	public void setProjectManager(ProjectManager projectManager) {
-		this.projectManager = projectManager;
-	}
+        return ret;
+    }
 
-	public StudioConfiguration getStudioConfiguration() {
-		return studioConfiguration;
-	}
+    // spring-controlled bean properties
+    private ProjectManager projectManager;
 
-	public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-		this.studioConfiguration = studioConfiguration;
-	}
+    private StudioConfiguration studioConfiguration;
+
+    public ProjectManager getProjectManager() {
+        return this.projectManager;
+    }
+
+    public void setProjectManager(ProjectManager projectManager) {
+        this.projectManager = projectManager;
+    }
+
+    public StudioConfiguration getStudioConfiguration() {
+        return this.studioConfiguration;
+    }
+
+    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
+        this.studioConfiguration = studioConfiguration;
+    }
 }

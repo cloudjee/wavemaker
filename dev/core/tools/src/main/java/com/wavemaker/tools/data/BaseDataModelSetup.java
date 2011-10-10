@@ -64,8 +64,9 @@ public abstract class BaseDataModelSetup {
     private static final String ORACLE_DB_TYPE = "oracle";
 
     private static final String SQL_SERVER_DB_TYPE = "sqlserver";
+
     private static final String SQL_SERVER_URL_SCHEME = "jtds:";
-    		
+
     private static final String DB2_DB_TYPE = "db2";
 
     private static final String POSTGRESQL_DB_TYPE = "postgresql";
@@ -78,11 +79,9 @@ public abstract class BaseDataModelSetup {
 
     private static final String SCHEMA_FILTER_SEP = ",";
 
-    protected static final Map<String, Class<?>> DB_TYPES_TO_DIALECTS = new HashMap<String, Class<?>>(
-            6);
+    protected static final Map<String, Class<?>> DB_TYPES_TO_DIALECTS = new HashMap<String, Class<?>>(6);
 
-    protected static final Map<String, String> DB_TYPES_TO_DRIVER_CLASSES = new HashMap<String, String>(
-            6);
+    protected static final Map<String, String> DB_TYPES_TO_DRIVER_CLASSES = new HashMap<String, String>(6);
 
     static {
         DB_TYPES_TO_DIALECTS.put(HSQL_DB_TYPE, HSQLDialect.class);
@@ -92,69 +91,51 @@ public abstract class BaseDataModelSetup {
         DB_TYPES_TO_DRIVER_CLASSES.put(MYSQL_DB_TYPE, "com.mysql.jdbc.Driver");
 
         DB_TYPES_TO_DIALECTS.put(ORACLE_DB_TYPE, OracleDialect.class);
-        DB_TYPES_TO_DRIVER_CLASSES.put(ORACLE_DB_TYPE,
-                "oracle.jdbc.driver.OracleDriver");
+        DB_TYPES_TO_DRIVER_CLASSES.put(ORACLE_DB_TYPE, "oracle.jdbc.driver.OracleDriver");
 
         DB_TYPES_TO_DIALECTS.put(SQL_SERVER_DB_TYPE, SQLServerDialect.class);
-        DB_TYPES_TO_DRIVER_CLASSES.put(SQL_SERVER_DB_TYPE,
-                "net.sourceforge.jtds.jdbc.Driver");
+        DB_TYPES_TO_DRIVER_CLASSES.put(SQL_SERVER_DB_TYPE, "net.sourceforge.jtds.jdbc.Driver");
 
         DB_TYPES_TO_DIALECTS.put(DB2_DB_TYPE, DB2Dialect.class);
-        DB_TYPES_TO_DRIVER_CLASSES
-                .put(DB2_DB_TYPE, "com.ibm.db2.jcc.DB2Driver");
+        DB_TYPES_TO_DRIVER_CLASSES.put(DB2_DB_TYPE, "com.ibm.db2.jcc.DB2Driver");
 
         DB_TYPES_TO_DIALECTS.put(POSTGRESQL_DB_TYPE, PostgreSQLDialect.class);
-        DB_TYPES_TO_DRIVER_CLASSES.put(POSTGRESQL_DB_TYPE,
-                "org.postgresql.Driver");
+        DB_TYPES_TO_DRIVER_CLASSES.put(POSTGRESQL_DB_TYPE, "org.postgresql.Driver");
     }
 
-    protected static final String SYSTEM_PROPERTY_PREFIX = CommonConstants.WM_SYSTEM_PROPERTY_PREFIX
-            + "importdb.";
+    protected static final String SYSTEM_PROPERTY_PREFIX = CommonConstants.WM_SYSTEM_PROPERTY_PREFIX + "importdb.";
 
     private static String strip(String s) {
-        return StringUtils
-                .fromFirstOccurrence(s, DataServiceConstants.PROP_SEP);
+        return StringUtils.fromFirstOccurrence(s, DataServiceConstants.PROP_SEP);
     }
 
-    protected static final String USER_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX
-            + strip(DataServiceConstants.DB_USERNAME);
+    protected static final String USER_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + strip(DataServiceConstants.DB_USERNAME);
 
-    protected static final String PASS_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX
-            + strip(DataServiceConstants.DB_PASS);
+    protected static final String PASS_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + strip(DataServiceConstants.DB_PASS);
 
-    protected static final String CONNECTION_URL_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX
-            + strip(DataServiceConstants.DB_URL);
+    protected static final String CONNECTION_URL_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + strip(DataServiceConstants.DB_URL);
 
-    protected static final String DRIVER_CLASS_NAME_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX
-            + strip(DataServiceConstants.DB_DRIVER_CLASS_NAME);
+    protected static final String DRIVER_CLASS_NAME_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + strip(DataServiceConstants.DB_DRIVER_CLASS_NAME);
 
-    protected static final String DBTYPE_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX
-            + "dbtype";
+    protected static final String DBTYPE_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "dbtype";
 
     protected static final String HIBERNATE_DIALECT_SYSTEM_PROPERTY = "hibernate.dialect";
 
-    protected static final String NAME_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX
-            + "serviceName";
+    protected static final String NAME_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "serviceName";
 
-    protected static final String PACKAGE_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX
-            + "package";
+    protected static final String PACKAGE_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "package";
 
-    protected static final String DATA_PACKAGE_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX
-            + "dataPackage";
+    protected static final String DATA_PACKAGE_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "dataPackage";
 
-    protected static final String DESTDIR_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX
-            + "outputDir";
+    protected static final String DESTDIR_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "outputDir";
 
-    protected static final String TABLE_FILTER_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX
-            + "tableFilter";
+    protected static final String TABLE_FILTER_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "tableFilter";
 
-    protected static final String SCHEMA_FILTER_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX
-            + "schemaFilter";
+    protected static final String SCHEMA_FILTER_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "schemaFilter";
 
-    private static final String REVENG_NAMING_STRATEGY_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX
-            + "revengNamingStrategy";
+    private static final String REVENG_NAMING_STRATEGY_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "revengNamingStrategy";
 
-    private String DEFAULT_FILTER = ".*";
+    private final String DEFAULT_FILTER = ".*";
 
     public static String getDriverClassForDBType(String dbtype) {
         return DB_TYPES_TO_DRIVER_CLASSES.get(dbtype);
@@ -166,16 +147,15 @@ public abstract class BaseDataModelSetup {
 
     public static String getDBTypeFromURL(String url) {
         if (!url.startsWith(JDBC_URL_SCHEME)) {
-            throw new IllegalArgumentException("jdbc url must start with "
-                    + JDBC_URL_SCHEME);
+            throw new IllegalArgumentException("jdbc url must start with " + JDBC_URL_SCHEME);
         }
         String dbtype = url.substring(JDBC_URL_SCHEME.length()).toLowerCase();
-        
+
         // MAV-1769
         if (dbtype.startsWith(SQL_SERVER_URL_SCHEME)) {
             return SQL_SERVER_DB_TYPE;
         }
-        
+
         for (String t : DB_TYPES_TO_DIALECTS.keySet()) {
             if (dbtype.startsWith(t.toLowerCase())) {
                 return t;
@@ -233,12 +213,12 @@ public abstract class BaseDataModelSetup {
     protected Properties properties = new Properties();
 
     protected boolean initialized = false;
-    
+
     protected boolean impersonateUser = false;
-    
+
     protected String activeDirectoryDomain = null;
 
-    private List<File> tmpFiles = new ArrayList<File>();
+    private final List<File> tmpFiles = new ArrayList<File>();
 
     public void setDestDir(File destdir) {
         this.destdir = destdir;
@@ -294,11 +274,11 @@ public abstract class BaseDataModelSetup {
     }
 
     public String getTableFilter() {
-        return ObjectUtils.toString(tableFilters, ",");
+        return ObjectUtils.toString(this.tableFilters, ",");
     }
 
     public String getSchemaFilter() {
-        return ObjectUtils.toString(schemaFilters, ",");
+        return ObjectUtils.toString(this.schemaFilters, ",");
     }
 
     public void setRevengNamingStrategy(Class<?> revengNamingStrategy) {
@@ -314,7 +294,7 @@ public abstract class BaseDataModelSetup {
     }
 
     public String getDriverClassName() {
-        return driverClassName;
+        return this.driverClassName;
     }
 
     public void setConnectionUrl(String connectionUrl) {
@@ -322,7 +302,7 @@ public abstract class BaseDataModelSetup {
     }
 
     public String getConnectionUrl() {
-        return connectionUrl;
+        return this.connectionUrl;
     }
 
     public void setUsername(String username) {
@@ -330,26 +310,26 @@ public abstract class BaseDataModelSetup {
     }
 
     public String getUsername() {
-        return username;
+        return this.username;
     }
 
     public String getDialect() {
-        return dialect;
+        return this.dialect;
     }
 
     public String getCatalogName() {
-        return catalogName;
+        return this.catalogName;
     }
-    
+
     public boolean isImpersonateUser() {
-    	return impersonateUser;
+        return this.impersonateUser;
     }
 
     public String getActiveDirectoryDomain() {
-		return activeDirectoryDomain;
-	}
+        return this.activeDirectoryDomain;
+    }
 
-	public void setCatalogName(String catalogName) {
+    public void setCatalogName(String catalogName) {
         this.catalogName = catalogName;
     }
 
@@ -361,7 +341,7 @@ public abstract class BaseDataModelSetup {
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     public void setDialect(String dialect) {
@@ -377,7 +357,7 @@ public abstract class BaseDataModelSetup {
     }
 
     public String getClassName() {
-        return className;
+        return this.className;
     }
 
     public void setPackage(String packageName) {
@@ -385,7 +365,7 @@ public abstract class BaseDataModelSetup {
     }
 
     public String getPackage() {
-        return packageName;
+        return this.packageName;
     }
 
     public void setDataPackage(String dataPackage) {
@@ -397,24 +377,24 @@ public abstract class BaseDataModelSetup {
     }
 
     protected Project getProject() {
-        return project;
+        return this.project;
     }
 
     public void setProperties(Properties additionalProperties) {
-        properties.putAll(additionalProperties);
+        this.properties.putAll(additionalProperties);
     }
-    
+
     public void setImpersonateUser(boolean impersonateUser) {
-    	this.impersonateUser = impersonateUser;
+        this.impersonateUser = impersonateUser;
     }
 
     public void setActiveDirectoryDomain(String activeDirectoryDomain) {
-		this.activeDirectoryDomain = activeDirectoryDomain;
-	}
+        this.activeDirectoryDomain = activeDirectoryDomain;
+    }
 
-	protected void registerTmpFileForCleanup(File f) {
+    protected void registerTmpFileForCleanup(File f) {
         f.deleteOnExit(); // we really want this file to go away
-        tmpFiles.add(f);
+        this.tmpFiles.add(f);
     }
 
     protected abstract boolean customInit(Collection<String> requiredProperties);
@@ -431,21 +411,21 @@ public abstract class BaseDataModelSetup {
 
         checkProperties(requiredProperties);
 
-        initialized = true;
+        this.initialized = true;
 
         return rtn;
     }
 
     public void run() {
-        if (!initialized) {
+        if (!this.initialized) {
             boolean ok = init();
             if (!ok) {
                 return;
             }
         }
 
-        parentTask.setConfiguration(new Configuration());
-        parentTask.setProject(project);
+        this.parentTask.setConfiguration(new Configuration());
+        this.parentTask.setProject(this.project);
 
         customRun();
     }
@@ -454,7 +434,7 @@ public abstract class BaseDataModelSetup {
         try {
             customDispose();
         } finally {
-            for (File f : tmpFiles) {
+            for (File f : this.tmpFiles) {
                 try {
                     f.delete();
                 } catch (Exception ignore) {
@@ -464,12 +444,11 @@ public abstract class BaseDataModelSetup {
     }
 
     protected void runDDL(String sql) {
-        runDDL(sql, connectionUrl);
+        runDDL(sql, this.connectionUrl);
     }
 
     protected void runDDL(String sql, String url) {
-        JDBCUtils.runSql(new String[] { sql }, url, username, password,
-                driverClassName, DataServiceLoggers.importLogger, true);
+        JDBCUtils.runSql(new String[] { sql }, url, this.username, this.password, this.driverClassName, DataServiceLoggers.importLogger, true);
     }
 
     /**
@@ -483,27 +462,26 @@ public abstract class BaseDataModelSetup {
 
         Properties p = new Properties();
 
-        p.put(DataServiceConstants.DB_USERNAME, username);
-        p.put(DataServiceConstants.DB_PASS, password);
-        p.put(DataServiceConstants.DB_URL, connectionUrl);
-        p.put(DataServiceConstants.DB_DRIVER_CLASS_NAME, driverClassName);
-        p.put(DataServiceConstants.DB_DIALECT, dialect);
+        p.put(DataServiceConstants.DB_USERNAME, this.username);
+        p.put(DataServiceConstants.DB_PASS, this.password);
+        p.put(DataServiceConstants.DB_URL, this.connectionUrl);
+        p.put(DataServiceConstants.DB_DRIVER_CLASS_NAME, this.driverClassName);
+        p.put(DataServiceConstants.DB_DIALECT, this.dialect);
 
         // preserve info about how db was imported
         String s = getTableFilter();
         if (ObjectUtils.isNullOrEmpty(s)) {
-            s = DEFAULT_FILTER;
+            s = this.DEFAULT_FILTER;
         }
         p.setProperty(DataServiceConstants.DB_TABLE_FILTER, s);
 
         s = getSchemaFilter();
         if (ObjectUtils.isNullOrEmpty(s)) {
-            s = DEFAULT_FILTER;
+            s = this.DEFAULT_FILTER;
         }
         p.setProperty(DataServiceConstants.DB_SCHEMA_FILTER, s);
 
-        p.setProperty(DataServiceConstants.DB_REVENG_NAMING,
-                (revengNamingStrategy == null ? "" : revengNamingStrategy));
+        p.setProperty(DataServiceConstants.DB_REVENG_NAMING, this.revengNamingStrategy == null ? "" : this.revengNamingStrategy);
 
         Properties rtn = null;
 
@@ -523,13 +501,12 @@ public abstract class BaseDataModelSetup {
 
     protected Properties getHibernateConnectionProperties() {
 
-        Properties rtn = DataServiceUtils
-                .toHibernateConnectionProperties(getProperties(false));
-        
-        if(dbtype.equals(MYSQL_DB_TYPE)) {
-            String defaultCatalog = catalogName;
-            if(defaultCatalog == null && !connectionUrl.endsWith("/")) {
-                defaultCatalog = connectionUrl.substring(connectionUrl.lastIndexOf("/")+1);
+        Properties rtn = DataServiceUtils.toHibernateConnectionProperties(getProperties(false));
+
+        if (this.dbtype.equals(MYSQL_DB_TYPE)) {
+            String defaultCatalog = this.catalogName;
+            if (defaultCatalog == null && !this.connectionUrl.endsWith("/")) {
+                defaultCatalog = this.connectionUrl.substring(this.connectionUrl.lastIndexOf("/") + 1);
             }
             if (defaultCatalog != null) {
                 rtn.setProperty("hibernate.default_catalog", defaultCatalog);
@@ -537,8 +514,7 @@ public abstract class BaseDataModelSetup {
         }
 
         if (DataServiceLoggers.importLogger.isInfoEnabled()) {
-            DataServiceLoggers.importLogger.info("Connection properties: "
-                    + rtn);
+            DataServiceLoggers.importLogger.info("Connection properties: " + rtn);
         }
 
         return rtn;
@@ -546,33 +522,32 @@ public abstract class BaseDataModelSetup {
 
     protected void checkDialectAndDBType(Collection<String> requiredProperties) {
 
-        if (dbtype == null && dialect == null) {
+        if (this.dbtype == null && this.dialect == null) {
             return;
         }
 
-        if (dbtype != null && dialect == null) {
+        if (this.dbtype != null && this.dialect == null) {
             // dialect not set, but we have dbtype, so determine Hibernate
             // Dialect from dbtype
-            Class<?> c = DB_TYPES_TO_DIALECTS.get(dbtype);
+            Class<?> c = DB_TYPES_TO_DIALECTS.get(this.dbtype);
             if (c == null) {
-                throw new ConfigurationException("Unknown dbtype \"" + dbtype
-                        + "\", cannot determine dialect");
+                throw new ConfigurationException("Unknown dbtype \"" + this.dbtype + "\", cannot determine dialect");
             }
-            dialect = c.getName();
-        } else if (dbtype == null && dialect != null) {
+            this.dialect = c.getName();
+        } else if (this.dbtype == null && this.dialect != null) {
             // if Hibernate Dialect is set, use that and try to set dbtype to
             // something meaningful
-            String s = dialect.toLowerCase();
+            String s = this.dialect.toLowerCase();
             s = StringUtils.fromLastOccurrence(s, "dialect", -1);
-            dbtype = StringUtils.fromLastOccurrence(s, ".");
+            this.dbtype = StringUtils.fromLastOccurrence(s, ".");
         }
     }
 
     protected void checkTableFilter() {
 
-        if (tableFilters.isEmpty()) {
+        if (this.tableFilters.isEmpty()) {
 
-            String s = properties.getProperty(TABLE_FILTER_SYSTEM_PROPERTY);
+            String s = this.properties.getProperty(TABLE_FILTER_SYSTEM_PROPERTY);
 
             if (s != null) {
                 setTableFilterSplit(s);
@@ -582,9 +557,9 @@ public abstract class BaseDataModelSetup {
 
     protected void checkSchemaFilter() {
 
-        if (schemaFilters.isEmpty()) {
+        if (this.schemaFilters.isEmpty()) {
 
-            String s = properties.getProperty(SCHEMA_FILTER_SYSTEM_PROPERTY);
+            String s = this.properties.getProperty(SCHEMA_FILTER_SYSTEM_PROPERTY);
 
             if (s != null) {
                 setSchemaFilterSplit(s);
@@ -594,16 +569,16 @@ public abstract class BaseDataModelSetup {
 
     protected void checkRevengNamingStrategy() {
 
-        if (revengNamingStrategy == null) {
+        if (this.revengNamingStrategy == null) {
 
-            revengNamingStrategy = properties
-                    .getProperty(REVENG_NAMING_STRATEGY_SYSTEM_PROPERTY);
+            this.revengNamingStrategy = this.properties.getProperty(REVENG_NAMING_STRATEGY_SYSTEM_PROPERTY);
 
-            if (revengNamingStrategy == null) {
-                if (dialect != null && dialect.contains("SQLServer"))
+            if (this.revengNamingStrategy == null) {
+                if (this.dialect != null && this.dialect.contains("SQLServer")) {
                     setRevengNamingStrategy(getMSSQLRevengNamingStrategy());
-                else
+                } else {
                     setRevengNamingStrategy(getDefaultRevengNamingStrategy());
+                }
             }
         }
     }
@@ -625,38 +600,34 @@ public abstract class BaseDataModelSetup {
         }
 
         if (i == 0) {
-            throw new ConfigurationException(
-                    "No matching tables found for table filter \""
-                            + tableFilters + "\" and schema filter \""
-                            + schemaFilters + "\"");
+            throw new ConfigurationException("No matching tables found for table filter \"" + this.tableFilters + "\" and schema filter \""
+                + this.schemaFilters + "\"");
         }
     }
 
-    protected void checkDialect(Collection<String> requiredProperties,
-            boolean isFatal) {
-        if (dialect == null) {
-            String s = properties
-                    .getProperty(HIBERNATE_DIALECT_SYSTEM_PROPERTY);
+    protected void checkDialect(Collection<String> requiredProperties, boolean isFatal) {
+        if (this.dialect == null) {
+            String s = this.properties.getProperty(HIBERNATE_DIALECT_SYSTEM_PROPERTY);
             if (s != null) {
                 setDialect(s);
             }
         }
 
-        if (dialect == null && isFatal) {
+        if (this.dialect == null && isFatal) {
             requiredProperties.add(HIBERNATE_DIALECT_SYSTEM_PROPERTY);
         }
 
     }
 
     protected void checkDBType() {
-        if (dbtype == null) {
+        if (this.dbtype == null) {
 
-            String s = properties.getProperty(DBTYPE_SYSTEM_PROPERTY);
+            String s = this.properties.getProperty(DBTYPE_SYSTEM_PROPERTY);
 
             if (s == null) {
                 // try to get dbtype from the connection url
-                if (connectionUrl != null) {
-                    s = getDBTypeFromURL(connectionUrl);
+                if (this.connectionUrl != null) {
+                    s = getDBTypeFromURL(this.connectionUrl);
                 } else {
                     // will cause errror later
                 }
@@ -670,13 +641,12 @@ public abstract class BaseDataModelSetup {
 
     protected void checkUser(Collection<String> requiredProperties) {
 
-        if (username == null) {
+        if (this.username == null) {
 
-            String s = properties.getProperty(USER_SYSTEM_PROPERTY);
+            String s = this.properties.getProperty(USER_SYSTEM_PROPERTY);
 
             if (s == null) {
-                s = properties
-                        .getProperty(DataServiceConstants.HIBERNATE_USER_PROPERTY);
+                s = this.properties.getProperty(DataServiceConstants.HIBERNATE_USER_PROPERTY);
             }
 
             if (s == null) {
@@ -691,13 +661,12 @@ public abstract class BaseDataModelSetup {
 
     protected void checkPass(Collection<String> requiredProperties) {
 
-        if (password == null) {
+        if (this.password == null) {
 
-            String s = properties.getProperty(PASS_SYSTEM_PROPERTY);
+            String s = this.properties.getProperty(PASS_SYSTEM_PROPERTY);
 
             if (s == null) {
-                s = properties
-                        .getProperty(DataServiceConstants.HIBERNATE_PASS_PROPERTY);
+                s = this.properties.getProperty(DataServiceConstants.HIBERNATE_PASS_PROPERTY);
             }
 
             if (s == null) {
@@ -710,14 +679,12 @@ public abstract class BaseDataModelSetup {
 
     protected void checkDriverClass(Collection<String> requiredProperties) {
 
-        if (driverClassName == null) {
+        if (this.driverClassName == null) {
 
-            String s = properties
-                    .getProperty(DRIVER_CLASS_NAME_SYSTEM_PROPERTY);
+            String s = this.properties.getProperty(DRIVER_CLASS_NAME_SYSTEM_PROPERTY);
 
             if (s == null) {
-                s = properties
-                        .getProperty(DataServiceConstants.HIBERNATE_DRIVER_CLASS_NAME_PROPERTY);
+                s = this.properties.getProperty(DataServiceConstants.HIBERNATE_DRIVER_CLASS_NAME_PROPERTY);
             }
 
             if (s != null) {
@@ -725,12 +692,12 @@ public abstract class BaseDataModelSetup {
             }
         }
 
-        if (driverClassName == null) {
+        if (this.driverClassName == null) {
             // if we have db type, we can default driver class
-            setDriverClassName(DB_TYPES_TO_DRIVER_CLASSES.get(dbtype));
+            setDriverClassName(DB_TYPES_TO_DRIVER_CLASSES.get(this.dbtype));
         }
 
-        if (driverClassName == null) {
+        if (this.driverClassName == null) {
             requiredProperties.add(DRIVER_CLASS_NAME_SYSTEM_PROPERTY);
         }
 
@@ -738,26 +705,22 @@ public abstract class BaseDataModelSetup {
 
     protected void checkAlternateConnectionProperties() {
 
-        if (!SystemUtils.allPropertiesAreSet(properties, USER_SYSTEM_PROPERTY,
-                CONNECTION_URL_SYSTEM_PROPERTY,
-                DRIVER_CLASS_NAME_SYSTEM_PROPERTY)) {
+        if (!SystemUtils.allPropertiesAreSet(this.properties, USER_SYSTEM_PROPERTY, CONNECTION_URL_SYSTEM_PROPERTY, DRIVER_CLASS_NAME_SYSTEM_PROPERTY)) {
 
-            Properties p = DataServiceUtils
-                    .toHibernateConnectionProperties(properties);
+            Properties p = DataServiceUtils.toHibernateConnectionProperties(this.properties);
 
-            properties.putAll(p);
+            this.properties.putAll(p);
         }
     }
 
     protected void checkUrl(Collection<String> requiredProperties) {
 
-        if (connectionUrl == null) {
+        if (this.connectionUrl == null) {
 
-            String s = properties.getProperty(CONNECTION_URL_SYSTEM_PROPERTY);
+            String s = this.properties.getProperty(CONNECTION_URL_SYSTEM_PROPERTY);
 
             if (s == null) {
-                s = properties
-                        .getProperty(DataServiceConstants.HIBERNATE_CONNECTION_URL_PROPERTY);
+                s = this.properties.getProperty(DataServiceConstants.HIBERNATE_CONNECTION_URL_PROPERTY);
             }
 
             if (s != null) {
@@ -765,7 +728,7 @@ public abstract class BaseDataModelSetup {
             }
         }
 
-        if (connectionUrl == null) {
+        if (this.connectionUrl == null) {
             requiredProperties.add(CONNECTION_URL_SYSTEM_PROPERTY);
         }
     }
@@ -773,92 +736,85 @@ public abstract class BaseDataModelSetup {
     protected void checkCatalogName() {
         // depending on the db we're connection to, the catalog name
         // overrides parts of the connection url
-        if (catalogName != null) {
-            if (dbtype == MYSQL_DB_TYPE) {
-                int i = connectionUrl.indexOf(catalogName);
+        if (this.catalogName != null) {
+            if (this.dbtype == MYSQL_DB_TYPE) {
+                int i = this.connectionUrl.indexOf(this.catalogName);
                 if (i == -1) {
-                    String newUrl = connectionUrl;
+                    String newUrl = this.connectionUrl;
                     String props = "";
-                    int j = connectionUrl.indexOf(";");
+                    int j = this.connectionUrl.indexOf(";");
                     if (j > -1) {
-                        props = connectionUrl.substring(j);
-                        newUrl = connectionUrl.substring(0, j);
+                        props = this.connectionUrl.substring(j);
+                        newUrl = this.connectionUrl.substring(0, j);
                     }
-                    int k = connectionUrl.lastIndexOf("//");
-                    int l = connectionUrl.lastIndexOf("/");
-                    if (k != (l - 1)) {
+                    int k = this.connectionUrl.lastIndexOf("//");
+                    int l = this.connectionUrl.lastIndexOf("/");
+                    if (k != l - 1) {
                         newUrl = newUrl.substring(0, l);
                     }
-                    newUrl += "/" + catalogName + props;
-                    connectionUrl = newUrl;
+                    newUrl += "/" + this.catalogName + props;
+                    this.connectionUrl = newUrl;
                     if (DataServiceLoggers.importLogger.isInfoEnabled()) {
-                        DataServiceLoggers.importLogger
-                                .info("Added catalog to connection url: "
-                                        + connectionUrl);
+                        DataServiceLoggers.importLogger.info("Added catalog to connection url: " + this.connectionUrl);
                     }
                 }
             }
         }
     }
 
-    protected void checkServiceName(boolean fatal,
-            Collection<String> requiredProperties) {
-        if (serviceName == null) {
-            String s = properties.getProperty(NAME_SYSTEM_PROPERTY);
+    protected void checkServiceName(boolean fatal, Collection<String> requiredProperties) {
+        if (this.serviceName == null) {
+            String s = this.properties.getProperty(NAME_SYSTEM_PROPERTY);
             if (s != null) {
                 setServiceName(s);
             }
         }
 
-        if (serviceName == null) {
-            if (className != null) {
-                setServiceName(StringUtils.lowerCaseFirstLetter(className));
+        if (this.serviceName == null) {
+            if (this.className != null) {
+                setServiceName(StringUtils.lowerCaseFirstLetter(this.className));
             }
         }
 
-        if (serviceName == null) {
+        if (this.serviceName == null) {
             if (fatal) {
                 requiredProperties.add(NAME_SYSTEM_PROPERTY);
             }
         } else {
             // some basic checking of service name
-            if (serviceName.indexOf(".") > -1) {
-                throw new ConfigurationException(
-                        "servicename cannot contain '.': " + serviceName);
+            if (this.serviceName.indexOf(".") > -1) {
+                throw new ConfigurationException("servicename cannot contain '.': " + this.serviceName);
             }
 
-            if (serviceName.indexOf(" ") > -1) {
-                throw new ConfigurationException(
-                        "servicename cannot contain spaces");
+            if (this.serviceName.indexOf(" ") > -1) {
+                throw new ConfigurationException("servicename cannot contain spaces");
             }
         }
     }
 
     protected void checkDestdir(Collection<String> requiredProperties) {
-        if (destdir == null) {
-            String s = properties.getProperty(DESTDIR_SYSTEM_PROPERTY);
+        if (this.destdir == null) {
+            String s = this.properties.getProperty(DESTDIR_SYSTEM_PROPERTY);
             if (s != null) {
                 setDestDir(new File(s));
             }
         }
 
-        if (destdir == null) {
+        if (this.destdir == null) {
             requiredProperties.add(DESTDIR_SYSTEM_PROPERTY);
         } else {
-            if (destdir.exists()) {
-                if (destdir.isFile()) {
-                    throw new ConfigurationException(
-                            MessageResource.PROPERTY_MUST_BE_DIR,
-                            DESTDIR_SYSTEM_PROPERTY, destdir.getAbsolutePath());
+            if (this.destdir.exists()) {
+                if (this.destdir.isFile()) {
+                    throw new ConfigurationException(MessageResource.PROPERTY_MUST_BE_DIR, DESTDIR_SYSTEM_PROPERTY, this.destdir.getAbsolutePath());
                 }
             }
         }
     }
 
     protected void checkPackage() {
-        if (packageName == null) {
+        if (this.packageName == null) {
 
-            String s = properties.getProperty(PACKAGE_SYSTEM_PROPERTY);
+            String s = this.properties.getProperty(PACKAGE_SYSTEM_PROPERTY);
             if (s != null) {
                 setPackage(s);
             }
@@ -866,40 +822,40 @@ public abstract class BaseDataModelSetup {
     }
 
     protected void checkDataPackage() {
-        if (dataPackage == null) {
+        if (this.dataPackage == null) {
 
-            String s = properties.getProperty(DATA_PACKAGE_SYSTEM_PROPERTY);
+            String s = this.properties.getProperty(DATA_PACKAGE_SYSTEM_PROPERTY);
             if (s != null) {
                 setDataPackage(s);
             }
         }
 
-        if (dataPackage == null) {
-            setDataPackage(packageName);
+        if (this.dataPackage == null) {
+            setDataPackage(this.packageName);
         }
     }
 
     protected void checkClassName(Collection<String> requiredProperties) {
-        if (className == null) {
-            if (serviceName != null) {
-                String s = com.wavemaker.tools.data.util.DataServiceUtils
-                    .getServiceClassName(serviceName);
+        if (this.className == null) {
+            if (this.serviceName != null) {
+                String s = com.wavemaker.tools.data.util.DataServiceUtils.getServiceClassName(this.serviceName);
                 setClassName(s);
             }
         }
     }
 
     protected WMHibernateToolTask getParentTask() {
-        return parentTask;
+        return this.parentTask;
     }
 
     protected ExporterTask getConfigurationExporter() {
         return new GenericExporterTask(getParentTask()) {
+
+            @Override
             public Exporter createExporter() {
-                return new HibernateSpringConfigExporter(serviceName,
-                        packageName, dataPackage, className,
-                        getUseIndividualCRUDOperations(), 
-                        impersonateUser, activeDirectoryDomain);
+                return new HibernateSpringConfigExporter(BaseDataModelSetup.this.serviceName, BaseDataModelSetup.this.packageName,
+                    BaseDataModelSetup.this.dataPackage, BaseDataModelSetup.this.className, getUseIndividualCRUDOperations(),
+                    BaseDataModelSetup.this.impersonateUser, BaseDataModelSetup.this.activeDirectoryDomain);
             };
         };
     }
@@ -908,10 +864,9 @@ public abstract class BaseDataModelSetup {
         return false;
     }
 
-    protected boolean initConnection(Collection<String> requiredProperties,
-            boolean dialectIsRequired) {
+    protected boolean initConnection(Collection<String> requiredProperties, boolean dialectIsRequired) {
 
-        if (initialized) {
+        if (this.initialized) {
             return true;
         }
 
@@ -933,45 +888,45 @@ public abstract class BaseDataModelSetup {
     }
 
     public boolean isMySQL() {
-        if (dbtype == null) {
+        if (this.dbtype == null) {
             return false;
         }
-        return dbtype == MYSQL_DB_TYPE;
+        return this.dbtype == MYSQL_DB_TYPE;
     }
 
     public boolean isSQLServer() {
-        if (dbtype == null) {
+        if (this.dbtype == null) {
             return false;
         }
-        return dbtype == SQL_SERVER_DB_TYPE;
+        return this.dbtype == SQL_SERVER_DB_TYPE;
     }
 
     public boolean isOracle() {
-        if (dbtype == null) {
+        if (this.dbtype == null) {
             return false;
         }
-        return dbtype == ORACLE_DB_TYPE;
+        return this.dbtype == ORACLE_DB_TYPE;
     }
 
     public boolean isHSQLDB() {
-        if (dbtype == null) {
+        if (this.dbtype == null) {
             return false;
         }
-        return dbtype == HSQL_DB_TYPE;
+        return this.dbtype == HSQL_DB_TYPE;
     }
 
     public boolean isDB2() {
-        if (dbtype == null) {
+        if (this.dbtype == null) {
             return false;
         }
-        return dbtype == DB2_DB_TYPE;
+        return this.dbtype == DB2_DB_TYPE;
     }
 
     public boolean isPostgres() {
-        if (dbtype == null) {
+        if (this.dbtype == null) {
             return false;
         }
-        return dbtype == POSTGRESQL_DB_TYPE;
+        return this.dbtype == POSTGRESQL_DB_TYPE;
     }
 
     public void testConnection() {
@@ -980,33 +935,26 @@ public abstract class BaseDataModelSetup {
         initConnection(requiredProperties, false);
         checkProperties(requiredProperties);
 
-        if (dbtype == HSQL_DB_TYPE) {
-            JDBCUtils.testHSQLConnection(connectionUrl, username, password,
-                    driverClassName);
+        if (this.dbtype == HSQL_DB_TYPE) {
+            JDBCUtils.testHSQLConnection(this.connectionUrl, this.username, this.password, this.driverClassName);
 
-        } else if (dbtype == MYSQL_DB_TYPE) {
-            JDBCUtils.testMySQLConnection(connectionUrl, username, password,
-                    driverClassName);
-        } else if (dbtype == ORACLE_DB_TYPE) {
-            JDBCUtils.testOracleConnection(connectionUrl, username, password,
-                    driverClassName);
-        } else if (dbtype == SQL_SERVER_DB_TYPE) {
-            JDBCUtils.testSQLServerConnection(connectionUrl, username,
-                    password, driverClassName);
+        } else if (this.dbtype == MYSQL_DB_TYPE) {
+            JDBCUtils.testMySQLConnection(this.connectionUrl, this.username, this.password, this.driverClassName);
+        } else if (this.dbtype == ORACLE_DB_TYPE) {
+            JDBCUtils.testOracleConnection(this.connectionUrl, this.username, this.password, this.driverClassName);
+        } else if (this.dbtype == SQL_SERVER_DB_TYPE) {
+            JDBCUtils.testSQLServerConnection(this.connectionUrl, this.username, this.password, this.driverClassName);
         } else {
             if (DataServiceLoggers.importLogger.isInfoEnabled()) {
-                DataServiceLoggers.importLogger
-                        .info("Generic connection test for: " + connectionUrl);
+                DataServiceLoggers.importLogger.info("Generic connection test for: " + this.connectionUrl);
             }
-            JDBCUtils.getConnection(connectionUrl, username, password,
-                    driverClassName);
+            JDBCUtils.getConnection(this.connectionUrl, this.username, this.password, this.driverClassName);
         }
     }
 
     private void checkProperties(Collection<String> requiredProperties) {
         if (!requiredProperties.isEmpty()) {
-            throw new ConfigurationException(MessageResource.MISSING_SYS_PROPERTIES
-                    .getMessage(ObjectUtils.toString(requiredProperties, ", ")));
+            throw new ConfigurationException(MessageResource.MISSING_SYS_PROPERTIES.getMessage(ObjectUtils.toString(requiredProperties, ", ")));
         }
     }
 }

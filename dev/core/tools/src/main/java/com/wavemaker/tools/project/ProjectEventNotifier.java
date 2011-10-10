@@ -25,24 +25,22 @@ import com.wavemaker.runtime.service.events.EventNotifier;
  * 
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class ProjectEventNotifier extends EventNotifier {
-    
+
     public void executeCloseProject(Project p) {
-        
-        Map<ProjectEventListener, List<ServiceWire>> listenersO =
-            getEventManager().getEventListeners(ProjectEventListener.class);
-        for (ProjectEventListener listener: listenersO.keySet()) {
+
+        Map<ProjectEventListener, List<ServiceWire>> listenersO = getEventManager().getEventListeners(ProjectEventListener.class);
+        for (ProjectEventListener listener : listenersO.keySet()) {
             listener.closeProject(p);
         }
     }
-    
+
     public void executeOpenProject(Project p) {
-        
-        Map<ProjectEventListener, List<ServiceWire>> listenersO =
-            getEventManager().getEventListeners(ProjectEventListener.class);
-        for (ProjectEventListener listener: listenersO.keySet()) {
+
+        Map<ProjectEventListener, List<ServiceWire>> listenersO = getEventManager().getEventListeners(ProjectEventListener.class);
+        for (ProjectEventListener listener : listenersO.keySet()) {
             listener.openProject(p);
         }
     }

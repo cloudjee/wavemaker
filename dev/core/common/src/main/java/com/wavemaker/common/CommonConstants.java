@@ -17,25 +17,32 @@ package com.wavemaker.common;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class CommonConstants {
 
-
     public static final String WM_SYSTEM_PROPERTY_PREFIX = "wm.";
+
     public static final String APP_PROPERTY_FILE = "app.properties";
+
     public static final String LOGON_TENANT_ID = "logOnTenantId";
+
     public static final String LOGON_USER_NAME = "logOnUsername";
+
     public static final String IBMWAS_DIR = "websphere";
 
     public static final String SERVER_TYPE_TOMCAT = "tomcat";
+
     public static final String SERVER_TYPE_WEBSPHERE = "websphere";
+
     public static final String SERVER_TYPE_CLOUDFOUNDRY = "cloudfoundry";
+
     public static final String DEPLOYMENT_TARGETS_XML = "deploymentTargets.xml";
 
-    public static final String SALESFORCE_SERVICE = "salesforceService"; //salesforce
-    public static final String SFLOGIN_SERVICE = "loginService"; //salesforce
-     
+    public static final String SALESFORCE_SERVICE = "salesforceService"; // salesforce
+
+    public static final String SFLOGIN_SERVICE = "loginService"; // salesforce
+
     private CommonConstants() {
         throw new UnsupportedOperationException();
     }

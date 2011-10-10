@@ -36,9 +36,9 @@ public class QueryOptions extends PagingOptions {
     private boolean excludeNone = true;
 
     private boolean excludeZeros = true;
-    
+
     private List<String> sqlRestrictions = new ArrayList<String>();
-    
+
     public QueryOptions() {
     }
 
@@ -59,7 +59,7 @@ public class QueryOptions extends PagingOptions {
     }
 
     public MatchMode getTypedMatchMode() {
-        return matchMode;
+        return this.matchMode;
     }
 
     // convenience method
@@ -68,23 +68,22 @@ public class QueryOptions extends PagingOptions {
     }
 
     /**
-     * anywhere, exact, start, end
-     * default is: start
+     * anywhere, exact, start, end default is: start
      */
     public void setMatchMode(String matchMode) {
         this.matchMode = DataServiceUtils.parseMatchMode(matchMode);
     }
-    
-    public void addSqlRestriction(String  s) {
-        sqlRestrictions.add(s);
+
+    public void addSqlRestriction(String s) {
+        this.sqlRestrictions.add(s);
     }
-    
+
     public void setSqlRestrictions(List<String> sqlRestrictions) {
         this.sqlRestrictions = sqlRestrictions;
     }
 
     public List<String> getSqlRestrictions() {
-        return sqlRestrictions;
+        return this.sqlRestrictions;
     }
 
     public void setIgnoreCase(boolean ignoreCase) {
@@ -92,7 +91,7 @@ public class QueryOptions extends PagingOptions {
     }
 
     public boolean getIgnoreCase() {
-        return ignoreCase;
+        return this.ignoreCase;
     }
 
     public void setExcludeZeros(boolean excludeZeros) {
@@ -100,11 +99,11 @@ public class QueryOptions extends PagingOptions {
     }
 
     public boolean getExcludeZeros() {
-        return excludeZeros;
+        return this.excludeZeros;
     }
 
     public boolean getExcludeNone() {
-        return excludeNone;
+        return this.excludeNone;
     }
 
     public void setExcludeNone(boolean excludeNone) {

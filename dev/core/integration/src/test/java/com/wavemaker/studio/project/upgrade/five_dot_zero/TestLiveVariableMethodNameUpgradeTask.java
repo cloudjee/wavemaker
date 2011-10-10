@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.wavemaker.studio.project.upgrade.five_dot_zero;
 
 import static org.junit.Assert.assertEquals;
@@ -44,68 +45,63 @@ import com.wavemaker.tools.project.upgrade.five_dot_zero.LiveVariableMethodNameU
  */
 public class TestLiveVariableMethodNameUpgradeTask extends StudioTestCase {
 
-	@Test
-	public void testChangeInsertDataToInsert() throws Exception {
+    @Test
+    public void testChangeInsertDataToInsert() throws Exception {
 
-		String projectName = "testChangeInsertDataToInsert";
+        String projectName = "testChangeInsertDataToInsert";
 
-		makeProject(projectName, false);
-		ProjectManager pm = (ProjectManager) getBean("projectManager");
-		Project project = pm.getCurrentProject();
+        makeProject(projectName, false);
+        ProjectManager pm = (ProjectManager) getBean("projectManager");
+        Project project = pm.getCurrentProject();
 
-		File webapproot = new File(project.getProjectRoot().getFile(),
-				"webapproot");
-		assertTrue(webapproot.exists());
-		File pagesdir = new File(webapproot, "pages");
-		pagesdir.mkdir();
+        File webapproot = new File(project.getProjectRoot().getFile(), "webapproot");
+        assertTrue(webapproot.exists());
+        File pagesdir = new File(webapproot, "pages");
+        pagesdir.mkdir();
 
-		File autosizeFiles = (new ClassPathResource(
-				"com/wavemaker/studio/project/upgrade/five_dot_zero/livevariablemethodname.files"))
-				.getFile();
-		File inputLogin = new File(autosizeFiles, "input/Main");
-		assertTrue(inputLogin.exists());
+        File autosizeFiles = new ClassPathResource("com/wavemaker/studio/project/upgrade/five_dot_zero/livevariablemethodname.files").getFile();
+        File inputLogin = new File(autosizeFiles, "input/Main");
+        assertTrue(inputLogin.exists());
 
-		File main = new File(pagesdir, "Main");
-		FileUtils.copyDirectory(inputLogin, main);
+        File main = new File(pagesdir, "Main");
+        FileUtils.copyDirectory(inputLogin, main);
 
-		LiveVariableMethodNameUpgradeTask ut = new LiveVariableMethodNameUpgradeTask();
-		ut.setPagesManager((PagesManager) getBean("pagesManager"));
-		UpgradeInfo info = new UpgradeInfo();
-		ut.doUpgrade(project, info);
+        LiveVariableMethodNameUpgradeTask ut = new LiveVariableMethodNameUpgradeTask();
+        ut.setPagesManager((PagesManager) getBean("pagesManager"));
+        UpgradeInfo info = new UpgradeInfo();
+        ut.doUpgrade(project, info);
 
-		File expectedLogin = new File(autosizeFiles, "expected/Main");
-		assertEquals(1, expectedLogin.listFiles().length);
-		boolean gotWidgetsJS = false;
-		for (File file : expectedLogin.listFiles()) {
-			File inputFile = new File(main, file.getName());
-			if (inputFile.getName().endsWith(".widgets.js")) {
-				gotWidgetsJS = true;
-			}
+        File expectedLogin = new File(autosizeFiles, "expected/Main");
+        assertEquals(1, expectedLogin.listFiles().length);
+        boolean gotWidgetsJS = false;
+        for (File file : expectedLogin.listFiles()) {
+            File inputFile = new File(main, file.getName());
+            if (inputFile.getName().endsWith(".widgets.js")) {
+                gotWidgetsJS = true;
+            }
 
-			assertEquals(StringUtils.deleteWhitespace(FileUtils
-					.readFileToString(file)),
-					StringUtils.deleteWhitespace(FileUtils
-							.readFileToString(inputFile)));
-		}
-		assertTrue(gotWidgetsJS);
-	}
+            assertEquals(StringUtils.deleteWhitespace(FileUtils.readFileToString(file)),
+                StringUtils.deleteWhitespace(FileUtils.readFileToString(inputFile)));
+        }
+        assertTrue(gotWidgetsJS);
+    }
 
-	@Test
-	public void testUpgradeTaskPresent() throws Exception {
+    @Test
+    public void testUpgradeTaskPresent() throws Exception {
 
-		boolean foundTask = false;
+        boolean foundTask = false;
 
-		UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
+        UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
 
-		outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
-			for (UpgradeTask ut : uts) {
-				if (ut instanceof LiveVariableMethodNameUpgradeTask) {
-					foundTask = true;
-					break outer;
-				}
-			}
-		}
+        outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
+            for (UpgradeTask ut : uts) {
+                if (ut instanceof LiveVariableMethodNameUpgradeTask) {
+                    foundTask = true;
+                    break outer;
+                }
+            }
+        }
 
-		assertTrue(foundTask);
-	}
+        assertTrue(foundTask);
+    }
 }

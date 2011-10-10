@@ -25,35 +25,33 @@ import java.util.Map.Entry;
  * 
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TypeManager {
-    
+
     /**
-     * Return a list of all types (as java class names) associated with a given
-     * service object.
+     * Return a list of all types (as java class names) associated with a given service object.
      * 
      * @param service
      * @return
      */
     public List<String> getTypes(String serviceId) {
-        
+
         return getTypes().get(serviceId);
     }
-    
+
     /**
-     * Return the service id that corresponds to the given type, or null if no
-     * corresponding type was found.
+     * Return the service id that corresponds to the given type, or null if no corresponding type was found.
      * 
      * @param type
      * @return
-     * @throws TypeNotFoundException 
+     * @throws TypeNotFoundException
      */
     public String getServiceIdForType(String type) throws TypeNotFoundException {
-        
+
         String foundServiceId = null;
-        entryLoop: for (Entry<String, List<String>> entry: types.entrySet()) {
-            for (String serviceType: entry.getValue()) {
+        entryLoop: for (Entry<String, List<String>> entry : this.types.entrySet()) {
+            for (String serviceType : entry.getValue()) {
                 if (serviceType.equals(type)) {
                     foundServiceId = entry.getKey();
                     break entryLoop;
@@ -64,24 +62,22 @@ public class TypeManager {
     }
 
     /**
-     * Return the service object that corresponds to the give type, or null if
-     * no corresponding type was found.
+     * Return the service object that corresponds to the give type, or null if no corresponding type was found.
      * 
      * @param type
      * @return
      * @throws TypeNotFoundException
-     * @deprecated use {@link #getServiceWireForType(String)} instead. This will
-     *             be removed in a few versions.
+     * @deprecated use {@link #getServiceWireForType(String)} instead. This will be removed in a few versions.
      */
+    @Deprecated
     public Object getServiceForType(String type) throws TypeNotFoundException {
-        
+
         String serviceId = getServiceIdForType(type);
         return getServiceManager().getService(serviceId);
     }
-    
+
     /**
-     * Return the service object that corresponds to the give type, or null if
-     * no corresponding type was found.
+     * Return the service object that corresponds to the give type, or null if no corresponding type was found.
      * 
      * @param type
      * @return
@@ -93,21 +89,23 @@ public class TypeManager {
         return getServiceManager().getServiceWire(serviceId);
     }
 
-
     // bean properties below here
     private Map<String, List<String>> types;
+
     private ServiceManager serviceManager;
 
     public Map<String, List<String>> getTypes() {
-        return types;
+        return this.types;
     }
+
     public void setTypes(Map<String, List<String>> types) {
         this.types = types;
     }
-    
+
     public ServiceManager getServiceManager() {
-        return serviceManager;
+        return this.serviceManager;
     }
+
     public void setServiceManager(ServiceManager serviceManager) {
         this.serviceManager = serviceManager;
     }

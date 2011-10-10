@@ -30,24 +30,21 @@ public class InitData {
 
     private List<TreeNode> dataObjectsTree = null;
 
-    private Map<String, Collection<TypeInfo>> valueTypes = 
-        new HashMap<String, Collection<TypeInfo>>();
+    private final Map<String, Collection<TypeInfo>> valueTypes = new HashMap<String, Collection<TypeInfo>>();
 
     public InitData(List<TreeNode> dataObjectsTree) {
         this.dataObjectsTree = dataObjectsTree;
     }
 
-    public void addValueTypes(String dataModelName, 
-                              Collection<TypeInfo> valueTypes) 
-    {
+    public void addValueTypes(String dataModelName, Collection<TypeInfo> valueTypes) {
         this.valueTypes.put(dataModelName, valueTypes);
     }
 
     public List<TreeNode> getDataObjectsTree() {
-        return dataObjectsTree;
+        return this.dataObjectsTree;
     }
 
     public Map<String, Collection<TypeInfo>> getValueTypes() {
-        return valueTypes;
+        return this.valueTypes;
     }
 }

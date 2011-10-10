@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.data;
 
 import static org.junit.Assert.assertEquals;
@@ -55,216 +56,206 @@ import com.wavemaker.runtime.test.TestSpringContextTestCase;
  */
 public class TestOrahrCRUD extends TestSpringContextTestCase {
 
-	static class TestData {
+    static class TestData {
 
-		private String dependentTestName = null;
+        private String dependentTestName = null;
 
-		private boolean skipRemaining = false;
+        private boolean skipRemaining = false;
 
-		private Orahr orahr = null;
+        private Orahr orahr = null;
 
-		private Employees newEmployee = null;
+        private Employees newEmployee = null;
 
-		void setService(Orahr orahr) {
-			this.orahr = orahr;
-		}
+        void setService(Orahr orahr) {
+            this.orahr = orahr;
+        }
 
-		Orahr getOrahr() {
-			return orahr;
-		}
+        Orahr getOrahr() {
+            return this.orahr;
+        }
 
-		void setNewEmployee(Employees newEmployee) {
-			this.newEmployee = newEmployee;
-		}
+        void setNewEmployee(Employees newEmployee) {
+            this.newEmployee = newEmployee;
+        }
 
-		Employees getNewEmployee() {
-			return newEmployee;
-		}
+        Employees getNewEmployee() {
+            return this.newEmployee;
+        }
 
-		void setSkipRemaining(String dependentTestName) {
-			this.skipRemaining = true;
-			this.dependentTestName = dependentTestName;
-		}
+        void setSkipRemaining(String dependentTestName) {
+            this.skipRemaining = true;
+            this.dependentTestName = dependentTestName;
+        }
 
-		boolean skipRemaining() {
-			return skipRemaining;
-		}
+        boolean skipRemaining() {
+            return this.skipRemaining;
+        }
 
-		String getDependentTestName() {
-			return dependentTestName;
-		}
+        String getDependentTestName() {
+            return this.dependentTestName;
+        }
 
-	}
+    }
 
-	protected static TestData testData;
+    protected static TestData testData;
 
-	@BeforeClass
-	public static void initData() {
-		testData = new TestData();
-	}
+    @BeforeClass
+    public static void initData() {
+        testData = new TestData();
+    }
 
-	protected void checkShouldSkip() {
-		if (testData.skipRemaining) {
-			throw new DependentTestFailureException(
-					testData.getDependentTestName());
-		}
-	}
+    protected void checkShouldSkip() {
+        if (testData.skipRemaining) {
+            throw new DependentTestFailureException(testData.getDependentTestName());
+        }
+    }
 
-	@Test
-	public void testCountEmployees() {
+    @Test
+    public void testCountEmployees() {
 
-		try {
+        try {
 
-			ApplicationContext ctx = getApplicationContext();
+            ApplicationContext ctx = getApplicationContext();
 
-			ServiceManager serviceMgr = (ServiceManager) ctx
-					.getBean(ServiceConstants.SERVICE_MANAGER_NAME);
+            ServiceManager serviceMgr = (ServiceManager) ctx.getBean(ServiceConstants.SERVICE_MANAGER_NAME);
 
-			Orahr orahr = (Orahr) ((ReflectServiceWire) serviceMgr
-					.getServiceWire(DataServiceTestConstants.ORACLE_HR_SERVICE_ID))
-					.getServiceBean();
+            Orahr orahr = (Orahr) ((ReflectServiceWire) serviceMgr.getServiceWire(DataServiceTestConstants.ORACLE_HR_SERVICE_ID)).getServiceBean();
 
-			assertTrue(orahr.getEmployeesCount(new Employees(),
-					new QueryOptions()) == (long) 107);
+            assertTrue(orahr.getEmployeesCount(new Employees(), new QueryOptions()) == (long) 107);
 
-			testData.setService(orahr);
+            testData.setService(orahr);
 
-		} catch (RuntimeException ex) {
-			testData.setSkipRemaining("testCountEmployees");
-			throw ex;
-		}
-	}
+        } catch (RuntimeException ex) {
+            testData.setSkipRemaining("testCountEmployees");
+            throw ex;
+        }
+    }
 
-	@Test
-	public void testScrollableResultSet() {
+    @Test
+    public void testScrollableResultSet() {
 
-		checkShouldSkip();
+        checkShouldSkip();
 
-		Orahr orahr = testData.getOrahr();
+        Orahr orahr = testData.getOrahr();
 
-		orahr.getDataServiceManager().begin();
+        orahr.getDataServiceManager().begin();
 
-		ScrollableResults sr = null;
+        ScrollableResults sr = null;
 
-		try {
+        try {
 
-			Session session = orahr.getDataServiceManager().getSession();
+            Session session = orahr.getDataServiceManager().getSession();
 
-			Query q = session
-					.createQuery("from Employees where lastName like 'A%'");
+            Query q = session.createQuery("from Employees where lastName like 'A%'");
 
-			sr = q.scroll();
-			sr.last();
+            sr = q.scroll();
+            sr.last();
 
-			assertEquals(4, sr.getRowNumber() + 1);
+            assertEquals(4, sr.getRowNumber() + 1);
 
-		} finally {
-			try {
-				sr.close();
-			} catch (Exception ignore) {
-			}
-			orahr.getDataServiceManager().rollback();
-		}
-	}
+        } finally {
+            try {
+                sr.close();
+            } catch (Exception ignore) {
+            }
+            orahr.getDataServiceManager().rollback();
+        }
+    }
 
-	@Test
-	public void testAddNewEmployee() {
+    @Test
+    public void testAddNewEmployee() {
 
-		checkShouldSkip();
+        checkShouldSkip();
 
-		Jobs job = new Jobs();
+        Jobs job = new Jobs();
 
-		job.setJobId("AC_ACCOUNT");
+        job.setJobId("AC_ACCOUNT");
 
-		Employees mgr = new Employees();
-		mgr.setEmployeeId(200);
+        Employees mgr = new Employees();
+        mgr.setEmployeeId(200);
 
-		Employees e = new Employees();
-		e.setEmployeeId(300);
-		e.setLastName("NEW-EMP");
-		e.setHireDate(new Date());
-		e.setEmail("new");
-		e.setJobs(job);
-		e.setEmployees(mgr);
+        Employees e = new Employees();
+        e.setEmployeeId(300);
+        e.setLastName("NEW-EMP");
+        e.setHireDate(new Date());
+        e.setEmail("new");
+        e.setJobs(job);
+        e.setEmployees(mgr);
 
-		try {
-			testData.getOrahr().insertEmployees(e);
-		} catch (RuntimeException ex) {
-			testData.setSkipRemaining("testAddNewEmployee");
-			throw ex;
-		}
-	}
+        try {
+            testData.getOrahr().insertEmployees(e);
+        } catch (RuntimeException ex) {
+            testData.setSkipRemaining("testAddNewEmployee");
+            throw ex;
+        }
+    }
 
-	@Test
-	public void testFindNewEmployee() {
+    @Test
+    public void testFindNewEmployee() {
 
-		checkShouldSkip();
+        checkShouldSkip();
 
-		Employees qbe = new Employees();
+        Employees qbe = new Employees();
 
-		qbe.setLastName("NEW-EMP");
-		qbe.setEmail("new");
+        qbe.setLastName("NEW-EMP");
+        qbe.setEmail("new");
 
-		try {
-			List<Employees> l = testData.getOrahr().getEmployeesList(qbe,
-					new QueryOptions());
+        try {
+            List<Employees> l = testData.getOrahr().getEmployeesList(qbe, new QueryOptions());
 
-			assertTrue(l.size() == 1);
+            assertTrue(l.size() == 1);
 
-			assertTrue(l.get(0).getLastName().equals("NEW-EMP"));
+            assertTrue(l.get(0).getLastName().equals("NEW-EMP"));
 
-			testData.setNewEmployee(l.get(0));
+            testData.setNewEmployee(l.get(0));
 
-		} catch (RuntimeException ex) {
-			testData.setSkipRemaining("testFindNewEmployee");
-			throw ex;
-		}
+        } catch (RuntimeException ex) {
+            testData.setSkipRemaining("testFindNewEmployee");
+            throw ex;
+        }
 
-	}
+    }
 
-	@Test
-	public void testDeleteNewEmployee() {
+    @Test
+    public void testDeleteNewEmployee() {
 
-		checkShouldSkip();
+        checkShouldSkip();
 
-		testData.getOrahr().deleteEmployees(testData.getNewEmployee());
+        testData.getOrahr().deleteEmployees(testData.getNewEmployee());
 
-	}
+    }
 
-	@Test
-	public void testOracleConnection() throws IOException {
+    @Test
+    public void testOracleConnection() throws IOException {
 
-		File props = ClassLoaderUtils.getClasspathFile(
-				"oracle_orahr.properties").getFile();
+        File props = ClassLoaderUtils.getClasspathFile("oracle_orahr.properties").getFile();
 
-		Properties p = DataServiceUtils.loadDBProperties(props);
+        Properties p = DataServiceUtils.loadDBProperties(props);
 
-		TestDBConnection t = new TestDBConnection();
-		t.setProperties(p);
-		t.run();
-	}
+        TestDBConnection t = new TestDBConnection();
+        t.setProperties(p);
+        t.run();
+    }
 
-	@Test
-	public void testOracleConnection2() throws Exception {
+    @Test
+    public void testOracleConnection2() throws Exception {
 
-		File props = ClassLoaderUtils.getClasspathFile(
-				"oracle_orahr.properties").getFile();
+        File props = ClassLoaderUtils.getClasspathFile("oracle_orahr.properties").getFile();
 
-		Properties p = DataServiceUtils.loadDBProperties(props);
+        Properties p = DataServiceUtils.loadDBProperties(props);
 
-		TestDBConnection t = new TestDBConnection();
-		t.setProperties(p);
-		t.setUsername("___foo");
-		try {
-			t.run();
-		} catch (DataServiceRuntimeException ex) {
-			Throwable cause = ex.getCause();
-			assertTrue(cause.getMessage().startsWith(
-					"ORA-01017: invalid username/password"));
-			return;
-		}
+        TestDBConnection t = new TestDBConnection();
+        t.setProperties(p);
+        t.setUsername("___foo");
+        try {
+            t.run();
+        } catch (DataServiceRuntimeException ex) {
+            Throwable cause = ex.getCause();
+            assertTrue(cause.getMessage().startsWith("ORA-01017: invalid username/password"));
+            return;
+        }
 
-		fail("connection should have failed");
-	}
+        fail("connection should have failed");
+    }
 
 }

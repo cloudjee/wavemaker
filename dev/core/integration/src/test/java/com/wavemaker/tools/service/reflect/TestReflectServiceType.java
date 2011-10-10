@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.service.reflect;
 
 import static org.junit.Assert.assertEquals;
@@ -53,47 +54,47 @@ import com.wavemaker.tools.spring.ComplexReturnBean;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestReflectServiceType extends TestSpringContextTestCase {
-    
-    @Test public void testFindMethod() throws Exception {
+
+    @Test
+    public void testFindMethod() throws Exception {
 
         InternalClass a = new InternalClass();
         Method m = InternalClass.class.getMethod("firstTestMethod", int.class, short.class);
         assertNotNull(m);
         assertEquals(String.class, m.getReturnType());
-        
+
         Method mp = ReflectServiceType.findMethod("firstTestMethod", a, 2);
         assertEquals(m, mp);
     }
 
-    @Test public void testIC_FirstTestMethod() throws Exception {
+    @Test
+    public void testIC_FirstTestMethod() throws Exception {
 
         InternalClass a = new InternalClass();
         JSON json = JSONUnmarshaller.unmarshal("[1, 2]");
         assertTrue(json.isList());
         JSONArray params = (JSONArray) json;
-        
+
         JSONState jsonState = new JSONState();
-        
+
         ReflectServiceWire rsw = new ReflectServiceWire();
         rsw.setServiceBean(a);
         ReflectServiceType rst = new JavaServiceType();
-        
-        ParsedServiceArguments serviceArgs = rst.parseServiceArgs(rsw,
-                "firstTestMethod", params, jsonState);
-        TypedServiceReturn o = rst.invokeMethod(rsw,
-                "firstTestMethod", serviceArgs, jsonState);
-        assertEquals("firstTestMethod("+1+", "+2+")", o.getReturnValue());
-        assertEquals(String.class.getName(),
-                o.getReturnType().getTypeDefinition().getTypeName());
+
+        ParsedServiceArguments serviceArgs = rst.parseServiceArgs(rsw, "firstTestMethod", params, jsonState);
+        TypedServiceReturn o = rst.invokeMethod(rsw, "firstTestMethod", serviceArgs, jsonState);
+        assertEquals("firstTestMethod(" + 1 + ", " + 2 + ")", o.getReturnValue());
+        assertEquals(String.class.getName(), o.getReturnType().getTypeDefinition().getTypeName());
     }
 
-    @Test public void testParamsFromAnnotatedMethod() throws Exception {
+    @Test
+    public void testParamsFromAnnotatedMethod() throws Exception {
 
         Method method = null;
-        for (Method m: ComplexReturnBean.class.getMethods()) {
+        for (Method m : ComplexReturnBean.class.getMethods()) {
             if (m.getName().equals("testUpload")) {
                 method = m;
                 break;
@@ -102,21 +103,21 @@ public class TestReflectServiceType extends TestSpringContextTestCase {
         assertNotNull(method);
 
         Map<String, Object[]> params = new HashMap<String, Object[]>();
-        params.put("parma1", new String[]{"foo"});
-        params.put("param2", new File[]{new File("/")});
+        params.put("parma1", new String[] { "foo" });
+        params.put("param2", new File[] { new File("/") });
 
         Object[] ret = ReflectServiceType.paramsFromAnnotatedMethod(method, params);
         assertNotNull(ret);
         assertEquals(2, ret.length);
     }
 
-    @Test public void testIC2_FirstTestMethod() throws Exception {
+    @Test
+    public void testIC2_FirstTestMethod() throws Exception {
 
         JSONState jsonState = new JSONState();
 
         InternalClass2 ic = new InternalClass2();
-        JSON json = JSONUnmarshaller.unmarshal(
-                "[{\"attr\": 12}, \"foobar\", 12.49]");
+        JSON json = JSONUnmarshaller.unmarshal("[{\"attr\": 12}, \"foobar\", 12.49]");
         assertTrue(json.isList());
         JSONArray params = (JSONArray) json;
 
@@ -124,17 +125,15 @@ public class TestReflectServiceType extends TestSpringContextTestCase {
         rsw.setServiceBean(ic);
         ReflectServiceType rst = new JavaServiceType();
 
-        ParsedServiceArguments serviceArgs = rst.parseServiceArgs(rsw,
-                "ic2_firstTestMethod", params, jsonState);
-        TypedServiceReturn o = rst.invokeMethod(rsw,
-                "ic2_firstTestMethod", serviceArgs, jsonState);
+        ParsedServiceArguments serviceArgs = rst.parseServiceArgs(rsw, "ic2_firstTestMethod", params, jsonState);
+        TypedServiceReturn o = rst.invokeMethod(rsw, "ic2_firstTestMethod", serviceArgs, jsonState);
 
         assertEquals("12foobar12.49", o.getReturnValue());
-        assertEquals(String.class.getName(),
-                o.getReturnType().getTypeDefinition().getTypeName());
+        assertEquals(String.class.getName(), o.getReturnType().getTypeDefinition().getTypeName());
     }
 
-    @Test public void testIC2_failInvoke() {
+    @Test
+    public void testIC2_failInvoke() {
 
         try {
             InternalClass2 ic = new InternalClass2();
@@ -144,24 +143,20 @@ public class TestReflectServiceType extends TestSpringContextTestCase {
             rsw.setServiceBean(ic);
             ReflectServiceType rst = new JavaServiceType();
 
-            ParsedServiceArguments serviceArgs = rst.parseServiceArgs(rsw,
-                    "failInvoke", (JSONArray) JSONUnmarshaller.unmarshal("[]"),
-                    jsonState);
+            ParsedServiceArguments serviceArgs = rst.parseServiceArgs(rsw, "failInvoke", (JSONArray) JSONUnmarshaller.unmarshal("[]"), jsonState);
             rst.invokeMethod(rsw, "failInvoke", serviceArgs, jsonState);
-            
+
             fail("expected exception");
         } catch (WMRuntimeException e) {
-            assertEquals(MessageResource.JSONUTILS_FAILEDINVOKE.getId(),
-                    e.getMessageId());
+            assertEquals(MessageResource.JSONUTILS_FAILEDINVOKE.getId(), e.getMessageId());
 
-            assertEquals(
-                    "Failed to invoke method \"failInvoke\" in \"class "+InternalClass2.class.getName()+"\"",
-                    e.getMessage());
+            assertEquals("Failed to invoke method \"failInvoke\" in \"class " + InternalClass2.class.getName() + "\"", e.getMessage());
             assertEquals("the exception", e.getCause().getMessage());
         }
     }
 
-    @Test public void testCPInvokeClass_cpic_Short() throws Exception {
+    @Test
+    public void testCPInvokeClass_cpic_Short() throws Exception {
 
         JSONState jsonState = new JSONState();
 
@@ -173,60 +168,54 @@ public class TestReflectServiceType extends TestSpringContextTestCase {
         ReflectServiceWire rsw = new ReflectServiceWire();
         rsw.setServiceBean(c);
         ReflectServiceType rst = new JavaServiceType();
-        
-        ParsedServiceArguments serviceArgs = rst.parseServiceArgs(rsw,
-                "cpic_Short", params, jsonState);
-        TypedServiceReturn o = rst.invokeMethod(rsw,
-                "cpic_Short", serviceArgs, jsonState);
+
+        ParsedServiceArguments serviceArgs = rst.parseServiceArgs(rsw, "cpic_Short", params, jsonState);
+        TypedServiceReturn o = rst.invokeMethod(rsw, "cpic_Short", serviceArgs, jsonState);
         assertEquals("short: 12", o.getReturnValue());
     }
 
-    @Test public void testCPInvokeClass_cpic_Many() throws Exception {
+    @Test
+    public void testCPInvokeClass_cpic_Many() throws Exception {
 
         JSONState jsonState = new JSONState();
 
         CPInvokeClass c = new CPInvokeClass();
-        JSON json = JSONUnmarshaller.unmarshal(
-                "[12, 13, 14, 15, 16, 17, 18, 19, 20, 21.1]");
+        JSON json = JSONUnmarshaller.unmarshal("[12, 13, 14, 15, 16, 17, 18, 19, 20, 21.1]");
         assertTrue(json.isList());
         JSONArray params = (JSONArray) json;
 
         ReflectServiceWire rsw = new ReflectServiceWire();
         rsw.setServiceBean(c);
         ReflectServiceType rst = new JavaServiceType();
-        
-        ParsedServiceArguments serviceArgs = rst.parseServiceArgs(rsw,
-                "cpic_Many", params, jsonState);
-        TypedServiceReturn o = rst.invokeMethod(rsw,
-                "cpic_Many", serviceArgs, jsonState);
-        assertEquals("12, 13, 14, 15, 16, 17, 18, 19.0, 20.0, 21.1",
-                o.getReturnValue());
+
+        ParsedServiceArguments serviceArgs = rst.parseServiceArgs(rsw, "cpic_Many", params, jsonState);
+        TypedServiceReturn o = rst.invokeMethod(rsw, "cpic_Many", serviceArgs, jsonState);
+        assertEquals("12, 13, 14, 15, 16, 17, 18, 19.0, 20.0, 21.1", o.getReturnValue());
     }
 
-    @Test public void testCPInvokeClass_cpic_Many_LowerCase() throws Exception {
-        
+    @Test
+    public void testCPInvokeClass_cpic_Many_LowerCase() throws Exception {
+
         JSONState jsonState = new JSONState();
 
         CPInvokeClass c = new CPInvokeClass();
-        JSON json = JSONUnmarshaller.unmarshal(
-                "[12, 13, 14, 15, 20, 21.1]");
+        JSON json = JSONUnmarshaller.unmarshal("[12, 13, 14, 15, 20, 21.1]");
         assertTrue(json.isList());
         JSONArray params = (JSONArray) json;
 
         ReflectServiceWire rsw = new ReflectServiceWire();
         rsw.setServiceBean(c);
         ReflectServiceType rst = new JavaServiceType();
-        
-        ParsedServiceArguments serviceArgs = rst.parseServiceArgs(rsw,
-                "cpic_Many_LowerCase", params, jsonState);
-        TypedServiceReturn o = rst.invokeMethod(rsw,
-                "cpic_Many_LowerCase", serviceArgs, jsonState);
+
+        ParsedServiceArguments serviceArgs = rst.parseServiceArgs(rsw, "cpic_Many_LowerCase", params, jsonState);
+        TypedServiceReturn o = rst.invokeMethod(rsw, "cpic_Many_LowerCase", serviceArgs, jsonState);
 
         assertEquals("12, 13, 14, 15, 20.0, 21.1", o.getReturnValue());
     }
 
-    @Test public void testCPInvokeClass_noArgs_EmptyArray() throws Exception {
-        
+    @Test
+    public void testCPInvokeClass_noArgs_EmptyArray() throws Exception {
+
         JSONState jsonState = new JSONState();
 
         CPInvokeClass c = new CPInvokeClass();
@@ -238,16 +227,15 @@ public class TestReflectServiceType extends TestSpringContextTestCase {
         rsw.setServiceBean(c);
         ReflectServiceType rst = new JavaServiceType();
 
-        ParsedServiceArguments serviceArgs = rst.parseServiceArgs(rsw,
-                "noArgs", params, jsonState);
-        TypedServiceReturn o = rst.invokeMethod(rsw,
-                "noArgs", serviceArgs, jsonState);
+        ParsedServiceArguments serviceArgs = rst.parseServiceArgs(rsw, "noArgs", params, jsonState);
+        TypedServiceReturn o = rst.invokeMethod(rsw, "noArgs", serviceArgs, jsonState);
 
         assertEquals("noargs", o.getReturnValue());
     }
 
-    @Test public void testMethodOverloading() throws Exception {
-        
+    @Test
+    public void testMethodOverloading() throws Exception {
+
         JSONState jsonState = new JSONState();
 
         OverloadedMethodsClass c = new OverloadedMethodsClass();
@@ -258,10 +246,8 @@ public class TestReflectServiceType extends TestSpringContextTestCase {
         JSON json = JSONUnmarshaller.unmarshal("[\"foo\", 12.2]");
         assertTrue(json.isList());
         JSONArray params = (JSONArray) json;
-        ParsedServiceArguments serviceArgs = rst.parseServiceArgs(rsw,
-                "args", params, jsonState);
-        TypedServiceReturn o = rst.invokeMethod(rsw,
-                "args", serviceArgs, jsonState);
+        ParsedServiceArguments serviceArgs = rst.parseServiceArgs(rsw, "args", params, jsonState);
+        TypedServiceReturn o = rst.invokeMethod(rsw, "args", serviceArgs, jsonState);
         assertEquals("foo12.2", o.getReturnValue());
 
         json = JSONUnmarshaller.unmarshal("[\"foo\", 12.2, false]");
@@ -272,7 +258,8 @@ public class TestReflectServiceType extends TestSpringContextTestCase {
         assertEquals("foo12.2false", o.getReturnValue());
     }
 
-    @Test public void testBadMethodOverloading() throws Exception {
+    @Test
+    public void testBadMethodOverloading() throws Exception {
 
         JSONState jsonState = new JSONState();
 
@@ -285,18 +272,17 @@ public class TestReflectServiceType extends TestSpringContextTestCase {
             JSON json = JSONUnmarshaller.unmarshal("[1]");
             assertTrue(json.isList());
             JSONArray params = (JSONArray) json;
-            ParsedServiceArguments serviceArgs = rst.parseServiceArgs(
-                    rsw, "args", params, jsonState);
+            ParsedServiceArguments serviceArgs = rst.parseServiceArgs(rsw, "args", params, jsonState);
             rst.invokeMethod(rsw, "args", serviceArgs, jsonState);
             fail("expected exception");
         } catch (WMRuntimeException e) {
-            assertEquals(MessageResource.JSONUTILS_BADMETHODOVERLOAD.getId(),
-                    e.getMessageId());
+            assertEquals(MessageResource.JSONUTILS_BADMETHODOVERLOAD.getId(), e.getMessageId());
         }
     }
 
-    @Test public void testListMethodArg() throws Exception {
-        
+    @Test
+    public void testListMethodArg() throws Exception {
+
         JSONState jsonState = new JSONState();
 
         InternalClass ic = new InternalClass();
@@ -307,8 +293,7 @@ public class TestReflectServiceType extends TestSpringContextTestCase {
         JSON json = JSONUnmarshaller.unmarshal("[[\"foo\", \"bar\"]]");
         assertTrue(json.isList());
         JSONArray params = (JSONArray) json;
-        ParsedServiceArguments serviceArgs = rst.parseServiceArgs(rsw,
-                "listArgs", params, jsonState);
+        ParsedServiceArguments serviceArgs = rst.parseServiceArgs(rsw, "listArgs", params, jsonState);
         assertEquals(1, serviceArgs.getArguments().length);
         assertTrue(serviceArgs.getArguments()[0] instanceof List);
         List<?> resultList = (List<?>) serviceArgs.getArguments()[0];
@@ -328,8 +313,9 @@ public class TestReflectServiceType extends TestSpringContextTestCase {
         assertTrue(resultSet.contains("bar"));
     }
 
-    @Test public void testConversionArray() throws Exception {
-        
+    @Test
+    public void testConversionArray() throws Exception {
+
         JSONState jsonState = new JSONState();
 
         InternalClass ic = new InternalClass();
@@ -340,12 +326,10 @@ public class TestReflectServiceType extends TestSpringContextTestCase {
         JSON json = JSONUnmarshaller.unmarshal("[[1,2]]");
         assertTrue(json.isList());
         JSONArray params = (JSONArray) json;
-        ParsedServiceArguments serviceArgs = rst.parseServiceArgs(rsw,
-                "setArrayArgs", params, jsonState);
+        ParsedServiceArguments serviceArgs = rst.parseServiceArgs(rsw, "setArrayArgs", params, jsonState);
 
         assertEquals(1, serviceArgs.getArguments().length);
-        assertEquals(ClassUtils.forName("int[]", null),
-                serviceArgs.getArguments()[0].getClass());
+        assertEquals(ClassUtils.forName("int[]", null), serviceArgs.getArguments()[0].getClass());
         int[] retContents = (int[]) serviceArgs.getArguments()[0];
         assertEquals(2, retContents.length);
 
@@ -353,8 +337,9 @@ public class TestReflectServiceType extends TestSpringContextTestCase {
         assertEquals(2, retContents[1]);
     }
 
-    @Test public void testConversionEmptyArray() throws Exception {
-        
+    @Test
+    public void testConversionEmptyArray() throws Exception {
+
         JSONState jsonState = new JSONState();
 
         InternalClass ic = new InternalClass();
@@ -365,17 +350,16 @@ public class TestReflectServiceType extends TestSpringContextTestCase {
         JSON json = JSONUnmarshaller.unmarshal("[[]]");
         assertTrue(json.isList());
         JSONArray params = (JSONArray) json;
-        ParsedServiceArguments serviceArgs = rst.parseServiceArgs(rsw,
-                "setArrayArgs", params, jsonState);
+        ParsedServiceArguments serviceArgs = rst.parseServiceArgs(rsw, "setArrayArgs", params, jsonState);
 
         assertEquals(1, serviceArgs.getArguments().length);
-        assertEquals(ClassUtils.forName("int[]", null),
-                serviceArgs.getArguments()[0].getClass());
+        assertEquals(ClassUtils.forName("int[]", null), serviceArgs.getArguments()[0].getClass());
         int[] retContents = (int[]) serviceArgs.getArguments()[0];
         assertEquals(0, retContents.length);
     }
 
-    @Test public void testExceptionInvoke() throws Exception {
+    @Test
+    public void testExceptionInvoke() throws Exception {
 
         JSONState jsonState = new JSONState();
 
@@ -385,9 +369,8 @@ public class TestReflectServiceType extends TestSpringContextTestCase {
         ReflectServiceType rst = new JavaServiceType();
 
         try {
-            ParsedServiceArguments serviceArgs = rst.parseServiceArgs(
-                    rsw, "failRuntimeInvoke",
-                    (JSONArray)JSONUnmarshaller.unmarshal("[]"), jsonState);
+            ParsedServiceArguments serviceArgs = rst.parseServiceArgs(rsw, "failRuntimeInvoke", (JSONArray) JSONUnmarshaller.unmarshal("[]"),
+                jsonState);
             rst.invokeMethod(rsw, "cpic_Short", serviceArgs, jsonState);
             fail("didn't get an exception");
         } catch (WMRuntimeException e) {
@@ -396,26 +379,30 @@ public class TestReflectServiceType extends TestSpringContextTestCase {
         }
     }
 
-
-
     // test classes
     public static class InternalClass {
 
         private List<String> arg;
+
         private Set<String> set;
+
         private int[] array;
-        private int attr=0;
+
+        private int attr = 0;
+
         private Map<String, String> map;
 
-        public InternalClass() {}
+        public InternalClass() {
+        }
 
         public String firstTestMethod(int i, short j) {
-            return "firstTestMethod("+i+", "+j+")";
+            return "firstTestMethod(" + i + ", " + j + ")";
         }
 
         public int getAttr() {
-            return attr;
+            return this.attr;
         }
+
         public void setAttr(int attr) {
             this.attr = attr;
         }
@@ -423,6 +410,7 @@ public class TestReflectServiceType extends TestSpringContextTestCase {
         public void setArrayArgs(int[] arg) {
             this.array = arg;
         }
+
         public int[] getArrayArgs() {
             return this.array;
         }
@@ -430,20 +418,23 @@ public class TestReflectServiceType extends TestSpringContextTestCase {
         public void listArgs(List<String> arg) {
             this.arg = arg;
         }
+
         public List<String> getArg() {
             return this.arg;
         }
 
         public Set<String> getSet() {
-            return set;
+            return this.set;
         }
+
         public void setSet(Set<String> set) {
             this.set = set;
         }
 
         public Map<String, String> getMap() {
-            return map;
+            return this.map;
         }
+
         public void setMap(Map<String, String> map) {
             this.map = map;
         }
@@ -451,9 +442,8 @@ public class TestReflectServiceType extends TestSpringContextTestCase {
 
     public static class InternalClass2 {
 
-        public String ic2_firstTestMethod(InternalClass i, String arg2,
-                float arg3) {
-            return ""+i.getAttr()+arg2+arg3;
+        public String ic2_firstTestMethod(InternalClass i, String arg2, float arg3) {
+            return "" + i.getAttr() + arg2 + arg3;
         }
 
         public void failInvoke() throws Exception {
@@ -472,39 +462,34 @@ public class TestReflectServiceType extends TestSpringContextTestCase {
         }
 
         public String cpic_Short(Short s) {
-            return "short: "+s;
+            return "short: " + s;
         }
 
-        public String cpic_Many(Byte b, Short s, Integer i, Long l,
-                BigInteger bi, AtomicInteger ai, AtomicLong al, Float f,
-                Double d, BigDecimal bd) {
-            return ""+b+", "+s+", "+i+", "+l+", "+bi+", "+ai+", "+al+", "+f+
-                ", "+d+", "+bd;
+        public String cpic_Many(Byte b, Short s, Integer i, Long l, BigInteger bi, AtomicInteger ai, AtomicLong al, Float f, Double d, BigDecimal bd) {
+            return "" + b + ", " + s + ", " + i + ", " + l + ", " + bi + ", " + ai + ", " + al + ", " + f + ", " + d + ", " + bd;
         }
 
-        public String cpic_Many_LowerCase(byte b, short s, int i, long l,
-                float f, double d) {
-            return ""+b+", "+s+", "+i+", "+l+", "+f+", "+d;
+        public String cpic_Many_LowerCase(byte b, short s, int i, long l, float f, double d) {
+            return "" + b + ", " + s + ", " + i + ", " + l + ", " + f + ", " + d;
         }
     }
-
 
     public static class OverloadedMethodsClass {
 
         public String args(String arg0, float arg1) {
-            return ""+arg0+arg1;
+            return "" + arg0 + arg1;
         }
 
         public String args(String arg0, float arg1, boolean arg2) {
-            return ""+arg0+arg1+arg2;
+            return "" + arg0 + arg1 + arg2;
         }
 
         public String args(int i) {
-            return ""+i;
+            return "" + i;
         }
 
         public String args(float i) {
-            return ""+i;
+            return "" + i;
         }
     }
 }

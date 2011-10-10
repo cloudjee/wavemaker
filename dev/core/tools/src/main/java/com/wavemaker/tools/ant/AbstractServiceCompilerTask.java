@@ -17,13 +17,12 @@ package com.wavemaker.tools.ant;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.Resources;
 
-
 /**
  * Adds a dirset and a destination directory.
- *
+ * 
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public abstract class AbstractServiceCompilerTask extends CompilerTask {
 
@@ -40,6 +39,7 @@ public abstract class AbstractServiceCompilerTask extends CompilerTask {
     public Resources getUnion() {
         return this.union;
     }
+
     public void add(ResourceCollection rc) {
         this.union.add(rc);
     }

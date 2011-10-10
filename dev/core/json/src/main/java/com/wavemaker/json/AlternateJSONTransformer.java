@@ -16,8 +16,8 @@ package com.wavemaker.json;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
-import java.util.Stack;
 import java.util.Map.Entry;
+import java.util.Stack;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.NullArgumentException;
@@ -53,85 +53,63 @@ public class AlternateJSONTransformer {
         return toObject(new JSONState(), obj, klass);
     }
 
-    public static Object toObject(JSONState jsonState, Object obj,
-            Class<?> klass) {
-        
+    public static Object toObject(JSONState jsonState, Object obj, Class<?> klass) {
+
         TypeState typeState = jsonState.getTypeState();
-        FieldDefinition fieldDefinition = ReflectTypeUtils.getFieldDefinition(
-                klass, typeState, false, null);
-        
-        return toObjectInternal(jsonState, obj, obj,
-                fieldDefinition, typeState, 0,
-                new Stack<String>());
+        FieldDefinition fieldDefinition = ReflectTypeUtils.getFieldDefinition(klass, typeState, false, null);
+
+        return toObjectInternal(jsonState, obj, obj, fieldDefinition, typeState, 0, new Stack<String>());
     }
 
-    public static Object toObject(JSONState jsonState, Object obj,
-            FieldDefinition fieldDefinition) {
-        
-        return toObjectInternal(jsonState, obj, obj,
-                fieldDefinition, jsonState.getTypeState(), 0,
-                new Stack<String>());
+    public static Object toObject(JSONState jsonState, Object obj, FieldDefinition fieldDefinition) {
+
+        return toObjectInternal(jsonState, obj, obj, fieldDefinition, jsonState.getTypeState(), 0, new Stack<String>());
     }
 
     /**
      * Main recursive call; every level should go through this method.
      */
-    private static Object toObjectInternal(JSONState jsonState, Object obj,
-            Object root,
-            FieldDefinition fieldDefinition, TypeState typeState,
-            int arrayLevel, Stack<String> setterQueue) {
-        
-        if (null==fieldDefinition) {
+    private static Object toObjectInternal(JSONState jsonState, Object obj, Object root, FieldDefinition fieldDefinition, TypeState typeState,
+        int arrayLevel, Stack<String> setterQueue) {
+
+        if (null == fieldDefinition) {
             throw new NullArgumentException("fieldDefinition");
         }
 
         Object ret = null;
-        
-        if (null!=jsonState.getValueTransformer()) {
-            Tuple.Three<Object, FieldDefinition, Integer> tuple =
-                jsonState.getValueTransformer().transformToJava(obj,
-                        fieldDefinition, arrayLevel,
-                        root, getPropertyFromQueue(setterQueue),
-                        jsonState.getTypeState());
-            
-            if (null!=tuple) {
+
+        if (null != jsonState.getValueTransformer()) {
+            Tuple.Three<Object, FieldDefinition, Integer> tuple = jsonState.getValueTransformer().transformToJava(obj, fieldDefinition, arrayLevel,
+                root, getPropertyFromQueue(setterQueue), jsonState.getTypeState());
+
+            if (null != tuple) {
                 obj = tuple.v1;
                 fieldDefinition = tuple.v2;
                 arrayLevel = tuple.v3;
             }
         }
-        
-        if (null!=obj && fieldDefinition.getDimensions()==arrayLevel &&
-                null==fieldDefinition.getTypeDefinition()) {
-            fieldDefinition = ReflectTypeUtils.getFieldDefinition(
-                    obj.getClass(), typeState, false, null);
+
+        if (null != obj && fieldDefinition.getDimensions() == arrayLevel && null == fieldDefinition.getTypeDefinition()) {
+            fieldDefinition = ReflectTypeUtils.getFieldDefinition(obj.getClass(), typeState, false, null);
         }
-        
+
         try {
-            if (null==fieldDefinition.getTypeDefinition()) {
+            if (null == fieldDefinition.getTypeDefinition()) {
                 ret = obj;
-            } else if (arrayLevel == fieldDefinition.getDimensions() &&
-                    fieldDefinition.getTypeDefinition() instanceof ReadObjectConverter) {
-                ret = ((ReadObjectConverter)fieldDefinition.getTypeDefinition()).
-                readObject(obj, root, getPropertyFromQueue(setterQueue));
+            } else if (arrayLevel == fieldDefinition.getDimensions() && fieldDefinition.getTypeDefinition() instanceof ReadObjectConverter) {
+                ret = ((ReadObjectConverter) fieldDefinition.getTypeDefinition()).readObject(obj, root, getPropertyFromQueue(setterQueue));
             } else if (null == obj) {
                 ret = null;
             } else if (arrayLevel < fieldDefinition.getDimensions()) {
-                ret = toCollectionOrArray(jsonState, obj, root,
-                        fieldDefinition, typeState, arrayLevel, setterQueue);
+                ret = toCollectionOrArray(jsonState, obj, root, fieldDefinition, typeState, arrayLevel, setterQueue);
             } else if (fieldDefinition.getTypeDefinition() instanceof PrimitiveTypeDefinition) {
                 ret = fieldDefinition.getTypeDefinition().newInstance(obj);
             } else if (fieldDefinition.getTypeDefinition() instanceof MapTypeDefinition) {
-                ret = toMap(jsonState, obj, root, fieldDefinition, typeState,
-                        arrayLevel, setterQueue);
-            } else if (obj instanceof JSONObject &&
-                    fieldDefinition.getTypeDefinition() instanceof ObjectTypeDefinition) {
-                ret = toObjectInternal(jsonState, (JSONObject) obj, root,
-                        fieldDefinition, typeState, arrayLevel,
-                        setterQueue);
+                ret = toMap(jsonState, obj, root, fieldDefinition, typeState, arrayLevel, setterQueue);
+            } else if (obj instanceof JSONObject && fieldDefinition.getTypeDefinition() instanceof ObjectTypeDefinition) {
+                ret = toObjectInternal(jsonState, (JSONObject) obj, root, fieldDefinition, typeState, arrayLevel, setterQueue);
             } else {
-                throw new WMRuntimeException(MessageResource.JSON_UNKNOWN_OBJECT_TYPE,
-                        obj, obj.getClass(), fieldDefinition);
+                throw new WMRuntimeException(MessageResource.JSON_UNKNOWN_OBJECT_TYPE, obj, obj.getClass(), fieldDefinition);
             }
         } catch (InstantiationException e) {
             throw new WMRuntimeException(e);
@@ -146,39 +124,33 @@ public class AlternateJSONTransformer {
         return ret;
     }
 
-    private static Object toObjectInternal(JSONState jsonState,
-            JSONObject obj, Object root,
-            FieldDefinition fieldDefinition, TypeState typeState,
-            int arrayLevel, Stack<String> setterQueue)
-            throws InstantiationException, IllegalAccessException,
-            InvocationTargetException, NoSuchMethodException {
-        
-        if (null==fieldDefinition) {
+    private static Object toObjectInternal(JSONState jsonState, JSONObject obj, Object root, FieldDefinition fieldDefinition, TypeState typeState,
+        int arrayLevel, Stack<String> setterQueue) throws InstantiationException, IllegalAccessException, InvocationTargetException,
+        NoSuchMethodException {
+
+        if (null == fieldDefinition) {
             throw new NullArgumentException("fieldDefinition");
-        } else if (null==fieldDefinition.getTypeDefinition()) {
+        } else if (null == fieldDefinition.getTypeDefinition()) {
             throw new WMRuntimeException(MessageResource.JSON_TYPEDEF_REQUIRED);
         } else if (!(fieldDefinition.getTypeDefinition() instanceof ObjectTypeDefinition)) {
-            throw new WMRuntimeException(MessageResource.JSON_OBJECTTYPEDEF_REQUIRED,
-                    fieldDefinition.getTypeDefinition(),
-                    fieldDefinition.getTypeDefinition().getClass());
+            throw new WMRuntimeException(MessageResource.JSON_OBJECTTYPEDEF_REQUIRED, fieldDefinition.getTypeDefinition(),
+                fieldDefinition.getTypeDefinition().getClass());
         }
-        
+
         ObjectTypeDefinition otd = (ObjectTypeDefinition) fieldDefinition.getTypeDefinition();
 
         Object instance = otd.newInstance();
 
-        for (Object entryO: obj.entrySet()) {
-            Entry<?, ?> entry = (Entry<?,?>) entryO;
+        for (Object entryO : obj.entrySet()) {
+            Entry<?, ?> entry = (Entry<?, ?>) entryO;
             String key = (String) entry.getKey();
-            
+
             FieldDefinition nestedFieldDefinition = otd.getFields().get(key);
-            if (null==nestedFieldDefinition) {
-                throw new WMRuntimeException(MessageResource.JSON_NO_PROP_MATCHES_KEY,
-                        key, fieldDefinition);
+            if (null == nestedFieldDefinition) {
+                throw new WMRuntimeException(MessageResource.JSON_NO_PROP_MATCHES_KEY, key, fieldDefinition);
             }
             if (!PropertyUtils.isWriteable(instance, key)) {
-                logger.warn(MessageResource.JSON_NO_WRITE_METHOD.getMessage(
-                        fieldDefinition, key));
+                logger.warn(MessageResource.JSON_NO_WRITE_METHOD.getMessage(fieldDefinition, key));
                 continue;
             }
 
@@ -186,9 +158,7 @@ public class AlternateJSONTransformer {
             setterQueue.push(key);
             jsonState.getSettersCalled().add(getPropertyFromQueue(setterQueue));
 
-            Object paramValue = toObjectInternal(jsonState, entry.getValue(),
-                    root,
-                    nestedFieldDefinition, typeState, 0, setterQueue);
+            Object paramValue = toObjectInternal(jsonState, entry.getValue(), root, nestedFieldDefinition, typeState, 0, setterQueue);
             PropertyUtils.setProperty(instance, key, paramValue);
 
             // end setter list support
@@ -197,26 +167,21 @@ public class AlternateJSONTransformer {
 
         return instance;
     }
-    
-    private static Object toCollectionOrArray(JSONState jsonState,
-            Object obj, Object root,
-            FieldDefinition fieldDefinition, TypeState typeState,
-            int arrayLevel, Stack<String> setterQueue)
-            throws InstantiationException, IllegalAccessException {
-        
-        if (null==fieldDefinition) {
+
+    private static Object toCollectionOrArray(JSONState jsonState, Object obj, Object root, FieldDefinition fieldDefinition, TypeState typeState,
+        int arrayLevel, Stack<String> setterQueue) throws InstantiationException, IllegalAccessException {
+
+        if (null == fieldDefinition) {
             throw new NullArgumentException("fieldDefinition");
         }
-        
+
         ListTypeDefinition ltd = fieldDefinition.getArrayTypes().get(arrayLevel);
-        
+
         JSONArray jsonArray = (JSONArray) obj;
         Object listObject = ltd.newInstance(jsonArray.size());
 
-        for (int i=0;i<jsonArray.size();i++) {
-            Object arrayElement = toObjectInternal(jsonState,
-                    jsonArray.get(i), root,
-                    fieldDefinition, typeState, arrayLevel+1, setterQueue);
+        for (int i = 0; i < jsonArray.size(); i++) {
+            Object arrayElement = toObjectInternal(jsonState, jsonArray.get(i), root, fieldDefinition, typeState, arrayLevel + 1, setterQueue);
 
             ltd.add(listObject, i, arrayElement);
         }
@@ -225,13 +190,11 @@ public class AlternateJSONTransformer {
     }
 
     @SuppressWarnings("unchecked")
-    private static Map<?,?> toMap(JSONState jsonState, Object obj, Object root,
-            FieldDefinition fieldDefinition, TypeState typeState,
-            int arrayLevel, Stack<String> setterQueue)
-            throws InstantiationException, IllegalAccessException,
-            InvocationTargetException, NoSuchMethodException {
-        
-        if (null==fieldDefinition) {
+    private static Map<?, ?> toMap(JSONState jsonState, Object obj, Object root, FieldDefinition fieldDefinition, TypeState typeState,
+        int arrayLevel, Stack<String> setterQueue) throws InstantiationException, IllegalAccessException, InvocationTargetException,
+        NoSuchMethodException {
+
+        if (null == fieldDefinition) {
             throw new NullArgumentException("fieldDefinition");
         }
 
@@ -240,25 +203,19 @@ public class AlternateJSONTransformer {
 
         // now, convert our object
         if (!(obj instanceof JSONObject)) {
-            throw new WMRuntimeException(
-                    MessageResource.JSON_OBJECT_REQUIRED_FOR_MAP_CONVERSION, obj,
-                    (null!=obj)?obj.getClass():obj);
+            throw new WMRuntimeException(MessageResource.JSON_OBJECT_REQUIRED_FOR_MAP_CONVERSION, obj, null != obj ? obj.getClass() : obj);
         }
 
         JSONObject jsonObject = (JSONObject) obj;
         Map ret = (Map) fieldDefinition.getTypeDefinition().newInstance();
-        
+
         FieldDefinition keyFD = mtd.getKeyFieldDefinition();
         FieldDefinition valueFD = mtd.getValueFieldDefinition();
 
-        for (Object entryObject: jsonObject.entrySet()) {
-            Entry<?,?> entry = (Entry<?,?>) entryObject;
-            Object key = toObjectInternal(jsonState, entry.getKey(), root,
-                    keyFD, typeState, 0,
-                    setterQueue);
-            Object value = toObjectInternal(jsonState, entry.getValue(), root,
-                    valueFD, typeState, 0,
-                    setterQueue);
+        for (Object entryObject : jsonObject.entrySet()) {
+            Entry<?, ?> entry = (Entry<?, ?>) entryObject;
+            Object key = toObjectInternal(jsonState, entry.getKey(), root, keyFD, typeState, 0, setterQueue);
+            Object value = toObjectInternal(jsonState, entry.getValue(), root, valueFD, typeState, 0, setterQueue);
             ret.put(key, value);
         }
 

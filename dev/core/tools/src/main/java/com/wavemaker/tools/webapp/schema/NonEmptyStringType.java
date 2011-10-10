@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -27,16 +26,16 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * 
- * 	This type defines a string which contains at least one
- * 	character.
- *       
+ * This type defines a string which contains at least one character.
  * 
- * <p>Java class for nonEmptyStringType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for nonEmptyStringType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="nonEmptyStringType">
@@ -51,13 +50,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "nonEmptyStringType")
-@XmlSeeAlso({
-    ServletNameType.class,
-    FilterNameType.class
-})
-public class NonEmptyStringType
-    extends String
-{
-
+@XmlSeeAlso({ ServletNameType.class, FilterNameType.class })
+public class NonEmptyStringType extends String {
 
 }

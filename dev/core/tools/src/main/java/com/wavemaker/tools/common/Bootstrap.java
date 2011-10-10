@@ -18,8 +18,7 @@ import com.wavemaker.common.LoggingInitializer;
 import com.wavemaker.common.util.SpringUtils;
 
 /**
- * Entry point for bootstrapping the system. Knows about other Bootstrap classes
- * in the system.
+ * Entry point for bootstrapping the system. Knows about other Bootstrap classes in the system.
  * 
  * @author Simon Toens
  */
@@ -43,6 +42,7 @@ public class Bootstrap {
         hasRun = true;
     }
 
-    private Bootstrap() {}
+    private Bootstrap() {
+    }
 
 }

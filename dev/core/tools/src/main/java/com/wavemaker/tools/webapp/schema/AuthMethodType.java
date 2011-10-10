@@ -19,32 +19,29 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * 
  * 
- * 	The auth-methodType is used to configure the authentication
- * 	mechanism for the web application. As a prerequisite to
- * 	gaining access to any web resources which are protected by
- * 	an authorization constraint, a user must have authenticated
- * 	using the configured mechanism. Legal values are "BASIC",
- * 	"DIGEST", "FORM", "CLIENT-CERT", or a vendor-specific
- * 	authentication scheme.
+ * The auth-methodType is used to configure the authentication mechanism for the web application. As a prerequisite to
+ * gaining access to any web resources which are protected by an authorization constraint, a user must have
+ * authenticated using the configured mechanism. Legal values are "BASIC", "DIGEST", "FORM", "CLIENT-CERT", or a
+ * vendor-specific authentication scheme.
  * 
- * 	Used in: login-config
+ * Used in: login-config
  * 
- *       
  * 
- * <p>Java class for auth-methodType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for auth-methodType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="auth-methodType">
@@ -59,9 +56,6 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "auth-methodType")
-public class AuthMethodType
-    extends String
-{
-
+public class AuthMethodType extends String {
 
 }

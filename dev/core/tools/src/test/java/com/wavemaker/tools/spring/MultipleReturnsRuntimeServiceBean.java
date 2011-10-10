@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.spring;
 
 import com.wavemaker.common.WMRuntimeException;
@@ -33,32 +34,37 @@ import com.wavemaker.runtime.service.response.LiveDataServiceResponse;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class MultipleReturnsRuntimeServiceBean extends AbstractLiveDataService {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.runtime.service.LiveDataService#delete(java.lang.Object)
      */
     public void delete(Object o) throws Exception {
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.runtime.service.LiveDataService#insert(java.lang.Object)
      */
     public Object insert(Object o) throws Exception {
         return null;
     }
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.service.LiveDataService#read(com.wavemaker.json.type.TypeDefinition, java.lang.Object, com.wavemaker.runtime.service.PropertyOptions, com.wavemaker.runtime.service.PagingOptions)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.runtime.service.LiveDataService#read(com.wavemaker.json.type.TypeDefinition, java.lang.Object,
+     * com.wavemaker.runtime.service.PropertyOptions, com.wavemaker.runtime.service.PagingOptions)
      */
-    public TypedServiceReturn read(TypeDefinition type, Object o,
-            PropertyOptions propertyOptions, PagingOptions pagingOptions)
-            throws Exception {
-        
+    public TypedServiceReturn read(TypeDefinition type, Object o, PropertyOptions propertyOptions, PagingOptions pagingOptions) throws Exception {
+
         TypedServiceReturn tsr = new TypedServiceReturn();
-        
+
         if (type.getTypeName().equals(RawObjectNoType.class.getName())) {
             RawObjectNoType raw = new RawObjectNoType();
             raw.setA("aVal");
@@ -67,17 +73,16 @@ public class MultipleReturnsRuntimeServiceBean extends AbstractLiveDataService {
             RawObjectType raw = new RawObjectType();
             raw.setB("bVal");
             tsr.setReturnValue(raw);
-            
-            FieldDefinition rawField = ReflectTypeUtils.getFieldDefinition(
-                    RawObjectType.class, new ReflectTypeState(), false, null);
+
+            FieldDefinition rawField = ReflectTypeUtils.getFieldDefinition(RawObjectType.class, new ReflectTypeState(), false, null);
             tsr.setReturnType(rawField);
         } else if (type.getTypeName().equals(WrappedObjectNoType.class.getName())) {
             WrappedObjectNoType wrap = new WrappedObjectNoType();
             wrap.setC("cVal");
-            
+
             LiveDataServiceResponse resp = new LiveDataServiceResponse();
             resp.setResult(wrap);
-            
+
             tsr.setReturnValue(resp);
         } else if (type.getTypeName().equals(WrappedObjectType.class.getName())) {
             WrappedObjectType wrap = new WrappedObjectType();
@@ -85,52 +90,45 @@ public class MultipleReturnsRuntimeServiceBean extends AbstractLiveDataService {
 
             LiveDataServiceResponse resp = new LiveDataServiceResponse();
             resp.setResult(wrap);
-            
+
             tsr.setReturnValue(resp);
-            
-            
-            FieldDefinition wrapField = ReflectTypeUtils.getFieldDefinition(
-                    WrappedObjectType.class, new ReflectTypeState(), false, null);
-            FieldDefinition liveDataField = ReflectTypeUtils.getFieldDefinition(
-                    LiveDataServiceResponse.class, new ReflectTypeState(), false,
-                    null);
-            ((ObjectTypeDefinition)liveDataField.getTypeDefinition()).
-                    getFields().put(ServerConstants.RESULTS_PART, wrapField);
-            
+
+            FieldDefinition wrapField = ReflectTypeUtils.getFieldDefinition(WrappedObjectType.class, new ReflectTypeState(), false, null);
+            FieldDefinition liveDataField = ReflectTypeUtils.getFieldDefinition(LiveDataServiceResponse.class, new ReflectTypeState(), false, null);
+            ((ObjectTypeDefinition) liveDataField.getTypeDefinition()).getFields().put(ServerConstants.RESULTS_PART, wrapField);
+
             tsr.setReturnType(liveDataField);
         } else {
-            throw new WMRuntimeException("unrecognized type: "+type);
+            throw new WMRuntimeException("unrecognized type: " + type);
         }
-        
-        
+
         return tsr;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.runtime.service.LiveDataService#update(java.lang.Object)
      */
     public Object update(Object o) throws Exception {
         return null;
     }
-    
-    
-    
-    
+
     public static class RawObjectNoType {
-        
+
         private String a;
 
         public String getA() {
-            return a;
+            return this.a;
         }
 
         public void setA(String a) {
             this.a = a;
         }
     }
-    
+
     public static class RawObjectType {
-     
+
         private String b;
 
         public void setB(String b) {
@@ -138,12 +136,12 @@ public class MultipleReturnsRuntimeServiceBean extends AbstractLiveDataService {
         }
 
         public String getB() {
-            return b;
+            return this.b;
         }
     }
-    
+
     public static class WrappedObjectNoType {
-     
+
         private String c;
 
         public void setC(String c) {
@@ -151,12 +149,12 @@ public class MultipleReturnsRuntimeServiceBean extends AbstractLiveDataService {
         }
 
         public String getC() {
-            return c;
+            return this.c;
         }
     }
-    
+
     public static class WrappedObjectType {
-    
+
         private String d;
 
         public void setD(String d) {
@@ -164,7 +162,7 @@ public class MultipleReturnsRuntimeServiceBean extends AbstractLiveDataService {
         }
 
         public String getD() {
-            return d;
+            return this.d;
         }
     }
 }

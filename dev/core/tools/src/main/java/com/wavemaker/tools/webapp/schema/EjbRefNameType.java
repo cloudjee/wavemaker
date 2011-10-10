@@ -19,36 +19,34 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * 
- * 	
  * 
- * 	  The ejb-ref-name element contains the name of an EJB
- * 	  reference. The EJB reference is an entry in the
- * 	  Deployment Component's environment and is relative to the
- * 	  java:comp/env context.  The name must be unique within the
- * 	  Deployment Component.
  * 
- * 	  It is recommended that name is prefixed with "ejb/".
+ * The ejb-ref-name element contains the name of an EJB reference. The EJB reference is an entry in the Deployment
+ * Component's environment and is relative to the java:comp/env context. The name must be unique within the Deployment
+ * Component.
  * 
- * 	  Example:
+ * It is recommended that name is prefixed with "ejb/".
  * 
- * 	  <ejb-ref-name>ejb/Payroll</ejb-ref-name>
+ * Example:
  * 
- * 	  
- *       
+ * <ejb-ref-name>ejb/Payroll</ejb-ref-name>
  * 
- * <p>Java class for ejb-ref-nameType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * 
+ * 
+ * <p>
+ * Java class for ejb-ref-nameType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="ejb-ref-nameType">
@@ -63,9 +61,6 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ejb-ref-nameType")
-public class EjbRefNameType
-    extends JndiNameType
-{
-
+public class EjbRefNameType extends JndiNameType {
 
 }

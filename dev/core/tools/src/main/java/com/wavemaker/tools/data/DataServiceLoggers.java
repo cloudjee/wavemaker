@@ -16,6 +16,7 @@ package com.wavemaker.tools.data;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 /**
  * @author Simon Toens
  * @version $Rev$ - $Date$
@@ -23,14 +24,11 @@ import org.apache.commons.logging.LogFactory;
  */
 public class DataServiceLoggers {
 
-    private DataServiceLoggers() {}
+    private DataServiceLoggers() {
+    }
 
-    
-    public static final Log parserLogger = 
-        LogFactory.getLog("com.wavemaker.tools.data.parser");
-    
-    public static final Log importLogger = LogFactory
-    .getLog("com.wavemaker.tools.data.importdb");
-    
+    public static final Log parserLogger = LogFactory.getLog("com.wavemaker.tools.data.parser");
+
+    public static final Log importLogger = LogFactory.getLog("com.wavemaker.tools.data.importdb");
 
 }

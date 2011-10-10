@@ -49,11 +49,10 @@ import com.wavemaker.tools.data.parser.HbmParser;
  * 
  */
 public class ExportDB extends BaseDataModelSetup {
-    
+
     private static final Log log = LogFactory.getLog(BaseDataModelSetup.class);
 
-    private static final String HBM_FILES_DIR_SYSTEM_PROPERTY = 
-        SYSTEM_PROPERTY_PREFIX + "hbmFilesDir";
+    private static final String HBM_FILES_DIR_SYSTEM_PROPERTY = SYSTEM_PROPERTY_PREFIX + "hbmFilesDir";
 
     private File hbmFilesDir = null;
 
@@ -82,7 +81,7 @@ public class ExportDB extends BaseDataModelSetup {
     }
 
     public List<Throwable> getErrors() {
-        return errors;
+        return this.errors;
     }
 
     public void setHbmFilesDir(File hbmFilesDir) {
@@ -98,7 +97,7 @@ public class ExportDB extends BaseDataModelSetup {
     }
 
     public String getDDL() {
-        return ddl;
+        return this.ddl;
     }
 
     @Override
@@ -108,7 +107,7 @@ public class ExportDB extends BaseDataModelSetup {
 
         final Configuration cfg = new Configuration();
 
-        cfg.addDirectory(hbmFilesDir);
+        cfg.addDirectory(this.hbmFilesDir);
 
         Properties connectionProperties = getHibernateConnectionProperties();
 
@@ -117,22 +116,22 @@ public class ExportDB extends BaseDataModelSetup {
         SchemaExport export = null;
         SchemaUpdate update = null;
         File ddlFile = null;
-        
+
         ClassLoaderUtils.TaskRtn t;
 
         try {
-            if (overrideTable) {
+            if (this.overrideTable) {
                 t = new ClassLoaderUtils.TaskRtn() {
+
                     public SchemaExport run() {
                         return new SchemaExport(cfg);
                     }
                 };
 
-                if (classesDir == null) {
+                if (this.classesDir == null) {
                     export = (SchemaExport) t.run();
                 } else {
-                    export = (SchemaExport) ClassLoaderUtils.runInClassLoaderContext(t,
-                            new FileSystemResource(classesDir));
+                    export = (SchemaExport) ClassLoaderUtils.runInClassLoaderContext(t, new FileSystemResource(this.classesDir));
                 }
 
                 ddlFile = File.createTempFile("ddl", ".sql");
@@ -142,36 +141,35 @@ public class ExportDB extends BaseDataModelSetup {
                 export.setDelimiter(";");
                 export.setFormat(true);
 
-                String extraddl = prepareForExport(exportToDatabase);
+                String extraddl = prepareForExport(this.exportToDatabase);
 
-                export.create(verbose, exportToDatabase);
+                export.create(this.verbose, this.exportToDatabase);
 
-                errors = CastUtils.cast(export.getExceptions());
-                errors = filterError(errors, connectionProperties);
+                this.errors = CastUtils.cast(export.getExceptions());
+                this.errors = filterError(this.errors, connectionProperties);
 
-                ddl = IOUtils.read(ddlFile);
+                this.ddl = IOUtils.read(ddlFile);
 
                 if (!ObjectUtils.isNullOrEmpty(extraddl)) {
-                    ddl = extraddl + "\n" + ddl;
+                    this.ddl = extraddl + "\n" + this.ddl;
                 }
             } else {
                 t = new ClassLoaderUtils.TaskRtn() {
+
                     public SchemaUpdate run() {
                         return new SchemaUpdate(cfg);
                     }
                 };
 
-                if (classesDir == null) {
+                if (this.classesDir == null) {
                     update = (SchemaUpdate) t.run();
                 } else {
-                    update = (SchemaUpdate) ClassLoaderUtils.runInClassLoaderContext(t,
-                            new FileSystemResource(classesDir));
+                    update = (SchemaUpdate) ClassLoaderUtils.runInClassLoaderContext(t, new FileSystemResource(this.classesDir));
                 }
 
-                prepareForExport(exportToDatabase);
+                prepareForExport(this.exportToDatabase);
 
-                Connection conn = JDBCUtils.getConnection(this.connectionUrl, this.username,
-                        this.password, this.driverClassName);
+                Connection conn = JDBCUtils.getConnection(this.connectionUrl, this.username, this.password, this.driverClassName);
 
                 Dialect dialect = Dialect.getDialect(connectionProperties);
 
@@ -179,15 +177,15 @@ public class ExportDB extends BaseDataModelSetup {
 
                 String[] updateSQL = cfg.generateSchemaUpdateScript(dialect, meta);
 
-                update.execute(verbose, exportToDatabase);
+                update.execute(this.verbose, this.exportToDatabase);
 
-                errors = CastUtils.cast(update.getExceptions());
+                this.errors = CastUtils.cast(update.getExceptions());
                 StringBuilder sb = new StringBuilder();
-                for (String line: updateSQL) {
+                for (String line : updateSQL) {
                     sb = sb.append(line);
                     sb = sb.append("\n");
                 }
-                ddl = sb.toString();
+                this.ddl = sb.toString();
 
             }
         } catch (IOException ex) {
@@ -197,33 +195,35 @@ public class ExportDB extends BaseDataModelSetup {
         } finally {
             try {
                 ddlFile.delete();
-            } catch (Exception ignore) {}
+            } catch (Exception ignore) {
+            }
         }
     }
 
-    //The DDL Hibernate creates includes "alter table" statement on the top, which causes an error message (Table not found)
-    //to be displayed after the DB is exported properly.  Let's hide the error message because it is too misleading.
-    //This is not a perfect solution but we have no other way round until Hibernate fixes this problem.
+    // The DDL Hibernate creates includes "alter table" statement on the top, which causes an error message (Table not
+    // found)
+    // to be displayed after the DB is exported properly. Let's hide the error message because it is too misleading.
+    // This is not a perfect solution but we have no other way round until Hibernate fixes this problem.
 
     private List<Throwable> filterError(List<Throwable> errors, Properties props) {
         List<Throwable> rtn = new ArrayList<Throwable>();
-        String dialect = (String)props.get(".dialect");
+        String dialect = (String) props.get(".dialect");
         String dbType;
-        if (dialect == null) return rtn; 
-        if (dialect.contains("MySQL"))
-            dbType = "mysql";
-        else if (dialect.contains("HSQL"))
-            dbType = "hsql";
-        else
+        if (dialect == null) {
             return rtn;
+        }
+        if (dialect.contains("MySQL")) {
+            dbType = "mysql";
+        } else if (dialect.contains("HSQL")) {
+            dbType = "hsql";
+        } else {
+            return rtn;
+        }
 
-        for (Throwable t: errors) {
+        for (Throwable t : errors) {
             String msg = t.getMessage();
-            if ((dbType.equals("mysql") && (msg.substring(0, 5).equals("Table")
-                    && msg.lastIndexOf("doesn't exist") == msg.length() - 13)) ||
-                 (dbType.equals("hsql") && (msg.substring(0, 16).equals("Table not found:")
-                    && msg.contains("in statement [alter table"))))
-            {
+            if (dbType.equals("mysql") && msg.substring(0, 5).equals("Table") && msg.lastIndexOf("doesn't exist") == msg.length() - 13
+                || dbType.equals("hsql") && msg.substring(0, 16).equals("Table not found:") && msg.contains("in statement [alter table")) {
                 continue;
             } else {
                 rtn.add(t);
@@ -244,7 +244,8 @@ public class ExportDB extends BaseDataModelSetup {
     }
 
     @Override
-    protected void customDispose() {}
+    protected void customDispose() {
+    }
 
     private String prepareForExport(boolean run) {
 
@@ -252,35 +253,33 @@ public class ExportDB extends BaseDataModelSetup {
             return null;
         }
 
-        // For export to MySQL or Postgres, we attempt to create the 
-        // database.  For Postgres, we should also create the schema.
-        // And we should expand this logic to include other supported 
+        // For export to MySQL or Postgres, we attempt to create the
+        // database. For Postgres, we should also create the schema.
+        // And we should expand this logic to include other supported
         // database types.
 
         Tuple.Two<String, String> t = getMappedSchemaAndCatalog();
         String schemaName = t.v1, catalogName = t.v2;
         String urlDBName = getDatabaseNameFromConnectionUrl();
-        String url = connectionUrl;
+        String url = this.connectionUrl;
 
         if (isMySQL() && !ObjectUtils.isNullOrEmpty(schemaName)) {
             throw new ConfigurationException(MessageResource.UNSET_SCHEMA, "MySQL");
         }
 
         if (!ObjectUtils.isNullOrEmpty(urlDBName)) {
-            url = connectionUrl.substring(0, connectionUrl.indexOf(urlDBName));
+            url = this.connectionUrl.substring(0, this.connectionUrl.indexOf(urlDBName));
             if (isPostgres()) {
                 url += "postgres";
             }
             if (ObjectUtils.isNullOrEmpty(catalogName)) {
                 catalogName = urlDBName;
             } else if (!ObjectUtils.isNullOrEmpty(catalogName) && !catalogName.equals(urlDBName)) {
-                throw new ConfigurationException(
-                    MessageResource.MISMATCH_CATALOG_DBNAME, urlDBName, catalogName);
+                throw new ConfigurationException(MessageResource.MISMATCH_CATALOG_DBNAME, urlDBName, catalogName);
             }
         } else if (ObjectUtils.isNullOrEmpty(catalogName)) {
             throw new ConfigurationException(MessageResource.CATALOG_SHOULD_BE_SET);
         }
-        
 
         String ddl = null;
         if (isMySQL()) {
@@ -296,45 +295,45 @@ public class ExportDB extends BaseDataModelSetup {
                 runDDL(ddl, url);
             }
         } catch (RuntimeException ex) {
-            log.warn("Unable to create database "+catalogName+" - it's possible it already exists.", ex);
+            log.warn("Unable to create database " + catalogName + " - it's possible it already exists.", ex);
         }
 
         return ddl;
     }
 
     private void checkHbmFilesDir(Collection<String> requiredProperties) {
-        if (hbmFilesDir == null) {
-            String s = properties.getProperty(HBM_FILES_DIR_SYSTEM_PROPERTY);
+        if (this.hbmFilesDir == null) {
+            String s = this.properties.getProperty(HBM_FILES_DIR_SYSTEM_PROPERTY);
             if (s != null) {
                 setHbmFilesDir(new File(s));
             }
         }
 
-        if (hbmFilesDir == null) {
+        if (this.hbmFilesDir == null) {
             requiredProperties.add(HBM_FILES_DIR_SYSTEM_PROPERTY);
         }
     }
 
     private String getDatabaseNameFromConnectionUrl() {
-        return JDBCUtils.getMySQLDatabaseName(connectionUrl);
+        return JDBCUtils.getMySQLDatabaseName(this.connectionUrl);
     }
 
     private Tuple.Two<String, String> getMappedSchemaAndCatalog() {
-        for (String s : hbmFilesDir.list()) {
-            File f = new File(hbmFilesDir, s);
+        for (String s : this.hbmFilesDir.list()) {
+            File f = new File(this.hbmFilesDir, s);
             if (!f.isDirectory()) {
                 HbmParser p = null;
                 try {
                     p = new HbmParser(f);
                     // rely on the fact that all mapping files have the same
                     // schema and catalog
-                    return Tuple.tuple(p.getEntity().getSchemaName(),
-                                       p.getEntity().getCatalogName());
+                    return Tuple.tuple(p.getEntity().getSchemaName(), p.getEntity().getCatalogName());
                 } catch (RuntimeException ignore) {
                 } finally {
                     try {
                         p.close();
-                    } catch (RuntimeException ignore) {}
+                    } catch (RuntimeException ignore) {
+                    }
                 }
             }
         }

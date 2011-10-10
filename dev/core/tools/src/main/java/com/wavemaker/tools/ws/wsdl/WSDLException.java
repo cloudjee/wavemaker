@@ -23,21 +23,21 @@ import com.wavemaker.common.WMException;
  * @author Frankie Fu
  */
 public class WSDLException extends WMException {
-    
+
     private static final long serialVersionUID = 1L;
 
     public WSDLException(String message) {
         super(message);
     }
-    
+
     public WSDLException(MessageResource resource, Object... args) {
         super(resource, args);
     }
-    
+
     public WSDLException(Throwable cause) {
         super(cause);
     }
-    
+
     public WSDLException(String message, Throwable cause) {
         super(message, cause);
     }

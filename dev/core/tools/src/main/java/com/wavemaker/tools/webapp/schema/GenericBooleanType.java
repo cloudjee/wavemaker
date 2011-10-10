@@ -19,26 +19,25 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * 
  * 
- * 	This type defines four different values which can designate
- * 	boolean values. This includes values yes and no which are
- * 	not designated by xsd:boolean
+ * This type defines four different values which can designate boolean values. This includes values yes and no which are
+ * not designated by xsd:boolean
  * 
- *       
  * 
- * <p>Java class for generic-booleanType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for generic-booleanType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="generic-booleanType">
@@ -53,9 +52,6 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "generic-booleanType")
-public class GenericBooleanType
-    extends String
-{
-
+public class GenericBooleanType extends String {
 
 }

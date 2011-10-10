@@ -15,45 +15,50 @@
 package com.wavemaker.runtime.module;
 
 /**
- * Provides wiring between module beans and their entry points (the extension
- * point that they bind to), as well as exposing other configuration settings.
+ * Provides wiring between module beans and their entry points (the extension point that they bind to), as well as
+ * exposing other configuration settings.
  * 
  * @author small
  * @version $Rev$ - $Date$
  */
 public class ModuleWire {
-    
+
     private String extensionPoint;
+
     private Object bean;
+
     private String name;
 
-    
     public ModuleWire() {
         // do nothin'
     }
-    
+
     public ModuleWire(String extensionPoint, Object bean) {
         this();
         setExtensionPoint(extensionPoint);
         setBean(bean);
     }
-    
-    
+
     public String getExtensionPoint() {
-        return extensionPoint;
+        return this.extensionPoint;
     }
+
     public void setExtensionPoint(String extensionPoint) {
         this.extensionPoint = extensionPoint;
     }
+
     public Object getBean() {
-        return bean;
+        return this.bean;
     }
+
     public void setBean(Object bean) {
         this.bean = bean;
     }
+
     public String getName() {
-        return name;
+        return this.name;
     }
+
     public void setName(String name) {
         this.name = name;
     }

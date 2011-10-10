@@ -37,62 +37,63 @@ import com.wavemaker.json.type.reflect.ReflectTypeUtils;
  * @author small
  * @version $Rev$ - $Date$
  */
-public class BlobTypeDefinition extends PrimitiveReflectTypeDefinition
-        implements ReadObjectConverter, WriteObjectConverter {
-    
+public class BlobTypeDefinition extends PrimitiveReflectTypeDefinition implements ReadObjectConverter, WriteObjectConverter {
+
     public BlobTypeDefinition(Class<? extends Blob> klass) {
-        
+
         super();
         this.setKlass(klass);
         this.setTypeName(ReflectTypeUtils.getTypeName(this.getKlass()));
     }
-    
-    /* (non-Javadoc)
-     * @see com.wavemaker.json.type.converters.ReadObjectConverter#readObject(java.lang.Object, java.lang.Object, java.lang.String)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.json.type.converters.ReadObjectConverter#readObject(java.lang.Object, java.lang.Object,
+     * java.lang.String)
      */
     public Object readObject(Object input, Object root, String path) {
-        
-        if (null==input) {
+
+        if (null == input) {
             return null;
         } else if (JSONArray.class.isAssignableFrom(input.getClass())) {
             JSONArray jarr = (JSONArray) input;
             byte[] barr = new byte[jarr.size()];
-            
-            for (int i=0;i<barr.length;i++) {
+
+            for (int i = 0; i < barr.length; i++) {
                 if (Number.class.isAssignableFrom(jarr.get(i).getClass())) {
                     barr[i] = ((Number) jarr.get(i)).byteValue();
                 } else {
-                    throw new WMRuntimeException("expected number, not: "+
-                            jarr.get(i)+" (class: "+jarr.get(i).getClass()+")");
+                    throw new WMRuntimeException("expected number, not: " + jarr.get(i) + " (class: " + jarr.get(i).getClass() + ")");
                 }
             }
-            
+
             return new BlobImpl(barr);
         } else {
             return input;
         }
     }
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.json.type.converters.WriteObjectConverter#writeObject(java.lang.Object, java.lang.Object, java.lang.String, java.io.Writer)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.json.type.converters.WriteObjectConverter#writeObject(java.lang.Object, java.lang.Object,
+     * java.lang.String, java.io.Writer)
      */
-    public void writeObject(Object input, Object root, String path,
-            Writer writer) throws IOException {
-        
-        if (null==input) {
+    public void writeObject(Object input, Object root, String path, Writer writer) throws IOException {
+
+        if (null == input) {
             JSONMarshaller.marshal(writer, input);
         } else if (input instanceof Blob) {
             try {
-                byte[] bytes = IOUtils.toByteArray(((Blob) input)
-                        .getBinaryStream());
+                byte[] bytes = IOUtils.toByteArray(((Blob) input).getBinaryStream());
 
                 JSONMarshaller.marshal(writer, bytes);
             } catch (SQLException e) {
                 throw new WMRuntimeException(e);
             }
         } else {
-            throw new WMRuntimeException(MessageResource.JSON_UNHANDLED_TYPE, input,
-                    input.getClass());
+            throw new WMRuntimeException(MessageResource.JSON_UNHANDLED_TYPE, input, input.getClass());
         }
     }
 }

@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.json.type.reflect;
 
 import java.util.HashMap;
@@ -28,7 +29,7 @@ import com.wavemaker.infra.WMTestCase;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestMapReflectTypeDefinition extends WMTestCase {
 
@@ -38,15 +39,15 @@ public class TestMapReflectTypeDefinition extends WMTestCase {
     }
 
     public void testNewInstance() throws Exception {
-        
+
         MapReflectTypeDefinition mrtd = new MapReflectTypeDefinition();
-        
+
         mrtd.setKlass(Map.class);
         assertTrue(mrtd.newInstance() instanceof HashMap);
-        
+
         mrtd.setKlass(TreeMap.class);
         assertTrue(mrtd.newInstance() instanceof TreeMap);
-        
+
         mrtd.setKlass(SortedMap.class);
         assertTrue(mrtd.newInstance() instanceof TreeMap);
     }

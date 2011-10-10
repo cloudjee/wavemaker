@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.wavemaker.studio.project.upgrade.five_dot_zero;
 
 import static org.junit.Assert.assertEquals;
@@ -42,83 +43,73 @@ import com.wavemaker.tools.project.upgrade.five_dot_zero.ConvertVariableToServic
  * @author Jeremy Grelle
  * 
  */
-public class TestConvertVariableToServiceInputUpgradeTask extends
-		StudioTestCase {
+public class TestConvertVariableToServiceInputUpgradeTask extends StudioTestCase {
 
-	@Test
-	public void testBasicUpgrade() throws Exception {
+    @Test
+    public void testBasicUpgrade() throws Exception {
 
-		String projectName = "WMAPP_FinancialServices";
+        String projectName = "WMAPP_FinancialServices";
 
-		makeProject(projectName, false);
-		ProjectManager pm = (ProjectManager) getBean("projectManager");
-		Project project = pm.getCurrentProject();
+        makeProject(projectName, false);
+        ProjectManager pm = (ProjectManager) getBean("projectManager");
+        Project project = pm.getCurrentProject();
 
-		File webapproot = new File(project.getProjectRoot().getFile(),
-				"webapproot");
-		assertTrue(webapproot.exists());
-		File pagesdir = new File(webapproot, "pages");
-		pagesdir.mkdir();
+        File webapproot = new File(project.getProjectRoot().getFile(), "webapproot");
+        assertTrue(webapproot.exists());
+        File pagesdir = new File(webapproot, "pages");
+        pagesdir.mkdir();
 
-		File varFiles = (new ClassPathResource(
-				"com/wavemaker/studio/project/upgrade/five_dot_zero/convertvariabletoserviceinput.files"))
-				.getFile();
-		File inputMain = new File(varFiles, "input/MainPage");
-		assertTrue(inputMain.exists());
+        File varFiles = new ClassPathResource("com/wavemaker/studio/project/upgrade/five_dot_zero/convertvariabletoserviceinput.files").getFile();
+        File inputMain = new File(varFiles, "input/MainPage");
+        assertTrue(inputMain.exists());
 
-		File main = new File(pagesdir, "MainPage");
-		FileUtils.copyDirectory(inputMain, main);
+        File main = new File(pagesdir, "MainPage");
+        FileUtils.copyDirectory(inputMain, main);
 
-		File inputApp = new File(varFiles,
-				"input/app/WMAPP_FinancialServices.js");
-		File app = new File(new File(project.getProjectRoot().getFile(),
-				"webapproot"), "WMAPP_FinancialServices.js");
-		FileUtils.copyFile(inputApp, app);
+        File inputApp = new File(varFiles, "input/app/WMAPP_FinancialServices.js");
+        File app = new File(new File(project.getProjectRoot().getFile(), "webapproot"), "WMAPP_FinancialServices.js");
+        FileUtils.copyFile(inputApp, app);
 
-		ConvertVariableToServiceInputUpgradeTask ut = new ConvertVariableToServiceInputUpgradeTask();
-		ut.setPagesManager((PagesManager) getBean("pagesManager"));
-		UpgradeInfo info = new UpgradeInfo();
-		ut.doUpgrade(project, info);
+        ConvertVariableToServiceInputUpgradeTask ut = new ConvertVariableToServiceInputUpgradeTask();
+        ut.setPagesManager((PagesManager) getBean("pagesManager"));
+        UpgradeInfo info = new UpgradeInfo();
+        ut.doUpgrade(project, info);
 
-		File expectedMain = new File(varFiles, "expected/MainPage");
-		assertEquals(1, expectedMain.listFiles().length);
-		boolean gotWidgetsJS = false;
-		for (File file : expectedMain.listFiles()) {
-			File inputFile = new File(main, file.getName());
-			if (inputFile.getName().endsWith(".widgets.js")) {
-				gotWidgetsJS = true;
-			}
+        File expectedMain = new File(varFiles, "expected/MainPage");
+        assertEquals(1, expectedMain.listFiles().length);
+        boolean gotWidgetsJS = false;
+        for (File file : expectedMain.listFiles()) {
+            File inputFile = new File(main, file.getName());
+            if (inputFile.getName().endsWith(".widgets.js")) {
+                gotWidgetsJS = true;
+            }
 
-			assertEquals(StringUtils.deleteWhitespace(FileUtils
-					.readFileToString(file)),
-					StringUtils.deleteWhitespace(FileUtils
-							.readFileToString(inputFile)));
-		}
-		assertTrue(gotWidgetsJS);
+            assertEquals(StringUtils.deleteWhitespace(FileUtils.readFileToString(file)),
+                StringUtils.deleteWhitespace(FileUtils.readFileToString(inputFile)));
+        }
+        assertTrue(gotWidgetsJS);
 
-		File expectedApp = new File(varFiles,
-				"expected/app/WMAPP_FinancialServices.js");
-		assertEquals(StringUtils.deleteWhitespace(FileUtils
-				.readFileToString(expectedApp)),
-				StringUtils.deleteWhitespace(FileUtils.readFileToString(app)));
-	}
+        File expectedApp = new File(varFiles, "expected/app/WMAPP_FinancialServices.js");
+        assertEquals(StringUtils.deleteWhitespace(FileUtils.readFileToString(expectedApp)),
+            StringUtils.deleteWhitespace(FileUtils.readFileToString(app)));
+    }
 
-	@Test
-	public void testUpgradeTaskPresent() throws Exception {
+    @Test
+    public void testUpgradeTaskPresent() throws Exception {
 
-		boolean foundTask = false;
+        boolean foundTask = false;
 
-		UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
+        UpgradeManager um = (UpgradeManager) getBean("upgradeManager");
 
-		outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
-			for (UpgradeTask ut : uts) {
-				if (ut instanceof ConvertVariableToServiceInputUpgradeTask) {
-					foundTask = true;
-					break outer;
-				}
-			}
-		}
+        outer: for (List<UpgradeTask> uts : um.getUpgrades().values()) {
+            for (UpgradeTask ut : uts) {
+                if (ut instanceof ConvertVariableToServiceInputUpgradeTask) {
+                    foundTask = true;
+                    break outer;
+                }
+            }
+        }
 
-		assertTrue(foundTask);
-	}
+        assertTrue(foundTask);
+    }
 }

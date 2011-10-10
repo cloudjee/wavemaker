@@ -21,16 +21,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Hides any method or type that this annotation is applied to from the client,
- * both at design-time and runtime (so invokes will fail).  When applied to a
- * type, all methods in that type will be hidden by default, unless exposed
- * by {@link ExposeToClient}.
+ * Hides any method or type that this annotation is applied to from the client, both at design-time and runtime (so
+ * invokes will fail). When applied to a type, all methods in that type will be hidden by default, unless exposed by
+ * {@link ExposeToClient}.
  * 
  * @author small
  * @version $Rev$ - $Date$
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.TYPE})
+@Target({ ElementType.METHOD, ElementType.TYPE })
 @Documented
 public @interface HideFromClient {
 

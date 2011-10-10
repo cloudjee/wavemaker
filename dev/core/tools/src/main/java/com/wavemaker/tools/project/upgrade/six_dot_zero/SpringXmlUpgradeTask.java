@@ -23,6 +23,7 @@ import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
+
 /**
  * Changes the package of WMPropertyPlaceholderConfigurer.
  * 
@@ -30,30 +31,38 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
  */
 public class SpringXmlUpgradeTask implements UpgradeTask {
 
-    private String fromStr = "com.wavemaker.common.WMPropertyPlaceholderConfigurer";
-    private String toStr = "com.wavemaker.runtime.data.spring.WMPropertyPlaceholderConfigurer";
+    private final String fromStr = "com.wavemaker.common.WMPropertyPlaceholderConfigurer";
+
+    private final String toStr = "com.wavemaker.runtime.data.spring.WMPropertyPlaceholderConfigurer";
+
     private boolean processed = false;
+
     private boolean error = false;
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
+     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
      */
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
         String svcPath = project.getProjectRoot() + "/services";
         File svc = new File(svcPath);
 
         File[] mdls = svc.listFiles();
-		if (mdls == null || mdls.length == 0) return;
+        if (mdls == null || mdls.length == 0) {
+            return;
+        }
 
-        for (File mdl: mdls) {
+        for (File mdl : mdls) {
             File mdlsrc = new File(mdl.getAbsolutePath() + "/src");
             processSingleMdl(mdlsrc);
-		}
+        }
 
-        if (error) {
-            upgradeInfo.addMessage("*** Terminated with error while upgrading Data Model Spring config file. " +
-                    "Please check the console message.***");
-        } else if (!processed) {
+        if (this.error) {
+            upgradeInfo.addMessage("*** Terminated with error while upgrading Data Model Spring config file. "
+                + "Please check the console message.***");
+        } else if (!this.processed) {
             upgradeInfo.addMessage("Upgrading Data Model Spring config file completed. No files processed.");
         } else {
             upgradeInfo.addMessage("Upgrading Data Model Spring config file completed successfully.");
@@ -63,26 +72,32 @@ public class SpringXmlUpgradeTask implements UpgradeTask {
     private void processSingleMdl(File mdl) {
         File[] xmls = mdl.listFiles();
 
-        if (xmls == null || xmls.length == 0) return;
+        if (xmls == null || xmls.length == 0) {
+            return;
+        }
 
-        for (File xmlf: xmls) {
-            if (xmlf.isDirectory()) continue;
+        for (File xmlf : xmls) {
+            if (xmlf.isDirectory()) {
+                continue;
+            }
             processSingleXml(xmlf);
-		}
+        }
     }
 
     private void processSingleXml(File xmlf) {
         String fileName = xmlf.getName();
-        if (!fileName.contains("spring.xml")) return;
+        if (!fileName.contains("spring.xml")) {
+            return;
+        }
 
         try {
             String content = FileUtils.readFileToString(xmlf, ServerConstants.DEFAULT_ENCODING);
-            content = content.replace(fromStr, toStr);
+            content = content.replace(this.fromStr, this.toStr);
             FileUtils.writeStringToFile(xmlf, content, ServerConstants.DEFAULT_ENCODING);
-            processed = true;
+            this.processed = true;
         } catch (IOException ioe) {
             ioe.printStackTrace();
-            error = true;
+            this.error = true;
         }
     }
 }

@@ -15,9 +15,9 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.common.util;
 
-import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.infra.WMTestCase;
 
 /**
@@ -33,29 +33,24 @@ public class TestEncoding extends WMTestCase {
         String str = "\u00F6";
         assertEquals("ö", str);
         // UTF8 is c3b6, LATIN1 is f6
-        
-        assertEquals("c3b6", Long.toHexString(SystemUtils.getUnsignedValue(str
-                .getBytes("UTF8"))));
-        assertEquals("f6", Long.toHexString(SystemUtils.getUnsignedValue(str
-                .getBytes("LATIN1"))));
+
+        assertEquals("c3b6", Long.toHexString(SystemUtils.getUnsignedValue(str.getBytes("UTF8"))));
+        assertEquals("f6", Long.toHexString(SystemUtils.getUnsignedValue(str.getBytes("LATIN1"))));
     }
-    
-    
+
     public void test2() throws Exception {
         String str = "\u00C9";
         assertEquals("É", str);
         // UTF8 is c389
-        assertEquals("c389", Long.toHexString(SystemUtils.getUnsignedValue(str
-                .getBytes("UTF8"))));
-    }    
-    
+        assertEquals("c389", Long.toHexString(SystemUtils.getUnsignedValue(str.getBytes("UTF8"))));
+    }
+
     public void test3() throws Exception {
         String str = "\u00E9";
-        assertEquals("é" , str);
+        assertEquals("é", str);
         // UTF8 is c3a9
-        assertEquals("c3a9", Long.toHexString(SystemUtils.getUnsignedValue(str
-                .getBytes("UTF8"))));
-    }        
+        assertEquals("c3a9", Long.toHexString(SystemUtils.getUnsignedValue(str.getBytes("UTF8"))));
+    }
 
     public void testGetValue() {
         assertEquals(1, SystemUtils.getUnsignedValue(new byte[] { 1 }));

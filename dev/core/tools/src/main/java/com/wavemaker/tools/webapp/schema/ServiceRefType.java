@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import java.util.ArrayList;
@@ -35,23 +34,21 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
  * 
  * 
- * 	The service-ref element declares a reference to a Web
- * 	service. It contains optional description, display name and
- * 	icons, a declaration of the required Service interface,
- * 	an optional WSDL document location, an optional set
- * 	of JAX-RPC mappings, an optional QName for the service element,
- * 	an optional set of Service Endpoint Interfaces to be resolved
- * 	by the container to a WSDL port, and an optional set of handlers.
+ * The service-ref element declares a reference to a Web service. It contains optional description, display name and
+ * icons, a declaration of the required Service interface, an optional WSDL document location, an optional set of
+ * JAX-RPC mappings, an optional QName for the service element, an optional set of Service Endpoint Interfaces to be
+ * resolved by the container to a WSDL port, and an optional set of handlers.
  * 
- *       
  * 
- * <p>Java class for service-refType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for service-refType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="service-refType">
@@ -76,37 +73,37 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "service-refType", propOrder = {
-    "description",
-    "displayName",
-    "icon",
-    "serviceRefName",
-    "serviceInterface",
-    "wsdlFile",
-    "jaxrpcMappingFile",
-    "serviceQname",
-    "portComponentRef",
-    "handler"
-})
+@XmlType(name = "service-refType", propOrder = { "description", "displayName", "icon", "serviceRefName", "serviceInterface", "wsdlFile",
+    "jaxrpcMappingFile", "serviceQname", "portComponentRef", "handler" })
 public class ServiceRefType {
 
     protected List<DescriptionType> description;
+
     @XmlElement(name = "display-name")
     protected List<DisplayNameType> displayName;
+
     protected List<IconType> icon;
+
     @XmlElement(name = "service-ref-name", required = true)
     protected JndiNameType serviceRefName;
+
     @XmlElement(name = "service-interface", required = true)
     protected FullyQualifiedClassType serviceInterface;
+
     @XmlElement(name = "wsdl-file")
     protected XsdAnyURIType wsdlFile;
+
     @XmlElement(name = "jaxrpc-mapping-file")
     protected PathType jaxrpcMappingFile;
+
     @XmlElement(name = "service-qname")
     protected XsdQNameType serviceQname;
+
     @XmlElement(name = "port-component-ref")
     protected List<PortComponentRefType> portComponentRef;
+
     protected List<ServiceRefHandlerType> handler;
+
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -117,27 +114,26 @@ public class ServiceRefType {
      * Gets the value of the description property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the description property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the description property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getDescription().add(newItem);
+     * getDescription().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DescriptionType }
+     * Objects of the following type(s) are allowed in the list {@link DescriptionType }
      * 
      * 
      */
     public List<DescriptionType> getDescription() {
-        if (description == null) {
-            description = new ArrayList<DescriptionType>();
+        if (this.description == null) {
+            this.description = new ArrayList<DescriptionType>();
         }
         return this.description;
     }
@@ -146,27 +142,26 @@ public class ServiceRefType {
      * Gets the value of the displayName property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the displayName property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the displayName property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getDisplayName().add(newItem);
+     * getDisplayName().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DisplayNameType }
+     * Objects of the following type(s) are allowed in the list {@link DisplayNameType }
      * 
      * 
      */
     public List<DisplayNameType> getDisplayName() {
-        if (displayName == null) {
-            displayName = new ArrayList<DisplayNameType>();
+        if (this.displayName == null) {
+            this.displayName = new ArrayList<DisplayNameType>();
         }
         return this.displayName;
     }
@@ -175,27 +170,26 @@ public class ServiceRefType {
      * Gets the value of the icon property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the icon property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the icon property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getIcon().add(newItem);
+     * getIcon().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link IconType }
+     * Objects of the following type(s) are allowed in the list {@link IconType }
      * 
      * 
      */
     public List<IconType> getIcon() {
-        if (icon == null) {
-            icon = new ArrayList<IconType>();
+        if (this.icon == null) {
+            this.icon = new ArrayList<IconType>();
         }
         return this.icon;
     }
@@ -203,22 +197,18 @@ public class ServiceRefType {
     /**
      * Gets the value of the serviceRefName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link JndiNameType }
-     *     
+     * @return possible object is {@link JndiNameType }
+     * 
      */
     public JndiNameType getServiceRefName() {
-        return serviceRefName;
+        return this.serviceRefName;
     }
 
     /**
      * Sets the value of the serviceRefName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link JndiNameType }
-     *     
+     * @param value allowed object is {@link JndiNameType }
+     * 
      */
     public void setServiceRefName(JndiNameType value) {
         this.serviceRefName = value;
@@ -227,22 +217,18 @@ public class ServiceRefType {
     /**
      * Gets the value of the serviceInterface property.
      * 
-     * @return
-     *     possible object is
-     *     {@link FullyQualifiedClassType }
-     *     
+     * @return possible object is {@link FullyQualifiedClassType }
+     * 
      */
     public FullyQualifiedClassType getServiceInterface() {
-        return serviceInterface;
+        return this.serviceInterface;
     }
 
     /**
      * Sets the value of the serviceInterface property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link FullyQualifiedClassType }
-     *     
+     * @param value allowed object is {@link FullyQualifiedClassType }
+     * 
      */
     public void setServiceInterface(FullyQualifiedClassType value) {
         this.serviceInterface = value;
@@ -251,22 +237,18 @@ public class ServiceRefType {
     /**
      * Gets the value of the wsdlFile property.
      * 
-     * @return
-     *     possible object is
-     *     {@link XsdAnyURIType }
-     *     
+     * @return possible object is {@link XsdAnyURIType }
+     * 
      */
     public XsdAnyURIType getWsdlFile() {
-        return wsdlFile;
+        return this.wsdlFile;
     }
 
     /**
      * Sets the value of the wsdlFile property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link XsdAnyURIType }
-     *     
+     * @param value allowed object is {@link XsdAnyURIType }
+     * 
      */
     public void setWsdlFile(XsdAnyURIType value) {
         this.wsdlFile = value;
@@ -275,22 +257,18 @@ public class ServiceRefType {
     /**
      * Gets the value of the jaxrpcMappingFile property.
      * 
-     * @return
-     *     possible object is
-     *     {@link PathType }
-     *     
+     * @return possible object is {@link PathType }
+     * 
      */
     public PathType getJaxrpcMappingFile() {
-        return jaxrpcMappingFile;
+        return this.jaxrpcMappingFile;
     }
 
     /**
      * Sets the value of the jaxrpcMappingFile property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link PathType }
-     *     
+     * @param value allowed object is {@link PathType }
+     * 
      */
     public void setJaxrpcMappingFile(PathType value) {
         this.jaxrpcMappingFile = value;
@@ -299,22 +277,18 @@ public class ServiceRefType {
     /**
      * Gets the value of the serviceQname property.
      * 
-     * @return
-     *     possible object is
-     *     {@link XsdQNameType }
-     *     
+     * @return possible object is {@link XsdQNameType }
+     * 
      */
     public XsdQNameType getServiceQname() {
-        return serviceQname;
+        return this.serviceQname;
     }
 
     /**
      * Sets the value of the serviceQname property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link XsdQNameType }
-     *     
+     * @param value allowed object is {@link XsdQNameType }
+     * 
      */
     public void setServiceQname(XsdQNameType value) {
         this.serviceQname = value;
@@ -324,27 +298,26 @@ public class ServiceRefType {
      * Gets the value of the portComponentRef property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the portComponentRef property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the portComponentRef property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getPortComponentRef().add(newItem);
+     * getPortComponentRef().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link PortComponentRefType }
+     * Objects of the following type(s) are allowed in the list {@link PortComponentRefType }
      * 
      * 
      */
     public List<PortComponentRefType> getPortComponentRef() {
-        if (portComponentRef == null) {
-            portComponentRef = new ArrayList<PortComponentRefType>();
+        if (this.portComponentRef == null) {
+            this.portComponentRef = new ArrayList<PortComponentRefType>();
         }
         return this.portComponentRef;
     }
@@ -353,27 +326,26 @@ public class ServiceRefType {
      * Gets the value of the handler property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the handler property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the handler property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getHandler().add(newItem);
+     * getHandler().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link ServiceRefHandlerType }
+     * Objects of the following type(s) are allowed in the list {@link ServiceRefHandlerType }
      * 
      * 
      */
     public List<ServiceRefHandlerType> getHandler() {
-        if (handler == null) {
-            handler = new ArrayList<ServiceRefHandlerType>();
+        if (this.handler == null) {
+            this.handler = new ArrayList<ServiceRefHandlerType>();
         }
         return this.handler;
     }
@@ -381,22 +353,18 @@ public class ServiceRefType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setId(java.lang.String value) {
         this.id = value;

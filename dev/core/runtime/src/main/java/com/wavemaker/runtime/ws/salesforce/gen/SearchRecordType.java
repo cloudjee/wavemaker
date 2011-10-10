@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -21,11 +19,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for SearchRecord complex type.
+ * <p>
+ * Java class for SearchRecord complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="SearchRecord">
@@ -42,9 +41,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "SearchRecord", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "record"
-})
+@XmlType(name = "SearchRecord", namespace = "urn:partner.soap.sforce.com", propOrder = { "record" })
 public class SearchRecordType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
@@ -53,22 +50,18 @@ public class SearchRecordType {
     /**
      * Gets the value of the record property.
      * 
-     * @return
-     *     possible object is
-     *     {@link SObjectType }
-     *     
+     * @return possible object is {@link SObjectType }
+     * 
      */
     public SObjectType getRecord() {
-        return record;
+        return this.record;
     }
 
     /**
      * Sets the value of the record property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link SObjectType }
-     *     
+     * @param value allowed object is {@link SObjectType }
+     * 
      */
     public void setRecord(SObjectType value) {
         this.record = value;

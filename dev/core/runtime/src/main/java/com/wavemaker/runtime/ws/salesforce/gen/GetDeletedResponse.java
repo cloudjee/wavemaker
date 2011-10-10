@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -22,11 +20,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
+ * <p>
+ * Java class for anonymous complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType>
@@ -43,9 +42,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "result"
-})
+@XmlType(name = "", propOrder = { "result" })
 @XmlRootElement(name = "getDeletedResponse", namespace = "urn:partner.soap.sforce.com")
 public class GetDeletedResponse {
 
@@ -55,22 +52,18 @@ public class GetDeletedResponse {
     /**
      * Gets the value of the result property.
      * 
-     * @return
-     *     possible object is
-     *     {@link GetDeletedResultType }
-     *     
+     * @return possible object is {@link GetDeletedResultType }
+     * 
      */
     public GetDeletedResultType getResult() {
-        return result;
+        return this.result;
     }
 
     /**
      * Sets the value of the result property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link GetDeletedResultType }
-     *     
+     * @param value allowed object is {@link GetDeletedResultType }
+     * 
      */
     public void setResult(GetDeletedResultType value) {
         this.result = value;

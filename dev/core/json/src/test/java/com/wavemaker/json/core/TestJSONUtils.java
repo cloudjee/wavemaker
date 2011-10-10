@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.json.core;
 
 import java.math.BigInteger;
@@ -26,19 +27,19 @@ import com.wavemaker.json.JSONMarshaller_Objects.ClassWithEnum;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestJSONUtils extends WMTestCase {
 
     public void testIsNumber() throws Exception {
-        
+
         assertTrue(JSONUtils.isNumber(int.class));
         assertTrue(JSONUtils.isNumber(Integer.class));
         assertTrue(JSONUtils.isNumber(BigInteger.class));
     }
-    
+
     public void testIsPrimitive() throws Exception {
-        
+
         assertTrue(JSONUtils.isPrimitive(String.class));
         assertTrue(JSONUtils.isPrimitive(ClassWithEnum.DAYS.class));
         assertTrue(JSONUtils.isPrimitive(boolean.class));

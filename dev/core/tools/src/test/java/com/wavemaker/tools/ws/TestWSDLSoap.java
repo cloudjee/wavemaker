@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.ws;
 
 import java.util.ArrayList;
@@ -32,11 +33,11 @@ import com.wavemaker.tools.ws.wsdl.WSDL;
  * 
  */
 public class TestWSDLSoap extends WMTestCase {
-    
+
     public static WSDL getStockQuoteWSDL() throws Exception {
         return TestWSDL.getWSDL("com/wavemaker/tools/ws/stockquote.wsdl");
     }
-    
+
     public static WSDL getSalesforceWSDL() throws Exception {
         String wsdlResource = "com/wavemaker/tools/ws/salesforceEnterprise.wsdl";
         List<String> bindingResources = new ArrayList<String>();
@@ -53,7 +54,7 @@ public class TestWSDLSoap extends WMTestCase {
         bindingResources.add("com/wavemaker/tools/ws/WeatherForecast1.xjb");
         return TestWSDL.getWSDL(wsdlResource, bindingResources);
     }
-    
+
     public static WSDL getBasicRealTimeQuotesWSDL() throws Exception {
         String wsdlResource = "com/wavemaker/tools/ws/BasicRealTimeQuotes.wsdl";
         List<String> bindingResources = new ArrayList<String>();
@@ -62,14 +63,10 @@ public class TestWSDLSoap extends WMTestCase {
         bindingResources.add("com/wavemaker/tools/ws/BasicRealTimeQuotes2.xjb");
         return TestWSDL.getWSDL(wsdlResource, bindingResources);
     }
-    
-    private static final String[] REAL_QUOTE_TYPE_PROPERTYNAMES = new String[] {
-        "symbol", "CUSIP", "CIK", "name", "date", "time", "last", "quantity",
-        "changeFromPrevious", "percentChangeFromPrevious", "open",
-        "changeFromOpen", "percentChangeFromOpen", "bid", "ask", "spread",
-        "bidQuantity", "askQuantity", "volume", "ECNVolume", "highest", "lowest",
-        "rank"
-    };
+
+    private static final String[] REAL_QUOTE_TYPE_PROPERTYNAMES = new String[] { "symbol", "CUSIP", "CIK", "name", "date", "time", "last",
+        "quantity", "changeFromPrevious", "percentChangeFromPrevious", "open", "changeFromOpen", "percentChangeFromOpen", "bid", "ask", "spread",
+        "bidQuantity", "askQuantity", "volume", "ECNVolume", "highest", "lowest", "rank" };
 
     public static WSDL getUSHolidayDatesWSDL() throws Exception {
         String wsdlResource = "com/wavemaker/tools/ws/USHolidayDates.wsdl";
@@ -107,14 +104,14 @@ public class TestWSDLSoap extends WMTestCase {
         assertEquals("parameters", inputType.getName());
         assertEquals("net.webservicex.stockquote.GetQuote", inputType.getJavaType());
         assertEquals(false, inputType.isList());
-        
+
         // check the child properties for the inputType
         List<ElementType> properties = inputType.getProperties();
         assertEquals(1, properties.size());
         assertEquals("java.lang.String", properties.get(0).getJavaType());
         assertEquals(0, properties.get(0).getProperties().size());
     }
-    
+
     public void testStockQuoteGetTypes() throws Exception {
         WSDL wsdl = getStockQuoteWSDL();
         List<ElementType> types = wsdl.getTypes();
@@ -144,10 +141,9 @@ public class TestWSDLSoap extends WMTestCase {
         WSDL wsdl = getStockQuoteWSDL();
         ElementType outputType = wsdl.getOutputType("getQuote");
         assertEquals("parameters", outputType.getName());
-        assertEquals("net.webservicex.stockquote.GetQuoteResponse", outputType
-                .getJavaType());
+        assertEquals("net.webservicex.stockquote.GetQuoteResponse", outputType.getJavaType());
         assertEquals(false, outputType.isList());
-        
+
         // check the child properties for the outputType
         List<ElementType> properties = outputType.getProperties();
         assertEquals(1, properties.size());
@@ -172,9 +168,8 @@ public class TestWSDLSoap extends WMTestCase {
         WSDL wsdl = getSalesforceWSDL();
         List<ElementType> inputTypes = wsdl.getInputTypes("login");
         assertEquals(1, inputTypes.size());
-        assertEquals("com.sforce.soap.enterprise.sforceservice.Login", inputTypes.get(0)
-                .getJavaType());
-        
+        assertEquals("com.sforce.soap.enterprise.sforceservice.Login", inputTypes.get(0).getJavaType());
+
         // check the child properties for the inputType
         List<ElementType> properties = inputTypes.get(0).getProperties();
         assertEquals(2, properties.size());
@@ -186,14 +181,12 @@ public class TestWSDLSoap extends WMTestCase {
 
     public void testSalesforceGetSOAPHeaderInputTypes() throws Exception {
         WSDL wsdl = getSalesforceWSDL();
-        List<SchemaElementType> headerInputTypes = wsdl
-                .getSOAPHeaderInputTypes("update");
+        List<SchemaElementType> headerInputTypes = wsdl.getSOAPHeaderInputTypes("update");
         assertEquals(3, headerInputTypes.size());
 
         List<String> expectedHeaderJavaTypes = new ArrayList<String>();
         expectedHeaderJavaTypes.add("com.sforce.soap.enterprise.sforceservice.SessionHeader");
-        expectedHeaderJavaTypes
-                .add("com.sforce.soap.enterprise.sforceservice.AssignmentRuleHeader");
+        expectedHeaderJavaTypes.add("com.sforce.soap.enterprise.sforceservice.AssignmentRuleHeader");
         expectedHeaderJavaTypes.add("com.sforce.soap.enterprise.sforceservice.MruHeader");
 
         for (SchemaElementType headerInputType : headerInputTypes) {
@@ -202,11 +195,10 @@ public class TestWSDLSoap extends WMTestCase {
         }
 
         if (expectedHeaderJavaTypes.size() != 0) {
-            fail("also expected these SOAP headers Java types: "
-                    + expectedHeaderJavaTypes);
+            fail("also expected these SOAP headers Java types: " + expectedHeaderJavaTypes);
         }
     }
-    
+
     public void testWeatherForecastGetTypes() throws Exception {
         WSDL wsdl = getWeatherForecastWSDL();
         List<ElementType> types = wsdl.getTypes();
@@ -218,7 +210,7 @@ public class TestWSDLSoap extends WMTestCase {
             }
         }
     }
-    
+
     public void testBasicRealTimeQuotesGetTypes() throws Exception {
         List<String> allPropNames = Arrays.asList(REAL_QUOTE_TYPE_PROPERTYNAMES);
         WSDL wsdl = getBasicRealTimeQuotesWSDL();
@@ -240,7 +232,7 @@ public class TestWSDLSoap extends WMTestCase {
         assertEquals(1, properties.size());
         assertEquals("java.util.Date", properties.get(0).getJavaType());
     }
-    
+
     public void testUSHolidayDatesGetAllTypes() throws Exception {
         WSDL wsdl = getUSHolidayDatesWSDL();
         List<ElementType> types = wsdl.getTypes();

@@ -31,7 +31,7 @@ public class DemoUser {
     private List<String> roles;
 
     public String getUserid() {
-        return userid;
+        return this.userid;
     }
 
     public void setUserid(String userid) {
@@ -39,7 +39,7 @@ public class DemoUser {
     }
 
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     public void setPassword(String password) {
@@ -47,10 +47,10 @@ public class DemoUser {
     }
 
     public List<String> getRoles() {
-        if (roles == null) {
+        if (this.roles == null) {
             return Collections.emptyList();
         }
-        return roles;
+        return this.roles;
     }
 
     public void setRoles(List<String> roles) {

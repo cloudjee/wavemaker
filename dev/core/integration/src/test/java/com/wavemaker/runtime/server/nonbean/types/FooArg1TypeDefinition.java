@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.server.nonbean.types;
 
 import java.io.IOException;
@@ -31,50 +32,60 @@ import com.wavemaker.runtime.server.nonbean.NonBeanTypeFactory;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class FooArg1TypeDefinition extends NonBeanPrimitiveTypeDefinition {
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.type.TypeDefinition#getTypeName()
      */
     public String getTypeName() {
         return NonBeanTypeFactory.FOO_ARG_1;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.type.TypeDefinition#getShortName()
      */
     public String getShortName() {
         return null;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.type.TypeDefinition#isLiveService()
      */
     public boolean isLiveService() {
         return false;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.type.TypeDefinition#newInstance(java.lang.Object[])
      */
     public Object newInstance(Object... args) {
-        
+
         if (!(args[0] instanceof Map)) {
-            throw new WMRuntimeException("expected map, was: "+args);
+            throw new WMRuntimeException("expected map, was: " + args);
         }
-        
+
         int ret = 0;
-        for (Entry<?, ?> entry: ((Map<?, ?>) args[0]).entrySet()) {
-            ret += entry.getKey().toString().length() +
-                entry.getValue().toString().length();
+        for (Entry<?, ?> entry : ((Map<?, ?>) args[0]).entrySet()) {
+            ret += entry.getKey().toString().length() + entry.getValue().toString().length();
         }
         return ret;
     }
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.server.nonbean.types.NonBeanPrimitiveTypeDefinition#toJson(java.io.Writer, java.lang.Object)
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.runtime.server.nonbean.types.NonBeanPrimitiveTypeDefinition#toJson(java.io.Writer,
+     * java.lang.Object)
      */
     @Override
     public void toJson(Writer writer, Object obj) throws IOException {

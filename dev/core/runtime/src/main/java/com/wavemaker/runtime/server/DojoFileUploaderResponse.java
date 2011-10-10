@@ -14,70 +14,85 @@
 
 package com.wavemaker.runtime.server;
 
-import java.io.InputStream;
-
 /**
- * A class containing a download response. This should be used as the return
- * type for any operation which handles download requests.
+ * A class containing a download response. This should be used as the return type for any operation which handles
+ * download requests.
  * 
  * @author Matt Small
  * @version $Rev: 29059 $ - $Date: 2010-04-29 17:19:33 -0700 (Thu, 29 Apr 2010) $
  * 
  */
 public class DojoFileUploaderResponse {
-    
+
     public DojoFileUploaderResponse() {
         // empty constructor
     }
-    
+
     public DojoFileUploaderResponse(String path, String name, String type, String error, String width, String height) {
         this.path = path;
         this.name = name;
         this.type = type;
-        this.error= error;
-        this.width= width;
-        this.height=height;
+        this.error = error;
+        this.width = width;
+        this.height = height;
     }
 
     private String path;
+
     private String name;
+
     private String type;
+
     private String error;
+
     private String width;
+
     private String height;
+
     public String getPath() {
-        return path;
+        return this.path;
     }
+
     public void setPath(String path) {
         this.path = path;
     }
+
     public String getType() {
-        return type;
+        return this.type;
     }
+
     public void setType(String type) {
         this.type = type;
     }
+
     public String getName() {
-        return name;
+        return this.name;
     }
+
     public void setName(String name) {
         this.name = name;
     }
+
     public String getError() {
-        return error;
+        return this.error;
     }
+
     public void setError(String error) {
         this.error = error;
     }
+
     public String getWidth() {
-        return width;
+        return this.width;
     }
+
     public void setWidth(String width) {
         this.width = width;
     }
+
     public String getHeight() {
-        return height;
+        return this.height;
     }
+
     public void setHeight(String height) {
         this.height = height;
     }

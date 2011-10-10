@@ -39,10 +39,10 @@ import com.wavemaker.tools.ws.wsdl.WSDLManager;
  */
 public class ImportWS {
 
-	private StudioConfiguration studioConfiguration; 
-	
+    private StudioConfiguration studioConfiguration;
+
     private Resource destDir;
-    
+
     private String packageName;
 
     private boolean noOverwriteCustomizationFiles;
@@ -54,29 +54,29 @@ public class ImportWS {
     private List<Resource> jaxwsCustomizationFiles = new ArrayList<Resource>();
 
     private String wsdlUri;
-    
+
     private String serviceId;
 
     private String partnerName;
 
     public Resource getDestdir() {
-        return destDir;
+        return this.destDir;
     }
 
     public void setDestdir(Resource destdir) {
         this.destDir = destdir;
     }
-    
+
     public String getPackageName() {
-        return packageName;
+        return this.packageName;
     }
-    
+
     public void setPackageName(String packageName) {
         this.packageName = packageName;
     }
 
     public boolean isNoOverwriteCustomizationFiles() {
-        return noOverwriteCustomizationFiles;
+        return this.noOverwriteCustomizationFiles;
     }
 
     public void setNoOverwriteCustomizationFiles(boolean noOverwriteCustomizationFiles) {
@@ -84,7 +84,7 @@ public class ImportWS {
     }
 
     public boolean isSkipInternalCustomization() {
-        return skipInternalCustomization;
+        return this.skipInternalCustomization;
     }
 
     public void setSkipInternalCustomization(boolean skipInternalCustomization) {
@@ -92,7 +92,7 @@ public class ImportWS {
     }
 
     public List<Resource> getJaxbCustomizationFiles() {
-        return jaxbCustomizationFiles;
+        return this.jaxbCustomizationFiles;
     }
 
     public void addJaxbCustomizationFile(Resource jaxbCustomizationFile) {
@@ -104,7 +104,7 @@ public class ImportWS {
     }
 
     public List<Resource> getJaxwsCustomizationFiles() {
-        return jaxwsCustomizationFiles;
+        return this.jaxwsCustomizationFiles;
     }
 
     public void addJaxwsCustomizationFile(Resource jaxwsCustomizationFile) {
@@ -116,7 +116,7 @@ public class ImportWS {
     }
 
     public String getWsdlUri() {
-        return wsdlUri;
+        return this.wsdlUri;
     }
 
     public void setWsdlUri(String wsdlUri) {
@@ -124,15 +124,15 @@ public class ImportWS {
     }
 
     public String getServiceId() {
-        return serviceId;
+        return this.serviceId;
     }
 
     public void setServiceId(String serviceId) {
         this.serviceId = serviceId;
     }
 
-     public String getPartnerName() {
-        return partnerName;
+    public String getPartnerName() {
+        return this.partnerName;
     }
 
     public void setPartnerName(String partnerName) {
@@ -140,14 +140,14 @@ public class ImportWS {
     }
 
     public StudioConfiguration getStudioConfiguration() {
-		return studioConfiguration;
-	}
+        return this.studioConfiguration;
+    }
 
-	public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-		this.studioConfiguration = studioConfiguration;
-	}
+    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
+        this.studioConfiguration = studioConfiguration;
+    }
 
-	public void parseArguments(String[] args) {
+    public void parseArguments(String[] args) {
         for (int i = 0; i < args.length; i++) {
             if (args[i].length() == 0) {
                 throw new ConfigurationException("Empty argument.");
@@ -155,59 +155,56 @@ public class ImportWS {
             if (args[i].charAt(0) == '-') {
                 int j = parseArguments(args, i);
                 if (j == 0) {
-                    throw new ConfigurationException(
-                            "Unrecognized argument " + args[i]);
+                    throw new ConfigurationException("Unrecognized argument " + args[i]);
                 }
-                i += (j-1);
+                i += j - 1;
             } else {
-                Resource wsdlFile = studioConfiguration.getResourceForURI(args[i]);
+                Resource wsdlFile = this.studioConfiguration.getResourceForURI(args[i]);
                 if (!wsdlFile.exists()) {
-                    throw new ConfigurationException("This file was not found: "
-                            + wsdlFile.toString());
+                    throw new ConfigurationException("This file was not found: " + wsdlFile.toString());
                 }
                 try {
-					setWsdlUri(wsdlFile.getURI().toString());
-				} catch (IOException ex) {
-					throw new WMRuntimeException(ex);
-				}
+                    setWsdlUri(wsdlFile.getURI().toString());
+                } catch (IOException ex) {
+                    throw new WMRuntimeException(ex);
+                }
             }
         }
     }
-    
+
     protected int parseArguments(String[] args, int i) {
         if (args[i].equals("-d")) {
-            destDir = studioConfiguration.getResourceForURI(requireArgument("-d", args, ++i));
+            this.destDir = this.studioConfiguration.getResourceForURI(requireArgument("-d", args, ++i));
             return 2;
         } else if (args[i].equals("-p")) {
-            packageName = requireArgument("-p", args, ++i);
+            this.packageName = requireArgument("-p", args, ++i);
             return 2;
         } else if (args[i].equals("-noOverwriteCustomization")) {
-            noOverwriteCustomizationFiles = true;
+            this.noOverwriteCustomizationFiles = true;
             return 2;
         } else if (args[i].equals("-skipInternalCustomization")) {
-            skipInternalCustomization = true;
+            this.skipInternalCustomization = true;
             return 2;
         } else if (args[i].equals("-jaxb")) {
-            this.addJaxbCustomizationFile(studioConfiguration.getResourceForURI(requireArgument("-jaxb", args, ++i)));
+            this.addJaxbCustomizationFile(this.studioConfiguration.getResourceForURI(requireArgument("-jaxb", args, ++i)));
             return 2;
         } else if (args[i].equals("-jaxws")) {
-            this.addJaxwsCustomizationFile(studioConfiguration.getResourceForURI(requireArgument("-jaxws", args, ++i)));
+            this.addJaxwsCustomizationFile(this.studioConfiguration.getResourceForURI(requireArgument("-jaxws", args, ++i)));
             return 2;
         }
-        if (destDir == null) {
-            destDir = studioConfiguration.getResourceForURI(".");
+        if (this.destDir == null) {
+            this.destDir = this.studioConfiguration.getResourceForURI(".");
         }
         return 0;
     }
-    
+
     public String requireArgument(String optionName, String[] args, int i) {
         if (args[i].startsWith("-")) {
-            throw new ConfigurationException(
-                    "Missing option argument " + args[i]);
+            throw new ConfigurationException("Missing option argument " + args[i]);
         }
         return args[i];
     }
-    
+
     /**
      * Generates Java service class and beans for the specified WSDL files.
      * 
@@ -216,23 +213,21 @@ public class ImportWS {
     public WSDL generateServiceClass() {
         WSDL wsdl = null;
         try {
-            wsdl = WSDLManager.processWSDL(wsdlUri, serviceId);
-            if (packageName != null) {
-                wsdl.setPackageName(packageName);
+            wsdl = WSDLManager.processWSDL(this.wsdlUri, this.serviceId);
+            if (this.packageName != null) {
+                wsdl.setPackageName(this.packageName);
             }
         } catch (WSDLException e) {
             throw new ConfigurationException(e);
         }
-        
-        wsdl.setSkipInternalCustomization(skipInternalCustomization);
-        wsdl.setJaxbCustomizationFiles(jaxbCustomizationFiles);
-        wsdl.setJaxwsCustomizationFiles(jaxwsCustomizationFiles);
 
-        GenerationConfiguration genConfig = new GenerationConfiguration(wsdl,
-                destDir);
-        genConfig.setPartnerName(partnerName);
-        ServiceGenerator generator = (new WebServiceFactory())
-                .getServiceGenerator(genConfig);
+        wsdl.setSkipInternalCustomization(this.skipInternalCustomization);
+        wsdl.setJaxbCustomizationFiles(this.jaxbCustomizationFiles);
+        wsdl.setJaxwsCustomizationFiles(this.jaxwsCustomizationFiles);
+
+        GenerationConfiguration genConfig = new GenerationConfiguration(wsdl, this.destDir);
+        genConfig.setPartnerName(this.partnerName);
+        ServiceGenerator generator = new WebServiceFactory().getServiceGenerator(genConfig);
 
         try {
             generator.generate();
@@ -241,12 +236,12 @@ public class ImportWS {
             throw new ConfigurationException(e);
         }
     }
-    
+
     public void run(String[] args) {
         parseArguments(args);
         generateServiceClass();
     }
-    
+
     public static void usage(Class<?> mainClazz) {
         System.out.println("");
         System.out.println("Usage: " + mainClazz.getSimpleName() + " [options] <WSDL URI>");

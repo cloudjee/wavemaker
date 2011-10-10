@@ -11,12 +11,13 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
+
 package com.wavemaker.studio.warp;
-import com.wavemaker.runtime.service.annotations.HideFromClient;
-import com.wavemaker.tools.ws.infoteria.FlowSupport;
 
 import java.util.List;
+
+import com.wavemaker.runtime.service.annotations.HideFromClient;
+import com.wavemaker.tools.ws.infoteria.FlowSupport;
 
 /**
  * Login service class for Asteria Flow Designer Server
@@ -24,37 +25,37 @@ import java.util.List;
 public class FlowService {
 
     private LoginService warpLoginService;
+
     private FlowSupport flowSupport;
 
     public String listProjects(String host, String port, String userName, String password, String domain) throws Exception {
-        String sessionId = warpLoginService.logIn(host, port, userName, password, domain);
+        String sessionId = this.warpLoginService.logIn(host, port, userName, password, domain);
 
-        return flowSupport.listProjects(host, port, sessionId);
+        return this.flowSupport.listProjects(host, port, sessionId);
     }
 
-    public String listFlows(String host, String port, String projectName, String userName, String password, String domain)
-            throws Exception {
-        String sessionId = warpLoginService.logIn(host, port, userName, password, domain);
+    public String listFlows(String host, String port, String projectName, String userName, String password, String domain) throws Exception {
+        String sessionId = this.warpLoginService.logIn(host, port, userName, password, domain);
 
-        return flowSupport.listFlows(host, port, projectName, sessionId);
+        return this.flowSupport.listFlows(host, port, projectName, sessionId);
     }
 
     public String listAllFlows(String host, String port, String userName, String password, String domain) throws Exception {
-        String sessionId = warpLoginService.logIn(host, port, userName, password, domain);
+        String sessionId = this.warpLoginService.logIn(host, port, userName, password, domain);
 
-        return flowSupport.listAllFlows(host, port, sessionId);
+        return this.flowSupport.listAllFlows(host, port, sessionId);
     }
 
-    public void importFlows(String host, String port, String userName, String password, String domain, String projectName,
-                            String sessionId) throws Exception {
+    public void importFlows(String host, String port, String userName, String password, String domain, String projectName, String sessionId)
+        throws Exception {
         importFlows(host, port, userName, password, domain, projectName, null, sessionId);
     }
 
-    public void importFlows(String host, String port, String userName, String password, String domain, String projectName,
-                            List<String> flows, String sessionId) throws Exception {
-        sessionId = warpLoginService.logIn(host, port, userName, password, domain);
+    public void importFlows(String host, String port, String userName, String password, String domain, String projectName, List<String> flows,
+        String sessionId) throws Exception {
+        sessionId = this.warpLoginService.logIn(host, port, userName, password, domain);
 
-        flowSupport.importFlows(host, port, userName, password, domain, projectName, flows, sessionId);
+        this.flowSupport.importFlows(host, port, userName, password, domain, projectName, flows, sessionId);
     }
 
     @HideFromClient

@@ -19,7 +19,6 @@
 // Generated on: 2008.10.23 at 10:17:33 AM PDT 
 //
 
-
 package com.wavemaker.tools.service.definitions;
 
 import java.util.ArrayList;
@@ -31,11 +30,12 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for Operation complex type.
+ * <p>
+ * Java class for Operation complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="Operation">
@@ -73,15 +73,14 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Operation", propOrder = {
-    "parameter",
-    "_return"
-})
+@XmlType(name = "Operation", propOrder = { "parameter", "_return" })
 public class Operation {
 
     protected List<Operation.Parameter> parameter;
+
     @XmlElement(name = "return")
     protected Operation.Return _return;
+
     @XmlAttribute(required = true)
     protected String name;
 
@@ -89,27 +88,26 @@ public class Operation {
      * Gets the value of the parameter property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the parameter property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the parameter property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getParameter().add(newItem);
+     * getParameter().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Operation.Parameter }
+     * Objects of the following type(s) are allowed in the list {@link Operation.Parameter }
      * 
      * 
      */
     public List<Operation.Parameter> getParameter() {
-        if (parameter == null) {
-            parameter = new ArrayList<Operation.Parameter>();
+        if (this.parameter == null) {
+            this.parameter = new ArrayList<Operation.Parameter>();
         }
         return this.parameter;
     }
@@ -117,22 +115,18 @@ public class Operation {
     /**
      * Gets the value of the return property.
      * 
-     * @return
-     *     possible object is
-     *     {@link Operation.Return }
-     *     
+     * @return possible object is {@link Operation.Return }
+     * 
      */
     public Operation.Return getReturn() {
-        return _return;
+        return this._return;
     }
 
     /**
      * Sets the value of the return property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link Operation.Return }
-     *     
+     * @param value allowed object is {@link Operation.Return }
+     * 
      */
     public void setReturn(Operation.Return value) {
         this._return = value;
@@ -141,32 +135,29 @@ public class Operation {
     /**
      * Gets the value of the name property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**
      * Sets the value of the name property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setName(String value) {
         this.name = value;
     }
 
-
     /**
-     * <p>Java class for anonymous complex type.
+     * <p>
+     * Java class for anonymous complex type.
      * 
-     * <p>The following schema fragment specifies the expected content contained within this class.
+     * <p>
+     * The following schema fragment specifies the expected content contained within this class.
      * 
      * <pre>
      * &lt;complexType>
@@ -188,30 +179,28 @@ public class Operation {
 
         @XmlAttribute(required = true)
         protected String name;
+
         @XmlAttribute(required = true)
         protected String typeRef;
+
         @XmlAttribute
         protected Boolean isList;
 
         /**
          * Gets the value of the name property.
          * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
+         * @return possible object is {@link String }
+         * 
          */
         public String getName() {
-            return name;
+            return this.name;
         }
 
         /**
          * Sets the value of the name property.
          * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
+         * @param value allowed object is {@link String }
+         * 
          */
         public void setName(String value) {
             this.name = value;
@@ -220,22 +209,18 @@ public class Operation {
         /**
          * Gets the value of the typeRef property.
          * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
+         * @return possible object is {@link String }
+         * 
          */
         public String getTypeRef() {
-            return typeRef;
+            return this.typeRef;
         }
 
         /**
          * Sets the value of the typeRef property.
          * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
+         * @param value allowed object is {@link String }
+         * 
          */
         public void setTypeRef(String value) {
             this.typeRef = value;
@@ -244,26 +229,22 @@ public class Operation {
         /**
          * Gets the value of the isList property.
          * 
-         * @return
-         *     possible object is
-         *     {@link Boolean }
-         *     
+         * @return possible object is {@link Boolean }
+         * 
          */
         public boolean isIsList() {
-            if (isList == null) {
+            if (this.isList == null) {
                 return false;
             } else {
-                return isList;
+                return this.isList;
             }
         }
 
         /**
          * Sets the value of the isList property.
          * 
-         * @param value
-         *     allowed object is
-         *     {@link Boolean }
-         *     
+         * @param value allowed object is {@link Boolean }
+         * 
          */
         public void setIsList(Boolean value) {
             this.isList = value;
@@ -271,11 +252,12 @@ public class Operation {
 
     }
 
-
     /**
-     * <p>Java class for anonymous complex type.
+     * <p>
+     * Java class for anonymous complex type.
      * 
-     * <p>The following schema fragment specifies the expected content contained within this class.
+     * <p>
+     * The following schema fragment specifies the expected content contained within this class.
      * 
      * <pre>
      * &lt;complexType>
@@ -296,28 +278,25 @@ public class Operation {
 
         @XmlAttribute(required = true)
         protected String typeRef;
+
         @XmlAttribute
         protected Boolean isList;
 
         /**
          * Gets the value of the typeRef property.
          * 
-         * @return
-         *     possible object is
-         *     {@link String }
-         *     
+         * @return possible object is {@link String }
+         * 
          */
         public String getTypeRef() {
-            return typeRef;
+            return this.typeRef;
         }
 
         /**
          * Sets the value of the typeRef property.
          * 
-         * @param value
-         *     allowed object is
-         *     {@link String }
-         *     
+         * @param value allowed object is {@link String }
+         * 
          */
         public void setTypeRef(String value) {
             this.typeRef = value;
@@ -326,26 +305,22 @@ public class Operation {
         /**
          * Gets the value of the isList property.
          * 
-         * @return
-         *     possible object is
-         *     {@link Boolean }
-         *     
+         * @return possible object is {@link Boolean }
+         * 
          */
         public boolean isIsList() {
-            if (isList == null) {
+            if (this.isList == null) {
                 return false;
             } else {
-                return isList;
+                return this.isList;
             }
         }
 
         /**
          * Sets the value of the isList property.
          * 
-         * @param value
-         *     allowed object is
-         *     {@link Boolean }
-         *     
+         * @param value allowed object is {@link Boolean }
+         * 
          */
         public void setIsList(Boolean value) {
             this.isList = value;

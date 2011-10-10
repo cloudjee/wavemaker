@@ -19,9 +19,8 @@ import java.util.List;
 import com.wavemaker.runtime.server.InternalRuntime;
 
 /**
- * This class contains parsed service arguments.  It should be extended to
- * contain any extra information that the servicetype requires to be passed
- * from argument parsing to method invocation.
+ * This class contains parsed service arguments. It should be extended to contain any extra information that the
+ * servicetype requires to be passed from argument parsing to method invocation.
  * 
  * @author small
  * @version $Rev$ - $Date$
@@ -32,14 +31,14 @@ public class ParsedServiceArguments {
      * The parsed arguments.
      */
     private Object[] arguments;
-    
+
     /**
-     * The getters called while de-serializing the arguments.  See {@link InternalRuntime#getDeserializedProperties()}.
+     * The getters called while de-serializing the arguments. See {@link InternalRuntime#getDeserializedProperties()}.
      */
     private List<List<String>> gettersCalled;
 
     public Object[] getArguments() {
-        return arguments;
+        return this.arguments;
     }
 
     public void setArguments(Object[] arguments) {
@@ -47,7 +46,7 @@ public class ParsedServiceArguments {
     }
 
     public List<List<String>> getGettersCalled() {
-        return gettersCalled;
+        return this.gettersCalled;
     }
 
     public void setGettersCalled(List<List<String>> gettersCalled) {

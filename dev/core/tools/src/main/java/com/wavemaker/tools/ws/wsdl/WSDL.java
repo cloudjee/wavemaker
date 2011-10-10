@@ -50,17 +50,16 @@ import com.wavemaker.tools.ws.wsdl.WSDLUtils.SoapHeader;
  * @author ffu
  * @author Jeremy Grelle
  */
-public class WSDL  extends AbstractDeprecatedServiceDefinition
-        implements ReflectServiceDefinition {
+public class WSDL extends AbstractDeprecatedServiceDefinition implements ReflectServiceDefinition {
 
     public enum WebServiceType {
         SOAP, REST
     }
-    
+
     private static final int MAX_NESTED_CHILD_LEVEL = 10;
 
     private String serviceId;
-    
+
     private String serviceClassName;
 
     private List<ServiceInfo> serviceInfoList;
@@ -78,11 +77,11 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     private Map<String, Element> schemas;
 
     private List<XmlSchema> xmlSchemas;
-    
+
     private List<String> importedNoRefSchemas;
 
     private boolean isRPC;
-    
+
     private boolean isSOAPEncoded;
 
     private String endpointLocation;
@@ -111,11 +110,8 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     private WSDL() {
     }
 
-    public WSDL(String serviceId, String serviceClassName,
-            List<ServiceInfo> serviceInfoList, Definition definition,
-            String wsdlURI, WebServiceType webServiceType,
-            Map<String, Element> schemas, List<XmlSchema> xmlSchemas)
-            throws SchemaException {
+    public WSDL(String serviceId, String serviceClassName, List<ServiceInfo> serviceInfoList, Definition definition, String wsdlURI,
+        WebServiceType webServiceType, Map<String, Element> schemas, List<XmlSchema> xmlSchemas) throws SchemaException {
         this.serviceId = serviceId;
         this.serviceClassName = serviceClassName;
         this.serviceInfoList = serviceInfoList;
@@ -127,11 +123,11 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     }
 
     public String getServiceId() {
-        return serviceId;
+        return this.serviceId;
     }
 
     public List<ServiceInfo> getServiceInfoList() {
-        return serviceInfoList;
+        return this.serviceInfoList;
     }
 
     public ServiceType getServiceType() {
@@ -139,11 +135,11 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     }
 
     public WebServiceType getWebServiceType() {
-        return webServiceType;
+        return this.webServiceType;
     }
 
     public String getPackageName() {
-        return packageName;
+        return this.packageName;
     }
 
     public void setPackageName(String pkg) {
@@ -156,17 +152,16 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
      * @return The actual WSDL's <code>Definition</code> object.
      */
     public Definition getDefinition() {
-        return definition;
+        return this.definition;
     }
 
     /**
-     * Returns the URI (can be a filename or URL) pointing to a WSDL XML
-     * definition.
+     * Returns the URI (can be a filename or URL) pointing to a WSDL XML definition.
      * 
      * @return The URI.
      */
     public String getURI() {
-        return wsdlURI;
+        return this.wsdlURI;
     }
 
     /**
@@ -175,39 +170,37 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
      * @return The target namespace.
      */
     public String getTargetNamespace() {
-        return definition.getTargetNamespace();
+        return this.definition.getTargetNamespace();
     }
 
     /**
-     * Returns a map view of all the schemas defined in the WSDL. The key is the
-     * system identifier for the schema, and the value is the Element form for
-     * the schema.
+     * Returns a map view of all the schemas defined in the WSDL. The key is the system identifier for the schema, and
+     * the value is the Element form for the schema.
      * 
      * @return A list of schemas
      */
     public Map<String, Element> getSchemas() {
-        return schemas;
+        return this.schemas;
     }
 
     /**
-     * Returns all the schemas defined in the WSDL. This list will include
-     * schema for "http://www.w3.org/2001/XMLSchema".
+     * Returns all the schemas defined in the WSDL. This list will include schema for
+     * "http://www.w3.org/2001/XMLSchema".
      * 
      * @return A list of schemas.
      */
     public List<XmlSchema> getXmlSchemas() {
-        return xmlSchemas;
+        return this.xmlSchemas;
     }
 
     /**
-     * Returns a list of schema namespace URIs which are imported as part of 
-     * schema definition but don't specify the actual schema location.  For this
-     * list of schemas, we may have to add them to the bindings explicitly.
+     * Returns a list of schema namespace URIs which are imported as part of schema definition but don't specify the
+     * actual schema location. For this list of schemas, we may have to add them to the bindings explicitly.
      * 
      * @return A list of schema namespace URIs.
      */
     public List<String> getImportedNoRefSchemas() {
-        return importedNoRefSchemas;
+        return this.importedNoRefSchemas;
     }
 
     public void setImportedNoRefSchemas(List<String> importedNoRefSchemas) {
@@ -215,13 +208,13 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     }
 
     /**
-     * Returns true if the WSDL is RPC style. A WSDL is RPC style if the style
-     * attribute is specified and the value is "rpc".
+     * Returns true if the WSDL is RPC style. A WSDL is RPC style if the style attribute is specified and the value is
+     * "rpc".
      * 
      * @return True if the WSDL is RPC style.
      */
     public boolean isRPC() {
-        return isRPC;
+        return this.isRPC;
     }
 
     public void setRPC(boolean isRPC) {
@@ -229,13 +222,13 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     }
 
     /**
-     * Returns true if the WSDL is SOAP encoded. A WSDL is SOAP encoded if one
-     * of the soap:body element has the use attribue set to "encoded".
+     * Returns true if the WSDL is SOAP encoded. A WSDL is SOAP encoded if one of the soap:body element has the use
+     * attribue set to "encoded".
      * 
      * @return True if the WSDL is SOAP encoded.
      */
     public boolean isSOAPEncoded() {
-        return isSOAPEncoded;
+        return this.isSOAPEncoded;
     }
 
     public void setSOAPEncoded(boolean isSOAPEncoded) {
@@ -243,21 +236,19 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     }
 
     /**
-     * Returns the location of the service endpoint. For SOAP type, this would
-     * be a fully resolvable URL. If the WSDL is REST type, then this would be a
-     * parameterized URL.
+     * Returns the location of the service endpoint. For SOAP type, this would be a fully resolvable URL. If the WSDL is
+     * REST type, then this would be a parameterized URL.
      * 
      * @return The endpoint location.
      */
     public String getEndpointLocation() {
-        return endpointLocation;
+        return this.endpointLocation;
     }
 
     /**
      * Sets the location of the service endpoint.
      * 
-     * @param endpointLocation
-     *            The endpoint location.
+     * @param endpointLocation The endpoint location.
      */
     public void setEndpointLocation(String endpointLocation) {
         this.endpointLocation = endpointLocation;
@@ -269,7 +260,7 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
      * @return the httpRequestMethod
      */
     public HTTPRequestMethod getHttpRequestMethod() {
-        return httpRequestMethod;
+        return this.httpRequestMethod;
     }
 
     /**
@@ -282,14 +273,12 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     }
 
     /**
-     * Returns true if generation should not overwrite the existing
-     * customization files.
+     * Returns true if generation should not overwrite the existing customization files.
      * 
-     * @return True if generation should not overwrite the existing
-     *         customization files.
+     * @return True if generation should not overwrite the existing customization files.
      */
     public boolean isNoOverwriteCustomizationFiles() {
-        return noOverwriteCustomizationFiles;
+        return this.noOverwriteCustomizationFiles;
     }
 
     /**
@@ -297,20 +286,17 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
      * 
      * @param noOverwriteCustomizationFiles
      */
-    public void setNoOverwriteCustomizationFiles(
-            boolean noOverwriteCustomizationFiles) {
+    public void setNoOverwriteCustomizationFiles(boolean noOverwriteCustomizationFiles) {
         this.noOverwriteCustomizationFiles = noOverwriteCustomizationFiles;
     }
 
     /**
-     * Returns true if generation should skip our internal generated
-     * customization files.
+     * Returns true if generation should skip our internal generated customization files.
      * 
-     * @return True if generation should skip out internal generate
-     *  customization files.
+     * @return True if generation should skip out internal generate customization files.
      */
     public boolean isSkipInternalCustomization() {
-        return skipInternalCustomization;
+        return this.skipInternalCustomization;
     }
 
     /**
@@ -323,13 +309,13 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     }
 
     /**
-     * Returns additional JAXB customization files.  These files are addition to
-     * our own internal JAXB customization files.
+     * Returns additional JAXB customization files. These files are addition to our own internal JAXB customization
+     * files.
      * 
      * @return The additional JAXB customization files.
      */
     public List<Resource> getJaxbCustomizationFiles() {
-        return jaxbCustomizationFiles;
+        return this.jaxbCustomizationFiles;
     }
 
     /**
@@ -342,13 +328,13 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     }
 
     /**
-     * Returns additional JAXWS customization files.  These files are addition
-     * to our own internal JAXWS customization files.
+     * Returns additional JAXWS customization files. These files are addition to our own internal JAXWS customization
+     * files.
      * 
      * @return The additional JAXWS customization files.
      */
     public List<Resource> getJaxwsCustomizationFiles() {
-        return jaxwsCustomizationFiles;
+        return this.jaxwsCustomizationFiles;
     }
 
     /**
@@ -361,38 +347,35 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     }
 
     /**
-     * Returns a list of interceptors which would be used to do additional
-     * processing of the inbound and outbound messages.
+     * Returns a list of interceptors which would be used to do additional processing of the inbound and outbound
+     * messages.
      * 
      * @return A list of class names.
      */
     public List<String> getInterceptorClassNames() {
-        return interceptorClassNames;
+        return this.interceptorClassNames;
     }
 
     /**
-     * Sets the class names to be used for performing additional processing of
-     * the inbound and outbound messages.
+     * Sets the class names to be used for performing additional processing of the inbound and outbound messages.
      * 
-     * @param classNames
-     *            A list of class names.
+     * @param classNames A list of class names.
      */
     public void setInterceptorClassNames(List<String> classNames) {
-        interceptorClassNames = classNames;
+        this.interceptorClassNames = classNames;
     }
 
     /**
      * Adds the class name to the interceptor list.
      * 
-     * @param className
-     *            The class name representing the interceptor.
+     * @param className The class name representing the interceptor.
      */
     public void addInterceptorClassName(String className) {
-        interceptorClassNames.add(className);
+        this.interceptorClassNames.add(className);
     }
 
     public List<String> getOperationNames() {
-        return new ArrayList<String>(operationMap.keySet());
+        return new ArrayList<String>(this.operationMap.keySet());
     }
 
     public Map<String, Operation> getOperationMap() {
@@ -402,12 +385,11 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     /**
      * Returns the specifed operation.
      * 
-     * @param name
-     *            The name of the desired operation.
+     * @param name The name of the desired operation.
      * @return The operation.
      */
     public Operation getOperation(String name) {
-        return operationMap.get(name);
+        return this.operationMap.get(name);
     }
 
     public void setOperationsMap(Map<String, Operation> operationMap) {
@@ -425,14 +407,11 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     /**
      * Returns the input types for the specified operation.
      * 
-     * @param operationName
-     *            The name of the desired operation.
-     * @param unWrapped
-     *            True if unwrapped input types should be returned.
+     * @param operationName The name of the desired operation.
+     * @param unWrapped True if unwrapped input types should be returned.
      * @return A list of input types.
      */
-    public List<ElementType> getInputTypes(String operationName,
-            boolean unWrapped) {
+    public List<ElementType> getInputTypes(String operationName, boolean unWrapped) {
         List<SchemaElementType> types = null;
         if (unWrapped) {
             types = getUnWrappedInputTypes(operationName);
@@ -440,7 +419,7 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
             types = getDefinedInputTypes(operationName);
         }
 
-        if (webServiceType == WebServiceType.SOAP) {
+        if (this.webServiceType == WebServiceType.SOAP) {
             types.addAll(getSOAPHeaderInputTypes(operationName));
         }
 
@@ -450,10 +429,8 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     /**
      * Returns the type for the operation's output.
      * 
-     * @param operationName
-     *            The name of the desired operation.
-     * @param unWrapped
-     *            True if unwraped output type should be returned.
+     * @param operationName The name of the desired operation.
+     * @param unWrapped True if unwraped output type should be returned.
      * @return The output type.
      */
     public ElementType getOutputType(String operationName, boolean unWrapped) {
@@ -467,18 +444,16 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     /**
      * Returns a list of exception types for the given operation.
      * 
-     * @param operationName
-     *            The operation name.
+     * @param operationName The operation name.
      * @return The exception types for the given operation.
      */
     public List<SchemaElementType> getExceptionTypes(String operationName) {
         List<SchemaElementType> elementTypes = new ArrayList<SchemaElementType>();
-        if (webServiceType == WebServiceType.SOAP) {
+        if (this.webServiceType == WebServiceType.SOAP) {
             Operation operation = getOperation(operationName);
-            List<Part> faultParts = WSDLUtils.getFaults(definition, operation);
+            List<Part> faultParts = WSDLUtils.getFaults(this.definition, operation);
             for (Part faultPart : faultParts) {
-                SchemaElementType elementType =
-                    constructSchemaElementType(faultPart);
+                SchemaElementType elementType = constructSchemaElementType(faultPart);
                 elementTypes.add(elementType);
             }
         }
@@ -488,19 +463,16 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     /**
      * Returns the operation's input types for putting in the SOAP header.
      * 
-     * @param operationName
-     *            The operation name.
+     * @param operationName The operation name.
      * @return The input types for putting in the SOAP header.
      */
     public List<SchemaElementType> getSOAPHeaderInputTypes(String operationName) {
         List<SchemaElementType> elementTypes = new ArrayList<SchemaElementType>();
-        if (webServiceType == WebServiceType.SOAP) {
+        if (this.webServiceType == WebServiceType.SOAP) {
             Operation operation = getOperation(operationName);
-            List<SoapHeader> inputSoapHeaders = WSDLUtils.getInputSoapHeaders(
-                    definition, operation);
+            List<SoapHeader> inputSoapHeaders = WSDLUtils.getInputSoapHeaders(this.definition, operation);
             for (SoapHeader soapHeader : inputSoapHeaders) {
-                Message soapHeaderMessage = definition.getMessage(soapHeader
-                        .getMessage());
+                Message soapHeaderMessage = this.definition.getMessage(soapHeader.getMessage());
                 String partName = soapHeader.getPart();
                 if (partName != null && partName.length() > 0) {
                     Part part = soapHeaderMessage.getPart(partName);
@@ -529,21 +501,15 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
             schemaType = part.getElementName(); // QName is an element
             isElement = true;
         }
-        SchemaElementType type = new SchemaElementType(
-                getTypeMapper().toPropertyName(part.getName()), schemaType,
-                getJavaType(schemaType, isElement));
-        type.setProperties(CastUtils.cast(
-                getChildTypes(type, MAX_NESTED_CHILD_LEVEL),
-                ElementType.class));
+        SchemaElementType type = new SchemaElementType(getTypeMapper().toPropertyName(part.getName()), schemaType, getJavaType(schemaType, isElement));
+        type.setProperties(CastUtils.cast(getChildTypes(type, MAX_NESTED_CHILD_LEVEL), ElementType.class));
         return type;
     }
 
     /**
-     * Returns a list of types for the operation's input. The input types
-     * represent what actually defined in the WSDL.
+     * Returns a list of types for the operation's input. The input types represent what actually defined in the WSDL.
      * 
-     * @param operationName
-     *            The name of the desired operation.
+     * @param operationName The name of the desired operation.
      * @return A list of input types.
      */
     public List<SchemaElementType> getDefinedInputTypes(String operationName) {
@@ -560,11 +526,10 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     }
 
     /**
-     * Returns the type for the operation's output. The returned output type
-     * represents what actually defined in the WSDL.
+     * Returns the type for the operation's output. The returned output type represents what actually defined in the
+     * WSDL.
      * 
-     * @param operationName
-     *            The name of the desired operation.
+     * @param operationName The name of the desired operation.
      * @return The output type.
      */
     public SchemaElementType getDefinedOutputType(String operationName) {
@@ -583,18 +548,15 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     }
 
     /**
-     * Returns a list of types for the operation's input. Unwrapped input types
-     * will be returned if appropriated.
+     * Returns a list of types for the operation's input. Unwrapped input types will be returned if appropriated.
      * 
-     * @param operationName
-     *            The name of the desired operation.
+     * @param operationName The name of the desired operation.
      * @return A list of input types.
      */
     public List<SchemaElementType> getUnWrappedInputTypes(String operationName) {
         List<SchemaElementType> elementTypes = getDefinedInputTypes(operationName);
         if (!isRPC() && elementTypes.size() == 1) {
-            List<SchemaElementType> childTypes = getChildTypes(
-                    elementTypes.iterator().next(), MAX_NESTED_CHILD_LEVEL);
+            List<SchemaElementType> childTypes = getChildTypes(elementTypes.iterator().next(), MAX_NESTED_CHILD_LEVEL);
             return childTypes.isEmpty() ? elementTypes : childTypes;
         } else {
             return elementTypes;
@@ -602,32 +564,26 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     }
 
     /**
-     * Returns the type for the operation's output. Unwrapped output type will
-     * be returned if appropriated.
+     * Returns the type for the operation's output. Unwrapped output type will be returned if appropriated.
      * 
-     * @param operationName
-     *            The name of the desired operation.
+     * @param operationName The name of the desired operation.
      * @return The output type.
      */
     public SchemaElementType getUnWrappedOutputType(String operationName) {
         SchemaElementType elementType = getDefinedOutputType(operationName);
         if (!isRPC() && elementType != null) {
-            List<SchemaElementType> childTypes =
-                getChildTypes(elementType, MAX_NESTED_CHILD_LEVEL);
+            List<SchemaElementType> childTypes = getChildTypes(elementType, MAX_NESTED_CHILD_LEVEL);
             return childTypes.size() == 1 ? childTypes.get(0) : elementType;
         }
         return elementType;
     }
 
-    private List<SchemaElementType> getChildTypes(SchemaElementType rootType,
-            int maxLevel) {
-        List<XmlSchemaElement> childElements =
-            getChildElements(rootType.getSchemaType());
+    private List<SchemaElementType> getChildTypes(SchemaElementType rootType, int maxLevel) {
+        List<XmlSchemaElement> childElements = getChildElements(rootType.getSchemaType());
         if (childElements.isEmpty()) {
             return Collections.emptyList();
         } else {
-            List <SchemaElementType> childTypes =
-                new ArrayList<SchemaElementType>();
+            List<SchemaElementType> childTypes = new ArrayList<SchemaElementType>();
             for (XmlSchemaElement childElement : childElements) {
                 boolean isElement = false;
                 QName t = childElement.getSchemaTypeName();
@@ -636,18 +592,12 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
                     isElement = true;
                 }
                 if (t != null) {
-                    SchemaElementType ctype = new SchemaElementType(
-                            getTypeMapper().toPropertyName(childElement.getName()),
-                            t,
-                            getJavaType(t, isElement),
-                            childElement.getMinOccurs(),
-                            childElement.getMaxOccurs());
+                    SchemaElementType ctype = new SchemaElementType(getTypeMapper().toPropertyName(childElement.getName()), t, getJavaType(t,
+                        isElement), childElement.getMinOccurs(), childElement.getMaxOccurs());
                     // don't proceed anymore if max level is reached
                     // stop processing if the parent type and the child type are the same, to avoid infinite loop.
                     if (maxLevel > 1 && !rootType.getName().equals(ctype.getName())) {
-                        ctype.setProperties(CastUtils.cast(
-                            getChildTypes(ctype, maxLevel--),
-                            ElementType.class));
+                        ctype.setProperties(CastUtils.cast(getChildTypes(ctype, maxLevel--), ElementType.class));
                     }
                     childTypes.add(ctype);
                 }
@@ -657,16 +607,14 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     }
 
     /**
-     * Given a <code>QName</code>, returns a list of child XML schema
-     * elements. If no child elements for the
-     * <code>QName<code>, eg. the <code>QName</code>
-     * is a leaf node, then empty list is returned.
+     * Given a <code>QName</code>, returns a list of child XML schema elements. If no child elements for the
+     * <code>QName<code>, eg. the <code>QName</code> is a leaf node, then empty list is returned.
      * 
      * @param qname The qualified name.
      * @return A list of child XML schema elements.
      */
     private List<XmlSchemaElement> getChildElements(QName qname) {
-        for (XmlSchema schema : xmlSchemas) {
+        for (XmlSchema schema : this.xmlSchemas) {
             XmlSchemaType schemaType = schema.getTypeByName(qname);
             if (schemaType == null) {
                 XmlSchemaElement element = schema.getElementByName(qname);
@@ -682,36 +630,33 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     }
 
     /**
-     * Returns the <code>TypeMapper</code> used for doing Java type and schema
-     * type convertions.
+     * Returns the <code>TypeMapper</code> used for doing Java type and schema type convertions.
      * 
      * @return The <code>TypeMapper</code> object.
      */
     public TypeMapper getTypeMapper() {
-        if (typeMapper == null) {
+        if (this.typeMapper == null) {
             throw new WMRuntimeException(MessageResource.WS_MISSING_TYPEMAPPER);
         }
         return this.typeMapper;
     }
 
     /**
-     * Sets the <code>TypeMapper</code> for converting <code>QName</code> to
-     * Java type.
+     * Sets the <code>TypeMapper</code> for converting <code>QName</code> to Java type.
      * 
-     * @param typeMapper
-     *            The <code>TypeMapper</code> object.
+     * @param typeMapper The <code>TypeMapper</code> object.
      */
     public void setTypeMapper(TypeMapper typeMapper) {
         this.typeMapper = typeMapper;
     }
 
     /**
-     * Returns the Java type for the given <code>QName</code>.  This method uses
-     * <code>TypeMapp</code> to get the mappings.
+     * Returns the Java type for the given <code>QName</code>. This method uses <code>TypeMapp</code> to get the
+     * mappings.
      * 
      * @param qname The qualified name.
-     * @param isElement If the <code>QName</code> represents an element; if this
-     * is set to <code>false</code>, then means it is a complex type.
+     * @param isElement If the <code>QName</code> represents an element; if this is set to <code>false</code>, then
+     *        means it is a complex type.
      * @return The Java type.
      * @see #setTypeMapper
      */
@@ -720,9 +665,9 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     }
 
     public String getRuntimeConfiguration() {
-        return runtimeConfiguration;
+        return this.runtimeConfiguration;
     }
-    
+
     public void setRuntimeConfiguration(String runtimeConfiguration) {
         this.runtimeConfiguration = runtimeConfiguration;
     }
@@ -734,7 +679,7 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
      * Returns the service's class name omitting the package.
      */
     public String getServiceClassName() {
-        return serviceClassName;
+        return this.serviceClassName;
     }
 
     public String getServiceClass() {
@@ -745,7 +690,7 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
      * Returns a set of auxiliary classes for this service.
      */
     public Set<String> getAuxiliaryClasses() {
-        return auxiliaryClasses;
+        return this.auxiliaryClasses;
     }
 
     /**
@@ -758,11 +703,12 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
     }
 
     public List<ElementType> getTypes() {
-        return getTypeMapper().getAllTypes(serviceId);
+        return getTypeMapper().getAllTypes(this.serviceId);
     }
 
+    @Override
     public List<ElementType> getTypes(String username, String password) {
-        return getTypeMapper().getAllTypes(serviceId, username, password);
+        return getTypeMapper().getAllTypes(this.serviceId, username, password);
     }
 
     public List<String> getEventNotifiers() {
@@ -773,6 +719,7 @@ public class WSDL  extends AbstractDeprecatedServiceDefinition
         return false;
     }
 
+    @Override
     public String getPartnerName() {
         return this.partnerName;
     }

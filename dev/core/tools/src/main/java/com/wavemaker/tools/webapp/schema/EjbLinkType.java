@@ -19,47 +19,41 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * 
- * 	
  * 
- * 	  The ejb-linkType is used by ejb-link
- * 	  elements in the ejb-ref or ejb-local-ref elements to specify
- * 	  that an EJB reference is linked to enterprise bean.
  * 
- * 	  The value of the ejb-link element must be the ejb-name of an
- * 	  enterprise bean in the same ejb-jar file or in another ejb-jar
- * 	  file in the same J2EE application unit.
+ * The ejb-linkType is used by ejb-link elements in the ejb-ref or ejb-local-ref elements to specify that an EJB
+ * reference is linked to enterprise bean.
  * 
- * 	  Alternatively, the name in the ejb-link element may be
- * 	  composed of a path name specifying the ejb-jar containing the
- * 	  referenced enterprise bean with the ejb-name of the target
- * 	  bean appended and separated from the path name by "#".  The
- * 	  path name is relative to the Deployment File containing
- * 	  Deployment Component that is referencing the enterprise
- * 	  bean.  This allows multiple enterprise beans with the same
- * 	  ejb-name to be uniquely identified.
+ * The value of the ejb-link element must be the ejb-name of an enterprise bean in the same ejb-jar file or in another
+ * ejb-jar file in the same J2EE application unit.
  * 
- * 	  Examples:
+ * Alternatively, the name in the ejb-link element may be composed of a path name specifying the ejb-jar containing the
+ * referenced enterprise bean with the ejb-name of the target bean appended and separated from the path name by "#". The
+ * path name is relative to the Deployment File containing Deployment Component that is referencing the enterprise bean.
+ * This allows multiple enterprise beans with the same ejb-name to be uniquely identified.
  * 
- * 	      <ejb-link>EmployeeRecord</ejb-link>
+ * Examples:
  * 
- * 	      <ejb-link>../products/product.jar#ProductEJB</ejb-link>
+ * <ejb-link>EmployeeRecord</ejb-link>
  * 
- * 	  
- *       
+ * <ejb-link>../products/product.jar#ProductEJB</ejb-link>
  * 
- * <p>Java class for ejb-linkType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * 
+ * 
+ * <p>
+ * Java class for ejb-linkType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="ejb-linkType">
@@ -74,9 +68,6 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ejb-linkType")
-public class EjbLinkType
-    extends String
-{
-
+public class EjbLinkType extends String {
 
 }

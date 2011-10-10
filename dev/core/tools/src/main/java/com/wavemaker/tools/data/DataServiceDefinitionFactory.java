@@ -31,34 +31,32 @@ import com.wavemaker.tools.service.ServiceGeneratorFactory;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
 
-public class DataServiceDefinitionFactory implements ServiceDefinitionFactory,
-        ServiceGeneratorFactory {
+public class DataServiceDefinitionFactory implements ServiceDefinitionFactory, ServiceGeneratorFactory {
 
-    public ServiceDefinition getServiceDefinition(Resource f, String serviceId,
-            DesignServiceManager serviceMgr) {
+    public ServiceDefinition getServiceDefinition(Resource f, String serviceId, DesignServiceManager serviceMgr) {
 
         try {
-			if (f.getFile().isDirectory()) {
-			    for (String s : f.getFile().list(new FilenameFilter() {
-			        public boolean accept(File dir, String file) {
-			            return file.endsWith(".xml");
-			        }
-			    })) {
+            if (f.getFile().isDirectory()) {
+                for (String s : f.getFile().list(new FilenameFilter() {
 
-			        File potential = new File(f.getFile(), s);
+                    public boolean accept(File dir, String file) {
+                        return file.endsWith(".xml");
+                    }
+                })) {
 
-			        ServiceDefinition rtn = initServiceDefinition(potential,
-			                serviceId, serviceMgr);
-			        if (rtn != null) {
-			            return rtn;
-			        }
-			    }
-			} else {
-			    return initServiceDefinition(f.getFile(), serviceId, serviceMgr);
-			}
-		} catch (IOException ex) {
-			throw new WMRuntimeException(ex);
-		}
+                    File potential = new File(f.getFile(), s);
+
+                    ServiceDefinition rtn = initServiceDefinition(potential, serviceId, serviceMgr);
+                    if (rtn != null) {
+                        return rtn;
+                    }
+                }
+            } else {
+                return initServiceDefinition(f.getFile(), serviceId, serviceMgr);
+            }
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
 
         return null;
     }
@@ -68,16 +66,16 @@ public class DataServiceDefinitionFactory implements ServiceDefinitionFactory,
         ServiceDefinition def = cfg.getServiceDefinition();
 
         if (def instanceof DataServiceDefinition) {
-            if (def.getServiceId().equals(CommonConstants.SALESFORCE_SERVICE)) //salesforce
+            if (def.getServiceId().equals(CommonConstants.SALESFORCE_SERVICE)) {
                 return new DataServiceGenerator_SF(cfg);
-            else
+            } else {
                 return new DataServiceGenerator(cfg);
+            }
         }
         return null;
     }
 
-    private ServiceDefinition initServiceDefinition(File f, String serviceId,
-            DesignServiceManager serviceMgr) {
+    private ServiceDefinition initServiceDefinition(File f, String serviceId, DesignServiceManager serviceMgr) {
 
         if (!f.getName().endsWith(".xml")) {
             return null;
@@ -85,14 +83,11 @@ public class DataServiceDefinitionFactory implements ServiceDefinitionFactory,
         DataServiceDefinition rtn = null;
 
         try {
-            ExternalDataModelConfig externalConfig = 
-		new DesignExternalDataModelConfig(serviceId, serviceMgr);
-            
-            rtn = new DataServiceDefinition(serviceId, externalConfig,
-                    serviceMgr, f);
+            ExternalDataModelConfig externalConfig = new DesignExternalDataModelConfig(serviceId, serviceMgr);
 
-            if (!rtn.getDataModelConfiguration().isKnownConfiguration() &&
-                    !serviceId.equals(CommonConstants.SALESFORCE_SERVICE)) { //salesforce
+            rtn = new DataServiceDefinition(serviceId, externalConfig, serviceMgr, f);
+
+            if (!rtn.getDataModelConfiguration().isKnownConfiguration() && !serviceId.equals(CommonConstants.SALESFORCE_SERVICE)) { // salesforce
                 rtn.dispose();
                 return null;
             }

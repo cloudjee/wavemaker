@@ -15,22 +15,22 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data.crud;
 
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-
 /**
  * @author Simon Toens
  * @version $Rev$ - $Date$
  * 
  */
-public class TestCRUDService extends  BaseCRUDServiceTest {
+public class TestCRUDService extends BaseCRUDServiceTest {
 
-	@Test
+    @Test
     public void testInitService() {
-        assertTrue(sakila != null);
+        assertTrue(this.sakila != null);
     }
 }

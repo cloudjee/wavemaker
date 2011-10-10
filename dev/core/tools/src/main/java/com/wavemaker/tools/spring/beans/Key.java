@@ -19,7 +19,6 @@
 // Generated on: 2008.02.26 at 04:39:33 PM PST 
 //
 
-
 package com.wavemaker.tools.spring.beans;
 
 import java.util.ArrayList;
@@ -32,11 +31,12 @@ import javax.xml.bind.annotation.XmlElementRefs;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for anonymous complex type.
+ * <p>
+ * Java class for anonymous complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType>
@@ -51,14 +51,11 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "", propOrder = {
-    "refElement"
-})
+@XmlType(name = "", propOrder = { "refElement" })
 @XmlRootElement(name = "key")
 public class Key {
 
-    @XmlElementRefs({
-        @XmlElementRef(name = "value", namespace = "http://www.springframework.org/schema/beans", type = Value.class),
+    @XmlElementRefs({ @XmlElementRef(name = "value", namespace = "http://www.springframework.org/schema/beans", type = Value.class),
         @XmlElementRef(name = "idref", namespace = "http://www.springframework.org/schema/beans", type = Idref.class),
         @XmlElementRef(name = "ref", namespace = "http://www.springframework.org/schema/beans", type = Ref.class),
         @XmlElementRef(name = "null", namespace = "http://www.springframework.org/schema/beans", type = Null.class),
@@ -66,8 +63,7 @@ public class Key {
         @XmlElementRef(name = "map", namespace = "http://www.springframework.org/schema/beans", type = Map.class),
         @XmlElementRef(name = "list", namespace = "http://www.springframework.org/schema/beans", type = com.wavemaker.tools.spring.beans.List.class),
         @XmlElementRef(name = "set", namespace = "http://www.springframework.org/schema/beans", type = Set.class),
-        @XmlElementRef(name = "props", namespace = "http://www.springframework.org/schema/beans", type = Props.class)
-    })
+        @XmlElementRef(name = "props", namespace = "http://www.springframework.org/schema/beans", type = Props.class) })
     @XmlAnyElement(lax = true)
     protected java.util.List<Object> refElement;
 
@@ -75,36 +71,27 @@ public class Key {
      * Gets the value of the refElement property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the refElement property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the refElement property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getRefElement().add(newItem);
+     * getRefElement().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link Value }
-     * {@link Idref }
-     * {@link Bean }
-     * {@link Null }
-     * {@link Ref }
-     * {@link com.wavemaker.tools.spring.beans.List }
-     * {@link Map }
-     * {@link Set }
-     * {@link Props }
-     * {@link Object }
+     * Objects of the following type(s) are allowed in the list {@link Value } {@link Idref } {@link Bean } {@link Null }
+     * {@link Ref } {@link com.wavemaker.tools.spring.beans.List } {@link Map } {@link Set } {@link Props } {@link Object }
      * 
      * 
      */
     public java.util.List<Object> getRefElement() {
-        if (refElement == null) {
-            refElement = new ArrayList<Object>();
+        if (this.refElement == null) {
+            this.refElement = new ArrayList<Object>();
         }
         return this.refElement;
     }
@@ -112,19 +99,9 @@ public class Key {
     /**
      * Sets the value of the refElement property.
      * 
-     * @param refElement
-     *     allowed object is
-     *     {@link Value }
-     *     {@link Idref }
-     *     {@link Bean }
-     *     {@link Null }
-     *     {@link Ref }
-     *     {@link com.wavemaker.tools.spring.beans.List }
-     *     {@link Map }
-     *     {@link Set }
-     *     {@link Props }
-     *     {@link Object }
-     *     
+     * @param refElement allowed object is {@link Value } {@link Idref } {@link Bean } {@link Null } {@link Ref }
+     *        {@link com.wavemaker.tools.spring.beans.List } {@link Map } {@link Set } {@link Props } {@link Object }
+     * 
      */
     public void setRefElement(java.util.List<Object> refElement) {
         this.refElement = refElement;

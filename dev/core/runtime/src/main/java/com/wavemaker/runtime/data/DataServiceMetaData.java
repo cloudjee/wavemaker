@@ -14,13 +14,14 @@
 
 package com.wavemaker.runtime.data;
 
-
 import java.util.Collection;
 import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.engine.NamedQueryDefinition;
 import org.hibernate.mapping.Property;
+
 /**
  * Interface to wraps a Data Source Configuration with convenience methods.
  * 

@@ -28,74 +28,66 @@ import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
 
 /**
- * Generic upgrade task; reads a file from the template, and writes it into the
- * current project. The file and any messages are provided through Spring
- * properties. No backup (beyond the automatic zip) is made of the project
- * files.
+ * Generic upgrade task; reads a file from the template, and writes it into the current project. The file and any
+ * messages are provided through Spring properties. No backup (beyond the automatic zip) is made of the project files.
  * 
  * @author small
  * @author Jeremy Grelle
  */
 public class UpgradeTemplateFile implements UpgradeTask {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker
-	 * .tools.project.Project, com.wavemaker.tools.project.upgrade.UpgradeInfo)
-	 */
-	public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker .tools.project.Project,
+     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
+     */
+    public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
-		if (null == relativePath) {
-			throw new WMRuntimeException("No file provided");
-		}
+        if (null == this.relativePath) {
+            throw new WMRuntimeException("No file provided");
+        }
 
-		try {
-			Resource localFile = project.getProjectRoot().createRelative(
-					relativePath);
+        try {
+            Resource localFile = project.getProjectRoot().createRelative(this.relativePath);
 
-			InputStream resourceStream = this
-					.getClass()
-					.getClassLoader()
-					.getResourceAsStream(
-							ProjectManager._TEMPLATE_APP_RESOURCE_NAME);
-			ZipInputStream resourceZipStream = new ZipInputStream(
-					resourceStream);
+            InputStream resourceStream = this.getClass().getClassLoader().getResourceAsStream(ProjectManager._TEMPLATE_APP_RESOURCE_NAME);
+            ZipInputStream resourceZipStream = new ZipInputStream(resourceStream);
 
-			ZipEntry zipEntry = null;
+            ZipEntry zipEntry = null;
 
-			while ((zipEntry = resourceZipStream.getNextEntry()) != null) {
-				if (relativePath.equals(zipEntry.getName())) {
-					Writer writer = project.getWriter(localFile);
-					IOUtils.copy(resourceZipStream, writer);
-					writer.close();
-				}
-			}
+            while ((zipEntry = resourceZipStream.getNextEntry()) != null) {
+                if (this.relativePath.equals(zipEntry.getName())) {
+                    Writer writer = project.getWriter(localFile);
+                    IOUtils.copy(resourceZipStream, writer);
+                    writer.close();
+                }
+            }
 
-			resourceZipStream.close();
-			resourceStream.close();
-		} catch (IOException e) {
-			throw new WMRuntimeException(e);
-		}
+            resourceZipStream.close();
+            resourceStream.close();
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        }
 
-		if (null != message) {
-			upgradeInfo.addMessage(message);
-		}
-	}
+        if (null != this.message) {
+            upgradeInfo.addMessage(this.message);
+        }
+    }
 
-	// bean properties
-	private String relativePath;
-	private String message;
+    // bean properties
+    private String relativePath;
 
-	/**
-	 * The relative path (relative to the project root) for the file to upgrade.
-	 */
-	public void setFile(String file) {
-		this.relativePath = file;
-	}
+    private String message;
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+    /**
+     * The relative path (relative to the project root) for the file to upgrade.
+     */
+    public void setFile(String file) {
+        this.relativePath = file;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
 }

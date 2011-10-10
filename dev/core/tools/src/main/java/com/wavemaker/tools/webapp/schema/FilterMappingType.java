@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import java.util.ArrayList;
@@ -35,31 +34,24 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
  * 
  * 
- * 	Declaration of the filter mappings in this web
- * 	application is done by using filter-mappingType.
- * 	The container uses the filter-mapping
- * 	declarations to decide which filters to apply to a request,
- * 	and in what order. The container matches the request URI to
- * 	a Servlet in the normal way. To determine which filters to
- * 	apply it matches filter-mapping declarations either on
- * 	servlet-name, or on url-pattern for each filter-mapping
- * 	element, depending on which style is used. The order in
- * 	which filters are invoked is the order in which
- * 	filter-mapping declarations that match a request URI for a
- * 	servlet appear in the list of filter-mapping elements.The
- * 	filter-name value must be the value of the filter-name
- * 	sub-elements of one of the filter declarations in the
- * 	deployment descriptor.
+ * Declaration of the filter mappings in this web application is done by using filter-mappingType. The container uses
+ * the filter-mapping declarations to decide which filters to apply to a request, and in what order. The container
+ * matches the request URI to a Servlet in the normal way. To determine which filters to apply it matches filter-mapping
+ * declarations either on servlet-name, or on url-pattern for each filter-mapping element, depending on which style is
+ * used. The order in which filters are invoked is the order in which filter-mapping declarations that match a request
+ * URI for a servlet appear in the list of filter-mapping elements.The filter-name value must be the value of the
+ * filter-name sub-elements of one of the filter declarations in the deployment descriptor.
  * 
- *       
  * 
- * <p>Java class for filter-mappingType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for filter-mappingType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="filter-mappingType">
@@ -82,21 +74,20 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "filter-mappingType", propOrder = {
-    "filterName",
-    "urlPattern",
-    "servletName",
-    "dispatcher"
-})
+@XmlType(name = "filter-mappingType", propOrder = { "filterName", "urlPattern", "servletName", "dispatcher" })
 public class FilterMappingType {
 
     @XmlElement(name = "filter-name", required = true)
     protected FilterNameType filterName;
+
     @XmlElement(name = "url-pattern")
     protected UrlPatternType urlPattern;
+
     @XmlElement(name = "servlet-name")
     protected ServletNameType servletName;
+
     protected List<DispatcherType> dispatcher;
+
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -106,22 +97,18 @@ public class FilterMappingType {
     /**
      * Gets the value of the filterName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link FilterNameType }
-     *     
+     * @return possible object is {@link FilterNameType }
+     * 
      */
     public FilterNameType getFilterName() {
-        return filterName;
+        return this.filterName;
     }
 
     /**
      * Sets the value of the filterName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link FilterNameType }
-     *     
+     * @param value allowed object is {@link FilterNameType }
+     * 
      */
     public void setFilterName(FilterNameType value) {
         this.filterName = value;
@@ -130,22 +117,18 @@ public class FilterMappingType {
     /**
      * Gets the value of the urlPattern property.
      * 
-     * @return
-     *     possible object is
-     *     {@link UrlPatternType }
-     *     
+     * @return possible object is {@link UrlPatternType }
+     * 
      */
     public UrlPatternType getUrlPattern() {
-        return urlPattern;
+        return this.urlPattern;
     }
 
     /**
      * Sets the value of the urlPattern property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link UrlPatternType }
-     *     
+     * @param value allowed object is {@link UrlPatternType }
+     * 
      */
     public void setUrlPattern(UrlPatternType value) {
         this.urlPattern = value;
@@ -154,22 +137,18 @@ public class FilterMappingType {
     /**
      * Gets the value of the servletName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link ServletNameType }
-     *     
+     * @return possible object is {@link ServletNameType }
+     * 
      */
     public ServletNameType getServletName() {
-        return servletName;
+        return this.servletName;
     }
 
     /**
      * Sets the value of the servletName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link ServletNameType }
-     *     
+     * @param value allowed object is {@link ServletNameType }
+     * 
      */
     public void setServletName(ServletNameType value) {
         this.servletName = value;
@@ -179,27 +158,26 @@ public class FilterMappingType {
      * Gets the value of the dispatcher property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the dispatcher property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the dispatcher property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getDispatcher().add(newItem);
+     * getDispatcher().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DispatcherType }
+     * Objects of the following type(s) are allowed in the list {@link DispatcherType }
      * 
      * 
      */
     public List<DispatcherType> getDispatcher() {
-        if (dispatcher == null) {
-            dispatcher = new ArrayList<DispatcherType>();
+        if (this.dispatcher == null) {
+            this.dispatcher = new ArrayList<DispatcherType>();
         }
         return this.dispatcher;
     }
@@ -207,22 +185,18 @@ public class FilterMappingType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setId(java.lang.String value) {
         this.id = value;

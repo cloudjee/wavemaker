@@ -11,23 +11,23 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for SendEmailError complex type.
+ * <p>
+ * Java class for SendEmailError complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="SendEmailError">
@@ -47,20 +47,18 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "SendEmailError", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "fields",
-    "message",
-    "statusCode",
-    "targetObjectId"
-})
+@XmlType(name = "SendEmailError", namespace = "urn:partner.soap.sforce.com", propOrder = { "fields", "message", "statusCode", "targetObjectId" })
 public class SendEmailErrorType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com", nillable = true)
     protected List<String> fields;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String message;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected StatusCodeType statusCode;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String targetObjectId;
 
@@ -68,27 +66,26 @@ public class SendEmailErrorType {
      * Gets the value of the fields property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the fields property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the fields property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getFields().add(newItem);
+     * getFields().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link String }
+     * Objects of the following type(s) are allowed in the list {@link String }
      * 
      * 
      */
     public List<String> getFields() {
-        if (fields == null) {
-            fields = new ArrayList<String>();
+        if (this.fields == null) {
+            this.fields = new ArrayList<String>();
         }
         return this.fields;
     }
@@ -96,22 +93,18 @@ public class SendEmailErrorType {
     /**
      * Gets the value of the message property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getMessage() {
-        return message;
+        return this.message;
     }
 
     /**
      * Sets the value of the message property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setMessage(String value) {
         this.message = value;
@@ -120,22 +113,18 @@ public class SendEmailErrorType {
     /**
      * Gets the value of the statusCode property.
      * 
-     * @return
-     *     possible object is
-     *     {@link StatusCodeType }
-     *     
+     * @return possible object is {@link StatusCodeType }
+     * 
      */
     public StatusCodeType getStatusCode() {
-        return statusCode;
+        return this.statusCode;
     }
 
     /**
      * Sets the value of the statusCode property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link StatusCodeType }
-     *     
+     * @param value allowed object is {@link StatusCodeType }
+     * 
      */
     public void setStatusCode(StatusCodeType value) {
         this.statusCode = value;
@@ -144,22 +133,18 @@ public class SendEmailErrorType {
     /**
      * Gets the value of the targetObjectId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getTargetObjectId() {
-        return targetObjectId;
+        return this.targetObjectId;
     }
 
     /**
      * Sets the value of the targetObjectId property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setTargetObjectId(String value) {
         this.targetObjectId = value;
@@ -168,10 +153,8 @@ public class SendEmailErrorType {
     /**
      * Sets the value of the fields property.
      * 
-     * @param fields
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param fields allowed object is {@link String }
+     * 
      */
     public void setFields(List<String> fields) {
         this.fields = fields;

@@ -26,26 +26,29 @@ public class DataServiceOperation {
 
     private String queryName = null;
 
-    // queries can return more than one type    
+    // queries can return more than one type
     private List<String> outputTypes = new ArrayList<String>();
+
     private List<String> outputNames = new ArrayList<String>();
 
-    private List<String> inputTypes = new ArrayList<String>();
-    private List<String> inputNames = new ArrayList<String>();
-    private List<Boolean> inputIsList = new ArrayList<Boolean>();
+    private final List<String> inputTypes = new ArrayList<String>();
+
+    private final List<String> inputNames = new ArrayList<String>();
+
+    private final List<Boolean> inputIsList = new ArrayList<Boolean>();
 
     private String taskGetter = null;
 
     private boolean returnsSingleResult = false;
-    
+
     private boolean requiresResultWrapper = false;
 
-    private List<DataServiceOperation> overloadedOperations = new ArrayList<DataServiceOperation>();
+    private final List<DataServiceOperation> overloadedOperations = new ArrayList<DataServiceOperation>();
 
     // don't use ElementType to store type/value
     // it is meant to store type/name
-    private List<ElementType> literalTaskInputs = new ArrayList<ElementType>();
-    
+    private final List<ElementType> literalTaskInputs = new ArrayList<ElementType>();
+
     private String code = null;
 
     public DataServiceOperation() {
@@ -62,15 +65,12 @@ public class DataServiceOperation {
     }
 
     public DataServiceOperation addOverloadedOperation() {
-        return addOverloadedOperation(Collections.<String> emptyList(),
-                Collections.<String> emptyList());
+        return addOverloadedOperation(Collections.<String> emptyList(), Collections.<String> emptyList());
     }
 
-    public DataServiceOperation addOverloadedOperation(List<String> inputTypes,
-            List<String> inputNames) {
-        DataServiceOperation op = new DataServiceOperation(getName(),
-                getQueryName(), getTaskGetter());
-        overloadedOperations.add(op);
+    public DataServiceOperation addOverloadedOperation(List<String> inputTypes, List<String> inputNames) {
+        DataServiceOperation op = new DataServiceOperation(getName(), getQueryName(), getTaskGetter());
+        this.overloadedOperations.add(op);
         for (int i = 0; i < inputTypes.size(); i++) {
             op.addInput(inputTypes.get(i), inputNames.get(0));
         }
@@ -78,43 +78,40 @@ public class DataServiceOperation {
         op.setReturnsSingleResult(getReturnsSingleResult());
         return op;
     }
-    
+
     public void setCode(String code) {
         this.code = code;
     }
-    
+
     public String getCode() {
-        return code;
+        return this.code;
     }
 
     public void setReturnsSingleResult(Boolean b) {
-        returnsSingleResult = b;
+        this.returnsSingleResult = b;
     }
 
     public boolean getReturnsSingleResult() {
-        return returnsSingleResult;
+        return this.returnsSingleResult;
     }
 
     public boolean isQuery() {
-        return (queryName != null);
+        return this.queryName != null;
     }
 
     public String getQueryName() {
-        return queryName;
+        return this.queryName;
     }
 
     public void setQueryName(String queryName) {
         this.queryName = queryName;
     }
-    
-    public DataServiceOperation addInput(String inputName, 
-					 Class<?> inputType) {
+
+    public DataServiceOperation addInput(String inputName, Class<?> inputType) {
         return addInput(inputName, inputType.getName());
     }
 
-    public DataServiceOperation addInput(String inputName, 
-					 Class<?> inputType, 
-					 Boolean isList) {
+    public DataServiceOperation addInput(String inputName, Class<?> inputType, Boolean isList) {
         return addInput(inputName, inputType.getName(), isList);
     }
 
@@ -122,11 +119,10 @@ public class DataServiceOperation {
         return addInput(inputName, inputType, Boolean.FALSE);
     }
 
-    public DataServiceOperation addInput(String inputName, String inputType,
-					 Boolean isList) {
-        inputNames.add(inputName);
-        inputTypes.add(inputType);
-	inputIsList.add(isList);
+    public DataServiceOperation addInput(String inputName, String inputType, Boolean isList) {
+        this.inputNames.add(inputName);
+        this.inputTypes.add(inputType);
+        this.inputIsList.add(isList);
         return this;
     }
 
@@ -140,7 +136,7 @@ public class DataServiceOperation {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -148,46 +144,46 @@ public class DataServiceOperation {
     }
 
     public List<String> getInputTypes() {
-        return inputTypes;
+        return this.inputTypes;
     }
 
     public List<String> getInputNames() {
-        return inputNames;
+        return this.inputNames;
     }
 
     public List<Boolean> getInputIsList() {
-	return inputIsList;
+        return this.inputIsList;
     }
 
     public String getOutputType() {
-        if (outputTypes.isEmpty()) {
+        if (this.outputTypes.isEmpty()) {
             return null;
         }
-        return outputTypes.get(0);
+        return this.outputTypes.get(0);
     }
-    
+
     public List<String> getOutputTypes() {
-        return outputTypes;
+        return this.outputTypes;
     }
-    
+
     public List<String> getOutputNames() {
-        return outputNames;
+        return this.outputNames;
     }
-    
+
     public void setOutputNames(List<String> outputNames) {
         this.outputNames = outputNames;
     }
-    
+
     public void setOutputTypes(List<String> outputTypes) {
         this.outputTypes = outputTypes;
     }
-    
+
     public String getTaskGetter() {
-        return taskGetter;
+        return this.taskGetter;
     }
 
     public List<ElementType> getTaskInputs() {
-        return literalTaskInputs;
+        return this.literalTaskInputs;
     }
 
     public void addTaskInput(ElementType taskInput) {
@@ -195,15 +191,15 @@ public class DataServiceOperation {
     }
 
     public List<DataServiceOperation> getOverloadedOperations() {
-        return overloadedOperations;
+        return this.overloadedOperations;
     }
-    
+
     public void setRequiresResultWrapper(boolean requiresResultWrapper) {
         this.requiresResultWrapper = requiresResultWrapper;
     }
-    
+
     public boolean requiresResultWrapper() {
-        return requiresResultWrapper;
+        return this.requiresResultWrapper;
     }
-    
+
 }

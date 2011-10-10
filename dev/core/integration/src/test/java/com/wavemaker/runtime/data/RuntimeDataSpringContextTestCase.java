@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data;
 
 import org.springframework.test.context.ContextConfiguration;
@@ -26,8 +27,8 @@ import com.wavemaker.runtime.test.TestSpringContextTestCase;
  * @version $Rev$ - $Date$
  * 
  */
-@ContextConfiguration(locations={DataServiceTestConstants.SAKILA_SPRING_CFG, "orahr.spring.xml", "adventure.spring.xml", "aghr.spring.xml", "db2sample.spring.xml"})
-public abstract class RuntimeDataSpringContextTestCase extends
-        TestSpringContextTestCase {
+@ContextConfiguration(locations = { DataServiceTestConstants.SAKILA_SPRING_CFG, "orahr.spring.xml", "adventure.spring.xml", "aghr.spring.xml",
+    "db2sample.spring.xml" })
+public abstract class RuntimeDataSpringContextTestCase extends TestSpringContextTestCase {
 
 }

@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.server.testspring;
 
 import com.wavemaker.common.WMRuntimeException;
@@ -28,61 +29,58 @@ import com.wavemaker.runtime.service.reflect.ReflectServiceWire;
 /**
  * @author small
  * @version $Rev:22671 $ - $Date:2008-05-30 14:29:23 -0700 (Fri, 30 May 2008) $
- *
+ * 
  */
 public class ServiceEventBeanListener implements ServiceEventListener {
 
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.service.events.ServiceEventListener#preOperation(com.wavemaker.runtime.service.ServiceWire, java.lang.String, java.lang.Object[])
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.wavemaker.runtime.service.events.ServiceEventListener#preOperation(com.wavemaker.runtime.service.ServiceWire,
+     * java.lang.String, java.lang.Object[])
      */
-    public Object[] preOperation(ServiceWire serviceWire, String operationName,
-            Object[] params) {
-        
+    public Object[] preOperation(ServiceWire serviceWire, String operationName, Object[] params) {
+
         if (operationName.equals("getValue")) {
-            Long p = (Long)params[0];
-            params[0] = Long.valueOf(p.longValue()+2000);
+            Long p = (Long) params[0];
+            params[0] = Long.valueOf(p.longValue() + 2000);
         }
-        
+
         if (!(serviceWire instanceof ReflectServiceWire)) {
-            throw new WMRuntimeException(
-                    "serviceWire should have been Reflect, was: "+serviceWire+
-                    "("+serviceWire.getClass()+")");
+            throw new WMRuntimeException("serviceWire should have been Reflect, was: " + serviceWire + "(" + serviceWire.getClass() + ")");
         }
-        
+
         ReflectServiceWire rsw = (ReflectServiceWire) serviceWire;
-        
+
         ServiceEventBean seb = (ServiceEventBean) rsw.getServiceBean();
         seb.increment();
         return params;
     }
-    
-    /* (non-Javadoc)
-     * @see com.wavemaker.runtime.service.events.ServiceEventListener#postOperation(com.wavemaker.runtime.service.ServiceWire, java.lang.String, com.wavemaker.runtime.service.TypedServiceReturn, java.lang.Throwable)
+
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * com.wavemaker.runtime.service.events.ServiceEventListener#postOperation(com.wavemaker.runtime.service.ServiceWire
+     * , java.lang.String, com.wavemaker.runtime.service.TypedServiceReturn, java.lang.Throwable)
      */
-    public TypedServiceReturn postOperation(
-            ServiceWire serviceWire, String operationName,
-            TypedServiceReturn result, Throwable throwable)
-            throws Throwable {
-        
-        if (null!=throwable) {
-            return new TypedServiceReturn(Long.valueOf(10000),
-                    ReflectTypeUtils.getFieldDefinition(Long.class,
-                            new ReflectTypeState(), false, null));
+    public TypedServiceReturn postOperation(ServiceWire serviceWire, String operationName, TypedServiceReturn result, Throwable throwable)
+        throws Throwable {
+
+        if (null != throwable) {
+            return new TypedServiceReturn(Long.valueOf(10000), ReflectTypeUtils.getFieldDefinition(Long.class, new ReflectTypeState(), false, null));
         } else {
             if (!(serviceWire instanceof ReflectServiceWire)) {
-                throw new WMRuntimeException(
-                        "serviceWire should have been Reflect, was: "+serviceWire+
-                        "("+serviceWire.getClass()+")");
+                throw new WMRuntimeException("serviceWire should have been Reflect, was: " + serviceWire + "(" + serviceWire.getClass() + ")");
             }
             ReflectServiceWire rsw = (ReflectServiceWire) serviceWire;
-            
+
             ServiceEventBean seb = (ServiceEventBean) rsw.getServiceBean();
             seb.increment();
 
-            return new TypedServiceReturn(
-                    Long.valueOf(((Long)result.getReturnValue()).longValue()+1000),
-                    ReflectTypeUtils.getFieldDefinition(Long.class,
-                            new ReflectTypeState(), false, null));
+            return new TypedServiceReturn(Long.valueOf(((Long) result.getReturnValue()).longValue() + 1000), ReflectTypeUtils.getFieldDefinition(
+                Long.class, new ReflectTypeState(), false, null));
         }
     }
 }

@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.data;
 
 import java.io.File;
@@ -48,10 +49,9 @@ public class TestSpringCfgGenerator extends WMTestCase {
 
             File s = new File(f, "foo" + DataServiceConstants.SPRING_CFG_EXT);
 
-            Beans b = SpringConfigSupport
-		.readBeans(FileUtils.readFileToString(s, "UTF-8"));
+            Beans b = SpringConfigSupport.readBeans(FileUtils.readFileToString(s, "UTF-8"));
 
-            assertEquals("beans: "+b.getBeanList(), 10, b.getBeanList().size());
+            assertEquals("beans: " + b.getBeanList(), 10, b.getBeanList().size());
         } finally {
             IOUtils.deleteRecursive(f);
         }

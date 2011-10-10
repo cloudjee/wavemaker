@@ -14,22 +14,22 @@
 
 package com.wavemaker.runtime.service;
 
-import java.io.InputStream;
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.runtime.RuntimeAccess;
-import com.wavemaker.runtime.server.InternalRuntime;
 import com.wavemaker.runtime.server.DownloadResponse;
+import com.wavemaker.runtime.server.InternalRuntime;
 import com.wavemaker.runtime.service.events.ServiceEventNotifier;
 
 /**
  * @author EdC
  * @version $Rev: 21571 $ - $Date: 2008-03-13 13:37:31 -0700 (Thu, 13 Mar 2008) $
- *
+ * 
  */
 
 public class WaveMakerService {
@@ -42,20 +42,19 @@ public class WaveMakerService {
         return RuntimeAccess.getInstance().getSession().getId();
     }
 
-    public DownloadResponse echo(String contents, String contentType,
-            String fileName) {
+    public DownloadResponse echo(String contents, String contentType, String fileName) {
         InputStream is;
         try {
             is = new ByteArrayInputStream(contents.getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
             throw new WMRuntimeException(e);
         }
-        return (new DownloadResponse(is, contentType, fileName));
+        return new DownloadResponse(is, contentType, fileName);
     }
-    
+
     /**
-     * Get the service.  If serviceName is not null or "", use the serviceName.
-     * If not, use the owning service of typeName.
+     * Get the service. If serviceName is not null or "", use the serviceName. If not, use the owning service of
+     * typeName.
      * 
      * @param serviceName The serviceName (can be null or "") of the desired service..
      * @param typeName The typeName (only used if serviceName is null or "") owned by the desired service.
@@ -65,13 +64,13 @@ public class WaveMakerService {
     public ServiceWire getServiceWire(String serviceName, String typeName) {
         ServiceWire serviceWire = null;
         Exception enclosedException = null;
-        
-        if (null!=serviceName && 0!=serviceName.length()) {
-            serviceWire = serviceManager.getServiceWire(serviceName);
+
+        if (null != serviceName && 0 != serviceName.length()) {
+            serviceWire = this.serviceManager.getServiceWire(serviceName);
         } else {
             try {
-                String serviceId = typeManager.getServiceIdForType(typeName);
-                serviceWire = serviceManager.getServiceWire(serviceId);
+                String serviceId = this.typeManager.getServiceIdForType(typeName);
+                serviceWire = this.serviceManager.getServiceWire(serviceId);
             } catch (TypeNotFoundException e) {
                 enclosedException = e;
             } catch (WMRuntimeException e2) {
@@ -79,61 +78,62 @@ public class WaveMakerService {
             }
         }
 
-        if (null==serviceWire && null == enclosedException) {
-            throw new WMRuntimeException(MessageResource.NO_SERVICE_FROM_ID_TYPE,
-                    serviceName, typeName);
-        } else if (null==serviceWire) {
-            throw new WMRuntimeException(MessageResource.NO_SERVICE_FROM_ID_TYPE,
-                    enclosedException, serviceName, typeName);
+        if (null == serviceWire && null == enclosedException) {
+            throw new WMRuntimeException(MessageResource.NO_SERVICE_FROM_ID_TYPE, serviceName, typeName);
+        } else if (null == serviceWire) {
+            throw new WMRuntimeException(MessageResource.NO_SERVICE_FROM_ID_TYPE, enclosedException, serviceName, typeName);
         }
-        
+
         return serviceWire;
     }
-    
-    
+
     // spring-managed bean properties
     private TypeManager typeManager;
 
     private ServiceManager serviceManager;
 
     private ServiceEventNotifier serviceEventNotifier;
-    
+
     private InternalRuntime internalRuntime;
-    
+
     private RuntimeAccess runtimeAccess;
 
     public TypeManager getTypeManager() {
-        return typeManager;
+        return this.typeManager;
     }
+
     public void setTypeManager(TypeManager typeManager) {
         this.typeManager = typeManager;
     }
 
     public ServiceManager getServiceManager() {
-        return serviceManager;
+        return this.serviceManager;
     }
+
     public void setServiceManager(ServiceManager serviceManager) {
         this.serviceManager = serviceManager;
     }
 
     public ServiceEventNotifier getServiceEventNotifier() {
-        return serviceEventNotifier;
+        return this.serviceEventNotifier;
     }
-    public void setServiceEventNotifier(
-            ServiceEventNotifier serviceEventNotifier) {
+
+    public void setServiceEventNotifier(ServiceEventNotifier serviceEventNotifier) {
         this.serviceEventNotifier = serviceEventNotifier;
     }
 
     public InternalRuntime getInternalRuntime() {
-        return internalRuntime;
+        return this.internalRuntime;
     }
+
     public void setInternalRuntime(InternalRuntime internalRuntime) {
         this.internalRuntime = internalRuntime;
     }
 
     public RuntimeAccess getRuntimeAccess() {
-        return runtimeAccess;
+        return this.runtimeAccess;
     }
+
     public void setRuntimeAccess(RuntimeAccess runtimeAccess) {
         this.runtimeAccess = runtimeAccess;
     }

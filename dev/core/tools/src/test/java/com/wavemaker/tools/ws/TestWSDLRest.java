@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.ws;
 
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ import com.wavemaker.tools.ws.wsdl.WSDL;
  * 
  */
 public class TestWSDLRest extends WMTestCase {
-    
+
     public static WSDL getYahooStockQuoteWSDL() throws Exception {
         return TestWSDL.getWSDL("com/wavemaker/tools/ws/YahooStockQuote.wsdl");
     }
@@ -54,8 +55,8 @@ public class TestWSDLRest extends WMTestCase {
     public void testYahooStockQuoteGetEndpointLocation() throws Exception {
         WSDL wsdl = getYahooStockQuoteWSDL();
         assertEquals(
-                "http://service.openkapow.com/frankiefu/yahooquoteservice?symbol={symbol}&resultformat=xml&xml.rootElementName=&html.title=&html.style.stylesheetLink=&header=yes&json.callbackFunction=",
-                wsdl.getEndpointLocation());
+            "http://service.openkapow.com/frankiefu/yahooquoteservice?symbol={symbol}&resultformat=xml&xml.rootElementName=&html.title=&html.style.stylesheetLink=&header=yes&json.callbackFunction=",
+            wsdl.getEndpointLocation());
     }
 
     public void testYahooStockQuoteGetOperationNames() throws Exception {
@@ -73,7 +74,7 @@ public class TestWSDLRest extends WMTestCase {
         assertEquals("symbol", inputType.getName());
         assertEquals("java.lang.String", inputType.getJavaType());
         assertEquals(false, inputType.isList());
-        
+
         // check the child properties for the inputType
         assertEquals(0, inputType.getProperties().size());
     }
@@ -82,11 +83,9 @@ public class TestWSDLRest extends WMTestCase {
         WSDL wsdl = getYahooStockQuoteWSDL();
         ElementType outputType = wsdl.getOutputType("getQuote", false);
         assertEquals("body", outputType.getName());
-        assertEquals(
-                "com.openkapow.service.frankiefu.yahooquoteservice.yahoostockquote.Result",
-                outputType.getJavaType());
+        assertEquals("com.openkapow.service.frankiefu.yahooquoteservice.yahoostockquote.Result", outputType.getJavaType());
         assertEquals(false, outputType.isList());
-        
+
         // check the child properties for the outputType
         List<ElementType> properties = outputType.getProperties();
         assertEquals(1, properties.size());
@@ -98,8 +97,7 @@ public class TestWSDLRest extends WMTestCase {
         WSDL wsdl = getYahooStockQuoteWSDL();
         List<ElementType> types = wsdl.getTypes();
         assertEquals(1, types.size());
-        assertEquals("com.openkapow.service.frankiefu.yahooquoteservice.yahoostockquote.Result", 
-                types.get(0).getJavaType());
+        assertEquals("com.openkapow.service.frankiefu.yahooquoteservice.yahoostockquote.Result", types.get(0).getJavaType());
         List<ElementType> properties = types.get(0).getProperties();
         assertEquals(1, properties.size());
         assertEquals("quote", properties.get(0).getName());
@@ -113,9 +111,8 @@ public class TestWSDLRest extends WMTestCase {
 
     public void testYahooTrafficGetEndpointLocation() throws Exception {
         WSDL wsdl = getYahooTrafficDataWSDL();
-        assertEquals(
-                "http://api.local.yahoo.com/MapsService/V1/trafficData?appid={appid}&street={street}&city={city}&state={state}&include_map=1",
-                wsdl.getEndpointLocation());
+        assertEquals("http://api.local.yahoo.com/MapsService/V1/trafficData?appid={appid}&street={street}&city={city}&state={state}&include_map=1",
+            wsdl.getEndpointLocation());
     }
 
     public void testYahooTrafficGetOperationNames() throws Exception {
@@ -158,19 +155,17 @@ public class TestWSDLRest extends WMTestCase {
         assertEquals("yahoo.maps.yahootraffic.ResultSet", outputType.getJavaType());
         assertEquals(false, outputType.isList());
     }
-    
+
     public void testAmazonSearchGetTypes() throws Exception {
         WSDL wsdl = getAmazonSearchWSDL();
         assertNotNull(wsdl);
         List<ElementType> types = wsdl.getTypes();
         for (ElementType type : types) {
             String javaType = type.getJavaType();
-            if (javaType.equals(
-                    "com.amazon.webservices.awsecommerceservice._2005_10_05.amazonrestservice.ListmaniaLists")) {
+            if (javaType.equals("com.amazon.webservices.awsecommerceservice._2005_10_05.amazonrestservice.ListmaniaLists")) {
                 assertEquals(1, type.getProperties().size());
-                assertEquals(
-                        "com.amazon.webservices.awsecommerceservice._2005_10_05.amazonrestservice.ListmaniaLists.ListmaniaList",
-                        type.getProperties().get(0).getJavaType());
+                assertEquals("com.amazon.webservices.awsecommerceservice._2005_10_05.amazonrestservice.ListmaniaLists.ListmaniaList",
+                    type.getProperties().get(0).getJavaType());
             }
             if (javaType.equals("com.amazon.webservices.awsecommerceservice._2005_10_05.amazonrestservice.Items")) {
                 List<ElementType> properties = type.getProperties();

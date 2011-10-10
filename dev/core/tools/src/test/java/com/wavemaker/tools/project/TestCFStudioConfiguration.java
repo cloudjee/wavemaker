@@ -47,290 +47,258 @@ import com.wavemaker.tools.config.ConfigurationStore;
  * 
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@IfProfileValue(name="spring.profiles", value="cloud-test")
+@IfProfileValue(name = "spring.profiles", value = "cloud-test")
 @TestExecutionListeners({})
 public class TestCFStudioConfiguration {
-	
-	private Log log = LogFactory.getLog(TestCFStudioConfiguration.class);
-	
-	private MongoDbFactory mongoFactory;
 
-	private static String PROJECT_TYPE = System
-			.getProperty("test.project.type");
+    private final Log log = LogFactory.getLog(TestCFStudioConfiguration.class);
 
-	private MockServletContext servletContext = new MockServletContext(
-			"classpath:/test-studio-root/");
+    private MongoDbFactory mongoFactory;
 
-	@Before
-	public void setUp() throws Exception {
-		ApplicationContext ctx = new AnnotationConfigApplicationContext(
-				TestMongoConfig.class);
-		mongoFactory = (MongoDbFactory) ctx.getBean("mongoFactory");
-		log.info("Connected to: " // ensure mongo is running
-				+ mongoFactory.getDb().getMongo().getAddress().getHost());
-	}
+    private static String PROJECT_TYPE = System.getProperty("test.project.type");
 
-	@After
-	public void tearDown() throws Exception {
-		mongoFactory.getDb().dropDatabase();
-	}
+    private final MockServletContext servletContext = new MockServletContext("classpath:/test-studio-root/");
 
-	@Test
-	public void testOverrideWMHome() throws Exception {
-		if (!"cloud".equals(PROJECT_TYPE)) {
-			String oldWMHome = System.getProperty(
-					CFStudioConfiguration.WMHOME_PROP_KEY, null);
+    @Before
+    public void setUp() throws Exception {
+        ApplicationContext ctx = new AnnotationConfigApplicationContext(TestMongoConfig.class);
+        this.mongoFactory = (MongoDbFactory) ctx.getBean("mongoFactory");
+        this.log.info("Connected to: " // ensure mongo is running
+            + this.mongoFactory.getDb().getMongo().getAddress().getHost());
+    }
 
-			try {
-				String newWMHome = "foo";
+    @After
+    public void tearDown() throws Exception {
+        this.mongoFactory.getDb().dropDatabase();
+    }
 
-				System.setProperty(CFStudioConfiguration.WMHOME_PROP_KEY, "/"
-						+ newWMHome);
+    @Test
+    public void testOverrideWMHome() throws Exception {
+        if (!"cloud".equals(PROJECT_TYPE)) {
+            String oldWMHome = System.getProperty(CFStudioConfiguration.WMHOME_PROP_KEY, null);
 
-				StudioConfiguration sc = new CFStudioConfiguration(mongoFactory);
-				Resource wmHome = sc.getWaveMakerHome();
+            try {
+                String newWMHome = "foo";
 
-				assertEquals(newWMHome, wmHome.getFilename());
-			} finally {
-				if (null == oldWMHome) {
-					Properties props = System.getProperties();
-					props.remove(CFStudioConfiguration.WMHOME_PROP_KEY);
-					System.setProperties(props);
-				} else {
-					System.setProperty(CFStudioConfiguration.WMHOME_PROP_KEY,
-							oldWMHome);
-				}
-			}
-		}
-	}
+                System.setProperty(CFStudioConfiguration.WMHOME_PROP_KEY, "/" + newWMHome);
 
-	@Test
-	public void testWMHomeDirCreation_File() throws Exception {
-		if (!"cloud".equals(PROJECT_TYPE)) {
-			String oldPref = ConfigurationStore.getPreference(
-					CFStudioConfiguration.class,
-					CFStudioConfiguration.WMHOME_KEY, null);
+                StudioConfiguration sc = new CFStudioConfiguration(this.mongoFactory);
+                Resource wmHome = sc.getWaveMakerHome();
 
-			try {
-				File tempDir = null;
+                assertEquals(newWMHome, wmHome.getFilename());
+            } finally {
+                if (null == oldWMHome) {
+                    Properties props = System.getProperties();
+                    props.remove(CFStudioConfiguration.WMHOME_PROP_KEY);
+                    System.setProperties(props);
+                } else {
+                    System.setProperty(CFStudioConfiguration.WMHOME_PROP_KEY, oldWMHome);
+                }
+            }
+        }
+    }
 
-				try {
-					tempDir = IOUtils.createTempDirectory();
-					IOUtils.deleteRecursive(tempDir);
+    @Test
+    public void testWMHomeDirCreation_File() throws Exception {
+        if (!"cloud".equals(PROJECT_TYPE)) {
+            String oldPref = ConfigurationStore.getPreference(CFStudioConfiguration.class, CFStudioConfiguration.WMHOME_KEY, null);
 
-					assertTrue(!tempDir.exists());
+            try {
+                File tempDir = null;
 
-					GFSResource gfsWMHome = new GFSResource(
-							CFStudioConfiguration.getGFS(), tempDir.getPath()+ "/");
-					CFStudioConfiguration.setWaveMakerHome(gfsWMHome);
+                try {
+                    tempDir = IOUtils.createTempDirectory();
+                    IOUtils.deleteRecursive(tempDir);
 
-					assertTrue(gfsWMHome.exists());
-				} finally {
-					if (null != tempDir && tempDir.exists()) {
-						IOUtils.deleteRecursive(tempDir);
-					}
-				}
-			} finally {
-				if (null == oldPref) {
-					ConfigurationStore.removePreference(
-							CFStudioConfiguration.class,
-							CFStudioConfiguration.WMHOME_KEY);
-				} else {
-					CFStudioConfiguration.setWaveMakerHome(new GFSResource(
-							CFStudioConfiguration.getGFS(), oldPref));
-				}
-			}
-		}
-	}
+                    assertTrue(!tempDir.exists());
 
-	@Test
-	public void testCommonDirCreation() throws Exception {
-		if (!"cloud".equals(PROJECT_TYPE)) {
-			File tempDir = null;
+                    GFSResource gfsWMHome = new GFSResource(CFStudioConfiguration.getGFS(), tempDir.getPath() + "/");
+                    CFStudioConfiguration.setWaveMakerHome(gfsWMHome);
 
-			try {
-				tempDir = IOUtils.createTempDirectory();
-				File tempProjectsDir = new File(tempDir,
-						CFStudioConfiguration.PROJECTS_DIR);
+                    assertTrue(gfsWMHome.exists());
+                } finally {
+                    if (null != tempDir && tempDir.exists()) {
+                        IOUtils.deleteRecursive(tempDir);
+                    }
+                }
+            } finally {
+                if (null == oldPref) {
+                    ConfigurationStore.removePreference(CFStudioConfiguration.class, CFStudioConfiguration.WMHOME_KEY);
+                } else {
+                    CFStudioConfiguration.setWaveMakerHome(new GFSResource(CFStudioConfiguration.getGFS(), oldPref));
+                }
+            }
+        }
+    }
 
-				assertTrue(!tempProjectsDir.exists());
+    @Test
+    public void testCommonDirCreation() throws Exception {
+        if (!"cloud".equals(PROJECT_TYPE)) {
+            File tempDir = null;
 
-				CFStudioConfiguration sc = new CFStudioConfiguration(
-						mongoFactory);
-				sc.setTestWaveMakerHome(tempDir);
-				sc.setServletContext(servletContext);
+            try {
+                tempDir = IOUtils.createTempDirectory();
+                File tempProjectsDir = new File(tempDir, CFStudioConfiguration.PROJECTS_DIR);
 
-				assertTrue(sc.getProjectsDir().exists());
-				assertTrue(
-						"expected failure in eclipse: expected dir: "
-								+ sc.getCommonDir() + " DNE", sc.getCommonDir()
-								.exists());
+                assertTrue(!tempProjectsDir.exists());
 
-				Resource commonSvn = sc.getCommonDir().createRelative(".svn/");
-				assertTrue(commonSvn.exists()); // Was false, but just created commonSvn - EdC
-			} finally {
-				if (null != tempDir && tempDir.exists()) {
-					IOUtils.deleteRecursive(tempDir);
-				}
-			}
-		}
-	}
+                CFStudioConfiguration sc = new CFStudioConfiguration(this.mongoFactory);
+                sc.setTestWaveMakerHome(tempDir);
+                sc.setServletContext(this.servletContext);
 
-	@Test
-	public void testGetStudioWebAppRootFile() throws Exception {
+                assertTrue(sc.getProjectsDir().exists());
+                assertTrue("expected failure in eclipse: expected dir: " + sc.getCommonDir() + " DNE", sc.getCommonDir().exists());
 
-		CFStudioConfiguration sc = new CFStudioConfiguration(mongoFactory);
-		sc.setServletContext(servletContext);
-		Resource studioWebAppRootFile = sc.getStudioWebAppRoot();
-		assertTrue(studioWebAppRootFile.exists());
-		Resource studioWebInfFile = studioWebAppRootFile
-				.createRelative("WEB-INF/");
-		assertTrue(studioWebInfFile.exists());
-		Resource webXmlFile = studioWebInfFile
-				.createRelative(ProjectConstants.WEB_XML);
-		assertTrue(webXmlFile.exists());
-	}
+                Resource commonSvn = sc.getCommonDir().createRelative(".svn/");
+                assertTrue(commonSvn.exists()); // Was false, but just created commonSvn - EdC
+            } finally {
+                if (null != tempDir && tempDir.exists()) {
+                    IOUtils.deleteRecursive(tempDir);
+                }
+            }
+        }
+    }
 
-	@Test
-	public void testDefaultStudioHome() throws Exception {
-		if (!"cloud".equals(PROJECT_TYPE)) {
-			String oldStudioHome = ConfigurationStore.getPreference(
-					CFStudioConfiguration.class,
-					CFStudioConfiguration.WMHOME_KEY, null);
-			StudioConfiguration sc = new CFStudioConfiguration(mongoFactory);
+    @Test
+    public void testGetStudioWebAppRootFile() throws Exception {
 
-			try {
-				ConfigurationStore.removePreference(
-						CFStudioConfiguration.class,
-						CFStudioConfiguration.WMHOME_KEY);
+        CFStudioConfiguration sc = new CFStudioConfiguration(this.mongoFactory);
+        sc.setServletContext(this.servletContext);
+        Resource studioWebAppRootFile = sc.getStudioWebAppRoot();
+        assertTrue(studioWebAppRootFile.exists());
+        Resource studioWebInfFile = studioWebAppRootFile.createRelative("WEB-INF/");
+        assertTrue(studioWebInfFile.exists());
+        Resource webXmlFile = studioWebInfFile.createRelative(ProjectConstants.WEB_XML);
+        assertTrue(webXmlFile.exists());
+    }
 
-				Resource home = sc.getWaveMakerHome();
-				assertTrue("we expected the home to exist; home: " + home,
-						home.exists());
-				String homeFolder = ((GFSResource) home).getPath().replace(((GFSResource) home).getParent()+"/","");
-				assertEquals("unexpected ending of home path: " + home, // Filename is not path -EdC
-						homeFolder, ("WaveMaker/"));
-				assertTrue(home.exists());
-			} finally {
-				if (null != oldStudioHome) {
-					CFStudioConfiguration.setWaveMakerHome(new GFSResource(
-							CFStudioConfiguration.getGFS(), oldStudioHome));
-				}
-			}
-		}
-	}
+    @Test
+    public void testDefaultStudioHome() throws Exception {
+        if (!"cloud".equals(PROJECT_TYPE)) {
+            String oldStudioHome = ConfigurationStore.getPreference(CFStudioConfiguration.class, CFStudioConfiguration.WMHOME_KEY, null);
+            StudioConfiguration sc = new CFStudioConfiguration(this.mongoFactory);
 
-	@Test
-	public void testCommonDir() throws Exception {
-		if (!"cloud".equals(PROJECT_TYPE)) {
-			File tempDir = null;
-			try {
-				tempDir = IOUtils.createTempDirectory();
-				File tempProjectsDir = new File(tempDir,
-						CFStudioConfiguration.PROJECTS_DIR);
+            try {
+                ConfigurationStore.removePreference(CFStudioConfiguration.class, CFStudioConfiguration.WMHOME_KEY);
 
-				assertTrue(!tempProjectsDir.exists());
+                Resource home = sc.getWaveMakerHome();
+                assertTrue("we expected the home to exist; home: " + home, home.exists());
+                String homeFolder = ((GFSResource) home).getPath().replace(((GFSResource) home).getParent() + "/", "");
+                assertEquals("unexpected ending of home path: " + home, // Filename is not path -EdC
+                    homeFolder, "WaveMaker/");
+                assertTrue(home.exists());
+            } finally {
+                if (null != oldStudioHome) {
+                    CFStudioConfiguration.setWaveMakerHome(new GFSResource(CFStudioConfiguration.getGFS(), oldStudioHome));
+                }
+            }
+        }
+    }
 
-				CFStudioConfiguration sc = new CFStudioConfiguration(
-						mongoFactory);
-				sc.setTestWaveMakerHome(tempDir);
-				sc.setServletContext(servletContext);
-				Resource projects = sc.getProjectsDir();
-				Resource common = sc.getCommonDir();
+    @Test
+    public void testCommonDir() throws Exception {
+        if (!"cloud".equals(PROJECT_TYPE)) {
+            File tempDir = null;
+            try {
+                tempDir = IOUtils.createTempDirectory();
+                File tempProjectsDir = new File(tempDir, CFStudioConfiguration.PROJECTS_DIR);
 
-				assertEquals(((GFSResource) projects).getParent(),
-						((GFSResource) common).getParent());
-			} finally {
-				if (null != tempDir && tempDir.exists()) {
-					IOUtils.deleteRecursive(tempDir);
-				}
-			}
-		}
-	}
+                assertTrue(!tempProjectsDir.exists());
 
-	// MAV-1989
-	@Test
-	public void testCommonDirCreation_Threads() throws Exception {
-		if (!"cloud".equals(PROJECT_TYPE)) {
-			File tempDir = null;
+                CFStudioConfiguration sc = new CFStudioConfiguration(this.mongoFactory);
+                sc.setTestWaveMakerHome(tempDir);
+                sc.setServletContext(this.servletContext);
+                Resource projects = sc.getProjectsDir();
+                Resource common = sc.getCommonDir();
 
-			try {
-				tempDir = IOUtils.createTempDirectory();
-				File tempProjectsDir = new File(tempDir,
-						CFStudioConfiguration.PROJECTS_DIR);
+                assertEquals(((GFSResource) projects).getParent(), ((GFSResource) common).getParent());
+            } finally {
+                if (null != tempDir && tempDir.exists()) {
+                    IOUtils.deleteRecursive(tempDir);
+                }
+            }
+        }
+    }
 
-				assertTrue(!tempProjectsDir.exists());
+    // MAV-1989
+    @Test
+    public void testCommonDirCreation_Threads() throws Exception {
+        if (!"cloud".equals(PROJECT_TYPE)) {
+            File tempDir = null;
 
-				CFStudioConfiguration sc = new CFStudioConfiguration(
-						mongoFactory);
-				sc.setTestWaveMakerHome(tempDir);
-				sc.setServletContext(servletContext);
+            try {
+                tempDir = IOUtils.createTempDirectory();
+                File tempProjectsDir = new File(tempDir, CFStudioConfiguration.PROJECTS_DIR);
 
-				Thread[] threads = new Thread[100];
-				for (int i = 0; i < threads.length; i++) {
-					threads[i] = new CommonDirThread(i, sc);
-				}
+                assertTrue(!tempProjectsDir.exists());
 
-				for (int i = 0; i < threads.length; i++) {
-					threads[i].start();
-				}
+                CFStudioConfiguration sc = new CFStudioConfiguration(this.mongoFactory);
+                sc.setTestWaveMakerHome(tempDir);
+                sc.setServletContext(this.servletContext);
 
-				for (int i = 0; i < threads.length; i++) {
-					threads[i].join();
-				}
+                Thread[] threads = new Thread[100];
+                for (int i = 0; i < threads.length; i++) {
+                    threads[i] = new CommonDirThread(i, sc);
+                }
 
-				assertTrue(sc.getProjectsDir().exists());
-				assertTrue(
-						"expected failure in eclipse: expected dir: "
-								+ sc.getCommonDir() + " DNE", sc.getCommonDir()
-								.exists());
-			} finally {
-				if (null != tempDir && tempDir.exists()) {
-					IOUtils.deleteRecursive(tempDir);
-				}
-			}
-		}
-	}
+                for (int i = 0; i < threads.length; i++) {
+                    threads[i].start();
+                }
 
-	private class CommonDirThread extends Thread {
+                for (int i = 0; i < threads.length; i++) {
+                    threads[i].join();
+                }
 
-		int index;
-		StudioConfiguration sc;
+                assertTrue(sc.getProjectsDir().exists());
+                assertTrue("expected failure in eclipse: expected dir: " + sc.getCommonDir() + " DNE", sc.getCommonDir().exists());
+            } finally {
+                if (null != tempDir && tempDir.exists()) {
+                    IOUtils.deleteRecursive(tempDir);
+                }
+            }
+        }
+    }
 
-		public CommonDirThread(int index, StudioConfiguration sc) {
+    private class CommonDirThread extends Thread {
 
-			super();
+        int index;
 
-			this.index = index;
-			this.sc = sc;
-		}
+        StudioConfiguration sc;
 
-		@Override
-		public void run() {
+        public CommonDirThread(int index, StudioConfiguration sc) {
 
-			Thread.yield();
+            super();
 
-			try {
-				sc.getCommonDir();
-			} catch (IOException e) {
-				throw new RuntimeException("failure on index " + index, e);
-			}
-		}
-	}
+            this.index = index;
+            this.sc = sc;
+        }
 
-	@Test
-	public void testGetCurrentVersionInfo() throws Exception {
+        @Override
+        public void run() {
 
-		VersionInfo vi = CFStudioConfiguration.getCurrentVersionInfo();
-		assertNotNull(vi);
-		assertTrue(vi.getMajor() > 4);
-	}
+            Thread.yield();
 
-	@Test
-	public void testGetRegisteredVersionInfo() throws Exception {
+            try {
+                this.sc.getCommonDir();
+            } catch (IOException e) {
+                throw new RuntimeException("failure on index " + this.index, e);
+            }
+        }
+    }
 
-		VersionInfo vi = CFStudioConfiguration.getRegisteredVersionInfo();
-		assertNotNull(vi);
-		assertTrue(vi.getMajor() >= 4);
-	}
+    @Test
+    public void testGetCurrentVersionInfo() throws Exception {
+
+        VersionInfo vi = CFStudioConfiguration.getCurrentVersionInfo();
+        assertNotNull(vi);
+        assertTrue(vi.getMajor() > 4);
+    }
+
+    @Test
+    public void testGetRegisteredVersionInfo() throws Exception {
+
+        VersionInfo vi = CFStudioConfiguration.getRegisteredVersionInfo();
+        assertNotNull(vi);
+        assertTrue(vi.getMajor() >= 4);
+    }
 }

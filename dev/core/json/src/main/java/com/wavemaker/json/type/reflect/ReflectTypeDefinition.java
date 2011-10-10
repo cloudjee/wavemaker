@@ -20,37 +20,37 @@ import com.wavemaker.json.type.TypeDefinition;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public abstract class ReflectTypeDefinition implements TypeDefinition {
-    
+
     /**
      * Often, this will be the backing Java class' canonical name.
      */
     private String typeName;
 
     private String shortName;
-    
+
     private Class<?> klass;
-    
+
     private boolean liveService;
-    
-    
-    
+
     @Override
     public String toString() {
-        return "TypeDefinition "+getTypeName()+"("+getClass()+")";
+        return "TypeDefinition " + getTypeName() + "(" + getClass() + ")";
     }
 
     public Class<?> getKlass() {
         return this.klass;
     }
-    
+
     public void setKlass(Class<?> klass) {
         this.klass = klass;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.type.TypeDefinition#getTypeName()
      */
     public String getTypeName() {
@@ -60,12 +60,14 @@ public abstract class ReflectTypeDefinition implements TypeDefinition {
     public void setTypeName(String typeName) {
         this.typeName = typeName;
     }
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.type.TypeDefinition#newInstance(java.lang.Object[])
      */
     public Object newInstance(Object... args) {
-        
+
         try {
             return this.getKlass().newInstance();
         } catch (InstantiationException e) {
@@ -79,21 +81,25 @@ public abstract class ReflectTypeDefinition implements TypeDefinition {
         this.liveService = liveService;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.type.TypeDefinition#isLiveService()
      */
     public boolean isLiveService() {
-        return liveService;
+        return this.liveService;
     }
 
     public void setShortName(String shortName) {
         this.shortName = shortName;
     }
 
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.json.type.TypeDefinition#getShortName()
      */
     public String getShortName() {
-        return shortName;
+        return this.shortName;
     }
 }

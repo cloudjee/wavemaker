@@ -41,12 +41,12 @@ import com.wavemaker.tools.service.codegen.ServiceGenerator;
  */
 public class ServiceClassGenerator {
 
-    private Log logger = LogFactory.getLog(ServiceClassGenerator.class);
+    private final Log logger = LogFactory.getLog(ServiceClassGenerator.class);
 
-    private List<Resource> services = new ArrayList<Resource>();
+    private final List<Resource> services = new ArrayList<Resource>();
 
     // map service file to its service id
-    private Map<Resource, String> serviceToServiceId = new HashMap<Resource, String>();
+    private final Map<Resource, String> serviceToServiceId = new HashMap<Resource, String>();
 
     private Resource outputDirectory = null;
 
@@ -69,10 +69,11 @@ public class ServiceClassGenerator {
             addService(f, serviceId);
         }
     }
-    
+
     /**
      * @deprecated - use {@link #addService(List, String) addService} instead
      */
+    @Deprecated
     public void addServiceFiles(List<File> serviceFiles, String serviceId) {
         for (File f : serviceFiles) {
             addService(new FileSystemResource(f), serviceId);
@@ -84,51 +85,47 @@ public class ServiceClassGenerator {
     }
 
     public void addService(Resource f, String serviceId) {
-        services.add(f);
+        this.services.add(f);
         if (serviceId != null) {
-            serviceToServiceId.put(f, serviceId);
+            this.serviceToServiceId.put(f, serviceId);
         }
     }
 
     public void run() {
 
-        if (serviceManager == null) {
+        if (this.serviceManager == null) {
             throw new ConfigurationException("serviceMgr cannot be null");
         }
 
-        for (Resource f : services) {
+        for (Resource f : this.services) {
 
-            String serviceId = serviceToServiceId.get(f);
-            
-            DeprecatedServiceDefinition def = ServiceUtils.getServiceDefinition(f,
-                    serviceId, serviceManager);
-            
+            String serviceId = this.serviceToServiceId.get(f);
+
+            DeprecatedServiceDefinition def = ServiceUtils.getServiceDefinition(f, serviceId, this.serviceManager);
+
             if (null == def) {
                 continue;
             }
 
-            GenerationConfiguration cfg = new GenerationConfiguration(def,
-                    outputDirectory);
-            
+            GenerationConfiguration cfg = new GenerationConfiguration(def, this.outputDirectory);
+
             ServiceGenerator generator = ServiceUtils.getServiceGenerator(cfg);
 
-            Resource rtdir = serviceManager.getServiceRuntimeDirectory(serviceId);
+            Resource rtdir = this.serviceManager.getServiceRuntimeDirectory(serviceId);
             long l;
-			try {
-				l = rtdir.lastModified();
-			} catch (IOException ex) {
-				throw new WMRuntimeException(ex);
-			}
+            try {
+                l = rtdir.lastModified();
+            } catch (IOException ex) {
+                throw new WMRuntimeException(ex);
+            }
             if (generator.isUpToDate(l)) {
-                if (logger.isInfoEnabled()) {
-                    logger.info("service " + def.getServiceId()
-                            + " is up to date");
+                if (this.logger.isInfoEnabled()) {
+                    this.logger.info("service " + def.getServiceId() + " is up to date");
                 }
                 continue;
             } else {
-                if (logger.isInfoEnabled()) {
-                    logger.info("service " + def.getServiceId()
-                            + " needs to be re-generated");
+                if (this.logger.isInfoEnabled()) {
+                    this.logger.info("service " + def.getServiceId() + " needs to be re-generated");
                 }
             }
 
@@ -140,7 +137,7 @@ public class ServiceClassGenerator {
                 try {
                     def.dispose();
                 } catch (RuntimeException ex) {
-                    logger.warn("Error while cleaning up", ex);
+                    this.logger.warn("Error while cleaning up", ex);
                 }
             }
         }

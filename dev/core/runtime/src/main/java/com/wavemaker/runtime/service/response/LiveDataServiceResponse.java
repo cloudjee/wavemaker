@@ -14,18 +14,17 @@
 
 package com.wavemaker.runtime.service.response;
 
-
 /**
- * Wrapper that CRUD operations can return to provide meta-data about their
- * result to the client.
+ * Wrapper that CRUD operations can return to provide meta-data about their result to the client.
  * 
  * @author small
  * @version $Rev$ - $Date$
  * 
  */
 public class LiveDataServiceResponse implements PagingResponse, SuccessResponse {
-    
+
     private Object result;
+
     private long dataSetSize;
 
     public LiveDataServiceResponse() {
@@ -42,8 +41,9 @@ public class LiveDataServiceResponse implements PagingResponse, SuccessResponse 
         setDataSetSize(dataSetSize);
     }
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.runtime.service.response.SuccessResponse#getResult()
      */
     public Object getResult() {
@@ -57,8 +57,9 @@ public class LiveDataServiceResponse implements PagingResponse, SuccessResponse 
         this.result = result;
     }
 
-
-    /* (non-Javadoc)
+    /*
+     * (non-Javadoc)
+     * 
      * @see com.wavemaker.runtime.service.response.PagingResponse#getDataSetSize()
      */
     public long getDataSetSize() {

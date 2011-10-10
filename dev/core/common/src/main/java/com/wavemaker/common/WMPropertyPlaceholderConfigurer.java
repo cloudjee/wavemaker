@@ -23,8 +23,7 @@ import com.wavemaker.common.util.SystemUtils;
  * @version $Rev: 26365 $ - $Date: 2009-04-29 20:04:57 -0700 (Wed, 29 Apr 2009) $
  * 
  */
-public class WMPropertyPlaceholderConfigurer extends
-        PropertyPlaceholderConfigurer {
+public class WMPropertyPlaceholderConfigurer extends PropertyPlaceholderConfigurer {
 
     @Override
     protected String convertPropertyValue(String value) {

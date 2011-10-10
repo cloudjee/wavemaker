@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -21,11 +19,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for LeadConvert complex type.
+ * <p>
+ * Java class for LeadConvert complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="LeadConvert">
@@ -50,57 +49,52 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "LeadConvert", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "accountId",
-    "contactId",
-    "convertedStatus",
-    "doNotCreateOpportunity",
-    "leadId",
-    "opportunityName",
-    "overwriteLeadSource",
-    "ownerId",
-    "sendNotificationEmail"
-})
+@XmlType(name = "LeadConvert", namespace = "urn:partner.soap.sforce.com", propOrder = { "accountId", "contactId", "convertedStatus",
+    "doNotCreateOpportunity", "leadId", "opportunityName", "overwriteLeadSource", "ownerId", "sendNotificationEmail" })
 public class LeadConvertType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String accountId;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String contactId;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String convertedStatus;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean doNotCreateOpportunity;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String leadId;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String opportunityName;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean overwriteLeadSource;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true, nillable = true)
     protected String ownerId;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com")
     protected boolean sendNotificationEmail;
 
     /**
      * Gets the value of the accountId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getAccountId() {
-        return accountId;
+        return this.accountId;
     }
 
     /**
      * Sets the value of the accountId property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setAccountId(String value) {
         this.accountId = value;
@@ -109,22 +103,18 @@ public class LeadConvertType {
     /**
      * Gets the value of the contactId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getContactId() {
-        return contactId;
+        return this.contactId;
     }
 
     /**
      * Sets the value of the contactId property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setContactId(String value) {
         this.contactId = value;
@@ -133,22 +123,18 @@ public class LeadConvertType {
     /**
      * Gets the value of the convertedStatus property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getConvertedStatus() {
-        return convertedStatus;
+        return this.convertedStatus;
     }
 
     /**
      * Sets the value of the convertedStatus property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setConvertedStatus(String value) {
         this.convertedStatus = value;
@@ -159,7 +145,7 @@ public class LeadConvertType {
      * 
      */
     public boolean isDoNotCreateOpportunity() {
-        return doNotCreateOpportunity;
+        return this.doNotCreateOpportunity;
     }
 
     /**
@@ -173,22 +159,18 @@ public class LeadConvertType {
     /**
      * Gets the value of the leadId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getLeadId() {
-        return leadId;
+        return this.leadId;
     }
 
     /**
      * Sets the value of the leadId property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setLeadId(String value) {
         this.leadId = value;
@@ -197,22 +179,18 @@ public class LeadConvertType {
     /**
      * Gets the value of the opportunityName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getOpportunityName() {
-        return opportunityName;
+        return this.opportunityName;
     }
 
     /**
      * Sets the value of the opportunityName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setOpportunityName(String value) {
         this.opportunityName = value;
@@ -223,7 +201,7 @@ public class LeadConvertType {
      * 
      */
     public boolean isOverwriteLeadSource() {
-        return overwriteLeadSource;
+        return this.overwriteLeadSource;
     }
 
     /**
@@ -237,22 +215,18 @@ public class LeadConvertType {
     /**
      * Gets the value of the ownerId property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getOwnerId() {
-        return ownerId;
+        return this.ownerId;
     }
 
     /**
      * Sets the value of the ownerId property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setOwnerId(String value) {
         this.ownerId = value;
@@ -263,7 +237,7 @@ public class LeadConvertType {
      * 
      */
     public boolean isSendNotificationEmail() {
-        return sendNotificationEmail;
+        return this.sendNotificationEmail;
     }
 
     /**

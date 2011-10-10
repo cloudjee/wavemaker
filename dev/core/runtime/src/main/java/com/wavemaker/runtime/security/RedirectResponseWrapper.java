@@ -14,19 +14,20 @@
 
 package com.wavemaker.runtime.security;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.IOException;
 
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletResponseWrapper;
+
 /**
- * Response wrappter which overrides and captures the redirect requests. This
- * class is used by AcegiAjaxFilter.
+ * Response wrappter which overrides and captures the redirect requests. This class is used by AcegiAjaxFilter.
  * 
  * @author ffu
  * @version $Rev$ - $Date$
  * 
  */
 public class RedirectResponseWrapper extends HttpServletResponseWrapper {
+
     private String redirect;
 
     public RedirectResponseWrapper(HttpServletResponse httpServletResponse) {
@@ -34,9 +35,10 @@ public class RedirectResponseWrapper extends HttpServletResponseWrapper {
     }
 
     public String getRedirect() {
-        return redirect;
+        return this.redirect;
     }
 
+    @Override
     public void sendRedirect(String string) throws IOException {
         this.redirect = string;
     }

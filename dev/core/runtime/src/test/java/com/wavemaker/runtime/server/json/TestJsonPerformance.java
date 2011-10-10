@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.server.json;
 
 import java.io.IOException;
@@ -33,78 +34,68 @@ import com.wavemaker.json.JSONObject;
 import com.wavemaker.json.JSONState;
 import com.wavemaker.json.JSONUnmarshaller;
 
-
 /**
  * Test JSON performance, make sure nothing is worse.
  * 
- * This is disabled by default; running stuff in the background can make this
- * fail.  Remove the DISABLED lines to enable the tests.
+ * This is disabled by default; running stuff in the background can make this fail. Remove the DISABLED lines to enable
+ * the tests.
  * 
  * 
  * @version $Rev$ - $Id$
  * @author small
  */
 public class TestJsonPerformance extends WMTestCase {
-    
+
     private Level oldLoggerLevel;
+
     Logger jsonMarshallerLogger = Logger.getLogger(JSONMarshaller.class);
-    
+
     @Override
     public void setUp() throws Exception {
-        
+
         super.setUp();
-        oldLoggerLevel = jsonMarshallerLogger.getLevel();
-        jsonMarshallerLogger.setLevel(Level.ERROR);
+        this.oldLoggerLevel = this.jsonMarshallerLogger.getLevel();
+        this.jsonMarshallerLogger.setLevel(Level.ERROR);
     }
-    
+
     @Override
     public void tearDown() throws Exception {
-        
+
         super.tearDown();
-        jsonMarshallerLogger.setLevel(oldLoggerLevel);
+        this.jsonMarshallerLogger.setLevel(this.oldLoggerLevel);
     }
-    
+
     public void testNothing() {
         // stub to prevent this test from failing
     }
 
     /**
-     * Test the speed and memory usage of the default json-lib toBean(), as well
-     * as my re-implementation.
-     *
-     * stock json 2.2 vs current AlternateJSONTransformer (iterations=5):
-     *          alternate, avg mem: 466978.0, time: 20.5
-     *          std, avg mem: 1.9336264E7, time: 779.0
-     *
-     *
-     * stock json 2.2 vs current AlternateJSONTransformer (iterations=10):
-     *          alternate, avg mem: 466978.0, time: 20.5
-     *          std, avg mem: 1.9336264E7, time: 779.0
+     * Test the speed and memory usage of the default json-lib toBean(), as well as my re-implementation.
      * 
-     * new numbers (from r22569):
-     *     [junit] testToBean()
-     *     [junit] alternate, avg mem: 470717.3333333333, time: 20.666666666666668
-     *     [junit] std, avg mem: 1.7070099555555556E7, time: 730.8888888888889
-     *     [junit]
-     *     [junit] testSerialize()
-     *     [junit] average old: 2050736.0
-     *     [junit] time old: 244.25
-     *     [junit] average new: 502008.0
-     *     [junit] time new: 169.75
-     *
-     *
+     * stock json 2.2 vs current AlternateJSONTransformer (iterations=5): alternate, avg mem: 466978.0, time: 20.5 std,
+     * avg mem: 1.9336264E7, time: 779.0
+     * 
+     * 
+     * stock json 2.2 vs current AlternateJSONTransformer (iterations=10): alternate, avg mem: 466978.0, time: 20.5 std,
+     * avg mem: 1.9336264E7, time: 779.0
+     * 
+     * new numbers (from r22569): [junit] testToBean() [junit] alternate, avg mem: 470717.3333333333, time:
+     * 20.666666666666668 [junit] std, avg mem: 1.7070099555555556E7, time: 730.8888888888889 [junit] [junit]
+     * testSerialize() [junit] average old: 2050736.0 [junit] time old: 244.25 [junit] average new: 502008.0 [junit]
+     * time new: 169.75
+     * 
+     * 
      * @throws Exception
      */
     public void DISABLEDtestToBean() throws Exception {
-        
+
         System.out.println("testToBean()");
 
         Runtime r = Runtime.getRuntime();
         JSONState jc = new JSONState();
         jc.setCycleHandler(JSONState.CycleHandler.NULL);
 
-        String jsonString = JSONMarshaller.marshal(
-                getLocalResultObject().get("result"), jc);
+        String jsonString = JSONMarshaller.marshal(getLocalResultObject().get("result"), jc);
         JSONObject jo = (JSONObject) JSONUnmarshaller.unmarshal(jsonString);
 
         System.gc();
@@ -126,11 +117,10 @@ public class TestJsonPerformance extends WMTestCase {
 
         boolean afterFirstRun = false;
 
-
         @SuppressWarnings("unused")
         Object o;
 
-        for (int i=0;i<iterations;i++) {
+        for (int i = 0; i < iterations; i++) {
             doGC();
             memStart = r.totalMemory() - r.freeMemory();
             timeStart = System.currentTimeMillis();
@@ -144,8 +134,8 @@ public class TestJsonPerformance extends WMTestCase {
 
             // discard results from the first run
             if (afterFirstRun) {
-                altAccumMem += (memEnd-memStart);
-                altAccumTime += (timeEnd-timeStart);
+                altAccumMem += memEnd - memStart;
+                altAccumTime += timeEnd - timeStart;
             } else {
                 afterFirstRun = true;
             }
@@ -153,45 +143,39 @@ public class TestJsonPerformance extends WMTestCase {
             doGC();
         }
 
-        altAccumMem/=(iterations-1);
-        altAccumTime/=(iterations-1);
-        stdAccumMem/=(iterations-1);
-        stdAccumTime/=(iterations-1);
+        altAccumMem /= iterations - 1;
+        altAccumTime /= iterations - 1;
+        stdAccumMem /= iterations - 1;
+        stdAccumTime /= iterations - 1;
 
-        System.out.println("alternate, avg mem: "+altAccumMem+", time: "+
-                altAccumTime);
-        System.out.println("std, avg mem: "+stdAccumMem+", time: "+
-                stdAccumTime);
+        System.out.println("alternate, avg mem: " + altAccumMem + ", time: " + altAccumTime);
+        System.out.println("std, avg mem: " + stdAccumMem + ", time: " + stdAccumTime);
         System.out.println();
-        
+
         assertTrue(altAccumMem < stdAccumMem);
         assertTrue(altAccumTime < stdAccumTime);
     }
 
     /**
-     * test the memory consumption of the current json library.  With a shorter
-     * possible object tree (replace getResultObject() with
-     * getLocalResultObject()), the memory usage drops immediately.
-     *
+     * test the memory consumption of the current json library. With a shorter possible object tree (replace
+     * getResultObject() with getLocalResultObject()), the memory usage drops immediately.
+     * 
      * Test mav-881.
-     *
-     * json-lib-2.3-SNAPSHOT reports:
-     *      3173032.0 (my linux box), 3198543.2 (eng3-checkin win4)
-     * json-lib-2.2 reports:
-     *      2140696.0 (my linux box), 2166209.6 (eng3-checkin win4)
-     *
+     * 
+     * json-lib-2.3-SNAPSHOT reports: 3173032.0 (my linux box), 3198543.2 (eng3-checkin win4) json-lib-2.2 reports:
+     * 2140696.0 (my linux box), 2166209.6 (eng3-checkin win4)
+     * 
      * @throws Exception
      */
     public void DISABLEDtestSerialize() throws Exception {
 
         System.out.println("testSerialize()");
-        
+
         Runtime r = Runtime.getRuntime();
         JSONState jc = new JSONState();
         jc.setCycleHandler(JSONState.CycleHandler.NULL);
 
         Map<String, Actor> res = getResultObject();
-
 
         // run through JSON once, to see if we need to load anything
         @SuppressWarnings("unused")
@@ -207,40 +191,38 @@ public class TestJsonPerformance extends WMTestCase {
         double mem_accumulation_new = 0;
         double time_accum_old = 0;
         double time_accum_new = 0;
-        int iterations = 4;             // no diff between runs, so keep it low
+        int iterations = 4; // no diff between runs, so keep it low
 
-        for (int i=0;i<iterations;i++) {
+        for (int i = 0; i < iterations; i++) {
             time_start = System.currentTimeMillis();
             mem_diff = doJsonSerialize_old(res, jc, r);
             mem_accumulation_old += mem_diff;
-            time_accum_old = (System.currentTimeMillis() - time_start);
-            
+            time_accum_old = System.currentTimeMillis() - time_start;
+
             time_start = System.currentTimeMillis();
             mem_diff = doJsonSerialize_new(res, jc, r);
             mem_accumulation_new += mem_diff;
-            time_accum_new = (System.currentTimeMillis() - time_start);
+            time_accum_new = System.currentTimeMillis() - time_start;
         }
-        
-        assertFalse(Double.MAX_VALUE==mem_accumulation_old);
-        assertFalse(Double.MAX_VALUE==mem_accumulation_new);
+
+        assertFalse(Double.MAX_VALUE == mem_accumulation_old);
+        assertFalse(Double.MAX_VALUE == mem_accumulation_new);
         double mem_average_old = mem_accumulation_old / iterations;
         double mem_average_new = mem_accumulation_new / iterations;
-        
-        assertFalse(Double.MAX_VALUE==time_accum_new);
-        assertFalse(Double.MAX_VALUE==time_accum_old);
+
+        assertFalse(Double.MAX_VALUE == time_accum_new);
+        assertFalse(Double.MAX_VALUE == time_accum_old);
         double time_average_new = time_accum_new / iterations;
         double time_average_old = time_accum_old / iterations;
-        
-        System.out.println("average old: "+mem_average_old);
-        System.out.println("time old: "+time_average_old);
-        System.out.println("average new: "+mem_average_new);
-        System.out.println("time new: "+time_average_new);
+
+        System.out.println("average old: " + mem_average_old);
+        System.out.println("time old: " + time_average_old);
+        System.out.println("average new: " + mem_average_new);
+        System.out.println("time new: " + time_average_new);
         System.out.println();
-        
-        assertTrue("new perf: "+time_average_new+" !< old: "+time_average_old,
-                time_average_new < time_average_old);
-        assertTrue("mem new: "+mem_average_new+" !< old: "+mem_average_old,
-                mem_average_new < mem_average_old);
+
+        assertTrue("new perf: " + time_average_new + " !< old: " + time_average_old, time_average_new < time_average_old);
+        assertTrue("mem new: " + mem_average_new + " !< old: " + mem_average_old, mem_average_new < mem_average_old);
     }
 
     private Map<String, LocalActor> getLocalResultObject() {
@@ -292,16 +274,14 @@ public class TestJsonPerformance extends WMTestCase {
     }
 
     /**
-     * Return the difference in memory, between when the JSONObject is in memory,
-     * and when that's been gc'd.
-     *
+     * Return the difference in memory, between when the JSONObject is in memory, and when that's been gc'd.
+     * 
      * @param object
      * @param jc
      * @return
      * @throws IOException
      */
-    private long doJsonSerialize_old(Object object, JSONState jc, Runtime r)
-            throws IOException {
+    private long doJsonSerialize_old(Object object, JSONState jc, Runtime r) throws IOException {
 
         long afterSerialization = 0;
         long afterFreedJson = 0;
@@ -322,18 +302,16 @@ public class TestJsonPerformance extends WMTestCase {
 
         return afterSerialization - afterFreedJson;
     }
-    
+
     /**
-     * Return the difference in memory, between when the JSONObject is in memory,
-     * and when that's been gc'd.
-     *
+     * Return the difference in memory, between when the JSONObject is in memory, and when that's been gc'd.
+     * 
      * @param object
      * @param jc
      * @return
      * @throws IOException
      */
-    private long doJsonSerialize_new(Object object, JSONState jc, Runtime r)
-            throws IOException {
+    private long doJsonSerialize_new(Object object, JSONState jc, Runtime r) throws IOException {
 
         long afterSerialization = 0;
         long afterFreedJson = 0;
@@ -367,7 +345,9 @@ public class TestJsonPerformance extends WMTestCase {
     public static class LocalActor {
 
         private Set<LocalFilmActor> filmActors;
+
         private String first;
+
         private String last;
 
         public LocalActor() {
@@ -380,20 +360,25 @@ public class TestJsonPerformance extends WMTestCase {
         }
 
         public Set<LocalFilmActor> getFilmActors() {
-            return filmActors;
+            return this.filmActors;
         }
+
         public void setFilmActors(Set<LocalFilmActor> filmActors) {
             this.filmActors = filmActors;
         }
+
         public String getFirst() {
-            return first;
+            return this.first;
         }
+
         public void setFirst(String first) {
             this.first = first;
         }
+
         public String getLast() {
-            return last;
+            return this.last;
         }
+
         public void setLast(String last) {
             this.last = last;
         }
@@ -402,17 +387,21 @@ public class TestJsonPerformance extends WMTestCase {
     public static class LocalFilmActor {
 
         private LocalFilm film;
+
         private LocalActor actor;
 
         public LocalFilm getFilm() {
-            return film;
+            return this.film;
         }
+
         public void setFilm(LocalFilm film) {
             this.film = film;
         }
+
         public LocalActor getActor() {
-            return actor;
+            return this.actor;
         }
+
         public void setActor(LocalActor actor) {
             this.actor = actor;
         }
@@ -423,8 +412,9 @@ public class TestJsonPerformance extends WMTestCase {
         private String title;
 
         public String getTitle() {
-            return title;
+            return this.title;
         }
+
         public void setTitle(String title) {
             this.title = title;
         }

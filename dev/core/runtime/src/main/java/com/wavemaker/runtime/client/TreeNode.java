@@ -14,62 +14,82 @@
 
 package com.wavemaker.runtime.client;
 
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class TreeNode {
 
     private boolean closed = true;
-    
+
     private String content = null;
-    
+
     private String image = null;
 
-    private List<String> data = new ArrayList<String>();
-    
+    private final List<String> data = new ArrayList<String>();
+
     private List<TreeNode> children = new ArrayList<TreeNode>();
 
+    public TreeNode() {
+    }
 
-    public TreeNode() {}
+    public TreeNode(String content) {
+        this.content = content;
+    }
 
-    public TreeNode(String content) { this.content = content; }
-
-    public TreeNode(String content, String data) { 
+    public TreeNode(String content, String data) {
         this.content = content;
         this.data.add(data);
     }
 
-    public String getContent() { return content; }
-    public void setContent(String content) { this.content = content; }
-
-    public List<TreeNode> getChildren() { return children; }
-    public void setChildren(List<TreeNode> children) { 
-        this.children = children; 
+    public String getContent() {
+        return this.content;
     }
-    public void addChild(TreeNode child) { children.add(child); }
 
-    public boolean getClosed() { return closed; }
-    public void setClosed(boolean closed) { this.closed = closed; }
+    public void setContent(String content) {
+        this.content = content;
+    }
 
-    public void addData(List<String> data) { 
+    public List<TreeNode> getChildren() {
+        return this.children;
+    }
+
+    public void setChildren(List<TreeNode> children) {
+        this.children = children;
+    }
+
+    public void addChild(TreeNode child) {
+        this.children.add(child);
+    }
+
+    public boolean getClosed() {
+        return this.closed;
+    }
+
+    public void setClosed(boolean closed) {
+        this.closed = closed;
+    }
+
+    public void addData(List<String> data) {
         this.data.addAll(data);
     }
-    public void addData(String... s) { 
+
+    public void addData(String... s) {
         for (int i = 0; i < s.length; i++) {
-            data.add(s[i]);
+            this.data.add(s[i]);
         }
     }
-    public List<String> getData() { 
-        if (data.isEmpty()) {
+
+    public List<String> getData() {
+        if (this.data.isEmpty()) {
             return null;
         }
-        return data; 
+        return this.data;
     }
-    
+
     public String getImage() {
-        return image;
+        return this.image;
     }
-    
+
     public void setImage(String image) {
         this.image = image;
     }

@@ -19,7 +19,6 @@
 // Generated on: 2007.12.20 at 10:31:30 AM PST 
 //
 
-
 package com.wavemaker.tools.webapp.schema;
 
 import java.util.ArrayList;
@@ -35,29 +34,23 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-
 /**
  * 
  * 
- * 	The ejb-refType is used by ejb-ref elements for the
- * 	declaration of a reference to an enterprise bean's home. The
- * 	declaration consists of:
+ * The ejb-refType is used by ejb-ref elements for the declaration of a reference to an enterprise bean's home. The
+ * declaration consists of:
  * 
- * 	    - an optional description
- * 	    - the EJB reference name used in the code of
- * 	      the Deployment Component that's referencing the enterprise
- * 	      bean
- * 	    - the expected type of the referenced enterprise bean
- * 	    - the expected home and remote interfaces of the referenced
- * 	      enterprise bean
- * 	    - optional ejb-link information, used to specify the
- * 	      referenced enterprise bean
+ * - an optional description - the EJB reference name used in the code of the Deployment Component that's referencing
+ * the enterprise bean - the expected type of the referenced enterprise bean - the expected home and remote interfaces
+ * of the referenced enterprise bean - optional ejb-link information, used to specify the referenced enterprise bean
  * 
- *       
  * 
- * <p>Java class for ejb-refType complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * Java class for ejb-refType complex type.
+ * 
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="ejb-refType">
@@ -80,27 +73,26 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ejb-refType", propOrder = {
-    "description",
-    "ejbRefName",
-    "ejbRefType",
-    "home",
-    "remote",
-    "ejbLink"
-})
+@XmlType(name = "ejb-refType", propOrder = { "description", "ejbRefName", "ejbRefType", "home", "remote", "ejbLink" })
 public class EjbRefType {
 
     protected List<DescriptionType> description;
+
     @XmlElement(name = "ejb-ref-name", required = true)
     protected EjbRefNameType ejbRefName;
+
     @XmlElement(name = "ejb-ref-type", required = true)
     protected EjbRefTypeType ejbRefType;
+
     @XmlElement(required = true)
     protected HomeType home;
+
     @XmlElement(required = true)
     protected RemoteType remote;
+
     @XmlElement(name = "ejb-link")
     protected EjbLinkType ejbLink;
+
     @XmlAttribute
     @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     @XmlID
@@ -111,27 +103,26 @@ public class EjbRefType {
      * Gets the value of the description property.
      * 
      * <p>
-     * This accessor method returns a reference to the live list,
-     * not a snapshot. Therefore any modification you make to the
-     * returned list will be present inside the JAXB object.
-     * This is why there is not a <CODE>set</CODE> method for the description property.
+     * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to
+     * the returned list will be present inside the JAXB object. This is why there is not a <CODE>set</CODE> method for
+     * the description property.
      * 
      * <p>
      * For example, to add a new item, do as follows:
+     * 
      * <pre>
-     *    getDescription().add(newItem);
+     * getDescription().add(newItem);
      * </pre>
      * 
      * 
      * <p>
-     * Objects of the following type(s) are allowed in the list
-     * {@link DescriptionType }
+     * Objects of the following type(s) are allowed in the list {@link DescriptionType }
      * 
      * 
      */
     public List<DescriptionType> getDescription() {
-        if (description == null) {
-            description = new ArrayList<DescriptionType>();
+        if (this.description == null) {
+            this.description = new ArrayList<DescriptionType>();
         }
         return this.description;
     }
@@ -139,22 +130,18 @@ public class EjbRefType {
     /**
      * Gets the value of the ejbRefName property.
      * 
-     * @return
-     *     possible object is
-     *     {@link EjbRefNameType }
-     *     
+     * @return possible object is {@link EjbRefNameType }
+     * 
      */
     public EjbRefNameType getEjbRefName() {
-        return ejbRefName;
+        return this.ejbRefName;
     }
 
     /**
      * Sets the value of the ejbRefName property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link EjbRefNameType }
-     *     
+     * @param value allowed object is {@link EjbRefNameType }
+     * 
      */
     public void setEjbRefName(EjbRefNameType value) {
         this.ejbRefName = value;
@@ -163,22 +150,18 @@ public class EjbRefType {
     /**
      * Gets the value of the ejbRefType property.
      * 
-     * @return
-     *     possible object is
-     *     {@link EjbRefTypeType }
-     *     
+     * @return possible object is {@link EjbRefTypeType }
+     * 
      */
     public EjbRefTypeType getEjbRefType() {
-        return ejbRefType;
+        return this.ejbRefType;
     }
 
     /**
      * Sets the value of the ejbRefType property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link EjbRefTypeType }
-     *     
+     * @param value allowed object is {@link EjbRefTypeType }
+     * 
      */
     public void setEjbRefType(EjbRefTypeType value) {
         this.ejbRefType = value;
@@ -187,22 +170,18 @@ public class EjbRefType {
     /**
      * Gets the value of the home property.
      * 
-     * @return
-     *     possible object is
-     *     {@link HomeType }
-     *     
+     * @return possible object is {@link HomeType }
+     * 
      */
     public HomeType getHome() {
-        return home;
+        return this.home;
     }
 
     /**
      * Sets the value of the home property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link HomeType }
-     *     
+     * @param value allowed object is {@link HomeType }
+     * 
      */
     public void setHome(HomeType value) {
         this.home = value;
@@ -211,22 +190,18 @@ public class EjbRefType {
     /**
      * Gets the value of the remote property.
      * 
-     * @return
-     *     possible object is
-     *     {@link RemoteType }
-     *     
+     * @return possible object is {@link RemoteType }
+     * 
      */
     public RemoteType getRemote() {
-        return remote;
+        return this.remote;
     }
 
     /**
      * Sets the value of the remote property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link RemoteType }
-     *     
+     * @param value allowed object is {@link RemoteType }
+     * 
      */
     public void setRemote(RemoteType value) {
         this.remote = value;
@@ -235,22 +210,18 @@ public class EjbRefType {
     /**
      * Gets the value of the ejbLink property.
      * 
-     * @return
-     *     possible object is
-     *     {@link EjbLinkType }
-     *     
+     * @return possible object is {@link EjbLinkType }
+     * 
      */
     public EjbLinkType getEjbLink() {
-        return ejbLink;
+        return this.ejbLink;
     }
 
     /**
      * Sets the value of the ejbLink property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link EjbLinkType }
-     *     
+     * @param value allowed object is {@link EjbLinkType }
+     * 
      */
     public void setEjbLink(EjbLinkType value) {
         this.ejbLink = value;
@@ -259,22 +230,18 @@ public class EjbRefType {
     /**
      * Gets the value of the id property.
      * 
-     * @return
-     *     possible object is
-     *     {@link java.lang.String }
-     *     
+     * @return possible object is {@link java.lang.String }
+     * 
      */
     public java.lang.String getId() {
-        return id;
+        return this.id;
     }
 
     /**
      * Sets the value of the id property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link java.lang.String }
-     *     
+     * @param value allowed object is {@link java.lang.String }
+     * 
      */
     public void setId(java.lang.String value) {
         this.id = value;

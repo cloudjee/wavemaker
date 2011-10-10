@@ -14,35 +14,34 @@
 
 package com.wavemaker.runtime.service;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.io.InputStream;
-import java.io.ByteArrayInputStream;
-import java.io.UnsupportedEncodingException;
 
 import org.apache.commons.beanutils.PropertyUtils;
 
-import com.wavemaker.common.NotYetImplementedException;
 import com.wavemaker.common.MessageResource;
+import com.wavemaker.common.NotYetImplementedException;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.json.JSONState;
 import com.wavemaker.json.type.TypeDefinition;
 import com.wavemaker.runtime.RuntimeAccess;
+import com.wavemaker.runtime.server.DownloadResponse;
 import com.wavemaker.runtime.server.InternalRuntime;
 import com.wavemaker.runtime.server.JSONParameterTypeField;
 import com.wavemaker.runtime.server.ServerUtils;
-import com.wavemaker.runtime.server.DownloadResponse;
 import com.wavemaker.runtime.service.events.ServiceEventNotifier;
 import com.wavemaker.runtime.service.response.SuccessResponse;
 
 /**
- * Runtime service. This service is always present during the runtime of a
- * Maverick's application, and provides general operations.
+ * Runtime service. This service is always present during the runtime of a Maverick's application, and provides general
+ * operations.
  * 
- * For now, modifications of this class must be accompanied by modifications to
- * runtimeServiceDef.xml.
+ * For now, modifications of this class must be accompanied by modifications to runtimeServiceDef.xml.
  * 
  * @author small
  * @version $Rev$ - $Date$
@@ -51,36 +50,27 @@ import com.wavemaker.runtime.service.response.SuccessResponse;
 public class RuntimeService {
 
     /**
-     * getProperty() is a legacy interface. This retrieves (and allows
-     * lazy-loading) of a single attribute of an object.
+     * getProperty() is a legacy interface. This retrieves (and allows lazy-loading) of a single attribute of an object.
      * 
-     * @param instance
-     *                An instance of type type.
-     * @param type
-     *                The type of the object instance.
-     * @param propertyName
-     *                The name of the property to load.
-     * @return The attribute specified by the propertyName parameter is
-     *         returned, not the whole object.
+     * @param instance An instance of type type.
+     * @param type The type of the object instance.
+     * @param propertyName The name of the property to load.
+     * @return The attribute specified by the propertyName parameter is returned, not the whole object.
      * @throws Exception
      */
     @SuppressWarnings("unchecked")
-    public Object getProperty(
-            @JSONParameterTypeField(typeParameter = 1) Object instance,
-            String type, String propertyName)
-            throws Exception {
+    public Object getProperty(@JSONParameterTypeField(typeParameter = 1) Object instance, String type, String propertyName) throws Exception {
 
-        ServiceWire serviceWire = typeManager.getServiceWireForType(type);
+        ServiceWire serviceWire = this.typeManager.getServiceWireForType(type);
 
         if (serviceWire.isLiveDataService()) {
 
             PropertyOptions po = new PropertyOptions();
             po.getProperties().add(propertyName);
 
-            TypedServiceReturn resp = read(typeManager.getServiceIdForType(type),
-                    type, instance, po, null);
+            TypedServiceReturn resp = read(this.typeManager.getServiceIdForType(type), type, instance, po, null);
 
-            Object o = ((SuccessResponse)resp.getReturnValue()).getResult();
+            Object o = ((SuccessResponse) resp.getReturnValue()).getResult();
 
             if (o instanceof Collection) {
                 Collection c = (Collection) o;
@@ -102,24 +92,19 @@ public class RuntimeService {
         }
     }
 
-    public TypedServiceReturn read(String serviceName,
-            String typeName, @JSONParameterTypeField(typeParameter = 1)
-            Object instance, PropertyOptions propertyOptions,
-            PagingOptions pagingOptions) throws Exception {
+    public TypedServiceReturn read(String serviceName, String typeName, @JSONParameterTypeField(typeParameter = 1) Object instance,
+        PropertyOptions propertyOptions, PagingOptions pagingOptions) throws Exception {
 
         ServiceWire sw = getServiceWire(serviceName, typeName);
-        sw.getServiceType().setup(sw, internalRuntime, runtimeAccess);
-        
-        TypeDefinition typeDefinition = internalRuntime.getJSONState().getTypeState().getType(typeName);
+        sw.getServiceType().setup(sw, this.internalRuntime, this.runtimeAccess);
+
+        TypeDefinition typeDefinition = this.internalRuntime.getJSONState().getTypeState().getType(typeName);
         String methodName = "read";
-        
+
         JSONState jc = getInternalRuntime().getJSONState();
         jc.setTrimStackLevel(1);
-        if (null!=getInternalRuntime() &&
-                null!=jc &&
-                null!=jc.getRequiredProperties() &&
-                null!=propertyOptions &&
-                null!=propertyOptions.getProperties()) {
+        if (null != getInternalRuntime() && null != jc && null != jc.getRequiredProperties() && null != propertyOptions
+            && null != propertyOptions.getProperties()) {
 
             List<String> jcProperties = jc.getRequiredProperties();
             for (String property : propertyOptions.getProperties()) {
@@ -129,22 +114,19 @@ public class RuntimeService {
 
         if (sw.isLiveDataService()) {
             ParsedServiceArguments psa = new ParsedServiceArguments();
-            psa.setArguments(new Object[] { typeDefinition, instance, propertyOptions,
-                    pagingOptions });
-            TypedServiceReturn ret = ServerUtils.invokeMethodWithEvents(
-                    getServiceEventNotifier(), sw, methodName, psa, jc, true);
+            psa.setArguments(new Object[] { typeDefinition, instance, propertyOptions, pagingOptions });
+            TypedServiceReturn ret = ServerUtils.invokeMethodWithEvents(getServiceEventNotifier(), sw, methodName, psa, jc, true);
             return ret;
         } else {
             throw new NotYetImplementedException();
         }
     }
 
-    public TypedServiceReturn update(String serviceName,
-            String typeName, @JSONParameterTypeField(typeParameter = 1)
-            Object objectToUpdate) throws Exception {
+    public TypedServiceReturn update(String serviceName, String typeName, @JSONParameterTypeField(typeParameter = 1) Object objectToUpdate)
+        throws Exception {
 
         ServiceWire sw = getServiceWire(serviceName, typeName);
-        sw.getServiceType().setup(sw, internalRuntime, runtimeAccess);
+        sw.getServiceType().setup(sw, this.internalRuntime, this.runtimeAccess);
         String methodName = "update";
 
         if (sw.isLiveDataService()) {
@@ -154,46 +136,38 @@ public class RuntimeService {
 
             ParsedServiceArguments psa = new ParsedServiceArguments();
             psa.setArguments(new Object[] { objectToUpdate });
-            return ServerUtils.invokeMethodWithEvents(
-                    getServiceEventNotifier(), sw, methodName, psa,
-                    getInternalRuntime().getJSONState(), true);
+            return ServerUtils.invokeMethodWithEvents(getServiceEventNotifier(), sw, methodName, psa, getInternalRuntime().getJSONState(), true);
         } else {
             throw new NotYetImplementedException();
         }
     }
 
-    public TypedServiceReturn insert(String serviceName,
-            String typeName, @JSONParameterTypeField(typeParameter = 1)
-            Object objectToInsert) throws Exception {
+    public TypedServiceReturn insert(String serviceName, String typeName, @JSONParameterTypeField(typeParameter = 1) Object objectToInsert)
+        throws Exception {
 
         ServiceWire sw = getServiceWire(serviceName, typeName);
-        sw.getServiceType().setup(sw, internalRuntime, runtimeAccess);
+        sw.getServiceType().setup(sw, this.internalRuntime, this.runtimeAccess);
         String methodName = "insert";
 
         if (sw.isLiveDataService()) {
             ParsedServiceArguments psa = new ParsedServiceArguments();
             psa.setArguments(new Object[] { objectToInsert });
-            return ServerUtils.invokeMethodWithEvents(
-                    getServiceEventNotifier(), sw, methodName, psa,
-                    getInternalRuntime().getJSONState(), true);
+            return ServerUtils.invokeMethodWithEvents(getServiceEventNotifier(), sw, methodName, psa, getInternalRuntime().getJSONState(), true);
         } else {
             throw new NotYetImplementedException();
         }
     }
 
-    public void delete(String serviceName, String typeName,
-            @JSONParameterTypeField(typeParameter = 1)
-            Object objectToDelete) throws Exception {
+    public void delete(String serviceName, String typeName, @JSONParameterTypeField(typeParameter = 1) Object objectToDelete) throws Exception {
 
         ServiceWire sw = getServiceWire(serviceName, typeName);
-        sw.getServiceType().setup(sw, internalRuntime, runtimeAccess);
+        sw.getServiceType().setup(sw, this.internalRuntime, this.runtimeAccess);
         String methodName = "delete";
 
         if (sw.isLiveDataService()) {
             ParsedServiceArguments psa = new ParsedServiceArguments();
             psa.setArguments(new Object[] { objectToDelete });
-            ServerUtils.invokeMethodWithEvents(getServiceEventNotifier(), sw,
-                    methodName, psa, getInternalRuntime().getJSONState(), true);
+            ServerUtils.invokeMethodWithEvents(getServiceEventNotifier(), sw, methodName, psa, getInternalRuntime().getJSONState(), true);
         } else {
             throw new NotYetImplementedException();
         }
@@ -207,15 +181,14 @@ public class RuntimeService {
         return RuntimeAccess.getInstance().getSession().getId();
     }
 
-    public DownloadResponse echo(String contents, String contentType,
-            String fileName) {
+    public DownloadResponse echo(String contents, String contentType, String fileName) {
         InputStream is;
         try {
             is = new ByteArrayInputStream(contents.getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
             throw new WMRuntimeException(e);
         }
-        return (new DownloadResponse(is, contentType, fileName));
+        return new DownloadResponse(is, contentType, fileName);
     }
 
     private void shiftDeserializedProperties(int index) {
@@ -228,10 +201,10 @@ public class RuntimeService {
         }
         ir.setDeserializedProperties(props);
     }
-    
+
     /**
-     * Get the service.  If serviceName is not null or "", use the serviceName.
-     * If not, use the owning service of typeName.
+     * Get the service. If serviceName is not null or "", use the serviceName. If not, use the owning service of
+     * typeName.
      * 
      * @param serviceName The serviceName (can be null or "") of the desired service..
      * @param typeName The typeName (only used if serviceName is null or "") owned by the desired service.
@@ -241,13 +214,13 @@ public class RuntimeService {
     public ServiceWire getServiceWire(String serviceName, String typeName) {
         ServiceWire serviceWire = null;
         Exception enclosedException = null;
-        
-        if (null!=serviceName && 0!=serviceName.length()) {
-            serviceWire = serviceManager.getServiceWire(serviceName);
+
+        if (null != serviceName && 0 != serviceName.length()) {
+            serviceWire = this.serviceManager.getServiceWire(serviceName);
         } else {
             try {
-                String serviceId = typeManager.getServiceIdForType(typeName);
-                serviceWire = serviceManager.getServiceWire(serviceId);
+                String serviceId = this.typeManager.getServiceIdForType(typeName);
+                serviceWire = this.serviceManager.getServiceWire(serviceId);
             } catch (TypeNotFoundException e) {
                 enclosedException = e;
             } catch (WMRuntimeException e2) {
@@ -255,18 +228,14 @@ public class RuntimeService {
             }
         }
 
-        if (null==serviceWire && null == enclosedException) {
-            throw new WMRuntimeException(MessageResource.NO_SERVICE_FROM_ID_TYPE,
-                    serviceName, typeName);
-        } else if (null==serviceWire) {
-            throw new WMRuntimeException(MessageResource.NO_SERVICE_FROM_ID_TYPE,
-                    enclosedException, serviceName, typeName);
+        if (null == serviceWire && null == enclosedException) {
+            throw new WMRuntimeException(MessageResource.NO_SERVICE_FROM_ID_TYPE, serviceName, typeName);
+        } else if (null == serviceWire) {
+            throw new WMRuntimeException(MessageResource.NO_SERVICE_FROM_ID_TYPE, enclosedException, serviceName, typeName);
         }
-        
+
         return serviceWire;
     }
-    
-    
 
     // spring-managed bean properties
     private TypeManager typeManager;
@@ -274,43 +243,47 @@ public class RuntimeService {
     private ServiceManager serviceManager;
 
     private ServiceEventNotifier serviceEventNotifier;
-    
+
     private InternalRuntime internalRuntime;
-    
+
     private RuntimeAccess runtimeAccess;
 
     public TypeManager getTypeManager() {
-        return typeManager;
+        return this.typeManager;
     }
+
     public void setTypeManager(TypeManager typeManager) {
         this.typeManager = typeManager;
     }
 
     public ServiceManager getServiceManager() {
-        return serviceManager;
+        return this.serviceManager;
     }
+
     public void setServiceManager(ServiceManager serviceManager) {
         this.serviceManager = serviceManager;
     }
 
     public ServiceEventNotifier getServiceEventNotifier() {
-        return serviceEventNotifier;
+        return this.serviceEventNotifier;
     }
-    public void setServiceEventNotifier(
-            ServiceEventNotifier serviceEventNotifier) {
+
+    public void setServiceEventNotifier(ServiceEventNotifier serviceEventNotifier) {
         this.serviceEventNotifier = serviceEventNotifier;
     }
 
     public InternalRuntime getInternalRuntime() {
-        return internalRuntime;
+        return this.internalRuntime;
     }
+
     public void setInternalRuntime(InternalRuntime internalRuntime) {
         this.internalRuntime = internalRuntime;
     }
 
     public RuntimeAccess getRuntimeAccess() {
-        return runtimeAccess;
+        return this.runtimeAccess;
     }
+
     public void setRuntimeAccess(RuntimeAccess runtimeAccess) {
         this.runtimeAccess = runtimeAccess;
     }

@@ -11,8 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
- 
-
 
 package com.wavemaker.runtime.ws.salesforce.gen;
 
@@ -21,11 +19,12 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
- * <p>Java class for DescribeSoftphoneScreenPopOption complex type.
+ * <p>
+ * Java class for DescribeSoftphoneScreenPopOption complex type.
  * 
- * <p>The following schema fragment specifies the expected content contained within this class.
+ * <p>
+ * The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
  * &lt;complexType name="DescribeSoftphoneScreenPopOption">
@@ -44,39 +43,34 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "DescribeSoftphoneScreenPopOption", namespace = "urn:partner.soap.sforce.com", propOrder = {
-    "matchType",
-    "screenPopData",
-    "screenPopType"
-})
+@XmlType(name = "DescribeSoftphoneScreenPopOption", namespace = "urn:partner.soap.sforce.com", propOrder = { "matchType", "screenPopData",
+    "screenPopType" })
 public class DescribeSoftphoneScreenPopOptionType {
 
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String matchType;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String screenPopData;
+
     @XmlElement(namespace = "urn:partner.soap.sforce.com", required = true)
     protected String screenPopType;
 
     /**
      * Gets the value of the matchType property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getMatchType() {
-        return matchType;
+        return this.matchType;
     }
 
     /**
      * Sets the value of the matchType property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setMatchType(String value) {
         this.matchType = value;
@@ -85,22 +79,18 @@ public class DescribeSoftphoneScreenPopOptionType {
     /**
      * Gets the value of the screenPopData property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getScreenPopData() {
-        return screenPopData;
+        return this.screenPopData;
     }
 
     /**
      * Sets the value of the screenPopData property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setScreenPopData(String value) {
         this.screenPopData = value;
@@ -109,22 +99,18 @@ public class DescribeSoftphoneScreenPopOptionType {
     /**
      * Gets the value of the screenPopType property.
      * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     * @return possible object is {@link String }
+     * 
      */
     public String getScreenPopType() {
-        return screenPopType;
+        return this.screenPopType;
     }
 
     /**
      * Sets the value of the screenPopType property.
      * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     * @param value allowed object is {@link String }
+     * 
      */
     public void setScreenPopType(String value) {
         this.screenPopType = value;

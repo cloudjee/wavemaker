@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.service.smd;
 
 import java.util.ArrayList;
@@ -24,36 +25,36 @@ import com.wavemaker.infra.WMTestCase;
 /**
  * @author small
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public class TestMethod extends WMTestCase {
 
     public void testMethodComparison() throws Exception {
-        
+
         Method m1 = new Method();
         m1.setName("a");
-        
+
         Method m2 = new Method();
         m2.setName("b");
-        
-        assertTrue(m1.compareTo(m2)<0);
-        assertEquals(m1.compareTo(m2), -1*m2.compareTo(m1));
-        
+
+        assertTrue(m1.compareTo(m2) < 0);
+        assertEquals(m1.compareTo(m2), -1 * m2.compareTo(m1));
+
         m2.setName("a");
         assertEquals(0, m1.compareTo(m2));
-        assertEquals(m1.compareTo(m2), -1*m2.compareTo(m1));
-        
+        assertEquals(m1.compareTo(m2), -1 * m2.compareTo(m1));
+
         m1.setParameters(new ArrayList<Param>());
         m1.getParameters().add(new Param());
-        assertTrue(m1.compareTo(m2)>0);
-        assertEquals(m1.compareTo(m2), -1*m2.compareTo(m1));
+        assertTrue(m1.compareTo(m2) > 0);
+        assertEquals(m1.compareTo(m2), -1 * m2.compareTo(m1));
 
         m2.setParameters(new ArrayList<Param>());
-        assertTrue(m1.compareTo(m2)>0);
-        assertEquals(m1.compareTo(m2), -1*m2.compareTo(m1));
-        
+        assertTrue(m1.compareTo(m2) > 0);
+        assertEquals(m1.compareTo(m2), -1 * m2.compareTo(m1));
+
         m2.getParameters().add(new Param());
         assertEquals(0, m1.compareTo(m2));
-        assertEquals(m1.compareTo(m2), -1*m2.compareTo(m1));
+        assertEquals(m1.compareTo(m2), -1 * m2.compareTo(m1));
     }
 }

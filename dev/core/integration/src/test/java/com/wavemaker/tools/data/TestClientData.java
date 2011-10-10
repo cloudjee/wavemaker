@@ -18,6 +18,7 @@
 /**
  * 
  */
+
 package com.wavemaker.tools.data;
 
 import java.io.File;
@@ -45,16 +46,16 @@ public class TestClientData extends WMTestCase {
 
     @Override
     public void setUp() throws IOException {
-        f = DataServiceTestUtils.setupSakilaConfiguration();
-        cfg = new DataModelConfiguration(f);
+        this.f = DataServiceTestUtils.setupSakilaConfiguration();
+        this.cfg = new DataModelConfiguration(this.f);
     }
 
     @Override
     public void tearDown() throws IOException {
         try {
-            cfg.dispose();
+            this.cfg.dispose();
         } finally {
-            IOUtils.deleteRecursive(f.getParentFile());
+            IOUtils.deleteRecursive(this.f.getParentFile());
         }
     }
 
@@ -62,7 +63,7 @@ public class TestClientData extends WMTestCase {
 
         TreeNode types = new TreeNode("Types");
 
-        cfg.addDataObjectTree(types);
+        this.cfg.addDataObjectTree(types);
 
         TreeNode actor = getEntityNode(types, "Actor");
         // printTree(actor, 0, System.out);
@@ -70,20 +71,16 @@ public class TestClientData extends WMTestCase {
         assertTrue(actor != null);
         assertEquals(DataServiceConstants.ENTITY_NODE, actor.getData().get(0));
         assertEquals("Actor", actor.getData().get(1));
-        assertEquals("com.wavemaker.runtime.data.sample.sakila.Actor", actor
-                .getData().get(2));
+        assertEquals("com.wavemaker.runtime.data.sample.sakila.Actor", actor.getData().get(2));
         List<TreeNode> props = actor.getChildren();
-        assertEquals(DataServiceConstants.COLUMN_NODE, props.get(0).getData()
-                .get(0));
+        assertEquals(DataServiceConstants.COLUMN_NODE, props.get(0).getData().get(0));
         assertEquals("actorId", props.get(0).getData().get(1));
         assertEquals("short", props.get(0).getData().get(2));
         assertEquals("actor_id", props.get(0).getData().get(3));
 
-        assertEquals(DataServiceConstants.RELATIONSHIP_NODE, props.get(4)
-                .getData().get(0));
+        assertEquals(DataServiceConstants.RELATIONSHIP_NODE, props.get(4).getData().get(0));
         assertEquals("filmActors", props.get(4).getData().get(1));
-        assertEquals("com.wavemaker.runtime.data.sample.sakila.FilmActor",
-                props.get(4).getData().get(2));
+        assertEquals("com.wavemaker.runtime.data.sample.sakila.FilmActor", props.get(4).getData().get(2));
     }
 
     private TreeNode getEntityNode(TreeNode root, String entityName) {

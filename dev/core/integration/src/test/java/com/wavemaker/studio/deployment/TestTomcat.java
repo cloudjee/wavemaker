@@ -15,6 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with WaveMaker Studio.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package com.wavemaker.studio.deployment;
 
 import static org.junit.Assert.assertEquals;
@@ -43,48 +44,53 @@ import com.wavemaker.tools.util.TomcatServer;
 public class TestTomcat extends StudioTestCase {
 
     private String tomcatHost;
+
     private int tomcatPort;
+
     private String semaphore;
-    
+
     @Before
     @Override
     public void setUp() throws Exception {
 
         super.setUp();
-        semaphore = UtilTest.lockSemaphore("TestTomcat");
-        
-        
+        this.semaphore = UtilTest.lockSemaphore("TestTomcat");
+
         // make a call, just to init the request
-        invokeService_toObject("studioService", "listProjects", new Object[]{});
+        invokeService_toObject("studioService", "listProjects", new Object[] {});
 
         LocalStudioConfiguration sc = (LocalStudioConfiguration) getBean("studioConfiguration");
-        tomcatHost = sc.getTomcatHost();
-        tomcatPort = sc.getTomcatPort();
+        this.tomcatHost = sc.getTomcatHost();
+        this.tomcatPort = sc.getTomcatPort();
     }
-    
+
     @After
     @Override
     public void tearDown() throws Exception {
-        UtilTest.unlockSemaphore(semaphore);
+        UtilTest.unlockSemaphore(this.semaphore);
     }
 
-    @Test public void testServer() {
-        TomcatServer server = new TomcatServer(tomcatHost, tomcatPort);
-        assertEquals(tomcatHost, server.getHostName());
-        assertEquals(tomcatPort, server.getPort());
+    @Test
+    public void testServer() {
+        TomcatServer server = new TomcatServer(this.tomcatHost, this.tomcatPort);
+        assertEquals(this.tomcatHost, server.getHostName());
+        assertEquals(this.tomcatPort, server.getPort());
     }
 
-    @Test public void testListening() {
-        TomcatServer server = new TomcatServer(tomcatHost, tomcatPort);
+    @Test
+    public void testListening() {
+        TomcatServer server = new TomcatServer(this.tomcatHost, this.tomcatPort);
         assertTrue(server.isListening());
     }
 
-    @Test public void testNotListening() {
-        TomcatServer server = new TomcatServer(tomcatHost, 9159);
+    @Test
+    public void testNotListening() {
+        TomcatServer server = new TomcatServer(this.tomcatHost, 9159);
         assertFalse(server.isListening());
     }
 
-    @Test public void testDeploy() throws Exception {
+    @Test
+    public void testDeploy() throws Exception {
 
         // create war to deploy
         String projectName = "testDeploy";
@@ -94,9 +100,9 @@ public class TestTomcat extends StudioTestCase {
         File war = new File(projectDir, "dist/" + projectName + ".war");
         assertTrue("war " + war + " does not exist", war.exists());
         TestDeploymentManager.trimWar(war);
-      
+
         // deploy, check deployments, undeploy, check deployments
-        TomcatServer server = new TomcatServer(tomcatHost, tomcatPort);
+        TomcatServer server = new TomcatServer(this.tomcatHost, this.tomcatPort);
 
         String contextRoot = "/" + System.getProperty("user.name") + "swar_TestTomcat_" + System.currentTimeMillis();
 
@@ -110,11 +116,10 @@ public class TestTomcat extends StudioTestCase {
                 }
             }
             assertTrue("deployed app not in list of apps", found);
-                       
+
         } finally {
             server.undeploy(contextRoot);
-            assertFalse("undeployed app still in list of apps",
-                       server.listDeployments().contains(contextRoot));
+            assertFalse("undeployed app still in list of apps", server.listDeployments().contains(contextRoot));
         }
     }
 }

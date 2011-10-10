@@ -14,7 +14,6 @@
 
 package com.wavemaker.common;
 
-
 /**
  * @author Simon Toens
  */
@@ -26,11 +25,13 @@ public class LoggingInitializer {
     @SuppressWarnings("unused")
     private static final String AG_LOG4J_CONFIG = "log4j.properties";
 
+    public static void initTestLogging() {
+    } // use default log4j filename
 
-    public static void initTestLogging() {} // use default log4j filename
-	//SystemUtils.setPropertyUnlessSet(LOG4J_CONFIG_PROPERTY,
-        //                                 AG_LOG4J_CONFIG);
+    // SystemUtils.setPropertyUnlessSet(LOG4J_CONFIG_PROPERTY,
+    // AG_LOG4J_CONFIG);
 
-    public static void initProdLogging() {} // use default log4j filename
+    public static void initProdLogging() {
+    } // use default log4j filename
 
 }

@@ -31,7 +31,6 @@ import com.wavemaker.json.type.TypeDefinition;
 import com.wavemaker.json.type.reflect.ReflectTypeDefinition;
 import com.wavemaker.runtime.data.DataServiceLoggers;
 import com.wavemaker.runtime.data.Task;
-import com.wavemaker.runtime.data.DataServiceMetaData;
 import com.wavemaker.runtime.data.util.DataServiceUtils;
 import com.wavemaker.runtime.data.util.HQLGenerator;
 import com.wavemaker.runtime.service.Filter;
@@ -47,8 +46,7 @@ import com.wavemaker.runtime.service.response.LiveDataServiceResponse;
  * @author Simon Toens
  * @version $Rev$ - $Date$
  */
-public class HQLReadTask extends AbstractReadTask implements Task,
-        DefaultRollback {
+public class HQLReadTask extends AbstractReadTask implements Task, DefaultRollback {
 
     private static final String BIND_PARAM_PREFIX = "_";
 
@@ -62,22 +60,21 @@ public class HQLReadTask extends AbstractReadTask implements Task,
 
         private final Class<?> type;
 
-        private final Collection<String> outerJoinPropertyPaths =
-            new HashSet<String>();
+        private final Collection<String> outerJoinPropertyPaths = new HashSet<String>();
 
         private JoinStrategy(Class<?> type) {
             this.type = type;
         }
 
         public Join getJoin(String propertyPath, String dbName) {
-            for (String s : outerJoinPropertyPaths) {
+            for (String s : this.outerJoinPropertyPaths) {
                 if (propertyPath.startsWith(s)) {
                     return HQLGenerator.JoinStrategy.Join.LEFT_OUTER_JOIN;
                 }
             }
 
-            if (isNulleable(type, propertyPath, dbName)) {
-                outerJoinPropertyPaths.add(propertyPath);
+            if (isNulleable(this.type, propertyPath, dbName)) {
+                this.outerJoinPropertyPaths.add(propertyPath);
                 return HQLGenerator.JoinStrategy.Join.LEFT_OUTER_JOIN;
             }
 
@@ -89,22 +86,21 @@ public class HQLReadTask extends AbstractReadTask implements Task,
 
         private final Class<?> type;
 
-        private final Collection<String> componentPropertyPaths =
-            new HashSet<String>();
+        private final Collection<String> componentPropertyPaths = new HashSet<String>();
 
         private TypeManager(Class<?> type) {
             this.type = type;
         }
 
         public boolean isComponentPath(String propertyPath, String dbName) {
-            for (String s : componentPropertyPaths) {
+            for (String s : this.componentPropertyPaths) {
                 if (propertyPath.startsWith(s)) {
                     return true;
                 }
             }
 
-            if (isComponentType(type, propertyPath, dbName)) {
-                componentPropertyPaths.add(propertyPath);
+            if (isComponentType(this.type, propertyPath, dbName)) {
+                this.componentPropertyPaths.add(propertyPath);
                 return true;
             }
 
@@ -136,9 +132,7 @@ public class HQLReadTask extends AbstractReadTask implements Task,
                 if (o instanceof ReflectTypeDefinition) {
                     type = ((ReflectTypeDefinition) o).getKlass();
                 } else {
-                    throw new IllegalArgumentException(
-                            "ReflectTypeDefinition required, instead found "+o+
-                            " ("+o.getClass()+")");
+                    throw new IllegalArgumentException("ReflectTypeDefinition required, instead found " + o + " (" + o.getClass() + ")");
                 }
             } else if (PropertyOptions.class.isAssignableFrom(o.getClass())) {
                 propertyOptions = (PropertyOptions) o;
@@ -150,8 +144,7 @@ public class HQLReadTask extends AbstractReadTask implements Task,
         }
 
         if (type == null && instance == null) {
-            throw new IllegalArgumentException(
-                    "Either root type or instance must be set");
+            throw new IllegalArgumentException("Either root type or instance must be set");
         }
 
         if (type == null) {
@@ -165,28 +158,22 @@ public class HQLReadTask extends AbstractReadTask implements Task,
             idValue = getObjectAccess().getProperty(instance, idPropName);
 
             if (idValue == null) {
-                throw new IllegalArgumentException(type.getName() + "'s "
-                        + idPropName + " must be set");
+                throw new IllegalArgumentException(type.getName() + "'s " + idPropName + " must be set");
             }
 
         }
 
-        HQLGenerator generator =
-            setupGenerator(type, instance, propertyOptions, pagingOptions,
-                           idPropName, idValue, bindParams, dbName);
+        HQLGenerator generator = setupGenerator(type, instance, propertyOptions, pagingOptions, idPropName, idValue, bindParams, dbName);
 
-        return getResponse(session, generator, instance, pagingOptions,
-                idValue, bindParams, dbName);
+        return getResponse(session, generator, instance, pagingOptions, idValue, bindParams, dbName);
     }
 
     public String getName() {
         return "Built-in CRUD Read Task";
     }
 
-    private TypedServiceReturn getResponse(Session session,
-            HQLGenerator generator, Object instance,
-            PagingOptions pagingOptions, Object idValue,
-            Map<String, Object> bindParams, String dbName) {
+    private TypedServiceReturn getResponse(Session session, HQLGenerator generator, Object instance, PagingOptions pagingOptions, Object idValue,
+        Map<String, Object> bindParams, String dbName) {
 
         String queryStr = generator.getQuery(dbName);
 
@@ -199,8 +186,8 @@ public class HQLReadTask extends AbstractReadTask implements Task,
         applyPaging(pagingOptions, query);
 
         LiveDataServiceResponse rtn = new LiveDataServiceResponse();
-        
-        boolean singleResult = (instance != null);
+
+        boolean singleResult = instance != null;
 
         rtn.setResult(runQuery(query, singleResult, dbName));
 
@@ -216,16 +203,15 @@ public class HQLReadTask extends AbstractReadTask implements Task,
 
             rtn.setDataSetSize((Long) runQuery(countQuery, true, dbName));
         }
-        
-        // TODO is this hokey?  I think it is - maybe.  small, 200901
+
+        // TODO is this hokey? I think it is - maybe. small, 200901
         TypedServiceReturn tsr = new TypedServiceReturn();
         tsr.setReturnValue(rtn);
 
         return tsr;
     }
 
-    private void handleBindParameters(Object idValue, Query query,
-            Map<String, Object> bindParams) {
+    private void handleBindParameters(Object idValue, Query query, Map<String, Object> bindParams) {
 
         if (idValue == null) {
             if (DataServiceLoggers.taskLogger.isDebugEnabled()) {
@@ -234,8 +220,7 @@ public class HQLReadTask extends AbstractReadTask implements Task,
         } else if (idValue != UNSET) {
             query.setParameter(ID_BIND_PARAM, idValue);
             if (DataServiceLoggers.taskLogger.isDebugEnabled()) {
-                DataServiceLoggers.taskLogger.debug("binding id value: "
-                        + idValue);
+                DataServiceLoggers.taskLogger.debug("binding id value: " + idValue);
             }
         }
 
@@ -245,12 +230,10 @@ public class HQLReadTask extends AbstractReadTask implements Task,
 
     }
 
-    private HQLGenerator setupGenerator(Class<?> type, Object instance,
-            PropertyOptions propertyOptions, PagingOptions pagingOptions,
-            String idPropName, Object idValue, Map<String, Object> bindParams, String dbName) {
+    private HQLGenerator setupGenerator(Class<?> type, Object instance, PropertyOptions propertyOptions, PagingOptions pagingOptions,
+        String idPropName, Object idValue, Map<String, Object> bindParams, String dbName) {
 
-        HQLGenerator rtn = new HQLGenerator(type, new JoinStrategy(type),
-                new TypeManager(type));
+        HQLGenerator rtn = new HQLGenerator(type, new JoinStrategy(type), new TypeManager(type));
 
         if (propertyOptions != null) {
             handlePropertyOptions(type, rtn, propertyOptions, bindParams, dbName);
@@ -274,8 +257,7 @@ public class HQLReadTask extends AbstractReadTask implements Task,
         return rtn;
     }
 
-    private void handlePropertyOptions(Class<?> type, HQLGenerator generator,
-            PropertyOptions options, Map<String, Object> bindParams, String dbName) {
+    private void handlePropertyOptions(Class<?> type, HQLGenerator generator, PropertyOptions options, Map<String, Object> bindParams, String dbName) {
 
         generator.loadEagerly(options.getProperties());
 
@@ -292,10 +274,9 @@ public class HQLReadTask extends AbstractReadTask implements Task,
             boolean isLike = false;
             boolean isStr = false;
             Class<?> propertyType = getPropertyType(type, propertyPath, dbName);
-            isStr = (String.class == propertyType);
+            isStr = String.class == propertyType;
             if (isStr) {
-                MatchMode m = DataServiceUtils.parseMatchMode(options
-                        .getMatchMode());
+                MatchMode m = DataServiceUtils.parseMatchMode(options.getMatchMode());
                 if (m == MatchMode.EXACT) {
                     value.append(s);
                 } else {
@@ -323,8 +304,7 @@ public class HQLReadTask extends AbstractReadTask implements Task,
 
             String bindParam = getNextBindParam(bindParams.keySet());
 
-            Object o = TypeConversionUtils.fromString(propertyType, value
-                    .toString());
+            Object o = TypeConversionUtils.fromString(propertyType, value.toString());
 
             expr.append(getBindParamRef(bindParam));
 
@@ -347,8 +327,7 @@ public class HQLReadTask extends AbstractReadTask implements Task,
     }
 
     private String getNextBindParam(Collection<String> bindParams) {
-        String rtn = StringUtils.getUniqueName(BIND_PARAM_PREFIX + "p",
-                bindParams);
+        String rtn = StringUtils.getUniqueName(BIND_PARAM_PREFIX + "p", bindParams);
         return rtn;
     }
 }

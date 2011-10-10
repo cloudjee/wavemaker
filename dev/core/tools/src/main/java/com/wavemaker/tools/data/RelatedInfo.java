@@ -43,10 +43,7 @@ public class RelatedInfo implements Cloneable {
 
     public enum CascadeOption {
 
-        None("none"), SaveUpdate("save-update"), Persist("persist"), Merge(
-                "merge"), Delete("delete"), Remove("remove"), Lock("lock"), Replicate(
-                "replicate"), Evict("evict"), Refresh("refresh"), All("all"), DeleteOrphan(
-                "delete-orphan");
+        None("none"), SaveUpdate("save-update"), Persist("persist"), Merge("merge"), Delete("delete"), Remove("remove"), Lock("lock"), Replicate("replicate"), Evict("evict"), Refresh("refresh"), All("all"), DeleteOrphan("delete-orphan");
 
         private String toString;
 
@@ -56,7 +53,7 @@ public class RelatedInfo implements Cloneable {
 
         @Override
         public String toString() {
-            return toString;
+            return this.toString;
         }
 
         public static CascadeOption fromString(String s) {
@@ -111,8 +108,7 @@ public class RelatedInfo implements Cloneable {
     public RelatedInfo() {
     }
 
-    public RelatedInfo(String name, String relatedType, String tableName,
-            Cardinality cardinality) {
+    public RelatedInfo(String name, String relatedType, String tableName, Cardinality cardinality) {
 
         this.name = name;
         this.tableName = tableName;
@@ -121,7 +117,7 @@ public class RelatedInfo implements Cloneable {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public void setName(String name) {
@@ -129,7 +125,7 @@ public class RelatedInfo implements Cloneable {
     }
 
     public String getTableName() {
-        return tableName;
+        return this.tableName;
     }
 
     public void setTableName(String tableName) {
@@ -137,7 +133,7 @@ public class RelatedInfo implements Cloneable {
     }
 
     public String getRelatedType() {
-        return relatedType;
+        return this.relatedType;
     }
 
     public void setRelatedType(String relatedType) {
@@ -149,15 +145,15 @@ public class RelatedInfo implements Cloneable {
     }
 
     public String getFullyQualifiedType() {
-        return fullyQualifiedType;
+        return this.fullyQualifiedType;
     }
 
     public String getCardinality() {
-        return cardinality.toString();
+        return this.cardinality.toString();
     }
 
     public Cardinality cardinality() {
-        return cardinality;
+        return this.cardinality;
     }
 
     public void setCardinality(String cardinality) {
@@ -178,15 +174,14 @@ public class RelatedInfo implements Cloneable {
     }
 
     public CascadeOption getCascadeOptions() {
-        if (cascadeOptions.isEmpty()) {
+        if (this.cascadeOptions.isEmpty()) {
             return CascadeOption.None;
         }
-        return cascadeOptions.get(0);
+        return this.cascadeOptions.get(0);
     }
 
     public ColumnInfo[] foreignKeyColumns() {
-        return (ColumnInfo[]) foreignKeyColumns
-                .toArray(new ColumnInfo[foreignKeyColumns.size()]);
+        return this.foreignKeyColumns.toArray(new ColumnInfo[this.foreignKeyColumns.size()]);
     }
 
     public void setColumnNames(String[] names) {
@@ -195,30 +190,27 @@ public class RelatedInfo implements Cloneable {
 
     public void foreignKeyColumns(ColumnInfo[] foreignKeyColumns) {
         this.foreignKeyColumns = Arrays.asList(foreignKeyColumns);
-        foreignKeyColumnNames = new ArrayList<String>(foreignKeyColumns.length);
+        this.foreignKeyColumnNames = new ArrayList<String>(foreignKeyColumns.length);
         for (ColumnInfo i : foreignKeyColumns) {
-            foreignKeyColumnNames.add(i.getName());
+            this.foreignKeyColumnNames.add(i.getName());
         }
     }
 
     public String[] getColumnNames() {
-        return (String[]) foreignKeyColumnNames
-                .toArray(new String[foreignKeyColumnNames.size()]);
+        return this.foreignKeyColumnNames.toArray(new String[this.foreignKeyColumnNames.size()]);
     }
 
     @Override
     public String toString() {
-        return name + " fq: " + fullyQualifiedType + " related type: "
-                + relatedType;
+        return this.name + " fq: " + this.fullyQualifiedType + " related type: " + this.relatedType;
     }
 
     @Override
     public Object clone() {
         try {
             RelatedInfo rtn = (RelatedInfo) super.clone();
-            rtn.foreignKeyColumns = new ArrayList<ColumnInfo>(foreignKeyColumns
-                    .size());
-            for (ColumnInfo ci : foreignKeyColumns) {
+            rtn.foreignKeyColumns = new ArrayList<ColumnInfo>(this.foreignKeyColumns.size());
+            for (ColumnInfo ci : this.foreignKeyColumns) {
                 rtn.foreignKeyColumns.add((ColumnInfo) ci.clone());
             }
             return rtn;

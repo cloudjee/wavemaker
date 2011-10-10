@@ -17,13 +17,13 @@ package com.wavemaker.runtime.data.task;
 /**
  * Marker interface.
  * 
- * A Task implementing this interface will run in a tx that will be rolled back
- * after the task has exited from its run method - iff the tx was started for
- * the Task instance. If a tx is already in progress when the task
- * starts running, the rollback will not happen.
+ * A Task implementing this interface will run in a tx that will be rolled back after the task has exited from its run
+ * method - iff the tx was started for the Task instance. If a tx is already in progress when the task starts running,
+ * the rollback will not happen.
  * 
  * @author Simon Toens
  * @version $Rev$ - $Date$
  * 
  */
-public interface DefaultRollback {}
+public interface DefaultRollback {
+}

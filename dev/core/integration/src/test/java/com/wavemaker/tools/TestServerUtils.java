@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools;
 
 import static org.junit.Assert.assertEquals;
@@ -35,7 +36,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockMultipartHttpServletRequest;
-import org.springframework.web.servlet.mvc.AbstractController;
+import org.springframework.web.servlet.support.WebContentGenerator;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.ClassLoaderUtils;
@@ -55,17 +56,18 @@ import com.wavemaker.tools.spring.ComplexReturnBean;
 
 /**
  * Server utility test cases
+ * 
  * @author small
  * @version $Rev$ - $Date$
  */
 public class TestServerUtils extends TestSpringContextTestCase {
 
-    @Test public void testGetFileName() {
+    @Test
+    public void testGetFileName() {
 
         MockHttpSession session = new MockHttpSession();
 
-        MockHttpServletRequest mhr = new MockHttpServletRequest("POST",
-                "/bar/foo.json");
+        MockHttpServletRequest mhr = new MockHttpServletRequest("POST", "/bar/foo.json");
         mhr.setSession(session);
         assertEquals("foo.json", ServerUtils.getFileName(mhr));
 
@@ -90,12 +92,12 @@ public class TestServerUtils extends TestSpringContextTestCase {
         assertEquals("baz", ServerUtils.getFileName(mhr));
     }
 
-    @Test public void testGetDirectory() {
+    @Test
+    public void testGetDirectory() {
 
         MockHttpSession session = new MockHttpSession();
 
-        MockHttpServletRequest mhr = new MockHttpServletRequest("POST",
-                "/bar/foo.json");
+        MockHttpServletRequest mhr = new MockHttpServletRequest("POST", "/bar/foo.json");
         mhr.setSession(session);
         assertEquals("foo.json", ServerUtils.getFileName(mhr));
 
@@ -120,46 +122,45 @@ public class TestServerUtils extends TestSpringContextTestCase {
         assertEquals("/foo.bar/baz", ServerUtils.getDirectory(mhr));
     }
 
-    @Test public void testGetServiceName() {
+    @Test
+    public void testGetServiceName() {
 
         MockHttpSession session = new MockHttpSession();
 
-        MockHttpServletRequest mhr = new MockHttpServletRequest("POST",
-                "/bar/foo.json");
+        MockHttpServletRequest mhr = new MockHttpServletRequest("POST", "/bar/foo.json");
         mhr.setSession(session);
         assertEquals("foo", ServerUtils.getServiceName(mhr));
 
-        mhr = new MockHttpServletRequest("POST",
-            "/bar/foo.download");
+        mhr = new MockHttpServletRequest("POST", "/bar/foo.download");
         assertEquals("foo", ServerUtils.getServiceName(mhr));
 
-        mhr = new MockHttpServletRequest("POST",
-            "/bar/foo.upload");
+        mhr = new MockHttpServletRequest("POST", "/bar/foo.upload");
         assertEquals("foo", ServerUtils.getServiceName(mhr));
 
-        mhr = new MockHttpServletRequest("POST",
-            "/bar/foo.bar");
+        mhr = new MockHttpServletRequest("POST", "/bar/foo.bar");
         assertNull(ServerUtils.getServiceName(mhr));
     }
 
-    @Test public void testGetMethod() {
+    @Test
+    public void testGetMethod() {
 
         String expectedMethod = "foo";
         String expectedOtherEntry = "fooValue";
 
         Map<String, Object[]> params = new HashMap<String, Object[]>();
-        params.put(ServerConstants.METHOD, new String[]{expectedMethod});
-        params.put("fooKey", new String[]{expectedOtherEntry});
+        params.put(ServerConstants.METHOD, new String[] { expectedMethod });
+        params.put("fooKey", new String[] { expectedOtherEntry });
 
         String actualMethod = ServerUtils.getMethod(params);
         assertEquals(expectedMethod, actualMethod);
         assertFalse(params.containsKey(ServerConstants.METHOD));
     }
 
-    @Test public void testGetNonexistentMethod() {
+    @Test
+    public void testGetNonexistentMethod() {
 
         Map<String, Object[]> params = new HashMap<String, Object[]>();
-        params.put("fooKey", new String[]{"fooValue"});
+        params.put("fooKey", new String[] { "fooValue" });
 
         try {
             ServerUtils.getMethod(params);
@@ -169,12 +170,13 @@ public class TestServerUtils extends TestSpringContextTestCase {
         }
     }
 
-    @Test public void testMergeParams() {
+    @Test
+    public void testMergeParams() {
 
         String contents = "foo";
 
         MockMultipartHttpServletRequest req = new MockMultipartHttpServletRequest();
-        req.setMethod(AbstractController.METHOD_POST);
+        req.setMethod(WebContentGenerator.METHOD_POST);
         req.setParameter("param1", "bar");
         req.setParameter(ServerConstants.METHOD, "testUpload");
         req.addFile(new MockMultipartFile("param2", contents.getBytes()));
@@ -191,41 +193,42 @@ public class TestServerUtils extends TestSpringContextTestCase {
         assertTrue(params.containsKey(ServerConstants.METHOD));
         assertEquals(2, params.get("param2").length);
     }
-    
-    @Test public void testGetParameterNames() throws Exception {
-        
+
+    @Test
+    public void testGetParameterNames() throws Exception {
+
         Method method = null;
-        for (Method m: ComplexReturnBean.class.getMethods()) {
+        for (Method m : ComplexReturnBean.class.getMethods()) {
             if (m.getName().equals("testUpload")) {
                 method = m;
                 break;
             }
         }
         assertNotNull(method);
-        
+
         List<String> paramNames = ServerUtils.getParameterNames(method);
         assertEquals(2, paramNames.size());
         assertEquals("param1", paramNames.get(0));
         assertEquals("param2", paramNames.get(1));
-        
+
         Method method2 = null;
-        for (Method m: JavaServiceDefinitionClass_ParamName.class.getMethods()) {
+        for (Method m : JavaServiceDefinitionClass_ParamName.class.getMethods()) {
             if (m.getName().equals("doSomething")) {
                 method2 = m;
                 break;
             }
         }
         assertNotNull(method2);
-        
+
         paramNames = ServerUtils.getParameterNames(method2);
         assertEquals(2, paramNames.size());
         assertEquals("foo", paramNames.get(0));
         assertEquals("bar", paramNames.get(1));
-        
+
         List<Method> methods = ClassUtils.getPublicMethods(JavaServiceDefinitionClass_ParamName.class);
         Collection<Method> retMethods = JavaServiceDefinition.filterOverloadedMethods(methods);
         Method method3 = null;
-        for (Method m: retMethods) {
+        for (Method m : retMethods) {
             if (m.getName().equals("doSomething")) {
                 method3 = m;
                 break;
@@ -237,17 +240,16 @@ public class TestServerUtils extends TestSpringContextTestCase {
         assertEquals("foo", paramNames.get(0));
         assertEquals("bar", paramNames.get(1));
     }
-    
-    @Test public void testGetParameterNames_throughCL() throws Exception {
-        
-        Class<?> runtimeServiceClass = ClassLoaderUtils.loadClass(
-                JavaServiceDefinitionClass_ParamName.class.getName(),
-                getClass().getClassLoader());
+
+    @Test
+    public void testGetParameterNames_throughCL() throws Exception {
+
+        Class<?> runtimeServiceClass = ClassLoaderUtils.loadClass(JavaServiceDefinitionClass_ParamName.class.getName(), getClass().getClassLoader());
         List<Method> methods = ClassUtils.getPublicMethods(runtimeServiceClass);
         Collection<Method> retMethods = JavaServiceDefinition.filterOverloadedMethods(methods);
-        
+
         Method method3 = null;
-        for (Method m: retMethods) {
+        for (Method m : retMethods) {
             if (m.getName().equals("doSomething")) {
                 method3 = m;
                 break;
@@ -259,14 +261,15 @@ public class TestServerUtils extends TestSpringContextTestCase {
         assertEquals("foo", paramNames.get(0));
         assertEquals("bar", paramNames.get(1));
     }
-    
+
     // MAV-1360 - didn't repro, but tests back-end functionality
-    @Test public void testGetParameterNamesWithVariables() throws Exception {
-        
+    @Test
+    public void testGetParameterNamesWithVariables() throws Exception {
+
         List<Method> methods = ClassUtils.getPublicMethods(JavaServiceDefinitionClass_ParamNamesWithVariables.class);
         Collection<Method> retMethods = JavaServiceDefinition.filterOverloadedMethods(methods);
         Method method3 = null;
-        for (Method m: retMethods) {
+        for (Method m : retMethods) {
             if (m.getName().equals("testMe")) {
                 method3 = m;
                 break;
@@ -278,14 +281,15 @@ public class TestServerUtils extends TestSpringContextTestCase {
         assertEquals("firstName", paramNames.get(0));
         assertEquals("lastName", paramNames.get(1));
     }
-    
+
     // MAV-1758
-    @Test public void testGetParameterNamesFromEmailServiceClass() throws Exception {
-        
+    @Test
+    public void testGetParameterNamesFromEmailServiceClass() throws Exception {
+
         List<Method> methods = ClassUtils.getPublicMethods(GetParameterNamesFromEmailServiceClass.class);
         Collection<Method> retMethods = JavaServiceDefinition.filterOverloadedMethods(methods);
         Method method3 = null;
-        for (Method m: retMethods) {
+        for (Method m : retMethods) {
             if (m.getName().equals("sendMail")) {
                 method3 = m;
                 break;
@@ -304,14 +308,15 @@ public class TestServerUtils extends TestSpringContextTestCase {
         assertEquals("Subject", paramNames.get(7));
         assertEquals("Message", paramNames.get(8));
     }
-    
+
     // WM-12
-    @Test public void testGetParameterNames_OutOfOrder_WM_12() throws Exception {
-        
+    @Test
+    public void testGetParameterNames_OutOfOrder_WM_12() throws Exception {
+
         List<Method> methods = ClassUtils.getPublicMethods(OutOfOrder_WM_12.class);
         Collection<Method> retMethods = JavaServiceDefinition.filterOverloadedMethods(methods);
         Method method3 = null;
-        for (Method m: retMethods) {
+        for (Method m : retMethods) {
             if (m.getName().equals("testFunction")) {
                 method3 = m;
                 break;
@@ -325,86 +330,80 @@ public class TestServerUtils extends TestSpringContextTestCase {
         assertEquals("two", paramNames.get(1));
         assertEquals("something", paramNames.get(2));
     }
-    
-    @Test public void testGetClientExposedMethods() throws Exception {
-        
+
+    @Test
+    public void testGetClientExposedMethods() throws Exception {
+
         List<Method> methods;
-        
-        methods = ServerUtils.getClientExposedMethods(
-                HideExposeClasses.Default.class);
+
+        methods = ServerUtils.getClientExposedMethods(HideExposeClasses.Default.class);
         assertEquals(2, methods.size());
-        assertTrue(methods.contains(HideExposeClasses.Default.class
-                .getMethod("foo")));
-        assertTrue(methods.contains(HideExposeClasses.Default.class
-                .getMethod("expose")));
-        
-        methods = ServerUtils.getClientExposedMethods(
-                HideExposeClasses.Expose.class);
+        assertTrue(methods.contains(HideExposeClasses.Default.class.getMethod("foo")));
+        assertTrue(methods.contains(HideExposeClasses.Default.class.getMethod("expose")));
+
+        methods = ServerUtils.getClientExposedMethods(HideExposeClasses.Expose.class);
         assertEquals(2, methods.size());
-        assertTrue(methods.contains(HideExposeClasses.Expose.class
-                .getMethod("foo")));
-        assertTrue(methods.contains(HideExposeClasses.Expose.class
-                .getMethod("expose")));
-        
-        methods = ServerUtils.getClientExposedMethods(
-                HideExposeClasses.Hide.class);
+        assertTrue(methods.contains(HideExposeClasses.Expose.class.getMethod("foo")));
+        assertTrue(methods.contains(HideExposeClasses.Expose.class.getMethod("expose")));
+
+        methods = ServerUtils.getClientExposedMethods(HideExposeClasses.Hide.class);
         assertEquals(1, methods.size());
-        assertTrue(methods.contains(HideExposeClasses.Hide.class
-                .getMethod("expose")));
-        
-        methods = ServerUtils.getClientExposedMethods(
-                JavaServiceDefinitionClass_HiddenMethods.class);
+        assertTrue(methods.contains(HideExposeClasses.Hide.class.getMethod("expose")));
+
+        methods = ServerUtils.getClientExposedMethods(JavaServiceDefinitionClass_HiddenMethods.class);
         assertEquals(0, methods.size());
-        
-        methods = ServerUtils.getClientExposedMethods(
-                HideExposeClasses.Conflict.class);
+
+        methods = ServerUtils.getClientExposedMethods(HideExposeClasses.Conflict.class);
         assertEquals(0, methods.size());
     }
-    
-    @Test public void testGetRealClass() throws Exception {
-        
+
+    @Test
+    public void testGetRealClass() throws Exception {
+
         String s = "hi";
         assertEquals(String.class, ServerUtils.getRealClass(s));
-        
+
         Object aopObject = getBean("aopAdvisedServiceBean");
         assertTrue(aopObject.getClass().getName().contains("CGLIB"));
         assertEquals(AopAdvised.class, ServerUtils.getRealClass(aopObject));
     }
-    
-    @Test public void testGetClientExposedMethods_ParamNames_AOP() throws Exception {
-        
+
+    @Test
+    public void testGetClientExposedMethods_ParamNames_AOP() throws Exception {
+
         Object aopObject = getBean("aopAdvisedServiceBean");
         assertTrue(aopObject.getClass().getName().contains("CGLIB"));
 
         List<Method> methods = ServerUtils.getClientExposedMethods(ServerUtils.getRealClass(aopObject));
-        assertTrue(methods.size()>=3);
-        
+        assertTrue(methods.size() >= 3);
+
         boolean gotGetIval = false;
         boolean gotSetIval = false;
         boolean gotTestUpload = false;
-        
-        for (Method method: methods) {
-            if (0=="getIval".compareTo(method.getName())) {
+
+        for (Method method : methods) {
+            if (0 == "getIval".compareTo(method.getName())) {
                 gotGetIval = true;
-            } else if (0=="setIval".compareTo(method.getName())) {
+            } else if (0 == "setIval".compareTo(method.getName())) {
                 gotSetIval = true;
-            } else if (0=="testUpload".compareTo(method.getName())) {
+            } else if (0 == "testUpload".compareTo(method.getName())) {
                 gotTestUpload = true;
-                
+
                 List<String> names = ServerUtils.getParameterNames(method);
                 assertEquals(2, names.size());
                 assertEquals("param1", names.get(0));
                 assertEquals("param2", names.get(1));
             }
         }
-        
+
         assertTrue(gotGetIval);
         assertTrue(gotSetIval);
         assertTrue(gotTestUpload);
     }
-    
-    @Test public void testGetParamNamesFromInterface() throws Exception {
-        
+
+    @Test
+    public void testGetParamNamesFromInterface() throws Exception {
+
         Method m = ServerUtilsParamNameConcrete.class.getMethod("getCalculatedString", String.class, String.class);
         assertNotNull(m);
         List<String> p = ServerUtils.getParameterNames(m);

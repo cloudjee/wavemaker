@@ -16,26 +16,35 @@ package com.wavemaker.tools.cloudmgr;
 
 /**
  * This class represents a cloud server.
- *
+ * 
  * @author slee
  */
 public class CloudServer {
 
     private String serverName;
+
     private String serverDesc;
+
     private String serverId;
+
     private String imageId;
+
     private String flavorId;
+
     private String networkId;
+
     private String dnsHost;
+
     private String publicIpAddress;
+
     private String privateIpAddress;
+
     private String created;
 
     private int status;
 
-    public CloudServer(String serverName, String serverDesc,String serverId, String imageId, String flavorId,
-                       String networkId, String dnsHost, String publicIpAddress, String privateIpAddress, String created) {
+    public CloudServer(String serverName, String serverDesc, String serverId, String imageId, String flavorId, String networkId, String dnsHost,
+        String publicIpAddress, String privateIpAddress, String created) {
         this.serverName = serverName;
         this.serverDesc = serverDesc;
         this.serverId = serverId;
@@ -101,7 +110,7 @@ public class CloudServer {
     }
 
     public String getDnsHost() {
-        return this.dnsHost;    
+        return this.dnsHost;
     }
 
     public void setPublicIpAddress(String val) {
@@ -113,13 +122,13 @@ public class CloudServer {
     }
 
     public void setPrivateIpAddress(String val) {
-            this.privateIpAddress = val;
+        this.privateIpAddress = val;
     }
 
     public String getPrivateIpAddress() {
         return this.privateIpAddress;
     }
-    
+
     public void setCreated(String val) {
         this.created = val;
     }

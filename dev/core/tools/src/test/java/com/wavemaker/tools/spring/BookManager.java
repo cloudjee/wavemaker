@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.spring;
 
 import java.util.List;
@@ -22,17 +23,16 @@ import java.util.List;
 public class BookManager {
 
     private List<Book> books;
-    
+
     public BookManager() {
     }
 
     public List<Book> getBooks() {
-        return books;
+        return this.books;
     }
 
     public void setBooks(List<Book> books) {
         this.books = books;
     }
-    
-    
+
 }

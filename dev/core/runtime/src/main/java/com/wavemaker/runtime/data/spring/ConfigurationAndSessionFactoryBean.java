@@ -41,7 +41,7 @@ public class ConfigurationAndSessionFactoryBean extends LocalSessionFactoryBean 
 
     @Override
     public Configuration newConfiguration() {
-        if (name == null) {
+        if (this.name == null) {
             throw new IllegalStateException("name must be set before creating new Configuration");
         }
 
@@ -49,19 +49,19 @@ public class ConfigurationAndSessionFactoryBean extends LocalSessionFactoryBean 
         Assert.isAssignable(this.getDefaultConfigurationClass(), configuration.getClass(), "Type of Hibernate Configuration "
             + "object is incorrect for the current studio environment.  Expected a subclass of " + this.getDefaultConfigurationClass() + " but was "
             + configuration.getClass());
-        ConfigurationRegistry.getInstance().register(name, configuration);
+        ConfigurationRegistry.getInstance().register(this.name, configuration);
         return configuration;
     }
 
     @Override
     protected void afterSessionFactoryCreation() throws Exception {
         SessionFactory sessionFactory = getSessionFactory();
-        ConfigurationRegistry.getInstance().register(name, sessionFactory);
+        ConfigurationRegistry.getInstance().register(this.name, sessionFactory);
     }
 
     @Override
     protected void beforeSessionFactoryDestruction() {
-        ConfigurationRegistry.getInstance().remove(name);
+        ConfigurationRegistry.getInstance().remove(this.name);
     }
 
     public void setName(String name) {

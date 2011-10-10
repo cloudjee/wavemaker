@@ -33,202 +33,179 @@ import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.util.DesignTimeUtils;
 
 /**
- * Compile servicedefs from .class files (and maybe old servicedef xml files).
- * This will treat services as Java services (using reflection to discover
- * method attributes and other information), and so should only be used on Java
- * services. All other services should be configured through the studio.
+ * Compile servicedefs from .class files (and maybe old servicedef xml files). This will treat services as Java services
+ * (using reflection to discover method attributes and other information), and so should only be used on Java services.
+ * All other services should be configured through the studio.
  * 
  * @author small
  * @author Jeremy Grelle
  */
 public class ServiceDefCompilerTask extends CompilerTask {
 
-	private final List<NestedService> nestedServices;
-	private File classesDir = null;
-	private String mavenClasspath;
+    private final List<NestedService> nestedServices;
 
-	public ServiceDefCompilerTask() {
-		this(true);
-	}
+    private File classesDir = null;
 
-	public ServiceDefCompilerTask(boolean init) {
-		super(init);
-		setProjectRootRequired(true);
-		nestedServices = new ArrayList<NestedService>();
-	}
+    private String mavenClasspath;
 
-	public void addService(NestedService service) {
-		nestedServices.add(service);
-	}
+    public ServiceDefCompilerTask() {
+        this(true);
+    }
 
-	/**
-	 * Location where the JavaServiceDefinition should expect the compiled
-	 * .class files for the services to be.
-	 * 
-	 * @param classesDir
-	 */
-	public void setClassesDir(File classesDir) {
-		this.classesDir = classesDir;
-	}
+    public ServiceDefCompilerTask(boolean init) {
+        super(init);
+        setProjectRootRequired(true);
+        this.nestedServices = new ArrayList<NestedService>();
+    }
 
-	public void setMavenClasspath(String mavenClasspath) {
-		this.mavenClasspath = mavenClasspath;
-	}
+    public void addService(NestedService service) {
+        this.nestedServices.add(service);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.wavemaker.tools.ant.CompilerTask#doExecute()
-	 */
-	@Override
-	protected void doExecute() {
+    /**
+     * Location where the JavaServiceDefinition should expect the compiled .class files for the services to be.
+     * 
+     * @param classesDir
+     */
+    public void setClassesDir(File classesDir) {
+        this.classesDir = classesDir;
+    }
 
-		DesignServiceManager dsm = DesignTimeUtils
-				.getDSMForProjectRoot(new FileSystemResource(getProjectRoot()));
+    public void setMavenClasspath(String mavenClasspath) {
+        this.mavenClasspath = mavenClasspath;
+    }
 
-		for (NestedService ns : nestedServices) {
-			String serviceId = ns.getServiceId();
-			String fqClassName = ns.getServiceClass(dsm);
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.tools.ant.CompilerTask#doExecute()
+     */
+    @Override
+    protected void doExecute() {
 
-			try {
-				File serviceDefXml = dsm.getServiceDefXml(serviceId).getFile();
-				boolean reGen = true;
-				File serviceSrc = dsm.getServiceRuntimeDirectory(serviceId)
-						.getFile();
+        DesignServiceManager dsm = DesignTimeUtils.getDSMForProjectRoot(new FileSystemResource(getProjectRoot()));
 
-				File serviceSrcFile = new File(serviceSrc, fqClassName.replace(
-						'.', '/') + ".java");
-				if (serviceSrcFile.exists()
-						&& serviceDefXml.exists()
-						&& (serviceSrcFile.lastModified() <= serviceDefXml
-								.lastModified())) {
-					// System.out.println("service "+serviceId+" is up to date, don't regen");
-					reGen = false;
-				}
+        for (NestedService ns : this.nestedServices) {
+            String serviceId = ns.getServiceId();
+            String fqClassName = ns.getServiceClass(dsm);
 
-				if (reGen) {
-					System.out.println("creating servicedef for service "
-							+ serviceId);
+            try {
+                File serviceDefXml = dsm.getServiceDefXml(serviceId).getFile();
+                boolean reGen = true;
+                File serviceSrc = dsm.getServiceRuntimeDirectory(serviceId).getFile();
 
-					ServiceDefinition serviceDef;
+                File serviceSrcFile = new File(serviceSrc, fqClassName.replace('.', '/') + ".java");
+                if (serviceSrcFile.exists() && serviceDefXml.exists() && serviceSrcFile.lastModified() <= serviceDefXml.lastModified()) {
+                    // System.out.println("service "+serviceId+" is up to date, don't regen");
+                    reGen = false;
+                }
 
-					if (null == classesDir) {
-						classesDir = dsm.getProjectManager()
-								.getCurrentProject().getWebInfClasses()
-								.getFile();
-					}
+                if (reGen) {
+                    System.out.println("creating servicedef for service " + serviceId);
 
-					if (StringUtils.hasText(mavenClasspath)) {
-						String[] paths = mavenClasspath.split(File.pathSeparator);
-						File[] classPathFiles = new File[paths.length];
-						for (int i = 0; i < paths.length; i++) {
-							classPathFiles[i] = new File(paths[i])
-									.getParentFile();
-						}
-						serviceDef = new JavaServiceDefinition(fqClassName,
-								serviceId,
-								Arrays.asList(new File[] { classesDir }),
-								Arrays.asList(classPathFiles),
-								dsm.getExcludeTypeNames(serviceId));
-					} else {
-						serviceDef = new JavaServiceDefinition(fqClassName,
-								serviceId, new FileSystemResource(classesDir),
-								dsm.getProjectManager().getCurrentProject()
-										.getWebInfLib(),
-								dsm.getExcludeTypeNames(serviceId));
-					}
+                    ServiceDefinition serviceDef;
 
-					dsm.defineService(serviceDef);
-				}
-			} catch (ClassNotFoundException e) {
-				throw new BuildException(e);
-			} catch (LinkageError e) {
-				throw new BuildException(e);
-			} catch (IOException e) {
-				throw new BuildException(e);
-			}
-		}
-	}
+                    if (null == this.classesDir) {
+                        this.classesDir = dsm.getProjectManager().getCurrentProject().getWebInfClasses().getFile();
+                    }
 
-	public static class NestedService {
+                    if (StringUtils.hasText(this.mavenClasspath)) {
+                        String[] paths = this.mavenClasspath.split(File.pathSeparator);
+                        File[] classPathFiles = new File[paths.length];
+                        for (int i = 0; i < paths.length; i++) {
+                            classPathFiles[i] = new File(paths[i]).getParentFile();
+                        }
+                        serviceDef = new JavaServiceDefinition(fqClassName, serviceId, Arrays.asList(new File[] { this.classesDir }),
+                            Arrays.asList(classPathFiles), dsm.getExcludeTypeNames(serviceId));
+                    } else {
+                        serviceDef = new JavaServiceDefinition(fqClassName, serviceId, new FileSystemResource(this.classesDir),
+                            dsm.getProjectManager().getCurrentProject().getWebInfLib(), dsm.getExcludeTypeNames(serviceId));
+                    }
 
-		private String serviceId;
-		private String serviceClass = null;
+                    dsm.defineService(serviceDef);
+                }
+            } catch (ClassNotFoundException e) {
+                throw new BuildException(e);
+            } catch (LinkageError e) {
+                throw new BuildException(e);
+            } catch (IOException e) {
+                throw new BuildException(e);
+            }
+        }
+    }
 
-		public NestedService() {
-		}
+    public static class NestedService {
 
-		public NestedService(String serviceId) {
-			this();
-			this.serviceId = serviceId;
-		}
+        private String serviceId;
 
-		public String getServiceId() {
-			return serviceId;
-		}
+        private String serviceClass = null;
 
-		public void setServiceId(String serviceId) {
-			this.serviceId = serviceId;
-		}
+        public NestedService() {
+        }
 
-		/**
-		 * Sets the service class name. This is optional; if it is not set, a
-		 * default will be used; see {@link #getServiceClass()}.
-		 * 
-		 * @param serviceClass
-		 */
-		public void setServiceClass(String serviceClass) {
-			this.serviceClass = serviceClass;
-		}
+        public NestedService(String serviceId) {
+            this();
+            this.serviceId = serviceId;
+        }
 
-		/**
-		 * Gets the service class name. This is determined by the following (in
-		 * order):
-		 * 
-		 * <ol>
-		 * <li>Value set in {@link #setServiceClass(String)}.</li>
-		 * <li>Value currently in the servicedef.xml associated with this
-		 * service.</li>
-		 * <li>If there is only a single Java file in this service's src
-		 * directory, that will be used.</li>
-		 * </ol>
-		 * 
-		 * If none of those conditions are met, an Exception will be thrown.
-		 * 
-		 * @return The serviceClassName for the service being configured.
-		 */
-		public String getServiceClass(DesignServiceManager dsm) {
+        public String getServiceId() {
+            return this.serviceId;
+        }
 
-			try {
-				String ret = null;
-				File serviceDefXml = dsm.getServiceDefXml(serviceId).getFile();
-				File serviceSrc = dsm.getServiceRuntimeDirectory(serviceId)
-						.getFile();
+        public void setServiceId(String serviceId) {
+            this.serviceId = serviceId;
+        }
 
-				if (null != this.serviceClass) {
-					ret = this.serviceClass;
-				} else if (serviceDefXml.exists()) {
-					Service sTemp = dsm.getService(serviceId);
-					ret = sTemp.getClazz();
-				} else {
-					Collection<?> files = FileUtils.listFiles(serviceSrc,
-							new String[] { "java" }, true);
+        /**
+         * Sets the service class name. This is optional; if it is not set, a default will be used; see
+         * {@link #getServiceClass()}.
+         * 
+         * @param serviceClass
+         */
+        public void setServiceClass(String serviceClass) {
+            this.serviceClass = serviceClass;
+        }
 
-					if (1 != files.size()) {
-						throw new BuildException(
-								"Couldn't determine class for service; create a servicedef: "
-										+ files);
-					}
-					for (Object o : files) {
-						File cF = (File) o;
-						ret = "";
-					}
-				}
+        /**
+         * Gets the service class name. This is determined by the following (in order):
+         * 
+         * <ol>
+         * <li>Value set in {@link #setServiceClass(String)}.</li>
+         * <li>Value currently in the servicedef.xml associated with this service.</li>
+         * <li>If there is only a single Java file in this service's src directory, that will be used.</li>
+         * </ol>
+         * 
+         * If none of those conditions are met, an Exception will be thrown.
+         * 
+         * @return The serviceClassName for the service being configured.
+         */
+        public String getServiceClass(DesignServiceManager dsm) {
 
-				return ret;
-			} catch (IOException ex) {
-				throw new BuildException(ex);
-			}
-		}
-	}
+            try {
+                String ret = null;
+                File serviceDefXml = dsm.getServiceDefXml(this.serviceId).getFile();
+                File serviceSrc = dsm.getServiceRuntimeDirectory(this.serviceId).getFile();
+
+                if (null != this.serviceClass) {
+                    ret = this.serviceClass;
+                } else if (serviceDefXml.exists()) {
+                    Service sTemp = dsm.getService(this.serviceId);
+                    ret = sTemp.getClazz();
+                } else {
+                    Collection<?> files = FileUtils.listFiles(serviceSrc, new String[] { "java" }, true);
+
+                    if (1 != files.size()) {
+                        throw new BuildException("Couldn't determine class for service; create a servicedef: " + files);
+                    }
+                    for (Object o : files) {
+                        ret = "";
+                    }
+                }
+
+                return ret;
+            } catch (IOException ex) {
+                throw new BuildException(ex);
+            }
+        }
+    }
 }

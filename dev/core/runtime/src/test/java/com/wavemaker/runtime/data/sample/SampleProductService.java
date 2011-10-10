@@ -15,21 +15,20 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.runtime.data.sample;
 
 public class SampleProductService {
-    
 
     // public interface; this is the actual class
     public Product[] getProducts() {
 
-        return (Product[]) prodMan.getProducts().toArray(new Product[] {});
+        return this.prodMan.getProducts().toArray(new Product[] {});
     }
 
     public Product getProduct(int id) {
 
-        Product[] prods = (Product[]) prodMan.getProducts().toArray(
-                new Product[] {});
+        Product[] prods = this.prodMan.getProducts().toArray(new Product[] {});
 
         for (int i = 0; i < prods.length; i++) {
             if (prods[i].getId() == id) {
@@ -39,7 +38,7 @@ public class SampleProductService {
 
         return null;
     }
-    
+
     /**
      * Sample testing method; returns the product passed in as a parameter.
      * 
@@ -50,16 +49,15 @@ public class SampleProductService {
         return p;
     }
 
-
     // bean actions below here; just to get the data in through Spring
     private ProductManager prodMan;
 
     public void setProductManager(ProductManager pm) {
-        prodMan = pm;
+        this.prodMan = pm;
     }
 
     public ProductManager getProductManager() {
-        return prodMan;
+        return this.prodMan;
     }
 
 }

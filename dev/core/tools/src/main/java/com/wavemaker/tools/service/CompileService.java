@@ -19,10 +19,10 @@ package com.wavemaker.tools.service;
  * 
  * @author Simon Toens
  * @version $Rev$ - $Date$
- *
+ * 
  */
 public interface CompileService {
-    
+
     void compile(boolean clean);
 
 }

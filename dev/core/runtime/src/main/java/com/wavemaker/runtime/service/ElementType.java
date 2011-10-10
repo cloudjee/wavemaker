@@ -36,8 +36,7 @@ import com.wavemaker.json.type.reflect.ReflectTypeState;
 import com.wavemaker.json.type.reflect.ReflectTypeUtils;
 
 /**
- * Used by <code>ServiceDefinition</code> representing the operation's input
- * and output type.
+ * Used by <code>ServiceDefinition</code> representing the operation's input and output type.
  * 
  * @author Frankie Fu
  * @version $Rev$ - $Date$
@@ -49,17 +48,17 @@ public class ElementType implements Cloneable {
     private String javaType;
 
     private boolean isList;
-    
+
     private boolean allowNull;
-    
+
     private boolean supportsQuickData;
 
-    private String subType; //salesforce
-    
+    private String subType; // salesforce
+
     private List<OperationEnumeration> require = new ArrayList<OperationEnumeration>();
-    
+
     private List<OperationEnumeration> noChange = new ArrayList<OperationEnumeration>();
-    
+
     private List<OperationEnumeration> exclude = new ArrayList<OperationEnumeration>();
 
     /**
@@ -99,9 +98,8 @@ public class ElementType implements Cloneable {
     }
 
     /**
-     * Create an ElementType with one level of children (populated by looking
-     * at the bean properties of javaType).  This method should not be used
-     * recursively.
+     * Create an ElementType with one level of children (populated by looking at the bean properties of javaType). This
+     * method should not be used recursively.
      */
     public ElementType(String name, Class<?> javaType, boolean isList) {
 
@@ -116,30 +114,27 @@ public class ElementType implements Cloneable {
             if (pd.getName().equals("class")) {
                 continue;
             }
-            if (null==pd.getReadMethod() && null==pd.getWriteMethod()) {
+            if (null == pd.getReadMethod() && null == pd.getWriteMethod()) {
                 continue;
             }
-            
+
             Class<?> klass;
             Type type;
-            if (null!=pd.getReadMethod()) {
+            if (null != pd.getReadMethod()) {
                 klass = pd.getReadMethod().getReturnType();
                 type = pd.getReadMethod().getGenericReturnType();
             } else {
                 klass = pd.getWriteMethod().getParameterTypes()[0];
                 type = pd.getWriteMethod().getGenericParameterTypes()[0];
             }
-            
+
             ElementType element;
             if (klass.isArray()) {
-                element = new ElementType(pd.getName(),
-                        klass.getComponentType().getName(), true);
-            } else if (Collection.class.isAssignableFrom(klass) &&
-                    type instanceof ParameterizedType) {
+                element = new ElementType(pd.getName(), klass.getComponentType().getName(), true);
+            } else if (Collection.class.isAssignableFrom(klass) && type instanceof ParameterizedType) {
                 ParameterizedType ptype = (ParameterizedType) type;
                 Type aType = ptype.getActualTypeArguments()[0];
-                element = new ElementType(pd.getName(),
-                        ((Class<?>)aType).getName(), true);
+                element = new ElementType(pd.getName(), ((Class<?>) aType).getName(), true);
             } else {
                 element = new ElementType(pd.getName(), klass.getName());
             }
@@ -149,16 +144,14 @@ public class ElementType implements Cloneable {
         this.properties = elements;
     }
 
-    public ElementType(String name, String javaType, boolean isList,
-            List<ElementType> properties) {
+    public ElementType(String name, String javaType, boolean isList, List<ElementType> properties) {
         this.name = name;
         this.javaType = javaType;
         this.isList = isList;
         this.properties = properties;
     }
 
-    public ElementType(String name, Class<?> javaType, boolean isList,
-            List<ElementType> properties) {
+    public ElementType(String name, Class<?> javaType, boolean isList, List<ElementType> properties) {
         this(name, javaType.getName(), isList, properties);
     }
 
@@ -168,14 +161,13 @@ public class ElementType implements Cloneable {
      * @return The name for this type.
      */
     public String getName() {
-        return name;
+        return this.name;
     }
 
     /**
      * Sets the name for this type.
      * 
-     * @param name
-     *            The name for this type.
+     * @param name The name for this type.
      */
     public void setName(String name) {
         this.name = name;
@@ -187,21 +179,20 @@ public class ElementType implements Cloneable {
      * @return Strings like "int", "java.lang.String", "java.io.File".
      */
     public String getJavaType() {
-        return javaType;
+        return this.javaType;
     }
 
     /**
      * Sets the full name of the Java type.
      * 
-     * @param javaType
-     *            Strings like "int", "java.lang.String", "java.io.File".
+     * @param javaType Strings like "int", "java.lang.String", "java.io.File".
      */
     public void setJavaType(String javaType) {
         this.javaType = javaType;
     }
 
     public boolean isList() {
-        return isList;
+        return this.isList;
     }
 
     public void setList(boolean isList) {
@@ -213,7 +204,7 @@ public class ElementType implements Cloneable {
     }
 
     public void addProperty(ElementType property) {
-        properties.add(property);
+        this.properties.add(property);
     }
 
     public void setProperties(List<ElementType> properties) {
@@ -221,7 +212,7 @@ public class ElementType implements Cloneable {
     }
 
     public String getService() {
-        return service;
+        return this.service;
     }
 
     public void setService(String service) {
@@ -229,7 +220,7 @@ public class ElementType implements Cloneable {
     }
 
     public boolean isTopLevel() {
-        return isTopLevel;
+        return this.isTopLevel;
     }
 
     public void setTopLevel(boolean isTopLevel) {
@@ -237,23 +228,23 @@ public class ElementType implements Cloneable {
     }
 
     public boolean isAllowNull() {
-        return allowNull;
+        return this.allowNull;
     }
 
     public void setAllowNull(boolean allowNull) {
         this.allowNull = allowNull;
     }
 
-    public String getSubType() { //salesforce
-        return subType;
+    public String getSubType() { // salesforce
+        return this.subType;
     }
 
-    public void setSubType(String subType) { //salesforce
+    public void setSubType(String subType) { // salesforce
         this.subType = subType;
     }
 
     public boolean isSupportsQuickData() {
-        return supportsQuickData;
+        return this.supportsQuickData;
     }
 
     public void setSupportsQuickData(boolean supportsQuickData) {
@@ -262,11 +253,11 @@ public class ElementType implements Cloneable {
 
     @Override
     public String toString() {
-        return javaType;
+        return this.javaType;
     }
 
     public List<OperationEnumeration> getRequire() {
-        return require;
+        return this.require;
     }
 
     public void setRequire(List<OperationEnumeration> require) {
@@ -274,7 +265,7 @@ public class ElementType implements Cloneable {
     }
 
     public List<OperationEnumeration> getNoChange() {
-        return noChange;
+        return this.noChange;
     }
 
     public void setNoChange(List<OperationEnumeration> noChange) {
@@ -282,64 +273,59 @@ public class ElementType implements Cloneable {
     }
 
     public List<OperationEnumeration> getExclude() {
-        return exclude;
+        return this.exclude;
     }
 
     public void setExclude(List<OperationEnumeration> exclude) {
         this.exclude = exclude;
     }
-    
+
     /**
-     * Transforms this ElementType into a FieldDefinition, to make the
-     * transition easier.  This uses the default reflection-based TypeDefinition
-     * classes ({@link com.wavemaker.json.type.reflect}).
+     * Transforms this ElementType into a FieldDefinition, to make the transition easier. This uses the default
+     * reflection-based TypeDefinition classes ({@link com.wavemaker.json.type.reflect}).
      * 
      * @return
      */
     public FieldDefinition toFieldDefinition() {
 
         GenericFieldDefinition ret = new GenericFieldDefinition();
-        
+
         Class<?> klass = null;
         try {
-            if (null!=getJavaType()) {
+            if (null != getJavaType()) {
                 klass = ClassUtils.forName(getJavaType());
             }
         } catch (ClassNotFoundException e) {
             // ignore
         }
-        
+
         if (!getProperties().isEmpty()) {
             ObjectReflectTypeDefinition ortd = new ObjectReflectTypeDefinition();
 
             ortd.setTypeName(getJavaType());
-            for (ElementType et: getProperties()) {
+            for (ElementType et : getProperties()) {
                 ortd.getFields().put(et.getName(), et.toFieldDefinition());
             }
-            
+
             ret.setTypeDefinition(ortd);
-        } else if (null!=klass) {
-            ret = (GenericFieldDefinition) ReflectTypeUtils.getFieldDefinition(
-                    klass, new ReflectTypeState(), false, null);
+        } else if (null != klass) {
+            ret = (GenericFieldDefinition) ReflectTypeUtils.getFieldDefinition(klass, new ReflectTypeState(), false, null);
         } else {
             // for now, assume it's primitive and let it pass
             /*
-            System.out.println("Unhandled ET: "+this+" (javaType: "+
-                    getJavaType()+", name: "+getName()+", properties: "+
-                    getProperties()+")");
-            */
+             * System.out.println("Unhandled ET: "+this+" (javaType: "+
+             * getJavaType()+", name: "+getName()+", properties: "+ getProperties()+")");
+             */
             PrimitiveReflectTypeDefinition prtd = new PrimitiveReflectTypeDefinition();
             prtd.setTypeName(this.getJavaType());
             ret.setTypeDefinition(prtd);
         }
-        
-        if (null!=ret.getTypeDefinition()) {
-            ((ReflectTypeDefinition) ret.getTypeDefinition()).setLiveService(
-                    isSupportsQuickData());
-            ((ReflectTypeDefinition) ret.getTypeDefinition()).setShortName(
-                    getName());
+
+        if (null != ret.getTypeDefinition()) {
+            ((ReflectTypeDefinition) ret.getTypeDefinition()).setLiveService(isSupportsQuickData());
+            ((ReflectTypeDefinition) ret.getTypeDefinition()).setShortName(getName());
         }
-        
+
         if (isList()) {
             List<ListTypeDefinition> listType = new ArrayList<ListTypeDefinition>();
             ListReflectTypeDefinition lrtd = new ListReflectTypeDefinition();
@@ -348,14 +334,14 @@ public class ElementType implements Cloneable {
             listType.add(lrtd);
             ret.setArrayTypes(listType);
         }
-        
+
         ret.setNoChange(getNoChange());
         ret.setExclude(getExclude());
         ret.setRequire(getRequire());
         ret.setName(getName());
         ret.setAllowNull(isAllowNull());
-        ret.setSubType(getSubType()); //salesforce
-        
+        ret.setSubType(getSubType()); // salesforce
+
         return ret;
     }
 

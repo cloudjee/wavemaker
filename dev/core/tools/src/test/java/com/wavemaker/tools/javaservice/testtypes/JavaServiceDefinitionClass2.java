@@ -15,6 +15,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 package com.wavemaker.tools.javaservice.testtypes;
 
 import com.wavemaker.json.type.GenericFieldDefinition;
@@ -32,18 +33,16 @@ import com.wavemaker.tools.javaservice.JavaService_BeanClass;
  */
 public class JavaServiceDefinitionClass2 implements LiveDataService {
 
-    public TypedServiceReturn read(TypeDefinition type,
-            Object instance, PropertyOptions propertyOptions,
-            PagingOptions pagingOptions) {
-        
-        int i=0;
+    public TypedServiceReturn read(TypeDefinition type, Object instance, PropertyOptions propertyOptions, PagingOptions pagingOptions) {
+
+        int i = 0;
         LiveDataServiceResponse ret = new LiveDataServiceResponse();
         ret.setResult(i);
-        
+
         TypedServiceReturn tsr = new TypedServiceReturn();
         tsr.setReturnValue(ret);
         tsr.setReturnType(new GenericFieldDefinition(type));
-        
+
         return tsr;
     }
 
@@ -57,7 +56,7 @@ public class JavaServiceDefinitionClass2 implements LiveDataService {
     public Object update(Object objectToUpdate) {
         return null;
     }
-    
+
     // use something from a clean classloader
     public JavaService_BeanClass getBean() {
         return null;
