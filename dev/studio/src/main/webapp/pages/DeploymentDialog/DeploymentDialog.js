@@ -278,6 +278,14 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	this.deploymentListVar.setValue("dataValue", data);
 	this.editPanel.clearDirty();
 	this.deploymentList.selectByIndex(selectedIndex);
+	this.refreshStudioDeploymentsMenu();
+
+	if (!deploying) {
+	    studio.endWait();
+	    app.toastSuccess(this.getDictionaryItem("TOAST_SAVE_SUCCESS"));
+	}
+    },
+    refreshStudioDeploymentsMenu: function() {
 	var newData = [];
 	var data = this.deploymentListVar.getData()
 	for (var i = 0; i < data.length; i++) {
@@ -286,10 +294,6 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	studio._deploymentData = newData;
 	studio.updateDeploymentsMenu();
 
-	if (!deploying) {
-	    studio.endWait();
-	    app.toastSuccess(this.getDictionaryItem("TOAST_SAVE_SUCCESS"));
-	}
     },
     saveFailed: function(inError) {
 	studio.endWait();
@@ -650,7 +654,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 
 		  this.defaultLayer.activate();
 		  this._currentDeploymentIndex = -1;
-		  studio.updateDeploymentsMenu();
+		  this.refreshStudioDeploymentsMenu();
 		  studio.endWait();
 	      });
 	      
@@ -670,12 +674,14 @@ dojo.declare("DeploymentDialog", wm.Page, {
           console.error('ERROR IN deleteButtonClick: ' + e); 
       } 
   },
+/*
     contextDelete: function() {
 	var data = this.deploymentListVar.getItem(this._contextMenuIndex).getValue("dataValue");
 	app.confirm(this.getDictionaryItem("CONFIRM_DELETE_HEADER") + this.generateDeploymentHTMLSynopsis(data), false, dojo.hitch(this, function() {
 	    var selectedIndex = this.deploymentList.getSelectedIndex();
+
             this.deploymentListVar.removeItem(this._contextMenuIndex);
-	    app.toastWarning("TODO: Delete from server");
+
 	    if (selectedIndex == this._contextMenuIndex) {
 	      dojo.forEach(this.currentDatabaseBoxes, function(w) {
 		  w.destroy();
@@ -692,9 +698,10 @@ dojo.declare("DeploymentDialog", wm.Page, {
 		this.deploymentList.selectByIndex(selectedIndex);
 		this._currentDeploymentIndex = selectedIndex;
 	    }
-	    studio.updateDeploymentsMenu();
+	    this.refreshStudioDeploymentsMenu();
 	}));
     },
+    */
   addButtonClick: function(inSender) {
       if (this.getIsDirty()) {
 /*

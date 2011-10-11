@@ -17,11 +17,12 @@ DeploymentDialog.widgets = {
 	}]
     }],
 
-
+/*
     deploymentListPopupMenu: ["wm.PopupMenu", {"fullStructure":[{'label':'Deploy', 'onClick':"contextDeploy",'children':[]},
 								{'label':'Delete','onClick':"contextDelete",'children':[]}
 							       ]
 					      }],
+					      */
     deploymentListVar: ["wm.Variable", {type: "EntryData", isList:true}],
     confirmSaveDialog: ["wm.DesignableDialog", {"border":"1","height":"110px","title":"Save Changes","width":"400px","containerWidgetId":"containerWidget4","buttonBarId":"buttonBar4"}, {}, {
 	containerWidget4: ["wm.Container", {"_classes":{"domNode":["wmdialogcontainer","MainContent"]},"autoScroll":true,"border":"0","height":"100%","horizontalAlign":"left","margin":"0","verticalAlign":"top","width":"100%"}, {}, {
@@ -74,7 +75,7 @@ DeploymentDialog.widgets = {
 		    deleteButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Delete","height":"100%","margin":"1","width":"100%"}, {"onclick":"deleteButtonClick"}],
 		    copyButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Copy","height":"100%","margin":"1","width":"45px"}, {"onclick":"copyButtonClick"}]
 		}],
-		deploymentList: ["wm.List", {dataFields: "name", headerVisible: false, innerBorder:"1",borderColor:"black","height":"100%","width":"100%"}, {onselect: "deploymentListSelect", onRightClick: "deploymentListPopupMenuOpen"}, {
+		deploymentList: ["wm.List", {dataFields: "name", headerVisible: false, innerBorder:"1",borderColor:"black","height":"100%","width":"100%"}, {onselect: "deploymentListSelect"/*, onRightClick: "deploymentListPopupMenuOpen"*/}, {
 		    binding: ["wm.Binding", {}, {}, {
 			wire: ["wm.Wire", {"source":"deploymentListVar","targetProperty":"dataSet"}, {}]
 		    }]
