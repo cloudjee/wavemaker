@@ -1891,3 +1891,9 @@ Overriding dijit's progress bar properties to enable height changes to progress 
 .dj_ie9 .dijitComboBox .dijitInputContainer, .dj_ie9 .dijitComboBox .dijitInputContainer input {
     height: 100%;
 }
+
+.tundra div .dojoxGridError {
+	background-image: none;
+	padding-left: 0px;
+	padding-right: 0px;
+}
