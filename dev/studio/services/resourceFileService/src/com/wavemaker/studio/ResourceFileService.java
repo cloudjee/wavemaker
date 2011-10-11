@@ -205,10 +205,9 @@ public class ResourceFileService {
      * Send the client a datastruct listing all contents of the resources folder. WARNING: At some point we may want to
      * support larger projects by NOT sending it all at once
      */
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-    public Hashtable getResourceFolder() {
+    public Hashtable<String, Object> getResourceFolder() {
         Resource resourceDir = this.getResourcesDir();
-        Hashtable P = new Hashtable();
+        Hashtable<String, Object> P = new Hashtable<String, Object>();
         try {
             P.put(
                 "files",
