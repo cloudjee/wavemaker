@@ -724,6 +724,7 @@ dojo.declare("wm.FilteringLookup", wm.Lookup, {
 	this.filterField = this.displayField;
 	this.orderBy = "asc: " + this.displayField;
     },
+/*
     createDataSet: function() {
 	this.inherited(arguments);
 	if (this.dataSet) {
@@ -731,25 +732,56 @@ dojo.declare("wm.FilteringLookup", wm.Lookup, {
 	}
 	
     },
+    */
+    setDataSet: function(inDataSet) {
+	this.inherited(arguments);
+	if (this.dataSet) {
+	    wm.onidle(this, function() {
+		var item = this.editor.get("item");
+		if (item) {
+		    if (item[this._storeNameField] != this.editor.get("displayedValue"))
+			item = null;
+		}
+		if (!item) {
+		    this.editor._startSearchFromInput();
+		}
+		this._onchange(); // see if there have been any new characters since our last request was fired
+	    });
+	}
+    },
     setDataValue: function(inData) {
 	if (this.dataSet) {
 	    this.dataSet.setData(inData ? [inData] : null);
 	}
 	this.inherited(arguments);
     },
+/*
     onDataSetSuccess: function() {
 	wm.onidle(this, function() {
-	    this.editor._startSearchFromInput();
-	    this.onchange(); // see if there have been any new characters since our last request was fired
+	    var item = this.editor.get("item");
+	    if (item) {
+		if (item.name != this.editor.get("displayedValue"))
+		    item = null;
+	    }
+	    if (!item) {
+		this.editor._startSearchFromInput();
+	    }
+	    this._onchange(); // see if there have been any new characters since our last request was fired
 	});
     },
+    */
     setPageSize: function(inValue) {
 	this.maxResults = this.pageSize = inValue;
     },
-    onchange: function() {
+    doOnchange: function() {
+	this._onchange();
+	this.inherited(arguments);
+    },
+    _onchange: function() {
 	if (this.disabled || this.readonly) return;
-	var value = this.displayValue;
+	var value = this.editor.get("displayedValue");
 	var lastValue = this.dataSet.filter.getValue(this.filterField);
+
 	/* Don't update the filter if its already firing; keep it at its last value so we'll know when it returns
 	 * what was requested
 	 */
