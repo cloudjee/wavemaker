@@ -15,10 +15,7 @@
 dojo.declare("Start", wm.Page, {
         i18n: true,
 	start: function() {
-	    if (dojo.isIE == 8) {
-		this.owner.owner.setWidth("790px");
-		this.owner.owner.setHeight("465px");
-	    }
+
 	    this.copyright.setHtml(this.copyright.html + wm.studioConfig.studioVersion);
 		this.subscribe("wm-project-changed", this, "update");
 		this.existingProjectList.connect(this.existingProjectList, "onformat", this, "existingProjectListFormatCell");
