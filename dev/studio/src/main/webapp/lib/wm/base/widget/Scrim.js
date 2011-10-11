@@ -31,7 +31,14 @@ dojo.declare("wm.Scrim", wm.Widget, {
 		this.domNode.style.position = "absolute";
 		if (this.waitCursor)
 			this.domNode.style.cursor = "wait";
+	    this.subscribe("window-resize", this, "resize");
 	},
+    resize: function() {
+	wm.onidle(this, function() {
+	    if (this.showing)
+		this.reflowParent();
+	});
+    },
 	reflowParent: function() {
 		//if (this.domNode.parentNode)
 		dojo.marginBox(this.domNode, dojo.contentBox(this.domNode.parentNode));

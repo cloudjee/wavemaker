@@ -174,7 +174,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 
 		this.domNode.style.display = "none";		
 		this._connections.push(this.connect(document, "keydown", this, "keydown"));
-	        this._subscriptions.push(dojo.subscribe("window-resize", this, "reflow"));
+	        this._subscriptions.push(dojo.subscribe("window-resize", this, "delayedRenderBounds"));
 
 	    this.setModal(this.modal);
 
@@ -413,6 +413,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 		    this.dialogScrim.reflowParent();
 		}
 	},
+    delayedRenderBounds: function() {
+	wm.job(this.getRuntimeId() + ".renderBounds", 5, dojo.hitch(this, "renderBounds"));
+    },
  	renderBounds: function() {
 		if (this.showing) {
 		    if (this.fitToContentHeight && !this._userSized) {
