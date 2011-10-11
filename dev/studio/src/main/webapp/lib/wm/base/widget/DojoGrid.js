@@ -121,6 +121,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		this.selectedItem.setType(this.variable && this.variable.type ? this.variable.type : "any");
 	},
 	setSelectedRow: function(rowIndex, isSelected) {
+	    if (!this.dataSet) return;
 	    if (this._setRowTimeout) {
 		window.clearTimeout(this._setRowTimeout);
 		delete this._setRowTimeout;
@@ -128,11 +129,17 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 	  if (isSelected == undefined) 
 	    isSelected = true;
+
 	  if (isSelected) {
-	    this.dojoObj.selection.select(rowIndex);
+	      if (rowIndex < this.dataSet.getCount()) {
+		  this.dojoObj.selection.select(rowIndex);
+		  this.onSelectionChange();
+	      }
 	  } else {
 	    this.dojoObj.selection.setSelected(rowIndex,isSelected);
+	      this.onSelectionChange();
 	  }
+
 	},
 	selectItemOnGrid: function(obj, pkList){
 		if (!this.store)
@@ -582,7 +589,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		this.dojoRenderer();
 		
 		var selectedData = this.selectedItem.getData();
-		if (selectedData || this.selectFirstRow)
+	        var isSelectedDataArray = dojo.isArray(selectedData);
+	        if ( isSelectedDataArray && selectedData.length || !isSelectedDataArray && selectedData || this.selectFirstRow)
 			this.selectItemOnGrid(this.selectedItem);
         
 
