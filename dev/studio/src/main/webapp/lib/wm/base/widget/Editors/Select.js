@@ -174,7 +174,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
     // and compare its name field to whats in the store. 
     // we'll do a lookup by
         // STORE ACCESS (DONE EXCEPT RESTRICT VALUES)
-	setEditorValue: function(inValue) {
+	setEditorValue: function(inValue) {	    
 	    if (!this.dataSet || this.dataSet.getCount() == 0) {
 		if (typeof inValue == "object" && this.dataField == this._allFields) {
 		    this.displayValue = this._getDisplayData(inValue);
@@ -190,6 +190,8 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		return;
 	    }
 
+	    this._inSetEditor = true;
+	    try {
 		// if the user has selected "all fields", then how and what do we compare inValue to?  
 		// Answer: if we don't have a unique identifier from the user, then we compare on the displayname.
 		var lookupFieldName = this._dataField;
@@ -231,6 +233,12 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 			}
 		}
 		this.updateReadonlyValue();
+	    } catch(e){
+	    } finally {
+		delete this._inSetEditor;
+		this.editorChanged();
+	    }
+	    
 	},
 // we need to call this.editorChanged in here to update dataValue
 
@@ -255,9 +263,9 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 		}
 
 		if (this.restrictValues)
-		    e.set('displayedValue', inDisplayValue, !this._updating);
+		    e.set('displayedValue', inDisplayValue, this._inSetEditor ? false : !this._updating);
 		else
-		    e.set('value', inDisplayValue, !this._updating);
+		    e.set('value', inDisplayValue, this._inSetEditor ? false : !this._updating);
 	        this.editor._lastValueReported = inDisplayValue;
 	   if (addedItem)
 	       this.editor.store.data.pop();
@@ -669,10 +677,6 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		}
 	    }
 	},	
-    setEditorValue: function(inValue) {
-	this.inherited(arguments);
-	this.editorChanged();
-    },
 	// NOTE: lookups automatically push data back to their source
 	changed: function() {
 		// When loopup editor is changed by user only then we should change liveForms field values.
