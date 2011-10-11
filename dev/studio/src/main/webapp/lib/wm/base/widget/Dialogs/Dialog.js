@@ -539,6 +539,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    this.bounds.t = o.y + (o.h-this.bounds.h)/2;
 	}
         this.insureDialogVisible();
+	this.setBounds(this.bounds); // recalcualtes right and bottom borders
 /*
         if (!this.insureDialogVisible(true)) {
             this.bounds.t = o.y - this.bounds.h;
@@ -924,10 +925,13 @@ dojo.declare("wm.Dialog", wm.Container, {
 		var targetY = e.clientY - this.marginExtents.t - this.borderExtents.t;
 		if (targetX - 12 <= this.bounds.l && targetX + 12 >= this.bounds.l) {
 		    this._dragBorderX = "left";
+		    console.log("LEFT");
 		} else if (targetX - 12 <= this.bounds.r && targetX + 12 >= this.bounds.r) {
 		    this._dragBorderX = "right";
+		    console.log("RIGHT");
 		} else {
 		    this._dragBorderX = "";
+		    console.log("NOT LEFT OR RIGHT; targetX:"+ targetX + "; this.bounds.r:" + this.bounds.r + "; this.bounds.l: " + this.bounds.l + "; this.bounds.w:" + this.bounds.w);
 		}
 		if (targetY - 12 <= this.bounds.t && targetY + 12 >= this.bounds.t) {
 		    this._dragBorderY = "top";
