@@ -322,6 +322,7 @@ wm.Lookup.extend({
 		props.dataSet.ignoretmp = this.autoDataSet;
 		props.dataSet.bindTarget = !props.dataSet.ignoretmp;
 	        props.maxResults.ignoretmp = !this.autoDataSet;
+	        props.startUpdate.ignoretmp = !this.autoDataSet;
 		return props;
 	},
 	set_formField: function(inFieldName) {
@@ -333,7 +334,11 @@ wm.Lookup.extend({
 	    } else {
 		delete this.formField; // undefined used in getFormEditorsArray
 	    }
-	}
+	},
+    set_autoDataSet: function(inValue) {
+	this.startUpdate = Boolean(inValue);
+	this.setAutoDataSet(inValue);
+    }
 });
 
 
