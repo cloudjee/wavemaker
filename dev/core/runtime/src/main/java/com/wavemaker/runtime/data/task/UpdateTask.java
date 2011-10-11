@@ -29,6 +29,7 @@ public class UpdateTask extends BaseTask implements PreProcessor, Task {
      * Update each object in input. This is a noop when invoked directly from the client - all work is done in the
      * PreProcessor task.
      */
+    @Override
     public Object run(Session session, String dbName, Object... input) {
 
         if (ObjectUtils.isNullOrEmpty(input)) {
@@ -58,6 +59,7 @@ public class UpdateTask extends BaseTask implements PreProcessor, Task {
         return o;
     }
 
+    @Override
     public String getName() {
         return "Built-in Update Task";
     }

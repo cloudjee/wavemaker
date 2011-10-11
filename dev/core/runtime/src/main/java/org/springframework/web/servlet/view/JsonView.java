@@ -96,6 +96,7 @@ public class JsonView extends AbstractView implements TypedView {
      * 
      * @see com.wavemaker.runtime.server.view.TypedView#getRootType()
      */
+    @Override
     public FieldDefinition getRootType() {
         return this.rootType;
     }
@@ -105,6 +106,7 @@ public class JsonView extends AbstractView implements TypedView {
      * 
      * @see com.wavemaker.runtime.server.view.TypedView#setRootType(com.wavemaker.json.type.FieldDefinition)
      */
+    @Override
     public void setRootType(FieldDefinition type) {
         this.rootType = type;
     }

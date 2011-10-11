@@ -243,6 +243,7 @@ public class ImportDB extends BaseDataModelSetup {
 
         ClassLoaderUtils.TaskRtn t = new ClassLoaderUtils.TaskRtn() {
 
+            @Override
             public ServiceDefinition run() {
 
                 if (ImportDB.this.importDatabase) {
@@ -342,6 +343,7 @@ public class ImportDB extends BaseDataModelSetup {
 
         FilenameFilter filter = new FilenameFilter() {
 
+            @Override
             public boolean accept(File dir, String name) {
                 int len = name.length();
                 return name.substring(len - 5).equals(".java");

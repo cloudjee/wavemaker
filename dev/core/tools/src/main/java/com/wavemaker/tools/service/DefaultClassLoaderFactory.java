@@ -35,6 +35,7 @@ public class DefaultClassLoaderFactory implements ClassLoaderFactory {
         this.paths = paths;
     }
 
+    @Override
     public ClassLoader getClassLoader() {
         return ClassLoaderUtils.getClassLoaderForFile(this.paths);
     }

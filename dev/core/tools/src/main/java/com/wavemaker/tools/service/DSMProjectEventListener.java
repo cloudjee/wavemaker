@@ -32,6 +32,7 @@ public class DSMProjectEventListener implements ProjectEventListener {
      * 
      * @see com.wavemaker.tools.project.ProjectEventListener#closeProject(com.wavemaker.tools.project.Project)
      */
+    @Override
     public void closeProject(Project p) {
 
         Map<Project, Map<String, Service>> serviceDefinitions = this.designServiceManager.getAllServiceDefinitions();
@@ -43,6 +44,7 @@ public class DSMProjectEventListener implements ProjectEventListener {
      * 
      * @see com.wavemaker.tools.project.ProjectEventListener#openProject(com.wavemaker.tools.project.Project)
      */
+    @Override
     public void openProject(Project p) {
         // do nothing
     }

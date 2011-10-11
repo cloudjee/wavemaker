@@ -129,6 +129,7 @@ public class SpringConfigBuilder {
         public Bean addFiles(String name, String path) {
             return addFiles(name, path, new FilenameFilter() {
 
+                @Override
                 public boolean accept(File dir, String name) {
                     return true;
                 }

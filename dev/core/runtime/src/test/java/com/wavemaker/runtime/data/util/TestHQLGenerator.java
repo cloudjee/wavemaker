@@ -135,6 +135,7 @@ public class TestHQLGenerator extends WMTestCase {
     public void testTypeManager() {
         HQLGenerator.TypeManager mgr = new HQLGenerator.TypeManager() {
 
+            @Override
             public boolean isComponentPath(String propertyPath, String dbName) {
                 if (propertyPath.equals("id") || propertyPath.startsWith("id.")) {
                     return true;

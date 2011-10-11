@@ -88,6 +88,7 @@ public class ProjectCompiler {
             List<Resource> serviceDirs = this.studioConfiguration.listChildren(project.getProjectRoot().createRelative("services/"),
                 new ResourceFilter() {
 
+                    @Override
                     public boolean accept(Resource resource) {
                         return StringUtils.getFilenameExtension(resource.getFilename()) == null;
                     }

@@ -44,6 +44,7 @@ public class DataPropertyFilter implements PropertyFilter {
 
     }
 
+    @Override
     public boolean filter(Object source, String name, Object value) {
 
         if (ALWAYS_FILTERED.contains(name)) {

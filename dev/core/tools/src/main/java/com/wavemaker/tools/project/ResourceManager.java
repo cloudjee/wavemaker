@@ -197,6 +197,7 @@ public class ResourceManager {
     static public Hashtable[] getListing(File curdir, File jarListFile) {
         File[] listing = curdir.listFiles(new java.io.FilenameFilter() {
 
+            @Override
             public boolean accept(File dir, String name) {
                 return name.indexOf(".") != 0;
             }
@@ -224,6 +225,7 @@ public class ResourceManager {
     public static Hashtable[] getListing(StudioConfiguration studioConfiguration, Resource curdir, Resource jarListFile) {
         List<Resource> listings = studioConfiguration.listChildren(curdir, new ResourceFilter() {
 
+            @Override
             public boolean accept(Resource resource) {
                 return resource.getFilename().indexOf(".") != 0;
             }

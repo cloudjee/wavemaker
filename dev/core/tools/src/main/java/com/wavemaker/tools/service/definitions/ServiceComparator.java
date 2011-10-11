@@ -31,6 +31,7 @@ public class ServiceComparator implements Comparator<Service>, Serializable {
      * 
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
+    @Override
     public int compare(Service o1, Service o2) {
 
         return o1.getId().compareTo(o2.getId());

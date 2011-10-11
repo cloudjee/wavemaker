@@ -66,6 +66,7 @@ public class HQLReadTask extends AbstractReadTask implements Task, DefaultRollba
             this.type = type;
         }
 
+        @Override
         public Join getJoin(String propertyPath, String dbName) {
             for (String s : this.outerJoinPropertyPaths) {
                 if (propertyPath.startsWith(s)) {
@@ -92,6 +93,7 @@ public class HQLReadTask extends AbstractReadTask implements Task, DefaultRollba
             this.type = type;
         }
 
+        @Override
         public boolean isComponentPath(String propertyPath, String dbName) {
             for (String s : this.componentPropertyPaths) {
                 if (propertyPath.startsWith(s)) {
@@ -109,6 +111,7 @@ public class HQLReadTask extends AbstractReadTask implements Task, DefaultRollba
 
     };
 
+    @Override
     public Object run(Session session, String dbName, Object... input) {
 
         if (ObjectUtils.isNullOrEmpty(input)) {
@@ -168,6 +171,7 @@ public class HQLReadTask extends AbstractReadTask implements Task, DefaultRollba
         return getResponse(session, generator, instance, pagingOptions, idValue, bindParams, dbName);
     }
 
+    @Override
     public String getName() {
         return "Built-in CRUD Read Task";
     }

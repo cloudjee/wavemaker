@@ -261,10 +261,12 @@ public class WSDLUtils {
             this.soapHeader = soapHeader;
         }
 
+        @Override
         public QName getMessage() {
             return this.soapHeader.getMessage();
         }
 
+        @Override
         public String getPart() {
             return this.soapHeader.getPart();
         }
@@ -278,10 +280,12 @@ public class WSDLUtils {
             this.soapHeader = soapHeader;
         }
 
+        @Override
         public QName getMessage() {
             return this.soapHeader.getMessage();
         }
 
+        @Override
         public String getPart() {
             return this.soapHeader.getPart();
         }
@@ -380,6 +384,7 @@ public class WSDLUtils {
             this.soapAddress = soapAddress;
         }
 
+        @Override
         public String getLocationURI() {
             return this.soapAddress.getLocationURI();
         }
@@ -393,6 +398,7 @@ public class WSDLUtils {
             this.soap12Address = soap12Address;
         }
 
+        @Override
         public String getLocationURI() {
             return this.soap12Address.getLocationURI();
         }

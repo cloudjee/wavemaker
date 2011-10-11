@@ -33,6 +33,7 @@ import com.wavemaker.tools.javaservice.JavaService_BeanClass;
  */
 public class JavaServiceDefinitionClass2 implements LiveDataService {
 
+    @Override
     public TypedServiceReturn read(TypeDefinition type, Object instance, PropertyOptions propertyOptions, PagingOptions pagingOptions) {
 
         int i = 0;
@@ -46,13 +47,16 @@ public class JavaServiceDefinitionClass2 implements LiveDataService {
         return tsr;
     }
 
+    @Override
     public void delete(Object objectToDelete) {
     }
 
+    @Override
     public Object insert(Object objectToInsert) {
         return null;
     }
 
+    @Override
     public Object update(Object objectToUpdate) {
         return null;
     }

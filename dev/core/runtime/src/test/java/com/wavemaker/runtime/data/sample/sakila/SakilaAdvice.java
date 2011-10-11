@@ -25,6 +25,7 @@ import org.springframework.aop.MethodBeforeAdvice;
 
 public class SakilaAdvice implements MethodBeforeAdvice {
 
+    @Override
     public void before(Method method, Object[] args, Object target) throws Throwable {
         Actor actor = (Actor) args[0];
         actor.setLastUpdate(new Date());

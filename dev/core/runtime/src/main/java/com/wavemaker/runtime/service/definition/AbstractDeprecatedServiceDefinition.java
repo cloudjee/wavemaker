@@ -29,6 +29,7 @@ import com.wavemaker.runtime.service.ElementType;
  */
 public abstract class AbstractDeprecatedServiceDefinition implements DeprecatedServiceDefinition {
 
+    @Override
     @SuppressWarnings("deprecation")
     public List<ServiceOperation> getServiceOperations() {
 
@@ -58,6 +59,7 @@ public abstract class AbstractDeprecatedServiceDefinition implements DeprecatedS
         return ret;
     }
 
+    @Override
     @SuppressWarnings("deprecation")
     public List<TypeDefinition> getLocalTypes() {
 
@@ -74,6 +76,7 @@ public abstract class AbstractDeprecatedServiceDefinition implements DeprecatedS
         return ret;
     }
 
+    @Override
     @SuppressWarnings("deprecation")
     public List<TypeDefinition> getLocalTypes(String username, String password) { // salesforce
 
@@ -90,10 +93,12 @@ public abstract class AbstractDeprecatedServiceDefinition implements DeprecatedS
         return ret;
     }
 
+    @Override
     public List<ElementType> getTypes(String username, String password) { // xxx
         return null;
     }
 
+    @Override
     public String getPartnerName() {
         return null;
     }

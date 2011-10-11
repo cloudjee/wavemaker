@@ -31,10 +31,12 @@ public class DataServiceProjectEventListener implements ProjectEventListener {
         this.dataModelManager = dataModelManager;
     }
 
+    @Override
     public void closeProject(Project p) {
         this.dataModelManager.dispose(p.getProjectName());
     }
 
+    @Override
     public void openProject(Project p) {
     }
 }

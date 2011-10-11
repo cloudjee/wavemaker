@@ -44,6 +44,7 @@ public class WebServiceFactory implements ServiceDefinitionFactory, ServiceGener
         return getServiceDefinition(f, null, null);
     }
 
+    @Override
     public DeprecatedServiceDefinition getServiceDefinition(Resource f, String serviceId, DesignServiceManager serviceMgr) {
         if (f.getFilename().endsWith(Constants.WSDL_EXT)) {
             try {
@@ -57,6 +58,7 @@ public class WebServiceFactory implements ServiceDefinitionFactory, ServiceGener
         return null;
     }
 
+    @Override
     public ServiceGenerator getServiceGenerator(GenerationConfiguration cfg) {
         if (cfg.getServiceDefinition() instanceof WSDL) {
             WSDL wsdl = (WSDL) cfg.getServiceDefinition();

@@ -192,20 +192,24 @@ public class XJCCompiler {
             this.saxParseExceptions.clear();
         }
 
+        @Override
         public void error(SAXParseException exception) {
             this.hasError = true;
             this.saxParseExceptions.add(exception);
             log.warn(getErrorMessage(exception), exception);
         }
 
+        @Override
         public void fatalError(SAXParseException exception) {
             error(exception);
         }
 
+        @Override
         public void info(SAXParseException exception) {
             log.info(getErrorMessage(exception), exception);
         }
 
+        @Override
         public void warning(SAXParseException exception) {
             info(exception);
         }

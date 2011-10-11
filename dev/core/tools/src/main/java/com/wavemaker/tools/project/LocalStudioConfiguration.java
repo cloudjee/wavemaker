@@ -130,6 +130,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
      * 
      * @see com.wavemaker.tools.project.StudioConfiguration#getProjectsDir()
      */
+    @Override
     public Resource getProjectsDir() {
         String projectsProp = null;
         if (isRuntime()) {
@@ -211,6 +212,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
      * 
      * @see com.wavemaker.tools.project.StudioConfiguration#getWaveMakerHome()
      */
+    @Override
     public Resource getWaveMakerHome() {
 
         if (null != this.testWMHome) {
@@ -304,6 +306,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
      * 
      * @see com.wavemaker.tools.project.StudioConfiguration#getDemoDir()
      */
+    @Override
     public Resource getDemoDir() {
         if (isCloud()) {
             return null;
@@ -348,6 +351,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
      * 
      * @see com.wavemaker.tools.project.StudioConfiguration#getCommonDir()
      */
+    @Override
     public Resource getCommonDir() throws IOException {
         Resource common = getWaveMakerHome().createRelative(COMMON_DIR);
 
@@ -427,6 +431,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
      * 
      * @see com.wavemaker.tools.project.StudioConfiguration#getStudioWebAppRootFile()
      */
+    @Override
     public Resource getStudioWebAppRoot() {
         return new ServletContextResource(this.servletContext, "/");
     }
@@ -436,6 +441,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
      * 
      * @see com.wavemaker.tools.project.StudioConfiguration#getPreferencesMap()
      */
+    @Override
     public Map<String, String> getPreferencesMap() {
 
         Map<String, String> prefs = new HashMap<String, String>();
@@ -460,6 +466,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
      * @param prefs
      * @throws FileAccessException
      */
+    @Override
     public void setPreferencesMap(Map<String, String> prefs) {
 
         if (isCloud()) {
@@ -526,6 +533,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
      * 
      * @see com.wavemaker.tools.project.StudioConfiguration#getRuntimeAccess()
      */
+    @Override
     public RuntimeAccess getRuntimeAccess() {
         return this.runtimeAccess;
     }
@@ -534,10 +542,12 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
         this.runtimeAccess = runtimeAccess;
     }
 
+    @Override
     public void setServletContext(ServletContext servletContext) {
         this.servletContext = servletContext;
     }
 
+    @Override
     public Resource createPath(Resource root, String path) {
         Assert.isInstanceOf(FileSystemResource.class, root, "Expected a FileSystemResource");
         try {
@@ -562,6 +572,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
         }
     }
 
+    @Override
     public Resource copyFile(Resource root, InputStream source, String filePath) {
         Assert.isInstanceOf(FileSystemResource.class, root, "Expected a FileSystemResource");
         try {
@@ -573,6 +584,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
         }
     }
 
+    @Override
     public boolean deleteFile(Resource file) {
         Assert.isInstanceOf(FileSystemResource.class, file, "Expected a FileSystemResource");
         FileSystemResource fileResource = (FileSystemResource) file;
@@ -588,6 +600,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
         }
     }
 
+    @Override
     public OutputStream getOutputStream(Resource file) {
         try {
             Assert.isTrue(!file.getFile().isDirectory(), "Cannot get an output stream for an invalid file.");
@@ -600,6 +613,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
         }
     }
 
+    @Override
     public Resource copyRecursive(Resource root, Resource target, List<String> exclusions) {
         try {
             IOUtils.copy(root.getFile(), target.getFile(), exclusions);
@@ -609,12 +623,14 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
         return target;
     }
 
+    @Override
     public Resource getTomcatHome() {
         String tomcatHome = System.getProperty("catalina.home");
         tomcatHome = tomcatHome.endsWith("/") ? tomcatHome : tomcatHome + "/";
         return new FileSystemResource(tomcatHome);
     }
 
+    @Override
     public Resource getProjectLogsFolder() {
         try {
             return getTomcatHome().createRelative("logs/ProjectLogs/");
@@ -623,6 +639,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
         }
     }
 
+    @Override
     public List<Resource> listChildren(Resource root) {
         List<Resource> children = new ArrayList<Resource>();
         File[] files;
@@ -640,6 +657,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
         return children;
     }
 
+    @Override
     public List<Resource> listChildren(Resource root, ResourceFilter filter) {
         List<Resource> children = new ArrayList<Resource>();
         File[] files;
@@ -660,6 +678,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
         return children;
     }
 
+    @Override
     public Resource createTempDir() {
         try {
             return new FileSystemResource(IOUtils.createTempDirectory("local", "_tmp").getAbsolutePath() + "/");
@@ -668,10 +687,12 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
         }
     }
 
+    @Override
     public Resource getResourceForURI(String resourceURI) {
         return new FileSystemResource(resourceURI);
     }
 
+    @Override
     public void prepareForWriting(Resource file) {
         try {
             if (file.getFile().isDirectory()) {
@@ -684,6 +705,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
         }
     }
 
+    @Override
     public void rename(Resource oldResource, Resource newResource) {
         Assert.isInstanceOf(FileSystemResource.class, oldResource, "Expected a FileSystemResource");
         Assert.isInstanceOf(FileSystemResource.class, newResource, "Expected a FileSystemResource");
@@ -694,6 +716,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
         }
     }
 
+    @Override
     public String getPath(Resource file) {
         try {
             return file.getFile().getPath();

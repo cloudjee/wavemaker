@@ -55,6 +55,7 @@ public abstract class AbstractFileService implements FileService {
      * 
      * @see com.wavemaker.runtime.service.FileService#getEncoding()
      */
+    @Override
     public String getEncoding() {
         return ServerConstants.DEFAULT_ENCODING;
     }
@@ -64,6 +65,7 @@ public abstract class AbstractFileService implements FileService {
      * 
      * @see com.wavemaker.runtime.service.FileService#readFile(java.lang.String)
      */
+    @Override
     public String readFile(String path) throws IOException {
         return readFile(getFileServiceRoot().createRelative(path));
     }
@@ -73,6 +75,7 @@ public abstract class AbstractFileService implements FileService {
      * 
      * @see com.wavemaker.runtime.service.FileService#readFile(java.io.File)
      */
+    @Override
     public String readFile(Resource file) throws IOException {
         return FileCopyUtils.copyToString(getReader(file));
     }
@@ -82,6 +85,7 @@ public abstract class AbstractFileService implements FileService {
      * 
      * @see com.wavemaker.runtime.service.FileService#writeFile(java.lang.String, java.lang.String)
      */
+    @Override
     public void writeFile(String path, String data) throws IOException {
         writeFile(getFileServiceRoot().createRelative(path), data);
     }
@@ -91,6 +95,7 @@ public abstract class AbstractFileService implements FileService {
      * 
      * @see com.wavemaker.runtime.service.FileService#writeFile(java.io.File, java.lang.String)
      */
+    @Override
     public void writeFile(Resource file, String data) throws IOException {
         FileCopyUtils.copy(data, getWriter(file));
     }
@@ -100,6 +105,7 @@ public abstract class AbstractFileService implements FileService {
      * 
      * @see com.wavemaker.runtime.service.FileService#deleteFile(java.lang.String)
      */
+    @Override
     public boolean deleteFile(String path) throws IOException {
         return deleteFile(getFileServiceRoot().createRelative(path));
     }
@@ -109,6 +115,7 @@ public abstract class AbstractFileService implements FileService {
      * 
      * @see com.wavemaker.tools.service.FileService#deleteFile(org.springframework.core.io.Resource)
      */
+    @Override
     public boolean deleteFile(Resource file) throws IOException {
         Assert.notNull(this.studioConfiguration, "Studio Configuration is required.");
         return this.studioConfiguration.deleteFile(file);
@@ -119,6 +126,7 @@ public abstract class AbstractFileService implements FileService {
      * 
      * @see com.wavemaker.runtime.service.FileService#getReader(java.io.File)
      */
+    @Override
     public Reader getReader(Resource file) throws UnsupportedEncodingException, FileNotFoundException, IOException {
         return new InputStreamReader(file.getInputStream(), getEncoding());
     }
@@ -128,6 +136,7 @@ public abstract class AbstractFileService implements FileService {
      * 
      * @see com.wavemaker.runtime.service.FileService#getReader(java.lang.String)
      */
+    @Override
     public Reader getReader(String path) throws UnsupportedEncodingException, FileNotFoundException, IOException {
         return getReader(getFileServiceRoot().createRelative(path));
     }
@@ -137,6 +146,7 @@ public abstract class AbstractFileService implements FileService {
      * 
      * @see com.wavemaker.runtime.service.FileService#getWriter(java.io.File)
      */
+    @Override
     public Writer getWriter(Resource file) throws UnsupportedEncodingException, FileNotFoundException {
         Assert.notNull(this.studioConfiguration, "Studio Configuration is required.");
         return new OutputStreamWriter(this.studioConfiguration.getOutputStream(file), getEncoding());
@@ -147,6 +157,7 @@ public abstract class AbstractFileService implements FileService {
      * 
      * @see com.wavemaker.runtime.service.FileService#getWriter(java.lang.String)
      */
+    @Override
     public Writer getWriter(String path) throws UnsupportedEncodingException, FileNotFoundException, IOException {
         return getWriter(getFileServiceRoot().createRelative(path));
     }
@@ -156,6 +167,7 @@ public abstract class AbstractFileService implements FileService {
      * 
      * @see com.wavemaker.tools.service.FileService#exists(java.lang.String)
      */
+    @Override
     public boolean fileExists(String path) throws IOException {
         return getFileServiceRoot().createRelative(path).exists();
     }
@@ -165,6 +177,7 @@ public abstract class AbstractFileService implements FileService {
      * 
      * @see com.wavemaker.tools.service.FileService#exists(java.io.File)
      */
+    @Override
     public boolean fileExists(Resource file) {
         return file.exists();
     }
@@ -174,6 +187,7 @@ public abstract class AbstractFileService implements FileService {
      * 
      * @see com.wavemaker.tools.service.FileService#getOutputStream(org.springframework.core.io.Resource)
      */
+    @Override
     public OutputStream getOutputStream(Resource resource) {
         return this.studioConfiguration.getOutputStream(resource);
     }

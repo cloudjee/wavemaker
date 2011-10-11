@@ -43,6 +43,7 @@ import com.wavemaker.runtime.service.response.LiveDataServiceResponse;
 public class CriteriaReadTask extends AbstractReadTask implements Task, DefaultRollback {
 
     // Class (type), Object (instance)
+    @Override
     public Object run(Session session, String dbName, Object... input) {
 
         if (ObjectUtils.isNullOrEmpty(input)) {
@@ -110,6 +111,7 @@ public class CriteriaReadTask extends AbstractReadTask implements Task, DefaultR
         return rtn;
     }
 
+    @Override
     public String getName() {
         return "Built-in CRUD Read Task";
     }

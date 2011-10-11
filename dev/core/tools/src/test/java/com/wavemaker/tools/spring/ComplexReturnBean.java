@@ -583,6 +583,7 @@ public class ComplexReturnBean {
          * 
          * @see com.wavemaker.runtime.service.response.SuccessResponse#getResult()
          */
+        @Override
         public Object getResult() {
             return this.result;
         }
@@ -605,6 +606,7 @@ public class ComplexReturnBean {
          * 
          * @see com.wavemaker.runtime.service.response.ErrorResponse#getError()
          */
+        @Override
         public String getError() {
             return this.error;
         }

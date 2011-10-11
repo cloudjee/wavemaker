@@ -274,10 +274,12 @@ public class TestObjectGraphTraversal extends WMTestCase implements ObjectGraphT
         this.tr.traverse(n1, ROOT_CTX_VALUE);
     }
 
+    @Override
     public void cycle(Object o, Context ctx) {
 
     }
 
+    @Override
     public void visit(Object o, ObjectGraphTraversal.Context ctx) {
         Node n = (Node) o;
         Node expectedNode = this.expectedNodes.remove(0);
@@ -320,6 +322,7 @@ public class TestObjectGraphTraversal extends WMTestCase implements ObjectGraphT
         ctx.getValues().add(0, this.ctxValues.get(n));
     }
 
+    @Override
     public List<String> getProperties(Object o, Context ctx) {
         return this.propertyNames;
     }

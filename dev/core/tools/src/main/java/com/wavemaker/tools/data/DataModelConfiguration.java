@@ -224,6 +224,7 @@ public class DataModelConfiguration {
 
         this.fileService = new AbstractFileService(new LocalStudioConfiguration()) {
 
+            @Override
             public Resource getFileServiceRoot() {
                 return new FileSystemResource(baseDir.getAbsolutePath() + "/");
             }
@@ -812,6 +813,7 @@ public class DataModelConfiguration {
 
         ClassLoaderUtils.TaskNoRtn task = new ClassLoaderUtils.TaskNoRtn() {
 
+            @Override
             public void run() {
 
                 QueryRunner queryRunner = SpringService.initQueryRunner(DataModelConfiguration.this.cfgFile);
@@ -832,6 +834,7 @@ public class DataModelConfiguration {
 
         ClassLoaderUtils.TaskRtn task = new ClassLoaderUtils.TaskRtn() {
 
+            @Override
             public Object run() {
 
                 QueryRunner queryRunner = SpringService.initQueryRunner(DataModelConfiguration.this.cfgFile);
@@ -1905,6 +1908,7 @@ public class DataModelConfiguration {
 
         DeprecatedServiceDefinition rtn = (DeprecatedServiceDefinition) ClassLoaderUtils.runInClassLoaderContext(new ClassLoaderUtils.TaskRtn() {
 
+            @Override
             public Object run() {
                 return SpringService.initialize(DataModelConfiguration.this.cfgFile);
             }

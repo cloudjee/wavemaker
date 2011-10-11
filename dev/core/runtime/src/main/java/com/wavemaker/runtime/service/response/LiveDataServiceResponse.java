@@ -46,6 +46,7 @@ public class LiveDataServiceResponse implements PagingResponse, SuccessResponse 
      * 
      * @see com.wavemaker.runtime.service.response.SuccessResponse#getResult()
      */
+    @Override
     public Object getResult() {
         return this.result;
     }
@@ -62,6 +63,7 @@ public class LiveDataServiceResponse implements PagingResponse, SuccessResponse 
      * 
      * @see com.wavemaker.runtime.service.response.PagingResponse#getDataSetSize()
      */
+    @Override
     public long getDataSetSize() {
         return this.dataSetSize;
     }

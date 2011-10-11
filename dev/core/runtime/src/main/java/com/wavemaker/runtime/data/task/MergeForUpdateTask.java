@@ -28,6 +28,7 @@ import com.wavemaker.runtime.data.util.SystemUtils;
  */
 public class MergeForUpdateTask extends BaseTask implements Task {
 
+    @Override
     public Object run(Session session, String dbName, Object... input) {
 
         if (ObjectUtils.isNullOrEmpty(input)) {
@@ -47,6 +48,7 @@ public class MergeForUpdateTask extends BaseTask implements Task {
 
     }
 
+    @Override
     public String getName() {
         return "Built-in MergeForUpdate Task";
     }

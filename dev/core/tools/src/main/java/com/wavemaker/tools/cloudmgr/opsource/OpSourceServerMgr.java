@@ -62,6 +62,7 @@ public class OpSourceServerMgr implements CloudServerMgr {
 
     private String orgId = null;
 
+    @Override
     public Collection<CloudServer> createServer(String serverName, String desc, String image, String flavorId, String network, String adminPass,
         String keyPair, String vmType, List<String> securityGroup, CloudAuth auth) {
 
@@ -84,6 +85,7 @@ public class OpSourceServerMgr implements CloudServerMgr {
         return getServerList(null, auth);
     }
 
+    @Override
     public Collection<CloudServer> deleteServer(String serverId, CloudAuth auth) {
         if (!loggedIn(auth)) {
             String un = auth.getUsername();
@@ -104,6 +106,7 @@ public class OpSourceServerMgr implements CloudServerMgr {
         return getServerList(null, auth);
     }
 
+    @Override
     public Collection<CloudServer> getServerList(String image, CloudAuth auth) {
         if (!loggedIn(auth)) {
             String un = auth.getUsername();
@@ -128,6 +131,7 @@ public class OpSourceServerMgr implements CloudServerMgr {
         return rtn;
     }
 
+    @Override
     public Collection<CloudImage> getImageList(CloudAuth auth) {
         if (!loggedIn(auth)) {
             String un = auth.getUsername();
@@ -157,6 +161,7 @@ public class OpSourceServerMgr implements CloudServerMgr {
         return rtn;
     }
 
+    @Override
     public Collection<CloudNetwork> getNetworkList(CloudAuth auth) {
         if (!loggedIn(auth)) {
             String un = auth.getUsername();
@@ -190,14 +195,17 @@ public class OpSourceServerMgr implements CloudServerMgr {
         }
     }
 
+    @Override
     public Collection<CloudFlavor> getFlavorList(CloudAuth authObj) {
         return null;
     }
 
+    @Override
     public Collection<CloudSecurityGroup> getSecurityGroupList(CloudAuth authObj) {
         return null;
     }
 
+    @Override
     public Collection<CloudKeyPair> getKeyPairList(CloudAuth authObj) {
         return null;
     }

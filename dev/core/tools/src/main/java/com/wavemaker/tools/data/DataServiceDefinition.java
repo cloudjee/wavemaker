@@ -95,22 +95,27 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition i
         initOperationManager();
     }
 
+    @Override
     public void setElementTypeFactory(ElementTypeFactory elementTypeFactory) {
         this.elementTypeFactory = elementTypeFactory;
     }
 
+    @Override
     public String getServiceClass() {
         return this.serviceClass;
     }
 
+    @Override
     public String getServiceId() {
         return this.serviceId;
     }
 
+    @Override
     public String getPackageName() {
         return this.packageName;
     }
 
+    @Override
     public String getDataPackage() {
         return this.dataCfg.getDataPackage();
     }
@@ -119,14 +124,17 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition i
         return this.dataCfg;
     }
 
+    @Override
     public ServiceType getServiceType() {
         return new DataServiceType();
     }
 
+    @Override
     public List<String> getOperationNames() {
         return this.serviceManager.getOperationNames(this.serviceId);
     }
 
+    @Override
     public List<ElementType> getInputTypes(String operationName) {
         Operation op = this.serviceManager.getOperation(this.serviceId, operationName);
         List<Operation.Parameter> params = op.getParameter();
@@ -137,6 +145,7 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition i
         return rtn;
     }
 
+    @Override
     public ElementType getOutputType(String operationName) {
         Operation op = this.serviceManager.getOperation(this.serviceId, operationName);
         if (op.getReturn() == null) {
@@ -147,26 +156,31 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition i
         return rtn;
     }
 
+    @Override
     public List<ElementType> getTypes() {
         Collection<String> entities = getEntityClassNames();
         Collection<String> otherTypes = getHelperTypes();
         return DataServiceUtils.getTypes(entities, otherTypes, this.elementTypeFactory);
     }
 
+    @Override
     public String getRuntimeConfiguration() {
         return this.serviceId + DataServiceConstants.SPRING_CFG_EXT;
     }
 
+    @Override
     public void dispose() {
         if (this.owner) {
             this.dataCfg.dispose();
         }
     }
 
+    @Override
     public List<String> getEventNotifiers() {
         return Collections.emptyList();
     }
 
+    @Override
     public DataServiceOperation getOperation(String operationName) {
         DataServiceOperation rtn = this.operationManager.getOperation(operationName);
         if (rtn == null) {
@@ -176,9 +190,11 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition i
         return rtn;
     }
 
+    @Override
     public void setExternalConfig(ExternalDataModelConfig externalConfig) {
     }
 
+    @Override
     public boolean isLiveDataService() {
         return true;
     }
@@ -213,10 +229,12 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition i
 
         return new DataOperationFactory() {
 
+            @Override
             public Collection<String> getEntityClassNames() {
                 return DataServiceDefinition.this.getEntityClassNames();
             }
 
+            @Override
             public Collection<Tuple.Three<String, String, Boolean>> getQueryInputs(String queryName) {
                 Collection<Tuple.Three<String, String, Boolean>> rtn = new ArrayList<Tuple.Three<String, String, Boolean>>();
                 QueryInfo qi = DataServiceDefinition.this.dataCfg.getQuery(queryName);
@@ -226,10 +244,12 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition i
                 return rtn;
             }
 
+            @Override
             public Collection<String> getQueryNames() {
                 return DataServiceDefinition.this.dataCfg.getQueryNames();
             }
 
+            @Override
             public List<String> getQueryReturnTypes(String operationName, String queryName) {
                 List<String> rtn = new ArrayList<String>();
                 Operation op = DataServiceDefinition.this.serviceManager.getOperation(DataServiceDefinition.this.serviceId, operationName);
@@ -247,15 +267,18 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition i
                 return rtn;
             }
 
+            @Override
             public boolean requiresResultWrapper(String operationName, String queryName) {
                 QueryInfo query = DataServiceDefinition.this.dataCfg.getQuery(queryName);
                 return DataServiceUtils.requiresResultWrapper(query.getQuery());
             }
 
+            @Override
             public List<String> getQueryReturnNames(String operationName, String queryName) {
                 return Collections.emptyList();
             }
 
+            @Override
             public boolean queryReturnsSingleResult(String operationName, String queryName) {
                 Operation op = DataServiceDefinition.this.serviceManager.getOperation(DataServiceDefinition.this.serviceId, operationName);
                 if (op == null) {

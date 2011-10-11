@@ -93,6 +93,7 @@ public class DataServiceUtils {
 
     public static final DataModelConfiguration.UpdateCallback NOOP_UPDATE_CALLBACK = new DataModelConfiguration.UpdateCallback() {
 
+        @Override
         public void update(DataServiceDefinition dataServiceDefinition) {
         }
     };
@@ -128,6 +129,7 @@ public class DataServiceUtils {
 
         dataServiceDefinition.setElementTypeFactory(new DataServiceDefinition.ElementTypeFactory() {
 
+            @Override
             public ElementType getElementType(String javaType) {
 
                 ElementType rtn = new ElementType(javaType);
@@ -402,14 +404,17 @@ public class DataServiceUtils {
     public static ExternalDataModelConfig getDummyExternalConfig() {
         return new ExternalDataModelConfig() {
 
+            @Override
             public boolean returnsSingleResult(String operationName) {
                 return false;
             }
 
+            @Override
             public String getOutputType(String operationName) {
                 return null;
             }
 
+            @Override
             public String getServiceClass() {
                 return "";
             }

@@ -174,6 +174,7 @@ public abstract class BaseHbmParser {
 
         factory.setXMLResolver(new XMLResolver() {
 
+            @Override
             public Object resolveEntity(String publicId, String systemId, String s1, String s2) {
                 if (HbmConstants.HBM_SYSTEM_ID.equals(systemId)) {
                     InputStream rtn = ClassLoaderUtils.getResourceAsStream("com/wavemaker/tools/data/hibernate-mapping-3.0.dtd");

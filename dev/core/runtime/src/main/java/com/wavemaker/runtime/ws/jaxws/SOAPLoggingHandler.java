@@ -37,20 +37,24 @@ public class SOAPLoggingHandler implements SOAPHandler<SOAPMessageContext> {
 
     private static Log log = LogFactory.getLog(SOAPLoggingHandler.class);
 
+    @Override
     public Set<QName> getHeaders() {
         return null;
     }
 
+    @Override
     public boolean handleMessage(SOAPMessageContext context) {
         log(context);
         return true;
     }
 
+    @Override
     public boolean handleFault(SOAPMessageContext context) {
         log(context);
         return true;
     }
 
+    @Override
     public void close(MessageContext messageContext) {
     }
 

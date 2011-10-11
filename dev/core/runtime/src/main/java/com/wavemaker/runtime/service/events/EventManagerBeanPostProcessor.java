@@ -31,6 +31,7 @@ public class EventManagerBeanPostProcessor implements BeanPostProcessor {
      * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(java.lang.Object,
      * java.lang.String)
      */
+    @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 
         if (bean instanceof EventWire) {
@@ -46,6 +47,7 @@ public class EventManagerBeanPostProcessor implements BeanPostProcessor {
      * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessBeforeInitialization(java.lang.Object,
      * java.lang.String)
      */
+    @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         return bean;
     }

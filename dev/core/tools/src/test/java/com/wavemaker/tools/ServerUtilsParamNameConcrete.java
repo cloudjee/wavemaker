@@ -30,6 +30,7 @@ public class ServerUtilsParamNameConcrete implements ServerUtilsParamNameInterfa
      * 
      * @see com.wavemaker.tools.ServerUtilsParamNameInterface#getCalculatedString(java.lang.String, java.lang.String)
      */
+    @Override
     public String getCalculatedString(String param1, String param2) {
         return "calculated: " + param1 + ", " + param2;
     }

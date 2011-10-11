@@ -188,6 +188,7 @@ public class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFile
         final List<Resource> javaResources = new ArrayList<Resource>();
         javaResources.addAll(this.studioConfiguration.listChildren(rootPath, new ResourceFilter() {
 
+            @Override
             public boolean accept(Resource resource) {
                 String extension = StringUtils.getFilenameExtension(resource.getFilename());
                 if (extensions.contains(extension)) {
@@ -231,27 +232,33 @@ public class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFile
 
     // Below methods are to satisfy StandardJavaFileManager contract in such a
     // way as to be compatible with the Eclipse compiler.
+    @Override
     public Iterable<? extends JavaFileObject> getJavaFileObjects(File... files) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public Iterable<? extends JavaFileObject> getJavaFileObjects(String... names) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public Iterable<? extends JavaFileObject> getJavaFileObjectsFromFiles(Iterable<? extends File> files) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public Iterable<? extends JavaFileObject> getJavaFileObjectsFromStrings(Iterable<String> names) {
         throw new UnsupportedOperationException();
     }
 
+    @Override
     public Iterable<? extends File> getLocation(Location location) {
         if (location == StandardLocation.CLASS_PATH) {
             try {
                 File[] jars = this.studioConfiguration.getStudioWebAppRoot().createRelative("WEB-INF/lib/").getFile().listFiles(new FilenameFilter() {
 
+                    @Override
                     public boolean accept(File dir, String name) {
                         return StringUtils.getFilenameExtension(name).equals("jar");
                     }
@@ -269,6 +276,7 @@ public class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFile
         }
     }
 
+    @Override
     public void setLocation(Location location, Iterable<? extends File> path) throws IOException {
         throw new UnsupportedOperationException();
     }

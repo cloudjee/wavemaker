@@ -33,6 +33,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSON {
      * 
      * @see com.wavemaker.json.JSON#isList()
      */
+    @Override
     public boolean isList() {
         return false;
     }
@@ -42,6 +43,7 @@ public class JSONObject extends LinkedHashMap<String, Object> implements JSON {
      * 
      * @see com.wavemaker.json.JSON#isObject()
      */
+    @Override
     public boolean isObject() {
         return true;
     }

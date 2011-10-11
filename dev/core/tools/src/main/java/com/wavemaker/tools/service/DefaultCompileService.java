@@ -38,6 +38,7 @@ public class DefaultCompileService implements CompileService {
         this.destdir = destdir;
     }
 
+    @Override
     public void compile(boolean clean) {
         AntUtils.javac(this.srcdir.getAbsolutePath(), this.destdir);
 

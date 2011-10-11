@@ -46,6 +46,7 @@ public class ProjSpringAppXmlUpgradeTask implements UpgradeTask {
      * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
      * com.wavemaker.tools.project.upgrade.UpgradeInfo)
      */
+    @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
         File file = new File(project.getWebInf() + "/project-springapp.xml");

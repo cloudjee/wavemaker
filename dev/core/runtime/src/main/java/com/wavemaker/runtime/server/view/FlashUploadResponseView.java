@@ -64,11 +64,13 @@ public class FlashUploadResponseView extends AbstractView implements TypedView {
         }
     }
 
+    @Override
     public FieldDefinition getRootType() {
         // ignored
         return null;
     }
 
+    @Override
     public void setRootType(FieldDefinition type) {
         // ignored
     }

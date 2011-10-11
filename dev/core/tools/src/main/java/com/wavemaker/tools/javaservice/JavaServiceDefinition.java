@@ -264,6 +264,7 @@ public class JavaServiceDefinition implements ReflectServiceDefinition {
         return methodsMap.values();
     }
 
+    @Override
     public String getPackageName() {
         return this.packageName;
     }
@@ -272,26 +273,32 @@ public class JavaServiceDefinition implements ReflectServiceDefinition {
         this.packageName = packageName;
     }
 
+    @Override
     public String getServiceId() {
         return this.serviceId;
     }
 
+    @Override
     public ServiceType getServiceType() {
         return new JavaServiceType();
     }
 
+    @Override
     public String getRuntimeConfiguration() {
         return null;
     }
 
+    @Override
     public String getServiceClass() {
         return this.serviceClassName;
     }
 
+    @Override
     public List<String> getEventNotifiers() {
         return Collections.emptyList();
     }
 
+    @Override
     public boolean isLiveDataService() {
         return this.implementsCRUDService;
     }
@@ -300,18 +307,22 @@ public class JavaServiceDefinition implements ReflectServiceDefinition {
         this.implementsCRUDService = liveDataService;
     }
 
+    @Override
     public List<TypeDefinition> getLocalTypes() {
         return this.typeDefinitions;
     }
 
+    @Override
     public List<TypeDefinition> getLocalTypes(String username, String password) { // salesforce
         return null;
     }
 
+    @Override
     public List<ServiceOperation> getServiceOperations() {
         return this.operations;
     }
 
+    @Override
     public String getPartnerName() {
         return null;
     }

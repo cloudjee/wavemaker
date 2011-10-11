@@ -102,6 +102,7 @@ public class HQLGenerator {
 
     private static final HQLGenerator.JoinStrategy DEFAULT_JOIN_STRATEGY = new HQLGenerator.JoinStrategy() {
 
+        @Override
         public Join getJoin(String propertyPath, String dbName) {
             return Join.INNER_JOIN;
         }
@@ -133,6 +134,7 @@ public class HQLGenerator {
     public HQLGenerator(Class<?> rootEntity) {
         this(rootEntity, DEFAULT_JOIN_STRATEGY, new TypeManager() {
 
+            @Override
             public boolean isComponentPath(String propertyPath, String dbName) {
                 return false;
             }

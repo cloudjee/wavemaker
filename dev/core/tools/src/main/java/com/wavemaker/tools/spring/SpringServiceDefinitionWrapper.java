@@ -41,6 +41,7 @@ public class SpringServiceDefinitionWrapper implements DeprecatedServiceDefiniti
         this.ctx = ctx;
     }
 
+    @Override
     public void dispose() {
         try {
             this.delegate.dispose();
@@ -49,63 +50,77 @@ public class SpringServiceDefinitionWrapper implements DeprecatedServiceDefiniti
         }
     }
 
+    @Override
     @Deprecated
     public List<String> getEventNotifiers() {
         return this.delegate.getEventNotifiers();
     }
 
+    @Override
     @Deprecated
     public List<ElementType> getInputTypes(String operationName) {
         return this.delegate.getInputTypes(operationName);
     }
 
+    @Override
     @Deprecated
     public List<String> getOperationNames() {
         return this.delegate.getOperationNames();
     }
 
+    @Override
     @Deprecated
     public ElementType getOutputType(String operationName) {
         return this.delegate.getOutputType(operationName);
     }
 
+    @Override
     public List<ServiceOperation> getServiceOperations() {
         return this.delegate.getServiceOperations();
     }
 
+    @Override
     public String getPackageName() {
         return this.delegate.getPackageName();
     }
 
+    @Override
     public String getRuntimeConfiguration() {
         return this.delegate.getRuntimeConfiguration();
     }
 
+    @Override
     public String getServiceClass() {
         return this.delegate.getServiceClass();
     }
 
+    @Override
     public String getServiceId() {
         return this.delegate.getServiceId();
     }
 
+    @Override
     public ServiceType getServiceType() {
         return this.delegate.getServiceType();
     }
 
+    @Override
     @SuppressWarnings("deprecation")
     public List<ElementType> getTypes() {
         return this.delegate.getTypes();
     }
 
+    @Override
     public List<ElementType> getTypes(String username, String password) { // salesforce
         return null;
     }
 
+    @Override
     public List<TypeDefinition> getLocalTypes() {
         return this.delegate.getLocalTypes();
     }
 
+    @Override
     public List<TypeDefinition> getLocalTypes(String username, String password) {
         return this.delegate.getLocalTypes(username, password);
     }
@@ -114,10 +129,12 @@ public class SpringServiceDefinitionWrapper implements DeprecatedServiceDefiniti
         return this.delegate;
     }
 
+    @Override
     public boolean isLiveDataService() {
         return this.delegate.isLiveDataService();
     }
 
+    @Override
     public String getPartnerName() {
         return null;
     }

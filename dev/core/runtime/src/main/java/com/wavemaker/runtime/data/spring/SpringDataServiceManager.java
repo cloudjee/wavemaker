@@ -113,10 +113,12 @@ public class SpringDataServiceManager implements DataServiceManager {
         this.metaData = initMetaData(configurationName, this.cfg, hibernateTemplate, useIndividualCRUDOperations, properties);
     }
 
+    @Override
     public DataServiceMetaData getMetaData() {
         return this.metaData;
     }
 
+    @Override
     public Session getSession() {
         if (!isTxRunning()) {
             txLogger.warn("begin a tx before accessing the session");
@@ -124,6 +126,7 @@ public class SpringDataServiceManager implements DataServiceManager {
         return (Session) invoke(this.taskMgr.getSessionTask());
     }
 
+    @Override
     public void begin() {
         if (txLogger.isInfoEnabled()) {
             txLogger.info("begin");
@@ -149,6 +152,7 @@ public class SpringDataServiceManager implements DataServiceManager {
         }
     }
 
+    @Override
     public void commit() {
 
         if (txLogger.isInfoEnabled()) {
@@ -201,6 +205,7 @@ public class SpringDataServiceManager implements DataServiceManager {
         }
     }
 
+    @Override
     public void rollback() {
 
         if (txLogger.isInfoEnabled()) {
@@ -239,6 +244,7 @@ public class SpringDataServiceManager implements DataServiceManager {
         }
     }
 
+    @Override
     public Object invoke(Task task, Object... input) {
         boolean unset = false;
         ThreadContext.Context ctx = ThreadContext.getContext(this.metaData.getName());
@@ -255,6 +261,7 @@ public class SpringDataServiceManager implements DataServiceManager {
         }
     }
 
+    @Override
     public void dispose() {
         try {
             if (isTxRunning()) {
@@ -316,6 +323,7 @@ public class SpringDataServiceManager implements DataServiceManager {
             this.input = input;
         }
 
+        @Override
         public Object doInHibernate(Session session) {
 
             Task preProcessorTask = ThreadContext.getPreProcessorTask();
@@ -352,6 +360,7 @@ public class SpringDataServiceManager implements DataServiceManager {
             this.rollbackOnly = rollbackOnly;
         }
 
+        @Override
         public Object doInTransaction(TransactionStatus status) {
             if (this.rollbackOnly) {
                 status.setRollbackOnly();
@@ -366,6 +375,7 @@ public class SpringDataServiceManager implements DataServiceManager {
 
         htemp.execute(new HibernateCallback() {
 
+            @Override
             public Object doInHibernate(Session session) {
                 rtn.init(session, useIndividualCRUDOperations);
                 return null;
@@ -375,6 +385,7 @@ public class SpringDataServiceManager implements DataServiceManager {
         return rtn;
     }
 
+    @Override
     public Object invoke(Task task, Map<String, Class<?>> types, boolean named, Object... input) { // salesforce
         return null;
     }

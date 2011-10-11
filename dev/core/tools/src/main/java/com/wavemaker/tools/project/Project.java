@@ -219,6 +219,7 @@ public class Project extends AbstractFileService {
      * 
      * @see com.wavemaker.runtime.service.FileService#getFileServiceRoot()
      */
+    @Override
     public Resource getFileServiceRoot() {
         return this.projectRoot;
     }

@@ -39,6 +39,7 @@ public class TypeValueTransformer implements ValueTransformer {
      * com.wavemaker.json.type.FieldDefinition, int, java.lang.Object, java.lang.String,
      * com.wavemaker.json.type.TypeState)
      */
+    @Override
     public Three<Object, FieldDefinition, Integer> transformToJSON(Object input, FieldDefinition fieldDefinition, int arrayLevel, Object root,
         String path, TypeState typeState) {
 
@@ -70,6 +71,7 @@ public class TypeValueTransformer implements ValueTransformer {
      * com.wavemaker.json.type.FieldDefinition, int, java.lang.Object, java.lang.String,
      * com.wavemaker.json.type.TypeState)
      */
+    @Override
     public Three<Object, FieldDefinition, Integer> transformToJava(Object input, FieldDefinition fieldDefinition, int arrayLevel, Object root,
         String path, TypeState typeState) {
         throw new NotYetImplementedException();

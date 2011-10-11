@@ -44,6 +44,7 @@ public class SampleProductServiceEventListener implements ServletEventListener {
      * @see
      * com.wavemaker.runtime.service.events.ServletEventListener#endRequest(com.wavemaker.runtime.service.ServiceWire)
      */
+    @Override
     public void endRequest(ServiceWire serviceWire) {
 
         Object service = ((ReflectServiceWire) serviceWire).getServiceBean();
@@ -61,6 +62,7 @@ public class SampleProductServiceEventListener implements ServletEventListener {
      * @see
      * com.wavemaker.runtime.service.events.ServletEventListener#startRequest(com.wavemaker.runtime.service.ServiceWire)
      */
+    @Override
     public void startRequest(ServiceWire serviceWire) {
 
         Object service = ((ReflectServiceWire) serviceWire).getServiceBean();

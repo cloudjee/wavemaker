@@ -30,6 +30,7 @@ public interface DataServiceInternal {
 
     static final ElementTypeFactory DEFAULT_ELEMENT_TYPE_FACTORY = new ElementTypeFactory() {
 
+        @Override
         public ElementType getElementType(String javaType) {
             return new ElementType(javaType);
         }

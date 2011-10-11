@@ -47,6 +47,7 @@ public class TestBeans extends WMTestCase {
     public void setUp() throws Exception {
         this.fileService = new AbstractFileService(new LocalStudioConfiguration()) {
 
+            @Override
             public Resource getFileServiceRoot() {
                 try {
                     return ClassLoaderUtils.getClasspathFile("com/wavemaker/tools/spring/");

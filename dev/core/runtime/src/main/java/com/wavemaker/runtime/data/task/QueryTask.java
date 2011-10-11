@@ -35,6 +35,7 @@ public class QueryTask extends AbstractReadTask implements Task {
     /**
      * First element in input array is the query.
      */
+    @Override
     public Object run(Session session, String dbName, Object... input) {
 
         PagingOptions pagingOptions = null;
@@ -106,6 +107,7 @@ public class QueryTask extends AbstractReadTask implements Task {
 
     }
 
+    @Override
     public String getName() {
         return "Built-in Query Task";
     }

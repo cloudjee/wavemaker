@@ -424,6 +424,7 @@ public class Adventure implements DataServiceManagerAccess {
         this.ds.invoke(this.taskMgr.getDeleteTask(), vproductModelCatalogDescription);
     }
 
+    @Override
     public DataServiceManager getDataServiceManager() {
         return this.ds;
     }

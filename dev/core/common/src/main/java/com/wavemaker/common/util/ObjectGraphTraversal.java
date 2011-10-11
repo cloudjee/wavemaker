@@ -112,9 +112,11 @@ public class ObjectGraphTraversal {
 
     private static final ObjectVisitor NOOP_VISITOR = new ObjectVisitor() {
 
+        @Override
         public void visit(Object o, Context ctx) {
         }
 
+        @Override
         public void cycle(Object o, Context ctx) {
         }
     };

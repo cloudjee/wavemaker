@@ -85,6 +85,7 @@ public class JAXBTypeMapper implements TypeMapper {
         return this.jaxbModel;
     }
 
+    @Override
     public String getJavaType(QName schemaType, boolean isElement) {
         String javaType = null;
         if (this.jaxbModel != null) {
@@ -108,10 +109,12 @@ public class JAXBTypeMapper implements TypeMapper {
         return javaType;
     }
 
+    @Override
     public String toPropertyName(String name) {
         return CodeGenUtils.toPropertyName(name);
     }
 
+    @Override
     public boolean isSimpleType(QName qname) {
         TypeAndAnnotation javaType = this.jaxbModel.getJavaType(qname);
         if (javaType == null) {
@@ -155,6 +158,7 @@ public class JAXBTypeMapper implements TypeMapper {
         return mappings;
     }
 
+    @Override
     public List<ElementType> getAllTypes(String serviceId) {
         List<ElementType> allTypes = new ArrayList<ElementType>();
         Model internalModel = getInternalModel();
@@ -176,6 +180,7 @@ public class JAXBTypeMapper implements TypeMapper {
         return allTypes;
     }
 
+    @Override
     public List<ElementType> getAllTypes(String serviceId, String username, String password) { // salesforce
         return null;
     }

@@ -29,6 +29,7 @@ import com.wavemaker.runtime.pws.PwsException;
  */
 public class DefaultResponseProcessor implements IPwsResponseProcessor {
 
+    @Override
     public <T extends Object> T processServiceResponse(byte[] bytes, Class<T> responseType) throws WebServiceException {
         ByteArrayInputStream is = new ByteArrayInputStream(bytes);
         try {
@@ -50,6 +51,7 @@ public class DefaultResponseProcessor implements IPwsResponseProcessor {
         }
     }
 
+    @Override
     public void detectExceptionsBeforeProcess(byte[] bytes) throws WebServiceException, PwsException {
     }
 }

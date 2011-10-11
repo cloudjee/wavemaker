@@ -141,6 +141,7 @@ public class PrimitiveReflectTypeDefinition extends ReflectTypeDefinition implem
      * 
      * @see com.wavemaker.json.type.PrimitiveTypeDefinition#toJson(java.io.Writer, java.lang.Object)
      */
+    @Override
     public void toJson(Writer writer, Object obj) throws IOException {
 
         if (CharSequence.class.isAssignableFrom(obj.getClass())) {

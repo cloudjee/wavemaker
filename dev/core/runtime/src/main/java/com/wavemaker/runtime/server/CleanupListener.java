@@ -37,11 +37,13 @@ import com.wavemaker.runtime.WMAppContext;
  */
 public class CleanupListener implements ServletContextListener {
 
+    @Override
     public void contextInitialized(ServletContextEvent event) {
         WMAppContext.getInstance(event);
         // StudioConfiguration.setupDeploymentTargetXML();
     }
 
+    @Override
     public void contextDestroyed(ServletContextEvent event) {
         try {
             // remove from the system DriverManager the JDBC drivers registered

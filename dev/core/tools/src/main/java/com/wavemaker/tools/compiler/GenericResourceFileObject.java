@@ -47,6 +47,7 @@ public class GenericResourceFileObject implements FileObject {
     /**
      * Returns the source text content of the Java resource.
      */
+    @Override
     public CharSequence getCharContent(boolean ignoreEncodingErrors) {
         try {
             return this.project.readFile(this.resource);
@@ -55,6 +56,7 @@ public class GenericResourceFileObject implements FileObject {
         }
     }
 
+    @Override
     public boolean delete() {
         try {
             return this.project.deleteFile(this.resource);
@@ -63,6 +65,7 @@ public class GenericResourceFileObject implements FileObject {
         }
     }
 
+    @Override
     public long getLastModified() {
         try {
             return this.resource.lastModified();
@@ -71,22 +74,27 @@ public class GenericResourceFileObject implements FileObject {
         }
     }
 
+    @Override
     public InputStream openInputStream() throws IOException {
         return this.resource.getInputStream();
     }
 
+    @Override
     public OutputStream openOutputStream() throws IOException {
         return this.project.getOutputStream(this.resource);
     }
 
+    @Override
     public Reader openReader(boolean ignoreEncodingErrors) throws IOException {
         return this.project.getReader(this.resource);
     }
 
+    @Override
     public Writer openWriter() throws IOException {
         return this.project.getWriter(this.resource);
     }
 
+    @Override
     public URI toUri() {
         try {
             return this.resource.getURI();
@@ -95,6 +103,7 @@ public class GenericResourceFileObject implements FileObject {
         }
     }
 
+    @Override
     public String getName() {
         return this.resource.getDescription();
     }

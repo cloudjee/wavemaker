@@ -55,6 +55,7 @@ public abstract class AbstractReadTask extends BaseTask implements Task {
 
     private static final PropertyTraversal NOOP_PROPERTY_TRAVERSAL = new PropertyTraversal() {
 
+        @Override
         public boolean keepGoing(Type type) {
             return true;
         }
@@ -62,6 +63,7 @@ public abstract class AbstractReadTask extends BaseTask implements Task {
 
     private static final PropertyTraversal COMPONENT_PROPERTY_TRAVERSAL = new PropertyTraversal() {
 
+        @Override
         public boolean keepGoing(Type type) {
             return !type.isComponentType();
         }

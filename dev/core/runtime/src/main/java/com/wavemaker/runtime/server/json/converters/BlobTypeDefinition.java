@@ -52,6 +52,7 @@ public class BlobTypeDefinition extends PrimitiveReflectTypeDefinition implement
      * @see com.wavemaker.json.type.converters.ReadObjectConverter#readObject(java.lang.Object, java.lang.Object,
      * java.lang.String)
      */
+    @Override
     public Object readObject(Object input, Object root, String path) {
 
         if (null == input) {
@@ -80,6 +81,7 @@ public class BlobTypeDefinition extends PrimitiveReflectTypeDefinition implement
      * @see com.wavemaker.json.type.converters.WriteObjectConverter#writeObject(java.lang.Object, java.lang.Object,
      * java.lang.String, java.io.Writer)
      */
+    @Override
     public void writeObject(Object input, Object root, String path, Writer writer) throws IOException {
 
         if (null == input) {

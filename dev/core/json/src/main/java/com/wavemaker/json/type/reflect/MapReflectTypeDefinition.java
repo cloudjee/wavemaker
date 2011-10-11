@@ -57,6 +57,7 @@ public class MapReflectTypeDefinition extends ReflectTypeDefinition implements M
         }
     }
 
+    @Override
     public FieldDefinition getValueFieldDefinition() {
         return this.valueFieldDefinition;
     }
@@ -65,6 +66,7 @@ public class MapReflectTypeDefinition extends ReflectTypeDefinition implements M
         this.valueFieldDefinition = valueFieldDefinition;
     }
 
+    @Override
     public FieldDefinition getKeyFieldDefinition() {
         return this.keyFieldDefinition;
     }

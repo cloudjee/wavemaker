@@ -55,6 +55,7 @@ public class QueryHandler implements InvocationHandler {
         this.cfg = cfg;
     }
 
+    @Override
     public Object invoke(Object proxy, Method m, Object[] args) throws Throwable {
         String methodName = m.getName();
 

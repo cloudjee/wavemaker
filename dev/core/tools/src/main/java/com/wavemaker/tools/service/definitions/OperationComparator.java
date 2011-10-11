@@ -31,6 +31,7 @@ public class OperationComparator implements Comparator<Operation>, Serializable 
      * 
      * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
      */
+    @Override
     public int compare(Operation o1, Operation o2) {
 
         int ret = o1.getName().compareTo(o2.getName());

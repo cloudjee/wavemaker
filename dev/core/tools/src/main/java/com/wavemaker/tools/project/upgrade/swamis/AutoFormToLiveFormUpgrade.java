@@ -39,6 +39,7 @@ public class AutoFormToLiveFormUpgrade implements UpgradeTask {
      * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker .tools.project.Project,
      * com.wavemaker.tools.project.upgrade.UpgradeInfo)
      */
+    @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
         try {

@@ -135,6 +135,7 @@ public class DataServiceUtils {
         final DataServiceMetaData metaData, final boolean skipToMany) {
         ObjectGraphTraversal.PropertyFactory pf = new ObjectGraphTraversal.PropertyFactory() {
 
+            @Override
             public Collection<String> getProperties(Object o, ObjectGraphTraversal.Context ctx) {
                 Class<?> entityClass = getEntityClass(o.getClass());
 

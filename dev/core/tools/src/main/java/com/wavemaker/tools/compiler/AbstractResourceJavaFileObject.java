@@ -39,18 +39,22 @@ public abstract class AbstractResourceJavaFileObject extends GenericResourceFile
         this.kind = kind;
     }
 
+    @Override
     public Modifier getAccessLevel() {
         return null;
     }
 
+    @Override
     public Kind getKind() {
         return this.kind;
     }
 
+    @Override
     public NestingKind getNestingKind() {
         return null;
     }
 
+    @Override
     public boolean isNameCompatible(String name, Kind kind) {
         return this.resource.getFilename().equals(name) && kind.extension.replaceFirst(".", "").equals(StringUtils.getFilenameExtension(name));
     }

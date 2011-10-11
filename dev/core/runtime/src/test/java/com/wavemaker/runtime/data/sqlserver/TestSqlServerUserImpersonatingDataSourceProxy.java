@@ -133,6 +133,7 @@ public class TestSqlServerUserImpersonatingDataSourceProxy {
             this.dataSource = dataSource;
         }
 
+        @Override
         public Connection answer(InvocationOnMock invocation) throws Throwable {
             if (this.connection == null) {
                 this.connection = this.dataSource.getConnection();
@@ -149,6 +150,7 @@ public class TestSqlServerUserImpersonatingDataSourceProxy {
             this.dataSource = dataSource;
         }
 
+        @Override
         public Connection answer(InvocationOnMock invocation) throws Throwable {
             Connection connection = DataSourceUtils.getConnection(this.dataSource);
             DataSourceUtils.releaseConnection(connection, this.dataSource);

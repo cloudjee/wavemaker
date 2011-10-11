@@ -30,6 +30,7 @@ public abstract class ReflectDesignServiceType implements DesignServiceType {
      * 
      * @see com.wavemaker.tools.service.DesignServiceType#getServiceWire()
      */
+    @Override
     public Class<? extends ServiceWire> getServiceWire() {
         return ReflectServiceWire.class;
     }
@@ -39,6 +40,7 @@ public abstract class ReflectDesignServiceType implements DesignServiceType {
      * 
      * @see com.wavemaker.tools.service.DesignServiceType#getServiceType()
      */
+    @Override
     public String getServiceType() {
         return this.serviceType;
     }

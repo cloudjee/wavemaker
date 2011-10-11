@@ -92,6 +92,7 @@ public class VersionInfo implements Comparable<VersionInfo> {
         return this.getMajor() + "." + this.getMinor() + "." + this.getRevision() + (null != this.getReleaseStatus() ? this.getReleaseStatus() : "");
     }
 
+    @Override
     public int compareTo(VersionInfo o) {
 
         VersionInfo other = o;

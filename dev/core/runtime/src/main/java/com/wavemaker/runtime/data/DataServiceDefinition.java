@@ -98,6 +98,7 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition i
         this(serviceName, hbcfg, false, useIndividualCRUDOperations);
     }
 
+    @Override
     public void setExternalConfig(ExternalDataModelConfig externalConfig) {
         this.externalConfig = externalConfig;
     }
@@ -106,10 +107,12 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition i
         return this.metaData;
     }
 
+    @Override
     public void setElementTypeFactory(ElementTypeFactory elementTypeFactory) {
         this.elementTypeFactory = elementTypeFactory;
     }
 
+    @Override
     public List<ElementType> getInputTypes(String operationName) {
 
         DataServiceOperation op = this.metaData.getOperation(operationName);
@@ -130,10 +133,12 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition i
         return rtn;
     }
 
+    @Override
     public List<String> getOperationNames() {
         return new ArrayList<String>(this.metaData.getOperationNames());
     }
 
+    @Override
     public ElementType getOutputType(String operationName) {
 
         DataServiceOperation op = this.metaData.getOperation(operationName);
@@ -157,6 +162,7 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition i
         return rtn;
     }
 
+    @Override
     public String getPackageName() {
         if (this.metaData.getServiceClassName() != null) {
             return StringUtils.splitPackageAndClass(this.metaData.getServiceClassName()).v1;
@@ -165,22 +171,27 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition i
         }
     }
 
+    @Override
     public String getDataPackage() {
         return this.metaData.getDataPackage();
     }
 
+    @Override
     public String getServiceId() {
         return this.metaData.getName();
     }
 
+    @Override
     public ServiceType getServiceType() {
         return new DataServiceType();
     }
 
+    @Override
     public String getRuntimeConfiguration() {
         return getServiceId() + DataServiceConstants.SPRING_CFG_EXT;
     }
 
+    @Override
     public void dispose() {
         this.metaData.dispose();
         try {
@@ -191,6 +202,7 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition i
         }
     }
 
+    @Override
     public String getServiceClass() {
         // at import-db time, the meta-data has the service
         // class name to use. this is to allow a class
@@ -205,6 +217,7 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition i
         }
     }
 
+    @Override
     public List<ElementType> getTypes() {
         Collection<String> entities = this.metaData.getEntityClassNames();
         Collection<String> helperTypes = this.metaData.getHelperClassNames();
@@ -232,14 +245,17 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition i
         return rtn.toString();
     }
 
+    @Override
     public List<String> getEventNotifiers() {
         return Collections.emptyList();
     }
 
+    @Override
     public DataServiceOperation getOperation(String operationName) {
         return this.metaData.getOperation(operationName);
     }
 
+    @Override
     public boolean isLiveDataService() {
         return true;
     }

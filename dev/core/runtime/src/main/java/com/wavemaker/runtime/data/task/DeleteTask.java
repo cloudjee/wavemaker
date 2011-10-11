@@ -20,6 +20,7 @@ import com.wavemaker.common.util.ObjectUtils;
 
 public class DeleteTask extends BaseTask {
 
+    @Override
     public Object run(Session session, String dbName, Object... input) {
 
         if (ObjectUtils.isNullOrEmpty(input)) {
@@ -39,6 +40,7 @@ public class DeleteTask extends BaseTask {
 
     }
 
+    @Override
     public String getName() {
         return "Build-in Delete Task";
     }

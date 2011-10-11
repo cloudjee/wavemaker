@@ -50,6 +50,7 @@ public class NamedQueryTask extends BaseTask implements Task {
      * First element in input array is the query name
      */
 
+    @Override
     public Object run(Session session, String dbName, Object... input) {
 
         DataServiceMetaData meta = getMetaData(dbName);
@@ -91,6 +92,7 @@ public class NamedQueryTask extends BaseTask implements Task {
         return rtn;
     }
 
+    @Override
     public String getName() {
         return "Built-in Named Query Task";
     }

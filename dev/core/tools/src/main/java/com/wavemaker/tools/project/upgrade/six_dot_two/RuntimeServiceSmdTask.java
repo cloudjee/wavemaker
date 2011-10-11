@@ -34,6 +34,7 @@ public class RuntimeServiceSmdTask implements UpgradeTask {
 
     private StudioConfiguration studioConfiguration;
 
+    @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
         Resource rtsmd;
         try {

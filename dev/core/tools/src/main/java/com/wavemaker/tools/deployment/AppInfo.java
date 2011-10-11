@@ -63,6 +63,7 @@ public class AppInfo implements Comparable<AppInfo> {
         return this.description;
     }
 
+    @Override
     public int compareTo(AppInfo appInfo) {
         return this.name.compareTo(appInfo.name);
     }

@@ -215,16 +215,19 @@ public class ObjectUtils {
 
         ObjectGraphTraversal.ObjectVisitor v = new ObjectGraphTraversal.ObjectVisitor() {
 
+            @Override
             public void visit(Object o, Context ctx) {
                 sb.append("\n" + ctx.getPropertyPath() + ": " + objectToString(o));
             }
 
+            @Override
             public void cycle(Object o, Context ctx) {
                 sb.append("\n" + ctx.getPropertyPath() + ": Cycle");
             }
         };
         ObjectGraphTraversal.PropertyFactory p = new ObjectGraphTraversal.PropertyFactory() {
 
+            @Override
             public List<String> getProperties(Object o, Context ctx) {
                 return oa.getPropertyNames(o.getClass());
             }

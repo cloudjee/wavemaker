@@ -53,6 +53,7 @@ public abstract class ReflectTypeDefinition implements TypeDefinition {
      * 
      * @see com.wavemaker.json.type.TypeDefinition#getTypeName()
      */
+    @Override
     public String getTypeName() {
         return this.typeName;
     }
@@ -66,6 +67,7 @@ public abstract class ReflectTypeDefinition implements TypeDefinition {
      * 
      * @see com.wavemaker.json.type.TypeDefinition#newInstance(java.lang.Object[])
      */
+    @Override
     public Object newInstance(Object... args) {
 
         try {
@@ -86,6 +88,7 @@ public abstract class ReflectTypeDefinition implements TypeDefinition {
      * 
      * @see com.wavemaker.json.type.TypeDefinition#isLiveService()
      */
+    @Override
     public boolean isLiveService() {
         return this.liveService;
     }
@@ -99,6 +102,7 @@ public abstract class ReflectTypeDefinition implements TypeDefinition {
      * 
      * @see com.wavemaker.json.type.TypeDefinition#getShortName()
      */
+    @Override
     public String getShortName() {
         return this.shortName;
     }

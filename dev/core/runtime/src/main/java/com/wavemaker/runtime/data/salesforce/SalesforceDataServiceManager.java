@@ -50,30 +50,38 @@ public class SalesforceDataServiceManager implements DataServiceManager {
         this.metaData = initMetaData(CommonConstants.SALESFORCE_SERVICE, properties);
     }
 
+    @Override
     public void begin() {
     }
 
+    @Override
     public void commit() {
     }
 
+    @Override
     public void rollback() {
     }
 
+    @Override
     public Session getSession() {
         return null;
     }
 
+    @Override
     public DataServiceMetaData getMetaData() {
         return this.metaData;
     }
 
+    @Override
     public void dispose() {
     }
 
+    @Override
     public Object invoke(Task task, Object... input) {
         return null;
     }
 
+    @Override
     public Object invoke(Task task, Map<String, Class<?>> types, boolean named, Object... input) {
 
         boolean unset = false;
@@ -135,6 +143,7 @@ public class SalesforceDataServiceManager implements DataServiceManager {
             this.input = input;
         }
 
+        @Override
         public Object doInTransaction(TransactionStatus status) {
             if (this.rollbackOnly) {
                 status.setRollbackOnly();

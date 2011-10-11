@@ -190,12 +190,14 @@ public class DeploymentManager {
 
         private String projectName;
 
+        @Override
         public void valueBound(HttpSessionBindingEvent event) {
             this.projectDir = getProjectDir();
             this.projectName = getDeployName(this.projectDir);
             DeploymentManager.this.logger.info("SESSION BOUND " + this.projectName + "!!!!!!!!!!!!!!!");
         }
 
+        @Override
         public void valueUnbound(HttpSessionBindingEvent event) {
             // Lines are commented out because an attempt to undeploy the
             // current project will cause the Studio
@@ -860,6 +862,7 @@ public class DeploymentManager {
 
         List<Resource> widgetThemeFiles = this.studioConfiguration.listChildren(themesFolder, new ResourceFilter() {
 
+            @Override
             public boolean accept(Resource resource) {
                 return resource.getFilename().indexOf("wm_") == 0;
             }
@@ -950,6 +953,7 @@ public class DeploymentManager {
         }
         List<Resource> files = this.studioConfiguration.listChildren(folder, new ResourceFilter() {
 
+            @Override
             public boolean accept(Resource file) {
                 String name = file.getFilename().toLowerCase();
                 return name.endsWith(".gif") || name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".jpeg");

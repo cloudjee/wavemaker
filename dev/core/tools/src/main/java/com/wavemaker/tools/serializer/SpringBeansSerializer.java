@@ -39,6 +39,7 @@ public class SpringBeansSerializer implements FileSerializer {
      * @see com.wavemaker.tools.serializer.FileSerializer#readObject(com.wavemaker.runtime.service.FileService,
      * java.io.File)
      */
+    @Override
     public Object readObject(FileService fileService, Resource file) throws FileSerializerException {
         try {
             return SpringConfigSupport.readBeans(file, fileService);
@@ -55,6 +56,7 @@ public class SpringBeansSerializer implements FileSerializer {
      * @see com.wavemaker.tools.serializer.FileSerializer#writeObject(com.wavemaker.runtime.service.FileService,
      * java.lang.Object, java.io.File)
      */
+    @Override
     public void writeObject(FileService fileService, Object object, Resource file) throws FileSerializerException {
         try {
             SpringConfigSupport.writeBeans((Beans) object, file, fileService);

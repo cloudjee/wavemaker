@@ -122,6 +122,7 @@ public class WSDL extends AbstractDeprecatedServiceDefinition implements Reflect
         this.xmlSchemas = xmlSchemas;
     }
 
+    @Override
     public String getServiceId() {
         return this.serviceId;
     }
@@ -130,6 +131,7 @@ public class WSDL extends AbstractDeprecatedServiceDefinition implements Reflect
         return this.serviceInfoList;
     }
 
+    @Override
     public ServiceType getServiceType() {
         return new com.wavemaker.runtime.ws.WebServiceType();
     }
@@ -138,6 +140,7 @@ public class WSDL extends AbstractDeprecatedServiceDefinition implements Reflect
         return this.webServiceType;
     }
 
+    @Override
     public String getPackageName() {
         return this.packageName;
     }
@@ -374,6 +377,7 @@ public class WSDL extends AbstractDeprecatedServiceDefinition implements Reflect
         this.interceptorClassNames.add(className);
     }
 
+    @Override
     public List<String> getOperationNames() {
         return new ArrayList<String>(this.operationMap.keySet());
     }
@@ -396,10 +400,12 @@ public class WSDL extends AbstractDeprecatedServiceDefinition implements Reflect
         this.operationMap = operationMap;
     }
 
+    @Override
     public List<ElementType> getInputTypes(String operationName) {
         return getInputTypes(operationName, false);
     }
 
+    @Override
     public ElementType getOutputType(String operationName) {
         return getOutputType(operationName, false);
     }
@@ -664,6 +670,7 @@ public class WSDL extends AbstractDeprecatedServiceDefinition implements Reflect
         return getTypeMapper().getJavaType(qname, isElement);
     }
 
+    @Override
     public String getRuntimeConfiguration() {
         return this.runtimeConfiguration;
     }
@@ -672,6 +679,7 @@ public class WSDL extends AbstractDeprecatedServiceDefinition implements Reflect
         this.runtimeConfiguration = runtimeConfiguration;
     }
 
+    @Override
     public void dispose() {
     }
 
@@ -682,6 +690,7 @@ public class WSDL extends AbstractDeprecatedServiceDefinition implements Reflect
         return this.serviceClassName;
     }
 
+    @Override
     public String getServiceClass() {
         return getPackageName() + "." + getServiceClassName();
     }
@@ -702,6 +711,7 @@ public class WSDL extends AbstractDeprecatedServiceDefinition implements Reflect
         this.auxiliaryClasses = auxiliaryClasses;
     }
 
+    @Override
     public List<ElementType> getTypes() {
         return getTypeMapper().getAllTypes(this.serviceId);
     }
@@ -711,10 +721,12 @@ public class WSDL extends AbstractDeprecatedServiceDefinition implements Reflect
         return getTypeMapper().getAllTypes(this.serviceId, username, password);
     }
 
+    @Override
     public List<String> getEventNotifiers() {
         return new ArrayList<String>();
     }
 
+    @Override
     public boolean isLiveDataService() {
         return false;
     }

@@ -63,6 +63,7 @@ public class SpringConfigurationUpgrade extends BaseDataUpgradeTask implements U
 
         FileService fileService = new AbstractFileService(new LocalStudioConfiguration()) {
 
+            @Override
             public Resource getFileServiceRoot() {
                 return mgr.getServiceHome(id);
             }

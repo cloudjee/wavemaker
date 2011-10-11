@@ -62,6 +62,7 @@ public class CloudFoundryDataServiceBeanFactoryPostProcessor implements BeanFact
     /**
      * {@inheritDoc}
      */
+    @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) beanFactory;
 

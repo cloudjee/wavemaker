@@ -29,6 +29,7 @@ import org.aopalliance.intercept.MethodInvocation;
  */
 public class AopAdvisedInterceptor implements Interceptor, MethodInterceptor {
 
+    @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
 
         if (invocation.getThis() instanceof AopAdvised && 0 == invocation.getMethod().getName().compareTo("getIval")) {

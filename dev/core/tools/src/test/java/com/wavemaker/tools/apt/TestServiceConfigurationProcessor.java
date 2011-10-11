@@ -230,49 +230,61 @@ public class TestServiceConfigurationProcessor {
 
     private static class updateService_SD extends AbstractDeprecatedServiceDefinition implements ReflectServiceDefinition {
 
+        @Override
         public void dispose() {
         }
 
+        @Override
         public List<ElementType> getInputTypes(String operationName) {
             return null;
         }
 
+        @Override
         public List<String> getOperationNames() {
             return Collections.emptyList();
         }
 
+        @Override
         public ElementType getOutputType(String operationName) {
             return null;
         }
 
+        @Override
         public String getPackageName() {
             return null;
         }
 
+        @Override
         public String getServiceId() {
             return "updateService";
         }
 
+        @Override
         public ServiceType getServiceType() {
             return new WebServiceType();
         }
 
+        @Override
         public String getServiceClass() {
             return "com.wavemaker.tools.service.UpdateService_SD";
         }
 
+        @Override
         public List<ElementType> getTypes() {
             return new ArrayList<ElementType>();
         }
 
+        @Override
         public String getRuntimeConfiguration() {
             return null;
         }
 
+        @Override
         public List<String> getEventNotifiers() {
             return new ArrayList<String>();
         }
 
+        @Override
         public boolean isLiveDataService() {
             return false;
         }
@@ -280,49 +292,61 @@ public class TestServiceConfigurationProcessor {
 
     private static class updateService_SD2 extends AbstractDeprecatedServiceDefinition implements ReflectServiceDefinition {
 
+        @Override
         public void dispose() {
         }
 
+        @Override
         public String getRuntimeConfiguration() {
             return "foo/bar.xml";
         }
 
+        @Override
         public List<ElementType> getInputTypes(String operationName) {
             return null;
         }
 
+        @Override
         public List<String> getOperationNames() {
             return Collections.emptyList();
         }
 
+        @Override
         public ElementType getOutputType(String operationName) {
             return null;
         }
 
+        @Override
         public String getPackageName() {
             return null;
         }
 
+        @Override
         public String getServiceId() {
             return "updateService2";
         }
 
+        @Override
         public ServiceType getServiceType() {
             return new JavaServiceType();
         }
 
+        @Override
         public String getServiceClass() {
             return "com.wavemaker.tools.service.UpdateService_SD2";
         }
 
+        @Override
         public List<ElementType> getTypes() {
             return new ArrayList<ElementType>();
         }
 
+        @Override
         public List<String> getEventNotifiers() {
             return new ArrayList<String>();
         }
 
+        @Override
         public boolean isLiveDataService() {
             return false;
         }
@@ -337,13 +361,16 @@ public class TestServiceConfigurationProcessor {
             this.operationNames.add("add");
         }
 
+        @Override
         public void dispose() {
         }
 
+        @Override
         public String getRuntimeConfiguration() {
             return null;
         }
 
+        @Override
         public List<ElementType> getInputTypes(String operationName) {
 
             List<ElementType> ret = new ArrayList<ElementType>();
@@ -359,10 +386,12 @@ public class TestServiceConfigurationProcessor {
             return ret;
         }
 
+        @Override
         public List<String> getOperationNames() {
             return this.operationNames;
         }
 
+        @Override
         public ElementType getOutputType(String operationName) {
 
             ElementType ret = null;
@@ -374,30 +403,37 @@ public class TestServiceConfigurationProcessor {
             return ret;
         }
 
+        @Override
         public String getPackageName() {
             return null;
         }
 
+        @Override
         public String getServiceId() {
             return "updateOperation";
         }
 
+        @Override
         public ServiceType getServiceType() {
             return new JavaServiceType();
         }
 
+        @Override
         public String getServiceClass() {
             return "com.wavemaker.tools.service.UpdateOperation_SD";
         }
 
+        @Override
         public List<ElementType> getTypes() {
             return new ArrayList<ElementType>();
         }
 
+        @Override
         public List<String> getEventNotifiers() {
             return new ArrayList<String>();
         }
 
+        @Override
         public boolean isLiveDataService() {
             return false;
         }

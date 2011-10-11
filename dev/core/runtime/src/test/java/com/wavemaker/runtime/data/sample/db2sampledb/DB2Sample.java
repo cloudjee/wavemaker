@@ -2386,6 +2386,7 @@ public class DB2Sample implements DataServiceManagerAccess {
         this.dsMgr.rollback();
     }
 
+    @Override
     public DataServiceManager getDataServiceManager() {
         return this.dsMgr;
     }

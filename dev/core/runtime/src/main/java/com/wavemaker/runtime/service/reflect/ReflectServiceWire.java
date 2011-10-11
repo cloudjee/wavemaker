@@ -82,6 +82,7 @@ public class ReflectServiceWire implements ServiceWire, ApplicationContextAware 
      * 
      * @see com.wavemaker.runtime.service.ServiceWire#setServiceType(com.wavemaker.runtime.service.ServiceType)
      */
+    @Override
     public void setServiceType(ServiceType serviceType) {
         this.serviceType = serviceType;
     }
@@ -91,6 +92,7 @@ public class ReflectServiceWire implements ServiceWire, ApplicationContextAware 
      * 
      * @see com.wavemaker.runtime.service.ServiceWire#getServiceType()
      */
+    @Override
     public ServiceType getServiceType() {
         return this.serviceType;
     }
@@ -100,6 +102,7 @@ public class ReflectServiceWire implements ServiceWire, ApplicationContextAware 
      * 
      * @see com.wavemaker.runtime.service.ServiceWire#setServiceId(java.lang.String)
      */
+    @Override
     public void setServiceId(String serviceId) {
         this.serviceId = serviceId;
     }
@@ -109,6 +112,7 @@ public class ReflectServiceWire implements ServiceWire, ApplicationContextAware 
      * 
      * @see com.wavemaker.runtime.service.ServiceWire#getServiceId()
      */
+    @Override
     public String getServiceId() {
         return this.serviceId;
     }
@@ -118,6 +122,7 @@ public class ReflectServiceWire implements ServiceWire, ApplicationContextAware 
      * 
      * @see com.wavemaker.runtime.service.ServiceWire#isLiveDataService()
      */
+    @Override
     public boolean isLiveDataService() {
 
         return this.getServiceBean() instanceof LiveDataService;
@@ -129,6 +134,7 @@ public class ReflectServiceWire implements ServiceWire, ApplicationContextAware 
      * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.
      * ApplicationContext)
      */
+    @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }

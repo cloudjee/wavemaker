@@ -65,6 +65,7 @@ public class GenericFieldDefinition implements FieldDefinition {
      * 
      * @see com.wavemaker.json.type.FieldDefinition#getArrayTypes()
      */
+    @Override
     public List<ListTypeDefinition> getArrayTypes() {
         return this.arrayTypes;
     }
@@ -78,6 +79,7 @@ public class GenericFieldDefinition implements FieldDefinition {
      * 
      * @see com.wavemaker.json.type.FieldDefinition#getDimensions()
      */
+    @Override
     public int getDimensions() {
         if (null == this.getArrayTypes()) {
             return 0;
@@ -91,6 +93,7 @@ public class GenericFieldDefinition implements FieldDefinition {
      * 
      * @see com.wavemaker.json.type.FieldDefinition#getTypeDefinition()
      */
+    @Override
     public TypeDefinition getTypeDefinition() {
         return this.typeDefinition;
     }
@@ -104,6 +107,7 @@ public class GenericFieldDefinition implements FieldDefinition {
      * 
      * @see com.wavemaker.json.type.FieldDefinition#isAllowNull()
      */
+    @Override
     public boolean isAllowNull() {
         return this.allowNull;
     }
@@ -117,6 +121,7 @@ public class GenericFieldDefinition implements FieldDefinition {
      * 
      * @see com.wavemaker.json.type.FieldDefinition#isAllowNull()
      */
+    @Override
     public String getSubType() { // salesforce
         return this.subType;
     }
@@ -130,6 +135,7 @@ public class GenericFieldDefinition implements FieldDefinition {
      * 
      * @see com.wavemaker.json.type.FieldDefinition#getName()
      */
+    @Override
     public String getName() {
         return this.name;
     }
@@ -143,6 +149,7 @@ public class GenericFieldDefinition implements FieldDefinition {
      * 
      * @see com.wavemaker.json.type.FieldDefinition#getExclude()
      */
+    @Override
     public List<OperationEnumeration> getExclude() {
         return this.exclude;
     }
@@ -156,6 +163,7 @@ public class GenericFieldDefinition implements FieldDefinition {
      * 
      * @see com.wavemaker.json.type.FieldDefinition#getNoChange()
      */
+    @Override
     public List<OperationEnumeration> getNoChange() {
         return this.noChange;
     }
@@ -169,6 +177,7 @@ public class GenericFieldDefinition implements FieldDefinition {
      * 
      * @see com.wavemaker.json.type.FieldDefinition#getRequire()
      */
+    @Override
     public List<OperationEnumeration> getRequire() {
         return this.require;
     }

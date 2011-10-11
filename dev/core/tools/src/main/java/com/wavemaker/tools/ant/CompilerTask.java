@@ -105,6 +105,7 @@ public abstract class CompilerTask extends Task {
 
         ClassLoaderUtils.TaskNoRtn task = new TaskNoRtn() {
 
+            @Override
             public void run() {
                 doExecute();
             }

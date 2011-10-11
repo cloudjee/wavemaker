@@ -133,6 +133,7 @@ public class ClassLoaderUtils {
 
             URLClassLoader ret = AccessController.doPrivileged(new PrivilegedAction<URLClassLoader>() {
 
+                @Override
                 public URLClassLoader run() {
                     return new URLClassLoader(urls, parentF);
                 }
@@ -161,6 +162,7 @@ public class ClassLoaderUtils {
 
         ClassLoader ret = AccessController.doPrivileged(new PrivilegedAction<ThrowawayFileClassLoader>() {
 
+            @Override
             public ThrowawayFileClassLoader run() {
                 return new ThrowawayFileClassLoader(filesList, getClassLoader().getParent());
             }

@@ -23,10 +23,12 @@ import com.wavemaker.runtime.data.Task;
  */
 public class GetSessionTask extends BaseTask implements Task, DefaultRollback {
 
+    @Override
     public Object run(Session session, String dbName, Object... input) {
         return session;
     }
 
+    @Override
     public String getName() {
         return "Built-in GetSession Task";
     }

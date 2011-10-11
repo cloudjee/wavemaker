@@ -34,6 +34,7 @@ public class Method implements Comparable<Method> {
      * 
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
+    @Override
     public int compareTo(Method o) {
 
         // first, check the names

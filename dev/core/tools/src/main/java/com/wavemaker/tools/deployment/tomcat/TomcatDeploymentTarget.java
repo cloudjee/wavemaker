@@ -54,31 +54,37 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
         CONFIGURABLE_PROPERTIES = Collections.unmodifiableMap(m);
     }
 
+    @Override
     public String deploy(File f, DeploymentInfo deploymentInfo) {
         TomcatServer tomcat = initTomcat(deploymentInfo);
         return tomcat.deploy(f, deploymentInfo.getApplicationName());
     }
 
+    @Override
     public String undeploy(DeploymentInfo deploymentInfo, boolean deleteServices) {
         TomcatServer tomcat = initTomcat(deploymentInfo);
         return tomcat.undeploy(deploymentInfo.getApplicationName());
     }
 
+    @Override
     public String redeploy(DeploymentInfo deploymentInfo) {
         TomcatServer tomcat = initTomcat(deploymentInfo);
         return tomcat.redeploy(deploymentInfo.getApplicationName());
     }
 
+    @Override
     public String start(DeploymentInfo deploymentInfo) {
         TomcatServer tomcat = initTomcat(deploymentInfo);
         return tomcat.start(deploymentInfo.getApplicationName());
     }
 
+    @Override
     public String stop(DeploymentInfo deploymentInfo) {
         TomcatServer tomcat = initTomcat(deploymentInfo);
         return tomcat.stop(deploymentInfo.getApplicationName());
     }
 
+    @Override
     public List<AppInfo> listDeploymentNames(DeploymentInfo deploymentInfo) {
         TomcatServer tomcat = initTomcat(deploymentInfo);
         List<Tuple.Two<String, String>> apps = tomcat.listDeployments();
@@ -96,6 +102,7 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
         return rtn;
     }
 
+    @Override
     public Map<String, String> getConfigurableProperties() {
         return CONFIGURABLE_PROPERTIES;
     }
@@ -116,6 +123,7 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String validateDeployment(DeploymentInfo deploymentInfo) {
         // No-op
         return "SUCCESS";

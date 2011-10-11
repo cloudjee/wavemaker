@@ -40,6 +40,7 @@ public class ReflectTypeState implements TypeState {
      * 
      * @see com.wavemaker.json.type.TypeState#addType(com.wavemaker.json.type.TypeDefinition)
      */
+    @Override
     public void addType(TypeDefinition typeDefinition) {
         this.knownTypes.put(typeDefinition.getTypeName(), typeDefinition);
     }
@@ -49,6 +50,7 @@ public class ReflectTypeState implements TypeState {
      * 
      * @see com.wavemaker.json.type.TypeState#getType(java.lang.String)
      */
+    @Override
     public TypeDefinition getType(String typeName) {
 
         if (this.knownTypes.containsKey(typeName)) {
@@ -71,6 +73,7 @@ public class ReflectTypeState implements TypeState {
      * 
      * @see com.wavemaker.json.type.TypeState#isTypeKnown(java.lang.String)
      */
+    @Override
     public boolean isTypeKnown(String typeName) {
 
         return this.knownTypes.containsKey(typeName);

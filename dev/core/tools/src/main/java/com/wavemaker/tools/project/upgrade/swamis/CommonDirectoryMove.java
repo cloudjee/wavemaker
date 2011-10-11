@@ -41,6 +41,7 @@ public class CommonDirectoryMove implements StudioUpgradeTask {
      * 
      * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker .tools.project.upgrade.UpgradeInfo)
      */
+    @Override
     public void doUpgrade(UpgradeInfo upgradeInfo) {
 
         try {

@@ -30,6 +30,7 @@ public class SimpleResource implements Resource {
     public SimpleResource() {
     }
 
+    @Override
     public boolean matchResource(Resource resource) {
         if (resource instanceof SimpleResource) {
             if (getResourceName().equals(ANY_RESOURCE) || ((SimpleResource) resource).getResourceName().equals(ANY_RESOURCE)) {

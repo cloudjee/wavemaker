@@ -37,6 +37,7 @@ public class AddManifestToCommonStudioUpgradeTask implements StudioUpgradeTask {
      * @see com.wavemaker.tools.project.upgrade.StudioUpgradeTask#doUpgrade(com.wavemaker
      * .tools.project.upgrade.UpgradeInfo)
      */
+    @Override
     public void doUpgrade(UpgradeInfo upgradeInfo) {
 
         try {

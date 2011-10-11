@@ -68,6 +68,7 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
     // do we already have constants for the web-app xml elements?
     private static final String WEB_XML_INSERT_BEFORE = "</web-app>";
 
+    @Override
     public void prepare(String serviceName, Map<String, String> properties, DesignServiceManager mgr, int indx) {
 
         String rootPath = DesignServiceManager.getRuntimeRelativeDir(serviceName);

@@ -152,6 +152,7 @@ public class JSONRPCController extends ControllerBase {
 
         ErrorResponse er = new ErrorResponse() {
 
+            @Override
             public String getError() {
                 return message;
             }

@@ -104,6 +104,7 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
 
     }
 
+    @Override
     public void init(Session session, boolean useIndividualCRUDOperations) {
     }
 
@@ -112,6 +113,7 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
      * 
      * @param configurationName A valid configuration name.
      */
+    @Override
     public void init(String configurationName) {
 
         DataOperationFactory fac = initFactory(configurationName);
@@ -119,29 +121,36 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
         this.operationManager = new DataServiceOperationManager(fac, false);
     }
 
+    @Override
     public void dispose() {
     }
 
+    @Override
     public String getName() {
         return this.configurationName;
     }
 
+    @Override
     public String getServiceClassName() {
         return this.serviceClassName;
     }
 
+    @Override
     public void setHelperClassNames(Collection<String> helperClassNames) {
         this.helperClassNames = helperClassNames;
     }
 
+    @Override
     public Collection<String> getHelperClassNames() {
         return this.helperClassNames;
     }
 
+    @Override
     public void setServiceClassName(String serviceClassName) {
         this.serviceClassName = serviceClassName;
     }
 
+    @Override
     public Configuration getConfiguration() {
         return null;
     }
@@ -149,14 +158,17 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
     private void initMappingData() {
     }
 
+    @Override
     public Collection<String> getEntityClassNames() {
         return this.entityClassNames;
     }
 
+    @Override
     public List<Class<?>> getEntityClasses() {
         return this.entityClasses;
     }
 
+    @Override
     public boolean refreshEntity(Class<?> c) {
 
         if (!isEntity(c)) {
@@ -166,44 +178,53 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
         return this.refreshEntities.contains(c.getName());
     }
 
+    @Override
     public String getIdPropertyName(Class<?> c) {
 
         return null;
     }
 
+    @Override
     public boolean isCompositeProperty(Class<?> c, String propertyName) {
 
         return false;
     }
 
+    @Override
     public Collection<String> getRelPropertyNames(Class<?> c) {
 
         return null;
     }
 
+    @Override
     public Property getProperty(String className, String propertyName) {
 
         return null;
     }
 
+    @Override
     public String getDataPackage() {
 
         return null;
     }
 
+    @Override
     public boolean isEntity(Class<?> c) {
         return false;
     }
 
+    @Override
     public Collection<String> getOperationNames() {
         return this.operationManager.getOperationNames();
     }
 
+    @Override
     public NamedQueryDefinition getQueryDefinition(String queryName) {
 
         return null;
     }
 
+    @Override
     public DataServiceOperation getOperation(String operationName) {
         DataServiceOperation rtn = this.operationManager.getOperation(operationName);
         if (rtn == null) {
@@ -229,10 +250,12 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
                 this.queries = this.p.getQueries();
             }
 
+            @Override
             public Collection<String> getEntityClassNames() {
                 return DataServiceMetaData_SF.this.entityClassNames;
             }
 
+            @Override
             public List<Tuple.Three<String, String, Boolean>> getQueryInputs(String queryName) {
 
                 List<Tuple.Three<String, String, Boolean>> rtn = new ArrayList<Tuple.Three<String, String, Boolean>>();
@@ -248,6 +271,7 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
                 return rtn;
             }
 
+            @Override
             @SuppressWarnings("unchecked")
             public Collection<String> getQueryNames() {
 
@@ -258,6 +282,7 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
                 return rtn;
             }
 
+            @Override
             public List<String> getQueryReturnNames(String operationName, String queryName) {
 
                 String query = this.queries.get(queryName).getQuery();
@@ -282,10 +307,12 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
                 return rtn;
             }
 
+            @Override
             public boolean requiresResultWrapper(String operationName, String queryName) {
                 return true;
             }
 
+            @Override
             public List<String> getQueryReturnTypes(String operationName, String queryName) {
 
                 String query = this.queries.get(queryName).getQuery();
@@ -303,6 +330,7 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
                 return types;
             }
 
+            @Override
             public boolean queryReturnsSingleResult(String operationName, String queryName) {
 
                 // hack for generated queries - only required for initial

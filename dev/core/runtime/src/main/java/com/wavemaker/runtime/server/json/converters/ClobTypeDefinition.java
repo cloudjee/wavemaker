@@ -51,6 +51,7 @@ public class ClobTypeDefinition extends PrimitiveReflectTypeDefinition implement
      * @see com.wavemaker.json.type.converters.ReadObjectConverter#readObject(java.lang.Object, java.lang.Object,
      * java.lang.String)
      */
+    @Override
     public Object readObject(Object input, Object root, String path) {
 
         if (null == input) {
@@ -62,6 +63,7 @@ public class ClobTypeDefinition extends PrimitiveReflectTypeDefinition implement
         }
     }
 
+    @Override
     public void writeObject(Object input, Object root, String path, Writer writer) throws IOException {
 
         if (null == input) {

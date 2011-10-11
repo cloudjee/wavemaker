@@ -83,6 +83,7 @@ public abstract class SpringTestCase extends AbstractJUnit4SpringContextTests im
         RequestContextHolder.resetRequestAttributes();
     }
 
+    @Override
     public void setMockMvc(MockMvc mockMvc) {
         this.mockMvc = mockMvc;
     }

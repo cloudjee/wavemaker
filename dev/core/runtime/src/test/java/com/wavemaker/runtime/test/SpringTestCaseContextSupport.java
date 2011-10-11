@@ -28,6 +28,7 @@ public class SpringTestCaseContextSupport extends AbstractContextLoader implemen
 
     private MockMvc mockMvc;
 
+    @Override
     public ApplicationContext loadContext(MergedContextConfiguration mergedConfig) throws Exception {
         WrapperContextMockMvcBuilder builder = createBuilder(mergedConfig.getLocations());
         builder.activateProfiles(mergedConfig.getActiveProfiles());
@@ -35,6 +36,7 @@ public class SpringTestCaseContextSupport extends AbstractContextLoader implemen
         return builder.context;
     }
 
+    @Override
     public ApplicationContext loadContext(String... locations) throws Exception {
         WrapperContextMockMvcBuilder builder = createBuilder(locations);
         builder.activateProfiles(builder.context.getEnvironment().getActiveProfiles());
@@ -87,6 +89,7 @@ public class SpringTestCaseContextSupport extends AbstractContextLoader implemen
 
     }
 
+    @Override
     public void prepareTestInstance(TestContext testContext) throws Exception {
         Object test = testContext.getTestInstance();
         if (test instanceof MockMvcAware) {
@@ -94,18 +97,22 @@ public class SpringTestCaseContextSupport extends AbstractContextLoader implemen
         }
     }
 
+    @Override
     public void beforeTestClass(TestContext testContext) throws Exception {
         // no-op
     }
 
+    @Override
     public void beforeTestMethod(TestContext testContext) throws Exception {
         // no-op
     }
 
+    @Override
     public void afterTestMethod(TestContext testContext) throws Exception {
         // no-op
     }
 
+    @Override
     public void afterTestClass(TestContext testContext) throws Exception {
         // no-op
     }

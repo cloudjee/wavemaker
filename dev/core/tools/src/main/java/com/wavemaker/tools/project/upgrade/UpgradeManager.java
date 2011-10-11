@@ -109,6 +109,7 @@ public class UpgradeManager implements InitializingBean {
      * 
      * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
      */
+    @Override
     public void afterPropertiesSet() {
 
         doStudioUpgrade();

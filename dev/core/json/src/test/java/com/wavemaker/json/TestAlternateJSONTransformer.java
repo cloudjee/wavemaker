@@ -336,6 +336,7 @@ public class TestAlternateJSONTransformer extends WMTestCase {
 
         state.setValueTransformer(new ValueTransformer() {
 
+            @Override
             public Tuple.Three<Object, FieldDefinition, Integer> transformToJSON(Object input, FieldDefinition fieldDefinition, int arrayLevel,
                 Object root, String path, TypeState typeState) {
 
@@ -343,6 +344,7 @@ public class TestAlternateJSONTransformer extends WMTestCase {
                 return null;
             }
 
+            @Override
             public Tuple.Three<Object, FieldDefinition, Integer> transformToJava(Object input, FieldDefinition fieldDefinition, int arrayLevel,
                 Object root, String path, TypeState typeState) {
 

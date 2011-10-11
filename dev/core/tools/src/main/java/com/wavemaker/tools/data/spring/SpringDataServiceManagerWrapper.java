@@ -39,14 +39,17 @@ public class SpringDataServiceManagerWrapper implements DataServiceManager {
         this.ctx = ctx;
     }
 
+    @Override
     public void begin() {
         this.delegate.begin();
     }
 
+    @Override
     public void commit() {
         this.delegate.commit();
     }
 
+    @Override
     public void dispose() {
         try {
             this.delegate.dispose();
@@ -55,22 +58,27 @@ public class SpringDataServiceManagerWrapper implements DataServiceManager {
         }
     }
 
+    @Override
     public DataServiceMetaData getMetaData() {
         return this.delegate.getMetaData();
     }
 
+    @Override
     public Session getSession() {
         return this.delegate.getSession();
     }
 
+    @Override
     public Object invoke(Task task, Object... input) {
         return this.delegate.invoke(task, input);
     }
 
+    @Override
     public Object invoke(Task task, Map<String, Class<?>> types, boolean named, Object... input) {
         return this.delegate.invoke(task, types, named, input); // salesforce
     }
 
+    @Override
     public void rollback() {
         this.delegate.rollback();
     }

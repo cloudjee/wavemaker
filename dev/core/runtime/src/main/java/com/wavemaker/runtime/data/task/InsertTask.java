@@ -24,6 +24,7 @@ import com.wavemaker.runtime.data.Task;
  */
 public class InsertTask extends BaseTask implements PreProcessor, Task {
 
+    @Override
     public Object run(Session session, String dbName, Object... input) {
 
         if (ObjectUtils.isNullOrEmpty(input)) {
@@ -43,6 +44,7 @@ public class InsertTask extends BaseTask implements PreProcessor, Task {
         return o;
     }
 
+    @Override
     public String getName() {
         return "Built-in Insert Task";
     }

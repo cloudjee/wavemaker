@@ -31,6 +31,7 @@ public class ObjectReflectTypeDefinition extends ReflectTypeDefinition implement
      */
     private LinkedHashMap<String, FieldDefinition> fields = new LinkedHashMap<String, FieldDefinition>();
 
+    @Override
     public LinkedHashMap<String, FieldDefinition> getFields() {
         return this.fields;
     }

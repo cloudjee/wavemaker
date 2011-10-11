@@ -81,6 +81,7 @@ public class VmcDeploymentTarget implements DeploymentTarget {
         this.dataModelManager = dataModelManager;
     }
 
+    @Override
     public String validateDeployment(DeploymentInfo deploymentInfo) {
         CloudFoundryClient client = getClient(deploymentInfo);
 
@@ -106,6 +107,7 @@ public class VmcDeploymentTarget implements DeploymentTarget {
         }
     }
 
+    @Override
     public String deploy(File webapp, DeploymentInfo deploymentInfo) {
 
         CloudFoundryClient client = getClient(deploymentInfo);
@@ -236,6 +238,7 @@ public class VmcDeploymentTarget implements DeploymentTarget {
         return postgresql;
     }
 
+    @Override
     public String undeploy(DeploymentInfo deploymentInfo, boolean deleteServices) {
         CloudFoundryClient client = getClient(deploymentInfo);
         log.info("Deleting application " + deploymentInfo.getApplicationName());
@@ -260,18 +263,21 @@ public class VmcDeploymentTarget implements DeploymentTarget {
         return SUCCESS_RESULT;
     }
 
+    @Override
     public String redeploy(DeploymentInfo deploymentInfo) {
         CloudFoundryClient client = getClient(deploymentInfo);
         doRestart(deploymentInfo, client);
         return SUCCESS_RESULT;
     }
 
+    @Override
     public String start(DeploymentInfo deploymentInfo) {
         CloudFoundryClient client = getClient(deploymentInfo);
         doStart(deploymentInfo, client);
         return SUCCESS_RESULT;
     }
 
+    @Override
     public String stop(DeploymentInfo deploymentInfo) {
         CloudFoundryClient client = getClient(deploymentInfo);
         log.info("Stopping application " + deploymentInfo.getApplicationName());
@@ -282,6 +288,7 @@ public class VmcDeploymentTarget implements DeploymentTarget {
         return SUCCESS_RESULT;
     }
 
+    @Override
     public List<AppInfo> listDeploymentNames(DeploymentInfo deploymentInfo) {
         CloudFoundryClient client = getClient(deploymentInfo);
         List<AppInfo> infoList = new ArrayList<AppInfo>();
@@ -293,6 +300,7 @@ public class VmcDeploymentTarget implements DeploymentTarget {
         return infoList;
     }
 
+    @Override
     public Map<String, String> getConfigurableProperties() {
         return CONFIGURABLE_PROPERTIES;
     }
@@ -343,14 +351,17 @@ public class VmcDeploymentTarget implements DeploymentTarget {
             this.timer = timer;
         }
 
+        @Override
         public void onCheckResources() {
             log.info("Preparing to upload to CloudFoundry - comparing resources...");
         }
 
+        @Override
         public void onMatchedFileNames(Set<String> fileNames) {
             log.info(fileNames.size() + " files already cached...");
         }
 
+        @Override
         public void onProcessMatchedResources(int length) {
             log.info("Uploading " + length + " bytes...");
             this.timer.start();

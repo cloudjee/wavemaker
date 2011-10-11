@@ -181,6 +181,7 @@ public class ServiceManager implements ApplicationContextAware {
         return this.serviceWires;
     }
 
+    @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }

@@ -93,30 +93,37 @@ public class DefaultTaskManager implements TaskManager {
     public DefaultTaskManager() {
     }
 
+    @Override
     public Task getQueryTask() {
         return NAMED_QUERY;
     }
 
+    @Override
     public Task getInsertTask() {
         return INSERT;
     }
 
+    @Override
     public Task getDeleteTask() {
         return DELETE;
     }
 
+    @Override
     public Task getUpdateTask() {
         return UPDATE;
     }
 
+    @Override
     public Task getSearchTask() {
         return SEARCH;
     }
 
+    @Override
     public Task getCountTask() {
         return COUNT;
     }
 
+    @Override
     public Task getSessionTask() {
         return SESSION;
     }
@@ -129,6 +136,7 @@ public class DefaultTaskManager implements TaskManager {
         return CHECK_QUERY_TASK;
     }
 
+    @Override
     public Task getReadTask() {
         return READ_TASK;
     }

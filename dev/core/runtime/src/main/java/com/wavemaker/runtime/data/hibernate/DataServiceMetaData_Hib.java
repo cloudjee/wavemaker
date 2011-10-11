@@ -128,6 +128,7 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { // salesfo
      * 
      * @param session A valid session for this Configuration.
      */
+    @Override
     public void init(Session session, boolean useIndividualCRUDOperations) {
 
         DataOperationFactory fac = initFactory(session);
@@ -135,32 +136,40 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { // salesfo
         this.operationManager = new DataServiceOperationManager(fac, useIndividualCRUDOperations);
     }
 
+    @Override
     public void init(String configurationName) {
     } // salesforce
 
+    @Override
     public void dispose() {
     }
 
+    @Override
     public String getName() {
         return this.configurationName;
     }
 
+    @Override
     public String getServiceClassName() {
         return this.serviceClassName;
     }
 
+    @Override
     public void setHelperClassNames(Collection<String> helperClassNames) {
         this.helperClassNames = helperClassNames;
     }
 
+    @Override
     public Collection<String> getHelperClassNames() {
         return this.helperClassNames;
     }
 
+    @Override
     public void setServiceClassName(String serviceClassName) {
         this.serviceClassName = serviceClassName;
     }
 
+    @Override
     public Configuration getConfiguration() {
         return this.cfg;
     }
@@ -230,14 +239,17 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { // salesfo
         }
     }
 
+    @Override
     public Collection<String> getEntityClassNames() {
         return this.entityClassNames;
     }
 
+    @Override
     public List<Class<?>> getEntityClasses() {
         return this.entityClasses;
     }
 
+    @Override
     public boolean refreshEntity(Class<?> c) {
 
         if (!isEntity(c)) {
@@ -247,6 +259,7 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { // salesfo
         return this.refreshEntities.contains(c.getName());
     }
 
+    @Override
     public String getIdPropertyName(Class<?> c) {
 
         if (!isEntity(c)) {
@@ -260,6 +273,7 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { // salesfo
         return id.getName();
     }
 
+    @Override
     public boolean isCompositeProperty(Class<?> c, String propertyName) {
 
         if (!isEntity(c)) {
@@ -273,6 +287,7 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { // salesfo
         return p.isComposite();
     }
 
+    @Override
     public Collection<String> getRelPropertyNames(Class<?> c) {
 
         if (!isEntity(c)) {
@@ -288,6 +303,7 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { // salesfo
         return rtn;
     }
 
+    @Override
     public Property getProperty(String className, String propertyName) {
 
         ensureEntityOrComponent(className);
@@ -295,6 +311,7 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { // salesfo
         return this.allPropertiesMap.get(className).get(propertyName);
     }
 
+    @Override
     public String getDataPackage() {
         Configuration cfg = getConfiguration();
         RootClass rc = (RootClass) cfg.getClassMappings().next();
@@ -302,14 +319,17 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { // salesfo
         return StringUtils.fromLastOccurrence(className, ".", -1);
     }
 
+    @Override
     public boolean isEntity(Class<?> c) {
         return getRootClass(c) != null;
     }
 
+    @Override
     public Collection<String> getOperationNames() {
         return this.operationManager.getOperationNames();
     }
 
+    @Override
     public NamedQueryDefinition getQueryDefinition(String queryName) {
         Configuration cfg = getConfiguration();
         NamedQueryDefinition rtn = (NamedQueryDefinition) cfg.getNamedQueries().get(queryName);
@@ -319,6 +339,7 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { // salesfo
         return rtn;
     }
 
+    @Override
     public DataServiceOperation getOperation(String operationName) {
         DataServiceOperation rtn = this.operationManager.getOperation(operationName);
         if (rtn == null) {
@@ -350,10 +371,12 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { // salesfo
             // generated example query(ies).
             private static final String GENERATED_QUERY_NAME = "ExampleHQLQuery1";
 
+            @Override
             public Collection<String> getEntityClassNames() {
                 return DataServiceMetaData_Hib.this.entityClassNames;
             }
 
+            @Override
             public List<Tuple.Three<String, String, Boolean>> getQueryInputs(String queryName) {
 
                 List<Tuple.Three<String, String, Boolean>> rtn = new ArrayList<Tuple.Three<String, String, Boolean>>();
@@ -370,6 +393,7 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { // salesfo
                 return rtn;
             }
 
+            @Override
             @SuppressWarnings("unchecked")
             public Collection<String> getQueryNames() {
 
@@ -383,6 +407,7 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { // salesfo
                 return rtn;
             }
 
+            @Override
             public List<String> getQueryReturnNames(String operationName, String queryName) {
 
                 Query query = session.getNamedQuery(queryName);
@@ -399,11 +424,13 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { // salesfo
 
             }
 
+            @Override
             public boolean requiresResultWrapper(String operationName, String queryName) {
                 NamedQueryDefinition query = getQueryDefinition(queryName);
                 return DataServiceUtils.requiresResultWrapper(query.getQuery());
             }
 
+            @Override
             public List<String> getQueryReturnTypes(String operationName, String queryName) {
 
                 List<String> rtn = new ArrayList<String>();
@@ -442,6 +469,7 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { // salesfo
                 return rtn;
             }
 
+            @Override
             public boolean queryReturnsSingleResult(String operationName, String queryName) {
 
                 // hack for generated queries - only required for initial

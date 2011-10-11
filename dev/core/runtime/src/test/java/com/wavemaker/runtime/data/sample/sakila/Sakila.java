@@ -805,22 +805,27 @@ public class Sakila implements DataServiceManagerAccess, LiveDataService {
         this.ds.invoke(this.taskMgr.getDeleteTask(), language);
     }
 
+    @Override
     public DataServiceManager getDataServiceManager() {
         return this.ds;
     }
 
+    @Override
     public TypedServiceReturn read(TypeDefinition type, Object instance, PropertyOptions propertyOptions, PagingOptions pagingOptions) {
         return (TypedServiceReturn) this.ds.invoke(this.taskMgr.getReadTask(), type, instance, propertyOptions, pagingOptions);
     }
 
+    @Override
     public void delete(Object o) {
         this.ds.invoke(this.taskMgr.getDeleteTask(), o);
     }
 
+    @Override
     public Object insert(Object o) {
         return this.ds.invoke(this.taskMgr.getInsertTask(), o);
     }
 
+    @Override
     public Object update(Object o) {
         return this.ds.invoke(this.taskMgr.getUpdateTask(), o);
     }

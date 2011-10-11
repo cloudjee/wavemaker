@@ -457,14 +457,17 @@ public class DataModelManager {
 
         final ExternalDataModelConfig extCfg = new ExternalDataModelConfig() {
 
+            @Override
             public boolean returnsSingleResult(String operationName) {
                 return mgr.getQueryByOperationName(operationName).getReturnsSingleResult();
             }
 
+            @Override
             public String getOutputType(String operationName) {
                 return mgr.getQueryByOperationName(operationName).getOutputType();
             }
 
+            @Override
             public String getServiceClass() {
                 return DataModelManager.this.serviceManager.getService(dataModelName).getClazz();
             }
@@ -473,6 +476,7 @@ public class DataModelManager {
         try {
             mgr.save(true, new DataModelConfiguration.UpdateCallback() {
 
+                @Override
                 public void update(DataServiceDefinition def) {
                     def.setExternalConfig(extCfg);
                     setupElementTypeFactory(def.getServiceId(), def);
@@ -748,6 +752,7 @@ public class DataModelManager {
 
             ClassLoaderFactory clf = new ClassLoaderFactory() {
 
+                @Override
                 public ClassLoader getClassLoader() {
                     return DataModelManager.this.serviceManager.getServiceRuntimeClassLoader(serviceId);
                 }
@@ -755,6 +760,7 @@ public class DataModelManager {
 
             CompileService cs = new CompileService() {
 
+                @Override
                 public void compile(boolean clean) {
                     // only "compile" here, don't "build".
                     // "build" generates the service class and we don't

@@ -299,6 +299,7 @@ public class DataService {
     private void sortColumns(List<ColumnInfo> columns) {
         Collections.sort(columns, new Comparator<ColumnInfo>() {
 
+            @Override
             public int compare(ColumnInfo o1, ColumnInfo o2) {
                 if (o1.getIsPk()) {
                     if (o2.getIsPk()) {

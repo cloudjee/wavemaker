@@ -25,13 +25,16 @@ import org.springframework.transaction.TransactionStatus;
  */
 public class SalesforceTransactionManager implements PlatformTransactionManager {
 
+    @Override
     public TransactionStatus getTransaction(TransactionDefinition transactionDefinition) throws TransactionException {
         return null;
     }
 
+    @Override
     public void commit(TransactionStatus transactionStatus) throws TransactionException {
     }
 
+    @Override
     public void rollback(TransactionStatus transactionStatus) throws TransactionException {
     }
 }

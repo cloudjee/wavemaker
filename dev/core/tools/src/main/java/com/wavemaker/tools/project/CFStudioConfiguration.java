@@ -136,6 +136,7 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
      * 
      * @see com.wavemaker.tools.project.StudioConfiguration#getProjectsDir()
      */
+    @Override
     public Resource getProjectsDir() {
         String projectsProp = null;
         if (isRuntime()) {
@@ -217,6 +218,7 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
      * 
      * @see com.wavemaker.tools.project.StudioConfiguration#getWaveMakerHome()
      */
+    @Override
     public Resource getWaveMakerHome() {
 
         if (null != this.testWMHome) {
@@ -304,6 +306,7 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
      * 
      * @see com.wavemaker.tools.project.StudioConfiguration#getDemoDir()
      */
+    @Override
     public Resource getDemoDir() {
         if (isCloud()) {
             return null;
@@ -348,6 +351,7 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
      * 
      * @see com.wavemaker.tools.project.StudioConfiguration#getCommonDir()
      */
+    @Override
     public Resource getCommonDir() throws IOException {
         Resource common = ((GFSResource) getWaveMakerHome()).createRelative(gfs, COMMON_DIR);
 
@@ -427,6 +431,7 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
      * 
      * @see com.wavemaker.tools.project.StudioConfiguration#getStudioWebAppRootFile()
      */
+    @Override
     public Resource getStudioWebAppRoot() {
         return new ServletContextResource(this.servletContext, "/");
     }
@@ -436,6 +441,7 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
      * 
      * @see com.wavemaker.tools.project.StudioConfiguration#getPreferencesMap()
      */
+    @Override
     public Map<String, String> getPreferencesMap() {
 
         Map<String, String> prefs = new HashMap<String, String>();
@@ -460,6 +466,7 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
      * @param prefs
      * @throws FileAccessException
      */
+    @Override
     public void setPreferencesMap(Map<String, String> prefs) {
 
         if (isCloud()) {
@@ -526,6 +533,7 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
      * 
      * @see com.wavemaker.tools.project.StudioConfiguration#getRuntimeAccess()
      */
+    @Override
     public RuntimeAccess getRuntimeAccess() {
         return this.runtimeAccess;
     }
@@ -534,10 +542,12 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
         this.runtimeAccess = runtimeAccess;
     }
 
+    @Override
     public void setServletContext(ServletContext servletContext) {
         this.servletContext = servletContext;
     }
 
+    @Override
     public Resource createPath(Resource root, String path) {
         Assert.isInstanceOf(Resource.class, root, "GFS: Expected a Resource");
         try {
@@ -548,6 +558,7 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
         }
     }
 
+    @Override
     public Resource copyFile(Resource root, InputStream source, String filePath) {
         Assert.isInstanceOf(Resource.class, root, "GFS: Expected a Resource");
         try {
@@ -558,6 +569,7 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
         }
     }
 
+    @Override
     public boolean deleteFile(Resource file) {
         Assert.isInstanceOf(Resource.class, file, "GFS: Expected a Resource");
         GFSResource fileResource = (GFSResource) file;
@@ -574,6 +586,7 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
         }
     }
 
+    @Override
     public OutputStream getOutputStream(Resource file) {
         try {
             Assert.isTrue(!((GFSResource) file).isDirectory(), "Cannot get an output stream for a directory.");
@@ -584,6 +597,7 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
         }
     }
 
+    @Override
     public Resource copyRecursive(Resource root, Resource target, List<String> exclusions) {
         GFSResource source = (GFSResource) root;
         GFSResource destination = (GFSResource) target;
@@ -595,12 +609,14 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
         return destination;
     }
 
+    @Override
     public Resource getTomcatHome() {
         String tomcatHome = System.getProperty("catalina.home");
         tomcatHome = tomcatHome.endsWith("/") ? tomcatHome : tomcatHome + "/";
         return new GFSResource(gfs, tomcatHome);
     }
 
+    @Override
     public Resource getProjectLogsFolder() {
         try {
             return getTomcatHome().createRelative("logs/ProjectLogs/");
@@ -609,6 +625,7 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
         }
     }
 
+    @Override
     public List<Resource> listChildren(Resource root) {
         List<Resource> children = new ArrayList<Resource>();
         GridFSInputFile[] files;
@@ -626,6 +643,7 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
         return children;
     }
 
+    @Override
     public List<Resource> listChildren(Resource root, ResourceFilter filter) {
         List<Resource> children = new ArrayList<Resource>();
         GridFSInputFile[] files;
@@ -645,6 +663,7 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
         return children;
     }
 
+    @Override
     public Resource createTempDir() {
         try {
             return new GFSResource(gfs, "/tmp");
@@ -653,14 +672,17 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
         }
     }
 
+    @Override
     public Resource getResourceForURI(String resourceURI) {
         return new GFSResource(gfs, resourceURI);
     }
 
+    @Override
     public void prepareForWriting(Resource file) {
         // no need to pre-create directories here
     }
 
+    @Override
     public void rename(Resource oldResource, Resource newResource) {
         Assert.isInstanceOf(Resource.class, oldResource, "GFS: Expected a Resource");
         Assert.isInstanceOf(Resource.class, newResource, "GFS: Expected a Resource");
@@ -671,6 +693,7 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
         }
     }
 
+    @Override
     public String getPath(Resource file) {
         return ((GFSResource) file).getPath();
     }

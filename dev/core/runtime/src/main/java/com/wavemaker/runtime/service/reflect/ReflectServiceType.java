@@ -45,6 +45,7 @@ public abstract class ReflectServiceType implements ServiceType {
      * @see com.wavemaker.runtime.service.ServiceType#parseServiceArgs(com.wavemaker.runtime.service.ServiceWire,
      * java.lang.String, com.wavemaker.json.JSONArray, com.wavemaker.json.JSONState)
      */
+    @Override
     public ParsedServiceArguments parseServiceArgs(ServiceWire serviceWire, String methodName, JSONArray args, JSONState jsonState) {
 
         if (!(serviceWire instanceof ReflectServiceWire)) {
@@ -69,6 +70,7 @@ public abstract class ReflectServiceType implements ServiceType {
      * @see com.wavemaker.runtime.service.ServiceType#parseServiceArgs(com.wavemaker.runtime.service.ServiceWire,
      * java.lang.String, java.util.Map, com.wavemaker.json.JSONState)
      */
+    @Override
     public ParsedServiceArguments parseServiceArgs(ServiceWire serviceWire, String methodName, Map<String, Object[]> args, JSONState jsonState) {
 
         if (!(serviceWire instanceof ReflectServiceWire)) {
@@ -94,10 +96,12 @@ public abstract class ReflectServiceType implements ServiceType {
      * @see com.wavemaker.runtime.service.ServiceType#setup(com.wavemaker.runtime.service.ServiceWire,
      * com.wavemaker.runtime.server.InternalRuntime, com.wavemaker.runtime.RuntimeAccess)
      */
+    @Override
     public void setup(ServiceWire serviceWire, InternalRuntime internalRuntime, RuntimeAccess runtimeAccess) {
         // do nothing
     }
 
+    @Override
     public TypedServiceReturn invokeMethod(ServiceWire serviceWire, String methodName, ParsedServiceArguments args, JSONState jsonState) {
 
         Method method;

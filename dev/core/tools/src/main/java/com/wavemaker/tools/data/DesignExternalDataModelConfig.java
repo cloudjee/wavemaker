@@ -36,6 +36,7 @@ public class DesignExternalDataModelConfig implements ExternalDataModelConfig {
         this.serviceMgr = serviceMgr;
     }
 
+    @Override
     public boolean returnsSingleResult(String operationName) {
 
         Operation.Return rtn = getReturn(operationName);
@@ -47,10 +48,12 @@ public class DesignExternalDataModelConfig implements ExternalDataModelConfig {
         return !rtn.isIsList();
     }
 
+    @Override
     public String getServiceClass() {
         return this.serviceMgr.getService(this.serviceId).getClazz();
     }
 
+    @Override
     public String getOutputType(String operationName) {
 
         Operation.Return rtn = getReturn(operationName);

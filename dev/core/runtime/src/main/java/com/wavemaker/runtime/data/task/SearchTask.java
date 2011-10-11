@@ -46,6 +46,7 @@ public class SearchTask extends AbstractReadTask implements Task, DefaultRollbac
 
     private static final QueryOptions DEFAULT_QUERY_OPTIONS = new QueryOptions();
 
+    @Override
     public Object run(Session session, String dbName, Object... input) {
 
         if (input == null || input.length == 0) {
@@ -112,9 +113,11 @@ public class SearchTask extends AbstractReadTask implements Task, DefaultRollbac
 
             ObjectGraphTraversal.ObjectVisitor ov = new ObjectGraphTraversal.ObjectVisitor() {
 
+                @Override
                 public void cycle(Object o, Context ctx) {
                 }
 
+                @Override
                 public void visit(Object queryInstance, Context ctx) {
 
                     String propertyName = ctx.getProperties().get(0);
@@ -158,6 +161,7 @@ public class SearchTask extends AbstractReadTask implements Task, DefaultRollbac
         return rootCriteria;
     }
 
+    @Override
     public String getName() {
         return "Built-in Query By Example Task";
     }

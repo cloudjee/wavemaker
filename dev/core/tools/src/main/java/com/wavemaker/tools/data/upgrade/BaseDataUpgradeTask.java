@@ -62,6 +62,7 @@ public abstract class BaseDataUpgradeTask implements UpgradeTask {
         return null;
     }
 
+    @Override
     public final void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
         this.mgr = DesignTimeUtils.getDSMForProjectRoot(project.getProjectRoot());
 

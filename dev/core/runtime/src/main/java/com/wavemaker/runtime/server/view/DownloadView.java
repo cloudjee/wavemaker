@@ -69,11 +69,13 @@ public class DownloadView extends AbstractView implements TypedView {
         }
     }
 
+    @Override
     public FieldDefinition getRootType() {
         // ignored
         return null;
     }
 
+    @Override
     public void setRootType(FieldDefinition type) {
         // ignored
     }

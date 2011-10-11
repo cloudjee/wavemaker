@@ -30,6 +30,7 @@ public class JavaServiceType extends ReflectServiceType {
      * 
      * @see com.wavemaker.runtime.service.ServiceType#getTypeName()
      */
+    @Override
     public String getTypeName() {
         return TYPE_NAME;
     }

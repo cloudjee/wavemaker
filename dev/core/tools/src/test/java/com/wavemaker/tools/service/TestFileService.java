@@ -71,6 +71,7 @@ public class TestFileService extends WMTestCase {
             return this.encoding;
         }
 
+        @Override
         public Resource getFileServiceRoot() {
             return new FileSystemResource(this.basedir.getPath() + "/");
         }

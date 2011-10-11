@@ -127,26 +127,32 @@ public class RESTWsdlGenerator implements IPwsRestWsdlGenerator {
         this.parameterizedUrl = parameterizedUrl;
     }
 
+    @Override
     public void setServiceName(String serviceName) {
         this.serviceName = serviceName;
     }
 
+    @Override
     public void setNamespace(String namespace) {
         this.namespace = namespace;
     }
 
+    @Override
     public void setOperationNameList(List<String> operationName_list) {
         this.operationName_list = operationName_list;
     }
 
+    @Override
     public void setParameterizedUrl(String parameterizedUrl) {
         this.parameterizedUrl = parameterizedUrl;
     }
 
+    @Override
     public void setSchemaStrings(List<String> schemas) {
         this.schemaStrings = schemas;
     }
 
+    @Override
     public void setSchemaElements(List<Element> schemas) {
         this.schemaElements = schemas;
     }
@@ -156,6 +162,7 @@ public class RESTWsdlGenerator implements IPwsRestWsdlGenerator {
         this.inputParts_list.add(inputParts);
     }
 
+    @Override
     public void setInputParts_list(List<List<RESTInputParam>> inputParts_list) {
         this.inputParts_list = inputParts_list;
     }
@@ -165,22 +172,27 @@ public class RESTWsdlGenerator implements IPwsRestWsdlGenerator {
         this.additionalNamespaces.add(outputElementType);
     }
 
+    @Override
     public void setStringOutput(boolean isStringOutput) {
         this.isStringOutput = isStringOutput;
     }
 
+    @Override
     public void setOutputType(String outputType) {
         this.outputType = outputType;
     }
 
+    @Override
     public void setHttpMethod(String httpMethod) {
         this.httpMethod = httpMethod;
     }
 
+    @Override
     public void setContentType(String contentType) {
         this.contentType = contentType;
     }
 
+    @Override
     public void setPartnerName(String partnerName) {
     }
 
@@ -383,6 +395,7 @@ public class RESTWsdlGenerator implements IPwsRestWsdlGenerator {
         }
     }
 
+    @Override
     public QName buildQName(String namespace, String operationName, String suffix) {
         if (namespace == null || namespace.length() == 0) {
             return new QName(suffix);
@@ -401,6 +414,7 @@ public class RESTWsdlGenerator implements IPwsRestWsdlGenerator {
      * @throws ParserConfigurationException
      * @throws TransformerException
      */
+    @Override
     public void write(File wsdlFile) throws WSDLException, IOException, SAXException, ParserConfigurationException, TransformerException {
         WSDLWriter writer = WSDLFactory.newInstance().newWSDLWriter();
         Definition definition = generate();

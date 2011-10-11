@@ -43,6 +43,7 @@ public class MultipleReturnsRuntimeServiceBean extends AbstractLiveDataService {
      * 
      * @see com.wavemaker.runtime.service.LiveDataService#delete(java.lang.Object)
      */
+    @Override
     public void delete(Object o) throws Exception {
     }
 
@@ -51,6 +52,7 @@ public class MultipleReturnsRuntimeServiceBean extends AbstractLiveDataService {
      * 
      * @see com.wavemaker.runtime.service.LiveDataService#insert(java.lang.Object)
      */
+    @Override
     public Object insert(Object o) throws Exception {
         return null;
     }
@@ -61,6 +63,7 @@ public class MultipleReturnsRuntimeServiceBean extends AbstractLiveDataService {
      * @see com.wavemaker.runtime.service.LiveDataService#read(com.wavemaker.json.type.TypeDefinition, java.lang.Object,
      * com.wavemaker.runtime.service.PropertyOptions, com.wavemaker.runtime.service.PagingOptions)
      */
+    @Override
     public TypedServiceReturn read(TypeDefinition type, Object o, PropertyOptions propertyOptions, PagingOptions pagingOptions) throws Exception {
 
         TypedServiceReturn tsr = new TypedServiceReturn();
@@ -110,6 +113,7 @@ public class MultipleReturnsRuntimeServiceBean extends AbstractLiveDataService {
      * 
      * @see com.wavemaker.runtime.service.LiveDataService#update(java.lang.Object)
      */
+    @Override
     public Object update(Object o) throws Exception {
         return null;
     }
