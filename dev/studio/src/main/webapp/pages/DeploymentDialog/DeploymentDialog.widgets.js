@@ -93,7 +93,7 @@ DeploymentDialog.widgets = {
 				tomcatLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
 				    tcDeploymentNameEditor: ["wm.Text", {"border":"0","caption":"Deployment name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"New Tomcat Deployment","width":"100%", required: true}, {onchange: "deploymentNameChange"}],
 				    tcDeploymentTypeEditor: ["wm.Text", {"border":"0","caption":"Type","captionAlign":"left","captionSize":"140px","displayValue":"Tomcat Server","readonly":true,"width":"100%", required: true}, {}],
-				    tcHostEditor: ["wm.Text", {"border":"0","caption":"Host name/IP addr","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"localhost","width":"100%", required: true}, {}],
+				    tcHostEditor: ["wm.Text", {"border":"0","caption":"Host/IP address","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"localhost","width":"100%", required: true}, {}],
 				    tcPortEditor: ["wm.Text", {"border":"0","caption":"Port","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"80","width":"100%", required: true}, {}],
 				    tcNameEditor: ["wm.Text", {"border":"0","caption":"Application name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {}],
 				    tcUrlEditor: ["wm.Text", {"border":"0","caption":"URL","captionAlign":"left","captionSize":"140px","displayValue":"http://localhost:80/","readonly":true,"width":"100%"}, {}, {
