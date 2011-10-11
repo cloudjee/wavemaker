@@ -92,7 +92,13 @@ public abstract class AbstractStudioServiceProcessor extends AbstractProcessor {
         this.initialized = true;
     }
 
-    protected abstract void doInit(ProcessingEnvironment processingEnv);
+    /**
+     * Subclasses may override this to provide additional initialization logic. Default implementation is a no-op.
+     * 
+     * @param processingEnv
+     */
+    protected void doInit(ProcessingEnvironment processingEnv) {
+    };
 
     public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
         this.studioConfiguration = studioConfiguration;

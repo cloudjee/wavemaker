@@ -124,7 +124,6 @@ public class ProjectCompiler {
         options.add("utf8");
 
         options.add("-A" + ServiceProcessorConstants.PROJECT_NAME_PROP + "=" + projectName);
-        options.add("-A" + ServiceProcessorConstants.SERVICE_ID_PROP + "=" + serviceId);
 
         if (sourceFiles.iterator().hasNext()) {
             JavaCompiler.CompilationTask task = compiler.getTask(null, projectFileManager, null, options, null, sourceFiles);

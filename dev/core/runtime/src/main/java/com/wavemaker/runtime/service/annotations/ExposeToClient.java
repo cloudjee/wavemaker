@@ -21,14 +21,12 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Exposes any method or type that this annotation is applied to to the client. By default, all exposed services behave
- * as if they have been annotated with {@link ExposeToClient}.
+ * Exposes any method or type to which this annotation is applied to the client. Typically this will be used as the
+ * top-level annotation on a service class.
  * 
- * This is mostly useful to annotate individual methods for exposure, after the type that they belong to has been
- * annotated with {@link HideFromClient}.
- * 
+ * @see HideFromClient
  * @author small
- * @version $Rev$ - $Date$
+ * @author Jeremy Grelle
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD, ElementType.TYPE })

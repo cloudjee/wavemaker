@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedOptions;
@@ -34,6 +33,8 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementKindVisitor6;
 import javax.lang.model.util.ElementScanner6;
 import javax.tools.Diagnostic.Kind;
+import javax.tools.FileObject;
+import javax.tools.StandardLocation;
 
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -52,31 +53,13 @@ import com.wavemaker.tools.javaservice.JavaServiceDefinition;
 import com.wavemaker.tools.project.StudioConfiguration;
 import com.wavemaker.tools.service.DesignServiceManager;
 
-@SupportedAnnotationTypes("*")
+@SupportedAnnotationTypes({ "com.wavemaker.runtime.service.annotations.ExposeToClient", "com.wavemaker.runtime.service.annotations.HideFromClient" })
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
 @SupportedOptions({ ServiceProcessorConstants.PROJECT_NAME_PROP, ServiceProcessorConstants.PROJECT_ROOT_PROP,
     ServiceProcessorConstants.SERVICE_ID_PROP, ServiceProcessorConstants.SERVICE_CLASS_PROP, ServiceProcessorConstants.CLASS_PATH_SERVICE_PROP })
 public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
 
     private static final String LIVE_SERVICE_CLASS = "com.wavemaker.runtime.service.LiveDataService";
-
-    private String serviceId;
-
-    private String serviceClass;
-
-    private boolean classPathService = false;
-
-    private List<String> excludeTypeNames;
-
-    @Override
-    protected void doInit(ProcessingEnvironment processingEnv) {
-        this.serviceId = processingEnv.getOptions().get(ServiceProcessorConstants.SERVICE_ID_PROP);
-        this.serviceClass = processingEnv.getOptions().get(ServiceProcessorConstants.SERVICE_CLASS_PROP);
-        if (processingEnv.getOptions().containsKey(ServiceProcessorConstants.CLASS_PATH_SERVICE_PROP)) {
-            this.classPathService = Boolean.valueOf(processingEnv.getOptions().get(ServiceProcessorConstants.CLASS_PATH_SERVICE_PROP));
-        }
-        this.excludeTypeNames = this.designServiceManager.getExcludeTypeNames(this.serviceId);
-    }
 
     @Override
     protected boolean doProcess(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -89,27 +72,30 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
             return false;
         }
 
-        if (!StringUtils.hasText(this.serviceId)) {
-            this.processingEnv.getMessager().printMessage(Kind.ERROR, "serviceId option is required.");
-            return true;
-        }
+        for (Element e : roundEnv.getRootElements()) {
+            if (e instanceof TypeElement) {
+                TypeElement type = (TypeElement) e;
+                String serviceId = "";
 
-        if (this.classPathService) {
-            TypeElement type = this.processingEnv.getElementUtils().getTypeElement(this.serviceClass);
-            if (type == null) {
-                this.processingEnv.getMessager().printMessage(Kind.ERROR,
-                    "Could not locate " + this.serviceClass + " on the classpath for processing.");
-                return true;
-            }
-            return processService(type);
-        } else {
-            for (Element e : roundEnv.getRootElements()) {
-                if (e instanceof TypeElement) {
-                    TypeElement type = (TypeElement) e;
-                    if (StringUtils.hasText(this.serviceClass) && type.getQualifiedName().contentEquals(this.serviceClass)
-                        || !StringUtils.hasText(this.serviceClass) && type.getSimpleName().toString().endsWith("Service")) {
-                        return processService(type);
+                String packageName = this.processingEnv.getElementUtils().getPackageOf(type).getQualifiedName().toString();
+                try {
+                    FileObject file = this.processingEnv.getFiler().getResource(StandardLocation.SOURCE_PATH, packageName,
+                        type.getSimpleName().toString() + ".java");
+                    if (file.toUri().getPath().contains("/src/")) {
+                        String path = file.toUri().getPath();
+                        String servicePath = path.substring(0, path.lastIndexOf("/src/"));
+                        serviceId = servicePath.substring(servicePath.lastIndexOf("/") + 1);
                     }
+                } catch (IOException ex) {
+                    // File does not exist, so default to using the class name for the serviceId
+                    serviceId = StringUtils.uncapitalize(type.getSimpleName().toString());
+                }
+                if (!StringUtils.hasText(serviceId)) {
+                    this.processingEnv.getMessager().printMessage(Kind.ERROR, "Could not locate serviceId for class ");
+                    return true;
+                }
+                if (processService(serviceId, type)) {
+                    return true;
                 }
             }
         }
@@ -126,10 +112,10 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
         this.studioConfiguration = studioConfiguration;
     }
 
-    private boolean processService(TypeElement type) {
-        Resource serviceDefXml = this.designServiceManager.getServiceDefXml(this.serviceId);
+    private boolean processService(String serviceId, TypeElement type) {
+        Resource serviceDefXml = this.designServiceManager.getServiceDefXml(serviceId);
         try {
-            Resource sourceFile = this.designServiceManager.getServiceRuntimeDirectory(this.serviceId).createRelative(
+            Resource sourceFile = this.designServiceManager.getServiceRuntimeDirectory(serviceId).createRelative(
                 JavaServiceDefinition.getRelPathFromClass(type.getQualifiedName().toString()));
             if (!sourceFile.exists()) {
                 ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(ClassUtils.getDefaultClassLoader());
@@ -149,9 +135,9 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
             throw new WMRuntimeException(ex);
         }
 
-        this.processingEnv.getMessager().printMessage(Kind.NOTE, "Creating servicdedef for service " + this.serviceId);
+        this.processingEnv.getMessager().printMessage(Kind.NOTE, "Creating servicdedef for service " + serviceId);
 
-        JavaServiceDefinition serviceDef = new JavaServiceDefinition(type.getQualifiedName().toString(), this.serviceId);
+        JavaServiceDefinition serviceDef = new JavaServiceDefinition(type.getQualifiedName().toString(), serviceId);
         serviceDef.setPackageName(this.processingEnv.getElementUtils().getPackageOf(type).getQualifiedName().toString());
         TypeMirror dataServiceType = this.processingEnv.getElementUtils().getTypeElement(LIVE_SERVICE_CLASS).asType();
         if (this.processingEnv.getTypeUtils().isSubtype(type.asType(), dataServiceType)) {
@@ -169,7 +155,7 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
 
         @Override
         public JavaServiceDefinition scan(Element element, JavaServiceDefinition serviceDef) {
-            return element.accept(new JavaServiceVisitor(this.typeState), serviceDef);
+            return element.accept(new JavaServiceVisitor(this.typeState, serviceDef.getServiceId()), serviceDef);
         }
     }
 
@@ -177,8 +163,11 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
 
         private final CompileTypeState typeState;
 
-        public JavaServiceVisitor(CompileTypeState typeState) {
+        private final List<String> excludeTypeNames;
+
+        public JavaServiceVisitor(CompileTypeState typeState, String serviceId) {
             this.typeState = typeState;
+            this.excludeTypeNames = ServiceDefProcessor.this.designServiceManager.getExcludeTypeNames(serviceId);
         }
 
         @Override
@@ -244,7 +233,7 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
                 }
             }
 
-            if (ServiceDefProcessor.this.excludeTypeNames.contains(td.getTypeName())) {
+            if (this.excludeTypeNames.contains(td.getTypeName())) {
                 return;
             }
 

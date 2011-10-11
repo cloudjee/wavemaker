@@ -117,8 +117,9 @@ public class TestProjectCompiler {
         String serviceId = "serviceA";
         Resource serviceASrc = project.getProjectRoot().createRelative(DesignServiceManager.getRuntimeRelativeDir(serviceId));
         Resource javaSrc = serviceASrc.createRelative("FooService.java");
-        project.writeFile(javaSrc, "public class FooService{public int getInt(){return 12;}\n"
-            + "\tpublic int getInt2(java.util.List<String[]> strings){return 0;}\n}");
+        project.writeFile(javaSrc,
+            "import com.wavemaker.runtime.service.annotations.ExposeToClient;\n\n@ExposeToClient\npublic class FooService{public int getInt(){return 12;}\n"
+                + "\tpublic int getInt2(java.util.List<String[]> strings){return 0;}\n}");
 
         this.projectCompiler.compileProject("ProjectCompilerProject");
 
@@ -145,8 +146,9 @@ public class TestProjectCompiler {
         String serviceId = "serviceA";
         Resource serviceASrc = project.getProjectRoot().createRelative(DesignServiceManager.getRuntimeRelativeDir(serviceId));
         Resource javaSrc = serviceASrc.createRelative("FooService.java");
-        project.writeFile(javaSrc, "public class FooService{public int getInt(){return 12;}\n"
-            + "\tpublic int getInt2(java.util.List<String[]> strings){return 0;}\n}");
+        project.writeFile(javaSrc,
+            "import com.wavemaker.runtime.service.annotations.ExposeToClient;\n\n@ExposeToClient\npublic class FooService{public int getInt(){return 12;}\n"
+                + "\tpublic int getInt2(java.util.List<String[]> strings){return 0;}\n}");
 
         this.projectCompiler.compileProject("ProjectCompilerProject");
 

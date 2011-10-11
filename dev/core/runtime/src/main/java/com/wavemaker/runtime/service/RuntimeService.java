@@ -34,19 +34,18 @@ import com.wavemaker.runtime.server.DownloadResponse;
 import com.wavemaker.runtime.server.InternalRuntime;
 import com.wavemaker.runtime.server.JSONParameterTypeField;
 import com.wavemaker.runtime.server.ServerUtils;
+import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.events.ServiceEventNotifier;
 import com.wavemaker.runtime.service.response.SuccessResponse;
 
 /**
- * Runtime service. This service is always present during the runtime of a Maverick's application, and provides general
+ * Runtime service. This service is always present during the runtime of a WaveMaker application, and provides general
  * operations.
  * 
- * For now, modifications of this class must be accompanied by modifications to runtimeServiceDef.xml.
- * 
  * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Jeremy Grelle
  */
+@ExposeToClient
 public class RuntimeService {
 
     /**
@@ -58,7 +57,7 @@ public class RuntimeService {
      * @return The attribute specified by the propertyName parameter is returned, not the whole object.
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public Object getProperty(@JSONParameterTypeField(typeParameter = 1) Object instance, String type, String propertyName) throws Exception {
 
         ServiceWire serviceWire = this.typeManager.getServiceWireForType(type);

@@ -8,16 +8,15 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.List;
 import java.util.ServiceLoader;
-import java.util.Set;
 
 import javax.annotation.processing.Processor;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
+import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 
@@ -27,9 +26,9 @@ import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
-import com.wavemaker.common.util.ConversionUtils;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.server.ServerConstants;
+import com.wavemaker.runtime.service.RuntimeService;
 import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.StudioConfiguration;
@@ -74,14 +73,15 @@ public class TestServiceDefProcessor {
 
         Resource serviceASrc = projectRoot.createRelative(DesignServiceManager.getRuntimeRelativeDir(serviceId));
         Resource javaSrc = serviceASrc.createRelative("Foo.java");
-        this.project.writeFile(javaSrc, "public class Foo{public int getInt(){return 12;}}");
+        this.project.writeFile(javaSrc,
+            "import com.wavemaker.runtime.service.annotations.ExposeToClient;\n\n@ExposeToClient\npublic class Foo{public int getInt(){return 12;}}");
 
         Resource serviceDesignDir = projectRoot.createRelative(DesignServiceManager.getDesigntimeRelativeDir(serviceId));
         assertFalse(serviceDesignDir.exists());
 
         ServiceDefProcessor processor = new ServiceDefProcessor();
         processor.setStudioConfiguration(this.studioConfiguration);
-        buildWithProcessor(this.project, serviceId, "Foo", processor, javaSrc);
+        buildWithProcessor(this.project, serviceId, processor);
 
         assertTrue(serviceDesignDir.exists());
 
@@ -97,11 +97,13 @@ public class TestServiceDefProcessor {
 
         Resource serviceASrc = projectRoot.createRelative(DesignServiceManager.getRuntimeRelativeDir(serviceId));
         Resource javaSrc = serviceASrc.createRelative("Foo.java");
-        this.project.writeFile(javaSrc, "public class Foo{public int getInt(){return 12;}\n" + "\tpublic int getInt2(){return 13;}\n}");
+        this.project.writeFile(javaSrc,
+            "import com.wavemaker.runtime.service.annotations.ExposeToClient;\n\n@ExposeToClient\npublic class Foo{public int getInt(){return 12;}\n"
+                + "\tpublic int getInt2(){return 13;}\n}");
 
         ServiceDefProcessor processor = new ServiceDefProcessor();
         processor.setStudioConfiguration(this.studioConfiguration);
-        buildWithProcessor(this.project, serviceId, "Foo", processor, javaSrc);
+        buildWithProcessor(this.project, serviceId, processor);
 
         Service service = this.localDSM.getService(serviceId);
         assertEquals("Foo", service.getClazz());
@@ -115,12 +117,13 @@ public class TestServiceDefProcessor {
 
         Resource serviceASrc = projectRoot.createRelative(DesignServiceManager.getRuntimeRelativeDir(serviceId));
         Resource javaSrc = serviceASrc.createRelative("Foo.java");
-        this.project.writeFile(javaSrc, "public class Foo{public int getInt(){return 12;}\n"
-            + "\tpublic int getInt2(Integer[] ints){return 13+ints[0];}\n}");
+        this.project.writeFile(javaSrc,
+            "import com.wavemaker.runtime.service.annotations.ExposeToClient;\n\n@ExposeToClient\npublic class Foo{public int getInt(){return 12;}\n"
+                + "\tpublic int getInt2(Integer[] ints){return 13+ints[0];}\n}");
 
         ServiceDefProcessor processor = new ServiceDefProcessor();
         processor.setStudioConfiguration(this.studioConfiguration);
-        buildWithProcessor(this.project, serviceId, "Foo", processor, javaSrc);
+        buildWithProcessor(this.project, serviceId, processor);
 
         Service service = this.localDSM.getService(serviceId);
         assertEquals("Foo", service.getClazz());
@@ -147,12 +150,13 @@ public class TestServiceDefProcessor {
 
         Resource serviceASrc = projectRoot.createRelative(DesignServiceManager.getRuntimeRelativeDir(serviceId));
         Resource javaSrc = serviceASrc.createRelative("Foo.java");
-        this.project.writeFile(javaSrc, "public class Foo{public int getInt(){return 12;}\n"
-            + "\tpublic int getInt2(java.util.List<Integer> ints){return ints.get(0);}\n}");
+        this.project.writeFile(javaSrc,
+            "import com.wavemaker.runtime.service.annotations.ExposeToClient;\n\n@ExposeToClient\npublic class Foo{public int getInt(){return 12;}\n"
+                + "\tpublic int getInt2(java.util.List<Integer> ints){return ints.get(0);}\n}");
 
         ServiceDefProcessor processor = new ServiceDefProcessor();
         processor.setStudioConfiguration(this.studioConfiguration);
-        buildWithProcessor(this.project, serviceId, "Foo", processor, javaSrc);
+        buildWithProcessor(this.project, serviceId, processor);
 
         Service service = this.localDSM.getService(serviceId);
         assertEquals("Foo", service.getClazz());
@@ -179,12 +183,13 @@ public class TestServiceDefProcessor {
 
         Resource serviceASrc = projectRoot.createRelative(DesignServiceManager.getRuntimeRelativeDir(serviceId));
         Resource javaSrc = serviceASrc.createRelative("Foo.java");
-        this.project.writeFile(javaSrc, "public class Foo{public int getInt(){return 12;}\n"
-            + "\tpublic int getInt2(java.util.List<String[]> strings){return 0;}\n}");
+        this.project.writeFile(javaSrc,
+            "import com.wavemaker.runtime.service.annotations.ExposeToClient;\n\n@ExposeToClient\npublic class Foo{public int getInt(){return 12;}\n"
+                + "\tpublic int getInt2(java.util.List<String[]> strings){return 0;}\n}");
 
         ServiceDefProcessor processor = new ServiceDefProcessor();
         processor.setStudioConfiguration(this.studioConfiguration);
-        buildWithProcessor(this.project, serviceId, "Foo", processor, javaSrc);
+        buildWithProcessor(this.project, serviceId, processor);
 
         Service service = this.localDSM.getService(serviceId);
         assertEquals("Foo", service.getClazz());
@@ -211,12 +216,13 @@ public class TestServiceDefProcessor {
 
         Resource serviceASrc = projectRoot.createRelative(DesignServiceManager.getRuntimeRelativeDir(serviceId));
         Resource javaSrc = serviceASrc.createRelative("Foo.java");
-        this.project.writeFile(javaSrc, "public class Foo{public int getInt(){return 12;}\n"
-            + "\tpublic void takeThisMap(java.util.Map<String, String> strings){ }\n}");
+        this.project.writeFile(javaSrc,
+            "import com.wavemaker.runtime.service.annotations.ExposeToClient;\n\n@ExposeToClient\npublic class Foo{public int getInt(){return 12;}\n"
+                + "\tpublic void takeThisMap(java.util.Map<String, String> strings){ }\n}");
 
         ServiceDefProcessor processor = new ServiceDefProcessor();
         processor.setStudioConfiguration(this.studioConfiguration);
-        buildWithProcessor(this.project, serviceId, "Foo", processor, javaSrc);
+        buildWithProcessor(this.project, serviceId, processor);
 
         Service service = this.localDSM.getService(serviceId);
         assertEquals("Foo", service.getClazz());
@@ -242,12 +248,13 @@ public class TestServiceDefProcessor {
 
         Resource serviceASrc = projectRoot.createRelative(DesignServiceManager.getRuntimeRelativeDir(serviceId));
         Resource javaSrc = serviceASrc.createRelative("Foo.java");
-        this.project.writeFile(javaSrc, "public class Foo{public int getInt(){return 12;}\n"
-            + "\tpublic void takeThisEnum(java.lang.annotation.ElementType elementType){ }\n}");
+        this.project.writeFile(javaSrc,
+            "import com.wavemaker.runtime.service.annotations.ExposeToClient;\n\n@ExposeToClient\npublic class Foo{public int getInt(){return 12;}\n"
+                + "\tpublic void takeThisEnum(java.lang.annotation.ElementType elementType){ }\n}");
 
         ServiceDefProcessor processor = new ServiceDefProcessor();
         processor.setStudioConfiguration(this.studioConfiguration);
-        buildWithProcessor(this.project, serviceId, "Foo", processor, javaSrc);
+        buildWithProcessor(this.project, serviceId, processor);
 
         Service service = this.localDSM.getService(serviceId);
         assertEquals("Foo", service.getClazz());
@@ -276,12 +283,13 @@ public class TestServiceDefProcessor {
         Resource javaSrc1 = serviceASrc.createRelative("com/wavemaker/tools/apt/MyBean.java");
         this.project.writeFile(javaSrc1, this.project.readFile(javeFileToRead));
         Resource javaSrc2 = serviceASrc.createRelative("Foo.java");
-        this.project.writeFile(javaSrc2, "import com.wavemaker.tools.apt.MyBean;\n"
-            + "public class Foo{public MyBean findMyBean(){return new MyBean();}\n" + "\tpublic void saveMyBean(MyBean myBean){ }\n}");
+        this.project.writeFile(javaSrc2,
+            "import com.wavemaker.tools.apt.MyBean;\nimport com.wavemaker.runtime.service.annotations.ExposeToClient;\n\n@ExposeToClient\n"
+                + "public class Foo{public MyBean findMyBean(){return new MyBean();}\n" + "\tpublic void saveMyBean(MyBean myBean){ }\n}");
 
         ServiceDefProcessor processor = new ServiceDefProcessor();
         processor.setStudioConfiguration(this.studioConfiguration);
-        buildWithProcessor(this.project, serviceId, "Foo", processor, javaSrc1, javaSrc2);
+        buildWithProcessor(this.project, serviceId, processor);
 
         Service service = this.localDSM.getService(serviceId);
         assertEquals("Foo", service.getClazz());
@@ -303,8 +311,27 @@ public class TestServiceDefProcessor {
         assertTrue(foundBeanReturn && foundBeanArg);
     }
 
-    private void buildWithProcessor(Project project, String serviceId, String serviceClass, Processor processor, Resource... testClasses)
-        throws IOException {
+    @Test
+    public void testCreateServiceDef_ClassPathService() throws IOException {
+
+        String serviceId = "runtimeService";
+        Resource projectRoot = this.project.getProjectRoot();
+
+        Resource serviceDesignDir = projectRoot.createRelative(DesignServiceManager.getDesigntimeRelativeDir(serviceId));
+        assertFalse(serviceDesignDir.exists());
+
+        ServiceDefProcessor processor = new ServiceDefProcessor();
+        processor.setStudioConfiguration(this.studioConfiguration);
+        buildWithProcessor(this.project, serviceId, processor);
+
+        assertTrue(serviceDesignDir.exists());
+
+        Service service = this.localDSM.getService(serviceId);
+        assertEquals(RuntimeService.class.getName(), service.getClazz());
+        assertTrue(service.getOperation().size() > 0);
+    }
+
+    private void buildWithProcessor(Project project, String serviceId, Processor processor) throws IOException {
         // Get an instance of Eclipse compiler
         JavaCompiler compiler = ServiceLoader.load(JavaCompiler.class).iterator().next();
 
@@ -317,15 +344,17 @@ public class TestServiceDefProcessor {
 
         project.getWebInfClasses().getFile().mkdirs();
         fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Collections.singleton(project.getWebInfClasses().getFile()));
+        fileManager.setLocation(StandardLocation.SOURCE_PATH,
+            Collections.singleton(project.getProjectRoot().createRelative("services/" + serviceId + "/src/").getFile()));
 
-        // Get the list of java file objects, in this case we have only
-        // one file, TestClass.java
-        Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjectsFromFiles(ConversionUtils.convertToFileList(Arrays.asList(testClasses)));
+        // Get the list of java file objects
+        Iterable<? extends JavaFileObject> compilationUnits = fileManager.list(StandardLocation.SOURCE_PATH, "", Collections.singleton(Kind.SOURCE),
+            true);
 
-        Set<String> options = new HashSet<String>();
+        List<String> options = new ArrayList<String>();
         options.add("-A" + ServiceProcessorConstants.PROJECT_NAME_PROP + "=" + project.getProjectName());
-        options.add("-A" + ServiceProcessorConstants.SERVICE_ID_PROP + "=" + serviceId);
-        options.add("-A" + ServiceProcessorConstants.SERVICE_CLASS_PROP + "=" + serviceClass);
+        options.add("-classNames");
+        options.add(RuntimeService.class.getName());
 
         // Create the compilation task
         CompilationTask task = compiler.getTask(null, fileManager, null, options, null, compilationUnits);
