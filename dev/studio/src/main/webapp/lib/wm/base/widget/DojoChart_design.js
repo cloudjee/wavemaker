@@ -168,9 +168,8 @@ wm.DojoChart.extend({
 		});
 	},
 	setChartType: function(inValue){
-		this.chartType = inValue;
-		this.updateChartType();
-		this.dojoRenderer();
+	    this.chartType = inValue;
+	    this.renderDojoObj();
 	},
 	setLegendHeight: function(inValue){
 		this.legendHeight = inValue;
