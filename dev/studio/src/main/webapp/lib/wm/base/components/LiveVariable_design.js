@@ -82,11 +82,11 @@ wm.LiveVariable.extend({
 	},
 
 	set_liveSource: function(inLiveSource) {
-		this.setLiveSource(inLiveSource);
-/*
-		if (this.isDesignLoaded() && studio.selected == this)
-			studio.inspector.inspect(this);
-			*/
+	    this.setLiveSource(inLiveSource);
+
+	    if (studio.selected == this)
+		studio.inspector.inspect(this);
+
 	},
 	set_sourceData: function(inSourceData) {
 		this.setSourceData(inSourceData);
