@@ -35,6 +35,7 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 	},
 	createTab: function(inCaption, inIndex, inLayer) {
 		var b = this.btns[inIndex] = document.createElement("button");
+	    dojo.attr(b,"type", "button");
 	        //b.style.outline = "none";
 		b.style.display = inLayer.showing ? "" : "none";
 	    this.setBtnText(b, inCaption, inLayer.closable || inLayer.destroyable);
@@ -46,6 +47,7 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 		 * we capture the event properties we need and pass that rather than the event object itself.
 		 * Other browsers don't require this, but it seems like a good practice regardless.
 		 */
+		if (evt.type == "submit") return;
 		var pseudoEvent = {target: evt.target,
 				   clientX: evt.clientX,
 				   clientY: evt.clientY};

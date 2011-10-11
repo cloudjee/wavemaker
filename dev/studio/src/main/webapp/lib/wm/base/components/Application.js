@@ -509,13 +509,13 @@ dojo.declare("wm.Application", wm.Component, {
 	},
 	doRun: function() {
 		this._pageLoader.domNode = this.domNode = dojo.byId(this.domNode) || document.body;
-	    var button = document.createElement("BUTTON");
-	    /* WM-2794: ENTER key in a text input causes focus to move to first button and fire it; make sure its a button that does nothing; only certain this is an issue in IE 8 */
+	    /* WM-2794: ENTER key in a text input causes focus to move to first button and fire it; make sure its a button that does nothing; only certain this is an issue in IE 8 
 	    if (dojo.isIE <= 8) {
+		var button = document.createElement("BUTTON");
 		button.style.width = "1px";
 		button.style.height = "1px";
 		this.domNode.appendChild(button);
-	    }
+	    }*/
 		this.loadPage(app.main);
 	        this.hideLoadingIndicator();
 	},
