@@ -198,9 +198,12 @@ dojo.declare("wm.studio.Project", null, {
 							      this.loadError(studio.getDictionaryItem("wm.studio.Project.TOAST_OPEN_PROJECT_FAILED",
 												      {projectName: this.projectName, error: e}));
 
+							      this.editProjectFiles();
+/*
 							      this.projectName = "";
 							      this.pageName = "";
 							      studio.application = studio.page = null;
+*/
 							  } finally {
 							      studio._loadingApplication = false;
 							      this.loadingProject = false;
@@ -247,6 +250,25 @@ dojo.declare("wm.studio.Project", null, {
 		}
 		*/
 	},
+    editProjectFiles: function() {
+
+	studio.sourceTab.activate();
+	studio.resourcesTab.activate();
+	studio.workspace.hide();
+	var layers = studio.sourceTabs.layers;
+	for (var i = 0; i < layers.length; i++) {
+	    layers[i].setShowing(layers[i].name == "resourcesTab");
+	}
+
+	studio.startPageDialog.hide();
+	app.alert("There were errors in your project that prevent it from being openned; you may edit your files here to try and fix these problems");
+	studio.connectOnce(this, "closeProject", this, function() {
+	for (var i = 0; i < layers.length; i++) {
+	    layers[i].setShowing(true);
+	}
+	    studio.workspace.show();
+	});
+    },
     closeAllServicesTabs: function() {
 	var layers = studio.tabs.layers;
 	for (var i = layers.length-1; i >= 0; i--) 
@@ -291,8 +313,10 @@ dojo.declare("wm.studio.Project", null, {
 			studio.page = null;
 		    if (studio.application && studio.application.main && studio.application.main != inName)
 			this.openPage(studio.application.main);
-		    else
-			this.closeProject();
+		    else {
+			this.editProjectFiles();
+			//this.closeProject();
+		    }
 		}
 	this.loadingPage = false;
 	},
@@ -722,6 +746,7 @@ dojo.declare("wm.studio.Project", null, {
 	// Close
 	//=========================================================================
 	closeProject: function(inProjectName) {	    
+	    this.projectData = {};
 	    if (studio.application)
 		dojo.removeClass(studio.designer.domNode, studio.application.theme);
 	    if (studio.bindDialog.showing && !studio.bindDialog._hideAnimation) 

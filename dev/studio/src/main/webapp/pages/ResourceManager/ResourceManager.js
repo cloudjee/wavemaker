@@ -192,7 +192,7 @@ dojo.declare("ResourceManager", wm.Page, {
     start: function() {
 	this.subscribe("studio-saveProjectData", dojo.hitch(this, "loadResources"));
 	this.connect(studio, "projectChanged", this, function() {
-	    this.shortcutList.selectByIndex(0);
+	    this.shortcutList.selectByIndex(studio.application && studio.page ? 0 : 1);
 	    this.onShortcutSelect(this.shortcutList);
 	});
 	this.propertiesPanel = this.resourceProperties;
@@ -225,8 +225,10 @@ dojo.declare("ResourceManager", wm.Page, {
 	});	
 	*/
 
-	this.shortcutList.selectByIndex(0);
-	this.onShortcutSelect(this.shortcutList);
+	if (studio.application && studio.page) {
+	    this.shortcutList.selectByIndex(0);
+	    this.onShortcutSelect(this.shortcutList);
+	}
     },
     
     loadResources: function(optionalRoot) {
@@ -236,7 +238,7 @@ dojo.declare("ResourceManager", wm.Page, {
 	    root = optionalRoot;
 	} else if (optionalRoot === undefined && this.tree.root && this.tree.root.kids[0] ) {
 	    root = this.tree.root.kids[0].data.optionalRoot;
-	} else if (optionalRoot === undefined) {
+	} else if (optionalRoot === undefined && studio.application && studio.page) {
 	    root = "/webapproot/resources";
 	} else { // else if optionalRoot == "" for example
 	    root = "";
@@ -249,11 +251,12 @@ dojo.declare("ResourceManager", wm.Page, {
 	var t = this.tree;
 	t.clear();
 	this.selectedItem = null;
-	if (!studio.application) return;
 	var _this = this;
 	studio.resourceManagerService.requestAsync("getFolder", [root], 
                                                    function(rootfolder) {_this.initResourcesData(rootfolder, optionalRoot || "");},
-                                                   dojo.hitch(app, "toastWarning"));	
+						   function(inError) {
+						       app.toastWarning(inError.message);
+						   });
     },
     initResourcesData: function(rootfolder, optionalRoot) {
 

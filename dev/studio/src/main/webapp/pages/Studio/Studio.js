@@ -381,22 +381,34 @@ dojo.declare("Studio", wm.Page, {
 			     options.push("other");
 			     this.languageSelect.setOptions(options.join(","));
 			 }));
+			 this.disableMenuBar(false);
 		     } else if (!this.isLoginShowing()) {
-			 studio.startPageDialog.show();
-			 if (app.alertDialog && app.alertDialog.showing && !app.alertDialog._hideAnimation)
-			     app.alertDialog.show(); // insure the alert dialog is over the startPageDialog
+			 if (!wm.isEmpty(this.project.projectData)) {
+			     if (app.alertDialog && app.alertDialog.showing && !app.alertDialog._hideAnimation)
+				 app.alertDialog.show(); // insure the alert dialog is over the startPageDialog
+			     this.disableMenuBar(false);
+			     this.insertPopupBtn.set("disabled",true);
+			     this.servicesPopupBtn.set("disabled",true);
+			     this.pagePopupBtn.set("disabled",true);
+			 } else {
+			     studio.startPageDialog.show();
+			     this.disableMenuBar(true);
+			 }
 			 //this.startLayer.activate();
 		       //this.projects.activate();
+
+		     } else {
+			     this.disableMenuBar(true);
 		     }
     
 				// mount project so live services and the resources folder can be accessed; 
 				// somewhere there is code so that live services will autodeploy the project, but this doesn't work for resources; 
 				// at some point a cleanup of that code may be needed.	        
 		    /* deployStatus will probably be set already if any autoUpdate/startUpdate services fire during initialization */
-				if (!wm.studioConfig.preventLiveData && inName != '')
+				if (!wm.studioConfig.preventLiveData && inName != '' && studio.application)
 	            		    studio.deploy(null,"studioProjectCompile", true); 
 		}
-		this.disableMenuBar(!b);
+
 	    //this.disableCanvasSourceBtns(!b);
 			    /* Removal of projects tab
 		this.updateProjectTree();
@@ -1136,6 +1148,7 @@ dojo.declare("Studio", wm.Page, {
 			wm.fire(this.welcomePane.page, "update");
 	},*/
 	tabsCanChange: function(inSender, inChangeInfo) {
+	    if (!studio.application) return true; // needed to show the resource manager when the application has failed to load
 	    var newLayer = inSender.layers[inChangeInfo.newIndex];
 	    if (!newLayer) return;
 	    if (this.tabs.getActiveLayer().name == "sourceTab") {
@@ -1200,6 +1213,7 @@ dojo.declare("Studio", wm.Page, {
 	sourceTabsCanChange: function(inSender, inChangeInfo) {
 	},
 	sourceTabsChange: function(inSender) {
+	    if (!studio.application) return; // needed to show the resource manager when the application has failed to load
 	    var layer = inSender.getActiveLayer();
 
             // darksnazzy messes with users ability to edit themes
