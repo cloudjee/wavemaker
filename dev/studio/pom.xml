@@ -112,6 +112,12 @@
 									</excludes>
 								</resource>
 								<resource>
+									<directory>services/runtimeService/src</directory>
+									<excludes>
+										<exclude>**/*.java</exclude>
+									</excludes>
+								</resource>
+								<resource>
 									<directory>services/securityConfigService/src</directory>
 									<excludes>
 										<exclude>**/*.java</exclude>
@@ -199,13 +205,6 @@
 						<annotationProcessor>com.wavemaker.tools.apt.ServiceDefProcessor</annotationProcessor>
 					</annotationProcessors>
 					<compilerArgument>-AprojectRoot=${basedir}</compilerArgument>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-war-plugin</artifactId>
-				<configuration>
-					<webXml>${basedir}/../core/tools/templates/web.xml</webXml>
 				</configuration>
 			</plugin>
 			<plugin>
