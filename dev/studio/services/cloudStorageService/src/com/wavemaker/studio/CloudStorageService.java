@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Collection;
 
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.cloudmgr.CloudAuth;
 import com.wavemaker.tools.cloudmgr.CloudContainer;
@@ -31,6 +32,7 @@ import com.wavemaker.tools.deployment.ServiceDeploymentManager;
  * @author Jeremy Grelle
  * 
  */
+@ExposeToClient
 public class CloudStorageService {
 
     private CloudStorageMgrBeans cloudStorageMgrBeans;

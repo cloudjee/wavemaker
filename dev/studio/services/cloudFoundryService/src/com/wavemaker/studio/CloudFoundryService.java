@@ -10,8 +10,10 @@ import org.cloudfoundry.client.lib.CloudFoundryException;
 import org.springframework.http.HttpStatus;
 
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.tools.deployment.cloudfoundry.VmcDeploymentTarget;
 
+@ExposeToClient
 public class CloudFoundryService {
 
     public String login(String username, String password, String target) {

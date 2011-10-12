@@ -28,6 +28,7 @@ import org.xml.sax.SAXException;
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.runtime.server.DownloadResponse;
 import com.wavemaker.runtime.server.ParamName;
+import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.ws.BindingProperties;
 import com.wavemaker.runtime.ws.WebServiceException;
 import com.wavemaker.tools.project.ProjectManager;
@@ -44,6 +45,7 @@ import com.wavemaker.tools.ws.wsdl.WSDLException;
  * @version $Rev$ - $Date$
  * 
  */
+@ExposeToClient
 public class WebService {
 
     private WebServiceToolsManager wsToolsMgr;

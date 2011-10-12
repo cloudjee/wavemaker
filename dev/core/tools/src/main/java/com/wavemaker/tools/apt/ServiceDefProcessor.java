@@ -16,14 +16,18 @@ package com.wavemaker.tools.apt;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
+import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.RoundEnvironment;
 import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.annotation.processing.SupportedOptions;
 import javax.annotation.processing.SupportedSourceVersion;
 import javax.lang.model.SourceVersion;
+import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
@@ -33,7 +37,7 @@ import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementKindVisitor6;
 import javax.lang.model.util.ElementScanner6;
 import javax.tools.Diagnostic.Kind;
-import javax.tools.FileObject;
+import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
 
 import org.springframework.core.io.Resource;
@@ -50,16 +54,33 @@ import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.runtime.service.definition.ServiceOperation;
 import com.wavemaker.tools.javaservice.JavaServiceDefinition;
+import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.StudioConfiguration;
 import com.wavemaker.tools.service.DesignServiceManager;
 
 @SupportedAnnotationTypes({ "com.wavemaker.runtime.service.annotations.ExposeToClient", "com.wavemaker.runtime.service.annotations.HideFromClient" })
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
-@SupportedOptions({ ServiceProcessorConstants.PROJECT_NAME_PROP, ServiceProcessorConstants.PROJECT_ROOT_PROP,
-    ServiceProcessorConstants.SERVICE_ID_PROP, ServiceProcessorConstants.SERVICE_CLASS_PROP, ServiceProcessorConstants.CLASS_PATH_SERVICE_PROP })
+@SupportedOptions({ ServiceProcessorConstants.PROJECT_NAME_PROP, ServiceProcessorConstants.PROJECT_ROOT_PROP })
 public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
 
     private static final String LIVE_SERVICE_CLASS = "com.wavemaker.runtime.service.LiveDataService";
+
+    private Properties classPathServices = null;
+
+    @Override
+    protected void doInit(ProcessingEnvironment processingEnv) {
+        Project project = this.designServiceManager.getProjectManager().getCurrentProject();
+        try {
+            Resource classPathServicesProps = project.getProjectRoot().createRelative(
+                "services/" + ServiceProcessorConstants.CLASS_PATH_SERVICES_FILE);
+            if (classPathServicesProps.exists()) {
+                this.classPathServices = new Properties();
+                this.classPathServices.load(classPathServicesProps.getInputStream());
+            }
+        } catch (IOException e) {
+            this.processingEnv.getMessager().printMessage(Kind.ERROR, "Could not load " + ServiceProcessorConstants.CLASS_PATH_SERVICES_FILE);
+        }
+    }
 
     @Override
     protected boolean doProcess(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -72,30 +93,45 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
             return false;
         }
 
-        for (Element e : roundEnv.getRootElements()) {
-            if (e instanceof TypeElement) {
-                TypeElement type = (TypeElement) e;
-                String serviceId = "";
-
-                String packageName = this.processingEnv.getElementUtils().getPackageOf(type).getQualifiedName().toString();
-                try {
-                    FileObject file = this.processingEnv.getFiler().getResource(StandardLocation.SOURCE_PATH, packageName,
-                        type.getSimpleName().toString() + ".java");
-                    if (file.toUri().getPath().contains("/src/")) {
-                        String path = file.toUri().getPath();
-                        String servicePath = path.substring(0, path.lastIndexOf("/src/"));
-                        serviceId = servicePath.substring(servicePath.lastIndexOf("/") + 1);
+        for (TypeElement annotation : annotations) {
+            Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(annotation);
+            for (Element e : elements) {
+                if (e instanceof TypeElement) {
+                    TypeElement type = (TypeElement) e;
+                    String serviceId = "";
+                    try {
+                        JavaFileObject file = this.fileManager.getJavaFileForInput(StandardLocation.SOURCE_PATH, type.getQualifiedName().toString(),
+                            JavaFileObject.Kind.SOURCE);
+                        if (file != null && file.toUri().getPath().contains("/src/")) {
+                            String path = file.toUri().getPath();
+                            String servicePath = path.substring(0, path.lastIndexOf("/src/"));
+                            if (servicePath.contains("services/")) {
+                                serviceId = servicePath.substring(servicePath.lastIndexOf("/") + 1);
+                            }
+                        }
+                    } catch (IOException ex) {
+                        // File can't be located, so default to using the class name for the serviceId
                     }
-                } catch (IOException ex) {
-                    // File does not exist, so default to using the class name for the serviceId
-                    serviceId = StringUtils.uncapitalize(type.getSimpleName().toString());
+                    if (!StringUtils.hasText(serviceId)) {
+                        serviceId = StringUtils.uncapitalize(type.getSimpleName().toString());
+                    }
+                    if (processService(serviceId, type)) {
+                        return true;
+                    }
                 }
-                if (!StringUtils.hasText(serviceId)) {
-                    this.processingEnv.getMessager().printMessage(Kind.ERROR, "Could not locate serviceId for class ");
-                    return true;
-                }
-                if (processService(serviceId, type)) {
-                    return true;
+            }
+            if (this.classPathServices != null) {
+                Enumeration<?> props = this.classPathServices.propertyNames();
+                while (props.hasMoreElements()) {
+                    String serviceId = props.nextElement().toString();
+                    TypeElement type = this.processingEnv.getElementUtils().getTypeElement(this.classPathServices.getProperty(serviceId));
+                    for (AnnotationMirror annotationMirror : this.processingEnv.getElementUtils().getAllAnnotationMirrors(type)) {
+                        if (this.processingEnv.getTypeUtils().isSameType(annotationMirror.getAnnotationType(), annotation.asType())) {
+                            if (processService(serviceId, type)) {
+                                return true;
+                            }
+                        }
+                    }
                 }
             }
         }

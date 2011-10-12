@@ -15,11 +15,14 @@
 package com.wavemaker.tools.project;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 
 import org.springframework.core.io.Resource;
+import org.springframework.util.StringUtils;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.CastUtils;
@@ -68,6 +71,36 @@ public class Project extends AbstractFileService {
             } else {
                 return this.projectRoot.createRelative(ProjectConstants.WEB_DIR);
             }
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
+    }
+
+    public Resource getMainSrc() {
+        try {
+            if (this.mavenProject) {
+                return this.projectRoot.createRelative(ProjectConstants.MAVEN_SRC_DIR);
+            } else {
+                return this.projectRoot.createRelative(ProjectConstants.SRC_DIR);
+            }
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
+    }
+
+    public List<Resource> getAllServiceSrcDirs() {
+        try {
+            List<Resource> serviceSrcDirs = new ArrayList<Resource>();
+            List<Resource> serviceDirs = this.studioConfiguration.listChildren(this.projectRoot.createRelative("services/"));
+            for (Resource serviceDir : serviceDirs) {
+                if (StringUtils.getFilenameExtension(serviceDir.getFilename()) == null) {
+                    Resource srcDir = serviceDir.createRelative("src/");
+                    if (srcDir.exists()) {
+                        serviceSrcDirs.add(srcDir);
+                    }
+                }
+            }
+            return serviceSrcDirs;
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }

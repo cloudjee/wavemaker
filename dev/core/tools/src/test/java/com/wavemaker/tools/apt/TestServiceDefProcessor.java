@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.ServiceLoader;
 
 import javax.annotation.processing.Processor;
+import javax.tools.Diagnostic;
+import javax.tools.DiagnosticListener;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
@@ -25,6 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.util.StringUtils;
 
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.server.ServerConstants;
@@ -88,6 +91,22 @@ public class TestServiceDefProcessor {
         Service service = this.localDSM.getService(serviceId);
         assertEquals("Foo", service.getClazz());
         assertEquals(1, service.getOperation().size());
+    }
+
+    @Test
+    public void testCreateProcessNonService() throws IOException {
+
+        Resource projectRoot = this.project.getProjectRoot();
+
+        Resource srcDir = projectRoot.createRelative("src/");
+        Resource javaSrc = srcDir.createRelative("Foo.java");
+        this.project.writeFile(javaSrc, "public class Foo{public int getInt(){return 12;}}");
+
+        ServiceDefProcessor processor = new ServiceDefProcessor();
+        processor.setStudioConfiguration(this.studioConfiguration);
+        buildWithProcessor(this.project, null, processor);
+
+        assertTrue(this.project.getWebInfClasses().createRelative("Foo.class").exists());
     }
 
     @Test
@@ -336,16 +355,20 @@ public class TestServiceDefProcessor {
         JavaCompiler compiler = ServiceLoader.load(JavaCompiler.class).iterator().next();
 
         // Get an instance of Standard compiler
-        // JavaCompiler compiler =
-        // javax.tools.ToolProvider.getSystemJavaCompiler();
+        // JavaCompiler compiler = javax.tools.ToolProvider.getSystemJavaCompiler();
 
         // Get a new instance of the standard file manager implementation
         StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, Charset.forName(ServerConstants.DEFAULT_ENCODING));
 
         project.getWebInfClasses().getFile().mkdirs();
         fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Collections.singleton(project.getWebInfClasses().getFile()));
-        fileManager.setLocation(StandardLocation.SOURCE_PATH,
-            Collections.singleton(project.getProjectRoot().createRelative("services/" + serviceId + "/src/").getFile()));
+
+        if (StringUtils.hasText(serviceId)) {
+            fileManager.setLocation(StandardLocation.SOURCE_PATH,
+                Collections.singleton(project.getProjectRoot().createRelative("services/" + serviceId + "/src/").getFile()));
+        } else {
+            fileManager.setLocation(StandardLocation.SOURCE_PATH, Collections.singleton(project.getProjectRoot().createRelative("src/").getFile()));
+        }
 
         // Get the list of java file objects
         Iterable<? extends JavaFileObject> compilationUnits = fileManager.list(StandardLocation.SOURCE_PATH, "", Collections.singleton(Kind.SOURCE),
@@ -357,7 +380,13 @@ public class TestServiceDefProcessor {
         options.add(RuntimeService.class.getName());
 
         // Create the compilation task
-        CompilationTask task = compiler.getTask(null, fileManager, null, options, null, compilationUnits);
+        CompilationTask task = compiler.getTask(null, fileManager, new DiagnosticListener<JavaFileObject>() {
+
+            @Override
+            public void report(Diagnostic<? extends JavaFileObject> diagnostic) {
+                assertFalse("Error reported: " + diagnostic.getMessage(null), diagnostic.getKind() == Diagnostic.Kind.ERROR);
+            }
+        }, options, null, compilationUnits);
         task.setProcessors(Collections.singletonList(processor));
         // Perform the compilation task.
         task.call();

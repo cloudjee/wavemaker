@@ -24,6 +24,7 @@ import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.server.DownloadResponse;
 import com.wavemaker.runtime.server.InternalRuntime;
+import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.events.ServiceEventNotifier;
 
 /**
@@ -31,7 +32,7 @@ import com.wavemaker.runtime.service.events.ServiceEventNotifier;
  * @version $Rev: 21571 $ - $Date: 2008-03-13 13:37:31 -0700 (Thu, 13 Mar 2008) $
  * 
  */
-
+@ExposeToClient
 public class WaveMakerService {
 
     public String getLocalHostIP() {

@@ -27,6 +27,7 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.server.DownloadResponse;
 import com.wavemaker.runtime.server.FileUploadResponse;
 import com.wavemaker.runtime.server.ParamName;
+import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.project.StudioConfiguration;
@@ -36,6 +37,7 @@ import com.wavemaker.tools.project.StudioConfiguration;
  * parameters will be passed to the client or taken from the client, respectively. This will be a singleton instance,
  * shared between all requests.
  */
+@ExposeToClient
 public class ResourceFileService {
 
     protected final Logger logger = Logger.getLogger(getClass());

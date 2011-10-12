@@ -32,6 +32,7 @@ import javax.xml.bind.JAXBException;
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
+import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.tools.data.ColumnInfo;
 import com.wavemaker.tools.data.DataModelConfiguration;
 import com.wavemaker.tools.data.DataModelManager;
@@ -49,6 +50,7 @@ import com.wavemaker.tools.service.DesignServiceManager;
 /**
  * This service provides methods to config security settings for the project.
  */
+@ExposeToClient
 public class SecurityConfigService {
 
     private static final String IS_AUTHENTICATED_ANONYMOUSLY = "IS_AUTHENTICATED_ANONYMOUSLY";

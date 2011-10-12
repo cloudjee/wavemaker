@@ -64,8 +64,7 @@ public class ProjectCompiler {
         ClassFileManager projectFileManager;
         Iterable<JavaFileObject> sourceFiles = null;
         try {
-            projectFileManager = new ClassFileManager(compiler.getStandardFileManager(null, null, null), this.studioConfiguration, project,
-                project.getProjectRoot().createRelative("src/"));
+            projectFileManager = new ClassFileManager(compiler.getStandardFileManager(null, null, null), this.studioConfiguration, project);
             sourceFiles = projectFileManager.list(StandardLocation.SOURCE_PATH, "", Collections.singleton(Kind.SOURCE), true);
 
         } catch (IOException e) {
@@ -111,8 +110,7 @@ public class ProjectCompiler {
         ClassFileManager projectFileManager;
         Iterable<JavaFileObject> sourceFiles;
         try {
-            projectFileManager = new ClassFileManager(compiler.getStandardFileManager(null, null, null), this.studioConfiguration, project,
-                project.getProjectRoot().createRelative("services/" + serviceId + "/src/"));
+            projectFileManager = new ClassFileManager(compiler.getStandardFileManager(null, null, null), this.studioConfiguration, project);
             sourceFiles = projectFileManager.list(StandardLocation.SOURCE_PATH, "", Collections.singleton(Kind.SOURCE), true);
         } catch (IOException e) {
             throw new WMRuntimeException("Could not create Java file manager for project " + projectName, e);

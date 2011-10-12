@@ -27,7 +27,11 @@ public class ProjectConstants {
 
     public static final String WEB_DIR = "webapproot/";
 
+    public static final String SRC_DIR = "src/";
+
     public static final String MAVEN_WEB_DIR = "src/main/webapp/";
+
+    public static final String MAVEN_SRC_DIR = "src/main/java/";
 
     public static final String PAGES_DIR = "pages/";
 

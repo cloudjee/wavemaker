@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.List;
 
 import com.wavemaker.common.util.Tuple;
+import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.cloudmgr.CloudAuth;
 import com.wavemaker.tools.cloudmgr.CloudFlavor;
@@ -32,6 +33,7 @@ import com.wavemaker.tools.cloudmgr.CloudServerMgrBeans;
  * @author slee
  * 
  */
+@ExposeToClient
 public class CloudServerService {
 
     private CloudServerMgrBeans cloudServerMgrBeans;

@@ -19,6 +19,7 @@ import java.util.List;
 import com.wavemaker.runtime.pws.IPwsLoginManager;
 import com.wavemaker.runtime.pws.PwsLoginInfo;
 import com.wavemaker.runtime.pws.PwsLoginManagerBeanFactory;
+import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.pws.IPwsRestImporter;
 import com.wavemaker.tools.pws.PwsRestImporterBeanFactory;
@@ -27,6 +28,7 @@ import com.wavemaker.tools.pws.PwsRestImporterBeanFactory;
  * @author slee Partner Web Service class This class provides the list of services and operations and import web
  *         services
  */
+@ExposeToClient
 public class PwsImportService {
 
     private PwsLoginManagerBeanFactory pwsLoginManagerBeanFactory;

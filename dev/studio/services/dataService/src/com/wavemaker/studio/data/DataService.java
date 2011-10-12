@@ -30,6 +30,7 @@ import com.wavemaker.runtime.client.TreeNode;
 import com.wavemaker.runtime.data.Input;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.data.util.JDBCUtils;
+import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.tools.data.ColumnInfo;
 import com.wavemaker.tools.data.DataModelManager;
 import com.wavemaker.tools.data.DataServiceLoggers;
@@ -46,6 +47,7 @@ import com.wavemaker.tools.project.ProjectManager;
  * @author Jeremy Grelle
  * 
  */
+@ExposeToClient
 public class DataService {
 
     private DataModelManager dataModelMgr = null;

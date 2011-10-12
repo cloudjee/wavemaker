@@ -18,12 +18,14 @@ import javax.xml.namespace.QName;
 
 import org.json.JSONObject;
 
+import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.ws.HTTPBindingSupport;
 import com.wavemaker.runtime.ws.util.Constants;
 
 /**
  * Login service class for Asteria Flow Designer Server
  */
+@ExposeToClient
 public class LoginService {
 
     public String logIn(String host, String port, String userName, String password, String domain) throws Exception {

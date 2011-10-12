@@ -16,12 +16,14 @@ package com.wavemaker.studio.warp;
 
 import java.util.List;
 
+import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.ws.infoteria.FlowSupport;
 
 /**
  * Login service class for Asteria Flow Designer Server
  */
+@ExposeToClient
 public class FlowService {
 
     private LoginService warpLoginService;
