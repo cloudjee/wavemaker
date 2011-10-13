@@ -30,13 +30,9 @@ public class ConfigurationAndSessionFactoryBean extends LocalSessionFactoryBean 
     private String name = null;
 
     @Override
-    protected Class<? extends Configuration> getDefaultConfigurationClass() {
-        WMAppContext wmApp = WMAppContext.getInstance();
-        if (wmApp != null && wmApp.isMultiTenant()) {
-            return ConfigurationExt.class;
-        } else {
-            return super.getDefaultConfigurationClass();
-        }
+    public void afterPropertiesSet() throws Exception {
+        setConfigurationClass(getDefaultConfigurationClass());
+        super.afterPropertiesSet();
     }
 
     @Override
@@ -53,6 +49,10 @@ public class ConfigurationAndSessionFactoryBean extends LocalSessionFactoryBean 
         return configuration;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     protected void afterSessionFactoryCreation() throws Exception {
         SessionFactory sessionFactory = getSessionFactory();
@@ -64,7 +64,12 @@ public class ConfigurationAndSessionFactoryBean extends LocalSessionFactoryBean 
         ConfigurationRegistry.getInstance().remove(this.name);
     }
 
-    public void setName(String name) {
-        this.name = name;
+    private Class<? extends Configuration> getDefaultConfigurationClass() {
+        WMAppContext wmApp = WMAppContext.getInstance();
+        if (wmApp != null && wmApp.isMultiTenant()) {
+            return ConfigurationExt.class;
+        } else {
+            return Configuration.class;
+        }
     }
 }
