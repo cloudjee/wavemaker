@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" id="runtimeService" class="com.wavemaker.runtime.service.RuntimeService" CRUDService="false" type="JavaService" springFile="runtimeService.spring.xml">
+    <operation name="getProperty">
+        <parameter name="instance" typeRef="java.lang.Object" isList="false"/>
+        <parameter name="type" typeRef="java.lang.String" isList="false"/>
+        <parameter name="propertyName" typeRef="java.lang.String" isList="false"/>
+        <return typeRef="java.lang.Object" isList="false"/>
+    </operation>
+    <operation name="read">
+        <parameter name="serviceName" typeRef="java.lang.String" isList="false"/>
+        <parameter name="typeName" typeRef="java.lang.String" isList="false"/>
+        <parameter name="instance" typeRef="java.lang.Object" isList="false"/>
+        <parameter name="propertyOptions" typeRef="com.wavemaker.runtime.service.PropertyOptions" isList="false"/>
+        <parameter name="pagingOptions" typeRef="com.wavemaker.runtime.service.PagingOptions" isList="false"/>
+        <return typeRef="com.wavemaker.runtime.service.TypedServiceReturn" isList="false"/>
+    </operation>
+    <operation name="update">
+        <parameter name="serviceName" typeRef="java.lang.String" isList="false"/>
+        <parameter name="typeName" typeRef="java.lang.String" isList="false"/>
+        <parameter name="objectToUpdate" typeRef="java.lang.Object" isList="false"/>
+        <return typeRef="com.wavemaker.runtime.service.TypedServiceReturn" isList="false"/>
+    </operation>
+    <operation name="insert">
+        <parameter name="serviceName" typeRef="java.lang.String" isList="false"/>
+        <parameter name="typeName" typeRef="java.lang.String" isList="false"/>
+        <parameter name="objectToInsert" typeRef="java.lang.Object" isList="false"/>
+        <return typeRef="com.wavemaker.runtime.service.TypedServiceReturn" isList="false"/>
+    </operation>
+    <operation name="delete">
+        <parameter name="serviceName" typeRef="java.lang.String" isList="false"/>
+        <parameter name="typeName" typeRef="java.lang.String" isList="false"/>
+        <parameter name="objectToDelete" typeRef="java.lang.Object" isList="false"/>
+    </operation>
+    <operation name="getLocalHostIP">
+        <return typeRef="java.lang.String" isList="false"/>
+    </operation>
+    <operation name="getSessionId">
+        <return typeRef="java.lang.String" isList="false"/>
+    </operation>
+    <operation name="echo">
+        <parameter name="contents" typeRef="java.lang.String" isList="false"/>
+        <parameter name="contentType" typeRef="java.lang.String" isList="false"/>
+        <parameter name="fileName" typeRef="java.lang.String" isList="false"/>
+        <return typeRef="com.wavemaker.runtime.server.DownloadResponse" isList="false"/>
+    </operation>
+    <operation name="shiftDeserializedProperties">
+        <parameter name="index" typeRef="int" isList="false"/>
+    </operation>
+    <operation name="getServiceWire">
+        <parameter name="serviceName" typeRef="java.lang.String" isList="false"/>
+        <parameter name="typeName" typeRef="java.lang.String" isList="false"/>
+        <return typeRef="com.wavemaker.runtime.service.ServiceWire" isList="false"/>
+    </operation>
+    <operation name="getTypeManager">
+        <return typeRef="com.wavemaker.runtime.service.TypeManager" isList="false"/>
+    </operation>
+    <operation name="setTypeManager">
+        <parameter name="typeManager" typeRef="com.wavemaker.runtime.service.TypeManager" isList="false"/>
+    </operation>
+    <operation name="getServiceManager">
+        <return typeRef="com.wavemaker.runtime.service.ServiceManager" isList="false"/>
+    </operation>
+    <operation name="setServiceManager">
+        <parameter name="serviceManager" typeRef="com.wavemaker.runtime.service.ServiceManager" isList="false"/>
+    </operation>
+    <operation name="getServiceEventNotifier">
+        <return typeRef="com.wavemaker.runtime.service.events.ServiceEventNotifier" isList="false"/>
+    </operation>
+    <operation name="setServiceEventNotifier">
+        <parameter name="serviceEventNotifier" typeRef="com.wavemaker.runtime.service.events.ServiceEventNotifier" isList="false"/>
+    </operation>
+    <operation name="getInternalRuntime">
+        <return typeRef="com.wavemaker.runtime.server.InternalRuntime" isList="false"/>
+    </operation>
+    <operation name="setInternalRuntime">
+        <parameter name="internalRuntime" typeRef="com.wavemaker.runtime.server.InternalRuntime" isList="false"/>
+    </operation>
+    <operation name="getRuntimeAccess">
+        <return typeRef="com.wavemaker.runtime.RuntimeAccess" isList="false"/>
+    </operation>
+    <operation name="setRuntimeAccess">
+        <parameter name="runtimeAccess" typeRef="com.wavemaker.runtime.RuntimeAccess" isList="false"/>
+    </operation>
+    <dataobjects>
+        <dataobject javaType="com.wavemaker.runtime.service.TypedServiceReturn" name="TypedServiceReturn" supportsQuickData="false">
+            <element name="returnValue" typeRef="java.lang.Object" isList="false" allowNull="false"/>
+            <element name="returnType" typeRef="com.wavemaker.json.type.FieldDefinition" isList="false" allowNull="false"/>
+        </dataobject>
+        <dataobject javaType="com.wavemaker.runtime.service.PropertyOptions" name="PropertyOptions" supportsQuickData="false">
+            <element name="properties" typeRef="java.lang.String" isList="true" allowNull="false"/>
+            <element name="filterList" typeRef="com.wavemaker.runtime.service.Filter" isList="true" allowNull="false"/>
+            <element name="filters" typeRef="java.util.List&lt;java.lang.String&gt;" isList="true" allowNull="false"/>
+            <element name="matchMode" typeRef="java.lang.String" isList="false" allowNull="false"/>
+            <element name="ignoreCase" typeRef="boolean" isList="false" allowNull="false"/>
+        </dataobject>
+        <dataobject javaType="com.wavemaker.runtime.service.PagingOptions" name="PagingOptions" supportsQuickData="false">
+            <element name="maxResults" typeRef="java.lang.Long" isList="false" allowNull="false"/>
+            <element name="firstResult" typeRef="java.lang.Long" isList="false" allowNull="false"/>
+            <element name="orderBy" typeRef="java.util.List&lt;java.lang.String&gt;" isList="true" allowNull="false"/>
+            <element name="orderByList" typeRef="com.wavemaker.runtime.service.OrderBy" isList="true" allowNull="false"/>
+        </dataobject>
+        <dataobject javaType="com.wavemaker.runtime.service.ServiceWire" name="ServiceWire" supportsQuickData="false">
+            <element name="serviceType" typeRef="com.wavemaker.runtime.service.ServiceType" isList="false" allowNull="false"/>
+            <element name="serviceId" typeRef="java.lang.String" isList="false" allowNull="false"/>
+            <element name="liveDataService" typeRef="boolean" isList="false" allowNull="false"/>
+        </dataobject>
+        <dataobject javaType="com.wavemaker.runtime.service.TypeManager" name="TypeManager" supportsQuickData="false">
+            <element name="types" typeRef="java.util.Map&lt;java.lang.String,java.util.List&lt;java.lang.String&gt;&gt;" isList="false" allowNull="false"/>
+            <element name="serviceManager" typeRef="com.wavemaker.runtime.service.ServiceManager" isList="false" allowNull="false"/>
+        </dataobject>
+        <dataobject javaType="com.wavemaker.runtime.service.ServiceManager" name="ServiceManager" supportsQuickData="false">
+            <element name="services" typeRef="java.lang.String" isList="true" allowNull="false"/>
+            <element name="serviceTypes" typeRef="com.wavemaker.runtime.service.ServiceType" isList="true" allowNull="false"/>
+            <element name="serviceWires" typeRef="com.wavemaker.runtime.service.ServiceWire" isList="true" allowNull="false"/>
+        </dataobject>
+        <dataobject javaType="com.wavemaker.runtime.service.events.ServiceEventNotifier" name="ServiceEventNotifier" supportsQuickData="false"/>
+        <dataobject javaType="com.wavemaker.runtime.server.InternalRuntime" name="InternalRuntime" supportsQuickData="false">
+            <element name="instance" typeRef="com.wavemaker.runtime.server.InternalRuntime" isList="false" allowNull="false"/>
+            <element name="jsonConfig" typeRef="com.wavemaker.json.JSONState" isList="false" allowNull="false"/>
+            <element name="jSONState" typeRef="com.wavemaker.json.JSONState" isList="false" allowNull="false"/>
+            <element name="deserializedProperties" typeRef="java.util.List&lt;java.lang.String&gt;" isList="true" allowNull="false"/>
+        </dataobject>
+        <dataobject javaType="com.wavemaker.runtime.RuntimeAccess" name="RuntimeAccess" supportsQuickData="false">
+            <element name="instance" typeRef="com.wavemaker.runtime.RuntimeAccess" isList="false" allowNull="false"/>
+            <element name="session" typeRef="javax.servlet.http.HttpSession" isList="false" allowNull="false"/>
+            <element name="request" typeRef="javax.servlet.http.HttpServletRequest" isList="false" allowNull="false"/>
+            <element name="tenantId" typeRef="int" isList="false" allowNull="false"/>
+        </dataobject>
+    </dataobjects>
+</service>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<service xmlns="http://www.activegrid.com/namespaces/ServiceDefinitions/1.0" id="waveMakerService" class="com.wavemaker.runtime.service.WaveMakerService" CRUDService="false" type="JavaService" springFile="waveMakerService.spring.xml">
+    <operation name="getLocalHostIP">
+        <return typeRef="java.lang.String" isList="false"/>
+    </operation>
+    <operation name="getSessionId">
+        <return typeRef="java.lang.String" isList="false"/>
+    </operation>
+    <operation name="echo">
+        <parameter name="contents" typeRef="java.lang.String" isList="false"/>
+        <parameter name="contentType" typeRef="java.lang.String" isList="false"/>
+        <parameter name="fileName" typeRef="java.lang.String" isList="false"/>
+        <return typeRef="com.wavemaker.runtime.server.DownloadResponse" isList="false"/>
+    </operation>
+    <operation name="getServiceWire">
+        <parameter name="serviceName" typeRef="java.lang.String" isList="false"/>
+        <parameter name="typeName" typeRef="java.lang.String" isList="false"/>
+        <return typeRef="com.wavemaker.runtime.service.ServiceWire" isList="false"/>
+    </operation>
+    <operation name="getTypeManager">
+        <return typeRef="com.wavemaker.runtime.service.TypeManager" isList="false"/>
+    </operation>
+    <operation name="setTypeManager">
+        <parameter name="typeManager" typeRef="com.wavemaker.runtime.service.TypeManager" isList="false"/>
+    </operation>
+    <operation name="getServiceManager">
+        <return typeRef="com.wavemaker.runtime.service.ServiceManager" isList="false"/>
+    </operation>
+    <operation name="setServiceManager">
+        <parameter name="serviceManager" typeRef="com.wavemaker.runtime.service.ServiceManager" isList="false"/>
+    </operation>
+    <operation name="getServiceEventNotifier">
+        <return typeRef="com.wavemaker.runtime.service.events.ServiceEventNotifier" isList="false"/>
+    </operation>
+    <operation name="setServiceEventNotifier">
+        <parameter name="serviceEventNotifier" typeRef="com.wavemaker.runtime.service.events.ServiceEventNotifier" isList="false"/>
+    </operation>
+    <operation name="getInternalRuntime">
+        <return typeRef="com.wavemaker.runtime.server.InternalRuntime" isList="false"/>
+    </operation>
+    <operation name="setInternalRuntime">
+        <parameter name="internalRuntime" typeRef="com.wavemaker.runtime.server.InternalRuntime" isList="false"/>
+    </operation>
+    <operation name="getRuntimeAccess">
+        <return typeRef="com.wavemaker.runtime.RuntimeAccess" isList="false"/>
+    </operation>
+    <operation name="setRuntimeAccess">
+        <parameter name="runtimeAccess" typeRef="com.wavemaker.runtime.RuntimeAccess" isList="false"/>
+    </operation>
+    <dataobjects/>
+</service>

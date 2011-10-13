@@ -150,7 +150,7 @@ public class DesignServiceManager {
      * @return
      */
     public static String getDesigntimeRelativeDir(String serviceId) {
-        return SERVICES_DIR + "/" + serviceId + "/" + DESIGNTIME_DIR;
+        return SERVICES_DIR + serviceId + "/" + DESIGNTIME_DIR;
     }
 
     /**
@@ -159,7 +159,7 @@ public class DesignServiceManager {
      * @return
      */
     public static String getRuntimeRelativeDir(String serviceId) {
-        return SERVICES_DIR + "/" + serviceId + "/" + RUNTIME_DIR;
+        return SERVICES_DIR + serviceId + "/" + RUNTIME_DIR;
     }
 
     /**
@@ -192,7 +192,7 @@ public class DesignServiceManager {
      */
     public static String getServiceBeanRelative(String serviceId) {
 
-        return getRuntimeRelativeDir(serviceId) + "/" + getServiceBeanName(serviceId);
+        return getRuntimeRelativeDir(serviceId) + getServiceBeanName(serviceId);
     }
 
     /**
@@ -473,7 +473,14 @@ public class DesignServiceManager {
      */
     public Resource getServiceDefXml(String serviceId) {
         try {
-            return getServiceDesigntimeDirectory(serviceId).createRelative(SERVICE_DEF_XML);
+            Resource serviceDef = getServiceDesigntimeDirectory(serviceId).createRelative(SERVICE_DEF_XML);
+            if (!serviceDef.exists()) {
+                Resource runtimeServiceDef = new ClassPathResource(SERVICES_DIR + serviceId + "/" + SERVICE_DEF_XML);
+                if (runtimeServiceDef.exists()) {
+                    return runtimeServiceDef;
+                }
+            }
+            return serviceDef;
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
@@ -537,6 +544,9 @@ public class DesignServiceManager {
                 }
             }
         }
+
+        ret.add(RUNTIME_SERVICE_ID);
+        ret.add(RUNTIME_DATA_SERVICE_ID);
 
         return ret;
     }

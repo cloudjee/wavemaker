@@ -577,7 +577,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
         Assert.isInstanceOf(FileSystemResource.class, root, "Expected a FileSystemResource");
         try {
             FileSystemResource targetFile = (FileSystemResource) root.createRelative(filePath);
-            FileCopyUtils.copy(source, new FileOutputStream(targetFile.getFile()));
+            FileCopyUtils.copy(source, getOutputStream(targetFile));
             return targetFile;
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);

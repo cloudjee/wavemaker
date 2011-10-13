@@ -75,6 +75,7 @@ public class TestServiceConfigurationProcessor {
         this.project = new Project(projectDir, this.studioConfiguration);
 
         this.localDSM = DesignTimeUtils.getDSMForProjectRoot(this.project.getProjectRoot());
+        this.localDSM.setStudioConfiguration(this.studioConfiguration);
     }
 
     @After
@@ -107,16 +108,16 @@ public class TestServiceConfigurationProcessor {
 
         Beans actualBeans = SpringConfigSupport.readBeans(new FileSystemResource(actualServices), this.project);
 
-        assertEquals(2, actualBeans.getImportsAndAliasAndBean().size());
+        assertEquals(4, actualBeans.getImportsAndAliasAndBean().size());
         for (Object o : actualBeans.getImportsAndAliasAndBean()) {
             if (o instanceof Import) {
                 Import imp = (Import) o;
 
                 if (("classpath:" + sd2.getRuntimeConfiguration()).equals(imp.getResource())) {
                     // good
-                } else if ("classpath:com/wavemaker/runtime/service/runtimeServiceBean.xml".equals(imp.getResource())) {
+                } else if ("classpath:runtimeService.spring.xml".equals(imp.getResource())) {
                     // good
-                } else if ("classpath:com/wavemaker/runtime/service/waveMakerServiceBean.xml".equals(imp.getResource())) {
+                } else if ("classpath:waveMakerService.spring.xml".equals(imp.getResource())) {
                     // good
                 } else if (("classpath:" + DesignServiceManager.getServiceBeanName(sd.getServiceId())).equals(imp.getResource())) {
                     // good

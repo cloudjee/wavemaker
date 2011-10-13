@@ -10,6 +10,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Properties;
 import java.util.ServiceLoader;
 
 import javax.annotation.processing.Processor;
@@ -30,8 +31,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
 
 import com.wavemaker.runtime.RuntimeAccess;
+import com.wavemaker.runtime.security.SecurityService;
 import com.wavemaker.runtime.server.ServerConstants;
-import com.wavemaker.runtime.service.RuntimeService;
 import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.StudioConfiguration;
@@ -333,21 +334,35 @@ public class TestServiceDefProcessor {
     @Test
     public void testCreateServiceDef_ClassPathService() throws IOException {
 
-        String serviceId = "runtimeService";
         Resource projectRoot = this.project.getProjectRoot();
 
-        Resource serviceDesignDir = projectRoot.createRelative(DesignServiceManager.getDesigntimeRelativeDir(serviceId));
+        String sourceServiceId = "serviceA";
+        Resource serviceASrc = projectRoot.createRelative(DesignServiceManager.getRuntimeRelativeDir(sourceServiceId));
+        Resource javaSrc = serviceASrc.createRelative("Foo.java");
+        this.project.writeFile(javaSrc,
+            "import com.wavemaker.runtime.service.annotations.ExposeToClient;\n\n@ExposeToClient\npublic class Foo{public int getInt(){return 12;}}");
+
+        String classPathServiceId = "securityService";
+        Resource serviceDesignDir = projectRoot.createRelative(DesignServiceManager.getDesigntimeRelativeDir(classPathServiceId));
         assertFalse(serviceDesignDir.exists());
+
+        Properties properties = new Properties();
+        properties.setProperty(classPathServiceId, SecurityService.class.getName());
+        properties.store(this.project.getWriter("/services/" + ServiceProcessorConstants.CLASS_PATH_SERVICES_FILE), null);
+        assertTrue(this.project.getProjectRoot().createRelative("services/" + ServiceProcessorConstants.CLASS_PATH_SERVICES_FILE).exists());
 
         ServiceDefProcessor processor = new ServiceDefProcessor();
         processor.setStudioConfiguration(this.studioConfiguration);
-        buildWithProcessor(this.project, serviceId, processor);
+        buildWithProcessor(this.project, sourceServiceId, processor);
 
         assertTrue(serviceDesignDir.exists());
 
-        Service service = this.localDSM.getService(serviceId);
-        assertEquals(RuntimeService.class.getName(), service.getClazz());
+        Service service = this.localDSM.getService(classPathServiceId);
+        assertEquals(SecurityService.class.getName(), service.getClazz());
         assertTrue(service.getOperation().size() > 0);
+
+        Resource classPathServiceDef = this.project.getWebInfClasses().createRelative("services/" + classPathServiceId + "/servicedef.xml");
+        assertTrue(classPathServiceDef.exists());
     }
 
     private void buildWithProcessor(Project project, String serviceId, Processor processor) throws IOException {
@@ -376,8 +391,6 @@ public class TestServiceDefProcessor {
 
         List<String> options = new ArrayList<String>();
         options.add("-A" + ServiceProcessorConstants.PROJECT_NAME_PROP + "=" + project.getProjectName());
-        options.add("-classNames");
-        options.add(RuntimeService.class.getName());
 
         // Create the compilation task
         CompilationTask task = compiler.getTask(null, fileManager, new DiagnosticListener<JavaFileObject>() {

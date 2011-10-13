@@ -63,6 +63,11 @@ public class JavaService {
             bw.newLine();
         }
 
+        bw.write("import com.wavemaker.runtime.javaservice.JavaServiceSuperClass;");
+        bw.newLine();
+        bw.write("import com.wavemaker.runtime.service.annotations.ExposeToClient;");
+        bw.newLine();
+        bw.newLine();
         bw.write("/**");
         bw.newLine();
         bw.write(" * This is a client-facing service class.  All");
@@ -85,7 +90,9 @@ public class JavaService {
         bw.newLine();
         bw.write(" */");
         bw.newLine();
-        bw.write("public class " + className + " extends com.wavemaker.runtime.javaservice.JavaServiceSuperClass {");
+        bw.write("@ExposeToClient");
+        bw.newLine();
+        bw.write("public class " + className + " extends JavaServiceSuperClass {");
         bw.newLine();
         bw.write("    /* Pass in one of FATAL, ERROR, WARN,  INFO and DEBUG to modify your log level;");
         bw.newLine();

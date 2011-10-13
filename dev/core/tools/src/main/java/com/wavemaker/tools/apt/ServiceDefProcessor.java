@@ -93,6 +93,8 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
             return false;
         }
 
+        Project project = this.designServiceManager.getProjectManager().getCurrentProject();
+
         for (TypeElement annotation : annotations) {
             Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(annotation);
             for (Element e : elements) {
@@ -120,16 +122,27 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
                     }
                 }
             }
-            if (this.classPathServices != null) {
-                Enumeration<?> props = this.classPathServices.propertyNames();
-                while (props.hasMoreElements()) {
-                    String serviceId = props.nextElement().toString();
-                    TypeElement type = this.processingEnv.getElementUtils().getTypeElement(this.classPathServices.getProperty(serviceId));
-                    for (AnnotationMirror annotationMirror : this.processingEnv.getElementUtils().getAllAnnotationMirrors(type)) {
-                        if (this.processingEnv.getTypeUtils().isSameType(annotationMirror.getAnnotationType(), annotation.asType())) {
-                            if (processService(serviceId, type)) {
-                                return true;
-                            }
+        }
+        if (this.classPathServices != null) {
+            TypeElement exposeAnn = this.processingEnv.getElementUtils().getTypeElement(ExposeToClient.class.getName());
+            TypeElement hideAnn = this.processingEnv.getElementUtils().getTypeElement(HideFromClient.class.getName());
+            Enumeration<?> props = this.classPathServices.propertyNames();
+            while (props.hasMoreElements()) {
+                String serviceId = props.nextElement().toString();
+                TypeElement type = this.processingEnv.getElementUtils().getTypeElement(this.classPathServices.getProperty(serviceId));
+                for (AnnotationMirror annotationMirror : this.processingEnv.getElementUtils().getAllAnnotationMirrors(type)) {
+                    if (this.processingEnv.getTypeUtils().isSameType(annotationMirror.getAnnotationType(), exposeAnn.asType())
+                        || this.processingEnv.getTypeUtils().isSameType(annotationMirror.getAnnotationType(), hideAnn.asType())) {
+                        if (processService(serviceId, type)) {
+                            return true;
+                        }
+                        Resource serviceDef = this.designServiceManager.getServiceDefXml(serviceId);
+                        try {
+                            this.studioConfiguration.copyFile(project.getWebInfClasses(), serviceDef.getInputStream(), "services/" + serviceId + "/"
+                                + serviceDef.getFilename());
+                        } catch (IOException ex) {
+                            this.processingEnv.getMessager().printMessage(Kind.ERROR,
+                                "Could not copy servicedef for runtime service " + serviceId + " to classpath.");
                         }
                     }
                 }
@@ -275,7 +288,5 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
 
             serviceDef.getLocalTypes().add(td);
         }
-
     }
-
 }

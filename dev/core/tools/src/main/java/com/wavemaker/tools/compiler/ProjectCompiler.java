@@ -27,16 +27,12 @@ import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardLocation;
 
-import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
-
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.apt.ServiceConfigurationProcessor;
 import com.wavemaker.tools.apt.ServiceDefProcessor;
 import com.wavemaker.tools.apt.ServiceProcessorConstants;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
-import com.wavemaker.tools.project.ResourceFilter;
 import com.wavemaker.tools.project.StudioConfiguration;
 import com.wavemaker.tools.service.DesignServiceManager;
 
@@ -76,30 +72,16 @@ public class ProjectCompiler {
         options.add("-encoding");
         options.add("utf8");
 
+        options.add("-A" + ServiceProcessorConstants.PROJECT_NAME_PROP + "=" + projectName);
+
         if (sourceFiles.iterator().hasNext()) {
             JavaCompiler.CompilationTask task = compiler.getTask(null, projectFileManager, null, options, null, sourceFiles);
+            task.setProcessors(Collections.singleton(createServiceDefProcessor(projectFileManager)));
             if (!task.call()) {
                 return;
             }
         }
-
-        try {
-            List<Resource> serviceDirs = this.studioConfiguration.listChildren(project.getProjectRoot().createRelative("services/"),
-                new ResourceFilter() {
-
-                    @Override
-                    public boolean accept(Resource resource) {
-                        return StringUtils.getFilenameExtension(resource.getFilename()) == null;
-                    }
-                });
-            for (Resource serviceDir : serviceDirs) {
-                compileService(projectName, serviceDir.getFilename());
-            }
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
-        }
         executeConfigurationProcessor(compiler, projectFileManager, projectName);
-
     }
 
     public void compileService(String projectName, String serviceId) {
@@ -125,9 +107,10 @@ public class ProjectCompiler {
 
         if (sourceFiles.iterator().hasNext()) {
             JavaCompiler.CompilationTask task = compiler.getTask(null, projectFileManager, null, options, null, sourceFiles);
-            task.setProcessors(Collections.singleton(createServiceDefProcessor()));
+            task.setProcessors(Collections.singleton(createServiceDefProcessor(projectFileManager)));
             task.call();
         }
+        executeConfigurationProcessor(compiler, projectFileManager, projectName);
     }
 
     public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
@@ -168,10 +151,11 @@ public class ProjectCompiler {
         return processor;
     }
 
-    private Processor createServiceDefProcessor() {
+    private Processor createServiceDefProcessor(ClassFileManager projectFileManager) {
         ServiceDefProcessor processor = new ServiceDefProcessor();
         processor.setStudioConfiguration(this.studioConfiguration);
         processor.setDesignServiceManager(this.designServiceManager);
+        processor.setFileManager(projectFileManager);
         return processor;
     }
 }

@@ -124,6 +124,10 @@ public abstract class AbstractStudioServiceProcessor extends AbstractProcessor {
         this.designServiceManager = designServiceManager;
     }
 
+    public void setFileManager(ClassFileManager fileManager) {
+        this.fileManager = fileManager;
+    }
+
     @Override
     protected synchronized boolean isInitialized() {
         return this.initialized && super.isInitialized();

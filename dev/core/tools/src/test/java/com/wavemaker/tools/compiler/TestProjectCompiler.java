@@ -182,13 +182,40 @@ public class TestProjectCompiler {
 
         String serviceId = "serviceA";
         Resource serviceASrc = project.getProjectRoot().createRelative(DesignServiceManager.getRuntimeRelativeDir(serviceId));
-        Resource javaSrc = serviceASrc.createRelative("com/foo/FooService.java");
-        project.writeFile(javaSrc,
-            "package com.foo;\n\npublic class FooService extends com.wavemaker.runtime.javaservice.JavaServiceSuperClass {public int getInt(){return 12;}}");
+        Resource javaSrc = serviceASrc.createRelative("com/bar/BarService.java");
+        project.writeFile(
+            javaSrc,
+            "package com.bar;\n\nimport com.wavemaker.runtime.service.annotations.ExposeToClient;\n\n@ExposeToClient\npublic class BarService extends com.wavemaker.runtime.javaservice.JavaServiceSuperClass {public int getInt(){return 12;}}");
 
         this.projectCompiler.compileProject("ProjectCompilerProject");
 
-        Resource fooClass = project.getWebInfClasses().createRelative("com/foo/FooService.class");
-        assertTrue(fooClass.exists());
+        Resource barClass = project.getWebInfClasses().createRelative("com/bar/BarService.class");
+        assertTrue(barClass.exists());
+
+        Resource serviceDef = project.getProjectRoot().createRelative(DesignServiceManager.getDesigntimeRelativeDir(serviceId) + "servicedef.xml");
+        assertTrue(serviceDef.exists());
+    }
+
+    @Test
+    public void testCompileSingleService() throws IOException {
+        Project project = this.projectManager.getCurrentProject();
+
+        String serviceId = "serviceA";
+        Resource serviceASrc = project.getProjectRoot().createRelative(DesignServiceManager.getRuntimeRelativeDir(serviceId));
+        Resource javaSrc = serviceASrc.createRelative("FooService.java");
+        project.writeFile(javaSrc,
+            "import com.wavemaker.runtime.service.annotations.ExposeToClient;\n\n@ExposeToClient\npublic class FooService{public int getInt(){return 12;}\n"
+                + "\tpublic int getInt2(java.util.List<String[]> strings){return 0;}\n}");
+
+        this.projectCompiler.compileService("ProjectCompilerProject", serviceId);
+
+        Resource serviceClass = project.getWebInfClasses().createRelative("FooService.class");
+        assertTrue(serviceClass.exists());
+
+        Resource serviceDef = project.getProjectRoot().createRelative(DesignServiceManager.getDesigntimeRelativeDir(serviceId) + "servicedef.xml");
+        assertTrue(serviceDef.exists());
+
+        Resource types = project.getWebAppRoot().createRelative("types.js");
+        assertTrue(types.exists());
     }
 }
