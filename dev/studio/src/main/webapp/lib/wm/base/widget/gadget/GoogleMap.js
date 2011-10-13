@@ -105,6 +105,28 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
 	if (this._map)
 	    this._map.setCenter(new google.maps.LatLng(this.latitude, this.longitude));
     },
+    fitToMarkers: function() {
+	var minLat = 10000000;
+	var minLon = 10000000;
+	var maxLat = -1000000;
+	var maxLon = -1000000;
+	if (!this.dataSet) return;
+	var count = this.dataSet.getCount();
+	if (count == 0) return;
+	for (var i = 0; i < count; i++) {
+	    var item = this.dataSet.getItem(i);
+	    var lat = item.getValue(this.latitudeField);
+	    var lon = item.getValue(this.longitudeField);
+	    if (lat < minLat) minLat = lat;
+	    if (lat > maxLat) maxLat = lat;
+	    if (lon < minLon) minLon = lon;
+	    if (lon > maxLon) maxLon = lon;
+	}
+
+	var maxPos = new google.maps.LatLng(maxLat, maxLon);
+	var minPos = new google.maps.LatLng(minLat, minLon);
+	this._map.fitBounds(new google.maps.LatLngBounds(minPos, maxPos));
+    },
     setMapType: function(inVal) {
 	this.mapType = inVal;
 	if (this._map)
@@ -164,8 +186,9 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
 	    
 	},
     generateMarkers: function() {
+        
 	    var data = this.dataSet.getData();
-
+	
 	    for (var i = 0; i < data.length; i++) {
 		this.generateMarker(data[i]);
 	    }
@@ -177,6 +200,7 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
 		var desc = d[this.descriptionField];
 		var icon = d[this.iconField];
 		var marker = new google.maps.Marker({
+		    icon: icon,
 		    position: new google.maps.LatLng(lat,lon), 
 		    map: this._map,
 		    title: title});
