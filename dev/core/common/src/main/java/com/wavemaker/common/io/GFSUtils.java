@@ -24,10 +24,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.bson.types.ObjectId;
+import org.springframework.util.Assert;
 
 import com.mongodb.gridfs.GridFS;
-import com.mongodb.gridfs.GridFSInputFile;
+import com.mongodb.gridfs.GridFSDBFile;
 import com.wavemaker.common.WMRuntimeException;
 
 /**
@@ -50,7 +50,7 @@ public class GFSUtils {
      * @throws IOException
      */
     public static void copy(GridFS gfs, GFSResource source, GFSResource destination, List<String> excludes) throws IOException {
-
+    	Assert.notNull(gfs, "Unable to copy without GFS");
         try {
             if (!source.exists()) {
                 throw new IOException("Can't copy from non-existent file: " + source.getPath() + source.getFilename());
@@ -66,10 +66,10 @@ public class GFSUtils {
                     throw new IOException("Can't copy directory (" + source.getPath() + ") to non-directory: " + destination.getPath());
                 }
 
-                GridFSInputFile files[] = source.listFiles();
+                GridFSDBFile files[] = source.listFiles();
                 for (int i = 0; i < files.length; i++) {
                     // Find the GridFSDBFile for the source, get its input stream and create new file resource
-                    new GFSResource(gfs, gfs.findOne((ObjectId) files[i].getId()).getInputStream(), files[i].getFilename(), destination.getPath());
+                 	new GFSResource(gfs, files[i].getInputStream(), files[i].getFilename(), destination.getPath());
                 }
             } else if (source.isFile()) {
                 if (destination.isDirectory()) {
@@ -90,7 +90,7 @@ public class GFSUtils {
      */
     public static void forceDelete(GridFS gfs, GFSResource file) {
         if (file.isDirectory()) {
-            GridFSInputFile files[] = file.listFiles();
+        	GridFSDBFile files[] = file.listFiles();
             for (int i = 0; i < files.length; i++) {
                 gfs.remove(files[i].getFilename());
             }

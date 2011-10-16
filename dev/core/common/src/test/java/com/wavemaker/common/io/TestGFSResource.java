@@ -15,6 +15,12 @@
 package com.wavemaker.common.io;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -22,12 +28,15 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 import org.springframework.test.annotation.IfProfileValue;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
+import org.springframework.util.Assert;
+import org.springframework.util.FileCopyUtils;
 
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSInputFile;
@@ -36,21 +45,22 @@ import com.mongodb.gridfs.GridFSInputFile;
  * @author Ed Callahan
  * 
  */
+@ContextConfiguration()
 @RunWith(SpringJUnit4ClassRunner.class)
 @IfProfileValue(name = "spring.profiles", value = "cloud-test")
-@TestExecutionListeners({})
-public class TestGFSResource {
+@TestExecutionListeners({DependencyInjectionTestExecutionListener.class})
+public class TestGFSResource  {
 
+    @Autowired
+    private SimpleMongoDbFactory mongoFactory;
+    
     private static final Log log = LogFactory.getLog(TestGFSResource.class);
 
     private static GridFS mygridfs;
 
-    private static MongoDbFactory mongoFactory;
-
     @Before
     public void setUp() throws Exception {
-        ApplicationContext ctx = new AnnotationConfigApplicationContext(TestMongoConfig.class);
-        mongoFactory = (MongoDbFactory) ctx.getBean("mongoFactory");
+    	Assert.notNull(this.mongoFactory, "Need a Factory here");
         log.info("Connected to: " // use factory to ensure mongo is running
             + mongoFactory.getDb().getMongo().getAddress().getHost());
         mygridfs = new GridFS(mongoFactory.getDb());
@@ -68,6 +78,32 @@ public class TestGFSResource {
         assertEquals(newPath, gfsRes.getPath());
     }
 
+    @Test
+    public void testEmptyFileExists(){
+    	String path = "/someFile.txt";
+    	GFSResource resA = new GFSResource(mygridfs, path);
+    	assertTrue(true);
+    	assertTrue(resA.exists());
+    	assertTrue(resA.isFile());
+    	assertFalse(resA.isDirectory());
+    }
+    
+    @Test
+    public void testGetInputStream(){
+    	String fileName = "ioc.txt";
+    	String path = "/spring/";
+    	try{
+    		InputStream fin1 = getClass().getResourceAsStream(fileName);
+    		InputStream fin2 = getClass().getResourceAsStream(fileName); 		
+    		GFSResource gfsRes = new GFSResource(mygridfs, fin1, fileName, path );
+    		String gContent = FileCopyUtils.copyToString(new InputStreamReader(gfsRes.getInputStream()));
+    		String fContent = FileCopyUtils.copyToString(new InputStreamReader(fin2));
+    		assertEquals(fContent,gContent);
+    	} catch (IOException ioe){
+    		ioe.printStackTrace();
+    	}
+    }
+    
     @Test
     public void testCreateRelative() {
         GFSResource newRes = null;

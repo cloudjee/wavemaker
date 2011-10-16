@@ -36,7 +36,7 @@ import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.context.support.ServletContextResource;
 
 import com.mongodb.gridfs.GridFS;
-import com.mongodb.gridfs.GridFSInputFile;
+import com.mongodb.gridfs.GridFSDBFile;
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
@@ -114,6 +114,8 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
     protected static final String VERSION_FILE = "version";
 
     private ServletContext servletContext;
+    
+    private static final String METADATA_PATH_KEY = "Path";
 
     private static GridFS gfs;
 
@@ -628,8 +630,8 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
     @Override
     public List<Resource> listChildren(Resource root) {
         List<Resource> children = new ArrayList<Resource>();
-        GridFSInputFile[] files;
-        try {
+        GridFSDBFile[] files;
+        try { //GridFSDBFile
             files = ((GFSResource) root).listFiles();
         } catch (Exception e) {
             throw new WMRuntimeException(e);
@@ -637,8 +639,8 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
         if (files == null) {
             return children;
         }
-        for (GridFSInputFile file : files) {
-            children.add((Resource) file);
+        for (GridFSDBFile file : files) {
+            children.add(new GFSResource(gfs, file.getInputStream(), file.getFilename(), (String)file.getMetaData().get(METADATA_PATH_KEY)));
         }
         return children;
     }
@@ -646,8 +648,8 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
     @Override
     public List<Resource> listChildren(Resource root, ResourceFilter filter) {
         List<Resource> children = new ArrayList<Resource>();
-        GridFSInputFile[] files;
-        try {
+        GridFSDBFile[] files;
+        try {  
             files = ((GFSResource) root).listFiles();
         } catch (Exception e) {
             throw new WMRuntimeException(e);
@@ -655,8 +657,9 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
         if (files == null) {
             return children;
         }
-        for (GridFSInputFile file : files) {
+        for (GridFSDBFile file : files) {
             if (filter.accept((Resource) file)) {
+            	//children.add(new GFSResource(gfs, file.getInputStream(), file.getFilename(), (String)file.getMetaData().get(METADATA_PATH_KEY)));
                 children.add((Resource) file);
             }
         }
@@ -687,7 +690,7 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
         Assert.isInstanceOf(Resource.class, oldResource, "GFS: Expected a Resource");
         Assert.isInstanceOf(Resource.class, newResource, "GFS: Expected a Resource");
         try {
-            ((GFSResource) oldResource).getGridFSInputFile().setFilename(((GFSResource) newResource).getGridFSInputFile().getFilename());
+        	((GFSResource)oldResource).setFilename(((GFSResource)newResource).getFilename());
         } catch (Exception ex) {
             throw new WMRuntimeException(ex);
         }
