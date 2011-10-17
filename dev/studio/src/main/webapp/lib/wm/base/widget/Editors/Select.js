@@ -435,7 +435,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
                 this.selectedItem.setType(inDataSet.type);
 	    try {
 		/* If this is design time and we've cleared the dataSet, clear the fields as well */
-		if (this._isDesignLoaded && !inDataSet) {
+		if (this._isDesignLoaded && !inDataSet && !this._cupdating) {
 		    this.dataField = this.displayField = "";
 		}
 	    } catch(e) {}

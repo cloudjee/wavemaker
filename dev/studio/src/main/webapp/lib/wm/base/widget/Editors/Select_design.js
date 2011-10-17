@@ -34,16 +34,27 @@ wm.SelectMenu.extend({
 		    if (ds) {
 			this.components.binding.addWire("", "dataSet", ds.getId());
 		    }
-		} else if (!inDataSet) {
+		}
+
+	    /* If the user triggers a set_dataSet(null) (user didn't trigger it if this._cupdating) then clear everything */
+	    else if (!inDataSet && !this._cupdating) {
 		    this.components.binding.removeWireByProp("dataSet");
 		    this.options = this.dataField = this.displayField = "";
 		    this.setDataSet(inDataSet);
-		} else {		    
+	    } else {		    		
+		    var oldDataSet = this.dataSet;
 		    /* Clear the options property if setting a new dataSet */
 		    if (this.options && inDataSet != this.$.optionsVar)
 			this.options = "";
 		    this.setDataSet(inDataSet);
-		    if (!this._cupdating && inDataSet && (!this.displayField && !this.displayExpression || this._lastType != inDataSet.type))  {
+		    /* If we didn't have a dataSet, then only update the displayField if there isn't a displayField */
+		    if (!oldDataSet && inDataSet && (!this.displayField && !this.displayExpression)) {
+			this._setDisplayField();
+
+		    }
+
+		    /* Else if we have changed types (or don't have a displayField/expression), then update both dataField and displayField */
+		    else if (oldDataSet && inDataSet && inDataSet != this.$.liveVariable && (!this.displayField && !this.displayExpression || this._lastType != inDataSet.type))  {
 			if (wm.defaultTypes[inDataSet.type]) {
 			    this.dataField = "dataValue";
 			} else {
