@@ -194,7 +194,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 		return this.variable;
 	},
 	setDataSet: function (inValue, inDefault){
-		this.variable = inValue;
+	    this.dataSet = this.variable = inValue;
 	    if(!this.dojoObj && (!this.variable || !this.variable.getData()))
 			return;
 			
