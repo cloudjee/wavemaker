@@ -1,0 +1,4 @@
+The interface org.springframework.context.ApplicationContext represents the Spring IoC container and is responsible for instantiating, configuring,
+and assembling the aforementioned beans. The container gets its instructions on what objects to instantiate, configure, and assemble by reading
+configuration metadata. The configuration metadata is represented in XML, Java annotations, or Java code. 
+It allows you to express the objects that compose your application and the rich interdependencies between such objects.
