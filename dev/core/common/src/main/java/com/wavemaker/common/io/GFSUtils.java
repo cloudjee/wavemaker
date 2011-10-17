@@ -69,13 +69,16 @@ public class GFSUtils {
                 GridFSDBFile files[] = source.listFiles();
                 for (int i = 0; i < files.length; i++) {
                     // Find the GridFSDBFile for the source, get its input stream and create new file resource
-                 	new GFSResource(gfs, files[i].getInputStream(), files[i].getFilename(), destination.getPath());
+                	GFSResource res = new GFSResource(gfs, files[i].getInputStream(), files[i].getFilename(), destination.getPath());
+                	res.save();
                 }
             } else if (source.isFile()) {
                 if (destination.isDirectory()) {
-                    new GFSResource(gfs, source.getInputStream(), source.getFilename(), destination.getPath());
+                    GFSResource res = new GFSResource(gfs, source.getInputStream(), source.getFilename(), destination.getPath());
+                    res.save();
                 } else {
-                    new GFSResource(gfs, source.getInputStream(), destination.getFilename(), destination.getPath());
+                	GFSResource res = new GFSResource(gfs, source.getInputStream(), destination.getFilename(), destination.getPath());
+                	res.save();
                 }
             } else {
                 throw new IOException("Don't know how to copy " + source.getPath() + "; it's neither a directory nor a file");

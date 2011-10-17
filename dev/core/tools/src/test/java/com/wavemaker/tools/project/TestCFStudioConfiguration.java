@@ -20,6 +20,9 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -40,6 +43,7 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.util.Assert;
+import org.springframework.util.FileCopyUtils;
 
 import com.mongodb.gridfs.GridFS;
 import com.wavemaker.common.io.GFSResource;
@@ -211,7 +215,9 @@ public class TestCFStudioConfiguration {
 		String fTwo = "FileTwo.txt";
 	
 		GFSResource oldRes = new GFSResource(CFStudioConfiguration.getGFS(),getClass().getResourceAsStream(testFolder + fOne), oldName, oldFilePath );
+		oldRes.save();
 		GFSResource newRes = new GFSResource(CFStudioConfiguration.getGFS(),getClass().getResourceAsStream(testFolder + fTwo), newName, newFilePath );
+		newRes.save();
 		
 		CFStudioConfiguration sc  = new CFStudioConfiguration(this.mongoFactory);
 		sc.rename(oldRes, newRes);
@@ -278,6 +284,33 @@ public class TestCFStudioConfiguration {
 			}
 		}
 	}
+	
+	 @Test
+	    public void testgetOutputStream(){
+	    	String fileName = "doofenshmirtz.js";
+	    	String folderName = "MyStuff/SubFolderOne/";
+	    	String buford = "Buford = { 'status': {'crying':'false'}}";
+	    	String path = "/test/js/";
+	    	
+	    	OutputStream out = null;
+	    	try{
+	    		CFStudioConfiguration sc = new CFStudioConfiguration(this.mongoFactory);
+	    		GridFS myGFS = CFStudioConfiguration.getGFS();
+	    		InputStream fin = getClass().getResourceAsStream(folderName + fileName);    		
+	    		GFSResource gfsRes = new GFSResource(myGFS, fin, fileName, path );
+	    		
+	    		byte buf[] = buford.getBytes(); 
+	    		out = sc.getOutputStream(gfsRes);	
+	    		out.write(buf);
+	    		out.close();
+	    		
+	    		String gfsResString = FileCopyUtils.copyToString(new InputStreamReader(gfsRes.getInputStream()));
+	    		assertEquals(buford,gfsResString);
+
+	    	} catch (IOException ioe){
+	    		ioe.printStackTrace();
+	    	}
+	    }
 
 	@Test
 	public void testListChildren() throws Exception {
@@ -299,14 +332,17 @@ public class TestCFStudioConfiguration {
 		GFSResource fileOne = new GFSResource(myGFS, getClass()
 				.getResourceAsStream(testFolder + fOne), fOne,
 				sourceDir.getPath());
+		fileOne.save();
 		control.add(fileOne);
 		GFSResource fileTwo = new GFSResource(myGFS, getClass()
 				.getResourceAsStream(testFolder + fTwo), fTwo,
 				sourceDir.getPath());
+		fileTwo.save();
 		control.add(fileTwo);
 		GFSResource fileThree = new GFSResource(myGFS, getClass()
 				.getResourceAsStream(testFolder + fThree), fThree,
 				sourceDir.getPath());
+		fileThree.save();
 		control.add(fileThree);
 
 		GFSResource targetDir = new GFSResource(myGFS, targetFolder);
