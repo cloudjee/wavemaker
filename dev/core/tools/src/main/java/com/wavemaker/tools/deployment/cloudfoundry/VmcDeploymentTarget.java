@@ -228,7 +228,7 @@ public class VmcDeploymentTarget implements DeploymentTarget {
      * @param db
      * @return
      */
-    private CloudService createPostgresqlService(DeploymentDB db) {
+    public static CloudService createPostgresqlService(DeploymentDB db) {
         CloudService postgresql = new CloudService();
         postgresql.setType(SERVICE_TYPE);
         postgresql.setVendor(POSTGRES_SERVICE_VENDOR);
