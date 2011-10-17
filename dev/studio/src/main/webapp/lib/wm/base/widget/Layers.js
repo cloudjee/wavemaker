@@ -654,8 +654,9 @@ dojo.declare("wm.AccordionLayers", wm.Layers, {
 	}
     },
     addLayer: function() {
-        this.inherited(arguments);
+        var result = this.inherited(arguments);
         this.setLayerBorder(this.layerBorder);
+	return result;
     }
 });
 
