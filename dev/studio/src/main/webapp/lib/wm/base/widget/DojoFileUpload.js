@@ -53,9 +53,6 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
     // for runtime use in defining types for the input variable
     _serviceVariable: "", 
 
-    // input variable to provide additional parameters to go with files at runtime
-    input: "", 
-
     // Standard control/container properties 
     verticalAlign: "top",
     horizontalAlign: "top",
@@ -735,6 +732,9 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
 	}
 	return this.inherited(arguments);
     },
+    getOrderedWidgets: function() {
+	return [];
+    },
         setButtonWidth: function(inWidth) {
             this.buttonWidth = parseInt(inWidth);
             this.buttonPanel.setWidth(inWidth + "px");
@@ -792,6 +792,8 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
 });
 
 wm.Object.extendSchema(wm.DojoFileUpload, {
+    _variable: {ignore:1},
+    _uploadedVariable: {ignore:1},
     useList: {group: "display", order: 1, type: "boolean"},
     buttonCaption: {group: "display", order: 2, type: "string"},
     service: {group: "Services", order: 38},
