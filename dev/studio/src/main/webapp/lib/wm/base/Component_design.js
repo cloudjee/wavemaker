@@ -176,7 +176,7 @@ wm.Component.extend({
 	    var c = this.components[inName];
 
 	    /* If it has no name, then its not a user generated component, its an internal component and in any case is unsafe to write */
-	    if (!inName) {
+	    if (!inName || inName.match(/^_/)) {
 		return false;
 	    }
 
