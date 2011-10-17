@@ -276,7 +276,7 @@ wm.Object.extendSchema(wm.SelectMenu, {
 
 wm.Object.extendSchema(wm.Lookup, {
     ignoreCase: {ignore: true},
-    displayExpression: {group: "editor", order: 20, doc: 1, displayExpression: "liveVariable"},
+    displayExpression: {group: "editor", order: 20, doc: 1, displayExpression: "displayExpression"},
 	autoDataSet: {group: "data", order: 3},
     maxResults: {group: "editor", order: 100},
 	options: {ignore: 1},
