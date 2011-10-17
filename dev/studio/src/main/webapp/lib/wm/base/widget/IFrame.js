@@ -29,7 +29,7 @@ dojo.declare("wm.IFrame", wm.Control, {
 	init: function() {
 		dojo.addClass(this.domNode, "wmiframe");
 		this.inherited(arguments);
-		this.setSource(this.source);
+	    this.setSource(this.getSource());
 	},
         buildCssSetterObj: function() {
 	    var obj = this.inherited(arguments);
@@ -38,6 +38,7 @@ dojo.declare("wm.IFrame", wm.Control, {
 	    obj.overflowY = "";
 	    return obj;
 	},
+    getSource: function() {return this.source;},
 	setSource: function(inSource) {
 		if (!dojo.isString(inSource) || inSource == "undefined")
 			inSource = "";
