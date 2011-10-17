@@ -565,6 +565,7 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
         Assert.isInstanceOf(Resource.class, root, "GFS: Expected a Resource");
         try {
             Resource targetFile = new GFSResource(gfs, source, root.getFilename(), filePath);
+            //targetFile.save();
             return targetFile;
         } catch (Exception ex) {
             throw new WMRuntimeException(ex);
@@ -592,8 +593,7 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
     public OutputStream getOutputStream(Resource file) {
         try {
             Assert.isTrue(!((GFSResource) file).isDirectory(), "Cannot get an output stream for a directory.");
-            prepareForWriting(file);
-            return ((GFSResource) file).getGridFSInputFile().getOutputStream();
+            return ((GFSResource) file).getOutputStream();
         } catch (Exception ex) {
             throw new WMRuntimeException(ex);
         }
@@ -631,7 +631,7 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
     public List<Resource> listChildren(Resource root) {
         List<Resource> children = new ArrayList<Resource>();
         GridFSDBFile[] files;
-        try { //GridFSDBFile
+        try {
             files = ((GFSResource) root).listFiles();
         } catch (Exception e) {
             throw new WMRuntimeException(e);
@@ -659,8 +659,7 @@ public class CFStudioConfiguration implements EmbeddedServerConfiguration, Servl
         }
         for (GridFSDBFile file : files) {
             if (filter.accept((Resource) file)) {
-            	//children.add(new GFSResource(gfs, file.getInputStream(), file.getFilename(), (String)file.getMetaData().get(METADATA_PATH_KEY)));
-                children.add((Resource) file);
+            	children.add(new GFSResource(gfs, file.getInputStream(), file.getFilename(), (String)file.getMetaData().get(METADATA_PATH_KEY)));
             }
         }
         return children;

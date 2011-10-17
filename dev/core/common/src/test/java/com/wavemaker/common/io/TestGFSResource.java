@@ -96,6 +96,7 @@ public class TestGFSResource  {
     		InputStream fin1 = getClass().getResourceAsStream(fileName);
     		InputStream fin2 = getClass().getResourceAsStream(fileName); 		
     		GFSResource gfsRes = new GFSResource(mygridfs, fin1, fileName, path );
+    		gfsRes.save();
     		String gContent = FileCopyUtils.copyToString(new InputStreamReader(gfsRes.getInputStream()));
     		String fContent = FileCopyUtils.copyToString(new InputStreamReader(fin2));
     		assertEquals(fContent,gContent);
@@ -103,7 +104,7 @@ public class TestGFSResource  {
     		ioe.printStackTrace();
     	}
     }
-    
+       
     @Test
     public void testCreateRelative() {
         GFSResource newRes = null;

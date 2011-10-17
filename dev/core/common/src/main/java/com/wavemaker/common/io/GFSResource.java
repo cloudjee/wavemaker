@@ -24,6 +24,7 @@ package com.wavemaker.common.io;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -61,7 +62,8 @@ public class GFSResource implements Resource {
 	/*
 	 * Creates a Resource from a GridFS and a String If path does not end in a
 	 * filename extension, it will be considered a directory. Directory paths
-	 * must always end in "/"
+	 * must always end in "/".  Must call save() OR close() on outputStream to save data
+	 * @see com.mongodb.gridfs.GridFS.html#createFile(java.io.InputStream, java.lang.String)
 	 */
 	public GFSResource(GridFS gfs, String path) {
 		Assert.notNull(gfs, "GridFS must not be null");
@@ -79,7 +81,9 @@ public class GFSResource implements Resource {
 	}
 
 	/*
-	 * Creates a Resource from an input stream. Always a file
+	 * Creates a Resource from an input stream. Always a file.  Must call save() OR close() on outputStream to save data
+	 *  @see com.mongodb.gridfs.GridFS.html#createFile(java.io.InputStream, java.lang.String)
+	 *  Ctor can not call save() for you as it prohibits use of outputstream
 	 */
 	public GFSResource(GridFS gfs, InputStream in, String filename, String path) {
 		Assert.notNull(gfs, "GFS must not be null");
@@ -92,7 +96,6 @@ public class GFSResource implements Resource {
 		this.path = StringUtils.cleanPath(path);
 		this.file = gfs.createFile(in, this.filename);
 		this.file.setMetaData(new BasicDBObject(METADATA_PATH_KEY, this.path));
-		this.file.save();
 	}
 
 	/**
@@ -116,6 +119,15 @@ public class GFSResource implements Resource {
 		return ret.substring(0, ret.lastIndexOf("/"));
 	}
 
+	/**
+	 * 
+	 *  Save the GridFSInputFile
+	 */
+	public void save(){
+		Assert.notNull(this.file);
+		this.file.save();
+	}
+	
 	/**
 	 * Returns the GridFSInputFile.
 	 * 
@@ -293,6 +305,17 @@ public class GFSResource implements Resource {
 		Assert.notNull(this.file, "File can not be null for inputStream");
 		return this.gfs.findOne((ObjectId) this.file.getId()).getInputStream();
 	}
+	
+
+	/**
+	 * Returns the outputStream for the file
+	 */
+	public OutputStream getOutputStream() throws IOException {
+		Assert.notNull(this.file, "File can not be null for outputStream");
+		return this.file.getOutputStream();
+	}
+	
+	
 
 	/**
 	 * This operation is not supported
