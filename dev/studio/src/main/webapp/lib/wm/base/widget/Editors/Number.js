@@ -58,7 +58,7 @@ dojo.declare("wm.Number", wm.Text, {
 			}
 		}
 
-		constraints.pattern = this._getPattern();
+	//constraints.pattern = this._getPattern();
 
 	return constraints;
     },
@@ -68,7 +68,7 @@ dojo.declare("wm.Number", wm.Text, {
 
 		return dojo.mixin(this.inherited(arguments), {
 			constraints: constraints,
-			editPattern: constraints.pattern,
+		    //editPattern: constraints.pattern,
 			rangeMessage: this.rangeMessage,
 			required: this.required,
 			value: v ? Number(v) : ""
@@ -83,6 +83,7 @@ dojo.declare("wm.Number", wm.Text, {
 	    else
 		return new dijit.form.NumberTextBox(this.getEditorProps(inNode, inProps));
 	},
+/*
 	_getPattern: function() {
 		var
 			p = this.places !== "" ? Number(this.places) : 20,
@@ -94,6 +95,7 @@ dojo.declare("wm.Number", wm.Text, {
 			pattern.push(n);
 		return pattern.join('');
 	},
+	*/
 	setMaximum: function(inMax) {
 	        var v = (inMax === "") ? "" : Number(inMax);
 		if (this.minimum === "" || this.minimum < v || v === "") {

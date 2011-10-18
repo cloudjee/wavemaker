@@ -15,19 +15,17 @@
 
 dojo.provide("wm.base.widget.Editors.dijit");
 
-dojo.require("dijit.form.CheckBox");
-dojo.require("dijit.form.TextBox");
-
 // the requires below are not removed or made dojo['require'] because their class methods are changed and should be done initially.
 dojo.require("dijit.form.ValidationTextBox");
-dojo.require("dijit.form.NumberTextBox");
-dojo.require("dijit.form.CurrencyTextBox");
-dojo.require("dijit.form.FilteringSelect");
+
 
 // dojo customization: remove tooltip if destroyed
 dijit.form._FormWidget.prototype.destroy = function() {
 	try {
 		wm.fire(this, "_hideTooltip");
+		if(this._onChangeHandle){ // destroy called before last onChange has fired
+			clearTimeout(this._onChangeHandle);
+		}
 		dijit._Widget.prototype.destroy.call(this);
 	}
 	catch(e){
@@ -36,16 +34,6 @@ dijit.form._FormWidget.prototype.destroy = function() {
 	}
 }
 
-// dojo customization: add owner validation on keyup only
-dijit.form.ValidationTextBox.prototype._update = function(e) {
-	if (e.type == "keyup") {
-		wm.fire(this.owner, "validate");
-	}
-	this._refreshState();
-	this._onMouse(e);
-}
-
-/*
 // dojo customization: dijit hack to display invalid error only when box is blurred and show valid when focused.
 dijit.form.ValidationTextBox.prototype.validate = function(isFocused){
 	var message = "";
@@ -71,7 +59,7 @@ dijit.form.ValidationTextBox.prototype.validate = function(isFocused){
 	// CHANGE: return valid if focused or valid
 	return isFocused || isValid;
 }
-*/
+
 
 
 // expose validation process to "owner" (this is a wm concept)
@@ -84,6 +72,7 @@ dijit.form.ValidationTextBox.prototype.validator = function(value, constraints) 
 }
 
 // dojo customization: hide tooltip after a delay
+
 dijit.form.ValidationTextBox.prototype.displayMessage = function(message){
 	if(this._message == message){ return; }
 	this._message = message;
@@ -98,6 +87,7 @@ dijit.form.ValidationTextBox.prototype.displayMessage = function(message){
 }
 
 // dojo customization: hide tooltip
+
 dijit.form.ValidationTextBox.prototype._hideTooltip = function() {
 	this._cancelHideTooltip();
 	wm.hideToolTip();
@@ -107,69 +97,3 @@ dijit.form.ValidationTextBox.prototype._cancelHideTooltip = function() {
 	dijit._hideTooltipHandle = null;
 }
 
-// dojo customization:
-// allow number editor to have no 0 as empty value
-dijit.form.NumberTextBox.prototype.format = function(value, constraints){
-	// add this line to allow null value.
-	if(value === null){ return ""; }
-	//
-	if(typeof value == "string") { return value; }
-	if(isNaN(value)){ return ""; }
-	if(this.editOptions && this._focused){
-		constraints = dojo.mixin(dojo.mixin({}, this.editOptions), this.constraints);
-	}
-	var v = this._formatter(value, constraints);
-	return v;
-}
-
-// dojo customization:
-// allow number editor parse empty value as null, not NaN
-dijit.form.NumberTextBox.prototype.parse = function(expression, options) {
-	var v = dojo.number.parse(expression, options);
-	// null if NaN
-	if (isNaN(v) && !expression)
-		v = null;
-	return v;
-}
-
-// dojo customization:
-// allow currency editor parse empty value as null, not NaN
-dijit.form.CurrencyTextBox.prototype.parse = function(expression, options) {
-     var v = dojo.currency.parse(dojo.currency.format(expression.replace(/[^0-9\-\.]/g,""),options),options)
-    //var v = dojo.currency.parse(expression, options);
-	// null if NaN
-	if (isNaN(v) && !expression)
-		v = null;
-	return v;
-}
-
-// dojo customization:
-// allow filtering select to optionally filter its values when down arrow is pressed
-dijit.form.FilteringSelect.prototype._onKeyPressDefault = dijit.form.FilteringSelect.prototype._onKeyPress;
-dijit.form.FilteringSelect.prototype._onKeyPress = function(evt) {
-	if(evt.altKey || (evt.ctrlKey && evt.charCode != 118)){
-				return;
-	}
-	var dk = dojo.keys;
-	// dojo change: regardless of selection, show all options when user presses drop down and list is closed
-	if (evt.keyCode == dk.DOWN_ARROW && !this._isShowingNow) {
-		setTimeout(dojo.hitch(this, "_startSearch", [""]),1);
-	} else
-		this._onKeyPressDefault(evt);
-};
-
-// dojo customization:
-/*
-dijit.form.FilteringSelect.prototype.isValid = function(isFocused){
-	return !this.required || this._isvalid;
-}
-*/
-
-
-dijit.form.FilteringSelect.prototype.isValid = function(isFocused){
-    if (!this.required && this.get('displayedValue') == "")
-	return true;
-    else if (this.item && this.get('displayedValue'))
-	return true;
-    return false;
-}
