@@ -336,7 +336,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 		var l = parseConnectionUrl(inData.connectionUrl, inData);
 
 		if (l == null) {
-			this.conDBdropdown.setDisplayValue(" ");
+		    this.conDBdropdown.setDisplayValue(inData.connectionUrl.length > 5 ? "Other" : "");
 
 			this.conHostInput.setShowing(false);
 			this.conPortInput.setShowing(false);
