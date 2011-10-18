@@ -23,7 +23,7 @@ dojo.provide("wm.base.widget.Dialogs.LoadingDialog");
 dojo.require("wm.base.widget.Dialogs.Dialog");
 
 dojo.declare("wm.LoadingDialog", wm.Dialog, {
-    _noAnimation: true,
+
 
     containerClass: "", // don't give the containerWidget any extra classes
 
@@ -48,7 +48,11 @@ dojo.declare("wm.LoadingDialog", wm.Dialog, {
     noEscape: true,
     border: 0,
     title: "",
-
+    _noAnimation: true,
+/*
+    _animationShowTime: 800,
+    _opacity: 0.7,
+    */
     postInit: function() {
 	this.inherited(arguments);
 	dojo.removeClass(this.domNode, "wmdialog");
