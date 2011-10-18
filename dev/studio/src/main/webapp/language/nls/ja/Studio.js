@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  * Copyright (C) 2011 Infoteria Corporation All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
