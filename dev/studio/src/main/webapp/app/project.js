@@ -110,6 +110,8 @@ dojo.declare("wm.studio.Project", null, {
                 var template = dojo.clone(template_def);
 
                 var widgets = template._template;
+		delete template.displayName;
+		delete template.thumbnail;
                 delete template._template;
                 var hasLayout = false;
                 for (var i in widgets)
@@ -120,7 +122,7 @@ dojo.declare("wm.studio.Project", null, {
                 if (hasLayout) {
                     widgets_js = widgets;
                 } else {
-                    widgets_js =  {layoutBox1: ["wm.Layout", {name: "layout1"}, {}, {}]};
+                    widgets_js =  {layoutBox1: ["wm.Layout", dojo.mixin(template, {name: "layout1"}), {}, {}]};
                     for (var i in template) {
                         widgets_js.layoutBox1[1][i] = template[i];
                     }
