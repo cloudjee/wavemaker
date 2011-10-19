@@ -116,10 +116,11 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 	// Form data
 	//===========================================================================
 	setDataSet: function(inDataSet) {
-		if (this.parent && this.parent.operation){
+
+		if (this.parent && this.parent.operation && this.editingMode != "lookup") {
 			return;	
 		}
-		
+
 		this.beginEditUpdate();
 		this.dataSet = inDataSet;
 		var d = this.getItemData();
@@ -231,8 +232,9 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 			if (wm.isInstanceType(e, wm.LiveFormBase)) {
 			    /* Don't populate lookup related editors if we're in the middle of the owner's operationSucceeded method because
 			     * this populates the editor with value="" which is invalid and shows the invalid indicator */
-			        if (e.editingMode != "lookup" || !this._operationSucceeded)
+			    if (e.editingMode != "lookup" || !this._operationSucceeded)
 				    wm.fire(e, "populateEditors");
+			    }
 			} else {
                             if (wm.Lookup && e instanceof wm.Lookup && (!e.dataSet || !e.dataSet.type)) 
                                 e.setAutoDataSet(e.autoDataSet);
