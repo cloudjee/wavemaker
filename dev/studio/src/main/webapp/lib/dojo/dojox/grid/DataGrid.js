@@ -289,6 +289,7 @@ dojo.declare("dojox.grid.DataGrid", dojox.grid._Grid, {
 	},
 
 	_onFetchError: function(err, req){
+	    debugger;
 		console.log(err);
 		delete this._lastScrollTop;
 		if(!this._isLoaded){

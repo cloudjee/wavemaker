@@ -676,7 +676,7 @@ dojo.require("dojo.dnd.Manager");
 		     * WaveMaker: WM-3079: This block added for IE; when the row is regenerated, and the target becomes invalid, record
 		     * in IEGridEvent what the replacement target is
 		     */
-		    if (dojo.IEGridEvent && dojo.IEGridEvent.rowIndex !== undefined && dojo.IEGridEvent.cellIndex !== undefined && dojo.IEGridEvent.rowIndex == inRowIndex) {
+		    if (dojo.isIE && dojo.IEGridEvent && dojo.IEGridEvent.rowIndex !== undefined && dojo.IEGridEvent.cellIndex !== undefined && dojo.IEGridEvent.rowIndex == inRowIndex) {
 			var newTarget = dojo.query("td", rowNode)[dojo.IEGridEvent.cellIndex];
 
 			var inputList = dojo.query("input", newTarget);
