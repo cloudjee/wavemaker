@@ -33,9 +33,15 @@ public interface StudioConfiguration {
      */
     public abstract Resource getCommonDir() throws IOException;
 
+    /**
+     * Creates a resource relative to CommonDir. Use instead of getCommonDir.createRelative() IOException
+     */
+    public abstract Resource createCommonRelative(String relativePath) throws IOException;
+    
     // other studio information
     public abstract Resource getStudioWebAppRoot();
 
+    public abstract Resource createStudioWebAppRootReleative(String relativePath) throws IOException;
     /**
      * Get a map of all known preferences.
      */

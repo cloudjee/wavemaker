@@ -361,6 +361,11 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
 
         return common;
     }
+    
+    @Override
+    public Resource createCommonRelative(String relPath) throws IOException{
+    	return this.getCommonDir().createRelative(relPath);
+    }
 
     private synchronized void createCommonDir(Resource common) throws IOException {
 
@@ -436,6 +441,10 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
         return new ServletContextResource(this.servletContext, "/");
     }
 
+    @Override
+    public Resource createStudioWebAppRootReleative(String relativePath) throws IOException{
+    	return this.getStudioWebAppRoot().createRelative(relativePath);
+    }
     /*
      * (non-Javadoc)
      * 

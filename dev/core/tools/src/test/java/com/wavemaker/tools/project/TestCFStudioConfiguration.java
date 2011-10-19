@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2007-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2007-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -191,17 +191,16 @@ public class TestCFStudioConfiguration {
 
 	@Test
 	public void testGetStudioWebAppRootFile() throws Exception {
-		// FIXME: Passing previously - not using GFSResource
 		CFStudioConfiguration sc = new CFStudioConfiguration(this.mongoFactory);
 		sc.setServletContext(this.servletContext);
 		Resource studioWebAppRootFile = sc.getStudioWebAppRoot();
-		 //assertTrue(studioWebAppRootFile.exists());
+		assertTrue(studioWebAppRootFile.exists());
 		Resource studioWebInfFile = studioWebAppRootFile
 				.createRelative("WEB-INF/");
-		//assertTrue(studioWebInfFile.exists());
+		assertTrue(studioWebInfFile.exists());
 		Resource webXmlFile = studioWebInfFile
 				.createRelative(ProjectConstants.WEB_XML);
-		//assertTrue(webXmlFile.exists());
+		assertTrue(webXmlFile.exists());
 	}
 
 	@Test

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2007-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2007-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -53,11 +53,11 @@ public class GFSResource implements Resource {
 
 	private GridFSInputFile file;
 
-	private final String path;
+	protected final String path;
 
-	private String filename;
+	protected String filename;
 
-	private final Boolean isDir;
+	protected final Boolean isDir;
 
 	/*
 	 * Creates a Resource from a GridFS and a String If path does not end in a
