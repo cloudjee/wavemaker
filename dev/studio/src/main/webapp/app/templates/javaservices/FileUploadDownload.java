@@ -123,7 +123,7 @@ protected File getUploadDir() {
 
             /* Create a file object that does not point to an existing file.
              * Loop through names until we find a filename not already in use */
-            String filename = file.getOriginalFilename().replaceAll("[^a-zA-Z0-9 ._-]","");
+            String filename = file.getOriginalFilename(); /*.replaceAll("[^a-zA-Z0-9 ._-]","");*/
             boolean hasExtension = filename.indexOf(".") != -1;
             String name = (hasExtension) ? 
               filename.substring(0, filename.lastIndexOf(".")) : filename;
