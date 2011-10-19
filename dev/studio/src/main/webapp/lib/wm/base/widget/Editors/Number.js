@@ -121,7 +121,7 @@ dojo.declare("wm.Number", wm.Text, {
 		}
 	},
 	_getReadonlyValue: function() {
-		return dojo.number.format(this.dataValue, this.getFormatProps());
+	    return dojo.number.format(this.getDataValue(), this.getFormatProps());
 	},
 	getFormatProps: function() {
 		var formatProps = {};
