@@ -680,15 +680,18 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 
 	updateReadonlyValue: function(inValue) {
 	    if (this.readonly && this.readOnlyNode){
-		var value = inValue || this._getReadonlyValue();
+		var value;
 		if (this.$.format) {
-		    value = this.$.format.format(value);
+		    value = this.$.format.format(inValue || this.getDataValue());
 		} else if (this.formatter && dojo.isFunction(this.owner[this.formatter])) {
 		    try {
-			value = this.owner[this.formatter](this, value);
+			value = this.owner[this.formatter](this, inValue || this.getDataValue());
 		    } catch(e) {
 			console.error("Formatter error in " + this.toString() + ": " + e);
 		    }
+		} 
+		if (value === undefined) {
+		    value = inValue || this._getReadonlyValue();
 		}
 		this.readOnlyNode.innerHTML = value;
 	    }

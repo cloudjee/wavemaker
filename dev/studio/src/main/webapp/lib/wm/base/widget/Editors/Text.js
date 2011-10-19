@@ -57,7 +57,7 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
 		else
 		        return "hidden";
 	},
-	updateReadonlyValue: function() {
+	updateReadonlyValue: function(inValue) {
 		this.inherited(arguments);
             // the test for width is actually a test to see if sizeEditor has been called; we can't autoSize if caption and readOnlyNode have not yet been assigned an initial size
 	  	if (this.readonly && this.readOnlyNode && this.readOnlyNode.style.width && (this.autoSizeHeight || this.autoSizeWidth))
