@@ -61,6 +61,8 @@ wm.SelectMenu.extend({
 			    this.dataField = "";
 			}
 			this._setDisplayField();
+		    } else if (!this.displayField && !this.displayExpression) {
+			this._setDisplayField();
 		    }
 		}
 	    if (inDataSet)
