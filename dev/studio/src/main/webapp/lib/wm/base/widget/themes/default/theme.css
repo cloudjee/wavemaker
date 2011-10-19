@@ -1892,8 +1892,3 @@ Overriding dijit's progress bar properties to enable height changes to progress 
     height: 100%;
 }
 
-.tundra div .dojoxGridError {
-	background-image: none;
-	padding-left: 0px;
-	padding-right: 0px;
-}
