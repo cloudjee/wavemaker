@@ -18,6 +18,8 @@ import java.io.File;
 import java.util.List;
 import java.util.Map;
 
+import com.wavemaker.tools.project.Project;
+
 /**
  * @author Simon Toens
  * @version $Rev$ - $Date$
@@ -41,6 +43,15 @@ public interface DeploymentTarget {
      * @return status message
      */
     String deploy(File webapp, DeploymentInfo deploymentInfo);
+
+    /**
+     * Deploy a project.
+     * 
+     * @param project Project to deploy
+     * @param deploymentInfo
+     * @return status message
+     */
+    String deploy(Project project, DeploymentInfo deploymentInfo);
 
     /**
      * Undeploy an app.

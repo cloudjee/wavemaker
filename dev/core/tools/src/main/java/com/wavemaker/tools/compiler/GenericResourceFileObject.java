@@ -108,6 +108,10 @@ public class GenericResourceFileObject implements FileObject {
         return this.resource.getDescription();
     }
 
+    public String getFilename() {
+        return this.resource.getFilename();
+    }
+
     @Override
     public String toString() {
         return getClass().getName() + "[" + this.resource.getDescription() + "]";

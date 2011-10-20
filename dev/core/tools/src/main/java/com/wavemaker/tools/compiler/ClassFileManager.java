@@ -155,6 +155,8 @@ public class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFile
         for (Kind kind : kinds) {
             if (StringUtils.hasText(kind.extension)) {
                 extensions.add(kind.extension.substring(1));
+            } else {
+                extensions.add("*");
             }
         }
 
@@ -196,7 +198,7 @@ public class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFile
             @Override
             public boolean accept(Resource resource) {
                 String extension = StringUtils.getFilenameExtension(resource.getFilename());
-                if (extensions.contains(extension)) {
+                if (extension != null && (extensions.contains(extension) || extensions.contains("*"))) {
                     return true;
                 } else if (extension == null && recurse) {
                     javaResources.addAll(locateResources(extensions, resource, recurse));

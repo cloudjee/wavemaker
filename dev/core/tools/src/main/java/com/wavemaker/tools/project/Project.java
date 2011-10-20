@@ -16,9 +16,11 @@ package com.wavemaker.tools.project;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.springframework.core.io.Resource;
@@ -74,6 +76,77 @@ public class Project extends AbstractFileService {
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
+    }
+
+    public Map<String, Resource> getWebAppFilesForDeployment() {
+        Map<String, Resource> projectWebAppFiles = new HashMap<String, Resource>();
+
+        try {
+
+            String projectBasePath = extractPath(getWebAppRoot());
+            collectFiles(projectWebAppFiles, projectBasePath, getWebAppRoot());
+
+            final String studioBasePath = extractPath(this.studioConfiguration.getStudioWebAppRoot());
+
+            collectFiles(projectWebAppFiles, studioBasePath, this.studioConfiguration.getStudioWebAppRoot().createRelative("WEB-INF/lib/"));
+            collectFiles(projectWebAppFiles, studioBasePath, this.studioConfiguration.getStudioWebAppRoot().createRelative("lib/"),
+                new ResourceFilter() {
+
+                    @Override
+                    public boolean accept(Resource resource) {
+                        try {
+                            String path = extractPath(resource).replace(studioBasePath, "");
+                            if (path.startsWith("wm/common/") || path.startsWith("dojo/utils/") || path.startsWith("dojo/")
+                                && path.contains("tests/")) {
+                                return false;
+                            }
+                            return true;
+                        } catch (IOException e) {
+                            throw new WMRuntimeException(e);
+                        }
+                    }
+                });
+            collectFiles(projectWebAppFiles, studioBasePath, this.studioConfiguration.getCommonDir(), null, "lib/wm/");
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        }
+
+        return projectWebAppFiles;
+    }
+
+    public boolean isMavenProject() {
+        return this.mavenProject;
+    }
+
+    private void collectFiles(Map<String, Resource> files, String basePath, Resource root) throws IOException {
+        collectFiles(files, basePath, root, null);
+    }
+
+    private void collectFiles(Map<String, Resource> files, String basePath, Resource root, ResourceFilter filter) throws IOException {
+        collectFiles(files, basePath, root, filter, "");
+    }
+
+    private void collectFiles(Map<String, Resource> files, String basePath, Resource root, ResourceFilter filter, String newPath) throws IOException {
+        List<Resource> children;
+        if (filter == null) {
+            children = this.studioConfiguration.listChildren(root);
+        } else {
+            children = this.studioConfiguration.listChildren(root, filter);
+        }
+        for (Resource child : children) {
+            if (StringUtils.getFilenameExtension(child.getFilename()) == null) {
+                collectFiles(files, basePath, child, filter);
+            } else {
+                files.put(newPath + extractPath(child).replace(basePath, ""), child);
+            }
+        }
+    }
+
+    private String extractPath(Resource resource) throws IOException {
+        // TODO - This is dangerous, as it depends on implementation of Resource - consider adding to
+        // StudioConfiguration
+        return resource.getURI().getPath();
+        // return description.substring(description.indexOf("[") + 1, description.lastIndexOf("]"));
     }
 
     public Resource getMainSrc() {

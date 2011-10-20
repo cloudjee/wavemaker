@@ -14,7 +14,6 @@
 
 package com.wavemaker.tools.project;
 
-import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -42,6 +41,7 @@ import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.project.upgrade.UpgradeManager;
+import com.wavemaker.tools.util.NoCloseInputStream;
 
 /**
  * Manages projects; list of all available projects, and keeps track of any open projects. Normally this should be
@@ -70,8 +70,8 @@ public class ProjectManager {
 
     public ProjectManager() {
         this.projectCopyExclusions = new ArrayList<String>(IOUtils.DEFAULT_EXCLUSION);
-        this.projectCopyExclusions.add(DeploymentManager.EXPORT_DIR_DEFAULT);
-        this.projectCopyExclusions.add(DeploymentManager.DIST_DIR_DEFAULT);
+        this.projectCopyExclusions.add(AbstractDeploymentManager.EXPORT_DIR_DEFAULT);
+        this.projectCopyExclusions.add(LocalDeploymentManager.DIST_DIR_DEFAULT);
     }
 
     public Resource getTmpDir() {
@@ -550,17 +550,5 @@ public class ProjectManager {
 
     private void setCurrentProject(Project currentProject) {
         this.currentProject = currentProject;
-    }
-
-    private static final class NoCloseInputStream extends FilterInputStream {
-
-        protected NoCloseInputStream(InputStream in) {
-            super(in);
-        }
-
-        @Override
-        public void close() throws IOException {
-            // no-op
-        }
     }
 }

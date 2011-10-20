@@ -16,6 +16,7 @@ package com.wavemaker.tools.apt;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
@@ -53,6 +54,7 @@ import com.wavemaker.json.type.TypeDefinition;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.runtime.service.definition.ServiceOperation;
+import com.wavemaker.tools.compiler.ResourceJavaFileObject;
 import com.wavemaker.tools.javaservice.JavaServiceDefinition;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.StudioConfiguration;
@@ -148,6 +150,11 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
                 }
             }
         }
+        try {
+            copySpringXml();
+        } catch (IOException e) {
+            this.processingEnv.getMessager().printMessage(Kind.ERROR, "Could not copy Spring xml config to classpath.");
+        }
         return false;
     }
 
@@ -159,6 +166,22 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
     @Override
     public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
         this.studioConfiguration = studioConfiguration;
+    }
+
+    private void copySpringXml() throws IOException {
+        Project project = this.designServiceManager.getProjectManager().getCurrentProject();
+        if (!project.isMavenProject()) {
+            Iterable<JavaFileObject> matchedFiles = this.fileManager.list(StandardLocation.SOURCE_PATH, "",
+                Collections.singleton(JavaFileObject.Kind.OTHER), false);
+            for (JavaFileObject match : matchedFiles) {
+                if (match instanceof ResourceJavaFileObject) {
+                    ResourceJavaFileObject resource = (ResourceJavaFileObject) match;
+                    if (resource.getFilename().endsWith("spring.xml")) {
+                        this.studioConfiguration.copyFile(project.getWebInfClasses(), resource.openInputStream(), resource.getFilename());
+                    }
+                }
+            }
+        }
     }
 
     private boolean processService(String serviceId, TypeElement type) {

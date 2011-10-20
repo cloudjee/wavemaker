@@ -108,7 +108,7 @@ public class TestServiceConfigurationProcessor {
 
         Beans actualBeans = SpringConfigSupport.readBeans(new FileSystemResource(actualServices), this.project);
 
-        assertEquals(4, actualBeans.getImportsAndAliasAndBean().size());
+        assertEquals(2, actualBeans.getImportsAndAliasAndBean().size());
         for (Object o : actualBeans.getImportsAndAliasAndBean()) {
             if (o instanceof Import) {
                 Import imp = (Import) o;

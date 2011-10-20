@@ -24,8 +24,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.wavemaker.studio.infra.StudioTestCase;
-import com.wavemaker.studio.project.TestDeploymentManager;
-import com.wavemaker.tools.project.DeploymentManager;
+import com.wavemaker.studio.project.TestLocalDeploymentManager;
+import com.wavemaker.tools.project.LocalDeploymentManager;
 
 /**
  * @author small
@@ -36,7 +36,7 @@ public class TestAppModules extends StudioTestCase {
 
     private static String PROJECT_TYPE = System.getProperty("test.project.type");
 
-    protected DeploymentManager deploymentManager;
+    protected LocalDeploymentManager deploymentManager;
 
     @Before
     @Override
@@ -44,7 +44,7 @@ public class TestAppModules extends StudioTestCase {
 
         super.setUp();
 
-        this.deploymentManager = (DeploymentManager) getBean("deploymentManager");
+        this.deploymentManager = (LocalDeploymentManager) getBean("deploymentManager");
     }
 
     @Test
@@ -57,11 +57,11 @@ public class TestAppModules extends StudioTestCase {
 
         try {
             if ("cloud".equals(PROJECT_TYPE)) {
-                TestDeploymentManager.checkURLContent(testTestRunDir, deployName, "modules/id/wm.cloud/cloud.src.resource", "",
-                    TestDeploymentManager.RETRY_SECONDS, this.deploymentManager);
+                TestLocalDeploymentManager.checkURLContent(testTestRunDir, deployName, "modules/id/wm.cloud/cloud.src.resource", "",
+                    TestLocalDeploymentManager.RETRY_SECONDS, this.deploymentManager);
             } else {
-                TestDeploymentManager.checkURLContent(testTestRunDir, deployName, "modules/id/wm.local/local.src.resource", "",
-                    TestDeploymentManager.RETRY_SECONDS, this.deploymentManager);
+                TestLocalDeploymentManager.checkURLContent(testTestRunDir, deployName, "modules/id/wm.local/local.src.resource", "",
+                    TestLocalDeploymentManager.RETRY_SECONDS, this.deploymentManager);
             }
         } finally {
             this.deploymentManager.testRunClean(testTestRunDir.getAbsolutePath(), deployName);

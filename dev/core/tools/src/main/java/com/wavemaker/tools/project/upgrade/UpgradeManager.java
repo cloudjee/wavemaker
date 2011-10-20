@@ -26,6 +26,7 @@ import org.springframework.core.io.Resource;
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.config.ConfigurationStore;
+import com.wavemaker.tools.project.AbstractDeploymentManager;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.Project;
 
@@ -63,7 +64,7 @@ public class UpgradeManager implements InitializingBean {
 
             try {
                 Resource exportFile = project.getProjectRoot().createRelative(
-                    DeploymentManager.EXPORT_DIR_DEFAULT + project.getProjectName() + "-upgrade-" + projectVersion + ".zip");
+                    AbstractDeploymentManager.EXPORT_DIR_DEFAULT + project.getProjectName() + "-upgrade-" + projectVersion + ".zip");
                 this.deploymentManager.exportProject(exportFile.getURI().toString());
                 ret.setBackupExportFile(exportFile);
             } catch (IOException ex) {

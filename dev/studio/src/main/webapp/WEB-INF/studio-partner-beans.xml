@@ -1,67 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--
-	Defines bean factory classes and beans for design time
--->
+<!-- Defines bean factory classes and beans for design time -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xmlns:aop="http://www.springframework.org/schema/aop"
-		xsi:schemaLocation="http://www.springframework.org/schema/beans
-			http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
 			http://www.springframework.org/schema/aop
-			http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+			http://www.springframework.org/schema/aop/spring-aop-3.1.xsd">
 
-	<bean id="pwsLoginManagerBeanFactory"
-		class="com.wavemaker.runtime.pws.PwsLoginManagerBeanFactory"
-		scope="singleton"
-		lazy-init="true">
+	<bean id="pwsLoginManagerBeanFactory" class="com.wavemaker.runtime.pws.PwsLoginManagerBeanFactory"
+		scope="singleton" lazy-init="true">
 		<property name="pwsLoginManagers">
 			<map>
-				<!--entry key="xxxxx" value-ref="xxxxxLoginManager"/-->
+				<!--entry key="xxxxx" value-ref="xxxxxLoginManager"/ -->
 			</map>
 		</property>
 	</bean>
 
-	<bean id="pwsRestImporterBeanFactory"
-		class="com.wavemaker.tools.pws.PwsRestImporterBeanFactory"
-		scope="singleton"
-		lazy-init="true">
+	<bean id="pwsRestImporterBeanFactory" class="com.wavemaker.tools.pws.PwsRestImporterBeanFactory"
+		scope="singleton" lazy-init="true">
 		<property name="pwsRestImporters">
 			<map>
-				<!--entry key="xxxxx" value-ref="xxxxxRestImporter"/-->
+				<!--entry key="xxxxx" value-ref="xxxxxRestImporter"/ -->
 			</map>
 		</property>
 	</bean>
 
-	<bean id="pwsRestWsdlGeneratorBeanFactory"
-		class="com.wavemaker.tools.pws.PwsRestWsdlGeneratorBeanFactory"
-		scope="singleton"
-		lazy-init="true">
+	<bean id="pwsRestWsdlGeneratorBeanFactory" class="com.wavemaker.tools.pws.PwsRestWsdlGeneratorBeanFactory"
+		scope="singleton" lazy-init="true">
 		<property name="pwsRestWsdlGenerators">
 			<map>
-				<!--entry key="xxxxx" value-ref="xxxxxRestWsdlGenerator"/-->
+				<!--entry key="xxxxx" value-ref="xxxxxRestWsdlGenerator"/ -->
 			</map>
 		</property>
 	</bean>
 
 	<bean id="pwsRestServiceGeneratorBeanFactory"
 		class="com.wavemaker.tools.pws.PwsRestServiceGeneratorBeanFactory"
-		scope="singleton"
-		lazy-init="true">
+		scope="singleton" lazy-init="true">
 		<property name="pwsRestServiceGenerators">
 			<map>
-				<!--entry key="xxxxx" value-ref="xxxxxRestServiceGenerator"/-->
+				<!--entry key="xxxxx" value-ref="xxxxxRestServiceGenerator"/ -->
 			</map>
 		</property>
 	</bean>
 
-	<bean id="pwsServiceModifierBeanFactory" 
-		class="com.wavemaker.tools.pws.PwsServiceModifierBeanFactory" 
-		lazy-init="true" 
-		scope="singleton">
+	<bean id="pwsServiceModifierBeanFactory" class="com.wavemaker.tools.pws.PwsServiceModifierBeanFactory"
+		lazy-init="true" scope="singleton">
 		<property name="pwsServiceModifiers">
 			<map>
-				<!--entry key="xxxxx" value-ref="xxxxxRestServiceGenerator"/-->
+				<!--entry key="xxxxx" value-ref="xxxxxRestServiceGenerator"/ -->
 			</map>
 		</property>
 	</bean>

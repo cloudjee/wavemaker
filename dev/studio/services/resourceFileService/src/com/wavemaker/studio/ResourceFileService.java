@@ -282,33 +282,4 @@ public class ResourceFileService {
             throw new WMRuntimeException(e);
         }
     }
-
-    /*
-     * public boolean changeClassPath(String inPath, boolean isInClassPath) { try { Resource root =
-     * getRequestedFile(inPath, false);
-     * 
-     * / * if (inPath.indexOf("/") == 0) inPath = inPath.substring(1); String inFileName = inPath
-     * .substring(inPath.lastIndexOf("/") != -1 ? inPath .lastIndexOf("/") + 1 : 0); /
-     * 
-     * Resource f = getResourcesDir().createRelative(".includeJars"); String fileContents; StringBuffer newFile = new
-     * StringBuffer(""); String[] fileList;
-     * 
-     * if (f.exists()) fileContents = projectManager.getCurrentProject().readFile(f); else fileContents = ""; fileList =
-     * fileContents.split("\n");
-     * 
-     * boolean found = false; for (int i = 0; i < fileList.length; i++) { boolean addFile = true; if
-     * (inPath.equals(fileList[i])) { if (isInClassPath) { found = true; } else { addFile = false; } } if (addFile) { if
-     * (newFile.length() > 0) newFile.append("\n"); newFile.append(fileList[i]); }
-     * 
-     * }
-     * 
-     * Resource destFile = projectManager.getCurrentProject() .getProjectRoot().createRelative("lib/" +
-     * root.getFilename());
-     * 
-     * if (isInClassPath && !found) { if (newFile.length() > 0) newFile.append("\n"); newFile.append(inPath); Resource
-     * sourceFile = getRequestedFile(inPath,false); studioConfiguration.copyRecursive(sourceFile, destFile, new
-     * ArrayList<String>()); } else if (!isInClassPath) { studioConfiguration.deleteFile(destFile); }
-     * projectManager.getCurrentProject().writeFile(f, newFile.toString()); return true; } catch (Exception e) { throw
-     * new WMRuntimeException(e); } }
-     */
 }

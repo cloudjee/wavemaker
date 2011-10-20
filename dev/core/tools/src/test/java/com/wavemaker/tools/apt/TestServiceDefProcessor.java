@@ -61,7 +61,6 @@ public class TestServiceDefProcessor {
         assertTrue(projectDir.exists());
         assertTrue(projectDir.createRelative("file_map_readme.txt").exists());
         this.project = new Project(projectDir, this.studioConfiguration);
-
         this.localDSM = DesignTimeUtils.getDSMForProjectRoot(this.project.getProjectRoot());
     }
 
@@ -92,6 +91,12 @@ public class TestServiceDefProcessor {
         Service service = this.localDSM.getService(serviceId);
         assertEquals("Foo", service.getClazz());
         assertEquals(1, service.getOperation().size());
+
+        Resource sourceSpringXml = serviceASrc.createRelative("serviceA.spring.xml");
+        assertTrue(sourceSpringXml.exists());
+
+        Resource classPathSpringXml = this.project.getWebInfClasses().createRelative("serviceA.spring.xml");
+        assertTrue(classPathSpringXml.exists());
     }
 
     @Test

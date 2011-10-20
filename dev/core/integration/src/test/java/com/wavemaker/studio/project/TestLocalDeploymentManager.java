@@ -46,7 +46,7 @@ import org.junit.Test;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.studio.infra.StudioTestCase;
 import com.wavemaker.tools.project.BuildExceptionWithOutput;
-import com.wavemaker.tools.project.DeploymentManager;
+import com.wavemaker.tools.project.LocalDeploymentManager;
 import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.project.ProjectManager;
@@ -57,13 +57,13 @@ import com.wavemaker.tools.service.DesignServiceManager;
  * @author Jeremy Grelle
  * 
  */
-public class TestDeploymentManager extends StudioTestCase {
+public class TestLocalDeploymentManager extends StudioTestCase {
 
     public static final String PLAN_FILE_TEXT = "";
 
     public static final long RETRY_SECONDS = 30;
 
-    protected DeploymentManager deploymentManager;
+    protected LocalDeploymentManager deploymentManager;
 
     protected ProjectManager projectManager;
 
@@ -73,7 +73,7 @@ public class TestDeploymentManager extends StudioTestCase {
 
         super.setUp();
 
-        this.deploymentManager = (DeploymentManager) getBean("deploymentManager");
+        this.deploymentManager = (LocalDeploymentManager) getBean("deploymentManager");
         this.projectManager = (ProjectManager) getBean("projectManager");
     }
 
@@ -370,7 +370,7 @@ public class TestDeploymentManager extends StudioTestCase {
     }
 
     public static void checkURLContent(File projectDir, String deployName, String filename, String expectedResult, long retrySeconds,
-        DeploymentManager deploymentManager) throws InterruptedException {
+        LocalDeploymentManager deploymentManager) throws InterruptedException {
 
         String tomcatHost = deploymentManager.getStudioConfiguration().getTomcatHost();
         int tomcatPort = deploymentManager.getStudioConfiguration().getTomcatPort();

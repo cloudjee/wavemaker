@@ -26,6 +26,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -45,6 +46,7 @@ import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.server.FileUploadResponse;
+import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.project.DeploymentManager;
@@ -84,7 +86,7 @@ public class StudioService extends ClassLoader {
             conn.setDoOutput(true);
             OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
             System.out.println("C");
-            String data = "output_format=json&output_info=errors&js_code=" + java.net.URLEncoder.encode(s);
+            String data = "output_format=json&output_info=errors&js_code=" + java.net.URLEncoder.encode(s, ServerConstants.DEFAULT_ENCODING);
 
             // write parameters
             writer.write(data);
@@ -444,13 +446,13 @@ public class StudioService extends ClassLoader {
     }
 
     @ExposeToClient
-    public java.util.Hashtable getLogUpdate(String filename, String lastStamp) throws IOException {
+    public Hashtable<String, Object> getLogUpdate(String filename, String lastStamp) throws IOException {
         File logFolder = new File(System.getProperty("catalina.home") + "/logs/ProjectLogs", this.projectManager.getCurrentProject().getProjectName());
         // File logFolder = projectManager.getCurrentProject().getLogFolder();
         File logFile = new File(logFolder, filename);
         // System.out.println("READING LOG FILE : " + logFile.toString());
         if (!logFile.exists()) {
-            java.util.Hashtable PEmpty = new java.util.Hashtable();
+            Hashtable<String, Object> PEmpty = new Hashtable<String, Object>();
             PEmpty.put("logs", "");
             PEmpty.put("lastStamp", 0);
             return PEmpty;
@@ -481,7 +483,7 @@ public class StudioService extends ClassLoader {
             timestamp = m.group();
             timestamp = timestamp.replaceFirst("START_WM_LOG_LINE\\s+.*?", "");
         }
-        java.util.Hashtable P = new java.util.Hashtable();
+        Hashtable<String, Object> P = new Hashtable<String, Object>();
         s = m.replaceAll(""); // remove all START_WM_LOG_LINE xxx:xxx:xxx,xxx
         s = s.replaceAll(" END_WM_LOG_LINE", "");
         if (s.matches("^\\s+$")) {

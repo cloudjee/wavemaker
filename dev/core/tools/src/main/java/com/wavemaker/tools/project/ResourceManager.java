@@ -39,6 +39,7 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.server.DownloadResponse;
 import com.wavemaker.runtime.server.ServerConstants;
+import com.wavemaker.tools.util.NoCloseInputStream;
 
 public class ResourceManager {
 
@@ -336,9 +337,7 @@ public class ResourceManager {
                     studioConfiguration.createPath(zipFolder, entry.getName() + "/");
                 } else {
                     Resource outputFile = studioConfiguration.createPath(zipFolder, entry.getName());
-
-                    // DO NOT USE FileCopyUtils.copy which closes our zip stream when it finishes
-                    IOUtils.copy(zis, studioConfiguration.getOutputStream(outputFile));
+                    FileCopyUtils.copy(new NoCloseInputStream(zis), studioConfiguration.getOutputStream(outputFile));
                 }
             }
             zis.close();

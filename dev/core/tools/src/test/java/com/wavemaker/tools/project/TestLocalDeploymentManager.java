@@ -12,7 +12,7 @@
  *  limitations under the License.
  */
 
-package com.wavemaker.tools.deployment;
+package com.wavemaker.tools.project;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -46,14 +46,16 @@ import com.wavemaker.json.JSON;
 import com.wavemaker.json.JSONObject;
 import com.wavemaker.json.JSONUnmarshaller;
 import com.wavemaker.runtime.server.json.JSONUtils;
-import com.wavemaker.tools.project.LocalStudioConfiguration;
-import com.wavemaker.tools.project.Project;
-import com.wavemaker.tools.project.ProjectManager;
+import com.wavemaker.tools.deployment.ArchiveType;
+import com.wavemaker.tools.deployment.DeploymentDB;
+import com.wavemaker.tools.deployment.DeploymentInfo;
+import com.wavemaker.tools.deployment.DeploymentType;
+import com.wavemaker.tools.deployment.Deployments;
 
 /**
  * @author Jeremy Grelle
  */
-public class TestServiceDeploymentManager {
+public class TestLocalDeploymentManager {
 
     private static File homeDir;
 
@@ -62,11 +64,11 @@ public class TestServiceDeploymentManager {
     @Mock
     private ProjectManager projectManager;
 
-    private ServiceDeploymentManager mgr;
+    private LocalDeploymentManager mgr;
 
     @BeforeClass
     public static void initHomeDir() throws IOException {
-        homeDir = IOUtils.createTempDirectory(TestServiceDeploymentManager.class.getName(), "tmp");
+        homeDir = IOUtils.createTempDirectory(TestLocalDeploymentManager.class.getName(), "tmp");
     }
 
     @Before
@@ -80,7 +82,7 @@ public class TestServiceDeploymentManager {
         this.studioConfig = new LocalStudioConfiguration();
         this.studioConfig.setTestWaveMakerHome(homeDir);
         MockitoAnnotations.initMocks(this);
-        this.mgr = new ServiceDeploymentManager();
+        this.mgr = new LocalDeploymentManager();
         this.mgr.setProjectManager(this.projectManager);
         this.mgr.setStudioConfiguration(this.studioConfig);
 

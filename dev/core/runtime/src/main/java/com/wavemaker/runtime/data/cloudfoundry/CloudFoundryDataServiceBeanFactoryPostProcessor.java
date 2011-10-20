@@ -151,8 +151,8 @@ public class CloudFoundryDataServiceBeanFactoryPostProcessor implements BeanFact
                     PostgresqlServiceInfo service = this.cloudEnvironment.getServiceInfo(serviceName, PostgresqlServiceInfo.class);
                     if (service != null) {
                         defaultListableBeanFactory.removeBeanDefinition(dsBean);
-                        PostgresqlServiceCreator postgresCreationHelper = new PostgresqlServiceCreator(this.cloudEnvironment);
-                        DataSource cfDataSource = postgresCreationHelper.createService(serviceName);
+                        PostgresqlServiceCreator postgresCreationHelper = new PostgresqlServiceCreator();
+                        DataSource cfDataSource = postgresCreationHelper.createService(service);
                         defaultListableBeanFactory.registerSingleton(dsBean, cfDataSource);
                     } else {
                         log.warn("Service '" + serviceName + "' found, but it is not a PostgreSQL service as expected.");
@@ -161,8 +161,8 @@ public class CloudFoundryDataServiceBeanFactoryPostProcessor implements BeanFact
                     MysqlServiceInfo service = this.cloudEnvironment.getServiceInfo(serviceName, MysqlServiceInfo.class);
                     if (service != null) {
                         defaultListableBeanFactory.removeBeanDefinition(dsBean);
-                        MysqlServiceCreator mysqlCreationHelper = new MysqlServiceCreator(this.cloudEnvironment);
-                        DataSource cfDataSource = mysqlCreationHelper.createService(serviceName);
+                        MysqlServiceCreator mysqlCreationHelper = new MysqlServiceCreator();
+                        DataSource cfDataSource = mysqlCreationHelper.createService(service);
                         defaultListableBeanFactory.registerSingleton(dsBean, cfDataSource);
                     } else {
                         log.warn("Service '" + serviceName + "' found, but it is not a MySQL service as expected.");

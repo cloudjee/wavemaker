@@ -15,17 +15,23 @@
 package com.wavemaker.tools.deployment.tomcat;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.core.io.Resource;
+
+import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.common.util.Tuple;
 import com.wavemaker.tools.deployment.AppInfo;
 import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.deployment.DeploymentTarget;
+import com.wavemaker.tools.project.LocalDeploymentManager;
+import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.util.TomcatServer;
 
 /**
@@ -58,6 +64,16 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
     public String deploy(File f, DeploymentInfo deploymentInfo) {
         TomcatServer tomcat = initTomcat(deploymentInfo);
         return tomcat.deploy(f, deploymentInfo.getApplicationName());
+    }
+
+    @Override
+    public String deploy(Project project, DeploymentInfo deploymentInfo) {
+        try {
+            Resource warFile = project.getProjectRoot().createRelative(LocalDeploymentManager.DIST_DIR_DEFAULT + project.getProjectName() + ".war");
+            return deploy(warFile.getFile(), deploymentInfo);
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        }
     }
 
     @Override

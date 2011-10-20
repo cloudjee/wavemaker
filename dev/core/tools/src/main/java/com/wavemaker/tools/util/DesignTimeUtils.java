@@ -26,7 +26,7 @@ import org.springframework.core.io.Resource;
 
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.common.ConfigurationException;
-import com.wavemaker.tools.project.DeploymentManager;
+import com.wavemaker.tools.project.LocalDeploymentManager;
 import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.service.DesignServiceManager;
@@ -118,7 +118,7 @@ public class DesignTimeUtils {
                 pm.openProject(projectRoot.getFilename(), true);
                 dsm.setProjectManager(pm);
 
-                DeploymentManager dep = new DeploymentManager();
+                LocalDeploymentManager dep = new LocalDeploymentManager();
                 dep.setProjectManager(pm);
                 dep.setStudioConfiguration(sc);
                 dsm.setStudioConfiguration(sc);

@@ -98,8 +98,7 @@ public class DeploymentService {
     }
 
     public String exportProject() {
-        String result = this.deploymentManager.exportProject();
-        return DeploymentManager.isCloud() ? "" : result;
+        return this.deploymentManager.exportProject();
     }
 
     /*
@@ -184,7 +183,7 @@ public class DeploymentService {
     }
 
     public List<DeploymentInfo> getDeploymentInfo() {
-        return this.serviceDeploymentManager.getDeploymentInfo();
+        return this.deploymentManager.getDeploymentInfo();
     }
 
     public String deploy(DeploymentInfo deploymentInfo) throws IOException {
@@ -195,14 +194,17 @@ public class DeploymentService {
                 return validateResult;
             }
         }
-        File f = this.serviceDeploymentManager.generateWebapp(deploymentInfo).getFile();
-        if (!f.exists()) {
-            throw new AssertionError("Application archive file doesn't exist at " + f.getAbsolutePath());
+        if (deploymentInfo.getDeploymentType() != DeploymentType.CLOUD_FOUNDRY) {
+            File f = this.serviceDeploymentManager.generateWebapp(deploymentInfo).getFile();
+            if (!f.exists()) {
+                throw new AssertionError("Application archive file doesn't exist at " + f.getAbsolutePath());
+            }
+            if (deploymentInfo.getDeploymentType() == DeploymentType.FILE) {
+                return "SUCCESS";
+            }
         }
-        if (deploymentInfo.getDeploymentType() == DeploymentType.FILE) {
-            return "SUCCESS";
-        }
-        return this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).deploy(f, deploymentInfo);
+        return this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).deploy(
+            this.serviceDeploymentManager.getProjectManager().getCurrentProject(), deploymentInfo);
     }
 
     public String undeploy(DeploymentInfo deploymentInfo, boolean deleteServices) {
@@ -213,11 +215,11 @@ public class DeploymentService {
     }
 
     public String save(DeploymentInfo deploymentInfo) {
-        return this.serviceDeploymentManager.saveDeploymentInfo(deploymentInfo);
+        return this.deploymentManager.saveDeploymentInfo(deploymentInfo);
     }
 
     public String delete(String deploymentId) {
-        this.serviceDeploymentManager.deleteDeploymentInfo(deploymentId);
+        this.deploymentManager.deleteDeploymentInfo(deploymentId);
         return "SUCCESS";
     }
 

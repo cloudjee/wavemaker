@@ -28,7 +28,7 @@ import com.wavemaker.tools.project.Project;
  * @author Jeremy Grelle
  * 
  */
-public class JavaResourceObject extends AbstractResourceJavaFileObject {
+public class JavaResourceObject extends ResourceJavaFileObject {
 
     /**
      * Represents a Java source file
@@ -40,16 +40,11 @@ public class JavaResourceObject extends AbstractResourceJavaFileObject {
      */
     public JavaResourceObject(Kind kind, Project project, Resource javaFile) throws IOException {
         super(kind, project, javaFile);
-        Assert.isTrue(kind == Kind.SOURCE, "Expected a to be kind " + Kind.SOURCE);
-    }
-
-    @Override
-    public Kind getKind() {
-        return Kind.SOURCE;
+        Assert.isTrue(isSourceOrResource(kind), "Expected a to be a source or resource kind");
     }
 
     @Override
     public boolean equals(Object obj) {
-        return obj == this || obj instanceof ClassResourceObject && this.resource.equals(((ClassResourceObject) obj).resource);
+        return obj == this || obj instanceof JavaResourceObject && this.resource.equals(((JavaResourceObject) obj).resource);
     }
 }

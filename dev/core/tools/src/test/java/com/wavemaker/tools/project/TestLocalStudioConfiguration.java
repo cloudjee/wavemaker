@@ -54,6 +54,7 @@ public class TestLocalStudioConfiguration extends WMTestCase {
                 Resource wmHome = sc.getWaveMakerHome();
 
                 assertEquals(newWMHome, wmHome.getFilename());
+
             } finally {
                 if (null == oldWMHome) {
                     Properties props = System.getProperties();

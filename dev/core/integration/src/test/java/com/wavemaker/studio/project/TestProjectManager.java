@@ -39,7 +39,7 @@ import org.springframework.mock.web.MockHttpSession;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.studio.infra.StudioTestCase;
-import com.wavemaker.tools.project.DeploymentManager;
+import com.wavemaker.tools.project.LocalDeploymentManager;
 import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.project.ProjectManager;
@@ -222,8 +222,8 @@ public class TestProjectManager extends StudioTestCase {
         makeProject(projectA);
 
         File sourceSVNDir = new File(pm.getCurrentProject().getProjectRoot().getFile(), ".svn");
-        File sourceExportDir = new File(pm.getCurrentProject().getProjectRoot().getFile(), DeploymentManager.EXPORT_DIR_DEFAULT);
-        File sourceDistDir = new File(pm.getCurrentProject().getProjectRoot().getFile(), DeploymentManager.DIST_DIR_DEFAULT);
+        File sourceExportDir = new File(pm.getCurrentProject().getProjectRoot().getFile(), LocalDeploymentManager.EXPORT_DIR_DEFAULT);
+        File sourceDistDir = new File(pm.getCurrentProject().getProjectRoot().getFile(), LocalDeploymentManager.DIST_DIR_DEFAULT);
 
         sourceSVNDir.mkdir();
         sourceDistDir.mkdir();
@@ -232,8 +232,8 @@ public class TestProjectManager extends StudioTestCase {
         pm.copyProject(projectA, projectB);
 
         File destSVNDir = new File(pm.getProjectDir(projectB, false).getFile(), ".svn");
-        File destExportDir = new File(pm.getProjectDir(projectB, false).getFile(), DeploymentManager.EXPORT_DIR_DEFAULT);
-        File destDistDir = new File(pm.getProjectDir(projectB, false).getFile(), DeploymentManager.DIST_DIR_DEFAULT);
+        File destExportDir = new File(pm.getProjectDir(projectB, false).getFile(), LocalDeploymentManager.EXPORT_DIR_DEFAULT);
+        File destDistDir = new File(pm.getProjectDir(projectB, false).getFile(), LocalDeploymentManager.DIST_DIR_DEFAULT);
 
         assertFalse(destSVNDir.exists());
         assertFalse(destExportDir.exists());

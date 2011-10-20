@@ -30,7 +30,7 @@ import org.junit.Test;
 
 import com.wavemaker.common.util.Tuple;
 import com.wavemaker.studio.infra.StudioTestCase;
-import com.wavemaker.studio.project.TestDeploymentManager;
+import com.wavemaker.studio.project.TestLocalDeploymentManager;
 import com.wavemaker.testsupport.UtilTest;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.LocalStudioConfiguration;
@@ -99,7 +99,7 @@ public class TestTomcat extends StudioTestCase {
         ((DeploymentManager) getBean("deploymentManager")).buildWar();
         File war = new File(projectDir, "dist/" + projectName + ".war");
         assertTrue("war " + war + " does not exist", war.exists());
-        TestDeploymentManager.trimWar(war);
+        TestLocalDeploymentManager.trimWar(war);
 
         // deploy, check deployments, undeploy, check deployments
         TomcatServer server = new TomcatServer(this.tomcatHost, this.tomcatPort);

@@ -545,9 +545,6 @@ public class DesignServiceManager {
             }
         }
 
-        ret.add(RUNTIME_SERVICE_ID);
-        ret.add(RUNTIME_DATA_SERVICE_ID);
-
         return ret;
     }
 

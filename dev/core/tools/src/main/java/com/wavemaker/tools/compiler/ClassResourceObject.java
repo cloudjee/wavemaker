@@ -31,7 +31,7 @@ import com.wavemaker.tools.project.Project;
  * @author Jeremy Grelle
  * 
  */
-public class ClassResourceObject extends AbstractResourceJavaFileObject {
+public class ClassResourceObject extends ResourceJavaFileObject {
 
     /**
      * Represents a compiled class object
@@ -43,7 +43,7 @@ public class ClassResourceObject extends AbstractResourceJavaFileObject {
      */
     public ClassResourceObject(JavaFileObject.Kind kind, Project project, Resource classFile) throws IOException {
         super(kind, project, classFile);
-        Assert.isTrue(kind == Kind.CLASS, "Expected a to be kind " + Kind.CLASS);
+        Assert.isTrue(isClassOrResource(kind), "Expected a to be a class or resource kind");
     }
 
     /**
@@ -53,11 +53,6 @@ public class ClassResourceObject extends AbstractResourceJavaFileObject {
      */
     public byte[] getBytes() throws IOException {
         return IOUtils.toByteArray(this.resource.getInputStream());
-    }
-
-    @Override
-    public Kind getKind() {
-        return Kind.CLASS;
     }
 
     @Override
