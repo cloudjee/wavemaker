@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>org.cloudfoundry</groupId>
+  <artifactId>cloudfoundry-client-lib</artifactId>
+  <versioning>
+    <versions>
+      <version>0.7.1.BUILD-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20111020195718</lastUpdated>
+  </versioning>
+</metadata>
