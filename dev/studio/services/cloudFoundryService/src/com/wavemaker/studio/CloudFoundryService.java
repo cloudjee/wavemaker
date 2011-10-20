@@ -88,10 +88,10 @@ public class CloudFoundryService {
         }
     }
 
-    public void deleteService(String token, String target, DeploymentDB db) {
+    public void deleteService(String token, String target, String service) {
         try {
             CloudFoundryClient client = new CloudFoundryClient(token, target);
-            client.deleteService(db.getDbName());
+            client.deleteService(service);
         } catch (CloudFoundryException ex) {
             if (HttpStatus.FORBIDDEN == ex.getStatusCode()) {
                 throw new WMRuntimeException(VmcDeploymentTarget.TOKEN_EXPIRED_RESULT);

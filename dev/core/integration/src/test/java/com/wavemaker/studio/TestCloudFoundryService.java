@@ -71,11 +71,11 @@ public class TestCloudFoundryService {
     }
 
     @Test
-    public void testCreateServices() {
+    public void testCreateService() {
         cloudService.createService(token, TEST_TARGET, depDb, "wavemaker");
         CloudService service = cloudService.getService(token, TEST_TARGET, TEST_DB_NAME);
         assertNotNull(service);
-        cloudService.deleteService(token, TEST_TARGET, depDb);
+        cloudService.deleteService(token, TEST_TARGET, TEST_DB_NAME);
         service = cloudService.getService(token, TEST_TARGET, TEST_DB_NAME);
         assertNull(service);
     }
