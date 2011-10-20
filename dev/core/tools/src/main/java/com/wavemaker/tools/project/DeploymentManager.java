@@ -324,7 +324,7 @@ public class DeploymentManager {
 		properties.put(WAR_FILE_NAME_PROPERTY, warFile);
 		properties.put(EAR_FILE_NAME_PROPERTY, earFileName);
 		properties.put(CUSTOM_WM_DIR_NAME_PROPERTY,
-				CFStudioConfiguration.COMMON_DIR);
+				LocalStudioConfiguration.COMMON_DIR);
 
 		try {
 			properties.put(WAVEMAKER_HOME, getStudioConfiguration()
@@ -1204,17 +1204,17 @@ public class DeploymentManager {
 	}
 
 	// bean properties
-	private CFStudioConfiguration studioConfiguration;
+	private LocalStudioConfiguration studioConfiguration;
 
 	private ProjectManager projectManager;
 
 	private ProjectCompiler projectCompiler;
 
-	public CFStudioConfiguration getStudioConfiguration() {
+	public LocalStudioConfiguration getStudioConfiguration() {
 		return this.studioConfiguration;
 	}
 
-	public void setStudioConfiguration(CFStudioConfiguration studioConfiguration) {
+	public void setStudioConfiguration(LocalStudioConfiguration studioConfiguration) {
 		this.studioConfiguration = studioConfiguration;
 	}
 
