@@ -37,6 +37,7 @@ import java.util.regex.Pattern;
 import org.apache.tools.ant.BuildException;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wavemaker.common.WMRuntimeException;
@@ -372,9 +373,13 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public void writeWebFile(String path, String data, boolean noClobber) throws IOException {
-
-        String newPath = ProjectConstants.WEB_DIR + (path.startsWith("/") ? path.substring(1) : path);
-        this.projectManager.getCurrentProject().writeFile(newPath, data, noClobber);
+        if (path.startsWith("/common")) {
+            Resource newCommonFile = this.fileSystem.getCommonDir().createRelative(path.replaceFirst("/common", ""));
+            FileCopyUtils.copy(data, new OutputStreamWriter(this.fileSystem.getOutputStream(newCommonFile)));
+        } else {
+            String newPath = ProjectConstants.WEB_DIR + (path.startsWith("/") ? path.substring(1) : path);
+            this.projectManager.getCurrentProject().writeFile(newPath, data, noClobber);
+        }
     }
 
     /**
@@ -446,6 +451,7 @@ public class StudioService extends ClassLoader {
         return m.group(1);
 
     }
+
     /**
      * Get the studio configuration env
      */
@@ -453,7 +459,6 @@ public class StudioService extends ClassLoader {
     public String getStudioEnv() {
         return this.fileSystem.getStudioEnv();
     }
-    
 
     @ExposeToClient
     public String getMainLog(int lines) throws IOException {
@@ -694,7 +699,7 @@ public class StudioService extends ClassLoader {
              */
             String packagesExt = "";
             try {
-				// Get the packages.js file from our extensions.zip file */
+                // Get the packages.js file from our extensions.zip file */
                 packagesExt = IOUtils.read(new File(extFolder, "packages.js"));
             } catch (Exception e) {
                 packagesExt = "";
@@ -839,10 +844,10 @@ public class StudioService extends ClassLoader {
         }
     }
 
-    //db2jcc.jar - com.ibm.db2.app.DB2StructOutput.class
-    //ojdbc.jar - oracle.jdbc.driver.OracleDatabaseMetaData
-    //wsdl4j.jar - javax.wsdl.factory.WSDLFactory.class
-    //hibernate3.jar - org.hibernate.cfg.Environment.class
+    // db2jcc.jar - com.ibm.db2.app.DB2StructOutput.class
+    // ojdbc.jar - oracle.jdbc.driver.OracleDatabaseMetaData
+    // wsdl4j.jar - javax.wsdl.factory.WSDLFactory.class
+    // hibernate3.jar - org.hibernate.cfg.Environment.class
     @ExposeToClient
     public List<String> getMissingJars() {
         Map<String, String> jarHash = new HashMap<String, String>();

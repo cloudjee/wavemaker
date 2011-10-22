@@ -471,8 +471,13 @@
                     <list>
                         <bean class="com.wavemaker.tools.project.upgrade.six_dot_four_dot_two.OldMSIEUpgradeTask"/>
                     </list>
+                				</entry>	
+                <entry key="0.48">
+                    <list>
+                        <bean class="com.wavemaker.tools.project.upgrade.six_dot_four_dot_three.MergeIEXUATagUpgradeTask">
+                        </bean>
+                    </list>
                 </entry>
-                
             </map>
         </property>
         <property name="deploymentManager">
