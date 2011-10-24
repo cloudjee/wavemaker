@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -12,6 +12,13 @@
  *  limitations under the License.
  */
 {
+applyStayButton: {caption: "Aplicar"},
+applyButton: {caption: "Enlazar"},
+cancelButton: {caption: "Cancelar"},
+
+DOES_NOT_COMPILE: "'${expr} no se compila a un valor de tipo cadena. Tal vez usted necesita comillas?",
+    UNABLE_TO_COMPILE: "No se puede compilar: ${error}",
+
 TOAST_SUCCESS: "Enlace a&ntilde;adido",
 TOAST_FAILED: "Fallo en enlace",
 "wm.BinderSource.searchBar.caption": "Buscar",
