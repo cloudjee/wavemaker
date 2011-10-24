@@ -119,7 +119,7 @@ dojo.declare("wm.InspectorBase", null, {
 	    if (!this.owner.inspected)
 		return;
 	    var v = this.owner.inspected.getProp(inProp);
-	    return dojo.isFunction(v) ? ["(", inProp, ")"].join('') : v;
+	    return dojo.isFunction(v) ? "" : v;
 	},
 
 	editProp: function(inTarget) {

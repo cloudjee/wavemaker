@@ -589,9 +589,11 @@ dojo.declare("wm.Component", wm.Object, {
 	    if (this.isEventProp(n) && this._isDesignLoaded) {
 		this.setEvent(n, v);
 	    } else if (this.isCustomMethodProp(n) && this._isDesignLoaded) {
-		this._designee[n] = v;
 		if (v) {
+		    this._designee[n] = v;
 		    eventEdit(this, n, v, this.owner == studio.application);
+		} else {
+		    delete this._designee[n];
 		}
 	    } else {
 			// do we need this?
