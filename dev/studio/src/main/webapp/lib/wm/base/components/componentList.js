@@ -66,6 +66,7 @@ wm.componentList = {
 	'wm.Editor':['build.Gzipped.wm_editors_old'],
 	'wm.DateEditor':['build.Gzipped.wm_editors_old'],
 	'wm.TimeEditor':['build.Gzipped.wm_editors_old'],
+	'wm.Select':['build.Gzipped.wm_editors_old'],
 
 	'wm.Date':['build.Gzipped.wm_editors'],
 	'wm.DateTime':['build.Gzipped.wm_editors'],
@@ -76,7 +77,7 @@ wm.componentList = {
 	'wm.Checkbox':['build.Gzipped.wm_editors'],
 	'wm.RadioButton':['build.Gzipped.wm_editors'],
 	'wm.Currency':['build.Gzipped.wm_editors'],
-	'wm.Select':['build.Gzipped.wm_editors'],
+
 	'wm.Slider':['build.Gzipped.wm_editors'],
 	'wm.Text':['build.Gzipped.wm_editors'],
 	'wm.TextArea':['build.Gzipped.wm_editors'],
