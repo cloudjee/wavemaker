@@ -36,8 +36,6 @@
 	<import resource="classpath:webService.spring.xml" />
 	<import resource="classpath:securityConfigService.spring.xml" />
 	<import resource="classpath:servicesService.spring.xml" />
-	<import resource="classpath:warpFlowService.spring.xml" />
-	<import resource="classpath:warpLoginService.spring.xml" />
 	<import resource="classpath:waveMakerService.spring.xml" />
 	<import resource="classpath:pwsImportService.spring.xml" />
 </beans>

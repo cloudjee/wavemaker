@@ -194,10 +194,6 @@
                       serviceclass="com.wavemaker.studio.LicensingService"/>
         <buildservice servicename="webService" 
                       serviceclass="com.wavemaker.studio.ws.WebService"/>
-		<buildservice servicename="warpLoginService" 
-                      serviceclass="com.wavemaker.studio.warp.LoginService"/>
-		<buildservice servicename="warpFlowService" 
-                      serviceclass="com.wavemaker.studio.warp.FlowService"/>	
 		<buildservice servicename="waveMakerService" 
                       serviceclass="com.wavemaker.runtime.service.WaveMakerService"/>
 		<buildservice servicename="pwsImportService" 
