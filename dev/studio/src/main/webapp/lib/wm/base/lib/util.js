@@ -511,15 +511,12 @@ wm.isInstanceType = function(obj, type){
 
 wm.isClassInstanceType = function(inClass, type) {
     try {
-        return inClass.prototype instanceof type;
+        return type && inClass.prototype instanceof type;
     } catch(e) {}
     return false;
 }
 wm.isInstanceType = function(obj, type){
-    try {
-        return obj instanceof type;
-    } catch(e) {}
-    return false;
+    return type && obj instanceof type;
 }
 /* Obsolete with dojo 1.4 
 wm.isClassInstanceType = function(inClass, type) {

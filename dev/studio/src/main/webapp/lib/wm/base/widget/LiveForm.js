@@ -179,7 +179,7 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 			
 			if (o){
 				try{
-					if (o instanceof wm.DojoGrid){
+				    if (wm.isInstanceType(o, wm.DojoGrid)) {
 						ds = o.variable;
 					} else {
 						ds = o.dataSet;
@@ -236,7 +236,7 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 				    wm.fire(e, "populateEditors");
 			    }
 			} else {
-                            if (wm.Lookup && e instanceof wm.Lookup && (!e.dataSet || !e.dataSet.type)) 
+                            if (wm.isInstanceType(e,wm.Lookup) && (!e.dataSet || !e.dataSet.type)) 
                                 e.setAutoDataSet(e.autoDataSet);
 
 			    wm.fire(e, "setDataValue", [e.formField && data ? data[e.formField] : data]);
@@ -253,7 +253,7 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
                             wm.fire(e, "populateDataOutput"); // this.dataOutput will be updated via bindings once e has been updated
 			}else if (e.formField) {
 				d.setValue(e.formField, e.getDataValue());
-			} else if (this instanceof wm.RelatedEditor) {
+			} else if (wm.isInstanceType(this, wm.RelatedEditor)) {
                             d.setData(e.getDataValue());
                         }
 	    }));
@@ -296,13 +296,13 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 	},
 	getEditorsArray: function() {
 		return wm.getMatchingFormWidgets(this, function(w) {
-		    return (wm.isInstanceType(w, wm.Editor) || wm.isInstanceType(w, wm.AbstractEditor));
+		    return (wm.Editor && wm.isInstanceType(w, wm.Editor) || wm.isInstanceType(w, wm.AbstractEditor));
 		});
 	},
 	// FIXME: handle related editors specially
 	getRelatedEditorsArray: function(inContainer) {
 		return wm.getMatchingFormWidgets(this, function(w) {
-			return (wm.isInstanceType(w, wm.RelatedEditor));
+			return (wm.RelatedEditor && wm.isInstanceType(w, wm.RelatedEditor));
 		});
 	},
 	getFormEditorsArray: function() {
@@ -322,7 +322,7 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 		var
 			s = parts.join('.'),
 			v = this.getValueById(s);
-		if (wm.isInstanceType(v, wm.Editor) || wm.isInstanceType(v, wm.RelatedEditor))
+		if (wm.Editor && wm.isInstanceType(v, wm.Editor) || wm.RelatedEditor && wm.isInstanceType(v, wm.RelatedEditor))
 			return v;
 	},
 	// get editors bound to dataOutput
@@ -344,8 +344,8 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 	// Editor setters
 	//===========================================================================
 	canChangeEditorReadonly: function(inEditor, inReadonly, inCanChangeFunc) {
-	    if (inEditor instanceof wm.AbstractEditor && inEditor.ignoreParentReadonly ||
-		inEditor instanceof wm.RelatedEditor   && inEditor.ignoreParentReadonly && inEditor.editingMode == "editable subform") {
+	    if (wm.isInstanceType(inEditor, wm.AbstractEditor) && inEditor.ignoreParentReadonly ||
+		wm.isInstanceType(inEditor, wm.RelatedEditor)  && inEditor.ignoreParentReadonly && inEditor.editingMode == "editable subform") {
 		return false;
 	    }
 	    var c = dojo.isFunction(inCanChangeFunc);
@@ -569,9 +569,9 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 
 	    if (!this.readonly) {
 		wm.getMatchingFormWidgets(this, function(w) {
-		    if (w instanceof wm.Editor || 
-			w instanceof wm.AbstractEditor ||
-			w instanceof wm.RelatedEditor) {
+		    if (wm.isInstanceType(w, wm.Editor) || 
+			wm.isInstanceType(w, wm.AbstractEditor) ||
+			wm.isInstanceType(w, wm.RelatedEditor)) {
 			w.validate();
 		    }});
 	    }
@@ -641,10 +641,10 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	},
 	// editors that should not be changed during an edit should remain readonly
 	_canChangeEditorReadonly: function(inOperations, inEditor, inForm, inReadonly) {
-	    if (inEditor instanceof wm.RelatedEditor && inEditor.editingMode == "editable subform" && inEditor.ignoreParentReadonly)
+	    if (wm.isInstanceType(inEditor, wm.RelatedEditor) && inEditor.editingMode == "editable subform" && inEditor.ignoreParentReadonly)
 		return false; // devs must set readonly explicitly and must know what they are doing; some danger to editing subforms
 
-	    if ((wm.isInstanceType(inEditor, wm.Editor) || wm.isInstanceType(inEditor, wm.AbstractEditor)) && inEditor.formField) {
+	    if ((wm.Editor && wm.isInstanceType(inEditor, wm.Editor) || wm.isInstanceType(inEditor, wm.AbstractEditor)) && inEditor.formField) {
 			var
 				f = inEditor.formField,
 				dt = inForm.dataSet.type,
