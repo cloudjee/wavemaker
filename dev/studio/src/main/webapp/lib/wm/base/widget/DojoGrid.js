@@ -1083,6 +1083,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 */
 	    app.echoFile(this.toCSV(), "text/csv", this.name + ".csv");
 	},
+
 	toCSV: function(){
 		var csvData = [];
 		dojo.forEach(this.columns, function(col, idx){
@@ -1098,7 +1099,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		this.addBreakToCSV(csvData);
 		
 		var dataList = this.variable.getData();
-		dojo.forEach(dataList, function(obj){
+	        dojo.forEach(dataList, function(obj, rowId){
 			dojo.forEach(this.columns, function(col, idx){
 				if (!col.show)
 					return;
@@ -1152,7 +1153,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 						default:
 							if (!this.isDesignLoaded())
-								value = dojo.hitch(this.owner, col.formatFunc)(value);
+							    value = dojo.hitch(this.owner, col.formatFunc)(value, rowId, idx, col.field || col.id, {}, obj);
 							break;
 					}
 				}
