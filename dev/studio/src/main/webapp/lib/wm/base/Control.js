@@ -1511,7 +1511,22 @@ this.label.enable();
     // Only if you subscribe to these are these connected; if you subscribe then the event stops here
     onRightClick: function(event){dojo.stopEvent(event);},
     onMouseOver: function(event){dojo.stopEvent(event);}, 
-    onMouseOut: function(event){dojo.stopEvent(event);}
+    onMouseOut: function(event){dojo.stopEvent(event);},
+
+
+    toHtml: function() {return "";},
+    customToHtml: function(inWidth) {return "";},
+    print: function() {
+	var html = this.toHtml(725); // 725px wide page
+	var csspath = dojo.moduleUrl("wm.base.widget.themes.default").path + "print.css";
+	html = "<html><head><title>Printing...</title><link rel='stylesheet' type='text/css' href='" + csspath + "' /></head><body onload='print()'>" + html + "</body><html>";
+	var win = window.open("", "Printing");
+	if (win) {
+	    win.document.open("text/html");
+	    win.document.write(html);
+	    win.document.close();
+	}
+    }
 });
 
 // layout specific

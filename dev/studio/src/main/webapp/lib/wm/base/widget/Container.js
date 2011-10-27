@@ -730,6 +730,75 @@ wm.Container.extend({
 			this.width = this.bounds.w + "px";
                         this._percEx.w = 0;
                 }
+	},
+
+
+    toHtml: function(inWidth) {
+	if (this.customToHtml != this.constructor.prototype.customToHtml)
+	    return this.customToHtml();
+	var html = [];
+	var count = 0;
+	var hasContents = [];
+	for (var i = 0; i < this.c$.length; i++) {
+	    var c = this.c$[i];
+	    if (this.layout.inFlow(c) ) {
+		hasContents[i] = c.toHtml != wm.Control.prototype.toHtml;
+		if (hasContents[i] && c.customToHtml != c.constructor.prototype.customToHtml) {
+		    var testContent = c.toHtml(inWidth);
+		    if (testContent === "" || testContent === undefined || testContent === null)
+			hasContents[i] = false;
+		}
+		if (hasContents[i]) {
+		    count++;
+		}
+	    }
 	}
+
+
+	if (this.layoutKind == "top-to-bottom" || count <= 1) {
+	    html.push("<div id='" + this.domNode.id + "' class='wmPanelTopToBottom'>");
+	    for (var i = 0; i < this.c$.length; i++) {
+		if (hasContents[i]) {
+		    var h = this.c$[i].toHtml(inWidth);
+		    if (h) {
+			html.push("<div id='" + this.c$[i].domNode.id + "_Outer'>" + h + "</div>");
+		    }
+		}
+	    }
+	} else {
+	    var remainingWidth = inWidth-4; // things start wrapping if we don't have at least 4 extra px space
+	    var totalPercent = 0;
+	    var widths = [];
+	    for (var i = 0; i < this.c$.length; i++) {
+		if (hasContents[i]) {
+		    var c = this.c$[i];
+		    if (!c._percEx.w) {
+			widths[i] = c.bounds.w;
+			remainingWidth -= c.bounds.w;
+		    } else {
+			totalPercent += c._percEx.w;
+		    }
+		}
+	    }
+	    for (var i = 0; i < this.c$.length; i++) {
+		if (hasContents[i]) {
+		    var c = this.c$[i];
+		    if (c._percEx.w) {
+			var width = c._percEx.w/totalPercent * remainingWidth;
+			widths[i] = width;
+		    }
+		}
+	    }
+	    html.push("<div id='" + this.domNode.id + "' class='wmPanelLeftToRight'>");
+	    for (var i = 0; i < this.c$.length; i++) {
+		var h = this.c$[i].toHtml(widths[i])
+		if (h) {
+		    html.push("<div id='" + this.c$[i].domNode.id + "_Outer' style='width:" + widths[i] + "px;'>" + h + "</div>");
+		}
+	    }	    
+	}
+	html.push("</div>");
+	return html.join("");
+    }
 });
 

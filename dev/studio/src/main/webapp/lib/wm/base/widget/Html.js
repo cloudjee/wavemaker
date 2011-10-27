@@ -173,6 +173,9 @@ dojo.declare("wm.Html", wm.Control, {
 	    if (!this.autoSizeHeight)
 		this.setAutoSizeHeight(true);
         }
+    },
+    toHtml: function() {
+	return this.html;
     }
 });
 

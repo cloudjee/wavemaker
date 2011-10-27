@@ -642,6 +642,10 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	onMouseOver: function(e, dataObj){
 	},
 	onMouseOut: function(e, dataObj){
-	}
+	},
+
+    toHtml: function() {
+	return this.dojoObj.node.innerHTML;
+    }
 });
 

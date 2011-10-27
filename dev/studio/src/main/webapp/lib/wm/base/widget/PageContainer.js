@@ -231,6 +231,12 @@ dojo.declare("wm.PageContainer", wm.Box, {
 	hasPageLoaded: function(optionalPageName) {
 	  if (!optionalPageName) return Boolean(this.page);
 	  return Boolean(this.page && this.page.name == optionalPageName);
-	}
+	},
+    toHtml: function() {
+	if (this.page && this.page.root)
+	    return this.page.root.toHtml();
+	else
+	    return "";
+    }
 });
 

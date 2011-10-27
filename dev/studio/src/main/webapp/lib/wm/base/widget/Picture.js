@@ -107,7 +107,10 @@ dojo.declare("wm.Picture", wm.Control, {
 			t = t.parent;
 		}
 		return t ? t.imageList : null;
-	}
+	},
+    toHtml: function() {
+	return "<img class='wmpicture' style='width:" + this.bounds.w + "px;height:" + this.bounds.h + "px' src='" + this.img.src + "'/>";
+    }
 });
 
 wm.Object.extendSchema(wm.Picture, {

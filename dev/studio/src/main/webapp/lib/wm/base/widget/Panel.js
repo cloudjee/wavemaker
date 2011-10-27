@@ -488,6 +488,10 @@ dojo.declare("wm.FancyPanel", wm.Panel, {
     setLabelHeight: function(inHeight) {
         this.labelHeight = inHeight;
         this.labelWidget.setHeight(inHeight);
+    },
+    toHtml: function(inWidth) {
+	var remainingWidth = inWidth - 12; // this panel should have a 1px border; which costs 2 width; and a 5px margin costing 10px
+	return "<div id='" + this.domNode.id + "' class='" + this.classNames + "'><div class='wmFancyPanel-labelWidget'>" + this.title + "</div><div class='wmFancyPanel-containerWidget'>" + this.containerWidget.toHtml(remainingWidth) + "</div></div>";
     }
 });
 

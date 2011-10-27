@@ -87,6 +87,9 @@ dojo.declare("wm.Content", wm.Control, {
 			dojo.marginBox(n, b);
 			this.reflowParent();
 		}*/
-	}
+	},
+    toHtml: function() {
+	return this.domNode.innerHTML;
+    }
 });
 

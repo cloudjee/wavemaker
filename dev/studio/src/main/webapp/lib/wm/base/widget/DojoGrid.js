@@ -1083,6 +1083,82 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 */
 	    app.echoFile(this.toCSV(), "text/csv", this.name + ".csv");
 	},
+    toHtml: function() {
+	var html = "<table border='1' class='wmdojogrid'><thead><tr>";
+		dojo.forEach(this.columns, function(col, idx){
+			if (!col.show)
+				return;
+		    html += "<th style='" + (col.width.match(/px/) ? col.width : "") + "'>" + col.title + "</th>";
+		}, this);
+	html += "</tr></thead><tbody>";
+
+		var dataList = this.variable.getData();
+	dojo.forEach(dataList, function(obj, rowId){
+			dojo.forEach(this.columns, function(col, idx){
+				if (!col.show)
+					return;
+			    try {
+				var value = obj[col.field || col.id];
+			    if (!value) {
+				var value = obj;
+				var colid = col.field || col.id;
+				while(colid.indexOf(".") != -1) {
+				    var index = colid.indexOf(".");
+				    value = value[colid.substring(0,index)];
+				    colid = colid.substring(index+1);
+
+				}
+				value = value[colid];
+			    }
+				if (col.expression){
+					value = this.getExpressionValue(col.expression, idx, obj, true);
+				} else if (col.formatFunc){
+					switch(col.formatFunc){
+						case 'wm_date_formatter':
+					        case 'Date (WaveMaker)':				    
+							value = this.dateFormatter(value);			
+							break;
+						case 'wm_localdate_formatter':
+					        case 'Local Date (WaveMaker)':				    
+							value = this.localDateFormatter(value);			
+							break;
+						case 'wm_time_formatter':
+					        case 'Time (WaveMaker)':				    
+							value = this.timeFormatter(value);			
+							break;
+						case 'wm_number_formatter':
+					        case 'Number (WaveMaker)':				    
+							value = this.numberFormatter(value);	
+							break;
+						case 'wm_currency_formatter':
+					        case 'Currency (WaveMaker)':				    
+							value = this.currencyFormatter(value);	
+							break;
+						case 'wm_image_formatter':
+					        case 'Image (WaveMaker)':				    
+					    // spreadsheet shouldn't be given HTML
+							//value = this.imageFormatter(value);	
+							break;
+						case 'wm_link_formatter':
+					        case 'Link (WaveMaker)':				    
+					    // spreadsheet shouldn't be given HTML
+					    //value = this.linkFormatter(value);	
+							break;
+
+						default:
+							if (!this.isDesignLoaded())
+							    value = dojo.hitch(this.owner, col.formatFunc)(value, rowId, idx, col.field || col.id, {}, obj);
+							break;
+					}
+				}
+			    } catch(e){value = "";}
+			    html += "<td>" + value + "</td>";
+			}, this);
+		    html += "</tr>";
+		}, this);
+		
+	return html += "</tbody></table>";
+	},
 
 	toCSV: function(){
 		var csvData = [];

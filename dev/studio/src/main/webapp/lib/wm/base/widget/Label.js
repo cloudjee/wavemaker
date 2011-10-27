@@ -190,7 +190,11 @@ dojo.declare("wm.Label", wm.Control, {
 		this.renderLabel();
 	},
 	onclick: function(inEvent) {
-	}
+	},
+
+    toHtml: function() {
+	return "<div style='text-align:" + (this.align || "left") + ";' id='" + this.domNode.id + "'>" + this.caption + "</div>";
+    }
 });
 
 // NOTE: This sizing node is used by ALL classes that need a sizing node (wm.Html, wm.Base, etc...)

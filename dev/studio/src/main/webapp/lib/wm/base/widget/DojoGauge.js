@@ -222,6 +222,9 @@ dojo.declare("wm.DojoGauge", wm.Control, {
       this.gauge.destroy();
       this.inherited(arguments);
     },
+    toHtml: function() {
+	return main.dojoGauge1.gauge.domNode.innerHTML;
+    },
     _end: 0
 });
 
