@@ -786,8 +786,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		}, this);
 	},
 	sortNoCase: function(a,b){
-	  var a = a.toLowerCase();
-	  var b = b.toLowerCase();
+	    var a = String(a).toLowerCase();
+	    var b = String(b).toLowerCase();
 	                                        
 	  if (a>b) return 1;
 	  if (a<b) return -1;
