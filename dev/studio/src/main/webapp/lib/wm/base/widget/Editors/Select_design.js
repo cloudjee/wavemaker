@@ -259,7 +259,7 @@ wm.Object.extendSchema(wm.SelectMenu, {
         dataValue: {ignore: 1, bindable: 1, group: "editData", order: 3, simpleBindProp: true, type: "any"}, // use getDataValue()
 	dataField: {group: "editor", order: 10, doc: 1},
 	displayField: {group: "editor", order: 15,doc: 1},
-    displayExpression: {group: "editor", order: 20, doc: 1, displayExpression: "displayExpression"}, /* last property is the name of the field that is used as a display expression */
+    displayExpression: {group: "editor", order: 20, doc: 1, displayExpression: "displayExpression", displayExpressionDataSet: "dataSet"}, /* last property is the name of the field that is used as a display expression */
 	displayType:{group: "editor", order: 21},
   autoComplete: {group: "editor", order: 25},
 	hasDownArrow: {group: "editor", order: 26},
@@ -278,7 +278,6 @@ wm.Object.extendSchema(wm.SelectMenu, {
 
 wm.Object.extendSchema(wm.Lookup, {
     ignoreCase: {ignore: true},
-    displayExpression: {group: "editor", order: 20, doc: 1, displayExpression: "displayExpression"},
 	autoDataSet: {group: "data", order: 3},
     maxResults: {group: "editor", order: 100},
 	options: {ignore: 1},

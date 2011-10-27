@@ -57,7 +57,7 @@ dojo.declare("BindSourceDialog", wm.Page, {
 		if (tp.subtype == "File") {
 		    this.resourceRb.editor.setChecked(true);
 		} else if (tp.displayExpression) {
-		    tp.displayExpressionObject = tp.object.getProp(tp.displayExpression);
+		    tp.displayExpressionObject = tp.object.getProp(tp.displayExpressionDataSet);
 		    if (!tp.displayExpressionObject) 
 			return app.toastWarning(this.getDictionaryItem("NEED_DATASET_FOR_DISPLAY_EXPR"));
 		    this.displayExpressionRb.editor.setChecked(true);
