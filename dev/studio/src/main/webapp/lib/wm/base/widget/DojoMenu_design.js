@@ -285,7 +285,7 @@ wm.DojoMenu.extend({
 	    }
 	}
 	return null;
-    },
+    }
 /*
     copyLocalizedEvents: function(inStruct, inCurrentStruct) {
 	for (var i = 0; i < inCurrentStruct.children.length; i++) {

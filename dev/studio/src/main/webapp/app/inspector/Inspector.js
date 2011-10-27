@@ -769,7 +769,7 @@ dojo.declare("wm.EventInspector", wm.Inspector, {
 	    return [
 		'<td class="wminspector-caption">', this.makeRowCaption(inName.match(/\d+$/) ? "and then..." : inName, inProp), '</td>',
 		'<td class="wminspector-property">', editor, '</td>',
-		'<td class="wminspector-addevent">+</td>',
+		'<td class="wminspector-addevent">+</td>'
 	    ];
 	},
 	generateHeaderCells: function() {

@@ -101,7 +101,7 @@ dojo.declare("wm.ListViewerRow", wm.Container, {
 	    }
 	    this.fixWireIds(c[3]);
 	}
-    },
+    }
 /*
     destroyWires: function(inComponent) {
 	// don't want wires to modify individual rows when we don't have live components to listen to those wires

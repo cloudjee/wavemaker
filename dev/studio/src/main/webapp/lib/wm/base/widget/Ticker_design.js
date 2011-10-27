@@ -78,7 +78,7 @@ wm.Ticker.extend({
 		this.inherited(arguments);
 	    this.setLayoutKind("left-to-right");
 	    this.setWidth("100%");
-	},
+	}
 });
 
 

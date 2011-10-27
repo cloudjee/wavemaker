@@ -117,7 +117,7 @@ wm.Layer.extend({
 	    props.destroyable.ignoretmp = (this.parent.layersType != 'Tabs');
 	    props.showDirtyFlag.ignoretmp = (this.parent.layersType != 'Tabs');
 	    return props;
-	},
+	}
 });
 
 wm.Object.extendSchema(wm.Layers, {

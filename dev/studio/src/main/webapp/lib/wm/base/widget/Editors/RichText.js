@@ -333,5 +333,5 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 		this.toolbarFind = val;
 		this.updatePlugins();
 		this.createEditor();
-	},
+	}
  });
