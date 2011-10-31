@@ -761,7 +761,11 @@ wm.Container.extend({
 		if (hasContents[i]) {
 		    var h = this.c$[i].toHtml(inWidth);
 		    if (h) {
-			html.push("<div id='" + this.c$[i].domNode.id + "_Outer'>" + h + "</div>");
+			var style = "";//"style='margin: " + this.margin + ";padding: " + this.padding + ";'";
+			var classes = (this.c$[i]._classes && this.c$[i]._classes.domNode ? this.c$[i]._classes.domNode : []);
+			classes = dojo.filter(classes, function(inClass) {return inClass.indexOf("wm_Font") == 0 || inClass.indexOf("wm_Text") == 0;});
+			classes = classes.join(" ");
+			html.push("<div id='" + this.c$[i].domNode.id + "_Outer' " + style + " class='" + classes + "'>" + h + "</div>");
 		    }
 		}
 	    }
@@ -793,7 +797,11 @@ wm.Container.extend({
 	    for (var i = 0; i < this.c$.length; i++) {
 		var h = this.c$[i].toHtml(widths[i])
 		if (h) {
-		    html.push("<div id='" + this.c$[i].domNode.id + "_Outer' style='width:" + widths[i] + "px;'>" + h + "</div>");
+		    var style = ""; //"style='margin-top: " + this.marginExtents.t + "px;margin-bottom: " + this.marginExtents.b + "px;padding-top: " + this.paddingExtents.t + "px;padding-bottom: " + this.paddingExtents.b + "px;'";
+		    var classes = (this.c$[i]._classes && this.c$[i]._classes.domNode ? this.c$[i]._classes.domNode : []);
+		    classes = dojo.filter(classes, function(inClass) {return inClass.indexOf("wm_Font") == 0 || inClass.indexOf("wm_Text") == 0;});
+		    classes = classes.join(" ");
+		    html.push("<div id='" + this.c$[i].domNode.id + "_Outer' style='width:" + widths[i] + "px;' " + style + " class='"+classes+"'>" + h + "</div>");
 		}
 	    }	    
 	}

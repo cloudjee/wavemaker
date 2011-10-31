@@ -1519,7 +1519,8 @@ this.label.enable();
     print: function() {
 	var html = this.toHtml(725); // 725px wide page
 	var csspath = dojo.moduleUrl("wm.base.widget.themes.default").path + "print.css";
-	html = "<html><head><title>Printing...</title><link rel='stylesheet' type='text/css' href='" + csspath + "' /></head><body onload='print()'>" + html + "</body><html>";
+	var wavemakercsspath = dojo.moduleUrl("wm.base.styles").path + "wavemaker.css";
+	html = "<html><head><title>Printing " + app.declaredClass + "</title><link rel='stylesheet' type='text/css' href='" + csspath + "' /><link rel='stylesheet' type='text/css' href='" + wavemakercsspath + "'/></head><body onload='print()'>" + html + "</body><html>";
 	var win = window.open("", "Printing");
 	if (win) {
 	    win.document.open("text/html");

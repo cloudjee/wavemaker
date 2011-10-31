@@ -945,7 +945,31 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		    this.invalidate();
 		}
 	},
-    onEnterKeyPress: function() {}
+    onEnterKeyPress: function() {},
+
+
+    toHtml: function(inWidth) {
+	var remainingWidth = inWidth - 4; // always seem to need a 4px buffer to avoid wrapping
+	var margin = "2px 4px 2px 4px";
+	remainingWidth -= 8; // margin for the wrapper div
+	remainingWidth -= 2; // border for the editor
+	var captionSize = 125;
+	var topToBottomLayout =  (remainingWidth - captionSize < 100 || this.captionPosition == "top" || this.captionPosition == "bottom");
+	if (this.caption && this.captionSize != "0px" && this.captionSize != "0%" && !topToBottomLayout) {
+	    var captionPadding = 4;
+	    var editorSize = remainingWidth - captionSize;
+	    return "<div class='wmeditor' id='" + this.domNode.id + "' style='margin: " + margin + ";'><div class='wmeditor-label' style='width:" + (captionSize-captionPadding) + "px;padding-right:" + captionPadding + "px;display:inline-block;'>" + this.caption + "</div><div class='wmeditor-value' style='display: inline-block;width:" + editorSize + "px'>" + (this.getDisplayValue() || "&nbsp;") + "</div></div>";
+	} else {
+	    var html = [];
+	    html.push("<div class='wmeditor' id='" + this.domNode.id + "' style='margin: " + margin + ";'>");
+	    if (this.caption && this.captionSize != "0px" && this.captionSize != "0%") {
+		html.push("<div class='wmeditor-label' >" + this.caption + "</div>");
+	    }
+	    html.push("<div class='wmeditor-value'>" + (this.getDisplayValue() || "&nbsp;") + "</div>");
+	    html.push("</div>");
+	    return html.join("\n");
+	}
+    }    
 });
 
 wm.AbstractEditor.captionPaddingWidth = 8;

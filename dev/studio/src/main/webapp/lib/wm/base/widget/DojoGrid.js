@@ -487,7 +487,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    }
 	  }
 	    data._new = true;
-
+	    data._wmVariable = new wm.Variable({type: this.dataSet.type});
+	    data._wmVariable.setData(data);
 	  var result = this.store.newItem(data);
 
 	  if (selectOnAdd) {
@@ -1084,7 +1085,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    app.echoFile(this.toCSV(), "text/csv", this.name + ".csv");
 	},
     toHtml: function() {
-	var html = "<table border='1' class='wmdojogrid'><thead><tr>";
+	var html = "<table border='0' cellspacing='0' cellpadding='0' class='wmdojogrid'><thead><tr>";
 		dojo.forEach(this.columns, function(col, idx){
 			if (!col.show)
 				return;
