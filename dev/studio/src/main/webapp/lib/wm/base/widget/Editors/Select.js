@@ -237,6 +237,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	    } finally {
 		delete this._inSetEditor;
 		this.editorChanged();
+		this.getInvalid();
 	    }
 	    
 	},
@@ -512,7 +513,6 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
         blurred: function() {
 	    this.inherited(arguments);
 	    var displayValue = this.displayValue;
-	    console.log("D1: " + displayValue + "; D2: " + this.getDisplayValue());
 	    if (this.getDisplayValue() != displayValue) {
 		this.doOnchange();
 	    }
