@@ -68,8 +68,11 @@ dojo.declare("wm.base.data.SimpleStore", null, {
 			d = inItem, w = "*", a, b, exact;
 		for (var i in inQuery) {
 		        a = d[i];
+                        if (dojo.isString(a)) a = a.replace(/\\([^\\])/g,"$1");
+
 		        b = inQuery[i];
                         if (dojo.isString(b)) b = b.replace(/\\([^\\])/g,"$1");
+
 			if (b == w)
 				continue;
 			exact = inExactMatch || (b.indexOf(w) == - 1);
