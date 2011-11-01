@@ -249,10 +249,7 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 			var node = dojo.byId("propinspect_row_"+propname);
 			if (node) {
 			    this.setPropEdit(propname);
-			    // neat hack... I first tried style.display = "none" and the table became unformatted
-			    // position absolute removes it from the flow and visibility makes it hidden
-			    node.style.position = prop.ignoretmp ? "absolute" : ""; 
-			    node.style.visibility = prop.ignoretmp ? "hidden" : ""; 
+			    node.style.display = prop.ignoretmp ? "none" : "table-row"; 
 			}
 		    }
 		}
