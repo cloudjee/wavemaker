@@ -40,5 +40,8 @@ dojo.declare("wm.Bevel", wm.Widget, {
 		this.inherited(arguments);
 		this.addOrientation();
 		this.updateSize();
-	}
+	},
+    toHtml: function() {
+	return "<hr/>";
+    }
 });
