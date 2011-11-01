@@ -208,10 +208,12 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	// ==========================================================
 	// Server I/O
 	// ==========================================================
+/* Commented out in 6.4; sourceData no longer available when doing a read
 	_getCanUpdate: function() {
 		return this.inherited(arguments) &&
 			!(this.operation == "read" && this._isSourceDataBound() && wm.isEmpty(this.sourceData.getData()) );
 	},
+	*/
 	// FIXME: need to zot this
 	operationChanged: function() {
 	},

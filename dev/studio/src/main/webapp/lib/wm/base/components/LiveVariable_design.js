@@ -25,8 +25,8 @@ wm.Object.extendSchema(wm.LiveVariable, {
 	input: {ignore: 1},
 	liveSource: { group: "data", order: 1},
 	liveView: { ignore: 1},
-    sourceData: {ignore: 1, group: "data", order: 3, bindTarget: 1, categoryParent: "Properties", categoryProps: {component: "sourceData", inspector: "Data"}, doc: 1},
-    filter: { ignore: 1, group: "data", order: 5, bindTarget: 1, categoryParent: "Properties", categoryProps: {component: "filter", inspector: "Data"}, doc: 1},
+    sourceData: {readonly: 1, group: "data", order: 3, bindTarget: 1, categoryParent: "Properties", categoryProps: {component: "sourceData", inspector: "Data"}, doc: 1},
+    filter: { readonly: 1, group: "data", order: 5, bindTarget: 1, categoryParent: "Properties", categoryProps: {component: "filter", inspector: "Data"}, doc: 1},
 	matchMode: {group: "data", order: 10},
 	firstRow: {group: "data", order: 15},
 	//maxResults: {group: "data", order: 17},
@@ -50,8 +50,10 @@ wm.LiveVariable.extend({
 		p.designMaxResults.ignoretmp = !r;
 		p.orderBy.ignoretmp = !r;
 		p.ignoreCase.ignoretmp = !r;
-		p.filter.bindTarget = r;
+		p.filter.ignoretmp = !r;
 		p.filter.categoryParent = r ? "Properties" : "";
+	        p.sourceData.categoryParent = !r ? "Properties" : "";
+	        p.sourceData.ignoretmp = r;
 		return p;
 	},
 	isListBindable: function() {
@@ -117,6 +119,9 @@ wm.LiveVariable.extend({
 	},
 	makePropEdit: function(inName, inValue, inDefault) {
 		switch (inName) {
+		case "filter":
+		case "sourceData":
+		    return makeInputPropEdit(inName, inValue == this.filter || inValue == this.sourceData ? "" : inValue, inDefault, true);
 			case "liveSource":
 				return new wm.propEdit.LiveSourcesSelect({component: this, name: inName, value: inValue});
 			case "matchMode":
