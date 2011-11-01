@@ -631,7 +631,9 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		var v = wm.getFormLiveView(wm.getParentForm(this));
 		if (v) {
 			var ff = wm.getFormField(this);
-			v.addRelated(ff);
+		        if (!this._isDesignLoaded) {
+			    v.addRelated(ff);
+			}
 			var lv = this.dataSet = new wm.LiveVariable({
 				name: "liveVariable",
 				owner: this,
