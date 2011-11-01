@@ -184,12 +184,21 @@ wm.getComponentStructure = function(inType){
 }
 
 wm.addFrameworkFix = function(gzipName, inFunc) {
-    if (djConfig.isDebug || window["studio"])
+    if (djConfig.isDebug && !wm.studioConfig) {
 	inFunc();
-    else if (!wm.componentFixList[gzipName]) {
+    } else if (!wm.componentFixList[gzipName]) {
 	wm.componentFixList[gzipName] = [inFunc];
     } else {
 	wm.componentFixList[gzipName].push(inFunc);
+    }
+}
+
+wm.applyFrameworkFixes = function() {
+    for (var packageName in wm.componentFixList) {
+	var packageFixes = wm.componentFixList[packageName];
+	for (var i = 0; i < packageFixes.length; i++) {
+	    packageFixes[i]();
+	}
     }
 }
 
