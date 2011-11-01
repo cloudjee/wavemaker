@@ -325,7 +325,7 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 		var p = propArray[i];
 		var n = p.name;
 			rows.push(
-			    '<tr id="propinspect_row_' + n + '" ' + (p.ignoretmp ? 'style="position:absolute;visibility:hidden" ' :'') +  'propName="', n, '">',
+			    '<tr id="propinspect_row_' + n + '" ' + (p.ignoretmp ? 'style="display:none;" ' :'') +  'propName="', n, '">',
 				this.generateRowCells(n, p).join(''),
 				'<td class="wminspector-help"></td>',
 				'</tr>'
@@ -606,7 +606,7 @@ dojo.declare("wm.GroupInspector", wm.Inspector, {
 				'<tr class="',
 			    this.getRowClasses(n,p),
 			    '"',
-			    (p.ignoretmp ? 'style="position:absolute;visibility:hidden" ' :''),
+			    (p.ignoretmp ? 'style="display:none;" ' :''),
 			    'id="propinspect_row_' + n + '" propName="', n, '"', inGroup.closed ? ' style="display: none;"' : '', '>',
 				this.generateRowCells(n, p).join(''),
 				// add a "?" button unless its a Data group.  Its assumed that a Data group contains variable/database/webservice 
