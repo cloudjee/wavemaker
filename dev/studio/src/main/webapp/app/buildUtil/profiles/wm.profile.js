@@ -127,7 +127,7 @@ dependencies = {
 				"wm.base.components.ImageList",
 				//"wm.base.components.DomMacro",
 				// widgets
-				//"wm.base.widget.Formatters",
+			        "wm.base.widget.Formatters",
 				//"wm.base.widget.Editors.dijit",
 				"wm.base.widget.Editors.AbstractEditor",
 				"wm.base.widget.Editors.Text",
@@ -304,7 +304,6 @@ dependencies = {
 			layerDependencies: ["lib_build.js"],
 			dependencies: [
         	   "wm.base.lib.text",
-        	   "wm.base.widget.Formatters",
         	   "wm.base.widget.Editors.dijit",
                "wm.base.widget.Editor",
                "wm.base.widget.Editors.Number",
@@ -323,7 +322,6 @@ dependencies = {
 			layerDependencies: ["lib_build.js"],
 			dependencies: [
         	   "wm.base.lib.text",
-        	   "wm.base.widget.Formatters",
         	   "wm.base.widget.Editors.dijit",
 			    "wm.base.widget.Editors.Base",
                "wm.base.widget.Editor",
