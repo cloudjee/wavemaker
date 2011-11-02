@@ -627,6 +627,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 		Cancels an edit by restoring the editors to the data from the <i>dataSet</i> property.
 	*/
 	cancelEdit: function() {
+	        this.operation = null; // must be called before setDataSet
 		this.editCancelling();
 		var d = this.getItemData();
 		this.beginEditUpdate();
