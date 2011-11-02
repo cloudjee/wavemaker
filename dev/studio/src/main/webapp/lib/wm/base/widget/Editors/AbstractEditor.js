@@ -122,7 +122,11 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		if (this.captionPosition != "left")
 		  this.setCaptionPosition(this.captionPosition);
 	    this._inPostInit = true;
-	    this.editorChanged();
+	    this.displayValue = this.getDisplayValue();
+	    this.dataValue = this.getDataValue();
+	    this.valueChanged("displayValue", this.displayValue);
+	    this.valueChanged("dataValue", this.dataValue);
+	    //this.editorChanged();
 	    delete this._inPostInit;
 	},
 
