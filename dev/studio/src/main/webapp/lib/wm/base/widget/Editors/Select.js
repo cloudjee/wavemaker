@@ -238,10 +238,8 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	    } catch(e){
 	    } finally {
 		delete this._inSetEditor;
-		this.editorChanged();
-		this.getInvalid();
+		this.changed();
 	    }
-	    
 	},
 // we need to call this.editorChanged in here to update dataValue
 
