@@ -46,7 +46,7 @@ wm.Application.extend({
 
 	    var compsArray = this.writeComponents(inIndent);
 
-	    var classOrdering = ["wm.TypeDefinition", "wm.LiveView"];
+	    var classOrdering = ["wm.ImageList", "wm.TypeDefinition", "wm.LiveView"];
 
 	    compsArray = compsArray.sort(function(a,b) {
 		var alist = a.match(/^(.*?)\:\s*\[\"(.*?)\"/);
