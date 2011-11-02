@@ -15,6 +15,7 @@
 
 dojo.provide("wm.base.widget.Editors.Checkbox");
 dojo.require("wm.base.widget.Editors.AbstractEditor");
+dojo.require("dijit.form.CheckBox");
 
 dojo.declare("wm.Checkbox", wm.AbstractEditor, {
     /* Formating */

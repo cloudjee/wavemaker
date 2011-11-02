@@ -15,6 +15,8 @@
 
 dojo.provide("wm.base.widget.Editors.Select");
 dojo.require("wm.base.widget.Editors.AbstractEditor");
+dojo.require("dijit.form.FilteringSelect");
+dojo.require("dijit.form.ComboBox");
 //===========================================================================
 // Select Editor
 //===========================================================================

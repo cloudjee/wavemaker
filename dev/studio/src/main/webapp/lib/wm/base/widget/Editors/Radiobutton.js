@@ -15,7 +15,7 @@
 
 dojo.provide("wm.base.widget.Editors.Radiobutton");
 dojo.require("wm.base.widget.Editors.Checkbox");
-
+dojo.require("dijit.form.RadioButton");
 
 
 
