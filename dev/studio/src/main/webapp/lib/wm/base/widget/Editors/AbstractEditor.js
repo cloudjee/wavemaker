@@ -835,7 +835,13 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    wm.fire(this.parent, "updateIsDirty");
     },
 	getDataValue: function() {
-		return this.isReady() ? this.getEditorValue() : this.dataValue;
+	    if (this.isReady()) {
+		return this.getEditorValue();
+	    } else if (this.dataValue === null || this.dataValue === undefined || this.dataValue === "") {
+		return this.makeEmptyValue();
+	    } else {
+		return this.dataValue;
+	    }
 	},
 	setDataValue: function(inValue) {
 	    // for simplicity, treat undefined as null
