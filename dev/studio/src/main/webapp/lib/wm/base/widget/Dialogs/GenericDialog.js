@@ -177,10 +177,11 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
         if (this.buttonBar)
 	    this.buttonBar.setShowing(this.button1Caption || this.button2Caption || this.button3Caption || this.button4Caption);
     },
-    onEnterKeyPress: function(inText) {
+    onEnterKeyPress: function(inText, inEvent) {
         if (this.enterKeyIsButton1) {
             if (this.button1Close) this.dismiss();
             this.onButton1Click(this.button1, inText);
+	    dojo.stopEvent(inEvent);
         }
     },
     buttonClick: function(inSender) {

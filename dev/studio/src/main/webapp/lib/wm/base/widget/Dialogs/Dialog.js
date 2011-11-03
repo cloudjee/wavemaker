@@ -780,9 +780,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 		}
 	    } else if (inEvent.keyCode == dojo.keys.ENTER) {
                 if (this.$.textInput && this.$.textInput.getDataValue)
-                    this.onEnterKeyPress(this.$.textInput.getDataValue());
+                    this.onEnterKeyPress(this.$.textInput.getDataValue(), inEvent);
                 else
-                    this.onEnterKeyPress();
+                    this.onEnterKeyPress("", inEvent);
             }
             return true;
 	},
