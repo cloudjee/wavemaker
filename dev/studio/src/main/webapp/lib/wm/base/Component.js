@@ -766,8 +766,15 @@ this.panel1.createComponent("custom", "wm.Panel", {
 		return args;
 	},
 	makeEvents: function(inEvents, inComponent) {
-		var e, n, f;
-		for (n in inEvents) {
+	    var e, n, f;
+	    var eventsArray = [];
+	    for (n in inEvents) {
+		eventsArray.push(n);
+	    }
+	    eventsArray.sort();
+	    for (var i = 0; i < eventsArray.length; i++) {
+		var n = eventsArray[i];
+
 			// name of the source
 			f = inEvents[n];
 			// the target
