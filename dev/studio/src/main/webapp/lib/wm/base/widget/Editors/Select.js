@@ -505,9 +505,9 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	     *          all changed actions will fire AFTER we have a displayValue to go with whatever dataValue we have.
 	     */
 	    if (this.dataSet && this.dataSet.getCount()) {
-		this.inherited(arguments);
+		var result = this.inherited(arguments);
 		this.updateSelectedItem();
-		return true;
+		return result;
 	    }
 	},
         blurred: function() {
