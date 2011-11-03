@@ -273,10 +273,10 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
     setMaxHeight: function(newMax) {
         if (this.isDesignLoaded()) {
             if (newMax < this.minHeight) {
-                app.alert(studio.getDictionaryItem("wm.ResizableEditor.SET_MAX_HEIGHT", {minHeight: this.minHeight}));
+                app.alert(studio.getDictionaryItem("wm.ResizeableEditor.SET_MAX_HEIGHT", {minHeight: this.minHeight}));
                 return;
             } else if (newMax < this.getMinHeightProp()) {
-                app.alert(studio.getDictionaryItem("wm.ResizableEditor.SET_MAX_HEIGHT", {minHeight: this.getMinHeightProp()}));
+                app.alert(studio.getDictionaryItem("wm.ResizeableEditor.SET_MAX_HEIGHT", {minHeight: this.getMinHeightProp()}));
                 return;
             }
         }
