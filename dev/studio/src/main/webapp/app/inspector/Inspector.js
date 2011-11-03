@@ -727,19 +727,33 @@ dojo.declare("wm.GroupInspector", wm.Inspector, {
 });
 
 dojo.declare("wm.EventInspector", wm.Inspector, {
-	preinspect: function() {
+	preinspect: function () {
 	    this.props = this.getProps();
 	    for (var eventName in this.owner.inspected.eventBindings) {
-		if (this.props[eventName] === undefined) {
-		    this.props[eventName] = {isEvent: true, 
-					     name: eventName
-					    };
-		    if (!dojo.isFunction(this.owner.inspected[eventName])) {
-			this.owner.inspected[eventName] = function(){};
-		    }
-		}
+	        if (this.props[eventName] === undefined) {
+	            this.props[eventName] = {
+	                isEvent: true,
+	                name: eventName
+	            };
+	            if (!dojo.isFunction(this.owner.inspected[eventName])) {
+	                this.owner.inspected[eventName] = function () {};
+	            }
+	        } 
+
+		/* Verify that if this is the basic eventName (not onClick5, only onClick) that all appropriate eventBindings have been setup */
+	        try {
+	            if (!eventName.match(/\d$/)) {
+	                for (var i = 1; i < 10; i++) {
+	                    if (!this.owner.inspected.eventBindings[eventName + i] && this.props[eventName + i]) {
+	                        this.owner.inspected.eventBindings[eventName + i] = this.owner.inspected[eventName + i];
+	                    }
+	                }
+	            }
+	        } catch (e) {}
 	    }
 	},
+	
+
         reinspect: function() {this.inspect();},
 	getProps: function() {
 		var props = this.inherited(arguments);
