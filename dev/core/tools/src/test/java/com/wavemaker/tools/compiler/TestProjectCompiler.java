@@ -172,7 +172,7 @@ public class TestProjectCompiler {
 
         this.projectCompiler.compileProject("ProjectCompilerProject");
 
-        Resource fooClass = project.getWebInfClasses().createRelative("com/foo/FooSubclass.class");
+        Resource fooClass = project.getWebInfClasses().createRelative("com/foo/FooSubClass.class");
         assertTrue(fooClass.exists());
     }
 
