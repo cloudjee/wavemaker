@@ -480,6 +480,13 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 	this.resetButton = inReset;
 	dojo[inReset ? "addClass":"removeClass"](this.domNode, "wmreseteditor");
 	this.createEditor();
+    },
+    afterPaletteDrop: function() {
+	this.inherited(arguments);
+	var liveform = this.isAncestorInstanceOf(wm.LiveFormBase);
+	if (liveform) {
+	    this.emptyValue = "emptyString";
+	}
     }
 });
 

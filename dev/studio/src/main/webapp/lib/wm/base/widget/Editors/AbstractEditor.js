@@ -130,10 +130,6 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    delete this._inPostInit;
 	},
 
-	afterPaletteDrop: function() {
-		this.setCaption(this.name);
-	},
-
 	setCaption: function(inCaption) {
 		var oldCap = this.caption;
 		this.caption = inCaption;
