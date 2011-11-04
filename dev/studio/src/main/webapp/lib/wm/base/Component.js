@@ -442,11 +442,12 @@ dojo.declare("wm.Component", wm.Object, {
 		var r = this.getRoot();
 		r = r && r.getValue(inId);
 		var result;
+	    /* r._wmNull appears to not exist anywhere */
 		if (r && r._wmNull) {
 		  return app.getValue(inId);
 		}
 	    
-	    if (r) return r;
+	    if (r !== undefined) return r;
 
 	    if (inId && wm.Component.byId[inId]) {
 		return wm.Component.byId[inId];
