@@ -20,6 +20,7 @@
     /* Documentation; Help Menu */
     URL_TUTORIALS: "http://dev.wavemaker.com/wiki/bin/wmdoc_${studioVersionNumber}/Tutorials",
     URL_DOCS: "http://dev.wavemaker.com/wiki/bin/wmdoc_${studioVersionNumber}/",
+    URL_PATCHES: "http://dev.wavemaker.com/wiki/bin/wmdoc_${studioVersionNumber}/patches${studioSubVersionNumber}",
     URL_PROPDOCS: "http://dev.wavemaker.com/wiki/bin/wmjsref_${studioVersionNumber}/",
     URL_EDIT_PROPDOCS: "http://dev.wavemaker.com/wiki/bin/inline/wmjsref_${studioVersionNumber}/",
     URL_FORUMS: "http://dev.wavemaker.com/forums",

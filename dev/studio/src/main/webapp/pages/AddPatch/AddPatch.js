@@ -35,7 +35,8 @@ dojo.declare("AddPatch", wm.Page, {
 	*/
 	this.editor.setDataValue(this.fullText);
     },
-    patchUrl: studio.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}) + "patches",
+    patchUrl: studio.getDictionaryItem("URL_PATCHES", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+)\..*/,"$1"),
+						       studioSubVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+)\.(\d+)\.(\d+).*/,"$1"+"_" + "$2" + "_" + "$3")}),
     loadPatchesClick: function() {
 	studio.studioService.requestAsync("getLatestPatches", [this.patchUrl], 
 					  dojo.hitch(this,function(inData) {
