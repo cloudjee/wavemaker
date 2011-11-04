@@ -1533,7 +1533,7 @@ dojo.declare("Studio", wm.Page, {
 	studio.inspector.reinspect();
     },
     pageSelectChanged: function(inSender, optionalPageName) {
-	if (!studio.page) return;
+	if (!studio.page || this.disabledPageSelectChanged) return;
 	var page = optionalPageName || inSender.getDataValue();
 	if (page == this.project.pageName || !page) return;
 
@@ -1543,7 +1543,9 @@ dojo.declare("Studio", wm.Page, {
 				   this.waitForCallback(this.getDictionaryItem("WAIT_OPENING_PAGE", {pageName: page}), dojo.hitch(this.project, "openPage", page, !noChanges));
 			       }),
 			       dojo.hitch(this, function() {
+				   this.disabledPageSelectChanged = true;
 				   this.pageSelect.setDataValue(studio.project.pageName);
+				   this.disabledPageSelectChanged = false;
 			       }));
 	//this.project.openPage(pagename);
     },
