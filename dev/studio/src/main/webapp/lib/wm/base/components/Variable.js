@@ -354,8 +354,9 @@ dojo.declare("wm.Variable", wm.Component, {
 					}
 				// for non-existing variable props, set *value* iff it exists
 				// (we do not set null values here because that can prompt infinite marshalling)
-				} else if (v !== undefined)
+				} else if (v !== undefined) {
 					this._setDataValue(i, v);
+				}
 			// for non-variable props, set null-checked value iff it exists
 			} else {
 				if (nv !== undefined)
@@ -996,7 +997,8 @@ wm.Variable.extend({
 				var d = this.getData();
 				if (!wm.isEmpty(d)) {
 					var
-						props = this.liveView ? this._getLoadProps(inPropName, v) : inPropName,
+						//props = this.liveView ? this._getLoadProps(inPropName, v) : inPropName,
+				                props = this._getLoadProps(inPropName, v),
 						args = [null, this.type, d, {properties: props}];
 					//console.log("lazyLoad", this.getId(), args);
 					wm.logging && console.log("lazyLoad", inVariable.owner && inVariable.owner.getId(), args);
