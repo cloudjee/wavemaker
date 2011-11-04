@@ -8,6 +8,8 @@ dev/studio/src/main/webapp/WEB-INF/project-managers.xml
 dev/studio/src/main/webapp/WEB-INF/project-services.xml
 dev/studio/src/main/webapp/services/
 dev/studio/src/main/webapp/types.js
+dev/studio/src/main/webapp/WEB-INF/classes
+dev/studio/src/main/webapp/WEB-INF/lib
 
 .DS_Store
 *#*
