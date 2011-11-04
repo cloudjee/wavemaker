@@ -662,11 +662,7 @@ public class MysqlXAConnection extends MysqlPooledConnection implements
 		return asString.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see javax.sql.PooledConnection#getConnection()
-	 */
+	
 	public synchronized Connection getConnection() throws SQLException {
 		Connection connToWrap = getConnection(false, true);
 		

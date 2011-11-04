@@ -23,9 +23,7 @@ import com.wavemaker.infra.WMTestCase;
 /**
  * Some sanity tests.
  * 
- * @author stoens
- * @version $Rev$ - $Date$
- * 
+ * @author Simon Toens
  */
 public class TestEncoding extends WMTestCase {
 

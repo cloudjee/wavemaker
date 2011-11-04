@@ -22,7 +22,6 @@ import org.hibernate.Session;
  * Every service that is a "Data Service" has one associated DataServiceManager instance.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
  * 
  * @deprecated This is now deprecated; see {@link com.wavemaker.runtime.data.DataServiceManager}. This will be removed
  *             in a future release.

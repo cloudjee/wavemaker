@@ -32,7 +32,6 @@ import com.wavemaker.tools.data.PropertyInfo;
  * Written at the Oakland Airport, waiting for a plane to Portland, continued at SFO, waiting for a plane to Frankfurt.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
  */
 public class HbmParser extends BaseHbmParser {
 

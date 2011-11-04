@@ -20,8 +20,6 @@ import com.wavemaker.common.util.SystemUtils;
 
 /**
  * @author Simon Toens
- * @version $Rev: 26365 $ - $Date: 2009-04-29 20:04:57 -0700 (Wed, 29 Apr 2009) $
- * 
  */
 public class WMPropertyPlaceholderConfigurer extends PropertyPlaceholderConfigurer {
 

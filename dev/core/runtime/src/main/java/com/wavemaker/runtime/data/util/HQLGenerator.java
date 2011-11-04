@@ -28,8 +28,6 @@ import com.wavemaker.runtime.service.OrderBy;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class HQLGenerator {
 

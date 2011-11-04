@@ -27,8 +27,6 @@ import com.wavemaker.tools.data.util.DataServiceUtils;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class HbmQueryWriter extends BaseHbmWriter {
 

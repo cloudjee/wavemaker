@@ -21,12 +21,9 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.JSONState;
 
 /**
- * Provides request-scoped runtime information; for internal use only. If contact with eyes or mucus membranes occurs,
- * flush with water for 15 minutes.
+ * Provides request-scoped runtime information; for internal use only.
  * 
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class InternalRuntime {
 

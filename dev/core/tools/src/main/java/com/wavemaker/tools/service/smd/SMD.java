@@ -17,9 +17,7 @@ package com.wavemaker.tools.service.smd;
 import java.util.SortedSet;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class SMD {
 

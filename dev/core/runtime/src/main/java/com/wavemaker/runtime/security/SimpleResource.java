@@ -18,8 +18,6 @@ package com.wavemaker.runtime.security;
  * This class represents a simple string resource. The string "*" could be used to represent any resource string.
  * 
  * @author Frankie Fu
- * @version $Rev$ - $Date$
- * 
  */
 public class SimpleResource implements Resource {
 

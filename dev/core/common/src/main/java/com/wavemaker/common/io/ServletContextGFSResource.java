@@ -21,55 +21,49 @@ import java.io.InputStream;
 import javax.servlet.ServletContext;
 
 import org.springframework.util.Assert;
-//import org.springframework.util.StringUtils;
 
 import com.mongodb.gridfs.GridFS;
 
 /**
  * @author Ed Callahan
- *
  */
-
-
 public class ServletContextGFSResource extends GFSResource {
 
-private ServletContext servletContext;
+    private final ServletContext servletContext;
 
-	/**
-	 * @param gfs
-	 * @param path
-	 */
-	public ServletContextGFSResource(GridFS gfs, ServletContext servletContext, String path) {
-        //this(gfs, servletContext, StringUtils.getFilename(path), path); //Resource with a file
-		super(gfs,path); //Resource without a File		
-		Assert.notNull(servletContext, "Cannot resolve ServletContextResource without ServletContext");
+    /**
+     * @param gfs
+     * @param path
+     */
+    public ServletContextGFSResource(GridFS gfs, ServletContext servletContext, String path) {
+        super(gfs, path); // Resource without a File
+        Assert.notNull(servletContext, "Cannot resolve ServletContextResource without ServletContext");
         this.servletContext = servletContext;
-	}
+    }
 
-	/**
-	 * @param gfs
-	 * @param in
-	 * @param filename
-	 * @param path
-	 */
-	public ServletContextGFSResource(GridFS gfs, ServletContext servletContext, String filename,
-			String path) {
-		super(gfs, servletContext.getResourceAsStream(path), filename, path);		
-		Assert.notNull(servletContext, "Cannot resolve ServletContextResource without ServletContext");
+    /**
+     * @param gfs
+     * @param in
+     * @param filename
+     * @param path
+     */
+    public ServletContextGFSResource(GridFS gfs, ServletContext servletContext, String filename, String path) {
+        super(gfs, servletContext.getResourceAsStream(path), filename, path);
+        Assert.notNull(servletContext, "Cannot resolve ServletContextResource without ServletContext");
         this.servletContext = servletContext;
-	}
+    }
 
-	@Override
-	public InputStream getInputStream() throws IOException {
+    @Override
+    public InputStream getInputStream() throws IOException {
         InputStream is = this.servletContext.getResourceAsStream(this.path);
         if (is == null) {
-            throw new FileNotFoundException("Could not open servletContext " + this.path + " " + this.filename );
+            throw new FileNotFoundException("Could not open servletContext " + this.path + " " + this.filename);
         }
         return is;
-	}
-	
-	public ServletContext getServletContext() {
-		return this.servletContext;
-	}
-	
+    }
+
+    public ServletContext getServletContext() {
+        return this.servletContext;
+    }
+
 }

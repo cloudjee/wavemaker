@@ -19,7 +19,7 @@ package com.wavemaker.runtime.pws;
  * client when a web service is called. Requred fields that must be set vary per different partners and the type of
  * operation.
  * 
- * @author slee
+ * @author Seung Lee
  */
 public class PwsLoginInfo {
 

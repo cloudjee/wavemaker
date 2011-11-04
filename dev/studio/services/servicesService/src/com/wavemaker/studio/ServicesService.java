@@ -50,9 +50,7 @@ import com.wavemaker.tools.service.types.Types;
 /**
  * Service to manage services with.
  * 
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 @HideFromClient
 public class ServicesService {

@@ -9,7 +9,6 @@ import org.w3c.dom.Node;
 
 /**
  * A collection of helper utilities for dealing with WADL artifacts in an XSLT transformation.
- * 
  */
 public class WadlXsltUtils {
 

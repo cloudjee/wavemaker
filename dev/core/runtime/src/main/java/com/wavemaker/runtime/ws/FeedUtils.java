@@ -15,9 +15,7 @@
 package com.wavemaker.runtime.ws;
 
 /**
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class FeedUtils {
 

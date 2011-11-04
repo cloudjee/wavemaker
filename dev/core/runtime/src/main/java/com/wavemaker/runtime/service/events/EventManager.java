@@ -25,7 +25,6 @@ import com.wavemaker.runtime.service.ServiceWire;
 
 /**
  * @author Matt Small
- * @version $Rev$ - $Date$
  */
 public class EventManager {
 

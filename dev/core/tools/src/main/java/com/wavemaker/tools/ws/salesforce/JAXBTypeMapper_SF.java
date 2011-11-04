@@ -38,7 +38,7 @@ import com.wavemaker.tools.ws.wsdl.WSDL.WebServiceType;
 /**
  * JAXB specific type mappings for SalesForce.
  * 
- * @author slee
+ * @author Seung Lee
  * @author Jeremy Grelle
  */
 public class JAXBTypeMapper_SF extends JAXBTypeMapper {

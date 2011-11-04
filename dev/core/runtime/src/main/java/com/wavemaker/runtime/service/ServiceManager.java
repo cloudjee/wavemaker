@@ -35,7 +35,6 @@ import com.wavemaker.runtime.RuntimeAccess;
  * be through Spring bean properties or {@link RuntimeAccess}.
  * 
  * @author Matt Small
- * @version $Rev$ - $Date$
  */
 public class ServiceManager implements ApplicationContextAware {
 

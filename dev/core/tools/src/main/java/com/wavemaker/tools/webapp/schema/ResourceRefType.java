@@ -74,8 +74,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "resource-refType", propOrder = { "description", "resRefName", "resType", "resAuth", "resSharingScope" })

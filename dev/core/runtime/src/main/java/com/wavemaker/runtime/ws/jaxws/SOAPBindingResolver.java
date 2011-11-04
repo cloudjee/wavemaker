@@ -28,9 +28,7 @@ import com.sun.xml.ws.developer.WSBindingProvider;
 import com.wavemaker.runtime.ws.BindingProperties;
 
 /**
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class SOAPBindingResolver {
 

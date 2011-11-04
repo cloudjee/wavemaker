@@ -20,7 +20,6 @@ package com.wavemaker.common.util;
 
 /**
  * @author Matt Small
- * @version $Rev$ - $Date$
  */
 public class ClassUtilsObject extends ClassUtilsObjectSuper {
 

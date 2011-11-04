@@ -33,8 +33,7 @@ import com.wavemaker.json.type.reflect.ReflectTypeUtils;
 /**
  * TypeDefinition for types extending from {@link Clob}.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public class ClobTypeDefinition extends PrimitiveReflectTypeDefinition implements ReadObjectConverter, WriteObjectConverter {
 
@@ -45,12 +44,6 @@ public class ClobTypeDefinition extends PrimitiveReflectTypeDefinition implement
         this.setTypeName(ReflectTypeUtils.getTypeName(this.getKlass()));
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.converters.ReadObjectConverter#readObject(java.lang.Object, java.lang.Object,
-     * java.lang.String)
-     */
     @Override
     public Object readObject(Object input, Object root, String path) {
 

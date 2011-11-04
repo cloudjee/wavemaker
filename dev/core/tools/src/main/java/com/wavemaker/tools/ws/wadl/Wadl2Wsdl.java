@@ -69,9 +69,8 @@ import com.wavemaker.tools.ws.RESTWsdlGenerator;
 /**
  * Converts WADL to WSDL.
  * 
- * @author ffu
+ * @author Frankie Fu
  * @author Jeremy Grelle
- * 
  */
 public class Wadl2Wsdl {
 

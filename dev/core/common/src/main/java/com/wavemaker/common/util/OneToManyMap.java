@@ -27,8 +27,6 @@ import java.util.Set;
  * Collections returned by this Map are read only.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class OneToManyMap<K, V> {
 
@@ -43,7 +41,6 @@ public class OneToManyMap<K, V> {
      * 
      * @param mapType
      */
-    @SuppressWarnings("unchecked")
     public OneToManyMap(Class<?> mapType) {
         this.m = CastUtils.cast((Map) ClassUtils.newInstance(mapType));
     }

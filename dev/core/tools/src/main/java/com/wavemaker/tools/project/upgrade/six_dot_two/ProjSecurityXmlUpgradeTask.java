@@ -25,7 +25,7 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
 /**
  * Changes for enabling live data even when security is on
  * 
- * @author S Lee
+ * @author Seung Lee
  * @author Jeremy Grelle
  */
 public class ProjSecurityXmlUpgradeTask implements UpgradeTask {
@@ -42,12 +42,6 @@ public class ProjSecurityXmlUpgradeTask implements UpgradeTask {
         "com.wavemaker.runtime.security.WMAnonymousProcessingFilter", "com.wavemaker.runtime.security.WMExceptionTranslationFilter",
         "com.wavemaker.runtime.security.WMFilterSecurityInterceptor" };
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
-     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
         Resource secxml = project.getSecurityXml();

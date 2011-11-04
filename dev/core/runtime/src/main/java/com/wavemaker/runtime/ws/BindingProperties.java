@@ -20,9 +20,7 @@ import java.util.Map;
 /**
  * This class contains properties used to configure the client binding through request context.
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class BindingProperties {
 

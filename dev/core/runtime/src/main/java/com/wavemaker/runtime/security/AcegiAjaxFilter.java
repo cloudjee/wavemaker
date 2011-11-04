@@ -28,9 +28,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 /**
  * Filter to support Acegi's Ajax based login.
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class AcegiAjaxFilter extends OncePerRequestFilter {
 

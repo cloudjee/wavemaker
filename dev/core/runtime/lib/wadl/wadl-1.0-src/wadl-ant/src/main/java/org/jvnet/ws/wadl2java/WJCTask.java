@@ -14,7 +14,6 @@
  * WJCTask.java
  *
  * Created on May 2, 2006, 11:37 AM
- *
  */
 
 package org.jvnet.ws.wadl2java;

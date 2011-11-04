@@ -26,9 +26,7 @@ import com.wavemaker.json.type.reflect.ReflectTypeState;
 import com.wavemaker.json.type.reflect.converters.DateTypeDefinition;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class TestConversions extends WMTestCase {
 

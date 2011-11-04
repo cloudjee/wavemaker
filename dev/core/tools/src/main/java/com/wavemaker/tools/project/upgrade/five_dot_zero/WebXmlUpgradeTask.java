@@ -35,19 +35,12 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
 /**
  * Backs up the current web.xml, and gives the user a message regarding that.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public class WebXmlUpgradeTask implements UpgradeTask {
 
     protected static final String WEB_XML_BACKUP = ProjectConstants.WEB_XML + ".4_5_bak";
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker .tools.project.Project,
-     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 

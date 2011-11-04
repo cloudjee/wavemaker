@@ -20,8 +20,7 @@ import java.util.List;
  * Provide definitions for individual fields. Each field contains a type, information on it's array dimensions, as well
  * as metadata describing the values that may be placed there (for instance, if null is allowed).
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public interface FieldDefinition {
 

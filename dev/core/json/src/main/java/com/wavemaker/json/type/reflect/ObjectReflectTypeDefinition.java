@@ -20,9 +20,7 @@ import com.wavemaker.json.type.FieldDefinition;
 import com.wavemaker.json.type.ObjectTypeDefinition;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class ObjectReflectTypeDefinition extends ReflectTypeDefinition implements ObjectTypeDefinition {
 

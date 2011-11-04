@@ -32,8 +32,6 @@ import com.wavemaker.runtime.service.annotations.HideFromClient;
  * when using JOSSO
  * 
  * @author Ed Callahan
- * @version $Rev: 26762 $ - $Date: 2009-06-23 10:54:57 -0700 (Wed, 23 June 2009) $
- * 
  */
 @HideFromClient
 public class JOSSOSecurityService {

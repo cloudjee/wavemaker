@@ -20,9 +20,7 @@ import org.apache.tools.ant.Task;
 import com.wavemaker.testsupport.UtilTest;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class UnlockSemaphoreAntTask extends Task {
 

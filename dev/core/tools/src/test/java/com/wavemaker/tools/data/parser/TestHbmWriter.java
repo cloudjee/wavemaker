@@ -21,9 +21,7 @@ package com.wavemaker.tools.data.parser;
 import com.wavemaker.infra.WMTestCase;
 
 /**
- * @author stoens
- * @version $Rev$ - $Date$
- * 
+ * @author Simon Toens
  */
 public class TestHbmWriter extends WMTestCase {
 

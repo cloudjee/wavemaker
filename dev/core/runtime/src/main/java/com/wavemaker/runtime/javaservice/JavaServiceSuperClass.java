@@ -24,9 +24,7 @@ import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 
 /**
- * @author Michael
- * @version $Rev: 26365 $ - $Date: 2009-07-04 20:04:57 -0700 (Wed, 29 Apr 2009) $
- * 
+ * @author Michael Kantor
  */
 public class JavaServiceSuperClass {
 

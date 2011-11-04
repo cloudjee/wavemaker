@@ -1,5 +1,4 @@
 /**
- * 
  */
 package org.jvnet.ws.wadl.matchers;
 

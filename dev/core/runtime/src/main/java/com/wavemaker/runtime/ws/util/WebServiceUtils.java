@@ -15,7 +15,7 @@
 package com.wavemaker.runtime.ws.util;
 
 /**
- * @author slee
+ * @author Seung Lee
  */
 public class WebServiceUtils {
 

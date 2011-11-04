@@ -49,7 +49,7 @@ import com.wavemaker.runtime.ws.salesforce.SalesforceSupport;
 /**
  * Wraps a Salesforce Data Source Configuration with convenience methods.
  * 
- * @author slee
+ * @author Seung Lee
  */
 public class DataServiceMetaData_SF implements DataServiceMetaData {
 

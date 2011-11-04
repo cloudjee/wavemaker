@@ -33,8 +33,7 @@ import com.wavemaker.runtime.ws.WebServiceException;
  * caught so that a login attempt can be made.
  * </p>
  * 
- * @author slee
- * 
+ * @author Seung Lee
  */
 public interface IPwsResponseProcessor {
 

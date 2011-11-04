@@ -39,7 +39,7 @@ import java.util.Properties;
  * will be called, and the provider is expected to clean up any resources at
  * this time.
  *
- * @version $Id: $
+ * 
  */
 public interface JDBC4ClientInfoProvider {
 	/**

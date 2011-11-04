@@ -32,9 +32,7 @@ import com.wavemaker.runtime.service.annotations.HideFromClient;
 /**
  * This service is used to consume RSS and Atom feeds.
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 @HideFromClient
 public class SyndFeedService {

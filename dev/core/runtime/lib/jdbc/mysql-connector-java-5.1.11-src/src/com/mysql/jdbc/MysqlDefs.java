@@ -34,7 +34,6 @@ import java.util.Map;
  * MySQL server.
  * 
  * @author Mark Matthews
- * @version $Id$
  */
 public final class MysqlDefs {
 	// ~ Static fields/initializers

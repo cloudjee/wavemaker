@@ -16,8 +16,6 @@ package com.wavemaker.runtime.service;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class Filter {
 
@@ -65,5 +63,4 @@ public class Filter {
     public String toString() {
         return this.propertyPath + FILTER_SEP + this.expression;
     }
-
 }

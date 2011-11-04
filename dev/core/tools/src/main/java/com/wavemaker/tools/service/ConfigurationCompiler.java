@@ -65,10 +65,9 @@ import com.wavemaker.tools.ws.salesforce.SalesforceHelper;
 /**
  * Responsible for generating the runtime configuration files.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
-public/* static */class ConfigurationCompiler {
+public class ConfigurationCompiler {
 
     private ConfigurationCompiler() {
     }

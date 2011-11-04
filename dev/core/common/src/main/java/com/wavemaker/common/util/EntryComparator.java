@@ -21,17 +21,10 @@ import java.util.Map.Entry;
  * Compares Map.Entry objects, using their keys. The keys will be converted to Strings (using toString()), and the
  * Strings will be compared, and that result returned.
  * 
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class EntryComparator implements Comparator<Entry<?, ?>> {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-     */
     @Override
     public int compare(Entry<?, ?> o1, Entry<?, ?> o2) {
 

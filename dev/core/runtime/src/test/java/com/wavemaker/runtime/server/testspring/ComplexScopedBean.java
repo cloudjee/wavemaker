@@ -19,9 +19,7 @@
 package com.wavemaker.runtime.server.testspring;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class ComplexScopedBean {
 

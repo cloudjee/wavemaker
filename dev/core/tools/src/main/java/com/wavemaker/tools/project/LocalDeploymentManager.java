@@ -41,7 +41,6 @@ import com.wavemaker.runtime.RuntimeAccess;
  * 
  * @author Joel Hare
  * @author Jeremy Grelle
- * 
  */
 
 public class LocalDeploymentManager extends AbstractDeploymentManager {

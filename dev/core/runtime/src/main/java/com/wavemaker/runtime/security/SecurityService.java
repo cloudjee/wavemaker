@@ -38,8 +38,6 @@ import com.wavemaker.runtime.service.annotations.HideFromClient;
  * The Security Service provides interfaces to access authentication and authorization information in the system.
  * 
  * @author Frankie Fu
- * @version $Rev$ - $Date$
- * 
  */
 @HideFromClient
 public class SecurityService {

@@ -35,7 +35,7 @@ import java.sql.SQLException;
  * This interface, although public is <strong>not</strong> designed to 
  * be consumed publicly other than for the statement interceptor use case.
  * 
- * @version $Id: $
+ * 
  */
 public interface ResultSetInternalMethods extends java.sql.ResultSet {
 

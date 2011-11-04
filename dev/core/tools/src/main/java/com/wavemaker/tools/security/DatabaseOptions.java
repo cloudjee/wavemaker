@@ -15,9 +15,7 @@
 package com.wavemaker.tools.security;
 
 /**
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class DatabaseOptions {
 

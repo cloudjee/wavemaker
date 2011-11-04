@@ -17,8 +17,7 @@ package com.wavemaker.tools.service.types;
 /**
  * Individual primitive type.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public class PrimitiveType implements Type {
 

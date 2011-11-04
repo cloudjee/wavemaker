@@ -19,9 +19,7 @@
 package com.wavemaker.tools.javaservice.testtypes;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class OutOfOrder_WM_12 {
 

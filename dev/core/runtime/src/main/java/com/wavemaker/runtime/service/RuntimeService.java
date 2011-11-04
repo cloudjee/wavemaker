@@ -42,7 +42,7 @@ import com.wavemaker.runtime.service.response.SuccessResponse;
  * Runtime service. This service is always present during the runtime of a WaveMaker application, and provides general
  * operations.
  * 
- * @author small
+ * @author Matt Small
  * @author Jeremy Grelle
  */
 @ExposeToClient

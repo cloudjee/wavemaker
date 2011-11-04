@@ -22,7 +22,6 @@ import com.wavemaker.runtime.service.ElementType;
  * Schema specific <code>ElementType</code> class.
  * 
  * @author Frankie Fu
- * 
  */
 public class SchemaElementType extends ElementType {
 

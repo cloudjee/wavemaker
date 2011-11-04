@@ -41,8 +41,6 @@ import com.wavemaker.common.WMRuntimeException;
  * presence. o getting input and output types for properties and methods. o object string representation.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class ObjectAccess {
 
@@ -96,7 +94,7 @@ public class ObjectAccess {
             }
         }
 
-        Class c = getClassForObject(o);
+        Class<?> c = getClassForObject(o);
 
         Method m = null;
 

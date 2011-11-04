@@ -39,8 +39,7 @@ import com.wavemaker.json.type.reflect.ReflectTypeUtils;
 /**
  * Alternate JSONObject -&gt; Object transformers.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public class AlternateJSONTransformer {
 
@@ -207,7 +206,7 @@ public class AlternateJSONTransformer {
         }
 
         JSONObject jsonObject = (JSONObject) obj;
-        Map ret = (Map) fieldDefinition.getTypeDefinition().newInstance();
+        Map<Object, Object> ret = (Map<Object, Object>) fieldDefinition.getTypeDefinition().newInstance();
 
         FieldDefinition keyFD = mtd.getKeyFieldDefinition();
         FieldDefinition valueFD = mtd.getValueFieldDefinition();

@@ -21,9 +21,7 @@ import com.wavemaker.runtime.service.response.LiveDataServiceResponse;
  * This interface defines a LiveData/CRUD service. These services must provide standard CRUD operations (Create, Read,
  * Update, Delete) to the client.
  * 
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public interface LiveDataService {
 

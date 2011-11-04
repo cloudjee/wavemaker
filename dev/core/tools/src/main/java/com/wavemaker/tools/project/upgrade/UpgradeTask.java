@@ -19,9 +19,7 @@ import com.wavemaker.tools.project.Project;
 /**
  * An individual upgrade task.
  * 
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public interface UpgradeTask {
 

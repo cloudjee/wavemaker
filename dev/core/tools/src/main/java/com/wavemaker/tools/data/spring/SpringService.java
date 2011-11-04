@@ -32,8 +32,6 @@ import com.wavemaker.tools.spring.SpringServiceDefinitionWrapper;
 
 /**
  * @author Simon Toens
- * @version $Rev:22685 $ - $Date:2008-05-30 16:19:36 -0700 (Fri, 30 May 2008) $
- * 
  */
 public class SpringService {
 

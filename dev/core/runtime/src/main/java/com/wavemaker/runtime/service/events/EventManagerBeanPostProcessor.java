@@ -20,17 +20,10 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 /**
  * Bean post processor that listens in to bean creation, and adds any events to the EventManager singleton.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public class EventManagerBeanPostProcessor implements BeanPostProcessor {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(java.lang.Object,
-     * java.lang.String)
-     */
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 
@@ -41,12 +34,6 @@ public class EventManagerBeanPostProcessor implements BeanPostProcessor {
         return bean;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessBeforeInitialization(java.lang.Object,
-     * java.lang.String)
-     */
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         return bean;

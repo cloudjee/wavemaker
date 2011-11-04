@@ -33,17 +33,11 @@ import com.wavemaker.tools.spring.beans.Beans;
  * Removes the serviceManager bean definition from the individual project. This is now defined at the top-level, in
  * managers.xml.
  * 
- * @author small
+ * @author Matt Small
  * @author Jeremy Grelle
  */
 public class RemoveServiceManagerUpgradeTask implements UpgradeTask {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker .tools.project.Project,
-     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
         try {

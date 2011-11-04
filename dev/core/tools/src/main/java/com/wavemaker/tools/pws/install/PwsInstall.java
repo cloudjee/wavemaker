@@ -49,7 +49,7 @@ import com.wavemaker.tools.project.ProjectManager;
 /**
  * Provides methods to install partner package and to set up pws when creating a new project
  * 
- * @author slee
+ * @author Seung Lee
  */
 public class PwsInstall {
 

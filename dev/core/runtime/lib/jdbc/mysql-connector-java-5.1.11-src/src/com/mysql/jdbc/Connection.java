@@ -37,9 +37,6 @@ import com.mysql.jdbc.log.Log;
  * an API that is used for plugability of implementations inside our driver
  * (which is why there are still references to ConnectionImpl throughout the
  * code).
- * 
- * @version $Id: $
- *
  */
 public interface Connection extends java.sql.Connection, ConnectionProperties {
 

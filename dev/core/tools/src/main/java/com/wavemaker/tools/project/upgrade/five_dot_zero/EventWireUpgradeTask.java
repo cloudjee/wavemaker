@@ -45,17 +45,11 @@ import com.wavemaker.tools.util.DesignTimeUtils;
  * Makes sure EventWires are eagerly-loaded, and changes them to reference the serviceWire, not the service id. May also
  * change the ServiceWire to have an id.
  * 
- * @author small
+ * @author Matt Small
  * @author Jeremy Grelle
  */
 public class EventWireUpgradeTask implements UpgradeTask {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker .tools.project.Project,
-     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 

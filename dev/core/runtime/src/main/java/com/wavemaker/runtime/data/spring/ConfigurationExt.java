@@ -25,8 +25,7 @@ import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.data.util.QueryHandler;
 
 /**
- * @author S Lee
- * 
+ * @author Seung Lee
  */
 public class ConfigurationExt extends Configuration {
 

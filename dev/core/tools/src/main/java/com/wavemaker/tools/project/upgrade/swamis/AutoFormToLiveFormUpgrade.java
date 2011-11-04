@@ -28,17 +28,11 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
 /**
  * Transform wm.AutoForm to wm.LiveForm.
  * 
- * @author small
+ * @author Matt Small
  * @author Jeremy Grelle
  */
 public class AutoFormToLiveFormUpgrade implements UpgradeTask {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker .tools.project.Project,
-     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 

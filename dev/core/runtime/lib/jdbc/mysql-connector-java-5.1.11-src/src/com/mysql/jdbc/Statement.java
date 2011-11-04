@@ -36,8 +36,6 @@ import java.sql.SQLException;
  * (which is why there are still references to StatementImpl throughout the
  * code).
  *
- * @version $Id: $
- *
  */
 public interface Statement extends java.sql.Statement {
 

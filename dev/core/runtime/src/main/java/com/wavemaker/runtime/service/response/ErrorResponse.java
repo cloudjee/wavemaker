@@ -15,9 +15,7 @@
 package com.wavemaker.runtime.service.response;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public interface ErrorResponse extends RootServiceResponse {
 

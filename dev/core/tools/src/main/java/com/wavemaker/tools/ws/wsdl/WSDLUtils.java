@@ -60,8 +60,7 @@ import com.wavemaker.runtime.ws.util.Constants;
 /**
  * WSDL related utility methods.
  * 
- * @author ffu
- * @version $Rev$ - $Date$
+ * @author Frankie Fu
  */
 public class WSDLUtils {
 

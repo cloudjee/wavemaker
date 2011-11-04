@@ -49,8 +49,6 @@ import com.wavemaker.runtime.data.util.QueryHandler;
 
 /**
  * @author Simon Toens
- * @version $Rev:22658 $ - $Date:2008-05-30 09:30:24 -0700 (Fri, 30 May 2008) $
- * 
  */
 public class SpringDataServiceManager implements DataServiceManager {
 

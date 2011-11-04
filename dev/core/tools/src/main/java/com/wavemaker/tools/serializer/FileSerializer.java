@@ -21,9 +21,8 @@ import com.wavemaker.tools.service.FileService;
 /**
  * This interface describes the project file serializer.
  * 
- * @author ffu
+ * @author Frankie Fu
  * @author Jeremy Grelle
- * 
  */
 public interface FileSerializer {
 

@@ -18,8 +18,7 @@ package com.wavemaker.json.type;
  * TypeDefinition representing Map types. These are a mapping from arbitrary keys to values, but the types of both the
  * keys and values are currently fixed.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public interface MapTypeDefinition extends TypeDefinition {
 

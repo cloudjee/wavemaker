@@ -38,9 +38,7 @@ import com.wavemaker.json.JSONObject;
 import com.wavemaker.runtime.server.ServerConstants;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class ModuleController extends AbstractController {
 

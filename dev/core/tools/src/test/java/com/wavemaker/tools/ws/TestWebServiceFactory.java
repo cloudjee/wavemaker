@@ -32,9 +32,8 @@ import com.wavemaker.tools.service.codegen.ServiceGenerator;
 import com.wavemaker.tools.ws.wsdl.WSDL;
 
 /**
- * @author ffu
+ * @author Frankie Fu
  * @author Jeremy Grelle
- * 
  */
 public class TestWebServiceFactory extends WMTestCase {
 

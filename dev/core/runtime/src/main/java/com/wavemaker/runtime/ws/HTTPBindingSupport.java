@@ -53,9 +53,7 @@ import com.wavemaker.runtime.pws.PwsResponseProcessorBeanFactory;
 /**
  * This class provides helper methods for HTTP binding.
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class HTTPBindingSupport {
 

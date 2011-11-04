@@ -19,9 +19,7 @@ import java.util.Date;
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 /**
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class DateXmlAdapter extends XmlAdapter<String, Date> {
 

@@ -17,8 +17,7 @@ package com.wavemaker.tools.service.types;
 /**
  * An empty interface indicating that the implementing object is a Type.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public interface Type {
 

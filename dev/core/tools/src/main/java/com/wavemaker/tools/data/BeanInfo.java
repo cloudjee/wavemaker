@@ -18,9 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * @author stoens
- * @version $Rev$ - $Date$
- * 
+ * @author Simon Toens
  */
 public class BeanInfo extends TypeInfo {
 

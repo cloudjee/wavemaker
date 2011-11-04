@@ -14,7 +14,6 @@
  * Main.java
  *
  * Created on May 1, 2006, 5:10 PM
- *
  */
 
 package com.sun.research.wadl2java.yahoo;

@@ -27,7 +27,7 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
 /**
  * Changes for setting server time offset.
  * 
- * @author S Lee
+ * @author Seung Lee
  */
 public class ProjSpringAppXmlUpgradeTask implements UpgradeTask {
 
@@ -37,12 +37,6 @@ public class ProjSpringAppXmlUpgradeTask implements UpgradeTask {
 
     private boolean error = false;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
-     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 

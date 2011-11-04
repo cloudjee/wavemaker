@@ -31,9 +31,8 @@ import com.wavemaker.infra.WMTestCase;
 import com.wavemaker.tools.config.ConfigurationStore;
 
 /**
- * @author small
+ * @author Matt Small
  * @author Jeremy Grelle
- * 
  */
 public class TestLocalStudioConfiguration extends WMTestCase {
 

@@ -17,9 +17,7 @@ package com.wavemaker.tools.spring;
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 
 /**
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class BeansNamespaceMapper extends NamespacePrefixMapper {
 

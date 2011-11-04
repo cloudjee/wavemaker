@@ -21,9 +21,7 @@ package com.wavemaker.infra;
 import com.wavemaker.common.WMRuntimeException;
 
 /**
- * @author stoens
- * @version $Rev$ - $Date$
- * 
+ * @author Simon Toens
  */
 public class DependentTestFailureException extends WMRuntimeException {
 

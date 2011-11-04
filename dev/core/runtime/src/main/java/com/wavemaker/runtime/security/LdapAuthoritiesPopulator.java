@@ -28,15 +28,12 @@ import org.acegisecurity.ldap.InitialDirContextFactory;
 import org.acegisecurity.providers.ldap.populator.DefaultLdapAuthoritiesPopulator;
 
 /**
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class LdapAuthoritiesPopulator extends DefaultLdapAuthoritiesPopulator {
 
     private boolean groupSearchDisabled;
 
-    // Added by Girish
     private String roleModel;
 
     private String roleEntity;
@@ -163,5 +160,4 @@ public class LdapAuthoritiesPopulator extends DefaultLdapAuthoritiesPopulator {
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
     }
-
 }

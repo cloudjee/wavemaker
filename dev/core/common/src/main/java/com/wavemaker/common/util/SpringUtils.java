@@ -26,7 +26,6 @@ import org.springframework.core.io.Resource;
  * Helper methods for initializing and configuring Spring.
  * 
  * @author Simon Toens
- * 
  */
 public class SpringUtils {
 

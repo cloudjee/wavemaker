@@ -22,9 +22,7 @@ import org.springframework.test.context.ContextConfiguration;
 /**
  * A concrete implementation of SpringTestCase, defaulting to WaveMaker projects default paths.
  * 
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 @ContextConfiguration(locations = "webapproot/WEB-INF/project-springapp.xml")
 public abstract class ProjectTestCase extends SpringTestCase {

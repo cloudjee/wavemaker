@@ -73,8 +73,6 @@ import com.wavemaker.json.type.OperationEnumeration;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "dataobject", propOrder = { "element" })

@@ -21,8 +21,6 @@ import com.wavemaker.runtime.data.Input;
  * Partially written on a flight to Las Vegas.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class QueryInfo {
 

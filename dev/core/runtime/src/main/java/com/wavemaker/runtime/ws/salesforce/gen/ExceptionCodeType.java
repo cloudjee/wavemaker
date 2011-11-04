@@ -108,7 +108,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
- * 
  */
 @XmlType(name = "ExceptionCode", namespace = "urn:fault.partner.soap.sforce.com")
 @XmlEnum

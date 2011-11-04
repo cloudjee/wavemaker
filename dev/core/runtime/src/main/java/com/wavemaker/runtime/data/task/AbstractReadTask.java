@@ -43,8 +43,6 @@ import com.wavemaker.runtime.service.ServiceConstants;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public abstract class AbstractReadTask extends BaseTask implements Task {
 

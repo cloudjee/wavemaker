@@ -38,7 +38,6 @@ import com.wavemaker.tools.service.AbstractFileService;
  * 
  * @author Matt Small
  * @author Jeremy Grelle
- * 
  */
 public class Project extends AbstractFileService {
 
@@ -272,11 +271,6 @@ public class Project extends AbstractFileService {
         FileSerializerFactory.getInstance().writeObject(this, obj, file);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.service.FileService#writeFile(java.lang.String, java.lang.String)
-     */
     @Override
     public void writeFile(String path, String data) throws IOException {
 
@@ -320,11 +314,6 @@ public class Project extends AbstractFileService {
         return this.projectRoot.getFilename();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.service.FileService#getFileServiceRoot()
-     */
     @Override
     public Resource getFileServiceRoot() {
         return this.projectRoot;

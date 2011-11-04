@@ -19,8 +19,6 @@ package com.wavemaker.tools.project;
  * the release status can be something like ALPHA or BETA.
  * 
  * @author Matt Small
- * @version $Rev$ - $Date$
- * 
  */
 public class VersionInfo implements Comparable<VersionInfo> {
 

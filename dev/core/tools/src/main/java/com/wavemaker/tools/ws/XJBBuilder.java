@@ -37,8 +37,7 @@ import com.wavemaker.tools.ws.wsdl.WSDL;
 /**
  * Generates JAXB binding customization files.
  * 
- * @author ffu
- * 
+ * @author Frankie Fu
  */
 public class XJBBuilder {
 

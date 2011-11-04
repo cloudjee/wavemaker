@@ -33,9 +33,8 @@ import com.wavemaker.tools.project.Project;
 /**
  * The upgrade manager. Provides methods to upgrade projects to the current version.
  * 
- * @author small
+ * @author Matt Small
  * @author Jeremy Grelle
- * 
  */
 public class UpgradeManager implements InitializingBean {
 
@@ -105,11 +104,6 @@ public class UpgradeManager implements InitializingBean {
         return getUpgrades().lastKey();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
-     */
     @Override
     public void afterPropertiesSet() {
 

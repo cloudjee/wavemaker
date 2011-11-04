@@ -32,9 +32,8 @@ import com.wavemaker.tools.webapp.schema.ObjectFactory;
 import com.wavemaker.tools.webapp.schema.WebAppType;
 
 /**
- * @author small
+ * @author Matt Small
  * @author Jeremy Grelle
- * 
  */
 public class WebXmlSupport {
 

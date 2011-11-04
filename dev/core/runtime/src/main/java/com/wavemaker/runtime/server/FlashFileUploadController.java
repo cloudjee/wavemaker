@@ -31,9 +31,7 @@ import com.wavemaker.runtime.service.ServiceWire;
 import com.wavemaker.runtime.service.TypedServiceReturn;
 
 /**
- * @author small
- * @version $Rev: 29059 $ - $Date: 2010-04-29 17:19:33 -0700 (Thu, 29 Apr 2010) $
- * 
+ * @author Matt Small
  */
 public class FlashFileUploadController extends ControllerBase {
 
@@ -44,12 +42,6 @@ public class FlashFileUploadController extends ControllerBase {
      * UPLOADS stores the location of files on disk. Windows users must update this; Mac & Linux should be fine.
      */
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.server.ControllerBase#executeRequest(javax.servlet.http.HttpServletRequest,
-     * javax.servlet.http.HttpServletResponse)
-     */
     @Override
     protected ModelAndView executeRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, WMException {
 
@@ -69,21 +61,11 @@ public class FlashFileUploadController extends ControllerBase {
         return getModelAndView(getView(), reflInvokeRef);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.server.ControllerBase#getView()
-     */
     @Override
     protected TypedView getView() {
         return new FlashUploadResponseView();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.server.ControllerBase#handleError(java.lang.String, java.lang.Throwable)
-     */
     @Override
     protected ModelAndView handleError(String message, Throwable t) {
         throw new WMRuntimeException(t);

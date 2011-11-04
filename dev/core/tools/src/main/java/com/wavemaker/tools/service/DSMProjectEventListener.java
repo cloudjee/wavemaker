@@ -21,17 +21,10 @@ import com.wavemaker.tools.project.ProjectEventListener;
 import com.wavemaker.tools.service.definitions.Service;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class DSMProjectEventListener implements ProjectEventListener {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.ProjectEventListener#closeProject(com.wavemaker.tools.project.Project)
-     */
     @Override
     public void closeProject(Project p) {
 
@@ -39,11 +32,6 @@ public class DSMProjectEventListener implements ProjectEventListener {
         serviceDefinitions.remove(p);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.ProjectEventListener#openProject(com.wavemaker.tools.project.Project)
-     */
     @Override
     public void openProject(Project p) {
         // do nothing

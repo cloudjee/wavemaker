@@ -29,9 +29,8 @@ import com.wavemaker.tools.service.FileService;
  * methods similar to those defined in the <code>FileSerializer</code> class are also provided. This class uses Spring
  * for instantiation and to populate its serializer map.
  * 
- * @author ffu
+ * @author Frankie Fu
  * @author Jeremy Grelle
- * 
  */
 public class FileSerializerFactory {
 

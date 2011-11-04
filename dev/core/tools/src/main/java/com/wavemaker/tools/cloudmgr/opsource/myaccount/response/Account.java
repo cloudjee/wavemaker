@@ -79,8 +79,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexType>
  * &lt;/element>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "userName", "fullName", "firstName", "lastName", "emailAddress", "department", "customDefined1", "customDefined2",

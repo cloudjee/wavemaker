@@ -28,9 +28,7 @@ import com.wavemaker.infra.WMTestCase;
 /**
  * Test beanutils access, and provides examples of its use.
  * 
- * @author small
- * @version $Rev$ - $Date:2008-05-30 14:29:23 -0700 (Fri, 30 May 2008) $
- * 
+ * @author Matt Small
  */
 public class TestBeanUtils extends WMTestCase {
 

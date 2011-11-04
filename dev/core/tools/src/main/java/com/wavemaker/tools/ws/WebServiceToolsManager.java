@@ -87,9 +87,8 @@ import com.wavemaker.tools.ws.wsdl.WSDLUtils;
 /**
  * Provides Web service related tooling APIs.
  * 
- * @author ffu
+ * @author Frankie Fu
  * @author Jeremy Grelle
- * 
  */
 public class WebServiceToolsManager {
 

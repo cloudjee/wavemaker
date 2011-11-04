@@ -27,9 +27,7 @@ import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.infra.WMTestCase;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class TestMapReflectTypeDefinition extends WMTestCase {
 

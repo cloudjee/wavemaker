@@ -22,7 +22,6 @@ import com.wavemaker.infra.WMTestCase;
 
 /**
  * @author Matt Small
- * @version $Rev$ - $Date$
  */
 public class TestVersionInfo extends WMTestCase {
 

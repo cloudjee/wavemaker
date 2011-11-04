@@ -30,18 +30,10 @@ import org.acegisecurity.ui.ExceptionTranslationFilter;
  * Extends from the normal <code>ExceptionTranslationFilter</code>, this filter will send 403 if the request is a JSON
  * service request.
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class JSONExceptionTranslationFilter extends ExceptionTranslationFilter {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.acegisecurity.ui.ExceptionTranslationFilter#sendStartAuthentication(javax.servlet.ServletRequest,
-     * javax.servlet.ServletResponse, javax.servlet.FilterChain, org.acegisecurity.AuthenticationException)
-     */
     @Override
     protected void sendStartAuthentication(ServletRequest request, ServletResponse response, FilterChain chain, AuthenticationException reason)
         throws ServletException, IOException {

@@ -530,11 +530,7 @@ public class ServerPreparedStatement extends PreparedStatement {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.mysql.jdbc.Statement#checkClosed()
-	 */
+	
 	protected void checkClosed() throws SQLException {
 		if (this.invalid) {
 			throw this.invalidationException;

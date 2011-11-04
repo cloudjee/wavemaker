@@ -62,20 +62,12 @@ public class CommunicationsException extends SQLRecoverableException implements 
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Throwable#getMessage()
-	 */
+	
 	public String getMessage() {
 		return this.exceptionMessage;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.SQLException#getSQLState()
-	 */
+	
 	public String getSQLState() {
 		return SQLError.SQL_STATE_COMMUNICATION_LINK_FAILURE;
 	}

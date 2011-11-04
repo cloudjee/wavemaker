@@ -44,9 +44,8 @@ import com.wavemaker.tools.project.StudioConfiguration;
  * {@link Resource}-based {@link FileManager} implementation that provides file reading and writing services to the
  * compiler.
  * 
- * @author slee
+ * @author Seung Lee
  * @author Jeremy Grelle
- * 
  */
 
 public class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> implements StandardJavaFileManager {

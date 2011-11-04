@@ -38,8 +38,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ProcessWorkitemRequest", namespace = "urn:partner.soap.sforce.com", propOrder = { "action", "workitemId" })

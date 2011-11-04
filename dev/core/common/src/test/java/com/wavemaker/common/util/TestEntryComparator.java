@@ -25,9 +25,7 @@ import java.util.Map.Entry;
 import com.wavemaker.infra.WMTestCase;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class TestEntryComparator extends WMTestCase {
 

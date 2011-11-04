@@ -43,8 +43,6 @@ import com.wavemaker.tools.spring.beans.Value;
 
 /**
  * @author $Author$
- * @version $Revision$ Last changed: $LastChangedDate$
- * 
  */
 public class SecuritySpringSupport {
 

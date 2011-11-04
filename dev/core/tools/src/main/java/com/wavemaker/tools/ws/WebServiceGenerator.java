@@ -50,9 +50,8 @@ import com.wavemaker.tools.ws.wsdl.WSDL;
 /**
  * Base class for all Web Service generators.
  * 
- * @author ffu
+ * @author Frankie Fu
  * @author Jeremy Grelle
- * 
  */
 public abstract class WebServiceGenerator extends ServiceGenerator {
 

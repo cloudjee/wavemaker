@@ -25,8 +25,7 @@ import com.wavemaker.tools.common.ConfigurationException;
 /**
  * This class manages WSDLs.
  * 
- * @author ffu
- * @version $Rev$ - $Date$
+ * @author Frankie Fu
  */
 public class WSDLManager {
 

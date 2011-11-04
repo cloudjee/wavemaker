@@ -30,7 +30,6 @@ import com.wavemaker.runtime.data.TaskManager;
 
 /**
  * Generated for Service "orahr" on 08/19/2007 21:06:53
- * 
  */
 @SuppressWarnings({ "unchecked" })
 public class Orahr implements DataServiceManagerAccess {

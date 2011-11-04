@@ -38,8 +38,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "DataCategoryGroupSobjectTypePair", namespace = "urn:partner.soap.sforce.com", propOrder = { "dataCategoryGroupName", "sobject" })

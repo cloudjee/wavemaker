@@ -20,8 +20,6 @@ import com.wavemaker.tools.util.AntUtils;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class DefaultCompileService implements CompileService {
 

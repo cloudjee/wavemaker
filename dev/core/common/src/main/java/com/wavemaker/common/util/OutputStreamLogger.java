@@ -20,10 +20,7 @@ import java.io.OutputStream;
 import org.apache.commons.logging.Log;
 
 /**
- * 
- * @author stoens
- * @version $Rev$ - $Date$
- * 
+ * @author Simon Toens
  */
 public class OutputStreamLogger extends OutputStream {
 

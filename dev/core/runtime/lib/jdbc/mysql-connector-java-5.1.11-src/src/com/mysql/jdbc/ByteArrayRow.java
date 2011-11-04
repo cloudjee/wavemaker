@@ -38,7 +38,7 @@ import java.util.TimeZone;
  * A RowHolder implementation that is for cached results (a-la
  * mysql_store_result()).
  * 
- * @version $Id: $
+ * 
  */
 public class ByteArrayRow extends ResultSetRow {
 

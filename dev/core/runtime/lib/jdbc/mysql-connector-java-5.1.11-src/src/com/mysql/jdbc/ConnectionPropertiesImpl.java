@@ -1775,9 +1775,7 @@ public class ConnectionPropertiesImpl implements Serializable, ConnectionPropert
 		return info;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#exposeAsXml()
-	 */
+	
 	public String exposeAsXml() throws SQLException {
 		StringBuffer xmlBuf = new StringBuffer();
 		xmlBuf.append("<ConnectionProperties>"); //$NON-NLS-1$
@@ -1921,248 +1919,178 @@ public class ConnectionPropertiesImpl implements Serializable, ConnectionPropert
 		return xmlBuf.toString();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getAllowLoadLocalInfile()
-	 */
+	
 	public boolean getAllowLoadLocalInfile() {
 		return this.allowLoadLocalInfile.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getAllowMultiQueries()
-	 */
+	
 	public boolean getAllowMultiQueries() {
 		return this.allowMultiQueries.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getAllowNanAndInf()
-	 */
+	
 	public boolean getAllowNanAndInf() {
 		return allowNanAndInf.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getAllowUrlInLocalInfile()
-	 */
+	
 	public boolean getAllowUrlInLocalInfile() {
 		return this.allowUrlInLocalInfile.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getAlwaysSendSetIsolation()
-	 */
+	
 	public boolean getAlwaysSendSetIsolation() {
 		return this.alwaysSendSetIsolation.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getAutoDeserialize()
-	 */
+	
 	public boolean getAutoDeserialize() {
 		return autoDeserialize.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getAutoGenerateTestcaseScript()
-	 */
+	
 	public boolean getAutoGenerateTestcaseScript() {
 		return this.autoGenerateTestcaseScriptAsBoolean;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getAutoReconnectForPools()
-	 */
+	
 	public boolean getAutoReconnectForPools() {
 		return this.autoReconnectForPoolsAsBoolean;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getBlobSendChunkSize()
-	 */
+	
 	public int getBlobSendChunkSize() {
 		return blobSendChunkSize.getValueAsInt();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getCacheCallableStatements()
-	 */
+	
 	public boolean getCacheCallableStatements() {
 		return this.cacheCallableStatements.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getCachePreparedStatements()
-	 */
+	
 	public boolean getCachePreparedStatements() {
 		return ((Boolean) this.cachePreparedStatements.getValueAsObject())
 				.booleanValue();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getCacheResultSetMetadata()
-	 */
+	
 	public boolean getCacheResultSetMetadata() {
 		return this.cacheResultSetMetaDataAsBoolean;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getCacheServerConfiguration()
-	 */
+	
 	public boolean getCacheServerConfiguration() {
 		return cacheServerConfiguration.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getCallableStatementCacheSize()
-	 */
+	
 	public int getCallableStatementCacheSize() {
 		return this.callableStatementCacheSize.getValueAsInt();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getCapitalizeTypeNames()
-	 */
+	
 	public boolean getCapitalizeTypeNames() {
 		return this.capitalizeTypeNames.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getCharacterSetResults()
-	 */
+	
 	public String getCharacterSetResults() {
 		return this.characterSetResults.getValueAsString();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getClobberStreamingResults()
-	 */
+	
 	public boolean getClobberStreamingResults() {
 		return this.clobberStreamingResults.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getClobCharacterEncoding()
-	 */
+	
 	public String getClobCharacterEncoding() {
 		return this.clobCharacterEncoding.getValueAsString();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getConnectionCollation()
-	 */
+	
 	public String getConnectionCollation() {
 		return this.connectionCollation.getValueAsString();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getConnectTimeout()
-	 */
+	
 	public int getConnectTimeout() {
 		return this.connectTimeout.getValueAsInt();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getContinueBatchOnError()
-	 */
+	
 	public boolean getContinueBatchOnError() {
 		return this.continueBatchOnError.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getCreateDatabaseIfNotExist()
-	 */
+	
 	public boolean getCreateDatabaseIfNotExist() {
 		return this.createDatabaseIfNotExist.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getDefaultFetchSize()
-	 */
+	
 	public int getDefaultFetchSize() {
 		return this.defaultFetchSize.getValueAsInt();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getDontTrackOpenResources()
-	 */
+	
 	public boolean getDontTrackOpenResources() {
 		return this.dontTrackOpenResources.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getDumpQueriesOnException()
-	 */
+	
 	public boolean getDumpQueriesOnException() {
 		return this.dumpQueriesOnException.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getDynamicCalendars()
-	 */
+	
 	public boolean getDynamicCalendars() {
 		return this.dynamicCalendars.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getElideSetAutoCommits()
-	 */
+	
 	public boolean getElideSetAutoCommits() {
 		return this.elideSetAutoCommits.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getEmptyStringsConvertToZero()
-	 */
+	
 	public boolean getEmptyStringsConvertToZero() {
 		return this.emptyStringsConvertToZero.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getEmulateLocators()
-	 */
+	
 	public boolean getEmulateLocators() {
 		return this.emulateLocators.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getEmulateUnsupportedPstmts()
-	 */
+	
 	public boolean getEmulateUnsupportedPstmts() {
 		return this.emulateUnsupportedPstmts.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getEnablePacketDebug()
-	 */
+	
 	public boolean getEnablePacketDebug() {
 		return this.enablePacketDebug.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getEncoding()
-	 */
+	
 	public String getEncoding() {
 		return this.characterEncodingAsString;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getExplainSlowQueries()
-	 */
+	
 	public boolean getExplainSlowQueries() {
 		return this.explainSlowQueries.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getFailOverReadOnly()
-	 */
+	
 	public boolean getFailOverReadOnly() {
 		return this.failOverReadOnly.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getGatherPerformanceMetrics()
-	 */
+	
 	public boolean getGatherPerformanceMetrics() {
 		return this.gatherPerformanceMetrics.getValueAsBoolean();
 	}
@@ -2176,221 +2104,159 @@ public class ConnectionPropertiesImpl implements Serializable, ConnectionPropert
 		return this.highAvailabilityAsBoolean;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getHoldResultsOpenOverStatementClose()
-	 */
+	
 	public boolean getHoldResultsOpenOverStatementClose() {
 		return holdResultsOpenOverStatementClose.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getIgnoreNonTxTables()
-	 */
+	
 	public boolean getIgnoreNonTxTables() {
 		return this.ignoreNonTxTables.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getInitialTimeout()
-	 */
+	
 	public int getInitialTimeout() {
 		return this.initialTimeout.getValueAsInt();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getInteractiveClient()
-	 */
+	
 	public boolean getInteractiveClient() {
 		return this.isInteractiveClient.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getIsInteractiveClient()
-	 */
+	
 	public boolean getIsInteractiveClient() {
 		return this.isInteractiveClient.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getJdbcCompliantTruncation()
-	 */
+	
 	public boolean getJdbcCompliantTruncation() {
 		return this.jdbcCompliantTruncation.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getLocatorFetchBufferSize()
-	 */
+	
 	public int getLocatorFetchBufferSize() {
 		return this.locatorFetchBufferSize.getValueAsInt();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getLogger()
-	 */
+	
 	public String getLogger() {
 		return this.loggerClassName.getValueAsString();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getLoggerClassName()
-	 */
+	
 	public String getLoggerClassName() {
 		return this.loggerClassName.getValueAsString();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getLogSlowQueries()
-	 */
+	
 	public boolean getLogSlowQueries() {
 		return this.logSlowQueries.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getMaintainTimeStats()
-	 */
+	
 	public boolean getMaintainTimeStats() {
 		return maintainTimeStatsAsBoolean;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getMaxQuerySizeToLog()
-	 */
+	
 	public int getMaxQuerySizeToLog() {
 		return this.maxQuerySizeToLog.getValueAsInt();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getMaxReconnects()
-	 */
+	
 	public int getMaxReconnects() {
 		return this.maxReconnects.getValueAsInt();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getMaxRows()
-	 */
+	
 	public int getMaxRows() {
 		return this.maxRowsAsInt;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getMetadataCacheSize()
-	 */
+	
 	public int getMetadataCacheSize() {
 		return this.metadataCacheSize.getValueAsInt();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getNoDatetimeStringSync()
-	 */
+	
 	public boolean getNoDatetimeStringSync() {
 		return this.noDatetimeStringSync.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getNullCatalogMeansCurrent()
-	 */
+	
 	public boolean getNullCatalogMeansCurrent() {
 		return this.nullCatalogMeansCurrent.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getNullNamePatternMatchesAll()
-	 */
+	
 	public boolean getNullNamePatternMatchesAll() {
 		return this.nullNamePatternMatchesAll.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getPacketDebugBufferSize()
-	 */
+	
 	public int getPacketDebugBufferSize() {
 		return this.packetDebugBufferSize.getValueAsInt();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getParanoid()
-	 */
+	
 	public boolean getParanoid() {
 		return this.paranoid.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getPedantic()
-	 */
+	
 	public boolean getPedantic() {
 		return this.pedantic.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getPreparedStatementCacheSize()
-	 */
+	
 	public int getPreparedStatementCacheSize() {
 		return ((Integer) this.preparedStatementCacheSize.getValueAsObject())
 				.intValue();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getPreparedStatementCacheSqlLimit()
-	 */
+	
 	public int getPreparedStatementCacheSqlLimit() {
 		return ((Integer) this.preparedStatementCacheSqlLimit
 				.getValueAsObject()).intValue();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getProfileSql()
-	 */
+	
 	public boolean getProfileSql() {
 		return this.profileSQLAsBoolean;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getProfileSQL()
-	 */
+	
 	public boolean getProfileSQL() {
 		return this.profileSQL.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getPropertiesTransform()
-	 */
+	
 	public String getPropertiesTransform() {
 		return this.propertiesTransform.getValueAsString();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getQueriesBeforeRetryMaster()
-	 */
+	
 	public int getQueriesBeforeRetryMaster() {
 		return this.queriesBeforeRetryMaster.getValueAsInt();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getReconnectAtTxEnd()
-	 */
+	
 	public boolean getReconnectAtTxEnd() {
 		return this.reconnectTxAtEndAsBoolean;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getRelaxAutoCommit()
-	 */
+	
 	public boolean getRelaxAutoCommit() {
 		return this.relaxAutoCommit.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getReportMetricsIntervalMillis()
-	 */
+	
 	public int getReportMetricsIntervalMillis() {
 		return this.reportMetricsIntervalMillis.getValueAsInt();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getRequireSSL()
-	 */
+	
 	public boolean getRequireSSL() {
 		return this.requireSSL.getValueAsBoolean();
 	}
@@ -2399,233 +2265,167 @@ public class ConnectionPropertiesImpl implements Serializable, ConnectionPropert
 		return this.retainStatementAfterResultSetClose.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getRollbackOnPooledClose()
-	 */
+	
 	public boolean getRollbackOnPooledClose() {
 		return this.rollbackOnPooledClose.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getRoundRobinLoadBalance()
-	 */
+	
 	public boolean getRoundRobinLoadBalance() {
 		return this.roundRobinLoadBalance.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getRunningCTS13()
-	 */
+	
 	public boolean getRunningCTS13() {
 		return this.runningCTS13.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getSecondsBeforeRetryMaster()
-	 */
+	
 	public int getSecondsBeforeRetryMaster() {
 		return this.secondsBeforeRetryMaster.getValueAsInt();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getServerTimezone()
-	 */
+	
 	public String getServerTimezone() {
 		return this.serverTimezone.getValueAsString();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getSessionVariables()
-	 */
+	
 	public String getSessionVariables() {
 		return sessionVariables.getValueAsString();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getSlowQueryThresholdMillis()
-	 */
+	
 	public int getSlowQueryThresholdMillis() {
 		return this.slowQueryThresholdMillis.getValueAsInt();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getSocketFactoryClassName()
-	 */
+	
 	public String getSocketFactoryClassName() {
 		return this.socketFactoryClassName.getValueAsString();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getSocketTimeout()
-	 */
+	
 	public int getSocketTimeout() {
 		return this.socketTimeout.getValueAsInt();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getStrictFloatingPoint()
-	 */
+	
 	public boolean getStrictFloatingPoint() {
 		return this.strictFloatingPoint.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getStrictUpdates()
-	 */
+	
 	public boolean getStrictUpdates() {
 		return this.strictUpdates.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getTinyInt1isBit()
-	 */
+	
 	public boolean getTinyInt1isBit() {
 		return this.tinyInt1isBit.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getTraceProtocol()
-	 */
+	
 	public boolean getTraceProtocol() {
 		return this.traceProtocol.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getTransformedBitIsBoolean()
-	 */
+	
 	public boolean getTransformedBitIsBoolean() {
 		return this.transformedBitIsBoolean.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseCompression()
-	 */
+	
 	public boolean getUseCompression() {
 		return this.useCompression.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseFastIntParsing()
-	 */
+	
 	public boolean getUseFastIntParsing() {
 		return this.useFastIntParsing.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseHostsInPrivileges()
-	 */
+	
 	public boolean getUseHostsInPrivileges() {
 		return this.useHostsInPrivileges.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseInformationSchema()
-	 */
+	
 	public boolean getUseInformationSchema() {
 		return this.useInformationSchema.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseLocalSessionState()
-	 */
+	
 	public boolean getUseLocalSessionState() {
 		return this.useLocalSessionState.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseOldUTF8Behavior()
-	 */
+	
 	public boolean getUseOldUTF8Behavior() {
 		return this.useOldUTF8BehaviorAsBoolean;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseOnlyServerErrorMessages()
-	 */
+	
 	public boolean getUseOnlyServerErrorMessages() {
 		return this.useOnlyServerErrorMessages.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseReadAheadInput()
-	 */
+	
 	public boolean getUseReadAheadInput() {
 		return this.useReadAheadInput.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseServerPreparedStmts()
-	 */
+	
 	public boolean getUseServerPreparedStmts() {
 		return this.detectServerPreparedStmts.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseSqlStateCodes()
-	 */
+	
 	public boolean getUseSqlStateCodes() {
 		return this.useSqlStateCodes.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseSSL()
-	 */
+	
 	public boolean getUseSSL() {
 		return this.useSSL.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseStreamLengthsInPrepStmts()
-	 */
+	
 	public boolean getUseStreamLengthsInPrepStmts() {
 		return this.useStreamLengthsInPrepStmts.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseTimezone()
-	 */
+	
 	public boolean getUseTimezone() {
 		return this.useTimezone.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseUltraDevWorkAround()
-	 */
+	
 	public boolean getUseUltraDevWorkAround() {
 		return this.useUltraDevWorkAround.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseUnbufferedInput()
-	 */
+	
 	public boolean getUseUnbufferedInput() {
 		return this.useUnbufferedInput.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseUnicode()
-	 */
+	
 	public boolean getUseUnicode() {
 		return this.useUnicodeAsBoolean;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseUsageAdvisor()
-	 */
+	
 	public boolean getUseUsageAdvisor() {
 		return this.useUsageAdvisorAsBoolean;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getYearIsDateType()
-	 */
+	
 	public boolean getYearIsDateType() {
 		return this.yearIsDateType.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getZeroDateTimeBehavior()
-	 */
+	
 	public String getZeroDateTimeBehavior() {
 		return this.zeroDateTimeBehavior.getValueAsString();
 	}
@@ -2789,290 +2589,210 @@ public class ConnectionPropertiesImpl implements Serializable, ConnectionPropert
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setAllowLoadLocalInfile(boolean)
-	 */
+	
 	public void setAllowLoadLocalInfile(boolean property) {
 		this.allowLoadLocalInfile.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setAllowMultiQueries(boolean)
-	 */
+	
 	public void setAllowMultiQueries(boolean property) {
 		this.allowMultiQueries.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setAllowNanAndInf(boolean)
-	 */
+	
 	public void setAllowNanAndInf(boolean flag) {
 		this.allowNanAndInf.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setAllowUrlInLocalInfile(boolean)
-	 */
+	
 	public void setAllowUrlInLocalInfile(boolean flag) {
 		this.allowUrlInLocalInfile.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setAlwaysSendSetIsolation(boolean)
-	 */
+	
 	public void setAlwaysSendSetIsolation(boolean flag) {
 		this.alwaysSendSetIsolation.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setAutoDeserialize(boolean)
-	 */
+	
 	public void setAutoDeserialize(boolean flag) {
 		this.autoDeserialize.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setAutoGenerateTestcaseScript(boolean)
-	 */
+	
 	public void setAutoGenerateTestcaseScript(boolean flag) {
 		this.autoGenerateTestcaseScript.setValue(flag);
 		this.autoGenerateTestcaseScriptAsBoolean = this.autoGenerateTestcaseScript
 				.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setAutoReconnect(boolean)
-	 */
+	
 	public void setAutoReconnect(boolean flag) {
 		this.autoReconnect.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setAutoReconnectForConnectionPools(boolean)
-	 */
+	
 	public void setAutoReconnectForConnectionPools(boolean property) {
 		this.autoReconnectForPools.setValue(property);
 		this.autoReconnectForPoolsAsBoolean = this.autoReconnectForPools
 				.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setAutoReconnectForPools(boolean)
-	 */
+	
 	public void setAutoReconnectForPools(boolean flag) {
 		this.autoReconnectForPools.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setBlobSendChunkSize(java.lang.String)
-	 */
+	
 	public void setBlobSendChunkSize(String value) throws SQLException {
 		this.blobSendChunkSize.setValue(value);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setCacheCallableStatements(boolean)
-	 */
+	
 	public void setCacheCallableStatements(boolean flag) {
 		this.cacheCallableStatements.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setCachePreparedStatements(boolean)
-	 */
+	
 	public void setCachePreparedStatements(boolean flag) {
 		this.cachePreparedStatements.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setCacheResultSetMetadata(boolean)
-	 */
+	
 	public void setCacheResultSetMetadata(boolean property) {
 		this.cacheResultSetMetadata.setValue(property);
 		this.cacheResultSetMetaDataAsBoolean = this.cacheResultSetMetadata
 				.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setCacheServerConfiguration(boolean)
-	 */
+	
 	public void setCacheServerConfiguration(boolean flag) {
 		this.cacheServerConfiguration.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setCallableStatementCacheSize(int)
-	 */
+	
 	public void setCallableStatementCacheSize(int size) {
 		this.callableStatementCacheSize.setValue(size);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setCapitalizeDBMDTypes(boolean)
-	 */
+	
 	public void setCapitalizeDBMDTypes(boolean property) {
 		this.capitalizeTypeNames.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setCapitalizeTypeNames(boolean)
-	 */
+	
 	public void setCapitalizeTypeNames(boolean flag) {
 		this.capitalizeTypeNames.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setCharacterEncoding(java.lang.String)
-	 */
+	
 	public void setCharacterEncoding(String encoding) {
 		this.characterEncoding.setValue(encoding);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setCharacterSetResults(java.lang.String)
-	 */
+	
 	public void setCharacterSetResults(String characterSet) {
 		this.characterSetResults.setValue(characterSet);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setClobberStreamingResults(boolean)
-	 */
+	
 	public void setClobberStreamingResults(boolean flag) {
 		this.clobberStreamingResults.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setClobCharacterEncoding(java.lang.String)
-	 */
+	
 	public void setClobCharacterEncoding(String encoding) {
 		this.clobCharacterEncoding.setValue(encoding);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setConnectionCollation(java.lang.String)
-	 */
+	
 	public void setConnectionCollation(String collation) {
 		this.connectionCollation.setValue(collation);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setConnectTimeout(int)
-	 */
+	
 	public void setConnectTimeout(int timeoutMs) {
 		this.connectTimeout.setValue(timeoutMs);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setContinueBatchOnError(boolean)
-	 */
+	
 	public void setContinueBatchOnError(boolean property) {
 		this.continueBatchOnError.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setCreateDatabaseIfNotExist(boolean)
-	 */
+	
 	public void setCreateDatabaseIfNotExist(boolean flag) {
 		this.createDatabaseIfNotExist.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setDefaultFetchSize(int)
-	 */
+	
 	public void setDefaultFetchSize(int n) {
 		this.defaultFetchSize.setValue(n);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setDetectServerPreparedStmts(boolean)
-	 */
+	
 	public void setDetectServerPreparedStmts(boolean property) {
 		this.detectServerPreparedStmts.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setDontTrackOpenResources(boolean)
-	 */
+	
 	public void setDontTrackOpenResources(boolean flag) {
 		this.dontTrackOpenResources.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setDumpQueriesOnException(boolean)
-	 */
+	
 	public void setDumpQueriesOnException(boolean flag) {
 		this.dumpQueriesOnException.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setDynamicCalendars(boolean)
-	 */
+	
 	public void setDynamicCalendars(boolean flag) {
 		this.dynamicCalendars.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setElideSetAutoCommits(boolean)
-	 */
+	
 	public void setElideSetAutoCommits(boolean flag) {
 		this.elideSetAutoCommits.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setEmptyStringsConvertToZero(boolean)
-	 */
+	
 	public void setEmptyStringsConvertToZero(boolean flag) {
 		this.emptyStringsConvertToZero.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setEmulateLocators(boolean)
-	 */
+	
 	public void setEmulateLocators(boolean property) {
 		this.emulateLocators.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setEmulateUnsupportedPstmts(boolean)
-	 */
+	
 	public void setEmulateUnsupportedPstmts(boolean flag) {
 		this.emulateUnsupportedPstmts.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setEnablePacketDebug(boolean)
-	 */
+	
 	public void setEnablePacketDebug(boolean flag) {
 		this.enablePacketDebug.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setEncoding(java.lang.String)
-	 */
+	
 	public void setEncoding(String property) {
 		this.characterEncoding.setValue(property);
 		this.characterEncodingAsString = this.characterEncoding
 				.getValueAsString();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setExplainSlowQueries(boolean)
-	 */
+	
 	public void setExplainSlowQueries(boolean flag) {
 		this.explainSlowQueries.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setFailOverReadOnly(boolean)
-	 */
+	
 	public void setFailOverReadOnly(boolean flag) {
 		this.failOverReadOnly.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setGatherPerformanceMetrics(boolean)
-	 */
+	
 	public void setGatherPerformanceMetrics(boolean flag) {
 		this.gatherPerformanceMetrics.setValue(flag);
 	}
@@ -3087,461 +2807,333 @@ public class ConnectionPropertiesImpl implements Serializable, ConnectionPropert
 		this.highAvailabilityAsBoolean = this.autoReconnect.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setHoldResultsOpenOverStatementClose(boolean)
-	 */
+	
 	public void setHoldResultsOpenOverStatementClose(boolean flag) {
 		this.holdResultsOpenOverStatementClose.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setIgnoreNonTxTables(boolean)
-	 */
+	
 	public void setIgnoreNonTxTables(boolean property) {
 		this.ignoreNonTxTables.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setInitialTimeout(int)
-	 */
+	
 	public void setInitialTimeout(int property) {
 		this.initialTimeout.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setIsInteractiveClient(boolean)
-	 */
+	
 	public void setIsInteractiveClient(boolean property) {
 		this.isInteractiveClient.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setJdbcCompliantTruncation(boolean)
-	 */
+	
 	public void setJdbcCompliantTruncation(boolean flag) {
 		this.jdbcCompliantTruncation.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setLocatorFetchBufferSize(java.lang.String)
-	 */
+	
 	public void setLocatorFetchBufferSize(String value) throws SQLException {
 		this.locatorFetchBufferSize.setValue(value);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setLogger(java.lang.String)
-	 */
+	
 	public void setLogger(String property) {
 		this.loggerClassName.setValueAsObject(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setLoggerClassName(java.lang.String)
-	 */
+	
 	public void setLoggerClassName(String className) {
 		this.loggerClassName.setValue(className);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setLogSlowQueries(boolean)
-	 */
+	
 	public void setLogSlowQueries(boolean flag) {
 		this.logSlowQueries.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setMaintainTimeStats(boolean)
-	 */
+	
 	public void setMaintainTimeStats(boolean flag) {
 		this.maintainTimeStats.setValue(flag);
 		this.maintainTimeStatsAsBoolean = this.maintainTimeStats
 				.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setMaxQuerySizeToLog(int)
-	 */
+	
 	public void setMaxQuerySizeToLog(int sizeInBytes) {
 		this.maxQuerySizeToLog.setValue(sizeInBytes);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setMaxReconnects(int)
-	 */
+	
 	public void setMaxReconnects(int property) {
 		this.maxReconnects.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setMaxRows(int)
-	 */
+	
 	public void setMaxRows(int property) {
 		this.maxRows.setValue(property);
 		this.maxRowsAsInt = this.maxRows.getValueAsInt();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setMetadataCacheSize(int)
-	 */
+	
 	public void setMetadataCacheSize(int value) {
 		this.metadataCacheSize.setValue(value);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setNoDatetimeStringSync(boolean)
-	 */
+	
 	public void setNoDatetimeStringSync(boolean flag) {
 		this.noDatetimeStringSync.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setNullCatalogMeansCurrent(boolean)
-	 */
+	
 	public void setNullCatalogMeansCurrent(boolean value) {
 		this.nullCatalogMeansCurrent.setValue(value);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setNullNamePatternMatchesAll(boolean)
-	 */
+	
 	public void setNullNamePatternMatchesAll(boolean value) {
 		this.nullNamePatternMatchesAll.setValue(value);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setPacketDebugBufferSize(int)
-	 */
+	
 	public void setPacketDebugBufferSize(int size) {
 		this.packetDebugBufferSize.setValue(size);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setParanoid(boolean)
-	 */
+	
 	public void setParanoid(boolean property) {
 		this.paranoid.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setPedantic(boolean)
-	 */
+	
 	public void setPedantic(boolean property) {
 		this.pedantic.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setPreparedStatementCacheSize(int)
-	 */
+	
 	public void setPreparedStatementCacheSize(int cacheSize) {
 		this.preparedStatementCacheSize.setValue(cacheSize);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setPreparedStatementCacheSqlLimit(int)
-	 */
+	
 	public void setPreparedStatementCacheSqlLimit(int cacheSqlLimit) {
 		this.preparedStatementCacheSqlLimit.setValue(cacheSqlLimit);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setProfileSql(boolean)
-	 */
+	
 	public void setProfileSql(boolean property) {
 		this.profileSQL.setValue(property);
 		this.profileSQLAsBoolean = this.profileSQL.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setProfileSQL(boolean)
-	 */
+	
 	public void setProfileSQL(boolean flag) {
 		this.profileSQL.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setPropertiesTransform(java.lang.String)
-	 */
+	
 	public void setPropertiesTransform(String value) {
 		this.propertiesTransform.setValue(value);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setQueriesBeforeRetryMaster(int)
-	 */
+	
 	public void setQueriesBeforeRetryMaster(int property) {
 		this.queriesBeforeRetryMaster.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setReconnectAtTxEnd(boolean)
-	 */
+	
 	public void setReconnectAtTxEnd(boolean property) {
 		this.reconnectAtTxEnd.setValue(property);
 		this.reconnectTxAtEndAsBoolean = this.reconnectAtTxEnd
 				.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setRelaxAutoCommit(boolean)
-	 */
+	
 	public void setRelaxAutoCommit(boolean property) {
 		this.relaxAutoCommit.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setReportMetricsIntervalMillis(int)
-	 */
+	
 	public void setReportMetricsIntervalMillis(int millis) {
 		this.reportMetricsIntervalMillis.setValue(millis);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setRequireSSL(boolean)
-	 */
+	
 	public void setRequireSSL(boolean property) {
 		this.requireSSL.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setRetainStatementAfterResultSetClose(boolean)
-	 */
+	
 	public void setRetainStatementAfterResultSetClose(boolean flag) {
 		this.retainStatementAfterResultSetClose.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setRollbackOnPooledClose(boolean)
-	 */
+	
 	public void setRollbackOnPooledClose(boolean flag) {
 		this.rollbackOnPooledClose.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setRoundRobinLoadBalance(boolean)
-	 */
+	
 	public void setRoundRobinLoadBalance(boolean flag) {
 		this.roundRobinLoadBalance.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setRunningCTS13(boolean)
-	 */
+	
 	public void setRunningCTS13(boolean flag) {
 		this.runningCTS13.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setSecondsBeforeRetryMaster(int)
-	 */
+	
 	public void setSecondsBeforeRetryMaster(int property) {
 		this.secondsBeforeRetryMaster.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setServerTimezone(java.lang.String)
-	 */
+	
 	public void setServerTimezone(String property) {
 		this.serverTimezone.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setSessionVariables(java.lang.String)
-	 */
+	
 	public void setSessionVariables(String variables) {
 		this.sessionVariables.setValue(variables);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setSlowQueryThresholdMillis(int)
-	 */
+	
 	public void setSlowQueryThresholdMillis(int millis) {
 		this.slowQueryThresholdMillis.setValue(millis);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setSocketFactoryClassName(java.lang.String)
-	 */
+	
 	public void setSocketFactoryClassName(String property) {
 		this.socketFactoryClassName.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setSocketTimeout(int)
-	 */
+	
 	public void setSocketTimeout(int property) {
 		this.socketTimeout.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setStrictFloatingPoint(boolean)
-	 */
+	
 	public void setStrictFloatingPoint(boolean property) {
 		this.strictFloatingPoint.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setStrictUpdates(boolean)
-	 */
+	
 	public void setStrictUpdates(boolean property) {
 		this.strictUpdates.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setTinyInt1isBit(boolean)
-	 */
+	
 	public void setTinyInt1isBit(boolean flag) {
 		this.tinyInt1isBit.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setTraceProtocol(boolean)
-	 */
+	
 	public void setTraceProtocol(boolean flag) {
 		this.traceProtocol.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setTransformedBitIsBoolean(boolean)
-	 */
+	
 	public void setTransformedBitIsBoolean(boolean flag) {
 		this.transformedBitIsBoolean.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseCompression(boolean)
-	 */
+	
 	public void setUseCompression(boolean property) {
 		this.useCompression.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseFastIntParsing(boolean)
-	 */
+	
 	public void setUseFastIntParsing(boolean flag) {
 		this.useFastIntParsing.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseHostsInPrivileges(boolean)
-	 */
+	
 	public void setUseHostsInPrivileges(boolean property) {
 		this.useHostsInPrivileges.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseInformationSchema(boolean)
-	 */
+	
 	public void setUseInformationSchema(boolean flag) {
 		this.useInformationSchema.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseLocalSessionState(boolean)
-	 */
+	
 	public void setUseLocalSessionState(boolean flag) {
 		this.useLocalSessionState.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseOldUTF8Behavior(boolean)
-	 */
+	
 	public void setUseOldUTF8Behavior(boolean flag) {
 		this.useOldUTF8Behavior.setValue(flag);
 		this.useOldUTF8BehaviorAsBoolean = this.useOldUTF8Behavior
 				.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseOnlyServerErrorMessages(boolean)
-	 */
+	
 	public void setUseOnlyServerErrorMessages(boolean flag) {
 		this.useOnlyServerErrorMessages.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseReadAheadInput(boolean)
-	 */
+	
 	public void setUseReadAheadInput(boolean flag) {
 		this.useReadAheadInput.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseServerPreparedStmts(boolean)
-	 */
+	
 	public void setUseServerPreparedStmts(boolean flag) {
 		this.detectServerPreparedStmts.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseSqlStateCodes(boolean)
-	 */
+	
 	public void setUseSqlStateCodes(boolean flag) {
 		this.useSqlStateCodes.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseSSL(boolean)
-	 */
+	
 	public void setUseSSL(boolean property) {
 		this.useSSL.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseStreamLengthsInPrepStmts(boolean)
-	 */
+	
 	public void setUseStreamLengthsInPrepStmts(boolean property) {
 		this.useStreamLengthsInPrepStmts.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseTimezone(boolean)
-	 */
+	
 	public void setUseTimezone(boolean property) {
 		this.useTimezone.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseUltraDevWorkAround(boolean)
-	 */
+	
 	public void setUseUltraDevWorkAround(boolean property) {
 		this.useUltraDevWorkAround.setValue(property);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseUnbufferedInput(boolean)
-	 */
+	
 	public void setUseUnbufferedInput(boolean flag) {
 		this.useUnbufferedInput.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseUnicode(boolean)
-	 */
+	
 	public void setUseUnicode(boolean flag) {
 		this.useUnicode.setValue(flag);
 		this.useUnicodeAsBoolean = this.useUnicode.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseUsageAdvisor(boolean)
-	 */
+	
 	public void setUseUsageAdvisor(boolean useUsageAdvisorFlag) {
 		this.useUsageAdvisor.setValue(useUsageAdvisorFlag);
 		this.useUsageAdvisorAsBoolean = this.useUsageAdvisor
 				.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setYearIsDateType(boolean)
-	 */
+	
 	public void setYearIsDateType(boolean flag) {
 		this.yearIsDateType.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setZeroDateTimeBehavior(java.lang.String)
-	 */
+	
 	public void setZeroDateTimeBehavior(String behavior) {
 		this.zeroDateTimeBehavior.setValue(behavior);
 	}
@@ -3566,192 +3158,138 @@ public class ConnectionPropertiesImpl implements Serializable, ConnectionPropert
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#useUnbufferedInput()
-	 */
+	
 	public boolean useUnbufferedInput() {
 		return this.useUnbufferedInput.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseCursorFetch()
-	 */
+	
 	public boolean getUseCursorFetch() {
 		return this.useCursorFetch.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseCursorFetch(boolean)
-	 */
+	
 	public void setUseCursorFetch(boolean flag) {
 		this.useCursorFetch.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getOverrideSupportsIntegrityEnhancementFacility()
-	 */
+	
 	public boolean getOverrideSupportsIntegrityEnhancementFacility() {
 		return this.overrideSupportsIntegrityEnhancementFacility.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setOverrideSupportsIntegrityEnhancementFacility(boolean)
-	 */
+	
 	public void setOverrideSupportsIntegrityEnhancementFacility(boolean flag) {
 		this.overrideSupportsIntegrityEnhancementFacility.setValue(flag);	
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getNoTimezoneConversionForTimeType()
-	 */
+	
 	public boolean getNoTimezoneConversionForTimeType() {
 		return this.noTimezoneConversionForTimeType.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setNoTimezoneConversionForTimeType(boolean)
-	 */
+	
 	public void setNoTimezoneConversionForTimeType(boolean flag) {
 		this.noTimezoneConversionForTimeType.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseJDBCCompliantTimezoneShift()
-	 */
+	
 	public boolean getUseJDBCCompliantTimezoneShift() {
 		return this.useJDBCCompliantTimezoneShift.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseJDBCCompliantTimezoneShift(boolean)
-	 */
+	
 	public void setUseJDBCCompliantTimezoneShift(boolean flag) {
 		this.useJDBCCompliantTimezoneShift.setValue(flag);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getAutoClosePStmtStreams()
-	 */
+	
 	public boolean getAutoClosePStmtStreams() {
 		return this.autoClosePStmtStreams.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setAutoClosePStmtStreams(boolean)
-	 */
+	
 	public void setAutoClosePStmtStreams(boolean flag) {
 		this.autoClosePStmtStreams.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getProcessEscapeCodesForPrepStmts()
-	 */
+	
 	public boolean getProcessEscapeCodesForPrepStmts() {
 		return this.processEscapeCodesForPrepStmts.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setProcessEscapeCodesForPrepStmts(boolean)
-	 */
+	
 	public void setProcessEscapeCodesForPrepStmts(boolean flag) {
 		this.processEscapeCodesForPrepStmts.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseGmtMillisForDatetimes()
-	 */
+	
 	public boolean getUseGmtMillisForDatetimes() {
 		return this.useGmtMillisForDatetimes.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseGmtMillisForDatetimes(boolean)
-	 */
+	
 	public void setUseGmtMillisForDatetimes(boolean flag) {
 		this.useGmtMillisForDatetimes.setValue(flag);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getDumpMetadataOnColumnNotFound()
-	 */
+	
 	public boolean getDumpMetadataOnColumnNotFound() {
 		return this.dumpMetadataOnColumnNotFound.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setDumpMetadataOnColumnNotFound(boolean)
-	 */
+	
 	public void setDumpMetadataOnColumnNotFound(boolean flag) {
 		this.dumpMetadataOnColumnNotFound.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getResourceId()
-	 */
+	
 	public String getResourceId() {
 		return this.resourceId.getValueAsString();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setResourceId(java.lang.String)
-	 */
+	
 	public void setResourceId(String resourceId) {
 		this.resourceId.setValue(resourceId);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getRewriteBatchedStatements()
-	 */
+	
 	public boolean getRewriteBatchedStatements() {
 		return this.rewriteBatchedStatements.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setRewriteBatchedStatements(boolean)
-	 */
+	
 	public void setRewriteBatchedStatements(boolean flag) {
 		this.rewriteBatchedStatements.setValue(flag);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getJdbcCompliantTruncationForReads()
-	 */
+	
 	public boolean getJdbcCompliantTruncationForReads() {
 		return this.jdbcCompliantTruncationForReads;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setJdbcCompliantTruncationForReads(boolean)
-	 */
+	
 	public void setJdbcCompliantTruncationForReads(
 			boolean jdbcCompliantTruncationForReads) {
 		this.jdbcCompliantTruncationForReads = jdbcCompliantTruncationForReads;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseJvmCharsetConverters()
-	 */
+	
 	public boolean getUseJvmCharsetConverters() {
 		return this.useJvmCharsetConverters.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseJvmCharsetConverters(boolean)
-	 */
+	
 	public void setUseJvmCharsetConverters(boolean flag) {
 		this.useJvmCharsetConverters.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getPinGlobalTxToPhysicalConnection()
-	 */
+	
 	public boolean getPinGlobalTxToPhysicalConnection() {
 		return this.pinGlobalTxToPhysicalConnection.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setPinGlobalTxToPhysicalConnection(boolean)
-	 */
+	
 	public void setPinGlobalTxToPhysicalConnection(boolean flag) {
 		this.pinGlobalTxToPhysicalConnection.setValue(flag);
 	}
@@ -3761,436 +3299,314 @@ public class ConnectionPropertiesImpl implements Serializable, ConnectionPropert
 	 * from datasources easier.
 	 */
 	
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setGatherPerfMetrics(boolean)
-	 */
+	
 	public void setGatherPerfMetrics(boolean flag) {
 		setGatherPerformanceMetrics(flag);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getGatherPerfMetrics()
-	 */
+	
 	public boolean getGatherPerfMetrics() {
 		return getGatherPerformanceMetrics();
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUltraDevHack(boolean)
-	 */
+	
 	public void setUltraDevHack(boolean flag) {
 		setUseUltraDevWorkAround(flag);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUltraDevHack()
-	 */
+	
 	public boolean getUltraDevHack() {
 		return getUseUltraDevWorkAround();
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setInteractiveClient(boolean)
-	 */
+	
 	public void setInteractiveClient(boolean property) {
 		setIsInteractiveClient(property);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setSocketFactory(java.lang.String)
-	 */
+	
 	public void setSocketFactory(String name) {
 		setSocketFactoryClassName(name);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getSocketFactory()
-	 */
+	
 	public String getSocketFactory() {
 		return getSocketFactoryClassName();
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseServerPrepStmts(boolean)
-	 */
+	
 	public void setUseServerPrepStmts(boolean flag) {
 		setUseServerPreparedStmts(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseServerPrepStmts()
-	 */
+	
 	public boolean getUseServerPrepStmts() {
 		return getUseServerPreparedStmts();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setCacheCallableStmts(boolean)
-	 */
+	
 	public void setCacheCallableStmts(boolean flag) {
 		setCacheCallableStatements(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getCacheCallableStmts()
-	 */
+	
 	public boolean getCacheCallableStmts() {
 		return getCacheCallableStatements();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setCachePrepStmts(boolean)
-	 */
+	
 	public void setCachePrepStmts(boolean flag) {
 		setCachePreparedStatements(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getCachePrepStmts()
-	 */
+	
 	public boolean getCachePrepStmts() {
 		return getCachePreparedStatements();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setCallableStmtCacheSize(int)
-	 */
+	
 	public void setCallableStmtCacheSize(int cacheSize) {
 		setCallableStatementCacheSize(cacheSize);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getCallableStmtCacheSize()
-	 */
+	
 	public int getCallableStmtCacheSize() {
 		return getCallableStatementCacheSize();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setPrepStmtCacheSize(int)
-	 */
+	
 	public void setPrepStmtCacheSize(int cacheSize) {
 		setPreparedStatementCacheSize(cacheSize);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getPrepStmtCacheSize()
-	 */
+	
 	public int getPrepStmtCacheSize() {
 		return getPreparedStatementCacheSize();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setPrepStmtCacheSqlLimit(int)
-	 */
+	
 	public void setPrepStmtCacheSqlLimit(int sqlLimit) {
 		setPreparedStatementCacheSqlLimit(sqlLimit);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getPrepStmtCacheSqlLimit()
-	 */
+	
 	public int getPrepStmtCacheSqlLimit() {
 		return getPreparedStatementCacheSqlLimit();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getNoAccessToProcedureBodies()
-	 */
+	
 	public boolean getNoAccessToProcedureBodies() {
 		return this.noAccessToProcedureBodies.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setNoAccessToProcedureBodies(boolean)
-	 */
+	
 	public void setNoAccessToProcedureBodies(boolean flag) {
 		this.noAccessToProcedureBodies.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseOldAliasMetadataBehavior()
-	 */
+	
 	public boolean getUseOldAliasMetadataBehavior() {
 		return this.useOldAliasMetadataBehavior.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseOldAliasMetadataBehavior(boolean)
-	 */
+	
 	public void setUseOldAliasMetadataBehavior(boolean flag) {
 		this.useOldAliasMetadataBehavior.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getClientCertificateKeyStorePassword()
-	 */
+	
 	public String getClientCertificateKeyStorePassword() {
 		return clientCertificateKeyStorePassword.getValueAsString();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setClientCertificateKeyStorePassword(java.lang.String)
-	 */
+	
 	public void setClientCertificateKeyStorePassword(
 			String value) {
 		this.clientCertificateKeyStorePassword.setValue(value);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getClientCertificateKeyStoreType()
-	 */
+	
 	public String getClientCertificateKeyStoreType() {
 		return clientCertificateKeyStoreType.getValueAsString();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setClientCertificateKeyStoreType(java.lang.String)
-	 */
+	
 	public void setClientCertificateKeyStoreType(
 			String value) {
 		this.clientCertificateKeyStoreType.setValue(value);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getClientCertificateKeyStoreUrl()
-	 */
+	
 	public String getClientCertificateKeyStoreUrl() {
 		return clientCertificateKeyStoreUrl.getValueAsString();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setClientCertificateKeyStoreUrl(java.lang.String)
-	 */
+	
 	public void setClientCertificateKeyStoreUrl(
 			String value) {
 		this.clientCertificateKeyStoreUrl.setValue(value);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getTrustCertificateKeyStorePassword()
-	 */
+	
 	public String getTrustCertificateKeyStorePassword() {
 		return trustCertificateKeyStorePassword.getValueAsString();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setTrustCertificateKeyStorePassword(java.lang.String)
-	 */
+	
 	public void setTrustCertificateKeyStorePassword(
 			String value) {
 		this.trustCertificateKeyStorePassword.setValue(value);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getTrustCertificateKeyStoreType()
-	 */
+	
 	public String getTrustCertificateKeyStoreType() {
 		return trustCertificateKeyStoreType.getValueAsString();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setTrustCertificateKeyStoreType(java.lang.String)
-	 */
+	
 	public void setTrustCertificateKeyStoreType(
 			String value) {
 		this.trustCertificateKeyStoreType.setValue(value);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getTrustCertificateKeyStoreUrl()
-	 */
+	
 	public String getTrustCertificateKeyStoreUrl() {
 		return trustCertificateKeyStoreUrl.getValueAsString();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setTrustCertificateKeyStoreUrl(java.lang.String)
-	 */
+	
 	public void setTrustCertificateKeyStoreUrl(
 			String value) {
 		this.trustCertificateKeyStoreUrl.setValue(value);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseSSPSCompatibleTimezoneShift()
-	 */
+	
 	public boolean getUseSSPSCompatibleTimezoneShift() {
 		return this.useSSPSCompatibleTimezoneShift.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseSSPSCompatibleTimezoneShift(boolean)
-	 */
+	
 	public void setUseSSPSCompatibleTimezoneShift(boolean flag) {
 		this.useSSPSCompatibleTimezoneShift.setValue(flag);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getTreatUtilDateAsTimestamp()
-	 */
+	
 	public boolean getTreatUtilDateAsTimestamp() {
 		return this.treatUtilDateAsTimestamp.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setTreatUtilDateAsTimestamp(boolean)
-	 */
+	
 	public void setTreatUtilDateAsTimestamp(boolean flag) {
 		this.treatUtilDateAsTimestamp.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseFastDateParsing()
-	 */
+	
 	public boolean getUseFastDateParsing() {
 		return this.useFastDateParsing.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseFastDateParsing(boolean)
-	 */
+	
 	public void setUseFastDateParsing(boolean flag) {
 		this.useFastDateParsing.setValue(flag);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getLocalSocketAddress()
-	 */
+	
 	public String getLocalSocketAddress() {
 		return this.localSocketAddress.getValueAsString();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setLocalSocketAddress(java.lang.String)
-	 */
+	
 	public void setLocalSocketAddress(String address) {
 		this.localSocketAddress.setValue(address);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseConfigs(java.lang.String)
-	 */
+	
 	public void setUseConfigs(String configs) {
 		this.useConfigs.setValue(configs);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseConfigs()
-	 */
+	
 	public String getUseConfigs() {
 		return this.useConfigs.getValueAsString();
 	}
 	
 	
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getGenerateSimpleParameterMetadata()
-	 */
+	
 	public boolean getGenerateSimpleParameterMetadata() {
 		return this.generateSimpleParameterMetadata.getValueAsBoolean();
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setGenerateSimpleParameterMetadata(boolean)
-	 */
+	
 	public void setGenerateSimpleParameterMetadata(boolean flag) {
 		this.generateSimpleParameterMetadata.setValue(flag);
 	}	
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getLogXaCommands()
-	 */
+	
 	public boolean getLogXaCommands() {
 		return this.logXaCommands.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setLogXaCommands(boolean)
-	 */
+	
 	public void setLogXaCommands(boolean flag) {
 		this.logXaCommands.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getResultSetSizeThreshold()
-	 */
+	
 	public int getResultSetSizeThreshold() {
 		return this.resultSetSizeThreshold.getValueAsInt();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setResultSetSizeThreshold(int)
-	 */
+	
 	public void setResultSetSizeThreshold(int threshold) {
 		this.resultSetSizeThreshold.setValue(threshold);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getNetTimeoutForStreamingResults()
-	 */
+	
 	public int getNetTimeoutForStreamingResults() {
 		return this.netTimeoutForStreamingResults.getValueAsInt();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setNetTimeoutForStreamingResults(int)
-	 */
+	
 	public void setNetTimeoutForStreamingResults(int value) {
 		this.netTimeoutForStreamingResults.setValue(value);
 	}
 	
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getEnableQueryTimeouts()
-	 */
+	
 	public boolean getEnableQueryTimeouts() {
 		return this.enableQueryTimeouts.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setEnableQueryTimeouts(boolean)
-	 */
+	
 	public void setEnableQueryTimeouts(boolean flag) {
 		this.enableQueryTimeouts.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getPadCharsWithSpace()
-	 */
+	
 	public boolean getPadCharsWithSpace() {
 		return this.padCharsWithSpace.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setPadCharsWithSpace(boolean)
-	 */
+	
 	public void setPadCharsWithSpace(boolean flag) {
 		this.padCharsWithSpace.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getUseDynamicCharsetInfo()
-	 */
+	
 	public boolean getUseDynamicCharsetInfo() {
 		return this.useDynamicCharsetInfo.getValueAsBoolean();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setUseDynamicCharsetInfo(boolean)
-	 */
+	
 	public void setUseDynamicCharsetInfo(boolean flag) {
 		this.useDynamicCharsetInfo.setValue(flag);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#getClientInfoProvider()
-	 */
+	
 	public String getClientInfoProvider() {
 		return this.clientInfoProvider.getValueAsString();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IConnectionProperties#setClientInfoProvider(java.lang.String)
-	 */
+	
 	public void setClientInfoProvider(String classname) {
 		this.clientInfoProvider.setValue(classname);
 	}

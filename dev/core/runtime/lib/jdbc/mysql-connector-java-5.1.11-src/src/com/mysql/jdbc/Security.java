@@ -32,8 +32,6 @@ import java.security.NoSuchAlgorithmException;
  * Methods for doing secure authentication with MySQL-4.1 and newer.
  * 
  * @author Mark Matthews
- * 
- * @version $Id$
  */
 class Security {
 	private static final char PVERSION41_CHAR = '*';

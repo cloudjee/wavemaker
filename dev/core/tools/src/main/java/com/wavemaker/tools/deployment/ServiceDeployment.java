@@ -20,8 +20,6 @@ import com.wavemaker.tools.service.DesignServiceManager;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public interface ServiceDeployment {
 

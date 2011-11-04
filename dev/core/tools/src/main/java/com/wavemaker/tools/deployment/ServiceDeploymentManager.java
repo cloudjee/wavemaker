@@ -38,7 +38,6 @@ import com.wavemaker.tools.util.DesignTimeUtils;
 /**
  * @author Simon Toens
  * @author Jeremy Grelle
- * 
  */
 public class ServiceDeploymentManager {
 

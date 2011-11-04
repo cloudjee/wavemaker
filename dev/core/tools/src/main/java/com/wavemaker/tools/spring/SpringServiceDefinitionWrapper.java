@@ -26,9 +26,8 @@ import com.wavemaker.runtime.service.definition.ServiceDefinition;
 import com.wavemaker.runtime.service.definition.ServiceOperation;
 
 /**
- * @author stoens
+ * @author Simon Toens
  * @author Jeremy Grelle
- * 
  */
 public class SpringServiceDefinitionWrapper implements DeprecatedServiceDefinition {
 

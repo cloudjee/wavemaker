@@ -23,9 +23,7 @@ import java.util.ArrayList;
 import com.wavemaker.infra.WMTestCase;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class TestMethod extends WMTestCase {
 

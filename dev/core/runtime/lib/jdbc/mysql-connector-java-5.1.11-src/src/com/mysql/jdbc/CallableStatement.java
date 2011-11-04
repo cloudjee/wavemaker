@@ -126,11 +126,7 @@ public class CallableStatement extends PreparedStatement implements
 			this.inOutModifier = inOutModifier;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.lang.Object#clone()
-		 */
+		
 		protected Object clone() throws CloneNotSupportedException {
 			return super.clone();
 		}
@@ -276,11 +272,7 @@ public class CallableStatement extends PreparedStatement implements
 			}
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.lang.Object#clone()
-		 */
+		
 		protected Object clone() throws CloneNotSupportedException {
 			return super.clone();
 		}
@@ -636,11 +628,7 @@ public class CallableStatement extends PreparedStatement implements
 		this.retrieveGeneratedKeys = true; // not provided for in the JDBC spec
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.PreparedStatement#addBatch()
-	 */
+	
 	public void addBatch() throws SQLException {
 		setOutParams();
 
@@ -858,11 +846,7 @@ public class CallableStatement extends PreparedStatement implements
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.PreparedStatement#execute()
-	 */
+	
 	public boolean execute() throws SQLException {
 		boolean returnVal = false;
 
@@ -893,11 +877,7 @@ public class CallableStatement extends PreparedStatement implements
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.PreparedStatement#executeQuery()
-	 */
+	
 	public java.sql.ResultSet executeQuery() throws SQLException {
 		checkClosed();
 
@@ -917,11 +897,7 @@ public class CallableStatement extends PreparedStatement implements
 		return execResults;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.PreparedStatement#executeUpdate()
-	 */
+	
 	public int executeUpdate() throws SQLException {
 		int returnVal = -1;
 

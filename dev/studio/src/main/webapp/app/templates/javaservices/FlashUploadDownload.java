@@ -71,7 +71,6 @@ protected File getUploadDir() {
  *         scan the list of returned files for any errors.
  *   Width/Height: Intended for returning width/height of uploaded images, but in fact 
  *         you can use these to return any custom information you want.
- *
  */
 
 public DojoFileUploaderResponse uploadFile(CommonsMultipartFile file, 

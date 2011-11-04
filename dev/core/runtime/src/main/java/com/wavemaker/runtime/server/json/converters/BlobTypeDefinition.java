@@ -34,8 +34,7 @@ import com.wavemaker.json.type.reflect.ReflectTypeUtils;
 /**
  * TypeDefinition for types extending from {@link Blob}.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public class BlobTypeDefinition extends PrimitiveReflectTypeDefinition implements ReadObjectConverter, WriteObjectConverter {
 
@@ -46,12 +45,6 @@ public class BlobTypeDefinition extends PrimitiveReflectTypeDefinition implement
         this.setTypeName(ReflectTypeUtils.getTypeName(this.getKlass()));
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.converters.ReadObjectConverter#readObject(java.lang.Object, java.lang.Object,
-     * java.lang.String)
-     */
     @Override
     public Object readObject(Object input, Object root, String path) {
 
@@ -75,12 +68,6 @@ public class BlobTypeDefinition extends PrimitiveReflectTypeDefinition implement
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.converters.WriteObjectConverter#writeObject(java.lang.Object, java.lang.Object,
-     * java.lang.String, java.io.Writer)
-     */
     @Override
     public void writeObject(Object input, Object root, String path, Writer writer) throws IOException {
 

@@ -48,8 +48,6 @@ import com.wavemaker.runtime.ws.jaxb.DateXmlAdapter;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "GetDeletedResult", namespace = "urn:partner.soap.sforce.com", propOrder = { "deletedRecords", "earliestDateAvailable",

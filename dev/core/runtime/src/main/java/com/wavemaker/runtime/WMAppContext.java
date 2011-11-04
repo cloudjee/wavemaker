@@ -34,7 +34,7 @@ import com.wavemaker.runtime.data.util.DataServiceConstants;
 /**
  * This singleton class is to store any properties in the scope of the application context.
  * 
- * @author S Lee
+ * @author Seung Lee
  * @author Jeremy Grelle
  */
 public class WMAppContext {

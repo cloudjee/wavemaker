@@ -20,17 +20,10 @@ import java.io.Writer;
 import com.wavemaker.json.core.JSONUtils;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class EnumPrimitiveReflectTypeDefinition extends PrimitiveReflectTypeDefinition {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.reflect.ReflectTypeDefinition#newInstance(java.lang.Object[])
-     */
     @Override
     @SuppressWarnings("unchecked")
     public Object newInstance(Object... args) {
@@ -46,11 +39,6 @@ public class EnumPrimitiveReflectTypeDefinition extends PrimitiveReflectTypeDefi
         return ret;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.reflect.PrimitiveReflectTypeDefinition#toJson(java.io.Writer, java.lang.Object)
-     */
     @Override
     public void toJson(Writer writer, Object obj) throws IOException {
         writer.write(JSONUtils.quote(obj.toString()));

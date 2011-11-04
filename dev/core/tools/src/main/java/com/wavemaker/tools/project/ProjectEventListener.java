@@ -17,9 +17,7 @@ package com.wavemaker.tools.project;
 /**
  * EventListener for Project events.
  * 
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public interface ProjectEventListener {
 

@@ -14,7 +14,6 @@
  * JAXBDispatcher.java
  *
  * Created on May 1, 2006, 9:57 AM
- *
  */
 
 package org.jvnet.ws.wadl.util;

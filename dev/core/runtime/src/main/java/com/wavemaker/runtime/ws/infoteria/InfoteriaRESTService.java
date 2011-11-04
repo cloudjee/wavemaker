@@ -25,8 +25,7 @@ import com.wavemaker.runtime.ws.RESTService;
 /**
  * This class overrides some methods i RESTService for infoteria
  * 
- * @author slee
- * 
+ * @author Seung Lee
  */
 public class InfoteriaRESTService extends RESTService {
 

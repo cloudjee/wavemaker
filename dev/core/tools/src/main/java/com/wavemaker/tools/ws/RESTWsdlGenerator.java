@@ -69,9 +69,7 @@ import com.wavemaker.tools.ws.RESTInputParam.InputType;
 /**
  * Generates WSDL which describes how to invoke and process REST service.
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class RESTWsdlGenerator implements IPwsRestWsdlGenerator {
 

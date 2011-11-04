@@ -41,9 +41,8 @@ import com.wavemaker.tools.service.DesignServiceManager;
  * security settings from the old project-security.xml and recreate a new one using the existing settings.</li> <li>
  * Rename login.html to login.html.bak and regenerate a new one.</li>
  * 
- * @author ffu
+ * @author Frankie Fu
  * @author Jeremy Grelle
- * 
  */
 public class SecurityUpgrade implements UpgradeTask {
 
@@ -57,12 +56,6 @@ public class SecurityUpgrade implements UpgradeTask {
         this.dsm = dsm;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker .tools.project.Project,
-     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
         SecurityToolsManager stm = new SecurityToolsManager(this.dsm.getProjectManager(), this.dsm);

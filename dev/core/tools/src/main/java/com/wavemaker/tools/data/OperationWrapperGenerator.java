@@ -26,8 +26,6 @@ import com.wavemaker.tools.service.codegen.BeanGenerator;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class OperationWrapperGenerator {
 

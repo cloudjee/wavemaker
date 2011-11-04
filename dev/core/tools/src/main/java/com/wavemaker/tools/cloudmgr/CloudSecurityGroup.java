@@ -17,7 +17,7 @@ package com.wavemaker.tools.cloudmgr;
 /**
  * This class represents a security group for cloud server access
  * 
- * @author slee
+ * @author Seung Lee
  */
 public class CloudSecurityGroup {
 

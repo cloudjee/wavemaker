@@ -19,8 +19,7 @@ import com.wavemaker.runtime.service.ServiceWire;
 /**
  * Provides configuration wiring between EventListeners and the ServiceWires they operate on.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public class EventWire {
 

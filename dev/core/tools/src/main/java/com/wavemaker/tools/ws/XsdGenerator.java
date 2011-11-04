@@ -32,9 +32,7 @@ import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.runtime.ws.util.Constants;
 
 /**
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class XsdGenerator {
 

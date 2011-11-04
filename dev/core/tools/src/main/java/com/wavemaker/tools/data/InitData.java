@@ -23,8 +23,6 @@ import com.wavemaker.runtime.client.TreeNode;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class InitData {
 

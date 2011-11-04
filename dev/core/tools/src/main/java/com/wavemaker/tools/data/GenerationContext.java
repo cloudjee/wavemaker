@@ -22,8 +22,6 @@ import com.wavemaker.runtime.data.DataServiceDefinition;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public abstract class GenerationContext {
 

@@ -24,9 +24,7 @@ import com.wavemaker.runtime.data.DataServiceMetaData;
 import com.wavemaker.runtime.data.Task;
 
 /**
- * @author stoens
- * @version $Rev$ - $Date$
- * 
+ * @author Simon Toens
  */
 public class SpringDataServiceManagerWrapper implements DataServiceManager {
 

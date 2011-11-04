@@ -30,18 +30,11 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
  * 
  * instances of wm.MoneyFormatter become wm.CurrencyFormatter
  * 
- * @author small
+ * @author Matt Small
  * @author Jeremy Grelle
- * 
  */
 public class CurrencyRenameUpgrade implements UpgradeTask {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker .tools.project.Project,
-     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 

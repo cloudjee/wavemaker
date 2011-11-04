@@ -33,8 +33,6 @@ import com.mysql.jdbc.profiler.ProfilerEvent;
  * Logging functionality for JDK1.4
  * 
  * @author Mark Matthews
- * 
- * @version $Id$
  */
 public class Jdk14Logger implements Log {
 	private static final Level DEBUG = Level.FINE;

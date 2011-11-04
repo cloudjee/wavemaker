@@ -42,7 +42,7 @@ import com.wavemaker.tools.cloudmgr.opsource.myaccount.response.Account;
 /**
  * This class is to manage OpSource cloud server instances.
  * 
- * @author slee
+ * @author Seung Lee
  */
 public class OpSourceServerMgr implements CloudServerMgr {
 

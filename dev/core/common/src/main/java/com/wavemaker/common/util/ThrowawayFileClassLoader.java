@@ -33,9 +33,8 @@ import com.wavemaker.common.WMRuntimeException;
  * everything to avoid ever loading classes into any other classloader. It takes a parent classloader as an option, but
  * only delegates to it if the class cannot be found in the local paths.
  * 
- * @author small
+ * @author Matt Small
  * @author Jeremy Grelle
- * 
  */
 public class ThrowawayFileClassLoader extends ClassLoader {
 

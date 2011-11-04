@@ -43,9 +43,7 @@ import com.wavemaker.tools.project.VersionInfo;
  * 
  * When removing versioned Preferences, all versions will be removed at the same time (automatically).
  * 
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class ConfigurationStore {
 

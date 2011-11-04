@@ -22,9 +22,7 @@ import java.util.Map;
  * Provides interfaces to access message interceptors. Message interceptors are used to plug in to the Web Service
  * runtime to do additional processing of the inbound and outbound messages.
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class MessageInterceptorManager {
 

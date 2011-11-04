@@ -33,7 +33,6 @@ import java.util.regex.PatternSyntaxException;
  * Field is a class used to describe fields in a ResultSet
  *
  * @author Mark Matthews
- * @version $Id$
  */
 public class Field {
 

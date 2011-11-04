@@ -45,7 +45,6 @@ import java.sql.SQLException;
  * class is new in the JDBC 2.0 API.
  * 
  * @author Mark Matthews
- * @version $Id$
  */
 public class Blob implements java.sql.Blob, OutputStreamWatcher {
 

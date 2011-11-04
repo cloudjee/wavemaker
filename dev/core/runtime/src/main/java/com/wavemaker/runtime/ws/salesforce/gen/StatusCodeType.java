@@ -187,7 +187,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
- * 
  */
 @XmlType(name = "StatusCode", namespace = "urn:partner.soap.sforce.com")
 @XmlEnum

@@ -31,7 +31,7 @@ import java.sql.SQLException;
 /**
  * Buffer contains code to read and write packets from/to the MySQL server.
  * 
- * @version $Id$
+ * 
  * @author Mark Matthews
  */
 class Buffer {
@@ -210,11 +210,7 @@ class Buffer {
 		return b;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.mysql.jdbc.Buffer#getBytes(int, int)
-	 */
+	
 	byte[] getBytes(int offset, int len) {
 		byte[] dest = new byte[len];
 		System.arraycopy(this.byteBuffer, offset, dest, 0, len);

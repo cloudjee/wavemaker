@@ -14,7 +14,6 @@
  * RepresentationNode.java
  *
  * Created on August 16, 2006, 12:59 PM
- *
  */
 
 package org.jvnet.ws.wadl2java.ast;

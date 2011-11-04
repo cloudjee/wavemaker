@@ -18,8 +18,7 @@ package com.wavemaker.json.type;
  * The TypeDefinition class holds type information about individual types in the system. Each instance also allows for
  * new Objects to be created, and for transformations to and from JSON.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public interface TypeDefinition {
 

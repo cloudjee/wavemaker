@@ -14,7 +14,6 @@
  * StreamDataSource.java
  *
  * Created on April 18, 2007, 3:28 PM
- *
  */
 
 package org.jvnet.ws.wadl.util;
@@ -25,7 +24,6 @@ import java.io.OutputStream;
 import javax.activation.DataSource;
 
 /**
- *
  * @author mh124079
  */
 public class StreamDataSource implements DataSource {

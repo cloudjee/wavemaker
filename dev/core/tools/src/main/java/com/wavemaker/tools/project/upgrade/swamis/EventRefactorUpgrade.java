@@ -42,18 +42,11 @@ import com.wavemaker.tools.util.DesignTimeUtils;
  * 
  * @link ServiceBeanFileUpgrade}.
  * 
- * @author small
+ * @author Matt Small
  * @author Jeremy Grelle
- * 
  */
 public class EventRefactorUpgrade implements UpgradeTask {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker .tools.project.Project,
-     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 

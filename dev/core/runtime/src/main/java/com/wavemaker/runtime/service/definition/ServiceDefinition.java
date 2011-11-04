@@ -24,7 +24,6 @@ import com.wavemaker.runtime.service.events.EventWire;
  * Represents a service definition.
  * 
  * @author Frankie Fu
- * @version $Rev$ - $Date$
  */
 public interface ServiceDefinition {
 

@@ -25,9 +25,7 @@ import org.acegisecurity.ui.logout.LogoutHandler;
 /**
  * Filter to support Acegi's Ajax based logout.
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class AcegiAjaxLogoutFilter extends LogoutFilter {
 

@@ -38,9 +38,8 @@ import com.wavemaker.tools.util.DesignTimeUtils;
 /**
  * Create separate bean files for all services that don't already have them.
  * 
- * @author small
+ * @author Matt Small
  * @author Jeremy Grelle
- * 
  */
 public class ServiceBeanFileUpgrade implements UpgradeTask {
 
@@ -54,12 +53,6 @@ public class ServiceBeanFileUpgrade implements UpgradeTask {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker .tools.project.Project,
-     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 

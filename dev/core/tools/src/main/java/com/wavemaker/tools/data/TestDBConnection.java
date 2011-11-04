@@ -17,9 +17,7 @@ package com.wavemaker.tools.data;
 import java.util.Collection;
 
 /**
- * @author stoens
- * @version $Rev$ - $Date$
- * 
+ * @author Simon Toens
  */
 public class TestDBConnection extends BaseDataModelSetup {
 

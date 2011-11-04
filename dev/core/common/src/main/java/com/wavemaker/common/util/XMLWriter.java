@@ -27,7 +27,6 @@ import org.apache.commons.lang.StringEscapeUtils;
  * API for writing XML.
  * 
  * @author Simon Toens
- * 
  */
 public class XMLWriter {
 
@@ -226,7 +225,6 @@ public class XMLWriter {
      * Adds attributes to current XML element, represented as Map. Uses the keys as atttribute names and corresponding
      * elements as attribute values. Calls String.valueOf(...) on keys and values.
      */
-    @SuppressWarnings("unchecked")
     public void addAttribute(Map attributes) {
         String[] attributesArray = new String[attributes.size() * 2];
         int index = 0;

@@ -77,28 +77,15 @@ public class AppletRegressionTest extends BaseTestCase {
 	 * works (and we can connect to various databases).
 	 */
 	class CustomAppletSecurity extends AppletSecurity {
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.lang.SecurityManager#checkAccess(java.lang.Thread)
-		 */
+		
 		public synchronized void checkAccess(Thread arg0) {
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.lang.SecurityManager#checkConnect(java.lang.String, int,
-		 *      java.lang.Object)
-		 */
+		
 		public void checkConnect(String host, int port, Object context) {
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.lang.SecurityManager#checkConnect(java.lang.String, int)
-		 */
+		
 		public void checkConnect(String host, int port) {
 		}
 	}

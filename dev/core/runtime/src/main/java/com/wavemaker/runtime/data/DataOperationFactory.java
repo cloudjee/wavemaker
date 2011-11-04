@@ -21,8 +21,6 @@ import com.wavemaker.common.util.Tuple;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public interface DataOperationFactory {
 

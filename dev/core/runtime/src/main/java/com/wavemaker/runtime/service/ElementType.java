@@ -39,7 +39,6 @@ import com.wavemaker.json.type.reflect.ReflectTypeUtils;
  * Used by <code>ServiceDefinition</code> representing the operation's input and output type.
  * 
  * @author Frankie Fu
- * @version $Rev$ - $Date$
  */
 public class ElementType implements Cloneable {
 

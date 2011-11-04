@@ -45,7 +45,6 @@ import com.mysql.jdbc.SQLError;
 /**
  * 
  * @author Mark Matthews
- * @version $Id$
  */
 public class DateTest extends BaseTestCase {
 	// ~ Constructors

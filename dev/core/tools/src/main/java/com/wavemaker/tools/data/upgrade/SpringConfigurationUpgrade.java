@@ -41,7 +41,6 @@ import com.wavemaker.tools.spring.beans.Map;
 /**
  * @author Simon Toens
  * @author Jeremy Grelle
- * 
  */
 public class SpringConfigurationUpgrade extends BaseDataUpgradeTask implements UpgradeTask {
 

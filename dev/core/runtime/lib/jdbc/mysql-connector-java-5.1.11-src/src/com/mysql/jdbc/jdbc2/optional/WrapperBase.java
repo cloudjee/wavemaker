@@ -38,8 +38,6 @@ import com.mysql.jdbc.SQLError;
  * Base class for all wrapped instances created by LogicalHandle
  * 
  * @author Mark matthews
- * 
- * @version $Id$
  */
 abstract class WrapperBase {
 	protected MysqlPooledConnection pooledConnection;

@@ -17,7 +17,7 @@ package com.wavemaker.tools.cloudmgr;
 /**
  * This class represents a cloud server image.
  * 
- * @author slee
+ * @author Seung Lee
  */
 public class CloudImage {
 

@@ -19,13 +19,10 @@ package com.wavemaker.runtime.server;
  * download requests.
  * 
  * @author Matt Small
- * @version $Rev: 29059 $ - $Date: 2010-04-29 17:19:33 -0700 (Thu, 29 Apr 2010) $
- * 
  */
 public class DojoFileUploaderResponse {
 
     public DojoFileUploaderResponse() {
-        // empty constructor
     }
 
     public DojoFileUploaderResponse(String path, String name, String type, String error, String width, String height) {

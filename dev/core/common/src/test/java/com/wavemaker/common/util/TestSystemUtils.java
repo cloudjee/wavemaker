@@ -23,9 +23,7 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.infra.WMTestCase;
 
 /**
- * @author small
- * @version $Rev$ - $Date:2008-05-30 14:37:26 -0700 (Fri, 30 May 2008) $
- * 
+ * @author Matt Small
  */
 public class TestSystemUtils extends WMTestCase {
 

@@ -51,7 +51,7 @@ import com.wavemaker.runtime.ws.salesforce.gen.SforceService;
 /**
  * Helper class for Salesforce.
  * 
- * @author slee
+ * @author Seung Lee
  */
 public class SalesforceSupport {
 

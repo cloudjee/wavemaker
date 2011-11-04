@@ -46,7 +46,7 @@ import java.util.TimeZone;
  * 
  * (this isn't possible when doing things like reading floating point values).
  * 
- * @version $Id: $
+ * 
  */
 public class BufferRow extends ResultSetRow {
 	private Buffer rowFromServer;

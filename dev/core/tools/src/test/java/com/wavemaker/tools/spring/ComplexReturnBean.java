@@ -57,9 +57,7 @@ import com.wavemaker.runtime.service.response.SuccessResponse;
 import com.wavemaker.tools.data.QueryInfo;
 
 /**
- * @author small
- * @version $Rev:22671 $ - $Date:2008-05-30 14:29:23 -0700 (Fri, 30 May 2008) $
- * 
+ * @author Matt Small
  */
 public class ComplexReturnBean {
 
@@ -578,11 +576,6 @@ public class ComplexReturnBean {
 
         private Object result;
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see com.wavemaker.runtime.service.response.SuccessResponse#getResult()
-         */
         @Override
         public Object getResult() {
             return this.result;
@@ -601,11 +594,6 @@ public class ComplexReturnBean {
 
         private String error;
 
-        /*
-         * (non-Javadoc)
-         * 
-         * @see com.wavemaker.runtime.service.response.ErrorResponse#getError()
-         */
         @Override
         public String getError() {
             return this.error;

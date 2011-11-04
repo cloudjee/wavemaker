@@ -57,9 +57,7 @@ import com.wavemaker.runtime.service.events.ServletEventNotifier;
 import com.wavemaker.runtime.service.response.RootServiceResponse;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public abstract class ControllerBase extends AbstractController {
 
@@ -90,13 +88,6 @@ public abstract class ControllerBase extends AbstractController {
         return jsonState;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * org.springframework.web.servlet.mvc.AbstractController#handleRequestInternal(javax.servlet.http.HttpServletRequest
-     * , javax.servlet.http.HttpServletResponse)
-     */
     @Override
     public ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) {
 
@@ -156,9 +147,7 @@ public abstract class ControllerBase extends AbstractController {
      * @param request The current request.
      */
     protected void initializeRuntimeController(HttpServletRequest request) {
-
         JSONState jsonConfig = ControllerBase.createJSONState();
-
         getInternalRuntime().setJSONState(jsonConfig);
     }
 

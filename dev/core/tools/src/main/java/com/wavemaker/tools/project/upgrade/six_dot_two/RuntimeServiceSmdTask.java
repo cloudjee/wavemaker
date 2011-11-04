@@ -27,7 +27,7 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
 /**
  * Delete runtimeService.smd so that it can be re-created reflecting changes (if any) in Runtime Service.
  * 
- * @author S Lee
+ * @author Seung Lee
  * @author Jeremy Grelle
  */
 public class RuntimeServiceSmdTask implements UpgradeTask {

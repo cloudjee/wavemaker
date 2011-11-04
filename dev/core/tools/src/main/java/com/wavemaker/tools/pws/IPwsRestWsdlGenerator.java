@@ -32,7 +32,7 @@ import com.wavemaker.tools.ws.RESTInputParam;
  * The default implementation of this interface is <code>RESTWsdlGenerator</code>. Developers may extend the default
  * implementation to customize the content of the generated WSDL.
  * 
- * @author slee
+ * @author Seung Lee
  * 
  */
 public interface IPwsRestWsdlGenerator {

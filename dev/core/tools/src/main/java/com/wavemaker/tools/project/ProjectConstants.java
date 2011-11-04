@@ -17,9 +17,8 @@ package com.wavemaker.tools.project;
 import com.wavemaker.json.AlternateJSONTransformer;
 
 /**
- * @author small
+ * @author Matt Small
  * @author Jeremy Grelle
- * 
  */
 public class ProjectConstants {
 

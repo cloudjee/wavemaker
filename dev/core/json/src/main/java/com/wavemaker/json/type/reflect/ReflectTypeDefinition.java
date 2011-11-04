@@ -18,9 +18,7 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.type.TypeDefinition;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public abstract class ReflectTypeDefinition implements TypeDefinition {
 
@@ -48,11 +46,6 @@ public abstract class ReflectTypeDefinition implements TypeDefinition {
         this.klass = klass;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.TypeDefinition#getTypeName()
-     */
     @Override
     public String getTypeName() {
         return this.typeName;
@@ -62,11 +55,6 @@ public abstract class ReflectTypeDefinition implements TypeDefinition {
         this.typeName = typeName;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.TypeDefinition#newInstance(java.lang.Object[])
-     */
     @Override
     public Object newInstance(Object... args) {
 
@@ -83,11 +71,6 @@ public abstract class ReflectTypeDefinition implements TypeDefinition {
         this.liveService = liveService;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.TypeDefinition#isLiveService()
-     */
     @Override
     public boolean isLiveService() {
         return this.liveService;
@@ -97,11 +80,6 @@ public abstract class ReflectTypeDefinition implements TypeDefinition {
         this.shortName = shortName;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.TypeDefinition#getShortName()
-     */
     @Override
     public String getShortName() {
         return this.shortName;

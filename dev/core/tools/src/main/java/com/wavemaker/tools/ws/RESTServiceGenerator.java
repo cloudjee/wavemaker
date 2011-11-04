@@ -46,9 +46,8 @@ import com.wavemaker.tools.ws.wsdl.WSDL;
 /**
  * This class generates REST service stubs.
  * 
- * @author ffu
+ * @author Frankie Fu
  * @author Jeremy Grelle
- * 
  */
 public class RESTServiceGenerator extends WebServiceGenerator {
 

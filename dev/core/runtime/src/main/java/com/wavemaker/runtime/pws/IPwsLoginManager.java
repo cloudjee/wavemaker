@@ -18,8 +18,7 @@ package com.wavemaker.runtime.pws;
  * This interface provides methods to log in/out to/from partner web service sites. It also defines methods to manage
  * session and relevant information.
  * 
- * @author slee
- * 
+ * @author Seung Lee
  */
 public interface IPwsLoginManager {
 

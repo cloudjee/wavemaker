@@ -23,9 +23,7 @@ import java.io.IOException;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class AopAdvised {
 

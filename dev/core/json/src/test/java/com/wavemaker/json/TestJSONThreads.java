@@ -26,9 +26,7 @@ import com.wavemaker.infra.WMTestCase;
 import com.wavemaker.json.type.reflect.converters.DateTypeDefinition;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class TestJSONThreads extends WMTestCase {
 

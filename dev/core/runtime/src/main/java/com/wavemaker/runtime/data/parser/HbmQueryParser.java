@@ -30,7 +30,6 @@ import com.wavemaker.runtime.data.util.DataServiceUtils;
  * Eventually this should move into HbmParser so we can handle generic hbm files with both mappings and queries.
  * 
  * @author Simon Toens
- * @version $Rev: 29063 $ - $Date: 2010-04-29 17:56:29 -0700 (Thu, 29 Apr 2010) $
  */
 public class HbmQueryParser extends BaseHbmParser {
 

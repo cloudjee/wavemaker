@@ -32,8 +32,6 @@ import java.sql.SQLException;
  * Utilities for dealing with result sets (used in testcases and profiler).
  * 
  * @author Mark Matthews
- * 
- * @version $Id$
  */
 public class ResultSetUtil {
 

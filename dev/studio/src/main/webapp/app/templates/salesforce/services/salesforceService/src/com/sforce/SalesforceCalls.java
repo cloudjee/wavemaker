@@ -34,7 +34,7 @@ import java.io.InputStream;
 /**
  * Helper class for Salesforce.
  * 
- * @author slee
+ * @author Seung Lee
  */
 public class SalesforceCalls {
 

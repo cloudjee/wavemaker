@@ -43,299 +43,299 @@ import com.mongodb.gridfs.GridFSInputFile;
 
 /**
  * @author Ed Callahan
- * 
  */
 public class GFSResource implements Resource {
 
-	private static final String METADATA_PATH_KEY = "Path";
+    private static final String METADATA_PATH_KEY = "Path";
 
-	private final GridFS gfs;
+    private final GridFS gfs;
 
-	private GridFSInputFile file;
+    private GridFSInputFile file;
 
-	protected final String path;
+    protected final String path;
 
-	protected String filename;
+    protected String filename;
 
-	protected final Boolean isDir;
+    protected final Boolean isDir;
 
-	/*
-	 * Creates a Resource from a GridFS and a String If path does not end in a
-	 * filename extension, it will be considered a directory. Directory paths
-	 * must always end in "/".  Must call save() OR close() on outputStream to save data
-	 * @see com.mongodb.gridfs.GridFS.html#createFile(java.io.InputStream, java.lang.String)
-	 */
-	public GFSResource(GridFS gfs, String path) {
-		Assert.notNull(gfs, "GridFS must not be null");
-		Assert.notNull(path, "Path must not be null");
-		this.isDir = null != StringUtils.getFilenameExtension(path) ? false
-				: true;
-		this.gfs = gfs;
-		this.path = StringUtils.cleanPath(path);
-		this.filename = StringUtils.getFilename(path);
-		if (!this.isDir) {
-			this.file = gfs.createFile(this.filename);
-			this.file.setMetaData(new BasicDBObject(METADATA_PATH_KEY,
-					this.path));
-		}
-	}
+    /*
+     * Creates a Resource from a GridFS and a String If path does not end in a filename extension, it will be considered
+     * a directory. Directory paths must always end in "/". Must call save() OR close() on outputStream to save data
+     * 
+     * @see com.mongodb.gridfs.GridFS.html#createFile(java.io.InputStream, java.lang.String)
+     */
+    public GFSResource(GridFS gfs, String path) {
+        Assert.notNull(gfs, "GridFS must not be null");
+        Assert.notNull(path, "Path must not be null");
+        this.isDir = null != StringUtils.getFilenameExtension(path) ? false : true;
+        this.gfs = gfs;
+        this.path = StringUtils.cleanPath(path);
+        this.filename = StringUtils.getFilename(path);
+        if (!this.isDir) {
+            this.file = gfs.createFile(this.filename);
+            this.file.setMetaData(new BasicDBObject(METADATA_PATH_KEY, this.path));
+        }
+    }
 
-	/*
-	 * Creates a Resource from an input stream. Always a file.  Must call save() OR close() on outputStream to save data
-	 *  @see com.mongodb.gridfs.GridFS.html#createFile(java.io.InputStream, java.lang.String)
-	 *  Ctor can not call save() for you as it prohibits use of outputstream
-	 */
-	public GFSResource(GridFS gfs, InputStream in, String filename, String path) {
-		Assert.notNull(gfs, "GFS must not be null");
-		Assert.notNull(in, "InputStream must not be null");
-		Assert.notNull(filename, "FileName must not be null");
-		Assert.notNull(path, "Path must not be null");
-		this.isDir = false;
-		this.filename = filename;
-		this.gfs = gfs;
-		this.path = StringUtils.cleanPath(path);
-		this.file = gfs.createFile(in, this.filename);
-		this.file.setMetaData(new BasicDBObject(METADATA_PATH_KEY, this.path));
-	}
+    /*
+     * Creates a Resource from an input stream. Always a file. Must call save() OR close() on outputStream to save data
+     * 
+     * @see com.mongodb.gridfs.GridFS.html#createFile(java.io.InputStream, java.lang.String) Ctor can not call save()
+     * for you as it prohibits use of outputstream
+     */
+    public GFSResource(GridFS gfs, InputStream in, String filename, String path) {
+        Assert.notNull(gfs, "GFS must not be null");
+        Assert.notNull(in, "InputStream must not be null");
+        Assert.notNull(filename, "FileName must not be null");
+        Assert.notNull(path, "Path must not be null");
+        this.isDir = false;
+        this.filename = filename;
+        this.gfs = gfs;
+        this.path = StringUtils.cleanPath(path);
+        this.file = gfs.createFile(in, this.filename);
+        this.file.setMetaData(new BasicDBObject(METADATA_PATH_KEY, this.path));
+    }
 
-	/**
-	 * Return the path for this resource.
-	 */
-	public String getPath() {
-		return this.path;
-	}
+    /**
+     * Return the path for this resource.
+     */
+    public String getPath() {
+        return this.path;
+    }
 
-	/**
-	 * Returns the parent path string or null if none
-	 */
-	public String getParent() {
-		String ret = this.path;
-		if (this.path.lastIndexOf("/") == 0) {
-			return null;
-		}
-		if (isDirectory()) {
-			ret = ret.substring(0, ret.lastIndexOf("/"));
-		}
-		return ret.substring(0, ret.lastIndexOf("/"));
-	}
+    /**
+     * Returns the parent path string or null if none
+     */
+    public String getParent() {
+        String ret = this.path;
+        if (this.path.lastIndexOf("/") == 0) {
+            return null;
+        }
+        if (isDirectory()) {
+            ret = ret.substring(0, ret.lastIndexOf("/"));
+        }
+        return ret.substring(0, ret.lastIndexOf("/"));
+    }
 
-	/**
-	 * 
-	 *  Save the GridFSInputFile
-	 */
-	public void save(){
-		Assert.notNull(this.file);
-		this.file.save();
-	}
-	
-	/**
-	 * Returns the GridFSInputFile.
-	 * 
-	 * @see com.mongo.gridfs.GridFSInputFile.getFilename()
-	 */
-	public GridFSInputFile getGridFSInputFile() {
-		Assert.notNull(this.file);
-		return this.file;
-	}
+    /**
+     * 
+     * Save the GridFSInputFile
+     */
+    public void save() {
+        Assert.notNull(this.file);
+        this.file.save();
+    }
 
-	/**
-	 * Returns the name of the file.
-	 * 
-	 * @see com.mongo.gridfs.GridFSInputFile.getFilename()
-	 */
-	public void setGridFSInputFile(GridFSInputFile file) {
-		Assert.notNull(file);
-		this.file = file;
-	}
+    /**
+     * Returns the GridFSInputFile.
+     * 
+     * @see com.mongo.gridfs.GridFSInputFile.getFilename()
+     */
+    public GridFSInputFile getGridFSInputFile() {
+        Assert.notNull(this.file);
+        return this.file;
+    }
 
-	/**
-	 * Returns the name of the file.
-	 * 
-	 * @see com.mongo.gridfs.GridFSInputFile.getFilename()
-	 */
-	public String getFilename() {
-		return this.filename;
-	}
+    /**
+     * Returns the name of the file.
+     * 
+     * @see com.mongo.gridfs.GridFSInputFile.getFilename()
+     */
+    public void setGridFSInputFile(GridFSInputFile file) {
+        Assert.notNull(file);
+        this.file = file;
+    }
 
-	/**
-	 * Sets the name of the file.
-	 * 
-	 * @see com.mongo.gridfs.GridFSInputFile.getFilename()
-	 */
-	public void setFilename(String fn) {
-		this.filename = fn;
-		if (this.file != null) {
-			this.file.setFilename(fn);
-		}
-	}
+    /**
+     * Returns the name of the file.
+     * 
+     * @see com.mongo.gridfs.GridFSInputFile.getFilename()
+     */
+    @Override
+    public String getFilename() {
+        return this.filename;
+    }
 
-	/**
-	 * Queries the GridFS for files with matching Path metadata
-	 * 
-	 * @return array of GridFSDBFile
-	 */
-	public GridFSDBFile[] listFiles() {
-		Assert.isTrue(isDirectory(), "Can only list files of a directory");
-		ArrayList<GridFSDBFile> ret = new ArrayList<GridFSDBFile>();
+    /**
+     * Sets the name of the file.
+     * 
+     * @see com.mongo.gridfs.GridFSInputFile.getFilename()
+     */
+    public void setFilename(String fn) {
+        this.filename = fn;
+        if (this.file != null) {
+            this.file.setFilename(fn);
+        }
+    }
 
-		DBCursor dbc = this.gfs.getFileList();
-		while (dbc.hasNext()) {
-			DBObject dbo = dbc.next();
-			//TODO: Why need to re-fetch this file ?
-			GridFSDBFile file = this.gfs.findOne(dbo);  
-			DBObject metad = file.getMetaData();
-			if(metad.containsField(METADATA_PATH_KEY)){
-				// FIXME: getFileList should be able to do the filtering for us
-				if(this.path.equals((String)metad.get(METADATA_PATH_KEY))) 
-				{ 
-					ret.add(file);
-				}
-			}
-		}
-		GridFSDBFile[] result = new GridFSDBFile[ret.size()];
-		return ret.toArray(result);
-	}
+    /**
+     * Queries the GridFS for files with matching Path metadata
+     * 
+     * @return array of GridFSDBFile
+     */
+    public GridFSDBFile[] listFiles() {
+        Assert.isTrue(isDirectory(), "Can only list files of a directory");
+        ArrayList<GridFSDBFile> ret = new ArrayList<GridFSDBFile>();
 
-	/**
-	 * Returns true unless path is null
-	 */
-	public boolean exists() {
-		return this.path != null ? true : false;
-	}
+        DBCursor dbc = this.gfs.getFileList();
+        while (dbc.hasNext()) {
+            DBObject dbo = dbc.next();
+            // TODO: Why need to re-fetch this file ?
+            GridFSDBFile file = this.gfs.findOne(dbo);
+            DBObject metad = file.getMetaData();
+            if (metad.containsField(METADATA_PATH_KEY)) {
+                // FIXME: getFileList should be able to do the filtering for us
+                if (this.path.equals(metad.get(METADATA_PATH_KEY))) {
+                    ret.add(file);
+                }
+            }
+        }
+        GridFSDBFile[] result = new GridFSDBFile[ret.size()];
+        return ret.toArray(result);
+    }
 
-	/**
-	 * Delete the file
-	 * 
-	 */
-	public void deleteFile() {
-		Assert.notNull(getFilename(), "Can't delete without a filename");
-		this.gfs.remove(getFilename());
-	}
+    /**
+     * Returns true unless path is null
+     */
+    @Override
+    public boolean exists() {
+        return this.path != null ? true : false;
+    }
 
-	/**
-	 * Returns true if exists
-	 */
-	public boolean isReadable() {
-		return this.exists();
-	}
+    /**
+     * Delete the file
+     * 
+     */
+    public void deleteFile() {
+        Assert.notNull(getFilename(), "Can't delete without a filename");
+        this.gfs.remove(getFilename());
+    }
 
-	/**
-	 * This implementation always returns <code>false</code>.
-	 */
-	public boolean isOpen() {
-		return false;
-	}
+    /**
+     * Returns true if exists
+     */
+    @Override
+    public boolean isReadable() {
+        return this.exists();
+    }
 
-	/**
-	 * Returns false if there is a file, else returns true;
-	 */
-	public boolean isDirectory() {
-		return this.isDir;
-	}
+    /**
+     * This implementation always returns <code>false</code>.
+     */
+    @Override
+    public boolean isOpen() {
+        return false;
+    }
 
-	/**
-	 * Returns false if there is a file, else returns true;
-	 */
-	public boolean isFile() {
-		return !this.isDir;
-	}
+    /**
+     * Returns false if there is a file, else returns true;
+     */
+    public boolean isDirectory() {
+        return this.isDir;
+    }
 
-	/**
-	 * Determine the content length for this resource.
-	 * 
-	 * @throws IOException
-	 *             if the resource cannot be resolved (in the file system or as
-	 *             some other known physical resource type)
-	 */
-	public long contentLength() throws IOException {
-		return this.file.getLength();
-	}
+    /**
+     * Returns false if there is a file, else returns true;
+     */
+    public boolean isFile() {
+        return !this.isDir;
+    }
 
-	/**
-	 * Returns the upload date for this resource in unix time.
-	 * 
-	 * @throws IOException
-	 *             if the resource cannot be resolved (in the file system or as
-	 *             some other known physical resource type)
-	 */
-	public long lastModified() throws IOException {
-		return this.file.getUploadDate().getTime();
-	}
+    /**
+     * Determine the content length for this resource.
+     * 
+     * @throws IOException if the resource cannot be resolved (in the file system or as some other known physical
+     *         resource type)
+     */
+    @Override
+    public long contentLength() throws IOException {
+        return this.file.getLength();
+    }
 
-	/**
-	 * Create a resource relative to this resource.
-	 * 
-	 * @param relativePath
-	 *            the relative path (relative to this resource)
-	 * @return the resource handle for the relative resource
-	 * @throws IOException
-	 *             if the relative resource cannot be determined
-	 */
-	public GFSResource createRelative(GridFS gfs, String relativePath)
-			throws IOException {
-		String pathToUse = StringUtils.applyRelativePath(this.path,
-				relativePath);
-		return new GFSResource(gfs, pathToUse);
-	}
+    /**
+     * Returns the upload date for this resource in unix time.
+     * 
+     * @throws IOException if the resource cannot be resolved (in the file system or as some other known physical
+     *         resource type)
+     */
+    @Override
+    public long lastModified() throws IOException {
+        return this.file.getUploadDate().getTime();
+    }
 
-	public GFSResource createRelative(String relativePath) throws IOException {
-		return createRelative(this.gfs, relativePath);
-	}
+    /**
+     * Create a resource relative to this resource.
+     * 
+     * @param relativePath the relative path (relative to this resource)
+     * @return the resource handle for the relative resource
+     * @throws IOException if the relative resource cannot be determined
+     */
+    public GFSResource createRelative(GridFS gfs, String relativePath) throws IOException {
+        String pathToUse = StringUtils.applyRelativePath(this.path, relativePath);
+        return new GFSResource(gfs, pathToUse);
+    }
 
-	/**
-	 * Return the MD5 for this resource
-	 */
-	public String getMD5() {
-		return this.file.getMD5();
-	}
+    @Override
+    public GFSResource createRelative(String relativePath) throws IOException {
+        return createRelative(this.gfs, relativePath);
+    }
 
-	/**
-	 * Return the contentType
-	 * 
-	 * @see com.mongodb.gridfs.GridFSFile#getContentType()
-	 */
-	public String getDescription() {
-		return this.file.getContentType();
-	}
+    /**
+     * Return the MD5 for this resource
+     */
+    public String getMD5() {
+        return this.file.getMD5();
+    }
 
-	/**
-	 * Returns the inputStream for the file
-	 */
-	public InputStream getInputStream() throws IOException {
-		Assert.notNull(this.file, "File can not be null for inputStream");
-		return this.gfs.findOne((ObjectId) this.file.getId()).getInputStream();
-	}
-	
+    /**
+     * Return the contentType
+     * 
+     * @see com.mongodb.gridfs.GridFSFile#getContentType()
+     */
+    @Override
+    public String getDescription() {
+        return this.file.getContentType();
+    }
 
-	/**
-	 * Returns the outputStream for the file
-	 */
-	public OutputStream getOutputStream() throws IOException {
-		Assert.notNull(this.file, "File can not be null for outputStream");
-		return this.file.getOutputStream();
-	}
-	
-	
+    /**
+     * Returns the inputStream for the file
+     */
+    @Override
+    public InputStream getInputStream() throws IOException {
+        Assert.notNull(this.file, "File can not be null for inputStream");
+        return this.gfs.findOne((ObjectId) this.file.getId()).getInputStream();
+    }
 
-	/**
-	 * This operation is not supported
-	 */
-	public URL getURL() throws UnsupportedOperationException {
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * Returns the outputStream for the file
+     */
+    public OutputStream getOutputStream() throws IOException {
+        Assert.notNull(this.file, "File can not be null for outputStream");
+        return this.file.getOutputStream();
+    }
 
-	/**
-	 * This operation is not supported
-	 */
-	public URI getURI() throws UnsupportedOperationException {
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * This operation is not supported
+     */
+    @Override
+    public URL getURL() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
 
-	/**
-	 * This operation is not supported This module does not return files
-	 */
-	public File getFile() throws UnsupportedOperationException {
-		throw new UnsupportedOperationException();
-	}
+    /**
+     * This operation is not supported
+     */
+    @Override
+    public URI getURI() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * This operation is not supported This module does not return files
+     */
+    @Override
+    public File getFile() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
+    }
 
 }

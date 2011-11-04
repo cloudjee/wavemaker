@@ -24,8 +24,6 @@ import com.wavemaker.infra.WMTestCase;
 
 /**
  * @author Simon Toens
- * @version $Rev:22672 $ - $Date:2008-05-30 14:37:26 -0700 (Fri, 30 May 2008) $
- * 
  */
 public class TestObjectInvoker extends WMTestCase {
 

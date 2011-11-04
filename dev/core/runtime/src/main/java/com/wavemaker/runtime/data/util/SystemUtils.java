@@ -28,7 +28,6 @@ import com.wavemaker.runtime.server.InternalRuntime;
  * Published utility methods.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
  */
 public class SystemUtils {
 

@@ -20,29 +20,17 @@ import java.util.LinkedHashMap;
 import com.wavemaker.common.WMRuntimeException;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class JSONObject extends LinkedHashMap<String, Object> implements JSON {
 
     private static final long serialVersionUID = 1L;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.JSON#isList()
-     */
     @Override
     public boolean isList() {
         return false;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.JSON#isObject()
-     */
     @Override
     public boolean isObject() {
         return true;

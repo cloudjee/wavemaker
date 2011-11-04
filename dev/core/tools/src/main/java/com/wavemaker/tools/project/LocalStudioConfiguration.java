@@ -53,7 +53,6 @@ import com.wavemaker.tools.config.ConfigurationStore;
  * @author Matt Small
  * @author Joel Hare
  * @author Jeremy Grelle
- * 
  */
 public class LocalStudioConfiguration implements EmbeddedServerConfiguration, ServletContextAware {
 
@@ -125,11 +124,6 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
      */
     private File testDemoDir = null;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.StudioConfiguration#getProjectsDir()
-     */
     @Override
     public Resource getProjectsDir() {
         String projectsProp = null;
@@ -207,11 +201,6 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
         this.testWMHome = file;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.StudioConfiguration#getWaveMakerHome()
-     */
     @Override
     public Resource getWaveMakerHome() {
 
@@ -301,11 +290,6 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.StudioConfiguration#getDemoDir()
-     */
     @Override
     public Resource getDemoDir() {
         if (isCloud()) {
@@ -346,11 +330,6 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
         this.testDemoDir = file;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.StudioConfiguration#getCommonDir()
-     */
     @Override
     public Resource getCommonDir() throws IOException {
         Resource common = getWaveMakerHome().createRelative(COMMON_DIR);
@@ -361,10 +340,10 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
 
         return common;
     }
-    
+
     @Override
-    public Resource createCommonRelative(String relPath) throws IOException{
-    	return this.getCommonDir().createRelative(relPath);
+    public Resource createCommonRelative(String relPath) throws IOException {
+        return this.getCommonDir().createRelative(relPath);
     }
 
     private synchronized void createCommonDir(Resource common) throws IOException {
@@ -431,25 +410,17 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
     }
 
     // other studio information
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.StudioConfiguration#getStudioWebAppRootFile()
-     */
+
     @Override
     public Resource getStudioWebAppRoot() {
         return new ServletContextResource(this.servletContext, "/");
     }
 
     @Override
-    public Resource createStudioWebAppRootReleative(String relativePath) throws IOException{
-    	return this.getStudioWebAppRoot().createRelative(relativePath);
+    public Resource createStudioWebAppRootReleative(String relativePath) throws IOException {
+        return this.getStudioWebAppRoot().createRelative(relativePath);
     }
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.StudioConfiguration#getPreferencesMap()
-     */
+
     @Override
     public Map<String, String> getPreferencesMap() {
 
@@ -537,11 +508,6 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
     // bean properties
     private RuntimeAccess runtimeAccess;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.StudioConfiguration#getRuntimeAccess()
-     */
     @Override
     public RuntimeAccess getRuntimeAccess() {
         return this.runtimeAccess;

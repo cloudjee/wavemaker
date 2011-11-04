@@ -36,9 +36,8 @@ import com.wavemaker.tools.service.definitions.DataObject;
 import com.wavemaker.tools.service.definitions.Service;
 
 /**
- * @author small
+ * @author Matt Small
  * @author Jeremy Grelle
- * 
  */
 @HideFromClient
 public class JavaService {

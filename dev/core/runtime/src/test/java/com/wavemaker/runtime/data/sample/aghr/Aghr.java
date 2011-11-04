@@ -30,7 +30,6 @@ import com.wavemaker.runtime.data.TaskManager;
 
 /**
  * Generated for Service "aghr" on 08/28/2007 16:37:08
- * 
  */
 @SuppressWarnings({ "unchecked" })
 public class Aghr implements DataServiceManagerAccess {

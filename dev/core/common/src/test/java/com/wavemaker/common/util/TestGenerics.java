@@ -27,9 +27,7 @@ import java.util.Map;
 import com.wavemaker.infra.WMTestCase;
 
 /**
- * @author small
- * @version $Rev:22672 $ - $Date:2008-05-30 14:37:26 -0700 (Fri, 30 May 2008) $
- * 
+ * @author Matt Small
  */
 public class TestGenerics extends WMTestCase {
 

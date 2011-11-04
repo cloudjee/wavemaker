@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author mh124079
  */
 public class URIUtilTest extends TestCase {

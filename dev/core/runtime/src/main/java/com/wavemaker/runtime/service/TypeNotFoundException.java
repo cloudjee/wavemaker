@@ -18,9 +18,7 @@ import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMException;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class TypeNotFoundException extends WMException {
 

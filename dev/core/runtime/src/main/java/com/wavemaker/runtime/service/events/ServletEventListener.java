@@ -31,7 +31,6 @@ import com.wavemaker.runtime.service.ServiceWire;
  * they'll be called in is not guaranteed.
  * 
  * @author Matt Small
- * @version $Rev$ - $Date$
  */
 public interface ServletEventListener {
 

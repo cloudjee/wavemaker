@@ -23,7 +23,7 @@ import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.util.SpringUtils;
 
 /**
- * @author slee
+ * @author Seung Lee
  * 
  */
 public class PwsServiceModifierBeanFactory {

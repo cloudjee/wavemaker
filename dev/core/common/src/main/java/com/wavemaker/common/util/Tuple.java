@@ -16,8 +16,6 @@ package com.wavemaker.common.util;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class Tuple {
 

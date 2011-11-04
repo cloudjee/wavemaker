@@ -44,7 +44,6 @@ import com.wavemaker.runtime.service.response.LiveDataServiceResponse;
  * LiveDataService.read implementation using HQL.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
  */
 public class HQLReadTask extends AbstractReadTask implements Task, DefaultRollback {
 

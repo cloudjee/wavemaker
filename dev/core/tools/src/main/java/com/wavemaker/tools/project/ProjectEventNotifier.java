@@ -23,9 +23,7 @@ import com.wavemaker.runtime.service.events.EventNotifier;
 /**
  * EventNotifier for Project events.
  * 
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class ProjectEventNotifier extends EventNotifier {
 

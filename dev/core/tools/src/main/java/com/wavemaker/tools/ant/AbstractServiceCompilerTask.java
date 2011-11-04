@@ -20,9 +20,7 @@ import org.apache.tools.ant.types.resources.Resources;
 /**
  * Adds a dirset and a destination directory.
  * 
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public abstract class AbstractServiceCompilerTask extends CompilerTask {
 

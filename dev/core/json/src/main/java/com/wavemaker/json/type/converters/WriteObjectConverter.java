@@ -23,8 +23,7 @@ import com.wavemaker.json.type.TypeDefinition;
  * Provides an interface for TypeDefinitions wishing to provide type conversions in the writeObject (Java -&gt; JSON
  * String or serialization) direction.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public interface WriteObjectConverter extends TypeDefinition {
 

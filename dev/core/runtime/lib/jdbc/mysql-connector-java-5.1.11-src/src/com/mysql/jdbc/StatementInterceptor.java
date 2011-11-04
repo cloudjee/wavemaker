@@ -35,7 +35,7 @@ import java.util.Properties;
  * on in the chain, from left-to-right order, as specified by the user in the 
  * JDBC configuration property "statementInterceptors".
  * 
- * @version $Id: $
+ * 
  */
 
 public interface StatementInterceptor extends Extension {

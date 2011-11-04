@@ -45,7 +45,6 @@ import com.mysql.jdbc.jdbc2.optional.MysqlXADataSource;
 /**
  * 
  * @author Mark Matthews
- * @version $Id$
  */
 public class DataSourceTest extends BaseTestCase {
 	// ~ Instance fields

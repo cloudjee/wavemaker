@@ -15,10 +15,7 @@
 package com.wavemaker.runtime.data;
 
 /**
- * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public interface DataServiceManagerAccess {
 

@@ -47,8 +47,7 @@ import com.wavemaker.common.util.Tuple;
 /**
  * The ModulesManager. This provides methods to access all known modules.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public class ModuleManager {
 

@@ -21,8 +21,7 @@ package com.wavemaker.json.type;
  * @see com.wavemaker.runtime.service.LiveDataService for more information, and the interface providing the operations
  *      enumerated here.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public enum OperationEnumeration {
 

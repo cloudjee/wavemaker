@@ -20,8 +20,6 @@ import com.wavemaker.common.MessageResource;
  * Thrown if the credentials are invalid.
  * 
  * @author Frankie Fu
- * @version $Rev$ - $Date$
- * 
  */
 public class InvalidCredentialsException extends SecurityException {
 

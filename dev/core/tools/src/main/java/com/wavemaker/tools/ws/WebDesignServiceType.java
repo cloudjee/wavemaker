@@ -17,9 +17,7 @@ package com.wavemaker.tools.ws;
 import com.wavemaker.tools.service.reflect.ReflectDesignServiceType;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class WebDesignServiceType extends ReflectDesignServiceType {
 

@@ -14,7 +14,6 @@
 
 package com.wavemaker.runtime.ws.salesforce;
 
-//import com.sforce.soap.enterprise.salesforceservice.*;
 import com.wavemaker.runtime.ws.BindingProperties;
 import com.wavemaker.runtime.ws.salesforce.gen.Login;
 import com.wavemaker.runtime.ws.salesforce.gen.LoginResponse;

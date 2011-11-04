@@ -57,7 +57,6 @@ import com.wavemaker.tools.spring.beans.Value;
  * 
  * @author Simon Toens
  * @author Jeremy Grelle
- * 
  */
 public class DataServiceSpringConfiguration {
 

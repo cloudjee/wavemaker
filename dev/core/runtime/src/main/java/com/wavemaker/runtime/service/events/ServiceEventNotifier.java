@@ -25,9 +25,7 @@ import com.wavemaker.runtime.service.TypedServiceReturn;
  * The notifier aspect to ServiceEventListener. This will interface with EventManager to get the current
  * ServletEventListeners, and their related objects, and it will invoke the specific events.
  * 
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class ServiceEventNotifier extends EventNotifier {
 

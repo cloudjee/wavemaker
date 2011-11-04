@@ -36,7 +36,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
- * 
  */
 @XmlType(name = "layoutComponentType", namespace = "urn:partner.soap.sforce.com")
 @XmlEnum

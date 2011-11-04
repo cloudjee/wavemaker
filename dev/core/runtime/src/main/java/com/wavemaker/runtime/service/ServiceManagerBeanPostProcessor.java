@@ -22,20 +22,13 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
  * During bean creation, this intercepts the events and adds any ServiceManager- managed beans to the ServiceManager
  * singleton.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public class ServiceManagerBeanPostProcessor implements BeanPostProcessor {
 
     /** Logger for this class and subclasses */
     protected final Logger logger = Logger.getLogger(getClass());
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(java.lang.Object,
-     * java.lang.String)
-     */
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 
@@ -48,12 +41,6 @@ public class ServiceManagerBeanPostProcessor implements BeanPostProcessor {
         return bean;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessBeforeInitialization(java.lang.Object,
-     * java.lang.String)
-     */
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         return bean;

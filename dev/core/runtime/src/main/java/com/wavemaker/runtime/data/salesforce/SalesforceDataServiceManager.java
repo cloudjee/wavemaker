@@ -34,8 +34,7 @@ import com.wavemaker.runtime.data.task.DefaultRollback;
 import com.wavemaker.runtime.ws.salesforce.SalesforceSupport;
 
 /**
- * @author slee
- * 
+ * @author Seung Lee
  */
 public class SalesforceDataServiceManager implements DataServiceManager {
 

@@ -20,9 +20,7 @@ import com.wavemaker.tools.ws.CodeGenUtils;
 import com.wavemaker.tools.ws.wsdl.ServiceInfo;
 
 /**
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class JAXWSServiceInfo {
 

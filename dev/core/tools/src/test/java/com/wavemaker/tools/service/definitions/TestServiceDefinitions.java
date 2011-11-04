@@ -36,9 +36,7 @@ import com.wavemaker.runtime.ws.WebServiceType;
 import com.wavemaker.tools.service.definitions.DataObject.Element;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class TestServiceDefinitions extends WMTestCase {
 

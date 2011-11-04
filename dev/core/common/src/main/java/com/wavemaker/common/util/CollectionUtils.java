@@ -20,9 +20,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class CollectionUtils {
 

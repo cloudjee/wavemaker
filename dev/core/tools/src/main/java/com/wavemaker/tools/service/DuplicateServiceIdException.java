@@ -16,8 +16,6 @@ package com.wavemaker.tools.service;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class DuplicateServiceIdException extends InvalidServiceIdException {
 

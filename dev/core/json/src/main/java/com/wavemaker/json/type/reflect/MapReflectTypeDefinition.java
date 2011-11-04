@@ -24,9 +24,7 @@ import com.wavemaker.json.type.FieldDefinition;
 import com.wavemaker.json.type.MapTypeDefinition;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class MapReflectTypeDefinition extends ReflectTypeDefinition implements MapTypeDefinition {
 
@@ -34,11 +32,6 @@ public class MapReflectTypeDefinition extends ReflectTypeDefinition implements M
 
     private FieldDefinition valueFieldDefinition;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.reflect.ReflectTypeDefinition#newInstance(java.lang.Object[])
-     */
     @Override
     public Object newInstance(Object... args) {
 

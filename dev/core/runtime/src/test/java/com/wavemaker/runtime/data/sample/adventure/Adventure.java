@@ -29,7 +29,6 @@ import com.wavemaker.runtime.data.TaskManager;
 
 /**
  * Generated for Service "adventure" on 08/18/2007 17:20:18
- * 
  */
 @SuppressWarnings("unchecked")
 public class Adventure implements DataServiceManagerAccess {

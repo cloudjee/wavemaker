@@ -31,9 +31,8 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
 /**
  * Handle upgrades related to the Swami's-era refactorings in the client-side code.
  * 
- * @author small
+ * @author Matt Small
  * @author Jeremy Grelle
- * 
  */
 public class ClientSideRefactorUpgrade implements UpgradeTask {
 
@@ -53,12 +52,6 @@ public class ClientSideRefactorUpgrade implements UpgradeTask {
 
     protected final Pattern expressionPattern = Pattern.compile("(expression:\\s*\")(.*?)(\")");
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
-     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 

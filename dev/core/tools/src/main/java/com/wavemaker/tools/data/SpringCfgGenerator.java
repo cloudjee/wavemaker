@@ -21,9 +21,7 @@ import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.data.util.DataServiceUtils;
 
 /**
- * @author stoens
- * @version $Rev$ - $Date$
- * 
+ * @author Simon Toens
  */
 public class SpringCfgGenerator extends BaseDataModelSetup {
 

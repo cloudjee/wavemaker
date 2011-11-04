@@ -31,9 +31,7 @@ import com.wavemaker.json.type.OperationEnumeration;
 import com.wavemaker.json.type.TypeDefinition;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class TestElementType extends WMTestCase {
 

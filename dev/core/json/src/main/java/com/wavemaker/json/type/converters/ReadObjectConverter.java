@@ -21,8 +21,7 @@ import com.wavemaker.json.type.TypeDefinition;
  * Provides an interface for TypeDefinitions wishing to provide type conversions in the readObject (JSON String -&gt;
  * Java or de-serialization) direction.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public interface ReadObjectConverter extends TypeDefinition {
 

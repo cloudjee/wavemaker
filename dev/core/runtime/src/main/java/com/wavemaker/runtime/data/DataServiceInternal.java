@@ -17,9 +17,7 @@ package com.wavemaker.runtime.data;
 import com.wavemaker.runtime.service.ElementType;
 
 /**
- * @author stoens
- * @version $Rev$ - $Date$
- * 
+ * @author Simon Toens
  */
 public interface DataServiceInternal {
 

@@ -19,9 +19,7 @@ import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectEventListener;
 
 /**
- * @author stoens
- * @version $Rev$ - $Date$
- * 
+ * @author Simon Toens
  */
 public class DataServiceProjectEventListener implements ProjectEventListener {
 

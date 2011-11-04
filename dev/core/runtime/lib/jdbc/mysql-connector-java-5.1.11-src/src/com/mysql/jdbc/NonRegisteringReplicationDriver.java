@@ -42,11 +42,7 @@ public class NonRegisteringReplicationDriver extends NonRegisteringDriver {
 		super();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Driver#connect(java.lang.String, java.util.Properties)
-	 */
+	
 	public Connection connect(String url, Properties info) throws SQLException {
 		return connectReplicationConnection(url, info);
 	}

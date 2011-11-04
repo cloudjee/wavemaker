@@ -26,8 +26,6 @@ import com.wavemaker.tools.common.ConfigurationException;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class DeploymentTargetManager {
 

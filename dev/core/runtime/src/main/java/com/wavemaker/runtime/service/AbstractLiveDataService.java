@@ -21,9 +21,7 @@ import com.wavemaker.runtime.service.reflect.ReflectServiceType;
 /**
  * An abstract form of the {@link LiveDataService} interface.
  * 
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public abstract class AbstractLiveDataService implements LiveDataService {
 
@@ -38,7 +36,6 @@ public abstract class AbstractLiveDataService implements LiveDataService {
      * @throws MethodInvokeException If the method is not found or the match isn't strict.
      */
     protected Method findMethod(String methodName, Object[] arguments) {
-
         return ReflectServiceType.findMethod(methodName, this, arguments.length);
     }
 }

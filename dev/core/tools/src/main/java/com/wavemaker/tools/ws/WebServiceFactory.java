@@ -34,9 +34,8 @@ import com.wavemaker.tools.ws.wsdl.WSDLManager;
 
 /**
  * 
- * @author ffu
+ * @author Frankie Fu
  * @author Jeremy Grelle
- * 
  */
 public class WebServiceFactory implements ServiceDefinitionFactory, ServiceGeneratorFactory {
 

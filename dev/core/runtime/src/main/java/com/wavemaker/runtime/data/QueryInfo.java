@@ -15,11 +15,7 @@
 package com.wavemaker.runtime.data;
 
 /**
- * Partially written on a flight to Las Vegas.
- * 
  * @author Simon Toens
- * @version $Rev: 29984 $ - $Date: 2010-09-24 16:15:44 -0700 (Fri, 24 Sep 2010) $
- * 
  */
 public class QueryInfo {
 

@@ -33,7 +33,6 @@ import com.wavemaker.runtime.service.TypedServiceReturn;
 
 /**
  * Generated for Service "sakila2" on 07/07/2007 15:52:39
- * 
  */
 @SuppressWarnings({ "unchecked" })
 public class Sakila implements DataServiceManagerAccess, LiveDataService {

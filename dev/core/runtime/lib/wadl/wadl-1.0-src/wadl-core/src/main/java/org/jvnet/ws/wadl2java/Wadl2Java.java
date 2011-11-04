@@ -14,7 +14,6 @@
  * Wadl2Java.java
  *
  * Created on May 11, 2006, 11:35 AM
- *
  */
 
 package org.jvnet.ws.wadl2java;

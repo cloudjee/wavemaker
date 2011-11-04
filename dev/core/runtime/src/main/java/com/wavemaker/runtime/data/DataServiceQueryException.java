@@ -16,8 +16,6 @@ package com.wavemaker.runtime.data;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 @SuppressWarnings("serial")
 public class DataServiceQueryException extends DataServiceRuntimeException {

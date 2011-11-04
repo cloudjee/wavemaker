@@ -14,7 +14,6 @@
  * PathSegment.java
  *
  * Created on August 7, 2006, 1:24 PM
- *
  */
 
 package org.jvnet.ws.wadl2java.ast;

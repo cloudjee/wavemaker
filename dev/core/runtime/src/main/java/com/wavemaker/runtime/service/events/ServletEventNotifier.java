@@ -26,9 +26,7 @@ import com.wavemaker.runtime.service.ServiceWire;
  * 
  * When an event is triggered, the Notifier should be called.
  * 
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class ServletEventNotifier extends EventNotifier {
 

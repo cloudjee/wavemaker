@@ -28,16 +28,10 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.type.ListTypeDefinition;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public class ListReflectTypeDefinition extends ReflectTypeDefinition implements ListTypeDefinition {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.TypeDefinition#newInstance(java.lang.Object[])
-     */
     @Override
     public Object newInstance(Object... args) {
 
@@ -66,11 +60,6 @@ public class ListReflectTypeDefinition extends ReflectTypeDefinition implements 
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.ListTypeDefinition#set(java.lang.Object, int, java.lang.Object)
-     */
     @Override
     @SuppressWarnings("unchecked")
     public void add(Object list, int index, Object o) {

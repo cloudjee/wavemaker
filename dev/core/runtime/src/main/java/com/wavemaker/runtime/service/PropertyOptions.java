@@ -21,16 +21,18 @@ import java.util.List;
 /**
  * PropertyOptions specifies how to load properties of an object.
  * 
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class PropertyOptions {
 
-    /** The properties to load, in beanutil's format; i.e., foo.bar. */
+    /**
+     * The properties to load, in beanutil's format; i.e., foo.bar.
+     */
     private List<String> properties = new ArrayList<String>();
 
-    /** filters to apply: property path -> expr. */
+    /**
+     * Filters to apply: property path -> expr.
+     */
     private final List<Filter> filters = new ArrayList<Filter>();
 
     private String matchMode = "start";

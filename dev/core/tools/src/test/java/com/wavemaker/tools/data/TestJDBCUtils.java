@@ -23,8 +23,6 @@ import com.wavemaker.runtime.data.util.JDBCUtils;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class TestJDBCUtils extends WMTestCase {
 

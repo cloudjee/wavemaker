@@ -37,7 +37,6 @@ import com.wavemaker.tools.service.FileService;
 /**
  * @author Simon Toens
  * @author Jeremy Grelle
- * 
  */
 public class DataModelDeploymentConfiguration implements ServiceDeployment {
 

@@ -23,8 +23,6 @@ import org.springframework.transaction.TransactionStatus;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class ThreadContext {
 
@@ -47,27 +45,13 @@ public class ThreadContext {
         preProcessorTask.set(null);
     }
 
-    // public static Context getContext() {
-    // return threadLocal.get();
-    // }
-
     public static Context getContext(String dbName) {
-        HashMap contextHash = threadLocal.get();
+        HashMap<String, Context> contextHash = getThreadLocalHash();
         if (contextHash == null || contextHash.size() == 0) {
             return null;
         }
-        return (Context) contextHash.get(dbName);
-
-        // ThreadLocal<Context> tl = contextHash.get(dbName);
-        // if (tl == null)
-        // return null;
-        // else
-        // return tl.get();
+        return contextHash.get(dbName);
     }
-
-    // public static void unsetContext() {
-    // threadLocal.set(null);
-    // }
 
     public static void unsetContext(String dbName) {
         HashMap<String, Context> contextHash = threadLocal.get();
@@ -79,7 +63,6 @@ public class ThreadContext {
         return threadLocal.get();
     }
 
-    // public static class Context {
     public static class Context {
 
         private final PlatformTransactionManager txMgr;

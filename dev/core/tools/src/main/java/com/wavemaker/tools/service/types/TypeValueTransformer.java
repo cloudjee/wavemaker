@@ -26,19 +26,10 @@ import com.wavemaker.json.type.TypeDefinition;
 import com.wavemaker.json.type.TypeState;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class TypeValueTransformer implements ValueTransformer {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.ValueTransformer#transformToJSON(java.lang.Object,
-     * com.wavemaker.json.type.FieldDefinition, int, java.lang.Object, java.lang.String,
-     * com.wavemaker.json.type.TypeState)
-     */
     @Override
     public Three<Object, FieldDefinition, Integer> transformToJSON(Object input, FieldDefinition fieldDefinition, int arrayLevel, Object root,
         String path, TypeState typeState) {
@@ -64,13 +55,6 @@ public class TypeValueTransformer implements ValueTransformer {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.ValueTransformer#transformToJava(java.lang.Object,
-     * com.wavemaker.json.type.FieldDefinition, int, java.lang.Object, java.lang.String,
-     * com.wavemaker.json.type.TypeState)
-     */
     @Override
     public Three<Object, FieldDefinition, Integer> transformToJava(Object input, FieldDefinition fieldDefinition, int arrayLevel, Object root,
         String path, TypeState typeState) {

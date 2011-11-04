@@ -33,9 +33,7 @@ import com.wavemaker.runtime.data.DataServiceRuntimeException;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 
 /**
- * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
  * 
  * @deprecated This is now deprecated; see {@link com.wavemaker.runtime.data.util.DataServiceUtils}. This will be
  *             removed in a future release.

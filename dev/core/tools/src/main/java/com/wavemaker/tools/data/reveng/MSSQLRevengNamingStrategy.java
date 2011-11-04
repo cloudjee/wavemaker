@@ -20,7 +20,7 @@ import org.hibernate.cfg.reveng.ReverseEngineeringStrategy;
 import org.hibernate.cfg.reveng.TableIdentifier;
 
 /**
- * @author slee
+ * @author Seung Lee
  * 
  */
 public class MSSQLRevengNamingStrategy extends DefaultRevengNamingStrategy {

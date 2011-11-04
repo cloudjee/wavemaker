@@ -24,8 +24,6 @@ import com.wavemaker.runtime.service.PagingOptions;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class QueryOptions extends PagingOptions {
 

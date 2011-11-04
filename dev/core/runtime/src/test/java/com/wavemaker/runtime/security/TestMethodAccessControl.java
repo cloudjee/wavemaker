@@ -34,7 +34,6 @@ import com.wavemaker.infra.WMTestCase;
 /**
  * 
  * @author Frankie Fu
- * 
  */
 public class TestMethodAccessControl extends WMTestCase {
 

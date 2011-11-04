@@ -28,12 +28,20 @@ import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.events.ServiceEventNotifier;
 
 /**
- * @author EdC
- * @version $Rev: 21571 $ - $Date: 2008-03-13 13:37:31 -0700 (Thu, 13 Mar 2008) $
- * 
+ * @author Ed Callahan
  */
 @ExposeToClient
 public class WaveMakerService {
+
+    private TypeManager typeManager;
+
+    private ServiceManager serviceManager;
+
+    private ServiceEventNotifier serviceEventNotifier;
+
+    private InternalRuntime internalRuntime;
+
+    private RuntimeAccess runtimeAccess;
 
     public String getLocalHostIP() {
         return SystemUtils.getIP();
@@ -87,17 +95,6 @@ public class WaveMakerService {
 
         return serviceWire;
     }
-
-    // spring-managed bean properties
-    private TypeManager typeManager;
-
-    private ServiceManager serviceManager;
-
-    private ServiceEventNotifier serviceEventNotifier;
-
-    private InternalRuntime internalRuntime;
-
-    private RuntimeAccess runtimeAccess;
 
     public TypeManager getTypeManager() {
         return this.typeManager;

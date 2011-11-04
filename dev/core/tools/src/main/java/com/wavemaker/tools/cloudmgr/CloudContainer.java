@@ -19,7 +19,7 @@ import java.util.Collection;
 /**
  * This class represents a cloud container.
  * 
- * @author slee
+ * @author Seung Lee
  */
 public class CloudContainer {
 

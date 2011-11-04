@@ -25,8 +25,7 @@ import com.wavemaker.runtime.server.json.JSONUtils;
 /**
  * Interface specifying the runtime component for a ServiceType.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public interface ServiceType {
 

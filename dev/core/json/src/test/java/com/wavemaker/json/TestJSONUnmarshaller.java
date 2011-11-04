@@ -25,9 +25,7 @@ import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class TestJSONUnmarshaller extends TestCase {
 

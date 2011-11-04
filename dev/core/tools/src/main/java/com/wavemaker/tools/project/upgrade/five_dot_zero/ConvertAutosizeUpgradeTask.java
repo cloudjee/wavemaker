@@ -20,9 +20,7 @@ import com.wavemaker.json.JSONObject;
 import com.wavemaker.tools.project.upgrade.AbstractWidgetsJSUpgradeTask;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class ConvertAutosizeUpgradeTask extends AbstractWidgetsJSUpgradeTask {
 
@@ -120,11 +118,6 @@ public class ConvertAutosizeUpgradeTask extends AbstractWidgetsJSUpgradeTask {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.AbstractWidgetsJSUpgradeTask#doUpgradeAppJS()
-     */
     @Override
     public boolean doUpgradeAppJS() {
         return false;

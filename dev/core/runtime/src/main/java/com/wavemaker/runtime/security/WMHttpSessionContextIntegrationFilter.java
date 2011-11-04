@@ -26,7 +26,7 @@ import org.acegisecurity.context.HttpSessionContextIntegrationFilter;
 /**
  * Overrides standard Acegi filter's doFilter method, to
  * 
- * @author slee
+ * @author Seung Lee
  * 
  */
 public class WMHttpSessionContextIntegrationFilter extends HttpSessionContextIntegrationFilter {

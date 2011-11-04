@@ -29,8 +29,6 @@ import com.wavemaker.runtime.data.util.DataServiceUtils;
 
 /**
  * @author Simon Toens
- * @version $Rev:22658 $ - $Date:2008-05-30 09:30:24 -0700 (Fri, 30 May 2008) $
- * 
  */
 public abstract class BaseTask implements Task {
 
@@ -42,49 +40,30 @@ public abstract class BaseTask implements Task {
         return this.objectAccess;
     }
 
-    /*
-     * protected static DataServiceMetaData getMetaData() {
-     * 
-     * ThreadContext.Context ctx = ThreadContext.getContext();
-     * 
-     * return ctx.getMetaData(); }
-     */
-
     protected static DataServiceMetaData getMetaData(String dbName) {
-
         ThreadContext.Context ctx = ThreadContext.getContext(dbName);
-
         return ctx.getMetaData();
     }
 
     protected static SessionFactory getSessionFactory(String dbName) {
-
         ThreadContext.Context ctx = ThreadContext.getContext(dbName);
-
         return ctx.getSessionFactory();
     }
 
     protected static Configuration getConfiguration(String dbName) {
-
         ThreadContext.Context ctx = ThreadContext.getContext(dbName);
-
         return ctx.getConfiguration();
     }
 
     protected boolean isRelatedMany(Class<?> c) {
-
         return DataServiceUtils.isRelatedMany(c);
-
     }
 
     protected Object loadById(Object o, Session session, String dbName) {
-
-        // return DataServiceUtils.loadById(o, session, getMetaData(), logger);
         return DataServiceUtils.loadById(o, session, getMetaData(dbName), this.logger);
     }
 
     protected Object loadIntoSession(Object o, Session session, String dbname) {
-
         Object rtn = loadById(o, session, dbname);
 
         if (rtn == null) {
@@ -97,31 +76,21 @@ public abstract class BaseTask implements Task {
     }
 
     protected Object emptyInstanceWithId(Object o, DataServiceMetaData metaData) {
-
-        // String s = getMetaData().getIdPropertyName(o.getClass());
         String s = metaData.getIdPropertyName(o.getClass());
-
         Object id = getObjectAccess().getProperty(o, s);
-
         Object rtn = this.objectAccess.newInstance(getEntityClass(o));
-
         this.objectAccess.setProperty(rtn, s, id);
-
         return rtn;
     }
 
     protected Class<?> getEntityClass(Object entityInstance) {
-
         return DataServiceUtils.getEntityClass(entityInstance.getClass());
-
     }
 
     protected void maybeRefreshEntity(Object o, Session session, String dbName) {
-
         if (getMetaData(dbName).refreshEntity(o.getClass())) {
             session.flush();
             session.refresh(o);
         }
-
     }
 }

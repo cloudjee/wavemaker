@@ -29,8 +29,6 @@ package com.mysql.jdbc.log;
  * properties.
  * 
  * @author Mark Matthews
- * 
- * @version $Id$
  */
 public class NullLogger implements Log {
 

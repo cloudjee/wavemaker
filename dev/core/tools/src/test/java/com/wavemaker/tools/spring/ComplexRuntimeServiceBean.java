@@ -32,9 +32,7 @@ import com.wavemaker.runtime.service.TypedServiceReturn;
 import com.wavemaker.runtime.service.response.LiveDataServiceResponse;
 
 /**
- * @author small
- * @version $Rev:22671 $ - $Date:2008-05-30 14:29:23 -0700 (Fri, 30 May 2008) $
- * 
+ * @author Matt Small
  */
 public class ComplexRuntimeServiceBean extends AbstractLiveDataService {
 
@@ -70,12 +68,6 @@ public class ComplexRuntimeServiceBean extends AbstractLiveDataService {
         this.eventCalled = eventCalled;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.service.LiveDataService#read(com.wavemaker.json.type.TypeDefinition, java.lang.Object,
-     * com.wavemaker.runtime.service.PropertyOptions, com.wavemaker.runtime.service.PagingOptions)
-     */
     @Override
     public TypedServiceReturn read(TypeDefinition type, Object instance, PropertyOptions propertyOptions, PagingOptions pagingOptions) {
         Object ret;
@@ -121,30 +113,15 @@ public class ComplexRuntimeServiceBean extends AbstractLiveDataService {
         return tsr;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.service.LiveDataService#delete(java.lang.Object)
-     */
     @Override
     public void delete(Object objectToDelete) {
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.service.LiveDataService#insert(java.lang.Object)
-     */
     @Override
     public Object insert(Object objectToInsert) {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.service.LiveDataService#update(java.lang.Object)
-     */
     @Override
     public Object update(Object objectToUpdate) {
         return null;

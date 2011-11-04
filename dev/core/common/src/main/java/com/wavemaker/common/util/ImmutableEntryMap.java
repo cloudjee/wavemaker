@@ -21,8 +21,6 @@ import java.util.Map;
  * Attempting to override an existing Entry throws an IllegalStateException.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class ImmutableEntryMap<K, V> extends HashMap<K, V> implements Map<K, V> {
 

@@ -19,8 +19,6 @@ import org.apache.commons.logging.LogFactory;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class DataServiceLoggers {
 

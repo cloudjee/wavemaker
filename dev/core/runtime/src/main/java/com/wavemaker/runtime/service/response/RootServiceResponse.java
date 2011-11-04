@@ -21,9 +21,7 @@ import com.wavemaker.runtime.server.JSONRPCController;
  * service method returns, the result is placed in the ModelMap with a "result" key (on success) or an "error" key on
  * failure. Results that implement this interface avoid that step.
  * 
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public interface RootServiceResponse {
 

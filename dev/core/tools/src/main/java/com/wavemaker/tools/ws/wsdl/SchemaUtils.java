@@ -30,8 +30,7 @@ import com.wavemaker.common.util.CastUtils;
 /**
  * Schema related utility methods.
  * 
- * @author ffu
- * @version $Rev$ - $Date$
+ * @author Frankie Fu
  */
 public class SchemaUtils {
 

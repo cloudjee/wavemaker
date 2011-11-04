@@ -14,7 +14,6 @@
  * UnresolvableReferenceException.java
  *
  * Created on June 1, 2006, 10:05 AM
- *
  */
 
 package org.jvnet.ws.wadl2java;

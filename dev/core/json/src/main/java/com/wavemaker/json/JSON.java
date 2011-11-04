@@ -15,9 +15,7 @@
 package com.wavemaker.json;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public interface JSON {
 

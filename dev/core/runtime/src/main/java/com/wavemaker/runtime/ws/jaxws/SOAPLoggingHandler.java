@@ -29,9 +29,7 @@ import org.apache.commons.logging.LogFactory;
 /**
  * This handler is used to log inbound and outbound SOAP messages.
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class SOAPLoggingHandler implements SOAPHandler<SOAPMessageContext> {
 

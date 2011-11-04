@@ -28,7 +28,7 @@ import com.wavemaker.tools.cloudmgr.CloudFile;
 import com.amazon.s3.*;
 
 /**
- * @author slee
+ * @author Seung Lee
  *
  */
 public class AmazonS3StorageMgr implements CloudStorageMgr {

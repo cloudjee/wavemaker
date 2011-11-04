@@ -48,8 +48,6 @@ import com.wavemaker.runtime.service.reflect.ReflectServiceWire;
  * </pre>
  * 
  * @author Matt Small
- * @version $Rev$ - $Date$
- * 
  */
 public class RuntimeAccess {
 

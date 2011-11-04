@@ -46,7 +46,6 @@ import org.mozilla.javascript.UintMap;
 
 /**
  * @author rbackhouse
- *
  */
 public class Compressor {
     private static final int FUNCTION_END = Token.LAST_TOKEN + 1;

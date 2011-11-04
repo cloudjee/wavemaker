@@ -28,7 +28,6 @@ import java.io.File;
 import java.util.List;
 
 /**
- *
  * @author mh124079
  */
 public class MainTest extends TestCase {

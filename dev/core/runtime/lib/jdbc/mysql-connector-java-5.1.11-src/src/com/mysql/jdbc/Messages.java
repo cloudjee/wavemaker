@@ -33,7 +33,6 @@ import java.util.ResourceBundle;
  * Support for localized messages.
  * 
  * @author Mark Matthews
- * @version $Id$
  */
 public class Messages {
 

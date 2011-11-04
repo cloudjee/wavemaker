@@ -77,7 +77,6 @@ import com.wavemaker.tools.service.definitions.Service;
  * 
  * @author Simon Toens
  * @author Jeremy Grelle
- * 
  */
 public class DataModelConfiguration {
 

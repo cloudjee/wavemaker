@@ -16,7 +16,7 @@ import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
 
 /**
- * @author ecallahan
+ * @author Ed Callahan
  * 
  */
 public class IE_XUATagUpgradeTask implements UpgradeTask {
@@ -28,13 +28,6 @@ public class IE_XUATagUpgradeTask implements UpgradeTask {
     private static String headStr = "<head>";
 
     private static String headReplaceStr = "<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=9\">";
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
-     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
 
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {

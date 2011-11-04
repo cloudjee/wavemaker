@@ -32,9 +32,7 @@ import com.wavemaker.tools.ws.ImportWS;
  * java importws -d C:\ag\output C:\ag\wsdls
  * </pre>
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class importws {
 

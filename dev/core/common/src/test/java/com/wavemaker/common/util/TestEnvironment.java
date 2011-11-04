@@ -23,8 +23,7 @@ import com.wavemaker.infra.WMTestCase;
 /**
  * Used to debug CC failures. Prints out some information about the environment of this test run.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public class TestEnvironment extends WMTestCase {
 

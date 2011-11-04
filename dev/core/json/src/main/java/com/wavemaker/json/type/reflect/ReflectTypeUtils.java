@@ -45,8 +45,7 @@ import com.wavemaker.json.type.TypeState;
 /**
  * Type utility methods. Includes methods for creating types & fields.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public class ReflectTypeUtils {
 

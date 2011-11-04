@@ -20,8 +20,6 @@ import org.hibernate.cfg.Configuration;
  * Wraps a Hibernate Configuration with convenience methods.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  * @deprecated This is now deprecated; see {@link com.wavemaker.runtime.data.DataServiceMetaData}. This will be removed
  *             in a future release.
  */

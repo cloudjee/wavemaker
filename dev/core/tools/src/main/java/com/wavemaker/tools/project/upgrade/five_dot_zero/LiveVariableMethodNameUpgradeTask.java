@@ -20,17 +20,10 @@ import com.wavemaker.json.JSONObject;
 import com.wavemaker.tools.project.upgrade.AbstractWidgetsJSUpgradeTask;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class LiveVariableMethodNameUpgradeTask extends AbstractWidgetsJSUpgradeTask {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.AbstractWidgetsJSUpgradeTask#upgradeWidgetsJS(com.wavemaker.json.JSON)
-     */
     @Override
     public void upgradeWidgetsJS(JSON j) {
         recurseWidgets(j);
@@ -69,11 +62,6 @@ public class LiveVariableMethodNameUpgradeTask extends AbstractWidgetsJSUpgradeT
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.AbstractWidgetsJSUpgradeTask#doUpgradeAppJS()
-     */
     @Override
     public boolean doUpgradeAppJS() {
         return false;

@@ -47,20 +47,12 @@ public class ConnectionFeatureNotAvailableException extends
 		super(conn, lastPacketSentTimeMs, 0, underlyingException);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Throwable#getMessage()
-	 */
+	
 	public String getMessage() {
 		return "Feature not available in this distribution of Connector/J";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.SQLException#getSQLState()
-	 */
+	
 	public String getSQLState() {
 		return SQLError.SQL_STATE_INVALID_CONNECTION_ATTRIBUTE;
 	}

@@ -45,8 +45,6 @@ import com.wavemaker.tools.data.parser.HbmParser;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class ExportDB extends BaseDataModelSetup {
 

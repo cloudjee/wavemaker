@@ -14,7 +14,6 @@
  * URIUtil.java
  *
  * Created on June 1, 2006, 3:12 PM
- *
  */
 
 package org.jvnet.ws.wadl.util;

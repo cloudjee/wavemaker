@@ -42,8 +42,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "DescribeLayoutResult", namespace = "urn:partner.soap.sforce.com", propOrder = { "layouts", "recordTypeMappings",

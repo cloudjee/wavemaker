@@ -34,7 +34,6 @@ import testsuite.BaseTestCase;
  * Tests result set traversal methods.
  * 
  * @author Mark Matthews
- * @version $Id$
  */
 public class TraversalTest extends BaseTestCase {
 

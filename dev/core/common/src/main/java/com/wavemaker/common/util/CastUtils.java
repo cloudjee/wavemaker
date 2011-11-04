@@ -22,9 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 @SuppressWarnings("unchecked")
 public final class CastUtils {

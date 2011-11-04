@@ -43,7 +43,6 @@ import com.mongodb.gridfs.GridFSInputFile;
 
 /**
  * @author Ed Callahan
- * 
  */
 @ContextConfiguration()
 @RunWith(SpringJUnit4ClassRunner.class)

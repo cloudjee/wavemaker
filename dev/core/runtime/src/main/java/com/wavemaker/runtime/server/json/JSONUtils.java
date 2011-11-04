@@ -41,10 +41,8 @@ import com.wavemaker.runtime.service.ParsedServiceArguments;
  * JSON utility methods.
  * 
  * @author Matt Small
- * @version $Rev$ - $Date$
- * 
  */
-public/* static */class JSONUtils {
+public class JSONUtils {
 
     private JSONUtils() {
         throw new UnsupportedOperationException();

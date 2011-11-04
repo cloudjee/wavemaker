@@ -21,9 +21,7 @@ package com.wavemaker.json;
 import com.wavemaker.infra.WMTestCase;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class TestOrder extends WMTestCase {
 

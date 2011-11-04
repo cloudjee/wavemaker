@@ -47,7 +47,7 @@ import com.wavemaker.tools.ws.wsdl.WSDLUtils.SoapHeader;
 /**
  * This class represents a Web Service definition.
  * 
- * @author ffu
+ * @author Frankie Fu
  * @author Jeremy Grelle
  */
 public class WSDL extends AbstractDeprecatedServiceDefinition implements ReflectServiceDefinition {

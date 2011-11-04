@@ -18,9 +18,7 @@ package com.wavemaker.runtime.service.events;
  * Abstract EventNotifier class. This just provides a convenience mechanism for adding the required properties to your
  * EventNotifier.
  * 
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public abstract class EventNotifier {
 

@@ -37,7 +37,7 @@ import com.wavemaker.tools.util.DesignTimeUtils;
  * (using reflection to discover method attributes and other information), and so should only be used on Java services.
  * All other services should be configured through the studio.
  * 
- * @author small
+ * @author Matt Small
  * @author Jeremy Grelle
  */
 public class ServiceDefCompilerTask extends CompilerTask {
@@ -75,11 +75,6 @@ public class ServiceDefCompilerTask extends CompilerTask {
         this.mavenClasspath = mavenClasspath;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.ant.CompilerTask#doExecute()
-     */
     @Override
     protected void doExecute() {
 

@@ -34,9 +34,7 @@ import com.wavemaker.tools.javaservice.JavaServiceDefinition;
 /**
  * Service definition for <code>SyndFeedService</code>.
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class FeedServiceDefinition extends JavaServiceDefinition {
 

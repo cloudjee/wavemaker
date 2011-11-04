@@ -49,7 +49,6 @@ public class NamedQueryTask extends BaseTask implements Task {
     /**
      * First element in input array is the query name
      */
-
     @Override
     public Object run(Session session, String dbName, Object... input) {
 

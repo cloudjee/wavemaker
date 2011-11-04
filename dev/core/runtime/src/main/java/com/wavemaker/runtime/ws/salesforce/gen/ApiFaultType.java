@@ -39,8 +39,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "ApiFault", namespace = "urn:fault.partner.soap.sforce.com", propOrder = { "exceptionCode", "exceptionMessage" })

@@ -25,8 +25,7 @@ import com.wavemaker.runtime.WMAppContext;
 /**
  * Created to set user name table so that getUserName() can return a proper value
  * 
- * @author slee
- * 
+ * @author Seung Lee
  */
 public class EnhancedInMemoryDaoImpl extends InMemoryDaoImpl {
 

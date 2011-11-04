@@ -71,8 +71,6 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "resource-env-refType", propOrder = { "description", "resourceEnvRefName", "resourceEnvRefType" })

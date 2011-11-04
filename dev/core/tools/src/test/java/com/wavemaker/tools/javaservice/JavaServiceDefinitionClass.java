@@ -21,9 +21,7 @@ package com.wavemaker.tools.javaservice;
 import java.util.List;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class JavaServiceDefinitionClass {
 

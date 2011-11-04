@@ -19,27 +19,15 @@ import com.wavemaker.runtime.service.reflect.ReflectServiceWire;
 import com.wavemaker.tools.service.DesignServiceType;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public abstract class ReflectDesignServiceType implements DesignServiceType {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.service.DesignServiceType#getServiceWire()
-     */
     @Override
     public Class<? extends ServiceWire> getServiceWire() {
         return ReflectServiceWire.class;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.service.DesignServiceType#getServiceType()
-     */
     @Override
     public String getServiceType() {
         return this.serviceType;

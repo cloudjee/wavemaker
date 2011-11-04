@@ -18,8 +18,6 @@ import com.wavemaker.common.util.ObjectUtils;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class OrderBy {
 

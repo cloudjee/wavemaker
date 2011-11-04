@@ -27,7 +27,7 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
 /**
  * Changes the package of WMPropertyPlaceholderConfigurer.
  * 
- * @author S Lee
+ * @author Seung Lee
  */
 public class SpringXmlUpgradeTask implements UpgradeTask {
 
@@ -39,12 +39,6 @@ public class SpringXmlUpgradeTask implements UpgradeTask {
 
     private boolean error = false;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
-     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
         String svcPath = project.getProjectRoot() + "/services";

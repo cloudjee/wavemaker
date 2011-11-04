@@ -46,8 +46,6 @@ import com.wavemaker.runtime.ws.jaxb.DateXmlAdapter;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "sObjectType", "startDate", "endDate" })

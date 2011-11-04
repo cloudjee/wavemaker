@@ -15,9 +15,7 @@
 package com.wavemaker.runtime.service.definition;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public interface ReflectServiceDefinition extends ServiceDefinition {
 

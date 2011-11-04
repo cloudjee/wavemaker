@@ -30,18 +30,10 @@ import com.wavemaker.runtime.server.ServerConstants;
  * Provides a suitable view for download servlets. If a DownloadObject is present, it will send the pieces from that; if
  * not, the String representation of the result will be sent.
  * 
- * @author small
- * @version $Rev: 29059 $ - $Date: 2010-04-29 17:19:33 -0700 (Thu, 29 Apr 2010) $
- * 
+ * @author Matt Small
  */
 public class FlashUploadResponseView extends AbstractView implements TypedView {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.web.servlet.view.AbstractView#renderMergedOutputModel(java.util.Map,
-     * javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-     */
     @Override
     protected void renderMergedOutputModel(@SuppressWarnings("unchecked") Map model, HttpServletRequest request, HttpServletResponse response)
         throws Exception {

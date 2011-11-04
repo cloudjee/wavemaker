@@ -255,11 +255,7 @@ public class ReadAheadInputStream extends InputStream {
 		this.log = logTo;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.io.Closeable#close()
-	 */
+	
 	public void close() throws IOException {
 		if (this.underlyingStream != null) {
 			try {
@@ -272,20 +268,12 @@ public class ReadAheadInputStream extends InputStream {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.io.InputStream#markSupported()
-	 */
+	
 	public boolean markSupported() {
 		return false;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.io.InputStream#skip(long)
-	 */
+	
 	public long skip(long n) throws IOException {
 		checkClosed();
 		if (n <= 0) {

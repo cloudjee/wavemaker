@@ -25,9 +25,7 @@ import com.wavemaker.json.type.TypeDefinition;
 import com.wavemaker.json.type.TypeState;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class ReflectTypeState implements TypeState {
 
@@ -35,21 +33,11 @@ public class ReflectTypeState implements TypeState {
 
     private final PropertyUtilsBean propertyUtilsBean = new PropertyUtilsBean();
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.TypeState#addType(com.wavemaker.json.type.TypeDefinition)
-     */
     @Override
     public void addType(TypeDefinition typeDefinition) {
         this.knownTypes.put(typeDefinition.getTypeName(), typeDefinition);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.TypeState#getType(java.lang.String)
-     */
     @Override
     public TypeDefinition getType(String typeName) {
 
@@ -68,11 +56,6 @@ public class ReflectTypeState implements TypeState {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.TypeState#isTypeKnown(java.lang.String)
-     */
     @Override
     public boolean isTypeKnown(String typeName) {
 

@@ -20,8 +20,6 @@ import org.hibernate.tool.ant.JDBCConfigurationTask;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class WMJDBCConfigurationTask extends JDBCConfigurationTask {
 

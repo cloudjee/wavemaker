@@ -20,8 +20,7 @@ import java.util.List;
 /**
  * A generic FieldDefinition implementation. This provides getters & setters access for all required attributes.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public class GenericFieldDefinition implements FieldDefinition {
 
@@ -60,11 +59,6 @@ public class GenericFieldDefinition implements FieldDefinition {
 
     private List<OperationEnumeration> exclude = new ArrayList<OperationEnumeration>();
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.FieldDefinition#getArrayTypes()
-     */
     @Override
     public List<ListTypeDefinition> getArrayTypes() {
         return this.arrayTypes;
@@ -74,11 +68,6 @@ public class GenericFieldDefinition implements FieldDefinition {
         this.arrayTypes = arrayTypes;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.FieldDefinition#getDimensions()
-     */
     @Override
     public int getDimensions() {
         if (null == this.getArrayTypes()) {
@@ -88,11 +77,6 @@ public class GenericFieldDefinition implements FieldDefinition {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.FieldDefinition#getTypeDefinition()
-     */
     @Override
     public TypeDefinition getTypeDefinition() {
         return this.typeDefinition;
@@ -102,11 +86,6 @@ public class GenericFieldDefinition implements FieldDefinition {
         this.typeDefinition = typeDefinition;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.FieldDefinition#isAllowNull()
-     */
     @Override
     public boolean isAllowNull() {
         return this.allowNull;
@@ -116,11 +95,6 @@ public class GenericFieldDefinition implements FieldDefinition {
         this.allowNull = allowNull;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.FieldDefinition#isAllowNull()
-     */
     @Override
     public String getSubType() { // salesforce
         return this.subType;
@@ -130,11 +104,6 @@ public class GenericFieldDefinition implements FieldDefinition {
         this.subType = subType;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.FieldDefinition#getName()
-     */
     @Override
     public String getName() {
         return this.name;
@@ -144,11 +113,6 @@ public class GenericFieldDefinition implements FieldDefinition {
         this.name = name;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.FieldDefinition#getExclude()
-     */
     @Override
     public List<OperationEnumeration> getExclude() {
         return this.exclude;
@@ -158,11 +122,6 @@ public class GenericFieldDefinition implements FieldDefinition {
         this.exclude = exclude;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.FieldDefinition#getNoChange()
-     */
     @Override
     public List<OperationEnumeration> getNoChange() {
         return this.noChange;
@@ -172,11 +131,6 @@ public class GenericFieldDefinition implements FieldDefinition {
         this.noChange = noChange;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.FieldDefinition#getRequire()
-     */
     @Override
     public List<OperationEnumeration> getRequire() {
         return this.require;

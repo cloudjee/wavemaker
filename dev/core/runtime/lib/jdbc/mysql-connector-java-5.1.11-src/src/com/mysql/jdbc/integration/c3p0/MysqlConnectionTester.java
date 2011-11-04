@@ -59,11 +59,7 @@ public final class MysqlConnectionTester implements QueryConnectionTester {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.mchange.v2.c3p0.ConnectionTester#activeCheckConnection(java.sql.Connection)
-	 */
+	
 	public int activeCheckConnection(Connection con) {
 		try {
 			if (pingMethod != null) {
@@ -96,12 +92,7 @@ public final class MysqlConnectionTester implements QueryConnectionTester {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.mchange.v2.c3p0.ConnectionTester#statusOnException(java.sql.Connection,
-	 *      java.lang.Throwable)
-	 */
+	
 	public int statusOnException(Connection arg0, Throwable throwable) {
 		if (throwable instanceof CommunicationsException
 				|| "com.mysql.jdbc.exceptions.jdbc4.CommunicationsException"
@@ -124,12 +115,7 @@ public final class MysqlConnectionTester implements QueryConnectionTester {
 		return CONNECTION_IS_INVALID;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.mchange.v2.c3p0.QueryConnectionTester#activeCheckConnection(java.sql.Connection,
-	 *      java.lang.String)
-	 */
+	
 	public int activeCheckConnection(Connection arg0, String arg1) {
 		return CONNECTION_IS_OKAY;
 	}

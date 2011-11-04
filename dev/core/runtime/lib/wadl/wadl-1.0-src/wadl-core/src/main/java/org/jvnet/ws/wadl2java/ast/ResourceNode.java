@@ -14,7 +14,6 @@
  * ResourceNode.java
  *
  * Created on August 16, 2006, 12:58 PM
- *
  */
 
 package org.jvnet.ws.wadl2java.ast;

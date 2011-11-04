@@ -21,9 +21,7 @@ package com.wavemaker.runtime.server.testspring;
 import java.util.Map;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class UtilMapBeanClass {
 

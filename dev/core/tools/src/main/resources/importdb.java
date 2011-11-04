@@ -18,8 +18,6 @@ import java.util.Arrays;
  * Command line entry point.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
- *
  */
 public class importdb {
 

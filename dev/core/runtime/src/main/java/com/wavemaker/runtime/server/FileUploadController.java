@@ -29,21 +29,13 @@ import com.wavemaker.runtime.service.ServiceWire;
 import com.wavemaker.runtime.service.TypedServiceReturn;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class FileUploadController extends JSONRPCController {
 
     /** Logger for this class and subclasses */
     protected final Logger logger = Logger.getLogger(getClass());
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.server.ControllerBase#executeRequest(javax.servlet.http.HttpServletRequest,
-     * javax.servlet.http.HttpServletResponse)
-     */
     @Override
     protected ModelAndView executeRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, WMException {
 
@@ -68,11 +60,6 @@ public class FileUploadController extends JSONRPCController {
         return getModelAndView(getView(), reflInvokeRef);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.server.ControllerBase#getView()
-     */
     @Override
     protected UploadResponseView getView() {
 

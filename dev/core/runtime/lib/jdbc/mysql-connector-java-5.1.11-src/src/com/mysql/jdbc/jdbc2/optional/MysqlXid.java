@@ -28,7 +28,7 @@ import javax.transaction.xa.Xid;
 /**
  * Implementation of the XID interface for MySQL XA
  * 
- * @version $Id: $
+ * 
  */
 public class MysqlXid implements Xid {
 

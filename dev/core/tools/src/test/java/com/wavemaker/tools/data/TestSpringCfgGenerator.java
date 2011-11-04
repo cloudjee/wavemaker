@@ -30,9 +30,7 @@ import com.wavemaker.tools.spring.SpringConfigSupport;
 import com.wavemaker.tools.spring.beans.Beans;
 
 /**
- * @author stoens
- * @version $Rev$ - $Date$
- * 
+ * @author Simon Toens
  */
 public class TestSpringCfgGenerator extends WMTestCase {
 

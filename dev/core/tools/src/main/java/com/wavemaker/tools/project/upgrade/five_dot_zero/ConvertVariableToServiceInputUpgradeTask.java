@@ -23,16 +23,10 @@ import com.wavemaker.tools.project.upgrade.AbstractWidgetsJSUpgradeTask;
 
 /**
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public class ConvertVariableToServiceInputUpgradeTask extends AbstractWidgetsJSUpgradeTask {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.AbstractWidgetsJSUpgradeTask#upgradeWidgetsJS(com.wavemaker.json.JSON)
-     */
     @Override
     public void upgradeWidgetsJS(JSON j) {
 
@@ -76,11 +70,6 @@ public class ConvertVariableToServiceInputUpgradeTask extends AbstractWidgetsJSU
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.AbstractWidgetsJSUpgradeTask#doUpgradeAppJS()
-     */
     @Override
     public boolean doUpgradeAppJS() {
         return true;

@@ -38,7 +38,7 @@ import java.sql.Timestamp;
  * Interface to allow PreparedStatement implementations to expose
  * their parameter bindings to StatementInterceptors.
  * 
- * @version $Id: $
+ * 
  */
 public interface ParameterBindings {
 

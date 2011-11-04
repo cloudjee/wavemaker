@@ -41,8 +41,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "DescribeSoftphoneLayoutSection", namespace = "urn:partner.soap.sforce.com", propOrder = { "entityApiName", "items" })

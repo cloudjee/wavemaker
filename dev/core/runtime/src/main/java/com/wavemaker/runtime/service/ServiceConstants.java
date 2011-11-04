@@ -16,9 +16,8 @@ package com.wavemaker.runtime.service;
 
 /**
  * @author Matt Small
- * @version $Rev$ - $Date$
  */
-public/* static */class ServiceConstants {
+public class ServiceConstants {
 
     private ServiceConstants() {
     }

@@ -58,7 +58,7 @@ import com.wavemaker.tools.util.AntUtils;
 
 /**
  * @author Simon Toens
- * @version $Rev: 27087 $ - $Date: 2009-07-23 16:27:07 -0700 (Thu, 23 Jul 2009) $
+ * 
  * 
  */
 public class DataModelManager {

@@ -63,7 +63,7 @@ import com.wavemaker.tools.service.definitions.Service;
 /**
  * Helper class for Salesforce.
  * 
- * @author slee
+ * @author Seung Lee
  */
 public class SalesforceHelper {
 

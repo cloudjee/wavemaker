@@ -30,9 +30,7 @@ import com.wavemaker.common.util.IOUtils;
 /**
  * Manages pages.
  * 
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class PagesManager {
 

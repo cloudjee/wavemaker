@@ -24,21 +24,11 @@ public class CompileTypeState implements TypeState {
 
     private final Map<String, TypeDefinition> knownTypes = new HashMap<String, TypeDefinition>();
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.TypeState#addType(com.wavemaker.json.type. TypeDefinition)
-     */
     @Override
     public void addType(TypeDefinition typeDefinition) {
         this.knownTypes.put(typeDefinition.getTypeName(), typeDefinition);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.TypeState#getType(java.lang.String)
-     */
     @Override
     public TypeDefinition getType(String typeName) {
 
@@ -49,11 +39,6 @@ public class CompileTypeState implements TypeState {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.TypeState#isTypeKnown(java.lang.String)
-     */
     @Override
     public boolean isTypeKnown(String typeName) {
 

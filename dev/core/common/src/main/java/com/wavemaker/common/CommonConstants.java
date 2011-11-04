@@ -15,9 +15,7 @@
 package com.wavemaker.common;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class CommonConstants {
 

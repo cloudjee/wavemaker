@@ -28,9 +28,8 @@ import com.wavemaker.tools.cloudmgr.CloudStorageMgrBeans;
 import com.wavemaker.tools.deployment.ServiceDeploymentManager;
 
 /**
- * @author slee
+ * @author Seung Lee
  * @author Jeremy Grelle
- * 
  */
 @ExposeToClient
 public class CloudStorageService {

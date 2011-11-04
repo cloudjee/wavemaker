@@ -52,8 +52,6 @@ import com.wavemaker.tools.cloudmgr.opsource.ProcStatus;
  *   &lt;/complexType>
  * &lt;/element>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = { "operation", "result", "resultDetail", "resultCode" })

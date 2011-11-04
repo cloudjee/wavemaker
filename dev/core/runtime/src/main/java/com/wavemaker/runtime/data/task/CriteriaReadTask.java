@@ -37,8 +37,6 @@ import com.wavemaker.runtime.service.response.LiveDataServiceResponse;
  * This class remains unused.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class CriteriaReadTask extends AbstractReadTask implements Task, DefaultRollback {
 

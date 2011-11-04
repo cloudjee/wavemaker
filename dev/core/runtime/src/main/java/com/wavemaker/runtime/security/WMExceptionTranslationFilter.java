@@ -25,14 +25,10 @@ import javax.servlet.ServletResponse;
 /**
  * Overrides standard Acegi filter's doFilter method, to
  * 
- * @author slee
+ * @author Seung Lee
  * 
  */
 public class WMExceptionTranslationFilter extends JSONExceptionTranslationFilter {
-
-    // public WMExceptionTranslationFilter() throws ServletException {
-    // super();
-    // }
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {

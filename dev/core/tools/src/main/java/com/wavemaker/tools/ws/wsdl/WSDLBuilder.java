@@ -54,9 +54,7 @@ import com.wavemaker.tools.ws.wsdl.WSDLUtils.SoapAddress;
  * This class builds a <code>WSDL</code> object from a WSDL file. The <code>WSDL</code> object represents the Web
  * Service definition that the framework could process.
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class WSDLBuilder {
 

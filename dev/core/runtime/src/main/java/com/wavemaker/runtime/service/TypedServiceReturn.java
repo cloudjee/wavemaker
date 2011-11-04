@@ -20,9 +20,7 @@ import com.wavemaker.json.type.FieldDefinition;
  * This is an optional return type for services which would like to indicate their return type (instead of using
  * ServiceType-specific methods to discover it). This is
  * 
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class TypedServiceReturn {
 

@@ -32,11 +32,8 @@ import com.wavemaker.runtime.server.view.TypedView;
 /**
  * A View that renders its model as a JSON object.
  * 
- * @author Andres Almiray <aalmiray@users.sourceforge.net>
- * 
- *         Modified by ActiveGrid.
- * @author small
- * @version $Rev$ - $Date$
+ * @author Andres Almiray
+ * @author Matt Small
  */
 public class JsonView extends AbstractView implements TypedView {
 
@@ -73,11 +70,8 @@ public class JsonView extends AbstractView implements TypedView {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     protected void renderMergedOutputModel(Map model, HttpServletRequest request, HttpServletResponse response) throws Exception {
-
         response.setContentType(getContentType());
-
         Writer w = response.getWriter();
         createJSON(model, w);
         w.close();
@@ -91,21 +85,11 @@ public class JsonView extends AbstractView implements TypedView {
         this.jsonConfig = jsonConfig;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.server.view.TypedView#getRootType()
-     */
     @Override
     public FieldDefinition getRootType() {
         return this.rootType;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.server.view.TypedView#setRootType(com.wavemaker.json.type.FieldDefinition)
-     */
     @Override
     public void setRootType(FieldDefinition type) {
         this.rootType = type;

@@ -41,9 +41,7 @@ import com.wavemaker.tools.ws.wsdl.WSDLException;
 /**
  * Service to provide interfaces to do Web Service toolings.
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 @ExposeToClient
 public class WebService {

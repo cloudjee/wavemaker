@@ -63,8 +63,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "propertyType", propOrder = { "description", "any", "props", "map", "set", "list", "_null", "valueElement", "idref", "refElement",

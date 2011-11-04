@@ -34,17 +34,10 @@ import com.sun.tools.xjc.outline.Outline;
  * <code>java.lange.Boolean</code> should be named getXXX. This plugin is handy if you want to use your XJC generated
  * classes in frameworks that need to deal with JavaBeans.
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class PluginImpl extends Plugin {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.sun.tools.xjc.Plugin#getOptionName()
-     */
     @Override
     public String getOptionName() {
         return "Xboolean-getter";
@@ -60,22 +53,11 @@ public class PluginImpl extends Plugin {
         return nsUri.equals(Const.NS) && localName.equals("boolean");
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.sun.tools.xjc.Plugin#getUsage()
-     */
     @Override
     public String getUsage() {
         return "  -Xboolean-getter\t:  replace isXXX method to getXXX method for Boolean type properties";
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.sun.tools.xjc.Plugin#run(com.sun.tools.xjc.outline.Outline, com.sun.tools.xjc.Options,
-     * org.xml.sax.ErrorHandler)
-     */
     @Override
     public boolean run(Outline model, Options opt, ErrorHandler errorHandler) throws SAXException {
         for (ClassOutline co : model.getClasses()) {

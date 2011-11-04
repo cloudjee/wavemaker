@@ -58,10 +58,8 @@ import com.wavemaker.runtime.service.events.ServiceEventNotifier;
  * Utility methods for the server components.
  * 
  * @author Matt Small
- * @version $Rev$ - $Date$
- * 
  */
-public/* static */class ServerUtils {
+public class ServerUtils {
 
     /** Logger for this class and subclasses */
     protected final static Logger logger = Logger.getLogger(ServerUtils.class);

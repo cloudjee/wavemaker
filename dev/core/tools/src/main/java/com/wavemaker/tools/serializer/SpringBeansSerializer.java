@@ -27,18 +27,11 @@ import com.wavemaker.tools.spring.beans.Beans;
 /**
  * File serializer for Spring config file.
  * 
- * @author ffu
+ * @author Frankie Fu
  * @author Jeremy Grelle
- * 
  */
 public class SpringBeansSerializer implements FileSerializer {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.serializer.FileSerializer#readObject(com.wavemaker.runtime.service.FileService,
-     * java.io.File)
-     */
     @Override
     public Object readObject(FileService fileService, Resource file) throws FileSerializerException {
         try {
@@ -50,12 +43,6 @@ public class SpringBeansSerializer implements FileSerializer {
         }
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.serializer.FileSerializer#writeObject(com.wavemaker.runtime.service.FileService,
-     * java.lang.Object, java.io.File)
-     */
     @Override
     public void writeObject(FileService fileService, Object object, Resource file) throws FileSerializerException {
         try {

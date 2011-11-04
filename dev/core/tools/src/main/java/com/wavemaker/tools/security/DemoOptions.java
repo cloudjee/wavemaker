@@ -18,9 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class DemoOptions {
 

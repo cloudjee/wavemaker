@@ -19,8 +19,6 @@ package com.wavemaker.runtime.security;
  * example a resource could be a url, an identifier, or a pojo.
  * 
  * @author Frankie Fu
- * @version $Rev$ - $Date$
- * 
  */
 public interface Resource {
 

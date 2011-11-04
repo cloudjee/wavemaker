@@ -22,8 +22,6 @@ package com.wavemaker.runtime.data.task;
  * the rollback will not happen.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public interface DefaultRollback {
 }

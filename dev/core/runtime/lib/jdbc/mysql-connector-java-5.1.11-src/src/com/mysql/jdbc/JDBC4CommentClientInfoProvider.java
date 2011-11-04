@@ -40,7 +40,7 @@ import java.util.Properties;
  * Client information is <i>never</i> read from the server with this
  * implementation, it is always cached locally.
  * 
- * @version $Id: $
+ * 
  */
 
 public class JDBC4CommentClientInfoProvider implements JDBC4ClientInfoProvider {

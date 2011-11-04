@@ -23,8 +23,7 @@ import com.wavemaker.json.JSONObject;
 /**
  * JSON grammar. Language spec from <http://www.ietf.org/rfc/rfc4627.txt>.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public class jsonParser extends Parser {
 

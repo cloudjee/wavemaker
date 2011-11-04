@@ -36,8 +36,6 @@ import com.wavemaker.common.util.ClassLoaderUtils;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public abstract class BaseHbmParser {
 

@@ -20,8 +20,6 @@ import org.hibernate.Session;
  * Command Object.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  * @deprecated This is now deprecated; see {@link com.wavemaker.runtime.data.Task}. This will be removed in a future
  *             release.
  */

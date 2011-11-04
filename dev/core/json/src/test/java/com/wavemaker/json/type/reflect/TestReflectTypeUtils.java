@@ -43,9 +43,7 @@ import com.wavemaker.json.type.TypeDefinition;
 import com.wavemaker.json.type.TypeState;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class TestReflectTypeUtils extends WMTestCase {
 

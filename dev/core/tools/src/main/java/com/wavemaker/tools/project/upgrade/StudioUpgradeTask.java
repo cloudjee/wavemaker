@@ -17,9 +17,7 @@ package com.wavemaker.tools.project.upgrade;
 /**
  * An individual studio upgrade task.
  * 
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public interface StudioUpgradeTask {
 

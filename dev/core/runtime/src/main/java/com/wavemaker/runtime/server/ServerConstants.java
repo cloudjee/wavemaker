@@ -18,9 +18,8 @@ package com.wavemaker.runtime.server;
  * Constants in the server package.
  * 
  * @author Matt Small
- * @version $Rev$ - $Date$
  */
-public/* static */class ServerConstants {
+public class ServerConstants {
 
     public static final String SERVICE_JSON_RPC = "JSON-RPC";
 

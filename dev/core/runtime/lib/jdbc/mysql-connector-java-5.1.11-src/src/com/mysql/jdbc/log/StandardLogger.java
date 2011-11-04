@@ -34,8 +34,6 @@ import com.mysql.jdbc.profiler.ProfilerEvent;
  * facilities. Simply logs messages to STDERR.
  * 
  * @author Mark Matthews
- * 
- * @version $Id$
  */
 public class StandardLogger implements Log {
 	private static final int FATAL = 0;

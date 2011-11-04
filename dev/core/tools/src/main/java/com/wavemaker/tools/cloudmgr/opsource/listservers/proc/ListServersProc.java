@@ -37,7 +37,7 @@ import com.wavemaker.tools.cloudmgr.opsource.listservers.response.Servers;
 /**
  * This class is to manage opSource cloud server instances.
  * 
- * @author slee
+ * @author Seung Lee
  */
 public class ListServersProc {
 

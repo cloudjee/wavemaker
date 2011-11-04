@@ -33,9 +33,8 @@ import com.wavemaker.tools.spring.beans.Property;
 /**
  * Utility methods for managing web service spring file.
  * 
- * @author ffu
+ * @author Frankie Fu
  * @author Jeremy Grelle
- * 
  */
 public class WebServiceSpringSupport {
 

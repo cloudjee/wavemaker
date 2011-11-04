@@ -29,9 +29,7 @@ import com.wavemaker.runtime.ws.util.Constants;
  * REST service caller. This class provides interface to call a REST style Web service. This class can be extended and
  * customized to support patrner specific web service requirements.
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class RESTService {
 

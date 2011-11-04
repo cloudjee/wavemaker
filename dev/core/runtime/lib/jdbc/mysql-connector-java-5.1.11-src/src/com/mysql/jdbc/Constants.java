@@ -28,8 +28,6 @@ package com.mysql.jdbc;
  * Represents various constants used in the driver.
  * 
  * @author Mark Matthews
- * 
- * @version $Id$
  */
 public class Constants {
 	/**

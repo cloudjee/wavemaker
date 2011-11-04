@@ -25,9 +25,7 @@ import com.wavemaker.infra.WMTestCase;
 import com.wavemaker.json.JSONMarshaller_Objects.ClassWithEnum;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class TestJSONUtils extends WMTestCase {
 

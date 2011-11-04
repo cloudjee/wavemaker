@@ -27,8 +27,6 @@ import com.wavemaker.common.util.StringUtils;
  * Dumb task that parses a jdbc url. Only parses out the host at this point, since that's what I need.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class JDBCUrlParser extends Task {
 

@@ -22,9 +22,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
 /**
  * Response wrappter which overrides and captures the redirect requests. This class is used by AcegiAjaxFilter.
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class RedirectResponseWrapper extends HttpServletResponseWrapper {
 

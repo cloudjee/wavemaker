@@ -33,8 +33,6 @@ import com.wavemaker.runtime.server.testspring.UtilMapBeanClass;
 
 /**
  * @author Matt Small
- * @version $Rev$ - $Date$
- * 
  */
 public class TestSpring extends WMTestCase {
 

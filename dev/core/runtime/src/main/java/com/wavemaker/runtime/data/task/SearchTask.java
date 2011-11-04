@@ -39,8 +39,6 @@ import com.wavemaker.runtime.service.ServiceConstants;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class SearchTask extends AbstractReadTask implements Task, DefaultRollback {
 

@@ -31,7 +31,6 @@ import testsuite.BaseTestCase;
 /**
  * 
  * @author Mark Matthews
- * @version $Id$
  */
 public class NumbersTest extends BaseTestCase {
 	// ~ Static fields/initializers

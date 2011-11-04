@@ -32,37 +32,19 @@ import com.wavemaker.runtime.service.TypedServiceReturn;
 import com.wavemaker.runtime.service.response.LiveDataServiceResponse;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class MultipleReturnsRuntimeServiceBean extends AbstractLiveDataService {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.service.LiveDataService#delete(java.lang.Object)
-     */
     @Override
     public void delete(Object o) throws Exception {
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.service.LiveDataService#insert(java.lang.Object)
-     */
     @Override
     public Object insert(Object o) throws Exception {
         return null;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.service.LiveDataService#read(com.wavemaker.json.type.TypeDefinition, java.lang.Object,
-     * com.wavemaker.runtime.service.PropertyOptions, com.wavemaker.runtime.service.PagingOptions)
-     */
     @Override
     public TypedServiceReturn read(TypeDefinition type, Object o, PropertyOptions propertyOptions, PagingOptions pagingOptions) throws Exception {
 
@@ -108,11 +90,6 @@ public class MultipleReturnsRuntimeServiceBean extends AbstractLiveDataService {
         return tsr;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.service.LiveDataService#update(java.lang.Object)
-     */
     @Override
     public Object update(Object o) throws Exception {
         return null;

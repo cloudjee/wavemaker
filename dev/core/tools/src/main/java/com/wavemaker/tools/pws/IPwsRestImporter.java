@@ -25,7 +25,7 @@ import com.wavemaker.runtime.pws.PwsLoginInfo;
  * In case of REST style web service, XSD or WADL must be provided. In case of SOAP style web service, WSDL must be
  * provided.
  * 
- * @author slee
+ * @author Seung Lee
  * 
  */
 public interface IPwsRestImporter {

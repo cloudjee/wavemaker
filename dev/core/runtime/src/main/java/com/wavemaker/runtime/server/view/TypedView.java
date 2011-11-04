@@ -19,9 +19,7 @@ import org.springframework.web.servlet.View;
 import com.wavemaker.json.type.FieldDefinition;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public interface TypedView extends View {
 

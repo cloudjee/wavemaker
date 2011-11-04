@@ -23,8 +23,6 @@ import com.wavemaker.runtime.data.Task;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class CountTask extends SearchTask implements Task, DefaultRollback {
 

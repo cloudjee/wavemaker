@@ -37,7 +37,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
- * 
  */
 @XmlType(name = "EmailPriority", namespace = "urn:partner.soap.sforce.com")
 @XmlEnum

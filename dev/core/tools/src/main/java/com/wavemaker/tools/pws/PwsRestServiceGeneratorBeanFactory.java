@@ -24,7 +24,7 @@ import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
 
 /**
- * @author slee
+ * @author Seung Lee
  * 
  */
 public class PwsRestServiceGeneratorBeanFactory {

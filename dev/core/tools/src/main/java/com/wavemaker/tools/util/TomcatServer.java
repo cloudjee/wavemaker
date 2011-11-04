@@ -41,7 +41,6 @@ import com.wavemaker.tools.common.ConfigurationException;
  * It uses the manager webapp to deploy,undeploy and list deployed apps.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
  */
 public class TomcatServer extends Server {
 

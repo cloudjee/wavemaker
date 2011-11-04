@@ -23,8 +23,6 @@ import com.wavemaker.runtime.data.DataPropertyFilter;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class DesignDataPropertyFilter extends DataPropertyFilter implements PropertyFilter {
 

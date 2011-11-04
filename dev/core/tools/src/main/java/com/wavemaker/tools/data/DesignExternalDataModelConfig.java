@@ -21,9 +21,7 @@ import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Operation;
 
 /**
- * @author stoens
- * @version $Rev$ - $Date$
- * 
+ * @author Simon Toens
  */
 public class DesignExternalDataModelConfig implements ExternalDataModelConfig {
 

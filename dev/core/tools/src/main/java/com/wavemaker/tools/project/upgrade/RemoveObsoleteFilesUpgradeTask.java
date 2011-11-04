@@ -26,17 +26,11 @@ import com.wavemaker.tools.project.Project;
  * This task removes old & obsolete files (according to a list set via spring). All files to remove are relative to the
  * project root.
  * 
- * @author small
+ * @author Matt Small
  * @author Jeremy Grelle
  */
 public class RemoveObsoleteFilesUpgradeTask implements UpgradeTask {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
-     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 

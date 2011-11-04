@@ -30,9 +30,8 @@ import com.wavemaker.tools.service.FileService;
 import com.wavemaker.tools.spring.beans.Beans;
 
 /**
- * @author ffu
+ * @author Frankie Fu
  * @author Jeremy Grelle
- * 
  */
 public class SpringConfigSupport {
 

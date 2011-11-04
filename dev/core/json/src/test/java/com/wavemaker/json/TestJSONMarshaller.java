@@ -62,9 +62,7 @@ import com.wavemaker.json.type.reflect.ReflectTypeUtils;
 import com.wavemaker.json.type.reflect.converters.DateTypeDefinition;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class TestJSONMarshaller extends WMTestCase {
 

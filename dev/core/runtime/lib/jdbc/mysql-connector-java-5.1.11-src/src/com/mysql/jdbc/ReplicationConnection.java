@@ -109,39 +109,23 @@ public class ReplicationConnection implements Connection, PingTarget {
 		this.currentConnection = this.masterConnection;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#clearWarnings()
-	 */
+	
 	public synchronized void clearWarnings() throws SQLException {
 		this.currentConnection.clearWarnings();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#close()
-	 */
+	
 	public synchronized void close() throws SQLException {
 		this.masterConnection.close();
 		this.slavesConnection.close();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#commit()
-	 */
+	
 	public synchronized void commit() throws SQLException {
 		this.currentConnection.commit();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#createStatement()
-	 */
+	
 	public Statement createStatement() throws SQLException {
 		Statement stmt = this.currentConnection.createStatement();
 		((com.mysql.jdbc.Statement) stmt).setPingTarget(this);
@@ -149,11 +133,7 @@ public class ReplicationConnection implements Connection, PingTarget {
 		return stmt;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#createStatement(int, int)
-	 */
+	
 	public synchronized Statement createStatement(int resultSetType,
 			int resultSetConcurrency) throws SQLException {
 		Statement stmt = this.currentConnection.createStatement(resultSetType,
@@ -164,11 +144,7 @@ public class ReplicationConnection implements Connection, PingTarget {
 		return stmt;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#createStatement(int, int, int)
-	 */
+	
 	public synchronized Statement createStatement(int resultSetType,
 			int resultSetConcurrency, int resultSetHoldability)
 			throws SQLException {
@@ -180,20 +156,12 @@ public class ReplicationConnection implements Connection, PingTarget {
 		return stmt;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#getAutoCommit()
-	 */
+	
 	public synchronized boolean getAutoCommit() throws SQLException {
 		return this.currentConnection.getAutoCommit();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#getCatalog()
-	 */
+	
 	public synchronized String getCatalog() throws SQLException {
 		return this.currentConnection.getCatalog();
 	}
@@ -202,11 +170,7 @@ public class ReplicationConnection implements Connection, PingTarget {
 		return this.currentConnection;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#getHoldability()
-	 */
+	
 	public synchronized int getHoldability() throws SQLException {
 		return this.currentConnection.getHoldability();
 	}
@@ -215,11 +179,7 @@ public class ReplicationConnection implements Connection, PingTarget {
 		return this.masterConnection;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#getMetaData()
-	 */
+	
 	public synchronized DatabaseMetaData getMetaData() throws SQLException {
 		return this.currentConnection.getMetaData();
 	}
@@ -228,85 +188,49 @@ public class ReplicationConnection implements Connection, PingTarget {
 		return this.slavesConnection;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#getTransactionIsolation()
-	 */
+	
 	public synchronized int getTransactionIsolation() throws SQLException {
 		return this.currentConnection.getTransactionIsolation();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#getTypeMap()
-	 */
+	
 	public synchronized Map getTypeMap() throws SQLException {
 		return this.currentConnection.getTypeMap();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#getWarnings()
-	 */
+	
 	public synchronized SQLWarning getWarnings() throws SQLException {
 		return this.currentConnection.getWarnings();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#isClosed()
-	 */
+	
 	public synchronized boolean isClosed() throws SQLException {
 		return this.currentConnection.isClosed();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#isReadOnly()
-	 */
+	
 	public synchronized boolean isReadOnly() throws SQLException {
 		return this.currentConnection == this.slavesConnection;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#nativeSQL(java.lang.String)
-	 */
+	
 	public synchronized String nativeSQL(String sql) throws SQLException {
 		return this.currentConnection.nativeSQL(sql);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#prepareCall(java.lang.String)
-	 */
+	
 	public CallableStatement prepareCall(String sql) throws SQLException {
 		return this.currentConnection.prepareCall(sql);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#prepareCall(java.lang.String, int, int)
-	 */
+	
 	public synchronized CallableStatement prepareCall(String sql,
 			int resultSetType, int resultSetConcurrency) throws SQLException {
 		return this.currentConnection.prepareCall(sql, resultSetType,
 				resultSetConcurrency);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#prepareCall(java.lang.String, int, int, int)
-	 */
+	
 	public synchronized CallableStatement prepareCall(String sql,
 			int resultSetType, int resultSetConcurrency,
 			int resultSetHoldability) throws SQLException {
@@ -314,11 +238,7 @@ public class ReplicationConnection implements Connection, PingTarget {
 				resultSetConcurrency, resultSetHoldability);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#prepareStatement(java.lang.String)
-	 */
+	
 	public PreparedStatement prepareStatement(String sql) throws SQLException {
 		PreparedStatement pstmt = this.currentConnection.prepareStatement(sql);
 
@@ -327,11 +247,7 @@ public class ReplicationConnection implements Connection, PingTarget {
 		return pstmt;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#prepareStatement(java.lang.String, int)
-	 */
+	
 	public synchronized PreparedStatement prepareStatement(String sql,
 			int autoGeneratedKeys) throws SQLException {
 		PreparedStatement pstmt = this.currentConnection.prepareStatement(sql, autoGeneratedKeys);
@@ -341,11 +257,7 @@ public class ReplicationConnection implements Connection, PingTarget {
 		return pstmt;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#prepareStatement(java.lang.String, int, int)
-	 */
+	
 	public synchronized PreparedStatement prepareStatement(String sql,
 			int resultSetType, int resultSetConcurrency) throws SQLException {
 		PreparedStatement pstmt = this.currentConnection.prepareStatement(sql, resultSetType,
@@ -356,12 +268,7 @@ public class ReplicationConnection implements Connection, PingTarget {
 		return pstmt;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#prepareStatement(java.lang.String, int, int,
-	 *      int)
-	 */
+	
 	public synchronized PreparedStatement prepareStatement(String sql,
 			int resultSetType, int resultSetConcurrency,
 			int resultSetHoldability) throws SQLException {
@@ -373,11 +280,7 @@ public class ReplicationConnection implements Connection, PingTarget {
 		return pstmt;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#prepareStatement(java.lang.String, int[])
-	 */
+	
 	public synchronized PreparedStatement prepareStatement(String sql,
 			int[] columnIndexes) throws SQLException {
 		PreparedStatement pstmt = this.currentConnection.prepareStatement(sql, columnIndexes);
@@ -387,12 +290,7 @@ public class ReplicationConnection implements Connection, PingTarget {
 		return pstmt;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#prepareStatement(java.lang.String,
-	 *      java.lang.String[])
-	 */
+	
 	public synchronized PreparedStatement prepareStatement(String sql,
 			String[] columnNames) throws SQLException {
 		PreparedStatement pstmt = this.currentConnection.prepareStatement(sql, columnNames);
@@ -402,68 +300,40 @@ public class ReplicationConnection implements Connection, PingTarget {
 		return pstmt;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#releaseSavepoint(java.sql.Savepoint)
-	 */
+	
 	public synchronized void releaseSavepoint(Savepoint savepoint)
 			throws SQLException {
 		this.currentConnection.releaseSavepoint(savepoint);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#rollback()
-	 */
+	
 	public synchronized void rollback() throws SQLException {
 		this.currentConnection.rollback();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#rollback(java.sql.Savepoint)
-	 */
+	
 	public synchronized void rollback(Savepoint savepoint) throws SQLException {
 		this.currentConnection.rollback(savepoint);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#setAutoCommit(boolean)
-	 */
+	
 	public synchronized void setAutoCommit(boolean autoCommit)
 			throws SQLException {
 		this.currentConnection.setAutoCommit(autoCommit);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#setCatalog(java.lang.String)
-	 */
+	
 	public synchronized void setCatalog(String catalog) throws SQLException {
 		this.currentConnection.setCatalog(catalog);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#setHoldability(int)
-	 */
+	
 	public synchronized void setHoldability(int holdability)
 			throws SQLException {
 		this.currentConnection.setHoldability(holdability);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#setReadOnly(boolean)
-	 */
+	
 	public synchronized void setReadOnly(boolean readOnly) throws SQLException {
 		if (readOnly) {
 			if (currentConnection != slavesConnection) {
@@ -476,29 +346,17 @@ public class ReplicationConnection implements Connection, PingTarget {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#setSavepoint()
-	 */
+	
 	public synchronized Savepoint setSavepoint() throws SQLException {
 		return this.currentConnection.setSavepoint();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#setSavepoint(java.lang.String)
-	 */
+	
 	public synchronized Savepoint setSavepoint(String name) throws SQLException {
 		return this.currentConnection.setSavepoint(name);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#setTransactionIsolation(int)
-	 */
+	
 	public synchronized void setTransactionIsolation(int level)
 			throws SQLException {
 		this.currentConnection.setTransactionIsolation(level);
@@ -506,11 +364,7 @@ public class ReplicationConnection implements Connection, PingTarget {
 
 	// For testing
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.Connection#setTypeMap(java.util.Map)
-	 */
+	
 	public synchronized void setTypeMap(Map arg0) throws SQLException {
 		this.currentConnection.setTypeMap(arg0);
 	}

@@ -15,9 +15,7 @@
 package com.wavemaker.tools.service.smd;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class Param {
 

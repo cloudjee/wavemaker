@@ -44,8 +44,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "DescribeDataCategoryGroupStructureResult", namespace = "urn:partner.soap.sforce.com", propOrder = { "description", "label", "name",

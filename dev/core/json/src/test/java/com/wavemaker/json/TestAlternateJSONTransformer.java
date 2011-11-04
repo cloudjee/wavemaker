@@ -47,9 +47,7 @@ import com.wavemaker.json.type.reflect.converters.DateTypeDefinition;
 import com.wavemaker.json.type.reflect.converters.FileTypeDefinition;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class TestAlternateJSONTransformer extends WMTestCase {
 
@@ -377,7 +375,6 @@ public class TestAlternateJSONTransformer extends WMTestCase {
 
     public static class HasNoGenericsList {
 
-        @SuppressWarnings("unchecked")
         private List strings;
 
         @SuppressWarnings("unchecked")
@@ -385,7 +382,6 @@ public class TestAlternateJSONTransformer extends WMTestCase {
             return this.strings;
         }
 
-        @SuppressWarnings("unchecked")
         public void setStrings(List strings) {
             this.strings = strings;
         }

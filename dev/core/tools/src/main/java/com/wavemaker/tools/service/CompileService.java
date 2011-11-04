@@ -18,8 +18,6 @@ package com.wavemaker.tools.service;
  * Abstraction for compiling.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public interface CompileService {
 

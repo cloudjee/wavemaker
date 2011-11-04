@@ -18,7 +18,7 @@ package com.wavemaker.tools.cloudmgr;
  * This class contains credentials for cloud server & storage management, such as access key id, secret access key, user
  * id and password.
  * 
- * @author slee
+ * @author Seung Lee
  */
 public class CloudAuth {
 

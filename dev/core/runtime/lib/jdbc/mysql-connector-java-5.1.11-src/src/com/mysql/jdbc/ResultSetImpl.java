@@ -108,7 +108,7 @@ import com.mysql.jdbc.profiler.ProfilerEventHandlerFactory;
  * </p>
  * 
  * @author Mark Matthews
- * @version $Id$
+ * 
  * 
  * @see ResultSetMetaData
  * @see java.sql.ResultSet

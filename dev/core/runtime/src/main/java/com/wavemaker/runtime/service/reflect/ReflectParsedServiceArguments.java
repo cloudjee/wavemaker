@@ -19,9 +19,7 @@ import java.lang.reflect.Method;
 import com.wavemaker.runtime.service.ParsedServiceArguments;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class ReflectParsedServiceArguments extends ParsedServiceArguments {
 

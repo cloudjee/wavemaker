@@ -45,9 +45,8 @@ import com.wavemaker.tools.util.DesignTimeUtils;
  * DesignServiceManager.generateRuntimeConfiguration()). The destWebAppRoot takes precedence over project, but project
  * should still be set to read project-specific configuration.
  * 
- * @author small
+ * @author Matt Small
  * @author Jeremy Grelle
- * 
  */
 public class ConfigurationCompilerTask extends AbstractServiceCompilerTask {
 

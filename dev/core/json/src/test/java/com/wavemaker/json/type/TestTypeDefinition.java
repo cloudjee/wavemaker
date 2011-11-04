@@ -29,9 +29,7 @@ import com.wavemaker.json.type.reflect.TestReflectTypeUtils.BasicMapTypes;
 import com.wavemaker.json.type.reflect.TestReflectTypeUtils.MapListType;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class TestTypeDefinition extends WMTestCase {
 

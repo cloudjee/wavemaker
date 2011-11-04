@@ -18,7 +18,6 @@ import org.jvnet.ws.wadl.maven.Wadl2JavaMojo;
  * A bunch of tests for the {@link Wadl2JavaMojo}.
  * 
  * @author Wilfred Springer
- * 
  */
 public class Wadl2JavaMojoTest extends AbstractMojoTestCase {
 

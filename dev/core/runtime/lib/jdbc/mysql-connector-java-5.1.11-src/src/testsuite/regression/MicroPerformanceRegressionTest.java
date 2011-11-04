@@ -373,11 +373,7 @@ public class MicroPerformanceRegressionTest extends BaseTestCase {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see junit.framework.TestCase#setUp()
-	 */
+	
 	public void setUp() throws Exception {
 		super.setUp();
 

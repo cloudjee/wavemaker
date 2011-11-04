@@ -36,9 +36,7 @@ import com.wavemaker.runtime.WMAppContext;
  * the parameter is something else like <code>Types.INTEGER</code>. This seems to be a problem only in PostgreSQL, other
  * databases like MySQL seems to will just covert the parameter value to the right type.
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class EnhancedJdbcDaoImpl extends JdbcDaoImpl {
 

@@ -35,11 +35,7 @@ import org.jboss.resource.adapter.jdbc.vendor.MySQLExceptionSorter;
  */
 public final class ExtendedMysqlExceptionSorter extends MySQLExceptionSorter {
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.jboss.resource.adapter.jdbc.ExceptionSorter#isExceptionFatal(java.sql.SQLException)
-	 */
+	
 	public boolean isExceptionFatal(SQLException ex) {
 		String sqlState = ex.getSQLState();
 

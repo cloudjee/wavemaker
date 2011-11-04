@@ -21,9 +21,7 @@ package com.wavemaker.tools.ws;
 import com.wavemaker.infra.WMTestCase;
 
 /**
- * @author ffu
- * @version $Rev:22673 $ - $Date:2008-05-30 14:45:46 -0700 (Fri, 30 May 2008) $
- * 
+ * @author Frankie Fu
  */
 public class TestCodeGenUtils extends WMTestCase {
 

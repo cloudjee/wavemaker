@@ -30,8 +30,7 @@ import com.wavemaker.tools.cloudmgr.CloudServer;
 import com.wavemaker.tools.cloudmgr.CloudServerMgrBeans;
 
 /**
- * @author slee
- * 
+ * @author Seung Lee
  */
 @ExposeToClient
 public class CloudServerService {

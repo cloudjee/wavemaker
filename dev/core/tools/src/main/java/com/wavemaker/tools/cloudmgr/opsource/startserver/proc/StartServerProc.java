@@ -37,7 +37,7 @@ import com.wavemaker.tools.cloudmgr.opsource.startserver.response.Status;
 /**
  * This class is to manage opSource cloud server instances.
  * 
- * @author slee
+ * @author Seung Lee
  */
 public class StartServerProc {
 

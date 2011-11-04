@@ -29,8 +29,6 @@ import com.wavemaker.common.WMRuntimeException;
  * ...and replace whole thing with antlr generated parser.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class ObjectLiteralParser {
 
@@ -171,11 +169,9 @@ public class ObjectLiteralParser {
         this.objectAccess.setProperty(o, propertyName, value);
     }
 
-    @SuppressWarnings("unchecked")
-    private List buildList(int start, Class<?> type) {
+    private List<Object> buildList(int start, Class<?> type) {
 
         int i = start;
-
         if (this.literal.charAt(i) != '[') {
             throw new IllegalArgumentException("List must start with '['");
         }
@@ -186,17 +182,12 @@ public class ObjectLiteralParser {
             throw new IllegalArgumentException("List must end with ']'");
         }
 
-        List rtn = new ArrayList();
-
+        List<Object> rtn = new ArrayList<Object>();
         String s = this.literal.substring(i + 1, j);
-
         for (String token : s.split(",")) {
-
             Object o = TypeConversionUtils.fromString(type, token.trim());
-
             rtn.add(o);
         }
-
         return rtn;
 
     }

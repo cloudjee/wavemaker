@@ -23,8 +23,6 @@ import com.wavemaker.runtime.data.DataServiceLoggers;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class ThreadLocalDriverManagerDataSource extends DriverManagerDataSource {
 

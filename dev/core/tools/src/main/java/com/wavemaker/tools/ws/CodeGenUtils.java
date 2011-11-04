@@ -19,9 +19,7 @@ import java.io.File;
 import com.sun.xml.bind.api.impl.NameConverter;
 
 /**
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class CodeGenUtils {
 

@@ -32,8 +32,6 @@ import com.wavemaker.tools.data.DataServiceLoggers;
  * Use for Postgres, SQLServer, HSQLDB import.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class MetaDataDialect extends BasicMetaDataDialect {
 

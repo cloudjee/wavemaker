@@ -24,8 +24,7 @@ import com.wavemaker.json.type.TypeState;
  * 
  * For instance, a templating ValueTransformer could change a value of "$foo" to "bar" or to the number 12.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public interface ValueTransformer {
 

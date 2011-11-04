@@ -21,8 +21,6 @@ import com.wavemaker.common.WMException;
  * Security related exception.
  * 
  * @author Frankie Fu
- * @version $Rev$ - $Date$
- * 
  */
 public class SecurityException extends WMException {
 

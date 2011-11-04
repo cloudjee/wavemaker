@@ -33,8 +33,6 @@ import com.wavemaker.common.util.SpringUtils;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public abstract class WMTestCase extends TestCase {
 

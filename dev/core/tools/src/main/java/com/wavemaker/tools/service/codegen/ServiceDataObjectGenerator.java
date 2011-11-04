@@ -28,8 +28,6 @@ import com.wavemaker.tools.service.definitions.Service;
  * Generate DataObjects based on a com.wavemaker.tools.service.definitions.Service
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class ServiceDataObjectGenerator {
 

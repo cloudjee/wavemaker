@@ -14,7 +14,6 @@
  * JavaDocUtil.java
  *
  * Created on August 10, 2006, 3:12 PM
- *
  */
 
 package org.jvnet.ws.wadl2java;

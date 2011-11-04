@@ -46,8 +46,7 @@ import com.wavemaker.json.type.converters.WriteObjectConverter;
 import com.wavemaker.json.type.reflect.ReflectTypeUtils;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public final class JSONMarshaller {
 

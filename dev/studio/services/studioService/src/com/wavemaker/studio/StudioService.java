@@ -63,8 +63,6 @@ import com.wavemaker.tools.serializer.FileSerializerException;
  * HTTPSession, the current project, etc.
  * 
  * @author Matt Small
- * @version $Rev$ - $Date$
- * 
  */
 @HideFromClient
 public class StudioService extends ClassLoader {

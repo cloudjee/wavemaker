@@ -14,7 +14,6 @@
 
 /**
  *  GridFS specific helper utils
- * 
  */
 
 package com.wavemaker.common.io;
@@ -31,8 +30,7 @@ import com.mongodb.gridfs.GridFSDBFile;
 import com.wavemaker.common.WMRuntimeException;
 
 /**
- * @author ecallahan
- * 
+ * @author Ed Callahan
  */
 public class GFSUtils {
 
@@ -50,7 +48,7 @@ public class GFSUtils {
      * @throws IOException
      */
     public static void copy(GridFS gfs, GFSResource source, GFSResource destination, List<String> excludes) throws IOException {
-    	Assert.notNull(gfs, "Unable to copy without GFS");
+        Assert.notNull(gfs, "Unable to copy without GFS");
         try {
             if (!source.exists()) {
                 throw new IOException("Can't copy from non-existent file: " + source.getPath() + source.getFilename());
@@ -69,16 +67,16 @@ public class GFSUtils {
                 GridFSDBFile files[] = source.listFiles();
                 for (int i = 0; i < files.length; i++) {
                     // Find the GridFSDBFile for the source, get its input stream and create new file resource
-                	GFSResource res = new GFSResource(gfs, files[i].getInputStream(), files[i].getFilename(), destination.getPath());
-                	res.save();
+                    GFSResource res = new GFSResource(gfs, files[i].getInputStream(), files[i].getFilename(), destination.getPath());
+                    res.save();
                 }
             } else if (source.isFile()) {
                 if (destination.isDirectory()) {
                     GFSResource res = new GFSResource(gfs, source.getInputStream(), source.getFilename(), destination.getPath());
                     res.save();
                 } else {
-                	GFSResource res = new GFSResource(gfs, source.getInputStream(), destination.getFilename(), destination.getPath());
-                	res.save();
+                    GFSResource res = new GFSResource(gfs, source.getInputStream(), destination.getFilename(), destination.getPath());
+                    res.save();
                 }
             } else {
                 throw new IOException("Don't know how to copy " + source.getPath() + "; it's neither a directory nor a file");
@@ -93,7 +91,7 @@ public class GFSUtils {
      */
     public static void forceDelete(GridFS gfs, GFSResource file) {
         if (file.isDirectory()) {
-        	GridFSDBFile files[] = file.listFiles();
+            GridFSDBFile files[] = file.listFiles();
             for (int i = 0; i < files.length; i++) {
                 gfs.remove(files[i].getFilename());
             }

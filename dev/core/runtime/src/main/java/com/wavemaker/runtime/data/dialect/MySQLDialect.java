@@ -20,10 +20,6 @@ import org.hibernate.dialect.function.NoArgSQLFunction;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
- *          Added in Shibuya.
- * 
  */
 public class MySQLDialect extends MySQL5Dialect {
 

@@ -21,8 +21,6 @@ import com.wavemaker.tools.javaservice.JavaServiceDefinition;
  * Service definition for JOSSOSecurityService.
  * 
  * @author Ed Callahan
- * @version $Rev: 26762 $ - $Date: 2009-06-23 10:54:57 -0700 (Wed, 23 June 2009) $
- * 
  */
 public class JOSSOSecurityServiceDefinition extends JavaServiceDefinition {
 

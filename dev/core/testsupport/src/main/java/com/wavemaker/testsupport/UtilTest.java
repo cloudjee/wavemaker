@@ -22,8 +22,7 @@ import org.apache.commons.lang.NullArgumentException;
 /**
  * Static utilities for tests.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public class UtilTest {
 

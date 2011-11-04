@@ -20,8 +20,6 @@ package com.wavemaker.runtime.data.task;
  * A Task implementing this interface indicates that it requires preprocessing of its input.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public interface PreProcessor {
 }

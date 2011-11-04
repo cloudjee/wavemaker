@@ -29,7 +29,6 @@ import com.wavemaker.tools.service.ServiceClassGenerator;
  * 
  * @author Simon Toens
  * @author Matt Small
- * @version $Rev$ - $Date$
  */
 public class ServiceCompilerTask extends CompilerTask {
 

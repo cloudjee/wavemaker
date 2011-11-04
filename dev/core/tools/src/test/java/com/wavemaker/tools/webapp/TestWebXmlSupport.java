@@ -33,9 +33,7 @@ import com.wavemaker.tools.webapp.schema.ServletType;
 import com.wavemaker.tools.webapp.schema.WebAppType;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class TestWebXmlSupport extends WMTestCase {
 

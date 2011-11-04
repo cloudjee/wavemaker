@@ -17,8 +17,7 @@ package com.wavemaker.json.type;
 /**
  * A TypeDefinition representing List (including Arrays and Collections) types.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public interface ListTypeDefinition extends TypeDefinition {
 

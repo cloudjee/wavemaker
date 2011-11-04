@@ -31,16 +31,13 @@ import com.wavemaker.runtime.WMAppContext;
  * Listener that flushes all of the Introspector's interna l caches and deregisters all JDBC drivers on web app
  * shutdown.
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class CleanupListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
         WMAppContext.getInstance(event);
-        // StudioConfiguration.setupDeploymentTargetXML();
     }
 
     @Override

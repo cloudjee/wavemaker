@@ -49,9 +49,8 @@ import com.wavemaker.tools.ws.wsdl.WSDL.WebServiceType;
 /**
  * JAXB binding compiler.
  * 
- * @author ffu
+ * @author Frankie Fu
  * @author Jeremy Grelle
- * 
  */
 public class XJCCompiler {
 

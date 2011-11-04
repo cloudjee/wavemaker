@@ -216,11 +216,7 @@ public class UpdatableResultSet extends ResultSetImpl {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see com.mysql.jdbc.ResultSet#checkRowPos()
-	 */
+	
 	protected void checkRowPos() throws SQLException {
 		checkClosed();
 

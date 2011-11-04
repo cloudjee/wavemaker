@@ -28,7 +28,6 @@ import com.wavemaker.runtime.ws.jaxws.SOAPBindingResolver;
 
 /**
  * Operations for service "myservice" 07/16/2010 11:14:19
- * 
  */
 public class SforceService {
 

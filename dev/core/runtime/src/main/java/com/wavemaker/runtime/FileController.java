@@ -45,7 +45,6 @@ import com.wavemaker.runtime.server.ServerUtils;
  * Controller (in the MVC sense) providing the studio access to project files. Based off of the old StaticFileServlet.
  * 
  * @author Matt Small
- * @version $Rev: 28227 $ - $Date: 2009-12-16 12:09:58 -0800 (Wed, 16 Dec 2009) $
  */
 public final class FileController extends AbstractController {
 

@@ -28,9 +28,7 @@ import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.infra.WMTestCase;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class TestCopyRuntimeJarsTask extends WMTestCase {
 

@@ -28,7 +28,6 @@ import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
  */
 public class TypeConversionUtils {
 

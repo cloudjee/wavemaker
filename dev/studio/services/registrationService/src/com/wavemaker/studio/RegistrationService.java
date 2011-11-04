@@ -23,9 +23,7 @@ import java.net.URLConnection;
 import com.wavemaker.tools.config.ConfigurationStore;
 
 /**
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class RegistrationService {
 

@@ -18,8 +18,7 @@ package com.wavemaker.runtime.service;
  * ServiceWire binds service objects into the ServiceManager. Different implementations may have different requirements,
  * but the ServiceType and serviceId are always required.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public interface ServiceWire {
 

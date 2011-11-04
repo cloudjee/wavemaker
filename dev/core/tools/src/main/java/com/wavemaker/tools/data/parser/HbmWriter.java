@@ -29,8 +29,6 @@ import com.wavemaker.tools.data.PropertyInfo;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class HbmWriter extends BaseHbmWriter {
 

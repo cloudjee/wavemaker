@@ -35,9 +35,7 @@ import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.service.ConfigurationCompiler;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class TestWebInfActiveGridUpgrade extends WMTestCase {
 

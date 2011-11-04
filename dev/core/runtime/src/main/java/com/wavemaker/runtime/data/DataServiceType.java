@@ -17,19 +17,12 @@ package com.wavemaker.runtime.data;
 import com.wavemaker.runtime.service.reflect.ReflectServiceType;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class DataServiceType extends ReflectServiceType {
 
     public static final String TYPE_NAME = "DataService";
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.service.ServiceType#getTypeName()
-     */
     @Override
     public String getTypeName() {
         return TYPE_NAME;

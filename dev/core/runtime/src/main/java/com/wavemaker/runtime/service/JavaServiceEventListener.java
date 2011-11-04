@@ -21,17 +21,9 @@ import com.wavemaker.runtime.service.events.ServiceEventListener;
  * Remove Hibernate proxies.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
  */
 public class JavaServiceEventListener implements ServiceEventListener {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.wavemaker.runtime.service.events.ServiceEventListener#postOperation(com.wavemaker.runtime.service.ServiceWire
-     * , java.lang.String, com.wavemaker.runtime.service.TypedServiceReturn, java.lang.Throwable)
-     */
     @Override
     public TypedServiceReturn postOperation(ServiceWire serviceWire, String operationName, TypedServiceReturn result, Throwable throwable)
         throws Throwable {

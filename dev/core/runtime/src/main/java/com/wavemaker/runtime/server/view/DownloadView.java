@@ -31,18 +31,10 @@ import com.wavemaker.runtime.server.ServerConstants;
  * Provides a suitable view for download servlets. If a DownloadObject is present, it will send the pieces from that; if
  * not, the String representation of the result will be sent.
  * 
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class DownloadView extends AbstractView implements TypedView {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.web.servlet.view.AbstractView#renderMergedOutputModel(java.util.Map,
-     * javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-     */
     @Override
     protected void renderMergedOutputModel(@SuppressWarnings("unchecked") Map model, HttpServletRequest request, HttpServletResponse response)
         throws Exception {

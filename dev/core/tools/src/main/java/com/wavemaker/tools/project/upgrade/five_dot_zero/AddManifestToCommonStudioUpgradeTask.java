@@ -25,18 +25,11 @@ import com.wavemaker.tools.project.upgrade.StudioUpgradeTask;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 
 /**
- * @author small
+ * @author Matt Small
  * @author Jeremy Grelle
- * 
  */
 public class AddManifestToCommonStudioUpgradeTask implements StudioUpgradeTask {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.StudioUpgradeTask#doUpgrade(com.wavemaker
-     * .tools.project.upgrade.UpgradeInfo)
-     */
     @Override
     public void doUpgrade(UpgradeInfo upgradeInfo) {
 

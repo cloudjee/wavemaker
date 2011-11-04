@@ -27,8 +27,6 @@ import com.wavemaker.tools.common.ConfigurationException;
  * Use for MySQL import.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class BasicMetaDataDialect extends MySQLMetaDataDialect {
 

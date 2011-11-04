@@ -23,17 +23,14 @@ import com.wavemaker.json.PropertyFilter;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
-
 public class DataPropertyFilter implements PropertyFilter {
 
     public static DataPropertyFilter getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
-    private static final DataPropertyFilter instance = new DataPropertyFilter();
+    private static final DataPropertyFilter INSTANCE = new DataPropertyFilter();
 
     private static final Collection<String> ALWAYS_FILTERED = new HashSet<String>(1);
     static {

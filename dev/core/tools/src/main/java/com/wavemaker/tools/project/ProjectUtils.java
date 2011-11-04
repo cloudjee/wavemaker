@@ -30,7 +30,7 @@ import com.wavemaker.runtime.WMAppContext;
 /**
  * Project utility methods.
  * 
- * @author small
+ * @author Matt Small
  * @author Jeremy Grelle
  */
 public class ProjectUtils {

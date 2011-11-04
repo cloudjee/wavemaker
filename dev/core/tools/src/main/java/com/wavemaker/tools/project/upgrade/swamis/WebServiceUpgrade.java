@@ -39,9 +39,7 @@ import com.wavemaker.tools.ws.wsdl.WSDLException;
  * This upgrade task will perform the followings: <li>Delete and re-import FeedService.</li> <li>Detete and re-import
  * all SOAP and REST services in the project.</li>
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class WebServiceUpgrade implements UpgradeTask {
 
@@ -55,12 +53,6 @@ public class WebServiceUpgrade implements UpgradeTask {
         this.dsm = dsm;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
-     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
         WebServiceToolsManager wstm = new WebServiceToolsManager(this.dsm.getProjectManager(), this.dsm);

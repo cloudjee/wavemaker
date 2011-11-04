@@ -23,8 +23,7 @@ import com.wavemaker.json.JSONMarshaller;
  * A TypeDefinition representing primitive types, such as String, int, and enum classes. Any individual values are
  * considered primitives.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public interface PrimitiveTypeDefinition extends TypeDefinition {
 

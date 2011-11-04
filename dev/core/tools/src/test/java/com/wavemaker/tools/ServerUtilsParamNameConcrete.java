@@ -19,17 +19,10 @@
 package com.wavemaker.tools;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class ServerUtilsParamNameConcrete implements ServerUtilsParamNameInterface {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.ServerUtilsParamNameInterface#getCalculatedString(java.lang.String, java.lang.String)
-     */
     @Override
     public String getCalculatedString(String param1, String param2) {
         return "calculated: " + param1 + ", " + param2;

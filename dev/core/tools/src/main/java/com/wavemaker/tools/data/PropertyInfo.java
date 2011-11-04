@@ -32,8 +32,6 @@ import com.wavemaker.tools.data.parser.HbmConstants;
  * Also has ColumnInfo instance if backed by a db column.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class PropertyInfo {
 

@@ -25,7 +25,7 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
 /**
  * Changes the package of WMPropertyPlaceholderConfigurer.
  * 
- * @author S Lee
+ * @author Seung Lee
  * @author Jeremy Grelle
  */
 public class WebXmlUpgradeTask implements UpgradeTask {
@@ -38,12 +38,6 @@ public class WebXmlUpgradeTask implements UpgradeTask {
 
     private boolean error = false;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
-     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
         Resource webxml = project.getWebXml();

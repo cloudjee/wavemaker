@@ -27,9 +27,7 @@ import com.wavemaker.runtime.service.TypedServiceReturn;
  * 
  * @see ServletEventListener
  * 
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public interface ServiceEventListener {
 

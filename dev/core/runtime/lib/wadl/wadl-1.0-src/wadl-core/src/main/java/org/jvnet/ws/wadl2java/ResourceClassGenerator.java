@@ -14,7 +14,6 @@
  * ResourceClassGenerator.java
  *
  * Created on June 1, 2006, 5:23 PM
- * 
  */
 
 package org.jvnet.ws.wadl2java;

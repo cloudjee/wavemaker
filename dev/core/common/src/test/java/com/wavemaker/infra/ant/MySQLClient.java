@@ -21,9 +21,7 @@ package com.wavemaker.infra.ant;
 import org.apache.tools.ant.taskdefs.ExecTask;
 
 /**
- * @author stoens
- * @version $Rev$ - $Date$
- * 
+ * @author Simon Toens
  */
 public class MySQLClient extends ExecTask {
 

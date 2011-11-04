@@ -19,9 +19,7 @@ import java.util.List;
 import com.wavemaker.json.type.FieldDefinition;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class ServiceOperation {
 

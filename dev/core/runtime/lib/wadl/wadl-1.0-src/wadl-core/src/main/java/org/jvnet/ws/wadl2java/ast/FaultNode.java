@@ -14,7 +14,6 @@
  * FaultNode.java
  *
  * Created on August 16, 2006, 1:00 PM
- *
  */
 
 package org.jvnet.ws.wadl2java.ast;

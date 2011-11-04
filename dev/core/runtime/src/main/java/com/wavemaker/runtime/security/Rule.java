@@ -20,8 +20,6 @@ import java.util.List;
  * This represents a rule which defines the access control permission. A role could have 0 or more rules.
  * 
  * @author Frankie Fu
- * @version $Rev$ - $Date$
- * 
  */
 public class Rule {
 

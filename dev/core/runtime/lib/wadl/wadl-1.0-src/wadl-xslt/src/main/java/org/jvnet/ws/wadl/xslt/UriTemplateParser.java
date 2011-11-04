@@ -2,7 +2,6 @@ package org.jvnet.ws.wadl.xslt;
 
 /**
  * A simple parser for URI templates.
- * 
  */
 public class UriTemplateParser {
 

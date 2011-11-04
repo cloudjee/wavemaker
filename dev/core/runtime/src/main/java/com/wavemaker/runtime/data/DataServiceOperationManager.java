@@ -31,8 +31,6 @@ import com.wavemaker.runtime.service.ElementType;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class DataServiceOperationManager {
 

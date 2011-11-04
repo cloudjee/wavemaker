@@ -29,7 +29,6 @@ import java.util.Map.Entry;
 
 /**
  * @author Mark Matthews
- * @version $Id$
  */
 public class LRUCache extends LinkedHashMap {
     private static final long serialVersionUID = 1L;
@@ -40,11 +39,7 @@ public class LRUCache extends LinkedHashMap {
 		this.maxElements = maxSize;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.util.LinkedHashMap#removeEldestEntry(java.util.Map.Entry)
-	 */
+	
 	protected boolean removeEldestEntry(Entry eldest) {
 		return (size() > this.maxElements);
 	}

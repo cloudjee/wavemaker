@@ -19,9 +19,7 @@ import com.wavemaker.runtime.server.JSONRPCController;
 /**
  * Marks the successful return of an operation, and avoid processing from {@link JSONRPCController}.
  * 
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public interface SuccessResponse extends RootServiceResponse {
 

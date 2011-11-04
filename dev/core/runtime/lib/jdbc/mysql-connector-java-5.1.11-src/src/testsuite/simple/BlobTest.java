@@ -40,7 +40,6 @@ import testsuite.BaseTestCase;
  * Tests BLOB functionality in the driver.
  * 
  * @author Mark Matthews
- * @version $Id$
  */
 public class BlobTest extends BaseTestCase {
 

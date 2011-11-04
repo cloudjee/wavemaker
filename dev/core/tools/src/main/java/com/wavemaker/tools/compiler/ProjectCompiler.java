@@ -40,7 +40,7 @@ import com.wavemaker.tools.service.DesignServiceManager;
  * Compiler main class. This class compiles all java class source files in a project and executes annotation processors
  * post-compilation
  * 
- * @author slee
+ * @author Seung Lee
  * @author Jeremy Grelle
  */
 

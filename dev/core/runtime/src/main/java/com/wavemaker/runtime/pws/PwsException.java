@@ -17,9 +17,8 @@ package com.wavemaker.runtime.pws;
 /**
  * Exception class for Partner Web Service module
  * 
- * @author slee
+ * @author Seung Lee
  */
-
 public class PwsException extends RuntimeException {
 
     private static final long serialVersionUID = -1079899189574588869L;

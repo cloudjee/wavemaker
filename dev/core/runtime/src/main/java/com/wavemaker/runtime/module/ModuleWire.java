@@ -18,8 +18,7 @@ package com.wavemaker.runtime.module;
  * Provides wiring between module beans and their entry points (the extension point that they bind to), as well as
  * exposing other configuration settings.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public class ModuleWire {
 

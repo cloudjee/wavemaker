@@ -14,8 +14,6 @@
 
 package com.wavemaker.runtime.ws.salesforce;
 
-//import com.sforce.soap.enterprise.salesforceservice.SforceService;
-//import com.sforce.soap.enterprise.salesforceservice.SessionHeader;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.ws.salesforce.gen.SessionHeader;
 import com.wavemaker.runtime.ws.salesforce.gen.SforceService;

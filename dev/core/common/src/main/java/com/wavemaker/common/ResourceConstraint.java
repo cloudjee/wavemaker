@@ -21,8 +21,6 @@ import java.lang.annotation.Target;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

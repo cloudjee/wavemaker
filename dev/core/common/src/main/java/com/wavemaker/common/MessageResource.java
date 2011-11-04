@@ -27,7 +27,6 @@ import com.wavemaker.common.util.ClassUtils;
  * WM(Runtime)Exception. The underlying message can be accessed using getMessage/getDetailMessage.
  * 
  * @author Simon Toens
- * 
  */
 public class MessageResource {
 

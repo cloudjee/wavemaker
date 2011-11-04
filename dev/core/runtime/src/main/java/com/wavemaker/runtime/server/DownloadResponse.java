@@ -21,13 +21,10 @@ import java.io.InputStream;
  * download requests.
  * 
  * @author Matt Small
- * @version $Rev$ - $Date$
- * 
  */
 public class DownloadResponse {
 
     public DownloadResponse() {
-        // empty constructor
     }
 
     public DownloadResponse(InputStream contents, String contentType, String fileName) {

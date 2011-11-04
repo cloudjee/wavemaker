@@ -16,8 +16,6 @@ package com.wavemaker.common;
 
 /**
  * @author Simon Toens
- * @version $Rev: 31959 $ - $Date: 2011-05-06 15:39:46 -0700 (Fri, 06 May 2011) $
- * 
  */
 @SuppressWarnings("serial")
 public class ConfigurationException extends WMRuntimeException {

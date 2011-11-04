@@ -25,9 +25,7 @@ import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.service.DesignServiceManager;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class TestDesignTimeUtils extends WMTestCase {
 

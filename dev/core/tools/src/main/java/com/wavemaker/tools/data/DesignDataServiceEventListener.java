@@ -21,30 +21,14 @@ import com.wavemaker.runtime.service.events.ServiceEventListener;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class DesignDataServiceEventListener implements ServiceEventListener {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.wavemaker.runtime.service.events.ServiceEventListener#preOperation(com.wavemaker.runtime.service.ServiceWire,
-     * java.lang.String, java.lang.Object[])
-     */
     @Override
     public Object[] preOperation(ServiceWire serviceWire, String operationName, Object[] params) {
         return params;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.wavemaker.runtime.service.events.ServiceEventListener#postOperation(com.wavemaker.runtime.service.ServiceWire
-     * , java.lang.String, com.wavemaker.runtime.service.TypedServiceReturn, java.lang.Throwable)
-     */
     @Override
     public TypedServiceReturn postOperation(ServiceWire serviceWire, String operationName, TypedServiceReturn result, Throwable th) throws Throwable {
 

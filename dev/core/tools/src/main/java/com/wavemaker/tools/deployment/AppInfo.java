@@ -18,8 +18,6 @@ package com.wavemaker.tools.deployment;
  * Describes a deployed webapp.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class AppInfo implements Comparable<AppInfo> {
 

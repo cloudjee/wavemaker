@@ -23,9 +23,7 @@ import javax.xml.bind.DatatypeConverter;
 /**
  * JAXB customization to use <code>java.util.Date</code> for xs:date, xs:time and xs:dateTime.
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class DateAdapter {
 

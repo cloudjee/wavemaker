@@ -29,9 +29,7 @@ import org.springframework.context.support.GenericApplicationContext;
 import com.wavemaker.common.WMRuntimeException;
 
 /**
- * @author stoens
- * @version $Rev$ - $Date$
- * 
+ * @author Simon Toens
  */
 public class SpringConfigBuilder {
 

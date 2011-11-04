@@ -43,7 +43,6 @@ import com.wavemaker.tools.data.util.DataServiceUtils;
 /**
  * @author Simon Toens
  * @author Jeremy Grelle
- * 
  */
 public class HibernateSpringConfigExporter extends GenericExporter {
 

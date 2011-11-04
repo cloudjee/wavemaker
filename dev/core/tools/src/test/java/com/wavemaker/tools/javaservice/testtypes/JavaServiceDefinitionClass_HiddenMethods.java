@@ -21,8 +21,7 @@ package com.wavemaker.tools.javaservice.testtypes;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 
 /**
- * @author small
- * @version $Rev$ - $Date:2008-05-30 14:45:46 -0700 (Fri, 30 May 2008) $
+ * @author Matt Small
  */
 public class JavaServiceDefinitionClass_HiddenMethods {
 

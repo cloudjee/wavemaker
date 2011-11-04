@@ -23,19 +23,10 @@ import com.wavemaker.runtime.service.ServiceWire;
 import com.wavemaker.runtime.service.events.ServletEventListener;
 
 /**
- * 
  * @author Simon Toens
- * @version $$Rev$$ - $$Date$$
- * 
  */
 public class DataServiceServletEventListener implements ServletEventListener {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.wavemaker.runtime.service.events.ServletEventListener#startRequest(com.wavemaker.runtime.service.ServiceWire)
-     */
     @Override
     public void startRequest(ServiceWire serviceWire) {
         // DataServiceManager mgr = getDataServiceManager(service);
@@ -45,12 +36,6 @@ public class DataServiceServletEventListener implements ServletEventListener {
         // mgr.begin();
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.wavemaker.runtime.service.events.ServletEventListener#endRequest(com.wavemaker.runtime.service.ServiceWire)
-     */
     @Override
     public void endRequest(ServiceWire serviceWire) {
         // DataServiceManager mgr = getDataServiceManager(service);

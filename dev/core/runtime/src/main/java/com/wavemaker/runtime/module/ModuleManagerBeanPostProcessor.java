@@ -20,17 +20,10 @@ import org.springframework.beans.factory.config.BeanPostProcessor;
 /**
  * Listen to bean creation, and add any ModuleWire beans to the ModuleManager.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public class ModuleManagerBeanPostProcessor implements BeanPostProcessor {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessAfterInitialization(java.lang.Object,
-     * java.lang.String)
-     */
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
 
@@ -41,12 +34,6 @@ public class ModuleManagerBeanPostProcessor implements BeanPostProcessor {
         return bean;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.beans.factory.config.BeanPostProcessor#postProcessBeforeInitialization(java.lang.Object,
-     * java.lang.String)
-     */
     @Override
     public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         return bean;

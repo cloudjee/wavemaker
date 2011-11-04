@@ -30,9 +30,7 @@ import com.wavemaker.json.core.JSONUtils;
 import com.wavemaker.json.type.PrimitiveTypeDefinition;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class PrimitiveReflectTypeDefinition extends ReflectTypeDefinition implements PrimitiveTypeDefinition {
 
@@ -136,11 +134,6 @@ public class PrimitiveReflectTypeDefinition extends ReflectTypeDefinition implem
         return ret;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.json.type.PrimitiveTypeDefinition#toJson(java.io.Writer, java.lang.Object)
-     */
     @Override
     public void toJson(Writer writer, Object obj) throws IOException {
 

@@ -19,9 +19,7 @@ import java.util.List;
 import com.wavemaker.runtime.service.ElementType;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public interface DeprecatedServiceDefinition extends ReflectServiceDefinition {
 

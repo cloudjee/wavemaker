@@ -24,8 +24,6 @@ import org.hibernate.Session;
  * Every service that is a "Data Service" has one associated DataServiceManager instance.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public interface DataServiceManager {
 

@@ -23,8 +23,7 @@ import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.project.PagesManager;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 @HideFromClient
 public class PagesService {

@@ -23,8 +23,6 @@ import com.wavemaker.common.util.Tuple;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class DefaultRevengNamingStrategy extends DelegatingReverseEngineeringStrategy implements ReverseEngineeringStrategy {
 

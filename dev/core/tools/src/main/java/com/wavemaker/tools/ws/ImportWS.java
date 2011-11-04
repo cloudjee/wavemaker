@@ -33,9 +33,8 @@ import com.wavemaker.tools.ws.wsdl.WSDLManager;
 /**
  * Import Web Service.
  * 
- * @author ffu
+ * @author Frankie Fu
  * @author Jeremy Grelle
- * 
  */
 public class ImportWS {
 

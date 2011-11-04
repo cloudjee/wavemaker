@@ -27,8 +27,6 @@ import com.wavemaker.tools.data.parser.HbmConstants;
  * Wrapper around Column.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class ColumnInfo implements Cloneable {
 

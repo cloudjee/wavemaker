@@ -28,19 +28,13 @@ import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 /**
  * Not so much of a project upgrade, this moves the old common directory to a backup directory.
  * 
- * @author small
+ * @author Matt Small
  * @author Jeremy Grelle
- * 
  */
 public class CommonDirectoryMove implements StudioUpgradeTask {
 
     public static final String UPGRADED_KEY = "COMMON_DIR_UPGRADED";
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker .tools.project.upgrade.UpgradeInfo)
-     */
     @Override
     public void doUpgrade(UpgradeInfo upgradeInfo) {
 

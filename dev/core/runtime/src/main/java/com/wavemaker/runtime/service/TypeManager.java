@@ -21,13 +21,13 @@ import java.util.Map.Entry;
 /**
  * Type manager.
  * 
- * Tested by TestServiceManager.
- * 
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class TypeManager {
+
+    private Map<String, List<String>> types;
+
+    private ServiceManager serviceManager;
 
     /**
      * Return a list of all types (as java class names) associated with a given service object.
@@ -36,7 +36,6 @@ public class TypeManager {
      * @return
      */
     public List<String> getTypes(String serviceId) {
-
         return getTypes().get(serviceId);
     }
 
@@ -71,7 +70,6 @@ public class TypeManager {
      */
     @Deprecated
     public Object getServiceForType(String type) throws TypeNotFoundException {
-
         String serviceId = getServiceIdForType(type);
         return getServiceManager().getService(serviceId);
     }
@@ -84,15 +82,9 @@ public class TypeManager {
      * @throws TypeNotFoundException
      */
     public ServiceWire getServiceWireForType(String type) throws TypeNotFoundException {
-
         String serviceId = getServiceIdForType(type);
         return getServiceManager().getServiceWire(serviceId);
     }
-
-    // bean properties below here
-    private Map<String, List<String>> types;
-
-    private ServiceManager serviceManager;
 
     public Map<String, List<String>> getTypes() {
         return this.types;

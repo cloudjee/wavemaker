@@ -31,17 +31,11 @@ import com.wavemaker.tools.project.ProjectManager;
  * Generic upgrade task; reads a file from the template, and writes it into the current project. The file and any
  * messages are provided through Spring properties. No backup (beyond the automatic zip) is made of the project files.
  * 
- * @author small
+ * @author Matt Small
  * @author Jeremy Grelle
  */
 public class UpgradeTemplateFile implements UpgradeTask {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker .tools.project.Project,
-     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 

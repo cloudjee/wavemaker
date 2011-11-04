@@ -22,9 +22,7 @@ import com.sun.tools.ws.processor.util.ClassNameCollector;
  * This class is intended to be used by <code>com.sun.tools.ws.processor.modeler.wsdl.ClassNameAllocatorImpl</code> to
  * get a a list of generated SEI service class names so JAXB could use something else if there is a name collision.
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class SimpleClassNameCollector extends ClassNameCollector {
 

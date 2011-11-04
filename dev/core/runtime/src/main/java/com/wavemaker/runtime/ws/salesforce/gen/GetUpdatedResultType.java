@@ -47,8 +47,6 @@ import com.wavemaker.runtime.ws.jaxb.DateXmlAdapter;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "GetUpdatedResult", namespace = "urn:partner.soap.sforce.com", propOrder = { "ids", "latestDateCovered", "sforceReserved" })

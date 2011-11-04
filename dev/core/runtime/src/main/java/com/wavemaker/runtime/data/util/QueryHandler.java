@@ -34,10 +34,8 @@ import com.wavemaker.runtime.WMAppContext;
 /**
  * This class wraps Hibernate APIs to incorporate the tenant ID in the DB queries.
  * 
- * @author S Lee
- * 
+ * @author Seung Lee
  */
-
 public class QueryHandler implements InvocationHandler {
 
     private Object target;

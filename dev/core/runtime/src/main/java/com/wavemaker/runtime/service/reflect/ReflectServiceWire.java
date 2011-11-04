@@ -26,8 +26,7 @@ import com.wavemaker.runtime.service.ServiceWire;
  * ServiceWire for ServiceTypes supporting default reflection. This ServiceWire type adds a property to hold the service
  * bean object.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public class ReflectServiceWire implements ServiceWire, ApplicationContextAware {
 
@@ -77,63 +76,32 @@ public class ReflectServiceWire implements ServiceWire, ApplicationContextAware 
         this.serviceBean = obj;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.service.ServiceWire#setServiceType(com.wavemaker.runtime.service.ServiceType)
-     */
     @Override
     public void setServiceType(ServiceType serviceType) {
         this.serviceType = serviceType;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.service.ServiceWire#getServiceType()
-     */
     @Override
     public ServiceType getServiceType() {
         return this.serviceType;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.service.ServiceWire#setServiceId(java.lang.String)
-     */
     @Override
     public void setServiceId(String serviceId) {
         this.serviceId = serviceId;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.service.ServiceWire#getServiceId()
-     */
     @Override
     public String getServiceId() {
         return this.serviceId;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.service.ServiceWire#isLiveDataService()
-     */
     @Override
     public boolean isLiveDataService() {
 
         return this.getServiceBean() instanceof LiveDataService;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.springframework.context.ApplicationContextAware#setApplicationContext(org.springframework.context.
-     * ApplicationContext)
-     */
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;

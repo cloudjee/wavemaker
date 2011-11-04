@@ -46,8 +46,6 @@ import org.w3c.dom.Element;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "sObject", namespace = "urn:sobject.partner.soap.sforce.com", propOrder = { "type", "fieldsToNulls", "id", "anies" })

@@ -20,9 +20,7 @@ import com.wavemaker.tools.javaservice.JavaServiceDefinition;
 /**
  * Service definition for SecurityService.
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class SecurityServiceDefinition extends JavaServiceDefinition {
 

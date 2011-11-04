@@ -20,8 +20,6 @@ import java.util.List;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class RelatedInfo implements Cloneable {
 

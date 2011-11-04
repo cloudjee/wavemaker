@@ -28,8 +28,7 @@ import java.lang.annotation.Target;
  * 
  * @ParamName(name="str") String str) </code>
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.PARAMETER)

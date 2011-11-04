@@ -19,9 +19,7 @@
 package com.wavemaker.tools;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public interface ServerUtilsParamNameInterface {
 

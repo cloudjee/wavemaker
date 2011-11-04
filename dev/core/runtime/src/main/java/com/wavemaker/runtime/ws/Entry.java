@@ -25,9 +25,7 @@ import com.sun.syndication.feed.synd.SyndLink;
 /**
  * This represents the feed entry.
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class Entry {
 

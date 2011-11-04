@@ -14,7 +14,6 @@
  * ReferenceTargetException.java
  *
  * Created on June 1, 2006, 10:07 AM
- *
  */
 
 package org.jvnet.ws.wadl2java;

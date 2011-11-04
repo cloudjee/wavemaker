@@ -22,8 +22,6 @@ import com.wavemaker.tools.project.Project;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public interface DeploymentTarget {
 

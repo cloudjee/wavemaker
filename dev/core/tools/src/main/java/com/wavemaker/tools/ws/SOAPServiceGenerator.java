@@ -52,7 +52,7 @@ import com.wavemaker.tools.ws.wsdl.WSDL;
 /**
  * This class generates SOAP service stubs.
  * 
- * @author ffu
+ * @author Frankie Fu
  * @author Jeremy Grelle
  */
 public class SOAPServiceGenerator extends WebServiceGenerator {

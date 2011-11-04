@@ -20,19 +20,11 @@ import com.wavemaker.runtime.service.TypedServiceReturn;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class DynamicConnectionDataServiceEventListener extends DataServiceEventListener {
 
     private static int counter = 0;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.data.DataServiceEventListener#preOperation(com.wavemaker.runtime.service.ServiceWire,
-     * java.lang.String, java.lang.Object[])
-     */
     @Override
     public Object[] preOperation(ServiceWire serviceWire, String operationName, Object[] params) {
 
@@ -46,12 +38,6 @@ public class DynamicConnectionDataServiceEventListener extends DataServiceEventL
         return super.preOperation(serviceWire, operationName, params);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.data.DataServiceEventListener#postOperation(com.wavemaker.runtime.service.ServiceWire,
-     * java.lang.String, com.wavemaker.runtime.service.TypedServiceReturn, java.lang.Throwable)
-     */
     @Override
     public TypedServiceReturn postOperation(ServiceWire serviceWire, String operationName, TypedServiceReturn result, Throwable th) throws Throwable {
 

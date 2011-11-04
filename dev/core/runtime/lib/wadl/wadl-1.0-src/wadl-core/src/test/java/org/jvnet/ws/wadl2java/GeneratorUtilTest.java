@@ -27,7 +27,6 @@ import java.util.HashSet;
 import javax.xml.namespace.QName;
 
 /**
- *
  * @author mh124079
  */
 public class GeneratorUtilTest extends TestCase {

@@ -17,9 +17,7 @@ package com.wavemaker.runtime.ws;
 import com.wavemaker.common.WMRuntimeException;
 
 /**
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class WebServiceInvocationException extends WMRuntimeException {
 

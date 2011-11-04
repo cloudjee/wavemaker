@@ -30,9 +30,7 @@ import com.wavemaker.tools.ws.wsdl.WSDLUtils.SoapAddress;
 /**
  * This class represents a PortType in the WSDL defintion.
  * 
- * @author ffu
- * @version $Rev: 22692 $ - $Date: 2008-05-30 16:58:02 -0700 (Fri, 30 May 2008) $
- * 
+ * @author Frankie Fu
  */
 public class PortTypeInfo extends GenericInfo {
 

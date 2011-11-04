@@ -29,7 +29,6 @@ import com.wavemaker.tools.common.ConfigurationException;
  * This class represents a generic server on the network.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
  */
 public class Server {
 

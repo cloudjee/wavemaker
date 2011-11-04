@@ -36,7 +36,6 @@ import com.wavemaker.runtime.data.util.DataServiceConstants;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
  */
 public class WMHibernateConfigurationExporter extends HibernateConfigurationExporter {
 

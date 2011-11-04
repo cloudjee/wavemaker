@@ -44,7 +44,6 @@ import com.mysql.jdbc.StringUtils;
  * Tests DatabaseMetaData methods.
  * 
  * @author Mark Matthews
- * @version $Id$
  */
 public class MetadataTest extends BaseTestCase {
 	// ~ Constructors

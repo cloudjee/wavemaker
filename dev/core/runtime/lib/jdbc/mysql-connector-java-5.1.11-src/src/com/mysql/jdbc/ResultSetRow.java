@@ -44,7 +44,7 @@ import java.util.TimeZone;
  * Notice that <strong>no</strong> bounds checking is expected for implementors
  * of this interface, it happens in ResultSetImpl.
  * 
- * @version $Id: $
+ * 
  */
 public abstract class ResultSetRow {
 	protected ExceptionInterceptor exceptionInterceptor;

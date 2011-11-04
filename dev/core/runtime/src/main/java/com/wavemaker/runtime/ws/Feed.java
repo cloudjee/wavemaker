@@ -30,9 +30,7 @@ import com.sun.syndication.feed.synd.SyndLink;
  * 
  * @see com.wavemaker.runtime.ws.SyndFeedService#getFeed(String)
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class Feed {
 

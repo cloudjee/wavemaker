@@ -18,9 +18,7 @@ import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMException;
 
 /**
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class FileSerializerException extends WMException {
 

@@ -24,9 +24,7 @@ import com.wavemaker.json.core.jsonLexer;
 import com.wavemaker.json.core.jsonParser;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class JSONUnmarshaller {
 

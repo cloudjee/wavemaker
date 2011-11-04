@@ -20,8 +20,7 @@ import java.util.Map;
 /**
  * Class holding client-facing information about all server types.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public class Types {
 

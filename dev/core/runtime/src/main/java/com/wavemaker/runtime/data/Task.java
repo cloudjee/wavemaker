@@ -20,7 +20,6 @@ import org.hibernate.Session;
  * Command Object.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
  */
 public interface Task {
 

@@ -18,8 +18,7 @@ package com.wavemaker.json.type;
  * Holds the state of current types, and knows how to discover new types (associated with the individual type of this
  * TypeState).
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public interface TypeState {
 

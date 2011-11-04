@@ -31,7 +31,6 @@ import com.wavemaker.tools.util.DesignTimeUtils;
 /**
  * @author Simon Toens
  * @author Jeremy Grelle
- * 
  */
 public abstract class BaseDataUpgradeTask implements UpgradeTask {
 

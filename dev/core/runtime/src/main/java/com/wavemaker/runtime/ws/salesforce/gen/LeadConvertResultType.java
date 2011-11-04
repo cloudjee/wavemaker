@@ -45,8 +45,6 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "LeadConvertResult", namespace = "urn:partner.soap.sforce.com", propOrder = { "accountId", "contactId", "errors", "leadId",

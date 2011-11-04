@@ -75,9 +75,8 @@ import com.wavemaker.tools.ws.salesforce.SalesforceHelper;
 /**
  * The DesignServiceManager provides design-time access to service descriptor information, including types..
  * 
- * @author small
+ * @author Matt Small
  * @author Jeremy Grelle
- * 
  */
 public class DesignServiceManager {
 

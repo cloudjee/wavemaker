@@ -452,20 +452,12 @@ public class RowDataCursor implements RowData {
 		throw new OperationNotSupportedException();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.mysql.jdbc.RowProvider#setOwner(com.mysql.jdbc.ResultSet)
-	 */
+	
 	public void setOwner(ResultSetImpl rs) {
 		this.owner = rs;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.mysql.jdbc.RowProvider#getOwner()
-	 */
+	
 	public ResultSetInternalMethods getOwner() {
 		return this.owner;
 	}

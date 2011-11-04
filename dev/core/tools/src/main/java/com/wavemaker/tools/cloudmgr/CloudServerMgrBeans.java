@@ -23,7 +23,7 @@ import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.tools.common.ConfigurationException;
 
 /**
- * @author slee
+ * @author Seung Lee
  * 
  */
 public class CloudServerMgrBeans {

@@ -25,17 +25,10 @@ import com.wavemaker.tools.service.definitions.Service;
  * Upgrade the Java service class. Currently, this touches the Spring file so the next build will regenerate the
  * service's Java class.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public class DataServiceJavaUpgrade extends BaseDataUpgradeTask {
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.wavemaker.tools.data.upgrade.BaseDataUpgradeTask#upgrade(com.wavemaker.tools.service.definitions.Service)
-     */
     @Override
     protected void upgrade(Service service) {
 

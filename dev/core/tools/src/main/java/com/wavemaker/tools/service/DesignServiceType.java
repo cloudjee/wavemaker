@@ -17,9 +17,7 @@ package com.wavemaker.tools.service;
 import com.wavemaker.runtime.service.ServiceWire;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public interface DesignServiceType {
 

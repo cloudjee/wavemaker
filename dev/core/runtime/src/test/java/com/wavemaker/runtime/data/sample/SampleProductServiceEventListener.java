@@ -26,8 +26,6 @@ import com.wavemaker.runtime.service.reflect.ReflectServiceWire;
 
 /**
  * @author Matt Small
- * @version $Rev$ - $Date$
- * 
  */
 public class SampleProductServiceEventListener implements ServletEventListener {
 
@@ -38,12 +36,6 @@ public class SampleProductServiceEventListener implements ServletEventListener {
         this.p = new Product("pmelProduct", 12399.8, 10);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.wavemaker.runtime.service.events.ServletEventListener#endRequest(com.wavemaker.runtime.service.ServiceWire)
-     */
     @Override
     public void endRequest(ServiceWire serviceWire) {
 
@@ -56,12 +48,6 @@ public class SampleProductServiceEventListener implements ServletEventListener {
         pm.setProducts(products);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see
-     * com.wavemaker.runtime.service.events.ServletEventListener#startRequest(com.wavemaker.runtime.service.ServiceWire)
-     */
     @Override
     public void startRequest(ServiceWire serviceWire) {
 

@@ -26,14 +26,10 @@ import org.acegisecurity.intercept.web.FilterSecurityInterceptor;
 /**
  * Overrides standard Acegi filter's doFilter method, to
  * 
- * @author slee
+ * @author Seung Lee
  * 
  */
 public class WMFilterSecurityInterceptor extends FilterSecurityInterceptor {
-
-    // public WMFilterSecurityInterceptor() throws ServletException {
-    // super();
-    // }
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {

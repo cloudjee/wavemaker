@@ -50,8 +50,6 @@ import com.wavemaker.tools.data.reveng.MSSQLRevengNamingStrategy;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public abstract class BaseDataModelSetup {
 

@@ -20,8 +20,7 @@ import java.util.LinkedHashMap;
  * Objects provide mappings from a fixed set of keys to their values. Currently, all keys must be of type String, but
  * value types can be anything.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public interface ObjectTypeDefinition extends TypeDefinition {
 

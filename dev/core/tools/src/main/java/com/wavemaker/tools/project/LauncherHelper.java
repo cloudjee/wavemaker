@@ -29,8 +29,6 @@ import com.wavemaker.common.util.SpringUtils;
  * Helper methods for the launcher.
  * 
  * @author Matt Small
- * @version $Rev$ - $Date$
- * 
  */
 public class LauncherHelper {
 

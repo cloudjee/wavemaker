@@ -44,9 +44,7 @@ import com.wavemaker.tools.ws.wsdl.WSDL;
 /**
  * Generates service client files.
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class JAXWSBuilder {
 

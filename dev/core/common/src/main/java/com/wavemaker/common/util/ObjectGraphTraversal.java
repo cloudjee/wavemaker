@@ -40,8 +40,6 @@ import java.util.Map;
  * See javadoc for inner Context class.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class ObjectGraphTraversal {
 
@@ -163,7 +161,6 @@ public class ObjectGraphTraversal {
         traverseInternal(root, ctx, alreadyVisited);
     }
 
-    @SuppressWarnings("unchecked")
     private void traverseInternal(Object o, Context ctx, Collection<Object> alreadyVisited) {
 
         Collection<String> properties = this.propertyFactory.getProperties(o, ctx);
@@ -190,11 +187,11 @@ public class ObjectGraphTraversal {
 
             try {
                 if (propval instanceof Map || propval instanceof Collection) {
-                    Collection propsvals = null;
+                    Collection<?> propsvals = null;
                     if (propval instanceof Map) {
-                        propsvals = ((Map) propval).values();
+                        propsvals = ((Map<?, ?>) propval).values();
                     } else {
-                        propsvals = (Collection) propval;
+                        propsvals = (Collection<?>) propval;
                     }
                     for (Object val : propsvals) {
                         visitAndRecurse(val, ctx, alreadyVisited);

@@ -54,7 +54,7 @@ import java.util.Set;
  * connection instance amongst threads is a good idea, given that transactions
  * are scoped to connections in JDBC.
  * 
- * @version $Id: $
+ * 
  * 
  */
 public class LoadBalancingConnectionProxy implements InvocationHandler, PingTarget {

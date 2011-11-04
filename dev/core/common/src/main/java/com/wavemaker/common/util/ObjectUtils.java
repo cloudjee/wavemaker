@@ -137,12 +137,10 @@ public class ObjectUtils {
         return sb.toString();
     }
 
-    @SuppressWarnings("unchecked")
     public static String toString(Collection c) {
         return toString(c, ", ");
     }
 
-    @SuppressWarnings("unchecked")
     public static String toString(Collection c, String sep) {
         StringBuilder sb = new StringBuilder();
         for (Iterator iter = c.iterator(); iter.hasNext();) {

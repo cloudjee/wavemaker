@@ -73,7 +73,7 @@ import com.mysql.jdbc.util.LRUCache;
  * </p>
  * 
  * @author Mark Matthews
- * @version $Id$
+ * 
  * @see java.sql.Connection
  */
 public class ConnectionImpl extends ConnectionPropertiesImpl implements
@@ -143,11 +143,7 @@ public class ConnectionImpl extends ConnectionPropertiesImpl implements
 					: "") + this.componentTwo).hashCode();
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.lang.Object#equals(java.lang.Object)
-		 */
+		
 		public boolean equals(Object obj) {
 			if (obj instanceof CompoundCacheKey) {
 				CompoundCacheKey another = (CompoundCacheKey) obj;
@@ -168,11 +164,7 @@ public class ConnectionImpl extends ConnectionPropertiesImpl implements
 			return false;
 		}
 
-		/*
-		 * (non-Javadoc)
-		 * 
-		 * @see java.lang.Object#hashCode()
-		 */
+		
 		public int hashCode() {
 			return this.hashCode;
 		}

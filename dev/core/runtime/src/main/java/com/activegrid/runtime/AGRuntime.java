@@ -38,11 +38,9 @@ import com.wavemaker.runtime.RuntimeAccess;
  * </pre>
  * 
  * @author Matt Small
- * @version $Rev$ - $Date$
  * 
  * @deprecated AGRuntime is now deprecated; instead, use {@link RuntimeAccess}. In a future release, AGRuntime will be
  *             removed. Also, note that {@link RuntimeAccess} uses a different bean name (runtimeAccess).
- * 
  */
 @Deprecated
 public class AGRuntime {

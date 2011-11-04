@@ -17,9 +17,7 @@ package com.wavemaker.tools.service.smd;
 import java.util.List;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class Method implements Comparable<Method> {
 
@@ -29,11 +27,6 @@ public class Method implements Comparable<Method> {
 
     private List<Param> parameters;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.lang.Comparable#compareTo(java.lang.Object)
-     */
     @Override
     public int compareTo(Method o) {
 

@@ -23,8 +23,6 @@ import com.wavemaker.runtime.data.util.SystemUtils;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class MergeForInsertTask extends BaseTask implements Task {
 

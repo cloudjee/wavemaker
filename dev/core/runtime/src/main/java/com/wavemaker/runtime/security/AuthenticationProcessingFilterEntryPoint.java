@@ -24,9 +24,7 @@ import org.acegisecurity.AuthenticationException;
  * "debug" is added to the query string of the app URL (e.g. http://localhost:8080/app1/?debug) and we want to have
  * login URL to be loaded in debug mode as well. (e.g. http://localhost:8080/app1/login.html?debug)
  * 
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class AuthenticationProcessingFilterEntryPoint extends org.acegisecurity.ui.webapp.AuthenticationProcessingFilterEntryPoint {
 

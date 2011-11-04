@@ -24,9 +24,7 @@ import com.wavemaker.common.util.ObjectAccess;
 import com.wavemaker.runtime.data.QueryOptions;
 
 /**
- * @author stoens
- * @version $Rev$ - $Date$
- * 
+ * @author Simon Toens
  */
 public class CheckGeneratedServiceMethods {
 

@@ -65,7 +65,6 @@ import com.wavemaker.tools.util.AntUtils;
  * dependencies on Ant.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
  */
 public class ImportDB extends BaseDataModelSetup {
 

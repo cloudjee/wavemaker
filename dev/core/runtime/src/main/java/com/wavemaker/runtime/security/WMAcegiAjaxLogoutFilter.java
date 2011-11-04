@@ -26,8 +26,7 @@ import org.acegisecurity.ui.logout.LogoutHandler;
 /**
  * Overrides standard Acegi filter's doFilter method, to
  * 
- * @author slee
- * 
+ * @author Seung Lee
  */
 public class WMAcegiAjaxLogoutFilter extends AcegiAjaxLogoutFilter {
 

@@ -26,9 +26,7 @@ import org.springframework.core.io.Resource;
  * only be displayed if the user selects a "More Info" option. Therefore, info which requires user action should be
  * placed into messages; informational info should go into verbose.
  * 
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class UpgradeInfo {
 

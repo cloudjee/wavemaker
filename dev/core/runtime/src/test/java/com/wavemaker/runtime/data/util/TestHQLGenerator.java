@@ -26,8 +26,6 @@ import com.wavemaker.runtime.data.sample.sakila.FilmActor;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class TestHQLGenerator extends WMTestCase {
 

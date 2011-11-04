@@ -20,8 +20,7 @@ import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.TransactionStatus;
 
 /**
- * @author slee
- * 
+ * @author Seung Lee
  */
 public class SalesforceTransactionManager implements PlatformTransactionManager {
 

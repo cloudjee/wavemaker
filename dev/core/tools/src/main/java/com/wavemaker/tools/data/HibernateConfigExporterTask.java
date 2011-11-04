@@ -24,7 +24,6 @@ import org.hibernate.tool.hbm2x.Exporter;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
  */
 public class HibernateConfigExporterTask extends Hbm2CfgXmlExporterTask {
 

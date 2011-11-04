@@ -20,9 +20,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 /**
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class ServiceInfo extends GenericInfo {
 

@@ -25,7 +25,7 @@ import org.hibernate.mapping.Property;
 /**
  * Interface to wraps a Data Source Configuration with convenience methods.
  * 
- * @author slee
+ * @author Seung Lee
  */
 public interface DataServiceMetaData {
 

@@ -19,9 +19,7 @@ import org.acegisecurity.ldap.DefaultInitialDirContextFactory;
 import com.wavemaker.common.util.SystemUtils;
 
 /**
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class PWEncryptedInitialDirContextFactory extends DefaultInitialDirContextFactory {
 
@@ -34,11 +32,6 @@ public class PWEncryptedInitialDirContextFactory extends DefaultInitialDirContex
         super(providerUrl);
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.acegisecurity.ldap.DefaultInitialDirContextFactory#setManagerPassword(java.lang.String)
-     */
     @Override
     public void setManagerPassword(String managerPassword) {
         // check if the password is encrypted, if so, decrypt it

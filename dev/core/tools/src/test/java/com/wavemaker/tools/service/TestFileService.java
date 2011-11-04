@@ -31,9 +31,7 @@ import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.spring.ComplexReturnBean;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class TestFileService extends WMTestCase {
 

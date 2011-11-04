@@ -22,8 +22,7 @@ import com.wavemaker.runtime.server.InternalRuntime;
  * This class contains parsed service arguments. It should be extended to contain any extra information that the
  * servicetype requires to be passed from argument parsing to method invocation.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public class ParsedServiceArguments {
 

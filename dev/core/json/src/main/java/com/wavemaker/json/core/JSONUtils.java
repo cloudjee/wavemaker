@@ -38,11 +38,8 @@ import com.wavemaker.common.WMRuntimeException;
 /**
  * Provides useful methods on java objects and JSON values.
  * 
- * @author Andres Almiray <aalmiray@users.sourceforge.net>
- * @version 6
- * 
- *          Modified by Matt Small <msmall@wavemaker.com>, as well as parts added.
- * @version $Rev$ - $Date$
+ * @author Andres Almiray
+ * @author Matt Small
  */
 public class JSONUtils {
 

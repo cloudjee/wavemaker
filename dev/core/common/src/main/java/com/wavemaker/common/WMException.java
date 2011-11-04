@@ -18,7 +18,6 @@ package com.wavemaker.common;
  * The root of ActiveGrid's checked Exception hierarchy.
  * 
  * @author Simon Toens
- * 
  */
 public abstract class WMException extends Exception {
 

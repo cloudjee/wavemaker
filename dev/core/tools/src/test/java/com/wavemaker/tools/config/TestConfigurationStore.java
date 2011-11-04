@@ -25,9 +25,7 @@ import com.wavemaker.testsupport.UtilTest;
 import com.wavemaker.tools.project.VersionInfo;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class TestConfigurationStore extends WMTestCase {
 

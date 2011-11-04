@@ -14,8 +14,9 @@
 
 package com.wavemaker.runtime.server;
 
-/* Response object to return when sending a file via the "html" version of the DojoFileUpload widget */
-
+/**
+ * Response object to return when sending a file via the "html" version of the DojoFileUpload widget
+ */
 public class FileUploadResponse {
 
     private String path;
@@ -57,5 +58,4 @@ public class FileUploadResponse {
     public void setHeight(String height) {
         this.height = height;
     }
-
 };

@@ -32,8 +32,6 @@ import com.wavemaker.runtime.data.util.DataServiceUtils;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class CheckQueryTask extends QueryTask implements Task {
 

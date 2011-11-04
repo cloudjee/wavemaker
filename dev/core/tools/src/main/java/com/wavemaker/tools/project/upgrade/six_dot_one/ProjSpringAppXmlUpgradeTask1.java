@@ -27,7 +27,7 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
 /**
  * Changes for dynamic loading.
  * 
- * @author S Lee
+ * @author Seung Lee
  */
 public class ProjSpringAppXmlUpgradeTask1 implements UpgradeTask {
 
@@ -38,12 +38,6 @@ public class ProjSpringAppXmlUpgradeTask1 implements UpgradeTask {
 
     private boolean error = false;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
-     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 

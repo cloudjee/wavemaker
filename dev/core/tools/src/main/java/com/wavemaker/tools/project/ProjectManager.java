@@ -47,9 +47,8 @@ import com.wavemaker.tools.util.NoCloseInputStream;
  * Manages projects; list of all available projects, and keeps track of any open projects. Normally this should be
  * session-scoped.
  * 
- * @author small
+ * @author Matt Small
  * @author Jeremy Grelle
- * 
  */
 public class ProjectManager {
 

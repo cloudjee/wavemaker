@@ -24,7 +24,6 @@ import com.wavemaker.runtime.service.ElementType;
  * Used by <code>WSDL</code> to do QName to Java type conversion.
  * 
  * @author Frankie Fu
- * 
  */
 public interface TypeMapper {
 

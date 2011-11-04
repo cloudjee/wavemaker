@@ -25,7 +25,6 @@ import com.wavemaker.tools.service.codegen.ServiceGenerator;
 /**
  * @author Simon Toens
  * @author Jeremy Grelle
- * 
  */
 public class ServiceUtils {
 

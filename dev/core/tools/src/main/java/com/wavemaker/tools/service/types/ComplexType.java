@@ -20,8 +20,7 @@ import java.util.Map;
 /**
  * Individual complex type.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public class ComplexType implements Type {
 

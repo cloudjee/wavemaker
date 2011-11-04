@@ -41,8 +41,8 @@ import com.wavemaker.json.JSONUnmarshaller;
  * the tests.
  * 
  * 
- * @version $Rev$ - $Id$
- * @author small
+ * 
+ * @author Matt Small
  */
 public class TestJsonPerformance extends WMTestCase {
 

@@ -68,8 +68,6 @@ import com.wavemaker.runtime.service.response.LiveDataServiceResponse;
  * and provide hooks to specify any others.
  * 
  * @author Matt Small
- * @version $Rev:22675 $ - $Date:2008-05-30 14:53:23 -0700 (Fri, 30 May 2008) $
- * 
  */
 @ContextConfiguration(locations = "/springapp.xml", loader = SpringTestCaseContextSupport.class)
 public abstract class SpringTestCase extends AbstractJUnit4SpringContextTests implements MockMvcAware {

@@ -25,7 +25,7 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
 /**
  * Changes to use custom class in place of InMemoryDaoImpl
  * 
- * @author S Lee
+ * @author Seung Lee
  * @author Jeremy Grelle
  */
 public class ProjSecurityXmlUpgradeTask1 implements UpgradeTask {
@@ -36,12 +36,6 @@ public class ProjSecurityXmlUpgradeTask1 implements UpgradeTask {
 
     private final String fromStr = "org.acegisecurity.userdetails.memory.InMemoryDaoImpl";
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
-     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
         Resource secxml = project.getSecurityXml();

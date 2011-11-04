@@ -28,7 +28,6 @@ import com.wavemaker.runtime.data.TaskManager;
 
 /**
  * Generated for service "db2sample" on 02/07/2008 13:48:00
- * 
  */
 @SuppressWarnings({ "unchecked" })
 public class DB2Sample implements DataServiceManagerAccess {

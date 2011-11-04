@@ -28,20 +28,13 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
 /**
  * Rename the old 'panes' directory to 'pages'.
  * 
- * @author small
+ * @author Matt Small
  * @author Jeremy Grelle
- * 
  */
 public class PanesRenameUpgrade implements UpgradeTask {
 
     private static final String OLD_PANES_DIR = "panes";
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker .tools.project.Project,
-     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 

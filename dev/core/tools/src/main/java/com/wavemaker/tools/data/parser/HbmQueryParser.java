@@ -28,7 +28,6 @@ import com.wavemaker.tools.data.QueryInfo;
  * Eventually this should move into HbmParser so we can handle generic hbm files with both mappings and queries.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
  */
 public class HbmQueryParser extends BaseHbmParser {
 

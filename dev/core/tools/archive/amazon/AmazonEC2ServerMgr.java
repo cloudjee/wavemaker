@@ -24,7 +24,7 @@ import com.amazonaws.ec2.AmazonEC2Exception;
 import com.amazonaws.ec2.AmazonEC2Config;
 
 /**
- * @author slee
+ * @author Seung Lee
  *
  */
 public class AmazonEC2ServerMgr implements CloudServerMgr {

@@ -18,19 +18,12 @@ import java.io.Serializable;
 import java.util.Comparator;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class OperationComparator implements Comparator<Operation>, Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
-     */
     @Override
     public int compare(Operation o1, Operation o2) {
 

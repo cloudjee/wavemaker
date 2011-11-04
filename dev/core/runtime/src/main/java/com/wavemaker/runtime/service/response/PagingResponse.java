@@ -17,9 +17,7 @@ package com.wavemaker.runtime.service.response;
 /**
  * Denotes paged responses.
  * 
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public interface PagingResponse extends RootServiceResponse {
 

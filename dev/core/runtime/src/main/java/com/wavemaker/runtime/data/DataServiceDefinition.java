@@ -35,7 +35,6 @@ import com.wavemaker.runtime.service.definition.ReflectServiceDefinition;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
  */
 public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition implements DataServiceInternal, ReflectServiceDefinition {
 

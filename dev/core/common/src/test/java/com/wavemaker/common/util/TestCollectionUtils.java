@@ -24,9 +24,7 @@ import java.util.Set;
 import com.wavemaker.infra.WMTestCase;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class TestCollectionUtils extends WMTestCase {
 

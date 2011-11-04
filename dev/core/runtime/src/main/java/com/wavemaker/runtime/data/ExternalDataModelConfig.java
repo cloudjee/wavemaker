@@ -15,9 +15,7 @@
 package com.wavemaker.runtime.data;
 
 /**
- * @author stoens
- * @version $Rev$ - $Date$
- * 
+ * @author Simon Toens
  */
 public interface ExternalDataModelConfig {
 

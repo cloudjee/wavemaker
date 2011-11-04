@@ -25,8 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public class JSONMarshaller_Objects {
 

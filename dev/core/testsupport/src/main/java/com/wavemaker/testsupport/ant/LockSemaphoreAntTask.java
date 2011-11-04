@@ -21,9 +21,7 @@ import org.apache.tools.ant.taskdefs.Property;
 import com.wavemaker.testsupport.UtilTest;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class LockSemaphoreAntTask extends Task {
 

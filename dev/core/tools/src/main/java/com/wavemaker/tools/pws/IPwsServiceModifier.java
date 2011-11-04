@@ -21,7 +21,7 @@ import com.wavemaker.runtime.service.definition.ServiceOperation;
  * This interface defines methods to modify the service definition before generating the service definition file and the
  * types definition script, but after generating java classes.
  * 
- * @author slee
+ * @author Seung Lee
  * 
  */
 public interface IPwsServiceModifier {

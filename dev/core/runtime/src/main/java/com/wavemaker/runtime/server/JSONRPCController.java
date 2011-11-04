@@ -39,19 +39,12 @@ import com.wavemaker.runtime.service.response.ErrorResponse;
  * Controller (in the MVC sense) implementing a JSON interface and view onto the AG framework.
  * 
  * @author Matt Small
- * @version $Rev$ - $Date$
  */
 public class JSONRPCController extends ControllerBase {
 
     /** Logger for this class and subclasses */
     protected final Logger logger = Logger.getLogger(getClass());
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.server.ControllerBase#executeRequest(javax.servlet.http.HttpServletRequest,
-     * javax.servlet.http.HttpServletResponse)
-     */
     @Override
     protected ModelAndView executeRequest(HttpServletRequest request, HttpServletResponse response) throws IOException, WMException {
 
@@ -127,11 +120,6 @@ public class JSONRPCController extends ControllerBase {
         return ret;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.server.ControllerBase#getView()
-     */
     @Override
     protected JsonView getView() {
 
@@ -140,11 +128,6 @@ public class JSONRPCController extends ControllerBase {
         return ret;
     }
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.runtime.server.ControllerBase#handleError(java.lang.String, java.lang.Throwable)
-     */
     @Override
     protected ModelAndView handleError(final String message, Throwable t) {
 

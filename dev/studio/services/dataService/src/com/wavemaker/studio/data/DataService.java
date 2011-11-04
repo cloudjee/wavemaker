@@ -45,7 +45,6 @@ import com.wavemaker.tools.project.ProjectManager;
 /**
  * @author Simon Toens
  * @author Jeremy Grelle
- * 
  */
 @ExposeToClient
 public class DataService {

@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
  * {@link ExposeToClient}.
  * 
  * @see ExposeToClient
- * @author small
+ * @author Matt Small
  * @author Jeremy Grelle
  */
 @Retention(RetentionPolicy.RUNTIME)

@@ -14,7 +14,6 @@
  * Main.java
  *
  * Created on April 27, 2006, 2:42 PM
- *
  */
 
 package org.jvnet.ws.wadl2java;

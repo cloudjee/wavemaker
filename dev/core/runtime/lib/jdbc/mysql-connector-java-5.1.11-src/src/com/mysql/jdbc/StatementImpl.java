@@ -588,9 +588,7 @@ public class StatementImpl implements Statement {
 	private int originalResultSetType = 0;
 	private int originalFetchSize = 0;
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.IStatement#enableStreamingResults()
-	 */
+	
 	public void enableStreamingResults() throws SQLException {
 		this.originalResultSetType = this.resultSetType;
 		this.originalFetchSize = this.fetchSize;

@@ -26,8 +26,6 @@ import com.wavemaker.common.util.StringUtils;
 
 /**
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class DataTypeMapper {
 

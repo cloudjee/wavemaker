@@ -24,8 +24,7 @@ import com.wavemaker.runtime.service.ElementType;
 /**
  * An abstract ReflectServiceDefinition with the new methods implemented, to help aid in the transition.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public abstract class AbstractDeprecatedServiceDefinition implements DeprecatedServiceDefinition {
 
@@ -77,7 +76,6 @@ public abstract class AbstractDeprecatedServiceDefinition implements DeprecatedS
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public List<TypeDefinition> getLocalTypes(String username, String password) { // salesforce
 
         List<ElementType> types = getTypes(username, password);
@@ -94,7 +92,7 @@ public abstract class AbstractDeprecatedServiceDefinition implements DeprecatedS
     }
 
     @Override
-    public List<ElementType> getTypes(String username, String password) { // xxx
+    public List<ElementType> getTypes(String username, String password) {
         return null;
     }
 

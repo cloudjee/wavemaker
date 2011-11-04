@@ -66,11 +66,7 @@ public class CommunicationsException extends SQLException implements StreamingNo
 
 	
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Throwable#getMessage()
-	 */
+	
 	public String getMessage() {
 		// Get the message at last possible moment, but cache it 
 		// and drop references to conn, underlyingException
@@ -84,18 +80,12 @@ public class CommunicationsException extends SQLException implements StreamingNo
 		return this.exceptionMessage;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.sql.SQLException#getSQLState()
-	 */
+	
 	public String getSQLState() {
 		return SQLError.SQL_STATE_COMMUNICATION_LINK_FAILURE;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.mysql.jdbc.StreamingNotifiable#setWasStreamingResults()
-	 */
+	
 	public void setWasStreamingResults() {
 		this.streamingResultSetInPlay = true;
 	}

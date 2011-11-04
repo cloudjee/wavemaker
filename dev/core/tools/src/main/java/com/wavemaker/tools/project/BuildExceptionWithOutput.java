@@ -19,8 +19,7 @@ import org.apache.tools.ant.BuildException;
 /**
  * Adds a compilerOutput field to ant's BuildException.
  * 
- * @author small
- * @version $Rev$ - $Date$
+ * @author Matt Small
  */
 public class BuildExceptionWithOutput extends BuildException {
 

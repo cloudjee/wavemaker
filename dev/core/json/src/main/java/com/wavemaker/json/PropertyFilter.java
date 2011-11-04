@@ -33,11 +33,10 @@ package com.wavemaker.json;
 /**
  * Provides a method to filter out properties.
  * 
- * Based on net.sf.json.util.PropertyFilter by Andres Almiray, (c) 2002-2007 and licensed under ASL 2.0.
+ * Based on <tt>net.sf.json.util.PropertyFilter</tt> by Andres Almiray, (c) 2002-2007 and licensed under ASL 2.0.
  * 
- * Modified by Matt Small <msmall@wavemaker.com>
- * 
- * @version $Rev$ - $Date$
+ * @author Andres Almiray
+ * @author Matt Small
  */
 public interface PropertyFilter {
 

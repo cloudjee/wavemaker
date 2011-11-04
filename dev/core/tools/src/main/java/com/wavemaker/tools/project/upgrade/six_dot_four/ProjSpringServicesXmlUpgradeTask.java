@@ -15,7 +15,7 @@ import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
 
 /**
- * @author ecallahan
+ * @author Ed Callahan
  * 
  */
 public class ProjSpringServicesXmlUpgradeTask implements UpgradeTask {
@@ -24,12 +24,6 @@ public class ProjSpringServicesXmlUpgradeTask implements UpgradeTask {
 
     private static String toStr = "    <import resource=\"classpath:com/wavemaker/runtime/service/waveMakerServiceBean.xml\"/>\r\n</beans>";
 
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
-     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 

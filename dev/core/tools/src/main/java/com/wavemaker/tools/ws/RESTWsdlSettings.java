@@ -17,9 +17,7 @@ package com.wavemaker.tools.ws;
 import java.util.List;
 
 /**
- * @author ffu
- * @version $Rev$ - $Date$
- * 
+ * @author Frankie Fu
  */
 public class RESTWsdlSettings {
 

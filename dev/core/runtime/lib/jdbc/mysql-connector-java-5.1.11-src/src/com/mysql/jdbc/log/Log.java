@@ -28,8 +28,6 @@ package com.mysql.jdbc.log;
  * Unified interface to logging facilities on different platforms
  * 
  * @author Mark Matthews
- * 
- * @version $Id$
  */
 public interface Log {
 	/**

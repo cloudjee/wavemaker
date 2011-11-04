@@ -54,8 +54,6 @@ import javax.xml.namespace.QName;
  *   &lt;/simpleContent>
  * &lt;/complexType>
  * </pre>
- * 
- * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "xsdQNameType", propOrder = { "value" })

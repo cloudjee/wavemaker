@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
  * top-level annotation on a service class.
  * 
  * @see HideFromClient
- * @author small
+ * @author Matt Small
  * @author Jeremy Grelle
  */
 @Retention(RetentionPolicy.RUNTIME)

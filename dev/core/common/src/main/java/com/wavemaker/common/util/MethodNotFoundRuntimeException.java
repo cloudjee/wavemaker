@@ -20,8 +20,6 @@ import com.wavemaker.common.WMRuntimeException;
  * Add more details about method we're trying to invoke here.
  * 
  * @author Simon Toens
- * @version $Rev$ - $Date$
- * 
  */
 public class MethodNotFoundRuntimeException extends WMRuntimeException {
 

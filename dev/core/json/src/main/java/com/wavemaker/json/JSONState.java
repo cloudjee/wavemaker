@@ -24,9 +24,7 @@ import com.wavemaker.json.type.reflect.ReflectTypeState;
  * Contains both JSON serialization/de-serialization state and configuration. State is emphasized; objects of JSONState
  * should not be shared between serialization or de-serialization running in concurrent threads.
  * 
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class JSONState {
 

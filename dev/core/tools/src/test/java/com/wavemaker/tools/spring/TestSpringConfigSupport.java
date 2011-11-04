@@ -41,9 +41,7 @@ import com.wavemaker.tools.spring.beans.ListOrSetType;
 import com.wavemaker.tools.spring.beans.Property;
 
 /**
- * @author ffu
- * @version $Rev:22686 $ - $Date:2008-05-30 16:27:22 -0700 (Fri, 30 May 2008) $
- * 
+ * @author Frankie Fu
  */
 public class TestSpringConfigSupport extends WMTestCase {
 

@@ -31,7 +31,6 @@ import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
 /**
- *
  * @author mh124079
  */
 public class PathSegmentTest extends TestCase {

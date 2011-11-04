@@ -41,8 +41,6 @@ import com.wavemaker.json.type.reflect.converters.DateTypeDefinition;
 
 /**
  * @author Matt Small
- * @version $Rev:22671 $ - $Date:2008-05-30 14:29:23 -0700 (Fri, 30 May 2008) $
- * 
  */
 public class TestJSONSerialization extends WMTestCase {
 

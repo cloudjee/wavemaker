@@ -31,9 +31,7 @@ import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 
 /**
- * @author small
- * @version $Rev$ - $Date$
- * 
+ * @author Matt Small
  */
 public class TestPanesRenameUpgrade extends WMTestCase {
 

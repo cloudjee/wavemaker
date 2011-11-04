@@ -50,7 +50,7 @@ import com.wavemaker.tools.ws.salesforce.SalesforceHelper;
 /**
  * DataService class generation.
  * 
- * @author slee
+ * @author Seung Lee
  */
 public class DataServiceGenerator_SF extends DataServiceGenerator {
 
