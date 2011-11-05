@@ -996,6 +996,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	this.editLayer.activate();
 	this.tomcatLayer.activate();
 	this.tcDeploymentNameEditor.setDataValue(inData.name);
+        this.tcDeploymentTypeEditor.setDataValue("Tomcat Server");
 	this.tcHostEditor.setDataValue(inData.host);
 	this.tcPortEditor.setDataValue(inData.port);
 	this.tcNameEditor.setDataValue(inData.applicationName);
@@ -1052,7 +1053,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	this.cloudFoundryLayer.activate();
 
 	this.cfDeploymentNameEditor.setDataValue(inData.name);
-
+	this.cfDeploymentTypeEditor.setDataValue("CloudFoundry");
 	this.cfNameEditor.setDataValue(inData.applicationName);
 	this.cfHostEditor.setDataValue(inData.target);
 

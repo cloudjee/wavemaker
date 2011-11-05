@@ -105,7 +105,7 @@ DeploymentDialog.widgets = {
 			    settingLayers: ["wm.Layers", {margin: "5,50,5,50", height: "100%", width: "100%"}, {}, {
 				tomcatLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
 				    tcDeploymentNameEditor: ["wm.Text", {"border":"0","caption":"Deployment name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"New Tomcat Deployment","width":"100%", required: true}, {onchange: "deploymentNameChange"}],
-				    tcDeploymentTypeEditor: ["wm.Text", {"border":"0","caption":"Type","captionAlign":"left","captionSize":"140px","displayValue":"Tomcat Server","readonly":true,"width":"100%", required: true}, {}],
+				    tcDeploymentTypeEditor: ["wm.Text", {"border":"0","caption":"Type","captionAlign":"left","captionSize":"140px","readonly":true,"width":"100%", required: true}, {}],
 				    tcHostEditor: ["wm.Text", {"border":"0","caption":"Host/IP address","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"localhost","width":"100%", required: true}, {}],
 				    tcPortEditor: ["wm.Text", {"border":"0","caption":"Port","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"80","width":"100%", required: true}, {}],
 				    tcNameEditor: ["wm.Text", {"border":"0","caption":"Application name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {}],
@@ -119,7 +119,7 @@ DeploymentDialog.widgets = {
 				}],
 				cloudFoundryLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
 				    cfDeploymentNameEditor: ["wm.Text", {"border":"0","caption":"Deployment name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"New CloudFoundry Deployment","width":"100%", required: true}, {onchange: "deploymentNameChange"}],
-				    cfDeploymentTypeEditor: ["wm.Text", {"border":"0","caption":"Type","captionAlign":"left","captionSize":"140px","displayValue":"CloudFoundry","readonly":true,"width":"100%"}, {}],
+				    cfDeploymentTypeEditor: ["wm.Text", {"border":"0","caption":"Type","captionAlign":"left","captionSize":"140px","readonly":true,"width":"100%"}, {}],
 				    cfHostEditor: ["wm.Text", {"border":"0","caption":"CloudFoundry target","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"https://api.cloudfoundry.com","width":"100%", required: true}, {}],
 				    cfNameEditor: ["wm.Text", {"border":"0","caption":"Application name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"","width":"100%", required: true}, {onchange: "cloudFoundryApplicationNameChanged"}],
 				    cfUrlEditor: ["wm.Text", {"border":"0","caption":"URL","captionAlign":"left","captionSize":"140px","displayValue":"http://.cloudfoundry.com/","readonly":true,"width":"100%"}, {}, {
