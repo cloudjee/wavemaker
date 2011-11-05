@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2007-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2007-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
 
 package com.wavemaker.tools.security;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -98,8 +99,8 @@ public class SecurityToolsManager {
         return ret;
     }
 
-    public Resource getAcegiSpringFile() {
-        return getAcegiSpringFile(this.projectMgr.getCurrentProject());
+    public synchronized File getAcegiSpringFile() throws IOException {
+        return getAcegiSpringFile(this.projectMgr.getCurrentProject()).getFile();
     }
 
     private Resource getAcegiSpringFile(Project currentProject) {
@@ -116,7 +117,7 @@ public class SecurityToolsManager {
      * @param create If this is set to true, it will create the Spring file using the template if the Acegi Spring file
      *        does not exist in current project.
      */
-    private Beans getAcegiSpringBeans(boolean create) throws IOException, JAXBException {
+    private synchronized Beans getAcegiSpringBeans(boolean create) throws IOException, JAXBException {
         Project currentProject = this.projectMgr.getCurrentProject();
         Resource securityXml = getAcegiSpringFile(currentProject);
         Beans beans = null;
@@ -144,7 +145,7 @@ public class SecurityToolsManager {
     /**
      * Saves the specified Acegi Spring beans to the current project.
      */
-    private void saveAcegiSpringBeans(Beans beans) throws JAXBException, IOException {
+    private synchronized void saveAcegiSpringBeans(Beans beans) throws JAXBException, IOException {
         Project currentProject = this.projectMgr.getCurrentProject();
         Resource securityXml = getAcegiSpringFile(currentProject);
         SpringConfigSupport.writeBeans(beans, securityXml, currentProject);
@@ -556,17 +557,13 @@ public class SecurityToolsManager {
     }
 
     public void setJOSSORoles(List<String> roles) throws IOException, JAXBException {
-        // not implemented
+        throw new UnsupportedOperationException("Method Not Implemented");
     }
 
     public void setRoles(List<String> roles) throws IOException, JAXBException {
         Beans beans = getAcegiSpringBeans(true);
         SecuritySpringSupport.setRoles(beans, roles);
         saveAcegiSpringBeans(beans);
-        List<String> testRoles = SecuritySpringSupport.getRoles(beans);
-        if( !(testRoles.equals(roles)) && !roles.isEmpty()){
-        	throw new ConfigurationException("Roles not correctly set. Expected: " + roles.toString() + " read: " + testRoles.toString());
-        }
     }
 
     public Resource getLoginHtmlTemplateFile() throws IOException {
