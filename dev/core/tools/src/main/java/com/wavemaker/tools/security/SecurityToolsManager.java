@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import javax.naming.NamingException;
 import javax.naming.directory.DirContext;
@@ -62,7 +64,6 @@ import com.wavemaker.tools.webapp.schema.SecurityRoleType;
 import com.wavemaker.tools.webapp.schema.TransportGuaranteeType;
 import com.wavemaker.tools.webapp.schema.UrlPatternType;
 import com.wavemaker.tools.webapp.schema.UserDataConstraintType;
-import com.wavemaker.tools.webapp.schema.WarPathType;
 import com.wavemaker.tools.webapp.schema.WebAppType;
 import com.wavemaker.tools.webapp.schema.WebResourceCollectionType;
 
@@ -78,6 +79,8 @@ public class SecurityToolsManager {
     private static final String ACEGI_SPRING_TEMPLATE_CLASSPATH = "com/wavemaker/tools/security/project-security-template.xml";
 
     private static final String LOGIN_HTML_TEMPLATE_CLASSPATH = "com/wavemaker/tools/security/login-template.html";
+
+    private final Lock lock = new ReentrantLock();
 
     private final ProjectManager projectMgr;
 
@@ -99,7 +102,7 @@ public class SecurityToolsManager {
         return ret;
     }
 
-    public synchronized File getAcegiSpringFile() throws IOException {
+    public File getAcegiSpringFile() throws IOException {
         return getAcegiSpringFile(this.projectMgr.getCurrentProject()).getFile();
     }
 
@@ -117,7 +120,7 @@ public class SecurityToolsManager {
      * @param create If this is set to true, it will create the Spring file using the template if the Acegi Spring file
      *        does not exist in current project.
      */
-    private synchronized Beans getAcegiSpringBeans(boolean create) throws IOException, JAXBException {
+    private Beans getAcegiSpringBeans(boolean create) throws IOException, JAXBException {
         Project currentProject = this.projectMgr.getCurrentProject();
         Resource securityXml = getAcegiSpringFile(currentProject);
         Beans beans = null;
@@ -234,23 +237,37 @@ public class SecurityToolsManager {
     }
 
     public void setGeneralOptions(boolean enforceSecurity, boolean enforceIndexHtml) throws IOException, JAXBException {
-        Beans beans = getAcegiSpringBeans(true);
-        SecuritySpringSupport.setSecurityResources(beans, enforceSecurity, enforceIndexHtml);
-        saveAcegiSpringBeans(beans);
+        this.lock.lock();
+        try {
+            Beans beans = getAcegiSpringBeans(true);
+            SecuritySpringSupport.setSecurityResources(beans, enforceSecurity, enforceIndexHtml);
+            saveAcegiSpringBeans(beans);
+        } finally {
+            this.lock.unlock();
+        }
     }
 
     public void setGeneralOptions(boolean enforceSecurity) throws IOException, JAXBException {
-        Beans beans = getAcegiSpringBeans(false);
-        SecuritySpringSupport.setSecurityResources(beans, enforceSecurity, false);
-        saveAcegiSpringBeans(beans);
+        this.lock.lock();
+        try {
+            Beans beans = getAcegiSpringBeans(false);
+            SecuritySpringSupport.setSecurityResources(beans, enforceSecurity, false);
+            saveAcegiSpringBeans(beans);
+        } finally {
+            this.lock.unlock();
+        }
     }
 
     public void setStandardOptions(boolean enforceSecurity) throws IOException, JAXBException {
-        Beans beans = getAcegiSpringBeans(false);
-        SecuritySpringSupport.setSecurityResources(beans, enforceSecurity, false);
-        SecuritySpringSupport.setSecurityFilterChain(beans);
-        saveAcegiSpringBeans(beans);
-        logger.warn("Notice: Community Security settings applied to project, use Enteprise Edition.");
+        this.lock.lock();
+        try {
+            Beans beans = getAcegiSpringBeans(false);
+            SecuritySpringSupport.setSecurityResources(beans, enforceSecurity, false);
+            SecuritySpringSupport.setSecurityFilterChain(beans);
+            saveAcegiSpringBeans(beans);
+        } finally {
+            this.lock.unlock();
+        }
     }
 
     public DemoOptions getDemoOptions() throws JAXBException, IOException {
@@ -290,102 +307,95 @@ public class SecurityToolsManager {
      */
     public void setJOSSOOptions(String primaryRole) throws JAXBException, IOException {
         boolean exists = false;
-        this.designServiceMgr.getDeploymentManager().generateRuntime();
+        this.lock.lock();
+        try {
+            this.designServiceMgr.getDeploymentManager().generateRuntime();
 
-        Resource webXml = this.projectMgr.getCurrentProject().getWebXml();
-        WebAppType wat = WebXmlSupport.readWebXml(webXml);
+            Resource webXml = this.projectMgr.getCurrentProject().getWebXml();
+            WebAppType wat = WebXmlSupport.readWebXml(webXml);
 
-        List<Object> watList = wat.getDescriptionAndDisplayNameAndIcon();
-        Iterator<Object> itr = watList.iterator();
-        while (itr.hasNext()) {
-            Object element = itr.next();
-            if (element instanceof SecurityConstraintType) {
-                exists = true;
-                SecurityConstraintType secCon = (SecurityConstraintType) element;
-                AuthConstraintType authCons = secCon.getAuthConstraint();
-                authCons.getRoleName().clear();
-                RoleNameType roleName = new RoleNameType();
-                roleName.setValue(primaryRole);
-                authCons.getRoleName().add(roleName);
+            List<Object> watList = wat.getDescriptionAndDisplayNameAndIcon();
+            Iterator<Object> itr = watList.iterator();
+            while (itr.hasNext()) {
+                Object element = itr.next();
+                if (element instanceof SecurityConstraintType) {
+                    exists = true;
+                    SecurityConstraintType secCon = (SecurityConstraintType) element;
+                    AuthConstraintType authCons = secCon.getAuthConstraint();
+                    authCons.getRoleName().clear();
+                    RoleNameType roleName = new RoleNameType();
+                    roleName.setValue(primaryRole);
+                    authCons.getRoleName().add(roleName);
+                }
+                if (element instanceof SecurityRoleType) {
+                    exists = true;
+                    SecurityRoleType secRole = (SecurityRoleType) element;
+                    RoleNameType theRole = secRole.getRoleName();
+                    theRole.setValue(primaryRole);
+                    secRole.setRoleName(theRole);
+                }
             }
-            if (element instanceof SecurityRoleType) {
-                exists = true;
-                SecurityRoleType secRole = (SecurityRoleType) element;
-                RoleNameType theRole = secRole.getRoleName();
-                theRole.setValue(primaryRole);
-                secRole.setRoleName(theRole);
-            }
-        }
 
-        if (exists) {
+            if (exists) {
+                WebXmlSupport.writeWebXml(null, wat, webXml);
+                return;
+            }
+
+            SecurityConstraintType secCons = new SecurityConstraintType();
+            WebResourceCollectionType webResColl = new WebResourceCollectionType();
+
+            if (exists) {
+                WebXmlSupport.writeWebXml(wat, webXml);
+                return;
+            }
+
+            SecurityConstraintType secCons = new SecurityConstraintType();
+            WebResourceCollectionType webResColl = new WebResourceCollectionType();
+
+            com.wavemaker.tools.webapp.schema.String webString = new com.wavemaker.tools.webapp.schema.String();
+            webString.setValue("protected-resource");
+
+            webResColl.setWebResourceName(webString);
+            UrlPatternType urlPat = new UrlPatternType();
+            urlPat.setValue("/*");
+            webResColl.getUrlPattern().add(urlPat);
+
+            List<HttpMethodType> methods = new ArrayList<HttpMethodType>();
+            HttpMethodType httpMetHead = new HttpMethodType();
+            httpMetHead.setValue("HEAD");
+            methods.add(httpMetHead);
+            HttpMethodType httpMetGet = new HttpMethodType();
+            httpMetGet.setValue("GET");
+            methods.add(httpMetGet);
+            HttpMethodType httpMetPost = new HttpMethodType();
+            httpMetPost.setValue("POST");
+            methods.add(httpMetPost);
+            HttpMethodType httpMetPut = new HttpMethodType();
+            httpMetPut.setValue("PUT");
+            methods.add(httpMetPut);
+            HttpMethodType httpMetDelete = new HttpMethodType();
+            httpMetDelete.setValue("DELETE");
+            methods.add(httpMetDelete);
+            webResColl.getHttpMethod().addAll(methods);
+            secCons.getWebResourceCollection().add(webResColl);
+
+            AuthConstraintType authCons = new AuthConstraintType();
+            RoleNameType roleName = new RoleNameType();
+            roleName.setValue(primaryRole);
+            authCons.getRoleName().add(roleName);
+
+            UserDataConstraintType userDataCons = new UserDataConstraintType();
+            TransportGuaranteeType transGuarantee = new TransportGuaranteeType();
+            transGuarantee.setValue("NONE");
+            userDataCons.setTransportGuarantee(transGuarantee);
+            secCons.setAuthConstraint(authCons);
+            secCons.setUserDataConstraint(userDataCons);
+            wat.getDescriptionAndDisplayNameAndIcon().add(secCons);
+
             WebXmlSupport.writeWebXml(null, wat, webXml);
-            return;
+        } finally {
+            this.lock.unlock();
         }
-
-        SecurityConstraintType secCons = new SecurityConstraintType();
-        WebResourceCollectionType webResColl = new WebResourceCollectionType();
-
-        com.wavemaker.tools.webapp.schema.String webString = new com.wavemaker.tools.webapp.schema.String();
-        webString.setValue("protected-resource");
-
-        webResColl.setWebResourceName(webString);
-        UrlPatternType urlPat = new UrlPatternType();
-        urlPat.setValue("/*");
-        webResColl.getUrlPattern().add(urlPat);
-
-        List<HttpMethodType> methods = new ArrayList<HttpMethodType>();
-        HttpMethodType httpMetHead = new HttpMethodType();
-        httpMetHead.setValue("HEAD");
-        methods.add(httpMetHead);
-        HttpMethodType httpMetGet = new HttpMethodType();
-        httpMetGet.setValue("GET");
-        methods.add(httpMetGet);
-        HttpMethodType httpMetPost = new HttpMethodType();
-        httpMetPost.setValue("POST");
-        methods.add(httpMetPost);
-        HttpMethodType httpMetPut = new HttpMethodType();
-        httpMetPut.setValue("PUT");
-        methods.add(httpMetPut);
-        HttpMethodType httpMetDelete = new HttpMethodType();
-        httpMetDelete.setValue("DELETE");
-        methods.add(httpMetDelete);
-        webResColl.getHttpMethod().addAll(methods);
-        secCons.getWebResourceCollection().add(webResColl);
-
-        AuthConstraintType authCons = new AuthConstraintType();
-        RoleNameType roleName = new RoleNameType();
-        roleName.setValue(primaryRole);
-        authCons.getRoleName().add(roleName);
-
-        UserDataConstraintType userDataCons = new UserDataConstraintType();
-        TransportGuaranteeType transGuarantee = new TransportGuaranteeType();
-        transGuarantee.setValue("NONE");
-        userDataCons.setTransportGuarantee(transGuarantee);
-        secCons.setAuthConstraint(authCons);
-        secCons.setUserDataConstraint(userDataCons);
-        wat.getDescriptionAndDisplayNameAndIcon().add(secCons);
-
-        LoginConfigType loginConf = new LoginConfigType();
-        AuthMethodType authMeth = new AuthMethodType();
-        authMeth.setValue("FORM");
-        loginConf.setAuthMethod(authMeth);
-        FormLoginConfigType loginForm = new FormLoginConfigType();
-        WarPathType loginPage = new WarPathType();
-        loginPage.setValue("/login-redirect.jsp");
-        loginForm.setFormLoginPage(loginPage);
-        WarPathType errorPage = new WarPathType();
-        errorPage.setValue("/login-redirect.jsp");
-        loginForm.setFormErrorPage(errorPage);
-        loginConf.setFormLoginConfig(loginForm);
-        wat.getDescriptionAndDisplayNameAndIcon().add(loginConf);
-
-        SecurityRoleType secRole = new SecurityRoleType();
-        RoleNameType secRoleName = new RoleNameType();
-        secRoleName.setValue(primaryRole);
-        secRole.setRoleName(secRoleName);
-        wat.getDescriptionAndDisplayNameAndIcon().add(secRole);
-
-        WebXmlSupport.writeWebXml(null, wat, webXml);
     }
 
     public void configDemo(DemoUser[] demoUsers) throws JAXBException, IOException {
@@ -561,9 +571,14 @@ public class SecurityToolsManager {
     }
 
     public void setRoles(List<String> roles) throws IOException, JAXBException {
-        Beans beans = getAcegiSpringBeans(true);
-        SecuritySpringSupport.setRoles(beans, roles);
-        saveAcegiSpringBeans(beans);
+        this.lock.lock();
+        try {
+            Beans beans = getAcegiSpringBeans(true);
+            SecuritySpringSupport.setRoles(beans, roles);
+            saveAcegiSpringBeans(beans);
+        } finally {
+            this.lock.unlock();
+        }
     }
 
     public Resource getLoginHtmlTemplateFile() throws IOException {
@@ -621,10 +636,29 @@ public class SecurityToolsManager {
     }
 
     /**
-     * Returns the security filter object definition source map
+     * Sets the project security filter object definition source map
      * 
-     * @return The projects security filter object definition source map
+     * @param urlMap The new object definition source map. Replaces existing map
+     * @throws IOException
+     * @throws JAXBException
      */
+    public void setSecurityFilterODS(Map<String, List<String>> urlMap) throws IOException, JAXBException {
+        Beans beans = null;
+        this.lock.lock();
+        try {
+            beans = getAcegiSpringBeans(false);
+            if (beans == null || beans.getBeanList().isEmpty()) {
+                throw new RuntimeException("Unable to get Security Bean");
+            } else {
+                SecuritySpringSupport.setObjectDefinitionSource(beans, urlMap);
+                saveAcegiSpringBeans(beans);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        } finally {
+            this.lock.unlock();
+        }
+    }
 
     public Map<String, List<String>> getSecurityFilterODS() {
         Beans beans = null;
@@ -639,25 +673,4 @@ public class SecurityToolsManager {
             return SecuritySpringSupport.getObjectDefinitionSource(beans);
         }
     }
-
-    /**
-     * Sets the project security filter object definition source map
-     * 
-     * @param urlMap The new object definition source map. Replaces existing map
-     * @throws IOException
-     * @throws JAXBException
-     */
-    public void setSecurityFilterODS(Map<String, List<String>> urlMap) throws IOException, JAXBException {
-        Beans beans = null;
-        try {
-            beans = getAcegiSpringBeans(false);
-        } catch (Exception e) {
-        }
-        if (beans == null || beans.getBeanList().isEmpty()) {
-        } else {
-            SecuritySpringSupport.setObjectDefinitionSource(beans, urlMap);
-            saveAcegiSpringBeans(beans);
-        }
-    }
-
 }
