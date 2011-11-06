@@ -428,34 +428,50 @@ public class SecurityConfigService {
      */
 
     public void setSecurityFilterODS(List<SecurityURLMap> securityURLMap, Boolean preserveMap, Boolean enforceSecurity, Boolean enforceIndexHtml)
-        throws JAXBException, IOException {
-        Map<String, List<String>> urlMap = new LinkedHashMap<String, List<String>>();
-        Iterator<SecurityURLMap> itr = securityURLMap.iterator();
-        while (itr.hasNext()) {
-            SecurityURLMap thisEntry = itr.next();
-            List<String> attributes = new ArrayList<String>();
-            attributes.add(thisEntry.getAttributes());
-            urlMap.put(thisEntry.getURL().toLowerCase().trim(), attributes);
-        }
-        // ensure '/*.json' is last if present, setup for login, unless preserve
-        // set
-        if (enforceSecurity && !preserveMap) {
-            String indexHtmlAuthz = null;
-            if (enforceIndexHtml) {
-                indexHtmlAuthz = IS_AUTHENTICATED_FULLY;
-            } else {
-                indexHtmlAuthz = IS_AUTHENTICATED_ANONYMOUSLY;
-            }
-            urlMap.put("/index.html", Arrays.asList(new String[] { indexHtmlAuthz }));
-            urlMap.put("/", Arrays.asList(new String[] { indexHtmlAuthz }));
-            urlMap.put("/securityservice.json", Arrays.asList(new String[] { IS_AUTHENTICATED_ANONYMOUSLY }));
-            if (urlMap.get("/*.json") != null) {
-                List<String> jsonEntry = urlMap.remove("/*.json");
-                urlMap.put("/*.json", jsonEntry);
-            }
-        }
-        getSecToolsMgr().setSecurityFilterODS(urlMap);
-    }
+	throws JAXBException, IOException {
+		Map<String, List<String>> urlMap = new LinkedHashMap<String, List<String>>();
+		Iterator<SecurityURLMap> itr = securityURLMap.iterator();
+		while (itr.hasNext()) {
+			SecurityURLMap thisEntry = itr.next();
+			List<String> attributes = new ArrayList<String>();
+			attributes.add(thisEntry.getAttributes());
+			urlMap.put(thisEntry.getURL().toLowerCase().trim(), attributes);
+		}
+		//ensure wildcards are last if present and setup for login, unless preserve set
+		if (enforceSecurity && !preserveMap) {
+			String indexHtmlAuthz = null;
+			if (enforceIndexHtml) {
+				indexHtmlAuthz = IS_AUTHENTICATED_FULLY;
+			} else {
+				indexHtmlAuthz = IS_AUTHENTICATED_ANONYMOUSLY;
+			}
+			urlMap.put("/index.html", Arrays.asList(
+					(new String[] { indexHtmlAuthz })));
+			urlMap.put("/", Arrays.asList(
+					(new String[] { indexHtmlAuthz })));
+			if(urlMap.get("/securityservice.json") != null){
+				urlMap.remove("/securityservice.json");
+			}
+			urlMap.put("/securityservice.json", Arrays.asList(new String[] {IS_AUTHENTICATED_ANONYMOUSLY}));
+			if(urlMap.get("/pages/login/**") != null){
+				urlMap.remove("/pages/login/**");
+			}
+			urlMap.put("/pages/login/**",Arrays.asList(
+					(new String[] { IS_AUTHENTICATED_ANONYMOUSLY })));		 				
+			if(urlMap.get("/pages/**") != null){
+				urlMap.remove("/pages/**");
+			}
+			urlMap.put("/types.js", Arrays.asList(
+					(new String[] { indexHtmlAuthz })));
+			urlMap.put("/pages/**", Arrays.asList(
+					(new String[] { indexHtmlAuthz })));
+			if(urlMap.get("/*.json") != null){ 
+				List<String> jsonEntry = urlMap.remove("/*.json");
+				urlMap.put("/*.json", jsonEntry);
+			}
+		}
+		getSecToolsMgr().setSecurityFilterODS(urlMap);
+	}
 
     /**
      * Set a new Object Definition Source Filter. Replaces previous definition. Only a single attribute per URL is
