@@ -461,8 +461,6 @@ public class SecurityConfigService {
 			if(urlMap.get("/pages/**") != null){
 				urlMap.remove("/pages/**");
 			}
-			urlMap.put("/types.js", Arrays.asList(
-					(new String[] { indexHtmlAuthz })));
 			urlMap.put("/pages/**", Arrays.asList(
 					(new String[] { indexHtmlAuthz })));
 			if(urlMap.get("/*.json") != null){ 

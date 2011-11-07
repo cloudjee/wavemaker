@@ -262,8 +262,6 @@ public class SecuritySpringSupport {
                     (new String[] { IS_AUTHENTICATED_FULLY })));
             urlMap.put("/*.upload", Arrays.asList(
                     (new String[] { IS_AUTHENTICATED_FULLY })));
-            urlMap.put("/types.js", Arrays.asList(
-                    (new String[] { indexHtmlAuthz })));
             urlMap.put("/pages/**", Arrays.asList(
                     (new String[] { indexHtmlAuthz })));
             urlMap.put("/*.json", Arrays.asList(
