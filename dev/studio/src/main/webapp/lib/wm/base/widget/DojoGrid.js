@@ -131,7 +131,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    isSelected = true;
 
 	  if (isSelected) {
-	      if (rowIndex < this.dataSet.getCount()) {
+	      if (rowIndex < this.getRowCount()) {
 		  this.dojoObj.selection.select(rowIndex);
 		  this.onSelectionChange();
 	      }
@@ -527,7 +527,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	this.addRow(obj,selectOnAdd);
     },
 	getRowCount: function() {
-	  return this.dojoObj.rowCount;
+	    return Math.max(this.dojoObj.rowCount, this.dojoObj._by_idx.length);
 	},
 	hasSelection: function() {
 	  return Boolean(this.getSelectedIndex() != -1);

@@ -307,8 +307,10 @@ dojo.declare("wm.AceEditor", wm.Control, {
 					      caption: "Search",
 					      captionSize: "100px",
 						 captionAlign: "left",
-					      width: "100%",
+					      width: "100%",					      
 					      onEnterKeyPress: dojo.hitch(this, "onFindClick")});
+	    
+	    this._searchEditor.editor.set("selectOnClick",true);
 	    var checkboxPanel = new wm.Panel({owner: this,
 					     parent: this._searchDialog.containerWidget,
 					     name: "checkboxPanel",
