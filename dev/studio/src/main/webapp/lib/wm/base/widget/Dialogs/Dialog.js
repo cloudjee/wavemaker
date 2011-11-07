@@ -414,7 +414,12 @@ dojo.declare("wm.Dialog", wm.Container, {
 		}
 	},
     delayedRenderBounds: function() {
-	wm.job(this.getRuntimeId() + ".renderBounds", 5, dojo.hitch(this, "renderBounds"));
+	wm.job(this.getRuntimeId() + ".renderBounds", 5, dojo.hitch(this, function() {
+	    var bounds = dojo.clone(this.bounds);
+	    this.renderBounds();
+	    if (bounds.w != this.bounds.w || bounds.h != this.bounds.h)
+		this.reflow();
+	}));
     },
  	renderBounds: function() {
 		if (this.showing) {
