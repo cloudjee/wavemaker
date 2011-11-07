@@ -443,8 +443,12 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    var item = this.dojoObj.getItem(rowIndex);
 
 	    this.dojoObj.store._setValueOrValues(item, fieldName, newValue, !noRendering);
-
-	      this.updateSelectedItem(rowIndex);
+	    if (item._wmVariable && item._wmVariable[0]) {
+		item._wmVariable[0].setValue(fieldName, newValue);
+	    }
+	    if (this.getSelectedIndex() == rowIndex) {
+		this.updateSelectedItem(rowIndex);
+	    }
 
 	},
 	deleteRow: function(rowIndex) {
