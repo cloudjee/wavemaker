@@ -1509,9 +1509,12 @@ this.label.enable();
 	},
 
     // Only if you subscribe to these are these connected; if you subscribe then the event stops here
-    onRightClick: function(event){dojo.stopEvent(event);},
-    onMouseOver: function(event){dojo.stopEvent(event);}, 
-    onMouseOut: function(event){dojo.stopEvent(event);},
+    onRightClick: function(event){
+    },
+    onMouseOver: function(event){
+    }, 
+    onMouseOut: function(event){
+    },
 
 
     toHtml: function() {return "";},

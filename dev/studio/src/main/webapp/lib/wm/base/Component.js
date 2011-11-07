@@ -812,14 +812,18 @@ this.panel1.createComponent("custom", "wm.Panel", {
 
 			    } else if (n.match(/^onMouseOver\d*$/)) {
 				inComponent.connect(inComponent.domNode, "onmouseover", function(e) {
+				    var event = {x: e.pageX, y: e.pageY,target: e.target};
+				    dojo.stopEvent(e);
 				    wm.job(inComponent.getRuntimeId + "MouseMoveEvents", 50, function() {
-					inComponent.onMouseOver(e);
+					inComponent.onMouseOver(event);
 				    });
 				});
 			    } else if (n.match(/^onMouseOut\d*$/)) {
 				inComponent.connect(inComponent.domNode, "onmouseout", function(e) {
+				    var event = {x: e.pageX, y: e.pageY,target: e.target};
+				    dojo.stopEvent(e);
 				    wm.job(inComponent.getRuntimeId + "MouseMoveEvents", 50, function() {
-					inComponent.onMouseOut(e);
+					inComponent.onMouseOut(event);
 				    });
 				});
 			    } else if (n.match(/^onEnterKeyPress\d*$/) && inComponent instanceof wm.Container) {
