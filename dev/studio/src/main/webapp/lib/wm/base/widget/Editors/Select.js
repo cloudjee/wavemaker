@@ -626,29 +626,35 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		    this.createDataSet();
             this.dataField = "All Fields"; // just in case someone somehow changed it, this must be all fields to work.
 	},
-	createDataSet: function() {
-		wm.fire(this.$.liveVariable, "destroy");
-		var v = wm.getFormLiveView(wm.getParentForm(this));
-		if (v) {
-			var ff = wm.getFormField(this);
-		        if (!this._isDesignLoaded) {
-			    v.addRelated(ff);
-			}
-			var lv = this.dataSet = new wm.LiveVariable({
-				name: "liveVariable",
-				owner: this,
-				autoUpdate: false,
-				startUpdate: false,
-				_rootField: ff,
-			        liveView: v,
-			    maxResults: this.maxResults,
-			    ignoreCase: this.ignoreCase,
-			    orderBy: this.orderBy // right now, only FilteringSelect provides the orderBy property
-			});
-			this.selectedItem.setType(this.dataSet.type);
-			this.createDataSetWire(lv);
-		}
+	createDataSet: function () {
+	    wm.fire(this.$.liveVariable, "destroy");
+
+	    /* If these classes and methods aren't loaded, then we don't actually need to try any of the logic below */
+	    if (wm.LiveForm && wm.getParentForm) {
+	        var v = wm.getFormLiveView(wm.getParentForm(this));
+	        if (v) {
+	            var ff = wm.getFormField(this);
+	            if (!this._isDesignLoaded) {
+	                v.addRelated(ff);
+	            }
+	            var lv = this.dataSet = new wm.LiveVariable({
+	                name: "liveVariable",
+	                owner: this,
+	                autoUpdate: false,
+	                startUpdate: false,
+	                _rootField: ff,
+	                liveView: v,
+	                maxResults: this.maxResults,
+	                ignoreCase: this.ignoreCase,
+	                orderBy: this.orderBy // right now, only FilteringSelect provides the orderBy property
+	            });
+	            this.selectedItem.setType(this.dataSet.type);
+	            this.createDataSetWire(lv);
+	        }
+	    }
 	},
+	
+
 	createDataSetWire: function(inDataSet) {
 		var w = this._dataSetWire = new wm.Wire({
 			name: "dataFieldWire",
