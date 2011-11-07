@@ -425,6 +425,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
 	/* This method is flawed; tab does not work if cells are edited this way */
 	editCell: function(rowIndex, fieldName) {
+	    wm.onidle(this, function() {
 	  var cells = this.dojoObj.layout.cells;
 	  for (var i = 0; i < cells.length; i++) {
 	    if (cells[i].field == fieldName) {
@@ -433,6 +434,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		return;
 	    }
 	  }
+	    });
 	},
         setCell: function(rowIndex, fieldName, newValue, noRendering) {
 	  if (rowIndex < 0) {
