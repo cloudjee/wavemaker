@@ -42,8 +42,6 @@
 								<source>services/securityServiceJOSSO/src</source>
 								<source>services/servicesService/src</source>
 								<source>services/studioService/src</source>
-								<source>services/warpFlowService/src</source>
-								<source>services/warpLoginService/src</source>
 								<source>services/waveMakerService/src</source>
 								<source>services/webService/src</source>
 							</sources>
@@ -143,18 +141,6 @@
 								</resource>
 								<resource>
 									<directory>services/studioService/src</directory>
-									<excludes>
-										<exclude>**/*.java</exclude>
-									</excludes>
-								</resource>
-								<resource>
-									<directory>services/warpFlowService/src</directory>
-									<excludes>
-										<exclude>**/*.java</exclude>
-									</excludes>
-								</resource>
-								<resource>
-									<directory>services/warpLoginService/src</directory>
 									<excludes>
 										<exclude>**/*.java</exclude>
 									</excludes>
