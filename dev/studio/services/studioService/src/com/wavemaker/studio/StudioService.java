@@ -362,7 +362,7 @@ public class StudioService extends ClassLoader {
     @ExposeToClient
     public void writeWebFile(String path, String data, boolean noClobber) throws IOException {
 
-        String newPath = ProjectConstants.WEB_DIR + "/" + path;
+        String newPath = ProjectConstants.WEB_DIR + (path.startsWith("/") ? path.substring(1) : path);
         this.projectManager.getCurrentProject().writeFile(newPath, data, noClobber);
     }
 

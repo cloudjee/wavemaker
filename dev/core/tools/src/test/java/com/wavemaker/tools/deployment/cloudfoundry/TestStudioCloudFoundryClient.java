@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Collections;
 
 import org.apache.commons.logging.Log;
@@ -46,6 +47,8 @@ public class TestStudioCloudFoundryClient {
 
     private Project project;
 
+    private WebAppAssembler webAppAssembler;
+
     @BeforeClass
     public static void init() throws Exception {
         if (!StringUtils.hasText(TEST_USER_EMAIL)) {
@@ -58,10 +61,13 @@ public class TestStudioCloudFoundryClient {
     }
 
     @Before
-    public void setUp() throws IOException {
+    public void setUp() throws Exception {
         Resource wmHome = this.studioConfiguration.createTempDir();
         this.studioConfiguration.setTestWaveMakerHome(wmHome.getFile());
         this.studioConfiguration.setServletContext(this.servletContext);
+        this.webAppAssembler = new WebAppAssembler();
+        this.webAppAssembler.setStudioConfiguration(this.studioConfiguration);
+        this.webAppAssembler.afterPropertiesSet();
         Resource projectsDir = wmHome.createRelative("projects/");
         Resource zipProject = this.studioConfiguration.copyFile(projectsDir, new ClassPathResource(
             "com/wavemaker/tools/deployment/cloudfoundry/javaservicesproject.zip").getInputStream(), "javaservicesproject.zip");
@@ -78,7 +84,8 @@ public class TestStudioCloudFoundryClient {
 
     @Test
     public void testUploadProject() throws IOException {
-        StudioCloudFoundryClient client = new StudioCloudFoundryClient(TEST_USER_EMAIL, TEST_USER_PASS, "http://api.wmtest.cloudfoundry.me");
+        StudioCloudFoundryClient client = new StudioCloudFoundryClient(TEST_USER_EMAIL, TEST_USER_PASS, null, new URL(
+            "http://api.wmtest.cloudfoundry.me"), this.webAppAssembler);
         client.login();
         client.createApplication(this.project.getProjectName(), CloudApplication.SPRING, client.getDefaultApplicationMemory(CloudApplication.SPRING),
             Collections.singletonList("http://" + this.project.getProjectName() + ".wmtest.cloudfoundry.me"), null, true);

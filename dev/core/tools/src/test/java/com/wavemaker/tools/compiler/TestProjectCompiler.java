@@ -218,4 +218,20 @@ public class TestProjectCompiler {
         Resource types = project.getWebAppRoot().createRelative("types.js");
         assertTrue(types.exists());
     }
+
+    @Test
+    public void testCompileAndCopyResources() throws IOException {
+        Project project = this.projectManager.getCurrentProject();
+
+        Resource fooSrc = project.getProjectRoot().createRelative("src/Foo.java");
+        project.writeFile(fooSrc, "public class Foo{public int getInt(){return 12;}}");
+
+        this.projectCompiler.compileProject("ProjectCompilerProject");
+
+        Resource fooClass = project.getWebInfClasses().createRelative("Foo.class");
+        assertTrue(fooClass.exists());
+
+        Resource classPathProps = project.getWebInfClasses().createRelative("log4j.properties");
+        assertTrue(classPathProps.exists());
+    }
 }

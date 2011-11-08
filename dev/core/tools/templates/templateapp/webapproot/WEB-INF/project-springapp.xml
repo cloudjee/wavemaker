@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+			http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+			http://www.springframework.org/schema/mvc
+			http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
+
+	<import resource="classpath:springapp.xml" />
+	<import resource="project-config.xml" />
+	<import resource="project-services.xml" />
+	<import resource="project-managers.xml" />
+	<import resource="project-security.xml" />
+	<import resource="project-spring.xml" />
+	<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping"
+		id="urlMapping">
+		<property name="mappings">
+			<value>
+				/**/*.json=agJSONController
+				/**/*.download=agFileDownloadController
+				/**/*.flashUploader=agFlashFileUploadController
+				/**/*.upload=agFileUploadController
+				/modules/**=wmModuleController
+				/lib/build/Gzipped/*=fileController
+				/lib/build/themes/**=fileController
+				/lib/wm/base/widget/themes/**=fileController
+				/lib/dojo/**=fileController
+				/lib/runtimeLoader.js=fileController
+				/lib/boot/boot.js=fileController
+				/resources/images/**=fileController
+				/resources/gzipped/**=fileController
+				/config.js=fileController
+			</value>
+		</property>
+		<property name="alwaysUseFullPath" value="true" />
+	</bean>
+
+	<!--  <beans profile="cloud">-->
+		<mvc:resources mapping="/wavemaker/**" location="/"
+			cache-period="31556926" />
+	<!-- </beans> -->
+</beans>

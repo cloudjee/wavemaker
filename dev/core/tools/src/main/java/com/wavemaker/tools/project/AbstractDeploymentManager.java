@@ -68,7 +68,7 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
         return isCloud;
     }
 
-    protected LocalStudioConfiguration studioConfiguration;
+    protected StudioConfiguration studioConfiguration;
 
     protected ProjectManager projectManager;
 
@@ -92,11 +92,11 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
         }
     }
 
-    public LocalStudioConfiguration getStudioConfiguration() {
+    public StudioConfiguration getStudioConfiguration() {
         return this.studioConfiguration;
     }
 
-    public void setStudioConfiguration(LocalStudioConfiguration studioConfiguration) {
+    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
         this.studioConfiguration = studioConfiguration;
     }
 
@@ -733,13 +733,13 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
         try {
             deploymentsResource = this.studioConfiguration.getCommonDir().createRelative(DEPLOYMENTS_FILE);
             if (!deploymentsResource.exists()) {
-                deploymentsResource.getFile().createNewFile();
+                this.projectManager.getCurrentProject().writeFile(deploymentsResource, "{}");
                 return new Deployments();
             } else {
                 String s = FileCopyUtils.copyToString(new InputStreamReader(deploymentsResource.getInputStream()));
                 if (s.length() > 0) {
                     JSON result = JSONUnmarshaller.unmarshal(s);
-                    Assert.isTrue(result instanceof JSONObject, deploymentsResource.getFile().getAbsolutePath() + " is in an unexpected format.");
+                    Assert.isTrue(result instanceof JSONObject, deploymentsResource.getDescription() + " is in an unexpected format.");
                     return (Deployments) JSONUtils.toBean((JSONObject) result, Deployments.class);
                 } else {
                     return new Deployments();

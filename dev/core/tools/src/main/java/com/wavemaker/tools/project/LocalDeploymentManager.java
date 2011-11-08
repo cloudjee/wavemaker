@@ -447,17 +447,17 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
             newProperties.put(PROJECT_ENCODING_PROPERTY, getProjectManager().getCurrentProject().getEncoding());
         }
 
-        newProperties.put(TOMCAT_HOST_PROPERTY, getStudioConfiguration().getTomcatHost());
-        System.setProperty("wm.proj." + TOMCAT_HOST_PROPERTY, getStudioConfiguration().getTomcatHost());
+        newProperties.put(TOMCAT_HOST_PROPERTY, ((LocalStudioConfiguration) getStudioConfiguration()).getTomcatHost());
+        System.setProperty("wm.proj." + TOMCAT_HOST_PROPERTY, ((LocalStudioConfiguration) getStudioConfiguration()).getTomcatHost());
 
-        newProperties.put(TOMCAT_PORT_PROPERTY, getStudioConfiguration().getTomcatPort());
-        System.setProperty("wm.proj." + TOMCAT_PORT_PROPERTY, getStudioConfiguration().getTomcatPort() + "");
+        newProperties.put(TOMCAT_PORT_PROPERTY, ((LocalStudioConfiguration) getStudioConfiguration()).getTomcatPort());
+        System.setProperty("wm.proj." + TOMCAT_PORT_PROPERTY, ((LocalStudioConfiguration) getStudioConfiguration()).getTomcatPort() + "");
 
-        newProperties.put("tomcat.manager.username", getStudioConfiguration().getTomcatManagerUsername());
-        System.setProperty("wm.proj.tomcat.manager.username", getStudioConfiguration().getTomcatManagerUsername());
+        newProperties.put("tomcat.manager.username", ((LocalStudioConfiguration) getStudioConfiguration()).getTomcatManagerUsername());
+        System.setProperty("wm.proj.tomcat.manager.username", ((LocalStudioConfiguration) getStudioConfiguration()).getTomcatManagerUsername());
 
-        newProperties.put("tomcat.manager.password", getStudioConfiguration().getTomcatManagerPassword());
-        System.setProperty("wm.proj.tomcat.manager.password", getStudioConfiguration().getTomcatManagerPassword());
+        newProperties.put("tomcat.manager.password", ((LocalStudioConfiguration) getStudioConfiguration()).getTomcatManagerPassword());
+        System.setProperty("wm.proj.tomcat.manager.password", ((LocalStudioConfiguration) getStudioConfiguration()).getTomcatManagerPassword());
 
         newProperties.putAll(properties);
 

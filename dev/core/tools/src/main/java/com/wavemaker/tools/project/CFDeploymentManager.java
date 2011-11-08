@@ -22,6 +22,7 @@ public class CFDeploymentManager extends AbstractDeploymentManager {
 
     @Override
     public String testRunStart() {
+        compile();
         DeploymentTarget target = this.deploymentTargetManager.getDeploymentTarget(DeploymentType.CLOUD_FOUNDRY);
         DeploymentInfo deployment = findCloudFoundryDeploymentInfo(target);
         if (deployment != null) {

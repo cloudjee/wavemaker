@@ -27,6 +27,8 @@ import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardLocation;
 
+import org.springframework.util.Assert;
+
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.apt.ServiceConfigurationProcessor;
 import com.wavemaker.tools.apt.ServiceDefProcessor;
@@ -59,9 +61,16 @@ public class ProjectCompiler {
         JavaCompiler compiler = ServiceLoader.load(JavaCompiler.class).iterator().next();
         ClassFileManager projectFileManager;
         Iterable<JavaFileObject> sourceFiles = null;
+        Iterable<JavaFileObject> resourceFiles = null;
         try {
             projectFileManager = new ClassFileManager(compiler.getStandardFileManager(null, null, null), this.studioConfiguration, project);
             sourceFiles = projectFileManager.list(StandardLocation.SOURCE_PATH, "", Collections.singleton(Kind.SOURCE), true);
+            resourceFiles = projectFileManager.list(StandardLocation.SOURCE_PATH, "", Collections.singleton(Kind.OTHER), true);
+            for (JavaFileObject resourceFile : resourceFiles) {
+                Assert.isTrue(resourceFile instanceof GenericResourceFileObject, "Expected a Resource-based JavaFileObject");
+                this.studioConfiguration.copyFile(project.getWebInfClasses(), resourceFile.openInputStream(),
+                    ((GenericResourceFileObject) resourceFile).getFilename());
+            }
 
         } catch (IOException e) {
             throw new WMRuntimeException("Could not create Java file manager for project " + projectName, e);

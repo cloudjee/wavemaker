@@ -69,6 +69,8 @@ public class VmcDeploymentTarget implements DeploymentTarget {
 
     private DataModelManager dataModelManager;
 
+    private WebAppAssembler webAppAssembler;
+
     static {
         Map<String, String> props = new LinkedHashMap<String, String>();
         props.put(VMC_USERNAME_PROPERTY, "username@mydomain.com");
@@ -79,6 +81,10 @@ public class VmcDeploymentTarget implements DeploymentTarget {
 
     public void setDataModelManager(DataModelManager dataModelManager) {
         this.dataModelManager = dataModelManager;
+    }
+
+    public void setWebAppAssembler(WebAppAssembler webAppAssembler) {
+        this.webAppAssembler = webAppAssembler;
     }
 
     @Override
@@ -379,7 +385,7 @@ public class VmcDeploymentTarget implements DeploymentTarget {
         }
 
         try {
-            StudioCloudFoundryClient client = new StudioCloudFoundryClient(deploymentInfo.getToken(), url);
+            StudioCloudFoundryClient client = new StudioCloudFoundryClient(deploymentInfo.getToken(), url, this.webAppAssembler);
             return client;
         } catch (MalformedURLException ex) {
             throw new WMRuntimeException("CloudFoundry target URL is invalid", ex);

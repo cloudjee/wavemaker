@@ -27,10 +27,10 @@ import com.wavemaker.runtime.data.DataServiceType;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.DataModelDeploymentConfiguration;
 import com.wavemaker.tools.project.LocalDeploymentManager;
-import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.project.ProjectManager;
+import com.wavemaker.tools.project.StudioConfiguration;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.util.DesignTimeUtils;
@@ -43,7 +43,7 @@ public class ServiceDeploymentManager {
 
     private List<ServiceDeployment> serviceDeployments = new ArrayList<ServiceDeployment>(1);
 
-    private LocalStudioConfiguration studioConfiguration = null;
+    private StudioConfiguration studioConfiguration = null;
 
     private ProjectManager projectMgr = null;
 
@@ -129,7 +129,7 @@ public class ServiceDeploymentManager {
         this.serviceDeployments = serviceDeployments;
     }
 
-    public void setStudioConfiguration(LocalStudioConfiguration studioConfiguration) {
+    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
         this.studioConfiguration = studioConfiguration;
     }
 

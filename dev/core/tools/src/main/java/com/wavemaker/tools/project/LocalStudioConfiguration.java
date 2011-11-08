@@ -416,11 +416,11 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
         return new ServletContextResource(this.servletContext, "/");
     }
 
-    @Override
-    public Resource createStudioWebAppRootReleative(String relativePath) throws IOException {
-        return this.getStudioWebAppRoot().createRelative(relativePath);
-    }
-
+    /*
+     * (non-Javadoc)
+     * 
+     * @see com.wavemaker.tools.project.StudioConfiguration#getPreferencesMap()
+     */
     @Override
     public Map<String, String> getPreferencesMap() {
 
@@ -694,9 +694,22 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
     @Override
     public String getPath(Resource file) {
         try {
-            return file.getFile().getPath();
+            String path = StringUtils.cleanPath(file.getFile().getPath());
+            if (file.getFile().isDirectory() && !path.endsWith("/")) {
+                path += "/";
+            }
+            return path;
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
+        }
+    }
+
+    @Override
+    public boolean isDirectory(Resource file) {
+        try {
+            return file.getFile().isDirectory();
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
         }
     }
 }

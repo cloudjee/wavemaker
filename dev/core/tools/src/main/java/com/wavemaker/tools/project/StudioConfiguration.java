@@ -41,8 +41,6 @@ public interface StudioConfiguration {
     // other studio information
     public abstract Resource getStudioWebAppRoot();
 
-    public abstract Resource createStudioWebAppRootReleative(String relativePath) throws IOException;
-
     /**
      * Get a map of all known preferences.
      */
@@ -75,5 +73,7 @@ public interface StudioConfiguration {
     public abstract void setPreferencesMap(Map<String, String> prefs);
 
     public abstract String getPath(Resource file);
+
+    public abstract boolean isDirectory(Resource file);
 
 }
