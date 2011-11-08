@@ -510,24 +510,42 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	  return result;
 	},
     addEmptyRow: function(selectOnAdd) {
-	var type = wm.typeManager.getType(this.getDataSet().type);
-	var obj = {};
-	for (var prop in type.fields) {
-	    switch(type.fields[prop].type) {
+	    var obj = {};
+
+	for (var i = 0; i < this.columns.length; i++) {
+	    var column = this.columns[i];
+	    var columnid = column.field||column.id;
+
+	    var parts = columnid.split(".");
+	    var typeName = this.dataSet.type;
+	    var type = wm.typeManager.getType(typeName);
+	    for (var partnum = 0; partnum < parts.length; partnum++) {
+		if (type && type.fields) {
+		    var field = type.fields[parts[partnum]];
+		    if (field) {
+			typeName = type.fields[parts[partnum]].type;
+			type = wm.typeManager.getType(typeName);
+		    } else {
+			type = "java.lang.String";
+		    }
+		}
+	    }
+
+	    switch(typeName) {
 	    case "java.lang.Integer":
 	    case "java.lang.Double":
 	    case "java.lang.Float":
 	    case "java.lang.Short":
-		obj[prop] = "0";
+		obj[columnid] = "0";
 		break;
 	    case "java.lang.Date":
-		obj[prop] = new Date().getTime();
+		obj[columnid] = new Date().getTime();
 		break;
 	    case "java.lang.Boolean":
-		obj[prop] = false;
+		obj[columnid] = false;
 		break;
 	    default:
-		obj[prop] = "&nbsp;";
+		obj[columnid] = "&nbsp;";
 	    }
 	}
 	this.addRow(obj,selectOnAdd);
