@@ -41,7 +41,7 @@ wm.componentList = {
 	'wm.Tree': ['wm.base.widget.Trees.Tree'],
 	'wm.PropertyTree': ['wm.base.widget.Trees.PropertyTree'],
 	'wm.ObjectTree': ['wm.base.widget.Trees.ObjectTree'],
-        "wm.DraggableTree":['wm.base.widget.Tree.DraggableTree'],
+        "wm.DraggableTree":['wm.base.widget.Trees.DraggableTree'],
 	'wm.Gadget': ['build.Gzipped.wm_gadgets'],
 	'wm.gadget.YouTube': ['build.Gzipped.wm_gadgets'],
 	'wm.gadget.FacebookLikeButton': ['build.Gzipped.wm_gadgets'],
