@@ -87,8 +87,10 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 		else
 		    inLayer.hide();
 		this.decoree.renderBounds(); // in case number of rows of tabs has changed
-		if (!currentLayer.isDestroyed) currentLayer.activate();
-		else if (currentIndex > 0) parent.setLayerIndex(currentIndex-1);
+		if (!currentLayer.isDestroyed) {
+		    currentLayer.activate();
+		    currentLayer.parent.layerIndex = dojo.indexOf(currentLayer.parent.layers, currentLayer);
+		} else if (currentIndex > 0) parent.setLayerIndex(currentIndex-1);
 		else parent.setLayerIndex(0);
 		    
 	    } else {
