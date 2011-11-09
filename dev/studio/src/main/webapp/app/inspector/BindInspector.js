@@ -508,14 +508,14 @@ dojo.declare("wm.DataInspector", wm.BindInspector, {
 		// if its undefined, then presumably it failed to compile
 		var tmp2 = eval(tmp);		
 		if (tmp2 === undefined) {
-		    this.beginBind(origProp, this.bindingOwner);
+		    this.beginBind(origProp, dojo.byId("propinspect_row_" + origProp));
 		    studio.bindDialog.bindSourceDialog.expressionRb.editor.setChecked(true);
 		    studio.bindDialog.bindSourceDialog.expressionEditor.setDataValue(inValue);
 		    app.toastError(studio.getDictionaryItem("wm.DataInspector.TOAST_EXPRESSION_FAILED"));
 		    return;
 		}
 	    } catch(e) {
-		    this.beginBind(origProp, this.bindingOwner);
+		this.beginBind(origProp, dojo.byId("propinspect_row_" + origProp));
 		studio.bindDialog.bindSourceDialog.expressionRb.editor.setChecked(true);
 		studio.bindDialog.bindSourceDialog.expressionEditor.setDataValue(inValue);
 		    app.toastError(studio.getDictionaryItem("wm.DataInspector.TOAST_EXPRESSION_FAILED"));
