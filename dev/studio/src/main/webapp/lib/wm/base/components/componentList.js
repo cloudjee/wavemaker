@@ -41,6 +41,7 @@ wm.componentList = {
 	'wm.Tree': ['wm.base.widget.Trees.Tree'],
 	'wm.PropertyTree': ['wm.base.widget.Trees.PropertyTree'],
 	'wm.ObjectTree': ['wm.base.widget.Trees.ObjectTree'],
+        "wm.DraggableTree":['wm.base.widget.Tree.DraggableTree'],
 	'wm.Gadget': ['build.Gzipped.wm_gadgets'],
 	'wm.gadget.YouTube': ['build.Gzipped.wm_gadgets'],
 	'wm.gadget.FacebookLikeButton': ['build.Gzipped.wm_gadgets'],
@@ -128,7 +129,6 @@ wm.componentList = {
 	'wm.IFrame':['wm.base.widget.IFrame'],
 	'wm.FeedList':['wm.base.widget.FeedList'],
 	'wm.ListViewer':['wm.base.widget.ListViewer'],
-        "wm.DraggableTree":['wm.base.widget.DraggableTree'],
 	
 	'wm.LogoutVariable':['wm.base.components.LogoutVariable'],
 	'wm.Service':['wm.base.components.Service']
