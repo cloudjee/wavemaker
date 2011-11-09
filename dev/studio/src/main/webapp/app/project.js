@@ -1452,6 +1452,9 @@ Studio.extend({
 
 		bd.bindSourceDialog.resourceRb.editor.setChecked(true);
 		bd.bindSourceDialog.treeControlsPanel.hide();
+		if (bd.bindSourceDialog.applyButton.caption !== this.getDictionaryItem("IMPORT_RESOURCE_BUTTON_CAPTION")) {
+		    bd.bindSourceDialog.applyButton._oldCaption =  bd.bindSourceDialog.applyButton.caption;		    
+		}
 		bd.bindSourceDialog.applyButton.setCaption(this.getDictionaryItem("IMPORT_RESOURCE_BUTTON_CAPTION"));
 		bd.bindSourceDialog.applyButtonClick = function() {
 		    var filepath = bd.bindSourceDialog.bindEditor.getValue("dataValue");

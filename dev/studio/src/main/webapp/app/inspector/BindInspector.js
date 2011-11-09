@@ -354,6 +354,10 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
     /* Show the bind dialog, setup for binding the selected property */
 	beginBind: function(inPropName, inNode) {
 	    studio.bindDialog.page.initBinding();
+	    if (studio.bindDialog.bindSourceDialog.applyButton._oldCaption) {
+		studio.bindDialog.bindSourceDialog.applyButton.setCaption(studio.bindDialog.bindSourceDialog.applyButton._oldCaption);
+		delete studio.bindDialog.bindSourceDialog.applyButton._oldCaption;
+	    }
 		var
 			bd = studio.bindDialog,
 			p = this.getBindDialogProps(inPropName),
