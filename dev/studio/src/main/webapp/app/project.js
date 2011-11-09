@@ -1469,7 +1469,10 @@ Studio.extend({
 
 		    bd.bindSourceDialog.cancelButtonClick();
 		};
-
+		var closeConnect = dojo.connect(bd, "onClose", this, function() {
+		    dojo.disconnect(closeConnect);
+		    bd.bindSourceDialog.applyButtonClick = bd.bindSourceDialog.constructor.prototype.applyButtonClick;
+		});
 		bd.show();
 		bd.domNode.style.display = "block"; // Obviously I'm doing something wrong; this shouldn't be needed
 		return true;
