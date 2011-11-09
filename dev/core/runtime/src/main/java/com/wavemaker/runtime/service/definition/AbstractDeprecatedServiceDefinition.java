@@ -117,7 +117,6 @@ public abstract class AbstractDeprecatedServiceDefinition implements DeprecatedS
         return null;
     }
 
-    @Override
     public List<ElementType> getInputTypesNoCaseShift(String operationName) {
         return null;    
     }
