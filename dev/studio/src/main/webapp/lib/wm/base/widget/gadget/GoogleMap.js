@@ -320,7 +320,7 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
 	this._clickMarker(this._markers[inIndex], this.dataSet.getItem(inIndex));
     },
     _clickMarker: function(inMarker, inData) {
-	var content = "<h3>" + inData.getValue(this.titleField) + "</h3>" + inData.getValue(this.descriptionField);
+	var content = "<h3 class='MapMarkerTitle'>" + inData.getValue(this.titleField) + "</h3><div class='MapMarkerDescription'>" + inData.getValue(this.descriptionField) + "</div>";
 	this._infoWindow.setContent(content);
 	this._infoWindow.open(this._map, inMarker);
 	this.onMarkerChange(inData);
@@ -357,5 +357,13 @@ wm.Object.extendSchema(wm.gadget.GoogleMap, {
     latitude: {group: "Map", order: 1, bindTarget: 1},
     longitude: {group: "Map", order: 2, bindTarget: 1},
     zoom: {group: "Map", order: 3, options: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]},
-    mapType: {group: "Map", order: 4}
+    mapType: {group: "Map", order: 4},
+    
+    setZoom: {group: "method", method: true},
+    setLatitude:{group: "method", method: true},
+    setLongitude:{group: "method", method: true},
+    fitToMarkers:{group: "method", method: true},
+    setMapType:{group: "method", method: true},
+    setDataSet:{group: "method", method: true},
+    selectMarkerByIndex:{group: "method", method: true}
 });
