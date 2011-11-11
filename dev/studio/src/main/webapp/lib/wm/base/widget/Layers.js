@@ -386,31 +386,31 @@ dojo.declare("wm.Layers", wm.Container, {
 		wm.fire(inLayer.decorator, "deactivateLayer", [inLayer]);
 	        inLayer.onDeactivate();
 	},
-	setLayerIndex: function(inIndex) {
-		if (inIndex == this.layerIndex)
-			return;
-		var
-			fireEvents = !this.loading,
-	                oldLayer = this.layers[this.layerIndex];
-			l = this.getLayer(inIndex);
-		if (fireEvents) {
-			var info = {newIndex: inIndex, canChange: l && l.showing};
-			this.oncanchange(info);
-			if (info.canChange === false)
-				return;
-			inIndex = info.newIndex;
-		}
-		if (inIndex < 0 || inIndex > this.getCount()-1)
-			return;
+	setLayerIndex: function (inIndex) {
+	    if (inIndex == this.layerIndex) return;
+	    var fireEvents = !this.loading;
+	    var oldLayer = this.layers[this.layerIndex];
+	    var l = this.getLayer(inIndex);
+	    if (fireEvents) {
+	        var info = {
+	            newIndex: inIndex,
+	            canChange: l && l.showing
+	        };
+	        this.oncanchange(info);
+	        if (info.canChange === false) return;
+	        inIndex = info.newIndex;
+	    }
+	    if (inIndex < 0 || inIndex > this.getCount() - 1) return;
 
-		this._setLayerIndex(inIndex);
-		if (fireEvents) {
-			l && l.onShow();
-		        oldLayer && oldLayer.onDeactivate();
-		}
-		if (fireEvents && this.lastLayerIndex != this.layerIndex)
-			this.onchange(this.layerIndex);
+	    this._setLayerIndex(inIndex);
+	    if (fireEvents) {
+	        l && l.onShow();
+	        oldLayer && oldLayer.onDeactivate();
+	    }
+	    if (fireEvents && this.lastLayerIndex != this.layerIndex) this.onchange(this.layerIndex);
 	},
+	
+
 	_setLayerIndex: function(inIndex) {
 	    this.lastLayerIndex = this.layerIndex;
 	    this.layerIndex = inIndex;
