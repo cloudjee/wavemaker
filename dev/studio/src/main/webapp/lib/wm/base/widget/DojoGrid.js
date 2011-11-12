@@ -446,7 +446,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 	    this.dojoObj.store._setValueOrValues(item, fieldName, newValue, !noRendering);
 	    if (item._wmVariable && item._wmVariable[0]) {
+		item._wmVariable[0].beginUpdate();
 		item._wmVariable[0].setValue(fieldName, newValue);
+		item._wmVariable[0].endUpdate();
 	    }
 	    if (this.getSelectedIndex() == rowIndex) {
 		this.updateSelectedItem(rowIndex);
