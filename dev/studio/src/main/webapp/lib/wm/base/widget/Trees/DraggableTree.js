@@ -38,13 +38,11 @@ dojo.declare("wm.DraggableTree", wm.Tree, {
      * without having to subclass wm.TreeNode
      */
     setNoDrop: function(inNode, noDrop) {
+	inNode.noDrop = noDrop;
 	dojo.toggleClass(inNode.contentNode, "noDrop", noDrop);
     },
     getNoDrop: function(inNode) {
-	if (inNode == this.root)
-	    return dojo.hasClass(inNode.domNode, "noDrop");
-	else
-	    return dojo.hasClass(inNode.contentNode, "noDrop");
+	return inNode.noDrop;
     },
     nodeDrop: function() {
 	// TODO: Better management of which nodes have what temporary classes
