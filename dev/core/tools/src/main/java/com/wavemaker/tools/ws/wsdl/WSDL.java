@@ -781,4 +781,6 @@ public class WSDL extends AbstractDeprecatedServiceDefinition implements Reflect
     public void setServiceAlias(String serviceAlias) {
         this.serviceAlias = serviceAlias;
     }
+
+    public String getOperationType(String operationName) {return null;}
 }

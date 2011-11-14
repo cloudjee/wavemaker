@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2007-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2007-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -339,7 +339,20 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { // salesfo
         return rtn;
     }
 
-    @Override
+    public NamedQueryDefinition getHqlQueryDefinition(String queryName) {
+        Configuration cfg = getConfiguration();
+        NamedQueryDefinition rtn = (NamedQueryDefinition) cfg.getNamedQueries()
+                .get(queryName);
+        return rtn;
+    }
+
+    public NamedQueryDefinition getSqlQueryDefinition(String queryName) {
+        Configuration cfg = getConfiguration();
+        NamedQueryDefinition rtn = (NamedQueryDefinition) cfg.getNamedSQLQueries()
+                    .get(queryName);
+        return rtn;
+    }
+
     public DataServiceOperation getOperation(String operationName) {
         DataServiceOperation rtn = this.operationManager.getOperation(operationName);
         if (rtn == null) {

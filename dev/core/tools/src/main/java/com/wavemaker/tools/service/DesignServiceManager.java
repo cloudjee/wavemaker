@@ -979,6 +979,8 @@ public class DesignServiceManager {
                 ret.setTypeRef(retType.getTypeDefinition().getTypeName());
             }
             op.setReturn(ret);
+
+            op.setOperationType(so.getOperationType());
         }
     }
 

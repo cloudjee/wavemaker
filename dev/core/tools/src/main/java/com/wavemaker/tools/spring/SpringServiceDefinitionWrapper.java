@@ -146,4 +146,6 @@ public class SpringServiceDefinitionWrapper implements DeprecatedServiceDefiniti
     public List<ServiceOperation> getServiceOperations(IPwsServiceModifier serviceModifier) {
         return delegate.getServiceOperations();  
     }
+
+    public String getOperationType(String operationName) {return null;}
 }

@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.NDC;
+import org.json.JSONObject;
+import org.json.JSONArray;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -324,6 +326,10 @@ public class DataServiceGenerator extends ServiceGenerator {
             }
         }
 
+        if (operationTypeExists(smdObject, op.getName()) && op.isQuery()) {
+            exp.arg(JExpr.ref("pagingOptions"));
+        }
+
         if (op.getCode() != null) {
             body.directStatement(op.getCode());
         }
@@ -441,5 +447,34 @@ public class DataServiceGenerator extends ServiceGenerator {
     @Override
     protected JBlock addExtraInputParameters(JBlock body, ServiceInfo serviceInfo, WSDL wsdl, String operationName) {
         return null;
+    }
+
+    protected void addAdditionalInputParams(JMethod method, String operationName) {
+        if (operationTypeExists(smdObject, operationName)) {
+            DataServiceOperation op = ds.getOperation(operationName);
+            if (op.isQuery()) {
+                method.param(PagingOptions.class, "pagingOptions");
+            }
+        }
+    }
+
+    private boolean operationTypeExists(JSONObject obj, String operationName) {
+        try {
+            JSONArray methods = (JSONArray)obj.get("methods");
+            for (int i=0; i<methods.length(); i++) {
+                JSONObject method = methods.getJSONObject(i);
+                if (method.get("name").equals(operationName)) {
+                    if (method.isNull("operationType")) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            return false;
+        }
+
+        return false;
     }
 }

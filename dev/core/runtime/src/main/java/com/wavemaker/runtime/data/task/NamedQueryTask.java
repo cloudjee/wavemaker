@@ -36,6 +36,7 @@ import com.wavemaker.runtime.data.DataServiceMetaData;
 import com.wavemaker.runtime.data.DataServiceRuntimeException;
 import com.wavemaker.runtime.data.Task;
 import com.wavemaker.runtime.data.util.DataServiceUtils;
+import com.wavemaker.runtime.service.PagingOptions;
 
 /**
  * Looks up a query by name, and runs it.
@@ -51,6 +52,18 @@ public class NamedQueryTask extends BaseTask implements Task {
      */
     @Override
     public Object run(Session session, String dbName, Object... input) {
+        
+        PagingOptions pagingOptions = null;
+
+        if (input.length > 0) {
+            Object o = input[input.length - 1];
+            if (o instanceof PagingOptions) {
+                pagingOptions = (PagingOptions)o;
+                Object[] ar = new Object[input.length - 1];
+                System.arraycopy(input, 0, ar, 0, ar.length);
+                input = ar;
+            }
+        }
 
         DataServiceMetaData meta = getMetaData(dbName);
 
@@ -73,6 +86,8 @@ public class NamedQueryTask extends BaseTask implements Task {
             l.add(query.executeUpdate());
             rtn = l;
         } else {
+
+            AbstractReadTask.applyPaging(pagingOptions, query);
             rtn = query.list();
 
             NamedQueryDefinition def = meta.getQueryDefinition(queryName);

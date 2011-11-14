@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2007-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2007-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
+import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
@@ -130,8 +131,13 @@ public class ServiceClassGenerator {
             }
 
             try {
+                File smdFile = ConfigurationCompiler.getSmdFile(serviceManager.getProjectManager().getCurrentProject(), serviceId);
+                String smdContent = FileUtils.readFileToString(smdFile, ServerConstants.DEFAULT_ENCODING);
+                generator.setSmdContent(smdContent);
                 generator.generate();
             } catch (GenerationException ex) {
+                throw new WMRuntimeException(ex);
+            } catch (IOException ex) {
                 throw new WMRuntimeException(ex);
             } finally {
                 try {

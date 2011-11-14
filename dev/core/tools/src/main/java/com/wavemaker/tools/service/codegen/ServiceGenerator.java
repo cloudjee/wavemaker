@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,6 +23,8 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.NDC;
+import org.json.JSONObject;
+import org.json.JSONException;
 import org.springframework.core.io.Resource;
 
 import com.sun.codemodel.JBlock;
@@ -82,8 +84,11 @@ public abstract class ServiceGenerator {
 
     protected WSDL wsdl;
 
-    public ServiceGenerator() {
-    }
+    private String smdContent;
+
+    protected JSONObject smdObject;
+
+    public ServiceGenerator() {}
 
     public ServiceGenerator(GenerationConfiguration configuration) {
         // this.configuration = configuration;
@@ -312,6 +317,8 @@ public abstract class ServiceGenerator {
             inputJTypeMap.put(paramName, paramJType);
         }
 
+        addAdditionalInputParams(method, operationName);
+
         JBlock body = method.body();
 
         JTryBlock tryBlock = null;
@@ -430,5 +437,18 @@ public abstract class ServiceGenerator {
      */
     protected ElementType getAdjustedOutputType(ElementType type) {
         return type;
+    }
+
+    //Sunclasses may override this method if additional input parameters need to be added
+    protected void addAdditionalInputParams(JMethod method, String operationName) {
+    }
+
+    public void setSmdContent(String smdContent) {
+        this.smdContent = smdContent;
+        try {
+            smdObject = new JSONObject(smdContent);
+        } catch (JSONException ex) {
+            smdObject = null;
+        }
     }
 }

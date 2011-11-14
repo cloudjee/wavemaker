@@ -142,7 +142,7 @@ public abstract class AbstractReadTask extends BaseTask implements Task {
         options.nextPage();
     }
 
-    protected void applyPaging(PagingOptions options, Query q) {
+    protected static void applyPaging(PagingOptions options, Query q) {
 
         if (options == null) {
             return;

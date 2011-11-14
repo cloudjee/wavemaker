@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2009-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -60,6 +60,15 @@ public interface DeprecatedServiceDefinition extends ReflectServiceDefinition {
     @Deprecated
     public ElementType getOutputType(String operationName);
 
+    /**
+     * Returns the type of the specified operation.
+     *
+     * @param operationName The name of the desired operation.
+     * @return The operation type (hqlquery, sqlquery, other).
+     */
+    @Deprecated
+    public String getOperationType(String operationName);
+    
     /**
      * Get all types associated with this service.
      * 

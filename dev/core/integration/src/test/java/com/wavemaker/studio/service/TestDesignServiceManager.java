@@ -989,6 +989,8 @@ public class TestDesignServiceManager extends StudioTestCase {
         public boolean isLiveDataService() {
             return false;
         }
+
+        public String getOperationType(String operationName) {return null;}
     }
 
     public static class updateService_ExtraOp_SD extends updateService_SD {
@@ -1067,6 +1069,8 @@ public class TestDesignServiceManager extends StudioTestCase {
         public boolean isLiveDataService() {
             return false;
         }
+
+        public String getOperationType(String operationName) {return null;}
     }
 
     public static class updateOperation_SD extends AbstractDeprecatedServiceDefinition implements ReflectServiceDefinition {
@@ -1145,6 +1149,8 @@ public class TestDesignServiceManager extends StudioTestCase {
         public boolean isLiveDataService() {
             return false;
         }
+
+        public String getOperationType(String operationName) {return null;}
     }
 
     public static class nullParamsAndReturn_SD extends updateOperation_SD {

@@ -69,6 +69,8 @@ public abstract class AbstractDeprecatedServiceDefinition implements DeprecatedS
                     }
                 }
             }
+
+            so.setOperationType(getOperationType(operationName));
         }
 
         return ret;
