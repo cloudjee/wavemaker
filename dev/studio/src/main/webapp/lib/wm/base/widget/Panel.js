@@ -99,9 +99,6 @@ dojo.declare("wm.FancyPanel", wm.Panel, {
 	    this.inherited(arguments);
 
             this._isDesign = this.isDesignLoaded();
-	    if (this._isDesign) {
-		this.flags.noModelDrop = true;
-	    }
 
 	    this.labelWidget = new wm.Label({border: this.innerBorder,
                                              borderColor: this.borderColor,

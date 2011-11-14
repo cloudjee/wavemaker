@@ -72,24 +72,25 @@ wm.Container.extend({
 	},
 	designMoveControl: function(inControl, inDropInfo) {
 		info = {l:inDropInfo.l, t:inDropInfo.t, i: inDropInfo.i};
-		if (inControl.parent == this) {
+	        var container = this.containerWidget || this;
+		if (inControl.parent == container) {
 			// inDropInfo.index 'i' may be counting inControl
-			this.moveControl(inControl, info.i || 0);
+			container.moveControl(inControl, info.i || 0);
 		} else {
 			var p = inControl.parent;
-			inControl.setParent(this);
+			inControl.setParent(container);
 			inControl.designWrapper.controlParentChanged();
 			// inDropInfo.index 'i' is never counting inControl
-			this.removeControl(inControl);
-			this.insertControl(inControl, info.i || 0);
+			container.removeControl(inControl);
+			container.insertControl(inControl, info.i || 0);
 			if (p)
 				p.reflow();
 		}
-		if (this.layout.insert) {
-			this.layout.insert(this, inControl, inDropInfo);
+		if (container.layout.insert) {
+			container.layout.insert(container, inControl, inDropInfo);
 			//return;
 		}
-		this.reflow();
+		container.reflow();
 	},
 	makePropEdit: function(inName, inValue, inDefault) {
 		switch (inName) {
