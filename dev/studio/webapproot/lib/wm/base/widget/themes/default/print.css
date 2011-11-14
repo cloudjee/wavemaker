@@ -27,6 +27,7 @@ body .wmFancyPanel-containerWidget {
     border-bottom: solid 1px #bbb;
     border-right: solid 1px #bbb;
     padding: 2px;
+    padding-right: 10px;
 }
 
 
