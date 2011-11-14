@@ -28,9 +28,11 @@ wm.Object.extendSchema(wm.LiveVariable, {
     sourceData: {readonly: 1, group: "data", order: 3, bindTarget: 1, categoryParent: "Properties", categoryProps: {component: "sourceData", inspector: "Data"}, doc: 1},
     filter: { readonly: 1, group: "data", order: 5, bindTarget: 1, categoryParent: "Properties", categoryProps: {component: "filter", inspector: "Data"}, doc: 1},
 	matchMode: {group: "data", order: 10},
+/*
 	firstRow: {group: "data", order: 15},
     maxResults: {group: "data", order: 17},
     designMaxResults: {group: "data", order: 18},
+    */
 	orderBy: {group: "data", order: 19},
 	ignoreCase:  {group: "data", order: 20},
 	configure: { ignore: 1 },

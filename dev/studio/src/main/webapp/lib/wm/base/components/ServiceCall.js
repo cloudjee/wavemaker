@@ -195,8 +195,25 @@ dojo.declare("wm.ServiceCall", null, {
 		return this._service && this.operation && !Boolean(this._requester);
 	},
 	getArgs: function() {
-		return this.input.getArgs();
+	    var args = this.input.getArgs();
+	    var operationType = this.getOperationType();
+	    if (operationType == "hqlquery") {
+		var max = this.isDesignLoaded() ? this.designMaxResults : this.maxResults;
+		var pagingOptions = max ? { maxResults: max, firstResult: this.firstRow || 0} : {};
+		args.push(pagingOptions);
+	    }
 	},
+    getOperationType: function() {
+	    var service = this._service;
+	    if (service) {
+		var operation = service._operations[this.operation];
+	    }
+	    if (operation) {
+		return operation.operationType;
+	    } else {
+		return "";
+	    }
+    },
     replaceAllDateObjects: function(item) {
         for (var i in item) {
             if (item[i] instanceof Date) item[i] = item[i].getTime();
@@ -303,28 +320,11 @@ dojo.declare("wm.ServiceCall", null, {
 	//=======================================================
 	// Result Processing
 	//=======================================================
-	result: function(inResult) {
-	        this._requester = false;
-		var tmp = [];
-		var max = this.isDesignLoaded() ? this.designMaxResults : this.maxResults;
-		if ((this instanceof wm.ServiceVariable) && !(this instanceof wm.LiveVariable) && inResult 
-		    && dojo.isArray(inResult) && inResult.length > 1 && max > 0) {
-			var cnt = 0;
-			for (var o in inResult) {
-				tmp[cnt] = inResult[cnt];
-				cnt++;
-				if (max > 0 && cnt == max) break;
-			}
-			this.processResult(tmp);
-		        if (this.updateOnResult)
-			    this.update();
-			return tmp;
-		} else {
-			this.processResult(inResult);
-		        if (this.updateOnResult)
-			    this.update();
-			return inResult;
-		}
+	result: function (inResult) {
+	    this._requester = false;
+	    this.processResult(inResult);
+	    if (this.updateOnResult) this.update();
+	    return inResult;
 	},
 	processResult: function(inResult) {
 		this.onResult(inResult);

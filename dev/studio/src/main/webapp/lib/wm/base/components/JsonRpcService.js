@@ -337,8 +337,9 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		for (var i=0, op; (op=m[i]); i++){
 			this._methods.push(op.name);
 			this._operations[op.name] = {
-				parameters: this.paramArrayToHash(op.parameters || []),
-				returnType: op.returnType || "any"
+			    parameters: this.paramArrayToHash(op.parameters || []),
+			    returnType: op.returnType || "any",
+			    operationType: op.operationType || ""
 			};
 		}
 		this._methods.sort();

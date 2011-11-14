@@ -106,8 +106,9 @@ wm.Object.extendSchema(wm.ServiceVariable, {
 	service: {group: "common", order: 23 },
 	autoUpdate: {group: "common", order: 25},
 	startUpdate: {group: "common", order: 26},
-        maxResults: {group: "data", order: 17, hidden: true},
-        designMaxResults: {group: "data", order: 18, hidden: true},
+    firstRow: {group: "data",order: 15},
+        maxResults: {group: "data", order: 17},
+        designMaxResults: {group: "data", order: 18},
 	updateNow: { group: "operation", order: 10},
 	queue: { group: "deprecated", order: 20},
 	json: {ignore: 1},
@@ -136,5 +137,16 @@ wm.ServiceVariable.description = "Data from a service.";
 /**#@+ @design */
 wm.ServiceVariable.extend({
 	/** @lends wm.ServiceVariable.prototype */
+	listProperties: function() {
+	    var p = this.inherited(arguments);
+	    var operationType = this.getOperationType();
+
+	    p.firstRow.ignoretmp = !Boolean(operationType == "hqlquery");
+	    p.maxResults.ignoretmp = !Boolean(operationType == "hqlquery");
+	    p.designMaxResults.ignoretmp = !Boolean(operationType == "hqlquery");
+
+	    return p;
+	}
+	    
 });
 /**#@- @design */
