@@ -42,7 +42,7 @@ DeploymentDialog.widgets = {
 	    confirmSaveDialogHtml1: ["wm.Html", {"border":"0","height":"100%","width":"100%", padding: "10,30,10,30", html: "You have unsaved changes that will be lost; continue?"}, {}]
 	}],
 	buttonBar4: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-		saveDialogDontSaveButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Don't Save","margin":"4","width":"93px"}, {}],
+		saveDialogDontSaveButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Don't Save","margin":"4","width":"100px"}, {}],
 		spacer1: ["wm.Spacer", {"height":"48px","width":"100%"}, {}],
 	        saveDialogCancelButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Cancel","margin":"4"}, {}],
 	        saveDialogSaveButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Save","margin":"4"}, {}]
