@@ -610,7 +610,7 @@ dojo.declare("wm.TabLayers", wm.Layers, {
 		this.decorator.tabsControl.setShowing(this.getVisibleLayerCount() > 1);
 	},
     // onClose handles both destroy and close as long as it came from clicking the close icon in the tab button
-    onClose: function(inLayer) {
+    onCloseOrDestroy: function(inLayer) {
 
     },
     customClose: function(inLayer) {
