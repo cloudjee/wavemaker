@@ -58,14 +58,20 @@ public class ProjectManager {
 
     private static final List<String> runtimeServices;
 
-    private final List<String> projectCopyExclusions;
-
     static {
         runtimeServices = new ArrayList<String>();
         runtimeServices.add("securityService");
         runtimeServices.add("runtimeService");
         runtimeServices.add("waveMakerService");
     }
+
+    private final List<String> projectCopyExclusions;
+
+    private StudioFileSystem fileSystem;
+
+    private ProjectEventNotifier projectEventNotifier;
+
+    private UpgradeManager upgradeManager;
 
     public ProjectManager() {
         this.projectCopyExclusions = new ArrayList<String>(IOUtils.DEFAULT_EXCLUSION);
@@ -75,11 +81,11 @@ public class ProjectManager {
 
     public Resource getTmpDir() {
         try {
-            Resource tmpDir = this.studioConfiguration.getCommonDir();
+            Resource tmpDir = this.fileSystem.getCommonDir();
             if (getCurrentUsername() != null) {
-                tmpDir = this.studioConfiguration.createPath(tmpDir, getCurrentUsername() + "/");
+                tmpDir = this.fileSystem.createPath(tmpDir, getCurrentUsername() + "/");
             }
-            tmpDir = this.studioConfiguration.createPath(tmpDir, "tmp/");
+            tmpDir = this.fileSystem.createPath(tmpDir, "tmp/");
             return tmpDir;
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
@@ -125,7 +131,7 @@ public class ProjectManager {
         }
 
         // create and open
-        Project project = new Project(projectDir, this.studioConfiguration);
+        Project project = new Project(projectDir, this.fileSystem);
 
         if (null != this.currentProject) {
             closeProject();
@@ -203,9 +209,9 @@ public class ProjectManager {
 
         checkNewProject(projectName);
 
-        Resource projectDir = this.studioConfiguration.getProjectsDir().createRelative(projectName + "/");
+        Resource projectDir = this.fileSystem.getProjectsDir().createRelative(projectName + "/");
         if (!projectDir.exists()) {
-            this.studioConfiguration.createPath(this.studioConfiguration.getProjectsDir(), projectName + "/");
+            this.fileSystem.createPath(this.fileSystem.getProjectsDir(), projectName + "/");
             if (!noTemplate) {
                 createProjectFromTemplate(projectDir);
             }
@@ -215,14 +221,14 @@ public class ProjectManager {
 
         Project project = getCurrentProject();
 
-        Resource studioServices = this.studioConfiguration.getStudioWebAppRoot().createRelative("services/");
-        Resource studioClasspath = this.studioConfiguration.getStudioWebAppRoot().createRelative("WEB-INF/classes/");
+        Resource studioServices = this.fileSystem.getStudioWebAppRoot().createRelative("services/");
+        Resource studioClasspath = this.fileSystem.getStudioWebAppRoot().createRelative("WEB-INF/classes/");
         for (String runtimeService : runtimeServices) {
             Resource runtimeServiceSmd = studioServices.createRelative(runtimeService + ".smd");
-            this.studioConfiguration.copyFile(getCurrentProject().getWebAppRoot(), runtimeServiceSmd.getInputStream(), "services/"
-                + runtimeServiceSmd.getFilename());
+            this.fileSystem.copyFile(getCurrentProject().getWebAppRoot(), runtimeServiceSmd.getInputStream(),
+                "services/" + runtimeServiceSmd.getFilename());
             Resource runtimeServiceSpringDef = studioClasspath.createRelative(runtimeService + ".spring.xml");
-            this.studioConfiguration.copyFile(getCurrentProject().getWebInfClasses(), runtimeServiceSpringDef.getInputStream(),
+            this.fileSystem.copyFile(getCurrentProject().getWebInfClasses(), runtimeServiceSpringDef.getInputStream(),
                 runtimeServiceSpringDef.getFilename());
         }
 
@@ -238,8 +244,8 @@ public class ProjectManager {
      */
     public void copyProject(String sourceProjectName, String destinationProjectName) throws IOException {
 
-        Project sourceProject = new Project(getProjectDir(sourceProjectName, false), this.studioConfiguration);
-        Project destProject = new Project(getProjectDir(destinationProjectName, true), this.studioConfiguration);
+        Project sourceProject = new Project(getProjectDir(sourceProjectName, false), this.fileSystem);
+        Project destProject = new Project(getProjectDir(destinationProjectName, true), this.fileSystem);
 
         if (!sourceProject.getProjectRoot().exists()) {
             throw new WMRuntimeException(MessageResource.PROJECTCOPY_SOURCE_DNE, sourceProjectName);
@@ -248,13 +254,13 @@ public class ProjectManager {
             throw new WMRuntimeException(MessageResource.PROJECTCOPY_DEST_DE, sourceProjectName);
         }
 
-        this.studioConfiguration.copyRecursive(sourceProject.getProjectRoot(), destProject.getProjectRoot(), this.projectCopyExclusions);
+        this.fileSystem.copyRecursive(sourceProject.getProjectRoot(), destProject.getProjectRoot(), this.projectCopyExclusions);
 
         try {
             // delete the deployment xml
             Resource tomcatXml = destProject.getProjectRoot().createRelative(sourceProjectName + ".xml");
             if (tomcatXml.exists()) {
-                this.studioConfiguration.deleteFile(tomcatXml);
+                this.fileSystem.deleteFile(tomcatXml);
             }
             // update the projectname.js file
             String shortSourceName = sourceProjectName.substring(getUserProjectPrefix().length());
@@ -272,7 +278,7 @@ public class ProjectManager {
                 destJSStr = destJSStr.replace(shortSourceName + ".extend(", shortDestName + ".extend(");
                 destJSStr = destJSStr.replace(dummyStr, serviceStr);
                 destProject.writeFile(destJS, destJSStr);
-                this.studioConfiguration.deleteFile(sourceJS);
+                this.fileSystem.deleteFile(sourceJS);
             }
 
             // update the index.html
@@ -304,8 +310,8 @@ public class ProjectManager {
     public Resource getProjectDir(String projectName, boolean ignoreDemos) {
         try {
             Resource projectDir = getBaseProjectDir().createRelative(projectName + "/");
-            if (!projectDir.exists() && !ignoreDemos && null != this.studioConfiguration.getDemoDir()) {
-                Resource demoProjectDir = this.studioConfiguration.getDemoDir().createRelative(projectName + "/");
+            if (!projectDir.exists() && !ignoreDemos && null != this.fileSystem.getDemoDir()) {
+                Resource demoProjectDir = this.fileSystem.getDemoDir().createRelative(projectName + "/");
                 if (demoProjectDir.exists()) {
                     projectDir = demoProjectDir;
                 }
@@ -317,11 +323,11 @@ public class ProjectManager {
     }
 
     public Project getProject(String projectName, boolean ignoreDemos) {
-        return new Project(getProjectDir(projectName, ignoreDemos), this.studioConfiguration);
+        return new Project(getProjectDir(projectName, ignoreDemos), this.fileSystem);
     }
 
     public Resource getBaseProjectDir() throws FileAccessException {
-        return this.studioConfiguration.getProjectsDir();
+        return this.fileSystem.getProjectsDir();
     }
 
     private void createProjectFromTemplate(Resource projectFile) throws IOException {
@@ -331,9 +337,9 @@ public class ProjectManager {
         ZipEntry zipEntry = null;
         while ((zipEntry = resourceZipStream.getNextEntry()) != null) {
             if (zipEntry.isDirectory()) {
-                this.studioConfiguration.createPath(projectFile, zipEntry.getName());
+                this.fileSystem.createPath(projectFile, zipEntry.getName());
             } else {
-                this.studioConfiguration.copyFile(projectFile, new NoCloseInputStream(resourceZipStream), zipEntry.getName());
+                this.fileSystem.copyFile(projectFile, new NoCloseInputStream(resourceZipStream), zipEntry.getName());
             }
         }
         resourceZipStream.close();
@@ -350,13 +356,13 @@ public class ProjectManager {
 
         Resource projectDir = getProjectDir(projectName, false);
         if (projectDir.exists()) {
-            this.studioConfiguration.deleteFile(projectDir);
+            this.fileSystem.deleteFile(projectDir);
         }
 
-        if (this.studioConfiguration instanceof EmbeddedServerConfiguration) {
-            Resource logFolder = ((EmbeddedServerConfiguration) this.studioConfiguration).getProjectLogsFolder().createRelative(projectName);
+        if (this.fileSystem instanceof EmbeddedServerConfiguration) {
+            Resource logFolder = ((EmbeddedServerConfiguration) this.fileSystem).getProjectLogsFolder().createRelative(projectName);
             if (logFolder.exists()) {
-                this.studioConfiguration.deleteFile(logFolder);
+                this.fileSystem.deleteFile(logFolder);
             }
         }
     }
@@ -391,26 +397,26 @@ public class ProjectManager {
         final String prefix = prefixIn;
         SortedSet<String> ret = new TreeSet<String>();
 
-        Resource projectsDir = this.studioConfiguration.getProjectsDir();
+        Resource projectsDir = this.fileSystem.getProjectsDir();
         if (null != projectsDir && projectsDir.exists()) {
-            for (Resource possibleProject : this.studioConfiguration.listChildren(projectsDir)) {
+            for (Resource possibleProject : this.fileSystem.listChildren(projectsDir)) {
                 if (!possibleProject.getFilename().startsWith(prefix) || !checkProjectName(possibleProject.getFilename())) {
                     continue;
                 }
-                if (this.studioConfiguration.listChildren(possibleProject).size() > 0) {
+                if (this.fileSystem.listChildren(possibleProject).size() > 0) {
                     ret.add(possibleProject.getFilename());
                 }
             }
         }
 
-        Resource demoDir = this.studioConfiguration.getDemoDir();
+        Resource demoDir = this.fileSystem.getDemoDir();
         if (null != demoDir && demoDir.exists()) {
-            for (Resource possibleProject : this.studioConfiguration.listChildren(demoDir)) {
+            for (Resource possibleProject : this.fileSystem.listChildren(demoDir)) {
                 if (possibleProject.getFilename().startsWith(".")) {
                     continue;
                 }
 
-                if (this.studioConfiguration.listChildren(possibleProject).size() > 0) {
+                if (this.fileSystem.listChildren(possibleProject).size() > 0) {
                     ret.add(possibleProject.getFilename());
                 }
             }
@@ -426,9 +432,9 @@ public class ProjectManager {
      */
     public void checkNewProject(String projectName) {
 
-        if (null != this.studioConfiguration.getDemoDir()) {
+        if (null != this.fileSystem.getDemoDir()) {
             try {
-                Resource demoProject = this.studioConfiguration.getDemoDir().createRelative(projectName);
+                Resource demoProject = this.fileSystem.getDemoDir().createRelative(projectName);
                 if (demoProject.exists()) {
                     throw new WMRuntimeException(MessageResource.PROJECT_CONFLICT, projectName);
                 }
@@ -454,19 +460,8 @@ public class ProjectManager {
         return true;
     }
 
-    // spring-managed bean properties
-    private StudioConfiguration studioConfiguration;
-
-    private ProjectEventNotifier projectEventNotifier;
-
-    private UpgradeManager upgradeManager;
-
-    public StudioConfiguration getStudioConfiguration() {
-        return this.studioConfiguration;
-    }
-
-    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-        this.studioConfiguration = studioConfiguration;
+    public void setFileSystem(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
     }
 
     public ProjectEventNotifier getProjectEventNotifier() {
@@ -549,5 +544,9 @@ public class ProjectManager {
 
     private void setCurrentProject(Project currentProject) {
         this.currentProject = currentProject;
+    }
+
+    public StudioFileSystem getFileSystem() {
+        return this.fileSystem;
     }
 }

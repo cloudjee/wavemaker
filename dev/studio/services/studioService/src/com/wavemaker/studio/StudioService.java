@@ -14,7 +14,6 @@
 
 package com.wavemaker.studio;
 
-/* Added for closure */
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -50,9 +49,11 @@ import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.project.DeploymentManager;
+import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.project.StudioConfiguration;
+import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeManager;
 import com.wavemaker.tools.pws.install.PwsInstall;
@@ -66,6 +67,16 @@ import com.wavemaker.tools.serializer.FileSerializerException;
  */
 @HideFromClient
 public class StudioService extends ClassLoader {
+
+    private RuntimeAccess runtimeAccess;
+
+    private ProjectManager projectManager;
+
+    private DeploymentManager deploymentManager;
+
+    private StudioFileSystem fileSystem;
+
+    private UpgradeManager upgradeManager;
 
     @ExposeToClient
     public String closurecompile(String s) {
@@ -290,7 +301,7 @@ public class StudioService extends ClassLoader {
 
     @ExposeToClient
     public void writeCommonFile(String path, String data) throws IOException {
-        Resource commonDir = this.studioConfiguration.getCommonDir();
+        Resource commonDir = this.fileSystem.getCommonDir();
         Resource writeFile = commonDir.createRelative(path);
         if (writeFile.exists()) {
             String original = this.projectManager.getCurrentProject().readFile(writeFile);
@@ -425,7 +436,7 @@ public class StudioService extends ClassLoader {
     @ExposeToClient
     public String getStudioProjectType() throws IOException {
 
-        String versionFileContents = com.wavemaker.tools.project.LocalStudioConfiguration.getCurrentVersionInfoString();
+        String versionFileContents = LocalStudioConfiguration.getCurrentVersionInfoString();
         final Pattern p = Pattern.compile("^Build type: (.*)$", Pattern.MULTILINE);
 
         Matcher m = p.matcher(versionFileContents);
@@ -438,7 +449,7 @@ public class StudioService extends ClassLoader {
 
     @ExposeToClient
     public String getMainLog(int lines) throws IOException {
-        Resource logDir = this.studioConfiguration.createPath(this.studioConfiguration.getWaveMakerHome(), "logs/");
+        Resource logDir = this.fileSystem.createPath(this.fileSystem.getWaveMakerHome(), "logs/");
         Resource logFile = logDir.createRelative("wm.log");
         return IOUtils.tail(logFile.getFile(), lines);
     }
@@ -578,7 +589,7 @@ public class StudioService extends ClassLoader {
     @ExposeToClient
     public String getJavaServiceTemplate(String templateName) throws IOException {
         return getProjectManager().getCurrentProject().readFile(
-            this.studioConfiguration.getStudioWebAppRoot().createRelative("/app/templates/javaservices" + templateName));
+            this.fileSystem.getStudioWebAppRoot().createRelative("/app/templates/javaservices" + templateName));
     }
 
     @ExposeToClient
@@ -608,7 +619,7 @@ public class StudioService extends ClassLoader {
             IOUtils.copy(file.getInputStream(), fos);
             file.getInputStream().close();
             fos.close();
-            File extFolder = com.wavemaker.tools.project.ResourceManager.unzipFile(getStudioConfiguration(), new FileSystemResource(outputFile)).getFile();
+            File extFolder = com.wavemaker.tools.project.ResourceManager.unzipFile(this.fileSystem, new FileSystemResource(outputFile)).getFile();
 
             /*
              * Import the pages from the pages folder STATUS: DONE
@@ -687,7 +698,7 @@ public class StudioService extends ClassLoader {
                 packagesExt = ",\n" + startPackagesExt + packagesExt + "\n" + endPackagesExt;
 
                 /* Create the packagesDir if needed */
-                File packagesDir = new File(this.studioConfiguration.getCommonDir().getFile(), "packages");
+                File packagesDir = new File(this.fileSystem.getCommonDir().getFile(), "packages");
                 if (!packagesDir.exists()) {
                     packagesDir.mkdir();
                 }
@@ -756,17 +767,6 @@ public class StudioService extends ClassLoader {
         return ret;
     }
 
-    // bean properties
-    private RuntimeAccess runtimeAccess;
-
-    private ProjectManager projectManager;
-
-    private DeploymentManager deploymentManager;
-
-    private StudioConfiguration studioConfiguration;
-
-    private UpgradeManager upgradeManager;
-
     public RuntimeAccess getRuntimeAccess() {
         return this.runtimeAccess;
     }
@@ -791,12 +791,13 @@ public class StudioService extends ClassLoader {
         this.deploymentManager = deploymentManager;
     }
 
-    public StudioConfiguration getStudioConfiguration() {
-        return this.studioConfiguration;
+    public void setFileSystem(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
     }
 
-    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-        this.studioConfiguration = studioConfiguration;
+    @Deprecated
+    private StudioConfiguration getStudioConfiguration() {
+        return (StudioConfiguration) this.fileSystem;
     }
 
     public UpgradeManager getUpgradeManager() {

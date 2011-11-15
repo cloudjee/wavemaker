@@ -332,7 +332,7 @@ public class SalesforceHelper {
     public static void setupSalesforceSrc(ProjectManager mgr, String username, String password) {
         File destf;
         try {
-            File srcf = new File(mgr.getStudioConfiguration().getStudioWebAppRoot().getFile(), "app/templates/salesforce");
+            File srcf = new File(mgr.getFileSystem().getStudioWebAppRoot().getFile(), "app/templates/salesforce");
 
             // File destf = new File(mgr.getCurrentProject().getProjectRoot(), "services");
             destf = mgr.getCurrentProject().getProjectRoot().getFile();

@@ -39,12 +39,11 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.util.ResourceUtils;
 
 import com.wavemaker.runtime.module.ModuleManager;
-import com.wavemaker.tools.project.LocalStudioConfiguration;
+import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
 
 /**
- * 
  * @author Matt Small
  * @author Joel Hare
  * @author Jeremy Grelle
@@ -109,7 +108,14 @@ public class CopyRuntimeJarsTask extends Task {
             throw new IllegalStateException("CopyRuntimeJarsTask could not load " + propFile);
         }
 
+        runtimeJarName = cleanupRuntimeJarName(runtimeJarName);
+
         return runtimeJarName;
+    }
+
+    private String cleanupRuntimeJarName(String runtimeJarName) {
+        // Allows for deployment inside eclipse
+        return runtimeJarName.replaceAll("\\Q-${project.version}\\E", "");
     }
 
     protected List<String> getReferencedClassPathJars(File jarFile, boolean failOnError) {
@@ -382,7 +388,7 @@ public class CopyRuntimeJarsTask extends Task {
     }
 
     public void setProjectRoot(File projectRoot) {
-        this.wmProject = new Project(new FileSystemResource(projectRoot), new LocalStudioConfiguration());
+        this.wmProject = new Project(new FileSystemResource(projectRoot), new LocalStudioFileSystem());
     }
 
     public File getTodir() {

@@ -22,7 +22,7 @@ import org.springframework.core.io.FileSystemResource;
 
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.common.util.ClassLoaderUtils.TaskNoRtn;
-import com.wavemaker.tools.project.LocalStudioConfiguration;
+import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.util.AntUtils;
@@ -70,7 +70,7 @@ public abstract class CompilerTask extends Task {
 
     public void setProjectRoot(File projectRoot) {
         this.projectRoot = projectRoot;
-        this.agProject = new Project(new FileSystemResource(projectRoot), new LocalStudioConfiguration());
+        this.agProject = new Project(new FileSystemResource(projectRoot), new LocalStudioFileSystem());
     }
 
     public void setVerbose(boolean verbose) {

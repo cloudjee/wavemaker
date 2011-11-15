@@ -22,7 +22,7 @@ import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.common.ConfigurationException;
-import com.wavemaker.tools.project.StudioConfiguration;
+import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
@@ -38,7 +38,7 @@ import com.wavemaker.tools.ws.wsdl.WSDLManager;
  */
 public class ImportWS {
 
-    private StudioConfiguration studioConfiguration;
+    private StudioFileSystem fileSystem;
 
     private Resource destDir;
 
@@ -138,12 +138,8 @@ public class ImportWS {
         this.partnerName = partnerName;
     }
 
-    public StudioConfiguration getStudioConfiguration() {
-        return this.studioConfiguration;
-    }
-
-    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-        this.studioConfiguration = studioConfiguration;
+    public void setFileSystem(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
     }
 
     public void parseArguments(String[] args) {
@@ -158,7 +154,7 @@ public class ImportWS {
                 }
                 i += j - 1;
             } else {
-                Resource wsdlFile = this.studioConfiguration.getResourceForURI(args[i]);
+                Resource wsdlFile = this.fileSystem.getResourceForURI(args[i]);
                 if (!wsdlFile.exists()) {
                     throw new ConfigurationException("This file was not found: " + wsdlFile.toString());
                 }
@@ -173,7 +169,7 @@ public class ImportWS {
 
     protected int parseArguments(String[] args, int i) {
         if (args[i].equals("-d")) {
-            this.destDir = this.studioConfiguration.getResourceForURI(requireArgument("-d", args, ++i));
+            this.destDir = this.fileSystem.getResourceForURI(requireArgument("-d", args, ++i));
             return 2;
         } else if (args[i].equals("-p")) {
             this.packageName = requireArgument("-p", args, ++i);
@@ -185,14 +181,14 @@ public class ImportWS {
             this.skipInternalCustomization = true;
             return 2;
         } else if (args[i].equals("-jaxb")) {
-            this.addJaxbCustomizationFile(this.studioConfiguration.getResourceForURI(requireArgument("-jaxb", args, ++i)));
+            this.addJaxbCustomizationFile(this.fileSystem.getResourceForURI(requireArgument("-jaxb", args, ++i)));
             return 2;
         } else if (args[i].equals("-jaxws")) {
-            this.addJaxwsCustomizationFile(this.studioConfiguration.getResourceForURI(requireArgument("-jaxws", args, ++i)));
+            this.addJaxwsCustomizationFile(this.fileSystem.getResourceForURI(requireArgument("-jaxws", args, ++i)));
             return 2;
         }
         if (this.destDir == null) {
-            this.destDir = this.studioConfiguration.getResourceForURI(".");
+            this.destDir = this.fileSystem.getResourceForURI(".");
         }
         return 0;
     }

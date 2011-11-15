@@ -43,9 +43,8 @@ import com.wavemaker.runtime.service.definition.AbstractDeprecatedServiceDefinit
 import com.wavemaker.runtime.service.definition.ReflectServiceDefinition;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
 import com.wavemaker.runtime.ws.WebServiceType;
-import com.wavemaker.tools.project.LocalStudioConfiguration;
+import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.Project;
-import com.wavemaker.tools.project.StudioConfiguration;
 import com.wavemaker.tools.service.ConfigurationCompiler;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.spring.SpringConfigSupport;
@@ -56,7 +55,7 @@ import com.wavemaker.tools.util.DesignTimeUtils;
 
 public class TestServiceConfigurationProcessor {
 
-    private StudioConfiguration studioConfiguration;
+    private LocalStudioFileSystem fileSystem;
 
     private Project project;
 
@@ -65,22 +64,21 @@ public class TestServiceConfigurationProcessor {
     @Before
     public void setUp() throws IOException {
         RuntimeAccess.setRuntimeBean(new RuntimeAccess());
-        this.studioConfiguration = new LocalStudioConfiguration();
-        Resource wmHome = this.studioConfiguration.createTempDir();
-        ((LocalStudioConfiguration) this.studioConfiguration).setTestWaveMakerHome(wmHome.getFile());
+        this.fileSystem = new LocalStudioFileSystem();
+        Resource wmHome = this.fileSystem.createTempDir();
+        this.fileSystem.setTestWaveMakerHome(wmHome.getFile());
         Resource projectDir = wmHome.createRelative("/projects/ServiceDefProcessorProject/");
-        this.studioConfiguration.copyRecursive(new ClassPathResource("templates/templateapp/"), projectDir, new ArrayList<String>());
+        this.fileSystem.copyRecursive(new ClassPathResource("templates/templateapp/"), projectDir, new ArrayList<String>());
         assertTrue(projectDir.exists());
         assertTrue(projectDir.createRelative("file_map_readme.txt").exists());
-        this.project = new Project(projectDir, this.studioConfiguration);
-
+        this.project = new Project(projectDir, this.fileSystem);
         this.localDSM = DesignTimeUtils.getDSMForProjectRoot(this.project.getProjectRoot());
-        this.localDSM.setStudioConfiguration(this.studioConfiguration);
+        this.localDSM.setFileSystem(this.fileSystem);
     }
 
     @After
     public void tearDown() {
-        this.studioConfiguration.deleteFile(this.project.getProjectRoot());
+        this.fileSystem.deleteFile(this.project.getProjectRoot());
     }
 
     @Test
@@ -95,7 +93,7 @@ public class TestServiceConfigurationProcessor {
         this.localDSM.defineService(sd2);
 
         ServiceConfigurationProcessor processor = new ServiceConfigurationProcessor();
-        processor.setStudioConfiguration(this.studioConfiguration);
+        processor.setFileSystem(this.fileSystem);
         buildWithProcessor(this.project, "Foo", processor);
 
         File actualServices = new File(this.project.getWebInf().getFile(), "project-services.xml");
@@ -158,7 +156,7 @@ public class TestServiceConfigurationProcessor {
         this.localDSM.defineService(sd2);
 
         ServiceConfigurationProcessor processor = new ServiceConfigurationProcessor();
-        processor.setStudioConfiguration(this.studioConfiguration);
+        processor.setFileSystem(this.fileSystem);
         buildWithProcessor(this.project, "Foo", processor);
 
         File actualServices = ConfigurationCompiler.getRuntimeServicesXml(this.project).getFile();
@@ -199,7 +197,7 @@ public class TestServiceConfigurationProcessor {
         this.localDSM.defineService(sd);
 
         ServiceConfigurationProcessor processor = new ServiceConfigurationProcessor();
-        processor.setStudioConfiguration(this.studioConfiguration);
+        processor.setFileSystem(this.fileSystem);
         buildWithProcessor(this.project, "Foo", processor);
 
         assertTrue(typesFile.exists());
@@ -214,7 +212,7 @@ public class TestServiceConfigurationProcessor {
         this.localDSM.defineService(sd2);
 
         processor = new ServiceConfigurationProcessor();
-        processor.setStudioConfiguration(this.studioConfiguration);
+        processor.setFileSystem(this.fileSystem);
         buildWithProcessor(this.project, "Foo", processor);
 
         assertTrue(managersFile.exists());

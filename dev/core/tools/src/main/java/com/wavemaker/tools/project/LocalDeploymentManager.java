@@ -49,6 +49,8 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
 
     Logger logger = Logger.getLogger(getClass());
 
+    private LocalStudioConfiguration studioConfiguration;
+
     // ant properties
     public static final String PROJECT_DIR_PROPERTY = "project.dir";
 
@@ -260,16 +262,16 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
         properties.put(BUILD_WEBAPPROOT_PROPERTY, buildDir);
         properties.put(WAR_FILE_NAME_PROPERTY, warFile);
         properties.put(EAR_FILE_NAME_PROPERTY, earFileName);
-        properties.put(CUSTOM_WM_DIR_NAME_PROPERTY, LocalStudioConfiguration.COMMON_DIR);
+        properties.put(CUSTOM_WM_DIR_NAME_PROPERTY, AbstractStudioFileSystem.COMMON_DIR);
 
         try {
-            properties.put(WAVEMAKER_HOME, getStudioConfiguration().getWaveMakerHome().getURI().toString());
+            properties.put(WAVEMAKER_HOME, getFileSystem().getWaveMakerHome().getURI().toString());
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
 
         properties.put(PROJ_DIRECTORY_PROPERTY, projectDir);
-        properties.put(DEPLOY_NAME_PROPERTY, this.studioConfiguration.getResourceForURI(projectDir).getFilename());
+        properties.put(DEPLOY_NAME_PROPERTY, getFileSystem().getResourceForURI(projectDir).getFilename());
 
         build();
 
@@ -295,11 +297,11 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
      */
     @Override
     public void buildWar(String warFileLocation, boolean includeEar) throws IOException {
-        Resource buildDir = this.studioConfiguration.createTempDir();
+        Resource buildDir = getFileSystem().createTempDir();
         try {
             buildWar(getProjectDir().getURI().toString(), buildDir.getURI().toString(), warFileLocation, includeEar);
         } finally {
-            this.studioConfiguration.deleteFile(buildDir);
+            getFileSystem().deleteFile(buildDir);
         }
     }
 
@@ -355,9 +357,9 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
     }
 
     private String exportProject(String projectDirPath, String zipFilePath) {
-        Resource projectDir = this.studioConfiguration.getResourceForURI(projectDirPath);
-        Resource zipFile = this.studioConfiguration.getResourceForURI(zipFilePath);
-        this.studioConfiguration.prepareForWriting(zipFile);
+        Resource projectDir = getFileSystem().getResourceForURI(projectDirPath);
+        Resource zipFile = getFileSystem().getResourceForURI(zipFilePath);
+        getFileSystem().prepareForWriting(zipFile);
 
         String projectName = projectDir.getFilename();
 
@@ -440,29 +442,29 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
     private Project parseAntFile(String projectDir, String deployName, Map<String, String> properties) {
 
         Project ant = new Project();
-        StudioConfiguration studioConfiguration = this.projectManager.getStudioConfiguration();
+        StudioFileSystem fileSystem = this.projectManager.getFileSystem();
         Map<String, Object> newProperties = new HashMap<String, Object>();
 
         if (null != getProjectManager() && null != getProjectManager().getCurrentProject()) {
             newProperties.put(PROJECT_ENCODING_PROPERTY, getProjectManager().getCurrentProject().getEncoding());
         }
 
-        newProperties.put(TOMCAT_HOST_PROPERTY, ((LocalStudioConfiguration) getStudioConfiguration()).getTomcatHost());
-        System.setProperty("wm.proj." + TOMCAT_HOST_PROPERTY, ((LocalStudioConfiguration) getStudioConfiguration()).getTomcatHost());
+        newProperties.put(TOMCAT_HOST_PROPERTY, getStudioConfiguration().getTomcatHost());
+        System.setProperty("wm.proj." + TOMCAT_HOST_PROPERTY, getStudioConfiguration().getTomcatHost());
 
-        newProperties.put(TOMCAT_PORT_PROPERTY, ((LocalStudioConfiguration) getStudioConfiguration()).getTomcatPort());
-        System.setProperty("wm.proj." + TOMCAT_PORT_PROPERTY, ((LocalStudioConfiguration) getStudioConfiguration()).getTomcatPort() + "");
+        newProperties.put(TOMCAT_PORT_PROPERTY, getStudioConfiguration().getTomcatPort());
+        System.setProperty("wm.proj." + TOMCAT_PORT_PROPERTY, getStudioConfiguration().getTomcatPort() + "");
 
-        newProperties.put("tomcat.manager.username", ((LocalStudioConfiguration) getStudioConfiguration()).getTomcatManagerUsername());
-        System.setProperty("wm.proj.tomcat.manager.username", ((LocalStudioConfiguration) getStudioConfiguration()).getTomcatManagerUsername());
+        newProperties.put("tomcat.manager.username", getStudioConfiguration().getTomcatManagerUsername());
+        System.setProperty("wm.proj.tomcat.manager.username", getStudioConfiguration().getTomcatManagerUsername());
 
-        newProperties.put("tomcat.manager.password", ((LocalStudioConfiguration) getStudioConfiguration()).getTomcatManagerPassword());
-        System.setProperty("wm.proj.tomcat.manager.password", ((LocalStudioConfiguration) getStudioConfiguration()).getTomcatManagerPassword());
+        newProperties.put("tomcat.manager.password", getStudioConfiguration().getTomcatManagerPassword());
+        System.setProperty("wm.proj.tomcat.manager.password", getStudioConfiguration().getTomcatManagerPassword());
 
         newProperties.putAll(properties);
 
         try {
-            newProperties.put(STUDIO_WEBAPPROOT_PROPERTY, studioConfiguration.getStudioWebAppRoot().getFile().getCanonicalPath());
+            newProperties.put(STUDIO_WEBAPPROOT_PROPERTY, fileSystem.getStudioWebAppRoot().getFile().getCanonicalPath());
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
@@ -470,7 +472,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
         newProperties.put(PROJECT_DIR_PROPERTY, projectDir);
 
         this.logger.info("PUT DIR: " + projectDir.toString());
-        Resource projectDirFile = studioConfiguration.getResourceForURI(projectDir);
+        Resource projectDirFile = fileSystem.getResourceForURI(projectDir);
         String projectName = projectDirFile.getFilename();
         newProperties.put(PROJECT_NAME_PROPERTY, projectName);
 
@@ -493,6 +495,14 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
         ant.init();
         helper.parse(ant, this.getClass().getResource(BUILD_RESOURCE_NAME));
         return ant;
+    }
+
+    private LocalStudioConfiguration getStudioConfiguration() {
+        return this.studioConfiguration;
+    }
+
+    public void setStudioConfiguration(LocalStudioConfiguration studioConfiguration) {
+        this.studioConfiguration = studioConfiguration;
     }
 
     public static class DeploymentNamespaceMapper extends NamespacePrefixMapper {

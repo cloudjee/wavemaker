@@ -26,7 +26,7 @@ import org.springframework.core.io.Resource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.infra.WMTestCase;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
-import com.wavemaker.tools.project.LocalStudioConfiguration;
+import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
 import com.wavemaker.tools.ws.wsdl.WSDL;
@@ -50,7 +50,7 @@ public class TestWebServiceFactory extends WMTestCase {
         if (!(serviceDefinition instanceof WSDL)) {
             fail("The service definition should be a WSDL.");
         }
-        GenerationConfiguration cfg = new GenerationConfiguration(serviceDefinition, new LocalStudioConfiguration().createTempDir());
+        GenerationConfiguration cfg = new GenerationConfiguration(serviceDefinition, new LocalStudioFileSystem().createTempDir());
         ServiceGenerator serviceGenerator = factory.getServiceGenerator(cfg);
         if (!(serviceGenerator instanceof SOAPServiceGenerator)) {
             fail("ServiceGenerator should be an instance of SOAPServiceGenerator, but was getting " + serviceGenerator.getClass().getName());

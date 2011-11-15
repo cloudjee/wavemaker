@@ -21,7 +21,7 @@ package com.wavemaker.tools.util;
 import org.springframework.core.io.Resource;
 
 import com.wavemaker.infra.WMTestCase;
-import com.wavemaker.tools.project.LocalStudioConfiguration;
+import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.service.DesignServiceManager;
 
 /**
@@ -31,7 +31,7 @@ public class TestDesignTimeUtils extends WMTestCase {
 
     public void testGetDSM() throws Exception {
 
-        Resource tempDir = new LocalStudioConfiguration().createTempDir();
+        Resource tempDir = new LocalStudioFileSystem().createTempDir();
         assertTrue(tempDir.exists());
 
         DesignServiceManager dsm = DesignTimeUtils.getDSMForProjectRoot(tempDir);

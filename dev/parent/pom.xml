@@ -439,6 +439,12 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+	            <groupId>org.hamcrest</groupId>
+	            <artifactId>hamcrest-all</artifactId>
+	            <version>1.1</version>
+	            <scope>test</scope>
+            </dependency>
+            <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-all</artifactId>
                 <version>1.8.2</version>
@@ -688,6 +694,9 @@
                     <configuration>
                         <downloadSources>true</downloadSources>
                         <downloadJavadocs>false</downloadJavadocs>
+                        <wtpversion>2.0</wtpversion>
+                        <wtpmanifest>true</wtpmanifest>
+                        <manifest>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifest>
                         <additionalConfig>
                             <file>
                                 <name>.settings/org.eclipse.jdt.core.prefs</name>

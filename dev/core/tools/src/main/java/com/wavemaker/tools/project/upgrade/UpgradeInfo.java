@@ -30,6 +30,14 @@ import org.springframework.core.io.Resource;
  */
 public class UpgradeInfo {
 
+    private Map<String, List<String>> messages = new HashMap<String, List<String>>();
+
+    private Map<String, List<String>> verbose = new HashMap<String, List<String>>();
+
+    private Resource backupExportFile;
+
+    private double version = -1;
+
     public void addMessage(String message) {
 
         String versionStr = "" + this.version;
@@ -47,15 +55,6 @@ public class UpgradeInfo {
         }
         this.verbose.get(versionStr).add(message);
     }
-
-    // bean properties
-    private Map<String, List<String>> messages = new HashMap<String, List<String>>();
-
-    private Map<String, List<String>> verbose = new HashMap<String, List<String>>();
-
-    private Resource backupExportFile;
-
-    private double version = -1;
 
     public Resource getBackupExportFile() {
         return this.backupExportFile;

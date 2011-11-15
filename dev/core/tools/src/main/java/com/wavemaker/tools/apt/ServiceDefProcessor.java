@@ -57,7 +57,6 @@ import com.wavemaker.runtime.service.definition.ServiceOperation;
 import com.wavemaker.tools.compiler.ResourceJavaFileObject;
 import com.wavemaker.tools.javaservice.JavaServiceDefinition;
 import com.wavemaker.tools.project.Project;
-import com.wavemaker.tools.project.StudioConfiguration;
 import com.wavemaker.tools.service.DesignServiceManager;
 
 @SupportedAnnotationTypes({ "com.wavemaker.runtime.service.annotations.ExposeToClient", "com.wavemaker.runtime.service.annotations.HideFromClient" })
@@ -140,8 +139,8 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
                         }
                         Resource serviceDef = this.designServiceManager.getServiceDefXml(serviceId);
                         try {
-                            this.studioConfiguration.copyFile(project.getWebInfClasses(), serviceDef.getInputStream(), "services/" + serviceId + "/"
-                                + serviceDef.getFilename());
+                            getFileSystem().copyFile(project.getWebInfClasses(), serviceDef.getInputStream(),
+                                "services/" + serviceId + "/" + serviceDef.getFilename());
                         } catch (IOException ex) {
                             this.processingEnv.getMessager().printMessage(Kind.ERROR,
                                 "Could not copy servicedef for runtime service " + serviceId + " to classpath.");
@@ -163,11 +162,6 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
         this.designServiceManager = designServiceManager;
     }
 
-    @Override
-    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-        this.studioConfiguration = studioConfiguration;
-    }
-
     private void copySpringXml() throws IOException {
         Project project = this.designServiceManager.getProjectManager().getCurrentProject();
         if (!project.isMavenProject()) {
@@ -177,7 +171,7 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
                 if (match instanceof ResourceJavaFileObject) {
                     ResourceJavaFileObject resource = (ResourceJavaFileObject) match;
                     if (resource.getFilename().endsWith("spring.xml")) {
-                        this.studioConfiguration.copyFile(project.getWebInfClasses(), resource.openInputStream(), resource.getFilename());
+                        getFileSystem().copyFile(project.getWebInfClasses(), resource.openInputStream(), resource.getFilename());
                     }
                 }
             }

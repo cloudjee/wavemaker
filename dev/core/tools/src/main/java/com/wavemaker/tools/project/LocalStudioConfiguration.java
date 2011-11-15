@@ -15,37 +15,22 @@
 package com.wavemaker.tools.project;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.servlet.ServletContext;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.SystemUtils;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.util.Assert;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.StringUtils;
-import org.springframework.web.context.ServletContextAware;
-import org.springframework.web.context.support.ServletContextResource;
 
 import com.wavemaker.common.CommonConstants;
-import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.FileAccessException;
-import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.config.ConfigurationStore;
+import com.wavemaker.tools.project.upgrade.UpgradeManager;
 
 /**
  * StudioConfiguration holds configuration data associated with this studio.
@@ -54,310 +39,52 @@ import com.wavemaker.tools.config.ConfigurationStore;
  * @author Joel Hare
  * @author Jeremy Grelle
  */
-public class LocalStudioConfiguration implements EmbeddedServerConfiguration, ServletContextAware {
+public class LocalStudioConfiguration implements EmbeddedServerConfiguration {
 
-    public static final String MARKER_RESOURCE_NAME = "marker.resource.txt";
+    private static final String TOMCAT_PORT_KEY = "tomcatPort";
 
-    public static final String WAVEMAKER_HOME = "WaveMaker/";
+    private static final int TOMCAT_PORT_DEFAULT = 8080;
 
-    public static final String PROJECTS_DIR = "projects/";
+    private static final String TOMCAT_PORT_ENV = CommonConstants.WM_SYSTEM_PROPERTY_PREFIX + TOMCAT_PORT_KEY;
 
-    public static final String COMMON_DIR = "common/";
+    private static final String TOMCAT_HOST_KEY = "tomcatHost";
 
-    public static final String PROJECTHOME_KEY = "projectsDir";
+    private static final String TOMCAT_HOST_DEFAULT = "localhost";
 
-    public static final String DEMOHOME_KEY = "demoHome";
+    private static final String TOMCAT_HOST_ENV = CommonConstants.WM_SYSTEM_PROPERTY_PREFIX + TOMCAT_HOST_KEY;
 
-    public static final String WMHOME_KEY = "wavemakerHome";
+    private static final String TOMCAT_MANAGER_USER_KEY = "managerUser";
 
-    public static final String PROJECTHOME_PROP_KEY = CommonConstants.WM_SYSTEM_PROPERTY_PREFIX + PROJECTHOME_KEY;
+    private static final String TOMCAT_MANAGER_USER_DEFAULT = "manager";
 
-    public static final String WMHOME_PROP_KEY = CommonConstants.WM_SYSTEM_PROPERTY_PREFIX + WMHOME_KEY;
+    private static final String TOMCAT_MANAGER_USER_ENV = CommonConstants.WM_SYSTEM_PROPERTY_PREFIX + TOMCAT_MANAGER_USER_KEY;
 
-    protected static final String TOMCAT_MANAGER_USER_KEY = "managerUser";
+    private static final String TOMCAT_MANAGER_PW_KEY = "managerPassword";
 
-    protected static final String TOMCAT_MANAGER_PW_KEY = "managerPassword";
+    private static final String TOMCAT_MANAGER_PW_DEFAULT = "manager";
 
-    protected static final String TOMCAT_PORT_KEY = "tomcatPort";
+    private static final String TOMCAT_MANAGER_PASSWORD_ENV = CommonConstants.WM_SYSTEM_PROPERTY_PREFIX + TOMCAT_MANAGER_PW_KEY;
 
-    protected static final String TOMCAT_HOST_KEY = "tomcatHost";
+    private static final String STUDIO_VERSION_KEY = "StudioVersion";
 
-    protected static final String TOMCAT_MANAGER_USER_ENV = CommonConstants.WM_SYSTEM_PROPERTY_PREFIX + TOMCAT_MANAGER_USER_KEY;
+    private static final String VERSION_FILE = "version";
 
-    protected static final String TOMCAT_MANAGER_PASSWORD_ENV = CommonConstants.WM_SYSTEM_PROPERTY_PREFIX + TOMCAT_MANAGER_PW_KEY;
+    private static final String VERSION_KEY = "studioVersion";
 
-    protected static final String TOMCAT_PORT_ENV = CommonConstants.WM_SYSTEM_PROPERTY_PREFIX + TOMCAT_PORT_KEY;
+    private static final String VERSION_DEFAULT = "4.0.0";
 
-    protected static final String TOMCAT_HOST_ENV = CommonConstants.WM_SYSTEM_PROPERTY_PREFIX + TOMCAT_HOST_KEY;
+    private final LocalStudioFileSystem fileSystem;
 
-    public static final int TOMCAT_PORT_DEFAULT = 8080;
-
-    protected static final String TOMCAT_HOST_DEFAULT = "localhost";
-
-    protected static final String TOMCAT_MANAGER_PW_DEFAULT = "manager";
-
-    protected static final String TOMCAT_MANAGER_USER_DEFAULT = "manager";
-
-    protected static final String VERSION_KEY = "studioVersion";
-
-    protected static final String VERSION_DEFAULT = "4.0.0";
-
-    public static final String CMD_GET = "get";
-
-    public static final String CMD_SET = "set";
-
-    protected static final String CMD_DEL = "del";
-
-    protected static final String CMD_NOTSET = "NOTSET";
-
-    protected static final String VERSION_FILE = "version";
-
-    private ServletContext servletContext;
-
-    /**
-     * WaveMaker home override, used for testing. NEVER set this in production.
-     */
-    private File testWMHome = null;
-
-    /**
-     * WaveMaker demo directory override, used for testing. NEVER set this in production.
-     */
-    private File testDemoDir = null;
-
-    @Override
-    public Resource getProjectsDir() {
-        String projectsProp = null;
-        if (isRuntime()) {
-            projectsProp = (String) RuntimeAccess.getInstance().getSession().getAttribute(PROJECTHOME_PROP_KEY);
-        } else {
-            projectsProp = System.getProperty(PROJECTHOME_PROP_KEY, null);
-        }
-
-        if (null != projectsProp && 0 != projectsProp.length()) {
-            projectsProp = projectsProp.endsWith("/") ? projectsProp : projectsProp + "/";
-            return new FileSystemResource(projectsProp);
-        }
-
-        try {
-            Resource projectsDir = getWaveMakerHome().createRelative(PROJECTS_DIR);
-            if (!projectsDir.exists()) {
-                IOUtils.makeDirectories(projectsDir.getFile(), getWaveMakerHome().getFile());
-            }
-            return projectsDir;
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
+    public LocalStudioConfiguration(LocalStudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
     }
 
-    private boolean isRuntime() {
-
-        try {
-            if (RuntimeAccess.getInstance() != null && RuntimeAccess.getInstance().getRequest() != null) {
-                return true;
-            }
-        } catch (Exception e) {
-        }
-        return false;
-    }
-
-    private static boolean isCloud;
-
-    private static boolean isCloudInitialized = false;
-
-    public static boolean isCloud() {
-        if (!isCloudInitialized) {
-            try {
-
-                org.springframework.core.io.ClassPathResource cpr = new org.springframework.core.io.ClassPathResource("cloud.src.resource");
-                isCloud = cpr.exists();
-                isCloudInitialized = true;
-            } catch (Exception e) {
-                return false;
-            }
-        }
-
-        return isCloud;
-    }
-
-    public static void setWaveMakerHome(Resource wmHome) throws FileAccessException {
-        if (isCloud()) {
-            return;
-        }
-
-        Assert.isInstanceOf(FileSystemResource.class, wmHome, "Expected a FileSystemResource");
-
-        try {
-            ConfigurationStore.setVersionedPreference(LocalStudioConfiguration.class, WMHOME_KEY, wmHome.getFile().getCanonicalPath());
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
-
-        if (!wmHome.exists()) {
-            ((FileSystemResource) wmHome).getFile().mkdirs();
-        }
-    }
-
-    public void setTestWaveMakerHome(File file) {
-        this.testWMHome = file;
-    }
-
-    @Override
-    public Resource getWaveMakerHome() {
-
-        if (null != this.testWMHome) {
-            return new FileSystemResource(this.testWMHome.toString() + "/");
-        }
-
-        return staticGetWaveMakerHome();
-    }
-
+    @Deprecated
     public static Resource staticGetWaveMakerHome() {
-
-        Resource ret = null;
-
-        String env = System.getProperty(WMHOME_PROP_KEY, null);
-        if (null != env && 0 != env.length()) {
-            ret = new FileSystemResource(env);
-        }
-
-        if (null == ret) {
-            String pref = ConfigurationStore.getPreference(LocalStudioConfiguration.class, WMHOME_KEY, null);
-            if (null != pref && 0 != pref.length()) {
-                pref = pref.endsWith("/") ? pref : pref + "/";
-                ret = new FileSystemResource(pref);
-            }
-        }
-
-        // we couldn't find a test value, a property, or a preference, so use
-        // a default
-        if (null == ret) {
-            ret = getDefaultWaveMakerHome();
-        }
-
-        if (!ret.exists()) {
-            try {
-                ret.getFile().mkdir();
-            } catch (IOException ex) {
-                throw new WMRuntimeException(ex);
-            }
-        }
-
-        return ret;
-    }
-
-    protected static Resource getDefaultWaveMakerHome() {
-
-        Resource userHome = null;
-        if (SystemUtils.IS_OS_WINDOWS) {
-            String userProfileEnvVar = System.getenv("USERPROFILE");
-            if (StringUtils.hasText(userProfileEnvVar)) {
-                userProfileEnvVar = userProfileEnvVar.endsWith("/") ? userProfileEnvVar : userProfileEnvVar + "/";
-                userHome = new FileSystemResource(System.getenv("USERPROFILE"));
-            }
-        }
-        if (null == userHome) {
-            String userHomeProp = System.getProperty("user.home");
-            userHomeProp = userHomeProp.endsWith("/") ? userHomeProp : userHomeProp + "/";
-            userHome = new FileSystemResource(userHomeProp);
-        }
-
-        String osVersionStr = System.getProperty("os.version");
-        if (osVersionStr.contains(".")) {
-            String sub = osVersionStr.substring(osVersionStr.indexOf(".") + 1);
-            if (sub.contains(".")) {
-                osVersionStr = osVersionStr.substring(0, osVersionStr.indexOf('.', osVersionStr.indexOf('.') + 1));
-            }
-        }
-
-        try {
-            if (SystemUtils.IS_OS_WINDOWS) {
-                userHome = new FileSystemResource(javax.swing.filechooser.FileSystemView.getFileSystemView().getDefaultDirectory());
-            } else if (SystemUtils.IS_OS_MAC) {
-                userHome = userHome.createRelative("Documents/");
-            }
-
-            if (!userHome.exists()) {
-                throw new WMRuntimeException(MessageResource.PROJECT_USERHOMEDNE, userHome);
-            }
-
-            Resource wmHome = userHome.createRelative(WAVEMAKER_HOME);
-            if (!wmHome.exists()) {
-                wmHome.getFile().mkdir();
-            }
-            return wmHome;
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
-    }
-
-    @Override
-    public Resource getDemoDir() {
-        if (isCloud()) {
-            return null;
-        }
-
-        if (null != this.testDemoDir) {
-            return new FileSystemResource(this.testDemoDir.toString() + "/");
-        }
-
-        String location = ConfigurationStore.getPreference(getClass(), DEMOHOME_KEY, null);
-        Resource demo;
-        try {
-            if (null != location) {
-                demo = new FileSystemResource(location);
-            } else {
-                demo = getStudioWebAppRoot().createRelative("../Samples");
-            }
-            return demo;
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
-    }
-
-    public void setDemoDir(File file) {
-        if (isCloud()) {
-            return;
-        }
-
-        ConfigurationStore.setPreference(getClass(), DEMOHOME_KEY, file.getAbsolutePath());
-    }
-
-    public void setTestDemoDir(File file) {
-        if (isCloud()) {
-            return;
-        }
-
-        this.testDemoDir = file;
-    }
-
-    @Override
-    public Resource getCommonDir() throws IOException {
-        Resource common = getWaveMakerHome().createRelative(COMMON_DIR);
-
-        if (!common.exists() && getWaveMakerHome().exists()) {
-            createCommonDir(common);
-        }
-
-        return common;
-    }
-
-    @Override
-    public Resource createCommonRelative(String relPath) throws IOException {
-        return this.getCommonDir().createRelative(relPath);
-    }
-
-    private synchronized void createCommonDir(Resource common) throws IOException {
-
-        if (!common.exists()) {
-            Resource templateFile = getStudioWebAppRoot().createRelative("lib/wm/" + COMMON_DIR);
-            if (templateFile.exists()) {
-                IOUtils.copy(templateFile.getFile(), common.getFile(), IOUtils.DEFAULT_EXCLUSION);
-            }
-        }
+        return LocalStudioFileSystem.staticGetWaveMakerHome();
     }
 
     public int getTomcatPort() {
-
         String propVal = System.getProperty(TOMCAT_PORT_ENV, null);
         if (null != propVal) {
             return Integer.parseInt(propVal);
@@ -390,50 +117,34 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
     }
 
     public String getTomcatManagerUsername() {
-
         String propVal = System.getProperty(TOMCAT_MANAGER_USER_ENV, null);
         if (null != propVal) {
             return propVal;
         }
-
         return ConfigurationStore.getPreference(getClass(), TOMCAT_MANAGER_USER_KEY, TOMCAT_MANAGER_USER_DEFAULT);
     }
 
     public String getTomcatManagerPassword() {
-
         String propVal = System.getProperty(TOMCAT_MANAGER_PASSWORD_ENV, null);
         if (null != propVal) {
             return propVal;
         }
-
         return ConfigurationStore.getPreference(getClass(), TOMCAT_MANAGER_PW_KEY, TOMCAT_MANAGER_PW_DEFAULT);
     }
 
-    // other studio information
-
-    @Override
-    public Resource getStudioWebAppRoot() {
-        return new ServletContextResource(this.servletContext, "/");
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.StudioConfiguration#getPreferencesMap()
-     */
     @Override
     public Map<String, String> getPreferencesMap() {
 
         Map<String, String> prefs = new HashMap<String, String>();
 
         try {
-            prefs.put(WMHOME_KEY, getWaveMakerHome().getFile().getCanonicalPath());
+            prefs.put(LocalStudioFileSystem.WMHOME_KEY, this.fileSystem.getWaveMakerHome().getFile().getCanonicalPath());
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
 
         try {
-            prefs.put(DEMOHOME_KEY, isCloud() ? null : getDemoDir().getFile().getCanonicalPath());
+            prefs.put(AbstractStudioFileSystem.DEMOHOME_KEY, isCloud() ? null : this.fileSystem.getDemoDir().getFile().getCanonicalPath());
             return prefs;
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
@@ -453,15 +164,15 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
             return;
         }
 
-        if (prefs.containsKey(WMHOME_KEY) && null != prefs.get(WMHOME_KEY)) {
+        if (prefs.containsKey(LocalStudioFileSystem.WMHOME_KEY) && null != prefs.get(LocalStudioFileSystem.WMHOME_KEY)) {
             try {
-                setWaveMakerHome(new FileSystemResource(prefs.get(WMHOME_KEY)));
+                LocalStudioFileSystem.setWaveMakerHome(new FileSystemResource(prefs.get(LocalStudioFileSystem.WMHOME_KEY)));
             } catch (FileAccessException e) {
                 throw new WMRuntimeException(e);
             }
         }
-        if (prefs.containsKey(DEMOHOME_KEY) && null != prefs.get(DEMOHOME_KEY)) {
-            setDemoDir(new File(prefs.get(DEMOHOME_KEY)));
+        if (prefs.containsKey(AbstractStudioFileSystem.DEMOHOME_KEY) && null != prefs.get(AbstractStudioFileSystem.DEMOHOME_KEY)) {
+            this.fileSystem.setDemoDir(new File(prefs.get(AbstractStudioFileSystem.DEMOHOME_KEY)));
         }
     }
 
@@ -518,87 +229,6 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
     }
 
     @Override
-    public void setServletContext(ServletContext servletContext) {
-        this.servletContext = servletContext;
-    }
-
-    @Override
-    public Resource createPath(Resource root, String path) {
-        Assert.isInstanceOf(FileSystemResource.class, root, "Expected a FileSystemResource");
-        try {
-            if (!root.exists()) {
-                File rootFile = root.getFile();
-                while (rootFile.getAbsolutePath().length() > 1 && !rootFile.exists()) {
-                    rootFile = rootFile.getParentFile();
-                }
-                IOUtils.makeDirectories(root.getFile(), rootFile);
-            }
-            FileSystemResource relativeResource = (FileSystemResource) root.createRelative(path);
-            if (!relativeResource.exists()) {
-                if (relativeResource.getPath().endsWith("/")) {
-                    IOUtils.makeDirectories(relativeResource.getFile(), root.getFile());
-                } else {
-                    IOUtils.makeDirectories(relativeResource.getFile().getParentFile(), root.getFile());
-                }
-            }
-            return relativeResource;
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
-    }
-
-    @Override
-    public Resource copyFile(Resource root, InputStream source, String filePath) {
-        Assert.isInstanceOf(FileSystemResource.class, root, "Expected a FileSystemResource");
-        try {
-            FileSystemResource targetFile = (FileSystemResource) root.createRelative(filePath);
-            FileCopyUtils.copy(source, getOutputStream(targetFile));
-            return targetFile;
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
-    }
-
-    @Override
-    public boolean deleteFile(Resource file) {
-        Assert.isInstanceOf(FileSystemResource.class, file, "Expected a FileSystemResource");
-        FileSystemResource fileResource = (FileSystemResource) file;
-        if (fileResource.getFile().isDirectory()) {
-            try {
-                FileUtils.forceDelete(fileResource.getFile());
-                return true;
-            } catch (IOException ex) {
-                throw new WMRuntimeException(ex);
-            }
-        } else {
-            return fileResource.getFile().delete();
-        }
-    }
-
-    @Override
-    public OutputStream getOutputStream(Resource file) {
-        try {
-            Assert.isTrue(!file.getFile().isDirectory(), "Cannot get an output stream for an invalid file.");
-            prepareForWriting(file);
-            return new FileOutputStream(file.getFile());
-        } catch (FileNotFoundException ex) {
-            throw new WMRuntimeException(ex);
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
-    }
-
-    @Override
-    public Resource copyRecursive(Resource root, Resource target, List<String> exclusions) {
-        try {
-            IOUtils.copy(root.getFile(), target.getFile(), exclusions);
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
-        return target;
-    }
-
-    @Override
     public Resource getTomcatHome() {
         String tomcatHome = System.getProperty("catalina.home");
         tomcatHome = tomcatHome.endsWith("/") ? tomcatHome : tomcatHome + "/";
@@ -614,102 +244,31 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration, Se
         }
     }
 
-    @Override
-    public List<Resource> listChildren(Resource root) {
-        List<Resource> children = new ArrayList<Resource>();
-        File[] files;
-        try {
-            files = root.getFile().listFiles();
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
-        }
-        if (files == null) {
-            return children;
-        }
-        for (File file : files) {
-            children.add(new FileSystemResource(file.getAbsolutePath() + "/"));
-        }
-        return children;
+    private boolean isCloud() {
+        return AbstractStudioFileSystem.isCloud();
+    }
+
+    public static void setWaveMakerHome(Resource wmHome) throws FileAccessException {
+        LocalStudioFileSystem.setWaveMakerHome(wmHome);
+    }
+
+    protected static Resource getDefaultWaveMakerHome() {
+        return LocalStudioFileSystem.getDefaultWaveMakerHome();
     }
 
     @Override
-    public List<Resource> listChildren(Resource root, ResourceFilter filter) {
-        List<Resource> children = new ArrayList<Resource>();
-        File[] files;
-        try {
-            files = root.getFile().listFiles();
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
-        }
-        if (files == null) {
-            return children;
-        }
-        for (File file : files) {
-            FileSystemResource fileResource = new FileSystemResource(file.getAbsolutePath() + "/");
-            if (filter.accept(fileResource)) {
-                children.add(fileResource);
-            }
-        }
-        return children;
+    public boolean isStudioUpgradeSupported() {
+        return true;
     }
 
     @Override
-    public Resource createTempDir() {
-        try {
-            return new FileSystemResource(IOUtils.createTempDirectory("local", "_tmp").getAbsolutePath() + "/");
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
+    public double getCurrentUpgradeKey() {
+        String prefString = ConfigurationStore.getPreference(UpgradeManager.class, STUDIO_VERSION_KEY, "0.0");
+        return Double.parseDouble(prefString);
     }
 
     @Override
-    public Resource getResourceForURI(String resourceURI) {
-        return new FileSystemResource(resourceURI);
-    }
-
-    @Override
-    public void prepareForWriting(Resource file) {
-        try {
-            if (file.getFile().isDirectory()) {
-                file.getFile().mkdirs();
-            } else {
-                file.getFile().getParentFile().mkdirs();
-            }
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
-    }
-
-    @Override
-    public void rename(Resource oldResource, Resource newResource) {
-        Assert.isInstanceOf(FileSystemResource.class, oldResource, "Expected a FileSystemResource");
-        Assert.isInstanceOf(FileSystemResource.class, newResource, "Expected a FileSystemResource");
-        try {
-            oldResource.getFile().renameTo(newResource.getFile());
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
-    }
-
-    @Override
-    public String getPath(Resource file) {
-        try {
-            String path = StringUtils.cleanPath(file.getFile().getPath());
-            if (file.getFile().isDirectory() && !path.endsWith("/")) {
-                path += "/";
-            }
-            return path;
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
-    }
-
-    @Override
-    public boolean isDirectory(Resource file) {
-        try {
-            return file.getFile().isDirectory();
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
-        }
+    public void setCurrentUpgradeKey(double key) {
+        ConfigurationStore.setPreference(UpgradeManager.class, STUDIO_VERSION_KEY, "" + key);
     }
 }

@@ -153,11 +153,12 @@
         <param-value>/WEB-INF/studio-springapp.xml</param-value>
     </context-param>
     
-    <!-- Uncomment this to do local testing of a simulated Cloud Foundry environment (i.e., using a local MongoDB instance for the file system) -->
-    <!-- <context-param>
+    <!-- Uncomment this to do local testing of a simulated Cloud Foundry environment (i.e., using a local MongoDB instance for the file system) 
+    <context-param>
         <param-name>spring.profiles.active</param-name>
         <param-value>cloud-test</param-value>
-    </context-param>-->
+    </context-param>
+    -->
     
     <!--
         Filter requests into UTF-8.  This must be the first filter defined/run.

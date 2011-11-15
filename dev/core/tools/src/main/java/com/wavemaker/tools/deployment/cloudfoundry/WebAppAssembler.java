@@ -24,13 +24,13 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.deployment.cloudfoundry.LoggingStatusCallback.Timer;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ResourceFilter;
-import com.wavemaker.tools.project.StudioConfiguration;
+import com.wavemaker.tools.project.StudioFileSystem;
 
 public class WebAppAssembler implements InitializingBean {
 
     private static final Log log = LogFactory.getLog(WebAppAssembler.class);
 
-    private StudioConfiguration studioConfiguration;
+    private StudioFileSystem fileSystem;
 
     private Map<String, Resource> studioWebAppFiles;
 
@@ -39,26 +39,25 @@ public class WebAppAssembler implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         this.studioWebAppFiles = new HashMap<String, Resource>();
-
-        final String studioBasePath = this.studioConfiguration.getPath(this.studioConfiguration.getStudioWebAppRoot());
+        Resource root = this.fileSystem.getStudioWebAppRoot();
+        final String studioBasePath = this.fileSystem.getPath(root);
 
         try {
-            collectFiles(this.studioWebAppFiles, studioBasePath, this.studioConfiguration.getStudioWebAppRoot().createRelative("images/"));
-            collectFiles(this.studioWebAppFiles, studioBasePath, this.studioConfiguration.getStudioWebAppRoot().createRelative("WEB-INF/lib/"));
-            collectFiles(this.studioWebAppFiles, studioBasePath, this.studioConfiguration.getStudioWebAppRoot().createRelative("lib/"),
-                new ResourceFilter() {
+            collectFiles(this.studioWebAppFiles, studioBasePath, root.createRelative("images/"));
+            collectFiles(this.studioWebAppFiles, studioBasePath, root.createRelative("WEB-INF/lib/"));
+            collectFiles(this.studioWebAppFiles, studioBasePath, root.createRelative("lib/"), new ResourceFilter() {
 
-                    @Override
-                    public boolean accept(Resource resource) {
-                        String path = WebAppAssembler.this.studioConfiguration.getPath(resource).replace(studioBasePath, "");
-                        if (path.startsWith("wm/common/") || path.startsWith("dojo/utils/") || path.startsWith("dojo/") && path.contains("tests/")) {
-                            return false;
-                        }
-                        return true;
+                @Override
+                public boolean accept(Resource resource) {
+                    String path = WebAppAssembler.this.fileSystem.getPath(resource).replace(studioBasePath, "");
+                    if (path.startsWith("wm/common/") || path.startsWith("dojo/utils/") || path.startsWith("dojo/") && path.contains("tests/")) {
+                        return false;
                     }
-                });
-            collectFiles(this.studioWebAppFiles, this.studioConfiguration.getPath(this.studioConfiguration.getCommonDir()),
-                this.studioConfiguration.getCommonDir(), null, "lib/wm/common/");
+                    return true;
+                }
+            });
+            collectFiles(this.studioWebAppFiles, this.fileSystem.getPath(this.fileSystem.getCommonDir()), this.fileSystem.getCommonDir(), null,
+                "lib/wm/common/");
 
             ExecutorService executor = Executors.newSingleThreadExecutor();
             this.studioHashes = executor.submit(new StudioHashCalculator());
@@ -72,7 +71,7 @@ public class WebAppAssembler implements InitializingBean {
 
         try {
 
-            String projectBasePath = this.studioConfiguration.getPath(project.getWebAppRoot());
+            String projectBasePath = this.fileSystem.getPath(project.getWebAppRoot());
             collectFiles(projectWebAppFiles, projectBasePath, project.getWebAppRoot());
             // projectWebAppFiles.add("WEB-INF/web.xml", new ClassPathResource(""));
         } catch (IOException e) {
@@ -94,8 +93,8 @@ public class WebAppAssembler implements InitializingBean {
         }
     }
 
-    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-        this.studioConfiguration = studioConfiguration;
+    public void setFileSystem(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
     }
 
     private void collectFiles(Map<String, Resource> files, String basePath, Resource root) throws IOException {
@@ -109,15 +108,15 @@ public class WebAppAssembler implements InitializingBean {
     private void collectFiles(Map<String, Resource> files, String basePath, Resource root, ResourceFilter filter, String newPath) throws IOException {
         List<Resource> children;
         if (filter == null) {
-            children = this.studioConfiguration.listChildren(root);
+            children = this.fileSystem.listChildren(root);
         } else {
-            children = this.studioConfiguration.listChildren(root, filter);
+            children = this.fileSystem.listChildren(root, filter);
         }
         for (Resource child : children) {
-            if (this.studioConfiguration.isDirectory(child)) {
+            if (this.fileSystem.isDirectory(child)) {
                 collectFiles(files, basePath, child, filter);
             } else {
-                files.put(newPath + this.studioConfiguration.getPath(child).replace(basePath, ""), child);
+                files.put(newPath + this.fileSystem.getPath(child).replace(basePath, ""), child);
             }
         }
     }

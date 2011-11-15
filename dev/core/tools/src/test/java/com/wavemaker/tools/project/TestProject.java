@@ -46,7 +46,7 @@ public class TestProject extends WMTestCase {
 
     private File tempDir = null;
 
-    private final StudioConfiguration studioConfiguration = new LocalStudioConfiguration();
+    private final StudioFileSystem fileSystem = new LocalStudioFileSystem();
 
     @Override
     public void setUp() throws Exception {
@@ -65,7 +65,7 @@ public class TestProject extends WMTestCase {
 
         Resource projectRoot = new FileSystemResource(this.tempDir.getPath() + "/").createRelative(projectName + "/");
 
-        Project p = new Project(projectRoot, this.studioConfiguration);
+        Project p = new Project(projectRoot, this.fileSystem);
         assertEquals(projectName, p.getProjectName());
     }
 
@@ -74,7 +74,7 @@ public class TestProject extends WMTestCase {
         String projectName = "foo";
         Resource projectRoot = new FileSystemResource(this.tempDir.getPath() + "/").createRelative(projectName + "/");
         projectRoot.getFile().mkdir();
-        Project p = new Project(projectRoot, this.studioConfiguration);
+        Project p = new Project(projectRoot, this.fileSystem);
 
         assertTrue(projectRoot.getFile().exists());
         assertTrue(projectRoot.getFile().isDirectory());
@@ -99,7 +99,7 @@ public class TestProject extends WMTestCase {
 
         Resource projectRoot = new FileSystemResource(tempDir.getPath() + "/").createRelative(projectName + "/");
         projectRoot.getFile().mkdir();
-        Project p = new Project(projectRoot, this.studioConfiguration);
+        Project p = new Project(projectRoot, this.fileSystem);
 
         assertEquals(Double.valueOf(Project.PROPERTY_PROJECT_VERSION_DEFAULT), p.getProjectVersion());
 
@@ -118,7 +118,7 @@ public class TestProject extends WMTestCase {
         File tempDir = IOUtils.createTempDirectory();
         Resource projectRoot = new FileSystemResource(tempDir.getPath() + "/").createRelative(projectName + "/");
         projectRoot.getFile().mkdir();
-        Project p = new Project(projectRoot, this.studioConfiguration);
+        Project p = new Project(projectRoot, this.fileSystem);
 
         Resource webinfClasses = projectRoot.createRelative("webapproot/WEB-INF/classes/");
         assertEquals(webinfClasses, p.getWebInfClasses());
@@ -127,7 +127,7 @@ public class TestProject extends WMTestCase {
     public void testProjectBasicEncoding() throws Exception {
 
         File tempDir = IOUtils.createTempDirectory();
-        FileService fs = new Project(new FileSystemResource(tempDir.getPath() + "/"), this.studioConfiguration);
+        FileService fs = new Project(new FileSystemResource(tempDir.getPath() + "/"), this.fileSystem);
         fs.writeFile("foo.txt", ComplexReturnBean.EXTENDED_CHARS_TEST_STR);
 
         File expectedFile = new File(tempDir, "foo.txt");
@@ -143,7 +143,7 @@ public class TestProject extends WMTestCase {
     public void testProjectBasicWriterReaderEncoding() throws Exception {
 
         File tempDir = IOUtils.createTempDirectory();
-        FileService fs = new Project(new FileSystemResource(tempDir.getPath() + "/"), this.studioConfiguration);
+        FileService fs = new Project(new FileSystemResource(tempDir.getPath() + "/"), this.fileSystem);
 
         Writer writer = fs.getWriter("foo.txt");
         writer.write(ComplexReturnBean.EXTENDED_CHARS_TEST_STR);

@@ -42,25 +42,25 @@ public class TestLocalStudioConfiguration extends WMTestCase {
 
     public void testOverrideWMHome() throws Exception {
         if (!"cloud".equals(PROJECT_TYPE)) {
-            String oldWMHome = System.getProperty(LocalStudioConfiguration.WMHOME_PROP_KEY, null);
+            String oldWMHome = System.getProperty(LocalStudioFileSystem.WMHOME_PROP_KEY, null);
 
             try {
                 String newWMHome = "foo";
 
-                System.setProperty(LocalStudioConfiguration.WMHOME_PROP_KEY, "/" + newWMHome);
+                System.setProperty(LocalStudioFileSystem.WMHOME_PROP_KEY, "/" + newWMHome);
 
-                StudioConfiguration sc = new LocalStudioConfiguration();
-                Resource wmHome = sc.getWaveMakerHome();
+                StudioFileSystem fileSystem = new LocalStudioFileSystem();
+                Resource wmHome = fileSystem.getWaveMakerHome();
 
                 assertEquals(newWMHome, wmHome.getFilename());
 
             } finally {
                 if (null == oldWMHome) {
                     Properties props = System.getProperties();
-                    props.remove(LocalStudioConfiguration.WMHOME_PROP_KEY);
+                    props.remove(LocalStudioFileSystem.WMHOME_PROP_KEY);
                     System.setProperties(props);
                 } else {
-                    System.setProperty(LocalStudioConfiguration.WMHOME_PROP_KEY, oldWMHome);
+                    System.setProperty(LocalStudioFileSystem.WMHOME_PROP_KEY, oldWMHome);
                 }
             }
         }
@@ -68,7 +68,7 @@ public class TestLocalStudioConfiguration extends WMTestCase {
 
     public void testWMHomeDirCreation_File() throws Exception {
         if (!"cloud".equals(PROJECT_TYPE)) {
-            String oldPref = ConfigurationStore.getPreference(LocalStudioConfiguration.class, LocalStudioConfiguration.WMHOME_KEY, null);
+            String oldPref = ConfigurationStore.getPreference(LocalStudioConfiguration.class, LocalStudioFileSystem.WMHOME_KEY, null);
 
             try {
                 File tempDir = null;
@@ -79,7 +79,7 @@ public class TestLocalStudioConfiguration extends WMTestCase {
 
                     assertTrue(!tempDir.exists());
 
-                    LocalStudioConfiguration.setWaveMakerHome(new FileSystemResource(tempDir));
+                    LocalStudioFileSystem.setWaveMakerHome(new FileSystemResource(tempDir));
                     assertTrue(tempDir.exists());
                 } finally {
                     if (null != tempDir && tempDir.exists()) {
@@ -88,9 +88,9 @@ public class TestLocalStudioConfiguration extends WMTestCase {
                 }
             } finally {
                 if (null == oldPref) {
-                    ConfigurationStore.removePreference(LocalStudioConfiguration.class, LocalStudioConfiguration.WMHOME_KEY);
+                    ConfigurationStore.removePreference(LocalStudioConfiguration.class, LocalStudioFileSystem.WMHOME_KEY);
                 } else {
-                    LocalStudioConfiguration.setWaveMakerHome(new FileSystemResource(oldPref));
+                    LocalStudioFileSystem.setWaveMakerHome(new FileSystemResource(oldPref));
                 }
             }
         }
@@ -102,18 +102,18 @@ public class TestLocalStudioConfiguration extends WMTestCase {
 
             try {
                 tempDir = IOUtils.createTempDirectory();
-                File tempProjectsDir = new File(tempDir, LocalStudioConfiguration.PROJECTS_DIR);
+                File tempProjectsDir = new File(tempDir, AbstractStudioFileSystem.PROJECTS_DIR);
 
                 assertTrue(!tempProjectsDir.exists());
 
-                LocalStudioConfiguration sc = new LocalStudioConfiguration();
-                sc.setTestWaveMakerHome(tempDir);
-                sc.setServletContext(this.servletContext);
+                LocalStudioFileSystem sf = new LocalStudioFileSystem();
+                sf.setTestWaveMakerHome(tempDir);
+                sf.setServletContext(this.servletContext);
 
-                assertTrue(sc.getProjectsDir().exists());
-                assertTrue("expected failure in eclipse: expected dir: " + sc.getCommonDir() + " DNE", sc.getCommonDir().exists());
+                assertTrue(sf.getProjectsDir().exists());
+                assertTrue("expected failure in eclipse: expected dir: " + sf.getCommonDir() + " DNE", sf.getCommonDir().exists());
 
-                Resource commonSvn = sc.getCommonDir().createRelative(".svn/");
+                Resource commonSvn = sf.getCommonDir().createRelative(".svn/");
                 assertFalse(commonSvn.exists());
             } finally {
                 if (null != tempDir && tempDir.exists()) {
@@ -125,9 +125,9 @@ public class TestLocalStudioConfiguration extends WMTestCase {
 
     public void testGetStudioWebAppRootFile() throws Exception {
 
-        LocalStudioConfiguration sc = new LocalStudioConfiguration();
-        sc.setServletContext(this.servletContext);
-        Resource studioWebAppRootFile = sc.getStudioWebAppRoot();
+        LocalStudioFileSystem sf = new LocalStudioFileSystem();
+        sf.setServletContext(this.servletContext);
+        Resource studioWebAppRootFile = sf.getStudioWebAppRoot();
         assertTrue(studioWebAppRootFile.exists());
         Resource studioWebInfFile = studioWebAppRootFile.createRelative("WEB-INF/");
         assertTrue(studioWebInfFile.exists());
@@ -137,19 +137,19 @@ public class TestLocalStudioConfiguration extends WMTestCase {
 
     public void testDefaultStudioHome() throws Exception {
         if (!"cloud".equals(PROJECT_TYPE)) {
-            String oldStudioHome = ConfigurationStore.getPreference(LocalStudioConfiguration.class, LocalStudioConfiguration.WMHOME_KEY, null);
-            StudioConfiguration sc = new LocalStudioConfiguration();
+            String oldStudioHome = ConfigurationStore.getPreference(LocalStudioConfiguration.class, LocalStudioFileSystem.WMHOME_KEY, null);
+            StudioFileSystem sf = new LocalStudioFileSystem();
 
             try {
-                ConfigurationStore.removePreference(LocalStudioConfiguration.class, LocalStudioConfiguration.WMHOME_KEY);
+                ConfigurationStore.removePreference(LocalStudioConfiguration.class, LocalStudioFileSystem.WMHOME_KEY);
 
-                Resource home = sc.getWaveMakerHome();
+                Resource home = sf.getWaveMakerHome();
                 assertTrue("we expected the parent of the home to exist; home: " + home, home.getFile().getParentFile().exists());
                 assertEquals("unexpected ending of home path: " + home, home.getFilename(), "WaveMaker");
                 assertTrue(home.exists());
             } finally {
                 if (null != oldStudioHome) {
-                    LocalStudioConfiguration.setWaveMakerHome(new FileSystemResource(oldStudioHome));
+                    LocalStudioFileSystem.setWaveMakerHome(new FileSystemResource(oldStudioHome));
                 }
             }
         }
@@ -160,11 +160,11 @@ public class TestLocalStudioConfiguration extends WMTestCase {
             File tempDir = null;
             try {
                 tempDir = IOUtils.createTempDirectory();
-                File tempProjectsDir = new File(tempDir, LocalStudioConfiguration.PROJECTS_DIR);
+                File tempProjectsDir = new File(tempDir, AbstractStudioFileSystem.PROJECTS_DIR);
 
                 assertTrue(!tempProjectsDir.exists());
 
-                LocalStudioConfiguration sc = new LocalStudioConfiguration();
+                LocalStudioFileSystem sc = new LocalStudioFileSystem();
                 sc.setTestWaveMakerHome(tempDir);
                 sc.setServletContext(this.servletContext);
                 Resource projects = sc.getProjectsDir();
@@ -186,17 +186,17 @@ public class TestLocalStudioConfiguration extends WMTestCase {
 
             try {
                 tempDir = IOUtils.createTempDirectory();
-                File tempProjectsDir = new File(tempDir, LocalStudioConfiguration.PROJECTS_DIR);
+                File tempProjectsDir = new File(tempDir, AbstractStudioFileSystem.PROJECTS_DIR);
 
                 assertTrue(!tempProjectsDir.exists());
 
-                LocalStudioConfiguration sc = new LocalStudioConfiguration();
-                sc.setTestWaveMakerHome(tempDir);
-                sc.setServletContext(this.servletContext);
+                LocalStudioFileSystem sf = new LocalStudioFileSystem();
+                sf.setTestWaveMakerHome(tempDir);
+                sf.setServletContext(this.servletContext);
 
                 Thread[] threads = new Thread[100];
                 for (int i = 0; i < threads.length; i++) {
-                    threads[i] = new CommonDirThread(i, sc);
+                    threads[i] = new CommonDirThread(i, sf);
                 }
 
                 for (int i = 0; i < threads.length; i++) {
@@ -207,8 +207,8 @@ public class TestLocalStudioConfiguration extends WMTestCase {
                     threads[i].join();
                 }
 
-                assertTrue(sc.getProjectsDir().exists());
-                assertTrue("expected failure in eclipse: expected dir: " + sc.getCommonDir() + " DNE", sc.getCommonDir().exists());
+                assertTrue(sf.getProjectsDir().exists());
+                assertTrue("expected failure in eclipse: expected dir: " + sf.getCommonDir() + " DNE", sf.getCommonDir().exists());
             } finally {
                 if (null != tempDir && tempDir.exists()) {
                     IOUtils.deleteRecursive(tempDir);
@@ -221,14 +221,14 @@ public class TestLocalStudioConfiguration extends WMTestCase {
 
         int index;
 
-        StudioConfiguration sc;
+        StudioFileSystem sf;
 
-        public CommonDirThread(int index, StudioConfiguration sc) {
+        public CommonDirThread(int index, StudioFileSystem sc) {
 
             super();
 
             this.index = index;
-            this.sc = sc;
+            this.sf = sc;
         }
 
         @Override
@@ -237,7 +237,7 @@ public class TestLocalStudioConfiguration extends WMTestCase {
             Thread.yield();
 
             try {
-                this.sc.getCommonDir();
+                this.sf.getCommonDir();
             } catch (IOException e) {
                 throw new RuntimeException("failure on index " + this.index, e);
             }

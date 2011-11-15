@@ -33,7 +33,7 @@ import org.springframework.core.io.Resource;
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.infra.WMTestCase;
 import com.wavemaker.runtime.server.ServerConstants;
-import com.wavemaker.tools.project.LocalStudioConfiguration;
+import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.spring.beans.Bean;
 import com.wavemaker.tools.spring.beans.Beans;
@@ -48,7 +48,7 @@ public class TestSpringConfigSupport extends WMTestCase {
     public void testReadBeans() throws Exception {
 
         File configFile = ClassLoaderUtils.getClasspathFile("com/wavemaker/tools/spring/spring-test1.xml").getFile();
-        Project project = new Project(new FileSystemResource(configFile.getParentFile()), new LocalStudioConfiguration());
+        Project project = new Project(new FileSystemResource(configFile.getParentFile()), new LocalStudioFileSystem());
         Beans beans = SpringConfigSupport.readBeans(new FileSystemResource(configFile), project);
         List<Object> beansChildren = beans.getImportsAndAliasAndBean();
         assertEquals(3, beansChildren.size());

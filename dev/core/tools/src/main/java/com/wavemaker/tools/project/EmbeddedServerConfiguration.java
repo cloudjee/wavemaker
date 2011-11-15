@@ -5,7 +5,7 @@ import org.springframework.core.io.Resource;
 
 public interface EmbeddedServerConfiguration extends StudioConfiguration {
 
-    public abstract Resource getTomcatHome();
+    Resource getTomcatHome();
 
-    public abstract Resource getProjectLogsFolder();
+    Resource getProjectLogsFolder();
 }

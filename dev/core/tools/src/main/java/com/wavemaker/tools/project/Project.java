@@ -50,8 +50,8 @@ public class Project extends AbstractFileService {
 
     private final boolean mavenProject;
 
-    public Project(Resource projectRoot, StudioConfiguration studioConfiguration) {
-        super(studioConfiguration);
+    public Project(Resource projectRoot, StudioFileSystem fileSystem) {
+        super(fileSystem);
         this.projectRoot = projectRoot;
         try {
             this.mavenProject = projectRoot.createRelative(ProjectConstants.POM_XML).exists();
@@ -95,7 +95,7 @@ public class Project extends AbstractFileService {
     public List<Resource> getAllServiceSrcDirs() {
         try {
             List<Resource> serviceSrcDirs = new ArrayList<Resource>();
-            List<Resource> serviceDirs = this.studioConfiguration.listChildren(this.projectRoot.createRelative("services/"));
+            List<Resource> serviceDirs = getFileSystem().listChildren(this.projectRoot.createRelative("services/"));
             for (Resource serviceDir : serviceDirs) {
                 if (StringUtils.getFilenameExtension(serviceDir.getFilename()) == null) {
                     Resource srcDir = serviceDir.createRelative("src/");
@@ -227,7 +227,7 @@ public class Project extends AbstractFileService {
                 return;
             }
         } else {
-            file = this.studioConfiguration.createPath(this.projectRoot, path);
+            file = getFileSystem().createPath(this.projectRoot, path);
         }
 
         if (noClobber && file.exists()) {
@@ -332,7 +332,7 @@ public class Project extends AbstractFileService {
     protected void setProperties(Properties props) {
         try {
             Resource projectProperties = getProjectRoot().createRelative(PROJECT_PROPERTIES);
-            OutputStream os = this.studioConfiguration.getOutputStream(projectProperties);
+            OutputStream os = getFileSystem().getOutputStream(projectProperties);
             props.storeToXML(os, "Project Properties", getEncoding());
             os.close();
         } catch (IOException e) {

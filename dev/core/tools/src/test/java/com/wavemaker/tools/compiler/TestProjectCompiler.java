@@ -18,14 +18,14 @@ import org.springframework.util.Assert;
 
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.RuntimeAccess;
-import com.wavemaker.tools.project.LocalStudioConfiguration;
+import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.service.DesignServiceManager;
 
 public class TestProjectCompiler {
 
-    private LocalStudioConfiguration studioConfiguration;
+    private LocalStudioFileSystem studioConfiguration;
 
     private ProjectManager projectManager;
 
@@ -49,7 +49,7 @@ public class TestProjectCompiler {
     @Before
     public void setUp() throws IOException {
         RuntimeAccess.setRuntimeBean(new RuntimeAccess());
-        this.studioConfiguration = new LocalStudioConfiguration();
+        this.studioConfiguration = new LocalStudioFileSystem();
         this.studioConfiguration.setServletContext(servletContext);
         Resource wmHome = this.studioConfiguration.createTempDir();
         this.studioConfiguration.setTestWaveMakerHome(wmHome.getFile());
@@ -59,12 +59,12 @@ public class TestProjectCompiler {
         assertTrue(projectDir.createRelative("file_map_readme.txt").exists());
 
         this.projectManager = new ProjectManager();
-        this.projectManager.setStudioConfiguration(this.studioConfiguration);
+        this.projectManager.setFileSystem(this.studioConfiguration);
         this.projectManager.openProject(projectDir, true);
 
         this.projectCompiler = new ProjectCompiler();
         this.projectCompiler.setProjectManager(this.projectManager);
-        this.projectCompiler.setStudioConfiguration(this.studioConfiguration);
+        this.projectCompiler.setFileSystem(this.studioConfiguration);
     }
 
     @After

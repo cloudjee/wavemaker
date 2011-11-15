@@ -10,7 +10,8 @@ dev/studio/src/main/webapp/services/
 dev/studio/src/main/webapp/types.js
 dev/studio/src/main/webapp/WEB-INF/classes
 dev/studio/src/main/webapp/WEB-INF/lib
-
+dev/studio/src/main/webapp/META-INF/MANIFEST.MF
 .DS_Store
 *#*
 *~
+

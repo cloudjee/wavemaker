@@ -7,8 +7,8 @@
         <property name="projectManager">
             <ref bean="projectManager" />
         </property>
-        <property name="studioConfiguration">
-            <ref bean="studioConfiguration" />
+        <property name="fileSystem">
+            <ref bean="fileSystem" />
         </property>
      </bean>
 

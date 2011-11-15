@@ -133,7 +133,6 @@ public class ConfigurationStore {
     }
 
     protected static Preferences getLessThanEqualVersionedNode(Class<?> klass, String key) {
-
         try {
             return getLessThanEqualVersionedNode(klass, key, LocalStudioConfiguration.getCurrentVersionInfo());
         } catch (IOException e) {

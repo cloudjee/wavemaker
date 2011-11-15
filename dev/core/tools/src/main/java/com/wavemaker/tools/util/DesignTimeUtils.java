@@ -26,8 +26,9 @@ import org.springframework.core.io.Resource;
 
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.common.ConfigurationException;
+import com.wavemaker.tools.project.AbstractStudioFileSystem;
 import com.wavemaker.tools.project.LocalDeploymentManager;
-import com.wavemaker.tools.project.LocalStudioConfiguration;
+import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.DesignServiceType;
@@ -44,9 +45,9 @@ public class DesignTimeUtils {
     private static String getDefaultProjectHome() {
         String home;
         if (isRuntime()) {
-            home = (String) RuntimeAccess.getInstance().getSession().getAttribute(LocalStudioConfiguration.PROJECTHOME_PROP_KEY);
+            home = (String) RuntimeAccess.getInstance().getSession().getAttribute(AbstractStudioFileSystem.PROJECTHOME_PROP_KEY);
         } else {
-            home = System.getProperty(LocalStudioConfiguration.PROJECTHOME_PROP_KEY);
+            home = System.getProperty(AbstractStudioFileSystem.PROJECTHOME_PROP_KEY);
         }
         // System.out.println("GET HOME IS " + home);
         return home;
@@ -54,19 +55,19 @@ public class DesignTimeUtils {
 
     private static void setDefaultProjectHome(String home) {
         if (isRuntime()) {
-            RuntimeAccess.getInstance().getSession().setAttribute(LocalStudioConfiguration.PROJECTHOME_PROP_KEY, home);
+            RuntimeAccess.getInstance().getSession().setAttribute(AbstractStudioFileSystem.PROJECTHOME_PROP_KEY, home);
         } else {
-            System.setProperty(LocalStudioConfiguration.PROJECTHOME_PROP_KEY, home);
+            System.setProperty(AbstractStudioFileSystem.PROJECTHOME_PROP_KEY, home);
         }
         // System.out.println("SET HOME IS " + home);
     }
 
     private static void deleteDefaultProjectHomeProp() {
         if (isRuntime()) {
-            RuntimeAccess.getInstance().getSession().removeAttribute(LocalStudioConfiguration.PROJECTHOME_PROP_KEY);
+            RuntimeAccess.getInstance().getSession().removeAttribute(AbstractStudioFileSystem.PROJECTHOME_PROP_KEY);
         } else {
             Properties props = System.getProperties();
-            props.remove(LocalStudioConfiguration.PROJECTHOME_PROP_KEY);
+            props.remove(AbstractStudioFileSystem.PROJECTHOME_PROP_KEY);
             System.setProperties(props);
         }
         // System.out.println("DELETE HOME");
@@ -110,18 +111,18 @@ public class DesignTimeUtils {
                     dsm.getDesignServiceTypes().add((DesignServiceType) o);
                 }
 
-                LocalStudioConfiguration sc = new LocalStudioConfiguration();
-                sc.setTestWaveMakerHome(projectRoot.getFile().getParentFile());
+                LocalStudioFileSystem sf = new LocalStudioFileSystem();
+                sf.setTestWaveMakerHome(projectRoot.getFile().getParentFile());
 
                 ProjectManager pm = new ProjectManager();
-                pm.setStudioConfiguration(sc);
+                pm.setFileSystem(sf);
                 pm.openProject(projectRoot.getFilename(), true);
                 dsm.setProjectManager(pm);
 
                 LocalDeploymentManager dep = new LocalDeploymentManager();
                 dep.setProjectManager(pm);
-                dep.setStudioConfiguration(sc);
-                dsm.setStudioConfiguration(sc);
+                dep.setFileSystem(sf);
+                dsm.setFileSystem(sf);
                 dsm.setDeploymentManager(dep);
 
                 return dsm;

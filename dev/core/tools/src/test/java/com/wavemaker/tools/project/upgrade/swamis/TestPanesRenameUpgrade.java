@@ -25,7 +25,7 @@ import org.springframework.core.io.FileSystemResource;
 
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.infra.WMTestCase;
-import com.wavemaker.tools.project.LocalStudioConfiguration;
+import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
@@ -39,7 +39,7 @@ public class TestPanesRenameUpgrade extends WMTestCase {
 
         File root = IOUtils.createTempDirectory("testUpgrade", "_dir");
 
-        Project p = new Project(new FileSystemResource(root.getAbsolutePath() + "/"), new LocalStudioConfiguration());
+        Project p = new Project(new FileSystemResource(root.getAbsolutePath() + "/"), new LocalStudioFileSystem());
         p.getWebAppRoot().getFile().mkdir();
         File panes = new File(p.getWebAppRoot().getFile(), "panes");
         panes.mkdir();
@@ -63,7 +63,7 @@ public class TestPanesRenameUpgrade extends WMTestCase {
 
         File root = IOUtils.createTempDirectory("testUpgrade", "_dir");
 
-        Project p = new Project(new FileSystemResource(root.getAbsolutePath() + "/"), new LocalStudioConfiguration());
+        Project p = new Project(new FileSystemResource(root.getAbsolutePath() + "/"), new LocalStudioFileSystem());
         p.getWebAppRoot().getFile().mkdir();
         File panes = new File(p.getWebAppRoot().getFile(), "panes");
         File pages = new File(p.getWebAppRoot().getFile(), ProjectConstants.PAGES_DIR);

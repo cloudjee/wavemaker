@@ -30,7 +30,7 @@ import com.wavemaker.runtime.server.ParamName;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.project.ProjectManager;
-import com.wavemaker.tools.project.StudioConfiguration;
+import com.wavemaker.tools.project.StudioFileSystem;
 
 /**
  * This is a client-facing service class. All public methods will be exposed to the client. Their return values and
@@ -44,7 +44,7 @@ public class ResourceFileService {
 
     private ProjectManager projectManager;
 
-    private StudioConfiguration studioConfiguration;
+    private StudioFileSystem fileSystem;
 
     // Used by spring
     @HideFromClient
@@ -53,8 +53,8 @@ public class ResourceFileService {
     }
 
     @HideFromClient
-    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-        this.studioConfiguration = studioConfiguration;
+    public void setFileSystem(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
     }
 
     @HideFromClient
@@ -74,13 +74,13 @@ public class ResourceFileService {
             throw new WMRuntimeException(e);
         }
         if (!resources.exists()) {
-            resources = this.studioConfiguration.createPath(getProjectDir(), "resources/");
-            this.studioConfiguration.createPath(resources, "images/imagelists/");
-            this.studioConfiguration.createPath(resources, "images/buttons/");
-            this.studioConfiguration.createPath(resources, "images/logos/");
-            this.studioConfiguration.createPath(resources, "javascript/");
-            this.studioConfiguration.createPath(resources, "css/");
-            this.studioConfiguration.createPath(resources, "htmlcontent/");
+            resources = this.fileSystem.createPath(getProjectDir(), "resources/");
+            this.fileSystem.createPath(resources, "images/imagelists/");
+            this.fileSystem.createPath(resources, "images/buttons/");
+            this.fileSystem.createPath(resources, "images/logos/");
+            this.fileSystem.createPath(resources, "javascript/");
+            this.fileSystem.createPath(resources, "css/");
+            this.fileSystem.createPath(resources, "htmlcontent/");
         }
         return resources;
     }
@@ -93,7 +93,7 @@ public class ResourceFileService {
         Resource root;
         if (requestedFile.startsWith("/common")) {
             try {
-                root = this.studioConfiguration.getCommonDir();
+                root = this.fileSystem.getCommonDir();
             } catch (IOException e) {
                 root = this.projectManager.getCurrentProject().getProjectRoot(); // don't know what to do if exception
                                                                                  // thrown...
@@ -105,7 +105,7 @@ public class ResourceFileService {
         }
         if (requestedFile != null && requestedFile.length() > 0) {
             if (create) {
-                return this.studioConfiguration.createPath(root, requestedFile + (isFolder ? "/" : ""));
+                return this.fileSystem.createPath(root, requestedFile + (isFolder ? "/" : ""));
             } else {
                 return root.createRelative(requestedFile + (isFolder ? "/" : ""));
             }
@@ -121,8 +121,7 @@ public class ResourceFileService {
         Resource parentDir = getRequestedFile(folderpath, true);
         Resource localFile = parentDir.createRelative(filename + (filename.indexOf(".") == -1 ? "/" : ""));
         if (StringUtils.getFilenameExtension(filename) == null) {
-            localFile = com.wavemaker.tools.project.ResourceManager.createZipFile(this.studioConfiguration, localFile,
-                this.projectManager.getTmpDir());
+            localFile = com.wavemaker.tools.project.ResourceManager.createZipFile(this.fileSystem, localFile, this.projectManager.getTmpDir());
             if (localFile == null) {
                 return null;
             }
@@ -153,7 +152,7 @@ public class ResourceFileService {
             }
             Resource f = getRequestedFile(from, from.indexOf(".") == -1);
             System.out.println("RENAME " + f.getDescription() + " TO " + dest.getDescription());
-            this.studioConfiguration.rename(f, dest);
+            this.fileSystem.rename(f, dest);
             return dest.getFilename();
         } catch (Exception e) {
             throw new WMRuntimeException(e);
@@ -196,7 +195,7 @@ public class ResourceFileService {
     public boolean deleteFile(@ParamName(name = "name") String name) {
         try {
             Resource f = getRequestedFile(name, name.indexOf(".") == -1);
-            this.studioConfiguration.deleteFile(f);
+            this.fileSystem.deleteFile(f);
             return !f.exists();
         } catch (Exception e) {
             throw new WMRuntimeException(e);
@@ -211,10 +210,8 @@ public class ResourceFileService {
         Resource resourceDir = this.getResourcesDir();
         Hashtable<String, Object> P = new Hashtable<String, Object>();
         try {
-            P.put(
-                "files",
-                com.wavemaker.tools.project.ResourceManager.getListing(this.studioConfiguration, resourceDir,
-                    resourceDir.createRelative(".includeJars")));
+            P.put("files",
+                com.wavemaker.tools.project.ResourceManager.getListing(this.fileSystem, resourceDir, resourceDir.createRelative(".includeJars")));
         } catch (IOException e) {
             throw new WMRuntimeException(e);
         }
@@ -229,8 +226,7 @@ public class ResourceFileService {
             Resource folder = getRequestedFile(folderName, true);
 
             Hashtable P = new Hashtable();
-            P.put("files",
-                com.wavemaker.tools.project.ResourceManager.getListing(this.studioConfiguration, folder, folder.createRelative(".includeJars")));
+            P.put("files", com.wavemaker.tools.project.ResourceManager.getListing(this.fileSystem, folder, folder.createRelative(".includeJars")));
             P.put("file", folder.getFilename());
             P.put("type", "folder");
             return P;
@@ -254,7 +250,7 @@ public class ResourceFileService {
         try {
             Resource dir = getRequestedFile(path, true);
             Resource outputFile = dir.createRelative(file.getOriginalFilename().replaceAll("[^a-zA-Z0-9.-_ ]", ""));
-            FileCopyUtils.copy(file.getInputStream(), this.studioConfiguration.getOutputStream(outputFile));
+            FileCopyUtils.copy(file.getInputStream(), this.fileSystem.getOutputStream(outputFile));
             ret.setPath(outputFile.getDescription());
             ret.setError("");
             ret.setWidth("");
@@ -276,7 +272,7 @@ public class ResourceFileService {
     public boolean unzipAndMoveNewFile(@ParamName(name = "file") String path) {
         try {
             Resource zipfile = getRequestedFile(path, false);
-            Resource zipfolder = com.wavemaker.tools.project.ResourceManager.unzipFile(this.studioConfiguration, zipfile);
+            Resource zipfolder = com.wavemaker.tools.project.ResourceManager.unzipFile(this.fileSystem, zipfile);
             return zipfolder.exists() && StringUtils.getFilenameExtension(zipfolder.getFilename()) == null;
         } catch (IOException e) {
             throw new WMRuntimeException(e);

@@ -1,79 +1,42 @@
 
 package com.wavemaker.tools.project;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.List;
 import java.util.Map;
-
-import org.springframework.core.io.Resource;
 
 import com.wavemaker.runtime.RuntimeAccess;
 
 public interface StudioConfiguration {
 
+    RuntimeAccess getRuntimeAccess();
+
+    Map<String, String> getPreferencesMap();
+
+    void setPreferencesMap(Map<String, String> prefs);
+
     /**
-     * Return the projects directory ("projects", inside of the path returned by {@link #getWaveMakerHome()}. This can
-     * be overridden with the system property PROJECTHOME_KEY.
+     * Returns true if studio upgrades are supported. If this method returns false the {@link #getCurrentUpgradeKey()}
+     * and {@link #setCurrentUpgradeKey(double)} methods must not be called.
      * 
-     * @return
-     * @throws IOException
+     * @return true if studio upgrade is supported
      */
-    public abstract Resource getProjectsDir();
-
-    public abstract Resource getWaveMakerHome();
-
-    public abstract Resource getDemoDir();
+    boolean isStudioUpgradeSupported();
 
     /**
-     * Get the common WM directory. This is always relative to the user's WaveMaker home.
+     * Returns any previously stored {@link #setCurrentUpgradeKey(Double) upgrade key}. This key is used to track what
+     * upgrade tasks should be applied. Once upgrade is complete the {@link #setCurrentUpgradeKey(Double)} method should
+     * be called.
      * 
-     * @throws IOException
+     * @return the current upgrade key
+     * @see #setCurrentUpgradeKey(Double)
      */
-    public abstract Resource getCommonDir() throws IOException;
+    double getCurrentUpgradeKey();
 
     /**
-     * Creates a resource relative to CommonDir. Use instead of getCommonDir.createRelative() IOException
+     * Sets the current upgrade key. This method should be called to ensure that updates are not re-applied.
+     * 
+     * @param key the upgrade key
+     * @see #getCurrentUpgradeKey()
      */
-    public abstract Resource createCommonRelative(String relativePath) throws IOException;
-
-    // other studio information
-    public abstract Resource getStudioWebAppRoot();
-
-    /**
-     * Get a map of all known preferences.
-     */
-    public abstract Map<String, String> getPreferencesMap();
-
-    public abstract RuntimeAccess getRuntimeAccess();
-
-    public abstract Resource createPath(Resource root, String path);
-
-    public abstract Resource copyFile(Resource root, InputStream source, String filePath);
-
-    public abstract Resource copyRecursive(Resource root, Resource target, List<String> exclusions);
-
-    public abstract boolean deleteFile(Resource file);
-
-    public abstract List<Resource> listChildren(Resource root);
-
-    public abstract List<Resource> listChildren(Resource root, ResourceFilter filter);
-
-    public abstract OutputStream getOutputStream(Resource file);
-
-    public abstract Resource createTempDir();
-
-    public abstract Resource getResourceForURI(String resourceURI);
-
-    public abstract void prepareForWriting(Resource file);
-
-    public abstract void rename(Resource oldResource, Resource newResource);
-
-    public abstract void setPreferencesMap(Map<String, String> prefs);
-
-    public abstract String getPath(Resource file);
-
-    public abstract boolean isDirectory(Resource file);
+    void setCurrentUpgradeKey(double key);
 
 }

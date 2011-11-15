@@ -212,10 +212,8 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-eclipse-plugin</artifactId>
 				<configuration>
-					<useProjectReferences>false</useProjectReferences>
 					<downloadSources>true</downloadSources>
 					<downloadJavadocs>false</downloadJavadocs>
-					<wtpversion>2.0</wtpversion>
 					<wtpContextName>wavemaker</wtpContextName>
 					<additionalConfig>
 						<file>

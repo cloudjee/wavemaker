@@ -30,7 +30,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Resource;
 import org.springframework.core.io.FileSystemResource;
 
-import com.wavemaker.tools.project.LocalStudioConfiguration;
+import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.service.ConfigurationCompiler;
@@ -101,7 +101,7 @@ public class ConfigurationCompilerTask extends AbstractServiceCompilerTask {
 
         if (null == fileService) {
             System.out.println("using " + destination + " as a default project directory; please set projectRoot");
-            fileService = new Project(new FileSystemResource(destination), new LocalStudioConfiguration());
+            fileService = new Project(new FileSystemResource(destination), new LocalStudioFileSystem());
         }
 
         boolean doXmlBuild = false;

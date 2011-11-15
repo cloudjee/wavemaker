@@ -28,7 +28,7 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.project.ProjectManager;
-import com.wavemaker.tools.project.StudioConfiguration;
+import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
 
@@ -41,6 +41,8 @@ public class WebXmlUpgradeTask implements UpgradeTask {
 
     protected static final String WEB_XML_BACKUP = ProjectConstants.WEB_XML + ".4_5_bak";
 
+    private StudioFileSystem filesSystem;
+
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
@@ -48,8 +50,8 @@ public class WebXmlUpgradeTask implements UpgradeTask {
         if (webXml.exists()) {
             try {
                 Resource webXmlBak = project.getWebInf().createRelative(WEB_XML_BACKUP);
-                FileCopyUtils.copy(webXml.getInputStream(), this.studioConfiguration.getOutputStream(webXmlBak));
-                this.studioConfiguration.deleteFile(webXml);
+                FileCopyUtils.copy(webXml.getInputStream(), this.filesSystem.getOutputStream(webXmlBak));
+                this.filesSystem.deleteFile(webXml);
 
                 Resource userWebXml = project.getWebInf().createRelative(ProjectConstants.USER_WEB_XML);
                 InputStream resourceStream = this.getClass().getClassLoader().getResourceAsStream(ProjectManager._TEMPLATE_APP_RESOURCE_NAME);
@@ -76,13 +78,7 @@ public class WebXmlUpgradeTask implements UpgradeTask {
         }
     }
 
-    private StudioConfiguration studioConfiguration;
-
-    public StudioConfiguration getStudioConfiguration() {
-        return this.studioConfiguration;
-    }
-
-    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-        this.studioConfiguration = studioConfiguration;
+    public void setFileSystem(StudioFileSystem fileSystem) {
+        this.filesSystem = fileSystem;
     }
 }

@@ -60,7 +60,7 @@ import com.wavemaker.tools.data.parser.HbmQueryParser;
 import com.wavemaker.tools.data.parser.HbmQueryWriter;
 import com.wavemaker.tools.data.parser.HbmWriter;
 import com.wavemaker.tools.data.spring.SpringService;
-import com.wavemaker.tools.project.LocalStudioConfiguration;
+import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.service.AbstractFileService;
 import com.wavemaker.tools.service.ClassLoaderFactory;
@@ -221,7 +221,7 @@ public class DataModelConfiguration {
         this.externalConfig = externalConfig;
         this.compileService = compileService;
 
-        this.fileService = new AbstractFileService(new LocalStudioConfiguration()) {
+        this.fileService = new AbstractFileService(new LocalStudioFileSystem()) {
 
             @Override
             public Resource getFileServiceRoot() {

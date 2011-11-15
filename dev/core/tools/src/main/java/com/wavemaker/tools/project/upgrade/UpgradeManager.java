@@ -25,10 +25,10 @@ import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.tools.config.ConfigurationStore;
 import com.wavemaker.tools.project.AbstractDeploymentManager;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.Project;
+import com.wavemaker.tools.project.StudioConfiguration;
 
 /**
  * The upgrade manager. Provides methods to upgrade projects to the current version.
@@ -41,7 +41,13 @@ public class UpgradeManager implements InitializingBean {
     /** Logger for this class and subclasses */
     protected final Logger logger = Logger.getLogger(getClass());
 
-    protected static final String STUDIO_VERSION_KEY = "StudioVersion";
+    private SortedMap<Double, List<UpgradeTask>> upgrades;
+
+    private SortedMap<Double, List<StudioUpgradeTask>> studioUpgrades;
+
+    private DeploymentManager deploymentManager;
+
+    private StudioConfiguration studioConfiguration;
 
     /**
      * Perform the upgrades; this will run through the list of potential upgrades iteratively until the project is at
@@ -100,13 +106,11 @@ public class UpgradeManager implements InitializingBean {
      * @return The current version.
      */
     public double getCurrentVersion() {
-
         return getUpgrades().lastKey();
     }
 
     @Override
     public void afterPropertiesSet() {
-
         doStudioUpgrade();
     }
 
@@ -116,54 +120,36 @@ public class UpgradeManager implements InitializingBean {
      */
     public void doStudioUpgrade() {
 
-        double studioVersion = getStudioVersion();
-        double studioMaxVersion = this.studioUpgrades.lastKey();
+        if (!this.studioConfiguration.isStudioUpgradeSupported()) {
+            this.logger.debug("Studio upgrade will not be attempted");
+            return;
+        }
 
-        if (studioVersion > studioMaxVersion) {
-            this.logger.error("Configured studio version (" + studioVersion + ") is older than currently running version (" + studioMaxVersion
-                + "); have you downgraded your studio?");
-        } else if (studioVersion < studioMaxVersion) {
-            UpgradeInfo ret = new UpgradeInfo();
+        double currentUpgradeVersion = this.studioConfiguration.getCurrentUpgradeKey();
+        double latestUpgradeVersion = this.studioUpgrades.lastKey();
 
+        if (currentUpgradeVersion > latestUpgradeVersion) {
+            this.logger.error("Configured studio version (" + currentUpgradeVersion + ") is older than currently running version ("
+                + latestUpgradeVersion + "); have you downgraded your studio?");
+        } else if (currentUpgradeVersion < latestUpgradeVersion) {
+            UpgradeInfo upgradeInfo = new UpgradeInfo();
             for (Entry<Double, List<StudioUpgradeTask>> entry : getStudioUpgrades().entrySet()) {
-
-                if (entry.getKey() <= studioVersion) {
+                if (entry.getKey() <= currentUpgradeVersion) {
                     continue;
                 }
-
-                ret.setVersion(entry.getKey());
-
+                upgradeInfo.setVersion(entry.getKey());
                 for (StudioUpgradeTask task : entry.getValue()) {
-                    task.doUpgrade(ret);
+                    task.doUpgrade(upgradeInfo);
                 }
-
-                // update the stored version
-                setStudioVersion(entry.getKey());
+                this.studioConfiguration.setCurrentUpgradeKey(entry.getKey());
             }
-
-            for (String version : ret.getMessages().keySet()) {
-                for (String message : ret.getMessages().get(version)) {
+            for (String version : upgradeInfo.getMessages().keySet()) {
+                for (String message : upgradeInfo.getMessages().get(version)) {
                     this.logger.warn("Upgraded to " + version + ": " + message);
                 }
             }
         }
     }
-
-    public static double getStudioVersion() {
-        String prefString = ConfigurationStore.getPreference(UpgradeManager.class, STUDIO_VERSION_KEY, "0.0");
-        return Double.parseDouble(prefString);
-    }
-
-    public static void setStudioVersion(double version) {
-        ConfigurationStore.setPreference(UpgradeManager.class, STUDIO_VERSION_KEY, "" + version);
-    }
-
-    // bean properties
-    private SortedMap<Double, List<UpgradeTask>> upgrades;
-
-    private SortedMap<Double, List<StudioUpgradeTask>> studioUpgrades;
-
-    private DeploymentManager deploymentManager;
 
     public SortedMap<Double, List<UpgradeTask>> getUpgrades() {
         return this.upgrades;
@@ -187,5 +173,9 @@ public class UpgradeManager implements InitializingBean {
 
     public void setStudioUpgrades(SortedMap<Double, List<StudioUpgradeTask>> studioUpgrades) {
         this.studioUpgrades = studioUpgrades;
+    }
+
+    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
+        this.studioConfiguration = studioConfiguration;
     }
 }

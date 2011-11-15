@@ -26,7 +26,7 @@ import org.springframework.util.StringUtils;
 
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.deployment.cloudfoundry.LoggingStatusCallback.Timer;
-import com.wavemaker.tools.project.LocalStudioConfiguration;
+import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ResourceManager;
 
@@ -43,7 +43,7 @@ public class TestStudioCloudFoundryClient {
 
     private final MockServletContext servletContext = new MockServletContext("classpath:com/wavemaker/tools/deployment/cloudfoundry/studioroot");
 
-    private final LocalStudioConfiguration studioConfiguration = new LocalStudioConfiguration();
+    private final LocalStudioFileSystem fs = new LocalStudioFileSystem();
 
     private Project project;
 
@@ -62,17 +62,17 @@ public class TestStudioCloudFoundryClient {
 
     @Before
     public void setUp() throws Exception {
-        Resource wmHome = this.studioConfiguration.createTempDir();
-        this.studioConfiguration.setTestWaveMakerHome(wmHome.getFile());
-        this.studioConfiguration.setServletContext(this.servletContext);
+        Resource wmHome = this.fs.createTempDir();
+        this.fs.setTestWaveMakerHome(wmHome.getFile());
+        this.fs.setServletContext(this.servletContext);
         this.webAppAssembler = new WebAppAssembler();
-        this.webAppAssembler.setStudioConfiguration(this.studioConfiguration);
+        this.webAppAssembler.setFileSystem(this.fs);
         this.webAppAssembler.afterPropertiesSet();
         Resource projectsDir = wmHome.createRelative("projects/");
-        Resource zipProject = this.studioConfiguration.copyFile(projectsDir, new ClassPathResource(
+        Resource zipProject = this.fs.copyFile(projectsDir, new ClassPathResource(
             "com/wavemaker/tools/deployment/cloudfoundry/javaservicesproject.zip").getInputStream(), "javaservicesproject.zip");
-        ResourceManager.unzipFile(this.studioConfiguration, zipProject);
-        this.project = new Project(projectsDir.createRelative("javaservicesproject/"), this.studioConfiguration);
+        ResourceManager.unzipFile(this.fs, zipProject);
+        this.project = new Project(projectsDir.createRelative("javaservicesproject/"), this.fs);
         assertTrue(this.project.getProjectRoot().exists());
 
     }

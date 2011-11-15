@@ -37,7 +37,7 @@ import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.project.ProjectManager;
-import com.wavemaker.tools.project.StudioConfiguration;
+import com.wavemaker.tools.project.StudioFileSystem;
 
 /**
  * Controller (in the MVC sense) providing the studio access to project files. Based off of the old StaticFileServlet.
@@ -65,6 +65,10 @@ public final class StaticFileController extends AbstractController {
 
     private static final String WM_RUNTIME_LOADER_URL = "/lib/runtimeLoader.js";
 
+    private ProjectManager projectManager;
+
+    private StudioFileSystem fileSystem;
+
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -84,11 +88,11 @@ public final class StaticFileController extends AbstractController {
             isGzipped = true;
             addExpiresTag = true;
             reqPath += ".gz";
-            sendFile = getStudioConfiguration().getStudioWebAppRoot().createRelative(reqPath);
+            sendFile = this.fileSystem.getStudioWebAppRoot().createRelative(reqPath);
         } else if (reqPath.startsWith(WM_BUILD_DOJO_THEMES_URL) || reqPath.startsWith(WM_BUILD_WM_THEMES_URL)
             || reqPath.startsWith(WM_BUILD_DOJO_FOLDER_URL) || reqPath.equals(WM_BOOT_URL) || reqPath.equals(WM_RUNTIME_LOADER_URL)) {
 
-            sendFile = getStudioConfiguration().getStudioWebAppRoot().createRelative(reqPath);
+            sendFile = this.fileSystem.getStudioWebAppRoot().createRelative(reqPath);
             addExpiresTag = true;
 
         } else if (reqPath.equals("/" + WM_PROJECTS_PATH) || reqPath.startsWith("/" + WM_PROJECTS_PATH + "/")) {
@@ -126,7 +130,7 @@ public final class StaticFileController extends AbstractController {
             sendFile = webapproot.createRelative(reqPath);
         } else if (reqPath.equals("/" + WM_COMMON_URL) || reqPath.startsWith("/" + WM_COMMON_URL + "/")) {
             reqPath = reqPath.substring(("/" + WM_COMMON_URL).length());
-            Resource userWmDir = getStudioConfiguration().getCommonDir();
+            Resource userWmDir = this.fileSystem.getCommonDir();
             if (!userWmDir.exists()) {
                 handleError(response, "Expected wm directory does not exist: " + userWmDir, HttpServletResponse.SC_NOT_FOUND);
                 return null;
@@ -218,7 +222,7 @@ public final class StaticFileController extends AbstractController {
         Writer writer = response.getWriter();
         writer.write("<html><body>\n");
 
-        for (Resource file : this.studioConfiguration.listChildren(dir)) {
+        for (Resource file : this.fileSystem.listChildren(dir)) {
             writer.write("\t<a href=\"" + reqFqURL + file.getFilename());
             if (StringUtils.getFilenameExtension(file.getFilename()) == null) {
                 writer.write("/");
@@ -246,11 +250,6 @@ public final class StaticFileController extends AbstractController {
         return StringUtils.hasText(mimeType) ? MediaType.parseMediaType(mimeType) : null;
     }
 
-    // spring-managed bean properties
-    private ProjectManager projectManager;
-
-    private StudioConfiguration studioConfiguration;
-
     public ProjectManager getProjectManager() {
         return this.projectManager;
     }
@@ -259,11 +258,7 @@ public final class StaticFileController extends AbstractController {
         this.projectManager = projectManager;
     }
 
-    public StudioConfiguration getStudioConfiguration() {
-        return this.studioConfiguration;
-    }
-
-    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-        this.studioConfiguration = studioConfiguration;
+    public void setFileSystem(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
     }
 }

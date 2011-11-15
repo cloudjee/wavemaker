@@ -56,7 +56,7 @@ import org.apache.catalina.LifecycleListener;
  * Launch options for Studio debug, Live Layout, display page container content,
  * server port and shutdown port can be modified, as well.
  *
- * @author Craig Conover, cconover@wavemaker.com
+ * @author Craig Conover
  * @since 6.3
  */
 public class MainConsole extends javax.swing.JFrame

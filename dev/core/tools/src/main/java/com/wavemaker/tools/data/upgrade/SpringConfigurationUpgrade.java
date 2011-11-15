@@ -26,7 +26,7 @@ import com.wavemaker.runtime.data.spring.SpringDataServiceManager;
 import com.wavemaker.runtime.data.spring.WMPropertyPlaceholderConfigurer;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.data.util.DataServiceUtils;
-import com.wavemaker.tools.project.LocalStudioConfiguration;
+import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
 import com.wavemaker.tools.service.AbstractFileService;
 import com.wavemaker.tools.service.DesignServiceManager;
@@ -60,7 +60,8 @@ public class SpringConfigurationUpgrade extends BaseDataUpgradeTask implements U
 
         final DesignServiceManager mgr = getDesignServiceManager();
 
-        FileService fileService = new AbstractFileService(new LocalStudioConfiguration()) {
+        LocalStudioFileSystem fileSystem = new LocalStudioFileSystem();
+        FileService fileService = new AbstractFileService(fileSystem) {
 
             @Override
             public Resource getFileServiceRoot() {

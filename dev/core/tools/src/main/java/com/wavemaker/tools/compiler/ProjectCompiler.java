@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.ServiceLoader;
 
 import javax.annotation.processing.Processor;
 import javax.tools.JavaCompiler;
@@ -35,7 +34,7 @@ import com.wavemaker.tools.apt.ServiceDefProcessor;
 import com.wavemaker.tools.apt.ServiceProcessorConstants;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
-import com.wavemaker.tools.project.StudioConfiguration;
+import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.DesignServiceManager;
 
 /**
@@ -45,10 +44,9 @@ import com.wavemaker.tools.service.DesignServiceManager;
  * @author Seung Lee
  * @author Jeremy Grelle
  */
-
 public class ProjectCompiler {
 
-    private StudioConfiguration studioConfiguration;
+    private StudioFileSystem fileSystem;
 
     private ProjectManager projectManager;
 
@@ -58,17 +56,17 @@ public class ProjectCompiler {
 
         Project project = this.projectManager.getProject(projectName, true);
 
-        JavaCompiler compiler = ServiceLoader.load(JavaCompiler.class).iterator().next();
+        JavaCompiler compiler = newJavaCompiler();
         ClassFileManager projectFileManager;
         Iterable<JavaFileObject> sourceFiles = null;
         Iterable<JavaFileObject> resourceFiles = null;
         try {
-            projectFileManager = new ClassFileManager(compiler.getStandardFileManager(null, null, null), this.studioConfiguration, project);
+            projectFileManager = new ClassFileManager(compiler.getStandardFileManager(null, null, null), this.fileSystem, project);
             sourceFiles = projectFileManager.list(StandardLocation.SOURCE_PATH, "", Collections.singleton(Kind.SOURCE), true);
             resourceFiles = projectFileManager.list(StandardLocation.SOURCE_PATH, "", Collections.singleton(Kind.OTHER), true);
             for (JavaFileObject resourceFile : resourceFiles) {
                 Assert.isTrue(resourceFile instanceof GenericResourceFileObject, "Expected a Resource-based JavaFileObject");
-                this.studioConfiguration.copyFile(project.getWebInfClasses(), resourceFile.openInputStream(),
+                this.fileSystem.copyFile(project.getWebInfClasses(), resourceFile.openInputStream(),
                     ((GenericResourceFileObject) resourceFile).getFilename());
             }
 
@@ -97,11 +95,11 @@ public class ProjectCompiler {
 
         Project project = this.projectManager.getProject(projectName, true);
 
-        JavaCompiler compiler = ServiceLoader.load(JavaCompiler.class).iterator().next();
+        JavaCompiler compiler = newJavaCompiler();
         ClassFileManager projectFileManager;
         Iterable<JavaFileObject> sourceFiles;
         try {
-            projectFileManager = new ClassFileManager(compiler.getStandardFileManager(null, null, null), this.studioConfiguration, project);
+            projectFileManager = new ClassFileManager(compiler.getStandardFileManager(null, null, null), this.fileSystem, project);
             sourceFiles = projectFileManager.list(StandardLocation.SOURCE_PATH, "", Collections.singleton(Kind.SOURCE), true);
         } catch (IOException e) {
             throw new WMRuntimeException("Could not create Java file manager for project " + projectName, e);
@@ -122,8 +120,12 @@ public class ProjectCompiler {
         executeConfigurationProcessor(compiler, projectFileManager, projectName);
     }
 
-    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-        this.studioConfiguration = studioConfiguration;
+    private JavaCompiler newJavaCompiler() {
+        return new WaveMakerJavaCompiler();
+    }
+
+    public void setFileSystem(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
     }
 
     public void setProjectManager(ProjectManager projectManager) {
@@ -155,14 +157,14 @@ public class ProjectCompiler {
 
     private Processor createServiceConfigProcessor() {
         ServiceConfigurationProcessor processor = new ServiceConfigurationProcessor();
-        processor.setStudioConfiguration(this.studioConfiguration);
+        processor.setFileSystem(this.fileSystem);
         processor.setDesignServiceManager(this.designServiceManager);
         return processor;
     }
 
     private Processor createServiceDefProcessor(ClassFileManager projectFileManager) {
         ServiceDefProcessor processor = new ServiceDefProcessor();
-        processor.setStudioConfiguration(this.studioConfiguration);
+        processor.setFileSystem(this.fileSystem);
         processor.setDesignServiceManager(this.designServiceManager);
         processor.setFileManager(projectFileManager);
         return processor;

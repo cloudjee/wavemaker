@@ -20,7 +20,7 @@ import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.project.Project;
-import com.wavemaker.tools.project.StudioConfiguration;
+import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
 
@@ -32,11 +32,13 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
  */
 public class CopyAppCssUpgrade implements UpgradeTask {
 
+    private StudioFileSystem fileSystem;
+
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
         try {
-            Resource appCssTemplate = this.studioConfiguration.getStudioWebAppRoot().createRelative("app/templates/project/app.css");
+            Resource appCssTemplate = this.fileSystem.getStudioWebAppRoot().createRelative("app/templates/project/app.css");
             Resource destCss = project.getWebAppRoot().createRelative("app.css");
 
             if (!destCss.exists()) {
@@ -47,14 +49,7 @@ public class CopyAppCssUpgrade implements UpgradeTask {
         }
     }
 
-    // bean properties
-    private StudioConfiguration studioConfiguration;
-
-    public StudioConfiguration getStudioConfiguration() {
-        return this.studioConfiguration;
-    }
-
-    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-        this.studioConfiguration = studioConfiguration;
+    public void setFileSystem(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
     }
 }

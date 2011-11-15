@@ -90,14 +90,14 @@ public class ResourceManager {
         return null;
     }
 
-    public static Resource createZipFile(StudioConfiguration studioConfig, Resource f, Resource tmpDir) {
+    public static Resource createZipFile(StudioFileSystem fileSystem, Resource f, Resource tmpDir) {
         try {
             Resource destFile = tmpDir.createRelative(f.getFilename() + ".zip");
-            studioConfig.createPath(tmpDir, f.getFilename() + ".zip");
-            OutputStream dest = studioConfig.getOutputStream(destFile);
+            fileSystem.createPath(tmpDir, f.getFilename() + ".zip");
+            OutputStream dest = fileSystem.getOutputStream(destFile);
             ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(dest));
 
-            addToZipStream(studioConfig, f, out, "");
+            addToZipStream(fileSystem, f, out, "");
 
             out.close();
             return destFile;
@@ -147,7 +147,7 @@ public class ResourceManager {
         }
     }
 
-    public static void addToZipStream(StudioConfiguration studioConfiguration, Resource dir, ZipOutputStream out, String path) {
+    public static void addToZipStream(StudioFileSystem fileSystem, Resource dir, ZipOutputStream out, String path) {
         System.out.println("add to stream: " + path + "/" + dir.getFilename());
 
         final int BUFFER = 2048;
@@ -155,7 +155,7 @@ public class ResourceManager {
         BufferedInputStream origin = null;
 
         // get a list of files from current directory
-        List<Resource> files = studioConfiguration.listChildren(dir);
+        List<Resource> files = fileSystem.listChildren(dir);
 
         for (Resource file : files) {
             if (file.getFilename().startsWith(".")) {
@@ -163,7 +163,7 @@ public class ResourceManager {
             }
             if (StringUtils.getFilenameExtension(file.getFilename()) == null) {
                 System.out.println("PATH:" + path + ", NAME: " + dir.getFilename());
-                addToZipStream(studioConfiguration, file, out, path + "/" + dir.getFilename());
+                addToZipStream(fileSystem, file, out, path + "/" + dir.getFilename());
             } else {
                 try {
                     origin = new BufferedInputStream(file.getInputStream(), BUFFER);
@@ -223,8 +223,8 @@ public class ResourceManager {
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static Hashtable[] getListing(StudioConfiguration studioConfiguration, Resource curdir, Resource jarListFile) {
-        List<Resource> listings = studioConfiguration.listChildren(curdir, new ResourceFilter() {
+    public static Hashtable[] getListing(StudioFileSystem fileSystem, Resource curdir, Resource jarListFile) {
+        List<Resource> listings = fileSystem.listChildren(curdir, new ResourceFilter() {
 
             @Override
             public boolean accept(Resource resource) {
@@ -240,7 +240,7 @@ public class ResourceManager {
             myfiles[i] = F;
             if (StringUtils.getFilenameExtension(listings.get(i).getFilename()) == null) {
                 F.put("type", "folder");
-                F.put("files", getListing(studioConfiguration, listings.get(i), jarListFile));
+                F.put("files", getListing(fileSystem, listings.get(i), jarListFile));
             } else {
                 F.put("type", "file");
                 if (name.endsWith(".jar")) {
@@ -310,7 +310,7 @@ public class ResourceManager {
         }
     }
 
-    public static Resource unzipFile(StudioConfiguration studioConfiguration, Resource zipfile) {
+    public static Resource unzipFile(StudioFileSystem fileSystem, Resource zipfile) {
         String zipname = zipfile.getFilename();
         int extindex = zipname.lastIndexOf(".");
         String folderName;
@@ -327,22 +327,22 @@ public class ResourceManager {
             for (int i = 0; zipFolder.exists(); i++) {
                 zipFolder = zipfile.createRelative(folderName + i + "/");
             }
-            studioConfiguration.prepareForWriting(zipFolder);
+            fileSystem.prepareForWriting(zipFolder);
 
             InputStream fis = zipfile.getInputStream();
             ZipInputStream zis = new ZipInputStream(new BufferedInputStream(fis));
             ZipEntry entry;
             while ((entry = zis.getNextEntry()) != null) {
                 if (entry.isDirectory()) {
-                    studioConfiguration.createPath(zipFolder, entry.getName() + "/");
+                    fileSystem.createPath(zipFolder, entry.getName() + "/");
                 } else {
-                    Resource outputFile = studioConfiguration.createPath(zipFolder, entry.getName());
-                    FileCopyUtils.copy(new NoCloseInputStream(zis), studioConfiguration.getOutputStream(outputFile));
+                    Resource outputFile = fileSystem.createPath(zipFolder, entry.getName());
+                    FileCopyUtils.copy(new NoCloseInputStream(zis), fileSystem.getOutputStream(outputFile));
                 }
             }
             zis.close();
 
-            studioConfiguration.deleteFile(zipfile);
+            fileSystem.deleteFile(zipfile);
             return zipFolder;
         } catch (Exception ex) {
             throw new WMRuntimeException(ex);

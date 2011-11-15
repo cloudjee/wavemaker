@@ -25,7 +25,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 
 import com.wavemaker.infra.WMTestCase;
-import com.wavemaker.tools.project.LocalStudioConfiguration;
+import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.webapp.schema.DisplayNameType;
@@ -60,7 +60,7 @@ public class TestWebXmlSupport extends WMTestCase {
         fp.deleteOnExit();
 
         try {
-            WebXmlSupport.writeWebXml(new Project(new FileSystemResource(fp.getParentFile()), new LocalStudioConfiguration()), wat,
+            WebXmlSupport.writeWebXml(new Project(new FileSystemResource(fp.getParentFile()), new LocalStudioFileSystem()), wat,
                 new FileSystemResource(fp));
             String fpContents = FileUtils.readFileToString(fp);
 

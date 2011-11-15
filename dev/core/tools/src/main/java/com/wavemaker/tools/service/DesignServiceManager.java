@@ -56,7 +56,7 @@ import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
-import com.wavemaker.tools.project.StudioConfiguration;
+import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.pws.IPwsServiceModifier;
 import com.wavemaker.tools.pws.PwsServiceModifierBeanFactory;
 import com.wavemaker.tools.service.definitions.DataObject;
@@ -110,6 +110,18 @@ public class DesignServiceManager {
     private DataModelConfiguration cfg; // salesforce
 
     private ProjectCompiler projectCompiler;
+
+    private PwsServiceModifierBeanFactory pwsServiceModifierBeanFactory;
+
+    private IPwsServiceModifier defaultServiceModifier;
+
+    private ProjectManager projectManager;
+
+    private DeploymentManager deploymentManager;
+
+    private List<DesignServiceType> designServiceTypes;
+
+    private StudioFileSystem fileSystem;
 
     static {
         try {
@@ -534,7 +546,7 @@ public class DesignServiceManager {
         Resource serviceXml;
 
         if (servicesDir.exists()) {
-            for (Resource child : this.studioConfiguration.listChildren(servicesDir)) {
+            for (Resource child : this.fileSystem.listChildren(servicesDir)) {
                 if (org.springframework.util.StringUtils.getFilenameExtension(child.getFilename()) == null) {
                     serviceXml = getServiceDefXml(child.getFilename());
                     if (serviceXml.exists()) {
@@ -1080,7 +1092,7 @@ public class DesignServiceManager {
         try {
             Marshaller marshaller = definitionsContext.createMarshaller();
             marshaller.setProperty("jaxb.formatted.output", true);
-            marshaller.marshal(service, this.studioConfiguration.getOutputStream(serviceDefFile));
+            marshaller.marshal(service, this.fileSystem.getOutputStream(serviceDefFile));
         } catch (JAXBException e) {
             throw new WMRuntimeException(e);
         }
@@ -1106,19 +1118,6 @@ public class DesignServiceManager {
         }
         return false;
     }
-
-    // spring-controlled bean properties
-    private PwsServiceModifierBeanFactory pwsServiceModifierBeanFactory;
-
-    private IPwsServiceModifier defaultServiceModifier;
-
-    private ProjectManager projectManager;
-
-    private DeploymentManager deploymentManager;
-
-    private List<DesignServiceType> designServiceTypes;
-
-    private StudioConfiguration studioConfiguration;
 
     public void setProjectManager(ProjectManager projectManager) {
         this.projectManager = projectManager;
@@ -1164,12 +1163,8 @@ public class DesignServiceManager {
         return definitionsContext;
     }
 
-    public StudioConfiguration getStudioConfiguration() {
-        return this.studioConfiguration;
-    }
-
-    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-        this.studioConfiguration = studioConfiguration;
+    public void setFileSystem(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
     }
 
     public void setProjectCompiler(ProjectCompiler projectCompiler) {

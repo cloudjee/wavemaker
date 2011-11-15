@@ -1,13 +1,8 @@
-<?xml version="1.0"?>
-<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
-
-<!-- Generated Aug 18, 2007 5:20:14 PM
-
-Configuration for 'adventure' database service
-
--->
-
-<beans>
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
 
   <bean id="adventure"
         class="com.wavemaker.runtime.data.sample.adventure.Adventure"

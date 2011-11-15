@@ -1141,7 +1141,7 @@ wm.FolderResourceItem.extend({
 
 	    studio.resourceManagerService.requestAsync("readFile", [this.getFilePath() + "/Readme.txt"], 
 						      dojo.hitch(this, function(inResult) {
-							  inResult = inResult.replace(/\n/gs,"<br/>");
+							  inResult = inResult.replace(/\n/g,"<br/>");
 							  this.html.setHtml("README.txt:<br/><br/><div class='README'>" + inResult + "</README>");
 						      }));	    
 	}

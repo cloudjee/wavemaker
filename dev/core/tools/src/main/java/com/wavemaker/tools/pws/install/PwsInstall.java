@@ -68,7 +68,7 @@ public class PwsInstall {
     public static void setupPwsProject(ProjectManager mgr, String partnerName) {
         File destf;
         try {
-            File srcf = new File(mgr.getStudioConfiguration().getStudioWebAppRoot().getFile(), "app/templates/pws/" + partnerName);
+            File srcf = new File(mgr.getFileSystem().getStudioWebAppRoot().getFile(), "app/templates/pws/" + partnerName);
 
             destf = mgr.getCurrentProject().getProjectRoot().getFile();
 

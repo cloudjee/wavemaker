@@ -42,6 +42,10 @@ public class PagesManager {
 
     public static final String PAGE_JS = "js";
 
+    private ProjectManager projectManager;
+
+    private StudioFileSystem fileSystem;
+
     /**
      * List all pages in the current project.
      * 
@@ -65,7 +69,7 @@ public class PagesManager {
 
         Resource pagesDir = getPagesDir(projectName);
 
-        List<Resource> children = this.studioConfiguration.listChildren(pagesDir);
+        List<Resource> children = this.fileSystem.listChildren(pagesDir);
         if (null != children) {
             for (Resource child : children) {
                 if (StringUtils.getFilenameExtension(child.getFilename()) == null && !IOUtils.DEFAULT_EXCLUSION.contains(child.getFilename())) {
@@ -87,7 +91,7 @@ public class PagesManager {
 
         Resource removePage = getPageDir(this.projectManager.getCurrentProject().getProjectName(), pageName);
         if (removePage.exists()) {
-            this.studioConfiguration.deleteFile(removePage);
+            this.fileSystem.deleteFile(removePage);
         }
     }
 
@@ -192,7 +196,7 @@ public class PagesManager {
 
         Resource dictionariesDir = getDictionariesDir(projectName);
 
-        List<Resource> children = this.studioConfiguration.listChildren(dictionariesDir);
+        List<Resource> children = this.fileSystem.listChildren(dictionariesDir);
         for (Resource child : children) {
             if (IOUtils.DEFAULT_EXCLUSION.contains(child.getFilename())) {
                 ret.add(child.getFilename());
@@ -202,11 +206,6 @@ public class PagesManager {
         return ret;
     }
 
-    // spring-controlled bean properties
-    private ProjectManager projectManager;
-
-    private StudioConfiguration studioConfiguration;
-
     public ProjectManager getProjectManager() {
         return this.projectManager;
     }
@@ -215,11 +214,7 @@ public class PagesManager {
         this.projectManager = projectManager;
     }
 
-    public StudioConfiguration getStudioConfiguration() {
-        return this.studioConfiguration;
-    }
-
-    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-        this.studioConfiguration = studioConfiguration;
+    public void setFileSystem(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
     }
 }

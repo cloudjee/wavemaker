@@ -27,10 +27,10 @@ import org.springframework.core.io.FileSystemResource;
 
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.infra.WMTestCase;
-import com.wavemaker.tools.project.LocalStudioConfiguration;
+import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
-import com.wavemaker.tools.project.StudioConfiguration;
+import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.service.ConfigurationCompiler;
 
@@ -41,17 +41,17 @@ public class TestWebInfActiveGridUpgrade extends WMTestCase {
 
     public void testWebInfUpgrade() throws Exception {
 
-        StudioConfiguration config = new LocalStudioConfiguration();
+        StudioFileSystem fileSystem = new LocalStudioFileSystem();
 
         File sourceProjectRoot = new ClassPathResource("com/wavemaker/tools/project/upgrade/swamis/webinfactivegridupgrade/").getFile();
         assertTrue(sourceProjectRoot.exists());
 
         File projectRoot = IOUtils.createTempDirectory("testWebInfUpgrade", "_dir");
-        config.copyRecursive(new FileSystemResource(sourceProjectRoot.getAbsolutePath()),
-            new FileSystemResource(projectRoot.getAbsolutePath() + "/"), new ArrayList<String>());
+        fileSystem.copyRecursive(new FileSystemResource(sourceProjectRoot.getAbsolutePath()), new FileSystemResource(projectRoot.getAbsolutePath()
+            + "/"), new ArrayList<String>());
         // FileUtils.copyDirectory(sourceProjectRoot, projectRoot);
 
-        Project p = new Project(new FileSystemResource(projectRoot.getAbsolutePath() + "/"), new LocalStudioConfiguration());
+        Project p = new Project(new FileSystemResource(projectRoot.getAbsolutePath() + "/"), new LocalStudioFileSystem());
         File webinf = p.getWebInf().getFile();
         assertTrue(webinf.exists());
 

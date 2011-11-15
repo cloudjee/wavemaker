@@ -33,24 +33,28 @@ import org.springframework.util.StringUtils;
 
 import com.wavemaker.tools.compiler.ClassFileManager;
 import com.wavemaker.tools.javaservice.JavaDesignServiceType;
-import com.wavemaker.tools.project.LocalStudioConfiguration;
+import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
-import com.wavemaker.tools.project.StudioConfiguration;
+import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.DesignServiceType;
 
 public abstract class AbstractStudioServiceProcessor extends AbstractProcessor {
 
-    protected String projectName;
+    private boolean initialized;
 
-    protected StudioConfiguration studioConfiguration;
+    private StudioFileSystem fileSystem;
+
+    protected String projectName;
 
     protected DesignServiceManager designServiceManager;
 
-    protected ClassFileManager fileManager = null;
+    protected ClassFileManager fileManager;
 
-    private boolean initialized;
+    protected final StudioFileSystem getFileSystem() {
+        return this.fileSystem;
+    }
 
     @Override
     public synchronized final void init(ProcessingEnvironment processingEnv) {
@@ -59,17 +63,17 @@ public abstract class AbstractStudioServiceProcessor extends AbstractProcessor {
         ClassUtils.overrideThreadContextClassLoader(getClass().getClassLoader());
         try {
             this.projectName = processingEnv.getOptions().get(ServiceProcessorConstants.PROJECT_NAME_PROP);
-            if (this.studioConfiguration == null) {
-                this.studioConfiguration = new LocalStudioConfiguration();
+            if (this.fileSystem == null) {
+                this.fileSystem = new LocalStudioFileSystem();
             }
             Project project = null;
             if (this.designServiceManager == null) {
                 ProjectManager projectManager = new ProjectManager();
-                projectManager.setStudioConfiguration(this.studioConfiguration);
+                projectManager.setFileSystem(this.fileSystem);
                 String projectRoot = processingEnv.getOptions().get(ServiceProcessorConstants.PROJECT_ROOT_PROP);
                 if (StringUtils.hasText(projectRoot)) {
                     projectRoot = projectRoot.endsWith("/") ? projectRoot : projectRoot + "/";
-                    Resource projectDir = this.studioConfiguration.getResourceForURI(projectRoot);
+                    Resource projectDir = this.fileSystem.getResourceForURI(projectRoot);
                     this.projectName = projectDir.getFilename();
                     projectManager.openProject(projectDir, true);
                 } else {
@@ -78,7 +82,7 @@ public abstract class AbstractStudioServiceProcessor extends AbstractProcessor {
                 project = projectManager.getCurrentProject();
                 this.designServiceManager = new DesignServiceManager();
                 this.designServiceManager.setProjectManager(projectManager);
-                this.designServiceManager.setStudioConfiguration(this.studioConfiguration);
+                this.designServiceManager.setFileSystem(this.fileSystem);
 
                 JavaDesignServiceType designServiceType = new JavaDesignServiceType();
                 designServiceType.setServiceType("JavaService");
@@ -93,7 +97,7 @@ public abstract class AbstractStudioServiceProcessor extends AbstractProcessor {
                 JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
                 if (compiler != null) {
                     StandardJavaFileManager standardManager = compiler.getStandardFileManager(null, null, null);
-                    this.fileManager = new ClassFileManager(standardManager, this.studioConfiguration, project);
+                    this.fileManager = new ClassFileManager(standardManager, this.fileSystem, project);
                 }
             }
             doInit(processingEnv);
@@ -116,8 +120,8 @@ public abstract class AbstractStudioServiceProcessor extends AbstractProcessor {
      */
     protected abstract void doInit(ProcessingEnvironment processingEnv);
 
-    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-        this.studioConfiguration = studioConfiguration;
+    public void setFileSystem(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
     }
 
     public void setDesignServiceManager(DesignServiceManager designServiceManager) {

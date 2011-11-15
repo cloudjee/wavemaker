@@ -33,9 +33,8 @@ import org.springframework.util.StringUtils;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.security.SecurityService;
 import com.wavemaker.runtime.server.ServerConstants;
-import com.wavemaker.tools.project.LocalStudioConfiguration;
+import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.Project;
-import com.wavemaker.tools.project.StudioConfiguration;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Operation;
 import com.wavemaker.tools.service.definitions.Operation.Parameter;
@@ -44,7 +43,7 @@ import com.wavemaker.tools.util.DesignTimeUtils;
 
 public class TestServiceDefProcessor {
 
-    private StudioConfiguration studioConfiguration;
+    private LocalStudioFileSystem fileSystem;
 
     private Project project;
 
@@ -53,20 +52,20 @@ public class TestServiceDefProcessor {
     @Before
     public void setUp() throws IOException {
         RuntimeAccess.setRuntimeBean(new RuntimeAccess());
-        this.studioConfiguration = new LocalStudioConfiguration();
-        Resource wmHome = this.studioConfiguration.createTempDir();
-        ((LocalStudioConfiguration) this.studioConfiguration).setTestWaveMakerHome(wmHome.getFile());
+        this.fileSystem = new LocalStudioFileSystem();
+        Resource wmHome = this.fileSystem.createTempDir();
+        this.fileSystem.setTestWaveMakerHome(wmHome.getFile());
         Resource projectDir = wmHome.createRelative("/projects/ServiceDefProcessorProject/");
-        this.studioConfiguration.copyRecursive(new ClassPathResource("templates/templateapp/"), projectDir, new ArrayList<String>());
+        this.fileSystem.copyRecursive(new ClassPathResource("templates/templateapp/"), projectDir, new ArrayList<String>());
         assertTrue(projectDir.exists());
         assertTrue(projectDir.createRelative("file_map_readme.txt").exists());
-        this.project = new Project(projectDir, this.studioConfiguration);
+        this.project = new Project(projectDir, this.fileSystem);
         this.localDSM = DesignTimeUtils.getDSMForProjectRoot(this.project.getProjectRoot());
     }
 
     @After
     public void tearDown() {
-        this.studioConfiguration.deleteFile(this.project.getProjectRoot());
+        this.fileSystem.deleteFile(this.project.getProjectRoot());
     }
 
     @Test
@@ -83,7 +82,7 @@ public class TestServiceDefProcessor {
         assertFalse(serviceDesignDir.exists());
 
         ServiceDefProcessor processor = new ServiceDefProcessor();
-        processor.setStudioConfiguration(this.studioConfiguration);
+        processor.setFileSystem(this.fileSystem);
         buildWithProcessor(this.project, serviceId, processor);
 
         assertTrue(serviceDesignDir.exists());
@@ -109,7 +108,7 @@ public class TestServiceDefProcessor {
         this.project.writeFile(javaSrc, "public class Foo{public int getInt(){return 12;}}");
 
         ServiceDefProcessor processor = new ServiceDefProcessor();
-        processor.setStudioConfiguration(this.studioConfiguration);
+        processor.setFileSystem(this.fileSystem);
         buildWithProcessor(this.project, null, processor);
 
         assertTrue(this.project.getWebInfClasses().createRelative("Foo.class").exists());
@@ -127,7 +126,7 @@ public class TestServiceDefProcessor {
                 + "\tpublic int getInt2(){return 13;}\n}");
 
         ServiceDefProcessor processor = new ServiceDefProcessor();
-        processor.setStudioConfiguration(this.studioConfiguration);
+        processor.setFileSystem(this.fileSystem);
         buildWithProcessor(this.project, serviceId, processor);
 
         Service service = this.localDSM.getService(serviceId);
@@ -147,7 +146,7 @@ public class TestServiceDefProcessor {
                 + "\tpublic int getInt2(Integer[] ints){return 13+ints[0];}\n}");
 
         ServiceDefProcessor processor = new ServiceDefProcessor();
-        processor.setStudioConfiguration(this.studioConfiguration);
+        processor.setFileSystem(this.fileSystem);
         buildWithProcessor(this.project, serviceId, processor);
 
         Service service = this.localDSM.getService(serviceId);
@@ -180,7 +179,7 @@ public class TestServiceDefProcessor {
                 + "\tpublic int getInt2(java.util.List<Integer> ints){return ints.get(0);}\n}");
 
         ServiceDefProcessor processor = new ServiceDefProcessor();
-        processor.setStudioConfiguration(this.studioConfiguration);
+        processor.setFileSystem(this.fileSystem);
         buildWithProcessor(this.project, serviceId, processor);
 
         Service service = this.localDSM.getService(serviceId);
@@ -213,7 +212,7 @@ public class TestServiceDefProcessor {
                 + "\tpublic int getInt2(java.util.List<String[]> strings){return 0;}\n}");
 
         ServiceDefProcessor processor = new ServiceDefProcessor();
-        processor.setStudioConfiguration(this.studioConfiguration);
+        processor.setFileSystem(this.fileSystem);
         buildWithProcessor(this.project, serviceId, processor);
 
         Service service = this.localDSM.getService(serviceId);
@@ -246,7 +245,7 @@ public class TestServiceDefProcessor {
                 + "\tpublic void takeThisMap(java.util.Map<String, String> strings){ }\n}");
 
         ServiceDefProcessor processor = new ServiceDefProcessor();
-        processor.setStudioConfiguration(this.studioConfiguration);
+        processor.setFileSystem(this.fileSystem);
         buildWithProcessor(this.project, serviceId, processor);
 
         Service service = this.localDSM.getService(serviceId);
@@ -278,7 +277,7 @@ public class TestServiceDefProcessor {
                 + "\tpublic void takeThisEnum(java.lang.annotation.ElementType elementType){ }\n}");
 
         ServiceDefProcessor processor = new ServiceDefProcessor();
-        processor.setStudioConfiguration(this.studioConfiguration);
+        processor.setFileSystem(this.fileSystem);
         buildWithProcessor(this.project, serviceId, processor);
 
         Service service = this.localDSM.getService(serviceId);
@@ -313,7 +312,7 @@ public class TestServiceDefProcessor {
                 + "public class Foo{public MyBean findMyBean(){return new MyBean();}\n" + "\tpublic void saveMyBean(MyBean myBean){ }\n}");
 
         ServiceDefProcessor processor = new ServiceDefProcessor();
-        processor.setStudioConfiguration(this.studioConfiguration);
+        processor.setFileSystem(this.fileSystem);
         buildWithProcessor(this.project, serviceId, processor);
 
         Service service = this.localDSM.getService(serviceId);
@@ -357,7 +356,7 @@ public class TestServiceDefProcessor {
         assertTrue(this.project.getProjectRoot().createRelative("services/" + ServiceProcessorConstants.CLASS_PATH_SERVICES_FILE).exists());
 
         ServiceDefProcessor processor = new ServiceDefProcessor();
-        processor.setStudioConfiguration(this.studioConfiguration);
+        processor.setFileSystem(this.fileSystem);
         buildWithProcessor(this.project, sourceServiceId, processor);
 
         assertTrue(serviceDesignDir.exists());

@@ -59,7 +59,7 @@ public class TestLocalDeploymentManager {
 
     private static File homeDir;
 
-    private LocalStudioConfiguration studioConfig;
+    private LocalStudioFileSystem fileSystem;
 
     @Mock
     private ProjectManager projectManager;
@@ -79,17 +79,17 @@ public class TestLocalDeploymentManager {
         commonDir.mkdir();
         assertTrue(commonDir.exists());
         assertTrue(commonDir.isDirectory());
-        this.studioConfig = new LocalStudioConfiguration();
-        this.studioConfig.setTestWaveMakerHome(homeDir);
+        this.fileSystem = new LocalStudioFileSystem();
+        this.fileSystem.setTestWaveMakerHome(homeDir);
         MockitoAnnotations.initMocks(this);
         this.mgr = new LocalDeploymentManager();
         this.mgr.setProjectManager(this.projectManager);
-        this.mgr.setStudioConfiguration(this.studioConfig);
+        this.mgr.setFileSystem(this.fileSystem);
 
         File projectDir = new File(homeDir, "projects/foo");
         projectDir.mkdirs();
         assertTrue(projectDir.isDirectory());
-        Project proj = new Project(new FileSystemResource(projectDir), new LocalStudioConfiguration());
+        Project proj = new Project(new FileSystemResource(projectDir), new LocalStudioFileSystem());
         when(this.projectManager.getCurrentProject()).thenReturn(proj);
     }
 
@@ -126,7 +126,7 @@ public class TestLocalDeploymentManager {
         File projectDir = new File(homeDir, "projects/bar");
         projectDir.mkdirs();
         assertTrue(projectDir.isDirectory());
-        Project proj = new Project(new FileSystemResource(projectDir), new LocalStudioConfiguration());
+        Project proj = new Project(new FileSystemResource(projectDir), new LocalStudioFileSystem());
         when(this.projectManager.getCurrentProject()).thenReturn(proj);
 
         result = this.mgr.saveDeploymentInfo(deployment4);

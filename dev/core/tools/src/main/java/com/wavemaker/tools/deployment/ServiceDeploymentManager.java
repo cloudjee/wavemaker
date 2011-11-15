@@ -30,7 +30,7 @@ import com.wavemaker.tools.project.LocalDeploymentManager;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.project.ProjectManager;
-import com.wavemaker.tools.project.StudioConfiguration;
+import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.util.DesignTimeUtils;
@@ -43,9 +43,9 @@ public class ServiceDeploymentManager {
 
     private List<ServiceDeployment> serviceDeployments = new ArrayList<ServiceDeployment>(1);
 
-    private StudioConfiguration studioConfiguration = null;
+    private StudioFileSystem fileSystem;
 
-    private ProjectManager projectMgr = null;
+    private ProjectManager projectMgr;
 
     public ServiceDeploymentManager() {
         // hack: these should be managed by Spring
@@ -67,8 +67,8 @@ public class ServiceDeploymentManager {
     public Resource generateWebapp(Resource projectRoot, Map<String, String> properties, boolean includeEar) {
         Resource stagingProjectDir = null;
         try {
-            stagingProjectDir = this.studioConfiguration.createTempDir();
-            this.studioConfiguration.copyRecursive(projectRoot, stagingProjectDir, new ArrayList<String>());
+            stagingProjectDir = this.fileSystem.createTempDir();
+            this.fileSystem.copyRecursive(projectRoot, stagingProjectDir, new ArrayList<String>());
             DesignServiceManager mgr = DesignTimeUtils.getDSMForProjectRoot(stagingProjectDir);
             prepareForDeployment(mgr, properties);
             return buildWar(mgr.getProjectManager(), getWarFile(), includeEar);
@@ -76,7 +76,7 @@ public class ServiceDeploymentManager {
             throw new ConfigurationException(ex);
         } finally {
             try {
-                this.studioConfiguration.deleteFile(stagingProjectDir);
+                this.fileSystem.deleteFile(stagingProjectDir);
             } catch (Exception ignore) {
             }
         }
@@ -129,8 +129,8 @@ public class ServiceDeploymentManager {
         this.serviceDeployments = serviceDeployments;
     }
 
-    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-        this.studioConfiguration = studioConfiguration;
+    public void setFileSystem(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
     }
 
     public void setProjectManager(ProjectManager projectMgr) {
@@ -150,9 +150,9 @@ public class ServiceDeploymentManager {
         // would be super nice to refactor this
         LocalDeploymentManager deploymentMgr = new LocalDeploymentManager();
         deploymentMgr.setProjectManager(projectMgr);
-        deploymentMgr.setStudioConfiguration(this.studioConfiguration);
+        deploymentMgr.setFileSystem(this.fileSystem);
         String war = deploymentMgr.buildWar(warFile, includeEar);
-        return this.studioConfiguration.getResourceForURI(war);
+        return this.fileSystem.getResourceForURI(war);
     }
 
     private void prepareForDeployment(DesignServiceManager mgr, Map<String, String> properties) {

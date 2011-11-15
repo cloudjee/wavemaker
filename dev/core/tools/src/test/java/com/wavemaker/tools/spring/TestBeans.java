@@ -28,7 +28,7 @@ import org.springframework.core.io.Resource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.infra.WMTestCase;
-import com.wavemaker.tools.project.LocalStudioConfiguration;
+import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.service.AbstractFileService;
 import com.wavemaker.tools.service.FileService;
 import com.wavemaker.tools.spring.beans.Bean;
@@ -43,7 +43,7 @@ public class TestBeans extends WMTestCase {
 
     @Override
     public void setUp() throws Exception {
-        this.fileService = new AbstractFileService(new LocalStudioConfiguration()) {
+        this.fileService = new AbstractFileService(new LocalStudioFileSystem()) {
 
             @Override
             public Resource getFileServiceRoot() {

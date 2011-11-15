@@ -20,7 +20,7 @@ import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.project.Project;
-import com.wavemaker.tools.project.StudioConfiguration;
+import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
 
@@ -32,7 +32,7 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
  */
 public class RuntimeServiceSmdTask implements UpgradeTask {
 
-    private StudioConfiguration studioConfiguration;
+    private StudioFileSystem fileSystem;
 
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
@@ -43,7 +43,7 @@ public class RuntimeServiceSmdTask implements UpgradeTask {
             throw new WMRuntimeException(ex);
         }
 
-        if (this.studioConfiguration.deleteFile(rtsmd)) {
+        if (this.fileSystem.deleteFile(rtsmd)) {
             upgradeInfo.addMessage("runtimeService.smd is successfully deleted for re-creation.");
         } else {
             upgradeInfo.addMessage("*** Cannot delete runtimeService.smd. Upgrade has failed ***");
@@ -51,18 +51,14 @@ public class RuntimeServiceSmdTask implements UpgradeTask {
         }
 
         Resource webxml = project.getWebXml();
-        if (this.studioConfiguration.deleteFile(webxml)) {
+        if (this.fileSystem.deleteFile(webxml)) {
             upgradeInfo.addMessage("\r\n\tweb.xml is successfully deleted for re-creation.");
         } else {
             upgradeInfo.addMessage("*** Cannot delete web.xml. Upgrade has failed ***");
         }
     }
 
-    public StudioConfiguration getStudioConfiguration() {
-        return this.studioConfiguration;
-    }
-
-    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-        this.studioConfiguration = studioConfiguration;
+    public void setFileSystem(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
     }
 }

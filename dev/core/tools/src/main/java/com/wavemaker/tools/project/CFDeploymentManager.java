@@ -61,7 +61,7 @@ public class CFDeploymentManager extends AbstractDeploymentManager {
 
     private void clean() {
         Project project = this.projectManager.getCurrentProject();
-        List<Resource> classFiles = this.studioConfiguration.listChildren(project.getWebInfClasses(), new ResourceFilter() {
+        List<Resource> classFiles = getFileSystem().listChildren(project.getWebInfClasses(), new ResourceFilter() {
 
             @Override
             public boolean accept(Resource resource) {
@@ -69,7 +69,7 @@ public class CFDeploymentManager extends AbstractDeploymentManager {
             }
         });
         for (Resource classFile : classFiles) {
-            this.studioConfiguration.deleteFile(classFile);
+            getFileSystem().deleteFile(classFile);
         }
     }
 

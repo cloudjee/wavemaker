@@ -213,7 +213,7 @@ public class GFSResource implements Resource {
      */
     @Override
     public String getDescription() {
-        return this.file.getContentType();
+        return this.path;
     }
 
     /**

@@ -28,7 +28,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
 
 import com.wavemaker.runtime.server.ServerConstants;
-import com.wavemaker.tools.project.StudioConfiguration;
+import com.wavemaker.tools.project.StudioFileSystem;
 
 /**
  * An abstract version of the FileService. Provides default implementations of some methods, as well as a default
@@ -39,14 +39,18 @@ import com.wavemaker.tools.project.StudioConfiguration;
  */
 public abstract class AbstractFileService implements FileService {
 
-    protected StudioConfiguration studioConfiguration;
+    private StudioFileSystem fileSystem;
 
-    public AbstractFileService(StudioConfiguration studioConfiguration) {
-        this.studioConfiguration = studioConfiguration;
+    protected final StudioFileSystem getFileSystem() {
+        return this.fileSystem;
     }
 
-    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-        this.studioConfiguration = studioConfiguration;
+    public AbstractFileService(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
+    }
+
+    public void setFileSystem(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
     }
 
     @Override
@@ -81,8 +85,8 @@ public abstract class AbstractFileService implements FileService {
 
     @Override
     public boolean deleteFile(Resource file) throws IOException {
-        Assert.notNull(this.studioConfiguration, "Studio Configuration is required.");
-        return this.studioConfiguration.deleteFile(file);
+        Assert.notNull(this.fileSystem, "StudioFileSystem is required.");
+        return this.fileSystem.deleteFile(file);
     }
 
     @Override
@@ -97,8 +101,8 @@ public abstract class AbstractFileService implements FileService {
 
     @Override
     public Writer getWriter(Resource file) throws UnsupportedEncodingException, FileNotFoundException {
-        Assert.notNull(this.studioConfiguration, "Studio Configuration is required.");
-        return new OutputStreamWriter(this.studioConfiguration.getOutputStream(file), getEncoding());
+        Assert.notNull(this.fileSystem, "StudioFileSystem is required.");
+        return new OutputStreamWriter(this.fileSystem.getOutputStream(file), getEncoding());
     }
 
     @Override
@@ -118,7 +122,7 @@ public abstract class AbstractFileService implements FileService {
 
     @Override
     public OutputStream getOutputStream(Resource resource) {
-        return this.studioConfiguration.getOutputStream(resource);
+        return this.fileSystem.getOutputStream(resource);
     }
 
 }

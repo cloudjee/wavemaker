@@ -27,7 +27,7 @@ import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.infra.WMTestCase;
-import com.wavemaker.tools.project.LocalStudioConfiguration;
+import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.spring.ComplexReturnBean;
 
 /**
@@ -39,7 +39,7 @@ public class TestFileService extends WMTestCase {
 
         File f = IOUtils.createTempDirectory("testDirFor_" + this.getName(), ".tmp");
         SampleFileService fs = new SampleFileService(f, "UTF-8");
-        fs.setStudioConfiguration(new LocalStudioConfiguration());
+        fs.setFileSystem(new LocalStudioFileSystem());
         fs.writeFile("foo.txt", ComplexReturnBean.EXTENDED_CHARS_TEST_STR);
 
         File expectedFile = new File(f, "foo.txt");
@@ -59,7 +59,7 @@ public class TestFileService extends WMTestCase {
         private final File basedir;
 
         public SampleFileService(File basedir, String encoding) {
-            super(new LocalStudioConfiguration());
+            super(new LocalStudioFileSystem());
             this.encoding = encoding;
             this.basedir = basedir;
         }

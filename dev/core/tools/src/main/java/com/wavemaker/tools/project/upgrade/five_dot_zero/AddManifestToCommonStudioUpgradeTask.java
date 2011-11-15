@@ -20,7 +20,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
 
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.tools.project.StudioConfiguration;
+import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.project.upgrade.StudioUpgradeTask;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 
@@ -30,29 +30,25 @@ import com.wavemaker.tools.project.upgrade.UpgradeInfo;
  */
 public class AddManifestToCommonStudioUpgradeTask implements StudioUpgradeTask {
 
+    private StudioFileSystem fileSystem;
+
     @Override
     public void doUpgrade(UpgradeInfo upgradeInfo) {
 
         try {
-            Resource commonDir = this.studioConfiguration.getCommonDir();
+            Resource commonDir = this.fileSystem.getCommonDir();
             Resource userManifest = commonDir.createRelative("manifest.js");
 
             if (commonDir.exists() && !userManifest.exists()) {
-                Resource templateManifest = this.studioConfiguration.getStudioWebAppRoot().createRelative("lib/wm/common/manifest.js");
-                FileCopyUtils.copy(templateManifest.getInputStream(), this.studioConfiguration.getOutputStream(userManifest));
+                Resource templateManifest = this.fileSystem.getStudioWebAppRoot().createRelative("lib/wm/common/manifest.js");
+                FileCopyUtils.copy(templateManifest.getInputStream(), this.fileSystem.getOutputStream(userManifest));
             }
         } catch (IOException e) {
             throw new WMRuntimeException(e);
         }
     }
 
-    private StudioConfiguration studioConfiguration;
-
-    public StudioConfiguration getStudioConfiguration() {
-        return this.studioConfiguration;
-    }
-
-    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-        this.studioConfiguration = studioConfiguration;
+    public void setFileSystem(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
     }
 }

@@ -5,12 +5,16 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xmlns:cloud="http://schema.cloudfoundry.org/spring"
+	
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
                 http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
                 http://www.springframework.org/schema/aop
                 http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
                 http://www.springframework.org/schema/data/mongo
-          		http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
+          		http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd
+          		http://schema.cloudfoundry.org/spring
+          		http://schema.cloudfoundry.org/spring/cloudfoundry-spring-0.8.xsd">
 
 	<bean id="dataModelManager" class="com.wavemaker.tools.data.DataModelManager"
 		scope="singleton" lazy-init="true">
@@ -39,8 +43,8 @@
 
 	<bean id="projectManager" class="com.wavemaker.tools.project.ProjectManager"
 		scope="session" lazy-init="true">
-		<property name="studioConfiguration">
-			<ref bean="studioConfiguration" />
+		<property name="fileSystem">
+			<ref bean="fileSystem" />
 		</property>
 		<property name="projectEventNotifier">
 			<ref bean="projectEventNotifier" />
@@ -57,8 +61,8 @@
 		<property name="projectManager">
 			<ref bean="projectManager" />
 		</property>
-		<property name="studioConfiguration">
-			<ref bean="studioConfiguration" />
+		<property name="fileSystem">
+			<ref bean="fileSystem" />
 		</property>
 	</bean>
 
@@ -74,7 +78,7 @@
 	</bean>
 	
 	<bean id="webAppAssembler" class="com.wavemaker.tools.deployment.cloudfoundry.WebAppAssembler">
-		<property name="studioConfiguration" ref="studioConfiguration"/>
+		<property name="fileSystem" ref="fileSystem"/>
 	</bean>
 
 	<bean id="deploymentTargetManager" class="com.wavemaker.tools.deployment.DeploymentTargetManager"
@@ -99,8 +103,8 @@
 		<property name="projectManager">
 			<ref bean="projectManager" />
 		</property>
-		<property name="studioConfiguration">
-			<ref bean="studioConfiguration" />
+		<property name="fileSystem">
+			<ref bean="fileSystem" />
 		</property>
 		<property name="designServiceManager">
 			<ref bean="designServiceManager" />
@@ -115,8 +119,8 @@
 		<property name="projectManager">
 			<ref bean="projectManager" />
 		</property>
-		<property name="studioConfiguration">
-			<ref bean="studioConfiguration" />
+		<property name="fileSystem">
+			<ref bean="fileSystem" />
 		</property>
 	</bean>
 
@@ -155,21 +159,14 @@
 					<list />
 				</entry>
 				<entry key="0.1">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.swamis.CommonDirectoryMove">
-							<property name="studioConfiguration">
-								<ref bean="studioConfiguration" />
-							</property>
-						</bean>
-					</list>
+					<list />
 				</entry>
 				<entry key="0.2">
 					<list>
 						<bean
 							class="com.wavemaker.tools.project.upgrade.five_dot_zero.AddManifestToCommonStudioUpgradeTask">
-							<property name="studioConfiguration">
-								<ref bean="studioConfiguration" />
+							<property name="fileSystem">
+								<ref bean="fileSystem" />
 							</property>
 						</bean>
 					</list>
@@ -262,8 +259,8 @@
 						<bean
 							class="com.wavemaker.tools.project.upgrade.swamis.CopyAppCssUpgrade"
 							scope="singleton">
-							<property name="studioConfiguration">
-								<ref bean="studioConfiguration" />
+							<property name="fileSystem">
+								<ref bean="fileSystem" />
 							</property>
 						</bean>
 					</list>
@@ -476,6 +473,8 @@
 		<property name="deploymentManager">
 			<ref bean="deploymentManager" />
 		</property>
+		
+		<property name="studioConfiguration" ref="studioConfiguration"/>
 	</bean>
 
 	<!-- event notifiers & listeners not associated with any service -->
@@ -496,8 +495,11 @@
 	</bean>
 
 	<beans profile="default">
+	
+	<bean id="fileSystem" class="com.wavemaker.tools.project.LocalStudioFileSystem"/>
 		<bean id="studioConfiguration" class="com.wavemaker.tools.project.LocalStudioConfiguration"
 			scope="singleton">
+			<constructor-arg ref="fileSystem"/>
 			<property name="runtimeAccess">
 				<ref bean="runtimeAccess" />
 			</property>
@@ -508,12 +510,13 @@
 			<property name="projectManager">
 				<ref bean="projectManager" />
 			</property>
-			<property name="studioConfiguration">
-				<ref bean="studioConfiguration" />
+			<property name="fileSystem">
+				<ref bean="fileSystem" />
 			</property>
 			<property name="projectCompiler">
 				<ref bean="projectCompiler" />
 			</property>
+			<property name="studioConfiguration" ref="studioConfiguration"/>
 		</bean>
 	</beans>
 
@@ -521,19 +524,46 @@
 		<mongo:mongo />
 		
 		<mongo:db-factory dbname="testWM" />
+		
+		<bean id="fileSystem" class="com.wavemaker.tools.project.GridFSStudioFileSystem">
+			<constructor-arg ref="mongoDbFactory"/>
+		</bean>
 	
 		<bean id="studioConfiguration" class="com.wavemaker.tools.project.CFStudioConfiguration"
 			scope="singleton">
-			<constructor-arg ref="mongoDbFactory"/>
+			<constructor-arg ref="fileSystem"/>
 			<property name="runtimeAccess" ref="runtimeAccess"/>
 		</bean>
 
 		<bean id="deploymentManager" class="com.wavemaker.tools.project.CFDeploymentManager"
 			scope="singleton" lazy-init="true">
 			<property name="projectManager" ref="projectManager" />
-			<property name="studioConfiguration" ref="studioConfiguration" />
+			<property name="fileSystem" ref="fileSystem" />
 			<property name="projectCompiler" ref="projectCompiler"/>
 			<property name="deploymentTargetManager" ref="deploymentTargetManager"/>
 		</bean>
 	</beans>
+	
+	<beans profile="cloud">
+		<cloud:mongo-db-factory id="mongoDbFactory"/>
+		
+		<bean id="fileSystem" class="com.wavemaker.tools.project.GridFSStudioFileSystem">
+			<constructor-arg ref="mongoDbFactory"/>
+		</bean>
+	
+		<bean id="studioConfiguration" class="com.wavemaker.tools.project.CFStudioConfiguration"
+			scope="singleton">
+			<constructor-arg ref="fileSystem"/>
+			<property name="runtimeAccess" ref="runtimeAccess"/>
+		</bean>
+
+		<bean id="deploymentManager" class="com.wavemaker.tools.project.CFDeploymentManager"
+			scope="singleton" lazy-init="true">
+			<property name="projectManager" ref="projectManager" />
+			<property name="fileSystem" ref="fileSystem" />
+			<property name="projectCompiler" ref="projectCompiler"/>
+			<property name="deploymentTargetManager" ref="deploymentTargetManager"/>
+		</bean>
+	</beans>
+	
 </beans>

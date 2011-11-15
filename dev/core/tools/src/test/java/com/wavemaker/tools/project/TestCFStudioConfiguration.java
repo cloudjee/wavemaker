@@ -44,7 +44,6 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
 
-import com.mongodb.gridfs.GridFS;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.io.GFSResource;
 import com.wavemaker.common.util.IOUtils;
@@ -65,8 +64,6 @@ public class TestCFStudioConfiguration {
 
     private final MockServletContext servletContext = new MockServletContext("classpath:/test-studio-root/");
 
-    private GridFS gfs;
-
     @Autowired
     private SimpleMongoDbFactory mongoFactory;
 
@@ -75,7 +72,6 @@ public class TestCFStudioConfiguration {
         Assert.notNull(this.mongoFactory, "Need a Factory here");
         this.log.info("Connected to: " // ensure mongo is running
             + this.mongoFactory.getDb().getMongo().getAddress().getHost());
-        this.gfs = new GridFS(this.mongoFactory.getDb());
     }
 
     @After
@@ -86,18 +82,18 @@ public class TestCFStudioConfiguration {
 
     @Test
     public void testCommonDirCreation() throws Exception {
-        CFStudioConfiguration sc = new CFStudioConfiguration(this.mongoFactory);
-        sc.setServletContext(this.servletContext);
+        GridFSStudioFileSystem sf = new GridFSStudioFileSystem(this.mongoFactory);
+        sf.setServletContext(this.servletContext);
 
-        assertTrue(sc.getProjectsDir().exists());
-        assertTrue(sc.getCommonDir().exists());
+        assertTrue(sf.getProjectsDir().exists());
+        assertTrue(sf.getCommonDir().exists());
     }
 
     @Test
     public void testGetStudioWebAppRootFile() throws Exception {
-        CFStudioConfiguration sc = new CFStudioConfiguration(this.mongoFactory);
-        sc.setServletContext(this.servletContext);
-        Resource studioWebAppRootFile = sc.getStudioWebAppRoot();
+        GridFSStudioFileSystem sf = new GridFSStudioFileSystem(this.mongoFactory);
+        sf.setServletContext(this.servletContext);
+        Resource studioWebAppRootFile = sf.getStudioWebAppRoot();
         assertTrue(studioWebAppRootFile.exists());
         Resource studioWebInfFile = studioWebAppRootFile.createRelative("WEB-INF/");
         assertTrue(studioWebInfFile.exists());
@@ -112,15 +108,15 @@ public class TestCFStudioConfiguration {
         String newName = "newFile.txt";
         String newFilePath = "/new/stuff/";
 
-        CFStudioConfiguration sc = new CFStudioConfiguration(this.mongoFactory);
+        GridFSStudioFileSystem sf = new GridFSStudioFileSystem(this.mongoFactory);
 
         ClassPathResource testFile = new ClassPathResource("/com/wavemaker/tools/project/MyStuff/FileOne.txt");
-        GFSResource oldRes = (GFSResource) sc.getWaveMakerHome().createRelative(oldFilePath + oldName);
-        FileCopyUtils.copy(testFile.getInputStream(), sc.getOutputStream(oldRes));
+        GFSResource oldRes = (GFSResource) sf.getWaveMakerHome().createRelative(oldFilePath + oldName);
+        FileCopyUtils.copy(testFile.getInputStream(), sf.getOutputStream(oldRes));
         String oldContents = FileCopyUtils.copyToString(new InputStreamReader(oldRes.getInputStream()));
-        GFSResource newRes = (GFSResource) sc.getWaveMakerHome().createRelative(newFilePath + newName);
+        GFSResource newRes = (GFSResource) sf.getWaveMakerHome().createRelative(newFilePath + newName);
 
-        sc.rename(oldRes, newRes);
+        sf.rename(oldRes, newRes);
         assertEquals(newName, newRes.getFilename());
         String newContents = FileCopyUtils.copyToString(new InputStreamReader(newRes.getInputStream()));
         assertEquals(oldContents, newContents);
@@ -128,8 +124,8 @@ public class TestCFStudioConfiguration {
 
     @Test
     public void testDefaultStudioHome() throws Exception {
-        StudioConfiguration sc = new CFStudioConfiguration(this.mongoFactory);
-        Resource home = sc.getWaveMakerHome();
+        StudioFileSystem sf = new GridFSStudioFileSystem(this.mongoFactory);
+        Resource home = sf.getWaveMakerHome();
         assertTrue("we expected the home to exist; home: " + home, home.exists());
     }
 
@@ -143,11 +139,11 @@ public class TestCFStudioConfiguration {
 
                 assertTrue(!tempProjectsDir.exists());
 
-                CFStudioConfiguration sc = new CFStudioConfiguration(this.mongoFactory);
-                sc.setTestWaveMakerHome(tempDir);
-                sc.setServletContext(this.servletContext);
-                Resource projects = sc.getProjectsDir();
-                Resource common = sc.getCommonDir();
+                GridFSStudioFileSystem sf = new GridFSStudioFileSystem(this.mongoFactory);
+                sf.setTestWaveMakerHome(tempDir);
+                sf.setServletContext(this.servletContext);
+                Resource projects = sf.getProjectsDir();
+                Resource common = sf.getCommonDir();
 
                 assertEquals(((GFSResource) projects).getParent(), ((GFSResource) common).getParent());
             } finally {
@@ -165,12 +161,12 @@ public class TestCFStudioConfiguration {
         String targetFolderName = "/MyStuff/SubFolderOne/";
         String path = "/test/js/";
 
-        CFStudioConfiguration sc = new CFStudioConfiguration(this.mongoFactory);
+        GridFSStudioFileSystem sf = new GridFSStudioFileSystem(this.mongoFactory);
         ClassPathResource testFile = new ClassPathResource(localPath + targetFolderName + fileName);
-        GFSResource gfsRes = (GFSResource) sc.getWaveMakerHome().createRelative(path + fileName);
+        GFSResource gfsRes = (GFSResource) sf.getWaveMakerHome().createRelative(path + fileName);
 
         String localContents = FileCopyUtils.copyToString(new InputStreamReader(testFile.getInputStream()));
-        FileCopyUtils.copy(testFile.getInputStream(), sc.getOutputStream(gfsRes));
+        FileCopyUtils.copy(testFile.getInputStream(), sf.getOutputStream(gfsRes));
         String gfsResString = FileCopyUtils.copyToString(new InputStreamReader(gfsRes.getInputStream()));
         assertEquals(localContents, gfsResString);
     }
@@ -182,17 +178,16 @@ public class TestCFStudioConfiguration {
         String targetFolderName = "/MyStuff//SubFolderOne/";
         String path = "/test//invalid/";
 
-        CFStudioConfiguration sc = new CFStudioConfiguration(this.mongoFactory);
+        GridFSStudioFileSystem sf = new GridFSStudioFileSystem(this.mongoFactory);
         ClassPathResource testFile = new ClassPathResource(localPath + targetFolderName + fileName);
-        GFSResource gfsRes = (GFSResource) sc.getWaveMakerHome().createRelative(path + fileName);
+        GFSResource gfsRes = (GFSResource) sf.getWaveMakerHome().createRelative(path + fileName);
 
         try {
-            FileCopyUtils.copy(testFile.getInputStream(), sc.getOutputStream(gfsRes));
+            FileCopyUtils.copy(testFile.getInputStream(), sf.getOutputStream(gfsRes));
             fail("An error should have been thrown.");
         } catch (WMRuntimeException ex) {
             // expected
         }
-
     }
 
     @Test
@@ -202,12 +197,12 @@ public class TestCFStudioConfiguration {
         List<String> exclusions = new ArrayList<String>();
 
         ClassPathResource sourceDir = new ClassPathResource(testFolder);
-        CFStudioConfiguration sc = new CFStudioConfiguration(this.mongoFactory);
+        GridFSStudioFileSystem sf = new GridFSStudioFileSystem(this.mongoFactory);
 
-        GFSResource targetDir = (GFSResource) sc.getWaveMakerHome().createRelative(targetFolder);
-        sc.copyRecursive(sourceDir, targetDir, exclusions);
+        GFSResource targetDir = (GFSResource) sf.getWaveMakerHome().createRelative(targetFolder);
+        sf.copyRecursive(sourceDir, targetDir, exclusions);
 
-        List<Resource> results = sc.listChildren(targetDir);
+        List<Resource> results = sf.listChildren(targetDir);
 
         assertEquals(4, results.size());
     }
@@ -219,13 +214,4 @@ public class TestCFStudioConfiguration {
         assertNotNull(vi);
         assertTrue(vi.getMajor() > 4);
     }
-
-    @Test
-    public void testGetRegisteredVersionInfo() throws Exception {
-
-        VersionInfo vi = CFStudioConfiguration.getRegisteredVersionInfo();
-        assertNotNull(vi);
-        assertTrue(vi.getMajor() >= 4);
-    }
-
 }

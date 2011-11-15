@@ -38,7 +38,7 @@ import org.springframework.util.StringUtils;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ResourceFilter;
-import com.wavemaker.tools.project.StudioConfiguration;
+import com.wavemaker.tools.project.StudioFileSystem;
 
 /**
  * {@link Resource}-based {@link FileManager} implementation that provides file reading and writing services to the
@@ -47,18 +47,17 @@ import com.wavemaker.tools.project.StudioConfiguration;
  * @author Seung Lee
  * @author Jeremy Grelle
  */
-
 public class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> implements StandardJavaFileManager {
 
     private final Project project;
 
     private final List<Resource> sourceLocations = new ArrayList<Resource>();
 
-    private final StudioConfiguration studioConfiguration;
+    private final StudioFileSystem fileSystem;
 
-    public ClassFileManager(StandardJavaFileManager standardManager, StudioConfiguration studioConfiguration, Project project) {
+    public ClassFileManager(StandardJavaFileManager standardManager, StudioFileSystem fileSystem, Project project) {
         super(standardManager);
-        this.studioConfiguration = studioConfiguration;
+        this.fileSystem = fileSystem;
         this.project = project;
         this.sourceLocations.add(project.getMainSrc());
         this.sourceLocations.addAll(project.getAllServiceSrcDirs());
@@ -192,7 +191,7 @@ public class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFile
 
     private List<Resource> locateResources(final Set<String> extensions, Resource rootPath, final boolean recurse) {
         final List<Resource> javaResources = new ArrayList<Resource>();
-        javaResources.addAll(this.studioConfiguration.listChildren(rootPath, new ResourceFilter() {
+        javaResources.addAll(this.fileSystem.listChildren(rootPath, new ResourceFilter() {
 
             @Override
             public boolean accept(Resource resource) {
@@ -261,7 +260,7 @@ public class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFile
     public Iterable<? extends File> getLocation(Location location) {
         if (location == StandardLocation.CLASS_PATH) {
             try {
-                File[] jars = this.studioConfiguration.getStudioWebAppRoot().createRelative("WEB-INF/lib/").getFile().listFiles(new FilenameFilter() {
+                File[] jars = this.fileSystem.getStudioWebAppRoot().createRelative("WEB-INF/lib/").getFile().listFiles(new FilenameFilter() {
 
                     @Override
                     public boolean accept(File dir, String name) {
