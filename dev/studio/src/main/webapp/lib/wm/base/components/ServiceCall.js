@@ -202,6 +202,7 @@ dojo.declare("wm.ServiceCall", null, {
 		var pagingOptions = max ? { maxResults: max, firstResult: this.firstRow || 0} : {};
 		args.push(pagingOptions);
 	    }
+	    return args;
 	},
     getOperationType: function() {
 	    var service = this._service;
