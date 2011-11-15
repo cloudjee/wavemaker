@@ -613,7 +613,7 @@ dojo.declare("wm.TabLayers", wm.Layers, {
     onCloseOrDestroy: function(inLayer) {
 
     },
-    customClose: function(inLayer) {
+    customCloseOrDestroy: function(inLayer) {
 
     }
 /*,

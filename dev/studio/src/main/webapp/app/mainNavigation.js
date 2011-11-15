@@ -182,7 +182,7 @@ Studio.extend({
 		tab.parent.setCaption(caption);
 	}
     },
-        closeServiceTab: function(inLayer) {
+    closeServiceTab: function(inSender, inLayer) {
 	    var page = inLayer.c$[0].page;
 
 	    this.confirmSaveDialog.page.setup(
@@ -208,7 +208,7 @@ Studio.extend({
 		null, // onCancel, do nothing
 		!page || !page.getDirty()); // if there is no page being closed or if the page is not dirty, then skip this confirm
 	},
-    closeServiceParentTab: function(inLayer) {
+    closeServiceParentTab: function(inSender, inLayer) {
 	var layers = inLayer.c$[0].layers;
 	var unsavedPages = [];
 	for (var i = 0; i < layers.length; i++) {
