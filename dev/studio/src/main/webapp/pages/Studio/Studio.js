@@ -1161,7 +1161,7 @@ dojo.declare("Studio", wm.Page, {
 	    if (!studio.application) return true; // needed to show the resource manager when the application has failed to load
 	    var newLayer = inSender.layers[inChangeInfo.newIndex];
 	    if (!newLayer) return;
-	    if (this.tabs.getActiveLayer().name == "sourceTab") {
+	    if (this.tabs.getActiveLayer() && this.tabs.getActiveLayer().name == "sourceTab") {
 		setTimeout(dojo.hitch(this, function() {
 		    this.cssChanged();
 		    this.markupChanged();
