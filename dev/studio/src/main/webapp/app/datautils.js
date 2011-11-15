@@ -82,7 +82,7 @@ buildConnectionUrl = function(dbtype, host, port, extra, extra2) {
 	} else if (isDB2(dbtype)) {
 		rtn += "db2://" + host + "\:" + port + "/" + extra;
 	} else if (isPostgreSQL(dbtype)) {
-		rtn += "postgresql://" + host + ":" + port + "/" + extra;;
+		rtn += "postgresql://" + host + ":" + port + "/" + extra;
 	}
 
 	return rtn;
