@@ -708,10 +708,15 @@ dojo.declare("wm.GroupInspector", wm.Inspector, {
 		img.src = "images/group_" + (isOpen ? "closed.gif" : "open.gif");
 		// show / hide group rows
 		for (var rows=this.table.rows, i = dojo.indexOf(rows, r) + 1, row; (row=rows[i]); i++) {
-			if (dojo.hasClass(row, "wminspector-grouprow"))
+		    if (dojo.hasClass(row, "wminspector-grouprow")) {
 				break;
-			else
+		    } else {
+			var propName = row.id.replace(/^propinspect_row_/,"");
+			var propDef = this.props[propName];
+			if (!propDef.ignoretmp) {
 				row.style.display = isOpen ? "none" : "";
+			}
+		    }
 		}
 		return true;
 	},
