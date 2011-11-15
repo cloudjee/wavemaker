@@ -25,7 +25,9 @@ dojo.declare("wm.gadget.YouTube", wm.Gadget, {
 	dojo.attr(this.domNode, "allowfullscreen", "true");
     },
     getSource: function() {
-	return "http://www.youtube.com/embed/" + this.videoId.replace(/^.*\//,"");
+	if (!this.videoId && this._isDesignLoaded)
+	    return "";
+	return "http://www.youtube.com/embed/" + (this.videoId ? this.videoId.replace(/^.*\//,"") : "");
     },
     setVideoId: function(inId) {
 	this.videoId = inId;
