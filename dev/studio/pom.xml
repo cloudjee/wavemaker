@@ -5,12 +5,14 @@
 	<parent>
 		<groupId>com.wavemaker</groupId>
 		<artifactId>wm-parent</artifactId>
-		<version>6.4.0.BUILD-SNAPSHOT</version>
-		<relativePath>../parent</relativePath>
+		<version>6.5.0.BUILD-SNAPSHOT</version>
 	</parent>
 	<artifactId>wm-studio</artifactId>
 	<packaging>war</packaging>
 	<name>WaveMaker Studio Web Application</name>
+	<properties>
+		<main.basedir>${basedir}/..</main.basedir>
+	</properties>
 
 	<build>
 		<finalName>wavemaker</finalName>
@@ -183,7 +185,7 @@
 					</execution>
 				</executions>
 			</plugin>
-		    <plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-clean-plugin</artifactId>
 				<configuration>
@@ -191,14 +193,14 @@
 						<!-- Cleanup any war:inplace output -->
 						<fileset>
 							<directory>${basedir}/src/main/webapp/WEB-INF/lib</directory>
-            			</fileset>
-            			<fileset>
-              				<directory>${basedir}/src/main/webapp/WEB-INF/classes</directory>
-            			</fileset>
-          			</filesets>
+						</fileset>
+						<fileset>
+							<directory>${basedir}/src/main/webapp/WEB-INF/classes</directory>
+						</fileset>
+					</filesets>
 				</configuration>
 			</plugin>
-		    <plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
@@ -206,29 +208,6 @@
 						<annotationProcessor>com.wavemaker.tools.apt.ServiceDefProcessor</annotationProcessor>
 					</annotationProcessors>
 					<compilerArgument>-AprojectRoot=${basedir}</compilerArgument>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-eclipse-plugin</artifactId>
-				<configuration>
-					<downloadSources>true</downloadSources>
-					<downloadJavadocs>false</downloadJavadocs>
-					<wtpContextName>wavemaker</wtpContextName>
-					<additionalConfig>
-						<file>
-							<name>.settings/org.eclipse.jdt.core.prefs</name>
-							<location>${basedir}/../code-style/eclipse/.settings/org.eclipse.jdt.core.prefs</location>
-						</file>
-						<file>
-							<name>.settings/org.eclipse.jdt.ui.prefs</name>
-							<location>${basedir}/../code-style/eclipse/.settings/org.eclipse.jdt.ui.prefs</location>
-						</file>
-						<file>
-							<name>.settings/org.eclipse.wst.validation.prefs</name>
-							<location>${basedir}/../code-style/eclipse/.settings/org.eclipse.wst.validation.prefs</location>
-						</file>
-					</additionalConfig>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -252,17 +231,6 @@
 			<artifactId>spring-test</artifactId>
 		</dependency>
 	</dependencies>
-
-	<pluginRepositories>
-		<pluginRepository>
-			<id>com.springsource.repository.bundles.release</id>
-			<name> SpringSource Enterprise Bundle Repository - SpringSource Bundle Releases</name>
-			<url>http://repository.springsource.com/maven/bundles/release/</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</pluginRepository>
-	</pluginRepositories>
 
 	<profiles>
 		<profile>
@@ -289,38 +257,38 @@
 					</plugin>
 				</plugins>
 			</build>
-			</profile>
-			<profile>
-				<id>Inplace</id>
-				<properties>
-					<tomcat.context.docbase>${basedir}/src/main/webapp</tomcat.context.docbase>
-					<tomcat.context.reloadable>true</tomcat.context.reloadable>
-				</properties>
-				<build>
-					<resources>
-						<resource>
-							<directory>src/main/resources</directory>
-						</resource>
-						<resource>
-							<directory>src/main/inplace-resources</directory>
-							<filtering>true</filtering>
-						</resource>
-					</resources>
-					<plugins>
-						<plugin>
-							<groupId>org.codehaus.mojo</groupId>
-							<artifactId>tomcat-maven-plugin</artifactId>
-							<version>1.1</version>
-							<configuration>
-								<update>true</update>
-								<mode>context</mode>
-								<contextFile>${basedir}/src/main/webapp/WEB-INF/classes/context.xml</contextFile>
-								<username>manager</username>
-								<password>manager</password>
-							</configuration>
-						</plugin>
-					</plugins>
-				</build>
-			</profile>
+		</profile>
+		<profile>
+			<id>Inplace</id>
+			<properties>
+				<tomcat.context.docbase>${basedir}/src/main/webapp</tomcat.context.docbase>
+				<tomcat.context.reloadable>true</tomcat.context.reloadable>
+			</properties>
+			<build>
+				<resources>
+					<resource>
+						<directory>src/main/resources</directory>
+					</resource>
+					<resource>
+						<directory>src/main/inplace-resources</directory>
+						<filtering>true</filtering>
+					</resource>
+				</resources>
+				<plugins>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>tomcat-maven-plugin</artifactId>
+						<version>1.1</version>
+						<configuration>
+							<update>true</update>
+							<mode>context</mode>
+							<contextFile>${basedir}/src/main/webapp/WEB-INF/classes/context.xml</contextFile>
+							<username>manager</username>
+							<password>manager</password>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
 	</profiles>
 </project>

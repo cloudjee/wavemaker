@@ -4,14 +4,15 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.wavemaker</groupId>
-        <artifactId>wm-parent</artifactId>
-        <version>6.4.0.BUILD-SNAPSHOT</version>
-		<relativePath>../../parent</relativePath>
+        <artifactId>wm-core-parent</artifactId>
+        <version>6.5.0.BUILD-SNAPSHOT</version>
     </parent>
     <artifactId>wm-json</artifactId>
     <packaging>jar</packaging>
     <name>WaveMaker JSON</name>
-
+	<properties>
+		<main.basedir>${basedir}/../..</main.basedir>
+	</properties>
     <build>
         <plugins>
             <!--<plugin>
@@ -61,16 +62,4 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
-    
-    <pluginRepositories>
-        <pluginRepository>
-            <id>com.springsource.repository.bundles.release</id>
-            <name> SpringSource Enterprise Bundle Repository - SpringSource Bundle Releases</name>
-            <url>http://repository.springsource.com/maven/bundles/release/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
-
 </project>
