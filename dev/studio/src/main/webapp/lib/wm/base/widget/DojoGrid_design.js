@@ -443,7 +443,7 @@ wm.Object.extendSchema(wm.DojoGrid, {
     showCSVData: {group: "method"},
     setSortIndex:{group: "method"},
     setSortField:{group: "method"},
-
+    setColumnComboBoxOptions: {group: "method"},
     onMouseOver: {ignore: 1},
     onMouseOut: {ignore: 1},
     onRightClick: {ignore: 1}
