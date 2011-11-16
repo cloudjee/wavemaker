@@ -244,7 +244,7 @@ wm.LiveFormBase.extend({
 	        if (relatedTypeDef && !relatedTypeDef.liveService) {
 		    props.editingMode = "editable subform";
 		    return this.owner.loadComponent(wm.makeNameForProp(inFormField, "RelatedEditor"), this, "wm.RelatedEditor", props);
-		} else if (relatedTypeDef) {
+		} else if (relatedTypeDef && fieldDef && !fieldDef.isList) {
 		    props.name = wm.makeNameForProp(inFormField, "Lookup")
 		    return wm.createFieldEditor(this.getEditorParent(), fieldDef, props, {}, "wm.Lookup");
 		} else {
