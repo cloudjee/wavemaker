@@ -246,7 +246,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	// Optimization: fast setting of select using internal dijit functionality
 	// avoids re-getting items from store
        _setEditorValue: function(inDisplayValue, optionalDataObjValue) {
-		inDisplayValue = String(inDisplayValue);
+	   inDisplayValue = (inDisplayValue === null || inDisplayValue === undefined) ? "" : String(inDisplayValue);
 		var e = this.editor;
 		delete this._isValid;
 	   if (!e) {
@@ -345,7 +345,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	    var result = de ? wm.expression.getValue(de, v) : inVariable.getValue(this._displayField);
             if (this.displayType && this.displayType != 'Text')
                 result = this.formatData(result);
-            return String(result);
+            return result === undefined || result === null ? "" : String(result);
 	},
 	formatData: function(inValue){
 		try
@@ -471,8 +471,8 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
 	clear: function() {
 		// note: hack to call internal dijit function to ensure we can
 		// set a blank value even if this is not a valid value
-		if (this.editor && this.hasValues()) {
-                    var valueWas = this.editor.get("displayedValue");
+	    if (this.editor) {
+                 var valueWas = this.editor.get("displayedValue");
 			if (this.restrictValues) {
 			    this.editor.set('value', '', false);
 			} else {
@@ -488,7 +488,7 @@ dojo.declare("wm.SelectMenu", wm.AbstractEditor, {
                         this.editor._lastValueReported = "";
 			this.updateReadonlyValue();
 		    this.resetState(); 
-                    if (valueWas)
+                    if (valueWas  && this.hasValues()) 
                         this.changed();
 		} else {
 		    this.resetState(); 
@@ -760,7 +760,7 @@ dojo.declare("wm.FilteringLookup", wm.Lookup, {
 	}
     },
     setDataValue: function(inData) {
-	if (this.dataSet) {
+	if (this.dataSet && inData) {
 	    this.dataSet.setData(inData ? [inData] : null);
 	}
 	this.inherited(arguments);
