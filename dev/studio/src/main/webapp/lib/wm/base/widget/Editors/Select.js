@@ -693,6 +693,7 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 			return;
 
 		this.inherited(arguments);
+	    if (wm.getParentForm) {
 		var f = wm.getParentForm(this);
 	    if (f instanceof wm.RelatedEditor) {
 		var s = this._getFormSource(f);
@@ -713,6 +714,7 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 			//wm.fire(f, "populateEditors");
 		}
 	    }
+	}
 	}
 });
 
@@ -750,7 +752,7 @@ dojo.declare("wm.FilteringLookup", wm.Lookup, {
 		    if (item[this._storeNameField] != this.editor.get("displayedValue"))
 			item = null;
 		}
-		if (!item) {
+		if (!item && this.editor.get("displayedValue")) {
 		    this.editor._startSearchFromInput();
 		}
 		this._onchange(); // see if there have been any new characters since our last request was fired
@@ -783,12 +785,19 @@ dojo.declare("wm.FilteringLookup", wm.Lookup, {
     },
     doOnchange: function() {
 	this._onchange();
-	this.inherited(arguments);
+	if (this.editor.get("item")) {
+	    this.inherited(arguments);
+	}
     },
     _onchange: function() {
 	if (this.disabled || this.readonly) return;
 	var value = this.editor.get("displayedValue");
 	var lastValue = this.dataSet.filter.getValue(this.filterField);
+
+	/* Insure that oldValue doesn't get used in setDataSet if there is no current item */
+	if (!this.editor.get("item")) {
+	    this.dataValue = "";
+	}
 
 	/* Don't update the filter if its already firing; keep it at its last value so we'll know when it returns
 	 * what was requested
