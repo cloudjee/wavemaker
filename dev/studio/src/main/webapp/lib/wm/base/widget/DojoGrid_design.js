@@ -436,6 +436,7 @@ wm.Object.extendSchema(wm.DojoGrid, {
     editCell:  {group: "method"},
     deleteRow:  {group: "method"},
     addRow:  {group: "method"},
+    addEmptyRow:  {group: "method"},
     getRowCount: {group: "method", returns: "Number"},
     getDataSet: {group: "method", returns: "wm.Variable"},
     setDataSet: {group: "method"},
