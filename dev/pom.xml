@@ -18,6 +18,7 @@
 	<modules>
 		<module>core</module>
 		<module>studio</module>
+		<module>spinup</module>
 	</modules>
 
 	<distributionManagement>
@@ -596,6 +597,24 @@
 		</dependencies>
 	</dependencyManagement>
 
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-all</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
 	<build>
 		<extensions>
 			<extension>
@@ -698,27 +717,6 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-eclipse-plugin</artifactId>
 					<version>2.8</version>
-					<configuration>
-						<downloadSources>true</downloadSources>
-						<downloadJavadocs>false</downloadJavadocs>
-						<wtpversion>2.0</wtpversion>
-						<wtpmanifest>true</wtpmanifest>
-						<manifest>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifest>
-						<additionalConfig>
-							<file>
-								<name>.settings/org.eclipse.jdt.core.prefs</name>
-								<location>${main.basedir}/code-style/eclipse/.settings/org.eclipse.jdt.core.prefs</location>
-							</file>
-							<file>
-								<name>.settings/org.eclipse.jdt.ui.prefs</name>
-								<location>${main.basedir}/code-style/eclipse/.settings/org.eclipse.jdt.ui.prefs</location>
-							</file>
-							<file>
-								<name>.settings/org.eclipse.wst.validation.prefs</name>
-								<location>${main.basedir}/code-style/eclipse/.settings/org.eclipse.wst.validation.prefs</location>
-							</file>
-						</additionalConfig>
-					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>com.springsource.bundlor</groupId>
@@ -755,6 +753,33 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<configuration>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>false</downloadJavadocs>
+					<wtpversion>2.0</wtpversion>
+					<wtpmanifest>true</wtpmanifest>
+					<manifest>${basedir}/src/main/resources/META-INF/MANIFEST.MF</manifest>
+					<additionalConfig>
+						<file>
+							<name>.settings/org.eclipse.jdt.core.prefs</name>
+							<location>${main.basedir}/code-style/eclipse/.settings/org.eclipse.jdt.core.prefs</location>
+						</file>
+						<file>
+							<name>.settings/org.eclipse.jdt.ui.prefs</name>
+							<location>${main.basedir}/code-style/eclipse/.settings/org.eclipse.jdt.ui.prefs</location>
+						</file>
+						<file>
+							<name>.settings/org.eclipse.wst.validation.prefs</name>
+							<location>${main.basedir}/code-style/eclipse/.settings/org.eclipse.wst.validation.prefs</location>
+						</file>
+					</additionalConfig>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
 
 	<profiles>
