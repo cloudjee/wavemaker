@@ -608,8 +608,13 @@
 			<plugins>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.8</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-resources-plugin</artifactId>
-					<version>2.3</version>
+					<version>2.5</version>
 					<configuration>
 						<encoding>UTF-8</encoding>
 					</configuration>
@@ -617,7 +622,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.9</version>
+					<version>2.10</version>
 					<configuration>
 						<includes>
 							<include>**/*Tests.class</include>
@@ -644,7 +649,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-jar-plugin</artifactId>
-					<version>2.3</version>
+					<version>2.3.2</version>
 					<executions>
 						<execution>
 							<id>test-jar</id>
@@ -670,7 +675,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-source-plugin</artifactId>
-					<version>2.0.3</version>
+					<version>2.1.2</version>
 					<configuration>
 						<attach>true</attach>
 					</configuration>
@@ -687,7 +692,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-install-plugin</artifactId>
-					<version>2.3</version>
+					<version>2.3.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -743,6 +748,11 @@
 					<artifactId>maven-processor-plugin</artifactId>
 					<version>2.0.5</version>
 				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>tomcat-maven-plugin</artifactId>
+					<version>1.1</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -754,7 +764,6 @@
 				<plugins>
 					<plugin>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>2.5</version>
 						<executions>
 							<execution>
 								<id>aggregate</id>
@@ -791,6 +800,4 @@
 			</build>
 		</profile>
 	</profiles>
-
-
 </project>
