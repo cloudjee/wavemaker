@@ -14,9 +14,9 @@ import org.springframework.util.Assert;
  */
 public final class TransportToken {
 
-    private byte[] digest;
+    private final byte[] digest;
 
-    private byte[] encryptedToken;
+    private final byte[] encryptedToken;
 
     public TransportToken(byte[] digest, byte[] encryptedToken) {
         Assert.notNull(digest, "Digest must not be null");
@@ -26,7 +26,7 @@ public final class TransportToken {
     }
 
     public byte[] getEncryptedToken() {
-        return encryptedToken;
+        return this.encryptedToken;
     }
 
     public boolean isDigestMatch(byte[] digest) {
@@ -38,7 +38,7 @@ public final class TransportToken {
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(digest) + Arrays.hashCode(encryptedToken);
+        return Arrays.hashCode(this.digest) + Arrays.hashCode(this.encryptedToken);
     }
 
     @Override
@@ -53,6 +53,6 @@ public final class TransportToken {
             return false;
         }
         TransportToken other = (TransportToken) obj;
-        return Arrays.equals(digest, other.digest) && Arrays.equals(encryptedToken, other.encryptedToken);
+        return Arrays.equals(this.digest, other.digest) && Arrays.equals(this.encryptedToken, other.encryptedToken);
     }
 }

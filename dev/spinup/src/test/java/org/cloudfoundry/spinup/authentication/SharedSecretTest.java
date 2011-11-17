@@ -30,14 +30,14 @@ public class SharedSecretTest {
     public void shouldCreateGenerated() throws Exception {
         SharedSecret s1 = new SharedSecret();
         SharedSecret s2 = new SharedSecret();
-        assertFalse("Arrays should not match", Arrays.equals(s1.toBytes(), s2.toBytes()));
+        assertFalse("Arrays should not match", Arrays.equals(s1.getBytes(), s2.getBytes()));
     }
 
     @Test
     public void shouldCreateFromBytes() throws Exception {
-        byte[] bytes = new SharedSecret().toBytes();
+        byte[] bytes = new SharedSecret().getBytes();
         SharedSecret secret = SharedSecret.fromBytes(bytes);
-        assertTrue("Bytes should match", Arrays.equals(bytes, secret.toBytes()));
+        assertTrue("Bytes should match", Arrays.equals(bytes, secret.getBytes()));
     }
 
     @Test

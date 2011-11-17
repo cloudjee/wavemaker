@@ -11,25 +11,20 @@ import org.springframework.util.Assert;
  */
 public class SharedKeyAuthentication {
 
-    private SharedSecret sharedSecret;
+    private final SharedSecret sharedSecret;
 
-    private LoginManager loginManager;
-
-    public SharedKeyAuthentication(SharedSecret sharedSecret, LoginManager loginManager) {
+    public SharedKeyAuthentication(SharedSecret sharedSecret) {
         Assert.notNull(sharedSecret, "SharedSecret must not be null");
-        Assert.notNull(loginManager, "LoginManager must not be null");
         this.sharedSecret = sharedSecret;
-        this.loginManager = loginManager;
     }
 
-    public TransportToken getTransportToken(LoginCredentials credentials) {
-        Assert.notNull(credentials, "Credentials must not be null");
-        AuthenticationToken authenticationToken = loginManager.login(credentials);
-        return sharedSecret.encrypt(authenticationToken);
+    public TransportToken getTransportToken(AuthenticationToken authenticationToken) {
+        Assert.notNull(authenticationToken, "Authentication Token must not be null");
+        return this.sharedSecret.encrypt(authenticationToken);
     }
 
     public AuthenticationToken getAuthenticationToken(TransportToken transportToken) {
         Assert.notNull(transportToken, "TransportToken must not be null");
-        return sharedSecret.decrypt(transportToken);
+        return this.sharedSecret.decrypt(transportToken);
     }
 }

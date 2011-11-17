@@ -6,8 +6,8 @@ import java.util.Arrays;
 import org.springframework.util.Assert;
 
 /**
- * Authentication token returned from a {@link LoginManager} used to ensure a user has rights to use a system. The
- * authentication token is considered sensitive and should not be stored or transported between systems.
+ * Authentication token returned used to ensure a user has rights to use a system. The authentication token is
+ * considered sensitive and should not be stored or transported between systems.
  * 
  * @see TransportToken
  * @see SharedKeyAuthentication
@@ -15,7 +15,7 @@ import org.springframework.util.Assert;
  */
 public final class AuthenticationToken {
 
-    private byte[] bytes;
+    private final byte[] bytes;
 
     public AuthenticationToken(byte[] bytes) {
         Assert.notNull(bytes, "Bytes must not be null");
@@ -23,12 +23,12 @@ public final class AuthenticationToken {
     }
 
     public byte[] getBytes() {
-        return bytes;
+        return this.bytes;
     }
 
     @Override
     public int hashCode() {
-        return Arrays.hashCode(bytes);
+        return Arrays.hashCode(this.bytes);
     }
 
     @Override
@@ -43,7 +43,7 @@ public final class AuthenticationToken {
             return false;
         }
         AuthenticationToken other = (AuthenticationToken) obj;
-        return Arrays.equals(bytes, other.bytes);
+        return Arrays.equals(this.bytes, other.bytes);
     }
 
 }

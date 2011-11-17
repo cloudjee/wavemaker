@@ -19,6 +19,8 @@ import org.springframework.util.Assert;
  */
 public class SharedSecret {
 
+    // FIXME implement HashCode + Equals
+
     private static final String DIGEST_ALGORITHM = "SHA-1";
 
     private static final String ENCRYPTION_ALGORITHM = "AES";
@@ -46,7 +48,7 @@ public class SharedSecret {
      */
     private SharedSecret(byte[] secret) {
         try {
-            this.secret = (secret == null ? generateSecret() : secret);
+            this.secret = secret == null ? generateSecret() : secret;
             this.digestOfSecret = calculateDigest(this.secret);
         } catch (NoSuchAlgorithmException e) {
             throw new IllegalStateException(e);
@@ -73,7 +75,7 @@ public class SharedSecret {
     public TransportToken encrypt(AuthenticationToken authenticationToken) {
         Assert.notNull(authenticationToken, "AuthenticationToken must not be null");
         byte[] encryptedToken = cipher(Cipher.ENCRYPT_MODE, authenticationToken.getBytes());
-        return new TransportToken(digestOfSecret, encryptedToken);
+        return new TransportToken(this.digestOfSecret, encryptedToken);
     }
 
     /**
@@ -85,7 +87,7 @@ public class SharedSecret {
      */
     public AuthenticationToken decrypt(TransportToken transportToken) throws TransportTokenDigestMismatchException {
         Assert.notNull(transportToken, "TransportToken must not be null");
-        if (!transportToken.isDigestMatch(digestOfSecret)) {
+        if (!transportToken.isDigestMatch(this.digestOfSecret)) {
             throw new TransportTokenDigestMismatchException("The digest of the transport does not match the shared secret");
         }
         byte[] decryptToken = cipher(Cipher.DECRYPT_MODE, transportToken.getEncryptedToken());
@@ -101,7 +103,7 @@ public class SharedSecret {
      */
     private byte[] cipher(int cipherMode, byte[] bytes) {
         try {
-            SecretKeySpec keySpec = new SecretKeySpec(secret, ENCRYPTION_ALGORITHM);
+            SecretKeySpec keySpec = new SecretKeySpec(this.secret, ENCRYPTION_ALGORITHM);
             Cipher cipher = Cipher.getInstance(ENCRYPTION_ALGORITHM);
             cipher.init(cipherMode, keySpec);
             return cipher.doFinal(bytes);
@@ -114,8 +116,8 @@ public class SharedSecret {
      * @return The secret as a byte array
      * @see #fromBytes(byte[])
      */
-    public byte[] toBytes() {
-        return secret;
+    public byte[] getBytes() {
+        return this.secret;
     }
 
     /**
@@ -123,7 +125,7 @@ public class SharedSecret {
      * 
      * @param bytes the bytes of the secret
      * @return a new {@link SharedSecret} instance.
-     * @see #toBytes()
+     * @see #getBytes()
      */
     public static SharedSecret fromBytes(byte[] bytes) {
         Assert.notNull(bytes, "Bytes must not be null");

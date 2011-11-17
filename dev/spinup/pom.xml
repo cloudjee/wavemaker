@@ -14,8 +14,16 @@
 	</properties>
 	<dependencies>
 		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.cloudfoundry</groupId>
+			<artifactId>cloudfoundry-client-lib</artifactId>
 		</dependency>
 	</dependencies>
 </project>
