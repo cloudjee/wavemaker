@@ -173,7 +173,8 @@ dojo.declare("wm.Currency", wm.Number, {
 		return new dijit.form.CurrencyTextBox(this.getEditorProps(inNode, inProps));
 	},
 	_getReadonlyValue: function() {
-	    return dojo.currency.format( this.dataValue, {currency: this.currency, places: parseInt(this.places)});
+	    return dojo.currency.format( this.dataValue, {currency: this.currency || (this._isDesignLoaded ? studio.application.currencyLocale : app.currencyLocale) || "USD",
+							  places: parseInt(this.places)});
 	},
 	_getPlaces: function() {
 		return this.places;

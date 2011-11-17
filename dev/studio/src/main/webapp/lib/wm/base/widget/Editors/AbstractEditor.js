@@ -681,7 +681,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	updateReadonlyValue: function(inValue) {
 	    if (this.readonly && this.readOnlyNode){
 		var value;
-		if (this.$.format) {
+		if (this.$.format && this.$.format.declaredClass != "wm.DataFormatter") {
 		    value = this.$.format.format(inValue || this.getDataValue());
 		} else if (this.formatter && dojo.isFunction(this.owner[this.formatter])) {
 		    try {
