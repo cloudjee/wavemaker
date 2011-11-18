@@ -52,6 +52,9 @@
 
 },
 "wm.AbstractEditor": {
+        defaultInsert: "Insert時の初期値",
+	ignoreParentReadonly: "親の読込専用を無視",
+	formField: "フィールド",
 	caption: "表示名",
 	captionPosition: "表示名の位置",
 	captionAlign: "表示名の配置",
@@ -285,10 +288,7 @@
 	dataValue: "データ値",
 	startChecked: "初期状態でチェック",
 	dataType: "データ型",
-	checkedValue: "チェック時の値",
-	formField: "フィールド",
-	ignoreParentReadonly: "親の読込専用を無視",
-	defaultInsert: "Insert時の初期値"
+	checkedValue: "チェック時の値"
 },
 "wm.Currency": {
 	currency: "通貨",
@@ -456,8 +456,10 @@
 	customSort: "カスタムソート",
 	customFormatter: "カスタムフォーマット",
 	editColumns: "列を編集",
-	minWidth: "最小幅"
+        minWidth: "最小幅",
+	updateNow: "今すぐ更新"
 },
+
 "wm.DataNavigator": {
 	byPage: "ページ毎",
 	liveSource: "ライブ変数",
