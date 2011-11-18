@@ -168,7 +168,7 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition i
         NamedQueryDefinition def = metaData.getHqlQueryDefinition(operationName);
 
         if (def == null) {
-            def = metaData.getHqlQueryDefinition(operationName);
+            def = metaData.getSqlQueryDefinition(operationName);
             if (def == null) {
                 type = "other";
             } else {

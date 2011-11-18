@@ -326,7 +326,7 @@ public class DataServiceGenerator extends ServiceGenerator {
             }
         }
 
-        if (operationTypeExists(smdObject, op.getName()) && op.isQuery()) {
+        if (operationTypeHql(smdObject, op.getName()) && op.isQuery()) {
             exp.arg(JExpr.ref("pagingOptions"));
         }
 
@@ -450,7 +450,7 @@ public class DataServiceGenerator extends ServiceGenerator {
     }
 
     protected void addAdditionalInputParams(JMethod method, String operationName) {
-        if (operationTypeExists(smdObject, operationName)) {
+        if (operationTypeHql(smdObject, operationName)) {
             DataServiceOperation op = ds.getOperation(operationName);
             if (op.isQuery()) {
                 method.param(PagingOptions.class, "pagingOptions");
@@ -458,13 +458,14 @@ public class DataServiceGenerator extends ServiceGenerator {
         }
     }
 
-    private boolean operationTypeExists(JSONObject obj, String operationName) {
+    private boolean operationTypeHql(JSONObject obj, String operationName) {
         try {
             JSONArray methods = (JSONArray)obj.get("methods");
             for (int i=0; i<methods.length(); i++) {
                 JSONObject method = methods.getJSONObject(i);
                 if (method.get("name").equals(operationName)) {
-                    if (method.isNull("operationType")) {
+                    String opType = (String)method.get("operationType");
+                    if (opType == null || !opType.equals("hqlquery")) {
                         return false;
                     } else {
                         return true;
