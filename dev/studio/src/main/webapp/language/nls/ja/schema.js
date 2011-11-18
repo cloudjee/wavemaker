@@ -12,12 +12,9 @@
  *  limitations under the License.
  */
 {
-    "wm.ServiceVariable": {
-	updateNow: "今すぐ更新"
-    },
 "wm.Component": {
 	name: "名前",
-//	owner: "オーナー",
+	owner: "オーナー",
 	documentation: "ドキュメント",
 	generateDocumentation: "ドキュメント作成"
 },
@@ -75,7 +72,7 @@
 	iconHeight: "アイコン高さ",
 	iconMargin: "アイコンマージン",
 	hint: "ヒント",
-	imageIndex: "画像インデックス",
+	imageIndex: "画像インデックス"
 },
 "wm.Button": {
 	caption: "表示名",
@@ -244,7 +241,7 @@
 	deferLoad: "遅延ロード",
 	footerBorder: "フッター枠線",
 	footerBorderColor: "フッター枠線色",
-	hideControls: "コントロールを隠す",
+	hideControls: "コントロールを隠す"
 },
 "wm.DesignableDialog": {
 	createButtonBar: "ボタンバーを作成"
@@ -530,7 +527,7 @@
 	renderBoundsX: "X軸境界線を描画",
 	renderBoundsY: "Y軸境界線を描画",
 	deployDijit: "Dijitを配布",
-	undeployDijit: "Dijitを配布中止",
+	undeployDijit: "Dijitを配布中止"
 },
 "wm.gadget.GoogleMap": {
 	dataSet: "データセット",
@@ -606,6 +603,89 @@
 	main: "Main Page"
 }, 
 
+"wm.Variable": {
+	type: "種別",
+	dataSet: "データセット",
+	isList: "一覧",
+	json: "JSON",
+	saveInCookie: "Cookieに保存"
+}, 
+
+"wm.ServiceVariable": {
+	service: "サービス",
+	operation: "オペレーション",
+	autoUpdate: "自動更新",
+	startUpdate: "起動時に更新",
+	maxResults: "結果最大数",
+	designMaxResults: "スタジオでの結果最大数",
+	downloadFile: "ファイルをダウンロード",
+	updateNow: "今すぐ更新",
+	clearInput: "入力をクリア",
+	queue: "キュー"
+}, 
+
+"wm.LiveVariable": {
+	service: "サービス",
+	operation: "操作",
+	liveSource: "ライブソース",
+	sourceData: "ソースデータ",
+	filter: "フィルター",
+	matchMode: "一致モード",
+	firstRow: "最初の行",
+	orderBy: "並び替え",
+	ignoreCase: "大文字小文字を区別",
+}, 
+
+"wm.NavigationCall": {
+    operation: "オペレーション",
+    clearInput: "入力をクリア",
+    queue: "キュー"
+},
+
+"wm.ImageList": {
+	url: "URL",
+	colCount: "列数",
+	height: "高さ",
+	iconCount: "アイコン数",
+	width: "幅"
+},
+
+"wm.LogoutVariable": {
+	clearDataOnLogout: "ログアウト時にデータをクリア"
+},
+
+"wm.Timer": {
+	owner: "オーナー",
+	autoStart: "自動開始",
+	delay: "遅延",
+	repeating: "繰り返し"
+},
+
+"wm.ComponentPublisher": {
+	width: "幅",
+	height: "高さ",
+	publishName: "公開名",
+	namespace: "名前空間",
+	group: "グループ",
+	displayName: "表示名",
+	description: "詳細",
+	deploy: "配布",
+	undeploy: "配布中止"
+},
+
+"wm.Property": {
+	property: "プロパティ",
+	bindSource: "バインド元",
+	bindTarget: "バインド対象",
+	isEvent: "イベント",
+	readonly: "読み込み専用",
+	selectProperty: "プロパティ選択"
+},
+
+"wm.TemplatePublisher": {
+	isFullPageTemplate: "全画面テンプレート"
+},
+
 /* group name that come from Inspector.js */
 "GROUP_common": "共通",
 "GROUP_data": "データ",
@@ -631,6 +711,7 @@
 "GROUP_toolbar": "ツールバー",
 "GROUP_Map": "地図",
 "GROUP_Marker": "マーカー",
+"GROUP_deprecated": "廃止",
 
 /* group name that come from each component */
 "GROUP_BusyButton": "ビジーボタン",
