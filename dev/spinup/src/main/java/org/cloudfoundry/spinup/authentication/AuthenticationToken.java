@@ -10,7 +10,6 @@ import org.springframework.util.Assert;
  * considered sensitive and should not be stored or transported between systems.
  * 
  * @see TransportToken
- * @see SharedKeyAuthentication
  * @author Phillip Webb
  */
 public final class AuthenticationToken {

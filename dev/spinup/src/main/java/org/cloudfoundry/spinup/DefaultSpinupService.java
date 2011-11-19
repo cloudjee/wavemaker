@@ -3,12 +3,20 @@ package org.cloudfoundry.spinup;
 
 import java.net.MalformedURLException;
 
+import org.cloudfoundry.client.lib.CloudApplication;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
 import org.cloudfoundry.spinup.authentication.AuthenticationToken;
 import org.cloudfoundry.spinup.authentication.LoginCredentials;
 import org.cloudfoundry.spinup.authentication.SharedSecret;
+import org.cloudfoundry.spinup.authentication.SharedSecretPropagation;
+import org.cloudfoundry.spinup.authentication.TransportToken;
 import org.springframework.util.Assert;
 
+/**
+ * Default implementation of {@link SpinupService}.
+ * 
+ * @author Phillip Webb
+ */
 public class DefaultSpinupService implements SpinupService {
 
     private final String controllerUrl;
@@ -22,9 +30,7 @@ public class DefaultSpinupService implements SpinupService {
     public StartedApplication start(SharedSecret secret, LoginCredentials credentials) {
         CloudFoundryClient cloudFoundryClient = getCloudFoundryClient(credentials);
         AuthenticationToken authenticationToken = new AuthenticationToken(cloudFoundryClient.login());
-        String redirectUrl = deployAndShareSecret(cloudFoundryClient, secret);
-
-        return null;
+        return deployAndShareSecret(cloudFoundryClient, authenticationToken, secret);
     }
 
     private CloudFoundryClient getCloudFoundryClient(LoginCredentials credentials) {
@@ -36,22 +42,27 @@ public class DefaultSpinupService implements SpinupService {
         }
     }
 
-    private String deployAndShareSecret(CloudFoundryClient cloudFoundryClient, SharedSecret secret) {
+    private StartedApplication deployAndShareSecret(CloudFoundryClient cloudFoundryClient, AuthenticationToken authenticationToken,
+        SharedSecret secret) {
+
+        CloudApplication application = deployAsRequired();
+
+        TransportToken transportToken = secret.encrypt(authenticationToken);
+        SharedSecretPropagation propagation = new SharedSecretPropagation(cloudFoundryClient);
+        propagation.sendTo(secret, application);
+
+        String applicationUrl = getApplicationUrl(application);
+        return new DefaultStartedApplication(transportToken, applicationUrl);
+    }
+
+    private CloudApplication deployAsRequired() {
+
         // TODO Auto-generated method stub
-
-        // get applications
-        cloudFoundryClient.getApplications();
-
-        // See if an application matches the name we want
-
-        // if not deploy the application
-
-        // encrypt token
-
-        // transfer the token
-
-        // return a new result
         return null;
     }
 
+    private String getApplicationUrl(CloudApplication application) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

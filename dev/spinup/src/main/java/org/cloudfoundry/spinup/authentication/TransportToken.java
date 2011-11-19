@@ -10,7 +10,6 @@ import org.springframework.util.Assert;
  * s encrypted using a {@link SharedSecret}.
  * 
  * @see AuthenticationToken
- * @see SharedKeyAuthentication
  */
 public final class TransportToken {
 

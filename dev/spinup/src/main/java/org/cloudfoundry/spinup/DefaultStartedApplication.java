@@ -9,23 +9,23 @@ import org.springframework.util.Assert;
  * 
  * @author Phillip Webb
  */
-public class DefaultSpinupResult implements StartedApplication {
+public class DefaultStartedApplication implements StartedApplication {
 
     private final TransportToken transportToken;
 
-    private final String redirectUrl;
+    private final String applicationUrl;
 
     /**
-     * Create a new {@link DefaultSpinupResult} implementation.
+     * Create a new {@link DefaultStartedApplication} implementation.
      * 
      * @param transportToken the transport token
-     * @param redirectUrl the redirect url
+     * @param applicationUrl the redirect url
      */
-    public DefaultSpinupResult(TransportToken transportToken, String redirectUrl) {
+    public DefaultStartedApplication(TransportToken transportToken, String applicationUrl) {
         Assert.notNull(transportToken, "TransportToken must not be null");
-        Assert.notNull(redirectUrl, "RedirectToken must not be null");
+        Assert.notNull(applicationUrl, "ApplicationUrl must not be null");
         this.transportToken = transportToken;
-        this.redirectUrl = redirectUrl;
+        this.applicationUrl = applicationUrl;
     }
 
     @Override
@@ -35,6 +35,6 @@ public class DefaultSpinupResult implements StartedApplication {
 
     @Override
     public String getApplicationUrl() {
-        return this.redirectUrl;
+        return this.applicationUrl;
     }
 }

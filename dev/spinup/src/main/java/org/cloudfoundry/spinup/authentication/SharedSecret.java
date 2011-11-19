@@ -14,7 +14,6 @@ import org.springframework.util.Assert;
  * Represents a shared secret used by client and server to encrypt/decrypt tokens. Shared secrets should never be
  * exposed to the client.
  * 
- * @see SharedKeyAuthentication
  * @author Phillip Webb
  */
 public class SharedSecret {
