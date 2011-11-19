@@ -1,5 +1,5 @@
 
-package org.cloudfoundry.spinup;
+package org.cloudfoundry.spinup.authentication;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -15,6 +15,7 @@ import java.util.Map;
 import org.cloudfoundry.client.lib.CloudApplication;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
 import org.cloudfoundry.spinup.authentication.SharedSecret;
+import org.cloudfoundry.spinup.authentication.SharedSecretPropagation;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -72,13 +73,13 @@ public class SharedSecretPropagationTest {
     public void shouldSendToApplicationByName() throws Exception {
         this.propagation = spy(this.propagation);
         given(this.client.getApplication(this.applicationName)).willReturn(this.application);
-        this.propagation.sendTo(this.applicationName, this.secret);
-        verify(this.propagation).sendTo(this.application, this.secret);
+        this.propagation.sendTo(this.secret, this.applicationName);
+        verify(this.propagation).sendTo(this.secret, this.application);
     }
 
     @Test
     public void shouldSendToApplication() throws Exception {
-        this.propagation.sendTo(this.application, this.secret);
+        this.propagation.sendTo(this.secret, this.application);
         verify(this.client).updateApplicationEnv(eq(this.applicationName), this.envCaptor.capture());
         assertThat(this.envCaptor.getValue().get(SharedSecretPropagation.ENV_KEY), is("000102"));
     }
@@ -86,7 +87,7 @@ public class SharedSecretPropagationTest {
     @Test
     public void shouldSendToApplicationAndRetainEnvs() throws Exception {
         this.applicationEnv.put("example", "test");
-        this.propagation.sendTo(this.application, this.secret);
+        this.propagation.sendTo(this.secret, this.application);
         verify(this.client).updateApplicationEnv(eq(this.applicationName), this.envCaptor.capture());
         assertThat(this.envCaptor.getValue().get("example"), is("test"));
     }

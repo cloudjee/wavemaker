@@ -1,5 +1,5 @@
 
-package org.cloudfoundry.spinup;
+package org.cloudfoundry.spinup.authentication;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +8,6 @@ import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
 import org.cloudfoundry.client.lib.CloudApplication;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
-import org.cloudfoundry.spinup.authentication.SharedSecret;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -23,18 +22,35 @@ public class SharedSecretPropagation {
 
     private final CloudFoundryClient client;
 
+    /**
+     * Create a new {@link SharedSecretPropagation} implementation.
+     * 
+     * @param client the cloud foundry client
+     */
     public SharedSecretPropagation(CloudFoundryClient client) {
         Assert.notNull(client, "Client must not be null");
         this.client = client;
     }
 
-    public void sendTo(String applicationName, SharedSecret secret) {
+    /**
+     * Send the specified shared secret to a running cloud foundry application.
+     * 
+     * @param secret the secret to send
+     * @param applicationName the application to send the secret to
+     */
+    public void sendTo(SharedSecret secret, String applicationName) {
         Assert.notNull(applicationName, "ApplicationName must not be null");
         CloudApplication application = this.client.getApplication(applicationName);
-        sendTo(application, secret);
+        sendTo(secret, application);
     }
 
-    public void sendTo(CloudApplication application, SharedSecret secret) {
+    /**
+     * Send the specified shared secret to a running cloud foundry application.
+     * 
+     * @param secret the secret to send
+     * @param application the application to send the secret to
+     */
+    public void sendTo(SharedSecret secret, CloudApplication application) {
         Assert.notNull(application, "Application must not be null");
         Map<String, String> env = new HashMap<String, String>();
         env.putAll(application.getEnvAsMap());
@@ -42,7 +58,14 @@ public class SharedSecretPropagation {
         this.client.updateApplicationEnv(application.getName(), env);
     }
 
-    public SharedSecret getForSelf() {
+    /**
+     * Get the shared secret for the currently running application. This method assumes that some other process has
+     * {@link #sendTo(SharedSecret, CloudApplication) sent} the {@link SharedSecret} to the running application.
+     * 
+     * @return the shared secret
+     * @throw IllegalStateException if the secret cannot be obtained
+     */
+    public SharedSecret getForSelf() throws IllegalStateException {
         try {
             String secret = getEnv(ENV_KEY);
             Assert.state(StringUtils.hasLength(secret), "No shared secret has been propagated");
@@ -52,6 +75,12 @@ public class SharedSecretPropagation {
         }
     }
 
+    /**
+     * Access a system environment variable. This method exists to enable unit testing of the class.
+     * 
+     * @param name the name of the environment variable
+     * @return the variable value
+     */
     protected String getEnv(String name) {
         return System.getenv(name);
     }

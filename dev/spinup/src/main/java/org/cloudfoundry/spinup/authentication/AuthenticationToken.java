@@ -17,6 +17,11 @@ public final class AuthenticationToken {
 
     private final byte[] bytes;
 
+    public AuthenticationToken(String token) {
+        // FIXME
+        throw new UnsupportedOperationException();
+    }
+
     public AuthenticationToken(byte[] bytes) {
         Assert.notNull(bytes, "Bytes must not be null");
         this.bytes = bytes;
