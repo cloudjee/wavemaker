@@ -663,6 +663,17 @@
 	repeating: "繰り返し"
 },
 
+"wm.TypeDefinition": {
+	addField: "フィールド追加"
+},
+
+"wm.TypeDefinitionField": {
+	fieldName: "フィールド名",
+	fieldType: "フィールド型",
+	isList: "リスト",
+	isObject: "オブジェクト"
+},
+
 "wm.ComponentPublisher": {
 	width: "幅",
 	height: "高さ",
