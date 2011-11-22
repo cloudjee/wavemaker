@@ -152,6 +152,9 @@
 	"ServiceVariable" : "サービス変数",
 	"LiveVariable" : "ライブ変数",
 	"ImageList" : "画像リスト",
+	silkIconList: "Silkアイコンリスト",
+	booleanIconList: "Booleanアイコンリスト",
+
 	"NavigationCall" : "ナビ呼び出し",
 	"LogoutVariable" : "ログアウト変数",
 	"Timer" : "タイマー",

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 Infoteria Corporation and VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 Infoteria Corporation and VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,8 +13,8 @@
  */
 {
 applyStayButton: {caption: "適用"},
-applyButton: {caption: "バインド"},
-cancelButton: {caption: "キャンセル"},
+applyButton: {caption: "バインド", width: "100px"},
+cancelButton: {caption: "キャンセル", width: "100px"},
 
 TOAST_SUCCESS: "バインドが追加されました",
 TOAST_FAILED: "バインドに失敗しました",
