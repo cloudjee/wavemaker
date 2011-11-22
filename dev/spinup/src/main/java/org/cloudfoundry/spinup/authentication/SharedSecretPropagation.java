@@ -20,47 +20,40 @@ public class SharedSecretPropagation {
 
     static final String ENV_KEY = SharedSecretPropagation.class.getName() + ".SECRET";
 
-    private final CloudFoundryClient client;
-
-    /**
-     * Create a new {@link SharedSecretPropagation} implementation.
-     * 
-     * @param client the cloud foundry client
-     */
-    public SharedSecretPropagation(CloudFoundryClient client) {
-        Assert.notNull(client, "Client must not be null");
-        this.client = client;
-    }
-
     /**
      * Send the specified shared secret to a running cloud foundry application.
      * 
+     * @param client client
      * @param secret the secret to send
      * @param applicationName the application to send the secret to
      */
-    public void sendTo(SharedSecret secret, String applicationName) {
+    public void sendTo(CloudFoundryClient client, SharedSecret secret, String applicationName) {
+        Assert.notNull(client, "Client must not be null");
         Assert.notNull(applicationName, "ApplicationName must not be null");
-        CloudApplication application = this.client.getApplication(applicationName);
-        sendTo(secret, application);
+        CloudApplication application = client.getApplication(applicationName);
+        sendTo(client, secret, application);
     }
 
     /**
      * Send the specified shared secret to a running cloud foundry application.
      * 
+     * @param client client
      * @param secret the secret to send
      * @param application the application to send the secret to
      */
-    public void sendTo(SharedSecret secret, CloudApplication application) {
+    public void sendTo(CloudFoundryClient client, SharedSecret secret, CloudApplication application) {
+        Assert.notNull(client, "Client must not be null");
         Assert.notNull(application, "Application must not be null");
         Map<String, String> env = new HashMap<String, String>();
         env.putAll(application.getEnvAsMap());
         env.put(ENV_KEY, Hex.encodeHexString(secret.getBytes()));
-        this.client.updateApplicationEnv(application.getName(), env);
+        client.updateApplicationEnv(application.getName(), env);
     }
 
     /**
      * Get the shared secret for the currently running application. This method assumes that some other process has
-     * {@link #sendTo(SharedSecret, CloudApplication) sent} the {@link SharedSecret} to the running application.
+     * {@link #sendTo(CloudFoundryClient, SharedSecret, CloudApplication) sent} the {@link SharedSecret} to the running
+     * application.
      * 
      * @return the shared secret
      * @throw IllegalStateException if the secret cannot be obtained

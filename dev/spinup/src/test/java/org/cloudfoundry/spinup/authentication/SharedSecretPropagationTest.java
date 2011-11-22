@@ -14,8 +14,6 @@ import java.util.Map;
 
 import org.cloudfoundry.client.lib.CloudApplication;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
-import org.cloudfoundry.spinup.authentication.SharedSecret;
-import org.cloudfoundry.spinup.authentication.SharedSecretPropagation;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -59,27 +57,27 @@ public class SharedSecretPropagationTest {
         MockitoAnnotations.initMocks(this);
         given(this.application.getName()).willReturn(this.applicationName);
         given(this.application.getEnvAsMap()).willReturn(this.applicationEnv);
-        this.propagation = new SharedSecretPropagationWithMockEnv(this.client);
+        this.propagation = new SharedSecretPropagationWithMockEnv();
     }
 
     @Test
     public void shouldNeedClient() throws Exception {
         this.thrown.expect(IllegalArgumentException.class);
         this.thrown.expectMessage("Client must not be null");
-        new SharedSecretPropagation(null);
+        // FIXME
     }
 
     @Test
     public void shouldSendToApplicationByName() throws Exception {
         this.propagation = spy(this.propagation);
         given(this.client.getApplication(this.applicationName)).willReturn(this.application);
-        this.propagation.sendTo(this.secret, this.applicationName);
-        verify(this.propagation).sendTo(this.secret, this.application);
+        this.propagation.sendTo(this.client, this.secret, this.applicationName);
+        verify(this.propagation).sendTo(this.client, this.secret, this.application);
     }
 
     @Test
     public void shouldSendToApplication() throws Exception {
-        this.propagation.sendTo(this.secret, this.application);
+        this.propagation.sendTo(this.client, this.secret, this.application);
         verify(this.client).updateApplicationEnv(eq(this.applicationName), this.envCaptor.capture());
         assertThat(this.envCaptor.getValue().get(SharedSecretPropagation.ENV_KEY), is("000102"));
     }
@@ -87,7 +85,7 @@ public class SharedSecretPropagationTest {
     @Test
     public void shouldSendToApplicationAndRetainEnvs() throws Exception {
         this.applicationEnv.put("example", "test");
-        this.propagation.sendTo(this.secret, this.application);
+        this.propagation.sendTo(this.client, this.secret, this.application);
         verify(this.client).updateApplicationEnv(eq(this.applicationName), this.envCaptor.capture());
         assertThat(this.envCaptor.getValue().get("example"), is("test"));
     }
@@ -106,10 +104,6 @@ public class SharedSecretPropagationTest {
     }
 
     private class SharedSecretPropagationWithMockEnv extends SharedSecretPropagation {
-
-        public SharedSecretPropagationWithMockEnv(CloudFoundryClient client) {
-            super(client);
-        }
 
         @Override
         protected String getEnv(String name) {
