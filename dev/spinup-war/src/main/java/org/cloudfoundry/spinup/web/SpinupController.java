@@ -22,7 +22,7 @@ public class SpinupController {
     public @ResponseBody
     String service() {
         SharedSecret secret = new SharedSecret();
-        LoginCredentials credentials = new LoginCredentials("pwebb@vmware.com", "");
+        LoginCredentials credentials = new LoginCredentials("phil.webb@orbweaver.co.uk", "password");
         this.service.start(secret, credentials);
         return "OK";
     }

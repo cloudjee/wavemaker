@@ -1,23 +1,22 @@
 
 package org.cloudfoundry.spinup.deploy;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
 import org.cloudfoundry.client.lib.CloudApplication;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
-import org.springframework.util.Assert;
+import org.cloudfoundry.client.lib.archive.ApplicationArchive;
 
 public class DefaultDeployableApplication implements DeployableApplication {
 
     private ApplicationNamer namer;
 
-    private final File file;
+    private final ApplicationArchive archive;
 
-    public DefaultDeployableApplication(File file, ApplicationNamer namer) {
-        this.file = file;
+    public DefaultDeployableApplication(ApplicationArchive archive, ApplicationNamer namer) {
+        this.archive = archive;
         this.namer = namer;
     }
 
@@ -46,10 +45,9 @@ public class DefaultDeployableApplication implements DeployableApplication {
 
     private CloudApplication deployNew(CloudFoundryClient client, String name) {
         try {
-            Assert.state(this.file.exists(), "Unable to find file " + this.file.getName());
-            List<String> uris = Collections.singletonList(name + ".cloudfoundry.com");
+            List<String> uris = Collections.singletonList(name + ".pwebb.cloudfoundry.me");
             client.createApplication(name, CloudApplication.SPRING, client.getDefaultApplicationMemory(CloudApplication.SPRING), uris, null, true);
-            client.uploadApplication(name, this.file);
+            client.uploadApplication(name, this.archive);
             return client.getApplication(name);
         } catch (IOException e) {
             throw new IllegalStateException(e);

@@ -18,7 +18,8 @@ import org.springframework.util.StringUtils;
  */
 public class SharedSecretPropagation {
 
-    static final String ENV_KEY = SharedSecretPropagation.class.getName() + ".SECRET";
+    // Cloud foundry cannot cope with dots in env variables
+    static final String ENV_KEY = (SharedSecretPropagation.class.getName() + ".SECRET").replaceAll("\\.", "_");
 
     /**
      * Send the specified shared secret to a running cloud foundry application.
@@ -48,6 +49,7 @@ public class SharedSecretPropagation {
         env.putAll(application.getEnvAsMap());
         env.put(ENV_KEY, Hex.encodeHexString(secret.getBytes()));
         client.updateApplicationEnv(application.getName(), env);
+        client.restartApplication(application.getName());
     }
 
     /**

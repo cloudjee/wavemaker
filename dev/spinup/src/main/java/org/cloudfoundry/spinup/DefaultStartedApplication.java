@@ -19,7 +19,7 @@ public class DefaultStartedApplication implements StartedApplication {
      * Create a new {@link DefaultStartedApplication} implementation.
      * 
      * @param transportToken the transport token
-     * @param applicationUrl the redirect url
+     * @param applicationUrl the redirect URL
      */
     public DefaultStartedApplication(TransportToken transportToken, String applicationUrl) {
         Assert.notNull(transportToken, "TransportToken must not be null");

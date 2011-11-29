@@ -18,12 +18,12 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 	</bean>
 
 	<bean name="deployable" class="org.cloudfoundry.spinup.deploy.DefaultDeployableApplication">
-		<constructor-arg value="/Users/pwebb/projects/spring/wavemaker/code/dev/spinup-war/target/wm-spinup-war-6.5.0.BUILD-SNAPSHOT.war"/>
+		<constructor-arg ref="selfArchive"/>
 		<constructor-arg ref="namer"/>
 	</bean>
 	
 	<bean name="spinupService" class="org.cloudfoundry.spinup.DefaultSpinupService">
-		<constructor-arg value="http://api.cloudfoundry.com"/>
+		<constructor-arg value="http://api.pwebb.cloudfoundry.me"/>
 		<constructor-arg ref="deployable"/>
 	</bean>
 	
