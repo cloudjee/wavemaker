@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.context.support.ServletContextResource;
 
-@Component("selfArchive")
+@Component
 public class SelfApplicationArchiveFactory implements FactoryBean<ApplicationArchive>, ServletContextAware {
 
     private File root;

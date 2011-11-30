@@ -43,6 +43,7 @@ public class SharedSecretPropagation {
      * @param application the application to send the secret to
      */
     public void sendTo(CloudFoundryClient client, SharedSecret secret, CloudApplication application) {
+        // FIXME only do this is necessary
         Assert.notNull(client, "Client must not be null");
         Assert.notNull(application, "Application must not be null");
         Map<String, String> env = new HashMap<String, String>();

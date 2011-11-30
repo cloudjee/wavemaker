@@ -3,11 +3,12 @@ package org.cloudfoundry.spinup.authentication;
 
 import java.util.Arrays;
 
+import org.cloudfoundry.spinup.util.HexString;
 import org.springframework.util.Assert;
 
 /**
- * A security token that can be stored and transported between systems. Transport tokens are {@link AuthenticationToken}
- * s encrypted using a {@link SharedSecret}.
+ * A security token that can be stored and transported between systems. Transport tokens are {@link AuthenticationToken
+ * AuthenticationTokens} encrypted using a {@link SharedSecret}.
  * 
  * @see AuthenticationToken
  */
@@ -54,4 +55,9 @@ public final class TransportToken {
         TransportToken other = (TransportToken) obj;
         return Arrays.equals(this.digest, other.digest) && Arrays.equals(this.encryptedToken, other.encryptedToken);
     }
+
+    public String encode() {
+        return HexString.toString(this.digest) + "." + HexString.toString(this.encryptedToken);
+    }
+
 }

@@ -3,6 +3,7 @@ package org.cloudfoundry.spinup.authentication;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -17,8 +18,6 @@ import org.springframework.util.Assert;
  * @author Phillip Webb
  */
 public class SharedSecret {
-
-    // FIXME implement HashCode + Equals
 
     private static final String DIGEST_ALGORITHM = "SHA-1";
 
@@ -117,6 +116,30 @@ public class SharedSecret {
      */
     public byte[] getBytes() {
         return this.secret;
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + Arrays.hashCode(this.digestOfSecret);
+        result = prime * result + Arrays.hashCode(this.secret);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        SharedSecret other = (SharedSecret) obj;
+        return Arrays.equals(this.digestOfSecret, other.digestOfSecret) && Arrays.equals(this.secret, other.secret);
     }
 
     /**

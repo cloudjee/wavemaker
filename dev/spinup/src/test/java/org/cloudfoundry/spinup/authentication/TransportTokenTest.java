@@ -61,4 +61,10 @@ public class TransportTokenTest {
         assertThat(t1.hashCode(), is(equalTo(t2.hashCode())));
         assertThat(t1, is(equalTo(t2)));
     }
+
+    @Test
+    public void shouldEncode() throws Exception {
+        TransportToken t = new TransportToken(new byte[] { 0, 1 }, new byte[] { 1, 2 });
+        assertThat(t.encode(), is(equalTo("0001.0102")));
+    }
 }

@@ -11,23 +11,20 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 
 	<mvc:annotation-driven />
 
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/views/" />
 		<property name="suffix" value=".jsp" />
 	</bean>
 
-	<bean name="deployable" class="org.cloudfoundry.spinup.deploy.DefaultDeployableApplication">
-		<constructor-arg ref="selfArchive"/>
-		<constructor-arg ref="namer"/>
+
+	<bean name="spinupService" class="org.cloudfoundry.spinup.DefaultSpinupService" autowire="byType">
+		<property name="controllerUrl" value="http://api.pwebb.cloudfoundry.me" />
 	</bean>
-	
-	<bean name="spinupService" class="org.cloudfoundry.spinup.DefaultSpinupService">
-		<constructor-arg value="http://api.pwebb.cloudfoundry.me"/>
-		<constructor-arg ref="deployable"/>
-	</bean>
-	
-	<bean class="org.cloudfoundry.spinup.authentication.SharedSecretPropagation"/>
+
+	<bean class="org.cloudfoundry.spinup.authentication.SharedSecretPropagation" />
 
 
 </beans>
