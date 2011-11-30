@@ -14,8 +14,8 @@
 <project name="installer" default="build" basedir=".">
 
     <property name="root.dir" location="${basedir}/../../dev"/>
-    <import file="${root.dir}/common.build.xml"/>
-    <import file="${basedir}/../common.installer.build.xml"/>
+    <import file="${root.dir}/common.build.xml"/> 
+    <import file="${basedir}/../common.installer.build.xml"/> 
 
     <!-- Default properties -->
     <property name="compiler.path" value="${basedir}/NSIS-unicode-2.42.4" />
@@ -132,7 +132,9 @@
         </exec>
     </target>
 
-    <target name="build" depends="build-installer, sign-installer"/>
+    <target name="build" depends="build-installer, sign-installer">
+        <echo>Building Windows Installer using build.xml</echo>
+    </target>
 
     <target name="clean" depends="common-installer.clean">
         <delete dir="${build.installer.dir}"/>

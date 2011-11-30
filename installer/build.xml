@@ -15,7 +15,7 @@
 <project name="installers" default="build" basedir=".">
 
     <property name="root.dir" location="${basedir}/../dev"/>
-    <import file="${root.dir}/common.build.xml"/>
+ <!--   <import file="${root.dir}/common.build.xml"/> -->
 
     <target name="init">
         <condition property="os.mac">
