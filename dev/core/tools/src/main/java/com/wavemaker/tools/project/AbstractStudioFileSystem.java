@@ -121,6 +121,10 @@ public abstract class AbstractStudioFileSystem implements StudioFileSystem, Serv
         return listChildren(resource, ResourceFilter.NO_FILTER);
     }
 
+    /**
+     *  Tests for previous cloud edition, NOT cloud foundry
+     */
+    @Deprecated
     public static boolean isCloud() {
         if (!isCloudInitialized) {
             try {
@@ -135,4 +139,10 @@ public abstract class AbstractStudioFileSystem implements StudioFileSystem, Serv
         return isCloud;
     }
 
+    protected abstract String getFSType();
+    
+    @Override
+    public String getStudioEnv(){
+    	return getFSType();  	
+    }
 }

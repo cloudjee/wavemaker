@@ -446,6 +446,14 @@ public class StudioService extends ClassLoader {
         return m.group(1);
 
     }
+    /**
+     * Get the studio configuration env
+     */
+    @ExposeToClient
+    public String getStudioEnv() {
+        return this.fileSystem.getStudioEnv();
+    }
+    
 
     @ExposeToClient
     public String getMainLog(int lines) throws IOException {

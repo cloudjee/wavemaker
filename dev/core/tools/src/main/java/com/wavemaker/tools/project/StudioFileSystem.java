@@ -167,4 +167,9 @@ public interface StudioFileSystem {
      * @return the temporary directory
      */
     Resource createTempDir();
+    
+    /**
+     * Returns a string indicating the studio filesystem being used
+     */
+    String getStudioEnv();
 }
