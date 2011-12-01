@@ -13,8 +13,11 @@
 		<form:form id="form" method="post" modelAttribute="loginCredentialsBean" cssClass="cleanform">
 			<div class="header">
 				<s:bind path="*">
-					<c:if test="${status.error}">
-						<div id="message" class="error">Form has errors</div>
+					<c:if test="${(status.error) or (not empty message)}">
+						<div id="message" class="error">
+							<c:if test="${not empty message}">${message}</c:if>							
+							<c:if test="${empty message}">Form has errors</c:if>							
+						</div>
 					</c:if>
 				</s:bind>
 			</div>

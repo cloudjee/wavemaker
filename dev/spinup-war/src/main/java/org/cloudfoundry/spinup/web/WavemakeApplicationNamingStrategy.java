@@ -11,10 +11,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class WavemakeApplicationNamingStrategy implements ApplicationNamingStrategy {
 
-    private static final String APPLICATION_NAME = "wavemaker-studio";
+    private static final String APPLICATION_NAME = "wavemaker-studio2";
 
     @Override
     public boolean isMatch(ApplicationDetails applicationDetails) {
+        if (true) {
+            return false;
+        }
         return APPLICATION_NAME.equalsIgnoreCase(applicationDetails.getName());
     }
 

@@ -1,6 +1,11 @@
 
 package org.cloudfoundry.spinup;
 
+/**
+ * Exception thrown in the case of invalid login credentials.
+ * 
+ * @author Phillip Webb
+ */
 public class InvalidLoginCredentialsException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;

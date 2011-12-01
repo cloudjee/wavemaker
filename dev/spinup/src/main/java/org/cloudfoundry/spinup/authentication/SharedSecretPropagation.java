@@ -18,7 +18,7 @@ import org.springframework.util.StringUtils;
  */
 public class SharedSecretPropagation {
 
-    // Cloud foundry cannot cope with dots in env variables
+    // NOTE: Cloud foundry cannot cope with dots in env variables
     static final String ENV_KEY = (SharedSecretPropagation.class.getName() + ".SECRET").replaceAll("\\.", "_");
 
     /**

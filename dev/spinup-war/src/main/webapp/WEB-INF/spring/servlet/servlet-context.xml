@@ -21,8 +21,9 @@ http://www.springframework.org/schema/context http://www.springframework.org/sch
 
 
 	<bean name="spinupService" class="org.cloudfoundry.spinup.DefaultSpinupService" autowire="byType">
-		<property name="controllerUrl" value="http://api.pwebb.cloudfoundry.me" />
-	</bean>
+	<property name="controllerUrl" value="http://api.cloudfoundry.com"/>
+<!-- 		<property name="controllerUrl" value="http://api.pwebb.cloudfoundry.me" />
+ -->	</bean>
 
 	<bean class="org.cloudfoundry.spinup.authentication.SharedSecretPropagation" />
 

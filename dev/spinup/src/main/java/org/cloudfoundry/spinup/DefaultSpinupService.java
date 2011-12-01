@@ -26,6 +26,10 @@ import org.springframework.util.Assert;
  */
 public class DefaultSpinupService implements SpinupService {
 
+    private static final int MAX_ATTEMPTS = 5;
+
+    // FIXME logging in entire API
+
     private String controllerUrl;
 
     private ApplicationNamingStrategy namingStrategy;
@@ -96,13 +100,25 @@ public class DefaultSpinupService implements SpinupService {
         if (memory == null) {
             memory = cloudFoundryClient.getDefaultApplicationMemory(this.framework);
         }
-        // FIXME retry loop in case URL is already used
-        ApplicationDetails applicationDetails = this.namingStrategy.newApplicationDetails(this.controllerUrl);
-        String name = applicationDetails.getName();
-        List<String> uris = Collections.singletonList(applicationDetails.getUrl());
-        cloudFoundryClient.createApplication(name, this.framework, memory, uris, this.serviceNames, true);
-        cloudFoundryClient.uploadApplication(name, this.archive);
+
+        ApplicationDetails applicationDetails = createApplicationWithUniqueUrl(cloudFoundryClient);
+        cloudFoundryClient.uploadApplication(applicationDetails.getName(), this.archive);
         return applicationDetails;
+    }
+
+    private ApplicationDetails createApplicationWithUniqueUrl(CloudFoundryClient cloudFoundryClient) {
+        for (int attempt = 1;; attempt++) {
+            try {
+                ApplicationDetails applicationDetails = this.namingStrategy.newApplicationDetails(this.controllerUrl);
+                List<String> uris = Collections.singletonList(applicationDetails.getUrl());
+                cloudFoundryClient.createApplication(applicationDetails.getName(), this.framework, this.memory, uris, this.serviceNames, true);
+                return applicationDetails;
+            } catch (CloudFoundryException e) {
+                if (!HttpStatus.BAD_REQUEST.equals(e.getStatusCode()) || attempt > MAX_ATTEMPTS) {
+                    throw e;
+                }
+            }
+        }
     }
 
     /**
