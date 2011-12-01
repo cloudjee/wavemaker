@@ -64,7 +64,7 @@ public class SharedSecretPropagationTest {
     public void shouldNeedClient() throws Exception {
         this.thrown.expect(IllegalArgumentException.class);
         this.thrown.expectMessage("Client must not be null");
-        // FIXME
+        this.propagation.sendTo(null, this.secret, this.application);
     }
 
     @Test

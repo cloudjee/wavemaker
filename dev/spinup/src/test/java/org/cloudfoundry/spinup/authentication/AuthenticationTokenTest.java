@@ -26,7 +26,7 @@ public class AuthenticationTokenTest {
     @Test
     public void shouldNeedBytes() throws Exception {
         this.thrown.expect(IllegalArgumentException.class);
-        this.thrown.expectMessage("Bytes must not be null");
+        this.thrown.expectMessage("Token must not be null");
         new AuthenticationToken((byte[]) null);
     }
 

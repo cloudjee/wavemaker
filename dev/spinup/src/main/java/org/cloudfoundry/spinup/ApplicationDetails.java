@@ -1,6 +1,7 @@
 
 package org.cloudfoundry.spinup;
 
+import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 
 /**
@@ -44,5 +45,10 @@ public class ApplicationDetails {
      */
     public String getUrl() {
         return this.url;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringCreator(this).append("name", this.name).append("url", this.url).toString();
     }
 }

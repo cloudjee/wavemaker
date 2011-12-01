@@ -62,7 +62,7 @@ public class DefaultSpinupService implements SpinupService {
         }
     }
 
-    private CloudFoundryClient getCloudFoundryClient(LoginCredentials credentials) {
+    protected CloudFoundryClient getCloudFoundryClient(LoginCredentials credentials) {
         Assert.notNull(credentials, "Credential must not be null");
         try {
             return new CloudFoundryClient(credentials.getUsername(), credentials.getPassword(), this.controllerUrl);
@@ -81,6 +81,7 @@ public class DefaultSpinupService implements SpinupService {
         }
         TransportToken transportToken = secret.encrypt(authenticationToken);
         this.propagation.sendTo(cloudFoundryClient, secret, applicationDetails.getName());
+        cloudFoundryClient.startApplication(applicationDetails.getName());
         return new DefaultStartedApplication(transportToken, applicationDetails.getUrl());
     }
 
@@ -96,25 +97,24 @@ public class DefaultSpinupService implements SpinupService {
             }
         }
 
-        Integer memory = this.memory;
-        if (memory == null) {
-            memory = cloudFoundryClient.getDefaultApplicationMemory(this.framework);
-        }
-
         ApplicationDetails applicationDetails = createApplicationWithUniqueUrl(cloudFoundryClient);
         cloudFoundryClient.uploadApplication(applicationDetails.getName(), this.archive);
         return applicationDetails;
     }
 
     private ApplicationDetails createApplicationWithUniqueUrl(CloudFoundryClient cloudFoundryClient) {
+        Integer memory = this.memory;
+        if (memory == null) {
+            memory = cloudFoundryClient.getDefaultApplicationMemory(this.framework);
+        }
         for (int attempt = 1;; attempt++) {
             try {
                 ApplicationDetails applicationDetails = this.namingStrategy.newApplicationDetails(this.controllerUrl);
                 List<String> uris = Collections.singletonList(applicationDetails.getUrl());
-                cloudFoundryClient.createApplication(applicationDetails.getName(), this.framework, this.memory, uris, this.serviceNames, true);
+                cloudFoundryClient.createApplication(applicationDetails.getName(), this.framework, memory, uris, this.serviceNames, true);
                 return applicationDetails;
             } catch (CloudFoundryException e) {
-                if (!HttpStatus.BAD_REQUEST.equals(e.getStatusCode()) || attempt > MAX_ATTEMPTS) {
+                if (!HttpStatus.BAD_REQUEST.equals(e.getStatusCode()) || attempt >= MAX_ATTEMPTS) {
                     throw e;
                 }
             }
