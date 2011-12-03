@@ -93,6 +93,7 @@ wm.Object.extendSchema(wm.DojoChart, {
 wm.DojoChart.description = "A dojo chart.";
 
 wm.DojoChart.extend({
+    scrim: true,
     themeable: false,
     set_hideLegend: function(inHide) {
 	this.hideLegend = inHide;
