@@ -397,7 +397,8 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 				        minSizeSum += minSize;
 				    } else if (minSize < percentSize) {
 					flex += Number(c._percEx[inAxis]) || 0;
-				        minSizeSum += minSize;				  
+
+				        minSizeSum += minSize;
 				    } else {
 					free -= Math.max(c.bounds[inAxis],c[minname]());
 				    }

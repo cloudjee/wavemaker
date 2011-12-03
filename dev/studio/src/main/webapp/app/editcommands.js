@@ -562,7 +562,8 @@ Studio.extend({
 		    "params":{type: "String"}}});
 
 
-	    this.autoCompletionDialog = new wm.Dialog({owner: this,
+	    this.autoCompletionDialog = new wm.Dialog({_classes: {domNode: ["studiodialog"]},
+						       owner: this,
 						       _noAutoFocus: true,
 						       title: this.getDictionaryItem("AUTOCOMPLETION_TITLE_DIALOG"),
 						       name: "autoCompletionDialog",

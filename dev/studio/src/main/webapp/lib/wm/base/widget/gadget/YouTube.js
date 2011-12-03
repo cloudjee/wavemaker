@@ -33,7 +33,6 @@ dojo.declare("wm.gadget.YouTube", wm.Gadget, {
 	this.videoId = inId;
 	this.setSource(this.getSource());
     }
-    //source: "http://gmodules.com/ig/ifr?url=http://throttled.org/googlegadgets/youtubesearch.xml&synd=open&w=320&h=250&title=Search+YouTube&border=%23ffffff%7C3px%2C1px+solid+%23999999"
 });
 
 wm.Object.extendSchema(wm.gadget.YouTube, {

@@ -218,10 +218,3 @@ dojo.declare("wm.RadioButton", wm.Checkbox, {
 });
 
 
-
-wm.Object.extendSchema(wm.RadioButton, {
-    checkedValue: {group: "editor", bindTarget: 1,order: 40, type: "any", doc: 1},
-    radioGroup: { type: "string", group: "editor", order: 50,doc: 1},
-    groupValue: { ignore: 1, bindSource: 1, group: "editData", type: "any",simpleBindProp: true},
-    dataValue: {ignore: 1, bindable: 1, group: "editData", order: 3, simpleBindProp: false, type: "String"} // use getDataValue()
-});

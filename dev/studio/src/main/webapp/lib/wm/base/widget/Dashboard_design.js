@@ -16,6 +16,7 @@
 dojo.provide("wm.base.widget.Dashboard_design");
 dojo.require("wm.base.widget.Dashboard");
 dojo.require("wm.base.widget.ContextMenuDialog");
+dojo.require("wm.base.Control_design");
 
 wm.Dashboard.extend({
   themeable: false,
@@ -41,6 +42,8 @@ wm.Dashboard.extend({
 							headerAttr: this.headerAttr, 
 							dataSet: this.portlets, 
 							newRowDefault: defaultPortletParams, 
+							 noLeftRightDocking: true,
+							 _classes: {domNode: ["studiodialog"]},
 							addDeleteColumn: true});
 		dojo.connect(this.contextMenu, 'onPropChanged', this, 'portletPropChanged');
 		dojo.connect(this.contextMenu, 'onRowDelete', this, 'destroyPortlet');
@@ -100,21 +103,8 @@ wm.Dashboard.extend({
 			this.pageStore.attr('data', pageList);
 		}
 	},
-	makePropEdit: function(inName, inValue, inDefault) {
-	        var prop = this.schema ? this.schema[inName] : null;
-	        var name =  (prop && prop.shortname) ? prop.shortname : inName;
-		switch (inName) {
-		case "configPortlets":
-			return makeReadonlyButtonEdit(name, inValue, inDefault);
-		}
-		return this.inherited(arguments);
-	},
-	editProp: function(inName, inValue, inInspector) {
-		switch (inName) {
-			case "configPortlets":
-				return this.showMenuDialog();
-		}
-		return this.inherited(arguments);
+        configPortlets: function() {
+	    return this.showMenuDialog();
 	},
 	writeComponents: function() {
 		return ""; // don't write the addDialog at a minimum...
@@ -156,21 +146,22 @@ wm.Object.extendSchema(wm.Dashboard, {
 	minWidth:{ignore:1},
 	portlets:{ignore:1},
 	dijitPortlets:{ignore:1},
+    hint: {ignore:1},
 	addDialogName:{hidden:true},
 	headerAttr:{ignore:1},
-        configPortlets: { group: "edit", order: 10, contextMenu: 1 },
-        autoScroll: {group: "style", order: 100, ignore: 0},
-    allowAutoScroll: {group: "style", order: 101, ignore: 0},
-    hasResizableColumns: {group: "display"},
+    configPortlets: { group: "edit", order: 10, contextMenu: 1, operation:1 },
+        autoScroll: {group: "style", order: 100, ignore: 1},
+    allowAutoScroll: {group: "style", order: 101, ignore: 0, type: "boolean"},
+    hasResizableColumns: {group: "display", type: "boolean"},
     minChildWidth: {group: "display"},
     minColWidth: {group: "display"},
     nbZones: {group: "display"},
     opacity: {group: "display"},
     saveInCookie: {group: "edit", order: 1},
-    withHandles: {group: "display"},
+    withHandles: {group: "display", type: "boolean"},
 
-    openDialog: {group: "method"},
-    initAddDialog: {group: "method"},
-    addPortlet: {group: "method"}
+    openDialog: {method:1},
+    initAddDialog: {method:1},
+    addPortlet: {method:1}
 });
 

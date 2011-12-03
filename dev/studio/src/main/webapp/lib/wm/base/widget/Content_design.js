@@ -14,6 +14,7 @@
 
 dojo.provide("wm.base.widget.Content_design");
 dojo.require("wm.base.widget.Content");
+dojo.require("wm.base.Control_design");
 
 // design-time only
 wm.Content.description = "Displays markup content.";
@@ -50,9 +51,11 @@ wm.Content.extend({
 			dojo.publish('wm-content-markupchanged', [inNode]);
 		}
 	},
-	makePropEdit: function(inName, inValue, inDefault) {
-		if (inName == "content")
-			return makeMarkupIdsPropEdit(inName, inValue, inDefault);
-		return this.inherited(arguments);
+	makePropEdit: function(inName, inValue, inEditorProps) {
+	    if (inName == "content") {
+		var options = getMarkupIds();
+		return wm.SelectMenu(dojo.mixin(inEditorProps, {options: options}));
+	    }
+	    return this.inherited(arguments);
 	}
 });

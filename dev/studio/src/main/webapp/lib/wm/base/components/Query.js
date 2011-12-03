@@ -60,7 +60,18 @@ dojo.declare("wm.Query", wm.ServerComponent, {
 //			}
 //		}));
 //		return ret;
-	}
+	},
+
+
+    hasServiceTreeDrop: function() {return true;},
+    onServiceTreeDrop: function(inParent, inOwner, inNode) {
+	var result = new wm.ServiceVariable({owner: inOwner,
+				       name: inOwner.getUniqueName(this.queryName + "SVar"),
+				       service: this.dataModelName,
+				       operation: this.queryName,
+				       startUpdate: false});
+	return result; // returning will trigger a design tree refresh and a studio.select	
+    }
 });
 
 dojo.declare("wm.QueryLoader", null, {

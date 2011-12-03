@@ -18,9 +18,7 @@ dojo.require("wm.base.widget.gadget.Gadget");
 
 
 dojo.declare("wm.gadget.Facebook", wm.Gadget, {});
-wm.Object.extendSchema(wm.gadget.Facebook, {
-    base_source: {ignore: 1}
-});
+
 
 /* For more info on the properties:
  * http://developers.facebook.com/docs/reference/plugins/like/ 
@@ -97,28 +95,10 @@ dojo.declare("wm.gadget.FacebookLikeButton", wm.gadget.Facebook, {
     setColorscheme: function(inValue) {
 	this.colorscheme = inValue;
 	this.updateSource();
-    },
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-		case "layout":
-			return makeSelectPropEdit(inName, inValue, ["standard", "button_count", "box_count"], inDefault);
-		case "action":
-			return makeSelectPropEdit(inName, inValue, ["like", "recommend"], inDefault);
-		case "font":
-		    return makeSelectPropEdit(inName, inValue, ["arial", "licida grande", "segoe ui", "tahoma", "trebuchet ms", "verdana"], inDefault);
-		case "colorscheme":
-		    return makeSelectPropEdit(inName, inValue, ["dark", "light"], inDefault);
-
-		}
-		return this.inherited(arguments);
-	}
-
+    }
 });
 
 
-wm.Object.extendSchema(wm.gadget.FacebookLikeButton, {
-    href: {bindTarget: true}
-});
 
 dojo.declare("wm.gadget.FacebookActivityFeed", wm.gadget.Facebook, {
     width: "200px",
@@ -171,28 +151,5 @@ dojo.declare("wm.gadget.FacebookActivityFeed", wm.gadget.Facebook, {
     setColorscheme: function(inValue) {
 	this.colorscheme = inValue;
 	this.updateSource();
-    },
-	makePropEdit: function(inName, inValue, inDefault) {
-	    var prop = this.schema ? this.schema[inName] : null;
-	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
-		switch (inName) {
-		case "font":
-		    return makeSelectPropEdit(inName, inValue, ["arial", "licida grande", "segoe ui", "tahoma", "trebuchet ms", "verdana"], inDefault);
-		case "colorscheme":
-		    return makeSelectPropEdit(inName, inValue, ["dark", "light"], inDefault);
-
-		}
-		return this.inherited(arguments);
-	}
-
-});
-
-wm.Object.extendSchema(wm.gadget.FacebookActivityFeed, {
-    colorscheme: {group:"display"},
-    font:  {group:"display"},
-    showHeader: {group: "Facebook"},
-    showRecommendations: {group: "Facebook"},
-    ref: {group: "Facebook"},
-    site: {group: "Facebook"}
-
+    }
 });

@@ -206,7 +206,66 @@ wm.typeManager = {
 			if (ts)
 				return this.isPropInList(ts, parts);
 		}
-	}
+	},
+    getDisplayField: function(inType) {
+	    var typeDef = wm.typeManager.getType(inType);
+	    if (!typeDef) return "";
+	    var fields = typeDef.fields;
+	    var stringFields = {};
+	    var literalFields = {};
+	    for (fieldName in fields) {
+		var field = fields[fieldName];
+		if (!field.exclude || field.exclude.length == 0) {
+		    if (field.type == "java.lang.String" || field.type == "StringData") {
+			stringFields[fieldName] = field;
+		    } else if (!wm.typeManager.isStructuredType(field.type)) {
+			literalFields[fieldName] = field;
+		    }
+		}
+	    }
+	    
+	    for (var fieldName in stringFields) {
+		var lowestFieldOrder = 100000;
+		var lowestFieldName;
+		if (!dojo.isFunction(stringFields[fieldName])) { // ace damned changes to object prototype
+		    if (stringFields[fieldName].fieldOrder === undefined && !lowestFieldName) {
+			lowestFieldName = fieldName;
+		    }
+		    else if (stringFields[fieldName].fieldOrder !== undefined && 
+			stringFields[fieldName].fieldOrder < lowestFieldOrder) 
+		    {
+			lowestFieldOrder = stringFields[fieldName].fieldOrder;
+			lowestFieldName = fieldName;
+		    }
+		}
+	    }
+	    if (lowestFieldName) {
+		return lowestFieldName;
+	    }
+
+
+	    for (var fieldName in literalFields) {
+		var lowestFieldOrder = 100000;
+		var lowestFieldName;
+		if (!dojo.isFunction(literalFields[fieldName])) { // ace damned changes to object prototype
+		    if (literalFields[fieldName].fieldOrder === undefined && !lowestFieldName) {
+			lowestFieldName = fieldName;
+		    }
+		    else if (literalFields[fieldName].fieldOrder !== undefined &&
+			     literalFields[fieldName].fieldOrder < lowestFieldOrder) {
+			lowestFieldOrder = literalFields[fieldName].fieldOrder;
+			lowestFieldName = fieldName;
+		    }
+		}
+	    }
+	    if (lowestFieldName) {
+		return lowestFieldName;
+	    }
+	    for (fieldName in fields) {
+		return fieldName;
+	    }
+    }
+        
 };
 
 wm.defaultTypes = {

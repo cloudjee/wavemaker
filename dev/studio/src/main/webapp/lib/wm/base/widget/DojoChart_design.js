@@ -16,7 +16,47 @@ dojo.provide("wm.base.widget.DojoChart_design");
 dojo.require("wm.base.widget.DojoChart");
 
 
-var chartThemes = [
+
+
+/* TODO: Localize */
+ 
+
+// design only...
+wm.Object.extendSchema(wm.DojoChart, {
+	variable: { ignore: 1 },
+	dojoDiv:{ignore:1},
+	caption:{ignore:1},
+	disabled:{ignore:1},
+	dataValue:{ignore:1},
+	defaultValuesX:{ignore:1},
+	defaultValuesY:{ignore:1},
+	addedSeries:{ignore:1},
+	aniHighlight:{ignore:1},
+	aniShake:{ignore:1},
+	magnify:{ignore:1},
+	aniTooltip:{ignore:1},
+	xLabels:{ignore:1},
+	legendDiv:{ignore:1},
+	legend:{ignore:1},
+        dataSet: {writeonly: 1, bindTarget: 1, group: "edit", order: 10, isList: true},
+	xAxis: {group: "edit", order: 20},
+        //isTimeXAxis: {group: "edit", order: 21, type: "string"},
+	maxTimePoints: {group: "edit", order: 22},
+	yAxis: {group: "edit", order: 30},
+	chartColor: {group: "edit", order: 40},
+    chartType: {order: 10, options:  [
+  				"Columns",
+				"ClusteredColumns",
+				"StackedColumns",
+				"Bars",
+				"ClusteredBars",
+				"StackedBars",
+				"Areas",
+				"StackedAreas",
+				"Pie",
+				"Lines"
+    ]},
+    theme: {order: 20, options: [
       		"GreySkies",
       		"Adobebricks",
       		"Algae",
@@ -45,48 +85,7 @@ var chartThemes = [
       		"PlotKit.orange",
       		"PlotKit.purple",
       		"PlotKit.red"
-      	];
-
-/* TODO: Localize */
-var chartTypes = [
-  				"Columns",
-				"ClusteredColumns",
-				"StackedColumns",
-				"Bars",
-				"ClusteredBars",
-				"StackedBars",
-				"Areas",
-				"StackedAreas",
-				"Pie",
-				"Lines"
-                  ];
-
-
-// design only...
-wm.Object.extendSchema(wm.DojoChart, {
-	variable: { ignore: 1 },
-	dojoDiv:{ignore:1},
-	caption:{ignore:1},
-	disabled:{ignore:1},
-	dataValue:{ignore:1},
-	defaultValuesX:{ignore:1},
-	defaultValuesY:{ignore:1},
-	addedSeries:{ignore:1},
-	aniHighlight:{ignore:1},
-	aniShake:{ignore:1},
-	magnify:{ignore:1},
-	aniTooltip:{ignore:1},
-	xLabels:{ignore:1},
-	legendDiv:{ignore:1},
-	legend:{ignore:1},
-	dataSet: {bindTarget: 1, group: "edit", order: 10, isList: true},
-	xAxis: {group: "edit", order: 20},
-        //isTimeXAxis: {group: "edit", order: 21, type: "string"},
-	maxTimePoints: {group: "edit", order: 22},
-	yAxis: {group: "edit", order: 30},
-	chartColor: {group: "edit", order: 40},
-	chartType: {order: 10},
-	theme: {order: 20},
+    ]},
 	addSilverlight:{ignore:1}
 });
 
@@ -121,19 +120,6 @@ wm.DojoChart.extend({
 	afterPaletteDrop: function() {
 		this.caption = this.caption || this.name;
 		this.renderDojoObj();
-	},
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "theme":
-				return makeSelectPropEdit(inName, inValue, chartThemes, inDefault);
-			case "chartType":
-				return makeSelectPropEdit(inName, inValue, chartTypes, inDefault);
-/*
-		case "isTimeXAxis":		    
-		    return makeSelectPropEdit(inName, inValue, ["", "hh:mm:ss", "hh:mm", "hh"], inDefault);
-		    */
-		}
-		return this.inherited(arguments);
 	},
 	setXAxis: function(inValue){
 		this.xAxis = inValue;

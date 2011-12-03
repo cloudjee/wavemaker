@@ -76,19 +76,13 @@ wm.Application.extend({
     setToastPosition: function(inPosition) {
         this.toastPosition = inPosition.replace(/top/, "t").replace(/bottom/,"b").replace(/left/,"l").replace(/right/,"r").replace(/center/,"c").replace(/ /,"");
     },
-    makePropEdit: function(inName, inValue, inDefault) {
+    makePropEdit: function(inName, inValue, inEditorProps) {
 	switch (inName) {
-	case "main":
-	    return new wm.propEdit.PagesSelect({component: this, name: inName, value: inValue, currentPageOK: true});
 	case "theme":
             var options = [];
             var data = studio.themesListVar.getData();
             dojo.forEach(data, function(item) {options.push(item.dataValue);});
-	    return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: options});
-        case "toastPosition":
-            inValue = inValue.replace(/^c/, "center ").replace(/^t/, "top ").replace(/^b/, "bottom ").replace(/l$/, "left").replace(/r$/, "right").replace(/c$/, "center");
-	    /* TODO: Localize */
-            return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["top left", "top center", "top right", "center left", "center center", "center right", "bottom left", "bottom center", "bottom right"]});
+	    return new wm.prop.SelectMenu(dojo.mixin(inEditorProps,{options:options}));
 	}
 	return this.inherited(arguments);
     },
@@ -130,8 +124,11 @@ wm.Application.extend({
 
 wm.Object.extendSchema(wm.Application, {
     name: {ignore: 1}, // at some point, we might provide this as a way to rename the project... but renaming is really a server side op, so requires confirmation. 
-    main: {shortname: "mainPageName", order: 5},
+    main: {shortname: "mainPageName", order: 5, editor: "wm.prop.PagesSelect", editorProps: {currentPageOK:true}},
     promptChromeFrame: {order: 10, type: "string", options: ["chromeframe.html", "http://google.com/chrome", "Allow IE 6 and 7"]},
+    toastPosition: {editor: "wm.prop.SelectMenu", editorProps: {
+	options: ["top left", "top center", "top right", "center left", "center center", "center right", "bottom left", "bottom center", "bottom right"],
+	values: ["tl", "tc", "tr", "cl", "cc", "cr", "bl", "bc", "br"]}},
     i18n: {type: "boolean", order: 6},
     theme: {type: "string", order: 7},
     currencyLocale: {type: "string", order: 8},
@@ -144,18 +141,18 @@ wm.Object.extendSchema(wm.Application, {
     firstThemeChange: {ignore: true},
     documentation: {ignore: true},
     generateDocumentation: {ignore: true},
-    loadPage: {group: "method"},
-    forceReloadPage: {group: "method"},
-    getFullVersionNumber: {group: "method"},
-    getSessionId: {group: "method"},
-    echoFile: {group: "method"},
-    alert: {group: "method"},
-    confirm: {group: "method"},
-    prompt: {group: "method"},
-    toastError: {group: "method"},
-    toastWarning: {group: "method"},
-    toastInfo: {group: "method"},
-    toastSuccess: {group: "method"},
-    createToolTip: {group: "method"},
-    hideToolTip: {group: "method"}
+    loadPage: {method:1},
+    forceReloadPage: {method:1},
+    getFullVersionNumber: {method:1},
+    getSessionId: {method:1},
+    echoFile: {method:1},
+    alert: {method:1},
+    confirm: {method:1},
+    prompt: {method:1},
+    toastError: {method:1},
+    toastWarning: {method:1},
+    toastInfo: {method:1},
+    toastSuccess: {method:1},
+    createToolTip: {method:1},
+    hideToolTip: {method:1}
 });

@@ -297,6 +297,7 @@ dojo.declare("wm.Binding", wm.Component, {
 		};
 		var wire = this.wires[id] = new wm.Wire(props);
 		wire.connectWire();
+	        return wire;
 	},
 	// for greater control, optionally removal only occurs if source and/or expression match arguments
 	removeWire: function(inWireId, inSource, inExpression) {

@@ -701,6 +701,7 @@ dojo.declare("wm.studio.Project", null, {
 
 	},
 	saveProjectData: function(inPath, inData, inNoOverwrite) {
+	    dojo.publish("studio-saveProjectData");
 		return studio.studioService.requestSync("writeWebFile", [inPath, inData, inNoOverwrite||false]);
 	},
 	savePageData: function(inPath, inData, inNoOverwrite) {
@@ -1493,7 +1494,7 @@ Studio.extend({
 			modal: false,
 			positionLocation: "tl",
 			border: "1px",
-			width: 550,
+			width: 650,
 			height: 350,
 			hideControls: true,
 			title: this.getDictionaryItem("TITLE_BIND_DIALOG")
@@ -1799,7 +1800,7 @@ Studio.extend({
 	runProjectClick: function(inSender) {	    
 	    this.application._deployStatus == ""; // reset this so we can rerun if the button became enabled but this value failed to clear
 
-	    var operation = inSender.iconClass;
+	    var operation = this.runPopup.iconClass;
 	    this._runRequested = (operation != "studioProjectCompile") ? operation : false;
 	    if (!this._runConnections) this._runConnections = [];
 	    console.log("CLICK: " + this._runRequested);

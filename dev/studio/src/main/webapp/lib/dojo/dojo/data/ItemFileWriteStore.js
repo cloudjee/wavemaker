@@ -423,8 +423,28 @@ dojo.declare("dojo.data.ItemFileWriteStore", dojo.data.ItemFileReadStore, {
 					}
 				}
 			}
+
+		    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+		     * WaveMaker: calling setValueOrValues with an attribute such as "department.name" did NOT set the department 
+		     * object's name, it set a key "department.name" which is just wrong; this now sets the correct subitem
+		     */
+		    var subitem = item;
+		    var attributeParts = attribute.split(/\./);
+		    while (subitem && attributeParts.length > 1) {
+			subitem = subitem[attributeParts[0]];
+			attributeParts.shift();
+			if (subitem) {
+			    subitem = subitem[0];
+			}
+		    }
+		    if (subitem) {
+			subitem[attributeParts[0]] = newValueArray;
+		    } else {
 			item[attribute] = newValueArray;
-			success = true;
+		    }
+		    /* END VMware SECTION */
+
+		    success = true;
 		}
 
 		// Now we make the dojo.data.api.Notification call

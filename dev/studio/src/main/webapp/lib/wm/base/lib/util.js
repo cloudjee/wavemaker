@@ -326,7 +326,9 @@ wm.cancelJob = function(inName) {
 	clearTimeout(wm._jobs[inName]);
 }
 wm._jobs = {};
-
+wm.hasJob = function(inName) {
+    return Boolean(wm._jobs[inName]);
+}
 wm.connectEvents = function(inObject, inNode, inEvents) {
 	// FIXME: maybe remove this at some point
 	if (!dojo.isArray(inEvents)){throw("wm.connectEvents: event list must be an array (did you use variable args?)")};

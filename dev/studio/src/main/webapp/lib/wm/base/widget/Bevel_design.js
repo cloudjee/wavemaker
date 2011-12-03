@@ -14,6 +14,7 @@
 
 dojo.provide("wm.base.widget.Bevel_design");
 dojo.require("wm.base.widget.Bevel");
+dojo.require("wm.base.Control_design");
 
 // design-time
 wm.Object.extendSchema(wm.Bevel, {
@@ -27,7 +28,7 @@ wm.Object.extendSchema(wm.Bevel, {
         scrollY: {ignore: 1},
         minWidth:  {ignore: 1},
     minHeight: {ignore: 1},
-    bevelSize: {group: "layout", doc: 1}/*,
+    bevelSize: {group: "layout", doc: 1, type: "number"}/*,
     updateSize: {group: "method", params: "()", doc: 1}*/
 });
 

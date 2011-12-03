@@ -555,6 +555,13 @@ dojo.declare("dojox.grid.DataGrid", dojox.grid._Grid, {
 				     */
 				    if (typeof inValue == 'boolean')
 					inValue = inValue ? 1 : 0;
+
+				    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+				     * WaveMaker: this else if statement added so that date editors whose source data is a long can recognize
+				     * dates as legitimate values and replace them with longs
+				     */
+				    else if (inValue instanceof Date)
+					inValue = inValue.getTime();
 				    else
 					inValue = isNaN(inValue) ? inValue : parseFloat(inValue);
 				}else if(typeof oldValue == 'boolean'){

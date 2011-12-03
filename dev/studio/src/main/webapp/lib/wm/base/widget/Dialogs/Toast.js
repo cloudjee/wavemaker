@@ -115,8 +115,10 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
 	this.duration = inDuration || this.duration;
 	this.domNode.className = this.classNames + " " + ((inCssClasses) ? inCssClasses : "");
 	this.show();
-	this.setContent(inContent);
+	//this.setContent(inContent);
         this.message.doAutoSize(true, true);
+	this.containerWidget.removeDelayedReflow()
+	this.containerWidget.reflow();
         this.setHeight((this.containerWidget.padBorderMargin.t + this.containerWidget.padBorderMargin.b + this.message.parent.bounds.h + this.padBorderMargin.t + this
 .padBorderMargin.b) + "px" );
 

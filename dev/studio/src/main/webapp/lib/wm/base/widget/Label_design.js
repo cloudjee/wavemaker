@@ -21,18 +21,19 @@ wm.Object.extendSchema(wm.Label, {
     disabled: { ignore: 1 },
     imageList: {ignore: 1},
     caption: { type: "String", bindable: 1, group: "display", order: 100, focus: true, doc: 1},
-    display: { group: "format", order: 20 },
-    align: { group: "display", order: 25, doc: 1 },
+    link: { type: "String", bindable: 1, group: "format", order: 20, doc: 1 },
+    display: { group: "format", order: 30 },
+    format: { group: "format", order: 31, subcomponent: true},
+    align: { group: "display", order: 25, doc: 1, options: ["none", "left", "center", "right", "justify"] },
     singleLine: { group: "display", order: 200,doc: 1},
-    format: { ignore: 1, writeonly: 1, categoryParent: "Properties", categoryProps: {component: "format"}},
-    link: { type: "String", bindable: 1, group: "format", order: 40, doc: 1 },
-    autoSizeHeight: {type: "Boolean", group: "advanced layout", order: 31, writeonly: true, ignore: true},
-    autoSizeWidth: {type: "Boolean", group: "advanced layout", order: 32, writeonly: true, ignore: true},
-    autoSize: {group: "advanced layout"},
-    setAlign: {group: "method"},
-    setCaption: {group: "method"},
-    setSingleLine: {group: "method"},
-    resizeToFit:{ group: "layout", order: 30 }
+
+    autoSizeHeight: {type: "Boolean", group: "advanced layout", order: 31, writeonly: true},
+    autoSizeWidth: {type: "Boolean", group: "advanced layout", order: 32, writeonly: true},
+    autoSize: {group: "advanced layout", options: ["none", "width", "height"]},
+    setAlign: {method:1},
+    setCaption: {method:1},
+    setSingleLine: {method:1},
+    resizeToFit:{ group: "layout", order: 30,operation:true }
 });
 
 wm.Label.description = "A simple label.";
@@ -84,33 +85,23 @@ wm.Label.extend({
 			setTimeout(dojo.hitch(studio.inspector, "reinspect"), 100); 		
 	},
         */
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "display":
-			case "formatter":
-		                var funcName = this.generateEventName("onReadOnlyNodeFormat");
-		                var customFunction = (this.formatter == funcName) ? funcName : "Custom Function";
-		                return makeSelectPropEdit(inName, inValue, ["", customFunction].concat(wm.formatters), inDefault);
-
-
-			case "resizeToFit":
-				return makeReadonlyButtonEdit(inName, inValue, inDefault);
-                        case "autoSize": 
-		                return makeSelectPropEdit(inName, (this.autoSizeHeight) ? "height" : (this.autoSizeWidth) ? "width" : "none", ["none", "width", "height"], inDefault);
-			case "align":
-				return makeSelectPropEdit(inName, inValue, ["none", "left", "center", "right", "justify"], inDefault);
-		}
-		return this.inherited(arguments);
+	makePropEdit: function(inName, inValue, inEditorProps) {
+	    switch (inName) {
+	    case "display":
+	    case "formatter":
+		var funcName = this.generateEventName("onReadOnlyNodeFormat");
+		var customFunction = (this.formatter == funcName) ? funcName : "Custom Function";
+		inEditorProps.options = ["", customFunction].concat(wm.formatters);
+		inEditorProps.displayField = inEditorProps.dataField = "dataValue";
+		inEditorProps.restrictValues = false;
+		return new wm.SelectMenu(inEditorProps);
+	    }
+	    return this.inherited(arguments);
 	},
-    editProp: function(inName, inValue) {
-	switch (inName) {
-	case "resizeToFit":
+    resizeToFit: function() {
 	    var was = this.autoSizeWidth;
 	    this.setAutoSizeWidth(true);
 	    this.setAutoSizeWidth(was);
-	    return;
-	}
-	return this.inherited(arguments);
     },
 
     getAutoSize: function() {

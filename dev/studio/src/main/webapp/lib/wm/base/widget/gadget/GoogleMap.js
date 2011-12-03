@@ -167,6 +167,7 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
 		}
 	    return this.inherited(arguments);
 	},
+
 	setDataSet: function(inDataSet) {
 	    this.dataSet = inDataSet;
 	    if (inDataSet)
@@ -180,16 +181,114 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
 		this.generateMarkers();
 	    }
 	},
-	set_dataSet: function(inDataSet) {
-		// support setting dataSet via id from designer
-		if (inDataSet && !(inDataSet instanceof wm.Variable)) {
-			var ds = this.getValueById(inDataSet);
-			if (ds)
-				this.components.binding.addWire("", "dataSet", ds.getId());
-		} else
-			this.setDataSet(inDataSet);
-	    
-	},
+    geocode: function(inData) {
+	this._dataToGeocode.push(inData);
+	this.geocodeNext();
+    },
+    geocodeNext: function() {
+	if (this._geocoding) return;
+	this._geocoding = true;
+	this.onIncrementGeocodeCount(this._dataToGeocode.length, this.dataSet.getCount());
+        this._geocode(this._dataToGeocode.shift(), this._dataToGeocode.length ? dojo.hitch(this, "geocodeNext") : dojo.hitch(this, "onGeocodeComplete"));    
+    },
+
+    /* This is called before each geocode attempt; lets you update a progress bar; TODO: Make this bindable to a progressbar */
+    onIncrementGeocodeCount: function(remainingItems, totalItems) {},
+
+    /* Called after ALL addresses in the dataSet that needed to be geocoded have been geocoded */
+    onGeocodeComplete: function() {},
+    
+    /* Called for each successful geocode of each individual address in the dataset; will be called many times; if updating a wm.Variable with the results,
+     * you should precede your updates with this.variable.beginUpdate/endUpdate so that the map isn't repeatedly regenerated/regeocoded
+     */
+    onGeocodeSuccess: function(inItem) {},
+
+    /* If errors occur (other than QUOTA_LIMIT errors which cause us to retry the address) calls this */
+    onGeocodeError: function(inResponse, inData) {},
+    _geocode: function(inData, onCompleteFunc) {
+        var self = this;
+        var icon;
+	if (!this.geocoder) {
+	    this.geocoder = new google.maps.Geocoder();
+	}
+        this.geocoder.geocode({
+            'address': inData[this.addressField]
+        }, function(results, status) {
+	    self._geocoding = false;
+            if (status == google.maps.GeocoderStatus.OK) {
+                var location = results[0].geometry.location;
+		inData[self.latitudeField] = location.lat();
+		inData[self.longitudeField] = location.lng();
+		self.generateMarker(inData);
+		self.onGeocodeSuccess(inData);
+            } else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
+                console.log("GEOCODING: " + status + ". DELAY and then redo " + inData[self.addressField]);
+                self._dataToGeocode.push(inData);
+                wm.job("geocodeNext", 500, dojo.hitch(self, "geocodeNext"));
+                return;
+            } else {
+                console.error("Failed to geocode " + inData[self.addressField] + "; " + status);
+		self.onGeocodeError(status, inData);
+            }
+            if (onCompleteFunc) {
+                onCompleteFunc();
+            }
+        });
+    },
+    geocode: function(inData) {
+	this._dataToGeocode.push(inData);
+	this.geocodeNext();
+    },
+    geocodeNext: function() {
+	if (this._geocoding) return;
+	this._geocoding = true;
+	this.onIncrementGeocodeCount(this._dataToGeocode.length, this.dataSet.getCount());
+        this._geocode(this._dataToGeocode.shift(), this._dataToGeocode.length ? dojo.hitch(this, "geocodeNext") : dojo.hitch(this, "onGeocodeComplete"));    
+    },
+
+    /* This is called before each geocode attempt; lets you update a progress bar; TODO: Make this bindable to a progressbar */
+    onIncrementGeocodeCount: function(remainingItems, totalItems) {},
+
+    /* Called after ALL addresses in the dataSet that needed to be geocoded have been geocoded */
+    onGeocodeComplete: function() {},
+    
+    /* Called for each successful geocode of each individual address in the dataset; will be called many times; if updating a wm.Variable with the results,
+     * you should precede your updates with this.variable.beginUpdate/endUpdate so that the map isn't repeatedly regenerated/regeocoded
+     */
+    onGeocodeSuccess: function(inItem) {},
+
+    /* If errors occur (other than QUOTA_LIMIT errors which cause us to retry the address) calls this */
+    onGeocodeError: function(inResponse, inData) {},
+    _geocode: function(inData, onCompleteFunc) {
+        var self = this;
+        var icon;
+	if (!this.geocoder) {
+	    this.geocoder = new google.maps.Geocoder();
+	}
+        this.geocoder.geocode({
+            'address': inData[this.addressField]
+        }, function(results, status) {
+	    self._geocoding = false;
+            if (status == google.maps.GeocoderStatus.OK) {
+                var location = results[0].geometry.location;
+		inData[self.latitudeField] = location.lat();
+		inData[self.longitudeField] = location.lng();
+		self.generateMarker(inData);
+		self.onGeocodeSuccess(inData);
+            } else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
+                console.log("GEOCODING: " + status + ". DELAY and then redo " + inData[self.addressField]);
+                self._dataToGeocode.push(inData);
+                wm.job("geocodeNext", 500, dojo.hitch(self, "geocodeNext"));
+                return;
+            } else {
+                console.error("Failed to geocode " + inData[self.addressField] + "; " + status);
+		self.onGeocodeError(status, inData);
+            }
+            if (onCompleteFunc) {
+                onCompleteFunc();
+            }
+        });
+    },
     geocode: function(inData) {
 	this._dataToGeocode.push(inData);
 	this.geocodeNext();
@@ -329,11 +428,6 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
     },
     onMarkerChange: function(inData) {
     },
-    listProperties: function() {
-	var props = this.inherited(arguments);
-	props.selectedItem.type = this.dataSet ? this.dataSet.type : "";
-	return props
-    },
     _end: 0
 });
 
@@ -343,27 +437,3 @@ wm.gadget.GoogleMap.initialize = function() {
     wm.gadget.GoogleMap.waitingForInitialize = [];
 }
 
-
-
-wm.Object.extendSchema(wm.gadget.GoogleMap, {
-    dataSet: { readonly: true, group: "data", order: 1, bindTarget: 1, type: "wm.Variable", isList: true},
-    selectedItem: { ignore: 1, bindSource: 1, isObject: true, simpleBindProp: true },
-    addressField: {group: "Marker", order: 1},
-    latitudeField: {group: "Marker", order: 2},
-    longitudeField: {group: "Marker", order: 3},
-    titleField: {group: "Marker", order: 4},
-    descriptionField: {group: "Marker", order: 5},
-    iconField: {group: "Marker", order: 6},
-    latitude: {group: "Map", order: 1, bindTarget: 1},
-    longitude: {group: "Map", order: 2, bindTarget: 1},
-    zoom: {group: "Map", order: 3, options: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]},
-    mapType: {group: "Map", order: 4},
-    
-    setZoom: {group: "method", method: true},
-    setLatitude:{group: "method", method: true},
-    setLongitude:{group: "method", method: true},
-    fitToMarkers:{group: "method", method: true},
-    setMapType:{group: "method", method: true},
-    setDataSet:{group: "method", method: true},
-    selectMarkerByIndex:{group: "method", method: true}
-});

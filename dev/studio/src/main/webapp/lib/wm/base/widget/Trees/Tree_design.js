@@ -26,26 +26,30 @@ wm.Object.extendSchema(wm.TreeNode, {
     closed: {ignore: 1, doc: 1},
     content: {ignore: 1, doc: 1},
     canSelect: {ignore: 1, doc: 1},
-    destroy: {group: "method"},
-    isSelected: {group: "method", returns: "Boolean"},
-    removeChildren: {group: "method"},
-    setOpen: {group: "method"},
-    setContent: {group: "method"},    
-    forEachDescendant: {group: "method"},    
-    findDescendant: {group: "method", returns: "wm.TreeNode"}
+    destroy: {method:1},
+    isSelected: {method:1, returns: "Boolean"},
+    removeChildren: {method:1},
+    setOpen: {method:1},
+    setContent: {method:1},    
+    forEachDescendant: {method:1},    
+    findDescendant: {method:1, returns: "wm.TreeNode"}
 });
 
 
 wm.Object.extendSchema(wm.Tree, {
 	disabled: { ignore: 1 },
     nodes: { ignore: 1},
-    clear: {group: "method"},
-    deselect: {group: "method"},
-    select: {group: "method"},
-    forEachNode: {group: "method"},
-    findNodeByCallback: {group: "method", returns: "wm.TreeNode"},
+    clear: {method:1},
+    deselect: {method:1},
+    select: {method:1},
+    forEachNode: {method:1},
+    findNodeByCallback: {method:1, returns: "wm.TreeNode"},
     root: {type: "wm.TreeNode", doc: 1, ignore: 1},
-    connectors: {group: "display", order: 100}
+    connectors: {group: "display", order: 100},
+    forEachNode: {method: 1, returns: null},
+    clear: {method: 1, returns: null},
+    deselect: {method: 1, returns: null},
+    select: {method: 1, returns: null}
 
 });
 wm.Tree.extend({
@@ -57,7 +61,7 @@ wm.Tree.extend({
 wm.Object.extendSchema(wm.PropertyTree, {
     dataSet: { readonly: true, group: "data", order: 1, bindTarget: 1, type: "wm.Variable", isList: true},
     selectedItem: { ignore: 1, bindSource: 1, isObject: true, simpleBindProp: true },
-    configJson: {group: "data", order: 10},
+    configJson: {group: "data", order: 10, editor: "wm.LargeTextArea", editorProps: {height: "300px"} },
 });
 
 

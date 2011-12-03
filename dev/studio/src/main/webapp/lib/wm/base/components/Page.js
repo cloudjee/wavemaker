@@ -69,12 +69,11 @@ dojo.declare("wm.Page", wm.Component, {
 	},
 
 	init: function() {
-		this.app = window.app;
-		if (this.owner instanceof wm.Application)		
-			window[this.name] = this;
-		else
-			this.owner[this.name] = this;
-		this.inherited(arguments);
+	    this.app = window.app;
+	    if (this.owner == app.pageContainer)
+		window[this.name] = this;
+	    this.owner[this.name] = this;
+	    this.inherited(arguments);
 	},
 	forEachWidget: function(inFunc) {
 		if (this.root)
@@ -83,12 +82,13 @@ dojo.declare("wm.Page", wm.Component, {
 	},
 	render: function() {
 		//console.time('renderTime ');
-		var d = this.domNode || document.body;
 		// FIXME: hiding pages not owned by app when rendered
 		// this really only applies to pages loaded into pageContainers
 		// however, due to asynchronous rendering it's not convenient to put
 		// this code elsewhere right now.
-		var notAppOwned = (this.owner != app), ds = d.style;
+	    var notAppOwned = (this.owner != app.pageContainer);
+	    var d = notAppOwned ? this.domNode || document.body : app.appRoot.domNode;
+	    var ds = d.style;
 		dojo.addClass(d, this.declaredClass);
 		
 		// if noAppOwned, we set left to negetive value so that user cannot see
@@ -228,7 +228,7 @@ dojo.declare("wm.Page", wm.Component, {
 	},
 	getRuntimeId: function(inId) {
 		inId = this.name + (inId ? "." + inId : "");
-		return this.owner ? this.owner.getRuntimeId(inId) : inId;
+		return this.owner != app.pageContainer ? this.owner.getRuntimeId(inId) : inId;
 	},
 	getComponent: function(inName) {
 		return this.components[inName] || this[inName] || this.owner && this.owner.getComponent(inName);

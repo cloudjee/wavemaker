@@ -52,6 +52,18 @@ wm.define("wm.Container", wm.Control, {
 		this.c$ = [];
 	},
 	init: function() {
+	    if (this.dockRight) {
+		app.dockRight = this;
+	    } 
+	    if (this.dockLeft) {
+		app.dockLeft = this;
+	    } 
+	    if (this.dockTop) {
+		app.dockTop = this;
+	    } 
+	    if (this.dockBottom) {
+		app.dockBottom = this;
+	    }
 	    if (this.touchScrolling && app._touchEnabled) {
 		wm.conditionalRequire("lib.github.touchscroll.touchscroll");
 		this._touchScroll = new TouchScroll(this.domNode, {elastic:true, owner: this});
@@ -106,6 +118,15 @@ wm.define("wm.Container", wm.Control, {
 	},
 	destroy: function()
 	{
+	    if (this.dockRight) {
+		delete app.dockRight;
+	    } else if (this.dockLeft) {
+		delete app.dockLeft;
+	    } else if (this.dockTop) {
+		delete app.dockTop;
+	    } else if (this.dockBottom) {
+		delete app.dockBottom;
+	    }
 		if (this.domNode && this.domNode.box)
 			delete this.domNode.box;
 		this.inherited(arguments);
@@ -297,6 +318,41 @@ wm.define("wm.Container", wm.Control, {
 		    c.renderBounds();
 	    }
 	},
+    removeDelayedReflow: function() {
+	delete wm.Container.delayedReflowWidgets[this.getRuntimeId()];
+    },
+    delayedReflow: function() {
+	/* Already queued for reflow */
+	if (wm.Container.delayedReflowWidgets[this.getRuntimeId()])
+	    return;
+	wm.Container.delayedReflowWidgets[this.getRuntimeId()] = this;
+	
+	var newParents = [];
+
+	/* Iterate over every existing delayed widget and find if they have a common parent that could be reflowed instead */
+	try {
+	    wm.forEachProperty(wm.Container.delayedReflowWidgets, dojo.hitch(this, function(widget, widgetid) {
+	    if (widget === this) {
+		;
+	    } else if (widget.parent === this.parent) {
+		delete wm.Container.delayedReflowWidgets[widgetId];
+		delete 	wm.Container.delayedReflowWidgets[this.getRuntimeId()];
+		newParents.push(this.parent);
+	    } else if (this.isAncestor(widget)) {
+		delete wm.Container.delayedReflowWidgets[widgetId];
+	    } else if (widget.isAncestor(this)) {
+		delete 	wm.Container.delayedReflowWidgets[this.getRuntimeId()];
+	    }
+	    }));
+	} catch(e) {}
+	for (var i = 0; i < newParents.length; i++) {
+	    newParents[i].delayedReflow();
+	}
+
+	if (!wm.Container._delayedReflowWidgetsId) {
+	    wm.Container._delayedReflowWidgetsId = window.setTimeout(wm.Container.runDelayedReflow, 1);
+	}
+    },
         forEachControl: function(inFunc, paramArray) {
 	  dojo.forEach(this.c$, function(inControl) {
 	    inFunc.apply(inControl, (paramArray) ? paramArray : []);
@@ -385,7 +441,7 @@ wm.define("wm.Container", wm.Control, {
 	// Lock/freeze
 	//
 	getLock: function() {
-		return this.lock || (this.parent && wm.fire(this.parent, "getLock"));
+		return this.lock || (this.parent && wm.fire(this.parent, "getLock")) || false;
 	},
 	setLock: function(inLock) {
 	        var original = this.lock;
@@ -645,8 +701,8 @@ wm.Container.extend({
 		return this.inherited(arguments);
 	},
         focusFirstEditor: function() {
-	    for (var i in this.widgets) {
-		var w = this.widgets[i];
+	    for (var i = 0; i < this.c$.length; i++) {
+		var w = this.c$[i];
 		if (wm.isInstanceType(w,wm.Editor) ||
 		    wm.isInstanceType(w,wm.AbstractEditor)) {
 		    w.focus();
@@ -663,6 +719,7 @@ wm.Container.extend({
 	clearEditors: function(){
 		return this.clearData();
 	},
+
 
     // events
     onEnterKeyPress: function(inEvent){}
@@ -810,3 +867,13 @@ wm.Container.extend({
     }
 });
 
+wm.Container.delayedReflowWidgets = {};
+wm.Container._delayedReflowWidgetsId = 0;
+wm.Container.runDelayedReflow = function() {
+    var widgets = wm.Container.delayedReflowWidgets;
+    wm.Container.delayedReflowWidgets = {};
+    wm.Container._delayedReflowWidgetsId = 0;
+    wm.forEachProperty(widgets, function(widget,widgetId) {
+	widget.reflow();
+    });
+};

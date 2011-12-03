@@ -32,7 +32,9 @@ wm.Plugin.plugin("rbac", wm.Widget, {
 		this.rbacSocket(arguments);
 	},
 	setRoles: function(inValue) {
-		var s = inValue.split(','), r=[];
+	    if (inValue === undefined || inValue === null)
+		inValue = [];
+	    var s = dojo.isArray(inValue) ? inValue : inValue.split(','), r=[];
 		for (var i=0, v, f; (f=s[i]); i++) {
 			v = dojo.trim(f);
 			if (v)
@@ -94,6 +96,9 @@ wm.Plugin.plugin("rbacLayer", wm.Layer, {
 });
 
 wm.Object.extendSchema(wm.Widget, {
+/*
 	roles: {ignore: 1, writeonly: 1, category: "Security",
 	categoryProps: {content: "Security", image: "images/lock_16.png", inspector: "Security"}}
+	*/
+    roles: {group: "Roles", editor: "wm.prop.RolesEditor"}
 }, true);

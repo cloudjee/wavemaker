@@ -148,90 +148,15 @@ dojo.declare("wm.DojoLightbox", wm.Component, {
 		this.show();
 	},
 
-	set_dataSet: function(inDataSet) {
-		// support setting dataSet via id from designer
-		if (inDataSet && !(inDataSet instanceof wm.Variable)) {
-		    var ds = this.getValueById(inDataSet);
-		    if (ds) {
-			this.components.binding.addWire("", "dataSet", ds.getId());
-		    }
-		} else {
-		    this.setDataSet(inDataSet);
-		}
-	},
-	_listFields: function() {
-		var list = [ "" ];
-		var schema = this.dataSet instanceof wm.LiveVariable ? wm.typeManager.getTypeSchema(this.dataSet.type) : (this.dataSet||0)._dataSchema;
-		var schema = (this.dataSet||0)._dataSchema;
-		this._addFields(list, schema);
-		return list;
-	},
-	// FIXME: for simplicity, allow only top level , non-list, non-object fields.
-	_addFields: function(inList, inSchema) {
-		for (var i in inSchema) {
-			var ti = inSchema[i];
-			if (!(ti||0).isList && !wm.typeManager.isStructuredType((ti||0).type)) {
-				inList.push(i);
-			}
-		}
-	},
-	makePropEdit: function(inName, inValue, inDefault) {  
-	    var prop = this.schema ? this.schema[inName] : null;
-	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
-	    switch (inName) {
-	    case "imageUrlField":
-	    case "imageLabelField":
-		var values = this._listFields();
-		return makeSelectPropEdit(inName, inValue, values, inDefault);
-	    case "dataSet":
-		return new wm.propEdit.DataSetSelect({component: this, name: inName, value: this.dataSet ? this.dataSet.getId() : "", allowAllTypes: true, listMatch: true, value: inValue});
-	    }
-	    return this.inherited(arguments);
-	},
-    setPropEdit: function(inName, inValue, inDefault) {
-	switch (inName) {
-	case "imageUrlField":
-	    var editor1 = dijit.byId("studio_propinspect_imageUrlField");
-
-	    var store1 = editor1.store.root;
-
-	    while (store1.firstChild) store1.removeChild(store1.firstChild);
-
-
-	    var displayFields = this.makePropEdit("imageUrlField");
-	    displayFields = displayFields.replace(/selected="selected"/,"");
-	    displayFields = displayFields.replace(/^.*?\<option/,"<option");
-	    displayFields = displayFields.replace(/\<\/select.*/,"");
-	    store1.innerHTML = displayFields;
-	    editor1.set("value", inValue, false);
-	    return true;
-	case "imageLabelField":
-	    var editor1 = dijit.byId("studio_propinspect_imageLabelField");
-
-	    var store1 = editor1.store.root;
-
-	    while (store1.firstChild) store1.removeChild(store1.firstChild);
-
-
-	    var displayFields = this.makePropEdit("imageLabelField");
-	    displayFields = displayFields.replace(/selected="selected"/,"");
-	    displayFields = displayFields.replace(/^.*?\<option/,"<option");
-	    displayFields = displayFields.replace(/\<\/select.*/,"");
-	    store1.innerHTML = displayFields;
-	    editor1.set("value", inValue, false);
-	    return true;
-
-	}
-	return this.inherited(arguments);
-    }
+    _end:0
 });
 
 // design only...
 wm.Object.extendSchema(wm.DojoLightbox, {
 	variable: {ignore: 1},
-    dataSet: {bindable: 1, group: "edit", order: 10, isList: true, type: "wm.Variable"},
-	imageUrlField:{group: "edit", order: 20},
-	imageLabelField:{group: "edit", order: 30}
+        dataSet: {bindTarget: 1, group: "edit", order: 10, isList: true, type: "wm.Variable", createWire: 1, editor: "wm.prop.DataSetSelect", editorProps: {listMatch: true, widgetDataSets: true, allowAllTypes: true}},
+	imageUrlField:{group: "edit", order: 20, editor:"wm.prop.FieldSelect", editorProps: {}},
+	imageLabelField:{group: "edit", order: 30, editor:"wm.prop.FieldSelect", editorProps: {}}
 });
 
 wm.DojoLightbox.description = "A dojo Lightbox.";

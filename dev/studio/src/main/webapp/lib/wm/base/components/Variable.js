@@ -44,6 +44,8 @@ dojo.declare("wm.Variable", wm.Component, {
 		@type String
 	*/
 	type: "",
+    //primaryKeyFields: "",
+
 	/** 
 		True if this variable contains a list (aka array).
 		@type Boolean
@@ -158,6 +160,15 @@ dojo.declare("wm.Variable", wm.Component, {
     set_type: function(inType) {
 	this.setType(inType);
 	reinspect();
+/*
+	var oldType = this.type;
+	this.setType(inType);
+	if (oldType != inType) {
+	    var keys = wm.getPrimaryKeys(wm.typeManager.getType(inType));
+	    this.primaryKeyFields = keys.length ? keys.join(",") : "";
+	}
+	reinspect();
+	*/
     },
 	typeChanged: function(inType) {
 		var t = inType;
@@ -265,10 +276,11 @@ dojo.declare("wm.Variable", wm.Component, {
 		if (ownerPage._loadingPage && !inData) return;
 	    }
 
-	    this.onPrepareSetData(inData);
 	    if (inData instanceof wm.Variable)
-		this._setVariableData(inData);
-	    else if (dojo.isArray(inData))
+		inData = inData.getData();
+
+	    this.onPrepareSetData(inData);
+	    if (dojo.isArray(inData))
 		this._setArrayData(inData);
 	    else if (this.isPrimitive)
 		this._setPrimitiveData(inData);
@@ -297,10 +309,11 @@ dojo.declare("wm.Variable", wm.Component, {
 
 	    this.isList = false;
 	},
+/*
 	_setVariableData: function(inVariable) {
 		this.setData(inVariable.getData());
 	},
-
+	*/
     /* WM-2500: Need a way for the user to change the isList property at design time (but not for subclasses of wm.Variable) */
         setIsList: function(isList) {
 	    if (isList && !this.isList) {
@@ -377,6 +390,20 @@ dojo.declare("wm.Variable", wm.Component, {
 		if (this._isNull)
 			return null;
 		else if (this.isList) {
+		    // if its a byte list merge it into a single string and change it to a nonlist 
+		    if (this.type == "byte") { 
+			try {
+			    if (this.data.list && this.data.list[0] instanceof wm.Variable) {
+				this.data.list[0] = this.data.list[0].data.dataValue;
+			    }
+			    this.data = {dataValue: this.data.list.join("")};
+			} catch(e) {
+			    this.data = null;
+			}
+			this.isList = false;
+			
+			return dojo.clone(this.data); // getData never returns pointers into the datastructure but only copies so that manipulating it doesn't corrupt the wm.Variable
+		    } else {
 			var data = [];
 			for (var i=0, l= this.getCount(), v; i<l; i++) {
 				v = (this.getItem(i) || 0).getData(flattenPrimitives);
@@ -384,6 +411,7 @@ dojo.declare("wm.Variable", wm.Component, {
 					data.push(v);
 			}
 			return data;
+		    }
 		} else if (flattenPrimitives && this.isPrimitive && this.data["dataValue"] !== undefined) {
 		    return this.data.dataValue;
 		} else {
@@ -434,8 +462,18 @@ dojo.declare("wm.Variable", wm.Component, {
 		if (this._isNull && v !== undefined)
 			this._setNull(false);
 		this.beginUpdate();
-		var o = this._getDataValue(n);
-		this.endUpdate();
+	    var o;
+	    if (v === null || v === undefined) {
+		o =  this._getDataValue(n,true);
+		if (o === null || o === undefined) {
+		    this.endUpdate();
+		    return;
+		}
+	    } else {
+		o = this._getDataValue(n);
+	    }
+	    this.endUpdate();
+		
 		if (o instanceof wm.Variable) {
 			// if we are updating, o's listeners will be notified by us
 			// o doesn't need to message them directly
@@ -631,12 +669,13 @@ dojo.declare("wm.Variable", wm.Component, {
 	// should we store this for faster access? (items have itemIndex, but this is not maintained)
 	getItemIndex: function(inVariable) {
 		if (!this.isList)
-			return;
+		    return -1;
 		var list = (this.data || 0).list || [];
 		for (var i=0, l = list.length; i < l; i++) {
 			if (inVariable == list[i])
 				return i;
 		}
+	    return -1;
 	},
 	getItemIndexByPrimaryKey: function(inVariable, pkList){
 		if (!this.isList || !pkList || pkList.length < 1)
@@ -932,7 +971,7 @@ dojo.declare("wm.Variable", wm.Component, {
 
     toString: function(inText) {   
 	var t = inText || "";
-	var hasData =  this.data && this.data.list && this.data.list.length ? this.data.length : wm.isEmpty(this.data);
+	var hasData =  this.data && this.data.list && this.data.list.length ? this.data.length : !wm.isEmpty(this.data);
 	t += "; " + wm.getDictionaryItem("wm.Variable.toString_TYPE", {type: this.type}) + "; " + wm.getDictionaryItem("wm.Variable.toString_ISEMPTY", {isEmpty: !hasData}); 
 	return this.inherited(arguments, [t]);
     },
@@ -1073,45 +1112,30 @@ wm.Object.extendSchema(wm.Variable, {
     isList: { group: "data", order: 4},
     cursor: { ignore: 1},
     isPrimitive: { ignore: 1},
-    type: { ignore: 0, group: "common", order: 1},
+    type: { ignore: 0, group: "common", order: 1, editor: "wm.prop.DataTypeSelect", editorProps: {liveTypes: 0}},
     saveInCookie: {group: "data", order: 20},
-    json: { group: "data", order: 5},
-    dataSet: { readonly: 1, bindable: 1, group: "data", order: 0, defaultBindTarget: 1, isObject: true, categoryParent: "Properties", categoryProps: {content: "dataSet", inspector: "Data"} },
-    removeItem: {group: "method"},
-    setData: {group: "method"},
-    addItem: {group: "method"},
-    setItem: {group: "method"},
-    setJson: {group: "method"},
-    removeItem: {group: "method"},
-    clearData: {group: "method"},
-    sort: {group: "method"},
-    getCount: {group: "method", returns: "Number"},
-    getData: {group: "method", returns: "Any"},
-    getItem: {group: "method", returns: "wm.Variable"}
+    json: {hidden:1, group: "data", order: 5},
+    editJson: {operation: 1, group:"data", order:5},
+    dataSet: { readonly: 1, bindable: 1, group: "data", order: 0, defaultBindTarget: 1, isObject: true},
+    removeItem: {method:1},
+    setData: {method:1},
+    addItem: {method:1},
+    setItem: {method:1},
+    setJson: {method:1},
+    removeItem: {method:1},
+    clearData: {method:1},
+    sort: {method:1},
+    getCount: {method:1, returns: "Number"},
+    getData: {method:1, returns: "Any"},
+    getItem: {method:1, returns: "wm.Variable"}
 });
 
 /**#@+ @design */
 wm.Variable.extend({
-	/** @lends wm.Variable.prototype */
-	makePropEdit: function(inName, inValue, inDefault) {
-	    var prop = this.schema ? this.schema[inName] : null;
-	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
-		switch (inName) {
-			case "type":
-				return new wm.propEdit.DataTypesSelect({component: this, name: inName, value: inValue});
-			case "json":
-		                return makeReadonlyButtonEdit(name, inValue, inDefault);
-		}
-		return this.inherited(arguments);
-	},
-	editProp: function(inName, inValue, inInspector) {
-		switch (inName) {
-		case "json":
+
+        editJson: function() {
 		    studio.editVariableDialog.show();
 		    studio.editVariableDialog.page.reset(this);
-		    return;
-		}
-	    return this.inherited(arguments);
 	},
 	isListBindable: function() {
 		return this.isList;
@@ -1384,3 +1408,126 @@ wm.Variable.extend({
     _end: 0
 });
 }
+
+
+
+
+wm.Variable.extend({
+    forEachItem: function(callback, options) {
+	if (!options)
+	    option = {count: 0,
+		      stopOnTrue: false};
+	var stopOnTrue = options.stopOnTrue;
+	var count = this.getCount();
+	for (var i = options.start || 0; i < count; i++) {
+	    var item = this.getItem(i);
+	    if (callback(item) && stopOnTrue) {
+		return;
+	    }
+	}
+    },
+    get: function(id) {
+	var keys = this.primaryKeyFields.split(/\s*,\s*/);
+	var query = {};
+	if (keys.length == 0)
+	    return null;
+	for (var i = 0; i < keys.length; i++) {
+	    if (id instanceof wm.Variable) {
+		query[keys[i]] = id.getValue(keys[i]);
+	    } else if (id !== null && typeof id == "object") {
+		query[keys[i]] = id[keys[i]];
+	    } else {
+		query[keys[i]] = id;
+	    }
+	}
+	return this.query(query, {limit: 1}).matches[0];
+    },
+    query: function(query, options){
+	var results = [];
+
+	var compareFields = function(val1, val2, options) {
+	    if (options.ignoreCase) {
+		val1 = val1.toLowerCase();
+		val2 = val2.toLowerCase();
+	    }
+	    if (val1 == val2)
+		return true;
+	    else if (!options.exactMatch && typeof val1 == "string" && val1.indexOf(val2) == 0)
+		return true;
+	    return false;
+	};
+
+	this.forEachItem(
+	    function(item) {
+		for (key in query) {
+		    var value = query[key];
+		    if (value instanceof wm.Variable) {
+			value = value.getValue(query[key]);
+		    } else if (value != null && typeof value == "object") {
+			value = value[query[key]];
+		    }
+		    if (!compareFields(value, item.getValue(query[key]), options))
+			return false;
+		}
+		result.push(item);
+		return options.count ? result.length < options.count : false;
+	    }, 
+	    {stopOnTrue: true, start: options.start || 0}
+	);
+	return {total: result.length,
+		matches: result,
+		forEach: function(callback, thisobj) {
+		    return dojo.forEach(results, callback, thisobj);
+		},
+		filter: function(callback, thisobj) {
+		    return dojo.filter(results, callback, thisobj);
+		},
+		map: function(callback, thisobj) {
+		    return dojo.map(results, callback, thisobj);
+		}
+	       };
+    },
+    put: function(data, options) {
+	this.addItem(data);
+    },
+    remove: function(id) {
+	var item = this.get(id);
+	if (item) {
+	    var index = this.getItemIndex(item);
+	    if (index != -1) 
+		this.removeItem(index);
+	}
+    },
+    getIdentity: function(item) {
+	var keys = this.primaryKeyFields.split(/\s*,\s*/);
+	var result = "";
+	for (var i = 0; i < keys.length; i++) {
+	    if (result) result += "|";
+	    result += item.getValue(keys[i]);
+	}
+	return result;
+    },
+    getChildren: function(item) {
+	var result = [];
+	var schema = this._dataSchema;
+	for (var i in schema) {
+	    var s = schema[i];
+	    if (s.isList || wm.typeManager.isStructuredType(s.type)) {
+		result.push(item.getValue(i));
+	    }
+	}
+	return {total: result.length,
+		matches: result,
+		forEach: function(callback, thisobj) {
+		    return dojo.forEach(results, callback, thisobj);
+		},
+		filter: function(callback, thisobj) {
+		    return dojo.filter(results, callback, thisobj);
+		},
+		map: function(callback, thisobj) {
+		    return dojo.map(results, callback, thisobj);
+		}
+	       };
+    },
+    
+});

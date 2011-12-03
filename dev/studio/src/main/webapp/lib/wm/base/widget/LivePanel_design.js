@@ -22,7 +22,7 @@ wm.LivePanel.extend({
 		studio.LivePanelTypeChooserDialog = new wm.PageDialog({owner: studio,
 								       name: "LivePanelTypeChooserDialog",
 								       pageName: "NewLivePanelDialog",
-								       width: "350px",
+								       width: "510px",
 								       height: "300px",
 								       modal: true,
 								       hideControls: true,
@@ -51,13 +51,20 @@ wm.LivePanel.extend({
 			studio.beginWait(studio.getDictionaryItem("wm.LivePanel.WAIT_GENERATING"));
 			wm.onidle(this, function() {
 			    switch(inName) {
+			    case "wm.LiveVariable":
+				var lvar = this.createLiveSource(this.liveSource);
+				studio.select(lvar);
+				studio.endWait();
+				this.destroy();
+				studio.refreshComponentTree();
+				return;
 			    case studio.LivePanelTypeChooserDialog.page.getDictionaryItem("TRADITIONAL"):
 				this.createTraditionalLivePanel(inName.match(/Paging$/));
 				break;
 			    case studio.LivePanelTypeChooserDialog.page.getDictionaryItem("DIALOG"):
 				this.createPopupLivePanel(inName.match(/Paging$/));
 				break;
-			    case "Editable Grid":
+			    case studio.LivePanelTypeChooserDialog.page.getDictionaryItem("GRID"):
 				this.createEditableGrid();
 				break;
 			    case "Live Form Only":
@@ -140,7 +147,7 @@ wm.LivePanel.extend({
 		    this.liveForm.dataSet.maxResults = 30;
 		    navigator.setLiveSource(lvar);
 		}
-		this.dataGrid.set_dataSet(lvar);
+	 this.dataGrid.$.binding.addWire("", "dataSet", lvar);
 
 
 	var liveFormConnect = this.liveForm.connect(this.liveForm, "finishAddEditors", this, function() {
@@ -185,6 +192,19 @@ wm.LivePanel.extend({
 	this.$.binding.addWire(null, "saveButton", this.saveButton.name, "");
     },
 
+	createLiveSource: function(inType) {
+	    var r = this.getRoot();
+	    var ti = wm.typeManager.getType(inType)
+	    if (!ti)
+		return;
+	    var name = inType.split('.').pop().toLowerCase();
+  	    var lvar = r.createComponent(name + "LiveVariable1", "wm.LiveVariable", {type: inType});
+	    var lv = new wm.LiveView({owner: lvar, name: "liveView", service: ti.service, dataType: inType, _defaultView: true});
+	    lv.getRelatedFields(); // make sure its calculated its list of related fields before we create/fire a livevar
+	    lvar.setLiveView(lv);
+	    return lvar;
+	},
+
     createEditableGrid: function() {
 	this.dataGrid = new wm.DojoGrid({
 	    name: studio.page.getUniqueName(this.liveDataName + "DojoGrid"),
@@ -192,7 +212,9 @@ wm.LivePanel.extend({
 	    height:'100%',
 	    width: "100%",
 	    parent: this,
-	    liveEditing: true
+	    liveEditing: true,
+	    deleteColumn: true,
+	    singleClickEdit: true
 	});
 	
 	var gridButtonPanel = new wm.Panel({owner: studio.page,
@@ -207,46 +229,67 @@ wm.LivePanel.extend({
 				       name: studio.page.getUniqueName(this.liveDataName + "NewButton"),
 				       parent: gridButtonPanel,
 					  caption: studio.getDictionaryItem("wm.EditPanel.NEW_CAPTION")});
-	var deleteButton = new wm.Button({owner: studio.page,
-					  name: studio.page.getUniqueName(this.liveDataName + "DeleteButton"),
-					  parent: gridButtonPanel,
-					  caption: studio.getDictionaryItem("wm.EditPanel.DELETE_CAPTION")});
 
-	newButton.eventBindings.onclick = this.name + ".editableGridNew";
-	deleteButton.eventBindings.onclick = this.name + ".editableGridDelete";
+	newButton.eventBindings.onclick = this.dataGrid.name + ".addEmptyRow";
 	this.$.binding.addWire(null, "dataGrid", this.dataGrid.name, "");
 
-
+	var lvar = this.createLiveSource(this.liveSource);
+/*
 	var livevar = this.liveVariable = new wm.LiveVariable({owner: studio.page,
 					   name: studio.page.getUniqueName(this.liveDataName + "LiveVariable1"),
 					   liveSource: this.liveSource,
 					   operation: "read"});
-	this.$.binding.addWire(null, "liveVariable", this.livevar.name, "");
-	this.dataGrid.set_dataSet(livevar.name);
+	this.$.binding.addWire(null, "liveVariable", lvar.name, "");
+					   */
+	this.dataGrid.$.binding.addWire("", "dataSet", lvar.name, "");
 
 	var columns = this.dataGrid.columns;
-
-	var type = wm.typeManager.getType(livevar.type)
+	var r = this.getRoot();
+	debugger;
+	var type = wm.typeManager.getType(lvar.type)
 	for (var i = 0; i < columns.length; i++) {
-	    var field = type.fields[columns[i].id]
-	    if (field.exclude.length == 0)
-		columns[i].editable = true;
-	    switch(field.type) {
-	    case "java.util.Date":
-		columns[i].fieldType = "dojox.grid.cells.DateTextBox";
-		break;
-	    case "java.lang.Boolean":
-		columns[i].fieldType = "dojox.grid.cells.Bool";
-		break;
-	    case "java.lang.Integer":
-	    case "java.lang.Double":
-	    case "java.lang.Float":
-	    case "java.lang.Short":
-		columns[i].fieldType = "dojox.grid.cells.NumberTextBox";
-		break;
-	}
+	    var fieldName = columns[i].field;
+	    if (fieldName.indexOf(".") != -1) {
+		/* Editing a subobject */
+		var objectName = fieldName.replace(/\..*?$/, "");
+		var obj = lvar.getValue(objectName);
+		var displayField = wm.typeManager.getDisplayField(obj.type);
+
+	        var fieldName = fieldName.replace(/^.*?\./,"");
+	        if (fieldName != displayField) {
+		    columns[i].show = false;
+		} else {
+  		    var subvar = r.createComponent(objectName + "LiveVariable1", "wm.LiveVariable", {type: obj.type});
+		    columns[i].title = wm.capitalize(objectName);
+		    columns[i].fieldType = "dojox.grid.cells.ComboBox";
+		    columns[i].editorProps = {selectDataSet: subvar.name,
+					      displayField: displayField};
+		}
+	} else {
+		/* Editing a field of the main object */
+		var field = type.fields[fieldName];
+	    if (field.exclude.length == 0) { 
+		switch(field.type) {
+		case "java.util.Date":
+		    columns[i].fieldType = "dojox.grid.cells.DateTextBox";
+		    break;
+		case "java.lang.Boolean":
+		    columns[i].fieldType = "dojox.grid.cells.Bool";
+		    break;
+		case "java.lang.Integer":
+		case "java.lang.Double":
+		case "java.lang.Float":
+		case "java.lang.Short":
+		    columns[i].fieldType = "dojox.grid.cells.NumberTextBox";
+		    break;
+		default:
+		    columns[i].fieldType = "dojox.grid.cells._Widget";
+		}
+	    }
+	    }
 	}
 	    this.dataGrid.renderDojoObj();
+	studio.endWait();
     },
     createGrid: function() {
 	this.dataGrid = new wm.DojoGrid({
@@ -294,7 +337,7 @@ wm.LivePanel.extend({
                                                      verticalAlign: "top",
 						     owner: this.owner,
 						     name: this.liveDataName + "GridPanel",
-                                                     minHeight: "180",
+                                                     minHeight: 180,
 						     title: wm.capitalize(this.liveDataName)});
 		this.dataGrid = new wm.DojoGrid({
                                 border: "0", // wm.FancyPanel + theme change; fancy panel provides the border; ignore any default borders provided by theme

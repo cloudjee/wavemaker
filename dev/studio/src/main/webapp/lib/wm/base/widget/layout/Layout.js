@@ -30,7 +30,7 @@ wm.inLayout = function(inNode) {
 dojo.declare("wm.layout.Base", null, {
 	inFlow: function(inControl) {
 		return inControl.showing && (inControl.inFlow !== false) &&
-		      (inControl._forceShowing || wm.inLayout(inControl.domNode)); //bc only
+		      (inControl instanceof wm.Dialog && inControl.docked || inControl._forceShowing || wm.inLayout(inControl.domNode)); //bc only
 	},
 	flow: function(inContainer) {
 	},

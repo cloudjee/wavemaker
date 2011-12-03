@@ -224,7 +224,9 @@ dojo.declare("wm.LiveView", wm.Component, {
 	//$ Set the dataType for the dataView. This is a type that supports crud operations.
 	setDataType: function(inType) {
 	    if (this._typeChangeSubscribe) {
-		dojo.disconnect(this._typeChangeSubscribe);
+		try {
+		    dojo.disconnect(this._typeChangeSubscribe);
+		} catch(e) {}
 		delete this._typeChangeSubscribe;
 	    }
 		var t = this.dataType;
@@ -286,7 +288,7 @@ dojo.declare("wm.LiveView", wm.Component, {
 	getSubView: function(inPropPath) {
 
 	    // update the view if we're designing and the view is managed by a variable
-	    if (this._isDesignLoaded && this.owner instanceof wm.Variable)
+	    if (this._isDesignLoaded && this.owner instanceof wm.Variable && this.view.length == 0)
 		this.createDefaultView();
 
 		inPropPath = inPropPath ? inPropPath + "." : "";

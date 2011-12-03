@@ -96,22 +96,26 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
 });
 
 wm.Object.extendSchema(wm.ServiceVariable, {
+    inFlightBehavior: {group: "data", options: ["executeLast", "executeAll", "dontExecute"]},
         downloadFile: {},
         isList: {ignore: 1},
-	operation: { group: "common", order: 24},
-	clearInput: { group: "operation", order: 30},
+    operation: { group: "common", order: 24, bindTarget: 1},
+    clearInput: { group: "operation", order: 30, operation: "doClearInput"},
 	onSetData: {ignore: 1},
         onCanUpdate: {events: ["js", "sharedjs", "sharedEventHandlers"]},
-    input: { ignore: 1 , doc: 1, type: "wm.Variable", writeonly: 1, componentonly: 1, categoryParent: "Properties", categoryProps: {component: "input", bindToComponent: true, inspector: "Data"}},
+/*    input: { ignore: 1 , doc: 1, type: "wm.Variable", writeonly: 1, componentonly: 1, categoryParent: "Properties", categoryProps: {component: "input", bindToComponent: true, inspector: "Data"}},*/
+    input: {group: "data", order: 3, bindTarget: 1, treeBindField: true, treeBindObject: "input"},
 	service: {group: "common", order: 23 },
 	autoUpdate: {group: "common", order: 25},
 	startUpdate: {group: "common", order: 26},
+
     firstRow: {group: "data",order: 15},
-        maxResults: {group: "data", order: 17},
-        designMaxResults: {group: "data", order: 18},
-	updateNow: { group: "operation", order: 10},
-	queue: { group: "deprecated", order: 20},
+    maxResults: {group: "data", order: 17},
+    designMaxResults: {group: "data", order: 18},
+    updateNow: { group: "operation", operation: "update", order: 10},
+    queue: { group: "deprecated", order: 20,operation: "showQueueDialog"},
 	json: {ignore: 1},
+    editJson: {ignore: 1},
 	listType: {ignore: 1},
 	isList: {ignore: 1},
         saveInCookie: {ignore: 1},
@@ -122,12 +126,12 @@ wm.Object.extendSchema(wm.ServiceVariable, {
 	dataSet: { ignore: 1, defaultBindTarget: 1, isObject: true, type: "any"},
 	startUpdateComplete: { ignore: 1},
     total: {ignore: 1},
-    getTotal: {group: "method", returns: "Number"},
-    getPageCount: {group: "method", returns: "Number"},
-    setNextPage: {group: "method"},
-    setPreviousPage: {group: "method"},
-    setLastPage: {group: "method"},
-    update: {group: "method"}
+    getTotal: {method:1, returns: "Number"},
+    getPageCount: {method:1, returns: "Number"},
+    setNextPage: {method:1},
+    setPreviousPage: {method:1},
+    setLastPage: {method:1},
+    update: {method:1}
 
 });
 

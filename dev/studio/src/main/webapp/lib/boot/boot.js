@@ -28,7 +28,7 @@ if (location.search.indexOf("dojo.locale=") != -1) {
 }
     } catch(e) {}
 wm = window["wm"] || {};
-wm.version = '6.4.2Beta';
+wm.version = '6.4.3RC';
 
 // loading via append element
 wm.createElement = function(inTag, inAttrs) {

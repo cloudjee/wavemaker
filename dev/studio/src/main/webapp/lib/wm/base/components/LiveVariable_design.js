@@ -21,27 +21,29 @@ wm.Object.extendSchema(wm.LiveVariable, {
 	view: { ignore: 1},
 	service: { ignore: 1},
 	dataType: { ignore: 1},
-    operation: { group: "data", order: 0}, // do not try and set the options here; parent class overrides this usage
+	type: { ignore: 0,  editor: "wm.prop.DataTypeSelect", editorProps: {liveTypes: 1}},
+    operation: { group: "data", order: 0}, // do not try and set the options here; parent class overrides this usage by handling operation in makePropEdit
 	input: {ignore: 1},
-	liveSource: { group: "data", order: 1},
+    liveSource: { group: "data", order: 1, editor: "wm.prop.DataSetSelect", editorProps: {servicesOnly: 1, includeLiveViews: true}, ignoreHint: "LiveSource is a deprecated property; it is only enabled for LiveVariables already using it"},
 	liveView: { ignore: 1},
-    sourceData: {readonly: 1, group: "data", order: 3, bindTarget: 1, categoryParent: "Properties", categoryProps: {component: "sourceData", inspector: "Data"}, doc: 1},
-    filter: { readonly: 1, group: "data", order: 5, bindTarget: 1, categoryParent: "Properties", categoryProps: {component: "filter", inspector: "Data"}, doc: 1},
-	matchMode: {group: "data", order: 10},
-/*
-	firstRow: {group: "data", order: 15},
-    maxResults: {group: "data", order: 17},
-    designMaxResults: {group: "data", order: 18},
-    */
+    sourceData: {readonly: 1, group: "data", createWire: 1, order: 3, bindTarget: 1, treeBindField: "sourceData", editor: "wm.prop.DataSetSelect", editorProps: {widgetDataSets: true, listMatch: false}},
+    filter: {readonly: 1, group: "data", createWire: 1, order: 5, bindTarget: 1, treeBindField: "filter", editor: "wm.prop.DataSetSelect", editorProps: {widgetDataSets: true, listMatch: false}},
+    matchMode: {group: "data", order: 10, options: ["start", "end", "anywhere", "exact"]},
 	orderBy: {group: "data", order: 19},
 	ignoreCase:  {group: "data", order: 20},
 	configure: { ignore: 1 },
-	dataSetCount: { ignore: 1 }
+    dataSetCount: { ignore: 1 },
+    editView: {group: "data",operation:1}
 });
 
 wm.LiveVariable.extend({
 	_operations: ["read", "insert", "update", "delete"],
-	_matchModes: ["start", "end", "anywhere", "exact"],
+	makePropEdit: function(inName, inValue, inEditorProps) {
+	    if (inName == "operation") {
+		return new wm.SelectMenu(dojo.mixin(inEditorProps, {options: this._operations}));
+	    }
+	    return this.inherited(arguments);
+	},
 	listProperties: function() {
 		var
 			p = this.inherited(arguments),
@@ -53,7 +55,12 @@ wm.LiveVariable.extend({
 		p.orderBy.ignoretmp = !r;
 		p.ignoreCase.ignoretmp = !r;
 		p.filter.ignoretmp = !r;
-		p.filter.categoryParent = r ? "Properties" : "";
+	        p.sourceData.ignoretmp = r;
+
+	    p.liveSource.ignoretmp = !this.liveSource; // if there's no liveSource, hide the prop because its deprecated 
+	    p.editView.ignoretmp = Boolean(this.liveSource);
+
+
 	        p.sourceData.categoryParent = !r ? "Properties" : "";
 	        p.sourceData.ignoretmp = r;
 		return p;
@@ -79,12 +86,10 @@ wm.LiveVariable.extend({
 		        this.setStartUpdate(inOperation == "read");
 			this.setAutoUpdate(inOperation == "read");
 
-			if (studio.selected == this)
-			    studio.inspector.initTree(this);
-
 		}
 	},
 
+/* DEPRECATED */
 	set_liveSource: function(inLiveSource) {
 	    this.setLiveSource(inLiveSource);
 
@@ -119,28 +124,16 @@ wm.LiveVariable.extend({
 		this.checkOrderBy(inOrderBy);
 		this.setOrderBy(inOrderBy);
 	},
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-		case "filter":
-		case "sourceData":
-		    return makeInputPropEdit(inName, inValue == this.filter || inValue == this.sourceData ? "" : inValue, inDefault, true);
-			case "liveSource":
-				return new wm.propEdit.LiveSourcesSelect({component: this, name: inName, value: inValue});
-			case "matchMode":
-				return makeSelectPropEdit(inName, inValue, this._matchModes, inDefault);
-			case "operation":
-		    return makeSelectPropEdit(inName, inValue, ["read", "insert", "update", "delete"], inDefault);
-		}
-		return this.inherited(arguments);
+    editView: function() {
+		    studio.liveViewEditDialog.show();
+		    studio.liveViewEditDialog.page.setLiveView(this.liveView);
 	},
-    setPropEdit: function(inName, inValue, inDefault) {
-	switch (inName) {
-	case "operation":
-	    var editor = dijit.byId("studio_propinspect_operation");
-	    if (editor) editor.set(inValue, false);
-	    return true;
+    _isWriteableComponent: function(inName, inProperties) {
+	if (inName == "liveView") {
+	    return !this.liveSource;
+	} else {
+	    return this.inherited(arguments);
 	}
-	return this.inherited(arguments);
     }
 
 });

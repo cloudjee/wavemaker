@@ -167,7 +167,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	this.sizeEditor();
     },
     setCaptionPositionLF: function(inPosition) {
-	var liveform = this.isAncestorInstanceOf(wm.LiveFormBase);
+	var liveform = this.isAncestorInstanceOf(wm.LiveFormBase) || this.isAncestorInstanceOf(wm.FormPanel);
 	if (liveform) {
 	    this.setCaptionPosition(liveform.captionPosition);
 	    this.setCaptionSize(liveform.captionSize);
@@ -187,14 +187,18 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		this.updateReadOnlyNodeStyle();
     },
 	setDisabled: function(inDisabled) {
+	    inDisabled = Boolean(inDisabled);
 		var d = this.disabled;
 		this.inherited(arguments);
-	    if (d != this.disabled && this.editor) {
-		if (this.editor instanceof wm.Control)
+	    if (this.editor) {
+		if (this.editor instanceof wm.Control && d != this.editor.disabled) {
 		    this.editor.setDisabled(inDisabled);
-		else
+		    dojo[this.disabled ? "addClass" : "removeClass"](this.captionNode, "wmeditor-caption-disabled");
+		} else if (d != this.disabled) {
 		    this.editor.set("disabled", Boolean(inDisabled));
-		dojo[this.disabled ? "addClass" : "removeClass"](this.captionNode, "wmeditor-caption-disabled");
+		    dojo[this.disabled ? "addClass" : "removeClass"](this.captionNode, "wmeditor-caption-disabled");
+		}
+		
 	    }
 	    this.disabled = inDisabled;
 	},
@@ -209,6 +213,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    this.connect(this.helpNode, "onmouseover", this, function(e) {
 		wm.job(this.getRuntimeId() + ".helpText", 100, dojo.hitch(this, function() {
 		    var coords = dojo.coords(this.helpNode);
+		    //app.createToolTip(this.helpText, null, {mouseX: coords.x, mouseY: coords.y + coords.h});
 		    app.createToolTip(this.helpText, null, {mouseX: coords.x, mouseY: coords.y + coords.h});
 		}));
 	    });
@@ -249,7 +254,8 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
                 this.editor._onChangeHandle = null;
             }
 	    */
-		this.editorNode = this.editor.domNode;
+	/* this.editor.tagName is an IE safe way of doing this.editor instanceof Node */
+	        this.editorNode = this.editor.tagName ? this.editor : this.editor.domNode;
 		this.editorNode.style.margin = "0"; // failure to explicitly set these is throwing off my bounds calculations
 	        this.editorNode.style.padding = "0";
     	    this.stopTimerWithName("CreateDijit", this.declaredClass);
@@ -302,6 +308,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    if (this.captionNode)
 			dojo.style(this.captionNode, {position: "absolute"});
 	},
+
 	sizeEditor: function() {	     
 		if (this._cupdating)
 			return;
@@ -404,6 +411,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 
                     } else {
 			var setnode = (e["domNode"]) ? e.domNode : e;
+
 			var s = setnode.style;
 
 			if (this.editorBorder && b.w && b.h) {
@@ -438,6 +446,8 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 			this.updateReadOnlyNodeStyle(b.h);
 
 		}
+	    this._editorHeight = b.h;
+	    this._editorWidth = b.w;
 	    if (this.helpText && this.helpNode) {
 		var s = this.helpNode.style;
 		s.top = (this.caption) ? (parseInt(this.captionNode.style.top) + (this.captionPosition == "bottom" ? 5 : 0)) + "px" : b.t + "px";
@@ -567,7 +577,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		this.onchange(this.getDisplayValue(), this.getDataValue());
 	}
     },
-    onchange: function() {},
+    onchange: function(inDisplayValue, inDataValue) {},
 	_getValidatorNode: function() {
 		var n = this.editor && this.editor.domNode.firstChild;
 		if (!n)
@@ -602,17 +612,17 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		return !this.getInvalid();
 	}, 
 	getInvalid: function() {
-	        if (!this.validationEnabled()) return false;
-		if (this.editor && this.editor.isValid) {
-			if (this._isValid === undefined)
-				this._isValid = this.editor.isValid();
-			return !(this.readonly || this._isValid);
-		} else if (this.required && !this.readonly) {
-		    var value = this.getDataValue();
-		    if (value === undefined || value === null || value === "") {
-			return true;
-		    }
+	    var validationEnabled = this.validationEnabled();
+	    if (validationEnabled && this.editor && this.editor.isValid) { /* test for existence of isValid method */
+		if (this._isValid === undefined)
+		    this._isValid = this.editor.isValid();
+		return !(this.readonly || this._isValid);
+	    } else if (this.required && !this.readonly) {
+		var value = this.getDataValue();
+		if (value === undefined || value === null || value === "") {
+		    return true;
 		}
+	    }
 	},
         setInvalid: function() {
 	    this._isValid = false;
@@ -720,9 +730,11 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    
 		return (v || v === 0) ? v : this.makeEmptyValue();
 	},
+        normalizeDataValue: function(inValue) {return inValue;},
 	setEditorValue: function(inValue) {
 	    if (this.editor) {  // If using html widgets and replacing them with dijits use  if (this.editor && this.editor.declaredClass) {
 		inValue = inValue === undefined ? null : inValue;
+		inValue = this.normalizeDataValue(inValue);
 		var oldValue = this.editor.get('value');
 		this.editor.set('value',inValue, false);
 
@@ -771,7 +783,9 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	},
 	setInitialValue: function() {
 	    this.beginEditUpdate();
-	    this.setEditorValue(wm.propertyIsChanged(this.dataValue, "dataValue", wm.Editor) ? this.dataValue : this.displayValue);
+	    try {
+		this.setEditorValue(wm.propertyIsChanged(this.dataValue, "dataValue", wm.Editor) ? this.dataValue : this.displayValue);
+	    } catch(e) {}
 	    this.endEditUpdate();
 	},
 
@@ -793,6 +807,8 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    if (this.calcIsDirty(dataValue, this._lastValueReported)) {		
 		this.valueChanged("dataValue", this.dataValue = dataValue);
 		changed = true;		
+	    } else {
+		this.dataValue = dataValue; // its possible for _lastValueReported to not be stored in this.dataValue, though its probably just a special case for DataSet editors
 	    }
 	    if (changed) {
 		/* NOTE: editorChanged is called when the user types OR when setDataValue is called
@@ -976,6 +992,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    return html.join("\n");
 	}
     }    
+
 });
 
 wm.AbstractEditor.captionPaddingWidth = 8;

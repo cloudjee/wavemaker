@@ -32,11 +32,7 @@ dojo.declare("wm.DataNavigator", wm.Panel, {
 		this.createNavComponents();
 		this.connectNavComponents();
 	},
-	afterPaletteDrop: function() {
-		this.inherited(arguments);
-	    this.setLayoutKind("left-to-right");
-	    this.setWidth("100%");
-	},
+
 	createNavComponents: function() {
 		this.readComponents(this.getTemplate());
 		dojo.mixin(this, this.widgets);
@@ -105,7 +101,7 @@ dojo.declare("wm.DataNavigator", wm.Panel, {
 			this.components.binding.addWire("", "liveSource", s);
 			return;
 		}
-		s = s instanceof wm.LiveForm ? s.dataSet : s;
+	    s = wm.isInstanceType(s, wm.LiveForm) || wm.isInstanceType(s,wm.DataForm) ? s.dataSet : s;
 		if (s instanceof wm.LiveVariable) {
 			this.liveSource = s;
 			this.connect(this.liveSource, "onSuccess", this, "update");

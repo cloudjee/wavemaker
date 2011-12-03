@@ -20,14 +20,15 @@ dojo.require("wm.base.widget.DataNavigator");
 wm.Object.extendSchema(wm.DataNavigator, {
 	box: {ignore: 1},
 	lock: {ignore: 1},
+    freeze: {ignore:1},
 	liveForm: {ignore: 1},
 	layoutKind: {ignore: 1},
 	byPage: {group: "common", order: 250},
-	liveSource: { readonly: 1, bindable: 1, type: "wm.LiveVariable", group: "common", order: 200},
-	firstRecord: { group: "operation", order: 5},
-	previousRecord: { group: "operation", order: 10},
-	nextRecord: { group: "operation", order: 15},
-    lastRecord: { group: "operation", order: 20},
+    liveSource: { readonly: 1, bindable: 1, type: "wm.LiveVariable", group: "common", order: 200,editor: "wm.prop.DataSetSelect", editorProps: {widgetDataSet: 1, listMatch:1}},
+    firstRecord: { group: "operation", order: 5, operation:"setFirst"},
+	previousRecord: { group: "operation", order: 10, operation:"setPrevious"},
+	nextRecord: { group: "operation", order: 15, operation:"setNext"},
+    lastRecord: { group: "operation", order: 20, operation:"setLast"},
     autoScroll: {ignore: true},
     scrollX: {ignore: true},
     scrollY: {ignore: true},
@@ -45,31 +46,9 @@ wm.DataNavigator.extend({
 		// since we create them at runtime.
 		return [];
 	},
-	makePropEdit: function(inName, inValue, inDefault) {
-	        var prop = this.schema ? this.schema[inName] : null;
-	        var name =  (prop && prop.shortname) ? prop.shortname : inName;
-		switch (inName) {
-			case "firstRecord":
-			case "previousRecord":
-			case "nextRecord":
-			case "lastRecord":
-				return makeReadonlyButtonEdit(name, inValue, inDefault);
-			case "liveSource":
-				return new wm.propEdit.DataSetSelect({component: this, name: inName, widgetDataSets: true, listMatch: true});
-		}
-		return this.inherited(arguments);
-	},
-	editProp: function(inName, inValue, inInspector) {
-		switch (inName) {
-			case "firstRecord":
-				return this.setFirst();
-			case "previousRecord":
-				return this.setPrevious();
-			case "nextRecord":
-				return this.setNext();
-			case "lastRecord":
-				return this.setLast();
-		}
-		return this.inherited(arguments);
+	afterPaletteDrop: function() {
+		this.inherited(arguments);
+	    this.setLayoutKind("left-to-right");
+	    this.setWidth("100%");
 	}
 });

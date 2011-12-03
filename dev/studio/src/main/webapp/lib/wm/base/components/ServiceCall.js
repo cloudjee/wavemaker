@@ -53,10 +53,17 @@ dojo.declare("wm.ServiceCall", null, {
 	*/
 	operation: "",
 	_operationInfo: {},
+
+        inFlightBehavior: "executeLast",
 	destroy: function() {
+	        delete this._inFlightBacklog;
 		this.inherited(arguments);
 		wm.fire(this._requester, "cancel");
 	},
+    init: function() {
+	this.inherited(arguments);
+	this._inFlightBacklog = [];
+    },
 	postInit: function() {
 		this.inherited(arguments);
 		this.connectStartUpdate();
@@ -72,6 +79,10 @@ dojo.declare("wm.ServiceCall", null, {
 			this.input = this.createInput();
 		this.subscribe(this.input.getRuntimeId() + "-changed", this, "inputChanged");
 	},
+    /* Used when binding to input */
+    setInput: function(inDataSet) {
+	this.input.setDataSet(inDataSet);
+    },
 	//=======================================================
 	// Service
 	//=======================================================
@@ -141,7 +152,7 @@ dojo.declare("wm.ServiceCall", null, {
 	//=======================================================
 	connectStartUpdate: function() {
 		if (this.owner && this.owner.start)
-			this.connect(this.owner, "start", this, "doStartUpdate");
+			this.connectOnce(this.owner, "start", this, "doStartUpdate");
 	},
 	setAutoUpdate: function(inAutoUpdate) {
 		this.autoUpdate = inAutoUpdate;
@@ -175,13 +186,25 @@ dojo.declare("wm.ServiceCall", null, {
 		return this._isDesignLoaded ? this.doDesigntimeUpdate() : this._update();
 	},
 	_update: function() {
-		if (this.canUpdate()) {
-			this.onBeforeUpdate(this.input);
-		        wm.cancelJob(this.getRuntimeId() + ".doAutoUpdate"); // just in case there's a job already scheduled
-			return this.request();
+	    if (this._requester && !this._isDesignLoaded) {
+		if (this.inFlightBehavior == "executeLast")
+		    this._inFlightBacklog.pop();
+		if (this.inFlightBehavior == "executeLast" || 
+		    this.inFlightBehavior == "executeAll") {
+		    var d = new dojo.Deferred();
+		    this._inFlightBacklog.push({args: this.getArgs(),
+					operation: this.operation,
+					deferred: d});
 		}
+		return d;
+	    }
+	    if (this.canUpdate()) {
+		this.onBeforeUpdate(this.input);
+		wm.cancelJob(this.getRuntimeId() + ".doAutoUpdate"); // just in case there's a job already scheduled
+		return this.request();
+	    }
 	},
-	/**
+        /**
 		Return a boolean value used to determine if the service can be updated.
 		Use the <a href="onCanUpdate">onCanUpdate</a>,
 		event to control the output of canUpdate.
@@ -192,7 +215,7 @@ dojo.declare("wm.ServiceCall", null, {
 		return info.canUpdate;
 	},
 	_getCanUpdate: function() {
-		return this._service && this.operation && !Boolean(this._requester);
+	    return this._service && this.operation;
 	},
 	getArgs: function() {
 	    var args = this.input.getArgs();
@@ -221,7 +244,12 @@ dojo.declare("wm.ServiceCall", null, {
             else if (typeof item[i] == "object") this.replaceAllDateObjects(item[i]);
         }
     },
-	request: function(inArgs) {
+    /* inArgs optional too... */
+    request: function(inArgs, optionalOp, optionalDeferred) {
+	    /* Update all parameters to be current before we fire this 
+	    if (this.$.binding) {
+		this.$.binding.refresh();
+	    }*/
 	    /* Update all parameters to be current before we fire this 
 	    if (this.$.binding) {
 		this.$.binding.refresh();
@@ -265,7 +293,7 @@ dojo.declare("wm.ServiceCall", null, {
 				 action: urlStr});
 		var method = iframedoc.createElement("input");
 		dojo.attr(method, {name: "method",
-				   value: this.operation});
+				   value: optionalOp || this.operation});
 		form.appendChild(method);
                 for (i in args) {
 		    var input = iframedoc.createElement("textarea");
@@ -299,10 +327,21 @@ dojo.declare("wm.ServiceCall", null, {
             } else {
 	        var args = inArgs || this.getArgs();
                 //this.replaceAllDateObjects(args);
-		wm.logging && console.debug("request", this.getId(), "operation", this.operation, "args", args);
+		wm.logging && console.debug("request", this.getId(), "operation", optionalOp || this.operation, "args", args);
 		if (djConfig.isDebug)
-		  console.log("REQUEST   Component: " + this.getRoot() + "." + this.name + ";  Operation: " + this.operation);
-	        var d = this._requester = this._service.invoke(this.operation, args, this.owner, this);
+		    console.log("REQUEST   Component: " + this.getRoot() + "." + this.name + ";  Operation: " + (optionalOp || this.operation));
+
+	        var d = this._requester = this._service.invoke(optionalOp || this.operation, args, this.owner, this);
+		if (optionalDeferred) {
+		    d.then(
+			function(inValue) {
+			    optionalDeferred.callback(inValue);
+			},
+			function(inError) {
+			    optionalDeferred.errback(inError);
+			}
+		    );
+		}
 		return this.processRequest(d);
             }
 	},
@@ -321,16 +360,23 @@ dojo.declare("wm.ServiceCall", null, {
 	//=======================================================
 	// Result Processing
 	//=======================================================
-	result: function (inResult) {
+	result: function(inResult) {
 	    this._requester = false;
 	    this.processResult(inResult);
 	    if (this.updateOnResult) this.update();
+	    this.processResult(inResult);
+	    if (!this._isDesignLoaded && this._inFlightBacklog.length) {
+		wm.onidle(this, function() {
+		    var backlog = this._inFlightBacklog.shift();
+		    this.request(backlog.args, backlog.operation, backlog.deferred);
+		});
+	    }
 	    return inResult;
 	},
 	processResult: function(inResult) {
 		this.onResult(inResult);
 		this.onSuccess(inResult);
-	    if (!this.isDestroyed)
+	    if (!this.isDestroyed && this.$.queue)
 		this.$.queue.update();
 	},
 	error: function(inError) {
@@ -342,9 +388,7 @@ dojo.declare("wm.ServiceCall", null, {
 		this.onResult(inError);
 		this.onError(inError);
 	},
-    setUpdateOnResult: function(inVal) {
-	this.updateOnResult = inVal;
-    },
+
 	//=======================================================
 	// Events
 	//=======================================================
@@ -403,12 +447,16 @@ dojo.declare("wm.ServiceCall", null, {
 		}
 	}
 });
-
+	    
 /**#@+ @design */
 wm.ServiceCall.extend({
 	clearInput: "(clear input)",
 	updateNow: "(update now)",
 	queue: "(serviceCalls)",
+	getUniqueName: function(inName) {
+	    if (inName === "input") return "input";
+	    return this.inherited(arguments);
+	},
 	/** @lends wm.ServiceCall.prototype */
 	doDesigntimeUpdate: function() {
 		this._designTime = true; //The line is not being used now.  It may be used in the future to differenciate requests from 
@@ -446,35 +494,17 @@ wm.ServiceCall.extend({
 		}
 		d.show();
 	},
-    setPropEdit: function(inName, inValue, inDefault) {
-	switch (inName) {
-	case "operation":
-	    var editor = dijit.byId("studio_propinspect_operation");
-	    var store = editor.store.root;
-	    while (store.firstChild) store.removeChild(store.firstChild);
 
-	    var	s = this._service;
-	    var valueOk = s && s.getOperation(inValue);
-	    var methods = s && s.getOperationsList();
-	    
-	    
-	    dojo.forEach(methods, function(method) {
-		var node = document.createElement("option");
-		node.innerHTML = method;
-		store.appendChild(node);
-	    });
-	    return true;
-	}
-	return this.inherited(arguments);
-    },
 
-	makePropEdit: function(inName, inValue, inDefault) {
+	makePropEdit: function(inName, inValue, inEditorProps) {
+	    var prop = this.schema ? this.schema[inName] : null;
+	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
 	    var prop = this.schema ? this.schema[inName] : null;
 	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
 		switch (inName) {
 			case "service":
-				return makeSelectPropEdit(inName, inValue, this.getServicesList(), inDefault);
-			case "operation":
+		    return new wm.SelectMenu(dojo.mixin(inEditorProps, {options: this.getServicesList()}));
+		case "operation":
 				var
 					s = this._service,
 					valueOk = s && s.getOperation(inValue),
@@ -485,24 +515,8 @@ wm.ServiceCall.extend({
 						this.set_operation(inValue);
 				}
 				if (methods)
-					return makeSelectPropEdit(name, inValue, methods, inDefault);
+				    return new wm.SelectMenu(dojo.mixin(inEditorProps, {options: methods}));
 				break;
-			case "queue":
-			case "updateNow":
-			case "clearInput":
-				return makeReadonlyButtonEdit(name, inValue, inDefault);
-		}
-		return this.inherited(arguments);
-	},
-	editProp: function(inName, inValue, inInspector) {
-		switch (inName) {
-			case "updateNow":
-				return this.update();
-			case "queue":
-				this.showQueueDialog();
-				return;
-			case "clearInput":
-				return this.doClearInput();
 		}
 		return this.inherited(arguments);
 	}
@@ -515,7 +529,7 @@ wm.Object.extendSchema(wm.ServiceCall, {
     canUpdate: {group: "method"}
 });
 
-
+	     
 //===========================================================================
 // Variable used as a service input
 //===========================================================================
@@ -570,6 +584,12 @@ dojo.declare("wm.ServiceInput", wm.Variable, {
 		}
 	    return args;
 	}
+});
+
+wm.ServiceInput.extend({
+    writeProps: function() {
+	return {type: this.type};
+    }
 });
 
 wm.Object.extendSchema(wm.ServiceInput, {

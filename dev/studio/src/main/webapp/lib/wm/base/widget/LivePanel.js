@@ -69,26 +69,8 @@ dojo.declare("wm.LivePanel", wm.Panel, {
 	    }
 	}));
 	this.dialog.show();
-    },
-
-
-
-
-    editableGridNew: function() {
-	this.dataGrid.addEmptyRow(true);
-	wm.onidle(this, function() {
-	    var type = wm.typeManager.getType(this.dataGrid.getDataSet().type)
-	    var columns = this.dataGrid.columns;
-	    for (var i = 0; i < columns.length; i++) {
-		var field = type.fields[columns[i].id];
-		if (field.exclude.length == 0) {
-		    this.dataGrid.editCell(this.dataGrid.getSelectedIndex(), columns[i].id);
-		    break;
-		}
-	    }
-	});
-    },
-    editableGridDelete: function() {
-	this.dataGrid.deleteRow(this.dataGrid.getSelectedIndex());
     }
+
+
+
 });

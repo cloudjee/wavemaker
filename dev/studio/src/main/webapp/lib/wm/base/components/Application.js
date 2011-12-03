@@ -77,13 +77,19 @@ dojo.declare("wm.Application", wm.Component, {
 	        this.setTheme(themematch ? themematch[1] : this.theme, true);
 	        if (dojo.isIE && dojo.isIE < 8) this.dialogAnimationTime = 0;
 
-	    if (djConfig.isDebug && !this.debugDialog) 
-		this.createDebugDialog();
+		this.components = {};
+	        this.createPageContainer();
 
+	    if (!this._isDesignLoaded) {
+		if (djConfig.isDebug && !this.debugDialog) 
+		    this.createDebugDialog();
+		
 		this.pageDialog = new wm.PageDialog({name: "pageDialog", owner: this});
 		this.toastDialog = new wm.Toast({name: "toastDialog", owner: this});
-		this.createPageLoader();
-		this.components = {};
+	    }
+	        //this.createPageLoader();
+
+
 	        if (this._touchEnabled === undefined)
 		    this._touchEnabled = navigator.userAgent.match(/AppleWebKit/) &&
 		navigator.userAgent.match(/Mobile/);
@@ -396,12 +402,17 @@ dojo.declare("wm.Application", wm.Component, {
 		dojo.forEach(this.connectList, dojo.disconnect);
 		this.connectList = null;
 		delete this._page;
+/*
 		if (this._pageLoader)
 		{
 			this._pageLoader.destroy();
 			this._pageLoader = null;
 		}	
-		
+		*/
+	    if (this.pageContainer) {
+		this.pageContainer.destroy();
+		this.pageContainer = null;
+	    }
 		if (this.domNode)
 		{
 			dojo.destroy(this.domNode);
@@ -417,11 +428,21 @@ dojo.declare("wm.Application", wm.Component, {
 		delete this.app;
 		//dojo.publish('applicationDestroyed',[]);
 	},
+	createPageContainer: function() {
+	    if (!this._isDesignLoaded) {
+		this.appRoot = new wm.AppRoot({owner: this});
+		this.pageContainer = new wm.PageContainer({owner: this, parent: this.appRoot, width: "100%", height: "100%", getRuntimeId: function() {return ""}});
+		this.connectList[this.connectList.length] = this.connect(this.pageContainer._pageLoader, "onBeforeCreatePage", this, "beforeCreatePage");
+		this.connectList[this.connectList.length] = this.connect(this.pageContainer._pageLoader, "onPageChanged", this, "pageChanged");
+	    }
+	},
+/*
 	createPageLoader: function() {
 		this._pageLoader = new wm.PageLoader({owner: this});
 		this.connectList[this.connectList.length] = this.connect(this._pageLoader, "onBeforeCreatePage", this, "beforeCreatePage");
 		this.connectList[this.connectList.length] = this.connect(this._pageLoader, "onPageChanged", this, "pageChanged");
 	},
+	*/
 	// avoid unique names when loading components
 	loadComponents: function(inChildren) {
 		this._loading = true;
@@ -485,6 +506,7 @@ dojo.declare("wm.Application", wm.Component, {
 	reflow: function() {
 		var d = this.domNode;
 		d.scrollTop = 0;
+	    this.appRoot.reflow();
 	},
 	reflowParent: function() {
 		this.reflow();
@@ -508,7 +530,8 @@ dojo.declare("wm.Application", wm.Component, {
 		setTimeout(dojo.hitch(this, "doRun"), dojo.isIE < 7 ? 100 : 1);
 	},
 	doRun: function() {
-		this._pageLoader.domNode = this.domNode = dojo.byId(this.domNode) || document.body;
+		this.appRoot.domNode = this.domNode = dojo.byId(this.domNode) || document.body;
+	        this.reflow()
 	    /* WM-2794: ENTER key in a text input causes focus to move to first button and fire it; make sure its a button that does nothing; only certain this is an issue in IE 8 
 	    if (dojo.isIE <= 8) {
 		var button = document.createElement("BUTTON");
@@ -564,7 +587,7 @@ dojo.declare("wm.Application", wm.Component, {
 		}
 	},
 	beforeCreatePage: function() {
-		this._pageLoader.pageConnect("start", this, "start");
+		this.pageContainer._pageLoader.pageConnect("start", this, "start");
 		this.pageLoadedDeferred = new dojo.Deferred()
 	},
 	pageChanged: function(inPage, inPreviousPage) {
@@ -592,7 +615,7 @@ dojo.declare("wm.Application", wm.Component, {
 		//this._pageLoader.unloadSupport();
 		try 
 		{
-			this._pageLoader.loadPage(inName, inName.toLowerCase());
+		    this.pageContainer.setPageName(inName);//_pageLoader.loadPage(inName, inName.toLowerCase());
 		}
 		catch (e)
 		{
@@ -737,27 +760,88 @@ dojo.declare("wm.Application", wm.Component, {
         this.toastDialog.showToast(inMsg, optionalDuration || 5000, "Info");
     },
     
-    createToolTip: function(message, node, event, optionalWidth) {
+    createToolTip: function(message, node, event, source) {
 	if (!this.toolTipDialog) {
-	    this.toolTipDialog = new wm.GenericDialog({title: "",
-						       modal: false,
-						       width: "350px",
-						       height: "100px",
-						       fitToContentHeight: true,
-						       owner: this,
-						       corner: "tr",
-						       _fixPosition: true});
-	    this.toolTipDialog.$.genericInfoPanel.setPadding("2,5,2,5");
+	    this.toolTipDialog = new wm.Dialog({_classes: {domNode: ["AppToolTip"]},
+						title: "",
+						modal: false,
+						width: "350px",
+						height: "50px",
+						fitToContentHeight: true,
+						owner: this,
+						corner: "tr",
+						_fixPosition: true,
+						useContainerWidget: true,
+						margin: "0,0,4,4",
+						padding: "4"});
+	    this.toolTipDialog.containerWidget.destroy();
+	    this.toolTipDialog.useContainerWidget = false;
+	    delete this.toolTipDialog.containerWidget;
+	    delete this.toolTipDialog.containerNode;
+	    var html = new wm.Html({owner: this.toolTipDialog,
+				    parent: this.toolTipDialog,
+				    autoScroll:false,
+				    name: "html",
+				    width: "100%",
+				    height: "100%",
+				    margin: "0",
+				    padding: "0",
+				    autoSizeHeight: true});
+	    this.toolTipDialog.html = html;
 	}
-	this.toolTipDialog.setWidth(optionalWidth || "350px");
+	this.toolTipDialog.tipOwner = source;
 	if (node) {
 	    this.toolTipDialog.fixPositionNode = node;
 	} else {
-	    this.toolTipDialog.bounds.l = event.mouseX;
-	    this.toolTipDialog.bounds.t = event.mouseY;
+	    this.toolTipDialog.fixPositionNode = null;
+	    var originalMouseX = this.toolTipDialog.bounds.l = event.mouseX;
+	    var originalMouseY = this.toolTipDialog.bounds.t = event.mouseY;
 	}
-	this.toolTipDialog.setUserPrompt(message);	
+	this.toolTipDialog.html.setHtml();	
 	this.toolTipDialog.show();
+	this.toolTipDialog._cupdating = true;
+	this.toolTipDialog.html.setAutoSizeWidth(false);
+	this.toolTipDialog.html.setAutoSizeHeight(false);
+	this.toolTipDialog.setFitToContentHeight(false);	    
+	this.toolTipDialog.setFitToContentWidth(false);	    
+	    this.toolTipDialog.setHeight("25px");
+	    this.toolTipDialog.setWidth("350px");
+	    this.toolTipDialog.html.setHeight("100%");
+	    this.toolTipDialog.html.setWidth("100%");
+	this.toolTipDialog._cupdating = false;
+	this.toolTipDialog.renderBounds();
+	this.toolTipDialog.html.setHtml(message);	
+	if (String(message).length < 30) {
+	    this.toolTipDialog.html.setAutoSizeWidth(true);
+	    this.toolTipDialog.setFitToContentWidth(true);
+	} else {
+	    this.toolTipDialog.html.setAutoSizeHeight(true);
+	    this.toolTipDialog.setFitToContentHeight(true);
+	}
+
+	var self = this;
+	if (this._testHintConnect)
+	    dojo.disconnect(this._testHintConnect);
+
+	    this._testHintConnect = 
+		this.connect(window.document.body, "onmousemove", this, function(evt) {
+		    if (evt.target ===  this.toolTipDialog.domNode || dojo.isDescendant(evt.target, this.toolTipDialog.domNode)) return;
+
+		    /* If there is a mouse-over node, and the mouse has left the node, dismiss the tooltip */
+		    if (node) {
+			if (evt.target != node && !dojo.isDescendant(evt.target, node)) {
+			    this.hideToolTip();
+			}
+		    } 
+
+		    /* If there is no node, then just dismiss the tooltip if the mouse moves at least 20px from the location that started this tooltip */
+		    else if (Math.abs(evt.clientX-originalMouseX) > 20 ||
+			       Math.abs(evt.clientY-originalMouseY) > 20) {
+			this.hideToolTip();
+		    }
+		});
+
+
     },
     getToolTip: function() {
 	if (this.toolTipDialog)
@@ -765,13 +849,16 @@ dojo.declare("wm.Application", wm.Component, {
 	return "";
     },
     hideToolTip: function() {
+	dojo.disconnect(this._testHintConnect);
+	delete 	this._testHintConnect;
 	this.toolTipDialog.hide();
     },
     createMinifiedDialogPanel: function() {
-	this.wmMinifiedDialogPanel = new wm.Panel({name: "wmMinifiedDialogPanel", width: this._page.root.bounds.w + "px", height: "25px", border: "2,0,0,0", padding: "2", autoScroll: true, verticalAlign: "top", horizontalAlign: "left", layoutKind: "left-to-right", owner: this});
-	document.body.appendChild(this.wmMinifiedDialogPanel.domNode);
-	this.wmMinifiedDialogPanel.subscribe("window-resize", this, "resizeMinifiedDialogPanel");
-	this.resizeMinifiedDialogPanel();
+	this.wmMinifiedDialogPanel = new wm.Panel({name: "wmMinifiedDialogPanel", width: "100%", height: "25px", border: "2,0,0,0", padding: "2", autoScroll: true, verticalAlign: "top", horizontalAlign: "left", layoutKind: "left-to-right", owner: this, parent: this.appRoot});
+	//document.body.appendChild(this.wmMinifiedDialogPanel.domNode);
+	//this.wmMinifiedDialogPanel.subscribe("window-resize", this, "resizeMinifiedDialogPanel");
+	//this.resizeMinifiedDialogPanel();
+	this.appRoot.reflow();
     },
     createMinifiedDialogLabel: function(title) {
 	var l = new wm.Button({caption: title, parent: app.wmMinifiedDialogPanel, owner: this, width: "100px", height: "100%", margin: "0", padding: "0"});
@@ -789,6 +876,115 @@ dojo.declare("wm.Application", wm.Component, {
 		 h: 25};
 	this.wmMinifiedDialogPanel.setBounds(b);
 	this.wmMinifiedDialogPanel.renderBounds();
+    },
+    createLeftToRightDockingPanel: function() {
+	if (!this._leftToRightDockingPanel) {
+	    this._leftToRightDockingPanel = new wm.Panel({name: "_leftToRightDockingPanel", width: "100%", height: "100%", border: "0", padding: "", layoutKind: "left-to-right", owner: this, parent: this.appRoot});
+	    this.appRoot.moveControl(this._leftToRightDockingPanel, this.appRoot.indexOfControl(this.pageContainer));
+	    this.pageContainer.setParent(this._leftToRightDockingPanel);	
+	}
+    },
+    dockDialog: function(inDialog, inEdge) {
+	if (inEdge == "l" || inEdge == "r") {
+	    this.createLeftToRightDockingPanel();
+	}
+	var parentPanel;
+	var created = false;
+	switch(inEdge) {
+	case "t":
+	    if (this._topDock) {
+		parentPanel = this._topDock;
+	    } else {
+		created = true;
+		parentPanel = this._topDock = new wm.Panel({owner: this, name: "_topDock", width: "100%", height: "100px", border: "0", padding: "", layoutKind: "left-to-right", parent: this.appRoot});
+		this.appRoot.moveControl(parentPanel,0);
+		this._topSplitter = new wm.Splitter({_classes: {domNode: ["docksplitter"]}, owner: this, parent: this.appRoot});
+		this.appRoot.moveControl(this._topSplitter,1);
+		this._topSplitter.findLayout();
+	    }
+	    break;
+	case "b":
+	    if (this._bottomDock) {
+		parentPanel = this._bottomDock;
+	    } else {
+		created = true;
+		parentPanel = this._bottomDock = new wm.Panel({owner: this, name: "_bottomDock", width: "100%", height: "100px", border: "0", padding: "", layoutKind: "left-to-right", parent: this.appRoot});
+		this._bottomSplitter = new wm.Splitter({_classes: {domNode: ["docksplitter"]}, owner: this, parent: this.appRoot});
+		this.appRoot.moveControl(this._bottomSplitter,this.appRoot.c$.length-2);
+		this._bottomSplitter.findLayout();
+	    }		
+	    break;
+	case "l":
+	    if (this._leftDock) {
+		parentPanel = this._leftDock;
+	    } else {
+		created = true;
+		parentPanel = this._leftDock = new wm.Panel({owner: this, name: "_leftDock", width: "150px", height: "100%", border: "0", padding: "", layoutKind: "top-to-bottom", parent: this._leftToRightDockingPanel});
+		this._leftToRightDockingPanel.moveControl(parentPanel,0);
+		this._leftSplitter = new wm.Splitter({_classes: {domNode: ["docksplitter"]}, owner: this, parent: this._leftToRightDockingPanel});
+		this._leftToRightDockingPanel.moveControl(this._leftSplitter,1);
+		this._leftSplitter.findLayout();
+	    }		
+	    break;
+	case "r":
+	    if (this._rightDock) {
+		parentPanel = this._rightDock;
+	    } else {
+		created = true;
+		this._rightSplitter = new wm.Splitter({_classes: {domNode: ["docksplitter"]}, owner: this, parent: this._leftToRightDockingPanel});
+		parentPanel = this._rightDock = new wm.Panel({owner: this, name: "_rightDock", width: "150px", height: "100%", border: "0", padding: "", layoutKind: "top-to-bottom", parent: this._leftToRightDockingPanel});
+
+		this._rightSplitter.findLayout();
+
+	    }		
+	    break;
+	}
+	inDialog.setParent(parentPanel);
+	switch(inEdge) {
+	case "t":
+	case "b":
+	    if (inDialog.minHeight > parentPanel.bounds.h)
+		parentPanel.setHeight(inDialog.minHeight + "px");
+	    inDialog.setWidth("100%");
+	    break;
+	case "l":
+	case "r":
+	    if (inDialog.minWidth > parentPanel.bounds.w)
+		parentPanel.setWidth(inDialog.minWidth + "px");
+	    inDialog.setHeight("100%");
+	    break;
+	}
+	if (created) {
+	    this.appRoot.reflow();
+	} else if (!parentPanel.showing) {
+	    parentPanel.show();
+	    if (parentPanel == this._topDock)
+		this._topSplitter.show();
+	    else if (parentPanel == this._bottomDock)
+		this._bottomSplitter.show();
+	    else if (parentPanel == this._rightDock)
+		this._rightSplitter.show();
+	    else if (parentPanel == this._leftDock)
+		this._leftSplitter.show();
+
+	} else {
+	    parentPanel.reflow();
+	}
+    },
+    removeDockedDialog: function(inDialog) {
+	var parent = inDialog.parent;
+	inDialog.setParent(null);
+	if (parent.c$.length == 0) {
+	    parent.hide();
+	    if (parent == this._topDock)
+		this._topSplitter.hide();
+	    else if (parent == this._bottomDock)
+		this._bottomSplitter.hide();
+	    else if (parent == this._rightDock)
+		this._rightSplitter.hide();
+	    else if (parent == this._leftDock)
+		this._leftSplitter.hide();
+	}
     }
 });
 

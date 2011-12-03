@@ -181,27 +181,6 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
 	}
 });
 
-wm.Object.extendSchema(wm.dijit.Calendar, {
-	disabled: {ignore: 1},
-        specialDates: { readonly: true, group: "data", order: 0, type: "wm.Variable", isList: true, bindTarget: true},
-    useDialog: {group: "data", order: 1, type: "boolean"},
-    dateValue: { ignore: 1, bindable: 1, type: "Date", simpleBindProp: true },
-    setDate: {group: "method"},
-    getDateValue: {group: "method"},
-    setDisplayDate: {group: "method"},
-    setSpecialDates: {group: "method"}
-});
-
-wm.dijit.Calendar.extend({
-    scrim: true,
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-                case "specialDates":
-		    return new wm.propEdit.DataSetSelect({component: this, name: inName, value: this.dataSet ? this.dataSet.getId() : "", allowAllTypes: true, listMatch: true});
-                }
-            return this.inherited(arguments);
-        }
-});
 
 wm.dijit.Calendar.getTime = function(date) {
     var hour = date.getHours();

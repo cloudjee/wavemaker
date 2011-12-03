@@ -53,7 +53,7 @@ wm.bgIframe = {
 				" z-index: 2; filter:Alpha(Opacity=\"0\");'>"
 			].join(''),
 	    f = this.domNode = (dojo.isIE && dojo.isIE < 9) ? document.createElement(html) : document.createElement("IFRAME");
-		document.body.appendChild(f);
+	    app.appRoot.domNode.appendChild(f);
 		f.style.display = "none";
 		if (dojo.isMoz) {
 			f.style.position = "absolute";
@@ -147,11 +147,12 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    this.flags.noModelDrop = true;
 	}
 
-	if (this._isDesignLoaded) 
-	    studio.designer.domNode.appendChild(this.domNode);
-	else
-	    document.body.appendChild(this.domNode);
-
+	if (!this.docked) {
+	    if (this._isDesignLoaded) 
+		studio.designer.domNode.appendChild(this.domNode);
+	    else
+		app.appRoot.domNode.appendChild(this.domNode);
+	}
 	this.dialogScrim = new wm.Scrim({owner: this, _classes: {domNode: ["wmdialog-scrim"]}, waitCursor: false});
 
 	this.createTitle();
@@ -171,10 +172,10 @@ dojo.declare("wm.Dialog", wm.Container, {
 
             if (this.designWrapper)
                 this.designWrapper.domNode.style.zIndex = this.domNode.style.zIndex+1;
-
+	    if (!this.docked) 
 		this.domNode.style.display = "none";		
-		this._connections.push(this.connect(document, "keydown", this, "keydown"));
-	        this._subscriptions.push(dojo.subscribe("window-resize", this, "delayedRenderBounds"));
+	    this._connections.push(this.connect(document, "keydown", this, "keydown"));
+	    this._subscriptions.push(dojo.subscribe("window-resize", this, "windowResize"));
 
 	    this.setModal(this.modal);
 
@@ -253,6 +254,8 @@ dojo.declare("wm.Dialog", wm.Container, {
 		this.containerWidget = containerWidget;
 	    }
 	    this.containerNode = containerNode;
+	    if (this.docked)
+		this.show();
 	},
     setUseButtonBar: function(inUse) {
         this.useButtonBar = inUse;
@@ -278,6 +281,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 				       layoutKind: "left-to-right",
 				       border: this.footerBorder,
 				       borderColor: this.titlebarBorderColor});
+        this.reflow();
     },
     setTitlebarBorder: function(inBorder) {
         this.titlebarBorder = inBorder;
@@ -314,27 +318,145 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    this.dojoMoveable = new dojo.dnd.Moveable(this.domNode, {handle: this.titleLabel.domNode});
 	    this.connect(this.dojoMoveable, "onMouseDown", this, function() {
 		if (!this.modal) {
+		    if (this.docked) {
+			this._userSized = true;
+			this.setDocked(false);
+		    }
 		    var zindex =  wm.dialog.getNextZIndex(this._isDesignLoaded, this);
 		    this.domNode.style.zIndex = zindex;
 		}
 	    });
 	    this.connect(this.dojoMoveable, "onMoveStop", this, function() {
+		this._userSized = true;
 		this.bounds.l = parseInt(this.domNode.style.left);
 		this.bounds.t = parseInt(this.domNode.style.top);
+		if (!this.insureDialogVisible(true)) {
+		    if (this.bounds.t < 0 && !this.noTopBottomDocking || this.bounds.t+this.bounds.h > app.appRoot.bounds.b && !this.noTopBottomDocking ||
+			this.bounds.l < 0 && !this.noLeftRightDocking || this.bounds.w + this.bounds.l > app.appRoot.bounds.r && !this.noLeftRightDocking) {
+			this.setDocked(true);
+		    }
+		} 
+
+		/* If user drags it above the top of the screen, the titlebar can't be reached to move it back, so don't allow this */
+		if (!this.docked && this.bounds.t < 0) {
+		    var oldT = this.bounds.t;
+		    this.bounds.top = 0;
+		    this.renderBounds();
+		}	
 	    });
 	}
 	if (this.showing  && !this._isDesignLoaded) {
 	    this.dialogScrim.setShowing(this.modal);
 	    wm.bgIframe.setShowing(!this.modal && !this.isDesignedComponent());
 	}
-	this.titleClose.setShowing(!this.modal && !this.noEscape);
-	this.titleMinify.setShowing(!this.modal && !this.noMinify);
-	this.titleMaxify.setShowing(!this.modal && !this.noMaxify);
+	this.titleButtonPanel.setShowing(!this.modal);
     },
     setNoEscape: function(inNoEscape) {
 	this.noEscape = inNoEscape;
 	this.titleClose.setShowing(!this.modal && !this.noEscape);
     },	
+    setDocked: function(inDock, optionalParent) {
+	var wasDocked = this.docked
+	if (Boolean(wasDocked) == Boolean(inDock)) return;
+	this.docked = inDock;
+	if (inDock) {	    
+	    this._dock(optionalParent);
+	} else {
+	    this._undock();
+	}
+    },
+    _dock: function(parent) {
+	var border = this.border;
+	var margin = this.margin;
+	var edge = "";
+	if (this.bounds.t < 0 && !this.noTopBottomDocking)
+	    edge = "t";
+	else if (this.bounds.t+this.bounds.h > app.appRoot.bounds.b  && !this.noTopBottomDocking) 
+	    edge = "b";
+	else if (this.bounds.l < 0 && !this.noLeftRightDocking)
+	    edge = "l";
+	else if (!this.noLeftRightDocking)
+	    edge = "r";
+
+	    this.titleClose.parent.hide();
+
+	this._dockData = dojo.clone(this.bounds);
+	this._dockData.edge = edge;
+	this._dockData.border = border;
+	this._dockData.margin = margin;
+	this.setBorder("0");
+	this.setMargin("0");
+	if (!parent) {
+	    if (edge == "t" && app.dockTop) {
+		parent = app.dockTop;
+	    } else if (edge == "b" && app.dockBottom) {
+		parent = app.dockBottom;
+	    } else if (edge == "l" && app.dockLeft) {
+		parent = app.dockLeft;
+	    } else if (edge == "r" && app.dockRight) {
+		parent = app.dockRight;
+	    } else {
+		parent = app.appRoot;
+	    }
+	}
+
+	if (parent == app.appRoot) {
+	    app.dockDialog(this, edge);
+	} else {
+	    this.setParent(parent);
+	    this.setWidth("100%");
+	    this.setHeight("100%");
+	    parent.show();
+	    parent.reflow();
+	}
+    },
+    _undock: function() {
+	this.docked = false;
+	this.titleClose.parent.show();
+	if (!this._dockData) {
+	    this._dockData = dojo.clone(this.bounds);
+	}
+	if (this._dockData.edge == "t" || this._dockData.edge == "b") {
+	    this._dockData.t = Math.floor(dojo.coords(this.domNode).y);
+	} else {
+	    this._dockData.l = Math.floor(dojo.coords(this.domNode).x);
+	}
+	this._cupdating = true;
+	if (this._dockData.border !== undefined)
+	    this.setBorder(this._dockData.border);
+	else
+	    this.setBorder(wm.Dialog.prototype.border);
+	if (this._dockData.margin !== undefined)
+	    this.setMargin(this._dockData.margin);
+	else
+	    this.setMargin(wm.Dialog.prototype.margin);
+
+	this.setWidth((this._dockData.w-20) + "px");
+	this.setHeight((this._dockData.h-20) + "px");
+	this.setBounds({t: this._dockData.t, l: this._dockData.l});
+	this._cupdating = false;
+
+	delete this._dockData;
+	var parent = this.parent;
+	app.removeDockedDialog(this); // TODO
+	if (this._isDesignLoaded) 
+	    studio.designer.domNode.appendChild(this.domNode);
+	else
+	    app.appRoot.domNode.appendChild(this.domNode);
+
+	this.render();
+	this.flow();
+
+	if (parent.dockRight || parent.dockLeft || parent.dockTop || parent.dockBottom) {
+	    if (parent.c$.length == 0) {
+		parent.hide();
+	    } else {
+		parent.reflow();
+	    }
+	} else {
+	    app.reflow();
+	}
+    },
     minify: function() {
 	this._minified = true;
 	this.setShowing(false);
@@ -350,10 +472,6 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    this.setShowing(true);
 	});
 	app.wmMinifiedDialogPanel.reflow();
-    },
-    unminifyormove: function(inEvent) {
-	this._unminifyMouseX = inEvent.x;
-	this._unminifyMouseY = inEvent.y;
     },
     unminify: function(inEvent, dontCallSetShowing) {
 	if (!this._minified) return;
@@ -378,6 +496,10 @@ dojo.declare("wm.Dialog", wm.Container, {
 	this.reflow();
     },
 
+    windowResize: function() {
+	this.reflow();
+	this.delayedRenderBounds();
+    },
 	reflowParent: function() {
 	},
 
@@ -388,6 +510,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		why = null;
 	},
         destroy: function() {
+	    this._destroying = true;
 	    if (this._minified)
 		this.unminify({}, true);
 	    if (this.showing)
@@ -413,6 +536,28 @@ dojo.declare("wm.Dialog", wm.Container, {
 		    this.dialogScrim.reflowParent();
 		}
 	},
+
+    getPreferredFitToContentHeight: function() {
+	var result = this.inherited(arguments);
+	var min = this.minHeight;
+	//result = result - this.marginExtents.t - this.marginExtents.b;
+	return Math.max(min, result);
+    },
+    getPreferredFitToContentWidth: function() {
+	var result = this.inherited(arguments);
+	var min = this.minWidth;
+	//result = result - this.marginExtents.l - this.marginExtents.r;
+	return Math.max(min, result);
+    },
+	setFitToContentWidth: function(inFitToContent) {
+	    this.inherited(arguments);
+	    this.reflow();
+	},
+	setFitToContentHeight: function(inFitToContent) {
+	    this.inherited(arguments);
+	    this.reflow();
+	},
+
     delayedRenderBounds: function() {
 	wm.job(this.getRuntimeId() + ".renderBounds", 5, dojo.hitch(this, function() {
 	    var bounds = dojo.clone(this.bounds);
@@ -421,19 +566,26 @@ dojo.declare("wm.Dialog", wm.Container, {
 		this.reflow();
 	}));
     },
- 	renderBounds: function() {
+    renderBounds: function() {
+	    if (this.docked)
+		return this.inherited(arguments);
+
 		if (this.showing) {
 		    if (this.fitToContentHeight && !this._userSized) {
 			this.bounds.h = this.getPreferredFitToContentHeight();
 			this.height = this.bounds.h + "px";
 		    }
+		    if (this.fitToContentWidth && !this._userSized) {
+			this.bounds.w = this.getPreferredFitToContentWidth();
+			this.width = this.bounds.w + "px";
+		    }
 		    if (this._minified) {
-			var parentBox = dojo.contentBox(window.document.body);
+			var parentBox = app.appRoot.bounds; //dojo.contentBox(window.document.body);
 			var t = parentBox.h - 30;
 			var l = parentBox.w - 200;
 			this.setBounds(l,t,200,30);
 		    } else if (this._maxified) {
-			var parentBox = dojo.contentBox(window.document.body);
+			var parentBox = app.appRoot.bounds; //dojo.contentBox(window.document.body);
 			this.setBounds(20,20,parentBox.w-40,parentBox.h-40);
 		    } else {
 			//// center within parent
@@ -485,7 +637,8 @@ dojo.declare("wm.Dialog", wm.Container, {
 	if (!this.showing) return;
         var w = this.bounds.w;
         var h = this.bounds.h;
-        var isDesigned =  (this.domNode.parentNode != document.body);
+        //var isDesigned =  (this.domNode.parentNode != document.body);
+	var isDesigned =  (this.domNode.parentNode != app.appRoot.domNode);
         var W = (isDesigned) ? studio.designer.bounds.w : (app._page) ? app._page.root.bounds.w : window.clientWidth;
         var H = (isDesigned) ? studio.designer.bounds.h : (app._page) ? app._page.root.bounds.h : window.clientHeight;
         if (this.bounds.t + this.bounds.h > H) {
@@ -514,6 +667,7 @@ dojo.declare("wm.Dialog", wm.Container, {
     renderBoundsByPositionNode: function() {
         if (!this.fixPositionNode) return;
 	var o = dojo._abs(this.fixPositionNode);
+
 	if (this._isDesignLoaded) {
 	    var designerO = dojo._abs(studio.designer.domNode);
 	    o.x -= designerO.x;
@@ -726,6 +880,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 					      onEnd: dojo.hitch(this, function() {
                                                   if (this.isDestroyed) return;
 						      wm.Control.prototype.setShowing.call(this,inShowing,forceChange, skipOnClose);
+						  if (this.docked) this.setDocked(false);
                                                   delete this._transitionToHiding;
 						      if (!skipOnClose && !this._minified) 
 						          this.onClose("");
@@ -735,6 +890,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		    }
 		} else {
 		    this.inherited(arguments);		    
+		    if (this.docked) this.setDocked(false);
 		    if (!skipOnClose && !this._minified) 
 			this.onClose("");
 		}
@@ -760,7 +916,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	},
 	*/
     canProcessKeyboardEvent: function(inEvent) {
-        if (!this.showing) return false;
+        if (!this.showing || this.docked) return false;
             var dialogs = dojo.query(".wmdialog");
             var zindex = parseInt(this.domNode.style.zIndex);
             for (var i = 0; i < dialogs.length; i++) {
@@ -782,6 +938,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		    this.onClose("cancel");
 		    if (!this._isDesignLoaded)
 			inEvent._wmstop = true;
+		    dojo.stopEvent(inEvent);
 		}
 	    } else if (inEvent.keyCode == dojo.keys.ENTER) {
                 if (this.$.textInput && this.$.textInput.getDataValue)
@@ -797,6 +954,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    this.callOnShowParent();
 	},
 	onClose: function(inWhy) {
+	    this.callOnHideParent();
 	},
     setTitlebarHeight: function(inHeight) {
         this.titlebarHeight = inHeight;
@@ -818,7 +976,16 @@ dojo.declare("wm.Dialog", wm.Container, {
 					  verticalAlign: "middle",
 					  layoutKind: "left-to-right",
 					  flags: {notInspectable: true}});
-
+	var buttonPanel = this.titleButtonPanel = new wm.Panel({parent: this.titleBar,
+					owner: this,
+								name: "titleButtonBar",
+					width: (!this.noEscape ? 20 : 0) + (!this.noMinify ? 20 : 0) + (!this.noMaxify ? 20 : 0) + "px",
+					height: "100%",
+					layoutKind: "left-to-right",
+					horizontalAlign: "left",
+					verticalAlign: "top",
+					showing: !this.modal && !this.docked
+				       });
 	this.titleClose = new wm.ToolButton({_classes: {domNode: ["dialogclosebutton"]},
 					     noInspector: true,
 					     name: "titleClose",
@@ -826,9 +993,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 					     width: "19px",
 					     height: "19px",
 					     margin: "3,0,0,3",
-					     parent: this.titleBar,
+					     parent: buttonPanel,
 					     owner: this,
-					     showing: !this.modal && !this.noEscape });
+					     showing: !this.noEscape });
 	this.titleMinify = new wm.ToolButton({_classes: {domNode: ["dialogminifybutton"]},
 					      noInspector: true,
                                              hint: wm.getDictionaryItem("wm.Dialog.HINT_MINIFY"),
@@ -836,9 +1003,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 					      width: "19px",
 					      height: "19px",
 					      margin: "3,0,0,3",
-					      parent: this.titleBar,
+					     parent: buttonPanel,
 					      owner: this,
-					      showing: !this.modal && !this.noMinify});	
+					      showing:  !this.noMinify});	
 
 	this.titleMaxify = new wm.ToolButton({_classes: {domNode: ["dialogmaxifybutton"]},
 					  noInspector: true,
@@ -848,9 +1015,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 					      width: "19px",
 					      height: "19px",
 					      margin: "3,0,0,3",
-					      parent: this.titleBar,
+					     parent: buttonPanel,
 					      owner: this,
-					      showing: !this.modal && !this.noMaxify});	
+					      showing: !this.noMaxify});	
     
 	this.titleLabel = new wm.Label({
 					  noInspector: true,
@@ -866,8 +1033,6 @@ dojo.declare("wm.Dialog", wm.Container, {
 	this.connect(this.titleClose, "onclick", this, "dismiss");
 	this.connect(this.titleMinify, "onclick", this, "minify");
 	this.connect(this.titleMaxify, "onclick", this, "maxify");
-	this.connect(this.titleLabel, "onclick", this, "unminify");
-	this.connect(this.titleLabel.domNode, "onmousedown", this, "unminifyormove");
 
     },
     setNoMinify: function(val) {
@@ -891,7 +1056,8 @@ dojo.declare("wm.Dialog", wm.Container, {
     },
     setSizeProp: function(n, v, inMinSize) {
 	this.inherited(arguments);
-	this.renderBounds();
+	if (this.isReflowEnabled())
+	    this.renderBounds();
 	if(this.designWrapper) {
 	    this.designWrapper.controlBoundsChange();
 	    this.designWrapper.renderBounds();			
@@ -923,7 +1089,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    /* Can only target the dialog's node if hitting the border or if some bad rendering of content */
 	    /* noMaxify is taken to mean that the dialog isn't designed to be resized, either to max size or any custom size */
 	    if (!this.modal && !this.noMaxify && e.target == this.domNode) {
-		this._userSized = true;
+
 		this._initialPosition = dojo.clone(this.bounds);
 
 		var targetX = e.clientX - this.marginExtents.l - this.borderExtents.l;
@@ -971,11 +1137,11 @@ dojo.declare("wm.Dialog", wm.Container, {
 		    wm.Dialog.resizer.setCursor("e-resize");
 		    break;
 		}
-		this._userSized = true;
 		wm.Dialog.resizer.beginResize(e, this);
 	    }
 	},
 	drag: function(inDx, inDy) {
+	    this._userSized = true;
 	    //console.log(inDx);
 	    if (this._dragBorderX == "left") {
 		this.setBounds(this._initialPosition.l + inDx, NaN, this._initialPosition.w - inDx, NaN);
@@ -991,8 +1157,14 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    }
 
 	    this.renderBounds();
-	    if (!dojo.isIE || dojo.isIE >= 9)
-		this.reflow();
+	    if (!dojo.isIE || dojo.isIE >= 9) {
+		if (this.docked) {
+		    app.reflow();
+		} else {
+		    this.reflow();
+		}
+	    }
+
 	},
 	drop: function() {
 	    this.reflow();

@@ -178,13 +178,6 @@ dojo.declare("wm.DateTimeFormatter", wm.DataFormatter, {
 			locale: this.locale,
 			formatter: this.format
 		}
-	},
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "formatLength":
-				return makeSelectPropEdit(inName, inValue, ["medium", "short", "long", "full"], inDefault);
-		}
-		return this.inherited(arguments);
 	}
 });
 
@@ -242,7 +235,8 @@ wm.Object.extendSchema(wm.DataFormatter, {
 });
 
 wm.Object.extendSchema(wm.DateTimeFormatter, {
-	useLocalTime: { ignore: 1 }
+    formatLength: {options: ["short","medium","long","full"]},
+    useLocalTime: { ignore: 1 }
 });
 
 wm.Object.extendSchema(wm.DateFormatter, {

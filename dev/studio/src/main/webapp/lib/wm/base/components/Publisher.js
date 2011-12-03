@@ -54,35 +54,15 @@ dojo.declare("wm.ComponentPublisher", wm.Component, {
 	write: function() {
 		return wm.Property.deploy ? "" : this.inherited(arguments);
 	},
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "deploy":
-			case "undeploy":
-				return makeReadonlyButtonEdit(inName, inValue, inDefault);
-			case "width":
-			case "height":
-				return new wm.propEdit.UnitValue({
-					component: this,
-					name: inName,
-					value: inValue,
-					options: [ "px", "%" ]
-				});
-		}
-		return this.inherited(arguments);
-	},
-	editProp: function(inName, inValue, inInspector) {
-		switch (inName) {
-			case "deploy":
+
+    doDeploy: function() {
 		                var self = this;
 		                studio.project.saveProject(false, function() {
 				    self.deploy();
 				});
-		                return;
-			case "undeploy":
-				return this.undeploy();
-		}
-		return this.inherited(arguments);
-	}
+
+    }
+
 });
 
 wm.Object.extendSchema(wm.ComponentPublisher, {
@@ -92,10 +72,10 @@ wm.Object.extendSchema(wm.ComponentPublisher, {
 	group: {group: "Events", order: 30},
 	displayName: {group: "Events", order: 40},
 	description: {group: "Events", order: 50},
-	width: {group: "layout", order: 20},
-	height: {group: "layout", order: 30},
-	deploy: {group: "operation", order: 10},
-	undeploy: {group: "operation", order: 20},
+    width: {group: "layout", order: 20, editor: "wm.prop.SizeEditor"},
+	height: {group: "layout", order: 30, editor: "wm.prop.SizeEditor"},
+    deploy: {group: "operation", order: 10, operation: "doDeploy"},
+    undeploy: {group: "operation", order: 20, operation: true},
 	owner: {ignore: 1}
 });
 

@@ -55,7 +55,7 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 	    this.inherited(arguments);
 	    if (!this.formField)
 		this.setCaption("");
-	    var lf = wm.getParentForm(this);
+	    var lf = this.getParentForm();
 	    if (lf) {
 		this.setPadding(wm.AbstractEditor.prototype.padding);
 	    }
@@ -243,6 +243,7 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
  
  
  wm.Object.extendSchema(wm.RichText, {
+     selectOnClick: {ignore: 1},
 	changeOnEnter: { ignore: 1 },
 	changeOnKey: { ignore: 1 },
 	password: {ignore: 1},
@@ -265,16 +266,16 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
      toolbarSize: {group: "toolbar", order: 9, shortname: "size",  doc: 1},
      toolbarColor: {group: "toolbar", order: 11, shortname: "color", doc: 1},
      toolbarFind: {group: "toolbar", order: 12, shortname: "find & replace", doc: 1},
-     setToolbarUndo: {group: "method",  doc: 1},
-     setToolbarStyle: {group: "method",  doc: 1},
-     setToolbarStyleAll: {group: "method", doc: 1},
-     setToolbarAlign: {group: "method",  doc: 1},
-     setToolbarList: {group: "method",  doc: 1},
-     setToolbarLink: {group: "method",  doc: 1},
-     setToolbarFont: {group: "method",  doc: 1},
-     setToolbarFormat: {group: "method", doc: 1},
-     setToolbarSize: {group: "method",  doc: 1},
-     setToolbarColor: {group: "method",  doc: 1}
+     setToolbarUndo: {method:1,  doc: 1},
+     setToolbarStyle: {method:1,  doc: 1},
+     setToolbarStyleAll: {method:1, doc: 1},
+     setToolbarAlign: {method:1,  doc: 1},
+     setToolbarList: {method:1,  doc: 1},
+     setToolbarLink: {method:1,  doc: 1},
+     setToolbarFont: {method:1,  doc: 1},
+     setToolbarFormat: {method:1, doc: 1},
+     setToolbarSize: {method:1,  doc: 1},
+     setToolbarColor: {method:1,  doc: 1}
  });
  
  wm.RichText.extend({

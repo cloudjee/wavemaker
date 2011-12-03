@@ -146,7 +146,6 @@ Studio.extend({
 			if (!wm.fire(comp, "afterPaletteDrop")) {
 				// FIXME: should not refresh entire tree when dropping from palette.
 				studio.refreshDesignTrees();
-				studio.inspector.resetInspector();
 				studio.select(comp);
 			}
 		}

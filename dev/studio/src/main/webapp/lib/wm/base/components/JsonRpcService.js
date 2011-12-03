@@ -344,9 +344,9 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		}
 		this._methods.sort();
 	}, 
-	makePropEdit: function(inName, inValue, inDefault) {
+	makePropEdit: function(inName, inValue, inEditorProps) {
 		if (inName == "operations")
-			return makeSelectPropEdit(inName, inValue, this._methods||[], inDefault);
+		    return new wm.SelectMenu(dojo.mixin(inEditorProps, {options:this._methods || []}));
 		return this.inherited(arguments);
 	}
 });

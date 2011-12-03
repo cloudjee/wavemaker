@@ -54,11 +54,14 @@ dojo.declare("wm.ObjectTree", wm.Tree, {
 							  object: inData});
 	this.root.setOpen(true);
     },
-    makePropEdit: function(inName, inValue, inDefault) {
+    makePropEdit: function(inName, inValue, inEditorProps) {
 	switch (inName) {
 	case "data":
-	    if (!dojo.isString(inValue)) inValue = dojo.toJson(inValue);
-	    return makeTextPropEdit(inName, inValue, inDefault)
+	    if (!inValue)
+		inValue = "";
+	    else if (!dojo.isString(inValue))
+		inValue = dojo.toJson(inValue);
+	    return new wm.LargeTextArea(dojo.mixin(inEditorProps, {height: "300px", dataValue: inValue}));
 	}
 	return this.inherited(arguments);
     },

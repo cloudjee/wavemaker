@@ -180,13 +180,7 @@ dojo.declare("wm.PropertyTree", wm.Tree, {
 	    this.buildSubTree(inParentNode);
 	}
     },
-    makePropEdit: function(inName, inValue, inDefault) {
-	switch (inName) {
-	case "configJson":
-	    return makeTextPropEdit(inName, inValue, inDefault, 15)
-	}
-	return this.inherited(arguments);
-    },
+
     select: function(inNode) {
 	if (this.selected != inNode) {
 	    this.deselect();

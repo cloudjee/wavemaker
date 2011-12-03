@@ -12,7 +12,6 @@
  *  limitations under the License.
  */
 
-
 dojo.provide("wm.base.widget.Editors.Date");
 dojo.require("wm.base.lib.date");
 dojo.require("wm.base.widget.Editors.Base");
@@ -65,8 +64,9 @@ dojo.declare("wm.Date", wm.Text, {
 	getEditorValue: function() {
 	    var d = this.inherited(arguments);
 	    if (d) {
-		if (!this.useLocalTime)
+		if (!this.useLocalTime) {
 		    d.setHours(-wm.timezoneOffset,0,0);
+		}
 		return d.getTime();
 	    }
 	    return this.makeEmptyValue();
@@ -172,13 +172,6 @@ dojo.declare("wm.Time", wm.Date, {
 	    }
 	    return this.makeEmptyValue();
 	},
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "timePattern":
-			    return makeSelectPropEdit(inName, inValue, ["HH:mm", "HH:mm:ss", "HH:mm a", "HH:mm:ss a"], inDefault);
-		}
-		return this.inherited(arguments);
-	},
 
     calcIsDirty: function(val1, val2) {
 	if (val1 === undefined || val1 === null)
@@ -202,38 +195,6 @@ dojo.declare("wm.Time", wm.Date, {
 	return val1 != val2;
     }
 
-});
-
-
-
-
-
-wm.Object.extendSchema(wm.Date, {
-    changeOnKey: { ignore: 1 },
-    minimum: {group: "editor", order: 2,  doc: 1, bindTarget: true},
-    maximum: {group: "editor", order: 3, doc: 1, bindTarget: true}, 
-    format:  {group: "editor", doc: 0, ignore: 1},
-    invalidMessage: {group: "validation", order: 3},
-    showMessages: {group: "validation", order: 4},
-    promptMessage: {group: "Labeling", order: 6},
-    password: {ignore:1},
-    regExp: {ignore:1},
-    maxChars: {ignore:1},
-    resetButton: {ignore: 1}
-});
-
-wm.Object.extendSchema(wm.Time, {
-    format: { ignore: 1 },
-    minimum: {group: "editor", order: 2, ignore: 1},
-    maximum: {group: "editor", order: 3, ignore: 1},
-    timePattern:{group: "editor", order: 4,  doc: 1},
-    invalidMessage: {group: "validation", order: 3},
-    showMessages: {group: "validation", order: 4},
-    promptMessage: {group: "Labeling", order: 6},
-    password: {ignore:1},
-    regExp: {ignore:1},
-    maxChars: {ignore:1},
-    changeOnKey: {ignore: 1}
 });
 
 
@@ -536,40 +497,5 @@ dojo.declare("wm.DateTime", wm.Text, {
 	return p;
     }
 
-
 });
 
-wm.Object.extendSchema(wm.DateTime, {
-    changeOnKey: { ignore: 1 },
-    invalidMessage: {group: "validation", order: 3},
-    showMessages: {group: "validation", order: 4},
-    promptMessage: {group: "Labeling", order: 6},
-    password: {ignore:1},
-    regExp: {ignore:1},
-    maxChars: {ignore:1},
-    changeOnKey: {ignore: 1},
-
-    dateMode: {group: "editor", order: 2},
-    formatLength: {group: "editor", order: 3},
-    resetButton: {ignore: 1},
-    timePanelHeight: {group: "style"},
-    useLocalTime: {group: "editor", order: 4}
-});
-
-wm.DateTime.extend({
-    makePropEdit: function(inName, inValue, inDefault) {
-	switch (inName) {
-	case "formatLength":
-	    return makeSelectPropEdit(inName, inValue, ["short", "medium", "long"], inDefault);
-	case "dateMode":
-	    return makeSelectPropEdit(inName, inValue, ["Date and Time", "Date", "Time"], inDefault);
-	}
-	return this.inherited(arguments);
-    },
-    setFormatLength: function(inValue) {
-	// must get value before changing formatLength because formatLength determines how to parse the value
-	var value = this.getDataValue();
-	this.formatLength = inValue; 
-	this.setDataValue(value);
-    }
-});

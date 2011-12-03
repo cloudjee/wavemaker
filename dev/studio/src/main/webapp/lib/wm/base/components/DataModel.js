@@ -206,7 +206,13 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 	studio.handleMissingJar("db2jcc.jar",
 				studio.getDictionaryItem("wm.DataModel.DB2_JAR_INSTRUCTIONS"));
 	
-    }
+    },
+
+    hasServiceTreeDrop: function() {return true;},
+    onServiceTreeDrop: function(inParent, inOwner) {
+	return new wm.LiveVariable({owner: inOwner,
+				    name: inOwner.getUniqueName("liveVariable")});
+    }	
 
 });
 
@@ -236,6 +242,24 @@ dojo.declare("wm.DataModelEntity", wm.Component, {
     },
     getLayerCaption: function() {
 	return this.dataModelName + " (" + studio.getDictionaryItem("wm.DataModel.TAB_CAPTION") + ")";
+    },
+    hasServiceTreeDrop: function() {return true;},
+    onServiceTreeDrop: function(inParent, inOwner) {
+	var types = wm.dataSources.sources[this.dataModelName];
+	var type;
+	for (var i = 0; i < types.length; i++) {
+	    if (types[i].caption == this.entityName) {
+		type = types[i].type;
+		break;
+	    }
+	}
+	var panel = new wm.LivePanel({owner: inOwner,
+				      parent: inParent,
+				      liveDataName: this.dataModelName.toLowerCase(),
+				      liveSource: type,
+				      name: inOwner.getUniqueName(this.dataModelName + "LivePanel")});
+	panel.afterPaletteDrop();
+	return panel;
     }
 });
 

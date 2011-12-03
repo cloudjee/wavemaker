@@ -39,10 +39,11 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	ignoreCase: false,
 	/** Optional order by clause, example "asc: cityId, desc: city" */
 	orderBy: "",
+
 	/** LiveView or LiveTable from which this LiveVariable gets its field information; can use a liveView or liveTable */
-	liveSource: null,
-	/** our liveView **/
-	liveView: null,
+	liveSource: null,  /* LiveSource is now deprecated; TODO: Hide liveSource unless its an old LIveVar already pointing to an app.liveview */
+
+
 	/** Maximum number of results to return */
 	maxResults: 500,
 	//designMaxResults: 50,
@@ -67,11 +68,22 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	postInit: function() {
 		this.inherited(arguments);
 		// initialize via liveSource or optionally directly with a liveView)
-		if (this.liveSource && this.liveSource != "app")
-			this.setLiveSource(this.liveSource);
-		else
-			this.setLiveView(this.liveView || this.createLiveView(this.type));
-		this.doAutoUpdate();
+
+	    /* if there is an existing liveView subcomponent, use it*/
+	    if (this.$.liveView) {
+		this.setLiveView(this.$.liveView);
+	    }
+
+	    /* DEPRECATED; if its old style and points to an app.liveView, use that liveview */
+	    else if (this.liveSource && this.liveSource != "app") {
+		this.setLiveSource(this.liveSource);
+	    }
+
+	    /* Else create a new LiveView */
+	    else {
+		this.setLiveView(this.liveView || this.createLiveView(this.type));
+	    }
+	    this.doAutoUpdate();
 	},
 	_subscribeLiveView: function() {
 		this._unsubscribeLiveView();
@@ -82,6 +94,7 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 		dojo.unsubscribe(this._liveViewSubscription);
 		this._liveViewSubscription = null;
 	},
+        /* Basically, is this a valid type for a LiveVariable; unless type is unset, should return true */
 	isLiveType: function() {
 		return wm.typeManager.getLiveService(this.type);
 	},
@@ -125,20 +138,34 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	    // if no livetype, accept anything...
 	    // if passing in a hash (no declaredClass) thats fine if we already have a type
 	    // else if passing in a variable, its type should match our current type
-	    if (!liveType || (this.type && !inSourceData.declaredClass) || (inSourceData || 0).type == this.type) {
+	    if (!liveType || (this.type && inSourceData && !inSourceData.declaredClass) || (inSourceData || 0).type == this.type) {
 			this.sourceData.setDataSet(inSourceData);
 			if (!liveType) {
-				this._updating++;
+			    this._updating++;
+			    /* Deprecated if clause */
+			    if (inSourceData.liveView && inSourceData.liveView.getId().match(/^app\./)) {
 				this.setLiveSource(this.sourceData.type);
-				this._updating--;
+			    } else {
+				if (!this.liveView) 
+				    this.liveView = this.createLiveView();
+				this.liveView.setDataType(inSourceData.liveView.dataType);
+				this.liveView.related = dojo.clone(inSourceData.liveView.related);
+				this.liveView.service = inSourceData.liveView.service;
+				this.liveView.view = dojo.clone(inSourceData.liveView.view);
+				this.setLiveView(this.liveView);
+			    }
+			    this._updating--;
 			}
-		}
+	    } else if (!inSourceData) {
+		this.sourceData.setDataSet(null);
+	    }
 	},
 	// ==========================================================
 	// LiveView integration
 	// ==========================================================
 	/** Set the LiveView or LiveTable from which we will get data information */
 	/* valid input: LiveView full id or LiveTable full name */
+	    /* DEPRECATED */
 	setLiveSource: function(inLiveSource) {
 	    var s = this.liveSource = inLiveSource;
 	    var v;
@@ -149,6 +176,7 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 		v = this.createLiveView(s);
 	    if (v)
 		this.setLiveView(v);
+		
 	    this.doAutoUpdate();
 	},
 		     /*
@@ -167,8 +195,10 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	setLiveView: function(inLiveView) {
 		this.clearData();
 		this.liveView = inLiveView;
+	    if (this._isDesignLoaded) {
 		this._subscribeLiveView();
-		this.setType(this.getViewType());
+	    }
+	    this.setType(this.getViewType());
 	},
 	createLiveView: function(inType) {
 		return new wm.LiveView({
@@ -192,6 +222,11 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 
 	    this.filter.setType(this.type);
 	    this.sourceData.setType(this.type);
+	    
+	    if (this.liveView && this.liveView.dataType != this.type && this.liveView.owner == this) {
+		this.liveView.setDataType(this.type);
+		this.liveView.createDefaultView();
+	    }
 	    // I've been seeing these bindings fire way too often, so
 	    // some extra tests to insure its needed
 	    var newSourceType = this.sourceDataType + "|" + dojo.toJson(this.sourceData._dataSchema);

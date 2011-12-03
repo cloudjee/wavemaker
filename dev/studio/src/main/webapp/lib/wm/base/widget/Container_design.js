@@ -16,37 +16,41 @@
 
 dojo.provide("wm.base.widget.Container_design");
 dojo.require("wm.base.widget.Container");
-
+dojo.require("wm.base.Control_design");
 
 wm.Object.extendSchema(wm.Container, {
-    layoutKind:         {group: "layout", order: 100, doc: 1},
+    hint: {ignore:true},
+    layoutKind:         {group: "layout", order: 100, doc: 1, options: ["top-to-bottom","left-to-right"]},
     horizontalAlign:    {group: "layout", order: 110, doc: 1, options: ["left","center","right"]},
     verticalAlign:      {group: "layout", order: 120, doc: 1, options: ["top","middle","bottom"]},
     fitToContent:       {ignore: true},
     fitToContentWidth:  {group: "advanced layout", order: 90, shortname: "Auto Width", type: "Boolean"},
     fitToContentHeight: {group: "advanced layout", order: 91, shortname: "Auto Height", type: "Boolean"},
-    autoScroll: {group: "scrolling", order: 100, ignore: 0, type: "Boolean"},
+    autoScroll: {writeonly: 0},
     scrollX: {group: "scrolling", order: 101, ignore: 0, type: "Boolean"},
     scrollY: {group: "scrolling", order: 102, ignore: 0, type: "Boolean"},
     touchScrolling: {group: "scrolling", order: 103, ignore: 0},
     isMajorContent: {group: "style", order: 150, ignore: 1}, // obsolete
-    themeStyleType: {ignore: true, group: "style", order: 150},
-    setThemeStyleType: {group: "method"},
-    getThemeStyleType: {group: "method", returns: "String"},
-    reflow: {group: "method"},
-    getInvalidWidget: {group: "method", returns: "wm.Control"},
-    setHorizontalAlign:    {group: "method"},
-    setVerticalAlign:      {group: "method"},
-    clearData: {group: "method"},
-    resetData: {group: "method"},
-    clearDirty: {group: "method"},
+    themeStyleType: {ignore: true, group: "style", order: 20, options: ["", "MainContent", "EmphasizedContent", "HeaderContent"]},
+    setThemeStyleType: {method:1},
+    getThemeStyleType: {method:1, returns: "String"},
+    reflow: {method:1},
+    getInvalidWidget: {method:1, returns: "wm.Control"},
+    setHorizontalAlign:    {method:1},
+    setVerticalAlign:      {method:1},
+    clearData: {method:1},
+    resetData: {method:1},
+    clearDirty: {method:1},
+    resetData: {method:1},
+    clearDirty: {method:1},
     customGetValidate:     {group: "customMethods"},
 		invalid: { ignore: 1, bindSource: 1, readonly: 1, type: "Boolean" },
 		isDirty: { ignore: 1, bindSource: 1, readonly: 1, type: "Boolean" },
 	    lock: { order: 0, type: "Boolean" },
 		freeze: { order: 5, type: "Boolean" },
 		box: { ignore: 1 },
-		boxPosition: { ignore: 1}
+    boxPosition: { ignore: 1},
+    resizeToFit: {group: "operation", operation: true}
 });
 
 
@@ -54,6 +58,7 @@ wm.Container.extend({
 	listProperties: function() {
 		var p = this.inherited(arguments);
 		p.freeze.ignoretmp = this.schema.freeze.ignore || this.getLock();
+	        p.resizeToFit.ignoretmp = this.percEx && this.percEx.w && this.percEx.h || this.fitToContent;
 		return p;
 	},
 	writeChildren: function(inNode, inIndent, inOptions) {
@@ -79,6 +84,7 @@ wm.Container.extend({
 		} else {
 			var p = inControl.parent;
 			inControl.setParent(container);
+		    if (inControl.designWrapper)
 			inControl.designWrapper.controlParentChanged();
 			// inDropInfo.index 'i' is never counting inControl
 			container.removeControl(inControl);
@@ -92,20 +98,56 @@ wm.Container.extend({
 		}
 		container.reflow();
 	},
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "layoutKind":
-				return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: wm.layout.listLayouts()});
 
-                case "themeStyleType":
-		    return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["", "MainContent", "EmphasizedContent", "HeaderContent"]});
-		}
-		return this.inherited(arguments);
-	},
+    resizeToFit: function() {
+	this.designResizeForNewChild("left-to-right", true);
+	this.designResizeForNewChild("top-to-bottom", true);
+    },
 	resizeUpdate: function(inBounds) {
 		// update the boundary rectangle highlight only
 		this.designWrapper._setBounds(inBounds);
 	},
+    designResizeForNewChild: function(layoutKind, reduceSize) {
+	if (!this.autoScroll && 
+	    !this.scrollX && 
+	    !this.scrollY && 
+	    !this.fitToContent) 
+	{
+	    if (!layoutKind) {
+		layoutKind = this.layoutKind;
+	    }
+	    if (layoutKind == "left-to-right") {
+		var preferredWidth = this.getPreferredFitToContentWidth();
+		var width = this.bounds.w;
+		if (preferredWidth > width) {
+		    if (!this._percEx.w) {
+			this.setWidth(preferredWidth + "px");
+		    } else {
+			if (this.parent && this.parent instanceof wm.Layout == false) {
+			    this.parent.designResizeForNewChild(layoutKind);
+			}
+		    }
+		} else if (reduceSize && !this._percEx.w) {
+		    this.setWidth(preferredWidth + "px");
+		}
+	    } else {
+		var preferredHeight = this.getPreferredFitToContentHeight();
+		var height = this.bounds.h;
+		if (preferredHeight > height) {
+		    if (!this._percEx.h) {
+			this.setHeight(preferredHeight + "px");
+		    } else {
+			if (this.parent && this.parent instanceof wm.Container && this.parent instanceof wm.Layout == false) {
+			    this.parent.designResizeForNewChild(layoutKind);
+			}
+		    }
+		} else if (reduceSize && !this._percEx.h) {
+		    this.setHeight(preferredHeight + "px");
+		}
 
+
+	    }
+	}
+    },
 _end: 0
 });

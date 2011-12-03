@@ -26,7 +26,7 @@ dojo.declare("wm.StyleInspector", [wm.Layers, wm.InspectorBase], {
 		    stylePropHtml: ["wm.Html", {width: "100%", height: "100%"}]
 		}],
 
-		classes: ["wm.Layer", {flex: 1, caption: "", box: "v"}, {}, {
+		classes: ["wm.Layer", {"_classes":{"domNode":["wm_FontColor_Black"]},flex: 1, caption: "", box: "v"}, {}, {
 			//classTree: ["wm.Tree", {flex: 1}, {}, {}],
 		        classListPanel: ["wm.Panel", {height: "100%", width: "100%", layoutKind: "top-to-bottom", padding: "4", margin: "0", autoScroll: true}],
 			bevel1: ["wm.Bevel", {}, {}, {}],

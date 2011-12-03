@@ -171,18 +171,3 @@ dojo.declare("wm.DojoFisheye", wm.Control, {
 	
 });
 
-// design only...
-wm.Object.extendSchema(wm.DojoFisheye, {
-	variable: {ignore: 1},
-	connectEvents:{ignore:1},
-	variableConnectEvents:{ignore:1},
-	dataSet: {bindTarget: 1, group: "edit", order: 10, isList: true},
-	imageUrlField:{group: "edit", order: 20},
-	imageLabelField:{group: "edit", order: 30},
-	itemWidth:{group: "edit", order: 40},
-	itemHeight:{group: "edit", order: 50},
-	itemMaxWidth:{group: "edit", order: 60},
-	itemMaxHeight:{group: "edit", order: 70},
-	selectedItem: { ignore: true, isObject: true, bindSource: true, simpleBindProp: true }
-});
-

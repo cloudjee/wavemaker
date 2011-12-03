@@ -67,14 +67,79 @@ dojo.declare("wm.Number", wm.Text, {
 	var v = this.displayValue;
 	var constraints = this.getEditorConstraints();
 
-		return dojo.mixin(this.inherited(arguments), {
+	var p = dojo.mixin(this.inherited(arguments), {
 			constraints: constraints,
 		    //editPattern: constraints.pattern,
 			rangeMessage: this.rangeMessage,
 			required: this.required,
 			value: v ? Number(v) : ""
 		}, inProps || {});
+/*
+	if (this.numberFormat) {
+	    p.format = dojo.hitch(this, this.numberFormatter);
+	    p.parse = dojo.hitch(this, this.numberParser);
+	}	    
+	*/
+	return p;
 	},
+/*
+    numberFormat: "",
+    numberFormatter: function(inValue) {
+	if (inValue === undefined ||
+	    inValue === null ||
+	    inValue === "") return inValue;
+
+	inValue = String(inValue); // inValue is a number
+
+	var result = "";
+	/ * If inValue is different from _lastFormattedNumber only at the end of the string, then the user is doing normal changes; 
+	 * If the user is NOT doing normal changes, stick '_' wherever characters were removed
+	 * /
+	if (this._lastFormattedNumber &&
+	    this._lastFormattedNumber.indexOf(inValue) != 0 &&
+	    inValue.indexOf(this._lastFormattedNumber) != 0) 
+	{
+	    var a = inValue;
+	    var b = this._lastFormattedNumber;
+	    var length = (this._lastFormattedNumber.length <= inValue.length) ? this._lastFormattedNumber.length : inValue.length;
+	    inValue = "";
+	    var iOffset = 0;	    
+	    for (var i = 0; i < length; i++) {
+		if (a.charAt(i) == b.charAt(i+iOffset) || b.charAt(i+iOffset).match(/\D/)) {
+		    inValue += a.charAt(i);
+		} else {
+		    debugger;
+		    inValue += "_";
+		    iOffset++;
+		}
+	    }
+	} 
+	    var v = String(inValue||"").replace(/[^0-9\._]/g,"").split("");
+	    var n = this.numberFormat;
+	    var vIndex = 0;
+
+	    for (var i = 0; i < n.length; i++) {
+		if (n.charAt(i) == "?") {
+		    result += v[vIndex] || "";
+		    vIndex++;
+		    if (vIndex >= v.length) break;
+		} else {
+		    result += n.charAt(i);
+		}
+	    }
+
+	this._lastFormattedNumber = result.replace(/[^0-9\._]/g,"");
+	return result;
+    },
+    numberParser: function(inValue) {
+	inValue = String(inValue);
+	if (inValue.indexOf("_") != -1) {
+	    return inValue.replace(/[^0-9\._]/g,"");
+	} else {
+	    return parseInt(String(inValue).replace(/\D/g,""));
+	}
+    },
+    */
 	_getPlaces: function (){
 		return '';
 	},
@@ -136,23 +201,42 @@ dojo.declare("wm.Number", wm.Text, {
 	    this.createEditor();
 	}
     },
+    calcIsDirty: function(a,b) {
+	return a !== b;
+    }
 
-    themeableStyles: [{name: "wm.NumberSpinner-Down-Arrow_Image", displayName: "Down Arrow"}, {name: "wm.NumberSpinner-Up-Arrow_Image", displayName: "Up Arrow"}]
-	
-});
+/*
+    dokeypress: function(inEvent) {
+	if (this.numberFormat) {
+	    if (app._keys[inEvent.keyCode].match(/\d/)) {
+	    var d =  this.editor.get("displayedValue");
+	    var pos = this.getCursorPosition();
+	    if (d.charAt(pos+1) == '_') {
+		this.editor.textbox.value = d.substring(0, pos+1) + d.substring(pos+2);
+		this.setCursorPosition(pos+1);
+	    }
+	    } else if ( app._keys[inEvent.keyCode] == "BACKSPACE") {
+		
+	    }
+	}
+	this.inherited(arguments);
+    }
 
-wm.Object.extendSchema(wm.Number, {
-    resetButton: {ignore: 1},
-    dataValue: {ignore: 1, bindable: 1, group: "editData", order: 3, simpleBindProp: true, type: "Number"},
-    places: {group: "editor", order: 2, doc: 1},
-    minimum:  { group: "editor", order: 3, emptyOK: true, doc: 1, bindTarget: true},
-    maximum: { group: "editor", order: 4, emptyOK: true, doc: 1, bindTarget: true},
-    rangeMessage: {  group: "editor", order: 5},
-    spinnerButtons: {group: "editor", order: 6},
-    regExp: { ignore: 1 },
-    maxChars: { ignore: 1},
-    setMaximum: {group: "method", doc: 1},
-    setMinimum: {group: "method", doc: 1}
+    changed: function() {
+	if (this.numberFormat && this.editor && this.editor.textbox) {
+	    var val = this.editor.get("displayedValue");
+	    var formattedValue = this.editor.format(this.editor.parse(val));
+
+	    if(formattedValue !== undefined) {
+		var pos = this.getCursorPosition();
+		pos += (formattedValue.length - val.length);		
+		this.editor.textbox.value = formattedValue;
+		this.setCursorPosition(pos+1);
+	    }
+	}
+	this.inherited(arguments);
+	  }*/
+
 });
 
 //===========================================================================
@@ -219,14 +303,6 @@ dojo.declare("wm.Currency", wm.Number, {
 	this.createEditor();
     }
 
-});
-
-wm.Object.extendSchema(wm.Currency, {
-    password: {ignore:1},
-    currency: {group: "editor", order: 2, doc: 1},
-    places: {  group: "editor", order: 5, doc: 1},
-    rangeMessage: {  group: "editor", order: 6},
-    spinnerButtons: {ignore: 1}
 });
 
 
@@ -336,16 +412,3 @@ dojo.declare("wm.Slider", wm.AbstractEditor, {
 	}
 			*/			
 });
-
-wm.Object.extendSchema(wm.Slider, {
-    discreteValues: {group: "editor", order: 2},
-    minimum:  { group: "editor", order: 3, doc: 1, bindTarget: true},
-    maximum: { group: "editor", order: 4, doc: 1, bindTarget: true},
-    showButtons: {  group: "editor", order: 5},
-    verticalSlider: {  group: "editor", order: 6, ignore: 1},
-    editorBorder: { ignore: 1 },
-    changeOnKey: { ignore: 1 },
-    changeOnEnter: { ignore: 1 }
-});
-
-

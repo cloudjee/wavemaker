@@ -15,231 +15,19 @@
 
 dojo.provide("wm.base.widget.Editors.Select_design");
 dojo.require("wm.base.widget.Editors.Select");
+dojo.require("wm.base.widget.Editors.AbstractEditor_design");
 
 
 // design only
 wm.SelectMenu.extend({
     themeableStyles: ["wm.SelectMenu-Down-Arrow_Image", "wm.SelectMenu-Inner_Radius"],
-	updateNow: "(updateNow)",
-    /* Don't show optionsVar in the dataSet property field */
-        get_dataSet: function() {
-	    if (this.dataSet == this.$.optionsVar)
-		return null;
-	    return this.dataSet;
-	},
-	set_dataSet: function(inDataSet) {
-		// support setting dataSet via id from designer
-		if (inDataSet && !(inDataSet instanceof wm.Variable)) {
-		    var ds = this.getValueById(inDataSet);
-		    if (ds) {
-			this.components.binding.addWire("", "dataSet", ds.getId());
-		    }
-		}
-
-	    /* If the user triggers a set_dataSet(null) (user didn't trigger it if this._cupdating) then clear everything */
-	    else if (!inDataSet && !this._cupdating) {
-		    this.components.binding.removeWireByProp("dataSet");
-		    this.options = this.dataField = this.displayField = "";
-		    this.setDataSet(inDataSet);
-	    } else {		    		
-		    var oldDataSet = this.dataSet;
-		    /* Clear the options property if setting a new dataSet */
-		    if (this.options && inDataSet != this.$.optionsVar)
-			this.options = "";
-		    this.setDataSet(inDataSet);
-		    /* If we didn't have a dataSet, then only update the displayField if there isn't a displayField */
-		    if (!oldDataSet && inDataSet && (!this.displayField && !this.displayExpression)) {
-			this._setDisplayField();
-
-		    }
-
-		    /* Else if we have changed types (or don't have a displayField/expression), then update both dataField and displayField */
-		    else if (oldDataSet && inDataSet && inDataSet != this.$.liveVariable && (!this.displayField && !this.displayExpression || this._lastType != inDataSet.type))  {
-			if (wm.defaultTypes[inDataSet.type]) {
-			    this.dataField = "dataValue";
-			} else {
-			    this.dataField = "";
-			}
-			this._setDisplayField();
-		    } else if ((!this.displayField || !wm.typeManager.getType(inDataSet.type) || !wm.typeManager.getType(inDataSet.type).fields[this.displayField]) && !this.displayExpression) {
-			this._setDisplayField();
-		    }
-		}
-	    if (inDataSet)
-		this._lastType = inDataSet.type;
-	},
-	// FIXME: for simplicity, allow only top level , non-list, non-object fields.
-	_addFields: function(inList, inSchema) {
-		for (var i in inSchema) {
-			var ti = inSchema[i];
-			if (!(ti||0).isList && !wm.typeManager.isStructuredType((ti||0).type)) {
-				inList.push(i);
-			}
-		}
-	},
-    /* find a best guess at an initial displayField */
-    _setDisplayField: function() {
-	var dataSet = this.dataSet;
-	if (dataSet && dataSet.type) {
-	    var type = dataSet.type;
-	    var typeDef = wm.typeManager.getType(type);
-	    if (!typeDef) return;
-	    var fields = typeDef.fields;
-	    var stringFields = {};
-	    var literalFields = {};
-	    for (fieldName in fields) {
-		var field = fields[fieldName];
-		if (!field.exclude || field.exclude.length == 0) {
-		    if (field.type == "java.lang.String" || field.type == "StringData") {
-			stringFields[fieldName] = field;
-		    } else if (!wm.typeManager.isStructuredType(field.type)) {
-			literalFields[fieldName] = field;
-		    }
-		}
-	    }
-	    
-	    for (var fieldName in stringFields) {
-		var lowestFieldOrder = 100000;
-		var lowestFieldName;
-		if (!dojo.isFunction(stringFields[fieldName])) { // ace damned changes to object prototype
-		    if (stringFields[fieldName].fieldOrder === undefined && !lowestFieldName) {
-			lowestFieldName = fieldName;
-		    }
-		    else if (stringFields[fieldName].fieldOrder !== undefined && 
-			stringFields[fieldName].fieldOrder < lowestFieldOrder) 
-		    {
-			lowestFieldOrder = stringFields[fieldName].fieldOrder;
-			lowestFieldName = fieldName;
-		    }
-		}
-	    }
-	    if (lowestFieldName) {
-		return this.setDisplayField(lowestFieldName);
-	    }
-
-
-	    for (var fieldName in literalFields) {
-		var lowestFieldOrder = 100000;
-		var lowestFieldName;
-		if (!dojo.isFunction(literalFields[fieldName])) { // ace damned changes to object prototype
-		    if (literalFields[fieldName].fieldOrder === undefined && !lowestFieldName) {
-			lowestFieldName = fieldName;
-		    }
-		    else if (literalFields[fieldName].fieldOrder !== undefined &&
-			     literalFields[fieldName].fieldOrder < lowestFieldOrder) {
-			lowestFieldOrder = literalFields[fieldName].fieldOrder;
-			lowestFieldName = fieldName;
-		    }
-		}
-	    }
-	    if (lowestFieldName) {
-		return this.setDisplayField(lowestFieldName);
-	    }
-	}
-    },
-	_listFields: function() {
-		var list = [ "" ];
-		var schema = this.dataSet instanceof wm.LiveVariable ? wm.typeManager.getTypeSchema(this.dataSet.type) : (this.dataSet||0)._dataSchema;
-		var schema = (this.dataSet||0)._dataSchema;
-		this._addFields(list, schema);
-		return list;
-	},
-	makePropEdit: function(inName, inValue, inDefault) {  
-	        var prop = this.schema ? this.schema[inName] : null;
-	        var name =  (prop && prop.shortname) ? prop.shortname : inName;
-		switch (inName) {
-			case "displayField":
-				var values = this._listFields();
-		                //return new wm.propEdit.Select({component: this, name: inName, value: inValue, options: values});
-				return makeSelectPropEdit(inName, inValue, values, inDefault);
-			case "dataField":
-		                var showValue = inValue;
-				var values = this._listFields();
-		                if (values.length) values[0] = this._allFields;
-		                if (!showValue) {
-				    showValue = this._allFields;
-				}
-		                //return new wm.propEdit.Select({component: this, name: inName, value: inValue, options: values});
-				return makeSelectPropEdit(inName, showValue, values, inDefault);
-
-			case "displayType":
-				return makeSelectPropEdit(inName, inValue, wm.selectDisplayTypes, inDefault);
-			case "dataSet":
-		    return new wm.propEdit.DataSetSelect({component: this, name: inName, value: this.dataSet ? this.dataSet.getId() : "", allowAllTypes: true, listMatch: true, value: inValue});
-			case "updateNow":
-				return makeReadonlyButtonEdit(name, inValue, inDefault);
-		}
-		return this.inherited(arguments);
-	},
-    setPropEdit: function(inName, inValue, inDefault) {
-	switch (inName) {
-	case "displayField":
-	    var editor1 = dijit.byId("studio_propinspect_displayField");
-
-	    var store1 = editor1.store.root;
-
-	    while (store1.firstChild) store1.removeChild(store1.firstChild);
-
-
-	    var displayFields = this.makePropEdit("displayField");
-	    displayFields = displayFields.replace(/selected="selected"/,"");
-	    displayFields = displayFields.replace(/^.*?\<option/,"<option");
-	    displayFields = displayFields.replace(/\<\/select.*/,"");
-	    store1.innerHTML = displayFields;
-	    editor1.set("value", inValue, false);
-	    return true;
-	case "dataField":
-	    var showValue = inValue;
-	    if (!showValue)
-		showValue = this._allFields;
-	    var editor1 = dijit.byId("studio_propinspect_dataField");
-
-	    var store1 = editor1.store.root;
-
-	    while (store1.firstChild) store1.removeChild(store1.firstChild);
-
-
-	    var dataFields = this.makePropEdit("dataField");
-	    dataFields = dataFields.replace(/selected="selected"/,"");
-	    dataFields = dataFields.replace(/^.*?\<option/,"<option");
-	    dataFields = dataFields.replace(/\<\/select.*/,"");
-	    store1.innerHTML = dataFields;
-	    editor1.set("value", showValue, false);
-	    return true;
-	}
-	return this.inherited(arguments);
-    },    
-	editProp: function(inName, inValue, inInspector) {
-		switch (inName) {
-			case "updateNow":
-				return this.update();
-		}
-	    return this.inherited(arguments);
-	},
 	setHasDownArrow: function(inValue){
 		this.hasDownArrow = inValue;
 		//this.editor.attr('hasDownArrow', this.hasDownArrow); does not work updates the editor instantly. Therefore wrote a hack to hide downArrowNode by updating style prop.
 		if (this.editor.downArrowNode){
 			this.editor.downArrowNode.style.display = this.hasDownArrow ? "" : "none";
 		}
-	},
-    set_displayExpression: function(inExpr) {
-	if (inExpr) {
-		var ex2 = inExpr.replace(/\$\{.*?}/g, 1); // replace all ${...} with the value 1 for a quick and easy test to validate the expression
-		try {
-		    var result = eval(ex2);
-		    if (typeof result == "object") {
-			app.toastError("<" + ex2 + "> does not compile to a string value. Perhaps you need quotes?");
-			return;
-		    }
-			
-		} catch(e) {
-		    app.toastError("Unable to compile this expression: " + e);
-		    return;
-		}
 	}
-	this.displayExpression = inExpr;
-    }
 });
 
 
@@ -247,41 +35,28 @@ wm.SelectMenu.extend({
 wm.Object.extendSchema(wm.SelectMenu, {
     placeHolder: {group: "Labeling", doc: 1},
     onEnterKeyPress: {ignore: 0},
-    restrictValues: {type: "wm.Boolean", group: "editor", order: 40, doc: 1},
+    restrictValues: {type: "boolean", group: "editor", order: 40, doc: 1},
 	changeOnKey: { ignore: 1 },
 	changeOnEnter: { ignore: 1 },
-    selectedItem: { ignore: true, bindSource: true, isObject: true, bindSource: true, doc: 1},
-	dataSet: { readonly: true, group: "editor", order: 4, type: "wm.Variable", isList: true, bindTarget: true, doc: 1},
-	startUpdate: { group: "editor", order: 5},
-  pageSize: { order: 6, group: "editor"},
-	liveVariable: {ignore: 1 },
-	options: {group: "editor", order: 7},
-        dataValue: {ignore: 1, bindable: 1, group: "editData", order: 3, simpleBindProp: true, type: "any"}, // use getDataValue()
-	dataField: {group: "editor", order: 10, doc: 1},
-	displayField: {group: "editor", order: 15,doc: 1},
-    displayExpression: {group: "editor", order: 20, doc: 1, displayExpression: "displayExpression", displayExpressionDataSet: "dataSet"}, /* last property is the name of the field that is used as a display expression */
-	displayType:{group: "editor", order: 21},
+        pageSize: { order: 6, group: "editor"},
   autoComplete: {group: "editor", order: 25},
 	hasDownArrow: {group: "editor", order: 26},
   allowNone: {group: "editor", order: 30},
-	updateNow: {group: "operation"},
   dataFieldWire: { ignore: 1},
-  optionsVar: {ignore:1},
-	_allFields: {ignore:1},
-    defaultInsert:{ignore:1, bindTarget: 1, type:'wm.Variable', group: "editData", order: 10},
-    setRestrictValues: {group: "method", doc: 1},
-    setDataSet: {group: "method", doc: 1},
-    setOptions: {group: "method", doc: 1},
-    getItemIndex: {group: "method", doc: 1, returns: "Number"}
+    setRestrictValues: {method:1, doc: 1},
+    getItemIndex: {method:1, doc: 1, returns: "Number"}
 });
 
 
 wm.Object.extendSchema(wm.Lookup, {
+    formField: {editor: "wm.prop.FormFieldSelect", editorProps: {relatedFields: true}},
+    editorType: {group: "common", order: 501, options: ["Lookup", "FilteringLookup"]},
     ignoreCase: {ignore: true},
 	autoDataSet: {group: "data", order: 3},
     maxResults: {group: "editor", order: 100},
 	options: {ignore: 1},
-	dataField: {ignore: 1}
+    dataField: {ignore: 1},
+    liveVariable: {ignore: 1} /* else it writes its liveVariable subcomponent */
 });
 
 
@@ -315,18 +90,6 @@ wm.Lookup.extend({
 	getOptions: function() {
 		var f = wm.getParentForm(this), ds = f && f.dataSet;
 		return ds && ds.type ? this.getSchemaOptions(ds._dataSchema) : [""];
-	},
-
-
-
-
-
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "formField":
-				return new wm.propEdit.FormFieldSelect({component: this, name: inName, value: inValue, relatedFields: true});
-		}
-		return this.inherited(arguments);
 	},
 
 	listProperties: function() {

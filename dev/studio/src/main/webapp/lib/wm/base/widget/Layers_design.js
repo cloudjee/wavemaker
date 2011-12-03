@@ -14,6 +14,7 @@
 
 dojo.provide("wm.base.widget.Layers_design");
 dojo.require("wm.base.widget.Layers");
+dojo.require("wm.base.widget.Container_design");
 
 // design-time
 wm.Object.extendSchema(wm.Layer, {
@@ -23,8 +24,8 @@ wm.Object.extendSchema(wm.Layer, {
     themeStyleType: {group: "style", order: 150},
 	title: { ignore: 1 },
 	disabled: { ignore: 1 },
-    moveNext: { group: "operation", order: 1, contextMenu: false },
-	movePrevious: { group: "operation", order: 2, contextMenu: false },
+    moveNext: { group: "operation", order: 1, contextMenu: false, operation: 1 },
+	movePrevious: { group: "operation", order: 2, contextMenu: false, operation: 1 },
 	flex: {ignore: 1},
 	sizeUnits: {ignore: 1},
 	size: {ignore: 1},
@@ -35,18 +36,17 @@ wm.Object.extendSchema(wm.Layer, {
     fitToContentHeight: { ignore: 1},
     minWidth: { ignore: 1},
     minHeight: { ignore: 1},
-    activate: {group: "method"},
-    isActive: {group: "method", returns: "Boolean"},
-    setCaption: {group: "method"},
-    getIndex: {group: "method", returns: "Number"},
-    parent: {ignore: 1, doc: 1, prototype: "wm.Layers"}
+    activate: {method:1},
+    isActive: {method:1, returns: "Boolean"},
+    setCaption: {method:1},
+    getIndex: {method:1, returns: "Number"},
+    parent: {ignore: 1, doc: 1, prototype: "wm.Layers"},
+    resizeToFit: {ignore:1}
 });
 
 wm.Layer.extend({
     themeable: false,
         sizeable: false,
-	moveNext: "(move to next)",
-	movePrevious: "(move to previous)",
 	designCreate: function() {
 		this.inherited(arguments);
 		if (this.designWrapper)
@@ -61,35 +61,17 @@ wm.Layer.extend({
 		var l = this.parent, i = this.getIndex();
 		l.moveLayerIndex(this, i + inDelta);
 	},
-	makePropEdit: function(inName, inValue, inDefault) {
-	        var prop = this.schema ? this.schema[inName] : null;
-	        var name =  (prop && prop.shortname) ? prop.shortname : inName;
-		switch (inName) {
-			case "moveNext":
-				return makeReadonlyButtonEdit(name, inValue, inDefault, '&raquo;');
-			case "movePrevious":
-				return makeReadonlyButtonEdit(name, inValue, inDefault, '&laquo;');
-		}
-		return this.inherited(arguments);
+        moveNext: function() {
+	    this.moveLayer(1);
+	    studio.refreshComponentOnTree(this.parent);
+	    studio.select(null);
+	    studio.select(this);
 	},
-	editProp: function(inName, inValue, inInspector) {
-		switch (inName) {
-			case "moveNext":
-				this.moveLayer(1);
-				studio.refreshComponentOnTree(this.parent);
-				studio.select(null);
-				studio.select(this);
-				break;
-			case "movePrevious":
-				this.moveLayer(-1);
-				studio.refreshComponentOnTree(this.parent);
-				studio.select(null);
-				studio.select(this);
-				break;
-			default:
-				this.inherited(arguments);
-				return;
-		}
+        movePrevious: function() {
+	    this.moveLayer(-1);
+	    studio.refreshComponentOnTree(this.parent);
+	    studio.select(null);
+	    studio.select(this);
 	},
 
     createDesignContextMenu: function(menuObj) {
@@ -121,7 +103,7 @@ wm.Layer.extend({
 });
 
 wm.Object.extendSchema(wm.Layers, {
-    transition: {group: "display"},
+    transition: {group: "display", options: ["none","fade","slide"]},
 	lock: {ignore: 1},
 	freeze: {ignore: 1},
 	box: {ignore: 1},
@@ -132,44 +114,45 @@ wm.Object.extendSchema(wm.Layers, {
 	layerIndex: {ignore: 1},
 	lastLayerIndex: {ignore: 1},
         defaultLayer: { group: "layout", order: 105, doc: 1},
-	layersType: { group: "layout", order: 110 },
-	add: { group: "operation", order: 1 },
+    layersType: { group: "layout", order: 110, options:["Layers", "RoundedTabs", "Tabs", "Accordion"] },
+	add: { group: "operation", order: 1, operation: 1 },
 	userDefHeaderHeight: {ignore:1},
 	fitToContent: { ignore: 1},
-        headerHeight: { group: "layout", order: 50},
+    headerHeight: {ignore:1, group: "layout", order: 50, editor: "wm.prop.SizeEditor", editorProps: {pxOnly: 1}},
+    headerWidth: {ignore:1, group: "layout", order: 50, editor: "wm.prop.SizeEditor", editorProps: {pxOnly: 1}},
     
     clientBorder: {group: "style", order: "100", doc: 1, shortname: "layerBorder"},
-    clientBorderColor: {group: "style", order: "101", doc: 1, shortname: "layerBorderColor"},
-    addLayer: {group: "method"},
-    getLayer: {group: "method", returns: "wm.Layer"},
+    clientBorderColor: {group: "style", order: "101", doc: 1, shortname: "layerBorderColor", editor: "wm.ColorPicker"},
+    addLayer: {method:1},
+    getLayer: {method:1, returns: "wm.Layer"},
+    removeLayer:{method:1},
     getLayerByCaption: {group: "method", returns: "wm.Layer"},
-    removeLayer:{group: "method"},
 
-    getActiveLayer: {group: "method", returns: "wm.Layer"},
+    getActiveLayer: {method:1, returns: "wm.Layer"},
 
-    indexOfLayer:  {group: "method", returns: "Number"},
-    indexOfLayerName:  {group: "method", returns: "Number"},
-    indexOfLayerCaption:  {group: "method", returns: "Number"},
+    indexOfLayer:  {method:1, returns: "Number"},
+    indexOfLayerName:  {method:1, returns: "Number"},
+    indexOfLayerCaption:  {method:1, returns: "Number"},
 
-    setLayer: {group: "method"},
-    setLayerIndex: {group: "method"},
+    setLayer: {method:1},
+    setLayerIndex: {method:1},
     
-    getCount: {group: "method", returns: "Number"},
+    getCount: {method:1, returns: "Number"},
 
-    moveLayerIndex: {group: "method"},
-    clear: {group: "method"},
+    moveLayerIndex: {method:1},
+    clear: {method:1},
 
-    setClientBorder: {group: "method"},
-    setClientBorderColor: {group: "method"},
+    setClientBorder: {method:1},
+    setClientBorderColor: {method:1},
     autoScroll: {ignore: 1}, // wm.Layer should have scrolling set, not the wm.Layers/TabLayers.  Accordion is an exception
     scrollX: {ignore: 1},
     scrollY: {ignore: 1},
-    touchScrolling: {ignore: 1}
+    touchScrolling: {ignore: 1},
+    resizeToFit: {ignore:1}
 });
 
 wm.Layers.extend({
     themeable: false,
-	add: '(add layer)',
 	_noCreate: true,
 	set_defaultLayer: function(inLayerIndex) {
 		this.setDefaultLayer(inLayerIndex);
@@ -221,54 +204,26 @@ wm.Layers.extend({
 			inIndexList.push(this.indexOfLayer(l));
 		}, this);
 	},
-	makePropEdit: function(inName, inValue, inDefault) {
-	        var prop = this.schema ? this.schema[inName] : null;
-	        var name =  (prop && prop.shortname) ? prop.shortname : inName;
-		switch (inName) {
-		        case "transition":
-		                return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["none", "fade", "slide"]});
-
-			case "add":
-				return makeReadonlyButtonEdit(name, inValue, inDefault);
-			case "layersType":
-				return makeSelectPropEdit(inName, inValue, ["Layers", "RoundedTabs", "Tabs", "Accordion"], inDefault);
-			case "defaultLayer":
-				var options = [""], values = [-1];
-				this.getLayerInfo(options, values);
-				return new wm.propEdit.Select({
-				    component: this,
-				    name: inName,
-				    value: inValue,
-				    values: values,
-				    options: options});
-
-			case "headerHeight":
-				return new wm.propEdit.UnitValue({
-					component: this,
-					name: inName,
-					value: inValue,
-					options: this._sizeUnits
-				});
-		}
-		return this.inherited(arguments);
+	makePropEdit: function(inName, inValue, inEditorProps) {
+	    switch (inName) {
+	    case "defaultLayer":
+		var options = [""], values = [-1];
+		this.getLayerInfo(options, values);
+		return new wm.prop.SelectMenu(dojo.mixin(inEditorProps, {options: options, values: values}));
+	    }
+	    return this.inherited(arguments);
 	},
-	editProp: function(inName, inValue, inInspector) {
-		switch (inName) {
-			case "add":
+    add: function() {
 				this.addLayer();
 				// FIXME: need to refresh tree and select layer
 				studio.refreshVisualTree();
 				studio.select(null);
 				studio.select(this);
-				break;
-			default:
-				this.inherited(arguments);
-				return;
-		}
 	},
 	listProperties: function() {
 		var props = this.inherited(arguments);
-		props.headerHeight.ignoretmp = (this.layersType != 'Tabs' && this.layersType != 'RoundedTabs');
+		props.headerHeight.ignoretmp = (this.layersType != 'Tabs' && this.layersType != 'RoundedTabs' && this.layersType != "Wizard" || this.verticalButtons);
+		props.headerWidth.ignoretmp = (this.layersType != 'Tabs' && this.layersType != 'RoundedTabs'  && this.layersType != "Wizard" || !this.verticalButtons);
 		return props;
 	},
 	getOrderedWidgets: function() {
@@ -323,26 +278,77 @@ wm.Object.extendSchema(wm.AccordionLayers, {
     clientBorder: {ignore: 1}
 });
 wm.Object.extendSchema(wm.TabLayers, {
-    conditionalTabButtons: {group: "layout"}
+    conditionalTabButtons: {group: "layout"},
+    verticalButtons: {group: "layout"},
+    layoutKind: { writeonly: 1},
+    headerHeight: {ignore: 0},
+    headerWidth: {ignore: 0}
 });
-wm.Object.extendSchema(wm.TabLayers, {
-    conditionalTabButtons: {group: "layout"}
+
+wm.Object.extendSchema(wm.WizardLayers, {
+    layoutKind: { writeonly: 1},
+    headerHeight: {ignore: 0},
+    headerWidth: {ignore: 0},
+    verticalButtons: {group: "layout"},
+    bottomButtons: {group: "layout"}
 });
-wm.Object.extendSchema(wm.TabLayers, {
-    conditionalTabButtons: {group: "layout"}
-});
-wm.Object.extendSchema(wm.TabLayers, {
-    conditionalTabButtons: {group: "layout"}
-});
+
+
 wm.TabLayers.extend({
     themeable: true,
     themeableProps: ["border", "borderColor", "clientBorder", "clientBorderColor", "headerHeight"],
-    themeableStyles: [{name: "wm.TabLayers-Button_Height", displayName: "Tab Button Height"}, {name: "wm.TabLayers-Button_TextSize", displayName: "Tab Font Size"}, {name: "wm.TabLayers-BorderStyle_Shadow", displayName: "Shadow (Default)"}, {name: "wm.TabLayers-Hover-BorderStyle_Shadow", displayName: "Shadow (Hover)"}, {name: "wm.TabLayers-Active-BorderStyle_Shadow", displayName: "Shadow (Active)"}]
+    themeableStyles: [{name: "wm.TabLayers-Button_Height", displayName: "Tab Button Height"}, {name: "wm.TabLayers-Button_TextSize", displayName: "Tab Font Size"}, {name: "wm.TabLayers-BorderStyle_Shadow", displayName: "Shadow (Default)"}, {name: "wm.TabLayers-Hover-BorderStyle_Shadow", displayName: "Shadow (Hover)"}, {name: "wm.TabLayers-Active-BorderStyle_Shadow", displayName: "Shadow (Active)"}],
+    set_verticalButtons: function(inValue) {
+	this.verticalButtons = Boolean(inValue);
+	if (inValue) {
+	    this.setLayoutKind("left-to-right");
+	} else {
+	    this.setLayoutKind("top-to-bottom");
+	}
+	this.decorator.decorateContainer();
+	this.reflow();
+	this.decorator.decorateLayers();
+    },
+    set_headerWidth: function(inWidth) {
+	this.headerWidth = inWidth;
+	this.c$[0].setWidth(inWidth);
+    }
 });
 
 wm.WizardLayers.extend({
     themeable: true,
-    themeableProps: ["border", "borderColor", "clientBorder", "clientBorderColor"]
+    themeableProps: ["border", "borderColor", "clientBorder", "clientBorderColor"],
+    set_bottomButtons: function(inValue) {
+	this.bottomButtons = inValue;
+	this.generateBottomButtonEvents();
+
+	this.decorator.addFooter();
+	this.reflow();
+	reinspect(true)
+    },
+    set_verticalButtons: function(inValue) {
+	this.verticalButtons = Boolean(inValue);
+	if (inValue) {
+	    this.setLayoutKind("left-to-right");
+	} else {
+	    this.setLayoutKind("top-to-bottom");
+	}
+	this.decorator.decorateContainer();
+	this.reflow();
+	this.decorator.decorateLayers();
+    },
+    set_headerWidth: function(inWidth) {
+	this.headerWidth = inWidth;
+	this.c$[0].setWidth(inWidth);
+    },
+    listProperties: function() {
+	var p = this.inherited(arguments);
+	var bottomButtons = this.bottomButtons ? this.bottomButtons.split(/\s*,\s*/) : [];
+	for (var i = 0; i < bottomButtons.length; i++) {
+	    p["onBottomButton" + i] = {isEvent:true};
+	}
+	return p;
+    }
 });
 
 

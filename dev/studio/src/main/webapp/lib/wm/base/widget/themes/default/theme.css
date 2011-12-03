@@ -1438,17 +1438,21 @@ display: block;
 
 
 
-.wmwizardlayers .wmwizardlayers-tab {
+.wmwizardlayers .wmwizardlayers-tab,
+.wmwizardlayers .wmwizardlayers-verticaltab {
 	cursor: pointer;
 	border: 1px solid transparent;
 	background-color: transparent;
-        height: 100%;
 	color: rgb(80,80,80);
 }
-.wmwizardlayers .wmwizardlayers-tab.done, .wmwizardlayers .wmwizardlayers-tab.wmwizardlayers-selected {
+.wmwizardlayers .wmwizardlayers-tab.done, 
+.wmwizardlayers .wmwizardlayers-tab.wmwizardlayers-selected,
+.wmwizardlayers .wmwizardlayers-verticaltab.done, 
+.wmwizardlayers .wmwizardlayers-verticaltab.wmwizardlayers-selected {
 	font-weight: bold;
 }
-.wmwizardlayers .wmwizardlayers-tab.wmwizardlayers-selected {
+.wmwizardlayers .wmwizardlayers-tab.wmwizardlayers-selected,
+.wmwizardlayers .wmwizardlayers-verticaltab.wmwizardlayers-selected {
     text-decoration: underline;
 }
 
@@ -1888,7 +1892,65 @@ Overriding dijit's progress bar properties to enable height changes to progress 
     cursor: default;
 }
 
+
+body .AppToolTip {
+	background-color: #949cab;
+	color: white;
+	text-align: center;
+     -moz-box-shadow: 2px 2px 4px black; /* FF3.5+ */
+     -webkit-box-shadow: 2px 2px 4px black; /* Saf3.0+, Chrome */
+     box-shadow: 2px 2px 4px black; /* Opera 10.5, IE 9.0 */	
+}
+
 .dj_ie9 .dijitComboBox .dijitInputContainer, .dj_ie9 .dijitComboBox .dijitInputContainer input {
     height: 100%;
 }
 
+
+body div.dojoxGridContent .dojoxGridCell .wmDeleteColumn {
+background-position: -560px 0px;
+width: 16px !important;
+height: 16px !important;
+background-image: url(/wavemaker/lib/images/silkIcons/silk.png);
+background-repeat:no-repeat;
+    cursor: pointer;
+}
+
+.wmeditor .wmCheckboxSet {
+    overflow-y: auto;
+    border-style: solid;
+}
+.wmeditor .wmCheckboxSetItem {
+    line-height: normal;
+    padding: 2px 5px 2px 5px;
+}
+
+.dojoGridNoHeader .dojoxGridMasterHeader {
+    display: none !important;
+}
+.Disabled .dojoxGrid {
+opacity: 0.6;
+    filter: alpha(opacity=60);
+}
+
+.wmSizeNode {
+display: inline-block;
+}
+
+.dojoxGridRow-inserting {
+    font-style: italic;
+    font-weight: bold !important;
+}
+
+code {
+border: solid 1px #333;
+display: block;
+padding: 5px;
+text-align: left;
+background-color: white;
+color: black;
+}
+li {
+    text-align: left;
+    padding-bottom: 5px;
+}

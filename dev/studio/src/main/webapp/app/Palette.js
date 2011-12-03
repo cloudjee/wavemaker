@@ -26,6 +26,62 @@ dojo.provide("wm.studio.app.Palette");
 	@name wm.Palette
 	@inherits wm.Tree
 */
+dojo.declare("wm.DraggableServiceTree", wm.Tree, {
+	init: function() {
+		this.inherited(arguments);
+		this.connect(this.domNode, "onmousedown", this, "mousedown");
+		this.dragger = new wm.design.Mover();
+		this.dragger.ondrop = dojo.hitch(this, "dragDrop");
+	},
+	mousedown: function(e) {
+		var t = this.findEventNode(e);
+		if (t) {
+		    if (t.component && t.component.hasServiceTreeDrop && t.component.hasServiceTreeDrop(t)) {
+			this.drag(e, t.component.name, t.component, t);
+			}
+			else if (t.parent == this.root && e.target != t.btnNode)
+			{
+				t.setOpen(t.closed);
+			}
+		}
+	},
+    drag: function(inEvent, inType, obj, node) {
+		if (!studio.page)
+			return;
+			this.dragger.beginDrag(inEvent, {
+				caption: inType,
+				type: inType,
+			    control: obj,
+			    node: node
+			});
+	},
+	dragDrop: function() {
+	    if (!this.dragger.target)
+		return;
+
+	    var info = this.dragger.info;
+	    var component = info.control;
+            var owner = this.dragger.target.owner;
+            while (owner != studio.page && owner != studio.application)
+                owner = owner.owner;
+
+	    var comp = component.onServiceTreeDrop(this.dragger.target, owner, info.node);
+
+		if (comp) {
+			if (!(comp instanceof wm.ServerComponent)) {
+				// create an undo task
+				new wm.AddTask(comp);
+			}
+			if (comp instanceof wm.Control) {
+				//comp.designMoveControl(this.dragger.target, this.dragger.dropRect);
+				this.dragger.target.designMoveControl(comp, this.dragger.dropRect);
+			}
+		    studio.refreshDesignTrees();
+		    studio.select(comp);
+		}
+	}
+});
+
 dojo.declare("wm.Palette", wm.Tree, {
 	init: function() {
 		this.items = [];
@@ -73,8 +129,18 @@ dojo.declare("wm.Palette", wm.Tree, {
 				props: inProps,
 				obj: obj
 			});
+/*
+	    wm.forEachVisibleWidget(studio.page.root, function(w) {
+		w.setMargin("4");
+	    });
+	    */
 	},
 	dragDrop: function() {
+/*
+	    wm.forEachVisibleWidget(studio.page.root, function(w) {
+		w.setMargin("0");
+	    });
+	    */
 		if (!this.dragger.target)
 			return;
 		var info = this.dragger.info;
@@ -110,7 +176,7 @@ dojo.declare("wm.Palette", wm.Tree, {
 			if (!wm.fire(comp, "afterPaletteDrop")) {
 				// FIXME: should not refresh entire tree when dropping from palette.
 				studio.refreshDesignTrees();
-				studio.inspector.resetInspector();
+			    //studio.inspector.resetInspector();
 				studio.select(comp);
 			}
 		}

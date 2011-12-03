@@ -107,6 +107,7 @@ dependencies = {
 				//"wm.base.components.Publisher",
 				//"wm.base.components.ImageList",
 				"wm.base.components.Binding",
+				"wm.base.components.Property",
 				"wm.base.components.LiveView",
 				"wm.base.components.LiveVariable",
 				"wm.base.components.JsonRpcService",
@@ -278,10 +279,13 @@ dependencies = {
 			layerDependencies: ["lib_build.js"],
 			dependencies: [
 	   		"dojox.grid.DataGrid",
+			    "dijit.tree.ForestStoreModel",
+			    "dojox.grid.TreeGrid",
 				"dojox.grid.cells.dijit",
 				"dojo.data.ItemFileWriteStore",
 				"dojo.string",
-				"dijit.Dialog",
+			        "dojox.grid._CheckBoxSelector",
+			        "dojox.grid._RadioSelector",
 				"wm.base.lib.currencyMappings",
 				"wm.base.widget.DataGrid",
 				"wm.base.widget.DojoGrid"
@@ -311,6 +315,10 @@ dependencies = {
                "wm.base.widget.Editors.Checkbox",
                "wm.base.widget.Editors.Radiobutton",
                "wm.base.widget.Editors.Select",
+               "wm.base.widget.Editors.ColorPicker",
+			    "wm.base.widget.Dialogs.ColorPickerDialog",
+			    "dojox.widget.ColorPicker",
+               "wm.base.widget.Editors.DataSetEditor",
 			    "wm.base.widget.Editors.Slider",
 			    "wm.base.widget.Buttons.ToggleButton",
 			    "wm.base.widget.JsonStatus"
@@ -370,6 +378,7 @@ dependencies = {
 				"wm.base.widget.gadget.Weather",
 				"wm.base.widget.gadget.YouTube",
 			        "wm.base.widget.gadget.Facebook",
+			        "wm.base.widget.gadget.TwitterGadgets",
 			        "wm.base.widget.gadget.GoogleMap"
 			]		
 		},

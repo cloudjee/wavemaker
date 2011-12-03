@@ -358,7 +358,7 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
             var d = c.constructor.prototype[inName];
 	    var v = this._getInspectedProp(inName);
 
-		var e = c.makePropEdit(inName, v, d) || makeInputPropEdit(inName, v, d);
+	    var e = c.makePropEdit(inName, v, d) || makeInputPropEdit(inName, v, d, inProp.readonly);
 		if (!dojo.isString(e)) {
 			e.inspector = this;
 			this._editors[inName] = e;
@@ -781,7 +781,7 @@ dojo.declare("wm.EventInspector", wm.Inspector, {
 	    return this.hasEvents(inProps);
 	},
 	generateRowCells: function(inName, inProp) {
-	    var editor = this.makePropEdit(inName);
+	    var editor = this.makePropEdit(inName, inProp);
 	    return [
 		'<td class="wminspector-caption">', this.makeRowCaption(inName.match(/\d+$/) ? "and then..." : inName, inProp), '</td>',
 		'<td class="wminspector-property">', editor, '</td>',

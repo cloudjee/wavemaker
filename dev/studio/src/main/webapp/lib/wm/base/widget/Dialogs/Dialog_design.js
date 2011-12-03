@@ -22,6 +22,7 @@ dojo.require("wm.base.widget.Dialogs.GenericDialog");
 dojo.require("wm.base.widget.Dialogs.PageDialog");
 dojo.require("wm.base.widget.Dialogs.Toast");
 dojo.require("wm.base.widget.Dialogs.ColorPickerDialog");
+dojo.require("wm.base.widget.Container_design");
 
 wm.Dialog.extend({
     themeableStyles: ["wm.Dialog_Inner-Radius"],
@@ -32,21 +33,6 @@ wm.Dialog.extend({
 	    studio.designer.domNode.appendChild(this.domNode);
 	    this.show();
 	},
-    makePropEdit: function(inName, inValue, inDefault) {
-	var prop = this.schema ? this.schema[inName] : null;
-	var name =  (prop && prop.shortname) ? prop.shortname : inName;
-		switch (inName) {
-        case "corner":
-            inValue = inValue.replace(/^c/, "center ").replace(/^t/, "top ").replace(/^b/, "bottom ").replace(/l$/, "left").replace(/r$/, "right").replace(/c$/, "center");
-            return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["top left", "top center", "top right", "center left", "center center", "center right", "bottom left", "bottom center", "bottom right"]});
-		case "positionNear":
-	    return new wm.propEdit.WidgetsSelect({component: this, 
-						  value: inValue, 
-						  name: inName,
-						  widgetType: wm.Control});
-                }
-		return this.inherited(arguments);
-    },
     set_owner: function(inOwner) {
 	var oldOwner = this.owner;
 	this.inherited(arguments);
@@ -69,18 +55,24 @@ wm.Object.extendSchema(wm.Dialog, {
     owner: { group: "common", order: 1, readonly: true, options: ["Page", "Application"] },
 
     titlebarBorder: {group: "style", order: 5},
-    titlebarBorderColor: {group: "style", order: 6},
+    titlebarBorderColor: {group: "style", order: 6, editor: "wm.ColorPicker"},
     titlebarHeight: {group: "style", order: 7},
     footerBorder: {group: "style", order: 8},
-    footerBorderColor: {group: "style", order: 9},
+    footerBorderColor: {group: "style", order: 9, editor: "wm.ColorPicker"},
 
     modal: {group: "display", order: 50},
     noEscape: {group: "display", order: 51},
     noMinify: {group: "display", order: 51},
     noMaxify: {group: "display", order: 51},
-    corner: {group: "layout", order: 52},
-    positionNear: {group: "layout", order: 53},
+    corner: {group: "layout", order: 52,editor: "wm.prop.SelectMenu", editorProps: {
+	options: ["top left", "top center", "top right", "center left", "center center", "center right", "bottom left", "bottom center", "bottom right"],
+	values: ["tl", "tc", "tr", "cl", "cc", "cr", "bl", "bc", "br"]}},
+    positionNear: {group: "layout", order: 53, editor: "wm.prop.WidgetSelect", editorProps: {widgetType: "wm.Control", excludeType: "wm.Dialog"}},
     fixPositionNode: {ignore: 1},
+
+    noTopBottomDocking: {group: "docking", type: "boolean"},
+    noLeftRightDocking: {group: "docking", type: "boolean"},
+
     noBevel: {ignore: 1},
     imageList: {ignore: 1},
     fitToContentWidth: {ignore: 1},
@@ -100,9 +92,9 @@ wm.Object.extendSchema(wm.Dialog, {
     horizontalAlign: {ignore: 1},
     verticalAlign: {ignore: 1},
     showing: {ignore: 1},
-    setModal: {group: "method"},
-    minify: {group: "method"},
-    setPositionNear: {group: "method"}
+    setModal: {method:1},
+    minify: {method:1},
+    setPositionNear: {method:1}
 });
 
 
@@ -133,14 +125,14 @@ wm.Object.extendSchema(wm.GenericDialog, {
 
     footerBorder: {group: "style", order: 100},
     footerBorderColor:  {group: "style", order: 101},
-    setShowInput: {group:"method"},
-    setInputDataValue: {group:"method"},
-    getInputDataValue: {group:"method", returns: "String"},
-    setUserPrompt: {group:"method"},
-    setButton1Caption: {group:"method"},
-    setButton2Caption: {group:"method"},
-    setButton3Caption: {group:"method"},
-    setButton4Caption: {group:"method"}
+    setShowInput: {method:1},
+    setInputDataValue: {method:1},
+    getInputDataValue: {method:1, returns: "String"},
+    setUserPrompt: {method:1},
+    setButton1Caption: {method:1},
+    setButton2Caption: {method:1},
+    setButton3Caption: {method:1},
+    setButton4Caption: {method:1}
 });
 
 wm.GenericDialog.extend({
@@ -181,7 +173,7 @@ wm.ColorPickerDialog.cssLoaded = false;
 
 wm.Object.extendSchema(wm.DesignableDialog, {
 /*    owner: {ignore: true} */ // See JIRA-2118: Can't drag and drop to an app level container
-    createButtonBar: {group: "operation", order: 20}
+    createButtonBar: {group: "operation", order: 20, operation:1}
 });
 
 wm.DesignableDialog.extend({
@@ -198,24 +190,7 @@ wm.DesignableDialog.extend({
 	this.inherited(arguments);
         this.createButtonBar();
     },
-	makePropEdit: function(inName, inValue, inDefault) {
-	var prop = this.schema ? this.schema[inName] : null;
-	var name =  (prop && prop.shortname) ? prop.shortname : inName;
-		switch (inName) {
-                case "createButtonBar":
-		    return makeReadonlyButtonEdit(name, inValue, inDefault);
-                }
-		return this.inherited(arguments);
-        },
-	editProp: function(inName, inValue, inInspector) {
-		switch (inName) {
-                case "createButtonBar":
-                    this.createButtonBar();
-                    this.reflow();
-                    return;
-                }
-		return this.inherited(arguments);
-        },
+
     writeProps: function() {
 	var out = this.inherited(arguments);
 	out.containerWidgetId = this.containerWidget && !this.containerWidget.isDestroyed ? this.containerWidget.getId() : "";
@@ -228,38 +203,16 @@ wm.DesignableDialog.extend({
 
 wm.LoadingDialog.extend({
     set_widgetToCover: function(inWidget) {
-	if (inWidget && !(inWidget instanceof wm.Component)) {
-	    var ds = this.getValueById(inWidget);
-	    if (ds)
-		this.components.binding.addWire("", "widgetToCover", ds.getId());
-	} else {
 	    this.widgetToCover = inWidget;
 	    this.renderBounds();
-	}
     },
     set_serviceVariableToTrack: function(inWidget) {
-	if (inWidget && !(inWidget instanceof wm.Component)) {
-	    var ds = this.getValueById(inWidget);
-	    if (ds)
-		this.components.binding.addWire("", "serviceVariableToTrack", ds.getId());
-	} else
 	    this.serviceVariableToTrack = inWidget;
     },
-    makePropEdit: function(inName, inValue, inDefault) {
-	switch(inName) {
-	case "widgetToCover":
-	    return new wm.propEdit.WidgetsSelect({component: this, 
-						  value: inValue, 
-						  name: inName,
-						  widgetType: wm.Control});
-	case "serviceVariableToTrack":
-            return new wm.propEdit.WidgetsSelect({component: this, 
-						  value: inValue, 
-						  name: inName,
-						  widgetType: wm.ServiceVariable});
-
-	}
-	return this.inherited(arguments);
+    set_captionWidth: function(inWidth) {
+	this.captionWidth = inWidth;
+	this._label.setWidth(inWidth);
+	this._label.doAutoSize();
     }
 
 
@@ -267,8 +220,15 @@ wm.LoadingDialog.extend({
 
 wm.Object.extendSchema(wm.LoadingDialog, {
     positionNear: {ignore:1},
-    widgetToCover: {readonly: 1, bindTarget: 1, group: "edit"},
-    serviceVariableToTrack: {readonly: 1, bindTarget: 1, group: "edit"},
+    widgetToCover: {bindTarget: 1, createWire: 1, group: "edit", editor: "wm.prop.WidgetSelect", editorProps: {widgetType: "wm.Control", excludeType: "wm.Dialog"}, order: 100},
+    serviceVariableToTrack: {bindTarget: 1, createWire: 1, group: "edit", editor: "wm.prop.WidgetSelect", editorProps: {widgetType: "wm.ServiceVariable"}, order: 101},    
+    caption: {bindTarget: 1, group: "edit", order: 102},
+    captionWidth:{group: "edit", order: 103, editor: "wm.prop.SizeEditor"},
+    image: {group: "edit", order: 110, type: "String", bindTarget: 1, subtype: "File", extensionMatch: ["jpg","jpeg","gif","png","tiff"]},
+    imageWidth:{group: "edit", order: 111, editor: "wm.prop.SizeEditor"},
+    imageHeight:{group: "edit", order: 112, editor: "wm.prop.SizeEditor"},
+    noTopBottomDocking: {ignore:1},
+    noLeftRightDocking: {ignore:1},
     width: {ignore: 1},
     height: {ignore: 1},
     autoScroll: {ignore: 1},

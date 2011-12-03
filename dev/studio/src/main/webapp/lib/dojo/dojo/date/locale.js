@@ -23,6 +23,9 @@ dojo.getObject("date.locale", true, dojo);
 					s = bundle[(l < 4) ? "eraAbbr" : "eraNames"][dateObject.getFullYear() < 0 ? 0 : 1];
 					break;
 				case 'y':
+			    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+			     * WaveMaker: Added "Y" because our users are likely to enter it */
+				case 'Y':
 					s = dateObject.getFullYear();
 					switch(l){
 						case 1:

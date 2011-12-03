@@ -57,9 +57,7 @@ dojo.declare("wm.EmphasizedContentPanel", wm.Panel, {
 dojo.declare("wm.HeaderContentPanel", wm.Panel, {
     classNames: "wmcontainer wmpanel HeaderContent"
 });
-wm.Object.extendSchema(wm.Panel, {
-    themeStyleType: {group: "style", order: 150}
-});
+
 dojo.declare("wm.FancyPanel", wm.Panel, {
     //useDesignBorder: 0, // move this to a _design file if we ever create one
     freeze: true,
@@ -84,6 +82,9 @@ dojo.declare("wm.FancyPanel", wm.Panel, {
     labelHeight: 30,
     themeStyleType: "ContentPanel",
     init: function() {
+	if (!this.labelHeight)
+	    this.labelHeight = 30;
+
 	var classes = this._classes;
 	var containerClasses = {domNode:[]};
 	for (var i = classes.domNode.length-1; i >= 0; i--) {
@@ -203,7 +204,7 @@ dojo.declare("wm.FancyPanel", wm.Panel, {
 	}
     },
 	getMinHeightProp: function() {
-            if (this.minHeight) return this.minHeight;
+            if (this.minHeight) return Number(this.minHeight);
             if (!this.containerWidget) return this.inherited(arguments);
             return this.containerWidget.getMinHeightProp() + ((this.labelWidget && this.labelWidget.showing) ? this.labelWidget.bounds.h : 0) + 30;
 	},
@@ -492,67 +493,3 @@ dojo.declare("wm.FancyPanel", wm.Panel, {
     }
 });
 
-wm.Panel.extend({
-    themeable: false,
-    // backward-compatibility fixups
-	afterPaletteDrop: function() {
-		this.inherited(arguments);
-	    if (this instanceof wm.FancyPanel) return;
-	    var v = "top-to-bottom", h = "left-to-right", pv = (this.parent.layoutKind == v);
-	    this.setLayoutKind(pv ? h : v);
-		if (pv)
-			this.setWidth("100%");
-		else
-			this.setHeight("100%");                 
-	//        this.setIsRounded(true);
-	}
-
-});
-
- 
-wm.FancyPanel.extend({
-    themeable: true,
-    themeableProps: ["innerBorder","borderColor","labelHeight"],
-    getOrderedWidgets: function() {
-	return this.containerWidget.getOrderedWidgets();
-    },
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "innerLayoutKind":
-				return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: wm.layout.listLayouts()});
-			case "innerHorizontalAlign":
-				return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["left", "center", "right"/*, "justified"*/]});
-			case "innerVerticalAlign":
-				return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["top", "middle", "bottom"/*, "justified"*/]});
-		}
-		return this.inherited(arguments);
-	}
-});
-
-wm.Object.extendSchema(wm.FancyPanel, {
-    title: { type: "String", bindTarget: 1, group: "display", order: 100, focus: true,  doc: 1},
-    labelWidget: {ignore: 1,  doc: 1},
-    themeStyleType:  {ignore: 1},
-    containerWidget: {ignore: 1,  doc: 1},
-    layoutKind: {ignore: 1},
-    innerLayoutKind: {group: "layout", order: 100, shortname: "layoutKind",  doc: 1},
-    innerHorizontalAlign: {group: "layout", order: 101, shortname: "horizontalAlign", doc: 1},
-    innerVerticalAlign: {group: "layout", order: 101, shortname: "verticalAlign",  doc: 1},
-    horizontalAlign: {ignore: 1},
-    verticalAlign: {ignore: 1},
-    padding: {ignore: 1},
-    labelHeight: {group: "layout", order: 90},
-    border: {ignore: 1},
-    innerBorder: {group: "style", shortname: "border",  doc: 1},
-    setInnerLayoutKind: {group: "method",   doc: 1},
-    setInnerHorizontalAlign: {group: "method", doc: 1},
-    setInnerVerticalAlign: {group: "method", doc: 1},
-    setInnerBorder: {group: "method", doc: 1},
-    setTitle:  {group: "method",  doc: 1},
-    autoScroll: {ignore: 1},  // until we actually scroll the correct node, don't even provide this property
-    scrollX:  {ignore: 1}, 
-    scrollY:  {ignore: 1}
-});
-
-
-wm.Panel.description = "A container for widgets.";

@@ -78,11 +78,19 @@ dijit.form.ValidationTextBox.prototype.displayMessage = function(message){
 	this._message = message;
 	this._cancelHideTooltip();
 	dijit.hideTooltip(this.domNode);
-    if(message && (!this.owner || !this.owner.readonly)){
-		dijit.showTooltip(message, this.domNode, this.tooltipPosition);
-		dijit._hideTooltipHandle = setTimeout(dojo.hitch(this, function() {
-			wm.fire(this, "_hideTooltip");
-		}), this.tooltipDisplayTime);
+    if (message && this.inGrid && !this.domNode.parentNode) {
+	/* this.domNode is not currently in the document; must wait until it is */
+	wm.job("GridValidationNode", 20, dojo.hitch(this, function() {
+	    dijit.showTooltip(message, this.domNode, this.tooltipPosition);
+	    dijit._hideTooltipHandle = setTimeout(dojo.hitch(this, function() {
+		wm.fire(this, "_hideTooltip");
+	    }), 2500);
+	}));
+    } else if (message && (!this.owner || !this.owner.readonly)){
+	    dijit.showTooltip(message, this.domNode, this.tooltipPosition);
+	    dijit._hideTooltipHandle = setTimeout(dojo.hitch(this, function() {
+		wm.fire(this, "_hideTooltip");
+	    }), this.tooltipDisplayTime || 2500);
 	}
 }
 

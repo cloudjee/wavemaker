@@ -143,20 +143,12 @@ dojo.declare("wm._CheckBoxEditor", wm._BaseEditor, {
 			this.owner.displayValue = true;
 	}
 });
-// design only...
-wm._CheckBoxEditor.extend({
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "dataType":
-				return makeSelectPropEdit(inName, inValue, ["string", "boolean", "number"], inDefault);
-		}
-		return this.inherited(arguments);
-	}
-});
+
 
 wm.Object.extendSchema(wm._CheckBoxEditor, {
 	changeOnKey: { ignore: 1 },
 	changeOnEnter: { ignore: 1 },
+    dataType: {options:["string", "boolean", "number"]},
 	startChecked: { bindable: 1, type: "Boolean"},
 	displayValue: { isOwnerProperty: 1, ignore: 1, writeonly: 1, type: "any" },
 	checkedValue: { isOwnerProperty: 1, readonly: 1, bindable: 1, group: "edit", order: 40, type: "any"},

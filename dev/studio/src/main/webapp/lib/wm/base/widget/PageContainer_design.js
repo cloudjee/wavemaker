@@ -109,6 +109,15 @@ wm.PageContainer.extend({
 	},
 	// write only binding.
 	writeComponents: function(inIndent) {
+	    /* Remove invalid bindings; typically caused by a wm.Property having been renamed or deleted */
+	    var props = this.listProperties();
+	    for (var propName in this.components.binding.wires) {
+		if (!props[propName] && !this.subpageProplist[propName]) {
+		    this.components.binding.removeWire(propName);
+		}
+	    }
+
+
 		var
 			s = [];
 			c = this.components.binding.write(inIndent);
@@ -116,13 +125,41 @@ wm.PageContainer.extend({
 			s.push(c);
 		return s;
 	},
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "pageName":
-		    return new wm.propEdit.PagesSelect({component: this, name: inName, value: inValue, newPage: true});
-		}
-		return this.inherited(arguments);
+	makePropEdit: function(inName, inValue, inEditorProps) {
+	    if (this.page && this.subpageProplist[inName]) {
+		try {
+		    var pid = this.page[inName].property;
+		    var componentName = pid.replace(/\..*?$/,"");
+		    var c = this.page.getValueById(componentName);
+		    var editor =  c.makePropEdit(pid.replace(/^.*\./,""), inValue, inDefault);
+		    return editor;
+/* TODO: PROPINSPECTOR CHANGE: Need to fix this
+		    if (typeof editor == "string") 
+			return editor.replace(/studio_propinspect_.*?"/, "studio_propinspect_" + inName + '"');
+		    else {
+		    / * Use the prop editor that was geneated but update the property name and component to point to this * /
+			editor.name = inName;
+			editor.component = this;
+			return editor;
+		}*/
+		} catch(e) {}
+	    }		
+	    return this.inherited(arguments);
 	},
+
+/* TODO: PROPINSPECTOR CHANGE: Need to fix this */
+    editProp: function(inName, inValue) {
+	if (this.page && this.subpageProplist[inName]) {
+	    try {
+		var pid = this.page[inName].property;
+		var componentName = pid.replace(/\..*?$/,"");
+		var c = this.page.getValueById(componentName);	    
+		c.editProp(pid.replace(/^.*\./,""), inValue);
+	    } catch(e) {return;}
+	} else {
+	    return this.inherited(arguments);
+	}
+    },
 	afterPaletteDrop: function() {
 		// change default so deferLoad is false
 		// this.inherited(arguments);
@@ -147,18 +184,54 @@ wm.PageContainer.extend({
 		     this.setPageName(pagename);
 		 })
 		};
+    },
+    listProperties: function() {
+	var props = this.inherited(arguments);
+	if (!this.page)
+	    return props;
+	props = dojo.clone(props);
+	var newprops = wm.listMatchingComponents([this.page], function(c) {return c instanceof wm.Property;});
+	this.subpageProplist = {};
+	this.subpageEventlist = {};
+	for (var i = 0; i < newprops.length; i++) {
+	    var p = newprops[i];
+	    /* Don't clobber any existing properties */
+	    if (props[p.name] === undefined || !props[p.name].group) {
+		if (p.isEvent) {
+		    this.subpageEventlist[p.name] = this.eventBindings[p.name];
+		    if (this[p.name] === undefined) {
+			this[p.name] = function(){};
+		    }
+		} else {
+		    this.subpageProplist[p.name] = p.property;
+		}
+		props[p.name] = {
+		    name: p.name,
+		    type: p.type || "string",
+		    bindTarget: p.bindTarget,
+		    bindSource: p.bindSource,
+		    isEvent: p.isEvent,
+		    readonly: p.readonly,
+		    propertyId: p.property
+		};
+	    }
+	}
+
+	return props;
     }
 })
 
 wm.Object.extendSchema(wm.PageContainer, {
+    subpageProplist: {writeonly: 1},
+    subpageEventlist: {writeonly: 1},
 	pageLoadedDeferred: {ignore: 1},
-        pageName: {group: "common", bindable: 1, type: "string", order: 50, pageProperty: "page"},
-	deferLoad: {group: "common", order: 100},
-	loadParentFirst: {group: "common", order: 101},
+    pageName: {group: "common", bindable: 1, type: "string", order: 50, pageProperty: "page", editor: "wm.prop.PagesSelect"},
+        deferLoad: {group: "common", order: 100, type: "boolean"},
+    loadParentFirst: {group: "common", order: 101, type: "boolean"},
 	box: {ignore: 1},
 	disabled: {ignore: 1},
 	page: {ignore: 1},
-    pageProperties: {ignore: 1, writeonly: 1},
-    setPageName: {group: "method"},
-    forceReloadPage: {group: "method"}
+    setPageName: {method:1},
+    forceReloadPage: {method:1},
+    hint: {ignore: 1}
 });

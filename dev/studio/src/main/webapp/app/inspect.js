@@ -249,19 +249,25 @@ inspect = function(inComponent, inDoFocus) {
 		setTimeout(function() { _inspect(inComponent, inDoFocus) }, 1);
 }
 
-reinspect = function() {
+reinspect = function(forceRegen) {
 	// call on timeout so IE can blur inspectedEditor before rebuilding inspector
 	//if (inComponent)
 		setTimeout(function() {
-		    if (studio.inspector && studio.inspector.inspector && studio.inspector.inspector.inspected)
-			studio.inspector.inspector.reinspect();
+		    if (studio.inspector && studio.inspector.inspected && !forceRegen) {
+			studio.inspector.reinspect();
+		    } else if (studio.inspector  && forceRegen) {
+			var inspected =	studio.inspector.inspected;
+			studio.inspector.inspected = null;
+			if (inspected)
+			    studio.inspector.inspect(inspected);
+		    }			
 		}, 1);
 }
 
 _setInspectedCaption = function(inComponent) {
 	var c = inComponent;
         if (studio.application && studio.page)
-	    studio.inspected.setCaption(c ? c.name  + ': ' + (c._designee.localizedDeclaredClass || c._designee.declaredClass) : "(none)");
+	    studio.PIContents.setTitle(c ? c.name  + ': ' + (c._designee.localizedDeclaredClass || c._designee.declaredClass) : "(none)");
 }
 
 _inspect = function(inComponent, inDoFocus) {

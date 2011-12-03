@@ -19,8 +19,8 @@ dojo.require('wm.base.Component');
 // Design Schema
 //===========================================================================
 wm.Object.extendSchema(wm.Component, {
-        documentation: {group: "docs", readonly: true, order: 1},
-    generateDocumentation: {group: "docs", readonly: true, order: 2, shortname: "Generate Docs"},
+    viewDocumentation: {group: "docs", readonly: true, order: 1, operation: true},
+    generateDocumentation: {group: "docs", readonly: true, order: 2, shortname: "Generate Docs", operation: true},
         themeable: {ignore: 1},
         theme: {ignore: 1},
         isDestroyed: {ignore: 1},
@@ -30,7 +30,7 @@ wm.Object.extendSchema(wm.Component, {
 	eventBindings: { ignore: 1 },
 	id: { ignore: 1 },
 	ignoredProps: { ignore: 1 },
-	name: { group: "common", order: 0, readonly: true },
+    name: { group: "common", order: 0},
     owner: { group: "common", order: 1, readonly: true, options: ["Page", "Application"], doc: 1},
 	publishClass: { ignore: 1 },
 	readonlyProps: { ignore: 1 },
@@ -41,10 +41,10 @@ wm.Object.extendSchema(wm.Component, {
     rootId: {ignore: 1},
 
 
-    destroy: {group:"method", doc: 1},
-    toString: {group:"method", doc: 1, returns: "String"},
-    getId: {group: "method", doc: 1, returns: "String"},
-    getRuntimeId: {group: "method", doc: 1, returns: "String"},
+    destroy: {method:1, doc: 1},
+    toString: {method:1, doc: 1, returns: "String"},
+    getId: {method:1, doc: 1, returns: "String"},
+    getRuntimeId: {method:1, doc: 1, returns: "String"},
     $: {ignore: true,doc: 1},
     localizedDeclaredClass: {ignore:1}
 });
@@ -155,6 +155,8 @@ wm.Component.extend({
 				try {
 				    out[n] = value.getTime();
 				} catch(e) {}
+			    } else if (dojo.isArray(value) && (!value.length || value[0] instanceof wm.Component || value[0] instanceof Node)) {
+				;
 			    } else {
 				out[n] = value;
 			    }
@@ -343,54 +345,18 @@ wm.Component.extend({
 		@param {Any} inDefault The default value of the property.
 		@returns {String} Html string for the property editor.
 	*/
-	makePropEdit: function(inName, inValue, inDefault) {
-	    var prop = this.schema ? this.schema[inName] : null;
-	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
-		switch (inName) {
-		   case "documentation":
-		       return makeReadonlyButtonEdit(name, inValue, inDefault);
-		   case "generateDocumentation":	    
-		       return makeReadonlyButtonEdit(name, inValue, inDefault);
-		}
-
+	makePropEdit: function(inName, inValue, inEditorProps) {
 	        if (inName.match(/^custom/) && dojo.isFunction(this.constructor.prototype[inName])) {
 		    var funclist =  getAllEventsInCode();
 		    var customName = this.name + wm.capitalize(inName);
 		    if (dojo.indexOf(funclist, customName) == -1)
 			funclist.unshift(customName);
-		    funclist.unshift("");
-		    return new wm.propEdit.Select({component: this, value: inValue, name: inName, defaultValue: inDefault, options:funclist});
+		    inEditorProps.allowNone = true;
+		    inEditorProps.options = funclist;
+		    inEditorProps.displayField = inEditorProps.dataField = "dataValue";		    
+		    return new wm.SelectMenu(inEditorProps);
 		}
-		//
-		var s = this.schema[inName] || 0;
-		var c = (this[inName] || 0).declaredClass;
-		// Look for the property class name in the Component editors registry
-		p = wm.Component.property[c] || 0;
-		if (p.makePropEdit) {
-			return p.makePropEdit.apply(this[inName], arguments);
-		}
-		// Operation
-		if (s.operation) {
-			return makeReadonlyButtonEdit(inName, inValue, inDefault);
-		}
-		// Enumeration
-		if (s.options) {
-			return new wm.propEdit.Select({component: this, value: inValue, name: inName, defaultValue: inDefault, options: s.options});
-		}
-		// reference property?
-		var type = s.componentType;
-		if (type)
-			return makeReferencePropEdit(dojo.getObject(type), inName, inValue);
-		// subcomponent?
-		if (this.components[inName])
-			// FIXME: ok for these to always be readonly?
-			// or should the subcompoment handle the decision?
-			//return makeInputButtonEdit(inName, inValue, inDefault);
-			return makeReadonlyButtonEdit(inName, inValue, inDefault);
-		// boolean?
-		if (typeof inDefault == "boolean")
-			return makeCheckPropEdit(inName, inValue, inDefault);
-		// use default
+
 	},
         setPropEdit: function(inName, inValue, inDefault) {
 	    return false; // unhandled
@@ -416,8 +382,17 @@ wm.Component.extend({
 		name = name.replace(/^.*\./,"");
 		return "on" + name +  n.slice(2, 3).toUpperCase() + n.slice(3);
 	},
+    viewDocumentation: function() {
+	studio.documentationDialog.setHtml(this.documentation);
+	studio.documentationDialog.setTitle(studio.getDictionaryItem("wm.Component.DOCUMENTATION_DIALOG_TITLE", {name: this.getId()}))
+	studio.documentationDialog.editComponent = this;
+	studio.documentationDialog.show();
+    },
         generateDocumentation: function() {
-	    var html = "<i>" + studio.getDictionaryItem("wm.Component.GENERATE_DOCUMENTATION_TOPNOTE") + "</i>\n";
+	    var html = ((this.documentation) ? this.documentation + "<br/><br/><br/>" : "");
+
+
+	    html += "<i>" + studio.getDictionaryItem("wm.Component.GENERATE_DOCUMENTATION_TOPNOTE") + "</i>\n";
 	    var eventSection = "";
 	    var props = this.listProperties();
 	    for (var i in props)
@@ -522,7 +497,8 @@ wm.Component.extend({
 
 	    html += bindToSection;
 	    console.log(html);
-	    return html;
+	    this.documentation = html;
+	    this.viewDocumentation();
 	},
         generateBindingDescriptions: function(inHash, comparisonObj) {
 	    if (this.components.binding) {
@@ -558,29 +534,6 @@ wm.Component.extend({
 
 	},
 	editProp: function(inName, inValue) {
-	    switch (inName) {
-	        case "documentation":
-	            studio.documentationDialog.setHtml(this.documentation);
-		    studio.documentationDialog.setTitle(studio.getDictionaryItem("wm.Component.DOCUMENTATION_DIALOG_TITLE", {name: this.getId()}))
-	            studio.documentationDialog.editComponent = this;
-	            studio.documentationDialog.show();
-	            return;
-	        case "generateDocumentation":
-	            this.documentation = ((this.documentation) ? this.documentation + "<br/><br/><br/>" : "") + this.generateDocumentation();
-	            this.editProp("documentation");
-	            return;
-	}
-
-
-		// operation?
-		var s = (this.schema[inName] || 0);
-		if (s.operation) {
-			return wm.fire(this, s.operation);
-		}
-		// subcomponent?
-		var c = this.components[inName];
-		if (c)
-			return this.editComponentProp(c);
 		// otherwise an event
 		var n=inName, v = inValue || this.generateEventName(n);
 	        this.setEvent(n, v, false);
@@ -662,7 +615,7 @@ wm.Component.extend({
 		   studio.bindDialog.show();
 	       } else
 	       */
-		   this.editProp(inPropName);
+		this[typeof inProp.operation == "string" ? inProp.operation : inPropName]();
 	   })});
     },
     hasLocalizedProp: function(inName) {

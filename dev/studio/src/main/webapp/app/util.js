@@ -142,7 +142,8 @@ wm.openUrl = function(inUrl, inTitle, inWindowName) {
 wm.openUrlDialog = function(inUrl, inTitle, inWindowName) {
     var d = wm.openUrl.dialog;
     if (!d) {
-	d = wm.openUrl.dialog = new wm.Dialog({title: studio.getDictionaryItem("POPUP_BLOCKER_TITLE"),
+	d = wm.openUrl.dialog = new wm.Dialog({_classes: {domNode: ["studiodialog"]},
+					       title: studio.getDictionaryItem("POPUP_BLOCKER_TITLE"),
 					       owner: studio, 
 					       width: 320, 
 					       height: 110,

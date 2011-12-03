@@ -51,17 +51,3 @@ dojo.declare("wm.IFrame", wm.Control, {
 	return "<iframe src='" + this.source + "'></iframe>";
     }
 });
-
-// design only...
-wm.Object.extendSchema(wm.IFrame, {
-	disabled: { ignore: 1 },
-    source: { type: "String", bindable: 1 },
-    setSource: {group: "method"},
-    imageList: {ignore: true}
-});
-
-wm.IFrame.description = "A frame.";
-
-dojo.extend(wm.IFrame, {
-        themeable: false
-});

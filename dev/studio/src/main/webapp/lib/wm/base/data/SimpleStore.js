@@ -75,7 +75,7 @@ dojo.declare("wm.base.data.SimpleStore", null, {
 
 			if (b == w)
 				continue;
-			exact = inExactMatch || (b.indexOf(w) == - 1);
+		    exact = inExactMatch || (typeof b == "string" && b.indexOf(w) == - 1);
 			if (dojo.isString(a) && dojo.isString(b) && !exact) {
 				if (b.charAt(b.length-1) == w)
 					b = b.slice(0, -1);

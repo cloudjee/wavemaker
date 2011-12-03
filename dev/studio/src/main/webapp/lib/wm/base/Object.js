@@ -248,30 +248,11 @@ wm.Object.extendSchema(wm.MyButton, {
 });
 	*/
     extendSchema: function(inClass, inSchema, skipDictionary) {
-/* Generates a list of properties that need to be localized
-	    console.group(inClass.prototype.declaredClass);
-	    for (var prop in inSchema) {
-		if (inSchema[prop].group == "method" || inSchema[prop].ignore && !inSchema[prop].bindable || inSchema[prop].writeonly && !inSchema[prop].bindable) {
-		    ;
-		} else {
-		    console.log(prop);
-		}
-	    }
-	    console.groupEnd();
-		*/
 	if (!skipDictionary && inSchema) {
-/* moved to studioLoader where build can process it better
-	    if (!wm.extendSchemaDictionary && wm.studioConfig) {
-		dojo.requireLocalization("language", "schema");
-		wm.extendSchemaDictionary = dojo.i18n.getLocalization("language", "schema");
-	    }
-	    if (!wm.extendSchemaDictionary) 
-		wm.extendSchemaDictionary = {};
-		*/
 	    var className = inClass.prototype.declaredClass;
 	    if (wm.extendSchemaDictionary) {
 		var dictionary = wm.extendSchemaDictionary[className];
-		if (dictionary) {
+		if (dictionary) {		    
 		    for (var i in dictionary) {
 			if (inSchema[i]) {
 			    inSchema[i].shortname = dictionary[i];
@@ -283,9 +264,20 @@ wm.Object.extendSchema(wm.MyButton, {
 	    }
 	}
 
-		dojo.extend(wm.Object.getSchemaClass(inClass), inSchema);
-		// expunge memoized property information
-		delete inClass._publishedProps;
+	/* This block of code allows the superclass to define the schema and the subclass to modify the schema instead of clobbering the schema.
+	 * The only thing that isn't modified is the ignore property; if ignore isn't there, then we assume the subclass isn't ignored.
+	 */
+	var superSchema = wm.Object.getSchemaClass(inClass).prototype;
+	if (superSchema) {
+	    for (var propName in inSchema) {
+		if (superSchema[propName]) {
+		    inSchema[propName] = dojo.mixin(dojo.clone(superSchema[propName]), inSchema[propName], !inSchema[propName].ignore ? {ignore: 0} : {});
+		}
+	    }
+	}
+	    dojo.extend(wm.Object.getSchemaClass(inClass), inSchema);
+	    // expunge memoized property information
+	    delete inClass._publishedProps;
 	}
 });
 

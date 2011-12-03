@@ -59,6 +59,10 @@ dojo.require("dijit.Editor");
 				this.widgetProps||{},
 				{
 					constraints: dojo.mixin({}, this.constraint) || {}, //TODO: really just for ValidationTextBoxes
+    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+     * WaveMaker added inGrid so that validator node will know to use the grid behavior */
+				    inGrid: true,
+
 					value: inDatum
 				}
 			);
@@ -93,6 +97,7 @@ dojo.require("dijit.Editor");
 		},
 		focus: function(inRowIndex, inNode){
 			if(this.widget){
+			    this.widget._message = "";
 				setTimeout(dojo.hitch(this.widget, function(){
 					dojox.grid.util.fire(this, "focus");
 				}), 0);
@@ -165,6 +170,15 @@ dojo.require("dijit.Editor");
 			}
 		},
 		getWidgetProps: function(inDatum){
+		    if (this.constraint) {
+
+			/* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+			 * WaveMaker added conversion of constraint from number to date */
+		    if (typeof this.constraint.max == "number")
+			this.constraint.max = new Date(this.constraint.max);
+		    if (typeof this.constraint.min == "number")
+			this.constraint.min = new Date(this.constraint.min);
+		    }
 			return dojo.mixin(this.inherited(arguments), {
 				value: new Date(inDatum)
 			});
@@ -183,6 +197,25 @@ dojo.require("dijit.Editor");
 	dgc.NumberTextBox.markupFactory = function(node, cell){
 		dgc._Widget.markupFactory(node, cell);
 	};
+	dojo.declare("dojox.grid.cells.ValidationTextBox", dgc._Widget, {
+	    widgetClass: dijit.form.ValidationTextBox,
+		getWidgetProps: function(inDatum){
+		    var props = this.inherited(arguments);
+		    return props;
+		},
+
+	});
+	dgc.ValidationTextBox.markupFactory = function(node, cell){
+		dgc._Widget.markupFactory(node, cell);
+	};
+	dojo.declare("dojox.grid.cells.TimeTextBox", dgc._Widget, {
+		widgetClass: dijit.form.TimeTextBox
+	});
+	dgc.TimeTextBox.markupFactory = function(node, cell){
+		dgc._Widget.markupFactory(node, cell);
+	};
+
+
 
 
 	dojo.declare("dojox.grid.cells.CheckBox", dgc._Widget, {
