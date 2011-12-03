@@ -13,5 +13,6 @@
  */
 {
     TRADITIONAL: "Traditional",
-    DIALOG: "Dialog"
+    DIALOG: "Dialog",
+    GRID: "Editable Grid"
 }

@@ -726,6 +726,7 @@
 "GROUP_Marker": "マーカー",
 "GROUP_deprecated": "廃止",
 
+
 /* group name that come from each component */
 "GROUP_BusyButton": "ビジーボタン",
 "GROUP_Buttons": "ボタン",

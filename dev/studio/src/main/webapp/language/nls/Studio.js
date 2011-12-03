@@ -20,6 +20,7 @@
     /* Documentation; Help Menu */
     URL_TUTORIALS: "http://dev.wavemaker.com/wiki/bin/wmdoc_${studioVersionNumber}/Tutorials",
     URL_DOCS: "http://dev.wavemaker.com/wiki/bin/wmdoc_${studioVersionNumber}/",
+    URL_STYLE_DOCS: "http://dev.wavemaker.com/wiki/bin/wmdoc_${studioVersionNumber}/StylingWidgets",
     URL_PATCHES: "http://dev.wavemaker.com/wiki/bin/wmdoc_${studioVersionNumber}/patches${studioSubVersionNumber}",
     URL_PROPDOCS: "http://dev.wavemaker.com/wiki/bin/wmjsref_${studioVersionNumber}/",
     URL_EDIT_PROPDOCS: "http://dev.wavemaker.com/wiki/bin/inline/wmjsref_${studioVersionNumber}/",
@@ -200,7 +201,9 @@
     "wm.EditPanel.UPDATE_CAPTION": "Update",
     "wm.EditPanel.DELETE_CAPTION": "Delete",
 
-
+    "wm.ServiceForm.UPDATE_CAPTION": "Edit",
+    "wm.DBForm.DIALOG_TITLE": "Setup Your Form",
+    "wm.DBForm.RESET_CAPTION": "Reset",
     "wm.EditArea.ENTER_LINE_NUMBER": "Enter line number"    ,
 
     /* Editors */
