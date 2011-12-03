@@ -344,7 +344,7 @@ dojo.declare("wm.Designer", wm.Surface, {
 		this.onmove(inControl);
 	},
         _onShowParent: function() {
-	    if (studio.page)
+	    if (studio.page && studio.page.root)
 		studio.page.root.callOnShowParent();
 	}
 });
