@@ -20,8 +20,9 @@ BindSourceDialog.widgets = {
 			        bindTargetTypeLabel: ["wm.Label", {width: "100%", border: "0",height: "22px"}, {}, {
 				   format: ["wm.DataFormatter", {}, {}]
 				}],
-				applyStayButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Apply", width: "70px"}, {onclick: "applyStayButtonClick"}],
-				    applyButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Bind", width: "70px"}, {onclick: "applyButtonClick"}],
+			    clearButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]}, caption: "Clear", width: "70px"}, {onclick: "clearButtonClick"}],
+			    applyButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Bind", width: "70px"}, {onclick: "applyButtonClick"}],
+			    doneButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Done", width: "70px"}, {onclick: "cancelButtonClick"}],
 		    cancelButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "Cancel", width: "70px"}, {onclick: "cancelButtonClick"}]
 			}]
 		}]

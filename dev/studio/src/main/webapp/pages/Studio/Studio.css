@@ -441,7 +441,7 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
 	background: white url(images/toolbar_btn_bg.gif) repeat-x;
 }
 
-.wminspector {
+.wminspector, #studio_inspectorLayers_classListPanel {
 	background-color: #424a5a;
 }
 
@@ -565,6 +565,30 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
 .wminspector .wminspector-bindProp {
 	background-image: url(images/inspector_bound.gif);
     /*background-image: url(images/inspector_bind.gif);*/
+}
+
+.wminspector .wmeditor-readonlyNode {
+    border: solid 1px #555;
+}
+
+.wminspector .wmeditor.wmreseteditor .dijitTextBox {
+     -moz-border-radius: 0px; 
+     -webkit-border-radius: 0px;
+     border-radius: 0px;     
+}
+
+.tundra .wminspector .dijitTextBoxDisabled,
+.tundra .wminspector  .dijitComboBoxDisabled,
+.tundra .wminspector  .Disabled .wmeditor-caption {
+	background:#424A5A;
+	border-color:#D5D5D5;
+	color: white;
+	opacity:1.0;
+}
+.wminspector .EditorHelpIcon {
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-image: url(images/grayhelp.png);
 }
 
 /*
@@ -1324,7 +1348,7 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
 	-moz-outline: none;
 }
 
-.wmDialogTitleBar, .Studio > .wmdialog > .dialogtitlebar {
+.wmDialogTitleBar, .wmdialog.studiodialog > .dialogtitlebar {
 	background-image:url(images/dark_toolbar_bg.gif);
 	background-repeat:repeat-x;
 	border-bottom:1px #363b44 solid;
@@ -1433,6 +1457,16 @@ body .StudioButton.wmbutton-disabled:hover {
     opacity: 0.65;
 }
 
+body .StudioButton.wmbutton.toggleButtonDown
+ {
+     color: black;
+	font-weight:bold;
+}
+body .StudioButton.wmbutton.toggleButtonUp
+ {
+	font-weight:normal;
+}
+
 
 body .StudioButton.wmbutton.toggleButtonDown
  {
@@ -1488,7 +1522,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 	background-color: #424a5a;
 }
 
-.wm-darksnazzy .wmsplitter {
+.wm-darksnazzy .wmsplitter, .docksplitter {
 	background: #959dab center center no-repeat;
 	border-left: 1px solid #c0c4ca;
 	border-right: 1px solid #363b44;
@@ -1497,11 +1531,11 @@ body.wm-darksnazzy .wmToolbar button:hover {
 	width:5px;
 }
 
-.wm-darksnazzy .wmsplitter-h {
+.wm-darksnazzy .wmsplitter-h, .docksplitter.wmsplitter-h {
 	background-image: url(images/v_splitter_handle.gif);
 }
 
-.wm-darksnazzy .wmsplitter-v {
+.wm-darksnazzy .wmsplitter-v, .docksplitter.wmsplitter-v {
 	background-image: url(images/h_splitter_handle.gif);
 }
 
@@ -1558,7 +1592,9 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #studio_inspectorLayers_Styles > .wmtablayers-tabbar,
 #studio_sourceTabs,
 .EditVariable .EditVariable-tabs .wmtablayers-tabbar,
-.DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-tabbar {
+.DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-tabbar ,
+.GridDesigner .wmtablayers-tabbar
+{
 	border-bottom: 1px solid #c0c4ca;
 	background-repeat:repeat-x;
 	padding-top: 8px;
@@ -1595,7 +1631,10 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #studio_inspectorLayers_Styles > .wmtablayers-tabbar > .wmtablayers-tab,
 #studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-tab,
 .EditVariable .EditVariable-tabs .wmtablayers-tab,
-.DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-tab {
+.DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-tab,
+.GridDesigner .wmtablayers-tab,
+#studio_inspector .wmaccordion-header
+ {
 	-moz-border-radius-topleft: 4px; 
 	-moz-border-radius-topright: 4px; 
 	-webkit-border-top-left-radius: 4px; 
@@ -1614,6 +1653,16 @@ body.wm-darksnazzy .wmToolbar button:hover {
 	background-image:none;
 	color: #FFF;
     padding: 2px 5px 3px 5px;
+}
+body #studio_inspector .wmaccordion-header {
+	-moz-border-radius: 4px; 
+	-webkit-border-radius: 4px; 
+	border-radius: 4px; 
+	background-color: #959dab;
+	color: #FFF;	
+}
+#studio_inspector .wmaccordion-header.wmaccordion-collapsed {
+	background-color: #5e6678;
 }
 
 .dj_ff3 .Studio .Security-tabs > .wmtablayers-tabbar,
@@ -1646,7 +1695,9 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #studio_inspectorLayers_Styles > .wmtablayers-tabbar > .wmtablayers-selected,
 #studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-selected,
 .EditVariable .EditVariable-tabs .wmtablayers-selected,
-.DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-selected {
+.DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-selected,
+.GridDesigner .wmtablayers-selected
+ {
 	border-top: 1px solid #c0c4ca;
 	border-right: 1px solid #363b44;
 	border-left: 1px solid #c0c4ca;
@@ -2072,4 +2123,23 @@ color: rgb(0,270,0);
 
 .Studio-navigationBar {
     font-family: "Nimbus Sans L", sans-serif;
+}
+
+.Studio #studio_PIContents {
+	background-color:#424a5a;
+}
+.wmPropertyInspector-propEdit_dataSet li {
+    background-image: none !important;
+}
+
+.wmPropertyInspector-propEdit_dataSet li input {
+    width: initial;
+
+    min-width: 80px;
+    display: inline-block;
+}
+
+.wmPropertyInspector-propEdit_dataSet li .wmtree-content {
+    min-width: 80px;
+    display: inline-block;
 }

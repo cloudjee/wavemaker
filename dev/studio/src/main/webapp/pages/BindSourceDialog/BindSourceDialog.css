@@ -31,3 +31,16 @@
 .BindSourceDialog .BindSourceDialog-expressionButtons button {
 	font-size: 120%;
 }
+
+.BindSourceDialog .WireExpression,
+.BindSourceDialog .WireSource {
+   font-style: italic;
+   color: #888;
+   border: solid 1px #888;
+   padding: 1px 4px;
+}
+
+.BindSourceDialog .WireExpression {
+   width: 100px;
+   overflow: hidden;
+}

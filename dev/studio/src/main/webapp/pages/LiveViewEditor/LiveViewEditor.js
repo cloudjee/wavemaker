@@ -44,6 +44,12 @@ dojo.declare("LiveViewEditor", wm.Page, {
 	    }
 	    */
 
+	    if (this.owner.owner instanceof wm.Dialog) {
+		this.buttonBar.show();
+		this.managerToolbar.hide();
+		this.titleLabel1.hide();
+		this.namePanel.hide();
+	    }
 	},
 	setLiveView: function(inLiveView) {
 		this.clientLiveView = inLiveView;
@@ -413,9 +419,11 @@ dojo.declare("LiveViewEditor", wm.Page, {
 		    this.clientLiveView.name + " (" + studio.getDictionaryItem("wm.LiveView.TAB_CAPTION") + ")";
 		this.dirty = changed;
 
-		if (caption != this.owner.parent.caption) {
-		    this.owner.parent.setCaption(caption);
-		    studio.updateServicesDirtyTabIndicators();
+		if (this.owner.owner instanceof wm.Dialog == false) {
+		    if (caption != this.owner.parent.caption) {
+			this.owner.parent.setCaption(caption);
+			studio.updateServicesDirtyTabIndicators();
+		    }
 		}
 	    }));
 
@@ -458,8 +466,10 @@ dojo.declare("LiveViewEditor", wm.Page, {
 	},
 	nameEditChanged: function() {
 		this.accept();
+	    if (this.owner.owner instanceof wm.Dialog == false) {
 	        this.owner.parent.setName(this.clientLiveView.getLayerName());
 	        this.owner.parent.setCaption(this.clientLiveView.getLayerCaption());
+	    }
 	    this.setDirty();
 		    reinspect();
 	},
@@ -533,5 +543,8 @@ dojo.declare("LiveViewEditor", wm.Page, {
 	    //dojo.publish("TypeChanged-" + this.type); // type reverts to old value; notify everyone that the type has changed
 	    this.clientLiveView.viewChanged(); // type reverts to old value; notify everyone that the type has changed
 	this.inherited(arguments);
+    },
+    okClick: function() {
+	this.owner.owner.hide();
     }
 });

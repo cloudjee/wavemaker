@@ -22,8 +22,8 @@ dojo.declare("BindSourceDialog", wm.Page, {
 	start: function() {
 	    this.connect(this.owner.parent, "onClose", this, "onClose");
 	},
-	initBinding: function() {
-		this.binderSource.initBinding();
+	initBinding: function(inProp) {
+	    this.binderSource.initBinding(false, inProp);
 	},
     onClose: function(inWhy) {
 	var object = this.targetProps.object;
@@ -44,8 +44,22 @@ dojo.declare("BindSourceDialog", wm.Page, {
 	this.targetType = this._getTargetType(inTargetProps);
 	var
 	tp = this.targetProps = inTargetProps,
-	w = wm.data.getPropWire(tp.object, tp.targetProperty);
-	this.binderSource.initBinding(noRegen);
+	w = wm.data.getPropWire(tp.object, tp.targetProperty);	
+	var propDef = tp.object.listProperties()[inTargetProps.targetProperty];
+	if (!propDef && tp.object._dataSchema) {
+	    var object = tp.object;
+	    if (inTargetProps.targetProperty.indexOf(".") != -1) {
+		var parts = inTargetProps.targetProperty.split(/\./);
+		while (parts.length > 1) {
+		    var currentPart = parts.shift();
+		    object = object.getValue(currentPart);
+		}
+		propDef = object._dataSchema[parts[0]];
+	    } else {
+		propDef = tp.object._dataSchema[inTargetProps.targetProperty];
+	    }
+	}
+	this.binderSource.initBinding(noRegen,  propDef);
 	this.binderSource.updateUiForWire(w, tp.displayExpression ? tp.object.getProp(tp.targetProperty) : "");
 	
 	    //this.bindTargetLabel.setValue("caption", [(tp.object|| 0).getId(), tp.targetProperty].join('.'));
@@ -54,7 +68,7 @@ dojo.declare("BindSourceDialog", wm.Page, {
 		if (bindname.length > 30) bindname = "..." + bindname.substring(bindname.length-30);
 		this.bindTargetTypeLabel.setCaption('<span style="font-weight: bold">Type:</span> <span style="font-style: italic;">' + bindname + "</span>");
 
-		if (tp.subtype == "File") {
+		if (propDef.subtype == "File") {
 		    this.resourceRb.editor.setChecked(true);
 		} else if (tp.displayExpression) {
 		    tp.displayExpressionObject = tp.object.getProp(tp.displayExpressionDataSet);
@@ -134,14 +148,25 @@ dojo.declare("BindSourceDialog", wm.Page, {
 	    }
 	},
 	applyButtonClick: function() {
-		if (this.binderSource.applyBinding(this.targetProps))
-			this.cancelButtonClick();
-	},
-	applyStayButtonClick: function() {
-	    if (this.binderSource.applyBinding(this.targetProps))
-		app.toastSuccess(this.getDictionaryItem("TOAST_SUCCESS"));
-	    else
+	    if (this.binderSource.applyBinding(this.targetProps)) {
+		/* If the cancel button is NOT showing, then don't autoclose the dialog after applying a binding */
+		if (this.cancelButton.showing) {
+		    this.cancelButtonClick();
+		}
+	    } else {
 		app.toastWarning(this.getDictionaryItem("TOAST_FAILED"));
+	    }
+	},
+/*
+	applyStayButtonClick: function() {
+	    if (this.binderSource.applyBinding(this.targetProps)) {
+		app.toastSuccess(this.getDictionaryItem("TOAST_SUCCESS"));
+	    } else
+		app.toastWarning(this.getDictionaryItem("TOAST_FAILED"));
+	},
+	*/
+	clearButtonClick: function() {
+	    this.binderSource.clearBinding();
 	},
 	cancelButtonClick: function() {
 		wm.fire(this.owner.owner, "dismiss");

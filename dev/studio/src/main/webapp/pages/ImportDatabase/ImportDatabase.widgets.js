@@ -19,7 +19,7 @@ ImportDatabase.widgets = {
 		panel2: ["wm.Layer", {caption: "Basic Options", layoutKind: "top-to-bottom", horizontalAlign: "center", verticalAlign: "middle"}, {}, {
 
 
-		    dbdropdown: ["wm.SelectMenu", {captionAlign: "left", captionSize: "120px", caption: "Database System", width: "65%", helpText: "Choose what type of database server you are connecting to", required: true}, {onchange: "importDBdropdownChanged"}],
+		    dbdropdown: ["wm.SelectMenu", {displayField: "dataValue", dataField: "dataValue", captionAlign: "left", captionSize: "120px", caption: "Database System", width: "65%", helpText: "Choose what type of database server you are connecting to", required: true}, {onchange: "importDBdropdownChanged"}],
 		    hostInput: ["wm.Text", {captionAlign: "left", captionSize: "120px", caption: "Hostname", width: "65%", border: "0", emptyValue: "emptyString", helpText: "The network host for the database. The default value is localhost, meaning that the database is located on the same computer that WaveMaker studio is running on.", required: true}, {onchange: "importHostChanged", changeOnKey: true, onEnterKeyPress: "importBtnClick"}],
 		    usernameInput: ["wm.Text", {captionAlign: "left", captionSize: "120px", caption: "Username", width: "65%", border: "0", emptyValue: "emptyString", helpText: "Enter the username for connecting to the database server", required: true}, {onchange: "usernameChanged", changeOnKey: true, onEnterKeyPress: "importBtnClick"}],
 		    passwordInput: ["wm.Text", {captionAlign: "left", captionSize: "120px", caption: "Password", width: "65%", border: "0", password:true, emptyValue: "emptyString", helpText: "Enter the password for connecting to the database server"}, {onEnterKey: "importBtnClick"}],

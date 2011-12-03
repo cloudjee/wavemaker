@@ -76,7 +76,9 @@ dojo.declare("Studio", wm.Page, {
 	    app._page = this;// not sure why this was failing to set, but I don't have time to investigate...
 	    this.neededJars = {};
 		try{
-		    this.documentationDialog = new wm.RichTextDialog({owner: this, name:"documentationDialog"});
+		    this.documentationDialog = new wm.RichTextDialog({_classes: {domNode: ["studiodialog"]},
+								      owner: this, 
+								      name:"documentationDialog"});
 		    this.connect(this.documentationDialog, "onOkClick", this, "saveDocumentation");
 		}
 		catch(e){
@@ -100,7 +102,8 @@ dojo.declare("Studio", wm.Page, {
 		// load module configuration
 		this.loadModuleConfig();
 		// FIXME: hack
-		this.owner = app;
+	        //this.owner = app;
+
 	    this.scrim = new wm.Scrim({owner: this, name: "studioScrim", _classes: {domNode: ["wmdialog-scrim"]}, waitCursor: false, _noAnimation: true});
 		// populate palettes
 		loadPackages();
@@ -167,6 +170,8 @@ dojo.declare("Studio", wm.Page, {
 		this.subscribe("service-variable-error", this, "handleServiceVariableError");
 
                 this.loadThemeList();
+	    this.cssHelpLink.setLink(this.getDictionaryItem("URL_STYLE_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}));
+
 	    this.helpDialog.containerWidget.c$[0].setPadding("0");
 	    this.helpDialog.containerWidget.c$[0].setBorder("10");
 	    this.helpDialog.containerWidget.c$[0].setBorderColor("#424959");
@@ -179,12 +184,10 @@ dojo.declare("Studio", wm.Page, {
 	    });	    
 
 
-	    this._paletteToDialogButton = document.createElement("div");
-	    this._paletteToDialogButton.className = "wmtoolbutton Studio-paletteToDialogButton";
-	    studio.left.decorator.tabsControl.domNode.appendChild(this._paletteToDialogButton);
-	    dojo.connect(this._paletteToDialogButton, "onclick", this, "togglePaletteDialog");
+	    /*
 	    this.propertiesDialog.containerWidget.setPadding("0");
 	    this.propertiesDialog.containerWidget.setAutoScroll(false);
+	    */
 
 	    this._jarsMissing = {};
 	    this.jarListService.requestAsync("getMissingJars").addCallback(dojo.hitch(this, function(inResult) {
@@ -349,10 +352,10 @@ dojo.declare("Studio", wm.Page, {
 			this.application = null;
 		}
 		this.clearTrees();
+/*
 	    if (this.propertiesDialog.showing)
 		this.propertiesDialog.hide();
-	    if (this.paletteDialog.showing)
-		this.paletteDialog.hide();
+		*/
 		wm.typeManager.clearTypes();
 		wm.services.clear();
 		if (this._loadingApplication) {
@@ -1115,7 +1118,7 @@ dojo.declare("Studio", wm.Page, {
 	    // return if there are any showing dialogs owned by StudioApplication; dialogs intercept ESC and other keyboard
 	    // events using their own event handlers
 	    if (dojo.some(wm.dialog.showingList, dojo.hitch(this,function(dialog) {
-		return dialog.getOwnerApp() == this.owner && dialog.modal;
+		return dialog.getOwnerApp() == this.owner.owner && (dialog.modal || e.keyCode === dojo.keys.ESCAPE && dojo.isDescendant(document.activeElement, dialog.domNode));
 	    })))
 		return true;
 
@@ -1129,7 +1132,7 @@ dojo.declare("Studio", wm.Page, {
 	    var         kc = e.keyCode,
                         isEsc = kc == dojo.keys.ESCAPE,
 			chr = String.fromCharCode(kc),
-			normalKey = ((!this.studioKeyPriority && this.allowKeyTarget(e)) || !this.isShowingWorkspace() || wm.dialog.showing),
+			normalKey = !isEsc && ((!this.studioKeyPriority && this.allowKeyTarget(e)) || !this.isShowingWorkspace() || wm.dialog.showing),
 			handled = false;
 	    if (e.metaKey && chr.toLowerCase() == "r") return false; // don't block reload commands
 		// hotkey
@@ -1641,6 +1644,7 @@ dojo.declare("Studio", wm.Page, {
 		this.inspector.reinspect();
 	},
         loadThemeList: function(optionalCallback) {
+
             var d = studio.deploymentService.requestAsync("listThemes");
             d.addCallback(dojo.hitch(this, function(inData) {
                 var d = [];
@@ -1688,6 +1692,7 @@ dojo.declare("Studio", wm.Page, {
 	//this.resourcesPage.getComponent("resourceManager").loadResources();
     },
 
+/*
     toggleInspectorDialog: function() {
 	if (!this.PIContents) return;
 	if (this.PIContents.parent == this.PIPanel) {
@@ -1738,8 +1743,25 @@ dojo.declare("Studio", wm.Page, {
 		d.reflow();
 	}
     },
+    */
     uploadStudioPatches: function() {
 	this.addPatchDialog.show();
-    }
+    },
 
+
+    dockPropertyPanel: function() {
+	if (!this.PIContents.isDestroyed && !this.PIContents._destroying) {
+	    this.PIContents.setShowing(true);
+	    this.PIContents.setDocked(true,this.PIPanel);
+	}
+    },
+    dockPalette: function() {
+	if (!this.panel2.isDestroyed && !this.panel2._destroying) {
+	    this.panel2.setShowing(true);
+	    this.panel2.setDocked(true,this.dockLeftPanel);
+	}
+    },
+    searchProperties: function(inSender,inDisplayValue,inDataValue) {
+	this.inspector.propertySearch(inDisplayValue);
+    }
 });

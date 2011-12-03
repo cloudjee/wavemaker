@@ -52,11 +52,15 @@ dojo.declare("MenuDesigner", wm.Page, {
 	    if (structure[i].iconClass)
 		content = '<img src="lib/dojo/dojo/resources/blank.gif" alt="" class="dijitIcon dijitMenuItemIcon ' + structure[i].iconClass + '" dojoattachpoint="iconNode">&nbsp;' + content;
 
+	    if (structure[i].separator) {
+		var n = new wm.TreeNode(parentNode, {closed: false, content: "----", data: {separator: true, defaultLabel: "Separator"}});
+	    } else {
 	    var n = new wm.TreeNode(parentNode, {closed: false, content: content, data: {content: structure[i].label,
 											 defaultLabel: structure[i].defaultLabel || structure[i].label,
 											 onClick: structure[i].onClick,
 											 iconClass: structure[i].iconClass,
 											 imageList: structure[i].imageList}});
+	    }
 	    if (this._defaultLabel == structure[i].label && this._defaultClass == structure[i].iconClass)
 		n.domNode.style.fontWeight = "bold";
 	    if (structure[i].children) // test for children needed on upgraded projects
@@ -169,6 +173,13 @@ dojo.declare("MenuDesigner", wm.Page, {
     mainCancelClick: function() {
 	this.owner.owner.dismiss();
     },
+    SeparatorButtonClick: function() {
+          var parent = this.tree.selected || this.tree.root;
+	  var childCount = parent.kids.length;
+	var content = "-----";
+        var node = new wm.TreeNode(parent, {closed: false, content: content, data: {separator: true, defaultLabel: "Separator"}});
+          this.updateMenu();
+    },
 
     popupImageSelector: function() {
 	var imageList = this.menuItemImageList.getDataValue();
@@ -231,6 +242,7 @@ dojo.declare("MenuDesigner", wm.Page, {
   writeNode: function(inNode) {
    
       var obj = {label: inNode.data.content,
+		 separator: inNode.data.separator,
 		 defaultLabel: inNode.data.defaultLabel,
 		 iconClass: inNode.data.iconClass,
 		 imageList: inNode.data.imageList,
