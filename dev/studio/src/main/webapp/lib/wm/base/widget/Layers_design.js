@@ -142,6 +142,7 @@ wm.Object.extendSchema(wm.Layers, {
     clientBorderColor: {group: "style", order: "101", doc: 1, shortname: "layerBorderColor"},
     addLayer: {group: "method"},
     getLayer: {group: "method", returns: "wm.Layer"},
+    getLayerByCaption: {group: "method", returns: "wm.Layer"},
     removeLayer:{group: "method"},
 
     getActiveLayer: {group: "method", returns: "wm.Layer"},
