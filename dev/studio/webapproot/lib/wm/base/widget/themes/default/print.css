@@ -30,6 +30,9 @@ body .wmFancyPanel-containerWidget {
     padding-right: 10px;
 }
 
+table {
+    font-size: inherit;
+}
 
 body {
 width:725px;
