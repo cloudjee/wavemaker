@@ -2143,3 +2143,19 @@ color: rgb(0,270,0);
     min-width: 80px;
     display: inline-block;
 }
+
+#studio_PIContents .wmbutton {
+	-moz-border-radius: 4px; 
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+        background: -webkit-gradient(linear, left top, left bottom, from(#E0E0E0), to(#707070));
+	background: -moz-linear-gradient(top,  #E0E0E0,  #707070);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#E0E0E0', endColorstr='#707070');
+        cursor: pointer;
+}
+
+#studio_PIContents .wmbutton:hover {
+        background: -webkit-gradient(linear, left top, left bottom, from(#D0D0D0), to(#404040));
+	background: -moz-linear-gradient(top,  #D0D0D0,  #404040);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#D0D0D0', endColorstr='#404040');
+}

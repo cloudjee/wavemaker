@@ -552,22 +552,16 @@
 	 var allProps = inComponent ? inComponent.listProperties() : {};
 	 var props = [];
 	 for (var i in allProps) {
-	     if (this.isEditableProp(allProps[i])) {
-		 props[i] = dojo.mixin({name: i}, allProps[i]);
-		 if (allProps[i].isEvent || inComponent.isEventProp(i))
-		     props[i].group = "events";
-		 else if (allProps[i].isCustomMethod) 
-		     props[i].group = "CustomMethods";
-		 else if (!props[i].group) 
-		     props[i].group = "Properties";
-
-	     }
-	 }
-	 for (var i in inComponent.eventBindings) {
-	     if (i in props == false) {
-		 props[i] = {group: "events",
-			     isEvent: true,
-			     name: i};
+	     if (this.isEditableProp(allProps[i])) {	     
+		     var p = dojo.mixin({name: i}, allProps[i]);
+		 if (allProps[i].isEvent || inComponent.isEventProp(i)) {
+		     p.group = "events";
+		     if (i.match(/\d$/)) continue; // ignore events that end in numbers; these are the "and-then" events, which are handled by the event editor
+		 } else if (allProps[i].isCustomMethod) 
+		     p.group = "CustomMethods";
+		 else if (!allProps[i].group) 
+		     p.group = "Properties";
+		 props[i] = p;
 	     }
 	 }
 	 if (isSubComponent) {
@@ -654,6 +648,7 @@
 	     hint: inProp.ignoretmp && inProp.ignoreHint ? this.ignoreHintPrefix + inProp.ignoreHint : "",
 	     showing: !isBound,
 	     name: "propEdit_" + inProp.name,
+	     propName: inProp.name,
 	     width: "100%",
 	     height: "45px",
 	     captionSize: "20px",
@@ -668,8 +663,9 @@
 	 if (inProp.isEvent) {
 	     editorProps.propName = inProp.name;
 
-	     var e = new wm.prop.EventEditor(editorProps);
+	     var e = new wm.prop.EventEditorSet(editorProps);
 	     this.editorHash[inComponent.getId() + "." + inProp.name] = e;
+/*
 	     var addEventLabel = new wm.Label({owner: this,
 					       parent: panel,
 					       caption: "+",
@@ -690,7 +686,7 @@
 						   parent.setHeight(parent.getPreferredFitToContentHeight() + "px");										  
 						   parent.reflow();
 					       })});
-
+					       */
 					       
 	 } else {
 	  var e = inComponent.makePropEdit(inProp.name, value, editorProps);
@@ -814,7 +810,7 @@
 		 studio.bindDialog.page.update(p);
 		 studio.bindDialog.show();
 	     };
-	 } else {
+	 } else if (!inProp.isEvent) {
 	     new wm.Spacer({owner:this,
 			    parent: panel,
 			    width: "20px",

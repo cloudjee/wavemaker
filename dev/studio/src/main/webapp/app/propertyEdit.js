@@ -744,6 +744,81 @@ dojo.declare("wm.prop.DataTypeSelect", wm.prop.SelectMenu, {
 });
 
 
+dojo.declare("wm.prop.EventEditorSet", wm.Container, {
+    inspected: null,
+    verticalAlign: "top",
+    horizontalAlign: "left",
+    borderColor: "#3F3F3F",
+    margin: "0,0,4,0",
+    init: function() {
+	this.inherited(arguments);
+	this.setLayoutKind("top-to-bottom");
+	var topPanel = new wm.Panel({owner: this,
+				   parent: this,
+				   width: "100%",
+				   height: "28px",
+				   layoutKind: "left-to-right",
+				   verticalAlign: "top",
+				   horizontalAlign: "left"});				     
+	var title = new wm.Label({owner: this,
+				  parent: topPanel,
+				  width: "100%",
+				  height: "20px",
+				  caption: this.propName});
+	this.plusButton = new wm.Label({owner: this,
+					parent: topPanel,
+					_classes: {domNode: ["wmbutton"]},
+					caption: "+",
+					align: "center",
+					width: "20px",
+					height: "20px",
+					border: "1",
+					borderColor: "#3F3F3F",
+					onclick: dojo.hitch(this, function() {
+					    var index = this.editors[this.editors.length-1].propertyNumber+1;
+					    this.addEditor(index, "-");
+					    this.inspected.eventBindings[this.propName + index] = "-";
+					    this.inspected[this.propName + index] = function(){};
+					    this.panel.setHeight(this.panel.getPreferredFitToContentHeight() + "px");
+					    this.setHeight(this.getPreferredFitToContentHeight() + "px");
+					    this.parent.setHeight(this.parent.getPreferredFitToContentHeight() + "px");
+					})});
+	this.panel = new wm.Panel({owner: this,
+				   parent: this,
+				   width: "100%",
+				   height: "28px",
+				   layoutKind: "top-to-bottom",
+				   verticalAlign: "top",
+				   horizontalAlign: "left"});
+
+	this.editors = [];
+	this.addEditor(0,this.inspected.getProp(this.propName));
+	for (var i = 1; i < 20; i++) {
+	    if (this.inspected.getProp(this.propName + i)) {
+		this.addEditor(i, this.inspected.getProp(this.propName + i));
+	    }
+	}
+	this.panel.setHeight(this.panel.getPreferredFitToContentHeight() + "px");
+	this.setHeight(this.getPreferredFitToContentHeight() + "px");
+	this.parent.setHeight(this.parent.getPreferredFitToContentHeight() + "px");
+    },
+	addEditor: function(inIndex, inValue) {
+	    var propertyName = this.propName + (inIndex == 0 ? "" : inIndex);
+	this.editors.push(new wm.prop.EventEditor({owner: this,
+						   parent: this.panel,
+						   name: "propEdit_" + this.propName + "_" + inIndex,
+						   propName: propertyName,
+						   propertyNumber: parseInt(inIndex),
+						   width: "100%",
+						   height: "28px",
+						   captionSize: "60px",
+						   caption: inIndex > 0 ? "And then" : "Action",
+						   captionPosition: "left",
+						   captionAlign: "left",
+						   dataValue: inValue,
+						   inspected: this.inspected}));
+    }
+});
 dojo.declare("wm.prop.EventEditor", wm.SelectMenu, {
     restrictValues: false,
     displayField: "dataValue",
