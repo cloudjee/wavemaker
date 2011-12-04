@@ -71,44 +71,6 @@ wm.DojoGrid.extend({
 		if (this._studioCreating)
 			this.studioCreate();
 		this.inherited(arguments);
-
-	    if (0) {
-		if (!this.headerAttr) {
-		    this.headerAttr = 
-			[{id:'show', title:' ',width:'10px', type:'checkbox'}, 
-			 {id:'id', width:'150px', type:'text', readOnly:true,
-			  title: studio.getDictionaryItem("wm.DojoGrid.CONFIG_ID")},
-
-			 {id:'title',width:'150px', type:'text',
-			  title:  studio.getDictionaryItem("wm.DojoGrid.CONFIG_TITLE")},
-			 {id:'width', width:'109px', type:'width',
-			  title:  studio.getDictionaryItem("wm.DojoGrid.CONFIG_WIDTH")},
-			 {id:'align',width:'70px', type:'dropdown',
-			  title:  studio.getDictionaryItem("wm.DojoGrid.CONFIG_ALIGN")},
-			 {id:'formatFunc',width:'150px', type:'dropdown',
-			  title:  studio.getDictionaryItem("wm.DojoGrid.CONFIG_FORMAT")},
-			 {id:'fieldType',width:'100px', type:'dropdown', isAdvanced:true,
-			  title:  studio.getDictionaryItem("wm.DojoGrid.CONFIG_TYPE")},
-			 /*				{id:'editable', title:'Editable',width:'10px', type:'checkbox', isAdvanced:true}, */
-			 /*		                {id: 'editParams', title: "Edit Parameters", width: "100px", type: 'gridEditParams', isAdvanced: true},*/
-			 {id:'expression', width:'150px', type:'text', isAdvanced:true,
-			  title:  studio.getDictionaryItem("wm.DojoGrid.CONFIG_EXPR")},
-			 {id: "backgroundColor", width: "50px", type: 'checkbox', title: "Background Color", isAdvanced: true},
-			 {id: "textColor", width: "50px", type: 'checkbox', title: "Text Color", isAdvanced: true}];
-		}
-
-		this.headerAttr[4].dataStore = this.getAlignmentTypeStore();
-		this.updateFormatterList();
-		this.headerAttr[5].dataStore = this.formatterStore;
-
-		this.updateFieldTypeList(this.fieldOptions);
-		this.headerAttr[6].dataStore = this.fieldTypeStore;
-		var defaultCustomFieldParams = {id: 'customField', isCustomField: true, expression: '', show:true, width:'100%'};
-		var helpText = studio.getDictionaryItem("wm.DojoGrid.HELP_TEXT");
-		var addColumnLabel = studio.getDictionaryItem("wm.DojoGrid.ADD_COLUMN_LABEL");
-		var dialogTitle =  studio.getDictionaryItem("wm.DojoGrid.EDIT_COLUMNS_DIALOG_TITLE");
-	    }
-
 	},
 	showMenuDialog: function(e){
 	    studio.gridDesignerDialog.show();
@@ -169,7 +131,7 @@ wm.DojoGrid.extend({
 	} else {
 	    for (var i = 0; i < this.columns.length; i++) {
 		var c = this.columns[i];
-		l[c.id] = c.title;
+		l[c.field] = c.title;
 	    }
 	    return l;
 	}	
