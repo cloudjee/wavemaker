@@ -51,8 +51,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	this.localizationStructure = inStructure;
 	for (var i = 0; i < this.columns.length; i++) {
 	    var c = this.columns[i];
-	    if (this.localizationStructure[c.id]) {
-		c.title = this.localizationStructure[c.id];
+	    if (this.localizationStructure[c.field]) {
+		c.title = this.localizationStructure[c.field];
 	    }
 	}
 	if (!this._cupdating && this.dojoObj) {
@@ -1118,7 +1118,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	        }
 	        this.columns.push({
 	            show: i < 15,
-	            id: f.dataIndex,
+	            field: f.dataIndex,
 	            title: f.caption,
 	            width: width,
 	            displayType: f.displayType,
