@@ -18,6 +18,7 @@ import org.cloudfoundry.spinup.authentication.TransportToken;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 /**
  * Default implementation of {@link SpinupService}.
@@ -65,7 +66,7 @@ public class DefaultSpinupService implements SpinupService {
     protected CloudFoundryClient getCloudFoundryClient(LoginCredentials credentials) {
         Assert.notNull(credentials, "Credential must not be null");
         try {
-            return new CloudFoundryClient(credentials.getUsername(), credentials.getPassword(), this.controllerUrl);
+            return new CloudFoundryClient(credentials.getUsername(), credentials.getPassword(), getControllerUrl());
         } catch (MalformedURLException e) {
             throw new IllegalStateException(e);
         }
@@ -82,7 +83,24 @@ public class DefaultSpinupService implements SpinupService {
         TransportToken transportToken = secret.encrypt(authenticationToken);
         this.propagation.sendTo(cloudFoundryClient, secret, applicationDetails.getName());
         cloudFoundryClient.startApplication(applicationDetails.getName());
-        return new DefaultStartedApplication(transportToken, applicationDetails.getUrl());
+
+        return new DefaultStartedApplication(transportToken, applicationDetails.getUrl(), getDomain());
+    }
+
+    private String getDomain() {
+        String domain = getControllerUrl().toLowerCase();
+        domain = stripPrefix(domain, "http://");
+        domain = stripPrefix(domain, "http://");
+        domain = stripPrefix(domain, "api.");
+        domain = "." + domain;
+        return domain;
+    }
+
+    private String stripPrefix(String s, String prefix) {
+        if (s.startsWith(prefix)) {
+            return s.substring(prefix.length());
+        }
+        return s;
     }
 
     private ApplicationDetails deployAsNecessary(CloudFoundryClient cloudFoundryClient, AuthenticationToken authenticationToken) throws IOException {
@@ -109,7 +127,7 @@ public class DefaultSpinupService implements SpinupService {
         }
         for (int attempt = 1;; attempt++) {
             try {
-                ApplicationDetails applicationDetails = this.namingStrategy.newApplicationDetails(this.controllerUrl);
+                ApplicationDetails applicationDetails = this.namingStrategy.newApplicationDetails(getControllerUrl());
                 List<String> uris = Collections.singletonList(applicationDetails.getUrl());
                 cloudFoundryClient.createApplication(applicationDetails.getName(), this.framework, memory, uris, this.serviceNames, true);
                 return applicationDetails;
@@ -122,13 +140,27 @@ public class DefaultSpinupService implements SpinupService {
     }
 
     /**
-     * Sets the controller URL that should be used to access cloud foundry.
+     * Sets the controller URL that should be used to access cloud foundry. If not specified the controller URL is
+     * deduced.
      * 
      * @param controllerUrl the controller URL
      */
-    @Required
     public void setControllerUrl(String controllerUrl) {
         this.controllerUrl = controllerUrl;
+    }
+
+    /**
+     * @return The actual controller URL to use.
+     */
+    private String getControllerUrl() {
+        if (StringUtils.hasLength(this.controllerUrl)) {
+            return this.controllerUrl;
+        }
+        String systemEnv = System.getenv("spinup_target");
+        if (StringUtils.hasLength(systemEnv)) {
+            return systemEnv;
+        }
+        return "http://api.cloudfoundry.com";
     }
 
     /**

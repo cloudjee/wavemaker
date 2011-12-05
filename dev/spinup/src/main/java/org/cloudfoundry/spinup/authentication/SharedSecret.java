@@ -9,6 +9,8 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.spec.SecretKeySpec;
 
+import org.cloudfoundry.spinup.util.HexString;
+import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 
 /**
@@ -140,6 +142,11 @@ public class SharedSecret {
         }
         SharedSecret other = (SharedSecret) obj;
         return Arrays.equals(this.digestOfSecret, other.digestOfSecret) && Arrays.equals(this.secret, other.secret);
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringCreator(this).append("secret", HexString.toString(getBytes())).toString();
     }
 
     /**

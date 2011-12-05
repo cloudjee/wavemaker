@@ -26,7 +26,7 @@
 				<legend>Login</legend>
 			
 				<!-- Username -->
-				<form:label path="username">Username: <form:errors path="password" cssClass="error"/></form:label>
+				<form:label path="username">Username: <form:errors path="username" cssClass="error"/></form:label>
 				<form:input path="username" />
 			
 				<!-- Password -->

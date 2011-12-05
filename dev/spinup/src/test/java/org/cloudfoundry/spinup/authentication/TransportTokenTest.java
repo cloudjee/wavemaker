@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -67,4 +68,26 @@ public class TransportTokenTest {
         TransportToken t = new TransportToken(new byte[] { 0, 1 }, new byte[] { 1, 2 });
         assertThat(t.encode(), is(equalTo("0001.0102")));
     }
+
+    @Test
+    public void shouldDecode() throws Exception {
+        TransportToken token = TransportToken.decode("0001.0102");
+        assertTrue(token.isDigestMatch(new byte[] { 0, 1 }));
+        assertThat(token.getEncryptedToken(), is(equalTo(new byte[] { 1, 2 })));
+    }
+
+    @Test
+    public void shouldNotDecodeNull() throws Exception {
+        this.thrown.expect(IllegalArgumentException.class);
+        this.thrown.expectMessage("EncodedTransportToken must not be null");
+        TransportToken.decode(null);
+    }
+
+    @Test
+    public void shouldNotDecodeMalformed() throws Exception {
+        this.thrown.expect(IllegalStateException.class);
+        this.thrown.expectMessage("Malformed EncodedTransportToken");
+        TransportToken.decode("a.b.c");
+    }
+
 }

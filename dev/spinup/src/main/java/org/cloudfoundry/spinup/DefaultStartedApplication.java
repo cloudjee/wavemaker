@@ -15,17 +15,20 @@ public class DefaultStartedApplication implements StartedApplication {
 
     private final String applicationUrl;
 
+    private final String domain;
+
     /**
      * Create a new {@link DefaultStartedApplication} implementation.
      * 
      * @param transportToken the transport token
      * @param applicationUrl the redirect URL
      */
-    public DefaultStartedApplication(TransportToken transportToken, String applicationUrl) {
+    public DefaultStartedApplication(TransportToken transportToken, String applicationUrl, String domain) {
         Assert.notNull(transportToken, "TransportToken must not be null");
         Assert.notNull(applicationUrl, "ApplicationUrl must not be null");
         this.transportToken = transportToken;
         this.applicationUrl = applicationUrl;
+        this.domain = domain;
     }
 
     @Override
@@ -36,5 +39,10 @@ public class DefaultStartedApplication implements StartedApplication {
     @Override
     public String getApplicationUrl() {
         return this.applicationUrl;
+    }
+
+    @Override
+    public String getDomain() {
+        return this.domain;
     }
 }

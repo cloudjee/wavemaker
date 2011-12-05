@@ -128,6 +128,7 @@ public class DefaultSpinupServiceTest {
         verifyNoMoreInteractions(this.cloudFoundryClient);
         assertThat(started.getApplicationUrl(), is(equalTo(APPLICATION_URL)));
         assertThat(started.getTransportToken(), is(this.transportToken));
+        assertThat(started.getDomain(), is(equalTo(".cloudfoundry.com")));
     }
 
     @Test

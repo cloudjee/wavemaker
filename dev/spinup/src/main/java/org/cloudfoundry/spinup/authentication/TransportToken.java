@@ -4,6 +4,7 @@ package org.cloudfoundry.spinup.authentication;
 import java.util.Arrays;
 
 import org.cloudfoundry.spinup.util.HexString;
+import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 
 /**
@@ -58,6 +59,25 @@ public final class TransportToken {
 
     public String encode() {
         return HexString.toString(this.digest) + "." + HexString.toString(this.encryptedToken);
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringCreator(this).append("digest", HexString.toString(this.digest)).append("encryptedToken",
+            HexString.toString(this.encryptedToken)).toString();
+    }
+
+    public static TransportToken decode(String encodedTransportToken) {
+        Assert.notNull(encodedTransportToken, "EncodedTransportToken must not be null");
+        String[] tokenParts = encodedTransportToken.split("\\.");
+        try {
+            Assert.state(tokenParts.length == 2, "Expected two parts in encoded transport token");
+            byte[] digest = HexString.toBytes(tokenParts[0]);
+            byte[] encryptedToken = HexString.toBytes(tokenParts[1]);
+            return new TransportToken(digest, encryptedToken);
+        } catch (Exception e) {
+            throw new IllegalStateException("Malformed EncodedTransportToken", e);
+        }
     }
 
 }

@@ -13,7 +13,7 @@ public interface StartedApplication {
 
     /**
      * Returns the transport token that should be passed to the running application. Generally cookies are the
-     * recommended method of transfering the transport token.
+     * recommended method of transferring the transport token.
      * 
      * @return the transport token
      */
@@ -25,5 +25,12 @@ public interface StartedApplication {
      * @return the application URL
      */
     String getApplicationUrl();
+
+    /**
+     * Returns the domain of the spun up application in a form that can be used with a cookie.
+     * 
+     * @return the domain or <tt>null</tt>.
+     */
+    String getDomain();
 
 }
