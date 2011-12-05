@@ -1,9 +1,10 @@
 
 package com.wavemaker.spinup.web;
 
-import org.cloudfoundry.spinup.ApplicationDetails;
-import org.cloudfoundry.spinup.ApplicationNamingStrategy;
 import org.springframework.stereotype.Component;
+
+import com.wavemaker.spinup.ApplicationDetails;
+import com.wavemaker.spinup.ApplicationNamingStrategy;
 
 /**
  * {@link ApplicationNamingStrategy} for WaveMaker.
@@ -11,13 +12,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class WavemakeApplicationNamingStrategy implements ApplicationNamingStrategy {
 
-    private static final String APPLICATION_NAME = "wavemaker-studio2";
+    private static final String APPLICATION_NAME = "wavemaker-studio";
 
     @Override
     public boolean isMatch(ApplicationDetails applicationDetails) {
-        if (true) {
-            return false;
-        }
         return APPLICATION_NAME.equalsIgnoreCase(applicationDetails.getName());
     }
 

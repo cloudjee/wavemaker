@@ -6,12 +6,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import org.cloudfoundry.spinup.InvalidLoginCredentialsException;
-import org.cloudfoundry.spinup.SpinupService;
-import org.cloudfoundry.spinup.StartedApplication;
-import org.cloudfoundry.spinup.authentication.SharedSecret;
-import org.cloudfoundry.spinup.authentication.SharedSecretPropagation;
-import org.cloudfoundry.spinup.authentication.TransportToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -25,6 +19,13 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.RequestContextUtils;
+
+import com.wavemaker.spinup.InvalidLoginCredentialsException;
+import com.wavemaker.spinup.SpinupService;
+import com.wavemaker.spinup.StartedApplication;
+import com.wavemaker.spinup.authentication.SharedSecret;
+import com.wavemaker.spinup.authentication.SharedSecretPropagation;
+import com.wavemaker.spinup.authentication.TransportToken;
 
 /**
  * Web {@link Controller} for spinning up wavemaker.
