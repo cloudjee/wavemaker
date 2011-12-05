@@ -142,6 +142,7 @@ dependencies = {
 				"wm.base.widget.layout.Layout",
 				"wm.base.widget.layout.Box",
 				//"wm.base.widget.layout.Abs",
+				"wm.base.widget.AppRoot",
 				"wm.base.widget.Container",
 				"wm.base.widget.Panel",
 				"wm.base.widget.Template",
