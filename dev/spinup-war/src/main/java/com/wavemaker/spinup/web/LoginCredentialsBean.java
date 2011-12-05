@@ -1,5 +1,5 @@
 
-package org.cloudfoundry.spinup.web;
+package com.wavemaker.spinup.web;
 
 import org.cloudfoundry.spinup.authentication.LoginCredentials;
 import org.hibernate.validator.constraints.NotEmpty;

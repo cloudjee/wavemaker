@@ -1,5 +1,5 @@
 
-package org.cloudfoundry.spinup.web;
+package com.wavemaker.spinup.web;
 
 import java.io.File;
 import java.io.IOException;

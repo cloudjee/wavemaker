@@ -1,5 +1,5 @@
 
-package org.cloudfoundry.spinup.web;
+package com.wavemaker.spinup.web;
 
 import org.cloudfoundry.spinup.ApplicationDetails;
 import org.cloudfoundry.spinup.ApplicationNamingStrategy;

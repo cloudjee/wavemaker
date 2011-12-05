@@ -1,5 +1,5 @@
 
-package org.cloudfoundry.spinup.web;
+package com.wavemaker.spinup.web;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
