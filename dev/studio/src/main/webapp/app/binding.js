@@ -991,7 +991,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		var ex2 = ex.replace(/\$\{.*?}/g, '""'); // replace all ${...} with the value 1 for a quick and easy test to validate the expression
 		try {
 		    var result = eval(ex2);
-		    if (typeof result == "object" && result instanceof Date == false && !dojo.isArray(result)) {
+		    if (isDisplayExpression && typeof result == "object" && result instanceof Date == false) {
 			app.toastError(this.getDictionaryItem("DOES_NOT_COMPILE", {expr: ex2}));
 			return;
 		    }
