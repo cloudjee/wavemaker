@@ -138,6 +138,15 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		var dateFields = this.getDateFields();
 		if (!pkList)
 			pkList = wm.data.getIncludeFields(this.variable.type);
+
+	    /* If there are no primary keys, then all fields are used to match this item -- this may fail, not trying will definitely fail */
+	        if (pkList.length == 0) {
+		    var fields = wm.typeManager.getTypeSchema(this.variable.type)
+		    for (var fieldName in fields) {
+			pkList.push(fieldName);
+		    }
+		}
+
 		var q = {};
 		dojo.forEach(pkList, function(f){
 			q[f] = obj[f];
