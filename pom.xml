@@ -1,0 +1,26 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.wavemaker</groupId>
+	<artifactId>wavemaker-all</artifactId>
+	<packaging>pom</packaging>
+	<version>6.4.0.BUILD-SNAPSHOT</version>
+	<modules>
+		<module>dev</module>
+		<module>dev/launcher</module>
+		<module>installer</module>
+	</modules>
+
+
+	<profiles>
+		<profile>
+			<id>DojoBuild</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+		</profile>
+	</profiles>
+
+</project>
+
