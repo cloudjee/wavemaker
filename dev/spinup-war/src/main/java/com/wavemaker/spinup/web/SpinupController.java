@@ -71,7 +71,7 @@ public class SpinupController {
         }
     }
 
-    // FIXME this should be removed befor GA
+    // FIXME this should be removed before GA
     @RequestMapping("/info")
     public @ResponseBody
     String info(@CookieValue(value = COOKIE_NAME, required = false) String encodedTransportToken) {

@@ -6,6 +6,8 @@ import java.net.MalformedURLException;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.cloudfoundry.client.lib.CloudApplication;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
 import org.cloudfoundry.client.lib.CloudFoundryException;
@@ -28,9 +30,9 @@ import com.wavemaker.spinup.authentication.TransportToken;
  */
 public class DefaultSpinupService implements SpinupService {
 
-    private static final int MAX_ATTEMPTS = 5;
+    private final Log logger = LogFactory.getLog(getClass());
 
-    // FIXME logging in entire API
+    private static final int MAX_ATTEMPTS = 5;
 
     private String controllerUrl;
 
@@ -48,95 +50,40 @@ public class DefaultSpinupService implements SpinupService {
 
     @Override
     public StartedApplication start(SharedSecret secret, LoginCredentials credentials) throws InvalidLoginCredentialsException {
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("Starting Cloud Foundry application");
+        }
         CloudFoundryClient cloudFoundryClient = getCloudFoundryClient(credentials);
         AuthenticationToken authenticationToken = new AuthenticationToken(login(cloudFoundryClient));
-        return deployAndShareSecret(cloudFoundryClient, authenticationToken, secret);
-    }
-
-    private String login(CloudFoundryClient cloudFoundryClient) {
-        try {
-            return cloudFoundryClient.login();
-        } catch (CloudFoundryException e) {
-            if (HttpStatus.FORBIDDEN.equals(e.getStatusCode())) {
-                throw new InvalidLoginCredentialsException(e);
-            }
-            throw e;
-        }
+        return new ApplicationStarter(cloudFoundryClient, credentials, authenticationToken, secret).start();
     }
 
     protected CloudFoundryClient getCloudFoundryClient(LoginCredentials credentials) {
         Assert.notNull(credentials, "Credential must not be null");
         try {
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("Cloud foundry client for user " + credentials.getUsername() + " at " + getControllerUrl());
+            }
             return new CloudFoundryClient(credentials.getUsername(), credentials.getPassword(), getControllerUrl());
         } catch (MalformedURLException e) {
             throw new IllegalStateException(e);
         }
     }
 
-    private StartedApplication deployAndShareSecret(CloudFoundryClient cloudFoundryClient, AuthenticationToken authenticationToken,
-        SharedSecret secret) {
-        ApplicationDetails applicationDetails;
+    private String login(CloudFoundryClient cloudFoundryClient) {
         try {
-            applicationDetails = deployAsNecessary(cloudFoundryClient, authenticationToken);
-        } catch (IOException e) {
-            throw new IllegalStateException(e);
-        }
-        TransportToken transportToken = secret.encrypt(authenticationToken);
-        this.propagation.sendTo(cloudFoundryClient, secret, applicationDetails.getName());
-        cloudFoundryClient.startApplication(applicationDetails.getName());
-
-        return new DefaultStartedApplication(transportToken, applicationDetails.getUrl(), getDomain());
-    }
-
-    private String getDomain() {
-        String domain = getControllerUrl().toLowerCase();
-        domain = stripPrefix(domain, "http://");
-        domain = stripPrefix(domain, "http://");
-        domain = stripPrefix(domain, "api.");
-        domain = "." + domain;
-        return domain;
-    }
-
-    private String stripPrefix(String s, String prefix) {
-        if (s.startsWith(prefix)) {
-            return s.substring(prefix.length());
-        }
-        return s;
-    }
-
-    private ApplicationDetails deployAsNecessary(CloudFoundryClient cloudFoundryClient, AuthenticationToken authenticationToken) throws IOException {
-
-        List<CloudApplication> applications = cloudFoundryClient.getApplications();
-        for (CloudApplication application : applications) {
-            for (String uri : application.getUris()) {
-                ApplicationDetails applicationDetails = new ApplicationDetails(application.getName(), uri);
-                if (this.namingStrategy.isMatch(applicationDetails)) {
-                    return applicationDetails;
-                }
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("Logging into cloud foundry");
             }
-        }
-
-        ApplicationDetails applicationDetails = createApplicationWithUniqueUrl(cloudFoundryClient);
-        cloudFoundryClient.uploadApplication(applicationDetails.getName(), this.archive);
-        return applicationDetails;
-    }
-
-    private ApplicationDetails createApplicationWithUniqueUrl(CloudFoundryClient cloudFoundryClient) {
-        Integer memory = this.memory;
-        if (memory == null) {
-            memory = cloudFoundryClient.getDefaultApplicationMemory(this.framework);
-        }
-        for (int attempt = 1;; attempt++) {
-            try {
-                ApplicationDetails applicationDetails = this.namingStrategy.newApplicationDetails(getControllerUrl());
-                List<String> uris = Collections.singletonList(applicationDetails.getUrl());
-                cloudFoundryClient.createApplication(applicationDetails.getName(), this.framework, memory, uris, this.serviceNames, true);
-                return applicationDetails;
-            } catch (CloudFoundryException e) {
-                if (!HttpStatus.BAD_REQUEST.equals(e.getStatusCode()) || attempt >= MAX_ATTEMPTS) {
-                    throw e;
+            return cloudFoundryClient.login();
+        } catch (CloudFoundryException e) {
+            if (HttpStatus.FORBIDDEN.equals(e.getStatusCode())) {
+                if (this.logger.isDebugEnabled()) {
+                    this.logger.debug("Login failed, thowing InvalidLoginCredentialsException");
                 }
+                throw new InvalidLoginCredentialsException(e);
             }
+            throw e;
         }
     }
 
@@ -218,5 +165,132 @@ public class DefaultSpinupService implements SpinupService {
      */
     public void setPropagation(SharedSecretPropagation propagation) {
         this.propagation = propagation;
+    }
+
+    private class ApplicationStarter {
+
+        private final CloudFoundryClient cloudFoundryClient;
+
+        private final LoginCredentials credentials;
+
+        private final AuthenticationToken authenticationToken;
+
+        private final SharedSecret secret;
+
+        public ApplicationStarter(CloudFoundryClient cloudFoundryClient, LoginCredentials credentials, AuthenticationToken authenticationToken,
+            SharedSecret secret) {
+            this.cloudFoundryClient = cloudFoundryClient;
+            this.credentials = credentials;
+            this.authenticationToken = authenticationToken;
+            this.secret = secret;
+        }
+
+        public StartedApplication start() {
+
+            ApplicationDetails applicationDetails;
+            try {
+                applicationDetails = deployAsNecessary();
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
+
+            TransportToken transportToken = this.secret.encrypt(this.authenticationToken);
+            DefaultSpinupService.this.propagation.sendTo(this.cloudFoundryClient, this.secret, applicationDetails.getName());
+
+            if (DefaultSpinupService.this.logger.isDebugEnabled()) {
+                DefaultSpinupService.this.logger.debug("Starting application " + applicationDetails.getName());
+            }
+            this.cloudFoundryClient.startApplication(applicationDetails.getName());
+
+            return new DefaultStartedApplication(transportToken, applicationDetails.getUrl(), getDomain());
+        }
+
+        private ApplicationDetails deployAsNecessary() throws IOException {
+
+            List<CloudApplication> applications = this.cloudFoundryClient.getApplications();
+            for (CloudApplication application : applications) {
+                for (String uri : application.getUris()) {
+                    ApplicationDetails applicationDetails = new ApplicationDetails(application.getName(), uri);
+                    if (DefaultSpinupService.this.namingStrategy.isMatch(applicationDetails)) {
+                        if (DefaultSpinupService.this.logger.isDebugEnabled()) {
+                            DefaultSpinupService.this.logger.debug("Skipping deployment of already running application "
+                                + applicationDetails.getName());
+                        }
+                        return applicationDetails;
+                    }
+                }
+            }
+
+            ApplicationDetails applicationDetails = createApplicationWithUniqueUrl();
+            if (DefaultSpinupService.this.logger.isDebugEnabled()) {
+                DefaultSpinupService.this.logger.debug("Uploading application " + applicationDetails.getName());
+            }
+            this.cloudFoundryClient.uploadApplication(applicationDetails.getName(), DefaultSpinupService.this.archive);
+            return applicationDetails;
+        }
+
+        private ApplicationDetails createApplicationWithUniqueUrl() {
+            Integer memory = DefaultSpinupService.this.memory;
+            if (memory == null) {
+                memory = this.cloudFoundryClient.getDefaultApplicationMemory(DefaultSpinupService.this.framework);
+            }
+            for (int attempt = 1;; attempt++) {
+                try {
+                    ApplicationNamingStrategyContext context = newApplicationNamingStrategyContext(attempt);
+                    ApplicationDetails applicationDetails = DefaultSpinupService.this.namingStrategy.newApplicationDetails(context);
+                    if (DefaultSpinupService.this.logger.isDebugEnabled()) {
+                        DefaultSpinupService.this.logger.debug("Named application " + applicationDetails.getName() + " URL "
+                            + applicationDetails.getUrl() + " attempt #" + attempt);
+                    }
+                    List<String> uris = Collections.singletonList(applicationDetails.getUrl());
+                    this.cloudFoundryClient.createApplication(applicationDetails.getName(), DefaultSpinupService.this.framework, memory, uris,
+                        DefaultSpinupService.this.serviceNames, true);
+                    return applicationDetails;
+                } catch (CloudFoundryException e) {
+                    if (!HttpStatus.BAD_REQUEST.equals(e.getStatusCode()) || attempt >= MAX_ATTEMPTS) {
+                        if (DefaultSpinupService.this.logger.isDebugEnabled()) {
+                            DefaultSpinupService.this.logger.debug("Application naming failed due to exception after " + attempt + " attempts");
+                        }
+                        throw e;
+                    }
+                }
+            }
+        }
+
+        private ApplicationNamingStrategyContext newApplicationNamingStrategyContext(final int attempt) {
+            return new ApplicationNamingStrategyContext() {
+
+                @Override
+                public String getUsername() {
+                    return ApplicationStarter.this.credentials.getUsername();
+                }
+
+                @Override
+                public String getControllerUrl() {
+                    return DefaultSpinupService.this.controllerUrl;
+                }
+
+                @Override
+                public int getAttemptNumber() {
+                    return attempt;
+                }
+            };
+        }
+
+        private String getDomain() {
+            String domain = getControllerUrl().toLowerCase();
+            domain = stripPrefix(domain, "http://");
+            domain = stripPrefix(domain, "http://");
+            domain = stripPrefix(domain, "api.");
+            domain = "." + domain;
+            return domain;
+        }
+
+        private String stripPrefix(String s, String prefix) {
+            if (s.startsWith(prefix)) {
+                return s.substring(prefix.length());
+            }
+            return s;
+        }
     }
 }

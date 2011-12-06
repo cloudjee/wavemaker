@@ -19,9 +19,9 @@ public interface ApplicationNamingStrategy {
     /**
      * Create new application details named correctly.
      * 
-     * @param controllerUrl the controller URI
+     * @param context Context that can be used to obtain relevant details
      * @return the application details
      */
-    ApplicationDetails newApplicationDetails(String controllerUrl);
+    ApplicationDetails newApplicationDetails(ApplicationNamingStrategyContext context);
 
 }

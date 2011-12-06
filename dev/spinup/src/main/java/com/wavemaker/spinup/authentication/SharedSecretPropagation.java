@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Hex;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.cloudfoundry.client.lib.CloudApplication;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
 import org.springframework.util.Assert;
@@ -17,6 +19,8 @@ import org.springframework.util.StringUtils;
  * @author Phillip Webb
  */
 public class SharedSecretPropagation {
+
+    private final Log logger = LogFactory.getLog(getClass());
 
     // NOTE: Cloud foundry cannot cope with dots in env variables
     static final String ENV_KEY = (SharedSecretPropagation.class.getName() + ".SECRET").replaceAll("\\.", "_");
@@ -43,14 +47,22 @@ public class SharedSecretPropagation {
      * @param application the application to send the secret to
      */
     public void sendTo(CloudFoundryClient client, SharedSecret secret, CloudApplication application) {
-        // FIXME only do this is necessary
         Assert.notNull(client, "Client must not be null");
         Assert.notNull(application, "Application must not be null");
+        if (this.logger.isDebugEnabled()) {
+            this.logger.debug("Propagating shared secret to " + application.getName());
+        }
         Map<String, String> env = new HashMap<String, String>();
         env.putAll(application.getEnvAsMap());
-        env.put(ENV_KEY, Hex.encodeHexString(secret.getBytes()));
-        client.updateApplicationEnv(application.getName(), env);
-        client.restartApplication(application.getName());
+        String envValue = Hex.encodeHexString(secret.getBytes());
+        if (!envValue.equals(env.get(ENV_KEY))) {
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("Restarting " + application.getName() + " due to new shared secret");
+            }
+            env.put(ENV_KEY, envValue);
+            client.updateApplicationEnv(application.getName(), env);
+            client.restartApplication(application.getName());
+        }
     }
 
     /**

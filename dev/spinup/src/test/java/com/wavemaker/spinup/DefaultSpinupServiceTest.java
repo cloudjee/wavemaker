@@ -31,11 +31,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 
-import com.wavemaker.spinup.ApplicationDetails;
-import com.wavemaker.spinup.ApplicationNamingStrategy;
-import com.wavemaker.spinup.DefaultSpinupService;
-import com.wavemaker.spinup.InvalidLoginCredentialsException;
-import com.wavemaker.spinup.StartedApplication;
 import com.wavemaker.spinup.authentication.AuthenticationToken;
 import com.wavemaker.spinup.authentication.LoginCredentials;
 import com.wavemaker.spinup.authentication.SharedSecret;
@@ -106,7 +101,7 @@ public class DefaultSpinupServiceTest {
     @Test
     public void shouldDeployStartAndPropagateNewApplication() throws Exception {
         given(this.namingStrategy.isMatch(isA(ApplicationDetails.class))).willReturn(false);
-        given(this.namingStrategy.newApplicationDetails(CONTROLLER_URL)).willReturn(this.applicationDetails);
+        given(this.namingStrategy.newApplicationDetails(isA(ApplicationNamingStrategyContext.class))).willReturn(this.applicationDetails);
         given(this.cloudFoundryClient.getApplication(APPLICATION_NAME)).willReturn(this.application);
         StartedApplication started = this.service.start(this.secret, this.credentials);
         verify(this.cloudFoundryClient).uploadApplication(APPLICATION_NAME, this.archive);
@@ -147,17 +142,17 @@ public class DefaultSpinupServiceTest {
     @Test
     public void shouldCallNamerAgainOnUrlClash() throws Exception {
         given(this.namingStrategy.isMatch(isA(ApplicationDetails.class))).willReturn(false);
-        given(this.namingStrategy.newApplicationDetails(CONTROLLER_URL)).willReturn(this.applicationDetails);
+        given(this.namingStrategy.newApplicationDetails(isA(ApplicationNamingStrategyContext.class))).willReturn(this.applicationDetails);
         willThrow(new CloudFoundryException(HttpStatus.BAD_REQUEST)).willNothing().given(this.cloudFoundryClient).createApplication(APPLICATION_NAME,
             CloudApplication.SPRING, 512, Collections.singletonList(APPLICATION_URL), null, true);
         this.service.start(this.secret, this.credentials);
-        verify(this.namingStrategy, times(2)).newApplicationDetails(CONTROLLER_URL);
+        verify(this.namingStrategy, times(2)).newApplicationDetails(isA(ApplicationNamingStrategyContext.class));
     }
 
     @Test
     public void shouldFailAfterTooManyNamerCalls() throws Exception {
         given(this.namingStrategy.isMatch(isA(ApplicationDetails.class))).willReturn(false);
-        given(this.namingStrategy.newApplicationDetails(CONTROLLER_URL)).willReturn(this.applicationDetails);
+        given(this.namingStrategy.newApplicationDetails(isA(ApplicationNamingStrategyContext.class))).willReturn(this.applicationDetails);
         willThrow(new CloudFoundryException(HttpStatus.BAD_REQUEST)).given(this.cloudFoundryClient).createApplication(APPLICATION_NAME,
             CloudApplication.SPRING, 512, Collections.singletonList(APPLICATION_URL), null, true);
         try {
@@ -166,7 +161,7 @@ public class DefaultSpinupServiceTest {
         } catch (CloudFoundryException e) {
             assertThat(e.getStatusCode(), is(HttpStatus.BAD_REQUEST));
         }
-        verify(this.namingStrategy, times(5)).newApplicationDetails(CONTROLLER_URL);
+        verify(this.namingStrategy, times(5)).newApplicationDetails(isA(ApplicationNamingStrategyContext.class));
     }
 
 }

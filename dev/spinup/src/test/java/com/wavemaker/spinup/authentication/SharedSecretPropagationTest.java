@@ -5,7 +5,9 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 
@@ -22,9 +24,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import com.wavemaker.spinup.authentication.SharedSecret;
-import com.wavemaker.spinup.authentication.SharedSecretPropagation;
 
 /**
  * Tests for {@link SharedSecretPropagation}.
@@ -91,6 +90,13 @@ public class SharedSecretPropagationTest {
         this.propagation.sendTo(this.client, this.secret, this.application);
         verify(this.client).updateApplicationEnv(eq(this.applicationName), this.envCaptor.capture());
         assertThat(this.envCaptor.getValue().get("example"), is("test"));
+    }
+
+    @Test
+    public void shouldSkipSendToApplicationIfEnvAlreadyContained() throws Exception {
+        this.applicationEnv.put(SharedSecretPropagation.ENV_KEY, "000102");
+        this.propagation.sendTo(this.client, this.secret, this.application);
+        verify(this.client, never()).updateApplicationEnv(anyString(), this.envCaptor.capture());
     }
 
     @Test
