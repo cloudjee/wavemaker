@@ -1,7 +1,6 @@
 
 package com.wavemaker.spinup;
 
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collections;
 import java.util.List;
@@ -38,7 +37,7 @@ public class DefaultSpinupService implements SpinupService {
 
     private ApplicationNamingStrategy namingStrategy;
 
-    private ApplicationArchive archive;
+    private ApplicationArchiveFactory archiveFactory;
 
     private String framework = CloudApplication.SPRING;
 
@@ -122,13 +121,12 @@ public class DefaultSpinupService implements SpinupService {
     }
 
     /**
-     * Set the archive that should be deployed.
+     * Set the factory used to create the archive that should be deployed.
      * 
-     * @param archive the archive
+     * @param archiveFactory the archive factory
      */
-    @Required
-    public void setArchive(ApplicationArchive archive) {
-        this.archive = archive;
+    public void setArchiveFactory(ApplicationArchiveFactory archiveFactory) {
+        this.archiveFactory = archiveFactory;
     }
 
     /**
@@ -186,13 +184,7 @@ public class DefaultSpinupService implements SpinupService {
         }
 
         public StartedApplication start() {
-
-            ApplicationDetails applicationDetails;
-            try {
-                applicationDetails = deployAsNecessary();
-            } catch (IOException e) {
-                throw new IllegalStateException(e);
-            }
+            ApplicationDetails applicationDetails = deployAsNecessary();
 
             TransportToken transportToken = this.secret.encrypt(this.authenticationToken);
             DefaultSpinupService.this.propagation.sendTo(this.cloudFoundryClient, this.secret, applicationDetails.getName());
@@ -205,8 +197,7 @@ public class DefaultSpinupService implements SpinupService {
             return new DefaultStartedApplication(transportToken, applicationDetails.getUrl(), getDomain());
         }
 
-        private ApplicationDetails deployAsNecessary() throws IOException {
-
+        private ApplicationDetails deployAsNecessary() {
             List<CloudApplication> applications = this.cloudFoundryClient.getApplications();
             for (CloudApplication application : applications) {
                 for (String uri : application.getUris()) {
@@ -225,8 +216,21 @@ public class DefaultSpinupService implements SpinupService {
             if (DefaultSpinupService.this.logger.isDebugEnabled()) {
                 DefaultSpinupService.this.logger.debug("Uploading application " + applicationDetails.getName());
             }
-            this.cloudFoundryClient.uploadApplication(applicationDetails.getName(), DefaultSpinupService.this.archive);
+            uploadApplication(applicationDetails.getName());
             return applicationDetails;
+        }
+
+        private void uploadApplication(String name) {
+            try {
+                ApplicationArchive archive = DefaultSpinupService.this.archiveFactory.getArchive();
+                try {
+                    this.cloudFoundryClient.uploadApplication(name, archive);
+                } finally {
+                    DefaultSpinupService.this.archiveFactory.closeArchive(archive);
+                }
+            } catch (Exception e) {
+                throw new IllegalStateException(e);
+            }
         }
 
         private ApplicationDetails createApplicationWithUniqueUrl() {

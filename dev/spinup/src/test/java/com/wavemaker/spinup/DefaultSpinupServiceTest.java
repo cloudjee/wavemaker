@@ -60,6 +60,9 @@ public class DefaultSpinupServiceTest {
     private ApplicationArchive archive;
 
     @Mock
+    private ApplicationArchiveFactory archiveFactory;
+
+    @Mock
     private ApplicationNamingStrategy namingStrategy;
 
     @Mock
@@ -90,12 +93,13 @@ public class DefaultSpinupServiceTest {
     };
 
     @Before
-    public void setup() {
+    public void setup() throws Exception {
         MockitoAnnotations.initMocks(this);
         this.service.setControllerUrl(CONTROLLER_URL);
         given(this.cloudFoundryClient.login()).willReturn(this.authenticationToken);
         given(this.cloudFoundryClient.getDefaultApplicationMemory(anyString())).willReturn(512);
         given(this.secret.encrypt(eq(new AuthenticationToken(this.authenticationToken)))).willReturn(this.transportToken);
+        given(this.archiveFactory.getArchive()).willReturn(this.archive);
     }
 
     @Test

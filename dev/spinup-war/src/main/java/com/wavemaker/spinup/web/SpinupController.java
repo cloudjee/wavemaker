@@ -62,7 +62,7 @@ public class SpinupController {
         try {
             StartedApplication startedApplication = this.spinupService.start(getSecret(request), credentials);
             Cookie cookie = new Cookie(COOKIE_NAME, startedApplication.getTransportToken().encode());
-            cookie.setDomain(".pwebb.cloudfoundry.me");
+            cookie.setDomain(startedApplication.getDomain());
             response.addCookie(cookie);
             return new ModelAndView("redirect:" + startedApplication.getApplicationUrl());
         } catch (InvalidLoginCredentialsException e) {
