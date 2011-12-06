@@ -3,6 +3,8 @@ package com.wavemaker.spinup.web;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.jar.Manifest;
 import java.util.zip.ZipFile;
 
 import javax.servlet.ServletContext;
@@ -31,7 +33,7 @@ public class WavemakerStudioApplicationArchiveFactory implements ApplicationArch
     @Override
     public void setServletContext(ServletContext servletContext) {
         try {
-            String version = getClass().getPackage().getImplementationVersion();
+            String version = getVersion(servletContext);
             String path = "/resources/wm-studio-" + version + ".war";
             if (this.logger.isDebugEnabled()) {
                 this.logger.debug("Using studio resource " + path);
@@ -42,6 +44,17 @@ public class WavemakerStudioApplicationArchiveFactory implements ApplicationArch
             this.studioWarFile = studioResource.getFile();
         } catch (IOException e) {
             throw new IllegalStateException(e);
+        }
+    }
+
+    private String getVersion(ServletContext servletContext) throws IOException {
+        ServletContextResource manifestResource = new ServletContextResource(servletContext, "/META-INF/MANIFEST.MF");
+        InputStream manifestStream = manifestResource.getInputStream();
+        try {
+            Manifest manifest = new Manifest(manifestStream);
+            return manifest.getMainAttributes().getValue("Implementation-Version");
+        } finally {
+            manifestStream.close();
         }
     }
 

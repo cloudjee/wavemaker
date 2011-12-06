@@ -144,6 +144,7 @@ public class DefaultSpinupService implements SpinupService {
      * @param serviceNames the service names
      */
     public void setServiceNames(List<String> serviceNames) {
+        // FIXME we may need a way to provision services as well as define the names
         this.serviceNames = serviceNames;
     }
 
@@ -271,7 +272,7 @@ public class DefaultSpinupService implements SpinupService {
 
                 @Override
                 public String getControllerUrl() {
-                    return DefaultSpinupService.this.controllerUrl;
+                    return DefaultSpinupService.this.getControllerUrl();
                 }
 
                 @Override

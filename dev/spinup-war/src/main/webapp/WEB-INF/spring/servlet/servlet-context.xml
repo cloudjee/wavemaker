@@ -7,7 +7,7 @@
 		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
 		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd">
 
-	<context:component-scan base-package="org.cloudfoundry.spinup.web" />
+	<context:component-scan base-package="com.wavemaker.spinup.web" />
 
 	<mvc:annotation-driven />
 
@@ -20,10 +20,15 @@
 	</bean>
 
 
-	<bean name="spinupService" class="org.cloudfoundry.spinup.DefaultSpinupService" autowire="byType">
+	<bean name="spinupService" class="com.wavemaker.spinup.DefaultSpinupService" autowire="byType">
+	<property name="serviceNames">
+		<list>
+			<value>wavemaker</value>
+		</list>
+	</property>
 	</bean>
 
-	<bean class="org.cloudfoundry.spinup.authentication.SharedSecretPropagation" />
+	<bean class="com.wavemaker.spinup.authentication.SharedSecretPropagation" />
 
 
 </beans>
