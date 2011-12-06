@@ -25,20 +25,8 @@
     <property name="prefix-nojdk" value="/opt/wavemaker-${version.number}" />
     <property name="installer.wm.nojdk.root" value="${buildroot}/NoJDK/${prefix-nojdk}"/>
 
-    <!-- Default properties -->
-    <target name="check">
-        <condition property="setupBAD">
-            <not>
-                <and>
-                    <available file="${dist.studio.dir}" />
-                    <available file="${dist.launcher.dir}" />
-                </and>
-            </not>
-        </condition>
-        <fail if="setupBAD" message="required files missing" />
-    </target>
 
-    <target name="init-nojdk" depends="check">
+    <target name="init-nojdk">
         <mkdir dir="${buildroot}/NoJDK"/>
 
         <mkdir dir="${installer.wm.nojdk.root}"/>
@@ -124,6 +112,7 @@
         </exec>
     </target>
 
+   <!-- Requires setuid on chown and chmod -->
    <target name="build-deb-nojdk" depends="init-deb-nojdk" if="deb.build">
     	  <exec executable="chown" failonerror="true">
 	    <arg line="-R" />
