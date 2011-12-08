@@ -15,6 +15,7 @@
 package com.wavemaker.runtime;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -83,7 +84,7 @@ public class WMAppContext {
             // Set up multi-tenant info
             Resource appPropsResource = null;
             try {
-                appPropsResource = new ServletContextResource(context, "/WEB-INF/"+CommonConstants.APP_PROPERTY_FILE);
+                appPropsResource = new ServletContextResource(this.context, "/WEB-INF/" + CommonConstants.APP_PROPERTY_FILE);
             } catch (WMRuntimeException re) {
                 return;
             } catch (Exception e) {

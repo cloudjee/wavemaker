@@ -1,0 +1,72 @@
+/*
+ * Copyright (C) 2010-2011 VMWare, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+ 
+
+
+
+.NewLiveFormDialog  .SelectableTemplate .wmpicture{
+        background-repeat: no-repeat;
+}
+.NewLiveFormDialog .SelectableTemplate {
+        -moz-box-shadow: 2px 2px 4px #333333;
+        -webkit-box-shadow: 2px 2px 4px #333333; 
+        box-shadow: 2px 2px 4px #333333;
+        opacity: 0.6;
+        background-color: #dddddd;
+}
+
+.NewLiveFormDialog .SelectableTemplate:hover,
+.NewLiveFormDialog .SelectableTemplate.Selected:hover {
+        -moz-box-shadow: 0px 0px 1px #333333;
+        -webkit-box-shadow: 0px 0px 1px #333333; 
+        box-shadow: 0px 0px 1px #333333;
+        cursor: pointer;
+}
+.NewLiveFormDialog .SelectableTemplate:hover {
+        opacity: 1.0;
+        background-color: #eeeeee;
+}
+
+
+.NewLiveFormDialog .SelectableTemplate.Selected{
+        background-color: #ffffff;
+        -moz-box-shadow: 0px 0px 0px #333333;
+        -webkit-box-shadow: 0px 0px 0px #333333; 
+        box-shadow: 0px 0px 0px #333333;
+        opacity: 1.0;
+/*        background-color: #333388;*/
+}
+
+.NewLiveFormDialog .NewLiveFormDialog-mainPanel,
+.NewLiveFormDialog .NewLiveFormDialog-mainPanel .wmeditor-caption {
+background-color: "#848c99";
+color: white;
+font-weight: bold;
+}
+.NewLiveFormDialog .NewLiveFormDialog-mainPanel input {
+   color: black !important;
+}
+.NewLiveFormDialog .NewLiveFormDialog-mainPanel .wmlabel {
+    text-align: right;
+}
+
+.NewLiveFormDialog .NewLiveFormDialog-templatesInsertPanel {
+    background-color: white;
+}
+.NewLiveFormDialog .NewLiveFormDialog-templatesInsertPanel .wmlabel {
+    color: black;
+    text-align: center;
+    font-size: 8pt;
+    font-weight: normal;
+}

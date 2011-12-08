@@ -19,8 +19,8 @@ import java.util.List;
 
 import com.wavemaker.json.type.FieldDefinition;
 import com.wavemaker.json.type.TypeDefinition;
-import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.runtime.pws.IPwsServiceModifier;
+import com.wavemaker.runtime.service.ElementType;
 
 /**
  * An abstract ReflectServiceDefinition with the new methods implemented, to help aid in the transition.
@@ -30,11 +30,11 @@ import com.wavemaker.runtime.pws.IPwsServiceModifier;
 public abstract class AbstractDeprecatedServiceDefinition implements DeprecatedServiceDefinition {
 
     @Override
-    @SuppressWarnings("deprecation")
     public List<ServiceOperation> getServiceOperations() {
         return getServiceOperations(null);
     }
 
+    @Override
     @SuppressWarnings("deprecation")
     public List<ServiceOperation> getServiceOperations(IPwsServiceModifier serviceModifier) {
 
@@ -119,7 +119,8 @@ public abstract class AbstractDeprecatedServiceDefinition implements DeprecatedS
         return null;
     }
 
+    @Override
     public List<ElementType> getInputTypesNoCaseShift(String operationName) {
-        return null;    
+        return null;
     }
 }

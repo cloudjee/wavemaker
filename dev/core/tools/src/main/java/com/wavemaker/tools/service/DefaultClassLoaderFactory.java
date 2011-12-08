@@ -33,6 +33,7 @@ public class DefaultClassLoaderFactory implements ClassLoaderFactory {
         this.paths = paths;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public ClassLoader getClassLoader() {
         return ClassLoaderUtils.getClassLoaderForFile(this.paths);

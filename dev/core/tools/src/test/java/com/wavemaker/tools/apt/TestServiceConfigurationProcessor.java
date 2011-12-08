@@ -287,6 +287,12 @@ public class TestServiceConfigurationProcessor {
         public boolean isLiveDataService() {
             return false;
         }
+
+        @Override
+        public String getOperationType(String operationName) {
+            // TODO Auto-generated method stub
+            return null;
+        }
     }
 
     private static class updateService_SD2 extends AbstractDeprecatedServiceDefinition implements ReflectServiceDefinition {
@@ -348,6 +354,12 @@ public class TestServiceConfigurationProcessor {
         @Override
         public boolean isLiveDataService() {
             return false;
+        }
+
+        @Override
+        public String getOperationType(String operationName) {
+            // TODO Auto-generated method stub
+            return null;
         }
     }
 
@@ -435,6 +447,12 @@ public class TestServiceConfigurationProcessor {
         @Override
         public boolean isLiveDataService() {
             return false;
+        }
+
+        @Override
+        public String getOperationType(String operationName) {
+            // TODO Auto-generated method stub
+            return null;
         }
     }
 

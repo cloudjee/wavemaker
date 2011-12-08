@@ -38,6 +38,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.util.ResourceUtils;
 
+import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.module.ModuleManager;
 import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.Project;
@@ -96,12 +97,12 @@ public class CopyRuntimeJarsTask extends Task {
                 prop.load(in);
                 runtimeJarName = prop.getProperty(key);
             } catch (IOException ioe) {
-                ioe.printStackTrace();
+                throw new WMRuntimeException(ioe);
             } finally {
                 try {
                     in.close();
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    throw new WMRuntimeException(e);
                 }
             }
         } else {

@@ -469,7 +469,9 @@
                 </entry>
                 <entry key="0.47">
                     <list>
-                        <bean class="com.wavemaker.tools.project.upgrade.six_dot_four_dot_two.OldMSIEUpgradeTask"/>
+                        <bean class="com.wavemaker.tools.project.upgrade.six_dot_four_dot_two.OldMSIEUpgradeTask">
+                        	<constructor-arg ref="fileSystem"/>
+                        </bean>
                     </list>
                 				</entry>	
                 <entry key="0.48">
@@ -506,7 +508,8 @@
 
     <beans profile="default">
     
-    <bean id="fileSystem" class="com.wavemaker.tools.project.LocalStudioFileSystem"/>
+    	<bean id="fileSystem" class="com.wavemaker.tools.project.LocalStudioFileSystem"/>
+        
         <bean id="studioConfiguration" class="com.wavemaker.tools.project.LocalStudioConfiguration"
             scope="singleton">
             <constructor-arg ref="fileSystem"/>

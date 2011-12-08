@@ -697,6 +697,7 @@ public class StudioService extends ClassLoader {
             /*
              * Import packages.js
              */
+            File packagesFile = new File(webapproot, "app/packages.js");
             String packagesExt = "";
             try {
                 // Get the packages.js file from our extensions.zip file */

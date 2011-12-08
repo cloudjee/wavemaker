@@ -12,14 +12,21 @@ import org.apache.commons.io.FileUtils;
 
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.tools.project.Project;
+import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
 
 /**
- * @author mkantor
+ * @author Michael Kantor
  * 
  */
 public class OldMSIEUpgradeTask implements UpgradeTask {
+
+    private final StudioFileSystem fileSystem;
+
+    public OldMSIEUpgradeTask(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
+    }
 
     /*
      * (non-Javadoc)
@@ -27,7 +34,6 @@ public class OldMSIEUpgradeTask implements UpgradeTask {
      * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
      * com.wavemaker.tools.project.upgrade.UpgradeInfo)
      */
-
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
         copyChromeframeFile(project, upgradeInfo);
@@ -37,7 +43,7 @@ public class OldMSIEUpgradeTask implements UpgradeTask {
             String indexContent = FileUtils.readFileToString(indexFile);
 
             // 1. rename /project/index.html to index.bak
-            File webapp = project.getWebAppRoot();
+            File webapp = project.getWebAppRoot().getFile();
             File bakIndexhtml = new File(webapp, "index.bak");
 
             FileUtils.copyFile(indexFile, bakIndexhtml);
@@ -54,7 +60,7 @@ public class OldMSIEUpgradeTask implements UpgradeTask {
             if (loginFile.exists()) {
 
                 // 1. rename /project/login.html to login.bak
-                File webapp = project.getWebAppRoot();
+                File webapp = project.getWebAppRoot().getFile();
                 File bakLoginHtml = new File(webapp, "login.bak");
                 FileUtils.copyFile(loginFile, bakLoginHtml);
 
@@ -76,9 +82,10 @@ public class OldMSIEUpgradeTask implements UpgradeTask {
     private void copyChromeframeFile(Project project, UpgradeInfo upgradeInfo) {
         try {
             String relativePath = "chromeframe.html";
-            File chromeFrameFile = new File(project.getWebAppRoot(), relativePath);
+            File chromeFrameFile = project.getWebAppRoot().createRelative(relativePath).getFile();
             if (!chromeFrameFile.exists()) {
-                IOUtils.copy(new File(studioConfiguration.getStudioWebAppRootFile(), "app/templates/project/chromeframe.html"), chromeFrameFile);
+                IOUtils.copy(this.fileSystem.getStudioWebAppRoot().createRelative("app/templates/project/chromeframe.html").getFile(),
+                    chromeFrameFile);
             }
 
         } catch (IOException ioe) {

@@ -14,7 +14,6 @@
 
 package com.wavemaker.tools.security;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -102,8 +101,8 @@ public class SecurityToolsManager {
         return ret;
     }
 
-    public File getAcegiSpringFile() throws IOException {
-        return getAcegiSpringFile(this.projectMgr.getCurrentProject()).getFile();
+    public Resource getAcegiSpringFile() throws IOException {
+        return getAcegiSpringFile(this.projectMgr.getCurrentProject());
     }
 
     private Resource getAcegiSpringFile(Project currentProject) {
@@ -311,7 +310,8 @@ public class SecurityToolsManager {
         try {
             this.designServiceMgr.getDeploymentManager().generateRuntime();
 
-            Resource webXml = this.projectMgr.getCurrentProject().getWebXml();
+            Project project = this.projectMgr.getCurrentProject();
+            Resource webXml = project.getWebXml();
             WebAppType wat = WebXmlSupport.readWebXml(webXml);
 
             List<Object> watList = wat.getDescriptionAndDisplayNameAndIcon();
@@ -337,15 +337,7 @@ public class SecurityToolsManager {
             }
 
             if (exists) {
-                WebXmlSupport.writeWebXml(null, wat, webXml);
-                return;
-            }
-
-            SecurityConstraintType secCons = new SecurityConstraintType();
-            WebResourceCollectionType webResColl = new WebResourceCollectionType();
-
-            if (exists) {
-                WebXmlSupport.writeWebXml(wat, webXml);
+                WebXmlSupport.writeWebXml(project, wat, webXml);
                 return;
             }
 

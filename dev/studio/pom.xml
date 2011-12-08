@@ -210,6 +210,13 @@
 					<compilerArgument>-AprojectRoot=${basedir}</compilerArgument>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<configuration>
+					<wtpContextName>wavemaker</wtpContextName>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 

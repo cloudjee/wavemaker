@@ -28,8 +28,8 @@ import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
-import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.tools.common.ConfigurationException;
+import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
@@ -131,8 +131,9 @@ public class ServiceClassGenerator {
             }
 
             try {
-                File smdFile = ConfigurationCompiler.getSmdFile(serviceManager.getProjectManager().getCurrentProject(), serviceId);
-                String smdContent = FileUtils.readFileToString(smdFile, ServerConstants.DEFAULT_ENCODING);
+                Project project = this.serviceManager.getProjectManager().getCurrentProject();
+                Resource smdFile = ConfigurationCompiler.getSmdFile(project, serviceId);
+                String smdContent = project.readFile(smdFile);
                 generator.setSmdContent(smdContent);
                 generator.generate();
             } catch (GenerationException ex) {

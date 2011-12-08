@@ -109,6 +109,7 @@ public class RuntimeAccess {
      * @throws WMRuntimeException If a bean with the specified id is not found, or if Spring has not yet initialized
      *         this bean.
      */
+    @SuppressWarnings("deprecation")
     public Object getService(String serviceId) {
         return this.serviceManager.getService(serviceId);
     }

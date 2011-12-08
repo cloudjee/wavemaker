@@ -46,10 +46,10 @@ import com.wavemaker.json.type.FieldDefinition;
 import com.wavemaker.json.type.ObjectTypeDefinition;
 import com.wavemaker.json.type.OperationEnumeration;
 import com.wavemaker.json.type.TypeDefinition;
+import com.wavemaker.runtime.pws.IPwsServiceModifier;
 import com.wavemaker.runtime.service.definition.ReflectServiceDefinition;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
 import com.wavemaker.runtime.service.definition.ServiceOperation;
-import com.wavemaker.runtime.pws.IPwsServiceModifier;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.compiler.ProjectCompiler;
 import com.wavemaker.tools.data.DataModelConfiguration;
@@ -58,7 +58,6 @@ import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.project.StudioFileSystem;
-import com.wavemaker.tools.pws.IPwsServiceModifier;
 import com.wavemaker.tools.pws.PwsServiceModifierBeanFactory;
 import com.wavemaker.tools.service.definitions.DataObject;
 import com.wavemaker.tools.service.definitions.DataObject.Element;
@@ -320,6 +319,7 @@ public class DesignServiceManager {
      * 
      * @param serviceDef The service definition for the newly defined service.
      */
+    @SuppressWarnings("deprecation")
     public void defineService(ServiceDefinition serviceDef, String username, String password) {
 
         try {
@@ -334,10 +334,10 @@ public class DesignServiceManager {
         getCurrentServiceDefinitions().put(serviceDef.getServiceId(), service);
 
         IPwsServiceModifier serviceModifier;
-        if (pwsServiceModifierBeanFactory == null || serviceDef.getPartnerName() == null) {
-                serviceModifier = null;
+        if (this.pwsServiceModifierBeanFactory == null || serviceDef.getPartnerName() == null) {
+            serviceModifier = null;
         } else {
-            serviceModifier = pwsServiceModifierBeanFactory.getPwsServiceModifier(serviceDef.getPartnerName());
+            serviceModifier = this.pwsServiceModifierBeanFactory.getPwsServiceModifier(serviceDef.getPartnerName());
         }
 
         try {
@@ -914,6 +914,7 @@ public class DesignServiceManager {
         return excludeTypeNames;
     }
 
+    @SuppressWarnings("deprecation")
     public ClassLoader getServiceRuntimeClassLoader(String sid) {
 
         // classloader has service runtime home (src) dir and build dir.
@@ -931,8 +932,7 @@ public class DesignServiceManager {
     // -----------------------------------------------------------------------
     // internal ops
     // -----------------------------------------------------------------------
-    protected void doUpdateOperation(ServiceOperation so, Service service,
-            ServiceDefinition sd, IPwsServiceModifier serviceModifier) {
+    protected void doUpdateOperation(ServiceOperation so, Service service, ServiceDefinition sd, IPwsServiceModifier serviceModifier) {
 
         List<Operation> ops = service.getOperation();
 
@@ -969,7 +969,7 @@ public class DesignServiceManager {
             Operation.Return ret = new Operation.Return();
             FieldDefinition retType;
             if (serviceModifier == null) {
-                    retType = so.getReturnType();
+                retType = so.getReturnType();
             } else {
                 retType = serviceModifier.getOperationReturnType(so);
             }
