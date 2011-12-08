@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,16 +24,11 @@
 /* Give editors the standard border color, and get rid of the outline styling which is unnecessary and looks bad in webkit */
 .wm_template .wmeditor .dijitTextBox.dijitFocused,
 .wm_template .wmeditor .dijitTextArea.dijitFocused,
-.wm_template .wmeditor .dijitComboBox.dijitFocused {
+.wm_template .wmeditor .dijitComboBox.dijitFocused,
+.wm_template .wmeditor .dijitSelect.dijitFocused {
 	outline-width: 0 !important;    
 }
 
-.wm_template .wmeditor .wmeditor-caption {
-    color: inherit;
-    font-family: inherit;
-    font-size: inherit;
-    font-weight: inherit;
-}
 
 /* Make all editors equally rounded.  This is not for technical reasons.  It is my opinion that a theme should
  * allow some things to vary, and other things should provide a consistent common look.
@@ -46,6 +41,18 @@
      -moz-border-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
      -webkit-border-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
      border-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
+}
+
+.wm_template  .wmeditor .dijitSelect .dijitButtonContents {
+     /* Borders-Editor_BorderStyle_Radius */
+    -moz-border-radius-bottomleft: 4px; /* Borders-Editor_BorderStyle_Radius */
+    -moz-border-radius-topleft: 4px; /* Borders-Editor_BorderStyle_Radius */
+    -webkit-border-top-left-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
+    -webkit-border-bottom-left-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
+    border-radius-bottomleft: 4px; /* Borders-Editor_BorderStyle_Radius */
+    border-radius-top-left: 4px; /* Borders-Editor_BorderStyle_Radius */
+    border-right: solid 0px transparent !important;
+    display:block;
 }
 
 /* Can't round the top edges of the richtext editor until we're ready to tackle rounding dojo's toolbar */
@@ -61,7 +68,8 @@
 
 
 
-.wm_template .wmeditor .dijitComboBox .dijitArrowButton {
+.wm_template .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_template .wmeditor .dijitSelect .dijitArrowButton {
     height: 100% !important;
     -moz-border-radius-bottomright: 2px; /* wm.SelectMenu-Inner_Radius */
     -moz-border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
@@ -73,6 +81,9 @@
 
 .wm_template .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
         height: 100% !important;
+}
+.wm_template .dijitComboBox .dijitArrowButton .dijitArrowButtonInner,
+.wm_template .dijitSelect .dijitArrowButton .dijitArrowButtonInner {
         background-position: 50% 50%;
 	background-image: url(images/comboArrowDown.png); /* wm.SelectMenu-Down-Arrow_Image */
         -moz-border-radius-bottomright: 2px;/* wm.SelectMenu-Inner_Radius */
@@ -124,18 +135,35 @@
    *              button. 
    ************************************************************************************************/
 .wm_template .wmeditor .dijitSpinner .dijitArrowButton,
-.wm_template .wmeditor .dijitComboBox .dijitArrowButton {
+.wm_template .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_template .wmeditor .dijitSelect .dijitArrowButton {
     background-color: #666666; /* Document-ClickablesDefault-Background_Color */
     background-image: none;
 }
 
     
+.wm_template .wmeditor .wmeditor-caption {
+	font-family: inherit; /* Document-EditorsCaption-Font_Family */
+	font-size: inherit; /* Document-EditorsCaption-Font_TextSize */
+	color: inherit; /* Document-EditorsCaption-Font_Color */
+	font-weight: bold; /* Document-EditorsCaption-Font_Weight */
+}
+
+.wm_template .wmeditor .wmeditor-readonlyNode {
+	font-family: inherit; /* Document-EditorsReadonly-Font_Family */
+	font-size: inherit; /* Document-EditorsReadonly-Font_TextSize */
+	color: inherit; /* Document-EditorsReadonly-Font_Color */
+	font-weight: inherit; /* Document-EditorsReadonly-Font_Weight */
+}
+
     
     .wm_template .dojoxGrid .dijitTextBox,
     .wm_template .dojoxGrid .dijitComboBox,
+    .wm_template .dojoxGrid .dijitSelect .dijitButtonContents,
     .wm_template .wmeditor .dijitTextBox,
     .wm_template .wmeditor .dijitTextArea,
     .wm_template .wmeditor .dijitComboBox,
+    .wm_template .wmeditor .dijitSelect .dijitButtonContents,
     .wm_template .dijitTimePickerItem,
     .wm_template .wmeditor .RichTextEditable iframe {
 	/* Document-EditorsDefault-Border */
@@ -167,6 +195,7 @@
     .wm_template .wmeditor .dijitTextBox.dijitHover,
     .wm_template .wmeditor .dijitTextArea:hover,
     .wm_template .wmeditor .dijitComboBox.dijitHover,
+    .wm_template .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
     .wm_template .wmeditor .RichTextEditable:hover iframe,
     .wm_template .dijitTimePickerMarker.dijitTimePickerMarkerHover,
     .wm_template .dijitTimePickerItem.dijitTimePickerItemHover {
@@ -184,12 +213,19 @@
 
     .wm_template .dojoxGrid .dijitTextBox.dijitFocused,
     .wm_template .dojoxGrid .dijitComboBox.dijitFocused,
+    .wm_template .dojoxGrid .dijitSelect.dijitFocused .dijitButtonContents,
     .wm_template .wmeditor .dijitTextBox.dijitFocused,
     .wm_template .wmeditor .dijitTextBox.dijitFocused.dijitHover,
     .wm_template .wmeditor .dijitTextArea.dijitFocused,
     .wm_template .wmeditor .dijitTextArea.dijitFocused:hover,
     .wm_template .wmeditor .dijitComboBox.dijitFocused,
     .wm_template .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_template .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
+    .wm_template .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents,
+    .wm_template .isDirty.wmeditor .dijitTextBox,
+    .wm_template .isDirty.wmeditor .dijitTextArea,
+    .wm_template .isDirty.wmeditor .dijitComboBox,
+    .wm_template .isDirty.wmeditor .dijitSelect .dijitButtonContents,
     .wm_template .wmeditor .RichTextEditable.Focused iframe {
 	/* Document-EditorsFocus-Font */
 	color: #FFFFFF; /* Document-EditorsFocus-Font_Color */
@@ -218,14 +254,15 @@
    *              button. 
    ************************************************************************************************/
 .wm_template .MainContent .wmeditor .dijitSpinner .dijitArrowButton,
-.wm_template .MainContent .wmeditor .dijitComboBox .dijitArrowButton {
+.wm_template .MainContent .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_template .MainContent .wmeditor .dijitSelect .dijitArrowButton {
     background-color: #666666; /* MainContent-ClickablesDefault-Background_Color */
-    background-image: none;
 }
 
     .wm_template .MainContent .wmeditor .dijitTextBox,
     .wm_template .MainContent .wmeditor .dijitTextArea,
     .wm_template .MainContent .wmeditor .dijitComboBox,
+    .wm_template .MainContent .wmeditor .dijitSelect .dijitButtonContents,
     .wm_template .MainContent .dijitTimePickerItem,
     .wm_template .MainContent .wmeditor .RichTextEditable iframe {
 	/* MainContent-EditorsDefault-Border */
@@ -258,6 +295,7 @@
     .wm_template .MainContent .wmeditor .dijitTextBox.dijitHover,
     .wm_template .MainContent .wmeditor .dijitTextArea:hover,
     .wm_template .MainContent .wmeditor .dijitComboBox.dijitHover,
+    .wm_template .MainContent .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
     .wm_template .MainContent .wmeditor .RichTextEditable:hover iframe,
     .wm_template .MainContent .dijitTimePickerMarker.dijitTimePickerMarkerHover,
     .wm_template .MainContent .dijitTimePickerItem.dijitTimePickerItemHover {
@@ -279,6 +317,8 @@
     .wm_template .MainContent .wmeditor .dijitTextArea.dijitFocused:hover,
     .wm_template .MainContent .wmeditor .dijitComboBox.dijitFocused,
     .wm_template .MainContent .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_template .MainContent .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
+    .wm_template .MainContent .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents,
     .wm_template .MainContent .wmeditor .RichTextEditable.Focused iframe {
 	/* MainContent-EditorsFocus-Font */
 	color: #FFFFFF; /* MainContent-EditorsFocus-Font_Color */
@@ -305,9 +345,9 @@
    *              button. 
    ************************************************************************************************/
 .wm_template .EmphasizedContent .wmeditor .dijitSpinner .dijitArrowButton,
-.wm_template .EmphasizedContent .wmeditor .dijitComboBox .dijitArrowButton {
+.wm_template .EmphasizedContent .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_template .EmphasizedContent .wmeditor .dijitSelect .dijitArrowButton {
     background-color: #666666; /* EmphasizedContent-ClickablesDefault-Background_Color */
-    background-image: none;
 }
 
     /* BEGIN inner content panel editors */
@@ -315,6 +355,7 @@
     .wm_template .EmphasizedContent .wmeditor .dijitTextBox,
     .wm_template .EmphasizedContent .wmeditor .dijitTextArea,
     .wm_template .EmphasizedContent .wmeditor .dijitComboBox,
+    .wm_template .EmphasizedContent .wmeditor .dijitSelect .dijitButtonContents,
     .wm_template .EmphasizedContent .dijitTimePickerItem,
     .wm_template .EmphasizedContent .wmeditor .RichTextEditable iframe {
 	/* EmphasizedContent-EditorsDefault-Border */
@@ -338,6 +379,7 @@
     .wm_template .EmphasizedContent .wmeditor .dijitTextBox.dijitHover,
     .wm_template .EmphasizedContent .wmeditor .dijitTextArea:hover,
     .wm_template .EmphasizedContent .wmeditor .dijitComboBox.dijitHover,
+    .wm_template .EmphasizedContent .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
     .wm_template .EmphasizedContent .wmeditor .RichTextEditable:hover iframe,
     .wm_template .EmphasizedContent .dijitTimePickerMarker.dijitTimePickerMarkerHover,
     .wm_template .EmphasizedContent .dijitTimePickerItem.dijitTimePickerItemHover {
@@ -359,6 +401,8 @@
     .wm_template .EmphasizedContent .wmeditor .dijitTextArea.dijitFocused:hover,
     .wm_template .EmphasizedContent .wmeditor .dijitComboBox.dijitFocused,
     .wm_template .EmphasizedContent .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_template .EmphasizedContent .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
+    .wm_template .EmphasizedContent .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents,
     .wm_template .EmphasizedContent .wmeditor .RichTextEditable.Focused iframe {
 	/* EmphasizedContent-EditorsFocus-Font */
 	color: #FFFFFF; /* EmphasizedContent-EditorsFocus-Font_Color */
@@ -383,10 +427,9 @@
    *              button. 
    ************************************************************************************************/
 .wm_template .HeaderContent .wmeditor .dijitSpinner .dijitArrowButton,
-.wm_template .HeaderContent .wmeditor .dijitComboBox .dijitArrowButton {
+.wm_template .HeaderContent .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_template .HeaderContent .wmeditor .dijitSelect .dijitArrowButton {
     background-color: #666666; /* HeaderContent-ClickablesDefault-Background_Color */
-    background-image: none;
-    height: 100% !important;
 }
 
     /* BEGIN inner content panel editors */
@@ -394,6 +437,7 @@
     .wm_template .HeaderContent .wmeditor .dijitTextBox,
     .wm_template .HeaderContent .wmeditor .dijitTextArea,
     .wm_template .HeaderContent .wmeditor .dijitComboBox,
+    .wm_template .HeaderContent .wmeditor .dijitSelect .dijitButtonContents,
     .wm_template .HeaderContent .dijitTimePickerItem,
     .wm_template .HeaderContent .wmeditor .RichTextEditable iframe {
 	/* HeaderContent-EditorsDefault-Border */
@@ -417,6 +461,7 @@
     .wm_template .HeaderContent .wmeditor .dijitTextBox.dijitHover,
     .wm_template .HeaderContent .wmeditor .dijitTextArea:hover,
     .wm_template .HeaderContent .wmeditor .dijitComboBox.dijitHover,
+    .wm_template .HeaderContent .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
     .wm_template .HeaderContent .wmeditor .RichTextEditable:hover iframe,
     .wm_template .HeaderContent .dijitTimePickerMarker.dijitTimePickerMarkerHover,
     .wm_template .HeaderContent .dijitTimePickerItem.dijitTimePickerItemHover {
@@ -438,6 +483,8 @@
     .wm_template .HeaderContent .wmeditor .dijitTextArea.dijitFocused:hover,
     .wm_template .HeaderContent .wmeditor .dijitComboBox.dijitFocused,
     .wm_template .HeaderContent .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_template .HeaderContent .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
+    .wm_template .HeaderContent .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents,
     .wm_template .HeaderContent .wmeditor .RichTextEditable.Focused iframe {
 	/* HeaderContent-EditorsFocus-Font */
 	color: #FFFFFF; /* HeaderContent-EditorsFocus-Font_Color */

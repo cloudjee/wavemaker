@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -562,7 +562,8 @@ Studio.extend({
 		    "params":{type: "String"}}});
 
 
-	    this.autoCompletionDialog = new wm.Dialog({owner: this,
+	    this.autoCompletionDialog = new wm.Dialog({_classes: {domNode: ["studiodialog"]},
+						       owner: this,
 						       _noAutoFocus: true,
 						       title: this.getDictionaryItem("AUTOCOMPLETION_TITLE_DIALOG"),
 						       name: "autoCompletionDialog",

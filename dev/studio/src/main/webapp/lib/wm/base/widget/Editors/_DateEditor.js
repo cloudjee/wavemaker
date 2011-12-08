@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -90,13 +90,6 @@ dojo.declare("wm._TimeEditor", wm._DateEditor, {
 	},
 	_createEditor: function(inNode, inProps) {
 		return new dijit.form.TimeTextBox(this.getEditorProps(inNode, inProps));
-	},
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "timePattern":
-			    return makeSelectPropEdit(inName, inValue, ["HH:mm", "HH:mm:ss", "HH:mm a", "HH:mm:ss a"], inDefault);
-		}
-		return this.inherited(arguments);
 	}
 });
 
@@ -106,5 +99,6 @@ wm.Object.extendSchema(wm._DateEditor, {
 });
 
 wm.Object.extendSchema(wm._TimeEditor, {
-	format: { ignore: 1 }
+    format: { ignore: 1 },
+    timePattern:{options:["HH:mm", "HH:mm:ss", "HH:mm a", "HH:mm:ss a"]}
 });

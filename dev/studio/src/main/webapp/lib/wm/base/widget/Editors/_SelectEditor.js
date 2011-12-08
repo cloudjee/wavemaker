@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -36,7 +36,6 @@ dojo.declare("wm._SelectEditor", wm._BaseEditor, {
 	hasDownArrow: true,
 	startUpdate: false,
 	_allFields: "All Fields",
-	binding: '(data binding)',
         restrictValues: true,
 	init: function() {
 		this.inherited(arguments);
@@ -506,59 +505,9 @@ wm._SelectEditor.extend({
 		this._addFields(list, schema);
 		return list;
 	},
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "displayField":
-				return makeSelectPropEdit(inName, inValue, this._listFields(), inDefault);
-			case "dataField":
-				var l = this._listFields();
-	  	  	        l.splice(1, 0, this._allFields);
-				return makeSelectPropEdit(inName, inValue, l, inDefault);
-			case "lookupDisplay":
-				return makeSelectPropEdit(inName, inValue, wm.selectDisplayTypes, inDefault);
-			case "dataSet":
-				return new wm.propEdit.DataSetSelect({component: this, name: inName, value: this.dataSet ? this.dataSet.getId() : "", allowAllTypes: true, listMatch: true});
-			case "updateNow":
-				return makeReadonlyButtonEdit(inName, inValue, inDefault);
-		}
-		return this.inherited(arguments);
-	},
-    setPropEdit: function(inName, inValue, inDefault) {
-	switch (inName) {
-	case "displayField":
-	    var editor1 = dijit.byId("studio_propinspect_displayField");
 
-	    var store1 = editor1.store.root;
-
-	    while (store1.firstChild) store1.removeChild(store1.firstChild);
-
-
-	    var displayFields = this.makePropEdit("displayField");
-	    displayFields = displayFields.replace(/^.*?\<option/,"<option");
-	    displayFields = displayFields.replace(/\<\/select.*/,"");
-	    store1.innerHTML = displayFields;
-	    return true;
-	case "dataField":
-	    var editor1 = dijit.byId("studio_propinspect_dataField");
-
-	    var store1 = editor1.store.root;
-
-	    while (store1.firstChild) store1.removeChild(store1.firstChild);
-
-
-	    var dataFields = this.makePropEdit("dataField");
-	    dataFields = dataFields.replace(/^.*?\<option/,"<option");
-	    dataFields = dataFields.replace(/\<\/select.*/,"");
-	    store1.innerHTML = dataFields;
-	    return true;
-	}
-	return this.inherited(arguments);
-    },    
-	editProp: function(inName, inValue, inInspector) {
-		switch (inName) {
-			case "updateNow":
-				return this.update();
-		}
+    updateNow: function() {
+	return this.update();
 	}
 });
 
@@ -566,19 +515,19 @@ wm.Object.extendSchema(wm._SelectEditor, {
 	changeOnKey: { ignore: 1 },
 	changeOnEnter: { ignore: 1 },
     selectedItem: { ignore: true, isObject: true, bindSource: true, isOwnerProperty: 1},
-    dataSet: { readonly: true, group: "data", order: 5, type: "wm.Variable", isList: true, bindTarget: true},
+    dataSet: { readonly: true, group: "data", order: 5, type: "wm.Variable", isList: true, bindTarget: true, editor: "wm.prop.DataSetSelect"},
 	startUpdate: { group: "data", order: 6},
 	liveVariable: {ignore: 1 },
 	formatter: {ignore:1},
 	options: {group: "data", order: 7},
-    dataField: {group: "data", order: 10},
-    displayField: {group: "data", order: 15},
-	lookupDisplay:{group: "data", order: 16},
+    dataField: {group: "data", order: 10, editor: "wm.prop.FieldSelect"},
+    displayField: {group: "data", order: 15, editor: "wm.prop.FieldSelect"},
+    lookupDisplay:{group: "data", order: 16, options: wm.selectDisplayTypes},
     displayExpression: {group: "data", order: 20},
 	hasDownArrow: {group: "editor", order: 26},
         restrictValues: {type: "wm.Boolean", group: "data", order: 40},
 	pageSize: { order: 0},
-	updateNow: {group: "operation"},
+    updateNow: {group: "operation",operation:1},
 	dataFieldWire: { ignore: 1}
 });
 

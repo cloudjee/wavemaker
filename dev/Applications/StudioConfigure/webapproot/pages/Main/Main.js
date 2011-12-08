@@ -15,6 +15,7 @@
 
 
 dojo.declare("Main", wm.Page, {
+	"i18n": true,
     start: function() {
 
     },

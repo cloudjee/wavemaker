@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -25,6 +25,8 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 	decorateContainer: function() {
 		this.inherited(arguments);
 		this.btns = [];
+	    if (this.tabsControl)
+		this.tabsControl.destroy();
 		this.tabsControl = new wm.TabsControl({
 			parent: this.decoree, 
 		        owner: this.decoree,
@@ -34,7 +36,10 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 		this.decoree.moveControl(this.tabsControl, 0);
 	},
 	createTab: function(inCaption, inIndex, inLayer) {
-		var b = this.btns[inIndex] = document.createElement("button");
+	    var b = this.btns[inIndex] = document.createElement("button");
+
+	    dojo.attr(b,"type", "button");
+	    dojo.attr(b,"type", "button");
 	        //b.style.outline = "none";
 		b.style.display = inLayer.showing ? "" : "none";
 	    this.setBtnText(b, inCaption, inLayer.closable || inLayer.destroyable);
@@ -46,6 +51,7 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 		 * we capture the event properties we need and pass that rather than the event object itself.
 		 * Other browsers don't require this, but it seems like a good practice regardless.
 		 */
+		if (evt.type == "submit") return;
 		var pseudoEvent = {target: evt.target,
 				   clientX: evt.clientX,
 				   clientY: evt.clientY};
@@ -54,7 +60,8 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 		    this.tabClicked(inLayer,pseudoEvent);
 		});
 	    }));
-	    b.className=this.decorationClass + "-tab" +  (inLayer.closable || inLayer.destroyable ? " " + this.decorationClass + "-closabletab" : "");
+	    var tabstyleName = (this.decoree.verticalButtons) ? "-verticaltab" : "-tab";
+	    b.className=this.decorationClass + tabstyleName +  (inLayer.closable || inLayer.destroyable ? " " + this.decorationClass + "-closabletab" : "");
 	    if (!inCaption) b.style.display = "none";
 	    this.tabsControl.domNode.appendChild(b);
 	},
@@ -74,19 +81,21 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 		    return inLayer.customCloseOrDestroy(inLayer);
 		inLayer.onCloseOrDestroy();
 
-		if (inLayer.parent.customClose != inLayer.parent.constructor.prototype.customClose)
-		    return inLayer.parent.customClose(inLayer);
+		if (inLayer.parent.customCloseOrDestroy != inLayer.parent.constructor.prototype.customCloseOrDestroy)
+		    return inLayer.parent.customCloseOrDestroy(inLayer.parent, inLayer);
 		var currentLayer = inLayer.parent.getActiveLayer();
 		var currentIndex = currentLayer.getIndex();
 		var parent = inLayer.parent;
-		parent.onClose(inLayer);
+		parent.onCloseOrDestroy(inLayer);
 		if (inLayer.destroyable) 
 		    inLayer.destroy();
 		else
 		    inLayer.hide();
 		this.decoree.renderBounds(); // in case number of rows of tabs has changed
-		if (!currentLayer.isDestroyed) currentLayer.activate();
-		else if (currentIndex > 0) parent.setLayerIndex(currentIndex-1);
+		if (!currentLayer.isDestroyed) {
+		    currentLayer.activate();
+		    currentLayer.parent.layerIndex = dojo.indexOf(currentLayer.parent.layers, currentLayer);
+		} else if (currentIndex > 0) parent.setLayerIndex(currentIndex-1);
 		else parent.setLayerIndex(0);
 		    
 	    } else {
@@ -116,7 +125,7 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 	applyLayerCaption: function(inLayer) {
 		var d = this.decoree, i = inLayer.getIndex();
 		if (i != -1)
-			this.setBtnText(this.btns[i], inLayer.caption, inLayer.closable || inLayer.destroyable);
+		    this.setBtnText(this.btns[i], inLayer.caption, inLayer.closable || inLayer.destroyable);
 	},
     setBtnText: function(inBtn, inCaption, closable) {
 	var index = dojo.indexOf(this.btns, inBtn);
@@ -251,6 +260,27 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 	this.cancelCaption = wm.getDictionaryItem("wm.WizardDecorator.CANCEL");
 
     },
+	decorateContainer: function() {
+	    this.inherited(arguments);
+	    if (!this.wrapperContainer) {
+	    this.wrapperContainer = new wm.Panel({owner: this.decoree, 
+						  width: "100%", 
+						  height: "100%", 
+						  layoutKind: "top-to-bottom"});
+	    if (this.decoree.client)
+		this.setupWrapperContainer();
+	    }
+	},
+    setupWrapperContainer: function() {
+	    this.decoree.client.setParent(this.wrapperContainer);
+	    this.wrapperContainer.moveControl(this.decoree.client,0);
+	    this.wrapperContainer.setParent(this.decoree);
+    },
+    createTab: function(inCaption,inIndex,inLayer) {
+	if (this.decoree.client && !this.wrapperContainer.parent)
+	    this.setupWrapperContainer();
+	this.inherited(arguments);
+    },
 	undecorate: function() {
 	    this.inherited(arguments);
 	    if (this.buttonPanel)
@@ -260,8 +290,12 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 	    this.prevButton  = null;
 	},
 	addFooter: function() {
+	    if (this.buttonPanel)
+		this.buttonPanel.destroy();
+	    var customButtons = this.decoree.customButtons ? this.decoree.customButtons.split(/\s*,\s*/) : [];
+
 	    this.buttonPanel = new wm.Panel({name: "buttonPanel",
-					     parent: this.decoree,
+					     parent: this.wrapperContainer,
 					     owner: this.decoree,
 					     layoutKind: "left-to-right",
 					     height: wm.Button.prototype.height,
@@ -269,7 +303,29 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
                                              freeze: true,
                                              lock: true,
 					     verticalAlign: "top",
-					     horizontalAlign: "right"});
+					     horizontalAlign:  customButtons.length ? "left" : "right"});
+
+	    var self = this;
+	    dojo.forEach(customButtons, function(caption,i) {
+		var b = 
+		new wm.Button({name: "custom" + i,
+			       parent: self.buttonPanel,
+			       owner: self.decoree,
+			       width: "100px",
+			       height: "100%",
+			       caption: caption});
+		/* Can't put i at the end or it looks like an event sequence of "and then..." events */
+		b.connect(b, "onclick", self.decoree, "onCustom" + i + "Button");
+
+	    });
+	    if (customButtons.length) {
+		new wm.Spacer({name: "spacer",
+			       parent: this.buttonPanel,
+			       owner: this.decoree,
+			       width: "100%"});
+	    }
+			       
+
 	    this.prevButton = new wm.Button({name: "prevButton",
 					     parent: this.buttonPanel,
 					     owner: this.decoree,
@@ -283,7 +339,7 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 					     height: "100%",
 					     caption: this.nextCaption});
 	    dojo.connect(this.prevButton, "onclick", this, "backClick");
-	    dojo.connect(this.nextButton, "onclick", this, "nextClick");
+	    dojo.connect(this.nextButton, "onclick", this, "nextClick");	
 	},
 	setLayerActive: function(inLayer, inActive) {
 	    this.inherited(arguments);
@@ -404,11 +460,18 @@ dojo.declare("wm.TabsControl", wm.Control, {
 	width: "100%",
 	border: 0,
 	init: function() {
-		if (this.parent && this.parent.isRelativePositioned)
-			this.isRelativePositioned = true;
-		dojo.addClass(this.domNode, "wmtablayers-tabbar");
-		this.height = this.owner && this.owner.headerHeight;
-		this.inherited(arguments);
+	    if (this.parent && this.parent.isRelativePositioned)
+		this.isRelativePositioned = true;
+	    dojo.addClass(this.domNode, "wmtablayers-tabbar");
+	    if (this.owner) {
+		if (this.owner.verticalButtons) {
+		    this.height = "100%";
+		    this.width = this.owner.headerWidth;
+		} else {
+		    this.height = this.owner.headerHeight;
+		}
+	    }
+	    this.inherited(arguments);
 	},
 	updateHeaderHeight: function(){
 		// dont do anything during design mode as designer decides what height should header have.

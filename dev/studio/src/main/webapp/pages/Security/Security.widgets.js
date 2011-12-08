@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2009-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -83,13 +83,13 @@ Security.widgets = {
 					    defTenantId: ["wm.Text", {captionSize: "150px", width: "500px", "border":"0","caption":"Default Tenant ID Value","emptyValue":"null","padding":"2", helpText: "The default tenant ID value is the value used when querying the database while you are in design; this has no effect on running your application"}, {"onchange":"setDirty"}],
 					    spacer31: ["wm.Spacer", {"height":"10px","width":"96px"}, {}],
 					}],
-					dbRoleBySQLPanel: ["wm.Panel", {"border":"0","height":"100px", fitToContentHeight: true, width: "100%", margin: "10,50,0,50", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+					dbRoleBySQLPanel: ["wm.Panel", {"border":"0","height":"100px", fitToContentHeight: true, width: "100%", margin: "10,40,0,40", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 					    panel14: ["wm.Panel", {"border":"0","height":"24px",width: "100%","layoutKind":"left-to-right"}, {}, {
 						spacer1: ["wm.Spacer", {"width":"202px"}, {}],
-						dbRoleBySQLCheckbox: ["wm.Checkbox", {"border":"0","caption":"Roles By SQL Query","captionAlign":"left","captionPosition":"right","captionSize":"380px","displayValue":"1","padding":"2","width":"100%"}, {"onchange":"dbRoleBySQLCheckboxChange"}]
+						dbRoleBySQLCheckbox: ["wm.Checkbox", {"border":"0","caption":"Roles By SQL Query","captionAlign":"left","captionPosition":"right","captionSize":"100%","displayValue":"1","padding":"2","width":"100%"}, {"onchange":"dbRoleBySQLCheckboxChange"}]
 					    }],
 					    dbRoleBySQLEnablePanel: ["wm.Panel", {"border":"0","height":"100px", fitToContentHeight: true, verticalAlign: "top", horizontalAlign: "left", width: "100%", margin: "5"}, {}, {
-						dbRoleBySQLInput: ["wm.LargeTextArea", {"border":"0","caption":"Enter Query",captionSize: "100px", captionPosition: "left", "emptyValue":"null","height":"48px", width:"100%", helpText: "Enter the SQL query that returns the user id and roles, e.g. 'select role.user_id, role.rolename from role where role.user_id = ?' "}, {"onchange":"setDirty"}],
+						dbRoleBySQLInput: ["wm.LargeTextArea", {"border":"0","caption":"Enter Query",captionSize: "100px", captionPosition: "left", "emptyValue":"null","height":"48px", width:"100%", helpText: "Enter the SQL query that returns the user id and roles based on the user id, returning the id first. e.g. 'select role.user_id, role.rolename from role where role.user_id = ?' "}, {"onchange":"setDirty"}],
 						panel22: ["wm.Panel", {"_classes":{"domNode":["wm_Padding_2px"]},"border":"0","height":"24px",width: "100%", "layoutKind":"left-to-right"}, {}, {
 						    spacer20: ["wm.Spacer", {"width":"100%"}, {}],
 						    dbTestSQLInput: ["wm.Text", {"border":"0","caption":"User ID","emptyValue":"null","padding":"2","width":"250px"}, {"onchange":"setDirty"}],
@@ -140,7 +140,7 @@ Security.widgets = {
 							ldapRoleBySQLCheckbox: ["wm.Checkbox", {"captionSize":"150px","caption":"Roles By SQL Query","width":"500px"}, {"onchange":"ldapRoleBySQLCheckboxChange"}]
 						    }],
 						    ldapRoleBySQLEnablePanel: ["wm.Panel", {"height":"150px","width":"100%", fitContentToHeight: true, verticalAlign: "top", horizontalAlign: "left"}, {}, {
-							ldapRoleBySQLInput: ["wm.LargeTextArea", {"width":"500px","emptyValue":"null","height":"68px","display":"TextArea", caption: "Enter Query", captionSize: "150px", captionPosition: "left", helpText: "Enter the SQL query that returns the user id and roles, e.g. 'select role.user_id, role.rolename from role where role.user_id = ?' "}, {onchange: "setDirty"}]
+							ldapRoleBySQLInput: ["wm.LargeTextArea", {"width":"500px","emptyValue":"null","height":"68px","display":"TextArea", caption: "Enter Query", captionSize: "150px", captionPosition: "left", helpText: "Enter the SQL query that returns the user id and roles based on username, returning the id first. e.g. 'select role.user_id, role.rolename from role where role.name = ?' "}, {onchange: "setDirty"}]
 						    }]
 						}]								
 					    }]	

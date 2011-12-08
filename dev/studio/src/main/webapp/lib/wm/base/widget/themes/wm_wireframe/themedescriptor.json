@@ -782,5 +782,17 @@
 	}, 
 	"wm.Dialog": {
 		"Inner-Radius": "0px"
+	}, 
+	"Document-EditorsCaption-Font": {
+		"Family": "inherit", 
+		"Weight": "bold", 
+		"TextSize": "inherit", 
+		"Color": "inherit"
+	}, 
+	"Document-EditorsReadonly-Font": {
+		"Family": "inherit", 
+		"Weight": "inherit", 
+		"TextSize": "inherit", 
+		"Color": "inherit"
 	}
 }

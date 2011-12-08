@@ -106,6 +106,8 @@ public class WSDL extends AbstractDeprecatedServiceDefinition implements Reflect
 
     private String partnerName;
 
+    private String serviceAlias;
+
     @SuppressWarnings("unused")
     private WSDL() {
     }
@@ -405,24 +407,37 @@ public class WSDL extends AbstractDeprecatedServiceDefinition implements Reflect
         return getInputTypes(operationName, false);
     }
 
-    @Override
+    public List<ElementType> getInputTypesNoCaseShift(String operationName) {
+        return getInputTypes(operationName, false, true);
+    }
+
     public ElementType getOutputType(String operationName) {
         return getOutputType(operationName, false);
+    }
+
+    public List<ElementType> getInputTypes(String operationName,
+            boolean unWrapped) {
+        return getInputTypes(operationName, unWrapped, false);
     }
 
     /**
      * Returns the input types for the specified operation.
      * 
-     * @param operationName The name of the desired operation.
-     * @param unWrapped True if unwrapped input types should be returned.
+     * @param operationName
+     *            The name of the desired operation.
+     * @param unWrapped
+     *            True if unwrapped input types should be returned.
+     * @param noCaseShift
+     *            True if the first letter of properties should NOT be shifted to lower case
      * @return A list of input types.
      */
-    public List<ElementType> getInputTypes(String operationName, boolean unWrapped) {
+    public List<ElementType> getInputTypes(String operationName,
+            boolean unWrapped, boolean noCaseShift) {
         List<SchemaElementType> types = null;
         if (unWrapped) {
             types = getUnWrappedInputTypes(operationName);
         } else {
-            types = getDefinedInputTypes(operationName);
+            types = getDefinedInputTypes(operationName, noCaseShift);
         }
 
         if (this.webServiceType == WebServiceType.SOAP) {
@@ -492,40 +507,59 @@ public class WSDL extends AbstractDeprecatedServiceDefinition implements Reflect
     }
 
     private List<SchemaElementType> parseMessageParts(Message message) {
+        return parseMessageParts(message, false);   
+    }
+
+    private List<SchemaElementType> parseMessageParts(Message message, boolean noCaseShift) {
         List<SchemaElementType> elementTypes = new ArrayList<SchemaElementType>();
         List<Part> parts = CastUtils.cast(message.getOrderedParts(null));
         for (Part part : parts) {
-            elementTypes.add(constructSchemaElementType(part));
+            elementTypes.add(constructSchemaElementType(part, noCaseShift));
         }
         return elementTypes;
     }
 
     private SchemaElementType constructSchemaElementType(Part part) {
+        return constructSchemaElementType(part, false);
+    }
+
+    private SchemaElementType constructSchemaElementType(Part part, boolean noCaseShift) {
         boolean isElement = false;
         QName schemaType = part.getTypeName();
         if (schemaType == null) {
             schemaType = part.getElementName(); // QName is an element
             isElement = true;
         }
-        SchemaElementType type = new SchemaElementType(getTypeMapper().toPropertyName(part.getName()), schemaType, getJavaType(schemaType, isElement));
-        type.setProperties(CastUtils.cast(getChildTypes(type, MAX_NESTED_CHILD_LEVEL), ElementType.class));
+        SchemaElementType type = new SchemaElementType(
+                getTypeMapper().toPropertyName(part.getName(), noCaseShift), schemaType,
+                getJavaType(schemaType, isElement));
+        type.setProperties(CastUtils.cast(
+                getChildTypes(type, MAX_NESTED_CHILD_LEVEL),
+                ElementType.class));
         return type;
+    }
+
+    public List<SchemaElementType> getDefinedInputTypes(String operationName) {
+        return getDefinedInputTypes(operationName, false);
     }
 
     /**
      * Returns a list of types for the operation's input. The input types represent what actually defined in the WSDL.
      * 
-     * @param operationName The name of the desired operation.
+     * @param operationName
+     *            The name of the desired operation.
+      * @param noCaseShift
+     *            True if the first letter of properties should NOT be shifted to lower case
      * @return A list of input types.
      */
-    public List<SchemaElementType> getDefinedInputTypes(String operationName) {
+    public List<SchemaElementType> getDefinedInputTypes(String operationName, boolean noCaseShift) {
         List<SchemaElementType> elementTypes = new ArrayList<SchemaElementType>();
         Operation operation = getOperation(operationName);
         Input input = operation.getInput();
         if (input != null) {
             Message message = input.getMessage();
             if (message != null) {
-                elementTypes.addAll(parseMessageParts(message));
+                elementTypes.addAll(parseMessageParts(message, noCaseShift));
             }
         }
         return elementTypes;
@@ -739,4 +773,14 @@ public class WSDL extends AbstractDeprecatedServiceDefinition implements Reflect
     public void setPartnerName(String partnerName) {
         this.partnerName = partnerName;
     }
+
+    public String getServiceAlias() {
+        return this.serviceAlias;
+    }
+
+    public void setServiceAlias(String serviceAlias) {
+        this.serviceAlias = serviceAlias;
+    }
+
+    public String getOperationType(String operationName) {return null;}
 }

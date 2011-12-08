@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,7 +23,12 @@ dojo.provide("wm.base.widget.Dialogs.LoadingDialog");
 dojo.require("wm.base.widget.Dialogs.Dialog");
 
 dojo.declare("wm.LoadingDialog", wm.Dialog, {
-    _noAnimation: true,
+    caption: "Loading...",
+    captionWidth: "60px",
+    image: "",
+    imageWidth: "20px",
+    imageHeight: "20px",
+
 
     containerClass: "", // don't give the containerWidget any extra classes
 
@@ -36,7 +41,7 @@ dojo.declare("wm.LoadingDialog", wm.Dialog, {
     serviceVariableToTrack: null,
 
     /* Do not use dialog class and styles */
-    classNames: "wmloadingdialog", 
+    classNames: "wmloadingdialog wm_FontColor_White", 
 
     useContainerWidget: true,
 
@@ -48,15 +53,21 @@ dojo.declare("wm.LoadingDialog", wm.Dialog, {
     noEscape: true,
     border: 0,
     title: "",
-
+    _noAnimation: true,
+/*
+    _animationShowTime: 800,
+    _opacity: 0.7,
+    */
     postInit: function() {
 	this.inherited(arguments);
 	dojo.removeClass(this.domNode, "wmdialog");
+	this.containerWidget.setLayoutKind("left-to-right");
 	this.containerWidget.setVerticalAlign("middle");
 	this.containerWidget.setHorizontalAlign("center");
+	this.containerWidget.setFitToContentHeight();
 
-	var url = dojo.moduleUrl("lib.wm.base.widget.themes.default.images").path + "loadingThrobber.gif";
-	this.setImage(url);
+	this.setImage(this.image);
+	this.setCaption(this.caption);
 	this.setServiceVariableToTrack(this.serviceVariableToTrack);
     },
     setServiceVariableToTrack: function(inVar) {
@@ -69,6 +80,11 @@ dojo.declare("wm.LoadingDialog", wm.Dialog, {
 	    delete this._onResultConnect;
 	    delete this._onRequestConnect;
 	}
+	if (inVar) {
+	    if (dojo.isString(inVar))
+		inVar = this.owner.getValueById(inVar);
+	}
+
 	this.serviceVariableToTrack = inVar;
 	  if (this.serviceVariableToTrack) {
 	      this._onResultConnect  = this.connect(this.serviceVariableToTrack, "onResult", this, "hide");
@@ -76,14 +92,55 @@ dojo.declare("wm.LoadingDialog", wm.Dialog, {
 	  }
     },
     setImage: function(inUrl) {
-
-	if (!this._picture)
+	this.image = inUrl || dojo.moduleUrl("lib.wm.base.widget.themes.default.images").path + "loadingThrobber.gif";
+	this._setImage(this.image);
+    },
+    _setImage: function(inUrl) {
+	
+	if (!this._picture) {
 	    this._picture = new wm.Picture({owner: this,
 					    parent: this.containerWidget,
-					    width: "20px",
-					    height: "20px"});
-	this._picture.setSource(inUrl);
+					    name: "loadingPicture",
+					    source: inUrl,
+					    width: this.imageWidth,
+					    height: this.imageHeight});
+	} else {
+	    this._picture.setSource(inUrl);
+	}
     }, 
+    setImageWidth: function(inWidth) {
+	this.imageWidth = inWidth;
+	if (this._picture) {
+	    this._picture.setWidth(inWidth);
+	}
+    },
+    setImageHeight: function(inHeight) {
+	this.imageHeight = inHeight;
+	if (this._picture) {
+	    this._picture.setHeight(inHeight);
+	}
+    },
+    setCaption: function(inCaption) {
+	this.caption = inCaption;
+	if (!this.caption) 
+	    return;
+	if (!this._label) {
+	    this._label = new wm.Label(
+		{
+		    owner: this,
+		    parent: this.containerWidget,
+		    name: "loadingLabel",
+		    width: this.captionWidth,
+		    height: "20px",
+		    caption: inCaption,
+		    singleLine: false,
+		    autoSizeHeight: true
+		});
+	} else {
+	    this._label.setCaption(this.caption);
+	}
+    }, 
+    
     renderBounds: function() {
 	if (this.widgetToCover) {
 	    if (dojo.isString(this.widgetToCover))

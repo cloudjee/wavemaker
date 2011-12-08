@@ -110,6 +110,8 @@ public class TestDataService extends StudioTestCase {
         public String getPartnerName() {
             return null;
         }
+
+        public String getOperationType(String operationName) {return null;}
     }
 
     @Before

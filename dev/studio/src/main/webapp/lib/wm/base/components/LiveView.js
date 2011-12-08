@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -224,7 +224,9 @@ dojo.declare("wm.LiveView", wm.Component, {
 	//$ Set the dataType for the dataView. This is a type that supports crud operations.
 	setDataType: function(inType) {
 	    if (this._typeChangeSubscribe) {
-		dojo.disconnect(this._typeChangeSubscribe);
+		try {
+		    dojo.disconnect(this._typeChangeSubscribe);
+		} catch(e) {}
 		delete this._typeChangeSubscribe;
 	    }
 		var t = this.dataType;
@@ -286,7 +288,7 @@ dojo.declare("wm.LiveView", wm.Component, {
 	getSubView: function(inPropPath) {
 
 	    // update the view if we're designing and the view is managed by a variable
-	    if (this._isDesignLoaded && this.owner instanceof wm.Variable)
+	    if (this._isDesignLoaded && this.owner instanceof wm.Variable && this.view.length == 0)
 		this.createDefaultView();
 
 		inPropPath = inPropPath ? inPropPath + "." : "";

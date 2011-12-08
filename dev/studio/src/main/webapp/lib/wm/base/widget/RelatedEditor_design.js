@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,9 +18,10 @@ dojo.require("wm.base.widget.RelatedEditor");
 wm.Object.extendSchema(wm.RelatedEditor, {
 	dataSet: {ignore: 1},
 	editingMode: { group: "common", order: 100},
-	formField: {group: "common", order: 500},
+	formField: {group: "common", order: 500, editor: "wm.prop.FormFieldSelect", editorProps: {relatedFields: true}},
 	caption: {ignore: 1},
-	readonly: {ignore: 1}
+    readonly: {ignore: 1},
+    ignoreParentReadonly: {group: "editor", order: 100, type: "Boolean"}
 });
 
 wm.RelatedEditor.extend({
@@ -72,6 +73,7 @@ wm.RelatedEditor.extend({
 			props =  dojo.mixin({}, this.inherited(arguments)),
 			f = wm.getParentForm(this);
 		props.formField.ignoretmp = !Boolean(f);
+	        props.ignoreParentReadonly.ignoretmp = (this.editingMode != "editable subform");
 		return props;
 	},
 	set_formField: function(inFieldName) {
@@ -83,7 +85,7 @@ wm.RelatedEditor.extend({
 		if (this.hasGrid())
 			this.removeGrid();
 		else
-			this.removeEditors();
+			this._removeEditors();
 			
 		var f = wm.getParentForm(this);
 		f.addEditorToForm(this);
@@ -280,8 +282,9 @@ wm.RelatedEditor.extend({
 			p = this.getEditorParent(),
 			g = this.owner.loadComponent("dataGrid1", p, "wm.DojoGrid", {height: "100px"}),
 			dsId = (this.dataSet || 0).getId();
-		if (g && dsId)
-			g.set_dataSet(dsId);
+	    if (g && dsId) {
+		g.$.binding.addWire("", "dataSet", dsId);
+	    }
 	},
 	removeGrid: function(){
 		this.inherited(arguments);
@@ -312,12 +315,10 @@ wm.RelatedEditor.extend({
 	//===========================================================================
 	// Inspector implementations
 	//===========================================================================
-	makePropEdit: function(inName, inValue, inDefault) {
+	makePropEdit: function(inName, inValue, inEditorProps) {
 		switch (inName) {
-			case "formField":
-				return new wm.propEdit.FormFieldSelect({component: this, name: inName, value: inValue, relatedFields: true});
 			case "editingMode":
-				return makeSelectPropEdit(inName, inValue, this._editingModes, inDefault);
+		    return new wm.prop.SelectMenu(dojo.mixin(inEditorProps, {options: this._editingModes}));
 		}
 		return this.inherited(arguments);
 	},

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -37,11 +37,15 @@ wm.AbstractEditor.extend({
 	},
 	afterPaletteDrop: function() {
 	    this.setCaption(this.name);
-	    var liveform = this.isAncestorInstanceOf(wm.LiveFormBase);
+	    var liveform = this.isAncestorInstanceOf(wm.LiveFormBase) || this.isAncestorInstanceOf(wm.FormPanel);
 	    if (liveform) {
 		this.setCaptionPosition(liveform.captionPosition);
 		this.setCaptionAlign(liveform.captionAlign);
 		this.setCaptionSize(liveform.captionSize);
+		if (this.height == wm.AbstractEditor.prototype.height)
+		    this.setHeight(liveform.editorHeight);
+		if (this.width == wm.AbstractEditor.prototype.width)
+		    this.setWidth(liveform.editorWidth);
 
 		// don't set the height if the editor uses a custom height
 		if (this.constructor.prototype.height == wm.AbstractEditor.prototype.height)
@@ -56,10 +60,11 @@ wm.AbstractEditor.extend({
 	// note: these editor properties must be serialized in the editor.
 	listProperties: function() {
 	        var props = this.inherited(arguments);
-		var f = wm.getParentForm(this);
-		props.formField.ignoretmp = !Boolean(f);
-		props.displayValue.readonly = this.formField;
-	    props.defaultInsert.ignoretmp = !this.isAncestorInstanceOf(wm.LiveFormBase);
+	    var hasForm = this.getParentForm() || this.formField;
+	    
+	    props.formField.ignoretmp = !Boolean(hasForm);
+	    props.displayValue.readonly = this.formField;
+	    props.defaultInsert.ignoretmp = !this.isAncestorInstanceOf(wm.LiveFormBase) && !this.isAncestorInstanceOf(wm.DataForm);
 	    props.ignoreParentReadonly.ignoretmp = props.defaultInsert.ignoretmp;
 	    props.minEditorWidth.ignoretmp = this.captionPosition == "top" || this.captionPosition == "bottom" || this.captionSize.match(/px/);
 		return props;
@@ -73,34 +78,26 @@ wm.AbstractEditor.extend({
 			delete this.formField;
 		else
 			this.formField = inFieldName;
-		var f = wm.getParentForm(this);
+		var f = this.getParentForm();
 		if (f) {
 		    var fieldInfo = f.addEditorToForm(this);
-		    this.setCaption(wm.capitalize(inFieldName));
+		    if (inFieldName) {
+			this.setCaption(wm.capitalize(inFieldName));
+		    }
 		}
 	},
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "formatter":
-		                var funcName = this.generateEventName("onReadOnlyNodeFormat");
-		                var customFunction = (this.formatter == funcName) ? funcName : "Custom Function";
-		                return makeSelectPropEdit(inName, inValue, ["", customFunction].concat(wm.formatters), inDefault);
-			case "formField":
-				return new wm.propEdit.FormFieldSelect({component: this, name: inName, value: inValue});
-			case "captionAlign":
-				return makeSelectPropEdit(inName, inValue, ["left", "center", "right"], inDefault);
-			case "captionSize":
-				return new wm.propEdit.UnitValue({component: this, name: inName, value: inValue, options: this._sizeUnits});
-			case "captionPosition":
-				return makeSelectPropEdit(inName, inValue, ["top", "left", "bottom", "right"], inDefault);
-			case "emptyValue":
-				return makeSelectPropEdit(inName, inValue, ["unset", "null", "emptyString", "false", "zero"], inDefault);
-			case "checkedValue":
-				return this.editor.dataType == "boolean" ? makeCheckPropEdit(inName, inValue, inDefault) : this.inherited(arguments);
-			case "resizeToFit":
-				return makeReadonlyButtonEdit(inName, inValue, inDefault);
-		}
-		return this.inherited(arguments);
+        makePropEdit: function(inName, inValue, inEditorProps) {
+	    switch (inName) {
+	    case "formatter":
+		var funcName = this.generateEventName("onReadOnlyNodeFormat");
+		var customFunction = (this.formatter == funcName) ? funcName : "Custom Function";
+		dojo.mixin(inEditorProps, {options: ["", customFunction].concat(wm.formatters),
+					   restrictValues: false, /* Needed to allow changing between Custom Function and funcName */
+					   dataField: "dataValue",
+					   displayField: "dataValue"});
+		return wm.SelectMenu(inEditorProps);
+	    }
+	    return this.inherited(arguments);
 	},
 	setFormatter: function(inDisplay) {
 	    if (this.formatter == inDisplay)
@@ -116,28 +113,55 @@ wm.AbstractEditor.extend({
 		var ctor = wm.getFormatter(this.formatter);
 		new ctor({name: "format", owner: this});
 	    }
+	},
+    set_editorType: function(inType) {
+        var widgetsjs = this.write("");
+	widgetsjs = dojo.fromJson(widgetsjs.replace(/^.*?\:/,""));
+	widgetsjs[1].captionPosition = this.captionPosition; // default values aren't written by write, but ugly stuff happens if this isn't copied around
+	inType = "wm." + inType;
+	var oldType = this.declaredClass;
+	if (dojo.getObject(oldType).prototype.height != dojo.getObject(inType).prototype.height) {
+	    widgetsjs[1].height = dojo.getObject(inType).prototype.height;
 	}
+	var name = this.name;	
+        var parent = this.parent;
+	var owner = this.owner;
+        var indexInParent = dojo.indexOf(this.parent.c$, this);
+        this.destroy();
+	
+        var clone = parent.createComponent(name, inType , widgetsjs[1], widgetsjs[2], widgetsjs[3], owner);
+        parent.moveControl(clone, indexInParent);
+        parent.reflow();
+	studio.refreshVisualTree();
+	studio.select(clone);
+    },
+    get_editorType: function() {
+	return this.declaredClass.replace(/wm\./,"");
+    }
 
 });
 
 wm.Object.extendSchema(wm.AbstractEditor, {
+    hint: {ignore:true},
     imageList: {ignore: 1},
     formatter: { group: "format", order: 20, shortname: "readonlyFormatter" },
-    format: { ignore: 1, writeonly: 1, categoryParent: "Properties", categoryProps: {component: "format"}},
-    formField: {group: "common", order: 500},
+    format: { writeonly: 1, categoryParent: "Properties", categoryProps: {component: "format"}},
+    formField: {group: "common", order: 500, editor: "wm.prop.FormFieldSelect", editorProps: {relatedFields: false}, ignoreHint: "This property is only available when the editor is in a Form"},
+    editorType: {group: "common", order: 501, options: ["Text", "LargeTextArea", "RichText", "Currency", "Number", "Slider"]},
     caption: {group: "Labeling", order: 1, bindTarget:true, doc: 1},
-    captionPosition: {group: "Labeling", order: 2, doc: 1},
-    captionAlign: {group: "Labeling", order: 3, doc: 1},
-    captionSize: {group: "layout", order: 4, doc: 1},
-    minEditorWidth: {group: "layout", order: 5, doc: 1},
+    captionPosition: {group: "Labeling", order: 2, doc: 1, options: ["top", "left", "bottom", "right"]},
+    captionAlign: {group: "Labeling", order: 3, doc: 1, options: ["left", "center", "right"]},
+    captionSize: {group: "layout", order: 4, doc: 1, editor: "wm.prop.SizeEditor"},
+    minEditorWidth: {group: "layout", order: 5, doc: 1, ignoreHint: "This property is only relevant for percent sized editors with captionPosition of left or right"},
     singleLine: {group: "Labeling", order: 5},
     helpText: {group: "Labeling", order: 10},
-    readonly: {group: "editor", order: 1, doc: 1},
-    ignoreParentReadonly: {group: "editor", order: 2, doc: 1},
+    invalid: {ignore: 1, bindSource: true},
+    readonly: {group: "editor", order: 1, doc: 1, type: "boolean"},
+    ignoreParentReadonly: {group: "editor", order: 2, doc: 1, ignoreHint: "This property is only relevant if the editor is in a form"},
     displayValue: {group: "editData", order: 2}, // use getDisplayValue()
-    dataValue: {ignore: 1, bindable: 1, group: "editData", order: 3, simpleBindProp: true, type: "String"}, // use getDataValue()
+    dataValue: {bindable: 1, group: "editData", order: 3, simpleBindProp: true, type: "String"}, // use getDataValue()
     isDirty: {ignore: 1, bindSource: 1, group: "editData", order: 10, type: "boolean"}, 
-    emptyValue: {group: "editData", order: 4, doc: 1},
+    emptyValue: {group: "editData", order: 4, doc: 1, options: ["unset", "null", "emptyString", "false", "zero"]},
     required: {group: "validation", order: 1, doc: 1},
     editorBorder: {group: "style", order: 100},
 
@@ -149,21 +173,21 @@ wm.Object.extendSchema(wm.AbstractEditor, {
     changeOnKey: {ignore: 1},
     onEnterKeyPress: {ignore: 1},
 
-    defaultInsert:{type: "String", bindTarget: 1, group: "editData", order: 10},
-    setCaption: {group: "method", doc: 1},
-    setCaptionSize: {group: "method", doc: 1},
-    setCaptionAlign: {group: "method",doc: 1},
-    setCaptionPosition:{group: "method", doc: 1},
-    setDisabled: {group: "method", doc: 1},
-    getInvalid: {group: "method", doc: 1, returns: "Boolean"},
-    setReadonly: {group: "method", doc: 1},
-    getDisplayValue: {group: "method",doc: 1, returns: "String"},
-    getDataValue: {group: "method", doc: 1, returns: "Any"},
-    setDisplayValue: {group: "method", doc: 1},
-    setDataValue: {group: "method", doc: 1},
+    defaultInsert:{type: "String", bindTarget: 1, group: "editData", order: 10, ignoreHint: "This property is only relevant if the editor is in a form"},
+    setCaption: {method:1, doc: 1},
+    setCaptionSize: {method:1, doc: 1},
+    setCaptionAlign: {method:1,doc: 1},
+    setCaptionPosition:{method:1, doc: 1},
+    setDisabled: {method:1, doc: 1},
+    getInvalid: {method:1, doc: 1, returns: "Boolean"},
+    setReadonly: {method:1, doc: 1},
+    getDisplayValue: {method:1,doc: 1, returns: "String"},
+    getDataValue: {method:1, doc: 1, returns: "Any"},
+    setDisplayValue: {method:1, doc: 1},
+    setDataValue: {method:1, doc: 1},
 
-		   focus: {group: "method",doc: 1},
-	    clear: {group: "method", doc: 1}
+		   focus: {method:1,doc: 1},
+    clear: {method:1, doc: 1}
     
     
 });

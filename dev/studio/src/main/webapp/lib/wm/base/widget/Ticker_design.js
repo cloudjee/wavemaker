@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -17,8 +17,8 @@ dojo.require("wm.base.widget.Ticker");
 
 
 wm.Object.extendSchema(wm.Ticker, {
-	startNow: { group: "operation", order: 10},
-	stopNow: { group: "operation", order: 20},
+    startNow: { group: "operation", order: 10,operation:1},
+    stopNow: { group: "operation", order: 20,operation:1},
 	fitToContent: { ignore: 1 },		// ticker content must be larger than container to work
     layoutKind: { ignore: 1 },				// ticker only moves left to right (so don't allow top-to-bottom)
     fitToContentHeight: {ignore: 1},
@@ -32,35 +32,17 @@ wm.Object.extendSchema(wm.Ticker, {
     imageList: {ignore: 1},
     motion: {group: "display"},
     rewindDelay: {group: "display"},
-    autoScroll: {ignore: 1}
+    autoScroll: {ignore: 1},
+    customGetValidate: {ignore:1}
 });
 
 wm.Ticker.extend({
     themeable: false,
-	startNow: "(click to start)",
-	stopNow: "(click to stop)",
+    startNow: function() {this.start();},
+    stopNow:function() {this.stop();},
 	designCreate: function() {
 		this.inherited(arguments);
 		this.stop();
-	},
-	makePropEdit: function(inName, inValue, inDefault) {
-	        var prop = this.schema ? this.schema[inName] : null;
-	        var name =  (prop && prop.shortname) ? prop.shortname : inName;
-		switch (inName) {
-			case "startNow":
-			case "stopNow":
-				return makeReadonlyButtonEdit(name, inValue, inDefault);
-		}
-		return this.inherited(arguments);
-	},
-	editProp: function(inName, inValue, inInspector) {
-		switch (inName) {
-			case "startNow":
-				return this.start();
-			case "stopNow":
-				return this.stop();
-		}
-		return this.inherited(arguments);
 	},
 	_start: wm.Ticker.prototype.start,
 	_stop: wm.Ticker.prototype.stop,
@@ -78,7 +60,7 @@ wm.Ticker.extend({
 		this.inherited(arguments);
 	    this.setLayoutKind("left-to-right");
 	    this.setWidth("100%");
-	},
+	}
 });
 
 

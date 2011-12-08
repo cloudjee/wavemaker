@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -143,6 +143,15 @@ dojo.declare("ImportDatabase", wm.Page, {
 					this.driverClassInput.getDataValue());
 	},
 	importBtnClick: function(inSender) {
+	    if (this.dbdropdown.getDataValue("").toLowerCase() == "mysql" && dojo.isMac) {
+		app.confirm(this.getDictionaryItem("CONFIRM_MYSQL_MAC_IMPORT"), false, dojo.hitch(this, "importBtnClick2"));
+	    } else if (this.dbdropdown.getDataValue("").toLowerCase() == "postgresql") {
+		app.confirm(this.getDictionaryItem("CONFIRM_POSTGRES_IMPORT"), false, dojo.hitch(this, "importBtnClick2"));
+	    } else {
+		this.importBtnClick2();
+	    }
+	},
+	importBtnClick2: function(inSender) {
 		this.dataModelName = null;
 	    studio.beginWait(this.getDictionaryItem("WAIT_IMPORTING"));
 		studio.dataService.requestAsync(IMPORT_DB_OP,

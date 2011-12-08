@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ dojo.require("dijit.form.SimpleTextarea");
 /* We may want to move this class to another file */
 dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
 	maxHeight: 96, // only used if autoSizeHeight is enabled; and height is in pixels
-
 /*
 	sizeEditor: function() {
 		this.inherited(arguments);
@@ -47,7 +46,7 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
 			return "normal";
                 // else, autosize isn't used; revert to default behaviors
 		else
-			return this.inherited(arguments);
+		    return this.singleLine ? "nowrap" : "normal";
 	},
         getReadOnlyNodeOverflow: function() {
 		// doAutoResize adjusts this value
@@ -58,7 +57,7 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
 		else
 		        return "hidden";
 	},
-	updateReadonlyValue: function() {
+	updateReadonlyValue: function(inValue) {
 		this.inherited(arguments);
             // the test for width is actually a test to see if sizeEditor has been called; we can't autoSize if caption and readOnlyNode have not yet been assigned an initial size
 	  	if (this.readonly && this.readOnlyNode && this.readOnlyNode.style.width && (this.autoSizeHeight || this.autoSizeWidth))
@@ -162,7 +161,7 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
                 var minHeight = this.getMinHeightProp();
                 if (minHeight > newHeight) newHeight = minHeight;
 		// scrollbars for a node less than 40px high is pretty much useless; even 40 is questionable
-                if (this.maxHeight && this.maxHeight < newHeight && (dojo.marginBox(this.readonlyNode).h > 40)) {
+                if (this.maxHeight && this.maxHeight < newHeight && (dojo.marginBox(this.readOnlyNode).h > 40)) {
                     newHeight = this.maxHeight;
                     bases.overflow = "auto";
                     this._autoSizeNeedsOverflow = true;
@@ -274,10 +273,10 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
     setMaxHeight: function(newMax) {
         if (this.isDesignLoaded()) {
             if (newMax < this.minHeight) {
-                app.alert(studio.getDictionaryItem("wm.ResizableEditor.SET_MAX_HEIGHT", {minHeight: this.minHeight}));
+                app.alert(studio.getDictionaryItem("wm.ResizeableEditor.SET_MAX_HEIGHT", {minHeight: this.minHeight}));
                 return;
             } else if (newMax < this.getMinHeightProp()) {
-                app.alert(studio.getDictionaryItem("wm.ResizableEditor.SET_MAX_HEIGHT", {minHeight: this.getMinHeightProp()}));
+                app.alert(studio.getDictionaryItem("wm.ResizeableEditor.SET_MAX_HEIGHT", {minHeight: this.getMinHeightProp()}));
                 return;
             }
         }
@@ -322,25 +321,13 @@ dojo.declare("wm.ResizableEditor", wm.AbstractEditor, {
 	    } 
 	}
     }
-/*
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-                        case "autoSizeWidth": 
-		                return makeSelectPropEdit(inName, (this.autoSizeHeight) ? "height" : (this.autoSizeWidth) ? "width" : "none", ["none", "width", "height"], inDefault);
-		}
-		return this.inherited(arguments);
-	}
-	*/
+
 });
 
-wm.Object.extendSchema(wm.ResizableEditor, {
-    autoSizeHeight: {type: "Boolean", group: "advanced layout", order: 31, writeonly: true},
-    autoSizeWidth: {type: "Boolean", group: "advanced layout", order: 32, writeonly: true},
-    autoSize: {type: "String", options: ["none", "width", "height"], group: "advanced layout"},
-    maxHeight:     {type: "Number", group: "advanced layout", order: 60}
-});
+
 
 dojo.declare("wm.Text", wm.ResizableEditor, {
+        selectOnClick: false,
         resetButton: false,
         placeHolder: "",
 	changeOnKey: false,
@@ -356,6 +343,7 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 	tooltipDisplayTime:2000,
 	getEditorProps: function(inNode, inProps) {
 		var p = dojo.mixin(this.inherited(arguments), {
+		    selectOnClick: this.selectOnClick,
 			promptMessage: this.promptMessage,
 			invalidMessage: this.invalidMessage || "$_unset_$",
 		        placeHolder: this.placeHolder,
@@ -364,6 +352,14 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 			required: this.required,
 			tooltipDisplayTime: this.tooltipDisplayTime
 		});
+/*
+	    if (!this._isDesignLoaded) {
+		if (this.customFormatter != this.constructor.prototype.customFormatter)
+		    p.format = this.customFormatter;
+		if (this.customParser != this.constructor.prototype.customParser)
+		    p.parse = this.customParser;
+	    }
+	    */
 		// this dijit supports setting password type at creation time only
 		if (this.password)
 			p.type = "password";
@@ -374,8 +370,29 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 
 		return dojo.mixin(p, inProps || {});
 	},
+/*
+    customFormatter: function(/ * take inValue and return the formatted version of it to display in the editor * / inValue) {},
+    customParser: function(/ * take inValue and return the dataValue represented by this value; also affects display of editor while editing * /inValue) {},
+    */
+    _onDijitFocus: function(){
+	if(this.disabled){ return; }
+	var val = this.editor.get('value');
+	if (val) {
+	    var formattedValue = this.editor.format(val);
+	    if(formattedValue !== undefined) {
+		this.editor.textbox.value = formattedValue;
+	    }
+	}
+	this.inherited(arguments);
+    },
 	validationEnabled: function() {
 	  return (this.regExp && this.regExp != ".*") || this.required;
+	},
+
+        setSelectOnClick: function(inSelectOnClick) {
+	    this.selectOnClick = inSelectOnClick;
+	    if (this.editor)
+		this.editor.attr("selectOnClick", inSelectOnClick);
 	},
         setPlaceHolder: function(inPlaceHolder) {
 	    this.placeHolder = inPlaceHolder;
@@ -395,6 +412,7 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 	if (!this._cupdating)
 	    this.createEditor();
     },
+
 /* a way to create an html editor and transform it to a dijit onclick; this approach may still be desired at some point... for both performance and usability reasons.  Usability reasons though could be handled with a click to exit readonly mode
     __createEditor: function(node,inProps) {
 	    if (this.fakeEditor) {
@@ -425,7 +443,7 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 	    if (this.resetButton) {
 		dojo.addClass(this.domNode, "wmreseteditor");
 		this._resetButtonNode = document.createElement("img");
-		this._resetButtonNode.src = dojo.moduleUrl("lib.images.boolean.Signage") + "Close_gray.png";
+		this._resetButtonNode.src = this._resetButtonUrl || dojo.moduleUrl("lib.images.boolean.Signage") + "Close_gray.png";
 		var s = this._resetButtonNode.style;
 		s.position = "absolute";
 		s.width = "16px";
@@ -435,12 +453,14 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 		result.domNode.appendChild(this._resetButtonNode);
 		this._resetButtonConnect = dojo.connect(this._resetButtonNode, "onclick", this, function() {
 		    wm.onidle(this, function() {
+			this._onResetClick();
 			this.setDataValue("");
 		    });
 		});
 	    }
 	    return result;
 	},
+    _onResetClick: function() {},
     sizeEditor: function() {
 	this.inherited(arguments);
 	if (this._cupdating)
@@ -473,6 +493,18 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 		}
 		return v;
 	},
+/*
+    changed: function() {
+	this.inherited(arguments);
+	if (this.customFormatter != this.constructor.prototype.customFormatter && this.editor && this.editor.textbox) {
+	    var val = this.editor.get("displayedValue");
+	    var formattedValue = this.editor.format(val);
+	    if(formattedValue !== undefined) {
+		this.editor.textbox.value = formattedValue;
+	    }
+	}
+    },
+    */
     setResetButton: function(inReset) {
 	if (this._resetButtonConnect) {
 	    dojo.disconnect(this._resetButtonConnect);
@@ -481,6 +513,56 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 	this.resetButton = inReset;
 	dojo[inReset ? "addClass":"removeClass"](this.domNode, "wmreseteditor");
 	this.createEditor();
+    },
+    getCursorPosition: function() {
+	var CaretPos = 0;
+	// IE Support
+	var ctrl = this.editor ? this.editor.focusNode || this.editor : null;
+	if (document.selection) {
+            this.focus();
+            var Sel = document.selection.createRange ();
+            Sel.moveStart ('character', -ctrl.value.length);
+            CaretPos = Sel.text.length;
+	}
+	// Firefox support
+	else if (ctrl.selectionStart || ctrl.selectionStart == '0')
+            CaretPos = ctrl.selectionStart;
+	return (CaretPos);
+    },
+    getCursorLength: function() {
+	var CaretPos = 0;
+	// IE Support
+	var ctrl = this.editor ? this.editor.focusNode || this.editor : null;
+	if (document.selection) {
+            this.focus();
+            var Sel = document.selection.createRange ();
+            Sel.moveStart ('character', -ctrl.value.length);
+            CaretPos = Sel.text.length;
+	}
+	// Firefox support
+	else if (ctrl.selectionStart || ctrl.selectionStart == '0')
+            return  ctrl.selectionStart -  ctrl.selectionEnd;
+    },
+    setCursorPosition: function(pos) {
+	var ctrl = this.editor ? this.editor.focusNode || this.editor : null;
+	if(ctrl.setSelectionRange) {
+            this.focus();
+            ctrl.setSelectionRange(pos,pos);
+	}
+	else if (ctrl.createTextRange) {
+            var range = ctrl.createTextRange();
+            range.collapse(true);
+            range.moveEnd('character', pos);
+            range.moveStart('character', pos);
+            range.select();
+	}
+    },
+    afterPaletteDrop: function() {
+	this.inherited(arguments);
+	var liveform = this.getParentForm();
+	if (liveform) {
+	    this.emptyValue = "emptyString";
+	}
     }
 });
 
@@ -489,6 +571,7 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 dojo.declare("wm.LargeTextArea", wm.Text, {
         _editorPaddingLeft: 3,
         _editorPaddingRight: 3,
+        showMessages: false,
 	width: "300px",
 	height: "96px",
 	captionSize: "24px",
@@ -497,6 +580,10 @@ dojo.declare("wm.LargeTextArea", wm.Text, {
 	singleLine: false,
 
         changeOnEnter: false,
+    normalizeDataValue: function(inValue) {
+	if (inValue === undefined || inValue === null) return "";
+	else return String(inValue);
+    },
 	_createEditor: function(inNode, inProps) {
 	    var editor = new dijit.form.SimpleTextarea(this.getEditorProps(inNode, inProps));
             editor.domNode.style.lineHeight = "normal"; // we test for this style before setting it to height of height px; if its normal we leave it alone
@@ -531,120 +618,3 @@ dojo.declare("wm.LargeTextArea", wm.Text, {
 });
 
 
-dojo.declare("wm.ColorPicker", wm.Text, {
-    className: "wmeditor wmcolorpickereditor",
-    _editorBackgroundColor: true,
-    colorPickerDialog: null,
-    cancelValue: null,
-    _empty: true,
-    regExp: "\#[0-9a-fA-F]{6}",
-    showMessages: false, // seems to mess up our color picker dialog when both are showing
-    init: function() {
-        this.inherited(arguments);
-        this.subscribe("wm.AbstractEditor-focused", this, function(inEditor) {
-            if (this != inEditor) {
-                if (this.colorPickerDialog)
-                    this.colorPickerDialog.dismiss();
-            }
-        });
-    },
-    postInit: function() {
-        this.inherited(arguments);
-        var v = this.getDataValue() || "#FFFFFF";
-        this.setNodeColors(v);
-    },
-    createColorPicker: function() {
-	wm.getComponentStructure("wm.ColorPickerDialog");
-        this.colorPickerDialog = new wm.ColorPickerDialog({owner: this});
-        this.colorPickerDialog.connect(this.colorPickerDialog, "onChange", this, function(inValue) {
-	    if (this.colorPickerDialog.showing)
-		this.setDataValue(inValue);
-        });
-        this.colorPickerDialog.connect(this.colorPickerDialog, "onCancel", this, function(inValue) {
-            var val = this.getDataValue();
-            if (val != this.cancelValue) {
-                this.setDataValue(this.cancelValue);
-                this.changed();
-            }
-            this.colorPickerDialog.dismiss();
-        });
-    },
-    onfocus: function() {
-        if (!this.colorPickerDialog || !this.colorPickerDialog.showing) {
-            var v = this.getDataValue() || "#FFFFFF";
-            this.cancelValue = this.getDataValue();
-            if (!this.colorPickerDialog)
-                this.createColorPicker();
-            this.colorPickerDialog.setValue(v);
-            this.colorPickerDialog.setShowing(true);
-        }
-    },
-    setEditorValue: function(inValue) {
-        this.inherited(arguments);
-	this._empty = !Boolean(inValue);
-        this.setNodeColors(inValue);
-    },
-    setNodeColors: function(inValue) {
-        if (inValue) {
-            this.editorNode.style.backgroundColor = inValue;
-            this.editorNode.style.color = (parseInt(inValue.substr(1,2),16) + parseInt(inValue.substr(3,2),16) + parseInt(inValue.substr(5,2),16) < 200) ? "white" : "black";
-        } else {
-            this.editorNode.style.backgroundColor = "transparent";
-            this.editorNode.style.color = "black";
-        }
-    },
-    getDataValue: function() {
-        if (this.getInvalid())
-            return "#ffffff";
-	return this.inherited(arguments) || "#ffffff";
-    },
-    onblur: function() {
-        if (this.colorPickerDialog && this.getDataValue() && (this._empty || this.colorPickerDialog.getValue().toLowerCase() != this.getDataValue().toLowerCase() && this.colorPickerDialog._changed)) {
-	    this._empty = false;
-            this.changed();
-        }
-    },
-    changed: function() {
-        if (this.colorPickerDialog) {
-            this.setNodeColors(this.getDataValue());
-            return this.inherited(arguments);
-        }
-    }
-
-});
-
-
-wm.Object.extendSchema(wm.Text, {
-    placeHolder: {group: "Labeling", doc: 1}, // TODO: ignoring this only for 6.2 as it needs polish, particularly if its to work with themes
-    promptMessage: {group: "Labeling", order: 6},
-    tooltipDisplayTime: {group: "Labeling", order: 7},
-    password: {group: "editor", order: 5, doc: 1},
-    maxChars: {group: "editor", order: 6, doc: 1},
-    changeOnKey: {group: "events", order: 3},
-    regExp: {group: "validation", order: 2, doc: 1},
-    invalidMessage: {group: "validation", order: 3},
-    showMessages: {group: "validation", order: 4},
-    onEnterKeyPress: {ignore: 0},
-    setPlaceHolder: {group: "method", doc: 1},
-    setPassword: {group: "method", doc: 1},
-    setRegExp: {group: "method", doc: 1},
-    resetButton: {group: "editor"}
-    
-});
-
-
-wm.Object.extendSchema(wm.LargeTextArea, {
-	changeOnEnter: { ignore: 1 },
-        onEnterKeyPress: {ignore: 1},
-        password: {ignore: 1},
-        resetButton: {ignore: 1}
-});
-
-wm.LargeTextArea.extend({
-     themeableDemoProps: {height: "100%"}
-});
-
-wm.Object.extendSchema(wm.ColorPicker, {
-    regExp: {ignore: true},
-    resetButton: {ignore: 1}
-});

@@ -2,7 +2,7 @@
  * FILE: theme.css
  *****************************************/
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -741,14 +741,9 @@ body .wm_green .dialogfooter .wmbutton:hover {
 /* Give editors the standard border color, and get rid of the outline styling which is unnecessary and looks bad in webkit */
 .wm_green .wmeditor .dijitTextBox.dijitFocused,
 .wm_green .wmeditor .dijitTextArea.dijitFocused,
-.wm_green .wmeditor .dijitComboBox.dijitFocused {
+.wm_green .wmeditor .dijitComboBox.dijitFocused,
+.wm_green .wmeditor .dijitSelect.dijitFocused {
 	outline-width: 0 !important;    
-}
-.wm_green .wmeditor .wmeditor-caption {
-    color: inherit;
-    font-family: inherit;
-    font-size: inherit;
-    font-weight: inherit;
 }
 /* Make all editors equally rounded.  This is not for technical reasons.  It is my opinion that a theme should
  * allow some things to vary, and other things should provide a consistent common look.
@@ -762,6 +757,17 @@ body .wm_green .dialogfooter .wmbutton:hover {
      -webkit-border-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
      border-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
 }
+.wm_green  .wmeditor .dijitSelect .dijitButtonContents {
+     /* Borders-Editor_BorderStyle_Radius */
+    -moz-border-radius-bottomleft: 4px; /* Borders-Editor_BorderStyle_Radius */
+    -moz-border-radius-topleft: 4px; /* Borders-Editor_BorderStyle_Radius */
+    -webkit-border-top-left-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
+    -webkit-border-bottom-left-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
+    border-radius-bottomleft: 4px; /* Borders-Editor_BorderStyle_Radius */
+    border-radius-top-left: 4px; /* Borders-Editor_BorderStyle_Radius */
+    border-right: solid 0px transparent !important;
+    display:block;
+}
 /* Can't round the top edges of the richtext editor until we're ready to tackle rounding dojo's toolbar */
 .wm_green .wmeditor.wmrichtext {
     /* Borders-Editor_BorderStyle_Radius */
@@ -772,7 +778,8 @@ body .wm_green .dialogfooter .wmbutton:hover {
     border-radius-bottomleft: 4px; /* Borders-Editor_BorderStyle_Radius */
     border-radius-bottomright: 4px; /* Borders-Editor_BorderStyle_Radius */
 }
-.wm_green .wmeditor .dijitComboBox .dijitArrowButton {
+.wm_green .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_green .wmeditor .dijitSelect .dijitArrowButton {
     height: 100% !important;
     -moz-border-radius-bottomright: 2px; /* wm.SelectMenu-Inner_Radius */
     -moz-border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
@@ -783,6 +790,9 @@ body .wm_green .dialogfooter .wmbutton:hover {
 }
 .wm_green .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
         height: 100% !important;
+}
+.wm_green .dijitComboBox .dijitArrowButton .dijitArrowButtonInner,
+.wm_green .dijitSelect .dijitArrowButton .dijitArrowButtonInner {
         background-position: 50% 50%;
 	background-image: url(images/comboArrowDownLight.png); /* wm.SelectMenu-Down-Arrow_Image */
         -moz-border-radius-bottomright: 2px;/* wm.SelectMenu-Inner_Radius */
@@ -828,15 +838,30 @@ body .wm_green .dialogfooter .wmbutton:hover {
    *              button. 
    ************************************************************************************************/
 .wm_green .wmeditor .dijitSpinner .dijitArrowButton,
-.wm_green .wmeditor .dijitComboBox .dijitArrowButton {
+.wm_green .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_green .wmeditor .dijitSelect .dijitArrowButton {
     background-color: #a19fa0; /* Document-ClickablesDefault-Background_Color */
     background-image: none;
 }
+.wm_green .wmeditor .wmeditor-caption {
+	font-family: inherit; /* Document-EditorsCaption-Font_Family */
+	font-size: inherit; /* Document-EditorsCaption-Font_TextSize */
+	color: inherit; /* Document-EditorsCaption-Font_Color */
+	font-weight: bold; /* Document-EditorsCaption-Font_Weight */
+}
+.wm_green .wmeditor .wmeditor-readonlyNode {
+	font-family: inherit; /* Document-EditorsReadonly-Font_Family */
+	font-size: inherit; /* Document-EditorsReadonly-Font_TextSize */
+	color: inherit; /* Document-EditorsReadonly-Font_Color */
+	font-weight: inherit; /* Document-EditorsReadonly-Font_Weight */
+}
     .wm_green .dojoxGrid .dijitTextBox,
     .wm_green .dojoxGrid .dijitComboBox,
+    .wm_green .dojoxGrid .dijitSelect .dijitButtonContents,
     .wm_green .wmeditor .dijitTextBox,
     .wm_green .wmeditor .dijitTextArea,
     .wm_green .wmeditor .dijitComboBox,
+    .wm_green .wmeditor .dijitSelect .dijitButtonContents,
     .wm_green .dijitTimePickerItem,
     .wm_green .wmeditor .RichTextEditable iframe {
 	/* Document-EditorsDefault-Border */
@@ -863,6 +888,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .wm_green .wmeditor .dijitTextBox.dijitHover,
     .wm_green .wmeditor .dijitTextArea:hover,
     .wm_green .wmeditor .dijitComboBox.dijitHover,
+    .wm_green .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
     .wm_green .wmeditor .RichTextEditable:hover iframe,
     .wm_green .dijitTimePickerMarker.dijitTimePickerMarkerHover,
     .wm_green .dijitTimePickerItem.dijitTimePickerItemHover {
@@ -877,12 +903,19 @@ body .wm_green .dialogfooter .wmbutton:hover {
     }
     .wm_green .dojoxGrid .dijitTextBox.dijitFocused,
     .wm_green .dojoxGrid .dijitComboBox.dijitFocused,
+    .wm_green .dojoxGrid .dijitSelect.dijitFocused .dijitButtonContents,
     .wm_green .wmeditor .dijitTextBox.dijitFocused,
     .wm_green .wmeditor .dijitTextBox.dijitFocused.dijitHover,
     .wm_green .wmeditor .dijitTextArea.dijitFocused,
     .wm_green .wmeditor .dijitTextArea.dijitFocused:hover,
     .wm_green .wmeditor .dijitComboBox.dijitFocused,
     .wm_green .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_green .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
+    .wm_green .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents,
+    .wm_green .isDirty.wmeditor .dijitTextBox,
+    .wm_green .isDirty.wmeditor .dijitTextArea,
+    .wm_green .isDirty.wmeditor .dijitComboBox,
+    .wm_green .isDirty.wmeditor .dijitSelect .dijitButtonContents,
     .wm_green .wmeditor .RichTextEditable.Focused iframe {
 	/* Document-EditorsFocus-Font */
 	color: #000000; /* Document-EditorsFocus-Font_Color */
@@ -903,13 +936,14 @@ body .wm_green .dialogfooter .wmbutton:hover {
    *              button. 
    ************************************************************************************************/
 .wm_green .MainContent .wmeditor .dijitSpinner .dijitArrowButton,
-.wm_green .MainContent .wmeditor .dijitComboBox .dijitArrowButton {
+.wm_green .MainContent .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_green .MainContent .wmeditor .dijitSelect .dijitArrowButton {
     background-color: #cccccc; /* MainContent-ClickablesDefault-Background_Color */
-    background-image: none;
 }
     .wm_green .MainContent .wmeditor .dijitTextBox,
     .wm_green .MainContent .wmeditor .dijitTextArea,
     .wm_green .MainContent .wmeditor .dijitComboBox,
+    .wm_green .MainContent .wmeditor .dijitSelect .dijitButtonContents,
     .wm_green .MainContent .dijitTimePickerItem,
     .wm_green .MainContent .wmeditor .RichTextEditable iframe {
 	/* MainContent-EditorsDefault-Border */
@@ -938,6 +972,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .wm_green .MainContent .wmeditor .dijitTextBox.dijitHover,
     .wm_green .MainContent .wmeditor .dijitTextArea:hover,
     .wm_green .MainContent .wmeditor .dijitComboBox.dijitHover,
+    .wm_green .MainContent .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
     .wm_green .MainContent .wmeditor .RichTextEditable:hover iframe,
     .wm_green .MainContent .dijitTimePickerMarker.dijitTimePickerMarkerHover,
     .wm_green .MainContent .dijitTimePickerItem.dijitTimePickerItemHover {
@@ -956,6 +991,8 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .wm_green .MainContent .wmeditor .dijitTextArea.dijitFocused:hover,
     .wm_green .MainContent .wmeditor .dijitComboBox.dijitFocused,
     .wm_green .MainContent .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_green .MainContent .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
+    .wm_green .MainContent .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents,
     .wm_green .MainContent .wmeditor .RichTextEditable.Focused iframe {
 	/* MainContent-EditorsFocus-Font */
 	color: #000000; /* MainContent-EditorsFocus-Font_Color */
@@ -975,14 +1012,15 @@ body .wm_green .dialogfooter .wmbutton:hover {
    *              button. 
    ************************************************************************************************/
 .wm_green .EmphasizedContent .wmeditor .dijitSpinner .dijitArrowButton,
-.wm_green .EmphasizedContent .wmeditor .dijitComboBox .dijitArrowButton {
+.wm_green .EmphasizedContent .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_green .EmphasizedContent .wmeditor .dijitSelect .dijitArrowButton {
     background-color: #333333; /* EmphasizedContent-ClickablesDefault-Background_Color */
-    background-image: none;
 }
     /* BEGIN inner content panel editors */
     .wm_green .EmphasizedContent .wmeditor .dijitTextBox,
     .wm_green .EmphasizedContent .wmeditor .dijitTextArea,
     .wm_green .EmphasizedContent .wmeditor .dijitComboBox,
+    .wm_green .EmphasizedContent .wmeditor .dijitSelect .dijitButtonContents,
     .wm_green .EmphasizedContent .dijitTimePickerItem,
     .wm_green .EmphasizedContent .wmeditor .RichTextEditable iframe {
 	/* EmphasizedContent-EditorsDefault-Border */
@@ -1002,6 +1040,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .wm_green .EmphasizedContent .wmeditor .dijitTextBox.dijitHover,
     .wm_green .EmphasizedContent .wmeditor .dijitTextArea:hover,
     .wm_green .EmphasizedContent .wmeditor .dijitComboBox.dijitHover,
+    .wm_green .EmphasizedContent .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
     .wm_green .EmphasizedContent .wmeditor .RichTextEditable:hover iframe,
     .wm_green .EmphasizedContent .dijitTimePickerMarker.dijitTimePickerMarkerHover,
     .wm_green .EmphasizedContent .dijitTimePickerItem.dijitTimePickerItemHover {
@@ -1020,6 +1059,8 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .wm_green .EmphasizedContent .wmeditor .dijitTextArea.dijitFocused:hover,
     .wm_green .EmphasizedContent .wmeditor .dijitComboBox.dijitFocused,
     .wm_green .EmphasizedContent .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_green .EmphasizedContent .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
+    .wm_green .EmphasizedContent .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents,
     .wm_green .EmphasizedContent .wmeditor .RichTextEditable.Focused iframe {
 	/* EmphasizedContent-EditorsFocus-Font */
 	color: #000000; /* EmphasizedContent-EditorsFocus-Font_Color */
@@ -1040,15 +1081,15 @@ body .wm_green .dialogfooter .wmbutton:hover {
    *              button. 
    ************************************************************************************************/
 .wm_green .HeaderContent .wmeditor .dijitSpinner .dijitArrowButton,
-.wm_green .HeaderContent .wmeditor .dijitComboBox .dijitArrowButton {
+.wm_green .HeaderContent .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_green .HeaderContent .wmeditor .dijitSelect .dijitArrowButton {
     background-color: #666666; /* HeaderContent-ClickablesDefault-Background_Color */
-    background-image: none;
-    height: 100% !important;
 }
     /* BEGIN inner content panel editors */
     .wm_green .HeaderContent .wmeditor .dijitTextBox,
     .wm_green .HeaderContent .wmeditor .dijitTextArea,
     .wm_green .HeaderContent .wmeditor .dijitComboBox,
+    .wm_green .HeaderContent .wmeditor .dijitSelect .dijitButtonContents,
     .wm_green .HeaderContent .dijitTimePickerItem,
     .wm_green .HeaderContent .wmeditor .RichTextEditable iframe {
 	/* HeaderContent-EditorsDefault-Border */
@@ -1068,6 +1109,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .wm_green .HeaderContent .wmeditor .dijitTextBox.dijitHover,
     .wm_green .HeaderContent .wmeditor .dijitTextArea:hover,
     .wm_green .HeaderContent .wmeditor .dijitComboBox.dijitHover,
+    .wm_green .HeaderContent .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
     .wm_green .HeaderContent .wmeditor .RichTextEditable:hover iframe,
     .wm_green .HeaderContent .dijitTimePickerMarker.dijitTimePickerMarkerHover,
     .wm_green .HeaderContent .dijitTimePickerItem.dijitTimePickerItemHover {
@@ -1086,6 +1128,8 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .wm_green .HeaderContent .wmeditor .dijitTextArea.dijitFocused:hover,
     .wm_green .HeaderContent .wmeditor .dijitComboBox.dijitFocused,
     .wm_green .HeaderContent .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_green .HeaderContent .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
+    .wm_green .HeaderContent .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents,
     .wm_green .HeaderContent .wmeditor .RichTextEditable.Focused iframe {
 	/* HeaderContent-EditorsFocus-Font */
 	color: #000000; /* HeaderContent-EditorsFocus-Font_Color */
@@ -1270,7 +1314,7 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .wm_green .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over, 
     .dj_ie6 .wm_green .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* MainContent-ClickablesActive-Background */
-	background-color: #5e7f11  !important; /* MainContent-ClickablesActive-Background_Color */
+	background-color: #5e7f11 !important; /* MainContent-ClickablesActive-Background_Color */
 	/* MainContent-ClickablesActive-Font */
 	color: #ffffff; /* MainContent-ClickablesActive-Font_Color */
     }
@@ -1303,11 +1347,13 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .wm_green .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
     .wm_green .EmphasizedContent div.dojoxGridRow.dojoxGridRowSelected, 
     .wm_green .EmphasizedContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+    .wm_green .EmphasizedContent div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver, 
+    .wm_green .EmphasizedContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
     .wm_green .EmphasizedContent .wmlist-item.wmlist-item-selected,
     .wm_green .EmphasizedContent .wmlist-item.wmlist-item-selected.wmlist-item-over,
     .dj_ie6 .wm_green .EmphasizedContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* EmphasizedContent-ClickablesActive-Background */
-	background-color: #9c9b46  !important; /* EmphasizedContent-ClickablesActive-Background_Color */
+	background-color: #9c9b46 !important; /* EmphasizedContent-ClickablesActive-Background_Color */
 	/* EmphasizedContent-ClickablesActive-Font */
 	color: #ffffff; /* EmphasizedContent-ClickablesActive-Font_Color */
     }
@@ -1339,11 +1385,13 @@ body .wm_green .dialogfooter .wmbutton:hover {
     .wm_green .HeaderContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
     .wm_green .HeaderContent div.dojoxGridRow.dojoxGridRowSelected, 
     .wm_green .HeaderContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+    .wm_green .HeaderContent div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver, 
+    .wm_green .HeaderContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
     .wm_green .HeaderContent .wmlist-item.wmlist-item-selected,
     .wm_green .HeaderContent .wmlist-item.wmlist-item-selected.wmlist-item-over,
     .dj_ie6 .wm_green .HeaderContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
 	/* HeaderContent-ClickablesActive-Background */
-	background-color: #999999  !important; /* HeaderContent-ClickablesActive-Background_Color */
+	background-color: #999999 !important; /* HeaderContent-ClickablesActive-Background_Color */
 	/* HeaderContent-ClickablesActive-Font */
 	color: #000000; /* HeaderContent-ClickablesActive-Font_Color */
     }
@@ -1649,7 +1697,7 @@ body .wm_green .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelected
    ************************************************************************************************/
 body.wm_green ul.dijitMenu .dijitMenuItem,
 body .wm_green ul.dijitMenu .dijitMenuItem,
-body.wm_default div.dijitMenu .dijitCalendarMonthLabel {
+body.wm_green div.dijitMenu .dijitCalendarMonthLabel {
     /* Tables-EvenRows-Font */
     color: #000000; /* Tables-EvenRows-Font_Color */
     /* Tables-EvenRows-Background */
@@ -1663,8 +1711,8 @@ body.wm_green  ul.dijitMenu .dijitMenuItem.dijitMenuItemHover,
 body .wm_green ul.dijitMenu .dijitMenuItem.dijitMenuItemHover,
 body.wm_green  ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected,
 body .wm_green ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected,
-body.wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover,
-body .wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
+body.wm_green div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover,
+body .wm_green div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
     /* Document-ClickablesHover-Font */
     color: #000000; /* Document-ClickablesHover-Font_Color */
     /* Document-ClickablesHover-Background */
@@ -1722,7 +1770,10 @@ body .wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
 }
 .wm_green .wmtablayers-tab.wmtablayers-selected,
 .wm_green .wmtablayers-tab.wmtablayers-selected:hover,
-.wm_green .wmtablayers-tab.wmtablayers-selected:focus {
+.wm_green .wmtablayers-tab.wmtablayers-selected:focus,
+.wm_green .wmtablayers-verticaltab.wmtablayers-selected,
+.wm_green .wmtablayers-verticaltab.wmtablayers-selected:hover,
+.wm_green .wmtablayers-verticaltab.wmtablayers-selected:focus {
     -moz-box-shadow: 0px 0px 0px #444444; /* wm.TabLayers-Active-BorderStyle_Shadow */
     -webkit-box-shadow: 0px 0px 0px #444444; /* wm.TabLayers-Active-BorderStyle_Shadow */
     box-shadow: 0px 0px 0px #444444; /* wm.TabLayers-Active-BorderStyle_Shadow */
@@ -1739,7 +1790,35 @@ body .wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
 	border-radius-topleft: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
 	border-radius-topright: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
 }
+.wm_green button.wmtablayers-verticaltab {
+    /* wm.TabLayers-BorderStyle_Shadow */
+    -moz-box-shadow: 1px 0px 1px #444444; /* wm.TabLayers-BorderStyle_Shadow */
+    -webkit-box-shadow: 1px 0px 1px #444444; /* wm.TabLayers-BorderStyle_Shadow */
+    box-shadow: 1px 0px 1px #444444; /* wm.TabLayers-BorderStyle_Shadow */
+    font-size: 9; /* wm.TabLayers-Button_TextSize */
+    width: 95%;
+    margin-left: 5%;
+}
+.wm_green .wmtablayers-verticaltab:hover, .wm_green .wmtablayers-verticaltab:focus {
+    /* wm.TabLayers-HoverShadow */
+    -moz-box-shadow: 0px 0px 0px #444444; /* wm.TabLayers-Hover-BorderStyle_Shadow */
+    -webkit-box-shadow: 0px 0px 0px #444444; /* wm.TabLayers-Hover-BorderStyle_Shadow */
+    box-shadow: -2px 2px 2px #444444;   /* wm.TabLayers-Hover-BorderStyle-Shadow */
+}
+/* Spacing between each tab */
+.wm_green .wmtablayers-verticaltab.wmtablayers-selected,
+.wm_green .wmtablayers-verticaltab.wmtablayers-verticaltab {
+    margin-bottom: 5px;
+	/* Document-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius-bottomleft: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius-topleft: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-bottom-left-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-top-left-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	border-radius-bottomleft: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	border-radius-topleft: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+}
     /* Tab <input type='button'> elements need to handle browser focus as any other button */
+    .wm_green .wmtablayers-verticaltab:focus,
     .wm_green .wmtablayers-tab:focus {
 	outline-width: 0;
     }
@@ -1931,7 +2010,8 @@ body.wm_green {
         background-image: none !important;
     }
     /* Tab buttons */
-    .wm_green button.wmtablayers-tab {
+    .wm_green button.wmtablayers-tab,
+    .wm_green button.wmtablayers-verticaltab {
 	/* Document-ClickablesDefault-Font */
 	font-family: Verdana; /* Document-ClickablesDefault-Font_Family */
 	color: #ffffff; /* Document-ClickablesDefault-Font_Color */
@@ -1944,16 +2024,26 @@ body.wm_green {
 	/* Document-ClickablesDefault-Border */
 	border-bottom-color: transparent;
 	border-top-color: #444444; /* Borders-Clickable_Border_Color */
-	border-right-color: #444444; /* Borders-Clickable_Border_Color */
 	border-left-color: #444444; /* Borders-Clickable_Border_Color */
         /* editting this is problematic without also editting headerHeight */
     border-width: 2px;
     border-style: solid;
     }
+    .wm_green button.wmtablayers-tab {
+	border-bottom-color: transparent;
+	border-right-color: #444444; /* Borders-Clickable_Border_Color */
+    }
+    .wm_green button.wmtablayers-verticaltab {
+	border-right-color: transparent;
+	border-bottom-color: #444444; /* Borders-Clickable_Border_Color */
+    }
     .dj_ie6 .wm_green .wmtablayers-tab {
         background-image: none !important;
     }
-    .wm_green .wmtablayers-tab:hover, .wm_green .wmtablayers-tab:focus {
+    .wm_green .wmtablayers-tab:hover, 
+    .wm_green .wmtablayers-tab:focus,
+    .wm_green .wmtablayers-verticaltab:hover, 
+    .wm_green .wmtablayers-verticaltab:focus {
 	/* Document-ClickablesHover-Font */
 	color: #000000; /* Document-ClickablesHover-Font_Color */
 	/* Document-ClickablesHover-Background */
@@ -1966,7 +2056,10 @@ body.wm_green {
     .dj_ie6 .wm_green .wmtablayers-tab.wmtablayers-selected,
     .wm_green .wmtablayers-tab.wmtablayers-selected,
     .wm_green .wmtablayers-tab.wmtablayers-selected:hover,
-    .wm_green .wmtablayers-tab.wmtablayers-selected:focus {
+    .wm_green .wmtablayers-tab.wmtablayers-selected:focus,
+    .wm_green .wmtablayers-verticaltab.wmtablayers-selected,
+    .wm_green .wmtablayers-verticaltab.wmtablayers-selected:hover,
+    .wm_green .wmtablayers-verticaltab.wmtablayers-selected:focus {
 	/* Document-ClickablesActive-Font */
 	color: #000000; /* Document-ClickablesActive-Font_Color */
 	/* Document-ClickablesActive-Background */
@@ -1983,7 +2076,9 @@ body.wm_green {
     /* BEGIN SECTION wm.WizardLayers */
     /* Custom formatting for wizard tab with focus or hover on the <input type='button'/> */
     .wm_green .wmwizardlayers-tab:focus,
-    .wm_green .wmwizardlayers-tab:hover {
+    .wm_green .wmwizardlayers-tab:hover,
+    .wm_green .wmwizardlayers-verticaltab:focus,
+    .wm_green .wmwizardlayers-verticaltab:hover {
 	color: black; /* Custom mouseover color */
     }
     /* END SECTION wm.WizardLayers */
@@ -2176,7 +2271,9 @@ body.wm_green {
     /* BEGIN SECTION wm.WizardLayers */
     /* TODO: Enable this property */
     .wm_green .MainContent .wmwizardlayers-tab:focus,
-    .wm_green .MainContent .wmwizardlayers-tab:hover {
+    .wm_green .MainContent .wmwizardlayers-tab:hover,
+    .wm_green .MainContent .wmwizardlayers-verticaltab:focus,
+    .wm_green .MainContent .wmwizardlayers-verticaltab:hover
 	color: black; /* wm.WizardLayers-Active_Color */
     }
     /* END SECTION wm.WizardLayers */
@@ -2344,7 +2441,9 @@ body.wm_green {
     /* BEGIN SECTION wm.WizardLayers */
     /* TODO: Enable this property */
     .wm_green .EmphasizedContent .wmwizardlayers-tab:focus,
-    .wm_green .EmphasizedContent .wmwizardlayers-tab:hover {
+    .wm_green .EmphasizedContent .wmwizardlayers-tab:hover,
+    .wm_green .EmphasizedContent .wmwizardlayers-verticaltab:focus,
+    .wm_green .EmphasizedContent .wmwizardlayers-verticaltab:hover {
 	color: black; /* wm.WizardLayers-Active_Color */
     }
     /* END SECTION wm.WizardLayers */
@@ -2511,7 +2610,9 @@ body.wm_green {
     /* BEGIN SECTION wm.WizardLayers */
     /* TODO: Enable this property */
     .wm_green .HeaderContent .wmwizardlayers-tab:focus,
-    .wm_green .HeaderContent .wmwizardlayers-tab:hover {
+    .wm_green .HeaderContent .wmwizardlayers-tab:hover,
+    .wm_green .HeaderContent .wmwizardlayers-verticaltab:focus,
+    .wm_green .HeaderContent .wmwizardlayers-verticaltab:hover {
 	color: black; /* wm.WizardLayers-Active_Color */
     }
     /* END SECTION wm.WizardLayers */

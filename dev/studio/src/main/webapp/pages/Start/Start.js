@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2009-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 dojo.declare("Start", wm.Page, {
         i18n: true,
 	start: function() {
+
 	    this.copyright.setHtml(this.copyright.html + wm.studioConfig.studioVersion);
 		this.subscribe("wm-project-changed", this, "update");
 		this.existingProjectList.connect(this.existingProjectList, "onformat", this, "existingProjectListFormatCell");
@@ -131,6 +132,7 @@ dojo.declare("Start", wm.Page, {
 		data.push({dataValue: this.projectList[i]});
 	    }
 	    app.projectListVar.setData(data);
+	    this.projectSearch.setDataValue("");
 	},
 	existingProjectListFormatCell: function(inDataInfo) {
 		var di = inDataInfo;

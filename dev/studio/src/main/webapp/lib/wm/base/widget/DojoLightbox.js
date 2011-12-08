@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -72,6 +72,8 @@ dojo.declare("wm.DojoLightbox", wm.Component, {
 		this.createDojoObj();	
 	},
 	destroy: function(){
+	    delete this.variable;
+	    delete this.dataSet;
 		this.inherited(arguments);
 		this.destroyDojoObj();
 	},
@@ -127,7 +129,7 @@ dojo.declare("wm.DojoLightbox", wm.Component, {
 		return this.variable;
 	},
 	setDataSet: function (inValue, inDefault){
-		this.variable = inValue;
+		this.variable = this.dataSet = inValue;
 		this.renderDojoObj();
 	},
 	setImageUrlField: function(inValue){
@@ -144,15 +146,17 @@ dojo.declare("wm.DojoLightbox", wm.Component, {
 	},
 	update: function(){
 		this.show();
-	}
+	},
+
+    _end:0
 });
 
 // design only...
 wm.Object.extendSchema(wm.DojoLightbox, {
 	variable: {ignore: 1},
-	dataSet: {bindable: 1, group: "edit", order: 10, isList: true},
-	imageUrlField:{group: "edit", order: 20},
-	imageLabelField:{group: "edit", order: 30}
+        dataSet: {bindTarget: 1, group: "edit", order: 10, isList: true, type: "wm.Variable", createWire: 1, editor: "wm.prop.DataSetSelect", editorProps: {listMatch: true, widgetDataSets: true, allowAllTypes: true}},
+	imageUrlField:{group: "edit", order: 20, editor:"wm.prop.FieldSelect", editorProps: {}},
+	imageLabelField:{group: "edit", order: 30, editor:"wm.prop.FieldSelect", editorProps: {}}
 });
 
 wm.DojoLightbox.description = "A dojo Lightbox.";

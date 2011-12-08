@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2010-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 	  dojo.addOnLoad(dojo.hitch(this, "renderDojoObj"));
 	},
 	createAddDialog: function(){
-		this.addDialog = new dijit.TooltipDialog({}, "tt");
+		this.addDialog = new dijit.TooltipDialog({});
 		this.addDialog.startup();
 		var dom = this.addDialog.containerNode;
                 dojo.require("wm.base.widget.Editors.Select");
@@ -65,7 +65,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 						   "display":"Select",
 						   "readonly":false,
 						   "width":"250px", 
-						   captionSize:"80px", 
+						   captionSize:wm.getDictionaryItem("wm.Dashboard.ADD_DIALOG_SELECT_CAPTION_SIZE"),
 						   required: true, 
 						   isRelativePositioned:true});
 		dom.appendChild(this.selectEditor.domNode);
@@ -80,7 +80,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 	    /* TODO: Localize */
 	    this.cancelButton = new wm.Button({owner: this,
 					       "height":"100%",
-					       "width":"60px",
+					       "width":wm.getDictionaryItem("wm.Dashboard.ADD_DIALOG_CANCEL_WIDTH"),
 					       "caption": wm.getDictionaryItem("wm.Dashboard.ADD_DIALOG_CANCEL_CAPTION"),
 					       isRelativePositioned:true}); //, {"onclick":'onCancelClick'});
 		panel.appendChild(this.okButton.domNode);

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -326,7 +326,9 @@ wm.cancelJob = function(inName) {
 	clearTimeout(wm._jobs[inName]);
 }
 wm._jobs = {};
-
+wm.hasJob = function(inName) {
+    return Boolean(wm._jobs[inName]);
+}
 wm.connectEvents = function(inObject, inNode, inEvents) {
 	// FIXME: maybe remove this at some point
 	if (!dojo.isArray(inEvents)){throw("wm.connectEvents: event list must be an array (did you use variable args?)")};
@@ -511,15 +513,12 @@ wm.isInstanceType = function(obj, type){
 
 wm.isClassInstanceType = function(inClass, type) {
     try {
-        return inClass.prototype instanceof type;
+        return type && inClass.prototype instanceof type;
     } catch(e) {}
     return false;
 }
 wm.isInstanceType = function(obj, type){
-    try {
-        return obj instanceof type;
-    } catch(e) {}
-    return false;
+    return type && obj instanceof type;
 }
 /* Obsolete with dojo 1.4 
 wm.isClassInstanceType = function(inClass, type) {

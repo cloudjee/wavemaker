@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -38,6 +38,7 @@ dojo.declare("wm.Layer", wm.Container, {
 		parent.decorator.tabsControl.setShowing(parent.getVisibleLayerCount() > 1);
 	},
 	init: function() {
+
 		this.inherited(arguments);
 		// bc
 		if (this.title) {
@@ -49,7 +50,9 @@ dojo.declare("wm.Layer", wm.Container, {
 			dojo.addClass(this.domNode, "wmlayer");
             this.setBorder(this.parent.clientBorder);
             this.setBorderColor(this.parent.clientBorderColor);
+
 	},
+
 	// FIXME: override so that we do not remove and re-add layer
 	// this is nasty but avoids dealing with layer order changing
 	setName: function(inName) {
@@ -122,7 +125,9 @@ dojo.declare("wm.Layer", wm.Container, {
 	},
     // called onDeactivate rather than onHide as its not meant to indicate when its no longer visible; only when its no
     // longer the active Layer in its parent
-        onDeactivate: function() {},
+        onDeactivate: function() {
+	    this.callOnHideParent();
+	},
         onCloseOrDestroy: function() {},
         customCloseOrDestroy: function() {},
     /* Only valid for layers within a TabLayers */
@@ -176,7 +181,16 @@ dojo.declare("wm.Layers", wm.Container, {
 	    else
 		this.setHeaderHeight('20px');
             // vertical defaults to justified; once we get rid of justified, we can remove this property
-	    this.client = new wm.Panel({isRelativePositioned:this.isRelativePositioned, border: 0, name: "client", parent: this, owner: this, height: "100%", width: "100%",  flags: {notInspectable: true, bindInspectable: true}}); // bindInspectable means the user can see it as a container to open in the bind inspector 
+	    this.client = new wm.Panel({isRelativePositioned:this.isRelativePositioned, 
+					border: 0, 
+					name: "client", 
+					parent: this, 
+					owner: this, 
+					height: "100%", 
+					width: "100%", 
+					verticalAlign: "top",
+					horizontalAlign: "left",
+					flags: {notInspectable: true, bindInspectable: true}}); // bindInspectable means the user can see it as a container to open in the bind inspector 
 	    this.inherited(arguments);
             this._isDesign = this.isDesignLoaded();
 	    if (this._isDesign) {
@@ -236,6 +250,17 @@ dojo.declare("wm.Layers", wm.Container, {
 		if (o)
 			return o.createComponent(defName, "wm.Layer", props);
 	},
+    addPageContainerLayer: function(inPageName, inCaption) {
+	var layer = this.createLayer(inCaption);
+	new wm.PageContainer({owner: this.owner,
+			      name: this.owner.getUniqueName(layer.name + "PageContainer"),
+			      width: "100%",
+			      height: "100%",
+			      pageName: inPageName,
+			      deferLoad: false});
+	return layer;
+    },
+
         themeStyleType: "",
         setThemeStyleType: function(inMajor) {
 	    this.themeStyleType = inMajor;
@@ -280,11 +305,13 @@ dojo.declare("wm.Layers", wm.Container, {
 	},
 	removeWidget: function(inWidget) {
 		if (inWidget instanceof wm.Layer) {
+		    var isActive = inWidget.isActive();
 			var i = this.indexOfLayer(inWidget);
 			this.layers.splice(i, 1);
 			this.setCaptionMapLayer(inWidget.caption, null);
 			this.decorator.undecorateLayer(inWidget, i);
 			this.client.removeWidget(inWidget);
+		    /*
 		    var found = false;
 		    for (j = 0; j < this.layers.length; j++) {
 			if (this.layers[j].active) {
@@ -294,6 +321,15 @@ dojo.declare("wm.Layers", wm.Container, {
 		    }
 		    if (!found)
 			this.setLayerIndex(this.layers.length == 0 ? -1 : (i > 0 ? i - 1 : 0));
+			*/
+		    if (isActive && !this._isDestroying && this.layers.length) {
+			if (this.layers.length > i) {
+			    this.layerIndex = -1;
+			    this.setLayerIndex(i);
+			} else {
+			    this.setLayerIndex(i-1);
+			}
+		    }
 		} else {
 			this.inherited(arguments);
 		}
@@ -375,31 +411,31 @@ dojo.declare("wm.Layers", wm.Container, {
 		wm.fire(inLayer.decorator, "deactivateLayer", [inLayer]);
 	        inLayer.onDeactivate();
 	},
-	setLayerIndex: function(inIndex) {
-		if (inIndex == this.layerIndex)
-			return;
-		var
-			fireEvents = !this.loading,
-	                oldLayer = this.layers[this.layerIndex];
-			l = this.getLayer(inIndex);
-		if (fireEvents) {
-			var info = {newIndex: inIndex, canChange: l && l.showing};
-			this.oncanchange(info);
-			if (info.canChange === false)
-				return;
-			inIndex = info.newIndex;
-		}
-		if (inIndex < 0 || inIndex > this.getCount()-1)
-			return;
+	setLayerIndex: function (inIndex) {
+	    if (inIndex == this.layerIndex) return;
+	    var fireEvents = !this.loading;
+	    var oldLayer = this.layers[this.layerIndex];
+	    var l = this.getLayer(inIndex);
+	    if (fireEvents) {
+	        var info = {
+	            newIndex: inIndex,
+	            canChange: l && l.showing
+	        };
+	        this.oncanchange(info);
+	        if (info.canChange === false) return;
+	        inIndex = info.newIndex;
+	    }
+	    if (inIndex < 0 || inIndex > this.getCount() - 1) return;
 
-		this._setLayerIndex(inIndex);
-		if (fireEvents) {
-			l && l.onShow();
-		        oldLayer && oldLayer.onDeactivate();
-		}
-		if (fireEvents && this.lastLayerIndex != this.layerIndex)
-			this.onchange(this.layerIndex);
+	    this._setLayerIndex(inIndex);
+	    if (fireEvents) {
+	        l && l.onShow();
+	        oldLayer && oldLayer.onDeactivate();
+	    }
+	    if (fireEvents && this.lastLayerIndex != this.layerIndex) this.onchange(this.layerIndex);
 	},
+	
+
 	_setLayerIndex: function(inIndex) {
 	    this.lastLayerIndex = this.layerIndex;
 	    this.layerIndex = inIndex;
@@ -520,7 +556,7 @@ dojo.declare("wm.Layers", wm.Container, {
 	// used only by Tabs
 	headerHeight: "27px",
 	setHeaderHeight: function(inHeight) {
-		if (this.layersType != 'Tabs' && this.layersType != "RoundedTabs")
+	    if (this.layersType != 'Tabs' && this.layersType != "RoundedTabs" && this.layersType != "Wizard")
 			return;
 		this.headerHeight = inHeight;
 		this.decorator && this.decorator.tabsControl && this.decorator.tabsControl.setHeight(inHeight);
@@ -585,6 +621,12 @@ dojo.declare("wm.TabLayers", wm.Layers, {
        themeStyleType: "ContentPanel",
        layersType: 'Tabs',
        conditionalTabButtons: false,
+       verticalButtons: false,
+        headerWidth: "50px",
+        setHeaderHeight: function(inHeight) {
+	    this.headerHeight = inHeight;
+	    this.c$[0].setHeight(inHeight);
+	},
 	addLayer: function(inCaption) {
 	    var result = this.inherited(arguments);
 	    if (!this._cupdating && !this.owner._loadingPage)
@@ -599,10 +641,10 @@ dojo.declare("wm.TabLayers", wm.Layers, {
 		this.decorator.tabsControl.setShowing(this.getVisibleLayerCount() > 1);
 	},
     // onClose handles both destroy and close as long as it came from clicking the close icon in the tab button
-    onClose: function(inLayer) {
+    onCloseOrDestroy: function(inLayer) {
 
     },
-    customClose: function(inLayer) {
+    customCloseOrDestroy: function(inLayer) {
 
     }
 /*,
@@ -643,8 +685,11 @@ dojo.declare("wm.AccordionLayers", wm.Layers, {
 	}
     },
     addLayer: function() {
-        this.inherited(arguments);
-        this.setLayerBorder(this.layerBorder);
+        var result = this.inherited(arguments);
+        result.setBorder(this.layerBorder);
+        result.setBorderColor(this.layerBorderColor);
+	return result;
+	return result;
     }
 });
 
@@ -667,11 +712,22 @@ dojo.declare("wm.WizardLayers", wm.Layers, {
     themeStyleType: "ContentPanel",
     layersType: 'Wizard',
     transition: "fade",
+    headerWidth: "50px",
+    verticalButtons: false,
+    bottomButtons: "",
     //useDesignBorder: 0,
     init: function() {
+	this.generateBottomButtonEvents();
+
 	this.inherited(arguments);
 	this.decorator.addFooter();
 	this.connect(this.domNode, "keydown", this, "keydown");
+    },
+    generateBottomButtonEvents: function() {
+	var bottomButtons = this.bottomButtons ? this.bottomButtons.split(/\s*,\s*/) : [];
+	for (var i = 0; i < bottomButtons.length; i++) {
+	    this["onBottom" + i + "Button"] = function() {}; // gives event handler something to connect to
+	}
     },
     keydown: function(e) {
 	var keyCode = e.keyCode;
@@ -682,10 +738,10 @@ dojo.declare("wm.WizardLayers", wm.Layers, {
 	}
 	return true;
     },
-    onCancelClick: function(inSender) {
+    onCancelClick: function() {
 
     },
-    onDoneClick: function(inSender) {
+    onDoneClick: function() {
 
     },
     /* This should really be an event of wm.Layer, but we should first discuss whether we want form

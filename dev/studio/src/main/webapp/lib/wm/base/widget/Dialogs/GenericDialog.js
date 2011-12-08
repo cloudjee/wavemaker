@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -177,10 +177,11 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
         if (this.buttonBar)
 	    this.buttonBar.setShowing(this.button1Caption || this.button2Caption || this.button3Caption || this.button4Caption);
     },
-    onEnterKeyPress: function(inText) {
+    onEnterKeyPress: function(inText, inEvent) {
         if (this.enterKeyIsButton1) {
             if (this.button1Close) this.dismiss();
             this.onButton1Click(this.button1, inText);
+	    dojo.stopEvent(inEvent);
         }
     },
     buttonClick: function(inSender) {

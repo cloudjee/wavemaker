@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,7 +20,10 @@
     /* Documentation; Help Menu */
     URL_TUTORIALS: "http://dev.wavemaker.com/wiki/bin/wmdoc_${studioVersionNumber}/Tutorials",
     URL_DOCS: "http://dev.wavemaker.com/wiki/bin/wmdoc_${studioVersionNumber}/",
+    URL_STYLE_DOCS: "http://dev.wavemaker.com/wiki/bin/wmdoc_${studioVersionNumber}/StylingWidgets",
+    URL_PATCHES: "http://dev.wavemaker.com/wiki/bin/wmdoc_${studioVersionNumber}/patches${studioSubVersionNumber}",
     URL_PROPDOCS: "http://dev.wavemaker.com/wiki/bin/wmjsref_${studioVersionNumber}/",
+    URL_EDIT_PROPDOCS: "http://dev.wavemaker.com/wiki/bin/inline/wmjsref_${studioVersionNumber}/",
     URL_FORUMS: "http://dev.wavemaker.com/forums",
     "MENU_ITEM_TUTORIALS" : "Tutorials",
     "MENU_ITEM_DOCS" : "Documentation",
@@ -128,9 +131,9 @@
     "wm.PopupMenuButton.MENU_DESIGNER_TITLE":"Edit Menu",
     "wm.DojoMenu.MENU_DESIGNER_TITLE": "Edit Menu",
     "wm.PopupMenu.DEFAULT_STRUCTURE": 
-        '[{label: "File",	children: [{label: "Save"},{label: "Close"}]},' +
-	'{label: "Edit",	children: [{label: "Cut"}, {label: "Copy"},{label: "Paste"}]},' +
-        '{label: "Help"}]',
+        [{label: "File",	children: [{label: "Save"},{label: "Close"}]},
+	{label: "Edit",	children: [{label: "Cut"}, {label: "Copy"},{label: "Paste"}]},
+        {label: "Help"}],
 
     /* wm.ContextMenuDialog */
     "wm.ContextMenuDialog.DELETE_LABEL": 'Delete', 
@@ -138,6 +141,7 @@
     "wm.ContextMenuDialog.SHOW_LESS": '<< Hide Advanced Properties',
 
     /* wm.Dashboard */
+    "wm.Dashboard.CAPTION_ADD_PORTLET": "Add Portlet",
     "wm.Dashboard.CONTEXT_MENU_TITLE": "Configure Portlets",
     "wm.Dashboard.CONFIG_DIALOG_OPEN_FIELD": "Default",
     "wm.Dashboard.CONFIG_DIALOG_TITLE_FIELD": "Title",
@@ -197,7 +201,9 @@
     "wm.EditPanel.UPDATE_CAPTION": "Update",
     "wm.EditPanel.DELETE_CAPTION": "Delete",
 
-
+    "wm.ServiceForm.UPDATE_CAPTION": "Edit",
+    "wm.DBForm.DIALOG_TITLE": "Setup Your Form",
+    "wm.DBForm.RESET_CAPTION": "Reset",
     "wm.EditArea.ENTER_LINE_NUMBER": "Enter line number"    ,
 
     /* Editors */
@@ -318,7 +324,7 @@
     CONFIRM_OPEN_PAGE : "Before opening ${newPage}, do you want to save ${oldPage}?",
 
     ALERT_UPGRADE_HEADING: "\n\nImportant messages regarding your upgrade:\n",
-    ALERT_BACKUP_OLD_PROJECT: "Your project has been upgraded.  A backup of your old project is available at:${filePath}\n",
+    ALERT_BACKUP_OLD_PROJECT: "Your project has been upgraded.  A backup of your old project is available at: ${filePath}\n",
     THROW_PROJECT_NOT_FOUND: "Warning: Could not find ${projectPath}",
     SAVE_DIALOG_START_LABEL: "Starting save...",
     SAVE_DIALOG_UPDATE_MESSAGE: "Saving ${componentName}",
@@ -349,5 +355,11 @@
     "DATA_UTILS_FILE": "File",
     "DATA_UTILS_DATABASE_HELP": "Enter the name of the database on your database server",
     "DATA_UTILS_FILE_HELP": "Enter the name of the file in your project's webapproot/data folder. If the name is hrdb.script, just enter hrdb.",
-    "CONFIRM_SAVE_LANGUAGE": "You must save the project before changing the language; save and continue?"
+    "CONFIRM_SAVE_LANGUAGE": "You must save the project before changing the language; save and continue?",
+
+    "STUDIO_CONFIG_TOOL_NOT_RUN": "It looks like the studio configuration tool was never run; this is an important part of finishing the installation of studio; please click OK to run the configuration tool",
+
+    COMPILE_BUTTON_WIDTH: "100px",
+    RUN_BUTTON_WIDTH: "75px",
+    TEST_BUTTON_WIDTH: "75px"
 }

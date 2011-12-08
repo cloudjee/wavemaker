@@ -249,7 +249,7 @@ public class ResourceFileService {
         FileUploadResponse ret = new FileUploadResponse();
         try {
             Resource dir = getRequestedFile(path, true);
-            Resource outputFile = dir.createRelative(file.getOriginalFilename().replaceAll("[^a-zA-Z0-9.-_ ]", ""));
+            Resource outputFile = dir.createRelative(file.getOriginalFilename().replaceAll("[^a-zA-Z0-9.\\-_ ]", ""));
             FileCopyUtils.copy(file.getInputStream(), this.fileSystem.getOutputStream(outputFile));
             ret.setPath(outputFile.getDescription());
             ret.setError("");

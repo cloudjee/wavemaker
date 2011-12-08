@@ -656,7 +656,7 @@ public class ImportDB extends BaseDataModelSetup {
             try {
 
                 PrintWriter pw = new PrintWriter(sw);
-                r.write(pw);
+                r.write(pw, dialect);
                 pw.close();
 
                 if (DataServiceLoggers.importLogger.isDebugEnabled()) {

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -180,13 +180,7 @@ dojo.declare("wm.PropertyTree", wm.Tree, {
 	    this.buildSubTree(inParentNode);
 	}
     },
-    makePropEdit: function(inName, inValue, inDefault) {
-	switch (inName) {
-	case "configJson":
-	    return makeTextPropEdit(inName, inValue, inDefault, 15)
-	}
-	return this.inherited(arguments);
-    },
+
     select: function(inNode) {
 	if (this.selected != inNode) {
 	    this.deselect();

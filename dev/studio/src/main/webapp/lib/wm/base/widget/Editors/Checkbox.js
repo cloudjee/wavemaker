@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 
 dojo.provide("wm.base.widget.Editors.Checkbox");
 dojo.require("wm.base.widget.Editors.AbstractEditor");
+dojo.require("dijit.form.CheckBox");
 
 dojo.declare("wm.Checkbox", wm.AbstractEditor, {
     /* Formating */
@@ -89,24 +90,37 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 	    }
 	},
 	getDisplayValue: function() {
-		return this.getTypedValue(this.displayValue);
+	    return this.getDataValue();
 	},
 	setDisplayValue: function(inValue) {
 	},
 	getEditorValue: function() {
 	    var c = this.editor && this.editor.checked;
 	    var v = this.checkedValue;
+
 	    if (v === undefined)
 		v = this.getTypedValue(1);
-		return c ? v : this.makeEmptyValue();
+	    else
+		v = this.getTypedValue(v);
+	    return c ? v : this.makeEmptyValue();
 	},
+    makeEmptyValue: function() {
+	return this.getTypedValue(this.inherited(arguments));
+    },
 	getTypedValue: function(inValue) {
 		var v = inValue;
 		switch (this.dataType) {
 			case "string":
 				// return "" for all false values but 0 which is "0"
-				v = v || v === 0 ? v : "";
-				return String(v);
+		    if (v === false) 
+			v = "false";
+		    else if (v === 0)
+			v = "0";
+		    else if (!v)
+			v = "";
+		    else
+			v = String(v);
+		    return v;
 			case "number": 
 				// if not a number, return number value of boolean value
 				var n = Number(v);
@@ -125,13 +139,18 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
         updateReadonlyValue: function(){
 	},
 	setStartChecked: function(inChecked) {
-		this.startChecked = inChecked;
-		this.createEditor();
+	    this.startChecked = inChecked;
+	    this.createEditor();
 	},
+    set_startChecked: function(inChecked) {
+	this.dataValue = Boolean(inChecked);
+	this.setStartChecked(inChecked);
+    },
 	setDataType: function(inDataType) {
 		this.dataType = inDataType;
-		if (inDataType == "boolean")
-			this.displayValue = true;
+	    if (inDataType == "boolean") {
+		this.displayValue = true;
+	    }
 
 	    switch(inDataType) {
 		/* Anything can convert to a string */
@@ -146,7 +165,10 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 		break;
 	    case "boolean":
 		if (typeof this.checkedValue == "boolean") {
-		} else if (this.checkedValue == "true" || this.checkedValue == "false") {
+		} else if (this.checkedValue == "true") {
+		    this.checkedValue = true;
+		} else if (this.checkedValue == "false") {
+		    this.checkedValue = false;
 		} else {
 		    app.toastWarning(studio.getDictionaryItem("wm.Checkbox.TOAST_WARN_CHECKED_VALUE_NOT_A_BOOLEAN"));
 		}
@@ -177,34 +199,3 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 
 
 
-
-wm.Object.extendSchema(wm.Checkbox, {
-    dataValue: {ignore: 1, bindable: 1, group: "editData", order: 3, simpleBindProp: true, type: "Boolean"},
-        readOnlyCheckbox: {ignore: 1},
-        startChecked: { group: "editor", bindTarget: 1, type: "Boolean"},
-    dataType:  { group: "editData", doc: 1},
-	displayValue: {ignore: 1, writeonly: 1, type: "any" },
-    checkedValue: {group: "editor", bindTarget: 1,order: 40, type: "any", doc: 1},    
-    required: {ignore: 1},
-    getChecked: {group: "method", doc: 1, returns: "Boolean"},
-    setChecked: {group: "method", doc: 1}
-});
-
-wm.Checkbox.extend({
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "dataType":
-				return makeSelectPropEdit(inName, inValue, ["string", "boolean", "number"], inDefault);
-		}
-		return this.inherited(arguments);
-	},
-        setPropEdit: function(inName, inValue, inDefault) {
-	    switch (inName) {
-	    case "dataType":
-		var editor = dijit.byId("studio_propinspect_dataType");
-		if (editor) editor.set(inValue, false);
-		return true;
-	    }
-	    return this.inherited(arguments);
-	}
-});

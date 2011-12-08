@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ dojo.declare("PopupHelp", wm.Page, {
 	start: function() {
 	},
     onShow: function() {
-	this.deleteExtraButtons();
+
     },
     deleteExtraButtons: function() {
 	for (var i = this.buttonPanel.c$.length-1; i >= 0;  i--) {
@@ -53,6 +53,7 @@ dojo.declare("PopupHelp", wm.Page, {
 		   this.deleteExtraButtons();
 	       }
 	       var popuphelp = this;
+	     this.deleteExtraButtons();
                dojo.query(".SynopsisNavButtons a").forEach(function(synopsislink) {
 		     var newButton = new wm.Button({parent: popuphelp.buttonPanel, owner: popuphelp, caption: synopsislink.innerHTML, width: "100px"});
 		     dojo.connect(newButton, "onclick", null, function() {

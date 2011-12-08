@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -62,6 +62,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
         editorNode: null,
         isDirty: false,
         _lastValue: "",
+        _lastValueReported: "",
 
     /* Caption */
 	caption: "",
@@ -121,12 +122,12 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		if (this.captionPosition != "left")
 		  this.setCaptionPosition(this.captionPosition);
 	    this._inPostInit = true;
-	    this.editorChanged();
+	    this.displayValue = this.getDisplayValue();
+	    this.dataValue = this.getDataValue();
+	    this.valueChanged("displayValue", this.displayValue);
+	    this.valueChanged("dataValue", this.dataValue);
+	    //this.editorChanged();
 	    delete this._inPostInit;
-	},
-
-	afterPaletteDrop: function() {
-		this.setCaption(this.name);
 	},
 
 	setCaption: function(inCaption) {
@@ -166,7 +167,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	this.sizeEditor();
     },
     setCaptionPositionLF: function(inPosition) {
-	var liveform = this.isAncestorInstanceOf(wm.LiveFormBase);
+	var liveform = this.isAncestorInstanceOf(wm.LiveFormBase) || this.isAncestorInstanceOf(wm.FormPanel);
 	if (liveform) {
 	    this.setCaptionPosition(liveform.captionPosition);
 	    this.setCaptionSize(liveform.captionSize);
@@ -186,14 +187,18 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		this.updateReadOnlyNodeStyle();
     },
 	setDisabled: function(inDisabled) {
+	    inDisabled = Boolean(inDisabled);
 		var d = this.disabled;
 		this.inherited(arguments);
-	    if (d != this.disabled && this.editor) {
-		if (this.editor instanceof wm.Control)
+	    if (this.editor) {
+		if (this.editor instanceof wm.Control && d != this.editor.disabled) {
 		    this.editor.setDisabled(inDisabled);
-		else
+		    dojo[this.disabled ? "addClass" : "removeClass"](this.captionNode, "wmeditor-caption-disabled");
+		} else if (d != this.disabled) {
 		    this.editor.set("disabled", Boolean(inDisabled));
-		dojo[this.disabled ? "addClass" : "removeClass"](this.captionNode, "wmeditor-caption-disabled");
+		    dojo[this.disabled ? "addClass" : "removeClass"](this.captionNode, "wmeditor-caption-disabled");
+		}
+		
 	    }
 	    this.disabled = inDisabled;
 	},
@@ -208,6 +213,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    this.connect(this.helpNode, "onmouseover", this, function(e) {
 		wm.job(this.getRuntimeId() + ".helpText", 100, dojo.hitch(this, function() {
 		    var coords = dojo.coords(this.helpNode);
+		    //app.createToolTip(this.helpText, null, {mouseX: coords.x, mouseY: coords.y + coords.h});
 		    app.createToolTip(this.helpText, null, {mouseX: coords.x, mouseY: coords.y + coords.h});
 		}));
 	    });
@@ -248,7 +254,8 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
                 this.editor._onChangeHandle = null;
             }
 	    */
-		this.editorNode = this.editor.domNode;
+	/* this.editor.tagName is an IE safe way of doing this.editor instanceof Node */
+	        this.editorNode = this.editor.tagName ? this.editor : this.editor.domNode;
 		this.editorNode.style.margin = "0"; // failure to explicitly set these is throwing off my bounds calculations
 	        this.editorNode.style.padding = "0";
     	    this.stopTimerWithName("CreateDijit", this.declaredClass);
@@ -301,6 +308,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    if (this.captionNode)
 			dojo.style(this.captionNode, {position: "absolute"});
 	},
+
 	sizeEditor: function() {	     
 		if (this._cupdating)
 			return;
@@ -345,6 +353,8 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 			editorHeight =  (height - labelHeight);
 			labelWidth = (w) ? w  : "";
 			editorWidth = labelWidth;
+			if (this.helpText)
+			    labelWidth -= helpIconSize + helpIconMargin;
 		    }
 
 		    labelWidth = Math.round(labelWidth);
@@ -368,7 +378,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		     // if height changes, then lineHeight may have to change
 		    s.lineHeight = (s.lineHeight != "normal") ? s.height : "normal";
 		    var captionLeft = (position == "right") ? (bounds.w + bounds.l - labelWidthWithSpacing )  : bounds.l;
-		    if (position != "left" && allocateHelpIconSpace) 
+		    if (position == "right" && allocateHelpIconSpace) 
 			captionLeft -= helpIconSize + helpIconMargin ;
 		    s.left = captionLeft + "px";
 		    s.top  = (position == "bottom") ? (editorHeight + bounds.t - captionEditorSpacing) + "px" : bounds.t + "px"; 
@@ -401,6 +411,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 
                     } else {
 			var setnode = (e["domNode"]) ? e.domNode : e;
+
 			var s = setnode.style;
 
 			if (this.editorBorder && b.w && b.h) {
@@ -435,6 +446,8 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 			this.updateReadOnlyNodeStyle(b.h);
 
 		}
+	    this._editorHeight = b.h;
+	    this._editorWidth = b.w;
 	    if (this.helpText && this.helpNode) {
 		var s = this.helpNode.style;
 		s.top = (this.caption) ? (parseInt(this.captionNode.style.top) + (this.captionPosition == "bottom" ? 5 : 0)) + "px" : b.t + "px";
@@ -564,7 +577,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		this.onchange(this.getDisplayValue(), this.getDataValue());
 	}
     },
-    onchange: function() {},
+    onchange: function(inDisplayValue, inDataValue) {},
 	_getValidatorNode: function() {
 		var n = this.editor && this.editor.domNode.firstChild;
 		if (!n)
@@ -585,9 +598,11 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 
             // just because the editor doesn't have validation doesn't mean that the container won't need to validate the sum of all inputs
 		wm.job(this.getRuntimeId(), 25, dojo.hitch(this, function() {
+		    if (!this.isDestroyed) {
 			if (this.parent) 
 				wm.fire(this.parent, "validate");
 			this.valueChanged("invalid", this.getInvalid());
+		    }
 		}));
 	},
 	getEditorProps: function(inNode, inProps) {
@@ -597,17 +612,17 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		return !this.getInvalid();
 	}, 
 	getInvalid: function() {
-	        if (!this.validationEnabled()) return false;
-		if (this.editor && this.editor.isValid) {
-			if (this._isValid === undefined)
-				this._isValid = this.editor.isValid();
-			return !(this.readonly || this._isValid);
-		} else if (this.required && !this.readonly) {
-		    var value = this.getDataValue();
-		    if (value === undefined || value === null || value === "") {
-			return true;
-		    }
+	    var validationEnabled = this.validationEnabled();
+	    if (validationEnabled && this.editor && this.editor.isValid) { /* test for existence of isValid method */
+		if (this._isValid === undefined)
+		    this._isValid = this.editor.isValid();
+		return !(this.readonly || this._isValid);
+	    } else if (this.required && !this.readonly) {
+		var value = this.getDataValue();
+		if (value === undefined || value === null || value === "") {
+		    return true;
 		}
+	    }
 	},
         setInvalid: function() {
 	    this._isValid = false;
@@ -619,6 +634,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	},
         createReadOnlyNode: function() {
 	    var node = dojo.create("div");
+	    dojo.addClass(node, "wmeditor-readonlyNode");
 	    var readstyle = node.style;
 	    readstyle.lineHeight = "normal";
 	    readstyle.position = "absolute";
@@ -674,15 +690,18 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 
 	updateReadonlyValue: function(inValue) {
 	    if (this.readonly && this.readOnlyNode){
-		var value = inValue || this._getReadonlyValue();
-		if (this.$.format) {
-		    value = this.$.format.format(value);
+		var value;
+		if (this.$.format && this.$.format.declaredClass != "wm.DataFormatter") {
+		    value = this.$.format.format(inValue || this.getDataValue());
 		} else if (this.formatter && dojo.isFunction(this.owner[this.formatter])) {
 		    try {
-			value = this.owner[this.formatter](this, value);
+			value = this.owner[this.formatter](this, inValue || this.getDataValue());
 		    } catch(e) {
 			console.error("Formatter error in " + this.toString() + ": " + e);
 		    }
+		} 
+		if (value === undefined) {
+		    value = inValue || this._getReadonlyValue();
 		}
 		this.readOnlyNode.innerHTML = value;
 	    }
@@ -711,9 +730,11 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    
 		return (v || v === 0) ? v : this.makeEmptyValue();
 	},
+        normalizeDataValue: function(inValue) {return inValue;},
 	setEditorValue: function(inValue) {
 	    if (this.editor) {  // If using html widgets and replacing them with dijits use  if (this.editor && this.editor.declaredClass) {
 		inValue = inValue === undefined ? null : inValue;
+		inValue = this.normalizeDataValue(inValue);
 		var oldValue = this.editor.get('value');
 		this.editor.set('value',inValue, false);
 
@@ -721,9 +742,15 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		 * parameter to set("value"); we pass in false so we can maintain an easier to 
 		 * understand syncrhonous setting of values and triggering of side effects */
 		this.editor._lastValueReported = inValue ? inValue : "";
-		this.updateReadonlyValue();
-		if (oldValue != inValue)
+		if (oldValue != inValue) {
 		    this.changed();
+		} else if ((typeof inValue != "object" || inValue === null) && this.dataValue !== inValue) {
+		    this.displayValue = this.getDisplayValue();
+		    this.dataValue = this.getDataValue();
+		}
+
+		/* If updateReadonlyValue is called before this.changed, then this.dataValue will not yet have been set */
+		this.updateReadonlyValue();
 	    }
 	},
 	setDisplayValue: function(inValue) {
@@ -756,7 +783,9 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	},
 	setInitialValue: function() {
 	    this.beginEditUpdate();
-	    this.setEditorValue(wm.propertyIsChanged(this.dataValue, "dataValue", wm.Editor) ? this.dataValue : this.displayValue);
+	    try {
+		this.setEditorValue(wm.propertyIsChanged(this.dataValue, "dataValue", wm.Editor) ? this.dataValue : this.displayValue);
+	    } catch(e) {}
 	    this.endEditUpdate();
 	},
 
@@ -775,11 +804,17 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    }
 
 	    var dataValue = this.getDataValue();
-	    if (dataValue != this.dataValue) {		
+	    if (this.calcIsDirty(dataValue, this._lastValueReported)) {		
 		this.valueChanged("dataValue", this.dataValue = dataValue);
-		changed = true;
+		changed = true;		
+	    } else {
+		this.dataValue = dataValue; // its possible for _lastValueReported to not be stored in this.dataValue, though its probably just a special case for DataSet editors
 	    }
 	    if (changed) {
+		/* NOTE: editorChanged is called when the user types OR when setDataValue is called
+		 * _lastValue must NOT be updated if its caused by the user typing, so its cleared from
+		 * setDataValue instead.  But _inPostInit gets special treatment.
+		 */
 		if (this._inPostInit) {		
 		    this._lastValue = this.dataValue;
 		}
@@ -788,6 +823,14 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    return changed;
 		//wm.fire(this.editor, "ownerEditorChanged");
 	},    
+
+    calcIsDirty: function(val1, val2) {
+	if (val1 === undefined || val1 === null)
+	    val1 = "";
+	if (val2 === undefined || val2 === null)
+	    val2 = "";
+	return val1 != val2;
+    },
     clearDirty: function() {
 	this._lastValue = this.dataValue == null ? this.makeEmptyValue() : this.dataValue;
 	this.updateIsDirty();
@@ -795,7 +838,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
     updateIsDirty: function() {
 	var wasDirty = this.isDirty;
 	var isDirty = true;
-	if (this.dataValue == this._lastValue) {
+	if (!this.calcIsDirty(this.dataValue, this._lastValue)) {
 	    isDirty = false;
 	} else if ((this.dataValue === "" || this.dataValue === null || this.dataValue === undefined) &&
 		   (this._lastValue === "" || this._lastValue === null || this._lastValue === undefined)) {
@@ -808,19 +851,28 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    wm.fire(this.parent, "updateIsDirty");
     },
 	getDataValue: function() {
-		return this.isReady() ? this.getEditorValue() : this.dataValue;
+	    if (this.isReady()) {
+		return this.getEditorValue();
+	    } else if (this.dataValue === null || this.dataValue === undefined || this.dataValue === "") {
+		return this.makeEmptyValue();
+	    } else {
+		return this.dataValue;
+	    }
 	},
 	setDataValue: function(inValue) {
 	    // for simplicity, treat undefined as null
 	    if (inValue === undefined)
 		inValue = null;
-
-	    this._lastValue = this.dataValue = inValue instanceof wm.Variable ? inValue.getData() : inValue;
+/*
+	    this._lastValue  = inValue instanceof wm.Variable ? inValue.getData() : inValue;
 	    if (this._lastValue == null)
 	        this._lastValue = this.makeEmptyValue();
+		*/
 	    this.setEditorValue(inValue);
 	    if (inValue === "" || inValue === null) 
-		return this.resetState();
+		this.resetState();
+	    if (!this.isUpdating())
+		this.clearDirty(); // calls to setDataValue should always clear the dirty indicator and assume the input value is "Good"
 	},
 	isUpdating: function() {
 		return this._updating > 0;
@@ -854,14 +906,11 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		}
 	},
 	clear: function() {
-		this.beginEditUpdate();
 		//this.setEditorValue(null);
 	        this._lastValue = this.makeEmptyValue();
 
 	        this.setDataValue(null);  // changed from setEditorValue because setEditorValue does not handle readonly editor
 	        //this.resetState();  called by setDataValue now
-		this.endEditUpdate();
-		this.editorChanged();
 	},
 	// design time
 	listOwnerProperties: function() {
@@ -888,7 +937,9 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	valueChanged: function(inProp, inValue) {
 		if (this._updating)
 			return;
-		this.inherited(arguments);
+	    if (inProp == "dataValue")
+		this._lastValueReported = inValue;
+	    this.inherited(arguments);
 		//if (this.isDesignLoaded() && inProp)
 		//	this.createEditor();
 	},
@@ -916,7 +967,32 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		    this.invalidate();
 		}
 	},
-    onEnterKeyPress: function() {}
+    onEnterKeyPress: function() {},
+
+
+    toHtml: function(inWidth) {
+	var remainingWidth = inWidth - 4; // always seem to need a 4px buffer to avoid wrapping
+	var margin = "2px 4px 2px 4px";
+	remainingWidth -= 8; // margin for the wrapper div
+	remainingWidth -= 2; // border for the editor
+	var captionSize = 125;
+	var topToBottomLayout =  (remainingWidth - captionSize < 100 || this.captionPosition == "top" || this.captionPosition == "bottom");
+	if (this.caption && this.captionSize != "0px" && this.captionSize != "0%" && !topToBottomLayout) {
+	    var captionPadding = 4;
+	    var editorSize = remainingWidth - captionSize;
+	    return "<div class='wmeditor' id='" + this.domNode.id + "' style='margin: " + margin + ";'><div class='wmeditor-label' style='width:" + (captionSize-captionPadding) + "px;padding-right:" + captionPadding + "px;display:inline-block;'>" + this.caption + "</div><div class='wmeditor-value' style='display: inline-block;width:" + editorSize + "px'>" + (this.getDisplayValue() || "&nbsp;") + "</div></div>";
+	} else {
+	    var html = [];
+	    html.push("<div class='wmeditor' id='" + this.domNode.id + "' style='margin: " + margin + ";'>");
+	    if (this.caption && this.captionSize != "0px" && this.captionSize != "0%") {
+		html.push("<div class='wmeditor-label' >" + this.caption + "</div>");
+	    }
+	    html.push("<div class='wmeditor-value'>" + (this.getDisplayValue() || "&nbsp;") + "</div>");
+	    html.push("</div>");
+	    return html.join("\n");
+	}
+    }    
+
 });
 
 wm.AbstractEditor.captionPaddingWidth = 8;

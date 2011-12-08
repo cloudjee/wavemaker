@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,9 +18,7 @@ dojo.require("wm.base.widget.gadget.Gadget");
 
 
 dojo.declare("wm.gadget.Facebook", wm.Gadget, {});
-wm.Object.extendSchema(wm.gadget.Facebook, {
-    base_source: {ignore: 1}
-});
+
 
 /* For more info on the properties:
  * http://developers.facebook.com/docs/reference/plugins/like/ 
@@ -97,34 +95,16 @@ dojo.declare("wm.gadget.FacebookLikeButton", wm.gadget.Facebook, {
     setColorscheme: function(inValue) {
 	this.colorscheme = inValue;
 	this.updateSource();
-    },
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-		case "layout":
-			return makeSelectPropEdit(inName, inValue, ["standard", "button_count", "box_count"], inDefault);
-		case "action":
-			return makeSelectPropEdit(inName, inValue, ["like", "recommend"], inDefault);
-		case "font":
-		    return makeSelectPropEdit(inName, inValue, ["arial", "licida grande", "segoe ui", "tahoma", "trebuchet ms", "verdana"], inDefault);
-		case "colorscheme":
-		    return makeSelectPropEdit(inName, inValue, ["dark", "light"], inDefault);
-
-		}
-		return this.inherited(arguments);
-	}
-
+    }
 });
 
 
-wm.Object.extendSchema(wm.gadget.FacebookLikeButton, {
-    href: {bindTarget: true}
-});
 
 dojo.declare("wm.gadget.FacebookActivityFeed", wm.gadget.Facebook, {
     width: "200px",
     height: "400px",
     base_source: "http://www.facebook.com/plugins/activity.php",
-    site: "http://wavemaker.com", //URL to like; we may want to control this
+    site: "wavemaker.com", //URL to like; we may want to control this
     showHeader: true, // actual parameter is "header"
     font: "arial",
     colorscheme: "dark",
@@ -171,17 +151,5 @@ dojo.declare("wm.gadget.FacebookActivityFeed", wm.gadget.Facebook, {
     setColorscheme: function(inValue) {
 	this.colorscheme = inValue;
 	this.updateSource();
-    },
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-		case "font":
-		    return makeSelectPropEdit(inName, inValue, ["arial", "licida grande", "segoe ui", "tahoma", "trebuchet ms", "verdana"], inDefault);
-		case "colorscheme":
-		    return makeSelectPropEdit(inName, inValue, ["dark", "light"], inDefault);
-
-		}
-		return this.inherited(arguments);
-	}
-
+    }
 });
-

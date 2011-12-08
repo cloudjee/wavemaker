@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 
 dojo.provide("wm.base.widget.Editors.Radiobutton");
 dojo.require("wm.base.widget.Editors.Checkbox");
-
+dojo.require("dijit.form.RadioButton");
 
 
 
@@ -218,9 +218,3 @@ dojo.declare("wm.RadioButton", wm.Checkbox, {
 });
 
 
-
-wm.Object.extendSchema(wm.RadioButton, {
-    checkedValue: {group: "editor", bindTarget: 1,order: 40, type: "any", doc: 1},
-    groupValue: { ignore: 1, bindSource: 1, type: "any"},
-    radioGroup: { type: "string", group: "editor", order: 50,doc: 1}
-});

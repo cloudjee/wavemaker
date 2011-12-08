@@ -216,6 +216,7 @@ public class ConfigurationCompiler {
 
             String methodName = op.getName();
             meth.setName(methodName);
+            meth.setOperationType(op.getOperationType());
 
             if (null != op.getReturn() && null != op.getReturn().getTypeRef()) {
                 String type = op.getReturn().getTypeRef();

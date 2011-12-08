@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -52,6 +52,7 @@ _initProjectTemplates = function() {
 	var c = wm.studioConfig;
 	dojo.mixin(c, {
 		appIndexFileName: "index.html",
+		appChromeFileName: "chromeframe.html",
 		appConfigFileName: "config.js",
 		appCssFileName: "app.css",
 		appDebugBootFileName: "lib_project.js",
@@ -63,6 +64,7 @@ _initProjectTemplates = function() {
 	loadData(t + c.appIndexFileName, function(t){ c.appIndexTemplate = t;});
 	loadData(t + c.appCssFileName, function(t){ c.appCssTemplate = t;});
 	loadData(t + c.appConfigFileName, function(t){ c.appConfigTemplate = t;});
+	loadData(t + c.appChromeFileName, function(t){ c.appChromeTemplate = t;});
 };
 
 _initPalmProjectTemplates = function() {

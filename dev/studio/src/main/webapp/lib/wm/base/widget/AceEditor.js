@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -127,7 +127,11 @@ dojo.declare("wm.AceEditor", wm.Control, {
 	}
     },
     isDirty: function() {
-	return this.getDataValue() != this._cachedDataValue;
+	var dataValue = this.getDataValue();
+	if (!dataValue && !this._cachedDataValue)
+	    return false;
+	else
+	    return dataValue != this._cachedDataValue;
     },
     clearDirty: function() {
 	this._cachedDataValue = this.dataValue;
@@ -303,8 +307,10 @@ dojo.declare("wm.AceEditor", wm.Control, {
 					      caption: "Search",
 					      captionSize: "100px",
 						 captionAlign: "left",
-					      width: "100%",
+					      width: "100%",					      
 					      onEnterKeyPress: dojo.hitch(this, "onFindClick")});
+	    
+	    this._searchEditor.editor.set("selectOnClick",true);
 	    var checkboxPanel = new wm.Panel({owner: this,
 					     parent: this._searchDialog.containerWidget,
 					     name: "checkboxPanel",

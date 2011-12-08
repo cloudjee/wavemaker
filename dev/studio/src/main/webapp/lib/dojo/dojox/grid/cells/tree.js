@@ -24,7 +24,12 @@ dojox.grid.cells.TreeCell = {
 			itemId = store.getIdentity(itemId);
 		}
 		if(!this.openStates){ this.openStates = {}; }
-		if(typeof itemId != "string" || !(itemId in this.openStates)){
+
+	    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+	     * WaveMaker: removed test for "string" which seems to always evaluate to false and prevent the tree from opening
+	     * if(typeof itemId != "string" || !(itemId in this.openStates)){ 
+	     */
+		if(!(itemId in this.openStates)){
 			this.openStates[itemId] = grid.getDefaultOpenState(this, itm);
 		}
 		return this.openStates[itemId];

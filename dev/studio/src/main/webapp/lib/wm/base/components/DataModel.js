@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -206,7 +206,13 @@ dojo.declare("wm.DataModel", wm.ServerComponent, {
 	studio.handleMissingJar("db2jcc.jar",
 				studio.getDictionaryItem("wm.DataModel.DB2_JAR_INSTRUCTIONS"));
 	
-    }
+    },
+
+    hasServiceTreeDrop: function() {return true;},
+    onServiceTreeDrop: function(inParent, inOwner) {
+	return new wm.LiveVariable({owner: inOwner,
+				    name: inOwner.getUniqueName("liveVariable")});
+    }	
 
 });
 
@@ -236,6 +242,24 @@ dojo.declare("wm.DataModelEntity", wm.Component, {
     },
     getLayerCaption: function() {
 	return this.dataModelName + " (" + studio.getDictionaryItem("wm.DataModel.TAB_CAPTION") + ")";
+    },
+    hasServiceTreeDrop: function() {return true;},
+    onServiceTreeDrop: function(inParent, inOwner) {
+	var types = wm.dataSources.sources[this.dataModelName];
+	var type;
+	for (var i = 0; i < types.length; i++) {
+	    if (types[i].caption == this.entityName) {
+		type = types[i].type;
+		break;
+	    }
+	}
+	var panel = new wm.LivePanel({owner: inOwner,
+				      parent: inParent,
+				      liveDataName: this.dataModelName.toLowerCase(),
+				      liveSource: type,
+				      name: inOwner.getUniqueName(this.dataModelName + "LivePanel")});
+	panel.afterPaletteDrop();
+	return panel;
     }
 });
 

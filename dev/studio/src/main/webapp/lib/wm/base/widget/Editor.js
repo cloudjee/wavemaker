@@ -3,7 +3,7 @@
                                                                      
                                              
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ dojo.provide("wm.base.widget.Editor");
 /* DEPRECATED! */
 
 wm.editors = [ 
-      "Text", "Date", "Time", "Number", "Currency", "Select", "CheckBox", "TextArea", "RadioButton", "Lookup", "Slider"
+    "Text", "Date", "Time", "DateTime", "Number", "Currency", "SelectMenu", "Checkbox", "TextArea", "RadioButton", "Lookup", "Slider"
 ];
 
 wm.getEditor = function(inName) {
@@ -396,34 +396,16 @@ wm.Editor.extend({
 	        if (this.isDesignLoaded() && studio.designer.selected == this)
 			setTimeout(dojo.hitch(studio.inspector, "reinspect"), 100); 		
 	},
-	makePropEdit: function(inName, inValue, inDefault) {
+	makePropEdit: function(inName, inValue, inEditorProps) {
 		switch (inName) {
 			case "formField":
-				return new wm.propEdit.FormFieldSelect({component: this, name: inName, value: inValue});
+		    return new wm.prop.FormFieldSelect(inEditorProps);
 			case "display":
-				return makeSelectPropEdit(inName, inValue, wm.editors, inDefault);
-			case "captionAlign":
-				return makeSelectPropEdit(inName, inValue, ["left", "center", "right"], inDefault);
-			case "captionSize":
-				return new wm.propEdit.UnitValue({component: this, name: inName, value: inValue, options: this._sizeUnits});
-			case "captionPosition":
-				return makeSelectPropEdit(inName, inValue, ["top", "left", "bottom", "right"], inDefault);
-			case "emptyValue":
-				return makeSelectPropEdit(inName, inValue, ["unset", "null", "emptyString", "false", "zero"], inDefault);
-			case "checkedValue":
-				return this.editor.dataType == "boolean" ? makeCheckPropEdit(inName, inValue, inDefault) : this.inherited(arguments);
-			case "resizeToFit":
-				return makeReadonlyButtonEdit(inName, inValue, inDefault);
+		    return new wm.SelectMenu(dojo.mixin(inEditorProps, {options:wm.editors}));
 		}
 		return this.inherited(arguments);
 	},
-	editProp: function(inName, inValue, inInspector) {
-		switch (inName) {
-			case "resizeToFit":
-				return this.resizeLabel();
-		}
-		return this.inherited(arguments);
-	},
+    resizeToFit: function() {this.resizeLabel();},
 	writeChildren: function(inNode, inIndent, inOptions) {
 		var s = this.inherited(arguments);
 		// write editor; it would not otherwise be streamed
@@ -502,7 +484,7 @@ dojo.declare("wm.SliderEditor", wm.Editor, {
 
 wm.Object.extendSchema(wm.Editor, {
 	disabled: { bindTarget: true, type: "Boolean", group: "common", order: 40},
-	formField: {ignore: 1, writeonly: 1, group: "common", order: 500},
+	formField: {group: "common", order: 500},
 	singleLine: { group: "display", order: 200 },
 	box: { ignore: 1 },
 	horizontalAlign: { ignore: 1 },
@@ -515,18 +497,18 @@ wm.Object.extendSchema(wm.Editor, {
 	imageList: {ignore: 1},
 	caption: { bindable: 1, group: "display", type: "String", order: 0, focus: 1},
 	readonly: { bindable: 1, type: "Boolean", group: "display", order: 5},
-	captionSize: { group: "display", order: 200 },
+    captionSize: { group: "display", order: 200, editor: "wm.prop.SizeEditor" },
 	captionUnits: { ignore: 1 },
-	captionAlign: { group: "display", order: 210 },
-	captionPosition: { group: "display", order: 220 },
+    captionAlign: { group: "display", order: 210,options: ["left","center","right"] },
+    captionPosition: { group: "display", order: 220 , options:["top", "left", "bottom", "right"]},
 	display: { group: "edit", order: 20 },
 	editor: { ignore: 1, writeonly: 1, componentonly: 1, categoryParent: "Properties", categoryProps: {component: "editor"}},
 	displayValue: { bindable: 1, group: "edit", order: 40, type: "any"},
 	dataValue: { ignore: 1, bindable: 1, group: "edit", order: 45, simpleBindProp: true},
-	emptyValue: { group: "edit", order: 50},
+    emptyValue: { group: "edit", order: 50, options: ["unset", "null", "emptyString", "false", "zero"]},
 	invalid: { ignore: 1,  bindSource: 1, type: "boolean" },
 	groupValue: { ignore: 1 },
 	selectedItem: { ignore: 1},
-	resizeToFit:{ group: "layout", order: 200 },
+    resizeToFit:{ group: "layout", order: 200,operation:1 },
 	captionStyles: {ignore: 1, categoryParent: "Styles", categoryProps: {content: "caption", nodeName: "captionNode", nodeClass: "wmeditor-caption"}}
 });

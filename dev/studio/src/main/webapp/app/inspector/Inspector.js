@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -40,7 +40,8 @@ wm.addPropertyGroups({
 	columns: {displayName: "Columns", order: 999},
 	ungrouped: {displayName: "Other", order: 1000},
 	operation: {displayName: "Operations", order: 2000},
-	docs: {displayName: "Documentation", order: 3000}
+    docs: {displayName: "Documentation", order: 3000},
+    deprecated: {displayName: "Deprecated", order: 100000}
 });
 
 dojo.declare("wm.InspectorBase", null, {
@@ -78,7 +79,8 @@ dojo.declare("wm.InspectorBase", null, {
                         modal: false,
                         noEscape: false,
                         useContainerWidget: false,
-                        hideControls: true
+                        hideControls: true,
+			corner: "tl"
 		    };
 		    var d = studio.helpPopup = new wm.PageDialog(props);
 		}
@@ -94,13 +96,13 @@ dojo.declare("wm.InspectorBase", null, {
 
 		if (!this.owner.inspected)
 			return;
-		var type = this.owner.inspected.getPropertyType(inProp) || "";
-	        if (type && type.type)
-		    type = type.type.toLowerCase();
+		var typeDef = this.owner.inspected.getPropertyType(inProp) || "";
+	        if (typeDef && typeDef.type)
+		    var type = typeDef.type.toLowerCase();
 
 	        switch (type) {
 			case "number":
-		                inValue = (inValue === "" && type.emptyOK) ? "" : Number(inValue);
+		                inValue = (inValue === "" && typeDef.emptyOK) ? "" : Number(inValue);
 				break;
 			case "boolean":
 				inValue = Boolean(inValue);
@@ -117,7 +119,7 @@ dojo.declare("wm.InspectorBase", null, {
 	    if (!this.owner.inspected)
 		return;
 	    var v = this.owner.inspected.getProp(inProp);
-	    return dojo.isFunction(v) ? ["(", inProp, ")"].join('') : v;
+	    return dojo.isFunction(v) ? "" : v;
 	},
 
 	editProp: function(inTarget) {
@@ -247,10 +249,7 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 			var node = dojo.byId("propinspect_row_"+propname);
 			if (node) {
 			    this.setPropEdit(propname);
-			    // neat hack... I first tried style.display = "none" and the table became unformatted
-			    // position absolute removes it from the flow and visibility makes it hidden
-			    node.style.position = prop.ignoretmp ? "absolute" : ""; 
-			    node.style.visibility = prop.ignoretmp ? "hidden" : ""; 
+			    node.style.display = prop.ignoretmp ? "none" : "table-row"; 
 			}
 		    }
 		}
@@ -326,7 +325,7 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 		var p = propArray[i];
 		var n = p.name;
 			rows.push(
-			    '<tr id="propinspect_row_' + n + '" ' + (p.ignoretmp ? 'style="position:absolute;visibility:hidden" ' :'') +  'propName="', n, '">',
+			    '<tr id="propinspect_row_' + n + '" ' + (p.ignoretmp ? 'style="display:none;" ' :'') +  'propName="', n, '">',
 				this.generateRowCells(n, p).join(''),
 				'<td class="wminspector-help"></td>',
 				'</tr>'
@@ -359,7 +358,7 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
             var d = c.constructor.prototype[inName];
 	    var v = this._getInspectedProp(inName);
 
-		var e = c.makePropEdit(inName, v, d) || makeInputPropEdit(inName, v, d);
+	    var e = c.makePropEdit(inName, v, d) || makeInputPropEdit(inName, v, d, inProp.readonly);
 		if (!dojo.isString(e)) {
 			e.inspector = this;
 			this._editors[inName] = e;
@@ -456,16 +455,19 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 	      bd.sourceNode = inNode;
 	      //bd.positionNode = inNode.parentNode;
 	      bd.fixPositionNode = inNode.parentNode;
+	      bd.corner = "tl";
 	    if (window.location.search.match(/editpropdoc/)) {
 		var classList = [];
 		studio.palette.forEachNode(function(node) {
 		    if (node.klass) {
 			try {
 			    var prototype = dojo.getObject(node.klass).prototype;
-			    if (prototype[inPropName] !== undefined || prototype["get" + wm.capitalize(inPropName)] !== undefined) {
-				var name = node.klass.replace(/^.*\./,"");
-				if (dojo.indexOf(classList, name) == -1)
-				    classList.push(name);
+			    if (node.klass.match(/^wm\./) && node.klass != "wm.example.myButton" && prototype instanceof wm._BaseEditor == false && prototype instanceof wm.Editor == false && (!prototype.schema[inPropName] || !prototype.schema[inPropName].ignore)) {
+				if (prototype[inPropName] !== undefined || prototype["get" + wm.capitalize(inPropName)] !== undefined) {
+				    var name = node.klass.replace(/^.*\./,"");
+				    if (dojo.indexOf(classList, name) == -1)
+					classList.push(name);
+				}
 			    }
 			} catch(e){}
 		    }
@@ -473,11 +475,20 @@ dojo.declare("wm.Inspector", [wm.Box, wm.InspectorBase], {
 
 		dojo.forEach(classList, function(className,i) {
 		    window.setTimeout(function() {
-			window.open(studio.getDictionaryItem("URL_PROPDOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}) + 
-				    className + "_" + inPropName + 
-				    "?parent=wmjsref_6.3&template=wmjsref_6.3.PropertyClassTemplate&name=" + className + "_" + inPropName + "&component=" + className + "&property=" + inPropName, "HelpEdit " + i);
+			var version = wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1");
+			var url = studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {studioVersionNumber: version,
+											 className: className.replace(/^.*\./,"") + "_" + inPropName});
+
+			app.toastInfo("Testing " + className + "." + inPropName);
+			studio.studioService.requestAsync("getPropertyHelp", [url + "?synopsis"], function(inResponse) {
+			    if (inResponse.indexOf("No documentation found for this topic") != -1 || !inResponse) {
+				window.open(studio.getDictionaryItem("URL_EDIT_PROPDOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}) + 
+					    className + "_" + inPropName + 
+					    "?parent=wmjsref_" + version + "&template=wmjsref_" + version + ".PropertyClassTemplate&name=" + className + "_" + inPropName + "&component=" + className + "&property=" + inPropName, "HelpEdit " + i);
+			    }
+			});
 		    },
-				      i * 1000);
+				      i * 1300);
 		});
 	    } else {
 		if (inType == studio.application.declaredClass)
@@ -595,7 +606,7 @@ dojo.declare("wm.GroupInspector", wm.Inspector, {
 				'<tr class="',
 			    this.getRowClasses(n,p),
 			    '"',
-			    (p.ignoretmp ? 'style="position:absolute;visibility:hidden" ' :''),
+			    (p.ignoretmp ? 'style="display:none;" ' :''),
 			    'id="propinspect_row_' + n + '" propName="', n, '"', inGroup.closed ? ' style="display: none;"' : '', '>',
 				this.generateRowCells(n, p).join(''),
 				// add a "?" button unless its a Data group.  Its assumed that a Data group contains variable/database/webservice 
@@ -697,10 +708,15 @@ dojo.declare("wm.GroupInspector", wm.Inspector, {
 		img.src = "images/group_" + (isOpen ? "closed.gif" : "open.gif");
 		// show / hide group rows
 		for (var rows=this.table.rows, i = dojo.indexOf(rows, r) + 1, row; (row=rows[i]); i++) {
-			if (dojo.hasClass(row, "wminspector-grouprow"))
+		    if (dojo.hasClass(row, "wminspector-grouprow")) {
 				break;
-			else
+		    } else {
+			var propName = row.id.replace(/^propinspect_row_/,"");
+			var propDef = this.props[propName];
+			if (!propDef.ignoretmp) {
 				row.style.display = isOpen ? "none" : "";
+			}
+		    }
 		}
 		return true;
 	},
@@ -716,19 +732,33 @@ dojo.declare("wm.GroupInspector", wm.Inspector, {
 });
 
 dojo.declare("wm.EventInspector", wm.Inspector, {
-	preinspect: function() {
+	preinspect: function () {
 	    this.props = this.getProps();
 	    for (var eventName in this.owner.inspected.eventBindings) {
-		if (this.props[eventName] === undefined) {
-		    this.props[eventName] = {isEvent: true, 
-					     name: eventName
-					    };
-		    if (!dojo.isFunction(this.owner.inspected[eventName])) {
-			this.owner.inspected[eventName] = function(){};
-		    }
-		}
+	        if (this.props[eventName] === undefined) {
+	            this.props[eventName] = {
+	                isEvent: true,
+	                name: eventName
+	            };
+	            if (!dojo.isFunction(this.owner.inspected[eventName])) {
+	                this.owner.inspected[eventName] = function () {};
+	            }
+	        } 
+
+		/* Verify that if this is the basic eventName (not onClick5, only onClick) that all appropriate eventBindings have been setup */
+	        try {
+	            if (!eventName.match(/\d$/)) {
+	                for (var i = 1; i < 10; i++) {
+	                    if (!this.owner.inspected.eventBindings[eventName + i] && this.props[eventName + i]) {
+	                        this.owner.inspected.eventBindings[eventName + i] = this.owner.inspected[eventName + i];
+	                    }
+	                }
+	            }
+	        } catch (e) {}
 	    }
 	},
+	
+
         reinspect: function() {this.inspect();},
 	getProps: function() {
 		var props = this.inherited(arguments);
@@ -751,11 +781,11 @@ dojo.declare("wm.EventInspector", wm.Inspector, {
 	    return this.hasEvents(inProps);
 	},
 	generateRowCells: function(inName, inProp) {
-	    var editor = this.makePropEdit(inName);
+	    var editor = this.makePropEdit(inName, inProp);
 	    return [
 		'<td class="wminspector-caption">', this.makeRowCaption(inName.match(/\d+$/) ? "and then..." : inName, inProp), '</td>',
 		'<td class="wminspector-property">', editor, '</td>',
-		'<td class="wminspector-addevent">+</td>',
+		'<td class="wminspector-addevent">+</td>'
 	    ];
 	},
 	generateHeaderCells: function() {
@@ -767,7 +797,7 @@ dojo.declare("wm.EventInspector", wm.Inspector, {
 });
 
 dojo.declare("wm.CustomMethodInspector", wm.Inspector, {
-    reinspect: function() {this.inspect();},
+//    reinspect: function() {this.inspect();},
 	getProps: function() {
 		var props = this.inherited(arguments);
 		for (var i in props)

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -442,11 +442,12 @@ dojo.declare("wm.Component", wm.Object, {
 		var r = this.getRoot();
 		r = r && r.getValue(inId);
 		var result;
+	    /* r._wmNull appears to not exist anywhere */
 		if (r && r._wmNull) {
 		  return app.getValue(inId);
 		}
 	    
-	    if (r) return r;
+	    if (r !== undefined) return r;
 
 	    if (inId && wm.Component.byId[inId]) {
 		return wm.Component.byId[inId];
@@ -457,13 +458,21 @@ dojo.declare("wm.Component", wm.Object, {
 	    var index = inId.indexOf(".");
 	    if (index != -1) {
 		var pageName = inId.substring(0,index);
+		if (pageName.indexOf("[") == 0)
+		    pageName = pageName.substring(1,pageName.length-1);
 		var remainder = inId.substring(index+1);
-		var pages = wm.Page.getPage(pageName);
-		if (pages && pages.length) {
-		    var page = pages[0]; // If more than one page of the same name, we have know way to know which one to use so just pick the first
+		var page = wm.Page.getPage(pageName);
+		if (page) {
 		    return page.getValueById(remainder);
 		}
+		if (this._isDesignLoaded && wm.decapitalize(String(studio.bindDialog.bindSourceDialog.pageContainer.pageName)) == pageName) {
+		    page = studio.bindDialog.bindSourceDialog.pageContainer.page;
+		    if (page) {
+			return page.getValueById(remainder);
+		    }
+		}
 	    }
+	    
 	    return null;
 	},
 	/* 
@@ -533,6 +542,13 @@ dojo.declare("wm.Component", wm.Object, {
 	    return item[1] != inEvent;
 	  });
 	},
+        findConnection: function(inEvent) {
+	    for (var i = 0; i < this._connections.length; i++) {
+		var con = this._connections[i];
+		if (con[1] == inEvent)
+		    return con;
+	    }
+	},
 	subscribe: function() {
             var s = dojo.subscribe.apply(dojo, arguments);
 	    this._subscriptions.push(s);
@@ -578,9 +594,16 @@ dojo.declare("wm.Component", wm.Object, {
 		return n in this._designee ? this._designee[n] : this.components[n];
 	},
 	_setProp: function(n, v) {
-		if (this.isEventProp(n) && this._isDesignLoaded)
-			this.setEvent(n, v);
-		else {
+	    if (this.isEventProp(n) && this._isDesignLoaded) {
+		this.setEvent(n, v);
+	    } else if (this.isCustomMethodProp(n) && this._isDesignLoaded) {
+		if (v) {
+		    this._designee[n] = v;
+		    eventEdit(this, n, v, this.owner == studio.application);
+		} else {
+		    delete this._designee[n];
+		}
+	    } else {
 			// do we need this?
 			var s = this._getPropWorker(this._designee, n, "set");
 			if (s)
@@ -727,7 +750,11 @@ this.panel1.createComponent("custom", "wm.Panel", {
 			console.info('error while creating component: ', e);
 		}
 		finally{
+		    try {
 			w.loaded();
+		    } catch(e) {
+			console.error("Error in postInit for " + w.toString() + ": " + e);
+		    }
 		}
 
 	    if (wm.debugPerformance) this.stopTimerWithName("CreateComponent",inType,1);
@@ -747,8 +774,15 @@ this.panel1.createComponent("custom", "wm.Panel", {
 		return args;
 	},
 	makeEvents: function(inEvents, inComponent) {
-		var e, n, f;
-		for (n in inEvents) {
+	    var e, n, f;
+	    var eventsArray = [];
+	    for (n in inEvents) {
+		eventsArray.push(n);
+	    }
+	    eventsArray.sort();
+	    for (var i = 0; i < eventsArray.length; i++) {
+		var n = eventsArray[i];
+
 			// name of the source
 			f = inEvents[n];
 			// the target
@@ -784,17 +818,9 @@ this.panel1.createComponent("custom", "wm.Panel", {
 				}
 
 			    } else if (n.match(/^onMouseOver\d*$/)) {
-				inComponent.connect(inComponent.domNode, "onmouseover", function(e) {
-				    wm.job(inComponent.getRuntimeId + "MouseMoveEvents", 50, function() {
-					inComponent.onMouseOver(e);
-				    });
-				});
+				this.createMouseOverConnect();
 			    } else if (n.match(/^onMouseOut\d*$/)) {
-				inComponent.connect(inComponent.domNode, "onmouseout", function(e) {
-				    wm.job(inComponent.getRuntimeId + "MouseMoveEvents", 50, function() {
-					inComponent.onMouseOut(e);
-				    });
-				});
+				this.createMouseOutConnect();
 			    } else if (n.match(/^onEnterKeyPress\d*$/) && inComponent instanceof wm.Container) {
 				inComponent.connectOnEnterKey();
 			    }

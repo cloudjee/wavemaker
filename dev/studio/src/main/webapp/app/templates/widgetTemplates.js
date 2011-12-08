@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -53,13 +53,14 @@ wm.widgetTemplates.twoColumn = {
 wm.fullTemplates.fancyTemplate = {
 	displayName: bundlePackage.FancyTemplate,
         thumbnail: "/wavemaker/app/templates/widgetTemplateImages/fancyTemplate.png",
-	layoutKind: "top-to-bottom",
+	layoutKind: "left-to-right",
 	width: "100%",
 	height: "100%",
 	verticalAlign: "top",
 	horizontalAlign: "center",
     autoScroll: true,
 	_template: {
+	monthsVar: ["wm.Variable", {"isList":true,"json":"[{name: \"January\", dataValue: 0}, {name: \"February\", dataValue: 1},{name: \"March\", dataValue: 2},{name: \"April\", dataValue: 3},{name: \"May\", dataValue: 4},{name: \"June\", dataValue: 5},{name: \"July\", dataValue: 6},{name: \"August\", dataValue: 7},{name: \"September\", dataValue: 8},{name: \"October\", dataValue: 9},{name: \"November\", dataValue: 10},{name: \"December\", dataValue: 11}]","type":"EntryData"}, {}],
 	varTemplateUsername: ["wm.ServiceVariable", {"autoUpdate":true,"designTime":true,"operation":"getUserName","service":"securityService","startUpdate":true}, {}, {
 		input: ["wm.ServiceInput", {"type":"getUserNameInputs"}, {}]
 	}],
@@ -97,7 +98,7 @@ wm.fullTemplates.fancyTemplate = {
 					fancyPanel1: ["wm.FancyPanel", {"horizontalAlign":"left","innerBorder":"1","labelHeight":"30","verticalAlign":"top"}, {}, {
 						dojoGrid1: ["wm.DojoGrid", {"borderColor":"#666666","dsType":"EntryData","height":"100%","columns":[{"show":true,"id":"name","title":"Name","width":"auto","displayType":undefined,"noDelete":true,"align":"left"},{"show":true,"id":"dataValue","title":"DataValue","width":"auto","displayType":undefined,"noDelete":true,"align":"left"}]}, {}, {
 							binding: ["wm.Binding", {}, {}, {
-								wire: ["wm.Wire", {"source":"studio.varTemplateData","targetProperty":"dataSet"}, {}]
+								wire: ["wm.Wire", {"source":"monthsVar","targetProperty":"dataSet"}, {}]
 							}]
 						}],
 						panel7: ["wm.Panel", {"height":"36px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
@@ -157,10 +158,9 @@ wm.fullTemplates.sideMenuTemplate = {
 	width: "100%",
 	height: "100%",
 	verticalAlign: "top",
-	horizontalAlign: "left",
+	horizontalAlign: "center",
     autoScroll: true,
 	_template: {
-	    spacer1: ["wm.Spacer", {width: "12%"}],
 	    panel1: ["wm.Panel", {"border":"0,1,0,0","borderColor":"#999999","height":"100%","horizontalAlign":"left","minWidth":900,minHeight: 600, "verticalAlign":"top","width":"75%"}, {}, {
 		panel2: ["wm.HeaderContentPanel", {"border":"0,0,1,0","height":"65px","horizontalAlign":"left","layoutKind":"left-to-right","margin":"0","padding":"0,10,0,10","verticalAlign":"middle","width":"100%"}, {}, {
 			picture1: ["wm.Picture", {"border":"0","height":"50px","source":"lib/wm/base/widget/themes/default/images/wmLogo.png","width":"62px"}, {}],
@@ -189,8 +189,7 @@ wm.fullTemplates.sideMenuTemplate = {
 				format: ["wm.DataFormatter", {}, {}]
 			}]
 		}]
-	    }],
-	    spacer2: ["wm.Spacer", {width: "12%"}]
+	    }]
 	}
 }
 
@@ -204,7 +203,6 @@ wm.fullTemplates.tabTemplate = {
 	horizontalAlign: "center",
     autoScroll: true,
 	_template: {
-	    spacer1: ["wm.Spacer", {width: "12%"}],
 	    panel3: ["wm.Panel", {"height":"100%","horizontalAlign":"left","minWidth":900,minHeight:600, "verticalAlign":"top","width":"75%"}, {}, {
 		panel1: ["wm.HeaderContentPanel", {"border":"0,0,1,0","borderColor":"#333333","height":"65px","horizontalAlign":"left","layoutKind":"left-to-right","padding":"0,10","verticalAlign":"middle","width":"100%"}, {}, {
 			picture1: ["wm.Picture", {"border":"0","height":"50px","source":"lib/wm/base/widget/themes/default/images/wmLogo.png","width":"62px"}, {}],
@@ -236,15 +234,14 @@ wm.fullTemplates.tabTemplate = {
 				format: ["wm.DataFormatter", {}, {}]
 			}]
 		}]	
-	    }],
-	    spacer2: ["wm.Spacer", {width: "12%"}]
+	    }]
 	}
 }
 
 wm.fullTemplates.topMenuTemplate = {
 	displayName: bundlePackage.TopMenu,
         thumbnail: "/wavemaker/app/templates/widgetTemplateImages/topMenuTemplate.png",
-	layoutKind: "top-to-bottom",
+	layoutKind: "left-to-right",
 	width: "100%",
 	height: "100%",
 	verticalAlign: "top",

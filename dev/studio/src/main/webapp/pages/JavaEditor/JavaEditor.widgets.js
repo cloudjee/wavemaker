@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2009-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ JavaEditor.widgets = {
 		editorContainer: ["wm.Panel", {border: "0", width: "100%", layoutKind: "left-to-right", height: "100%"}, {}, {
 			panel6: ["wm.Panel", {border: "0", width: "100%", height: "100%"}, {}, {
 				javaServicePanel: ["wm.Panel", {border: "0", width: "100%", height: "100%"}, {}, {
-				    javaCodeEditor: ["wm.AceEditor", {height: "100%", width: "100%", border: "0", syntax: "java"}, {onCtrlKey: "onCtrlKey", onKeyDown: "setDirty"}],
+				    javaCodeEditor: ["wm.AceEditor", {height: "100%", width: "100%", border: "0", syntax: "java"}, {onCtrlKey: "onCtrlKey", onChange: "setDirty"}],
 					javaCodeSplitter: ["wm.Splitter", {layout: "bottom", border: "0"}, {}],
 				    logTabs: ["wm.TabLayers", {width: "100%", height: "200px",clientBorder: "2,0,0,0", clientBorderColor: "#959DAB"}, {onchange: "changeLogTab"}, {
 					    complierTab: ["wm.Layer", {caption: "Compiler Messages"}, {}, {

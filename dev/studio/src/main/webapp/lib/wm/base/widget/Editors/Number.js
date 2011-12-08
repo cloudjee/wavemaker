@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,7 +18,8 @@ dojo.require("wm.base.widget.Editors.Text");
 dojo.require("dijit.form.VerticalSlider");
 dojo.require("dijit.form.HorizontalSlider");
 dojo.require("dijit.form.NumberSpinner");
-
+dojo.require("dijit.form.NumberTextBox");
+dojo.require("dijit.form.CurrencyTextBox");
 
 
 
@@ -41,13 +42,12 @@ dojo.declare("wm.Number", wm.Text, {
 	if (this.spinnerButtons)
 	    this.addEditorConnect(this.editor, "onClick", this, "changed");
     },
-	getEditorProps: function(inNode, inProps) {
-		var constraints = {}, v = this.displayValue;
+    getEditorConstraints: function() {
+	var constraints = {};
 	    if (!isNaN(parseInt(this.minimum)))
 			constraints.min = Number(this.minimum);
 	    if (!isNaN(parseInt(this.maximum)))
 			constraints.max = Number(this.maximum);
-
 		// NOTE: for constraining decimal places use pattern instead of places
 		// pattern is 'up to' while places is 'must be'
 		if (this.places)
@@ -59,15 +59,87 @@ dojo.declare("wm.Number", wm.Text, {
 			}
 		}
 
-		constraints.pattern = this._getPattern();
-		return dojo.mixin(this.inherited(arguments), {
+	//constraints.pattern = this._getPattern();
+
+	return constraints;
+    },
+    getEditorProps: function(inNode, inProps) {
+	var v = this.displayValue;
+	var constraints = this.getEditorConstraints();
+
+	var p = dojo.mixin(this.inherited(arguments), {
 			constraints: constraints,
-			editPattern: constraints.pattern,
+		    //editPattern: constraints.pattern,
 			rangeMessage: this.rangeMessage,
 			required: this.required,
 			value: v ? Number(v) : ""
 		}, inProps || {});
+/*
+	if (this.numberFormat) {
+	    p.format = dojo.hitch(this, this.numberFormatter);
+	    p.parse = dojo.hitch(this, this.numberParser);
+	}	    
+	*/
+	return p;
 	},
+/*
+    numberFormat: "",
+    numberFormatter: function(inValue) {
+	if (inValue === undefined ||
+	    inValue === null ||
+	    inValue === "") return inValue;
+
+	inValue = String(inValue); // inValue is a number
+
+	var result = "";
+	/ * If inValue is different from _lastFormattedNumber only at the end of the string, then the user is doing normal changes; 
+	 * If the user is NOT doing normal changes, stick '_' wherever characters were removed
+	 * /
+	if (this._lastFormattedNumber &&
+	    this._lastFormattedNumber.indexOf(inValue) != 0 &&
+	    inValue.indexOf(this._lastFormattedNumber) != 0) 
+	{
+	    var a = inValue;
+	    var b = this._lastFormattedNumber;
+	    var length = (this._lastFormattedNumber.length <= inValue.length) ? this._lastFormattedNumber.length : inValue.length;
+	    inValue = "";
+	    var iOffset = 0;	    
+	    for (var i = 0; i < length; i++) {
+		if (a.charAt(i) == b.charAt(i+iOffset) || b.charAt(i+iOffset).match(/\D/)) {
+		    inValue += a.charAt(i);
+		} else {
+		    debugger;
+		    inValue += "_";
+		    iOffset++;
+		}
+	    }
+	} 
+	    var v = String(inValue||"").replace(/[^0-9\._]/g,"").split("");
+	    var n = this.numberFormat;
+	    var vIndex = 0;
+
+	    for (var i = 0; i < n.length; i++) {
+		if (n.charAt(i) == "?") {
+		    result += v[vIndex] || "";
+		    vIndex++;
+		    if (vIndex >= v.length) break;
+		} else {
+		    result += n.charAt(i);
+		}
+	    }
+
+	this._lastFormattedNumber = result.replace(/[^0-9\._]/g,"");
+	return result;
+    },
+    numberParser: function(inValue) {
+	inValue = String(inValue);
+	if (inValue.indexOf("_") != -1) {
+	    return inValue.replace(/[^0-9\._]/g,"");
+	} else {
+	    return parseInt(String(inValue).replace(/\D/g,""));
+	}
+    },
+    */
 	_getPlaces: function (){
 		return '';
 	},
@@ -77,6 +149,7 @@ dojo.declare("wm.Number", wm.Text, {
 	    else
 		return new dijit.form.NumberTextBox(this.getEditorProps(inNode, inProps));
 	},
+/*
 	_getPattern: function() {
 		var
 			p = this.places !== "" ? Number(this.places) : 20,
@@ -88,30 +161,33 @@ dojo.declare("wm.Number", wm.Text, {
 			pattern.push(n);
 		return pattern.join('');
 	},
+	*/
 	setMaximum: function(inMax) {
 	        var v = (inMax === "") ? "" : Number(inMax);
 		if (this.minimum === "" || this.minimum < v || v === "") {
 			this.maximum = v;
 		        if (this.editor) {
-				this.editor.constraints.max = v;
+			    this.editor._setConstraintsAttr(this.getEditorConstraints());
 			        this.editor.validate();
 			}
-		} else if (this.isDesignLoaded())
+		} else if (this.isDesignLoaded() && !(this.$.binding && this.$.binding.wires.maximum)) {
 		    app.alert(dojo.string.substitute(this._messages.rangeMax, [this.minimum]));
+		}
 	},
 	setMinimum: function(inMin) {
 	        var v = (inMin === "") ? "" :  Number(inMin);
 		if (this.maximum === "" || v < this.maximum || v === "") {
 			this.minimum = v;
 		        if (this.editor) {
-				this.editor.constraints.min = v;
-			        this.editor.validate();
+			    this.editor._setConstraintsAttr(this.getEditorConstraints());
+			    this.editor.validate();
 			}
-		} else if (this.isDesignLoaded())
+		} else if (this.isDesignLoaded() && !(this.$.binding && this.$.binding.wires.minimum)) {
 		    app.alert(dojo.string.substitute(this._messages.rangeMin, [this.maximum]));
+		}
 	},
 	_getReadonlyValue: function() {
-		return dojo.number.format(this.dataValue, this.getFormatProps());
+	    return dojo.number.format(this.getDataValue(), this.getFormatProps());
 	},
 	getFormatProps: function() {
 		var formatProps = {};
@@ -125,22 +201,42 @@ dojo.declare("wm.Number", wm.Text, {
 	    this.createEditor();
 	}
     },
-    themeableStyles: [{name: "wm.NumberSpinner-Down-Arrow_Image", displayName: "Down Arrow"}, {name: "wm.NumberSpinner-Up-Arrow_Image", displayName: "Up Arrow"}]
-	
-});
+    calcIsDirty: function(a,b) {
+	return a !== b;
+    }
 
-wm.Object.extendSchema(wm.Number, {
-    resetButton: {ignore: 1},
-    dataValue: {ignore: 1, bindable: 1, group: "editData", order: 3, simpleBindProp: true, type: "Number"},
-    places: {group: "editor", order: 2, doc: 1},
-    minimum:  { group: "editor", order: 3, emptyOK: true, doc: 1},
-    maximum: { group: "editor", order: 4, emptyOK: true, doc: 1},
-    rangeMessage: {  group: "editor", order: 5},
-    spinnerButtons: {group: "editor", order: 6},
-    regExp: { ignore: 1 },
-    maxChars: { ignore: 1},
-    setMaximum: {group: "method", doc: 1},
-    setMinimum: {group: "method", doc: 1}
+/*
+    dokeypress: function(inEvent) {
+	if (this.numberFormat) {
+	    if (app._keys[inEvent.keyCode].match(/\d/)) {
+	    var d =  this.editor.get("displayedValue");
+	    var pos = this.getCursorPosition();
+	    if (d.charAt(pos+1) == '_') {
+		this.editor.textbox.value = d.substring(0, pos+1) + d.substring(pos+2);
+		this.setCursorPosition(pos+1);
+	    }
+	    } else if ( app._keys[inEvent.keyCode] == "BACKSPACE") {
+		
+	    }
+	}
+	this.inherited(arguments);
+    }
+
+    changed: function() {
+	if (this.numberFormat && this.editor && this.editor.textbox) {
+	    var val = this.editor.get("displayedValue");
+	    var formattedValue = this.editor.format(this.editor.parse(val));
+
+	    if(formattedValue !== undefined) {
+		var pos = this.getCursorPosition();
+		pos += (formattedValue.length - val.length);		
+		this.editor.textbox.value = formattedValue;
+		this.setCursorPosition(pos+1);
+	    }
+	}
+	this.inherited(arguments);
+	  }*/
+
 });
 
 //===========================================================================
@@ -161,7 +257,8 @@ dojo.declare("wm.Currency", wm.Number, {
 		return new dijit.form.CurrencyTextBox(this.getEditorProps(inNode, inProps));
 	},
 	_getReadonlyValue: function() {
-	    return dojo.currency.format( this.dataValue, {currency: this.currency, places: parseInt(this.places)});
+	    return dojo.currency.format( this.dataValue, {currency: this.currency || (this._isDesignLoaded ? studio.application.currencyLocale : app.currencyLocale) || "USD",
+							  places: parseInt(this.places)});
 	},
 	_getPlaces: function() {
 		return this.places;
@@ -184,7 +281,7 @@ dojo.declare("wm.Currency", wm.Number, {
 	
 	var changed = false;
 
-	if (dataValue != this.dataValue) {
+	if (dataValue != this._lastValue) {
 	    this.valueChanged("dataValue", this.dataValue);
 	    changed = true;
 	}
@@ -206,16 +303,6 @@ dojo.declare("wm.Currency", wm.Number, {
 	this.createEditor();
     }
 
-});
-
-wm.Object.extendSchema(wm.Currency, {
-    password: {ignore:1},
-    currency: {group: "editor", order: 2, doc: 1},
-    minimum:  { group: "editor", order: 3, emptyOK: true, doc: 1},
-    maximum: { group: "editor", order: 4, emptyOK: true, doc: 1},
-    places: {  group: "editor", order: 5, doc: 1},
-    rangeMessage: {  group: "editor", order: 6},
-    spinnerButtons: {ignore: 1}
 });
 
 
@@ -255,6 +342,23 @@ dojo.declare("wm.Slider", wm.AbstractEditor, {
 			value: v
 		}, inProps || {});
 	},
+	setMaximum: function(inMax) {
+	    this.maximum = (inMax === "") ? 100 : Number(inMax);
+	    if (this.editor) {
+		this.editor.maximum = this.maximum;
+		this.editor._setValueAttr(this.dataValue, true);
+	    }
+	},
+
+    setMinimum: function(inMin) {
+	    this.minimum = (inMin === "") ? 0 : Number(inMin);
+	    if (this.editor) {
+		this.editor.minimum = this.minimum;
+		this.editor._setValueAttr(this.dataValue, true);
+	    }
+	},
+
+
 	_createEditor: function(inNode, inProps) {
 		var div = dojo.create('div');
 		var dijitObj;
@@ -308,16 +412,3 @@ dojo.declare("wm.Slider", wm.AbstractEditor, {
 	}
 			*/			
 });
-
-wm.Object.extendSchema(wm.Slider, {
-    discreteValues: {group: "editor", order: 2},
-    minimum:  { group: "editor", order: 3, doc: 1},
-    maximum: { group: "editor", order: 4, doc: 1},
-    showButtons: {  group: "editor", order: 5},
-    verticalSlider: {  group: "editor", order: 6, ignore: 1},
-    editorBorder: { ignore: 1 },
-    changeOnKey: { ignore: 1 },
-    changeOnEnter: { ignore: 1 }
-});
-
-

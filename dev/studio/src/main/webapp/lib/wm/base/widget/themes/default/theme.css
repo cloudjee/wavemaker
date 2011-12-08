@@ -1,6 +1,6 @@
 
 /*
- *  Copyright (C) 2010-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2010-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -878,6 +878,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 }
 
 
+/* old editors */
 .wmeditor-readonly {
 	padding: 4px 8px 4px 4px;
 }
@@ -1256,17 +1257,6 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 	padding-left: 0;
 }
 
-.chromeFramePrompt{
-	position:absolute; 
-	top:5%; 
-	left:10%; 
-	z-index:999; 
-	display:none;
-	border:5px solid #DCDCDC; 
-	width:800px;
-	height:650px;
-	background-color:#FFFFFF;	
-}
 
 .topleft_wm_Border_TopStyleCurved12px {
     position: absolute;
@@ -1448,17 +1438,21 @@ display: block;
 
 
 
-.wmwizardlayers .wmwizardlayers-tab {
+.wmwizardlayers .wmwizardlayers-tab,
+.wmwizardlayers .wmwizardlayers-verticaltab {
 	cursor: pointer;
 	border: 1px solid transparent;
 	background-color: transparent;
-        height: 100%;
 	color: rgb(80,80,80);
 }
-.wmwizardlayers .wmwizardlayers-tab.done, .wmwizardlayers .wmwizardlayers-tab.wmwizardlayers-selected {
+.wmwizardlayers .wmwizardlayers-tab.done, 
+.wmwizardlayers .wmwizardlayers-tab.wmwizardlayers-selected,
+.wmwizardlayers .wmwizardlayers-verticaltab.done, 
+.wmwizardlayers .wmwizardlayers-verticaltab.wmwizardlayers-selected {
 	font-weight: bold;
 }
-.wmwizardlayers .wmwizardlayers-tab.wmwizardlayers-selected {
+.wmwizardlayers .wmwizardlayers-tab.wmwizardlayers-selected,
+.wmwizardlayers .wmwizardlayers-verticaltab.wmwizardlayers-selected {
     text-decoration: underline;
 }
 
@@ -1896,4 +1890,67 @@ Overriding dijit's progress bar properties to enable height changes to progress 
 }
 .wmeditor-cbeditor.Disabled, .wmeditor-cbeditor.Disabled input[type="checkbox"],  .wmeditor-cbeditor.Disabled input[type="radio"] {
     cursor: default;
+}
+
+
+body .AppToolTip {
+	background-color: #949cab;
+	color: white;
+	text-align: center;
+     -moz-box-shadow: 2px 2px 4px black; /* FF3.5+ */
+     -webkit-box-shadow: 2px 2px 4px black; /* Saf3.0+, Chrome */
+     box-shadow: 2px 2px 4px black; /* Opera 10.5, IE 9.0 */	
+}
+
+.dj_ie9 .dijitComboBox .dijitInputContainer, .dj_ie9 .dijitComboBox .dijitInputContainer input {
+    height: 100%;
+}
+
+
+body div.dojoxGridContent .dojoxGridCell .wmDeleteColumn {
+background-position: -560px 0px;
+width: 16px !important;
+height: 16px !important;
+background-image: url(/wavemaker/lib/images/silkIcons/silk.png);
+background-repeat:no-repeat;
+    cursor: pointer;
+}
+
+.wmeditor .wmCheckboxSet {
+    overflow-y: auto;
+    border-style: solid;
+}
+.wmeditor .wmCheckboxSetItem {
+    line-height: normal;
+    padding: 2px 5px 2px 5px;
+}
+
+.dojoGridNoHeader .dojoxGridMasterHeader {
+    display: none !important;
+}
+.Disabled .dojoxGrid {
+opacity: 0.6;
+    filter: alpha(opacity=60);
+}
+
+.wmSizeNode {
+display: inline-block;
+}
+
+.dojoxGridRow-inserting {
+    font-style: italic;
+    font-weight: bold !important;
+}
+
+code {
+border: solid 1px #333;
+display: block;
+padding: 5px;
+text-align: left;
+background-color: white;
+color: black;
+}
+li {
+    text-align: left;
+    padding-bottom: 5px;
 }

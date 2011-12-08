@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 Infoteria Corporation and VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -42,7 +42,11 @@ ALERT_CONNECTION_FAILED: "接続に失敗しました: ${error}",
 ALERT_CONNECTION_PROPS_SUCCESS: "接続プロパティを更新しました",
 ALERT_CONNECTION_PROPS_FAILED: "接続プロパティの更新に失敗しました",
 ALERT_REIMPORT_FAILED: "再インポートに失敗しました: ${error}",
+TOAST_REIMPORT_SUCCESS: "データベースが正しく再インポートされました",
 ALERT_LOAD_DDL_FAILED: "DDLがロードできません: ${error}",
-ALERT_EXPORT_FAILED: "エクスポートできません: {$error}",
-WAIT_TEST_CONNECTION: "接続テスト: ${url}"
+ALERT_EXPORT_FAILED: "エクスポートできません: ${error}",
+ALERT_EXPORT_OVERWRITE_NEEDED: "'データベースを上書き'をチェックする必要があるかもしれません",
+TOAST_EXPORT_SUCCESS: "正しくエクスポートされました",    
+WAIT_TEST_CONNECTION: "接続テスト: ${url}",
+CONFIRM_SAVE_MODEL_FIRST: "データモデルに保存されていない変更がある場合、エクスポートされません。それでもエクスポートしますか？"
 }

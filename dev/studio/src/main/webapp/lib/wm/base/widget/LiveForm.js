@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -116,10 +116,11 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 	// Form data
 	//===========================================================================
 	setDataSet: function(inDataSet) {
-		if (this.parent && this.parent.operation){
+
+		if (this.parent && this.parent.operation && this.editingMode != "lookup") {
 			return;	
 		}
-		
+
 		this.beginEditUpdate();
 		this.dataSet = inDataSet;
 		var d = this.getItemData();
@@ -178,7 +179,7 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 			
 			if (o){
 				try{
-					if (o instanceof wm.DojoGrid){
+				    if (wm.isInstanceType(o, wm.DojoGrid)) {
 						ds = o.variable;
 					} else {
 						ds = o.dataSet;
@@ -218,7 +219,8 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 	},
 	liveFormChanged: function() {
 		dojo.forEach(this.getFormEditorsArray(), function(e) {
-			wm.fire(e, "doOnchange");
+		    wm.fire(e, "doOnchange");
+		    wm.fire(e, "clearDirty");
 		});
 	},
 	//===========================================================================
@@ -230,10 +232,11 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 			if (wm.isInstanceType(e, wm.LiveFormBase)) {
 			    /* Don't populate lookup related editors if we're in the middle of the owner's operationSucceeded method because
 			     * this populates the editor with value="" which is invalid and shows the invalid indicator */
-			        if (e.editingMode != "lookup" || !this._operationSucceeded)
+			    if (e.editingMode != "lookup" || !this._operationSucceeded) {
 				    wm.fire(e, "populateEditors");
+			    }
 			} else {
-                            if (wm.Lookup && e instanceof wm.Lookup && (!e.dataSet || !e.dataSet.type)) 
+                            if (wm.isInstanceType(e,wm.Lookup) && (!e.dataSet || !e.dataSet.type)) 
                                 e.setAutoDataSet(e.autoDataSet);
 
 			    wm.fire(e, "setDataValue", [e.formField && data ? data[e.formField] : data]);
@@ -244,12 +247,13 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
                 if (this.dataSet && this.dataOutput.type != this.dataSet.type)
                     this.dataOutput.setType(this.dataSet.type);
 		var d = this.dataOutput;
+	    d.setIsList(false); // sanity test
 	    dojo.forEach(this.getFormEditorsArray(), dojo.hitch(this, function(e) {
 			if (wm.isInstanceType(e, wm.LiveFormBase)) {
                             wm.fire(e, "populateDataOutput"); // this.dataOutput will be updated via bindings once e has been updated
 			}else if (e.formField) {
 				d.setValue(e.formField, e.getDataValue());
-			} else if (this instanceof wm.RelatedEditor) {
+			} else if (wm.isInstanceType(this, wm.RelatedEditor)) {
                             d.setData(e.getDataValue());
                         }
 	    }));
@@ -292,13 +296,13 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 	},
 	getEditorsArray: function() {
 		return wm.getMatchingFormWidgets(this, function(w) {
-		    return (wm.isInstanceType(w, wm.Editor) || wm.isInstanceType(w, wm.AbstractEditor));
+		    return (wm.Editor && wm.isInstanceType(w, wm.Editor) || wm.isInstanceType(w, wm.AbstractEditor));
 		});
 	},
 	// FIXME: handle related editors specially
 	getRelatedEditorsArray: function(inContainer) {
 		return wm.getMatchingFormWidgets(this, function(w) {
-			return (wm.isInstanceType(w, wm.RelatedEditor));
+			return (wm.RelatedEditor && wm.isInstanceType(w, wm.RelatedEditor));
 		});
 	},
 	getFormEditorsArray: function() {
@@ -318,7 +322,7 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 		var
 			s = parts.join('.'),
 			v = this.getValueById(s);
-		if (wm.isInstanceType(v, wm.Editor) || wm.isInstanceType(v, wm.RelatedEditor))
+		if (wm.Editor && wm.isInstanceType(v, wm.Editor) || wm.RelatedEditor && wm.isInstanceType(v, wm.RelatedEditor))
 			return v;
 	},
 	// get editors bound to dataOutput
@@ -340,9 +344,12 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 	// Editor setters
 	//===========================================================================
 	canChangeEditorReadonly: function(inEditor, inReadonly, inCanChangeFunc) {
-	    if (inEditor.ignoreParentReadonly) return false;
-		var c = dojo.isFunction(inCanChangeFunc);
-		return !c || inCanChangeFunc(inEditor, this, inReadonly);
+	    if (wm.isInstanceType(inEditor, wm.AbstractEditor) && inEditor.ignoreParentReadonly ||
+		wm.isInstanceType(inEditor, wm.RelatedEditor)  && inEditor.ignoreParentReadonly && inEditor.editingMode == "editable subform") {
+		return false;
+	    }
+	    var c = dojo.isFunction(inCanChangeFunc);
+	    return !c || inCanChangeFunc(inEditor, this, inReadonly);
 	},
 	_setReadonly: function(inReadonly, inCanChangeFunc) {
 		dojo.forEach(this.getFormEditorsArray(), function(e) {
@@ -507,10 +514,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	liveDataSourceClass: null, //xxx
         //noButtonPanel: false,
         //editPanelStyle: "wm.Button",
-	_confirmDelete: true,
-	_formMessages: {
-		confirmDelete: "Are you sure you want to delete this data?"
-	},
+    confirmDelete: "Are you sure you want to delete this data?",
 	_controlSubForms: false,
 	destroy: function() {
 		this._cancelOnEnterKey();
@@ -556,7 +560,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	// Form data
 	//===========================================================================
 	setDataSet: function(inDataSet) {
-	    if (this.operation && !this.alwaysPopulateEditors)
+	    if (this.dataSet && this.operation && !this.alwaysPopulateEditors)
 		return;
 	    if (this.liveVariable && inDataSet && inDataSet.type)
 		this.liveVariable.setLiveSource(inDataSet.type);
@@ -565,9 +569,9 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 
 	    if (!this.readonly) {
 		wm.getMatchingFormWidgets(this, function(w) {
-		    if (w instanceof wm.Editor || 
-			w instanceof wm.AbstractEditor ||
-			w instanceof wm.RelatedEditor) {
+		    if (wm.isInstanceType(w, wm.Editor) || 
+			wm.isInstanceType(w, wm.AbstractEditor) ||
+			wm.isInstanceType(w, wm.RelatedEditor)) {
 			w.validate();
 		    }});
 	    }
@@ -623,6 +627,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 		Cancels an edit by restoring the editors to the data from the <i>dataSet</i> property.
 	*/
 	cancelEdit: function() {
+	        this.operation = null; // must be called before setDataSet
 		this.editCancelling();
 		var d = this.getItemData();
 		this.beginEditUpdate();
@@ -630,16 +635,17 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 		this.dataOutput.setData(d);
 		this.endEditUpdate();
 		//wm.fire(this.dataSet, "notify");
-		this.populateEditors();
+
+	        this.setDataSet(this.dataSet);
 		this.onCancelEdit();
 		this.endEdit();
 	},
 	// editors that should not be changed during an edit should remain readonly
 	_canChangeEditorReadonly: function(inOperations, inEditor, inForm, inReadonly) {
-	    if (inEditor instanceof wm.RelatedEditor && inEditor.editingMode == "editable subform")
+	    if (wm.isInstanceType(inEditor, wm.RelatedEditor) && inEditor.editingMode == "editable subform" && inEditor.ignoreParentReadonly)
 		return false; // devs must set readonly explicitly and must know what they are doing; some danger to editing subforms
 
-	    if ((wm.isInstanceType(inEditor, wm.Editor) || wm.isInstanceType(inEditor, wm.AbstractEditor)) && inEditor.formField) {
+	    if ((wm.Editor && wm.isInstanceType(inEditor, wm.Editor) || wm.isInstanceType(inEditor, wm.AbstractEditor)) && inEditor.formField) {
 			var
 				f = inEditor.formField,
 				dt = inForm.dataSet.type,
@@ -721,10 +727,10 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 		return this.doOperation("delete");
 	    });
 
-	    if (!this._confirmDelete) {
+	    if (!this.confirmDelete) {
 		f();
 	    } else {
-		app.confirm(this._formMessages.confirmDelete, false,
+		app.confirm(this.confirmDelete, false,
 			    f,
 			    dojo.hitch(this,function() {
 				this.cancelEdit();

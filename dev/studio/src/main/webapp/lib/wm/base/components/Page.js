@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -69,12 +69,11 @@ dojo.declare("wm.Page", wm.Component, {
 	},
 
 	init: function() {
-		this.app = window.app;
-		if (this.owner instanceof wm.Application)		
-			window[this.name] = this;
-		else
-			this.owner[this.name] = this;
-		this.inherited(arguments);
+	    this.app = window.app;
+	    if (this.owner == app.pageContainer)
+		window[this.name] = this;
+	    this.owner[this.name] = this;
+	    this.inherited(arguments);
 	},
 	forEachWidget: function(inFunc) {
 		if (this.root)
@@ -83,12 +82,13 @@ dojo.declare("wm.Page", wm.Component, {
 	},
 	render: function() {
 		//console.time('renderTime ');
-		var d = this.domNode || document.body;
 		// FIXME: hiding pages not owned by app when rendered
 		// this really only applies to pages loaded into pageContainers
 		// however, due to asynchronous rendering it's not convenient to put
 		// this code elsewhere right now.
-		var notAppOwned = (this.owner != app), ds = d.style;
+	    var notAppOwned = (this.owner != app.pageContainer);
+	    var d = notAppOwned ? this.domNode || document.body : app.appRoot.domNode;
+	    var ds = d.style;
 		dojo.addClass(d, this.declaredClass);
 		
 		// if noAppOwned, we set left to negetive value so that user cannot see
@@ -228,7 +228,7 @@ dojo.declare("wm.Page", wm.Component, {
 	},
 	getRuntimeId: function(inId) {
 		inId = this.name + (inId ? "." + inId : "");
-		return this.owner ? this.owner.getRuntimeId(inId) : inId;
+		return this.owner != app.pageContainer ? this.owner.getRuntimeId(inId) : inId;
 	},
 	getComponent: function(inName) {
 		return this.components[inName] || this[inName] || this.owner && this.owner.getComponent(inName);
@@ -511,7 +511,10 @@ wm.Page.extend({
 		var props = c.listWriteableProperties();
 		for (var prop in props) {
 		    var value = c.getProp(prop);
-		    if (typeof value == "string" || typeof value == "boolean" || typeof value == "number") {
+		    // only do this for non-objects or for objects that aren't dojo objects nor domNodes
+		    // typeof null should NOT be "object" :-(
+		    if (value === null || typeof value != "object" || value.declaredClass === undefined && value instanceof Node == false) {
+		    //if (typeof value == "string" || typeof value == "boolean" || typeof value == "number") {
 			/* Restore the default values any time we change languages and clear the cache */
 			if (c["_original_i18n_" + prop] !== undefined && c["_original_i18n_" + prop] != value) {
 			    c.setProp(prop, c["_original_i18n_" + prop]);
@@ -519,7 +522,7 @@ wm.Page.extend({
 			    delete c["_original_i18n_" + prop]; 
 			}
 			if (!isDefaultLang) {
-			    c["_original_i18n_" + prop] = value;
+			    c["_original_i18n_" + prop] = (typeof value == "object") ? dojo.clone(value) : value;
 			}
 		    }
 		}
@@ -545,8 +548,8 @@ wm.Page.extend({
 	for (var i = 0; i < compList.length; i++) {
 	    var c = compList[i];
 	    var props = c.listWriteableProperties();
-	    for (var prop in props) {
-		if (c["_original_i18n_" + prop] !== undefined && c["_original_i18n_" + prop] != c.getProp(prop)) {
+	    for (var prop in props) {		
+		if (c.hasLocalizedProp(prop)) {
 		    if (!result[c.name])
 			result[c.name] = {};
 		    result[c.name][prop] = c.getProp(prop);

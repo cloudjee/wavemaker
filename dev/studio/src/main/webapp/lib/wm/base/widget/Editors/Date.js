@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -11,7 +11,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 
 dojo.provide("wm.base.widget.Editors.Date");
 dojo.require("wm.base.lib.date");
@@ -31,12 +30,17 @@ dojo.declare("wm.Date", wm.Text, {
 	//locale: '',
     
 	validationEnabled: function() { return true;},
-	getEditorProps: function(inNode, inProps) {
-		var constraints = {};
+        getEditorConstraints: function() {
+	    var constraints = {};	
 		if (this.minimum)
-		    constraints.min = this.convertValue(this.minimum).getTime();
+		    constraints.min = this.convertValue(this.minimum);
 		if (this.maximum)
-		    constraints.max = this.convertValue(this.maximum).getTime();
+		    constraints.max = this.convertValue(this.maximum);
+	    return constraints;
+	},
+	getEditorProps: function(inNode, inProps) {
+	    var constraints = this.getEditorConstraints();
+
 		var prop = dojo.mixin(this.inherited(arguments), {
 			promptMessage: this.promptMessage,
 			invalidMessage: this.invalidMessage || "$_unset_$",
@@ -60,8 +64,9 @@ dojo.declare("wm.Date", wm.Text, {
 	getEditorValue: function() {
 	    var d = this.inherited(arguments);
 	    if (d) {
-		if (!this.useLocalTime)
+		if (!this.useLocalTime) {
 		    d.setHours(-wm.timezoneOffset,0,0);
+		}
 		return d.getTime();
 	    }
 	    return this.makeEmptyValue();
@@ -85,34 +90,51 @@ dojo.declare("wm.Date", wm.Text, {
 	    }
 	},
 
+    /* Note that the definition of what are legal values is based on the conversions done by getEditorConstraints */
+	setMaximum: function(inMax) {
+	    if (!inMax) {
+		this.maximum = null;
+	    } else {
+		this.maximum = inMax;
+	    }
+	    if (this.editor) {
+		this.editor._setConstraintsAttr(this.getEditorConstraints());
+		this.editor.validate();
+	    }
+	},
+	setMinimum: function(inMin) {
+	    if (!inMin) {
+		this.minimum = null;
+	    } else {
+		this.minimum = inMin;
+	    }
+	    if (this.editor) {
+		this.editor._setConstraintsAttr(this.getEditorConstraints());
+		this.editor.validate();
+	    }
+	},
 
-    updateIsDirty: function() {
-	var wasDirty = this.isDirty;
-	var isDirty = true;
-	if (this.dataValue) {
-	    var dataValue = new Date(this.dataValue);
-	    dataValue.setHours(0);
-	    dataValue.setMinutes(0);
-	    dataValue.setSeconds(0);
+
+    calcIsDirty: function(val1, val2) {
+	if (val1 === undefined || val1 === null)
+	    val1 = 0;
+	if (val2 === undefined || val2 === null)
+	    val2 = 0;
+
+	if (val1 instanceof Date == false) {
+	    val1 = new Date(val1);
 	}
-	if (this._lastValue) {
-	    var lastValue = new Date(this._lastValue);
-	    lastValue.setHours(0);
-	    lastValue.setMinutes(0);
-	    lastValue.setSeconds(0);
+	if (val2 instanceof Date == false) {
+	    var val2 = new Date(val2);
 	}
 
-	if (dataValue && lastValue && dataValue.getTime() == lastValue.getTime()) {
-	    isDirty = false;
-	} else if ((this.dataValue === "" || this.dataValue === null || this.dataValue === undefined) &&
-		   (this._lastValue === "" || this._lastValue === null || this._lastValue === undefined)) {
-	    isDirty = false;
+	if (val1 && val2 && val1.getTime() == val2.getTime()) {
+	    return false;
 	}
-	this.valueChanged("isDirty", this.isDirty = isDirty);
-	if (wasDirty != this.isDirty)
-	    dojo.toggleClass(this.domNode, "isDirty", this.isDirty);
-	if (!app.disableDirtyEditorTracking)
-	    wm.fire(this.parent, "updateIsDirty");
+	val1 = dojo.date.locale.format(val1, {formatLength: "short", selector: "date"});
+	val2 = dojo.date.locale.format(val2, {formatLength: "short", selector: "date"});
+
+	return val1 != val2;
     }
 
 });
@@ -150,50 +172,29 @@ dojo.declare("wm.Time", wm.Date, {
 	    }
 	    return this.makeEmptyValue();
 	},
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "timePattern":
-			    return makeSelectPropEdit(inName, inValue, ["HH:mm", "HH:mm:ss", "HH:mm a", "HH:mm:ss a"], inDefault);
-		}
-		return this.inherited(arguments);
-	},
 
-    updateIsDirty: function() {
-	return wm.AbstractEditor.prototype.updateIsDirty.call(this);
+    calcIsDirty: function(val1, val2) {
+	if (val1 === undefined || val1 === null)
+	    val1 = 0;
+	if (val2 === undefined || val2 === null)
+	    val2 = 0;
+
+	if (val1 instanceof Date == false) {
+	    val1 = new Date(val1);
+	}
+	if (val2 instanceof Date == false) {
+	    var val2 = new Date(val2);
+	}
+
+	if (val1 && val2 && val1.getTime() == val2.getTime()) {
+	    return false;
+	}
+	val1 = dojo.date.locale.format(val1, {timePattern: this.timePattern, selector: "time"});
+	val2 = dojo.date.locale.format(val2, {timePattern: this.timePattern, selector: "time"});
+
+	return val1 != val2;
     }
-});
 
-
-
-
-
-wm.Object.extendSchema(wm.Date, {
-    changeOnKey: { ignore: 1 },
-    minimum: {group: "editor", order: 2,  doc: 1},
-    maximum: {group: "editor", order: 3, doc: 1}, 
-    format:  {group: "editor", doc: 0, ignore: 1},
-    invalidMessage: {group: "validation", order: 3},
-    showMessages: {group: "validation", order: 4},
-    promptMessage: {group: "Labeling", order: 6},
-    password: {ignore:1},
-    regExp: {ignore:1},
-    maxChars: {ignore:1},
-    resetButton: {ignore: 1},
-    changeOnKey: {ignore: 1}
-});
-
-wm.Object.extendSchema(wm.Time, {
-    format: { ignore: 1 },
-    minimum: {group: "editor", order: 2, ignore: 1},
-    maximum: {group: "editor", order: 3, ignore: 1},
-    timePattern:{group: "editor", order: 4,  doc: 1},
-    invalidMessage: {group: "validation", order: 3},
-    showMessages: {group: "validation", order: 4},
-    promptMessage: {group: "Labeling", order: 6},
-    password: {ignore:1},
-    regExp: {ignore:1},
-    maxChars: {ignore:1},
-    changeOnKey: {ignore: 1}
 });
 
 
@@ -241,7 +242,8 @@ dojo.declare("wm.DateTime", wm.Text, {
 	this.inherited(arguments);
 	wm.onidle(this, function() {
 	    if (!wm.DateTime.dialog) {	    
-		var dialog = wm.DateTime.dialog = new wm.Dialog({_classes: {domNode: ["wmdatetimedialog"]}, owner: app, "height":"252px","title":"","width":"210px", modal: false, useContainerWidget:true, useButtonBar: true, name: "_DateTimeDialog"});
+		var dialog = wm.DateTime.dialog = new wm.Dialog({_classes: {domNode: ["wmdatetimedialog"]}, owner: app, "height":"252px","title":"","width":"210px", modal: false, useContainerWidget:true, useButtonBar: true, name: "_DateTimeDialog", corner: "bc"});
+		dialog.containerWidget.setAutoScroll(false);
 		dialog.containerWidget.setPadding("1");
 		dialog.containerWidget.createComponent(	
 		    "mainPanel", "wm.Container", 
@@ -495,40 +497,5 @@ dojo.declare("wm.DateTime", wm.Text, {
 	return p;
     }
 
-
 });
 
-wm.Object.extendSchema(wm.DateTime, {
-    changeOnKey: { ignore: 1 },
-    invalidMessage: {group: "validation", order: 3},
-    showMessages: {group: "validation", order: 4},
-    promptMessage: {group: "Labeling", order: 6},
-    password: {ignore:1},
-    regExp: {ignore:1},
-    maxChars: {ignore:1},
-    changeOnKey: {ignore: 1},
-
-    dateMode: {group: "editor", order: 2},
-    formatLength: {group: "editor", order: 3},
-    resetButton: {ignore: 1},
-    timePanelHeight: {group: "style"},
-    useLocalTime: {group: "editor", order: 4}
-});
-
-wm.DateTime.extend({
-    makePropEdit: function(inName, inValue, inDefault) {
-	switch (inName) {
-	case "formatLength":
-	    return makeSelectPropEdit(inName, inValue, ["short", "medium", "long"], inDefault);
-	case "dateMode":
-	    return makeSelectPropEdit(inName, inValue, ["Date and Time", "Date", "Time"], inDefault);
-	}
-	return this.inherited(arguments);
-    },
-    setFormatLength: function(inValue) {
-	// must get value before changing formatLength because formatLength determines how to parse the value
-	var value = this.getDataValue();
-	this.formatLength = inValue; 
-	this.setDataValue(value);
-    }
-});

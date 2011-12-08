@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +27,11 @@ public class Method implements Comparable<Method> {
 
     private List<Param> parameters;
 
-    @Override
+    private String operationType;
+    
+    /* (non-Javadoc)
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     */
     public int compareTo(Method o) {
 
         // first, check the names
@@ -63,5 +67,11 @@ public class Method implements Comparable<Method> {
 
     public void setParameters(List<Param> parameters) {
         this.parameters = parameters;
+    }
+    public String getOperationType() {
+        return operationType;
+    }
+    public void setOperationType(String operationType) {
+        this.operationType = operationType;
     }
 }

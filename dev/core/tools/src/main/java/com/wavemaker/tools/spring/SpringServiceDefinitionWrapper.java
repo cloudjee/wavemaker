@@ -24,6 +24,7 @@ import com.wavemaker.runtime.service.ServiceType;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
 import com.wavemaker.runtime.service.definition.ServiceOperation;
+import com.wavemaker.runtime.pws.IPwsServiceModifier;
 
 /**
  * @author Simon Toens
@@ -137,4 +138,14 @@ public class SpringServiceDefinitionWrapper implements DeprecatedServiceDefiniti
     public String getPartnerName() {
         return null;
     }
+
+    public List<ElementType> getInputTypesNoCaseShift(String operationName) {
+        return null;
+    }
+
+    public List<ServiceOperation> getServiceOperations(IPwsServiceModifier serviceModifier) {
+        return delegate.getServiceOperations();  
+    }
+
+    public String getOperationType(String operationName) {return null;}
 }

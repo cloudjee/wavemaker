@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2010-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -57,19 +57,16 @@ dojo.declare("wm.TypeDefinitionField", wm.Component, {
             this.owner.doRemoveType();
             this.owner.doAddType();
         }
+    },
+    /* design time */
+    addField: function() {
+	this.owner.addField();
     }
-});
-wm.TypeDefinitionField.extend({
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "fieldType":
-				return new wm.propEdit.AllDataTypesSelect({component: this, name: inName, value: inValue});
-                }
-            return this.inherited(arguments);
-        }
 });
 
 wm.Object.extendSchema(wm.TypeDefinitionField, {
+    addField: {operation:1},
+    fieldType: {editor: "wm.prop.DataTypeSelect", editorProps: {useLiterals:1}},
     documentation: {ignore: true},
     generateDocumentation: {ignore: true}
 });
@@ -128,28 +125,12 @@ dojo.declare("wm.TypeDefinition", wm.Component, {
 });
 
 wm.Object.extendSchema(wm.TypeDefinition, {
-    addField: {group: "operation", order: 1},
+    addField: {group: "operation", order: 1, operation:true},
     internal: {ignore: true}, // only way to set something as internal is to hardcode it into widgets.js; should only be internal if in use by studio to define a type for use by studio but not by the user
     owner: {ignore: true}
 });
 
 wm.TypeDefinition.extend({
-    addField: "(add field)",
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "addField":
-				return makeReadonlyButtonEdit(inName, inValue, inDefault);
-                }
-            return this.inherited(arguments);
-        },
-	editProp: function(inName, inValue, inInspector) {
-	    switch (inName) {
-	    case "addField":
-                this.addField();
-                return;
-            }
-            return this.inherited(arguments);
-        },
         addField: function() {
             this.fieldsAsTypes = null;
 	    var	defName = this.getUniqueName("field1");

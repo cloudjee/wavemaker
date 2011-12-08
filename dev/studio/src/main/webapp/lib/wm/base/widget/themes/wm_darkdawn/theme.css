@@ -2,7 +2,7 @@
  * FILE: theme.css
  *****************************************/
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 @import url("custom.css"); /* Edit this file if your editting by hand and don't want the themedesigner to overwrite your changes */
   /**************************************************************************************************
    * TYPE:        Button Focus for wm.Button and TabControls
@@ -88,7 +87,19 @@ body .wm_darkdawn input:focus,
 /*****************************************
  * FILE: buttons.css
  *****************************************/
-
+/*
+ *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.Button
    *
@@ -394,7 +405,19 @@ body .wm_darkdawn input:focus,
 /*****************************************
  * FILE: calendar.css
  *****************************************/
-
+/*
+ *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.Calendar and the popup from wm.Date
    *
@@ -501,7 +524,19 @@ body .wm_darkdawn input:focus,
 /*****************************************
  * FILE: dialog.css
  *****************************************/
-
+/*
+ *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.Dialog main styles
    *
@@ -683,7 +718,19 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
 /*****************************************
  * FILE: editors.css
  *****************************************/
-
+/*
+ *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.AbstractEditor / wm._BaseEditor
    *
@@ -694,14 +741,9 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
 /* Give editors the standard border color, and get rid of the outline styling which is unnecessary and looks bad in webkit */
 .wm_darkdawn .wmeditor .dijitTextBox.dijitFocused,
 .wm_darkdawn .wmeditor .dijitTextArea.dijitFocused,
-.wm_darkdawn .wmeditor .dijitComboBox.dijitFocused {
+.wm_darkdawn .wmeditor .dijitComboBox.dijitFocused,
+.wm_darkdawn .wmeditor .dijitSelect.dijitFocused {
 	outline-width: 0 !important;    
-}
-.wm_darkdawn .wmeditor .wmeditor-caption {
-    color: inherit;
-    font-family: inherit;
-    font-size: inherit;
-    font-weight: inherit;
 }
 /* Make all editors equally rounded.  This is not for technical reasons.  It is my opinion that a theme should
  * allow some things to vary, and other things should provide a consistent common look.
@@ -715,6 +757,17 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
      -webkit-border-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
      border-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
 }
+.wm_darkdawn  .wmeditor .dijitSelect .dijitButtonContents {
+     /* Borders-Editor_BorderStyle_Radius */
+    -moz-border-radius-bottomleft: 4px; /* Borders-Editor_BorderStyle_Radius */
+    -moz-border-radius-topleft: 4px; /* Borders-Editor_BorderStyle_Radius */
+    -webkit-border-top-left-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
+    -webkit-border-bottom-left-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
+    border-radius-bottomleft: 4px; /* Borders-Editor_BorderStyle_Radius */
+    border-radius-top-left: 4px; /* Borders-Editor_BorderStyle_Radius */
+    border-right: solid 0px transparent !important;
+    display:block;
+}
 /* Can't round the top edges of the richtext editor until we're ready to tackle rounding dojo's toolbar */
 .wm_darkdawn .wmeditor.wmrichtext {
     /* Borders-Editor_BorderStyle_Radius */
@@ -725,7 +778,8 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     border-radius-bottomleft: 4px; /* Borders-Editor_BorderStyle_Radius */
     border-radius-bottomright: 4px; /* Borders-Editor_BorderStyle_Radius */
 }
-.wm_darkdawn .wmeditor .dijitComboBox .dijitArrowButton {
+.wm_darkdawn .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_darkdawn .wmeditor .dijitSelect .dijitArrowButton {
     height: 100% !important;
     -moz-border-radius-bottomright: 2px; /* wm.SelectMenu-Inner_Radius */
     -moz-border-radius-topright: 2px; /* wm.SelectMenu-Inner_Radius */
@@ -736,6 +790,9 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
 }
 .wm_darkdawn .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
         height: 100% !important;
+}
+.wm_darkdawn .dijitComboBox .dijitArrowButton .dijitArrowButtonInner,
+.wm_darkdawn .dijitSelect .dijitArrowButton .dijitArrowButtonInner {
         background-position: 50% 50%;
 	background-image: url(images/comboArrowDownLight.png); /* wm.SelectMenu-Down-Arrow_Image */
         -moz-border-radius-bottomright: 2px; /* wm.SelectMenu-Inner_Radius */
@@ -781,15 +838,30 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
    *              button. 
    ************************************************************************************************/
 .wm_darkdawn .wmeditor .dijitSpinner .dijitArrowButton,
-.wm_darkdawn .wmeditor .dijitComboBox .dijitArrowButton {
+.wm_darkdawn .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_darkdawn .wmeditor .dijitSelect .dijitArrowButton {
     background-color: #555555; /* Document-ClickablesDefault-Background_Color */
     background-image: none;
 }
+.wm_darkdawn .wmeditor .wmeditor-caption {
+	font-family: inherit; /* Document-EditorsCaption-Font_Family */
+	font-size: inherit; /* Document-EditorsCaption-Font_TextSize */
+	color: inherit; /* Document-EditorsCaption-Font_Color */
+	font-weight: bold; /* Document-EditorsCaption-Font_Weight */
+}
+.wm_darkdawn .wmeditor .wmeditor-readonlyNode {
+	font-family: inherit; /* Document-EditorsReadonly-Font_Family */
+	font-size: inherit; /* Document-EditorsReadonly-Font_TextSize */
+	color: inherit; /* Document-EditorsReadonly-Font_Color */
+	font-weight: inherit; /* Document-EditorsReadonly-Font_Weight */
+}
     .wm_darkdawn .dojoxGrid .dijitTextBox,
     .wm_darkdawn .dojoxGrid .dijitComboBox,
+    .wm_darkdawn .dojoxGrid .dijitSelect .dijitButtonContents,
     .wm_darkdawn .wmeditor .dijitTextBox,
     .wm_darkdawn .wmeditor .dijitTextArea,
     .wm_darkdawn .wmeditor .dijitComboBox,
+    .wm_darkdawn .wmeditor .dijitSelect .dijitButtonContents,
     .wm_darkdawn .dijitTimePickerItem,
     .wm_darkdawn .wmeditor .RichTextEditable iframe {
 	/* Document-EditorsDefault-Border */
@@ -816,6 +888,7 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     .wm_darkdawn .wmeditor .dijitTextBox.dijitHover,
     .wm_darkdawn .wmeditor .dijitTextArea:hover,
     .wm_darkdawn .wmeditor .dijitComboBox.dijitHover,
+    .wm_darkdawn .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
     .wm_darkdawn .wmeditor .RichTextEditable:hover iframe,
     .wm_darkdawn .dijitTimePickerMarker.dijitTimePickerMarkerHover,
     .wm_darkdawn .dijitTimePickerItem.dijitTimePickerItemHover {
@@ -830,12 +903,19 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     }
     .wm_darkdawn .dojoxGrid .dijitTextBox.dijitFocused,
     .wm_darkdawn .dojoxGrid .dijitComboBox.dijitFocused,
+    .wm_darkdawn .dojoxGrid .dijitSelect.dijitFocused .dijitButtonContents,
     .wm_darkdawn .wmeditor .dijitTextBox.dijitFocused,
     .wm_darkdawn .wmeditor .dijitTextBox.dijitFocused.dijitHover,
     .wm_darkdawn .wmeditor .dijitTextArea.dijitFocused,
     .wm_darkdawn .wmeditor .dijitTextArea.dijitFocused:hover,
     .wm_darkdawn .wmeditor .dijitComboBox.dijitFocused,
     .wm_darkdawn .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_darkdawn .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
+    .wm_darkdawn .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents,
+    .wm_darkdawn .isDirty.wmeditor .dijitTextBox,
+    .wm_darkdawn .isDirty.wmeditor .dijitTextArea,
+    .wm_darkdawn .isDirty.wmeditor .dijitComboBox,
+    .wm_darkdawn .isDirty.wmeditor .dijitSelect .dijitButtonContents,
     .wm_darkdawn .wmeditor .RichTextEditable.Focused iframe {
 	/* Document-EditorsFocus-Font */
 	color: #000000; /* Document-EditorsFocus-Font_Color */
@@ -856,13 +936,14 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
    *              button. 
    ************************************************************************************************/
 .wm_darkdawn .MainContent .wmeditor .dijitSpinner .dijitArrowButton,
-.wm_darkdawn .MainContent .wmeditor .dijitComboBox .dijitArrowButton {
+.wm_darkdawn .MainContent .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_darkdawn .MainContent .wmeditor .dijitSelect .dijitArrowButton {
     background-color: #555555; /* MainContent-ClickablesDefault-Background_Color */
-    background-image: none;
 }
     .wm_darkdawn .MainContent .wmeditor .dijitTextBox,
     .wm_darkdawn .MainContent .wmeditor .dijitTextArea,
     .wm_darkdawn .MainContent .wmeditor .dijitComboBox,
+    .wm_darkdawn .MainContent .wmeditor .dijitSelect .dijitButtonContents,
     .wm_darkdawn .MainContent .dijitTimePickerItem,
     .wm_darkdawn .MainContent .wmeditor .RichTextEditable iframe {
 	/* MainContent-EditorsDefault-Border */
@@ -891,6 +972,7 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     .wm_darkdawn .MainContent .wmeditor .dijitTextBox.dijitHover,
     .wm_darkdawn .MainContent .wmeditor .dijitTextArea:hover,
     .wm_darkdawn .MainContent .wmeditor .dijitComboBox.dijitHover,
+    .wm_darkdawn .MainContent .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
     .wm_darkdawn .MainContent .wmeditor .RichTextEditable:hover iframe,
     .wm_darkdawn .MainContent .dijitTimePickerMarker.dijitTimePickerMarkerHover,
     .wm_darkdawn .MainContent .dijitTimePickerItem.dijitTimePickerItemHover {
@@ -909,6 +991,8 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     .wm_darkdawn .MainContent .wmeditor .dijitTextArea.dijitFocused:hover,
     .wm_darkdawn .MainContent .wmeditor .dijitComboBox.dijitFocused,
     .wm_darkdawn .MainContent .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_darkdawn .MainContent .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
+    .wm_darkdawn .MainContent .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents,
     .wm_darkdawn .MainContent .wmeditor .RichTextEditable.Focused iframe {
 	/* MainContent-EditorsFocus-Font */
 	color: #000000; /* MainContent-EditorsFocus-Font_Color */
@@ -928,14 +1012,15 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
    *              button. 
    ************************************************************************************************/
 .wm_darkdawn .EmphasizedContent .wmeditor .dijitSpinner .dijitArrowButton,
-.wm_darkdawn .EmphasizedContent .wmeditor .dijitComboBox .dijitArrowButton {
+.wm_darkdawn .EmphasizedContent .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_darkdawn .EmphasizedContent .wmeditor .dijitSelect .dijitArrowButton {
     background-color: #0078a3; /* EmphasizedContent-ClickablesDefault-Background_Color */
-    background-image: none;
 }
     /* BEGIN inner content panel editors */
     .wm_darkdawn .EmphasizedContent .wmeditor .dijitTextBox,
     .wm_darkdawn .EmphasizedContent .wmeditor .dijitTextArea,
     .wm_darkdawn .EmphasizedContent .wmeditor .dijitComboBox,
+    .wm_darkdawn .EmphasizedContent .wmeditor .dijitSelect .dijitButtonContents,
     .wm_darkdawn .EmphasizedContent .dijitTimePickerItem,
     .wm_darkdawn .EmphasizedContent .wmeditor .RichTextEditable iframe {
 	/* EmphasizedContent-EditorsDefault-Border */
@@ -955,6 +1040,7 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     .wm_darkdawn .EmphasizedContent .wmeditor .dijitTextBox.dijitHover,
     .wm_darkdawn .EmphasizedContent .wmeditor .dijitTextArea:hover,
     .wm_darkdawn .EmphasizedContent .wmeditor .dijitComboBox.dijitHover,
+    .wm_darkdawn .EmphasizedContent .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
     .wm_darkdawn .EmphasizedContent .wmeditor .RichTextEditable:hover iframe,
     .wm_darkdawn .EmphasizedContent .dijitTimePickerMarker.dijitTimePickerMarkerHover,
     .wm_darkdawn .EmphasizedContent .dijitTimePickerItem.dijitTimePickerItemHover {
@@ -973,6 +1059,8 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     .wm_darkdawn .EmphasizedContent .wmeditor .dijitTextArea.dijitFocused:hover,
     .wm_darkdawn .EmphasizedContent .wmeditor .dijitComboBox.dijitFocused,
     .wm_darkdawn .EmphasizedContent .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_darkdawn .EmphasizedContent .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
+    .wm_darkdawn .EmphasizedContent .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents,
     .wm_darkdawn .EmphasizedContent .wmeditor .RichTextEditable.Focused iframe {
 	/* EmphasizedContent-EditorsFocus-Font */
 	color: #000000; /* EmphasizedContent-EditorsFocus-Font_Color */
@@ -993,15 +1081,15 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
    *              button. 
    ************************************************************************************************/
 .wm_darkdawn .HeaderContent .wmeditor .dijitSpinner .dijitArrowButton,
-.wm_darkdawn .HeaderContent .wmeditor .dijitComboBox .dijitArrowButton {
+.wm_darkdawn .HeaderContent .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_darkdawn .HeaderContent .wmeditor .dijitSelect .dijitArrowButton {
     background-color: #ee891e; /* HeaderContent-ClickablesDefault-Background_Color */
-    background-image: none;
-    height: 100% !important;
 }
     /* BEGIN inner content panel editors */
     .wm_darkdawn .HeaderContent .wmeditor .dijitTextBox,
     .wm_darkdawn .HeaderContent .wmeditor .dijitTextArea,
     .wm_darkdawn .HeaderContent .wmeditor .dijitComboBox,
+    .wm_darkdawn .HeaderContent .wmeditor .dijitSelect .dijitButtonContents,
     .wm_darkdawn .HeaderContent .dijitTimePickerItem,
     .wm_darkdawn .HeaderContent .wmeditor .RichTextEditable iframe {
 	/* HeaderContent-EditorsDefault-Border */
@@ -1021,6 +1109,7 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     .wm_darkdawn .HeaderContent .wmeditor .dijitTextBox.dijitHover,
     .wm_darkdawn .HeaderContent .wmeditor .dijitTextArea:hover,
     .wm_darkdawn .HeaderContent .wmeditor .dijitComboBox.dijitHover,
+    .wm_darkdawn .HeaderContent .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
     .wm_darkdawn .HeaderContent .wmeditor .RichTextEditable:hover iframe,
     .wm_darkdawn .HeaderContent .dijitTimePickerMarker.dijitTimePickerMarkerHover,
     .wm_darkdawn .HeaderContent .dijitTimePickerItem.dijitTimePickerItemHover {
@@ -1039,6 +1128,8 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     .wm_darkdawn .HeaderContent .wmeditor .dijitTextArea.dijitFocused:hover,
     .wm_darkdawn .HeaderContent .wmeditor .dijitComboBox.dijitFocused,
     .wm_darkdawn .HeaderContent .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_darkdawn .HeaderContent .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
+    .wm_darkdawn .HeaderContent .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents,
     .wm_darkdawn .HeaderContent .wmeditor .RichTextEditable.Focused iframe {
 	/* HeaderContent-EditorsFocus-Font */
 	color: #000000; /* HeaderContent-EditorsFocus-Font_Color */
@@ -1057,7 +1148,19 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
 /*****************************************
  * FILE: grid.css
  *****************************************/
-
+/*
+ *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        Grid rows (Even rows and odd rows)
    *
@@ -1126,6 +1229,8 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     .wm_darkdawn div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
     .wm_darkdawn div.dojoxGridRow.dojoxGridRowSelected, 
     .wm_darkdawn div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+    .wm_darkdawn div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver, 
+    .wm_darkdawn div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
     .wm_darkdawn .wmlist-item.wmlist-item-selected,
     .wm_darkdawn .wmlist-item.wmlist-item-selected.wmlist-item-over,
     .dj_ie6 .wm_darkdawn .wmlist-item.wmlist-item-selected.wmlist-item-over {
@@ -1145,7 +1250,7 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     .wm_darkdawn .dojoxGridRowOver td.dojoxGridCell
     {
 	/* Document-ClickablesHover-Background */
-	background-color: #0078a3 !important; /* Document-ClickablesHover-Background_Color */
+	background-color: #0078a3; /* Document-ClickablesHover-Background_Color */
 	/* Document-ClickablesHover-Font */
 	color: #ffffff; /* Document-ClickablesHover-Font_Color */
     }
@@ -1154,7 +1259,7 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     }
     .wm_darkdawn div.dojoxGridContent .dojoxGridCellFocus,
     .wm_darkdawn div.dojoxGridContent .dojoxGrid-cell-focus {
-	border-width: 1px dashed transparent !important;
+	border: 1px dashed transparent !important;
     }
     /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
     .wm_darkdawn div.dojoxGrid-header .dojoxGrid-cell,
@@ -1203,6 +1308,8 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     .wm_darkdawn .MainContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
     .wm_darkdawn .MainContent div.dojoxGridRow.dojoxGridRowSelected, 
     .wm_darkdawn .MainContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+    .wm_darkdawn .MainContent div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver, 
+    .wm_darkdawn .MainContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
     .wm_darkdawn .MainContent .wmlist-item.wmlist-item-selected,
     .wm_darkdawn .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over, 
     .dj_ie6 .wm_darkdawn .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
@@ -1221,7 +1328,7 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     .wm_darkdawn .MainContent .dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* MainContent-ClickablesHover-Background */
-	background-color: #0078a3 !important; /* MainContent-ClickablesHover-Background_Color */
+	background-color: #0078a3; /* MainContent-ClickablesHover-Background_Color */
 	/* MainContent-ClickablesHover-Font */
 	color: #ffffff; /* MainContent-ClickablesHover-Font_Color */
     }
@@ -1230,7 +1337,7 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     }
     .wm_darkdawn .MainContent div.dojoxGridContent .dojoxGridCellFocus,
     .wm_darkdawn .MainContent div.dojoxGridContent .dojoxGrid-cell-focus {
-	border-width: 1px dashed transparent !important;
+	border: 1px dashed transparent !important;
     }
 }
 @media screen { /* EmphasizedContent-Level */ 
@@ -1240,6 +1347,8 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     .wm_darkdawn .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
     .wm_darkdawn .EmphasizedContent div.dojoxGridRow.dojoxGridRowSelected, 
     .wm_darkdawn .EmphasizedContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+    .wm_darkdawn .EmphasizedContent div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver, 
+    .wm_darkdawn .EmphasizedContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
     .wm_darkdawn .EmphasizedContent .wmlist-item.wmlist-item-selected,
     .wm_darkdawn .EmphasizedContent .wmlist-item.wmlist-item-selected.wmlist-item-over,
     .dj_ie6 .wm_darkdawn .EmphasizedContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
@@ -1257,7 +1366,7 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     .wm_darkdawn .EmphasizedContent .dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* EmphasizedContent-ClickablesHover-Background */
-	background-color: #0090c3 !important; /* EmphasizedContent-ClickablesHover-Background_Color */
+	background-color: #0090c3; /* EmphasizedContent-ClickablesHover-Background_Color */
 	/* EmphasizedContent-ClickablesHover-Font */
 	color: #ffffff; /* EmphasizedContent-ClickablesHover-Font_Color */
     }
@@ -1266,7 +1375,7 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     }
     .wm_darkdawn .EmphasizedContent div.dojoxGridContent .dojoxGridCellFocus,
     .wm_darkdawn .EmphasizedContent div.dojoxGridContent .dojoxGrid-cell-focus {
-	border-width: 1px dashed transparent !important;
+	border: 1px dashed transparent !important;
     }
 }
 @media screen { /* HeaderContent-Level */ 
@@ -1276,6 +1385,8 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     .wm_darkdawn .HeaderContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
     .wm_darkdawn .HeaderContent div.dojoxGridRow.dojoxGridRowSelected, 
     .wm_darkdawn .HeaderContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+    .wm_darkdawn .HeaderContent div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver, 
+    .wm_darkdawn .HeaderContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
     .wm_darkdawn .HeaderContent .wmlist-item.wmlist-item-selected,
     .wm_darkdawn .HeaderContent .wmlist-item.wmlist-item-selected.wmlist-item-over,
     .dj_ie6 .wm_darkdawn .HeaderContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
@@ -1294,7 +1405,7 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     .wm_darkdawn #wavemakerNode .wmlayout .HeaderContent .dojoxGridRowOver a
     {
 	/* HeaderContent-ClickablesHover-Background */
-	background-color: #c46900 !important; /* HeaderContent-ClickablesHover-Background_Color */
+	background-color: #c46900; /* HeaderContent-ClickablesHover-Background_Color */
 	/* HeaderContent-ClickablesHover-Font */
 	color: #ffffff; /* HeaderContent-ClickablesHover-Font_Color */
     }
@@ -1303,7 +1414,7 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
     }
     .wm_darkdawn .HeaderContent div.dojoxGridContent .dojoxGridCellFocus,
     .wm_darkdawn .HeaderContent div.dojoxGridContent .dojoxGrid-cell-focus {
-	border-width: 1px dashed transparent !important;
+	border: 1px dashed transparent !important;
     }
     /* Table/List Header-Cells (.dojoxGridCell is wm.DojoGrid; .dojoxGrid-cell is wm.DataGrid) */
     .wm_darkdawn .HeaderContent div.dojoxGrid-header .dojoxGrid-cell,
@@ -1346,7 +1457,19 @@ body .wm_darkdawn .dialogfooter .wmbutton:hover {
 /*****************************************
  * FILE: menus.css
  *****************************************/
-
+/*
+ *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.DojoMenu
    *
@@ -1574,7 +1697,7 @@ body .wm_darkdawn .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelected
    ************************************************************************************************/
 body.wm_darkdawn ul.dijitMenu .dijitMenuItem,
 body .wm_darkdawn ul.dijitMenu .dijitMenuItem,
-body.wm_default div.dijitMenu .dijitCalendarMonthLabel {
+body.wm_darkdawn div.dijitMenu .dijitCalendarMonthLabel {
     /* Tables-EvenRows-Font */
     color: #000000; /* Tables-EvenRows-Font_Color */
     /* Tables-EvenRows-Background */
@@ -1588,8 +1711,8 @@ body.wm_darkdawn  ul.dijitMenu .dijitMenuItem.dijitMenuItemHover,
 body .wm_darkdawn ul.dijitMenu .dijitMenuItem.dijitMenuItemHover,
 body.wm_darkdawn  ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected,
 body .wm_darkdawn ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected,
-body.wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover,
-body .wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
+body.wm_darkdawn div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover,
+body .wm_darkdawn div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
     /* Document-ClickablesHover-Font */
     color: #ffffff; /* Document-ClickablesHover-Font_Color */
     /* Document-ClickablesHover-Background */
@@ -1611,7 +1734,19 @@ body .wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
 /*****************************************
  * FILE: panels.css
  *****************************************/
-
+/*
+ *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 /* NOTE: Shadows don't currently work on fancy panel or Layers */
   /**************************************************************************************************
    * TYPE:        Tab Buttons
@@ -1635,7 +1770,10 @@ body .wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
 }
 .wm_darkdawn .wmtablayers-tab.wmtablayers-selected,
 .wm_darkdawn .wmtablayers-tab.wmtablayers-selected:hover,
-.wm_darkdawn .wmtablayers-tab.wmtablayers-selected:focus {
+.wm_darkdawn .wmtablayers-tab.wmtablayers-selected:focus,
+.wm_darkdawn .wmtablayers-verticaltab.wmtablayers-selected,
+.wm_darkdawn .wmtablayers-verticaltab.wmtablayers-selected:hover,
+.wm_darkdawn .wmtablayers-verticaltab.wmtablayers-selected:focus {
     -moz-box-shadow: 0px 0px 0px black;  /* wm.TabLayers-Active-BorderStyle_Shadow */
     -webkit-box-shadow: 0px 0px 0px black;   /* wm.TabLayers-Active-BorderStyle_Shadow */
     box-shadow: 0px 0px 0px black;   /* wm.TabLayers-Active-BorderStyle_Shadow */
@@ -1652,7 +1790,35 @@ body .wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
 	border-radius-topleft: 12px; /* Document-ClickablesDefault-BorderStyle_Radius */
 	border-radius-topright: 12px; /* Document-ClickablesDefault-BorderStyle_Radius */
 }
+.wm_darkdawn button.wmtablayers-verticaltab {
+    /* wm.TabLayers-BorderStyle_Shadow */
+    -moz-box-shadow: 2px 0px 2px #444444; /* wm.TabLayers-BorderStyle_Shadow */
+    -webkit-box-shadow: 2px 0px 2px #444444; /* wm.TabLayers-BorderStyle_Shadow */
+    box-shadow: 2px 0px 2px #444444; /* wm.TabLayers-BorderStyle_Shadow */
+    font-size: 10pt; /* wm.TabLayers-Button_TextSize */
+    width: 95%;
+    margin-left: 5%;
+}
+.wm_darkdawn .wmtablayers-verticaltab:hover, .wm_darkdawn .wmtablayers-verticaltab:focus {
+    /* wm.TabLayers-HoverShadow */
+    -moz-box-shadow: 1px 0px 1px #444444; /* wm.TabLayers-Hover-BorderStyle_Shadow */
+    -webkit-box-shadow: 1px 0px 1px #444444; /* wm.TabLayers-Hover-BorderStyle_Shadow */
+    box-shadow: -2px 2px 2px #444444;   /* wm.TabLayers-Hover-BorderStyle-Shadow */
+}
+/* Spacing between each tab */
+.wm_darkdawn .wmtablayers-verticaltab.wmtablayers-selected,
+.wm_darkdawn .wmtablayers-verticaltab.wmtablayers-verticaltab {
+    margin-bottom: 5px;
+	/* Document-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius-bottomleft: 12px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius-topleft: 12px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-bottom-left-radius: 12px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-top-left-radius: 12px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	border-radius-bottomleft: 12px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	border-radius-topleft: 12px; /* Document-ClickablesDefault-BorderStyle_Radius */
+}
     /* Tab <input type='button'> elements need to handle browser focus as any other button */
+    .wm_darkdawn .wmtablayers-verticaltab:focus,
     .wm_darkdawn .wmtablayers-tab:focus {
 	outline-width: 0;
     }
@@ -1844,7 +2010,8 @@ body.wm_darkdawn {
         background-image: none !important;
     }
     /* Tab buttons */
-    .wm_darkdawn button.wmtablayers-tab {
+    .wm_darkdawn button.wmtablayers-tab,
+    .wm_darkdawn button.wmtablayers-verticaltab {
 	/* Document-ClickablesDefault-Font */
 	font-family: Arial; /* Document-ClickablesDefault-Font_Family */
 	color: #ffffff; /* Document-ClickablesDefault-Font_Color */
@@ -1857,16 +2024,26 @@ body.wm_darkdawn {
 	/* Document-ClickablesDefault-Border */
 	border-bottom-color: transparent;
 	border-top-color: #444444; /* Borders-Clickable_Border_Color */
-	border-right-color:#444444; /* Borders-Clickable_Border_Color */
 	border-left-color:#444444; /* Borders-Clickable_Border_Color */
         /* editting this is problematic without also editting headerHeight */
     border-width: 2px;
     border-style: solid;
     }
+    .wm_darkdawn button.wmtablayers-tab {
+	border-bottom-color: transparent;
+	border-right-color: #444444; /* Borders-Clickable_Border_Color */
+    }
+    .wm_darkdawn button.wmtablayers-verticaltab {
+	border-right-color: transparent;
+	border-bottom-color: #444444; /* Borders-Clickable_Border_Color */
+    }
     .dj_ie6 .wm_darkdawn .wmtablayers-tab {
         background-image: none !important;
     }
-    .wm_darkdawn .wmtablayers-tab:hover, .wm_darkdawn .wmtablayers-tab:focus {
+    .wm_darkdawn .wmtablayers-tab:hover, 
+    .wm_darkdawn .wmtablayers-tab:focus,
+    .wm_darkdawn .wmtablayers-verticaltab:hover, 
+    .wm_darkdawn .wmtablayers-verticaltab:focus {
 	/* Document-ClickablesHover-Font */
 	color: #ffffff; /* Document-ClickablesHover-Font_Color */
 	/* Document-ClickablesHover-Background */
@@ -1879,7 +2056,10 @@ body.wm_darkdawn {
     .dj_ie6 .wm_darkdawn .wmtablayers-tab.wmtablayers-selected,
     .wm_darkdawn .wmtablayers-tab.wmtablayers-selected,
     .wm_darkdawn .wmtablayers-tab.wmtablayers-selected:hover,
-    .wm_darkdawn .wmtablayers-tab.wmtablayers-selected:focus {
+    .wm_darkdawn .wmtablayers-tab.wmtablayers-selected:focus,
+    .wm_darkdawn .wmtablayers-verticaltab.wmtablayers-selected,
+    .wm_darkdawn .wmtablayers-verticaltab.wmtablayers-selected:hover,
+    .wm_darkdawn .wmtablayers-verticaltab.wmtablayers-selected:focus {
 	/* Document-ClickablesActive-Font */
 	color: #ffffff; /* Document-ClickablesActive-Font_Color */
 	/* Document-ClickablesActive-Background */
@@ -1896,7 +2076,9 @@ body.wm_darkdawn {
     /* BEGIN SECTION wm.WizardLayers */
     /* Custom formatting for wizard tab with focus or hover on the <input type='button'/> */
     .wm_darkdawn .wmwizardlayers-tab:focus,
-    .wm_darkdawn .wmwizardlayers-tab:hover {
+    .wm_darkdawn .wmwizardlayers-tab:hover,
+    .wm_darkdawn .wmwizardlayers-verticaltab:focus,
+    .wm_darkdawn .wmwizardlayers-verticaltab:hover {
 	color: black; /* Custom mouseover color */
     }
     /* END SECTION wm.WizardLayers */
@@ -2089,7 +2271,9 @@ body.wm_darkdawn {
     /* BEGIN SECTION wm.WizardLayers */
     /* TODO: Enable this property */
     .wm_darkdawn .MainContent .wmwizardlayers-tab:focus,
-    .wm_darkdawn .MainContent .wmwizardlayers-tab:hover {
+    .wm_darkdawn .MainContent .wmwizardlayers-tab:hover,
+    .wm_darkdawn .MainContent .wmwizardlayers-verticaltab:focus,
+    .wm_darkdawn .MainContent .wmwizardlayers-verticaltab:hover
 	color: black; /* wm.WizardLayers-Active_Color */
     }
     /* END SECTION wm.WizardLayers */
@@ -2257,7 +2441,9 @@ body.wm_darkdawn {
     /* BEGIN SECTION wm.WizardLayers */
     /* TODO: Enable this property */
     .wm_darkdawn .EmphasizedContent .wmwizardlayers-tab:focus,
-    .wm_darkdawn .EmphasizedContent .wmwizardlayers-tab:hover {
+    .wm_darkdawn .EmphasizedContent .wmwizardlayers-tab:hover,
+    .wm_darkdawn .EmphasizedContent .wmwizardlayers-verticaltab:focus,
+    .wm_darkdawn .EmphasizedContent .wmwizardlayers-verticaltab:hover {
 	color: black; /* wm.WizardLayers-Active_Color */
     }
     /* END SECTION wm.WizardLayers */
@@ -2424,7 +2610,9 @@ body.wm_darkdawn {
     /* BEGIN SECTION wm.WizardLayers */
     /* TODO: Enable this property */
     .wm_darkdawn .HeaderContent .wmwizardlayers-tab:focus,
-    .wm_darkdawn .HeaderContent .wmwizardlayers-tab:hover {
+    .wm_darkdawn .HeaderContent .wmwizardlayers-tab:hover,
+    .wm_darkdawn .HeaderContent .wmwizardlayers-verticaltab:focus,
+    .wm_darkdawn .HeaderContent .wmwizardlayers-verticaltab:hover {
 	color: black; /* wm.WizardLayers-Active_Color */
     }
     /* END SECTION wm.WizardLayers */
@@ -2480,6 +2668,19 @@ body.wm_darkdawn {
 /*****************************************
  * FILE: progressbar.css
  *****************************************/
+/*
+ *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.dijit.ProgressBar
    *
@@ -2550,8 +2751,8 @@ body.wm_darkdawn {
 	color: #000000; /* MainContent-EditorsDefault-Font_Color */
 	font-weight: normal; /* MainContent-EditorsDefault-Font_Weight */
 	/* MainContent-EditorsDefault-Background */
-	background-color: #dddddd; /* MainContent-EditorsDefault-Background_Color */
-	background-image: url(images/repeatx/brightEdge2.png); /* MainContent-EditorsDefault-Background_Image */
+	background-color: #fff; /* MainContent-EditorsDefault-Background_Color */
+	background-image: url(images/repeatx/greyEdge2.png); /* MainContent-EditorsDefault-Background_Image */
 	background-position: top left; /* MainContent-EditorsDefault-Background_Image-Position */
 	background-repeat: repeat-x; /* MainContent-EditorsDefault-Background_Image-Repeat */
     }
@@ -2614,7 +2815,19 @@ body.wm_darkdawn {
 /*****************************************
  * FILE: splitterbevel.css
  *****************************************/
-
+/*
+ *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
   /**************************************************************************************************
    * TYPE:        wm.Splitter / wm.Bevel
    *

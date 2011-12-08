@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2007-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2007-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -37,6 +37,7 @@ import java.util.regex.Pattern;
 import org.apache.tools.ant.BuildException;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wavemaker.common.WMRuntimeException;
@@ -372,9 +373,13 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public void writeWebFile(String path, String data, boolean noClobber) throws IOException {
-
-        String newPath = ProjectConstants.WEB_DIR + (path.startsWith("/") ? path.substring(1) : path);
-        this.projectManager.getCurrentProject().writeFile(newPath, data, noClobber);
+        if (path.startsWith("/common")) {
+            Resource newCommonFile = this.fileSystem.getCommonDir().createRelative(path.replaceFirst("/common", ""));
+            FileCopyUtils.copy(data, new OutputStreamWriter(this.fileSystem.getOutputStream(newCommonFile)));
+        } else {
+            String newPath = ProjectConstants.WEB_DIR + (path.startsWith("/") ? path.substring(1) : path);
+            this.projectManager.getCurrentProject().writeFile(newPath, data, noClobber);
+        }
     }
 
     /**
@@ -446,6 +451,7 @@ public class StudioService extends ClassLoader {
         return m.group(1);
 
     }
+
     /**
      * Get the studio configuration env
      */
@@ -453,7 +459,6 @@ public class StudioService extends ClassLoader {
     public String getStudioEnv() {
         return this.fileSystem.getStudioEnv();
     }
-    
 
     @ExposeToClient
     public String getMainLog(int lines) throws IOException {
@@ -690,10 +695,12 @@ public class StudioService extends ClassLoader {
             }
 
             /*
-             * Import packages.js STATUS: DONE
+             * Import packages.js
              */
+            File packagesFile = new File(webapproot, "app/packages.js");
             String packagesExt = "";
             try {
+                // Get the packages.js file from our extensions.zip file */
                 packagesExt = IOUtils.read(new File(extFolder, "packages.js"));
             } catch (Exception e) {
                 packagesExt = "";
@@ -705,13 +712,7 @@ public class StudioService extends ClassLoader {
                 String endPackagesExt = "/* END PARTNER " + newName + " */\n";
                 packagesExt = ",\n" + startPackagesExt + packagesExt + "\n" + endPackagesExt;
 
-                /* Create the packagesDir if needed */
-                File packagesDir = new File(this.fileSystem.getCommonDir().getFile(), "packages");
-                if (!packagesDir.exists()) {
-                    packagesDir.mkdir();
-                }
-                File commonPackagesFile = new File(packagesDir, "packages.js");
-                String packages = IOUtils.read(commonPackagesFile);
+                String packages = IOUtils.read(packagesFile);
 
                 /* Remove previous packages entries for this partner */
                 int packagesStartIndex = packages.indexOf(startPackagesExt);
@@ -726,7 +727,7 @@ public class StudioService extends ClassLoader {
 
                 /* Append the string to packages.js and write it */
                 packages += packagesExt;
-                IOUtils.write(commonPackagesFile, packages);
+                IOUtils.write(packagesFile, packages);
             }
 
             /*
@@ -847,13 +848,14 @@ public class StudioService extends ClassLoader {
     // db2jcc.jar - com.ibm.db2.app.DB2StructOutput.class
     // ojdbc.jar - oracle.jdbc.driver.OracleDatabaseMetaData
     // wsdl4j.jar - javax.wsdl.factory.WSDLFactory.class
+    // hibernate3.jar - org.hibernate.cfg.Environment.class
     @ExposeToClient
     public List<String> getMissingJars() {
         Map<String, String> jarHash = new HashMap<String, String>();
         jarHash.put("db2jcc.jar", "COM.ibm.db2.app.DB2StructOutput");
         jarHash.put("ojdbc.jar", "oracle.jdbc.driver.OracleDatabaseMetaData");
         jarHash.put("wsdl4j.jar", "javax.wsdl.factory.WSDLFactory");
-        // ClassLoader loader = ClassLoaderUtils.getClassLoader();
+        jarHash.put("hibernate3.jar", "org.hibernate.cfg.Environment");
 
         List<String> missingJars = new ArrayList<String>();
 

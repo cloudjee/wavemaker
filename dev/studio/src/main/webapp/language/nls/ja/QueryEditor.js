@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 Infoteria Corporation and VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,10 +19,7 @@ delQueryBtn: {hint: "クエリーを削除"},
 queryDataModelInput: {caption: "データモデル"},
 queryNameInput: {caption: "名前"},
 queryCommentInput: {caption: "コメント"},
-helpSectionLabel: {caption: "使い方"},
-helpCaption1: {caption: "1. エディターを終了するときにクエリーの保存を忘れないでください"},
-helpCaption2: {caption: "2. クエリーを作成した後に、それを使用するサービス変数を作成してください"},
-helpLink: {caption: "クエリー記法の詳細"},
+helpHtml: {html: "<ol><li>このクエリーを使用するには、新しいwm.ServiceVariableを追加してください</li><li>LIMITおよびOFFSETの使用はHQLの中でサポートされません。 サービス変数の「結果最大数」および「開始行」プロパティを使用してください。</li><li>プロジェクトをアップグレードした場合は以下をお読みください: <a href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.4/WM64RelNotes#HSupportforLIMITandOFFSET' target='Doc'>6.4 Release Notes</a></li><li><a href='http://dev.wavemaker.com/wiki/bin/view/wmdoc_6.3/HqlTutorial' target='Doc'>Details on query syntax</a></li></ol>"},
 queryDefLabel: {caption: "クエリー定義"},
 returnsSingleResultCheckBox: {caption: "単一の結果を返却"},
 queryParamsLabel: {caption: "クエリーパラメーター"},

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -60,7 +60,18 @@ dojo.declare("wm.Query", wm.ServerComponent, {
 //			}
 //		}));
 //		return ret;
-	}
+	},
+
+
+    hasServiceTreeDrop: function() {return true;},
+    onServiceTreeDrop: function(inParent, inOwner, inNode) {
+	var result = new wm.ServiceVariable({owner: inOwner,
+				       name: inOwner.getUniqueName(this.queryName + "SVar"),
+				       service: this.dataModelName,
+				       operation: this.queryName,
+				       startUpdate: false});
+	return result; // returning will trigger a design tree refresh and a studio.select	
+    }
 });
 
 dojo.declare("wm.QueryLoader", null, {

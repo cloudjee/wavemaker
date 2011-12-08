@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2009-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,3 +27,7 @@ For project specific widgets, add the wm.loadLibs call to the project javascript
 wm.loadLibs([ 
 	"wm.packages.example.myButton"	
 ]);
+
+/* WARNING: This file is loaded at design time, and when running in debug mode, but is NOT loaded
+ * when running your project without ?debug; do NOT put code in here required by your running projects!
+ */

@@ -1,17 +1,20 @@
-/*	
+/*
  * Copyright (C) 2010-2011 Infoteria Corporation and VMware, Inc. All rights reserved.
- * 
- *   Licensed under the Apache License, Version 2.0 (the "License");
- *   you may not use this file except in compliance with the License.
- *   You may obtain a copy of the License at
- *       http://www.apache.org/licenses/LICENSE-2.0
- *   Unless required by applicable law or agreed to in writing, software
- *   distributed under the License is distributed on an "AS IS" BASIS,
- *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   See the License for the specific language governing permissions and
- *   limitations under the License.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
  */
+ 
+
 {
+
 	"Frequent_Category" : "最近使用したコンポーネント／ウィジェット",
 	"Button_Category": "ボタン",
 	"Formatting_Category": "フォーマット",
@@ -22,12 +25,12 @@
 	"Toggle_Button" : "トグルボタン",
 	"Rounded_Button" : "角丸ボタン",
 	"DataGrid" : "データグリッド",
-	"DojoGrid" : "Dojoグリッド",
+	"DojoGrid" : "グリッド",
 	"Label" : "ラベル",
 	"Picture" : "画像",
 	"Spacer" : "スペーサー",
 	"Splitter" : "スプリッター",
-
+        "Dijits": "Dijits",
 	"Containers" : "コンテナー",
 	"Accordion" : "アコーディオン",
 	"Layers" : "レイヤー",
@@ -35,45 +38,55 @@
 	"PageContainers": "ページコンテナー(複数)", /* See Studio.js */
 	"PageContainersDescription": "このプロジェクトのページ",
 	"Panel" : "パネル",
-	"Rounded_Panel" : "角丸パネル",
+	"Rounded_Panel" : "タイトル付きパネル",
 	"Tabs" : "タブ",
 	"Wizards" : "ウィザード／カード",
 
+        "FormsGroup": "フォーム",
+        "EditorsGroup": "編集",
 	"Editor" : "編集",
 	"Checkbox" : "チェックボックス",
 	"Currency" : "通貨",
 	"Date" : "日付",
 	"DateTime" : "日時",
+	"DateTimeGroup" : "日付と時刻",
+	"RelatedEditorGroup" : "関連編集",
+
 	"Number" : "数値",
 	"RadioButton" : "ラジオボタン",
 	"Select" : "選択",
+	"Lookup" : "検索",
+        "FilteringLookup": "フィルター検索",
 	"Slider" : "スライダー",
 	"Text" : "テキスト",
 	"TextArea" : "テキストエリア",
 	"Time" : "時刻",
 	"RichText" : "リッチテキスト",
-
+	
 	"Dialogs" : "ダイアログ",
 	"GenericDialog" : "シンプルダイアログ",
 	"PageDialog" : "ページダイアログ",
 	"RichTextDialog" : "リッチテキストダイアログ",
 	"DesignableDialog" : "カスタムダイアログ",
+	"LoadingDialog" : "ローディングダイアログ",
 
 	"Dojo_Widgets" : "Dojoウィジェット",
 	"Grid" : "グリッド",
 	"Chart" : "チャート",
 	"Dashboard" : "ダッシュボード",
+	"Menus" : "メニュー",
 	"Menu" : "メニュー",
 	"PopupMenu" : "ポップアップメニュー",
 	"Fisheye" : "Fisheye",
 	"Lightbox" : "Lightbox",
 
-	//"Form_Tools" : "フォームツール",
-	FormsEditors: "フォーム＆エディター",
+    //"Form_Tools" : "フォームツール",
+
 	Misc: "その他",
 	"DataNavigator" : "ページ遷移",
-	"LiveForm" : "ライブフォーム",
+	"LiveForm" : "フォーム",
 	"RelatedEditor" : "関連エディタ",
+
 
 	"More_Widgets" : "その他のウィジェット",
 	"JsonStatus": "JSONステータス",
@@ -113,18 +126,21 @@
 	"Twitter_Feed" : "Twitterフィード",
 	"Weather" : "天気",
 	"YouTube" : "YouTube",
+        "GoogleMap": "Googleマップ",
 	"FacebookLikeButton" : "Facebookイイネボタン",
 	"FacebookActivityFeed" : "Facebookアクティビティフィード",
-
+         BasicWidgets: "基本ウィジェット",
+ 
 	"Beta" : "ベータ",
 	"ColorPicker" : "色選択",
 	"BusyButton" : "ビジーボタン",
 	"Ticker" : "ティッカー",
-
+	
 	"Advanced" : "上級",
 	"Variables" : "ビルトイン変数",
 	"Tree" : "ツリー",
-	"DraggableTree" : "ツリー(ドラッグ化)",
+	"ObjectTree" : "オブジェクトツリー",
+	"DraggableTree" : "ドラッグ可能なツリー",
 	"SimpleForm" : "フォーム生成",
 
 	"Deprecated" : "廃止",
@@ -136,6 +152,9 @@
 	"ServiceVariable" : "サービス変数",
 	"LiveVariable" : "ライブ変数",
 	"ImageList" : "画像リスト",
+	silkIconList: "Silkアイコンリスト",
+	booleanIconList: "Booleanアイコンリスト",
+
 	"NavigationCall" : "ナビ呼び出し",
 	"LogoutVariable" : "ログアウト変数",
 	"Timer" : "タイマー",
@@ -143,7 +162,7 @@
 	"Composite_Publisher" : "ウィジェット公開",
 	"Property" : "プロパティ",
 	"Template_Publisher" : "テンプレート公開",
-
+ 
 	"Services" : "サービス",
 	"DataWidget": "データウィジェット",
 	DataWidgetSingle: "シングルデータポイント",
@@ -164,86 +183,89 @@
 	"Layout" : "レイアウト",
 
 	"descButton": "シンプルなボタン",
-	"descPopupButton": "A button with a Menu",
-	"descToggleButton": "A button that stays clicked until clicked again",
-	"descBusyButton": "A button with a status indicator",
+	"descPopupButton": "メニューのついたボタン",
+	"descToggleButton": "クリックすると状態の切り替わるボタン",
+	"descBusyButton": "状態を表示することのできるボタン",
 
-	"descLabel": "Basic text on page",
-	"descPicture":  "A picture from a url",
-	"descSpacer": "Adds space between widgets",
-	"descSplitter": "A movable bar to put between widgets",
-	"descBevel": "A bar to put between widgets",
-	"descContent": "Shows HTML content from file",
-	"descHtml": "Shows arbitrary HTML content",
-	"descIFrame": "An IFrame for external web pages",
+	"descLabel": "ページ上に配置するための基本的なテキスト",
+	"descPicture":  "URL指定の画像",
+	"descSpacer": "ウィジェットの間にスペースを追加",
+	"descSplitter": "ウィジェットの間に配置する移動可能なバー",
+	"descBevel": "ウィジェットの間に配置するバー",
+	"descContent": "HTMLコンテンツをファイルを指定して表示",
+	"descHtml": "任意のHTMLコンテンツを表示",
+	"descIFrame": "外部のウェブページを表示するためのインラインフレーム",
 
-	"descMenu": "A menu bar on top or left of page",
-	"descPopupMenu": "A menu that appears under the mouse",
+	"descMenu": "ページの上部または左側に置くメニューバー",
+	"descPopupMenu": "マウスカーソルを置いたときに表示されるメニュー",
+    
+	"descPanel":  "他のウィジェットを配置するためのコンテナー",
+	"descDashboard": "ページコンテナーを表示したり移動したりできる高度なウィジェット",
+	"descFancyPanel": "タイトルバーや丸い角のあるパネル",
+	"descPageContainer": "ページの中にサブページを置くためのコンテナー",
 
-	"descPanel":  "Container for other widgets",
-	"descDashboard": "Advanced widget for displaying and moving page containers",
-	"descFancyPanel": "A Panel with a titlebar and rounded corners",
-	"descPageContainer": "A container for putting subpages within this page",
+	"descAccordion": "ウィジェットを表示するためのアコーディオンコントロール",
+	"descLayers": "ウィジェットの表示を制御するためのコンテナー",
+	"descTabs": "ウィジェットを表示するためのタブボタンコントロール",
+	"descWizard": "次へ／戻るボタンやパンくずを表示するウィザードコントロール",
 
-	"descAccordion": "An accordion controls which widgets are shown",
-	"descLayers": "A container which controls which widgets are shown",
-	"descTabs": "Tab buttons control which widgets are shown",
-	"descWizard": "Next/Back and breadcrumbs control which widgets are shown",
+	"descGenericDialog": "１つのラベル、１つのテキスト入力、４つまでのボタンを持つシンプルなダイアログ",
+	"descPageDialog": "ページを表示するためのダイアログ",
+	"descDesignableDialog": "新しいウィジェットをドラッグ＆ドロップできるダイアログ",
+ 	"descLoadingDialog": "読み込み中アイコンをページ上のウィジェットやパネルの上に表示",
 
-	"descGenericDialog": "Simple dialog with one label, one optional text input, and up to 4 buttons",
-	"descPageDialog": "Dialog for showing a page",
-	"descDesignableDialog": "Dialog you can drag new widgets into",
+	"descLiveForm": "サーバーと連携してデータを管理するフォームを持つコンテナー",
+	"descCheckbox": "チェックボックス",
+	"descCurrency": "通貨を入力するためのテキストエディター",
+	"descDate": "ポップアップカレンダーを持つテキストエディター",
+	"descTime": "時刻ピッカーを持つテキストエディター",
+	"descNumber": "数値を入力するためのテキストエディター",
+	"descRadioButton": "ラジオボタン",
+	"descSelectMenu": "選択可能な値の一覧をポップアップするテキストエディター",
+	"descLookup": "関連するオブジェクトを選択するためのプルダウンメニュー",
+	"descSlider": "数値を選択するためのグラフィカルなウィジェット",
+	"descText": "テキスト入力のためのエディター",
+	"descTextArea": "複数行のテキストを入力するためのエディター",
+	"descRichText": "テキストを整形したりスタイルを追加したりするためのエディター",
+	"descCalendar": "日付を選択するためのカレンダー",
+	"descColorPicker": "カラーピッカーで色を選択できるテキストエディター",
+	"descRelatedEditor": "選択したデータベースエントリーに関連したrデータベーステーブル上のデータを選択したり参照したりすることのできるエディター",
+	"descSimpleForm": "基本的なフォームに必要なエディターをすべて生成することのできるコンテナー",
+	"descDojoFileUpload": "ファイルをアップロードするためのウィジェット",
+	"descDojoFlashFileUpload": "複数ファイルを一度にアップロードすることのできるウィジェット",
 
-	"descLiveForm": "A container for managing editors and writing changes to server",
-	"descCheckbox": "A checkbox editor",
-	"descCurrency": "A text editor for entering currency",
-	"descDate": "A text editor with popup calendar",
-	"descTime": "A text editor with popup time picker",
-	"descNumber": "A text editor for entering numbers",
-	"descRadioButton": "A radio button editor",
-	"descSelectMenu": "A text editor with a popup list of possible values",
-	"descSlider": "A graphical widget for selecting a number",
-	"descText": "An editor for entering text",
-	"descTextArea": "An editor for entering multiple lines of text",
-	"descRichText": "An editor for entering formatted and styled text",
-	"descCalendar": "A calendar for picking a date",
-	"descColorPicker": "A text editor with popup color picker",
-	"descRelatedEditor": "An editor for picking/viewing data in database tables related to the current selected database entry",
-	"descSimpleForm": "A container for generating all of the editors needed for a basic form",
-	"descDojoFileUpload": "A widget for uploading files",
-	"descDojoFlashFileUpload": "A widget for uploading multiple files at a time",
+	"descGrid": "表形式のデータを表示するためのグリッド",
+	"descDataNavigator": "データをページ制御するためのコントロール",
+	"descDojoChart": "チャートでデータを表示",
+	"descList": "表形式データを表示するとても単純なグリッド",
+	"descListViewer": "データアイテムごとに行を生成し、行の中を自由に配置できるウィジェット",
+	"descPropertyTree": "ライブ変数からツリーを生成",
+	"descPropertyObjectTree": "JavaScriptのハッシュ値からツリーを生成",
+	"descDraggableTree": "ユーザーがノードを移動することのできるツリーを生成",
+    
+	"descFancyTemplate": "いくつかのウィジェットが互いにどのように動作するのかを見せるためのサンプルテンプレートページ",
+	"descSideMenuTemplate": "ヘッダーとフッターがあり、左側にメニューのある800ピクセル幅中央寄せのテンプレートページ",
+	"descTabsTemplate": "主なセクション感をタブでナビゲートするためのサンプルテンプレートページ",
+	"descTopMenuTemplate": "上部にナビゲーションバーのあるサンプルテンプレートページ",
+    
+	"descSecurityTemplate": "ログアウトボタンと「ようこそ！＜ユーザー名＞」と表示するラベル",
+	"descTitleBarTemplate": "タイトルバーテンプレート",
+	"descFooterTemplate": "フッターテンプレート",
+	"descSearchListDetailTemplate": "検索可能なグリッドとフォームのウィジェットセット",
+	"descToolbarTemplate": "ツールバーテンプレート",
+	"descTwoColumnTemplate": "２カラムのページのためのパネル",
+	"descTabbedTwoColumnTemplate": "タブを持つ２カラムのページのためのパネル",
 
-	"descGrid": "A grid for showing tabular data",
-	"descDataNavigator": "A control for paging through data",
-	"descDojoChart": "Displays data within charts",
-	"descList": "A very simple grid for tabular data and picking from options",
-	"descListViewer": "Generates a row per data item, where row can contain any arrangement of widgets",
-	"descPropertyTree": "Builds a tree from a LiveVariable",
-	"descDraggableTree": "Builds a tree where nodes can be moved by the user",
-
-	"descFancyTemplate": "Premade page for showing how a number of widgets can work together",
-	"descSideMenuTemplate": "A 800px wide centered page container with header and footer and menu on the left",
-	"descTabsTemplate": "Premade page with tabs to navigate between its major sections",
-	"descTopMenuTemplate": "Premade page with menubar on top for navigation",
-
-	"descSecurityTemplate": "Logout button and label for showing 'Welcome ' + user's name",
-	"descTitleBarTemplate": "One way to structure a title bar for your page",
-	"descFooterTemplate": "One way to structure the footer for your page",
-	"descSearchListDetailTemplate": "A set of widgets for a searchable grid and a Form",
-	"descToolbarTemplate": "One way to structure a toolbar",
-	"descTwoColumnTemplate": "Sets up panels for a two column page",
-	"descTabbedTwoColumnTemplate": "Sets up panels for a two column page with tabs",
-
-	"descFeedList": "An RSS feed viewer",
-	"descTwitterFeed": "A twitter feed viewer",
-	"descWeatherWidget": "Google widget for viewing weather",
-	"descYouTubeWidget": "Widget for viewing YouTube videoes",
-	"descFisheye": "Widget for zooming into images as the mouse moves over them",
-	"descLightbox": "Popup for showing a set of photos",
-	"descProgressBar": "Widget for showing a progress indicator",
-	"descGauge": "Widget for graphically displaying the current numeric value of something",
-	"descJsonStatus": "Widget for indicating that json calls are in progress",
-	"descTicker": "Panel that contains widgets and scrolls them across the screen",
+	"descFeedList": "RSSフィードビューアー",
+	"descTwitterFeed": "Twitterフィードビューアー",
+	"descWeatherWidget": "天気を表示するGoogleウィジェット",
+	"descYouTubeWidget": "YouYubeビデオを表示するウィジェット",
+	"descFisheye": "マウスオーバーすると画像にズームするウィジェット",
+	"descLightbox": "写真を表示するためのポップアップ",
+	"descProgressBar": "進捗を表示するウィジェット",
+	"descGauge": "何かの現在値をグラフィカルに表示するためのウィジェット",
+	"descJsonStatus": "JSONを呼び出し中なことを示すためのウィジェット",
+	"descTicker": "画面上をスクロールしながら表示するためのウィジェットをもつパネル",
 
 
 	"isBeta": "(ベータ)"

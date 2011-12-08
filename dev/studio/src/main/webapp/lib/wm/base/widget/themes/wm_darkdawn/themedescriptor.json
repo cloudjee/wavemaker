@@ -1228,5 +1228,17 @@
 		"Image": "url(images/comboArrowUpLight.png)", 
 		"Image-Position": "top left", 
 		"Image-Repeat": "repeat"
+	}, 
+	"Document-EditorsCaption-Font": {
+		"Family": "inherit", 
+		"Weight": "bold", 
+		"TextSize": "inherit", 
+		"Color": "inherit"
+	}, 
+	"Document-EditorsReadonly-Font": {
+		"Family": "inherit", 
+		"Weight": "inherit", 
+		"TextSize": "inherit", 
+		"Color": "inherit"
 	}
 }

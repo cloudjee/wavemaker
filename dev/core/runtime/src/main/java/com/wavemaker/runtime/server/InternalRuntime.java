@@ -50,23 +50,7 @@ public class InternalRuntime {
     public static void setInternalRuntimeBean(InternalRuntime bean) {
         InternalRuntime.internalRuntime = bean;
     }
-
-    /**
-     * @deprecated This will be removed in a a few releases. Use {@link #getJSONState()} instead.
-     */
-    @Deprecated
-    public JSONState getJsonConfig() {
-        return this.jsonState;
-    }
-
-    /**
-     * @deprecated This will be removed in a few releases. Use {@link #setJSONState(JSONState)} instead.
-     */
-    @Deprecated
-    public void setJsonConfig(JSONState jsonConfig) {
-        this.jsonState = jsonConfig;
-    }
-
+    
     public JSONState getJSONState() {
         return this.jsonState;
     }

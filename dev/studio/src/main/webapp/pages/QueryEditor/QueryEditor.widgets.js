@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2009-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ QueryEditor.widgets = {
 			panel6a: ["wm.Panel", {border: "0", height: "100%", width: "100%"}, {}, {
 			    panel1: ["wm.Panel", {border: "0", height: "100%", width: "100%", minWidth: "400", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 				    panelTopLayout: ["wm.Panel", {height: "100px", width: "100%", layoutKind: "left-to-right"}, {}, {
-					    queryPropsPanel: ["wm.Panel", {border: "1,0,0,0", borderColor: "#000000", height: "100px", width: "400px", padding: "4", verticalAlign: "top", horizontalAlign: "left"}, {}, {
+					    queryPropsPanel: ["wm.Panel", {border: "1,0,0,0", borderColor: "#000000", height: "100%", width: "400px", padding: "4", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 						    queryDataModelInput: ["wm.Editor", {layoutKind: "left-to-right", caption: "Data Model", display: "Select", width: "100%", height: "24px", disabled: true,emptyValue: "emptyString"}, {onchange: "queryDataModelInputChange"}, {
 							    editor: ["wm._SelectEditor", {}, {}]
 							}],
@@ -39,12 +39,10 @@ QueryEditor.widgets = {
 							    editor: ["wm._TextEditor", {changeOnKey: true}, {}]
 							}]
 						}],
-					    helpContainer: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom", margin: "0,0,0,30"}, {}, {
-						helpSectionLabel: ["wm.Label", {caption: "Usage Notes", border: "0", height: "18px", width: "100%", padding: "0,0,0,5"}],
+					    helpContainer: ["wm.Panel", {border: "1,0,0,0", borderColor: "#000000", width: "100%", height: "100%", layoutKind: "top-to-bottom", margin: "0,0,0,30"}, {}, {
+						/*helpSectionLabel: ["wm.Label", {caption: "Usage Notes", border: "0", height: "18px", width: "100%", padding: "0,0,0,5"}],*/
 						helpPanel: ["wm.Panel", { width: "100%", height: "100%", margin: "0,5,0,0", layoutKind: "top-to-bottom"}, {}, {
-							    helpCaption1: ["wm.Label", {width: "100%", height: "28px", caption: "1. Remember to save your query before leaving the editor"}],
-							    helpCaption2: ["wm.Label", {width: "100%", height: "30px", singleLine: false, caption: "2. After you finish creating your query, create a new service variable to use it"}],						    
-							    helpLink: ["wm.Label", {width: "100%", height: "25px", link: "http://dev.wavemaker.com/wiki/bin/view/wmdoc_6.3/HqlTutorial", caption: "Details on query syntax"}]
+						    helpHtml: ["wm.Html", {width: "100%", height: "100%", html: "<ol><li>To use this query, insert a new wm.ServiceVariable</li><li>Use of LIMIT and OFFSET are not supported in HQL; Use your ServiceVariable's maxResults and firstRow properties</li><li>Upgraded projects read this: <a href='http://dev.wavemaker.com/wiki/bin/wmdoc_6.4/WM64RelNotes#HSupportforLIMITandOFFSET' target='Doc'>6.4 Release Notes</a></li><li><a href='http://dev.wavemaker.com/wiki/bin/view/wmdoc_6.3/HqlTutorial' target='Doc'>Details on query syntax</a></li></ol>"}]
 							    
 							}]
 						}]
@@ -80,7 +78,7 @@ QueryEditor.widgets = {
 					    paramsPanel: ["wm.Panel", { border: "0", height: "100%", width:"100%", padding: "4"}, {}, {
 							    queryInputsList: ["wm.List", {height: "100%", width: "100%", border: "0"}, {onselect: "parmSelected"}],
                                                             
-						addNewParamPanel: ["wm.Panel", {border: "0", height: "28px", width:"100%", layoutKind: "left-to-right", padding: "0", verticalAlign: "center"}, {}, {
+						addNewParamPanel: ["wm.Panel", {border: "0", height: "28px", width:"100%", layoutKind: "left-to-right", padding: "0", verticalAlign: "center", horizontalAlign: "left"}, {}, {
 								addBindParamLabel: ["wm.Label", {caption: "Add bind parameter:", border: "0", height: "100%", width: "125px"}, {}, {
 								    format: ["wm.DataFormatter", {}, {}]
 								}],
@@ -100,7 +98,7 @@ QueryEditor.widgets = {
 					                                wire: ["wm.Wire", {"targetProperty":"disabled","source":"queryInputsList.emptySelection"}, {}]
 				                                    }]
 								}],
-						                bindParamInput: ["wm.Text", {caption: "Test Value:", width: "100%", minWidth: "180px", captionSize: "100px"}, {onchange: "parameterPropEdit"}, {
+						                bindParamInput: ["wm.Text", {caption: "Test Value:", width: "100%", minWidth: "180", captionSize: "100px"}, {onchange: "parameterPropEdit"}, {
                                                                     binding: ["wm.Binding", {}, {}, {
 					                                wire: ["wm.Wire", {"targetProperty":"disabled","source":"queryInputsList.emptySelection"}, {}]
 				                                    }]

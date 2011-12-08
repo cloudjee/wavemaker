@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2010-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -41,8 +41,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
      */
     themeTypes: {"Family": ["wm.SelectMenu", {options: "Lucida Grande, Lucida Sans, Arial, Verdana,  sans-serif, serif", width: "80px"}],
                  "Weight": ["wm.SelectMenu", {options: "normal, bold", width: "80px"}],
-                 "TextSize": ["wm.Number",  { width: "60px"}],
-                 "Color": ["wm.ColorPicker", {width: "80px"}],
+                 "TextSize": ["wm.Text",  { width: "60px", regExp: "(\\d*|inherit)"}],
+                 "Color": ["wm.ColorPicker", {width: "80px", regExp: "(\#[0-9a-fA-F]{6}|inherit)", emptyValue: "emptyString", defaultValue: "inherit"}],
                  "Shadow": ["wm.SelectMenu", {dataField: "dataValue", displayValue: "name", allowNone: true, width: "80px"},{},{
                      binding: ["wm.Binding", {},{},{
                          wire: ["wm.Wire", {targetProperty: "dataSet", source: "shadowListVar"}]
@@ -147,7 +147,18 @@ dojo.declare("ThemeDesigner", wm.Page, {
                     displayName: "Editors (Focus)",
 		    demo: "themeGroupDemoAllPanelsWidgets",
                     description: "When the insertion point is in the editor, and the user can start typing in, you can setup a style to indicate that the editor is active. Wavemaker themes tend to cause these editors to go to solid white background and black text.  But this is entirely under the control of the theme designer; you can set the colors for border, background and font.",
-		    styles:     ["Border-Color", "Background", "Font-Color"]}}},
+		    styles:     ["Border-Color", "Background", "Font-Color"]},
+		"EditorsCaption":   {
+                    displayName: "Editors (Caption)",
+		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "Specify a style for your editor captions",
+		    styles:     ["Font"]},
+		"EditorsReadonly":   {
+                    displayName: "Editors (Readonly)",
+		    demo: "themeGroupDemoAllPanelsWidgets",
+                    description: "Specify a style for your editor values when in readonly state",
+		    styles:     ["Font"]}
+	    }},
 
         "Dialogs": {
 	    subcategories: {
@@ -230,7 +241,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
                     displayName: "Editors (Focus)",
 		    demo: "themeGroupDemoAllPanelsWidgets",
                     description: "When the insertion point is in a Main Content Panel editor, and the user can start typing in, you can setup a style to indicate that the editor is active. Wavemaker themes tend to cause these editors to go to solid white background and black text.  But this is entirely under the control of the theme designer; you can set the colors for border, background and font.",
-		    styles: ["Border-Color", "Background", "Font-Color"]}}},
+		    styles: ["Border-Color", "Background", "Font-Color"]}
+	    }},
 		
 
         "EmphasizedContent":  {
@@ -429,7 +441,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
     /* When a theme is selected, load in the theme data, and either reselect the current difficulty list
      * item or select basic if no current selection 
      */
-    themeselect: function(inSender) {
+    themeselectChange: function(inSender) {
 	var currentTheme = inSender.getDataValue();
 	if (!currentTheme) return;
         this.currentTheme = currentTheme;
@@ -1038,6 +1050,14 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	        this.setCssSymbol(this.panelTypes[i] + "-Editors-Default-Font", "Color", "#000000");
 	        this.setCssSymbol(this.panelTypes[i] + "-Editors-Hover-Font", "Color", "#000000");
 	        this.setCssSymbol(this.panelTypes[i] + "-Editors-Focus-Font", "Color", "#000000");
+	        this.setCssSymbol(this.panelTypes[i] + "-Editors-Caption-Font", "Color", "inherit");
+	        this.setCssSymbol(this.panelTypes[i] + "-Editors-Caption-Font", "Weight", "bold");
+	        this.setCssSymbol(this.panelTypes[i] + "-Editors-Caption-Font", "Family", "inherit");
+	        this.setCssSymbol(this.panelTypes[i] + "-Editors-Caption-Font", "TextSize", "inherit");
+	        this.setCssSymbol(this.panelTypes[i] + "-Editors-Readonly-Font", "Color", "inherit");
+	        this.setCssSymbol(this.panelTypes[i] + "-Editors-Readonly-Font", "Weight", "normal");
+	        this.setCssSymbol(this.panelTypes[i] + "-Editors-Readonly-Font", "Family", "inherit");
+	        this.setCssSymbol(this.panelTypes[i] + "-Editors-Readonly-Font", "TextSize", "inherit");
             }
 
             newvalues = this.offsetColor(value);
@@ -1886,7 +1906,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
         }
     },
     revertTheme: function() {        
-	this.themeselect(this.themeSelect);
+	this.themeselectChange(this.themeSelect);
         app.toastDialog.showToast("Reverted", 2000, "Success");
         this.setDirty(false);
     },
@@ -1929,7 +1949,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
         }
 
 
-        var dialog = studio.genericDialog; // defined in Studio.widgets.js
+        var dialog = this.genericDialog; // defined in Studio.widgets.js
         dialog.setTitle("Copy Theme");
         dialog.setButton1Caption("OK");
         dialog.setButton2Caption("Cancel");
@@ -1985,7 +2005,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
     },
 
     processNewThemeName: function(inText, selectedName) {
-        var dialog = studio.genericDialog; // defined in Studio.widgets.js
+        var dialog = this.genericDialog; // defined in Studio.widgets.js
 
         var list = [];
         var tmplist = studio.themesListVar.getData();
@@ -2029,7 +2049,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
             }));
     },
     confirmNewBorderColor: function() {
-        var dialog = studio.genericDialog; // defined in Studio.widgets.js
+        var dialog = this.genericDialog; // defined in Studio.widgets.js
         dialog.setTitle("Confirm");
         dialog.setButton1Caption("OK");
         dialog.setButton2Caption("Cancel");
@@ -2076,7 +2096,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
         if (!selectedName) return;
 
         if (selectedName.match(/^wm_/)) {
-            var dialog = studio.genericDialog; // defined in Studio.widgets.js
+            var dialog = this.genericDialog; // defined in Studio.widgets.js
             dialog.setButton1Caption("OK");
             dialog.setButton2Caption("");
             dialog.setUserPrompt("You can only delete themes that don't begin with 'wm_'");
@@ -2277,7 +2297,8 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	        this.owner = studio.page; // block Application.loadThemePrototypeForClass from using wm_studio to generate the widget
                 demoPanel.domNode.innerHTML = "";
 
-            demoPanel.createComponents(widgets);
+            var c = demoPanel.createComponents(widgets)[0];
+	    c.setParent(demoPanel);
 	    if (this.demoDialog) {
 		this.demoDialog.destroy();
                 this.demoDialog = null;

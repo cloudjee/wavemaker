@@ -165,4 +165,6 @@
         <!-- controller configuration -->
         <!--property name="supportedMethods" value="GET" /-->
     </bean>
+    
+    <bean class="com.wavemaker.runtime.data.cloudfoundry.CloudFoundryDataServiceBeanFactoryPostProcessor"/>
 </beans>

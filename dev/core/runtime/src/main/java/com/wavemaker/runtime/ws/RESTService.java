@@ -99,13 +99,14 @@ public class RESTService {
         } else {
             endpointAddress = this.parameterizedURI;
         }
+        
 
-        String postData = "";
+        Object postData = "";
         if (method != null && method.equals(Constants.HTTP_METHOD_POST)) {
             this.httpRequestMethod = HTTPRequestMethod.POST;
             if (inputs.size() == 1) {
                 for (Object o : inputs.values()) {
-                    postData = (String) o;
+                    postData = o;
                 }
             } else if (inputs.size() > 1) {
                 if (contentType.equalsIgnoreCase(Constants.MIME_TYPE_FORM)) {
@@ -133,7 +134,9 @@ public class RESTService {
         for (Map.Entry<String, Object> entry : entries) {
             sb.append(entry.getKey());
             sb.append("=");
-            sb.append((String) entry.getValue());
+            if (entry.getValue() != null) {
+                sb.append((String)entry.getValue());
+            }
             sb.append("&");
         }
 

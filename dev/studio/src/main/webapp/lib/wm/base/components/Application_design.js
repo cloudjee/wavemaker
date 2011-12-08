@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ wm.Application.extend({
 
 	    var compsArray = this.writeComponents(inIndent);
 
-	    var classOrdering = ["wm.TypeDefinition", "wm.LiveView"];
+	    var classOrdering = ["wm.ImageList", "wm.TypeDefinition", "wm.LiveView"];
 
 	    compsArray = compsArray.sort(function(a,b) {
 		var alist = a.match(/^(.*?)\:\s*\[\"(.*?)\"/);
@@ -76,19 +76,13 @@ wm.Application.extend({
     setToastPosition: function(inPosition) {
         this.toastPosition = inPosition.replace(/top/, "t").replace(/bottom/,"b").replace(/left/,"l").replace(/right/,"r").replace(/center/,"c").replace(/ /,"");
     },
-    makePropEdit: function(inName, inValue, inDefault) {
+    makePropEdit: function(inName, inValue, inEditorProps) {
 	switch (inName) {
-	case "main":
-	    return new wm.propEdit.PagesSelect({component: this, name: inName, value: inValue, currentPageOK: true});
 	case "theme":
             var options = [];
             var data = studio.themesListVar.getData();
             dojo.forEach(data, function(item) {options.push(item.dataValue);});
-	    return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: options});
-        case "toastPosition":
-            inValue = inValue.replace(/^c/, "center ").replace(/^t/, "top ").replace(/^b/, "bottom ").replace(/l$/, "left").replace(/r$/, "right").replace(/c$/, "center");
-	    /* TODO: Localize */
-            return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["top left", "top center", "top right", "center left", "center center", "center right", "bottom left", "bottom center", "bottom right"]});
+	    return new wm.prop.SelectMenu(dojo.mixin(inEditorProps,{options:options}));
 	}
 	return this.inherited(arguments);
     },
@@ -112,37 +106,53 @@ wm.Application.extend({
 	    }
 	} else
 	    this.projectSubVersion++;
+    },
+    setPromptChromeFrame: function(inValue) {
+	this.promptChromeFrame = inValue;
+	var indexText = studio.project.loadProjectData("index.html");
+	if (inValue == "Allow IE 6 and 7")
+	    inValue = null;
+	else
+	    inValue = '"' + inValue + '"';
+	indexText = indexText.replace(/var\s+wmChromeFramePath.*/, "var wmChromeFramePath = " + inValue + ";")
+	studio.project.saveProjectData("index.html", indexText);
+	var src = studio.project.generateApplicationSource();
+	studio.project.saveProjectData(studio.project.projectName + ".js", src);
     }
 });
 
 
 wm.Object.extendSchema(wm.Application, {
     name: {ignore: 1}, // at some point, we might provide this as a way to rename the project... but renaming is really a server side op, so requires confirmation. 
-    main: {shortname: "mainPageName"},
-    promptChromeFrame: {shortname: "chromeFrame (NA)", ignore: 1},
-    i18n: {type: "boolean"},
-    theme: {type: "string"},
-    currencyLocale: {type: "string"},
+    main: {shortname: "mainPageName", order: 5, editor: "wm.prop.PagesSelect", editorProps: {currentPageOK:true}},
+    promptChromeFrame: {order: 10, type: "string", options: ["chromeframe.html", "http://google.com/chrome", "Allow IE 6 and 7"]},
+    toastPosition: {editor: "wm.prop.SelectMenu", editorProps: {
+	options: ["top left", "top center", "top right", "center left", "center center", "center right", "bottom left", "bottom center", "bottom right"],
+	values: ["tl", "tc", "tr", "cl", "cc", "cr", "bl", "bc", "br"]}},
+    i18n: {type: "boolean", order: 6},
+    theme: {type: "string", order: 7},
+    currencyLocale: {type: "string", order: 8},
+    saveCounter: {writeonly: true},
     //IERoundedCorners: {ignore: true},
-    studioVersion: {writeonly: true, type: "string"},
-    dialogAnimationTime: {type: "number"},
-    projectVersion: {type: "string"},
-    projectSubVersion: {type: "string"},
+    studioVersion: {writeonly: true, type: "string", order: 105},
+    dialogAnimationTime: {type: "number", order: 200},
+    projectVersion: {type: "string", order: 100},
+    projectSubVersion: {type: "string", order: 101},
     firstThemeChange: {ignore: true},
     documentation: {ignore: true},
     generateDocumentation: {ignore: true},
-    loadPage: {group: "method"},
-    forceReloadPage: {group: "method"},
-    getFullVersionNumber: {group: "method"},
-    getSessionId: {group: "method"},
-    echoFile: {group: "method"},
-    alert: {group: "method"},
-    confirm: {group: "method"},
-    prompt: {group: "method"},
-    toastError: {group: "method"},
-    toastWarning: {group: "method"},
-    toastInfo: {group: "method"},
-    toastSuccess: {group: "method"},
-    createToolTip: {group: "method"},
-    hideToolTip: {group: "method"}
+    loadPage: {method:1},
+    forceReloadPage: {method:1},
+    getFullVersionNumber: {method:1},
+    getSessionId: {method:1},
+    echoFile: {method:1},
+    alert: {method:1},
+    confirm: {method:1},
+    prompt: {method:1},
+    toastError: {method:1},
+    toastWarning: {method:1},
+    toastInfo: {method:1},
+    toastSuccess: {method:1},
+    createToolTip: {method:1},
+    hideToolTip: {method:1}
 });

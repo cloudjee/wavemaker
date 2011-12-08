@@ -452,6 +452,14 @@ dojo.declare(
 				// Update 'value' (ex: KY) according to currently displayed text
 				this.item = null;
 				this.set('displayedValue', newvalue);
+			} 
+
+			    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+			     * WaveMaker: Nothing was being fired WHEN there was this.item, and the user deletes the text so that its now "" */
+		    else if (newvalue === "") {
+				// Update 'value' (ex: KY) according to currently displayed text
+				this.item = null;
+				this.set('displayedValue', newvalue);
 			}else{
 				if(this.value != this._lastValueReported){
 					dijit.form._FormValueWidget.prototype._setValueAttr.call(this, this.value, true);
@@ -1097,7 +1105,12 @@ dojo.declare(
 			//		Hook so set('value', value) works.
 			// description:
 			//		Sets the value of the select.
-			this._set("item", null); // value not looked up in store
+
+			    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+			     * WaveMaker: Added support for updating the item any time the value changes */
+		        this._set("item", null); // value not looked up in store
+		        var self = this;
+		        this.store.fetchItemByIdentity({identity: value, onItem: function(item) {self._set("item", item)}});
 			if(!value){ value = ''; } // null translates to blank
 			dijit.form.ValidationTextBox.prototype._setValueAttr.call(this, value, priorityChange, displayedValue);
 		}

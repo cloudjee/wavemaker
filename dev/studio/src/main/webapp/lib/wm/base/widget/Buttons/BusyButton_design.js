@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,10 +14,11 @@
 
 dojo.provide("wm.base.widget.Buttons.BusyButton_design");
 dojo.require("wm.base.widget.Buttons.BusyButton");
+dojo.require("wm.base.widget.Buttons.Button_design");
 
 wm.Object.extendSchema(wm.BusyButton, {
       iconUrl: {ignore: 1},
-	    clickVariable:  {group: "BusyButton", bindTarget: 1, order: 29, type: "wm.ServiceVariable", readonly: true},
+    clickVariable:  {group: "BusyButton", bindTarget: 1, order: 29, type: "wm.ServiceVariable", createWire: 1, editor: "wm.prop.DataSetSelect", editorProps: {servicesOnly: true, listMatch: undefined}},
     defaultIconUrl: {group: "BusyButton", bindTarget: true, order: 30, type: "String", subtype: "File"},
       iconLoadingUrl: {group: "BusyButton", bindTarget: true, order: 31, type: "String", subtype: "File"},
       iconSuccessUrl: {group: "BusyButton", bindTarget: true, order: 32, type: "String", subtype: "File"},
@@ -39,15 +40,8 @@ wm.BusyButton.extend({
 				this.components.binding.addWire("", "clickVariable", ds.getId());
 		} else
 		    this.setClickVariable(inVar);
-	},
-
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "clickVariable":
-			    return new wm.propEdit.DataSetSelect({component: this, name: inName, value: this.clickVariable ? this.clickVariable.getId() : "" , allowAllTypes: true});
-		}
-		return this.inherited(arguments);
 	}
+
 });
 
 wm.BusyButton.description = "A button that indicates when its ServiceVariable/LiveVariable is processing the button's action";

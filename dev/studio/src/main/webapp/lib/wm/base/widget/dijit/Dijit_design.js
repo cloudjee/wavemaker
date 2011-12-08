@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -138,17 +138,20 @@ wm.DijitDesigner.extend({
 	}
 	this.dijitPropList = dijitPropList.join(",");
     },
+/*
     makePropEdit: function(inName, inValue, inDefault) {
-	/* Component_design uses a checkbox property if the prototype says to. But the prototype of this class won't have dijit props in it
+	    var prop = this.schema ? this.schema[inName] : null;
+	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
+	/ * Component_design uses a checkbox property if the prototype says to. But the prototype of this class won't have dijit props in it
 	 * so handle boolean dijit props here.
-	 */
+	 * /
 	if (!this.schema[inName] && this.listProperties()[inName].type == "Boolean") {
 	    return makeCheckPropEdit(inName, inValue, inDefault);
 	} else {
 	    switch(inName) {
 	    case "deployDijit":
 	    case "undeployDijit":
-		return makeReadonlyButtonEdit(inName, inValue, inDefault);
+		return makeReadonlyButtonEdit(name, inValue, inDefault);
 	    }
 	    return this.inherited(arguments);
 	}
@@ -162,7 +165,7 @@ wm.DijitDesigner.extend({
 		}
 		return this.inherited(arguments);
 	},
-
+	*/
 
     /* TODO: Try replacing wmdijit[propname] with propname where possible  also need the rendering methods in DijitDesigner */
     makeComponentClass: function() {
@@ -197,6 +200,7 @@ wm.DijitDesigner.extend({
 		    value = '"' + value +'"';
 		else if (typeof value == "object")
 		    value = null;
+		    
 		result.push("\t" + usePropName + ": " + value + ",");
 		extendSchema.push("\t" + usePropName + ": {group:'" + this.dijitClass + "', type: '" + props[propName].type + "', bindTarget: true},");
 	    }
@@ -307,8 +311,8 @@ wm.Object.extendSchema(wm.CustomDijit, {
 });
 wm.Object.extendSchema(wm.DijitDesigner, {
     dijitPropList: {group: "DijitDesigner", writeonly: true},
-    deployDijit: {group: "operation", order: 10},
-    undeployDijit: {group: "operation", order: 20}
+    deployDijit: {group: "operation", operation:1,order: 10},
+    undeployDijit: {group: "operation", operation:1,order: 20}
 });
 
 

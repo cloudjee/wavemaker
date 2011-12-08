@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ dojo.declare("wm.PopupMenuButton", wm.Button, {
     rememberWithCookie: true,
     classNames: "wmbutton wmPopupButton",
     fullStructureStr: "",
+    fullStructure: null,
     iconClass: "", // alternative to iconUrl which allows for the icon to be loaded the same way as the icons in the menu itself
 
 
@@ -189,8 +190,6 @@ dojo.declare("wm.PopupMenuButton", wm.Button, {
     },
     // used by users who hand edit their own widgets.js files; used by studio.widgets.js
     setFullStructure: function(inObj) {
-	if (this._isDesignLoaded)
-	    this.fullStructureStr = dojo.toJson(inObj);
 	this.dojoMenu.setFullStructure(inObj);
 	this.dojoMenu.renderDojoObj();
     },

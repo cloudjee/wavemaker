@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2009-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@ wm.isDesignable = function(inControl) {
 
 wm.Control.extend({
         themeableProps: ["border", "borderColor"],
+        hint: "",
         themeable: true,
 	//publishClass: '',
 	scrim: false,
@@ -99,6 +100,13 @@ wm.Control.extend({
 		// IE6 has trouble refreshing inspector when it contains SELECT
 		setTimeout(dojo.hitch(studio.inspector, "reinspect"), 100);
 	        wm.job("studio.updateDirtyBit",10, function() {studio.updateProjectDirty();});
+
+	        if (this.parent && this.parent instanceof wm.Container) {
+		    var parent = this.parent;
+		    wm.job(parent.getRuntimeId() + ".designResize", 50, function() {
+			parent.designResizeForNewChild();
+		    });
+		}
 	},
 	designCreate: function() {
 		this.inherited(arguments);
@@ -198,6 +206,7 @@ wm.Control.extend({
 	},
 	// End design border
 */
+/*
 	getNodeStyles: function(inNodeName) {
 		return getControlNodeStyles(this, inNodeName);
 	},
@@ -220,10 +229,69 @@ wm.Control.extend({
 		if (!this._cupdating)
 			studio.cssChanged();
 	},
+	*/
 	set_showing: function(inShowing) {
 		this.setShowing(inShowing);
 		wm.fire(this.designWrapper, "setShowing", [inShowing]);
 	},
+	setImageList: function(inImageList) {
+		this.imageList = inImageList;
+		this.imageListChanged();
+	},
+	setImageIndex: function(inImageIndex) {
+		if (inImageIndex !== undefined) {
+		    this.imageIndex = Number(inImageIndex);
+			this.imageListChanged();
+		}
+	},
+	imageListChanged: function() {
+		var iln = this.findImageList();
+		this._imageList = iln ? iln instanceof wm.ImageList ? iln : this.owner.getValueById(iln) : null;
+	        this.invalidCss = true;
+	    this.render(true,true);
+	},
+    getCurrentImageIndex: function() {
+	    return this.imageIndex;
+    },
+	findImageList: function() {
+		var t = this;
+		while (t && !t.imageList) {
+			t = t.parent;
+		}
+		return t ? t.imageList : null;
+	},
+    showImageListDialog: function() {
+	var imageList = this._imageList
+	if (!imageList) {
+	    var imageListName = studio.getImageLists()[0];
+	    if (imageListName) {
+		this.setImageList(imageListName);
+		imageList = this._imageList;
+	    }
+	}
+	if (imageList) {
+	    var popupDialog = imageList.getPopupDialog();
+	    popupDialog.fixPositionNode = dojo.query(".wminspector-prop-button",dojo.byId("propinspect_row_editImageIndex"))[0];
+	    
+	    this._designImageListSelectCon = dojo.connect(imageList._designList, "onselect", this, function() {		    
+		    this.setImageIndex(imageList._designList.getSelectedIndex());
+		    studio.inspector.reinspect();
+	    });
+
+	    popupDialog.show();
+	    this._designImageListPopupCloseCon = dojo.connect(popupDialog, "setShowing", this, function(inShowing) {
+		if (!inShowing || studio.selected != this) {
+		    dojo.disconnect(this._designImageListPopupCloseCon);
+		    delete this._designImageListPopupCloseCon;
+		    dojo.disconnect(this._designImageListSelectCon);
+		    delete this._designImageListSelectCon;
+		}
+	    });
+	}
+    },
+    editImageIndex: function() {
+	    this.showImageListDialog();
+    },
 	isParentLocked: function() {
 		return this.parent && this.parent.container && this.parent.getLock();
 	},
@@ -247,49 +315,7 @@ wm.Control.extend({
 		return this.isSizeable() && !this.autoSize && !this.isFlex();
                 */
 	},
-	//_sizeUnits: [ "px", "em", "pt", "flex" ],
-	_sizeUnits: [ "px", "%" ],
-	makePropEdit: function(inName, inValue, inDefault) {
 
-		switch (inName) {
-			case "styles":
-				return makeTextPropEdit(inName, inValue, inDefault)
-			/*case "sizing":
-				return new wm.propEdit.UnitValue({
-					value: this.size + this.sizeUnits,
-					component: this, name: inName, options: this._sizeUnits
-				});*/
-			case "width":
-			case "height":
-				return new wm.propEdit.UnitValue({
-					component: this,
-				    name: inName,
-					value: inValue,
-					options: this._sizeUnits
-				});
-			case "imageList":
-				return new wm.propEdit.ImageListSelect({component: this, value: inValue, name: inName});
-		    /* Created for kana but never fully ported to wavemaker
-			case "isTabbable":
-		                return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["false", "true", "accessibility-only"]});
-				*/
-			/*case "align":
-				return new wm.propEdit.Select({component: this, value: inValue, name: inName, options: ["leftTop", "center", "rightBottom", "justify"]});
-			*/
-		}
-		return this.inherited(arguments);
-	},
-	/*editProp: function(inName, inValue, inInspector) {
-		switch (inName) {
-			case "flex":
-				this.set_flex(this.flex == 0 ? 1 : 0);
-				inInspector.reinspect();
-				break;
-			default:
-				this.inherited(arguments);
-				return;
-		}
-	},*/
 	writeComponents: function(inIndent, inOptions) {
 		var s = this.inherited(arguments);
 		return s.concat(this.writeChildren(this.domNode, inIndent, inOptions));
@@ -363,14 +389,18 @@ wm.Control.extend({
 });
 
 wm.Object.extendSchema(wm.Control, {
-        imageList: {},
+    imageList: {ignore: 1, group: "format", order: 50, editor: "wm.prop.ImageListSelect"},
+    imageIndex: {ignore: 1, group: "format", order: 51, type: "Number",  doc: 1},
+    editImageIndex: {ignore: 1, group: "format", order: 52, type: "String", doc: 1, operation: 1},
         noInspector: {ignore: 1}, // obsolete property, but still don't want it showing in property panels
         numTabbableWidgets: {ignore: 1},
         internalTabIndex: {writeonly: 1, ignore: 1},
         useDesignBorder: {ignore: 1},
 	classNames: { ignore: 1 },
 	className: { ignore: 1 },
-	_classes: { ignore: 1, category: "Styles", categoryProps: {content: "Styles", image: "images/colorwheel_16.png", inspector: "Styles"}},
+    styles: {order: 50, group: "style", editor: "wm.prop.StyleEditor"},
+    _classes: {writeonly:1},
+    classes: {order: 100, group: "style", editor: "wm.prop.ClassListEditor"},
 	container: { ignore: 1 },
 	flex: { ignore: 1 },
 	group: { ignore: 1 },
@@ -382,10 +412,10 @@ wm.Object.extendSchema(wm.Control, {
         autoSizeWidth:  { ignore: 1 },
         autoSizeHeight:  { ignore: 1 },
 	sizeable: { ignore: 1 }, // Property tells designer if a given class of widgets can be resized; splitter is an example of a widget where you might want this set to false
-	styles: { ignore: 1 },
+
     //runtimeBorder: { ignore: 1 },
-    width: { group: "layout", order: 20, doc: 1},
-    height: { group: "layout", order: 30, doc: 1},
+    width: { group: "layout", order: 20, doc: 1, editor: "wm.prop.SizeEditor"},
+    height: { group: "layout", order: 30, doc: 1, editor: "wm.prop.SizeEditor"},
         minWidth: { group: "advanced layout", order: 40},
         minHeight: { group: "advanced layout", order: 50},
     parent: { ignore: 1, doc: 1, prototype: "wm.Control" },
@@ -396,33 +426,34 @@ wm.Object.extendSchema(wm.Control, {
     disabled: { bindTarget: true, type: "Boolean", group: "common", order: 40, doc: 1},
 	size: { ignore: true },
         sizeUnits: { ignore: true },
+    hint: {group: "common", order: 1000, type: "String", bindTarget: true},
+    setShowing: {method:1, doc: 1},
 
-    setShowing: {group: "method", doc: 1},
+    setBorder: {method:1, doc: 1},
+    setBorderColor: {method:1,doc: 1},
+    setPadding: {method:1, doc: 1},
+    setMargin: {method:1, doc: 1},
+    setWidth: {method:1, doc: 1},
+    setHeight: {method:1, doc: 1},
 
-    setBorder: {group: "method", doc: 1},
-    setBorderColor: {group: "method",doc: 1},
-    setPadding: {group: "method", doc: 1},
-    setMargin: {group: "method", doc: 1},
-    setWidth: {group: "method", doc: 1},
-    setHeight: {group: "method", doc: 1},
-
-    isAncestorHidden: {group: "method", doc: 1, returns: "Boolean"},
-    setParent: {group: "method", doc: 1},
+    isAncestorHidden: {method:1, doc: 1, returns: "Boolean"},
+    setParent: {method:1, doc: 1},
 
 
 
 	        invalidCss: {ignore: 1},
 	        renderedOnce: {ignore: 1},
 		bounds: {ignore: 1},
-	    border: {group: "style", doc: 1},
-	    borderColor: {group: "style", doc: 1},
+    border: {group: "style", doc: 1, hidden: 1},
+	    borderColor: {group: "style", doc: 1, editor: "wm.ColorPicker", hidden: 1},
 		//backgroundColor: {group: "style"},
 		backgroundColor: {ignore: 1},
-	    margin: {group: "style", doc: 1},
-	    padding: {group: "style", doc: 1},
-	    autoScroll: {group: "scrolling", order: 100, ignore: 1, writeonly: 1},
-	    scrollX: {group: "scrolling", order: 101, ignore: 1, writeonly: 1},
-	    scrollY: {group: "scrolling", order: 102, ignore: 1, writeonly: 1},
+	    margin: {group: "style", doc: 1, hidden: 1},
+	    padding: {group: "style", doc: 1, hidden: 1},
+
+	    autoScroll: {group: "scrolling", order: 100, writeonly: 1, type: "Boolean"},
+	    scrollX: {group: "scrolling", order: 101, writeonly: 1},
+	    scrollY: {group: "scrolling", order: 102, writeonly: 1},
 		left: {writeonly: 1, ignore: 1},
 		top: {writeonly: 1, ignore: 1}
 

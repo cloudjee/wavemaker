@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,16 +22,19 @@ dojo.declare("BindSourceDialog", wm.Page, {
 	start: function() {
 	    this.connect(this.owner.parent, "onClose", this, "onClose");
 	},
-	initBinding: function() {
-		this.binderSource.initBinding();
+	initBinding: function(inProp) {
+	    this.binderSource.initBinding(false, inProp);
 	},
     onClose: function(inWhy) {
 	var object = this.targetProps.object;
 
 	// if the user clicked on any other components while binding, reselect the component that we're binding onClose
 	// However, this results in bad behaviors if we try to reselect a subcomponent, like the input of a servicevariable
-	if (object.owner == studio.page)
-	    studio.select(object); 
+	if (object.owner == studio.page) {
+	    if (object != studio.selected) {
+		studio.select(object); 
+	    }
+	}
     },
     update: function(inTargetProps, noRegen) {
 	this.binderSource.pageSelect.beginEditUpdate();
@@ -41,8 +44,22 @@ dojo.declare("BindSourceDialog", wm.Page, {
 	this.targetType = this._getTargetType(inTargetProps);
 	var
 	tp = this.targetProps = inTargetProps,
-	w = wm.data.getPropWire(tp.object, tp.targetProperty);
-	this.binderSource.initBinding(noRegen);
+	w = wm.data.getPropWire(tp.object, tp.targetProperty);	
+	var propDef = tp.object.listProperties()[inTargetProps.targetProperty];
+	if (!propDef && tp.object._dataSchema) {
+	    var object = tp.object;
+	    if (inTargetProps.targetProperty.indexOf(".") != -1) {
+		var parts = inTargetProps.targetProperty.split(/\./);
+		while (parts.length > 1) {
+		    var currentPart = parts.shift();
+		    object = object.getValue(currentPart);
+		}
+		propDef = object._dataSchema[parts[0]];
+	    } else {
+		propDef = tp.object._dataSchema[inTargetProps.targetProperty];
+	    }
+	}
+	this.binderSource.initBinding(noRegen,  propDef);
 	this.binderSource.updateUiForWire(w, tp.displayExpression ? tp.object.getProp(tp.targetProperty) : "");
 	
 	    //this.bindTargetLabel.setValue("caption", [(tp.object|| 0).getId(), tp.targetProperty].join('.'));
@@ -51,10 +68,10 @@ dojo.declare("BindSourceDialog", wm.Page, {
 		if (bindname.length > 30) bindname = "..." + bindname.substring(bindname.length-30);
 		this.bindTargetTypeLabel.setCaption('<span style="font-weight: bold">Type:</span> <span style="font-style: italic;">' + bindname + "</span>");
 
-		if (tp.subtype == "File") {
+		if (propDef.subtype == "File") {
 		    this.resourceRb.editor.setChecked(true);
 		} else if (tp.displayExpression) {
-		    tp.displayExpressionObject = tp.object.getProp(tp.displayExpression);
+		    tp.displayExpressionObject = tp.object.getProp(tp.displayExpressionDataSet);
 		    if (!tp.displayExpressionObject) 
 			return app.toastWarning(this.getDictionaryItem("NEED_DATASET_FOR_DISPLAY_EXPR"));
 		    this.displayExpressionRb.editor.setChecked(true);
@@ -113,7 +130,7 @@ dojo.declare("BindSourceDialog", wm.Page, {
 			ownerString = "[" + wm.decapitalize(studio.project.pageName) + "].";
 
 		} else if (nodeIsAppLevel) {
-		    ownerString = "app.";
+		    //ownerString = "app.";
 		}
 	    }
 
@@ -131,14 +148,25 @@ dojo.declare("BindSourceDialog", wm.Page, {
 	    }
 	},
 	applyButtonClick: function() {
-		if (this.binderSource.applyBinding(this.targetProps))
-			this.cancelButtonClick();
-	},
-	applyStayButtonClick: function() {
-	    if (this.binderSource.applyBinding(this.targetProps))
-		app.toastSuccess(this.getDictionaryItem("TOAST_SUCCESS"));
-	    else
+	    if (this.binderSource.applyBinding(this.targetProps)) {
+		/* If the cancel button is NOT showing, then don't autoclose the dialog after applying a binding */
+		if (this.cancelButton.showing) {
+		    this.cancelButtonClick();
+		}
+	    } else {
 		app.toastWarning(this.getDictionaryItem("TOAST_FAILED"));
+	    }
+	},
+/*
+	applyStayButtonClick: function() {
+	    if (this.binderSource.applyBinding(this.targetProps)) {
+		app.toastSuccess(this.getDictionaryItem("TOAST_SUCCESS"));
+	    } else
+		app.toastWarning(this.getDictionaryItem("TOAST_FAILED"));
+	},
+	*/
+	clearButtonClick: function() {
+	    this.binderSource.clearBinding();
 	},
 	cancelButtonClick: function() {
 		wm.fire(this.owner.owner, "dismiss");

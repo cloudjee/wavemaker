@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2009-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2009-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -85,6 +85,9 @@ LiveViewEditor.widgets = {
 				}]
 			}]
 		}],
-		benchbevel4: ["wm.Bevel", {border: "0"}, {}]
-	}]
+	    benchbevel4: ["wm.Bevel", {border: "0"}, {}],
+	    buttonBar: ["wm.Panel", {showing: false, _classes: {domNode: ["dialogfooter"]}, height: "20px", "horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%", padding: "2,0,2,0", border: "1,0,0,0", height: "34px", horizontalAlign: "right"}, {}, {
+			 OKButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "OK"}, {onclick: "okClick"}]
+		     }]
+	}]	    
 }

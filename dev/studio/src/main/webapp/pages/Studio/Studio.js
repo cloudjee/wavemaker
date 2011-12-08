@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -56,11 +56,16 @@ dojo.declare("Studio", wm.Page, {
 	// initialization
 	//=========================================================================
 	start: function() {   
+	    wm.applyFrameworkFixes();
+
 	    if (dojo.isIE && dojo.isIE < 8) {
 		app.alert(this.getDictionaryItem("ALERT_OLD_IE_BAD"));
 		app.alertDialog.setButton1Caption("");
 		return;
 	    }
+
+	    /* Create an empty patches file if there isn't one already */
+	    studio.studioService.requestSync("writeWebFile", ["/common/" + wm.version.replace(/[^a-zA-Z0-9]/g,"") + "_patches.js", "", true]);
 
 	    if (wm.EditArea && this.editArea instanceof wm.EditArea) {
 		this.scriptPageCompletionsBtn.hide();
@@ -71,7 +76,9 @@ dojo.declare("Studio", wm.Page, {
 	    app._page = this;// not sure why this was failing to set, but I don't have time to investigate...
 	    this.neededJars = {};
 		try{
-		    this.documentationDialog = new wm.RichTextDialog({owner: this, name:"documentationDialog"});
+		    this.documentationDialog = new wm.RichTextDialog({_classes: {domNode: ["studiodialog"]},
+								      owner: this, 
+								      name:"documentationDialog"});
 		    this.connect(this.documentationDialog, "onOkClick", this, "saveDocumentation");
 		}
 		catch(e){
@@ -95,7 +102,8 @@ dojo.declare("Studio", wm.Page, {
 		// load module configuration
 		this.loadModuleConfig();
 		// FIXME: hack
-		this.owner = app;
+	        //this.owner = app;
+
 	    this.scrim = new wm.Scrim({owner: this, name: "studioScrim", _classes: {domNode: ["wmdialog-scrim"]}, waitCursor: false, _noAnimation: true});
 		// populate palettes
 		loadPackages();
@@ -162,6 +170,8 @@ dojo.declare("Studio", wm.Page, {
 		this.subscribe("service-variable-error", this, "handleServiceVariableError");
 
                 this.loadThemeList();
+	    this.cssHelpLink.setLink(this.getDictionaryItem("URL_STYLE_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}));
+
 	    this.helpDialog.containerWidget.c$[0].setPadding("0");
 	    this.helpDialog.containerWidget.c$[0].setBorder("10");
 	    this.helpDialog.containerWidget.c$[0].setBorderColor("#424959");
@@ -174,19 +184,22 @@ dojo.declare("Studio", wm.Page, {
 	    });	    
 
 
-	    this._paletteToDialogButton = document.createElement("div");
-	    this._paletteToDialogButton.className = "wmtoolbutton Studio-paletteToDialogButton";
-	    studio.left.decorator.tabsControl.domNode.appendChild(this._paletteToDialogButton);
-	    dojo.connect(this._paletteToDialogButton, "onclick", this, "togglePaletteDialog");
+	    /*
 	    this.propertiesDialog.containerWidget.setPadding("0");
 	    this.propertiesDialog.containerWidget.setAutoScroll(false);
+	    */
 
 	    this._jarsMissing = {};
 	    this.jarListService.requestAsync("getMissingJars").addCallback(dojo.hitch(this, function(inResult) {
 		for (var i = 0; i < inResult.length; i++) {
 		    this._jarsMissing[inResult[i]] = true;
 		}
-
+		if (this._jarsMissing["hibernate3.jar"]) {
+		    app.confirm(this.getDictionaryItem("STUDIO_CONFIG_TOOL_NOT_RUN"), false,
+				function() {
+				    window.location = "/ConfigurationTool";
+				});
+		}
 	    }));
 
 /*
@@ -339,10 +352,10 @@ dojo.declare("Studio", wm.Page, {
 			this.application = null;
 		}
 		this.clearTrees();
+/*
 	    if (this.propertiesDialog.showing)
 		this.propertiesDialog.hide();
-	    if (this.paletteDialog.showing)
-		this.paletteDialog.hide();
+		*/
 		wm.typeManager.clearTypes();
 		wm.services.clear();
 		if (this._loadingApplication) {
@@ -543,7 +556,8 @@ dojo.declare("Studio", wm.Page, {
 		wm.dataSources.update();
 		this.refreshDataPalette();
 	    }
-	    dojo.publish("wmtypes-changed");
+	    if (this.application || this._application)
+		dojo.publish("wmtypes-changed");
 	},
 	servicesDataChanged: function(inData) {
 		// clear non-client services from registry
@@ -608,10 +622,9 @@ dojo.declare("Studio", wm.Page, {
 	},
     deploySuccess: function() {
 	var application = this.application || this._application;
-	console.log("DEPLOY SUCCESS!");
 	if (application._deployStatus == "deploying")
 	    application._deployStatus = "deployed";
-	this.runPopup.setDisabled(false);
+
 	this.setLiveLayoutReady(true);
 	switch(this._runRequested) {
 	case "studioProjectCompile":
@@ -630,7 +643,7 @@ dojo.declare("Studio", wm.Page, {
 	console.log("DEPLOY ERROR: " + result);
 	if (application._deployStatus == "deploying")
 	    application._deployStatus = "";
-	this.runPopup.setDisabled(false);
+
         if (result.message && result.message.match(/Application already exists at/)) {
             this.deploySuccess();
             return true;
@@ -644,11 +657,10 @@ dojo.declare("Studio", wm.Page, {
     },
         deploy: function(inMsg, deployType, noWait) {
 	    var application = this.application || this._application;
-	    if (application._deployStatus == "deploying") return;
+	    if (!application || application._deployStatus == "deploying") return;
 	    application._deployStatus = "deploying";
 
 	    this._runRequested = deployType;
-	    this.runPopup.setDisabled(true);
 	    var d = this._deployer = studio.deploymentService.requestAsync("testRunStart");
 	    d.addCallback(dojo.hitch(this, "deploySuccess"));
 	    d.addErrback(dojo.hitch(this, "deployError"));
@@ -1106,7 +1118,7 @@ dojo.declare("Studio", wm.Page, {
 	    // return if there are any showing dialogs owned by StudioApplication; dialogs intercept ESC and other keyboard
 	    // events using their own event handlers
 	    if (dojo.some(wm.dialog.showingList, dojo.hitch(this,function(dialog) {
-		return dialog.getOwnerApp() == this.owner && dialog.modal;
+		return dialog.getOwnerApp() == this.owner.owner && (dialog.modal || e.keyCode === dojo.keys.ESCAPE && dojo.isDescendant(document.activeElement, dialog.domNode));
 	    })))
 		return true;
 
@@ -1114,21 +1126,22 @@ dojo.declare("Studio", wm.Page, {
 		return true;
 	    
 
-		// only act on CTRL keys (but not SHIFT-CTRL)
-		var 
-			hotkey = (e.ctrlKey && !(e.ctrlKey && e.shiftKey)),
-			kc = e.keyCode,
+		// only act on CTRL keys (but not SHIFT-CTRL); accepts command/alt as alternative to ctrl key.
+	    var ctrlKey = e.ctrlKey || e.metaKey;
+	    var hotkey = (ctrlKey && !(ctrlKey && e.shiftKey));
+	    var         kc = e.keyCode,
                         isEsc = kc == dojo.keys.ESCAPE,
 			chr = String.fromCharCode(kc),
-			normalKey = ((!this.studioKeyPriority && this.allowKeyTarget(e)) || !this.isShowingWorkspace() || wm.dialog.showing),
-			handled = false;               
+			normalKey = !isEsc && ((!this.studioKeyPriority && this.allowKeyTarget(e)) || !this.isShowingWorkspace() || wm.dialog.showing),
+			handled = false;
+	    if (e.metaKey && chr.toLowerCase() == "r") return false; // don't block reload commands
 		// hotkey
 		if (hotkey)
 			handled = this.processKey(chr, wm.studioConfig.hotkeyMap, !normalKey);
 
                 // if its not a hotkey, and the target is a text or password field, let the browser handle it
                 if (!hotkey && !isEsc) {
-	            if (e.target && e.target.nodeName.toLowerCase() == "input" && (dojo.attr(e.target, "type") == "text" || dojo.attr(e.target, "type") == "password"))
+	            if (e.target && e.target.nodeName.toLowerCase() == "input" && (dojo.attr(e.target, "type") == "text" || dojo.attr(e.target, "type") == "password") || e.target && e.target.nodeName.toLowerCase() == "textarea")
                         return;
                 }
 
@@ -1151,7 +1164,7 @@ dojo.declare("Studio", wm.Page, {
 	    if (!studio.application) return true; // needed to show the resource manager when the application has failed to load
 	    var newLayer = inSender.layers[inChangeInfo.newIndex];
 	    if (!newLayer) return;
-	    if (this.tabs.getActiveLayer().name == "sourceTab") {
+	    if (this.tabs.getActiveLayer() && this.tabs.getActiveLayer().name == "sourceTab") {
 		setTimeout(dojo.hitch(this, function() {
 		    this.cssChanged();
 		    this.markupChanged();
@@ -1523,7 +1536,7 @@ dojo.declare("Studio", wm.Page, {
 	studio.inspector.reinspect();
     },
     pageSelectChanged: function(inSender, optionalPageName) {
-	if (!studio.page) return;
+	if (!studio.page || this.disabledPageSelectChanged) return;
 	var page = optionalPageName || inSender.getDataValue();
 	if (page == this.project.pageName || !page) return;
 
@@ -1533,7 +1546,9 @@ dojo.declare("Studio", wm.Page, {
 				   this.waitForCallback(this.getDictionaryItem("WAIT_OPENING_PAGE", {pageName: page}), dojo.hitch(this.project, "openPage", page, !noChanges));
 			       }),
 			       dojo.hitch(this, function() {
+				   this.disabledPageSelectChanged = true;
 				   this.pageSelect.setDataValue(studio.project.pageName);
+				   this.disabledPageSelectChanged = false;
 			       }));
 	//this.project.openPage(pagename);
     },
@@ -1629,6 +1644,7 @@ dojo.declare("Studio", wm.Page, {
 		this.inspector.reinspect();
 	},
         loadThemeList: function(optionalCallback) {
+
             var d = studio.deploymentService.requestAsync("listThemes");
             d.addCallback(dojo.hitch(this, function(inData) {
                 var d = [];
@@ -1676,6 +1692,7 @@ dojo.declare("Studio", wm.Page, {
 	//this.resourcesPage.getComponent("resourceManager").loadResources();
     },
 
+/*
     toggleInspectorDialog: function() {
 	if (!this.PIContents) return;
 	if (this.PIContents.parent == this.PIPanel) {
@@ -1726,8 +1743,25 @@ dojo.declare("Studio", wm.Page, {
 		d.reflow();
 	}
     },
+    */
     uploadStudioPatches: function() {
 	this.addPatchDialog.show();
-    }
+    },
 
+
+    dockPropertyPanel: function() {
+	if (!this.PIContents.isDestroyed && !this.PIContents._destroying) {
+	    this.PIContents.setShowing(true);
+	    this.PIContents.setDocked(true,this.PIPanel);
+	}
+    },
+    dockPalette: function() {
+	if (!this.panel2.isDestroyed && !this.panel2._destroying) {
+	    this.panel2.setShowing(true);
+	    this.panel2.setDocked(true,this.dockLeftPanel);
+	}
+    },
+    searchProperties: function(inSender,inDisplayValue,inDataValue) {
+	this.inspector.propertySearch(inDisplayValue);
+    }
 });

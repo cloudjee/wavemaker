@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -18,24 +18,24 @@ dojo.require("wm.base.widget.LiveForm");
 wm.Object.extendSchema(wm.LiveFormBase, {
     liveSaving:{ ignore: 1},
     themeStyleType: {group: "style", order: 150},
-	dataSet: { readonly: 1, group: "data", order: 1, bindTarget: 1, type: "wm.Variable"},
+    dataSet: { readonly: 1, group: "data", order: 1, bindTarget: 1, type: "wm.Variable", createWire:1},
 	dataOutput: { ignore: 1, group: "data", order: 2, bindable: 1, type: "wm.Variable", simpleBindProp: true, categoryParent: "Properties", categoryProps: {component: "dataOutput", inspector: "Data"} },
-	clearData: { group: "operation", order: 2},
-	addEditors: { group: "operation", order: 5},
-	removeEditors: { group: "operation", order: 10},
+    clearData: { group: "operation", order: 2, operation:1},
+    addEditors: { group: "operation", order: 5, operation:1},
+    removeEditors: { group: "operation", order: 10, operation:1},
 	readonly: { group: "editor", order: 6},
     //validateBeforeSave: {group: "display", order: 7, type: "Boolean"},
-	editorWidth: {group: "display", order: 200},
-	editorHeight: {group: "display", order: 201},
+    editorWidth: {group: "display", order: 200, editor: "wm.prop.SizeEditor"},
+	editorHeight: {group: "display", order: 201, editor: "wm.prop.SizeEditor"},
 	editorSize: { ignore: 1},
-	captionSize: { group: "display", order: 210},
+	captionSize: { group: "display", order: 210, editor: "wm.prop.SizeEditor"},
 	captionUnits: { ignore: 1},
-	captionAlign: { group: "display", order: 230},
-    captionPosition: { group: "display", order: 240},
-    setDataSet: {group: "method"},
-    beginDataUpdate: {group: "method"},
-    clearData: {group: "method"},
-    setReadonly: {group: "method"}
+    captionAlign: { group: "display", order: 230, options: ["left","center","right"]},
+    captionPosition: { group: "display", order: 240, options: ["top", "left", "bottom", "right"]},
+    setDataSet: {method: true},
+    beginDataUpdate: {method: true},
+    clearData: {method: true},
+    setReadonly: {method: true}
 
 
 });
@@ -46,29 +46,44 @@ wm.makeNameForProp = function(inProp, inSuffix) {
 }
 
 wm.getEditorClassName = function(type){
-	if (dojo.indexOf(wm.editors, type) == -1)
-		type = 'Text';
     switch(type.toLowerCase()) {
     case "checkbox":
+    case "java.lang.boolean":
 	type = "Checkbox";
 	break;
     case "select":
 	type = "SelectMenu";
 	break;
     case "date":
+    case "time":
+    case "java.util.date":
 	type = "DateTime";
 	break;
+    case "int":
+    case "java.lang.integer":
+    case "java.lang.short":
+    case "java.lang.long":
+    case "java.lang.float":
+    case "java.lang.double":
+	type = "Number";
+	break;
     }
+    if (dojo.indexOf(wm.editors, type) == -1)
+	type = 'Text';
     return 'wm.'+type;
 }
 
 wm.LiveFormBase.extend({
 	addEditors: "(addEditors)",
-	removeEditors: "(removeEditors)",
+    //removeEditors: "(removeEditors)",
 	afterPaletteDrop: function() {
 		wm.Container.prototype.afterPaletteDrop.call(this);
 		this.createLiveSource(this._liveSource);
 	},
+	getViewDataIndex: function(inFormField) {
+		return inFormField;
+	},
+
 	designPasted: function() {
 		this._checkBindings();
 	},
@@ -120,11 +135,16 @@ wm.LiveFormBase.extend({
 		}
 	},
 	removeEditors: function() {
-		this.destroyEditors();
-		this.setFitToContentHeight(false);
-		this.reflow();
-		wm.fire(this, "updateDesignTrees");
+		app.confirm(studio.getDictionaryItem("wm.LiveForm.CONFIRM_REMOVE_EDITORS", {name: this.getId()}),
+			    false, 
+			    dojo.hitch(this, "_removeEditors"));
 	},
+    _removeEditors: function() {
+				this.destroyEditors();
+				this.setFitToContentHeight(false);
+				this.reflow();
+				wm.fire(this, "updateDesignTrees");
+    },
 	destroyGrid: function(){
 		for(var i=0, eds = this.findGrid(), e; (e=eds[i]); i++) {
 			this._removeBindingForEditor(e);
@@ -191,11 +211,18 @@ wm.LiveFormBase.extend({
 			var
 				props = dojo.mixin(this.getFormEditorProps() || {}, {
 					formField: ff,
-					readonly: true,
+				        readonly: this.readonly,
 					name: wm.makeNameForProp(ff, "Editor")
 				}),
 /*		    e = this.createEditor(f, props, {onEnterKeyPress: this.getId() + ".saveDataIfValid"}, wm.getEditorClassName(f.displayType));*/
 		    e = this.createEditor(f, props, {}, wm.getEditorClassName(f.displayType));
+		    if (e) {
+			if (e instanceof wm.Number)
+			    e.emptyValue = "zero";
+			else if (e instanceof wm.Text)
+			    e.emptyValue = "emptyString";
+		    }
+
 			if (e)
 			this._bindEditor(e);
 			return true;
@@ -237,7 +264,7 @@ wm.LiveFormBase.extend({
 	        if (relatedTypeDef && !relatedTypeDef.liveService) {
 		    props.editingMode = "editable subform";
 		    return this.owner.loadComponent(wm.makeNameForProp(inFormField, "RelatedEditor"), this, "wm.RelatedEditor", props);
-		} else if (relatedTypeDef) {
+		} else if (relatedTypeDef && fieldDef && !fieldDef.isList) {
 		    props.name = wm.makeNameForProp(inFormField, "Lookup")
 		    return wm.createFieldEditor(this.getEditorParent(), fieldDef, props, {}, "wm.Lookup");
 		} else {
@@ -290,19 +317,19 @@ wm.LiveFormBase.extend({
 	// Automatic data source creation via _liveSource prop
 	//===========================================================================
 	createLiveSource: function(inType) {
-		var ti = wm.typeManager.getType(inType)
-		if (!ti)
-			return;
-		var
-			sa = studio.application,
-			name = inType.split('.').pop().toLowerCase(),
-			lv = new wm.LiveView({owner: sa, name: wm.findUniqueName(name + "LiveView1", [sa]), service: ti.service, dataType: inType, _defaultView: true});
-	                lv.getRelatedFields(); // make sure its calculated its list of related fields before we create/fire a livevar
-		var r = this.getRoot();
-  	        var d = r.createComponent(name + "LiveVariable1", "wm.LiveVariable", {liveSource: lv.getId()});
-		this.set_dataSet(d.name);
-		if (r == studio.page)
-			this.updateDesignTrees();
+	    var r = this.getRoot();
+	    var ti = wm.typeManager.getType(inType)
+	    if (!ti)
+		return;
+	    var name = inType.split('.').pop().toLowerCase();
+  	    var lvar = r.createComponent(name + "LiveVariable1", "wm.LiveVariable", {type: inType});
+	    var lv = new wm.LiveView({owner: lvar, name: "liveView", service: ti.service, dataType: inType, _defaultView: true});
+	    lv.getRelatedFields(); // make sure its calculated its list of related fields before we create/fire a livevar
+	    lvar.setLiveView(lv);
+
+	    this.set_dataSet(lvar.name);
+	    if (r == studio.page)
+		this.updateDesignTrees();
 	},
 	//===========================================================================
 	// Add existing editors to form
@@ -427,32 +454,15 @@ wm.LiveFormBase.extend({
 	//===========================================================================
 	// Inspector implementations
 	//===========================================================================
-	makePropEdit: function(inName, inValue, inDefault) {
-	var prop = this.schema ? this.schema[inName] : null;
-	var name =  (prop && prop.shortname) ? prop.shortname : inName;
+	makePropEdit: function(inName, inValue, inEditorProps) {
 		switch (inName) {
-			case "addEditors":
-			case "removeEditors":
-			case "clearData":
-		        case "generateButtons":
-				return makeReadonlyButtonEdit(name, inValue, inValue);
-			case "editorWidth":
-			case "editorHeight":
-			case "captionSize":
-				return new wm.propEdit.UnitValue({component: this, name: inName, value: inValue, options: this._sizeUnits});
-			case "captionAlign":
-				return makeSelectPropEdit(inName, inValue, ["left", "center", "right"], inDefault);
-			case "captionPosition":
-				return makeSelectPropEdit(inName, inValue, ["top", "left", "bottom", "right"], inDefault);
-/*
-                        case "editPanelStyle":
-				return makeSelectPropEdit(inName, inValue, ["wm.Button","wm.RoundedButton", "none"], inDefault);
-				*/
 			case "dataSet":
-				var p = wm.getParentForm(this);
-				return p ?
-					new wm.propEdit.Select({component: this, name: inName, options: [""].concat(this.getFormSubDataSetNames(p))}) : 
-					new wm.propEdit.LiveDataSetSelect({component: this, name: inName, widgetDataSets: true});
+		    var p = wm.getParentForm(this);
+		    if (p) {
+			return new wm.prop.Select(dojo.mixin(inEditorProps, {options: this.getFormSubDataSetNames(p)}));
+		    } else {
+			return new wm.prop.DataSetSelect(dojo.mixin(inEditorProps, {widgetDataSets: true}));
+		    }
 		}
 		return this.inherited(arguments);
 	},
@@ -481,23 +491,7 @@ wm.LiveFormBase.extend({
                 this.addEditPanel();                
             }
         },
-        editProp: function(inName, inValue, inInspector) {
-	    switch (inName) {
-	    case "addEditors":
-		return this.addEditors();
-	    case "removeEditors":
-		app.confirm(studio.getDictionaryItem("wm.LiveForm.CONFIRM_REMOVE_EDITORS", {name: this.getId()}),
-			    false, 
-			    dojo.hitch(this, "removeEditors"));
-		
-		return;
-	    case "clearData":
-		return this.clearData();
-	    case "generateButtons":
-		return this.generateButtons();
-	    }
-	    return this.inherited(arguments);
-	},
+
     generateButtons: function() {
 	if (!this._generateButtonsDialog) {
 	    var dialog = 
@@ -607,17 +601,18 @@ wm.Object.extendSchema(wm.LiveForm, {
         alwaysPopulateEditors: { group: "editor", order: 15, type: "Boolean"},
 
 
-	defaultButton: { ignore: 1, group: "Deprecated", order: 5, bindTarget: 1, type: "wm.Button"},
+	defaultButton: { ignore: 1, group: "deprecated", order: 5, bindTarget: 1, type: "wm.Button"},
         displayErrors: { group: "data", order: 15},
+    confirmDelete: {group: "data", order: 12},
     //noButtonPanel: {group: "display", order: 8, type: "Boolean", ignore: 1},
     //editPanelStyle: {group: "display", order: 9, type: "String"},
-    beginDataInsert: {group: "method"},
-    saveData: {group: "method"},
-    saveDataIfValid: {group: "method"},
-    insertData: {group: "method"},
-    updateData: {group: "method"},
-    deleteData: {group: "method"},
-    generateButtons: {group: "operation", order: 12},
+    beginDataInsert: {method:1},
+    saveData: {method:1},
+    saveDataIfValid: {method:1},
+    insertData: {method:1},
+    updateData: {method:1},
+    deleteData: {method:1},
+    generateButtons: {group: "operation", order: 12, operation:1},
     imageList: {ignore: 1},
     freeze: {ignore: 1},
     lock: {ignore: 1}

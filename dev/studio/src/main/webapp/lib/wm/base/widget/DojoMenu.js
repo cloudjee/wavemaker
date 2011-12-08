@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,6 +22,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 	width:'100%',
 	height:'35px',
 	structure:'',
+    localizationStructure: null,
 	fullStructure: null,
         fullStructureStr: "",// this varient of fullStructure can be written to widgets.js
 	dojoObj:null,
@@ -34,6 +35,9 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 
 	init: function() {
 	    this._menuConnects = [];
+	    if (!this.localizationStructure) {
+		this.localizationStructure = {};
+	    }
 /*
 	    this.eventList = [];
 	    this.menuItems = [];
@@ -91,6 +95,18 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		
 	return this.dojoObj;
     },
+    forEachMenuItem: function(inStruct, inCallback) {
+	if (dojo.isArray(inStruct))
+	    inStruct = {children: inStruct};
+	else
+	    inCallback(inStruct);
+	if (inStruct.children) {
+	    for (var i = 0; i < inStruct.children.length; i++) {
+		this.forEachMenuItem(inStruct.children[i], inCallback);
+	    }
+	}
+    },
+
     destroy: function() {
 	delete this._dijitHash;
 	dojo.forEach(this._menuConnects, function(c) {dojo.disconnect(c);});
@@ -287,6 +303,14 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		var idInPage = data.idInPage;
 		delete data.idInPage;
 
+	    if (data.defaultLabel) {
+		if (this.localizationStructure[idInPage ? idInPage :  data.defaultLabel])
+		    data.label = this.localizationStructure[idInPage ? idInPage : data.defaultLabel];
+		else if (data.defaultLabel)
+		    data.label = data.defaultLabel;
+	    }
+
+
 		if (isTop && !this._neverIsTop)
 		{
 		    menuObj = new dijit.PopupMenuBarItem({label: data.label, data: data});
@@ -299,7 +323,7 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		{
 		        menuObj = new dijit.MenuItem(data);
 		}
-	        if (data.label || data.defaultLabel) {
+	        if (data.defaultLabel || data.label) {
 		    this._dijitHash[data.defaultLabel || data.label] = menuObj;
 		}
 

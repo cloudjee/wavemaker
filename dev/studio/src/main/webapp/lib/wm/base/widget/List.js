@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -61,7 +61,6 @@ dojo.declare("wm.List", wm.VirtualList, {
 	constructor: function() {
 		this._data = [];
 	},
-	binding: "(data)",
 	updateNow: "(update now)",
 	columnWidths: "",
 	dataFields: "",
@@ -311,51 +310,6 @@ dojo.declare("wm.List", wm.VirtualList, {
 	  }
 });
 
-// design-time only
-wm.Object.extendSchema(wm.List, {
-	disabled: { ignore: 1 },
-	selectedItem: { ignore: 1, bindSource: 1, isObject: true, simpleBindProp: true },
-	dataSet: { readonly: true, group: "data", order: 1, bindTarget: 1, type: "wm.Variable", isList: true},
-    emptySelection: { ignore: true, bindSource: 1, type: "Boolean" },
-    getEmptySelection: {group: "method", returns: "Boolean"},
-    setColumnWidths: {group: "method"},
-    //getDataItemCount: {group: "method", returns: "Number"},
-    setDataSet: {group: "method"},
-    getItemData: {group: "method", returns: "Object"}   
-
-});
-
-wm.List.description = "Displays list of items.";
-
-wm.List.extend({
-	set_dataSet: function(inDataSet) {
-		// support setting dataSet via id from designer
-		if (inDataSet && !(inDataSet instanceof wm.Variable)) {
-			var ds = this.getValueById(inDataSet);
-			if (ds)
-				this.components.binding.addWire("", "dataSet", ds.getId());
-		} else
-			this.setDataSet(inDataSet);
-	},
-	makePropEdit: function(inName, inValue, inDefault) {
-	        var prop = this.schema ? this.schema[inName] : null;
-	        var name =  (prop && prop.shortname) ? prop.shortname : inName;
-		switch (inName) {
-			case "updateNow":
-				return makeReadonlyButtonEdit(name, inValue, inDefault);
-			case "dataSet":
-				return new wm.propEdit.DataSetSelect({component: this, name: inName, value: this.dataSet ? this.dataSet.getId() : "", allowAllTypes: true, listMatch: true});
-		}
-		return this.inherited(arguments);
-	},
-	editProp: function(inName, inValue, inInspector) {
-		switch (inName) {
-			case "updateNow":
-				return this.update();
-		}
-		this.inherited(arguments);
-	}
-});
 
 
 wm.FocusablePanelRegistry = [];
@@ -593,19 +547,3 @@ dojo.declare("wm.FocusablePanel", wm.Panel, {
 	}
 
 });
-wm.Object.extendSchema(wm.FocusableList, {
-	focusEventTime: { ignore: 1 },
-	nextFocus: {bindable: 1, type: "wm.FocusableList"},
-	priorFocus: {bindable: 1, type: "wm.FocusableList"},
-	hasFocus: {ignore:1},
-	focusOnStart: {type: "boolean"},
-	defaultFocusListIndex: {}
-	
-});
-
-wm.Object.extendSchema(wm.FocusablePanel, {
-	focusEventTime: { ignore: 1 }
-});
-
-
-

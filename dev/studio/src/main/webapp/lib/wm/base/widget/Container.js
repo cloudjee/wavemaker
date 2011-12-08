@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2009-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -52,6 +52,18 @@ wm.define("wm.Container", wm.Control, {
 		this.c$ = [];
 	},
 	init: function() {
+	    if (this.dockRight) {
+		app.dockRight = this;
+	    } 
+	    if (this.dockLeft) {
+		app.dockLeft = this;
+	    } 
+	    if (this.dockTop) {
+		app.dockTop = this;
+	    } 
+	    if (this.dockBottom) {
+		app.dockBottom = this;
+	    }
 	    if (this.touchScrolling && app._touchEnabled) {
 		wm.conditionalRequire("lib.github.touchscroll.touchscroll");
 		this._touchScroll = new TouchScroll(this.domNode, {elastic:true, owner: this});
@@ -106,6 +118,15 @@ wm.define("wm.Container", wm.Control, {
 	},
 	destroy: function()
 	{
+	    if (this.dockRight) {
+		delete app.dockRight;
+	    } else if (this.dockLeft) {
+		delete app.dockLeft;
+	    } else if (this.dockTop) {
+		delete app.dockTop;
+	    } else if (this.dockBottom) {
+		delete app.dockBottom;
+	    }
 		if (this.domNode && this.domNode.box)
 			delete this.domNode.box;
 		this.inherited(arguments);
@@ -293,9 +314,45 @@ wm.define("wm.Container", wm.Control, {
 	    // this means that autoscroll has a slower rendering execution than non-autoscroll
 	    //if (this.autoScroll && this._xneedReflow || this.fitToContent) this.renderBounds();
 	    for (var i=0, c; c=this.c$[i]; i++) {
-		c.renderBounds();
+		if (c.showing)
+		    c.renderBounds();
 	    }
 	},
+    removeDelayedReflow: function() {
+	delete wm.Container.delayedReflowWidgets[this.getRuntimeId()];
+    },
+    delayedReflow: function() {
+	/* Already queued for reflow */
+	if (wm.Container.delayedReflowWidgets[this.getRuntimeId()])
+	    return;
+	wm.Container.delayedReflowWidgets[this.getRuntimeId()] = this;
+	
+	var newParents = [];
+
+	/* Iterate over every existing delayed widget and find if they have a common parent that could be reflowed instead */
+	try {
+	    wm.forEachProperty(wm.Container.delayedReflowWidgets, dojo.hitch(this, function(widget, widgetid) {
+	    if (widget === this) {
+		;
+	    } else if (widget.parent === this.parent) {
+		delete wm.Container.delayedReflowWidgets[widgetId];
+		delete 	wm.Container.delayedReflowWidgets[this.getRuntimeId()];
+		newParents.push(this.parent);
+	    } else if (this.isAncestor(widget)) {
+		delete wm.Container.delayedReflowWidgets[widgetId];
+	    } else if (widget.isAncestor(this)) {
+		delete 	wm.Container.delayedReflowWidgets[this.getRuntimeId()];
+	    }
+	    }));
+	} catch(e) {}
+	for (var i = 0; i < newParents.length; i++) {
+	    newParents[i].delayedReflow();
+	}
+
+	if (!wm.Container._delayedReflowWidgetsId) {
+	    wm.Container._delayedReflowWidgetsId = window.setTimeout(wm.Container.runDelayedReflow, 1);
+	}
+    },
         forEachControl: function(inFunc, paramArray) {
 	  dojo.forEach(this.c$, function(inControl) {
 	    inFunc.apply(inControl, (paramArray) ? paramArray : []);
@@ -384,7 +441,7 @@ wm.define("wm.Container", wm.Control, {
 	// Lock/freeze
 	//
 	getLock: function() {
-		return this.lock || (this.parent && wm.fire(this.parent, "getLock"));
+		return this.lock || (this.parent && wm.fire(this.parent, "getLock")) || false;
 	},
 	setLock: function(inLock) {
 	        var original = this.lock;
@@ -553,9 +610,10 @@ wm.Container.extend({
 	        var sum = 0;
 	    var percentUsed = 0;
 		var v;
-
+	    var count = 0;
 		for (var i=0, c; c=this.c$[i]; i++) {		    
 			if (this.layout.inFlow(c)) {
+			    count++;
 			    /* If c is autoScrolling, then its size isn't affected by its contents */
 			        if (c.fitToContentWidth || c instanceof wm.Container && c._percEx.w == 100 && !c.autoScroll) {
 					v =  c.getPreferredFitToContentWidth();
@@ -576,7 +634,8 @@ wm.Container.extend({
 			}
 		}
 
-	    if (percentUsed && percentUsed < 100) {
+	    var dontNormalizeMinPercent = count == 1;
+	    if (!dontNormalizeMinPercent && percentUsed && percentUsed < 100) {
 		sum = Math.round(sum * 100/percentUsed);
 		max = Math.round(max * 100/percentUsed);
 	    }
@@ -597,8 +656,10 @@ wm.Container.extend({
 	    var sum = 0;
 	    var percentUsed = 0;
 	    var v;
+	    var count = 0;
 		for (var i=0, c; c=this.c$[i]; i++) {
 			if (this.layout.inFlow(c)) {
+			    count++;
 			    /* If c is autoScrolling, then its size isn't affected by its contents */
 			        if (c.fitToContentHeight || c instanceof wm.Container && c._percEx.h == 100 && !c.autoScroll) {
 					v = c.getPreferredFitToContentHeight();
@@ -617,8 +678,8 @@ wm.Container.extend({
 				sum += v;
 			}
 		}
-
-	    if (percentUsed && percentUsed < 100) {
+	    var dontNormalizeMinPercent = count == 1;
+	    if (!dontNormalizeMinPercent && percentUsed && percentUsed < 100) {
 		sum = Math.round(sum * 100/percentUsed);
 		max = Math.round(max * 100/percentUsed);
 	    }
@@ -640,8 +701,8 @@ wm.Container.extend({
 		return this.inherited(arguments);
 	},
         focusFirstEditor: function() {
-	    for (var i in this.widgets) {
-		var w = this.widgets[i];
+	    for (var i = 0; i < this.c$.length; i++) {
+		var w = this.c$[i];
 		if (wm.isInstanceType(w,wm.Editor) ||
 		    wm.isInstanceType(w,wm.AbstractEditor)) {
 		    w.focus();
@@ -658,6 +719,7 @@ wm.Container.extend({
 	clearEditors: function(){
 		return this.clearData();
 	},
+
 
     // events
     onEnterKeyPress: function(inEvent){}
@@ -725,6 +787,93 @@ wm.Container.extend({
 			this.width = this.bounds.w + "px";
                         this._percEx.w = 0;
                 }
+	},
+
+
+    toHtml: function(inWidth) {
+	if (this.customToHtml != this.constructor.prototype.customToHtml)
+	    return this.customToHtml();
+	var html = [];
+	var count = 0;
+	var hasContents = [];
+	for (var i = 0; i < this.c$.length; i++) {
+	    var c = this.c$[i];
+	    if (this.layout.inFlow(c) ) {
+		hasContents[i] = c.toHtml != wm.Control.prototype.toHtml;
+		if (hasContents[i] && c.customToHtml != c.constructor.prototype.customToHtml) {
+		    var testContent = c.toHtml(inWidth);
+		    if (testContent === "" || testContent === undefined || testContent === null)
+			hasContents[i] = false;
+		}
+		if (hasContents[i]) {
+		    count++;
+		}
+	    }
 	}
+
+
+	if (this.layoutKind == "top-to-bottom" || count <= 1) {
+	    html.push("<div id='" + this.domNode.id + "' class='wmPanelTopToBottom'>");
+	    for (var i = 0; i < this.c$.length; i++) {
+		if (hasContents[i]) {
+		    var h = this.c$[i].toHtml(inWidth);
+		    if (h) {
+			var style = "";//"style='margin: " + this.margin + ";padding: " + this.padding + ";'";
+			var classes = (this.c$[i]._classes && this.c$[i]._classes.domNode ? this.c$[i]._classes.domNode : []);
+			classes = dojo.filter(classes, function(inClass) {return inClass.indexOf("wm_Font") == 0 || inClass.indexOf("wm_Text") == 0;});
+			classes = classes.join(" ");
+			html.push("<div id='" + this.c$[i].domNode.id + "_Outer' " + style + " class='" + classes + "'>" + h + "</div>");
+		    }
+		}
+	    }
+	} else {
+	    var remainingWidth = inWidth-4; // things start wrapping if we don't have at least 4 extra px space
+	    var totalPercent = 0;
+	    var widths = [];
+	    for (var i = 0; i < this.c$.length; i++) {
+		if (hasContents[i]) {
+		    var c = this.c$[i];
+		    if (!c._percEx.w) {
+			widths[i] = c.bounds.w;
+			remainingWidth -= c.bounds.w;
+		    } else {
+			totalPercent += c._percEx.w;
+		    }
+		}
+	    }
+	    for (var i = 0; i < this.c$.length; i++) {
+		if (hasContents[i]) {
+		    var c = this.c$[i];
+		    if (c._percEx.w) {
+			var width = c._percEx.w/totalPercent * remainingWidth;
+			widths[i] = width;
+		    }
+		}
+	    }
+	    html.push("<div id='" + this.domNode.id + "' class='wmPanelLeftToRight'>");
+	    for (var i = 0; i < this.c$.length; i++) {
+		var h = this.c$[i].toHtml(widths[i])
+		if (h) {
+		    var style = ""; //"style='margin-top: " + this.marginExtents.t + "px;margin-bottom: " + this.marginExtents.b + "px;padding-top: " + this.paddingExtents.t + "px;padding-bottom: " + this.paddingExtents.b + "px;'";
+		    var classes = (this.c$[i]._classes && this.c$[i]._classes.domNode ? this.c$[i]._classes.domNode : []);
+		    classes = dojo.filter(classes, function(inClass) {return inClass.indexOf("wm_Font") == 0 || inClass.indexOf("wm_Text") == 0;});
+		    classes = classes.join(" ");
+		    html.push("<div id='" + this.c$[i].domNode.id + "_Outer' style='width:" + widths[i] + "px;' " + style + " class='"+classes+"'>" + h + "</div>");
+		}
+	    }	    
+	}
+	html.push("</div>");
+	return html.join("");
+    }
 });
 
+wm.Container.delayedReflowWidgets = {};
+wm.Container._delayedReflowWidgetsId = 0;
+wm.Container.runDelayedReflow = function() {
+    var widgets = wm.Container.delayedReflowWidgets;
+    wm.Container.delayedReflowWidgets = {};
+    wm.Container._delayedReflowWidgetsId = 0;
+    wm.forEachProperty(widgets, function(widget,widgetId) {
+	widget.reflow();
+    });
+};

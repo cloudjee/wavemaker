@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 Infoteria Corporation and VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 Infoteria Corporation and VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,5 +14,7 @@
 {
 templatesPanelLabel: {caption: "データをどのように見せたいかを選択"},
 CancelButton: {caption: "キャンセル"},
-OKButton: {caption: "OK"}
+OKButton: {caption: "OK"},
+    TRADITIONAL: "トラディショナル",
+    DIALOG: "ダイアログ"
 }

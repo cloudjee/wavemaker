@@ -1,4 +1,4 @@
-VMware WakeMaker 6.3.x
+VMware WakeMaker 6.4.x
 Copyright (c) 2007 - 2011 VMware, Inc. All Rights Reserved. 
 
 This product is licensed to you under the Apache License, Version 2.0 (the "License").  

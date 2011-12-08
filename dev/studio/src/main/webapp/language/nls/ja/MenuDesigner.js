@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 Infoteria Corporation and VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -26,5 +26,6 @@ treeLabel: {caption: "ツリーを使ってデザインしてください"},
 CancelButton: {caption: "キャンセル"},
 OKButton: {caption: "OK"},
 
-DEFAULT_ITEM_NAME: "メニューアイテム ${index}"
+DEFAULT_ITEM_NAME: "メニューアイテム ${index}",
+    YOUR_MENU_NAME: "あなたのメニュー"
 }

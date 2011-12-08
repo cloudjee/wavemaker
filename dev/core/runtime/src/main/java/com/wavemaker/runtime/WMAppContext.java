@@ -15,6 +15,7 @@
 package com.wavemaker.runtime;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Properties;
 
@@ -83,7 +84,7 @@ public class WMAppContext {
             // Set up multi-tenant info
             Resource appPropsResource = null;
             try {
-                appPropsResource = new ServletContextResource(this.context, "/WEB-INF/classes/" + CommonConstants.APP_PROPERTY_FILE);
+                appPropsResource = new ServletContextResource(this.context, "/WEB-INF/" + CommonConstants.APP_PROPERTY_FILE);
             } catch (WMRuntimeException re) {
                 return;
             } catch (Exception e) {
@@ -99,7 +100,9 @@ public class WMAppContext {
 
             try {
                 props = new Properties();
-                props.load(appPropsResource.getInputStream());
+                InputStream is = appPropsResource.getInputStream();
+                props.load(is);
+                is.close();
             } catch (IOException ioe) {
                 ioe.printStackTrace();
                 return;
@@ -191,10 +194,6 @@ public class WMAppContext {
     }
 
     public boolean isMultiTenant() {
-        if (isCloudFoundry()) {
-            return false;
-        }
-
         String tf;
         boolean multiTenancy;
 

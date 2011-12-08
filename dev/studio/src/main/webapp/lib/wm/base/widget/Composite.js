@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -243,12 +243,15 @@ wm.CompositeMixin.extend({
 			inDefault = p.comp.constructor.prototype[p.property];
 			//console.log(this, ": forwarding makePropEdit for published [", inName, "] to ", p);
 			var e = p.comp.makePropEdit(p.property, inValue, inDefault);
+/* TODO: PROPINSPECTOR CHANGE: Need to fix this
 			if (dojo.isString(e)) 
 				return e.replace('name="' + p.property + '"', 'name="' + inName + '"');
 			else if (e) {
 				e.name = inName;
+			        e.component = this;
 				return e;
 			}
+			*/
 		}
 		return this.inherited(arguments);
 	},

@@ -301,5 +301,7 @@ public class TestAddServiceWireUpgradeTask extends StudioTestCase {
         public boolean isLiveDataService() {
             return false;
         }
+
+        public String getOperationType(String operationName) {return null;}
     }
 }

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -118,6 +118,12 @@ dojo.declare("wm.Wire", wm.Component, {
 	},
 	refreshValue: function() {
 		//wm.logging && console.info("==> (refresh) ", this.source, "=>", this.getFullTarget(), " Wire.refreshValue");
+	    /* If we're in design mode, and the source is on a page that isn't loaded, we may find ourselves
+	     * doing nasty stuff like calling set_dataSet(null) which actually clears the binding
+	     * instead of transmitting binding data
+	     */
+	    if (this._isDesignLoaded && this.source && this.source.indexOf("[") == 0 && this.getValueById(this.source) === null)
+		return;
 	    this._sourceValueChanged(this.source ? this.getValueById(this.source) : "");
 		//wm.logging && console.groupEnd();
 	},
@@ -291,6 +297,7 @@ dojo.declare("wm.Binding", wm.Component, {
 		};
 		var wire = this.wires[id] = new wm.Wire(props);
 		wire.connectWire();
+	        return wire;
 	},
 	// for greater control, optionally removal only occurs if source and/or expression match arguments
 	removeWire: function(inWireId, inSource, inExpression) {

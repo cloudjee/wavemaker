@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,11 +32,7 @@ dojo.declare("wm.DataNavigator", wm.Panel, {
 		this.createNavComponents();
 		this.connectNavComponents();
 	},
-	afterPaletteDrop: function() {
-		this.inherited(arguments);
-	    this.setLayoutKind("left-to-right");
-	    this.setWidth("100%");
-	},
+
 	createNavComponents: function() {
 		this.readComponents(this.getTemplate());
 		dojo.mixin(this, this.widgets);
@@ -52,10 +48,8 @@ dojo.declare("wm.DataNavigator", wm.Panel, {
 		return ['{',
 		'firstButton: ["wm.Button", {caption: "&nbsp&laquo;&nbsp;", width: "',this._buttonWidth,'", height: "100%"}, {}],',
 		'prevButton: ["wm.Button", {caption: "&nbsp&lt;&nbsp;", width: "',this._buttonWidth,'", height: "100%"}, {}],',
-		'recordEditor: ["wm.Editor", {width: "65px", margin: 4, height: "100%"}, {}, {',
-			'editor: ["wm._NumberEditor", {}, {}]',
-		'}],',
-		'totalLabel: ["wm.Label", {caption: "of 0", width: "50px", border: 0, height: "100%"}, {}, {',
+		'recordEditor: ["wm.Number", {caption: "", width: "65px", margin: 4, height: "100%"}],',
+		'totalLabel: ["wm.Label", {caption: "/ 0", width: "50px", border: 0, height: "100%"}, {}, {',
 			'format: ["wm.DataFormatter", {}, {}]',
 		'}],',
 		'nextButton: ["wm.Button", {caption: "&nbsp&gt;&nbsp;", width: "',this._buttonWidth,'", height: "100%"}, {}],',
@@ -98,7 +92,7 @@ dojo.declare("wm.DataNavigator", wm.Panel, {
 		this._updating = c != r.getValue("dataValue");
 		if (c > t) c = t;
 		r.setValue("dataValue", c);
-	       this.totalLabel.setValue("caption", wm.getDictionaryItem("wm.DataNavigator.TOTAL_LABEL", {total: t}))
+	        this.totalLabel.setValue("caption", "/ " + t);
 		this._doSetRecord(d, c);
 	},
 	setLiveSource: function(inLiveSource) {
@@ -107,7 +101,7 @@ dojo.declare("wm.DataNavigator", wm.Panel, {
 			this.components.binding.addWire("", "liveSource", s);
 			return;
 		}
-		s = s instanceof wm.LiveForm ? s.dataSet : s;
+	    s = wm.isInstanceType(s, wm.LiveForm) || wm.isInstanceType(s,wm.DataForm) ? s.dataSet : s;
 		if (s instanceof wm.LiveVariable) {
 			this.liveSource = s;
 			this.connect(this.liveSource, "onSuccess", this, "update");

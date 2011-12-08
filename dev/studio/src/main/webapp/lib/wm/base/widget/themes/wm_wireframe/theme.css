@@ -2,7 +2,7 @@
  * FILE: theme.css
  *****************************************/
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -741,14 +741,9 @@ body .wm_wireframe .dialogfooter .wmbutton:hover {
 /* Give editors the standard border color, and get rid of the outline styling which is unnecessary and looks bad in webkit */
 .wm_wireframe .wmeditor .dijitTextBox.dijitFocused,
 .wm_wireframe .wmeditor .dijitTextArea.dijitFocused,
-.wm_wireframe .wmeditor .dijitComboBox.dijitFocused {
+.wm_wireframe .wmeditor .dijitComboBox.dijitFocused,
+.wm_wireframe .wmeditor .dijitSelect.dijitFocused {
 	outline-width: 0 !important;    
-}
-.wm_wireframe .wmeditor .wmeditor-caption {
-    color: inherit;
-    font-family: inherit;
-    font-size: inherit;
-    font-weight: inherit;
 }
 /* Make all editors equally rounded.  This is not for technical reasons.  It is my opinion that a theme should
  * allow some things to vary, and other things should provide a consistent common look.
@@ -762,6 +757,17 @@ body .wm_wireframe .dialogfooter .wmbutton:hover {
      -webkit-border-radius: 2px; /* Borders-Editor_BorderStyle_Radius */
      border-radius: 2px; /* Borders-Editor_BorderStyle_Radius */
 }
+.wm_wireframe  .wmeditor .dijitSelect .dijitButtonContents {
+     /* Borders-Editor_BorderStyle_Radius */
+    -moz-border-radius-bottomleft: 2px; /* Borders-Editor_BorderStyle_Radius */
+    -moz-border-radius-topleft: 2px; /* Borders-Editor_BorderStyle_Radius */
+    -webkit-border-top-left-radius: 2px; /* Borders-Editor_BorderStyle_Radius */
+    -webkit-border-bottom-left-radius: 2px; /* Borders-Editor_BorderStyle_Radius */
+    border-radius-bottomleft: 2px; /* Borders-Editor_BorderStyle_Radius */
+    border-radius-top-left: 2px; /* Borders-Editor_BorderStyle_Radius */
+    border-right: solid 0px transparent !important;
+    display:block;
+}
 /* Can't round the top edges of the richtext editor until we're ready to tackle rounding dojo's toolbar */
 .wm_wireframe .wmeditor.wmrichtext {
     /* Borders-Editor_BorderStyle_Radius */
@@ -772,7 +778,8 @@ body .wm_wireframe .dialogfooter .wmbutton:hover {
     border-radius-bottomleft: 2px; /* Borders-Editor_BorderStyle_Radius */
     border-radius-bottomright: 2px; /* Borders-Editor_BorderStyle_Radius */
 }
-.wm_wireframe .wmeditor .dijitComboBox .dijitArrowButton {
+.wm_wireframe .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_wireframe .wmeditor .dijitSelect .dijitArrowButton {
     height: 100% !important;
     -moz-border-radius-bottomright: 2px; /* wm.SelectMenu-Inner_Radius */
     -moz-border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
@@ -783,6 +790,9 @@ body .wm_wireframe .dialogfooter .wmbutton:hover {
 }
 .wm_wireframe .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
         height: 100% !important;
+}
+.wm_wireframe .dijitComboBox .dijitArrowButton .dijitArrowButtonInner,
+.wm_wireframe .dijitSelect .dijitArrowButton .dijitArrowButtonInner {
         background-position: 50% 50%;
 	background-image: url(images/comboArrowDownDark.png); /* wm.SelectMenu-Down-Arrow_Image */
         -moz-border-radius-bottomright: 2px;/* wm.SelectMenu-Inner_Radius */
@@ -828,15 +838,30 @@ body .wm_wireframe .dialogfooter .wmbutton:hover {
    *              button. 
    ************************************************************************************************/
 .wm_wireframe .wmeditor .dijitSpinner .dijitArrowButton,
-.wm_wireframe .wmeditor .dijitComboBox .dijitArrowButton {
+.wm_wireframe .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_wireframe .wmeditor .dijitSelect .dijitArrowButton {
     background-color: #ffffff; /* Document-ClickablesDefault-Background_Color */
     background-image: none;
 }
+.wm_wireframe .wmeditor .wmeditor-caption {
+	font-family: inherit; /* Document-EditorsCaption-Font_Family */
+	font-size: inherit; /* Document-EditorsCaption-Font_TextSize */
+	color: inherit; /* Document-EditorsCaption-Font_Color */
+	font-weight: bold; /* Document-EditorsCaption-Font_Weight */
+}
+.wm_wireframe .wmeditor .wmeditor-readonlyNode {
+	font-family: inherit; /* Document-EditorsReadonly-Font_Family */
+	font-size: inherit; /* Document-EditorsReadonly-Font_TextSize */
+	color: inherit; /* Document-EditorsReadonly-Font_Color */
+	font-weight: inherit; /* Document-EditorsReadonly-Font_Weight */
+}
     .wm_wireframe .dojoxGrid .dijitTextBox,
     .wm_wireframe .dojoxGrid .dijitComboBox,
+    .wm_wireframe .dojoxGrid .dijitSelect .dijitButtonContents,
     .wm_wireframe .wmeditor .dijitTextBox,
     .wm_wireframe .wmeditor .dijitTextArea,
     .wm_wireframe .wmeditor .dijitComboBox,
+    .wm_wireframe .wmeditor .dijitSelect .dijitButtonContents,
     .wm_wireframe .dijitTimePickerItem,
     .wm_wireframe .wmeditor .RichTextEditable iframe {
 	/* Document-EditorsDefault-Border */
@@ -863,6 +888,7 @@ body .wm_wireframe .dialogfooter .wmbutton:hover {
     .wm_wireframe .wmeditor .dijitTextBox.dijitHover,
     .wm_wireframe .wmeditor .dijitTextArea:hover,
     .wm_wireframe .wmeditor .dijitComboBox.dijitHover,
+    .wm_wireframe .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
     .wm_wireframe .wmeditor .RichTextEditable:hover iframe,
     .wm_wireframe .dijitTimePickerMarker.dijitTimePickerMarkerHover,
     .wm_wireframe .dijitTimePickerItem.dijitTimePickerItemHover {
@@ -877,12 +903,19 @@ body .wm_wireframe .dialogfooter .wmbutton:hover {
     }
     .wm_wireframe .dojoxGrid .dijitTextBox.dijitFocused,
     .wm_wireframe .dojoxGrid .dijitComboBox.dijitFocused,
+    .wm_wireframe .dojoxGrid .dijitSelect.dijitFocused .dijitButtonContents,
     .wm_wireframe .wmeditor .dijitTextBox.dijitFocused,
     .wm_wireframe .wmeditor .dijitTextBox.dijitFocused.dijitHover,
     .wm_wireframe .wmeditor .dijitTextArea.dijitFocused,
     .wm_wireframe .wmeditor .dijitTextArea.dijitFocused:hover,
     .wm_wireframe .wmeditor .dijitComboBox.dijitFocused,
     .wm_wireframe .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_wireframe .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
+    .wm_wireframe .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents,
+    .wm_wireframe .isDirty.wmeditor .dijitTextBox,
+    .wm_wireframe .isDirty.wmeditor .dijitTextArea,
+    .wm_wireframe .isDirty.wmeditor .dijitComboBox,
+    .wm_wireframe .isDirty.wmeditor .dijitSelect .dijitButtonContents,
     .wm_wireframe .wmeditor .RichTextEditable.Focused iframe {
 	/* Document-EditorsFocus-Font */
 	color: #000000; /* Document-EditorsFocus-Font_Color */
@@ -903,13 +936,14 @@ body .wm_wireframe .dialogfooter .wmbutton:hover {
    *              button. 
    ************************************************************************************************/
 .wm_wireframe .MainContent .wmeditor .dijitSpinner .dijitArrowButton,
-.wm_wireframe .MainContent .wmeditor .dijitComboBox .dijitArrowButton {
+.wm_wireframe .MainContent .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_wireframe .MainContent .wmeditor .dijitSelect .dijitArrowButton {
     background-color: #ffffff; /* MainContent-ClickablesDefault-Background_Color */
-    background-image: none;
 }
     .wm_wireframe .MainContent .wmeditor .dijitTextBox,
     .wm_wireframe .MainContent .wmeditor .dijitTextArea,
     .wm_wireframe .MainContent .wmeditor .dijitComboBox,
+    .wm_wireframe .MainContent .wmeditor .dijitSelect .dijitButtonContents,
     .wm_wireframe .MainContent .dijitTimePickerItem,
     .wm_wireframe .MainContent .wmeditor .RichTextEditable iframe {
 	/* MainContent-EditorsDefault-Border */
@@ -938,6 +972,7 @@ body .wm_wireframe .dialogfooter .wmbutton:hover {
     .wm_wireframe .MainContent .wmeditor .dijitTextBox.dijitHover,
     .wm_wireframe .MainContent .wmeditor .dijitTextArea:hover,
     .wm_wireframe .MainContent .wmeditor .dijitComboBox.dijitHover,
+    .wm_wireframe .MainContent .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
     .wm_wireframe .MainContent .wmeditor .RichTextEditable:hover iframe,
     .wm_wireframe .MainContent .dijitTimePickerMarker.dijitTimePickerMarkerHover,
     .wm_wireframe .MainContent .dijitTimePickerItem.dijitTimePickerItemHover {
@@ -956,6 +991,8 @@ body .wm_wireframe .dialogfooter .wmbutton:hover {
     .wm_wireframe .MainContent .wmeditor .dijitTextArea.dijitFocused:hover,
     .wm_wireframe .MainContent .wmeditor .dijitComboBox.dijitFocused,
     .wm_wireframe .MainContent .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_wireframe .MainContent .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
+    .wm_wireframe .MainContent .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents,
     .wm_wireframe .MainContent .wmeditor .RichTextEditable.Focused iframe {
 	/* MainContent-EditorsFocus-Font */
 	color: #000000; /* MainContent-EditorsFocus-Font_Color */
@@ -975,14 +1012,15 @@ body .wm_wireframe .dialogfooter .wmbutton:hover {
    *              button. 
    ************************************************************************************************/
 .wm_wireframe .EmphasizedContent .wmeditor .dijitSpinner .dijitArrowButton,
-.wm_wireframe .EmphasizedContent .wmeditor .dijitComboBox .dijitArrowButton {
+.wm_wireframe .EmphasizedContent .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_wireframe .EmphasizedContent .wmeditor .dijitSelect .dijitArrowButton {
     background-color: #ffffff; /* EmphasizedContent-ClickablesDefault-Background_Color */
-    background-image: none;
 }
     /* BEGIN inner content panel editors */
     .wm_wireframe .EmphasizedContent .wmeditor .dijitTextBox,
     .wm_wireframe .EmphasizedContent .wmeditor .dijitTextArea,
     .wm_wireframe .EmphasizedContent .wmeditor .dijitComboBox,
+    .wm_wireframe .EmphasizedContent .wmeditor .dijitSelect .dijitButtonContents,
     .wm_wireframe .EmphasizedContent .dijitTimePickerItem,
     .wm_wireframe .EmphasizedContent .wmeditor .RichTextEditable iframe {
 	/* EmphasizedContent-EditorsDefault-Border */
@@ -1002,6 +1040,7 @@ body .wm_wireframe .dialogfooter .wmbutton:hover {
     .wm_wireframe .EmphasizedContent .wmeditor .dijitTextBox.dijitHover,
     .wm_wireframe .EmphasizedContent .wmeditor .dijitTextArea:hover,
     .wm_wireframe .EmphasizedContent .wmeditor .dijitComboBox.dijitHover,
+    .wm_wireframe .EmphasizedContent .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
     .wm_wireframe .EmphasizedContent .wmeditor .RichTextEditable:hover iframe,
     .wm_wireframe .EmphasizedContent .dijitTimePickerMarker.dijitTimePickerMarkerHover,
     .wm_wireframe .EmphasizedContent .dijitTimePickerItem.dijitTimePickerItemHover {
@@ -1020,6 +1059,8 @@ body .wm_wireframe .dialogfooter .wmbutton:hover {
     .wm_wireframe .EmphasizedContent .wmeditor .dijitTextArea.dijitFocused:hover,
     .wm_wireframe .EmphasizedContent .wmeditor .dijitComboBox.dijitFocused,
     .wm_wireframe .EmphasizedContent .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_wireframe .EmphasizedContent .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
+    .wm_wireframe .EmphasizedContent .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents,
     .wm_wireframe .EmphasizedContent .wmeditor .RichTextEditable.Focused iframe {
 	/* EmphasizedContent-EditorsFocus-Font */
 	color: #000000; /* EmphasizedContent-EditorsFocus-Font_Color */
@@ -1040,15 +1081,15 @@ body .wm_wireframe .dialogfooter .wmbutton:hover {
    *              button. 
    ************************************************************************************************/
 .wm_wireframe .HeaderContent .wmeditor .dijitSpinner .dijitArrowButton,
-.wm_wireframe .HeaderContent .wmeditor .dijitComboBox .dijitArrowButton {
+.wm_wireframe .HeaderContent .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_wireframe .HeaderContent .wmeditor .dijitSelect .dijitArrowButton {
     background-color: #ffffff; /* HeaderContent-ClickablesDefault-Background_Color */
-    background-image: none;
-    height: 100% !important;
 }
     /* BEGIN inner content panel editors */
     .wm_wireframe .HeaderContent .wmeditor .dijitTextBox,
     .wm_wireframe .HeaderContent .wmeditor .dijitTextArea,
     .wm_wireframe .HeaderContent .wmeditor .dijitComboBox,
+    .wm_wireframe .HeaderContent .wmeditor .dijitSelect .dijitButtonContents,
     .wm_wireframe .HeaderContent .dijitTimePickerItem,
     .wm_wireframe .HeaderContent .wmeditor .RichTextEditable iframe {
 	/* HeaderContent-EditorsDefault-Border */
@@ -1068,6 +1109,7 @@ body .wm_wireframe .dialogfooter .wmbutton:hover {
     .wm_wireframe .HeaderContent .wmeditor .dijitTextBox.dijitHover,
     .wm_wireframe .HeaderContent .wmeditor .dijitTextArea:hover,
     .wm_wireframe .HeaderContent .wmeditor .dijitComboBox.dijitHover,
+    .wm_wireframe .HeaderContent .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
     .wm_wireframe .HeaderContent .wmeditor .RichTextEditable:hover iframe,
     .wm_wireframe .HeaderContent .dijitTimePickerMarker.dijitTimePickerMarkerHover,
     .wm_wireframe .HeaderContent .dijitTimePickerItem.dijitTimePickerItemHover {
@@ -1086,6 +1128,8 @@ body .wm_wireframe .dialogfooter .wmbutton:hover {
     .wm_wireframe .HeaderContent .wmeditor .dijitTextArea.dijitFocused:hover,
     .wm_wireframe .HeaderContent .wmeditor .dijitComboBox.dijitFocused,
     .wm_wireframe .HeaderContent .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_wireframe .HeaderContent .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
+    .wm_wireframe .HeaderContent .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents,
     .wm_wireframe .HeaderContent .wmeditor .RichTextEditable.Focused iframe {
 	/* HeaderContent-EditorsFocus-Font */
 	color: #000000; /* HeaderContent-EditorsFocus-Font_Color */
@@ -1185,6 +1229,8 @@ body .wm_wireframe .dialogfooter .wmbutton:hover {
     .wm_wireframe div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
     .wm_wireframe div.dojoxGridRow.dojoxGridRowSelected, 
     .wm_wireframe div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+    .wm_wireframe div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver, 
+    .wm_wireframe div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
     .wm_wireframe .wmlist-item.wmlist-item-selected,
     .wm_wireframe .wmlist-item.wmlist-item-selected.wmlist-item-over,
     .dj_ie6 .wm_wireframe .wmlist-item.wmlist-item-selected.wmlist-item-over {
@@ -1204,7 +1250,7 @@ body .wm_wireframe .dialogfooter .wmbutton:hover {
     .wm_wireframe .dojoxGridRowOver td.dojoxGridCell
     {
 	/* Document-ClickablesHover-Background */
-	background-color: #ffffff !important; /* Document-ClickablesHover-Background_Color */
+	background-color: #ffffff; /* Document-ClickablesHover-Background_Color */
 	/* Document-ClickablesHover-Font */
 	color: #000000; /* Document-ClickablesHover-Font_Color */
     }
@@ -1262,6 +1308,8 @@ body .wm_wireframe .dialogfooter .wmbutton:hover {
     .wm_wireframe .MainContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
     .wm_wireframe .MainContent div.dojoxGridRow.dojoxGridRowSelected, 
     .wm_wireframe .MainContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+    .wm_wireframe .MainContent div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver, 
+    .wm_wireframe .MainContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
     .wm_wireframe .MainContent .wmlist-item.wmlist-item-selected,
     .wm_wireframe .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over, 
     .dj_ie6 .wm_wireframe .MainContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
@@ -1280,7 +1328,7 @@ body .wm_wireframe .dialogfooter .wmbutton:hover {
     .wm_wireframe .MainContent .dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* MainContent-ClickablesHover-Background */
-	background-color: #e5e5e5 !important; /* MainContent-ClickablesHover-Background_Color */
+	background-color: #e5e5e5; /* MainContent-ClickablesHover-Background_Color */
 	/* MainContent-ClickablesHover-Font */
 	color: #000000; /* MainContent-ClickablesHover-Font_Color */
     }
@@ -1299,6 +1347,8 @@ body .wm_wireframe .dialogfooter .wmbutton:hover {
     .wm_wireframe .EmphasizedContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
     .wm_wireframe .EmphasizedContent div.dojoxGridRow.dojoxGridRowSelected, 
     .wm_wireframe .EmphasizedContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+    .wm_wireframe .EmphasizedContent div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver, 
+    .wm_wireframe .EmphasizedContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
     .wm_wireframe .EmphasizedContent .wmlist-item.wmlist-item-selected,
     .wm_wireframe .EmphasizedContent .wmlist-item.wmlist-item-selected.wmlist-item-over,
     .dj_ie6 .wm_wireframe .EmphasizedContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
@@ -1316,7 +1366,7 @@ body .wm_wireframe .dialogfooter .wmbutton:hover {
     .wm_wireframe .EmphasizedContent .dojoxGridRowOdd.dojoxGridRowOver
     {
 	/* EmphasizedContent-ClickablesHover-Background */
-	background-color: #e5e5e5 !important; /* EmphasizedContent-ClickablesHover-Background_Color */
+	background-color: #e5e5e5; /* EmphasizedContent-ClickablesHover-Background_Color */
 	/* EmphasizedContent-ClickablesHover-Font */
 	color: #000000; /* EmphasizedContent-ClickablesHover-Font_Color */
     }
@@ -1335,6 +1385,8 @@ body .wm_wireframe .dialogfooter .wmbutton:hover {
     .wm_wireframe .HeaderContent div.dojoxGrid-row.dojoxGrid-row-odd.dojoxGrid-row-selected,
     .wm_wireframe .HeaderContent div.dojoxGridRow.dojoxGridRowSelected, 
     .wm_wireframe .HeaderContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+    .wm_wireframe .HeaderContent div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver, 
+    .wm_wireframe .HeaderContent div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
     .wm_wireframe .HeaderContent .wmlist-item.wmlist-item-selected,
     .wm_wireframe .HeaderContent .wmlist-item.wmlist-item-selected.wmlist-item-over,
     .dj_ie6 .wm_wireframe .HeaderContent .wmlist-item.wmlist-item-selected.wmlist-item-over {
@@ -1353,7 +1405,7 @@ body .wm_wireframe .dialogfooter .wmbutton:hover {
     .wm_wireframe #wavemakerNode .wmlayout .HeaderContent .dojoxGridRowOver a
     {
 	/* HeaderContent-ClickablesHover-Background */
-	background-color: #e5e5e5 !important; /* HeaderContent-ClickablesHover-Background_Color */
+	background-color: #e5e5e5; /* HeaderContent-ClickablesHover-Background_Color */
 	/* HeaderContent-ClickablesHover-Font */
 	color: #000000; /* HeaderContent-ClickablesHover-Font_Color */
     }
@@ -1645,7 +1697,7 @@ body .wm_wireframe .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelecte
    ************************************************************************************************/
 body.wm_wireframe ul.dijitMenu .dijitMenuItem,
 body .wm_wireframe ul.dijitMenu .dijitMenuItem,
-body.wm_default div.dijitMenu .dijitCalendarMonthLabel {
+body.wm_wireframe div.dijitMenu .dijitCalendarMonthLabel {
     /* Tables-EvenRows-Font */
     color: #000000; /* Tables-EvenRows-Font_Color */
     /* Tables-EvenRows-Background */
@@ -1659,8 +1711,8 @@ body.wm_wireframe  ul.dijitMenu .dijitMenuItem.dijitMenuItemHover,
 body .wm_wireframe ul.dijitMenu .dijitMenuItem.dijitMenuItemHover,
 body.wm_wireframe  ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected,
 body .wm_wireframe ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected,
-body.wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover,
-body .wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
+body.wm_wireframe div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover,
+body .wm_wireframe div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
     /* Document-ClickablesHover-Font */
     color: #000000; /* Document-ClickablesHover-Font_Color */
     /* Document-ClickablesHover-Background */
@@ -1718,7 +1770,10 @@ body .wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
 }
 .wm_wireframe .wmtablayers-tab.wmtablayers-selected,
 .wm_wireframe .wmtablayers-tab.wmtablayers-selected:hover,
-.wm_wireframe .wmtablayers-tab.wmtablayers-selected:focus {
+.wm_wireframe .wmtablayers-tab.wmtablayers-selected:focus,
+.wm_wireframe .wmtablayers-verticaltab.wmtablayers-selected,
+.wm_wireframe .wmtablayers-verticaltab.wmtablayers-selected:hover,
+.wm_wireframe .wmtablayers-verticaltab.wmtablayers-selected:focus {
     -moz-box-shadow: 0px 0px 0px #444444; /* wm.TabLayers-Active-BorderStyle_Shadow */
     -webkit-box-shadow: 0px 0px 0px #444444; /* wm.TabLayers-Active-BorderStyle_Shadow */
     box-shadow: 0px 0px 0px #444444; /* wm.TabLayers-Active-BorderStyle_Shadow */
@@ -1735,7 +1790,35 @@ body .wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
 	border-radius-topleft: 2px; /* Document-ClickablesDefault-BorderStyle_Radius */
 	border-radius-topright: 2px; /* Document-ClickablesDefault-BorderStyle_Radius */
 }
+.wm_wireframe button.wmtablayers-verticaltab {
+    /* wm.TabLayers-BorderStyle_Shadow */
+    -moz-box-shadow: 0px 0px 0px #444444; /* wm.TabLayers-BorderStyle_Shadow */
+    -webkit-box-shadow: 0px 0px 0px #444444; /* wm.TabLayers-BorderStyle_Shadow */
+    box-shadow: 0px 0px 0px #444444; /* wm.TabLayers-BorderStyle_Shadow */
+    font-size: 9; /* wm.TabLayers-Button_TextSize */
+    width: 95%;
+    margin-left: 5%;
+}
+.wm_wireframe .wmtablayers-verticaltab:hover, .wm_wireframe .wmtablayers-verticaltab:focus {
+    /* wm.TabLayers-HoverShadow */
+    -moz-box-shadow: 0px 0px 0px #444444; /* wm.TabLayers-Hover-BorderStyle_Shadow */
+    -webkit-box-shadow: 0px 0px 0px #444444; /* wm.TabLayers-Hover-BorderStyle_Shadow */
+    box-shadow: -2px 2px 2px #444444;   /* wm.TabLayers-Hover-BorderStyle-Shadow */
+}
+/* Spacing between each tab */
+.wm_wireframe .wmtablayers-verticaltab.wmtablayers-selected,
+.wm_wireframe .wmtablayers-verticaltab.wmtablayers-verticaltab {
+    margin-bottom: 5px;
+	/* Document-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius-bottomleft: 2px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius-topleft: 2px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-bottom-left-radius: 2px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-top-left-radius: 2px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	border-radius-bottomleft: 2px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	border-radius-topleft: 2px; /* Document-ClickablesDefault-BorderStyle_Radius */
+}
     /* Tab <input type='button'> elements need to handle browser focus as any other button */
+    .wm_wireframe .wmtablayers-verticaltab:focus,
     .wm_wireframe .wmtablayers-tab:focus {
 	outline-width: 0;
     }
@@ -1927,7 +2010,8 @@ body.wm_wireframe {
         background-image: none !important;
     }
     /* Tab buttons */
-    .wm_wireframe button.wmtablayers-tab {
+    .wm_wireframe button.wmtablayers-tab,
+    .wm_wireframe button.wmtablayers-verticaltab {
 	/* Document-ClickablesDefault-Font */
 	font-family: Verdana; /* Document-ClickablesDefault-Font_Family */
 	color: #000000; /* Document-ClickablesDefault-Font_Color */
@@ -1940,16 +2024,26 @@ body.wm_wireframe {
 	/* Document-ClickablesDefault-Border */
 	border-bottom-color: transparent;
 	border-top-color: #444444; /* Borders-Clickable_Border_Color */
-	border-right-color: #444444; /* Borders-Clickable_Border_Color */
 	border-left-color: #444444; /* Borders-Clickable_Border_Color */
         /* editting this is problematic without also editting headerHeight */
     border-width: 2px;
     border-style: solid;
     }
+    .wm_wireframe button.wmtablayers-tab {
+	border-bottom-color: transparent;
+	border-right-color: #444444; /* Borders-Clickable_Border_Color */
+    }
+    .wm_wireframe button.wmtablayers-verticaltab {
+	border-right-color: transparent;
+	border-bottom-color: #444444; /* Borders-Clickable_Border_Color */
+    }
     .dj_ie6 .wm_wireframe .wmtablayers-tab {
         background-image: none !important;
     }
-    .wm_wireframe .wmtablayers-tab:hover, .wm_wireframe .wmtablayers-tab:focus {
+    .wm_wireframe .wmtablayers-tab:hover, 
+    .wm_wireframe .wmtablayers-tab:focus,
+    .wm_wireframe .wmtablayers-verticaltab:hover, 
+    .wm_wireframe .wmtablayers-verticaltab:focus {
 	/* Document-ClickablesHover-Font */
 	color: #000000; /* Document-ClickablesHover-Font_Color */
 	/* Document-ClickablesHover-Background */
@@ -1962,7 +2056,10 @@ body.wm_wireframe {
     .dj_ie6 .wm_wireframe .wmtablayers-tab.wmtablayers-selected,
     .wm_wireframe .wmtablayers-tab.wmtablayers-selected,
     .wm_wireframe .wmtablayers-tab.wmtablayers-selected:hover,
-    .wm_wireframe .wmtablayers-tab.wmtablayers-selected:focus {
+    .wm_wireframe .wmtablayers-tab.wmtablayers-selected:focus,
+    .wm_wireframe .wmtablayers-verticaltab.wmtablayers-selected,
+    .wm_wireframe .wmtablayers-verticaltab.wmtablayers-selected:hover,
+    .wm_wireframe .wmtablayers-verticaltab.wmtablayers-selected:focus {
 	/* Document-ClickablesActive-Font */
 	color: #000000; /* Document-ClickablesActive-Font_Color */
 	/* Document-ClickablesActive-Background */
@@ -1979,7 +2076,9 @@ body.wm_wireframe {
     /* BEGIN SECTION wm.WizardLayers */
     /* Custom formatting for wizard tab with focus or hover on the <input type='button'/> */
     .wm_wireframe .wmwizardlayers-tab:focus,
-    .wm_wireframe .wmwizardlayers-tab:hover {
+    .wm_wireframe .wmwizardlayers-tab:hover,
+    .wm_wireframe .wmwizardlayers-verticaltab:focus,
+    .wm_wireframe .wmwizardlayers-verticaltab:hover {
 	color: black; /* Custom mouseover color */
     }
     /* END SECTION wm.WizardLayers */
@@ -2172,7 +2271,9 @@ body.wm_wireframe {
     /* BEGIN SECTION wm.WizardLayers */
     /* TODO: Enable this property */
     .wm_wireframe .MainContent .wmwizardlayers-tab:focus,
-    .wm_wireframe .MainContent .wmwizardlayers-tab:hover {
+    .wm_wireframe .MainContent .wmwizardlayers-tab:hover,
+    .wm_wireframe .MainContent .wmwizardlayers-verticaltab:focus,
+    .wm_wireframe .MainContent .wmwizardlayers-verticaltab:hover
 	color: black; /* wm.WizardLayers-Active_Color */
     }
     /* END SECTION wm.WizardLayers */
@@ -2340,7 +2441,9 @@ body.wm_wireframe {
     /* BEGIN SECTION wm.WizardLayers */
     /* TODO: Enable this property */
     .wm_wireframe .EmphasizedContent .wmwizardlayers-tab:focus,
-    .wm_wireframe .EmphasizedContent .wmwizardlayers-tab:hover {
+    .wm_wireframe .EmphasizedContent .wmwizardlayers-tab:hover,
+    .wm_wireframe .EmphasizedContent .wmwizardlayers-verticaltab:focus,
+    .wm_wireframe .EmphasizedContent .wmwizardlayers-verticaltab:hover {
 	color: black; /* wm.WizardLayers-Active_Color */
     }
     /* END SECTION wm.WizardLayers */
@@ -2507,7 +2610,9 @@ body.wm_wireframe {
     /* BEGIN SECTION wm.WizardLayers */
     /* TODO: Enable this property */
     .wm_wireframe .HeaderContent .wmwizardlayers-tab:focus,
-    .wm_wireframe .HeaderContent .wmwizardlayers-tab:hover {
+    .wm_wireframe .HeaderContent .wmwizardlayers-tab:hover,
+    .wm_wireframe .HeaderContent .wmwizardlayers-verticaltab:focus,
+    .wm_wireframe .HeaderContent .wmwizardlayers-verticaltab:hover {
 	color: black; /* wm.WizardLayers-Active_Color */
     }
     /* END SECTION wm.WizardLayers */

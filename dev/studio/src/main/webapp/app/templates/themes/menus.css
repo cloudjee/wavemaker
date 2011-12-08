@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -288,7 +288,7 @@ body .wm_template .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelected
    ************************************************************************************************/
 body.wm_template ul.dijitMenu .dijitMenuItem,
 body .wm_template ul.dijitMenu .dijitMenuItem,
-body.wm_default div.dijitMenu .dijitCalendarMonthLabel {
+body.wm_template div.dijitMenu .dijitCalendarMonthLabel {
 
     /* Tables-EvenRows-Font */
     color: #FFFFFF; /* Tables-EvenRows-Font_Color */
@@ -306,8 +306,8 @@ body.wm_template  ul.dijitMenu .dijitMenuItem.dijitMenuItemHover,
 body .wm_template ul.dijitMenu .dijitMenuItem.dijitMenuItemHover,
 body.wm_template  ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected,
 body .wm_template ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected,
-body.wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover,
-body .wm_default div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
+body.wm_template div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover,
+body .wm_template div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
     /* Document-ClickablesHover-Font */
     color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
 

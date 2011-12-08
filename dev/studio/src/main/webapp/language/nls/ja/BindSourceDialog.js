@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 Infoteria Corporation and VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,8 +13,8 @@
  */
 {
 applyStayButton: {caption: "適用"},
-applyButton: {caption: "バインド"},
-cancelButton: {caption: "キャンセル"},
+applyButton: {caption: "バインド", width: "100px"},
+cancelButton: {caption: "キャンセル", width: "100px"},
 
 TOAST_SUCCESS: "バインドが追加されました",
 TOAST_FAILED: "バインドに失敗しました",
@@ -29,5 +29,8 @@ TOAST_FAILED: "バインドに失敗しました",
 ALERT_BLANK_MESSAGE: "バインドする値または式を選択してください。",
 ALERT_BIND_ERROR: "次のエラーでバインドがアボートしました: ${error}",
 VISUAL: "表示コンポーネント",
-NON_VISUAL: "非表示コンポーネント"
+NON_VISUAL: "非表示コンポーネント",
+NEED_DATASET_FOR_DISPLAY_EXPR: "表示式を編集する前にdataSetを設定してください",
+DOES_NOT_COMPILE: "'${expr}は文字列になりません。クオートを忘れていませんか？",
+UNABLE_TO_COMPILE: "コンパイルできません: ${error}"
 }

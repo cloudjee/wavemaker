@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -22,10 +22,7 @@ dojo.declare("wm.ToolButton", wm.Control, {
 	padding: "",
 	margin: "",
 	caption: "",
-	hint: "",
-	imageList: "",
 	classNames: "wmtoolbutton",
-	imageIndex: -1,
 	iconUrl: "",        
 	iconWidth: "16px",
 	iconHeight: "16px",
@@ -73,7 +70,7 @@ dojo.declare("wm.ToolButton", wm.Control, {
 
 		window.setTimeout(dojo.hitch(this, "click",pseudoEvt), 5);
 	    });
-	    this.setHint(this.title || this.hint);
+	    //this.setHint(this.title || this.hint);
 	    this.imageListChanged();
 
 	},
@@ -83,15 +80,13 @@ dojo.declare("wm.ToolButton", wm.Control, {
 		    this.setProp("clicked", true);
 	        this.onclick(inEvent, this);
 	    }
+
+	    if (app.toolTipDialog && this == app.toolTipDialog.tipOwner) {
+		app.toolTipDialog.hide();
+	    }
+
 	},
         onclick: function() {
-	},
-	findImageList: function() {
-		var t = this;
-		while (t && !t.imageList) {
-			t = t.parent;
-		}
-		return t ? t.imageList : null;
 	},
 	setDisabled: function(inDisabled) {
 	    if (inDisabled != this.disabled || this._firstCall === undefined) {
@@ -145,38 +140,28 @@ dojo.declare("wm.ToolButton", wm.Control, {
 	setContent: function(inContent) { // BC
 		this.setCaption(inContent);
 	},
+/*
 	setHint: function(inHint) {
 		this.btnNode.title = this.hint = inHint;
 	},
-
-	setImageList: function(inImageList) {
-		this.imageList = inImageList;
-		this.imageListChanged();
-	},
-	setImageIndex: function(inImageIndex) {
-		if (inImageIndex !== undefined) {
-		    this.imageIndex = Number(inImageIndex);
-			this.imageListChanged();
-		}
-	},
+	*/
 	imageListChanged: function() {
-		var iln = this.findImageList();
-		this._imageList = iln ? iln instanceof wm.ImageList ? iln : this.owner.getValueById(iln) : null;
-	        this.invalidCss = true;
+	    this.inherited(arguments);
+	    this.invalidCss = true;
 	    this.render(true,true);
 	},
     getCurrentImageIndex: function() {
-	if (this.declaredClass != "wm.ToolButton")
-	    return this.imageIndex;
-
-	// straight up toolbutton uses state to adjust the imageIndex; this requires imageLists to have multiple rows of icons, each row representing 
-	// a different state.  This is a pain for users, so is not a part of any of the subclasses.
+	if (this.declaredClass != "wm.ToolButton") {
+	    return this.inherited(arguments);
+	} else {
 	if (this.disabled)
 	    return this.imageIndex + this._imageList.colCount * 2;
 	if (this.selected)
 	    return this.imageIndex + this._imageList.colCount;
+	}
 	return this.imageIndex;
     },
+
     updateImageListButtonHtml: function() {
 	var sl = this.singleLine ? "line-height: " + this.height + "; " : "";
 	var captionHtml = this.caption ? '<span style="padding-left: 2px; ' + sl +'">' + this.caption + '</span>' : "";
@@ -214,12 +199,11 @@ dojo.declare("wm.ToolButton", wm.Control, {
     },
     renderBounds: function() {
         this.inherited(arguments);
-        if (!this._IEButtonTrickUsed && dojo.isIE && dojo.isIE < 9 && this.btnNode && this.btnNode.firstChild && this.btnNode.firstChild.tagName) {
-            this._IEButtonTrickUsed = true;
+        if (dojo.isIE && dojo.isIE < 9 && this.btnNode && this.btnNode.firstChild && this.btnNode.firstChild.tagName) {
             this.btnNode.firstChild.style.padding = "1px";
-            wm.onidle(this, function() {
+	    wm.job(this.getRuntimeId() + ".IEButtonTrick", 5, dojo.hitch(this, function() {
                 this.btnNode.firstChild.style.padding = "0px";
-            });
+            }));
         }
     },
 

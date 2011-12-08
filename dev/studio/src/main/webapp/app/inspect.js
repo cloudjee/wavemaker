@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -173,7 +173,7 @@ makeTextPropEdit = function(inName, inValue, inDefault, inRows, isBound) {
 	    ' onChange="wm.inspectOnChange(\''+inName+'\')"',
 		(inValue==inDefault ? ' class="prop-default wminspector-edit"' : 'class="wminspector-edit"'),	   
 	    ' >',
-	    String(inValue).replace(/\"/g,"'"),
+	    String(inValue),
 	    "</textarea>",
 	    '<textarea class="wminspector-readonly"  readonly="true"',
 	    ' rows="' + inRows + '"',
@@ -249,17 +249,25 @@ inspect = function(inComponent, inDoFocus) {
 		setTimeout(function() { _inspect(inComponent, inDoFocus) }, 1);
 }
 
-reinspect = function() {
+reinspect = function(forceRegen) {
 	// call on timeout so IE can blur inspectedEditor before rebuilding inspector
 	//if (inComponent)
-                studio.inspector.inspected = null;
-		setTimeout(function() { _inspect(studio.selected, false) }, 1);
+		setTimeout(function() {
+		    if (studio.inspector && studio.inspector.inspected && !forceRegen) {
+			studio.inspector.reinspect();
+		    } else if (studio.inspector  && forceRegen) {
+			var inspected =	studio.inspector.inspected;
+			studio.inspector.inspected = null;
+			if (inspected)
+			    studio.inspector.inspect(inspected);
+		    }			
+		}, 1);
 }
 
 _setInspectedCaption = function(inComponent) {
 	var c = inComponent;
         if (studio.application && studio.page)
-	    studio.inspected.setCaption(c ? c.name  + ': ' + (c._designee.localizedDeclaredClass || c._designee.declaredClass) : "(none)");
+	    studio.PIContents.setTitle(c ? c.name  + ': ' + (c._designee.localizedDeclaredClass || c._designee.declaredClass) : "(none)");
 }
 
 _inspect = function(inComponent, inDoFocus) {
@@ -438,8 +446,8 @@ dojo.declare("wm.EventEditor", dijit.form.ComboBox, {
 		this.domNode.style.width = this.domNode.style.height = "100%";
 	},
 	set: function(inName,inValue) {
-	  if (inName == "value" || inName == "item") {
-	  	var value = inName == "value" ? inValue : inValue.name;
+	  if (inName == "displayedValue" || inName == "value" || inName == "item") {
+	      var value = (inName == "value" || inName == "displayedValue") ? inValue : inValue.name;
 		var c = this.inspected, o = c.getValue(this.propName);
 		if (this.isEventAction(value))
 			this.doEventAction(value);

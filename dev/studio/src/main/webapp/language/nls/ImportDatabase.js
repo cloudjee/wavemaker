@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,5 +15,7 @@
 WAIT_IMPORTING: "Importing Database...",
 ALERT_CONNECTION_SUCCESS: "Connection successful",
 ALERT_CONNECTION_FAILED: "Connection failed: ${error}",
-ALERT_IMPORT_FAILED: "Import failed: ${error}\nSee wm.log for compiler output"
+ALERT_IMPORT_FAILED: "Import failed: ${error}\nSee wm.log for compiler output",
+    CONFIRM_MYSQL_MAC_IMPORT: "<p>When importing a MySQL database using a Macintosh, there is a known bug that occurs in setting up database relationships if your table names have any capital letters in them.</p><p>If your database table names are all lower case, you can ignore this warning.</p>  SOLUTIONS: <ul><li>Edit your database before importing it</li><li>Import your database on a different computer and then copy the project onto this computer</li></ul><p>For more info: <a target='jira' href='http://jira.wavemaker.com/browse/WM-3347'>WM-3347</a></p>Continue with import?",
+    CONFIRM_POSTGRES_IMPORT: "<p>When importing a Postgres database, there is a known bug that occurs when your table names have capital letters in them.</p><p>If your database table names are all lower case, you can ignore this warning.</p>  SOLUTION: <ul><li>Edit your database before importing it to remove upper case letters</li></ul><p>For more info: <a target='jira' href='http://jira.wavemaker.com/browse/WM-2068'>WM-2068</a></p>Continue with import?"
 }

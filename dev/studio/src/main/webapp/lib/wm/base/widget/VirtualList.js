@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -297,6 +297,12 @@ dojo.declare("wm.VirtualList", wm.Control, {
 				this.ctrlSelect(inItem);
 			else if (inEvent.shiftKey)
 				this.shiftSelect(inItem);
+		} else if (this.multiSelect) {
+		    if (dojo.indexOf(this.selected, inItem.index) == -1) {
+			this.addToSelection(inItem);
+		    } else {
+			this.removeFromSelection(inItem);
+		    }
 		} else {
 			var s = this.selected, oldIndex = s && s.index, newIndex = inItem.index;
 			if (oldIndex !== newIndex){
@@ -361,22 +367,3 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	}
 });
 
-wm.Object.extendSchema(wm.VirtualList, {
-	// FIXME: disabling this as we're not using it at all, and grid supports it.
-	multiSelect: { ignore: 1 },
-	box: { ignore: 1 },
-    toggleSelect: { group: "common", order: 100},
-    getCount: {group: "method", returns: "Number"},
-    getItem: {group: "method", returns: "wm.ListItem"},
-    getItemByCallback: {group: "method", returns: "wm.ListItem"},
-    getItemByFieldName: {group: "method", returns: "wm.ListItem"},
-    removeItem: {group: "method"},
-    setHeaderVisible: {group: "method"},
-    clear: {group: "method"},
-    getSelectedIndex: {group: "method", returns: "Number"},
-    selectByIndex: {group: "method"},
-    select: {group: "method"},
-    eventSelect: {group: "method"},
-    eventDeselect: {group: "method"},
-    deselectAll: {group: "method"}
-});

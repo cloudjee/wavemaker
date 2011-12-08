@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,6 +30,7 @@ Studio.extend({
 	this._partnerServicesStructure = {
 	    label: "Partner Services",
 	    iconClass: "PartnerService",
+	    idInPage: "partnerServicesSubmenu",
 	    children: [
 	    ]
 	};
@@ -145,7 +146,6 @@ Studio.extend({
 			if (!wm.fire(comp, "afterPaletteDrop")) {
 				// FIXME: should not refresh entire tree when dropping from palette.
 				studio.refreshDesignTrees();
-				studio.inspector.resetInspector();
 				studio.select(comp);
 			}
 		}
@@ -165,8 +165,8 @@ Studio.extend({
 		this.navTestBtn.setDisabled(inDisabled);
 		this.navRunBtn.setDisabled(inDisabled);
 		*/
+	      this.runPopup.setDisabled(inDisabled);
 	      if (inDisabled)
-		  this.runPopup.setDisabled(inDisabled); // enabling is done after we deploy a newly openned project
 		if (studio.isCloud()) {
 		    this.navEditAccountBtn.setDisabled(false);
 		    this.navLogoutBtn.setDisabled(false);

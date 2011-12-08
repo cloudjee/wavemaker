@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2007-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2007-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -233,6 +233,9 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
         }
         return rtn;
     }
+
+    public NamedQueryDefinition getHqlQueryDefinition(String queryName) {return  null;}
+    public NamedQueryDefinition getSqlQueryDefinition(String queryName) {return  null;}
 
     private DataOperationFactory initFactory(String configurationName) {
         return new DataOperationFactory() {

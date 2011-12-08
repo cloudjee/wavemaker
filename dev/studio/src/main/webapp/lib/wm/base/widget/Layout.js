@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -30,54 +30,16 @@ dojo.declare("wm.Layout", wm.Container, {
 		this.domNode.style.cssText += this.style + "overflow: hidden; position: relative;";
 	},
 	init: function() {
-		this.inherited(arguments);
-		/*
-		// FIXME: detect ownership under app. Seems like it would be cleaner if, at least, part controlled this.
-		var mainBox = (this.owner && this.owner.owner == window.app);
-		if (mainBox) {
-			this.fit = {
-				w: (!this.width || wm.splitUnits(this.width).units == "flex"),
-				h: (!this.height || wm.splitUnits(this.height).units == "flex")
-			};
-		}
-		*/
-		//if(this.domNode === document.body || mainBox){ 
-			this.subscribe("window-resize", this, "resize");
-		//}
-
-	    
-	},
-	fitTo: function() {
-		if(this.domNode === document.body) {
-			document.body.scrollTop = 0;
-		}
-		var pn = this.domNode.parentNode;
-		if (pn && !wm.isEmpty(this.fit)) {
-			pn.scrollTop = 0;
-			var n = dojo.contentBox(pn), b = {}, f = this.fit;
-			b.l = n.l;
-			b.t = n.t;
-			for (var i in f)
-				if (f[i])
-					b[i] = n[i];
-			dojo.marginBox(this.domNode, b);
-		}
-	},
-	resize: function() {
-		// if we have a parent, they control our reflow
-		// so we ignore window-resize message
-		if (!this.parent)
-			this.reflow();
+	    if (this.isDesignLoaded() && this.owner == studio.page) {
+		this.parent = studio.designer;
+	    } else if (this.owner && this.owner.owner instanceof wm.PageContainer) { // this is false within the ThemeDesigner
+		this.parent = this.owner.owner;
+	    }
+	    this.inherited(arguments);
 	},
 	updateBounds: function() {
-		this._percEx = {w:100, h: 100};
-		if (!this.parent) {
-			var pn = this.domNode.parentNode;
-			this.setBounds(0, 0, pn.offsetWidth, pn.offsetHeight);
-			//this.setBounds(dojo.contentBox(pn));
-		} else {
-			this.setBounds(this.parent.getContentBounds());
-		}
+	    this._percEx = {w:100, h: 100};
+	    this.setBounds(this.parent.getContentBounds());
 	},
 	reflow: function() {
 		if (this._cupdating)
@@ -93,21 +55,4 @@ dojo.declare("wm.Layout", wm.Container, {
 	}*/
 });
 
-// design-time
-wm.Object.extendSchema(wm.Layout, {
-    themeStyleType: {group: "style", order: 150},
-	fitToContent: { ignore: 1 },
-	fitToContentWidth: { ignore: 1 },
-	fitToContentHeight: { ignore: 1 },
-	minWidth: { ignore: 1 },
-	minHeight: { ignore: 1 },
-	fit: { ignore: 1 }
-});
-
-// bc
 wm.LayoutBox = wm.Layout;
-
-dojo.extend(wm.Layout, {
-    themeable: true,
-    themeableStyles: ["Document-Styles-BorderStyle_Radius", "Document-Styles-BorderStyle_Shadow"]
-});

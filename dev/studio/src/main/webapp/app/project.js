@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ dojo.declare("wm.studio.Project", null, {
 	if (this.projectName) {
 	    this.closeProject(inName);
 	}
+	studio._loadingApplication = true; 
 	var n = inName || this.projectName || "Project";
 	this.projectName = wm.getValidJsName(n);
 	this.pageName = "Main";
@@ -64,6 +65,7 @@ dojo.declare("wm.studio.Project", null, {
 			     this.projectChanged();
 			     this.projectsChanged();
 			     studio.endWait(studio.getDictionaryItem("wm.studio.Project.WAIT_CREATING_PROJECT"));
+			     studio._loadingApplication = false;
 			 }));
 	    studio.resourceManagerService.requestAsync("getResourceFolder", []);
 		//studio.deploy("Configuring Project...");
@@ -108,6 +110,8 @@ dojo.declare("wm.studio.Project", null, {
                 var template = dojo.clone(template_def);
 
                 var widgets = template._template;
+		delete template.displayName;
+		delete template.thumbnail;
                 delete template._template;
                 var hasLayout = false;
                 for (var i in widgets)
@@ -118,7 +122,7 @@ dojo.declare("wm.studio.Project", null, {
                 if (hasLayout) {
                     widgets_js = widgets;
                 } else {
-                    widgets_js =  {layoutBox1: ["wm.Layout", {name: "layout1"}, {}, {}]};
+                    widgets_js =  {layoutBox1: ["wm.Layout", dojo.mixin(template, {name: "layout1"}), {}, {}]};
                     for (var i in template) {
                         widgets_js.layoutBox1[1][i] = template[i];
                     }
@@ -174,40 +178,43 @@ dojo.declare("wm.studio.Project", null, {
  							  studio.endWait(studio.getDictionaryItem("wm.studio.Project.WAIT_OPEN_PROJECT"));
 							  studio._loadingApplication = true; 
 							  this.projectName = inProjectName;
-							  if (o.upgradeMessages)
-							      this.showUpgradeMessage(o.upgradeMessages);
-							  this.projectChanging();
-							  try {
-							      this.loadingProject = true;
-							      this.loadApplication();
-							      var ctor = dojo.getObject(this.projectName);
-							      this.pageName = inPageName || (ctor ? ctor.prototype.main : "Main");
-							      this.makeApplication();
-							      this.openPage(this.pageName);
-							      if (!wm.isEmpty(studio.neededJars)) {
-								  /* onidle insures it gets the higher z-index than the start page */
-								  wm.onidle(function() {
-								      studio.jarDownloadDialog.show();
-								  });
-								  throw "Missing Jar files are required for this project";
-							      }
-							      studio.startPageDialog.hide();
-							      
-							  } catch(e) {
-							      console.debug(e);
-							      this.loadError(studio.getDictionaryItem("wm.studio.Project.TOAST_OPEN_PROJECT_FAILED",
-												      {projectName: this.projectName, error: e}));
 
-							      this.editProjectFiles();
-/*
-							      this.projectName = "";
-							      this.pageName = "";
-							      studio.application = studio.page = null;
-*/
-							  } finally {
-							      studio._loadingApplication = false;
-							      this.loadingProject = false;
-							      this.projectChanged();
+							  var f = function() {
+							      this.projectChanging();
+							      try {
+								  this.loadingProject = true;
+								  this.loadApplication();
+								  var ctor = dojo.getObject(this.projectName);
+								  this.pageName = inPageName || (ctor ? ctor.prototype.main : "Main");
+								  this.makeApplication();
+								  this.openPage(this.pageName);
+								  if (!wm.isEmpty(studio.neededJars)) {
+								      /* onidle insures it gets the higher z-index than the start page */
+								      wm.onidle(function() {
+									  studio.jarDownloadDialog.show();
+								      });
+								      throw "Missing Jar files are required for this project";
+								  }
+								  studio.startPageDialog.hide();
+							      } catch(e) {
+								  console.debug(e);
+								  this.loadError(studio.getDictionaryItem("wm.studio.Project.TOAST_OPEN_PROJECT_FAILED",
+													  {projectName: this.projectName, error: e}));
+								  
+								  this.projectName = "";
+								  this.pageName = "";
+								  studio.application = studio.page = null;
+							      } finally {
+								  studio._loadingApplication = false;
+								  this.loadingProject = false;
+								  this.projectChanged();
+							      }
+							  };
+							  if (o.upgradeMessages) {
+							      this.showUpgradeMessage(o.upgradeMessages);
+							      app.alertDialog.connectOnce(app.alertDialog, "onClose", this, f);
+							  } else {
+							      dojo.hitch(this, f)();
 							  }
 						      }),
 						      dojo.hitch(this, function(err) {
@@ -494,8 +501,6 @@ dojo.declare("wm.studio.Project", null, {
 
 	    var f = [];
 
-
-	        studio.application.incSubversionNumber();
 	        try {
 		    studio.application.setValue("studioVersion", wm.studioConfig.studioVersion);
 		}catch(e) {console.error("Failed to write studio version to project file");}
@@ -506,6 +511,7 @@ dojo.declare("wm.studio.Project", null, {
 	    var c = wm.studioConfig;
 
 	    f.push(dojo.hitch(this, function() {
+		    studio.application.saveCounter = (studio.application.saveCounter || 0) +1;
 		    var src = this.generateApplicationSource()
 	            studio.setSaveProgressBarMessage(this.projectName + ".js");
 		    this.saveProjectData(this.projectName + ".js", src);
@@ -524,6 +530,13 @@ dojo.declare("wm.studio.Project", null, {
 		// save html file, config file, and debug loader + css
 	        studio.setSaveProgressBarMessage(c.appIndexFileName);
 	        this.saveProjectData(c.appIndexFileName, makeIndexHtml(this.projectName, studio.application.theme), true);
+	        studio.incrementSaveProgressBar(1);
+	    }));
+
+	    f.push(dojo.hitch(this, function() {
+		// save html file, config file, and debug loader + css
+	        studio.setSaveProgressBarMessage(c.appChromeFileName);
+	        this.saveProjectData(c.appChromeFileName, c.appChromeTemplate, true);
 	        studio.incrementSaveProgressBar(1);
 	    }));
 
@@ -688,6 +701,7 @@ dojo.declare("wm.studio.Project", null, {
 
 	},
 	saveProjectData: function(inPath, inData, inNoOverwrite) {
+	    dojo.publish("studio-saveProjectData");
 		return studio.studioService.requestSync("writeWebFile", [inPath, inData, inNoOverwrite||false]);
 	},
 	savePageData: function(inPath, inData, inNoOverwrite) {
@@ -766,18 +780,37 @@ dojo.declare("wm.studio.Project", null, {
 	// Project info / util
 	//=========================================================================
 	showUpgradeMessage: function(inMessages) {
-	        var message = studio.getDictionaryItem("ALERT_BACKUP_OLD_PROJECT", {filePath: inMessages.backupExportFile});
+	    var message = "<p>" + studio.getDictionaryItem("ALERT_BACKUP_OLD_PROJECT", {filePath: inMessages.backupExportFile}) + "</p>";
 		if (inMessages.messages) {
 			var firstElem = true;
 			for (var key in inMessages.messages) {
 				if (firstElem) {
-				    message += studio.getDictionaryItem("ALERT_UPGRADE_HEADING");
+				    message += "<p>" + studio.getDictionaryItem("ALERT_UPGRADE_HEADING")  + "<ul>";
 				    firstElem = false;
 				}
-				message += "\t" + inMessages.messages[key] + "\n";
+
+			    /* TODO: Split the string on \n and if there is a slit, make each one an <li> */
+			    var m1 = inMessages.messages[key];
+
+			    for (var i = 0; i < m1.length; i++) {
+				var m2 = m1[i];
+				m2 = m2.replace(/^\s*/,"");
+				m2 = m2.replace(/\s*$/,"");
+				var m3 = m2.split(/\n+/);
+				for (var j = 0; j < m3.length; j++) {
+				    var m4 = m3[j];
+				    m4 = m4.replace(/^\s*/,"");
+				    m4 = m4.replace(/\n/g,"<br/>");
+				    message += "<li>" + m4 + "</li>";
+				}
+			    }
+
 			}
 		}
-		alert(message);
+	    if (!firstElem)
+		message += "</ul></p>";
+	    app.alert(message);
+	    app.alertDialog.setWidth("500px");
 	},
 	updatePageList: function(hasOpenProject) {
 	    if (hasOpenProject) {
@@ -829,6 +862,9 @@ dojo.declare("wm.studio.Project", null, {
 	pagesChanged: function() {
 		this.updatePageList(true);
 		studio.pagesChanged();
+	        if (studio.application && studio.selected && !studio.selected.isDestroyed) {
+		    reinspect();
+		}
 	},
 	projectChanging: function() {
 		this.updatePageList(studio._loadingApplication);
@@ -1173,11 +1209,16 @@ Studio.extend({
 
 			deployMenu.children.unshift({label: this.getDictionaryItem("MENU_REDEPLOY", {deploymentName: deployment.name}),
 						     onClick: dojo.hitch(this, function() {
-							 this.project.saveProject(true);
 							 if (!this.deploymentDialog.page) {
 							     this.deploymentDialog.setPage("DeploymentDialog");
 							 }
-							 this.deploymentDialog.page.deployAfterVerifyingNoChanges(deployment);
+							 studio.beginWait(this.deploymentDialog.page.getDictionaryItem("WAIT_DEPLOY", {deploymentName: deployment.name}));
+														     
+				                         this.project.saveProject(true, dojo.hitch(this, function() {
+							     studio.beginWait(this.deploymentDialog.page.getDictionaryItem("WAIT_DEPLOY", {deploymentName: deployment.name}));
+							     this.deploymentDialog.page.deployAfterVerifyingNoChanges(deployment);
+							 }));
+						     
 						     })
 						    });
 		    }));
@@ -1412,6 +1453,9 @@ Studio.extend({
 
 		bd.bindSourceDialog.resourceRb.editor.setChecked(true);
 		bd.bindSourceDialog.treeControlsPanel.hide();
+		if (bd.bindSourceDialog.applyButton.caption !== this.getDictionaryItem("IMPORT_RESOURCE_BUTTON_CAPTION")) {
+		    bd.bindSourceDialog.applyButton._oldCaption =  bd.bindSourceDialog.applyButton.caption;		    
+		}
 		bd.bindSourceDialog.applyButton.setCaption(this.getDictionaryItem("IMPORT_RESOURCE_BUTTON_CAPTION"));
 		bd.bindSourceDialog.applyButtonClick = function() {
 		    var filepath = bd.bindSourceDialog.bindEditor.getValue("dataValue");
@@ -1426,7 +1470,10 @@ Studio.extend({
 
 		    bd.bindSourceDialog.cancelButtonClick();
 		};
-
+		var closeConnect = dojo.connect(bd, "onClose", this, function() {
+		    dojo.disconnect(closeConnect);
+		    bd.bindSourceDialog.applyButtonClick = bd.bindSourceDialog.constructor.prototype.applyButtonClick;
+		});
 		bd.show();
 		bd.domNode.style.display = "block"; // Obviously I'm doing something wrong; this shouldn't be needed
 		return true;
@@ -1447,7 +1494,7 @@ Studio.extend({
 			modal: false,
 			positionLocation: "tl",
 			border: "1px",
-			width: 550,
+			width: 650,
 			height: 350,
 			hideControls: true,
 			title: this.getDictionaryItem("TITLE_BIND_DIALOG")
@@ -1741,19 +1788,22 @@ Studio.extend({
 	},
 
     runProjectChange: function(inSender, inLabel, inIconClass, inEvent) {
-	if (inLabel == "Compile")
-	    inSender.setWidth("100px");
-	else if (inLabel == "Test" || inLabel == "Run")
-	    inSender.setWidth("75px");
+	if (inIconClass == "studioProjectCompile")
+	    inSender.setWidth(this.getDictionaryItem("COMPILE_BUTTON_WIDTH"));
+	else if (inIconClass == "studioProjectTest") {
+	    inSender.setWidth(this.getDictionaryItem("TEST_BUTTON_WIDTH"));
+	} else if (inIconClass == "studioProjectRun") {
+	    inSender.setWidth(this.getDictionaryItem("RUN_BUTTON_WIDTH"));
+	}
 	// else its in another language, and don't try tweaking the width at all
     },
 	runProjectClick: function(inSender) {	    
 	    this.application._deployStatus == ""; // reset this so we can rerun if the button became enabled but this value failed to clear
 
-	    var operation = inSender.iconClass;
+	    var operation = this.runPopup.iconClass;
 	    this._runRequested = (operation != "studioProjectCompile") ? operation : false;
 	    if (!this._runConnections) this._runConnections = [];
-
+	    console.log("CLICK: " + this._runRequested);
 	    /* Clear any prior connections... esp for runs that don't make it to projectSaveComplete */
 	    for (var i = 0; i < this._runConnections.length; i++) dojo.disconnect(this._runConnections[i]);
 	    this._runConnections.push(dojo.connect(this,"saveProjectSuccess", this, function() {

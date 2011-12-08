@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -49,9 +49,9 @@ wm.gzScriptLoader = function(name){
 dojo.declare("wm.PageLoader", wm.Component, {
 	init: function() {
 	    if (this.owner && this.isDesignLoaded()) {
-		this.randomNum = (studio.application || studio._application).getFullVersionNumber();
+		this.randomNum = (studio.application || studio._application).saveCounter;
 	    } else if (app && !window["studio"]) {
-		this.randomNum = app.getFullVersionNumber();
+		this.randomNum = app.saveCounter;
 	    } else {
 		this.randomNum =  Math.floor(Math.random()*1000000);
 	    }

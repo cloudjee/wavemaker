@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2010-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ dojo.provide('wm.base.components.componentList');
  * If that class is NOT a part of any existing layer, then enter in its standard package name
  * so dojo.require can run normally.  Still working out details of how to create new build layers.
  ************************************************************************************/
+wm.componentFixList = {};
 wm.componentList = {
 	'wm.DataGrid': ['build.Gzipped.wm_dojo_grid'],
 	'wm.DojoGrid': ['build.Gzipped.wm_dojo_grid'],
@@ -40,6 +41,7 @@ wm.componentList = {
 	'wm.Tree': ['wm.base.widget.Trees.Tree'],
 	'wm.PropertyTree': ['wm.base.widget.Trees.PropertyTree'],
 	'wm.ObjectTree': ['wm.base.widget.Trees.ObjectTree'],
+        "wm.DraggableTree":['wm.base.widget.Trees.DraggableTree'],
 	'wm.Gadget': ['build.Gzipped.wm_gadgets'],
 	'wm.gadget.YouTube': ['build.Gzipped.wm_gadgets'],
 	'wm.gadget.FacebookLikeButton': ['build.Gzipped.wm_gadgets'],
@@ -65,17 +67,21 @@ wm.componentList = {
 	'wm.Editor':['build.Gzipped.wm_editors_old'],
 	'wm.DateEditor':['build.Gzipped.wm_editors_old'],
 	'wm.TimeEditor':['build.Gzipped.wm_editors_old'],
+	'wm.Select':['build.Gzipped.wm_editors_old'],
 
 	'wm.Date':['build.Gzipped.wm_editors'],
 	'wm.DateTime':['build.Gzipped.wm_editors'],
 	'wm.SelectMenu':['build.Gzipped.wm_editors'],
 	'wm.Lookup':['build.Gzipped.wm_editors'],
 	'wm.FilteringLookup':['build.Gzipped.wm_editors'],
+	'wm.CheckboxSet':['build.Gzipped.wm_editors'],
+	'wm.RadioSet':['build.Gzipped.wm_editors'],
+	'wm.ListSet':['build.Gzipped.wm_editors'],
 	'wm.Number':['build.Gzipped.wm_editors'],
 	'wm.Checkbox':['build.Gzipped.wm_editors'],
 	'wm.RadioButton':['build.Gzipped.wm_editors'],
 	'wm.Currency':['build.Gzipped.wm_editors'],
-	'wm.Select':['build.Gzipped.wm_editors'],
+
 	'wm.Slider':['build.Gzipped.wm_editors'],
 	'wm.Text':['build.Gzipped.wm_editors'],
 	'wm.TextArea':['build.Gzipped.wm_editors'],
@@ -126,10 +132,20 @@ wm.componentList = {
 	'wm.IFrame':['wm.base.widget.IFrame'],
 	'wm.FeedList':['wm.base.widget.FeedList'],
 	'wm.ListViewer':['wm.base.widget.ListViewer'],
-        "wm.DraggableTree":['wm.base.widget.DraggableTree'],
 	
 	'wm.LogoutVariable':['wm.base.components.LogoutVariable'],
 	'wm.Service':['wm.base.components.Service']
+}
+
+/* wm.require is the public version of wm.getComponentStructure; inCommon is optional parameter
+ * to use when loading a class from the common folder
+ */
+wm.require = function(inType, inCommon) {
+    var requireList = wm.componentList[inType];
+    if (requireList || inCommon)
+	return wm.getComponentStructure(inType);
+    else
+	dojo["require"](inType);
 }
 
 wm.getComponentStructure = function(inType){
@@ -161,7 +177,32 @@ wm.getComponentStructure = function(inType){
 			var relpath = dojo._getModuleSymbols(requireList[i]).join("/") + ".js";
 			var uri = ((relpath.charAt(0) == "/" || relpath.match(/^\w+:/)) ? "" : dojo.baseUrl) + relpath;
 			wm.dojoScriptLoader(uri);
+		    if (wm.componentFixList[requireList[i]]) {
+			var fixes = wm.componentFixList[requireList[i]];
+			for (var j = 0; j < fixes.length; j++)
+			    fixes[j]();
+		    }
 		}
 	}
 }
 
+wm.addFrameworkFix = function(gzipName, inFunc) {
+    if (djConfig.isDebug && !wm.studioConfig) {
+	inFunc();
+    } else if (!wm.componentFixList[gzipName]) {
+	wm.componentFixList[gzipName] = [inFunc];
+    } else {
+	wm.componentFixList[gzipName].push(inFunc);
+    }
+}
+
+wm.applyFrameworkFixes = function() {
+    for (var packageName in wm.componentFixList) {
+	var packageFixes = wm.componentFixList[packageName];
+	for (var i = 0; i < packageFixes.length; i++) {
+	    packageFixes[i]();
+	}
+    }
+}
+
+wm.loadLib("common." + wm.version.replace(/[^a-zA-Z0-9]/g,"") + "_patches");

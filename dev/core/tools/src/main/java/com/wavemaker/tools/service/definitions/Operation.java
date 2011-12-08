@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2009-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -71,7 +71,11 @@ import javax.xml.bind.annotation.XmlType;
  * </pre>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Operation", propOrder = { "parameter", "_return" })
+@XmlType(name = "Operation", propOrder = {
+    "parameter",
+    "_return",
+    "operationType"
+})
 public class Operation {
 
     protected List<Operation.Parameter> parameter;
@@ -81,6 +85,8 @@ public class Operation {
 
     @XmlAttribute(required = true)
     protected String name;
+    @XmlAttribute(required = true)
+    private String operationType; //hqlquery, other
 
     /**
      * Gets the value of the parameter property.
@@ -149,6 +155,14 @@ public class Operation {
     public void setName(String value) {
         this.name = value;
     }
+
+    public String getOperationType() {
+        return operationType;
+    }
+    public void setOperationType(String operationType) {
+        this.operationType = operationType;
+    }
+
 
     /**
      * <p>

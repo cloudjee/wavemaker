@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2009-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -39,9 +39,9 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
     */
 	beginDrag: function(inEvent, inInfo) {
 		this.info = inInfo || this.info;
-		if (this.info && this.info.control){
-		  var parentForm = wm.getParentForm(this.info.control);
-			this.info.parentForm = parentForm instanceof wm.LiveFormBase ? parentForm : null;	
+	    if (this.info && this.info.control && (this.info.control instanceof wm.AbstractEditor || this.info.control instanceof wm.EditPanel)){
+		    var parentForm = wm.getParentForm(this.info.control);
+		    this.info.parentForm = parentForm instanceof wm.LiveFormBase ? parentForm : null;	
 		}
 		
 		this.mousedown(inEvent);
@@ -108,6 +108,13 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 
 	},
 	drop: function(e) {
+/*
+	    var parent = this.placeHolder.parent;
+	    if (parent) {
+		this.placeHolder.setParent(null);
+		parent.reflow();
+	    }
+	    */
 		if (this.target && this.target.layout.removeEdges)
 			this.target.layout.removeEdges(this.target);
 		this.inherited(arguments);
@@ -123,14 +130,38 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 			this.setCursor("default");
 			this.targetNode = this.target.containerNode || this.target.domNode;
 			this.targetOff = wm.calcOffset(this.targetNode, this.scrimNode, true);
-		    console.log("targetNode:"+this.targetNode.id + "; " + this.scrimNode.id);
+/*
+		    if (!this.placeHolder) {
+			this.placeHolder = new wm.Label({owner: studio, width: "100px", height: "20px", caption: "hello world", name: "placeHolder", border: "1", borderColor: "#333333"});
+			this.placeHolder.domNode.style.backgroundColor = "#999";
+		    }
+		    if (this.info.control) {
+			this.placeHolder.setWidth(this.info.control.width);
+			this.placeHolder.setHeight(this.info.control.height);
+		    } else if (this.info.obj && this.info.obj.data && this.info.obj.data.klass) {
+			var obj = dojo.getObject(this.info.obj.data.klass);
+			if (obj && obj.prototype) {
+			    this.placeHolder.setWidth(obj.prototype.width);
+			    this.placeHolder.setHeight(obj.prototype.height);
+			}
+		    }
+		    if (inTarget != this.placeHolder.parent)
+			this.placeHolder.setParent(inTarget);
+		    if (this.dropRect) {
+			inTarget.moveControl(this.placeHolder, this.dropRect.i);
+			this._lastDropRectI = this.dropRect.i;
+			console.log("targetNode:"+inTarget.toString() + "; Index: " + this.dropRect.i);
+		    }
+		    inTarget.reflow();
+		    */
 		} else {
 			this.setCursor("no-drop");
 			this.targetNode = null;
 			this.targetOff = null;
 		}
-		if (this.target && this.target.layout.renderEdges)
-			this.target.layout.renderEdges(this.target, this.info.control);
+	    if (this.target && this.target.layout.renderEdges) {
+		this.target.layout.renderEdges(this.target, this.info.control);
+	    }
 		this.updateAvatar();
 	},
 	updateAvatar: function() {
@@ -159,8 +190,14 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 	    } else if (this.targetInRoot(inHit)) {
 		t = (this.designable ? this._findTarget(inHit, this.root, 0) : this.root);
 	    } 
-	    if (!t)
+	    if (!t) {
 		kit._setMarginBox(this.markNode, 0, 0, 0, 0);
+	    }
+/*
+	    if (t != this.target || this.dropRect && this.dropRect.i != this._lastDropRectI) {
+		this.setTarget(t);
+	    }
+	    */
 	    if (t != this.target) {
 		this.setTarget(t);
 	    }
@@ -252,7 +289,7 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 	},
 	isDesignable: function() {
 		var c = this.info.control || (dojo.getObject(this.info.type)).prototype;
-		return c instanceof wm.Control;
+	    return c instanceof wm.Component;
 	}
 });
 

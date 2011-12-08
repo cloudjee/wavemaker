@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	enableAnimation:true,
 	chartType: 'Columns',
 	includeGrid:false,
-	gap:200,
+	gap:2,
 	defaultXY:[{'wmDefaultX':'Jan', 'wmDefaultY':3}, {'wmDefaultX':'Feb', 'wmDefaultY':5}, {'wmDefaultX':'Mar', 'wmDefaultY':8}, {'wmDefaultX':'Apr', 'wmDefaultY':2}],
 	addedSeries:{},
 	aniHighlight:null,
@@ -145,6 +145,9 @@ dojo.declare("wm.DojoChart", wm.Control, {
 			s.top = "0px";
 		    } 
 		}
+		while(this.domNode.childNodes[1].childNodes.length > 1) {
+		    dojo.destroy(this.domNode.childNodes[1].childNodes[0]);
+		}
 	    });
 	},
 	updateChartDivHeight: function(){
@@ -191,8 +194,8 @@ dojo.declare("wm.DojoChart", wm.Control, {
 		return this.variable;
 	},
 	setDataSet: function (inValue, inDefault){
-		this.variable = inValue;
-		if(!this.variable || !this.variable.getData())
+	    this.dataSet = this.variable = inValue;
+	    if(!this.dojoObj && (!this.variable || !this.variable.getData()))
 			return;
 			
 		var thisObj = this;
@@ -639,6 +642,10 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	onMouseOver: function(e, dataObj){
 	},
 	onMouseOut: function(e, dataObj){
-	}
+	},
+
+    toHtml: function() {
+	return this.dojoObj.node.innerHTML;
+    }
 });
 

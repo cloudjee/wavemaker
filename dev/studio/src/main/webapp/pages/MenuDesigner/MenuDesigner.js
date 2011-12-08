@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -52,11 +52,15 @@ dojo.declare("MenuDesigner", wm.Page, {
 	    if (structure[i].iconClass)
 		content = '<img src="lib/dojo/dojo/resources/blank.gif" alt="" class="dijitIcon dijitMenuItemIcon ' + structure[i].iconClass + '" dojoattachpoint="iconNode">&nbsp;' + content;
 
+	    if (structure[i].separator) {
+		var n = new wm.TreeNode(parentNode, {closed: false, content: "----", data: {separator: true, defaultLabel: "Separator"}});
+	    } else {
 	    var n = new wm.TreeNode(parentNode, {closed: false, content: content, data: {content: structure[i].label,
 											 defaultLabel: structure[i].defaultLabel || structure[i].label,
 											 onClick: structure[i].onClick,
 											 iconClass: structure[i].iconClass,
 											 imageList: structure[i].imageList}});
+	    }
 	    if (this._defaultLabel == structure[i].label && this._defaultClass == structure[i].iconClass)
 		n.domNode.style.fontWeight = "bold";
 	    if (structure[i].children) // test for children needed on upgraded projects
@@ -159,7 +163,7 @@ dojo.declare("MenuDesigner", wm.Page, {
       } 
   },
     mainOKClick: function() {
-	this.editMenu.setFullStructureStr(dojo.toJson(this.write()), true);
+	this.editMenu.set_fullStructure(this.write(), true);
 /*
 	if (this.defaultItemEnabled && this.defaultItem && this.defaultItem.data) 
 	    this.editMenu.setDefaultItem(this.defaultItem.data);
@@ -168,6 +172,13 @@ dojo.declare("MenuDesigner", wm.Page, {
     },
     mainCancelClick: function() {
 	this.owner.owner.dismiss();
+    },
+    SeparatorButtonClick: function() {
+          var parent = this.tree.selected || this.tree.root;
+	  var childCount = parent.kids.length;
+	var content = "-----";
+        var node = new wm.TreeNode(parent, {closed: false, content: content, data: {separator: true, defaultLabel: "Separator"}});
+          this.updateMenu();
     },
 
     popupImageSelector: function() {
@@ -199,8 +210,10 @@ dojo.declare("MenuDesigner", wm.Page, {
 		delete this._designImageListSelectCon;
 	    }
 
-	    this._iconlistDialog.hide();
-	    delete this._iconlistDialog;
+	    if (this._iconListDialog) {
+		this._iconlistDialog.hide();
+		delete this._iconlistDialog;
+	    }
     },
     treeSelect: function(inSender, inNode) {
 	this.EditButton.setShowing(inNode != this.rootNode);
@@ -229,6 +242,7 @@ dojo.declare("MenuDesigner", wm.Page, {
   writeNode: function(inNode) {
    
       var obj = {label: inNode.data.content,
+		 separator: inNode.data.separator,
 		 defaultLabel: inNode.data.defaultLabel,
 		 iconClass: inNode.data.iconClass,
 		 imageList: inNode.data.imageList,

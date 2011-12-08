@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -69,14 +69,13 @@ dojo.declare("wm.NumberFormatter", wm.DataFormatter, {
 });
 
 dojo.declare("wm.CurrencyFormatter", wm.NumberFormatter, {
+	digits: 2,
 	currency: "",
 	format: function(inDatum) {
 		return (inDatum == undefined) ? '-' : dojo.currency.format(inDatum, this.getFormatProps());
 	},
 	getFormatProps: function() {
 		var p = this.inherited(arguments);
-		// Dojo uses an iso4217 currency code, but let's allow $ to mean U.S. dollars (see http://www.xe.com/iso4217.php)
-		this.digits = 2;
 	        p.currency = this.currency == "$" ? "USD" : this.currency || (this._isDesignLoaded ? studio.application.currencyLocale : app.currencyLocale) || "USD";
 		return p;
 	}
@@ -179,13 +178,6 @@ dojo.declare("wm.DateTimeFormatter", wm.DataFormatter, {
 			locale: this.locale,
 			formatter: this.format
 		}
-	},
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "formatLength":
-				return makeSelectPropEdit(inName, inValue, ["medium", "short", "long", "full"], inDefault);
-		}
-		return this.inherited(arguments);
 	}
 });
 
@@ -243,7 +235,8 @@ wm.Object.extendSchema(wm.DataFormatter, {
 });
 
 wm.Object.extendSchema(wm.DateTimeFormatter, {
-	useLocalTime: { ignore: 1 }
+    formatLength: {options: ["short","medium","long","full"]},
+    useLocalTime: { ignore: 1 }
 });
 
 wm.Object.extendSchema(wm.DateFormatter, {

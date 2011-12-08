@@ -1,5 +1,5 @@
 /* 
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,7 +20,6 @@ dojo.declare("wm.AdaptorVariable", wm.Variable, {
     outputVar: null,
 
     outputType: "",
-    editMapping: "(Edit Mapping)",
     _mapping: {},
     mapping: "",
     init: function() {
@@ -61,22 +60,6 @@ dojo.declare("wm.AdaptorVariable", wm.Variable, {
 
 
 wm.AdaptorVariable.extend({
-    makePropEdit: function(inName, inValue, inDefault) {
-	switch (inName) {
-	case "outputType":
-	    return new wm.propEdit.DataTypesSelect({component: this, name: inName, value: inValue});
-	case "editMapping":
-	    return makeReadonlyButtonEdit(inName, inValue, inDefault);
-	}
-	return this.inherited(arguments);
-    },
-    editProp: function(inName, inValue, inInspector) {
-	switch (inName) {
-	case "editMapping":
-	    return this.editMapping();
-	}
-	return this.inherited(arguments);
-    },
     editMapping: function() {
 	if (!wm.AdaptorVariable.ConfigDialog) 
 	    wm.AdaptorVariable.ConfigDialog = new wm.PageDialog({
@@ -110,7 +93,8 @@ wm.AdaptorVariable.extend({
 });
 
 wm.Object.extendSchema(wm.AdaptorVariable, {
-    editMapping: {},
+    editMapping: {operation:1,group:"operations"},
     outputVar: {bindable:1, type: "wm.Variable", simpleBindProp: true},
+    outputType:{editor:"wm.prop.DataTypeSelect"},
     mapping: {}
 });

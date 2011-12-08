@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ dojo.declare("wm.FunctionService", wm.Service, {
 	componentFunction: function(inComponent, inFunction, inArguments) {
 		if (!(inComponent instanceof wm.Component))
 			return;
-		var args = (inArguments || "").split(',');
+		var args = String(inArguments || "").split(',');
 		for (var i=0, l=args.length; i<l; i++)
 			args[i] = dojo.trim(args[i]);
 		var result = wm.fire(inComponent, inFunction, args);

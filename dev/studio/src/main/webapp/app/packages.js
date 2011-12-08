@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -64,8 +64,17 @@
 [bundlePackage.FormsGroup, bundlePackage.LiveForm, "wm.LiveForm", "wm.base.widget.LiveForm", "Studio_paletteImageList_7", bundlePackage.descLiveForm, {}, false],
 [ bundlePackage.FormsGroup, bundlePackage.SimpleForm, "wm.SimpleForm", "wm.base.widget.LiveForm","Studio_paletteImageList_7", bundlePackage.descSimpleForm,{}, true],
 [ bundlePackage.FormsGroup, bundlePackage.RelatedEditor, "wm.RelatedEditor", "wm.base.widget.RelatedEditor", "Studio_paletteImageList_9",bundlePackage.descRelatedEditor, {}, false],
+[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "FormPanel", "wm.FormPanel", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descFormPanel, {}, false],
+[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "DataForm", "wm.DataForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descDataForm, {}, false],
+[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "Database Form", "wm.DBForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descDBForm, {}, false],
+[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "Service Input Form", "wm.ServiceInputForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descServiceInputForm, {}, false],
+[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "SubForm", "wm.SubForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descServiceInputForm, {}, false],
+
 
 [bundlePackage.EditorsGroup, bundlePackage.Checkbox, "wm.Checkbox", "wm.base.widget.Editors.Checkbox", "Studio_paletteImageList_9", bundlePackage.descCheckbox, {}, false],
+[bundlePackage.EditorsGroup, bundlePackage.CheckboxSet, "wm.CheckboxSet", "wm.base.widget.Editors.DataSetEditor", "Studio_paletteImageList_9", bundlePackage.descCheckboxSet, {}, false],
+[bundlePackage.EditorsGroup, bundlePackage.RadioButtonSet, "wm.RadioSet", "wm.base.widget.Editors.DataSetEditor", "Studio_paletteImageList_9", bundlePackage.descRadioSet, {}, false],
+[bundlePackage.EditorsGroup, bundlePackage.ListSet, "wm.ListSet", "wm.base.widget.Editors.DataSetEditor", "Studio_paletteImageList_9", bundlePackage.descListSet, {}, false],
 [ bundlePackage.EditorsGroup, bundlePackage.ColorPicker, "wm.ColorPicker", "wm.base.widget.Editors.Text", "Studio_paletteImageList_9",bundlePackage.descColorPicker, {}, false],
 [bundlePackage.EditorsGroup, bundlePackage.Currency, "wm.Currency", "wm.base.widget.Editors.Text", "Studio_paletteImageList_9", bundlePackage.descCurrency, {}, false],
 [bundlePackage.EditorsGroup, bundlePackage.Number, "wm.Number", "wm.base.widget.Editors.Number", "Studio_paletteImageList_9", bundlePackage.descNumber, {}, false],
@@ -135,6 +144,9 @@
 [ bundlePackage.Web_Content, "Maps", "wm.gadget.GoogleMap", "wm.base.widget.gadget.GoogleMap", "Studio_paletteImageList_35", bundlePackage.descYouTubeWidget, {},true],
 [ bundlePackage.Web_Content, bundlePackage.FacebookLikeButton, "wm.gadget.FacebookLikeButton", "wm.base.widget.gadget.Facebook", "Studio_paletteImageList_35", bundlePackage.descYouTubeWidget, {}, true],
 [ bundlePackage.Web_Content, bundlePackage.FacebookActivityFeed, "wm.gadget.FacebookActivityFeed", "wm.base.widget.gadget.Facebook", "Studio_paletteImageList_35", bundlePackage.descYouTubeWidget, {}, true],
+[ bundlePackage.Web_Content, "Twitter Follow Button", "wm.gadget.TwitterFollowButton", "wm.base.widget.gadget.TwitterGadgets", "Studio_paletteImageList_35", bundlePackage.descYouTubeWidget, {}, true],
+[ bundlePackage.Web_Content, "Twitter Tweet Button", "wm.gadget.TwitterTweetButton", "wm.base.widget.gadget.TwitterGadgets", "Studio_paletteImageList_35", bundlePackage.descYouTubeWidget, {}, true],
+[ bundlePackage.Web_Content, "Twitter List", "wm.gadget.TwitterList", "wm.base.widget.gadget.TwitterGadgets", "Studio_paletteImageList_35", bundlePackage.descYouTubeWidget, {}, true],
 [ bundlePackage.Web_Content, bundlePackage.Feed_List, "wm.FeedList", "wm.base.widget.FeedList", "images/rss.png", bundlePackage.descFeedList, {}, false],
 [ bundlePackage.Web_Content, bundlePackage.Twitter_Feed, "wm.TwitterFeed", "wm.base.widget.TwitterFeed", "Studio_paletteImageList_26", bundlePackage.descTwitterFeed, {}, false],
 
@@ -190,8 +202,8 @@
 
 /*[ "Non-Visual Components", "SalesForceMonitorVariable", "wm.SalesForceMonitorVariable", "wm.base.components.SalesForceMonitorVariable", "images/wm/servicevar_24.png"],*/
 [ bundlePackage.Non_Visual_Components, bundlePackage.ImageList, "wm.ImageList", "wm.base.components.ImageList", "Studio_paletteImageList_17", "", {parentMenu: bundlePackage.Graphics}, false],
-[ bundlePackage.Non_Visual_Components, "Silk Icons ImageList", "wm.ImageList", "wm.base.components.ImageList", "Studio_paletteImageList_17", "", {url: "lib/images/silkIcons/silk.png", width: 16,height: 16, colCount: 35, iconCount: 90, parentMenu: bundlePackage.Graphics }, false],
-[ bundlePackage.Non_Visual_Components, "Boolean Signage ImageList", "wm.ImageList", "wm.base.components.ImageList", "Studio_paletteImageList_17", "", {url: "lib/images/boolean/Signage/set.png", width: 16,height: 16, colCount: 9, parentMenu: bundlePackage.Graphics}, false],
+[ bundlePackage.Non_Visual_Components, bundlePackage.silkIconList, "wm.ImageList", "wm.base.components.ImageList", "Studio_paletteImageList_17", "", {url: "lib/images/silkIcons/silk.png", width: 16,height: 16, colCount: 35, iconCount: 90, parentMenu: bundlePackage.Graphics }, false],
+[ bundlePackage.Non_Visual_Components, bundlePackage.booleanIconList, "wm.ImageList", "wm.base.components.ImageList", "Studio_paletteImageList_17", "", {url: "lib/images/boolean/Signage/set.png", width: 16,height: 16, colCount: 9, parentMenu: bundlePackage.Graphics}, false],
 [ bundlePackage.Non_Visual_Components, bundlePackage.LogoutVariable, "wm.LogoutVariable", "wm.base.components.LogoutVariable", "Studio_paletteImageList_43", "", {parentMenu: bundlePackage.Advanced}, false],
 [ bundlePackage.Non_Visual_Components, bundlePackage.Timer, "wm.Timer", "wm.base.components.Timer", "Studio_paletteImageList_42", "", {parentMenu: bundlePackage.Advanced}, false],
 [ bundlePackage.Non_Visual_Components, bundlePackage.TypeDefinition, "wm.TypeDefinition", "wm.base.components.TypeDefinition", "Studio_paletteImageList_42", "", {parentMenu: bundlePackage.Advanced}, false],
@@ -201,7 +213,7 @@
 [ bundlePackage.Services, bundlePackage.Database_Design, "wm.DataModel", "wm.base.components.DataModel", "images/wm/data_blue.png", "", {_type: "New"}, false],
 [ bundlePackage.Services, bundlePackage.Java_Service, "wm.JavaService", "wm.base.components.JavaService", "images/wm/component.png", "", {}, false],
 // [ bundlePackage.Services, bundlePackage.UploadDownload_Service, "wm.JavaService", "wm.base.components.JavaService", "images/wm/component.png", "Creates a java service for handling file downloads", {initialCode: "public String download() {return 'Ouch!';}", serviceId: "Download", initialClassId: "Download"}],
-[ bundlePackage.Services, bundlePackage.LiveView, "wm.LiveView", "wm.base.components.LiveView", "images/wm/liveview_16.png", "", {}, false],
+/*[ bundlePackage.Services, bundlePackage.LiveView, "wm.LiveView", "wm.base.components.LiveView", "images/wm/liveview_16.png", "", {}, false],*/
 [ bundlePackage.Services, bundlePackage.Query, "wm.Query", "wm.base.components.Query", "images/wm/operation.png", "", {}, false],
 [ bundlePackage.Services, bundlePackage.Security, "wm.Security", "wm.base.components.Security", "images/lock_16.png", "", {}, false],
 [ bundlePackage.Services, bundlePackage.Web_Service, "wm.WebService", "wm.base.components.WebService", "images/wm/service.png", "", {}, false],

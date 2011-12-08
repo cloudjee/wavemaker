@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,7 +19,15 @@ dojo.declare("ImportThirdPartyAPI", wm.Page, {
     i18n: true,
     start: function() {
 	this.layers.decorator.buttonPanel.setParent(this.root);
+	dojo.addClass(this.layers.decorator.buttonPanel.domNode, "dialogfooter");
 	this.layers.decorator.doneCaption = this.getDictionaryItem("DONE_CAPTION");
+	if (navigator.platform == "MacIntel") {
+	    this.adminWarningLabel.hide();
+	    this.adminSpacer.hide();
+	}
+	if (!navigator.platform.match(/win/i)) {
+	    this.adminWarningLabel2.hide();
+	}
     },
     onShow: function() {
 	this.layer.invalid = true;

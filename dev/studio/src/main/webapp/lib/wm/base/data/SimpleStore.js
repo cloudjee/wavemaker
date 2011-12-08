@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -68,11 +68,14 @@ dojo.declare("wm.base.data.SimpleStore", null, {
 			d = inItem, w = "*", a, b, exact;
 		for (var i in inQuery) {
 		        a = d[i];
+                        if (dojo.isString(a)) a = a.replace(/\\([^\\])/g,"$1");
+
 		        b = inQuery[i];
                         if (dojo.isString(b)) b = b.replace(/\\([^\\])/g,"$1");
+
 			if (b == w)
 				continue;
-			exact = inExactMatch || (b.indexOf(w) == - 1);
+		    exact = inExactMatch || (typeof b == "string" && b.indexOf(w) == - 1);
 			if (dojo.isString(a) && dojo.isString(b) && !exact) {
 				if (b.charAt(b.length-1) == w)
 					b = b.slice(0, -1);

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -157,8 +157,8 @@ dojo.declare("wm.DataGridColumn", wm.Component, {
 	format: "(details)",
 	index: 0,
 	showing: true,
-	addColumn: "(click to add column)",
-	removeColumn: "(click to remove)",
+	addColumn:  function() {this.owner.doAddColumn();},
+    removeColumn: function() {this.owner.doRemoveColumn(this);},
 	init: function() {
 	    this._cupdating = true;
 		// BC
@@ -291,26 +291,12 @@ wm.DataGridColumn.extend({
 	isParentFrozen: function() {
 		return this.owner && this.owner.isParentFrozen();
 	},
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "addColumn":
-			case "removeColumn":
-				return makeReadonlyButtonEdit(inName, inValue, inDefault);
-			case "field":
-				return makeSelectPropEdit(inName, inValue, this.owner._listFields(), inDefault);
-			case "display":
-				return makeSelectPropEdit(inName, inValue, [""].concat(wm.formatters), inDefault);
-			case "columnWidth":
-				return new wm.propEdit.UnitValue({component: this, name: inName, value: inValue, options: this.owner._sizeUnits});
-		}
-		return this.inherited(arguments);
-	},
-	editProp: function(inName, inValue, inInspector) {
-		switch (inName) {
-			case "removeColumn":
-				return this.owner.doRemoveColumn(this);
-			case "addColumn":
-				return this.owner.doAddColumn();
+	makePropEdit: function(inName, inValue, inEditorProps) {
+	    switch (inName) {
+	    case "field":
+		return new wm.SelectMenu(dojo.mixin(inEditorProps, {options: this.owner._listFields()}));
+	    case "display":
+		return new wm.SelectMenu(dojo.mixin(inEditorProps, {options: [""].concat(wm.formatters)}));
 		}
 		return this.inherited(arguments);
 	}
@@ -324,10 +310,10 @@ wm.DataGridColumn.extend({
 */
 dojo.declare("wm.DataGrid", wm.dijit.Grid, {
 	/** @lends wm.DataGrid.prototype */
-	addColumn: "(click to add column)",
-	autoColumns: "(auto add columns)",
-	clearColumns: "(clear all columns)",
-	updateNow: "(update now)",
+    addColumn: function() {this.doAddColumn();},
+	autoColumns:  function() {this.doAddColumn();},
+	clearColumns: function() {this.doClearColumn();},
+	updateNow: function() {this.update();},
 	collection: "Columns",
         //fireOnReselect: false,
 	init: function() {
@@ -943,26 +929,9 @@ wm.DataGrid.extend({
 	},
 	makePropEdit: function(inName, inValue, inDefault) {
 		switch (inName) {
-			case "addColumn":
-			case "autoColumns":
-			case "clearColumns":
-			case "updateNow":
-				return makeReadonlyButtonEdit(inName, inValue, inDefault);
+
 			case "dataSet":
 				return new wm.propEdit.DataSetSelect({component: this, name: inName, value: this.dataSet ? this.dataSet.getId() : "", allowAllTypes: true, listMatch: true});
-		}
-		return this.inherited(arguments);
-	},
-	editProp: function(inName, inValue, inInspector) {
-		switch (inName) {
-			case "addColumn":
-				return this.doAddColumn();
-			case "autoColumns":
-				return this.doAutoColumns();
-			case "clearColumns":
-				return this.doClearColumns();
-			case "updateNow":
-				return this.update();
 		}
 		return this.inherited(arguments);
 	}
@@ -971,22 +940,23 @@ wm.DataGrid.extend({
 // design-time only
 wm.Object.extendSchema(wm.DataGridColumn, {
 	caption: { group: "common", order: 100, focus: 1 },
-	addColumn: { group: "operation", order: 10},
-	removeColumn: { group: "operation", order: 20},
+    addColumn: { group: "operation", order: 10,operation:1},
+    removeColumn: { group: "operation", order: 20,operation:1},
 	autoSize: { group: "layout", order: 10 },
-	columnWidth: { group: "layout", order: 20 },
+    columnWidth: { group: "layout", order: 20, editor: "wm.prop.SizeEditor"},
 	index: { group: "layout", order: 30 },
-	field: { group: "data", order: 10 },
+    field: { group: "data", order: 10, editor: "wm.prop.FieldSelect",  },
 	dataExpression: { group: "data", order: 15 },
 	display: { group: "data", order: 20 },
 	format: { group: "data", order: 30, categoryParent: "Properties", categoryProps: {component: "format"}},
-	showing: {ignore: 1}
+    showing: {ignore: 1},
+    format:{ignore:1}
 });
 
 wm.Object.extendSchema(wm.DataGrid, {
 	selectedItem: { ignore: true, isObject: true, bindSource: true, simpleBindProp: true },
 	emptySelection: { ignore: true, bindSource: 1, type: "Boolean" },
-	dataSet: { readonly: true, group: "data", order: 0, type: "wm.Variable", isList: true, bindTarget: true},
+    dataSet: { readonly: true, group: "data", order: 0, type: "wm.Variable", isList: true, bindTarget: true, createWire: 1, editor: "wm.prop.DataSetSelect", editorProps: {listMatch: true, widgetDataSets: true, allowAllTypes: true}},
 	addColumn: { group: "operation", order: 1},
 	autoColumns: { group: "operation", order: 5},
 	clearColumns: { group: "operation", order: 10},

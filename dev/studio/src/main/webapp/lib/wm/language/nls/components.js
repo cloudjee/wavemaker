@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -42,8 +42,9 @@
 "wm.Dashboard.ADD_DIALOG_SELECT_CAPTION": "Widget",
 "wm.Dashboard.ADD_DIALOG_ADD_CAPTION": "Add",
 "wm.Dashboard.ADD_DIALOG_CANCEL_CAPTION": "Cancel",
-
-"wm.DataNavigator.TOTAL_LABEL": "of ${total}",
+"wm.Dashboard.ADD_DIALOG_CANCEL_WIDTH": "60px",
+"wm.Dashboard.ADD_DIALOG_ADD_WIDTH": "60px",
+"wm.Dashboard.ADD_DIALOG_SELECT_CAPTION_SIZE": "80px",
 
 "wm.DojoChart.ALT_PROMPT_SILVERLIGHT": "Get Micsrosoft Silverlight",
 

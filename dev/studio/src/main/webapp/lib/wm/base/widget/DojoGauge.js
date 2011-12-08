@@ -1,3 +1,18 @@
+/*
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+
 dojo.provide("wm.base.widget.DojoGauge");
 
 dojo.declare("wm.DojoGauge", wm.Control, {
@@ -196,40 +211,15 @@ dojo.declare("wm.DojoGauge", wm.Control, {
 	this.createGauge();
     },
 
-    listProperties: function() {
-	var props = dojo.clone(this.inherited(arguments));
-	props.currentValue2.ignoretmp = props.arrowColor2.ignoretmp = !this.useSecondIndicator;
-	props.currentValue3.ignoretmp = props.arrowColor3.ignoretmp = !this.useThirdIndicator;
-	return props;
-    },
     destroy: function(){
       this.valueIndicator1.destroy();
       this.gauge.destroy();
       this.inherited(arguments);
     },
+    toHtml: function() {
+	return main.dojoGauge1.gauge.domNode.innerHTML;
+    },
     _end: 0
 });
 
 
-wm.Object.extendSchema(wm.DojoGauge, {
-    gaugeNode: {ignore: 1},
-    gauge: {ignore: 1},
-    valueIndicator1: {ignore: 1},
-    lowRangeColor: {group: "gauge", order: 1},
-    lowRangeMin:   {group: "gauge", order: 2},
-    lowRangeMax:   {group: "gauge", order: 3},
-    midRangeColor: {group: "gauge", order: 4},
-    midRangeMax: {group: "gauge", order: 5},
-    highRangeColor: {group: "gauge", order: 6},
-    highRangeMax: {group: "gauge", order: 7},
-    useOverlayImage: {group: "gauge", order: 20},
-
-    currentValue1: {group: "indicator", order: 1, bindTarget: 1},
-    arrowColor1: {group: "indicator", order: 2},
-    useSecondIndicator: {group: "indicator", order: 4},
-    currentValue2: {group: "indicator", order: 5, bindTarget: 1},
-    arrowColor2: {group: "indicator", order: 6},
-    useThirdIndicator: {group: "indicator", order: 7},
-    currentValue3: {group: "indicator", order: 8, bindTarget: 1},
-    arrowColor3: {group: "indicator", order: 9}
-});

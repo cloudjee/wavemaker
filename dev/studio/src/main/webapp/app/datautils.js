@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -82,7 +82,7 @@ buildConnectionUrl = function(dbtype, host, port, extra, extra2) {
 	} else if (isDB2(dbtype)) {
 		rtn += "db2://" + host + "\:" + port + "/" + extra;
 	} else if (isPostgreSQL(dbtype)) {
-		rtn += "postgresql://" + host + ":" + port + "/" + extra;;
+		rtn += "postgresql://" + host + ":" + port + "/" + extra;
 	}
 
 	return rtn;

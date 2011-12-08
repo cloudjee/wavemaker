@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -41,7 +41,10 @@
 
 .wm_template .wmtablayers-tab.wmtablayers-selected,
 .wm_template .wmtablayers-tab.wmtablayers-selected:hover,
-.wm_template .wmtablayers-tab.wmtablayers-selected:focus {
+.wm_template .wmtablayers-tab.wmtablayers-selected:focus,
+.wm_template .wmtablayers-verticaltab.wmtablayers-selected,
+.wm_template .wmtablayers-verticaltab.wmtablayers-selected:hover,
+.wm_template .wmtablayers-verticaltab.wmtablayers-selected:focus {
     -moz-box-shadow: 0px 0px 0px black;  /* wm.TabLayers-Active-BorderStyle_Shadow */
     -webkit-box-shadow: 0px 0px 0px black;   /* wm.TabLayers-Active-BorderStyle_Shadow */
     box-shadow: 0px 0px 0px black;   /* wm.TabLayers-Active-BorderStyle_Shadow */
@@ -62,8 +65,39 @@
 	border-radius-topright: 8px; /* Document-ClickablesDefault-BorderStyle_Radius */
 }
 
+.wm_template button.wmtablayers-verticaltab {
+    /* wm.TabLayers-BorderStyle_Shadow */
+    -moz-box-shadow: -1px 1px 1px #444444; /* wm.TabLayers-BorderStyle_Shadow */
+    -webkit-box-shadow: -1px 1px 1px #444444; /* wm.TabLayers-BorderStyle_Shadow */
+    box-shadow: -1px 1px 1px #444444; /* wm.TabLayers-BorderStyle_Shadow */
+    font-size: 9; /* wm.TabLayers-Button_TextSize */
+    width: 95%;
+    margin-left: 5%;
+}
+
+.wm_template .wmtablayers-verticaltab:hover, .wm_template .wmtablayers-verticaltab:focus {
+    /* wm.TabLayers-HoverShadow */
+    -moz-box-shadow: -2px 2px 2px #444444; /* wm.TabLayers-Hover-BorderStyle_Shadow */
+    -webkit-box-shadow: -2px 2px 2px #444444; /* wm.TabLayers-Hover-BorderStyle_Shadow */
+    box-shadow: -2px 2px 2px #444444;   /* wm.TabLayers-Hover-BorderStyle-Shadow */
+}
+
+/* Spacing between each tab */
+.wm_template .wmtablayers-verticaltab.wmtablayers-selected,
+.wm_template .wmtablayers-verticaltab.wmtablayers-verticaltab {
+    margin-bottom: 5px;
+	/* Document-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius-bottomleft: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-moz-border-radius-topleft: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-bottom-left-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-top-left-radius: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	border-radius-bottomleft: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+	border-radius-topleft: 4px; /* Document-ClickablesDefault-BorderStyle_Radius */
+}
+
 
     /* Tab <input type='button'> elements need to handle browser focus as any other button */
+    .wm_template .wmtablayers-verticaltab:focus,
     .wm_template .wmtablayers-tab:focus {
 	outline-width: 0;
     }
@@ -311,7 +345,8 @@ body.wm_template {
     }
 
     /* Tab buttons */
-    .wm_template button.wmtablayers-tab {
+    .wm_template button.wmtablayers-tab,
+    .wm_template button.wmtablayers-verticaltab {
 	/* Document-ClickablesDefault-Font */
 	font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */
 	color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
@@ -326,7 +361,6 @@ body.wm_template {
 	/* Document-ClickablesDefault-Border */
 	border-bottom-color: transparent;
 	border-top-color: #444444; /* Borders-Clickable_Border_Color */
-	border-right-color:#444444; /* Borders-Clickable_Border_Color */
 	border-left-color:#444444; /* Borders-Clickable_Border_Color */
 
         /* editting this is problematic without also editting headerHeight */
@@ -335,12 +369,24 @@ body.wm_template {
 
     }
 
+    .wm_template button.wmtablayers-tab {
+	border-bottom-color: transparent;
+	border-right-color: #444444; /* Borders-Clickable_Border_Color */
+    }
+    .wm_template button.wmtablayers-verticaltab {
+	border-right-color: transparent;
+	border-bottom-color: #444444; /* Borders-Clickable_Border_Color */
+    }
+
     .dj_ie6 .wm_template .wmtablayers-tab {
         background-image: none !important;
     }
 
 
-    .wm_template .wmtablayers-tab:hover, .wm_template .wmtablayers-tab:focus {
+    .wm_template .wmtablayers-tab:hover, 
+    .wm_template .wmtablayers-tab:focus,
+    .wm_template .wmtablayers-verticaltab:hover, 
+    .wm_template .wmtablayers-verticaltab:focus {
 	/* Document-ClickablesHover-Font */
 	color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
 
@@ -357,7 +403,10 @@ body.wm_template {
     .dj_ie6 .wm_template .wmtablayers-tab.wmtablayers-selected,
     .wm_template .wmtablayers-tab.wmtablayers-selected,
     .wm_template .wmtablayers-tab.wmtablayers-selected:hover,
-    .wm_template .wmtablayers-tab.wmtablayers-selected:focus {
+    .wm_template .wmtablayers-tab.wmtablayers-selected:focus,
+    .wm_template .wmtablayers-verticaltab.wmtablayers-selected,
+    .wm_template .wmtablayers-verticaltab.wmtablayers-selected:hover,
+    .wm_template .wmtablayers-verticaltab.wmtablayers-selected:focus {
 	/* Document-ClickablesActive-Font */
 	color: #FFFFFF; /* Document-ClickablesActive-Font_Color */
 
@@ -380,7 +429,9 @@ body.wm_template {
 
     /* Custom formatting for wizard tab with focus or hover on the <input type='button'/> */
     .wm_template .wmwizardlayers-tab:focus,
-    .wm_template .wmwizardlayers-tab:hover {
+    .wm_template .wmwizardlayers-tab:hover,
+    .wm_template .wmwizardlayers-verticaltab:focus,
+    .wm_template .wmwizardlayers-verticaltab:hover {
 	color: black; /* Custom mouseover color */
     }
 
@@ -616,7 +667,9 @@ body.wm_template {
 
     /* TODO: Enable this property */
     .wm_template .MainContent .wmwizardlayers-tab:focus,
-    .wm_template .MainContent .wmwizardlayers-tab:hover {
+    .wm_template .MainContent .wmwizardlayers-tab:hover,
+    .wm_template .MainContent .wmwizardlayers-verticaltab:focus,
+    .wm_template .MainContent .wmwizardlayers-verticaltab:hover
 	color: black; /* wm.WizardLayers-Active_Color */
     }
 
@@ -827,7 +880,9 @@ body.wm_template {
 
     /* TODO: Enable this property */
     .wm_template .EmphasizedContent .wmwizardlayers-tab:focus,
-    .wm_template .EmphasizedContent .wmwizardlayers-tab:hover {
+    .wm_template .EmphasizedContent .wmwizardlayers-tab:hover,
+    .wm_template .EmphasizedContent .wmwizardlayers-verticaltab:focus,
+    .wm_template .EmphasizedContent .wmwizardlayers-verticaltab:hover {
 	color: black; /* wm.WizardLayers-Active_Color */
     }
 
@@ -1036,7 +1091,9 @@ body.wm_template {
 
     /* TODO: Enable this property */
     .wm_template .HeaderContent .wmwizardlayers-tab:focus,
-    .wm_template .HeaderContent .wmwizardlayers-tab:hover {
+    .wm_template .HeaderContent .wmwizardlayers-tab:hover,
+    .wm_template .HeaderContent .wmwizardlayers-verticaltab:focus,
+    .wm_template .HeaderContent .wmwizardlayers-verticaltab:hover {
 	color: black; /* wm.WizardLayers-Active_Color */
     }
 

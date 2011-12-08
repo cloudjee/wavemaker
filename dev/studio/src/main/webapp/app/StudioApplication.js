@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -31,9 +31,11 @@ dojo.declare("StudioApplication", wm.Application, {
 	*/
 	this.inherited(arguments);
 	this.createDebugDialog();
+
     },
     confirm: function() {
         this.inherited(arguments);
+	dojo.addClass(this.confirmDialog.domNode, "studiodialog");
         this.confirmDialog.setBorderColor("white");
         this.confirmDialog.setBorder("2");        
         this.confirmDialog.$.genericInfoPanel.setBorder("10");
@@ -43,6 +45,7 @@ dojo.declare("StudioApplication", wm.Application, {
         var hasAlert = this.alertDialog;
         this.inherited(arguments);
         if (!hasAlert) {
+	    dojo.addClass(this.alertDialog.domNode, "studiodialog");
             this.alertDialog.setBorderColor("white");
             this.alertDialog.setBorder("2");        
             this.alertDialog.$.genericInfoPanel.setBorder("10");

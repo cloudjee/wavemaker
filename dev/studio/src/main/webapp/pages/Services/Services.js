@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ dojo.declare("Services", wm.Page, {
 		this.update();
 	    this._cachedData = this.getCachedData();
 
+/*
 	    if (dojo.isIE <= 8) {
 		wm.onidle(this, function() {
 		    this.webServiceSaveBtn.setBorder("1");
@@ -34,7 +35,7 @@ dojo.declare("Services", wm.Page, {
 		    this.delWebServiceBtn.setBorder("0");
 		});
 	    }
-
+	    */
 	},
 	update: function() {
 		studio.updateServices();

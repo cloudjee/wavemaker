@@ -51,6 +51,13 @@ public class Reveng {
 
     private static final String ESCAPE_CHAR = "\\";
 
+    private static final String ORACLE_DIALECT = "OracleDialect";
+
+    private static final String TYPE_MAPPING = "type-mapping";
+    private static final String SQL_TYPE = "sql-type";
+    private static final String JDBC_TYPE = "jdbc-type";
+    private static final String HIBERNATE_TYPE = "hibernate-type";
+
     private String packageName;
 
     private List<String> tableFilters = new ArrayList<String>();
@@ -132,6 +139,10 @@ public class Reveng {
     }
 
     public void write(PrintWriter writer) {
+        write(writer, null);
+    }
+
+    public void write(PrintWriter writer, String dialect) {
 
         XMLWriter xmlWriter = XMLUtils.newXMLWriter(writer);
         xmlWriter.addDoctype("hibernate-reverse-engineering", null, "http://hibernate.sourceforge.net/hibernate-reverse-engineering-3.0.dtd");
@@ -140,6 +151,8 @@ public class Reveng {
         for (String s : this.schemaFilters) {
             xmlWriter.addClosedElement(SCHEMA_SELECTION_ELEMENT, MATCH_SCHEMA_ATTR, XMLUtils.escape(s));
         }
+
+        addTypeMappingRule(xmlWriter, dialect);
 
         List<String> includeFilters = new ArrayList<String>();
         List<String> excludeFilters = new ArrayList<String>();
@@ -196,6 +209,15 @@ public class Reveng {
             }
         }
 
+    }
+
+    //Oracle jdbc driver maps timestamp colunbs to "Other" type.  Add the following mapping rule for correct type mapping.
+    private void addTypeMappingRule(XMLWriter xmlWriter, String dialect) {
+        if (dialect.contains(ORACLE_DIALECT)) {
+            xmlWriter.addElement(TYPE_MAPPING);
+            xmlWriter.addClosedElement(SQL_TYPE, JDBC_TYPE, XMLUtils.escape("OTHER"), HIBERNATE_TYPE, XMLUtils.escape("java.util.Date"));
+            xmlWriter.closeElement();
+        }
     }
 
 }

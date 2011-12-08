@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -51,6 +51,10 @@
 	"DateTime" : "DateTime",
 	"DateTimeGroup" : "Date and Time",
 	"RelatedEditorGroup" : "Relationship Editors",
+
+    "CheckboxSet": "CheckboxSet",
+    "RadioButtonSet": "RadioSet",
+    "ListSet": "ListSet",
 
 	"Number" : "Number",
 	"RadioButton" : "RadioButton",
@@ -132,6 +136,7 @@
          BasicWidgets: "Basic Widgets",
  
 	"Beta" : "Beta",
+        "betaGroup": "Beta Widgets",
 	"ColorPicker" : "ColorPicker",
 	"BusyButton" : "BusyButton",
 	"Ticker" : "Ticker",
@@ -152,6 +157,8 @@
 	"ServiceVariable" : "ServiceVariable",
 	"LiveVariable" : "LiveVariable",
 	"ImageList" : "ImageList",
+        "silkIconList": "Silk Icons ImageList",
+        "booleanIconList": "Boolean Icons ImageList",
 	"NavigationCall" : "NavigationCall",
 	"LogoutVariable" : "LogoutVariable",
 	"Timer" : "Timer",
@@ -212,7 +219,15 @@
     "descLoadingDialog": "Covers a widget/panel in your page with a loading icon",
 
     "descLiveForm": "A container for managing editors and writing changes to server",
+    "descFormPanel": "A container for managing the layout of its editors",
+    "descDataForm": "A container managing a set of editors, populating them through a dataSet and gathering their values in a dataOutput",
+    "descDBForm": "A container for managing editors and writing their values to a database",
+    "descServiceInputForm": "A container for creating editors and binding them to a service variable's inputs",
     "descCheckbox": "A checkbox editor",
+    "descCheckboxSet": "A set of checkbox editor, generated via options or dataSet",
+    "descRadioSet": "A set of radio buttons, generated via options or dataSet",
+    "descListSet": "A multi-select list, generated via options or dataSet",
+
     "descCurrency": "A text editor for entering currency",
     "descDate": "A text editor with popup calendar",
     "descTime": "A text editor with popup time picker",

@@ -14,10 +14,9 @@
 
 package com.wavemaker.studio;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -29,15 +28,19 @@ import java.util.Properties;
 
 import javax.xml.bind.JAXBException;
 
+import org.springframework.core.io.Resource;
+
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
+import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.ColumnInfo;
 import com.wavemaker.tools.data.DataModelConfiguration;
 import com.wavemaker.tools.data.DataModelManager;
 import com.wavemaker.tools.data.EntityInfo;
 import com.wavemaker.tools.data.PropertyInfo;
+import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.security.DatabaseOptions;
 import com.wavemaker.tools.security.DemoOptions;
@@ -158,7 +161,7 @@ public class SecurityConfigService {
         // value
         // meaning, if tenantIdField is null then the value for default tenant
         // id will not be stored.
-        if (tenantIdField != null && tenantIdField.length() != 0) {
+        if (tenantIdField != null && tenantIdField.length() != 0 && enforceSecurity) {
             String[] propertyNames = { DataServiceConstants.TENANT_FIELD_PROPERTY_NAME, DataServiceConstants.DEFAULT_TENANT_ID_PROPERTY_NAME,
                 DataServiceConstants.TENANT_COLUMN_PROPERTY_NAME };
 
@@ -177,36 +180,32 @@ public class SecurityConfigService {
         for (int i = 0; i < propNames.length; i++) {
             props.setProperty(propNames[i], propValues[i]);
         }
-
-        File appProperties = new File(this.projectMgr.getCurrentProject().getProjectRoot() + "/src", CommonConstants.APP_PROPERTY_FILE);
-        if (!appProperties.exists()) {
-            appProperties.createNewFile();
-        }
-        FileOutputStream os = new FileOutputStream(appProperties);
+        Project project = this.projectMgr.getCurrentProject();
+        Resource appProperties = project.getWebInf().createRelative(CommonConstants.APP_PROPERTY_FILE);
+        OutputStream os = this.projectMgr.getFileSystem().getOutputStream(appProperties);
         props.store(os, null);
         os.close();
     }
 
     private void deleteAppProperty() throws IOException {
-        File appProperties = new File(this.projectMgr.getCurrentProject().getProjectRoot() + "/src", CommonConstants.APP_PROPERTY_FILE);
+        Project project = this.projectMgr.getCurrentProject();
+        Resource appProperties = project.getWebInf().createRelative(CommonConstants.APP_PROPERTY_FILE);
         if (appProperties.exists()) {
-            appProperties.delete();
+            project.deleteFile(appProperties);
         }
     }
 
     private DatabaseOptions setMultiTenancyParms(DatabaseOptions options) throws IOException {
         Properties props = new Properties();
-        File appProperties = new File(this.projectMgr.getCurrentProject().getProjectRoot() + "/src", CommonConstants.APP_PROPERTY_FILE);
-        if (!appProperties.exists()) {
-            return options;
+        Project project = this.projectMgr.getCurrentProject();
+        Resource appProperties = project.getWebInf().createRelative(CommonConstants.APP_PROPERTY_FILE);
+        if (appProperties.exists()) {
+            InputStream is = appProperties.getInputStream();
+            props.load(is);
+            is.close();
+            options.setTenantIdField(props.getProperty(DataServiceConstants.TENANT_FIELD_PROPERTY_NAME));
+            options.setDefTenantId(Integer.parseInt(props.getProperty(DataServiceConstants.DEFAULT_TENANT_ID_PROPERTY_NAME)));
         }
-        FileInputStream is = new FileInputStream(appProperties);
-        props.load(is);
-
-        options.setTenantIdField(props.getProperty(DataServiceConstants.TENANT_FIELD_PROPERTY_NAME));
-        options.setDefTenantId(Integer.parseInt(props.getProperty(DataServiceConstants.DEFAULT_TENANT_ID_PROPERTY_NAME)));
-        is.close();
-
         return options;
     }
 
@@ -386,7 +385,7 @@ public class SecurityConfigService {
         return getSecToolsMgr().getJOSSORoles();
     }
 
-    public void setRoles(List<String> roles) throws IOException, JAXBException {
+    public void setRoles(List<String> roles) throws IOException, JAXBException, ConfigurationException {
         getSecToolsMgr().setRoles(roles);
     }
 
@@ -436,8 +435,7 @@ public class SecurityConfigService {
             attributes.add(thisEntry.getAttributes());
             urlMap.put(thisEntry.getURL().toLowerCase().trim(), attributes);
         }
-        // ensure '/*.json' is last if present, setup for login, unless preserve
-        // set
+        // ensure wildcards are last if present and setup for login, unless preserve set
         if (enforceSecurity && !preserveMap) {
             String indexHtmlAuthz = null;
             if (enforceIndexHtml) {
@@ -447,7 +445,18 @@ public class SecurityConfigService {
             }
             urlMap.put("/index.html", Arrays.asList(new String[] { indexHtmlAuthz }));
             urlMap.put("/", Arrays.asList(new String[] { indexHtmlAuthz }));
+            if (urlMap.get("/securityservice.json") != null) {
+                urlMap.remove("/securityservice.json");
+            }
             urlMap.put("/securityservice.json", Arrays.asList(new String[] { IS_AUTHENTICATED_ANONYMOUSLY }));
+            if (urlMap.get("/pages/login/**") != null) {
+                urlMap.remove("/pages/login/**");
+            }
+            urlMap.put("/pages/login/**", Arrays.asList(new String[] { IS_AUTHENTICATED_ANONYMOUSLY }));
+            if (urlMap.get("/pages/**") != null) {
+                urlMap.remove("/pages/**");
+            }
+            urlMap.put("/pages/**", Arrays.asList(new String[] { indexHtmlAuthz }));
             if (urlMap.get("/*.json") != null) {
                 List<String> jsonEntry = urlMap.remove("/*.json");
                 urlMap.put("/*.json", jsonEntry);

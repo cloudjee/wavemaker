@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -287,6 +287,7 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 				content: o,
 				image: "images/operation.png",
 				closed: true,
+			        component: this,
 				isOperation: true,
 				params: inList[o].parameters,
 				returnType: inList[o].returnType,
@@ -338,7 +339,86 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
 		} else if (inNode.isType) {
 			this.dumpTypeList(inNode, wm.typeManager.getTypeSchema(inNode.type));
 		}
+	},
+    hasServiceTreeDrop: function(inNode) {return true;},
+
+    /* TODO: 1. If isList: Grid + svar; 2. If isComplexType: Form + svar; 3. else just SVar; 4. move on to WebServices */
+/*
+    onServiceTreeDrop: function(inParent, inOwner, inNode) {
+	if  (!inNode.isOperation) {
+	    return new wm.ServiceVariable({owner: inOwner,
+					   name: inOwner.getUniqueName(this.name + "SVar"),
+					   service: this.name,
+					   startUpdate: false,
+					   autoUpdate: false});
 	}
+
+	var operation = inNode.content;
+	var service = this.name;
+	var serviceVariable = new wm.ServiceVariable({owner: inOwner,
+						      name: inOwner.getUniqueName(operation + wm.capitalize(service) + "SVar"),
+						      service: service,
+						      operation: operation,
+						      startUpdate: false,
+						      autoUpdate: false});
+	var schema = serviceVariable._dataSchema;
+
+	var i = 0;
+	for (var name in schema) {
+	    i++;
+	}
+	var isComplexType = i > 1;
+	var isList = serviceVariable.isList;
+
+	if (isComplexType || isList) {
+	    var panel = new wm.Panel({name:  inOwner.getUniqueName(operation + wm.capitalize(service) + "Panel"),
+				      width: "100%",
+				      owner: inOwner,
+				      parent: inParent,
+				      layoutKind: "top-to-bottom",
+				      horizontalAlign: "left",
+				      verticalAlign: "top"});
+	}
+
+	if (isComplexType && isList) {
+	    panel.setHeight("100%");
+	    var grid = new wm.DojoGrid({width: "100%",
+					height: "100%",
+					name: inOwner.getUniqueName(operation + wm.capitalize(service) + "Grid"),
+					owner: inOwner,
+					parent: panel});
+	    grid.$.binding.addWire(null, "dataSet", serviceVariable.name,"");
+
+	    var form = new wm.DataForm({width: "100%",
+					height: "100%",
+					name: inOwner.getUniqueName(operation + wm.capitalize(service) + "Form"),
+					owner: inOwner,
+					parent: panel});			
+	    form.$.binding.addWire(null, "dataSet", grid.name + ".selectedItem","");		
+	    serviceVariable.setStartUpdate(true);
+	} else if (isComplexType) {
+	    var form = new wm.DataForm({width: "100%",
+					height: "100%",
+					name: inOwner.getUniqueName(operation + wm.capitalize(service) + "Form"),
+					owner: inOwner,
+					parent: panel});			
+	    form.$.binding.addWire(null, "dataSet", serviceVariable.name,"");		
+	    panel.setHeight(form.height);
+	    serviceVariable.setStartUpdate(true);
+	} else if (isList) {
+	    var menu = new wm.SelectMenu({width: "100%",
+					  name: inOwner.getUniqueName(operation + wm.capitalize(service) + "Menu"),
+					owner: inOwner,
+					parent: panel});
+	    menu.$.binding.addWire(null, "dataSet", serviceVariable.name,"");
+	    panel.setHeight(menu.height);
+	    serviceVariable.setStartUpdate(true);
+	}
+
+	return panel || serviceVariable;
+
+    }
+	*/
 });
 
 dojo.declare("wm.JavaServiceLoader", null, {
@@ -353,6 +433,7 @@ dojo.declare("wm.JavaServiceLoader", null, {
 		return cs;
 	}
 });
+
 
 wm.registerComponentLoader("wm.JavaService", new wm.JavaServiceLoader());
 

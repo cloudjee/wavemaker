@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -28,6 +28,7 @@ dojo.declare("wm.AccordionDecorator", wm.LayersDecorator, {
 		var p = this.decoree.client;
 		var h = inLayer.header = new wm.Label({
 		    caption: inLayer.caption + "<span class='accordionArrowNode'></span>",
+		        width: "100%",
 		        margin: "0,0,2,0",
 		        height: captionHeight + "px",
                         padding: "4,4,0,4",

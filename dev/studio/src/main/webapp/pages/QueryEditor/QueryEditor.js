@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -42,6 +42,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		});
 	    });
 
+/*
 	    if (dojo.isIE <= 8) {
 		wm.onidle(this, function() {
 		    dojo.forEach(buttons, function(b) {
@@ -50,6 +51,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		    });
 		});
 	    }
+	    */
 	},
 	update: function() {
 		//this.selectedNode = null;
@@ -613,8 +615,8 @@ dojo.declare("QueryEditor", wm.Page, {
 			      list: false});
 	    }
 	}
-
-	this.queryInputsList._render();
+	this.queryInputsList.renderData(dojo.clone(oldData));
+	//this.queryInputsList._render();
     },
 	addBindParam: function(inSender) {
 		if (this.bindNameInput.getDataValue() == "") {

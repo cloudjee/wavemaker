@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -166,7 +166,7 @@ wm.loadLibs([
 	// Plugins
 	//"wm.modules.rbac.RbacPlugin"
        "wm.base.RbacPlugin",
-       "wm.base.I18nPlugin"
+	      "wm.base.I18nPlugin"
 ]);
 
 if (dojo.isIE)

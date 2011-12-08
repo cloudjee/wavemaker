@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -54,11 +54,14 @@ dojo.declare("wm.ObjectTree", wm.Tree, {
 							  object: inData});
 	this.root.setOpen(true);
     },
-    makePropEdit: function(inName, inValue, inDefault) {
+    makePropEdit: function(inName, inValue, inEditorProps) {
 	switch (inName) {
 	case "data":
-	    if (!dojo.isString(inValue)) inValue = dojo.toJson(inValue);
-	    return makeTextPropEdit(inName, inValue, inDefault)
+	    if (!inValue)
+		inValue = "";
+	    else if (!dojo.isString(inValue))
+		inValue = dojo.toJson(inValue);
+	    return new wm.LargeTextArea(dojo.mixin(inEditorProps, {height: "300px", dataValue: inValue}));
 	}
 	return this.inherited(arguments);
     },

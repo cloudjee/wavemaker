@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ dojo.declare("wm.IFrame", wm.Control, {
 	init: function() {
 		dojo.addClass(this.domNode, "wmiframe");
 		this.inherited(arguments);
-		this.setSource(this.source);
+	    this.setSource(this.getSource());
 	},
         buildCssSetterObj: function() {
 	    var obj = this.inherited(arguments);
@@ -38,6 +38,7 @@ dojo.declare("wm.IFrame", wm.Control, {
 	    obj.overflowY = "";
 	    return obj;
 	},
+    getSource: function() {return this.source;},
 	setSource: function(inSource) {
 		if (!dojo.isString(inSource) || inSource == "undefined")
 			inSource = "";
@@ -45,18 +46,8 @@ dojo.declare("wm.IFrame", wm.Control, {
 		var root = this.source.slice(0, 4) != "http" && this.source.slice(0, 1) != "/" ? this.getPath() : "";
 		this.frame.src = this.source ? root + this.source : this.source;
 	    this.valueChanged("source", this.source);
-	}
-});
-
-// design only...
-wm.Object.extendSchema(wm.IFrame, {
-	disabled: { ignore: 1 },
-    source: { type: "String", bindable: 1 },
-    setSource: {group: "method"}
-});
-
-wm.IFrame.description = "A frame.";
-
-dojo.extend(wm.IFrame, {
-        themeable: false
+	},
+    toHtml: function() {
+	return "<iframe src='" + this.source + "'></iframe>";
+    }
 });

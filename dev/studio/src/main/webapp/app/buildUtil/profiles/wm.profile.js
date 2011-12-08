@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2010-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -107,6 +107,7 @@ dependencies = {
 				//"wm.base.components.Publisher",
 				//"wm.base.components.ImageList",
 				"wm.base.components.Binding",
+				"wm.base.components.Property",
 				"wm.base.components.LiveView",
 				"wm.base.components.LiveVariable",
 				"wm.base.components.JsonRpcService",
@@ -127,7 +128,7 @@ dependencies = {
 				"wm.base.components.ImageList",
 				//"wm.base.components.DomMacro",
 				// widgets
-				//"wm.base.widget.Formatters",
+			        "wm.base.widget.Formatters",
 				//"wm.base.widget.Editors.dijit",
 				"wm.base.widget.Editors.AbstractEditor",
 				"wm.base.widget.Editors.Text",
@@ -141,6 +142,7 @@ dependencies = {
 				"wm.base.widget.layout.Layout",
 				"wm.base.widget.layout.Box",
 				//"wm.base.widget.layout.Abs",
+				"wm.base.widget.AppRoot",
 				"wm.base.widget.Container",
 				"wm.base.widget.Panel",
 				"wm.base.widget.Template",
@@ -278,10 +280,13 @@ dependencies = {
 			layerDependencies: ["lib_build.js"],
 			dependencies: [
 	   		"dojox.grid.DataGrid",
+			    "dijit.tree.ForestStoreModel",
+			    "dojox.grid.TreeGrid",
 				"dojox.grid.cells.dijit",
 				"dojo.data.ItemFileWriteStore",
 				"dojo.string",
-				"dijit.Dialog",
+			        "dojox.grid._CheckBoxSelector",
+			        "dojox.grid._RadioSelector",
 				"wm.base.lib.currencyMappings",
 				"wm.base.widget.DataGrid",
 				"wm.base.widget.DojoGrid"
@@ -304,7 +309,6 @@ dependencies = {
 			layerDependencies: ["lib_build.js"],
 			dependencies: [
         	   "wm.base.lib.text",
-        	   "wm.base.widget.Formatters",
         	   "wm.base.widget.Editors.dijit",
                "wm.base.widget.Editor",
                "wm.base.widget.Editors.Number",
@@ -312,6 +316,10 @@ dependencies = {
                "wm.base.widget.Editors.Checkbox",
                "wm.base.widget.Editors.Radiobutton",
                "wm.base.widget.Editors.Select",
+               "wm.base.widget.Editors.ColorPicker",
+			    "wm.base.widget.Dialogs.ColorPickerDialog",
+			    "dojox.widget.ColorPicker",
+               "wm.base.widget.Editors.DataSetEditor",
 			    "wm.base.widget.Editors.Slider",
 			    "wm.base.widget.Buttons.ToggleButton",
 			    "wm.base.widget.JsonStatus"
@@ -323,7 +331,6 @@ dependencies = {
 			layerDependencies: ["lib_build.js"],
 			dependencies: [
         	   "wm.base.lib.text",
-        	   "wm.base.widget.Formatters",
         	   "wm.base.widget.Editors.dijit",
 			    "wm.base.widget.Editors.Base",
                "wm.base.widget.Editor",
@@ -372,6 +379,7 @@ dependencies = {
 				"wm.base.widget.gadget.Weather",
 				"wm.base.widget.gadget.YouTube",
 			        "wm.base.widget.gadget.Facebook",
+			        "wm.base.widget.gadget.TwitterGadgets",
 			        "wm.base.widget.gadget.GoogleMap"
 			]		
 		},

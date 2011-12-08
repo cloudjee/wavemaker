@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -32,6 +32,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
         orderOffset: 0,
 	start: function() {
 		this.clearFieldForm();
+/*
 	    if (dojo.isIE <= 8) {
 		wm.onidle(this, function() {
 		    var btns = [this.saveLiveViewBtn, this.newLiveViewBtn, this.delLiveViewBtn];
@@ -41,11 +42,20 @@ dojo.declare("LiveViewEditor", wm.Page, {
 		    }
 		});
 	    }
+	    */
+
+	    if (this.owner.owner instanceof wm.Dialog) {
+		this.buttonBar.show();
+		this.managerToolbar.hide();
+		this.titleLabel1.hide();
+		this.namePanel.hide();
+	    }
 	},
 	setLiveView: function(inLiveView) {
 		this.clientLiveView = inLiveView;
 		this.liveVariable.setLiveView(this.clientLiveView);
 		this.update();
+	        reinspect();
 	},
 	update: function() {
 		// FIXME: grrr
@@ -409,9 +419,11 @@ dojo.declare("LiveViewEditor", wm.Page, {
 		    this.clientLiveView.name + " (" + studio.getDictionaryItem("wm.LiveView.TAB_CAPTION") + ")";
 		this.dirty = changed;
 
-		if (caption != this.owner.parent.caption) {
-		    this.owner.parent.setCaption(caption);
-		    studio.updateServicesDirtyTabIndicators();
+		if (this.owner.owner instanceof wm.Dialog == false) {
+		    if (caption != this.owner.parent.caption) {
+			this.owner.parent.setCaption(caption);
+			studio.updateServicesDirtyTabIndicators();
+		    }
 		}
 	    }));
 
@@ -454,9 +466,12 @@ dojo.declare("LiveViewEditor", wm.Page, {
 	},
 	nameEditChanged: function() {
 		this.accept();
+	    if (this.owner.owner instanceof wm.Dialog == false) {
 	        this.owner.parent.setName(this.clientLiveView.getLayerName());
 	        this.owner.parent.setCaption(this.clientLiveView.getLayerCaption());
+	    }
 	    this.setDirty();
+		    reinspect();
 	},
 	//
 	// Preview
@@ -498,6 +513,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
                                 dojo.hitch(this, function() {
 				    v.destroy();
 				    studio.refreshServiceTree("");
+				    reinspect();
 
 				    var pageContainer = this.owner;
 				    var subtablayer = pageContainer.parent;
@@ -527,5 +543,8 @@ dojo.declare("LiveViewEditor", wm.Page, {
 	    //dojo.publish("TypeChanged-" + this.type); // type reverts to old value; notify everyone that the type has changed
 	    this.clientLiveView.viewChanged(); // type reverts to old value; notify everyone that the type has changed
 	this.inherited(arguments);
+    },
+    okClick: function() {
+	this.owner.owner.hide();
     }
 });

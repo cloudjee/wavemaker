@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -336,7 +336,7 @@ dojo.declare("DBConnectionSettings", wm.Page, {
 		var l = parseConnectionUrl(inData.connectionUrl, inData);
 
 		if (l == null) {
-			this.conDBdropdown.setDisplayValue(" ");
+		    this.conDBdropdown.setDisplayValue(inData.connectionUrl.length > 5 ? "Other" : "");
 
 			this.conHostInput.setShowing(false);
 			this.conPortInput.setShowing(false);

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2010-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,16 +19,20 @@ dojo.declare("NewLivePanelDialog", wm.Page, {
     options: null,
     start: function() {
 
-	var options = this.options = [{name: this.getDictionaryItem("TRADITIONAL"),
+	var options = this.options = [{name: "wm.LiveVariable",
+				       img:""},
+				       {name: this.getDictionaryItem("TRADITIONAL"),
 				       img: "images/GridLiveForm.png"},
 				      {name: this.getDictionaryItem("DIALOG"),
+				       img: "images/GridLiveFormDialog.png"},
+				      {name: this.getDictionaryItem("GRID"),
 				       img: "images/GridLiveFormDialog.png"}];
 	
         var i = 0; 
 
 	for (var i = 0; i < options.length; i++) {
             var option = options[i];
-            if (i % 3 == 0) {
+            if (i % 4 == 0) {
                 var panel = new wm.Panel({width: "100%", height: "128px", layoutKind: "left-to-right", parent: this.templatesInsertPanel, owner: this, name: "templateRow" + i});
             }
             var imgpanel = new wm.Panel({_classes: {domNode: ["SelectableTemplate"]}, 

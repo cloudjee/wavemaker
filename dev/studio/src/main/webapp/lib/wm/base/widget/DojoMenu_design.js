@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,18 +20,21 @@ dojo.require("wm.base.widget.DojoMenu");
 wm.Object.extendSchema(wm.DojoMenu, {
     transparent: {group: "style", order: 150, type: "Boolean"},
 	caption:{ignore:1},
-        menu: {ignore: true},
+        menu: {ignore: true}, /* Originally contained string describing the menu */
         structure:{ignore: 1,  order:10},
-        fullStructureStr: {hidden: true},
+/*    fullStructureStr: {hidden: true},*/
+    fullStructureStr: {ignore: true},
+    fullStructure: {hidden: true, nonlocalizable: true},
+    localizationStructure: {hidden: true},
 	eventList:{hidden:true},
 	dataValue:{ignore:1},
 	dataSet: { ignore:1},
 	disabled:{ignore:1},
         menuItems:{ignore:1},
-    editMenuItems: {group: "operation"},
+    editMenuItems: {group: "operation", operation: 1},
     vertical: {group: "display"},
     openOnHover: {group: "display"},
-    setItemDisabled: {group: "method"}
+    setItemDisabled: {method:1}
 });
 
 wm.DojoMenu.description = "A dojo menu.";
@@ -45,7 +48,7 @@ wm.DojoMenu.extend({
 		      {name: "wm.DojoMenu-Right_Image", displayName: "Drop Icon (SubMenu)"}],
     afterPaletteDrop: function() {
 	this.inherited(arguments);
-	this.setFullStructureStr(studio.getDictionaryItem("wm.PopupMenu.DEFAULT_STRUCTURE"));
+	this.setFullStructure(studio.getDictionaryItem("wm.PopupMenu.DEFAULT_STRUCTURE"));
 	this.renderDojoObj();
     },
 	designCreate: function() {
@@ -54,24 +57,8 @@ wm.DojoMenu.extend({
 			this.studioCreate();
 		this.inherited(arguments);
 	},
-	makePropEdit: function(inName, inValue, inDefault) {
-	    var prop = this.schema ? this.schema[inName] : null;
-	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
-		switch (inName) {
-		case "editMenuItems":
-		    return makeReadonlyButtonEdit(name, inValue, inDefault);
-		case "menu":
-				return makeTextPropEdit(inName, inValue, inDefault);
-		case "transparent":
-		    return makeCheckPropEdit(inName, inValue, inDefault);
-		}
-		
-		return this.inherited(arguments);
-	},
 
-	editProp: function(inName, inValue, inInspector) {
-		switch (inName) {
-		case "editMenuItems":
+    editMenuItems: function() {
 		    if (!studio.menuDesignerDialog) {
 			studio.menuDesignerDialog = 
 			    new wm.PageDialog({pageName: "MenuDesigner", 
@@ -84,7 +71,6 @@ wm.DojoMenu.extend({
 		    }
 		    studio.menuDesignerDialog.page.setMenu(this);
 		    studio.menuDesignerDialog.show();
-		}
 	},
 
 	setOpenOnHover: function(inValue){
@@ -118,10 +104,12 @@ wm.DojoMenu.extend({
 	},
     addNodesToPropList: function(struct, props) {
 	for (var i = 0; i < struct.length; i++) {
-	    if (!struct[i].children || struct[i].children.length == 0)
-		props[this.getEventName(struct[i].defaultLabel || struct[i].label)] = {isEvent: true, isObject: false, noprop: false, type: "string", isMenuItem: true};
-	    if (struct[i].children)// test for children needed on upgraded projects
-		this.addNodesToPropList(struct[i].children,props);
+	    if (!struct[i].separator) {
+		if (!struct[i].children || struct[i].children.length == 0)
+		    props[this.getEventName(struct[i].defaultLabel || struct[i].label)] = {isEvent: true, isObject: false, noprop: false, type: "string", isMenuItem: true};
+		if (struct[i].children)// test for children; needed on upgraded projects
+		    this.addNodesToPropList(struct[i].children,props);
+	    }
 	}
 
     },
@@ -135,8 +123,13 @@ wm.DojoMenu.extend({
 	},
 	updatingEvent: function (prop, inValue){
 	    var evtObj = this.fullStructure ? this.getEventObjFull(this.fullStructure,prop) : this.getEventObj(prop);
+	    if (evtObj != null)
+		evtObj.onClick = inValue;
+	    if (studio.languageSelect.getDisplayValue() != "default" && this._original_i18n_fullStructure) {
+		evtObj = this.getEventObjFull(this._original_i18n_fullStructure, prop);
 		if (evtObj != null)
-			evtObj.onClick = inValue;
+		    evtObj.onClick = inValue;
+	    }
 	},
         getEventObjFull: function (struct,prop){
 	    for (var i = 0; i < struct.length; i++) {
@@ -203,7 +196,7 @@ wm.DojoMenu.extend({
 	},
     renameComponentEvents: function(originalId, newId) {
 	this.inherited(arguments); // handles non-menu-item events
-	this.renameComponentEventsMenu(this.fullStructure,originalId, newId);
+	this.renameComponentEventsMenu(this.getFullStructure(),originalId, newId);
     },
     renameComponentEventsMenu: function(children,originalId, newId) {
 	    for (var i = 0; i < children.length; i++)
@@ -215,18 +208,55 @@ wm.DojoMenu.extend({
 		    this.renameComponentEventsMenu(item.children,originalId,newId);
 	    }
     },
+    getFullStructure: function() {
+	if (!this.fullStructure && this.fullStructureStr) {
+	    this.setFullStructureStr(this.fullStructureStr);
+	}
+	return this.fullStructure;
+    },
+    setLocalizationStructure: function(inStruct) {
+	this.localizationStructure = inStruct;
+	/* To insure it gets written correctly, update the structure itself */
+	this.forEachMenuItem(this.fullStructure, function(menuItem) {
+	    if (inStruct[menuItem.defaultLabel])
+		menuItem.label = inStruct[menuItem.defaultLabel];
+	});
+
+
+	this.renderDojoObj();
+    },
+    getLocalizationStructure: function(optionalInStruct) {
+	    var l = this.localizationStructure = {};
+	if (studio.languageSelect.getDisplayValue() == "default") {
+	    return l;
+	} else {
+	    this.forEachMenuItem(optionalInStruct && typeof optionalInStruct == "object" ? optionalInStruct : this.fullStructure, function(menuItem) {
+		l[menuItem.defaultLabel || menuItem.label] = menuItem.label;
+	    });
+	    return l;
+	}
+    },
+/*
     write: function() {
-	if (this.fullStructure)
-	    this.fullStructureStr = dojo.toJson(this.fullStructure);
 	return this.inherited(arguments);
     },
+
     set_fullStructureStr: function(inStruct) {
 	if (studio.languageSelect.getDisplayValue() != "default") {
-	    var struct = dojo.fromJson(inStructStr);
-	    this.copyLocalizedEvents(struct, this.fullStructure);
+	    var struct = dojo.fromJson(inStruct);
+	    this.copyLocalizedEvents(struct, {children:this.fullStructure});
 	    inStruct = dojo.toJson(struct);
 	}
-	this.setFullStructureStr(inStruct);
+	this.setFullStructureStr(inStruct,true);
+    },
+    */
+    set_fullStructure: function(inStruct) {
+	if (studio.languageSelect.getDisplayValue() != "default") {
+	    this.getLocalizationStructure(inStruct);
+	}
+
+	this.setFullStructure(inStruct);
+	this.renderDojoObj();
     },
     findItemInFullStructure: function(inStruct, inDefaultLabel) {
 	for (var i = 0; i < inStruct.children.length; i++) {
@@ -240,7 +270,8 @@ wm.DojoMenu.extend({
 	    }
 	}
 	return null;
-    },
+    }
+/*
     copyLocalizedEvents: function(inStruct, inCurrentStruct) {
 	for (var i = 0; i < inCurrentStruct.children.length; i++) {
 	    var item = inCurrentStruct.children[i];
@@ -250,11 +281,12 @@ wm.DojoMenu.extend({
 		    itemToCopyTo.onClick = item.onClick;
 		}
 	    }
-	    if (item.children.length) {
+	    if (item.children && item.children.length) {
 		this.copyLocalizedEvents(inStruct, inCurrentStruct.children[i]);
 	    }
 	}
     }
+    */
 });
 
 
@@ -285,5 +317,8 @@ wm.Object.extendSchema(wm.PopupMenu, {
     onclick: {ignore: true},
     onRightClick: {ignore: true},
     onMouseOver: {ignore: true},
-    onMouseOut: {ignore: true}
+    onMouseOut: {ignore: true},
+    minWidth: {ignore: true},
+    minHeight: {ignore: true},
+    hint: {ignore: true}
 });

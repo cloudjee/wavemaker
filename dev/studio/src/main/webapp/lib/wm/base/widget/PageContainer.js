@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,12 +19,13 @@ dojo.require("wm.base.widget.Panel");
 wm.pagesFolder = "pages/";
 
 dojo.declare("wm.PageContainer", wm.Box, {
+    subpageProplist: null,
+    subpageEventlist: null,
 	width: "100%", 
 	height: "100%",
 	pageName: "",
 	deferLoad: false,
 	loadParentFirst: true,
-	pageProperties: null,
 	classNames: "wmpagecontainer",
 	init: function() {
 		this.pageLoadedList = [];
@@ -35,6 +36,14 @@ dojo.declare("wm.PageContainer", wm.Box, {
 		  this.loadPage(this.pageName);
 		//this._connections.push(dojo.connect(window, "onbeforeunload", this, "destroy"));
 		dojo.addOnWindowUnload(this, 'destroy');
+
+	    if (this.subpageEventlist) {
+		for (var propName in this.subpageEventlist) {
+		    if (this[propName] === undefined) {
+			this[propName] = function(){};
+		    }
+		}
+	    }
 	},
         postInit: function() {
 	    this.inherited(arguments);
@@ -51,6 +60,27 @@ dojo.declare("wm.PageContainer", wm.Box, {
 		    }));
 		}
 	},
+    setProp: function(inName, inValue) {
+	if (this.subpageProplist !== null && this.page) {
+	    var prop = this.subpageProplist[inName];
+	    if (prop) {
+		if (inValue instanceof wm.Component === false)
+		    this[inName] = inValue;
+		return this.page.setValue(prop, inValue);
+	    }
+	}
+	return this.inherited(arguments);
+    },
+    getProp: function(inName) {
+	if (this.subpageProplist !== null && this.page) {
+	    var prop = this.subpageProplist[inName];
+	    if (prop) {
+		return this.page.getValue(prop);
+	    }
+	}
+	return this.inherited(arguments);
+    },
+	    
         onError: function(inErrorOrMessage) {},
 	createPageLoader: function() {
 		this._pageLoader = new wm.PageLoader({owner: this, domNode: this.domNode, isRelativePositioned: this.isRelativePositioned});
@@ -171,7 +201,26 @@ dojo.declare("wm.PageContainer", wm.Box, {
     },
 	onStart: function() {
 	    if (this.parent && this.page && !dojo.coords(this.page.root.domNode).w) 
-			this.parent.reflow();
+		this.parent.reflow();
+
+	    if (this.subpageEventlist && this.page) {
+		for (var propName in this.subpageEventlist) {
+		    var propComponent = this.page[propName];
+		    if (propComponent && propComponent.isEvent) {
+			var componentName = propComponent.property.replace(/\..*?$/,"");
+			var eventName =  propComponent.property.replace(/^.*\./,"");
+			var component = this.page.getValue(componentName);
+			this.connect(component, eventName, this, propName);
+		    }
+		}
+	    }
+
+
+	    if (this.subpageProplist) {
+		for (var propName in this.subpageProplist) {
+			this.setProp(propName, this[propName]);
+		}
+	    }
 	},
 	forEachWidget: function(inFunc) {
 		if (this.page)
@@ -231,6 +280,12 @@ dojo.declare("wm.PageContainer", wm.Box, {
 	hasPageLoaded: function(optionalPageName) {
 	  if (!optionalPageName) return Boolean(this.page);
 	  return Boolean(this.page && this.page.name == optionalPageName);
-	}
+	},
+    toHtml: function() {
+	if (this.page && this.page.root)
+	    return this.page.root.toHtml();
+	else
+	    return "";
+    }
 });
 

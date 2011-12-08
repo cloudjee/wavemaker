@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,28 +19,35 @@ dojo.provide("wm.studio.pages.AddPatch.AddPatch");
 
 dojo.declare("AddPatch", wm.Page, {
     i18n: true,
+    fileName: "",
     start: function() {
-	var text = loadDataSync(dojo.moduleUrl("wm.common.packages").path + "lib.js");
+	this.fileName = wm.version.replace(/[^a-zA-Z0-9]/g,"") + "_patches.js";
+	var text = String(loadDataSync(dojo.moduleUrl("wm.common").path + this.fileName));
 	this.fullText = text;
 
+/*
 	var matches = text.match(/\/\* START WAVEMAKER PATCH \*\/([\s\S]*)\/\* END WAVEMAKER PATCH \*\//);
 	if (matches) {
 	    this.patchText = matches[1];
 	} else {
 	    this.patchText = "";
 	}
-
-	this.editor.setDataValue(this.patchText);
+	*/
+	this.editor.setDataValue(this.fullText);
     },
-    patchUrl: studio.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}) + "patches",
+    patchUrl: studio.getDictionaryItem("URL_PATCHES", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+)\..*/,"$1"),
+						       studioSubVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+)\.(\d+)\.(\d+).*/,"$1"+"_" + "$2" + "_" + "$3")}),
     loadPatchesClick: function() {
 	studio.studioService.requestAsync("getLatestPatches", [this.patchUrl], 
 					  dojo.hitch(this,function(inData) {
 					      studio.endWait();
 					      if (inData == "Could not find patches")
 						  app.alert(this.getDictionaryItem("ALERT_LOAD_PATCH_FAILED"));
-					      else
+					      else {
+						  inData = inData.replace(/\&\#91;/g,"[").replace(/\&\#36;/g,"$");
+						  inData = inData.replace(/\<p\/\>/g,"");
 						  this.editor.setDataValue(inData);
+					      }
 					  }),
 					  dojo.hitch(this, function() {
 					      studio.endWait();
@@ -59,15 +66,20 @@ dojo.declare("AddPatch", wm.Page, {
 	    alert(e);
 	    return;
 	}
-	var patch = "/* START WAVEMAKER PATCH */\n" + this.editor.getDataValue() + "\n/* END WAVEMAKER PATCH */\n";
+	//var patch = "/* START WAVEMAKER PATCH */\n" + this.editor.getDataValue() + "\n/* END WAVEMAKER PATCH */\n";
+	var patch = this.editor.getDataValue();
+/*
 	var text = this.fullText;
 	if (text.match(/\/\* START WAVEMAKER PATCH[\s\S]*END WAVEMAKER PATCH \*\//)) {
 	    text = text.replace(/\/\* START WAVEMAKER PATCH[\s\S]*END WAVEMAKER PATCH \*\//, patch);
 	} else {
 	    text += patch;
-	}
+	}	
 	this.fullText = text;
-	studio.studioService.requestSync("writeCommonFile", ["packages/lib.js", text]);
+	*/
+	this.fullText = patch;
+
+	studio.studioService.requestSync("writeCommonFile", [this.fileName, this.fullText]);
 	app.toastSuccess(this.getDictionaryItem("SAVED"));
 	this.owner.owner.hide();
     },

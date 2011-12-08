@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2010-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -52,9 +52,6 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
     // for design time use in getting list of operations and services
     // for runtime use in defining types for the input variable
     _serviceVariable: "", 
-
-    // input variable to provide additional parameters to go with files at runtime
-    input: "", 
 
     // Standard control/container properties 
     verticalAlign: "top",
@@ -735,6 +732,9 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
 	}
 	return this.inherited(arguments);
     },
+    getOrderedWidgets: function() {
+	return [];
+    },
         setButtonWidth: function(inWidth) {
             this.buttonWidth = parseInt(inWidth);
             this.buttonPanel.setWidth(inWidth + "px");
@@ -792,6 +792,8 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
 });
 
 wm.Object.extendSchema(wm.DojoFileUpload, {
+    _variable: {ignore:1},
+    _uploadedVariable: {ignore:1},
     useList: {group: "display", order: 1, type: "boolean"},
     buttonCaption: {group: "display", order: 2, type: "string"},
     service: {group: "Services", order: 38},

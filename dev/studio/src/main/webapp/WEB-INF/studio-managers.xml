@@ -2,568 +2,581 @@
 
 <!-- Server-side manager bean definitions. These are only to be used at runtime. -->
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	xmlns:aop="http://www.springframework.org/schema/aop"
-	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
-	xmlns:cloud="http://schema.cloudfoundry.org/spring"
-	
-	xsi:schemaLocation="http://www.springframework.org/schema/beans
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+    xmlns:cloud="http://schema.cloudfoundry.org/spring"
+    
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
                 http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
                 http://www.springframework.org/schema/aop
                 http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
                 http://www.springframework.org/schema/data/mongo
-          		http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd
-          		http://schema.cloudfoundry.org/spring
-          		http://schema.cloudfoundry.org/spring/cloudfoundry-spring-0.8.xsd">
+                http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd
+                http://schema.cloudfoundry.org/spring
+                http://schema.cloudfoundry.org/spring/cloudfoundry-spring-0.8.xsd">
 
-	<bean id="dataModelManager" class="com.wavemaker.tools.data.DataModelManager"
-		scope="singleton" lazy-init="true">
-		<property name="projectManager">
-			<ref bean="projectManager" />
-		</property>
-		<property name="projectCompiler">
-			<ref bean="projectCompiler" />
-		</property>
-		<property name="designServiceManager">
-			<ref bean="designServiceManager" />
-		</property>
-	</bean>
+    <bean id="dataModelManager" class="com.wavemaker.tools.data.DataModelManager"
+        scope="singleton" lazy-init="true">
+        <property name="projectManager">
+            <ref bean="projectManager" />
+        </property>
+        <property name="projectCompiler">
+            <ref bean="projectCompiler" />
+        </property>
+        <property name="designServiceManager">
+            <ref bean="designServiceManager" />
+        </property>
+    </bean>
 
-	<bean name="studio-typeManager" id="typeManager"
-		class="com.wavemaker.runtime.service.TypeManager" scope="singleton"
-		parent="typeManagerBase">
-		<property name="types">
-			<map merge="true">
-			</map>
-		</property>
-		<property name="serviceManager">
-			<ref bean="serviceManager" />
-		</property>
-	</bean>
+    <bean name="studio-typeManager" id="typeManager"
+        class="com.wavemaker.runtime.service.TypeManager" scope="singleton"
+        parent="typeManagerBase">
+        <property name="types">
+            <map merge="true">
+            </map>
+        </property>
+        <property name="serviceManager">
+            <ref bean="serviceManager" />
+        </property>
+    </bean>
 
-	<bean id="projectManager" class="com.wavemaker.tools.project.ProjectManager"
-		scope="session" lazy-init="true">
-		<property name="fileSystem">
-			<ref bean="fileSystem" />
-		</property>
-		<property name="projectEventNotifier">
-			<ref bean="projectEventNotifier" />
-		</property>
-		<property name="upgradeManager">
-			<ref bean="upgradeManager" />
-		</property>
+    <bean id="projectManager" class="com.wavemaker.tools.project.ProjectManager"
+        scope="session" lazy-init="true">
+        <property name="fileSystem">
+            <ref bean="fileSystem" />
+        </property>
+        <property name="projectEventNotifier">
+            <ref bean="projectEventNotifier" />
+        </property>
+        <property name="upgradeManager">
+            <ref bean="upgradeManager" />
+        </property>
 
-		<aop:scoped-proxy />
-	</bean>
+        <aop:scoped-proxy />
+    </bean>
 
-	<bean id="serviceDeploymentManager" class="com.wavemaker.tools.deployment.ServiceDeploymentManager"
-		scope="singleton" lazy-init="true">
-		<property name="projectManager">
-			<ref bean="projectManager" />
-		</property>
-		<property name="fileSystem">
-			<ref bean="fileSystem" />
-		</property>
-	</bean>
+    <bean id="serviceDeploymentManager" class="com.wavemaker.tools.deployment.ServiceDeploymentManager"
+        scope="singleton" lazy-init="true">
+        <property name="projectManager">
+            <ref bean="projectManager" />
+        </property>
+        <property name="fileSystem">
+            <ref bean="fileSystem" />
+        </property>
+    </bean>
 
-	<bean id="tomcatDeploymentTarget"
-		class="com.wavemaker.tools.deployment.tomcat.TomcatDeploymentTarget"
-		scope="singleton" lazy-init="true" />
+    <bean id="tomcatDeploymentTarget"
+        class="com.wavemaker.tools.deployment.tomcat.TomcatDeploymentTarget"
+        scope="singleton" lazy-init="true" />
 
-	<bean id="cloudFoundryDeploymentTarget"
-		class="com.wavemaker.tools.deployment.cloudfoundry.VmcDeploymentTarget"
-		scope="singleton" lazy-init="true">
-		<property name="dataModelManager" ref="dataModelManager" />
-		<property name="webAppAssembler" ref="webAppAssembler"/>
-	</bean>
-	
-	<bean id="webAppAssembler" class="com.wavemaker.tools.deployment.cloudfoundry.WebAppAssembler">
-		<property name="fileSystem" ref="fileSystem"/>
-	</bean>
+    <bean id="cloudFoundryDeploymentTarget"
+        class="com.wavemaker.tools.deployment.cloudfoundry.VmcDeploymentTarget"
+        scope="singleton" lazy-init="true">
+        <property name="dataModelManager" ref="dataModelManager" />
+        <property name="webAppAssembler" ref="webAppAssembler"/>
+    </bean>
+    
+    <bean id="webAppAssembler" class="com.wavemaker.tools.deployment.cloudfoundry.WebAppAssembler">
+        <property name="fileSystem" ref="fileSystem"/>
+    </bean>
 
-	<bean id="deploymentTargetManager" class="com.wavemaker.tools.deployment.DeploymentTargetManager"
-		scope="singleton" lazy-init="true">
-		<property name="deploymentTargets">
-			<map>
-				<entry key="TOMCAT" value-ref="tomcatDeploymentTarget" />
-				<entry key="CLOUD_FOUNDRY" value-ref="cloudFoundryDeploymentTarget" />
-			</map>
-		</property>
-	</bean>
+    <bean id="deploymentTargetManager" class="com.wavemaker.tools.deployment.DeploymentTargetManager"
+        scope="singleton" lazy-init="true">
+        <property name="deploymentTargets">
+            <map>
+                <entry key="TOMCAT" value-ref="tomcatDeploymentTarget" />
+                <entry key="CLOUD_FOUNDRY" value-ref="cloudFoundryDeploymentTarget" />
+            </map>
+        </property>
+    </bean>
 
-	<bean id="designServiceManager" class="com.wavemaker.tools.service.DesignServiceManager"
-		scope="session" autowire="byType" lazy-init="true">
+    <bean id="designServiceManager" class="com.wavemaker.tools.service.DesignServiceManager"
+        scope="session" autowire="byType" lazy-init="true">
 
-		<aop:scoped-proxy />
-	</bean>
+        <aop:scoped-proxy />
+    </bean>
 
-	<!-- java compiler -->
-	<bean id="projectCompiler" class="com.wavemaker.tools.compiler.ProjectCompiler"
-		scope="singleton" lazy-init="true">
-		<property name="projectManager">
-			<ref bean="projectManager" />
-		</property>
-		<property name="fileSystem">
-			<ref bean="fileSystem" />
-		</property>
-		<property name="designServiceManager">
-			<ref bean="designServiceManager" />
-		</property>
-	</bean>
+    <!-- java compiler -->
+    <bean id="projectCompiler" class="com.wavemaker.tools.compiler.ProjectCompiler"
+        scope="singleton" lazy-init="true">
+        <property name="projectManager">
+            <ref bean="projectManager" />
+        </property>
+        <property name="fileSystem">
+            <ref bean="fileSystem" />
+        </property>
+        <property name="designServiceManager">
+            <ref bean="designServiceManager" />
+        </property>
+    </bean>
 
-	<!-- see comments in the file -->
-	<import resource="classpath:designservicetypes.xml" />
+    <!-- see comments in the file -->
+    <import resource="classpath:designservicetypes.xml" />
 
-	<bean id="pagesManager" class="com.wavemaker.tools.project.PagesManager"
-		scope="singleton" lazy-init="true">
-		<property name="projectManager">
-			<ref bean="projectManager" />
-		</property>
-		<property name="fileSystem">
-			<ref bean="fileSystem" />
-		</property>
-	</bean>
+    <bean id="pagesManager" class="com.wavemaker.tools.project.PagesManager"
+        scope="singleton" lazy-init="true">
+        <property name="projectManager">
+            <ref bean="projectManager" />
+        </property>
+        <property name="fileSystem">
+            <ref bean="fileSystem" />
+        </property>
+    </bean>
 
-	<!-- Beans needed for Salesforce interface. These beans will later need 
-		to be moved to -->
-	<!-- the module container after the module design is enhanced. -->
+    <!-- Beans needed for Salesforce interface. These beans will later need 
+        to be moved to -->
+    <!-- the module container after the module design is enhanced. -->
 
-	<bean id="sfLoginObject" class="com.wavemaker.runtime.ws.salesforce.LoginObject"
-		scope="session" lazy-init="true">
-	</bean>
+    <bean id="sfLoginObject" class="com.wavemaker.runtime.ws.salesforce.LoginObject"
+        scope="session" lazy-init="true">
+    </bean>
 
-	<bean id="sfLoginService" class="com.wavemaker.runtime.ws.salesforce.LoginService"
-		scope="singleton" lazy-init="true">
-	</bean>
+    <bean id="sfLoginService" class="com.wavemaker.runtime.ws.salesforce.LoginService"
+        scope="singleton" lazy-init="true">
+    </bean>
 
-	<bean id="sfServiceBean" class="com.wavemaker.runtime.ws.salesforce.gen.SforceService"
-		scope="singleton" lazy-init="true">
-	</bean>
+    <bean id="sfServiceBean" class="com.wavemaker.runtime.ws.salesforce.gen.SforceService"
+        scope="singleton" lazy-init="true">
+    </bean>
 
-	<!-- we don't lazy-init this; upgradeManager has some afterPropertiesSet() 
-		to perform some studio upgrade tasks -->
-	<bean id="upgradeManager" class="com.wavemaker.tools.project.upgrade.UpgradeManager"
-		scope="singleton" lazy-init="false">
+    <!-- we don't lazy-init this; upgradeManager has some afterPropertiesSet() 
+        to perform some studio upgrade tasks -->
+    <bean id="upgradeManager" class="com.wavemaker.tools.project.upgrade.UpgradeManager"
+        scope="singleton" lazy-init="false">
 
-		<!-- the upgrades property contains a Map<Double,List<UpgradeTask>>. The 
-			UpgradeManager, when doing an upgrade, will iterate through the keys of list 
-			(in order) going from the project's current version to the current system 
-			version (which is the largest key in this map). Since these will be performed 
-			in-order, once a version upgrade has been released, it MUST NEVER be removed 
-			from this map. Or we'll get into an awful state that we'll never be able 
-			to support. -->
-		<property name="studioUpgrades">
-			<map merge="true">
-				<!-- 0.0 is the starting version; no upgrades should be present here. -->
-				<entry key="0.0">
-					<list />
-				</entry>
-				<entry key="0.1">
-					<list />
-				</entry>
-				<entry key="0.2">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.five_dot_zero.AddManifestToCommonStudioUpgradeTask">
-							<property name="fileSystem">
-								<ref bean="fileSystem" />
-							</property>
-						</bean>
-					</list>
-				</entry>
-			</map>
-		</property>
-		<property name="upgrades">
-			<map merge="true">
-				<!-- 0.0 is the starting version; no upgrades should be present here. -->
-				<entry key="0.0">
-					<list />
-				</entry>
-				<entry key="0.1">
-					<list>
-						<bean
-							class="com.wavemaker.tools.data.upgrade.SpringConfigurationUpgrade"
-							scope="singleton" />
+        <!-- the upgrades property contains a Map<Double,List<UpgradeTask>>. The 
+            UpgradeManager, when doing an upgrade, will iterate through the keys of list 
+            (in order) going from the project's current version to the current system 
+            version (which is the largest key in this map). Since these will be performed 
+            in-order, once a version upgrade has been released, it MUST NEVER be removed 
+            from this map. Or we'll get into an awful state that we'll never be able 
+            to support. -->
+        <property name="studioUpgrades">
+            <map merge="true">
+                <!-- 0.0 is the starting version; no upgrades should be present here. -->
+                <entry key="0.0">
+                    <list />
+                </entry>
+                <entry key="0.1">
+                    <list />
+                </entry>
+                <entry key="0.2">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.five_dot_zero.AddManifestToCommonStudioUpgradeTask">
+                            <property name="fileSystem">
+                                <ref bean="fileSystem" />
+                            </property>
+                        </bean>
+                    </list>
+                </entry>
+            </map>
+        </property>
+        <property name="upgrades">
+            <map merge="true">
+                <!-- 0.0 is the starting version; no upgrades should be present here. -->
+                <entry key="0.0">
+                    <list />
+                </entry>
+                <entry key="0.1">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.data.upgrade.SpringConfigurationUpgrade"
+                            scope="singleton" />
 
-					</list>
-				</entry>
-				<entry key="0.11">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.swamis.PanesRenameUpgrade"
-							scope="singleton" />
-					</list>
-				</entry>
-				<entry key="0.12">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.swamis.ServiceBeanFileUpgrade"
-							scope="singleton" />
-					</list>
-				</entry>
-				<entry key="0.13">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.swamis.WebInfActiveGridUpgrade"
-							scope="singleton" />
-					</list>
-				</entry>
-				<entry key="0.14">
-					<list>
-						<bean class="com.wavemaker.tools.project.upgrade.swamis.SecurityUpgrade"
-							scope="singleton">
-							<property name="designServiceManager">
-								<ref bean="designServiceManager" />
-							</property>
-						</bean>
-					</list>
-				</entry>
-				<entry key="0.15">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.swamis.ClientSideRefactorUpgrade"
-							scope="singleton">
-							<property name="pagesManager">
-								<ref bean="pagesManager" />
-							</property>
-						</bean>
-					</list>
-				</entry>
-				<entry key="0.16">
-					<list>
-						<bean
-							class="com.wavemaker.tools.data.upgrade.DataServiceDefinitionUpgrade"
-							scope="singleton">
-						</bean>
-					</list>
-				</entry>
-				<entry key="0.17">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.swamis.WebServiceUpgrade"
-							scope="singleton">
-							<property name="designServiceManager">
-								<ref bean="designServiceManager" />
-							</property>
-						</bean>
-					</list>
-				</entry>
-				<entry key="0.19">
-					<list>
-						<bean class="com.wavemaker.tools.data.upgrade.HibernateMappingUpgrade"
-							scope="singleton" />
-					</list>
-				</entry>
-				<entry key="0.20">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.swamis.CopyAppCssUpgrade"
-							scope="singleton">
-							<property name="fileSystem">
-								<ref bean="fileSystem" />
-							</property>
-						</bean>
-					</list>
-				</entry>
-				<entry key="0.21">
-					<list>
-						<bean
-							class="com.wavemaker.tools.data.upgrade.SpringConfigurationUpgrade"
-							scope="singleton" />
+                    </list>
+                </entry>
+                <entry key="0.11">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.swamis.PanesRenameUpgrade"
+                            scope="singleton" />
+                    </list>
+                </entry>
+                <entry key="0.12">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.swamis.ServiceBeanFileUpgrade"
+                            scope="singleton" />
+                    </list>
+                </entry>
+                <entry key="0.13">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.swamis.WebInfActiveGridUpgrade"
+                            scope="singleton" />
+                    </list>
+                </entry>
+                <entry key="0.14">
+                    <list>
+                        <bean class="com.wavemaker.tools.project.upgrade.swamis.SecurityUpgrade"
+                            scope="singleton">
+                            <property name="designServiceManager">
+                                <ref bean="designServiceManager" />
+                            </property>
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="0.15">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.swamis.ClientSideRefactorUpgrade"
+                            scope="singleton">
+                            <property name="pagesManager">
+                                <ref bean="pagesManager" />
+                            </property>
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="0.16">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.data.upgrade.DataServiceDefinitionUpgrade"
+                            scope="singleton">
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="0.17">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.swamis.WebServiceUpgrade"
+                            scope="singleton">
+                            <property name="designServiceManager">
+                                <ref bean="designServiceManager" />
+                            </property>
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="0.19">
+                    <list>
+                        <bean class="com.wavemaker.tools.data.upgrade.HibernateMappingUpgrade"
+                            scope="singleton" />
+                    </list>
+                </entry>
+                <entry key="0.20">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.swamis.CopyAppCssUpgrade"
+                            scope="singleton">
+                            <property name="fileSystem">
+                                <ref bean="fileSystem" />
+                            </property>
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="0.21">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.data.upgrade.SpringConfigurationUpgrade"
+                            scope="singleton" />
 
-					</list>
-				</entry>
-				<!-- ignore 0.22; it was a bad upgrade -->
-				<entry key="0.23">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.swamis.EventRefactorUpgrade"
-							scope="singleton" />
-					</list>
-				</entry>
-				<entry key="0.24">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.swamis.AutoFormToLiveFormUpgrade"
-							scope="singleton">
-							<property name="pagesManager">
-								<ref bean="pagesManager" />
-							</property>
-						</bean>
-					</list>
-				</entry>
-				<entry key="0.25">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.swamis.CurrencyRenameUpgrade"
-							scope="singleton">
-							<property name="pagesManager">
-								<ref bean="pagesManager" />
-							</property>
-						</bean>
-					</list>
-				</entry>
+                    </list>
+                </entry>
+                <!-- ignore 0.22; it was a bad upgrade -->
+                <entry key="0.23">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.swamis.EventRefactorUpgrade"
+                            scope="singleton" />
+                    </list>
+                </entry>
+                <entry key="0.24">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.swamis.AutoFormToLiveFormUpgrade"
+                            scope="singleton">
+                            <property name="pagesManager">
+                                <ref bean="pagesManager" />
+                            </property>
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="0.25">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.swamis.CurrencyRenameUpgrade"
+                            scope="singleton">
+                            <property name="pagesManager">
+                                <ref bean="pagesManager" />
+                            </property>
+                        </bean>
+                    </list>
+                </entry>
 
-				<!-- 5.0.0 upgrade tasks: -->
-				<entry key="0.26">
-					<list>
-						<bean class="com.wavemaker.tools.data.upgrade.DataServiceJavaUpgrade" />
-						<bean
-							class="com.wavemaker.tools.project.upgrade.five_dot_zero.AddServiceWireUpgradeTask" />
-						<bean
-							class="com.wavemaker.tools.project.upgrade.five_dot_zero.RemoveServiceManagerUpgradeTask" />
-					</list>
-				</entry>
-				<entry key="0.27">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.five_dot_zero.EventWireUpgradeTask" />
-					</list>
-				</entry>
-				<entry key="0.28">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.five_dot_zero.WebXmlUpgradeTask" />
-					</list>
-				</entry>
-				<entry key="0.29">
-					<list>
-						<bean class="com.wavemaker.tools.project.upgrade.UpgradeTemplateFile">
-							<property name="file"
-								value="webapproot/WEB-INF/project-springapp.xml" />
-						</bean>
-					</list>
-				</entry>
-				<entry key="0.30">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.five_dot_zero.ConvertAutosizeUpgradeTask">
-							<property name="pagesManager">
-								<ref bean="pagesManager" />
-							</property>
-						</bean>
-					</list>
-				</entry>
-				<entry key="0.31">
-					<list>
-						<bean class="com.wavemaker.tools.data.upgrade.DataServiceJavaUpgrade">
-						</bean>
-					</list>
-				</entry>
-				<entry key="0.32">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.RemoveObsoleteFilesUpgradeTask">
-							<property name="files">
-								<list>
-									<value>webapproot/config.js</value>
-									<value>webapproot/index.html</value>
-								</list>
-							</property>
-						</bean>
-					</list>
-				</entry>
-				<entry key="0.33">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.five_dot_zero.LiveVariableMethodNameUpgradeTask">
-							<property name="pagesManager">
-								<ref bean="pagesManager" />
-							</property>
-						</bean>
-					</list>
-				</entry>
-				<entry key="0.34">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.five_dot_zero.ConvertVariableToServiceInputUpgradeTask">
-							<property name="pagesManager">
-								<ref bean="pagesManager" />
-							</property>
-						</bean>
-					</list>
-				</entry>
-				<entry key="0.35">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.six_dot_zero.SpringXmlUpgradeTask">
-						</bean>
-					</list>
-				</entry>
-				<entry key="0.36">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.six_dot_zero.WebXmlUpgradeTask">
-						</bean>
-					</list>
-				</entry>
-				<entry key="0.37">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.six_dot_one.ProjSpringAppXmlUpgradeTask">
-						</bean>
-					</list>
-				</entry>
-				<entry key="0.38">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.six_dot_one.WebXmlUpgradeTask">
-						</bean>
-					</list>
-				</entry>
-				<entry key="0.39">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.six_dot_one.ProjSpringAppXmlUpgradeTask1">
-						</bean>
-					</list>
-				</entry>
-				<entry key="0.40">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.six_dot_one.WebXmlUpgradeTask1">
-						</bean>
-					</list>
-				</entry>
-				<entry key="0.41">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.six_dot_two.ProjSecurityXmlUpgradeTask">
-						</bean>
-					</list>
-				</entry>
-				<entry key="0.42">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.six_dot_two.RuntimeServiceSmdTask">
-						</bean>
-					</list>
-				</entry>
-				<entry key="0.43">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.six_dot_two.ProjSecurityXmlUpgradeTask1">
-						</bean>
-					</list>
-				</entry>
-				<entry key="0.44">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.six_dot_three.WebXmlUpgradeTask">
-						</bean>
-					</list>
-				</entry>
-				<entry key="0.45">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.six_dot_three.ProjSpringAppXmlUpgradeTask">
-						</bean>
-					</list>
-				</entry>
-				<entry key="0.46">
-					<list>
-						<bean
-							class="com.wavemaker.tools.project.upgrade.six_dot_four.IE_XUATagUpgradeTask" />
-						<bean
-							class="com.wavemaker.tools.project.upgrade.six_dot_four.ProjSpringServicesXmlUpgradeTask" />
-					</list>
-				</entry>
-			</map>
-		</property>
-		<property name="deploymentManager">
-			<ref bean="deploymentManager" />
-		</property>
-		
-		<property name="studioConfiguration" ref="studioConfiguration"/>
-	</bean>
+                <!-- 5.0.0 upgrade tasks: -->
+                <entry key="0.26">
+                    <list>
+                        <bean class="com.wavemaker.tools.data.upgrade.DataServiceJavaUpgrade" />
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.five_dot_zero.AddServiceWireUpgradeTask" />
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.five_dot_zero.RemoveServiceManagerUpgradeTask" />
+                    </list>
+                </entry>
+                <entry key="0.27">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.five_dot_zero.EventWireUpgradeTask" />
+                    </list>
+                </entry>
+                <entry key="0.28">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.five_dot_zero.WebXmlUpgradeTask" />
+                    </list>
+                </entry>
+                <entry key="0.29">
+                    <list>
+                        <bean class="com.wavemaker.tools.project.upgrade.UpgradeTemplateFile">
+                            <property name="file"
+                                value="webapproot/WEB-INF/project-springapp.xml" />
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="0.30">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.five_dot_zero.ConvertAutosizeUpgradeTask">
+                            <property name="pagesManager">
+                                <ref bean="pagesManager" />
+                            </property>
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="0.31">
+                    <list>
+                        <bean class="com.wavemaker.tools.data.upgrade.DataServiceJavaUpgrade">
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="0.32">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.RemoveObsoleteFilesUpgradeTask">
+                            <property name="files">
+                                <list>
+                                    <value>webapproot/config.js</value>
+                                    <value>webapproot/index.html</value>
+                                </list>
+                            </property>
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="0.33">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.five_dot_zero.LiveVariableMethodNameUpgradeTask">
+                            <property name="pagesManager">
+                                <ref bean="pagesManager" />
+                            </property>
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="0.34">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.five_dot_zero.ConvertVariableToServiceInputUpgradeTask">
+                            <property name="pagesManager">
+                                <ref bean="pagesManager" />
+                            </property>
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="0.35">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.six_dot_zero.SpringXmlUpgradeTask">
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="0.36">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.six_dot_zero.WebXmlUpgradeTask">
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="0.37">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.six_dot_one.ProjSpringAppXmlUpgradeTask">
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="0.38">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.six_dot_one.WebXmlUpgradeTask">
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="0.39">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.six_dot_one.ProjSpringAppXmlUpgradeTask1">
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="0.40">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.six_dot_one.WebXmlUpgradeTask1">
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="0.41">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.six_dot_two.ProjSecurityXmlUpgradeTask">
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="0.42">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.six_dot_two.RuntimeServiceSmdTask">
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="0.43">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.six_dot_two.ProjSecurityXmlUpgradeTask1">
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="0.44">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.six_dot_three.WebXmlUpgradeTask">
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="0.45">
+                    <list>
+                        <bean
+                            class="com.wavemaker.tools.project.upgrade.six_dot_three.ProjSpringAppXmlUpgradeTask">
+                        </bean>
+                    </list>
+                </entry>
+                <entry key="0.46">
+                    <list>
+                        <bean class="com.wavemaker.tools.project.upgrade.six_dot_four.IE_XUATagUpgradeTask"/>
+                        <bean class="com.wavemaker.tools.project.upgrade.six_dot_four.ProjSpringServicesXmlUpgradeTask"/>
+                        <bean class="com.wavemaker.tools.project.upgrade.six_dot_four.RemoveMySQLHBMCatalogUpgradeTask"/>
+                    </list>
+                </entry>
+                <entry key="0.47">
+                    <list>
+                        <bean class="com.wavemaker.tools.project.upgrade.six_dot_four_dot_two.OldMSIEUpgradeTask">
+                        	<constructor-arg ref="fileSystem"/>
+                        </bean>
+                    </list>
+                				</entry>	
+                <entry key="0.48">
+                    <list>
+                        <bean class="com.wavemaker.tools.project.upgrade.six_dot_four_dot_three.MergeIEXUATagUpgradeTask">
+                        </bean>
+                    </list>
+                </entry>
+            </map>
+        </property>
+        <property name="deploymentManager">
+            <ref bean="deploymentManager" />
+        </property>
+        
+        <property name="studioConfiguration" ref="studioConfiguration"/>
+    </bean>
 
-	<!-- event notifiers & listeners not associated with any service -->
-	<bean id="projectEventNotifier" class="com.wavemaker.tools.project.ProjectEventNotifier"
-		scope="singleton">
-		<property name="eventManager">
-			<ref bean="eventManager" />
-		</property>
-	</bean>
-	<bean class="com.wavemaker.runtime.service.events.EventWire">
-		<property name="eventListener">
-			<bean class="com.wavemaker.tools.service.DSMProjectEventListener">
-				<property name="designServiceManager">
-					<ref bean="designServiceManager" />
-				</property>
-			</bean>
-		</property>
-	</bean>
+    <!-- event notifiers & listeners not associated with any service -->
+    <bean id="projectEventNotifier" class="com.wavemaker.tools.project.ProjectEventNotifier"
+        scope="singleton">
+        <property name="eventManager">
+            <ref bean="eventManager" />
+        </property>
+    </bean>
+    <bean class="com.wavemaker.runtime.service.events.EventWire">
+        <property name="eventListener">
+            <bean class="com.wavemaker.tools.service.DSMProjectEventListener">
+                <property name="designServiceManager">
+                    <ref bean="designServiceManager" />
+                </property>
+            </bean>
+        </property>
+    </bean>
 
-	<beans profile="default">
-	
-	<bean id="fileSystem" class="com.wavemaker.tools.project.LocalStudioFileSystem"/>
-		<bean id="studioConfiguration" class="com.wavemaker.tools.project.LocalStudioConfiguration"
-			scope="singleton">
-			<constructor-arg ref="fileSystem"/>
-			<property name="runtimeAccess">
-				<ref bean="runtimeAccess" />
-			</property>
-		</bean>
+    <beans profile="default">
+    
+    	<bean id="fileSystem" class="com.wavemaker.tools.project.LocalStudioFileSystem"/>
+        
+        <bean id="studioConfiguration" class="com.wavemaker.tools.project.LocalStudioConfiguration"
+            scope="singleton">
+            <constructor-arg ref="fileSystem"/>
+            <property name="runtimeAccess">
+                <ref bean="runtimeAccess" />
+            </property>
+        </bean>
 
-		<bean id="deploymentManager" class="com.wavemaker.tools.project.LocalDeploymentManager"
-			scope="singleton" lazy-init="true">
-			<property name="projectManager">
-				<ref bean="projectManager" />
-			</property>
-			<property name="fileSystem">
-				<ref bean="fileSystem" />
-			</property>
-			<property name="projectCompiler">
-				<ref bean="projectCompiler" />
-			</property>
-			<property name="studioConfiguration" ref="studioConfiguration"/>
-		</bean>
-	</beans>
+        <bean id="deploymentManager" class="com.wavemaker.tools.project.LocalDeploymentManager"
+            scope="singleton" lazy-init="true">
+            <property name="projectManager">
+                <ref bean="projectManager" />
+            </property>
+            <property name="fileSystem">
+                <ref bean="fileSystem" />
+            </property>
+            <property name="projectCompiler">
+                <ref bean="projectCompiler" />
+            </property>
+            <property name="studioConfiguration" ref="studioConfiguration"/>
+        </bean>
+    </beans>
 
-	<beans profile="cloud-test">
-		<mongo:mongo />
-		
-		<mongo:db-factory dbname="testWM" />
-		
-		<bean id="fileSystem" class="com.wavemaker.tools.project.GridFSStudioFileSystem">
-			<constructor-arg ref="mongoDbFactory"/>
-		</bean>
-	
-		<bean id="studioConfiguration" class="com.wavemaker.tools.project.CFStudioConfiguration"
-			scope="singleton">
-			<constructor-arg ref="fileSystem"/>
-			<property name="runtimeAccess" ref="runtimeAccess"/>
-		</bean>
+    <beans profile="cloud-test">
+        <mongo:mongo />
+        
+        <mongo:db-factory dbname="testWM" />
+        
+        <bean id="fileSystem" class="com.wavemaker.tools.project.GridFSStudioFileSystem">
+            <constructor-arg ref="mongoDbFactory"/>
+        </bean>
+    
+        <bean id="studioConfiguration" class="com.wavemaker.tools.project.CFStudioConfiguration"
+            scope="singleton">
+            <constructor-arg ref="fileSystem"/>
+            <property name="runtimeAccess" ref="runtimeAccess"/>
+        </bean>
 
-		<bean id="deploymentManager" class="com.wavemaker.tools.project.CFDeploymentManager"
-			scope="singleton" lazy-init="true">
-			<property name="projectManager" ref="projectManager" />
-			<property name="fileSystem" ref="fileSystem" />
-			<property name="projectCompiler" ref="projectCompiler"/>
-			<property name="deploymentTargetManager" ref="deploymentTargetManager"/>
-		</bean>
-	</beans>
-	
-	<beans profile="cloud">
-		<cloud:mongo-db-factory id="mongoDbFactory"/>
-		
-		<bean id="fileSystem" class="com.wavemaker.tools.project.GridFSStudioFileSystem">
-			<constructor-arg ref="mongoDbFactory"/>
-		</bean>
-	
-		<bean id="studioConfiguration" class="com.wavemaker.tools.project.CFStudioConfiguration"
-			scope="singleton">
-			<constructor-arg ref="fileSystem"/>
-			<property name="runtimeAccess" ref="runtimeAccess"/>
-		</bean>
+        <bean id="deploymentManager" class="com.wavemaker.tools.project.CFDeploymentManager"
+            scope="singleton" lazy-init="true">
+            <property name="projectManager" ref="projectManager" />
+            <property name="fileSystem" ref="fileSystem" />
+            <property name="projectCompiler" ref="projectCompiler"/>
+            <property name="deploymentTargetManager" ref="deploymentTargetManager"/>
+        </bean>
+    </beans>
+    
+    <beans profile="cloud">
+        <cloud:mongo-db-factory id="mongoDbFactory"/>
+        
+        <bean id="fileSystem" class="com.wavemaker.tools.project.GridFSStudioFileSystem">
+            <constructor-arg ref="mongoDbFactory"/>
+        </bean>
+    
+        <bean id="studioConfiguration" class="com.wavemaker.tools.project.CFStudioConfiguration"
+            scope="singleton">
+            <constructor-arg ref="fileSystem"/>
+            <property name="runtimeAccess" ref="runtimeAccess"/>
+        </bean>
 
-		<bean id="deploymentManager" class="com.wavemaker.tools.project.CFDeploymentManager"
-			scope="singleton" lazy-init="true">
-			<property name="projectManager" ref="projectManager" />
-			<property name="fileSystem" ref="fileSystem" />
-			<property name="projectCompiler" ref="projectCompiler"/>
-			<property name="deploymentTargetManager" ref="deploymentTargetManager"/>
-		</bean>
-	</beans>
-	
+        <bean id="deploymentManager" class="com.wavemaker.tools.project.CFDeploymentManager"
+            scope="singleton" lazy-init="true">
+            <property name="projectManager" ref="projectManager" />
+            <property name="fileSystem" ref="fileSystem" />
+            <property name="projectCompiler" ref="projectCompiler"/>
+            <property name="deploymentTargetManager" ref="deploymentTargetManager"/>
+        </bean>
+    </beans>
+    
 </beans>

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ c)};define=function(b,c,a){function e(a){if(a.charAt(0)==="."){for(a=b.substring
 dojo.registerModulePath("studio", wm.basePath);
 dojo.registerModulePath("lib", wm.libPath);
 dojo.registerModulePath("wm", wm.libPath + "/wm");
+dojo.registerModulePath("common", wm.libPath + "/wm/common");
 dojo.registerModulePath("wm.language", wm.libPath + "/wm/language");
 dojo.registerModulePath("language", window.location.pathname.replace(/[^\/]*$/,"language"));
 
@@ -75,4 +76,3 @@ dojo.require("lib.manifest", true);
 
 // Load studio code and design extensions
 dojo.require("studio.app.manifest", true);
-

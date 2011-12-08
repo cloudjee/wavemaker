@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -337,15 +337,16 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		for (var i=0, op; (op=m[i]); i++){
 			this._methods.push(op.name);
 			this._operations[op.name] = {
-				parameters: this.paramArrayToHash(op.parameters || []),
-				returnType: op.returnType || "any"
+			    parameters: this.paramArrayToHash(op.parameters || []),
+			    returnType: op.returnType || "any",
+			    operationType: op.operationType || ""
 			};
 		}
 		this._methods.sort();
 	}, 
-	makePropEdit: function(inName, inValue, inDefault) {
+	makePropEdit: function(inName, inValue, inEditorProps) {
 		if (inName == "operations")
-			return makeSelectPropEdit(inName, inValue, this._methods||[], inDefault);
+		    return new wm.SelectMenu(dojo.mixin(inEditorProps, {options:this._methods || []}));
 		return this.inherited(arguments);
 	}
 });

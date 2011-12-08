@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2010-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -181,10 +181,15 @@ dependencies = {
 
 				"wm.base.widget.Editors.AbstractEditor",
 				"wm.base.widget.Editors.AbstractEditor_design",
+				"wm.base.widget.Editors.DataSetEditor_design",
+				"wm.base.widget.Editors.Text_design",
 				"wm.base.widget.Editors.Text",
 				"wm.base.widget.Editors.Number",
+				"wm.base.widget.Editors.Number_design",
 				"wm.base.widget.Editors.Date",
+				"wm.base.widget.Editors.Date_design",
 				"wm.base.widget.Editors.Checkbox",
+				"wm.base.widget.Editors.Checkbox_design",
 				"wm.base.widget.Editors.Radiobutton",
 				"wm.base.widget.Editors.Select",
 				"wm.base.widget.Editors.Select_design",
@@ -193,17 +198,22 @@ dependencies = {
 				//"wm.base.widget.Box_design",
 				"wm.base.widget.Spacer",
 				"wm.base.widget.Spacer_design",
+				"wm.base.widget.Label_design",
+				"wm.base.widget.Picture_design",
 				"wm.base.widget.layout.Layout",
 				"wm.base.widget.layout.Box",
 				"wm.base.widget.layout.Abs",
 				"wm.base.widget.Container",
 				"wm.base.widget.Container_design",
 				"wm.base.widget.Panel",
+				"wm.base.widget.Panel_design",
 				"wm.base.widget.Template",
 				"wm.base.widget.Layout",
+				"wm.base.widget.Layout_design",
 				"wm.base.widget.Content",
 				"wm.base.widget.Content_design",
 				"wm.base.widget.Html",
+				"wm.base.widget.Html_design",
 				"wm.base.widget.Bevel",
 				"wm.base.widget.Bevel_design",
 				"wm.base.widget.Splitter",
@@ -231,18 +241,25 @@ dependencies = {
 				"wm.base.widget.Table.builder",
 				"wm.base.widget.VirtualList",
 				"wm.base.widget.List",
+				"wm.base.widget.List_design",
 			/**/	"wm.base.widget.FeedList",
 /* Load on demand*/
 				"wm.base.widget.gadget.Gadget",
 				"wm.base.widget.gadget.Stocks",
 				"wm.base.widget.gadget.Weather",
 				"wm.base.widget.gadget.YouTube",
+				"wm.base.widget.gadget.GoogleMap",
+				"wm.base.widget.gadget.GoogleMap_design",
+				"wm.base.widget.gadget.Facebook",
+				"wm.base.widget.gadget.Facebook_design",
 				"wm.base.widget.TwitterFeed",
 				/**/
 			/*	"wm.base.widget.Detail",
 				"wm.base.widget.Form",*/
 				"wm.base.widget.LiveForm",
 				"wm.base.widget.LiveForm_design",
+				"wm.base.widget.DataForm",
+				"wm.base.widget.DataForm_design",
 				"wm.base.widget.LivePanel",
 				"wm.base.widget.LivePanel_design",
 				"wm.base.widget.RelatedEditor",
@@ -272,11 +289,13 @@ dependencies = {
 				"wm.base.widget.EditArea_design",*/
 				/*"wm.base.widget.Popup",*/
 				"wm.base.widget.IFrame",
+			    "wm.base.widget.IFrame_design",
 				"wm.base.widget.LayoutBox",
 				"wm.base.widget.dijit.Dijit",
 				"wm.base.widget.dijit.Dijit_design",
 				"wm.base.widget.dijit.CheckBox",
 				"wm.base.widget.dijit.Calendar",
+				"wm.base.widget.dijit.Calendar_design",
 				"wm.base.widget.dijit.ProgressBar",
 				"wm.base.widget.dijit.ProgressBar_design",
 				"wm.base.widget.dijit.Grid",
@@ -315,6 +334,7 @@ dependencies = {
 				"wm.base.widget.DojoChart",
 				"wm.base.widget.DojoChart_design",
 				"wm.base.widget.DojoGauge",
+				"wm.base.widget.DojoGauge_design",
 			    "wm.base.widget.DojoFisheye",
 			    "wm.base.widget.DojoFisheye_design",
 			/*	*/
@@ -325,6 +345,7 @@ dependencies = {
 				"wm.base.widget.DojoFileUpload",				
 				"wm.base.widget.DojoFlashFileUpload",				
 				"wm.base.widget.ListViewer",				
+				"wm.base.widget.ListViewer_design"
 				
 			]
 		},

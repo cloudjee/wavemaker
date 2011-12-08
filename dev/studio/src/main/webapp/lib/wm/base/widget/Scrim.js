@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -31,7 +31,14 @@ dojo.declare("wm.Scrim", wm.Widget, {
 		this.domNode.style.position = "absolute";
 		if (this.waitCursor)
 			this.domNode.style.cursor = "wait";
+	    this.subscribe("window-resize", this, "resize");
 	},
+    resize: function() {
+	wm.onidle(this, function() {
+	    if (this.showing)
+		this.reflowParent();
+	});
+    },
 	reflowParent: function() {
 		//if (this.domNode.parentNode)
 		dojo.marginBox(this.domNode, dojo.contentBox(this.domNode.parentNode));

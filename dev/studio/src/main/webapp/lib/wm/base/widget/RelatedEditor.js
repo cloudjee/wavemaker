@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@ dojo.provide("wm.base.widget.RelatedEditor");
 dojo.require("wm.base.widget.LiveForm");
 
 dojo.declare("wm.RelatedEditor", wm.LiveFormBase, {
+        ignoreParentReadonly: true,
 	height:'26px',
 	editingMode: "lookup",
 	_lookupCache: null,

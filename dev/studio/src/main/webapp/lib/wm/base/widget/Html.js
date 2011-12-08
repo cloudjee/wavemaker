@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2009-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,6 +15,9 @@
 dojo.provide("wm.base.widget.Html");
 
 dojo.declare("wm.Html", wm.Control, {
+    minHeight: 15,
+    width: "100%",
+    height: "200px",
 	html: "",
         autoScroll: true,
 	init: function() {
@@ -25,20 +28,26 @@ dojo.declare("wm.Html", wm.Control, {
 	    });
 	    this.setHtml(this.html);
 	},
+    build: function() {
+	this.inherited(arguments);
+	this.sizeNode = document.createElement("div");
+	dojo.addClass(this.sizeNode, "wmSizeNode");
+	this.domNode.appendChild(this.sizeNode);
+    },
 	getHtml: function() {
-		return this.domNode.innerHTML;
+		return this.sizeNode.innerHTML;
 	},
 	setHtml: function(inHtml) {
-                var innerHTML = this.domNode.innerHTML;
+                var innerHTML = this.sizeNode.innerHTML;
 	        if (inHtml && String(inHtml).indexOf('resources/') == 0)
 		{
 			if (!this.htmlLoader)
 				this.htmlLoader = new wm.HtmlLoader({owner: this, relativeUrl: true});
-			this.htmlLoader._htmlNode = this.domNode;
+			this.htmlLoader._htmlNode = this.sizeNode;
 			this.htmlLoader.setUrl(inHtml);
 			this.html = inHtml;
 		        this.valueChanged("html", inHtml);
-                        if ( innerHTML != this.domNode.innerHTML && (this.autoSizeHeight || this.autoSizeWidth)) {
+                        if ( innerHTML != this.sizeNode.innerHTML && (this.autoSizeHeight || this.autoSizeWidth)) {
 		            this.scheduleAutoSize();
                         }
 			return;
@@ -48,9 +57,9 @@ dojo.declare("wm.Html", wm.Control, {
 			inHtml = inHtml.join('');
 		if (inHtml && inHtml.value)
 			inHtml = inHtml.value;
-		this.html = this.domNode.innerHTML = (inHtml == undefined ? "" : inHtml);
+	    this.html = this.sizeNode.innerHTML = (inHtml == undefined ? "" : inHtml);
 	        this.valueChanged("html", this.inHtml);
-                if ( innerHTML != this.domNode.innerHTML && (this.autoSizeHeight || this.autoSizeWidth)) {
+                if ( innerHTML != this.sizeNode.innerHTML && (this.autoSizeHeight || this.autoSizeWidth)) {
                     this.scheduleAutoSize();
                 }
 	},
@@ -69,50 +78,61 @@ dojo.declare("wm.Html", wm.Control, {
             this._doingAutoSize = true;
 	    this._needsAutoSize = false;
 
-	    var divObj = wm.Label.sizingNode;
-	    divObj.innerHTML = this.html
-	    divObj.className = this.domNode.className;  // make sure it gets the same css selectors as this.domNode (we may need to handle ID as well, but most styling is done via classes)
-	    var b = this.bounds;
-  	    var s = divObj.style;
-	    s.position = "absolute";
-	    s.height = (!this.autoSizeHeight) ? (b.h - this.padBorderMargin.t - this.padBorderMargin.b) + "px" : "";
-	    s.width = (!this.autoSizeWidth) ? (b.w - this.padBorderMargin.l - this.padBorderMargin.r) + "px" : "";
-
-	    // If I have a 5px padding on the left or right, that will throw off the calculation unless we build that into our test div and force it to render with that as part of its width
-	    s.paddingLeft = (this.autoSizeWidth) ?  (this.padBorderMargin.l + this.padBorderMargin.r) + "px" : "";
-	    s.paddingTop = (this.autoSizeHeight) ?  (this.padBorderMargin.t + this.padBorderMargin.b) + "px" : "";
-
-	    // wm.Label sets these, need to make sure they are unset for wm.Html
-	    s.lineHeight = "normal";
-	    s.whiteSpace = "";
-
-	    // append to parent so that it gets the same css selectors as this.domNode.
-	    this.parent.domNode.appendChild(divObj);
-
-	    var captionWidth  = divObj.clientWidth;
-	    var captionHeight = divObj.clientHeight;
-	    divObj.parentNode.removeChild(divObj);
-
+	    var sizeNode = this.sizeNode;
+	    var contentHeight = sizeNode.offsetHeight;
+	    var contentWidth = sizeNode.offsetWidth;
 	    if (this.autoSizeHeight) {
-		var newh =  captionHeight;
-		if (newh < 14) newh = 14;
-                if (setSize)
-		    this.setHeight(newh + "px");
-                else {
-                    this.bounds.h = newh;
-                    this.height = newh + "px";
-                }
+		var newHeight = contentHeight + this.padBorderMargin.t + this.padBorderMargin.b;
+		if (newHeight < this.minHeight) {
+		    newHeight = this.minHeight;
+		} 
+
+		/* Account for space needed for scrollbars */
+		if (contentWidth > this.bounds.w) {
+		    newHeight += 17;
+		}
+		    this.bounds.h = newHeight;
+		    this.height = newHeight + "px";		
+/*
+		if (setSize) {
+		    this.setHeight(newHeight + "px");
+		} else {
+		    this.bounds.h = newHeight;
+		    this.height = newHeight + "px";
+		}
+		*/
+
+		var p = this.parent;
+		while (p.parent && (p.autoSizeHeight || p.fitToContentHeight)) {
+		    p = p.parent;
+		}
+		p.delayedReflow();
+
 	    }
 	    if (this.autoSizeWidth) {
-		var neww = captionWidth;
-		if (neww < 80) neww = 80;
-                if (setSize)
-		    this.setWidth(neww + "px");
-                else {
-                    this.bounds.w = neww;
-                    this.width = neww + "px";
-                }
+
+		var newWidth = contentWidth + this.padBorderMargin.l + this.padBorderMargin.r;
+		/* Account for space needed for scrollbars */
+		if (contentHeight > this.bounds.h) {
+		    newWidth += 17;
+		}
+		    this.bounds.w = newWidth;
+		    this.width = newWidth + "px";
+/*
+		if (setSize) {
+		    this.setWidth(newWidth + "px");
+		} else {
+		    this.bounds.w = newWidth;
+		    this.width = newWidth + "px";
+		}
+		*/
+		var p = this.parent;
+		while (p.parent && (p.autoSizeWidth || p.fitToContentWidth)) {
+		    p = p.parent;
+		}
+		p.delayedReflow();
 	    }
+
 
 	    // the line underneath updates panel's width property. Therefore only required for studio.
 	    if (this.isDesignLoaded() && studio.designer.selected == this)
@@ -125,8 +145,8 @@ dojo.declare("wm.Html", wm.Control, {
 		inHtml = inHtml.join('');
 	    if (inHtml && inHtml.value)
 		inHtml = inHtml.value;
-	    this.domNode.innerHTML += (inHtml == undefined ? "" : inHtml);
-	    this.html = this.domNode.innerHTML;
+	    this.sizeNode.innerHTML += (inHtml == undefined ? "" : inHtml);
+	    this.html = this.sizeNode.innerHTML;
 	    this.valueChanged("html", this.inHtml);
 	},
 	onclick: function() {
@@ -137,16 +157,6 @@ dojo.declare("wm.Html", wm.Control, {
                 if (this.autoSizeHeight || this.autoSizeWidth)
 	            this.doAutoSize(1,1);	
         },
-	makePropEdit: function(inName, inValue, inDefault) {
-	    switch (inName) {
-                case "autoSize": 
-		    return makeSelectPropEdit(inName, (this.autoSizeHeight) ? "height" : (this.autoSizeWidth) ? "width" : "none", ["none", "width", "height"], inDefault);
-		case "html":
-		var wire = wm.data.getPropWire(this, "html");
-		return makeTextPropEdit(inName, inValue, inDefault, 10, Boolean(wire));
-	    }
-	    return this.inherited(arguments);
-	},
     getAutoSize: function() {
 	if (this.autoSizeWidth) return "width";
 	if (this.autoSizeHeight) return "height";
@@ -171,23 +181,9 @@ dojo.declare("wm.Html", wm.Control, {
 	    if (!this.autoSizeHeight)
 		this.setAutoSizeHeight(true);
         }
+    },
+    toHtml: function() {
+	return this.html;
     }
 });
 
-// design only...
-
-wm.Html.description = "Container for any HTML content.";
-
-wm.Object.extendSchema(wm.Html, {
-	disabled: { ignore: 1 },
-        autoSizeHeight: {type: "Boolean", group: "advanced layout", order: 31, writeonly: true, ignore: true},
-    autoSizeWidth: {type: "Boolean", group: "advanced layout", order: 32, shortname: "Auto Size", writeonly: true, ignore: true},
-    autoSize: {group: "advanced layout", order: 31},
-        autoScroll: {group: "style", order: 100, ignore: 0},
-    html: { type: "String", bindable: 1, group: "display", order: 100, focus: true },
-    setHtml: {group: "method"}
-});
-
-wm.Html.extend({
-        themeable: false
-});

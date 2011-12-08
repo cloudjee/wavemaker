@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,14 +21,14 @@ if (location.search.indexOf("dojo.locale=") != -1) {
     if (djConfig.locale.indexOf("&") != -1) {
 	djConfig.locale = djConfig.locale.substring(0, djConfig.locale.indexOf("&"));
     }
-} else if (wm.language) {
-    djConfig.locale = wm.language.toLowerCase(); // wm.language is provided so that developers can override wm.localeString by putting it in config.js
+} else if (wm.preferredLanguage) {
+    djConfig.locale = wm.preferredLanguage.toLowerCase(); // wm.language is provided so that developers can override wm.localeString by putting it in config.js
 } else if (wm.localeString) {
     djConfig.locale = wm.localeString.toLowerCase(); // wm.localeString is added to config.js by FileController.java using the "accept-language" header.
 }
     } catch(e) {}
 wm = window["wm"] || {};
-wm.version = '6.4.1Beta';
+wm.version = '6.4.3RC';
 
 // loading via append element
 wm.createElement = function(inTag, inAttrs) {
@@ -137,7 +137,7 @@ wm.registerPackage = registerPackage = function() {
 };
 
 (function(){
-	wm.writeJsTag(wm.relativeLibPath + 'wm/base/CFInstall.js');
+        if (window["wmChromeFramePath"]) return;
 	// early browser sniff
 	var n = navigator, ua = n.userAgent, av = n.appVersion;
 	wm.isMoz = (ua.indexOf("Gecko")>=0 && av.indexOf("WebKit")<0 && av.indexOf("Safari")<0 && av.indexOf("Konqueror")<0);

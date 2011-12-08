@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -132,7 +132,7 @@ Studio.extend({
 	// Export
 	//=====================================================================
 	exportClick: function(inSender) {
-		studio.beginWait("Building ZIP File...");
+	    studio.beginWait("Building ZIP File...");
 	    studio.deploymentService.requestAsync("exportProject", [studio.project.projectName + "." + studio.application.getFullVersionNumber() + ".zip"], dojo.hitch(this, "exportClickCallback"), dojo.hitch(this, "exportClickError"));
 	    	},			  
 	exportClickCallback: function(inResponse) {
@@ -143,6 +143,10 @@ Studio.extend({
 	    } else {
 		this.downloadInIFrame("services/deploymentService.download?method=downloadProjectZip");
 	    }
+
+	    studio.application.incSubversionNumber();
+	    var src = studio.project.generateApplicationSource();
+	    studio.project.saveProjectData(this.projectName + ".js", src);
 	},
 	exportClickError: function(inError) {
 	    studio.endWait();

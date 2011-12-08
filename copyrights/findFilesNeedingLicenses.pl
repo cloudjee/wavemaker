@@ -54,7 +54,7 @@ sub searchFile {
     open(FILE, ">$file");
     print FILE $f;
     close(FILE);
-  } elsif ($f =~ /Copyright \(C\) (\d+\-)?2011 WaveMaker/) {
+  } elsif ($f =~ /Copyright \(C\) (\d+\-)?2011 VMware/) {
     ;
   } elsif ($f =~ /(Copyright .*)/) {
     push(@FOREIGN, "$file has foreign copyright: $1");

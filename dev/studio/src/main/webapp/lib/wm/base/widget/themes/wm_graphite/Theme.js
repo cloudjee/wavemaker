@@ -206,11 +206,13 @@
 	}, 
 	"wm.EmphasizedContentPanel": {
 		"border": "2", 
-		"borderColor": "#333333"
+		"borderColor": "#333333", 
+		"margin": "4"
 	}, 
 	"wm.HeaderContentPanel": {
 		"border": "2", 
-		"borderColor": "#333333"
+		"borderColor": "#333333", 
+		"margin": "4"
 	}, 
 	"wm.PopupMenuButton": {
 	}

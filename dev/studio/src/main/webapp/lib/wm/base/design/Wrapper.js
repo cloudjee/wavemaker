@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -143,6 +143,8 @@ wm.wrapperResizer = new wm.WrapperResizer();
 
 dojo.declare("wm.DesignWrapper", wm.Designable, {
 	//buffer: 6,
+    _isDesignLoaded: false,
+
 	border: 0,
         borderColor: "#F0F0F0",
 	handles: null,
@@ -169,6 +171,7 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 	},
 
 	destroy: function() {
+	    this.handles.destroy();
 		this.surface._deleted(this.control);
 		this.disconnect();
 		this.inherited(arguments);
@@ -421,10 +424,7 @@ dojo.declare("wm.DesignWrapper", wm.Designable, {
 	designMove: function(inDropInfo) {
 		this.surface.designMove(this.control, inDropInfo);
 	},
-    destroy: function() {
-	this.handles.destroy();
-	this.inherited(arguments);
-    },
+
     showContextMenu: function(e) {
 	this.control.showContextMenu(e);
     }

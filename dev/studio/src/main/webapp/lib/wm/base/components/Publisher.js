@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -54,31 +54,15 @@ dojo.declare("wm.ComponentPublisher", wm.Component, {
 	write: function() {
 		return wm.Property.deploy ? "" : this.inherited(arguments);
 	},
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-			case "deploy":
-			case "undeploy":
-				return makeReadonlyButtonEdit(inName, inValue, inDefault);
-			case "width":
-			case "height":
-				return new wm.propEdit.UnitValue({
-					component: this,
-					name: inName,
-					value: inValue,
-					options: [ "px", "%" ]
+
+    doDeploy: function() {
+		                var self = this;
+		                studio.project.saveProject(false, function() {
+				    self.deploy();
 				});
-		}
-		return this.inherited(arguments);
-	},
-	editProp: function(inName, inValue, inInspector) {
-		switch (inName) {
-			case "deploy":
-				return this.deploy();
-			case "undeploy":
-				return this.undeploy();
-		}
-		return this.inherited(arguments);
-	}
+
+    }
+
 });
 
 wm.Object.extendSchema(wm.ComponentPublisher, {
@@ -88,10 +72,10 @@ wm.Object.extendSchema(wm.ComponentPublisher, {
 	group: {group: "Events", order: 30},
 	displayName: {group: "Events", order: 40},
 	description: {group: "Events", order: 50},
-	width: {group: "layout", order: 20},
-	height: {group: "layout", order: 30},
-	deploy: {group: "operation", order: 10},
-	undeploy: {group: "operation", order: 20},
+    width: {group: "layout", order: 20, editor: "wm.prop.SizeEditor"},
+	height: {group: "layout", order: 30, editor: "wm.prop.SizeEditor"},
+    deploy: {group: "operation", order: 10, operation: "doDeploy"},
+    undeploy: {group: "operation", order: 20, operation: true},
 	owner: {ignore: 1}
 });
 

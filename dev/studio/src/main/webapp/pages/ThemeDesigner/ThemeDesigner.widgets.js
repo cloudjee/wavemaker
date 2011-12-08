@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2010-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ ThemeDesigner.widgets = {
         field4: ["wm.TypeDefinitionField", {type: "String", fieldName: "description"}],
         field5: ["wm.TypeDefinitionField", {type: "any", fieldName: "sourceData"}]
     }],
+    genericDialog: ["wm.GenericDialog", {}],
     imageListVar: ["wm.Variable", {type: "EntryData"}],
     themeListVar: ["wm.Variable", {type: "StringData"}],
     widgetListVar: ["wm.Variable", {type: "StringData"}],
@@ -30,7 +31,7 @@ ThemeDesigner.widgets = {
     shadowListVar: ["wm.Variable", {type: "EntryData", json: "[{dataValue: '0px 0px 0px #444444', name: 'No Shadow'}, {dataValue: '1px 0px 1px #444444', name: '1px Right Shadow'}, {dataValue: '0px 1px 1px #444444', name: '1px Bottom Shadow'}, {dataValue: '1px 1px 1px #444444', name: '1px Shadow'},{dataValue: '1px 0px 1px #000000', name: '1px Right Shadow Black'}, {dataValue: '0px 1px 1px #000000', name: '1px Bottom Shadow Black'}, {dataValue: '1px 1px 1px #000000', name: '1px Shadow Black'}, {dataValue: '2px 0px 2px #444444', name: '2px Right Shadow'}, {dataValue: '0px 2px 2px #444444', name: '2px Bottom Shadow'}, {dataValue: '2px 2px 2px #444444', name: '2px Shadow'}, {dataValue: '2px 0px 2px #000000', name: '2px Right Shadow Black'}, {dataValue: '0px 2px 2px #000000', name: '2px Bottom Shadow Black'}, {dataValue: '2px 2px 2px #000000', name: '2px Shadow Black'}, {dataValue: '3px 0px 3px #444444', name: '3px Right Shadow'}, {dataValue: '0px 3px 3px #444444', name: '3px Bottom Shadow'}, {dataValue: '3px 3px 3px #444444', name: '3px Shadow'}, {dataValue: '3px 0px 3px #000000', name: '3px Right Shadow Black'}, {dataValue: '0px 3px 3px #000000', name: '3px Bottom Shadow Black'}, {dataValue: '3px 3px 3px #000000', name: '3px Shadow Black'}, {dataValue: '4px 0px 4px #444444', name: '4px Right Shadow'}, {dataValue: '0px 4px 4px #444444', name: '4px Bottom Shadow'}, {dataValue: '4px 4px 4px #444444', name: '4px Shadow'}, {dataValue: '4px 0px 4px #000000', name: '4px Right Shadow Black'}, {dataValue: '0px 4px 4px #000000', name: '4px Bottom Shadow Black'}, {dataValue: '4px 4px 4px #000000', name: '4px Shadow Black'}, {dataValue: '6px 0px 6px #444444', name: '6px Right Shadow'}, {dataValue: '0px 6px 6px #444444', name: '6px Bottom Shadow'}, {dataValue: '6px 6px 12px #444444', name: '6px Shadow'}, {dataValue: '6px 0px 6px #000000', name: '6px Right Shadow Black'}, {dataValue: '0px 6px 6px #000000', name: '6px Bottom Shadow Black'}, {dataValue: '6px 6px 12px #000000', name: '6px Shadow Black'}]"}],
 	layoutBox1: ["wm.Layout", {height: "100%", width: "100%", horizontalAlign: "left", verticalAlign: "top", layoutKind: "left-to-right"}, {}, {	    
             leftColumn: ["wm.Panel", {layoutKind: "top-to-bottom", width: "335px", height: "100%", horizontalAlign: "left", verticalAlign: "top"},{},{
-                themeSelect: ["wm.SelectMenu", {caption: "Select Theme", captionAlign: "right", captionSize: "90px", margin: "0,0,10,0", height: "30px", width: "250px", displayField: "dataValue", dataField: "dataValue", headerVisible: false}, {onchange: "themeselect"}, {
+                themeSelect: ["wm.SelectMenu", {caption: "Select Theme", captionAlign: "right", captionSize: "90px", margin: "0,0,10,0", height: "30px", width: "250px", displayField: "dataValue", dataField: "dataValue", headerVisible: false}, {onchange: "themeselectChange"}, {
 		    binding: ["wm.Binding", {}, {}, {
 		        wire: ["wm.Wire", {"targetProperty":"dataSet","source":"themeListVar"}, {}]
 		    }]

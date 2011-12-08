@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -354,6 +354,10 @@ dojo.declare("wm.BindInspector", wm.GroupInspector, {
     /* Show the bind dialog, setup for binding the selected property */
 	beginBind: function(inPropName, inNode) {
 	    studio.bindDialog.page.initBinding();
+	    if (studio.bindDialog.bindSourceDialog.applyButton._oldCaption) {
+		studio.bindDialog.bindSourceDialog.applyButton.setCaption(studio.bindDialog.bindSourceDialog.applyButton._oldCaption);
+		delete studio.bindDialog.bindSourceDialog.applyButton._oldCaption;
+	    }
 		var
 			bd = studio.bindDialog,
 			p = this.getBindDialogProps(inPropName),
@@ -508,14 +512,14 @@ dojo.declare("wm.DataInspector", wm.BindInspector, {
 		// if its undefined, then presumably it failed to compile
 		var tmp2 = eval(tmp);		
 		if (tmp2 === undefined) {
-		    this.beginBind(origProp, this.bindingOwner);
+		    this.beginBind(origProp, dojo.byId("propinspect_row_" + origProp));
 		    studio.bindDialog.bindSourceDialog.expressionRb.editor.setChecked(true);
 		    studio.bindDialog.bindSourceDialog.expressionEditor.setDataValue(inValue);
 		    app.toastError(studio.getDictionaryItem("wm.DataInspector.TOAST_EXPRESSION_FAILED"));
 		    return;
 		}
 	    } catch(e) {
-		    this.beginBind(origProp, this.bindingOwner);
+		this.beginBind(origProp, dojo.byId("propinspect_row_" + origProp));
 		studio.bindDialog.bindSourceDialog.expressionRb.editor.setChecked(true);
 		studio.bindDialog.bindSourceDialog.expressionEditor.setDataValue(inValue);
 		    app.toastError(studio.getDictionaryItem("wm.DataInspector.TOAST_EXPRESSION_FAILED"));
@@ -633,6 +637,15 @@ dojo.declare("wm.NavigationInspector", wm.DataInspector, {
 	makePropEdit: function(inName, inProp, inWire) {
 		var ins = this.owner.inspected.getValue(inName);
 		switch (inName) {
+			case "showOnlyParentLayer":
+				return (new wm.propEdit.Select({
+						component: this, 
+				                value: ins,
+						name: inName, 
+				                options: ["true", "false"],
+				                values: [true, false]
+					})).getHtml();
+
 			case "pageName":
 				return (new wm.propEdit.PagesSelect({
 						component: this, 

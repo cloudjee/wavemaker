@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,6 +13,8 @@
  */
 
 /* TODO: 
+ *  - Make the geocode incrementer bindable to a progress bar
+ *  - document values for the icon property for each item "orange" and "orange1" or a path to a custom image
  *  1. FusionTables integration
  *  2. Geocoding? Maybe a bad idea, but hard to use without it.  Would be nice to have fields for specifying addresses and then do the lookup at runtime
  *  3. Directions link added to POI popups
@@ -32,6 +34,7 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
     zoom: 17,
     mapType: "ROADMAP", // ROADMAP, SATELLITE, HYBRID, TERRAIN
     dataSet: "",
+    addressField: "",
     latitudeField: "",
     longitudeField: "",
     titleField: "",
@@ -42,6 +45,7 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
     _infoWindow: "",
     selectedItem: "",
     init: function() {
+	this._dataToGeocode = [];
 	if (!dojo.byId("GoogleMapsScript")) {
 	    var script = document.createElement("script");
 	    script.type = "text/javascript";
@@ -105,6 +109,28 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
 	if (this._map)
 	    this._map.setCenter(new google.maps.LatLng(this.latitude, this.longitude));
     },
+    fitToMarkers: function() {
+	var minLat = 10000000;
+	var minLon = 10000000;
+	var maxLat = -1000000;
+	var maxLon = -1000000;
+	if (!this.dataSet) return;
+	var count = this.dataSet.getCount();
+	if (count == 0) return;
+	for (var i = 0; i < count; i++) {
+	    var item = this.dataSet.getItem(i);
+	    var lat = item.getValue(this.latitudeField);
+	    var lon = item.getValue(this.longitudeField);
+	    if (lat < minLat) minLat = lat;
+	    if (lat > maxLat) maxLat = lat;
+	    if (lon < minLon) minLon = lon;
+	    if (lon > maxLon) maxLon = lon;
+	}
+
+	var maxPos = new google.maps.LatLng(maxLat, maxLon);
+	var minPos = new google.maps.LatLng(minLat, minLon);
+	this._map.fitBounds(new google.maps.LatLngBounds(minPos, maxPos));
+    },
     setMapType: function(inVal) {
 	this.mapType = inVal;
 	if (this._map)
@@ -129,6 +155,7 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
 		switch (inName) {
 		case "mapType":
 		    return makeSelectPropEdit(inName, inValue, ["ROADMAP", "SATELLITE", "HYBRID", "TERRAIN"], inDefault);
+		case "addressField":
 		case "latitudeField":
 		case "longitudeField":
 		case "titleField":
@@ -140,6 +167,7 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
 		}
 	    return this.inherited(arguments);
 	},
+
 	setDataSet: function(inDataSet) {
 	    this.dataSet = inDataSet;
 	    if (inDataSet)
@@ -153,30 +181,225 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
 		this.generateMarkers();
 	    }
 	},
-	set_dataSet: function(inDataSet) {
-		// support setting dataSet via id from designer
-		if (inDataSet && !(inDataSet instanceof wm.Variable)) {
-			var ds = this.getValueById(inDataSet);
-			if (ds)
-				this.components.binding.addWire("", "dataSet", ds.getId());
-		} else
-			this.setDataSet(inDataSet);
-	    
-	},
-    generateMarkers: function() {
-	    var data = this.dataSet.getData();
+    geocode: function(inData) {
+	this._dataToGeocode.push(inData);
+	this.geocodeNext();
+    },
+    geocodeNext: function() {
+	if (this._geocoding) return;
+	this._geocoding = true;
+	this.onIncrementGeocodeCount(this._dataToGeocode.length, this.dataSet.getCount());
+        this._geocode(this._dataToGeocode.shift(), this._dataToGeocode.length ? dojo.hitch(this, "geocodeNext") : dojo.hitch(this, "onGeocodeComplete"));    
+    },
 
+    /* This is called before each geocode attempt; lets you update a progress bar; TODO: Make this bindable to a progressbar */
+    onIncrementGeocodeCount: function(remainingItems, totalItems) {},
+
+    /* Called after ALL addresses in the dataSet that needed to be geocoded have been geocoded */
+    onGeocodeComplete: function() {},
+    
+    /* Called for each successful geocode of each individual address in the dataset; will be called many times; if updating a wm.Variable with the results,
+     * you should precede your updates with this.variable.beginUpdate/endUpdate so that the map isn't repeatedly regenerated/regeocoded
+     */
+    onGeocodeSuccess: function(inItem) {},
+
+    /* If errors occur (other than QUOTA_LIMIT errors which cause us to retry the address) calls this */
+    onGeocodeError: function(inResponse, inData) {},
+    _geocode: function(inData, onCompleteFunc) {
+        var self = this;
+        var icon;
+	if (!this.geocoder) {
+	    this.geocoder = new google.maps.Geocoder();
+	}
+        this.geocoder.geocode({
+            'address': inData[this.addressField]
+        }, function(results, status) {
+	    self._geocoding = false;
+            if (status == google.maps.GeocoderStatus.OK) {
+                var location = results[0].geometry.location;
+		inData[self.latitudeField] = location.lat();
+		inData[self.longitudeField] = location.lng();
+		self.generateMarker(inData);
+		self.onGeocodeSuccess(inData);
+            } else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
+                console.log("GEOCODING: " + status + ". DELAY and then redo " + inData[self.addressField]);
+                self._dataToGeocode.push(inData);
+                wm.job("geocodeNext", 500, dojo.hitch(self, "geocodeNext"));
+                return;
+            } else {
+                console.error("Failed to geocode " + inData[self.addressField] + "; " + status);
+		self.onGeocodeError(status, inData);
+            }
+            if (onCompleteFunc) {
+                onCompleteFunc();
+            }
+        });
+    },
+    geocode: function(inData) {
+	this._dataToGeocode.push(inData);
+	this.geocodeNext();
+    },
+    geocodeNext: function() {
+	if (this._geocoding) return;
+	this._geocoding = true;
+	this.onIncrementGeocodeCount(this._dataToGeocode.length, this.dataSet.getCount());
+        this._geocode(this._dataToGeocode.shift(), this._dataToGeocode.length ? dojo.hitch(this, "geocodeNext") : dojo.hitch(this, "onGeocodeComplete"));    
+    },
+
+    /* This is called before each geocode attempt; lets you update a progress bar; TODO: Make this bindable to a progressbar */
+    onIncrementGeocodeCount: function(remainingItems, totalItems) {},
+
+    /* Called after ALL addresses in the dataSet that needed to be geocoded have been geocoded */
+    onGeocodeComplete: function() {},
+    
+    /* Called for each successful geocode of each individual address in the dataset; will be called many times; if updating a wm.Variable with the results,
+     * you should precede your updates with this.variable.beginUpdate/endUpdate so that the map isn't repeatedly regenerated/regeocoded
+     */
+    onGeocodeSuccess: function(inItem) {},
+
+    /* If errors occur (other than QUOTA_LIMIT errors which cause us to retry the address) calls this */
+    onGeocodeError: function(inResponse, inData) {},
+    _geocode: function(inData, onCompleteFunc) {
+        var self = this;
+        var icon;
+	if (!this.geocoder) {
+	    this.geocoder = new google.maps.Geocoder();
+	}
+        this.geocoder.geocode({
+            'address': inData[this.addressField]
+        }, function(results, status) {
+	    self._geocoding = false;
+            if (status == google.maps.GeocoderStatus.OK) {
+                var location = results[0].geometry.location;
+		inData[self.latitudeField] = location.lat();
+		inData[self.longitudeField] = location.lng();
+		self.generateMarker(inData);
+		self.onGeocodeSuccess(inData);
+            } else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
+                console.log("GEOCODING: " + status + ". DELAY and then redo " + inData[self.addressField]);
+                self._dataToGeocode.push(inData);
+                wm.job("geocodeNext", 500, dojo.hitch(self, "geocodeNext"));
+                return;
+            } else {
+                console.error("Failed to geocode " + inData[self.addressField] + "; " + status);
+		self.onGeocodeError(status, inData);
+            }
+            if (onCompleteFunc) {
+                onCompleteFunc();
+            }
+        });
+    },
+    geocode: function(inData) {
+	this._dataToGeocode.push(inData);
+	this.geocodeNext();
+    },
+    geocodeNext: function() {
+	if (this._geocoding) return;
+	this._geocoding = true;
+	this.onIncrementGeocodeCount(this._dataToGeocode.length, this.dataSet.getCount());
+        this._geocode(this._dataToGeocode.shift(), this._dataToGeocode.length ? dojo.hitch(this, "geocodeNext") : dojo.hitch(this, "onGeocodeComplete"));    
+    },
+
+    /* This is called before each geocode attempt; lets you update a progress bar; TODO: Make this bindable to a progressbar */
+    onIncrementGeocodeCount: function(remainingItems, totalItems) {},
+
+    /* Called after ALL addresses in the dataSet that needed to be geocoded have been geocoded */
+    onGeocodeComplete: function() {},
+    
+    /* Called for each successful geocode of each individual address in the dataset; will be called many times; if updating a wm.Variable with the results,
+     * you should precede your updates with this.variable.beginUpdate/endUpdate so that the map isn't repeatedly regenerated/regeocoded
+     */
+    onGeocodeSuccess: function(inItem) {},
+
+    /* If errors occur (other than QUOTA_LIMIT errors which cause us to retry the address) calls this */
+    onGeocodeError: function(inResponse, inData) {},
+    _geocode: function(inData, onCompleteFunc) {
+        var self = this;
+        var icon;
+	if (!this.geocoder) {
+	    this.geocoder = new google.maps.Geocoder();
+	}
+        this.geocoder.geocode({
+            'address': inData[this.addressField]
+        }, function(results, status) {
+	    self._geocoding = false;
+            if (status == google.maps.GeocoderStatus.OK) {
+                var location = results[0].geometry.location;
+		inData[self.latitudeField] = location.lat();
+		inData[self.longitudeField] = location.lng();
+		self.generateMarker(inData);
+		self.onGeocodeSuccess(inData);
+            } else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
+                console.log("GEOCODING: " + status + ". DELAY and then redo " + inData[self.addressField]);
+                self._dataToGeocode.push(inData);
+                wm.job("geocodeNext", 500, dojo.hitch(self, "geocodeNext"));
+                return;
+            } else {
+                console.error("Failed to geocode " + inData[self.addressField] + "; " + status);
+		self.onGeocodeError(status, inData);
+            }
+            if (onCompleteFunc) {
+                onCompleteFunc();
+            }
+        });
+    },
+    generateMarkers: function() {
+        
+	    var data = this.dataSet.getData();
+	
 	    for (var i = 0; i < data.length; i++) {
+		data[i]._index = i+1; // one based indexing for end users
 		this.generateMarker(data[i]);
 	    }
+	if (this._dataToGeocode.length)
+	    this.geocodeNext();
     },
     generateMarker: function(d) {
 		var lat = d[this.latitudeField];
 		var lon = d[this.longitudeField];
+	var address = d[this.addressField];
 		var title = d[this.titleField];
 		var desc = d[this.descriptionField];
 		var icon = d[this.iconField];
+	if (address && !lat && !lon) {
+	    this._dataToGeocode.push(d);
+	    return;
+	}
+	switch(icon) {
+	case "green":
+	    icon = "http://gmaps-samples.googlecode.com/svn/trunk/markers/green/blank.png";
+	    break;
+	case "blue":
+	    icon = "http://gmaps-samples.googlecode.com/svn/trunk/markers/blue/blank.png";
+	    break;
+	case "red":
+	    icon = "http://gmaps-samples.googlecode.com/svn/trunk/markers/red/blank.png";
+	    break;
+	case "pink":
+	    icon = "http://gmaps-samples.googlecode.com/svn/trunk/markers/pink/blank.png";
+	    break;
+	case "orange":
+	    icon = "http://gmaps-samples.googlecode.com/svn/trunk/markers/orange/blank.png";
+	    break;
+	case "green1":
+	    icon = "http://gmaps-samples.googlecode.com/svn/trunk/markers/green/marker" + d._index + ".png";
+	    break;
+	case "blue1":
+	    icon = "http://gmaps-samples.googlecode.com/svn/trunk/markers/blue/marker" + d._index + ".png";
+	    break;
+	case "red1":
+	    icon = "http://gmaps-samples.googlecode.com/svn/trunk/markers/red/marker" + d._index + ".png";
+	    break;
+	case "pink1":
+	    icon = "http://gmaps-samples.googlecode.com/svn/trunk/markers/pink/marker" + d._index + ".png";
+	    break;
+	case "orange1":
+	    icon = "http://gmaps-samples.googlecode.com/svn/trunk/markers/orange/marker" + d._index + ".png";
+	    break;
+	}
+
 		var marker = new google.maps.Marker({
+		    icon: icon,
 		    position: new google.maps.LatLng(lat,lon), 
 		    map: this._map,
 		    title: title});
@@ -196,7 +419,7 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
 	this._clickMarker(this._markers[inIndex], this.dataSet.getItem(inIndex));
     },
     _clickMarker: function(inMarker, inData) {
-	var content = "<h3>" + inData.getValue(this.titleField) + "</h3>" + inData.getValue(this.descriptionField);
+	var content = "<h3 class='MapMarkerTitle'>" + inData.getValue(this.titleField) + "</h3><div class='MapMarkerDescription'>" + inData.getValue(this.descriptionField) + "</div>";
 	this._infoWindow.setContent(content);
 	this._infoWindow.open(this._map, inMarker);
 	this.onMarkerChange(inData);
@@ -204,11 +427,6 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
     onMarkerClick: function(inData) {
     },
     onMarkerChange: function(inData) {
-    },
-    listProperties: function() {
-	var props = this.inherited(arguments);
-	props.selectedItem.type = this.dataSet ? this.dataSet.type : "";
-	return props
     },
     _end: 0
 });
@@ -219,18 +437,3 @@ wm.gadget.GoogleMap.initialize = function() {
     wm.gadget.GoogleMap.waitingForInitialize = [];
 }
 
-
-
-wm.Object.extendSchema(wm.gadget.GoogleMap, {
-    dataSet: { readonly: true, group: "data", order: 1, bindTarget: 1, type: "wm.Variable", isList: true},
-    selectedItem: { ignore: 1, bindSource: 1, isObject: true, simpleBindProp: true },
-    latitudeField: {group: "Marker", order: 1},
-    longitudeField: {group: "Marker", order: 2},
-    titleField: {group: "Marker", order: 3},
-    descriptionField: {group: "Marker", order: 4},
-    iconField: {group: "Marker", order: 5},
-    latitude: {group: "Map", order: 1, bindTarget: 1},
-    longitude: {group: "Map", order: 2, bindTarget: 1},
-    zoom: {group: "Map", order: 3, options: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]},
-    mapType: {group: "Map", order: 4}
-});

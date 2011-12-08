@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -53,10 +53,17 @@ dojo.declare("wm.ServiceCall", null, {
 	*/
 	operation: "",
 	_operationInfo: {},
+
+        inFlightBehavior: "executeLast",
 	destroy: function() {
+	        delete this._inFlightBacklog;
 		this.inherited(arguments);
 		wm.fire(this._requester, "cancel");
 	},
+    init: function() {
+	this.inherited(arguments);
+	this._inFlightBacklog = [];
+    },
 	postInit: function() {
 		this.inherited(arguments);
 		this.connectStartUpdate();
@@ -72,6 +79,10 @@ dojo.declare("wm.ServiceCall", null, {
 			this.input = this.createInput();
 		this.subscribe(this.input.getRuntimeId() + "-changed", this, "inputChanged");
 	},
+    /* Used when binding to input */
+    setInput: function(inDataSet) {
+	this.input.setDataSet(inDataSet);
+    },
 	//=======================================================
 	// Service
 	//=======================================================
@@ -141,7 +152,7 @@ dojo.declare("wm.ServiceCall", null, {
 	//=======================================================
 	connectStartUpdate: function() {
 		if (this.owner && this.owner.start)
-			this.connect(this.owner, "start", this, "doStartUpdate");
+			this.connectOnce(this.owner, "start", this, "doStartUpdate");
 	},
 	setAutoUpdate: function(inAutoUpdate) {
 		this.autoUpdate = inAutoUpdate;
@@ -175,13 +186,25 @@ dojo.declare("wm.ServiceCall", null, {
 		return this._isDesignLoaded ? this.doDesigntimeUpdate() : this._update();
 	},
 	_update: function() {
-		if (this.canUpdate()) {
-			this.onBeforeUpdate(this.input);
-		        wm.cancelJob(this.getRuntimeId() + ".doAutoUpdate"); // just in case there's a job already scheduled
-			return this.request();
+	    if (this._requester && !this._isDesignLoaded) {
+		if (this.inFlightBehavior == "executeLast")
+		    this._inFlightBacklog.pop();
+		if (this.inFlightBehavior == "executeLast" || 
+		    this.inFlightBehavior == "executeAll") {
+		    var d = new dojo.Deferred();
+		    this._inFlightBacklog.push({args: this.getArgs(),
+					operation: this.operation,
+					deferred: d});
 		}
+		return d;
+	    }
+	    if (this.canUpdate()) {
+		this.onBeforeUpdate(this.input);
+		wm.cancelJob(this.getRuntimeId() + ".doAutoUpdate"); // just in case there's a job already scheduled
+		return this.request();
+	    }
 	},
-	/**
+        /**
 		Return a boolean value used to determine if the service can be updated.
 		Use the <a href="onCanUpdate">onCanUpdate</a>,
 		event to control the output of canUpdate.
@@ -192,18 +215,45 @@ dojo.declare("wm.ServiceCall", null, {
 		return info.canUpdate;
 	},
 	_getCanUpdate: function() {
-		return this._service && this.operation && !Boolean(this._requester);
+	    return this._service && this.operation;
 	},
 	getArgs: function() {
-		return this.input.getArgs();
+	    var args = this.input.getArgs();
+	    var operationType = this.getOperationType();
+	    if (operationType == "hqlquery") {
+		var max = this.isDesignLoaded() ? this.designMaxResults : this.maxResults;
+		var pagingOptions = max ? { maxResults: max, firstResult: this.firstRow || 0} : {};
+		args.push(pagingOptions);
+	    }
+	    return args;
 	},
+    getOperationType: function() {
+	    var service = this._service;
+	    if (service) {
+		var operation = service._operations[this.operation];
+	    }
+	    if (operation) {
+		return operation.operationType;
+	    } else {
+		return "";
+	    }
+    },
     replaceAllDateObjects: function(item) {
         for (var i in item) {
             if (item[i] instanceof Date) item[i] = item[i].getTime();
             else if (typeof item[i] == "object") this.replaceAllDateObjects(item[i]);
         }
     },
-	request: function(inArgs) {
+    /* inArgs optional too... */
+    request: function(inArgs, optionalOp, optionalDeferred) {
+	    /* Update all parameters to be current before we fire this 
+	    if (this.$.binding) {
+		this.$.binding.refresh();
+	    }*/
+	    /* Update all parameters to be current before we fire this 
+	    if (this.$.binding) {
+		this.$.binding.refresh();
+	    }*/
             if (this.downloadFile) {
 	        var args = inArgs || this.input.getArgsHash();
                 this.replaceAllDateObjects(args);
@@ -243,7 +293,7 @@ dojo.declare("wm.ServiceCall", null, {
 				 action: urlStr});
 		var method = iframedoc.createElement("input");
 		dojo.attr(method, {name: "method",
-				   value: this.operation});
+				   value: optionalOp || this.operation});
 		form.appendChild(method);
                 for (i in args) {
 		    var input = iframedoc.createElement("textarea");
@@ -277,10 +327,21 @@ dojo.declare("wm.ServiceCall", null, {
             } else {
 	        var args = inArgs || this.getArgs();
                 //this.replaceAllDateObjects(args);
-		wm.logging && console.debug("request", this.getId(), "operation", this.operation, "args", args);
+		wm.logging && console.debug("request", this.getId(), "operation", optionalOp || this.operation, "args", args);
 		if (djConfig.isDebug)
-		  console.log("REQUEST   Component: " + this.getRoot() + "." + this.name + ";  Operation: " + this.operation);
-	        var d = this._requester = this._service.invoke(this.operation, args, this.owner, this);
+		    console.log("REQUEST   Component: " + this.getRoot() + "." + this.name + ";  Operation: " + (optionalOp || this.operation));
+
+	        var d = this._requester = this._service.invoke(optionalOp || this.operation, args, this.owner, this);
+		if (optionalDeferred) {
+		    d.then(
+			function(inValue) {
+			    optionalDeferred.callback(inValue);
+			},
+			function(inError) {
+			    optionalDeferred.errback(inError);
+			}
+		    );
+		}
 		return this.processRequest(d);
             }
 	},
@@ -300,32 +361,22 @@ dojo.declare("wm.ServiceCall", null, {
 	// Result Processing
 	//=======================================================
 	result: function(inResult) {
-	        this._requester = false;
-		var tmp = [];
-		var max = this.isDesignLoaded() ? this.designMaxResults : this.maxResults;
-		if ((this instanceof wm.ServiceVariable) && !(this instanceof wm.LiveVariable) && inResult 
-		    && dojo.isArray(inResult) && inResult.length > 1 && max > 0) {
-			var cnt = 0;
-			for (var o in inResult) {
-				tmp[cnt] = inResult[cnt];
-				cnt++;
-				if (max > 0 && cnt == max) break;
-			}
-			this.processResult(tmp);
-		        if (this.updateOnResult)
-			    this.update();
-			return tmp;
-		} else {
-			this.processResult(inResult);
-		        if (this.updateOnResult)
-			    this.update();
-			return inResult;
-		}
+	    this._requester = false;
+	    this.processResult(inResult);
+	    if (this.updateOnResult) this.update();
+	    this.processResult(inResult);
+	    if (!this._isDesignLoaded && this._inFlightBacklog.length) {
+		wm.onidle(this, function() {
+		    var backlog = this._inFlightBacklog.shift();
+		    this.request(backlog.args, backlog.operation, backlog.deferred);
+		});
+	    }
+	    return inResult;
 	},
 	processResult: function(inResult) {
 		this.onResult(inResult);
 		this.onSuccess(inResult);
-	    if (!this.isDestroyed)
+	    if (!this.isDestroyed && this.$.queue)
 		this.$.queue.update();
 	},
 	error: function(inError) {
@@ -337,9 +388,7 @@ dojo.declare("wm.ServiceCall", null, {
 		this.onResult(inError);
 		this.onError(inError);
 	},
-    setUpdateOnResult: function(inVal) {
-	this.updateOnResult = inVal;
-    },
+
 	//=======================================================
 	// Events
 	//=======================================================
@@ -398,12 +447,16 @@ dojo.declare("wm.ServiceCall", null, {
 		}
 	}
 });
-
+	    
 /**#@+ @design */
 wm.ServiceCall.extend({
 	clearInput: "(clear input)",
 	updateNow: "(update now)",
 	queue: "(serviceCalls)",
+	getUniqueName: function(inName) {
+	    if (inName === "input") return "input";
+	    return this.inherited(arguments);
+	},
 	/** @lends wm.ServiceCall.prototype */
 	doDesigntimeUpdate: function() {
 		this._designTime = true; //The line is not being used now.  It may be used in the future to differenciate requests from 
@@ -441,33 +494,17 @@ wm.ServiceCall.extend({
 		}
 		d.show();
 	},
-    setPropEdit: function(inName, inValue, inDefault) {
-	switch (inName) {
-	case "operation":
-	    var editor = dijit.byId("studio_propinspect_operation");
-	    var store = editor.store.root;
-	    while (store.firstChild) store.removeChild(store.firstChild);
 
-	    var	s = this._service;
-	    var valueOk = s && s.getOperation(inValue);
-	    var methods = s && s.getOperationsList();
-	    
-	    
-	    dojo.forEach(methods, function(method) {
-		var node = document.createElement("option");
-		node.innerHTML = method;
-		store.appendChild(node);
-	    });
-	    return true;
-	}
-	return this.inherited(arguments);
-    },
 
-	makePropEdit: function(inName, inValue, inDefault) {
+	makePropEdit: function(inName, inValue, inEditorProps) {
+	    var prop = this.schema ? this.schema[inName] : null;
+	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
+	    var prop = this.schema ? this.schema[inName] : null;
+	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
 		switch (inName) {
 			case "service":
-				return makeSelectPropEdit(inName, inValue, this.getServicesList(), inDefault);
-			case "operation":
+		    return new wm.SelectMenu(dojo.mixin(inEditorProps, {options: this.getServicesList()}));
+		case "operation":
 				var
 					s = this._service,
 					valueOk = s && s.getOperation(inValue),
@@ -478,24 +515,8 @@ wm.ServiceCall.extend({
 						this.set_operation(inValue);
 				}
 				if (methods)
-					return makeSelectPropEdit(inName, inValue, methods, inDefault);
+				    return new wm.SelectMenu(dojo.mixin(inEditorProps, {options: methods}));
 				break;
-			case "queue":
-			case "updateNow":
-			case "clearInput":
-				return makeReadonlyButtonEdit(inName, inValue, inDefault);
-		}
-		return this.inherited(arguments);
-	},
-	editProp: function(inName, inValue, inInspector) {
-		switch (inName) {
-			case "updateNow":
-				return this.update();
-			case "queue":
-				this.showQueueDialog();
-				return;
-			case "clearInput":
-				return this.doClearInput();
 		}
 		return this.inherited(arguments);
 	}
@@ -508,7 +529,7 @@ wm.Object.extendSchema(wm.ServiceCall, {
     canUpdate: {group: "method"}
 });
 
-
+	     
 //===========================================================================
 // Variable used as a service input
 //===========================================================================
@@ -549,7 +570,7 @@ dojo.declare("wm.ServiceInput", wm.Variable, {
 	return args;
     },
 	getArgs: function() {
-		var data= this.getData(), args=[], d;
+		var data= this.getData(true), args=[], d;
 		// convert to array
 		for (var p in this._dataSchema) {
 			if (data !== undefined)
@@ -561,8 +582,14 @@ dojo.declare("wm.ServiceInput", wm.Variable, {
 			}
 			*/
 		}
-		return args;
+	    return args;
 	}
+});
+
+wm.ServiceInput.extend({
+    writeProps: function() {
+	return {type: this.type};
+    }
 });
 
 wm.Object.extendSchema(wm.ServiceInput, {

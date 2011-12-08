@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -41,12 +41,28 @@ dojo.declare("wm.ColorPickerDialog", wm.Dialog, {
             document.getElementsByTagName("head")[0].appendChild(link);
             wm.ColorPickerDialog.cssLoaded = true;
         }
-        this.colorPickerControl = new wm.Control({name: "colorPickerControl", width: "325px", height: "193px", owner: this, parent: this});
-        this.buttonPanel = new wm.Panel({name: "buttonPanel", width: "100%", height: "100%", layoutKind: "left-to-right", owner: this, parent: this, horizontalAlign: "center"});
+        this.colorPickerControl = new wm.Control({name: "colorPickerControl", width: "325px", height: "170px", owner: this, parent: this});
+        this.textPanel = new wm.Panel({name: "buttonPanel", width: "100%", height: "26px", layoutKind: "left-to-right", owner: this, parent: this, horizontalAlign: "center"});
+
         this.BrightenButton = new wm.Button({caption: "Bright",//studio.getDictionaryItem("wm.ColorPickerDialog.BRIGHTEN"), 
-					     width: "75px", height: "30px", parent: this.buttonPanel, owner: this});
+					     width: "75px", height: "100%", parent: this.textPanel, owner: this});
         this.DarkenButton = new wm.Button({caption: "Dark",//studio.getDictionaryItem("wm.ColorPickerDialog.DARKEN"), 
-					   width: "75px", height: "30px", parent: this.buttonPanel, owner: this});
+					   width: "75px", height: "100%", parent: this.textPanel, owner: this});
+	this.text = new wm.Text({
+	    owner: this,
+	    parent: this.textPanel,
+	    name: "text",
+	    width: "100%",
+	    resetButton: true,
+	    placeHolder: "Enter Color",
+	    changeOnKey: true,
+	    onchange: dojo.hitch(this, "textChange"),
+	    onEnterKeyPress: dojo.hitch(this, "onOK")
+	});
+
+
+        this.buttonPanel = new wm.Panel({_classes: {domNode: ["dialogfooter"]}, name: "buttonPanel", width: "100%", height: "100%", layoutKind: "left-to-right", owner: this, parent: this, horizontalAlign: "right"});
+
         this.CancelButton = new wm.Button({caption: "Cancel",//studio.getDictionaryItem("wm.ColorPickerDialog.CANCEL"), 
 					   width: "75px", height: "30px", parent: this.buttonPanel, owner: this});
         this.OKButton = new wm.Button({caption: "OK",//studio.getDictionaryItem("wm.ColorPickerDialog.OK"), 
@@ -70,12 +86,18 @@ dojo.declare("wm.ColorPickerDialog", wm.Dialog, {
             return this._tmpValue;
         }
     },
-    setValue: function(inValue) {
+    setDijitValue: function(inValue) {
         if (this.colorPicker) {
-            this.colorPicker.setColor(inValue);
+	    if (inValue) {
+		this.colorPicker.setColor(inValue);
+	    }
         } else {
             this._tmpValue = inValue;
         }
+	if (this.text && inValue != this.text.getDataValue()) {
+	    this.text.setDataValue(inValue);
+	}
+	
     },
     setShowing: function(inShowing, forceShow) {
 	var hasPicker = Boolean(this.colorPicker);
@@ -106,7 +128,7 @@ dojo.declare("wm.ColorPickerDialog", wm.Dialog, {
                 this._changed = false;
 
             if (this._tmpValue) {
-                this.setValue(this._tmpValue);
+                this.setDijitValue(this._tmpValue);
                 delete this._tmpValue;
             }
             if (this.domNode.parentNode != document.body) {
@@ -130,7 +152,13 @@ dojo.declare("wm.ColorPickerDialog", wm.Dialog, {
     },
     valueChange: function(inValue) {        
         this._changed = true;
+	this.text.setDataValue(inValue);
         this.onChange(inValue);
+    },
+    textChange: function(inDisplayValue, inDataValue) {
+	this._changed = true;
+	this.setDijitValue(inDisplayValue);
+        this.onChange(inDisplayValue);
     },
     onChange: function(inValue) {
 
@@ -160,7 +188,7 @@ dojo.declare("wm.ColorPickerDialog", wm.Dialog, {
 
 
 
-        this.setValue(result);
+        this.setDijitValue(result);
         this.onChange(result);
     },
     darken: function() {
@@ -175,7 +203,7 @@ dojo.declare("wm.ColorPickerDialog", wm.Dialog, {
             if (str.length < 2) str = "0" + str;
             result += str;
         }
-        this.setValue(result);
+        this.setDijitValue(result);
         this.onChange(result);
     },
     destroy: function() {

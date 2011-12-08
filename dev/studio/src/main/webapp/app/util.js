@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -142,7 +142,8 @@ wm.openUrl = function(inUrl, inTitle, inWindowName) {
 wm.openUrlDialog = function(inUrl, inTitle, inWindowName) {
     var d = wm.openUrl.dialog;
     if (!d) {
-	d = wm.openUrl.dialog = new wm.Dialog({title: studio.getDictionaryItem("POPUP_BLOCKER_TITLE"),
+	d = wm.openUrl.dialog = new wm.Dialog({_classes: {domNode: ["studiodialog"]},
+					       title: studio.getDictionaryItem("POPUP_BLOCKER_TITLE"),
 					       owner: studio, 
 					       width: 320, 
 					       height: 110,
