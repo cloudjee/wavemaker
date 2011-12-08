@@ -154,8 +154,11 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition i
         ElementType rtn = new ElementType("rtn", opRtn.getTypeRef(), opRtn.isIsList());
         return rtn;
     }
-    
-    public String getOperationType(String operationName) {return null;}
+
+    @Override
+    public String getOperationType(String operationName) {
+        return null;
+    }
 
     @Override
     public List<ElementType> getTypes() {

@@ -50,7 +50,7 @@ public class InternalRuntime {
     public static void setInternalRuntimeBean(InternalRuntime bean) {
         InternalRuntime.internalRuntime = bean;
     }
-    
+
     public JSONState getJSONState() {
         return this.jsonState;
     }

@@ -23,8 +23,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.NDC;
-import org.json.JSONObject;
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -326,7 +326,7 @@ public class DataServiceGenerator extends ServiceGenerator {
             }
         }
 
-        if (operationTypeHql(smdObject, op.getName()) && op.isQuery()) {
+        if (operationTypeHql(this.smdObject, op.getName()) && op.isQuery()) {
             exp.arg(JExpr.ref("pagingOptions"));
         }
 
@@ -449,9 +449,10 @@ public class DataServiceGenerator extends ServiceGenerator {
         return null;
     }
 
+    @Override
     protected void addAdditionalInputParams(JMethod method, String operationName) {
-        if (operationTypeHql(smdObject, operationName)) {
-            DataServiceOperation op = ds.getOperation(operationName);
+        if (operationTypeHql(this.smdObject, operationName)) {
+            DataServiceOperation op = this.ds.getOperation(operationName);
             if (op.isQuery()) {
                 method.param(PagingOptions.class, "pagingOptions");
             }
@@ -460,11 +461,11 @@ public class DataServiceGenerator extends ServiceGenerator {
 
     private boolean operationTypeHql(JSONObject obj, String operationName) {
         try {
-            JSONArray methods = (JSONArray)obj.get("methods");
-            for (int i=0; i<methods.length(); i++) {
+            JSONArray methods = (JSONArray) obj.get("methods");
+            for (int i = 0; i < methods.length(); i++) {
                 JSONObject method = methods.getJSONObject(i);
                 if (method.get("name").equals(operationName)) {
-                    String opType = (String)method.get("operationType");
+                    String opType = (String) method.get("operationType");
                     if (opType == null || !opType.equals("hqlquery")) {
                         return false;
                     } else {

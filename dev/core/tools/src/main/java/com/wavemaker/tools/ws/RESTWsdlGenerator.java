@@ -288,8 +288,7 @@ public class RESTWsdlGenerator implements IPwsRestWsdlGenerator {
         return newParamName;
     }
 
-    private Element generateDocumentation(String content)
-            throws ParserConfigurationException {
+    private Element generateDocumentation(String content) throws ParserConfigurationException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
         DocumentBuilder db = dbf.newDocumentBuilder();

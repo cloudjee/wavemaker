@@ -33,6 +33,7 @@ public class FooArg2TypeDefinition extends NonBeanPrimitiveTypeDefinition {
      * 
      * @see com.wavemaker.json.type.TypeDefinition#getTypeName()
      */
+    @Override
     public String getTypeName() {
         return NonBeanTypeFactory.FOO_ARG_2;
     }
@@ -42,6 +43,7 @@ public class FooArg2TypeDefinition extends NonBeanPrimitiveTypeDefinition {
      * 
      * @see com.wavemaker.json.type.TypeDefinition#getShortName()
      */
+    @Override
     public String getShortName() {
         return null;
     }
@@ -51,6 +53,7 @@ public class FooArg2TypeDefinition extends NonBeanPrimitiveTypeDefinition {
      * 
      * @see com.wavemaker.json.type.TypeDefinition#isLiveService()
      */
+    @Override
     public boolean isLiveService() {
         return false;
     }
@@ -60,6 +63,7 @@ public class FooArg2TypeDefinition extends NonBeanPrimitiveTypeDefinition {
      * 
      * @see com.wavemaker.json.type.TypeDefinition#newInstance(java.lang.Object[])
      */
+    @Override
     public Object newInstance(Object... args) {
         if (!(args[0] instanceof Number)) {
             throw new WMRuntimeException("bad args: " + args[0] + " (" + args[0].getClass() + ")");

@@ -43,6 +43,7 @@ public class NonBeanTypeFactory implements TypeState {
      * 
      * @see com.wavemaker.json.type.TypeState#addType(com.wavemaker.json.type.TypeDefinition)
      */
+    @Override
     public void addType(TypeDefinition typeDefinition) {
         // not used
     }
@@ -52,6 +53,7 @@ public class NonBeanTypeFactory implements TypeState {
      * 
      * @see com.wavemaker.json.type.TypeState#getType(java.lang.String)
      */
+    @Override
     public TypeDefinition getType(String typeName) {
 
         if (FOO_ARG_1.equals(typeName)) {
@@ -70,6 +72,7 @@ public class NonBeanTypeFactory implements TypeState {
      * 
      * @see com.wavemaker.json.type.TypeState#isTypeKnown(java.lang.String)
      */
+    @Override
     public boolean isTypeKnown(String typeName) {
 
         try {

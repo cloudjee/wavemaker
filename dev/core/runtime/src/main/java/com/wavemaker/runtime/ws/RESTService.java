@@ -99,7 +99,6 @@ public class RESTService {
         } else {
             endpointAddress = this.parameterizedURI;
         }
-        
 
         Object postData = "";
         if (method != null && method.equals(Constants.HTTP_METHOD_POST)) {
@@ -135,7 +134,7 @@ public class RESTService {
             sb.append(entry.getKey());
             sb.append("=");
             if (entry.getValue() != null) {
-                sb.append((String)entry.getValue());
+                sb.append((String) entry.getValue());
             }
             sb.append("&");
         }

@@ -335,7 +335,7 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
     }
 
     @Override
-    protected String getFSType(){
-    	return new String("CF-GFS");
+    protected String getFSType() {
+        return new String("CF-GFS");
     }
 }

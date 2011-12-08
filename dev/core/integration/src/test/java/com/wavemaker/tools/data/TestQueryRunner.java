@@ -50,6 +50,7 @@ public class TestQueryRunner extends WMTestCase {
         this.f = DataServiceTestUtils.setupSakilaConfiguration().getParentFile();
         ClassLoaderUtils.TaskRtn task = new ClassLoaderUtils.TaskRtn() {
 
+            @Override
             public Object run() {
                 return SpringService.initQueryRunner(DataServiceTestConstants.SAKILA_SPRING_CFG);
             }

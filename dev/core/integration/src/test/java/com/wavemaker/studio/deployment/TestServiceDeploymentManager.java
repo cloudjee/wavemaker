@@ -107,6 +107,7 @@ public class TestServiceDeploymentManager extends StudioTestCase {
             AntUtils.unjar(war, tmp);
             FileService fileService = new AbstractFileService(new LocalStudioConfiguration()) {
 
+                @Override
                 public Resource getFileServiceRoot() {
                     return new FileSystemResource(tmp.getAbsolutePath() + "/").createRelative("WEB-INF/classes");
                 }

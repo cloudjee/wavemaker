@@ -54,8 +54,11 @@ public class Reveng {
     private static final String ORACLE_DIALECT = "OracleDialect";
 
     private static final String TYPE_MAPPING = "type-mapping";
+
     private static final String SQL_TYPE = "sql-type";
+
     private static final String JDBC_TYPE = "jdbc-type";
+
     private static final String HIBERNATE_TYPE = "hibernate-type";
 
     private String packageName;
@@ -211,7 +214,8 @@ public class Reveng {
 
     }
 
-    //Oracle jdbc driver maps timestamp colunbs to "Other" type.  Add the following mapping rule for correct type mapping.
+    // Oracle jdbc driver maps timestamp colunbs to "Other" type. Add the following mapping rule for correct type
+    // mapping.
     private void addTypeMappingRule(XMLWriter xmlWriter, String dialect) {
         if (dialect.contains(ORACLE_DIALECT)) {
             xmlWriter.addElement(TYPE_MAPPING);

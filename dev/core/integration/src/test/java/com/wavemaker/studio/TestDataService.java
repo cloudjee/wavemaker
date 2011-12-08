@@ -59,49 +59,61 @@ public class TestDataService extends StudioTestCase {
             this.serviceId = serviceId;
         }
 
+        @Override
         public String getRuntimeConfiguration() {
             return null;
         }
 
+        @Override
         public String getServiceClass() {
             return "abc";
         }
 
+        @Override
         public String getServiceId() {
             return this.serviceId;
         }
 
+        @Override
         public String getPackageName() {
             return "def";
         }
 
+        @Override
         public ServiceType getServiceType() {
             return new DataServiceType();
         }
 
+        @Override
         public List<String> getOperationNames() {
             return Collections.emptyList();
         }
 
+        @Override
         public List<ElementType> getInputTypes(String operationName) {
             return Collections.emptyList();
         }
 
+        @Override
         public ElementType getOutputType(String operationName) {
             return null;
         }
 
+        @Override
         public List<ElementType> getTypes() {
             return Collections.emptyList();
         }
 
+        @Override
         public void dispose() {
         }
 
+        @Override
         public List<String> getEventNotifiers() {
             return new ArrayList<String>();
         }
 
+        @Override
         public boolean isLiveDataService() {
             return true;
         }
@@ -111,7 +123,10 @@ public class TestDataService extends StudioTestCase {
             return null;
         }
 
-        public String getOperationType(String operationName) {return null;}
+        @Override
+        public String getOperationType(String operationName) {
+            return null;
+        }
     }
 
     @Before

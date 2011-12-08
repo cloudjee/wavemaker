@@ -62,16 +62,20 @@ public interface IPwsRestImporter {
     String listAllOperations(PwsLoginInfo loginInfo) throws Exception;
 
     /**
-     * <p>Imports partner web services for the selected service and operations. Typically the implemented logic in this method
-     * first gets the service specification (<tt>XSD</tt>, <tt>WSDL</tt> or <tt>WADL</tt>) and then calls <code>buildRestService</code>
-     * (if <tt>XSD</tt> ) in <code>WebServiceToolsManager</code> or calls <code>importWSDL</code> (if <tt>WSDL</tt> or <tt>WADL</tt>)
-     * in the same class.</p>
-     *
-     * <p>Artifacts generated include files such as Spring bean configuration files, service definition files, java scripts
-     * to store element types, service invocation Java classes, and Java classes for JAXB.</p>
-     *
-     * @param loginInfo the object of <code>PwsLoginInfo</code> containing information such as host, posrt, user name and
-     * password
+     * <p>
+     * Imports partner web services for the selected service and operations. Typically the implemented logic in this
+     * method first gets the service specification (<tt>XSD</tt>, <tt>WSDL</tt> or <tt>WADL</tt>) and then calls
+     * <code>buildRestService</code> (if <tt>XSD</tt> ) in <code>WebServiceToolsManager</code> or calls
+     * <code>importWSDL</code> (if <tt>WSDL</tt> or <tt>WADL</tt>) in the same class.
+     * </p>
+     * 
+     * <p>
+     * Artifacts generated include files such as Spring bean configuration files, service definition files, java scripts
+     * to store element types, service invocation Java classes, and Java classes for JAXB.
+     * </p>
+     * 
+     * @param loginInfo the object of <code>PwsLoginInfo</code> containing information such as host, posrt, user name
+     *        and password
      * @param service the service name
      * @param serviceAlias the alias of service name
      * @param operations selected operations

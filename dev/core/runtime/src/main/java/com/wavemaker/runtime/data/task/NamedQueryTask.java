@@ -52,13 +52,13 @@ public class NamedQueryTask extends BaseTask implements Task {
      */
     @Override
     public Object run(Session session, String dbName, Object... input) {
-        
+
         PagingOptions pagingOptions = null;
 
         if (input.length > 0) {
             Object o = input[input.length - 1];
             if (o instanceof PagingOptions) {
-                pagingOptions = (PagingOptions)o;
+                pagingOptions = (PagingOptions) o;
                 Object[] ar = new Object[input.length - 1];
                 System.arraycopy(input, 0, ar, 0, ar.length);
                 input = ar;

@@ -68,7 +68,9 @@ public interface DataServiceMetaData {
     public Collection<String> getOperationNames();
 
     public NamedQueryDefinition getQueryDefinition(String queryName);
+
     public NamedQueryDefinition getHqlQueryDefinition(String queryName);
+
     public NamedQueryDefinition getSqlQueryDefinition(String queryName);
 
     public DataServiceOperation getOperation(String operationName);

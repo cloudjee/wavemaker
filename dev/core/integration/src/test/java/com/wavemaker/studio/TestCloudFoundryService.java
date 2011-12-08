@@ -1,18 +1,22 @@
 
 package com.wavemaker.studio;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import org.cloudfoundry.client.lib.CloudFoundryClient;
 import org.cloudfoundry.client.lib.CloudService;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.util.StringUtils;
+
 import com.wavemaker.tools.deployment.DeploymentDB;
 
 /**
  * @author slee
- *
+ * 
  */
 
 public class TestCloudFoundryService {
@@ -29,7 +33,7 @@ public class TestCloudFoundryService {
 
     private static final String TEST_USER_PASS = System.getProperty("vcap.passwd");
 
-    private static final String TEST_TARGET = System.getProperty("vcap.target"); //https://api.cloudfoundry.com
+    private static final String TEST_TARGET = System.getProperty("vcap.target"); // https://api.cloudfoundry.com
 
     private static final String TEST_DB_NAME = System.getProperty("vcap.db");
 

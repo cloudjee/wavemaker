@@ -103,6 +103,7 @@ public class TestConfigurationCompiler extends StudioTestCase {
         this.dsm = (DesignServiceManager) getApplicationContext().getBean("designServiceManager");
         this.fileService = new AbstractFileService(new LocalStudioConfiguration()) {
 
+            @Override
             public Resource getFileServiceRoot() {
                 return new FileSystemResource("/");
             }

@@ -40,12 +40,12 @@ import com.wavemaker.json.type.reflect.ReflectTypeDefinition;
 import com.wavemaker.json.type.reflect.ReflectTypeState;
 import com.wavemaker.json.type.reflect.ReflectTypeUtils;
 import com.wavemaker.runtime.javaservice.JavaServiceType;
+import com.wavemaker.runtime.pws.IPwsServiceModifier;
 import com.wavemaker.runtime.server.ServerUtils;
 import com.wavemaker.runtime.service.LiveDataService;
 import com.wavemaker.runtime.service.ServiceType;
 import com.wavemaker.runtime.service.definition.ReflectServiceDefinition;
 import com.wavemaker.runtime.service.definition.ServiceOperation;
-import com.wavemaker.runtime.pws.IPwsServiceModifier;
 
 /**
  * @author Simon Toens
@@ -328,7 +328,8 @@ public class JavaServiceDefinition implements ReflectServiceDefinition {
         return null;
     }
 
+    @Override
     public List<ServiceOperation> getServiceOperations(IPwsServiceModifier serviceModifier) {
-        return this.operations;    
+        return this.operations;
     }
 }

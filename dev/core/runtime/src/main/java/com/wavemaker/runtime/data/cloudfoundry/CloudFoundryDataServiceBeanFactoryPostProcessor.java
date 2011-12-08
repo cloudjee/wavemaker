@@ -141,7 +141,7 @@ public class CloudFoundryDataServiceBeanFactoryPostProcessor implements BeanFact
                 DataSource cfDataSource = new RdbmsServiceCreator().createService(service);
                 defaultListableBeanFactory.registerSingleton(dsBean, cfDataSource);
             } else {
-            	log.warn("Service "+serviceName+" exists, but is not an RDBMS service as expected.");
+                log.warn("Service " + serviceName + " exists, but is not an RDBMS service as expected.");
             }
         }
     }

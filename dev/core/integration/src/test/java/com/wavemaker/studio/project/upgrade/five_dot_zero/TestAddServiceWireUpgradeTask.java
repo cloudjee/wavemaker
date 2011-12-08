@@ -255,53 +255,68 @@ public class TestAddServiceWireUpgradeTask extends StudioTestCase {
 
     protected static class AbstractTestServiceDefinition extends AbstractDeprecatedServiceDefinition {
 
+        @Override
         public void dispose() {
         }
 
+        @Override
         public List<String> getEventNotifiers() {
             return new ArrayList<String>();
         }
 
+        @Override
         public List<ElementType> getInputTypes(String operationName) {
             return new ArrayList<ElementType>();
         }
 
+        @Override
         public List<String> getOperationNames() {
             return new ArrayList<String>();
         }
 
+        @Override
         public ElementType getOutputType(String operationName) {
             return null;
         }
 
+        @Override
         public String getPackageName() {
             return null;
         }
 
+        @Override
         public String getRuntimeConfiguration() {
             return null;
         }
 
+        @Override
         public String getServiceClass() {
             return null;
         }
 
+        @Override
         public String getServiceId() {
             return null;
         }
 
+        @Override
         public ServiceType getServiceType() {
             return null;
         }
 
+        @Override
         public List<ElementType> getTypes() {
             return new ArrayList<ElementType>();
         }
 
+        @Override
         public boolean isLiveDataService() {
             return false;
         }
 
-        public String getOperationType(String operationName) {return null;}
+        @Override
+        public String getOperationType(String operationName) {
+            return null;
+        }
     }
 }

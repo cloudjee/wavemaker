@@ -234,8 +234,15 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
         return rtn;
     }
 
-    public NamedQueryDefinition getHqlQueryDefinition(String queryName) {return  null;}
-    public NamedQueryDefinition getSqlQueryDefinition(String queryName) {return  null;}
+    @Override
+    public NamedQueryDefinition getHqlQueryDefinition(String queryName) {
+        return null;
+    }
+
+    @Override
+    public NamedQueryDefinition getSqlQueryDefinition(String queryName) {
+        return null;
+    }
 
     private DataOperationFactory initFactory(String configurationName) {
         return new DataOperationFactory() {

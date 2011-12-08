@@ -67,15 +67,13 @@ public class PwsImportService {
         return importer.listAllOperations(loginInfo);
     }
 
-    public void importOperations(PwsLoginInfo loginInfo, String serviceName, List<String> operations)
-            throws Exception {
+    public void importOperations(PwsLoginInfo loginInfo, String serviceName, List<String> operations) throws Exception {
         importOperations(loginInfo, serviceName, null, operations);
     }
 
-    public void importOperations(PwsLoginInfo loginInfo, String serviceName, String serviceAlias, List<String> operations)
-            throws Exception {
-        IPwsLoginManager loginMgr = pwsLoginManagerBeanFactory.getPwsLoginManager(loginInfo.getPartnerName());
-        IPwsRestImporter importer = pwsRestImporterBeanFactory.getPwsRestImporter(loginInfo.getPartnerName());
+    public void importOperations(PwsLoginInfo loginInfo, String serviceName, String serviceAlias, List<String> operations) throws Exception {
+        IPwsLoginManager loginMgr = this.pwsLoginManagerBeanFactory.getPwsLoginManager(loginInfo.getPartnerName());
+        IPwsRestImporter importer = this.pwsRestImporterBeanFactory.getPwsRestImporter(loginInfo.getPartnerName());
 
         String sessionId = loginMgr.logIn(loginInfo);
         loginInfo.setSessionId(sessionId);

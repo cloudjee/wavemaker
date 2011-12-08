@@ -23,8 +23,8 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.NDC;
-import org.json.JSONObject;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.core.io.Resource;
 
 import com.sun.codemodel.JBlock;
@@ -84,11 +84,10 @@ public abstract class ServiceGenerator {
 
     protected WSDL wsdl;
 
-    private String smdContent;
-
     protected JSONObject smdObject;
 
-    public ServiceGenerator() {}
+    public ServiceGenerator() {
+    }
 
     public ServiceGenerator(GenerationConfiguration configuration) {
         // this.configuration = configuration;
@@ -278,7 +277,7 @@ public abstract class ServiceGenerator {
     }
 
     protected List<ElementType> getInputTypes(String operName) {
-        return serviceDefinition.getInputTypes(operName);
+        return this.serviceDefinition.getInputTypes(operName);
     }
 
     protected JDefinedClass generateClass() throws GenerationException {
@@ -439,16 +438,15 @@ public abstract class ServiceGenerator {
         return type;
     }
 
-    //Sunclasses may override this method if additional input parameters need to be added
+    // Sunclasses may override this method if additional input parameters need to be added
     protected void addAdditionalInputParams(JMethod method, String operationName) {
     }
 
     public void setSmdContent(String smdContent) {
-        this.smdContent = smdContent;
         try {
-            smdObject = new JSONObject(smdContent);
+            this.smdObject = new JSONObject(smdContent);
         } catch (JSONException ex) {
-            smdObject = null;
+            this.smdObject = null;
         }
     }
 }

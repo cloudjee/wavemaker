@@ -174,6 +174,7 @@ public class TestUpgradeManager extends StudioTestCase {
 
     public static class CheckFileCreationTask_0_1_1 implements UpgradeTask {
 
+        @Override
         public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
             try {
@@ -196,6 +197,7 @@ public class TestUpgradeManager extends StudioTestCase {
 
     public static class CheckFileCreationTask_0_1 implements UpgradeTask {
 
+        @Override
         public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
             try {
@@ -218,6 +220,7 @@ public class TestUpgradeManager extends StudioTestCase {
 
     public static class FileCreationUpgradeTask implements UpgradeTask {
 
+        @Override
         public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
             try {
@@ -252,6 +255,7 @@ public class TestUpgradeManager extends StudioTestCase {
 
     public static class DoNothingUpgradeTask implements UpgradeTask {
 
+        @Override
         public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
             // do nothing
         }

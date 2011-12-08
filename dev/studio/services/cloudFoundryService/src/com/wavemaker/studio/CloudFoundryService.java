@@ -12,8 +12,8 @@ import org.springframework.http.HttpStatus;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
-import com.wavemaker.tools.deployment.cloudfoundry.VmcDeploymentTarget;
 import com.wavemaker.tools.deployment.DeploymentDB;
+import com.wavemaker.tools.deployment.cloudfoundry.VmcDeploymentTarget;
 
 @ExposeToClient
 public class CloudFoundryService {

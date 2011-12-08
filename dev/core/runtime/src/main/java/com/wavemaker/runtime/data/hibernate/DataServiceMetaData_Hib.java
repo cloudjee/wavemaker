@@ -339,20 +339,21 @@ public class DataServiceMetaData_Hib implements DataServiceMetaData { // salesfo
         return rtn;
     }
 
+    @Override
     public NamedQueryDefinition getHqlQueryDefinition(String queryName) {
         Configuration cfg = getConfiguration();
-        NamedQueryDefinition rtn = (NamedQueryDefinition) cfg.getNamedQueries()
-                .get(queryName);
+        NamedQueryDefinition rtn = (NamedQueryDefinition) cfg.getNamedQueries().get(queryName);
         return rtn;
     }
 
+    @Override
     public NamedQueryDefinition getSqlQueryDefinition(String queryName) {
         Configuration cfg = getConfiguration();
-        NamedQueryDefinition rtn = (NamedQueryDefinition) cfg.getNamedSQLQueries()
-                    .get(queryName);
+        NamedQueryDefinition rtn = (NamedQueryDefinition) cfg.getNamedSQLQueries().get(queryName);
         return rtn;
     }
 
+    @Override
     public DataServiceOperation getOperation(String operationName) {
         DataServiceOperation rtn = this.operationManager.getOperation(operationName);
         if (rtn == null) {

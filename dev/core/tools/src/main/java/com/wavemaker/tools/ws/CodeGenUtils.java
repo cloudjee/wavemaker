@@ -80,7 +80,7 @@ public class CodeGenUtils {
 
     /**
      * Converts a string suitable for properties. The first letter of the property is NOT shifted to lower case.
-     *
+     * 
      * @param name The name to be converted.
      * @return A name suitable for properties.
      */
@@ -95,7 +95,7 @@ public class CodeGenUtils {
         }
         return s;
     }
-    
+
     /**
      * Converts a string into an identifier suitable for variables.
      * 

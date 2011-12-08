@@ -17,9 +17,9 @@ package com.wavemaker.runtime.service.definition;
 import java.util.List;
 
 import com.wavemaker.json.type.TypeDefinition;
+import com.wavemaker.runtime.pws.IPwsServiceModifier;
 import com.wavemaker.runtime.service.ServiceType;
 import com.wavemaker.runtime.service.events.EventWire;
-import com.wavemaker.runtime.pws.IPwsServiceModifier;
 
 /**
  * Represents a service definition.
@@ -51,16 +51,16 @@ public interface ServiceDefinition {
 
     /**
      * Get a list of all the service operations.
+     * 
      * @param serviceModifier the instance of service modifier
-     *
+     * 
      * @return the list of all service operations
      */
     @Deprecated
     public List<ServiceOperation> getServiceOperations(IPwsServiceModifier serviceModifier);
 
     /**
-     * Get all types associated with this service (instead of referenced in
-     * other services).
+     * Get all types associated with this service (instead of referenced in other services).
      * 
      * @return The list of types contained within this service.
      */

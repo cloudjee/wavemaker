@@ -250,22 +250,14 @@ public class SecuritySpringSupport {
             } else {
                 indexHtmlAuthz = IS_AUTHENTICATED_ANONYMOUSLY;
             }
-            urlMap.put("/index.html", Arrays.asList(
-                    (new String[] { indexHtmlAuthz })));
-            urlMap.put("/", Arrays.asList(
-                    (new String[] { indexHtmlAuthz })));
-            urlMap.put("/pages/login/**", Arrays.asList(
-                    (new String[] { IS_AUTHENTICATED_ANONYMOUSLY  })));
-            urlMap.put("/securityservice.json", Arrays.asList(
-                    (new String[] { IS_AUTHENTICATED_ANONYMOUSLY })));
-            urlMap.put("/*.download", Arrays.asList(
-                    (new String[] { IS_AUTHENTICATED_FULLY })));
-            urlMap.put("/*.upload", Arrays.asList(
-                    (new String[] { IS_AUTHENTICATED_FULLY })));
-            urlMap.put("/pages/**", Arrays.asList(
-                    (new String[] { indexHtmlAuthz })));
-            urlMap.put("/*.json", Arrays.asList(
-                    (new String[] { IS_AUTHENTICATED_FULLY })));
+            urlMap.put("/index.html", Arrays.asList(new String[] { indexHtmlAuthz }));
+            urlMap.put("/", Arrays.asList(new String[] { indexHtmlAuthz }));
+            urlMap.put("/pages/login/**", Arrays.asList(new String[] { IS_AUTHENTICATED_ANONYMOUSLY }));
+            urlMap.put("/securityservice.json", Arrays.asList(new String[] { IS_AUTHENTICATED_ANONYMOUSLY }));
+            urlMap.put("/*.download", Arrays.asList(new String[] { IS_AUTHENTICATED_FULLY }));
+            urlMap.put("/*.upload", Arrays.asList(new String[] { IS_AUTHENTICATED_FULLY }));
+            urlMap.put("/pages/**", Arrays.asList(new String[] { indexHtmlAuthz }));
+            urlMap.put("/*.json", Arrays.asList(new String[] { IS_AUTHENTICATED_FULLY }));
         }
         value = generateObjectDefinitionSource(enforceSecurity, urlMap);
         newContent.add(value);

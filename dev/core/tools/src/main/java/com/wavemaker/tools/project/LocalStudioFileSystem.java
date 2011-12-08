@@ -363,9 +363,9 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
             throw new WMRuntimeException(ex);
         }
     }
-    
+
     @Override
-    protected String getFSType(){
-    	return new String("local");
+    protected String getFSType() {
+        return new String("local");
     }
 }

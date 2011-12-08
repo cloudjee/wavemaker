@@ -47,6 +47,7 @@ public class NonBeanServiceType implements ServiceType {
      * 
      * @see com.wavemaker.runtime.service.ServiceType#getTypeName()
      */
+    @Override
     public String getTypeName() {
         return "NonBeanService";
     }
@@ -57,6 +58,7 @@ public class NonBeanServiceType implements ServiceType {
      * @see com.wavemaker.runtime.service.ServiceType#invokeMethod(com.wavemaker.runtime.service.ServiceWire,
      * java.lang.String, com.wavemaker.runtime.service.ParsedServiceArguments, com.wavemaker.json.JSONState)
      */
+    @Override
     public TypedServiceReturn invokeMethod(ServiceWire serviceWire, String methodName, ParsedServiceArguments args, JSONState jsonState) {
 
         if ("foo".equals(methodName)) {
@@ -86,6 +88,7 @@ public class NonBeanServiceType implements ServiceType {
      * @see com.wavemaker.runtime.service.ServiceType#parseServiceArgs(com.wavemaker.runtime.service.ServiceWire,
      * java.lang.String, com.wavemaker.json.JSONArray, com.wavemaker.json.JSONState)
      */
+    @Override
     public ParsedServiceArguments parseServiceArgs(ServiceWire serviceWire, String methodName, JSONArray args, JSONState jsonState) {
 
         List<FieldDefinition> fields = new ArrayList<FieldDefinition>();
@@ -105,6 +108,7 @@ public class NonBeanServiceType implements ServiceType {
      * @see com.wavemaker.runtime.service.ServiceType#parseServiceArgs(com.wavemaker.runtime.service.ServiceWire,
      * java.lang.String, java.util.Map, com.wavemaker.json.JSONState)
      */
+    @Override
     public ParsedServiceArguments parseServiceArgs(ServiceWire serviceWire, String methodName, Map<String, Object[]> args, JSONState jsonState) {
         // TODO Auto-generated method stub
         return null;
@@ -116,6 +120,7 @@ public class NonBeanServiceType implements ServiceType {
      * @see com.wavemaker.runtime.service.ServiceType#setup(com.wavemaker.runtime.service.ServiceWire,
      * com.wavemaker.runtime.server.InternalRuntime, com.wavemaker.runtime.RuntimeAccess)
      */
+    @Override
     public void setup(ServiceWire serviceWire, InternalRuntime internalRuntime, RuntimeAccess runtimeAccess) {
         internalRuntime.getJSONState().setTypeState(new NonBeanTypeFactory());
     }

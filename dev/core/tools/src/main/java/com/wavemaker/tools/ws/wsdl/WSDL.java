@@ -407,32 +407,29 @@ public class WSDL extends AbstractDeprecatedServiceDefinition implements Reflect
         return getInputTypes(operationName, false);
     }
 
+    @Override
     public List<ElementType> getInputTypesNoCaseShift(String operationName) {
         return getInputTypes(operationName, false, true);
     }
 
+    @Override
     public ElementType getOutputType(String operationName) {
         return getOutputType(operationName, false);
     }
 
-    public List<ElementType> getInputTypes(String operationName,
-            boolean unWrapped) {
+    public List<ElementType> getInputTypes(String operationName, boolean unWrapped) {
         return getInputTypes(operationName, unWrapped, false);
     }
 
     /**
      * Returns the input types for the specified operation.
      * 
-     * @param operationName
-     *            The name of the desired operation.
-     * @param unWrapped
-     *            True if unwrapped input types should be returned.
-     * @param noCaseShift
-     *            True if the first letter of properties should NOT be shifted to lower case
+     * @param operationName The name of the desired operation.
+     * @param unWrapped True if unwrapped input types should be returned.
+     * @param noCaseShift True if the first letter of properties should NOT be shifted to lower case
      * @return A list of input types.
      */
-    public List<ElementType> getInputTypes(String operationName,
-            boolean unWrapped, boolean noCaseShift) {
+    public List<ElementType> getInputTypes(String operationName, boolean unWrapped, boolean noCaseShift) {
         List<SchemaElementType> types = null;
         if (unWrapped) {
             types = getUnWrappedInputTypes(operationName);
@@ -507,7 +504,7 @@ public class WSDL extends AbstractDeprecatedServiceDefinition implements Reflect
     }
 
     private List<SchemaElementType> parseMessageParts(Message message) {
-        return parseMessageParts(message, false);   
+        return parseMessageParts(message, false);
     }
 
     private List<SchemaElementType> parseMessageParts(Message message, boolean noCaseShift) {
@@ -530,12 +527,9 @@ public class WSDL extends AbstractDeprecatedServiceDefinition implements Reflect
             schemaType = part.getElementName(); // QName is an element
             isElement = true;
         }
-        SchemaElementType type = new SchemaElementType(
-                getTypeMapper().toPropertyName(part.getName(), noCaseShift), schemaType,
-                getJavaType(schemaType, isElement));
-        type.setProperties(CastUtils.cast(
-                getChildTypes(type, MAX_NESTED_CHILD_LEVEL),
-                ElementType.class));
+        SchemaElementType type = new SchemaElementType(getTypeMapper().toPropertyName(part.getName(), noCaseShift), schemaType, getJavaType(
+            schemaType, isElement));
+        type.setProperties(CastUtils.cast(getChildTypes(type, MAX_NESTED_CHILD_LEVEL), ElementType.class));
         return type;
     }
 
@@ -546,10 +540,8 @@ public class WSDL extends AbstractDeprecatedServiceDefinition implements Reflect
     /**
      * Returns a list of types for the operation's input. The input types represent what actually defined in the WSDL.
      * 
-     * @param operationName
-     *            The name of the desired operation.
-      * @param noCaseShift
-     *            True if the first letter of properties should NOT be shifted to lower case
+     * @param operationName The name of the desired operation.
+     * @param noCaseShift True if the first letter of properties should NOT be shifted to lower case
      * @return A list of input types.
      */
     public List<SchemaElementType> getDefinedInputTypes(String operationName, boolean noCaseShift) {
@@ -782,5 +774,8 @@ public class WSDL extends AbstractDeprecatedServiceDefinition implements Reflect
         this.serviceAlias = serviceAlias;
     }
 
-    public String getOperationType(String operationName) {return null;}
+    @Override
+    public String getOperationType(String operationName) {
+        return null;
+    }
 }

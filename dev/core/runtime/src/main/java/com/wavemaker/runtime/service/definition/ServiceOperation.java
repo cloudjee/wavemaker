@@ -29,8 +29,8 @@ public class ServiceOperation {
 
     private String name;
 
-    private String operationType; //hqlquery, other
-    
+    private String operationType; // hqlquery, other
+
     public List<FieldDefinition> getParameterTypes() {
         return this.parameterTypes;
     }
@@ -54,9 +54,11 @@ public class ServiceOperation {
     public void setName(String name) {
         this.name = name;
     }
+
     public String getOperationType() {
-        return operationType;
+        return this.operationType;
     }
+
     public void setOperationType(String operationType) {
         this.operationType = operationType;
     }

@@ -35,7 +35,6 @@ import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.project.StudioConfiguration;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeManager;
-import com.wavemaker.tools.project.upgrade.swamis.CommonDirectoryMove;
 
 /**
  * @author small

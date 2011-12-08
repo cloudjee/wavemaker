@@ -93,6 +93,7 @@ public class TestUpgradeManager_StudioUpgrade extends StudioTestCase {
 
         public File tempFile = null;
 
+        @Override
         public void doUpgrade(UpgradeInfo upgradeInfo) {
 
             try {

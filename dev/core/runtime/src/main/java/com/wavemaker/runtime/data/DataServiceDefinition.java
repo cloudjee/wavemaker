@@ -22,8 +22,8 @@ import java.util.Properties;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.engine.NamedQueryDefinition;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.engine.NamedQueryDefinition;
 
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.runtime.data.hibernate.DataServiceMetaData_Hib;
@@ -162,13 +162,14 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition i
         return rtn;
     }
 
+    @Override
     public String getOperationType(String operationName) {
         String type;
 
-        NamedQueryDefinition def = metaData.getHqlQueryDefinition(operationName);
+        NamedQueryDefinition def = this.metaData.getHqlQueryDefinition(operationName);
 
         if (def == null) {
-            def = metaData.getSqlQueryDefinition(operationName);
+            def = this.metaData.getSqlQueryDefinition(operationName);
             if (def == null) {
                 type = "other";
             } else {
@@ -180,6 +181,7 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition i
         return type;
     }
 
+    @Override
     public String getPackageName() {
         if (this.metaData.getServiceClassName() != null) {
             return StringUtils.splitPackageAndClass(this.metaData.getServiceClassName()).v1;

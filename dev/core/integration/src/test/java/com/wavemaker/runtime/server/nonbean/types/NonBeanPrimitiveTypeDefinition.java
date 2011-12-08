@@ -35,6 +35,7 @@ public abstract class NonBeanPrimitiveTypeDefinition implements PrimitiveTypeDef
      * 
      * @see com.wavemaker.json.type.PrimitiveTypeDefinition#toJson(java.io.Writer, java.lang.Object)
      */
+    @Override
     public void toJson(Writer writer, Object obj) throws IOException {
         writer.write("unimplemented toJson for class " + getClass());
     }

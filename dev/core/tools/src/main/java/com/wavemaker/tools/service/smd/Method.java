@@ -28,10 +28,13 @@ public class Method implements Comparable<Method> {
     private List<Param> parameters;
 
     private String operationType;
-    
-    /* (non-Javadoc)
+
+    /*
+     * (non-Javadoc)
+     * 
      * @see java.lang.Comparable#compareTo(java.lang.Object)
      */
+    @Override
     public int compareTo(Method o) {
 
         // first, check the names
@@ -68,9 +71,11 @@ public class Method implements Comparable<Method> {
     public void setParameters(List<Param> parameters) {
         this.parameters = parameters;
     }
+
     public String getOperationType() {
-        return operationType;
+        return this.operationType;
     }
+
     public void setOperationType(String operationType) {
         this.operationType = operationType;
     }

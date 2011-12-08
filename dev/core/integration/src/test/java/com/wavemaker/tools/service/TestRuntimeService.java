@@ -246,11 +246,13 @@ public class TestRuntimeService extends TestSpringContextTestCase {
 
     public static class ComplexRuntimeServiceBeanEventListener implements ServiceEventListener {
 
+        @Override
         public TypedServiceReturn postOperation(ServiceWire serviceWire, String operationName, TypedServiceReturn result, Throwable throwable)
             throws Throwable {
             return result;
         }
 
+        @Override
         public Object[] preOperation(ServiceWire serviceWire, String operationName, Object[] params) {
 
             Object service = ((ReflectServiceWire) serviceWire).getServiceBean();

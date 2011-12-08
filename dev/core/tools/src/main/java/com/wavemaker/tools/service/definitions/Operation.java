@@ -71,11 +71,7 @@ import javax.xml.bind.annotation.XmlType;
  * </pre>
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "Operation", propOrder = {
-    "parameter",
-    "_return",
-    "operationType"
-})
+@XmlType(name = "Operation", propOrder = { "parameter", "_return", "operationType" })
 public class Operation {
 
     protected List<Operation.Parameter> parameter;
@@ -85,8 +81,9 @@ public class Operation {
 
     @XmlAttribute(required = true)
     protected String name;
+
     @XmlAttribute(required = true)
-    private String operationType; //hqlquery, other
+    private String operationType; // hqlquery, other
 
     /**
      * Gets the value of the parameter property.
@@ -157,12 +154,12 @@ public class Operation {
     }
 
     public String getOperationType() {
-        return operationType;
+        return this.operationType;
     }
+
     public void setOperationType(String operationType) {
         this.operationType = operationType;
     }
-
 
     /**
      * <p>

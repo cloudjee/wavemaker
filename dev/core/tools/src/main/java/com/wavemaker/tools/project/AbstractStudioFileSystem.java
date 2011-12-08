@@ -122,7 +122,7 @@ public abstract class AbstractStudioFileSystem implements StudioFileSystem, Serv
     }
 
     /**
-     *  Tests for previous cloud edition, NOT cloud foundry
+     * Tests for previous cloud edition, NOT cloud foundry
      */
     @Deprecated
     public static boolean isCloud() {
@@ -140,9 +140,9 @@ public abstract class AbstractStudioFileSystem implements StudioFileSystem, Serv
     }
 
     protected abstract String getFSType();
-    
+
     @Override
-    public String getStudioEnv(){
-    	return getFSType();  	
+    public String getStudioEnv() {
+        return getFSType();
     }
 }

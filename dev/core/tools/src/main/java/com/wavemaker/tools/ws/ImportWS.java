@@ -203,10 +203,10 @@ public class ImportWS {
     public WSDL generateServiceClass() {
         return generateServiceClass(null);
     }
-    
+
     /**
      * Generates Java service class and beans for the specified WSDL files.
-     *
+     * 
      * @param serviceAlias the alias of the service id
      * @return WSDL object.
      */
@@ -220,7 +220,7 @@ public class ImportWS {
         } catch (WSDLException e) {
             throw new ConfigurationException(e);
         }
-        
+
         wsdl.setSkipInternalCustomization(this.skipInternalCustomization);
         wsdl.setJaxbCustomizationFiles(this.jaxbCustomizationFiles);
         wsdl.setJaxwsCustomizationFiles(this.jaxwsCustomizationFiles);
