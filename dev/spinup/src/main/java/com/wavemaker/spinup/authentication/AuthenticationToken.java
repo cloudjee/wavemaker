@@ -31,6 +31,11 @@ public final class AuthenticationToken {
     }
 
     @Override
+    public String toString() {
+        return new String(this.bytes);
+    }
+
+    @Override
     public int hashCode() {
         return Arrays.hashCode(this.bytes);
     }

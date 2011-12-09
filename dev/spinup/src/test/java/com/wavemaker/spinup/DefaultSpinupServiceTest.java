@@ -90,6 +90,11 @@ public class DefaultSpinupServiceTest {
         protected CloudFoundryClient getCloudFoundryClient(LoginCredentials credentials) {
             return DefaultSpinupServiceTest.this.cloudFoundryClient;
         };
+
+        @Override
+        protected CloudFoundryClient getCloudFoundryClient(AuthenticationToken token) {
+            return DefaultSpinupServiceTest.this.cloudFoundryClient;
+        };
     };
 
     @Before

@@ -16,13 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
-import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
 import com.wavemaker.spinup.InvalidLoginCredentialsException;
 import com.wavemaker.spinup.SpinupService;
-import com.wavemaker.spinup.StartedApplication;
 import com.wavemaker.spinup.authentication.SharedSecret;
 import com.wavemaker.spinup.authentication.SharedSecretPropagation;
 import com.wavemaker.spinup.authentication.TransportToken;
@@ -49,26 +47,56 @@ public class SpinupController {
         return new LoginCredentialsBean();
     }
 
-    @RequestMapping(value = "/start", method = RequestMethod.GET)
-    public void start() {
+    /**
+     * Login form used to collect cloud foundry credentials.
+     */
+    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    public void loginForm() {
     }
 
-    @RequestMapping(value = "/start", method = RequestMethod.POST)
-    public ModelAndView processSubmit(@Valid LoginCredentialsBean credentials, BindingResult result, SessionStatus sessionStatus,
-        HttpServletRequest request, HttpServletResponse response) {
-        if (result.hasErrors()) {
+    /**
+     * Postback method from the login form. Will either re-direct back to the form (in the case of errors) or redirect
+     * to start the spinup process.
+     * 
+     * @param credentials User credentials
+     * @param bindingResult the binding result from the form
+     * @param request the HTTP request
+     * @param response the HTTP response
+     * @return the response (either a redirect to the form or a redirect to the spinup process)
+     */
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public ModelAndView processLogin(@Valid LoginCredentialsBean credentials, BindingResult bindingResult, HttpServletRequest request,
+        HttpServletResponse response) {
+        // If we have binding errors, re-render the page
+        if (bindingResult.hasErrors()) {
             return new ModelAndView();
         }
         try {
-            StartedApplication startedApplication = this.spinupService.start(getSecret(request), credentials);
-            Cookie cookie = new Cookie(COOKIE_NAME, startedApplication.getTransportToken().encode());
-            cookie.setDomain(startedApplication.getDomain());
+            // Login, add the cookie and redirect to start the spinup process
+            TransportToken transportToken = this.spinupService.login(getSecret(request), credentials);
+            Cookie cookie = new Cookie(COOKIE_NAME, transportToken.encode());
+            cookie.setDomain(this.spinupService.getDomain());
             response.addCookie(cookie);
-            return new ModelAndView("redirect:" + startedApplication.getApplicationUrl());
-        } catch (InvalidLoginCredentialsException e) {
-            RequestContextUtils.getOutputFlashMap(request).put("message", "Unable to login, please check your credentials");
             return new ModelAndView("redirect:/start");
+        } catch (InvalidLoginCredentialsException e) {
+            // On invalid login redirect with a message in flash scope
+            RequestContextUtils.getOutputFlashMap(request).put("message", "Unable to login, please check your credentials");
+            return new ModelAndView("redirect:/login");
         }
+    }
+
+    /**
+     * The screen that starts the deployment and waits until it completes. This screen opens a suspended connection to
+     * {@link #deploymentStaus()} before triggering {@link #startDeployment()}.
+     */
+    public void start() {
+    }
+
+    public void deploymentStaus() {
+    }
+
+    public void startDeployment() {
+
     }
 
     // FIXME this should be removed before GA

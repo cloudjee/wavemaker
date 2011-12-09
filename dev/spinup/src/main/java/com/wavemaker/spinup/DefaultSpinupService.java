@@ -48,22 +48,70 @@ public class DefaultSpinupService implements SpinupService {
     private SharedSecretPropagation propagation = new SharedSecretPropagation();
 
     @Override
+    @Deprecated
     public StartedApplication start(SharedSecret secret, LoginCredentials credentials) throws InvalidLoginCredentialsException {
+        Assert.notNull(secret, "Secret must not be null");
+        Assert.notNull(credentials, "Credentials must not be null");
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("Starting Cloud Foundry application");
         }
+        TransportToken transportToken = login(secret, credentials);
+        String applicationUrl = start(secret, credentials.getUsername(), transportToken);
+        return new DefaultStartedApplication(transportToken, applicationUrl, getDomain());
+    }
+
+    @Override
+    public String getDomain() {
+        String domain = getControllerUrl().toLowerCase();
+        domain = stripPrefix(domain, "http://");
+        domain = stripPrefix(domain, "http://");
+        domain = stripPrefix(domain, "api.");
+        domain = "." + domain;
+        return domain;
+    }
+
+    private String stripPrefix(String s, String prefix) {
+        if (s.startsWith(prefix)) {
+            return s.substring(prefix.length());
+        }
+        return s;
+    }
+
+    @Override
+    public TransportToken login(SharedSecret secret, LoginCredentials credentials) throws InvalidLoginCredentialsException {
+        Assert.notNull(secret, "Secret must not be null");
+        Assert.notNull(credentials, "Credentials must not be null");
         CloudFoundryClient cloudFoundryClient = getCloudFoundryClient(credentials);
         AuthenticationToken authenticationToken = new AuthenticationToken(login(cloudFoundryClient));
-        return new ApplicationStarter(cloudFoundryClient, credentials, authenticationToken, secret).start();
+        return secret.encrypt(authenticationToken);
+    }
+
+    @Override
+    public String start(SharedSecret secret, String username, TransportToken transportToken) {
+        Assert.notNull(secret, "Secret must not be null");
+        Assert.notNull(transportToken, "TransportToken must not be null");
+        AuthenticationToken authenticationToken = secret.decrypt(transportToken);
+        CloudFoundryClient cloudFoundryClient = getCloudFoundryClient(authenticationToken);
+        return new ApplicationStarter(cloudFoundryClient, username, secret).start();
     }
 
     protected CloudFoundryClient getCloudFoundryClient(LoginCredentials credentials) {
-        Assert.notNull(credentials, "Credential must not be null");
         try {
             if (this.logger.isDebugEnabled()) {
                 this.logger.debug("Cloud foundry client for user " + credentials.getUsername() + " at " + getControllerUrl());
             }
             return new CloudFoundryClient(credentials.getUsername(), credentials.getPassword(), getControllerUrl());
+        } catch (MalformedURLException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    protected CloudFoundryClient getCloudFoundryClient(AuthenticationToken token) {
+        try {
+            if (this.logger.isDebugEnabled()) {
+                this.logger.debug("Cloud foundry client for user authenticated user at " + getControllerUrl());
+            }
+            return new CloudFoundryClient(token.toString(), getControllerUrl());
         } catch (MalformedURLException e) {
             throw new IllegalStateException(e);
         }
@@ -170,32 +218,24 @@ public class DefaultSpinupService implements SpinupService {
 
         private final CloudFoundryClient cloudFoundryClient;
 
-        private final LoginCredentials credentials;
-
-        private final AuthenticationToken authenticationToken;
+        private final String username;
 
         private final SharedSecret secret;
 
-        public ApplicationStarter(CloudFoundryClient cloudFoundryClient, LoginCredentials credentials, AuthenticationToken authenticationToken,
-            SharedSecret secret) {
+        public ApplicationStarter(CloudFoundryClient cloudFoundryClient, String username, SharedSecret secret) {
             this.cloudFoundryClient = cloudFoundryClient;
-            this.credentials = credentials;
-            this.authenticationToken = authenticationToken;
+            this.username = username;
             this.secret = secret;
         }
 
-        public StartedApplication start() {
+        public String start() {
             ApplicationDetails applicationDetails = deployAsNecessary();
-
-            TransportToken transportToken = this.secret.encrypt(this.authenticationToken);
             DefaultSpinupService.this.propagation.sendTo(this.cloudFoundryClient, this.secret, applicationDetails.getName());
-
             if (DefaultSpinupService.this.logger.isDebugEnabled()) {
                 DefaultSpinupService.this.logger.debug("Starting application " + applicationDetails.getName());
             }
             this.cloudFoundryClient.startApplication(applicationDetails.getName());
-
-            return new DefaultStartedApplication(transportToken, applicationDetails.getUrl(), getDomain());
+            return applicationDetails.getUrl();
         }
 
         private ApplicationDetails deployAsNecessary() {
@@ -267,7 +307,7 @@ public class DefaultSpinupService implements SpinupService {
 
                 @Override
                 public String getUsername() {
-                    return ApplicationStarter.this.credentials.getUsername();
+                    return ApplicationStarter.this.username;
                 }
 
                 @Override
@@ -280,22 +320,6 @@ public class DefaultSpinupService implements SpinupService {
                     return attempt;
                 }
             };
-        }
-
-        private String getDomain() {
-            String domain = getControllerUrl().toLowerCase();
-            domain = stripPrefix(domain, "http://");
-            domain = stripPrefix(domain, "http://");
-            domain = stripPrefix(domain, "api.");
-            domain = "." + domain;
-            return domain;
-        }
-
-        private String stripPrefix(String s, String prefix) {
-            if (s.startsWith(prefix)) {
-                return s.substring(prefix.length());
-            }
-            return s;
         }
     }
 }
