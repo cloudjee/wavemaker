@@ -378,7 +378,7 @@ wm.LivePanel.extend({
 		this.liveForm.dataSet.maxResults = 30;
 		navigator.setLiveSource(lvar);
 	    }
-		this.dataGrid.set_dataSet(lvar);
+	    	this.dataGrid.$.binding.addWire("", "dataSet", lvar.name, "");
 		this.liveForm.set_dataSet(this.dataGrid.name + ".selectedItem");
 		this.liveForm.eventBindings.onSuccess = lvar;
 		fancyPanel2.setFitToContentHeight(true);
