@@ -53,7 +53,7 @@ dojo.declare("wm.AceEditor", wm.Control, {
 	this.waitForLibraryLoad();
     },
     waitForLibraryLoad: function() {
-	if (window.ace && window.requireace) {
+	if (window.ace && window.requireace && dojo.isDescendant(this.domNode, document.body)) {
 	    this._editor = ace.edit(this.domNode.id);
 	    this._editor.owner = this;
 	    var mode = window.requireace("ace/mode/" + this.syntax).Mode;
@@ -126,12 +126,18 @@ dojo.declare("wm.AceEditor", wm.Control, {
 	    this._editor.getSession().setValue(this.dataValue);
 	}
     },
-    isDirty: function() {
+    updateIsDirty: function() {
 	var dataValue = this.getDataValue();
+	var wasDirty = this.isDirty;
+	var isDirty = true;
 	if (!dataValue && !this._cachedDataValue)
-	    return false;
+	    isDirty = false;
 	else
-	    return dataValue != this._cachedDataValue;
+	    isDirty = dataValue != this._cachedDataValue;
+	if (isDirty != wasDirty) {
+	    this.valueChanged("isDirty", this.isDirty = isDirty);
+	    wm.fire(this.parent, "updateIsDirty");
+	}
     },
     clearDirty: function() {
 	this._cachedDataValue = this.dataValue;
@@ -393,6 +399,7 @@ dojo.declare("wm.AceEditor", wm.Control, {
     },
 
     _change: function() {
+	this.updateIsDirty();
 	this.onChange(this.getDataValue());
     },
     _changeSelection: function() {
