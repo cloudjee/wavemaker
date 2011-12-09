@@ -873,7 +873,9 @@ dojo.declare("Studio", wm.Page, {
 		try {
 			var s = this.selected = inComponent;
 			// make sure selected widget and all ancestors are showing
+		    if (!this._dontNavOnPageChange) {
 			this.revealSelected();
+		    }
 			// select in designer
 			this.designer.select(s instanceof wm.Widget ? s : null);
 			// select component on appropriate tree

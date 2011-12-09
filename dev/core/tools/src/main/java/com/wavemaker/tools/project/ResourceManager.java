@@ -195,7 +195,7 @@ public class ResourceManager {
      */
     @Deprecated
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    static public Hashtable[] getListing(File curdir, File jarListFile) {
+    static public Hashtable[] getListing(File curdir) {
         File[] listing = curdir.listFiles(new java.io.FilenameFilter() {
 
             @Override
@@ -211,19 +211,16 @@ public class ResourceManager {
             myfiles[i] = F;
             if (listing[i].isDirectory()) {
                 F.put("type", "folder");
-                F.put("files", getListing(listing[i], jarListFile));
+                //F.put("files", getListing(listing[i]));
             } else {
                 F.put("type", "file");
-                if (name.endsWith(".jar")) {
-                    F.put("isInClassPath", isJarInClassPath(listing[i], jarListFile));
-                }
             }
         }
         return myfiles;
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
-    public static Hashtable[] getListing(StudioFileSystem fileSystem, Resource curdir, Resource jarListFile) {
+    public static Hashtable[] getListing(StudioFileSystem fileSystem, Resource curdir) {
         List<Resource> listings = fileSystem.listChildren(curdir, new ResourceFilter() {
 
             @Override
@@ -240,12 +237,9 @@ public class ResourceManager {
             myfiles[i] = F;
             if (StringUtils.getFilenameExtension(listings.get(i).getFilename()) == null) {
                 F.put("type", "folder");
-                F.put("files", getListing(fileSystem, listings.get(i), jarListFile));
+                //F.put("files", getListing(fileSystem, listings.get(i)));
             } else {
                 F.put("type", "file");
-                if (name.endsWith(".jar")) {
-                    F.put("isInClassPath", isJarInClassPath(listings.get(i), jarListFile));
-                }
             }
         }
         return myfiles;

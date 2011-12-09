@@ -21,7 +21,9 @@ Studio.extend({
 		this.disableMenuBar(false);
 	        //this.disableCanvasOnlyMenuItems(false);
 	        //this.toggleCanvasSourceBtns(true, false);
+	    if (!this._dontNavOnPageChange) {
 		this.tabs.setLayer("workspace");
+	    }
             if (this.page) {
                 if (this._themeDesignerChange) {
                     this._themeDesignerChange = false;

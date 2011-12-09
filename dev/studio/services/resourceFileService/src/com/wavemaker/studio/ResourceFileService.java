@@ -206,13 +206,13 @@ public class ResourceFileService {
      * Send the client a datastruct listing all contents of the resources folder. WARNING: At some point we may want to
      * support larger projects by NOT sending it all at once
      */
-    public Hashtable<String, Object> getResourceFolder() {
+    public Hashtable<String, Object> getResourceFolder() throws WMRuntimeException {
         Resource resourceDir = this.getResourcesDir();
         Hashtable<String, Object> P = new Hashtable<String, Object>();
         try {
             P.put("files",
-                com.wavemaker.tools.project.ResourceManager.getListing(this.fileSystem, resourceDir, resourceDir.createRelative(".includeJars")));
-        } catch (IOException e) {
+                com.wavemaker.tools.project.ResourceManager.getListing(this.fileSystem, resourceDir));
+        } catch (Exception e) {
             throw new WMRuntimeException(e);
         }
         P.put("file", resourceDir.getFilename());
@@ -226,11 +226,12 @@ public class ResourceFileService {
             Resource folder = getRequestedFile(folderName, true);
 
             Hashtable P = new Hashtable();
-            P.put("files", com.wavemaker.tools.project.ResourceManager.getListing(this.fileSystem, folder, folder.createRelative(".includeJars")));
+            P.put("files", com.wavemaker.tools.project.ResourceManager.getListing(this.fileSystem, folder));
+	    
             P.put("file", folder.getFilename());
             P.put("type", "folder");
             return P;
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new WMRuntimeException(e);
         }
     }

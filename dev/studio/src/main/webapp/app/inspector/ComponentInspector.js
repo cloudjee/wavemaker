@@ -390,10 +390,6 @@
      inspected: null,
      props: null,
      dataSets: [],
-     postInit: function() {
-	 this.inherited(arguments);
-	 this.layers[0].destroy();
-     },
      inspect: function(inComponent, forceInspect) {	
 	 if (this.inspected == inComponent && !forceInspect) {
 	     return this.reinspect();

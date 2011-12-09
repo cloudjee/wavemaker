@@ -1601,8 +1601,9 @@ dojo.declare("wm.ResourceItem", wm.Object, {
       return result;
     },
     getFilePath: function(optName) {
-	if (this.rootPath !== undefined)
+	if (this.treeNode.parent == this.treeNode.tree.root) {
 	    return this.rootPath;
+	}
 
       if (optName)
 	return this.buildFilePath(optName);

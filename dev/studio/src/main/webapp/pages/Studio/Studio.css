@@ -1567,6 +1567,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #app_importDatabase_panel1 > .wmtablayers-tabbar,
 #studio_inspectorLayers_Styles > .wmtablayers-tabbar,
 #studio_sourceTabs .wmtablayers-tabbar,
+.ResourceManager .wmtablayers-tabbar,
 .EditVariable .EditVariable-tabs .wmtablayers-tabbar
  {
    /*
@@ -1593,6 +1594,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #studio_sourceTabs,
 .EditVariable .EditVariable-tabs .wmtablayers-tabbar,
 .DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-tabbar ,
+.ResourceManager .wmtablayers-tabbar,
 .GridDesigner .wmtablayers-tabbar
 {
 	border-bottom: 1px solid #c0c4ca;
@@ -1632,6 +1634,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-tab,
 .EditVariable .EditVariable-tabs .wmtablayers-tab,
 .DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-tab,
+.ResourceManager .wmtablayers-tab,
 .GridDesigner .wmtablayers-tab,
 #studio_inspector .wmaccordion-header
  {
@@ -1696,6 +1699,7 @@ body #studio_inspector .wmaccordion-header {
 #studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-selected,
 .EditVariable .EditVariable-tabs .wmtablayers-selected,
 .DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-selected,
+.ResourceManager .wmtablayers-selected,
 .GridDesigner .wmtablayers-selected
  {
 	border-top: 1px solid #c0c4ca;
@@ -2043,6 +2047,7 @@ color: rgb(0,270,0);
 .DataObjectsEditor-editorToolbar,
 .QueryEditor-editorToolbar,
 .QueryEditor-editorToolbar2,
+.ResourceManager .ResourceEditor-scriptRibbon,
 .LiveViewEditor-managerToolbar {
         background: -webkit-gradient(linear, left top, left bottom, from(#555555), to(#8E96A3));
 	background: -moz-linear-gradient(top,  #5B5B5B,  #8E96A3);

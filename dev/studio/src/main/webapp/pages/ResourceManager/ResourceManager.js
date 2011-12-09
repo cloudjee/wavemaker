@@ -192,7 +192,7 @@ dojo.declare("ResourceManager", wm.Page, {
     start: function() {
 	this.subscribe("studio-saveProjectData", dojo.hitch(this, "loadResources"));
 	this.connect(studio, "projectChanged", this, function() {
-	    this.shortcutList.selectByIndex(studio.application && studio.page ? 0 : 1);
+	    this.shortcutList.setDataValue("/webapproot/resources");
 	    this.onShortcutSelect(this.shortcutList);
 	});
 	this.propertiesPanel = this.resourceProperties;
@@ -226,7 +226,7 @@ dojo.declare("ResourceManager", wm.Page, {
 	*/
 
 	if (studio.application && studio.page) {
-	    this.shortcutList.selectByIndex(0);
+	    this.shortcutList.setDataValue("/webapproot/resources");
 	    this.onShortcutSelect(this.shortcutList);
 	}
     },
@@ -243,18 +243,23 @@ dojo.declare("ResourceManager", wm.Page, {
 	} else { // else if optionalRoot == "" for example
 	    root = "";
 	}
-	this.editorPanel.hide();
-	// I'd rather this was in this.start, but start gets called when the studio loads, not when this page shows. Waste of time loading this stuff before knowing if the user will navigate here.
-	//this.loadResourcesData(false);
 
 	// If two calls go to loadResources within less than 3 seconds, ignore the second one.
 	var t = this.tree;
 	t.clear();
 	this.selectedItem = null;
 	var _this = this;
+	this._loadingResources = this._loadingResources ? this._loadingResources + 1 : 1;
+	this.getReadmeFile(root);
 	studio.resourceManagerService.requestAsync("getFolder", [root], 
-                                                   function(rootfolder) {_this.initResourcesData(rootfolder, optionalRoot || "");},
+                                                   function(rootfolder) {
+						       _this._loadingResources--;
+						       if (_this._loadingResources === 0) {
+							   _this.initResourcesData(rootfolder, optionalRoot || "");
+						       }
+						   },
 						   function(inError) {
+						       _this._loadingResources--;
 						       app.toastWarning(inError.message);
 						   });
     },
@@ -393,147 +398,52 @@ dojo.declare("ResourceManager", wm.Page, {
 	}
 	return false;
     },
+    getReadmeFile: function(inFolderPath) {
+	studio.resourceManagerService.requestAsync("readFile", [inFolderPath + "/Readme.txt"], 
+						   dojo.hitch(this, function(inResult) {
+						       if (inResult) {
+							   inResult = inResult.replace(/\n/g,"<br/>");						       
+							   this.readmeHtml.setHtml(inFolderPath + "/Readme.txt:<br/><div class='README'>" + inResult + "</README>");
+						       }
+						   }),
+						   dojo.hitch(this, function() {
+						   }));	    
+    },
     itemSelected: function() {
-	var item = this.tree.selected.data;
-	if (this._editorItem && item != this._editorItem && this.editorPanel.showing && this.editor.isDirty()) {
-	    app.confirm(this.getDictionaryItem("LOSE_FILE_EDITS", {fileName: this._editorItem.itemName}), false,
-			dojo.hitch(this, function() {
-			    this.editor.setDataValue("");
-			    this.itemSelected();
-			}),
-			dojo.hitch(this, function() {
-			    if (this._editorItem)
-				this.setSelectedItem(this._editorItem);
-			}));
-	    return;
-	} else if (this.editorPanel.showing && this.editor.isDirty())
-	    return;
+	this.selectedItem = this.tree.selected.data;
+	this.updateToolbar();
 
-      this.selectedItem = this.tree.selected.data;
+
+	var itemName = this.selectedItem.itemName;
         var folder = (this.selectedItem instanceof wm.FolderResourceItem) ? this.selectedItem : this.tree.selected.parent.data;
-            
-      this.updateToolbar();
-      this.showPropertiesPanel();
         this.uploadButton.input.setType("AnyData");
         this.uploadButton.input.setData({dataValue: {path: folder.getFilePath()}});
+	this.getReadmeFile(folder.getFilePath());
+
+
 
 	if (!this.isBlocked(this.selectedItem) && (
 	    this.selectedItem instanceof wm.HTMLResourceItem ||
+	    this.selectedItem instanceof wm.ImageResourceItem ||
 	    this.selectedItem instanceof wm.XMLResourceItem ||
 	    this.selectedItem instanceof wm.MiscResourceItem ||
 	    this.selectedItem instanceof wm.CSSResourceItem ||
 		this.selectedItem instanceof wm.JSResourceItem)) {
-	    this.editorPanel.show();
-	    var text;
-	    studio.resourceManagerService.requestSync("readFile", [this.selectedItem.getFilePath()], function(inResult) {text = inResult;});
-	    //var text = wm.load("projects/" + studio.project.projectName +  this.selectedItem.getFilePath());
-	    this.editor.setText(text);
-	    this._editorItem = this.selectedItem;
-	    if (this.selectedItem instanceof wm.HTMLResourceItem) {
-		this.editor.setSyntax("html");
-		this.scriptPageFormatBtn.hide();
-	    } else if (this.selectedItem instanceof wm.XMLResourceItem) {
-		this.scriptPageFormatBtn.hide();
-		this.editor.setSyntax("xml");
-	    } else if (this.selectedItem instanceof wm.MiscResourceItem) {
-		this.scriptPageFormatBtn.hide();
-		this.editor.setSyntax("text");
-	    } else if (this.selectedItem instanceof wm.CSSResourceItem) {
-		this.scriptPageFormatBtn.hide();
-		this.editor.setSyntax("css");
-	    } else if (this.selectedItem instanceof wm.JSResourceItem) {
-		this.scriptPageFormatBtn.show();
-		this.editor.setSyntax("javascript");
-	    } else if (this.selectedItem instanceof wm.XMLResourceItem) {
-		this.scriptPageFormatBtn.hide();
-		this.editor.setSyntax("xml");
-	    } else {
-		this.scriptPageFormatBtn.hide();
-		this.editor.setSyntax("text");
-	    }
-	    
-	    wm.onidle(this, function() {
-		this.editor.setLineNumber(0);
-	    });
-	} else {
-	    this.editorPanel.hide();
+
+	    this.editorTabs.show();
+	var layer = this.editorTabs.addPageContainerLayer("ResourceEditor", itemName);
+	    layer.setDestroyable(true);
+	    layer.showDirtyFlag = true;
+	    layer.activate();
+	var page = layer.c$[0].page;
+	page.setItem(this.selectedItem);
+	    this.editorTabs.reflow();
 	}
     },
-    findScriptClick: function() {
-	this.editor.showSearch();
-    },
-    refreshScriptClick: function() {
-	this.editor.reset();
-    },
-    formatScriptClick: function() {
-	studio.formatScript(this.editor);
-    },
-    toggleWrapScriptClick: function() {
-	this.editor.toggleWordWrap();
-    },
-    showEditorHelp: function() {
-	this.editor.showHelp();
-    },
-    saveTextEditor: function() {	
-	var self = this;
-	studio.beginWait("Saving...");
-	studio.resourceManagerService.requestSync("writeFile", [this._editorItem.getFilePath(), this.editor.getDataValue()],
-					 function() {
-					     self.saveBtn.setDisabled(true);
-					     studio.endWait("Saving...");
-					     app.toastSuccess(self.getDictionaryItem("EDITS_SAVED"));
-					     self.editor.clearDirty();
-					     self.editor.focus();
-					     self.onFileChange(self._editorItem.getFilePath(), self.editor.getDataValue());
-					 },
-					 function() {
-					     studio.endWait("Saving...");
-					     app.toastError(self.getDictionaryItem("EDITS_FAILED"));
-					 }
-					 					 
-					);
-    },
-    editorChange: function(inSender) {
-	this.saveBtn.setDisabled(!this.editor.isDirty());
-    },
-    onFileChange: function(inPath, inContents) {
-	if (inPath.match(/\/pages\//)) {
-	    inPath = inPath.replace(/.*?\/pages\//,"");
-	    this.onPageChange(inPath, inContents);
-	} else if (inPath.indexOf("/common/") == 0) {
-	    this.onCommonChange(inPath, inContents);
-	} else {
-	    switch(inPath) {
-		case "/webapproot/" + studio.project.projectName + ".js":
-		this.onProjectChange(inPath, inContents);
-		break;
-		case "/webapproot/app.css":
-		this.onProjectChange(inPath, inContents);
-		break;
-	    }
+    editorClosed: function() {
+	if (this.editorTabs.layers.length == 1) {
+	    this.editorTabs.hide();
 	}
-    },
-    onPageChange: function(inPath, inContents) {
-	var matches = inPath.match(/^[^\/]*/);
-	var pageName = matches ? matches[0] : null; // should never be null;
-
-	/* Refresh all components so that page containers are updated */
-	if (pageName != studio.project.pageName) {
-	    var pageContainers = wm.listOfWidgetType(wm.PageContainer, false,false);
-	    for (var i = 0; i < pageContainers.length; i++) {
-		if (pageContainers[i].pageName == pageName)
-		    delete window[pageName];
-		    pageContainers[i].forceReloadPage();
-	    }
-	} else {
-	    studio.project.openPage(pageName);
-	}
-    },
-    onProjectChange: function(inPath, inContents) {
-
-    },
-    onCommonChange: function(inPath, inContents) {
-
     },
     setSelectedItem: function(item) {
       if (item == null) {
@@ -553,13 +463,16 @@ dojo.declare("ResourceManager", wm.Page, {
 	this.hidePropertiesPanel();
     },
     hidePropertiesPanel: function() {
+	return; // no longer supported
 	this.propertiesPanel.removeAllControls();
     },
     forceShowPropertiesPanel: function() {
+	return; // no longer supported
 	this.propertiesPanelItem = null;
 	this.showPropertiesPanel();
     },
     showPropertiesPanel: function(forceRegen) {
+	return; // no longer supported
       if (this.selectedItem == null) {
 	this.setSelectedItem( this.resourcesFolder); // setSelectedItem calls showPropertiesPanel
 	return;
@@ -634,10 +547,13 @@ dojo.declare("ResourceManager", wm.Page, {
     },
 
     onShortcutSelect: function(inSender) {
+/*
 	var index = inSender.getSelectedIndex();
 	var data = inSender._data[index];
 	this.loadResources(data.path);
 	this.treeLabel.setCaption(data.description);
+	*/
+	this.loadResources(inSender.selectedItem.getValue("dataValue"));
 
     },
 
@@ -1133,17 +1049,6 @@ wm.FolderResourceItem.extend({
 	return result;
       });
     },
-    addCustomDataToPropertiesPanel: function(propertiesPanel) {
-	this.html = new wm.Html({owner: studio.resourcesPage.page,
-				 parent: propertiesPanel,
-				 width: "100%",
-				 height: "100%"});
 
-	    studio.resourceManagerService.requestAsync("readFile", [this.getFilePath() + "/Readme.txt"], 
-						      dojo.hitch(this, function(inResult) {
-							  inResult = inResult.replace(/\n/g,"<br/>");
-							  this.html.setHtml("README.txt:<br/><br/><div class='README'>" + inResult + "</README>");
-						      }));	    
-	}
 });
 
