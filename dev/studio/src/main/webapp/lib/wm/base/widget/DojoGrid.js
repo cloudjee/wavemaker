@@ -608,7 +608,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
     addEmptyRow: function(selectOnAdd) {
 	    var obj = {};
-
+	var hasVisibleValue = false;
 	for (var i = 0; i < this.columns.length; i++) {
 	    var column = this.columns[i];
 	    var columnid = column.field||column.id;
@@ -627,22 +627,35 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		    }
 		}
 	    }
-
+	    var value = null;
 	    switch(typeName) {
 	    case "java.lang.Integer":
 	    case "java.lang.Double":
 	    case "java.lang.Float":
 	    case "java.lang.Short":
-		obj[columnid] = 0;
+		value = 0;
 		break;
 	    case "java.lang.Date":
-		obj[columnid] = new Date().getTime();
+		value = new Date().getTime();
+		hasVisibleValue = true;
 		break;
 	    case "java.lang.Boolean":
-		obj[columnid] = false;
+		value = false;
 		break;
 	    default:
-		obj[columnid] = "&nbsp;";
+		value =	hasVisibleValue ? null :"&nbsp;";
+		hasVisibleValue = true;
+	     }
+	    var subobj = obj;
+	    for (var partnum = 0; partnum < parts.length; partnum++) {
+		if (partnum +1 < parts.length) {
+		    if (!subobj[parts[partnum]]) {
+			subobj[parts[partnum]] = {};
+		    }
+		    subobj = subobj[parts[partnum]];
+		} else {
+		    subobj[parts[partnum]] = value;
+		}
 	    }
 	}
 	this.addRow(obj,selectOnAdd);
