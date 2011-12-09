@@ -18,7 +18,7 @@ dojo.require("wm.base.widget.Panel");
 
 wm.pagesFolder = "pages/";
 
-dojo.declare("wm.PageContainer", wm.Box, {
+dojo.declare("wm.PageContainer", wm.Control, {
     subpageProplist: null,
     subpageEventlist: null,
 	width: "100%", 
@@ -286,6 +286,14 @@ dojo.declare("wm.PageContainer", wm.Box, {
 	    return this.page.root.toHtml();
 	else
 	    return "";
+    },
+    updateIsDirty: function() {
+	this.setValue("isDirty", this.getIsDirty());
+	wm.fire(this.parent, "updateIsDirty");
+    },
+    getIsDirty: function() {
+	if (this.page)
+	    return this.page.root.getIsDirty();
     }
 });
 
