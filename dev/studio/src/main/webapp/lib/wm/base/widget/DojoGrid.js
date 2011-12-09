@@ -1095,6 +1095,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 	    return structure; 
 	},
+
+    /* Column manipulation methods */
     getColumnIndex: function(inFieldName) {
           for (var i = 0; i < this.columns.length; i++) {
             if (this.columns[i].field == inFieldName) {
@@ -1108,6 +1110,25 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	if (index != -1)
 	    return this.columns[index];
     },
+    setColumnShowing: function(inFieldName, inShowing, noRender) {
+	var index = this.getColumnIndex(inFieldName);
+	if (index != -1 && this.columns[index].show != inShowing) {	    
+	    this.columns[index].show = inShowing;
+	    if (!noRender) {
+		this.renderDojoObj();
+	    }
+	}
+    },
+    setColumnWidth: function(inFieldName, inWidth, noRender) {
+	var index = this.getColumnIndex(inFieldName);
+	if (index != -1 && this.columns[index].width != inWidth) {	    
+	    this.columns[index].width = inWidth;
+	    if (!noRender) {
+		this.renderDojoObj();
+	    }
+	}
+    },
+
     setColumnComboBoxOptions: function(inFieldName, inOptions) {
           for (var i = 0; i < this.columns.length; i++) {
             if (this.columns[i].field == inFieldName) {

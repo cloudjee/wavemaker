@@ -228,6 +228,8 @@ wm.Object.extendSchema(wm.DojoGrid, {
     setSortIndex:{method:1},
     setSortField:{method:1},
     setQuery: {method:1},
+    setColumnShowing: {method:1},
+    setColumnWidth: {method:1},
     onMouseOver: {ignore: 1},
     onMouseOut: {ignore: 1},
     onRightClick: {ignore: 1}
