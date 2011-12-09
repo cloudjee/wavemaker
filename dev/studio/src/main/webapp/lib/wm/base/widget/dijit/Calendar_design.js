@@ -23,6 +23,8 @@ wm.Object.extendSchema(wm.dijit.Calendar, {
     useLocalTime: {group: "data", type: "boolean"},
     useDialog: {group: "data", order: 1, type: "boolean"},
     dateValue: { ignore: 1, bindable: 1, type: "Date", simpleBindProp: true },
+    minimum: {group: "data", bindTarget: 1, type: "Date", editor: "wm.Date"},
+    maximum: {group: "data", bindTarget: 1, type: "Date", editor: "wm.Date"},
     setDate: {method:1},
     getDateValue: {method:1},
     setDisplayDate: {method:1},

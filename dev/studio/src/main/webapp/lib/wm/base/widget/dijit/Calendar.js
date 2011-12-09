@@ -34,6 +34,8 @@ dojo.extend(dijit.Calendar, {
 
 
 dojo.declare("wm.dijit.Calendar", wm.Dijit, {
+    minimum: "",
+    maximum: "",
         useLocalTime: false,
 	displayDate: "",
 	dijitClass: dijit.Calendar,
@@ -77,9 +79,9 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
             this.specialDates = dates;
             this.refreshCalendar();
         },
-    setSizeProp: function(n, v, inMinSize) {
-        this.inherited(arguments);
-        this.dijit._setStyleAttr({width: this.bounds.w + "px", height: this.bounds.h + "px"})
+    renderBounds: function() {
+	this.inherited(arguments);
+        this.dijit._setStyleAttr({width: this.bounds.w + "px", height: this.bounds.h + "px"})	
     },
     focus: function() {
 	this.dijit.focus();
@@ -101,6 +103,10 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
 
         },
     init: function() {
+	this.dijitProps.isDisabledDate = dojo.hitch(this, "isDisabledDate");
+	this.setMinimum(this.minimum);
+	this.setMaximum(this.maximum);
+
         this.inherited(arguments);
         if (this.useDialog) {
             this.dialog = new wm.WidgetsJsDialog({
@@ -121,6 +127,58 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
             });    
             this.dialog.titleMinify.hide();
             this.dialog.titleMaxify.hide();
+	}
+    },
+    setMinimum: function(inValue) {
+	if (this._isDesignLoaded) {
+	    if (inValue instanceof Date) {
+		this.minimum = inValue.getTime();
+	    } else if (!inValue) {
+		this.minimum = "";
+	    } else {
+		this.minimum = inValue;
+	    }
+	} else {
+	    if (inValue instanceof Date) {
+		this.minimum = inValue;
+	    } else if (!inValue) {
+		this.minimum = "";
+	    } else {
+		this.minimum = wm.convertValueToDate(inValue);
+	    }
+	    if (this.dijit) {
+		var currentFocus = this.dijit.currentFocus;
+		this.dijit.destroy();
+		this.initDijit(this.domNode);
+		this.renderBounds();
+		this.dijit.set("currentFocus", currentFocus);
+	    }
+	}
+    },
+    setMaximum: function(inValue) {
+	if (this._isDesignLoaded) {
+	    if (inValue instanceof Date) {
+		this.maximum = inValue.getTime();
+	    } else if (!inValue) {
+		this.maximum = "";
+	    } else {
+		this.maximum = inValue;
+	    }
+	} else {
+	    if (inValue instanceof Date) {
+		this.maximum = inValue;
+	    } else if (!inValue) {
+		this.maximum = "";
+	    } else {
+		this.maximum =  wm.convertValueToDate(inValue);
+	    }
+	    if (this.dijit) {
+		var currentFocus = this.dijit.currentFocus;
+		this.dijit.destroy();
+		this.initDijit(this.domNode);
+		this.renderBounds();
+		this.dijit.set("currentFocus", currentFocus);
+	    }
 	}
     },
 	setDomNode: function() {
@@ -178,7 +236,21 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
             } else if (this.useDialog && this.dialog.showing)
                 this.dialog.dismiss();
 	    this.valueChanged("dateValue", inDate instanceof Date ? inDate.getTime() : null);
+	},
+    isDisabledDate: function(date) {
+	if (this.minimum) {
+	    if (dojo.date.compare(date, this.minimum, "date") < 0) {
+		return true;
+	    }
 	}
+	if (this.maximum) {
+	    if (dojo.date.compare(date, this.maximum, "date") > 0) {
+		return true;
+	    }
+	}
+	return false;
+    }
+    
 });
 
 
