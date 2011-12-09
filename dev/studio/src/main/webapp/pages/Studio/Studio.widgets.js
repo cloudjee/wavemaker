@@ -418,8 +418,9 @@ Studio.widgets = {
 						    scriptPageCompletionsBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Auto Completion", imageIndex: 7, imageList: "canvasToolbarImageList16"}, {onclick: "listCompletions"}],
 						    scriptPageDictionaryBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Edit Localization Dictionary", imageIndex: 53, imageList: "silkIconImageList"}, {onclick: "editDictionary"}],
 						    scriptPageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Help", imageIndex: 26}, {onclick: "showEditorHelp"}],
-						    scriptToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}]/*,
-						    scriptPageCompileChkBtn: ["wm.Checkbox", {caption: "Validate on Save", width: "120px"}, {onchange: "validateScriptCheckboxChange"}]*/
+						    scriptToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
+						    /*scriptPageCompileChkBtn: ["wm.Checkbox", {caption: "Validate on Save", width: "120px"}, {onchange: "validateScriptCheckboxChange"}]*/
+						    editAreaFullPath: ["wm.Label", {width: "100%", align: "right", height: "100%"}]	    
 						}],
 						editArea: ["wm.AceEditor", {width: "100%", height: "100%"}, {onCtrlKey: "scriptEditorCtrlKey", onChange: "setEditAreaDirty"}]
 					    }],
@@ -431,7 +432,8 @@ Studio.widgets = {
 						    cssPageWordWrapBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Toggle Line Wrapping", imageIndex: 15, imageList: "canvasToolbarImageList16"}, {onclick: "toggleWrapCssClick"}],
 						    cssPageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Help", imageIndex: 26}, {onclick: "showCssEditorHelp"}],
 						    cssToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
-						    cssHelpLink: ["wm.Label", {width: "80px", caption: "Styling Wiki"}, {}]
+						    cssHelpLink: ["wm.Label", {width: "80px", caption: "Styling Wiki"}, {}],
+						    cssEditAreaFullPath: ["wm.Label", {width: "100%", align: "right", height: "100%"}]	    
 						}],
 						cssPageLabel: ["wm.Label", {caption: "Page CSS", height: "18px", width: "100%", border: 0}, {}, {
 						    format: ["wm.DataFormatter", {}, {}]
@@ -452,7 +454,8 @@ Studio.widgets = {
 							    markupPageWordWrapBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Toggle Line Wrapping", imageIndex: 15, imageList: "canvasToolbarImageList16"}, {onclick: "toggleWrapMarkupClick"}],
 							    markupPageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Help", imageIndex: 26}, {onclick: "showMarkupEditorHelp"}],
 							    markupToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
-							    markupLogoBottomHolder: ["wm.Panel", {width: "221px", border: "0"}, {}]
+							markupLogoBottomHolder: ["wm.Panel", {width: "221px", border: "0"}, {}],
+							markupEditAreaFullPath: ["wm.Label", {width: "100%", align: "right", height: "100%"}]
 							}],
 						    markupEditPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}, {
 							    markupEditArea: ["wm.AceEditor", {width: "100%", height: "100%", syntax: "html"}, {onCtrlKey: "markupEditorCtrlKey", onChange: "setEditAreaDirty"}],
@@ -471,8 +474,9 @@ Studio.widgets = {
 						    appsrcPageWordWrapBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Toggle Line Wrapping", imageIndex: 15, imageList: "canvasToolbarImageList16"}, {onclick: "toggleWrapAppScriptClick"}],
 							/*appsrcPageCompileBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Validation", imageIndex: 28,iconWidth: "20px", iconHeight: "20px"}, {onclick: "validateAppScriptClick"}],*/
 						    appsrcPageHelpBtn: ["wm.ToolButton", {width: "24px", margin: "0", hint: "Help", imageIndex: 26}, {onclick: "showAppScriptEditorHelp"}],
-						    scriptToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}]/*,
-							appsrcPageCompileChkBtn: ["wm.Checkbox", {caption: "Validate on Save", width: "120px"}, {onchange: "validateScriptCheckboxChange"}]*/
+						    scriptToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
+							/*appsrcPageCompileChkBtn: ["wm.Checkbox", {caption: "Validate on Save", width: "120px"}, {onchange: "validateScriptCheckboxChange"}]*/
+							appsourceEditAreaFullPath: ["wm.Label", {width: "100%", align: "right", height: "100%", caption: "webapproot/app.js"}]
 
 						}],
 

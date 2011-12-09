@@ -497,8 +497,9 @@ dojo.declare("Studio", wm.Page, {
 		wm.fire(this.page, "destroy");
 		this.removeClassCtor(c);
 		this.page = null;
-		if (this.project.pageName)
-			this.navGotoDesignerClick();
+	    if (this.project.pageName) {
+		this.navGotoDesignerClick();
+	    }
 	},
 	pageChanged: function(inName, inPageData) {
 		this.setScript(inPageData.js);
@@ -506,6 +507,10 @@ dojo.declare("Studio", wm.Page, {
 		this.cssChanged();
 		this.setMarkup(inPageData.html || "");
 		this.setCleanPage(inPageData);
+		this.editAreaFullPath.setCaption("webapproot/pages/" + inName + "/" + inName + ".js");
+		this.cssEditAreaFullPath.setCaption("webapproot/pages/" + inName + "/" + inName + ".css");
+		this.markupEditAreaFullPath.setCaption("webapproot/pages/" + inName + "/" + inName + ".html");
+
 
 	        if (this.page) {
 		    this.select(this.page.root);
