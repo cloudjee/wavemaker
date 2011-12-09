@@ -460,7 +460,7 @@ dojo.declare("wm.DateTimePicker", wm.Container, {
 	this.buttonPanel = new wm.Panel({owner: this,
 				   parent: this,
 			       _classes: {domNode: ["dialogfooter"]},
-
+					 showing: false, // clicking out of DateTimePicker seems to dismiss it; so experimenting with removing this
 				   name: "dateTimePickerButtonPanel",
 				   layoutKind: "left-to-right",
 				   horizontalAlign: "left",
