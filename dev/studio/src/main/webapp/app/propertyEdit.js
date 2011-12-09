@@ -812,7 +812,7 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
 						   width: "100%",
 						   height: "28px",
 						   captionSize: "60px",
-						   caption: inIndex > 0 ? "And then" : "Action",
+						   caption: inIndex > 0 ? "And then" : "Then do",
 						   captionPosition: "left",
 						   captionAlign: "left",
 						   dataValue: inValue,
@@ -1081,6 +1081,8 @@ dojo.declare("wm.prop.FieldTree", wm.Tree, {
 /* TODO: Figure out an upgrade script so we can treat border,borderColor, margin and padding as just more styles */
 /* TODO: Figure out how to let the user pick a resources for backgroundImage; also need backgroundPosition and gradient */
 dojo.declare("wm.prop.StyleEditor", wm.Container, {
+    verticalAlign: "top",
+    horizontalAlign: "left",
     height: "250px",
     scrollY: true,
     inspected: null,
@@ -1122,14 +1124,16 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	};
 	*/
 	var defaultProps = {
-	    captionPosition: "left",
+	    captionPosition: "top",
 	    captionAlign: "left",
-	    captionSize: "100px",
+	    captionSize: "20px",
 	    singleLine: false,
 	    width: "100%",
+	    height: "45px",
 	    allowNone: true,
 	    owner: this,
-	    parent: this
+	    parent: this,
+	    helpText: true
 	};
 	dojo.forEach(this.commonStyles, dojo.hitch(this, function(styleProp) {
 	    var ctor = dojo.getObject(styleProp.editor);
@@ -1140,7 +1144,10 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	    e.connect(e,"onchange", this, function(inDisplayValue, inDataValue) {
 		this.changed(e, inDisplayValue, inDataValue);
 	    });
-
+	    e.connect(e,"onHelpClick", this, function() {
+		studio.helpPopup = studio.inspector.getHelpDialog();
+		studio.inspector.beginHelp(e.caption, e.domNode, this.inspected.declaredClass);
+	    });
 	    this.editors[styleProp.name] = e;
 	}));
 
@@ -1166,7 +1173,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	     this.addEditor("","");
 	 });*/
 
-	//this.setHeight(this.getPreferredFitToContentHeight() + "px");
+	this.setHeight(this.getPreferredFitToContentHeight() + "px");
 	this.setDataValue(this.inspected.styles);
     },
     getDataValue: function() {return this.inspected.styles},

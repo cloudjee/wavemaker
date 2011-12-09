@@ -813,13 +813,14 @@
 		 studio.bindDialog.page.update(p);
 		 studio.bindDialog.show();
 	     };
-	 } else if (!inProp.isEvent) {
+	 } else if (!inProp.isEvent && e instanceof wm.prop.StyleEditor == false) {
 	     new wm.Spacer({owner:this,
 			    parent: panel,
 			    width: "20px",
 			    height: "20px"});
 	 }
 	 var self = this;
+	 if (e instanceof wm.prop.StyleEditor == false) {
 	 var helpButton = wm.Label({owner: this,
 				    caption: "",
 					 parent: panel,
@@ -830,7 +831,7 @@
 					     self.beginHelp(propName, e.parent.domNode, inComponent.declaredClass);
 					 },
 					 _classes: {domNode: ["EditorHelpIcon"]}});
-
+	 }
 	 panel.setHeight(panel.getPreferredFitToContentHeight() + "px");
 	 return e;
      },
