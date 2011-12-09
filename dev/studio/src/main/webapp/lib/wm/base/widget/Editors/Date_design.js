@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2011 VMWare, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,8 +23,8 @@ wm.Object.extendSchema(wm.Date, {
     defaultInsert: { writeonly: true},
     editorType: {group: "common", order: 501, options: ["Date", "Time", "DateTime"]},
     changeOnKey: { ignore: 1 },
-    minimum: {group: "editor", order: 2,  doc: 1, bindTarget: true},
-    maximum: {group: "editor", order: 3, doc: 1, bindTarget: true}, 
+    minimum: {group: "editor", order: 2,  doc: 1, bindTarget: true, editor: "wm.Date"},
+    maximum: {group: "editor", order: 3, doc: 1, bindTarget: true, editor: "wm.Date"}, 
     format:  {group: "editor", doc: 0, ignore: 1},
     invalidMessage: {group: "validation", order: 3},
     showMessages: {group: "validation", order: 4},
@@ -60,6 +60,9 @@ wm.Object.extendSchema(wm.DateTime, {
     invalidMessage: {group: "validation", order: 3},
     showMessages: {group: "validation", order: 4},
     promptMessage: {group: "Labeling", order: 6},
+    minimum: {group: "editor", order: 2,  doc: 1, bindTarget: true, editor: "wm.Date"},
+    maximum: {group: "editor", order: 3, doc: 1, bindTarget: true, editor: "wm.Date"}, 
+    use24Time: {group: "editor", order: 10, ignoreHint: "Only available if dateMode is not 'Date'"},
     password: {ignore:1},
     regExp: {ignore:1},
     maxChars: {ignore:1},
@@ -73,11 +76,28 @@ wm.Object.extendSchema(wm.DateTime, {
 });
 
 wm.DateTime.extend({
+        makePropEdit: function(inName, inValue, inEditorProps) {
+	    switch (inName) {
+	    case "maximum":
+	    case "minimum":
+		return new wm.DateTime(dojo.mixin({dateMode: this.dateMode}, inEditorProps));
+	    }
+	    return this.inherited(arguments);
+	},
 
-    setFormatLength: function(inValue) {
+    set_formatLength: function(inValue) {
 	// must get value before changing formatLength because formatLength determines how to parse the value
 	var value = this.getDataValue();
 	this.formatLength = inValue; 
 	this.setDataValue(value);
+    },
+    set_use24Time: function(inValue) {
+	this.use24Time = inValue;
+	this.createEditor();
+    },
+    listProperties: function() {
+	var p = this.inherited(arguments);
+	p.use24Time.ignoretmp = this.dateMode == "Date";
+	return p;
     }
 });

@@ -27,6 +27,7 @@ dojo.declare("wm.Date", wm.Text, {
 	invalidMessage: "",
 	minimum: "",
 	maximum: "",
+        dateMode: "Date",
 	//locale: '',
     
 	validationEnabled: function() { return true;},
@@ -59,13 +60,17 @@ dojo.declare("wm.Date", wm.Text, {
 		return new dijit.form.DateTextBox(this.getEditorProps(inNode, inProps));
 	},
 	convertValue: function(inValue) {
-		return wm.convertValueToDate(inValue);
+	    return wm.convertValueToDate(inValue, {selector: this.dateMode.toLowerCase(), formatLength: this.formatLength, timePattern: this.use24Time ? "HH:mm" : "hh:mm a"});
 	},
 	getEditorValue: function() {
 	    var d = this.inherited(arguments);
 	    if (d) {
 		if (!this.useLocalTime) {
-		    d.setHours(-wm.timezoneOffset,0,0);
+		    if (this.dateMode == "Date") {
+			d.setHours(-wm.timezoneOffset,0,0);
+		    } else {
+			d = dojo.date.add(d,"hour",-wm.timezoneOffset);
+		    }
 		}
 		return d.getTime();
 	    }
@@ -88,6 +93,21 @@ dojo.declare("wm.Date", wm.Text, {
 		this.setDataValue(this.defaultInsert); // setDataValue knows how to handle Date and long; dijit.set apparently does not.
 		this.invalidate();
 	    }
+	},
+    calcDisplayValue: function(inDate) {
+	var d = inDate;
+	if (d instanceof Date == false)
+	    d = new Date(inDate);
+	return dojo.date.locale.format(d, {formatLength: this.formatLength, fullYear: true, selector: this.dateMode.toLowerCase(), timePattern: this.use24Time ?'HH:mm' : "hh:mm a"});
+
+    },	
+	getDisplayValue: function() {
+	    if (this.editor)
+		return this.editor.get("displayedValue");
+	    else if (this.dataValue)
+		return this.calcDisplayValue(this.dataValue);
+	    else
+		return "";
 	},
 
     /* Note that the definition of what are legal values is based on the conversions done by getEditorConstraints */
@@ -131,8 +151,8 @@ dojo.declare("wm.Date", wm.Text, {
 	if (val1 && val2 && val1.getTime() == val2.getTime()) {
 	    return false;
 	}
-	val1 = dojo.date.locale.format(val1, {formatLength: "short", selector: "date"});
-	val2 = dojo.date.locale.format(val2, {formatLength: "short", selector: "date"});
+	val1 = dojo.date.locale.format(val1, {formatLength: this.formatLength || "short", selector: this.dateMode.toLowerCase(), timePattern: this.use24Time ?'HH:mm' :  "hh:mm a"});
+	val2 = dojo.date.locale.format(val2, {formatLength: this.formatLength || "short", selector: this.dateMode.toLowerCase(), timePattern: this.use24Time ?'HH:mm'  : "hh:mm a"});
 
 	return val1 != val2;
     }
@@ -198,11 +218,25 @@ dojo.declare("wm.Time", wm.Date, {
 });
 
 
-dojo.declare("wm.DateTime", wm.Text, {
-    useLocalTime: false,
-    timePanelHeight: 38,
+dojo.declare("wm.DateTime", wm.Date, {
+    use24Time: false,
     formatLength: "short",
     dateMode: "Date and Time",
+    getEditorConstraints: function() {
+	var constraints = this.inherited(arguments);
+	constraints.formatLength = this.formatLength;
+	constraints.timePattern = this.use24Time ? "HH:mm" : "hh:mm a";
+	return constraints;
+    },
+    getEditorProps: function(inNode, inProps) {
+	var p = this.inherited(arguments);
+	p._selector = this.dateMode == "Date and Time" ? "datetime" : this.dateMode.toLowerCase();
+	p.use24Time = this.use24Time;
+	return p;
+    },
+    _createEditor: function(inNode, inProps) {
+	return new dijit.form.DateTimeTextBox(this.getEditorProps(inNode, inProps));
+    },
 /*
     _createEditor: function(inNode, inProps) {
 	var e = this.inherited(arguments);
@@ -216,189 +250,7 @@ dojo.declare("wm.DateTime", wm.Text, {
 	return e;
     },
     */
-    init: function( ){
-	this.inherited(arguments);
-        this.subscribe("wm.AbstractEditor-focused", this, function(inEditor) {
-	    var dialog = wm.DateTime.dialog;
-	    if (dialog) {
-		if (this != inEditor && dialog.$.hours != inEditor && dialog.$.minutes != inEditor && dialog._currentEditor == this && inEditor instanceof wm.DateTime == false) {
-                    wm.DateTime.dialog.dismiss();
-		}
-            }
-        });
-    },
-    doOnblur: function() {
-	this.inherited(arguments);
 
-	// If we lose focus on the datetime editor when only picking a date, then dismiss the dialog
-	// unless the focus is now on the dialog itself
-	if (this.dateMode == "Date" && wm.DateTime.dialog && wm.DateTime.dialog.showing) {
-	    var node = document.activeElement;
-	    if (!dojo.isDescendant(node, this.domNode) && !dojo.isDescendant(node, wm.DateTime.dialog.domNode))
-		wm.DateTime.dialog.hide();
-	}
-    },
-    doOnfocus: function() {	
-	this.inherited(arguments);
-	wm.onidle(this, function() {
-	    if (!wm.DateTime.dialog) {	    
-		var dialog = wm.DateTime.dialog = new wm.Dialog({_classes: {domNode: ["wmdatetimedialog"]}, owner: app, "height":"252px","title":"","width":"210px", modal: false, useContainerWidget:true, useButtonBar: true, name: "_DateTimeDialog", corner: "bc"});
-		dialog.containerWidget.setAutoScroll(false);
-		dialog.containerWidget.setPadding("1");
-		dialog.containerWidget.createComponent(	
-		    "mainPanel", "wm.Container", 
-		    {"_classes":{"domNode":["wmdialogcontainer","MainContent"]},"border":"0","height":"100%","horizontalAlign":"left","margin":"0","padding":"0","verticalAlign":"top","width":"100%"},
-		    {},
-		    {
-			calendar: ["wm.dijit.Calendar", {useLocalTime: true, "border":"0", height: "180px", width: "100%"}, {onValueSelected: "handleDateChange"}],
-			panel1: ["wm.Panel", {"border":"0","height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"bottom","width":"100%"}, {}, {
-			    hours: ["wm.Number", {"caption":"Hour","captionAlign":"left","captionPosition":"top","captionSize":"20px","changeOnKey":true,"displayValue":"","height":"43px","maximum":12,"minimum":1,"padding":"2","spinnerButtons":true,"width":"56px"}, {}],
-			    minutes: ["wm.Number", {"caption":"Minute","captionAlign":"left","captionPosition":"top","captionSize":"20px","changeOnKey":true,"displayValue":"","height":"43px","maximum":59,"minimum":0,"padding":"2","spinnerButtons":true,"width":"56px"}, {}],
-			    ampm: ["wm.ToggleButton", {"captionDown":"PM","captionUp":"AM","height":"21px",width: "50px", "margin":"0,0,2,0"}, {}]
-			}],
-			label: ["wm.Label", {"border":"0","caption":"","padding":"4","width":"100%"}]
-		    }, dialog);
-		new wm.Button({owner: dialog,
-			       parent: dialog.buttonBar,
-			       name: "okButton",
-			       caption: "OK",
-			       width: "100px"});
-		new wm.Button({owner: dialog,
-			       parent: dialog.buttonBar,
-			       name: "cancelButton",
-			       caption: "Cancel",
-			       width: "100px"});
-
-	    }
-	    
-	    var dialog = wm.DateTime.dialog;
-
-	    /* So as to not screw with default dialog connections such as keydown, we're going to connect everything to the containerWidget */
-	    var containerWidget = dialog.containerWidget;
-	    containerWidget._disconnect();
-	    containerWidget.connect(dialog.$.calendar, "onValueSelected", this,"handleDateChange");
-	    containerWidget.connect(dialog.$.hours, "onchange", this, "handleDateChange");
-	    containerWidget.connect(dialog.$.minutes, "onchange", this, "handleDateChange");
-	    dialog.$.minutes.editor.set("smallDelta", 5);
-	    containerWidget.connect(dialog.$.ampm, "onclick", this, "handleDateChange");
-	    containerWidget.connect(dialog.$.okButton, "onclick", this, "okClicked");
-	    containerWidget.connect(dialog.$.cancelButton, "onclick", this, "cancelClicked");
-	    wm.DateTime.dialog.fixPositionNode = this.editor.domNode;
-	    this._initialDisplayValue = this.getDisplayValue();
-	    dialog._currentEditor = this;
-
-	    // Make the calendar focus on the date shown by the current value of the text; ignore timezone offset calcs for this
-	    // or you risk showing the user a date in calendar other than what is shown in text
-	    if (!this.useLocalTime && this.dateMode == "Date") {
-		var value = this.getDisplayValue();
-		var date = dojo.date.locale.parse(value, {formatLength: this.formatLength, fullYear: true, selector: this.dateMode.toLowerCase()});
-	    } else {
-		var date = new Date(this.getDataValue());
-	    }
-
-
-	    this._initializingDialog = true;
-	    if (date && date.getTime())
-		wm.DateTime.dialog.$.calendar.setDate(date);
-	    else
-		wm.DateTime.dialog.$.calendar.dijit.goToToday();
-	    if (this.dateMode != "Date") {
-		var time = dojo.date.locale.format(date, {selector:'time',timePattern: "hh:mm a"});
-		var timematches = time.match(/^(\d\d)\:(\d\d) (.*)$/);
-		wm.DateTime.dialog.$.hours.setDataValue(timematches[1]);
-		wm.DateTime.dialog.$.minutes.setDataValue(timematches[2]);
-		wm.DateTime.dialog.$.ampm.setClicked(timematches[3].toLowerCase() == "pm");
-	    }
-	    wm.DateTime.dialog.$.panel1.setShowing(this.dateMode != "Date");
-	    wm.DateTime.dialog.$.calendar.setShowing(this.dateMode != "Time");
-	    wm.DateTime.dialog.$.label.setShowing(this.dateMode == "Date and Time");
-	    wm.DateTime.dialog.buttonBar.setShowing(this.dateMode != "Date");
-	    
-	    switch(this.dateMode) {
-	    case "Time":
-		dialog.setHeight((this.timePanelHeight + 
-				  dialog.buttonBar.bounds.h + 			      
-				  dialog.padBorderMargin.t + 
-				  dialog.padBorderMargin.b +
-				  dialog.containerWidget.padBorderMargin.t + 
-				  dialog.containerWidget.padBorderMargin.b) + "px");
-		break;
-	    case "Date":
-		dialog.setHeight((dialog.$.calendar.bounds.h +
-				  //dialog.buttonBar.bounds.h + 
-				  dialog.padBorderMargin.t + 
-				  dialog.padBorderMargin.b +
-				  dialog.containerWidget.padBorderMargin.t + 
-				  dialog.containerWidget.padBorderMargin.b) + "px");
-		break;
-	    case "Date and Time":
-		dialog.setHeight((this.timePanelHeight + 
-				  dialog.$.calendar.bounds.h +
-				  dialog.buttonBar.bounds.h + 
-				  dialog.$.label.bounds.h + 
-				  dialog.padBorderMargin.t + 
-				  dialog.padBorderMargin.b +
-				  dialog.containerWidget.padBorderMargin.t + 
-				  dialog.containerWidget.padBorderMargin.b) + "px");
-		break;
-	    }
-	    delete this._initializingDialog;	
-	    wm.DateTime.dialog.show();
-	    this._setupDialogValues = true;
-	    this.handleDateChange();
-	    delete this._setupDialogValues;
-	    var editor = this.editor;
-	    wm.job(this.getRuntimeId() + ".blur", 50, dojo.hitch(this, function() {
-		if (wm.DateTime.dialog.$.calendar.showing)
-		    wm.DateTime.dialog.$.calendar.focus();
-		else
-		    wm.DateTime.dialog.$.hours.focus();
-	    }));
-	});
-    },
-    handleDateChange: function() {
-	if (this._initializingDialog) return;	
-	if (this.dateMode != "Time") {
-	    var date = new Date(wm.DateTime.dialog.$.calendar.getDateValue());
-	} else {
-	    var date = new Date(0);
-	}
-	if (this.dateMode != "Date") {
-	    var hour = wm.DateTime.dialog.$.hours.getDataValue() || 1;
-	    var minute = wm.DateTime.dialog.$.minutes.getDataValue() || 0;
-	    var isPM = wm.DateTime.dialog.$.ampm.clicked;
-	    date.setHours(hour + (isPM ? 12 : 0), minute);
-	}
-
-	var displayValue1 = dojo.date.locale.format(date, {formatLength: "medium", selector: this.dateMode.toLowerCase()});
-	wm.DateTime.dialog.$.label.setCaption(displayValue1);
-
-	if (this.dateMode == "Date") {
-	    var displayValue2 = dojo.date.locale.format(new Date(date.getTime() ), {formatLength: this.formatLength, fullYear: true, selector: this.dateMode.toLowerCase()});
-	    this.setDisplayValue(displayValue2);
-	    if (!this._setupDialogValues)
-		wm.DateTime.dialog.hide();
-	} else {
-
-	    var displayValue2 = dojo.date.locale.format(date, {formatLength: this.formatLength, fullYear: true, selector: this.dateMode.toLowerCase()});
-	    this.setDisplayValue(displayValue2);
-    }
-
-    },
-    calcDisplayValue: function(inDate) {
-	var d = inDate;
-	if (d instanceof Date == false)
-	    d = new Date(inDate);
-	return dojo.date.locale.format(d, {formatLength: this.formatLength, fullYear: true, selector: this.dateMode.toLowerCase()});
-    },	
-	getDisplayValue: function() {
-	    if (this.editor)
-		return this.editor.get("displayedValue");
-	    else if (this.dataValue)
-		return this.calcDisplayValue(this.dataValue);
-	    else
-		return "";
-	},
     setEditorValue: function(inValue) {
 	var d;
 	if (inValue instanceof Date) {
@@ -406,40 +258,20 @@ dojo.declare("wm.DateTime", wm.Text, {
 	} else if (String(inValue).match(/^\d+$/)) {
 	    d = new Date(inValue); // its a long
 	} else if (inValue) {
-	    d =  wm.convertValueToDate(inValue, {formatLength: this.formatLength, selector: this.dateMode.toLowerCase()});
+	    d =  wm.convertValueToDate(inValue, {formatLength: this.formatLength, selector: this.dateMode.toLowerCase(), timePattern: this.use24Time ?'HH:mm'  : "hh:mm a"});
 	}
 
 	var displayValue = null;
 	if (d && d.getTime() != NaN) {
-	    if (this.dateMode == "Date" && !this.useLocalTime)
+	    if (!this.useLocalTime)
 		d.setHours(d.getHours() + wm.timezoneOffset);
-	    displayValue = dojo.date.locale.format(d, {formatLength: this.formatLength, fullYear: true, selector: this.dateMode.toLowerCase()});
+	    displayValue = this.calcDisplayValue(d);
 	} else
 	    d = null;
 	this.inherited(arguments, [displayValue]);
     },
-    setDefaultOnInsert:function(){
-	if (this.defaultInsert) {
-	    if (this.$.binding && this.$.binding.wires.defaultInsert)
-		this.$.binding.wires.defaultInsert.refreshValue();
-	    this.setDataValue(this.defaultInsert);
-	    this.invalidate();
-	}
-    },
-    getEditorValue: function() {
-	var value = this.getDisplayValue();
-	var date = dojo.date.locale.parse(value, {formatLength: this.formatLength, fullYear: true, selector: this.dateMode.toLowerCase()});
-	if (date) {
-	    if (this.dateMode == "Date") {
-		if (!this.useLocalTime)
-		    date.setHours(-wm.timezoneOffset,0,0);
-		else
-		    date.setHours(0,0,0);
-	    }
-	    return date.getTime();
-	}
-	return null;
-    },
+
+/*
     updateIsDirty: function() {
 	var wasDirty = this.isDirty;
 	var isDirty = true;
@@ -485,17 +317,260 @@ dojo.declare("wm.DateTime", wm.Text, {
 	wm.DateTime.dialog.hide();
 	this.setDisplayValue(this._initialDisplayValue);
     },
+    */
     setDateMode: function(inValue) {
 	// must get value before changing formatLength because formatLength determines how to parse the value
 	var value = this.getDataValue();
 	this.dateMode = inValue; 
 	this.setDataValue(value);
-    },
-    listProperties: function() {
-	var p = this.inherited(arguments);
-	p.useLocalTime.ignoretmp = (this.dateMode != "Date");
-	return p;
     }
 
 });
 
+dojo.declare(
+	"dijit.form.DateTimeTextBox",
+	dijit.form._DateTimeTextBox,
+	{
+	    forceWidth: false, // Force the popup to use its own width and not match the editor width
+	    autoWidth: false,// Force the popup to use its own width and not match the editor width
+	    baseClass: "dijitTextBox dijitComboBox dijitDateTextBox", // use these classes in the editor
+	    popupClass: "wm.DateTimePicker", // name of the class to use for the popup (since I have my own openDropDown this may be ignored)
+	    _selector: "datetime",  // used in dojo.date.parse/format
+	    value: new Date(""),
+	    openDropDown: function(/*Function*/ callback){
+		    if (!wm.DateTimePicker.dialog) {
+			wm.DateTimePicker.dialog = new wm.DateTimePicker({owner: this,
+										name: "DateTimePopup"});
+		    }
+		    this.dropDown = wm.DateTimePicker.dialog;
+		    this.dropDown._updating = true;
+		switch(this._selector) {
+		case "datetime":
+		    this.dropDown.calendar.show();
+		    this.dropDown.panel.show();
+		    this.dropDown.buttonPanel.show();
+		    break;
+		case "time":
+		    this.dropDown.calendar.hide();
+		    this.dropDown.panel.show();
+		    this.dropDown.buttonPanel.show();
+		    break;
+		case "date":
+		    this.dropDown.calendar.show();
+		    this.dropDown.panel.hide();
+		    this.dropDown.buttonPanel.hide();
+		}
+		this.dropDown.setUse24Time(this.use24Time);
+		this.dropDown.setHeight(this.dropDown.getPreferredFitToContentHeight() + "px");
+
+		    this.dropDown.setDataValue(this.get("value"));
+		    this.dropDown.setMinimum(this.constraints.min);
+		    this.dropDown.setMaximum(this.constraints.max);
+		
+		    this.dropDown._currentDijit = this;
+		    this.dropDown._updating = false;
+		var result = dijit._HasDropDown.prototype.openDropDown.call(this, callback);
+		if (this.dropDown.calendar.showing)
+		    this.dropDown.calendar.focus();
+		else
+		    this.dropDown.hours.focus();
+		return result;
+		}
+	});
+
+dojo.require("wm.base.widget.Container");
+dojo.declare("wm.DateTimePicker", wm.Container, {
+    use24Time: false,
+    border: "1",
+    borderColor: "#333",    
+    height: "252px",
+    width: "210px",
+    padding: "0",
+    margin: "0",
+    classNames: "wmdialog MainContent",
+    horizontalAlign: "left",
+    verticalAlign: "top",
+    dataValue: null,
+    prepare: function(inProps) {
+	inProps.owner = app;
+	this.inherited(arguments);
+    },
+    setUse24Time: function(inVal) {
+	this.use24Time = inVal;
+	this.ampm.setShowing(!inVal);
+	this.hours.setMaximum(inVal ? 24 : 12);
+    },
+    postInit: function() {
+	var onchange = dojo.hitch(this, "changed");
+	this.calendar = new wm.dijit.Calendar({owner: this,
+					       parent: this,
+					       userLocalTime: true,
+					       height: "180px",
+					       width: "100%",
+					       onValueSelected: onchange});
+	this.panel = new wm.Panel({owner: this,
+				   parent: this,
+				   name: "dateTimePickerPanel",
+				   layoutKind: "left-to-right",
+				   horizontalAlign: "left",
+				   verticalAlign: "bottom",
+				   margin: "0,0,3,0",
+				   width: "100%",
+				   height: "50px"});
+	this.hours = new wm.Number({owner: this,
+				    parent: this.panel,
+				    caption: "Hour", // Localize
+				    captionAlign: "left",
+				    captionPosition: "top",
+				    captionSize: "22px",
+				    changeOnKey: true,
+				    displayValue: "",
+				    height: "100%",
+				    maximum: 12,
+				    minimum: 0,
+				    padding: "2",
+				    spinnerButtons: 1,
+				    width: "100%",
+				    onchange: onchange});
+
+	this.minutes = new wm.Number({owner: this,
+				    parent: this.panel,
+				    caption: "Minute", // Localize
+				    captionAlign: "left",
+				    captionPosition: "top",
+				    captionSize: "22px",
+				    changeOnKey: true,
+				    displayValue: "",
+				    height: "100%",
+				    maximum: 59,
+				    minimum: 0,
+				    padding: "2",
+				    spinnerButtons: 1,
+				    width: "100%",
+				    onchange: onchange});
+    
+	this.ampm = new wm.ToggleButton({owner: this,
+					 parent: this.panel,
+					 captionDown: "PM",
+					 captionUp: "AM",
+					 height: "21px",
+					 width: "50px",
+					 margin: "0,4,2,0",
+					 onclick: onchange});
+	this.buttonPanel = new wm.Panel({owner: this,
+				   parent: this,
+			       _classes: {domNode: ["dialogfooter"]},
+
+				   name: "dateTimePickerButtonPanel",
+				   layoutKind: "left-to-right",
+				   horizontalAlign: "left",
+				   verticalAlign: "bottom",
+				   width: "100%",
+					 height: "32px"});
+	this.okButton = new wm.Button({owner: this,
+				       parent: this.buttonPanel,
+			       name: "okButton",
+			       caption: "OK",
+			       width: "100px",
+				       height: "100%",
+				       onclick: dojo.hitch(this,"onOkClick")});
+
+		new wm.Button({owner: this,
+				       parent: this.buttonPanel,
+			       name: "cancelButton",
+			       caption: "Cancel",
+			       width: "100px",
+				       height: "100%",
+			       onclick: dojo.hitch(this,"onCancelClick")});
+
+	this.inherited(arguments);
+	this.reflow();
+    },
+
+    changed: function() {
+	if (this._updating) return;
+	if (this.calendar.showing) {
+	    var date = new Date(this.calendar.getDateValue());
+	} else {
+	    var date = new Date(0);
+	}
+
+	if (this.panel.showing) {
+	    var hour = this.hours.getDataValue() || 1;
+	    var minute = this.minutes.getDataValue() || 0;
+	    var isPM = this.ampm.clicked;
+	    date.setHours(hour + (isPM ? 12 : 0), minute);
+	}
+	this.dataValue = date;
+	if (this._currentDijit) {
+	    this._currentDijit.set("value", date);
+	}
+	if (this._currentDijit && this.calendar.showing && !this.panel.showing) {
+	    this._currentDijit.toggleDropDown();
+	}
+    },
+    set: function(inName, inValue) {
+	// ignore these calls
+    },
+    destroyRecursive: function() {}, // ignore this; don't let dojo decide when to destroy a popup shared across many widgets
+    reflowParent: function() {
+	this.reflow();
+	this.renderBounds();
+    },
+    getContentBounds: function() {
+	var b = this.inherited(arguments);
+	b.l += this.borderExtents.l;
+	b.t += this.borderExtents.t;
+	return b;
+    },
+    setDataValue: function(inValue) {
+	this._initialValue = inValue;
+	var value;
+	if (inValue instanceof Date) {
+	    value = inValue;
+	} else if (!inValue) {
+	    value = "";
+	} else {
+	    value = wm.convertValueToDate(inValue);
+	}
+	this.dataValue = value;
+
+	if (value) {
+	    if (this.calendar.showing) {
+		this.calendar.setDate(value);
+	    }
+	    if (this.panel.showing) {
+		var time = dojo.date.locale.format(value, {selector:'time', timePattern: this.use24Time ?'HH:mm' : "hh:mm a"});
+		if (this.use24Time) {
+		    var timematches = time.match(/^(\d\d)\:(\d\d)$/);
+		} else {
+		    var timematches = time.match(/^(\d\d)\:(\d\d) (.*)$/);
+		}
+		this.minutes.setDataValue(timematches[2]);
+
+		if (this.use24Time) {
+		    this.hours.setDataValue(Number(timematches[1]));
+		} else {
+		    var isPM = timematches[3].toLowerCase() == "pm";
+		    this.hours.setDataValue(timematches[1]);
+		    this.ampm.setClicked(isPM);
+		}
+	    }		
+	}
+    },
+    setMinimum: function(inMin) {this.calendar.setMinimum(inMin);},
+    setMaximum: function(inMax) {this.calendar.setMaximum(inMax);},
+    onOkClick: function() {
+	if (this._currentDijit) {
+	    this._currentDijit.toggleDropDown();
+	}
+    },
+    onCancelClick: function() {
+	if (this._currentDijit) {
+	    this._currentDijit.toggleDropDown();
+	    this._currentDijit.set("value",this._initialValue);
+	}
+    },
+    onChange: function(inValue) {
+    }
+});
