@@ -1,5 +1,5 @@
  /*
-  * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
+  * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
   *
   *  Licensed under the Apache License, Version 2.0 (the "License");
   *  you may not use this file except in compliance with the License.
@@ -404,8 +404,11 @@
 	     this._activeLayer = activeLayer.caption;
 	 try {
 	     this.inspected = inComponent;
-	     while (this.layers.length)
+	     this.layerIndex = -1;
+	     while (this.layers.length) {
+		 this.layers[0].active = false;
 		 this.layers[0].destroy();
+	     }
 	     while(this.dataSets.length)
 		 this.dataSets[0].destroy();
 	     this.props = this.getProps(inComponent,false);
