@@ -348,17 +348,17 @@ dojo.declare(
 		case "datetime":
 		    this.dropDown.calendar.show();
 		    this.dropDown.panel.show();
-		    this.dropDown.buttonPanel.show();
+		    //this.dropDown.buttonPanel.show();
 		    break;
 		case "time":
 		    this.dropDown.calendar.hide();
 		    this.dropDown.panel.show();
-		    this.dropDown.buttonPanel.show();
+		    //this.dropDown.buttonPanel.show();
 		    break;
 		case "date":
 		    this.dropDown.calendar.show();
 		    this.dropDown.panel.hide();
-		    this.dropDown.buttonPanel.hide();
+		    //this.dropDown.buttonPanel.hide();
 		}
 		this.dropDown.setUse24Time(this.use24Time);
 		this.dropDown.setHeight(this.dropDown.getPreferredFitToContentHeight() + "px");
