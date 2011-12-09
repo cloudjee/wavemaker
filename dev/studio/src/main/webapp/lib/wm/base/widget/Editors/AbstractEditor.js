@@ -209,24 +209,27 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	},
     createHelpNode: function() {
 	this.helpNode = dojo.create("div", {className: "EditorHelpIcon"}, this.domNode);
-	this._helpTextOverConnect =
-	    this.connect(this.helpNode, "onmouseover", this, function(e) {
-		wm.job(this.getRuntimeId() + ".helpText", 100, dojo.hitch(this, function() {
-		    var coords = dojo.coords(this.helpNode);
-		    //app.createToolTip(this.helpText, null, {mouseX: coords.x, mouseY: coords.y + coords.h});
-		    app.createToolTip(this.helpText, null, {mouseX: coords.x, mouseY: coords.y + coords.h});
-		}));
-	    });
-	this._helpTextOutConnect =
-	    this.connect(this.helpNode, "onmouseout", this, function() {
-		wm.job(this.getRuntimeId() + ".helpText", 100, dojo.hitch(this, function() {
-		    if (app.getToolTip() == this.helpText) // make sure tooltip isn't showing another editor's help text
-			app.hideToolTip();
-		}));
+	if (typeof this.helpText == "string") {
+	    this._helpTextOverConnect =
+		this.connect(this.helpNode, "onmouseover", this, function(e) {
+		    wm.job(this.getRuntimeId() + ".helpText", 100, dojo.hitch(this, function() {
+			var coords = dojo.coords(this.helpNode);
+			//app.createToolTip(this.helpText, null, {mouseX: coords.x, mouseY: coords.y + coords.h});
+			app.createToolTip(this.helpText, null, {mouseX: coords.x, mouseY: coords.y + coords.h});
+		    }));
+		});
+	    this._helpTextOutConnect =
+		this.connect(this.helpNode, "onmouseout", this, function() {
+		    wm.job(this.getRuntimeId() + ".helpText", 100, dojo.hitch(this, function() {
+			if (app.getToolTip() == this.helpText) // make sure tooltip isn't showing another editor's help text
+			    app.hideToolTip();
+		    }));
 
-	    });
-
+		});
+	}
+	this.connect(this.helpNode, "onclick", this, "onHelpClick");
     },
+    onHelpClick: function() {},
     destroyHelpNode: function() {
 	dojo.destroy(this.helpNode);
 	wm.Array.removeElement(this._connections,this._helpTextOverConnect); 
