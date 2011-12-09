@@ -142,7 +142,7 @@ dojo.declare("wm.Layer", wm.Container, {
        }
 });
 
-dojo.declare("wm.Layers", wm.Container, {
+dojo.declare("wm.Layers", wm.Container, {    
         transition: "none",
         clientBorder: "",
         clientBorderColor: "",
@@ -202,7 +202,7 @@ dojo.declare("wm.Layers", wm.Container, {
 	},
 	postInit: function() {
 		this.inherited(arguments);
-		if (!this.getCount())
+		if (!this.getCount() && this._isDesignLoaded)
 			this.addLayer();
 		this._initDefaultLayer();
 		// fire onshow when loaded
@@ -251,14 +251,27 @@ dojo.declare("wm.Layers", wm.Container, {
 		if (o)
 			return o.createComponent(defName, "wm.Layer", props);
 	},
-    addPageContainerLayer: function(inPageName, inCaption) {
-	var layer = this.createLayer(inCaption);
+    addPageContainerLayer: function(inPageName, inCaption, activate) {
+	var layer = this.getLayerByCaption(inCaption);
+	if (layer) {
+	    if (activate || activate === undefined) layer.activate();
+	    return layer;
+	}
+	layer = this.createLayer(inCaption);
 	new wm.PageContainer({owner: this.owner,
+			      parent: layer,
 			      name: this.owner.getUniqueName(layer.name + "PageContainer"),
 			      width: "100%",
 			      height: "100%",
 			      pageName: inPageName,
 			      deferLoad: false});
+	if (activate || activate === undefined)
+	    layer.activate();
+
+	if (this.conditionalTabButtons) {
+	    this.decorator.tabsControl.setShowing(this.getVisibleLayerCount() > 1);
+	}
+
 	return layer;
     },
 
