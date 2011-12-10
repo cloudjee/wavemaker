@@ -47,11 +47,11 @@ Studio.extend({
 	            this.regex = new RegExp(this._searchText.toLowerCase());
 
 		if (this.page) {
-		    var dialogs = this.getTreeComponents(this.application.components, null, [wm.Dialog, wm.PopupMenu]);
+		    var dialogs = this.getTreeComponents(this.application.components, null, [wm.Dialog, wm.PopupMenu, wm.DojoLightbox]);
 		    for (var d in dialogs) {
 			this.widgetToTree(this.widgetsTree.root, dialogs[d]);
 		    }
-		    dialogs = this.getTreeComponents(this.page.components, null, [wm.Dialog, wm.PopupMenu]);
+		    dialogs = this.getTreeComponents(this.page.components, null, [wm.Dialog, wm.PopupMenu, wm.DojoLightbox]);
 		    for (var d in dialogs) {
 			this.widgetToTree(this.widgetsTree.root, dialogs[d]);
 		    }
@@ -133,7 +133,7 @@ Studio.extend({
 	        n.component = this.page;
 	        this.page._studioTreeNode = n;
 
-	    var components  = this.getTreeComponents(this.page.components, [wm.Control]);
+	    var components  = this.getTreeComponents(this.page.components, [wm.Control, wm.DojoLightbox]);
 
 		    if (this._searchText) {
 			var _components = {};
@@ -207,7 +207,7 @@ Studio.extend({
 	    var n = this.newTreeNode(inTree.root, "images/project_16t.png", this.getDictionaryItem("MODELTREE_NODE_PROJECT_HEADING", {projectName: studio.project.projectName}));
 	        n.component = n.owner = this.application
 	    //this.application._studioTreeNode = n;
-	    this.excTypes = [wm.Query, wm.LiveView, wm.Control];
+	    this.excTypes = [wm.Query, wm.LiveView, wm.Control, wm.DojoLightbox];
 		if (this.application) {
 		    this.otherComps = this.getTreeComponents(this.application.components, this.excTypes);
 		    		    
@@ -277,7 +277,7 @@ Studio.extend({
 	},
 	widgetToTree: function(inNode, inWidget) {
 		if (inWidget) {
-		    if (inWidget.flags.notInspectable || inWidget.isParentLocked())
+		    if (inWidget.flags.notInspectable || inWidget.isParentLocked && inWidget.isParentLocked())
 				return;		    
 		    // create a new node if we are displaying this widget, else pass in the parent node.  If we're in search mode, then all widgets get added to the root node
 		    var n = (this._searchText && !inWidget.name.toLowerCase().match(this.regex)) ? inNode : this.newComponentNode(inNode, inWidget, null, null, {closed: inWidget instanceof wm.Dialog});

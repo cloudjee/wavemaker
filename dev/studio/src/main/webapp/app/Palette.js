@@ -169,7 +169,7 @@ dojo.declare("wm.Palette", wm.Tree, {
 				// create an undo task
 				new wm.AddTask(comp);
 			}
-			if (comp instanceof wm.Control) {
+			if (comp instanceof wm.Control && comp instanceof wm.Dialog == false) {
 				//comp.designMoveControl(this.dragger.target, this.dragger.dropRect);
 				this.dragger.target.designMoveControl(comp, this.dragger.dropRect);
 			}

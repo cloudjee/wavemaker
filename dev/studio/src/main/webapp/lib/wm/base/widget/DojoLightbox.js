@@ -64,7 +64,7 @@ dojo.declare("wm.DojoLightbox", wm.Component, {
 	dataSet:null,
 	imageUrlField:'',
 	imageLabelField:'',
-
+        
 	postInit: function() {
 		this.inherited(arguments);
 	    if (!this.$.binding && this.isDesignLoaded())
@@ -147,7 +147,16 @@ dojo.declare("wm.DojoLightbox", wm.Component, {
 	update: function(){
 		this.show();
 	},
-
+    /* Fired by studio.select */
+        activate: function() {
+	    try {
+		this.show();
+	    } catch(e) {}
+	    dojo.destroy(dojo.query(".dijitDialogUnderlayWrapper")[0]);
+	},
+    deactivate: function() {
+	this.dojoObj.hide();
+    },
     _end:0
 });
 

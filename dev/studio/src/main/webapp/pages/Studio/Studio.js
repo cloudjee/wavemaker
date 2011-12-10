@@ -889,6 +889,8 @@ dojo.declare("Studio", wm.Page, {
 		if (dialog1 && dialog1 != dialog2)
 		    dialog1.dismiss();
 	    }
+	    if (studio.selected && this.selected.deactivate)
+		this.selected.deactivate();
 
 		while (inComponent && inComponent.isParentLocked && inComponent.isParentLocked())
 			inComponent = inComponent.parent;
@@ -934,7 +936,7 @@ dojo.declare("Studio", wm.Page, {
 		// if the widget is on an inactive layer,
 		// activate all parent layers so it's visible
 		var w = this.selected;
-		if (w instanceof wm.Widget)
+		if (w instanceof wm.Widget || w instanceof wm.DojoLightbox)
 			while (w) {
 			wm.fire(w, "activate");
 			w = w.parent;
