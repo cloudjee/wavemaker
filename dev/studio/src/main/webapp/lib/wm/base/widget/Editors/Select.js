@@ -738,7 +738,7 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		var ff = wm.getFormField(this);
 		
 		try {
-		    var currentType = parentType ? wm.typeManager.getType(parentType).fields[ff].type : undefined;
+		    var currentType = parentType && parentType != "any" ? wm.typeManager.getType(parentType).fields[ff].type : "string";
 		} catch(e) {}
 		
 		if (view && !this._isDesignLoaded) {
