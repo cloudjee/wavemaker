@@ -863,7 +863,7 @@ dojo.declare("wm.studio.Project", null, {
 		this.updatePageList(true);
 		studio.pagesChanged();
 	        if (studio.application && studio.selected && !studio.selected.isDestroyed) {
-		    reinspect();
+		    studio.reinspect();
 		}
 	},
 	projectChanging: function() {

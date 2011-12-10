@@ -324,7 +324,7 @@ wm.WizardLayers.extend({
 
 	this.decorator.addFooter();
 	this.reflow();
-	reinspect(true)
+	studio.reinspect(true)
     },
     set_verticalButtons: function(inValue) {
 	this.verticalButtons = Boolean(inValue);

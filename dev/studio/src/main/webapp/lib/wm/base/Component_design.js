@@ -277,7 +277,7 @@ wm.Component.extend({
 	     * once per widget within the dialog; */
 	        if (this == studio.selected) {
 		    studio.refreshDesignTrees();
-		    inspect(this, true);
+		    studio.inspect(this, true);
 		}
 	},
 	get_owner: function() {

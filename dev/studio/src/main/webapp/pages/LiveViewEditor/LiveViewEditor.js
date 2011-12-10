@@ -55,7 +55,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
 		this.clientLiveView = inLiveView;
 		this.liveVariable.setLiveView(this.clientLiveView);
 		this.update();
-	        reinspect();
+	    studio.reinspect();
 	},
 	update: function() {
 		// FIXME: grrr
@@ -471,7 +471,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
 	        this.owner.parent.setCaption(this.clientLiveView.getLayerCaption());
 	    }
 	    this.setDirty();
-		    reinspect();
+	    studio.reinspect();
 	},
 	//
 	// Preview
@@ -513,7 +513,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
                                 dojo.hitch(this, function() {
 				    v.destroy();
 				    studio.refreshServiceTree("");
-				    reinspect();
+				    studio.reinspect();
 
 				    var pageContainer = this.owner;
 				    var subtablayer = pageContainer.parent;

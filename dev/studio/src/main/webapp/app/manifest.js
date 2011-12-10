@@ -115,7 +115,6 @@ wm.loadLibs([
 	"wm.studio.app.inspector.StyleInspector",
 	"wm.studio.app.inspector.SecurityInspector",
 	"wm.studio.app.inspector.ComponentInspector",
-	"wm.studio.app.inspect",
 	"wm.studio.app.sourcer",
 	"wm.studio.app.events",
 	"wm.studio.app.file",

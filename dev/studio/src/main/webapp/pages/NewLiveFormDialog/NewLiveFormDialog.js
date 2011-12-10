@@ -36,7 +36,7 @@ dojo.declare("NewLiveFormDialog", wm.Page, {
 	}
 	this.form.eventBindings.onEnterKeyPress = this.form.getId() + ".saveData";
         this.owner.owner.dismiss();
-	reinspect(true);
+	studio.reinspect(true);
     },
 
   _end: 0

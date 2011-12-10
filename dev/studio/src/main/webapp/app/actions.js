@@ -30,7 +30,7 @@ new wm.Action({
 		var s = studio.selected;
 		if (s) {
 			s.setBox(s.box == "h" ? "v" : "h");
-			inspect(s);
+			studio.inspect(s);
 		}
 	}
 });

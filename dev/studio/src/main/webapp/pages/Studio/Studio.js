@@ -749,7 +749,7 @@ dojo.declare("Studio", wm.Page, {
 	    if (this.page) {
 		studio.markup.domNode.innerHTML = this.designifyMarkup(this.getMarkup());
 	        // re-inspect selected control since markup change may influence inspector
-		inspect(this.selected || this.page.root);
+		this.inspect(this.selected || this.page.root);
 		dojo.publish("wm-markupchanged");
 	    }
 	},
@@ -823,6 +823,35 @@ dojo.declare("Studio", wm.Page, {
 		return this._add(this._make(inType, inProps));
 	},
         _lastBindSelect: null,
+    reinspect: function() {
+	wm.job("studio.inspect", 1, dojo.hitch(this, function() {
+	    if (this.inspector && this.inspector.inspected && !forceRegen) {
+		this.inspector.reinspect();
+	    } else if (this.inspector  && forceRegen) {
+		var inspected =	this.inspector.inspected;
+		this.inspector.inspected = null;
+		if (inspected)
+		    this.inspector.inspect(inspected);
+	    }			
+	}));
+    },
+        inspect: function(inComponent) {
+	    wm.job("studio.inspect", 1, dojo.hitch(this, function() {
+		this._inspect(inComponent);
+	    }));
+	},
+    _inspect: function(inComponent) {
+	if (inComponent.isDestroyed || !this.application) return;
+
+	// update label
+	this.setInspectedCaption(inComponent);
+	// inspect component
+	//studio.inspector.setLayerByCaption("Properties");
+	studio.inspector.inspect(inComponent);
+    },
+    setInspectedCaption: function(inComponent) {
+	this.PIContents.setTitle(inComponent ? inComponent.name  + ': ' + (inComponent._designee.localizedDeclaredClass || inComponent._designee.declaredClass) : "(none)");
+    },
 	select: function(inComponent) {
 	        if (studio.bindDialog && studio.bindDialog.showing && !studio.bindDialog._hideAnimation) {
 /*
@@ -895,7 +924,7 @@ dojo.declare("Studio", wm.Page, {
 			this.selectInTree(s);
 			// show in inspector
 			if (s && !s.noInspector)
-				inspect(s, true);
+			    this.inspect(s, true);
 		} finally {
 		}
 		this.updateCutPasteUi();
@@ -985,7 +1014,7 @@ dojo.declare("Studio", wm.Page, {
 	},
 	componentRenamed: function(inOld, inNew, inComponent) {
 		this.renameComponentOnTree.apply(this, arguments);
-		_setInspectedCaption(inComponent);
+	        this.setInspectedCaption(inComponent);
 		this.cssChanged();
 	},
 	//=========================================================================

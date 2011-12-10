@@ -99,7 +99,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	    if (this.isPrimitive || wm.typeManager.isType(this.type)) 
 		this.setType(this.type);
 	    if (studio.inspector.inspected == this) {
-		inspect(this);
+		studio.inspect(this);
 	    }
 	    if (this.owner instanceof wm.Variable)
 		this.endUpdate();
@@ -159,7 +159,7 @@ dojo.declare("wm.Variable", wm.Component, {
     /* Design time only */
     set_type: function(inType) {
 	this.setType(inType);
-	reinspect();
+	studio.reinspect();
 /*
 	var oldType = this.type;
 	this.setType(inType);
