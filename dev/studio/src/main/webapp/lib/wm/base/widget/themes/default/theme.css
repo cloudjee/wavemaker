@@ -1954,3 +1954,8 @@ li {
     text-align: left;
     padding-bottom: 5px;
 }
+
+.wmlabel.onClickEvent,
+.wmpicture.onClickEvent {
+    cursor: pointer;
+}

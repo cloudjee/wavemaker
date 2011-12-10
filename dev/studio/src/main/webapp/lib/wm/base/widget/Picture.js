@@ -45,6 +45,12 @@ dojo.declare("wm.Picture", wm.Control, {
 	        if (this.imageList)
 		    this.imageListChanged();
 	},
+        postInit: function() {
+	    this.inherited(arguments);
+	    if (this.onclick != this.constructor.prototype.onclick) {
+		dojo.addClass(this.domNode, "onClickEvent");
+	    }
+	},
 	setSource: function(inSource) {
 	    this.source = inSource || "";
 	    this.valueChanged("source", this.source);

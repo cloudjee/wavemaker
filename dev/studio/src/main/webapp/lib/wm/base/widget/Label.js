@@ -58,6 +58,9 @@ dojo.declare("wm.Label", wm.Control, {
 		this.renderLabel();
 		this.valueChanged("caption", this.caption);
 		this.valueChanged("link", this.link);
+	    if (this.onclick != this.constructor.prototype.onclick) {
+		dojo.addClass(this.domNode, "onClickEvent");
+	    }
 	},
 	renderLabel: function() {
 		if (this._loading)

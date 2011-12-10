@@ -1657,7 +1657,35 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		}
 		w = w.parent;
 	}
-    }
+    },
+
+	setImageList: function(inImageList) {
+		this.imageList = inImageList;
+		this.imageListChanged();
+	},
+	setImageIndex: function(inImageIndex) {
+		if (inImageIndex !== undefined) {
+		    this.imageIndex = Number(inImageIndex);
+			this.imageListChanged();
+		}
+	},
+	imageListChanged: function() {
+		var iln = this.findImageList();
+		this._imageList = iln ? iln instanceof wm.ImageList ? iln : this.owner.getValueById(iln) : null;
+	        this.invalidCss = true;
+	    this.render(true,true);
+	},
+    getCurrentImageIndex: function() {
+	    return this.imageIndex;
+    },
+	findImageList: function() {
+		var t = this;
+		while (t && !t.imageList) {
+			t = t.parent;
+		}
+		return t ? t.imageList : null;
+	}
+
     });
 
 // layout specific
