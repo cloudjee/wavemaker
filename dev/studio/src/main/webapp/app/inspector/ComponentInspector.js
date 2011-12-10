@@ -431,6 +431,53 @@
 		 var p = props[i];
 		 var propName = p.name;
 
+		     var e = this.editorHash[inComponent.getId() + "." + propName];
+		     if (e && e.isDestroyed) {
+			 delete this.editorHash[inComponent.getId() + "." + propName];
+			 e = undefined;
+		     }
+		     var binde = this.bindEditorHash[inComponent.getId() + "." + propName];
+		     if (!e) {
+			 continue;
+		     }
+		     /* Menus must be regenerated; at least until we have a better way of getting the list of options updated */
+		     if (e instanceof wm.SelectMenu || e instanceof wm.prop.SelectMenu) {
+			 var parent = e.parent;
+
+			 parent.removeAllControls();
+			 e = this.generateEditor(inComponent,p, parent.parent, parent);
+			 this.editorHash[inComponent.getId() + "." + propName] = e;
+		     } else if (e) {
+			 var newVal;
+			 if (inComponent.$.binding && inComponent.$.binding.wires[propName]) {
+			     newVal = inComponent.$.binding.wires[propName].source;
+			 } else {
+			     newVal = inComponent.getProp(propName);
+			 }
+
+			 // if you call getDataValue on a NumberEditor whose displayValue is a bind expression, you get back undefined
+			 // because its not a number
+			 if (e instanceof wm.AbstractEditor) {
+			     var oldVal = e.showing ? e.getDataValue() : binde && binde.showing ? binde.getDataValue() : e.getDataValue();
+			     if (newVal !== oldVal) {
+				 e.setDataValue(newVal);
+			     } else if (typeof newVal == "object" && newVal !== null) {
+				 e.setDataValue(newVal);// make sure the editor sees the updated hash or array
+			     }
+			 }
+			 e.setDisabled(p.ignoretmp);
+			 e.setHint(p.ignoretmp && p.ignoretmp ? this.ignoreHintPrefix +  p.ignoreHint : "");
+		     
+
+		     if (p.bindable || p.bindTarget) {
+			 var isBound = inComponent.$.binding && inComponent.$.binding.wires[propName];
+			 e.setShowing(!isBound);
+			 this.bindEditorHash[inComponent.getId() + "." + propName].setShowing(isBound);
+			 e.parent.setHeight((isBound ? this.bindEditorHash[inComponent.getId() + "." + propName].bounds.h : e.bounds.h) +  "px");
+			 var wire = inComponent.$.binding.wires[propName];
+			 this.bindEditorHash[inComponent.getId() + "." + propName].setDataValue(wire ? wire.expression || wire.source : "");
+		     }
+		     }
 
 		 if (p.subcomponent) {
 		     var subcomponent = inComponent.$[propName];
@@ -469,55 +516,7 @@
 
 			 this.generateEditors(subcomponent, p.group, currentLayer);
 		     }
-		 } else {
-		     var e = this.editorHash[inComponent.getId() + "." + propName];
-		     if (e && e.isDestroyed) {
-			 delete this.editorHash[inComponent.getId() + "." + propName];
-			 e = undefined;
-		     }
-		     var binde = this.bindEditorHash[inComponent.getId() + "." + propName];
-		     if (!e) {
-			 continue;
-		     }
-		     /* Menus must be regenerated; at least until we have a better way of getting the list of options updated */
-		     if (e instanceof wm.SelectMenu || e instanceof wm.prop.SelectMenu) {
-			 var parent = e.parent;
-
-			 parent.removeAllControls();
-			 e = this.generateEditor(inComponent,p, parent.parent, parent);
-			 this.editorHash[inComponent.getId() + "." + propName] = e;
-		     } else if (e) {
-			 var newVal;
-			 if (inComponent.$.binding && inComponent.$.binding.wires[propName]) {
-			     newVal = inComponent.$.binding.wires[propName].source;
-			 } else {
-			     newVal = inComponent.getProp(propName);
-			 }
-
-			 // if you call getDataValue on a NumberEditor whose displayValue is a bind expression, you get back undefined
-			 // because its not a number
-			 if (e instanceof wm.AbstractEditor) {
-			     var oldVal = e.showing ? e.getDataValue() : binde && binde.showing ? binde.getDataValue() : e.getDataValue();
-			     if (newVal !== oldVal) {
-				 e.setDataValue(newVal);
-			     } else if (typeof newVal == "object" && newVal !== null) {
-				 e.setDataValue(newVal);// make sure the editor sees the updated hash or array
-			     }
-			 }
-			 e.setDisabled(p.ignoretmp);
-			 e.setHint(p.ignoretmp && p.ignoretmp ? this.ignoreHintPrefix +  p.ignoreHint : "");
-		     }
-
-		     if (p.bindable || p.bindTarget) {
-			 var isBound = inComponent.$.binding && inComponent.$.binding.wires[propName];
-			 e.setShowing(!isBound);
-			 this.bindEditorHash[inComponent.getId() + "." + propName].setShowing(isBound);
-			 e.parent.setHeight((isBound ? this.bindEditorHash[inComponent.getId() + "." + propName].bounds.h : e.bounds.h) +  "px");
-			 var wire = inComponent.$.binding.wires[propName];
-			 this.bindEditorHash[inComponent.getId() + "." + propName].setDataValue(wire ? wire.expression || wire.source : "");
-		     }
 		 }
-
 	     }
 	 } catch(e) {
 	     console.error(e);
@@ -695,14 +694,16 @@
 
 		  var props = this.props;
 		  var subcomponent = inComponent.$[propName];
-		  this.subcomponents[subcomponent.getId()] = {className: subcomponent.declaredClass,
-							      parent: panel};
-		  this.props = this.getProps(subcomponent,true);
-		  this.generateEditors(subcomponent,"", panel);
-		  this.props = props; // cache the current props until the subcomponent inspection is done
-
+		  if (subcomponent) {
+		      this.subcomponents[subcomponent.getId()] = {className: subcomponent.declaredClass,
+								  parent: panel};
+		      this.props = this.getProps(subcomponent,true);
+		      this.generateEditors(subcomponent,"", panel);
+		      this.props = props; // cache the current props until the subcomponent inspection is done
+		      
 		      panel.setHeight(panel.getPreferredFitToContentHeight() + "px");
-		  return;
+		      return;
+		  }
 	      } 
 	      if (inProp.editor) {
 		  ctor = dojo.getObject(inProp.editor);
