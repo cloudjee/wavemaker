@@ -32,8 +32,10 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 	},
 	connectEditor: function() {
 		this.inherited(arguments);
+/*
 		if (this.captionNode)
 		    this.addEditorConnect(this.domNode, "onclick", this, "captionClicked");
+		    */
 	},
 	// checkbox cannot be sized, but should be adjusted in container
 	sizeEditor: function() {
@@ -81,6 +83,7 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 	    if (!this._cupdating)
 		this.changed();
 	},
+/*
 	captionClicked: function(e) {
 	    if (!this.readonly && !this.disabled && !this.isDesignLoaded() && !dojo.isDescendant(e.target, this.editor.domNode)) {
 		var isChecked = this.getChecked();
@@ -89,6 +92,7 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 		});
 	    }
 	},
+	*/
 	getDisplayValue: function() {
 	    return this.getDataValue();
 	},

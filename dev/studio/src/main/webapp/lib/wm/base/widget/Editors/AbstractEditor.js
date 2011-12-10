@@ -100,9 +100,8 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		else return 80 + parseInt(this.captionSize);
 	},
 	createCaption: function() {		 
-		var labeldiv = document.createElement("div");
+		var labeldiv = document.createElement("label");
 		var s = labeldiv.style;
-		s["float"] = "left"; // some compilers have trouble with x.float
 		s.padding = "0px";
 		s.margin = "0px";
 
@@ -250,7 +249,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		this.domNode.appendChild(n);
 	    this.startTimerWithName("CreateDijit", this.declaredClass);
 		this.editor = this._createEditor(n, inProps);
-
+	        dojo.attr(this.captionNode, "for", this.editor.id);
 /*
             if (this.editor._onChangeHandle) {
                 window.clearTimeout(this.editor._onChangeHandle);

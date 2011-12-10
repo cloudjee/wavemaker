@@ -35,14 +35,10 @@ dojo.declare("wm.RadioButton", wm.Checkbox, {
 	connectEditor: function() {
 	    this.inherited(arguments);
 	    this.addEditorConnect(this.domNode, "ondblclick", this, function() {
-		this.captionClicked();
 		this.onDblClick();
 	    });
 	},
-	captionClicked: function() {
-		if (!this.readonly && !this.disabled)
-			this.setChecked(true);
-	},
+
 	setInitialValue: function() {
 		this.beginEditUpdate();
 
