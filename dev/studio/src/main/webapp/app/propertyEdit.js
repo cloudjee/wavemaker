@@ -811,8 +811,8 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
 						   propertyNumber: parseInt(inIndex),
 						   width: "100%",
 						   height: "28px",
-						   captionSize: "60px",
-						   caption: inIndex > 0 ? "And then" : "Then do",
+						   captionSize: inIndex > 0 ? "60px" : "0px",
+						   caption: inIndex > 0 ? "And then" : "",
 						   captionPosition: "left",
 						   captionAlign: "left",
 						   dataValue: inValue,
@@ -824,8 +824,8 @@ dojo.declare("wm.prop.EventEditor", wm.SelectMenu, {
     displayField: "dataValue",
     dataField: "dataValue",
     constructor: function() {
-	if (!wm.EventEditor.eventActions) {
-	    wm.EventEditor.eventActions =  {
+	if (!wm.prop.EventEditor.eventActions) {
+	    wm.prop.EventEditor.eventActions =  {
 		noEvent: {caption: studio.getDictionaryItem("wm.EventEditor.NO_EVENTS")},
 		jsFunc: {caption: studio.getDictionaryItem("wm.EventEditor.NEW_JAVASCRIPT")},
 		jsSharedFunc: {caption: studio.getDictionaryItem("wm.EventEditor.NEW_JAVASCRIPT_SHARED")},
@@ -843,7 +843,7 @@ dojo.declare("wm.prop.EventEditor", wm.SelectMenu, {
 	}
     },
     isEventAction: function(inValue) {
-	var ea = wm.EventEditor.eventActions;
+	var ea = wm.prop.EventEditor.eventActions;
 	for (var i in ea)
 	    if (inValue == ea[i].caption)
 		return true;
@@ -872,7 +872,7 @@ dojo.declare("wm.prop.EventEditor", wm.SelectMenu, {
 	var items=[];
 	var eventSchema = this.inspected.schema[this.propName];
 
-	wm.forEachProperty(wm.EventEditor.eventActions, function(o, name) {
+	wm.forEachProperty(wm.prop.EventEditor.eventActions, function(o, name) {
 	    var n = o.caption, l = o.list;
 	    if (l) {
 		var a;
@@ -995,7 +995,7 @@ dojo.declare("wm.prop.EventEditor", wm.SelectMenu, {
     },
 
 	doEventAction: function(inEventName) {
-		var ea = wm.EventEditor.eventActions, c = this.inspected, p = this.propName, v;
+		var ea = wm.prop.EventEditor.eventActions, c = this.inspected, p = this.propName, v;
 		switch (inEventName) {
 		        case ea.noEvent.caption:
 		    this.setDisplayValue("");
