@@ -17,7 +17,7 @@ dojo.provide("wm.base.widget.Formatters");
 // FIXME: need formatter registry
 wm.formatters = [ 
 	"Number", "Date", "Time", "DateTime", "Currency", "Link",
-	"RegularExpression", "Evaluation","Image" 
+    "RegularExpression", "Evaluation","Image", "Percent"
 ];
 
 wm.getFormatter = function(inName) {
@@ -226,6 +226,14 @@ dojo.declare("wm.ImageFormatter", wm.DataFormatter, {
 			formatter: this.format
 		}
 	}
+});
+
+dojo.declare("wm.PercentFormatter", wm.NumberFormatter, {
+	getFormatProps: function() {
+	   var p = this.inherited(arguments);
+	   p.type = "percent";
+	   return p;
+	},
 });
 
 // design only...
