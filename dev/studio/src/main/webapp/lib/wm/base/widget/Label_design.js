@@ -56,7 +56,7 @@ wm.Label.extend({
 		if (this.display == inDisplay)
 			return;
 		this.display = inDisplay;
-		var ctor = wm.getFormatter(this.display);
+	    var ctor = this.display ? wm.getFormatter(this.display) : null;
 	        if (this.components.format)
 		    this.components.format.destroy();
 
@@ -64,9 +64,11 @@ wm.Label.extend({
 	    if (this.display == "Custom Function" || this.display == funcName) {
 		this.display = funcName;
 		eventEdit(this, "onFormat", funcName, this.owner == studio.application, "inValue");
-	    } else {
+	    } else if (ctor) {
 		var ctor = wm.getFormatter(this.display);
 		new ctor({name: "format", owner: this});
+		this.renderLabel();
+	    } else {
 		this.renderLabel();
 	    }
 	},
