@@ -65,6 +65,17 @@ dojo.declare("wm.DebugDialog", wm.Dialog, {
 					 name: "eventsLayer",
 					 caption: "Events"});
 
+	this.bindSearchBar = new wm.Text({owner: this,
+					   parent: this.eventsLayer,
+					  placeHolder: "Search bindings by property name",
+					  width: "100%",
+					  emptyValue: "emptyString",
+					  resetButton: true,
+					  changeOnKey: true,
+					  showing: false});
+	this.connect(this.bindSearchBar, "onchange", this, function() {
+	    this.debugTree.filterBindings(this.bindSearchBar.getDataValue());
+	});
 	this.debugTree = new wm.DebugTree({owner: this, 
 					   parent: this.eventsLayer,
 					   width: "100%", height: "100%",
@@ -100,6 +111,7 @@ dojo.declare("wm.DebugDialog", wm.Dialog, {
 	});
 	this.connect(bindButton, "onclick", this, function() {
 	    this.debugTree.showBinding(bindButton.clicked);
+	    this.bindSearchBar.setShowing(bindButton.clicked);
 	});
 	this.connect(executeDebugButton, "onclick", this, function() {
 	    var text = commandLine.getDataValue();
@@ -145,18 +157,20 @@ dojo.declare("wm.ServiceGridPanel", wm.Container, {
 
 	wm.conditionalRequire("lib.github.beautify", true); 
 
-	this.connect(wm.inflight, "add", this, "conditionalGenerateServicesLayer");
-	this.connect(wm.inflight, "remove", this, "conditionalGenerateServicesLayer");
+	this.connect(wm.inflight, "add", this, "newJsonEventStart");
+	this.connect(wm.inflight, "remove", this, "newJsonEventEnd");
 
 
 	var typeDef = this.createComponents({debuggerServicesType: ["wm.TypeDefinition", {internal: true, "name":"debuggerServicesType"}, {}, {
-	    field6: ["wm.TypeDefinitionField", {"fieldName":"id","fieldType":"string","name":"field6"}, {}],
 	    field0: ["wm.TypeDefinitionField", {"fieldName":"page","fieldType":"string","name":"field0"}, {}],
 	    field1: ["wm.TypeDefinitionField", {"fieldName":"name","fieldType":"string","name":"field1"}, {}],
 	    field2: ["wm.TypeDefinitionField", {"fieldName":"lastUpdate","fieldType":"date","name":"field2"}, {}],
 	    field3: ["wm.TypeDefinitionField", {"fieldName":"firedBy","fieldType":"string","name":"field3"}, {}],
 	    field4: ["wm.TypeDefinitionField", {"fieldName":"data","fieldType":"string","name":"field4"}, {}],
-	    field5: ["wm.TypeDefinitionField", {"fieldName":"request","fieldType":"string","name":"field5"}, {}]
+	    field5: ["wm.TypeDefinitionField", {"fieldName":"request","fieldType":"string","name":"field5"}, {}],
+	    field6: ["wm.TypeDefinitionField", {"fieldName":"id","fieldType":"string","name":"field6"}, {}],
+	    field7: ["wm.TypeDefinitionField", {"fieldName":"status","fieldType":"string","name":"field7"}, {}]
+
 	}]}, this);
 	wm.typeManager.types.debuggerServicesType.fields.id.include = ["update"];
 	this.serviceListVar = new wm.Variable({owner: this,
@@ -169,6 +183,7 @@ dojo.declare("wm.ServiceGridPanel", wm.Container, {
 	    tabs: ["wm.TabLayers", {name: "tabs", width: "100%", height: "100%"},{}, {
 		gridLayer: ["wm.Layer", {name: "gridLayer", caption: "Grid"}, {}, {
 		    serviceGrid: ["wm.DojoGrid", {width: "100%", height: "100%","columns":[
+			{"show":true,"field":"status","title":"-",width:"20px","formatFunc":"wm_image_formatter","formatProps":{"width":16,"height":16}},
 			{"show":true,"field":"page","title":"Page","width":"80px","align":"left","formatFunc":""},
 			{"show":true,"field":"name","title":"Name","width":"100%","align":"left","formatFunc":""},
 			{"show":true,"field":"lastUpdate","title":"Time","width":"80px","align":"left","formatFunc": "wm_date_formatter",
@@ -177,38 +192,47 @@ dojo.declare("wm.ServiceGridPanel", wm.Container, {
 			     formatLength: "medium"
 			 }},
 			{"show":true,"field":"firedBy","title":"FiredBy","width":"120px","align":"left","formatFunc":""},
-			{"show":true,"field":"data","title":"Data","width":"80px","align":"left","formatFunc":"", expression: "if (dojo.isArray(${data})) { ${data}.length + ' items';} else if (wm.isEmpty(${data})) {'Empty';} else {'Has Data';}"},
+			{"show":true,"field":"data","title":"Data","width":"80px","align":"left","formatFunc":"showDataCell", expression: ""},
 			/*{"show":true,"field":"request","title":"Request","width":"100%","align":"left","formatFunc":""},*/
 			{"show":true,"field":"update","title":"Update","width":"60px","align":"left","formatFunc":"wm_button_formatter","formatProps":null,"expression":"\"Update\"","isCustomField":true}
 		    ],
 						  "margin":"4",
-						  "name":"serviceGrid"}, {onGridButtonClick: "updateGridButtonClick"}, {
+						  "name":"serviceGrid"}, {onGridButtonClick: "updateGridButtonClick", onSelectionChange: "setLayersEnabled"}, {
 						      binding: ["wm.Binding", {"name":"binding"}, {}, {
 							  wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"app.debugDialog.serviceGridPanel.serviceListVar","targetProperty":"dataSet"}, {}]
 						      }]
-						  }]
+						  }],
+		    errorLabel: ["wm.Html", {name: "errorLabel", width: "100%", height: "50px", border: "1", borderColor: "red"}, {}, {
+						      binding: ["wm.Binding", {"name":"binding"}, {}, {
+							  wire: ["wm.Wire", {"expression":undefined,"name":"wire","expression":"${app.debugDialog.serviceGridPanel.serviceGrid.selectedItem};if (app.debugDialog.serviceGridPanel) app.debugDialog.serviceGridPanel.getErrorLabel()","targetProperty":"html"}, {}],
+							  wire2: ["wm.Wire", {"expression":undefined,"name":"wire","expression":"${app.debugDialog.serviceGridPanel.serviceGrid.selectedItem};if (app.debugDialog.serviceGridPanel) Boolean(app.debugDialog.serviceGridPanel.getErrorLabel())","targetProperty":"showing"}, {}]
+						      }]
+		    }]			
 		}],
-		dataLayer: ["wm.Layer", {name: "dataLayer", caption: "Data"},{}, {
+		dataLayer: ["wm.Layer", {name: "dataLayer", caption: "Data",showing: false},{}, {
 		    dataEditor: ["wm.AceEditor", {"height":"100%","name":"dataEditor","width":"100%"}, {}, {
 			binding: ["wm.Binding", {"name":"binding"}, {}, {
-			    wire: ["wm.Wire", {"name":"wire","expression":"${app.debugDialog.serviceGridPanel.serviceGrid.selectedItem};//causes subscribe to events\nvar data = app.debugDialog.serviceGridPanel.serviceGrid.selectedItem.getValue('data');\n var cleanData = [];\n dojo.forEach(data, function(item) {cleanData.push(wm.DojoGrid.prototype.itemToJSONObject(app.debugDialog.serviceGridPanel.serviceGrid.store,item));});\n js_beautify(dojo.toJson(cleanData));","targetProperty":"dataValue"}, {}]
+			    wire: ["wm.Wire", {"name":"wire","expression":"${app.debugDialog.serviceGridPanel.serviceGrid.selectedItem};if (app.debugDialog.serviceGridPanel) app.debugDialog.serviceGridPanel.getDataEditorData();","targetProperty":"dataValue"}, {}]
 			}]
 		    }],
 		    setDataButton: ["wm.Button", {name: "fireButton", caption: "setData()", width: "150px"}]
 		}],
-		requestLayer: ["wm.Layer", {name: "requestLayer", caption: "Request"},{}, {
+		requestLayer: ["wm.Layer", {name: "requestLayer", caption: "Request", showing: false},{}, {
 		    requestEditor: ["wm.AceEditor", {"height":"100%","name":"requestEditor","width":"100%"}, {}, {
 			binding: ["wm.Binding", {"name":"binding"}, {}, {
-			    wire: ["wm.Wire", {"name":"wire","expression":"${app.debugDialog.serviceGridPanel.serviceGrid.selectedItem};//causes subscribe to events\nvar data = app.debugDialog.serviceGridPanel.serviceGrid.selectedItem.getValue('request');\n data = wm.DojoGrid.prototype.itemToJSONObject(app.debugDialog.serviceGridPanel.serviceGrid.store,data); js_beautify(dojo.toJson(data));","targetProperty":"dataValue"}, {}]
+			    wire: ["wm.Wire", {"name":"wire","expression":"${app.debugDialog.serviceGridPanel.serviceGrid.selectedItem};if (app.debugDialog.serviceGridPanel) app.debugDialog.serviceGridPanel.getRequestEditorData();","targetProperty":"dataValue"}, {}]
 			}]
 		    }],
 		    fireButton: ["wm.Button", {name: "fireButton", caption: "update()", width: "150px"}]
 		}]
 	    }]
 	},this)[0];
-	this.serviceGrid = this.tabs.layers[this.tabs.indexOfLayerName("gridLayer")].c$[0];
-	this.dataEditor = this.tabs.layers[this.tabs.indexOfLayerName("dataLayer")].c$[0];
-	this.requestEditor = this.tabs.layers[this.tabs.indexOfLayerName("requestLayer")].c$[0];
+	this.serviceLayer = this.tabs.layers[this.tabs.indexOfLayerName("gridLayer")];
+	this.serviceGrid = this.serviceLayer.c$[0];
+	this.dataLayer = this.tabs.layers[this.tabs.indexOfLayerName("dataLayer")];
+	this.dataEditor = this.dataLayer.c$[0];
+	this.requestLayer = this.tabs.layers[this.tabs.indexOfLayerName("requestLayer")];
+	this.requestEditor = this.requestLayer.c$[0];
 	this.setDataButton = this.dataEditor.parent.c$[1];
 	this.updateButton = this.requestEditor.parent.c$[1];
 	this.connect(this.updateButton, "onclick", this, function wmdebugger() {
@@ -231,6 +255,57 @@ dojo.declare("wm.ServiceGridPanel", wm.Container, {
 	    c.setData(data);
 	});
     },
+    showDataCell: function(inValue, rowId, cellId, cellField, cellObj, rowObj) {
+	var data = rowObj.data;
+	if (data instanceof Error) {
+	    return data.toString();
+	} else if (dojo.isArray(data)) { 
+	    return data.length + ' items';
+	} else if (wm.isEmpty(data)) {
+	    return 'Empty';
+	} else {
+	    return 'Has Data';
+	}
+    },
+    getErrorLabel: function() {
+	var data = app.debugDialog.serviceGridPanel.serviceGrid.selectedItem.getValue('data');
+	if(data instanceof Error) {
+	    return data.toString(); 
+	} else { 
+	    return ''; 
+	}
+    },
+    getDataEditorData: function() {
+	var data = app.debugDialog.serviceGridPanel.serviceGrid.selectedItem.getValue('data');
+	var cleanData;
+	if (dojo.isArray(data)) {
+	    cleanData = [];
+	    dojo.forEach(data, function(item) {
+		cleanData.push(wm.DojoGrid.prototype.itemToJSONObject(app.debugDialog.serviceGridPanel.serviceGrid.store,item));
+	    });
+	} else {
+	    cleanData = wm.DojoGrid.prototype.itemToJSONObject(app.debugDialog.serviceGridPanel.serviceGrid.store,data);
+	}
+	return js_beautify(dojo.toJson(cleanData));
+    },
+    getRequestEditorData: function() {
+	var data = app.debugDialog.serviceGridPanel.serviceGrid.selectedItem.getValue('request');
+	var cleanData = wm.DojoGrid.prototype.itemToJSONObject(app.debugDialog.serviceGridPanel.serviceGrid.store,data);
+	return js_beautify(dojo.toJson(cleanData));
+    },
+    setLayersEnabled: function(inSender) {
+	var data = app.debugDialog.serviceGridPanel.serviceGrid.selectedItem.getData();
+	if (!data) {
+	    this.requestLayer.hide();
+	    this.dataLayer.hide();
+	} else if (app.getValueById(data.id) instanceof wm.ServiceVariable == false) {
+	    this.requestLayer.hide();
+	    this.dataLayer.show();
+	} else {
+	    this.requestLayer.show();
+	    this.dataLayer.show();
+	}
+    },
     updateGridButtonClick: function(inSender, fieldName, rowData, rowIndex) {
       try {
 	  /* Causes this click to show as "debugger" in the grid */
@@ -241,12 +316,51 @@ dojo.declare("wm.ServiceGridPanel", wm.Container, {
       } catch(e) {
       } 
   },
-    conditionalGenerateServicesLayer: function() {
-	if (!this.isAncestorHidden()) {
+    getLoadingIcon: function() {
+	return dojo.moduleUrl("wm.base.widget.themes.default.images") + "loadingThrobber.gif";
+    },
+    getErrorIcon: function() {
+	return dojo.moduleUrl("lib.images.boolean.Signage") + "Denied.png";
+    },
+    getSuccessIcon: function() {
+	return dojo.moduleUrl("lib.images.boolean.Signage") + "OK.png";
+    },
+    newJsonEventStart: function(inDeferred, inService, optName, inArgs, inMethod, invoker) {
+	if (!this.isAncestorHidden()) {	
 	    this.generateServicesLayer();
 	}
+	var count = this.serviceListVar.getCount();
+	var id = invoker.getRuntimeId();
+	for (var i = 0; i < count; i++) {
+	    var item = this.serviceListVar.getItem(i);
+	    if (id === item.getValue("id")) {
+		item.beginUpdate();
+		item.setValue("status", this.getLoadingIcon());
+		item.endUpdate();
+		this.serviceListVar.notify();
+		var self = this;
+		inDeferred.addCallback(function() {
+		    item.beginUpdate();
+		    item.setValue("status", self.getSuccessIcon());
+		    item.endUpdate();
+		    self.serviceListVar.notify();
+		});
+		inDeferred.addErrback(function(inError) {
+		    item.beginUpdate();
+		    item.setValue("status", self.getErrorIcon());
+		    item.setValue("data", inError);
+		    item.endUpdate();
+		    self.serviceListVar.notify();
+		});
+		break;
+	    }
+	}
     },
-    activate: function() {
+    newJsonEventEnd: function(inDeferred, inService, optName, inArgs, inMethod, invoker) {
+	;
+    },
+
+   activate: function() {
 	this.serviceGrid._renderHiddenGrid = true;
 	this.generateServicesLayer();
     },
@@ -257,8 +371,13 @@ dojo.declare("wm.ServiceGridPanel", wm.Container, {
 	this.serviceListVar.beginUpdate();
 	for (var id in wm.Component.byId) {
 	    var c = wm.Component.byId[id];
-	    if (c instanceof wm.ServiceVariable == false)
-		continue;
+
+	    /* Only include any servicevar and only wm.Variables owned by page or app */
+	    if (c instanceof wm.ServiceVariable == false) {
+		if (c instanceof wm.Variable && c.owner instanceof wm.Page == false && c.owner instanceof wm.Application == false || c instanceof wm.Variable == false) {
+		    continue;
+		}
+	    }
 	    var page = c.getParentPage();
 	    var pageName =  page ? page.declaredClass : "app";
 	    var componentName = id.indexOf(wm.decapitalize(pageName)) == 0 ? id.substring(pageName.length+1) : id;
@@ -270,25 +389,28 @@ dojo.declare("wm.ServiceGridPanel", wm.Container, {
 		if (c._debug.eventName) {
 		    firedBy += "." + c._debug.eventName;
 		}
+	    } else {
+		firedBy = "";
 	    }
 
+	    var status = "";
+	    if (c instanceof wm.ServiceVariable) {
+		if (c._requester ) {
+		    status =  this.getLoadingIcon();
+		} else if  (c._lastError) {
+		    status =  this.getErrorIcon();
+		} else if (firedBy) {
+		    status = this.getSuccessIcon();
+		}
+	    }
 	    var itemData = {page: pageName,
 			    name: componentName,
 			    id: c.getRuntimeId(),
+			    status: status,
 			    lastUpdate: c._debug && c._debug.lastUpdate ? c._debug.lastUpdate :  undefined,
-			    firedBy: firedBy,
-			    data: c.getData(),
-			    request: ""};
-
-	    if (c instanceof wm.LiveVariable) {
-		if (c.operation == "read") {
-		    itemData.request = c.filter.getData();
-		} else {
-		    itemData.request = c.sourceData.getData();
-		}
-	    } else {
-		itemData.request = c.input.getData();
-	    }
+			    firedBy: firedBy || (c instanceof wm.ServiceVariable ? "<i>Never Fired</i>" : ""),
+			    data: c._lastError ? c._lastError : c.getData(),
+			    request: c._debug ? c._debug.request : {}};
 
 	    // See if the item exists and update it if it does
 	    var found = false;
@@ -359,6 +481,12 @@ dojo.declare("wm.DebugTree", wm.Tree, {
 	this.forEachNode(function(inNode) {
 	    if (inNode instanceof wm.DebugBindingNode) 
 		inNode.domNode.style.display = inShow ? "block" : "none";
+	});
+    },
+    filterBindings: function(inText) {
+	this.forEachNode(function(inNode) {
+	    if (inNode instanceof wm.DebugBindingNode) 
+		inNode.domNode.style.display = inNode.property && inNode.property.toLowerCase().indexOf(inText.toLowerCase()) != -1 ? "block" : "none";
 	});
     },
     newLogEvent: function(inData) {

@@ -832,7 +832,7 @@ this.panel1.createComponent("custom", "wm.Panel", {
 	},
     _makeEvent: function(inName, inComponent,eventName) {
 		var self = this;
-		return function() { 
+		return function jsEventHandler() { 
 		    if (djConfig.isDebug && app.debugTree) {
 			var startNode = app.debugTree.newLogEvent({type: "javascriptEventStart",
 								   eventName: eventName,

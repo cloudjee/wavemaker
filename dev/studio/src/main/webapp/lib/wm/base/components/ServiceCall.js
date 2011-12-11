@@ -199,6 +199,12 @@ dojo.declare("wm.ServiceCall", null, {
 	},
 	doAutoUpdate: function() {
 	    if (this.autoUpdate && !this._loading && (!this.startUpdate || this.startUpdateComplete || this.isDesignLoaded())) {
+		if (djConfig.isDebug && !this._debug && this._inPostInit) {
+		    var page = this.getParentPage() || app;
+		    this._debug = {trigger: "autoUpdate" + (page && page._loadingPage ? ": onStart" : "unknown source"),
+				   lastUpdate: new Date()}; 
+		}
+
 		wm.job(this.getRuntimeId() + ".doAutoUpdate", 1, dojo.hitch(this, "updateInternal"));
 	    }
 	},
@@ -212,7 +218,7 @@ dojo.declare("wm.ServiceCall", null, {
 	update: function() {
 	    if (djConfig.isDebug) {
 		try {
-		    this._debug = {trigger: arguments.callee.caller.nom || arguments.callee.caller.name,
+		    this._debug = {trigger: arguments.callee.caller.nom || arguments.callee.caller.name || "anonymous",
 				   lastUpdate: new Date()}
 		} catch(e) {}
 	    }
@@ -264,7 +270,10 @@ dojo.declare("wm.ServiceCall", null, {
 	    }
 	    return args;
 	},
-    getOperationType: function() {
+    getDebugArgs: function() {
+	return this.input.getData();
+    },
+   getOperationType: function() {
 	    var service = this._service;
 	    if (service) {
 		var operation = service._operations[this.operation];
@@ -274,7 +283,7 @@ dojo.declare("wm.ServiceCall", null, {
 	    } else {
 		return "";
 	    }
-    },
+   },
     replaceAllDateObjects: function(item) {
         for (var i in item) {
             if (item[i] instanceof Date) item[i] = item[i].getTime();
@@ -283,10 +292,10 @@ dojo.declare("wm.ServiceCall", null, {
     },
     /* inArgs optional too... */
     request: function(inArgs, optionalOp, optionalDeferred) {
-	    /* Update all parameters to be current before we fire this 
-	    if (this.$.binding) {
-		this.$.binding.refresh();
-	    }*/
+	if (djConfig.isDebug && this._debug) {
+	    this._debug.request = this.getDebugArgs();
+	}
+
 	    /* Update all parameters to be current before we fire this 
 	    if (this.$.binding) {
 		this.$.binding.refresh();
@@ -411,12 +420,14 @@ dojo.declare("wm.ServiceCall", null, {
 	    return inResult;
 	},
 	processResult: function(inResult) {
+	    delete this._lastError;
 		this.onResult(inResult);
 		this.onSuccess(inResult);
 	    if (!this.isDestroyed && this.$.queue)
 		this.$.queue.update();
 	},
 	error: function(inError) {
+	    this._lastError = inError;
 	        this._requester = false;
 		this.processError(inError);
 		return inError;

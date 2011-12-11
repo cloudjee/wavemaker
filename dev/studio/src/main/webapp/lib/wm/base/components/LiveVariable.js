@@ -83,7 +83,9 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	    else {
 		this.setLiveView(this.liveView || this.createLiveView(this.type));
 	    }
+	    this._inPostInit = true;
 	    this.doAutoUpdate();
+	    this._inPostInit = false;
 	},
 	_subscribeLiveView: function() {
 		this._unsubscribeLiveView();
@@ -306,6 +308,13 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 		}
 		return args;
 	},
+    getDebugArgs: function() {
+	if (this.operation == "read") {
+	    return this.filter.getData();
+	} else {
+	    return this.sourceData.getData();
+	}
+    },
 	_getReadArguments: function() {
 		var
 			props = {properties: this._getEagerProps(this), filters: this._getFilters(), matchMode: this.matchMode, ignoreCase: this.ignoreCase},
