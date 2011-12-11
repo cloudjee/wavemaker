@@ -463,6 +463,13 @@ dojo.declare("wm.Page", wm.Component, {
 		if (!hasHtmlLoader)
 			this.loadComponent("htmlLoader", null, "wm.HtmlLoader", {owner: this, url: path + ".html"});
 	},*/
+        toString: function(inText) {
+	    var t = inText || "";
+	    if (this._loadingPage) {
+		t += "; PAGE LOADING";
+	    }
+	    return this.inherited(arguments, [t]);
+	},
 	_end: 0
 });
 
