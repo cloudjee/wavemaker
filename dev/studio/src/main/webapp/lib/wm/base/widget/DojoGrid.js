@@ -1741,6 +1741,7 @@ wm.DojoGrid.extend({
 	  if (item && store) {
 	    //Determine the attributes we need to process.
 	      var attributes = wm.isEmpty(item) ? [] : store.getAttributes(item);
+	      attributes = dojo.filter(attributes, function(inValue) {return inValue.indexOf("_") == -1;})
 	    if (attributes && attributes.length > 0) {
 	      var i;
 	      for (i = 0; i < attributes.length; i++) {
