@@ -715,8 +715,13 @@ dojo.declare("wm.prop.DataTypeSelect", wm.prop.SelectMenu, {
     useLiterals:false,
     liveTypes: false,
     postInit: function() {
-	this.options = [""];
-	this.values = [""];
+	if (this.useLiterals) {
+	    this.options = ["string", "number", "date", "boolean"];
+	    this.values = ["string", "number", "date", "boolean"];
+	} else {
+	    this.options = [];
+	    this.values = [];
+	}
 	this.addOptionValues(this.getDataTypes(), true);
 	this.inherited(arguments);
     },

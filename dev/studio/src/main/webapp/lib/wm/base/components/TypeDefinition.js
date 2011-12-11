@@ -91,7 +91,8 @@ dojo.declare("wm.TypeDefinition", wm.Component, {
         this.doAddType();
     },
     doRemoveType: function() {
-        wm.typeManager.removeType(this.name);
+	if (!this.internal)
+            wm.typeManager.removeType(this.name);
 	if (this._isDesignLoaded)
 	    studio.typesChanged();
     },
