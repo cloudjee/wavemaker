@@ -638,7 +638,8 @@ dojo.declare("wm.Dialog", wm.Container, {
         var w = this.bounds.w;
         var h = this.bounds.h;
         //var isDesigned =  (this.domNode.parentNode != document.body);
-	var isDesigned =  (this.domNode.parentNode != app.appRoot.domNode);
+	//var isDesigned =  (this.domNode.parentNode != app.appRoot.domNode);
+	var isDesigned = this._isDesignLoaded;
         var W = (isDesigned) ? studio.designer.bounds.w : (app._page) ? app._page.root.bounds.w : window.clientWidth;
         var H = (isDesigned) ? studio.designer.bounds.h : (app._page) ? app._page.root.bounds.h : window.clientHeight;
         if (this.bounds.t + this.bounds.h > H) {
