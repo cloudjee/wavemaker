@@ -823,7 +823,7 @@ dojo.declare("Studio", wm.Page, {
 		return this._add(this._make(inType, inProps));
 	},
         _lastBindSelect: null,
-    reinspect: function() {
+    reinspect: function(forceRegen) {
 	wm.job("studio.inspect", 1, dojo.hitch(this, function() {
 	    if (this.inspector && this.inspector.inspected && !forceRegen) {
 		this.inspector.reinspect();
