@@ -1581,8 +1581,20 @@ display:block;
     height: 16px;
 }
 
-#wmMinifiedDialogPanel {
-    z-index: 100;
+#app_wmMinifiedDialogPanel {
+    background-color: #aaa;
+}
+
+#app_wmMinifiedDialogPanel .wmbutton {
+    font-weight: normal;
+    font-size: 0.9Em;
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    border-radius: 0px;    
+     -moz-box-shadow: 0px 0px 0px #222; /* FF3.5+ */
+     -webkit-box-shadow: 0px 0px 0px #222; /* Saf3.0+, Chrome */
+     box-shadow: 0px 0px 0px #222; /* Opera 10.5, IE 9.0 */
+
 }
 
 .wmdojofileupload form, .wmdojofileupload form > .dijitFileInputReal {

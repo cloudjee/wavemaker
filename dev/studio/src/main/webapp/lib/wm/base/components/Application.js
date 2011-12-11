@@ -200,13 +200,16 @@ dojo.declare("wm.Application", wm.Component, {
     createDebugDialog: function() {
 		dojo.require("wm.base.widget.Trees.DebugTree");
 		dojo.require("wm.base.components.JsonRpcService");
+	if (!this.debugDialog) {
 		this.debugDialog = new wm.DebugDialog({owner: this, 
-						       width: "250px", 
+						       name: "debugDialog",
+						       width: "700px", 
 						       height: "400px",
 						  corner: "cr",
 
 						  noEscape: false});
 		this.debugTree = this.debugDialog.debugTree;
+	}
     },
     setTheme: function(inTheme, isInit, optionalCss, optionalPrototype, noRegen, forceUpdate) {
 	    var node = this._isDesignLoaded ? studio.designer.domNode : document.body;
@@ -854,14 +857,14 @@ dojo.declare("wm.Application", wm.Component, {
 	this.toolTipDialog.hide();
     },
     createMinifiedDialogPanel: function() {
-	this.wmMinifiedDialogPanel = new wm.Panel({name: "wmMinifiedDialogPanel", width: "100%", height: "25px", border: "2,0,0,0", padding: "2", autoScroll: true, verticalAlign: "top", horizontalAlign: "left", layoutKind: "left-to-right", owner: this, parent: this.appRoot});
+	this.wmMinifiedDialogPanel = new wm.Panel({name: "wmMinifiedDialogPanel", width: "100%", height: "22px", border: "2,0,0,0", padding: "1,0,0,0", autoScroll: true, verticalAlign: "top", horizontalAlign: "left", layoutKind: "left-to-right", owner: this, parent: this.appRoot});
 	//document.body.appendChild(this.wmMinifiedDialogPanel.domNode);
 	//this.wmMinifiedDialogPanel.subscribe("window-resize", this, "resizeMinifiedDialogPanel");
 	//this.resizeMinifiedDialogPanel();
 	this.appRoot.reflow();
     },
     createMinifiedDialogLabel: function(title) {
-	var l = new wm.Button({caption: title, parent: app.wmMinifiedDialogPanel, owner: this, width: "100px", height: "100%", margin: "0", padding: "0"});
+	var l = new wm.Button({caption: title, parent: app.wmMinifiedDialogPanel, owner: this, width: "100px", height: "100%", margin: "0", padding: "0", border:"1"});
 	app.wmMinifiedDialogPanel.show();
 	return l;
     },
