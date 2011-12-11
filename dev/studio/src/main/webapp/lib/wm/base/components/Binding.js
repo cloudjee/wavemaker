@@ -69,6 +69,7 @@ dojo.declare("wm.Wire", wm.Component, {
 		return true;
 	},
     debugBindingEvent: function(inValue) {
+	if (app.debugTree)
 			app.debugTree.newLogEvent({type: "bindingEvent",
 						   component: this.target,
 						   property: this.targetProperty,
@@ -86,7 +87,7 @@ dojo.declare("wm.Wire", wm.Component, {
 		    // literals or otherwise uninteresting to log
 		    // ignore if we are in refresh; this is not called by values changing,
 		    // but rather by components insuring everyone knows their state
-		    if (djConfig.isDebug && !this.owner._inRefresh && (!this.expression || this.expression.match(/\$/))) {
+		    if (djConfig.isDebug && !this.isAncestorInstanceOf(wm.DebugDialog) && !this.owner._inRefresh && (!this.expression || this.expression.match(/\$/))) {
 			this.debugBindingEvent(inValue);
 		    }
 

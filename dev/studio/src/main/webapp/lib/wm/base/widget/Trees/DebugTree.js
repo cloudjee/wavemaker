@@ -21,8 +21,10 @@ dojo.require("wm.base.widget.Dialogs.Dialog");
 
 
 dojo.declare("wm.DebugDialog", wm.Dialog, {
+    noTopBottomDocking: true,
+    noLeftRightDocking: true,
     useContainerWidget: true,
-    useButtonBar: true,
+    useButtonBar: false,
     modal: false,
     title: "Debugger",
     commands: null,
@@ -30,27 +32,66 @@ dojo.declare("wm.DebugDialog", wm.Dialog, {
     postInit: function() {
 	this.inherited(arguments);
 	this.commands = [];
-	this.debugTree = new wm.DebugTree({owner: this, 
+
+	this.tabLayers = new wm.TabLayers({owner: this,
 					   parent: this.containerWidget,
+					   width: "100%",
+					   height: "100%",
+					   name: "tabLayers"});
+	this.addEventsLayer();
+	this.addServiceListLayer();
+	this.tabLayers.setLayerIndex(0);
+	this.minify();
+    },
+    addServiceListLayer: function() {
+	this.servicesLayer = new wm.Layer({owner: this,
+					   parent: this.tabLayers,
+					   name: "servicesLayer",
+					   caption: "Services",
+					   onShow: dojo.hitch(this,function() {this.serviceGridPanel.activate();}),
+					   onDeactivate: dojo.hitch(this, function() {this.serviceGridPanel.deactivate();})
+					  });
+	this.serviceGridPanel = new wm.ServiceGridPanel({owner: this,
+							 name: "serviceGridPanel",
+							 parent: this.servicesLayer,
+							 width: "100%",
+							 height: "100%",
+							 autoScroll:true});
+
+    },
+    addEventsLayer: function() {
+	this.eventsLayer = new wm.Layer({owner: this,
+					 parent: this.tabLayers,
+					 name: "eventsLayer",
+					 caption: "Events"});
+
+	this.debugTree = new wm.DebugTree({owner: this, 
+					   parent: this.eventsLayer,
 					   width: "100%", height: "100%",
 					   name: "debugTree"});
 
 	var commandLine = new wm.Text({width: "100%",
 				       owner: this,
-				       parent: this.containerWidget,
+				       parent: this.eventsLayer,
 				       name: "commandLineDebug"});
-
+	var treeButtonBar = new wm.Panel({owner: this,
+					  parent: this.eventsLayer,
+					  horizontalAlign: "left",
+					  verticalAlign: "top",
+					  layoutKind: "left-to-right",
+					  width: "100%",
+					  height: "35px"});
 	var bindButton = new wm.ToggleButton({owner: this,
-					      parent: this.buttonBar,
+					      parent: treeButtonBar,
 					      name: "debugBindingButton",
 					      captionUp: "Bindings",
 					      captionDown: "Bindings"});
 	var clearDebugButton = new wm.Button({owner: this,
-					      parent: this.buttonBar,
+					      parent: treeButtonBar,
 					      name: "clearDebugButton",
 					      caption: "Clear"});
 	var executeDebugButton = new wm.Button({owner: this,
-						parent: this.buttonBar,
+						parent: treeButtonBar,
 						name: "executeDebugButton",
 						caption: "Execute"});
 
@@ -95,9 +136,185 @@ dojo.declare("wm.DebugDialog", wm.Dialog, {
 
 	}));
     }
+});
+
+dojo.declare("wm.ServiceGridPanel", wm.Container, {
+    
+    postInit: function() {
+	this.inherited(arguments);
+
+	wm.conditionalRequire("lib.github.beautify", true); 
+
+	this.connect(wm.inflight, "add", this, "conditionalGenerateServicesLayer");
+	this.connect(wm.inflight, "remove", this, "conditionalGenerateServicesLayer");
 
 
+	var typeDef = this.createComponents({debuggerServicesType: ["wm.TypeDefinition", {internal: true, "name":"debuggerServicesType"}, {}, {
+	    field6: ["wm.TypeDefinitionField", {"fieldName":"id","fieldType":"string","name":"field6"}, {}],
+	    field0: ["wm.TypeDefinitionField", {"fieldName":"page","fieldType":"string","name":"field0"}, {}],
+	    field1: ["wm.TypeDefinitionField", {"fieldName":"name","fieldType":"string","name":"field1"}, {}],
+	    field2: ["wm.TypeDefinitionField", {"fieldName":"lastUpdate","fieldType":"date","name":"field2"}, {}],
+	    field3: ["wm.TypeDefinitionField", {"fieldName":"firedBy","fieldType":"string","name":"field3"}, {}],
+	    field4: ["wm.TypeDefinitionField", {"fieldName":"data","fieldType":"string","name":"field4"}, {}],
+	    field5: ["wm.TypeDefinitionField", {"fieldName":"request","fieldType":"string","name":"field5"}, {}]
+	}]}, this);
+	wm.typeManager.types.debuggerServicesType.fields.id.include = ["update"];
+	this.serviceListVar = new wm.Variable({owner: this,
+					       isList: true,
+					       name: "serviceListVar",
+					       type: "debuggerServicesType"});
 
+
+	this.tabs = this.createComponents({
+	    tabs: ["wm.TabLayers", {name: "tabs", width: "100%", height: "100%"},{}, {
+		gridLayer: ["wm.Layer", {name: "gridLayer", caption: "Grid"}, {}, {
+		    serviceGrid: ["wm.DojoGrid", {width: "100%", height: "100%","columns":[
+			{"show":true,"field":"page","title":"Page","width":"80px","align":"left","formatFunc":""},
+			{"show":true,"field":"name","title":"Name","width":"100%","align":"left","formatFunc":""},
+			{"show":true,"field":"lastUpdate","title":"Time","width":"80px","align":"left","formatFunc": "wm_date_formatter",
+			 "formatProps": {
+                             "dateType": "time",
+			     formatLength: "medium"
+			 }},
+			{"show":true,"field":"firedBy","title":"FiredBy","width":"120px","align":"left","formatFunc":""},
+			{"show":true,"field":"data","title":"Data","width":"80px","align":"left","formatFunc":"", expression: "if (dojo.isArray(${data})) { ${data}.length + ' items';} else if (wm.isEmpty(${data})) {'Empty';} else {'Has Data';}"},
+			/*{"show":true,"field":"request","title":"Request","width":"100%","align":"left","formatFunc":""},*/
+			{"show":true,"field":"update","title":"Update","width":"60px","align":"left","formatFunc":"wm_button_formatter","formatProps":null,"expression":"\"Update\"","isCustomField":true}
+		    ],
+						  "margin":"4",
+						  "name":"serviceGrid"}, {onGridButtonClick: "updateGridButtonClick"}, {
+						      binding: ["wm.Binding", {"name":"binding"}, {}, {
+							  wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"app.debugDialog.serviceGridPanel.serviceListVar","targetProperty":"dataSet"}, {}]
+						      }]
+						  }]
+		}],
+		dataLayer: ["wm.Layer", {name: "dataLayer", caption: "Data"},{}, {
+		    dataEditor: ["wm.AceEditor", {"height":"100%","name":"dataEditor","width":"100%"}, {}, {
+			binding: ["wm.Binding", {"name":"binding"}, {}, {
+			    wire: ["wm.Wire", {"name":"wire","expression":"${app.debugDialog.serviceGridPanel.serviceGrid.selectedItem};//causes subscribe to events\nvar data = app.debugDialog.serviceGridPanel.serviceGrid.selectedItem.getValue('data');\n var cleanData = [];\n dojo.forEach(data, function(item) {cleanData.push(wm.DojoGrid.prototype.itemToJSONObject(app.debugDialog.serviceGridPanel.serviceGrid.store,item));});\n js_beautify(dojo.toJson(cleanData));","targetProperty":"dataValue"}, {}]
+			}]
+		    }],
+		    setDataButton: ["wm.Button", {name: "fireButton", caption: "setData()", width: "150px"}]
+		}],
+		requestLayer: ["wm.Layer", {name: "requestLayer", caption: "Request"},{}, {
+		    requestEditor: ["wm.AceEditor", {"height":"100%","name":"requestEditor","width":"100%"}, {}, {
+			binding: ["wm.Binding", {"name":"binding"}, {}, {
+			    wire: ["wm.Wire", {"name":"wire","expression":"${app.debugDialog.serviceGridPanel.serviceGrid.selectedItem};//causes subscribe to events\nvar data = app.debugDialog.serviceGridPanel.serviceGrid.selectedItem.getValue('request');\n data = wm.DojoGrid.prototype.itemToJSONObject(app.debugDialog.serviceGridPanel.serviceGrid.store,data); js_beautify(dojo.toJson(data));","targetProperty":"dataValue"}, {}]
+			}]
+		    }],
+		    fireButton: ["wm.Button", {name: "fireButton", caption: "update()", width: "150px"}]
+		}]
+	    }]
+	},this)[0];
+	this.serviceGrid = this.tabs.layers[this.tabs.indexOfLayerName("gridLayer")].c$[0];
+	this.dataEditor = this.tabs.layers[this.tabs.indexOfLayerName("dataLayer")].c$[0];
+	this.requestEditor = this.tabs.layers[this.tabs.indexOfLayerName("requestLayer")].c$[0];
+	this.setDataButton = this.dataEditor.parent.c$[1];
+	this.updateButton = this.requestEditor.parent.c$[1];
+	this.connect(this.updateButton, "onclick", this, function wmdebugger() {
+	    var data = this.requestEditor.getDataValue();
+	    data = eval("(" + data + ")");
+	    var c = app.getValueById(this.serviceGrid.selectedItem.getValue("id"));
+	    if (c instanceof wm.LiveVariable && c.operation == "read") {
+		c.filter.setData(data);
+	    } else if (c instanceof wm.LiveVariable) {
+		c.sourceData.setData(data);
+	    } else if (c instanceof wm.ServiceVariable) {
+		c.input.setData(data);
+	    }
+	    c.update();
+	});
+	this.connect(this.setDataButton, "onclick", this, function() {
+	    var data = this.dataEditor.getDataValue();
+	    data = eval("(" + data + ")");
+	    var c = app.getValueById(this.serviceGrid.selectedItem.getValue("id"));
+	    c.setData(data);
+	});
+    },
+    updateGridButtonClick: function(inSender, fieldName, rowData, rowIndex) {
+      try {
+	  /* Causes this click to show as "debugger" in the grid */
+	  (function wmdebugger() {
+              var c = app.getValueById(rowData.id);
+              c.update();
+	  })();
+      } catch(e) {
+      } 
+  },
+    conditionalGenerateServicesLayer: function() {
+	if (!this.isAncestorHidden()) {
+	    this.generateServicesLayer();
+	}
+    },
+    activate: function() {
+	this.serviceGrid._renderHiddenGrid = true;
+	this.generateServicesLayer();
+    },
+    deactivate: function() {
+	this.serviceGrid._renderHiddenGrid = false;
+    },
+    generateServicesLayer: function() {
+	this.serviceListVar.beginUpdate();
+	for (var id in wm.Component.byId) {
+	    var c = wm.Component.byId[id];
+	    if (c instanceof wm.ServiceVariable == false)
+		continue;
+	    var page = c.getParentPage();
+	    var pageName =  page ? page.declaredClass : "app";
+	    var componentName = id.indexOf(wm.decapitalize(pageName)) == 0 ? id.substring(pageName.length+1) : id;
+	    var firedBy = "";
+	    if (c._debug) {
+		if (c._debug.trigger) {
+		    firedBy = c._debug.trigger;
+		}
+		if (c._debug.eventName) {
+		    firedBy += "." + c._debug.eventName;
+		}
+	    }
+
+	    var itemData = {page: pageName,
+			    name: componentName,
+			    id: c.getRuntimeId(),
+			    lastUpdate: c._debug && c._debug.lastUpdate ? c._debug.lastUpdate :  undefined,
+			    firedBy: firedBy,
+			    data: c.getData(),
+			    request: ""};
+
+	    if (c instanceof wm.LiveVariable) {
+		if (c.operation == "read") {
+		    itemData.request = c.filter.getData();
+		} else {
+		    itemData.request = c.sourceData.getData();
+		}
+	    } else {
+		itemData.request = c.input.getData();
+	    }
+
+	    // See if the item exists and update it if it does
+	    var found = false;
+	    var count = this.serviceListVar.getCount();
+	    for (var i = 0; i < count; i++) {
+		var item = this.serviceListVar.getItem(i);
+		if (item.getValue("page") == pageName && item.getValue("name") == componentName) {
+		    found = true;
+		    item.beginUpdate();
+		    item.setData(itemData);
+		    item.endUpdate();
+		    break;
+		}
+	    }
+	    if (!found) {
+		if (!itemData.lastUpdate) itemData.lastUpdate = new Date();
+		this.serviceListVar.addItem(itemData);
+	    }
+	}
+
+	this.serviceListVar.endUpdate();	    
+	this.serviceListVar.notify();
+    },
+    newJsonEvent: function(inDeferred, inService, optName, inArgs, inMethod, invoker) {
+	
+    }
 });
 
 dojo.declare("wm.DebugTree", wm.Tree, {

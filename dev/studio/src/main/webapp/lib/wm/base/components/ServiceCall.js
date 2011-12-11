@@ -139,9 +139,28 @@ dojo.declare("wm.ServiceCall", null, {
 	},
 	inputChanged: function() {
 	        if (djConfig.isDebug && this.autoUpdate) {
-		    this._autoUpdateFiring = "inputChanged";
+		    if (djConfig.isDebug) {
+			this._autoUpdateFiring = "inputChanged";
+			this._debug = {trigger: "autoUpdate",
+				       lastUpdate: new Date()}; 
+		    try {
+			var i = 0;
+			var caller = arguments.callee.caller;
+			while (caller && caller.nom != "dataValueChanged" && i < 15) {
+			    caller = caller.caller;
+			    i++;
+			}
+			if (caller && caller.nom == "dataValueChanged") {
+			    var newValue = caller.arguments[1];
+
+			    this._debug.eventName = "sourceData: " + caller.arguments[0] + " set to " + (newValue instanceof wm.Component ? newValue.toString() : newValue);
+			}
+		    } catch(e) {}
+		    }
 		    this.doAutoUpdate();
-		    delete this._autoUpdateFiring;
+		    if (djConfig.isDebug) {
+			delete this._autoUpdateFiring;
+		    }
 		} else {
 		    this.doAutoUpdate();
 		}
@@ -161,18 +180,26 @@ dojo.declare("wm.ServiceCall", null, {
 	setStartUpdate: function(inStartUpdate) {
 		this.startUpdate = inStartUpdate;
 		if (this.startUpdate && !this._loading && this.isDesignLoaded()) {
-		  this.update();
+		    this.updateInternal();
 		}
 	},
 	doStartUpdate: function() {
 	        if (this.startUpdate && !this._loading) {
-			this.update();
-			this.startUpdateComplete = true;
+		    if (djConfig.isDebug) {
+			this._autoUpdateFiring = "startUpdate";
+			this._debug = {trigger: "startUpdate",
+				       lastUpdate: new Date()}; 
+		    }
+		    this.updateInternal();
+		    if (djConfig.isDebug) {
+			delete this._autoUpdateFiring;
+		    }
+		    this.startUpdateComplete = true;
 		}
 	},
 	doAutoUpdate: function() {
 	    if (this.autoUpdate && !this._loading && (!this.startUpdate || this.startUpdateComplete || this.isDesignLoaded())) {
-		wm.job(this.getRuntimeId() + ".doAutoUpdate", 1, dojo.hitch(this, "update"));
+		wm.job(this.getRuntimeId() + ".doAutoUpdate", 1, dojo.hitch(this, "updateInternal"));
 	    }
 	},
 	/**
@@ -183,8 +210,18 @@ dojo.declare("wm.ServiceCall", null, {
 		to monitor the outcome of the service call.
 	*/
 	update: function() {
+	    if (djConfig.isDebug) {
+		try {
+		    this._debug = {trigger: arguments.callee.caller.nom || arguments.callee.caller.name,
+				   lastUpdate: new Date()}
+		} catch(e) {}
+	    }
 		return this._isDesignLoaded ? this.doDesigntimeUpdate() : this._update();
 	},
+    /* Users call "update" event handlers and autoUpdate/startUpdate call updateInternal; used for tracking/debugging purposes */
+    updateInternal: function() {
+	return this._isDesignLoaded ? this.doDesigntimeUpdate() : this._update();
+    },
 	_update: function() {
 	    if (this._requester && !this._isDesignLoaded) {
 		if (this.inFlightBehavior == "executeLast")

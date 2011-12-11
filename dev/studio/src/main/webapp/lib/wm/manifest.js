@@ -175,6 +175,7 @@ wm.loadLibs([
 	"wm.base.widget.Input",
 	"wm.base.widget.TextArea",
 	"wm.base.widget.Select",
+	"wm.base.widget.AceEditor",
 	"wm.base.widget.Scrim",
 	"wm.base.widget.Dialogs.Dialog",
 	"wm.base.widget.Dialogs.DesignableDialog",

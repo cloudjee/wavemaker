@@ -833,12 +833,13 @@ this.panel1.createComponent("custom", "wm.Panel", {
     _makeEvent: function(inName, inComponent,eventName) {
 		var self = this;
 		return function() { 
-		    if (djConfig.isDebug && app.debugTree)
+		    if (djConfig.isDebug && app.debugTree) {
 			var startNode = app.debugTree.newLogEvent({type: "javascriptEventStart",
 								   eventName: eventName,
 								   trigger: inComponent,
 								   method: inName});
-
+			
+		    }
 		    self[inName].apply(self, self._eventArgs(this, arguments));
 
 		    if (djConfig.isDebug && app.debugTree)
@@ -852,7 +853,7 @@ this.panel1.createComponent("custom", "wm.Panel", {
     _makeComponentEvent: function(inHandler, inComponent,eventName) {
 		var self = this;
 		// FIXME: experimental: can call a method on a component
-	        return function(e, optionalTargetComp) { 
+	        return function eventHandler(e, optionalTargetComp) { 
 			// inHandler could be a component
 			// or a (string) Id of a component
 			// or a (string) Id of a component + a dotted method suffix
@@ -860,13 +861,23 @@ this.panel1.createComponent("custom", "wm.Panel", {
 			//console.info('wm.isInstanceType = ' + wm.isInstanceType(inHandler, 'wm.Component'));
 			var c = wm.isInstanceType(inHandler, wm.Component) ? inHandler : self.getValueById(inHandler);
 		    if (wm.isInstanceType(c, wm.Component)) {
-			if (djConfig.isDebug && app.debugTree)
+			if (djConfig.isDebug && app.debugTree) {
+			    if (!c._debug) c._debug = {};
+			    c._debug = {trigger: inComponent.getId(),
+					eventName: eventName,
+					method: "update",
+				       lastUpdate: new Date()};
 			    app.debugTree.newLogEvent({type: "componentEvent",
 							       eventName: eventName,
 							       trigger: inComponent,
 							       firing: c,
 							       method: "update"});
+			}
+			if (c.updateInternal) {
+			        wm.fire(c, "updateInternal", [e, optionalTargetComp]);
+			} else {
 			        wm.fire(c, "update", [e, optionalTargetComp]);
+			}
 			// call a method on a component
 		    } else if (dojo.isString(inHandler)) {
 				var o = inHandler.split('.');
@@ -875,6 +886,11 @@ this.panel1.createComponent("custom", "wm.Panel", {
 					c = self.getValueById(o);
 				    if (c && c[m]) {
 					if (djConfig.isDebug && app.debugTree)
+					    if (!c._debug) c._debug = {};
+					c._debug = {trigger: inComponent.getId(),
+						    eventName: eventName,
+						    method: m,
+						    lastUpdate: new Date()};
 					    app.debugTree.newLogEvent({type: "componentEvent",
 							       eventName: eventName,
 							       trigger: inComponent,
