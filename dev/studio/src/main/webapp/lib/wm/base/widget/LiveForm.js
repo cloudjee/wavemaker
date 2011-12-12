@@ -243,24 +243,7 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 			} 
 		        }));
 	},
-    updateDataOutputType: function () {
-        var type;
-        if (this.dataSet) {
-            type = this.dataSet.type;
-        } else {
-            var p = this.getParentForm();
-            var schema = p && p.dataOutput ? p.dataOutput._dataSchema : null;
-            var typeDef = schema && schema[this.formField];
-            if (typeDef && typeDef.type) {
-                type = typeDef.type;
-            }
-        }
-        if (type && this.dataOutput.type != type) {
-            this.dataOutput.setType(type);
-        }
-    },
 	populateDataOutput: function() {
-	    this.updateDataOutputType();
                 if (this.dataSet && this.dataOutput.type != this.dataSet.type)
                     this.dataOutput.setType(this.dataSet.type);
 		var d = this.dataOutput;
