@@ -330,7 +330,7 @@ dojo.declare("wm.ServiceGridPanel", wm.Container, {
 	    this.generateServicesLayer();
 	}
 	var count = this.serviceListVar.getCount();
-	var id = invoker.getRuntimeId();
+	var id =  invoker ? invoker.getRuntimeId() : "";
 	for (var i = 0; i < count; i++) {
 	    var item = this.serviceListVar.getItem(i);
 	    if (id === item.getValue("id")) {
