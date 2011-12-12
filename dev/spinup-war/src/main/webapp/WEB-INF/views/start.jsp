@@ -5,38 +5,33 @@
 <html>
 <head>
 	<title>WaveMaker</title>
-	<link href="<c:url value="/resources/form.css" />" rel="stylesheet"  type="text/css" />		
+	<link href="<c:url value="/resources/form.css" />" rel="stylesheet"  type="text/css" />
+	
+    <script type="text/javascript" src="jquery/jquery-1.6.4.js"></script>
+    <script type="text/javascript" src="jquery/jquery.atmosphere.js"></script>
+    
+	<script type="text/javascript">
+        $(document).ready(function() {
+			function callback(response) {
+				if (response.status == 200) {
+					$.atmosphere.unsubscribe();
+					window.location = response.responseBody;
+				}
+			}
+			var deployUrl = "<c:url value='/deploy'/>";
+        	var callbackAdded = false;
+        	$.atmosphere.subscribe(deployUrl, !callbackAdded ? callback : null, $.atmosphere.request = { transport: 'long-polling' });
+        	callbackAdded = true;
+        	$.atmosphere.response.push(deployUrl, null, $.atmosphere.request = {data: 'username=phil'});
+        });
+	</script>
+			
 </head>
 <body>
 	<div id="formsContent">
 		<h2>WaveMaker</h2>
-		<form:form id="form" method="post" modelAttribute="loginCredentialsBean" cssClass="cleanform">
-			<div class="header">
-				<s:bind path="*">
-					<c:if test="${(status.error) or (not empty message)}">
-						<div id="message" class="error">
-							<c:if test="${not empty message}">${message}</c:if>							
-							<c:if test="${empty message}">Form has errors</c:if>							
-						</div>
-					</c:if>
-				</s:bind>
-			</div>
-			
-			<fieldset>
-				<legend>Login</legend>
-			
-				<!-- Username -->
-				<form:label path="username">Username: <form:errors path="username" cssClass="error"/></form:label>
-				<form:input path="username" />
-			
-				<!-- Password -->
-				<form:label path="password">Password: <form:errors path="password" cssClass="error"/></form:label>
-				<form:password path="password" />
-			</fieldset>
-			<p>
-				<button type="submit">Submit</button>
-			</p>
-		</form:form>
+		<p>Deploying wavemaker, please wait...</p>
+		<img src="<c:url value="/resources/ajax-loader.gif" />"/>
 	</div>
 </body>
 </html>

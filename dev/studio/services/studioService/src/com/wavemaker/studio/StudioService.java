@@ -793,7 +793,7 @@ public class StudioService extends ClassLoader {
 
     public void setFileSystem(StudioFileSystem fileSystem) {
         this.fileSystem = fileSystem;
-    }
+    }   
 
     @Deprecated
     private StudioConfiguration getStudioConfiguration() {

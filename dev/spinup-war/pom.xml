@@ -11,6 +11,7 @@
 	<packaging>war</packaging>
 	<properties>
 		<main.basedir>${basedir}/..</main.basedir>
+		<atmosphere.version>0.8.1</atmosphere.version>
 	</properties>
 	<build>
 		<plugins>
@@ -42,12 +43,22 @@
 			</plugin>
 			<plugin>
 				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1.1</version>
 				<configuration>
 					<archive>
 						<manifest>
 							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
 						</manifest>
 					</archive>
+					<overlays>
+						<overlay>
+							<groupId>org.atmosphere</groupId>
+							<artifactId>atmosphere-jquery</artifactId>
+							<excludes>
+								<exclude>WEB-INF/web.xml</exclude>
+							</excludes>
+						</overlay>
+					</overlays>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -82,8 +93,14 @@
 		</dependency>
 		<dependency>
 			<groupId>org.atmosphere</groupId>
-			<artifactId>atmosphere-jersey</artifactId>
-			<version>0.8.1</version>
+			<artifactId>atmosphere-runtime</artifactId>
+			<version>${atmosphere.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.atmosphere</groupId>
+			<artifactId>atmosphere-jquery</artifactId>
+			<version>${atmosphere.version}</version>
+			<type>war</type>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>

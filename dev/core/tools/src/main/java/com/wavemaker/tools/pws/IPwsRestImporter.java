@@ -78,7 +78,6 @@ public interface IPwsRestImporter {
      *        and password
      * @param service the service name
      * @param operations selected operations
-     * @return a Json string that contains the list of all services and operations for a partner
      * @throws Exception if the request fails
      */
     void importOperations(PwsLoginInfo loginInfo, String service, List<String> operations) throws Exception;

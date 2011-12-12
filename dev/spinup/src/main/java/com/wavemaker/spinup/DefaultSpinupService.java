@@ -155,6 +155,10 @@ public class DefaultSpinupService implements SpinupService {
         if (StringUtils.hasLength(systemEnv)) {
             return systemEnv;
         }
+        systemEnv = System.getProperty("spinup_target");
+        if (StringUtils.hasLength(systemEnv)) {
+            return systemEnv;
+        }
         return "http://api.cloudfoundry.com";
     }
 
@@ -242,6 +246,9 @@ public class DefaultSpinupService implements SpinupService {
             List<CloudApplication> applications = this.cloudFoundryClient.getApplications();
             for (CloudApplication application : applications) {
                 for (String uri : application.getUris()) {
+                    if (!uri.startsWith("http")) {
+                        uri = "http://" + uri;
+                    }
                     ApplicationDetails applicationDetails = new ApplicationDetails(application.getName(), uri);
                     if (DefaultSpinupService.this.namingStrategy.isMatch(applicationDetails)) {
                         if (DefaultSpinupService.this.logger.isDebugEnabled()) {
