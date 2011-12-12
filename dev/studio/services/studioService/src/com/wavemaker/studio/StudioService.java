@@ -79,6 +79,8 @@ public class StudioService extends ClassLoader {
 
     private UpgradeManager upgradeManager;
 
+    private StudioConfiguration studioConfiguration;
+
     @ExposeToClient
     public String closurecompile(String s) {
         String result = null;
@@ -411,7 +413,7 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public Map<String, String> getPreferences() {
-        return getStudioConfiguration().getPreferencesMap();
+        return this.studioConfiguration.getPreferencesMap();
     }
 
     /**
@@ -422,7 +424,7 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public void setPreferences(Map<String, String> prefs) throws FileAccessException {
-        getStudioConfiguration().setPreferencesMap(prefs);
+        this.studioConfiguration.setPreferencesMap(prefs);
     }
 
     /**
@@ -804,9 +806,8 @@ public class StudioService extends ClassLoader {
         this.fileSystem = fileSystem;
     }
 
-    @Deprecated
-    private StudioConfiguration getStudioConfiguration() {
-        return (StudioConfiguration) this.fileSystem;
+    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
+        this.studioConfiguration = studioConfiguration;
     }
 
     public UpgradeManager getUpgradeManager() {

@@ -16,6 +16,9 @@
         <property name="fileSystem">
             <ref bean="fileSystem"/>
         </property>
+        <property name="studioConfiguration">
+        	<ref bean="studioConfiguration"/>
+        </property>
         <property name="upgradeManager">
             <ref bean="upgradeManager"/>
         </property>
