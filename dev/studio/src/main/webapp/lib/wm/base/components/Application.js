@@ -205,9 +205,7 @@ dojo.declare("wm.Application", wm.Component, {
 						       name: "debugDialog",
 						       width: "700px", 
 						       height: "400px",
-						  corner: "cr",
-
-						  noEscape: false});
+						       corner: "cr"});
 		this.debugTree = this.debugDialog.debugTree;
 	}
     },

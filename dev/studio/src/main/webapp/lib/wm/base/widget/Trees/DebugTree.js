@@ -21,6 +21,7 @@ dojo.require("wm.base.widget.Dialogs.Dialog");
 
 
 dojo.declare("wm.DebugDialog", wm.Dialog, {
+    noEscape: true,
     noTopBottomDocking: true,
     noLeftRightDocking: true,
     useContainerWidget: true,
