@@ -529,7 +529,12 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		if (this._dijitHash[inLabel]) {
 		    this._dijitHash[inLabel].set("disabled", inDisabled);
 		}
-	    }
+	    },
+    setItemShowing: function(inLabel, inShowing) {
+	if (this._dijitHash[inLabel]) {
+	    this._dijitHash[inLabel].domNode.style.display = inShowing ? "" : "none";
+	}
+    }
 });
 
 

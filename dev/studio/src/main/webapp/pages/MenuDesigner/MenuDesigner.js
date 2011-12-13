@@ -55,17 +55,19 @@ dojo.declare("MenuDesigner", wm.Page, {
 	    if (structure[i].separator) {
 		var n = new wm.TreeNode(parentNode, {closed: false, content: "----", data: {separator: true, defaultLabel: "Separator"}});
 	    } else {
-	    var n = new wm.TreeNode(parentNode, {closed: false, content: content, data: {content: structure[i].label,
-											 defaultLabel: structure[i].defaultLabel || structure[i].label,
-											 onClick: structure[i].onClick,
-											 iconClass: structure[i].iconClass,
-											 imageList: structure[i].imageList}});
+		var n = new wm.TreeNode(parentNode, {closed: false, content: content, data: {content: structure[i].label,
+											     idInPage: structure[i].idInPage,
+											     defaultLabel: structure[i].defaultLabel || structure[i].label,
+											     onClick: structure[i].onClick,
+											     iconClass: structure[i].iconClass,
+											     imageList: structure[i].imageList}});
 	    }
 	    if (this._defaultLabel == structure[i].label && this._defaultClass == structure[i].iconClass)
 		n.domNode.style.fontWeight = "bold";
 	    if (structure[i].children) // test for children needed on upgraded projects
 		this.setMenuBuildTree(structure[i].children, n);
 	}
+	
     },
   AddButtonClick: function(inSender, inEvent, inTarget) {
       try {
@@ -99,6 +101,9 @@ dojo.declare("MenuDesigner", wm.Page, {
           this.menuItemName.setDataValue(data.content);
           this.menuItemImageList.setDataValue(data ? data.imageList : null);
           this.menuItemIconClass.setDataValue(data ? data.iconClass : null);
+	  if (data && data.idInPage !== undefined) {
+              this.menuIdInPage.setDataValue(data.idInPage);
+	  }
 	  this.menuItemImageListBtn.setIconUrl("images/blank.gif");
 	  dojo.query("img", this.menuItemImageListBtn.domNode)[0].className = data.iconClass;
 
@@ -130,6 +135,7 @@ dojo.declare("MenuDesigner", wm.Page, {
 				     defaultLabel:  studio.languageSelect.getDisplayValue() == "default" ? this.menuItemName.getDataValue() : olddata.defaultLabel,
                                      imageList: this.menuItemImageList.getDataValue(),
                                      iconClass: this.menuItemIconClass.getDataValue(),
+				     idInPage: this.menuIdInPage.getDataValue(),
 				     onClick: olddata.onClick};
 	  var content = this.tree.selected.data.content;
 	  if (this.tree.selected.data.iconClass)
@@ -246,6 +252,7 @@ dojo.declare("MenuDesigner", wm.Page, {
 		 defaultLabel: inNode.data.defaultLabel,
 		 iconClass: inNode.data.iconClass,
 		 imageList: inNode.data.imageList,
+		 idInPage: inNode.data.idInPage,
 		 onClick: inNode.data.onClick,
                children: []};
    for (var i =0; i < inNode.kids.length; i++) {

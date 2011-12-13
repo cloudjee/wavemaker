@@ -22,7 +22,8 @@ MenuDesigner.widgets = {
 			    menuItemImageListLabel: ["wm.Label", {width: "60px", height: "100%", caption: "Pick Icon:"}],
 			    menuItemImageListBtn: ["wm.ToolButton", {width: "24px", height: "100%", margin: "2", padding: "0", border: "1"}, {onclick: "popupImageSelector"}]
 			}],
-		    menuItemIconClass: ["wm.Text", {"caption":"Icon Class","captionSize":"130px","displayValue":"",width:"100%"}, {"onEnterKeyPress":"onTextEnterKeyPress"}]
+		    menuItemIconClass: ["wm.Text", {"caption":"Icon Class","captionSize":"130px","displayValue":"",width:"100%"}, {"onEnterKeyPress":"onTextEnterKeyPress"}],
+		    menuIdInPage: ["wm.Text", {showing: false, "caption":"Menu Item ID","captionSize":"130px","displayValue":"",width:"100%"}, {}]
 		}],
 		buttonBar: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"border":"1,0,0,0","height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 			menuItemCancelButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},"caption":"Cancel"}, {"onclick":"menuItemCancelButtonClick"}],
