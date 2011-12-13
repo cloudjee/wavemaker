@@ -59,7 +59,7 @@ public class StudioCloudFoundryClient extends CloudFoundryClient {
         List<Map<String, Object>> resourcePayload = this.webAppAssembler.generateResourcePayload(webAppFiles);
         webAppFiles.putAll(this.webAppAssembler.getSharedStudioFiles());
         resourcePayload.addAll(this.webAppAssembler.getStudioHashes());
-        List<Map<String, Object>> matchedResources = this.restTemplate.postForObject(getCloudControllerUrl() + "/" + "resources", resourcePayload,
+        List<Map<String, Object>> matchedResources = getRestTemplate().postForObject(getCloudControllerUrl() + "/" + "resources", resourcePayload,
             List.class);
 
         if (callback != null) {
@@ -87,7 +87,7 @@ public class StudioCloudFoundryClient extends CloudFoundryClient {
         InputStream warFileStream = new ByteArrayInputStream(incrementalUpload);
         warFileLength = incrementalUpload.length;
 
-        this.restTemplate.put(
+        getRestTemplate().put(
             getCloudControllerUrl() + "/apps/{appName}/application",
             generatePartialResourcePayload(new InputStreamResourceWithName(warFileStream, warFileLength, project.getProjectName() + ".war"),
                 resources), appName);
