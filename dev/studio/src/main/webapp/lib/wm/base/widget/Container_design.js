@@ -43,6 +43,8 @@ wm.Object.extendSchema(wm.Container, {
     clearDirty: {method:1},
     resetData: {method:1},
     clearDirty: {method:1},
+    resizeWidth: {method:1}, /* TODO: propdoc */
+    resizeHeight: {method:1},/* TODO: propdoc */
     customGetValidate:     {group: "customMethods"},
 		invalid: { ignore: 1, bindSource: 1, readonly: 1, type: "Boolean" },
 		isDirty: { ignore: 1, bindSource: 1, readonly: 1, type: "Boolean" },

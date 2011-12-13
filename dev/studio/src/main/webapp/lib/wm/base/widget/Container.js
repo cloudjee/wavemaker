@@ -688,6 +688,12 @@ wm.Container.extend({
             var result =  ((this.layoutKind == "left-to-right") ? max : sum) + extra;
 	    return Math.max(this.minHeight,Math.max(result, wm.Control.prototype.getMinHeightProp.call(this)));
 	},
+    resizeWidth: function() {
+	this.setWidth(this.getPreferredFitToContentWidth());
+    },
+    resizeHeight: function() {
+	this.setHeight(this.getPreferredFitToContentHeight());
+    },
 	getMinWidthProp: function() {
             if (this.fitToContentWidth)
                 return this.getPreferredFitToContentWidth();
