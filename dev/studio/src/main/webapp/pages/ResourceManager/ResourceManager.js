@@ -402,11 +402,18 @@ dojo.declare("ResourceManager", wm.Page, {
 	studio.resourceManagerService.requestAsync("readFile", [inFolderPath + "/Readme.txt"], 
 						   dojo.hitch(this, function(inResult) {
 						       if (inResult) {
+							   this.readmeHtml.show();
+							   this.splitter2.show();
 							   inResult = inResult.replace(/\n/g,"<br/>");						       
 							   this.readmeHtml.setHtml(inFolderPath + "/Readme.txt:<br/><div class='README'>" + inResult + "</README>");
+						       } else {
+							   this.readmeHtml.hide();							   
+							   this.splitter2.hide();
 						       }
 						   }),
 						   dojo.hitch(this, function() {
+							   this.readmeHtml.hide();							   
+							   this.splitter2.hide();
 						   }));	    
     },
     itemSelected: function() {
