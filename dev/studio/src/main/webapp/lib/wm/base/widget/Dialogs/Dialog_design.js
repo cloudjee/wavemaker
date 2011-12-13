@@ -62,12 +62,13 @@ wm.Object.extendSchema(wm.Dialog, {
 
     modal: {group: "display", order: 50},
     noEscape: {group: "display", order: 51},
-    noMinify: {group: "display", order: 51},
-    noMaxify: {group: "display", order: 51},
-    corner: {group: "layout", order: 52,editor: "wm.prop.SelectMenu", editorProps: {
+
+    noMinify: {group: "display", order: 53},
+    noMaxify: {group: "display", order: 54},
+    corner: {group: "layout", order: 60,editor: "wm.prop.SelectMenu", editorProps: {
 	options: ["top left", "top center", "top right", "center left", "center center", "center right", "bottom left", "bottom center", "bottom right"],
 	values: ["tl", "tc", "tr", "cl", "cc", "cr", "bl", "bc", "br"]}},
-    positionNear: {group: "layout", order: 53, editor: "wm.prop.WidgetSelect", editorProps: {widgetType: "wm.Control", excludeType: "wm.Dialog"}},
+    positionNear: {group: "layout", order: 61, editor: "wm.prop.WidgetSelect", editorProps: {widgetType: "wm.Control", excludeType: "wm.Dialog"}},
     fixPositionNode: {ignore: 1},
 
     noTopBottomDocking: {group: "docking", type: "boolean"},
