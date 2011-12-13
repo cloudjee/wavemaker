@@ -215,7 +215,7 @@ dojo.declare("wm.Label", wm.Control, {
 	},
 
     toHtml: function() {
-	return "<div style='text-align:" + (this.align || "left") + ";' id='" + this.domNode.id + "'>" + (this.caption||"") + "</div>";
+	return "<div style='text-align:" + (this.align || "left") + ";' id='" + this.domNode.id + "'>" + (this.sizeNode.innerHTML) + "</div>";
     }
 });
 
