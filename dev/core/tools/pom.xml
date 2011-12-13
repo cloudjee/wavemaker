@@ -80,6 +80,7 @@
 		<dependency>
 			<groupId>com.wavemaker</groupId>
 			<artifactId>wm-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.cloudfoundry</groupId>
@@ -127,12 +128,8 @@
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat</groupId>
-			<artifactId>catalina</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.tomcat</groupId>
 			<artifactId>catalina-ant</artifactId>
-		</dependency>
+		</dependency>		
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-tools</artifactId>

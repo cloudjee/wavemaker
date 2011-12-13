@@ -27,7 +27,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.catalina.util.Base64;
+import org.apache.commons.codec.binary.Base64;
 
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.common.util.ObjectUtils;
@@ -221,7 +221,7 @@ public class TomcatServer extends Server {
         con.setRequestProperty("User-Agent", "Catalina-Ant-Task/1.0");
 
         String input = this.username + ":" + this.password;
-        String output = new String(Base64.encode(input.getBytes()));
+        String output = new String(new Base64().encode(input.getBytes()));
         con.setRequestProperty("Authorization", "Basic " + output);
 
         try {

@@ -45,9 +45,7 @@ import com.wavemaker.runtime.RuntimeAccess;
 
 public class LocalDeploymentManager extends AbstractDeploymentManager {
 
-    Project mAnt;
-
-    Logger logger = Logger.getLogger(getClass());
+    static Logger logger = Logger.getLogger(LocalDeploymentManager.class);
 
     private LocalStudioConfiguration studioConfiguration;
 
@@ -149,7 +147,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
         public void valueBound(HttpSessionBindingEvent event) {
             this.projectDir = getProjectDir();
             this.projectName = getDeployName(this.projectDir);
-            LocalDeploymentManager.this.logger.info("SESSION BOUND " + this.projectName + "!!!!!!!!!!!!!!!");
+            LocalDeploymentManager.logger.info("SESSION BOUND " + this.projectName + "!!!!!!!!!!!!!!!");
         }
 
         @Override
@@ -413,29 +411,29 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
         dl.setOutputPrintStream(ps);
         dl.setMessageOutputLevel(Project.MSG_INFO);
 
-        this.mAnt = parseAntFile(projectDir, deployName, properties);
+        Project antProject = parseAntFile(projectDir, deployName, properties);
 
         // remove all existing build listeners, and add in just mine
-        for (Object bl : this.mAnt.getBuildListeners()) {
-            this.mAnt.removeBuildListener((BuildListener) bl);
+        for (Object bl : antProject.getBuildListeners()) {
+            antProject.removeBuildListener((BuildListener) bl);
         }
-        this.mAnt.addBuildListener(dl);
+        antProject.addBuildListener(dl);
 
         try {
             try {
-                this.logger.info("RUN ANT");
-                this.mAnt.executeTarget(targetName);
-                this.logger.info("END ANT");
+                LocalDeploymentManager.logger.info("RUN ANT");
+                antProject.executeTarget(targetName);
+                LocalDeploymentManager.logger.info("END ANT");
             } finally {
                 ps.close();
             }
         } catch (BuildException e) {
-            this.logger.error("build failed with compiler output:\n" + baos.toString() + "\nmessage: " + e.getMessage(), e);
+            LocalDeploymentManager.logger.error("build failed with compiler output:\n" + baos.toString() + "\nmessage: " + e.getMessage(), e);
             throw new BuildExceptionWithOutput(e.getMessage(), baos.toString() + "\nmessage: " + e.getMessage(), e);
         }
 
         String compilerOutput = baos.toString();
-        this.logger.warn("build succeeded with compiler output:\n" + compilerOutput);
+        LocalDeploymentManager.logger.warn("build succeeded with compiler output:\n" + compilerOutput);
         return compilerOutput;
     }
 
@@ -471,12 +469,12 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
 
         newProperties.put(PROJECT_DIR_PROPERTY, projectDir);
 
-        this.logger.info("PUT DIR: " + projectDir.toString());
+        LocalDeploymentManager.logger.info("PUT DIR: " + projectDir.toString());
         Resource projectDirFile = fileSystem.getResourceForURI(projectDir);
         String projectName = projectDirFile.getFilename();
         newProperties.put(PROJECT_NAME_PROPERTY, projectName);
 
-        this.logger.info("PUT NAME: " + projectName);
+        LocalDeploymentManager.logger.info("PUT NAME: " + projectName);
 
         if (null != deployName) {
             newProperties.put(DEPLOY_NAME_PROPERTY, this.projectManager.getUserProjectPrefix() + deployName);
