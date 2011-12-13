@@ -151,7 +151,7 @@ dojo.declare("wm.DebugDialog", wm.Dialog, {
 });
 
 dojo.declare("wm.ServiceGridPanel", wm.Container, {
-    
+    layoutKind: "left-to-right",
     postInit: function() {
 	this.inherited(arguments);
 
@@ -179,43 +179,41 @@ dojo.declare("wm.ServiceGridPanel", wm.Container, {
 					       type: "debuggerServicesType"});
 
 
-	this.tabs = this.createComponents({
-	    tabs: ["wm.TabLayers", {name: "tabs", width: "100%", height: "100%"},{}, {
-		gridLayer: ["wm.Layer", {name: "gridLayer", caption: "Grid"}, {}, {
-		    serviceGrid: ["wm.DojoGrid", {width: "100%", height: "100%","columns":[
-			{"show":true,"field":"status","title":"-",width:"20px","formatFunc":"wm_image_formatter","formatProps":{"width":16,"height":16}},
-			{"show":true,"field":"page","title":"Page","width":"80px","align":"left","formatFunc":""},
-			{"show":true,"field":"name","title":"Name","width":"100%","align":"left","formatFunc":""},
-			{"show":true,"field":"lastUpdate","title":"Time","width":"80px","align":"left","formatFunc": "wm_date_formatter",
-			 "formatProps": {
-                             "dateType": "time",
-			     formatLength: "medium"
-			 }},
-			{"show":true,"field":"firedBy","title":"FiredBy","width":"120px","align":"left","formatFunc":""},
-			{"show":true,"field":"data","title":"Data","width":"80px","align":"left","formatFunc":"showDataCell", expression: ""},
-			/*{"show":true,"field":"request","title":"Request","width":"100%","align":"left","formatFunc":""},*/
-			{"show":true,"field":"update","title":"Update","width":"60px","align":"left","formatFunc":"wm_button_formatter","formatProps":null,"expression":"\"Update\"","isCustomField":true}
-		    ],
-						  "margin":"4",
-						  "name":"serviceGrid"}, {onGridButtonClick: "updateGridButtonClick", onSelectionChange: "setLayersEnabled"}, {
-						      binding: ["wm.Binding", {"name":"binding"}, {}, {
-							  wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"app.debugDialog.serviceGridPanel.serviceListVar","targetProperty":"dataSet"}, {}]
-						      }]
-						  }],
-		    errorLabel: ["wm.Html", {name: "errorLabel", width: "100%", height: "50px", border: "1", borderColor: "red"}, {}, {
-						      binding: ["wm.Binding", {"name":"binding"}, {}, {
-							  wire: ["wm.Wire", {"expression":undefined,"name":"wire","expression":"${app.debugDialog.serviceGridPanel.serviceGrid.selectedItem};if (app.debugDialog.serviceGridPanel) app.debugDialog.serviceGridPanel.getErrorLabel()","targetProperty":"html"}, {}],
-							  wire2: ["wm.Wire", {"expression":undefined,"name":"wire","expression":"${app.debugDialog.serviceGridPanel.serviceGrid.selectedItem};if (app.debugDialog.serviceGridPanel) Boolean(app.debugDialog.serviceGridPanel.getErrorLabel())","targetProperty":"showing"}, {}]
-						      }]
-		    }]			
-		}],
+	var components = this.createComponents({
+	    serviceGrid: ["wm.DojoGrid", {width: "100%", height: "100%","columns":[
+		{"show":true,"field":"status","title":"-",width:"20px","formatFunc":"wm_image_formatter","formatProps":{"width":18,"height":16}},
+		{"show":true,"field":"page","title":"Page","width":"80px","align":"left","formatFunc":""},
+		{"show":true,"field":"name","title":"Name","width":"100%","align":"left","formatFunc":""},
+		{"show":true,"field":"lastUpdate","title":"Time","width":"80px","align":"left","formatFunc": "wm_date_formatter",
+		 "formatProps": {
+                     "dateType": "time",
+		     formatLength: "medium"
+		 }},
+		{"show":true,"field":"firedBy","title":"FiredBy","width":"120px","align":"left","formatFunc":""},
+		{"show":true,"field":"data","title":"Data","width":"80px","align":"left","formatFunc":"showDataCell", expression: ""},
+		/*{"show":true,"field":"request","title":"Request","width":"100%","align":"left","formatFunc":""},*/
+		{"show":true,"field":"update","title":"Update","width":"60px","align":"left","formatFunc":"wm_button_formatter","formatProps":null,"expression":"\"Update\"","isCustomField":true}
+	    ],
+					  "margin":"4",
+					  "name":"serviceGrid"}, {onGridButtonClick: "updateGridButtonClick", onSelectionChange: "showDataTabs"}, {
+					      binding: ["wm.Binding", {"name":"binding"}, {}, {
+						  wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"app.debugDialog.serviceGridPanel.serviceListVar","targetProperty":"dataSet"}, {}]
+					      }]
+					  }],
+	    tabs: ["wm.TabLayers", {name: "tabs", width: "100%", height: "100%",showing:false, defaultLayer: 0},{}, {
 		dataLayer: ["wm.Layer", {name: "dataLayer", caption: "Data",showing: false},{}, {
 		    dataEditor: ["wm.AceEditor", {"height":"100%","name":"dataEditor","width":"100%"}, {}, {
 			binding: ["wm.Binding", {"name":"binding"}, {}, {
 			    wire: ["wm.Wire", {"name":"wire","expression":"${app.debugDialog.serviceGridPanel.serviceGrid.selectedItem};if (app.debugDialog.serviceGridPanel) app.debugDialog.serviceGridPanel.getDataEditorData();","targetProperty":"dataValue"}, {}]
 			}]
 		    }],
-		    setDataButton: ["wm.Button", {name: "fireButton", caption: "setData()", width: "150px"}]
+		    setDataButton: ["wm.Button", {name: "fireButton", caption: "setData()", width: "150px"}],
+		    errorLabel: ["wm.Html", {name: "errorLabel", width: "100%", height: "50px", border: "1", borderColor: "red"}, {}, {
+						      binding: ["wm.Binding", {"name":"binding"}, {}, {
+							  wire: ["wm.Wire", {"expression":undefined,"name":"wire","expression":"${app.debugDialog.serviceGridPanel.serviceGrid.selectedItem};if (app.debugDialog.serviceGridPanel) app.debugDialog.serviceGridPanel.getErrorLabel()","targetProperty":"html"}, {}],
+							  wire2: ["wm.Wire", {"expression":undefined,"name":"wire","expression":"${app.debugDialog.serviceGridPanel.serviceGrid.selectedItem};if (app.debugDialog.serviceGridPanel) Boolean(app.debugDialog.serviceGridPanel.getErrorLabel())","targetProperty":"showing"}, {}]
+						      }]
+		    }]			
 		}],
 		requestLayer: ["wm.Layer", {name: "requestLayer", caption: "Request", showing: false},{}, {
 		    requestEditor: ["wm.AceEditor", {"height":"100%","name":"requestEditor","width":"100%"}, {}, {
@@ -225,10 +223,10 @@ dojo.declare("wm.ServiceGridPanel", wm.Container, {
 		    }],
 		    fireButton: ["wm.Button", {name: "fireButton", caption: "update()", width: "150px"}]
 		}]
-	    }]
-	},this)[0];
-	this.serviceLayer = this.tabs.layers[this.tabs.indexOfLayerName("gridLayer")];
-	this.serviceGrid = this.serviceLayer.c$[0];
+		}]
+	},this);	
+	this.serviceGrid = components[0];
+	this.tabs = components[1];
 	this.dataLayer = this.tabs.layers[this.tabs.indexOfLayerName("dataLayer")];
 	this.dataEditor = this.dataLayer.c$[0];
 	this.requestLayer = this.tabs.layers[this.tabs.indexOfLayerName("requestLayer")];
@@ -253,6 +251,14 @@ dojo.declare("wm.ServiceGridPanel", wm.Container, {
 	    data = eval("(" + data + ")");
 	    var c = app.getValueById(this.serviceGrid.selectedItem.getValue("id"));
 	    c.setData(data);
+	});
+
+	var x = document.createElement("span");
+	dojo.addClass(x, "TabCloseIcon DebuggerCloseButton");
+	x.innerHTML = "x";
+	this.tabs.decorator.tabsControl.domNode.insertBefore(x, this.tabs.decorator.tabsControl.domNode.firstChild);
+	this.connect(x, "onclick", this, function() {
+	    this.serviceGrid.deselectAll();
 	});
     },
     showDataCell: function(inValue, rowId, cellId, cellField, cellObj, rowObj) {
@@ -293,17 +299,32 @@ dojo.declare("wm.ServiceGridPanel", wm.Container, {
 	var cleanData = wm.DojoGrid.prototype.itemToJSONObject(app.debugDialog.serviceGridPanel.serviceGrid.store,data);
 	return js_beautify(dojo.toJson(cleanData));
     },
-    setLayersEnabled: function(inSender) {
-	var data = app.debugDialog.serviceGridPanel.serviceGrid.selectedItem.getData();
-	if (!data) {
-	    this.requestLayer.hide();
-	    this.dataLayer.hide();
-	} else if (app.getValueById(data.id) instanceof wm.ServiceVariable == false) {
-	    this.requestLayer.hide();
-	    this.dataLayer.show();
-	} else {
-	    this.requestLayer.show();
-	    this.dataLayer.show();
+    showDataTabs: function(inSender) {
+	var hasSelection = this.serviceGrid.hasSelection();
+	    this.serviceGrid.setColumnShowing("page",!hasSelection, true);
+	    this.serviceGrid.setColumnShowing("lastUpdate",!hasSelection, true);
+	    this.serviceGrid.setColumnShowing("firedBy",!hasSelection, true);
+	    this.serviceGrid.setColumnShowing("data",!hasSelection, true);
+	this.serviceGrid.setColumnShowing("update",!hasSelection, false);
+	this.tabs.setShowing(hasSelection);	
+	this.serviceGrid.setWidth(hasSelection ? "150px" : "100%");
+	if (hasSelection) {
+	    if (this.tabs.layerIndex == -1) this.tabs.setLayerIndex(0);
+
+	    var data = app.debugDialog.serviceGridPanel.serviceGrid.selectedItem.getData();
+	    if (!data) {
+		this.requestLayer.hide();
+		this.dataLayer.hide();
+	    } else if (app.getValueById(data.id) instanceof wm.ServiceVariable == false) {
+		this.requestLayer.hide();
+		this.dataLayer.setCaption("Data");
+		this.dataLayer.show();
+	    } else {
+		this.requestLayer.show();
+		this.dataLayer.setCaption("Response");
+		this.dataLayer.show();
+
+	    }
 	}
     },
     updateGridButtonClick: function(inSender, fieldName, rowData, rowIndex) {

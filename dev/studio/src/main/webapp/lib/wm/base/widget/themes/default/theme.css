@@ -1758,10 +1758,11 @@ Overriding dijit's progress bar properties to enable height changes to progress 
 .dj_ff3 .TabCloseIcon,
 .dj_ff4 .TabCloseIcon {
     left: 4px;
-    top: -5px;
-    
+    top: -5px;   
 }
-
+.TabCloseIcon.DebuggerCloseButton {
+float: none;
+}
 .wmdatetimedialog,
 .wmdatetimedialog .dialogfooter {
 	-moz-border-radius: 0px !important; 
