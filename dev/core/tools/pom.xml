@@ -46,15 +46,11 @@
 						</goals>
 						<configuration>
 							<target>
-								<property name="templateapp.zip.name" value="templateapp.zip" />
-								<echo message="BaseDir is: ${basedir}"/>
-								<property name="templateapp.resource.dir"
-									value="${basedir}/src/main/resources/com/wavemaker/tools/project" />
-								<property name="templateapp.zip"
-									value="${templateapp.resource.dir}/${templateapp.zip.name}" />
-								<zip destfile="${templateapp.zip}">
-									<fileset dir="${basedir}/templates/templateapp">
-									</fileset>
+								<property name="zipdir" value="${basedir}/templates/templateapp" />
+								<property name="zipdestfile" value="${project.build.outputDirectory}/com/wavemaker/tools/project/templateapp.zip" />
+								<echo>Creating  from ${zipdestfile} from ${zipdir}</echo>
+								<zip destfile="${zipdestfile}">
+									<fileset dir="${zipdir}"/>
 								</zip>
 							</target>
 						</configuration>
