@@ -30,8 +30,6 @@
 						<configuration>
 							<sources>
 								<source>services/cloudFoundryService/src</source>
-								<source>services/cloudServerService/src</source>
-								<source>services/cloudStorageService/src</source>
 								<source>services/dataService/src</source>
 								<source>services/deploymentService/src</source>
 								<source>services/javaService/src</source>

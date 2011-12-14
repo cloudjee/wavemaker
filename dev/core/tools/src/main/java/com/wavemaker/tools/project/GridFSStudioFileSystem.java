@@ -105,9 +105,6 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
 
     @Override
     public Resource getDemoDir() {
-        if (isCloud()) {
-            return null;
-        }
         if (this.testDemoDir != null) {
             return createResource(this.testDemoDir.toString() + "/");
         }
@@ -119,9 +116,6 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
     }
 
     public void setTestDemoDir(File file) {
-        if (isCloud()) {
-            return;
-        }
         this.testDemoDir = file;
     }
 

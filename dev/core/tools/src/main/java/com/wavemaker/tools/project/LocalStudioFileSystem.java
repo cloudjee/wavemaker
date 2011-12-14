@@ -65,9 +65,6 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
     }
 
     public static void setWaveMakerHome(Resource wmHome) throws FileAccessException {
-        if (isCloud()) {
-            return;
-        }
         Assert.isInstanceOf(FileSystemResource.class, wmHome, "Expected a FileSystemResource");
 
         try {
@@ -88,10 +85,6 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
 
     @Override
     public Resource getDemoDir() {
-        if (isCloud()) {
-            return null;
-        }
-
         if (this.testDemoDir != null) {
             return createResource(this.testDemoDir.toString() + "/");
         }
@@ -111,16 +104,10 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
     }
 
     public void setDemoDir(File file) {
-        if (isCloud()) {
-            return;
-        }
         ConfigurationStore.setPreference(getClass(), DEMOHOME_KEY, file.getAbsolutePath());
     }
 
     public void setTestDemoDir(File file) {
-        if (isCloud()) {
-            return;
-        }
         this.testDemoDir = file;
     }
 

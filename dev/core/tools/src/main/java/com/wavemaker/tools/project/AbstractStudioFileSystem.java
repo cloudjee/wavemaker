@@ -40,10 +40,6 @@ public abstract class AbstractStudioFileSystem implements StudioFileSystem, Serv
 
     public static final String DEMOHOME_KEY = "demoHome";
 
-    private static boolean isCloud;
-
-    private static boolean isCloudInitialized = false;
-
     private ServletContext servletContext;
 
     @Override
@@ -119,24 +115,6 @@ public abstract class AbstractStudioFileSystem implements StudioFileSystem, Serv
     @Override
     public List<Resource> listChildren(Resource resource) {
         return listChildren(resource, ResourceFilter.NO_FILTER);
-    }
-
-    /**
-     * Tests for previous cloud edition, NOT cloud foundry
-     */
-    @Deprecated
-    public static boolean isCloud() {
-        if (!isCloudInitialized) {
-            try {
-
-                org.springframework.core.io.ClassPathResource cpr = new org.springframework.core.io.ClassPathResource("cloud.src.resource");
-                isCloud = cpr.exists();
-                isCloudInitialized = true;
-            } catch (Exception e) {
-                return false;
-            }
-        }
-        return isCloud;
     }
 
     protected abstract String getFSType();

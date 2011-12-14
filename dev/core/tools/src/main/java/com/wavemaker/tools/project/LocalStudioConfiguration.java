@@ -144,7 +144,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration {
         }
 
         try {
-            prefs.put(AbstractStudioFileSystem.DEMOHOME_KEY, isCloud() ? null : this.fileSystem.getDemoDir().getFile().getCanonicalPath());
+            prefs.put(AbstractStudioFileSystem.DEMOHOME_KEY, this.fileSystem.getDemoDir().getFile().getCanonicalPath());
             return prefs;
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
@@ -159,11 +159,6 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration {
      */
     @Override
     public void setPreferencesMap(Map<String, String> prefs) {
-
-        if (isCloud()) {
-            return;
-        }
-
         if (prefs.containsKey(LocalStudioFileSystem.WMHOME_KEY) && prefs.get(LocalStudioFileSystem.WMHOME_KEY) != null) {
             try {
                 LocalStudioFileSystem.setWaveMakerHome(new FileSystemResource(prefs.get(LocalStudioFileSystem.WMHOME_KEY)));
@@ -242,10 +237,6 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration {
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
-    }
-
-    private boolean isCloud() {
-        return AbstractStudioFileSystem.isCloud();
     }
 
     public static void setWaveMakerHome(Resource wmHome) throws FileAccessException {

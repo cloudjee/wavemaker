@@ -44,30 +44,6 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
 
     private static final String DEPLOYMENTS_FILE = "/deployments.js";
 
-    private static boolean isCloud;
-
-    private static boolean isCloudInitialized = false;
-
-    public static boolean isCloud() {
-        if (!isCloudInitialized) {
-            try {
-                // can a user create cloud.src.resource java service class and
-                // pass our isCloud test and modify our project folder settings?
-                // Answer: even if they can, they can't remove our existing
-                // com.wavemaker.cloud; all they could accomplish is to
-                // block the ability to SET those settings on their local
-                // computer.
-                org.springframework.core.io.ClassPathResource cpr = new org.springframework.core.io.ClassPathResource("cloud.src.resource");
-                isCloud = cpr.exists();
-                isCloudInitialized = true;
-            } catch (Exception e) {
-                return false;
-            }
-        }
-
-        return isCloud;
-    }
-
     private StudioFileSystem fileSystem;
 
     protected ProjectManager projectManager;
@@ -255,9 +231,6 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
     @Override
     public void deployClientComponent(String name, String namespace, String data) throws IOException {
 
-        if (isCloud()) {
-            return;
-        }
         Resource packagesDir = this.fileSystem.createPath(this.fileSystem.getCommonDir(), PACKAGES_DIR);
 
         Resource moduleDir = packagesDir;
@@ -388,10 +361,6 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
     @Override
     public void deployTheme(String themename, String filename, String data) throws IOException {
 
-        if (isCloud()) {
-            return;
-        }
-
         Resource themesDir = this.fileSystem.createPath(this.fileSystem.getCommonDir(), THEMES_DIR);
 
         Resource moduleDir = themesDir;
@@ -410,11 +379,6 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
      */
     @Override
     public boolean undeployTheme(String themename) throws IOException {
-
-        if (isCloud()) {
-            return false;
-        }
-
         Resource packagesDir = this.fileSystem.getCommonDir().createRelative(THEMES_DIR + themename + "/");
         if (!packagesDir.exists()) {
             return false;
@@ -600,11 +564,6 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
     @Override
     @SuppressWarnings("unchecked")
     public boolean undeployClientComponent(String name, String namespace, boolean removeSource) throws IOException {
-
-        if (isCloud()) {
-            return false;
-        }
-
         Resource packagesDir = this.fileSystem.getCommonDir().createRelative(PACKAGES_DIR);
         if (!packagesDir.exists()) {
             return false;

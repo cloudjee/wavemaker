@@ -63,7 +63,7 @@ public class CFStudioConfiguration implements StudioConfiguration {
         }
 
         try {
-            prefs.put(DEMOHOME_KEY, AbstractStudioFileSystem.isCloud() ? null : ((GFSResource) this.fileSystem.getDemoDir()).getPath());
+            prefs.put(DEMOHOME_KEY, ((GFSResource) this.fileSystem.getDemoDir()).getPath());
             return prefs;
         } catch (Exception ex) {
             throw new WMRuntimeException(ex);
