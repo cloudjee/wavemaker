@@ -70,6 +70,8 @@ public final class FileController extends AbstractController {
 
     private static final String WM_CONFIG_URL = "/config.js";
 
+    private ModuleManager moduleManager;
+
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -182,9 +184,6 @@ public final class FileController extends AbstractController {
 
         response.setContentType(mimeFileTypeMap.getContentType(file));
     }
-
-    // bean properties
-    private ModuleManager moduleManager;
 
     public void setModuleManager(ModuleManager moduleManager) {
         this.moduleManager = moduleManager;

@@ -43,82 +43,6 @@ import java.util.Map;
  */
 public class ObjectGraphTraversal {
 
-    public interface ObjectVisitor {
-
-        /**
-         * Called for each node that has not yet been visited. Traversing continues after this call, and
-         * PropertyFactry.getProperties will be called for this instance.
-         */
-        void visit(Object o, Context ctx);
-
-        /**
-         * Called for a node that has already been visited. Does not continue traversing, since this node has been
-         * visited previously. PropertyFactory.getProperties will not be called. Note that a pointer back to the root
-         * node is considered a cycle, although visit is not called for the root node.
-         */
-        void cycle(Object o, Context ctx);
-    }
-
-    public interface PropertyFactory {
-
-        Collection<String> getProperties(Object o, Context ctx);
-    }
-
-    /**
-     * The following Context information is available for each node:
-     * 
-     * The parent instances of the current node (stack). The direct parent is at position 0.
-     * 
-     * The properties (getters) chain traversed to get to this node (stack). The property name used to access this node
-     * is at position 0. For example if the current node is a Country instance and the root Object is a Person instance:
-     * (["country", "city", "address", "person"]). Use getPropertyPath to get a string representation.
-     * 
-     * Arbitrary context information that can be used to associate state with a visited Node (stack). Child nodes
-     * visited have access to the state of all of their parent nodes. A new null value is pushed for each visited node -
-     * therefore a node should use ctx.getValues().set(0, <value>) to override the default null value.
-     */
-    public class Context {
-
-        // parent nodes
-        private final List<Object> parents = new ArrayList<Object>();
-
-        // properties traversed to get to current node
-        private final List<String> properties = new ArrayList<String>();
-
-        // arbitrary storage for clients
-        private final List<Object> valueStack = new ArrayList<Object>();
-
-        public List<?> getParents() {
-            return this.parents;
-        }
-
-        public List<String> getProperties() {
-            return this.properties;
-        }
-
-        public List<Object> getValues() {
-            return this.valueStack;
-        }
-
-        public String getPropertyPath() {
-            List<String> l = new ArrayList<String>(getProperties());
-            Collections.reverse(l);
-            return ObjectUtils.toString(l, ".");
-        }
-
-    }
-
-    private static final ObjectVisitor NOOP_VISITOR = new ObjectVisitor() {
-
-        @Override
-        public void visit(Object o, Context ctx) {
-        }
-
-        @Override
-        public void cycle(Object o, Context ctx) {
-        }
-    };
-
     private final PropertyFactory propertyFactory;
 
     private final ObjectVisitor objectVisitor;
@@ -128,11 +52,11 @@ public class ObjectGraphTraversal {
     private boolean propertiesAreBeanProperties = true;
 
     public ObjectGraphTraversal(PropertyFactory propertyFactory) {
-        this(propertyFactory, NOOP_VISITOR);
+        this(propertyFactory, ObjectVisitor.NONE);
     }
 
     public ObjectGraphTraversal(PropertyFactory propertyFactory, ObjectAccess objectAccess) {
-        this(propertyFactory, NOOP_VISITOR, objectAccess);
+        this(propertyFactory, ObjectVisitor.NONE, objectAccess);
     }
 
     public ObjectGraphTraversal(PropertyFactory propertyFactory, ObjectVisitor objectVisitor) {
@@ -224,6 +148,82 @@ public class ObjectGraphTraversal {
 
         this.objectVisitor.visit(o, ctx);
         traverseInternal(o, ctx, alreadyVisited);
+    }
+
+    public interface ObjectVisitor {
+
+        public static final ObjectVisitor NONE = new ObjectVisitor() {
+
+            @Override
+            public void visit(Object o, Context ctx) {
+            }
+
+            @Override
+            public void cycle(Object o, Context ctx) {
+            }
+        };
+
+        /**
+         * Called for each node that has not yet been visited. Traversing continues after this call, and
+         * PropertyFactry.getProperties will be called for this instance.
+         */
+        void visit(Object o, Context ctx);
+
+        /**
+         * Called for a node that has already been visited. Does not continue traversing, since this node has been
+         * visited previously. PropertyFactory.getProperties will not be called. Note that a pointer back to the root
+         * node is considered a cycle, although visit is not called for the root node.
+         */
+        void cycle(Object o, Context ctx);
+    }
+
+    public interface PropertyFactory {
+
+        Collection<String> getProperties(Object o, Context ctx);
+    }
+
+    /**
+     * The following Context information is available for each node:
+     * 
+     * The parent instances of the current node (stack). The direct parent is at position 0.
+     * 
+     * The properties (getters) chain traversed to get to this node (stack). The property name used to access this node
+     * is at position 0. For example if the current node is a Country instance and the root Object is a Person instance:
+     * (["country", "city", "address", "person"]). Use getPropertyPath to get a string representation.
+     * 
+     * Arbitrary context information that can be used to associate state with a visited Node (stack). Child nodes
+     * visited have access to the state of all of their parent nodes. A new null value is pushed for each visited node -
+     * therefore a node should use ctx.getValues().set(0, <value>) to override the default null value.
+     */
+    public class Context {
+
+        // parent nodes
+        private final List<Object> parents = new ArrayList<Object>();
+
+        // properties traversed to get to current node
+        private final List<String> properties = new ArrayList<String>();
+
+        // arbitrary storage for clients
+        private final List<Object> valueStack = new ArrayList<Object>();
+
+        public List<?> getParents() {
+            return this.parents;
+        }
+
+        public List<String> getProperties() {
+            return this.properties;
+        }
+
+        public List<Object> getValues() {
+            return this.valueStack;
+        }
+
+        public String getPropertyPath() {
+            List<String> l = new ArrayList<String>(getProperties());
+            Collections.reverse(l);
+            return ObjectUtils.toString(l, ".");
+        }
+
     }
 
 }

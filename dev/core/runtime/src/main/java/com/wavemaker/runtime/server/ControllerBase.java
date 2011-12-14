@@ -66,6 +66,19 @@ public abstract class ControllerBase extends AbstractController {
 
     protected ServiceResponse serviceResponse;
 
+    private ServiceManager serviceManager;
+
+    private ServiceEventNotifier serviceEventNotifier;
+
+    private ServletEventNotifier servletEventNotifier;
+
+    @SuppressWarnings("deprecation")
+    private com.activegrid.runtime.AGRuntime runtime;
+
+    private InternalRuntime internalRuntime;
+
+    private RuntimeAccess runtimeAccess;
+
     /**
      * Create the default JSONState.
      * 
@@ -274,20 +287,6 @@ public abstract class ControllerBase extends AbstractController {
         getRuntimeAccess().setRequest(request);
         initializeRuntimeController(request);
     }
-
-    // bean properties
-    private ServiceManager serviceManager;
-
-    private ServiceEventNotifier serviceEventNotifier;
-
-    private ServletEventNotifier servletEventNotifier;
-
-    @SuppressWarnings("deprecation")
-    private com.activegrid.runtime.AGRuntime runtime;
-
-    private InternalRuntime internalRuntime;
-
-    private RuntimeAccess runtimeAccess;
 
     public void setServiceManager(ServiceManager spm) {
         this.serviceManager = spm;

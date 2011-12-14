@@ -34,6 +34,8 @@ import com.wavemaker.tools.project.Project;
  */
 public abstract class AbstractWidgetsJSUpgradeTask implements UpgradeTask {
 
+    private PagesManager pagesManager;
+
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
@@ -83,9 +85,6 @@ public abstract class AbstractWidgetsJSUpgradeTask implements UpgradeTask {
      * @return true iff the application js file should be upgraded as well.
      */
     public abstract boolean doUpgradeAppJS();
-
-    // bean properties
-    private PagesManager pagesManager;
 
     public PagesManager getPagesManager() {
         return this.pagesManager;

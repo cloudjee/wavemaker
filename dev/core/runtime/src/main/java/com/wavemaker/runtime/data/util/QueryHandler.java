@@ -105,7 +105,7 @@ public class QueryHandler implements InvocationHandler {
             return qry;
         } else if (methodName.equalsIgnoreCase("get")) {
             Object o = m.invoke(this.target, args);
-            Class cls = o.getClass();
+            Class<?> cls = o.getClass();
             String t = tFldName.substring(0, 1).toUpperCase();
             String getterName = "get" + t + tFldName.substring(1);
             Method getter = null;
@@ -126,7 +126,7 @@ public class QueryHandler implements InvocationHandler {
             return o;
         } else { // save, update, delete, contains
             Object o = args[0];
-            Class cls = o.getClass();
+            Class<?> cls = o.getClass();
             String s = tFldName.substring(0, 1).toUpperCase();
             setterName = "set" + s + tFldName.substring(1);
             Method setter = null;

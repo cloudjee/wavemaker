@@ -52,11 +52,11 @@ import com.wavemaker.tools.ws.salesforce.SalesforceHelper;
  * 
  * @author Seung Lee
  */
-public class DataServiceGenerator_SF extends DataServiceGenerator {
+public class SalesForceDataServiceGenerator extends DataServiceGenerator {
 
     private final DesignServiceManager dsm;
 
-    public DataServiceGenerator_SF(GenerationConfiguration configuration) {
+    public SalesForceDataServiceGenerator(GenerationConfiguration configuration) {
 
         super(configuration, "com.sforce.SalesforceQueries");
 

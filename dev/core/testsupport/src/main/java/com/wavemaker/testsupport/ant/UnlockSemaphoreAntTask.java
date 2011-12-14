@@ -24,6 +24,8 @@ import com.wavemaker.testsupport.UtilTest;
  */
 public class UnlockSemaphoreAntTask extends Task {
 
+    private String semaphoreReturn;
+
     @Override
     public void execute() throws BuildException {
 
@@ -38,9 +40,6 @@ public class UnlockSemaphoreAntTask extends Task {
             throw new BuildException(e);
         }
     }
-
-    // bean properties
-    private String semaphoreReturn;
 
     public void setSemaphoreReturn(String semaphoreReturn) {
         this.semaphoreReturn = semaphoreReturn;

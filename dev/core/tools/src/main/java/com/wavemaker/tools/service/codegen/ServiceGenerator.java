@@ -71,8 +71,7 @@ public abstract class ServiceGenerator {
 
     protected static final String NDC_POP = "pop";
 
-    protected Log logger = LogFactory // salesforce
-    .getLog("com.wavemaker.runtime.service.codegen");
+    protected Log logger = LogFactory.getLog("com.wavemaker.runtime.service.codegen");
 
     protected GenerationConfiguration configuration;
 
@@ -189,8 +188,7 @@ public abstract class ServiceGenerator {
      * @throws GenerationException
      */
     protected void generateOperationMethodBody(JMethod method, JBlock body, String operationName, Map<String, JType> inputJTypeMap,
-        ElementType outputType, JType outputJType, Integer overloadCount) // salesforce
-        throws GenerationException {
+        ElementType outputType, JType outputJType, Integer overloadCount) throws GenerationException {// salesforce
     }
 
     /**
@@ -328,7 +326,7 @@ public abstract class ServiceGenerator {
             body.staticInvoke(this.codeModel.ref(NDC.class), NDC_PUSH).arg(getClassName() + "." + operationName);
         }
 
-        generateOperationMethodBody(method, body, operationName, inputJTypeMap, outputType, outputJType, overloadCount); // salesforce
+        generateOperationMethodBody(method, body, operationName, inputJTypeMap, outputType, outputJType, overloadCount);// salesforce
 
         if (this.useNDCLogging) {
             tryBlock._finally().block().staticInvoke(this.codeModel.ref(NDC.class), NDC_POP);
@@ -371,7 +369,7 @@ public abstract class ServiceGenerator {
         return GenerationUtils.getGenericCollectionType(this.codeModel, List.class.getName(), type);
     }
 
-    protected void addJavadoc(JDocComment jdoc) { // salesforce private --> protected
+    protected void addJavadoc(JDocComment jdoc) {
         jdoc.add(" Operations for service \"" + this.serviceDefinition.getServiceId() + "\"\n" + StringUtils.getFormattedDate());
     }
 

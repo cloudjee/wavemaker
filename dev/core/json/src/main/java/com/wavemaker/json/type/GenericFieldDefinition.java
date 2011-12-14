@@ -96,11 +96,11 @@ public class GenericFieldDefinition implements FieldDefinition {
     }
 
     @Override
-    public String getSubType() { // salesforce
+    public String getSubType() {
         return this.subType;
     }
 
-    public void setSubType(String subType) { // salesforce
+    public void setSubType(String subType) {
         this.subType = subType;
     }
 

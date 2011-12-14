@@ -52,9 +52,6 @@ public class CloudFoundryDataServiceBeanFactoryPostProcessor implements BeanFact
 
     private final CloudEnvironment cloudEnvironment = new CloudEnvironment();
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) beanFactory;

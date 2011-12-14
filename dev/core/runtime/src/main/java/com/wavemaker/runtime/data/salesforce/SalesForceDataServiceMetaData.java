@@ -51,9 +51,7 @@ import com.wavemaker.runtime.ws.salesforce.SalesforceSupport;
  * 
  * @author Seung Lee
  */
-public class DataServiceMetaData_SF implements DataServiceMetaData {
-
-    // private final Configuration cfg;
+public class SalesForceDataServiceMetaData implements DataServiceMetaData {
 
     private DataServiceOperationManager operationManager = null;
 
@@ -62,11 +60,6 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
 
     // Entity class names in alphabetical order
     private final SortedSet<String> entityClassNames = new TreeSet<String>();
-
-    // Component class names in alphabetical order
-    private final SortedSet<String> componentClassNames = new TreeSet<String>();
-
-    private final SortedSet<String> entityNames = new TreeSet<String>();
 
     // Helper classes that are not part of the data model
     // Right now we only have query result wrappers
@@ -80,15 +73,11 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
 
     private String serviceClassName = null;
 
-    public DataServiceMetaData_SF(String configurationName
-    // Configuration cfg
-    ) {
+    public SalesForceDataServiceMetaData(String configurationName) {
         this(configurationName, Collections.<String, String> emptyMap());
     }
 
-    public DataServiceMetaData_SF(String configurationName,
-    // Configuration cfg,
-        Map<String, String> properties) {
+    public SalesForceDataServiceMetaData(String configurationName, Map<String, String> properties) {
         this.configurationName = configurationName;
         // this.cfg = cfg;
 
@@ -262,7 +251,7 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
 
             @Override
             public Collection<String> getEntityClassNames() {
-                return DataServiceMetaData_SF.this.entityClassNames;
+                return SalesForceDataServiceMetaData.this.entityClassNames;
             }
 
             @Override
@@ -282,7 +271,6 @@ public class DataServiceMetaData_SF implements DataServiceMetaData {
             }
 
             @Override
-            @SuppressWarnings("unchecked")
             public Collection<String> getQueryNames() {
 
                 Collection<String> rtn = new HashSet<String>();

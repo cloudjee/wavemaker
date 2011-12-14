@@ -50,12 +50,11 @@ import com.wavemaker.json.type.reflect.ReflectTypeUtils;
  */
 public final class JSONMarshaller {
 
+    protected static final Logger logger = Logger.getLogger(JSONMarshaller.class);
+
     private static final boolean DEFAULT_PRETTY_PRINT = false;
 
     private static final boolean DEFAULT_SORT = false;
-
-    /** Logger for this class and subclasses */
-    protected static final Logger logger = Logger.getLogger(JSONMarshaller.class);
 
     /**
      * Marshal the given Object into a JSON-formatted character stream (written out onto the writer parameter). This

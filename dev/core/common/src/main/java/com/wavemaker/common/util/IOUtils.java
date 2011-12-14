@@ -40,7 +40,7 @@ import com.wavemaker.common.MessageResource;
  * @author Matt Small
  * @author Jeremy Grelle
  */
-public class IOUtils {
+public abstract class IOUtils {
 
     private static final int DEFAULT_BUFFER_SIZE = 1024;
 
