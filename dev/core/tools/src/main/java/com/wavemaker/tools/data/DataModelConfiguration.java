@@ -459,7 +459,7 @@ public class DataModelConfiguration {
         // package
         if (outputType != null && DataServiceUtils.isOutputType(outputType)) {
             this.deletedQueries.add(StringUtils.classNameToSrcFilePath(outputType));
-            this.deletedSFQueries.add(queryName); // salesforce
+            this.deletedSFQueries.add(queryName);
             this.deletedSFDataObjects.add(StringUtils.classNameToSrcFilePath(outputType));
         }
 
@@ -1033,7 +1033,7 @@ public class DataModelConfiguration {
     }
 
     public String getDataPackage() {
-        if (this.name.equals(CommonConstants.SALESFORCE_SERVICE)) { // salesforce
+        if (this.name.equals(CommonConstants.SALESFORCE_SERVICE)) {
             return getDataPackage_SF();
         }
 
@@ -1043,7 +1043,7 @@ public class DataModelConfiguration {
         return this.dataPackage;
     }
 
-    public String getDataPackage_SF() { // salesforce
+    public String getDataPackage_SF() {
         return "com.sforce.queries";
     }
 
@@ -1105,19 +1105,19 @@ public class DataModelConfiguration {
         return "Mappings: " + this.entityNameToPath + "\n\nQueries: " + this.queryFiles;
     }
 
-    public Collection<String> getDeletedSFQueries() { // salesforce
+    public Collection<String> getDeletedSFQueries() {
         return this.deletedSFQueries;
     }
 
-    public void removeDeletedSFQueries(String name) { // salesforce
+    public void removeDeletedSFQueries(String name) {
         this.deletedSFQueries.remove(name);
     }
 
-    public Collection<String> getDeletedSFDataObjects() { // salesforce
+    public Collection<String> getDeletedSFDataObjects() {
         return this.deletedSFDataObjects;
     }
 
-    public void removeDeletedSFDataObjects(String name) { // salesforce
+    public void removeDeletedSFDataObjects(String name) {
         this.deletedSFDataObjects.remove(name);
     }
 
@@ -1702,7 +1702,7 @@ public class DataModelConfiguration {
         addRegisteredFiles();
     }
 
-    private void setup_SF() { // salesforce
+    private void setup_SF() {
         String path = "com/sforce/queries/sforce-queries.xml";
         addQueryDocument(path);
     }
@@ -1749,7 +1749,7 @@ public class DataModelConfiguration {
             String meta = p.getMeta();
 
             if (meta != null && com.wavemaker.tools.data.util.DataServiceUtils.isDefaultQueryStore(meta)
-                || this.name.equals(CommonConstants.SALESFORCE_SERVICE)) { // salesforce
+                || this.name.equals(CommonConstants.SALESFORCE_SERVICE)) {
                 this.defaultQueryParser = p;
             }
 

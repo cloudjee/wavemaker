@@ -48,8 +48,7 @@ public class QueryRunner {
 
     private final Map<String, Object> bindParameters = new HashMap<String, Object>();
 
-    private final Map<String, Class<?>> bindParameterTypes = // salesforce
-    new HashMap<String, Class<?>>();
+    private final Map<String, Class<?>> bindParameterTypes = new HashMap<String, Class<?>>();// salesforce
 
     private Long maxResults = null;
 
@@ -133,7 +132,7 @@ public class QueryRunner {
         }
     }
 
-    // salesforce-s
+    // salesforce
     public Object run(String query, boolean named) {
 
         try {
@@ -152,8 +151,6 @@ public class QueryRunner {
             this.bindParameterTypes.clear();
         }
     }
-
-    // salesforce-e
 
     public void dispose() {
         this.mgr.dispose();

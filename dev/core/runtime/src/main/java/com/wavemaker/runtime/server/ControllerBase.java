@@ -64,6 +64,19 @@ public abstract class ControllerBase extends AbstractController {
     /** Logger that is available to subclasses */
     protected final Log logger = LogFactory.getLog(getClass());
 
+    private ServiceManager serviceManager;
+
+    private ServiceEventNotifier serviceEventNotifier;
+
+    private ServletEventNotifier servletEventNotifier;
+
+    @SuppressWarnings("deprecation")
+    private com.activegrid.runtime.AGRuntime runtime;
+
+    private InternalRuntime internalRuntime;
+
+    private RuntimeAccess runtimeAccess;
+
     /**
      * Create the default JSONState.
      * 
@@ -256,20 +269,6 @@ public abstract class ControllerBase extends AbstractController {
         getRuntimeAccess().setRequest(request);
         initializeRuntimeController(request);
     }
-
-    // bean properties
-    private ServiceManager serviceManager;
-
-    private ServiceEventNotifier serviceEventNotifier;
-
-    private ServletEventNotifier servletEventNotifier;
-
-    @SuppressWarnings("deprecation")
-    private com.activegrid.runtime.AGRuntime runtime;
-
-    private InternalRuntime internalRuntime;
-
-    private RuntimeAccess runtimeAccess;
 
     public void setServiceManager(ServiceManager spm) {
         this.serviceManager = spm;

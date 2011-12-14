@@ -30,13 +30,16 @@ import com.wavemaker.common.WMRuntimeException;
 /**
  * @author Simon Toens
  */
-public class SystemUtils {
+public abstract class SystemUtils {
 
     private static final byte[] KEY = { 12, 7, 28, 127, 97, 69, 77, 122, 11 };
 
     private static final String ENCRYPTED_PREFIX = "wm_-+";
 
     private static final String ENCRYPTED_SUFFIX = "==wm-_";
+
+    private SystemUtils() {
+    }
 
     public static String encrypt(String s) {
         s = ENCRYPTED_PREFIX + s + ENCRYPTED_SUFFIX;
@@ -256,10 +259,6 @@ public class SystemUtils {
         } catch (UnknownHostException ex) {
             return "127.0.0.1";
         }
-    }
-
-    private SystemUtils() {
-        throw new UnsupportedOperationException();
     }
 
     public static boolean isLinux() {

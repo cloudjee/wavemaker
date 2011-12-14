@@ -25,7 +25,7 @@ import com.wavemaker.tools.project.VersionInfo;
 /**
  * Main configuration storage interface for WaveMaker. Wraps {@link Preferences} in a system-independent manner.
  * 
- * Also adds versioning to preferences. When a preference is marked as "versioned", the follow behaviour is used.
+ * Also adds versioning to preferences. When a preference is marked as "versioned", the follow behavior is used.
  * 
  * The version information from {@link LocalStudioConfiguration#getCurrentVersionInfo()} is used. When writing:
  * 

@@ -24,7 +24,7 @@ import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.data.ExternalDataModelConfig;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
-import com.wavemaker.tools.data.salesforce.DataServiceGenerator_SF;
+import com.wavemaker.tools.data.salesforce.SalesForceDataServiceGenerator;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.ServiceDefinitionFactory;
 import com.wavemaker.tools.service.ServiceGeneratorFactory;
@@ -70,7 +70,7 @@ public class DataServiceDefinitionFactory implements ServiceDefinitionFactory, S
 
         if (def instanceof DataServiceDefinition) {
             if (def.getServiceId().equals(CommonConstants.SALESFORCE_SERVICE)) {
-                return new DataServiceGenerator_SF(cfg);
+                return new SalesForceDataServiceGenerator(cfg);
             } else {
                 return new DataServiceGenerator(cfg);
             }
@@ -90,7 +90,7 @@ public class DataServiceDefinitionFactory implements ServiceDefinitionFactory, S
 
             rtn = new DataServiceDefinition(serviceId, externalConfig, serviceMgr, f);
 
-            if (!rtn.getDataModelConfiguration().isKnownConfiguration() && !serviceId.equals(CommonConstants.SALESFORCE_SERVICE)) { // salesforce
+            if (!rtn.getDataModelConfiguration().isKnownConfiguration() && !serviceId.equals(CommonConstants.SALESFORCE_SERVICE)) {
                 rtn.dispose();
                 return null;
             }

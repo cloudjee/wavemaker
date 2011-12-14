@@ -27,12 +27,11 @@ import org.springframework.core.io.Resource;
  * 
  * @author Simon Toens
  */
-public class SpringUtils {
+public abstract class SpringUtils {
 
     public static final String VALUE_ELEMENT = "value";
 
     private SpringUtils() {
-        throw new UnsupportedOperationException();
     }
 
     public static Object getRuntimeBean(File webAppRoot, String beanName) {

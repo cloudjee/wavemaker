@@ -14,7 +14,6 @@
 
 package com.wavemaker.tools.common;
 
-import com.wavemaker.common.LoggingInitializer;
 import com.wavemaker.common.util.SpringUtils;
 
 /**
@@ -31,8 +30,6 @@ public class Bootstrap {
         if (hasRun) {
             return;
         }
-
-        LoggingInitializer.initProdLogging();
 
         SpringUtils.initSpringConfig();
 

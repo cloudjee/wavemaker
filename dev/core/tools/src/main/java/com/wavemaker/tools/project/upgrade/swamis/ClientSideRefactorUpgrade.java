@@ -38,6 +38,10 @@ public class ClientSideRefactorUpgrade implements UpgradeTask {
 
     public static final String BACKUP_EXT = "bak";
 
+    private PagesManager pagesManager;
+
+    protected final Pattern expressionPattern = Pattern.compile("(expression:\\s*\")(.*?)(\")");
+
     public final Pattern panePagePattern = Pattern.compile("((?:operation|type):\\s*\")gotoPanePage(.*?\")", Pattern.DOTALL);
 
     public final String panePageReplaceStr = "$1gotoPageContainerPage$2";
@@ -49,8 +53,6 @@ public class ClientSideRefactorUpgrade implements UpgradeTask {
     public final Pattern serviceInputVariablePattern = Pattern.compile("(\\[\"wm.ServiceVariable\"[^\\]]*?\\[\")wm.Variable(\")", Pattern.DOTALL);
 
     public final String serviceInputVariableReplaceStr = "$1wm.ServiceInputVariable$2";
-
-    protected final Pattern expressionPattern = Pattern.compile("(expression:\\s*\")(.*?)(\")");
 
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
@@ -251,9 +253,6 @@ public class ClientSideRefactorUpgrade implements UpgradeTask {
 
         return start;
     }
-
-    // bean properties
-    private PagesManager pagesManager;
 
     public PagesManager getPagesManager() {
         return this.pagesManager;

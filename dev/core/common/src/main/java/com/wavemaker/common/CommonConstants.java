@@ -17,7 +17,7 @@ package com.wavemaker.common;
 /**
  * @author Matt Small
  */
-public class CommonConstants {
+public abstract class CommonConstants {
 
     public static final String WM_SYSTEM_PROPERTY_PREFIX = "wm.";
 
@@ -37,11 +37,10 @@ public class CommonConstants {
 
     public static final String DEPLOYMENT_TARGETS_XML = "deploymentTargets.xml";
 
-    public static final String SALESFORCE_SERVICE = "salesforceService"; // salesforce
+    public static final String SALESFORCE_SERVICE = "salesforceService";
 
-    public static final String SFLOGIN_SERVICE = "loginService"; // salesforce
+    public static final String SFLOGIN_SERVICE = "loginService";
 
     private CommonConstants() {
-        throw new UnsupportedOperationException();
     }
 }

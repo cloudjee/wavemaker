@@ -107,7 +107,7 @@ public class DesignServiceManager {
 
     public static final String RUNTIME_DATA_SERVICE_ID = "waveMakerService";
 
-    private DataModelConfiguration cfg; // salesforce
+    private DataModelConfiguration cfg;// salesforce
 
     private ProjectCompiler projectCompiler;
 
@@ -305,12 +305,12 @@ public class DesignServiceManager {
         this.deploymentManager.testRunClean();
     }
 
-    public void defineService(ServiceDefinition serviceDef, DataModelConfiguration cfg, String username, String password) { // salesforce
+    public void defineService(ServiceDefinition serviceDef, DataModelConfiguration cfg, String username, String password) {
         this.cfg = cfg;
         defineService(serviceDef, username, password);
     }
 
-    public void defineService(ServiceDefinition serviceDef) { // salesforce
+    public void defineService(ServiceDefinition serviceDef) {// salesforce
         defineService(serviceDef, null, null);
     }
 
@@ -369,7 +369,7 @@ public class DesignServiceManager {
         // TODO: Skipping salesforce setup when null is passed in for username
         // is not good programming practice.
         // TODO: The logic has to be rewritten later when we have time.
-        if (svcId.equals(CommonConstants.SALESFORCE_SERVICE) && username != null) { // salesforce
+        if (svcId.equals(CommonConstants.SALESFORCE_SERVICE) && username != null) {// salesforce
             SalesforceHelper.setupSalesforceSrc(this.projectManager, username, password);
         }
 
@@ -602,7 +602,7 @@ public class DesignServiceManager {
         return ret;
     }
 
-    public SortedSet<Service> getServicesByType(String[] types) { // salesforce
+    public SortedSet<Service> getServicesByType(String[] types) {// salesforce
 
         SortedSet<Service> services = getServices();
         SortedSet<Service> ret = new TreeSet<Service>(new ServiceComparator());
@@ -721,12 +721,12 @@ public class DesignServiceManager {
         ConfigurationCompiler.generateSMDs(project, services);
 
         // For dsalesforce, add an additional smd for loginService
-        Service svc = services.first(); // salesforce-s
+        Service svc = services.first();
         if (svc.getId().equals(CommonConstants.SALESFORCE_SERVICE)) {
             SortedSet<Service> svcs = new TreeSet<Service>();
             svcs.add(getCurrentServiceDefinition(CommonConstants.SFLOGIN_SERVICE));
             ConfigurationCompiler.generateSMDs(project, svcs);
-        } // salesforce-e
+        }
 
         ConfigurationCompiler.generateTypes(project, ConfigurationCompiler.getTypesFile(project), allServices, getPrimitiveDataObjects());
     }
@@ -741,7 +741,7 @@ public class DesignServiceManager {
      * @param service
      * @param serviceDef
      */
-    public void updateServiceTypes(Service service, ServiceDefinition serviceDef, String username, String password) { // salesforce
+    public void updateServiceTypes(Service service, ServiceDefinition serviceDef, String username, String password) {// salesforce
 
         if (service.getDataobjects() == null) {
             service.setDataobjects(new DataObjects());
@@ -788,7 +788,7 @@ public class DesignServiceManager {
                     }
                     e.setIsList(entry.getValue().getDimensions() > 0);
                     e.setAllowNull(entry.getValue().isAllowNull());
-                    e.setSubType(entry.getValue().getSubType()); // salesforce
+                    e.setSubType(entry.getValue().getSubType());// salesforce
 
                     for (OperationEnumeration oe : entry.getValue().getRequire()) {
                         e.getRequire().add(oe);
@@ -1070,7 +1070,7 @@ public class DesignServiceManager {
         Resource serviceDefFile = getServiceDefXml(serviceId);
         Service service = getCurrentServiceDefinition(serviceId);
 
-        Service oldService = null; // salesforce-s
+        Service oldService = null;
         if (serviceId.equals(CommonConstants.SALESFORCE_SERVICE)) {
             // For salesforceService, we need to retain service definitions in
             // the old service definition file.
@@ -1097,8 +1097,7 @@ public class DesignServiceManager {
                 service.setType(oldService.getType());
                 service.setCRUDService(oldService.getCRUDService());
             }
-        } // salesforce-e
-
+        }// salesforce
         try {
             Marshaller marshaller = definitionsContext.createMarshaller();
             marshaller.setProperty("jaxb.formatted.output", true);
@@ -1108,7 +1107,7 @@ public class DesignServiceManager {
         }
     }
 
-    private boolean isDeletedQuery(Operation op) { // salesforce
+    private boolean isDeletedQuery(Operation op) {
         Collection<String> deletedSFQueries = this.cfg.getDeletedSFQueries();
         for (String opn : deletedSFQueries) {
             if (op.getName().equals(opn)) {
@@ -1118,7 +1117,7 @@ public class DesignServiceManager {
         return false;
     }
 
-    private boolean isDeletedSFDataObject(DataObject obj) { // salesforce
+    private boolean isDeletedSFDataObject(DataObject obj) {// salesforce
         Collection<String> deletedSFDataObjects = this.cfg.getDeletedSFDataObjects();
         for (String name : deletedSFDataObjects) {
             String src = StringUtils.classNameToSrcFilePath(obj.getJavaType());
@@ -1169,7 +1168,7 @@ public class DesignServiceManager {
         return this.designServiceTypes;
     }
 
-    public JAXBContext getDefinitionsContext() { // salesforce
+    public JAXBContext getDefinitionsContext() {// salesforce
         return definitionsContext;
     }
 

@@ -50,6 +50,8 @@ public class ModuleController extends AbstractController {
 
     public static final String ID_PATH = "id";
 
+    private ModuleManager moduleManager;
+
     protected Tuple.Two<ModuleWire, String> parseRequestPath(String requestURI) {
 
         final String prefixEP = "/" + MODULES_PREFIX + "/" + EXTENSION_PATH + "/";
@@ -185,9 +187,6 @@ public class ModuleController extends AbstractController {
 
         return null;
     }
-
-    // bean properties
-    private ModuleManager moduleManager;
 
     public void setModuleManager(ModuleManager moduleManager) {
         this.moduleManager = moduleManager;

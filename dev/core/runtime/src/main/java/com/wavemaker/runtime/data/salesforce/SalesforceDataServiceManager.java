@@ -169,7 +169,7 @@ public class SalesforceDataServiceManager implements DataServiceManager {
     }
 
     private static DataServiceMetaData initMetaData(String configurationName, final Map<String, String> properties) {
-        final DataServiceMetaData rtn = new DataServiceMetaData_SF(configurationName, properties);
+        final DataServiceMetaData rtn = new SalesForceDataServiceMetaData(configurationName, properties);
 
         rtn.init(configurationName);
 

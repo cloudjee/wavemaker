@@ -40,7 +40,7 @@ public class SforceService {
     public SforceService() throws Exception {
         SforceServiceClient sforceServiceClient;
         try {
-            URL wsdlLocation = new ClassPathResource("com/wavemaker/runtime/ws/salesforce/partner.wsdl").getURL(); // salesforce
+            URL wsdlLocation = new ClassPathResource("com/wavemaker/runtime/ws/salesforce/partner.wsdl").getURL();
             sforceServiceClient = new SforceServiceClient(wsdlLocation, this.sforceServiceQName);
         } catch (IOException e) {
             sforceServiceClient = new SforceServiceClient();

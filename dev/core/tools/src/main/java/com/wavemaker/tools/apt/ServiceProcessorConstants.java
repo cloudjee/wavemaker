@@ -14,7 +14,7 @@
 
 package com.wavemaker.tools.apt;
 
-public final class ServiceProcessorConstants {
+public abstract class ServiceProcessorConstants {
 
     public static final String PROJECT_NAME_PROP = "projectName";
 

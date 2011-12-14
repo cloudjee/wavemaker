@@ -50,7 +50,7 @@ public class WMAppContext {
 
     private HashMap<String, ProjectInfo> hm;
 
-    ServletContext context;
+    private ServletContext context;
 
     private String appName;
 
@@ -58,7 +58,7 @@ public class WMAppContext {
 
     private static HashMap<String, String> userNameMap = new HashMap<String, String>();
 
-    private JSONObject typesObj; // salesforce
+    private JSONObject typesObj;
 
     private final CloudEnvironment cloudEnvironment = new CloudEnvironment();
 
@@ -251,11 +251,11 @@ public class WMAppContext {
         return this.context.getRealPath("");
     }
 
-    public JSONObject getTypesObject() { // salesforce
+    public JSONObject getTypesObject() {
         return this.typesObj;
     }
 
-    public void setTypesObject(JSONObject val) { // salesforce
+    public void setTypesObject(JSONObject val) {
         this.typesObj = val;
     }
 

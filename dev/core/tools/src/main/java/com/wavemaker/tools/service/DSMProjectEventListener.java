@@ -25,6 +25,8 @@ import com.wavemaker.tools.service.definitions.Service;
  */
 public class DSMProjectEventListener implements ProjectEventListener {
 
+    private DesignServiceManager designServiceManager;
+
     @Override
     public void closeProject(Project p) {
 
@@ -36,9 +38,6 @@ public class DSMProjectEventListener implements ProjectEventListener {
     public void openProject(Project p) {
         // do nothing
     }
-
-    // bean properties
-    private DesignServiceManager designServiceManager;
 
     public DesignServiceManager getDesignServiceManager() {
         return this.designServiceManager;
