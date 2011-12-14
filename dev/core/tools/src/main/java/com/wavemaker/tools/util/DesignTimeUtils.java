@@ -127,7 +127,7 @@ public class DesignTimeUtils {
 
                 return dsm;
             } finally {
-                if (null != oldProp) {
+                if (oldProp != null) {
                     setDefaultProjectHome(oldProp);
                 } else {
                     deleteDefaultProjectHomeProp();

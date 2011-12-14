@@ -78,7 +78,7 @@ public class EventWireUpgradeTask implements UpgradeTask {
                 Bean serviceWire = serviceWireBeans.get(0);
 
                 String id;
-                if (null != serviceWire.getId()) {
+                if (serviceWire.getId() != null) {
                     id = serviceWire.getId();
                 } else {
                     changed = true;
@@ -103,7 +103,7 @@ public class EventWireUpgradeTask implements UpgradeTask {
                         changed = true;
                     }
 
-                    if (null == bean.getProperty("serviceWire")) {
+                    if (bean.getProperty("serviceWire") == null) {
                         Property p = new Property();
                         p.setName("serviceWire");
                         p.setRef(id);

@@ -116,7 +116,7 @@ public class ServerUtils {
     public static String readInput(HttpServletRequest request) throws IOException {
 
         InputStream is = request.getInputStream();
-        if (null == is) {
+        if (is == null) {
             throw new WMRuntimeException("no input stream found in request");
         }
 
@@ -157,7 +157,7 @@ public class ServerUtils {
         for (int i = 0; i < numParams; i++) {
             String paramName = null;
 
-            if (null == paramName) {
+            if (paramName == null) {
                 for (Annotation ann : paramAnnotations[i]) {
                     if (paramNameClass.isAssignableFrom(ann.annotationType())) {
                         try {
@@ -178,11 +178,11 @@ public class ServerUtils {
                 }
             }
 
-            if (null == paramName && null != methodParameterNames) {
+            if (paramName == null && methodParameterNames != null) {
                 paramName = methodParameterNames[i];
             }
 
-            if (null == paramName) {
+            if (paramName == null) {
                 logger.warn("no parameter name information for parameter " + i + ", method: " + method.getName());
                 paramName = "arg-" + (i + 1);
             }
@@ -210,7 +210,7 @@ public class ServerUtils {
                 }
             }
         }
-        if (null == method) {
+        if (method == null) {
             throw new WMRuntimeException(MessageResource.SERVER_NOMETHODORID, params);
         }
         params.remove(ServerConstants.METHOD);
@@ -244,7 +244,7 @@ public class ServerUtils {
         for (Map.Entry<?, ?> e : entries) {
             String key = (String) e.getKey();
             Object[] value = (Object[]) e.getValue();
-            if (null == params.get(key)) {
+            if (params.get(key) == null) {
                 params.put(key, (Object[]) e.getValue());
             } else {
                 Object[] newArray = new Object[value.length + params.get(key).length];
@@ -274,7 +274,7 @@ public class ServerUtils {
 
                 for (Object arg : args.getArguments()) {
                     logMessage.append(arg);
-                    if (null != arg) {
+                    if (arg != null) {
                         logMessage.append(" (" + arg.getClass() + ")");
                     }
                     logMessage.append(", ");
@@ -360,15 +360,15 @@ public class ServerUtils {
         Class<Annotation> hideFromClient = (Class<Annotation>) ClassLoaderUtils.loadClass(HideFromClient.class.getCanonicalName(), cl);
         Class<Annotation> exposeToClient = (Class<Annotation>) ClassLoaderUtils.loadClass(ExposeToClient.class.getCanonicalName(), cl);
 
-        if (null != klass.getAnnotation(hideFromClient)) {
+        if (klass.getAnnotation(hideFromClient) != null) {
             for (Method meth : allMethods) {
-                if (null != meth.getAnnotation(exposeToClient)) {
+                if (meth.getAnnotation(exposeToClient) != null) {
                     ret.add(meth);
                 }
             }
         } else {
             for (Method meth : allMethods) {
-                if (null == meth.getAnnotation(hideFromClient)) {
+                if (meth.getAnnotation(hideFromClient) == null) {
                     ret.add(meth);
                 }
             }

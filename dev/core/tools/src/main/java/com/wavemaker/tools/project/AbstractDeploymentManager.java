@@ -114,7 +114,7 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
 
     protected Resource getProjectDir() {
         Project currentProject = this.projectManager.getCurrentProject();
-        if (null == currentProject) {
+        if (currentProject == null) {
             throw new WMRuntimeException("Current project must be set");
         }
         return currentProject.getProjectRoot();

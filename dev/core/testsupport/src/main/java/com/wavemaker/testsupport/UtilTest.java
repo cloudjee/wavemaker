@@ -62,7 +62,7 @@ public class UtilTest {
 
     public static void unlockSemaphore(String semaphoreLock) throws Exception {
 
-        if (null == semaphoreLock) {
+        if (semaphoreLock == null) {
             throw new NullArgumentException("semaphoreLock");
         }
 

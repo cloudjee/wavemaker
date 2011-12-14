@@ -40,7 +40,7 @@ public class InternalRuntime {
      */
     public static InternalRuntime getInstance() {
 
-        if (null == InternalRuntime.internalRuntime) {
+        if (InternalRuntime.internalRuntime == null) {
             throw new WMRuntimeException(MessageResource.RUNTIME_UNINITIALIZED);
         }
 

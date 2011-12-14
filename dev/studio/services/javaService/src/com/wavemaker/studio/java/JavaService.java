@@ -56,7 +56,7 @@ public class JavaService {
         Writer classFileWriter = getProjectManager().getCurrentProject().getWriter(classFile);
         BufferedWriter bw = new BufferedWriter(classFileWriter);
 
-        if (null != packageName) {
+        if (packageName != null) {
             bw.write("package " + packageName + ";");
             bw.newLine();
             bw.newLine();

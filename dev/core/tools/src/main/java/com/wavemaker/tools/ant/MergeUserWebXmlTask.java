@@ -47,7 +47,7 @@ public class MergeUserWebXmlTask extends Task {
 
     @Override
     public void execute() {
-        if (null == this.workdir) {
+        if (this.workdir == null) {
             throw new IllegalArgumentException("private String workDir; is not set");
         }
 

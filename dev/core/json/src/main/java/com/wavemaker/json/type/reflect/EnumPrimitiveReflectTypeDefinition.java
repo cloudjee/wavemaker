@@ -32,7 +32,7 @@ public class EnumPrimitiveReflectTypeDefinition extends PrimitiveReflectTypeDefi
 
         Object ret = fromStringValue((Class<Enum>) klass, (String) super.newInstance(args[0], String.class));
 
-        if (null == ret) {
+        if (ret == null) {
             ret = Enum.valueOf((Class<Enum>) klass, (String) super.newInstance(args[0], String.class));
         }
 

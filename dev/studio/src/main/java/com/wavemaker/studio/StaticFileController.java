@@ -141,11 +141,11 @@ public final class StaticFileController extends AbstractController {
             throw new WMRuntimeException(MessageResource.STUDIO_UNKNOWN_LOCATION, reqPath, request.getRequestURI());
         }
 
-        if (null != sendFile && !sendFile.exists()) {
+        if (sendFile != null && !sendFile.exists()) {
             handleError(response, "File " + reqPath + " not found in expected path: " + sendFile, HttpServletResponse.SC_NOT_FOUND);
-        } else if (null != sendFile && StringUtils.getFilenameExtension(sendFile.getFilename()) == null) {
+        } else if (sendFile != null && StringUtils.getFilenameExtension(sendFile.getFilename()) == null) {
             handleDirectoryList(sendFile, request.getRequestURL().toString(), response);
-        } else if (null != sendFile) {
+        } else if (sendFile != null) {
             if (addExpiresTag) {
                 // setting cache expire to one year.
                 setCacheExpireDate(response, 365 * 24 * 60 * 60);

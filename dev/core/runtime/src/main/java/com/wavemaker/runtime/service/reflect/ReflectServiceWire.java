@@ -53,7 +53,7 @@ public class ReflectServiceWire implements ServiceWire, ApplicationContextAware 
      * @return Gets the service bean associated with this ReflectServiceWire's service id.
      */
     public Object getServiceBean() {
-        if (null != this.serviceBean) {
+        if (this.serviceBean != null) {
             return this.serviceBean;
         } else {
             Object bean = this.applicationContext.getBean(getServiceId());

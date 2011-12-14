@@ -428,7 +428,7 @@ public class Adventure implements DataServiceManagerAccess {
         return this.ds;
     }
 
-    public final static void main(String[] args) {
+    public static final void main(String[] args) {
         String cfg = "adventure.spring.xml";
         String beanName = "adventure";
         Adventure s = (Adventure) SpringUtils.getBean(cfg, beanName);

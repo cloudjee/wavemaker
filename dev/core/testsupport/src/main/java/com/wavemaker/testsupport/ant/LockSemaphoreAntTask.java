@@ -28,9 +28,9 @@ public class LockSemaphoreAntTask extends Task {
     @Override
     public void execute() throws BuildException {
 
-        if (null == this.semaphoreName) {
+        if (this.semaphoreName == null) {
             throw new BuildException("semaphoreName parameter must be set");
-        } else if (null == this.propName) {
+        } else if (this.propName == null) {
             throw new BuildException("propName parameter must be set");
         }
 

@@ -2402,7 +2402,7 @@ public class DB2Sample implements DataServiceManagerAccess {
         this.taskMgr = taskMgr;
     }
 
-    public final static void main(String[] args) {
+    public static final void main(String[] args) {
         String cfg = "db2sample.spring.xml";
         String beanName = "db2sample";
         com.wavemaker.runtime.data.sample.db2sampledb.DB2Sample s = (com.wavemaker.runtime.data.sample.db2sampledb.DB2Sample) SpringUtils.getBean(

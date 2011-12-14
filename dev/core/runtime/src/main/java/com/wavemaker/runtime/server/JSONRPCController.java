@@ -52,10 +52,9 @@ public class JSONRPCController extends ControllerBase {
         ModelAndView ret = null;
         String method = null;
         JSONArray params = null;
-        // int callId = -1;
 
         String input;
-        if (0 == request.getContentLength() || null == request.getInputStream()) {
+        if (request.getContentLength() == 0 || request.getInputStream() == null) {
             input = "";
         } else {
             input = ServerUtils.readInput(request);
@@ -67,21 +66,20 @@ public class JSONRPCController extends ControllerBase {
 
         JSONObject jsonReq = (JSONObject) JSONUnmarshaller.unmarshal(input, getInternalRuntime().getJSONState());
 
-        if (null == jsonReq) {
+        if (jsonReq == null) {
             throw new WMRuntimeException(MessageResource.FAILED_TO_PARSE_REQUEST, input);
         } else if (!jsonReq.containsKey(ServerConstants.METHOD) || !jsonReq.containsKey(ServerConstants.ID)) {
             throw new WMRuntimeException(MessageResource.SERVER_NOMETHODORID, input);
         }
 
         method = (String) jsonReq.get(ServerConstants.METHOD);
-        // callId = jsonReq.getInt("id");
         params = null;
         if (jsonReq.containsKey(ServerConstants.PARAMETERS)) {
             Object rawParams = jsonReq.get(ServerConstants.PARAMETERS);
 
             if (rawParams instanceof JSONArray) {
                 params = (JSONArray) rawParams;
-            } else if (null == rawParams) {
+            } else if (rawParams == null) {
                 params = new JSONArray();
             } else if (rawParams instanceof JSONObject) {
                 JSONObject tjo = (JSONObject) rawParams;
@@ -105,7 +103,7 @@ public class JSONRPCController extends ControllerBase {
         }
 
         ServiceWire sw = this.getServiceManager().getServiceWire(serviceName);
-        if (null == sw) {
+        if (sw == null) {
             throw new WMRuntimeException(MessageResource.NO_SERVICEWIRE, serviceName);
         }
         TypedServiceReturn reflInvokeRef = invokeMethod(sw, method, params, null);

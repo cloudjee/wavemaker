@@ -66,7 +66,7 @@ public class AGRuntime {
      */
     public static AGRuntime getInstance() {
 
-        if (null == AGRuntime.staticRuntime) {
+        if (AGRuntime.staticRuntime == null) {
             throw new WMRuntimeException("AGRuntime uninitialized; request init failed.");
         }
 

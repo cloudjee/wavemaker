@@ -210,8 +210,7 @@ public class ResourceFileService {
         Resource resourceDir = this.getResourcesDir();
         Hashtable<String, Object> P = new Hashtable<String, Object>();
         try {
-            P.put("files",
-                com.wavemaker.tools.project.ResourceManager.getListing(this.fileSystem, resourceDir));
+            P.put("files", com.wavemaker.tools.project.ResourceManager.getListing(this.fileSystem, resourceDir));
         } catch (Exception e) {
             throw new WMRuntimeException(e);
         }
@@ -227,7 +226,7 @@ public class ResourceFileService {
 
             Hashtable P = new Hashtable();
             P.put("files", com.wavemaker.tools.project.ResourceManager.getListing(this.fileSystem, folder));
-	    
+
             P.put("file", folder.getFilename());
             P.put("type", "folder");
             return P;

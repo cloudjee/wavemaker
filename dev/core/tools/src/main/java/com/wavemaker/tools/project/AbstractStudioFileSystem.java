@@ -66,7 +66,7 @@ public abstract class AbstractStudioFileSystem implements StudioFileSystem, Serv
         } else {
             projectsProp = System.getProperty(PROJECTHOME_PROP_KEY, null);
         }
-        if (null != projectsProp && 0 != projectsProp.length()) {
+        if (projectsProp != null && 0 != projectsProp.length()) {
             projectsProp = projectsProp.endsWith("/") ? projectsProp : projectsProp + "/";
             return createResource(projectsProp);
         }

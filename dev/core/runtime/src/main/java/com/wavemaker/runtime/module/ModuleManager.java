@@ -138,7 +138,7 @@ public class ModuleManager {
             throw new WMRuntimeException(e);
         }
 
-        if (null == ur) {
+        if (ur == null) {
             throw new WMRuntimeException(MessageResource.MODULE_NOT_FOUND, moduleWire.getName(), moduleWire);
         } else if (this.moduleLocations.containsKey(moduleWire.getName())) {
             if (this.moduleLocations.get(moduleWire.getName()).v1.equals(ur)) {
@@ -217,7 +217,7 @@ public class ModuleManager {
     protected File getModuleRoot(String name) throws MalformedURLException, FileNotFoundException {
 
         Tuple.Two<URL, ModuleWire> tuple = this.moduleLocations.get(name);
-        if (null == tuple) {
+        if (tuple == null) {
             throw new WMRuntimeException(MessageResource.MODULE_UNINITIALIZED, name);
         }
 
@@ -239,7 +239,7 @@ public class ModuleManager {
     protected URL findModuleLocation(String moduleName) throws IOException, JAXBException {
 
         PathMatchingResourcePatternResolver searcher;
-        if (null == this.classLoader) {
+        if (this.classLoader == null) {
             searcher = new PathMatchingResourcePatternResolver();
         } else {
             searcher = new PathMatchingResourcePatternResolver(this.classLoader);
@@ -256,18 +256,18 @@ public class ModuleManager {
 
                     PropertyValue val = props.getPropertyValue("name");
                     String name;
-                    if (null == val) {
+                    if (val == null) {
                         throw new WMRuntimeException(MessageResource.MODULEWIRE_MISSING_NAME, ur);
-                    } else if (null != val.getConvertedValue()) {
+                    } else if (val.getConvertedValue() != null) {
                         name = (String) val.getConvertedValue();
                     } else if (val.getValue() instanceof TypedStringValue) {
                         name = ((TypedStringValue) val.getValue()).getValue();
                     } else {
                         throw new WMRuntimeException(MessageResource.MODULE_BAD_NAME, val.getValue(),
-                            null != val.getValue() ? val.getValue().getClass() : null, ur);
+                            val.getValue() != null ? val.getValue().getClass() : null, ur);
                     }
 
-                    if (null == name || "".equals(name)) {
+                    if (name == null || "".equals(name)) {
                         throw new WMRuntimeException(MessageResource.MODULEWIRE_MISSING_NAME, ur);
                     }
 

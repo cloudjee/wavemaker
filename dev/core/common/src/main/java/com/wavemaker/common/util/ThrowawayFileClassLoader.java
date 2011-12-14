@@ -52,9 +52,9 @@ public class ThrowawayFileClassLoader extends ClassLoader {
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
 
-        if (null == this.classPath) {
+        if (this.classPath == null) {
             throw new ClassNotFoundException("invalid search root: " + this.classPath);
-        } else if (null == name) {
+        } else if (name == null) {
             throw new ClassNotFoundException(MessageResource.NULL_CLASS.getMessage());
         }
 
@@ -70,7 +70,7 @@ public class ThrowawayFileClassLoader extends ClassLoader {
                     jarFile = new JarFile(entry.getFile());
                     ZipEntry ze = jarFile.getEntry(classNamePath);
 
-                    if (null != ze) {
+                    if (ze != null) {
                         is = jarFile.getInputStream(ze);
                         break;
                     } else {
@@ -86,12 +86,12 @@ public class ThrowawayFileClassLoader extends ClassLoader {
                 }
             }
 
-            if (null != is) {
+            if (is != null) {
                 try {
                     fileBytes = IOUtils.toByteArray(is);
                     is.close();
                 } finally {
-                    if (null != jarFile) {
+                    if (jarFile != null) {
                         jarFile.close();
                     }
                 }
@@ -102,19 +102,19 @@ public class ThrowawayFileClassLoader extends ClassLoader {
 
         if (name.contains(".")) {
             String packageName = name.substring(0, name.lastIndexOf('.'));
-            if (null == getPackage(packageName)) {
+            if (getPackage(packageName) == null) {
                 definePackage(packageName, "", "", "", "", "", "", null);
             }
         }
 
         Class<?> ret;
-        if (null == fileBytes) {
+        if (fileBytes == null) {
             ret = ClassLoaderUtils.loadClass(name, this.parentClassLoader);
         } else {
             ret = defineClass(name, fileBytes, 0, fileBytes.length);
         }
 
-        if (null == ret) {
+        if (ret == null) {
             throw new ClassNotFoundException("Couldn't find class " + name + " in expected classpath: " + this.classPath);
         }
 
@@ -134,7 +134,7 @@ public class ThrowawayFileClassLoader extends ClassLoader {
                     ZipEntry ze = jarFile.getEntry(name);
                     jarFile.close();
 
-                    if (null != ze) {
+                    if (ze != null) {
                         ret = new URL("jar:" + entry.getURL() + "!/" + name);
                         break;
                     }
@@ -156,7 +156,7 @@ public class ThrowawayFileClassLoader extends ClassLoader {
     @Override
     public InputStream getResourceAsStream(String name) {
         URL url = getResource(name);
-        if (null == url) {
+        if (url == null) {
             return null;
         }
 
@@ -167,7 +167,7 @@ public class ThrowawayFileClassLoader extends ClassLoader {
                 is = url.openStream();
                 b = IOUtils.toByteArray(is);
             } finally {
-                if (null != is) {
+                if (is != null) {
                     is.close();
                 }
                 url = null;

@@ -90,7 +90,7 @@ public class WebInfActiveGridUpgrade implements UpgradeTask {
             ret = "Removed com.activegrid references from " + StringUtils.join(changedFiles, ", ");
         }
         if (!regenedFiles.isEmpty()) {
-            if (null != ret) {
+            if (ret != null) {
                 ret += "\n";
             } else {
                 ret = "";

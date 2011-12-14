@@ -102,8 +102,8 @@ public class RuntimeService {
 
         JSONState jc = getInternalRuntime().getJSONState();
         jc.setTrimStackLevel(1);
-        if (null != getInternalRuntime() && null != jc && null != jc.getRequiredProperties() && null != propertyOptions
-            && null != propertyOptions.getProperties()) {
+        if (getInternalRuntime() != null && jc != null && jc.getRequiredProperties() != null && propertyOptions != null
+            && propertyOptions.getProperties() != null) {
 
             List<String> jcProperties = jc.getRequiredProperties();
             for (String property : propertyOptions.getProperties()) {
@@ -214,7 +214,7 @@ public class RuntimeService {
         ServiceWire serviceWire = null;
         Exception enclosedException = null;
 
-        if (null != serviceName && 0 != serviceName.length()) {
+        if (serviceName != null && 0 != serviceName.length()) {
             serviceWire = this.serviceManager.getServiceWire(serviceName);
         } else {
             try {
@@ -227,9 +227,9 @@ public class RuntimeService {
             }
         }
 
-        if (null == serviceWire && null == enclosedException) {
+        if (serviceWire == null && enclosedException == null) {
             throw new WMRuntimeException(MessageResource.NO_SERVICE_FROM_ID_TYPE, serviceName, typeName);
-        } else if (null == serviceWire) {
+        } else if (serviceWire == null) {
             throw new WMRuntimeException(MessageResource.NO_SERVICE_FROM_ID_TYPE, enclosedException, serviceName, typeName);
         }
 

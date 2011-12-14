@@ -279,7 +279,7 @@ public class Orahr implements DataServiceManagerAccess {
         return this.ds;
     }
 
-    public final static void main(String[] args) {
+    public static final void main(String[] args) {
         String cfg = "orahr.spring.xml";
         String beanName = "orahr";
         Orahr s = (Orahr) SpringUtils.getBean(cfg, beanName);

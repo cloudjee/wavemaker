@@ -27,7 +27,7 @@ public class UnlockSemaphoreAntTask extends Task {
     @Override
     public void execute() throws BuildException {
 
-        if (null == this.semaphoreReturn) {
+        if (this.semaphoreReturn == null) {
             throw new BuildException("semaphoreReturn parameter must be set");
         }
 

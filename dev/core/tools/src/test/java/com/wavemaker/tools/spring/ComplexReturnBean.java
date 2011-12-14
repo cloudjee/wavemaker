@@ -276,7 +276,7 @@ public class ComplexReturnBean {
         return EXTENDED_CHARS_TEST_STR;
     }
 
-    public final static String EXTENDED_CHARS_TEST_STR = "おはよございます école école école";
+    public static final String EXTENDED_CHARS_TEST_STR = "おはよございます école école école";
 
     // MAV-879
     public static String checkSetterList(HasArray hasArray, BeanClass bc) {

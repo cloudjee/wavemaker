@@ -365,11 +365,11 @@ public class jsonLexer extends Lexer {
 
                 }
 
-                String retStr = (null != MINUS1 ? MINUS1 != null ? MINUS1.getText() : null : "") + (INT2 != null ? INT2.getText() : null);
-                if (null != FRAC3) {
+                String retStr = (MINUS1 != null ? MINUS1 != null ? MINUS1.getText() : null : "") + (INT2 != null ? INT2.getText() : null);
+                if (FRAC3 != null) {
                     retStr = retStr + (FRAC3 != null ? FRAC3.getText() : null);
                 }
-                if (null != EXP4) {
+                if (EXP4 != null) {
                     retStr = retStr + (EXP4 != null ? EXP4.getText() : null);
                 }
                 setText(retStr);

@@ -37,7 +37,7 @@ public abstract class AbstractWidgetsJSUpgradeTask implements UpgradeTask {
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
-        if (null == getPagesManager()) {
+        if (getPagesManager() == null) {
             throw new WMRuntimeException("No pagesManager in doUpgrade()");
         }
 

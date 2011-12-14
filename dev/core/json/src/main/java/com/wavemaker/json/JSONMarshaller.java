@@ -167,7 +167,7 @@ public final class JSONMarshaller {
         TypeState typeState = jsonState.getTypeState();
         FieldDefinition fieldDefinition;
 
-        if (null == obj) {
+        if (obj == null) {
             fieldDefinition = ReflectTypeUtils.getFieldDefinition((Type) null, typeState, false, null);
         } else {
             fieldDefinition = ReflectTypeUtils.getFieldDefinition(obj.getClass(), typeState, false, null);
@@ -206,32 +206,32 @@ public final class JSONMarshaller {
         Stack<Object> touchedObjects, Stack<String> propertyNames, FieldDefinition fieldDefinition, int arrayLevel, TypeState typeState,
         boolean prettyPrint, int level, Logger logger) throws IOException {
 
-        if (null == fieldDefinition) {
+        if (fieldDefinition == null) {
             throw new NullArgumentException("fieldDefinition");
         }
 
         touchedObjects.push(obj);
         try {
-            if (null != obj && null == fieldDefinition.getTypeDefinition()) {
+            if (obj != null && fieldDefinition.getTypeDefinition() == null) {
                 fieldDefinition = ReflectTypeUtils.getFieldDefinition(obj.getClass(), typeState, false, null);
                 arrayLevel = 0;
             }
 
             // do value conversion
-            if (null != js.getValueTransformer()) {
+            if (js.getValueTransformer() != null) {
                 Tuple.Three<Object, FieldDefinition, Integer> tuple = js.getValueTransformer().transformToJSON(obj, fieldDefinition, arrayLevel,
                     root, getPropertyName(propertyNames, js), js.getTypeState());
-                if (null != tuple) {
+                if (tuple != null) {
                     obj = tuple.v1;
                     fieldDefinition = tuple.v2;
                     arrayLevel = tuple.v3;
                 }
             }
 
-            if (arrayLevel == fieldDefinition.getDimensions() && null != fieldDefinition.getTypeDefinition()
+            if (arrayLevel == fieldDefinition.getDimensions() && fieldDefinition.getTypeDefinition() != null
                 && fieldDefinition.getTypeDefinition() instanceof WriteObjectConverter) {
                 ((WriteObjectConverter) fieldDefinition.getTypeDefinition()).writeObject(obj, root, getPropertyName(propertyNames, js), writer);
-            } else if (null == obj) {
+            } else if (obj == null) {
                 writer.write("null");
 
                 // handle arrays & Collections
@@ -284,7 +284,7 @@ public final class JSONMarshaller {
 
                 writer.write("]");
                 // check for primitives
-            } else if (null != fieldDefinition.getTypeDefinition() && fieldDefinition.getTypeDefinition() instanceof PrimitiveTypeDefinition) {
+            } else if (fieldDefinition.getTypeDefinition() != null && fieldDefinition.getTypeDefinition() instanceof PrimitiveTypeDefinition) {
                 ((PrimitiveTypeDefinition) fieldDefinition.getTypeDefinition()).toJson(writer, obj);
                 // handle maps & objects
             } else {
@@ -308,7 +308,7 @@ public final class JSONMarshaller {
         boolean sort, FieldDefinition fieldDefinition, int arrayLevel, TypeState typeState, boolean prettyPrint, int level, Logger logger)
         throws IOException {
 
-        if (null == fieldDefinition) {
+        if (fieldDefinition == null) {
             throw new NullArgumentException("fieldDefinition");
         }
 
@@ -326,7 +326,7 @@ public final class JSONMarshaller {
             for (Entry<?, ?> entry : entries == null ? ((Map<?, ?>) obj).entrySet() : entries) {
                 String key = (String) entry.getKey();
 
-                if (null != fieldDefinition.getTypeDefinition() && fieldDefinition.getTypeDefinition() instanceof MapTypeDefinition) {
+                if (fieldDefinition.getTypeDefinition() != null && fieldDefinition.getTypeDefinition() instanceof MapTypeDefinition) {
                     fieldDefinition = ((MapTypeDefinition) fieldDefinition.getTypeDefinition()).getValueFieldDefinition();
                 } else {
                     fieldDefinition = new GenericFieldDefinition();
@@ -376,7 +376,7 @@ public final class JSONMarshaller {
         Writer writer, Stack<Object> touchedObjects, Stack<String> propertyNames, boolean sort, FieldDefinition fieldDefinition, int arrayLevel,
         TypeState typeState, boolean prettyPrint, int level, Logger logger) throws IOException {
 
-        if (null == fieldDefinition) {
+        if (fieldDefinition == null) {
             throw new NullArgumentException("fieldDefinition");
         }
 
@@ -387,7 +387,7 @@ public final class JSONMarshaller {
                 return firstProperty;
             }
 
-            if (null != js.getPropertyFilter()) {
+            if (js.getPropertyFilter() != null) {
                 if (js.getPropertyFilter().filter(object, key, value)) {
                     return firstProperty;
                 }
@@ -456,7 +456,7 @@ public final class JSONMarshaller {
     private static boolean isCycle(Object obj, Stack<Object> touchedObjects, String propertyName, JSONState js) {
 
         boolean cycle = -1 != touchedObjects.search(obj);
-        if (cycle && null != js.getRequiredProperties() && js.getRequiredProperties().contains(propertyName)) {
+        if (cycle && js.getRequiredProperties() != null && js.getRequiredProperties().contains(propertyName)) {
             cycle = false;
         }
         return cycle;

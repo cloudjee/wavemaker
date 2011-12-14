@@ -117,7 +117,7 @@ public class ServiceManager implements ApplicationContextAware {
         ServiceWire ret = null;
         for (ServiceWire sw : this.serviceWires) {
             if (sw.getServiceId().equals(serviceId)) {
-                if (null == ret) {
+                if (ret == null) {
                     ret = sw;
                 } else {
                     throw new WMRuntimeException(MessageResource.SERVICEWIRE_ID_DUP, serviceId);
@@ -163,7 +163,7 @@ public class ServiceManager implements ApplicationContextAware {
 
     public void addServiceWire(ServiceWire serviceWire) {
 
-        if (null == getServiceWire(serviceWire.getServiceId())) {
+        if (getServiceWire(serviceWire.getServiceId()) == null) {
             this.logger.info("Adding ServiceWire " + serviceWire);
             this.serviceWires.add(serviceWire);
         } else {

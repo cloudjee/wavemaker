@@ -97,7 +97,7 @@ public class DataServiceUtils {
         }
     };
 
-    public final static Collection<String> RESERVED_WORDS = new HashSet<String>(1);
+    public static final Collection<String> RESERVED_WORDS = new HashSet<String>(1);
 
     static {
         RESERVED_WORDS.add(DataServiceConstants.DATA_PACKAGE_NAME);

@@ -55,7 +55,7 @@ public class TestLocalStudioConfiguration extends WMTestCase {
                 assertEquals(newWMHome, wmHome.getFilename());
 
             } finally {
-                if (null == oldWMHome) {
+                if (oldWMHome == null) {
                     Properties props = System.getProperties();
                     props.remove(LocalStudioFileSystem.WMHOME_PROP_KEY);
                     System.setProperties(props);
@@ -82,12 +82,12 @@ public class TestLocalStudioConfiguration extends WMTestCase {
                     LocalStudioFileSystem.setWaveMakerHome(new FileSystemResource(tempDir));
                     assertTrue(tempDir.exists());
                 } finally {
-                    if (null != tempDir && tempDir.exists()) {
+                    if (tempDir != null && tempDir.exists()) {
                         IOUtils.deleteRecursive(tempDir);
                     }
                 }
             } finally {
-                if (null == oldPref) {
+                if (oldPref == null) {
                     ConfigurationStore.removePreference(LocalStudioConfiguration.class, LocalStudioFileSystem.WMHOME_KEY);
                 } else {
                     LocalStudioFileSystem.setWaveMakerHome(new FileSystemResource(oldPref));
@@ -116,7 +116,7 @@ public class TestLocalStudioConfiguration extends WMTestCase {
                 Resource commonSvn = sf.getCommonDir().createRelative(".svn/");
                 assertFalse(commonSvn.exists());
             } finally {
-                if (null != tempDir && tempDir.exists()) {
+                if (tempDir != null && tempDir.exists()) {
                     IOUtils.deleteRecursive(tempDir);
                 }
             }
@@ -148,7 +148,7 @@ public class TestLocalStudioConfiguration extends WMTestCase {
                 assertEquals("unexpected ending of home path: " + home, home.getFilename(), "WaveMaker");
                 assertTrue(home.exists());
             } finally {
-                if (null != oldStudioHome) {
+                if (oldStudioHome != null) {
                     LocalStudioFileSystem.setWaveMakerHome(new FileSystemResource(oldStudioHome));
                 }
             }
@@ -172,7 +172,7 @@ public class TestLocalStudioConfiguration extends WMTestCase {
 
                 assertEquals(projects.getFile().getParentFile(), common.getFile().getParentFile());
             } finally {
-                if (null != tempDir && tempDir.exists()) {
+                if (tempDir != null && tempDir.exists()) {
                     IOUtils.deleteRecursive(tempDir);
                 }
             }
@@ -210,7 +210,7 @@ public class TestLocalStudioConfiguration extends WMTestCase {
                 assertTrue(sf.getProjectsDir().exists());
                 assertTrue("expected failure in eclipse: expected dir: " + sf.getCommonDir() + " DNE", sf.getCommonDir().exists());
             } finally {
-                if (null != tempDir && tempDir.exists()) {
+                if (tempDir != null && tempDir.exists()) {
                     IOUtils.deleteRecursive(tempDir);
                 }
             }

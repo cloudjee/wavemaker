@@ -47,7 +47,7 @@ public class ClobTypeDefinition extends PrimitiveReflectTypeDefinition implement
     @Override
     public Object readObject(Object input, Object root, String path) {
 
-        if (null == input) {
+        if (input == null) {
             return null;
         } else if (String.class.isAssignableFrom(input.getClass())) {
             return new ClobImpl((String) input);
@@ -59,7 +59,7 @@ public class ClobTypeDefinition extends PrimitiveReflectTypeDefinition implement
     @Override
     public void writeObject(Object input, Object root, String path, Writer writer) throws IOException {
 
-        if (null == input) {
+        if (input == null) {
             JSONMarshaller.marshal(writer, input);
         } else if (input instanceof Clob) {
             try {

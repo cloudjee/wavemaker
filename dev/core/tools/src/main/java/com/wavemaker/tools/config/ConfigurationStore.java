@@ -157,12 +157,12 @@ public class ConfigurationStore {
                     continue;
                 }
 
-                if (vi.compareTo(currentStudioVersion) <= 0 && (null == currentPrefVersion || currentPrefVersion.compareTo(vi) < 0)) {
+                if (vi.compareTo(currentStudioVersion) <= 0 && (currentPrefVersion == null || currentPrefVersion.compareTo(vi) < 0)) {
                     currentPrefVersion = vi;
                 }
             }
 
-            if (null != currentPrefVersion) {
+            if (currentPrefVersion != null) {
                 return p.node(currentPrefVersion.toString());
             } else {
                 return Preferences.userNodeForPackage(klass);

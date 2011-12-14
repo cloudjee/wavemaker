@@ -91,9 +91,9 @@ public abstract class ControllerBase extends AbstractController {
     @Override
     public ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) {
 
-        if (null == request) {
+        if (request == null) {
             throw new WMRuntimeException(MessageResource.SERVER_NOREQUEST);
-        } else if (null == response) {
+        } else if (response == null) {
             throw new WMRuntimeException(MessageResource.SERVER_NORESPONSE);
         }
 
@@ -102,7 +102,7 @@ public abstract class ControllerBase extends AbstractController {
             // add logging
             StringBuilder logEntry = new StringBuilder();
             HttpSession session = request.getSession(false);
-            if (null != session) {
+            if (session != null) {
                 logEntry.append("session " + session.getId() + ", ");
             }
             logEntry.append("thread " + Thread.currentThread().getId());
@@ -122,11 +122,11 @@ public abstract class ControllerBase extends AbstractController {
             this.logger.error(t.getMessage(), t);
 
             String message;
-            while (null != t.getCause()) {
+            while (t.getCause() != null) {
                 t = t.getCause();
             }
 
-            if (null != t.getMessage() && t.getMessage().length() > 0) {
+            if (t.getMessage() != null && t.getMessage().length() > 0) {
                 message = t.getMessage();
             } else {
                 message = t.toString();
@@ -197,14 +197,14 @@ public abstract class ControllerBase extends AbstractController {
         ModelAndView ret;
 
         FieldDefinition fd;
-        if (null != typedServiceReturn.getReturnType()) {
+        if (typedServiceReturn.getReturnType() != null) {
             fd = typedServiceReturn.getReturnType();
         } else {
             fd = new GenericFieldDefinition();
         }
 
         Object resultObject = typedServiceReturn.getReturnValue();
-        if (null != resultObject && resultObject instanceof RootServiceResponse) {
+        if (resultObject != null && resultObject instanceof RootServiceResponse) {
             view.setRootType(fd);
             ret = new ModelAndView(view, ServerConstants.ROOT_MODEL_OBJECT_KEY, resultObject);
         } else {
@@ -222,9 +222,9 @@ public abstract class ControllerBase extends AbstractController {
 
     protected TypedServiceReturn invokeMethod(ServiceWire sw, String method, JSONArray jsonArgs, Map<String, Object[]> mapParams) throws WMException {
 
-        if (null != jsonArgs && null != mapParams) {
+        if (jsonArgs != null && mapParams != null) {
             throw new WMRuntimeException(MessageResource.BOTH_ARGUMENT_TYPES, jsonArgs, mapParams);
-        } else if (null == sw) {
+        } else if (sw == null) {
             throw new NullArgumentException("sw");
         }
 
@@ -233,7 +233,7 @@ public abstract class ControllerBase extends AbstractController {
         JSONState jsonState = getInternalRuntime().getJSONState();
 
         ParsedServiceArguments args;
-        if (null != mapParams) {
+        if (mapParams != null) {
             args = sw.getServiceType().parseServiceArgs(sw, method, mapParams, jsonState);
         } else {
             args = sw.getServiceType().parseServiceArgs(sw, method, jsonArgs, jsonState);

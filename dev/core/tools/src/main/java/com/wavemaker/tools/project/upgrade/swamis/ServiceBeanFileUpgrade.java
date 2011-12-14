@@ -60,7 +60,7 @@ public class ServiceBeanFileUpgrade implements UpgradeTask {
         List<String> touchedProjects = new ArrayList<String>();
 
         for (Service service : dsm.getServices()) {
-            if (null == service.getSpringFile()) {
+            if (service.getSpringFile() == null) {
                 // create the service bean file
                 Resource serviceBeanFile = dsm.getServiceBeanXml(service.getId());
                 if (!serviceBeanFile.exists()) {

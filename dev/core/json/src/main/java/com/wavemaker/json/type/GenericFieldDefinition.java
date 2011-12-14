@@ -70,7 +70,7 @@ public class GenericFieldDefinition implements FieldDefinition {
 
     @Override
     public int getDimensions() {
-        if (null == this.getArrayTypes()) {
+        if (this.getArrayTypes() == null) {
             return 0;
         } else {
             return this.getArrayTypes().size();

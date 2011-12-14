@@ -54,7 +54,7 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
 
     @Override
     public Resource getWaveMakerHome() {
-        if (null != this.testWMHome) {
+        if (this.testWMHome != null) {
             return createResource(this.testWMHome.toString() + "/");
         }
         return staticGetWaveMakerHome();
@@ -92,14 +92,14 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
             return null;
         }
 
-        if (null != this.testDemoDir) {
+        if (this.testDemoDir != null) {
             return createResource(this.testDemoDir.toString() + "/");
         }
 
         String location = ConfigurationStore.getPreference(getClass(), DEMOHOME_KEY, null);
         Resource demo;
         try {
-            if (null != location) {
+            if (location != null) {
                 demo = createResource(location);
             } else {
                 demo = getStudioWebAppRoot().createRelative("../Samples");
@@ -290,13 +290,13 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
         Resource ret = null;
 
         String env = System.getProperty(WMHOME_PROP_KEY, null);
-        if (null != env && 0 != env.length()) {
+        if (env != null && 0 != env.length()) {
             ret = new FileSystemResource(env);
         }
 
-        if (null == ret) {
+        if (ret == null) {
             String pref = ConfigurationStore.getPreference(LocalStudioConfiguration.class, WMHOME_KEY, null);
-            if (null != pref && 0 != pref.length()) {
+            if (pref != null && 0 != pref.length()) {
                 pref = pref.endsWith("/") ? pref : pref + "/";
                 ret = new FileSystemResource(pref);
             }
@@ -304,7 +304,7 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
 
         // we couldn't find a test value, a property, or a preference, so use
         // a default
-        if (null == ret) {
+        if (ret == null) {
             ret = getDefaultWaveMakerHome();
         }
 
@@ -329,7 +329,7 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
                 userHome = new FileSystemResource(System.getenv("USERPROFILE"));
             }
         }
-        if (null == userHome) {
+        if (userHome == null) {
             String userHomeProp = System.getProperty("user.home");
             userHomeProp = userHomeProp.endsWith("/") ? userHomeProp : userHomeProp + "/";
             userHome = new FileSystemResource(userHomeProp);

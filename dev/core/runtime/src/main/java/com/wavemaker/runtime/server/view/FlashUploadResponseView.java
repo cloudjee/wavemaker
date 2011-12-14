@@ -40,7 +40,7 @@ public class FlashUploadResponseView extends AbstractView implements TypedView {
 
         Object result = model.get(ServerConstants.RESULTS_PART);
 
-        if (null == result) {
+        if (result == null) {
             // no response string
         } else if (result instanceof DojoFileUploaderResponse) {
             DojoFileUploaderResponse dr = (DojoFileUploaderResponse) result;

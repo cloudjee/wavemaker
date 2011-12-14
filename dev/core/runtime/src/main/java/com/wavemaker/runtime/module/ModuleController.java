@@ -147,7 +147,7 @@ public class ModuleController extends AbstractController {
             writer.close();
         } else {
             Tuple.Two<ModuleWire, String> tuple = parseRequestPath(requestURI);
-            if (null == tuple.v1) {
+            if (tuple.v1 == null) {
                 String message = MessageResource.NO_MODULE_RESOURCE.getMessage(requestURI, tuple.v2);
                 this.logger.error(message);
 
@@ -174,10 +174,10 @@ public class ModuleController extends AbstractController {
 
                 IOUtils.copy(conn.getInputStream(), os);
             } finally {
-                if (null != os) {
+                if (os != null) {
                     os.close();
                 }
-                if (null != is) {
+                if (is != null) {
                     is.close();
                 }
             }

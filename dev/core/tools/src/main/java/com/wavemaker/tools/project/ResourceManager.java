@@ -211,7 +211,7 @@ public class ResourceManager {
             myfiles[i] = F;
             if (listing[i].isDirectory()) {
                 F.put("type", "folder");
-                //F.put("files", getListing(listing[i]));
+                // F.put("files", getListing(listing[i]));
             } else {
                 F.put("type", "file");
             }
@@ -237,7 +237,7 @@ public class ResourceManager {
             myfiles[i] = F;
             if (StringUtils.getFilenameExtension(listings.get(i).getFilename()) == null) {
                 F.put("type", "folder");
-                //F.put("files", getListing(fileSystem, listings.get(i)));
+                // F.put("files", getListing(fileSystem, listings.get(i)));
             } else {
                 F.put("type", "file");
             }

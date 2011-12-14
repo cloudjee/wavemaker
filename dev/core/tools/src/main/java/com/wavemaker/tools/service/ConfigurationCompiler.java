@@ -190,7 +190,7 @@ public class ConfigurationCompiler {
 
         for (Service service : allServices) {
 
-            if (null == service.getSpringFile()) {
+            if (service.getSpringFile() == null) {
                 throw new WMRuntimeException(MessageResource.NO_EXTERNAL_BEAN_DEF, service.getId());
             } else {
                 Import i = new Import();
@@ -218,7 +218,7 @@ public class ConfigurationCompiler {
             meth.setName(methodName);
             meth.setOperationType(op.getOperationType());
 
-            if (null != op.getReturn() && null != op.getReturn().getTypeRef()) {
+            if (op.getReturn() != null && op.getReturn().getTypeRef() != null) {
                 String type = op.getReturn().getTypeRef();
 
                 if (op.getReturn().isIsList()) {
@@ -248,12 +248,12 @@ public class ConfigurationCompiler {
                 meth.setParameters(methArgs);
             }
 
-            if (params.size() > 0 && null != methodMap.get(methodName)) {
+            if (params.size() > 0 && methodMap.get(methodName) != null) {
                 Method oldMethod = methodMap.get(methodName);
                 List<Param> oldMapParams = oldMethod.getParameters();
                 List<Param> curMapParams = meth.getParameters();
 
-                if (null == oldMapParams) {
+                if (oldMapParams == null) {
                     // hard to beat no parameters; leave the old one in the
                     // list
                 } else if (oldMapParams.size() > curMapParams.size()) {
@@ -337,7 +337,7 @@ public class ConfigurationCompiler {
         typesMap.setMerge(DefaultableBoolean.TRUE);
 
         for (Service service : services) {
-            if (null != service.getDataobjects()) {
+            if (service.getDataobjects() != null) {
                 Entry entry = new Entry();
                 entry.setKey(service.getId());
                 com.wavemaker.tools.spring.beans.List typesList = new com.wavemaker.tools.spring.beans.List();
@@ -385,11 +385,11 @@ public class ConfigurationCompiler {
         Types ret = new Types();
         for (Service service : services) {
             DataObjects objs = service.getDataobjects();
-            if (null != objs) {
+            if (objs != null) {
                 getTypesFromDataObjects(service.getId(), objs.getDataobject(), ret);
             }
         }
-        if (null != primitiveTypes) {
+        if (primitiveTypes != null) {
             getTypesFromDataObjects("noServicePrimitiveType", primitiveTypes, ret);
         }
 
@@ -399,7 +399,7 @@ public class ConfigurationCompiler {
     public static void getTypesFromDataObjects(String serviceId, List<DataObject> daos, Types types) {
 
         for (DataObject dao : daos) {
-            if (null == dao.getJsType()) {
+            if (dao.getJsType() == null) {
                 ComplexType type = new ComplexType();
 
                 if (dao.isSupportsQuickData()) {

@@ -100,7 +100,7 @@ public class ServiceDefCompilerTask extends CompilerTask {
 
                     ServiceDefinition serviceDef;
 
-                    if (null == this.classesDir) {
+                    if (this.classesDir == null) {
                         this.classesDir = dsm.getProjectManager().getCurrentProject().getWebInfClasses().getFile();
                     }
 
@@ -181,7 +181,7 @@ public class ServiceDefCompilerTask extends CompilerTask {
                 File serviceDefXml = dsm.getServiceDefXml(this.serviceId).getFile();
                 File serviceSrc = dsm.getServiceRuntimeDirectory(this.serviceId).getFile();
 
-                if (null != this.serviceClass) {
+                if (this.serviceClass != null) {
                     ret = this.serviceClass;
                 } else if (serviceDefXml.exists()) {
                     Service sTemp = dsm.getService(this.serviceId);

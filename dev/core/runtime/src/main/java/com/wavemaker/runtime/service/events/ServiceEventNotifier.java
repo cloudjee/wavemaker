@@ -63,7 +63,7 @@ public class ServiceEventNotifier extends EventNotifier {
         }
 
         // if the exception hasn't been corrected, throw it out
-        if (null != exception) {
+        if (exception != null) {
             throw exception;
         }
 

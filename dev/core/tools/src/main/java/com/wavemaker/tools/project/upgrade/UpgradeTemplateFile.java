@@ -39,7 +39,7 @@ public class UpgradeTemplateFile implements UpgradeTask {
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
-        if (null == this.relativePath) {
+        if (this.relativePath == null) {
             throw new WMRuntimeException("No file provided");
         }
 
@@ -65,7 +65,7 @@ public class UpgradeTemplateFile implements UpgradeTask {
             throw new WMRuntimeException(e);
         }
 
-        if (null != this.message) {
+        if (this.message != null) {
             upgradeInfo.addMessage(this.message);
         }
     }

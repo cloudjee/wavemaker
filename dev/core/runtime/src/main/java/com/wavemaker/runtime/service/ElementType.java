@@ -113,13 +113,13 @@ public class ElementType implements Cloneable {
             if (pd.getName().equals("class")) {
                 continue;
             }
-            if (null == pd.getReadMethod() && null == pd.getWriteMethod()) {
+            if (pd.getReadMethod() == null && pd.getWriteMethod() == null) {
                 continue;
             }
 
             Class<?> klass;
             Type type;
-            if (null != pd.getReadMethod()) {
+            if (pd.getReadMethod() != null) {
                 klass = pd.getReadMethod().getReturnType();
                 type = pd.getReadMethod().getGenericReturnType();
             } else {
@@ -291,7 +291,7 @@ public class ElementType implements Cloneable {
 
         Class<?> klass = null;
         try {
-            if (null != getJavaType()) {
+            if (getJavaType() != null) {
                 klass = ClassUtils.forName(getJavaType());
             }
         } catch (ClassNotFoundException e) {
@@ -307,7 +307,7 @@ public class ElementType implements Cloneable {
             }
 
             ret.setTypeDefinition(ortd);
-        } else if (null != klass) {
+        } else if (klass != null) {
             ret = (GenericFieldDefinition) ReflectTypeUtils.getFieldDefinition(klass, new ReflectTypeState(), false, null);
         } else {
             // for now, assume it's primitive and let it pass
@@ -320,7 +320,7 @@ public class ElementType implements Cloneable {
             ret.setTypeDefinition(prtd);
         }
 
-        if (null != ret.getTypeDefinition()) {
+        if (ret.getTypeDefinition() != null) {
             ((ReflectTypeDefinition) ret.getTypeDefinition()).setLiveService(isSupportsQuickData());
             ((ReflectTypeDefinition) ret.getTypeDefinition()).setShortName(getName());
         }

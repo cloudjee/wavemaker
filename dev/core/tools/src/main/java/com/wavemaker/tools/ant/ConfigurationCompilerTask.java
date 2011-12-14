@@ -85,9 +85,9 @@ public class ConfigurationCompilerTask extends AbstractServiceCompilerTask {
 
         File destination;
         FileService fileService = null;
-        if (null != getDestWebAppRoot()) {
+        if (getDestWebAppRoot() != null) {
             destination = getDestWebAppRoot();
-        } else if (null != getAGProject()) {
+        } else if (getAGProject() != null) {
             Project p = getAGProject();
             try {
                 destination = p.getWebAppRoot().getFile();
@@ -99,7 +99,7 @@ public class ConfigurationCompilerTask extends AbstractServiceCompilerTask {
             throw new BuildException("one of destWebAppRoot or projectRoot must be set");
         }
 
-        if (null == fileService) {
+        if (fileService == null) {
             System.out.println("using " + destination + " as a default project directory; please set projectRoot");
             fileService = new Project(new FileSystemResource(destination), new LocalStudioFileSystem());
         }
@@ -142,7 +142,7 @@ public class ConfigurationCompilerTask extends AbstractServiceCompilerTask {
         File typesJs = new File(destination, ConfigurationCompiler.TYPE_RUNTIME_FILE);
 
         File servicesDir;
-        if (null != getDestServicesDir()) {
+        if (getDestServicesDir() != null) {
             servicesDir = getDestServicesDir();
         } else {
             servicesDir = new File(destination, ConfigurationCompiler.RUNTIME_SERVICES_DIR);

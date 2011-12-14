@@ -45,7 +45,7 @@ public class RemoveServiceManagerUpgradeTask implements UpgradeTask {
 
             Beans beans = SpringConfigSupport.readBeans(new FileSystemResource(managersXml), project);
 
-            if (null != beans.getBeanById(ConfigurationCompiler.SERVICE_MANAGER_BEAN_ID)) {
+            if (beans.getBeanById(ConfigurationCompiler.SERVICE_MANAGER_BEAN_ID) != null) {
                 beans.removeBeanById(ConfigurationCompiler.SERVICE_MANAGER_BEAN_ID);
                 SpringConfigSupport.writeBeans(beans, new FileSystemResource(managersXml), project);
 

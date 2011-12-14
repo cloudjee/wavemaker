@@ -84,7 +84,7 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
 
     @Override
     public Resource getWaveMakerHome() {
-        if (null != this.testWMHome) {
+        if (this.testWMHome != null) {
             return createResource(this.testWMHome.toString() + "/");
         }
         return internalGetWaveMakerHome();
@@ -108,7 +108,7 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
         if (isCloud()) {
             return null;
         }
-        if (null != this.testDemoDir) {
+        if (this.testDemoDir != null) {
             return createResource(this.testDemoDir.toString() + "/");
         }
         try {

@@ -74,17 +74,17 @@ public class ComplexRuntimeServiceBean extends AbstractLiveDataService {
         ComplexRuntimeServiceBean crsb = (ComplexRuntimeServiceBean) instance;
         FieldDefinition retFD;
 
-        if (null == instance && type.getTypeName().equals(Integer.class.getName())) {
+        if (instance == null && type.getTypeName().equals(Integer.class.getName())) {
             crsb = new ComplexRuntimeServiceBean();
             crsb.setI(50);
             ret = crsb;
-        } else if (null == instance && type.getTypeName().equals(ComplexRuntimeServiceBean.class.getName())) {
+        } else if (instance == null && type.getTypeName().equals(ComplexRuntimeServiceBean.class.getName())) {
             crsb = new ComplexRuntimeServiceBean();
             crsb.setI(60);
             ret = crsb;
-        } else if (null == instance && type.getTypeName().equals(CycleA.class.getName())) {
+        } else if (instance == null && type.getTypeName().equals(CycleA.class.getName())) {
             ret = ComplexReturnBean.getCycle();
-        } else if (null == instance) {
+        } else if (instance == null) {
             throw new WMRuntimeException("unknown type: " + type);
         } else if (instance instanceof ComplexRuntimeServiceBean) {
             crsb.setI(crsb.getI() + 1000);

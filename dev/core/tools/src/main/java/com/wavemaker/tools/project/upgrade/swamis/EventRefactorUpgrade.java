@@ -74,7 +74,7 @@ public class EventRefactorUpgrade implements UpgradeTask {
                         }
 
                         Bean eventWireBean;
-                        if (null != existingBeanId) {
+                        if (existingBeanId != null) {
                             eventWireBean = getEventWireBean(service.getId(), existingBeanId);
                         } else {
                             eventWireBean = getEventWireBean_EmbeddedNotifier(service.getId(), event.getName());

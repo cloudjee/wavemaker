@@ -133,10 +133,10 @@ public class ProjectManager {
         // create and open
         Project project = new Project(projectDir, this.fileSystem);
 
-        if (null != this.currentProject) {
+        if (this.currentProject != null) {
             closeProject();
         }
-        if (null != getProjectEventNotifier()) {
+        if (getProjectEventNotifier() != null) {
             getProjectEventNotifier().executeOpenProject(this.currentProject);
         }
 
@@ -312,7 +312,7 @@ public class ProjectManager {
     public Resource getProjectDir(String projectName, boolean ignoreDemos) {
         try {
             Resource projectDir = getBaseProjectDir().createRelative(projectName + "/");
-            if (!projectDir.exists() && !ignoreDemos && null != this.fileSystem.getDemoDir()) {
+            if (!projectDir.exists() && !ignoreDemos && this.fileSystem.getDemoDir() != null) {
                 Resource demoProjectDir = this.fileSystem.getDemoDir().createRelative(projectName + "/");
                 if (demoProjectDir.exists()) {
                     projectDir = demoProjectDir;
@@ -378,11 +378,11 @@ public class ProjectManager {
 
         RuntimeAccess.getInstance().getSession().removeAttribute(OPEN_PROJECT_SESSION_NAME);
 
-        if (null == this.currentProject) {
+        if (this.currentProject == null) {
             return;
         }
 
-        if (null != getProjectEventNotifier()) {
+        if (getProjectEventNotifier() != null) {
             getProjectEventNotifier().executeCloseProject(this.currentProject);
         }
 
@@ -400,7 +400,7 @@ public class ProjectManager {
         SortedSet<String> ret = new TreeSet<String>();
 
         Resource projectsDir = this.fileSystem.getProjectsDir();
-        if (null != projectsDir && projectsDir.exists()) {
+        if (projectsDir != null && projectsDir.exists()) {
             for (Resource possibleProject : this.fileSystem.listChildren(projectsDir)) {
                 if (!possibleProject.getFilename().startsWith(prefix) || !checkProjectName(possibleProject.getFilename())) {
                     continue;
@@ -412,7 +412,7 @@ public class ProjectManager {
         }
 
         Resource demoDir = this.fileSystem.getDemoDir();
-        if (null != demoDir && demoDir.exists()) {
+        if (demoDir != null && demoDir.exists()) {
             for (Resource possibleProject : this.fileSystem.listChildren(demoDir)) {
                 if (possibleProject.getFilename().startsWith(".")) {
                     continue;
@@ -434,7 +434,7 @@ public class ProjectManager {
      */
     public void checkNewProject(String projectName) {
 
-        if (null != this.fileSystem.getDemoDir()) {
+        if (this.fileSystem.getDemoDir() != null) {
             try {
                 Resource demoProject = this.fileSystem.getDemoDir().createRelative(projectName);
                 if (demoProject.exists()) {
@@ -524,10 +524,10 @@ public class ProjectManager {
     // Note if you change this, you may have to change how JavaServiceSuperClass
     // looks up the project folder
     public Project getCurrentProject() {
-        if (null == this.currentProject) {
+        if (this.currentProject == null) {
             HttpSession sess = RuntimeAccess.getInstance().getSession();
             String sessionProjectName = (String) sess.getAttribute(OPEN_PROJECT_SESSION_NAME);
-            if (null != sessionProjectName) {
+            if (sessionProjectName != null) {
                 try {
                     openProject(sessionProjectName);
                 } catch (IOException e) {
@@ -537,7 +537,7 @@ public class ProjectManager {
         }
 
         // if we still have no project, error
-        if (null == this.currentProject) {
+        if (this.currentProject == null) {
             throw new WMRuntimeException(MessageResource.NO_PROJECT_FROM_SESSION);
         }
 

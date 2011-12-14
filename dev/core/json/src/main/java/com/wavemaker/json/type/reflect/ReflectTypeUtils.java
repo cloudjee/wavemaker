@@ -86,7 +86,7 @@ public class ReflectTypeUtils {
             }
 
             // we already know about this type; we're done
-            if (null != typeState.getType(ReflectTypeUtils.getTypeName(klass))) {
+            if (typeState.getType(ReflectTypeUtils.getTypeName(klass)) != null) {
                 return (ListTypeDefinition) typeState.getType(ReflectTypeUtils.getTypeName(klass));
             }
 
@@ -213,9 +213,9 @@ public class ReflectTypeUtils {
                     }
 
                     Type paramType;
-                    if (null != pd.getReadMethod()) {
+                    if (pd.getReadMethod() != null) {
                         paramType = pd.getReadMethod().getGenericReturnType();
-                    } else if (null != pd.getWriteMethod()) {
+                    } else if (pd.getWriteMethod() != null) {
                         paramType = pd.getWriteMethod().getGenericParameterTypes()[0];
                     } else {
                         logger.warn("No getter in type " + pd.getName());
@@ -247,7 +247,7 @@ public class ReflectTypeUtils {
                 throw new WMRuntimeException(MessageResource.JSON_TYPE_UNKNOWNRAWTYPE, pt.getOwnerType(), pt);
             }
         } else {
-            throw new WMRuntimeException(MessageResource.JSON_TYPE_UNKNOWNPARAMTYPE, type, null != type ? type.getClass() : null);
+            throw new WMRuntimeException(MessageResource.JSON_TYPE_UNKNOWNPARAMTYPE, type, type != null ? type.getClass() : null);
         }
 
         return ret;
@@ -278,7 +278,7 @@ public class ReflectTypeUtils {
         GenericFieldDefinition ret = new GenericFieldDefinition();
         ret.setName(name);
 
-        if (null == type) {
+        if (type == null) {
             // do nothing, it's null, but do return a FieldDefinition
         } else if (type instanceof Class) {
             Class<?> returnTypeClass = (Class<?>) type;
@@ -326,7 +326,7 @@ public class ReflectTypeUtils {
             ret.setTypeDefinition(dimAndClass.v1);
             ret.setArrayTypes(dimAndClass.v2);
         } else {
-            throw new WMRuntimeException(MessageResource.JSON_TYPE_UNKNOWNPARAMTYPE, type, null != type ? type.getClass() : null);
+            throw new WMRuntimeException(MessageResource.JSON_TYPE_UNKNOWNPARAMTYPE, type, type != null ? type.getClass() : null);
         }
 
         return ret;
@@ -371,10 +371,10 @@ public class ReflectTypeUtils {
             } catch (LinkageError e) {
                 klass = null;
             }
-            if (null == klass && gat.getGenericComponentType() instanceof Class) {
+            if (klass == null && gat.getGenericComponentType() instanceof Class) {
                 klass = Array.newInstance((Class<?>) gat.getGenericComponentType(), 0).getClass();
             }
-            if (null == klass) {
+            if (klass == null) {
                 throw new WMRuntimeException(MessageResource.JSON_FAILED_GENERICARRAYTYPE, gat, gat.getGenericComponentType());
             }
 
@@ -391,7 +391,7 @@ public class ReflectTypeUtils {
             return new Tuple.Two<TypeDefinition, List<ListTypeDefinition>>(getTypeDefinition(type, typeState, strict),
                 new ArrayList<ListTypeDefinition>());
         } else {
-            throw new WMRuntimeException(MessageResource.JSON_TYPE_UNKNOWNPARAMTYPE, type, null != type ? type.getClass() : null);
+            throw new WMRuntimeException(MessageResource.JSON_TYPE_UNKNOWNPARAMTYPE, type, type != null ? type.getClass() : null);
         }
     }
 
@@ -409,7 +409,7 @@ public class ReflectTypeUtils {
         } else if (type instanceof ParameterizedType) {
             return type.toString().replace(" ", "");
         } else {
-            throw new WMRuntimeException(MessageResource.JSON_TYPE_UNKNOWNPARAMTYPE, type, null != type ? type.getClass() : null);
+            throw new WMRuntimeException(MessageResource.JSON_TYPE_UNKNOWNPARAMTYPE, type, type != null ? type.getClass() : null);
         }
     }
 

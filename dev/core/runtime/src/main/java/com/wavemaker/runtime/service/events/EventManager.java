@@ -44,7 +44,7 @@ public class EventManager {
 
         Map<T, List<ServiceWire>> ret = new HashMap<T, List<ServiceWire>>();
 
-        if (null != this.eventWires && !this.eventWires.isEmpty()) {
+        if (this.eventWires != null && !this.eventWires.isEmpty()) {
             for (EventWire wire : this.eventWires) {
                 if (T.isAssignableFrom(wire.getEventListener().getClass())) {
                     if (!ret.containsKey(wire.getEventListener())) {

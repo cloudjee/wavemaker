@@ -54,7 +54,7 @@ public class ServiceEventBeanListener implements ServiceEventListener {
     public TypedServiceReturn postOperation(ServiceWire serviceWire, String operationName, TypedServiceReturn result, Throwable throwable)
         throws Throwable {
 
-        if (null != throwable) {
+        if (throwable != null) {
             return new TypedServiceReturn(Long.valueOf(10000), ReflectTypeUtils.getFieldDefinition(Long.class, new ReflectTypeState(), false, null));
         } else {
             if (!(serviceWire instanceof ReflectServiceWire)) {

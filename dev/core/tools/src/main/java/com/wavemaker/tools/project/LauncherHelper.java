@@ -40,7 +40,7 @@ public class LauncherHelper {
         throws ClassNotFoundException, SecurityException, NoSuchMethodException, InstantiationException, IllegalAccessException,
         IllegalArgumentException, InvocationTargetException {
 
-        if (null == ResourceManager.getInstance()) {
+        if (ResourceManager.getInstance() == null) {
             SpringUtils.initSpringConfig();
         }
 

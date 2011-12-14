@@ -351,9 +351,9 @@ public class DesignServiceManager {
                 service.setClazz(((ReflectServiceDefinition) serviceDef).getServiceClass());
             }
 
-            if (null != serviceDef.getRuntimeConfiguration()) {
+            if (serviceDef.getRuntimeConfiguration() != null) {
                 service.setSpringFile(serviceDef.getRuntimeConfiguration());
-            } else if (null != oldService && null != oldService.getSpringFile()) {
+            } else if (oldService != null && oldService.getSpringFile() != null) {
                 service.setSpringFile(oldService.getSpringFile());
             }
 
@@ -383,7 +383,7 @@ public class DesignServiceManager {
      */
     public void defineService(Service service) {
 
-        if (null == service.getSpringFile()) {
+        if (service.getSpringFile() == null) {
             service.setSpringFile(getServiceBeanName(service.getId()));
         }
 
@@ -705,7 +705,7 @@ public class DesignServiceManager {
 
         Project project = getProjectManager().getCurrentProject();
 
-        if (null == services) {
+        if (services == null) {
             services = getServices();
         }
         SortedSet<Service> allServices = getServices();
@@ -743,7 +743,7 @@ public class DesignServiceManager {
      */
     public void updateServiceTypes(Service service, ServiceDefinition serviceDef, String username, String password) { // salesforce
 
-        if (null == service.getDataobjects()) {
+        if (service.getDataobjects() == null) {
             service.setDataobjects(new DataObjects());
         }
         List<DataObject> dos = service.getDataobjects().getDataobject();
@@ -758,7 +758,7 @@ public class DesignServiceManager {
 
         for (TypeDefinition et : elementTypes) {
 
-            if (null != findDataObjectFromJavaType(et.getTypeName())) {
+            if (findDataObjectFromJavaType(et.getTypeName()) != null) {
                 throw new WMRuntimeException("Conflicting java type: " + et.getTypeName());
             }
 
@@ -783,7 +783,7 @@ public class DesignServiceManager {
                     // key or value.name?
                     e.setName(entry.getKey());
 
-                    if (null != entry.getValue().getTypeDefinition()) {
+                    if (entry.getValue().getTypeDefinition() != null) {
                         e.setTypeRef(entry.getValue().getTypeDefinition().getTypeName());
                     }
                     e.setIsList(entry.getValue().getDimensions() > 0);
@@ -838,7 +838,7 @@ public class DesignServiceManager {
         Collection<Service> services = getServices();
 
         for (Service service : services) {
-            if (null != service.getDataobjects()) {
+            if (service.getDataobjects() != null) {
                 List<DataObject> serviceObjects = service.getDataobjects().getDataobject();
                 ret.addAll(serviceObjects);
             }
@@ -856,7 +856,7 @@ public class DesignServiceManager {
     public List<DataObject> getLocalDataObjects(String serviceId) {
 
         Service service = getService(serviceId);
-        if (null != service.getDataobjects()) {
+        if (service.getDataobjects() != null) {
             return service.getDataobjects().getDataobject();
         } else {
             return new ArrayList<DataObject>();
@@ -943,7 +943,7 @@ public class DesignServiceManager {
                 break;
             }
         }
-        if (null == op) {
+        if (op == null) {
             op = new Operation();
             op.setName(so.getName());
             ops.add(op);
@@ -959,13 +959,13 @@ public class DesignServiceManager {
             Operation.Parameter param = new Operation.Parameter();
             param.setIsList(input.getDimensions() > 0);
             param.setName(input.getName());
-            if (null != input.getTypeDefinition()) {
+            if (input.getTypeDefinition() != null) {
                 param.setTypeRef(input.getTypeDefinition().getTypeName());
             }
             params.add(param);
         }
 
-        if (null != so.getReturnType()) {
+        if (so.getReturnType() != null) {
             Operation.Return ret = new Operation.Return();
             FieldDefinition retType;
             if (serviceModifier == null) {
@@ -975,7 +975,7 @@ public class DesignServiceManager {
             }
 
             ret.setIsList(retType.getDimensions() > 0);
-            if (null != retType.getTypeDefinition()) {
+            if (retType.getTypeDefinition() != null) {
                 ret.setTypeRef(retType.getTypeDefinition().getTypeName());
             }
             op.setReturn(ret);
@@ -1038,7 +1038,7 @@ public class DesignServiceManager {
         if (serviceDefFile.exists()) {
             try {
                 ret = loadServiceDefinition(serviceDefFile);
-                if (null == ret.getId() || "" == ret.getId()) {
+                if (ret.getId() == null || "" == ret.getId()) {
                     throw new WMRuntimeException(MessageResource.INVALID_SERVICE_DEF_NO_ID, serviceId);
                 }
             } catch (JAXBException e) {

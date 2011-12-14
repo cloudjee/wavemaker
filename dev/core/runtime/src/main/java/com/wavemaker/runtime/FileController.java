@@ -116,9 +116,9 @@ public final class FileController extends AbstractController {
             DataServiceLoggers.fileControllerLogger.debug("FileController: " + sendFile.getAbsolutePath() + "\t (" + reqPath + ")");
         }
 
-        if (null != sendFile && !sendFile.exists()) {
+        if (sendFile != null && !sendFile.exists()) {
             handleError(response, "File " + reqPath + " not found in expected path: " + sendFile, HttpServletResponse.SC_NOT_FOUND);
-        } else if (null != sendFile) {
+        } else if (sendFile != null) {
             if (addExpiresTag) {
                 // setting cache expire to one year.
                 setCacheExpireDate(response, 365 * 24 * 60 * 60);

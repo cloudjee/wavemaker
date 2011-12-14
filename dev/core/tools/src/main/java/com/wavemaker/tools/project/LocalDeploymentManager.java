@@ -443,7 +443,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
         StudioFileSystem fileSystem = this.projectManager.getFileSystem();
         Map<String, Object> newProperties = new HashMap<String, Object>();
 
-        if (null != getProjectManager() && null != getProjectManager().getCurrentProject()) {
+        if (getProjectManager() != null && getProjectManager().getCurrentProject() != null) {
             newProperties.put(PROJECT_ENCODING_PROPERTY, getProjectManager().getCurrentProject().getEncoding());
         }
 
@@ -476,7 +476,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
 
         LocalDeploymentManager.logger.info("PUT NAME: " + projectName);
 
-        if (null != deployName) {
+        if (deployName != null) {
             newProperties.put(DEPLOY_NAME_PROPERTY, this.projectManager.getUserProjectPrefix() + deployName);
             System.setProperty("wm.proj." + DEPLOY_NAME_PROPERTY, this.projectManager.getUserProjectPrefix() + deployName);
         }

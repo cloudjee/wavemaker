@@ -43,8 +43,8 @@ public class Method implements Comparable<Method> {
             return nameCompare;
         }
 
-        int thisParamSize = null != this.getParameters() ? this.getParameters().size() : 0;
-        int oParamSize = null != o.getParameters() ? o.getParameters().size() : 0;
+        int thisParamSize = this.getParameters() != null ? this.getParameters().size() : 0;
+        int oParamSize = o.getParameters() != null ? o.getParameters().size() : 0;
         return thisParamSize - oParamSize;
     }
 

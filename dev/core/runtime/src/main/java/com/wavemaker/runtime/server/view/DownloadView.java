@@ -41,14 +41,14 @@ public class DownloadView extends AbstractView implements TypedView {
 
         Object result = model.get(ServerConstants.RESULTS_PART);
 
-        if (null == result) {
+        if (result == null) {
             // no response string
         } else if (result instanceof DownloadResponse) {
             DownloadResponse dr = (DownloadResponse) result;
 
             response.setContentType(dr.getContentType());
             response.setContentLength(dr.getContents().available());
-            if (null != dr.getFileName()) {
+            if (dr.getFileName() != null) {
                 response.setHeader("Content-disposition", "attachment; filename=\"" + dr.getFileName() + "\"");
             }
 

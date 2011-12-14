@@ -164,7 +164,7 @@ public class TestIOUtils extends WMTestCase {
 
             assertTrue(lastModified < f.lastModified());
         } finally {
-            if (null != f) {
+            if (f != null) {
                 IOUtils.deleteRecursive(f);
             }
         }

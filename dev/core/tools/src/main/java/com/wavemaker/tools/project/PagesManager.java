@@ -70,7 +70,7 @@ public class PagesManager {
         Resource pagesDir = getPagesDir(projectName);
 
         List<Resource> children = this.fileSystem.listChildren(pagesDir);
-        if (null != children) {
+        if (children != null) {
             for (Resource child : children) {
                 if (StringUtils.getFilenameExtension(child.getFilename()) == null && !IOUtils.DEFAULT_EXCLUSION.contains(child.getFilename())) {
                     ret.add(child.getFilename());

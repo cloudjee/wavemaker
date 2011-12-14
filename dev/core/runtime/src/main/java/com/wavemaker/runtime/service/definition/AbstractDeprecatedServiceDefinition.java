@@ -46,14 +46,14 @@ public abstract class AbstractDeprecatedServiceDefinition implements DeprecatedS
             so.setName(operationName);
             ret.add(so);
 
-            if (null != getOutputType(operationName)) {
+            if (getOutputType(operationName) != null) {
                 so.setReturnType(getOutputType(operationName).toFieldDefinition());
             }
 
             List<FieldDefinition> fdPT = new ArrayList<FieldDefinition>();
             so.setParameterTypes(fdPT);
             if (serviceModifier == null) {
-                if (null != getInputTypes(operationName)) {
+                if (getInputTypes(operationName) != null) {
                     List<ElementType> parameterTypes = getInputTypes(operationName);
 
                     for (ElementType et : parameterTypes) {
@@ -61,7 +61,7 @@ public abstract class AbstractDeprecatedServiceDefinition implements DeprecatedS
                     }
                 }
             } else {
-                if (null != serviceModifier.getInputTypes(this, operationName)) {
+                if (serviceModifier.getInputTypes(this, operationName) != null) {
                     List<ElementType> parameterTypes = serviceModifier.getInputTypes(this, operationName);
 
                     for (ElementType et : parameterTypes) {
@@ -85,7 +85,7 @@ public abstract class AbstractDeprecatedServiceDefinition implements DeprecatedS
 
         for (ElementType type : types) {
             FieldDefinition fd = type.toFieldDefinition();
-            if (null != fd.getTypeDefinition()) {
+            if (fd.getTypeDefinition() != null) {
                 ret.add(fd.getTypeDefinition());
             }
         }
@@ -101,7 +101,7 @@ public abstract class AbstractDeprecatedServiceDefinition implements DeprecatedS
 
         for (ElementType type : types) {
             FieldDefinition fd = type.toFieldDefinition();
-            if (null != fd.getTypeDefinition()) {
+            if (fd.getTypeDefinition() != null) {
                 ret.add(fd.getTypeDefinition());
             }
         }

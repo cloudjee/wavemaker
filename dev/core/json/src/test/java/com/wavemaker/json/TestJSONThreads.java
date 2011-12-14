@@ -60,7 +60,7 @@ public class TestJSONThreads extends WMTestCase {
         @Override
         public void run() {
 
-            if (null == getExclude()) {
+            if (getExclude() == null) {
                 throw new RuntimeException("Exclude was null");
             }
 

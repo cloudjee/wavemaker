@@ -76,7 +76,7 @@ public class RuntimeAccess {
      */
     public static RuntimeAccess getInstance() {
 
-        if (null == RuntimeAccess.staticRuntime) {
+        if (RuntimeAccess.staticRuntime == null) {
             throw new WMRuntimeInitException("RuntimeAccess uninitialized; request init failed.");
         }
 

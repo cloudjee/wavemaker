@@ -283,7 +283,7 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
 
         private void checkAddType(JavaServiceDefinition serviceDef, TypeDefinition td) {
 
-            if (null == td) {
+            if (td == null) {
                 return;
             }
             if (serviceDef.getLocalTypes().contains(td)) {

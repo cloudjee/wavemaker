@@ -206,7 +206,7 @@ public abstract class SpringTestCase extends AbstractJUnit4SpringContextTests im
         req.put(ServerConstants.METHOD, operation);
         req.put(ServerConstants.ID, new Integer(createJSONRPCCallId));
         createJSONRPCCallId++;
-        if (null != parameters) {
+        if (parameters != null) {
             req.put(ServerConstants.PARAMETERS, parameters);
         }
 

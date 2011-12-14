@@ -47,7 +47,7 @@ public class DateTypeDefinition extends PrimitiveReflectTypeDefinition implement
     @Override
     public Object readObject(Object input, Object root, String path) {
 
-        if (null == input) {
+        if (input == null) {
             return null;
         } else if (Number.class.isAssignableFrom(input.getClass())) {
 
@@ -72,7 +72,7 @@ public class DateTypeDefinition extends PrimitiveReflectTypeDefinition implement
     @Override
     public void writeObject(Object input, Object root, String path, Writer writer) throws IOException {
 
-        if (null == input) {
+        if (input == null) {
             JSONMarshaller.marshal(writer, input);
         } else if (java.util.Date.class.isAssignableFrom(input.getClass())) {
             writer.write("" + ((java.util.Date) input).getTime());

@@ -55,7 +55,7 @@ public class VersionInfo implements Comparable<VersionInfo> {
             }
         }
 
-        if (null != this.releaseStatus) {
+        if (this.releaseStatus != null) {
             this.isRelease = false;
         } else {
             this.isRelease = true;
@@ -87,7 +87,7 @@ public class VersionInfo implements Comparable<VersionInfo> {
 
     @Override
     public String toString() {
-        return this.getMajor() + "." + this.getMinor() + "." + this.getRevision() + (null != this.getReleaseStatus() ? this.getReleaseStatus() : "");
+        return this.getMajor() + "." + this.getMinor() + "." + this.getRevision() + (this.getReleaseStatus() != null ? this.getReleaseStatus() : "");
     }
 
     @Override
@@ -114,9 +114,9 @@ public class VersionInfo implements Comparable<VersionInfo> {
             return 0;
         }
 
-        if (null == this.getReleaseStatus() && null != other.getReleaseStatus()) {
+        if (this.getReleaseStatus() == null && other.getReleaseStatus() != null) {
             return 1;
-        } else if (null != this.getReleaseStatus() && null == other.getReleaseStatus()) {
+        } else if (this.getReleaseStatus() != null && other.getReleaseStatus() == null) {
             return -1;
         } else {
             return this.getReleaseStatus().compareTo(other.getReleaseStatus());

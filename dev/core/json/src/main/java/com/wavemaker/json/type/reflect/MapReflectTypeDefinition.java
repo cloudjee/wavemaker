@@ -35,7 +35,7 @@ public class MapReflectTypeDefinition extends ReflectTypeDefinition implements M
     @Override
     public Object newInstance(Object... args) {
 
-        if (null == getKlass()) {
+        if (getKlass() == null) {
             return new HashMap<Object, Object>();
         } else if (getKlass().isInterface()) {
             if (getKlass().isAssignableFrom(HashMap.class)) {

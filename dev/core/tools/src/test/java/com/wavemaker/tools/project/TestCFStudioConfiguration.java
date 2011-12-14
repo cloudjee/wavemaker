@@ -147,7 +147,7 @@ public class TestCFStudioConfiguration {
 
                 assertEquals(((GFSResource) projects).getParent(), ((GFSResource) common).getParent());
             } finally {
-                if (null != tempDir && tempDir.exists()) {
+                if (tempDir != null && tempDir.exists()) {
                     IOUtils.deleteRecursive(tempDir);
                 }
             }

@@ -104,8 +104,7 @@ public abstract class ReflectServiceType implements ServiceType {
         try {
             ret = method.invoke(serviceObject, args.getArguments());
         } catch (Exception e) {
-            // e.printStackTrace();
-            if (null != e.getCause()) {
+            if (e.getCause() != null) {
                 throw new WMRuntimeException(MessageResource.JSONUTILS_FAILEDINVOKE, e.getCause(), method.getName(), method.getDeclaringClass());
             } else {
                 throw new WMRuntimeException(MessageResource.JSONUTILS_FAILEDINVOKE, e, method.getName(), method.getDeclaringClass());
@@ -128,14 +127,14 @@ public abstract class ReflectServiceType implements ServiceType {
         for (Method m : methods) {
             if (m.getName().equals(method) && m.getParameterTypes().length == paramsLength) {
 
-                if (null != meth) {
+                if (meth != null) {
                     throw new WMRuntimeException(MessageResource.JSONUTILS_BADMETHODOVERLOAD, method, s.getClass());
                 }
                 meth = m;
             }
         }
 
-        if (null == meth) {
+        if (meth == null) {
             throw new WMRuntimeException(MessageResource.JSONRPC_CONTROLLER_METHOD_NOT_FOUND, method, paramsLength, s.getClass());
         }
 

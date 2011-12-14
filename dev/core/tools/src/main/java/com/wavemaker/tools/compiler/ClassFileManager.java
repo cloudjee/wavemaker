@@ -35,6 +35,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import com.apple.eio.FileManager;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ResourceFilter;

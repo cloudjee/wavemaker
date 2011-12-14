@@ -82,8 +82,8 @@ public class JavaServiceDefinition implements ReflectServiceDefinition {
     public JavaServiceDefinition(String serviceClassName, String serviceId, Resource serviceCompiledDir, Resource serviceLibDir,
         List<String> excludeTypeNames) throws ClassNotFoundException, LinkageError, IOException {
 
-        this(serviceClassName, serviceId, null == serviceCompiledDir ? null : Arrays.asList(new File[] { serviceCompiledDir.getFile() }),
-            null == serviceLibDir ? null : Arrays.asList(new File[] { serviceLibDir.getFile() }), excludeTypeNames);
+        this(serviceClassName, serviceId, serviceCompiledDir == null ? null : Arrays.asList(new File[] { serviceCompiledDir.getFile() }),
+            serviceLibDir == null ? null : Arrays.asList(new File[] { serviceLibDir.getFile() }), excludeTypeNames);
     }
 
     /**
@@ -95,10 +95,10 @@ public class JavaServiceDefinition implements ReflectServiceDefinition {
         List<String> excludeTypeNames) throws ClassNotFoundException, LinkageError {
 
         List<File> classpath = new ArrayList<File>();
-        if (null != serviceCompiledDirs) {
+        if (serviceCompiledDirs != null) {
             classpath.addAll(serviceCompiledDirs);
         }
-        if (null != serviceLibDirs) {
+        if (serviceLibDirs != null) {
             for (File serviceLibDir : serviceLibDirs) {
                 if (!serviceLibDir.exists()) {
                     continue;
@@ -187,7 +187,7 @@ public class JavaServiceDefinition implements ReflectServiceDefinition {
             }
         }
 
-        if (null == serviceClass.getPackage()) {
+        if (serviceClass.getPackage() == null) {
             this.packageName = null;
         } else {
             this.packageName = serviceClass.getPackage().getName();
@@ -218,7 +218,7 @@ public class JavaServiceDefinition implements ReflectServiceDefinition {
 
     private void checkAddType(TypeDefinition td) {
 
-        if (null == td) {
+        if (td == null) {
             return;
         }
         if (this.typeDefinitions.contains(td)) {

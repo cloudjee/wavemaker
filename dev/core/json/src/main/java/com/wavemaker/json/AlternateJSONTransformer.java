@@ -71,33 +71,33 @@ public class AlternateJSONTransformer {
     private static Object toObjectInternal(JSONState jsonState, Object obj, Object root, FieldDefinition fieldDefinition, TypeState typeState,
         int arrayLevel, Stack<String> setterQueue) {
 
-        if (null == fieldDefinition) {
+        if (fieldDefinition == null) {
             throw new NullArgumentException("fieldDefinition");
         }
 
         Object ret = null;
 
-        if (null != jsonState.getValueTransformer()) {
+        if (jsonState.getValueTransformer() != null) {
             Tuple.Three<Object, FieldDefinition, Integer> tuple = jsonState.getValueTransformer().transformToJava(obj, fieldDefinition, arrayLevel,
                 root, getPropertyFromQueue(setterQueue), jsonState.getTypeState());
 
-            if (null != tuple) {
+            if (tuple != null) {
                 obj = tuple.v1;
                 fieldDefinition = tuple.v2;
                 arrayLevel = tuple.v3;
             }
         }
 
-        if (null != obj && fieldDefinition.getDimensions() == arrayLevel && null == fieldDefinition.getTypeDefinition()) {
+        if (obj != null && fieldDefinition.getDimensions() == arrayLevel && fieldDefinition.getTypeDefinition() == null) {
             fieldDefinition = ReflectTypeUtils.getFieldDefinition(obj.getClass(), typeState, false, null);
         }
 
         try {
-            if (null == fieldDefinition.getTypeDefinition()) {
+            if (fieldDefinition.getTypeDefinition() == null) {
                 ret = obj;
             } else if (arrayLevel == fieldDefinition.getDimensions() && fieldDefinition.getTypeDefinition() instanceof ReadObjectConverter) {
                 ret = ((ReadObjectConverter) fieldDefinition.getTypeDefinition()).readObject(obj, root, getPropertyFromQueue(setterQueue));
-            } else if (null == obj) {
+            } else if (obj == null) {
                 ret = null;
             } else if (arrayLevel < fieldDefinition.getDimensions()) {
                 ret = toCollectionOrArray(jsonState, obj, root, fieldDefinition, typeState, arrayLevel, setterQueue);
@@ -127,9 +127,9 @@ public class AlternateJSONTransformer {
         int arrayLevel, Stack<String> setterQueue) throws InstantiationException, IllegalAccessException, InvocationTargetException,
         NoSuchMethodException {
 
-        if (null == fieldDefinition) {
+        if (fieldDefinition == null) {
             throw new NullArgumentException("fieldDefinition");
-        } else if (null == fieldDefinition.getTypeDefinition()) {
+        } else if (fieldDefinition.getTypeDefinition() == null) {
             throw new WMRuntimeException(MessageResource.JSON_TYPEDEF_REQUIRED);
         } else if (!(fieldDefinition.getTypeDefinition() instanceof ObjectTypeDefinition)) {
             throw new WMRuntimeException(MessageResource.JSON_OBJECTTYPEDEF_REQUIRED, fieldDefinition.getTypeDefinition(),
@@ -145,7 +145,7 @@ public class AlternateJSONTransformer {
             String key = (String) entry.getKey();
 
             FieldDefinition nestedFieldDefinition = otd.getFields().get(key);
-            if (null == nestedFieldDefinition) {
+            if (nestedFieldDefinition == null) {
                 throw new WMRuntimeException(MessageResource.JSON_NO_PROP_MATCHES_KEY, key, fieldDefinition);
             }
             if (!PropertyUtils.isWriteable(instance, key)) {
@@ -170,7 +170,7 @@ public class AlternateJSONTransformer {
     private static Object toCollectionOrArray(JSONState jsonState, Object obj, Object root, FieldDefinition fieldDefinition, TypeState typeState,
         int arrayLevel, Stack<String> setterQueue) throws InstantiationException, IllegalAccessException {
 
-        if (null == fieldDefinition) {
+        if (fieldDefinition == null) {
             throw new NullArgumentException("fieldDefinition");
         }
 
@@ -193,7 +193,7 @@ public class AlternateJSONTransformer {
         int arrayLevel, Stack<String> setterQueue) throws InstantiationException, IllegalAccessException, InvocationTargetException,
         NoSuchMethodException {
 
-        if (null == fieldDefinition) {
+        if (fieldDefinition == null) {
             throw new NullArgumentException("fieldDefinition");
         }
 
@@ -202,7 +202,7 @@ public class AlternateJSONTransformer {
 
         // now, convert our object
         if (!(obj instanceof JSONObject)) {
-            throw new WMRuntimeException(MessageResource.JSON_OBJECT_REQUIRED_FOR_MAP_CONVERSION, obj, null != obj ? obj.getClass() : obj);
+            throw new WMRuntimeException(MessageResource.JSON_OBJECT_REQUIRED_FOR_MAP_CONVERSION, obj, obj != null ? obj.getClass() : obj);
         }
 
         JSONObject jsonObject = (JSONObject) obj;

@@ -48,7 +48,7 @@ public class BlobTypeDefinition extends PrimitiveReflectTypeDefinition implement
     @Override
     public Object readObject(Object input, Object root, String path) {
 
-        if (null == input) {
+        if (input == null) {
             return null;
         } else if (JSONArray.class.isAssignableFrom(input.getClass())) {
             JSONArray jarr = (JSONArray) input;
@@ -71,7 +71,7 @@ public class BlobTypeDefinition extends PrimitiveReflectTypeDefinition implement
     @Override
     public void writeObject(Object input, Object root, String path, Writer writer) throws IOException {
 
-        if (null == input) {
+        if (input == null) {
             JSONMarshaller.marshal(writer, input);
         } else if (input instanceof Blob) {
             try {

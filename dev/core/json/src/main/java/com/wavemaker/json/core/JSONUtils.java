@@ -175,7 +175,7 @@ public class JSONUtils {
             return true;
         } else if (isBoolean(klass)) {
             return true;
-        } else if (klass.isEnum() || null != klass.getDeclaringClass() && klass.getDeclaringClass().isEnum()) {
+        } else if (klass.isEnum() || klass.getDeclaringClass() != null && klass.getDeclaringClass().isEnum()) {
             return true;
         } else if (Class.class.isAssignableFrom(klass)) {
             return true;

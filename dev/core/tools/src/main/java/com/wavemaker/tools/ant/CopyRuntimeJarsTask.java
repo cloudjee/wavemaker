@@ -125,9 +125,9 @@ public class CopyRuntimeJarsTask extends Task {
             JarFile runtimeJar = new JarFile(jarFile);
             Manifest manifest = runtimeJar.getManifest();
             String jarClassPath = manifest.getMainAttributes().getValue(CLASSPATH_ATTR_NAME);
-            if (failOnError && null == jarClassPath) {
+            if (failOnError && jarClassPath == null) {
                 throw new IllegalStateException(CLASSPATH_ATTR_NAME + " attribute is missing from " + jarFile);
-            } else if (null == jarClassPath) {
+            } else if (jarClassPath == null) {
                 return new ArrayList<String>();
             }
 
@@ -224,10 +224,10 @@ public class CopyRuntimeJarsTask extends Task {
 
     @Override
     public void execute() {
-        if (null == this.todir) {
+        if (this.todir == null) {
             throw new IllegalArgumentException("todir is not set");
         }
-        if (null == this.from) {
+        if (this.from == null) {
             throw new IllegalArgumentException("from is not set");
         }
 
@@ -304,7 +304,7 @@ public class CopyRuntimeJarsTask extends Task {
 
     protected ClasspathUtils.Delegate getDelegate() {
 
-        if (null == this.cpDelegate) {
+        if (this.cpDelegate == null) {
             this.cpDelegate = ClasspathUtils.getDelegate(this);
         }
         return this.cpDelegate;

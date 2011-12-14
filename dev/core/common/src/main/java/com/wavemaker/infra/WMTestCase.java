@@ -108,7 +108,7 @@ public abstract class WMTestCase extends TestCase {
     public static void assertEquals(String message, File expected, File actual) throws IOException {
 
         String msg = "mismatch between expected file \"" + expected + "\" and actual \"" + actual + "\"";
-        if (null != message) {
+        if (message != null) {
             msg = message + ": " + msg;
         }
 

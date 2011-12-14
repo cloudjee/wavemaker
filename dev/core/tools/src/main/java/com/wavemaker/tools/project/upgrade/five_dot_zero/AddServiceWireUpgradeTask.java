@@ -75,14 +75,14 @@ public class AddServiceWireUpgradeTask implements UpgradeTask {
                 continue;
             }
 
-            if (null == service.getSpringFile()) {
+            if (service.getSpringFile() == null) {
                 throw new WMRuntimeException(MessageResource.ADD_SRV_UPGRADE_NO_SPRING_FILE, project.getProjectName());
             }
 
             try {
                 File springFile = new File(dsm.getServiceRuntimeDirectory(service.getId()).getFile(), service.getSpringFile());
 
-                if (null == springFile || !springFile.exists()) {
+                if (springFile == null || !springFile.exists()) {
                     DesignServiceManager.generateSpringServiceConfig(service.getId(), service.getClazz(),
                         dsm.getDesignServiceType(service.getType()), new FileSystemResource(springFile), project);
                     continue;
@@ -92,7 +92,7 @@ public class AddServiceWireUpgradeTask implements UpgradeTask {
 
                 boolean foundServiceWire = false;
                 for (Bean bean : beans.getBeanList()) {
-                    if (null != bean.getClazz()) {
+                    if (bean.getClazz() != null) {
                         Class<?> klass = cl.loadClass(bean.getClazz());
                         Class<?> serviceWireClass = cl.loadClass(ServiceWire.class.getName());
                         if (serviceWireClass.isAssignableFrom(klass)) {

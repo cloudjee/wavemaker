@@ -86,12 +86,12 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration {
 
     public int getTomcatPort() {
         String propVal = System.getProperty(TOMCAT_PORT_ENV, null);
-        if (null != propVal) {
+        if (propVal != null) {
             return Integer.parseInt(propVal);
         }
 
         int defaultValue;
-        if (null != getRuntimeAccess() && null != getRuntimeAccess().getRequest()) {
+        if (getRuntimeAccess() != null && getRuntimeAccess().getRequest() != null) {
             defaultValue = getRuntimeAccess().getRequest().getServerPort();
         } else {
             defaultValue = TOMCAT_PORT_DEFAULT;
@@ -102,12 +102,12 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration {
 
     public String getTomcatHost() {
         String propVal = System.getProperty(TOMCAT_HOST_ENV, null);
-        if (null != propVal) {
+        if (propVal != null) {
             return propVal;
         }
 
         String defaultValue;
-        if (null != getRuntimeAccess() && null != getRuntimeAccess().getRequest()) {
+        if (getRuntimeAccess() != null && getRuntimeAccess().getRequest() != null) {
             defaultValue = getRuntimeAccess().getRequest().getServerName();
         } else {
             defaultValue = TOMCAT_HOST_DEFAULT;
@@ -118,7 +118,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration {
 
     public String getTomcatManagerUsername() {
         String propVal = System.getProperty(TOMCAT_MANAGER_USER_ENV, null);
-        if (null != propVal) {
+        if (propVal != null) {
             return propVal;
         }
         return ConfigurationStore.getPreference(getClass(), TOMCAT_MANAGER_USER_KEY, TOMCAT_MANAGER_USER_DEFAULT);
@@ -126,7 +126,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration {
 
     public String getTomcatManagerPassword() {
         String propVal = System.getProperty(TOMCAT_MANAGER_PASSWORD_ENV, null);
-        if (null != propVal) {
+        if (propVal != null) {
             return propVal;
         }
         return ConfigurationStore.getPreference(getClass(), TOMCAT_MANAGER_PW_KEY, TOMCAT_MANAGER_PW_DEFAULT);
@@ -164,14 +164,14 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration {
             return;
         }
 
-        if (prefs.containsKey(LocalStudioFileSystem.WMHOME_KEY) && null != prefs.get(LocalStudioFileSystem.WMHOME_KEY)) {
+        if (prefs.containsKey(LocalStudioFileSystem.WMHOME_KEY) && prefs.get(LocalStudioFileSystem.WMHOME_KEY) != null) {
             try {
                 LocalStudioFileSystem.setWaveMakerHome(new FileSystemResource(prefs.get(LocalStudioFileSystem.WMHOME_KEY)));
             } catch (FileAccessException e) {
                 throw new WMRuntimeException(e);
             }
         }
-        if (prefs.containsKey(AbstractStudioFileSystem.DEMOHOME_KEY) && null != prefs.get(AbstractStudioFileSystem.DEMOHOME_KEY)) {
+        if (prefs.containsKey(AbstractStudioFileSystem.DEMOHOME_KEY) && prefs.get(AbstractStudioFileSystem.DEMOHOME_KEY) != null) {
             this.fileSystem.setDemoDir(new File(prefs.get(AbstractStudioFileSystem.DEMOHOME_KEY)));
         }
     }

@@ -294,7 +294,7 @@ public class ObjectUtils {
 
         Class<?> ret;
 
-        if (null == oldC) {
+        if (oldC == null) {
             ret = newC;
         } else if (oldC.equals(newC)) {
             ret = oldC;
@@ -316,7 +316,7 @@ public class ObjectUtils {
      */
     public static Class<?> getArrayType(Object array) {
 
-        if (null == array) {
+        if (array == null) {
             throw new IllegalArgumentException("Argument must be an array or a collection, not " + array);
         }
 
@@ -331,7 +331,7 @@ public class ObjectUtils {
 
                 for (Object elem : (Object[]) array) {
                     arrayType = getArrayType_ClassMatch(arrayType, elem.getClass());
-                    if (null == arrayType) {
+                    if (arrayType == null) {
                         break;
                     }
                 }
@@ -349,7 +349,7 @@ public class ObjectUtils {
 
             for (Object elem : c) {
                 arrayType = getArrayType_ClassMatch(arrayType, elem.getClass());
-                if (null == arrayType) {
+                if (arrayType == null) {
                     break;
                 }
             }

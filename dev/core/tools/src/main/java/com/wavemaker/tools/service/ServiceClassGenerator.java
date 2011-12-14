@@ -104,7 +104,7 @@ public class ServiceClassGenerator {
 
             DeprecatedServiceDefinition def = ServiceUtils.getServiceDefinition(f, serviceId, this.serviceManager);
 
-            if (null == def) {
+            if (def == null) {
                 continue;
             }
 

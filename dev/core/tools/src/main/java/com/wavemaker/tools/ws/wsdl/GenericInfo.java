@@ -26,7 +26,7 @@ public abstract class GenericInfo {
     private final AtomicReference<Map<String, Object>> propertyMap = new AtomicReference<Map<String, Object>>();
 
     public Object getProperty(String name) {
-        if (null == this.propertyMap.get()) {
+        if (this.propertyMap.get() == null) {
             return null;
         }
         return this.propertyMap.get().get(name);
@@ -37,7 +37,7 @@ public abstract class GenericInfo {
     }
 
     public void setProperty(String name, Object v) {
-        if (null == this.propertyMap.get()) {
+        if (this.propertyMap.get() == null) {
             this.propertyMap.compareAndSet(null, new ConcurrentHashMap<String, Object>(4));
         }
         if (v == null) {

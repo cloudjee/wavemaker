@@ -91,9 +91,9 @@ public class DataServiceConstants {
 
     public static final Class<Integer> DML_OPERATION_RTN_TYPE = Integer.class;
 
-    public final static String DEFAULT_PACKAGE_ROOT = "com.";
+    public static final String DEFAULT_PACKAGE_ROOT = "com.";
 
-    public final static String DATA_PACKAGE_NAME = "data";
+    public static final String DATA_PACKAGE_NAME = "data";
 
     public static final String OUTPUT_PACKAGE_NAME = "output";
 

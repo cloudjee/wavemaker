@@ -208,7 +208,7 @@ public class Aghr implements DataServiceManagerAccess {
         }
     }
 
-    public final static void main(String[] args) {
+    public static final void main(String[] args) {
         String cfg = "aghr.spring.xml";
         String beanName = "aghr";
         Aghr s = (Aghr) SpringUtils.getBean(cfg, beanName);

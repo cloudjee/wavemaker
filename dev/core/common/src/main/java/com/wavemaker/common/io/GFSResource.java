@@ -43,7 +43,6 @@ import com.wavemaker.common.WMRuntimeException;
 
 /**
  * @author Ed Callahan
- * 
  */
 public class GFSResource implements Resource {
 
@@ -70,7 +69,7 @@ public class GFSResource implements Resource {
     public GFSResource(GridFS gfs, DBObject dirsDoc, String path) {
         Assert.notNull(gfs, "GridFS must not be null");
         Assert.notNull(path, "Path must not be null");
-        this.isDir = null != StringUtils.getFilenameExtension(path) ? false : true;
+        this.isDir = StringUtils.getFilenameExtension(path) == null;
         this.gfs = gfs;
         this.dirsDoc = dirsDoc;
         this.path = StringUtils.cleanPath(path);

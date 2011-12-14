@@ -289,7 +289,7 @@ public class IOUtils {
                 exception = e;
             }
         }
-        if (null == dir) {
+        if (dir == null) {
             throw exception;
         }
 

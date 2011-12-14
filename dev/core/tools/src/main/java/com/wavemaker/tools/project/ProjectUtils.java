@@ -51,11 +51,11 @@ public class ProjectUtils {
 
         try {
             List<File> classpath = new ArrayList<File>();
-            if (null != project.getWebInfClasses()) {
+            if (project.getWebInfClasses() != null) {
                 classpath.add(project.getWebInfClasses().getFile());
             }
 
-            if (null != project.getWebInfLib() && project.getWebInfLib().exists()) {
+            if (project.getWebInfLib() != null && project.getWebInfLib().exists()) {
                 if (!project.getWebInfLib().getFile().isDirectory()) {
                     throw new WMRuntimeException(MessageResource.LIB_DIR_NOT_DIR, project.getWebInfLib());
                 }
