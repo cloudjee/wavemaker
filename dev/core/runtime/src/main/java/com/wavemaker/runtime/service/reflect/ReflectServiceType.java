@@ -22,10 +22,14 @@ import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.JSONArray;
 import com.wavemaker.json.JSONState;
+import com.wavemaker.json.JSONObject;
 import com.wavemaker.json.type.reflect.ReflectTypeUtils;
+import com.wavemaker.json.type.FieldDefinition;
+import com.wavemaker.json.type.GenericFieldDefinition;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.server.InternalRuntime;
 import com.wavemaker.runtime.server.ServerUtils;
+import com.wavemaker.runtime.server.ServiceResponse;
 import com.wavemaker.runtime.server.json.JSONUtils;
 import com.wavemaker.runtime.service.ParsedServiceArguments;
 import com.wavemaker.runtime.service.ServiceType;
@@ -82,7 +86,16 @@ public abstract class ReflectServiceType implements ServiceType {
     }
 
     @Override
-    public TypedServiceReturn invokeMethod(ServiceWire serviceWire, String methodName, ParsedServiceArguments args, JSONState jsonState) {
+    public TypedServiceReturn invokeMethod(
+                ServiceWire serviceWire, String methodName,
+                ParsedServiceArguments args, JSONState jsonState) {
+        return invokeMethod(serviceWire, methodName, args, jsonState, null, false, null);
+    }
+
+    public TypedServiceReturn invokeMethod(
+            ServiceWire serviceWire, String methodName,
+            ParsedServiceArguments args, JSONState jsonState, ServiceResponse serviceResponse, boolean longResponseTime,
+            String requestId) {
 
         Method method;
         Object serviceObject;
@@ -103,6 +116,11 @@ public abstract class ReflectServiceType implements ServiceType {
         Object ret = null;
         try {
             ret = method.invoke(serviceObject, args.getArguments());
+            if (longResponseTime) {
+                JSONObject retJson = serviceResponse.addResponse(requestId, ret);
+                FieldDefinition fd = new GenericFieldDefinition();
+                ret = new TypedServiceReturn(retJson, fd);
+            }
         } catch (Exception e) {
             if (e.getCause() != null) {
                 throw new WMRuntimeException(MessageResource.JSONUTILS_FAILEDINVOKE, e.getCause(), method.getName(), method.getDeclaringClass());

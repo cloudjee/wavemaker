@@ -106,7 +106,21 @@ public class JSONRPCController extends ControllerBase {
         if (sw == null) {
             throw new WMRuntimeException(MessageResource.NO_SERVICEWIRE, serviceName);
         }
-        TypedServiceReturn reflInvokeRef = invokeMethod(sw, method, params, null);
+
+        boolean longResponseTime = false;
+        String requestId = null;
+        if (params.size() > 1) {
+            int len = params.size();
+            Object lrt = params.get(len-2);
+            if (lrt != null && lrt.toString().equals("longResponseTime")) {
+                requestId = (String)params.get(len-1);
+                longResponseTime = true;
+                params.remove(len-1);
+                params.remove(len-2);
+                serviceResponse.addRequestThread(requestId, Thread.currentThread());
+            }
+        }
+        TypedServiceReturn reflInvokeRef = invokeMethod(sw, method, params, null, serviceResponse, longResponseTime, requestId);
 
         if (this.logger.isDebugEnabled()) {
             this.logger.debug("method " + method + " result: " + reflInvokeRef);

@@ -28,6 +28,7 @@ import com.wavemaker.runtime.server.FileUploadResponse;
 import com.wavemaker.runtime.server.ParamName;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
+import com.wavemaker.runtime.service.ServiceSuperClass;
 import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.deployment.DeploymentTargetManager;
 import com.wavemaker.tools.deployment.DeploymentType;
@@ -40,7 +41,7 @@ import com.wavemaker.tools.project.ProjectManager;
  * @author Jeremy Grelle
  */
 @ExposeToClient
-public class DeploymentService {
+public class DeploymentService extends ServiceSuperClass {
 
     private DeploymentManager deploymentManager;
 

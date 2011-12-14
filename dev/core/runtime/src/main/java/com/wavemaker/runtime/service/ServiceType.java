@@ -20,6 +20,7 @@ import com.wavemaker.json.JSONArray;
 import com.wavemaker.json.JSONState;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.server.InternalRuntime;
+import com.wavemaker.runtime.server.ServiceResponse;
 import com.wavemaker.runtime.server.json.JSONUtils;
 
 /**
@@ -71,9 +72,23 @@ public interface ServiceType {
      * @param methodName The method name.
      * @param args The parsed service arguments.
      * @param jsonState The current JSONState object.
-     * @return The TypedServiceReturn containing the return value for the service, as well as the type information.
+     * @param serviceResponse
+     *            The response object that holds the result af a sevice call in case longResponseTime is true
+     * @param longResponseTime
+     *            indicates if the connection may time out due to long processing time
+     * @param requestId
+     *            The request Id in case longResponseTime is true
+     * @return The TypedServiceReturn containing the return value for the
+     *         service, as well as the type information.
      */
-    public TypedServiceReturn invokeMethod(ServiceWire serviceWire, String methodName, ParsedServiceArguments args, JSONState jsonState);
+    public TypedServiceReturn invokeMethod(
+            ServiceWire serviceWire, String methodName,
+            ParsedServiceArguments args, JSONState jsonState, ServiceResponse serviceResponse,
+            boolean longResponseTime, String requestId);
+
+    public TypedServiceReturn invokeMethod(
+            ServiceWire serviceWire, String methodName,
+            ParsedServiceArguments args, JSONState jsonState);
 
     /**
      * An initial setup call. This is called before any method invocations or json translations happen (although it will

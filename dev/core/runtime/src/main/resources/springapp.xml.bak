@@ -39,9 +39,6 @@
         <property name="internalRuntime">
             <ref bean="internalRuntime"/>
         </property>
-		<property name="serviceResponse">
-            <ref bean="serviceResponse"/>
-        </property>
 
         <!-- controller configuration -->
         <property name="supportedMethods" value="POST" />
@@ -168,8 +165,6 @@
         <!-- controller configuration -->
         <!--property name="supportedMethods" value="GET" /-->
     </bean>
-
-	<bean id="serviceResponse" class="com.wavemaker.runtime.server.ServiceResponse" scope="singleton" lazy-init="true"/>
     
     <bean class="com.wavemaker.runtime.data.cloudfoundry.CloudFoundryDataServiceBeanFactoryPostProcessor"/>
 </beans>

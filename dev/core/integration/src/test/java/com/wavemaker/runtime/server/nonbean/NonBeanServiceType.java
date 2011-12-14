@@ -29,6 +29,7 @@ import com.wavemaker.json.type.FieldDefinition;
 import com.wavemaker.json.type.GenericFieldDefinition;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.server.InternalRuntime;
+import com.wavemaker.runtime.server.ServiceResponse;
 import com.wavemaker.runtime.server.json.JSONUtils;
 import com.wavemaker.runtime.service.ParsedServiceArguments;
 import com.wavemaker.runtime.service.ServiceType;
@@ -59,7 +60,18 @@ public class NonBeanServiceType implements ServiceType {
      * java.lang.String, com.wavemaker.runtime.service.ParsedServiceArguments, com.wavemaker.json.JSONState)
      */
     @Override
-    public TypedServiceReturn invokeMethod(ServiceWire serviceWire, String methodName, ParsedServiceArguments args, JSONState jsonState) {
+    public TypedServiceReturn invokeMethod(ServiceWire serviceWire,
+            String methodName, ParsedServiceArguments args, JSONState jsonState) {
+        return invokeMethod(serviceWire, methodName, args, jsonState, null, false, null);
+    }
+
+    /* (non-Javadoc)
+     * @see com.wavemaker.runtime.service.ServiceType#invokeMethod(com.wavemaker.runtime.service.ServiceWire, java.lang.String, com.wavemaker.runtime.service.ParsedServiceArguments, com.wavemaker.json.JSONState)
+     */
+    @Override
+    public TypedServiceReturn invokeMethod(ServiceWire serviceWire,
+            String methodName, ParsedServiceArguments args, JSONState jsonState,
+            ServiceResponse serviceResponse, boolean longResponseTime, String requestId) {
 
         if ("foo".equals(methodName)) {
             Object[] os = args.getArguments();

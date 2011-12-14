@@ -257,8 +257,20 @@ public class ServerUtils {
         return params;
     }
 
-    public static TypedServiceReturn invokeMethodWithEvents(ServiceEventNotifier serviceEventNotifier, ServiceWire sw, String method,
-        ParsedServiceArguments args, JSONState jsonState, boolean throwExceptions) throws WMException {
+    public static TypedServiceReturn invokeMethodWithEvents(
+            ServiceEventNotifier serviceEventNotifier, ServiceWire sw,
+            String method, ParsedServiceArguments args, JSONState jsonState,
+            boolean throwExceptions)
+            throws WMException {
+        return invokeMethodWithEvents(serviceEventNotifier, sw, method, args, jsonState, throwExceptions,
+                                        null, false, null);
+    }
+
+    public static TypedServiceReturn invokeMethodWithEvents(
+            ServiceEventNotifier serviceEventNotifier, ServiceWire sw,
+            String method, ParsedServiceArguments args, JSONState jsonState,
+            boolean throwExceptions, ServiceResponse serviceResponse, boolean longResponseTime, String requestId)
+            throws WMException {
 
         TypedServiceReturn ret = null;
 
@@ -285,7 +297,8 @@ public class ServerUtils {
 
             args.setArguments(serviceEventNotifier.executePreOperation(sw, method, args.getArguments()));
             try {
-                ret = sw.getServiceType().invokeMethod(sw, method, args, jsonState);
+                ret = sw.getServiceType().invokeMethod(sw, method, args,
+                        jsonState, serviceResponse, longResponseTime, requestId);
             } catch (Throwable t) {
                 if (throwExceptions) {
                     throw new WMRuntimeException(t);

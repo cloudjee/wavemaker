@@ -64,6 +64,8 @@ public abstract class ControllerBase extends AbstractController {
     /** Logger that is available to subclasses */
     protected final Log logger = LogFactory.getLog(getClass());
 
+    protected ServiceResponse serviceResponse;
+
     /**
      * Create the default JSONState.
      * 
@@ -220,28 +222,44 @@ public abstract class ControllerBase extends AbstractController {
         return ret;
     }
 
-    protected TypedServiceReturn invokeMethod(ServiceWire sw, String method, JSONArray jsonArgs, Map<String, Object[]> mapParams) throws WMException {
+    protected TypedServiceReturn invokeMethod(ServiceWire sw,
+            String method, JSONArray jsonArgs, Map<String, Object[]> mapParams)
+            throws WMException {
+        return invokeMethod(sw, method, jsonArgs, mapParams, null, false, null);
+    }
 
-        if (jsonArgs != null && mapParams != null) {
-            throw new WMRuntimeException(MessageResource.BOTH_ARGUMENT_TYPES, jsonArgs, mapParams);
-        } else if (sw == null) {
-            throw new NullArgumentException("sw");
+    protected TypedServiceReturn invokeMethod(ServiceWire sw,
+            String method, JSONArray jsonArgs, Map<String, Object[]> mapParams,
+            ServiceResponse serviceResponse, boolean longResponseTime, String requestId)
+            throws WMException {
+
+        try {
+            if (jsonArgs != null && mapParams != null) {
+                throw new WMRuntimeException(MessageResource.BOTH_ARGUMENT_TYPES, jsonArgs, mapParams);
+            } else if (sw == null) {
+                throw new NullArgumentException("sw");
+            }
+
+            sw.getServiceType().setup(sw, this.internalRuntime, this.runtimeAccess);
+
+            JSONState jsonState = getInternalRuntime().getJSONState();
+
+            ParsedServiceArguments args;
+            if (mapParams != null) {
+                args = sw.getServiceType().parseServiceArgs(sw, method, mapParams, jsonState);
+            } else {
+                args = sw.getServiceType().parseServiceArgs(sw, method, jsonArgs, jsonState);
+            }
+
+            getInternalRuntime().setDeserializedProperties(args.getGettersCalled());
+
+            return ServerUtils.invokeMethodWithEvents(getServiceEventNotifier(), sw, method, args, jsonState, false);
+        } catch (WMRuntimeException ex) {
+            if (longResponseTime) {
+                serviceResponse.addError(requestId, ex);
+            }
+            throw ex;
         }
-
-        sw.getServiceType().setup(sw, this.internalRuntime, this.runtimeAccess);
-
-        JSONState jsonState = getInternalRuntime().getJSONState();
-
-        ParsedServiceArguments args;
-        if (mapParams != null) {
-            args = sw.getServiceType().parseServiceArgs(sw, method, mapParams, jsonState);
-        } else {
-            args = sw.getServiceType().parseServiceArgs(sw, method, jsonArgs, jsonState);
-        }
-
-        getInternalRuntime().setDeserializedProperties(args.getGettersCalled());
-
-        return ServerUtils.invokeMethodWithEvents(getServiceEventNotifier(), sw, method, args, jsonState, false);
     }
 
     @SuppressWarnings("deprecation")
@@ -319,5 +337,9 @@ public abstract class ControllerBase extends AbstractController {
 
     public void setRuntimeAccess(RuntimeAccess runtimeAccess) {
         this.runtimeAccess = runtimeAccess;
+    }
+
+    public void setServiceResponse(ServiceResponse serviceResponse) {
+        this.serviceResponse = serviceResponse;
     }
 }
