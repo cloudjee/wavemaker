@@ -349,7 +349,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    this.dialogScrim.setShowing(this.modal);
 	    wm.bgIframe.setShowing(!this.modal && !this.isDesignedComponent());
 	}
-	this.titleButtonPanel.setShowing(!this.modal);
+	this.titleButtonPanel.setShowing(!this.modal && !this.docked);
     },
     setNoEscape: function(inNoEscape) {
 	this.noEscape = inNoEscape;
@@ -987,6 +987,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 					verticalAlign: "top",
 					showing: !this.modal && !this.docked
 				       });
+
 	this.titleClose = new wm.ToolButton({_classes: {domNode: ["dialogclosebutton"]},
 					     noInspector: true,
 					     name: "titleClose",
