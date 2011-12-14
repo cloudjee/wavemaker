@@ -1089,14 +1089,13 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
     verticalAlign: "top",
     horizontalAlign: "left",
     height: "250px",
-    scrollY: true,
     inspected: null,
     /* name, editor, editorProps, postFix */
     commonStyles: [
-	{name: "border", editor: "wm.Number"},
-	{name: "borderColor", editor: "wm.ColorPicker"},
-	{name: "margin", editor: "wm.Text"},
-	{name: "padding",editor: "wm.Text"},
+/*	{name: "border", editor: "wm.Number", layerName: "basicLayer"},
+	{name: "borderColor", editor: "wm.ColorPicker", layerName: "basicLayer"},
+	{name: "margin", editor: "wm.Text", layerName: "basicLayer"},
+	{name: "padding",editor: "wm.Text", layerName: "basicLayer"},*/
 	{name: "backgroundColor", editor: "wm.ColorPicker"},
 	{name: "backgroundRepeat", editor: "wm.SelectMenu", editorProps: {options: ["no-repeat","repeat-x","repeat-y","repeat"]}},
 	{name: "color", editor: "wm.ColorPicker"},
@@ -1116,36 +1115,54 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
     postInit: function() {
 	this.inherited(arguments);
 	this.editors = {};
-/*
-	var defaultProps = {
-	    captionPosition: "top",
-	    captionAlign: "left",
-	    captionSize: "20px",
-	    width: "100%",
-	    height: "45px",
-	    allowNone: true,
-	    owner: this,
-	    parent: this
-	};
-	*/
+
+	this.tabs = this.createComponents({
+	    tabs: ["wm.TabLayers", {width: "100%", fitToContentHeight: true, height: "100px", clientBorder: "1,0,0,0",clientBorderColor: "#959DAB", margin: "0", padding: "0"}, {}, {
+		basicLayer: ["wm.Layer", {caption: "Basic"}, {
+		}],
+		styleLayer: ["wm.Layer", {caption: "Styles"}, {},{
+		}],
+		classLayer: ["wm.Layer", {caption: "Classes"}, {}, {
+		    classListEditor: ["wm.prop.ClassListEditor", {width: "100%", inspected: this.inspected}]
+		}]
+	    }]
+	})[0];
+	this.connect(this.tabs,"onchange",this, function() {
+	    this.setHeight(this.getPreferredFitToContentHeight());
+	    this.parent.setHeight(this.parent.getPreferredFitToContentHeight());
+	    dojo.cookie(this.getRuntimeId() + ".layerIndex", this.tabs.layerIndex);
+	});
+	
+	this.basicLayer = this.tabs.layers[0];
+	this.styleLayer = this.tabs.layers[1];
+	this.classListLayer = this.tabs.layers[2];
+	this.classListEditor = this.classListLayer.c$[0];
+	this.tabs.setLayerIndex(dojo.cookie(this.getRuntimeId() + ".layerIndex") || 0);
 	var defaultProps = {
 	    captionPosition: "top",
 	    captionAlign: "left",
 	    captionSize: "20px",
 	    singleLine: false,
 	    width: "100%",
-	    height: "45px",
+	    height: "42px",
 	    allowNone: true,
 	    owner: this,
 	    parent: this,
 	    helpText: true
 	};
+
 	dojo.forEach(this.commonStyles, dojo.hitch(this, function(styleProp) {
+	    var parent;
+	    if (styleProp.layerName) {
+		parent = this[styleProp.layerName];
+	    } else {
+		parent = this.styleLayer;
+	    }
 	    var ctor = dojo.getObject(styleProp.editor);
 	    var props = styleProp.editorProps || {};
 	    props.caption = styleProp.name;
 	    props.name = "style_" + styleProp.name;
-	    var e = new ctor(dojo.mixin(props, defaultProps));
+	    var e = new ctor(dojo.mixin(props, defaultProps, {parent: parent}));
 	    e.connect(e,"onchange", this, function(inDisplayValue, inDataValue) {
 		this.changed(e, inDisplayValue, inDataValue);
 	    });
@@ -1156,12 +1173,24 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	    this.editors[styleProp.name] = e;
 	}));
 
+	var propsHash = this.inspected.listProperties();
+	var propsArray = [];
+	for (var p in propsHash) {
+	    var prop = propsHash[p];
+	    if (prop.group == "style" && !prop.ignore && !prop.hidden && prop.editor != "wm.prop.StyleEditor") {
+		prop.name = p;
+		this.owner.generateEditor(this.inspected, prop, this.basicLayer,null);
+	    }
+	}
+
+
 	var b = new wm.Button({
 	     owner: this,
-	     parent: this,
+	     parent: this.styleLayer,
 	     width: "100%",
 	     height: "30px",
-	    caption: "Generate CSS Rule",
+	    caption: "Create Class",
+	    hint: "Creates a css class based on these styles",
 	    onclick: dojo.hitch(this, "generateCssRule")
 	 });
 
@@ -1189,24 +1218,29 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	    if (styleProp.postFix && inValue) {
 		var value = this.inspected.getStyle(styleName);
 		value = value.replace(new RegExp(styleProp.postFix + "$"),"");
-		this.editors[styleProp.name].setDataValue(value);
 	    }
+	    this.editors[styleProp.name].setDataValue(value);
 	}));
 
     },
     generateCssRule: function() {
-	var cssText = "/* NOTE: You can not set border, borderColor, margin or padding for widgets using stylesheets.\n" +
+	app.prompt("What do you want to name this css class?  NOTE: Clicking ok will create this rule based on the styles you've set for this widget, and replace your styles with the new CSS Class", this.inspected.name, dojo.hitch(this, function(inClassName) {
+	    if (!inClassName) return;
+	    var cssText = "." + inClassName + " {\n";
 	    "You CAN set these styles for nodes inside of widgets, just not for the widgets themselves. */\n";
 	if (this.inspected.styles) {
 	    for (var styleName in this.inspected.styles) {
 		cssText += styleName.replace(/([A-Z])/g, function(inText) {return "-" + inText.toLowerCase();}) + ": " + this.inspected.styles[styleName] + ";\n";
 		delete this.inspected.styles[styleName];
 	    }
+	    cssText += "\n}\n";
 	    this.setDataValue(this.inspected.styles);
 	}
-	setControlNodeStyles(this.inspected, cssText);
-	studio.sourceTab.activate();
-	studio.cssLayer.activate();
+	    this.classListEditor.addClass(inClassName);
+	    studio.cssLayer.activate();
+	    studio.sourceTab.activate();
+	    studio.appCssEditArea.setDataValue(studio.appCssEditArea.getDataValue() + "\n\n" + cssText);
+	}));
     },
 /*
     addEditor: function(inStyleName, inStyleValue) {
@@ -1256,7 +1290,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 });
 
 dojo.declare("wm.prop.ClassListEditor", wm.Container, {
-    height: "100px",
+    height: "150px",
     emptyList: ["<i>No Classes...</i>"],
     postInit: function() {
 	this.inherited(arguments);
@@ -1294,10 +1328,20 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 				    caption: "Add Class",
 				    width: "100px",
 				    height: "100%",
-				    onclick: dojo.hitch(this, "addClass")});
+				    onclick: dojo.hitch(this, "_addClass")});
+	new wm.Label({owner: this, 
+		      parent: this,
+		      width: "100%",
+		      height: "32px",
+		      singleLine: false,
+		      caption: "Add a CSS class to this widget to style it"});
 	this.reflow();
     },
-    addClass: function() {
+    addClass: function(inClassName) {
+	this.textInput.setDataValue(inClassName);
+	this._addClass();
+    },
+    _addClass: function() {
 	var value = this.textInput.getDataValue();
 	this.textInput.clear();
 	if (value) {

@@ -1,0 +1,352 @@
+.Studio #studio_PIContents {
+	background-color:#424a5a;
+}
+.wmPropertyInspector-propEdit_dataSet li {
+    background-image: none !important;
+}
+
+.wmPropertyInspector-propEdit_dataSet li input {
+    width: initial;
+
+    min-width: 80px;
+    display: inline-block;
+}
+
+.tundra .wminspector .dojoxGridRowOdd {
+    background-color: #eeeeee;
+}
+.tundra .wminspector .dojoxGridRow {
+    background-color: #f5f5f5;
+}
+
+.wminspector .wmPropertyInspector-propEdit_dataSet li .wmtree-content {
+    min-width: 80px;
+    display: inline-block;
+}
+
+.wminspector .wmeditor-caption {
+    font-weight: normal;
+    font-size: 11px;
+}
+
+.wminspector .wmbutton {
+	-moz-border-radius: 4px; 
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+        background: -webkit-gradient(linear, left top, left bottom, from(#E0E0E0), to(#707070));
+	background: -moz-linear-gradient(top,  #E0E0E0,  #707070);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#E0E0E0', endColorstr='#707070');
+        cursor: pointer;
+}
+
+.wminspector  .wmbutton:hover {
+        background: -webkit-gradient(linear, left top, left bottom, from(#D0D0D0), to(#404040));
+	background: -moz-linear-gradient(top,  #D0D0D0,  #404040);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#D0D0D0', endColorstr='#404040');
+}
+
+.wminspector .EditorHelpIcon {
+    background-repeat: no-repeat;
+    background-position: 50% 50%;
+    background-image: url(/wavemaker/images/grayhelp.png);
+}
+
+.wminspector .wminspector-bindProp {
+	background-image: url(/wavemaker/images/inspector_bound.gif);
+}
+
+.tundra .wminspector .dijitTextBoxDisabled,
+.tundra .wminspector  .dijitComboBoxDisabled,
+.tundra .wminspector  .Disabled .wmeditor-caption {
+	background:#424A5A;
+	border-color:#D5D5D5;
+	color: white;
+	opacity:1.0;
+}
+
+/* Reset editor is used for showing bound properties */
+.wminspector .wmeditor.wmreseteditor .dijitTextBox {
+     -moz-border-radius: 0px; 
+     -webkit-border-radius: 0px;
+     border-radius: 0px;     
+}
+
+/*
+
+.Studio-inspected {
+	padding: 4px 4px 2px 4px;
+	border: none;
+	color: #FFF;
+}
+
+.prop-default {
+	color: green;
+}
+
+.prop-table td {
+	border: 0 none;
+}
+
+.prop-button {
+	width: 2em;
+}
+
+
+.wmstyleinspector {
+}
+
+.wmstyleinspector textarea {
+	border: 0 none;
+}
+
+.wmstyleinspector-label {
+	font-weight: bold;
+	border-bottom: 1px solid silver;
+	padding: 4px;
+	text-align: center;
+	background: white url(/wavemaker/images/toolbar_btn_bg.gif) repeat-x;
+}
+
+.wminspector, #studio_inspectorLayers_classListPanel {
+	background-color: #424a5a;
+}
+
+.wminspector table {
+	background-color: #424a5a;
+}
+
+.wminspector th {
+	border: 1px solid #5d6677;
+	border-top-color: #5d6677;
+	border-left-color: #5d6677;
+	border-left-width: 0px;
+}
+
+.wminspector td {
+	border: 1px solid #5d6677;
+	border-left-width: 0px;
+	border-top: none;
+	overflow: hidden;
+}
+
+.wminspector td table td {
+	border: none;
+}
+
+.wminspector td .dijitComboBox {
+	margin: 0;
+}
+
+.wminspector td .dijitValidationIcon {
+	width: 0;
+}
+
+.wminspector select {
+	width: 100%;
+	border: 0;
+	background-color: #d0d1d3;
+}
+
+.wminspector textarea {
+	border: none;
+	width: 100%;
+}
+
+.wminspector input {
+	width: 100%;
+	height:100%;
+	background-color: #d0d1d3;
+	border: 0px solid white;
+	padding: 0 2px;
+	color: #000;
+}
+
+.wminspector-caption {
+	padding: 2px 2px 2px 6px;
+	background-color:#424a5a;
+	color: #FFF;
+}
+
+.wminspector-property {
+	background-color: #d0d1d3;
+}
+
+.wminspector-addevent {
+    color: #FFF;
+    font-weight: bold;
+    cursor: pointer;    
+    width: 16px;
+    text-align: center;
+}
+
+
+.wminspector-header {
+	padding: 2px 4px;
+	background-color:#424a5a;
+	color: #FFF;
+}
+
+.wminspector-group {
+	padding: 2px 4px 2px 0px;
+	text-align: left;
+}
+
+.wminspector-binding, .wminspector .wminspector-help  {
+	width: 20px;
+	background-color:#424a5a;
+	background-repeat: no-repeat;
+	background-position: 50% 50%;
+}
+
+.wminspector-header.wminspector-binding {
+	background-image: url(/wavemaker/images/inspector_bound.gif);
+}
+
+
+.wminspector .wminspector-header.wminspector-help {
+   cursor: auto;
+}
+.wminspector .wminspector-help {
+   text-align: center;
+   font-weight: bold;
+   cursor: pointer;
+}
+
+
+.wminspector .wminspector-bindProp-disabled {
+}
+
+
+
+.wminspector .wmeditor-readonlyNode {
+    border: solid 1px #555;
+}
+
+
+.wminspector-grouprow {
+	cursor: pointer;
+}
+
+.wminspector-grouprow th {
+	background-color: #424a5a;
+	color:#FFF;
+}
+
+.wminspector-button {
+	vertical-align: middle;
+}
+
+.wminspector table {
+	table-layout: fixed;
+}
+
+.wminspector .wminspector-buttoncol {
+	border-right-width: 0px;
+	width: 14px;
+	text-align: left;
+	background-color:#424a5a;
+}
+
+.wminspector-spacer {
+	height: 1px;
+}
+
+.wminspector-filebox input {
+	border: none;
+	margin: 0;
+	padding: 0;
+	width: 50%;
+}
+
+.wminspector-fileinput {
+	font-size: 80%;
+}
+
+.wminspector-prop-default {
+	color: green;
+}
+
+.wminspector-prop-table td {
+	border: none;
+}
+
+.wminspector-prop-button {
+	width: 96%;
+	padding: 0;
+
+	-moz-border-radius: 4px; 
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+        border: solid 2px #282828;
+    border-left-width: 1px;
+        border-top-width: 1px;
+	margin: 1% 2%;
+        background: -webkit-gradient(linear, left top, left bottom, from(#E0E0E0), to(#707070));
+	background: -moz-linear-gradient(top,  #E0E0E0,  #707070);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#E0E0E0', endColorstr='#707070');
+        cursor: pointer;
+}
+.wminspector-prop-button:hover {
+        background: -webkit-gradient(linear, left top, left bottom, from(#D0D0D0), to(#404040));
+	background: -moz-linear-gradient(top,  #D0D0D0,  #404040);
+	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#D0D0D0', endColorstr='#404040');    
+        border: solid 1px #111111;
+    padding-bottom: 1px;
+}
+
+.wminspector-group img {
+	vertical-align: text-bottom;
+}
+
+.wminspector .bound-prop-table {
+	background-color:#424a5a;
+	border: 0;
+	padding: 0;
+	margin: 0;
+}
+
+.wminspector .bound-prop input {
+	padding: 0 2px;
+	font-weight: bold;
+	background-color:#ebebeb;
+	width: 100%;
+}
+
+.wminspector .bound-prop-table {
+	height: 1.5em;
+	width: 100%;
+}
+
+.wminspector .bound-prop-button {
+	padding: 0px;
+	width: 16px;
+	background: url(/wavemaker/images/inspector_bind_disabled.gif) no-repeat 50% 50%;
+}
+
+
+.Studio-PIPanel {
+	padding: 5px;
+	background-color: #6f798a;
+}
+
+.Studio-PIContents {
+	background-color: #424a5a;
+}
+
+.Studio-PISpacer, .Studio-PILabelContainer, .Studio-PITreeLabelContainer {
+	background-color: #6f798a;
+}
+
+
+.Studio-PITreeTopBorderl, .Studio-PITopBorderl {
+	background-image: url(/wavemaker/images/pi_ul.gif);
+}
+
+.Studio-PITreeTopBorderr, .Studio-PITopBorderr {
+	background-image: url(/wavemaker/images/pi_ur.gif);
+}
+
+.Studio-inspectorLayers .wmtree-root-leaf, .Studio-inspectorLayers .wmtree-root-last-leaf, .Studio-inspectorLayers .wmtree-last-item { 
+	background-color: #fff; 
+}
+*/

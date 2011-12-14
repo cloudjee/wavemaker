@@ -374,7 +374,7 @@ wm.Object.extendSchema(wm.Control, {
 	className: { ignore: 1 },
     styles: {order: 50, group: "style", editor: "wm.prop.StyleEditor"},
     _classes: {writeonly:1},
-    classes: {order: 100, group: "style", editor: "wm.prop.ClassListEditor"},
+    classes: {order: 100, group: "style", hidden:true}, // handled by StyleEditor
 	container: { ignore: 1 },
 	flex: { ignore: 1 },
 	group: { ignore: 1 },
@@ -415,15 +415,18 @@ wm.Object.extendSchema(wm.Control, {
 
 
 
-	        invalidCss: {ignore: 1},
-	        renderedOnce: {ignore: 1},
-		bounds: {ignore: 1},
-    border: {group: "style", doc: 1, hidden: 1},
-	    borderColor: {group: "style", doc: 1, editor: "wm.ColorPicker", hidden: 1},
+    invalidCss: {ignore: 1},
+    renderedOnce: {ignore: 1},
+    bounds: {ignore: 1},
+
+    /* These 4 are marked as hidden but are actually handled by the StyleInspector */
+    border: {group: "style", doc: 1, order: 10},
+    borderColor: {group: "style", doc: 1, editor: "wm.ColorPicker", order: 11},
+    padding: {group: "style", doc: 1, order: 12},
+    margin: {group: "style", doc: 1, order: 13},
+
 		//backgroundColor: {group: "style"},
 		backgroundColor: {ignore: 1},
-	    margin: {group: "style", doc: 1, hidden: 1},
-	    padding: {group: "style", doc: 1, hidden: 1},
 
 	    autoScroll: {group: "scrolling", order: 100, writeonly: 1, type: "Boolean"},
 	    scrollX: {group: "scrolling", order: 101, writeonly: 1},
