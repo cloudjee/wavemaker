@@ -217,12 +217,11 @@ public class DataServiceUtils {
         return cfg;
     }
 
-    @SuppressWarnings("unchecked")
     public static Properties toHibernateConnectionProperties(Properties p) {
         Properties rtn = new Properties();
         rtn.putAll(p);
-        for (Iterator iter = p.entrySet().iterator(); iter.hasNext();) {
-            Map.Entry entry = (Map.Entry) iter.next();
+        for (Iterator<Map.Entry<Object, Object>> iter = p.entrySet().iterator(); iter.hasNext();) {
+            Map.Entry<Object, Object> entry = iter.next();
             String name = (String) entry.getKey();
             String newName = null;
             if (name.endsWith(DataServiceConstants.DB_USERNAME)) {

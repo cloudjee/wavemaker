@@ -14,6 +14,7 @@
 
 package com.wavemaker.common.util;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -178,12 +179,11 @@ public class ObjectAccess {
         return rtn;
     }
 
-    public boolean hasAnnotation(Class<?> annotation, Object o, String methodName) {
+    public <T extends Annotation> boolean hasAnnotation(Class<T> annotation, Object o, String methodName) {
         return hasAnnotation(annotation, o, methodName, (Class<?>[]) null);
     }
 
-    @SuppressWarnings("unchecked")
-    public boolean hasAnnotation(Class annotation, Object o, String methodName, Class<?>... paramTypes) {
+    public <T extends Annotation> boolean hasAnnotation(Class<T> annotation, Object o, String methodName, Class<?>... paramTypes) {
         Method m = getMethod(getClassForObject(o), methodName, paramTypes);
         if (m == null) {
             return false;
@@ -191,8 +191,7 @@ public class ObjectAccess {
         return m.getAnnotation(annotation) != null;
     }
 
-    @SuppressWarnings("unchecked")
-    public boolean hasAnnotation(Class annotation, Object o, String methodName, int numParams) {
+    public <T extends Annotation> boolean hasAnnotation(Class<T> annotation, Object o, String methodName, int numParams) {
         Method m = getMethod(getClassForObject(o), methodName, numParams);
         if (m == null) {
             return false;

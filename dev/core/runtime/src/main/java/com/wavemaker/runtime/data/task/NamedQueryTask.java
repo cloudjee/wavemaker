@@ -111,7 +111,6 @@ public class NamedQueryTask extends BaseTask implements Task {
         return "Built-in Named Query Task";
     }
 
-    @SuppressWarnings("unchecked")
     private void handleBindParams(Query query, String queryName, Object[] paramValues, DataServiceMetaData meta) {
 
         NamedQueryDefinition def = meta.getQueryDefinition(queryName);

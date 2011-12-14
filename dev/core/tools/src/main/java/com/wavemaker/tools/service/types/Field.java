@@ -116,11 +116,11 @@ public class Field {
         this.fieldOrder = fieldOrder;
     }
 
-    public String getFieldSubType() { // salesforce
+    public String getFieldSubType() {
         return this.fieldSubType;
     }
 
-    public void setFieldSubType(String subType) { // salesforce
+    public void setFieldSubType(String subType) {
         this.fieldSubType = subType;
     }
 }

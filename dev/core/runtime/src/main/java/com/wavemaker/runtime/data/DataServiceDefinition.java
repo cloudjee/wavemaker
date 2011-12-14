@@ -244,7 +244,7 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition i
     }
 
     @Override
-    public List<ElementType> getTypes(String username, String password) { // salesforce - just to avoid compile error
+    public List<ElementType> getTypes(String username, String password) {
         Collection<String> entities = this.metaData.getEntityClassNames();
         Collection<String> helperTypes = this.metaData.getHelperClassNames();
         return DataServiceUtils.getTypes(entities, helperTypes, this.elementTypeFactory);

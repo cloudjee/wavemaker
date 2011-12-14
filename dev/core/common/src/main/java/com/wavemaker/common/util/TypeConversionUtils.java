@@ -29,10 +29,9 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * @author Simon Toens
  */
-public class TypeConversionUtils {
+public abstract class TypeConversionUtils {
 
     private TypeConversionUtils() {
-        throw new UnsupportedOperationException();
     }
 
     private static final Map<String, Class<?>> PRIMITIVES = new HashMap<String, Class<?>>(8);
@@ -172,7 +171,7 @@ public class TypeConversionUtils {
         }
     }
 
-    public static String getValueString(Class<?> type, String s) { // salesforce
+    public static String getValueString(Class<?> type, String s) {
 
         if (s == null) {
             return "null";

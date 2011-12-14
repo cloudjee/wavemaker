@@ -30,7 +30,7 @@ import com.wavemaker.common.util.ObjectGraphTraversal.Context;
 /**
  * @author Simon Toens
  */
-public class ObjectUtils {
+public abstract class ObjectUtils {
 
     // only use for logging - not guaranteed to be unique
     public static String getId(Object o) {
@@ -137,13 +137,13 @@ public class ObjectUtils {
         return sb.toString();
     }
 
-    public static String toString(Collection c) {
+    public static <T> String toString(Collection<T> c) {
         return toString(c, ", ");
     }
 
-    public static String toString(Collection c, String sep) {
+    public static <T> String toString(Collection<T> c, String sep) {
         StringBuilder sb = new StringBuilder();
-        for (Iterator iter = c.iterator(); iter.hasNext();) {
+        for (Iterator<T> iter = c.iterator(); iter.hasNext();) {
             sb.append(String.valueOf(iter.next()));
             if (iter.hasNext()) {
                 sb.append(sep);

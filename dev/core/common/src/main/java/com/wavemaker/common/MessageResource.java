@@ -206,7 +206,7 @@ public class MessageResource {
     @ResourceConstraint(numArgs = 0, hasDetailMsg = false)
     public static final MessageResource WS_WADL_METHOD_NOT_FOUND = new MessageResource("com.wavemaker.runtime.ws$WadlMethodNotFound");
 
-    // input: name(s) of required property(ies) (String)
+    // input: name(s) of required property(ies)
     @ResourceConstraint(numArgs = 1, hasDetailMsg = true)
     public static final MessageResource MISSING_SYS_PROPERTIES = new MessageResource("com.wavemaker.tools$SysPropertyNotSet");
 
@@ -407,7 +407,7 @@ public class MessageResource {
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
     public static final MessageResource JSON_BAD_CYCLE_HANDLER = new MessageResource("com.wavemaker.json$UnknownCycleHandler");
 
-    private static final Map<MessageResource, ResourceConstraint> annos;
+    private static final Map<MessageResource, ResourceConstraint> annotations;
     static {
 
         Map<MessageResource, ResourceConstraint> m = new HashMap<MessageResource, ResourceConstraint>();
@@ -421,7 +421,7 @@ public class MessageResource {
             throw new AssertionError(ex);
         }
 
-        annos = Collections.unmodifiableMap(m);
+        annotations = Collections.unmodifiableMap(m);
 
     }
 
@@ -429,9 +429,9 @@ public class MessageResource {
 
     private static final String ID_KEY = "_id";
 
-    private final Object key;
+    private final String key;
 
-    private MessageResource(Object key) {
+    private MessageResource(String key) {
         if (key == null) {
             throw new IllegalArgumentException("key cannot be null");
         }
@@ -439,7 +439,7 @@ public class MessageResource {
     }
 
     public Integer getId() {
-        return Integer.parseInt(MessageResource.getMessage((String) this.key + MessageResource.ID_KEY, 0));
+        return Integer.parseInt(MessageResource.getMessage(this.key + MessageResource.ID_KEY, 0));
     }
 
     public String getMessage() {
@@ -447,7 +447,7 @@ public class MessageResource {
     }
 
     public String getMessage(Object... args) {
-        return MessageResource.getMessage((String) this.key, getNumArgsRequired(), args);
+        return MessageResource.getMessage(this.key, getNumArgsRequired(), args);
     }
 
     public String getDetailMessage() {
@@ -455,23 +455,23 @@ public class MessageResource {
     }
 
     public String getDetailMessage(Object... args) {
-        return MessageResource.getMessage((String) this.key + MessageResource.DETAIL_KEY, getNumDetailArgsRequired(), args);
+        return MessageResource.getMessage(this.key + MessageResource.DETAIL_KEY, getNumDetailArgsRequired(), args);
     }
 
     public String getMessageKey() {
-        return (String) this.key;
+        return this.key;
     }
 
     public int getNumArgsRequired() {
-        return annos.get(this).numArgs();
+        return annotations.get(this).numArgs();
     }
 
     public int getNumDetailArgsRequired() {
-        return annos.get(this).numArgs();
+        return annotations.get(this).numArgs();
     }
 
     public boolean hasDetailedMsg() {
-        return annos.get(this).hasDetailMsg();
+        return annotations.get(this).hasDetailMsg();
     }
 
     private static String getMessage(String key, int numArgsRequired, Object... args) {

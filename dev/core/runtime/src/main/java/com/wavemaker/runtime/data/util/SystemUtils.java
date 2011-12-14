@@ -29,37 +29,33 @@ import com.wavemaker.runtime.server.InternalRuntime;
  * 
  * @author Simon Toens
  */
-public class SystemUtils {
+public abstract class SystemUtils {
+
+    private SystemUtils() {
+    }
 
     public static void clientPrepare() {
         registerPropertyFilter();
     }
 
     public static Object serverMergeForUpdate(Object o, DataServiceManagerAccess mgrAccess) {
-
         DataServiceManager mgr = mgrAccess.getDataServiceManager();
-
         return serverMergeForUpdate(o, mgr.getSession(), mgr.getMetaData());
     }
 
     public static Object serverMergeForUpdate(Object o, Session session, DataServiceMetaData metaData) {
-
         if (o == null) {
             return null;
         }
 
         InternalRuntime internalRuntime = InternalRuntime.getInstance();
-
         List<List<String>> args = internalRuntime.getDeserializedProperties();
-
         if (args.isEmpty()) {
             return o;
         }
 
         List<String> populatedProperties = args.get(0); // hardcoded first arg?
-
         return DataServiceUtils.mergeForUpdate(o, session, metaData, populatedProperties);
-
     }
 
     public static Object serverMergeForInsert(Object o, Session session, DataServiceMetaData metaData) {
@@ -68,9 +64,7 @@ public class SystemUtils {
 
     // does this need to be public?
     public static void registerPropertyFilter() {
-
         InternalRuntime internalRuntime = InternalRuntime.getInstance();
-
         internalRuntime.getJSONState().setPropertyFilter(DataPropertyFilter.getInstance());
     }
 
@@ -88,14 +82,7 @@ public class SystemUtils {
      */
     @Deprecated
     public static Object clientPrepare(Object o, DataServiceManagerAccess mgrAccess) {
-
         registerPropertyFilter();
-
         return o;
     }
-
-    private SystemUtils() {
-        throw new UnsupportedOperationException();
-    }
-
 }

@@ -23,6 +23,8 @@ import com.wavemaker.tools.service.DesignServiceType;
  */
 public abstract class ReflectDesignServiceType implements DesignServiceType {
 
+    private String serviceType;
+
     @Override
     public Class<? extends ServiceWire> getServiceWire() {
         return ReflectServiceWire.class;
@@ -32,9 +34,6 @@ public abstract class ReflectDesignServiceType implements DesignServiceType {
     public String getServiceType() {
         return this.serviceType;
     }
-
-    // bean properties
-    private String serviceType;
 
     public void setServiceType(String serviceType) {
         this.serviceType = serviceType;

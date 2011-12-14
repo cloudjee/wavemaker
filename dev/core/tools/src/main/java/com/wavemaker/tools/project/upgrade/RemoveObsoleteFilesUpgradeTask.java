@@ -31,6 +31,8 @@ import com.wavemaker.tools.project.Project;
  */
 public class RemoveObsoleteFilesUpgradeTask implements UpgradeTask {
 
+    private List<String> files;
+
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
@@ -44,9 +46,6 @@ public class RemoveObsoleteFilesUpgradeTask implements UpgradeTask {
 
         upgradeInfo.addMessage("Removed obsolete files: " + StringUtils.join(this.files, ", "));
     }
-
-    // bean properties
-    private List<String> files;
 
     public void setFiles(List<String> files) {
         this.files = files;

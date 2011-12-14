@@ -36,6 +36,10 @@ import com.wavemaker.tools.project.ProjectManager;
  */
 public class UpgradeTemplateFile implements UpgradeTask {
 
+    private String relativePath;
+
+    private String message;
+
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
@@ -69,11 +73,6 @@ public class UpgradeTemplateFile implements UpgradeTask {
             upgradeInfo.addMessage(this.message);
         }
     }
-
-    // bean properties
-    private String relativePath;
-
-    private String message;
 
     /**
      * The relative path (relative to the project root) for the file to upgrade.

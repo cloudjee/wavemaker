@@ -33,6 +33,8 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
  */
 public class AutoFormToLiveFormUpgrade implements UpgradeTask {
 
+    private PagesManager pagesManager;
+
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
@@ -53,9 +55,6 @@ public class AutoFormToLiveFormUpgrade implements UpgradeTask {
             throw new WMRuntimeException(e);
         }
     }
-
-    // bean properties
-    private PagesManager pagesManager;
 
     public PagesManager getPagesManager() {
         return this.pagesManager;

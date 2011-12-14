@@ -30,20 +30,7 @@ import java.util.Set;
  */
 public class OneToManyMap<K, V> {
 
-    private final Map<K, Set<V>> m;
-
-    public OneToManyMap() {
-        this(HashMap.class);
-    }
-
-    /**
-     * Specify the underlying Map implementation.
-     * 
-     * @param mapType
-     */
-    public OneToManyMap(Class<?> mapType) {
-        this.m = CastUtils.cast((Map) ClassUtils.newInstance(mapType));
-    }
+    private final Map<K, Set<V>> m = new HashMap<K, Set<V>>();
 
     public V put(K key, V value) {
 

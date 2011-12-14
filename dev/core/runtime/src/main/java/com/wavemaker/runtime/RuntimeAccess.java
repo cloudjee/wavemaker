@@ -51,9 +51,9 @@ import com.wavemaker.runtime.service.reflect.ReflectServiceWire;
  */
 public class RuntimeAccess {
 
-    private HttpServletRequest request = null;
-
     private static RuntimeAccess staticRuntime = null;
+
+    private HttpServletRequest request = null;
 
     private ServiceManager serviceManager = null;
 
@@ -146,7 +146,6 @@ public class RuntimeAccess {
         return ((ReflectServiceWire) this.getServiceWire(serviceId)).getServiceBean();
     }
 
-    // bean accessors
     public static void setRuntimeBean(RuntimeAccess bean) {
         RuntimeAccess.staticRuntime = bean;
     }
@@ -172,7 +171,7 @@ public class RuntimeAccess {
         return (Integer) o;
     }
 
-    public Object getSpringBean(String beanId) { // salesforce
+    public Object getSpringBean(String beanId) {
         ServletContext context = this.request.getSession().getServletContext();
         WebApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(context);
 

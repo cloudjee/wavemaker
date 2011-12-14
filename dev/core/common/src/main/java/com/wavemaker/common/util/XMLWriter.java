@@ -222,16 +222,16 @@ public class XMLWriter {
     }
 
     /**
-     * Adds attributes to current XML element, represented as Map. Uses the keys as atttribute names and corresponding
+     * Adds attributes to current XML element, represented as Map. Uses the keys as attribute names and corresponding
      * elements as attribute values. Calls String.valueOf(...) on keys and values.
      */
-    public void addAttribute(Map attributes) {
+    public void addAttribute(Map<String, String> attributes) {
         String[] attributesArray = new String[attributes.size() * 2];
         int index = 0;
-        for (Iterator iter = attributes.entrySet().iterator(); iter.hasNext();) {
-            Map.Entry entry = (Map.Entry) iter.next();
-            attributesArray[index] = (String) entry.getKey();
-            attributesArray[index + 1] = (String) entry.getValue();
+        for (Iterator<Map.Entry<String, String>> iter = attributes.entrySet().iterator(); iter.hasNext();) {
+            Map.Entry<String, String> entry = iter.next();
+            attributesArray[index] = entry.getKey();
+            attributesArray[index + 1] = entry.getValue();
             index += 2;
         }
         addAttribute(attributesArray);
