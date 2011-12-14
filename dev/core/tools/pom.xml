@@ -49,7 +49,7 @@
 								<property name="zipdir" value="${basedir}/templates/templateapp" />
 								<property name="zipdestfile" value="${project.build.outputDirectory}/com/wavemaker/tools/project/templateapp.zip" />
 								<echo>Creating  from ${zipdestfile} from ${zipdir}</echo>
-								<zip destfile="${zipdestfile}">
+								<zip destfile="${zipdestfile}" update="true">
 									<fileset dir="${zipdir}"/>
 								</zip>
 							</target>
