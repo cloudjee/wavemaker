@@ -431,7 +431,7 @@ dojo.declare("wm.Application", wm.Component, {
 	},
 	createPageContainer: function() {
 	    if (!this._isDesignLoaded) {
-		this.appRoot = new wm.AppRoot({owner: this});
+		this.appRoot = new wm.AppRoot({owner: this, name: "appRoot"});
 		this.pageContainer = new wm.PageContainer({owner: this, parent: this.appRoot, width: "100%", height: "100%", getRuntimeId: function() {return ""}});
 		this.connectList[this.connectList.length] = this.connect(this.pageContainer._pageLoader, "onBeforeCreatePage", this, "beforeCreatePage");
 		this.connectList[this.connectList.length] = this.connect(this.pageContainer._pageLoader, "onPageChanged", this, "pageChanged");

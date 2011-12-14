@@ -41,6 +41,7 @@ dojo.declare("wm.DebugDialog", wm.Dialog, {
 					   name: "tabLayers"});
 	this.addEventsLayer();
 	this.addServiceListLayer();
+	this.addWidgetListLayer();
 	this.tabLayers.setLayerIndex(0);
 	this.minify();
     },
@@ -52,7 +53,7 @@ dojo.declare("wm.DebugDialog", wm.Dialog, {
 					   onShow: dojo.hitch(this,function() {this.serviceGridPanel.activate();}),
 					   onDeactivate: dojo.hitch(this, function() {this.serviceGridPanel.deactivate();})
 					  });
-	this.serviceGridPanel = new wm.ServiceGridPanel({owner: this,
+	this.serviceGridPanel = new wm.ServiceDebugPanel({owner: this,
 							 name: "serviceGridPanel",
 							 parent: this.servicesLayer,
 							 width: "100%",
@@ -60,6 +61,22 @@ dojo.declare("wm.DebugDialog", wm.Dialog, {
 							 autoScroll:true});
 
     },
+    addWidgetListLayer: function() {
+	this.widgetLayer = new wm.Layer({owner: this,
+					 parent: this.tabLayers,
+					 name: "widgetsLayer",
+					 caption: "Widgets",
+					 onShow: dojo.hitch(this,function() {this.widgetPanel.activate();}),
+					 onDeactivate: dojo.hitch(this, function() {this.widgetPanel.deactivate();})
+					});
+	this.widgetPanel = new wm.WidgetDebugPanel({owner: this,
+						    name: "widgetPanel",
+						    parent: this.widgetLayer,
+						    width: "100%",
+						    height: "100%",
+						    autoScroll:true});
+    },
+
     addEventsLayer: function() {
 	this.eventsLayer = new wm.Layer({owner: this,
 					 parent: this.tabLayers,
@@ -151,7 +168,7 @@ dojo.declare("wm.DebugDialog", wm.Dialog, {
     }
 });
 
-dojo.declare("wm.ServiceGridPanel", wm.Container, {
+dojo.declare("wm.ServiceDebugPanel", wm.Container, {
     layoutKind: "left-to-right",
     postInit: function() {
 	this.inherited(arguments);
@@ -162,7 +179,7 @@ dojo.declare("wm.ServiceGridPanel", wm.Container, {
 	this.connect(wm.inflight, "remove", this, "newJsonEventEnd");
 
 
-	var typeDef = this.createComponents({debuggerServicesType: ["wm.TypeDefinition", {internal: true, "name":"debuggerServicesType"}, {}, {
+	var typeDef = this.createComponents({debuggerServicesType: ["wm.TypeDefinition", {internal: true}, {}, {
 	    field0: ["wm.TypeDefinitionField", {"fieldName":"page","fieldType":"string","name":"field0"}, {}],
 	    field1: ["wm.TypeDefinitionField", {"fieldName":"name","fieldType":"string","name":"field1"}, {}],
 	    field2: ["wm.TypeDefinitionField", {"fieldName":"lastUpdate","fieldType":"date","name":"field2"}, {}],
@@ -458,6 +475,181 @@ dojo.declare("wm.ServiceGridPanel", wm.Container, {
     },
     newJsonEvent: function(inDeferred, inService, optName, inArgs, inMethod, invoker) {
 	
+    }
+});
+
+
+dojo.declare("wm.WidgetDebugPanel", wm.Container, {
+    layoutKind: "left-to-right",
+    postInit: function() {
+	this.inherited(arguments);
+
+	var typeDef = this.createComponents({debuggerWidgetType: ["wm.TypeDefinition", {internal: true}, {}, {
+	    field100: ["wm.TypeDefinitionField", {"fieldName":"page","fieldType":"string","name":"field0"}, {}],
+	    field101: ["wm.TypeDefinitionField", {"fieldName":"name","fieldType":"string","name":"field1"}, {}],
+	    field102: ["wm.TypeDefinitionField", {"fieldName":"id","fieldType":"string","name":"field6"}, {}],
+	    field104: ["wm.TypeDefinitionField", {"fieldName":"type","fieldType":"string"}, {}],
+	    field105: ["wm.TypeDefinitionField", {"fieldName":"showing","fieldType":"boolean","name":"field3"}, {}]
+	}]}, this);
+	wm.typeManager.types.debuggerWidgetType.fields.id.include = ["update"];
+
+	var components = this.createComponents({
+	    widgetListVar:  ["wm.Variable", {type: "debuggerWidgetType", isList: true}],
+	    pageListVar: ["wm.Variable", {type: "StringData", isList: true}],
+	    gridPanel: ["wm.Panel", {layoutKind: "top-to-bottom", width: "400px", height: "100%",  verticalAlign: "top", horizontalAlign: "left"},{},{
+		searchPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "30px", verticalAlign: "top", horizontalAlign: "left"},{},{
+		    searchNameText: ["wm.Text", {resetButton: true, width: "100px", placeHolder: "Search by name", changeOnKey: true},{onchange: "searchChange"}],
+		    searchClassText: ["wm.Text", {resetButton: true, width: "100px", placeHolder: "Search by class", changeOnKey: true},{onchange: "searchChange"}],
+		    showingSelect: ["wm.SelectMenu", {displayValue: "All", width: "80px", options: ["All", "List visible widgets", "List hidden widgets"]},{onchange: "showingSelectChange"}],
+		    pagesMenu: ["wm.SelectMenu", {placeHolder: "Page name", width: "80px",displayField: "dataValue", dataField: "dataValue", allowNone:true},{onchange: "searchChange"},{
+			binding: ["wm.Binding", {"name":"binding"}, {}, {
+			    wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"app.debugDialog.widgetPanel.pageListVar","targetProperty":"dataSet"}, {}]
+			}]
+		    }]
+		}],
+		widgetGrid: ["wm.DojoGrid", 
+			     {width: "100%", height: "100%","columns":[
+				 {"show":true,"field":"page","title":"Page","width":"80px","align":"left","formatFunc":""},
+				 {"show":true,"field":"name","title":"Name","width":"100%","align":"left","formatFunc":""},
+				 {"show":true,"field":"type","title":"Class","width":"80px","align":"left","formatFunc":""},
+				 {"show":true,"field":"showing","title":"Hidden","width":"60px","align":"left","expression": "${showing} ? '' : 'hidden'"}
+			     ],
+			      "margin":"4",
+			      "name":"widgetGrid"}, {onSelectionChange: "showWidget"}, {
+				  binding: ["wm.Binding", {"name":"binding"}, {}, {
+				      wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"app.debugDialog.widgetPanel.widgetListVar","targetProperty":"dataSet"}, {}]
+				  }]
+			      }]
+	    }],
+	    propertiesPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left", autoScroll:true},{},{
+	    }]
+	    },this);
+	this.widgetListVar = components[0];
+	this.pageListVar = components[1];
+	this.searchNameText = components[2].c$[0].c$[0];
+	this.searchClassText = components[2].c$[0].c$[1];
+	this.showingSelect = components[2].c$[0].c$[2];
+	this.pagesMenu = components[2].c$[0].c$[3];
+	this.widgetGrid = components[2].c$[1];
+	this.propertiesPanel = components[3];
+    },
+    showWidget: function(inSender) {
+	var id = this.widgetGrid.selectedItem.getValue("id");
+	if (id) {
+	    this.selectedItem = app.getValueById(id);
+	}
+	if (!id) return;
+
+	this.propertiesPanel.removeAllControls();
+	new wm.Label({owner: this,
+		      parent: this.propertiesPanel,
+		      width: "100%", 
+		      singleLine: false, 
+		      height: "40px", 
+		      caption: "Access with<code>" + id + "</code>"});
+	for (var propName in this.selectedItem) {
+	    if (propName.indexOf("_") == 0) continue;
+	    if (this.selectedItem[propName] instanceof Node) continue;
+	    if (typeof this.selectedItem[propName] == "function") continue;
+	    if (typeof this.selectedItem[propName] == "object" && this.selectedItem[propName] instanceof wm.Component == false) continue;
+	    this.generateEditor(propName);
+	}
+	this.propertiesPanel.reflow();
+    },
+    generateEditor: function(inName) {
+	var value = this.selectedItem[inName];
+	var type = typeof value;
+	var ctor;
+	if (type == "boolean") {
+	    ctor = wm.Checkbox;
+	} else if (type == "number") {
+	    ctor = wm.Number;
+	} else if (type == "object") {
+	    value = value.toString();
+	    ctor = wm.Text;
+	} else {
+	    ctor = wm.Text;
+	}
+	var e = new ctor({owner: this,
+			  parent: this.propertiesPanel,
+			  readonly: type == "object",
+			  width: "100%",
+			  caption: inName,
+			  dataValue: value,
+			  startChecked: value,
+			  captionSize: "100px"});
+	
+	e.onchange = dojo.hitch(this, function(inDisplayValue, inDataValue) {
+	    if (this.selectedItem["set" + wm.capitalize(inName)]) {
+		this.selectedItem["set" + wm.capitalize(inName)](inDataValue);
+	    } else {
+		this.selectedItem[inName] = inDataValue;
+	    }
+	});
+    },
+    searchChange: function(inSender) {
+	var q = {};
+	var name = this.searchNameText.getDataValue();
+	if (name) {
+	    q.name = "*" + name + "*";
+	}
+
+	var className = this.searchClassText.getDataValue();
+	if (className) {
+	    q.type = "*" + className + "*";
+	}
+
+	var showing = this.showingSelect.getDataValue();
+	if (showing == "List visible widgets") {
+	    q.showing = true;
+	} else if (showing == "List hidden widgets") {
+	    q.showing = false;
+	}
+
+	var page = this.pagesMenu.getDataValue();
+	if (page) {
+	    q.page = page;
+	}
+	this.widgetGrid.setQuery(q);
+	inSender.focus();
+    },
+   activate: function() {
+	this.generateWidgetList();
+	this.generatePagesList();
+    },
+    deactivate: function() {
+    },
+    generateWidgetList: function() {
+	this.widgetListVar.beginUpdate();
+	this.widgetListVar.clearData();
+
+	for (var id in wm.Component.byId) {
+	    var c = wm.Component.byId[id];
+	    if (c instanceof wm.Control == false) continue;
+	    var page = c.getParentPage();
+	    var pageName =  page ? page.declaredClass : "app";
+	    var componentName = id.indexOf(wm.decapitalize(pageName)) == 0 ? id.substring(pageName.length+1) : id;
+	    var itemData = {page: pageName,
+			    name: componentName,
+			    id: c.getRuntimeId(),
+			    type: c.declaredClass,
+			    showing: c.showing};
+	    this.widgetListVar.addItem(itemData);
+	}
+
+	this.widgetListVar.endUpdate();	    
+	this.widgetListVar.notify();
+    },
+    generatePagesList: function() {
+	this.pageListVar.beginUpdate();
+	this.pageListVar.setData([{dataValue: "app"}]);
+
+	for (var pageName in wm.Page.byName) {
+	    this.pageListVar.addItem({dataValue: pageName});
+	}
+
+	this.pageListVar.endUpdate();	    
+	this.pageListVar.notify();
     }
 });
 
