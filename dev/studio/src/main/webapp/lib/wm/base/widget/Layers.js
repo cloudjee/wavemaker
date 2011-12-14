@@ -589,6 +589,8 @@ dojo.declare("wm.Layers", wm.Container, {
 		return;
 	    if (!this.decorator || !this.decorator.tabsControl)
 		return;
+	    if (this.decorator.tabsControl.isDestroyed)
+		return;
 
 	    // for purposes of IE6, we need to get the current height, change the style, and then wait
 	    // before doing anything

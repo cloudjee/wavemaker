@@ -525,7 +525,9 @@
 	     this.reflow();
 	 }
      },
-     isEditableProp: function(inProp) {
+     isEditableProp: function(inProp, allowStyleInspector) {
+	 if (inProp.group == "style" && inProp.editor != "wm.prop.StyleEditor" && !allowStyleInspector)
+	     return false; // handled by the style inspector only
 	 if (inProp.ignore)
 	     return false;
 	 if (inProp.bindTarget || inProp.bindable) 
@@ -648,7 +650,7 @@
 	     name: "propEdit_" + inProp.name,
 	     propName: inProp.name,
 	     width: "100%",
-	     height: "45px",
+	     height: "42px",
 	     captionSize: "20px",
 	     captionPosition: "top",
 	     captionAlign: "left",
@@ -810,7 +812,7 @@
 		 studio.bindDialog.page.update(p);
 		 studio.bindDialog.show();
 	     };
-	 } else if (!inProp.isEvent && e instanceof wm.prop.StyleEditor == false) {
+	 } else if (!inProp.isEvent && inProp.group != "style") {
 	     new wm.Spacer({owner:this,
 			    parent: panel,
 			    width: "20px",
@@ -975,7 +977,7 @@
 	     });
 	 }
 	 for (var i = 0; i < this.layers.length; i++) {
-	     this.layers[i].setPadding("10,4,10,4");
+	     this.layers[i].setPadding("5,4,5,4");
 	     this.layers[i].setFitToContentHeight(true);
 	 }	
      },
