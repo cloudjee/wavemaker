@@ -498,8 +498,8 @@ dojo.declare("wm.WidgetDebugPanel", wm.Container, {
 	    pageListVar: ["wm.Variable", {type: "StringData", isList: true}],
 	    gridPanel: ["wm.Panel", {layoutKind: "top-to-bottom", width: "400px", height: "100%",  verticalAlign: "top", horizontalAlign: "left"},{},{
 		searchPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "30px", verticalAlign: "top", horizontalAlign: "left"},{},{
-		    searchNameText: ["wm.Text", {resetButton: true, width: "100px", placeHolder: "Search by name", changeOnKey: true},{onchange: "searchChange"}],
-		    searchClassText: ["wm.Text", {resetButton: true, width: "100px", placeHolder: "Search by class", changeOnKey: true},{onchange: "searchChange"}],
+		    searchNameText: ["wm.Text", {resetButton: true, width: "100px", placeHolder: "Widget Name", changeOnKey: true},{onchange: "searchChange"}],
+		    searchClassText: ["wm.Text", {resetButton: true, width: "100px", placeHolder: "Class Name", changeOnKey: true},{onchange: "searchChange"}],
 		    showingSelect: ["wm.SelectMenu", {displayValue: "All", width: "80px", options: ["All", "List visible widgets", "List hidden widgets"]},{onchange: "showingSelectChange"}],
 		    pagesMenu: ["wm.SelectMenu", {placeHolder: "Page name", width: "80px",displayField: "dataValue", dataField: "dataValue", allowNone:true},{onchange: "searchChange"},{
 			binding: ["wm.Binding", {"name":"binding"}, {}, {
@@ -626,6 +626,8 @@ dojo.declare("wm.WidgetDebugPanel", wm.Container, {
 	for (var id in wm.Component.byId) {
 	    var c = wm.Component.byId[id];
 	    if (c instanceof wm.Control == false) continue;
+	    if (c == app.debugDialog || c.isAncestor(app.debugDialog)) continue;
+	    if (c.isAncestor(app.pageDialog)) continue;
 	    var page = c.getParentPage();
 	    var pageName =  page ? page.declaredClass : "app";
 	    var componentName = id.indexOf(wm.decapitalize(pageName)) == 0 ? id.substring(pageName.length+1) : id;
