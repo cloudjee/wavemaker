@@ -24,8 +24,9 @@
 
     <property name="versionString" value="${version.number}" />
     <property name="installerName" value="${build.installer.dir}/wavemaker-${versionString}.exe" />
-
-    <property name="java.zip.file" value="${basedir}/jdk1.6.0_24.zip"/>
+	
+	<property name="java.zip" value="jdk1.6.0_24.zip"/>
+    <property name="java.zip.file" value="${env.BUILD_JDK_ZIP}/${java.zip}"/>
     <property name="signtool" value="C:\Program Files\Microsoft Platform SDK for Windows Server 2003 R2\Bin\signtool.exe"/>
 
     <target name="check">
@@ -36,7 +37,7 @@
                 </and>
             </not>
         </condition>
-        <fail if="setupBAD" message="required files missing"/>
+        <fail if="setupBAD" message="Could not find ${java.zip}. Ensure ${java.zip} is in %BUILD_JDK_ZIP%, currently set to: ${env.BUILD_JDK_ZIP}." />
     </target>
 
     <target name="init" depends="check">
