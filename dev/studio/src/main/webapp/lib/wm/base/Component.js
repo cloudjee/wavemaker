@@ -473,7 +473,7 @@ dojo.declare("wm.Component", wm.Object, {
 		}
 	    }
 	    
-	    return null;
+	    return undefined;
 	},
 	/* 
   	LiveForm does not work with the impovement changes below.
