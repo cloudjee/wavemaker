@@ -540,11 +540,6 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnSaveActionPerformed
     {//GEN-HEADEREND:event_btnSaveActionPerformed
-        System.out.println("*** start btnSaveActionPerformed");
-//        if (JOptionPane.showConfirmDialog(JOptionPane.getRootFrame(),
-//                "Save current Studio launch options for future sessions?",
-//                "Save Launch Options", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION)
-//        {
         
         console.prefs.putBoolean(MainConsole.OPTION_AUTO_LAUNCH, ckbAutoLaunch.isSelected());
         console.prefs.put(MainConsole.OPTION_STUDIO_BROWSER, tfBrowser.getText());
@@ -602,10 +597,8 @@ public class LauncherAdvOptsDialog extends javax.swing.JDialog
         }
 
         initOptions();
-        System.out.println("    about to dispose of advanced dialog");
         dispose();
-        System.out.println("--- end btnSaveActionPerformed");
-//        }
+
 }//GEN-LAST:event_btnSaveActionPerformed
 
     private void btnResetActionPerformed(java.awt.event.ActionEvent evt)//GEN-FIRST:event_btnResetActionPerformed
