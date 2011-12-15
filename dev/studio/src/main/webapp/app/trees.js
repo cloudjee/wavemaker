@@ -336,12 +336,12 @@ Studio.extend({
 	componentsToTree: function(inNode, inComponents, inType) {
 	    var n = [], cn;
 	    if (!this.useHierarchy) {
-		for (cn in inComponents) { if (typeof(inComponents[cn] != "function")) n.push(cn); } // The ACE editor changed how IE sees some objects; must filter out non-properties
+		for (cn in inComponents) { if (typeof(inComponents[cn]) != "function") n.push(cn); } // The ACE editor changed how IE sees some objects; must filter out non-properties
 		n.sort();
 		for (var i=0; (cn=n[i]); i++)
 		    this.componentToTree(inNode, inComponents[cn], inType);
 	    } else {
-		for (cn in inComponents) { if (typeof(inComponents[cn] != "function")) n.push(inComponents[cn]); }// The ACE editor changed how IE sees some objects; must filter out non-properties
+		for (cn in inComponents) { if (typeof(inComponents[cn]) != "function") n.push(inComponents[cn]); }// The ACE editor changed how IE sees some objects; must filter out non-properties
 		n.sort(function(a,b) {
 		    if (a.declaredClass > b.declaredClass) return 1;
 		    if (a.declaredClass < b.declaredClass) return -1;
