@@ -30,7 +30,7 @@ wm.Object.extendSchema(wm.Component, {
 	eventBindings: { ignore: 1 },
 	id: { ignore: 1 },
 	ignoredProps: { ignore: 1 },
-    name: { group: "common", order: 0},
+    name: { group: "common", order: 0, requiredGroup: true},
     owner: { group: "common", order: 1, readonly: true, options: ["Page", "Application"], doc: 1},
 	publishClass: { ignore: 1 },
 	readonlyProps: { ignore: 1 },
@@ -387,7 +387,7 @@ wm.Component.extend({
 	studio.documentationDialog.setTitle(studio.getDictionaryItem("wm.Component.DOCUMENTATION_DIALOG_TITLE", {name: this.getId()}))
 	studio.documentationDialog.editComponent = this;
 	studio.documentationDialog.show();
-    },
+    }, // TODO: Need to update checkbox after setting documentation
         generateDocumentation: function() {
 	    var html = ((this.documentation) ? this.documentation + "<br/><br/><br/>" : "");
 
