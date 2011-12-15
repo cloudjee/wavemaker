@@ -391,7 +391,24 @@ Studio.widgets = {
 			    PIPanel: ["wm.Panel", { height: "100%", width: "250px", border: "0", padding: "0", layoutKind: "top-to-bottom", dockRight:true}, {}, {
 				PIContents: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, width: "100%", height: "100%", border: "0", maring: "0", containerWidget:"inspector",modal:false,docked: true, minWidth: "150", minHeight: "300", noTopBottomDocking: true}, {onClose: "dockPropertyPanel"}, {
 
-				    propertySearchBar: ["wm.Text", {resetButton: true, width: "100%", changeOnKey: true, emptyValue: "emptyString", placeHolder: "Find Property"},{onchange: "searchProperties"}],
+				    inspectorToolbar2: ["wm.Panel", {width: "100%", height: "22px", layoutKind: "left-to-right", horizontalAlign: "left", verticalAlign: "top",padding:"0"},{},{				    
+					propertySearchBar: ["wm.Text", {resetButton: true, width: "130px", changeOnKey: true, emptyValue: "emptyString", placeHolder: "Find Property"},{onchange: "inspector.propertySearch"}],
+					propertySearchBarSpacer: ["wm.Spacer", {width: "100%"}],
+					propertiesMenu: ["wm.PopupMenu", {
+					    "fullStructure":[
+						{idInPage: "togglePropertiesMultiactiveItem", "label":"One Accordion Open","separator":undefined,"defaultLabel":"One Accordion Open","isCheckbox":true,"onClick":"inspector.toggleMultiactive"},
+						{"separator":true,"defaultLabel":"Separator"},
+						{"label":"Component Info","defaultLabel":"Component Info","isCheckbox":false,"onClick":"generateDiagnostics"},
+						{idInPage: "writeDocumentationMenuItem", "label":"Write Documentation","defaultLabel":"Write Documentation","isCheckbox":true,"onClick":"selected.viewDocumentation"},
+						{"separator":true,"defaultLabel":"Separator"}
+					    ]}, {}],					
+					propMenuButton: ["wm.ToolButton", {height: "100%", width: "20px", caption: ""}, {onclick: "propertiesMenu"}]
+				    }],
+
+				    inspectorToolbar: ["wm.Panel", {width: "100%", height: "25px", layoutKind: "left-to-right", horizontalAlign: "center", verticalAlign: "top",margin:"3,0,0,0"},{},{
+					togglePropertiesButton: ["wm.ToggleButton", {height: "100%", width: "100px", captionUp: "Recommended",captionDown: "Recommended", border:"1",borderColor:"black",margin:"0",clicked:true}, {onclick: "inspector.toggleAdvancedProperties"}],
+					togglePropertiesButton2: ["wm.ToggleButton", {height: "100%", width: "50px", captionUp: "All",captionDown: "All", border:"1",borderColor:"black",margin:"0"}, {onclick: "inspector.toggleAdvancedProperties"}]
+				    }],
 				    inspector: ["wm.PropertyInspector", {_classes: {domNode: ["wm-darksnazzy"]},height: "100%", width:"100%",border: "0"}, {}, {}]
 				}]/*,
 				benchbevel4: ["wm.Bevel", {}, {}]*/

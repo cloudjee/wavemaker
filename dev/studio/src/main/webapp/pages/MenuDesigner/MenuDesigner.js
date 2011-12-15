@@ -57,6 +57,7 @@ dojo.declare("MenuDesigner", wm.Page, {
 	    } else {
 		var n = new wm.TreeNode(parentNode, {closed: false, content: content, data: {content: structure[i].label,
 											     idInPage: structure[i].idInPage,
+											     isCheckbox: structure[i].isCheckbox,
 											     defaultLabel: structure[i].defaultLabel || structure[i].label,
 											     onClick: structure[i].onClick,
 											     iconClass: structure[i].iconClass,
@@ -104,6 +105,7 @@ dojo.declare("MenuDesigner", wm.Page, {
 	  if (data && data.idInPage !== undefined) {
               this.menuIdInPage.setDataValue(data.idInPage);
 	  }
+          this.menuItemIsCheckbox.setChecked(data && data.isChecked);
 	  this.menuItemImageListBtn.setIconUrl("images/blank.gif");
 	  dojo.query("img", this.menuItemImageListBtn.domNode)[0].className = data.iconClass;
 
@@ -136,6 +138,7 @@ dojo.declare("MenuDesigner", wm.Page, {
                                      imageList: this.menuItemImageList.getDataValue(),
                                      iconClass: this.menuItemIconClass.getDataValue(),
 				     idInPage: this.menuIdInPage.getDataValue(),
+				     isCheckbox: this.menuItemIsCheckbox.getChecked(),
 				     onClick: olddata.onClick};
 	  var content = this.tree.selected.data.content;
 	  if (this.tree.selected.data.iconClass)
@@ -253,6 +256,7 @@ dojo.declare("MenuDesigner", wm.Page, {
 		 iconClass: inNode.data.iconClass,
 		 imageList: inNode.data.imageList,
 		 idInPage: inNode.data.idInPage,
+		 isCheckbox: inNode.data.isCheckbox,
 		 onClick: inNode.data.onClick,
                children: []};
    for (var i =0; i < inNode.kids.length; i++) {

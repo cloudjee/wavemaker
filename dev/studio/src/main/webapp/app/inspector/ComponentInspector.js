@@ -383,6 +383,8 @@
   * 8. Find all bindable/bindTarget properties that should be readonly and make them readonly
   */
  dojo.declare("wm.PropertyInspector", wm.AccordionLayers, {
+     preferredMultiActive: false,
+     multiActive: false,
      ignoreHintPrefix: "<p><b>Disabled</b></p>",
      classNames: "wminspector",
      layerBorder: 0,
@@ -445,7 +447,7 @@
 			 var parent = e.parent;
 
 			 parent.removeAllControls();
-			 e = this.generateEditor(inComponent,p, parent.parent, parent);
+			 e = this.generateEditor(inComponent,p, parent.parent, parent); // TODO: updating instead of recreating these would be nice...
 			 this.editorHash[inComponent.getId() + "." + propName] = e;
 		     } else if (e) {
 			 var newVal;
@@ -536,6 +538,8 @@
 	     return false;
 	 if (inProp.method)
 	     return false;
+	 if (inProp.advanced && !studio.togglePropertiesButton2.clicked) 
+	     return false;
 	 return true;
      },
      getProps: function(inComponent,isSubComponent) {
@@ -593,13 +597,13 @@
 	 for (var i = 0; i < props.length; i++) {
 	     var p = props[i];
 	     var propName = p.name;
-	     if (!inGroupName || inGroupName == p.group) {
+	     if (!inGroupName || inGroupName == p.group || inGroupName == "required" && p.requiredGroup) {
 		 if (p.operation) {
 		     this.generateButton(inComponent, p, inLayer);
 		 } else {
 		     var e = this.generateEditor(inComponent,p, inLayer);
 		 }
-	     }
+	     }	     
 	 }
      },
      generateButton: function(inComponent,inProp, inLayer) {
@@ -608,7 +612,8 @@
 	     parent: inLayer,
 	     width: "100%",
 	     height: "30px",
-	     caption: inProp.shortname || inProp.name
+	     caption: inProp.shortname || inProp.name,
+	     margin: "4,40,4,40"
 	 });
 	 this.editorHash[inComponent.getId() + "." + inProp.name] = b;
 	 b.connect(b, "onclick", this, function() {
@@ -745,7 +750,7 @@
 	      var e =  new ctor(editorProps);
 	  }
 	  if (inProp.readonly && e.setReadonly && !inProp.createWire && !e.createWire) {
-	      e.setReadonly(true);
+	      e.setDisabled(true);
 	  }
 
 	  e.connect(e, "onchange", this, function(inDisplayValue, inDataValue) {
@@ -968,11 +973,14 @@
 			 break;
 		     }
 		 }
-		 l.focusFirstEditor();
+
 		 if (l.c$.length == 0) {
 		     if (inComponent.isDestroyed) return;
 		     this.generateEditors(inComponent, group.name, l);
 		     l.reflow();
+		 }
+		 if (!layer.parent.multiActive) {
+		     l.focusFirstEditor();
 		 }
 	     });
 	 }
@@ -993,24 +1001,31 @@
 		 return groups;
 	 },
 	 buildGroups: function(inProps) {
-		 var groups = [], groupsArray = [], defaultGroup = "Properties";
-		 dojo.forEach(inProps, dojo.hitch(this, function(o, n) {
-			 if (!this.isEditableProp(o))
-				 return;
-			 var
-				 name = (o && o.group) || defaultGroup || "ungrouped",
-				 g = groups[name] || (groups[name] = []),
-				 order = o && o.order != undefined ? o.order : 1000,
-				 p = dojo.mixin({}, o, {name: n, order: order});
-		     if (name != "method")
-			 g.push(p);
+	     var groups = {"required":[]}, groupsArray = [], defaultGroup = "Properties";
+		 dojo.forEach(inProps, dojo.hitch(this, function(inPropDef, inPropName) {//o,n
+		     if (!this.isEditableProp(o))
+			 return;
+		     var groupName = (inPropDef && inPropDef.group) || defaultGroup || "ungrouped";
+		     var groupObj = groups[groupName];
+		     if (!groupObj) {
+			 groups[groupName] = [];
+			 groupObj = groups[groupName];
+		     }
+		     var order = inPropDef && inPropDef.order != undefined ? inPropDef.order : 1000;
+		     var newPropDef = dojo.mixin({}, inPropDef, {name: inPropName, order: order});
+		     groupObj.push(newPropDef);
+		     if (newPropDef.requiredGroup) {
+			 groups.required.push(newPropDef);
+		     }
 		 }));
 	     for (var i in groups) {
-		 if (typeof(groups[i]) != "function") {
-			 groupsArray.push({name: i, props: groups[i]});
+		 if (i == "required") {
+		     groupsArray.unshift({name: "required", props: groups.required});
+		 } else {
+		     groupsArray.push({name: i, props: groups[i]});
 		 }
 	     }
-		 return groupsArray;
+	     return groupsArray;
 	 },
 	 sortGroups: function(inGroups) {
 		 // sort groups
@@ -1027,8 +1042,19 @@
 		 });
 		 return inGroups;
 	 },
-     propertySearch: function(inDisplayValue) {
-	 this.multiActive = Boolean(inDisplayValue);
+
+     propertySearch:  function(inSender,inDisplayValue,inDataValue) {
+	 this.multiActive = Boolean(inDisplayValue) || this.preferredMultiActive;
+	 if (!this.multiActive) {
+	     var openFound = false;
+	     for (var i = 0; i < this.layers.length; i++) {
+		 if (this.layers[i].active && !openFound) {
+		     openFound = true;
+		 } else if (this.layers[i].active) {
+		     this.setLayerInactive(this.layers[i]);
+		 }
+	     }
+	 }
 
 	 /* Search only works if all property editors are generated */
 	 if (inDisplayValue) {
@@ -1087,7 +1113,49 @@
 	     }
 	 }
      },
+     toggleMultiactive: function() {
+	 this.preferredMultiActive = !this.preferredMultiActive;
+	 this.multiActive = this.preferredMultiActive;
+     },
+     toggleAdvancedProperties: function(inSender) {
+	 if (inSender.name == "togglePropertiesButton") {
+	     studio.togglePropertiesButton2.setClicked(!inSender.clicked);
+	 } else {
+	     studio.togglePropertiesButton.setClicked(!inSender.clicked);
+	 }
+	 this.inspect(this.inspected, true);
+     },
      _end: 0
  });
 
 
+wm.addPropertyGroups = function(propGroups) {
+	dojo.mixin(wm.propertyGroups || (wm.propertyGroups = {}), propGroups);
+}
+
+// registry of groups to show in inspector
+wm.addPropertyGroups({
+    required: {displayName: "Required", order: 1},
+	common: {displayName: "Common", order: 10},
+	data: {displayName: "Data", order: 13},
+	display: {displayName: "Display", order: 15},
+	layout: {displayName: "Layout", order: 25},
+	"advanced layout": {displayName: "Advanced Layout", order: 180},
+	style: {displayName: "Style", order: 30},
+	scrolling: {displayName: "Scrollbars", order: 32},
+	dataobjects: {displayName: "Data Objects", order: 35},
+	format: {displayName: "Formatting", order: 40},
+	Labeling: {displayName: "Labeling", order: 45},
+	edit: {displayName: "Editing", order: 50},
+	editor: {displayName: "Editor Options", order: 50},
+	editData: {displayName: "Editor Data", order: 55},
+	events: {displayName: "Events", order: 100},
+	Events: {displayName: "General", order: 100},
+	Properties: {displayName: "Other", order: 100},
+	validation: {displayName: "Validation", order: 150},
+	columns: {displayName: "Columns", order: 999},
+	ungrouped: {displayName: "Other", order: 1000},
+	operation: {displayName: "Operations", order: 2000},
+    docs: {displayName: "Documentation", order: 3000},
+    deprecated: {displayName: "Deprecated", order: 100000}
+});

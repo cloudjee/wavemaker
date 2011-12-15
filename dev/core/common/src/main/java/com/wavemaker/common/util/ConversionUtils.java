@@ -16,7 +16,7 @@ import com.wavemaker.common.WMRuntimeException;
  * 
  * @author Jeremy Grelle
  */
-public class ConversionUtils {
+public abstract class ConversionUtils {
 
     private ConversionUtils() {
     }

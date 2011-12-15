@@ -20,7 +20,7 @@ dojo.require("wm.base.widget.Label");
 wm.Object.extendSchema(wm.Label, {
     disabled: { ignore: 1 },
     imageList: {ignore: 1},
-    caption: { type: "String", bindable: 1, group: "display", order: 100, focus: true, doc: 1},
+    caption: { type: "String", bindable: 1, group: "display", order: 100, focus: true, doc: 1, requiredGroup: true},
     link: { type: "String", bindable: 1, group: "format", order: 20, doc: 1 },
     display: { group: "format", order: 30 },
     format: { group: "format", order: 31, subcomponent: true},

@@ -18,11 +18,11 @@
 
 package com.wavemaker.runtime.service;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.util.ClassUtils;
 
-import com.wavemaker.common.util.CollectionUtils;
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.infra.WMTestCase;
 import com.wavemaker.json.type.FieldDefinition;
@@ -50,9 +50,9 @@ public class TestElementType extends WMTestCase {
             if (prop.getName().equals("stringList")) {
                 assertEquals("java.lang.String", prop.getJavaType());
                 assertTrue(prop.isList());
-                prop.setRequire(CollectionUtils.createList(OperationEnumeration.read, OperationEnumeration.update, OperationEnumeration.delete));
-                prop.setExclude(CollectionUtils.createList(OperationEnumeration.insert));
-                prop.setNoChange(CollectionUtils.createList(OperationEnumeration.update));
+                prop.setRequire(Arrays.asList(OperationEnumeration.read, OperationEnumeration.update, OperationEnumeration.delete));
+                prop.setExclude(Arrays.asList(OperationEnumeration.insert));
+                prop.setNoChange(Arrays.asList(OperationEnumeration.update));
             } else if (prop.getName().equals("intVal")) {
                 assertEquals("int", prop.getJavaType());
                 assertFalse(prop.isList());

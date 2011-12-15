@@ -22,11 +22,12 @@ import org.apache.log4j.PropertyConfigurator;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
+import com.wavemaker.runtime.service.ServiceSuperClass;
 
 /**
  * @author Michael Kantor
  */
-public class JavaServiceSuperClass {
+public class JavaServiceSuperClass extends ServiceSuperClass {
 
     private Logger logger;
 
@@ -62,7 +63,7 @@ public class JavaServiceSuperClass {
 
         try {
 
-            /* Determine if we're in live layout, test run or deployed */
+            // Determine if we're in live layout, test run or deployed
             String currentPath = RuntimeAccess.getInstance().getSession().getServletContext().getRealPath("");
             File webapproot = new File(currentPath);
             boolean isDeployedApp = false;
@@ -88,26 +89,21 @@ public class JavaServiceSuperClass {
             }
 
             System.out.println("LOG FOLDER: " + logFolder.toString() + " | " + logFolder.exists());
-            // System.out.println("LOG FOLDER IS " + logFolder.toString());
 
             java.util.Properties props = new java.util.Properties();
             props.setProperty("log4j.logger." + this.getClass().getName(), LEVELS[logLevel] + ", WebServiceLogger1, WebServiceLogger2");
             props.setProperty("log4j.appender.WebServiceLogger1", "org.apache.log4j.RollingFileAppender");
             props.setProperty("log4j.appender.WebServiceLogger1.File", logFolder.toString() + "/" + this.getClass().getName() + ".log");
-            // System.out.println("FILE:" + logFolder.toString() + "/" + this.getClass().getName() + ".log");
             props.setProperty("log4j.appender.WebServiceLogger1.MaxFileSize", "50KB");
             props.setProperty("log4j.appender.WebServiceLogger1.layout", "org.apache.log4j.PatternLayout");
             props.setProperty("log4j.appender.WebServiceLogger1.layout.ConversionPattern", startLogLine + " %5p (%F:%L) "
                 + (isDeployedApp ? "%d" : "%d{HH:mm:ss}") + " - %m " + endLogLine + "%n");
-
             props.setProperty("log4j.appender.WebServiceLogger2", "org.apache.log4j.RollingFileAppender");
             props.setProperty("log4j.appender.WebServiceLogger2.File", logFolder.toString() + "/project.log");
-            // System.out.println("FILE:" + logFolder.toString() + "/project.log");
             props.setProperty("log4j.appender.WebServiceLogger2.MaxFileSize", "50KB");
             props.setProperty("log4j.appender.WebServiceLogger2.layout", "org.apache.log4j.PatternLayout");
             props.setProperty("log4j.appender.WebServiceLogger2.layout.ConversionPattern", startLogLine + " %5p (%F:%L) %d{HH:mm:ss} - %m "
                 + endLogLine + "%n");
-
             PropertyConfigurator.configure(props);
         } catch (Exception e) {
             e.printStackTrace();

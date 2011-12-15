@@ -44,12 +44,14 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 */
 		dojo.require("dijit.Menu");
 		dojo.require("dijit.MenuItem");
+		dojo.require("dijit.CheckedMenuItem");
 		dojo.require("dijit.PopupMenuItem");
 		dojo.require("dijit.MenuBar");
 		dojo.require("dijit.MenuBarItem");
 		dojo.require("dijit.PopupMenuBarItem");
 		dojo.require("dijit.MenuSeparator");
 		dojo.require("dojox.html.styles");
+	    //dojo.require("dijit.form.CheckBox");
 		this.inherited(arguments);
 		dojo.addClass(this.domNode, "dojoMenu");
 	},
@@ -319,6 +321,11 @@ dojo.declare("wm.DojoMenu", wm.Control, {
 		{
 			menuObj = new dijit.MenuSeparator();
 		}
+	        else if (data.isCheckbox === true) 
+	        {
+		    menuObj = new dijit.CheckedMenuItem(data);
+		    dojo.addClass(menuObj.iconNode, "dijitMenuItemIcon dijitCheckedMenuItemIcon"); // stupid hack to fix broken template handler in dojo 1.6
+		}
 		else 
 		{
 		        menuObj = new dijit.MenuItem(data);
@@ -533,6 +540,16 @@ dojo.declare("wm.DojoMenu", wm.Control, {
     setItemShowing: function(inLabel, inShowing) {
 	if (this._dijitHash[inLabel]) {
 	    this._dijitHash[inLabel].domNode.style.display = inShowing ? "" : "none";
+	}
+    },
+    getItemChecked: function(inLabel) {
+	if (this._dijitHash[inLabel]) {
+	    this._dijitHash[inLabel].get("checked");
+	}
+    },
+    setItemChecked: function(inLabel, inChecked) {
+	if (this._dijitHash[inLabel]) {
+	    this._dijitHash[inLabel].set("checked", Boolean(inChecked));
 	}
     }
 });

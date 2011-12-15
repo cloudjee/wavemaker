@@ -55,6 +55,20 @@ public class CopyRuntimeJarsTask extends Task {
 
     public static final String TASK_NAME = "copyRuntimeJarsTask";
 
+    private File todir = null;
+
+    private File from = null;
+
+    private boolean preserveLastModified = false;
+
+    private boolean overwrite = false;
+
+    private boolean verbose = false;
+
+    private ClasspathUtils.Delegate cpDelegate;
+
+    private Project wmProject;
+
     /**
      * XXX this is pretty faux - ideally, we'd do something better, instead of this. Which is search through for all the
      * module config files, and then getting the beandefs, and brute-forcing names & extension points out. Spring or
@@ -363,21 +377,6 @@ public class CopyRuntimeJarsTask extends Task {
             copyTask.perform();
         }
     }
-
-    // bean properties
-    private File todir = null;
-
-    private File from = null;
-
-    private boolean preserveLastModified = false;
-
-    private boolean overwrite = false;
-
-    private boolean verbose = false;
-
-    private ClasspathUtils.Delegate cpDelegate;
-
-    private Project wmProject;
 
     /**
      * Set the classpathref - this classpath will be used to discover available modules.

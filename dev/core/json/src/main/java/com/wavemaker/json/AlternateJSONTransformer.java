@@ -45,7 +45,6 @@ public class AlternateJSONTransformer {
 
     public static final char PROP_SEP = '.';
 
-    /** Logger for this class and subclasses */
     protected static final Logger logger = Logger.getLogger(AlternateJSONTransformer.class);
 
     public static Object toObject(JSONObject obj, Class<?> klass) {

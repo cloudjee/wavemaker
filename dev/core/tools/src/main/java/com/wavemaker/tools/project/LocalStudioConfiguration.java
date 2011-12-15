@@ -73,6 +73,8 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration {
 
     private static final String VERSION_DEFAULT = "4.0.0";
 
+    private RuntimeAccess runtimeAccess;
+
     private final LocalStudioFileSystem fileSystem;
 
     public LocalStudioConfiguration(LocalStudioFileSystem fileSystem) {
@@ -210,9 +212,6 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration {
         String versionString = ConfigurationStore.getPreference(LocalStudioConfiguration.class, VERSION_KEY, VERSION_DEFAULT);
         return new VersionInfo(versionString);
     }
-
-    // bean properties
-    private RuntimeAccess runtimeAccess;
 
     @Override
     public RuntimeAccess getRuntimeAccess() {

@@ -1096,8 +1096,6 @@ public class SalesforceSupport {
                 org.json.JSONObject fieldObj = fieldsObj.getJSONObject(fld);
                 String type = fieldObj.getString("type");
                 rtn.add(type);
-                // FieldType ftype = getFieldInfo(sq.objectName, fld);
-                // rtn.add(ftype.getType().value());
             }
         }
 

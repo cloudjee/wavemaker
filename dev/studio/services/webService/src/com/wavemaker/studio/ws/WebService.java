@@ -100,7 +100,7 @@ public class WebService {
      * IOException, WSDLException, JAXBException { return uploadWSDL(file, serviceId, overwrite, null, null); }
      */
 
-    public String uploadWSDL(@ParamName(name = "file") MultipartFile file, String serviceId, String overwrite, String username, String password) // salesforce
+    public String uploadWSDL(@ParamName(name = "file") MultipartFile file, String serviceId, String overwrite, String username, String password)
         throws IOException, WSDLException, JAXBException {
         return getWSToolsMgr().importUploadedFile(file, serviceId, overwrite, username, password);
     }

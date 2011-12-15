@@ -20,16 +20,14 @@ dojo.require("wm.base.Control_design");
 
 wm.Object.extendSchema(wm.Container, {
     hint: {ignore:true},
-    layoutKind:         {group: "layout", order: 100, doc: 1, options: ["top-to-bottom","left-to-right"]},
+    layoutKind:         {group: "layout", order: 100, doc: 1, options: ["top-to-bottom","left-to-right"], requiredGroup: true},
     horizontalAlign:    {group: "layout", order: 110, doc: 1, options: ["left","center","right"]},
     verticalAlign:      {group: "layout", order: 120, doc: 1, options: ["top","middle","bottom"]},
     fitToContent:       {ignore: true},
-    fitToContentWidth:  {group: "advanced layout", order: 90, shortname: "Auto Width", type: "Boolean"},
-    fitToContentHeight: {group: "advanced layout", order: 91, shortname: "Auto Height", type: "Boolean"},
+    fitToContentWidth:  {group: "advanced layout", order: 90, shortname: "Auto Width", type: "Boolean", advanced: true},
+    fitToContentHeight: {group: "advanced layout", order: 91, shortname: "Auto Height", type: "Boolean", advanced: true},
     autoScroll: {writeonly: 0},
-    scrollX: {group: "scrolling", order: 101, ignore: 0, type: "Boolean"},
-    scrollY: {group: "scrolling", order: 102, ignore: 0, type: "Boolean"},
-    touchScrolling: {group: "scrolling", order: 103, ignore: 0},
+    touchScrolling: {group: "scrolling", order: 103, ignore: 0, advanced: true},
     isMajorContent: {group: "style", order: 150, ignore: 1}, // obsolete
     themeStyleType: {ignore: true, group: "style", order: 20, options: ["", "MainContent", "EmphasizedContent", "HeaderContent"]},
     setThemeStyleType: {method:1},
@@ -43,8 +41,8 @@ wm.Object.extendSchema(wm.Container, {
     clearDirty: {method:1},
     resetData: {method:1},
     clearDirty: {method:1},
-    resizeWidth: {method:1}, /* TODO: propdoc */
-    resizeHeight: {method:1},/* TODO: propdoc */
+    setBestWidth: {method:1}, /* TODO: propdoc */
+    setBestHeight:{method:1}, /* TODO: propdoc */
     customGetValidate:     {group: "customMethods"},
 		invalid: { ignore: 1, bindSource: 1, readonly: 1, type: "Boolean" },
 		isDirty: { ignore: 1, bindSource: 1, readonly: 1, type: "Boolean" },

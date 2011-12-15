@@ -896,7 +896,8 @@ this.panel1.createComponent("custom", "wm.Panel", {
 							       trigger: inComponent,
 							       firing: c,
 							       method: m});
-					c[m]();
+					// changed from c[m]() so that inSender and all arguments get forwarded
+					c[m].apply(c, self._eventArgs(this,arguments));
 				    }
 				}
 			}

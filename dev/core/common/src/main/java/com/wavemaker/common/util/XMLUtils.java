@@ -26,12 +26,11 @@ import org.apache.commons.lang.StringEscapeUtils;
 /**
  * @author Simon Toens
  */
-public class XMLUtils {
+public abstract class XMLUtils {
 
     public static final String SCOPE_SEP = ".";
 
     private XMLUtils() {
-        throw new UnsupportedOperationException();
     }
 
     public static String escape(String s) {

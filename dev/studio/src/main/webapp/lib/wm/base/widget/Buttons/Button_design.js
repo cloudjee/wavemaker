@@ -38,7 +38,7 @@ wm.ToolButton.extend({
 
 
 wm.Object.extendSchema(wm.Button, {
-    caption: { group: "display", bindable: 1, order: 10, focus: 1, type: "String" },
+    caption: { group: "display", bindable: 1, order: 10, focus: 1, type: "String", requiredGroup: true },
     setCaption: {method:1,doc: 1},
     setImageIndex: {method:1,doc: 1},
     setIconUrl: {method:1,doc: 1},
@@ -47,8 +47,8 @@ wm.Object.extendSchema(wm.Button, {
 });
 
 wm.Object.extendSchema(wm.ToggleButton, {
-    captionUp: { group: "display", bindTarget: 1, order: 10, focus: 1, doc: 1},
-    captionDown: { group: "display", bindTarget: 1, order: 11, doc: 1},
+    captionUp: { group: "display", bindTarget: 1, order: 10, focus: 1, doc: 1, requiredGroup: true},
+    captionDown: { group: "display", bindTarget: 1, order: 11, doc: 1, requiredGroup: true},
     clicked: { group: "display", type: "Boolean", bindTarget: 1, bindSource: 1, order: 12, simpleBindProp: true,doc: 1},
     caption: {ignore: 1},
     setClicked: {method:1, params: "(inClicked)", doc: 1},
@@ -84,7 +84,7 @@ wm.PopupMenuButton.extend({
 wm.Object.extendSchema(wm.PopupMenuButton, {
     caption: { bindSource:1 },
     iconClass: {hidden: true},
-    editMenuItems: {group: "operation", operation: 1},
+    editMenuItems: {group: "operation", operation: 1, requiredGroup: true},
     fullStructureStr: {ignore: true}, /* deprecated */
     fullStructure: {hidden: true},
     fullStructure: {hidden: true},

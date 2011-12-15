@@ -772,13 +772,12 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
 				  caption: this.propName});
 	this.plusButton = new wm.Label({owner: this,
 					parent: topPanel,
-					_classes: {domNode: ["wmbutton"]},
+					_classes: {domNode: ["wmPlusToolButton"]},
 					caption: "+",
 					align: "center",
 					width: "20px",
-					height: "20px",
-					border: "1",
-					borderColor: "#3F3F3F",
+					height: "18px",
+					padding: "0",
 					onclick: dojo.hitch(this, function() {
 					    var index = this.editors[this.editors.length-1].propertyNumber+1;
 					    this.addEditor(index, "-");
@@ -1290,11 +1289,14 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 });
 
 dojo.declare("wm.prop.ClassListEditor", wm.Container, {
-    height: "150px",
+    height: "200px",
     emptyList: ["<i>No Classes...</i>"],
     postInit: function() {
 	this.inherited(arguments);
-
+	new wm.Label({owner: this,
+		      parent: this,
+		      width: "100%",
+		      caption: "Current CSS Classes:"});
 	var grid = this.grid = 
 	    new wm.ListSet({owner: this,
 			    parent: this,
@@ -1323,11 +1325,13 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 				width: "100%",
 				height: "100%",
 				      onEnterKeyPress: dojo.hitch(this, "addClass")});
-	this.addButton = new wm.Button({owner: this,
-				    parent: addPanel,
-				    caption: "Add Class",
-				    width: "100px",
-				    height: "100%",
+	this.addButton = new wm.Label({owner: this,
+					    parent: addPanel,
+					    name: "addButton",
+					_classes: {domNode: ["wmPlusToolButton"]},
+				    caption: "+",
+				    width: "20px",
+				    height: "20px",
 				    onclick: dojo.hitch(this, "_addClass")});
 	new wm.Label({owner: this, 
 		      parent: this,

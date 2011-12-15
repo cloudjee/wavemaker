@@ -214,6 +214,7 @@ dojo.declare("Studio", wm.Page, {
 	    s.display = "inline-block";
 	    this.pageSelect.renderBounds = function() {};
 		*/
+	    this.togglePropertiesMultiactiveItem.set("checked",!this.inspector.multiActive);
 	},
 /*
 	 startPageOnStart: function() {
@@ -925,8 +926,10 @@ dojo.declare("Studio", wm.Page, {
 			}
 			this.selectInTree(s);
 			// show in inspector
-			if (s && !s.noInspector)
+		    if (s && !s.noInspector) {
 			    this.inspect(s, true);
+			this.writeDocumentationMenuItem.set("checked",Boolean(s.documentation));
+		    }
 		} finally {
 		}
 		this.updateCutPasteUi();
@@ -1680,6 +1683,7 @@ dojo.declare("Studio", wm.Page, {
 	    this.documentationDialog.editComponent.documentation = html;
 	    if (this.documentationDialog.editComponent == studio.selected)
 		this.inspector.reinspect();
+	    this.writeDocumentationMenuItem.set("checked",Boolean(studio.selected.documentation));
 	},
         loadThemeList: function(optionalCallback) {
 

@@ -41,7 +41,10 @@ import com.wavemaker.common.WMRuntimeException;
  * @author Andres Almiray
  * @author Matt Small
  */
-public class JSONUtils {
+public abstract class JSONUtils {
+
+    private JSONUtils() {
+    }
 
     public static String quote(String string) {
 

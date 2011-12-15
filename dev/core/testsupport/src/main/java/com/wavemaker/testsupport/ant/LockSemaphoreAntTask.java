@@ -25,6 +25,14 @@ import com.wavemaker.testsupport.UtilTest;
  */
 public class LockSemaphoreAntTask extends Task {
 
+    private String semaphoreName;
+
+    private String propName;
+
+    private int iterations = 50;
+
+    private int sleepTime = 50;
+
     @Override
     public void execute() throws BuildException {
 
@@ -47,15 +55,6 @@ public class LockSemaphoreAntTask extends Task {
             throw new BuildException(e);
         }
     }
-
-    // bean properties
-    private String semaphoreName;
-
-    private String propName;
-
-    private int iterations = 50;
-
-    private int sleepTime = 50;
 
     public void setSemaphoreName(String s) {
         this.semaphoreName = s;

@@ -374,7 +374,7 @@ public class DataModelManager {
 
         String serviceClass = StringUtils.fq(serviceClassPackage, StringUtils.upperCaseFirstLetter(dataModelName));
 
-        this.serviceManager.defineService(new com.wavemaker.tools.data.DataServiceDefinition(dataModelName, cfg, this.serviceManager, serviceClass)); // salesforce
+        this.serviceManager.defineService(new com.wavemaker.tools.data.DataServiceDefinition(dataModelName, cfg, this.serviceManager, serviceClass));
 
         save(dataModelName, cfg, true, true);
     }
@@ -481,7 +481,7 @@ public class DataModelManager {
                     def.setExternalConfig(extCfg);
                     setupElementTypeFactory(def.getServiceId(), def);
                     if (dataModelName.equals(CommonConstants.SALESFORCE_SERVICE)) {// salesforce
-                        DataModelManager.this.serviceManager.defineService(def, mgr, null, null); // salesforce
+                        DataModelManager.this.serviceManager.defineService(def, mgr, null, null);
                     } else {
                         DataModelManager.this.serviceManager.defineService(def);
                     }
@@ -706,9 +706,9 @@ public class DataModelManager {
 
     private void initialize(boolean force) {
 
-        String[] types = { DataServiceType.TYPE_NAME, WebServiceType.TYPE_NAME }; // salesforce
+        String[] types = { DataServiceType.TYPE_NAME, WebServiceType.TYPE_NAME };
 
-        Set<Service> services = this.serviceManager.getServicesByType(types); // salesforce
+        Set<Service> services = this.serviceManager.getServicesByType(types);
 
         for (Service service : services) {
             // Only SalesForce service should be treated as a data model among web services

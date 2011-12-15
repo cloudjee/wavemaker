@@ -45,6 +45,13 @@
 	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#D0D0D0', endColorstr='#404040');
 }
 
+.wminspector .wmPlusToolButton {
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+}
+
 .wminspector .EditorHelpIcon {
     background-repeat: no-repeat;
     background-position: 50% 50%;
@@ -69,6 +76,11 @@
      -moz-border-radius: 0px; 
      -webkit-border-radius: 0px;
      border-radius: 0px;     
+}
+
+#studio_propMenuButton {
+   background: transparent url(/wavemaker/images/wm/component_16.png) no-repeat 50% 50%;
+    cursor: pointer;
 }
 
 /*

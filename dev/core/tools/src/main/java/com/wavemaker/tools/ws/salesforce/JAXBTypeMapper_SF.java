@@ -60,17 +60,17 @@ public class JAXBTypeMapper_SF extends JAXBTypeMapper {
     public synchronized List<ElementType> getAllTypes(String serviceId, String username, String password) {
         List<ElementType> allTypes = new ArrayList<ElementType>();
         Model internalModel = getInternalModel();
-        SalesforceHelper helper = null; // salesforce
+        SalesforceHelper helper = null;
         if (internalModel != null) {
             for (CClassInfo ci : internalModel.beans().values()) {
                 ElementType type = new ElementType(ci.shortName, ci.fullName());
-                if (serviceId.equals(CommonConstants.SALESFORCE_SERVICE)) { // salesforce
+                if (serviceId.equals(CommonConstants.SALESFORCE_SERVICE)) {
                     if (!SalesforceHelper.isSystemObject(ci.shortName)) {
                         type.setSupportsQuickData(true);
                     }
                 }
                 try {
-                    helper = new SalesforceHelper(ci.shortName, serviceId, username, password); // salesforce
+                    helper = new SalesforceHelper(ci.shortName, serviceId, username, password);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -86,7 +86,7 @@ public class JAXBTypeMapper_SF extends JAXBTypeMapper {
                 allTypes.add(type);
             }
             if (helper != null) {
-                SalesforceHelper.setSessionHeader(null); // salesforce
+                SalesforceHelper.setSessionHeader(null);
             }
         }
         return allTypes;
@@ -97,7 +97,7 @@ public class JAXBTypeMapper_SF extends JAXBTypeMapper {
         for (CPropertyInfo prop : ci.getProperties()) {
             if (serviceId.equals(CommonConstants.SALESFORCE_SERVICE)) {
                 if (sfHelper.skipElement(prop.getName(true), serviceId)) {
-                    continue; // salesforce
+                    continue;
                 }
             }
             Collection<? extends CTypeInfo> ref = prop.ref();
@@ -111,7 +111,7 @@ public class JAXBTypeMapper_SF extends JAXBTypeMapper {
             }
             ElementType propType = new ElementType(toPropertyName(prop.getName(true)), propJavaType, prop.isCollection());
 
-            propType = sfHelper.setElementTypeProperties(propType, serviceId); // salesforce
+            propType = sfHelper.setElementTypeProperties(propType, serviceId);
             properties.add(propType);
         }
         return properties;
