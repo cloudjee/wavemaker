@@ -527,7 +527,12 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		if (!noRegen) {
 		    if (inProp.treeBindField && !object.isDestroyed) {		    
 			this.propTree.clear();
-			var targetProp =  typeof inProp.treeBindField == "string" ? inProp.treeBindField : this.owner.targetProps.targetProperty;
+			var targetProp;
+			if (inProp.treeBindField == "this") {
+			    targetProp = "";
+			} else {
+			    targetProp =  typeof inProp.treeBindField == "string" ? inProp.treeBindField : this.owner.targetProps.targetProperty;
+			}
 			var nodeName = typeof inProp.treeBindField == "string" ? inProp.treeBindField : this.owner.targetProps.targetProperty;
 			if (inProp.treeBindObject) {			    
 			    this.owner.targetProps.object = object = object.getValue(inProp.treeBindObject);
@@ -555,7 +560,8 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 							data: {
 							    object: object,
 							    fieldName:targetProp,
-							    fullFieldName: targetProp
+							    fullFieldName: targetProp,
+							    type: object.type
 							}
 						       });
 			/*
@@ -608,6 +614,8 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	var data = inChildNode.data;
 	var object = data.object;
 	var currentObject =  data.fullFieldName ? object.getValue(data.fullFieldName) : object;
+	if (!currentObject) 
+	    currentObject = object;
 	var type = currentObject.type;
 /*
 	var typeDef = wm.typeManager.getType(type);
