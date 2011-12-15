@@ -966,44 +966,6 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
 }
 
 
-.wm-darksnazzy .wmaccordion {
-	border: none;
-	/*border-bottom: 1px solid #3399FF;*/
-}
-
-.wm-darksnazzy .wmaccordion-header {
-	background: #9EBFEF url(images/accordion_bg_on.gif) top right no-repeat;
-	cursor: pointer;
-	white-space:nowrap;
-	padding: 4px;
-	border-top: 1px solid #c0c4ca;
-	border-bottom: 1px solid #363b44;
-	border-left: 1px solid #c0c4ca;
-	color: #FFF;
-}
-
-.wm-darksnazzy .wmaccordion .wmaccordion-collapsed {
-	background: #ebebeb url(images/accordion_bg_off.gif) top right no-repeat;
-	border-top: 1px solid #c0c4ca;
-	border-bottom: 1px solid #363b44;
-	border-left: 1px solid #c0c4ca;
-	color: #FFF;
-	/*
-	border-bottom: 1px solid #3399FF;
-	border-bottom-style: none;
-	*/
-}
-
-.wm-darksnazzy .wmaccordion-content {
-	overflow: auto;
-	overflow-x: hidden;
-	/*
-	border: 1px solid #999999;
-	border-top-style: none;
-	border-bottom-style: none;
-	*/
-}
-
 .wm-darksnazzy {
 	color: #FFF;
 }
@@ -1338,6 +1300,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 .EditVariable .EditVariable-tabs .wmtablayers-tab,
 .DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-tab,
 #studio_inspector_tabs  .wmtablayers-tab,
+#studio_PIContents .wmtogglebutton,
 .ResourceManager .wmtablayers-tab,
 .GridDesigner .wmtablayers-tab,
 #studio_inspector .wmaccordion-header
@@ -1362,13 +1325,15 @@ body.wm-darksnazzy .wmToolbar button:hover {
     padding: 2px 5px 3px 5px;
 }
 
-body #studio_inspector .wmaccordion-header {
+body #studio_inspector .wmaccordion-header,
+#studio_PIContents .wmtogglebutton {
 	-moz-border-radius: 4px; 
 	-webkit-border-radius: 4px; 
 	border-radius: 4px; 
 	background-color: #959dab;
 	color: #FFF;	
 }
+#studio_PIContents .wmtogglebutton,
 #studio_inspector .wmaccordion-header.wmaccordion-collapsed {
 	background-color: #5e6678;
 }
@@ -1404,6 +1369,7 @@ body #studio_inspector .wmaccordion-header {
 .EditVariable .EditVariable-tabs .wmtablayers-selected,
 .DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-selected,
 #studio_inspector_tabs .wmtablayers-selected,
+#studio_PIContents .wmtogglebutton.toggleButtonDown,
 .ResourceManager .wmtablayers-selected,
 .GridDesigner .wmtablayers-selected
  {
@@ -1486,9 +1452,6 @@ body #studio_inspector .wmaccordion-header {
 	padding-right: 4px;
 }
 
-.wm-darksnazzy .wmaccordion-content{
-	background-color: #424a5a;
-}
 .Studio .Studio-bench {
 	background-image: url(/wavemaker/images/hash.png);
 }

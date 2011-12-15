@@ -14,35 +14,6 @@
  
 dojo.provide("wm.studio.app.inspector.Inspector");
 
-wm.addPropertyGroups = function(propGroups) {
-	dojo.mixin(wm.propertyGroups || (wm.propertyGroups = {}), propGroups);
-}
-
-// registry of groups to show in inspector
-wm.addPropertyGroups({
-	common: {displayName: "Common", order: 10},
-	data: {displayName: "Data", order: 13},
-	display: {displayName: "Display", order: 15},
-	layout: {displayName: "Layout", order: 25},
-	"advanced layout": {displayName: "Advanced Layout", order: 180},
-	style: {displayName: "Style", order: 30},
-	scrolling: {displayName: "Scrollbars", order: 32},
-	dataobjects: {displayName: "Data Objects", order: 35},
-	format: {displayName: "Formatting", order: 40},
-	Labeling: {displayName: "Labeling", order: 45},
-	edit: {displayName: "Editing", order: 50},
-	editor: {displayName: "Editor Options", order: 50},
-	editData: {displayName: "Editor Data", order: 55},
-	events: {displayName: "Events", order: 100},
-	Events: {displayName: "General", order: 100},
-	Properties: {displayName: "Other", order: 100},
-	validation: {displayName: "Validation", order: 150},
-	columns: {displayName: "Columns", order: 999},
-	ungrouped: {displayName: "Other", order: 1000},
-	operation: {displayName: "Operations", order: 2000},
-    docs: {displayName: "Documentation", order: 3000},
-    deprecated: {displayName: "Deprecated", order: 100000}
-});
 
 dojo.declare("wm.InspectorBase", null, {
 	flex: 1,

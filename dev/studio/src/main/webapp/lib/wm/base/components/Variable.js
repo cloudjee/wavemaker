@@ -1116,7 +1116,7 @@ wm.Object.extendSchema(wm.Variable, {
     saveInCookie: {group: "data", order: 20},
     json: {hidden:1, group: "data", order: 5},
     editJson: {operation: 1, group:"data", order:5},
-    dataSet: { readonly: 1, bindable: 1, group: "data", order: 0, defaultBindTarget: 1, isObject: true},
+    dataSet: { readonly: 1, bindable: 1, group: "data", order: 0, defaultBindTarget: 1, isObject: true, treeBindField: "this"},
     removeItem: {method:1},
     setData: {method:1},
     addItem: {method:1},
