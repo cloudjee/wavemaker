@@ -868,7 +868,9 @@ dojo.declare("wm.Application", wm.Component, {
     },
     removeMinifiedDialogLabel: function(minifiedLabel) {
 	minifiedLabel.destroy();
-	this.wmMinifiedDialogPanel.setShowing(Boolean(this.wmMinifiedDialogPanel.c$.length));
+	if (this.wmMinifiedDialogPanel) {
+	    this.wmMinifiedDialogPanel.setShowing(Boolean(this.wmMinifiedDialogPanel.c$.length));
+	}
     },
     resizeMinifiedDialogPanel: function() {
 	var b = {l: 0,
