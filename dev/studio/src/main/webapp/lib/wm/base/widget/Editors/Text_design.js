@@ -20,44 +20,60 @@ dojo.require("wm.base.widget.Editors.AbstractEditor_design");/* need parent clas
 
 
 wm.Object.extendSchema(wm.ResizableEditor, {
-    autoSizeHeight: {type: "Boolean", group: "advanced layout", order: 31, writeonly: true},
-    autoSizeWidth: {type: "Boolean", group: "advanced layout", order: 32, writeonly: true},
-    autoSize: {type: "String", options: ["none", "width", "height"], group: "advanced layout"},
-    maxHeight:     {type: "Number", group: "advanced layout", order: 60}
+    autoSizeHeight: {ignore: 0, writeonly: true},
+    autoSizeWidth: {ignore: 0, writeonly: true},
+    autoSize: {ignore: 0},
+    maxHeight:{type: "Number", group: "display", subgroup: "layout", order: 60, advanced: 1}
 });
 
 
+    
 wm.Object.extendSchema(wm.Text, {
-    placeHolder: {group: "Labeling", doc: 1}, // TODO: ignoring this only for 6.2 as it needs polish, particularly if its to work with themes
-    promptMessage: {group: "Labeling", order: 6},
-    tooltipDisplayTime: {group: "Labeling", order: 7},
-    password: {group: "editor", order: 5, doc: 1},
-    maxChars: {group: "editor", order: 6, doc: 1},
-    changeOnKey: {group: "events", order: 3},
-    regExp: {group: "validation", order: 2, doc: 1},
-    invalidMessage: {group: "validation", order: 3},
-    showMessages: {group: "validation", order: 4},
+    /* DISPLAY GROUP */
+    placeHolder: {group: "display", subgroup: "help"}, 
+
+    /* EDITOR GROUP */
+    /* Behavior subgroup */
+    maxChars: {group: "editor", subgroup: "behavior", order: 6},
+    resetButton: {group: "editor", subgroup: "behavior", advanced:1},
+    selectOnClick: {group: "editor", subgroup: "behavior", order: 10, advanced:1},
+
+    /* Validation subgroup */
+    regExp: {group: "editor", subgroup: "validation", order: 10, advanced: 1},
+
+    /* Dojo Tooltips subgroup */
+    showMessages: {group: "editor", subgroup: "dojo tooltips", order: 1, advanced: 1},
+    promptMessage: {group: "editor", subgroup: "dojo tooltips", order: 10, advanced: 1},
+    invalidMessage: {group: "editor", subgroup: "dojo tooltips", order: 20, advanced: 1},
+    tooltipDisplayTime: {group: "editor", subgroup: "dojo tooltips", order: 30, advanced: 1},
+    
+    /* Value display sugroup */
+    password: {group: "editor", subgroup: "display", order: 5, doc: 1},
+
+    /* EVENTS GROUP */
+    changeOnKey: {ignore: 0},
     onEnterKeyPress: {ignore: 0},
-    setPlaceHolder: {method:1, doc: 1},
-    setPassword: {method:1, doc: 1},
-    setRegExp: {method:1, doc: 1},
-    resetButton: {group: "editor"}
+
+    /* METHODS */
+    setPlaceHolder: {method:1},
+    setPassword: {method:1},
+    setRegExp: {method:1}
+
     
 });
 
 
 wm.Object.extendSchema(wm.LargeTextArea, {
-	changeOnEnter: { ignore: 1 },
-        onEnterKeyPress: {ignore: 1},
-        password: {ignore: 1},
-    resetButton: {ignore: 1},
-    regExp: {ignore: 1},
-    invalidMessage: {ignore: 1},
-    showMessages: {ignore: 1},
-    promptMessage: {ignore: 1},
-    tooltipDisplayTime: {ignore: 1},
-    placeHolder: {ignore: 1}
-
+    changeOnEnter:     {ignore: 1},
+    onEnterKeyPress:   {ignore: 1},
+    password:          {ignore: 1},
+    resetButton:       {ignore: 1},
+    regExp:            {ignore: 1},
+    invalidMessage:    {ignore: 1},
+    showMessages:      {ignore: 1},
+    promptMessage:     {ignore: 1},
+    tooltipDisplayTime:{ignore: 1},
+    placeHolder:       {ignore: 1}
 });
 
 wm.LargeTextArea.extend({
@@ -65,6 +81,8 @@ wm.LargeTextArea.extend({
 });
 
 wm.Object.extendSchema(wm.ColorPicker, {
-    regExp: {ignore: true},
-    resetButton: {ignore: 1}
+    defaultColor: {group: "editor", subgroup: "value"},
+    regExp:      {ignore: 1},
+    resetButton: {ignore: 1},
+    password:    {ignore: 1}
 });

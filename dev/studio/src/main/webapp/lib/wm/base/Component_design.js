@@ -19,8 +19,8 @@ dojo.require('wm.base.Component');
 // Design Schema
 //===========================================================================
 wm.Object.extendSchema(wm.Component, {
-    viewDocumentation: {group: "docs", readonly: true, order: 1, operation: true},
-    generateDocumentation: {group: "docs", readonly: true, order: 2, shortname: "Generate Docs", operation: true},
+    viewDocumentation: {group: "docs", writeonly: true},
+    //generateDocumentation: {group: "docs", readonly: true, order: 2, shortname: "Generate Docs", operation: true},
         themeable: {ignore: 1},
         theme: {ignore: 1},
         isDestroyed: {ignore: 1},
@@ -35,7 +35,6 @@ wm.Object.extendSchema(wm.Component, {
 	publishClass: { ignore: 1 },
 	readonlyProps: { ignore: 1 },
 	referenceProps: { ignore: 1 },
-	state: { ignore: 1 },
         binding: { ignore: 1, writeonly: 1},
         runtimeId: {ignore: 1},
     rootId: {ignore: 1},

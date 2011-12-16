@@ -33,28 +33,49 @@ wm.SelectMenu.extend({
 
 
 wm.Object.extendSchema(wm.SelectMenu, {
-    placeHolder: {group: "Labeling", doc: 1},
+    /* DISPLAY GROUP; help subgroup */
+    placeHolder: {group: "display", subgroup: "help"}, 
+
+    /* DISPLAY GROUP; visual subgroup */
+    hasDownArrow: {group: "editor",subgroup: "visual", order: 26},
+
+    /* Events group */
     onEnterKeyPress: {ignore: 0},
-    restrictValues: {type: "boolean", group: "editor", order: 40, doc: 1},
-	changeOnKey: { ignore: 1 },
-	changeOnEnter: { ignore: 1 },
-        pageSize: { order: 6, group: "editor"},
-  autoComplete: {group: "editor", order: 25},
-	hasDownArrow: {group: "editor", order: 26},
-  allowNone: {group: "editor", order: 30},
-  dataFieldWire: { ignore: 1},
-    setRestrictValues: {method:1, doc: 1},
-    getItemIndex: {method:1, doc: 1, returns: "Number"}
+
+
+    /* Editor group; validation subgroup */
+    restrictValues: {type: "boolean", group: "editor", subgroup: "validation", order: 40},
+
+    /* Editor group; dataSet subgroup */
+    allowNone: {group: "editor",subgroup: "dataSet", order: 30},
+
+
+    /* Editor group; behavior subgroup */
+    autoComplete: {group: "editor", order: 25, subgroup: "behavior"},
+    pageSize: { order: 100, group: "editor", subgroup: "behavior"},
+
+    /* Ignored group */
+    changeOnKey: { ignore: 1 },
+    changeOnEnter: { ignore: 1 },
+
+    /* Methods group */
+    setRestrictValues: {method:1},
+    getItemIndex: {method:1, returns: "Number"}
 });
 
 
 wm.Object.extendSchema(wm.Lookup, {
+    /* Editor group; value subgroup */
     formField: {editor: "wm.prop.FormFieldSelect", editorProps: {relatedFields: true}},
-    editorType: {group: "common", order: 501, options: ["Lookup", "FilteringLookup"]},
-    ignoreCase: {ignore: true},
-	autoDataSet: {group: "data", order: 3},
-    maxResults: {group: "editor", order: 100},
-	options: {ignore: 1},
+    editorType: {options: ["Lookup", "FilteringLookup"]},
+
+    /* Editor group; behavior subgroup */
+    autoDataSet: {group: "editor", subgroup: "behavior", order: 10}, /* both of these could also be dataSet subgroup */
+    maxResults: {group: "editor", subgroup: "behavior", order: 100},
+
+    /* Ignored group */
+    ignoreCase: {ignore: 1},
+    options: {ignore: 1},
     dataField: {ignore: 1},
     liveVariable: {ignore: 1} /* else it writes its liveVariable subcomponent */
 });
@@ -119,8 +140,10 @@ wm.Lookup.extend({
 
 
 wm.Object.extendSchema(wm.FilteringLookup, {
+    ignoreCase: {group: "editor", subgroup: "dataSet"},
+
+    /* Ignored group */
     orderBy: {ignore: true},
-    ignoreCase: {group: "data"},
     filterField: {ignore: true}, // for now, this value will always be the same as displayField
     maxResults: {ignore: true}, // for now, this value will always be the same as pageSize
     restrictValues: {ignore: true}, // by definition, we must find objects; if no match, no data

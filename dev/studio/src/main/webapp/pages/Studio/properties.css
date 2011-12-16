@@ -62,13 +62,17 @@
 	background-image: url(/wavemaker/images/inspector_bound.gif);
 }
 
-.tundra .wminspector .dijitTextBoxDisabled,
-.tundra .wminspector  .dijitComboBoxDisabled,
-.tundra .wminspector  .Disabled .wmeditor-caption {
-	background:#424A5A;
+.tundra .wminspector  .wminspector-boundvalue.Disabled .wmeditor-caption {
+    opacity:1.0;
+    color: white;
+}
+
+.tundra .wminspector .wminspector-boundvalue .dijitTextBoxDisabled,
+.tundra .wminspector  .wminspector-boundvalue .dijitComboBoxDisabled {
+	background:#525A6A;
 	border-color:#D5D5D5;
 	color: white;
-	opacity:1.0;
+	opacity: 1;
 }
 
 /* Reset editor is used for showing bound properties */
@@ -80,7 +84,12 @@
 
 #studio_propMenuButton {
    background: transparent url(/wavemaker/images/wm/component_16.png) no-repeat 50% 50%;
-    cursor: pointer;
+   cursor: pointer;
+}
+
+.wminspector .wminspector-subgroupLabel {
+    font-weight: bold;
+    text-align: center;
 }
 
 /*

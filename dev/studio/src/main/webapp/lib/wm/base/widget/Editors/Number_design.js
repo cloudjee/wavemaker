@@ -22,40 +22,57 @@ wm.Number.extend({
 });
 
 wm.Object.extendSchema(wm.Number, {
-/*
-    customFormatter: {ignore:1},
-    customParser: {ignore:1},*/
-    resetButton: {ignore: 1},
+    /* Editor group; value subgroup */
     dataValue: {type: "Number"},
     defaultInsert:{type: "Number"},
-    places: {group: "editor", order: 2, doc: 1, type: "number"},
-    minimum:  { group: "editor", order: 3, emptyOK: true, doc: 1, bindTarget: true, type: "number"},
-    maximum: { group: "editor", order: 4, emptyOK: true, doc: 1, bindTarget: true, type: "number"},
-    rangeMessage: {  group: "editor", order: 5},
-    spinnerButtons: {group: "editor", order: 6, type: "boolean"},
+
+    /* Editor group; display subgroup */
+    places: {group: "editor", subgroup: "display", order: 2, type: "number"},
+
+    /* Editor group; validation subgroup */
+    minimum:  { group: "editor", subgroup: "validation", order: 3, bindTarget: true, type: "Number", editor: "wm.Number", editorProps: {emptyValue: "unset"}},
+    maximum: { group: "editor",  subgroup: "validation", order: 4, bindTarget: true, type: "Number", editor: "wm.Number", editorProps: {emptyValue: "unset"}},
+
+
+    /* Editor group; dojo tooltips subgroup */
+    rangeMessage: {  group: "editor", subgroup: "dojo tooltips", order: 5, advanced:1},
+
+    /* Editor group; behavior subgroup */
+    spinnerButtons: {group: "editor", subgroup: "behavior", order: 6, type: "boolean"},
+
+    /* Ignored group */
+    resetButton: {ignore: 1},
     regExp: { ignore: 1 },
     maxChars: { ignore: 1},
-    setMaximum: {method:1, doc: 1},
-    setMinimum: {method:1, doc: 1}
+
+    /* Methods group */
+    setMaximum: {method:1},
+    setMinimum: {method:1}
 });
 
 
 
 wm.Object.extendSchema(wm.Currency, {
+    /* Editor group; display subgroup */
+    currency: {group: "editor", subgroup: "display", order: 2},
+
+    /* Ignored group */
     password: {ignore:1},
-    currency: {group: "editor", order: 2, doc: 1},
-    places: {  group: "editor", order: 5, doc: 1},
-    rangeMessage: {  group: "editor", order: 6},
     spinnerButtons: {ignore: 1}
 });
 
 
 wm.Object.extendSchema(wm.Slider, {
-    discreteValues: {group: "editor", order: 2},
-    minimum:  { group: "editor", order: 3, doc: 1, bindTarget: true},
-    maximum: { group: "editor", order: 4, doc: 1, bindTarget: true},
-    showButtons: {  group: "editor", order: 5},
-    verticalSlider: {  group: "editor", order: 6, ignore: 1},
+    /* Editor group; value subgroup */
+    discreteValues: {group: "editor", subgroup: "value", order: 2},
+    minimum:  { group: "editor", subgroup: "value", order: 3, bindTarget: true},
+    maximum: { group: "editor", subgroup: "value", order: 4, bindTarget: true},
+
+    /* Display group; visual subgroup */
+    showButtons: {  group: "display", subgroup: "visual", order: 5},
+    verticalSlider: {  group: "display", subgroup: "visual", order: 6, ignore: 1},
+
+    /* Ignored group */
     editorBorder: { ignore: 1 },
     changeOnKey: { ignore: 1 },
     changeOnEnter: { ignore: 1 }

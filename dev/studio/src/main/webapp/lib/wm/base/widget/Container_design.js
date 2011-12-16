@@ -27,7 +27,7 @@ wm.Object.extendSchema(wm.Container, {
     fitToContentWidth:  {group: "advanced layout", order: 90, shortname: "Auto Width", type: "Boolean", advanced: true},
     fitToContentHeight: {group: "advanced layout", order: 91, shortname: "Auto Height", type: "Boolean", advanced: true},
     autoScroll: {writeonly: 0},
-    touchScrolling: {group: "scrolling", order: 103, ignore: 0, advanced: true},
+    touchScrolling: {group: "display", subgroup: "scrolling", order: 103, ignore: 0, advanced: true},
     isMajorContent: {group: "style", order: 150, ignore: 1}, // obsolete
     themeStyleType: {ignore: true, group: "style", order: 20, options: ["", "MainContent", "EmphasizedContent", "HeaderContent"]},
     setThemeStyleType: {method:1},

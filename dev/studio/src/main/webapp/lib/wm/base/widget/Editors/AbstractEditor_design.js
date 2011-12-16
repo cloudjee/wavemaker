@@ -142,52 +142,87 @@ wm.AbstractEditor.extend({
 });
 
 wm.Object.extendSchema(wm.AbstractEditor, {
+
+    
+    /* DISPLAY GROUP */
+    /* Text subgroup */
+    caption: {group: "display", subgroup: "text", order: 1, bindTarget:true, requiredGroup:1},
+    captionPosition: {group: "display", subgroup: "text", order: 2, options: ["top", "left", "bottom", "right"]},
+    captionAlign: {group: "display", subgroup: "text", order: 3, options: ["left", "center", "right"]},
+    captionSize: {group: "display",subgroup: "text", order: 4, editor: "wm.prop.SizeEditor"},
+    singleLine: {group: "display", subgroup: "text", order: 5},
+
+    /* Text subgroup */
+    setCaption: {method:1},
+    setCaptionSize: {method:1},
+    setCaptionAlign: {method:1},
+    setCaptionPosition:{method:1},
+
+    /* Format subgroup */
+    formatter: { group: "display", subgroup: "format", order: 20, shortname: "readonlyFormatter", advanced:1 },
+
+    /* Help subgroup */
+    helpText: {group: "display", subgroup: "help", order: 10},
+
+    /* Layout subgroup */
+    minEditorWidth: {group: "display", subgroup: "layout", order: 500, ignoreHint: "minEditorWidth is only relevant for percent sized editors with captionPosition of left or right", advanced: 1},
+
+    /* END DISPLAY GROUP */
+
+    /* EDITOR GROUP */
+    /* Behavior subgroup */
+    readonly: {group: "editor", subgroup: "behavior", order: 1, type: "boolean"},
+    ignoreParentReadonly: {group: "editor", subgroup: "behavior", order: 2, ignoreHint: "ignoreParentReadonly is only relevant if the editor is in a form", advanced:1},
+    editorType: {group: "editor", subgroup: "behavior", order: 501, options: ["Text", "LargeTextArea", "RichText", "Currency", "Number", "Slider"]},
+    
+    /* Validation subgroup */
+    required: {group: "editor", subgroup: "validation", order: 1},    
+
+    /* Value subgroup */
+    formField: {group: "editor", subgroup: "value", order: 20, editor: "wm.prop.FormFieldSelect", editorProps: {relatedFields: false}, ignoreHint: "formField is only available when the editor is in a form", requiredGroup: 1},
+    defaultInsert:{type: "String", bindTarget: 1, group: "editor", subgroup: "value", order: 21, ignoreHint: "defaultInsert is only relevant if the editor is in a form"},
+    displayValue: {group: "editor", subgroup: "value", order: 10}, // use getDisplayValue()
+    dataValue: {bindable: 1, group: "editor", subgroup: "value", order: 11, simpleBindProp: true, type: "String"}, // use getDataValue()
+    emptyValue: {group: "editor", subgroup: "value",  order: 12, options: ["unset", "null", "emptyString", "false", "zero"]},
+
+    /* END EDITOR GROUP */
+
+    /* EVENTS GROUP */
+    changeOnEnter: {ignore: 1},
+    changeOnKey: {ignore: 1, group: "events", order: 0},
+    onchange: { group: "events", order: 1},
+    onEnterKeyPress: {ignore: 1, group: "events", order: 2},
+    onfocus: {group: "events", order:3, advanced:1},
+    onblur: {group: "events", order:4, advanced:1},
+    onHelpClick: {group: "events", order:4, advanced:1},
+
+    /* STYLE GROUP */
+    editorBorder: {group: "style", order: 1},
+
+
+    /* BIND SOURCE ONLY */
+    isDirty: {ignore: 1, bindSource: 1, group: "editData", order: 10, type: "boolean"}, 
+    invalid: {ignore: 1, bindSource: true},
+
+
+    /* IGNORE LIST */
     hint: {ignore:true},
     imageList: {ignore: 1},
-    formatter: { group: "format", order: 20, shortname: "readonlyFormatter" },
-    format: { writeonly: 1, categoryParent: "Properties", categoryProps: {component: "format"}},
-    formField: {group: "common", order: 500, editor: "wm.prop.FormFieldSelect", editorProps: {relatedFields: false}, ignoreHint: "This property is only available when the editor is in a Form"},
-    editorType: {group: "common", order: 501, options: ["Text", "LargeTextArea", "RichText", "Currency", "Number", "Slider"]},
-    caption: {group: "Labeling", order: 1, bindTarget:true, doc: 1},
-    captionPosition: {group: "Labeling", order: 2, doc: 1, options: ["top", "left", "bottom", "right"]},
-    captionAlign: {group: "Labeling", order: 3, doc: 1, options: ["left", "center", "right"]},
-    captionSize: {group: "layout", order: 4, doc: 1, editor: "wm.prop.SizeEditor"},
-    minEditorWidth: {group: "layout", order: 5, doc: 1, ignoreHint: "This property is only relevant for percent sized editors with captionPosition of left or right"},
-    singleLine: {group: "Labeling", order: 5},
-    helpText: {group: "Labeling", order: 10},
-    invalid: {ignore: 1, bindSource: true},
-    readonly: {group: "editor", order: 1, doc: 1, type: "boolean"},
-    ignoreParentReadonly: {group: "editor", order: 2, doc: 1, ignoreHint: "This property is only relevant if the editor is in a form"},
-    displayValue: {group: "editData", order: 2}, // use getDisplayValue()
-    dataValue: {bindable: 1, group: "editData", order: 3, simpleBindProp: true, type: "String"}, // use getDataValue()
-    isDirty: {ignore: 1, bindSource: 1, group: "editData", order: 10, type: "boolean"}, 
-    emptyValue: {group: "editData", order: 4, doc: 1, options: ["unset", "null", "emptyString", "false", "zero"]},
-    required: {group: "validation", order: 1, doc: 1},
-    editorBorder: {group: "style", order: 100},
-
-
     scrollX: {ignore:1},
     scrollY: {ignore:1},
     display: {ignore:1},
-    changeOnEnter: {ignore: 1},
-    changeOnKey: {ignore: 1},
-    onEnterKeyPress: {ignore: 1},
 
-    defaultInsert:{type: "String", bindTarget: 1, group: "editData", order: 10, ignoreHint: "This property is only relevant if the editor is in a form"},
-    setCaption: {method:1, doc: 1},
-    setCaptionSize: {method:1, doc: 1},
-    setCaptionAlign: {method:1,doc: 1},
-    setCaptionPosition:{method:1, doc: 1},
-    setDisabled: {method:1, doc: 1},
-    getInvalid: {method:1, doc: 1, returns: "Boolean"},
-    setReadonly: {method:1, doc: 1},
-    getDisplayValue: {method:1,doc: 1, returns: "String"},
-    getDataValue: {method:1, doc: 1, returns: "Any"},
-    setDisplayValue: {method:1, doc: 1},
-    setDataValue: {method:1, doc: 1},
 
-		   focus: {method:1,doc: 1},
-    clear: {method:1, doc: 1}
+    /* METHODS */
+    setDisabled: {method:1},
+    getInvalid: {method:1, returns: "Boolean"},
+    setReadonly: {method:1},
+    getDisplayValue: {method:1, returns: "String"},
+    getDataValue: {method:1, returns: "Any"},
+    setDisplayValue: {method:1},
+    setDataValue: {method:1},
+    focus: {method:1},
+    clear: {method:1}
     
     
 });
