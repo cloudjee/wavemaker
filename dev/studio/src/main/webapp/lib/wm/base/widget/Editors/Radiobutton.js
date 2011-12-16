@@ -24,6 +24,7 @@ dojo.require("dijit.form.RadioButton");
 //===========================================================================
 dojo.declare("wm.RadioButton", wm.Checkbox, {
 	radioGroup: "default",
+	dataType: "string",
 	_createEditor: function(inNode, inProps) {
 		return new dijit.form.RadioButton(this.getEditorProps(inNode, inProps));
 	},

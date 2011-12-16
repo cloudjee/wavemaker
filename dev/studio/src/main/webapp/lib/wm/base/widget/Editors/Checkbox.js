@@ -22,9 +22,9 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
     classNames: "wmeditor wmeditor-cbeditor",
 	width: "120px",
 
-	dataType: "string",
+	dataType: "boolean", /* TODO: WARNING, this may cause upgrade problems changing this from string to boolean */
 	startChecked: false,
-        checkedValue: "true",
+        checkedValue: true,
 	_createEditor: function(inNode, inProps) {
 		return new dijit.form.CheckBox(this.getEditorProps(inNode, inProps));
 	},
