@@ -829,9 +829,12 @@ dojo.declare("wm.Variable", wm.Component, {
 	},
 	*/
         getDataSet: function() {
+	    return this.dataSet || this;
+/*
 	    if (this.dataSet) return this.dataSet;
 	    else if (!this._isDesignLoaded)
 		return this;
+		*/
 	},
 	//===========================================================================
 	// Property API
@@ -1105,32 +1108,6 @@ wm.Variable.extend({
 	}
 });
 
-//===========================================================================
-// Design Time Extensions
-//===========================================================================
-wm.Object.extendSchema(wm.Variable, {
-    onPrepareSetData: {events: ["js","sharedjs"]},
-    data: { ignore: 1 },
-    isList: { group: "data", order: 4},
-    cursor: { ignore: 1},
-    isPrimitive: { ignore: 1},
-    type: { ignore: 0, group: "common", order: 1, editor: "wm.prop.DataTypeSelect", editorProps: {liveTypes: 0}},
-    saveInCookie: {group: "data", order: 20},
-    json: {hidden:1, group: "data", order: 5},
-    editJson: {operation: 1, group:"data", order:5},
-    dataSet: { bindable: 1, group: "data", order: 0, defaultBindTarget: 1, isObject: true, treeBindField: "this", editor: "wm.prop.FieldGroupEditor", editorProps: {groupEditorPropertyName: ""}},
-    removeItem: {method:1},
-    setData: {method:1},
-    addItem: {method:1},
-    setItem: {method:1},
-    setJson: {method:1},
-    removeItem: {method:1},
-    clearData: {method:1},
-    sort: {method:1},
-    getCount: {method:1, returns: "Number"},
-    getData: {method:1, returns: "Any"},
-    getItem: {method:1, returns: "wm.Variable"}
-});
 
 /**#@+ @design */
 wm.Variable.extend({
@@ -1530,6 +1507,6 @@ wm.Variable.extend({
 		    return dojo.map(results, callback, thisobj);
 		}
 	       };
-    },
+    }
     
 });

@@ -428,7 +428,9 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		if (this._disablePropTreeEvent) return;
 		this.bindEditor.setDataValue("");
 		try {
-		    this.owner.update({object: this.owner.targetProps.object, targetProperty: inNode.data.fullFieldName}, true);
+		    this.owner.update({object: this.owner.targetProps.object, 
+				       targetProperty: inNode.data.fullFieldName,
+				       propDef: inNode.data.propDef}, true);
 		} catch(e) {}
 		try {
 		if (this.propTree.selected.data.fullFieldName) {
@@ -505,66 +507,69 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 			this.mixinWidgets(inWidgets[i].widgets);
 	},
 
-    initBinding: function(noRegen, inProp) {
-            if (!noRegen && !this._applyingBinding) {
-		this._setRbEditorChecked(this.simpleRb);
-	        this.searchBar.setDataValue("");
-		this.updateBindSourceUi("simple");
-	    }
+    initBinding: function (noRegen, inProp) {
+        if (!noRegen && !this._applyingBinding) {
+            this._setRbEditorChecked(this.simpleRb);
+            this.searchBar.setDataValue("");
+            this.updateBindSourceUi("simple");
+        }
 
-	    if (this.owner.targetProps) {
-		var object = this.owner.targetProps.object;
-		var prop = this.owner.targetProps.targetProperty;
-		var propPrefix = "";
+        if (this.owner.targetProps) {
+            var object = this.owner.targetProps.object;
+            var prop = this.owner.targetProps.targetProperty;
+            var propPrefix = "";
 
-		if (prop.indexOf(".") != -1 && !object.isDestroyed) {
-		    propPrefix = prop.replace(/\..*?$/,"");
-		    prop = prop.replace(/^.*\./,"");
-		    object = object.getValue(propPrefix) || object;
-		    propPrefix += ".";
-		}
+            if (prop.indexOf(".") != -1 && !object.isDestroyed) {
+                propPrefix = prop.replace(/\..*?$/, "");
+                prop = prop.replace(/^.*\./, "");
+                object = object.getValue(propPrefix) || object;
+                propPrefix += ".";
+            }
 
-		if (!noRegen) {
-		    if (inProp.treeBindField && !object.isDestroyed) {		    
-			this.propTree.clear();
-			var targetProp;
-			if (inProp.treeBindField == "this") {
-			    targetProp = "";
-			} else {
-			    targetProp =  typeof inProp.treeBindField == "string" ? inProp.treeBindField : this.owner.targetProps.targetProperty;
-			}
-			var nodeName = typeof inProp.treeBindField == "string" ? inProp.treeBindField : this.owner.targetProps.targetProperty;
-			if (inProp.treeBindObject) {			    
-			    this.owner.targetProps.object = object = object.getValue(inProp.treeBindObject);
-			    this.owner.targetProps.targetProperty = targetProp = "";
-			}
-			var wire;
-			if (targetProp) {
-			    wire = object.$.binding ? object.$.binding.wires[targetProp] : null;
-			} else {
-			    wire = object.owner.$.binding ? object.owner.$.binding.wires[object.name] : null;
-			}
-		if (wire) {
-		    if (wire.expression) {
-			nodeName += " <span class='WireExpression'>" + wire.expression + "</span>";
-		    } else if (wire.source) {
-			nodeName += " <span class='WireSource'>" + wire.source + "</span>";
-		    } 
-		}
-			
-			var rootNode = new wm.TreeNode(this.propTree.root,
-						       {closed: false,
-							content: nodeName,
-							hasChildren: true,
-							initNodeChildren: dojo.hitch(this, "addPropTreeChildren"),
-							data: {
-							    object: object,
-							    fieldName:targetProp,
-							    fullFieldName: targetProp,
-							    type: object.type
-							}
-						       });
-			/*
+            if (!noRegen) {
+                if (inProp.treeBindField && !object.isDestroyed) {
+		    this.generatePropTree(inProp, object);
+/*
+                    this.propTree.clear();
+                    var targetProp;
+                    if (inProp.treeBindField == "this") {
+                        targetProp = "";
+                    } else {
+                        targetProp = typeof inProp.treeBindField == "string" ? inProp.treeBindField : this.owner.targetProps.targetProperty;
+                    }
+                    var nodeName = typeof inProp.treeBindField == "string" ? inProp.treeBindField : this.owner.targetProps.targetProperty;
+                    if (inProp.treeBindObject) {
+                        this.owner.targetProps.object = object = object.getValue(inProp.treeBindObject);
+                        this.owner.targetProps.targetProperty = targetProp = "";
+                    }
+                    var wire;
+                    if (targetProp) {
+                        wire = object.$.binding ? object.$.binding.wires[targetProp] : null;
+                    } else {
+                        wire = object.owner.$.binding ? object.owner.$.binding.wires[object.name] : null;
+                    }
+                    if (wire) {
+                        if (wire.expression) {
+                            nodeName += " <span class='WireExpression'>" + wire.expression + "</span>";
+                        } else if (wire.source) {
+                            nodeName += " <span class='WireSource'>" + wire.source + "</span>";
+                        }
+                    }
+
+                    var rootNode = new wm.TreeNode(this.propTree.root, {
+                        closed: false,
+                        content: nodeName,
+                        hasChildren: true,
+                        initNodeChildren: dojo.hitch(this, "addPropTreeChildren"),
+                        data: {
+                            object: object,
+                            fieldName: targetProp,
+                            fullFieldName: targetProp,
+                            type: object.type
+                        }
+                    });
+		    */
+/*
 
 			  var propList = object.listDataProperties("bindTarget");
 			  var list = [];
@@ -583,33 +588,90 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 			  this.propList.show();
 			*/
 
-			this.propTree.show();
-			this.propListLabel.show();
-			this._disablePropTreeEvent = true; 
-			this.propTree.select(rootNode);
-			this._disablePropTreeEvent = false;
-			this.owner._cupdating = true;
-			this.owner.clearButton.show();
-			this.owner.doneButton.show();
-			this.owner.cancelButton.hide();
-			this.owner._cupdating = false;
-		    } else {
-			/*
+                    this.propTree.show();
+                    this.propListLabel.show();
+                    this._disablePropTreeEvent = true;
+                    this._disablePropTreeEvent = false;
+                    this.owner._cupdating = true;
+                    this.owner.clearButton.show();
+                    this.owner.doneButton.show();
+                    this.owner.cancelButton.hide();
+                    this.owner._cupdating = false;
+                } else {
+/*
 			  this.propList.hide();
 			*/
-			this.propTree.hide();
-			this.propListLabel.hide();
+                    this.propTree.hide();
+                    this.propListLabel.hide();
 
-			this.owner._cupdating = true;
-			this.owner.clearButton.hide();
-			this.owner.doneButton.hide();
-			this.owner.cancelButton.show();
-			this.owner._cupdating = false;
+                    this.owner._cupdating = true;
+                    this.owner.clearButton.hide();
+                    this.owner.doneButton.hide();
+                    this.owner.cancelButton.show();
+                    this.owner._cupdating = false;
 
-		    }
-		}
-	    }
-	},
+                }
+            }
+        }
+    },
+    generatePropTree: function(inProp, inObject) {
+        this.propTree.clear();
+        var targetProp;
+	var treeBindField = inProp.rootTreeBindField || inProp.treeBindField;
+        if (treeBindField == "this") {
+            targetProp = "";
+        } else {
+            targetProp = typeof treeBindField == "string" ? treeBindField : this.owner.targetProps.targetProperty;
+        }
+
+	if (inProp.rootTreeBindField) {
+	    this.bindTreeSelectTargetProp = inProp.treeBindField;
+	}
+
+        var nodeName = typeof treeBindField == "string" ? treeBindField : this.owner.targetProps.targetProperty;
+
+	/* TODO: This block probably no longer needed/used */
+        if (inProp.treeBindObject) {
+	    var object = inObject.getValue(inProp.treeBindObject);
+            this.owner.targetProps.object = object; 
+            this.owner.targetProps.targetProperty = targetProp = "";
+        } else {
+	    var object = inObject;
+	}
+
+        var wire;
+        if (targetProp) {
+            wire = object.$.binding ? object.$.binding.wires[targetProp] : null;
+        } else {
+            wire = object.owner.$.binding ? object.owner.$.binding.wires[object.name] : null;
+        }
+        if (wire) {
+            if (wire.expression) {
+                nodeName += " <span class='WireExpression'>" + wire.expression + "</span>";
+            } else if (wire.source) {
+                nodeName += " <span class='WireSource'>" + wire.source + "</span>";
+            }
+        }
+
+	this._propTreeInitializing = true;
+        var rootNode = new wm.TreeNode(this.propTree.root, {
+            closed: false,
+            content: nodeName,
+            hasChildren: true,
+            initNodeChildren: dojo.hitch(this, "addPropTreeChildren"),
+            data: {
+                object: object,
+		propDef: inProp,
+                fieldName: targetProp,
+                fullFieldName: targetProp,
+                type: object.type
+            }
+        });
+	this._propTreeInitializing = false;
+	if (!inProp.rootTreeBindField) {
+	    this.propTree.select(rootNode);
+	}
+    },
     addPropTreeChildren: function(inChildNode) {
 	var data = inChildNode.data;
 	var object = data.object;
@@ -636,7 +698,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 			content += " <span class='WireSource'>" + wire.source + "</span>";
 		    } 
 		}
-		new wm.TreeNode(inChildNode, 
+		var n = new wm.TreeNode(inChildNode, 
 				{
 				    closed: true,
 				    content: content,
@@ -645,12 +707,19 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 				    data: {
 					object: object,
 					fieldName: fieldName,
-					fullFieldName: newFullFieldName
+					fullFieldName: newFullFieldName,
+					propDef: inChildNode.propDef
 				    }
 				});
+		if (this._propTreeInitializing) {
+		    if (newFullFieldName == this.bindTreeSelectTargetProp) {
+			this.propTree.select(n);
+		    }
+		}
+
 	    }
 	}
-	
+
     },
 	_setRbEditorChecked: function(inRbEditor) {
 		this.simpleRb.beginEditUpdate();
@@ -983,7 +1052,8 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	}
 	
     },
-        applyBinding: function(inTargetProps, inClear) {
+
+    applyBinding: function(inTargetProps, inClear) {
 	    var isExpression        = this.isExpression();
 	    var isDisplayExpression =  this.isDisplayExpression();
 	    var isResource = this.isResource();	    
@@ -997,14 +1067,28 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	    }
 	    if (isExpression || isDisplayExpression) {
 		var ex2 = ex.replace(/\$\{.*?}/g, '""'); // replace all ${...} with the value 1 for a quick and easy test to validate the expression
+
+		var error;
+
 		try {
 		    var result = eval(ex2);
-		    if (isDisplayExpression && typeof result == "object" && result instanceof Date == false) {
-			app.toastError(this.getDictionaryItem("DOES_NOT_COMPILE", {expr: ex2}));
+		} catch(e) {
+		    error = e;
+		    try {
+			if (dojo.trim(ex2).match(/^\{.*\}$/)) {
+			    ex2 = "(" + ex2 + ")";
+			    result = eval(ex2);
+			    ex = "(" + ex + ")"; // success with this change to the expression
+			}
+		    } catch(e) {		
+			app.toastError(this.getDictionaryItem("UNABLE_TO_COMPILE", {error: e.message}));
 			return;
 		    }
-		} catch(e) {
-		    app.toastError(this.getDictionaryItem("UNABLE_TO_COMPILE", {error: e.message}));
+		}
+	    
+
+		if (isDisplayExpression && typeof result == "object" && result instanceof Date == false) {
+		    app.toastError(this.getDictionaryItem("DOES_NOT_COMPILE", {expr: ex2}));
 		    return;
 		}
 	    }
@@ -1060,7 +1144,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	    var app = studio.application;
 
 	    /* If there is no targetProperty, then we are binding the object itself, which can only be done from the owner object */
-	    if (!inTargetProp) {
+	    if (!inTargetProp && inTargetObject.owner instanceof wm.Page == false && inTargetObject.owner instanceof wm.Application == false) {
 		var oldTargetObject = inTargetObject;
 		inTargetObject = inTargetObject.owner;
 		inTargetProp = oldTargetObject.name;

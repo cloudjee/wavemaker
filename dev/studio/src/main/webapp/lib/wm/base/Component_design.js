@@ -31,7 +31,7 @@ wm.Object.extendSchema(wm.Component, {
 	id: { ignore: 1 },
 	ignoredProps: { ignore: 1 },
     name: { group: "common", order: 0, requiredGroup: true},
-    owner: { group: "common", order: 1, readonly: true, options: ["Page", "Application"], doc: 1},
+    owner: { group: "common", order: 1, ignore: 1, unwritable: true, options: ["Page", "Application"], doc: 1},
 	publishClass: { ignore: 1 },
 	readonlyProps: { ignore: 1 },
 	referenceProps: { ignore: 1 },
@@ -123,7 +123,7 @@ wm.Component.extend({
         isWriteableProp: function(inPropSchema, inName) {
 	    var ps = inPropSchema;
 	    if (!ps) return true;
-	    if (ps.group == "method") return false;
+	    if (ps.method || ps.unwritable) return false;
 
 	    /* Its not writable if its bound; the binding is the source of the value */
 	    if (inName && this.$.binding && this.$.binding.wires[inName])

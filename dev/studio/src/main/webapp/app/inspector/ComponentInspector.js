@@ -365,6 +365,8 @@
   * categoryProps.inspector: OLD DEF: Specifies which inspector to use to inspect this component
   * createWire: creates a wire instead of calling setProp
   * readonly: useful for bindable props; user can see them, bind them, but not directly edit the property.  They only write the binding, not the value! TODO: USE THIS!  NOTE: readonly is ignored when setting the property editor's readonly state if createWire is true
+  * unwritable: similar to readonly but the editor is fully editable, it just doesn't get written.  Used for owner which users can edit but 
+  *             which updates its place in the structure rather than setting a property
   * subcomponent: the property refers to a subcomponent whose properties should be displayed in the property panel
   *
   * How to control what editor shows up for a property
@@ -468,9 +470,10 @@
 	 this._inspecting = false;
 	 this.reflow();
      },
-     reinspectEditor: function(inComponent, e, binde, inProp) {
+     reinspectEditor: function(inComponent, e, binde, inProp,optionalAppendToHashName) {
 	 var propName = inProp.name;
 	 var skipSetEditor = false;
+	 if (!binde)  binde = this.bindEditorHash[(optionalAppendToHashName ? optionalAppendToHashName + "_" : "") +  this.getHashId(inComponent,propName)];
 
 	 /* If its a wm.prop.SelectMenu then call its reinspect method to update its dataset */
 	 if (e instanceof wm.prop.SelectMenu) {
@@ -497,7 +500,7 @@
 	     var parent = e.parent;
 	     parent.removeAllControls();
 	     e = this.generateEditor(inComponent,inProp, parent.parent, parent); 
-	     this.editorHash[this.getHashId(inComponent,propName)] = e;
+	     this.editorHash[(optionalAppendToHashName ? optionalAppendToHashName + "_" : "") +  this.getHashId(inComponent,propName)] = e;
 	 
 	     /* If the editor was regenerated, it already shows the latest value; no need to set the editor here */
 	     skipSetEditor = true;
@@ -510,15 +513,22 @@
 	     var newVal;
 	     var isBound = this.isPropBound(inComponent, inProp);
 	     if (isBound) {
-		 var wire = inComponent.$.binding.wires[propName];
+		 var wire = inComponent.$.binding.wires[inProp.treeBindField || propName];
 		 newVal = wire.source || wire.expression; // TODO: prefix with str,numb, bool, expr
 	     } else {
-		 newVal = inComponent.getProp(propName);
+		 newVal = inComponent.getValue(propName);
+		 if (newVal instanceof wm.Component) {
+		     if (newVal === inComponent || newVal.isOwnedBy(inComponent)) {
+			 // don't show the value if the value is self or is something being managed internally; binding
+			 // is for connecting to a different component's properties.
+			 newVal = "";
+		     }
+		 }
 	     }
 
 	     // if you call getDataValue on a NumberEditor whose displayValue is a bind expression, you get back undefined
 	     // because its not a number
-	     if (e instanceof wm.AbstractEditor) {
+	     if (e instanceof wm.AbstractEditor && !isBound) {
 		 var oldVal = e.showing ? e.getDataValue() : binde && binde.showing ? binde.getDataValue() : e.getDataValue();
 
 		 // If the value has changed, update it.
@@ -541,16 +551,20 @@
 		 e.setDisabled(inProp.ignoretmp);
 		 e.setHint(inProp.ignoretmp && inProp.ignoretmp ? this.ignoreHintPrefix +  inProp.ignoreHint : "");
 	     } else {
-		 e.setShowing(!inProp.ignoretmp);
+		 e.parent.setShowing(!inProp.ignoretmp);
 	     }
 	     
 	     /* If its a bindable property, update whether the bindeditor or regular editor is showing and update the bindeditor's value. */
 	     if (inProp.bindable || inProp.bindTarget) {
+		 if (isBound)
+		     debugger;
 		 e.setShowing(!isBound);
-		 binde.setShowing(isBound);
+		 console.log(e.toString());
+		 binde.setShowing(Boolean(isBound));
+		 console.log(binde.toString());
 		 e.parent.setHeight((isBound ? binde.bounds.h : e.bounds.h) +  "px");
-		 var wire = inComponent.$.binding.wires[propName];
-		 binde.setDataValue(wire ? wire.expression || wire.source : "");
+		 var wire = inComponent.$.binding.wires[inProp.treeBindField || propName];
+		 binde.setDataValue(wire ?this.getFormattedBoundValue(wire.source,wire.expression) : "");
 	     }
 	 }
 
@@ -674,7 +688,6 @@
 	     }
 	 }
 	 if (groupObj) {
-	     this._generateEditors(inComponent, inLayer, groupObj.props,inGroupName == "required" || !this.isAdvancedMode());
 	     for (var subgroupName in groupObj.subgroups) {		 
 		 var subgroup = groupObj.subgroups[subgroupName];
 		 if (subgroup.props.length) {
@@ -682,6 +695,7 @@
 		     this._generateEditors(inComponent, inLayer, subgroup.props, !this.isAdvancedMode());
 		 }
 	     }
+	     this._generateEditors(inComponent, inLayer, groupObj.props,inGroupName == "required" || !this.isAdvancedMode());
 	 } else {
 	     this._generateEditors(inComponent, inLayer, this.props, !this.isAdvancedMode());
 	 }
@@ -730,7 +744,7 @@
 
 
 
-     generateEditor: function(inComponent, inProp, inLayer, optionalParent) {
+     generateEditor: function(inComponent, inProp, inLayer, optionalParent, optionalAppendToHashName) {
 	 var value;
 	 var isBound = false;
 	 var propName = inProp.name;
@@ -753,10 +767,17 @@
 	  ***********************************************************/
 	 var isBound = this.isPropBound(inComponent, inProp);
 	 if (isBound) {
-	     var wire = inComponent.$.binding.wires[propName];
+	     var wire = inComponent.$.binding.wires[inProp.treeBindField || propName];
 	     value = wire.source || wire.expression; // TODO: prefix with str,numb, bool, expr
 	 } else {
 	     value = inComponent.getValue(propName);
+	     if (value instanceof wm.Component) {
+		 if (value === inComponent || value.isOwnedBy(inComponent)) {
+		      // don't show the value if the value is self or is something being managed internally; binding
+		     // is for connecting to a different component's properties.
+		     value = "";
+		 }
+	     }
 	 }
 
 	 /**********************************************************
@@ -774,7 +795,7 @@
 	 if (inProp.isEvent) {
 	     editorProps.propName = inProp.name;
 	     var e = new wm.prop.EventEditorSet(editorProps);
-	     this.editorHash[this.getHashId(inComponent,propName)] = e;
+	     this.editorHash[(optionalAppendToHashName ? optionalAppendToHashName + "_" : "") +  this.getHashId(inComponent,propName)] = e;
 	 } else {
 	     var e = inComponent.makePropEdit(inProp.name, value, editorProps);
 	     if (!e || e instanceof wm.Control == false) {
@@ -795,14 +816,14 @@
 	 }
      
 	 /* Cache a refernce to the editor so that reinspect can quickly find it */
-	 this.editorHash[this.getHashId(inComponent,propName)] = e;
+	 this.editorHash[(optionalAppendToHashName ? optionalAppendToHashName + "_" : "") +  this.getHashId(inComponent,propName)] = e;
 
 
 	 /**********************************************************
 	  * Create the readonly bind editor that shows the bound value
 	  **********************************************************/
 	 if ((inProp.bindable || inProp.bindTarget) && !e.noBindColumn) {
-	     this.createBindEditor(inProp, editorProps, e, isBound, inComponent);
+	     this.createBindEditor(inProp, editorProps, e, isBound, inComponent,optionalAppendToHashName);
 	 } else if (!e.noBindColumn) {
 	     new wm.Spacer({owner:this,
 			    parent: panel,
@@ -817,6 +838,38 @@
 	 return e;
      },
 
+     /* When showing a bound value, get a pretty printed version of it */
+    getFormattedBoundValue: function(inSource, inExpr) {
+	var inValue = "";
+	if (!inSource && !inExpr)
+	    ;
+	else if (inSource) 
+	    inValue = "bind: " + inSource;
+	else if (inExpr === undefined || inExpr === null || inExpr === "" || String(inExpr).match(/^\s*$/))
+	    inValue = "";
+	else if (inExpr == "true")
+	    inValue = "bool: true";
+	else if (inExpr == "false")
+	    inValue = "bool: false";
+	else if (inExpr == "null")
+	    inValue = "null: null";
+	else if (inExpr == "null")
+	    inValue = "null: null";
+	else if (String(inExpr).match(/\d/) && !isNaN(inExpr)) // isNaN("") == isNaN(" ") == false
+	    inValue = "numb: " + inExpr;
+	else if (inExpr == "(binding data)")
+	    inValue = inExpr;
+	else {
+	    var matches = inExpr.match(/^\s*\"([^\"]*)\"\s*$/);
+	    if (matches)
+		inValue = "str: " + matches[1];
+	    else
+		inValue = "expr: " + inExpr;
+	    inValue = String(inValue).replace(/\"/g, "'") || "";
+	}
+	return inValue;
+    },
+
      /**************************************************************************************
       * isPropBound: Tells the generateEditor method if its generating an editor showing
       *              a value that is currently bound.
@@ -827,7 +880,7 @@
       * when in fact you've bound the name data field 
       **************************************************************************************/
      isPropBound: function(inComponent, inProp) {
-	 return (inProp.bindable || inProp.bindTarget) && inComponent.$.binding && inComponent.$.binding.wires[inProp.name];
+	 return Boolean((inProp.bindable || inProp.bindTarget) && inComponent.$.binding && inComponent.$.binding.wires[inProp.treeBindField || inProp.name]);
      },
 
      /**************************************************************************************
@@ -852,7 +905,12 @@
       * Creates an editor for showing a bound value, sets it to showing/hiding based
       * on whether there IS a bound value, and adds bind and reset buttons
       **************************************************************************************/
-     createBindEditor: function(inProp, editorProps, e, isBound, inComponent) {
+     createBindEditor: function(inProp, editorProps, e, isBound, inComponent,optionalAppendToHashName) {
+	 if (!isBound) editorProps.dataValue = undefined;
+	 else {
+	     var w = inComponent.$.binding.wires[inProp.treeBindField || inProp.name];
+	     editorProps.dataValue = this.getFormattedBoundValue(w.source,w.expression);
+	 }
 	 var bindEditorProps = 
 	     dojo.mixin(editorProps, 
 			{ captionSize: (e.captionSize == "100%") ? "80px" : e.captionSize, // 100% for checkbox; need more than 16px to show bind value
@@ -868,7 +926,8 @@
 
 	 bindableEditor._onResetClick = dojo.hitch(this, function() {
 	     var parent = e.parent;
-	     var w = inComponent.$.binding.wires[inProp.name];
+	     var propName = inProp.treeBindField || inProp.name;
+	     var w = inComponent.$.binding.wires[propName];
 	     if (w) 
 		 inComponent.$.binding.removeWire(w.getWireId());
 	     bindableEditor.hide();
@@ -880,7 +939,7 @@
 	     }
 	 });
 
-	 this.bindEditorHash[this.getHashId(inComponent,inProp.name)] = bindableEditor;
+	 this.bindEditorHash[(optionalAppendToHashName ? optionalAppendToHashName + "_" : "") +  this.getHashId(inComponent,inProp.name)] = bindableEditor;
 
 
 	 var l = new wm.Label({owner:this,
@@ -891,8 +950,8 @@
 			       height: "20px"});
 	 var self = this;
 	 l.onclick = function() {
-	     studio.bindDialog.page.update({object: inComponent, targetProperty: inProp.name});
-	     var p = self.getBindDialogProps(inComponent,inProp.name);
+	     //studio.bindDialog.page.update({object: inComponent, targetProperty: inProp.treeBindField || inProp.name});
+	     var p = self.getBindDialogProps(inComponent,inProp,e);
 	     studio.bindDialog.page.update(p);
 	     studio.bindDialog.show();
 	 };
@@ -916,7 +975,7 @@
 	      */
 	     if (!e.createWire) {
 		 /* TODO: PROPINSPECTOR CHANGE: Need to use the UNDOABLE TASK MANAGER */
-		 inComponent.setProp(inProp.name, inDataValue);
+		 inComponent.setValue(inProp.name, inDataValue);
 	     } 
 
 	     /* Else we need to create a wm.Wire for the new value */
@@ -924,12 +983,12 @@
 		 /* editor that uses the bindTarget property can control what the target of the binding is; typically though,
 		  * we're just binding to inProp.name.  bindTarget is used by wm.prop.FieldGroupEditor.
 		  */
-		 var bindPropName = e.bindTarget || inProp.name;
+		 var bindPropName = e.bindTarget || inProp.treeBindField || inProp.name;
 
 		 /* If there is no data value, then there is no wire; make sure that any wire is removed */
 		 if (!inDataValue) {
-		     inComponent.$.binding.removeWire(inProp.name);
-		     inComponent.setProp(inProp.name, undefined);
+		     inComponent.$.binding.removeWire(bindPropName);
+		     inComponent.setValue(bindPropName, undefined);
 		 } else if (inDataValue && typeof inDataValue == "string") {
 		     /* If an editor uses the createExpressionWire property, then we are creating a binding expression instead
 		      * of binding to a target.  Used by wm.prop.FieldGroupEditor.  Typically we are binding something like
@@ -1155,9 +1214,12 @@
 		 return b;
 	 },
      /* TODO: Make sure we handle subcomponents correctly, there was a lot of extra code in the previous version of inspector */
-     getBindDialogProps: function(inComponent,inPropName) {
-	     return {object: inComponent, targetProperty: inPropName};
-	 },
+     getBindDialogProps: function(inComponent,inPropDef, inEditor) {
+	 var result = {object: inComponent, 
+		       targetProperty: inPropDef.treeBindField || inPropDef.name,
+		       propDef: inEditor && inEditor.propDef ? inEditor.propDef : inPropDef};
+	 return result;
+     },
 
 
 
@@ -1187,7 +1249,7 @@
 		     this.generateEditors(inComponent, group.name, l);
 		     l.reflow();
 		 }
-		 if (!layer.parent.multiActive) {
+		 if (layer.parent && !layer.parent.multiActive) {
 		     l.focusFirstEditor();
 		 }
 	     });
@@ -1496,16 +1558,27 @@ wm.addPropertyGroups({
 			       order: 10}
 		 }
 		},
+    data: {displayName: "Data", 
+	   order: 55,
+	   subgroups: {
+	       data: {displayName: "Data",
+		      order: 1},
+	       serverOptions: {displayName: "Server Options",
+			       order: 10},
+	       behavior: {displayName: "Behavior",
+			  order: 20}
+	   }
+	  },
     style: {displayName: "Style", order: 60},
     events: {displayName: "Events", order: 100},
     custommethods: {displayName: "Custom Methods", order: 101},
     roles: {displayName: "Roles", order: 110},
-
+    deprecated: {displayName: "Deprecated", order: 100000},
 /* OLD SCHEMA */
 
 
 
-	data: {displayName: "Data", order: 13},
+
 
 	layout: {displayName: "Layout", order: 25},
 	"advanced layout": {displayName: "Advanced Layout", order: 180},
@@ -1523,6 +1596,6 @@ wm.addPropertyGroups({
 	columns: {displayName: "Columns", order: 999},
 	ungrouped: {displayName: "Other", order: 1000},
 	operation: {displayName: "Operations", order: 2000},
-    docs: {displayName: "Documentation", order: 3000},
-    deprecated: {displayName: "Deprecated", order: 100000}
+    docs: {displayName: "Documentation", order: 3000}
+
 });

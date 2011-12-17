@@ -603,14 +603,6 @@ wm.ServiceCall.extend({
 		return this.inherited(arguments);
 	}
 });
-wm.Object.extendSchema(wm.ServiceCall, {
-    startUpdateComplete: { ignore: 1},
-    setService: {group: "method"},
-    setOperation: {group: "method"},
-    update: {group: "method"},
-    canUpdate: {group: "method"}
-});
-
 	     
 //===========================================================================
 // Variable used as a service input
@@ -668,14 +660,7 @@ dojo.declare("wm.ServiceInput", wm.Variable, {
 	}
 });
 
-wm.ServiceInput.extend({
-    writeProps: function() {
-	return {type: this.type};
-    }
-});
 
-wm.Object.extendSchema(wm.ServiceInput, {
-	dataSet: { ignore: 1, defaultBindTarget: false, isObject: true, type: "any"}
-});
+
 
 wm.ServiceInputVariable = wm.ServiceInput;

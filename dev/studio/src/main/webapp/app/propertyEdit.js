@@ -480,7 +480,7 @@ dojo.declare("wm.prop.SelectMenu", wm.SelectMenu, {
     values: null, 
     postInit: function() {
 	this.inherited(arguments);
-	this.updateOptions();
+	this.refreshOptions();
     },
     getDataValue: function() {
 	if (!this.values)
@@ -500,6 +500,10 @@ dojo.declare("wm.prop.SelectMenu", wm.SelectMenu, {
 		return this.inherited(arguments, [this.options[i]]);
 	    }
 	}
+    },
+    refreshOptions: function() {
+	this.updateOptions();
+	this.setOptions(this.options);
     },
     updateOptions: function() {
     }
@@ -1452,37 +1456,62 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
     groupEditorPropertyName: "",
     postInit: function() {
 	this.inherited(arguments);
-	this.editors = {};
-	var c = this.inspected;
+
+	studio.inspector.addSubGroupIndicator(this.propDef.name,this);
+
 	if (this.groupEditorPropertyName) {
-	    c = this.inspected.getProp(this.groupEditorPropertyName);
+	    this.inspected = this.inspected.getProp(this.groupEditorPropertyName);
 	}
 
+
+	this.editors = {};
+
+	if (this.propDef.advanced && !studio.inspector.isAdvancedMode()) {
+	    this.setShowing(false);
+	} else {
+	    this.setShowing(true); // wm.PropertyInspector will set this to hidden if the entire thing is bound assuming a bind-editor will be shown instead; not applicable for this particular editor
+	}
+
+	this.generateEditors();
+    },
+    generateEditors: function() {
+	var c = this.inspected;
 	var propDef = dojo.clone(this.propDef);
+	if (propDef.treeBindField == "this") {
+	    propDef.treeBindField = this.propDef.name;
+	}
 	delete propDef.editor;
-	var e= studio.inspector.generateEditor(this.inspected, propDef, this);
+	var e= studio.inspector.generateEditor(this.inspected, propDef, this,null,this.propDef.name);
 	e.setDisabled(true);
 	this.editors._ROOT = e;
 	this.indent++;
-
+	
 	if (c._dataSchema) {
+	    this._generatedSchema = dojo.toJson(c._dataSchema);
 	    for (var fieldName in c._dataSchema) {
+
 		var fieldDef = c._dataSchema[fieldName];
 		var type = fieldDef.type;
-		propDef.name = fieldName;
-		propDef.displayName = fieldName;
-		propDef.type = type;
-		propDef.treeBindField = this.propDef + "." + fieldName;
-		propDef.editorProps = {margin: "0,0,0," + this.indent*25,
-				       createExpressionWire:true,
-				       bindTarget: c != this.inspected ? c.getId() + "." + fieldName : fieldName
-				      };
-		propDef.createWire = true;
+
+		/* dojo.mixin used this way insures we work on a copy of propDef and don't modify e.propDef before its onclick is fired */
+		propDef = dojo.mixin({}, propDef, {
+		    name: fieldName,
+		    displayName: fieldName,
+		    type: type || propDef.type,
+		    treeBindField: (this.propDef.treeBindField != "this" ? this.propDef.treeBindField + "." : "") + fieldName,
+		    editorProps: {
+		        margin: "0,0,0," + this.indent * 25,
+		        createExpressionWire: true
+		    },
+		    createWire: true,
+		    rootTreeBindField: this.propDef.treeBindField
+		});
+
 		if (wm.typeManager.isStructuredType(type)) {
-		    e = studio.inspector.generateEditor(c, propDef, this);
+		    e = studio.inspector.generateEditor(c, propDef, this,null,this.propDef.name);
 		    e.setDisabled(true);
 		} else {
-		    e = studio.inspector.generateEditor(c, propDef, this);
+		    e = studio.inspector.generateEditor(c, propDef, this,null,this.propDef.name);
 		}
 		this.editors[c.getId() + "." + fieldName] = e;
 	    }
@@ -1491,14 +1520,30 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	this.reflow();
     },
     reinspect: function() {
-	for(editorName in this.editors) {
-	    var e = this.editors[editorName];
-	    var inspected = this.inspected;
-	    var wire = inspected.$.binding.wires[e.bindTarget];
-	    if (wire) {
-		e.setDataValue(wire.source || "expr: " + wire.expression);
-		e.setDisabled(true);
+	if (this._generatedSchema != dojo.toJson(this.inspected._dataSchema)) {
+	    this.removeAllControls();
+	    this.generateEditors();
+	    this.parent.setBestHeight();
+	} else {
+	    for(var editorName in this.editors) {
+		var e = this.editors[editorName];
+		studio.inspector.reinspectEditor(this.inspected,e, null, e.propDef,this.propDef.name);
 	    }
 	}
+	return true;
+    },
+    removeAllControls: function() {
+	    for(var editorName in this.editors) {
+		var e = this.editors[editorName];
+		delete this.editors[editorName];
+		for (var editorName in studio.inspector.editorHash) {
+		    if (e == studio.inspector.editorHash[editorName]) {
+			delete studio.inspector.editorHash[editorName];
+			delete studio.inspector.bindEditorHash[editorName];
+		    }
+		}
+		e.parent.destroy();
+	    }
+	this.inherited(arguments);
     }
 });
