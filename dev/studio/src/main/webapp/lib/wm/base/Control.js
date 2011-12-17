@@ -1609,7 +1609,9 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		wm.cancelJob("app.hint");
 		var isShowing =  (app.toolTipDialog && app.toolTipDialog.showing);
 		wm.job("app.hint", isShowing ? 0 : 1500, function() {
-		    app.createToolTip(self.hint, self.domNode, event, self);
+		    if (!self.isAncestorHidden()) {
+			app.createToolTip(self.hint, self.domNode, event, self);
+		    }
 		});
 		
 	    }
