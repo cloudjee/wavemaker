@@ -29,7 +29,6 @@ wm.Object.extendSchema(wm.FormPanel, {
     captionSize: { group: "display", order: 210, editor: "wm.prop.SizeEditor"},
     captionAlign: { group: "display", order: 230, options: ["left", "center", "right"]},
     captionPosition: { group: "display", order: 240, options: ["top", "left", "bottom", "right"]},
-    layoutKind: {ignore: 1},
     lock: {ignore: 1},
     freeze: {ignore: 1},
     imageList: {ignore: 1},

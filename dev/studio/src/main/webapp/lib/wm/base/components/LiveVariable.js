@@ -42,7 +42,8 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 
 	/** LiveView or LiveTable from which this LiveVariable gets its field information; can use a liveView or liveTable */
 	liveSource: null,  /* LiveSource is now deprecated; TODO: Hide liveSource unless its an old LIveVar already pointing to an app.liveview */
-
+    
+    refireOnDbChange: false,
 
 	/** Maximum number of results to return */
 	maxResults: 500,
@@ -59,7 +60,9 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 		this.sourceData = new wm.Variable({name: "sourceData", owner: this, type: this.type || "any" });
 		this.subscribe(this.filter.getRuntimeId() + "-changed", this, "filterChanged");
 		this.subscribe(this.sourceData.getRuntimeId() + "-changed", this, "sourceDataChanged");
-
+	    if (this.refireOnDbChange) {
+		this.subscribe(this.type + "-changed", this, "updateOnDbChange");
+	    }
 	    // default assumption is that its a list until we have some actual
 	    // data to tell us otherwise
 	    if (this.isList === undefined && this.operation == "read") 
@@ -285,7 +288,18 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	// FIXME: need to zot this
 	operationChanged: function() {
 	},
+    updateOnDbChange: function(inComponent) {
+	if (inComponent === this) return;
+	if (djConfig.isDebug) {
+	    this._autoUpdateFiring = "startUpdate";
+	    this._debug = {trigger: "updateOnDbChange triggered",
+			   lastUpdate: new Date()}; 
+	}
+
+	this.update();
+    },
 	_update: function() {
+
 		// note: runtime service only available when application is deployed
 		// so must wait until here to set it.
 		//The following lines for checking designTime flag are not being used now.  They may be used in the future to differenciate requests from 
@@ -350,6 +364,9 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	processResult: function(inResult) {
 	        this.dataSetCount = this._service.fullResult ? this._service.fullResult.dataSetSize : 0;
 		this.inherited(arguments);
+	        if (this.operation != "read") {
+		    dojo.publish(this.type + "-changed", [this]);
+		}
 	},
 	//===========================================================================
 	// Paging

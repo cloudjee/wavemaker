@@ -754,6 +754,7 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		    liveSource: view ? undefined : currentType,
 		    maxResults: this.maxResults,
 		    ignoreCase: this.ignoreCase,
+		    refireOnDbChange: true,
 		    orderBy: this.orderBy // right now, only FilteringSelect provides the orderBy property
 		});
 		this.selectedItem.setType(this.dataSet.type);
