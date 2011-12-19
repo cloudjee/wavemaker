@@ -69,13 +69,37 @@ dojo.declare("wm.Wire", wm.Component, {
 		return true;
 	},
     debugBindingEvent: function(inValue) {
-	if (app.debugTree)
-			app.debugTree.newLogEvent({type: "bindingEvent",
-						   component: this.target,
-						   property: this.targetProperty,
-						   value: inValue,
-						   source: this.expression ? null : this.source,
-						   expression: this.expression});
+	/* Ignore expressions that are just literals; they provide lots of initialization "events" but no interaction events */
+	if (djConfig.isDebug && !this.isAncestor(app.debugDialog) && !this.owner._inRefresh && (!this.expression || this.expression.match(/\$/))) {
+	    var firingId = "";
+	    if (this.source && !this.expression) {
+		var source = this.source;
+		var sourceObj = this.getValueById(source);
+		while (source && sourceObj instanceof wm.Component == false) {
+		    if (source.indexOf(".") != -1) {
+			source = source.replace(/\..*?$/,"");
+			sourceObj = this.getValueById(source);
+		    } else {
+			break;
+		    }
+		}
+		firingId =  sourceObj ? sourceObj.getRuntimeId() : "";
+	    } 
+	    this.debugId = app.debugDialog.newLogEvent({eventType: "bindingEvent",
+							eventName: "Binding",
+							affectedId: this.target.getRuntimeId(),
+							firingId: firingId,
+							boundProperty: this.targetProperty,
+							boundValue: inValue instanceof wm.Component ? inValue.toString() : inValue,
+							boundSource: this.source,
+							boundExpression: this.expression});
+	}
+    },
+    endDebugBindingEvent: function() {
+	if (this.debugId) {
+	    app.debugDialog.endLogEvent(this.debugId);
+	    delete this.debugId;
+	}
     },
 	_sourceValueChanged: function(inValue) {
 		if (wm.bindingsDisabled)
@@ -87,11 +111,10 @@ dojo.declare("wm.Wire", wm.Component, {
 		    // literals or otherwise uninteresting to log
 		    // ignore if we are in refresh; this is not called by values changing,
 		    // but rather by components insuring everyone knows their state
-		    if (djConfig.isDebug && !this.isAncestorInstanceOf(wm.DebugDialog) && !this.owner._inRefresh && (!this.expression || this.expression.match(/\$/))) {
-			this.debugBindingEvent(inValue);
-		    }
+		    this.debugBindingEvent(inValue);
 
 		    this.target.setValue(this.targetProperty, inValue);
+		    this.endDebugBindingEvent();
 		}
 	},
 	sourceValueChanged: function(inValue, inV2) {
