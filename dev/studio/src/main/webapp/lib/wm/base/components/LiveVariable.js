@@ -112,6 +112,7 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 		    this._autoUpdateFiring = "filterChanged";
 		    this._debug = {trigger: "autoUpdate",
 				   lastUpdate: new Date()}; 
+
 		    try {
 			var i = 0;
 			var caller = arguments.callee.caller;
@@ -125,7 +126,17 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 			    this._debug.eventName = "filter: " + caller.arguments[0] + " set to " + (newValue instanceof wm.Component ? newValue.toString() : newValue);
 			}
 		    } catch(e) {}
+		    this.debugId = app.debugDialog.newLogEvent({eventType: "autoUpdate",
+								eventName: "autoUpdate",
+								affectedId: this.getRuntimeId(),
+								firingId: ""});
+
 		    this.doAutoUpdate();
+		    if (this.debugId) {
+			app.debugDialog.endLogEvent(this.debugId);
+			delete this.debugId;
+		    }
+
 		    delete this._autoUpdateFiring;
 		} else {
 		    this.doAutoUpdate();
@@ -150,8 +161,19 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 			}
 		    } catch(e) {}
 
+		    this.debugId = app.debugDialog.newLogEvent({eventType: "autoUpdate",
+								eventName: "autoUpdate",
+								affectedId: this.getRuntimeId(),
+								firingId: ""});
+
+
 		    this.doAutoUpdate();
 		    delete this._autoUpdateFiring;
+		    if (this.debugId) {
+			app.debugDialog.endLogEvent(this.debugId);
+			delete this.debugId;
+		    }
+
 		} else {
 		    this.doAutoUpdate();
 		}
