@@ -503,7 +503,9 @@ dojo.declare("wm.Variable", wm.Component, {
 	},
 
     isEmpty: function() {
-	if (this.data.list)
+	if (!this.data)
+	    return true;
+	else if (this.data.list)
 	    return !Boolean(this.data.list.length);
 	else
 	    return wm.isEmpty(this.data);
@@ -971,7 +973,7 @@ dojo.declare("wm.Variable", wm.Component, {
 
     toString: function(inText) {   
 	var t = inText || "";
-	var hasData =  this.data && this.data.list && this.data.list.length ? this.data.length : !wm.isEmpty(this.data);
+	var hasData =  this.isEmpty();
 	t += "; " + wm.getDictionaryItem("wm.Variable.toString_TYPE", {type: this.type}) + "; " + wm.getDictionaryItem("wm.Variable.toString_ISEMPTY", {isEmpty: !hasData}); 
 	return this.inherited(arguments, [t]);
     },
