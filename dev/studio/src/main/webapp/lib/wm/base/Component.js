@@ -77,6 +77,15 @@ dojo.declare("wm.Component", wm.Object, {
 	return null;
     },
 
+    isAncestor: function(inOwner) {
+	var o = this.owner;
+	while (o && o != inOwner) {
+	    o = o.owner;
+	}
+	return (o == inOwner);
+    },
+
+
     // perhaps should be called getAncestorInstanceOf; returns false if the widget/component lacks parent/owner that
     // is an instance of the specified class, else returns the class itself
     isAncestorInstanceOf: function(inClass) {
@@ -752,6 +761,9 @@ this.panel1.createComponent("custom", "wm.Panel", {
 		finally{
 		    try {
 			w.loaded();
+			if (w.owner && w.owner[w.name] === undefined && !w._isDesignLoaded) {
+			    w.owner[w.name] = w;
+			}
 		    } catch(e) {
 			console.error("Error in postInit for " + w.toString() + ": " + e);
 		    }
@@ -833,23 +845,29 @@ this.panel1.createComponent("custom", "wm.Panel", {
     _makeEvent: function(inName, inComponent,eventName) {
 		var self = this;
 		return function jsEventHandler() { 
-		    if (djConfig.isDebug && app.debugTree) {
-			var startNode = app.debugTree.newLogEvent({type: "javascriptEventStart",
-								   eventName: eventName,
-								   trigger: inComponent,
-								   method: inName});
+		    if (djConfig.isDebug && app.debugDialog && !inComponent.isAncestor(app.debugDialog)) {
+			var eventId = app.debugDialog.newLogEvent({eventType: "javascriptEvent",
+								     eventName: eventName,
+								     firingId: inComponent.getRuntimeId(),
+								     affectedId: self.getRuntimeId(),
+								     method: inName});
 			
 		    }
-		    self[inName].apply(self, self._eventArgs(this, arguments));
-
-		    if (djConfig.isDebug && app.debugTree)
-			app.debugTree.newLogEvent({type: "javascriptEventStop",
-						   startNode: startNode,
-						   eventName: eventName,
-						   trigger: inComponent,
-						   method: inName});
+		    try {
+			self[inName].apply(self, self._eventArgs(this, arguments));
+		    } catch(e) {
+			var errorMessage = "Error in " + self.toString() + "." + inName + ": " + e.message;
+			if (djConfig.isDebug) {
+			    app.toastError(errorMessage);
+			} else {
+			    console.error(errorMessage);
+			}
+		    }
+		    if (eventId) {
+			app.debugDialog.endLogEvent(eventId);
+		    }
 		}
-	},
+    },
     _makeComponentEvent: function(inHandler, inComponent,eventName) {
 		var self = this;
 		// FIXME: experimental: can call a method on a component
@@ -861,18 +879,20 @@ this.panel1.createComponent("custom", "wm.Panel", {
 			//console.info('wm.isInstanceType = ' + wm.isInstanceType(inHandler, 'wm.Component'));
 			var c = wm.isInstanceType(inHandler, wm.Component) ? inHandler : self.getValueById(inHandler);
 		    if (wm.isInstanceType(c, wm.Component)) {
-			if (djConfig.isDebug && app.debugTree) {
-			    if (!c._debug) c._debug = {};
-			    c._debug = {trigger: inComponent.getId(),
-					eventName: eventName,
-					method: "update",
-				       lastUpdate: new Date()};
-			    app.debugTree.newLogEvent({type: "componentEvent",
-							       eventName: eventName,
-							       trigger: inComponent,
-							       firing: c,
-							       method: "update"});
-			}
+			if (djConfig.isDebug && app.debugDialog && !inComponent.isAncestor(app.debugDialog)) {
+			    if (c instanceof wm.ServiceVariable) {
+				if (!c._debug) c._debug = {};
+				c._debug = {trigger: inComponent.getId(),
+					    eventName: eventName,
+					    method: "update",
+					    lastUpdate: new Date()};
+			    }
+			    var eventId = app.debugDialog.newLogEvent({eventType: "componentEvent",
+								       eventName: eventName,
+								       firingId: inComponent.getRuntimeId(),
+								       affectedId: c.getRuntimeId(),
+								       method: "update"});
+			}			
 			if (c.updateInternal) {
 			        wm.fire(c, "updateInternal", [e, optionalTargetComp]);
 			} else {
@@ -880,27 +900,42 @@ this.panel1.createComponent("custom", "wm.Panel", {
 			}
 			// call a method on a component
 		    } else if (dojo.isString(inHandler)) {
-				var o = inHandler.split('.');
-				if (o.length > 1) {
-					var m = o.pop();
-					c = self.getValueById(o);
-				    if (c && c[m]) {
-					if (djConfig.isDebug && app.debugTree)
-					    if (!c._debug) c._debug = {};
+			var o = inHandler.split('.');
+			if (o.length > 1) {
+			    var m = o.pop();
+			    c = self.getValueById(o.join("."));
+			    if (c && c[m]) {
+				if (djConfig.isDebug && app.debugDialog && !inComponent.isAncestor(app.debugDialog)) {
+				    if (c instanceof wm.ServiceVariable) {
+					if (!c._debug) c._debug = {};
 					c._debug = {trigger: inComponent.getId(),
 						    eventName: eventName,
 						    method: m,
 						    lastUpdate: new Date()};
-					    app.debugTree.newLogEvent({type: "componentEvent",
-							       eventName: eventName,
-							       trigger: inComponent,
-							       firing: c,
-							       method: m});
-					// changed from c[m]() so that inSender and all arguments get forwarded
-					c[m].apply(c, self._eventArgs(this,arguments));
 				    }
+				    var eventId = app.debugDialog.newLogEvent({eventType: "subcomponentEvent",
+							     eventName: eventName,
+							     firingId: inComponent.getRuntimeId(),
+							     affectedId: c.getRuntimeId(),
+							     method: m});
 				}
+				// changed from c[m]() so that inSender and all arguments get forwarded
+				try {
+				    c[m].apply(c, self._eventArgs(this,arguments));
+				} catch(e) {
+				    var errorMessage = "Error in " + self.toString() + "." + m + ": " + e.message;
+				    if (djConfig.isDebug) {
+					app.toastError(errorMessage);
+				    } else {
+					console.error(errorMessage);
+				    }
+				}				
+			    }
 			}
+		    }
+		    if (eventId) {
+			app.debugDialog.endLogEvent(eventId);
+		    }
 		}
 	},
 	readComponents: function(inComponents) {
