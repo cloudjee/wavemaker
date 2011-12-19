@@ -92,30 +92,44 @@ wm.DataSetEditor.extend({
 });
 
 wm.Object.extendSchema(wm.DataSetEditor, {
-    defaultInsert:{bindTarget: 1, type:'wm.Variable', group: "editData", order: 10},
-  optionsVar: {ignore:1},    
-    editorType: {group: "common", order: 501, options: ["ListSet", "SelectMenu", "RadioSet", "CheckboxSet"]},
-    formatter: {ignore: true},
-    selectedItem: { ignore: true, bindSource: true, isObject: true, bindSource: true, doc: 1},
-    dataSet: { group: "editor", order: 4, type: "wm.Variable", isList: true, bindTarget: true, doc: 1, editor: "wm.prop.DataSetSelect"},
-    startUpdate: { group: "editor", order: 5},
-    options: {group: "editor", order: 7},
+    /* Editor group; value subgroup */
+    defaultInsert:{type:'wm.Variable'},
     dataValue: {type: "any"}, // use getDataValue()
-    dataField: {group: "editor", order: 10, doc: 1, editor:"wm.prop.FieldSelect", editorProps: { emptyLabel: "All Fields"}},
-    displayField: {group: "editor", order: 15,doc: 1, editor:"wm.prop.FieldSelect", editorProps: {}},
-    displayExpression: {group: "editor", order: 20, doc: 1, displayExpression: "displayExpression", displayExpressionDataSet: "dataSet"}, /* last property is the name of the field that is used as a display expression */
-    displayType:{ignore: 1,group: "editor", order: 21, options: wm.selectDisplayTypes},
-    emptyValue: {ignore: 1},
-    updateNow: {group: "operation", operation: 1},
-    optionsVar: {ignore:1},
 
+    /* Editor group; behavior subgroup */
+    editorType: {options: ["ListSet", "SelectMenu", "RadioSet", "CheckboxSet"]},
+    startUpdate: { group: "editor", subgroup: "behavior", order: 5, advanced: 1},
+
+    /* Editor group; dataSet subgroup */
+    dataSet: { group: "editor", subgroup: "dataSet", order: 4, type: "wm.Variable", isList: true, bindTarget: true, doc: 1, editor: "wm.prop.DataSetSelect", requiredGroup:1},
+    options: {group: "editor", subgroup: "dataSet", order: 7, requiredGroup: 1},
+    dataField: {group: "editor", subgroup: "dataSet",order: 10, editor:"wm.prop.FieldSelect", editorProps: { emptyLabel: "All Fields"}, requiredGroup: 1},
+    displayField: {group: "editor", subgroup: "dataSet",order: 15, editor:"wm.prop.FieldSelect", editorProps: {}, requiredGroup: 1},
+    displayExpression: {group: "editor", subgroup: "dataSet",order: 20, displayExpression: "displayExpression", displayExpressionDataSet: "dataSet"}, /* displayExpressionDataSet is the name of the field that is used as a display expression */
+
+    /* Editor group; display subgroup */
+    displayType:{group: "editor", subgroup: "display", order: 21, options: wm.selectDisplayTypes},
+
+    selectedItem: { ignore: 1, bindSource: true, isObject: true, bindSource: true, doc: 1},
+
+
+    /* Operations group */
+    updateNow: {group: "operation", operation: 1},
+
+    /* Ignored group */
+    optionsVar: {ignore:1},    
+    formatter: {ignore: 1},
+    emptyValue: {ignore: 1},
+    optionsVar: {ignore:1},
+    
+    /* Methods */
     setDataSet: {method:1, doc: 1},
     setOptions: {method:1, doc: 1}
 });
 
 
 wm.Object.extendSchema(wm.ListSet, {
-    searchBar: {group: "editor", order: 100},
+    searchBar: {group: "subwidgets", subgroup: "layout", order: 100}, 
     onblur: {ignore: 1},
     onfocus: {ignore: 1}
 

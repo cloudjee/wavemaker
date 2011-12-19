@@ -352,11 +352,8 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     minWidth: 0,
     //maxHeight: 0, // number represents pixels
     //maxWidth: 0,
-    left: 0,
-    top: 0,
-    group: '',
+
     styles: '',
-    state : null,
     /**
        Showing state.<br>
        <br>
@@ -1328,16 +1325,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    this.renderCss();
 	    delete this.noRenderBounds;
 	},
-	//===========================================================================
-	// Groups
-	//===========================================================================
-	groupHandler: function(inMessage, inArgument) {
-	    switch(inMessage){
-	    case "disabled":
-		this.setDisabled(inDisabled);
-		break;
-	    }
-	},
+
 	//===========================================================================
 	// Convenience
 	//===========================================================================
@@ -1461,12 +1449,6 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    }
 	    this.disabled = d;
 	    dojo.toggleClass(this.domNode, "Disabled", inDisabled);
-	},
-	setGroup: function(inGroup) {
-	    this.group = inGroup;
-	    dojo.unsubscribe(this._subscription);
-	    if (this.group)
-		this._subscription = dojo.subscribe(this.group, this, "groupHandler");
 	},
 	setBackgroundColor: function(inColor) {
 	    this.backgroundColor = inColor;
@@ -1627,7 +1609,9 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		wm.cancelJob("app.hint");
 		var isShowing =  (app.toolTipDialog && app.toolTipDialog.showing);
 		wm.job("app.hint", isShowing ? 0 : 1500, function() {
-		    app.createToolTip(self.hint, self.domNode, event, self);
+		    if (!self.isAncestorHidden()) {
+			app.createToolTip(self.hint, self.domNode, event, self);
+		    }
 		});
 		
 	    }

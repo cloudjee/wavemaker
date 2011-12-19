@@ -121,7 +121,17 @@ dojo.declare("wm.Page", wm.Component, {
 		var result = dojo.parser.parse(this.domNode);
 		wm._dojoParserCurrentOwner = oldOwner;
 	    } else {
+		if (djConfig.isDebug) {
+		    this.debugId = app.debugDialog.newLogEvent({eventType: "pageLoad",
+								eventName: "pageLoad",
+								affectedId: this.getRuntimeId(),
+								firingId: this.getRuntimeId()});
+		}
 		this.loadComponents(widgets, null);
+		if (this.debugId) {
+		    app.debugDialog.endLogEvent(this.debugId);
+		    delete this.debugId;
+		}
 	    }
 	    //this._layoutPanel.parentNode.appendChild(this._layoutPanel.domNode);
 

@@ -383,15 +383,24 @@ wm.Object.extendSchema(wm.Control, {
 	owner: { ignore: 1 },
 	moveable: { ignore: 1 },
 	scrim: { ignore: 1 },
-        autoSizeWidth:  { ignore: 1 },
-        autoSizeHeight:  { ignore: 1 },
+    autoSizeWidth:  { ignore: 1,  group: "display", subgroup: "layout", advanced: true },
+    autoSizeHeight:  { ignore: 1,  group: "display", subgroup: "layout", advanced: true },
+    autoSize: {type: "String", options: ["none", "width", "height"],  ignore: 1,  group: "display", subgroup: "layout", advanced: true },
+
 	sizeable: { ignore: 1 }, // Property tells designer if a given class of widgets can be resized; splitter is an example of a widget where you might want this set to false
 
+    onRightClick: {group: "events", order: 2000, advanced: 1},
+    onMouseOver: {group: "events", order: 2001, advanced: 1},
+    onMouseOut: {group: "events", order: 2002, advanced: 1},
+    customToHtml: {advanced: 1},
+
     //runtimeBorder: { ignore: 1 },
-    width: { group: "layout", order: 20, doc: 1, editor: "wm.prop.SizeEditor"},
-    height: { group: "layout", order: 30, doc: 1, editor: "wm.prop.SizeEditor"},
-    minWidth: { group: "advanced layout", order: 40, advanced: true},
-        minHeight: { group: "advanced layout", order: 50, advanced: true},
+    width: { group: "display", subgroup: "layout", order: 20, doc: 1, editor: "wm.prop.SizeEditor"},
+    height: { group: "display", subgroup: "layout",  order: 30, doc: 1, editor: "wm.prop.SizeEditor"},
+    minWidth: { group: "display", subgroup: "layout", order: 40, advanced: true, ignoreHint: "minWidth is only available when width is % sized"},
+    minHeight: { group: "display", subgroup: "layout", order: 50, advanced: true, ignoreHint: "minHeight is only available when height is % sized"},
+
+
     parent: { ignore: 1, doc: 1, prototype: "wm.Control" },
     domNode: { ignore: 1, doc: 1 },
 	parentNode: { ignore: 1 },
@@ -420,20 +429,17 @@ wm.Object.extendSchema(wm.Control, {
     bounds: {ignore: 1},
 
     /* These 4 are marked as hidden but are actually handled by the StyleInspector */
-    border: {group: "style", doc: 1, order: 10},
-    borderColor: {group: "style", doc: 1, editor: "wm.ColorPicker", order: 11},
-    padding: {group: "style", doc: 1, order: 12},
-    margin: {group: "style", doc: 1, order: 13},
+    border: {group: "style", doc: 1, order: 100},
+    borderColor: {group: "style", doc: 1, editor: "wm.ColorPicker", order: 101},
+    padding: {group: "style", doc: 1, order: 102},
+    margin: {group: "style", doc: 1, order: 103},
 
 		//backgroundColor: {group: "style"},
 		backgroundColor: {ignore: 1},
 
-	    autoScroll: {group: "scrolling", order: 100, writeonly: 1, type: "Boolean"},
-	    scrollX: {group: "scrolling", order: 101, writeonly: 1},
-	    scrollY: {group: "scrolling", order: 102, writeonly: 1},
-		left: {writeonly: 1, ignore: 1},
-		top: {writeonly: 1, ignore: 1}
-
+    autoScroll: {group: "display", subgroup: "scrolling", order: 100, writeonly: 1, type: "Boolean"},
+    scrollX: {group: "display", subgroup: "scrolling", order: 101, writeonly: 1, advanced: 1},
+    scrollY: {group: "display", subgroup: "scrolling", order: 102, writeonly: 1, advanced: 1}
     
     
 });

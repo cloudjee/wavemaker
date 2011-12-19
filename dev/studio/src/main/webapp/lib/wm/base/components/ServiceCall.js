@@ -157,11 +157,23 @@ dojo.declare("wm.ServiceCall", null, {
 			}
 		    } catch(e) {}
 		    }
+
+		    this.debugId = app.debugDialog.newLogEvent({eventType: "autoUpdate",
+								eventName: "autoUpdate",
+								affectedId: this.getRuntimeId(),
+								firingId: ""});
+
+
 		    this.doAutoUpdate();
-		    if (djConfig.isDebug) {
-			delete this._autoUpdateFiring;
+
+		    if (this.debugId) {
+			app.debugDialog.endLogEvent(this.debugId);
+			delete this.debugId;
 		    }
-		} else {
+
+		    delete this._autoUpdateFiring;
+
+		} else if (this.autoUpdate) {
 		    this.doAutoUpdate();
 		}
 
@@ -189,10 +201,21 @@ dojo.declare("wm.ServiceCall", null, {
 			this._autoUpdateFiring = "startUpdate";
 			this._debug = {trigger: "startUpdate",
 				       lastUpdate: new Date()}; 
+
+		    this.debugId = app.debugDialog.newLogEvent({eventType: "startUpdate",
+								eventName: "startUpdate",
+								affectedId: this.getRuntimeId(),
+								firingId: this.owner.getRuntimeId()});
+
+
 		    }
 		    this.updateInternal();
 		    if (djConfig.isDebug) {
 			delete this._autoUpdateFiring;
+			if (this.debugId) {
+			    app.debugDialog.endLogEvent(this.debugId);
+			    delete this.debugId;
+			}
 		    }
 		    this.startUpdateComplete = true;
 		}
@@ -203,9 +226,20 @@ dojo.declare("wm.ServiceCall", null, {
 		    var page = this.getParentPage() || app;
 		    this._debug = {trigger: "autoUpdate" + (page && page._loadingPage ? ": onStart" : "unknown source"),
 				   lastUpdate: new Date()}; 
+
+		    this.debugId = app.debugDialog.newLogEvent({eventType: "autoUpdate",
+								eventName: "autoUpdate",
+								affectedId: this.getRuntimeId(),
+								firingId: this.owner.getRuntimeId()});
+
+		    
 		}
 
 		wm.job(this.getRuntimeId() + ".doAutoUpdate", 1, dojo.hitch(this, "updateInternal"));
+		if (this.debugId) {
+		    app.debugDialog.endLogEvent(this.debugId);
+		    delete this.debugId;
+		}
 	    }
 	},
 	/**
@@ -569,14 +603,6 @@ wm.ServiceCall.extend({
 		return this.inherited(arguments);
 	}
 });
-wm.Object.extendSchema(wm.ServiceCall, {
-    startUpdateComplete: { ignore: 1},
-    setService: {group: "method"},
-    setOperation: {group: "method"},
-    update: {group: "method"},
-    canUpdate: {group: "method"}
-});
-
 	     
 //===========================================================================
 // Variable used as a service input
@@ -634,14 +660,7 @@ dojo.declare("wm.ServiceInput", wm.Variable, {
 	}
 });
 
-wm.ServiceInput.extend({
-    writeProps: function() {
-	return {type: this.type};
-    }
-});
 
-wm.Object.extendSchema(wm.ServiceInput, {
-	dataSet: { ignore: 1, defaultBindTarget: false, isObject: true, type: "any"}
-});
+
 
 wm.ServiceInputVariable = wm.ServiceInput;

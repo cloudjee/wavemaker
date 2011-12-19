@@ -24,12 +24,7 @@ pageScript = function(name, defaultFunctions) {
 	return [
 		'dojo.declare("' + name + '", wm.Page, {',
 		'    start: function() {',
-		'        try {',
 		'            ',
-		'            ',
-		'        } catch(e) {',
-		'            app.toastError(this.name + ".start() Failed: " + e.toString()); ',
-		'        }',
 		'    },',
 	         (defaultFunctions ? "    " + defaultFunctions + "," : ""),
 		'    ' + terminus,
@@ -115,7 +110,7 @@ eventEdit = function(ctrl, name, value, noInSenderInArgs, optionalArgList) {
 	    a = a.substring(1);
 	else
 	    a = "inSender" + a;
-	var code = code.replace(terminus, value + ": function(" + a + ") {\n      try {\n          \n          \n      } catch(e) {\n          console.error('ERROR IN " + value + ": ' + e); \n      } \n  },\n  " + terminus);
+	var code = code.replace(terminus, value + ": function(" + a + ") {\n      \n  },\n  " + terminus);
 	if (appLevel)
 	    studio.setAppScript(code);
 	else
@@ -146,14 +141,14 @@ eventCopy = function(editor,oldName, newName) {
                 var match = code.match(r);
                 if (!match) return;
                 if (getEvent(newName, code)) return;
-            var newcode = newName + ": function" + match[1] + " {\n      try {\n          this." + oldName + match[1] + ";\n          \n      } catch(e) {\n          console.error('ERROR IN " + newName + ": ' + e); \n      } \n  },\n  ";
+            var newcode = newName + ": function" + match[1] + " {\n      this." + oldName + match[1] + ";\n  },\n  ";
 	    editor.setText(code.replace(terminus,  newcode +  terminus));
 	}
 }
 
 
 caretToEvent = function(name, editor) {
-	var r = new RegExp("[\\s\\S]*" + name + ": function\\([\\s\\S]*?{[\\s\\S]*?\\n[^\\n\\r\\S]*(try[\\s\\n]*{\\s*?\\n)?", "m");
+	var r = new RegExp("[\\s\\S]*" + name + ": function\\([\\s\\S]*?{[\\s\\S]*?\\n[^\\n\\r\\S]*", "m");
 
 	var t = editor.getText();
 	var m = t.match(r);

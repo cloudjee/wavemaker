@@ -510,10 +510,15 @@ dojo.declare("wm.WidgetDebugPanel", wm.Container, {
 	    widgetListVar:  ["wm.Variable", {type: "debuggerWidgetType", isList: true}],
 	    pageListVar: ["wm.Variable", {type: "StringData", isList: true}],
 	    bindingListVar:["wm.Variable", {type: "debuggerBindingType", isList: true}],
+	    classListVar:["wm.Variable", {type: "StringData", isList: true}],
 	    gridPanel: ["wm.Panel", {layoutKind: "top-to-bottom", width: "100%", height: "100%",  verticalAlign: "top", horizontalAlign: "left"},{},{
 		searchPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "30px", verticalAlign: "top", horizontalAlign: "left"},{},{
 		    searchNameText: ["wm.Text", {resetButton: true, width: "100px", placeHolder: "Widget Name", changeOnKey: true},{onchange: "searchChange"}],
-		    searchClassText: ["wm.Text", {resetButton: true, width: "100px", placeHolder: "Class Name", changeOnKey: true},{onchange: "searchChange"}],
+		    searchClassText: ["wm.SelectMenu", {allowNone: true, emptyValue: "emptyString", restrictValues: false, width: "100px", placeHolder: "Class Name", changeOnKey: true},{onchange: "searchChange"},{
+			binding: ["wm.Binding", {"name":"binding"}, {}, {
+			    wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"app.debugDialog.widgetPanel.classListVar","targetProperty":"dataSet"}, {}]
+			}]
+		    }],
 		    pagesMenu: ["wm.SelectMenu", {placeHolder: "Page name", width: "80px",displayField: "dataValue", dataField: "dataValue", allowNone:true},{onchange: "searchChange"},{
 			binding: ["wm.Binding", {"name":"binding"}, {}, {
 			    wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"app.debugDialog.widgetPanel.pageListVar","targetProperty":"dataSet"}, {}]
@@ -563,25 +568,24 @@ dojo.declare("wm.WidgetDebugPanel", wm.Container, {
 		    paddingInput: ["wm.Text", {width:"100%",caption: "padding", captionSize: "100px"}, {onchange: "paddingChange"}],
 		    borderInput: ["wm.Text", {width:"100%",caption: "border", captionSize: "100px"}, {onchange: "borderChange"}],
 		    borderColorInput: ["wm.ColorPicker", {width:"100%",caption: "borderColor", captionSize: "100px"}, {onchange: "borderColorChange"}],
-		    highlightButton: ["wm.Button", {caption: "Highlight Parents", hint: "click this to see each of this widget's parents; do this if you can't see the widget, this may help you discover a parent that needs to be scrollable in order to show this widget", width: "120px"},{onclick: "highlightParents"}],
+		    highlightButton: ["wm.Button", {caption: "Highlight Parents", hint: "click this to see each of this widget's parents; do this if you can't see the widget, this may help you discover a parent that needs to be scrollable in order to show this widget", width: "180px"},{onclick: "highlightParents"}],
 		    styleInput: ["wm.AceEditor", {syntax: "css", width: "100%", height: "100%",minWidth:"150"}, {onChange: "stylesChange"}]
 		}]
 	    }]
 	},this);
-	this.widgetListVar = components[0];
-	this.pageListVar = components[1];
-	this.bindingListVar = components[2];
-	this.searchNameText = components[3].c$[0].c$[0];
-	this.searchClassText = components[3].c$[0].c$[1];
-	this.showingSelect = components[3].c$[0].c$[2];
+	this.widgetListVar = this.$.widgetListVar;
+	this.pageListVar = this.$.pageListVar;
+	this.bindingListVar = this.$.bindingListVar;
+	this.classListVar = this.$.classListVar;
+	this.searchNameText = this.$.searchNameText;
+	this.searchClassText = this.$.searchClassText;
 	this.pagesMenu = this.$.pagesMenu;
-	this.widgetGrid = components[3].c$[1];
-	this.tabs = components[4];
-	this.propertiesPanel = this.tabs.layers[0];
-	this.bindPanel = this.tabs.layers[1];
-	this.presentationPanel = this.tabs.layers[2];
+	this.widgetGrid = this.$.widgetGrid;
+	this.tabs = this.$.tabs;
+	this.propertiesPanel = this.$.propertiesPanel;
+	this.bindPanel = this.$.bindPanel;
+	this.presentationPanel = this.$.presentationPanel;
 	this.bindGrid = this.$.bindGrid;
-
 
 	var x = document.createElement("span");
 	dojo.addClass(x, "TabCloseIcon DebuggerCloseButton");
@@ -746,6 +750,17 @@ dojo.declare("wm.WidgetDebugPanel", wm.Container, {
 
 	this.widgetListVar.endUpdate();	    
 	this.widgetListVar.notify();
+
+
+	this.classListVar.beginUpdate();
+	this.classListVar.clearData();
+	for (name in wm) {
+	    if (wm[name] && wm[name].prototype && wm[name].prototype instanceof wm.Component) {
+		this.classListVar.addItem({dataValue: name});
+	    }
+	}
+	this.classListVar.endUpdate();
+	this.classListVar.notify();
     },
     generatePagesList: function() {
 	this.pageListVar.beginUpdate();

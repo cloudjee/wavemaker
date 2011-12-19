@@ -100,5 +100,5 @@ wm.Object.extendSchema(wm.Widget, {
 	roles: {ignore: 1, writeonly: 1, category: "Security",
 	categoryProps: {content: "Security", image: "images/lock_16.png", inspector: "Security"}}
 	*/
-    roles: {group: "Roles", editor: "wm.prop.RolesEditor"}
+    roles: {group: "roles", editor: "wm.prop.RolesEditor", advanced: 1}
 }, true);

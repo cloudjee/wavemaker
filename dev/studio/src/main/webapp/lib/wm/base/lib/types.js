@@ -18,15 +18,19 @@ wm.typeManager = {
 	types: {},
 	initialized: false,
 	initTypes: function() {
-		var types = (wm.types||0).types;
-		if (types)
-			wm.typeManager.setTypes(types);
+	    if (wm.types) {
+		wm.typeManager.setTypes(wm.types);
+	    } else {
+		this.addDefaultTypes();
+	    }
 	},
 	setTypes: function(inTypes) {
-		this.clearTypes();
+	    this.clearTypes();
+	    if (inTypes) {
 		dojo.mixin(this.types, inTypes);
-		if (!this.initialized)
-			this.addDefaultTypes();
+	    }
+	    this.addDefaultTypes();
+
 	},
 	clearTypes: function() {
 		this._publicTypes = {};
@@ -185,9 +189,12 @@ wm.typeManager = {
 	    delete this._publicTypes[inName];
 	},
 	addDefaultTypes: function() {
+	    if (!this.initialized) {
+		this.initialized = true;
 		var d = wm.defaultTypes || {};
 		for (var i in d)
 			this.addType(i, d[i]);
+	    }
 	},
 	isPropInList: function(inTypeSchema, inPropName) {
 		var

@@ -689,10 +689,10 @@ wm.Container.extend({
 	    return Math.max(this.minHeight,Math.max(result, wm.Control.prototype.getMinHeightProp.call(this)));
 	},
     setBestWidth: function() {
-	this.setWidth(this.getPreferredFitToContentWidth());
+	this.setWidth(this.getPreferredFitToContentWidth() + "px");
     },
     setBestHeight: function() {
-	this.setHeight(this.getPreferredFitToContentHeight());
+	this.setHeight(this.getPreferredFitToContentHeight() + "px");
     },
 	getMinWidthProp: function() {
             if (this.fitToContentWidth)

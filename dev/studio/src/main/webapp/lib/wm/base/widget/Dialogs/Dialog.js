@@ -511,8 +511,10 @@ dojo.declare("wm.Dialog", wm.Container, {
 	},
         destroy: function() {
 	    this._destroying = true;
-	    if (this._minified)
-		this.unminify({}, true);
+	    if (this._minified) {
+		app.removeMinifiedDialogLabel(this.minifiedLabel);
+		delete this.minifiedLabel;
+	    }
 	    if (this.showing)
 		this.dismiss();
 	    if (this.dialogScrim)
@@ -856,15 +858,26 @@ dojo.declare("wm.Dialog", wm.Container, {
 
 	    if (inShowing && !wasShowing) {
 		if (animationTime) {
-		    this._showAnimation = this._showAnimation || 
-			dojo.animateProperty({node: this.domNode, 
-					      properties: {opacity: 1},
-					      duration: animationTime,
-					      onEnd: dojo.hitch(this, function() {
-			                          this.domNode.style.opacity = 1; // needed for IE 9 beta
-                                                  this.onShow();
-                                              })});
+		    if (!this._showAnimation) {
+			if (djConfig.isDebug) {
+			    var eventChain = app.debugDialog.cacheEventChain();
+			}
+			this._showAnimation =  
+			    dojo.animateProperty({node: this.domNode, 
+						  properties: {opacity: 1},
+						  duration: animationTime,
+						  onEnd: dojo.hitch(this, function() {
+						      if (eventChain) {
+							  app.debugDialog.restoreEventChain(eventChain);
+						      }
+			                              this.domNode.style.opacity = 1; // needed for IE 9 beta
+                                                      this.onShow();
+						  if (eventChain) {
+						      app.debugDialog.clearEventChain();
+						  }
+						  })});
 			this._showAnimation.play();
+		    }
 		} else {
 		    this.onShow();
 		}
@@ -873,6 +886,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 		
 		if (animationTime) {
 		    if (!this._hideAnimation) {
+			if (djConfig.isDebug) {
+			    var eventChain = app.debugDialog.cacheEventChain();
+			}
                         this._transitionToHiding = true;
 			this._hideAnimation = 
 			dojo.animateProperty({node: this.domNode, 
@@ -880,12 +896,18 @@ dojo.declare("wm.Dialog", wm.Container, {
 					      duration: animationTime,
 					      onEnd: dojo.hitch(this, function() {
                                                   if (this.isDestroyed) return;
+						  if (eventChain) {
+						      app.debugDialog.restoreEventChain(eventChain);
+						  }
 						      wm.Control.prototype.setShowing.call(this,inShowing,forceChange, skipOnClose);
 						  if (this.docked) this.setDocked(false);
                                                   delete this._transitionToHiding;
 						      if (!skipOnClose && !this._minified) 
 						          this.onClose("");
 						      delete this._hideAnimation; // has no destroy method
+						  if (eventChain) {
+						      app.debugDialog.clearEventChain();
+						  }
 					      })});
 			    this._hideAnimation.play();
 		    }

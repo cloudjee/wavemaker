@@ -79,6 +79,8 @@ wm.loadLibs([
 	"wm.base.widget.ListViewer_design",
 	"wm.base.widget.List_design",
 	"wm.base.components.ImageList_design",
+	"wm.base.components.Variable_design",
+	"wm.base.components.ServiceCall_design",
 	"wm.base.components.LiveVariable_design",
 	"wm.base.components.Property_design",
 	"wm.base.components.Publisher",

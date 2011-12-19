@@ -478,6 +478,10 @@ dojo.declare("wm.prop.SelectMenu", wm.SelectMenu, {
     dataField: "dataValue",
     displayField: "dataValue",
     values: null, 
+    postInit: function() {
+	this.inherited(arguments);
+	this.refreshOptions();
+    },
     getDataValue: function() {
 	if (!this.values)
 	    return this.inherited(arguments);
@@ -496,13 +500,19 @@ dojo.declare("wm.prop.SelectMenu", wm.SelectMenu, {
 		return this.inherited(arguments, [this.options[i]]);
 	    }
 	}
+    },
+    refreshOptions: function() {
+	this.updateOptions();
+	this.setOptions(this.options);
+    },
+    updateOptions: function() {
     }
 });
 
 dojo.declare("wm.prop.PagesSelect", wm.prop.SelectMenu, {
     currentPageOK: false,
-    postInit: function() {
-	this.inherited(arguments);
+    updateOptions: function() {
+	this.inherited(arguments)
 	var pagelist = wm.getPageList(this.currentPageOK);
         if (this.newPage)
 	    pagelist.push(studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION"));
@@ -524,8 +534,8 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
     includeLiveViews: false,
     noForms: false,
     showInputs: false,
-    postInit: function() {
-	this.inherited(arguments);
+    updateOptions: function() {
+	this.inherited(arguments)
 	var sp = studio.page;
 	var r = this.getDataSets([sp, sp.app]);
 	if (this.showInputs) {
@@ -604,7 +614,8 @@ dojo.declare("wm.prop.FieldSelect", wm.prop.SelectMenu, {
     insepected: null,
     allowNone: true,
     emptyLabel: "",
-    postInit: function() {
+    updateOptions: function() {
+	this.inherited(arguments)
 	var ds = this.inspected.getProp(this.dataSetProp);
 	var options;
 	if (ds) {
@@ -617,7 +628,6 @@ dojo.declare("wm.prop.FieldSelect", wm.prop.SelectMenu, {
 	    options.unshift(this.emptyLabel);
 	}
 	this.setOptions(options);
-	this.inherited(arguments);
     },
     setEditorValue: function(inValue) {
 	if (!inValue && this.emptyLabel) {
@@ -641,7 +651,7 @@ dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
     relatedFields: false,
     insepected: null,
     allowNone: false,   
-    postInit: function() {
+    updateOptions: function() {
 	this.inherited(arguments);
 	var f = this.inspected.getParentForm();
 	var ds;
@@ -673,7 +683,7 @@ dojo.declare("wm.prop.ImageListSelect", wm.prop.SelectMenu, {
     dataField: "dataValue",
     displayField: "dataValue",
     allowNone: true,
-    postInit: function() {
+    updateOptions: function() {
 	this.inherited(arguments);
 	this.setOptions(studio.getImageLists());
     }
@@ -685,13 +695,15 @@ dojo.declare("wm.prop.WidgetSelect", wm.prop.SelectMenu, {
     allowNone: true,
     widgetType: null,
     excludeType: null,
-    postInit: function() {
+    updateOptions: function() {
 	if (this.widgetType && typeof this.widgetType == "string")
 	    this.widgetType = dojo.getObject(this.widgetType);
 	if (this.excludeType && typeof this.excludeType == "string")
 	    this.excludeType = dojo.getObject(this.excludeType);
 
 	this.inherited(arguments);
+
+
 	var components = wm.listComponents([this.inspected.owner], this.widgetType);
 	var result = [];
 	if (this.excludeType) {
@@ -714,16 +726,16 @@ dojo.declare("wm.prop.WidgetSelect", wm.prop.SelectMenu, {
 dojo.declare("wm.prop.DataTypeSelect", wm.prop.SelectMenu, {
     useLiterals:false,
     liveTypes: false,
-    postInit: function() {
+    updateOptions: function() {
+	this.inherited(arguments);
 	if (this.useLiterals) {
-	    this.options = ["string", "number", "date", "boolean"];
-	    this.values = ["string", "number", "date", "boolean"];
+	    this.options = ["","string", "number", "date", "boolean"];
+	    this.values = ["", "string", "number", "date", "boolean"];
 	} else {
-	    this.options = [];
-	    this.values = [];
+	    this.options = [""];
+	    this.values = [""];
 	}
 	this.addOptionValues(this.getDataTypes(), true);
-	this.inherited(arguments);
     },
 	addOptionValues: function(inOptionValues, inSort) {
 	        this.sort = inSort;
@@ -750,6 +762,7 @@ dojo.declare("wm.prop.DataTypeSelect", wm.prop.SelectMenu, {
 
 
 dojo.declare("wm.prop.EventEditorSet", wm.Container, {
+    noBindColumn: true,
     inspected: null,
     verticalAlign: "top",
     horizontalAlign: "left",
@@ -814,7 +827,7 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
 						   propName: propertyName,
 						   propertyNumber: parseInt(inIndex),
 						   width: "100%",
-						   height: "28px",
+						   height: "22px",
 						   captionSize: inIndex > 0 ? "60px" : "0px",
 						   caption: inIndex > 0 ? "And then" : "",
 						   captionPosition: "left",
@@ -1034,57 +1047,16 @@ dojo.declare("wm.prop.EventEditor", wm.SelectMenu, {
 		    this.setDisplayValue(studio.selected.name);
 				break;
 		}
-	}
+	},
+    reinspect: function() {return true;} // not implemented yet; not very important either...
 });
-
-
-/*
-dojo.declare("wm.prop.FieldTreeNode", wm.TreeNode, {
-    closed: true,
-    type: null,
-    initNodeChildren: function(inChildNode) {
-	var typeDef = wm.typeManager.getType(this.type);
-	if (typeDef) {
-	    var fields = typeDef.fields;
-	    for (var i in fields) {
-		if (wm.typeManager.isStructuredType(fields[i].type)) {
-		    var n = new wm.prop.FieldTreeNode(this, {type: fields[i].type,
-							     hasChildren: true,
-							     content: i,
-							    });
-		}
-		//n.domNode.style.width = this.tree.bounds.w + "px";
-	    }
-	}
-    }
-});
-dojo.declare("wm.prop.FieldTree", wm.Tree, {
-    noBindButton: true,
-    noHelpButton: true,
-    height: "200px",
-    className: "wmpropFieldTree",
-    postInit: function() {
-	this.inherited(arguments);
-	var type = this.inspected.type;
-	new wm.prop.FieldTreeNode(this.root, {type: this.inspected.type,
-					      hasChildren: true,
-					      content: "dataSet"});
-    },
-/ *
-    onchange: function() {
-    },
-    renderBounds: function() {
-	this.inherited(arguments);
-	var w = this.bounds.w;
-	this.forEachNode(function(node) {node.domNode.style.width = w + "px";});
-    }* /
-});
-    */
 
 
 /* TODO: Figure out an upgrade script so we can treat border,borderColor, margin and padding as just more styles */
 /* TODO: Figure out how to let the user pick a resources for backgroundImage; also need backgroundPosition and gradient */
 dojo.declare("wm.prop.StyleEditor", wm.Container, {
+    noBindColumn: true,
+    noHelpButton: true,
     verticalAlign: "top",
     horizontalAlign: "left",
     height: "250px",
@@ -1096,27 +1068,28 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	{name: "margin", editor: "wm.Text", layerName: "basicLayer"},
 	{name: "padding",editor: "wm.Text", layerName: "basicLayer"},*/
 	{name: "backgroundColor", editor: "wm.ColorPicker"},
-	{name: "backgroundRepeat", editor: "wm.SelectMenu", editorProps: {options: ["no-repeat","repeat-x","repeat-y","repeat"]}},
+	{name: "backgroundRepeat", editor: "wm.SelectMenu", editorProps: {options: ["no-repeat","repeat-x","repeat-y","repeat"]}, advanced:1},
 	{name: "color", editor: "wm.ColorPicker"},
 	{name: "fontWeight", editor: "wm.SelectMenu", editorProps: {options: ["normal","bold","bolder","lighter"]}},
 	{name: "fontSize", editor: "wm.Number", postFix: "px"},
 	{name: "textAlign", editor: "wm.SelectMenu", editorProps: {options: ["left","center","right"]}},
-	{name: "verticalAlign", editor: "wm.SelectMenu", editorProps: {options: ["baseline","sub","super", "top","text-top","middle","bottom","text-bottom"]}},
+	{name: "verticalAlign", editor: "wm.SelectMenu", editorProps: {options: ["baseline","sub","super", "top","text-top","middle","bottom","text-bottom"]}, advanced:1},
 	{name: "textDecoration", editor: "wm.SelectMenu", editorProps: {options: ["none", "underline", "overline", "line-through", "blink"]}},
 	{name: "fontStyle", editor: "wm.SelectMenu", editorProps: {options: ["normal", "italic", "oblique"]}},
-	{name: "fontVariant", editor: "wm.SelectMenu", editorProps: {options: ["normal", "small-caps"]}},
+	{name: "fontVariant", editor: "wm.SelectMenu", editorProps: {options: ["normal", "small-caps"]},advanced:1},
 	{name: "fontFamily", editor: "wm.Text"},
 	{name: "whiteSpace", editor:  "wm.SelectMenu", editorProps: {options: ["normal", "nowrap", "pre","pre-line","pre-wrap"]}},
-	{name: "wordBreak",  editor:  "wm.SelectMenu", editorProps: {options: ["normal", "break-word"]}},
-	{name: "opacity", editor: "wm.Number", editorProps: {"minimum": 0, "maximum": 1}},
-	{name: "cursor", editor: "wm.SelectMenu", editorProps: {options: ["pointer", "crosshair", "e-resize","w-resize","n-resize","s-resize","ne-resize","nw-resize","se-resize","sw-resize","text","wait","help","move","progress"]}},
-	{name: "zIndex", editor: "wm.Number"}],
+	{name: "wordBreak",  editor:  "wm.SelectMenu", editorProps: {options: ["normal", "break-word"]},advanced:1},
+	{name: "opacity", editor: "wm.Number", editorProps: {"minimum": 0, "maximum": 1},advanced:1},
+	{name: "cursor", editor: "wm.SelectMenu", editorProps: {options: ["pointer", "crosshair", "e-resize","w-resize","n-resize","s-resize","ne-resize","nw-resize","se-resize","sw-resize","text","wait","help","move","progress"]},advanced:1},
+	{name: "zIndex", editor: "wm.Number",advanced:1}
+    ],
     postInit: function() {
 	this.inherited(arguments);
 	this.editors = {};
 
 	this.tabs = this.createComponents({
-	    tabs: ["wm.TabLayers", {width: "100%", fitToContentHeight: true, height: "100px", clientBorder: "1,0,0,0",clientBorderColor: "#959DAB", margin: "0", padding: "0"}, {}, {
+	    tabs: ["wm.TabLayers", {conditionalTabButtons: 1, width: "100%", fitToContentHeight: true, height: "100px", clientBorder: "1,0,0,0",clientBorderColor: "#959DAB", margin: "0", padding: "0"}, {}, {
 		basicLayer: ["wm.Layer", {caption: "Basic"}, {
 		}],
 		styleLayer: ["wm.Layer", {caption: "Styles"}, {},{
@@ -1151,6 +1124,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	};
 
 	dojo.forEach(this.commonStyles, dojo.hitch(this, function(styleProp) {
+	    if (styleProp.advanced && !studio.inspector.isAdvancedMode()) return;
 	    var parent;
 	    if (styleProp.layerName) {
 		parent = this[styleProp.layerName];
@@ -1174,14 +1148,20 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 
 	var propsHash = this.inspected.listProperties();
 	var propsArray = [];
-	for (var p in propsHash) {
-	    var prop = propsHash[p];
-	    if (prop.group == "style" && !prop.ignore && !prop.hidden && prop.editor != "wm.prop.StyleEditor") {
-		prop.name = p;
-		this.owner.generateEditor(this.inspected, prop, this.basicLayer,null);
+	for (var propName in propsHash) {
+	    var prop = propsHash[propName];
+	    if (prop.group == "style" && !prop.ignore && !prop.hidden && prop.editor != "wm.prop.StyleEditor" && (!prop.advanced || studio.inspector.isAdvancedMode())) {
+		propsArray.push(dojo.mixin({name: propName},prop));
 	    }
 	}
 
+	     var mysort = function(a, b) {
+		 var o = a.order - b.order;
+		 return o == 0 ? wm.compareStrings(a.name, b.name) : o;
+	     };
+	propsArray.sort(mysort);
+
+	this.owner._generateEditors(this.inspected, this.basicLayer, propsArray);
 
 	var b = new wm.Button({
 	     owner: this,
@@ -1210,6 +1190,10 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	this.setDataValue(this.inspected.styles);
     },
     getDataValue: function() {return this.inspected.styles},
+    reinspect: function() {
+	this.setDataValue(this.inspected.styles);
+	return true;
+    },
     setDataValue: function(inValue) {
 	dojo.forEach(this.commonStyles, dojo.hitch(this, function(styleProp) {
 	    var styleName = styleProp.name;
@@ -1218,9 +1202,10 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 		var value = this.inspected.getStyle(styleName);
 		value = value.replace(new RegExp(styleProp.postFix + "$"),"");
 	    }
-	    this.editors[styleProp.name].setDataValue(value);
+	    if (this.editors[styleProp.name]) {
+		this.editors[styleProp.name].setDataValue(value);
+	    }
 	}));
-
     },
     generateCssRule: function() {
 	app.prompt("What do you want to name this css class?  NOTE: Clicking ok will create this rule based on the styles you've set for this widget, and replace your styles with the new CSS Class", this.inspected.name, dojo.hitch(this, function(inClassName) {
@@ -1386,6 +1371,7 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 });
 
 dojo.declare("wm.prop.RolesEditor", wm.CheckboxSet, {
+    noBindColumn: true,
     noReinspect: true,
     height: "80px",
     dataField: "dataValue",
@@ -1457,5 +1443,107 @@ dojo.declare("wm.prop.RolesEditor", wm.CheckboxSet, {
 	    this.inherited(arguments);
 	    this.inspected.setRoles(this.getDataValue());
 	}
+    },
+    reinspect: function() {return true;}
+});
+
+
+dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
+    indent: 0,
+    noBindColumn: true,
+    noHelpButton: true,
+    inspected: null,
+    groupEditorPropertyName: "",
+    postInit: function() {
+	this.inherited(arguments);
+
+	studio.inspector.addSubGroupIndicator(this.propDef.name,this);
+
+	if (this.groupEditorPropertyName) {
+	    this.inspected = this.inspected.getProp(this.groupEditorPropertyName);
+	}
+
+
+	this.editors = {};
+
+	if (this.propDef.advanced && !studio.inspector.isAdvancedMode()) {
+	    this.setShowing(false);
+	} else {
+	    this.setShowing(true); // wm.PropertyInspector will set this to hidden if the entire thing is bound assuming a bind-editor will be shown instead; not applicable for this particular editor
+	}
+
+	this.generateEditors();
+    },
+    generateEditors: function() {
+	var c = this.inspected;
+	var propDef = dojo.clone(this.propDef);
+	if (propDef.treeBindField == "this") {
+	    propDef.treeBindField = this.propDef.name;
+	}
+	delete propDef.editor;
+	var e= studio.inspector.generateEditor(this.inspected, propDef, this,null,this.propDef.name);
+	e.setDisabled(true);
+	this.editors._ROOT = e;
+	this.indent++;
+	
+	if (c._dataSchema) {
+	    this._generatedSchema = dojo.toJson(c._dataSchema);
+	    for (var fieldName in c._dataSchema) {
+
+		var fieldDef = c._dataSchema[fieldName];
+		var type = fieldDef.type;
+
+		/* dojo.mixin used this way insures we work on a copy of propDef and don't modify e.propDef before its onclick is fired */
+		propDef = dojo.mixin({}, propDef, {
+		    name: fieldName,
+		    displayName: fieldName,
+		    type: type || propDef.type,
+		    treeBindField: (this.propDef.treeBindField != "this" ? this.propDef.treeBindField + "." : "") + fieldName,
+		    editorProps: {
+		        margin: "0,0,0," + this.indent * 25,
+		        createExpressionWire: true
+		    },
+		    createWire: true,
+		    rootTreeBindField: this.propDef.treeBindField
+		});
+
+		if (wm.typeManager.isStructuredType(type)) {
+		    e = studio.inspector.generateEditor(c, propDef, this,null,this.propDef.name);
+		    e.setDisabled(true);
+		} else {
+		    e = studio.inspector.generateEditor(c, propDef, this,null,this.propDef.name);
+		}
+		this.editors[c.getId() + "." + fieldName] = e;
+	    }
+	}
+	this.setBestHeight();
+	this.reflow();
+    },
+    reinspect: function() {
+	if (this._generatedSchema != dojo.toJson(this.inspected._dataSchema)) {
+	    this.removeAllControls();
+	    this.generateEditors();
+	    this.parent.setBestHeight();
+	} else {
+	    for(var editorName in this.editors) {
+		var e = this.editors[editorName];
+		studio.inspector.reinspectEditor(this.inspected,e, null, e.propDef,this.propDef.name);
+	    }
+	}
+	return true;
+    },
+    removeAllControls: function() {
+	    for(var editorName in this.editors) {
+		var e = this.editors[editorName];
+		delete this.editors[editorName];
+		for (var editorName in studio.inspector.editorHash) {
+		    if (e == studio.inspector.editorHash[editorName]) {
+			delete studio.inspector.editorHash[editorName];
+			delete studio.inspector.bindEditorHash[editorName];
+		    }
+		}
+		e.parent.destroy();
+	    }
+	this.inherited(arguments);
     }
 });

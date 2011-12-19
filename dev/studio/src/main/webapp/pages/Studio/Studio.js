@@ -825,7 +825,7 @@ dojo.declare("Studio", wm.Page, {
 	},
         _lastBindSelect: null,
     reinspect: function(forceRegen) {
-	wm.job("studio.inspect", 1, dojo.hitch(this, function() {
+
 	    if (this.inspector && this.inspector.inspected && !forceRegen) {
 		this.inspector.reinspect();
 	    } else if (this.inspector  && forceRegen) {
@@ -833,8 +833,7 @@ dojo.declare("Studio", wm.Page, {
 		this.inspector.inspected = null;
 		if (inspected)
 		    this.inspector.inspect(inspected);
-	    }			
-	}));
+	    }				
     },
         inspect: function(inComponent) {
 	    wm.job("studio.inspect", 1, dojo.hitch(this, function() {

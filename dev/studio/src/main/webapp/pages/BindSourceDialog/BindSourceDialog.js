@@ -42,10 +42,20 @@ dojo.declare("BindSourceDialog", wm.Page, {
 	this.binderSource.pageSelect.endEditUpdate();
 
 	this.targetType = this._getTargetType(inTargetProps);
-	var
-	tp = this.targetProps = inTargetProps,
-	w = wm.data.getPropWire(tp.object, tp.targetProperty);	
-	var propDef = tp.object.listProperties()[inTargetProps.targetProperty];
+	var tp = this.targetProps = inTargetProps;
+	var w;
+        if (tp.targetProperty) {
+            w = tp.object.$.binding ? tp.object.$.binding.wires[tp.targetProperty] : null;
+        } else {
+            w = tp.object.owner.$.binding ? tp.object.owner.$.binding.wires[tp.object.name] : null;
+        }
+
+	var propDef;
+	if (inTargetProps.propDef) {
+	    propDef = dojo.clone(inTargetProps.propDef);
+	} else {
+	    propDef = tp.object.listProperties()[inTargetProps.targetProperty];
+	}
 	if (!propDef && tp.object._dataSchema) {
 	    var object = tp.object;
 	    if (inTargetProps.targetProperty.indexOf(".") != -1) {
@@ -80,14 +90,16 @@ dojo.declare("BindSourceDialog", wm.Page, {
 		}
 	},
 	_getTargetType: function(inTargetProps) {
-		var 
-			tp = inTargetProps,
-			p = tp.targetProperty.split("."),
-			l = p.pop(),
-			v = tp.object.getValue(p.join(".")),
-			ti = v && v.getDataTypeInfo(l),
-			type, isObject, isList;
-		if (tp.object.getDataTypeInfo && (!p || !p.length)) {
+	    var tp = inTargetProps;
+	    var p = tp.targetProperty.split(".");
+	    var l = p.pop();
+	    var v = tp.object.getValue(p.join("."));
+	    var ti;
+	    try {
+		ti = v && v.getDataTypeInfo(l);
+	    } catch(e) {}
+	    var type, isObject, isList;
+	    if (tp.object.getDataTypeInfo && (!p || !p.length)) {
 			ti = tp.object.getDataTypeInfo(l);
 			if (!ti) {
 				type = tp.object.type;

@@ -298,7 +298,20 @@ wm.addRemoveClass = function(node, classn, addRemove) {
 // misc
 
 wm.onidle = function(/*hitch args*/) {
-	return setTimeout(dojo.hitch.apply(dojo, arguments), 1);
+    var args = [];
+    for (var i = 0; i in arguments; i++) {
+	args.push(arguments[i]);
+    }
+    if (djConfig.isDebug) {
+	var eventChain = app.debugDialog.cacheEventChain();
+    }
+    window.setTimeout(function() {
+	if (eventChain) {
+	    app.debugDialog.restoreEventChain(eventChain);
+	}
+	dojo.hitch.apply(null, args)();
+	app.debugDialog.clearEventChain();
+    },1);
 }
 wm.onidleChain = function(functionList, stateObj) {
     if (!stateObj) stateObj = {};
@@ -315,12 +328,19 @@ wm.onidleChain = function(functionList, stateObj) {
 
 }
 wm.job = function(inName, inDelay, inJob) {
-	wm.cancelJob(inName);
-	var job = function() {
-		delete wm._jobs[inName];
-		inJob();
+    wm.cancelJob(inName);
+    if (djConfig.isDebug) {
+	var eventChain = app.debugDialog.cacheEventChain();
+    }
+    var job = function() {
+	delete wm._jobs[inName];
+	if (eventChain) {
+	    app.debugDialog.restoreEventChain(eventChain);
 	}
-	wm._jobs[inName] = setTimeout(job, inDelay);
+	inJob();
+	app.debugDialog.clearEventChain();
+    }
+    wm._jobs[inName] = setTimeout(job, inDelay);
 }
 wm.cancelJob = function(inName) {
 	clearTimeout(wm._jobs[inName]);

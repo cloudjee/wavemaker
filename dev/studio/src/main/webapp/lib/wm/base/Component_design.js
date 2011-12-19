@@ -19,8 +19,8 @@ dojo.require('wm.base.Component');
 // Design Schema
 //===========================================================================
 wm.Object.extendSchema(wm.Component, {
-    viewDocumentation: {group: "docs", readonly: true, order: 1, operation: true},
-    generateDocumentation: {group: "docs", readonly: true, order: 2, shortname: "Generate Docs", operation: true},
+    viewDocumentation: {group: "docs", writeonly: true},
+    //generateDocumentation: {group: "docs", readonly: true, order: 2, shortname: "Generate Docs", operation: true},
         themeable: {ignore: 1},
         theme: {ignore: 1},
         isDestroyed: {ignore: 1},
@@ -31,11 +31,10 @@ wm.Object.extendSchema(wm.Component, {
 	id: { ignore: 1 },
 	ignoredProps: { ignore: 1 },
     name: { group: "common", order: 0, requiredGroup: true},
-    owner: { group: "common", order: 1, readonly: true, options: ["Page", "Application"], doc: 1},
+    owner: { group: "common", order: 1, ignore: 1, unwritable: true, options: ["Page", "Application"], doc: 1},
 	publishClass: { ignore: 1 },
 	readonlyProps: { ignore: 1 },
 	referenceProps: { ignore: 1 },
-	state: { ignore: 1 },
         binding: { ignore: 1, writeonly: 1},
         runtimeId: {ignore: 1},
     rootId: {ignore: 1},
@@ -124,7 +123,7 @@ wm.Component.extend({
         isWriteableProp: function(inPropSchema, inName) {
 	    var ps = inPropSchema;
 	    if (!ps) return true;
-	    if (ps.group == "method") return false;
+	    if (ps.method || ps.unwritable) return false;
 
 	    /* Its not writable if its bound; the binding is the source of the value */
 	    if (inName && this.$.binding && this.$.binding.wires[inName])

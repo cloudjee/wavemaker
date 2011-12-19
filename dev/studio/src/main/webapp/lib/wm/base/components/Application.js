@@ -198,15 +198,14 @@ dojo.declare("wm.Application", wm.Component, {
 		222:'"'};
 	},
     createDebugDialog: function() {
-		dojo.require("wm.base.widget.Trees.DebugTree");
+		dojo.require("wm.base.debugger.Dialog");
 		dojo.require("wm.base.components.JsonRpcService");
 	if (!this.debugDialog) {
-		this.debugDialog = new wm.DebugDialog({owner: this, 
+	    this.debugDialog = new wm.debugger.Dialog({owner: this, 
 						       name: "debugDialog",
 						       width: "700px", 
 						       height: "400px",
 						       corner: "cr"});
-		this.debugTree = this.debugDialog.debugTree;
 	}
     },
     setTheme: function(inTheme, isInit, optionalCss, optionalPrototype, noRegen, forceUpdate) {
@@ -868,7 +867,9 @@ dojo.declare("wm.Application", wm.Component, {
     },
     removeMinifiedDialogLabel: function(minifiedLabel) {
 	minifiedLabel.destroy();
-	this.wmMinifiedDialogPanel.setShowing(Boolean(this.wmMinifiedDialogPanel.c$.length));
+	if (this.wmMinifiedDialogPanel) {
+	    this.wmMinifiedDialogPanel.setShowing(Boolean(this.wmMinifiedDialogPanel.c$.length));
+	}
     },
     resizeMinifiedDialogPanel: function() {
 	var b = {l: 0,
