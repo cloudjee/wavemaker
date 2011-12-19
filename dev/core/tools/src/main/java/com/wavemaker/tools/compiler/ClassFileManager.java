@@ -35,14 +35,13 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import com.apple.eio.FileManager;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ResourceFilter;
 import com.wavemaker.tools.project.StudioFileSystem;
 
 /**
- * {@link Resource}-based {@link FileManager} implementation that provides file reading and writing services to the
+ * {@link Resource}-based  <tt>FileManager</tt> implementation that provides file reading and writing services to the
  * compiler.
  * 
  * @author Seung Lee
