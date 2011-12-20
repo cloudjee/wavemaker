@@ -13,7 +13,8 @@
  */
 
 /* TODO:
- *  The new try/catch blocks around event handlers should report errors in the event list; failures of events is a part of the event
+ *  1. Get event chain tracking to work across onSuccess/onError calls
+ *  2. The new try/catch blocks around event handlers should report errors in the event list; failures of events is a part of the event
  */
 
 dojo.provide("wm.base.debugger.Dialog");
