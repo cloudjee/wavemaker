@@ -506,7 +506,7 @@ dojo.declare("wm.DateTimePicker", wm.Container, {
 	    this._currentDijit.set("value", date);
 	}
 	if (this._currentDijit && this.calendar.showing && !this.panel.showing) {
-	    this._currentDijit.toggleDropDown();
+	    this._currentDijit.closeDropDown();
 	}
     },
     set: function(inName, inValue) {
@@ -562,12 +562,12 @@ dojo.declare("wm.DateTimePicker", wm.Container, {
     setMaximum: function(inMax) {this.calendar.setMaximum(inMax);},
     onOkClick: function() {
 	if (this._currentDijit) {
-	    this._currentDijit.toggleDropDown();
+	    this._currentDijit.closeDropDown();
 	}
     },
     onCancelClick: function() {
 	if (this._currentDijit) {
-	    this._currentDijit.toggleDropDown();
+	    this._currentDijit.closeDropDown();
 	    this._currentDijit.set("value",this._initialValue);
 	}
     },
