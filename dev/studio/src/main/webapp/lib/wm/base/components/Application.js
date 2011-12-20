@@ -35,6 +35,7 @@ dojo.declare("wm.Application", wm.Component, {
         _lastTheme: "",
     //IERoundedCorners: false,
 	init: function() {
+	    dojo.require("common." + wm.version.replace(/[^a-zA-Z0-9]/g,"") + "_patches",true);
 		app = wm.application = wm.application || this;
 		this.connectList = [];
 		this.app = this;

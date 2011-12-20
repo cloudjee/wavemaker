@@ -205,4 +205,4 @@ wm.applyFrameworkFixes = function() {
     }
 }
 
-wm.loadLib("common." + wm.version.replace(/[^a-zA-Z0-9]/g,"") + "_patches");
+//wm.loadLib("common." + wm.version.replace(/[^a-zA-Z0-9]/g,"") + "_patches"); moved to Application.js
