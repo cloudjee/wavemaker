@@ -302,7 +302,7 @@ wm.onidle = function(/*hitch args*/) {
     for (var i = 0; i in arguments; i++) {
 	args.push(arguments[i]);
     }
-    if (djConfig.isDebug) {
+    if (app && app.debugDialog) {
 	var eventChain = app.debugDialog.cacheEventChain();
     }
     window.setTimeout(function() {
@@ -329,7 +329,7 @@ wm.onidleChain = function(functionList, stateObj) {
 }
 wm.job = function(inName, inDelay, inJob) {
     wm.cancelJob(inName);
-    if (djConfig.isDebug) {
+    if (app && app.debugDialog) {
 	var eventChain = app.debugDialog.cacheEventChain();
     }
     var job = function() {
