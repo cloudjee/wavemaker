@@ -1484,6 +1484,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	this.generateEditors(this.inspectedSubcomponent);
     },
     generateEditors: function(c) {
+	this.propDef.treeBindRoot = this.propDef.name;
 	var propDef = dojo.clone(this.propDef);
 	propDef.editor = "wm.prop.DataSetSelect";
 	propDef.treeBindField = "";

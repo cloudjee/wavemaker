@@ -526,9 +526,8 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
     generatePropTree: function(inProp, inObject) {
 	/* Clear the tree so we can rebuild it */
         this.propTree.clear();
-        var targetProp = "";
-        var nodeName = this.owner.targetProps.targetProperty;
-
+        var nodeName = inProp.treeBindRoot;
+	this.selectedPropTreeField = inProp.treeBindField;
 
         var wire = inObject.owner.$.binding ? inObject.owner.$.binding.wires[inObject.name] : null;
 
@@ -549,13 +548,15 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
             data: {
                 object: inObject,
 		propDef: inProp,
-                fieldName: targetProp, /* Probably will always just copy the content/caption */
-                fullFieldName: targetProp,
+                fieldName: inProp.treeBindRoot,
+                fullFieldName: inProp.treeBindRoot, /* Contains full path: filter.employee.firstName */
                 type: inObject.type
             }
         });
 	this._propTreeInitializing = false;
-	this.propTree.select(rootNode);
+	if (inProp.name == inProp.treeBindRoot) {
+	    this.propTree.select(rootNode);
+	}
     },
     addPropTreeChildren: function(inChildNode) {
 	var data = inChildNode.data;
@@ -597,7 +598,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 				    }
 				});
 		if (this._propTreeInitializing) {
-		    if (newFullFieldName == this.bindTreeSelectTargetProp) {
+		    if (newFullFieldName == this.selectedPropTreeField) {
 			this.propTree.select(n);
 		    }
 		}
