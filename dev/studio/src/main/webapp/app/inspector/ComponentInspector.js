@@ -384,7 +384,7 @@
   * 7. Make a _design files for every component
   * 8. Find all bindable/bindTarget properties that should be readonly and make them readonly
   */
- dojo.declare("wm.PropertyInspector", wm.AccordionLayers, {
+ dojo.declare("wm.PropertyInspector", wm.AccordionLayers, {    
      preferredMultiActive: false,
      multiActive: false,
      ignoreHintPrefix: "<p><b>Disabled</b></p>",
@@ -1487,9 +1487,11 @@
 	     captionAlign: "left",
 	     caption: inProp.shortname || inProp.name,
 	     dataValue: inValue,
-	     createWire: inProp.createWire,
 	     inspected: inComponent /* Used by some of the custom editors in propertyEdit.js */
 	 };
+	 if (inProp.createWire != undefined) {
+	     editorProps.createWire = inProp.createWire;
+	 }
 	 return editorProps;
      },
      _end: 0

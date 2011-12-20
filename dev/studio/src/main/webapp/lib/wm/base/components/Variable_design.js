@@ -29,7 +29,7 @@ wm.Object.extendSchema(wm.Variable, {
     type: {ignore: 0, group: "data", subgroup: "data", order: 1, editor: "wm.prop.DataTypeSelect", editorProps: {liveTypes: 0}, requiredGroup: 1},
     isList: { group: "data", subgroup: "data", order: 4, requiredGroup: 1},
     editJson: {operation: 1, group:"data", subgroup: "data", order:5},
-    dataSet: { bindable: 1, group: "data", order: 0, defaultBindTarget: 1, isObject: true, treeBindField: "dataSet", editor: "wm.prop.FieldGroupEditor", editorProps: {groupEditorPropertyName: ""}},
+    dataSet: { bindable: 1, group: "data", order: 0, defaultBindTarget: 1, isObject: true, treeBindField: "dataSet", editor: "wm.prop.DataSetSelect", editorProps: {allowAllTypes: true, widgetDataSets: true, showInputs: true}},
 
     /* Data group; behavior subgroup */
     saveInCookie: {group: "data", subgroup: "behavior", order: 20, advanced:1},

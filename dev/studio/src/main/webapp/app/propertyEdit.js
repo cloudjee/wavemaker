@@ -522,6 +522,7 @@ dojo.declare("wm.prop.PagesSelect", wm.prop.SelectMenu, {
 
 
 dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
+    matchComponentType: false,
     dataField: "dataValue",
     displayField: "dataValue",
     allowAllTypes: true,
@@ -536,24 +537,30 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
     showInputs: false,
     updateOptions: function() {
 	this.inherited(arguments)
+	var matchType = "";
+	if (this.matchComponentType && this.propDef.treeBindField) {
+	    matchType = this.inspected.getValue(this.propDef.name).type;
+	}
 	var sp = studio.page;
-	var r = this.getDataSets([sp, sp.app]);
+	var r = this.getDataSets([sp, sp.app], matchType);
 	if (this.showInputs) {
 	    var serviceVars = wm.listComponents([sp,sp.app], wm.ServiceVariable, true);
 	    for (var i = 0; i < serviceVars.length; i++) {
-		r.push(serviceVars[i].name + ".input");
+		if (!matchType || matchType == serviceVars[i].type) {
+		    r.push(serviceVars[i].name + ".input");
+		}
 	    }
 	}
 	if (this.widgetDataSets)
 	    wm.forEachWidget(sp.root, dojo.hitch(this, function(w) {
 		if (w !== this && !(w instanceof wm.LiveFormBase) && !(w instanceof wm.AbstractEditor && w.formField))
-		    r = r.concat(this.getDataSets([w]));
+		    r = r.concat(this.getDataSets([w],matchType));
 	    }));
 	    if (this.includeLiveViews)
 		r = r.concat(this.getLiveViews());
 	r = r.sort();
+	wm.Array.removeElement(r,this.inspected.getId());
 	this.setOptions(r);
-
     },
 
 	getLiveViews: function() {
@@ -562,17 +569,20 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
 			lv = [];
 		wm.forEach(views, dojo.hitch(this, function(v) {
 			var dt = v.dataType || "", k = dt ? " (" + dt.split('.').pop() + ")" : "";
-			lv.push({
-				option: v.name + k,
-				value: v.getId()
-			});
+		    lv.push(v.getId());
+
 		}));
 		return lv;
 	},
-	getDataSets: function(inOwners) {
+    getDataSets: function(inOwners, matchType) {
 	    return wm.listMatchingComponentIds(inOwners, dojo.hitch(this, function(c) {
 
+
 			if (!c.name || c.name.indexOf("_") === 0) return false;
+
+		if (matchType) {
+		    return matchType == c.type;
+		}
 
 			if (!this.allowAllTypes && !wm.typeManager.isStructuredType(c.type)) return false;
 
@@ -1447,7 +1457,7 @@ dojo.declare("wm.prop.RolesEditor", wm.CheckboxSet, {
     reinspect: function() {return true;}
 });
 
-
+/*
 dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
     indent: 0,
     noBindColumn: true,
@@ -1472,49 +1482,73 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	    this.setShowing(true); // wm.PropertyInspector will set this to hidden if the entire thing is bound assuming a bind-editor will be shown instead; not applicable for this particular editor
 	}
 
-	this.generateEditors();
+	this.generateEditors(this.inspected);
     },
-    generateEditors: function() {
-	var c = this.inspected;
+    generateEditors: function(c) {
 	var propDef = dojo.clone(this.propDef);
 	if (propDef.treeBindField == "this") {
 	    propDef.treeBindField = this.propDef.name;
 	}
 	delete propDef.editor;
+
+	console.log("TODO: This should be a pulldown of matching objects to bind to");
 	var e= studio.inspector.generateEditor(this.inspected, propDef, this,null,this.propDef.name);
 	e.setDisabled(true);
 	this.editors._ROOT = e;
 	this.indent++;
 	
-	if (c._dataSchema) {
-	    this._generatedSchema = dojo.toJson(c._dataSchema);
-	    for (var fieldName in c._dataSchema) {
-
-		var fieldDef = c._dataSchema[fieldName];
+	var type = c.type;
+	var fields;
+	if (wm.typeManager.getType(type)) {
+	    fields = wm.typeManager.getType(type).fields;
+	} else {
+	    fields = c._dataSchema;
+	}
+	if (fields) {
+	    this._generatedSchema = dojo.toJson(fields);
+	    wm.forEachProperty(fields, dojo.hitch(this,function(fieldDef, fieldName) {
 		var type = fieldDef.type;
 
-		/* dojo.mixin used this way insures we work on a copy of propDef and don't modify e.propDef before its onclick is fired */
+		/ * dojo.mixin used this way insures we work on a copy of propDef and don't modify e.propDef before its onclick is fired * /
 		propDef = dojo.mixin({}, propDef, {
 		    name: fieldName,
 		    displayName: fieldName,
 		    type: type || propDef.type,
 		    treeBindField: (this.propDef.treeBindField != "this" ? this.propDef.treeBindField + "." : "") + fieldName,
 		    editorProps: {
-		        margin: "0,0,0," + this.indent * 25,
 		        createExpressionWire: true
 		    },
 		    createWire: true,
 		    rootTreeBindField: this.propDef.treeBindField
 		});
 
+		var p = new wm.Panel({owner: this,
+				      parent: 
 		if (wm.typeManager.isStructuredType(type)) {
 		    e = studio.inspector.generateEditor(c, propDef, this,null,this.propDef.name);
 		    e.setDisabled(true);
+		    var expandButton = new wm.ToolButton({owner: this,
+							  parent: e.parent,
+							  caption: ">",
+							  width: "20px",
+							  height: "20px",
+							  onclick: dojo.hitch(this, function() {
+							      this.generateEditors(c.getValue(fieldName));
+							  })
+							 });
+		    e.parent.moveControl(expandButton,0);
+
 		} else {
 		    e = studio.inspector.generateEditor(c, propDef, this,null,this.propDef.name);
+		    var expandButton = new wm.Spacer({owner: this,
+						      parent: e.parent,
+						      width: "20px",
+						      height: "20px"});
+		    e.parent.moveControl(expandButton,0);
+
 		}
 		this.editors[c.getId() + "." + fieldName] = e;
-	    }
+	    }));
 	}
 	this.setBestHeight();
 	this.reflow();
@@ -1522,7 +1556,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
     reinspect: function() {
 	if (this._generatedSchema != dojo.toJson(this.inspected._dataSchema)) {
 	    this.removeAllControls();
-	    this.generateEditors();
+	    this.generateEditors(this.inspected);
 	    this.parent.setBestHeight();
 	} else {
 	    for(var editorName in this.editors) {
@@ -1546,4 +1580,4 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	    }
 	this.inherited(arguments);
     }
-});
+});*/

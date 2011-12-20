@@ -18,7 +18,7 @@
 
 dojo.provide("wm.base.debugger.Dialog");
 dojo.require("wm.base.debugger.EventsPanel");
-dojo.require("wm.base.debugger.WidgetPanel");
+//dojo.require("wm.base.debugger.WidgetPanel");
 dojo.require("wm.base.debugger.ServicePanel");
 dojo.require("wm.base.debugger.PropertyPanel");
 dojo.require("wm.base.debugger.StylePanel");
