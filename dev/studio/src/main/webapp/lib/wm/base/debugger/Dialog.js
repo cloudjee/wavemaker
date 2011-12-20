@@ -13,8 +13,8 @@
  */
 
 /* TODO:
- *  1. Get event chain tracking to work across onSuccess/onError calls
- *  2. The new try/catch blocks around event handlers should report errors in the event list; failures of events is a part of the event
+ * 1. Cleanup areas where we do debugging tracking; esp ServiceCall and LiveVariable; the code is too messy
+ * 2. Track svar calls
  */
 
 dojo.provide("wm.base.debugger.Dialog");

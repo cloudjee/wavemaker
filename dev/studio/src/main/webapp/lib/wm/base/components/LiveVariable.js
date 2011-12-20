@@ -108,75 +108,18 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 			this.inherited(arguments);
 	},
 	filterChanged: function() {
-	        if (djConfig.isDebug && this.autoUpdate) {
-		    this._autoUpdateFiring = "filterChanged";
-		    this._debug = {trigger: "autoUpdate",
-				   lastUpdate: new Date()}; 
-
-		    try {
-			var i = 0;
-			var caller = arguments.callee.caller;
-			while (caller && caller.nom != "dataValueChanged" && i < 15) {
-			    caller = caller.caller;
-			    i++;
-			}
-			if (caller && caller.nom == "dataValueChanged") {
-			    var newValue = caller.arguments[1];
-
-			    this._debug.eventName = "filter: " + caller.arguments[0] + " set to " + (newValue instanceof wm.Component ? newValue.toString() : newValue);
-			}
-		    } catch(e) {}
-		    this.debugId = app.debugDialog.newLogEvent({eventType: "autoUpdate",
-								eventName: "autoUpdate",
-								affectedId: this.getRuntimeId(),
-								firingId: ""});
-
-		    this.doAutoUpdate();
-		    if (this.debugId) {
-			app.debugDialog.endLogEvent(this.debugId);
-			delete this.debugId;
-		    }
-
-		    delete this._autoUpdateFiring;
-		} else {
-		    this.doAutoUpdate();
-		}
+	    if (this.autoUpdate) {
+		if (this.djConfig.isDebug) this.log("autoUpdate");
+		this.doAutoUpdate();
+		if (this.djConfig.isDebug) this.endLog("autoUpdate");
+	    }
 	},
 	sourceDataChanged: function() {
-	        if (djConfig.isDebug && this.autoUpdate) {
-		    this._autoUpdateFiring = "sourceDataChanged";
-		    this._debug = {trigger: "autoUpdate",
-				   lastUpdate: new Date()}; 
-		    try {
-			var i = 0;
-			var caller = arguments.callee.caller;
-			while (caller && caller.nom != "dataValueChanged" && i < 15) {
-			    caller = caller.caller;
-			    i++;
-			}
-			if (caller && caller.nom == "dataValueChanged") {
-			    var newValue = caller.arguments[1];
-
-			    this._debug.eventName = "sourceData: " + caller.arguments[0] + " set to " + (newValue instanceof wm.Component ? newValue.toString() : newValue);
-			}
-		    } catch(e) {}
-
-		    this.debugId = app.debugDialog.newLogEvent({eventType: "autoUpdate",
-								eventName: "autoUpdate",
-								affectedId: this.getRuntimeId(),
-								firingId: ""});
-
-
-		    this.doAutoUpdate();
-		    delete this._autoUpdateFiring;
-		    if (this.debugId) {
-			app.debugDialog.endLogEvent(this.debugId);
-			delete this.debugId;
-		    }
-
-		} else {
-		    this.doAutoUpdate();
-		}
+	    if (this.autoUpdate) {
+		if (this.djConfig.isDebug) this.log("autoUpdate");
+		this.doAutoUpdate();
+		if (this.djConfig.isDebug) this.endLog("autoUpdate");
+	    }
 	},
 
 	/** Set the filter used for read operations */
@@ -311,13 +254,8 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	operationChanged: function() {
 	},
     updateOnDbChange: function(inComponent) {
-	if (inComponent === this) return;
-	if (djConfig.isDebug) {
-	    this._autoUpdateFiring = "startUpdate";
-	    this._debug = {trigger: "updateOnDbChange triggered",
-			   lastUpdate: new Date()}; 
-	}
-
+	if (inComponent === this || !this.autoUpdate) return;
+	if (djConfig.isDebug) this.log("autoUpdate", "updateOnDbChange");
 	this.update();
     },
 	_update: function() {

@@ -103,7 +103,7 @@ dojo.declare("wm.debugger.EventsPanel", wm.Container, {
 
 		    eventsGrid: ["wm.DojoGrid", 
 				 {width: "100%", height: "100%",query:{isBinding:false},"columns":[
-				     {"show":true,"field":"sourceEvent","title":"Source Event","width":"100%","align":"left","formatFunc":"", expression: "${firingId} + '.' + ${eventName} + '()'"},
+				     {"show":true,"field":"sourceEvent","title":"Source Event","width":"100%","align":"left","formatFunc":"", expression: "(${firingId} ? ${firingId} + '.' : '') + ${eventName} + '()'"},
 				     {"show":true,"field":"resultEvent","title":"Resulting Event","width":"100%","align":"left","formatFunc":"",expression: "${affectedId} + '.' + (${isBinding} ? 'setValue(' + ${boundProperty} + ',' + (${boundValue}||null) + ')' : (${method} || ${eventName}) + '()')"},
 				     {"show":true,"field":"time","title":"Time","width":"120px","align":"left","formatFunc": "wm_date_formatter",
 				      "formatProps": {

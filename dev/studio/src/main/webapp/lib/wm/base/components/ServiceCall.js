@@ -137,11 +137,136 @@ dojo.declare("wm.ServiceCall", null, {
 		i.operationChanged(this.operation, this._operationInfo.parameters);
 		return i;
 	},
+    /* eventType: 
+     *
+     */
+    log: function(eventType, /* autoUpdate, autoStart, eventHandler */
+		  callingMethod, /* optional; indicates who really called this */
+		  backlogObj, /* optional; used to provide an old eventChain */
+		  errorMsg /* optional; for processError only */
+		 ) {
+	if (!app.debugDialog) return;
+	if (!this.debugId) this.debugId = [];
+
+	/* STEP 1: Setup the _debug object used by the wm.debugger.ServicePanel */
+		  if (eventType != "serviceCall" && eventType != "serviceCallResponse") {
+	this._debug = {trigger:  callingMethod || eventType,
+		       eventName: eventType,
+		       request: "",
+		       lastUpdate: new Date()}; 
+		  }
+
+
+	/* If the eventType is autoUpdate, then this is triggered by a change to the input/filter/sourceData value; in other words,
+	 * a change to a wm.Variable.  This means that the notification for the change came from a call to dataValueChanged;
+	 * See if we can find what called dataValueChanged and log that.
+	 * WARNING: Sometimes the callstack goes into a loop, so don't go deeper than 15 into the stack.
+	 */
+	if (eventType == "autoUpdate") {
+	    /* This block logs it in wm.debugger.ServicePanel */
+	    try {
+		var i = 0;
+		var caller = arguments.callee.caller;
+		while (caller && caller.nom != "dataValueChanged" && i < 15) {
+		    caller = caller.caller;
+		    i++;
+		}
+		if (caller && caller.nom == "dataValueChanged") {
+		    var newValue = caller.arguments[1];
+		    this._debug.eventName = "inputChanged: " + caller.arguments[0] + " set to " + (newValue instanceof wm.Component ? newValue.toString() : newValue);
+		}
+	    } catch(e) {}
+
+	    /* This block logs it in wm.debugger.EventsPanel */
+	    this.debugId.push({eventType: eventType,
+			       id: app.debugDialog.newLogEvent({eventType: "autoUpdate",
+							eventName: "autoUpdate",
+								method: "update",
+							affectedId: this.getRuntimeId(),
+							firingId: this.getRuntimeId(),
+								method: "update"})});
+
+	} else if (eventType == "startUpdate") {
+	    this.debugId.push({eventType: eventType,
+			       id: app.debugDialog.newLogEvent({eventType: "startUpdate",
+								eventName: "startUpdate",
+								method: "update",
+								affectedId: this.getRuntimeId(),
+								firingId: this.owner.getRuntimeId()})});
+	} else if (eventType == "autoUpdateOnStart") {
+	    var page = this.getParentPage() || app;
+	    this._debug.trigger = "autoUpdate" + (page && page._loadingPage ? ": onStart" : "unknown source");
+
+	    this.debugId.push({eventType: eventType,
+			       id: app.debugDialog.newLogEvent({eventType: "autoUpdate",
+								eventName: "autoUpdate",
+								method: "update",
+								affectedId: this.getRuntimeId(),
+								firingId: this.owner.getRuntimeId()})});
+	} 
+
+	/* Calls to "update" are typically made from user written methods (I've changed most internal calls to "updateInternal" */
+	else if (eventType == "update") {
+	    this.debugId.push({eventType: eventType,
+			       id: app.debugDialog.newLogEvent({eventType: "update",
+								eventName: callingMethod || "update",
+								method: "update",
+								affectedId: this.getRuntimeId(),
+								firingId: ""})});
+	} else if (eventType == "serviceCall") {
+	    if (backlogObj && backlogObj.eventChain) {
+		var currentEventChain =  app.debugDialog.cacheEventChain();
+		app.debugDialog.restoreEventChain(backlogObj.eventChain);
+	    }
+	    this.debugId.push({eventType: eventType,
+			       id: app.debugDialog.newLogEvent({eventType: "serviceCall",
+								eventName: "update",
+								method: "<i>CallingServer</i>",
+								affectedId: this.getRuntimeId(),
+								firingId: this.getRuntimeId()})});
+	    this.debugEventChain = app.debugDialog.cacheEventChain(); // use this when the request is completed to stitch together the event sequence
+	    if (currentEventChain) {
+		app.debugDialog.restoreEventChain(currentEventChain); 
+	    }
+	} else if (eventType == "serviceCallResponse") {
+	    app.debugDialog.restoreEventChain(this.debugEventChain);
+	    delete this.debugEventChain;
+	    this.debugId.push({eventType: eventType,
+			       id: app.debugDialog.newLogEvent({eventType: "serviceCallResponse",
+								eventName:  "<i>CallingServer</i>",
+								method: errorMsg ? "processError" : "processResult",
+								affectedId: this.getRuntimeId(),
+								firingId: this.getRuntimeId()})});
+	}
+    },
+    endLog: function(eventType) {
+	if (this.debugId && this.debugId.length) {
+	    var debugId = this.debugId.pop();
+	    if (debugId.eventType == eventType) {
+		app.debugDialog.endLogEvent(this.debugId);
+	    }
+	}
+	if (eventType == "serviceCallResponse") {
+	    app.debugDialog.clearEventChain();
+	}
+    },	
+	inputChanged: function() {
+	    if (this.autoUpdate) {
+		if (djConfig.isDebug) this.log("autoUpdate");
+
+		this.doAutoUpdate();
+		if (djConfig.isDebug) this.endLog("autoUpdate");
+	    }
+	},
+/*
 	inputChanged: function() {
 	        if (djConfig.isDebug && this.autoUpdate) {
+		    this.log("autoUpdate");
+
 		    if (djConfig.isDebug) {
-			this._autoUpdateFiring = "inputChanged";
 			this._debug = {trigger: "autoUpdate",
+				       eventName: "",
+				       request: "",
 				       lastUpdate: new Date()}; 
 		    try {
 			var i = 0;
@@ -163,7 +288,6 @@ dojo.declare("wm.ServiceCall", null, {
 								affectedId: this.getRuntimeId(),
 								firingId: ""});
 
-
 		    this.doAutoUpdate();
 
 		    if (this.debugId) {
@@ -171,13 +295,13 @@ dojo.declare("wm.ServiceCall", null, {
 			delete this.debugId;
 		    }
 
-		    delete this._autoUpdateFiring;
 
 		} else if (this.autoUpdate) {
 		    this.doAutoUpdate();
 		}
 
 	},
+	*/
 	//=======================================================
 	// Updating
 	//=======================================================
@@ -196,50 +320,20 @@ dojo.declare("wm.ServiceCall", null, {
 		}
 	},
 	doStartUpdate: function() {
-	        if (this.startUpdate && !this._loading) {
-		    if (djConfig.isDebug) {
-			this._autoUpdateFiring = "startUpdate";
-			this._debug = {trigger: "startUpdate",
-				       lastUpdate: new Date()}; 
-
-		    this.debugId = app.debugDialog.newLogEvent({eventType: "startUpdate",
-								eventName: "startUpdate",
-								affectedId: this.getRuntimeId(),
-								firingId: this.owner.getRuntimeId()});
-
-
-		    }
-		    this.updateInternal();
-		    if (djConfig.isDebug) {
-			delete this._autoUpdateFiring;
-			if (this.debugId) {
-			    app.debugDialog.endLogEvent(this.debugId);
-			    delete this.debugId;
-			}
-		    }
-		    this.startUpdateComplete = true;
-		}
+	    if (this.startUpdate && !this._loading) {
+		if (djConfig.isDebug) this.log("startUpdate");		
+		this.updateInternal();
+		if (djConfig.isDebug) this.endLog("startUpdate");
+		this.startUpdateComplete = true;
+	    }
 	},
 	doAutoUpdate: function() {
 	    if (this.autoUpdate && !this._loading && (!this.startUpdate || this.startUpdateComplete || this.isDesignLoaded())) {
-		if (djConfig.isDebug && !this._debug && this._inPostInit) {
-		    var page = this.getParentPage() || app;
-		    this._debug = {trigger: "autoUpdate" + (page && page._loadingPage ? ": onStart" : "unknown source"),
-				   lastUpdate: new Date()}; 
-
-		    this.debugId = app.debugDialog.newLogEvent({eventType: "autoUpdate",
-								eventName: "autoUpdate",
-								affectedId: this.getRuntimeId(),
-								firingId: this.owner.getRuntimeId()});
-
-		    
-		}
+		if (djConfig.isDebug && !this._debug && this._inPostInit) this.log("autoUpdateOnStart");		    		
 
 		wm.job(this.getRuntimeId() + ".doAutoUpdate", 1, dojo.hitch(this, "updateInternal"));
-		if (this.debugId) {
-		    app.debugDialog.endLogEvent(this.debugId);
-		    delete this.debugId;
-		}
+
+		if (djConfig.isDebug) this.endLog("autoUpdateOnStart");
 	    }
 	},
 	/**
@@ -250,13 +344,8 @@ dojo.declare("wm.ServiceCall", null, {
 		to monitor the outcome of the service call.
 	*/
 	update: function() {
-	    if (djConfig.isDebug) {
-		try {
-		    this._debug = {trigger: arguments.callee.caller.nom || arguments.callee.caller.name || "anonymous",
-				   lastUpdate: new Date()}
-		} catch(e) {}
-	    }
-		return this._isDesignLoaded ? this.doDesigntimeUpdate() : this._update();
+	    if (djConfig.isDebug) try { this.log("update", arguments.callee.caller.nom || arguments.callee.caller.name || "anonymous");} catch(e) {}
+	    return this._isDesignLoaded ? this.doDesigntimeUpdate() : this._update();
 	},
     /* Users call "update" event handlers and autoUpdate/startUpdate call updateInternal; used for tracking/debugging purposes */
     updateInternal: function() {
@@ -270,8 +359,10 @@ dojo.declare("wm.ServiceCall", null, {
 		    this.inFlightBehavior == "executeAll") {
 		    var d = new dojo.Deferred();
 		    this._inFlightBacklog.push({args: this.getArgs(),
-					operation: this.operation,
-					deferred: d});
+						operation: this.operation,
+						deferred: d,
+						eventChain:  app.debugDialog.cacheEventChain()
+					       });
 		}
 		return d;
 	    }
@@ -326,9 +417,12 @@ dojo.declare("wm.ServiceCall", null, {
     },
     /* inArgs optional too... */
     request: function(inArgs, optionalOp, optionalDeferred) {
-	if (djConfig.isDebug && this._debug) {
-	    this._debug.request = this.getDebugArgs();
+	if (djConfig.isDebug && this._debug) this._debug.request = this.getDebugArgs();
+	if (djConfig.isDebug) {
+	    this.log("serviceCall", null, optionalOp);
+	    this.endLog("serviceCall", null, optionalOp);
 	}
+
 
 	    /* Update all parameters to be current before we fire this 
 	    if (this.$.binding) {
@@ -441,10 +535,14 @@ dojo.declare("wm.ServiceCall", null, {
 	// Result Processing
 	//=======================================================
 	result: function(inResult) {
+
+	    if (djConfig.isDebug) this.log("serviceCallResponse");
+
 	    this._requester = false;
 	    this.processResult(inResult);
-	    if (this.updateOnResult) this.update();
-	    this.processResult(inResult);
+
+	    if (djConfig.isDebug) this.endLog("serviceCallResponse");
+
 	    if (!this._isDesignLoaded && this._inFlightBacklog.length) {
 		wm.onidle(this, function() {
 		    var backlog = this._inFlightBacklog.shift();
@@ -461,9 +559,11 @@ dojo.declare("wm.ServiceCall", null, {
 		this.$.queue.update();
 	},
 	error: function(inError) {
+	    if (djConfig.isDebug) this.log("serviceCallResponse");
 	    this._lastError = inError;
 	        this._requester = false;
 		this.processError(inError);
+	    if (djConfig.isDebug) this.endLog("serviceCallResponse");
 		return inError;
 	},
 	processError: function(inError) {
