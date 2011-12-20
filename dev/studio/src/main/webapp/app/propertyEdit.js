@@ -1457,111 +1457,142 @@ dojo.declare("wm.prop.RolesEditor", wm.CheckboxSet, {
     reinspect: function() {return true;}
 });
 
-/*
+
 dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
     indent: 0,
-    noBindColumn: true,
-    noHelpButton: true,
-    inspected: null,
-    groupEditorPropertyName: "",
+    noBindColumn: true, // wm.PropertyInspector tests for this to decide if this editor needs a bind column
+    noHelpButton: true, // wm.PropertyInspector tests for this to decide if this editor needs a help button/column
+    inspected: null,    // Component being inspected
+    inspectedSubcomponent: null, // Subcomponent of this component whose fields we are generating editors for
     postInit: function() {
 	this.inherited(arguments);
 
+	/* Add a subheader in the property panel for this set of editors */
 	studio.inspector.addSubGroupIndicator(this.propDef.name,this);
 
-	if (this.groupEditorPropertyName) {
-	    this.inspected = this.inspected.getProp(this.groupEditorPropertyName);
-	}
-
+	this.inspectedSubcomponent = this.inspected.getValue(this.propDef.name);
 
 	this.editors = {};
 
+	/* Determine if this property should be shown or not */
 	if (this.propDef.advanced && !studio.inspector.isAdvancedMode()) {
 	    this.setShowing(false);
 	} else {
 	    this.setShowing(true); // wm.PropertyInspector will set this to hidden if the entire thing is bound assuming a bind-editor will be shown instead; not applicable for this particular editor
 	}
 
-	this.generateEditors(this.inspected);
+	this.generateEditors(this.inspectedSubcomponent);
     },
     generateEditors: function(c) {
 	var propDef = dojo.clone(this.propDef);
-	if (propDef.treeBindField == "this") {
-	    propDef.treeBindField = this.propDef.name;
+	propDef.editor = "wm.prop.DataSetSelect";
+	propDef.treeBindField = "";
+	if (!propDef.editorProps) {
+	    propDef.editorProps = {};
 	}
-	delete propDef.editor;
+	propDef.editorProps.matchComponentType = true;
 
-	console.log("TODO: This should be a pulldown of matching objects to bind to");
-	var e= studio.inspector.generateEditor(this.inspected, propDef, this,null,this.propDef.name);
-	e.setDisabled(true);
+	var e= studio.inspector.generateEditor(c, propDef, this,null,this.propDef.name);
+
+	 var componentToBind = propDef.putWiresInSubcomponent ? this.inspected.getValue(propDef.putWiresInSubcomponent) : this.inspected;
+	 var isBound = studio.inspector.isPropBound(componentToBind, propDef); 
+	
+	
 	this.editors._ROOT = e;
 	this.indent++;
 	
 	var type = c.type;
-	var fields;
-	if (wm.typeManager.getType(type)) {
-	    fields = wm.typeManager.getType(type).fields;
-	} else {
-	    fields = c._dataSchema;
-	}
+	var fields  = c._dataSchema;
 	if (fields) {
+	    this.fieldPanel =  panel = new wm.Panel({owner: this,
+						     parent: this,
+						     showing: !isBound,
+						     layoutKind: "top-to-bottom",
+						     width: "100%",
+						     height: "100%"});
+
 	    this._generatedSchema = dojo.toJson(fields);
 	    wm.forEachProperty(fields, dojo.hitch(this,function(fieldDef, fieldName) {
 		var type = fieldDef.type;
+		var isStructured = wm.typeManager.isStructuredType(type);
 
-		/ * dojo.mixin used this way insures we work on a copy of propDef and don't modify e.propDef before its onclick is fired * /
+		/* dojo.mixin used this way insures we work on a copy of propDef and don't modify e.propDef before its onclick is fired */
 		propDef = dojo.mixin({}, propDef, {
-		    name: fieldName,
-		    displayName: fieldName,
+
+		    /* The name of the field we are editing is "fieldName"; this is used for
+		     * 1. Naming the editor
+		     * 2. Calling getValue/setValue on the right property
+		     */
+		    name: fieldName,            
+
+		    /* The type of the property we are editing; used by bind dialog to validate the type;
+		     * for literal types may be used to chose an editor widget for the property
+		     */
 		    type: type || propDef.type,
-		    treeBindField: (this.propDef.treeBindField != "this" ? this.propDef.treeBindField + "." : "") + fieldName,
+
+		    /* Used by the bind dialog to determine which node is ???? */
+		    treeBindField: this.propDef.name + "." + fieldName,
+		    rootTreeBindField: this.propDef.treeBindField,
+
+		    /* If its a structured type, use a DataSetSelect editor to pick a suitable value; else use the default editor for that type */
+		    editor: isStructured  ? "wm.prop.DataSetSelect" : undefined,
+
 		    editorProps: {
-		        createExpressionWire: true
+			/* If its a DataSetSelect, only list components of matching types */
+			matchComponentType: isStructured,
+
+			/* if the user types in a value into a text editor, treat it as a bind expression */
+		        createExpressionWire: !isStructured, 
+
+			/* Indent these editors */
+			margin: "0,0,0,20"
 		    },
-		    createWire: true,
-		    rootTreeBindField: this.propDef.treeBindField
+
+		    /* When this editor changes, create a wire rather than calling c.setValue(propName,newValue) */
+		    createWire: true
 		});
 
-		var p = new wm.Panel({owner: this,
-				      parent: 
-		if (wm.typeManager.isStructuredType(type)) {
-		    e = studio.inspector.generateEditor(c, propDef, this,null,this.propDef.name);
-		    e.setDisabled(true);
-		    var expandButton = new wm.ToolButton({owner: this,
-							  parent: e.parent,
-							  caption: ">",
-							  width: "20px",
-							  height: "20px",
-							  onclick: dojo.hitch(this, function() {
-							      this.generateEditors(c.getValue(fieldName));
-							  })
-							 });
-		    e.parent.moveControl(expandButton,0);
-
-		} else {
-		    e = studio.inspector.generateEditor(c, propDef, this,null,this.propDef.name);
-		    var expandButton = new wm.Spacer({owner: this,
-						      parent: e.parent,
-						      width: "20px",
-						      height: "20px"});
-		    e.parent.moveControl(expandButton,0);
-
-		}
+		e = studio.inspector.generateEditor(c, /* Component we are editing (or subcomponent in our case) */
+						    propDef, /* Property we are editing within the component */
+						    panel, /* Parent panel */
+						    null, /* ignore */
+						    this.propDef.name /* Append this to the editor name to avoid naming colisions */
+						   );
 		this.editors[c.getId() + "." + fieldName] = e;
 	    }));
 	}
+	this.fieldPanel.setBestHeight();
 	this.setBestHeight();
 	this.reflow();
     },
     reinspect: function() {
-	if (this._generatedSchema != dojo.toJson(this.inspected._dataSchema)) {
+
+	 var componentToBind = this.propDef.putWiresInSubcomponent ? this.inspected.getValue(this.propDef.putWiresInSubcomponent) : this.inspected;
+	 var isBound = studio.inspector.isPropBound(componentToBind, this.propDef); 
+	if (!isBound && !this.fieldPanel.showing) {
+	    this.fieldPanel.show();
+	    this.fieldPanel.setBestHeight();
+	} else if (isBound && this.fieldPanel.showing) {
+	    this.fieldPanel.hide();
+	}
+
+	/* If the type we are editing has been changed to a different type, or its been edited so that the fields are different, regenerate
+	 * all editors
+	 */
+	if (this._generatedSchema != dojo.toJson(this.inspectedSubcomponent._dataSchema)) {
 	    this.removeAllControls();
-	    this.generateEditors(this.inspected);
+	    this.generateEditors(this.inspectedSubcomponent);
 	    this.parent.setBestHeight();
 	} else {
+	    /* Else call reinspectEditor on each editor */
 	    for(var editorName in this.editors) {
 		var e = this.editors[editorName];
-		studio.inspector.reinspectEditor(this.inspected,e, null, e.propDef,this.propDef.name);
+		studio.inspector.reinspectEditor(this.inspectedSubcomponent, /* Component we are editing */
+						 e, /* Editor used to edit this component property */
+						 null, /* Bind editor used to edit this component (wm.PropertyInspector will look this up) */
+						 e.propDef,/* Property Definition for the property we are editing */
+						 this.propDef.name /* Value to append to the name for avoiding naming colisions; used for looking up the editor in the editorHash/bindEditorHash */
+						);
 	    }
 	}
 	return true;
@@ -1580,4 +1611,4 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	    }
 	this.inherited(arguments);
     }
-});*/
+});

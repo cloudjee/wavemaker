@@ -424,26 +424,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	    });
 
 
-	    this.connect(this.propTree, "onselect", this,  function(inNode) {
-		if (this._disablePropTreeEvent) return;
-		this.bindEditor.setDataValue("");
-		try {
-		    this.owner.update({object: this.owner.targetProps.object, 
-				       targetProperty: inNode.data.fullFieldName,
-				       propDef: inNode.data.propDef}, true);
-		} catch(e) {}
-		try {
-		if (this.propTree.selected.data.fullFieldName) {
-		    var wirename = this.propTree.selected.data.fullFieldName;
-		    var wire = this.propTree.selected.data.object.$.binding.wires[wirename];
-		    this.owner.clearButton.setDisabled(!Boolean(wire));
-		} else {
-		    var wirename =  this.propTree.selected.data.object.name;
-		    var wire = this.propTree.selected.data.object.owner.$.binding.wires[wirename];
-		    this.owner.clearButton.setDisabled(!Boolean(wire));		    
-		}
-		} catch(e) {}
-	    });
+	    this.connect(this.propTree, "onselect", this,  "onPropTreeSelect");
 /*
 	    this.propList.connect(this.propList, "onselect", this,  function() {
 		_this.owner.update({object: _this.owner.targetProps.object, targetProperty: this.propList.selectedItem.getData().dataValue}, true);
@@ -507,6 +488,128 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 			this.mixinWidgets(inWidgets[i].widgets);
 	},
 
+    /* When the propertyTree is selected, we need to reset everything for binding to a new property/type which may have 
+     * a preexisting binding
+     */
+    onPropTreeSelect: function (inNode) {
+	    /* Avoid recursion loops */
+        if (this._disablePropTreeEvent) return;
+
+	
+        this.bindEditor.setDataValue("");
+
+	/* This call regenerates the bind UI for the new field */
+        try {
+            this.owner.update({
+                object: this.owner.targetProps.object,      /* We are inspecting the same object as before */
+                targetProperty: inNode.data.fullFieldName,  /* The field name we are binding is stored in the node's fullFieldName */
+                propDef: inNode.data.propDef                /* Pass in the propDef stored in the node */
+            }, true);
+        } catch (e) {}
+
+
+	/* Determine if the clear binding button should be enabled/disabled;
+	 * TODO: Sort out bindable subcomponents vs the inspected component
+	 */
+        try {
+            if (this.propTree.selected.data.fullFieldName) {
+                var wirename = this.propTree.selected.data.fullFieldName;
+                var wire = this.propTree.selected.data.object.$.binding.wires[wirename];
+                this.owner.clearButton.setDisabled(!Boolean(wire));
+            } else {
+                var wirename = this.propTree.selected.data.object.name;
+                var wire = this.propTree.selected.data.object.owner.$.binding.wires[wirename];
+                this.owner.clearButton.setDisabled(!Boolean(wire));
+            }
+        } catch (e) {}
+    },
+    generatePropTree: function(inProp, inObject) {
+	/* Clear the tree so we can rebuild it */
+        this.propTree.clear();
+        var targetProp = "";
+        var nodeName = this.owner.targetProps.targetProperty;
+
+
+        var wire = inObject.owner.$.binding ? inObject.owner.$.binding.wires[inObject.name] : null;
+
+        if (wire) {
+            if (wire.expression) {
+                nodeName += " <span class='WireExpression'>" + wire.expression + "</span>";
+            } else if (wire.source) {
+                nodeName += " <span class='WireSource'>" + wire.source + "</span>";
+            }
+        }
+
+	this._propTreeInitializing = true;
+        var rootNode = new wm.TreeNode(this.propTree.root, {
+            closed: false,
+            content: nodeName,
+            hasChildren: true,
+            initNodeChildren: dojo.hitch(this, "addPropTreeChildren"),
+            data: {
+                object: inObject,
+		propDef: inProp,
+                fieldName: targetProp, /* Probably will always just copy the content/caption */
+                fullFieldName: targetProp,
+                type: inObject.type
+            }
+        });
+	this._propTreeInitializing = false;
+	this.propTree.select(rootNode);
+    },
+    addPropTreeChildren: function(inChildNode) {
+	var data = inChildNode.data;
+	var object = data.object;
+	var currentObject =  data.fullFieldName ? object.getValue(data.fullFieldName) : object;
+	if (!currentObject) 
+	    currentObject = object;
+	var type = currentObject.type;
+/*
+	var typeDef = wm.typeManager.getType(type);
+	var fields = typeDef && typeDef.fields;
+	*/
+	var fields = currentObject._dataSchema;
+	if (fields) {
+	    for (var fieldName in fields) {
+		var fieldDef = fields[fieldName];
+		var structuredType = wm.typeManager.isStructuredType(fieldDef.type);
+		var newFullFieldName = inChildNode.data.fullFieldName ? inChildNode.data.fullFieldName + "." + fieldName : fieldName;
+		var wire = object.$.binding ? object.$.binding.wires[newFullFieldName] : null;
+		var content = fieldName;
+		if (wire) {
+		    if (wire.expression) {
+			content += " <span class='WireExpression'>" + wire.expression + "</span>";
+		    } else if (wire.source) {
+			content += " <span class='WireSource'>" + wire.source + "</span>";
+		    } 
+		}
+		var n = new wm.TreeNode(inChildNode, 
+				{
+				    closed: true,
+				    content: content,
+				    hasChildren: structuredType,
+				    initNodeChildren: dojo.hitch(this, "addPropTreeChildren"),
+				    data: {
+					object: object,
+					fieldName: fieldName,
+					fullFieldName: newFullFieldName,
+					propDef: inChildNode.propDef
+				    }
+				});
+		if (this._propTreeInitializing) {
+		    if (newFullFieldName == this.bindTreeSelectTargetProp) {
+			this.propTree.select(n);
+		    }
+		}
+
+	    }
+	}
+
+    },
+
+
+
+
     initBinding: function (noRegen, inProp) {
         if (!noRegen && !this._applyingBinding) {
             this._setRbEditorChecked(this.simpleRb);
@@ -527,7 +630,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
             }
 
             if (!noRegen) {
-                if (inProp.treeBindField && !object.isDestroyed) {
+                if (inProp.treeBindField !== undefined && !object.isDestroyed) {
 		    this.generatePropTree(inProp, object);
 /*
                     this.propTree.clear();
@@ -614,113 +717,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
             }
         }
     },
-    generatePropTree: function(inProp, inObject) {
-        this.propTree.clear();
-        var targetProp;
-	var treeBindField = inProp.rootTreeBindField || inProp.treeBindField;
-        if (treeBindField == "this") {
-            targetProp = "";
-        } else {
-            targetProp = typeof treeBindField == "string" ? treeBindField : this.owner.targetProps.targetProperty;
-        }
 
-	if (inProp.rootTreeBindField) {
-	    this.bindTreeSelectTargetProp = inProp.treeBindField;
-	}
-
-        var nodeName = typeof treeBindField == "string" ? treeBindField : this.owner.targetProps.targetProperty;
-
-	/* TODO: This block probably no longer needed/used */
-        if (inProp.treeBindObject) {
-	    var object = inObject.getValue(inProp.treeBindObject);
-            this.owner.targetProps.object = object; 
-            this.owner.targetProps.targetProperty = targetProp = "";
-        } else {
-	    var object = inObject;
-	}
-
-        var wire;
-        if (targetProp) {
-            wire = object.$.binding ? object.$.binding.wires[targetProp] : null;
-        } else {
-            wire = object.owner.$.binding ? object.owner.$.binding.wires[object.name] : null;
-        }
-        if (wire) {
-            if (wire.expression) {
-                nodeName += " <span class='WireExpression'>" + wire.expression + "</span>";
-            } else if (wire.source) {
-                nodeName += " <span class='WireSource'>" + wire.source + "</span>";
-            }
-        }
-
-	this._propTreeInitializing = true;
-        var rootNode = new wm.TreeNode(this.propTree.root, {
-            closed: false,
-            content: nodeName,
-            hasChildren: true,
-            initNodeChildren: dojo.hitch(this, "addPropTreeChildren"),
-            data: {
-                object: object,
-		propDef: inProp,
-                fieldName: targetProp,
-                fullFieldName: targetProp,
-                type: object.type
-            }
-        });
-	this._propTreeInitializing = false;
-	if (!inProp.rootTreeBindField) {
-	    this.propTree.select(rootNode);
-	}
-    },
-    addPropTreeChildren: function(inChildNode) {
-	var data = inChildNode.data;
-	var object = data.object;
-	var currentObject =  data.fullFieldName ? object.getValue(data.fullFieldName) : object;
-	if (!currentObject) 
-	    currentObject = object;
-	var type = currentObject.type;
-/*
-	var typeDef = wm.typeManager.getType(type);
-	var fields = typeDef && typeDef.fields;
-	*/
-	var fields = currentObject._dataSchema;
-	if (fields) {
-	    for (var fieldName in fields) {
-		var fieldDef = fields[fieldName];
-		var structuredType = wm.typeManager.isStructuredType(fieldDef.type);
-		var newFullFieldName = inChildNode.data.fullFieldName ? inChildNode.data.fullFieldName + "." + fieldName : fieldName;
-		var wire = object.$.binding ? object.$.binding.wires[newFullFieldName] : null;
-		var content = fieldName;
-		if (wire) {
-		    if (wire.expression) {
-			content += " <span class='WireExpression'>" + wire.expression + "</span>";
-		    } else if (wire.source) {
-			content += " <span class='WireSource'>" + wire.source + "</span>";
-		    } 
-		}
-		var n = new wm.TreeNode(inChildNode, 
-				{
-				    closed: true,
-				    content: content,
-				    hasChildren: structuredType,
-				    initNodeChildren: dojo.hitch(this, "addPropTreeChildren"),
-				    data: {
-					object: object,
-					fieldName: fieldName,
-					fullFieldName: newFullFieldName,
-					propDef: inChildNode.propDef
-				    }
-				});
-		if (this._propTreeInitializing) {
-		    if (newFullFieldName == this.bindTreeSelectTargetProp) {
-			this.propTree.select(n);
-		    }
-		}
-
-	    }
-	}
-
-    },
 	_setRbEditorChecked: function(inRbEditor) {
 		this.simpleRb.beginEditUpdate();
 		this.advancedRb.beginEditUpdate();

@@ -364,9 +364,7 @@
   * categoryProps.component: inspector will inspect this[categoryProps.component] (i.e. this.dataOutput) 
   * categoryProps.inspector: OLD DEF: Specifies which inspector to use to inspect this component
   * createWire: creates a wire instead of calling setProp
-  * readonly: useful for bindable props; user can see them, bind them, but not directly edit the property.  They only write the binding, not the value! TODO: USE THIS!  NOTE: readonly is ignored when setting the property editor's readonly state if createWire is true
-  * unwritable: similar to readonly but the editor is fully editable, it just doesn't get written.  Used for owner which users can edit but 
-  *             which updates its place in the structure rather than setting a property
+  * readonly: useful for bindable props; user can see them, bind them, but not directly edit the property.  They only write the binding, not the value! TODO: USE THIS!  NOTE: readonly is ignored when setting the property editor's readonly state; the property is shown to be edited.  Use editorProps to make the editor readonly.
   * subcomponent: the property refers to a subcomponent whose properties should be displayed in the property panel
   *
   * How to control what editor shows up for a property
@@ -564,7 +562,7 @@
 		 console.log(binde.toString());
 		 e.parent.setHeight((isBound ? binde.bounds.h : e.bounds.h) +  "px");
 		 var wire = inComponent.$.binding.wires[inProp.treeBindField || propName];
-		 binde.setDataValue(wire ?this.getFormattedBoundValue(wire.source,wire.expression) : "");
+		 binde.setDataValue(wire ?this.getFormattedBoundValue(inProp.type, wire.source,wire.expression) : "");
 	     }
 	 }
 
@@ -765,14 +763,15 @@
 	  * Get the current value of the editor; some complex editors don't have a value as such, 
 	  * but instead manage their own values in which case this lookup is ignored
 	  ***********************************************************/
-	 var isBound = this.isPropBound(inComponent, inProp);
+	 var componentToBind = inProp.putWiresInSubcomponent ? this.inspected.getValue(inProp.putWiresInSubcomponent) : this.inspected;
+	 var isBound = this.isPropBound(componentToBind, inProp); 
 	 if (isBound) {
-	     var wire = inComponent.$.binding.wires[inProp.treeBindField || propName];
+	     var wire = componentToBind.$.binding.wires[inProp.treeBindField || propName];
 	     value = wire.source || wire.expression; // TODO: prefix with str,numb, bool, expr
 	 } else {
-	     value = inComponent.getValue(propName);
+	     value = componentToBind.getValue(propName);
 	     if (value instanceof wm.Component) {
-		 if (value === inComponent || value.isOwnedBy(inComponent)) {
+		 if (value === componentToBind || value.isOwnedBy(componentToBind)) {
 		      // don't show the value if the value is self or is something being managed internally; binding
 		     // is for connecting to a different component's properties.
 		     value = "";
@@ -808,10 +807,6 @@
 	     }
 
 
-             if (inProp.readonly && e.setReadonly) {// && !inProp.createWire && !e.createWire) {
-		 e.setDisabled(true);
-	     }
-
 	     e.connect(e, "onchange", this, dojo.hitch(this, "onEditorChange", e, inProp, inComponent));
 	 }
      
@@ -839,7 +834,7 @@
      },
 
      /* When showing a bound value, get a pretty printed version of it */
-    getFormattedBoundValue: function(inSource, inExpr) {
+     getFormattedBoundValue: function(inType, inSource, inExpr) {
 	var inValue = "";
 	if (!inSource && !inExpr)
 	    ;
@@ -855,9 +850,15 @@
 	    inValue = "null: null";
 	else if (inExpr == "null")
 	    inValue = "null: null";
-	else if (String(inExpr).match(/\d/) && !isNaN(inExpr)) // isNaN("") == isNaN(" ") == false
-	    inValue = "numb: " + inExpr;
-	else if (inExpr == "(binding data)")
+	 else if (String(inExpr).match(/\d/) && !isNaN(inExpr)) { // isNaN("") == isNaN(" ") == false
+	     if (inType.toLowerCase() == "data" ||
+		 inType.toLowerCase() == "time" ||
+		 inType.toLowerCase() == "java.util.date") {
+		 inValue = "date: " + dojo.date.locale.format(new Date(Number(inExpr)), {selector: "date"});
+	     } else {
+		 inValue = "numb: " + inExpr;
+	     }
+	 } else if (inExpr == "(binding data)")
 	    inValue = inExpr;
 	else {
 	    var matches = inExpr.match(/^\s*\"([^\"]*)\"\s*$/);
@@ -906,10 +907,11 @@
       * on whether there IS a bound value, and adds bind and reset buttons
       **************************************************************************************/
      createBindEditor: function(inProp, editorProps, e, isBound, inComponent,optionalAppendToHashName) {
+	 var componentToBind = inProp.putWiresInSubcomponent ? this.inspected.getValue(inProp.putWiresInSubcomponent) : this.inspected;
 	 if (!isBound) editorProps.dataValue = undefined;
 	 else {
-	     var w = inComponent.$.binding.wires[inProp.treeBindField || inProp.name];
-	     editorProps.dataValue = this.getFormattedBoundValue(w.source,w.expression);
+	     var w = componentToBind.$.binding.wires[inProp.treeBindField || inProp.name];
+	     editorProps.dataValue = this.getFormattedBoundValue(inProp.type, w.source,w.expression);
 	 }
 	 var bindEditorProps = 
 	     dojo.mixin(editorProps, 
@@ -927,9 +929,9 @@
 	 bindableEditor._onResetClick = dojo.hitch(this, function() {
 	     var parent = e.parent;
 	     var propName = inProp.treeBindField || inProp.name;
-	     var w = inComponent.$.binding.wires[propName];
+	     var w = componentToBind.$.binding.wires[propName];
 	     if (w) 
-		 inComponent.$.binding.removeWire(w.getWireId());
+		 componentToBind.$.binding.removeWire(w.getWireId());
 	     bindableEditor.hide();
 	     e.clear();
 	     /* Clear causes onchange which causes reinspect which may destroy the editor */
@@ -951,7 +953,7 @@
 	 var self = this;
 	 l.onclick = function() {
 	     //studio.bindDialog.page.update({object: inComponent, targetProperty: inProp.treeBindField || inProp.name});
-	     var p = self.getBindDialogProps(inComponent,inProp,e);
+	     var p = self.getBindDialogProps(componentToBind,inProp,e);
 	     studio.bindDialog.page.update(p);
 	     studio.bindDialog.show();
 	 };
@@ -989,7 +991,7 @@
 		 if (!inDataValue) {
 		     inComponent.$.binding.removeWire(bindPropName);
 		     inComponent.setValue(bindPropName, undefined);
-		 } else if (inDataValue && typeof inDataValue == "string") {
+		 } else if (inDataValue) {
 		     /* If an editor uses the createExpressionWire property, then we are creating a binding expression instead
 		      * of binding to a target.  Used by wm.prop.FieldGroupEditor.  Typically we are binding something like
 		      * a dataSet where we get the name/id of a component and we bind to it.
@@ -1050,7 +1052,15 @@
 	     case "java.lang.float":
 	     case "int":
 	     case "number":
+	     case "java.lang.long":
+	     case "java.lang.double":
 		 ctor = wm.Number;
+		 break;
+	     case "date":
+	     case "time":
+	     case "java.util.date":
+		 ctor = wm.DateTime;
+		 editorProps.dateMode = "Date";
 		 break;
 	     default:
 		 ctor = wm.Text;
@@ -1084,11 +1094,18 @@
 	 }
      },
      parseExpressionForWire: function(inValue) {
-	 if (inValue == "true" || inValue == "false" || !isNaN(inValue) || String(inValue).match(/\"/) || String(inValue).match(/\$\{.*\}/) || String(inValue).match(/(\+|\-|\*|\/|\w\.\w)/)) {
-	     inValue = String(inValue);
+	 // A bind wire expression must be a string 
+	 if (typeof inValue == "number") {
+	     return String(inValue);
+	 } else if (typeof inValue == "object") {
+	     return inValue; // may need to handle this some day... but this shouldn't ever happen
+	 } else if (inValue == "true" || inValue == "false" || inValue.match(/^\d+$/) || inValue.match(/\"/) || inValue.match(/\$\{.*\}/) || inValue.match(/(\+|\-|\*|\/|\w\.\w)/)) {
+	     ; // its an expression, no need to quote it
 	 } else {
-	     inValue = '"' + inValue + '"';
+	     return  '"' + inValue + '"'; // its a string; quote it.
 	 }
+
+	 // Still here? Must be an expression; lets attempt to validate the expression
 	 try {
 	     var tmp = inValue;
 	     tmp = tmp.replace(/\$\{.*?\}/g, "''"); // remove the crazy stuff that we dont want to try evaluating right now (probably ok to evaluate it at design time, but its not needed to see if this will compile)

@@ -30,7 +30,7 @@ wm.Object.extendSchema(wm.Component, {
 	eventBindings: { ignore: 1 },
 	id: { ignore: 1 },
 	ignoredProps: { ignore: 1 },
-    name: { group: "common", order: 0, requiredGroup: true},
+    name: {readonly:1, group: "common", order: 0, requiredGroup: true},
     owner: { group: "common", order: 1, ignore: 1, unwritable: true, options: ["Page", "Application"], doc: 1},
 	publishClass: { ignore: 1 },
 	readonlyProps: { ignore: 1 },
