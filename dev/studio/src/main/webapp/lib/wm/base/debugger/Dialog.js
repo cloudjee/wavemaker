@@ -19,13 +19,14 @@
 
 dojo.provide("wm.base.debugger.Dialog");
 dojo.require("wm.base.debugger.EventsPanel");
-//dojo.require("wm.base.debugger.WidgetPanel");
+dojo.require("wm.base.debugger.WidgetPanel");
 dojo.require("wm.base.debugger.ServicePanel");
 dojo.require("wm.base.debugger.PropertyPanel");
 dojo.require("wm.base.debugger.StylePanel");
 dojo.require("wm.base.debugger.BindPanel");
 dojo.require("wm.base.debugger.DataPanel");
 dojo.require("wm.base.debugger.RequestPanel");
+dojo.require("wm.base.debugger.EventDetailsPanel");
 
 dojo.declare("wm.debugger.Dialog", wm.Dialog, {
     noEscape: true,
@@ -236,6 +237,7 @@ dojo.declare("wm.debugger.Inspector", wm.Container, {
     postInit: function() {
 	this.createComponents({
 	    tabs: ["wm.TabLayers", {width: "100%", height: "100%"}, {}, {
+		eventsPanel: ["wm.debugger.EventDetailsPanel",{}],
 		propertiesPanel: ["wm.debugger.PropertyPanel", {},{},{}],
 		bindPanel: ["wm.debugger.BindPanel", {}],		
 		presentationPanel: ["wm.debugger.StylePanel", {},{},{}],
@@ -251,10 +253,10 @@ dojo.declare("wm.debugger.Inspector", wm.Container, {
 	this.tabs.decorator.tabsControl.domNode.insertBefore(x, this.tabs.decorator.tabsControl.domNode.firstChild);
 	this.connect(x, "onclick", this, "onXClick");
     },
-    inspect: function(inComponent, inGridItem) {
+    inspect: function(inComponent, inRequestData, inEventItem) {
 	for (var i = 0; i < this.tabs.layers.length; i++) {
 	    try {
-		this.tabs.layers[i].inspect(inComponent, inGridItem);
+		this.tabs.layers[i].inspect(inComponent,inRequestData, inEventItem);
 	    } catch(e) {
 		app.toastError("Error in " + this.tabs.layers[i].declaredClass + ": " + e.toString());
 	    }

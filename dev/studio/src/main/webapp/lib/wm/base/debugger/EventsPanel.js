@@ -86,11 +86,10 @@ dojo.declare("wm.debugger.EventsPanel", wm.Container, {
 	    field1009: ["wm.TypeDefinitionField", {"fieldName":"boundSource","fieldType":"string"}, {}], 
 	    field1010: ["wm.TypeDefinitionField", {"fieldName":"boundExpression","fieldType":"string"}, {}],
 	    field1011: ["wm.TypeDefinitionField", {"fieldName":"isBinding","fieldType":"boolean"}, {}],
-	    field1012: ["wm.TypeDefinitionField", {"fieldName":"causeList","fieldType":"NumberData", isList: true}, {}],
-	    field1013: ["wm.TypeDefinitionField", {"fieldName":"highlightRow","fieldType":"boolean"}, {}]
+	    field1012: ["wm.TypeDefinitionField", {"fieldName":"causeList","fieldType":"NumberData", isList: true}, {}]
 	}]}, this)[0];
 	//typeDef.setOwner(this);
-	//wm.typeManager.types.debuggerEventType.fields.id.include = ["update"];
+	wm.typeManager.types.debuggerEventType.fields.id.include = ["update"];
 
 
 	var components = this.createComponents({
@@ -104,10 +103,8 @@ dojo.declare("wm.debugger.EventsPanel", wm.Container, {
 
 		    eventsGrid: ["wm.DojoGrid", 
 				 {width: "100%", height: "100%",query:{isBinding:false},"columns":[
-				     {"show":true,"field":"firingId","title":"Component","width":"120px","align":"left","formatFunc":"", backgroundColor: "${highlightRow} ? '#FFAAAA' : undefined;"},
-				     {"show":true,"field":"eventName","title":"Event","width":"80px","align":"left","formatFunc":""},
-				     {"show":true,"field":"affectedId","title":"Causing Widget","width":"120px","align":"left"},
-				     {"show":true,"field":"method","title":"To call","width":"100%","align":"left","expression": "${isBinding} ? 'setValue(' + ${boundProperty} + ',' + (${boundValue}||null) + ')' : ${method}"},
+				     {"show":true,"field":"sourceEvent","title":"Source Event","width":"100%","align":"left","formatFunc":"", expression: "${firingId} + '.' + ${eventName} + '()'"},
+				     {"show":true,"field":"resultEvent","title":"Resulting Event","width":"100%","align":"left","formatFunc":"",expression: "${affectedId} + '.' + (${isBinding} ? 'setValue(' + ${boundProperty} + ',' + (${boundValue}||null) + ')' : (${method} || ${eventName}) + '()')"},
 				     {"show":true,"field":"time","title":"Time","width":"120px","align":"left","formatFunc": "wm_date_formatter",
 				      "formatProps": {
 					  "dateType": "time",
@@ -119,71 +116,53 @@ dojo.declare("wm.debugger.EventsPanel", wm.Container, {
 					  wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"eventListVar","targetProperty":"dataSet"}, {}]
 				      }]
 				  }]
-	    }]
+	    }],
+	    inspector: ["wm.debugger.Inspector", {}, {onXClick: "XClick"}]
 	},this);
     },
+	XClick: function() {
+	    this.eventsGrid.deselectAll();
+	},
+
     clearEvents: function() {
 	this.eventListVar.clearData();
     },
     showEvent: function(inSender) {
 	if (this.inShowEvent) return;
 	this.inShowEvent = true;
-	/* Clear highlighted rows */
-	var count = this.eventListVar.getCount();
-	for (var i = 0; i < count; i++) {
-	    var item  = this.eventListVar.getItem(i);
-	    item.beginUpdate();
-	    item.setValue("highlightRow", false);
-	    item.endUpdate();
-	}
+	try {
+	var data =  this.eventsGrid.selectedItem.getData();
+	if (!data) {
+/*
+	    this.eventsGrid.setColumnShowing("firingId", true, true);
+	    this.eventsGrid.setColumnShowing("eventName", true, true);
+	    */
+	    this.eventsGrid.setColumnShowing("sourceEvent", true, true);
+	    this.eventsGrid.setColumnShowing("time", true, false);
 
-
-	var data = this.eventsGrid.selectedItem.getData();
-	var id = data.id;
-
-	/* If there is no selected id, return */
-	if (!id) {
-	    this.selectedItem = null;
-	    this.inShowEvent = false;
+	    this.inspector.hide();
+	    this.clearButton.show();
+	    this.gridPanel.setWidth("100%");
 	    return;
 	}
-
-	this.selectedItem = app.getValueById(data.affectedId);
-
-	var causeList = data.causeList;
-	causeList.unshift({dataValue:id});
-	var eventChain = [data];
-	if (causeList) {
-	    for (var i = 0; i < causeList.length; i++) {
-		var item = this.findEventById(causeList[i].dataValue);
-		if (item) {
-		    item.beginUpdate();
-		    item.setValue("highlightRow", true);
-		    item.endUpdate();
-		    eventChain.push(item);
-		}
-	    }
-	}
-	this.eventListVar.notify();
 /*
-	this.eventChainListVar.setData(eventChain);
-	if (data.method && data.affectedId) {
-	    this.eventChainDesc.setHtml(data.affectedId + "." + data.method + "() was called at " + dojo.date.locale.format(new Date(data.time), {selector: "time"}) + " as a result of the following events");
+	    this.eventsGrid.setColumnShowing("firingId", false, true);
+	    this.eventsGrid.setColumnShowing("eventName", false, true);
+	    */
+	    this.eventsGrid.setColumnShowing("sourceEvent", false, true);
+	    this.eventsGrid.setColumnShowing("time", false, false);
+	this.gridPanel.setWidth("200px");
+	this.clearButton.hide();
+	var selectedComponentId = data.affectedId;
+	if (selectedComponentId) {
+	    var selectedComponent = app.getValueById(selectedComponentId);
 	}
-	*/
-
-	    this.inShowEvent = false;	
-
-    },
-    findEventById: function(inId) {
-	var count = this.eventListVar.getCount();
-	for (var i = 0; i < count; i++) {
-	    var item = this.eventListVar.getItem(i);
-	    if (inId == item.getValue("id")) {
-		return item;
-	    }
+	this.inspector.show(true);
+	this.inspector.inspect(selectedComponent, null, data);
+	} catch(e) {
+	} finally {
+	    this.inShowEvent = false;
 	}
-	return null;
     },
     searchChange: function(inSender) {
 	var q = {};

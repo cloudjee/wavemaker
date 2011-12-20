@@ -122,8 +122,8 @@ dojo.declare("wm.Page", wm.Component, {
 		wm._dojoParserCurrentOwner = oldOwner;
 	    } else {
 		if (djConfig.isDebug) {
-		    this.debugId = app.debugDialog.newLogEvent({eventType: "pageLoad",
-								eventName: "pageLoad",
+		    this.debugId = app.debugDialog.newLogEvent({eventType: "loadComponents",
+								eventName: "loadComponents",
 								affectedId: this.getRuntimeId(),
 								firingId: this.getRuntimeId()});
 		}
@@ -179,7 +179,18 @@ dojo.declare("wm.Page", wm.Component, {
 			//this.root.leafFirstRenderCss();
 			this.reflow();
 		    }
+		    if (djConfig.isDebug) {
+			this.debugId = app.debugDialog.newLogEvent({eventType: "start",
+								    eventName: "start",
+								    affectedId: this.getRuntimeId(),
+								    firingId: this.getRuntimeId()});
+		    }
+
 		    this.start();
+		    if (this.debugId) {
+			app.debugDialog.endLogEvent(this.debugId);
+			delete this.debugId;
+		    }
                     this._startCalled = true;
 	        if (wm.debugPerformance) {
 	            var timeToLoad = this.stopTimerWithName("LoadPage", "wm.Layout");

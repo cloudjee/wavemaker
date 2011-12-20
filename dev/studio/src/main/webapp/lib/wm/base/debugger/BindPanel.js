@@ -43,6 +43,19 @@ dojo.declare("wm.debugger.BindPanel", wm.Layer, {
 
     postInit: function() {
 	this.inherited(arguments);
+
+	var typeDef = this.createComponents({debuggerBindingType: ["wm.TypeDefinition", {internal: true}, {}, {
+	    field201: ["wm.TypeDefinitionField", {"fieldName":"fieldName","fieldType":"string"}, {}],
+	    field202: ["wm.TypeDefinitionField", {"fieldName":"dataValue","fieldType":"string"}, {}],
+	    field204: ["wm.TypeDefinitionField", {"fieldName":"boundTo","fieldType":"string"}, {}],
+	     field205: ["wm.TypeDefinitionField", {"fieldName":"expression","fieldType":"boolean"}, {}],
+	    field206: ["wm.TypeDefinitionField", {"fieldName":"id","fieldType":"boolean"}, {}],
+	    field207: ["wm.TypeDefinitionField", {"fieldName":"errors","fieldType":"boolean"}, {}]
+	}]}, this)[0];
+	//typeDef.setOwner(this);
+	wm.typeManager.types.debuggerBindingType.fields.fieldName.include = ["update"];
+
+
 	this.createComponents({
 	            bindingListVar:["wm.Variable", {type: "debuggerBindingType", isList: true}],
 		    bindGrid: ["wm.DojoGrid", 

@@ -23,6 +23,11 @@ dojo.declare("wm.debugger.PropertyPanel", wm.Layer, {
     horizontalAlign: "left",
     autoScroll: true,
     inspect: function(inComponent) {
+	if (!inComponent) {
+	    this.hide();
+	    return;
+	}
+	this.show();
 	this.selectedItem = inComponent;
 	this.removeAllControls();
 	new wm.Label({owner: this,
