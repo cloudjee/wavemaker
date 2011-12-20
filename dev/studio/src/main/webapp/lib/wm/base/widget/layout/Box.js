@@ -410,8 +410,8 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 
 		// If this number is less than 0, then treat all minSized widgets as fixed size and factor in the minSize into the amount of free space
 		if (free - minSizeSum < 0) free -= minSizeSum; 
-/*		if (flex && flex < 100)
-			flex = 100;*/
+		if (flex && flex < 100)
+			flex = 100;
 	    var ratio;
 	    if (flex && free > 0)
 		ratio = free/flex;

@@ -614,8 +614,15 @@ wm.Container.extend({
 		for (var i=0, c; c=this.c$[i]; i++) {		    
 			if (this.layout.inFlow(c)) {
 			    count++;
-			    /* If c is autoScrolling, then its size isn't affected by its contents */
-			        if (c.fitToContentWidth || c instanceof wm.Container && c._percEx.w == 100 && !c.autoScroll) {
+			    if (
+				/* if its a fitToContentWidth widget, then its height is determined by calling getPreferredFitToContentHeight */
+				c.fitToContentWidth || 
+				    /* If there is a fitToContentWidth panel that contains a Container that is percent sized, then
+				     * assume the parent will resize to fit whatever height this % sized container needs.
+				     * If c is autoScrolling, then its size isn't affected by its contents.
+				     */
+				c instanceof wm.Container && c._percEx.w == 100 && !c.autoScroll && c.parent && (c.parent.fitToContentWidth||c.parent.autoScroll)
+			       ) {
 					v =  c.getPreferredFitToContentWidth();
 				} else if (!c._percEx.w) {
 					v =  c.bounds.w;
@@ -660,8 +667,15 @@ wm.Container.extend({
 		for (var i=0, c; c=this.c$[i]; i++) {
 			if (this.layout.inFlow(c)) {
 			    count++;
-			    /* If c is autoScrolling, then its size isn't affected by its contents */
-			        if (c.fitToContentHeight || c instanceof wm.Container && c._percEx.h == 100 && !c.autoScroll) {
+
+			    if (
+				c.fitToContentHeight || 
+				    /* If there is a fitToContentHeight panel that contains a Container that is percent sized, then
+				     * assume the parent will resize to fit whatever height this % sized container needs.
+				     * If c is autoscrolling, then its size is not affected by its children.
+				     */
+				c instanceof wm.Container && c._percEx.h == 100 && !c.autoScroll && c.parent && (c.parent.fitToContentHeight||c.parent.autoScroll)
+			       ) {
 					v = c.getPreferredFitToContentHeight();
 				} else if (!c._percEx.h) {
 					v = c.bounds.h;
