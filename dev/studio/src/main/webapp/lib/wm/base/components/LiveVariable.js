@@ -109,16 +109,16 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	},
 	filterChanged: function() {
 	    if (this.autoUpdate) {
-		if (this.djConfig.isDebug) this.log("autoUpdate");
+		if (djConfig.isDebug) this.log("autoUpdate");
 		this.doAutoUpdate();
-		if (this.djConfig.isDebug) this.endLog("autoUpdate");
+		if (djConfig.isDebug) this.endLog("autoUpdate");
 	    }
 	},
 	sourceDataChanged: function() {
 	    if (this.autoUpdate) {
-		if (this.djConfig.isDebug) this.log("autoUpdate");
+		if (djConfig.isDebug) this.log("autoUpdate");
 		this.doAutoUpdate();
-		if (this.djConfig.isDebug) this.endLog("autoUpdate");
+		if (djConfig.isDebug) this.endLog("autoUpdate");
 	    }
 	},
 
