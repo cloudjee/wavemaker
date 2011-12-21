@@ -48,14 +48,11 @@ dojo.declare("wm.Number", wm.Text, {
 			constraints.min = Number(this.minimum);
 	    if (!isNaN(parseInt(this.maximum)))
 			constraints.max = Number(this.maximum);
-		// NOTE: for constraining decimal places use pattern instead of places
-		// pattern is 'up to' while places is 'must be'
 		if (this.places)
 		{
 			var places = this._getPlaces();
-			if (places && places != '')
-			{
-			    constraints.places = parseInt(places) != NaN ? parseInt(places) : places;
+			if (places && places != '') {
+			    constraints.places = places;
 			}
 		}
 
@@ -141,7 +138,11 @@ dojo.declare("wm.Number", wm.Text, {
     },
     */
 	_getPlaces: function (){
-		return '';
+	    if (this.places) {
+		return "0," + this.places; /* between 0 and this.places are all considered valid */
+	    } else {
+		return "";
+	    }
 	},
 	_createEditor: function(inNode, inProps) {
 	    if (this.spinnerButtons)
@@ -261,7 +262,10 @@ dojo.declare("wm.Currency", wm.Number, {
 							  places: parseInt(this.places)});
 	},
 	_getPlaces: function() {
+	    if (this.places === '')
 		return this.places;
+	    else
+		return Number(this.places);
 	},
     setEditorValue: function(inValue) {
 	var v = inValue;
