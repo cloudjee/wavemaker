@@ -101,8 +101,8 @@ dojo.declare("wm.Number", wm.Text, {
 	    p.editOptions.places = Number(this.places);
 	}
 	return p;
-	}
-});
+     },
+
 /*
     numberFormat: "",
     numberFormatter: function(inValue) {
