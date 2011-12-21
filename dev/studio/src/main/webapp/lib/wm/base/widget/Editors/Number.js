@@ -22,6 +22,28 @@ dojo.require("dijit.form.NumberTextBox");
 dojo.require("dijit.form.CurrencyTextBox");
 
 
+/* Fixes handling of places property in wm.Number */
+dijit.form.NumberTextBox.extend({
+        	format: function(value,  constraints){
+			// summary:
+			//		Formats the value as a Number, according to constraints.
+			// tags:
+			//		protected
+			var formattedValue = String(value);
+			if(typeof value != "number"){ return formattedValue; }
+			if(isNaN(value)){ return ""; }
+			// check for exponential notation that dojo.number.format chokes on
+			if(!("rangeCheck" in this && this.rangeCheck(value, constraints)) && constraints.exponent !== false && /de[-+]?d/i.test(formattedValue)){
+				return formattedValue;
+			}
+			constraints = dojo.mixin({}, constraints, this.editOptions);
+			return this._formatter(value, constraints);
+		}
+});
+
+
+
+
 
 //===========================================================================
 // Number Editor
@@ -42,6 +64,7 @@ dojo.declare("wm.Number", wm.Text, {
 	if (this.spinnerButtons)
 	    this.addEditorConnect(this.editor, "onClick", this, "changed");
     },
+
     getEditorConstraints: function() {
 	var constraints = {};
 	    if (!isNaN(parseInt(this.minimum)))
@@ -63,25 +86,23 @@ dojo.declare("wm.Number", wm.Text, {
 
 	return constraints;
     },
-    getEditorProps: function(inNode, inProps) {
-	var v = this.displayValue;
+     getEditorProps: function(inNode, inProps) {
+    var v = this.displayValue;
 	var constraints = this.getEditorConstraints();
-
 	var p = dojo.mixin(this.inherited(arguments), {
-			constraints: constraints,
-		    //editPattern: constraints.pattern,
-			rangeMessage: this.rangeMessage,
-			required: this.required,
-			value: v ? Number(v) : ""
-		}, inProps || {});
-/*
-	if (this.numberFormat) {
-	    p.format = dojo.hitch(this, this.numberFormatter);
-	    p.parse = dojo.hitch(this, this.numberParser);
-	}	    
-	*/
+	    constraints: constraints,
+	    //editPattern: constraints.pattern,
+	    rangeMessage: this.rangeMessage,
+	    required: this.required,
+	    value: v ? Number(v) : "",
+	    editOptions: {}
+	}, inProps || {});
+	if (this.places) {
+	    p.editOptions.places = Number(this.places);
+	}
 	return p;
-	},
+	}
+});
 /*
     numberFormat: "",
     numberFormatter: function(inValue) {
