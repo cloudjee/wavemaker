@@ -18,18 +18,27 @@ dojo.require("wm.base.widget.Buttons.ToggleButton");
 dojo.require("wm.base.widget.Buttons.RoundedButton");
 dojo.require("wm.base.widget.Buttons.PopupMenuButton");
 dojo.require("wm.base.Control_design");
+
+
 wm.Object.extendSchema(wm.ToolButton, {
-    imageIndex: {ignore:0},
+
+    /* Display group; visual subgroup */
+    iconUrl:    {group: "display", subgroup: "visual", order: 100, bindTarget: true, type: "String", subtype: "File", advanced:1}, // resource manager
+    iconWidth:  {group: "display", subgroup: "visual", order: 101, editor: "wm.prop.SizeEditor", advanced:1},
+    iconHeight: {group: "display", subgroup: "visual", order: 102, editor: "wm.prop.SizeEditor", advanced:1},
+    iconMargin: {group: "display", subgroup: "visual", order: 103, type: "String", advanced:1}, 
+
+    /* Events group */
+    onclick: {requiredGroup: 1, order: 50}, 
+
+    /* Ignored Group */
+    imageIndex: {ignore:0, advanced:1},
     editImageIndex: { ignore:0},
     imageList: { ignore: 0},
+    scrollX:  { ignore: 1 },
+    scrollY:  { ignore: 1 },
+    clicked: {ignore: 1, bindSource: true, type: "Boolean"}
 
-	scrollX:  { ignore: 1 },
-	scrollY:  { ignore: 1 },
-        clicked: {ignore: 1, bindSource: true, type: "Boolean"},
-    iconUrl: {group: "format", bindTarget: true, type: "String", subtype: "File", order: 102},
-    iconWidth: {group: "format", order: 100, editor: "wm.prop.SizeEditor"},
-    iconHeight: {group: "format", order: 101, editor: "wm.prop.SizeEditor"},
-    iconMargin: {group: "format", order: 103}
 });
 
 wm.ToolButton.extend({
@@ -38,20 +47,31 @@ wm.ToolButton.extend({
 
 
 wm.Object.extendSchema(wm.Button, {
-    caption: { group: "display", bindable: 1, order: 10, focus: 1, type: "String", requiredGroup: true },
-    setCaption: {method:1,doc: 1},
-    setImageIndex: {method:1,doc: 1},
-    setIconUrl: {method:1,doc: 1},
-    setDisabled: {method:1, doc: 1},
-    click:  {method:1,  doc: 1}
+
+    /* Display group; text subgroup */
+    caption: { group: "display", subgroup: "text", bindable: 1, order: 10, focus: 1, type: "String", requiredGroup: true },
+
+    /* Methods group */
+    setCaption: {method:1},
+    setImageIndex: {method:1},
+    setIconUrl: {method:1},
+    setDisabled: {method:1},
+    click:  {method:1}
 });
 
 wm.Object.extendSchema(wm.ToggleButton, {
-    captionUp: { group: "display", bindTarget: 1, order: 10, focus: 1, doc: 1, requiredGroup: true},
-    captionDown: { group: "display", bindTarget: 1, order: 11, doc: 1, requiredGroup: true},
-    clicked: { group: "display", type: "Boolean", bindTarget: 1, bindSource: 1, order: 12, simpleBindProp: true,doc: 1},
+    /* Display group; text subgroup */
+    captionUp: { group: "display", subgroup: "text", bindTarget: 1, order: 10, focus: 1, requiredGroup: true},
+    captionDown: { group: "display", subgroup: "text",  bindTarget: 1, order: 11, requiredGroup: true},
+
+    /* Display group; misc subgroup */
+    clicked: { group: "display", subgroup: "misc", type: "Boolean", bindTarget: 1, bindSource: 1, order: 12, simpleBindProp: true},
+
+    /* Ignored group */
     caption: {ignore: 1},
-    setClicked: {method:1, params: "(inClicked)", doc: 1},
+
+    /* Methods group */
+    setClicked: {method:1},
     setCaptionUp: {method:1},
     setCaptionDown: {method:1}
 });
@@ -59,6 +79,7 @@ wm.Object.extendSchema(wm.ToggleButton, {
 
 wm.Button.description = "A simple button.";
 
+/* DEPRECATED; REMOVE in WM 7.0 */
 wm.Object.extendSchema(wm.RoundedButton, {
     imageList: {ignore: 1},
     imageIndex: {ignore: 1},
@@ -82,9 +103,16 @@ wm.PopupMenuButton.extend({
 });
 
 wm.Object.extendSchema(wm.PopupMenuButton, {
+    /* Display group; text subgroup */
     caption: { bindSource:1 },
+    editMenuItems: {group: "display", subgroup: "text", operation: 1, order: 30, requiredGroup: true},    
+    rememberWithCookie: {group: "display", subgroup: "text", order: 40},
+
+    /* Events group */
+    onchangeNoInit: {advanced:1},
+
+    /* Hidden/ignored group */
     iconClass: {hidden: true},
-    editMenuItems: {group: "operation", operation: 1, requiredGroup: true},
     fullStructureStr: {ignore: true}, /* deprecated */
     fullStructure: {hidden: true},
     fullStructure: {hidden: true},
@@ -95,7 +123,9 @@ wm.Object.extendSchema(wm.PopupMenuButton, {
     iconMargin: {ignore: true},
     dojoMenu: {ignore: true, doc: 1},
     editImageIndex: {ignore: 1},
-    setIconClass: {method:1, doc: 1}
+
+    /* Method group */
+    setIconClass: {method:1}
 });   
 
 

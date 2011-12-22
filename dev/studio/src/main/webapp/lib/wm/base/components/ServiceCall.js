@@ -74,14 +74,16 @@ dojo.declare("wm.ServiceCall", null, {
 		this._setOperation(this.operation);
 	},
 	initInput: function() {
-		this.input = this.$.input;
-		if (!this.input)
-			this.input = this.createInput();
-		this.subscribe(this.input.getRuntimeId() + "-changed", this, "inputChanged");
+	    this.input = this.$.input;
+	    if (!this.input) 
+		this.input = this.createInput();
+	    this.subscribe(this.input.getRuntimeId() + "-changed", this, "inputChanged");
 	},
     /* Used when binding to input */
     setInput: function(inDataSet) {
-	this.input.setDataSet(inDataSet);
+	if (this.$.input) {
+	    this.$.input.setDataSet(inDataSet);
+	}
     },
 	//=======================================================
 	// Service

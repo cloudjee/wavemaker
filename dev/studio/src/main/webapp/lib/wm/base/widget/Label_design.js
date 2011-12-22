@@ -18,22 +18,33 @@ dojo.require("wm.base.widget.Label");
 
 // design only...
 wm.Object.extendSchema(wm.Label, {
-    disabled: { ignore: 1 },
-    imageList: {ignore: 1},
-    caption: { type: "String", bindable: 1, group: "display", order: 100, focus: true, doc: 1, requiredGroup: true},
-    link: { type: "String", bindable: 1, group: "format", order: 20, doc: 1 },
-    display: { group: "format", order: 30 },
-    format: { group: "format", order: 31, subcomponent: true},
-    align: { group: "display", order: 25, doc: 1, options: ["none", "left", "center", "right", "justify"] },
-    singleLine: { group: "display", order: 200,doc: 1},
+    /* Display group; text subgroup */
+    caption:    {group: "display", subgroup: "text", type: "String", bindable: 1, order: 100, focus: true, requiredGroup: true},
 
-    autoSizeHeight: {type: "Boolean", group: "advanced layout", order: 31, writeonly: true},
-    autoSizeWidth: {type: "Boolean", group: "advanced layout", order: 32, writeonly: true},
-    autoSize: {group: "advanced layout", options: ["none", "width", "height"]},
+    /* Display group; misc subgroup */
+    link:       {group: "display", subgroup: "misc",  type: "String", bindable: 1, order: 20 },
+
+    /* Display group; format subgroup */
+    display:    {group: "display", subgroup: "format", order: 30 }, // shows the display property
+    format:     {group: "display", subgroup: "format", order: 31, subcomponent: true, indent: true}, // shows the properties made available by the display property
+
+    /* Display group; layout subgroup */
+    align:         {group: "display", subgroup: "layout", order: 25, options: ["none", "left", "center", "right", "justify"] },
+    singleLine:    {group: "display", subgroup: "layout", order: 50},
+    resizeToFit:   {group: "display", subgroup: "layout", order: 80, operation:true },
+    autoSizeHeight:{group: "display", subgroup: "layout", type: "Boolean", writeonly: true}, // hidden
+    autoSizeWidth: {group: "display", subgroup: "layout", type: "Boolean", writeonly: true},  // hidden
+    autoSize:      {group: "display", subgroup: "layout", order: 60, options: ["none", "width", "height"]},
+
+    /* Method group */
     setAlign: {method:1},
     setCaption: {method:1},
     setSingleLine: {method:1},
-    resizeToFit:{ group: "layout", order: 30,operation:true }
+
+
+    /* Ignored group */
+    disabled: { ignore: 1 },
+    imageList: {ignore: 1}
 });
 
 wm.Label.description = "A simple label.";

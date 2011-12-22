@@ -1258,7 +1258,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #studio_sourceTabs,
 .EditVariable .EditVariable-tabs .wmtablayers-tabbar,
 .DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-tabbar ,
-#studio_inspector_tabs > .wmtablayers-tabbar,
+#studio_PIContents > .wmtablayers-tabbar,
 .ResourceManager .wmtablayers-tabbar,
 .GridDesigner .wmtablayers-tabbar
 {
@@ -1299,7 +1299,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-tab,
 .EditVariable .EditVariable-tabs .wmtablayers-tab,
 .DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-tab,
-#studio_inspector_tabs  .wmtablayers-tab,
+#studio_PIContents  .wmtablayers-tab,
 #studio_PIContents .wmtogglebutton,
 .ResourceManager .wmtablayers-tab,
 .GridDesigner .wmtablayers-tab,
@@ -1368,7 +1368,7 @@ body #studio_inspector .wmaccordion-header,
 #studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-selected,
 .EditVariable .EditVariable-tabs .wmtablayers-selected,
 .DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-selected,
-#studio_inspector_tabs .wmtablayers-selected,
+#studio_PIContents .wmtablayers-selected,
 #studio_PIContents .wmtogglebutton.toggleButtonDown,
 .ResourceManager .wmtablayers-selected,
 .GridDesigner .wmtablayers-selected

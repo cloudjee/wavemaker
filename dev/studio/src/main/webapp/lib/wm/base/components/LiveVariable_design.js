@@ -14,26 +14,36 @@
 
 dojo.provide("wm.base.components.LiveVariable_design");
 dojo.require("wm.base.components.LiveVariable");
-
+dojo.require("wm.base.components.ServiceCall_design");
 wm.Object.extendSchema(wm.LiveVariable, {
+    
+    /* Data group; data subgroup */
+    type: { ignore: 0, editorProps: {liveTypes: 1}},
+
+    /* Data group; type subgroup */
+    operation: { group: "data", subgroup: "type"}, // do not try and set the options here; parent class overrides this usage by handling operation in makePropEdit
+    liveSource: { group: "data", subgroup: "type", order: 1, editor: "wm.prop.DataTypeSelect", editorProps: {liveTypes: 1, includeLiveViews: true}, ignoreHint: "LiveSource is a deprecated property; it is only enabled for LiveVariables already using it"},
+    editView: {group: "data", subgroup: "type", operation:1},
+
+    /* Data group; custom subgroup */
+    sourceData: {group: "data", readonly: 1, order: 3, bindTarget: 1, editor: "wm.prop.FieldGroupEditor"},
+    filter:     {group: "data", readonly: 1, order: 5, bindTarget: 1, editor: "wm.prop.FieldGroupEditor"},
+
+    /* Data group; server options subgroup */
+    matchMode: {group: "data", subgroup: "serverOptions", order: 10, options: ["start", "end", "anywhere", "exact"]},
+    orderBy: {group: "data", subgroup: "serverOptions", order: 19},
+    ignoreCase:  {group: "data", subgroup: "serverOptions", order: 20},
+
+/* Ignored Group */
+	liveView: { ignore: 1},
+    input: {ignore: 1},
         downloadFile: {ignore: 1},
 	related: { ignore: 1},
 	view: { ignore: 1},
 	service: { ignore: 1},
 	dataType: { ignore: 1},
-	type: { ignore: 0,  editor: "wm.prop.DataTypeSelect", editorProps: {liveTypes: 1}},
-    operation: { group: "data", order: 0}, // do not try and set the options here; parent class overrides this usage by handling operation in makePropEdit
-	input: {ignore: 1},
-    liveSource: { group: "data", order: 1, editor: "wm.prop.DataSetSelect", editorProps: {servicesOnly: 1, includeLiveViews: true}, ignoreHint: "LiveSource is a deprecated property; it is only enabled for LiveVariables already using it"},
-	liveView: { ignore: 1},
-    sourceData: {readonly: 1, group: "data", order: 3, bindTarget: 1, treeBindField: "sourceData",editor: "wm.prop.DataSetSelect", editorProps: {matchComponentType: true}},
-    filter:     {readonly: 1,group: "data", order: 5, bindTarget: 1, treeBindField: "filter",    editor: "wm.prop.DataSetSelect", editorProps: {matchComponentType: true}},
-    matchMode: {group: "data", order: 10, options: ["start", "end", "anywhere", "exact"]},
-	orderBy: {group: "data", order: 19},
-	ignoreCase:  {group: "data", order: 20},
 	configure: { ignore: 1 },
-    dataSetCount: { ignore: 1 },
-    editView: {group: "data",operation:1}
+    dataSetCount: { ignore: 1 }
 });
 
 wm.LiveVariable.extend({
@@ -79,14 +89,11 @@ wm.LiveVariable.extend({
 	},
 	set_operation: function(inOperation) {
 		this.operation = inOperation;
-		// just a good idea for safety
-		if (this.isDesignLoaded()) {
-			// automatically set autoUpdate to true if we're reading, 
-			// since this is the default anyway, otherwise set to false.
-		        this.setStartUpdate(inOperation == "read");
-			this.setAutoUpdate(inOperation == "read");
-
-		}
+	    // automatically set autoUpdate to true if we're reading, 
+	    // since this is the default anyway, otherwise set to false.
+	    this.setStartUpdate(inOperation == "read");
+	    this.setAutoUpdate(inOperation == "read");
+	    studio.reinspect(true); // may need to change whether sourceData or filter are showing
 	},
 
 /* DEPRECATED */

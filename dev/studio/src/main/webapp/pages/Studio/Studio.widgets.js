@@ -406,8 +406,8 @@ Studio.widgets = {
 				    }],
 
 				    inspectorToolbar: ["wm.Panel", {width: "100%", height: "25px", layoutKind: "left-to-right", horizontalAlign: "center", verticalAlign: "top",margin:"3,0,0,0"},{},{
-					togglePropertiesButton: ["wm.ToggleButton", {height: "100%", width: "100px", captionUp: "Recommended",captionDown: "Recommended", border:"1",borderColor:"black",margin:"0",clicked:true}, {onclick: "inspector.toggleAdvancedProperties"}],
-					togglePropertiesButton2: ["wm.ToggleButton", {height: "100%", width: "50px", captionUp: "All",captionDown: "All", border:"1",borderColor:"black",margin:"0"}, {onclick: "inspector.toggleAdvancedProperties"}]
+					togglePropertiesButton: ["wm.Button", {_classes: {domNode: ["wmtogglebutton","toggleButtonDown"]}, height: "100%", width: "100px", caption: "Recommended", border:"1",borderColor:"black",margin:"0",clicked:true}, {onclick: "inspector.toggleAdvancedPropertiesSome"}],
+					togglePropertiesButton2: ["wm.Button", {_classes: {domNode: ["wmtogglebutton"]}, height: "100%", width: "50px", caption: "All", border:"1",borderColor:"black",margin:"0"}, {onclick: "inspector.toggleAdvancedPropertiesAll"}]
 				    }],
 				    inspector: ["wm.PropertyInspector", {_classes: {domNode: ["wm-darksnazzy"]},height: "100%", width:"100%",border: "0"}, {}, {}]
 				}]/*,

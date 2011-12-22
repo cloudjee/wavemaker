@@ -365,6 +365,7 @@
   * categoryProps.inspector: OLD DEF: Specifies which inspector to use to inspect this component
   * createWire: creates a wire instead of calling setProp
   * readonly: useful for bindable props; user can see them, bind them, but not directly edit the property.  They only write the binding, not the value! TODO: USE THIS!  NOTE: readonly is ignored when setting the property editor's readonly state; the property is shown to be edited.  Use editorProps to make the editor readonly.
+  * 
   * subcomponent: the property refers to a subcomponent whose properties should be displayed in the property panel
   *
   * How to control what editor shows up for a property
@@ -428,6 +429,9 @@
      },
      getHashId: function(inComponent, propName) {
 	 var id = inComponent.getId();
+	 if (this.processingRequiredGroup) {
+	     id = "required_" + id;
+	 }
 /*
 	 if (id.indexOf(".") == -1) {
 	     id = "";
@@ -452,16 +456,27 @@
 	     for (var i = 0; i < props.length; i++) {
 		 var p = props[i];
 		 var propName = p.name;
-
-		 var e = this.editorHash[this.getHashId(inComponent,propName)];
-		     if (e && e.isDestroyed) {
-			 delete this.editorHash[this.getHashId(inComponent,propName)];
-			 e = undefined;
-		     }
-		     var binde = this.bindEditorHash[this.getHashId(inComponent,propName)];
-		     if (e) {		     
-			 this.reinspectEditor(inComponent, e, binde, p);
-		     }
+		 var propFullName = p.fullName || propName;
+		 var e = this.editorHash[this.getHashId(inComponent,propFullName)];
+		 if (e && e.isDestroyed) {
+		     delete this.editorHash[this.getHashId(inComponent,propFullName)];
+		     e = undefined;
+		 }
+		 var binde = this.bindEditorHash[this.getHashId(inComponent,propFullName)];
+		 if (e) {		     
+		     this.reinspectEditor(inComponent, e, binde, p);
+		 }
+		 this.processingRequiredGroup = true;
+		 e = this.editorHash[this.getHashId(inComponent,propFullName)];
+		 if (e && e.isDestroyed) {
+		     delete this.editorHash[this.getHashId(inComponent,propFullName)];
+		     e = undefined;
+		 }
+		 var binde = this.bindEditorHash[this.getHashId(inComponent,propFullName)];
+		 if (e) {		     
+		     this.reinspectEditor(inComponent, e, binde, p);
+		 }
+		 delete this.processingRequiredGroup;
 	     }
 	 } catch(e) {}
 
@@ -470,8 +485,9 @@
      },
      reinspectEditor: function(inComponent, e, binde, inProp,optionalAppendToHashName) {
 	 var propName = inProp.name;
+	 var propPath = inProp.fullName || inProp.name;
 	 var skipSetEditor = false;
-	 if (!binde)  binde = this.bindEditorHash[(optionalAppendToHashName ? optionalAppendToHashName + "_" : "") +  this.getHashId(inComponent,propName)];
+	 if (!binde)  binde = this.bindEditorHash[(optionalAppendToHashName ? optionalAppendToHashName + "_" : "") +  this.getHashId(inComponent,propPath)];
 
 	 /* If its a wm.prop.SelectMenu then call its reinspect method to update its dataset */
 	 if (e instanceof wm.prop.SelectMenu) {
@@ -498,7 +514,7 @@
 	     var parent = e.parent;
 	     parent.removeAllControls();
 	     e = this.generateEditor(inComponent,inProp, parent.parent, parent); 
-	     this.editorHash[(optionalAppendToHashName ? optionalAppendToHashName + "_" : "") +  this.getHashId(inComponent,propName)] = e;
+	     this.editorHash[(optionalAppendToHashName ? optionalAppendToHashName + "_" : "") +  this.getHashId(inComponent,propPath)] = e;
 	 
 	     /* If the editor was regenerated, it already shows the latest value; no need to set the editor here */
 	     skipSetEditor = true;
@@ -511,10 +527,10 @@
 	     var newVal;
 	     var isBound = this.isPropBound(inComponent, inProp);
 	     if (isBound) {
-		 var wire = inComponent.$.binding.wires[inProp.treeBindField || propName];
+		 var wire = inComponent.$.binding.wires[propPath];
 		 newVal = wire.source || wire.expression; // TODO: prefix with str,numb, bool, expr
 	     } else {
-		 newVal = inComponent.getValue(propName);
+		 newVal = inComponent.getValue(propPath);
 		 if (newVal instanceof wm.Component) {
 		     if (newVal === inComponent || newVal.isOwnedBy(inComponent)) {
 			 // don't show the value if the value is self or is something being managed internally; binding
@@ -561,7 +577,7 @@
 		 binde.setShowing(Boolean(isBound));
 		 console.log(binde.toString());
 		 e.parent.setHeight((isBound ? binde.bounds.h : e.bounds.h) +  "px");
-		 var wire = inComponent.$.binding.wires[inProp.treeBindField || propName];
+		 var wire = inComponent.$.binding.wires[propPath];
 		 binde.setDataValue(wire ?this.getFormattedBoundValue(inProp.type, wire.source,wire.expression) : "");
 	     }
 	 }
@@ -608,18 +624,19 @@
      
      },
      isEditableProp: function(inProp, allowStyleInspector) {
+	 if (inProp.advanced && !this.isAdvancedMode())
+	     return false;
 	 if (inProp.group == "style" && inProp.editor != "wm.prop.StyleEditor" && !allowStyleInspector)
 	     return false; // handled by the style inspector only
 	 if (inProp.ignore)
+	     return false;
+	 if (inProp.method)
 	     return false;
 	 if (inProp.bindTarget || inProp.bindable) 
 	     return true; // shows up even if writeonly/hidden are true; user can't set the value but can bind the value
 	 if (inProp.writeonly || inProp.hidden) /* writeonly and hidden appear to be identical */
 	     return false;
-	 if (inProp.method)
-	     return false;
-	 if (inProp.advanced && !this.isAdvancedMode())
-	     return false;
+
 	 return true;
      },
      getProps: function(inComponent,isSubComponent) {
@@ -693,7 +710,9 @@
 		     this._generateEditors(inComponent, inLayer, subgroup.props, !this.isAdvancedMode());
 		 }
 	     }
+	     this.processingRequiredGroup = inGroupName == "required";
 	     this._generateEditors(inComponent, inLayer, groupObj.props,inGroupName == "required" || !this.isAdvancedMode());
+	     delete this.processingRequiredGroup;
 	 } else {
 	     this._generateEditors(inComponent, inLayer, this.props, !this.isAdvancedMode());
 	 }
@@ -727,7 +746,7 @@
 	 });
      },
 
-     generatePanelForEditor: function(inParent, inName) {
+     generatePanelForEditor: function(inParent, inName) {	 
 	 return new wm.Panel({
 	     owner: this,
 	     parent: inParent,
@@ -746,16 +765,20 @@
 	 var value;
 	 var isBound = false;
 	 var propName = inProp.name;
+	 var fullPropName = inProp.fullName || propName;
 
 	 /**********************************************************
 	  * Get the panel we'll insert our editor into 
 	  **********************************************************/
 	 var panel = optionalParent;
 	 if (!panel) {
+	     panel = this.generatePanelForEditor(inLayer, inComponent.getId() + "_" + inProp.name);
 	     if (inProp.subcomponent) {
-		 panel = inLayer;
-	     } else {
-		 panel = this.generatePanelForEditor(inLayer, inComponent.getId() + "_" + inProp.name);
+		 panel.setLayoutKind("top-to-bottom");
+		 panel.setFitToContentHeight(true);
+	     }
+	     if (inProp.indent) {
+		 panel.setMargin("0,0,0,15");
 	     }
 	 }
 
@@ -763,15 +786,15 @@
 	  * Get the current value of the editor; some complex editors don't have a value as such, 
 	  * but instead manage their own values in which case this lookup is ignored
 	  ***********************************************************/
-	 var componentToBind = inProp.putWiresInSubcomponent ? this.inspected.getValue(inProp.putWiresInSubcomponent) : this.inspected;
-	 var isBound = this.isPropBound(componentToBind, inProp); 
+
+	 var isBound = this.isPropBound(inComponent, inProp); 
 	 if (isBound) {
-	     var wire = componentToBind.$.binding.wires[inProp.treeBindField || propName];
+	     var wire = inComponent.$.binding.wires[fullPropName || propName];
 	     value = wire.source || wire.expression; // TODO: prefix with str,numb, bool, expr
 	 } else {
-	     value = componentToBind.getValue(propName);
+	     value = inComponent.getValue(propName);
 	     if (value instanceof wm.Component) {
-		 if (value === componentToBind || value.isOwnedBy(componentToBind)) {
+		 if (value === inComponent || value.isOwnedBy(inComponent)) {
 		      // don't show the value if the value is self or is something being managed internally; binding
 		     // is for connecting to a different component's properties.
 		     value = "";
@@ -794,7 +817,7 @@
 	 if (inProp.isEvent) {
 	     editorProps.propName = inProp.name;
 	     var e = new wm.prop.EventEditorSet(editorProps);
-	     this.editorHash[(optionalAppendToHashName ? optionalAppendToHashName + "_" : "") +  this.getHashId(inComponent,propName)] = e;
+	     this.editorHash[(optionalAppendToHashName ? optionalAppendToHashName + "_" : "") +  this.getHashId(inComponent,fullPropName)] = e;
 	 } else {
 	     var e = inComponent.makePropEdit(inProp.name, value, editorProps);
 	     if (!e || e instanceof wm.Control == false) {
@@ -811,7 +834,7 @@
 	 }
      
 	 /* Cache a refernce to the editor so that reinspect can quickly find it */
-	 this.editorHash[(optionalAppendToHashName ? optionalAppendToHashName + "_" : "") +  this.getHashId(inComponent,propName)] = e;
+	 this.editorHash[(optionalAppendToHashName ? optionalAppendToHashName + "_" : "") +  this.getHashId(inComponent,fullPropName)] = e;
 
 
 	 /**********************************************************
@@ -881,7 +904,7 @@
       * when in fact you've bound the name data field 
       **************************************************************************************/
      isPropBound: function(inComponent, inProp) {
-	 return Boolean((inProp.bindable || inProp.bindTarget) && inComponent.$.binding && inComponent.$.binding.wires[inProp.treeBindField || inProp.name]);
+	 return Boolean((inProp.bindable || inProp.bindTarget) && inComponent.$.binding && inComponent.$.binding.wires[inProp.fullName || inProp.name]);
      },
 
      /**************************************************************************************
@@ -907,10 +930,9 @@
       * on whether there IS a bound value, and adds bind and reset buttons
       **************************************************************************************/
      createBindEditor: function(inProp, editorProps, e, isBound, inComponent,optionalAppendToHashName) {
-	 var componentToBind = inProp.putWiresInSubcomponent ? this.inspected.getValue(inProp.putWiresInSubcomponent) : this.inspected;
 	 if (!isBound) editorProps.dataValue = undefined;
 	 else {
-	     var w = componentToBind.$.binding.wires[inProp.treeBindField || inProp.name];
+	     var w = inComponent.$.binding.wires[inProp.fullName || inProp.name];
 	     editorProps.dataValue = this.getFormattedBoundValue(inProp.type, w.source,w.expression);
 	 }
 	 var bindEditorProps = 
@@ -928,22 +950,23 @@
 
 	 bindableEditor._onResetClick = dojo.hitch(this, function() {
 	     var parent = e.parent;
-	     var propName = inProp.treeBindField || inProp.name;
-	     var w = componentToBind.$.binding.wires[propName];
+	     var propName = inProp.fullName || inProp.name;
+	     var w = inComponent.$.binding.wires[propName];
 	     if (w) 
-		 componentToBind.$.binding.removeWire(w.getWireId());
+		 inComponent.$.binding.removeWire(w.getWireId());
 	     bindableEditor.hide();
 	     e.clear();
 	     /* Clear causes onchange which causes reinspect which may destroy the editor */
 	     if (!e.isDestroyed) {
 		 e.show();
 		 parent.setHeight(e.bounds.h + "px");
+		 this.reinspect();
 	     }
 	 });
 
-	 this.bindEditorHash[(optionalAppendToHashName ? optionalAppendToHashName + "_" : "") +  this.getHashId(inComponent,inProp.name)] = bindableEditor;
+	 this.bindEditorHash[(optionalAppendToHashName ? optionalAppendToHashName + "_" : "") +  this.getHashId(inComponent,inProp.fullName || inProp.name)] = bindableEditor;
 
-
+	 if (!e.hideBindColumn) {
 	 var l = new wm.Label({owner:this,
 			       parent: e.parent,
 			       _classes: {domNode: ["wminspector-bindProp"]},
@@ -953,10 +976,11 @@
 	 var self = this;
 	 l.onclick = function() {
 	     //studio.bindDialog.page.update({object: inComponent, targetProperty: inProp.treeBindField || inProp.name});
-	     var p = self.getBindDialogProps(componentToBind,inProp,e);
+	     var p = self.getBindDialogProps(inComponent,inProp,e);
 	     studio.bindDialog.page.update(p);
 	     studio.bindDialog.show();
 	 };
+	 }
      },
 
      /**************************************************************************************
@@ -985,7 +1009,7 @@
 		 /* editor that uses the bindTarget property can control what the target of the binding is; typically though,
 		  * we're just binding to inProp.name.  bindTarget is used by wm.prop.FieldGroupEditor.
 		  */
-		 var bindPropName = e.bindTarget || inProp.treeBindField || inProp.name;
+		 var bindPropName = e.bindTarget || inProp.fullName || inProp.name;
 
 		 /* If there is no data value, then there is no wire; make sure that any wire is removed */
 		 if (!inDataValue) {
@@ -1233,7 +1257,7 @@
      /* TODO: Make sure we handle subcomponents correctly, there was a lot of extra code in the previous version of inspector */
      getBindDialogProps: function(inComponent,inPropDef, inEditor) {
 	 var result = {object: inComponent, 
-		       targetProperty: inPropDef.treeBindField || inPropDef.name,
+		       targetProperty: inPropDef.fullName || inPropDef.name,
 		       propDef: inEditor && inEditor.propDef ? inEditor.propDef : inPropDef};
 	 return result;
      },
@@ -1477,16 +1501,20 @@
 	 this.preferredMultiActive = !this.preferredMultiActive;
 	 this.multiActive = this.preferredMultiActive;
      },
-     toggleAdvancedProperties: function(inSender) {
-	 if (inSender.name == "togglePropertiesButton") {
-	     studio.togglePropertiesButton2.setClicked(!inSender.clicked);
-	 } else {
-	     studio.togglePropertiesButton.setClicked(!inSender.clicked);
-	 }
+     toggleAdvancedPropertiesSome: function(inSender) {
+	 dojo.removeClass(studio.togglePropertiesButton2.domNode, "toggleButtonDown");
+	 dojo.addClass(studio.togglePropertiesButton.domNode, "toggleButtonDown");
+	 this.advancedMode = false;
+	 this.inspect(this.inspected, true);
+     },
+     toggleAdvancedPropertiesAll: function(inSender) {
+	 dojo.addClass(studio.togglePropertiesButton2.domNode, "toggleButtonDown");
+	 dojo.removeClass(studio.togglePropertiesButton.domNode, "toggleButtonDown");
+	 this.advancedMode = true;
 	 this.inspect(this.inspected, true);
      },
      isAdvancedMode: function() {
-	 return studio.togglePropertiesButton2.clicked;
+	 return this.advancedMode; 
      },
      getDefaultEditorProps: function(inComponent, inProp, inValue, inOwner, inParent) {
 	 var editorProps = {

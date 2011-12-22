@@ -41,8 +41,8 @@ wm.Object.extendSchema(wm.ServiceVariable, {
     /* Events group */
     onPrepareSetData: {}, // {} is here as a reminder that we get this event and has no functional meaning
     onSetData: {},
-    onCanUpdate: {events: ["js", "sharedjs", "sharedEventHandlers"]},
-
+    onCanUpdate: {events: ["js", "sharedjs", "sharedEventHandlers"], advanced:1},
+    onBeforeUpdate: {advanced:1},
 
     /* Data group; type subgroup */
     service:          {group: "data", subgroup: "type", order: 23, requiredGroup: 1 },
@@ -60,7 +60,7 @@ wm.Object.extendSchema(wm.ServiceVariable, {
     downloadFile:     {group: "data", subgroup: "serverOptions", order: 20, advanced: 1},
 
     /* Data group; its own subgroup */
-    input:            {group: "data", order: 3, putWiresInSubcomponent: "input", bindTarget: 1, editor: "wm.prop.DataSetSelect", editorProps: {matchComponentType: true}},
+    input:            {group: "data", order: 3, putWiresInSubcomponent: "input", bindTarget: 1, editor: "wm.prop.FieldGroupEditor"},
 
     /* Operations group */
     updateNow:        {group: "operation", operation: "update",      order: 10},

@@ -532,7 +532,7 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
     allowNone: true,
     servicesOnly: false,
     liveServicesOnly: false,
-    includeLiveViews: false,
+
     noForms: false,
     showInputs: false,
     updateOptions: function() {
@@ -556,24 +556,12 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
 		if (w !== this && !(w instanceof wm.LiveFormBase) && !(w instanceof wm.AbstractEditor && w.formField))
 		    r = r.concat(this.getDataSets([w],matchType));
 	    }));
-	    if (this.includeLiveViews)
-		r = r.concat(this.getLiveViews());
 	r = r.sort();
 	wm.Array.removeElement(r,this.inspected.getId());
 	this.setOptions(r);
     },
 
-	getLiveViews: function() {
-		var
-			views = wm.listComponents([studio.application], wm.LiveView),
-			lv = [];
-		wm.forEach(views, dojo.hitch(this, function(v) {
-			var dt = v.dataType || "", k = dt ? " (" + dt.split('.').pop() + ")" : "";
-		    lv.push(v.getId());
 
-		}));
-		return lv;
-	},
     getDataSets: function(inOwners, matchType) {
 	    return wm.listMatchingComponentIds(inOwners, dojo.hitch(this, function(c) {
 
@@ -736,6 +724,7 @@ dojo.declare("wm.prop.WidgetSelect", wm.prop.SelectMenu, {
 dojo.declare("wm.prop.DataTypeSelect", wm.prop.SelectMenu, {
     useLiterals:false,
     liveTypes: false,
+    includeLiveViews: false,
     updateOptions: function() {
 	this.inherited(arguments);
 	if (this.useLiterals) {
@@ -745,8 +734,22 @@ dojo.declare("wm.prop.DataTypeSelect", wm.prop.SelectMenu, {
 	    this.options = [""];
 	    this.values = [""];
 	}
+	if (this.includeLiveViews) {
+	    this.options =this.options.concat(this.getLiveViews());
+	}
 	this.addOptionValues(this.getDataTypes(), true);
     },
+	getLiveViews: function() {
+		var
+			views = wm.listComponents([studio.application], wm.LiveView),
+			lv = [];
+		wm.forEach(views, dojo.hitch(this, function(v) {
+			var dt = v.dataType || "", k = dt ? " (" + dt.split('.').pop() + ")" : "";
+		    lv.push(v.getId());
+
+		}));
+		return lv;
+	},
 	addOptionValues: function(inOptionValues, inSort) {
 	        this.sort = inSort;
 		if (inSort)
@@ -817,7 +820,9 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
 				   layoutKind: "top-to-bottom",
 				   verticalAlign: "top",
 				   horizontalAlign: "left"});
-
+	this.addEditors();
+    },
+    addEditors: function() {
 	this.editors = [];
 	this.addEditor(0,this.inspected.getProp(this.propName));
 	for (var i = 1; i < 20; i++) {
@@ -844,6 +849,15 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
 						   captionAlign: "left",
 						   dataValue: inValue,
 						   inspected: this.inspected}));
+	},
+
+    /* Needed when we have an eventHandler that is a required Property, such as for wm.Button; if one onclick editor changes, the
+     * other onclick editor must update
+     */
+    reinspect: function() {
+	this.panel.removeAllControls();
+	this.addEditors();
+	return true;
     }
 });
 dojo.declare("wm.prop.EventEditor", wm.SelectMenu, {
@@ -1018,6 +1032,7 @@ dojo.declare("wm.prop.EventEditor", wm.SelectMenu, {
 	    this.inherited(arguments);
 	    this.inspected.setProp(this.propName, value);
 	}
+        studio.inspector.reinspect();
 	wm.job("studio.updateDirtyBit",10, function() {studio.updateProjectDirty();});
     },
 
@@ -1031,6 +1046,7 @@ dojo.declare("wm.prop.EventEditor", wm.SelectMenu, {
 				v = c.generateEventName(p);
 		    window.setTimeout(dojo.hitch(this, function() {
 		        this.setDisplayValue(v);
+			studio.inspector.reinspect();
 		    }), 50); // wait until after the whole clicking on an option has finished and menu been dismissed before we change the value
 				try{c.updatingEvent(p,v);}catch (e){/*do nothing as this might happen if there's a component which does not extends wm.control class*/}
 		                eventEdit(c, p.replace(/\d*$/,""), v, c == studio.application);
@@ -1039,10 +1055,10 @@ dojo.declare("wm.prop.EventEditor", wm.SelectMenu, {
 				v = c.generateSharedEventName(p);
 		    window.setTimeout(dojo.hitch(this, function() {
 			this.setDisplayValue(v);
+			studio.inspector.reinspect();
 		    }), 50);
 				try{c.updatingEvent(p,v);}catch (e){/*do nothing as this might happen if there's a component which does not extends wm.control class*/}
 				eventEdit(c, p, v, c == studio.application);
-                                studio.inspector.reinspect();
 				break;
 			case ea.newService.caption:
 				studio.newComponentButtonClick({componentType: "wm.ServiceVariable"});
@@ -1057,8 +1073,7 @@ dojo.declare("wm.prop.EventEditor", wm.SelectMenu, {
 		    this.setDisplayValue(studio.selected.name);
 				break;
 		}
-	},
-    reinspect: function() {return true;} // not implemented yet; not very important either...
+	}
 });
 
 
@@ -1110,16 +1125,17 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	    }]
 	})[0];
 	this.connect(this.tabs,"onchange",this, function() {
+	    if (this.parent._isDestroying) return;
 	    this.setHeight(this.getPreferredFitToContentHeight());
 	    this.parent.setHeight(this.parent.getPreferredFitToContentHeight());
-	    dojo.cookie(this.getRuntimeId() + ".layerIndex", this.tabs.layerIndex);
+	    dojo.cookie("wm.prop.StyleEditor.layerIndex", this.tabs.layerIndex);
 	});
 	
 	this.basicLayer = this.tabs.layers[0];
 	this.styleLayer = this.tabs.layers[1];
 	this.classListLayer = this.tabs.layers[2];
 	this.classListEditor = this.classListLayer.c$[0];
-	this.tabs.setLayerIndex(dojo.cookie(this.getRuntimeId() + ".layerIndex") || 0);
+	this.tabs.setLayerIndex(dojo.cookie("wm.prop.StyleEditor.layerIndex") || 0);
 	var defaultProps = {
 	    captionPosition: "top",
 	    captionAlign: "left",
@@ -1463,14 +1479,14 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
     noBindColumn: true, // wm.PropertyInspector tests for this to decide if this editor needs a bind column
     noHelpButton: true, // wm.PropertyInspector tests for this to decide if this editor needs a help button/column
     inspected: null,    // Component being inspected
-    inspectedSubcomponent: null, // Subcomponent of this component whose fields we are generating editors for
     postInit: function() {
 	this.inherited(arguments);
+	if (this.propDef.putWiresInSubcomponent) {
+	    this.inspectedSubcomponent = this.inspected.getValue(this.propDef.putWiresInSubcomponent);
+	}
 
 	/* Add a subheader in the property panel for this set of editors */
 	studio.inspector.addSubGroupIndicator(this.propDef.name,this);
-
-	this.inspectedSubcomponent = this.inspected.getValue(this.propDef.name);
 
 	this.editors = {};
 
@@ -1481,32 +1497,43 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	    this.setShowing(true); // wm.PropertyInspector will set this to hidden if the entire thing is bound assuming a bind-editor will be shown instead; not applicable for this particular editor
 	}
 
-	this.generateEditors(this.inspectedSubcomponent);
+	this.generateEditors(this.inspected);
     },
     generateEditors: function(c) {
 	this.propDef.treeBindRoot = this.propDef.name;
-	var propDef = dojo.clone(this.propDef);
+	var propDef = dojo.clone(this.propDef);	
 	propDef.editor = "wm.prop.DataSetSelect";
-	propDef.treeBindField = "";
+	propDef.fullName = propDef.name;
 	if (!propDef.editorProps) {
 	    propDef.editorProps = {};
 	}
 	propDef.editorProps.matchComponentType = true;
+	if (this.propDef.putWiresInSubcomponent) {
+	    propDef.editorProps.disabled = true;
+	    propDef.editorProps.hideBindColumn = true;
+	}
 
-	var e= studio.inspector.generateEditor(c, propDef, this,null,this.propDef.name);
+	/* Don't edit this.inspectedSubcomponent if it exists; if there is anything bound to the whole object, its binding is in
+	 * this.inspected, not in the subcomponent
+	 */
+	var e= studio.inspector.generateEditor(this.inspected, propDef, this,null,this.propDef.name);
+	delete propDef.editorProps.disabled;
+	delete propDef.editorProps.hideBindColumn;
 
-	 var componentToBind = propDef.putWiresInSubcomponent ? this.inspected.getValue(propDef.putWiresInSubcomponent) : this.inspected;
-	 var isBound = studio.inspector.isPropBound(componentToBind, propDef); 
+	 var isBound = studio.inspector.isPropBound(this.inspected, propDef); 
 	
 	
 	this.editors._ROOT = e;
 	this.indent++;
 	
-	var type = c.type;
-	var fields  = c._dataSchema;
+	var inspected = this.inspectedSubcomponent || this.inspected;
+
+	var type = inspected.type;
+	var fields  = inspected._dataSchema;
 	if (fields) {
 	    this.fieldPanel =  panel = new wm.Panel({owner: this,
 						     parent: this,
+						     name: "FieldGroupInnerPanel_" + propDef.name,
 						     showing: !isBound,
 						     layoutKind: "top-to-bottom",
 						     width: "100%",
@@ -1516,7 +1543,12 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	    wm.forEachProperty(fields, dojo.hitch(this,function(fieldDef, fieldName) {
 		var type = fieldDef.type;
 		var isStructured = wm.typeManager.isStructuredType(type);
-
+		var fullName;
+		if (this.propDef.putWiresInSubcomponent) {
+		    fullName = fieldName;
+		} else {
+		    fullName = this.propDef.name + "." + fieldName;
+		}
 		/* dojo.mixin used this way insures we work on a copy of propDef and don't modify e.propDef before its onclick is fired */
 		propDef = dojo.mixin({}, propDef, {
 
@@ -1531,9 +1563,11 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 		     */
 		    type: type || propDef.type,
 
-		    /* Used by the bind dialog to determine which node is ???? */
-		    treeBindField: this.propDef.name + "." + fieldName,
-		    rootTreeBindField: this.propDef.treeBindField,
+		    /* fullName is the full property path used to lookup wires, open the bind dialog to the right node, etc... */
+		    fullName: fullName,
+
+		    /* rootName lets us pass around the root property name that will be the root node for the bind dialog's propTree */
+		    rootName: this.propDef.name,
 
 		    /* If its a structured type, use a DataSetSelect editor to pick a suitable value; else use the default editor for that type */
 		    editor: isStructured  ? "wm.prop.DataSetSelect" : undefined,
@@ -1550,45 +1584,49 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 		    },
 
 		    /* When this editor changes, create a wire rather than calling c.setValue(propName,newValue) */
-		    createWire: true
+		    createWire: true,
+		    noHelpButton: true
 		});
 
-		e = studio.inspector.generateEditor(c, /* Component we are editing (or subcomponent in our case) */
+		e = studio.inspector.generateEditor(inspected, /* Component we are editing (or subcomponent in our case) */
 						    propDef, /* Property we are editing within the component */
 						    panel, /* Parent panel */
 						    null, /* ignore */
 						    this.propDef.name /* Append this to the editor name to avoid naming colisions */
 						   );
-		this.editors[c.getId() + "." + fieldName] = e;
+		this.editors[inspected.getId() + "." + fieldName] = e;
 	    }));
+	    this.fieldPanel.setBestHeight();
 	}
-	this.fieldPanel.setBestHeight();
 	this.setBestHeight();
 	this.reflow();
     },
     reinspect: function() {
-
-	 var componentToBind = this.propDef.putWiresInSubcomponent ? this.inspected.getValue(this.propDef.putWiresInSubcomponent) : this.inspected;
-	 var isBound = studio.inspector.isPropBound(componentToBind, this.propDef); 
+	var inspected = this.inspectedSubcomponent || this.inspected;
+	 var isBound = studio.inspector.isPropBound(inspected, this.propDef); 
 	if (!isBound && !this.fieldPanel.showing) {
 	    this.fieldPanel.show();
 	    this.fieldPanel.setBestHeight();
+	    this.setBestHeight();
+	    this.parent.setBestHeight();
 	} else if (isBound && this.fieldPanel.showing) {
 	    this.fieldPanel.hide();
+	    this.setBestHeight();
+	    this.parent.setBestHeight();
 	}
 
 	/* If the type we are editing has been changed to a different type, or its been edited so that the fields are different, regenerate
 	 * all editors
 	 */
-	if (this._generatedSchema != dojo.toJson(this.inspectedSubcomponent._dataSchema)) {
+	if (this._generatedSchema != dojo.toJson(inspected._dataSchema)) {
 	    this.removeAllControls();
-	    this.generateEditors(this.inspectedSubcomponent);
+	    this.generateEditors(inspected);
 	    this.parent.setBestHeight();
 	} else {
 	    /* Else call reinspectEditor on each editor */
 	    for(var editorName in this.editors) {
 		var e = this.editors[editorName];
-		studio.inspector.reinspectEditor(this.inspectedSubcomponent, /* Component we are editing */
+		studio.inspector.reinspectEditor(editorName === "_ROOT" ? this.inspected || this.inspectedSubcomponent : inspected, /* Component we are editing */
 						 e, /* Editor used to edit this component property */
 						 null, /* Bind editor used to edit this component (wm.PropertyInspector will look this up) */
 						 e.propDef,/* Property Definition for the property we are editing */

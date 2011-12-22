@@ -25,11 +25,13 @@ wm.Object.extendSchema(wm.Variable, {
     onPrepareSetData: {events: ["js","sharedjs", "sharedEventHandlers"], advanced: 1},
     onSetData: {advanced: 1},
 
-    /* Data group; data subgroup */
-    type: {ignore: 0, group: "data", subgroup: "data", order: 1, editor: "wm.prop.DataTypeSelect", editorProps: {liveTypes: 0}, requiredGroup: 1},
-    isList: { group: "data", subgroup: "data", order: 4, requiredGroup: 1},
-    editJson: {operation: 1, group:"data", subgroup: "data", order:5},
-    dataSet: { bindable: 1, group: "data", order: 0, defaultBindTarget: 1, isObject: true, editor: "wm.prop.FieldGroupEditor", editorProps: {allowAllTypes: true, widgetDataSets: true, showInputs: true}},
+    /* Data group; type subgroup */
+    type: {ignore: 0, group: "data", subgroup: "type", order: 1, editor: "wm.prop.DataTypeSelect", editorProps: {liveTypes: 0}, requiredGroup: 1},
+    isList: { group: "data", subgroup: "type", order: 4, requiredGroup: 1},
+    editJson: {operation: 1, group:"type", subgroup: "data", order:5},
+
+    /* Data group; custom subgroup */
+    dataSet: { bindable: 1, group: "data", order: 0, defaultBindTarget: 1, isObject: true, editor: "wm.prop.FieldGroupEditor"},
 
     /* Data group; behavior subgroup */
     saveInCookie: {group: "data", subgroup: "behavior", order: 20, advanced:1},

@@ -526,10 +526,13 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
     generatePropTree: function(inProp, inObject) {
 	/* Clear the tree so we can rebuild it */
         this.propTree.clear();
-        var nodeName = inProp.treeBindRoot;
-	this.selectedPropTreeField = inProp.treeBindField;
+        var nodeName = inProp.rootName || inProp.name;
+	var rootName = nodeName;
+	this.selectedPropTreeField = inProp.fullName;
+	var sourceProp = inObject.listProperties()[rootName];
+	sourceProp.name = rootName;
 
-        var wire = inObject.owner.$.binding ? inObject.owner.$.binding.wires[inObject.name] : null;
+        var wire = inObject.$.binding && inObject.$.binding.wires[rootName];
 
         if (wire) {
             if (wire.expression) {
@@ -547,14 +550,14 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
             initNodeChildren: dojo.hitch(this, "addPropTreeChildren"),
             data: {
                 object: inObject,
-		propDef: inProp,
-                fieldName: inProp.treeBindRoot,
-                fullFieldName: inProp.treeBindRoot, /* Contains full path: filter.employee.firstName */
+		propDef: sourceProp,
+                fieldName: rootName,
+                fullFieldName: rootName,
                 type: inObject.type
             }
         });
 	this._propTreeInitializing = false;
-	if (inProp.name == inProp.treeBindRoot) {
+	if (inProp.name == this.selectedPropTreeField) {
 	    this.propTree.select(rootNode);
 	}
     },
@@ -623,15 +626,16 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
             var prop = this.owner.targetProps.targetProperty;
             var propPrefix = "";
 
+/*
             if (prop.indexOf(".") != -1 && !object.isDestroyed) {
                 propPrefix = prop.replace(/\..*?$/, "");
                 prop = prop.replace(/^.*\./, "");
                 object = object.getValue(propPrefix) || object;
                 propPrefix += ".";
             }
-
+	    */
             if (!noRegen) {
-                if (inProp.treeBindField !== undefined && !object.isDestroyed) {
+                if (inProp.fullName !== undefined && !object.isDestroyed) {
 		    this.generatePropTree(inProp, object);
 /*
                     this.propTree.clear();
@@ -1048,7 +1052,7 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 	if (this.expressionTree.selected) {
 	    this.expressionTree.deselect();
 	}
-	
+	studio.inspector.reinspect();
     },
 
     applyBinding: function(inTargetProps, inClear) {

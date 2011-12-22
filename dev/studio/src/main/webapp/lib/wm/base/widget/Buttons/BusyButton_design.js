@@ -17,15 +17,27 @@ dojo.require("wm.base.widget.Buttons.BusyButton");
 dojo.require("wm.base.widget.Buttons.Button_design");
 
 wm.Object.extendSchema(wm.BusyButton, {
+
+    /* display group; misc subgroup */
+    clickVariable:  {group: "display", subgroup: "misc", bindTarget: 1, order: 29, type: "wm.ServiceVariable", createWire: 1, editor: "wm.prop.DataSetSelect", editorProps: {servicesOnly: true, listMatch: undefined}, requiredGroup:1},
+
+    /* display group, layout subgroup */
+    defaultIconUrl: {group: "display", subgroup: "visual", bindTarget: true, order: 30, type: "String", subtype: "File"},
+    iconLoadingUrl: {group: "display", subgroup: "visual", bindTarget: true, order: 31, type: "String", subtype: "File"},
+    iconSuccessUrl: {group: "display", subgroup: "visual", bindTarget: true, order: 32, type: "String", subtype: "File"},
+    iconErrorUrl:   {group: "display", subgroup: "visual", bindTarget: true, order: 33, type: "String", subtype: "File"},
+
+    iconWidth:       {group: "display", subgroup: "layout", order: 34},
+    iconHeight:      {group: "display", subgroup: "layout", order: 35},
+    iconMargin:      {group: "display", subgroup: "layout", order: 36},
+
+    /* Events group */
+    onError: {advanced:1},
+    onResult:{advanced:1},
+    onSuccess:{advanced:1},
+
+    /* Ignored Group */
       iconUrl: {ignore: 1},
-    clickVariable:  {group: "BusyButton", bindTarget: 1, order: 29, type: "wm.ServiceVariable", createWire: 1, editor: "wm.prop.DataSetSelect", editorProps: {servicesOnly: true, listMatch: undefined}},
-    defaultIconUrl: {group: "BusyButton", bindTarget: true, order: 30, type: "String", subtype: "File"},
-      iconLoadingUrl: {group: "BusyButton", bindTarget: true, order: 31, type: "String", subtype: "File"},
-      iconSuccessUrl: {group: "BusyButton", bindTarget: true, order: 32, type: "String", subtype: "File"},
-      iconErrorUrl:   {group: "BusyButton", bindTarget: true, order: 33, type: "String", subtype: "File"},
-    iconWidth:      {group: "BusyButton", order: 34},
-      iconHeight:      {group: "BusyButton", order: 35},
-      iconMargin:      {group: "BusyButton", order: 36},
       imageList: {ignore: 1},
       imageIndex: {ignore: 1},
     editImageIndex: {ignore: 1}
