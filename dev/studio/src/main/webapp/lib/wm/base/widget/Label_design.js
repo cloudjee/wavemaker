@@ -26,7 +26,7 @@ wm.Object.extendSchema(wm.Label, {
 
     /* Display group; format subgroup */
     display:    {group: "display", subgroup: "format", order: 30 }, // shows the display property
-    format:     {group: "display", subgroup: "format", order: 31, subcomponent: true, indent: true}, // shows the properties made available by the display property
+    format:     {group: "display", subgroup: "format", order: 31, editor: "wm.prop.FormatterEditor"}, // shows the properties made available by the display property
 
     /* Display group; layout subgroup */
     align:         {group: "display", subgroup: "layout", order: 25, options: ["none", "left", "center", "right", "justify"] },
@@ -75,6 +75,7 @@ wm.Label.extend({
 	    if (this.display == "Custom Function" || this.display == funcName) {
 		this.display = funcName;
 		eventEdit(this, "onFormat", funcName, this.owner == studio.application, "inValue");
+		this.renderLabel(); // If there was a formatter on it before chaning the display property, we need to show that this formatter no longer is applied
 	    } else if (ctor) {
 		var ctor = wm.getFormatter(this.display);
 		new ctor({name: "format", owner: this});

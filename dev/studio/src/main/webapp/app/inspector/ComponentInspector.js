@@ -462,6 +462,12 @@
 		     delete this.editorHash[this.getHashId(inComponent,propFullName)];
 		     e = undefined;
 		 }
+/*
+		 if (p.subcomponent) {
+		     this.reinspectSubcomponentEditors(this.inspected,p);
+		     continue;
+		 }
+		 */
 		 var binde = this.bindEditorHash[this.getHashId(inComponent,propFullName)];
 		 if (e) {		     
 		     this.reinspectEditor(inComponent, e, binde, p);
@@ -570,8 +576,6 @@
 	     
 	     /* If its a bindable property, update whether the bindeditor or regular editor is showing and update the bindeditor's value. */
 	     if (inProp.bindable || inProp.bindTarget) {
-		 if (isBound)
-		     debugger;
 		 e.setShowing(!isBound);
 		 console.log(e.toString());
 		 binde.setShowing(Boolean(isBound));
@@ -581,7 +585,7 @@
 		 binde.setDataValue(wire ?this.getFormattedBoundValue(inProp.type, wire.source,wire.expression) : "");
 	     }
 	 }
-
+/*
 	 if (inProp.subcomponent) {
 	     var subcomponent = inComponent.$[propName];
 	     if (this.subcomponents[subcomponent.getId()] && 
@@ -621,7 +625,7 @@
 		 this.generateEditors(subcomponent, inProp.group, currentLayer);
 	     }
 	 }
-     
+	 */     
      },
      isEditableProp: function(inProp, allowStyleInspector) {
 	 if (inProp.advanced && !this.isAdvancedMode())
@@ -773,10 +777,12 @@
 	 var panel = optionalParent;
 	 if (!panel) {
 	     panel = this.generatePanelForEditor(inLayer, inComponent.getId() + "_" + inProp.name);
+/*
 	     if (inProp.subcomponent) {
 		 panel.setLayoutKind("top-to-bottom");
 		 panel.setFitToContentHeight(true);
 	     }
+	     */
 	     if (inProp.indent) {
 		 panel.setMargin("0,0,0,15");
 	     }
@@ -822,11 +828,15 @@
 	     var e = inComponent.makePropEdit(inProp.name, value, editorProps);
 	     if (!e || e instanceof wm.Control == false) {
 		 var ctor;
+		 /*
 		 if (inProp.subcomponent) {		
 		     return this.generateSubcomponentEditors(inComponent, inProp, panel);
 		 } else {
+		 */
 		     e = this.generateEditorFromProps(inProp, editorProps, value);
+		 /*
 		 }
+		 */
 	     }
 
 
@@ -1106,6 +1116,7 @@
 	     }
 	 }
      },
+/*
      generateSubcomponentEditors: function(inComponent, inProp, panel) {
 	 var props = this.props;
 	 var subcomponent = inComponent.$[inProp.name];
@@ -1117,6 +1128,18 @@
 	     this.props = props; // cache the current props until the subcomponent inspection is done
 	 }
      },
+     reinspectSubcomponentEditors: function(inComponent, inProp) {
+	 var props = this.props;
+	 var subcomponent = inComponent.$[inProp.name];
+	 if (subcomponent) {
+	     this.subcomponents[subcomponent.getId()] = {className: subcomponent.declaredClass,
+							 parent: panel};
+	     this.props = this.getProps(subcomponent,true);
+	     this._reinspect(subcomponent);
+	     this.props = props; // cache the current props until the subcomponent inspection is done
+	 }
+     },
+     */
      parseExpressionForWire: function(inValue) {
 	 // A bind wire expression must be a string 
 	 if (typeof inValue == "number") {

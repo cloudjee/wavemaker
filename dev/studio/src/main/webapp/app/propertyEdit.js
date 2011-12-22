@@ -1651,3 +1651,53 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	this.inherited(arguments);
     }
 });
+
+
+dojo.declare("wm.prop.SubComponentEditor", wm.Container, {
+    noHelpButton: true,/* This container doesn't get a help button; the editors in it do */
+    noBindColumn: true,/* This container doesn't get a bind button; the editors in it will if they are bindable */
+    inspected: null,
+    propDef: null,
+    postInit: function() {
+	this.inherited(arguments);
+	this.subinspected = this.inspected.getValue(this.propDef.name);
+	if (this.subinspected) {
+	    this.parent.show();
+	    this.generateEditors();
+	} else {
+	    this.parent.hide();
+	}
+    },
+    generateEditors: function() {
+	this._lastClassInspected = this.subinspected.declaredClass;
+
+	this.removeAllControls();
+	var props = studio.inspector.props;
+	studio.inspector.props = studio.inspector.getProps(this.subinspected,true);
+	studio.inspector._generateEditors(this.subinspected, this, studio.inspector.props, true);
+	studio.inspector.props = props;
+	this.setBestHeight();
+	this.parent.setBestHeight();
+    }, 
+    reinspect: function() {
+	this.subinspected = this.inspected.getValue(this.propDef.name);
+	if (!this.subinspected) {
+	    this.parent.hide();
+	} else {
+	    this.parent.show();
+	    if (this._lastClassInspected != this.subinspected.declaredClass) {
+		this.generateEditors();
+	    } else {
+		var props = studio.inspector.props;
+		studio.inspector.props = studio.inspector.getProps(this.subinspected,true);
+		studio.inspector._reinspect(this.subinspected);
+		studio.inspector.props = props;
+	    }
+	}
+	return true;
+    }
+});
+
+dojo.declare("wm.prop.FormatterEditor", wm.prop.SubComponentEditor, {
+    margin: "0,0,0,15"
+});

@@ -113,6 +113,7 @@ wm.AbstractEditor.extend({
 		var ctor = wm.getFormatter(this.formatter);
 		new ctor({name: "format", owner: this});
 	    }
+	    this.updateReadonlyValue();
 	},
     set_editorType: function(inType) {
         var widgetsjs = this.write("");
@@ -137,6 +138,9 @@ wm.AbstractEditor.extend({
     },
     get_editorType: function() {
 	return this.declaredClass.replace(/wm\./,"");
+    },
+    formatChanged: function() {
+	this.updateReadonlyValue();
     }
 
 });
@@ -160,6 +164,7 @@ wm.Object.extendSchema(wm.AbstractEditor, {
 
     /* Format subgroup */
     formatter: { group: "display", subgroup: "format", order: 20, shortname: "readonlyFormatter", advanced:1 },
+    format:     {group: "display", subgroup: "format", order: 21, editor: "wm.prop.FormatterEditor", advanced:1}, // shows the properties made available by the formatter property
 
     /* Help subgroup */
     helpText: {group: "display", subgroup: "help", order: 10},
