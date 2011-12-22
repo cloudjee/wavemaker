@@ -2,7 +2,6 @@ This is the WaveMaker Web Application Developer Studio.
 
 Use Maven 3 and JDK 6 to build this project.
 
-
 ***** NOTICE *****
 
 The GIT version of this project is currently being restructured.
@@ -13,3 +12,17 @@ http://dev.wavemaker.com/wiki/bin/wmdoc_6.4/644Download
 In the 'Source Code Bundle' section.
 
 
+DojoBuild Profile
+
+Use the DojoBuild profile to build the gzip versions of the runtime.
+If you do not use do the DojoBuild, you can only run in ?debug mode
+
+In Place Deployment
+
+If you have a tomcat running on 8080 with a manager/manager account,
+mvn -PInplace resources:resources war:inplace tomcat:inplace
+Will deploy studio to tomcat in place.
+
+Windows Installer
+
+The windows installer expects a zip of the JDK to deployed in the folder specified by BUILD_JDK_ZIP
