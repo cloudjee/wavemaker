@@ -1,3 +1,15 @@
 This is the WaveMaker Web Application Developer Studio.
 
 Use Maven 3 and JDK 6 to build this project.
+
+
+***** NOTICE *****
+
+The GIT version of this project is currently being restructured.
+The project may not be completely stable in all configurations and uses.
+
+The source code for the latest, stable version of this project can be downloaded as a tar bundle from:
+http://dev.wavemaker.com/wiki/bin/wmdoc_6.4/644Download
+In the 'Source Code Bundle' section.
+
+
