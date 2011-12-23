@@ -18,6 +18,9 @@ dojo.require("wm.base.Control_design");
 
 // design-time
 wm.Object.extendSchema(wm.Bevel, {
+    bevelSize: {group: "display", subgroup: "layout", doc: 1, type: "number"},
+
+    /* Ignored Group */
 	vertical: { ignore: 1 },
 	disabled: { ignore: 1 },
 	border: {ignore: 1},
@@ -27,9 +30,7 @@ wm.Object.extendSchema(wm.Bevel, {
 	scrollX: {ignore: 1},
         scrollY: {ignore: 1},
         minWidth:  {ignore: 1},
-    minHeight: {ignore: 1},
-    bevelSize: {group: "layout", doc: 1, type: "number"}/*,
-    updateSize: {group: "method", params: "()", doc: 1}*/
+    minHeight: {ignore: 1}
 });
 
 wm.Bevel.extend({

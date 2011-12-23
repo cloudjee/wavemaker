@@ -12,9 +12,9 @@
  *  limitations under the License.
  */
 
-dojo.provide("wm.base.debugger.PropertyPanel");
+dojo.provide("wm.base.debug.PropertyPanel");
 
-dojo.declare("wm.debugger.PropertyPanel", wm.Layer, {
+dojo.declare("wm.debug.PropertyPanel", wm.Layer, {
     width: "100%",
     height: "100%",
     caption: "Properties",

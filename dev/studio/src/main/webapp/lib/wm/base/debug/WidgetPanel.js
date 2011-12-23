@@ -12,9 +12,9 @@
  *  limitations under the License.
  */
 
-dojo.provide("wm.base.debugger.WidgetPanel");
+dojo.provide("wm.base.debug.WidgetPanel");
 
-dojo.declare("wm.debugger.WidgetPanel", wm.Container, {
+dojo.declare("wm.debug.WidgetPanel", wm.Container, {
     layoutKind: "left-to-right",
 
 /* This hack (providing getRoot and getRuntimeId) is needeed to be able to write event handlers such as onShow: "serviceGridPanel.activate"; without it, we'd need something like
@@ -34,7 +34,7 @@ dojo.declare("wm.debugger.WidgetPanel", wm.Container, {
     postInit: function() {
 	this.inherited(arguments);
 
-	var typeDef = this.createComponents({debuggerWidgetType: ["wm.TypeDefinition", {internal: true}, {}, {
+	var typeDef = this.createComponents({debugWidgetType: ["wm.TypeDefinition", {internal: true}, {}, {
 	    field100: ["wm.TypeDefinitionField", {"fieldName":"page","fieldType":"string"}, {}],
 	    field101: ["wm.TypeDefinitionField", {"fieldName":"name","fieldType":"string"}, {}],
 	    field102: ["wm.TypeDefinitionField", {"fieldName":"id","fieldType":"string"}, {}],
@@ -42,9 +42,9 @@ dojo.declare("wm.debugger.WidgetPanel", wm.Container, {
 	    field105: ["wm.TypeDefinitionField", {"fieldName":"showing","fieldType":"boolean"}, {}]
 	}]}, this)[0];
 	//typeDef.setOwner(this);
-	wm.typeManager.types.debuggerWidgetType.fields.id.include = ["update"];
+	wm.typeManager.types.debugWidgetType.fields.id.include = ["update"];
 
-	var typeDef = this.createComponents({debuggerBindingType: ["wm.TypeDefinition", {internal: true}, {}, {
+	var typeDef = this.createComponents({debugBindingType: ["wm.TypeDefinition", {internal: true}, {}, {
 	    field201: ["wm.TypeDefinitionField", {"fieldName":"fieldName","fieldType":"string"}, {}],
 	    field202: ["wm.TypeDefinitionField", {"fieldName":"dataValue","fieldType":"string"}, {}],
 	    field204: ["wm.TypeDefinitionField", {"fieldName":"boundTo","fieldType":"string"}, {}],
@@ -53,11 +53,11 @@ dojo.declare("wm.debugger.WidgetPanel", wm.Container, {
 	    field207: ["wm.TypeDefinitionField", {"fieldName":"errors","fieldType":"boolean"}, {}]
 	}]}, this)[0];
 	//typeDef.setOwner(this);
-	wm.typeManager.types.debuggerBindingType.fields.fieldName.include = ["update"];
+	wm.typeManager.types.debugBindingType.fields.fieldName.include = ["update"];
 
 
 	var components = this.createComponents({
-	    widgetListVar:  ["wm.Variable", {type: "debuggerWidgetType", isList: true}],
+	    widgetListVar:  ["wm.Variable", {type: "debugWidgetType", isList: true}],
 	    pageListVar: ["wm.Variable", {type: "StringData", isList: true}],
 
 	    classListVar:["wm.Variable", {type: "StringData", isList: true}],
@@ -88,7 +88,7 @@ dojo.declare("wm.debugger.WidgetPanel", wm.Container, {
 				  }]
 			      }]
 	    }],
-	    inspector: ["wm.debugger.Inspector", {}, {onXClick: "XClick"}]
+	    inspector: ["wm.debug.Inspector", {}, {onXClick: "XClick"}]
 	},this);
     },
 	XClick: function() {
@@ -149,7 +149,7 @@ dojo.declare("wm.debugger.WidgetPanel", wm.Container, {
 		if (c == app.debugDialog ||  c.isAncestor(app.debugDialog)) continue;
 		if (c.isAncestor(app.pageDialog)) continue;
 	    } else {
-		if (c.isAncestorInstanceOf(wm.debugger.Dialog)) {
+		if (c.isAncestorInstanceOf(wm.debug.Dialog)) {
 		    continue;
 		}
 	    }

@@ -17,6 +17,18 @@ dojo.require("wm.base.widget.dijit.ProgressBar");
 
 wm.dijit.ProgressBar.description = "Display a meter.";
 
-dojo.extend(wm.dijit.ProgressBar, {
-	scrim: true
+wm.dijit.ProgressBar.extend({
+    scrim: true,
+    themeableDemoProps: {height: "40px"}
+});
+
+
+wm.Object.extendSchema(wm.dijit.ProgressBar, {
+    /* Editor group; value subgroup */
+    progress: {group: "editor", subgroup: "value", order: 1},
+    indeterminate:  {group: "editor", subgroup: "value", order: 2},
+
+	disabled: { ignore: 1 },
+	progress: { bindable: 1 },
+	indeterminate: { bindable: 1 }
 });

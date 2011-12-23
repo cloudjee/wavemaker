@@ -43,14 +43,12 @@
 		"layersType": "Tabs", 
 		"clientBorder": "2", 
 		"border": "0", 
-		"isMajorContent": 1, 
 		"clientBorderColor": "#333333", 
 		"headerHeight": "29px"
 	}, 
 	"wm.WizardLayers": {
 		"border": "0", 
 		"clientBorder": "2", 
-		"isMajorContent": 1, 
 		"clientBorderColor": "#333333"
 	}, 
 	"wm.Layer": {

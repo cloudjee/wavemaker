@@ -18,58 +18,109 @@ dojo.require("wm.base.widget.Container_design");
 
 
 wm.Object.extendSchema(wm.FormPanel, {
+    /* Editor group;  */
+    readonly:       {group: "editor", subgroup: "behavior", order: 6},
+    editorWidth:    {group: "subwidgets", subgroup: "layout",order: 200, editor: "wm.prop.SizeEditor"},
+    editorHeight:   {group: "subwidgets", subgroup: "layout",order: 201, editor: "wm.prop.SizeEditor"},
+    captionSize:    {group: "subwidgets", subgroup: "text",  order: 210, editor: "wm.prop.SizeEditor"},
+    captionAlign:   {group: "subwidgets", subgroup: "text",  order: 230, options: ["left", "center", "right"]},
+    captionPosition:{group: "subwidgets", subgroup: "text",  order: 240, options: ["top", "left", "bottom", "right"]},
+
+    /* Display group */
+    layoutKind: {requiredGroup:0},
+
+    /* Ignore group */
     cancelButton: {ignore:1},
     updateButton: {ignore:1},
     deleteButton: {ignore:1},
     saveButton: {ignore:1},
     newButton: {ignore:1},
-    readonly: { group: "editor", order: 6},
-    editorWidth: {group: "display", order: 200, editor: "wm.prop.SizeEditor"},
-    editorHeight: {group: "display", order: 201, editor: "wm.prop.SizeEditor"},
-    captionSize: { group: "display", order: 210, editor: "wm.prop.SizeEditor"},
-    captionAlign: { group: "display", order: 230, options: ["left", "center", "right"]},
-    captionPosition: { group: "display", order: 240, options: ["top", "left", "bottom", "right"]},
     lock: {ignore: 1},
     freeze: {ignore: 1},
     imageList: {ignore: 1},
+
+    /* Hidden group */
     horizontalAlign: {writeonly: 1},
     verticalAlign: {writeonly: 1}
 });
 
 wm.Object.extendSchema(wm.DataForm, {
-    dataSet: {readonly: 1, group: "data", order: 1, bindTarget: 1, createWire:1,type: "wm.Variable"},// readonly; only binding should be written, not value
-    dataOutput: { ignore: 1, group: "data", order: 2, bindSource: 1, type: "wm.Variable", simpleBindProp: true, categoryParent: "Properties", categoryProps: {component: "dataOutput", inspector: "Data"} },
-    type: {group: "data",  order: 1, editor: "wm.prop.DataTypeSelect"},
-    generateInputBindings: {group: "editor"},
-    generateOutputBindings: {group: "editor"},
+    /* Editor group; value subgroup */
+    type:       {group: "editor", subgroup: "value", order: 1, requiredGroup: 1, editor: "wm.prop.DataTypeSelect"},
+    dataSet:    {group: "editor", subgroup: "value", order: 2, readonly: 1, bindTarget: 1, type: "wm.Variable", editor: "wm.prop.DataSetSelect"},
+
+    /* Editor group */
+    dataOutput: {group: "editor", subgroup: "",      order: 3, readonly: 1, bindable: 1,   type: "wm.Variable", simpleBindProp: true, editor: "wm.prop.FieldGroupEditor"},
+
+    /* Editor group; behavior subgroup */
+    confirmChangeOnDirty:    {group: "editor", subgroup: "behavior", order: 100, advanced:1},
+    setReadonlyOnPrimaryKeys:{group: "editor", subgroup: "behavior", order: 101, advanced:1},
+    generateInputBindings:   {group: "editor", subgroup: "behavior", order: 200, advanced:1},
+    generateOutputBindings:  {group: "editor", subgroup: "behavior", order: 201, advanced:1},
+
+
+    /* Operations gropu */
     addEditors: {operation: true, group: "operation"},
     removeEditors: {operation: true, group: "operation"},
     generateButtons:{operation: true, group: "operation"},
-    confirmChangeOnDirty: {group: "editor", order: 100},
-    setReadonlyOnPrimaryKeys: {group: "editor", order: 10},
+
+    /* Methods group */
     editNewObject: {method: 1},
     editCurrentObject:{method: 1},
+
+    /* Ignored group */
     noDataSet: {ignore: 1, bindSource: 1}
     
 });
 
 wm.Object.extendSchema(wm.DBForm, {
-    formBehavior: {group: "editor", order: 50, options: ["standard", "insertOnly", "updateOnly"]},
-    readonlyManager: {group: "editor", order: 55},
-    useLoadingDialog: {group: "display", order: 60},
-    deleteConfirmation: {group: "editor", order: 500},
+    /* Editor group; value subgroup */
+    type: {editorProps: {liveTypes: true}},
+
+    /* Editor group; behavior subgroup */
+    formBehavior:      {group: "editor", subgroup: "behavior", order: 1, requiredGroup:1, options: ["standard", "insertOnly", "updateOnly"]},
+    readonlyManager:   {group: "editor", subgroup: "behavior", order: 10},
+    deleteConfirmation:{group: "editor", subgroup: "behavior", order: 500, advanced:1},
+
+    /* Display group */
+    useLoadingDialog:  {group: "display",subgroup: "visual", order: 60},
+
+    /* Ignored/hidden group */
     operation: {ignore:1},
     service: {hidden: 1},
-    type: {group: "data",  order: 1, editor: "wm.prop.DataTypeSelect", editorProps: {liveTypes: true}},
     insertOp: {ignore:1},
     deleteOp: {ignore:1},
     updateOp: {ignore:1},
+    serviceVariable: {ignore:1},
+
+    /* Operations group */
     generateDeleteButton:{operation: true, group: "operation"},
     generateCancelButton:{operation: true, group: "operation"},
     generateEditButton:{operation: true, group: "operation"},
     generateNewButton:{operation: true, group: "operation"},
     generateSaveButton:{operation: true, group: "operation"},
-    serviceVariable: {ignore:1}
+
+    /* Events group */
+    onEnterKeyPress:    {order:0},
+    onSuccess:          {order:1},
+    onInsertSuccess:    {order:2},
+    onUpdateSuccess:    {order:3},
+    onDeleteSuccess:    {order:3},
+    onError:           {order:4},
+    onInsertError:     {order:5},
+    onUpdateError:     {order:6},
+    onDeleteError:     {order:7},
+    onResult:          {order:10},
+    onBeforeDeleteCall: {advanced:1, order: 100},
+    onBeforeInsertCall: {advanced:1, order: 101},
+    onBeforeUpdateCall: {advanced:1, order: 102},
+    onCancelDelete:     {advanced:1, order: 103},
+    onCancelEdit:       {advanced:1, order: 104},
+    onDataSetChanged:   {advanced:1, order: 90},
+    onDataSetChanging:  {advanced:1, order: 91},
+    onEditCurrentObject:{advanced:1, order: 120},
+    onEditNewObject:    {advanced:1, order: 121},
+    onSaveInvalidated:  {advanced:1, order: 150},
 });
 
 wm.DataForm.extend({
@@ -653,6 +704,7 @@ wm.DBForm.extend({
     listProperties: function() {
 	var props = this.inherited(arguments);
 	props.dataSet.ignoretmp = this.formBehavior == "insertOnly";	
+	props.dataOutput.ignoretmp = !this.generateOutputBindings;
 	return props;
     },
 
@@ -949,6 +1001,49 @@ wm.SubForm.extend({
 });
 
 wm.Object.extendSchema(wm.SubForm, {
-    formField: {group: "common", order: 500, editor: "wm.prop.FormFieldSelect", editorProps: {relatedFields: true}},
+    formField: {group: "editor", subgroup: "value", requiredGroup:1, order: 500, editor: "wm.prop.FormFieldSelect", editorProps: {relatedFields: true}},
     editingMode: {hidden:true}
+});
+
+
+wm.Object.extendSchema(wm.ServiceInputForm, {
+    dataSet: {ignore: 1},
+    type: {ignore: 1},
+    setReadonlyOnPrimaryKeys: {ignore: 1},
+
+    /* Operations to ignore */
+    onEditCurrentObject: {ignore:1},
+    onEditNewObject: {ignore:1},
+    onDataSetChanged: {ignore:1},
+    onDataSetChanging: {ignore:1},
+    onCancelEdit: {ignore: 1},
+
+    serviceVariable: { readonly: 1, group: "editor", subgroup: "behavior", requiredGroup:1, order: 1, bindTarget: 1, type: "wm.Variable", createWire:1, editor: "wm.prop.WidgetSelect", editorProps: {widgetType: wm.ServiceVariable, excludeType: wm.LiveVariable}}
+    
+});
+wm.ServiceInputForm.extend({
+    _placeEditorOffset: 0,
+    getTypeSchema: function() {
+	return this.serviceVariable._dataSchema;
+    },
+    set_serviceVariable: function(inVar) {
+	var oldVar = this.serviceVariable;
+	var oldType = this.serviceVariable ? this.serviceVariable.service + "." + this.serviceVariable.operation : "";
+	this.setServiceVariable(inVar);
+	if (!this._cupdating) {
+	    var newType = this.serviceVariable ? this.serviceVariable.service + "." + this.serviceVariable.operation : "";
+
+	    if (oldVar && oldVar != inVar && oldVar.$.binding && oldVar.$.binding.wires.input && oldVar.$.binding.wires.input.source == this.name+".dataOutput") {
+		oldVar.$.binding.removeWire("input");
+	    }
+	    if (inVar && newType != oldType) {
+		this._removeEditors();
+		this.addEditors();
+		var info = {targetProperty: "input", source: this.name + ".dataOutput"};
+		this.serviceVariable.components.binding.addWire("", info.targetProperty, info.source);
+	    } else if (!inVar) {
+		this._removeEditors();
+	    }
+	}
+    }
 });

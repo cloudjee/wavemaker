@@ -18,8 +18,8 @@ wm.typeManager = {
 	types: {},
 	initialized: false,
 	initTypes: function() {
-	    if (wm.types) {
-		wm.typeManager.setTypes(wm.types);
+	    if (wm.types && wm.types.types) {
+		wm.typeManager.setTypes(wm.types.types);
 	    } else {
 		this.addDefaultTypes();
 	    }

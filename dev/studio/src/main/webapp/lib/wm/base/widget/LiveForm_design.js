@@ -16,22 +16,46 @@ dojo.provide("wm.base.widget.LiveForm_design");
 dojo.require("wm.base.widget.LiveForm");
 
 wm.Object.extendSchema(wm.LiveFormBase, {
-    liveSaving:{ ignore: 1},
+    /* Display group; layout subgroup */
+    layoutKind: {requiredGroup: 0},
+
+    /* Editor group; value subgroup */
+    dataSet: {readonly: 1, group: "editor", subgroup: "value", order: 1, requiredGroup: 1, bindTarget: 1, type: "wm.Variable", editor: "wm.prop.DataSetSelect"},
+
+    /* Editor group */
+    dataOutput: {readonly:1, group: "editor", order: 2, bindable: 1, type: "wm.Variable", simpleBindProp: true, editor: "wm.prop.FieldGroupEditor", advanced:1},
+
+    /* Editor group; behavior subgroup */
+    readonly: { group: "editor", subgroup: "behavior", order: 6},
+
+    /* subwidgets group; layout subgroup */
+    editorWidth:  {group: "subwidgets", subgroup: "layout", order: 200, editor: "wm.prop.SizeEditor"},
+    editorHeight: {group: "subwidgets", subgroup: "layout", order: 201, editor: "wm.prop.SizeEditor"},
+
+    /* subwidgets group; text subgroup */
+    captionSize:     { group: "subwidgets", subgroup:"text", order: 210, editor: "wm.prop.SizeEditor"},
+    captionAlign:    { group: "subwidgets", subgroup:"text", order: 230, options: ["left","center","right"]},
+    captionPosition: { group: "subwidgets", subgroup:"text", order: 240, options: ["top", "left", "bottom", "right"]},
+
+    /* Styles group */
     themeStyleType: {group: "style", order: 150},
-    dataSet: { readonly: 1, group: "data", order: 1, bindTarget: 1, type: "wm.Variable", createWire:1},
-	dataOutput: { ignore: 1, group: "data", order: 2, bindable: 1, type: "wm.Variable", simpleBindProp: true, categoryParent: "Properties", categoryProps: {component: "dataOutput", inspector: "Data"} },
+
+    /* Operations group */
     clearData: { group: "operation", order: 2, operation:1},
     addEditors: { group: "operation", order: 5, operation:1},
     removeEditors: { group: "operation", order: 10, operation:1},
-	readonly: { group: "editor", order: 6},
+
     //validateBeforeSave: {group: "display", order: 7, type: "Boolean"},
-    editorWidth: {group: "display", order: 200, editor: "wm.prop.SizeEditor"},
-	editorHeight: {group: "display", order: 201, editor: "wm.prop.SizeEditor"},
-	editorSize: { ignore: 1},
-	captionSize: { group: "display", order: 210, editor: "wm.prop.SizeEditor"},
-	captionUnits: { ignore: 1},
-    captionAlign: { group: "display", order: 230, options: ["left","center","right"]},
-    captionPosition: { group: "display", order: 240, options: ["top", "left", "bottom", "right"]},
+
+
+
+
+    /* Ignored group */
+    liveSaving:{ ignore: 1},
+    editorSize: { ignore: 1},
+    captionUnits: { ignore: 1},
+
+    /* Methods group */
     setDataSet: {method: true},
     beginDataUpdate: {method: true},
     clearData: {method: true},
@@ -459,7 +483,7 @@ wm.LiveFormBase.extend({
 			case "dataSet":
 		    var p = wm.getParentForm(this);
 		    if (p) {
-			return new wm.prop.Select(dojo.mixin(inEditorProps, {options: this.getFormSubDataSetNames(p)}));
+			return new wm.prop.SelectMenu(dojo.mixin(inEditorProps, {options: this.getFormSubDataSetNames(p)}));
 		    } else {
 			return new wm.prop.DataSetSelect(dojo.mixin(inEditorProps, {widgetDataSets: true}));
 		    }
@@ -594,25 +618,41 @@ wm.LiveFormBase.extend({
 wm.LiveForm.description = "Displays a detailed form.";
 
 wm.Object.extendSchema(wm.LiveForm, {
-	liveVariable: {ignore: 1},
-	liveEditing: { group: "editor", order: 5, type: "Boolean"},
-        operation: {group: "editor", order: 6, options: ["insert", "update", "delete"], type: "String"},     
-        saveOnEnterKey: { group: "editor", order: 10, type: "Boolean"},
-        alwaysPopulateEditors: { group: "editor", order: 15, type: "Boolean"},
+    /* Editor group; behavior subgroup */
+    liveEditing:    {group: "editor", subgroup: "behavior", order: 5, type: "Boolean"},
+    alwaysPopulateEditors: {group: "editor", subgroup: "behavior", order: 4, type: "Boolean"},
+    operation:      {group: "editor", subgroup: "behavior", order: 10, options: ["insert", "update", "delete"], type: "String", advanced:1},     
+    saveOnEnterKey: {group: "editor", subgroup: "behavior", order: 20, type: "Boolean", advanced:1},
+    confirmDelete:  {group: "editor", subgroup: "behavior", order: 30, advanced:1},
 
 
-	defaultButton: { ignore: 1, group: "deprecated", order: 5, bindTarget: 1, type: "wm.Button"},
-        displayErrors: { group: "data", order: 15},
-    confirmDelete: {group: "data", order: 12},
-    //noButtonPanel: {group: "display", order: 8, type: "Boolean", ignore: 1},
-    //editPanelStyle: {group: "display", order: 9, type: "String"},
+    /* Editor group; validation subgroup */
+    displayErrors: { group: "editor", subgroup: "validation", order: 15, advanced:1},
+
+    /* Operations group */
+    generateButtons: {group: "operation", order: 12, operation:1},
+
+    /* Events group */
+    onBeforeOperation: {advanced:1},
+    onBeginDelete:     {advanced:1},
+    onBeginInsert:     {advanced:1},
+    onBeginUpdate:     {advanced:1},
+    onCancelEdit:      {advanced:1},
+    onDeleteData:      {advanced:1},
+    onInsertData:      {advanced:1},
+    onUpdateData:      {advanced:1},
+
+    /* Methods group */
     beginDataInsert: {method:1},
     saveData: {method:1},
     saveDataIfValid: {method:1},
     insertData: {method:1},
     updateData: {method:1},
     deleteData: {method:1},
-    generateButtons: {group: "operation", order: 12, operation:1},
+
+    /* Ignored group */
+	liveVariable: {ignore: 1},
+	defaultButton: { ignore: 1, group: "deprecated", order: 5, bindTarget: 1, type: "wm.Button"},
     imageList: {ignore: 1},
     freeze: {ignore: 1},
     lock: {ignore: 1}

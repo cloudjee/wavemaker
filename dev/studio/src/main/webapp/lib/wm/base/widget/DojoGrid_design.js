@@ -174,42 +174,82 @@ wm.DojoGrid.extend({
 });
 
 wm.Object.extendSchema(wm.DojoGrid, {
-    customFormatter: {ignore: 1},
-    rendering: {ignore: 1},
-	variable: { ignore: 1 },
-	caption:{ignore:1},
-	scrollX:{ignore:1},
-	scrollY:{ignore:1},
-	disabled:{ignore:1},
-	query: {ignore:1},
-    editColumns:{group: "edit", order:40, contextMenu: true, operation: 1},
-    singleClickEdit: {group: "edit", order: 32},
-    caseSensitiveSort: {group: "display", order: 40},
-    selectFirstRow: {group: "display", order: 41},
-    noHeader: {group: "display", order: 50},
-    liveEditing: {group: "LiveEditing", order: 1},
-    deleteColumn: {group: "LiveEditing", order: 10},
-    deleteConfirm: {group: "LiveEditing", order: 10},
-	store:{ignore:1},
-	menu:{ignore:1},
-	storeGUID:{ignore:1},
-	dataValue:{ignore:1},
+    /* widgetName group */
+    dataSet:           {group: "widgetName", subgroup: "data", order: 1, requiredGroup: 1, bindTarget: 1, isList: true, simpleBindTarget: true, editor: "wm.prop.DataSetSelect", editorProps: {listMatch: true, widgetDataSets: true, allowAllTypes: true}},
+    editColumns:       {group: "widgetName", subgroup: "data", order:5, requiredGroup: 1, contextMenu: true, operation: 1},
+    deleteColumn:      {group: "widgetName", subgroup: "data",  order: 10, advanced:1},
+    caseSensitiveSort: {group: "widgetName", subgroup: "data", order: 40, advanced:1},
+    selectFirstRow:    {group: "widgetName", subgroup: "selection", order: 41},
+    selectionMode:     {group: "widgetName", subgroup: "selection", order: 31, options: ["single", "multiple", "extended", "none", "checkbox", "radio"]},
+    deleteConfirm:     {group: "widgetName", subgroup: "confirmation", order: 10, advanced:1},
+    singleClickEdit:   {group: "widgetName", subgroup: "editing", order: 32},
+    liveEditing:       {group: "widgetName", subgroup: "editing", order: 1},
+
+    /* Display group; layout subgroup */
+    noHeader: {group: "display", subgroup: "layout", order: 50, advanced:1},
+
+    /* Operations group */
     updateNow: {group:"operation", operation: 1},
+
+    /* BindSource hidden group */
     selectedItem: {ignore:1, bindSource: 1, simpleBindProp: true, doc: 1},
     emptySelection: { ignore: true, bindSource: 1, type: "Boolean",  doc: 1},
     isRowSelected: { ignore: true, bindSource: 1, type: "Boolean",   doc: 1},
-    dataSet: {bindTarget: 1, group: "edit", order: 30, isList: true, simpleBindTarget: true, doc: 1, createWire: 1, editor: "wm.prop.DataSetSelect", editorProps: {listMatch: true, widgetDataSets: true, allowAllTypes: true}},
-    setColumnComboBoxOptions: {group: "method"},
-    onLiveEditBeforeUpdate:  {events: ["js", "sharedjs", "sharedEventHandlers"]},
-    onLiveEditBeforeInsert:  {events: ["js", "sharedjs", "sharedEventHandlers"]},
-    onLiveEditBeforeDelete:  {events: ["js", "sharedjs", "sharedEventHandlers"]},
+
+    /* Event handlers */
+    onSelectionChange:{order:1},
+    onSort:           {order:2},
+    onCellEdited:     {order:20},
+    onLiveEditBeforeUpdate:  {events: ["js", "sharedjs", "sharedEventHandlers"], order: 500, advanced:1},
+    onLiveEditBeforeInsert:  {events: ["js", "sharedjs", "sharedEventHandlers"], order: 501, advanced:1},
+    onLiveEditBeforeDelete:  {events: ["js", "sharedjs", "sharedEventHandlers"], order: 502, advanced:1},
+    onLiveEditInsertSuccess: {order:510, advanced:1},
+    onLiveEditUpdateSuccess: {order:511, advanced:1},
+    onLiveEditDeleteSuccess: {order:512, advanced:1},
+    onLiveEditInsertResult: {order:520, advanced:1},
+    onLiveEditUpdateResult: {order:521, advanced:1},
+    onLiveEditDeleteResult: {order:522, advanced:1},
+    onLiveEditInsertError: {order:530, advanced:1},
+    onLiveEditUpdateError: {order:531, advanced:1},
+    onLiveEditDeleteError: {order:532, advanced:1},
+    onRowDeleted:     {order:550,advanced:1},
+
+    onClick:          {order: 100},
+    onCellDblClick:   {order: 101},
+    onCellRightClick: {advanced:1, order: 102},
+    onGridButtonClick:{order:103},
+    onHeaderClick:    {order:104,advanced:1},
+
+    
+
+    /* Ignored group */
+    addFormName: {hidden:1},
+    customFormatter: {ignore: 1},
+    rendering: {ignore: 1},
+    variable: { ignore: 1 },
+    caption:{ignore:1},
+    scrollX:{ignore:1},
+    scrollY:{ignore:1},
+    disabled:{ignore:1},
+    query: {ignore:1},
+    store:{ignore:1},
+    menu:{ignore:1},
+    storeGUID:{ignore:1},
+    dataValue:{ignore:1},
+    onMouseOver: {ignore: 1},
+    onMouseOut: {ignore: 1},
+    onRightClick: {ignore: 1},
+
+
 
 /* TODO: Localize */
-    selectionMode: {group: "edit", order: 31, options: ["single", "multiple", "extended", "none", "checkbox", "radio"]},
     rightClickTBody: {ignore:1},
     dsType:{hidden:true},
     columns:{writeonly:1, nonlocalizable: true},
     localizationStructure: {hidden:true},
+
+    /* Method group */
+    setColumnComboBoxOptions: {method:1},
     select: {method:1},
     deselectAll: {method:1},
     getSelectedIndex:{method:1, returns: "Number"},
@@ -229,8 +269,5 @@ wm.Object.extendSchema(wm.DojoGrid, {
     setSortField:{method:1},
     setQuery: {method:1},
     setColumnShowing: {method:1},
-    setColumnWidth: {method:1},
-    onMouseOver: {ignore: 1},
-    onMouseOut: {ignore: 1},
-    onRightClick: {ignore: 1}
+    setColumnWidth: {method:1}
 });

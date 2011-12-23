@@ -410,17 +410,17 @@ wm.Object.extendSchema(wm.Control, {
 	size: { ignore: true },
         sizeUnits: { ignore: true },
     hint: {group: "common", order: 1000, type: "String", bindTarget: true, advanced: true},
-    setShowing: {method:1, doc: 1},
+    setShowing: {method:1},
 
-    setBorder: {method:1, doc: 1},
-    setBorderColor: {method:1,doc: 1},
-    setPadding: {method:1, doc: 1},
-    setMargin: {method:1, doc: 1},
-    setWidth: {method:1, doc: 1},
-    setHeight: {method:1, doc: 1},
+    setBorder: {method:1},
+    setBorderColor: {method:1},
+    setPadding: {method:1},
+    setMargin: {method:1},
+    setWidth: {method:1},
+    setHeight: {method:1},
 
-    isAncestorHidden: {method:1, doc: 1, returns: "Boolean"},
-    setParent: {method:1, doc: 1},
+    isAncestorHidden: {method:1, returns: "Boolean"},
+    setParent: {method:1},
 
 
 
@@ -429,10 +429,10 @@ wm.Object.extendSchema(wm.Control, {
     bounds: {ignore: 1},
 
     /* These 4 are marked as hidden but are actually handled by the StyleInspector */
-    border: {group: "style", doc: 1, order: 100},
-    borderColor: {group: "style", doc: 1, editor: "wm.ColorPicker", order: 101},
-    padding: {group: "style", doc: 1, order: 102},
-    margin: {group: "style", doc: 1, order: 103},
+    border: {group: "style", order: 100},
+    borderColor: {group: "style", editor: "wm.ColorPicker", order: 101},
+    padding: {group: "style", order: 102},
+    margin: {group: "style", order: 103},
 
 		//backgroundColor: {group: "style"},
 		backgroundColor: {ignore: 1},

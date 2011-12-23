@@ -18,22 +18,35 @@ dojo.require("wm.base.widget.DojoMenu");
 
 // design only...
 wm.Object.extendSchema(wm.DojoMenu, {
+    /* Display group; text subgroup */
+    editMenuItems: {group: "display", subgroup: "text", operation: 1, requiredGroup: 1},
+
+    /* Display group; layout subgroup */
+    vertical: {group: "display", subgroup: "layout"},
+
+    /* Display group; misc subgroup */
+    openOnHover: {group: "display", subgroup: "misc"},
+
+    /* Style group */
     transparent: {group: "style", order: 150, type: "Boolean"},
-	caption:{ignore:1},
-        menu: {ignore: true}, /* Originally contained string describing the menu */
-        structure:{ignore: 1,  order:10},
-/*    fullStructureStr: {hidden: true},*/
-    fullStructureStr: {ignore: true},
+
+    /* Hidden group: These properties are generated through interactions and are not directly edited on the property panel; written but not shown */
     fullStructure: {hidden: true, nonlocalizable: true},
     localizationStructure: {hidden: true},
-	eventList:{hidden:true},
-	dataValue:{ignore:1},
-	dataSet: { ignore:1},
-	disabled:{ignore:1},
-        menuItems:{ignore:1},
-    editMenuItems: {group: "operation", operation: 1},
-    vertical: {group: "display"},
-    openOnHover: {group: "display"},
+
+
+
+    /* Ignored group */
+    menu: {ignore: true}, /* Originally contained string describing the menu */
+    fullStructureStr: {ignore: true}, /* Originally contained string describing the menu */
+    structure:{ignore: 1,  order:10}, /* Originally contained string describing the menu */
+    eventList:{ignore:1}, /* No longer used; eventList should be read into fullStructure */
+    disabled:{ignore:1},
+    menuItems:{ignore:1},
+
+
+
+
     setItemDisabled: {method:1},// TODO: propdoc
     setItemShowing: {method:1}// TODO: propdoc
 });
@@ -302,6 +315,10 @@ wm.PopupMenu.extend({
 });
 
 wm.Object.extendSchema(wm.PopupMenu, {
+
+
+    /* Ignored group, basicaly strips out everything that makes this a widget */
+    styles: {ignore:true},
     vertical: {ignore:true},
     isPopupMenu: {ignore:true},
     transparent: {ignore:true},

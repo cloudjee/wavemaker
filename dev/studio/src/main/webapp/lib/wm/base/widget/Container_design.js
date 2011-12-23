@@ -19,17 +19,33 @@ dojo.require("wm.base.widget.Container");
 dojo.require("wm.base.Control_design");
 
 wm.Object.extendSchema(wm.Container, {
-    hint: {ignore:true},
-    layoutKind:         {group: "layout", order: 100, doc: 1, options: ["top-to-bottom","left-to-right"], requiredGroup: true},
-    horizontalAlign:    {group: "layout", order: 110, doc: 1, options: ["left","center","right"]},
-    verticalAlign:      {group: "layout", order: 120, doc: 1, options: ["top","middle","bottom"]},
-    fitToContent:       {ignore: true},
-    fitToContentWidth:  {group: "advanced layout", order: 90, shortname: "Auto Width", type: "Boolean", advanced: true},
-    fitToContentHeight: {group: "advanced layout", order: 91, shortname: "Auto Height", type: "Boolean", advanced: true},
+    /* Display group; layout subgroup */
+    layoutKind:         {group: "display", subgroup: "layout", order: 100, options: ["top-to-bottom","left-to-right"], requiredGroup: true},
+    horizontalAlign:    {group: "display", subgroup: "layout", order: 110, options: ["left","center","right"]},
+    verticalAlign:      {group: "display", subgroup: "layout", order: 120, options: ["top","middle","bottom"]},
+    fitToContentWidth:  {group: "display", subgroup: "layout", order: 150, shortname: "Auto Width", type: "Boolean", advanced: true},
+    fitToContentHeight: {group: "display", subgroup: "layout", order: 151, shortname: "Auto Height", type: "Boolean", advanced: true},
+    resizeToFit:        {group: "display", subgroup: "layout", order: 152, operation: true},
+
+    /* Display group; scrolling subgroup */
     autoScroll: {writeonly: 0},
     touchScrolling: {group: "display", subgroup: "scrolling", order: 103, ignore: 0, advanced: true},
-    isMajorContent: {group: "style", order: 150, ignore: 1}, // obsolete
+
+    /* Style group */
     themeStyleType: {ignore: true, group: "style", order: 20, options: ["", "MainContent", "EmphasizedContent", "HeaderContent"]},
+
+    /* Custom methods group */
+    customGetValidate:     {group: "customMethods", advanced:1},
+
+    /* BindSource properties that are not readable/writable */
+    invalid: { ignore: 1, bindSource: 1, readonly: 1, type: "Boolean" },
+    isDirty: { ignore: 1, bindSource: 1, readonly: 1, type: "Boolean" },
+
+    /* Display group; misc subgroup */
+    lock:   {group: "display", subgroup: "misc", order: 2000, type: "Boolean", advanced:1 },
+    freeze: {group: "display", subgroup: "misc", order: 2001, type: "Boolean", advanced:1 },
+
+    /* Methods group */
     setThemeStyleType: {method:1},
     getThemeStyleType: {method:1, returns: "String"},
     reflow: {method:1},
@@ -41,16 +57,15 @@ wm.Object.extendSchema(wm.Container, {
     clearDirty: {method:1},
     resetData: {method:1},
     clearDirty: {method:1},
-    setBestWidth: {method:1}, /* TODO: propdoc */
-    setBestHeight:{method:1}, /* TODO: propdoc */
-    customGetValidate:     {group: "customMethods"},
-		invalid: { ignore: 1, bindSource: 1, readonly: 1, type: "Boolean" },
-		isDirty: { ignore: 1, bindSource: 1, readonly: 1, type: "Boolean" },
-	    lock: { order: 0, type: "Boolean" },
-		freeze: { order: 5, type: "Boolean" },
-		box: { ignore: 1 },
-    boxPosition: { ignore: 1},
-    resizeToFit: {group: "operation", operation: true}
+    setBestWidth: {method:1}, 
+    setBestHeight:{method:1}, 
+
+
+    /* Ignored group */
+    hint: {ignore:true},
+    fitToContent:       {ignore: true},
+    box: { ignore: 1 },
+    boxPosition: { ignore: 1}
 });
 
 

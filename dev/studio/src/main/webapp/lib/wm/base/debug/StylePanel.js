@@ -12,9 +12,9 @@
  *  limitations under the License.
  */
 
-dojo.provide("wm.base.debugger.StylePanel");
+dojo.provide("wm.base.debug.StylePanel");
 
-dojo.declare("wm.debugger.StylePanel", wm.Layer, {
+dojo.declare("wm.debug.StylePanel", wm.Layer, {
     width: "100%",
     height: "100%",
     caption: "Styles/Position",

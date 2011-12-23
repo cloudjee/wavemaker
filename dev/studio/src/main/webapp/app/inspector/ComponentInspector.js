@@ -567,8 +567,8 @@
 	     /* In advanced mode we disable editors that aren't applicable and set a mouseover hint to explain why its disabled.
 	      * In basic mode, just hide the editor
 	      */
+	     e.setDisabled(inProp.ignoretmp); // make sure though to change the disabled property if ignoretmp changed...
 	     if (this.isAdvancedMode()) {
-		 e.setDisabled(inProp.ignoretmp);
 		 e.setHint(inProp.ignoretmp && inProp.ignoretmp ? this.ignoreHintPrefix +  inProp.ignoreHint : "");
 	     } else {
 		 e.parent.setShowing(!inProp.ignoretmp);
@@ -726,7 +726,7 @@
 	 for (var i = 0; i < inPropList.length; i++) {
 	     var p = inPropList[i];
 	     var propName = p.name;
-	     if (skipIgnoreTmp && p.ignoretmp) continue;
+	     //if (skipIgnoreTmp && p.ignoretmp) continue;
 	     if (p.operation) {
 		 this.generateButton(inComponent, p, inLayer);
 	     } else {
@@ -783,9 +783,7 @@
 		 panel.setFitToContentHeight(true);
 	     }
 	     */
-	     if (inProp.indent) {
-		 panel.setMargin("0,0,0,15");
-	     }
+	     panel.setShowing(!inProp.ignoretmp || this.isAdvancedMode());
 	 }
 
 	 /**********************************************************
@@ -811,8 +809,9 @@
 	 /**********************************************************
 	  * Get the editor properties 
 	  **********************************************************/
-	 var editorProps = this.getDefaultEditorProps(inComponent, inProp, value, this, panel);
+	 var editorProps = this.getDefaultEditorProps(inComponent, inProp, value, this, panel);	 
 	 editorProps.showing = !isBound;
+
 	 if (inProp.editorProps) {
 	     editorProps = dojo.mixin(editorProps, inProp.editorProps);
 	 }
@@ -1064,7 +1063,9 @@
      generateEditorFromProps: function(inProp, editorProps, value) {
 	 if (inProp.editor) {
 	     ctor = dojo.getObject(inProp.editor);
-	     this.adjustHeightProperty(editorProps, ctor);
+	     if (!inProp.editorProps || !inProp.editorProps.height) {
+		 this.adjustHeightProperty(editorProps, ctor);
+	     }
 	 } else if (inProp.options) {
 	     ctor = wm.SelectMenu;
 	     editorProps.options = inProp.options;
@@ -1341,6 +1342,7 @@
 	 },
      makeNewGroupObj: function(inName) {
 	 var result = {name: inName,
+		       displayName: inName,
 		       subgroups: [],
 		       props: [],
 		       order: 1000};
@@ -1366,6 +1368,9 @@
 		 subgroupObj = dojo.mixin({props: [], 
 					   name: subgroupName},
 					  wm.propertyGroups[groupObj.name].subgroups[subgroupName]);
+		 if (groupObj.name == "widgetName") {
+		     groupObj.displayName = this.inspected.declaredClass;
+		 }
 	     } else {
 		 subgroupObj = {props: [],
 				order: 1000,
@@ -1600,6 +1605,19 @@ wm.addPropertyGroups({
 			 order: 200}
 	      }
 	     },
+    widgetName: {displayName: "", // set to class name
+		 order: 45,
+		 subgroups: {
+		     selection: {displayName: "Selection",
+				 order: 10},
+		     data:      {displayName: "Data",
+				 order: 1},
+		     confirmation: {displayName: "Confirmation",
+				    order: 20},
+		     editing:    {displayName: "Editing",
+				  order: 30}
+		 }
+		},
     editor: {displayName: "Editor", 
 	     order: 50,
 	     subgroups: {
@@ -1617,19 +1635,30 @@ wm.addPropertyGroups({
 				   order: 50}
 	     }
 	    },
-    subwidgets: {displayName: "Children", 
+    dialog: {displayName: "Dialog",
 		 order: 55,
+		 subgroups: {
+		     behavior: {displayName: "Behaviors",
+				order: 1},
+		     docking: {displayName: "Docking",
+			    order: 2}
+		 }
+		},
+    subwidgets: {displayName: "Children", 
+		 order: 60,
 		 subgroups: {
 		     text: {displayName: "Text",
 			    order: 1},
 		     layout: {displayName: "Layout",
 			      order: 10},
 		     buttons: {displayName: "Buttons",
-			       order: 10}
+			       order: 15},
+		     behavior: {displayName: "Behaviors",
+			       order: 15}
 		 }
 		},
     data: {displayName: "Data", 
-	   order: 55,
+	   order: 70,
 	   subgroups: {
 	       data: {displayName: "Data",
 		      order: 1},
@@ -1639,7 +1668,7 @@ wm.addPropertyGroups({
 			  order: 20}
 	   }
 	  },
-    style: {displayName: "Style", order: 60},
+    style: {displayName: "Style", order: 80},
     events: {displayName: "Events", order: 100},
     custommethods: {displayName: "Custom Methods", order: 101},
     roles: {displayName: "Roles", order: 110},

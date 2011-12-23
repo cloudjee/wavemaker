@@ -45,8 +45,7 @@
 		"captionBorderColor": "#FBFBFB"
 	}, 
 	"wm.AccordionLayers": {
-		"border": "0", 
-		"isMajorContent": 1
+		"border": "0"
 	}, 
 	"wm.FancyPanel": {
 		"margin": "2", 

@@ -44,7 +44,6 @@
 		"margin": "0,2,0,2", 
 		"clientBorder": "1", 
 		"border": "0", 
-		"isMajorContent": 1, 
 		"clientBorderColor": "#999999", 
 		"headerHeight": "28px", 
 		"borderColor": "#999999"
@@ -53,7 +52,6 @@
 		"margin": "0,2,0,2", 
 		"border": "0", 
 		"clientBorder": "1", 
-		"isMajorContent": 1, 
 		"clientBorderColor": "#333333"
 	}, 
 	"wm.Layer": {

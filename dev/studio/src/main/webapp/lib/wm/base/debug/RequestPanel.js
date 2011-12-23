@@ -12,12 +12,12 @@
  *  limitations under the License.
  */
 
-dojo.provide("wm.base.debugger.DataPanel");
+dojo.provide("wm.base.debug.RequestPanel");
 
-dojo.declare("wm.debugger.DataPanel", wm.Layer, {
+dojo.declare("wm.debug.RequestPanel", wm.Layer, {
     width: "100%",
     height: "100%",
-    caption: "Data",
+    caption: "Request",
     layoutKind: "top-to-bottom",
     verticalAlign: "top",
     horizontalAlign: "left",
@@ -45,34 +45,46 @@ dojo.declare("wm.debugger.DataPanel", wm.Layer, {
 	this.inherited(arguments);
 	this.createComponents({
 	    dataEditor: ["wm.AceEditor", {"height":"100%","name":"dataEditor","width":"100%"}],
-	    setDataButton: ["wm.Button", {name: "fireButton", caption: "setData()", width: "150px"},{onclick: "callSetData"}],
-		errorLabel: ["wm.Html", {name: "errorLabel", width: "100%", height: "50px", border: "1", borderColor: "red"}, {}, {}]
+	    setRequestButton: ["wm.Button", {name: "fireButton", caption: "setRequest()", width: "150px"},{onclick: "callSetRequest"}]
 	}, this);
     },
 
 
     inspect: function(inComponent, inGridItem) {
 	this.selectedItem = inComponent;
-	if (!this.selectedItem || this.selectedItem instanceof wm.Variable == false) {
+	if (!this.selectedItem || this.selectedItem instanceof wm.ServiceVariable == false) {
 	    this.hide();
 	    return;
 	}
-
-	var data = inComponent.getData();
-	this.dataEditor.setDataValue(js_beautify(dojo.toJson(data)));
-	this.dataEditor.setLineNumber(0);
-
-	if (data instanceof Error) {
-	    this.errorLabel.setCaption(data.toString());
-	    this.errorLabel.show();
+	this.show();
+	if (inGridItem) {
+	    var data = inGridItem.getValue('request');
+	    var cleanData = wm.DojoGrid.prototype.itemToJSONObject(app.debugDialog.serviceGridPanel.serviceGrid.store,data);
+	    this.dataEditor.setDataValue(js_beautify(dojo.toJson(cleanData)));
 	} else {
-	    this.errorLabel.hide();
+	    var data;
+	    if (inComponent instanceof wm.LiveVariable && inComponent.operation == "read") {
+		data = inComponent.filter.getData();
+	    } else if (inComponent instanceof wm.LiveVariable) {
+		data = inComponent.sourceData.getData();
+	    } else {
+		data = inComponent.input.getData();
+	    }
+	    this.dataEditor.setDataValue(js_beautify(dojo.toJson(data)));
 	}
+	this.dataEditor.setLineNumber(0);
     },
-    callSetData: function() {
+    callSetRequest: function() {
 	var data = this.dataEditor.getDataValue();
 	data = eval("(" + data + ")");
-	this.selectedItem.setData(data);
+	if (this.selectedItem instanceof wm.LiveVariable && this.selectedItem.operation == "read") {
+	    this.selectedItem.filter.setData(data);
+	} else if (this.selectedItem instanceof wm.LiveVariable) {
+	    this.selectedItem.sourceData.setData(data);
+	} else {
+	    this.selectedItem.input.setData(data);
+	}
+	this.selectedItem.update();
     },
     onShow: function() {
 	this.dataEditor.focus();

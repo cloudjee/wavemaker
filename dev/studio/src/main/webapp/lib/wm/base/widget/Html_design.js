@@ -18,12 +18,22 @@ dojo.require("wm.base.Control_design");
 wm.Html.description = "Container for any HTML content.";
 
 wm.Object.extendSchema(wm.Html, {
+
+    /* Display group; layout subgroup */
+    autoSize: {ignore:0,advanced:0},
+
+    /* Display group; scrolling subgroup */
+    autoScroll: {writeonly: 0},
+
+    /* Display group; text subgroup */
+    html: {group: "display", subgroup: "text", order: 100,  type: "String", bindable: 1, editor: "wm.LargeTextArea", editorProps: {height: "250px"}, requiredGroup:1 },
+
+    /* Ignored/writeonly group */
+    autoSizeHeight: { writeonly: true},
+    autoSizeWidth: {writeonly: true},
     disabled: { ignore: 1 },
-    autoSizeHeight: {type: "Boolean", group: "advanced layout", order: 31, writeonly: true},
-    autoSizeWidth: {type: "Boolean", group: "advanced layout", order: 32, shortname: "Auto Size", writeonly: true},
-    autoSize: {group: "advanced layout", order: 31, options: ["none", "width", "height"]},
-    autoScroll: {ignore: 0},
-    html: { type: "String", bindable: 1, group: "display", order: 100, focus: true, editor: "wm.LargeTextArea", editorProps: {height: "300px"} },
+
+    /* Method group */
     setHtml: {method:1}
 });
 

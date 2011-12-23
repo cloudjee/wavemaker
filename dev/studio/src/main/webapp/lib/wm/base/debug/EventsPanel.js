@@ -12,10 +12,10 @@
  *  limitations under the License.
  */
 
-dojo.provide("wm.base.debugger.EventsPanel");
+dojo.provide("wm.base.debug.EventsPanel");
 
 
-dojo.declare("wm.debugger.EventsPanel", wm.Container, {
+dojo.declare("wm.debug.EventsPanel", wm.Container, {
     layoutKind: "left-to-right",
 
 /* This hack (providing getRoot and getRuntimeId) is needeed to be able to write event handlers such as onShow: "serviceGridPanel.activate"; without it, we'd need something like
@@ -73,7 +73,7 @@ dojo.declare("wm.debugger.EventsPanel", wm.Container, {
 
 	this.currentEventChain = [];
 
-	var typeDef = this.createComponents({debuggerEventType: ["wm.TypeDefinition", {internal: true}, {}, {
+	var typeDef = this.createComponents({debugEventType: ["wm.TypeDefinition", {internal: true}, {}, {
 	    field999: ["wm.TypeDefinitionField", {"fieldName":"id","fieldType":"number"}, {}],
 	    field1000: ["wm.TypeDefinitionField", {"fieldName":"time","fieldType":"date"}, {}],
 	    field1001: ["wm.TypeDefinitionField", {"fieldName":"eventType","fieldType":"string"}, {}], 
@@ -89,12 +89,12 @@ dojo.declare("wm.debugger.EventsPanel", wm.Container, {
 	    field1012: ["wm.TypeDefinitionField", {"fieldName":"causeList","fieldType":"NumberData", isList: true}, {}]
 	}]}, this)[0];
 	//typeDef.setOwner(this);
-	wm.typeManager.types.debuggerEventType.fields.id.include = ["update"];
+	wm.typeManager.types.debugEventType.fields.id.include = ["update"];
 
 
 	var components = this.createComponents({
-	    eventListVar:  ["wm.Variable", {type: "debuggerEventType", isList: true}],
-	    eventChainListVar:  ["wm.Variable", {type: "debuggerEventType", isList: true}],
+	    eventListVar:  ["wm.Variable", {type: "debugEventType", isList: true}],
+	    eventChainListVar:  ["wm.Variable", {type: "debugEventType", isList: true}],
 	    gridPanel: ["wm.Panel", {layoutKind: "top-to-bottom", width: "100%", height: "100%",  verticalAlign: "top", horizontalAlign: "left"},{},{
 		searchPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "30px", verticalAlign: "top", horizontalAlign: "left"},{},{
 		    showBindings: ["wm.Checkbox", {width: "150px", captionSize: "120px", caption: "Show Bindings"},{onchange: "searchChange"}],
@@ -117,7 +117,7 @@ dojo.declare("wm.debugger.EventsPanel", wm.Container, {
 				      }]
 				  }]
 	    }],
-	    inspector: ["wm.debugger.Inspector", {}, {onXClick: "XClick"}]
+	    inspector: ["wm.debug.Inspector", {}, {onXClick: "XClick"}]
 	},this);
     },
 	XClick: function() {
@@ -132,7 +132,7 @@ dojo.declare("wm.debugger.EventsPanel", wm.Container, {
 	this.inShowEvent = true;
 	try {
 	var data =  this.eventsGrid.selectedItem.getData();
-	if (!data) {
+	if (!data || !data.id) {
 /*
 	    this.eventsGrid.setColumnShowing("firingId", true, true);
 	    this.eventsGrid.setColumnShowing("eventName", true, true);

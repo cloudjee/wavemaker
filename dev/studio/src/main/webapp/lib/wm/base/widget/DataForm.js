@@ -319,6 +319,12 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 	return false;
     },
 
+    setDataOutput: function(inDataSet) {
+	if (this.dataOutput) {
+	    this.dataOutput.setDataSet(inDataSet);
+	}
+    },
+
     /****************
      * METHOD: setDataSet (PUBLIC)
      * DESCRIPTION: Pass in a dataSet; editors should be updated to show that dataSet.
@@ -812,7 +818,7 @@ dojo.declare("wm.DBForm", wm.DataForm, {
      * there's no need for the user friendly approach. Makes it more of a black box, but ServiceForm is 
      * more of a black box -- it attempts to automate client/server communication after all
      */
-    generateOutputBindings: false,
+    generateOutputBindings: true,
 
 
     /****************
@@ -1376,36 +1382,3 @@ dojo.declare("wm.ServiceInputForm", wm.DataForm, {
     _end: 0
 });
 
-wm.Object.extendSchema(wm.ServiceInputForm, {
-    dataSet: {ignore: 1},
-    type: {ignore: 1},
-    setReadonlyOnPrimaryKeys: {ignore: 1},
-    serviceVariable: { readonly: 1, group: "data", order: 1, bindTarget: 1, type: "wm.Variable", createWire:1, editor: "wm.prop.WidgetSelect", editorProps: {widgetType: wm.ServiceVariable, excludeType: wm.LiveVariable}}
-    
-});
-wm.ServiceInputForm.extend({
-    _placeEditorOffset: 0,
-    getTypeSchema: function() {
-	return this.serviceVariable._dataSchema;
-    },
-    set_serviceVariable: function(inVar) {
-	var oldVar = this.serviceVariable;
-	var oldType = this.serviceVariable ? this.serviceVariable.service + "." + this.serviceVariable.operation : "";
-	this.setServiceVariable(inVar);
-	if (!this._cupdating) {
-	    var newType = this.serviceVariable ? this.serviceVariable.service + "." + this.serviceVariable.operation : "";
-
-	    if (oldVar && oldVar != inVar && oldVar.$.binding && oldVar.$.binding.wires.input && oldVar.$.binding.wires.input.source == this.name+".dataOutput") {
-		oldVar.$.binding.removeWire("input");
-	    }
-	    if (inVar && newType != oldType) {
-		this._removeEditors();
-		this.addEditors();
-		var info = {targetProperty: "input", source: this.name + ".dataOutput"};
-		this.serviceVariable.components.binding.addWire("", info.targetProperty, info.source);
-	    } else if (!inVar) {
-		this._removeEditors();
-	    }
-	}
-    }
-});

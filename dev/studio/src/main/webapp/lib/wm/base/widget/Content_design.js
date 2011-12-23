@@ -20,11 +20,18 @@ dojo.require("wm.base.Control_design");
 wm.Content.description = "Displays markup content.";
 
 wm.Object.extendSchema(wm.Content, {
-    resource: {group: "display", type: "String", subtype: "File", bindTarget: true, extensionMatch: ["html","txt"] },
+    /* Display group; text subgroup */
+    content:    {group: "display", subgroup: "text"},
+    resource:   {group: "display", subgroup: "text", type: "String", subtype: "File", bindTarget: true, extensionMatch: ["html","txt"] },
+
+    /* Display group; scrolling subgroup */
+    autoScroll: {group: "display", subgroup: "scrolling", order: 100},
+
+    /* Ignored group */
     disabled: {ignore: 1},
     allowDuplicateContent: {ignore: 1},
-    autoScroll: {group: "scrolling", order: 100},
-    content: {group: "display"}
+
+
 });
 
 wm.Content.extend({

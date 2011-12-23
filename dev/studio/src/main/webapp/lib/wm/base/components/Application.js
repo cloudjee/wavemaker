@@ -35,7 +35,7 @@ dojo.declare("wm.Application", wm.Component, {
         _lastTheme: "",
     //IERoundedCorners: false,
 	init: function() {
-	    dojo.require("common." + wm.version.replace(/[^a-zA-Z0-9]/g,"") + "_patches",true);
+	    dojo["require"]("common." + wm.version.replace(/[^a-zA-Z0-9]/g,"") + "_patches",true);
 		app = wm.application = wm.application || this;
 		this.connectList = [];
 		this.app = this;
@@ -199,10 +199,10 @@ dojo.declare("wm.Application", wm.Component, {
 		222:'"'};
 	},
     createDebugDialog: function() {
-		dojo.require("wm.base.debugger.Dialog");
+		dojo.require("wm.base.debug.Dialog");
 		dojo.require("wm.base.components.JsonRpcService");
 	if (!this.debugDialog) {
-	    this.debugDialog = new wm.debugger.Dialog({owner: this, 
+	    this.debugDialog = new wm.debug.Dialog({owner: this, 
 						       name: "debugDialog",
 						       width: "700px", 
 						       height: "400px",

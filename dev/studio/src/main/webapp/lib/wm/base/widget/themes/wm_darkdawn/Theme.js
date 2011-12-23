@@ -28,7 +28,6 @@
 	"wm.AccordionLayers": {
 		"border": "0", 
 		"borderColor": "#333333", 
-		"isMajorContent": undefined, 
 		"captionBorder": "2", 
 		"layerBorder": "1", 
 		"captionHeight": "30", 
@@ -46,7 +45,6 @@
 		"margin": "0,2,0,2", 
 		"clientBorder": "1", 
 		"border": "0", 
-		"isMajorContent": 1, 
 		"clientBorderColor": "#333333", 
 		"headerHeight": "26px"
 	}, 
@@ -54,7 +52,6 @@
 		"margin": "0,2,0,2", 
 		"border": "0", 
 		"clientBorder": "1", 
-		"isMajorContent": 1, 
 		"clientBorderColor": "#333333"
 	}, 
 	"wm.Layer": {

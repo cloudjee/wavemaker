@@ -46,7 +46,6 @@
 		"layersType": "Tabs", 
 		"clientBorder": 1, 
 		"border": "0", 
-		"isMajorContent": 1, 
 		"clientBorderColor": "#444444", 
 		"headerHeight": "28px", 
 		"borderColor": "#444444"
@@ -55,7 +54,6 @@
 		"margin": "4", 
 		"border": "0", 
 		"clientBorder": 1, 
-		"isMajorContent": 1, 
 		"clientBorderColor": "#444444"
 	}, 
 	"wm.Layer": {

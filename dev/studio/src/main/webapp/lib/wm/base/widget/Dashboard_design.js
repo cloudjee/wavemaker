@@ -140,6 +140,25 @@ wm.Dashboard.extend({
 wm.Dashboard.description = "A dojo Grid Container that is used as a dashboard element.";
 
 wm.Object.extendSchema(wm.Dashboard, {
+
+    /* Display group; misc subgroup */
+    configPortlets: {group: "display", subgroup: "misc", order: 10, contextMenu: 1, operation:1, requiredGroup:1 },
+    saveInCookie:   {group: "display", subgroup: "misc", order: 111},
+
+    /* Display group; scrolling subgroup */
+    allowAutoScroll: {group: "display", subgroup: "scrolling", type: "boolean"},
+
+    /* Display group; layout subgroup */
+    minChildWidth:       {group: "display", subgroup: "layout", order: 100},
+    minColWidth:         {group: "display", subgroup: "layout", order: 101},
+    nbZones:             {group: "display", subgroup: "layout", order: 102},
+
+    /* Display group; visual subgroup */
+    hasResizableColumns: {group: "display", subgroup: "visual", order: 102, type: "boolean"},
+    withHandles:         {group: "display", subgroup: "visual", type: "boolean"},
+
+    /* Ignored/hidden group */
+    autoScroll: {ignore:1},
 	caption:{ignore:1},
 	disabled:{ignore:1},
 	dataValue:{ignore:1},
@@ -149,17 +168,8 @@ wm.Object.extendSchema(wm.Dashboard, {
     hint: {ignore:1},
 	addDialogName:{hidden:true},
 	headerAttr:{ignore:1},
-    configPortlets: { group: "edit", order: 10, contextMenu: 1, operation:1 },
-        autoScroll: {group: "style", order: 100, ignore: 1},
-    allowAutoScroll: {group: "style", order: 101, ignore: 0, type: "boolean"},
-    hasResizableColumns: {group: "display", type: "boolean"},
-    minChildWidth: {group: "display"},
-    minColWidth: {group: "display"},
-    nbZones: {group: "display"},
-    opacity: {group: "display"},
-    saveInCookie: {group: "edit", order: 1},
-    withHandles: {group: "display", type: "boolean"},
 
+/* Method group */
     openDialog: {method:1},
     initAddDialog: {method:1},
     addPortlet: {method:1}

@@ -222,16 +222,24 @@ wm.PageContainer.extend({
 })
 
 wm.Object.extendSchema(wm.PageContainer, {
+    pageName: {group: "display", subgroup: "misc", requiredGroup:1,bindable: 1, type: "string", order: 50, pageProperty: "page", editor: "wm.prop.PagesSelect"},
+    deferLoad: {group: "display", subgroup: "misc", order: 100, type: "boolean"},
+    loadParentFirst: {group: "display", subgroup: "misc", order: 101, type: "boolean", advanced:1},
+
+
+    /* Hidden group */
     subpageProplist: {writeonly: 1},
     subpageEventlist: {writeonly: 1},
-	pageLoadedDeferred: {ignore: 1},
-    pageName: {group: "common", bindable: 1, type: "string", order: 50, pageProperty: "page", editor: "wm.prop.PagesSelect"},
-        deferLoad: {group: "common", order: 100, type: "boolean"},
-    loadParentFirst: {group: "common", order: 101, type: "boolean"},
-	box: {ignore: 1},
-	disabled: {ignore: 1},
-	page: {ignore: 1},
+
+    /* Ignored group */
+    pageLoadedDeferred: {ignore: 1},
+    box: {ignore: 1},
+    disabled: {ignore: 1},
+    page: {ignore: 1},
+    hint: {ignore: 1},
+
+    /* Method group */
     setPageName: {method:1},
-    forceReloadPage: {method:1},
-    hint: {ignore: 1}
+    forceReloadPage: {method:1}
+
 });

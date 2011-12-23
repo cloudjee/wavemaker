@@ -12,9 +12,9 @@
  *  limitations under the License.
  */
 
-dojo.provide("wm.base.debugger.BindPanel");
+dojo.provide("wm.base.debug.BindPanel");
 
-dojo.declare("wm.debugger.BindPanel", wm.Layer, {
+dojo.declare("wm.debug.BindPanel", wm.Layer, {
     width: "100%",
     height: "100%",
     caption: "Bindings",
@@ -44,7 +44,7 @@ dojo.declare("wm.debugger.BindPanel", wm.Layer, {
     postInit: function() {
 	this.inherited(arguments);
 
-	var typeDef = this.createComponents({debuggerBindingType: ["wm.TypeDefinition", {internal: true}, {}, {
+	var typeDef = this.createComponents({debugBindingType: ["wm.TypeDefinition", {internal: true}, {}, {
 	    field201: ["wm.TypeDefinitionField", {"fieldName":"fieldName","fieldType":"string"}, {}],
 	    field202: ["wm.TypeDefinitionField", {"fieldName":"dataValue","fieldType":"string"}, {}],
 	    field204: ["wm.TypeDefinitionField", {"fieldName":"boundTo","fieldType":"string"}, {}],
@@ -53,11 +53,11 @@ dojo.declare("wm.debugger.BindPanel", wm.Layer, {
 	    field207: ["wm.TypeDefinitionField", {"fieldName":"errors","fieldType":"boolean"}, {}]
 	}]}, this)[0];
 	//typeDef.setOwner(this);
-	wm.typeManager.types.debuggerBindingType.fields.fieldName.include = ["update"];
+	wm.typeManager.types.debugBindingType.fields.fieldName.include = ["update"];
 
 
 	this.createComponents({
-	            bindingListVar:["wm.Variable", {type: "debuggerBindingType", isList: true}],
+	            bindingListVar:["wm.Variable", {type: "debugBindingType", isList: true}],
 		    bindGrid: ["wm.DojoGrid", 
 			   {width: "100%", height: "100%","columns":[
 			       {"show":true,"field":"fieldName","title":"Bind List","width":"100%","align":"left","formatFunc":"",expression: "'<b>Field name</b>: ' +${fieldName} + '<br/><b>Bound to</b>: ' + (${boundTo} || ${expression}) + '<br/><b>Value</b>: ' + ${dataValue} + (${errors} ? ' <span style=\"color:red\">INVALID BINDING!</span>' : '')"},
@@ -79,7 +79,7 @@ dojo.declare("wm.debugger.BindPanel", wm.Layer, {
 	this.selectedItem = inComponent;
 	this.bindingListVar.beginUpdate();
 	this.bindingListVar.clearData();
-	var b = this.selectedItem.$.binding;
+	var b = this.selectedItem ? this.selectedItem.$.binding : null;
 	this.disconnectBindDebugConnections();
 	this._debugBindConnections = [];
 	if (b) {

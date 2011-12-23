@@ -292,7 +292,7 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 	addFooter: function() {
 	    if (this.buttonPanel)
 		this.buttonPanel.destroy();
-	    var customButtons = this.decoree.customButtons ? this.decoree.customButtons.split(/\s*,\s*/) : [];
+	    var customButtons = this.decoree.bottomButtons ? this.decoree.bottomButtons.split(/\s*,\s*/) : [];
 
 	    this.buttonPanel = new wm.Panel({name: "buttonPanel",
 					     parent: this.wrapperContainer,
@@ -315,7 +315,7 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 			       height: "100%",
 			       caption: caption});
 		/* Can't put i at the end or it looks like an event sequence of "and then..." events */
-		b.connect(b, "onclick", self.decoree, "onCustom" + i + "Button");
+		b.connect(b, "onclick", self.decoree, "onBottom" + i + "Button");
 
 	    });
 	    if (customButtons.length) {

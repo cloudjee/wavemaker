@@ -244,19 +244,3 @@ dojo.declare("wm.Splitter", wm.Bevel, {
 		this.change();
 	}
 });
-
-
-wm.Object.extendSchema(wm.Splitter, {
-	left: {ignore: 1},
-	height: {ignore: 1},
-	top: {ignore: 1},
-	mode: {ignore: 1},
-	border: {ignore: 1},
-	borderColor: {ignore: 1},
-	margin: {ignore: 1},
-	padding: {ignore: 1},
-	minWidth:   { ignore: 1 },
-	minHeight:   { ignore: 1 },
-	minimum: { group: "layout", order: 1},
-	maximum: { group: "layout", order: 5}
-});

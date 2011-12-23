@@ -12,9 +12,9 @@
  *  limitations under the License.
  */
 
-dojo.provide("wm.base.debugger.EventDetailsPanel");
+dojo.provide("wm.base.debug.EventDetailsPanel");
 
-dojo.declare("wm.debugger.EventDetailsPanel", wm.Layer, {
+dojo.declare("wm.debug.EventDetailsPanel", wm.Layer, {
     width: "100%",
     height: "100%",
     caption: "Event Details",
@@ -44,7 +44,7 @@ dojo.declare("wm.debugger.EventDetailsPanel", wm.Layer, {
     postInit: function() {
 	this.inherited(arguments);
 	this.createComponents({
-	    eventListVar:["wm.Variable", {type: "debuggerEventType", isList: true}],
+	    eventListVar:["wm.Variable", {type: "debugEventType", isList: true}],
 	    html: ["wm.Html", {margin: "8", width: "100%", height: "80px", autoSizeHeight:1}],
 	    eventsGrid: ["wm.DojoGrid", 
 				 {width: "100%", height: "100%","columns":[

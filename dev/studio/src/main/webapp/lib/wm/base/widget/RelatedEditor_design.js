@@ -14,14 +14,18 @@
 
 dojo.provide("wm.base.widget.RelatedEditor_design");
 dojo.require("wm.base.widget.RelatedEditor");
+dojo.require("wm.base.widget.LiveForm_design");
 
 wm.Object.extendSchema(wm.RelatedEditor, {
+    /* Editor group */
+    editingMode: {group: "editor", subgroup: "behavior", order: 100, requiredGroup: 1},
+    formField:   {group: "editor", subgroup: "value",    order: 500, requiredGroup: 1, editor: "wm.prop.FormFieldSelect", editorProps: {relatedFields: true}},
+    ignoreParentReadonly: {group: "editor", subgroup: "behavior", order: 100, type: "Boolean"},
+
+    /* Ignored group */
 	dataSet: {ignore: 1},
-	editingMode: { group: "common", order: 100},
-	formField: {group: "common", order: 500, editor: "wm.prop.FormFieldSelect", editorProps: {relatedFields: true}},
 	caption: {ignore: 1},
-    readonly: {ignore: 1},
-    ignoreParentReadonly: {group: "editor", order: 100, type: "Boolean"}
+    readonly: {ignore: 1}
 });
 
 wm.RelatedEditor.extend({

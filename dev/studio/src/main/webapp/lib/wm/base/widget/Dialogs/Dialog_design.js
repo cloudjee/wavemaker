@@ -49,31 +49,42 @@ wm.Dialog.extend({
 
 
 wm.Object.extendSchema(wm.Dialog, {
-    title: {group: "display", order: 1, bindTarget: true},
+    /* Display group; text subgroup */
+    title: {group: "display", subgroup: "text", order: 1, requiredGroup: 1, bindTarget: true},
 
-    /* TODO: Localize */
-    owner: { group: "common", order: 1, readonly: true, options: ["Page", "Application"] },
-
-    titlebarBorder: {group: "style", order: 5},
-    titlebarBorderColor: {group: "style", order: 6, editor: "wm.ColorPicker"},
-    titlebarHeight: {group: "style", order: 7},
-    footerBorder: {group: "style", order: 8},
-    footerBorderColor: {group: "style", order: 9, editor: "wm.ColorPicker"},
-
-    modal: {group: "display", order: 50},
-    noEscape: {group: "display", order: 51},
-
-    noMinify: {group: "display", order: 53},
-    noMaxify: {group: "display", order: 54},
-    corner: {group: "layout", order: 60,editor: "wm.prop.SelectMenu", editorProps: {
+    /* Display group; layout subgroup */
+    positionNear: {group: "display", subgroup: "layout", order: 61, editor: "wm.prop.WidgetSelect", editorProps: {
+	widgetType: "wm.Control", excludeType: "wm.Dialog"
+    }},
+    corner:       {group: "display", subgroup: "layout", order: 60, editor: "wm.prop.SelectMenu", editorProps: {
 	options: ["top left", "top center", "top right", "center left", "center center", "center right", "bottom left", "bottom center", "bottom right"],
-	values: ["tl", "tc", "tr", "cl", "cc", "cr", "bl", "bc", "br"]}},
-    positionNear: {group: "layout", order: 61, editor: "wm.prop.WidgetSelect", editorProps: {widgetType: "wm.Control", excludeType: "wm.Dialog"}},
+	values: ["tl", "tc", "tr", "cl", "cc", "cr", "bl", "bc", "br"]
+    }},
+
+    /* Common group */
+    owner: {ignore:0},
+
+    /* Styles group */
+    titlebarBorder:      {group: "style", order: 5},
+    titlebarBorderColor: {group: "style", order: 6, editor: "wm.ColorPicker"},
+    titlebarHeight:      {group: "style", order: 7},
+    footerBorder:        {group: "style", order: 8},
+    footerBorderColor:   {group: "style", order: 9, editor: "wm.ColorPicker"},
+
+    /* Dialog group; behaviors subgroup */
+    modal:    {group: "dialog", subgroup: "behavior",  order: 50},
+    noEscape: {group: "dialog", subgroup: "behavior",  order: 51},
+    noMinify: {group: "dialog", subgroup: "behavior",  order: 53},
+    noMaxify: {group: "dialog", subgroup: "behavior",  order: 54},
+
+
+    /* Docking group */
+    noTopBottomDocking: {group: "dialog", subgroup: "docking", type: "boolean"},
+    noLeftRightDocking: {group: "dialog", subgroup: "docking", type: "boolean"},
+
+    /* Ignore group */
+    resizeToFit: {ignore: 1},
     fixPositionNode: {ignore: 1},
-
-    noTopBottomDocking: {group: "docking", type: "boolean"},
-    noLeftRightDocking: {group: "docking", type: "boolean"},
-
     noBevel: {ignore: 1},
     imageList: {ignore: 1},
     fitToContentWidth: {ignore: 1},
@@ -93,6 +104,8 @@ wm.Object.extendSchema(wm.Dialog, {
     horizontalAlign: {ignore: 1},
     verticalAlign: {ignore: 1},
     showing: {ignore: 1},
+
+    /* Method group */
     setModal: {method:1},
     minify: {method:1},
     setPositionNear: {method:1}
@@ -106,26 +119,29 @@ wm.Object.extendSchema(wm.Dialog, {
 
 
 
-wm.Object.extendSchema(wm.GenericDialog, {
-    
-    enterKeyIsButton1: {group: "Buttons", order: 60},
-    widgets_json: {ignore: 1},
-    button1Caption: {group: "Buttons", order: 61},
-    button1Close: {group: "Buttons", order: 62},
-    button2Caption: {group: "Buttons", order: 63},
-    button2Close: {group: "Buttons", order: 64},
-    button3Caption: {group: "Buttons", order: 65},
-    button3Close: {group: "Buttons", order: 66},
-    button4Caption: {group: "Buttons", order: 67},
-    button4Close: {group: "Buttons", order: 68},
+wm.Object.extendSchema(wm.GenericDialog, {   
+    /* Subwidgets group; buttons subgroup */
+    button1Caption: {group: "subwidgets", subgroup: "buttons", order: 61},
+    button2Caption: {group: "subwidgets", subgroup: "buttons", order: 63},
+    button3Caption: {group: "subwidgets", subgroup: "buttons", order: 65},
+    button4Caption: {group: "subwidgets", subgroup: "buttons", order: 67},
 
-    userPrompt: {group: "display", order: 54, bindTarget: true},
-    showInput: {group: "display", order: 55, bindTarget: true},
-    inputDataValue: {group: "editData", order: 56, bindTarget: true},
-    regExp: {group: "editData", order: 57},
+    /* Subwidgets group; behavior subgroup */
+    enterKeyIsButton1: {group: "subwidgets", subgroup: "behavior", order: 60},
+    button1Close: {group: "subwidgets", subgroup: "behavior", order: 62},
+    button2Close: {group: "subwidgets", subgroup: "behavior", order: 64},
+    button3Close: {group: "subwidgets", subgroup: "behavior", order: 66},
+    button4Close: {group: "subwidgets", subgroup: "behavior", order: 68},
 
-    footerBorder: {group: "style", order: 100},
-    footerBorderColor:  {group: "style", order: 101},
+    /* Display group; text subgroup */
+    userPrompt: {group: "display", subgroup: "text", order: 54, bindTarget: true},
+
+    /* Editor group */
+    showInput: {group: "editor", subgroup: "display", order: 55, bindTarget: true},
+    inputDataValue: {group: "editor", subgroup: "value", order: 56, bindTarget: true},
+    regExp: {group: "editor", subgroup: "validation", order: 57, advanced: 1},
+
+    /* Methods group */
     setShowInput: {method:1},
     setInputDataValue: {method:1},
     getInputDataValue: {method:1, returns: "String"},
@@ -133,7 +149,10 @@ wm.Object.extendSchema(wm.GenericDialog, {
     setButton1Caption: {method:1},
     setButton2Caption: {method:1},
     setButton3Caption: {method:1},
-    setButton4Caption: {method:1}
+    setButton4Caption: {method:1},
+
+/* Ignored group */
+    widgets_json: {ignore: 1}
 });
 
 wm.GenericDialog.extend({
@@ -156,11 +175,11 @@ wm.PageDialog.extend({
 });
 
 wm.Object.extendSchema(wm.PageDialog, {
-    pageName: {group: "display", bindable: 1, type: "string", order: 54, pageProperty: "page"},
-    deferLoad:{group: "display", type: "boolean", order: 55},
+    pageName: {group: "display", subgroup: "misc", bindable: 1, type: "string", order: 54, pageProperty: "page", editor: "wm.prop.PagesSelect"},
+    deferLoad:{group: "display", subgroup: "misc", type: "boolean", order: 55},
+    hideControls: {group: "display", subgroup: "layout"},
     footerBorder: {group: "style", order: 100},
-    footerBorderColor:  {group: "style", order: 101},
-    hideControls: {group: "display"}
+    footerBorderColor:  {group: "style", order: 101}
 });
 // design-time
 wm.Dialog.description = "Popup dialog.";
@@ -220,14 +239,19 @@ wm.LoadingDialog.extend({
 });
 
 wm.Object.extendSchema(wm.LoadingDialog, {
+    /* Display group; misc subgroup */
+    widgetToCover: {group: "display", subgroup: "layout", order: 1, requiredGroup: 1, bindTarget: 1, createWire: 1, editor: "wm.prop.WidgetSelect", editorProps: {widgetType: "wm.Control", excludeType: "wm.Dialog"}, order: 100},
+    serviceVariableToTrack: {group: "display", subgroup: "misc", order: 2, requiredGroup: 1, bindTarget: 1, createWire: 1, editor: "wm.prop.WidgetSelect", editorProps: {widgetType: "wm.ServiceVariable"}, order: 101},    
+
+    /* Display group; text subgroup */
+    caption:      {group: "display", subgroup: "text", order: 102, bindTarget: 1},
+    captionWidth: {group: "display", subgroup: "text", order: 103, editor: "wm.prop.SizeEditor"},
+    image:        {group: "display", subgroup: "visual", order: 110, type: "String", bindTarget: 1, subtype: "File", extensionMatch: ["jpg","jpeg","gif","png","tiff"]},
+    imageWidth:   {group: "display", subgroup: "layout", order: 111, editor: "wm.prop.SizeEditor"},
+    imageHeight:  {group: "display", subgroup: "layout", order: 112, editor: "wm.prop.SizeEditor"},
+    
+    /* Ignore group */
     positionNear: {ignore:1},
-    widgetToCover: {bindTarget: 1, createWire: 1, group: "edit", editor: "wm.prop.WidgetSelect", editorProps: {widgetType: "wm.Control", excludeType: "wm.Dialog"}, order: 100},
-    serviceVariableToTrack: {bindTarget: 1, createWire: 1, group: "edit", editor: "wm.prop.WidgetSelect", editorProps: {widgetType: "wm.ServiceVariable"}, order: 101},    
-    caption: {bindTarget: 1, group: "edit", order: 102},
-    captionWidth:{group: "edit", order: 103, editor: "wm.prop.SizeEditor"},
-    image: {group: "edit", order: 110, type: "String", bindTarget: 1, subtype: "File", extensionMatch: ["jpg","jpeg","gif","png","tiff"]},
-    imageWidth:{group: "edit", order: 111, editor: "wm.prop.SizeEditor"},
-    imageHeight:{group: "edit", order: 112, editor: "wm.prop.SizeEditor"},
     noTopBottomDocking: {ignore:1},
     noLeftRightDocking: {ignore:1},
     width: {ignore: 1},

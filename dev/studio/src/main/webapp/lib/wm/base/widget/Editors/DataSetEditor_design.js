@@ -101,7 +101,7 @@ wm.Object.extendSchema(wm.DataSetEditor, {
     startUpdate: { group: "editor", subgroup: "behavior", order: 5, advanced: 1},
 
     /* Editor group; dataSet subgroup */
-    dataSet: { group: "editor", subgroup: "dataSet", order: 4, type: "wm.Variable", isList: true, bindTarget: true, doc: 1, editor: "wm.prop.DataSetSelect", requiredGroup:1},
+    dataSet: { group: "editor", subgroup: "dataSet", order: 4, type: "wm.Variable", isList: true, bindTarget: true, editor: "wm.prop.DataSetSelect", requiredGroup:1},
     options: {group: "editor", subgroup: "dataSet", order: 7, requiredGroup: 1},
     dataField: {group: "editor", subgroup: "dataSet",order: 10, editor:"wm.prop.FieldSelect", editorProps: { emptyLabel: "All Fields"}, requiredGroup: 1},
     displayField: {group: "editor", subgroup: "dataSet",order: 15, editor:"wm.prop.FieldSelect", editorProps: {}, requiredGroup: 1},

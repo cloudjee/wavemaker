@@ -1528,8 +1528,12 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	
 	var inspected = this.inspectedSubcomponent || this.inspected;
 
-	var type = inspected.type;
-	var fields  = inspected._dataSchema;
+	var fields;
+	if (inspected instanceof wm.Variable) {
+	    fields  = inspected._dataSchema;
+	} else if (inspected.getValue(this.propDef.name) instanceof wm.Variable) {
+	    fields  = inspected.getValue(this.propDef.name)._dataSchema;
+	}
 	if (fields) {
 	    this.fieldPanel =  panel = new wm.Panel({owner: this,
 						     parent: this,

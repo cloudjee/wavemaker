@@ -18,30 +18,47 @@ dojo.require("wm.base.widget.Container_design");
 
 // design-time
 wm.Object.extendSchema(wm.Layer, {
-    closable: {group: "display", order: 250},
-    destroyable: {group: "display", order: 251},
-    showDirtyFlag: {group: "display", order: 252},
-    themeStyleType: {group: "style", order: 150},
-	title: { ignore: 1 },
-	disabled: { ignore: 1 },
+    /* Display group; text subgroup */
+    caption: { group: "display", subgroup: "text", order: 200, bindTarget: true},
+
+    /* Display group; visual subgroup */
+    closable:      {group: "display", subgroup: "visual", order: 250, advanced:1},
+    destroyable:   {group: "display", subgroup: "visual", order: 251, advanced:1},
+    showDirtyFlag: {group: "display", subgroup: "visual", order: 252, advanced:1},
+
+    /* Style group */
+    themeStyleType: {ignore: 0},
+
+    /* Operations group */
     moveNext: { group: "operation", order: 1, contextMenu: false, operation: 1 },
-	movePrevious: { group: "operation", order: 2, contextMenu: false, operation: 1 },
-	flex: {ignore: 1},
-	sizeUnits: {ignore: 1},
-	size: {ignore: 1},
-    caption: { group: "display", order: 200, focus: true, bindTarget: true, doc: 1},
-	inFlow: {ignore: 1},
-	active: {ignore: 1},
+    movePrevious: { group: "operation", order: 2, contextMenu: false, operation: 1 },
+
+    /* Events/custom methods group */
+    onCloseOrDestroy:     {advanced:1},
+    customCloseOrDestroy: {advanced:1},
+
+    /* Ignored group */
+    title: { ignore: 1 },
+    disabled: { ignore: 1 },
+    flex: {ignore: 1},
+    sizeUnits: {ignore: 1},
+    size: {ignore: 1},
+    inFlow: {ignore: 1},
+    active: {ignore: 1},
     fitToContentWidth: { ignore: 1},
     fitToContentHeight: { ignore: 1},
     minWidth: { ignore: 1},
     minHeight: { ignore: 1},
+    parent: {ignore: 1, prototype: "wm.Layers"},
+    resizeToFit: {ignore:1},
+
+    /* Methods group */
     activate: {method:1},
     isActive: {method:1, returns: "Boolean"},
     setCaption: {method:1},
-    getIndex: {method:1, returns: "Number"},
-    parent: {ignore: 1, doc: 1, prototype: "wm.Layers"},
-    resizeToFit: {ignore:1}
+    getIndex: {method:1, returns: "Number"}
+
+
 });
 
 wm.Layer.extend({
@@ -98,12 +115,38 @@ wm.Layer.extend({
 	    props.closable.ignoretmp = (this.parent.layersType != 'Tabs');
 	    props.destroyable.ignoretmp = (this.parent.layersType != 'Tabs');
 	    props.showDirtyFlag.ignoretmp = (this.parent.layersType != 'Tabs');
+	    props.caption.requiredGroup = (this.parent.layersType == 'Tabs');
 	    return props;
 	}
 });
 
 wm.Object.extendSchema(wm.Layers, {
-    transition: {group: "display", options: ["none","fade","slide"]},
+    /* Display group; visual subgroup */
+    transition: {group: "display", subgroup: "visual", options: ["none","fade","slide"]},
+
+    /* Display group; misc subgroup */
+    defaultLayer: { group: "display", subgroup: "misc", order: 105, doc: 1},
+    layersType:   { group: "display", subgroup: "misc", order: 110, options:["Layers", "RoundedTabs", "Tabs", "Accordion"] },
+
+    /* Display group; layout subgroup */
+    headerHeight: {ignore:1, group: "display", subgroup: "layout", order: 50, editor: "wm.prop.SizeEditor", editorProps: {pxOnly: 1}},
+    headerWidth: {ignore:1,  group: "display", subgroup: "layout", order: 50, editor: "wm.prop.SizeEditor", editorProps: {pxOnly: 1}},
+
+
+    /* Operations group */
+	add: { group: "operation", order: 1, operation: 1 },
+
+    /* Styles group */
+    clientBorder: {group: "style", order: 1, shortname: "layerBorder"},
+    clientBorderColor: {group: "style", order: 2, shortname: "layerBorderColor", editor: "wm.ColorPicker"},
+
+    /* Events/custom methods group */
+    oncanchange: {advanced:1, order: 100},
+    onchange: {order: 50},
+    onCloseOrDestroy:     {advanced:1, order: 150},
+    customCloseOrDestroy: {advanced:1},
+
+    /* Ignored group */
 	lock: {ignore: 1},
 	freeze: {ignore: 1},
 	box: {ignore: 1},
@@ -113,42 +156,30 @@ wm.Object.extendSchema(wm.Layers, {
 	verticalAlign: { ignore: 1},
 	layerIndex: {ignore: 1},
 	lastLayerIndex: {ignore: 1},
-        defaultLayer: { group: "layout", order: 105, doc: 1},
-    layersType: { group: "layout", order: 110, options:["Layers", "RoundedTabs", "Tabs", "Accordion"] },
-	add: { group: "operation", order: 1, operation: 1 },
 	userDefHeaderHeight: {ignore:1},
 	fitToContent: { ignore: 1},
-    headerHeight: {ignore:1, group: "layout", order: 50, editor: "wm.prop.SizeEditor", editorProps: {pxOnly: 1}},
-    headerWidth: {ignore:1, group: "layout", order: 50, editor: "wm.prop.SizeEditor", editorProps: {pxOnly: 1}},
-    
-    clientBorder: {group: "style", order: "100", doc: 1, shortname: "layerBorder"},
-    clientBorderColor: {group: "style", order: "101", doc: 1, shortname: "layerBorderColor", editor: "wm.ColorPicker"},
-    addLayer: {method:1},
-    getLayer: {method:1, returns: "wm.Layer"},
-    removeLayer:{method:1},
-    getLayerByCaption: {group: "method", returns: "wm.Layer"},
-
-    getActiveLayer: {method:1, returns: "wm.Layer"},
-
-    indexOfLayer:  {method:1, returns: "Number"},
-    indexOfLayerName:  {method:1, returns: "Number"},
-    indexOfLayerCaption:  {method:1, returns: "Number"},
-
-    setLayer: {method:1},
-    setLayerIndex: {method:1},
-    
-    getCount: {method:1, returns: "Number"},
-
-    moveLayerIndex: {method:1},
-    clear: {method:1},
-
-    setClientBorder: {method:1},
-    setClientBorderColor: {method:1},
-    autoScroll: {ignore: 1}, // wm.Layer should have scrolling set, not the wm.Layers/TabLayers.  Accordion is an exception
+        autoScroll: {ignore: 1}, // wm.Layer should have scrolling set, not the wm.Layers/TabLayers.  Accordion is an exception
     scrollX: {ignore: 1},
     scrollY: {ignore: 1},
     touchScrolling: {ignore: 1},
-    resizeToFit: {ignore:1}
+    resizeToFit: {ignore:1},
+
+/* Methods group */
+    addLayer: {method:1},
+    getLayer: {method:1, returns: "wm.Layer"},
+    removeLayer:{method:1},
+    getLayerByCaption: {method:1, returns: "wm.Layer"},
+    getActiveLayer: {method:1, returns: "wm.Layer"},
+    indexOfLayer:  {method:1, returns: "Number"},
+    indexOfLayerName:  {method:1, returns: "Number"},
+    indexOfLayerCaption:  {method:1, returns: "Number"},
+    setLayer: {method:1},
+    setLayerIndex: {method:1},
+    getCount: {method:1, returns: "Number"},
+    moveLayerIndex: {method:1},
+    clear: {method:1},
+    setClientBorder: {method:1},
+    setClientBorderColor: {method:1}
 });
 
 wm.Layers.extend({
@@ -267,19 +298,27 @@ wm.AccordionLayers.extend({
 		      {name: "wm.AccordionLayers-Closed_Image", displayName: "Closed Arrow Icon"}]
 });
 wm.Object.extendSchema(wm.AccordionLayers, {
+    /* Display group; scrolling subgroup */
+    autoScroll: {ignore: 0}, // Accordion should support vertical scrolling
+    scrollY: {ignore: 0},
+
+    /* Display group; visual subgroup */
+    multiActive: {group: "display", subgroup: "visual"},
+
+    /* Display group; layout subgroup */
+    captionHeight: {group: "display", subgroup: "layout"},
+
+    /* Styles group */
+    layerBorder: {group: "style", order: 1},
+
+    /* Ignored group */
     transition: {ignore: true},
     captionBorder: {ignore: 1},
-    autoScroll: {group: "scrolling", order: 100, ignore: 0}, // Accordion should support vertical scrolling
-    scrollY: {group: "scrolling", order: 102, ignore: 0},
-    multiActive: {group: "display"},
-    captionHeight: {group: "display"},
-    multiActive: {group: "display"},
-    layerBorder: {group: "style", order: 1},
     clientBorder: {ignore: 1}
 });
 wm.Object.extendSchema(wm.TabLayers, {
-    conditionalTabButtons: {group: "layout"},
-    verticalButtons: {group: "layout"},
+    conditionalTabButtons: {group: "display", subgroup: "visual"},
+    verticalButtons: {group: "display", subgroup: "layout"},
     layoutKind: { writeonly: 1},
     headerHeight: {ignore: 0},
     headerWidth: {ignore: 0}
@@ -289,8 +328,8 @@ wm.Object.extendSchema(wm.WizardLayers, {
     layoutKind: { writeonly: 1},
     headerHeight: {ignore: 0},
     headerWidth: {ignore: 0},
-    verticalButtons: {group: "layout"},
-    bottomButtons: {group: "layout"}
+    verticalButtons: {group: "display", subgroup: "layout"},
+    bottomButtons: {group: "subwidgets", subgroup: "buttons"}
 });
 
 

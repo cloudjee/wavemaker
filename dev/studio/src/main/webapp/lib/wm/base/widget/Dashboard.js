@@ -21,7 +21,6 @@ dojo.declare("wm.Dashboard", wm.Control, {
 	dojoObj:null,
 
 	hasResizableColumns:false,
-	opacity:0.3,
 	nbZones:3,
 	allowAutoScroll:true,
 	withHandles:true,
@@ -166,7 +165,6 @@ dojo.declare("wm.Dashboard", wm.Control, {
 			handleClasses:["dijitTitlePaneTitle"],
 			isAutoOrganized:false,
 			hasResizableColumns:this.hasResizableColumns,
-			opacity:this.opacity,
 			nbZones:this.nbZones,
 			allowAutoScroll:this.allowAutoScroll,
 			withHandles:this.withHandles,

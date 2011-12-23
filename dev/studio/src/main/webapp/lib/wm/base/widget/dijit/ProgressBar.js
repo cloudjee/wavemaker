@@ -66,12 +66,3 @@ dojo.declare("wm.dijit.ProgressBar", wm.Dijit, {
 	onChange: function() {}
 });
 
-wm.Object.extendSchema(wm.dijit.ProgressBar, {
-	disabled: { ignore: 1 },
-	progress: { bindable: 1 },
-	indeterminate: { bindable: 1 }
-});
-
-wm.dijit.ProgressBar.extend({
-    themeableDemoProps: {height: "40px"}
-});

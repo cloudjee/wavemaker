@@ -17,10 +17,15 @@ dojo.require("wm.base.widget.IFrame");
 dojo.require("wm.base.Control_design");
 // design only...
 wm.Object.extendSchema(wm.IFrame, {
-	disabled: { ignore: 1 },
-    source: { group:"display",type: "String", bindable: 1 },
+    /* Display group; misc subgroup */
+    source: { group:"display", subgroup: "misc", type: "String", bindable: 1, requiredGroup:1},
+
+    /* Method group */
     setSource: {method:1},
-    imageList: {ignore: true},
+
+    /* Ignored group */
+    disabled: { ignore: 1 },
+    imageList: {ignore: 1},
     hint:{ignore:1}
 });
 

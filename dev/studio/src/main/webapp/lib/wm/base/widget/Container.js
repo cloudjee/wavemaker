@@ -40,7 +40,6 @@ wm.define("wm.Container", wm.Control, {
 	freeze: false,
 	classNames: "wmcontainer",
 	autoScroll: false,
-        isMajorContent: false,
     //themeStyleType: "",        // A funky parameter that won't ever show up in widgets.js; instead it adds/removes classes (more of a style's inspector kind of property, but one that identifies the type of content and leaves it to the theme to decide how to render it)
         fitToContentWidth: false,  // Container automatically resizes itself to match the width of its content, or minWidth if % sized content
         fitToContentHeight: false, // Container automatically resizes itself to match the height of its content, or minHeight if % sized content      
@@ -82,12 +81,6 @@ wm.define("wm.Container", wm.Control, {
 		if (this.isDesignLoaded())
 			this.setLock(this.lock);
 		this.inherited(arguments);
-/*
-	    if (this.isMajorContent)  // obsolete property
-                this.setThemeStyleType("ContentPanel");
-            else if (this.themeStyleType)
-                this.setThemeStyleType(this.themeStyleType);
-                */
 	},
         /* Called from Component.makeEvents or by end user*/
         connectOnEnterKey: function() {

@@ -13,6 +13,8 @@
  */
 
 dojo.provide("wm.base.widget.Splitter_design");
+dojo.require("wm.base.widget.Splitter");
+dojo.require("wm.base.widget.Bevel_design");
 /*
 wm.Splitter.extend({
 	makePropEdit: function(inName, inValue, inDefault) {
@@ -25,5 +27,22 @@ wm.Splitter.extend({
 });
 */
 wm.Object.extendSchema(wm.Splitter, {
-	layout: {ignore: 1}
+    /* Display group; layout subgroup */
+    minimum: { group: "display", subgroup: "layout", order: 1},
+    maximum: { group: "display", subgroup: "layout", order: 5},
+
+    /* Ignored group */
+    left: {ignore: 1},
+    height: {ignore: 1},
+    top: {ignore: 1},
+    mode: {ignore: 1},
+    border: {ignore: 1},
+    borderColor: {ignore: 1},
+    margin: {ignore: 1},
+    padding: {ignore: 1},
+    minWidth:   { ignore: 1 },
+    minHeight:   { ignore: 1 },
+    layout: {ignore: 1}
+
 });
+

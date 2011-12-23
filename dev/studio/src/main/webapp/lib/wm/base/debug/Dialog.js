@@ -17,25 +17,25 @@
  * 2. Track svar calls
  */
 
-dojo.provide("wm.base.debugger.Dialog");
-dojo.require("wm.base.debugger.EventsPanel");
-dojo.require("wm.base.debugger.WidgetPanel");
-dojo.require("wm.base.debugger.ServicePanel");
-dojo.require("wm.base.debugger.PropertyPanel");
-dojo.require("wm.base.debugger.StylePanel");
-dojo.require("wm.base.debugger.BindPanel");
-dojo.require("wm.base.debugger.DataPanel");
-dojo.require("wm.base.debugger.RequestPanel");
-dojo.require("wm.base.debugger.EventDetailsPanel");
+dojo.provide("wm.base.debug.Dialog");
+dojo.require("wm.base.debug.EventsPanel");
+dojo.require("wm.base.debug.WidgetPanel");
+dojo.require("wm.base.debug.ServicePanel");
+dojo.require("wm.base.debug.PropertyPanel");
+dojo.require("wm.base.debug.StylePanel");
+dojo.require("wm.base.debug.BindPanel");
+dojo.require("wm.base.debug.DataPanel");
+dojo.require("wm.base.debug.RequestPanel");
+dojo.require("wm.base.debug.EventDetailsPanel");
 
-dojo.declare("wm.debugger.Dialog", wm.Dialog, {
+dojo.declare("wm.debug.Dialog", wm.Dialog, {
     noEscape: true,
     noTopBottomDocking: true,
     noLeftRightDocking: true,
     useContainerWidget: true,
     useButtonBar: false,
     modal: false,
-    title: "Debugger",
+    title: "WM Debugger",
     commands: null,
     commandPointer: null,
 
@@ -62,13 +62,13 @@ dojo.declare("wm.debugger.Dialog", wm.Dialog, {
 	this.containerWidget.createComponents({
 	    tabLayers: ["wm.TabLayers", {width: "100%", height: "100%"}, {}, {
 		eventsLayer: ["wm.Layer", {caption: "Events"}, {onShow: "eventsPanel.activate", onDeactivate: "eventsPanel.deactivate"}, {
-		    eventsPanel: ["wm.debugger.EventsPanel", {width: "100%", height: "100%", autoScroll: true}]
+		    eventsPanel: ["wm.debug.EventsPanel", {width: "100%", height: "100%", autoScroll: true}]
 		}],
 		servicesLayer: ["wm.Layer", {caption: "Services"}, {onShow: "serviceGridPanel.activate", onDeactivate: "serviceGridPanel.deactivate"}, {
-		    serviceGridPanel: ["wm.debugger.ServicePanel", {width: "100%", height: "100%", autoScroll: true}]
+		    serviceGridPanel: ["wm.debug.ServicePanel", {width: "100%", height: "100%", autoScroll: true}]
 		}],
 		widgetLayer:  ["wm.Layer", {caption: "Widgets and Bindings"}, {onShow: "widgetPanel.activate", onDeactivate: "widgetPanel.deactivate"}, {
-		    widgetPanel: ["wm.debugger.WidgetPanel", {width: "100%", height: "100%", autoScroll:true}]
+		    widgetPanel: ["wm.debug.WidgetPanel", {width: "100%", height: "100%", autoScroll:true}]
 		}]
 	    }]
 	});
@@ -227,7 +227,7 @@ dojo.declare("wm.debugger.Dialog", wm.Dialog, {
     }
 });
 
-dojo.declare("wm.debugger.Inspector", wm.Container, {
+dojo.declare("wm.debug.Inspector", wm.Container, {
     width: "100%",
     height: "100%",
     layoutKind: "top-to-bottom",
@@ -237,12 +237,12 @@ dojo.declare("wm.debugger.Inspector", wm.Container, {
     postInit: function() {
 	this.createComponents({
 	    tabs: ["wm.TabLayers", {width: "100%", height: "100%"}, {}, {
-		eventsPanel: ["wm.debugger.EventDetailsPanel",{}],
-		propertiesPanel: ["wm.debugger.PropertyPanel", {},{},{}],
-		bindPanel: ["wm.debugger.BindPanel", {}],		
-		presentationPanel: ["wm.debugger.StylePanel", {},{},{}],
-		dataPanel: ["wm.debugger.DataPanel", {},{},{}],
-		requestPanel: ["wm.debugger.RequestPanel", {},{},{}]
+		eventsPanel: ["wm.debug.EventDetailsPanel",{}],
+		propertiesPanel: ["wm.debug.PropertyPanel", {},{},{}],
+		bindPanel: ["wm.debug.BindPanel", {}],		
+		presentationPanel: ["wm.debug.StylePanel", {},{},{}],
+		dataPanel: ["wm.debug.DataPanel", {},{},{}],
+		requestPanel: ["wm.debug.RequestPanel", {},{},{}]
 	    }]
 	}, this);
 	this.inherited(arguments);
