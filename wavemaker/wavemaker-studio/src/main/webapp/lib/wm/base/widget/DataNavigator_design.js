@@ -18,17 +18,25 @@ dojo.require("wm.base.widget.DataNavigator");
 
 // design-time only
 wm.Object.extendSchema(wm.DataNavigator, {
-	box: {ignore: 1},
-	lock: {ignore: 1},
-    freeze: {ignore:1},
-	liveForm: {ignore: 1},
-	layoutKind: {ignore: 1},
-	byPage: {group: "common", order: 250},
-    liveSource: { readonly: 1, bindable: 1, type: "wm.LiveVariable", group: "common", order: 200,editor: "wm.prop.DataSetSelect", editorProps: {widgetDataSet: 1, listMatch:1}},
+
+    /* Data group; serverOptions subgroup */
+    byPage: {group: "data", subgroup: "serverOptions", order: 250},
+
+    liveSource: {group: "data", subgroup: "data", order: 1, requiredGroup:1, readonly: 1, bindable: 1, type: "wm.LiveVariable",editor: "wm.prop.DataSetSelect", editorProps: {widgetDataSet: 1, listMatch:1}},
+
+    /* Operations group */
     firstRecord: { group: "operation", order: 5, operation:"setFirst"},
-	previousRecord: { group: "operation", order: 10, operation:"setPrevious"},
-	nextRecord: { group: "operation", order: 15, operation:"setNext"},
+    previousRecord: { group: "operation", order: 10, operation:"setPrevious"},
+    nextRecord: { group: "operation", order: 15, operation:"setNext"},
     lastRecord: { group: "operation", order: 20, operation:"setLast"},
+
+
+    /* Ignored group */
+    box: {ignore: 1},
+    lock: {ignore: 1},
+    freeze: {ignore:1},
+    liveForm: {ignore: 1},
+    layoutKind: {ignore: 1},
     autoScroll: {ignore: true},
     scrollX: {ignore: true},
     scrollY: {ignore: true},
