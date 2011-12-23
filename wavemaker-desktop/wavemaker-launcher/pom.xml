@@ -1,0 +1,76 @@
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.wavemaker</groupId>
+		<artifactId>wavemaker-desktop</artifactId>
+		<version>6.5.0.BUILD-SNAPSHOT</version>
+	</parent>
+	<artifactId>wavemaker-launcher</artifactId>
+	<packaging>jar</packaging>
+	<properties>
+		<main.basedir>${basedir}/../..</main.basedir>
+	</properties>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifest>
+							<mainClass>com.wavemaker.desktop.launcher.Main</mainClass>
+							<addClasspath>false</addClasspath>
+						</manifest>
+						<manifestEntries>
+							<SplashScreen-Image>wm-splash-screen.gif</SplashScreen-Image>
+							<Class-Path>lib/annotation-api.jar lib/catalina.jar
+								lib/catalina-ha.jar lib/catalina-tribes.jar
+								lib/commons-logging-api-1.1.1.jar lib/ejb-api-3.0.jar
+								lib/el-api.jar lib/jasper.jar lib/jasper-el.jar
+								lib/jasper-jdt.jar lib/jaxws-api-2.2.1.jar lib/jsp-api.jar
+								lib/jsr250-api-1.0.jar lib/persistence-api-1.0.2.jar
+								lib/servlet-api.jar lib/tomcat-coyote.jar lib/tomcat-dbcp.jar
+								lib/tomcat-i18n-es.jar lib/tomcat-i18n-fr.jar
+								lib/tomcat-i18n-ja.jar lib/tomcat-juli.jar
+								../studio/WEB-INF/lib/swing-layout-1.0.4.jar
+								../studio/WEB-INF/lib/mysql-connector-java-5.1.11-bin.jar .</Class-Path>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>package-full</id>
+						<phase>package</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<property name="zipfile" value="${project.build.directory}/${project.artifactId}-${project.version}-full.zip"/>
+								<zip destfile="${zipfile}">
+									<fileset dir="${basedir}/src/tomcat-resources"/>
+									<zipfileset dir="${project.build.directory}" includes="${project.build.finalName}.${project.packaging}" fullpath="launcher.jar"/>
+								</zip>
+								<attachartifact file="${zipfile}" classifier="full" type="zip"/>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.tomcat</groupId>
+			<artifactId>catalina</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+		</dependency>
+	</dependencies>
+</project>

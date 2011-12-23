@@ -1,4 +1,0 @@
-Bundle-SymbolicName: com.wavemaker.common
-Bundle-Name: WaveMaker Common
-Bundle-Vendor: VMware
-Bundle-ManifestVersion: 2
