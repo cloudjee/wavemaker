@@ -1,3 +1,3 @@
-[submodule "dev/studio/src/main/webapp/app/lib"]
+[submodule "wavemaker-ace"]
 	path = wavemaker/wavemaker-studio/src/main/webapp/app/lib
-	url = git://github.com/SpringSource/wavemaker-ace.git
+	url = https://github.com/SpringSource/wavemaker-ace.git
