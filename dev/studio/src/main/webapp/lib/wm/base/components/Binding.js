@@ -77,14 +77,20 @@ dojo.declare("wm.Wire", wm.Component, {
 		var sourceObj = this.getValueById(source);
 		while (source && sourceObj instanceof wm.Component == false) {
 		    if (source.indexOf(".") != -1) {
-			source = source.replace(/\..*?$/,"");
+			source = source.substring(0, source.lastIndexOf("."));
 			sourceObj = this.getValueById(source);
 		    } else {
 			break;
 		    }
 		}
-		firingId =  sourceObj ? sourceObj.getRuntimeId() : "";
-	    } 
+		if (sourceObj) {
+		    firingId =  sourceObj.getRuntimeId();
+		} else {
+		    firingId = this.source + " not found";
+		}
+	    } else if (this.expression) {
+		firingId = "expression";
+	    }
 	    this.debugId = app.debugDialog.newLogEvent({eventType: "bindingEvent",
 							eventName: "Binding",
 							affectedId: this.target.getRuntimeId(),

@@ -103,8 +103,8 @@ dojo.declare("wm.debug.EventsPanel", wm.Container, {
 
 		    eventsGrid: ["wm.DojoGrid", 
 				 {width: "100%", height: "100%",query:{isBinding:false},"columns":[
-				     {"show":true,"field":"sourceEvent","title":"Source Event","width":"100%","align":"left","formatFunc":"", expression: "(${firingId} ? ${firingId} + '.' : '') + ${eventName} + '()'"},
-				     {"show":true,"field":"resultEvent","title":"Resulting Event","width":"100%","align":"left","formatFunc":"",expression: "${affectedId} + '.' + (${isBinding} ? 'setValue(' + ${boundProperty} + ',' + (${boundValue}||null) + ')' : (${method} || ${eventName}) + '()')"},
+				     {"show":true,"field":"sourceEvent","title":"Source Event","width":"100%","align":"left","formatFunc":"getSourceText"/*, expression: "(${firingId} ? ${firingId} + '.' : '') + (${eventName} == 'Binding' ? ' has changed' : ${eventName} + '()')"*/},
+				     {"show":true,"field":"resultEvent","title":"Resulting Event","width":"100%","align":"left","formatFunc":"getResultText"/*,expression: "${affectedId} + '.' + (${isBinding} ? 'setValue(' + ${boundProperty} + ',' + (${boundValue}||null) + ')' : (${method} || ${eventName}) + '()')"*/},
 				     {"show":true,"field":"time","title":"Time","width":"120px","align":"left","formatFunc": "wm_date_formatter",
 				      "formatProps": {
 					  "dateType": "time",
@@ -123,7 +123,24 @@ dojo.declare("wm.debug.EventsPanel", wm.Container, {
 	XClick: function() {
 	    this.eventsGrid.deselectAll();
 	},
-
+    getResultText: function(inValue, rowId, cellId, cellField, cellObj, rowObj){
+	if (rowObj.eventName == "Binding") {
+	    return rowObj.affectedId + "<br/>setValue(" + rowObj.boundProperty + "," + (rowObj.boundValue || "null") + ")";
+	} else {
+	    return rowObj.affectedId + "." + rowObj.method + "()";
+	}
+    },
+    getSourceText: function(inValue, rowId, cellId, cellField, cellObj, rowObj){
+	if (rowObj.eventName == "Binding") {
+	    if (rowObj.firingId.match(/ not found/)) {
+		return rowObj.firingId;
+	    } else {
+		return rowObj.firingId + " has changed";
+	    }
+	} else {
+	    return (rowObj.firingId ? rowObj.firingId + "." : "") + rowObj.eventName + "()";
+	}
+    },
     clearEvents: function() {
 	this.eventListVar.clearData();
     },

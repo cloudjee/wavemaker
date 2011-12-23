@@ -124,6 +124,7 @@ dojo.declare("wm.Page", wm.Component, {
 		if (djConfig.isDebug) {
 		    this.debugId = app.debugDialog.newLogEvent({eventType: "loadComponents",
 								eventName: "loadComponents",
+								method: "loadComponents",
 								affectedId: this.getRuntimeId(),
 								firingId: this.getRuntimeId()});
 		}
@@ -182,6 +183,7 @@ dojo.declare("wm.Page", wm.Component, {
 		    if (djConfig.isDebug) {
 			this.debugId = app.debugDialog.newLogEvent({eventType: "start",
 								    eventName: "start",
+								    method: "start",
 								    affectedId: this.getRuntimeId(),
 								    firingId: this.getRuntimeId()});
 		    }

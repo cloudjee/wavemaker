@@ -48,8 +48,8 @@ dojo.declare("wm.debug.EventDetailsPanel", wm.Layer, {
 	    html: ["wm.Html", {margin: "8", width: "100%", height: "80px", autoSizeHeight:1}],
 	    eventsGrid: ["wm.DojoGrid", 
 				 {width: "100%", height: "100%","columns":[
-				     {"show":true,"field":"sourceEvent","title":"Source Event","width":"100%","align":"left","formatFunc":"", expression: "${firingId} + '.' + ${eventName} + '()'"},
-				     {"show":true,"field":"resultEvent","title":"Resulting Event","width":"100%","align":"left","formatFunc":"",expression: "${affectedId} + '.' + (${isBinding} ? 'setValue(' + ${boundProperty} + ',' + (${boundValue}||null) + ')' : (${method} || ${eventName}) + '()')"}
+				     {"show":true,"field":"sourceEvent","title":"Source Event","width":"100%","align":"left","formatFunc":"getSourceText"/*, expression: "${firingId} + '.' + ${eventName} + '()'"*/},
+				     {"show":true,"field":"resultEvent","title":"Resulting Event","width":"100%","align":"left","formatFunc":"getResultText"/*,expression: "${affectedId} + '.' + (${isBinding} ? 'setValue(' + ${boundProperty} + ',' + (${boundValue}||null) + ')' : (${method} || ${eventName}) + '()')"*/}
 				 ],
 				  "margin":"4"}, {}, {
 				      binding: ["wm.Binding", {"name":"binding"}, {}, {
@@ -57,6 +57,12 @@ dojo.declare("wm.debug.EventDetailsPanel", wm.Layer, {
 				      }]
 				  }]
 	}, this);
+    },
+    getResultText: function(inValue, rowId, cellId, cellField, cellObj, rowObj){
+	return wm.debug.EventsPanel.prototype.getResultText(inValue, rowId, cellId, cellField, cellObj, rowObj);
+    },
+    getSourceText: function(inValue, rowId, cellId, cellField, cellObj, rowObj){
+	return wm.debug.EventsPanel.prototype.getSourceText(inValue, rowId, cellId, cellField, cellObj, rowObj);
     },
     inspect: function(inComponent, inRequestData, inEventObj) {
 	if (!inEventObj) {
