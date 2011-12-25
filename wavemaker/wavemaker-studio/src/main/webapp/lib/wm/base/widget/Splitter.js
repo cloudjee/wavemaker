@@ -61,11 +61,12 @@ dojo.declare("wm.Splitter", wm.Bevel, {
 	},
 	*/
 	findLayout: function() {
-		var v = (this.parent||0).layoutKind == "left-to-right", p = this.parent.prevSibling(this);
-		if (p) {
-			var l = v ? (p.width == "100%" ? "right" : "left") : (p.height == "100%" ? "bottom" : "top");
-			this.setLayout(l);
-		}
+	    var v = this.parent.layoutKind == "left-to-right";
+	    var p = this.parent.prevSibling(this,true);
+	    if (p) {
+		var l = v ? (p.width == "100%" ? "right" : "left") : (p.height == "100%" ? "bottom" : "top");
+		this.setLayout(l);
+	    }
 	},
 	setLayout: function(inLayout) {
 		this.layout = inLayout;
@@ -79,17 +80,17 @@ dojo.declare("wm.Splitter", wm.Bevel, {
 			//this.findLayout();
 		switch (this.layout) {
 			case "left":
-			case "top":
-		                this.percentSizeControl = this.parent.nextSibling(this);
-				return this.parent.prevSibling(this);
+			case "top":		    
+		                this.percentSizeControl = this.parent.nextSibling(this,true);
+		                return this.parent.prevSibling(this,true);
 				/*var node = this.domNode.previousSibling;
 				while (node && node.nodeType != 1)
 					node = node.previousSibling;
 				break;*/
 			case "right":
 			case "bottom":
-		                this.percentSizeControl = this.parent.prevSibling(this);
-				return this.parent.nextSibling(this);
+		                this.percentSizeControl = this.parent.prevSibling(this,true);
+		                return this.parent.nextSibling(this, true);
 				/*var node = this.domNode.nextSibling;
 				while (node && node.nodeType != 1)
 					node = node.nextSibling;
