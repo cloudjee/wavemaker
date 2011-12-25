@@ -69,6 +69,7 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 		this.isList = true;
 	},
 	postInit: function() {
+	    this._inLVPostInit = true;
 		this.inherited(arguments);
 		// initialize via liveSource or optionally directly with a liveView)
 
@@ -89,6 +90,7 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	    this._inPostInit = true;
 	    this.doAutoUpdate();
 	    this._inPostInit = false;
+	    this._inLVPostInit = false;
 	},
 	_subscribeLiveView: function() {
 		this._unsubscribeLiveView();
@@ -177,8 +179,9 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 		v = this.createLiveView(s);
 	    if (v)
 		this.setLiveView(v);
-		
-	    this.doAutoUpdate();
+	    if (!this._inLVPostInit) {
+		this.doAutoUpdate();
+	    }
 	},
 		     /*
 	setLiveSource: function(inLiveSource) {
@@ -230,9 +233,9 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	    }
 	    // I've been seeing these bindings fire way too often, so
 	    // some extra tests to insure its needed
-	    var newSourceType = this.sourceDataType + "|" + dojo.toJson(this.sourceData._dataSchema);
-	    var newFilterType = this.filterDataType + "|" + dojo.toJson(this.filter._dataSchema);
-	    if (!this._updating && !this._inPostInit && this.$.binding && (hasChanged || oldSourceType != newSourceType || oldFilterType != newFilterType))
+	    var newSourceType = this.sourceData.type + "|" + dojo.toJson(this.sourceData._dataSchema);
+	    var newFilterType = this.filter.type + "|" + dojo.toJson(this.filter._dataSchema);
+	    if (!this._updating && !this._inLVPostInit && this.$.binding && (hasChanged || oldSourceType != newSourceType || oldFilterType != newFilterType))
 		this.$.binding.refresh();
 	},
 	_liveViewChanged: function() {

@@ -239,7 +239,15 @@ dojo.declare("wm.ServiceCall", null, {
 								method: errorMsg ? "processError" : "processResult",
 								affectedId: this.getRuntimeId(),
 								firingId: this.getRuntimeId()})});
+	    if (this._debug && this._debug.lastUpdate) {
+		this._debug.duration = new Date().getTime() - this._debug.lastUpdate.getTime();
+	    }
 	}
+
+	if (eventType != "serviceCall" && eventType != "serviceCallResponse" && this._debug) {
+	    this._debug.eventId = this.debugId[this.debugId.length-1].id;
+	}
+
     },
     endLog: function(eventType) {
 	if (this.debugId && this.debugId.length) {
@@ -260,50 +268,6 @@ dojo.declare("wm.ServiceCall", null, {
 		if (djConfig.isDebug) this.endLog("autoUpdate");
 	    }
 	},
-/*
-	inputChanged: function() {
-	        if (djConfig.isDebug && this.autoUpdate) {
-		    this.log("autoUpdate");
-
-		    if (djConfig.isDebug) {
-			this._debug = {trigger: "autoUpdate",
-				       eventName: "",
-				       request: "",
-				       lastUpdate: new Date()}; 
-		    try {
-			var i = 0;
-			var caller = arguments.callee.caller;
-			while (caller && caller.nom != "dataValueChanged" && i < 15) {
-			    caller = caller.caller;
-			    i++;
-			}
-			if (caller && caller.nom == "dataValueChanged") {
-			    var newValue = caller.arguments[1];
-
-			    this._debug.eventName = "sourceData: " + caller.arguments[0] + " set to " + (newValue instanceof wm.Component ? newValue.toString() : newValue);
-			}
-		    } catch(e) {}
-		    }
-
-		    this.debugId = app.debugDialog.newLogEvent({eventType: "autoUpdate",
-								eventName: "autoUpdate",
-								affectedId: this.getRuntimeId(),
-								firingId: ""});
-
-		    this.doAutoUpdate();
-
-		    if (this.debugId) {
-			app.debugDialog.endLogEvent(this.debugId);
-			delete this.debugId;
-		    }
-
-
-		} else if (this.autoUpdate) {
-		    this.doAutoUpdate();
-		}
-
-	},
-	*/
 	//=======================================================
 	// Updating
 	//=======================================================

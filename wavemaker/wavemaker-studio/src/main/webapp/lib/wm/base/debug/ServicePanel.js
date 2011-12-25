@@ -44,11 +44,13 @@ dojo.declare("wm.debug.ServicePanel", wm.Container, {
 	    field0: ["wm.TypeDefinitionField", {"fieldName":"page","fieldType":"string","name":"field0"}, {}],
 	    field1: ["wm.TypeDefinitionField", {"fieldName":"name","fieldType":"string","name":"field1"}, {}],
 	    field2: ["wm.TypeDefinitionField", {"fieldName":"lastUpdate","fieldType":"date","name":"field2"}, {}],
+	    field2b: ["wm.TypeDefinitionField", {"fieldName":"duration","fieldType":"number","name":"field2"}, {}],
 	    field3: ["wm.TypeDefinitionField", {"fieldName":"firedBy","fieldType":"string","name":"field3"}, {}],
 	    field4: ["wm.TypeDefinitionField", {"fieldName":"data","fieldType":"string","name":"field4"}, {}],
 	    field5: ["wm.TypeDefinitionField", {"fieldName":"request","fieldType":"string","name":"field5"}, {}],
 	    field6: ["wm.TypeDefinitionField", {"fieldName":"id","fieldType":"string","name":"field6"}, {}],
-	    field7: ["wm.TypeDefinitionField", {"fieldName":"status","fieldType":"string","name":"field7"}, {}]
+	    field7: ["wm.TypeDefinitionField", {"fieldName":"status","fieldType":"string","name":"field7"}, {}],
+	    field8: ["wm.TypeDefinitionField", {"fieldName":"eventId","fieldType":"number","name":"field8"}, {}]
 	}]}, this)[0];
 	//typeDef.setOwner(this);
 	wm.typeManager.types.debugServicesType.fields.id.include = ["update"];
@@ -56,7 +58,7 @@ dojo.declare("wm.debug.ServicePanel", wm.Container, {
 	var components = this.createComponents({
 	    serviceListVar: ["wm.Variable", {type: "debugServicesType", isList: true}],
 	    serviceGrid: ["wm.DojoGrid", {width: "100%", height: "100%","columns":[
-		{"show":true,"field":"status","title":"-",width:"20px","formatFunc":"wm_image_formatter","formatProps":{"width":18,"height":16}},
+		{"show":true,"field":"status","title":"-",width:"22px","formatFunc":"wm_image_formatter","formatProps":{"width":18,"height":16}},
 		{"show":true,"field":"page","title":"Page","width":"80px","align":"left","formatFunc":""},
 		{"show":true,"field":"name","title":"Name","width":"100%","align":"left","formatFunc":""},
 		{"show":true,"field":"lastUpdate","title":"Time","width":"80px","align":"left","formatFunc": "wm_date_formatter",
@@ -64,13 +66,12 @@ dojo.declare("wm.debug.ServicePanel", wm.Container, {
                      "dateType": "time",
 		     formatLength: "medium"
 		 }},
+		{"show":true,"field":"duration","title":"Length (ms)","width":"80px","align":"left","formatFunc": "wm_number_formatter"},
 		{"show":true,"field":"firedBy","title":"FiredBy","width":"120px","align":"left","formatFunc":""},
-		{"show":true,"field":"data","title":"Data","width":"80px","align":"left","formatFunc":"showDataCell", expression: ""},
-		/*{"show":true,"field":"request","title":"Request","width":"100%","align":"left","formatFunc":""},*/
-		{"show":true,"field":"update","title":"Update","width":"60px","align":"left","formatFunc":"wm_button_formatter","formatProps":null,"expression":"\"Update\"","isCustomField":true}
+		{"show":true,"field":"data","title":"Data","width":"80px","align":"left","formatFunc":"showDataCell", expression: ""}
 	    ],
 					  "margin":"4",
-					  "name":"serviceGrid"}, {onGridButtonClick: "updateGridButtonClick", onSelectionChange: "showDataTabs"}, {
+					  "name":"serviceGrid"}, {onSelectionChange: "showDataTabs"}, {
 					      binding: ["wm.Binding", {"name":"binding"}, {}, {
 						  wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"serviceListVar","targetProperty":"dataSet"}, {}]
 					      }]
@@ -99,21 +100,27 @@ dojo.declare("wm.debug.ServicePanel", wm.Container, {
 	this.serviceGrid.setColumnShowing("lastUpdate",!hasSelection, true);
 	this.serviceGrid.setColumnShowing("firedBy",!hasSelection, true);
 	this.serviceGrid.setColumnShowing("data",!hasSelection, true);
+	this.serviceGrid.setColumnShowing("duration",!hasSelection, true);
 	this.serviceGrid.setColumnShowing("update",!hasSelection, false);
 	this.serviceGrid.setWidth(hasSelection ? "150px" : "100%");
 	if (hasSelection) {
 	    this.selectedGridItem = inSender.selectedItem;
+	    var eventId = inSender.selectedItem.getValue("eventId");
+	    if (eventId) {
+		var eventObj = wm.debug.EventsPanel.prototype.findEventById(eventId);
+	    }
 	    this.selectedItem = app.getValueById(inSender.selectedItem.getValue("id"));
 	    this.inspector.show();
-	    this.inspector.inspect(this.selectedItem, this.selectedGridItem);
+	    this.inspector.inspect(this.selectedItem, this.selectedGridItem, eventObj);
 	} else {
 	    this.inspector.hide();
 	}
 
     },
+/*
     updateGridButtonClick: function(inSender, fieldName, rowData, rowIndex) {
       try {
-	  /* Causes this click to show as "debugger" in the grid */
+	  / * Causes this click to show as "debugger" in the grid * /
 	  (function wmdebugger() {
               var c = app.getValueById(rowData.id);
               c.update();
@@ -121,6 +128,7 @@ dojo.declare("wm.debug.ServicePanel", wm.Container, {
       } catch(e) {
       } 
   },
+    */
     getLoadingIcon: function() {
 	return dojo.moduleUrl("wm.base.widget.themes.default.images") + "loadingThrobber.gif";
     },
@@ -211,8 +219,10 @@ dojo.declare("wm.debug.ServicePanel", wm.Container, {
 			    id: c.getRuntimeId(),
 			    status: status,
 			    lastUpdate: c._debug && c._debug.lastUpdate ? c._debug.lastUpdate :  undefined,
+			    duration: c._debug && c._debug.duration ? c._debug.duration : undefined,
 			    firedBy: firedBy || (c instanceof wm.ServiceVariable ? "<i>Never Fired</i>" : ""),
 			    data: c._lastError ? c._lastError : c.getData(),
+			    eventId: c._debug ? c._debug.eventId : null,
 			    request: c._debug ? c._debug.request : {}};
 
 	    // See if the item exists and update it if it does

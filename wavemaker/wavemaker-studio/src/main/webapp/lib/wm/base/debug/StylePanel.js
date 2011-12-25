@@ -51,7 +51,6 @@ dojo.declare("wm.debug.StylePanel", wm.Layer, {
 		    paddingInput: ["wm.Text", {width:"100%",caption: "padding", captionSize: "100px"}, {onchange: "paddingChange"}],
 		    borderInput: ["wm.Text", {width:"100%",caption: "border", captionSize: "100px"}, {onchange: "borderChange"}],
 		    borderColorInput: ["wm.ColorPicker", {width:"100%",caption: "borderColor", captionSize: "100px"}, {onchange: "borderColorChange"}],
-		    highlightButton: ["wm.Button", {caption: "Highlight Parents", hint: "click this to see each of this widget's parents; do this if you can't see the widget, this may help you discover a parent that needs to be scrollable in order to show this widget", width: "180px"},{onclick: "highlightParents"}],
 		    styleInput: ["wm.AceEditor", {syntax: "css", width: "100%", height: "100%",minWidth:"150"}, {onChange: "stylesChange"}]
 	}, this);
 
@@ -152,21 +151,5 @@ dojo.declare("wm.debug.StylePanel", wm.Layer, {
 		this.inspect();
 	    }
 	});
-    },
-    highlightParents: function() {
-	if (this.highlightWidget) {
-	    this.highlightWidget.setBorder(this.highlightWidgetBorder);
-	    this.highlightWidget.setBorderColor(this.highlightWidgetBorderColor);
-	    this.highlightWidget = this.highlightWidget.parent;
-	} else {
-	    this.highlightWidget = this.selectedItem;
-	}
-	if (!this.highlightWidget) return;
-	this.highlightWidgetBorder = this.highlightWidget.border;
-	this.highlightWidgetBorderColor = this.highlightWidget.borderColor;
-	this.highlightWidget.setBorder("4");
-	this.highlightWidget.setBorderColor("red");
-	app.toastDialog.showToast("Highlighting " + this.highlightWidget.toString(), 2000, "", "cc");
-	wm.job("highlightParents", 2000, dojo.hitch(this,"highlightParents"));
     }
 });

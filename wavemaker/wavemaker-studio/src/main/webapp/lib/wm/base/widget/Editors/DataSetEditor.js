@@ -44,12 +44,21 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
 	    }
 	}
     },
-	update: function() {
-		if (this.dataSet instanceof wm.ServiceVariable) {
-			var d = this.dataSet.update();
-			return d;
-		}
-	},
+    update: function() {
+	if (this.dataSet instanceof wm.ServiceVariable) {
+	    if (djConfig.isDebug) {
+		var eventId = app.debugDialog.newLogEvent({eventType: "startUpdate",
+							   eventName: "startUpdate",
+							   method: "update",
+							   affectedId: this.dataSet.getRuntimeId(),
+							   firingId: this.getRuntimeId(),
+							   method: "update"});
+	    }
+	    var d = this.dataSet.updateInternal(); // use internal because we're logging the cause of the update call here
+	    if (eventId) app.debugDialog.endLogEvent(eventId);
+	    return d;
+	}
+    },
 	hasValues: function(){
 	    return (this.options || this.dataSet && !this.dataSet.isEmpty());
 	},

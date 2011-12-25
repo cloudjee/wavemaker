@@ -29,8 +29,12 @@ dojo.require("wm.base.debug.RequestPanel");
 dojo.require("wm.base.debug.EventDetailsPanel");
 
 dojo.declare("wm.debug.Dialog", wm.Dialog, {
+    border: "4", // easy to resize!
+    _noAnimation:true,
+    showTitleButtonsWhenDocked: true,
     noEscape: true,
-    noTopBottomDocking: true,
+    minHeight: 300,
+    noTopBottomDocking: false,
     noLeftRightDocking: true,
     useContainerWidget: true,
     useButtonBar: false,
@@ -38,6 +42,8 @@ dojo.declare("wm.debug.Dialog", wm.Dialog, {
     title: "WM Debugger",
     commands: null,
     commandPointer: null,
+    _lastDocked: true,
+    padding: "0",
 
 /* This hack (providing getRoot and getRuntimeId) is needeed to be able to write event handlers such as onShow: "serviceGridPanel.activate"; without it, we'd need something like
  * app.debugDialog.serviceGridPanel.activate
@@ -58,16 +64,15 @@ dojo.declare("wm.debug.Dialog", wm.Dialog, {
     postInit: function() {
 	this.inherited(arguments);
 	this.commands = [];
-
 	this.containerWidget.createComponents({
-	    tabLayers: ["wm.TabLayers", {width: "100%", height: "100%"}, {}, {
-		eventsLayer: ["wm.Layer", {caption: "Events"}, {onShow: "eventsPanel.activate", onDeactivate: "eventsPanel.deactivate"}, {
-		    eventsPanel: ["wm.debug.EventsPanel", {width: "100%", height: "100%", autoScroll: true}]
-		}],
-		servicesLayer: ["wm.Layer", {caption: "Services"}, {onShow: "serviceGridPanel.activate", onDeactivate: "serviceGridPanel.deactivate"}, {
+	    tabLayers: ["wm.TabLayers", {width: "100%", height: "100%", headerHeight: "20px", clientBorder: "1,0,0,0", margin: "0"}, {}, {
+		servicesLayer: ["wm.Layer", {caption: "Services",padding:"0",margin:"0"}, {onShow: "serviceGridPanel.activate", onDeactivate: "serviceGridPanel.deactivate"}, {
 		    serviceGridPanel: ["wm.debug.ServicePanel", {width: "100%", height: "100%", autoScroll: true}]
 		}],
-		widgetLayer:  ["wm.Layer", {caption: "Widgets and Bindings"}, {onShow: "widgetPanel.activate", onDeactivate: "widgetPanel.deactivate"}, {
+		eventsLayer: ["wm.Layer", {caption: "Events",padding:"0",margin:"0"}, {onShow: "eventsPanel.activate", onDeactivate: "eventsPanel.deactivate"}, {
+		    eventsPanel: ["wm.debug.EventsPanel", {width: "100%", height: "100%", autoScroll: true}]
+		}],
+		widgetLayer:  ["wm.Layer", {caption: "Widgets and Bindings",padding:"0",margin:"0"}, {onShow: "widgetPanel.activate", onDeactivate: "widgetPanel.deactivate"}, {
 		    widgetPanel: ["wm.debug.WidgetPanel", {width: "100%", height: "100%", autoScroll:true}]
 		}]
 	    }]
@@ -224,6 +229,26 @@ dojo.declare("wm.debug.Dialog", wm.Dialog, {
 	    }
 
 	}));
+    },
+    _loadedCss: false,
+    setShowing: function(inShowing) {
+	if (inShowing && !this._loadedCss) {
+            var link = document.createElement("link");
+            link.rel = "stylesheet";
+            link.type = "text/css";
+            link.href = dojo.moduleUrl("wm.base.debug").uri + "debugger.css";
+            document.getElementsByTagName("head")[0].appendChild(link);
+	}
+	if (!this.showing && inShowing && this._lastDocked) {
+	    this.setDocked(true,null,"b");
+	}
+	this.inherited(arguments);
+    },
+    setDocked: function(inDock,optionalParent,optionalEdge) {
+	this.inherited(arguments);
+	if (this.showing) {
+	    this._lastDocked = this.docked;
+	}
     }
 });
 
@@ -234,9 +259,11 @@ dojo.declare("wm.debug.Inspector", wm.Container, {
     horizontalAlign: "left",
     verticalAlign: "top",
     showing: false,
+    border: "0,0,0,1",
+    borderColor: "#888",
     postInit: function() {
 	this.createComponents({
-	    tabs: ["wm.TabLayers", {width: "100%", height: "100%"}, {}, {
+	    tabs: ["wm.TabLayers", {width: "100%", height: "100%", headerHeight: "20px", clientBorder: "1,0,0,0", margin: "0"}, {}, {
 		eventsPanel: ["wm.debug.EventDetailsPanel",{}],
 		propertiesPanel: ["wm.debug.PropertyPanel", {},{},{}],
 		bindPanel: ["wm.debug.BindPanel", {}],		

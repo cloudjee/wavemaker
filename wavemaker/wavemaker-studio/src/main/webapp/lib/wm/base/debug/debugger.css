@@ -1,0 +1,248 @@
+/* Overall debugger styles */
+#debugDialog_containerWidget, 
+#debugDialog .wmtablayers {
+    background-color: #aaa;
+    font-size: 10px;
+}
+
+#debugDialog_containerWidget .wmlayer {
+    background-color: #ddd;
+}
+
+/* Styling of Tab Buttons */
+#debugDialog .wmtablayers-tab {
+    cursor: pointer;
+    height: 15px;
+    margin: 0px 0px 0px 1px;
+    overflow:hidden;
+    font-size: 8px;
+    border-left: solid 1px #666;
+    border-right: solid 1px #666;
+    border-top: solid 1px #666;
+    -moz-border-radius-topleft: 2px; 
+    -moz-border-radius-topright: 2px;
+    -webkit-border-top-left-radius: 2px;
+    -webkit-border-top-right-radius: 2px;
+    border-radius-topleft: 2px;
+    border-radius-topright: 2px;
+    -moz-box-shadow: 0px 0px 0px #666; /* Document-ClickablesDefault-BorderStyle_Shadow */
+    -webkit-box-shadow: 0px 0px 0px #666; /* Document-ClickablesDefault-BorderStyle_Shadow */
+    box-shadow: 0px 0px 0px #666; /* Document-ClickablesDefault-BorderStyle_Shadow */    
+    background-image: none;
+    background-color: #999;
+    color: black;
+    font-weight: normal;
+}
+#debugDialog .wmtablayers-tab.wmtablayers-selected {
+   background-color: #ddd;
+    color: black;
+    font-weight: bold;
+    top:0px;
+}
+
+/* Styling of Layer Borders */
+#debugDialog .wmlayer {
+    border-radius: 0px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+}
+
+
+/* Styling of Grids */
+#debugDialog .dojoxGridScrollbox {
+    background-color: inherit;
+}
+
+#debugDialog div.dojoxGridRow {
+    font-size: 8px;
+    color: #000000;
+    font-weight: normal;
+    background-color: #dadada;
+}
+#debugDialog div.dojoxGridRow.dojoxGridRowOdd {
+    color: #000000;
+    background-color: #d0d0d0;
+}
+#debugDialog td.dojoxGridCell {
+    border-left-width: 0px;
+    border-top-width: 0px;
+    border-bottom-width: 0px;
+    border-right-width: 1px !important;
+    border-style: solid;   
+    border-color: #888;
+}
+
+#debugDialog div.dojoxGridRow.dojoxGridRowSelected, 
+#debugDialog div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected,
+#debugDialog div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver, 
+#debugDialog div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver,
+#debugDialog div.dojoxGridRow.dojoxGridRowSelected .dojoxGridCell, 
+#debugDialog div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected .dojoxGridCell, 
+#debugDialog div.dojoxGridRow.dojoxGridRowSelected.dojoxGridRowOver .dojoxGridCell, 
+#debugDialog div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected.dojoxGridRowOver .dojoxGridCell {
+    background-color: #888;
+    color: white;
+}
+
+#debugDialog .dojoxGridRowOver, 
+#debugDialog .dojoxGridRowOver .dojoxGridCell, 
+#debugDialog .dojoxGridRowOdd.dojoxGridRowOver {
+    background-color: #aaa !important;
+    color: #000000 !important;
+}
+#debugDialog div.dojoxGridContent .dojoxGridCell {
+    background: transparent;
+}
+#debugDialog div.dojoxGridContent .dojoxGridCellFocus {
+    border: 1px dashed transparent !important;
+}
+
+
+/* Grid header */
+#debugDialog div.dojoxGridHeader .dojoxGridCell {
+    background: inherit;
+    border-right-width: 1px;
+    border-right-style: solid;
+    border-right-color: #888;
+
+    font-family: Verdana;
+    font-size: 8px;
+    color: #000000 !important;
+    font-weight: bold;
+}
+
+#debugDialog .dojoxGridHeader {
+    background-color: transparent;
+    background-image: none;
+}
+
+
+/* Styling of Buttons */
+#debugDialog .wmbutton {
+    background-color: #aaa;
+    background-image:url(../widget/themes/wm_default/images/repeatx/brightEdge2.png);
+    color: #000;
+    font-size: 8px;
+    font-weight: normal;
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;    
+    -moz-box-shadow: 1px 1px 1px #aaa;
+    -webkit-box-shadow: 1px 1px 1px #aaa;
+    box-shadow: 1px 1px 1px #aaa;
+    border-width:1px;
+    border-color:#666;
+}
+
+#debugDialog .wmbutton:hover {
+    background-color: #999;
+    background-image:url(../widget/themes/wm_default/images/repeatx/brightEdge2.png);
+    color: #000;
+    font-size: 8px;
+    font-weight: normal;
+    border-radius: 2px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;    
+    -moz-box-shadow: 0px 0px 0px #aaa;
+    -webkit-box-shadow: 0px 0px 0px #aaa;
+    box-shadow: 0px 0px 0px #aaa;
+    border-width:1px;
+    border-color:#666;
+}
+
+/* Editors */
+#debugDialog  .wmeditor .dijitTextBox,
+#debugDialog  .wmeditor .dijitTextArea,
+#debugDialog  .wmeditor .dijitComboBox
+ {
+     -moz-border-radius: 2px;
+     -webkit-border-radius: 2px;
+     border-radius: 2px;
+}
+
+#debugDialog .wmeditor .dijitComboBox .dijitArrowButton,
+#debugDialog .wmeditor .dijitSelect .dijitArrowButton {
+    -moz-border-radius-bottomright: 0px;
+    -moz-border-radius-topright: 0px;
+    -webkit-border-bottom-right-radius: 0px;
+    -webkit-border-top-right-radius: 0px;
+    border-radius-bottomright: 0px;
+    border-radius-topright: 0px;
+}    
+#debugDialog .dijitComboBox .dijitArrowButton .dijitArrowButtonInner,
+#debugDialog .dijitSelect .dijitArrowButton .dijitArrowButtonInner {
+	background-image: url(../widget/themes/wm_default/images/comboArrowDownLight.png);
+        -moz-border-radius-bottomright: 0px;
+        -moz-border-radius-topright: 0px;
+        -webkit-border-bottom-right-radius: 0px;
+        -webkit-border-top-right-radius: 0px;
+         border-radius-bottomright: 0px;
+         border-radius-topright: 0px;
+}
+
+
+#debugDialog .wmeditor .dijitComboBox .dijitArrowButton,
+#debugDialog .wmeditor .dijitSelect .dijitArrowButton {
+    background-color: #aaa;
+    background-image: none;
+}
+#debugDialog .wmeditor .wmeditor-caption {
+	font-family: inherit;
+	font-size: inherit;
+	color: inherit;
+	font-weight: normal;
+}
+#debugDialog .wmeditor .wmeditor-readonlyNode {
+	font-family: inherit;
+	font-size: inherit;
+	color: inherit;
+	font-weight: inherit;
+}
+    #debugDialog .wmeditor .dijitTextBox,
+    #debugDialog .wmeditor .dijitTextArea,
+    #debugDialog .wmeditor .dijitComboBox,
+    #debugDialog .wmeditor .dijitSelect .dijitButtonContents {
+
+	border-color: #999;
+	border-width: 1px; 
+	font-family: Verdana;
+	font-size: 8px;
+	color: #000000;
+	font-weight: normal;
+	background-color: #fff;
+	background-image: none;
+    }
+    #debugDialog .wmeditor .dijitTextBox.dijitHover,
+    #debugDialog .wmeditor .dijitTextArea:hover,
+    #debugDialog .wmeditor .dijitComboBox.dijitHover,
+    #debugDialog .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
+    #debugDialog .wmeditor .RichTextEditable:hover iframe {
+	color: #000000; 
+	border-color: #999;
+	background-color: #ddd;
+	background-image: none;
+    }
+    #debugDialog .dojoxGrid .dijitTextBox.dijitFocused,
+    #debugDialog .dojoxGrid .dijitComboBox.dijitFocused,
+    #debugDialog .dojoxGrid .dijitSelect.dijitFocused .dijitButtonContents,
+    #debugDialog .wmeditor .dijitTextBox.dijitFocused,
+    #debugDialog .wmeditor .dijitTextBox.dijitFocused.dijitHover,
+    #debugDialog .wmeditor .dijitTextArea.dijitFocused,
+    #debugDialog .wmeditor .dijitTextArea.dijitFocused:hover,
+    #debugDialog .wmeditor .dijitComboBox.dijitFocused,
+    #debugDialog .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    #debugDialog .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
+    #debugDialog .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents {
+	color: #000000;
+	border-color: #000000;
+	background-color: #FFFFFF;
+	background-image: none;
+    }
+
+
+/* Widget Highlighter */
+.wmdebuggerSelectionNode {
+    opacity: 0.2;
+    position: absolute;
+    background-color: blue;
+}

@@ -45,7 +45,7 @@ dojo.declare("wm.debug.RequestPanel", wm.Layer, {
 	this.inherited(arguments);
 	this.createComponents({
 	    dataEditor: ["wm.AceEditor", {"height":"100%","name":"dataEditor","width":"100%"}],
-	    setRequestButton: ["wm.Button", {name: "fireButton", caption: "setRequest()", width: "150px"},{onclick: "callSetRequest"}]
+	    setRequestButton: ["wm.Button", {name: "fireButton", caption: "setRequest()", width: "120px", height:"20px",margin:"2",border:"1",borderColor:"#666"},{onclick: "callSetRequest"}]
 	}, this);
     },
 
