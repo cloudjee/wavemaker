@@ -128,14 +128,14 @@ th {
 
 .wmsplitter-h {
 	cursor: e-resize;
-	/* for IE6 only */
-	background-position: 1px center;
+	background-position: center center;
+	background-repeat: no-repeat;
 }
 
 .wmsplitter-v {
 	cursor: n-resize;
-	/* for IE6 only */
-	background-position: center 1px;
+	background-position: center center;
+	background-repeat: no-repeat;
 }
 
 /**/

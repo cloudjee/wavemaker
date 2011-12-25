@@ -246,3 +246,10 @@
     position: absolute;
     background-color: blue;
 }
+
+/* Splitter */
+#debugDialog .wmsplitter {
+    background-color: #666;
+    background-repeat: no-repeat;
+    background-position: center center;
+}

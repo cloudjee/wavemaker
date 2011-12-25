@@ -93,6 +93,7 @@ dojo.declare("wm.debug.WidgetPanel", wm.Container, {
 				  }]
 			      }]
 	    }],
+	    splitter: ["wm.Splitter",{showing:false, bevelSize: "4"}],
 	    inspector: ["wm.debug.Inspector", {}, {onXClick: "XClick"}]
 	},this);
     },
@@ -254,6 +255,10 @@ dojo.declare("wm.debug.WidgetPanel", wm.Container, {
 		this.dataLayer.show();
 
 	    }
+	    this.splitter.show();
+	    this.splitter.findLayout();
+	} else {
+	    this.splitter.hide();
 	}
     }
 });

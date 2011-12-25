@@ -149,6 +149,7 @@ dojo.declare("wm.debug.EventsPanel", wm.Container, {
 				      }]
 				  }]
 	    }],
+	    splitter: ["wm.Splitter",{showing:false, bevelSize: "4"}],
 	    inspector: ["wm.debug.Inspector", {}, {onXClick: "XClick"}]
 	},this);
     },
@@ -210,6 +211,7 @@ dojo.declare("wm.debug.EventsPanel", wm.Container, {
 	    this.inspector.hide();
 	    this.clearButton.show();
 	    this.gridPanel.setWidth("100%");
+	    this.splitter.hide();
 	    return;
 	}
 /*
@@ -226,8 +228,10 @@ dojo.declare("wm.debug.EventsPanel", wm.Container, {
 	if (selectedComponentId) {
 	    var selectedComponent = app.getValueById(selectedComponentId);
 	}
-	this.inspector.show(true);
+	this.inspector.show();
 	this.inspector.inspect(selectedComponent, null, data);
+	    this.splitter.show();
+	    this.splitter.findLayout();
 	} catch(e) {
 	} finally {
 	    this.inShowEvent = false;

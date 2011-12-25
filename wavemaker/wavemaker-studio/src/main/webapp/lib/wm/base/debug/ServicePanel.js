@@ -76,6 +76,7 @@ dojo.declare("wm.debug.ServicePanel", wm.Container, {
 						  wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"serviceListVar","targetProperty":"dataSet"}, {}]
 					      }]
 					  }],
+	    splitter: ["wm.Splitter",{showing:false, bevelSize: "4"}],
 	    inspector: ["wm.debug.Inspector", {}, {onXClick: "XClick"}]
 	},this);	
     },
@@ -100,8 +101,8 @@ dojo.declare("wm.debug.ServicePanel", wm.Container, {
 	this.serviceGrid.setColumnShowing("lastUpdate",!hasSelection, true);
 	this.serviceGrid.setColumnShowing("firedBy",!hasSelection, true);
 	this.serviceGrid.setColumnShowing("data",!hasSelection, true);
-	this.serviceGrid.setColumnShowing("duration",!hasSelection, true);
-	this.serviceGrid.setColumnShowing("update",!hasSelection, false);
+	this.serviceGrid.setColumnShowing("duration",!hasSelection, false);
+
 	this.serviceGrid.setWidth(hasSelection ? "150px" : "100%");
 	if (hasSelection) {
 	    this.selectedGridItem = inSender.selectedItem;
@@ -112,8 +113,11 @@ dojo.declare("wm.debug.ServicePanel", wm.Container, {
 	    this.selectedItem = app.getValueById(inSender.selectedItem.getValue("id"));
 	    this.inspector.show();
 	    this.inspector.inspect(this.selectedItem, this.selectedGridItem, eventObj);
+	    this.splitter.show();
+	    this.splitter.findLayout();
 	} else {
 	    this.inspector.hide();
+	    this.splitter.hide();
 	}
 
     },

@@ -2840,15 +2840,20 @@ body.wm_darkdawn {
 .wm_darkdawn .wmbevel {
     /* Document-ClickablesDefault-Background */
     background-color: #555555; /* Document-ClickablesDefault-Background_Color */
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-    border-radius: 2px;
 }
 .wm_darkdawn div.wmsplitter-h:hover,
 .wm_darkdawn div.wmsplitter-v:hover {
     /* Document-ClickablesHover-Background */
     background-color: #0078a3; /* Document-ClickablesHover-Background_Color */
 }
+.wm_darkdawn .wmsplitter-h {
+	background-image: url(images/splitter_bg_h.png);
+}
+
+.wm_darkdawn .wmsplitter-v {
+	background-image: url(images/splitter_bg_v.png);
+}
+
 /*****************************************
  * EOF: splitterbevel.css
  *****************************************/

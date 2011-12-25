@@ -2840,15 +2840,20 @@ body.wm_harrypotter {
 .wm_harrypotter .wmbevel {
     /* Document-ClickablesDefault-Background */
     background-color: #b30000; /* Document-ClickablesDefault-Background_Color */
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-    border-radius: 2px;
 }
 .wm_harrypotter div.wmsplitter-h:hover,
 .wm_harrypotter div.wmsplitter-v:hover {
     /* Document-ClickablesHover-Background */
     background-color: #fe9603; /* Document-ClickablesHover-Background_Color */
 }
+.wm_harrypotter .wmsplitter-h {
+	background-image: url(images/splitter_bg_h.png);
+}
+
+.wm_harrypotter .wmsplitter-v {
+	background-image: url(images/splitter_bg_v.png);
+}
+
 /*****************************************
  * EOF: splitterbevel.css
  *****************************************/

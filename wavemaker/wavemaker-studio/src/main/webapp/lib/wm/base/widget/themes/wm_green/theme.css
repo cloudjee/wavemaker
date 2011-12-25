@@ -2840,15 +2840,20 @@ body.wm_green {
 .wm_green .wmbevel {
     /* Document-ClickablesDefault-Background */
     background-color: #a19fa0; /* Document-ClickablesDefault-Background_Color */
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-    border-radius: 2px;
 }
 .wm_green div.wmsplitter-h:hover,
 .wm_green div.wmsplitter-v:hover {
     /* Document-ClickablesHover-Background */
     background-color: #d7d1d5; /* Document-ClickablesHover-Background_Color */
 }
+.wm_green .wmsplitter-h {
+	background-image: url(images/splitter_bg_h.png);
+}
+
+.wm_green .wmsplitter-v {
+	background-image: url(images/splitter_bg_v.png);
+}
+
 /*****************************************
  * EOF: splitterbevel.css
  *****************************************/
