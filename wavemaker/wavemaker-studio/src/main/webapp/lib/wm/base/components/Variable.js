@@ -1011,7 +1011,9 @@ wm.Variable.extend({
 		this.dataSet = "";
 		if (inDataSet instanceof wm.Variable) {
 			this._rootField = inDataSet._rootField || "";
-			this.setLiveView(inDataSet.liveView);
+		        if (inDataSet.liveView) {
+			    this.setLiveView(inDataSet.liveView);
+			}
 		        this.setType(inDataSet ? inDataSet.type : "wm.Variable", true);
 			this.dataSet = inDataSet;
 			this.cursor = inDataSet.cursor;
