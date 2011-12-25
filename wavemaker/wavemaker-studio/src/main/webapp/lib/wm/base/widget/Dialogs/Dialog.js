@@ -128,6 +128,7 @@ dojo.declare("wm.Dialog", wm.Container, {
     titlebarBorderColor: "black",
     titlebarHeight: "23",
     footerBorder: "1,0,0,0",
+    padding: "5",
 /*
 	contentWidth: 640,
 	contentHeight: 400,
@@ -138,6 +139,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	showing: false,
         dialogScrim: null,
 	modal: true,
+    showTitleButtonsWhenDocked:false,
     constructor: function() {
 	wm.Dialog.resizer = wm.Dialog.resizer || new wm.DialogResize();
     },
@@ -208,7 +210,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 			parent: this,
 			owner: owner,
 			layoutKind: "top-to-bottom",
-			padding: "5",
+			padding: this.padding,
 			fitToContentHeight: this.fitToContentHeight,
 			margin: "0",
 			border: "0",
@@ -329,13 +331,14 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    this.connect(this.dojoMoveable, "onMoveStop", this, function() {
 		this._userSized = true;
 		this.bounds.l = parseInt(this.domNode.style.left);
-		this.bounds.t = parseInt(this.domNode.style.top);
+		this.bounds.t = parseInt(this.domNode.style.top);		
 		if (!this.insureDialogVisible(true)) {
 		    if (this.bounds.t < 0 && !this.noTopBottomDocking || this.bounds.t+this.bounds.h > app.appRoot.bounds.b && !this.noTopBottomDocking ||
 			this.bounds.l < 0 && !this.noLeftRightDocking || this.bounds.w + this.bounds.l > app.appRoot.bounds.r && !this.noLeftRightDocking) {
 			this.setDocked(true);
 		    }
 		} 
+		this.setBounds(this.bounds); // recalcualtes right and bottom borders
 
 		/* If user drags it above the top of the screen, the titlebar can't be reached to move it back, so don't allow this */
 		if (!this.docked && this.bounds.t < 0) {
@@ -355,30 +358,32 @@ dojo.declare("wm.Dialog", wm.Container, {
 	this.noEscape = inNoEscape;
 	this.titleClose.setShowing(!this.modal && !this.noEscape);
     },	
-    setDocked: function(inDock, optionalParent) {
+    setDocked: function(inDock, optionalParent, optionalEdge) {
 	var wasDocked = this.docked
 	if (Boolean(wasDocked) == Boolean(inDock)) return;
 	this.docked = inDock;
 	if (inDock) {	    
-	    this._dock(optionalParent);
+	    this._dock(optionalParent, optionalEdge);
 	} else {
 	    this._undock();
 	}
     },
-    _dock: function(parent) {
+    _dock: function(parent, edge) {
 	var border = this.border;
 	var margin = this.margin;
-	var edge = "";
-	if (this.bounds.t < 0 && !this.noTopBottomDocking)
-	    edge = "t";
-	else if (this.bounds.t+this.bounds.h > app.appRoot.bounds.b  && !this.noTopBottomDocking) 
-	    edge = "b";
-	else if (this.bounds.l < 0 && !this.noLeftRightDocking)
-	    edge = "l";
-	else if (!this.noLeftRightDocking)
-	    edge = "r";
-
+	if (!edge) {
+	    if (this.bounds.t < 0 && !this.noTopBottomDocking)
+		edge = "t";
+	    else if (this.bounds.t+this.bounds.h > app.appRoot.bounds.b  && !this.noTopBottomDocking) 
+		edge = "b";
+	    else if (this.bounds.l < 0 && !this.noLeftRightDocking)
+		edge = "l";
+	    else if (!this.noLeftRightDocking)
+		edge = "r";
+	}
+	if (!this.showTitleButtonsWhenDocked) {
 	    this.titleClose.parent.hide();
+	}
 
 	this._dockData = dojo.clone(this.bounds);
 	this._dockData.edge = edge;
@@ -483,6 +488,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    this.show();
     },
     maxify: function() {
+	if (this.docked) {
+	    this._undock();
+	}
 	if (this._maxified) {
 	    this._maxified = false;
 	    //this.titleMaxify.setCaption(" ");
@@ -501,6 +509,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 	this.delayedRenderBounds();
     },
 	reflowParent: function() {
+	    if (this.docked && this.parent) {
+		this.parent.reflow();
+	    }
 	},
 
 	dismiss: function(e) {
@@ -859,7 +870,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    if (inShowing && !wasShowing) {
 		if (animationTime) {
 		    if (!this._showAnimation) {
-			if (djConfig.isDebug) {
+			if (app.debugDialog) {
 			    var eventChain = app.debugDialog.cacheEventChain();
 			}
 			this._showAnimation =  
@@ -886,7 +897,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		
 		if (animationTime) {
 		    if (!this._hideAnimation) {
-			if (djConfig.isDebug) {
+			if (app.debugDialog) {
 			    var eventChain = app.debugDialog.cacheEventChain();
 			}
                         this._transitionToHiding = true;
@@ -1080,6 +1091,7 @@ dojo.declare("wm.Dialog", wm.Container, {
     },
     setSizeProp: function(n, v, inMinSize) {
 	this.inherited(arguments);
+	if (this.docked) return;
 	if (this.isReflowEnabled())
 	    this.renderBounds();
 	if(this.designWrapper) {
@@ -1116,21 +1128,23 @@ dojo.declare("wm.Dialog", wm.Container, {
 
 		this._initialPosition = dojo.clone(this.bounds);
 
-		var targetX = e.clientX - this.marginExtents.l - this.borderExtents.l;
-		var targetY = e.clientY - this.marginExtents.t - this.borderExtents.t;
-		if (targetX - 12 <= this.bounds.l && targetX + 12 >= this.bounds.l) {
+		var leftTarget = e.clientX - this.marginExtents.l - this.borderExtents.l;
+		var rightTarget = e.clientX;
+		var topTarget = e.clientY - this.marginExtents.t - this.borderExtents.t;
+		var bottomTarget = e.clientY;
+
+		if (leftTarget - 12 <= this.bounds.l && leftTarget + 12 >= this.bounds.l) {
 		    this._dragBorderX = "left";
 		    console.log("LEFT");
-		} else if (targetX - 12 <= this.bounds.r && targetX + 12 >= this.bounds.r) {
+		} else if (rightTarget - 12 <= this.bounds.r && rightTarget + 12 >= this.bounds.r) {
 		    this._dragBorderX = "right";
 		    console.log("RIGHT");
 		} else {
 		    this._dragBorderX = "";
-		    console.log("NOT LEFT OR RIGHT; targetX:"+ targetX + "; this.bounds.r:" + this.bounds.r + "; this.bounds.l: " + this.bounds.l + "; this.bounds.w:" + this.bounds.w);
 		}
-		if (targetY - 12 <= this.bounds.t && targetY + 12 >= this.bounds.t) {
+		if (topTarget - 12 <= this.bounds.t && topTarget + 12 >= this.bounds.t) {
 		    this._dragBorderY = "top";
-		} else if (targetY - 12 <= this.bounds.b && targetY + 12 >= this.bounds.b) {
+		} else if (bottomTarget - 12 <= this.bounds.b && bottomTarget + 12 >= this.bounds.b) {
 		    this._dragBorderY = "bottom";
 		} else {
 		    this._dragBorderY = "";
@@ -1190,7 +1204,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    }
 
 	},
-	drop: function() {
+	drop: function() {	    
 	    this.reflow();
 	},
     setPositionNear: function(inWidgetOrName) {
