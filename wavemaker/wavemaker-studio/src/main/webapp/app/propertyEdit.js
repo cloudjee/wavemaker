@@ -1109,6 +1109,16 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	{name: "cursor", editor: "wm.SelectMenu", editorProps: {options: ["pointer", "crosshair", "e-resize","w-resize","n-resize","s-resize","ne-resize","nw-resize","se-resize","sw-resize","text","wait","help","move","progress"]},advanced:1},
 	{name: "zIndex", editor: "wm.Number",advanced:1}
     ],
+    search: function(inName) {
+	var props = this.inspected.listProperties();
+	for (var propName in props) {
+	    var p = props[propName];
+	    /* TODO: Should test if isEditable prop */
+	    if (p.group == "style" && propName.toLowerCase().indexOf(inName.toLowerCase()) != -1)
+		return true;
+	}
+	return false;
+    },
     postInit: function() {
 	this.inherited(arguments);
 	this.editors = {};

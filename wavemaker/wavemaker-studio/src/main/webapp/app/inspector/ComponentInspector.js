@@ -1479,30 +1479,34 @@
 	 }
 
 	 var props = this.props;
-	 for (var i = 0; i < props.length; i++) {
-	     var prop = props[i];
-	     var key = this.inspected.getId() + "." + prop.name;
+	 for (var key in this.editorHash) { 
 	     var editor = this.editorHash[key];
-	     if (editor) {
+	     var prop = editor.propDef;
+	     if (prop) {
 		 if (inDisplayValue === "") {
 		     if (editor.parent instanceof wm.Layer) {
 			 editor.show();
 		     } else {
 			 editor.parent.show();
 		     }
-		 
-		 } else if (prop.name.toLowerCase().indexOf(inDisplayValue.toLowerCase()) != -1 ||
-			    prop.shortname && prop.shortname.toLowerCase().indexOf(inDisplayValue.toLowerCase()) != -1) {
-		     if (editor.parent instanceof wm.Layer) {
+		 } else if (editor.search) {
+		     if (editor.search(inDisplayValue)) {
 			 editor.show();
 		     } else {
+			 editor.hide();
+		     }
+		 } else if (prop.name.toLowerCase().indexOf(inDisplayValue.toLowerCase()) != -1 ||
+			    prop.shortname && prop.shortname.toLowerCase().indexOf(inDisplayValue.toLowerCase()) != -1) {
+		     if (editor.parent.layoutKind == "left-to-right" && editor.parent instanceof wm.Layer == false) {
 			 editor.parent.show();
+		     } else {
+			 editor.show();
 		     }
 		 } else {
-		     if (editor.parent instanceof wm.Layer) {
-			 editor.hide();
-		     } else {
+		     if (editor.parent.layoutKind == "left-to-right" && editor.parent instanceof wm.Layer == false) {
 			 editor.parent.hide();
+		     } else {
+			 editor.hide();
 		     }
 		 }
 	     }
