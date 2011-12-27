@@ -1167,9 +1167,12 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
 		};
 	},
         _getSourceObject: function(inSource, inOwner) {
-		var parts = (inSource || "").split('.'), o = [];
-	    parts.length = (parts.length && (parts[0] == "app" || parts[0] == wm.decapitalize(studio.project.pageName))) ? 2 : 1;
-		return inOwner.getValueById(parts.join('.'));
+	    var parts = (inSource || "").split('.'), o = [];
+	    //parts.length = (parts.length && (parts[0] == "app" || parts[0] == wm.decapitalize(studio.project.pageName))) ? 2 : 1;
+	    while (inOwner.getValueById(parts.join('.')) instanceof wm.Component == false) {
+		parts.pop();
+	    }
+	    return inOwner.getValueById(parts.join('.'));
 	},
     _getExpressionPageSourceObject: function(inExpression, inOwner) {
 		var sources = wm.expression.getSources(inExpression);
