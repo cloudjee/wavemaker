@@ -759,6 +759,7 @@ wm.List.extend({
 	}
     },
     getCellClass: function(inRow, inCol) {
+	if (!this.columns) return;
 	if (inRow != -1) {
 	    // ignore inRow parameter; its always -1 or 0 (header or cell)
 	    inRow = this._formatIndex != null ? this._formatIndex : this.getCount();
