@@ -36,9 +36,11 @@ dojo.declare("wm.table.builder", null, {
 	_table: ['<table class="', '','" cellspacing="0" cellpadding="0">'],
 	// generate starting tags for a cell
 	generateCell: function(inRow, inCol, inHeader) {
-		var tag = (inHeader ? 'th' : 'td'), html = ['<', tag, ' '],
-			s=(this.getCellStyle)&&this.getCellStyle(inRow, inCol),
-			c=this.columnClassName || ((this.getCellClass)&&this.getCellClass(inRow, inCol));
+	    var tag = (inHeader ? 'th' : 'td');
+	    var html = ['<', tag, ' '];
+	    var s=this.getCellStyle && this.getCellStyle(inRow, inCol);
+	    var c=this.getCellClass && this.getCellClass(inRow, inCol);
+	    c = (c ? c + " " : "") +  this.columnClassName;
 		s&&html.push([' style="', s, '"'].join(''));
 		c&&html.push([' class="', c, '"'].join(''));
 		html.push('>')

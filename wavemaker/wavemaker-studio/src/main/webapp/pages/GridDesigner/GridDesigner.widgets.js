@@ -63,7 +63,17 @@ GridDesigner.widgets = {
 		}],
 		panel4: ["wm.Panel", {"height":"32px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 		    addButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Add","margin":"4","width":"100%"}, {"onclick":"addButtonClick"}],
-		    deleteButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Delete","margin":"4","width":"100%"}, {"onclick":"deleteButtonClick"}]
+		    deleteButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Delete","margin":"4","width":"100%"}, {"onclick":"deleteButtonClick"}],
+		    upButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},width: "40px", imageList: "studio.silkIconImageList", imageIndex: 7,caption:""}, {onclick: "moveUp"}, {
+			binding: ["wm.Binding", {}, {}, {
+			    wire: ["wm.Wire", {"expression":undefined,"source":"grid.emptySelection","targetProperty":"disabled"}, {}]
+			}]		    
+		    }],
+		    downButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},width: "40px", imageList: "studio.silkIconImageList", imageIndex: 2,caption:""}, {onclick: "moveDown"}, {
+			binding: ["wm.Binding", {}, {}, {
+			    wire: ["wm.Wire", {"expression":undefined,"source":"grid.emptySelection","targetProperty":"disabled"}, {}]
+			}]		    
+		    }]
 		}]
 	    }],
 	    tabLayers1: ["wm.TabLayers", {"margin":"4", clientBorder: "1", clientBorderColor: "black"}, {}, {
@@ -90,7 +100,7 @@ GridDesigner.widgets = {
 			    }]
 			}]
 		    }],
-		    alignmentEditor: ["wm.SelectMenu", {"caption":"Alignment","captionAlign":"left","dataField":"dataValue","displayField":"dataValue","displayValue":"","helpText":"Horizontal alignment for cells in this column","options":"Left, Right, Center","width":"100%"}, {onchange: "onAlignChange"}, {
+		    alignmentEditor: ["wm.SelectMenu", {"caption":"Alignment","captionAlign":"left","dataField":"dataValue","displayField":"dataValue","displayValue":"","helpText":"Horizontal alignment for cells in this column","options":"left, right, center","width":"100%"}, {onchange: "onAlignChange"}, {
 			binding: ["wm.Binding", {}, {}, {
 			    wire: ["wm.Wire", {"expression":undefined,"source":"grid.selectedItem.align","targetProperty":"dataValue"}, {}]
 			}]
@@ -150,7 +160,7 @@ GridDesigner.widgets = {
 				}]
 			    }],
 			    numberLayer: ["wm.Layer", {}, {}, {
-				numberType: ["wm.Checkbox", {"border":"0","caption":"Show Percent?",checkedValue: "percent","captionAlign":"left","dataValue":undefined,"displayValue":"","helpText":"","width":"100%"}, {onchange: "onNumberTypeChange"}, {
+				numberType: ["wm.Checkbox", {dataType: "string", "border":"0","caption":"Show Percent?",checkedValue: "percent","captionAlign":"left","dataValue":undefined,"displayValue":"","helpText":"","width":"100%"}, {onchange: "onNumberTypeChange"}, {
 				    binding: ["wm.Binding", {}, {}, {
 					wire: ["wm.Wire", {"expression":undefined,"source":"grid.selectedItem.formatProps.numberType","targetProperty":"dataValue"}, {}]
 				    }]
@@ -224,7 +234,7 @@ GridDesigner.widgets = {
 			}]
 		    }]
 		}],
-		    layer2: ["wm.Layer", {"border":"1","borderColor":"#999999","caption":"Advanced Settings","horizontalAlign":"left","margin":"2,0,0,0","padding":"4","themeStyleType":"ContentPanel","verticalAlign":"top", autoScroll:true}, {}, {
+		    advancedLayer: ["wm.Layer", {"border":"1","borderColor":"#999999","caption":"Advanced Settings","horizontalAlign":"left","margin":"2,0,0,0","padding":"4","themeStyleType":"ContentPanel","verticalAlign":"top", autoScroll:true}, {}, {
 			label2: ["wm.Label", {"_classes":{"domNode":["wm_TextDecoration_Bold"]},"align":"center","border":"0,0,2,0","padding":"4","width":"100%"}, {}, {
 			    binding: ["wm.Binding", {}, {}, {
 				wire: ["wm.Wire", {"expression":undefined,"source":"grid.selectedItem.field","targetProperty":"caption"}, {}]
@@ -334,8 +344,8 @@ GridDesigner.widgets = {
 		}]
 	    }],
 	    panel2: ["wm.Panel", {"_classes":{"domNode":["dialogfooter"]},"height":"32px","horizontalAlign":"right","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
-		cancelButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Cancel"}, {onclick: "onCancelClick"}],
-		okButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"OK"}, {onclick: "onOkClick"}]
-	    }]
+		cancelButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},width: "80px", "caption":"Cancel"}, {onclick: "onCancelClick"}],
+		okButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},width: "80px", "caption":"OK"}, {onclick: "onOkClick"}]
 	}]
-    }
+    }]
+}

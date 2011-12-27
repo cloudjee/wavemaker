@@ -25,7 +25,10 @@ dojo.declare("wm.ListItem", wm.VirtualListItem, {
 	},
 
 	format: function(inData, inIndex) {
-		return (this.list.format ? this.list.format(inIndex, inData) : inData);
+	    this.list.inSetContent = true;
+	    var result =  (this.list.format ? this.list.format(inIndex, inData) : inData);
+	    delete this.list.inSetContent;
+	    return result;
 	},
 	setContent: function(inData, inImage) {
 		var f = this.format(inData, this.index);
@@ -36,7 +39,7 @@ dojo.declare("wm.ListItem", wm.VirtualListItem, {
 		return this.list.getItemData(this.index);
 	},
 	update: function() {
-		var html = this.format(this.getData(), this.index);
+	    var html = this.format(this.getData(), this.index);
 		this.domNode.innerHTML = html;
 	},
 	getColumnFromNode: function(inNode) {
@@ -65,7 +68,20 @@ dojo.declare("wm.List", wm.VirtualList, {
 	columnWidths: "",
 	dataFields: "",
         classNames: "wmlist",
+    columns: "",
+    _columnsHash: "",
+    setColumns: function(inColumns) {
+	this.columns = inColumns;
+	this._columnsHash = {};
+	for (var i = 0; i < this.columns.length; i++) {
+	    var column = this.columns[i];
+	    this._columnsHash[column.field] = column;
+	}
+    },
 	init: function() {
+	    if (this.columns) {
+		this.setColumns(this.columns);
+	    }
 		this.inherited(arguments);
 		this.createSelectedItem();
 		this.createBuilder();
@@ -85,6 +101,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 		this.builder = new wm.table.builder(this.className+'-table', this.className+'-row', this.className+'-cell');
 		this.builder.getCellContent = dojo.hitch(this, 'getCellContent');
 		this.builder.getCellStyle = dojo.hitch(this, 'getCellStyle');
+		this.builder.getCellClass = dojo.hitch(this, 'getCellClass');
 	},
 	createItem: function(inContent) {
 		return new wm.ListItem(this, inContent);
@@ -107,6 +124,14 @@ dojo.declare("wm.List", wm.VirtualList, {
 	  return Boolean(!this.selected);
 	},
 	_setDataFields: function(inDataFields) {
+	    if (this.columns) {
+		this._dataFields = [];
+		for (var i = 0; i < this.columns.length; i++) {
+		    if (this.columns[i].show) {
+			this._dataFields.push(this.columns[i].field);
+		    }
+		}		
+	    } else {
 		var d = this.dataFields = inDataFields  || '';
 		if (d) {
 			var s = d.split(','), d=[];
@@ -144,6 +169,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 		}
 		this.trimDataSetObjectFields(d);
 		this._dataFields = d;
+	    }
 	},
 	getDataSetObjectFields: function() {
 		var o = {};
@@ -256,45 +282,99 @@ dojo.declare("wm.List", wm.VirtualList, {
 		wm.job(this.getRuntimeId() + "ListSetupScroller", 1, dojo.hitch(this._listTouchScroll, "setupScroller"));
 	    }
 	},
+
 	getHeading: function(inField) {
-		var d = this._dataSource, s = d && d.schema || 0, si = s[inField] || 0;
+	    if (this.columns) {
+		var column = this._columnsHash[inField];
+		var heading = column.title;
+		return heading == null ? "" : heading;
+	    } else {
+		var d = this._dataSource;
+		var s = d && d.schema || 0;
+		var si = s[inField] || 0;
 		if (si.label) return wm.capitalize(si.label);
 		else {
-		  var fieldName = inField.replace(/^.*\./, "");
-		  return wm.capitalize(fieldName);
+		    var fieldName = inField.replace(/^.*\./, "");
+		    return wm.capitalize(fieldName);
 		}
+	    }
 	},
 	getItemData: function(inIndex) {
-		return this._data[inIndex];
+	    return this._data[inIndex];
 	},
 	// item rendering override.
 	getCellContent: function(inRow, inCol, inHeader) {
-		var
-			f = this._dataFields && this._dataFields[inCol],
-			cellData,
-			i = this._formatIndex != null ? this._formatIndex : this.getCount();
-		if (inHeader) {
-			cellData = '<div>' + this.getHeading(f);
-		} else if (this.dataSet && this.dataSet.isList) {
-			var v = this.dataSet.getItem(i);
-			cellData = v.getValue(f);
-		}
-		if (cellData == undefined) {
-			var d = this.getItemData(i);
-			f = wm.decapitalize(f);
-			cellData = f ? d[f] : d;
-		}
-		var info = {column: inCol, data: cellData, header: inHeader};
-		this.onformat(info, inCol, cellData, inHeader,v);
+	    var dataFields = this._dataFields && this._dataFields[inCol];
+	    var cellData;
+	    var i = this._formatIndex != null ? this._formatIndex : this.getCount();
+
+	    /* If its a header... */
+	    if (inHeader) {
+		cellData = '<div>' + this.getHeading(dataFields);
+	    } 
+
+	    /* If its a wm.Variable item */
+	    else if (this.dataSet && this.dataSet.isList) {
+		var value = this.dataSet.getItem(i);
+		cellData = value.getValue(dataFields);
+		cellData = this.formatCell(dataFields,cellData, value, i, inCol);
+	    }
+
+	    /* Else if the data came from a call to renderData([{randomHash},{randomHash},....]) */
+	    if (cellData == undefined) {
+		var d = this.getItemData(i);
+		f = wm.decapitalize(dataFields);
+		cellData = dataFields ? d[dataFields] : d;
+	    }
+	    var info = {column: inCol, data: cellData, header: inHeader};
+	    this.onformat(info, inCol, cellData, inHeader,value);
+	    if (!this.inSetContent) {
 		this._formatIndex = null;
-		return info.data;
+	    }
+	    return info.data;
 	},
 	getColWidth: function(inCol) {
+	    if (this.columns) {
+		return this.columns[inCol].width;
+	    } else {
 		var c = this._columnWidths;
 		return c && (c[inCol] != undefined) ? c[inCol] : Math.round(100 / this.builder.colCount) + '%';
+	    }
 	},
 	getCellStyle: function(inRow, inCol) {
+	    if (this.columns) {
+		var text = [];
+		var col = this.columns[inCol];
+		var align = col.align;
+
+		if (inRow != -1) {
+		    // ignore inRow parameter; its always -1 or 0 (header or cell)
+		    inRow = this._formatIndex != null ? this._formatIndex : this.getCount();
+		    var data = this._data[inRow];
+		    if (col.backgroundColor) {
+			var backgroundColor = wm.expression.getValue(col.backgroundColor, data);
+			if (backgroundColor) {
+			    text.push("background-color:" + backgroundColor);
+			}
+		    }
+		    if (col.textColor) {
+			var textColor = wm.expression.getValue(col.textColor, data);
+			if (textColor) {
+			    text.push("color:" + textColor);
+			}
+		    }
+		}
+		var width = this.getColWidth(inCol);
+		if (width) {
+		    text.push("width:" + width);
+		}
+		if (align) {
+		    text.push("text-align:" + align);
+		}
+		return text.join(";");
+	    } else {
 		return "width: " + this.getColWidth(inCol) + ';';
+	    }
 	},
 	updateBuilder: function() {
 		this.builder.colCount = this._dataFields ? this._dataFields.length : 1;
@@ -310,7 +390,321 @@ dojo.declare("wm.List", wm.VirtualList, {
 	  }
 });
 
+/* This block contains methods created solely to work with this.columns; or added for DojoGrid compatability */
+wm.List.extend({
+    formatCell: function(inField, inValue, inItem, inRowId,inColumnIndex) {
+	if (!this._columnsHash) {
+	    return inValue;
+	} else {
+	    var col = this._columnsHash[inField];
+	var value = "";
+	if (col.expression) {
+	    try	{
+		var data = inItem.getData();
+		value = wm.expression.getValue(col.expression, inItem.getData());
+	    }catch(e){}
+	} else {
+	    value = inValue;
+	}
 
+	if (col.formatFunc){
+	    switch(col.formatFunc){
+	    case 'wm_date_formatter':
+	    case 'Date (WaveMaker)':				    
+		value = this.dateFormatter(col.formatProps||{}, value);
+		break;
+	    case 'wm_localdate_formatter':
+	    case 'Local Date (WaveMaker)':				    
+		value = this.localDateFormatter(col.formatProps||{}, value);
+		break;
+	    case 'wm_time_formatter':
+	    case 'Time (WaveMaker)':				    
+		value = this.timeFormatter(col.formatProps||{}, value);
+		break;
+	    case 'wm_number_formatter':
+	    case 'Number (WaveMaker)':				    
+		value = this.numberFormatter(col.formatProps||{}, value);
+		break;
+	    case 'wm_currency_formatter':
+	    case 'Currency (WaveMaker)':				    
+		value = this.currencyFormatter(col.formatProps||{}, value);
+		break;
+	    case 'wm_image_formatter':
+	    case 'Image (WaveMaker)':				    
+		value = this.imageFormatter(col.formatProps||{}, value);	
+		break;
+	    case 'wm_link_formatter':
+	    case 'Link (WaveMaker)':				    
+		value = this.linkFormatter(col.formatProps||{}, value);	
+		break;
+	    case 'wm_button_formatter':
+		value = this.buttonFormatter(inField, col.formatProps||{}, inRowId, value);
+		break;
+	    default:
+		if (!this.isDesignLoaded()) {
+		    if (this.owner[col.formatFunc]) {
+			if (!data) var data = inItem.getData();
+			value = dojo.hitch(this.owner, col.formatFunc)(value, inRowId, inColumnIndex, inField, {}, data);
+		    }
+		} else {
+		    value = "<i>runtime only...</i>";
+		}
+		break;
+	    }
+	}
+	return value;
+	}
+    },
+    dateFormatter: function(formatterProps, inValue) {
+	    if (!inValue) {
+		return inValue;
+	    } else if (typeof inValue == "number") {
+		inValue = new Date(inValue);
+	    } else if (inValue instanceof Date == false) {
+		return inValue;
+	    }
+	    if (!formatterProps.useLocalTime) {
+		inValue.setHours(inValue.getHours() + wm.timezoneOffset);
+	    }
+	var constraints = {selector:formatterProps.dateType || 'date', formatLength:formatterProps.formatLength || 'short', locale:dojo.locale, datePattern: formatterProps.datePattern, timePattern: formatterProps.timePattern};
+	    return dojo.date.locale.format(inValue, constraints);
+	},
+    numberFormatter: function(formatterProps, inValue) {
+	    var constraints = {
+		places: formatterProps.dijits || 0, 
+		round: formatterProps.round ? 0 : -1,
+		type: formatterProps.numberType
+	    };
+	    return dojo.number.format(inValue, constraints);
+	},
+    currencyFormatter: function(formatterProps, inValue) {
+	    return dojo.currency.format(inValue, {
+		currency: formatterProps.currency || (this._isDesignLoaded ? studio.application.currencyLocale : app.currencyLocale) || wm.getLocaleCurrency(),
+		places: formatterProps.dijits == undefined ? 2 : formatterProps.dijits,
+		round: formatterProps.round ? 0 : -1
+	    });
+	},
+    imageFormatter: function(formatterProps, inValue) {
+	if (inValue && inValue != '') {
+	    var width = formatterProps.width ? ' width="' + formatterProps.width + 'px"' : "";
+	    var height = formatterProps.height ? ' height="' + formatterProps.height + 'px"' : "";
+	    if (formatterProps.prefix)
+		inValue = formatterProps.prefix + inValue;
+
+	    if (formatterProps.postfix)
+		inValue = inValue + formatterProps.postfix;
+
+	    return '<img ' + width + height + ' src="'+ inValue +'">';
+	}
+	return "";
+    },
+    linkFormatter: function(formatterProps, inValue) {
+	    if (inValue && inValue != '') {
+		var displayValue = String(inValue);
+		var linkValue = String(inValue);
+		if (formatterProps.prefix)
+		    linkValue = formatterProps.prefix + linkValue;
+		if (formatterProps.postfix)
+		    linkValue = linkValue + formatterProps.postfix;
+		var target = formatterProps.target || "_NewWindow";
+		if (linkValue.indexOf("://") == -1 && linkValue.charAt(0) != "/")
+		    linkValue = "http://" + linkValue;
+		return '<a href="'+ linkValue +'" target="' + target + '">' + displayValue + "</a>";
+	    }
+	    return inValue;
+	},
+    buttonFormatter: function(field, formatterProps, rowId, inValue) {
+	    if (inValue && inValue != '') {
+		var classList = formatterProps.buttonclass ? ' class="' + formatterProps.buttonclass + '" ' : ' class="wmbutton" ';
+		var onclick = "onclick='" + this.getRuntimeId() + ".gridButtonClicked(\"" + field + "\"," + rowId + ")' ";
+		return '<button ' + onclick + formatterProps.buttonclick + '" style="width:94%;display:inline-block" ' + classList + '>' + inValue + '</button>';
+	    }
+	    return inValue;
+	},
+    gridButtonClicked: function(fieldName, rowIndex) {
+	var rowData = this._data[rowIndex];
+	this.onGridButtonClick(fieldName, rowData, rowIndex);
+    },
+    onGridButtonClick: function(fieldName, rowData, rowIndex) {},
+    select: function(inItemOrIndex) {
+	if (typeof inItemOrIndex != "object") {
+	    this.eventSelect(this.items[inItemOrIndex]);
+	} else {
+	    this.inherited(arguments);
+	}
+    },
+    getRow: function(inRow) {
+	return this._data[inRow];
+    },
+    findRowIndexByFieldValue: function(inFieldName, inFieldValue) {
+	var item;
+	for (var i = 0; i < this._data.length; i++) {
+	    item = this._data[i];
+	    if (item[inFieldName] === inFieldValue) {
+		return i;
+	    }
+	}
+	return -1;
+    },
+    getCell: function(rowIndex, fieldName) {
+	var row = this._data[rowIndex];
+	if (row) {
+	    return row[fieldName];
+	}
+	return "";
+    },
+    setCell: function(rowIndex, fieldName, newValue, noRendering) {
+	var item = this.dataSet.getItem(rowIndex);
+	item.beginUpdate();
+	item.setValue(fieldName, newValue);
+	item.endUpdate();
+	var row = this._data[rowIndex];
+	if (row) {
+	    row[fieldName] = newValue;
+	    if (!noRendering) {
+		this.items[rowIndex].setContent(row);
+	    }
+	}
+    },
+    deleteRow: function(rowIndex) {
+	this.dataSet.removeItem(rowIndex);
+	this._render();
+    },
+    getRowCount: function() {
+	return this.items.length;
+    },
+    addRow: function(inFields, selectOnAdd) {
+	if (this.getRowCount() == 0 && this.variable) {
+	    this.dataSet.setData([inFields]);
+	    if (selectOnAdd) {
+		this.select(0);
+		this.selectionChange(); // needs committing
+	    }
+	    return;
+	  }
+	var data = dojo.clone(inFields);
+	var v = new wm.Variable({type: this.dataSet.type});
+	v.setData(data);
+
+	    /* Adding it to the dojo store does not work well if its a large store where not all of the data is loaded into the store; it seems to get confused */
+/*
+	    data._wmVariable = v;
+	  var schema = this.selectedItem._dataSchema;
+	  for (var key in schema) {
+	    if (!(key in data)) {
+	      data[key] = "";
+	    }
+	  }
+	    data._new = true;
+	    data._wmVariable = new wm.Variable({type: this.dataSet.type, owner: this});
+	    data._wmVariable.setData(data);
+	    debugger;
+	    var result = this.store.newItem(data);
+	    */
+	    this.dataSet.addItem(v,0);
+	    this.dataSet.getItem(0).data._new = true;
+	  if (selectOnAdd || selectOnAdd === undefined) {
+	      this.select(0);
+	  }
+	},
+    addEmptyRow: function(selectOnAdd) {
+	    var obj = {};
+	var hasVisibleValue = false;
+	for (var i = 0; i < this.columns.length; i++) {
+	    var column = this.columns[i];
+	    var columnid = column.field||column.id;
+
+	    var parts = columnid.split(".");
+	    var typeName = this.dataSet.type;
+	    var type = wm.typeManager.getType(typeName);
+	    for (var partnum = 0; partnum < parts.length; partnum++) {
+		if (type && type.fields) {
+		    var field = type.fields[parts[partnum]];
+		    if (field) {
+			typeName = type.fields[parts[partnum]].type;
+			type = wm.typeManager.getType(typeName);
+		    } else {
+			type = "java.lang.String";
+		    }
+		}
+	    }
+	    var value = null;
+	    switch(typeName) {
+	    case "java.lang.Integer":
+	    case "java.lang.Double":
+	    case "java.lang.Float":
+	    case "java.lang.Short":
+		value = 0;
+		break;
+	    case "java.lang.Date":
+		value = new Date().getTime();
+		hasVisibleValue = true;
+		break;
+	    case "java.lang.Boolean":
+		value = false;
+		break;
+	    default:
+		value =	"";
+		hasVisibleValue = true;
+	     }
+	    var subobj = obj;
+	    for (var partnum = 0; partnum < parts.length; partnum++) {
+		if (partnum +1 < parts.length) {
+		    if (!subobj[parts[partnum]]) {
+			subobj[parts[partnum]] = {};
+		    }
+		    subobj = subobj[parts[partnum]];
+		} else {
+		    subobj[parts[partnum]] = value;
+		}
+	    }
+	}
+	this.addRow(obj,selectOnAdd);
+    },
+    getDataSet: function() {return this.dataSet;},
+    setSortIndex: function(){console.warning("setSortIndex not implemented for wm.List");},
+    setSortField: function(){console.warning("setSortField not implemented for wm.List");},
+    setQuery: function() {console.warning("setQuery not implemented for wm.List");},
+    getColumnIndex: function(inFieldName) {
+          for (var i = 0; i < this.columns.length; i++) {
+            if (this.columns[i].field == inFieldName) {
+		return i;
+	    }
+	  }
+	return -1;
+    },
+    setColumnShowing: function(inFieldName, inShowing, noRender) {
+	var index = this.getColumnIndex(inFieldName);
+	if (index != -1 && this.columns[index].show != inShowing) {	    
+	    this.columns[index].show = inShowing;
+	    this.setColumns(this.columns);//regenerate this._dataFields
+	    this._setDataFields();
+	    if (!noRender) {
+		this._render();
+	    }
+	}
+
+    },
+
+    setColumnWidth: function(inFieldName, inWidth, noRender) {
+	this._columnsHash[inFieldName].width = inWidth;
+	if (!noRender) {
+	    this._render();
+	}
+    },
+    getCellClass: function(inRow, inCol) {
+	if (inRow != -1) {
+	    // ignore inRow parameter; its always -1 or 0 (header or cell)
+	    inRow = this._formatIndex != null ? this._formatIndex : this.getCount();
+	    var col = this.columns[inCol];
+	    var data = this._data[inRow];
+	    if (col.cssClass) {
+		return wm.expression.getValue(col.cssClass, data);
+	    }
+	}
+	return "";
+    },
+});
 
 wm.FocusablePanelRegistry = [];
 dojo.declare("wm.FocusableList", wm.List, {

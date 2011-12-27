@@ -40,6 +40,8 @@ wm.Object.extendSchema(wm.VirtualList, {
 
 // design-time only
 wm.Object.extendSchema(wm.List, {
+    editColumns:       {group: "widgetName", subgroup: "data", order:5, requiredGroup: 1, contextMenu: true, operation: 1},
+    columns: {hidden:1},
     updateNow: {group: "operation", operation:1},    
 	disabled: { ignore: 1 },
 	selectedItem: { ignore: 1, bindSource: 1, isObject: true, simpleBindProp: true },
@@ -56,7 +58,19 @@ wm.Object.extendSchema(wm.List, {
 wm.List.description = "Displays list of items.";
 
 wm.List.extend({
-    updateNow: function() {this.update();}
+    updateNow: function() {this.update();},
+    showMenuDialog: function(e){
+	studio.gridDesignerDialog.show();
+	studio.gridDesignerDialog.page.setGrid(this);
+    },
+    editColumns:function() {
+	return this.showMenuDialog();
+    },
+    set_columns: function(inColumns){
+	this.setColumns(inColumns);
+	this._render();
+    }
+
 });
 
 

@@ -1,5 +1,6 @@
 dojo.declare("GridDesigner", wm.Page, {
     start: function() {
+	wm.typeManager.types.gridDefinitionType.fields.field.include = ["update"];
     },
 	updateFormatterList: function(){
 	    this.fullFormattersVar.setData(this.formattersVar);
@@ -34,6 +35,28 @@ dojo.declare("GridDesigner", wm.Page, {
 		return this.currentGrid.columns[i];
 	}
     },
+    moveUp: function(inSender) {
+	var item = this.grid.selectedItem.getData();
+	var selectedIndex = this.grid.getSelectedIndex();
+	if (selectedIndex <= 0) return;
+	this.columnsVar.beginUpdate();
+	this.columnsVar.removeItem(selectedIndex);
+	this.columnsVar.addItem(item, selectedIndex-1);
+	this.columnsVar.endUpdate();
+	this.columnsVar.notify();
+	this.updateGrid();
+    },
+    moveDown: function(inSender) {
+	var item = this.grid.selectedItem.getData();
+	var selectedIndex = this.grid.getSelectedIndex();
+	if (selectedIndex == -1 || selectedIndex >= this.columnsVar.getCount()) return;
+	this.columnsVar.beginUpdate();
+	this.columnsVar.removeItem(selectedIndex);
+	this.columnsVar.addItem(item, selectedIndex+1);
+	this.columnsVar.endUpdate();
+	this.columnsVar.notify();
+	this.updateGrid();	
+    },
     addButtonClick: function(inSender) {
       try {
 	  var newName = "customField";
@@ -51,12 +74,7 @@ dojo.declare("GridDesigner", wm.Page, {
 						      align: "left",
 						      isCustomField: true,
 						      show: true});
-
-			     if (this.currentGrid.dojoObj) {
-				 this.currentGrid.dojoObj.attr('structure', this.currentGrid.getStructure());
-				 this.currentGrid.dojoObj.render();
-			     }
-
+			     this.updateGrid();
 			     window.setTimeout(dojo.hitch(this, function() {
 				 this.grid.select(this.grid.getRowCount() - 1);
 			     }), 1000);
@@ -90,9 +108,10 @@ dojo.declare("GridDesigner", wm.Page, {
 	}
 	return false;
     },
-    updateGrid: function(inRow) {
+    updateGrid: function() {
 	    var columns = this.columnsVar.getData();
-	    var col = columns[inRow];
+	for (var i = 0; i < columns.length; i++) {
+	    var col = columns[i];
 	    if (col.editorProps) {
 		for (var name in col.editorProps) {
 		    if (col.editorProps[name] === null)
@@ -111,11 +130,8 @@ dojo.declare("GridDesigner", wm.Page, {
 			delete col.formatProps[name];
 		}
 	    }
-	    this.currentGrid.columns = columns;
-	    if (this.currentGrid.dojoObj) {
-		this.currentGrid.dojoObj.attr('structure', this.currentGrid.getStructure());
-		this.currentGrid.dojoObj.render();
-	    }
+	}
+	this.currentGrid.set_columns(columns);
     },
     onTitleChange: function(inSender, inDisplayValue, inDataValue) {
 	this.changeItem("title", inDataValue);
@@ -226,11 +242,7 @@ dojo.declare("GridDesigner", wm.Page, {
 	this.changeItem("textColor", inDataValue);
     },
     onCancelClick: function() {
-	this.currentGrid.columns = this.initialColumns;
-	if (this.currentGrid.dojoObj) {
-	    this.currentGrid.dojoObj.attr('structure', this.currentGrid.getStructure());
-	    this.currentGrid.dojoObj.render();
-	}
+	this.currentGrid.set_columns(this.initialColumns);
 	this.owner.owner.hide();
     },
     onOkClick: function() {
