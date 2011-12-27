@@ -128,7 +128,7 @@ dojo.declare("wm.Dialog", wm.Container, {
     titlebarBorderColor: "black",
     titlebarHeight: "23",
     footerBorder: "1,0,0,0",
-    padding: "5",
+    containerPadding: "5",
 /*
 	contentWidth: 640,
 	contentHeight: 400,
@@ -210,7 +210,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 			parent: this,
 			owner: owner,
 			layoutKind: "top-to-bottom",
-			padding: this.padding,
+			padding: this.containerPadding,
 			fitToContentHeight: this.fitToContentHeight,
 			margin: "0",
 			border: "0",

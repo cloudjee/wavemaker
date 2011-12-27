@@ -43,7 +43,7 @@ dojo.declare("wm.debug.Dialog", wm.Dialog, {
     commands: null,
     commandPointer: null,
     _lastDocked: true,
-    padding: "0",
+    containerPadding: "0",
 
 /* This hack (providing getRoot and getRuntimeId) is needeed to be able to write event handlers such as onShow: "serviceGridPanel.activate"; without it, we'd need something like
  * app.debugDialog.serviceGridPanel.activate
