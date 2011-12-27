@@ -146,6 +146,9 @@ wm.Component.extend({
 		    var n = propList[i];		    
 		    if (this.isWriteableProp(props[n],n)) {
 			var value = (window["studio"] && studio._designLanguage !== undefined && studio._designLanguage != "default") ? src["_original_i18n_" + n] || src[n] : src[n];
+			if (n == "showing" && this._mobileShowingRequested) {
+			    value = this._mobileShowingRequested;
+			}
 			if (value instanceof Date) value = value.getTime();
 			if (wm.isInstanceType(src, wm.Application) && value !== undefined) {
 			    out[n] = value;

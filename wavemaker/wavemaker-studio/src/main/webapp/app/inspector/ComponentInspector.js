@@ -1676,6 +1676,7 @@ wm.addPropertyGroups({
     events: {displayName: "Events", order: 100},
     custommethods: {displayName: "Custom Methods", order: 101},
     roles: {displayName: "Roles", order: 110},
+    devices: {displayName: "Devices", order: 120},
     deprecated: {displayName: "Deprecated", order: 100000},
 /* OLD SCHEMA */
 

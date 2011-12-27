@@ -346,5 +346,14 @@ dojo.declare("wm.Designer", wm.Surface, {
         _onShowParent: function() {
 	    if (studio.page && studio.page.root)
 		studio.page.root.callOnShowParent();
+	},
+    renderBounds: function() {	
+	if (this.inherited(arguments)) {
+	    var deviceSize = this.deviceSize;
+	    this.deviceSize = app.appRoot.calcDeviceSize(this.bounds.w);
+	    if (deviceSize != this.deviceSize) {
+		dojo.publish("deviceSizeRecalc");
+	    }
 	}
+    },
 });

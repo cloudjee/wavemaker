@@ -988,6 +988,9 @@ dojo.declare("wm.Application", wm.Component, {
 	    else if (parent == this._leftDock)
 		this._leftSplitter.hide();
 	}
+    },
+    getDeviceSize: function() {
+	return this.appRoot ? this.appRoot.deviceSize : "1000";
     }
 });
 

@@ -19,8 +19,11 @@ dojo.declare("wm.AppRoot", wm.Container, {
 	classNames: '',
 	width: "",
 	height: "",
+        deviceSize: "",
 	create: function() {
-		this.inherited(arguments);
+	    this.inherited(arguments);
+	    this.deviceSize = this.calcDeviceSize(window.innerWidth);
+	    app.valueChanged("deviceSize",this.deviceSize); // bindable event
 	},
 	build: function() {
 	    this.domNode = dojo.byId(this.owner.domNode) || document.body;
@@ -32,6 +35,12 @@ dojo.declare("wm.AppRoot", wm.Container, {
 	},
     getRuntimeId: function() {return "approot";},
 	resize: function() {
+	    var deviceSize = this.deviceSize;
+	    this.deviceSize = this.calcDeviceSize(window.innerWidth);
+	    if (deviceSize != this.deviceSize) {
+		app.valueChanged("deviceSize",this.deviceSize); // bindable event
+		dojo.publish("deviceSizeRecalc");
+	    }
 	    this.reflow();
 	},
 	updateBounds: function() {
@@ -45,5 +54,20 @@ dojo.declare("wm.AppRoot", wm.Container, {
 	        this.updateBounds();
 		this.renderBounds();
 		this.inherited(arguments);
+	},
+    calcDeviceSize: function(width) {
+	if (width >= 1000) {
+	    return "1000";
+	} else if (width >= 800) {
+	    return "800";
+	} else if (width >= 600) {
+	    return "600";
+	} else if (width >= 450) {
+	    return "450";
+	} else if (width >= 300) {
+	    return "300";
+	} else {
+	    return "tiny";
 	}
+    }
 });
