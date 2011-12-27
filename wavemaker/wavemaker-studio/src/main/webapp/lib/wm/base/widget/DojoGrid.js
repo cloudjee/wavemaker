@@ -566,8 +566,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    this.variable.setData([inFields]);
 	    this.renderDojoObj();
 	    if (selectOnAdd) {
-	      this.setSelectedRow(0);
-	      this.selectionChange(); // needs committing
+		this.setSelectedRow(0);
+		this.selectionChange(); // needs committing
 	    }
 	    return;
 	  }
@@ -1136,6 +1136,12 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    }
 	}
     },
+    getColumnShowing: function(inFieldName, inShowing, noRender) {
+	var index = this.getColumnIndex(inFieldName);
+	if (index != -1) 
+	    return this.columns[index].show;
+    },
+
     setColumnWidth: function(inFieldName, inWidth, noRender) {
 	var index = this.getColumnIndex(inFieldName);
 	if (index != -1 && this.columns[index].width != inWidth) {	    
@@ -1560,8 +1566,6 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		try
 		{
 		    expValue = wm.expression.getValue(exp, json, this.owner);
-		    if (expValue === "")
-			console.log(expValue);
 		}
 		catch(e)
 		{
