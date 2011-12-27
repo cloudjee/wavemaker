@@ -29,7 +29,7 @@ if (location.search.indexOf("dojo.locale=") != -1) {
     } catch(e) {}
 wm = window["wm"] || {};
 wm.version = '6.4.3RC';
-
+wm.isMobile = navigator.userAgent.match(/mobile|android/i);
 // loading via append element
 wm.createElement = function(inTag, inAttrs) {
 	var tag = document.createElement(inTag);
