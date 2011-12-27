@@ -34,6 +34,27 @@ dojo.declare("wm.debug.EventsPanel", wm.Container, {
 
     currentEventChain: null,
     nextId: 1,
+    consoleEvent: function(type,args) {
+	var text = "";
+	for (var i = 0; i < args.length; i++) {
+	    text += args[i].toString();
+	}
+
+	var id = this.nextId;
+	this.nextId++;
+
+	this.eventListVar.addItem({
+	    id: id,
+	    time: new Date(),
+	    duration: 0,
+	    eventType: type,
+	    eventName: type,
+	    message: text,
+	    isBinding: false,
+	    causeList: dojo.clone(this.currentEventChain)
+	});
+	
+    },
     newLogEvent: function(inData) {
 	
 	var id = this.nextId;
@@ -115,7 +136,8 @@ dojo.declare("wm.debug.EventsPanel", wm.Container, {
 	    field1009: ["wm.TypeDefinitionField", {"fieldName":"boundSource","fieldType":"string"}, {}], 
 	    field1010: ["wm.TypeDefinitionField", {"fieldName":"boundExpression","fieldType":"string"}, {}],
 	    field1011: ["wm.TypeDefinitionField", {"fieldName":"isBinding","fieldType":"boolean"}, {}],
-	    field1012: ["wm.TypeDefinitionField", {"fieldName":"causeList","fieldType":"NumberData", isList: true}, {}]
+	    field1012: ["wm.TypeDefinitionField", {"fieldName":"causeList","fieldType":"NumberData", isList: true}, {}],
+	    field1013: ["wm.TypeDefinitionField", {"fieldName":"message","fieldType":"string"}, {}],
 	}]}, this)[0];
 	//typeDef.setOwner(this);
 	wm.typeManager.types.debugEventType.fields.id.include = ["update"];
@@ -127,13 +149,14 @@ dojo.declare("wm.debug.EventsPanel", wm.Container, {
 	    gridPanel: ["wm.Panel", {layoutKind: "top-to-bottom", width: "100%", height: "100%",  verticalAlign: "top", horizontalAlign: "left"},{},{
 		searchPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "20px", verticalAlign: "top", horizontalAlign: "left"},{},{
 		    showBindings: ["wm.Checkbox", {width: "150px", captionSize: "120px", caption: "Show Bindings"},{onchange: "searchChange"}],
+		    showErrors: ["wm.Checkbox", {width: "150px", captionSize: "120px", caption: "Errors Only"},{onchange: "searchChange"}],
 		    clearButton: ["wm.Button", {width: "60px", height: "20px", margin:"0",margin:"2",caption: "Clear",border:"1",borderColor:"#666"}, {onclick: "clearEvents"}]
 		}],
 
 		    eventsGrid: ["wm.DojoGrid", 
 				 {width: "100%", height: "100%",query:{isBinding:false},"columns":[
 				     {show:true,field:"eventType", title:"Type", width: "100px", formatFunc:"getEventType"},
-				     {"show":true,"field":"sourceEvent","title":"Source Event","width":"100%","align":"left","formatFunc":"getSourceText"/*, expression: "(${firingId} ? ${firingId} + '.' : '') + (${eventName} == 'Binding' ? ' has changed' : ${eventName} + '()')"*/},
+				     {"show":true,"field":"sourceEvent","title":"Source Event","width":"100%","align":"left","formatFunc":"getSourceText"/*, expression: "(${firingId} ? ${firingId} + '.' : '') + (${eventName} == 'Binding' ? ' has changed' : ${eventName} + '()')"*/, textColor: "${eventType} == 'error' ? 'red' : ''"},
 				     {"show":true,"field":"resultEvent","title":"Resulting Event","width":"100%","align":"left","formatFunc":"getResultText"/*,expression: "${affectedId} + '.' + (${isBinding} ? 'setValue(' + ${boundProperty} + ',' + (${boundValue}||null) + ')' : (${method} || ${eventName}) + '()')"*/},
 				     {"show":true,"field":"time","title":"Time","width":"80px","align":"left","formatFunc": "wm_date_formatter",
 				      "formatProps": {
@@ -151,6 +174,27 @@ dojo.declare("wm.debug.EventsPanel", wm.Container, {
 	    splitter: ["wm.Splitter",{showing:false, bevelSize: "4"}],
 	    inspector: ["wm.debug.Inspector", {}, {onXClick: "XClick"}]
 	},this);
+
+	try {
+	    this._consolelog = console.log;
+	    this._consolewarn = console.warn;
+	    this._consoleerror = console.error;
+	    console.error = dojo.hitch(this, function() {
+		    this._consoleerror.apply(console, arguments)
+		this.consoleEvent("error",arguments);
+	    });
+	    console.warn =  dojo.hitch(this, function() {
+		    this._consolewarn.apply(console, arguments)
+		this.consoleEvent("warn",arguments);
+	    });
+
+		console.log = dojo.hitch(this, function() {
+		    this._consolelog.apply(console, arguments)
+
+		this.consoleEvent("info",arguments);
+		});
+
+	} catch(e) {}
     },
 	XClick: function() {
 	    this.eventsGrid.deselectAll();
@@ -171,14 +215,21 @@ dojo.declare("wm.debug.EventsPanel", wm.Container, {
 	return eventType;
     },
     getResultText: function(inValue, rowId, cellId, cellField, cellObj, rowObj){
-	if (rowObj.eventName == "Binding") {
+	if (rowObj.message) {
+	    if (this instanceof wm.debug.EventsPanel && this.eventsGrid.getColumnShowing("sourceEvent"))
+		return "";
+	    else
+		return rowObj.message;
+	} else if (rowObj.eventName == "Binding") {
 	    return rowObj.affectedId + "<br/>setValue(" + rowObj.boundProperty + "," + (rowObj.boundValue || "null") + ")";
 	} else {
 	    return rowObj.affectedId + "." + rowObj.method + "()";
 	}
     },
     getSourceText: function(inValue, rowId, cellId, cellField, cellObj, rowObj){
-	if (rowObj.eventName == "Binding") {
+	if (rowObj.message) {
+	    return rowObj.message;
+	} else if (rowObj.eventName == "Binding") {
 	    if (rowObj.firingId.match(/ not found/)) {
 		return rowObj.firingId;
 	    } else {
@@ -200,8 +251,8 @@ dojo.declare("wm.debug.EventsPanel", wm.Container, {
 /*
 	    this.eventsGrid.setColumnShowing("firingId", true, true);
 	    this.eventsGrid.setColumnShowing("eventName", true, true);
-	    */
-	    this.eventsGrid.setColumnsShowing("eventType", true, true);
+	    */ 
+	    this.eventsGrid.setColumnShowing("eventType", true, true);
 	    this.eventsGrid.setColumnShowing("sourceEvent", true, true);
 	    this.eventsGrid.setColumnShowing("duration", true, true);
 	    this.eventsGrid.setColumnShowing("time", true, false);
@@ -239,12 +290,20 @@ dojo.declare("wm.debug.EventsPanel", wm.Container, {
     searchChange: function(inSender) {
 	var q = {};
 
-	var showBindings = this.showBindings.getChecked();
-	if (!showBindings) {
-	    q.isBinding = false;
+	var errorsOnly = this.showErrors.getChecked();
+	if (errorsOnly) {
+	    q.eventType = "error";
+	} else {
+
+	    var showBindings = this.showBindings.getChecked();
+	    if (!showBindings) {
+		q.isBinding = false;
+	    }
 	}
+	try {
 	this.eventsGrid.setQuery(q);
 	inSender.focus();
+	} catch(e) {alert(e.toString());}
     },
    activate: function() {
     },
