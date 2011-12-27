@@ -1207,13 +1207,16 @@ body .wm_graphite .dialogfooter .wmbutton:hover {
     border-style: solid;   
     border-color: #aaaaaa; /* Tables-EvenRows-Border_Color */
 }
-.wm_graphite .wmlist-item {
+.wm_graphite .wmlist-cell {
     border-style: solid;   
     border-color: #aaaaaa; /* Tables-EvenRows-Border_Color */
     border-left-width: 0px;
     border-right-width: 1px; /* Tables-EvenRows-Border_BorderSize */
     border-top-width: 0px;
     border-bottom-width: 0px;
+}
+.wm_graphite .wmlist-header .wmlist-cell {
+    border-right-width: 0px;
 }
   /**************************************************************************************************
    * TYPE:        Header, Hover and Selected row styles

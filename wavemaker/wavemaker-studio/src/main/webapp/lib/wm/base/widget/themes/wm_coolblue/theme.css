@@ -1163,13 +1163,16 @@ body .wm_coolblue .dialogfooter .wmbutton:hover {
     border-style: solid;   
     border-color: #cccccc; /* Tables-EvenRows-Border_Color */
 }
-.wm_coolblue .wmlist-item {
+.wm_coolblue .wmlist-cell {
     border-style: solid;   
     border-color: #cccccc; /* Tables-EvenRows-Border_Color */
     border-left-width: 0px;
     border-right-width: 1px; /* Tables-EvenRows-Border_BorderSize */
     border-top-width: 0px;
     border-bottom-width: 0px;
+}
+.wm_coolblue .wmlist-header .wmlist-cell {
+    border-right-width: 0px;
 }
   /**************************************************************************************************
    * TYPE:        Header, Hover and Selected row styles

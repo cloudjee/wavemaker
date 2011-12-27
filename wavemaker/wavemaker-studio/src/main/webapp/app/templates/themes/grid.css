@@ -66,7 +66,7 @@
     border-color: #AAAAAA; /* Tables-EvenRows-Border_Color */
 }
 
-.wm_template .wmlist-item {
+.wm_template .wmlist-cell {
     border-style: solid;   
     border-color: #AAAAAA; /* Tables-EvenRows-Border_Color */
     border-left-width: 0px;
@@ -74,7 +74,9 @@
     border-top-width: 0px;
     border-bottom-width: 0px;
 }
-
+.wm_template .wmlist-header .wmlist-cell {
+    border-right-width: 0px;
+}
 
   /**************************************************************************************************
    * TYPE:        Header, Hover and Selected row styles
