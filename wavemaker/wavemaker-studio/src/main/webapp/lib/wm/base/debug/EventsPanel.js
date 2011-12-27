@@ -99,7 +99,6 @@ dojo.declare("wm.debug.EventsPanel", wm.Container, {
     },
     postInit: function() {
 	this.inherited(arguments);
-
 	this.currentEventChain = [];
 
 	var typeDef = this.createComponents({debugEventType: ["wm.TypeDefinition", {internal: true}, {}, {
