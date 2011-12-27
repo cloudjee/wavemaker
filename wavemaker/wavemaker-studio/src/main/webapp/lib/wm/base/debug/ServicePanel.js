@@ -54,7 +54,6 @@ dojo.declare("wm.debug.ServicePanel", wm.Container, {
 	}]}, this)[0];
 	//typeDef.setOwner(this);
 	wm.typeManager.types.debugServicesType.fields.id.include = ["update"];
-
 	var components = this.createComponents({
 	    serviceListVar: ["wm.Variable", {type: "debugServicesType", isList: true}],
 	    serviceGrid: ["wm.DojoGrid", {width: "100%", height: "100%","columns":[
@@ -119,7 +118,6 @@ dojo.declare("wm.debug.ServicePanel", wm.Container, {
 	    this.inspector.hide();
 	    this.splitter.hide();
 	}
-
     },
 /*
     updateGridButtonClick: function(inSender, fieldName, rowData, rowIndex) {
@@ -178,11 +176,9 @@ dojo.declare("wm.debug.ServicePanel", wm.Container, {
     },
 
    activate: function() {
-	this.serviceGrid._renderHiddenGrid = true;
 	this.generateServicesLayer();
     },
     deactivate: function() {
-	this.serviceGrid._renderHiddenGrid = false;
     },
     generateServicesLayer: function() {
 	this.serviceListVar.beginUpdate();
