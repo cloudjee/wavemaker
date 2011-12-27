@@ -60,11 +60,15 @@ wm.Object.extendSchema(wm.ListItem, {
 });
 
 dojo.declare("wm.List", wm.VirtualList, {
+    query: {},
+    width:'100%',
+    height:'200px',
+    minWidth: 150,
+    minHeight: 60,
         autoScroll: false,
 	constructor: function() {
 		this._data = [];
 	},
-	updateNow: "(update now)",
 	columnWidths: "",
 	dataFields: "",
         classNames: "wmlist",
@@ -85,7 +89,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 		this.inherited(arguments);
 		this.createSelectedItem();
 		this.createBuilder();
-		if (this.columnWidths && this.dataFields.split(",").length != this.columnWidths.split(",").length) {
+		if (!this.columns && this.columnWidths && this.dataFields.split(",").length != this.columnWidths.split(",").length) {
 		  console.error("Column width count does not match field list count");
 		}
 		this._setDataFields(this.dataFields);
@@ -123,6 +127,10 @@ dojo.declare("wm.List", wm.VirtualList, {
 	getEmptySelection: function() {
 	  return Boolean(!this.selected);
 	},
+	hasSelection: function() {
+	    return Boolean(this.selected);
+	},
+
 	_setDataFields: function(inDataFields) {
 	    if (this.columns) {
 		this._dataFields = [];
@@ -241,6 +249,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	},
 	// virtual binding target
 	setDataSet: function(inDataSet) {
+	    try {
 		if (!this.canSetDataSet(inDataSet))
 			this.dataSet = "";
 		else
@@ -250,6 +259,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 		this.dataSetToSelectedItem(inDataSet);
 		this.onsetdata(this.dataSet);
 		this.renderDataSet(this.dataSet);
+	    } catch(e){alert(e.toString());}
 	},
 	setSelectedItemType: function(inType) {
 		this.selectedItem.setType(inType);
@@ -260,9 +270,21 @@ dojo.declare("wm.List", wm.VirtualList, {
 	},
 	//
 	renderDataSet: function(inDataSet) {
+	    if (this.isAncestorHidden() && !this._renderHiddenGrid) {
+		this._renderDojoObjSkipped = true;
+		return;
+	    } 
+	        this._renderDojoObjSkipped = false;
 		var d = inDataSet instanceof wm.Variable ? inDataSet.getData() : [];
+	        d = this.runQuery(d);
 		this.renderData(d);
 	},
+	    _onShowParent: function() {
+		if (this._renderDojoObjSkipped) {
+		    this.renderDataSet(this.dataSet);
+		}
+	    },
+
 	renderData: function(inData) {
 		this.clear();
 		this._data = inData;
@@ -282,6 +304,45 @@ dojo.declare("wm.List", wm.VirtualList, {
 		wm.job(this.getRuntimeId() + "ListSetupScroller", 1, dojo.hitch(this._listTouchScroll, "setupScroller"));
 	    }
 	},
+    runQuery: function(inData) {
+	if (wm.isEmpty(this.query)) {
+	    return inData;
+	} else {
+	    var newData = [];
+	    for (var i = 0; i < inData.length; i++) {
+		var d = inData[i];
+		var w = "*";
+		var isMatch = true;
+		for (var key in this.query) {
+		    var a = d[key];
+                    if (dojo.isString(a)) a = a.replace(/\\([^\\])/g,"$1");
+		    var b = this.query[key];
+                    if (dojo.isString(b)) b = b.replace(/\\([^\\])/g,"$1");
+		    if (b == w)
+			continue;
+		    if (dojo.isString(a) && dojo.isString(b)) {
+			if (b.charAt(b.length-1) == w)
+			    b = b.slice(0, -1);
+			a = a.toLowerCase();
+			b = b.toLowerCase();
+			if (a.indexOf(b) != 0) {
+			    isMatch = false;
+			    break;
+			}
+			    
+		    }
+		    else if (a !== b) {
+			isMatch = false;
+			break;
+		    }
+		}
+		if (isMatch) {
+		    newData.push(d);
+		}
+	    }
+	    return newData;
+	}
+    },
 
 	getHeading: function(inField) {
 	    if (this.columns) {
@@ -313,10 +374,9 @@ dojo.declare("wm.List", wm.VirtualList, {
 		cellData = '<div>' + this.getHeading(dataFields);
 	    } 
 
-	    /* If its a wm.Variable item */
-	    else if (this.dataSet && this.dataSet.isList) {
-		var value = this.dataSet.getItem(i);
-		cellData = value.getValue(dataFields);
+	    else if (this.columns) {
+		var value = this._data[i];
+		cellData = value[dataFields];
 		cellData = this.formatCell(dataFields,cellData, value, i, inCol);
 	    }
 
@@ -400,8 +460,7 @@ wm.List.extend({
 	var value = "";
 	if (col.expression) {
 	    try	{
-		var data = inItem.getData();
-		value = wm.expression.getValue(col.expression, inItem.getData());
+		value = wm.expression.getValue(col.expression, inItem);
 	    }catch(e){}
 	} else {
 	    value = inValue;
@@ -443,8 +502,7 @@ wm.List.extend({
 	    default:
 		if (!this.isDesignLoaded()) {
 		    if (this.owner[col.formatFunc]) {
-			if (!data) var data = inItem.getData();
-			value = dojo.hitch(this.owner, col.formatFunc)(value, inRowId, inColumnIndex, inField, {}, data);
+			value = dojo.hitch(this.owner, col.formatFunc)(value, inRowId, inColumnIndex, inField, {}, inItem);
 		    }
 		} else {
 		    value = "<i>runtime only...</i>";
@@ -662,9 +720,12 @@ wm.List.extend({
 	this.addRow(obj,selectOnAdd);
     },
     getDataSet: function() {return this.dataSet;},
-    setSortIndex: function(){console.warning("setSortIndex not implemented for wm.List");},
-    setSortField: function(){console.warning("setSortField not implemented for wm.List");},
-    setQuery: function() {console.warning("setQuery not implemented for wm.List");},
+    setSortIndex: function(){console.warn("setSortIndex not implemented for wm.List");},
+    setSortField: function(){console.warn("setSortField not implemented for wm.List");},
+    setQuery: function(inQuery) {
+	this.query = inQuery;
+	this.renderDataSet(this.dataSet);
+    },
     getColumnIndex: function(inFieldName) {
           for (var i = 0; i < this.columns.length; i++) {
             if (this.columns[i].field == inFieldName) {
@@ -672,6 +733,11 @@ wm.List.extend({
 	    }
 	  }
 	return -1;
+    },
+    getColumnShowing: function(inFieldName, inShowing, noRender) {
+	var index = this.getColumnIndex(inFieldName);
+	if (index != -1) 
+	    return this.columns[index].show;
     },
     setColumnShowing: function(inFieldName, inShowing, noRender) {
 	var index = this.getColumnIndex(inFieldName);
@@ -705,6 +771,10 @@ wm.List.extend({
 	return "";
     },
 });
+
+if (wm.isMobile) {
+    wm.DojoGrid = wm.List;
+}
 
 wm.FocusablePanelRegistry = [];
 dojo.declare("wm.FocusableList", wm.List, {
@@ -844,7 +914,8 @@ dojo.declare("wm.FocusableList", wm.List, {
 });
 
 
-dojo.declare("wm.FocusablePanel", wm.Panel, {
+dojo.require("wm.base.widget.Container");
+dojo.declare("wm.FocusablePanel", wm.Container, {
 	
 	init: function() {
 		this.inherited(arguments);
