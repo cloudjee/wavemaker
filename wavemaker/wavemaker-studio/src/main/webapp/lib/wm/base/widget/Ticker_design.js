@@ -20,6 +20,7 @@ wm.Object.extendSchema(wm.Ticker, {
     startNow: { group: "operation", order: 10,operation:1},
     stopNow: { group: "operation", order: 20,operation:1},
 	fitToContent: { ignore: 1 },		// ticker content must be larger than container to work
+    resizeToFit: {ignore:1},
     layoutKind: { ignore: 1 },				// ticker only moves left to right (so don't allow top-to-bottom)
     fitToContentHeight: {ignore: 1},
     fitToContentWidth: {ignore: 1},
@@ -28,10 +29,10 @@ wm.Object.extendSchema(wm.Ticker, {
     scrollX: {ignore: true, writeonly: 1},
     lock: {ignore: 1},
     freeze: {ignore: 1},
-    delay: {group: "display"},
+    delay: {group: "display",subgroup:"scrolling"},
     imageList: {ignore: 1},
-    motion: {group: "display"},
-    rewindDelay: {group: "display"},
+    motion: {group: "display", subgroup: "scrolling"},
+    rewindDelay: {group: "display", subgroup: "scrolling"},
     autoScroll: {ignore: 1},
     customGetValidate: {ignore:1}
 });

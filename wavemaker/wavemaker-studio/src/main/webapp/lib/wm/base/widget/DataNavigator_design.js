@@ -32,6 +32,11 @@ wm.Object.extendSchema(wm.DataNavigator, {
 
 
     /* Ignored group */
+    dockBottom: {ignore:1},
+    dockRight: {ignore:1},
+    dockLeft: {ignore:1},
+    dockTop: {ignore:1},
+    resizeToFit: {ignore:1},
     box: {ignore: 1},
     lock: {ignore: 1},
     freeze: {ignore:1},

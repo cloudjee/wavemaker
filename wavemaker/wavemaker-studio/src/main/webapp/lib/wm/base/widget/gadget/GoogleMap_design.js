@@ -18,18 +18,27 @@ dojo.require("wm.base.Control_design");
 
 
 wm.Object.extendSchema(wm.gadget.GoogleMap, {
-    dataSet: { readonly: true, group: "data", order: 1, bindTarget: 1, type: "wm.Variable", isList: true, createWire: 1, editor: "wm.prop.DataSetSelect", editorProps: {listMatch: true, widgetDataSets: true, allowAllTypes: true}},
+    /* widgetName group */
+    dataSet: { readonly: true, group: "widgetName", subgroup: "data", order: 1, bindTarget: 1, type: "wm.Variable", isList: true, createWire: 1, editor: "wm.prop.DataSetSelect", editorProps: {listMatch: true, widgetDataSets: true, allowAllTypes: true}},
+
+    addressField: {group: "widgetName", subgroup: "fields", order: 1, editor:"wm.prop.FieldSelect", editorProps: {}},
+    latitudeField: {group: "widgetName", subgroup: "fields", order: 2, editor:"wm.prop.FieldSelect", editorProps: {}},
+    longitudeField: {group: "widgetName", subgroup: "fields", order: 3, editor:"wm.prop.FieldSelect", editorProps: {}},
+    titleField: {group: "widgetName", subgroup: "fields", order: 4, editor:"wm.prop.FieldSelect", editorProps: {}},
+    descriptionField: {group: "widgetName", subgroup: "fields", order: 5, editor:"wm.prop.FieldSelect", editorProps: {}},
+    iconField: {group: "widgetName", subgroup: "fields", order: 6, editor:"wm.prop.FieldSelect", editorProps: {}},
+
+
+    /* Hidden bindSource group */
     selectedItem: { ignore: 1, bindSource: 1, isObject: true, simpleBindProp: true },
-    addressField: {group: "Marker", order: 1, editor:"wm.prop.FieldSelect", editorProps: {}},
-    latitudeField: {group: "Marker", order: 2, editor:"wm.prop.FieldSelect", editorProps: {}},
-    longitudeField: {group: "Marker", order: 3, editor:"wm.prop.FieldSelect", editorProps: {}},
-    titleField: {group: "Marker", order: 4, editor:"wm.prop.FieldSelect", editorProps: {}},
-    descriptionField: {group: "Marker", order: 5, editor:"wm.prop.FieldSelect", editorProps: {}},
-    iconField: {group: "Marker", order: 6, editor:"wm.prop.FieldSelect", editorProps: {}},
-    latitude: {group: "Map", order: 1, bindTarget: 1},
-    longitude: {group: "Map", order: 2, bindTarget: 1},
-    zoom: {group: "Map", order: 3, options: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]},
-    mapType: {group: "Map", order: 4, options:["ROADMAP", "SATELLITE", "HYBRID", "TERRAIN"]},
+
+    /* Display group; visual subgroup */
+    latitude: {group: "display", subgroup: "visual", order: 1, bindTarget: 1},
+    longitude: {group: "display", subgroup: "visual", order: 2, bindTarget: 1},
+    zoom: {group: "display", subgroup: "visual", order: 3, options: ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21"]},
+    mapType: {group: "display", subgroup: "visual", order: 4, options:["ROADMAP", "SATELLITE", "HYBRID", "TERRAIN"]},
+
+    /* Method group */
     setZoom: {group: "method", method: true},
     setLatitude:{group: "method", method: true},
     setLongitude:{group: "method", method: true},

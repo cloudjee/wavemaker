@@ -509,6 +509,22 @@ dojo.declare("wm.prop.SelectMenu", wm.SelectMenu, {
     }
 });
 
+
+dojo.declare("wm.prop.CheckboxSet", wm.CheckboxSet, {
+    dataField: "dataValue",
+    displayField: "dataValue",
+    postInit: function() {
+	this.inherited(arguments);
+	this.refreshOptions();
+    },
+    refreshOptions: function() {
+	this.updateOptions();
+	this.setOptions(this.options);
+    },
+    updateOptions: function() {
+    }
+});
+
 dojo.declare("wm.prop.PagesSelect", wm.prop.SelectMenu, {
     currentPageOK: false,
     updateOptions: function() {
@@ -641,6 +657,42 @@ dojo.declare("wm.prop.FieldSelect", wm.prop.SelectMenu, {
     }
 	    
 });
+dojo.declare("wm.prop.FieldList", wm.prop.CheckboxSet, {
+    dataField: "dataValue",
+    displayField: "dataValue",
+    dataSetProp: "dataSet",
+    insepected: null,
+    allowNone: true,
+    emptyLabel: "",
+    updateOptions: function() {
+	this.inherited(arguments)
+	var ds = this.inspected.getProp(this.dataSetProp);
+	var options;
+	if (ds) {
+	    options = wm.typeManager.getSimplePropNames(ds._dataSchema);
+	} else {
+	    options = [];
+	}
+	if (this.emptyLabel) {
+	    this.allowNone = false;
+	    options.unshift(this.emptyLabel);
+	}
+	this.setOptions(options);
+    },
+    setEditorValue: function(inValue) {
+	if (!inValue && this.emptyLabel) {
+	    this.inherited(arguments, [this.emptyLabel]);
+	} else {
+	    this.inherited(arguments);
+	}
+    },
+    setInitialValue: function() {
+	this.beginEditUpdate();
+	this.setEditorValue(this.dataValue);
+	this.endEditUpdate();
+    }
+	    
+});
 
 
 dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
@@ -675,6 +727,7 @@ dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
 		return [""].concat(wm.typeManager[this.relatedFields ? "getStructuredPropNames" : "getSimplePropNames"](inSchema));
 	}
 });
+
 
 
 dojo.declare("wm.prop.ImageListSelect", wm.prop.SelectMenu, {

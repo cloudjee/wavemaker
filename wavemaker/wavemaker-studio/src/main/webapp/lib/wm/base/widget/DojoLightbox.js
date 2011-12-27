@@ -163,9 +163,9 @@ dojo.declare("wm.DojoLightbox", wm.Component, {
 // design only...
 wm.Object.extendSchema(wm.DojoLightbox, {
 	variable: {ignore: 1},
-        dataSet: {bindTarget: 1, group: "edit", order: 10, isList: true, type: "wm.Variable", createWire: 1, editor: "wm.prop.DataSetSelect", editorProps: {listMatch: true, widgetDataSets: true, allowAllTypes: true}},
-	imageUrlField:{group: "edit", order: 20, editor:"wm.prop.FieldSelect", editorProps: {}},
-	imageLabelField:{group: "edit", order: 30, editor:"wm.prop.FieldSelect", editorProps: {}}
+    dataSet: {bindTarget: 1, group: "widgetName", subgroup: "data", order: 10, isList: true, type: "wm.Variable", createWire: 1, editor: "wm.prop.DataSetSelect", editorProps: {listMatch: true, widgetDataSets: true, allowAllTypes: true}},
+    imageUrlField:{group: "widgetName", subgroup: "fields", order: 20, editor:"wm.prop.FieldSelect", editorProps: {}},
+    imageLabelField:{group: "widgetName", subgroup: "fields", order: 30, editor:"wm.prop.FieldSelect", editorProps: {}}
 });
 
 wm.DojoLightbox.description = "A dojo Lightbox.";

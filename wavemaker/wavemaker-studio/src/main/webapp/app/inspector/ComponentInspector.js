@@ -1348,7 +1348,11 @@
 		       order: 1000};
 	 if (wm.propertyGroups[inName]) {
 	     result.order = wm.propertyGroups[inName].order;
-	     result.displayName = wm.propertyGroups[inName].displayName;
+	     if (inName == "widgetName") {
+		 result.displayName = this.inspected.declaredClass.replace(/^.*\./,"");
+	     } else {
+		 result.displayName = wm.propertyGroups[inName].displayName;
+	     }
 	 }
 	 return result;
      },
@@ -1368,9 +1372,7 @@
 		 subgroupObj = dojo.mixin({props: [], 
 					   name: subgroupName},
 					  wm.propertyGroups[groupObj.name].subgroups[subgroupName]);
-		 if (groupObj.name == "widgetName") {
-		     groupObj.displayName = this.inspected.declaredClass;
-		 }
+
 	     } else {
 		 subgroupObj = {props: [],
 				order: 1000,
@@ -1447,8 +1449,12 @@
 		 if (g.subgroups && g.subgroups.sort)
 		     g.subgroups.sort(mysort);
 		 for (var subgroupName in g.subgroups) {
-		     var subgroup = g.subgroups[subgroupName];
-		     subgroup.props.sort(mysort);
+		     if (g.subgroups) {
+			 var subgroup = g.subgroups[subgroupName];
+			 if (subgroup && subgroup.props) {
+			     subgroup.props.sort(mysort);
+			 }
+		     }
 		 }
 	     });
 
@@ -1609,6 +1615,11 @@ wm.addPropertyGroups({
 			 order: 200}
 	      }
 	     },
+    /* Philosophy of use for widgetName (proposal):
+     * For a widget with a small number of properties beyond wm.Control,
+     * its a good place to put the properties to highlight them instead of making the user
+     * dig in all of the different categories to find the customizations specific to this widget
+     */
     widgetName: {displayName: "", // set to class name
 		 order: 45,
 		 subgroups: {
@@ -1616,10 +1627,16 @@ wm.addPropertyGroups({
 				 order: 10},
 		     data:      {displayName: "Data",
 				 order: 1},
+		     fields:    {displayName: "Fields",
+				 order: 2},
 		     confirmation: {displayName: "Confirmation",
 				    order: 20},
 		     editing:    {displayName: "Editing",
-				  order: 30}
+				  order: 30},
+		     behavior:   {displayName: "Behavior",
+				  order: 40},
+		     display:    {displayName: "Display",
+				  order: 50}
 		 }
 		},
     editor: {displayName: "Editor", 

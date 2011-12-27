@@ -305,12 +305,12 @@ wm.Object.extendSchema(wm.CustomDijit, {
     onMouseOver: {ignore: true},
     onMouseOut: {ignore: true},
     imageList: {ignore: true},
-    renderBoundsX: {group: "DijitDesigner"},
-    renderBoundsY: {group: "DijitDesigner"},
-    dijitClass: {group: "DijitDesigner"}
+    renderBoundsX: {group: "display", subgroup: "layout"},
+    renderBoundsY: {group: "display", subgroup: "layout"},
+    dijitClass: {group: "widgetName", subgroup: "behavior"}
 });
 wm.Object.extendSchema(wm.DijitDesigner, {
-    dijitPropList: {group: "DijitDesigner", writeonly: true},
+    dijitPropList: {group: "widgetName", writeonly: true},
     deployDijit: {group: "operation", operation:1,order: 10},
     undeployDijit: {group: "operation", operation:1,order: 20}
 });
