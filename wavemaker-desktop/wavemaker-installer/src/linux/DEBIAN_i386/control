@@ -5,7 +5,7 @@ Priority: optional
 Architecture: i386
 Maintainer: Ed Callahan <community@wavemaker.com>
 Depends: openjdk-6-jdk | sun-java6-jdk
-Provides: wavemaker-@PROJECTTYPE@
+Provides: wavemaker
 Installed-Size: 130000
 Homepage: http://dev.wavemaker.com/
 Description: Web 2.0 WSYWIG AJAX Development
