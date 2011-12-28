@@ -21,6 +21,7 @@ import java.util.List;
 import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.runtime.ws.RESTInputParam;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
@@ -201,7 +202,7 @@ public class ImportWS {
     }
 
     public WSDL generateServiceClass() {
-        return generateServiceClass(null);
+        return generateServiceClass(null, null, null);
     }
 
     /**
@@ -210,10 +211,10 @@ public class ImportWS {
      * @param serviceAlias the alias of the service id
      * @return WSDL object.
      */
-    public WSDL generateServiceClass(String serviceAlias) {
+    public WSDL generateServiceClass(String serviceAlias, List<String> operationName_list, List<List<RESTInputParam>> inputs_list) {
         WSDL wsdl = null;
         try {
-            wsdl = WSDLManager.processWSDL(this.wsdlUri, this.serviceId);
+            wsdl = WSDLManager.processWSDL(this.wsdlUri, this.serviceId, operationName_list, inputs_list);
             if (this.packageName != null) {
                 wsdl.setPackageName(this.packageName);
             }

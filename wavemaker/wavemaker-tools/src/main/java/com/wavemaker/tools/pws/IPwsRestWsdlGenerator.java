@@ -26,7 +26,7 @@ import javax.xml.transform.TransformerException;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
 
-import com.wavemaker.tools.ws.RESTInputParam;
+import com.wavemaker.runtime.ws.RESTInputParam;
 
 /**
  * The default implementation of this interface is <code>RESTWsdlGenerator</code>. Developers may extend the default

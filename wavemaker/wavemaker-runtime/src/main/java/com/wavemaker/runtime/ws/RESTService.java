@@ -71,27 +71,29 @@ public class RESTService {
         this.bindingProperties = bindingProperties;
     }
 
-    public <T extends Object> T invoke(Map<String, Object> inputs, Class<T> responseType) {
-        return invoke(inputs, null, null, null, responseType);
+    public <T extends Object> T invoke(Map<String, Object> urlParams, Class<T> responseType, Map<String, Object> headerParams) {
+        return invoke(urlParams, null, null, null, responseType, headerParams);
     }
 
-    public <T extends Object> T invoke(Map<String, Object> inputs, String method, String contentType, String endpoint, Class<T> responseType) {
-        return invoke(inputs, method, contentType, endpoint, responseType, null);
+    public <T extends Object> T invoke(Map<String, Object> urlParams, String method, String contentType, String endpoint, Class<T> responseType,
+        Map<String, Object> headerParams) {
+        return invoke(urlParams, method, contentType, endpoint, responseType, null, headerParams);
     }
 
     /**
      * invoke a REST style web service
      * 
-     * @param inputs the map containing all input parameters <parameter name, value>
+     * @param urlParams the map containing all input parameters <parameter name, value>
      * @param method the http request method (<tt>GET</tt>, <tt>POST</tt>, <tt>PUT</tt>, <tt>DELETE</tt> and etc.)
      * @param contentType the content type of the request body
      * @param endpoint the service endpoint address
      * @param responseType the Class object of the output class
      * @param partnerName the name of the partner
+     * @param headerParams the map containing all input parameters to pass in header
      * @return the object of <i>responseType</i>
      */
-    public <T extends Object> T invoke(Map<String, Object> inputs, String method, String contentType, String endpoint, Class<T> responseType,
-        String partnerName) {
+    public <T extends Object> T invoke(Map<String, Object> urlParams, String method, String contentType, String endpoint, Class<T> responseType,
+        String partnerName, Map<String, Object> headerParams) {
         String endpointAddress = null;
 
         if (endpoint != null) {
@@ -103,33 +105,33 @@ public class RESTService {
         Object postData = "";
         if (method != null && method.equals(Constants.HTTP_METHOD_POST)) {
             this.httpRequestMethod = HTTPRequestMethod.POST;
-            if (inputs.size() == 1) {
-                for (Object o : inputs.values()) {
+            if (urlParams.size() == 1) {
+                for (Object o : urlParams.values()) {
                     postData = o;
                 }
-            } else if (inputs.size() > 1) {
+            } else if (urlParams.size() > 1) {
                 if (contentType.equalsIgnoreCase(Constants.MIME_TYPE_FORM)) {
-                    postData = createFormData(inputs);
+                    postData = createFormData(urlParams);
                 } else {
                     throw new WebServiceInvocationException("REST service call with HTTP POST should not have more than 1 input.");
                 }
             }
         } else {
             this.httpRequestMethod = HTTPRequestMethod.GET;
-            endpointAddress = parameterize(endpointAddress, inputs);
+            endpointAddress = parameterize(endpointAddress, urlParams);
         }
 
         try {
             return HTTPBindingSupport.getResponseObject(this.serviceQName, this.serviceQName, endpointAddress, this.httpRequestMethod, contentType,
-                postData, responseType, this.bindingProperties, partnerName);
+                postData, responseType, this.bindingProperties, partnerName, headerParams);
         } catch (WebServiceException e) {
             throw new WebServiceInvocationException(e);
         }
     }
 
-    private String createFormData(Map<String, Object> inputs) {
+    private String createFormData(Map<String, Object> urlParams) {
         StringBuffer sb = new StringBuffer();
-        Set<Entry<String, Object>> entries = inputs.entrySet();
+        Set<Entry<String, Object>> entries = urlParams.entrySet();
         for (Map.Entry<String, Object> entry : entries) {
             sb.append(entry.getKey());
             sb.append("=");
@@ -142,9 +144,9 @@ public class RESTService {
         return sb.toString();
     }
 
-    private static String parameterize(String parameterizedURI, Map<String, Object> inputs) {
+    private static String parameterize(String parameterizedURI, Map<String, Object> urlParams) {
         StringBuilder endpointAddress = new StringBuilder(parameterizedURI);
-        for (Entry<String, Object> entry : inputs.entrySet()) {
+        for (Entry<String, Object> entry : urlParams.entrySet()) {
             String param = entry.getKey();
             int index = endpointAddress.indexOf("{" + param + "}");
             if (index > -1) {

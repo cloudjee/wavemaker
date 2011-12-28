@@ -47,7 +47,7 @@ public class WebServiceFactory implements ServiceDefinitionFactory, ServiceGener
     public DeprecatedServiceDefinition getServiceDefinition(Resource f, String serviceId, DesignServiceManager serviceMgr) {
         if (f.getFilename().endsWith(Constants.WSDL_EXT)) {
             try {
-                return WSDLManager.processWSDL(f.getURL().toString(), serviceId);
+                return WSDLManager.processWSDL(f.getURL().toString(), serviceId, null, null);
             } catch (WSDLException e) {
                 throw new WMRuntimeException(e);
             } catch (IOException e) {
