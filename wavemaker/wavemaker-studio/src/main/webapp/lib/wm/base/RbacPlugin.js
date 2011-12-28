@@ -19,10 +19,10 @@ dojo.require("wm.base.Plugin");
 
 wm.Plugin.plugin("rbac", wm.Widget, {
 	roles: '',
-	loaded: function() {
+	prepare: function() {
 		this.rbacSocket(arguments);
 		if (this.roles && this.roles.length) {
-			this.setShowing(this.showing);
+		    this.showing = this.showing && this.isAllowed();
 		}
 	},
 	setShowing: function(inValue) {
@@ -101,4 +101,66 @@ wm.Object.extendSchema(wm.Widget, {
 	categoryProps: {content: "Security", image: "images/lock_16.png", inspector: "Security"}}
 	*/
     roles: {group: "roles", editor: "wm.prop.RolesEditor", advanced: 1}
+}, true);
+
+
+wm.Plugin.plugin("mobile", wm.Control, {
+    deviceSizes: '',
+    prepare: function() {
+	this.mobileSocket(arguments);
+	if (this.deviceSizes) {
+	    this._mobileShowingRequested = this.showing;
+	    this.showing = this.updateShowing(this.showing);
+	    this.subscribe("deviceSizeRecalc", this, "reshow");
+	}
+    },
+    reshow: function() {
+	this.setShowing(this._mobileShowingRequested);
+    },
+    setShowing: function(inValue) {
+	/* wm.Layer.setShowing calls TabDecorator.setShowing which calls wm.Control.setShowing, which would clobber our
+	 * _mobileShowingRequested value
+	 */
+	if (this instanceof wm.Layer == false && this.deviceSizes)
+	    inValue = this.updateShowing(inValue);
+	this.mobileSocket(arguments);
+    },
+    updateShowing: function(inValue) {
+	if (!this._cupdating)
+	    this._mobileShowingRequested = inValue; // cache whether it should be showing even if we don't let it show
+	if (this.deviceSizes && this.deviceSizes.length) {
+	    return inValue && this.isMobileShowAllowed();
+	} else {
+	    return inValue;
+	}
+    },
+    isMobileShowAllowed: function() {
+	var deviceSize = this._isDesignLoaded ? app.appRoot.calcDeviceSize(studio.designer.bounds.w) : app.appRoot.deviceSize;
+	return (!deviceSize || dojo.indexOf(this.deviceSizes, deviceSize) != -1);
+    },
+    set_deviceSizes: function(inSize) {
+	this.deviceSizes = inSize;
+	var found = false;
+	for (var i = 0; i < this._subscriptions.length; i++) {
+	    if (this._subscriptions[i][0] == "deviceSizeRecalc") {
+		found = true;
+		break;
+	    }
+	}
+	if (!found) {
+	    this.subscribe("deviceSizeRecalc", this, "reshow");
+	}
+    }
+});
+
+wm.Plugin.plugin("mobileLayer", wm.Layer, {
+    deviceSizes: '',
+    setShowing: function(inValue) {
+	inValue = this.updateShowing(inValue);
+	this.mobileLayerSocket(arguments);
+    }
+});
+
+wm.Object.extendSchema(wm.Control, {
+    deviceSizes: {group: "devices", editor: "wm.prop.DeviceListEditor", advanced: 1}
 }, true);

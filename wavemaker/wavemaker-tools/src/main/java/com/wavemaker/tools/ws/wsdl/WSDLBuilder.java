@@ -43,6 +43,7 @@ import org.w3c.dom.Element;
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.runtime.ws.HTTPBindingSupport.HTTPRequestMethod;
+import com.wavemaker.runtime.ws.RESTInputParam;
 import com.wavemaker.runtime.ws.util.Constants;
 import com.wavemaker.tools.ws.CodeGenUtils;
 import com.wavemaker.tools.ws.jaxws.JAXWSBuilder;
@@ -78,7 +79,7 @@ public class WSDLBuilder {
         this.serviceType = getWebServiceType();
     }
 
-    public WSDL buildWSDL(String serviceId) throws WSDLException {
+    public WSDL buildWSDL(String serviceId, List<String> operationName_list, List<List<RESTInputParam>> inputs_list) throws WSDLException {
         List<PortTypeInfo> portTypeInfoList = buildServices();
         processSchemas(this.definition);
         Map<String, Element> schemas = buildSchemas();
@@ -94,14 +95,14 @@ public class WSDLBuilder {
         try {
             WSDL wsdl = new WSDL(serviceId, serviceClassName, serviceInfoList, this.definition, this.wsdlURI, this.serviceType, schemas,
                 this.xmlSchemas);
-            populateWSDL(wsdl);
+            populateWSDL(wsdl, operationName_list, inputs_list);
             return wsdl;
         } catch (SchemaException e) {
             throw new WSDLException(e);
         }
     }
 
-    private void populateWSDL(WSDL wsdl) throws WSDLException {
+    private void populateWSDL(WSDL wsdl, List<String> operationNameList, List<List<RESTInputParam>> inputsList) throws WSDLException {
         String packageName = CodeGenUtils.constructPackageName(wsdl.getTargetNamespace(), wsdl.getServiceId());
         wsdl.setPackageName(packageName);
 
@@ -151,6 +152,19 @@ public class WSDLBuilder {
             }
         }
         wsdl.setOperationsMap(operationMap);
+
+        if (operationNameList != null && operationNameList.size() > 0) {
+            Map<String, List<RESTInputParam>> map = new HashMap<String, List<RESTInputParam>>();
+            int indx = -1;
+            for (String opName : operationNameList) {
+                indx++;
+                List<RESTInputParam> params = inputsList.get(indx);
+                if (params != null && params.size() > 0) {
+                    map.put(opName, params);
+                }
+            }
+            wsdl.setOperationParamsMap(map);
+        }
 
         // check with MessageInterceptorManager to see if there are
         // interceptors need to be set into the WSDL object.

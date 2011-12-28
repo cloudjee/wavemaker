@@ -270,6 +270,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 		this.selection = [];
 		if (!ignoreSelectedItem) {
 		  this._setSelected(null);
+		    this.onSelectionChange();
 		}
 	},
 	isSelected: function(inItem) {
@@ -314,12 +315,15 @@ dojo.declare("wm.VirtualList", wm.Control, {
 			}
 		}
 	},
-	eventDeselect: function(inItem, ignoreSelectedItem) {
+    eventDeselect: function(inItem, ignoreSelectedItem) {
 		if (this.multiSelect)
 			this.removeFromSelection(inItem);
 		else
 			this.deselectAll(ignoreSelectedItem);
+	    if (!ignoreSelectedItem) {
 		this.ondeselect(inItem);
+		this.onSelectionChange();
+	    }
 	},
 	eventSelect: function(inItem) {
 		var selectInfo = {canSelect: true};
@@ -328,6 +332,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 			/* candidate for a wm.onidle, but unfortunately, that will make javascript calls that use this async and will likely fail */
 			this.addToSelection(inItem);
 			this.onselect(inItem);
+		    this.onSelectionChange();
 		}
 	},
 	select: function(inItem) {
@@ -352,6 +357,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	},
 	ondblclick: function(inEvent, inItem) {
 	},
+    onSelectionChange: function() {}, // Added for DojoGrid compatability
 	onselect: function(inItem) {
 	},
 	ondeselect: function(inItem) {

@@ -63,7 +63,7 @@ dojo.declare("wm.debug.WidgetPanel", wm.Container, {
 	    classListVar:["wm.Variable", {type: "StringData", isList: true}],
 	    gridPanel: ["wm.Panel", {layoutKind: "top-to-bottom", width: "100%", height: "100%",  verticalAlign: "top", horizontalAlign: "left"},{},{
 		searchPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "30px", verticalAlign: "top", horizontalAlign: "left"},{},{
-		    searchNameText: ["wm.Text", {resetButton: true, width: "100px", placeHolder: "Widget Name", changeOnKey: true},{onchange: "searchChange"}],
+		    searchNameText: ["wm.Text", {resetButton: true, _resetButtonUrl: dojo.moduleUrl("lib.images.silkIcons").path + "arrow_undo.png", width: "100px", placeHolder: "Widget Name", changeOnKey: true},{onchange: "searchChange"}],
 		    searchClassText: ["wm.SelectMenu", {allowNone: true, emptyValue: "emptyString", restrictValues: false, width: "100px", placeHolder: "Class Name", changeOnKey: true},{onchange: "searchChange"},{
 			binding: ["wm.Binding", {"name":"binding"}, {}, {
 			    wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"classListVar","targetProperty":"dataSet"}, {}]
@@ -72,6 +72,11 @@ dojo.declare("wm.debug.WidgetPanel", wm.Container, {
 		    pagesMenu: ["wm.SelectMenu", {placeHolder: "Page name", width: "80px",displayField: "dataValue", dataField: "dataValue", allowNone:true},{onchange: "searchChange"},{
 			binding: ["wm.Binding", {"name":"binding"}, {}, {
 			    wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"pageListVar","targetProperty":"dataSet"}, {}]
+			}]
+		    }],		    
+		    inspectParentButton: ["wm.Button",  {width: "80px", height: "20px", margin:"0",margin:"2",caption: "Inspect Parent",border:"1",borderColor:"#666"}, {onclick: "inspectParent"},{
+			binding: ["wm.Binding", {"name":"binding"}, {}, {
+			    wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"widgetGrid.emptySelection","targetProperty":"disabled"}, {}]
 			}]
 		    }]
 		}],
@@ -88,22 +93,33 @@ dojo.declare("wm.debug.WidgetPanel", wm.Container, {
 				  }]
 			      }]
 	    }],
+	    splitter: ["wm.Splitter",{showing:false, bevelSize: "4"}],
 	    inspector: ["wm.debug.Inspector", {}, {onXClick: "XClick"}]
 	},this);
     },
 	XClick: function() {
 	    this.widgetGrid.deselectAll();
 	},
-    showWidget: function(inSender) {
-	var id = this.widgetGrid.selectedItem.getValue("id");
+    inspectParent: function() {
+	this.showWidget(null, this.selectedItem.parent.getRuntimeId());
+    },
+	showWidget: function(inSender, altId) {
+	var id = altId || this.widgetGrid.selectedItem.getValue("id");
 	if (!id) {
 	    this.selectedItem = null;
 	    this.widgetGrid.setColumnShowing("page",true, true);
 	    this.widgetGrid.setColumnShowing("type",true, false); 
 	    this.inspector.hide();
 	    this.$.gridPanel.setWidth("100%");
+	    this.searchNameText.show();
+	    this.searchClassText.show();
+	    this.pagesMenu.show();
 	    return;
 	}
+
+	    this.searchNameText.hide();
+	    this.searchClassText.hide();
+	    this.pagesMenu.hide();
 
 	this.selectedItem = app.getValueById(id);
 	this.widgetGrid.setColumnShowing("page",false, true);
@@ -111,6 +127,24 @@ dojo.declare("wm.debug.WidgetPanel", wm.Container, {
 	this.inspector.setShowing(true);	
 	    this.$.gridPanel.setWidth("300px");
 	this.inspector.inspect(this.selectedItem);
+
+	if (!this.selectionNode) {
+	    this.selectionNode = document.createElement("div");
+	    dojo.addClass(this.selectionNode, "wmdebuggerSelectionNode");
+	    document.body.appendChild(this.selectionNode);
+	}
+	if (!this.selectedItem.isAncestorHidden()) {
+	    var coords = dojo.coords(this.selectedItem.domNode);
+	    dojo.marginBox(this.selectionNode, {l: parseInt(coords.x),
+						t: parseInt(coords.y),
+						w: coords.w,
+						h: coords.h});
+	    this.selectionNode.style.display = "block";
+	    var self = this;
+	    wm.job(this.getRuntimeId() + ".dismissSelectionNode", 5000, function() {
+		self.selectionNode.style.display = "none";
+	    });
+	}
     },
 
     searchChange: function(inSender) {
@@ -221,6 +255,10 @@ dojo.declare("wm.debug.WidgetPanel", wm.Container, {
 		this.dataLayer.show();
 
 	    }
+	    this.splitter.show();
+	    this.splitter.findLayout();
+	} else {
+	    this.splitter.hide();
 	}
     }
 });

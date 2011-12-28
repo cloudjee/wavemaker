@@ -85,9 +85,8 @@ wm.DojoGrid.extend({
 			this.dojoObj.singleClickEdit = this.singleClickEdit;
 		this.dojoObj.render();
 	},
-
-	updateGridStructure: function(){
-	    this.columns = this.contextMenu.getUpdatedDataSet();
+        set_columns: function(inColumns){
+	    this.columns = inColumns;
 	    if (this.dojoObj) {
 		this.dojoObj.attr('structure', this.getStructure());
 		this.dojoObj.render();

@@ -17,14 +17,25 @@ dojo.require("wm.base.widget.dijit.Calendar");
 dojo.require("wm.base.widget.dijit.Dijit_design");
 
 wm.Object.extendSchema(wm.dijit.Calendar, {
-	disabled: {ignore: 1},
-    specialDates: { group: "data", order: 0, type: "wm.Variable", isList: true, bindTarget: true, editor: "wm.prop.DataSetSelect", editorProps: {listMatch:1,allowAllTypes:1,widgetDataSets:0}},
+
+    /* widgetName group */
+    specialDates: { group: "widgetName", subgroup: "data", order: 0, type: "wm.Variable", isList: true, bindTarget: true, editor: "wm.prop.DataSetSelect", editorProps: {listMatch:1,allowAllTypes:1,widgetDataSets:0}, advanced:1},
+    useDialog: {group: "widgetName", subgroup: "selection", order: 1, type: "boolean",advanced:1},
+
+    /* Editor group; value subgroup */
+    dateValue: {bindable: 1, group: "editor", subgroup: "value", order: 11, simpleBindProp: true, type: "Date", editor: "wm.Date"},
+    useLocalTime: {group: "editor", subgroup: "value", type: "boolean"},
+
+
+    /* Editor group; validation subgroup */
+    minimum: {group: "editor", subgroup: "validation", order: 2, doc: 1, bindTarget: true, editor: "wm.Date"},
+    maximum: {group: "editor", subgroup: "validation", order: 3, doc: 1, bindTarget: true, editor: "wm.Date"}, 
+
+    /* Ignored group */
+    disabled: {ignore: 1},
     displayDate: {ignore: 1},
-    useLocalTime: {group: "data", type: "boolean"},
-    useDialog: {group: "data", order: 1, type: "boolean"},
-    dateValue: { ignore: 1, bindable: 1, type: "Date", simpleBindProp: true },
-    minimum: {group: "data", bindTarget: 1, type: "Date", editor: "wm.Date"},
-    maximum: {group: "data", bindTarget: 1, type: "Date", editor: "wm.Date"},
+
+    /* Method group */
     setDate: {method:1},
     getDateValue: {method:1},
     setDisplayDate: {method:1},
@@ -32,5 +43,9 @@ wm.Object.extendSchema(wm.dijit.Calendar, {
 });
 
 wm.dijit.Calendar.extend({
-    scrim: true
+    scrim: true,
+    set_dateValue: function(inValue) {
+	this.dateValue = inValue;
+	this.setDateValue(inValue);
+    }
 });

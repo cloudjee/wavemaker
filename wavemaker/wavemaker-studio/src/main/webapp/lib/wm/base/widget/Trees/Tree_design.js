@@ -37,15 +37,29 @@ wm.Object.extendSchema(wm.TreeNode, {
 
 
 wm.Object.extendSchema(wm.Tree, {
-	disabled: { ignore: 1 },
+
+    connectors: {group: "display", subgroup: "visual", order: 100},
+
+    /* Events group */
+    onselect: {order: 1},
+    ondeselect: {order: 2},
+    onclick: {order: 3, advanced:1},
+    ondblclick: {order: 4},
+    onmousedown: {order: 5, advanced:1},
+    oncheckboxclick: {order: 20, advanced:1},
+    oninitchildren: {order: 30, advanced:1},
+    
+    /* Ignored group */
+    disabled: { ignore: 1 },
     nodes: { ignore: 1},
+    root: {type: "wm.TreeNode", doc: 1, ignore: 1},
+
+    /* Methods group */
     clear: {method:1},
     deselect: {method:1},
     select: {method:1},
     forEachNode: {method:1},
     findNodeByCallback: {method:1, returns: "wm.TreeNode"},
-    root: {type: "wm.TreeNode", doc: 1, ignore: 1},
-    connectors: {group: "display", order: 100},
     forEachNode: {method: 1, returns: null},
     clear: {method: 1, returns: null},
     deselect: {method: 1, returns: null},
@@ -59,18 +73,22 @@ wm.Tree.extend({
 
 
 wm.Object.extendSchema(wm.PropertyTree, {
-    dataSet: { readonly: true, group: "data", order: 1, bindTarget: 1, type: "wm.Variable", isList: true},
-    selectedItem: { ignore: 1, bindSource: 1, isObject: true, simpleBindProp: true },
-    configJson: {group: "data", order: 10, editor: "wm.LargeTextArea", editorProps: {height: "300px"} },
+    /* widgetName group */
+    dataSet: {group: "widgetName", subgroup: "data", order: 1, requiredGroup: 1, bindTarget: 1, isList: true, simpleBindTarget: true, editor: "wm.prop.DataSetSelect", editorProps: {listMatch: true, widgetDataSets: true, allowAllTypes: true}},
+    configJson: {group: "widgetName", subgroup: "data", order: 10, requiredGroup:1, editor: "wm.LargeTextArea", editorProps: {height: "300px"} },
+
+    /* Hidden bindSource group */
+    selectedItem: { ignore: 1, bindSource: 1, isObject: true, simpleBindProp: true }
+
 });
 
 
 
 wm.Object.extendSchema(wm.ObjectTree, {
-    data: {group: "data", order: 1, type: "Object"}
+    data: {group: "widgetName", subgroup: "data", order: 1, requiredGroup: 1, type: "Object"}
 });
 
 
 wm.Object.extendSchema(wm.DraggableTree, {
-    dropBetweenNodes: {group: "display"}
+    dropBetweenNodes: {group: "display", subgroup: "visual"}
 });

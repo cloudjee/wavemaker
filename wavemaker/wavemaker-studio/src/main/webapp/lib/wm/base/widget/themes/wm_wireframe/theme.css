@@ -1207,13 +1207,16 @@ body .wm_wireframe .dialogfooter .wmbutton:hover {
     border-style: solid;   
     border-color: #cccccc; /* Tables-EvenRows-Border_Color */
 }
-.wm_wireframe .wmlist-item {
+.wm_wireframe .wmlist-cell {
     border-style: solid;   
     border-color: #cccccc; /* Tables-EvenRows-Border_Color */
     border-left-width: 0px;
     border-right-width: 1px; /* Tables-EvenRows-Border_BorderSize */
     border-top-width: 0px;
     border-bottom-width: 0px;
+}
+.wm_wireframe .wmlist-header .wmlist-cell {
+    border-right-width: 0px;
 }
   /**************************************************************************************************
    * TYPE:        Header, Hover and Selected row styles
@@ -2840,15 +2843,20 @@ body.wm_wireframe {
 .wm_wireframe .wmbevel {
     /* Document-ClickablesDefault-Background */
     background-color: #ffffff; /* Document-ClickablesDefault-Background_Color */
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-    border-radius: 2px;
 }
 .wm_wireframe div.wmsplitter-h:hover,
 .wm_wireframe div.wmsplitter-v:hover {
     /* Document-ClickablesHover-Background */
     background-color: #ffffff; /* Document-ClickablesHover-Background_Color */
 }
+.wm_wireframe .wmsplitter-h {
+	background-image: url(images/splitter_bg_h.png);
+}
+
+.wm_wireframe .wmsplitter-v {
+	background-image: url(images/splitter_bg_v.png);
+}
+
 /*****************************************
  * EOF: splitterbevel.css
  *****************************************/

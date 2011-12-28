@@ -18,10 +18,15 @@ dojo.require("wm.base.Control_design");
 
 
 wm.Object.extendSchema(wm.VirtualList, {
-	// FIXME: disabling this as we're not using it at all, and grid supports it.
-	multiSelect: { ignore: 1 },
-	box: { ignore: 1 },
-    toggleSelect: { group: "common", order: 100},
+
+    /* wm.List group; selection subgroup */
+    multiSelect: { ignore: 1, group: "widgetName", subgroup: "selection", order: 40},    // FIXME: disabling this as we're not using it at all, and grid supports it.
+    toggleSelect: {group: "widgetName", subgroup: "selection", order: 41},
+
+    /* Ignored Group */
+    box: { ignore: 1 },
+
+    /* Methods group */
     getCount: {method:1, returns: "Number"},
     getItem: {method:1, returns: "wm.ListItem"},
     getItemByCallback: {method:1, returns: "wm.ListItem"},
@@ -40,11 +45,37 @@ wm.Object.extendSchema(wm.VirtualList, {
 
 // design-time only
 wm.Object.extendSchema(wm.List, {
-    updateNow: {group: "operation", operation:1},    
-	disabled: { ignore: 1 },
-	selectedItem: { ignore: 1, bindSource: 1, isObject: true, simpleBindProp: true },
-    dataSet: { group: "data", readonly: 1, order: 1, bindTarget: 1, type: "wm.Variable", isList: true,  createWire: 1, editor: "wm.prop.DataSetSelect", editorProps: {listMatch: true, widgetDataSets: true, allowAllTypes: true}},
+    /* widgetName group; data subgroup */
+    editColumns:       {group: "widgetName", subgroup: "data", order:5, requiredGroup: 1, contextMenu: true, operation: 1},
+    dataSet:           {group: "widgetName", subgroup: "data", order: 1, requiredGroup: 1, bindTarget: 1, isList: true, simpleBindTarget: true, editor: "wm.prop.DataSetSelect", editorProps: {listMatch: true, widgetDataSets: true, allowAllTypes: true}},
+    dataFields:        {group: "widgetName", subgroup: "data", order: 50, advanced:1},
+    columnWidths:      {group: "widgetName", subgroup: "data", order: 51, advanced:1},
+
+    /* Display group; layout subgroup */
+    headerVisible: {group: "display", subgroup: "layout", order: 1}, /* Or does this go in the style group? or in the widgetName group? */
+    
+    /* Events group; flagged as advanced any event NOT compatable with DojoGrid */
+    onSelectionChange: {order: 1, group: "events"},
+    onselect: {order: 2, advanced:1, group: "events"},   
+    ondeselect: {order: 3, advanced:1, group: "events"},
+    onclick: {order: 4, advanced:1, group: "events"},
+    ondblclick: {order: 5, advanced:1, group: "events"},
+    onsetdata: {order: 10, advanced:1, group: "events"},
+    onformat: {order:15, advanced:1, group: "events"},
+    onGridButtonClick: {order: 20, group: "events"},
+
+    /* Hidden/bindSource group */
+    selectedItem: { ignore: 1, bindSource: 1, isObject: true, simpleBindProp: true },
     emptySelection: { ignore: true, bindSource: 1, type: "Boolean" },
+
+    /* Operations group */
+    updateNow: {group: "operation", operation:1},    
+
+    /* Hidden/ignored group */
+    columns: {hidden:1},
+    disabled: { ignore: 1 },
+
+    /* Methods group */
     getEmptySelection: {method:1, returns: "Boolean"},
     setColumnWidths: {method:1},
     //getDataItemCount: {method:1, returns: "Number"},
@@ -56,7 +87,86 @@ wm.Object.extendSchema(wm.List, {
 wm.List.description = "Displays list of items.";
 
 wm.List.extend({
-    updateNow: function() {this.update();}
+    updateNow: function() {this.update();},
+    showMenuDialog: function(e){
+	if (!this.columns) {
+	    this.columns = [];
+	    this.updateColumnData();
+	}
+	studio.gridDesignerDialog.show();
+	studio.gridDesignerDialog.page.setGrid(this);
+    },
+    updateColumnData: function () {
+	var defaultSchema = {dataValue: {type: this.dataSet.type}}; // this is the schema to use if there is no schema (i.e. the type is a literal)
+        var viewFields = this.getViewFields() || defaultSchema;
+        dojo.forEach(viewFields, function (f, i) {
+            // if the column already exists, skip it
+            if (dojo.some(this.columns, function (item) {
+                return item.field == f.dataIndex;
+            })) return;
+
+	    var schema = wm.typeManager.getTypeSchema(this.dataSet.type) || defaultSchema;
+            // don't show one-to-many subentities in the grid
+            if (wm.typeManager.isPropInList(schema, f.dataIndex)) return;
+
+            var align = 'left';
+            var width = '100%';
+            var formatFunc = '';
+            if (f.displayType == 'Number') {
+                align = 'right';
+                width = '80px';
+            } else if (f.displayType == 'Date') {
+                width = '80px';
+                formatFunc = 'wm_date_formatter';
+            }
+            this.columns.push({
+                show: i < 15,
+                field: f.dataIndex,
+                title: wm.capitalize(f.dataIndex),
+                width: width,
+                displayType: f.displayType,
+                align: align,
+                formatFunc: formatFunc
+            });
+        }, this);
+
+        var newcolumns = [];
+        dojo.forEach(this.columns, dojo.hitch(this, function (col) {
+            // we don't update custom fields
+            if (col.isCustomField) {
+                newcolumns.push(col);
+                return;
+            }
+            // If the column is still in the viewFields after whatever change happened, then do nothing
+            if (dojo.some(viewFields, dojo.hitch(this, function (field) {
+                return field.dataIndex == col.field;
+            }))) {
+                newcolumns.push(col);
+                return;
+            }
+
+            // col is no longer relevant
+            return;
+        }));
+        this.columns = newcolumns;
+    },
+	getViewFields: function(){
+	    var fields = [];
+	    if (this.dataSet instanceof wm.LiveVariable)
+		fields = this.dataSet.getViewFields();
+	    else if (this.dataSet instanceof wm.Variable)
+		fields = wm.getDefaultView(this.dataSet.type) || [];
+	    return fields;
+	},
+
+    editColumns:function() {
+	return this.showMenuDialog();
+    },
+    set_columns: function(inColumns){
+	this.setColumns(inColumns);
+	this._render();
+    }
+
 });
 
 

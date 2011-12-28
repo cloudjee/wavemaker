@@ -17,6 +17,7 @@ package com.wavemaker.runtime.service.definition;
 import java.util.List;
 
 import com.wavemaker.runtime.service.ElementType;
+import com.wavemaker.runtime.ws.RESTInputParam;
 
 /**
  * @author Matt Small
@@ -90,4 +91,12 @@ public interface DeprecatedServiceDefinition extends ReflectServiceDefinition {
      * holding onto. After calling this method, this instance should no longer be accessed.
      */
     public void dispose();
+
+    /**
+     * Get input parameter info for an operation
+     * 
+     * @return A list of input parameter info.
+     * @param operationName The operation name
+     */
+    public List<RESTInputParam> getInputParams(String operationName);
 }

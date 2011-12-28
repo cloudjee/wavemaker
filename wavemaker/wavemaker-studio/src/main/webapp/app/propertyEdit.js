@@ -509,6 +509,22 @@ dojo.declare("wm.prop.SelectMenu", wm.SelectMenu, {
     }
 });
 
+
+dojo.declare("wm.prop.CheckboxSet", wm.CheckboxSet, {
+    dataField: "dataValue",
+    displayField: "dataValue",
+    postInit: function() {
+	this.inherited(arguments);
+	this.refreshOptions();
+    },
+    refreshOptions: function() {
+	this.updateOptions();
+	this.setOptions(this.options);
+    },
+    updateOptions: function() {
+    }
+});
+
 dojo.declare("wm.prop.PagesSelect", wm.prop.SelectMenu, {
     currentPageOK: false,
     updateOptions: function() {
@@ -641,6 +657,42 @@ dojo.declare("wm.prop.FieldSelect", wm.prop.SelectMenu, {
     }
 	    
 });
+dojo.declare("wm.prop.FieldList", wm.prop.CheckboxSet, {
+    dataField: "dataValue",
+    displayField: "dataValue",
+    dataSetProp: "dataSet",
+    insepected: null,
+    allowNone: true,
+    emptyLabel: "",
+    updateOptions: function() {
+	this.inherited(arguments)
+	var ds = this.inspected.getProp(this.dataSetProp);
+	var options;
+	if (ds) {
+	    options = wm.typeManager.getSimplePropNames(ds._dataSchema);
+	} else {
+	    options = [];
+	}
+	if (this.emptyLabel) {
+	    this.allowNone = false;
+	    options.unshift(this.emptyLabel);
+	}
+	this.setOptions(options);
+    },
+    setEditorValue: function(inValue) {
+	if (!inValue && this.emptyLabel) {
+	    this.inherited(arguments, [this.emptyLabel]);
+	} else {
+	    this.inherited(arguments);
+	}
+    },
+    setInitialValue: function() {
+	this.beginEditUpdate();
+	this.setEditorValue(this.dataValue);
+	this.endEditUpdate();
+    }
+	    
+});
 
 
 dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
@@ -675,6 +727,7 @@ dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
 		return [""].concat(wm.typeManager[this.relatedFields ? "getStructuredPropNames" : "getSimplePropNames"](inSchema));
 	}
 });
+
 
 
 dojo.declare("wm.prop.ImageListSelect", wm.prop.SelectMenu, {
@@ -1109,6 +1162,16 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	{name: "cursor", editor: "wm.SelectMenu", editorProps: {options: ["pointer", "crosshair", "e-resize","w-resize","n-resize","s-resize","ne-resize","nw-resize","se-resize","sw-resize","text","wait","help","move","progress"]},advanced:1},
 	{name: "zIndex", editor: "wm.Number",advanced:1}
     ],
+    search: function(inName) {
+	var props = this.inspected.listProperties();
+	for (var propName in props) {
+	    var p = props[propName];
+	    /* TODO: Should test if isEditable prop */
+	    if (p.group == "style" && propName.toLowerCase().indexOf(inName.toLowerCase()) != -1)
+		return true;
+	}
+	return false;
+    },
     postInit: function() {
 	this.inherited(arguments);
 	this.editors = {};
@@ -1704,4 +1767,79 @@ dojo.declare("wm.prop.SubComponentEditor", wm.Container, {
 
 dojo.declare("wm.prop.FormatterEditor", wm.prop.SubComponentEditor, {
     margin: "0,0,0,15"
+});
+
+
+dojo.declare("wm.prop.DeviceListEditor", wm.CheckboxSet, {
+    noBindColumn: true,
+    noReinspect: true,
+    height: "200px",
+    dataField: "dataValue",
+    displayField: "name",
+    init: function() {
+	this.inherited(arguments);
+	this.displaySizes = new wm.Variable({owner: this, type: "EntryData", isList:1});
+	this.displaySizes.setData([{name: "All",
+				    dataValue: ""},
+				   {name: ">= 1000<div style='margin-left:20px'>full screen/widescreen tablet; to use in design mode, undock properties and palette panels</div>", // NOTE: ipad in landscape mode is 1024px
+				    dataValue: "1000"},
+				   {name: "800px-1000px<div style='margin-left:20px'>desktop/tablet</div>",
+				    dataValue: "800"},
+				   {name: "600px-800px<div style='margin-left:20px'>laptop/tablet</div>",
+				    dataValue: "600"},
+				   {name: "450px-600px<div style='margin-left:20px'>tablet</div>",
+				    dataValue: "450"},
+				   {name: "300px-450px<div style='margin-left:20px'>phone</div>",
+				    dataValue: "300"},
+				   {name: "< 300px<div style='margin-left:20px'>small phone</div>",
+				    dataValue: "tiny"}]);
+	this.setDataSet(this.displaySizes);
+    },
+    setDataValue: function(inValue) {
+	if (wm.isEmpty(inValue)) {
+	    this.inherited(arguments, [["All"]]);
+	} else {
+	    this.inherited(arguments);
+	}
+    },
+    getDataValue: function() {
+	var value = this.inherited(arguments);
+	if (value && value.length == 1 && (value[0] === "All" || value[0] == "")) {
+	    return null;
+	} else {
+	    return value;
+	}
+    },
+    changed: function() {
+	if (!this._inDoChange) {
+	    this._inDoChange = true;
+	    var count = 0;
+	    for (var i = 0; i < this.dijits.length; i++) {
+		count += (this.dijits[i].get("checked")) ? 1 : 0;
+	    }
+	    if (this.dijits[0]) {
+		if (count ==  1) {
+		    this.hadAll = this.dijits[0].checked;
+		} else if (count == 0) {
+		    this.dijits[0].set("checked", true, false);
+		    this.dijits[0]._lastValueReported = true;
+		    this.hadAll = true;
+		} else if (this.hadAll && this.dijits[0].checked) {
+		    this.hadAll = false;
+		    this.dijits[0].set("checked", false, false);
+		    this.dijits[0]._lastValueReported = false;
+		} else if (this.dijits[0].checked) {
+		    this.hadAll = true;
+		    for (var i = 1; i < this.dijits.length; i++) {		
+			this.dijits[i].set("checked", false, false);
+			this.dijits[i]._lastValueReported = false;
+		    }
+		}
+	    }
+	    delete this._inDoChange;
+	    this.inherited(arguments);
+	    this.inspected.setRoles(this.getDataValue());
+	}
+    },
+    reinspect: function() {return true;}
 });

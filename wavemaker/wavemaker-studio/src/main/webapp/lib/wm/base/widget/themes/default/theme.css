@@ -128,14 +128,14 @@ th {
 
 .wmsplitter-h {
 	cursor: e-resize;
-	/* for IE6 only */
-	background-position: 1px center;
+	background-position: center center;
+	background-repeat: no-repeat;
 }
 
 .wmsplitter-v {
 	cursor: n-resize;
-	/* for IE6 only */
-	background-position: center 1px;
+	background-position: center center;
+	background-repeat: no-repeat;
 }
 
 /**/
@@ -644,7 +644,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 }
 
 .wmlist-cell {
-	padding: 0.1em;
+	padding: 0.2em 0.1em;
 }
 
 .wmlist-header th {
@@ -653,7 +653,7 @@ background: url(images/omg/header-bg.png) no-repeat top center;
 
 .wmlist-item {
 	cursor: pointer;
-	padding: 0.2em 0.5em;
+	padding: 0px 0.5em;
 	margin: 0;
 }
 

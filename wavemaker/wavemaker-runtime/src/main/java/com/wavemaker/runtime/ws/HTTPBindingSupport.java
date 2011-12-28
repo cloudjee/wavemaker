@@ -24,10 +24,12 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.activation.DataSource;
 import javax.xml.bind.JAXBContext;
@@ -65,12 +67,12 @@ public class HTTPBindingSupport {
 
     public static <T extends Object> T getResponseObject(QName serviceQName, QName portQName, String endpointAddress, HTTPRequestMethod method,
         String contentType, Object postData, Class<T> responseType, BindingProperties bindingProperties) throws WebServiceException {
-        return getResponseObject(serviceQName, portQName, endpointAddress, method, contentType, postData, responseType, bindingProperties, null);
+        return getResponseObject(serviceQName, portQName, endpointAddress, method, contentType, postData, responseType, bindingProperties, null, null);
     }
 
     public static <T extends Object> T getResponseObject(QName serviceQName, QName portQName, String endpointAddress, HTTPRequestMethod method,
-        String contentType, Object postData, Class<T> responseType, BindingProperties bindingProperties, String partnerName)
-        throws WebServiceException {
+        String contentType, Object postData, Class<T> responseType, BindingProperties bindingProperties, String partnerName,
+        Map<String, Object> headerParams) throws WebServiceException {
 
         String msg = postData == null ? null : postData instanceof String ? (String) postData : convertToXMLString(postData);
 
@@ -79,7 +81,8 @@ public class HTTPBindingSupport {
         if (method == HTTPRequestMethod.POST) {
             postSource = createDataSource(contentType, msg);
         }
-        DataSource response = getResponse(serviceQName, portQName, endpointAddress, method, postSource, bindingProperties, DataSource.class);
+        DataSource response = getResponse(serviceQName, portQName, endpointAddress, method, postSource, bindingProperties, DataSource.class,
+            headerParams);
 
         try {
             InputStream is = new BufferedInputStream(response.getInputStream());
@@ -129,7 +132,7 @@ public class HTTPBindingSupport {
 
     @SuppressWarnings("unchecked")
     private static <T extends Object> T getResponse(QName serviceQName, QName portQName, String endpointAddress, HTTPRequestMethod method,
-        T postSource, BindingProperties bindingProperties, Class<T> type) throws WebServiceException {
+        T postSource, BindingProperties bindingProperties, Class<T> type, Map<String, Object> headerParams) throws WebServiceException {
 
         Service service = Service.create(serviceQName);
         URI endpointURI;
@@ -163,6 +166,7 @@ public class HTTPBindingSupport {
         requestContext.put(MessageContext.QUERY_STRING, endpointQueryString);
         requestContext.put(MessageContext.PATH_INFO, endpointPath);
 
+        Map<String, List<String>> reqHeaders = null;
         if (bindingProperties != null) {
             String httpBasicAuthUsername = bindingProperties.getHttpBasicAuthUsername();
             if (httpBasicAuthUsername != null) {
@@ -179,7 +183,7 @@ public class HTTPBindingSupport {
 
             Map<String, List<String>> httpHeaders = bindingProperties.getHttpHeaders();
             if (httpHeaders != null && !httpHeaders.isEmpty()) {
-                Map<String, List<String>> reqHeaders = (Map<String, List<String>>) requestContext.get(MessageContext.HTTP_REQUEST_HEADERS);
+                reqHeaders = (Map<String, List<String>>) requestContext.get(MessageContext.HTTP_REQUEST_HEADERS);
                 if (reqHeaders == null) {
                     reqHeaders = new HashMap<String, List<String>>();
                     requestContext.put(MessageContext.HTTP_REQUEST_HEADERS, reqHeaders);
@@ -187,6 +191,20 @@ public class HTTPBindingSupport {
                 for (Entry<String, List<String>> entry : httpHeaders.entrySet()) {
                     reqHeaders.put(entry.getKey(), entry.getValue());
                 }
+            }
+        }
+
+        // Parameters to pass in http header
+        if (headerParams != null && headerParams.size() > 0) {
+            if (null == reqHeaders) {
+                reqHeaders = new HashMap<String, List<String>>();
+            }
+            Set<Entry<String, Object>> entries = headerParams.entrySet();
+            for (Map.Entry<String, Object> entry : entries) {
+                List<String> valList = new ArrayList<String>();
+                valList.add((String) entry.getValue());
+                reqHeaders.put(entry.getKey(), valList);
+                requestContext.put(MessageContext.HTTP_REQUEST_HEADERS, reqHeaders);
             }
         }
 
@@ -199,7 +217,7 @@ public class HTTPBindingSupport {
     public static String getResponseString(QName serviceQName, QName portQName, String endpointAddress, HTTPRequestMethod method,
         DataSource postSource, BindingProperties bindingProperties) throws WebServiceException {
 
-        DataSource response = getResponse(serviceQName, portQName, endpointAddress, method, postSource, bindingProperties, DataSource.class);
+        DataSource response = getResponse(serviceQName, portQName, endpointAddress, method, postSource, bindingProperties, DataSource.class, null);
         try {
             InputStream inputStream = response.getInputStream();
             return convertStreamToString(inputStream);

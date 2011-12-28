@@ -125,10 +125,7 @@ wm.componentList = {
 	'wm.ServiceCall':['wm.base.components.ServiceCall'],
 	'wm.ServiceInput':['wm.base.components.ServiceCall'],
 	'wm.FunctionService':['wm.base.components.FunctionService'],
-        'wm.List': ['wm.base.widget.List'],
-        'wm.WidgetList':['wm.base.widget.WidgetList'],
-//	'wm.List':["build.Gzipped.wm_list"],
-//	'wm.WidgetList':["build.Gzipped.wm_list"],
+	'wm.List':["build.Gzipped.wm_list"],
 	'wm.IFrame':['wm.base.widget.IFrame'],
 	'wm.FeedList':['wm.base.widget.FeedList'],
 	'wm.ListViewer':['wm.base.widget.ListViewer'],
@@ -150,7 +147,11 @@ wm.require = function(inType, inCommon) {
 
 wm.getComponentStructure = function(inType){
 	//console.info('Loading ' + inType + ' dynamically.');
-	var requireList = wm.componentList[inType];
+    var isMobile = navigator.userAgent.match(/mobile/i);
+    if (inType == "wm.DojoGrid" && isMobile) {
+	inType = "wm.List";
+    }
+    var requireList = wm.componentList[inType];
 
 	// if we dont get the require list, then we assume that it is a composite widget 
 	// so we will try to load it.
@@ -184,6 +185,9 @@ wm.getComponentStructure = function(inType){
 		    }
 		}
 	}
+    if (isMobile && inType == "wm.List") {
+	wm.DojoGrid = wm.List;
+    }
 }
 
 wm.addFrameworkFix = function(gzipName, inFunc) {

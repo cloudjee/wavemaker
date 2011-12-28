@@ -17,7 +17,7 @@
 		"borderColor": "#333333"
 	}, 
 	"wm.Splitter": {
-		"bevelSize": "10", 
+		"bevelSize": "4", 
 		"border": "1", 
 		"borderColor": "#333333"
 	}, 

@@ -545,15 +545,6 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
     },
 
 
-    getDataSource: function() {
-	if (!this._dataSource) {
-	    var binding = this.$ && this.$.binding;
-	    var dataSet = (binding && binding.wires["dataSet"] || 0).source;
-	    this._dataSource = dataSet && this.getValueById(dataSet);
-	}
-	return this._dataSource;
-    },
-
     editNewObject: function() {
 	this.beginEditUpdate();
 	this.clearDirty();

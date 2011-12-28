@@ -23,6 +23,7 @@ dojo.require("wm.base.widget.DojoChart");
 
 // design only...
 wm.Object.extendSchema(wm.DojoChart, {
+    /* Ignored group */
 	variable: { ignore: 1 },
 	dojoDiv:{ignore:1},
 	caption:{ignore:1},
@@ -38,25 +39,39 @@ wm.Object.extendSchema(wm.DojoChart, {
 	xLabels:{ignore:1},
 	legendDiv:{ignore:1},
 	legend:{ignore:1},
-        dataSet: {writeonly: 1, bindTarget: 1, group: "edit", order: 10, isList: true},
-	xAxis: {group: "edit", order: 20},
+
+    /* widgetName group */
+    dataSet: {writeonly: 1, bindTarget: 1, group: "widgetName", subgroup: "data", order: 10, requiredGroup:1,isList: true},
+
+    xAxis: {group: "widgetName", subgroup: "xaxis", order: 20,requiredGroup:1, editor: "wm.prop.FieldList"},
+    includeX: {group: "widgetName", subgroup: "xaxis", order: 21, advanced:1},
+    xAxisLabelLength: {group: "widgetName", subgroup: "xaxis", order: 22, advanced:1},
+    xMajorTickStep:  {group: "widgetName", subgroup: "xaxis", order: 23, advanced:1},
+    xMinorTicks:   {group: "widgetName", subgroup: "xaxis", order: 24, advanced:1},
+    xMinorTickStep:  {group: "widgetName", subgroup: "xaxis", order: 25, advanced:1},
+    
+    yAxis: {group: "widgetName", subgroup: "yaxis",  order: 30,requiredGroup:1, editor: "wm.prop.FieldList"},
+    includeY: {group: "widgetName", subgroup: "yaxis",  order: 35, advanced:1},
+    yAxisTitle: {group: "widgetName", subgroup: "yaxis",  order: 35},
+    yUpperRange: {group: "widgetName", subgroup: "yaxis",  order: 36, advanced:1},
         //isTimeXAxis: {group: "edit", order: 21, type: "string"},
-	maxTimePoints: {group: "edit", order: 22},
-	yAxis: {group: "edit", order: 30},
-	chartColor: {group: "edit", order: 40},
-    chartType: {order: 10, options:  [
-  				"Columns",
-				"ClusteredColumns",
-				"StackedColumns",
-				"Bars",
-				"ClusteredBars",
-				"StackedBars",
-				"Areas",
-				"StackedAreas",
-				"Pie",
-				"Lines"
+
+    
+    maxTimePoints: {group: "widgetName", subgroup: "display", order: 22, advanced:1},
+    chartColor: {group: "widgetName", subgroup: "display", order: 40},
+    chartType: {group: "widgetName", subgroup: "behavior", order: 10, options:  [
+  	"Columns",
+	"ClusteredColumns",
+	"StackedColumns",
+	"Bars",
+	"ClusteredBars",
+	"StackedBars",
+	"Areas",
+	"StackedAreas",
+	"Pie",
+	"Lines"
     ]},
-    theme: {order: 20, options: [
+    theme: {group: "widgetName", subgroup: "display", order: 20, options: [
       		"GreySkies",
       		"Adobebricks",
       		"Algae",
@@ -86,6 +101,16 @@ wm.Object.extendSchema(wm.DojoChart, {
       		"PlotKit.purple",
       		"PlotKit.red"
     ]},
+    gap: {group: "widgetName", subgroup: "display"},
+    hideLegend: {group: "widgetName", subgroup: "legend", advanced:1},
+    legendHeight: {group: "widgetName", subgroup: "legend", advanced:1},
+    legendWidth: {group: "widgetName", subgroup: "legend", advanced:1},
+    verticalLegend: {group: "widgetName", subgroup: "legend", advanced:1},
+    
+    includeGrid: {group: "widgetName", subgroup: "display", advanced:1},
+    enableAnimation: {group: "widgetName", subgroup: "display", advanced:1},
+    chartTitle: {group: "widgetName", subgroup: "display", advanced:1},
+    
 	addSilverlight:{ignore:1}
 });
 
@@ -121,14 +146,20 @@ wm.DojoChart.extend({
 		this.caption = this.caption || this.name;
 		this.renderDojoObj();
 	},
-	setXAxis: function(inValue){
-		this.xAxis = inValue;
+	set_xAxis: function(inValue){
+	    this.xAxis = dojo.isArray(inValue) ? inValue.join(",") : inValue;
 		this.renderDojoObj();
 	},
-	setYAxis: function(inValue){
-		this.yAxis = inValue;
+	set_yAxis: function(inValue){
+	    this.yAxis = dojo.isArray(inValue) ? inValue.join(",") : inValue;
 		this.renderDojoObj();
 	},
+    get_xAxis: function() {
+	return this.xAxis ? this.xAxis.split(",") : [];
+    },
+    get_yAxis: function() {
+	return this.yAxis ? this.yAxis.split(",") : [];
+    },
 	setYUpperRange: function(inValue){
 		this.yUpperRange = inValue;
 		this.renderDojoObj();

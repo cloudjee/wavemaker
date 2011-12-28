@@ -44,12 +44,12 @@ dojo.declare("wm.debug.EventDetailsPanel", wm.Layer, {
     postInit: function() {
 	this.inherited(arguments);
 	this.createComponents({
-	    eventListVar:["wm.Variable", {type: "debugEventType", isList: true}],
+	    eventListVar:["wm.Variable", {type: "EntryData", isList: true}],
 	    html: ["wm.Html", {margin: "8", width: "100%", height: "80px", autoSizeHeight:1}],
 	    eventsGrid: ["wm.DojoGrid", 
 				 {width: "100%", height: "100%","columns":[
-				     {"show":true,"field":"sourceEvent","title":"Source Event","width":"100%","align":"left","formatFunc":"getSourceText"/*, expression: "${firingId} + '.' + ${eventName} + '()'"*/},
-				     {"show":true,"field":"resultEvent","title":"Resulting Event","width":"100%","align":"left","formatFunc":"getResultText"/*,expression: "${affectedId} + '.' + (${isBinding} ? 'setValue(' + ${boundProperty} + ',' + (${boundValue}||null) + ')' : (${method} || ${eventName}) + '()')"*/}
+				     {"show":true,"field":"dataValue","title":"Type","width":"100px","align":"left"},
+				     {"show":true,"field":"name","title":"Event","width":"100%","align":"left"}
 				 ],
 				  "margin":"4"}, {}, {
 				      binding: ["wm.Binding", {"name":"binding"}, {}, {
@@ -74,28 +74,28 @@ dojo.declare("wm.debug.EventDetailsPanel", wm.Layer, {
 	var id = inEventObj.id;
 
 	var causeList = inEventObj.causeList || [];
-	var eventChain = [];
-	if (causeList) {
+	causeList.push({dataValue:id});
+	var eventChain = [];	
+
+	    var lastEvt = "";
 	    for (var i = 0; i < causeList.length; i++) {
-		var item = this.findEventById(causeList[i].dataValue);
+		var item = wm.debug.EventsPanel.prototype.findEventById(causeList[i].dataValue);
 		if (item) {
-		    eventChain.push(item);
+		    var sourceEvt = wm.debug.EventsPanel.prototype.getSourceText(null, null, null, null, null, item);
+		    var resultEvt = wm.debug.EventsPanel.prototype.getResultText(null, null, null, null, null, item);
+		    var evtType = wm.debug.EventsPanel.prototype.getEventType(null, null, null, null, null, item);;
+		    if (sourceEvt != lastEvt) {
+			eventChain.push({dataValue: evtType,
+					 name: sourceEvt});
+		    }
+		    if (sourceEvt != resultEvt) {
+			eventChain.push({dataValue: evtType,
+					 name: resultEvt});
+			var lastEvt = resultEvt;
+		    }
 		}
-	    }
 	}
-	eventChain.push(inEventObj);
 	this.eventListVar.setData(eventChain);
 	this.html.setHtml("The grid below shows the chain of events that led to the selected event occuring");
-    },
-    findEventById: function(inId) {
-	var EventsTable =  app.debugDialog.eventsPanel.eventListVar;
-	var count = EventsTable.getCount();
-	for (var i = 0; i < count; i++) {
-	    var item = EventsTable.getItem(i);
-	    if (inId == item.getValue("id")) {
-		return item.getData(); // don't return the item; an item can't be in two wm.Variables.
-	    }
-	}
-	return null;
     }
 });

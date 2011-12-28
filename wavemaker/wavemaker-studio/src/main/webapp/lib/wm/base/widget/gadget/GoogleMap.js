@@ -136,37 +136,6 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
 	if (this._map)
 	    this._map.setMapTypeId(google.maps.MapTypeId[this.mapType]);
     },
-	_addFields: function(inList, inSchema) {
-		for (var i in inSchema) {
-			var ti = inSchema[i];
-			if (!(ti||0).isList && !wm.typeManager.isStructuredType((ti||0).type)) {
-				inList.push(i);
-			}
-		}
-	},
-	_listFields: function() {
-		var list = [ "" ];
-		var schema = this.dataSet instanceof wm.LiveVariable ? wm.typeManager.getTypeSchema(this.dataSet.type) : (this.dataSet||0)._dataSchema;
-		var schema = (this.dataSet||0)._dataSchema;
-		this._addFields(list, schema);
-		return list;
-	},
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-		case "mapType":
-		    return makeSelectPropEdit(inName, inValue, ["ROADMAP", "SATELLITE", "HYBRID", "TERRAIN"], inDefault);
-		case "addressField":
-		case "latitudeField":
-		case "longitudeField":
-		case "titleField":
-		case "descriptionField":
-		case "iconField":
-		    return makeSelectPropEdit(inName, inValue, this._listFields(), inDefault);
-		case "dataSet":
-		    return new wm.propEdit.DataSetSelect({component: this, name: inName, value: this.variable ? this.variable.getId() : "", allowAllTypes: true, listMatch: true});
-		}
-	    return this.inherited(arguments);
-	},
 
 	setDataSet: function(inDataSet) {
 	    this.dataSet = inDataSet;

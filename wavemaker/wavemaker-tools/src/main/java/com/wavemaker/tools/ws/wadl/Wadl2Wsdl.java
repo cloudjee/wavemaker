@@ -61,9 +61,9 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.wavemaker.common.util.CastUtils;
+import com.wavemaker.runtime.ws.RESTInputParam;
+import com.wavemaker.runtime.ws.RESTInputParam.InputType;
 import com.wavemaker.runtime.ws.util.Constants;
-import com.wavemaker.tools.ws.RESTInputParam;
-import com.wavemaker.tools.ws.RESTInputParam.InputType;
 import com.wavemaker.tools.ws.RESTWsdlGenerator;
 
 /**

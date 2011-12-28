@@ -25,6 +25,7 @@ import com.wavemaker.runtime.service.ServiceType;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
 import com.wavemaker.runtime.service.definition.ServiceOperation;
+import com.wavemaker.runtime.ws.RESTInputParam;
 
 /**
  * @author Simon Toens
@@ -147,6 +148,11 @@ public class SpringServiceDefinitionWrapper implements DeprecatedServiceDefiniti
     @Override
     public List<ServiceOperation> getServiceOperations(IPwsServiceModifier serviceModifier) {
         return this.delegate.getServiceOperations();
+    }
+
+    @Override
+    public List<RESTInputParam> getInputParams(String operationName) {
+        return null;
     }
 
     @Override

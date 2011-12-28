@@ -69,6 +69,7 @@ import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.runtime.ws.BindingProperties;
 import com.wavemaker.runtime.ws.HTTPBindingSupport;
 import com.wavemaker.runtime.ws.HTTPBindingSupport.HTTPRequestMethod;
+import com.wavemaker.runtime.ws.RESTInputParam;
 import com.wavemaker.runtime.ws.WebServiceException;
 import com.wavemaker.runtime.ws.util.Constants;
 import com.wavemaker.tools.common.ConfigurationException;
@@ -110,7 +111,7 @@ public class WebServiceToolsManager {
     public String importWSDL(String wsdlPath, String serviceId, // salesforce
         boolean overwrite, String username, String password, String partnerName) throws WSDLException, IOException, JAXBException,
         ParserConfigurationException, SAXException, TransformerException {
-        return importWSDL(wsdlPath, serviceId, overwrite, username, password, partnerName, null);
+        return importWSDL(wsdlPath, serviceId, overwrite, username, password, partnerName, null, null, null);
     }
 
     /**
@@ -122,14 +123,18 @@ public class WebServiceToolsManager {
      * @param overwrite true to overwrite the service with the same service ID; false to simply return the string
      *        "$already_exists".
      * @param serviceAlias The alias of the service name
+     * @param operationName_list The list of operation names
+     * @param inputs_list The list of input parameters (per operations).
      * @return The service ID, or the string "$already_exists$" if the service ID already exists and overwrite is false.
      * @throws WSDLException
      * @throws IOException
      * @throws JAXBException
      */
-    public String importWSDL(String wsdlPath, String serviceId, // salesforce
-        boolean overwrite, String username, String password, String partnerName, String serviceAlias) throws WSDLException, IOException,
-        JAXBException, ParserConfigurationException, SAXException, TransformerException {
+    public String importWSDL(String wsdlPath,
+        String serviceId, // salesforce
+        boolean overwrite, String username, String password, String partnerName, String serviceAlias, List<String> operationName_list,
+        List<List<RESTInputParam>> inputs_list) throws WSDLException, IOException, JAXBException, ParserConfigurationException, SAXException,
+        TransformerException {
 
         logger.info("Importing " + wsdlPath);
         String srcPath;
@@ -139,7 +144,7 @@ public class WebServiceToolsManager {
         File tmpWsdlFile = null;
         if (wsdlPath.startsWith("http")) {
             // isLocal = false;
-            WSDL tmpWsdl = WSDLManager.processWSDL(wsdlPath, serviceId);
+            WSDL tmpWsdl = WSDLManager.processWSDL(wsdlPath, serviceId, operationName_list, inputs_list);
             File tempDir = IOUtils.createTempDirectory();
             tmpWsdlFile = new File(tempDir, tmpWsdl.getServiceId() + Constants.WSDL_EXT);
             WSDLUtils.writeDefinition(tmpWsdl.getDefinition(), tmpWsdlFile);
@@ -157,12 +162,13 @@ public class WebServiceToolsManager {
             File[] listFiles = origWsdlFile.listFiles();
             for (File f : listFiles) {
                 if (f.getName().toLowerCase().endsWith(Constants.WSDL_EXT)) {
-                    srvId = importWSDL(f.getCanonicalPath(), null, true, username, password, partnerName, serviceAlias); // salesforce
+                    srvId = importWSDL(f.getCanonicalPath(), null, true, username, password, partnerName, serviceAlias, operationName_list,
+                        inputs_list); // salesforce
                 }
             }
             return srvId;
         }
-        origWsdl = WSDLManager.processWSDL(origWsdlFile.toURI().toString(), serviceId);
+        origWsdl = WSDLManager.processWSDL(origWsdlFile.toURI().toString(), serviceId, operationName_list, inputs_list);
 
         if (!overwrite && this.designServiceMgr.serviceExists(origWsdl.getServiceId())) {
             return SERVICE_ID_ALREADY_EXISTS + origWsdl.getServiceId();
@@ -210,7 +216,7 @@ public class WebServiceToolsManager {
         importWS.setServiceId(serviceId);
         importWS.setDestdir(new FileSystemResource(runtimeDir));
         importWS.setPartnerName(partnerName);
-        WSDL wsdl = importWS.generateServiceClass(serviceAlias);
+        WSDL wsdl = importWS.generateServiceClass(serviceAlias, operationName_list, inputs_list);
         wsdl.setPartnerName(partnerName);
 
         // update DesignServiceManager with the WSDL that contains the
@@ -246,7 +252,7 @@ public class WebServiceToolsManager {
         File tempDir = IOUtils.createTempDirectory();
         try {
             File wsdlFile = generateWsdlFromWadl(wadlPath, tempDir);
-            return importWSDL(wsdlFile.getCanonicalPath(), serviceId, overwrite, null, null, null, null);
+            return importWSDL(wsdlFile.getCanonicalPath(), serviceId, overwrite, null, null, null, null, null, null);
         } finally {
             IOUtils.deleteRecursive(tempDir);
         }
@@ -286,7 +292,7 @@ public class WebServiceToolsManager {
             file.transferTo(wsdlFile);
             modifyServiceName(wsdlFile);
             if (isWSDL) {
-                return importWSDL(wsdlFile.getCanonicalPath(), serviceId, Boolean.valueOf(overwrite), username, password, null, null);
+                return importWSDL(wsdlFile.getCanonicalPath(), serviceId, Boolean.valueOf(overwrite), username, password, null, null, null, null);
             } else {
                 return importWADL(wsdlFile.getCanonicalPath(), serviceId, Boolean.valueOf(overwrite));
             }
@@ -443,7 +449,7 @@ public class WebServiceToolsManager {
         try {
             File wsdlFile = new File(tempDir, serviceName + Constants.WSDL_EXT);
             restWsdlGenerator.write(wsdlFile);
-            return importWSDL(wsdlFile.getCanonicalPath(), null, overwrite, null, null, partnerName, serviceAlias); // salesforce
+            return importWSDL(wsdlFile.getCanonicalPath(), null, overwrite, null, null, partnerName, serviceAlias, operationName_list, inputs_list); // salesforce
         } finally {
             IOUtils.deleteRecursive(tempDir);
         }

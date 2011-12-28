@@ -36,6 +36,7 @@ import com.sun.codemodel.JType;
 import com.sun.codemodel.JVar;
 import com.sun.tools.xjc.api.S2JJAXBModel;
 import com.wavemaker.runtime.service.ElementType;
+import com.wavemaker.runtime.ws.RESTInputParam;
 import com.wavemaker.runtime.ws.RESTService;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
@@ -55,7 +56,9 @@ public class RESTServiceGenerator extends WebServiceGenerator {
 
     private JFieldVar restServiceVar;
 
-    private JVar inputMapVar;
+    private JVar urlInputMapVar;
+
+    private JVar headerInputMapVar;
 
     private ServiceInfo serviceInfo;
 
@@ -152,13 +155,24 @@ public class RESTServiceGenerator extends WebServiceGenerator {
         super.generateOperationMethodBody(method, body, operationName, inputJTypeMap, outputType1, outputJType, overloadCount);
 
         // [RESULT]
-        // Map<String,Object> inputMap = new HashMap<String,Object>();
-        this.inputMapVar = body.decl(parseType("java.util.Map<String,Object>"), "inputMap", JExpr._new(parseType("java.util.HashMap<String,Object>")));
+        // Map<String,Object> urlParams = new HashMap<String,Object>();
+        this.urlInputMapVar = body.decl(parseType("java.util.Map<String,Object>"), "urlParams",
+            JExpr._new(parseType("java.util.HashMap<String,Object>")));
+        this.headerInputMapVar = body.decl(parseType("java.util.Map<String,Object>"), "headerParams",
+            JExpr._new(parseType("java.util.HashMap<String,Object>")));
 
         for (String paramName : inputJTypeMap.keySet()) {
-            // [RESULT]
-            // inputMap.put("<paramName>", <paramName>);
-            JInvocation invocation = this.inputMapVar.invoke("put");
+            JInvocation invocation;
+            if (passedInHeader(operationName, paramName)) {
+                // [RESULT]
+                // headerParams.put("<paramName>", <paramName>);
+                invocation = this.headerInputMapVar.invoke("put");
+
+            } else {
+                // [RESULT]
+                // urlParams.put("<paramName>", <paramName>);
+                invocation = this.urlInputMapVar.invoke("put");
+            }
             invocation.arg(JExpr.lit(paramName));
             invocation.arg(JExpr.ref(paramName));
             body.add(invocation);
@@ -184,7 +198,7 @@ public class RESTServiceGenerator extends WebServiceGenerator {
         body.add(setBindingInvoke);
 
         JInvocation invocation = this.restServiceVar.invoke("invoke");
-        invocation.arg(this.inputMapVar);
+        invocation.arg(this.urlInputMapVar);
 
         InvokeParams params = extraceInvokeParams(operationName);
         if (params != null) {
@@ -209,6 +223,8 @@ public class RESTServiceGenerator extends WebServiceGenerator {
             // [RESULT]
             // restService.invoke(inputMap, Void.class);
             invocation.arg(this.codeModel.ref("Void").dotclass());
+            invocation.arg(this.headerInputMapVar);
+            invocation = addExtraInputArgsInMethodInvocation(invocation, this.wsdl, operationName);
             body.add(invocation);
         } else {
             String javaType1 = getOutputJavaType(outputType);
@@ -216,6 +232,7 @@ public class RESTServiceGenerator extends WebServiceGenerator {
             // [RESULT]
             // <outputType> result = restService.invoke(inputMap, <outputType>);
             invocation.arg(this.codeModel.ref(javaType1).dotclass());
+            invocation.arg(this.headerInputMapVar);
             invocation = addExtraInputArgsInMethodInvocation(invocation, this.wsdl, operationName);
             JVar var = body.decl(this.codeModel.ref(javaType), "result", invocation);
 
@@ -234,7 +251,7 @@ public class RESTServiceGenerator extends WebServiceGenerator {
         for (Map.Entry<String, String> entry : paramMap.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
-            JInvocation invocation = this.inputMapVar.invoke("put");
+            JInvocation invocation = this.urlInputMapVar.invoke("put");
             invocation.arg(JExpr.lit(key));
             if (isRef) {
                 invocation.arg(JExpr.ref(value));
@@ -259,6 +276,20 @@ public class RESTServiceGenerator extends WebServiceGenerator {
             }
         }
         return params;
+    }
+
+    private boolean passedInHeader(String operationName, String paramName) {
+        List<RESTInputParam> list = this.serviceDefinition.getInputParams(operationName);
+        for (RESTInputParam rip : list) {
+            if (rip.getName().equals(paramName)) {
+                if (rip.toLocation() == RESTInputParam.InputLocation.HEADER) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        return false;
     }
 
     private static class InvokeParams {

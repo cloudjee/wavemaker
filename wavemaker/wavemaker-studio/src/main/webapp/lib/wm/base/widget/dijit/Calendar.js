@@ -108,6 +108,8 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
 	this.setMaximum(this.maximum);
 
         this.inherited(arguments);
+	if (this.dateValue)
+	    this.setDateValue(this.dateValue);
         if (this.useDialog) {
             this.dialog = new wm.WidgetsJsDialog({
                 width: 200,

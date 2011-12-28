@@ -65,11 +65,11 @@ dojo.declare("wm.gadget.TwitterFollowButton", wm.Gadget, {
 });
 
 wm.Object.extendSchema(wm.gadget.TwitterFollowButton, {
-    screenName: {bindTarget: 1, group: "display"},
-    buttonColor: {group: "TwitterStyle", options: ["blue","grey"]},
-    showFollowerCount: {group: "display", type: "Boolean"},
-    linkColor: {group: "TwitterStyle", editor: "wm.ColorPicker"},
-    textColor: {group: "TwitterStyle", editor: "wm.ColorPicker"}
+    screenName: {bindTarget: 1, group: "widgetName", subgroup: "behavior"},
+    buttonColor: {group: "widgetName", subgroup: "display", options: ["blue","grey"]},
+    showFollowerCount: {group: "widgetName", subgroup: "behavior", type: "Boolean"},
+    linkColor: {group: "widgetName", subgroup: "display", editor: "wm.ColorPicker"},
+    textColor: {group: "widgetName", subgroup: "display", editor: "wm.ColorPicker"}
 });
 
 
@@ -126,10 +126,10 @@ dojo.declare("wm.gadget.TwitterTweetButton", wm.Gadget, {
 });
 
 wm.Object.extendSchema(wm.gadget.TwitterTweetButton, {
-    url: {bindTarget: 1, group: "display"},
-    via: {bindTarget: 1, group: "display"},
-    showFollowerCount: {group: "display", type: "Boolean"},
-    countPosition: {group: "display", options: ["none", "horizontal", "vertical"]}
+    url: {bindTarget: 1, group: "widgetName", subgroup: "behavior"},
+    via: {bindTarget: 1, group: "widgetName", subgroup: "behavior"},
+    showFollowerCount: {group: "widgetName", subgroup: "display", type: "Boolean"},
+    countPosition: {group: "widgetName", subgroup: "display", options: ["none", "horizontal", "vertical"]}
 });
 
 
@@ -315,20 +315,20 @@ var params = {
     }
 });
 wm.Object.extendSchema(wm.gadget.TwitterList, {
-    screenName: {bindTarget: 1, group: "Twitter"},
-    title: {bindTarget: 1, group: "Twitter"},
-    search: {bindTarget: 1, group: "Twitter"},
-    twitterActivity: {group: "Twitter", options: ["profile", "search"]},
-    postCount: {group: "TwitterStyle", order: 100},
-    twitterScrollbar: {group: "TwitterStyle", order: 101},
-    twitterLoop:  {group: "TwitterStyle", order: 102},
-    pollInterval: {group: "Twitter", order: 110},
-    twitterPollingEnabled: {group: "Twitter", order: 111},
+    screenName: {bindTarget: 1, group: "widgetName", subgroup: "behavior"},
+    title: {bindTarget: 1, group: "widgetName", subgroup: "display"},
+    search: {bindTarget: 1, group: "widgetName", subgroup: "behavior"},
+    twitterActivity: {group: "widgetName", subgroup: "behavior", options: ["profile", "search"]},
+    postCount: {group: "widgetName", subgroup: "display", order: 100},
+    twitterScrollbar: {group: "widgetName", subgroup: "display", order: 101},
+    twitterLoop:  {group: "widgetName", subgroup: "behavior", order: 102},
+    pollInterval: {group: "widgetName", subgroup: "behavior", order: 110},
+    twitterPollingEnabled: {group: "widgetName", subgroup: "behavior", order: 111},
 
-    shellTextColor: {group: "TwitterStyle", editor: "wm.ColorPicker", order: 200},
-    shellBackground: {group: "TwitterStyle", editor: "wm.ColorPicker", order: 201},
-    tweetTextColor: {group: "TwitterStyle", editor: "wm.ColorPicker", order: 202},
-    tweetBackground: {group: "TwitterStyle", editor: "wm.ColorPicker", order: 203},
-    tweetLinkColor: {group: "TwitterStyle", editor: "wm.ColorPicker", order: 204},
+    shellTextColor: {group: "widgetName", subgroup: "display", editor: "wm.ColorPicker", order: 200},
+    shellBackground: {group: "widgetName", subgroup: "display", editor: "wm.ColorPicker", order: 201},
+    tweetTextColor: {group: "widgetName", subgroup: "display", editor: "wm.ColorPicker", order: 202},
+    tweetBackground: {group: "widgetName", subgroup: "display", editor: "wm.ColorPicker", order: 203},
+    tweetLinkColor: {group: "widgetName", subgroup: "display", editor: "wm.ColorPicker", order: 204},
     twitterBehavior: {ignore:1}
 });

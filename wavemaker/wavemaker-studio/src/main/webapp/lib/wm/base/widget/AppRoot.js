@@ -19,8 +19,11 @@ dojo.declare("wm.AppRoot", wm.Container, {
 	classNames: '',
 	width: "",
 	height: "",
+        deviceSize: "",
 	create: function() {
-		this.inherited(arguments);
+	    this.inherited(arguments);
+	    this.deviceSize = this.calcDeviceSize(window.innerWidth);
+	    app.valueChanged("deviceSize",this.deviceSize); // bindable event
 	},
 	build: function() {
 	    this.domNode = dojo.byId(this.owner.domNode) || document.body;
@@ -28,16 +31,39 @@ dojo.declare("wm.AppRoot", wm.Container, {
 	},
 	init: function() {
 	    this.inherited(arguments);
-	    this.subscribe("window-resize", this, "resize");
+	    var orientationEvent = ("onorientationchange" in window) ? "orientationchange" : "resize";
+	    window.addEventListener(orientationEvent, dojo.hitch(this,"resize"));
 	},
     getRuntimeId: function() {return "approot";},
 	resize: function() {
+
+	    var deviceSize = this.deviceSize;
+		this.updateBounds();
+	    this.deviceSize = this.calcDeviceSize(this.bounds.w);
+	    if (deviceSize != this.deviceSize) {
+		app.valueChanged("deviceSize",this.deviceSize); // bindable event
+		dojo.publish("deviceSizeRecalc");
+	    }
 	    this.reflow();
+
 	},
 	updateBounds: function() {
 	    this._percEx = {w:100, h: 100};
-	    var pn = this.domNode.parentNode;
-	    this.setBounds(0, 0, pn.offsetWidth, pn.offsetHeight);
+
+	    /* Even though desktop may have window.screen, some desktop apps may not occupy the entire page */
+/*
+	    if (wm.isMobile && window["screen"]) {
+		this.setBounds(0,0,screen.width,screen.height);
+	    } else {
+	    */
+	    if (wm.isMobile) {
+		var pn = this.domNode.parentNode;
+		pn.style.height = "100%";
+		this.setBounds(0, 0, pn.offsetWidth, pn.offsetHeight);
+	    } else {
+		var pn = this.domNode.parentNode;
+		this.setBounds(0, 0, pn.offsetWidth, pn.offsetHeight);
+	    }
 	},
 	reflow: function() {
 		if (this._cupdating)
@@ -45,5 +71,20 @@ dojo.declare("wm.AppRoot", wm.Container, {
 	        this.updateBounds();
 		this.renderBounds();
 		this.inherited(arguments);
+	},
+    calcDeviceSize: function(width) {	
+	if (width >= 1000) {
+	    return "1000";
+	} else if (width >= 800) {
+	    return "800";
+	} else if (width >= 600) {
+	    return "600";
+	} else if (width >= 450) {
+	    return "450";
+	} else if (width >= 300) {
+	    return "300";
+	} else {
+	    return "tiny";
 	}
+    }
 });

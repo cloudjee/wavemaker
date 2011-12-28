@@ -20,7 +20,7 @@ dojo.require("wm.base.Control_design");
 
 wm.Object.extendSchema(wm.Container, {
     /* Display group; layout subgroup */
-    layoutKind:         {group: "display", subgroup: "layout", order: 100, options: ["top-to-bottom","left-to-right"], requiredGroup: true},
+    layoutKind:         {group: "display", subgroup: "layout", order: 100, options: ["top-to-bottom","left-to-right","fluid"], requiredGroup: true},
     horizontalAlign:    {group: "display", subgroup: "layout", order: 110, options: ["left","center","right"]},
     verticalAlign:      {group: "display", subgroup: "layout", order: 120, options: ["top","middle","bottom"]},
     fitToContentWidth:  {group: "display", subgroup: "layout", order: 150, shortname: "Auto Width", type: "Boolean", advanced: true},

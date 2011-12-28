@@ -123,6 +123,7 @@ wm.Application.extend({
 
 
 wm.Object.extendSchema(wm.Application, {
+    deviceSize: {ignore: 1, bindSource:1},
     name: {ignore: 1}, // at some point, we might provide this as a way to rename the project... but renaming is really a server side op, so requires confirmation. 
     main: {shortname: "mainPageName", order: 5, editor: "wm.prop.PagesSelect", editorProps: {currentPageOK:true}},
     promptChromeFrame: {order: 10, type: "string", options: ["chromeframe.html", "http://google.com/chrome", "Allow IE 6 and 7"]},

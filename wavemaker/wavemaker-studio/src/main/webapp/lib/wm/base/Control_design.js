@@ -234,6 +234,27 @@ wm.Control.extend({
 		this.setShowing(inShowing);
 		wm.fire(this.designWrapper, "setShowing", [inShowing]);
 	},
+    //=======================================================
+    // Properties
+    //=======================================================
+    listProperties: function() {
+	var p = this.inherited(arguments);
+	p.autoSizeWidth.ignoretmp = (!this.isSizeable() && !this.autoSizeWidth) || (this.schema.autoSizeWidth && this.schema.autoSizeWidth.ignore);
+	p.autoSizeHeight.ignoretmp = (!this.isSizeable() && !this.autoSizeHeight) || (this.schema.autoSizeHeight && this.schema.autoSizeHeight.ignore);
+        p.minWidth.ignoretmp = !this.schema.minWidth || this.schema.minWidth.ignore || (!this._percEx.w && !this.autoSizeWidth); // minWidth only applies if width is % or autosize is on
+        p.minHeight.ignoretmp = this.schema.minHeight.ignore || (!this._percEx.h && !this.autoSizeHeight); // minHeight only applies if height is % or autosize is on
+	//p.width.ignore = p.width.writeonly = !this.isSizeable() || !this.canSetWidth();
+	//p.height.ignore = p.height.writeonly = !this.isSizeable() || !this.canSetHeight();
+	p.width.ignoretmp = p.width.writeonly = this.schema.width.ignore || !this.isSizeable() || this.autoSizeWidth;
+	p.height.ignoretmp = p.height.writeonly = this.schema.height.ignore || !this.isSizeable() || this.autoSizeHeight;
+	// _classes as array for bc; now an object that supports storing sets of classes
+	if (p._classes)
+	    p._classes.writeonly = (dojo.isArray(this._classes) && this._classes.length) || !wm.isEmpty(this._classes);
+	    if (p.parent && p.parent.layoutKind == "fluid") {
+		p.minWidth.advanced = false;
+	    }
+	return p;
+    },
     showImageListDialog: function() {
 	var imageList = this._imageList
 	if (!imageList) {

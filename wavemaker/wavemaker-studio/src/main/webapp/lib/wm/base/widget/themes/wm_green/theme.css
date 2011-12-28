@@ -1207,13 +1207,16 @@ body .wm_green .dialogfooter .wmbutton:hover {
     border-style: solid;   
     border-color: #cccccc; /* Tables-EvenRows-Border_Color */
 }
-.wm_green .wmlist-item {
+.wm_green .wmlist-cell {
     border-style: solid;   
     border-color: #cccccc; /* Tables-EvenRows-Border_Color */
     border-left-width: 0px;
     border-right-width: 1px; /* Tables-EvenRows-Border_BorderSize */
     border-top-width: 0px;
     border-bottom-width: 0px;
+}
+.wm_green .wmlist-header .wmlist-cell {
+    border-right-width: 0px;
 }
   /**************************************************************************************************
    * TYPE:        Header, Hover and Selected row styles
@@ -2840,15 +2843,20 @@ body.wm_green {
 .wm_green .wmbevel {
     /* Document-ClickablesDefault-Background */
     background-color: #a19fa0; /* Document-ClickablesDefault-Background_Color */
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-    border-radius: 2px;
 }
 .wm_green div.wmsplitter-h:hover,
 .wm_green div.wmsplitter-v:hover {
     /* Document-ClickablesHover-Background */
     background-color: #d7d1d5; /* Document-ClickablesHover-Background_Color */
 }
+.wm_green .wmsplitter-h {
+	background-image: url(images/splitter_bg_h.png);
+}
+
+.wm_green .wmsplitter-v {
+	background-image: url(images/splitter_bg_v.png);
+}
+
 /*****************************************
  * EOF: splitterbevel.css
  *****************************************/

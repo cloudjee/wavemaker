@@ -26,22 +26,22 @@ wm.Object.extendSchema(wm.gadget.Facebook, {
 
 wm.Object.extendSchema(wm.gadget.FacebookLikeButton, {
     href: {bindTarget: true},
-    layout: {group: "Facebook", options: ["standard", "button_count", "box_count"]},
-    action: {group: "Facebook", options: ["like", "recommend"]},
-    font: {group: "Facebook", options: ["arial", "licida grande", "segoe ui", "tahoma", "trebuchet ms", "verdana"]},
-    colorscheme: {group: "Facebook", options: ["dark","light"]},
-    href: {group:"Facebook"},
-    ref: {group:"Facebook"},
-    show_faces: {group:"Facebook"},
+    layout: {group: "widgetName", subgroup: "display", options: ["standard", "button_count", "box_count"]},
+    action: {group: "widgetName", subgroup: "display",  options: ["like", "recommend"]},
+    font: {group: "widgetName",  subgroup: "display", options: ["arial", "licida grande", "segoe ui", "tahoma", "trebuchet ms", "verdana"]},
+    show_faces: {group:"widgetName", subgroup: "display"},
+    colorscheme: {group: "widgetName",  subgroup: "display", options: ["dark","light"]},
+    href: {group:"widgetName", subgroup: "data"},
+    ref: {group:"widgetName", subgroup: "data"}
 });
 wm.Object.extendSchema(wm.gadget.FacebookActivityFeed, {
-    colorscheme: {group:"display"},
-    font:  {group:"display"},
-    showHeader: {group: "Facebook"},
-    showRecommendations: {group: "Facebook"},
-    font: {group: "Facebook", options:["arial", "licida grande", "segoe ui", "tahoma", "trebuchet ms", "verdana"]},
-    colorscheme: {group: "Facebook", options: ["dark","light"]}, 
-    ref: {group: "Facebook"},
-    site: {group: "Facebook"}
+    colorscheme: {group:"widgetName", subgroup: "display"},
+    font:  {group:"widgetName", subgroup: "display"},
+    showHeader: {group: "widgetName", subgroup: "display"},
+    showRecommendations: {group: "widgetName", subgroup: "behavior"},
+    font: {group: "widgetName",subgroup:"display", options:["arial", "licida grande", "segoe ui", "tahoma", "trebuchet ms", "verdana"]},
+    colorscheme: {group: "widgetName", subgroup:"display", options: ["dark","light"]}, 
+    ref: {group: "widgetName", subgroup: "data"},
+    site: {group: "widgetName", subgroup: "data"}
 
 });

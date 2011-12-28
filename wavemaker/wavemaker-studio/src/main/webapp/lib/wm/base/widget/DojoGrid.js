@@ -21,6 +21,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	margin: 4,
 	width:'100%',
 	height:'200px',
+    minWidth: 150,
+    minHeight: 60,
 	variable:null,
 	dataSet:null,
 	dsType:null,
@@ -564,8 +566,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    this.variable.setData([inFields]);
 	    this.renderDojoObj();
 	    if (selectOnAdd) {
-	      this.setSelectedRow(0);
-	      this.selectionChange(); // needs committing
+		this.setSelectedRow(0);
+		this.selectionChange(); // needs committing
 	    }
 	    return;
 	  }
@@ -1134,6 +1136,12 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    }
 	}
     },
+    getColumnShowing: function(inFieldName, inShowing, noRender) {
+	var index = this.getColumnIndex(inFieldName);
+	if (index != -1) 
+	    return this.columns[index].show;
+    },
+
     setColumnWidth: function(inFieldName, inWidth, noRender) {
 	var index = this.getColumnIndex(inFieldName);
 	if (index != -1 && this.columns[index].width != inWidth) {	    
@@ -1558,8 +1566,6 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		try
 		{
 		    expValue = wm.expression.getValue(exp, json, this.owner);
-		    if (expValue === "")
-			console.log(expValue);
 		}
 		catch(e)
 		{
@@ -1617,7 +1623,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	numberFormatter: function(formatterProps, backgroundColorFunc, textColorFunc,cssClassFunc,inValue, rowIdx, cellObj){
 	    this.handleColorFuncs(cellObj,backgroundColorFunc, textColorFunc,cssClassFunc, rowIdx);
 	    var constraints = {
-		places: formatterProps.dijits, 
+		places: formatterProps.dijits || 0, 
 		round: formatterProps.round ? 0 : -1,
 		type: formatterProps.numberType
 	    };
@@ -1627,7 +1633,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    this.handleColorFuncs(cellObj,backgroundColorFunc, textColorFunc,cssClassFunc, rowIdx);
 	    return dojo.currency.format(inValue, {
 		currency: formatterProps.currency || (this._isDesignLoaded ? studio.application.currencyLocale : app.currencyLocale) || wm.getLocaleCurrency(),
-		places: formatterProps.dijits,
+		places: formatterProps.dijits == undefined ? 2 : formatterProps.dijits,
 		round: formatterProps.round ? 0 : -1
 	    });
 	},

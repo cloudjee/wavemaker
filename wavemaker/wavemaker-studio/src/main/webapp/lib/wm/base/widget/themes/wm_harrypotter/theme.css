@@ -1207,13 +1207,16 @@ body .wm_harrypotter .dialogfooter .wmbutton:hover {
     border-style: solid;   
     border-color: #323232; /* Tables-EvenRows-Border_Color */
 }
-.wm_harrypotter .wmlist-item {
+.wm_harrypotter .wmlist-cell {
     border-style: solid;   
     border-color: #323232; /* Tables-EvenRows-Border_Color */
     border-left-width: 0px;
     border-right-width: 1px; /* Tables-EvenRows-Border_BorderSize */
     border-top-width: 0px;
     border-bottom-width: 0px;
+}
+.wm_harrypotter .wmlist-header .wmlist-cell {
+    border-right-width: 0px;
 }
   /**************************************************************************************************
    * TYPE:        Header, Hover and Selected row styles
@@ -2840,15 +2843,20 @@ body.wm_harrypotter {
 .wm_harrypotter .wmbevel {
     /* Document-ClickablesDefault-Background */
     background-color: #b30000; /* Document-ClickablesDefault-Background_Color */
-    -moz-border-radius: 2px;
-    -webkit-border-radius: 2px;
-    border-radius: 2px;
 }
 .wm_harrypotter div.wmsplitter-h:hover,
 .wm_harrypotter div.wmsplitter-v:hover {
     /* Document-ClickablesHover-Background */
     background-color: #fe9603; /* Document-ClickablesHover-Background_Color */
 }
+.wm_harrypotter .wmsplitter-h {
+	background-image: url(images/splitter_bg_h.png);
+}
+
+.wm_harrypotter .wmsplitter-v {
+	background-image: url(images/splitter_bg_v.png);
+}
+
 /*****************************************
  * EOF: splitterbevel.css
  *****************************************/

@@ -513,3 +513,191 @@ wm.layout.register("left-to-right", wm.layout.HBox);
 wm.layout.register("top-to-bottom", wm.layout.VBox);
 wm.layout.addCache("left-to-right", new wm.layout.HBox());
 wm.layout.addCache("top-to-bottom", new wm.layout.VBox());
+
+
+
+/* NOTES:
+ * autoScroll is not allowed in a fluid layout:
+ *    scrollX: a fluid layout's width determines when its children wrap, therefore, scrolling left-to-right is not allowed
+ *    scrollY: a fluid layout's height must be fluid and fit its children
+ *    To scroll a fluid region you must make the parent container autoScrolling
+ */
+dojo.declare("wm.layout.Fluid", wm.layout.Base, {
+    flow: function(inContainer,reflowTest) {
+	if (inContainer._inFluidReflow) return;
+	inContainer._inFluidReflow = true;
+	try {
+	    wm.layout.Box.prototype.handleAutoSizingWidgets(inContainer);
+            
+	    var b = inContainer.getContentBounds();
+
+
+	    var minWidths = {};
+	    for (var i = 0; i < inContainer.c$.length; i++) {
+		var c = inContainer.c$[i];
+		if (!this.inFlow(c)) continue;
+		minWidths[c.getRuntimeId()] = c.getMinWidthProp();
+	    }
+
+	    /* PASS 1: figure out which widgets will go on which row */
+	    var rows = [[]];
+	    var currentRow = rows[0];
+	    var currentWidth = 0;
+	    var maxWidth = b.w;
+	    for (var i = 0; i < inContainer.c$.length; i++) {
+		var c = inContainer.c$[i];
+		if (!this.inFlow(c)) continue;
+		if (!c.bounds.w) c.updateBounds();
+		var minWidth = (!c._percEx.w) ? c.bounds.w : minWidths[c.getRuntimeId()];
+		/* If there are no items in this row, then add the next item no matter what its size is;
+		 * if this one widget is wider than the container's width it will be adjusted later 
+		 */
+		if (currentRow.length == 0) {
+		    currentRow.push(c);
+		    currentWidth = minWidth;
+		}
+
+		/* If there's no more room, its time to move on to the next row */
+		else if (currentWidth + minWidth > maxWidth) {
+		    currentRow = [c];
+		    rows.push(currentRow);
+		    currentWidth = minWidth;
+		}
+
+		else {
+		    currentRow.push(c);
+		    currentWidth += minWidth;
+		}
+	    }
+
+	    /* Now iterate over each row, and layout the widgets for each row */
+	    var top = inContainer.padBorderMargin.t;
+	    for (var rowId = 0; rowId < rows.length; rowId++) {
+		top += this.renderRow(rows[rowId],b.l,maxWidth,top,minWidths);
+	    }
+	    if (inContainer.bounds.h != top) {
+		if (!top) top = 15;
+		top += inContainer.padBorderMargin.b;
+		inContainer.setHeight(top + "px"); // will trigger a reflowParent, and result in a second pass which we will block
+	    }
+	} catch(e) {
+	} finally {
+	    inContainer._inFluidReflow = false;
+	}	
+    },
+    renderRow: function(row,left,maxWidth, top,minWidths) {
+	var maxHeight = 0;
+
+	/* Step 1: normalize the % based widths */
+	var totalPercent = 0;
+	var availableWidth = maxWidth;
+	for (var i = 0; i < row.length; i++) {
+	    var c = row[i];
+	    if (c._percEx.w) {
+		totalPercent += c._percEx.w;
+	    } else {
+		availableWidth -= c.bounds.w;
+	    }
+	}
+
+	var ratio = 100/totalPercent;
+
+	/* Step 2: find the widgets whose minWidth is greater than the width allocated via their percent size, and
+	 * remove them from the percent calculation
+	 */
+	var ignorePercent = {};
+	for (var i = 0; i < row.length; i++) {
+	    var c = row[i];
+	    var b = c.bounds;
+	    if (ratio * availableWidth * c._percEx.w/100 < minWidths[c.getRuntimeId()]) {
+		ignorePercent[i] = true;
+	    }
+	}
+
+	/* Step 3: Take a second pass at calculating the ratio */
+	if (!wm.isEmpty(ignorePercent)) {
+	     totalPercent = 0;
+	     availableWidth = maxWidth;
+	    for (var i = 0; i < row.length; i++) {
+		var c = row[i];
+		if (c._percEx.w && !ignorePercent[i]) {
+		    totalPercent += c._percEx.w;
+		} else {
+		    availableWidth -= Math.max(minWidths[c.getRuntimeId()],c.bounds.w);
+		}
+	    }
+
+	    ratio = 100/totalPercent;
+	}
+
+	for (var i = 0; i < row.length; i++) {
+	    var c = row[i];
+	    var b = c.bounds;
+	    b.t = top;
+	    b.l = left;
+	    if (c._percEx.w && !ignorePercent[i]) {
+		b.w = ratio * availableWidth * c._percEx.w/100;
+		if (b.w < c.minWidth) {
+		    b.w = c.minWidth;
+		}
+	    } else if (b.w > maxWidth) {
+		b.w = maxWidth;
+	    } else if (b.w < minWidths[c.getRuntimeId()]) {
+		b.w = minWidths[c.getRuntimeId()];
+	    } else {
+		b.w = b.w; // no change
+	    }
+	    if (b.h < c.minHeight) {
+		b.h = c.minHeight;
+	    }
+	    c.setBounds(b);
+	    c.renderBounds();
+	    if (c.flow) c.flow();
+	    if (b.h > maxHeight) {
+		maxHeight = b.h;
+	    }	    
+	    left += b.w;
+	}
+	for (var i = 0; i < row.length; i++) {
+	    var c = row[i];
+	    if (c._percEx.h) {
+		c.bounds.h = maxHeight;
+		c.renderBounds();
+	    }
+	}
+	return maxHeight;
+    },
+    suggest: function(inContainer, inControl, ioRect) {
+
+	var y = 0;
+	for (var i=0, c; c=inContainer.c$[i]; i++) {
+	    if (this.inFlow(c)) {
+		if (ioRect.t < c.bounds.t + c.bounds.h / 2) {
+		    y = c.bounds.t - 1;
+		    break;
+		}
+		y = c.bounds.b;
+		ioRect.control = c;
+	    }
+	}
+	if (!ioRect.control) 
+	    ioRect.control = inContainer;
+
+	var containercoords = dojo.coords(inContainer.domNode);
+	var coords = dojo.coords(ioRect.control.domNode);
+	var styleBounds = inContainer.getStyleBounds();
+	ioRect.l = containercoords.x;
+	if (ioRect.control == inContainer) {
+	    ioRect.t = coords.y;
+	} else {
+	    ioRect.t = coords.y + coords.h;
+	}
+
+	ioRect.w = styleBounds.w;
+	ioRect.i = i;
+
+    }
+});
+
+wm.layout.register("fluid", wm.layout.Fluid);
+wm.layout.addCache("fluid", new wm.layout.Fluid());

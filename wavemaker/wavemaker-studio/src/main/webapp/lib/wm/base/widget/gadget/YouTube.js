@@ -36,5 +36,5 @@ dojo.declare("wm.gadget.YouTube", wm.Gadget, {
 });
 
 wm.Object.extendSchema(wm.gadget.YouTube, {
-    videoId: {bindTarget: 1, group: "display"}
+    videoId: {bindTarget: 1, group: "display", subgroup: "behavior", requiredGroup: 1}
 });

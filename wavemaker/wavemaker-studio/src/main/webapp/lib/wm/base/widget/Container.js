@@ -232,17 +232,30 @@ wm.define("wm.Container", wm.Control, {
 		}
 		return -1;
 	},
-	nextSibling: function(inControl) {
+    nextSibling: function(inControl, showingOnly) {
 		for (var i=0, c; c=this.c$[i]; i++){
 			if (c == inControl) {
+			    if (!showingOnly) {
 				return this.c$[i+1];
+			    } else {
+				for (var j = i+1; j < this.c$.length; j++) {
+				    if (this.c$[j].showing) return this.c$[j];
+				}
+			    }
 			}
 		}
 	},
-	prevSibling: function(inControl) {
+    prevSibling: function(inControl, showingOnly) {
 		for (var i=0, c; c=this.c$[i]; i++){
 			if (c == inControl) {
+			    if (!showingOnly) {
 				return this.c$[i-1];
+			    } else {
+				for (var j = i-1; j >= 0; j--) {
+				    if (this.c$[j].showing) return this.c$[j];
+				}
+			    }
+
 			}
 		}
 	},
