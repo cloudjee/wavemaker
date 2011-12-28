@@ -280,12 +280,10 @@ public class RESTServiceGenerator extends WebServiceGenerator {
 
     private boolean passedInHeader(String operationName, String paramName) {
         List<RESTInputParam> list = this.serviceDefinition.getInputParams(operationName);
-        for (RESTInputParam rip : list) {
-            if (rip.getName().equals(paramName)) {
-                if (rip.toLocation() == RESTInputParam.InputLocation.HEADER) {
-                    return true;
-                } else {
-                    return false;
+        if (list != null) {
+            for (RESTInputParam rip : list) {
+                if (rip.getName().equals(paramName)) {
+                    return rip.toLocation() == RESTInputParam.InputLocation.HEADER;
                 }
             }
         }

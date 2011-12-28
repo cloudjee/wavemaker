@@ -783,6 +783,9 @@ public class WSDL extends AbstractDeprecatedServiceDefinition implements Reflect
 
     @Override
     public List<RESTInputParam> getInputParams(String operationName) {
+        if (this.operationParamsMap == null) {
+            return null;
+        }
         return this.operationParamsMap.get(operationName);
     }
 
