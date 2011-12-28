@@ -28,7 +28,7 @@ import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.runtime.WMAppContext;
 
 /**
- * Listener that flushes all of the Introspector's interna l caches and deregisters all JDBC drivers on web app
+ * Listener that flushes all of the Introspector's internal caches and de-registers all JDBC drivers on web app
  * shutdown.
  * 
  * @author Frankie Fu
