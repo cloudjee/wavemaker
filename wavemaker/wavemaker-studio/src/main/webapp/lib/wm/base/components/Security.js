@@ -95,7 +95,7 @@ wm.clearUserPrincipal = function() {
 
 wm.getUserRoles = function(force) {
     if (!force) {
-	if (wm.disableUserPrincipalCookie) {
+	if (!wm.disableUserPrincipalCookie) {
 	    if (wm.getUserPrincipal().roles) {
 		return wm.getUserPrincipal().roles;
 	    }
