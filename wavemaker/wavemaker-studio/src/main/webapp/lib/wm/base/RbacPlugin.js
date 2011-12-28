@@ -115,11 +115,60 @@ wm.Plugin.plugin("rbacLayer", wm.Layer, {
 	}
 });
 
-wm.Object.extendSchema(wm.Widget, {
-/*
-	roles: {ignore: 1, writeonly: 1, category: "Security",
-	categoryProps: {content: "Security", image: "images/lock_16.png", inspector: "Security"}}
-	*/
+wm.Plugin.plugin("rbacservice", wm.ServiceVariable, {
+	roles: '',
+    update: function() {
+	if (!this.roles || this.isRbacUpdateAllowed())
+	    this.rbacserviceSocket(arguments);
+	else
+	    console.log(this.getId() + " blocked by role settings");
+    },
+    updateInternal: function() {
+	if (!this.roles || this.isRbacUpdateAllowed())
+	    this.rbacserviceSocket(arguments);
+	else
+	    console.log(this.getId() + " blocked by role settings");
+    },
+	setRoles: function(inValue) {
+	    if (inValue === undefined || inValue === null)
+		inValue = [];
+	    var s = dojo.isArray(inValue) ? inValue : inValue.split(','), r=[];
+		for (var i=0, v, f; (f=s[i]); i++) {
+			v = dojo.trim(f);
+			if (v)
+				r.push(v);
+		}
+ 		this.roles = r;
+	},
+	isRbacUpdateAllowed: function() {
+		var userRoles = this._getUserRoles();
+		if (userRoles) {
+			for (var i=0, r; (r=this.roles[i]); i++) {
+				for (var j=0, ur; (ur=userRoles[j]); j++) {
+					if (r == ur) {
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+		return true;
+	},
+	_getUserRoles: function() {
+		if (this.isDesignLoaded()) {
+			// this should return the "Preview By Role(s)" roles
+			return null;
+		} else {
+			return wm.getUserRoles();
+		}
+	}
+});
+
+
+wm.Object.extendSchema(wm.Control, {
+    roles: {group: "roles", editor: "wm.prop.RolesEditor", advanced: 1}
+}, true);
+wm.Object.extendSchema(wm.ServiceVariable, {
     roles: {group: "roles", editor: "wm.prop.RolesEditor", advanced: 1}
 }, true);
 
