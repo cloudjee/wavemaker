@@ -82,7 +82,7 @@ dojo.declare("wm.Variable", wm.Component, {
 		if (this.json)
 			this.setJson(this.json);
 		else
-			this._clearData();
+			this._clearData(false);
 
 	    this._inPostInit = false;
 
@@ -231,30 +231,32 @@ dojo.declare("wm.Variable", wm.Component, {
 		Clear all data values.
 	*/
 	clearData: function() {
-		this._clearData();
+		this._clearData(false);
 	        this.setType(this.type, true);
 	        if (this.type && this.type != this.declaredClass)
 		    this.notify();
 	},
-	_clearData: function() {
+	_clearData: function(forceEmpty) {
 		this._isNull = false;
 		this._nostub = false;
 		if (!this.data)
 			this.data = {};
 		if (this.isList)
 			this.data = {list: []};
-		else {
-			// maintain any subNards, but otherwise clear data
+	    else if (forceEmpty) 
+		this.data = {};
+	    else {
+			// maintain any subNards (to one depth anyways), but otherwise clear data
 			var d;
 			for (var i in this.data) {
 				d = this.data[i];
 				if (d instanceof wm.Variable)
-					d._clearData();
+					d._clearData(true);
 				else
 					delete this.data[i];
 			}
 		}
-	},
+	}
 	_setNull: function(inNull) {
 		this._isNull = inNull;
 		// owner null can be unset but not set. consequence: all null values != null
@@ -345,7 +347,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	},
 	_setObjectData: function(inObject) {
 		this.beginUpdate();
-		this._clearData();
+		this._clearData(false);
 		this.isList = false;
 		if (!("list" in this._dataSchema))
 			delete this.data.list;
