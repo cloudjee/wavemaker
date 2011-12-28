@@ -161,6 +161,7 @@ dependencies = {
 				"wm.base.components.NavigationService",
 				"wm.base.components.FunctionService",
 				"wm.base.components.JsonRpcService",
+				"wm.base.components.Security_design",
 				"wm.base.components.Security",
 			        //"wm.base.components.DomMacro",
 				"wm.base.components.Timer",

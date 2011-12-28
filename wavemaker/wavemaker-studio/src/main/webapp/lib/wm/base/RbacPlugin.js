@@ -22,15 +22,35 @@ wm.Plugin.plugin("rbac", wm.Widget, {
 	prepare: function() {
 		this.rbacSocket(arguments);
 		if (this.roles && this.roles.length) {
-		    this.showing = this.showing && this.isAllowed();
+		    this._rbacShowingRequested = this.showing;
+		    this.showing = this.updateRbacShowing(this.showing);
+		    this.subscribe("wmRbacUpdate", this, "reshowRbac");
 		}
 	},
+    reshowRbac: function() {
+	this.setShowing(this._rbacShowingRequested);
+    },
+    setShowing: function(inValue) {
+	/* wm.Layer.setShowing calls TabDecorator.setShowing which calls wm.Control.setShowing, which would clobber our
+	 * _mobileShowingRequested value
+	 */
+	if (this instanceof wm.Layer == false && this.roles)
+	    inValue = this.updateRbacShowing(inValue);
+	this.rbacSocket(arguments);
+    },
+    updateRbacShowing: function(inValue) {
+	if (!this._cupdating)
+	    this._rbacShowingRequested = inValue; // cache whether it should be showing even if we don't let it show
+	return inValue && this.isRbacShowAllowed();
+    },
+/*
 	setShowing: function(inValue) {
-		if (this.roles && this.roles.length) {
-			inValue = inValue && this.isAllowed();
-		}
-		this.rbacSocket(arguments);
+	    if (this.roles && this.roles.length) {
+		inValue = inValue && this.isAllowed();
+	    }
+	    this.rbacSocket(arguments);
 	},
+	*/
 	setRoles: function(inValue) {
 	    if (inValue === undefined || inValue === null)
 		inValue = [];
@@ -62,7 +82,7 @@ wm.Plugin.plugin("rbac", wm.Widget, {
 	removeAllRoles: function() {
 		this.roles = '';
 	},
-	isAllowed: function() {
+	isRbacShowAllowed: function() {
 		var userRoles = this._getUserRoles();
 		if (userRoles) {
 			for (var i=0, r; (r=this.roles[i]); i++) {
@@ -89,7 +109,7 @@ wm.Plugin.plugin("rbac", wm.Widget, {
 wm.Plugin.plugin("rbacLayer", wm.Layer, {
 	setShowing: function(inValue) {
 		if (this.roles && this.roles.length) {
-			inValue = inValue && this.isAllowed();
+		    inValue = this.updateRbacShowing(inValue);
 		}
 		this.rbacLayerSocket(arguments);
 	}
@@ -110,11 +130,11 @@ wm.Plugin.plugin("mobile", wm.Control, {
 	this.mobileSocket(arguments);
 	if (this.deviceSizes) {
 	    this._mobileShowingRequested = this.showing;
-	    this.showing = this.updateShowing(this.showing);
-	    this.subscribe("deviceSizeRecalc", this, "reshow");
+	    this.showing = this.updateMobileShowing(this.showing);
+	    this.subscribe("deviceSizeRecalc", this, "reshowMobile");
 	}
     },
-    reshow: function() {
+    reshowMobile: function() {
 	this.setShowing(this._mobileShowingRequested);
     },
     setShowing: function(inValue) {
@@ -122,10 +142,10 @@ wm.Plugin.plugin("mobile", wm.Control, {
 	 * _mobileShowingRequested value
 	 */
 	if (this instanceof wm.Layer == false && this.deviceSizes)
-	    inValue = this.updateShowing(inValue);
+	    inValue = this.updateMobileShowing(inValue);
 	this.mobileSocket(arguments);
     },
-    updateShowing: function(inValue) {
+    updateMobileShowing: function(inValue) {
 	if (!this._cupdating)
 	    this._mobileShowingRequested = inValue; // cache whether it should be showing even if we don't let it show
 	if (this.deviceSizes && this.deviceSizes.length) {
@@ -148,7 +168,7 @@ wm.Plugin.plugin("mobile", wm.Control, {
 	    }
 	}
 	if (!found) {
-	    this.subscribe("deviceSizeRecalc", this, "reshow");
+	    this.subscribe("deviceSizeRecalc", this, "reshowMobile");
 	}
     }
 });
@@ -156,7 +176,7 @@ wm.Plugin.plugin("mobile", wm.Control, {
 wm.Plugin.plugin("mobileLayer", wm.Layer, {
     deviceSizes: '',
     setShowing: function(inValue) {
-	inValue = this.updateShowing(inValue);
+	inValue = this.updateMobileShowing(inValue);
 	this.mobileLayerSocket(arguments);
     }
 });

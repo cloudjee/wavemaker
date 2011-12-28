@@ -35,8 +35,9 @@ dojo.declare("wm.ServiceVariable", [wm.Variable, wm.ServiceCall], {
 	maxResults: 0,
 	designMaxResults: 50,
 	processResult: function(inResult) {
-		this.setData(inResult);
-		this.inherited(arguments);
+	    this.setData(inResult);
+	    if (this.service == "securityService" && this.operation == "logout") wm.logoutSuccess();
+	    this.inherited(arguments);
 	},
     setType: function() {
 	if (this.input) 
