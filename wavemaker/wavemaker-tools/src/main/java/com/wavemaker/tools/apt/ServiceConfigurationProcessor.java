@@ -73,7 +73,7 @@ public class ServiceConfigurationProcessor extends AbstractStudioServiceProcesso
             Set<String> serviceIds = this.designServiceManager.getServiceIds();
             for (String serviceId : serviceIds) {
                 Resource serviceDef = this.designServiceManager.getServiceDefXml(serviceId);
-                Service service = DesignServiceManager.loadServiceDefinition(serviceDef.getInputStream());
+                Service service = DesignServiceManager.loadServiceDefinition(serviceDef.getInputStream(), true);
                 services.add(service);
                 Resource smd = ConfigurationCompiler.getSmdFile(this.project, serviceId);
                 if (!smd.exists() || smd.lastModified() < serviceDef.lastModified()) {
