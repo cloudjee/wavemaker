@@ -34,11 +34,14 @@ dojo.declare("wm.debug.EventsPanel", wm.Container, {
 
     currentEventChain: null,
     nextId: 1,
-    consoleEvent: function(type,args) {
-	var text = "";
-	for (var i = 0; i < args.length; i++) {
-	    text += args[i].toString();
+    consoleEvent: function() {
+	/* Make arguments a proper array */
+	var args = [];
+	for (var i = 0; i in arguments; i++) {
+	    args[i] = arguments[i];
 	}
+	var type = args.shift();
+	var text = args.join(" ");
 
 	var id = this.nextId;
 	this.nextId++;
@@ -176,6 +179,7 @@ dojo.declare("wm.debug.EventsPanel", wm.Container, {
 	},this);
 
 	try {
+/*
 	    this._consolelog = console.log;
 	    this._consolewarn = console.warn;
 	    this._consoleerror = console.error;
@@ -193,7 +197,10 @@ dojo.declare("wm.debug.EventsPanel", wm.Container, {
 
 		this.consoleEvent("info",arguments);
 		});
-
+		*/
+	    this.connect(console, "log", dojo.hitch(this, "consoleEvent", "log"));
+	    this.connect(console, "warn", dojo.hitch(this, "consoleEvent", "warn"));
+	    this.connect(console, "error", dojo.hitch(this, "consoleEvent", "error"));
 	} catch(e) {}
     },
 	XClick: function() {
