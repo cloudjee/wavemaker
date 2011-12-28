@@ -256,7 +256,7 @@ dojo.declare("wm.Variable", wm.Component, {
 					delete this.data[i];
 			}
 		}
-	}
+	},
 	_setNull: function(inNull) {
 		this._isNull = inNull;
 		// owner null can be unset but not set. consequence: all null values != null
