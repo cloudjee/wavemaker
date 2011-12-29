@@ -42,7 +42,6 @@ import com.wavemaker.runtime.RuntimeAccess;
  * @author Joel Hare
  * @author Jeremy Grelle
  */
-
 public class LocalDeploymentManager extends AbstractDeploymentManager {
 
     static Logger logger = Logger.getLogger(LocalDeploymentManager.class);
@@ -207,7 +206,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
     @Override
     public String cleanCompile() {
         try {
-            antExecute(getProjectDir().getURI().toString(), getDeployName(), CLEAN_OPERATION);
+            antExecute(getProjectDir().getFile().getCanonicalPath(), getDeployName(), CLEAN_OPERATION);
             return compile();
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
@@ -220,7 +219,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
     @Override
     public String build() {
         try {
-            antExecute(getProjectDir().getURI().toString(), getDeployName(), BUILD_TEMP_OPERATION);
+            antExecute(getProjectDir().getFile().getCanonicalPath(), getDeployName(), BUILD_TEMP_OPERATION);
             return compile();
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
@@ -233,7 +232,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
     @Override
     public String generateRuntime() {
         try {
-            return antExecute(getProjectDir().getURI().toString(), getDeployName(), GEN_RTFILES_OPERATION);
+            return antExecute(getProjectDir().getFile().getCanonicalPath(), getDeployName(), GEN_RTFILES_OPERATION);
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
@@ -245,7 +244,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
     @Override
     public String cleanBuild() {
         try {
-            antExecute(getProjectDir().getURI().toString(), getDeployName(), CLEAN_OPERATION);
+            antExecute(getProjectDir().getFile().getCanonicalPath(), getDeployName(), CLEAN_OPERATION);
             return build();
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
@@ -297,7 +296,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
     public void buildWar(String warFileLocation, boolean includeEar) throws IOException {
         Resource buildDir = getFileSystem().createTempDir();
         try {
-            buildWar(getProjectDir().getURI().toString(), buildDir.getURI().toString(), warFileLocation, includeEar);
+            buildWar(getProjectDir().getFile().getCanonicalPath(), buildDir.getURI().toString(), warFileLocation, includeEar);
         } finally {
             getFileSystem().deleteFile(buildDir);
         }
@@ -312,7 +311,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
         properties.put(WAR_FILE_NAME_PROPERTY, warFileName);
 
         try {
-            return antExecute(getProjectDir().getURI().toString(), deployName, DEPLOY_WAR_OPERATION, properties);
+            return antExecute(getProjectDir().getFile().getCanonicalPath(), deployName, DEPLOY_WAR_OPERATION, properties);
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
@@ -332,7 +331,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
     @Override
     public String testRunClean() {
         try {
-            return testRunClean(getProjectDir().getURI().toString(), getDeployName());
+            return testRunClean(getProjectDir().getFile().getCanonicalPath(), getDeployName());
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
@@ -344,7 +343,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
     @Override
     public String undeploy() {
         try {
-            return undeploy(getProjectDir().getURI().toString(), getDeployName());
+            return undeploy(getProjectDir().getFile().getCanonicalPath(), getDeployName());
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
@@ -376,7 +375,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
     @Override
     public void exportProject(String zipFileName) {
         try {
-            exportProject(getProjectDir().getURI().toString(), zipFileName);
+            exportProject(getProjectDir().getFile().getCanonicalPath(), zipFileName);
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
