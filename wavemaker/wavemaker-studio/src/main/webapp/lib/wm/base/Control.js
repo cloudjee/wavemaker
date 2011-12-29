@@ -613,9 +613,19 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     callOnShowParent: function() {
 	var self = this;
 	wm.forEachVisibleWidget(this, function(w) {
-	    if (self != w && w._onShowParent) {
-		w._onShowParent();
-		return false;
+	    if (self != w) {
+		/* For internal widget detection of changes to showing state, use _onShowParent */
+		if (w._onShowParent) {
+		    w._onShowParent();
+		}
+
+		/* For public tooled detection use onShow; only call onShow if its been replaced with something other than
+		 * the default empty onShow event handler because we can't be making 1000s of empty onShow calls
+		 */
+		else if (w.onShow && w.onShow != w.constructor.prototype.onShow) {
+		    w.onShow();
+		}
+
 	    }
 	}, true);
     },
@@ -625,13 +635,27 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    wm.forEachVisibleWidget(this, function(w) {
 		if (w.hint && app.toolTipDialog && app.toolTipDialog.tipOwner == self)
 		    app.hideToolTip();
-		if (self != w && w._onHideParent) {
+		if (self != w) {
+		/* For internal widget detection of changes to hideing state, use _onHideParent */
+		if (w._onHideParent) {
 		    w._onHideParent();
-		    return false;
+		}
+
+		/* For public tooled detection use onHide; only call onHide if its been replaced with something other than
+		 * the default empty onHide event handler because we can't be making 1000s of empty onHide calls
+		 */
+		else if (w.onHide && w.onHide != w.constructor.prototype.onHide) {
+		    w.onHide();
+		}
+
+
 		}
 	    }, true);
 	}
     },
+    onShow: function(){},
+    onHide: function(){},
+
 
     // OPTIONAL: Maybe handle all parents showing/hiding but thats a lot of connections
     //           and it may be better to just tell people not to show/hide parents of widgets needing these; just use layers
@@ -1547,7 +1571,6 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     }, 
     onMouseOut: function(event){
     },
-
 
     toHtml: function() {return "";},
     customToHtml: function(inWidth) {return "";},

@@ -870,6 +870,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    }
 
 	    if (inShowing && !wasShowing) {
+		this.callOnShowParent();
 		if (animationTime) {
 		    if (!this._showAnimation) {
 			if (app.debugDialog) {
@@ -896,7 +897,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		}
 
 	    } else if (!inShowing && wasShowing) {
-		
+		this.callOnHideParent();
 		if (animationTime) {
 		    if (!this._hideAnimation) {
 			if (app.debugDialog) {
@@ -970,6 +971,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    if (inEvent.keyCode == dojo.keys.ESCAPE && !this.noEscape) {
 		if (this._isDesignLoaded && studio.selected.getParentDialog() == this) return;
 		if (this.showing) {
+		    this.callOnHideParent();
 		    this.setShowing(false);
 		    this.onClose("cancel");
 		    if (!this._isDesignLoaded)
@@ -987,10 +989,8 @@ dojo.declare("wm.Dialog", wm.Container, {
         onEnterKeyPress: function(inText) {
         },
 	onShow: function() {
-	    this.callOnShowParent();
 	},
 	onClose: function(inWhy) {
-	    this.callOnHideParent();
 	},
     setTitlebarHeight: function(inHeight) {
         this.titlebarHeight = inHeight;

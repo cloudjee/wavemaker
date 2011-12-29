@@ -127,7 +127,7 @@ dojo.declare("wm.Layer", wm.Container, {
     // called onDeactivate rather than onHide as its not meant to indicate when its no longer visible; only when its no
     // longer the active Layer in its parent
         onDeactivate: function() {
-	    this.callOnHideParent();
+
 	},
         onCloseOrDestroy: function() {},
         customCloseOrDestroy: function() {},
@@ -442,6 +442,9 @@ dojo.declare("wm.Layers", wm.Container, {
 	    }
 	    if (inIndex < 0 || inIndex > this.getCount() - 1) return;
 
+	    if (fireEvents && oldLayer) {
+		oldLayer.callOnHideParent();
+	    }
 	    this._setLayerIndex(inIndex);
 	    if (fireEvents) {
 	        l && l.onShow();
