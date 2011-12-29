@@ -140,8 +140,8 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 			js, '\n \n',
 			widgets, '\n \n',
 			props,
-			css ? klass + '.css = "' + css + '";' + '\n \n' : '',
-			html ? klass + '.html = "' + html + '";' + '\n \n' : '',
+//		    css ? klass + '.css = "' + escape(css) + '";' + '\n \n' : '',
+//		    html ? klass + '.html = "' + escape(html) + '";' + '\n \n' : '',
 			reg
 		].join('');
 	}
