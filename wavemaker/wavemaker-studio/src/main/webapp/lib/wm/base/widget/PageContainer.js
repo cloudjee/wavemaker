@@ -294,6 +294,14 @@ dojo.declare("wm.PageContainer", wm.Control, {
     getIsDirty: function() {
 	if (this.page)
 	    return this.page.root.getIsDirty();
+    },
+    getOrderedWidgets: function() {
+	if (this._isDesignLoaded) return [];
+	if (this.page) {
+	    return [this.page.root];
+	} else {
+	    return [];
+	}
     }
 });
 
