@@ -176,6 +176,7 @@ dojo.declare("wm.Layers", wm.Container, {
 		this.setLayersType(this.layersType);
 	},
 	init: function() {
+	    if (wm.isMobile) this.headerHeight = this.mobileHeaderHeight;
 	    this.userDefHeaderHeight = this.headerHeight;
 	    if (!this.isRelativePositioned)
 		dojo.addClass(this.domNode, "wmlayers");
@@ -569,6 +570,7 @@ dojo.declare("wm.Layers", wm.Container, {
 	},
 	// used only by Tabs
 	headerHeight: "27px",
+        mobileHeaderHeight: "37px",
 	setHeaderHeight: function(inHeight) {
 	    if (this.layersType != 'Tabs' && this.layersType != "RoundedTabs" && this.layersType != "Wizard")
 			return;
