@@ -490,24 +490,27 @@ wm.Component.extend({
 							       source: wire.source || wire.expression});
 
 		}
-	    }
+	    } 
 	    if (!bindToSection) {
-		eventsFromSection = studio.getDictionaryItem("wm.Component.GENERATE_DOCUMENTATION_NO_BINDING");
+		bindToSection = studio.getDictionaryItem("wm.Component.GENERATE_DOCUMENTATION_NO_BINDING");
 	    }
 	    bindToSection = studio.getDictionaryItem("wm.Component.GENERATE_DOCUMENTATION_BOUND_TO_SECTION",
 						     {bindHtml: bindToSection});
 
 	    html += bindToSection;
-	    console.log(html);
-	    this.documentation = html;
-	    this.viewDocumentation();
+	    return html;
 	},
+       /* builds up inHash to contain a list of all bindings from all other components to comparisonObj;
+       * If this refers to the current page, then it iterates over every component/widget owned by the page
+       */
         generateBindingDescriptions: function(inHash, comparisonObj) {
+	    /* Step one: See if this component has any bindings; if there are, iterate over them and see if any are related to comparisonObj */
 	    if (this.components.binding) {
 		var wires = this.components.binding.components;
 		for (var i in wires) {
 		    var source = wires[i].source;
 		    var componentIds = [];
+		    /* Extract the component id from source or expression */
 		    if (source) {
 			componentIds.push(source.replace(/\.[^\.]*/,""));
 		    } else {
@@ -525,11 +528,25 @@ wm.Component.extend({
 			    }
 			}
 		    }
-		    if (componentIds.indexOf(comparisonObj.getId()) != -1)
-			inHash[wires[i].target.getId()] = wires[i];
+
+		    /* If any of the componentIds affect comparisonObj then its a match; add it to our hash */
+		    var comparisonId = comparisonObj.getId();
+		    for (var j = 0; j < componentIds.length; j++) {
+			var parts = componentIds[j].split(".");
+			while(parts.length) {
+			    if (parts.join(".").indexOf(comparisonId) != -1) {
+				inHash[wires[i].target.getId()] = wires[i];
+				break;
+			    }
+			    parts.pop();
+			}
+		    }
 		}
 	    }
 	    
+	    /* Step 2: Iterate over every component owned by the current component (we started with a wm.Page) and
+	     * see if they have any subcomponents bound to comparisonObj
+	     */
 		for (var i in this.components) {
 		    this.components[i].generateBindingDescriptions(inHash,comparisonObj);
 		}

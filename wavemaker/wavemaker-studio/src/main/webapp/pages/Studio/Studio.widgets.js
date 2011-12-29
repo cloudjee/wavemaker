@@ -398,7 +398,7 @@ Studio.widgets = {
 					    "fullStructure":[
 						{idInPage: "togglePropertiesMultiactiveItem", "label":"One Accordion Open","separator":undefined,"defaultLabel":"One Accordion Open","isCheckbox":true,"onClick":"inspector.toggleMultiactive"},
 						{"separator":true,"defaultLabel":"Separator"},
-						{"label":"Component Info","defaultLabel":"Component Info","isCheckbox":false,"onClick":"generateDiagnostics"},
+						{"label":"Component Info","defaultLabel":"Component Info","isCheckbox":false,"onClick":"generateDiagnostics", onClick: "inspector.generateComponentInfo"},
 						{idInPage: "writeDocumentationMenuItem", "label":"Write Documentation","defaultLabel":"Write Documentation","isCheckbox":true,"onClick":"selected.viewDocumentation"},
 						{"separator":true,"defaultLabel":"Separator"}
 					    ]}, {}],					
