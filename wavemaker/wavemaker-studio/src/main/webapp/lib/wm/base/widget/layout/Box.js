@@ -576,7 +576,7 @@ dojo.declare("wm.layout.Fluid", wm.layout.Base, {
 		top += this.renderRow(rows[rowId],b.l,maxWidth,top,minWidths);
 	    }
 	    if (inContainer.bounds.h != top) {
-		if (!top) top = 15;
+		if (top === inContainer.padBorderMargin.t) top = 15;
 		top += inContainer.padBorderMargin.b;
 		inContainer.setHeight(top + "px"); // will trigger a reflowParent, and result in a second pass which we will block
 	    }
