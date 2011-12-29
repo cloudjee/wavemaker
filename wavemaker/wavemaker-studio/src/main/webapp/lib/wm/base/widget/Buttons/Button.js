@@ -27,7 +27,7 @@ dojo.declare("wm.Button", wm.ToolButton, {
 	caption: "Button",
     classNames: "wmbutton",
     init: function() {
-	if (wm.isMobile) this.height = this.mobileHeight;
+	if (wm.isMobile && this.height.match(/px/)) this.height = this.mobileHeight;
 	this.inherited(arguments);
     }
 });
