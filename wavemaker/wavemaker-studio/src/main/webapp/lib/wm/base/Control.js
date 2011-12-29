@@ -915,7 +915,6 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    break;
 	}
 
-	//console.log(w, h);
 	this.setBounds(NaN, NaN, w, h);
 	//this.setBounds(this.left, this.top, w, h);
     },
