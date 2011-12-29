@@ -59,7 +59,7 @@ dojo.declare("wm.debug.EventsPanel", wm.Container, {
 	
     },
     newLogEvent: function(inData) {
-	
+	if (!this.currentEventChain) this.currentEventChain = [];
 	var id = this.nextId;
 	this.nextId++;
 	this.eventListVar.addItem({
