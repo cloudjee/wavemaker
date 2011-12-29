@@ -709,6 +709,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    } 
 	        this._renderDojoObjSkipped = false;
 		this.rendering = true;
+	        if (this._resetStore) {
+		    this.setDojoStore();
+		    delete this._resetStore;
+		}
 		var structure = this.getStructure();
 		if (structure[0].length == 0)
 			structure = {};
@@ -880,7 +884,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    }
 		if (this._isDesignLoaded && !this._loading && !updatedColumns)
 		    this.setColumnData();
-		this.setDojoStore();
+	    
+	    this._resetStore = true;
+	    //this.setDojoStore();
                 if (inValue && inValue instanceof wm.Variable)
                     this.selectedItem.setType(inValue.type); // broadcasts a message to all who are bound to the selectedItem
 	    if (this.allLibsLoaded()) {
