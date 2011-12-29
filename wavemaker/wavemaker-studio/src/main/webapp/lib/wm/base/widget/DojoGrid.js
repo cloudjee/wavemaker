@@ -847,9 +847,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		    if (isNew) {
 			inRow.customClasses += " dojoxGridRow-inserting";
 		    }
+		    this.onStyleRow(inRow, rowData);
 		}
 	    } catch(e) {}
 	},
+        onStyleRow: function(inRow/* inRow.customClasses += " myClass" */, rowData) {},
 	getDataSet: function() {
 		return this.variable;
 	},
