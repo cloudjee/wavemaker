@@ -812,10 +812,10 @@ dojo.declare("Studio", wm.Page, {
 		new wm.AddTask(inComponent);
 		if (!(inComponent instanceof wm.Widget))
 			this.addComponentToTree(inComponent);
-		this.inspector.resetInspector();
 		// NOTE: Addresses Russian Doll syndrome. Don't select panels by default.
 		if (!(inComponent instanceof wm.Container)) {
 			this.select(inComponent);
+		    this.inspect(inComponent);
 		}
 		this.page.reflow();
 		return inComponent;
