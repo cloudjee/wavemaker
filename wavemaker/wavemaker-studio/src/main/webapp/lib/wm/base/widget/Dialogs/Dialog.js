@@ -127,6 +127,7 @@ dojo.declare("wm.Dialog", wm.Container, {
     titlebarBorder: "1",
     titlebarBorderColor: "black",
     titlebarHeight: "23",
+    mobileTitlebarHeight: "35",
     footerBorder: "1,0,0,0",
     containerPadding: "5",
 /*
@@ -144,6 +145,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	wm.Dialog.resizer = wm.Dialog.resizer || new wm.DialogResize();
     },
     init: function() {
+	if (wm.isMobile) this.titlebarHeight = this.mobileTitlebarHeight;
         this.inherited(arguments);
 	if (this._isDesignLoaded) {
 	    this.flags.noModelDrop = true;
@@ -352,7 +354,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    this.dialogScrim.setShowing(this.modal);
 	    wm.bgIframe.setShowing(!this.modal && !this.isDesignedComponent());
 	}
-	this.titleButtonPanel.setShowing(!this.modal && !this.docked);
+	this.titleButtonPanel.setShowing(!this.modal && !this.docked && !wm.isMobile);
     },
     setNoEscape: function(inNoEscape) {
 	this.noEscape = inNoEscape;
@@ -1010,6 +1012,26 @@ dojo.declare("wm.Dialog", wm.Container, {
 					  verticalAlign: "middle",
 					  layoutKind: "left-to-right",
 					  flags: {notInspectable: true}});
+	if (wm.isMobile) {
+	    if (!wm.Dialog.titlebarMenu) {
+		wm.Dialog.titlebarMenu = app.createComponents({	
+		    _dialogTitlebarMenu: ["wm.PopupMenu", {"fullStructure":[
+			{"label":"Close","separator":undefined,"defaultLabel":"Close","iconClass":undefined,"imageList":undefined,"idInPage":undefined,"isCheckbox":false,"onClick":undefined,"children":[]},
+			{"label":"Minimize","separator":undefined,"defaultLabel":"Minimize","iconClass":undefined,"imageList":undefined,"idInPage":undefined,"isCheckbox":false,"onClick":undefined,"children":[]},
+			{"label":"Full Size","separator":undefined,"defaultLabel":"Full Size","iconClass":undefined,"imageList":undefined,"idInPage":undefined,"isCheckbox":false,"onClick":undefined,"children":[]}
+		    ]}]
+		},app)[0];
+	    }
+	    /* TODO: Change to ontouch */
+	    this.titleBar.connect(this.titleBar.domNode, "ontouch", dojo.hitch(this, function(inEvent) {
+		wm.Dialog.titlebarMenu.setItemShowing("Close", !this.noEscape);
+		wm.Dialog.titlebarMenu.setItemShowing("Minify", !this.noMinify);
+		wm.Dialog.titlebarMenu.setItemShowing("Full Size", !this.noMaxify);
+		wm.Dialog.titlebarMenu.update(inEvent);
+	    }));
+	}
+
+
 	var buttonPanel = this.titleButtonPanel = new wm.Panel({parent: this.titleBar,
 					owner: this,
 								name: "titleButtonBar",
@@ -1018,7 +1040,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 					layoutKind: "left-to-right",
 					horizontalAlign: "left",
 					verticalAlign: "top",
-					showing: !this.modal && !this.docked
+					showing: !this.modal && !this.docked && !wm.isMobile
 				       });
 
 	this.titleClose = new wm.ToolButton({_classes: {domNode: ["dialogclosebutton"]},
