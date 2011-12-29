@@ -46,8 +46,9 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 
     /* Formating */
 	formatter: '',
-	height: "24px",
+	height: "24px",    
 	width: "300px",
+        mobileHeight: "35px",
 	padding: "2",
 	border: "0",
 	editorBorder: true,
@@ -84,6 +85,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 
 	init: function() {
 		this._editorConnects = [];
+	    if (wm.isMobile) this.height = this.mobileHeight;
 		this.inherited(arguments);
 	},
 	// If I name it getMinHeight, then it will be used to show the "minHeight" property in the designer; this func is meant to use EITHER a user supplied value OR a best calculation, and that calculation varies at runtime based on various factors, so we do NOT want to write this calculation as a property to widgets.js
