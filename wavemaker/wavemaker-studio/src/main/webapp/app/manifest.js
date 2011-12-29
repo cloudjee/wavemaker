@@ -84,6 +84,7 @@ wm.loadLibs([
 	"wm.base.components.ServiceCall_design",
 	"wm.base.components.LiveVariable_design",
 	"wm.base.components.Property_design",
+        "wm.base.RbacPlugin_design",
 	"wm.base.components.Publisher",
 	"wm.base.components.ServerComponent",
 	"wm.base.components.DataModel",

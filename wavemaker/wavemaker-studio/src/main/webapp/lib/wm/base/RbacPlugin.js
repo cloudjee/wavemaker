@@ -43,45 +43,7 @@ wm.Plugin.plugin("rbac", wm.Widget, {
 	    this._rbacShowingRequested = inValue; // cache whether it should be showing even if we don't let it show
 	return inValue && this.isRbacShowAllowed();
     },
-/*
-	setShowing: function(inValue) {
-	    if (this.roles && this.roles.length) {
-		inValue = inValue && this.isAllowed();
-	    }
-	    this.rbacSocket(arguments);
-	},
-	*/
-	setRoles: function(inValue) {
-	    if (inValue === undefined || inValue === null)
-		inValue = [];
-	    var s = dojo.isArray(inValue) ? inValue : inValue.split(','), r=[];
-		for (var i=0, v, f; (f=s[i]); i++) {
-			v = dojo.trim(f);
-			if (v)
-				r.push(v);
-		}
-		this.roles = r;
-		this.setShowing(true);
-	},
-	addRole: function(inRole) {
-		if (!this.roles) {
-			this.roles = [];
-		}
-		this.roles.push(inRole);
-	},
-	removeRole: function(inRole) {
-		if (this.roles) {
-			for (var i=0, c; c=this.roles[i]; i++) 
-				if (c == inRole)
-					this.roles.splice(i--, 1);
-			if (!this.roles.length) {
-				this.roles = '';
-			}
-		}
-	},
-	removeAllRoles: function() {
-		this.roles = '';
-	},
+
 	isRbacShowAllowed: function() {
 		var userRoles = this._getUserRoles();
 		if (userRoles) {
@@ -129,17 +91,6 @@ wm.Plugin.plugin("rbacservice", wm.ServiceVariable, {
 	else
 	    console.log(this.getId() + " blocked by role settings");
     },
-	setRoles: function(inValue) {
-	    if (inValue === undefined || inValue === null)
-		inValue = [];
-	    var s = dojo.isArray(inValue) ? inValue : inValue.split(','), r=[];
-		for (var i=0, v, f; (f=s[i]); i++) {
-			v = dojo.trim(f);
-			if (v)
-				r.push(v);
-		}
- 		this.roles = r;
-	},
 	isRbacUpdateAllowed: function() {
 		var userRoles = this._getUserRoles();
 		if (userRoles) {
@@ -163,14 +114,6 @@ wm.Plugin.plugin("rbacservice", wm.ServiceVariable, {
 		}
 	}
 });
-
-
-wm.Object.extendSchema(wm.Control, {
-    roles: {group: "roles", editor: "wm.prop.RolesEditor", advanced: 1}
-}, true);
-wm.Object.extendSchema(wm.ServiceVariable, {
-    roles: {group: "roles", editor: "wm.prop.RolesEditor", advanced: 1}
-}, true);
 
 
 wm.Plugin.plugin("mobile", wm.Control, {
@@ -206,19 +149,6 @@ wm.Plugin.plugin("mobile", wm.Control, {
     isMobileShowAllowed: function() {
 	var deviceSize = this._isDesignLoaded ? app.appRoot.calcDeviceSize(studio.designer.bounds.w) : app.appRoot.deviceSize;
 	return (!deviceSize || dojo.indexOf(this.deviceSizes, deviceSize) != -1);
-    },
-    set_deviceSizes: function(inSize) {
-	this.deviceSizes = inSize;
-	var found = false;
-	for (var i = 0; i < this._subscriptions.length; i++) {
-	    if (this._subscriptions[i][0] == "deviceSizeRecalc") {
-		found = true;
-		break;
-	    }
-	}
-	if (!found) {
-	    this.subscribe("deviceSizeRecalc", this, "reshowMobile");
-	}
     }
 });
 
@@ -229,7 +159,3 @@ wm.Plugin.plugin("mobileLayer", wm.Layer, {
 	this.mobileLayerSocket(arguments);
     }
 });
-
-wm.Object.extendSchema(wm.Control, {
-    deviceSizes: {group: "devices", editor: "wm.prop.DeviceListEditor", advanced: 1}
-}, true);

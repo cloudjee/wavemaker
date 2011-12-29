@@ -135,6 +135,7 @@ dependencies = {
 				//"wm.base.Widget",
 				//"wm.base.Widget_design",
 				"wm.base.Plugin",
+				"wm.base.RbacPlugin_design",
 				"wm.base.RbacPlugin",
 				"wm.base.I18nPlugin",
 				"wm.base.components.Page",
