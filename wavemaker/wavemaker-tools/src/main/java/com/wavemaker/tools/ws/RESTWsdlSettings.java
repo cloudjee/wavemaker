@@ -16,6 +16,8 @@ package com.wavemaker.tools.ws;
 
 import java.util.List;
 
+import com.wavemaker.runtime.ws.RESTInputParam;
+
 /**
  * @author Frankie Fu
  */

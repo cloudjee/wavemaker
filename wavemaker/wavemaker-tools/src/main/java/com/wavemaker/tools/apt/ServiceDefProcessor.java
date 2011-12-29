@@ -15,6 +15,7 @@
 package com.wavemaker.tools.apt;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -76,7 +77,12 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
                 "services/" + ServiceProcessorConstants.CLASS_PATH_SERVICES_FILE);
             if (classPathServicesProps.exists()) {
                 this.classPathServices = new Properties();
-                this.classPathServices.load(classPathServicesProps.getInputStream());
+                InputStream inputStream = classPathServicesProps.getInputStream();
+                try {
+                    this.classPathServices.load(inputStream);
+                } finally {
+                    inputStream.close();
+                }
             }
         } catch (IOException e) {
             this.processingEnv.getMessager().printMessage(Kind.ERROR, "Could not load " + ServiceProcessorConstants.CLASS_PATH_SERVICES_FILE);

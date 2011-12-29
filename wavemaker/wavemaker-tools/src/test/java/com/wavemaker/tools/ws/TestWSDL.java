@@ -41,7 +41,7 @@ public class TestWSDL extends WMTestCase {
 
     public static WSDL buildWSDL(String wsdlResource) throws Exception {
         String resource = ClassLoaderUtils.getResource(wsdlResource);
-        WSDL wsdl = WSDLManager.processWSDL(resource, null);
+        WSDL wsdl = WSDLManager.processWSDL(resource, null, null, null);
         return wsdl;
     }
 

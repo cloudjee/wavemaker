@@ -21,6 +21,7 @@ import com.wavemaker.json.type.FieldDefinition;
 import com.wavemaker.json.type.TypeDefinition;
 import com.wavemaker.runtime.pws.IPwsServiceModifier;
 import com.wavemaker.runtime.service.ElementType;
+import com.wavemaker.runtime.ws.RESTInputParam;
 
 /**
  * An abstract ReflectServiceDefinition with the new methods implemented, to help aid in the transition.
@@ -121,6 +122,11 @@ public abstract class AbstractDeprecatedServiceDefinition implements DeprecatedS
 
     @Override
     public List<ElementType> getInputTypesNoCaseShift(String operationName) {
+        return null;
+    }
+
+    @Override
+    public List<RESTInputParam> getInputParams(String operationName) {
         return null;
     }
 }

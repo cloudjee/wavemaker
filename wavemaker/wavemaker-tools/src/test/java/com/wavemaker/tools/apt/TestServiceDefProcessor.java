@@ -6,6 +6,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -352,7 +353,12 @@ public class TestServiceDefProcessor {
 
         Properties properties = new Properties();
         properties.setProperty(classPathServiceId, SecurityService.class.getName());
-        properties.store(this.project.getWriter("/services/" + ServiceProcessorConstants.CLASS_PATH_SERVICES_FILE), null);
+        Writer writer = this.project.getWriter("/services/" + ServiceProcessorConstants.CLASS_PATH_SERVICES_FILE);
+        try {
+            properties.store(writer, null);
+        } finally {
+            writer.close();
+        }
         assertTrue(this.project.getProjectRoot().createRelative("services/" + ServiceProcessorConstants.CLASS_PATH_SERVICES_FILE).exists());
 
         ServiceDefProcessor processor = new ServiceDefProcessor();

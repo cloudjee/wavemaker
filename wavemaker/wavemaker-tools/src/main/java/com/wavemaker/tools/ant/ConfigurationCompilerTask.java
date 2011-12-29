@@ -16,7 +16,6 @@ package com.wavemaker.tools.ant;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -114,13 +113,7 @@ public class ConfigurationCompilerTask extends AbstractServiceCompilerTask {
             Resource resource = (Resource) it.next();
 
             try {
-                InputStream is = resource.getInputStream();
-                Service service;
-                try {
-                    service = DesignServiceManager.loadServiceDefinition(is);
-                } finally {
-                    is.close();
-                }
+                Service service = DesignServiceManager.loadServiceDefinition(resource.getInputStream(), true);
 
                 if (getVerbose()) {
                     System.out.println("checking service " + service.getId());

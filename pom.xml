@@ -9,6 +9,8 @@
 
 	<properties>
 		<main.basedir>${basedir}</main.basedir>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<spring.version>3.1.0.RELEASE</spring.version>
 		<integration.version>2.0.3.RELEASE</integration.version>
 		<security.version>3.0.5.RELEASE</security.version>

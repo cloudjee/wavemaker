@@ -16,6 +16,7 @@ package com.wavemaker.tools.service;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -137,18 +138,23 @@ public class DesignServiceManager {
 
         Unmarshaller unmarshaller = definitionsContext.createUnmarshaller();
         ClassPathResource primitiveServiceFile = new ClassPathResource("com/wavemaker/tools/service/primitive_types.xml");
-        Service primitiveService = (Service) unmarshaller.unmarshal(primitiveServiceFile.getInputStream());
-        this.primitiveTypes = Collections.unmodifiableList(primitiveService.getDataobjects().getDataobject());
+        InputStream inputStream = primitiveServiceFile.getInputStream();
+        try {
+            Service primitiveService = (Service) unmarshaller.unmarshal(inputStream);
+            this.primitiveTypes = Collections.unmodifiableList(primitiveService.getDataobjects().getDataobject());
 
-        Map<String, String> m = new TreeMap<String, String>();
+            Map<String, String> m = new TreeMap<String, String>();
 
-        for (DataObject o : this.primitiveTypes) {
-            if (!o.isInternal()) {
-                m.put(o.getName(), o.getJavaType());
+            for (DataObject o : this.primitiveTypes) {
+                if (!o.isInternal()) {
+                    m.put(o.getName(), o.getJavaType());
+                }
             }
-        }
 
-        this.primitivesMap = Collections.unmodifiableMap(m);
+            this.primitivesMap = Collections.unmodifiableMap(m);
+        } finally {
+            inputStream.close();
+        }
     }
 
     // -----------------------------------------------------------------------
@@ -1034,7 +1040,6 @@ public class DesignServiceManager {
         Service ret = null;
 
         Resource serviceDefFile = getServiceDefXml(serviceId);
-
         if (serviceDefFile.exists()) {
             try {
                 ret = loadServiceDefinition(serviceDefFile);
@@ -1045,24 +1050,34 @@ public class DesignServiceManager {
                 throw new WMRuntimeException(MessageResource.ERROR_LOADING_SERVICEDEF, e, serviceId, serviceDefFile, e.getMessage());
             }
         }
-
         return ret;
     }
 
     public static Service loadServiceDefinition(Resource serviceDefXml) throws JAXBException {
-
-        Unmarshaller unmarshaller = definitionsContext.createUnmarshaller();
         try {
-            return (Service) unmarshaller.unmarshal(serviceDefXml.getInputStream());
+            return loadServiceDefinition(serviceDefXml.getInputStream(), true);
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
     }
 
-    public static Service loadServiceDefinition(InputStream serviceDefIS) throws JAXBException {
+    public static Service loadServiceDefinition(InputStream inputStream) throws JAXBException {
+        return loadServiceDefinition(inputStream, false);
+    }
 
-        Unmarshaller unmarshaller = definitionsContext.createUnmarshaller();
-        return (Service) unmarshaller.unmarshal(serviceDefIS);
+    public static Service loadServiceDefinition(InputStream inputStream, boolean closeInputStream) throws JAXBException {
+        try {
+            Unmarshaller unmarshaller = definitionsContext.createUnmarshaller();
+            return (Service) unmarshaller.unmarshal(inputStream);
+        } finally {
+            if (closeInputStream) {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    throw new IllegalStateException("Unable to close service definition file", e);
+                }
+            }
+        }
     }
 
     public void saveServiceDefinition(String serviceId) {
@@ -1101,7 +1116,16 @@ public class DesignServiceManager {
         try {
             Marshaller marshaller = definitionsContext.createMarshaller();
             marshaller.setProperty("jaxb.formatted.output", true);
-            marshaller.marshal(service, this.fileSystem.getOutputStream(serviceDefFile));
+            OutputStream outputStream = this.fileSystem.getOutputStream(serviceDefFile);
+            try {
+                marshaller.marshal(service, outputStream);
+            } finally {
+                try {
+                    outputStream.close();
+                } catch (IOException e) {
+                    throw new IllegalStateException("Unable to close service def file", e);
+                }
+            }
         } catch (JAXBException e) {
             throw new WMRuntimeException(e);
         }

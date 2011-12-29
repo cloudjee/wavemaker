@@ -12,10 +12,13 @@
  *  limitations under the License.
  */
 
-package com.wavemaker.tools.ws;
+package com.wavemaker.runtime.ws;
+
 
 /**
- * @author Frankie Fu
+ * @author ffu
+ * @version $Rev: 33719 $ - $Date: 2011-10-18 11:33:27 -0700 (Tue, 18 Oct 2011) $
+ * 
  */
 public class RESTInputParam {
 
@@ -23,29 +26,51 @@ public class RESTInputParam {
         STRING, INTEGER, OTHER
     };
 
+    public enum InputLocation {
+        URL, HEADER, OTHER
+    };
+
     private String name;
 
     private String type;
+
+    private String location;
 
     public RESTInputParam() {
     }
 
     public RESTInputParam(String name, String type) {
+        this(name, type, "other");
+    }
+
+    public RESTInputParam(String name, String type, String location) {
         this.name = name;
         this.type = type;
+        this.location = location;
     }
 
     public RESTInputParam(String name, InputType type) {
+        this(name, type, InputLocation.OTHER);
+    }
+
+    public RESTInputParam(String name, InputType type, InputLocation location) {
         this.name = name;
         if (type == InputType.STRING) {
             this.type = "string";
         } else if (type == InputType.INTEGER) {
             this.type = "int";
         }
+        if (location == InputLocation.URL) {
+            this.location = "url";
+        } else if (location == InputLocation.HEADER) {
+            this.location = "header";
+        } else {
+            this.location = "other";
+        }
     }
 
     public String getName() {
-        return this.name;
+        return name;
     }
 
     public void setName(String name) {
@@ -53,20 +78,38 @@ public class RESTInputParam {
     }
 
     public String getType() {
-        return this.type;
+        return type;
     }
 
     public void setType(String type) {
         this.type = type;
     }
 
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+    
     public InputType toType() {
         InputType inputType = InputType.OTHER;
-        if ("string".equals(this.type)) {
+        if ("string".equals(type)) {
             inputType = InputType.STRING;
-        } else if ("int".equals(this.type)) {
+        } else if ("int".equals(type)) {
             inputType = InputType.INTEGER;
         }
         return inputType;
+    }
+
+    public InputLocation toLocation() {
+        InputLocation inputLocation = InputLocation.OTHER;
+        if ("url".equals(location)) {
+            inputLocation = InputLocation.URL;
+        } else if ("header".equals(location)) {
+            inputLocation = InputLocation.HEADER;
+        }
+        return inputLocation;
     }
 }

@@ -64,7 +64,7 @@ public class TestRESTServiceGenerator extends WMTestCase {
         SpringUtils.initSpringConfig();
 
         String resource = ClassLoaderUtils.getResource(wsdlResource);
-        WSDL wsdl = WSDLManager.processWSDL(resource, null);
+        WSDL wsdl = WSDLManager.processWSDL(resource, null, null, null);
 
         GenerationConfiguration genConfig = new GenerationConfiguration(wsdl, new FileSystemResource(this.outputDir));
         RESTServiceGenerator generator = new RESTServiceGenerator(genConfig);

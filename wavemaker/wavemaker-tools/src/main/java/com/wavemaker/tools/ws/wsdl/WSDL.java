@@ -42,6 +42,7 @@ import com.wavemaker.runtime.service.ServiceType;
 import com.wavemaker.runtime.service.definition.AbstractDeprecatedServiceDefinition;
 import com.wavemaker.runtime.service.definition.ReflectServiceDefinition;
 import com.wavemaker.runtime.ws.HTTPBindingSupport.HTTPRequestMethod;
+import com.wavemaker.runtime.ws.RESTInputParam;
 import com.wavemaker.tools.ws.wsdl.WSDLUtils.SoapHeader;
 
 /**
@@ -99,6 +100,8 @@ public class WSDL extends AbstractDeprecatedServiceDefinition implements Reflect
     private List<String> interceptorClassNames = new ArrayList<String>();
 
     private Map<String, Operation> operationMap;
+
+    private Map<String, List<RESTInputParam>> operationParamsMap;
 
     private TypeMapper typeMapper;
 
@@ -772,6 +775,18 @@ public class WSDL extends AbstractDeprecatedServiceDefinition implements Reflect
 
     public void setServiceAlias(String serviceAlias) {
         this.serviceAlias = serviceAlias;
+    }
+
+    public void setOperationParamsMap(Map<String, List<RESTInputParam>> operationParamsMap) {
+        this.operationParamsMap = operationParamsMap;
+    }
+
+    @Override
+    public List<RESTInputParam> getInputParams(String operationName) {
+        if (this.operationParamsMap == null) {
+            return null;
+        }
+        return this.operationParamsMap.get(operationName);
     }
 
     @Override

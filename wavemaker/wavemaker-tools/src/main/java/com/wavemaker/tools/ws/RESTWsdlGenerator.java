@@ -62,9 +62,9 @@ import com.ibm.wsdl.PortTypeImpl;
 import com.ibm.wsdl.TypesImpl;
 import com.ibm.wsdl.extensions.schema.SchemaImpl;
 import com.sun.tools.ws.processor.util.IndentingWriter;
+import com.wavemaker.runtime.ws.RESTInputParam;
 import com.wavemaker.runtime.ws.util.Constants;
 import com.wavemaker.tools.pws.IPwsRestWsdlGenerator;
-import com.wavemaker.tools.ws.RESTInputParam.InputType;
 
 /**
  * Generates WSDL which describes how to invoke and process REST service.
@@ -336,8 +336,8 @@ public class RESTWsdlGenerator implements IPwsRestWsdlGenerator {
             for (RESTInputParam entry : inputParts) {
                 Part part = new PartImpl();
                 part.setName(entry.getName());
-                InputType type = entry.toType();
-                if (type == InputType.OTHER) {
+                RESTInputParam.InputType type = entry.toType();
+                if (type == RESTInputParam.InputType.OTHER) {
                     String inputType = entry.getType();
                     int i = inputType.lastIndexOf(':');
                     QName inType = null;
@@ -388,10 +388,10 @@ public class RESTWsdlGenerator implements IPwsRestWsdlGenerator {
         return message;
     }
 
-    private static QName constructInputSimpleTypeQName(InputType type) {
-        if (type == InputType.STRING) {
+    private static QName constructInputSimpleTypeQName(RESTInputParam.InputType type) {
+        if (type == RESTInputParam.InputType.STRING) {
             return new QName(Constants.XSD_NS, "string");
-        } else if (type == InputType.INTEGER) {
+        } else if (type == RESTInputParam.InputType.INTEGER) {
             return new QName(Constants.XSD_NS, "int");
         } else {
             return null;

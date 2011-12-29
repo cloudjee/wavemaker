@@ -17,9 +17,11 @@ package com.wavemaker.tools.ws.wsdl;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.wavemaker.common.MessageResource;
+import com.wavemaker.runtime.ws.RESTInputParam;
 import com.wavemaker.tools.common.ConfigurationException;
 
 /**
@@ -53,7 +55,7 @@ public class WSDLManager {
      * @throws WSDLException
      */
     public WSDL registerWSDL(String wsdlURI, String serviceId) throws WSDLException {
-        WSDL wsdl = processWSDL(wsdlURI, serviceId);
+        WSDL wsdl = processWSDL(wsdlURI, serviceId, null, null);
         this.wsdlMap.put(wsdl.getServiceId(), wsdl);
         return wsdl;
     }
@@ -67,11 +69,12 @@ public class WSDLManager {
      * @return The WSDL object.
      * @throws WSDLException
      */
-    public static WSDL processWSDL(String wsdlURI, String serviceId) throws WSDLException {
+    public static WSDL processWSDL(String wsdlURI, String serviceId, List<String> operationName_list, List<List<RESTInputParam>> inputs_list)
+        throws WSDLException {
         if (wsdlURI == null) {
             throw new IllegalArgumentException(MessageResource.WS_NULL_WSDL_URI.getMessage());
         }
-        WSDL wsdl = new WSDLBuilder(wsdlURI).buildWSDL(serviceId);
+        WSDL wsdl = new WSDLBuilder(wsdlURI).buildWSDL(serviceId, operationName_list, inputs_list);
         if (wsdl.isRPC() && wsdl.isSOAPEncoded()) {
             throw new ConfigurationException(MessageResource.WS_RPC_ENCODED_NOT_SUPPORTED);
         }
