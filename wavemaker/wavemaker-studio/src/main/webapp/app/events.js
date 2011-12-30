@@ -52,7 +52,7 @@ getEventCode = function(ctrl, name, value, code) {
 	a = a.substring(1);
     else
 	a = "inSender" + a;
-    return value + ": function(" + a + ") {\n        " + code + "\n    },\n    ";
+    return value + ": function(" + a + ") {\n        " + code + "\n      },\n    ";
 
 }
 
@@ -110,7 +110,7 @@ eventEdit = function(ctrl, name, value, noInSenderInArgs, optionalArgList) {
 	    a = a.substring(1);
 	else
 	    a = "inSender" + a;
-	var code = code.replace(terminus, value + ": function(" + a + ") {\n      \n  },\n  " + terminus);
+	var code = code.replace(terminus, value + ": function(" + a + ") {\n      \n    },\n  " + terminus);
 	if (appLevel)
 	    studio.setAppScript(code);
 	else
@@ -141,7 +141,7 @@ eventCopy = function(editor,oldName, newName) {
                 var match = code.match(r);
                 if (!match) return;
                 if (getEvent(newName, code)) return;
-            var newcode = newName + ": function" + match[1] + " {\n      this." + oldName + match[1] + ";\n  },\n  ";
+            var newcode = newName + ": function" + match[1] + " {\n      this." + oldName + match[1] + ";\n    },\n  ";
 	    editor.setText(code.replace(terminus,  newcode +  terminus));
 	}
 }

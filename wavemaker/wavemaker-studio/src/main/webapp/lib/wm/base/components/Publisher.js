@@ -122,8 +122,8 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 			'"' + resource + '", ' +
 			'"' + image + '", ' +
 			'"' + this.description + '", ' +
-		        "false," + 
-			'{width: "' + this.width + '", height: "' + this.height + '"}' + 
+			'{width: "' + this.width + '", height: "' + this.height + '"},' + 
+		        "false" + 
 		']);';
 		//
 		var c, props = [];
@@ -140,8 +140,8 @@ dojo.declare("wm.CompositePublisher", wm.ComponentPublisher, {
 			js, '\n \n',
 			widgets, '\n \n',
 			props,
-			css ? klass + '.css = "' + css + '";' + '\n \n' : '',
-			html ? klass + '.html = "' + html + '";' + '\n \n' : '',
+//		    css ? klass + '.css = "' + escape(css) + '";' + '\n \n' : '',
+//		    html ? klass + '.html = "' + escape(html) + '";' + '\n \n' : '',
 			reg
 		].join('');
 	}

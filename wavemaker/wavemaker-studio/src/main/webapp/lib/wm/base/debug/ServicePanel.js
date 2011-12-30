@@ -149,23 +149,14 @@ dojo.declare("wm.debug.ServicePanel", wm.Container, {
 	for (var i = 0; i < count; i++) {
 	    var item = this.serviceListVar.getItem(i);
 	    if (id === item.getValue("id")) {
-		item.beginUpdate();
 		item.setValue("status", this.getLoadingIcon());
-		item.endUpdate();
-		this.serviceListVar.notify();
 		var self = this;
 		inDeferred.addCallback(function() {
-		    item.beginUpdate();
 		    item.setValue("status", self.getSuccessIcon());
-		    item.endUpdate();
-		    self.serviceListVar.notify();
 		});
 		inDeferred.addErrback(function(inError) {
-		    item.beginUpdate();
 		    item.setValue("status", self.getErrorIcon());
 		    item.setValue("data", inError);
-		    item.endUpdate();
-		    self.serviceListVar.notify();
 		});
 		break;
 	    }

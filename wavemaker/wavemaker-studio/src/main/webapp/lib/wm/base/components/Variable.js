@@ -57,6 +57,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	_greedyLoadProps: false,
 	_allowLazyLoad: true,
 	cursor: 0,
+        _uniqueSubnardId: 1,
 /*
 	constructor: function(inProps) {
 	},
@@ -82,7 +83,7 @@ dojo.declare("wm.Variable", wm.Component, {
 		if (this.json)
 			this.setJson(this.json);
 		else
-			this._clearData();
+			this._clearData(false);
 
 	    this._inPostInit = false;
 
@@ -231,25 +232,27 @@ dojo.declare("wm.Variable", wm.Component, {
 		Clear all data values.
 	*/
 	clearData: function() {
-		this._clearData();
+		this._clearData(false);
 	        this.setType(this.type, true);
 	        if (this.type && this.type != this.declaredClass)
 		    this.notify();
 	},
-	_clearData: function() {
+	_clearData: function(forceEmpty) {
 		this._isNull = false;
 		this._nostub = false;
 		if (!this.data)
 			this.data = {};
 		if (this.isList)
 			this.data = {list: []};
-		else {
-			// maintain any subNards, but otherwise clear data
+	    else if (forceEmpty) 
+		this.data = {};
+	    else {
+			// maintain any subNards (to one depth anyways), but otherwise clear data
 			var d;
 			for (var i in this.data) {
 				d = this.data[i];
 				if (d instanceof wm.Variable)
-					d._clearData();
+					d._clearData(true);
 				else
 					delete this.data[i];
 			}
@@ -345,7 +348,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	},
 	_setObjectData: function(inObject) {
 		this.beginUpdate();
-		this._clearData();
+		this._clearData(false);
 		this.isList = false;
 		if (!("list" in this._dataSchema))
 			delete this.data.list;
@@ -770,6 +773,7 @@ dojo.declare("wm.Variable", wm.Component, {
 			return;
 		var id = this.getRuntimeId();
 	        if (!id) return;
+
 		var topic=[id, "-changed"].join('');
 		wm.logging && console.group("<== CHANGED [", topic, "] published by Variable.dataChanged");
 		dojo.publish(topic, [this]);
@@ -785,7 +789,7 @@ dojo.declare("wm.Variable", wm.Component, {
 		    wm.logging && console.group("<== ROOTCHANGED [", topic2, "] published by Variable.dataRootChanged");
 		    dojo.publish(topic2, [this]);
 		}
-	   }
+	    }
 
 
 
@@ -863,7 +867,11 @@ dojo.declare("wm.Variable", wm.Component, {
 	    if ((window["studio"] || djConfig.isDebug) && inProps.type && !wm.typeManager.getType(inProps.type)) {
 		app.toastWarning("A variable of type " + inProps.type + " has been created, but that type does not exist");
 	    }
-	        inProps._temporaryComponent = 1;
+	    inProps._temporaryComponent = 1;
+	    if (!inProps.name) {
+		inProps.name = this._uniqueSubnardId;
+		this._uniqueSubnardId++;
+	    }
 		var v = new wm.Variable(inProps);
 		v.owner = this;
 		return v;
@@ -996,6 +1004,10 @@ wm.Variable.extend({
 	    /* If  we're either in design or debug mode, and the type just doesn't exist, warn the user */
 	    if ((window["studio"] && this.isDesignLoaded() || !window["studio"] && djConfig.isDebug) && inProps.type && !wm.typeManager.getType(inProps.type.replace(/[\[\]]/g,""))) {
 		app.alert(wm.getDictionaryItem("wm.Variable.TYPE_INVALID", {type: inProps.type.replace(/[\[\]]/g,"")}));
+	    }
+	    if (!inProps.name) {
+		inProps.name = this._uniqueSubnardId;
+		this._uniqueSubnardId++;
 	    }
 
 	        inProps._temporaryComponent = 1;

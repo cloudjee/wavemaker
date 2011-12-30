@@ -18,11 +18,16 @@ dojo.require("wm.base.widget.Buttons.ToolButton");
 
 
 dojo.declare("wm.Button", wm.ToolButton, {
+        mobileHeight: "40px",
 	height: "32px",
 	border: 1,
 	borderColor: "#ABB8CF",
 	margin: 4,
     /* TODO: Localize This */
 	caption: "Button",
-	classNames: "wmbutton"
+    classNames: "wmbutton",
+    init: function() {
+	if (wm.isMobile && this.height.match(/px/)) this.height = this.mobileHeight;
+	this.inherited(arguments);
+    }
 });

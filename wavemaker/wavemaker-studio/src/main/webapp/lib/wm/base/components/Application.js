@@ -35,6 +35,9 @@ dojo.declare("wm.Application", wm.Component, {
         _lastTheme: "",
     //IERoundedCorners: false,
 	init: function() {
+	    if (wm.isMobile) {
+		dojo.addClass(document.body, "wmmobile")
+	    }
 	    dojo["require"]("common." + wm.version.replace(/[^a-zA-Z0-9]/g,"") + "_patches",true);
 		app = wm.application = wm.application || this;
 		this.connectList = [];
@@ -316,7 +319,7 @@ dojo.declare("wm.Application", wm.Component, {
     },
     loadThemePrototypeForClass: function(ctor, optionalWidget) {
         if (!this.theme || !ctor) return;
-
+	
         var declaredClass = ctor.prototype.declaredClass;
         if (declaredClass == "wm.Template") declaredClass = "wm.Panel";
         if (!wm.Application.themePrototypeData[declaredClass] || wm.Application.themePrototypeData[declaredClass] != this.theme) {
@@ -855,7 +858,9 @@ dojo.declare("wm.Application", wm.Component, {
 	this.toolTipDialog.hide();
     },
     createMinifiedDialogPanel: function() {
-	this.wmMinifiedDialogPanel = new wm.Panel({name: "wmMinifiedDialogPanel", width: "100%", height: "22px", border: "2,0,0,0", padding: "1,0,0,0", autoScroll: true, verticalAlign: "top", horizontalAlign: "left", layoutKind: "left-to-right", owner: this, parent: this.appRoot});
+	var dockHeight = parseInt(parseInt(wm.Button.prototype.height)*0.8);
+	dockHeight += 3; // 2 for border, 1 for padding
+	this.wmMinifiedDialogPanel = new wm.Panel({name: "wmMinifiedDialogPanel", width: "100%", height: dockHeight + "px", border: "2,0,0,0", padding: "1,0,0,0", autoScroll: false, verticalAlign: "top", horizontalAlign: "left", layoutKind: "left-to-right", owner: this, parent: this.appRoot});
 	//document.body.appendChild(this.wmMinifiedDialogPanel.domNode);
 	//this.wmMinifiedDialogPanel.subscribe("window-resize", this, "resizeMinifiedDialogPanel");
 	//this.resizeMinifiedDialogPanel();

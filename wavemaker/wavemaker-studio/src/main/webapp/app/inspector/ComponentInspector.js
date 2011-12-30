@@ -1554,6 +1554,28 @@
      isAdvancedMode: function() {
 	 return this.advancedMode; 
      },
+     generateComponentInfo: function() {
+	 var html = this.inspected.generateDocumentation();
+	 if (!studio.componentDiagnosticsDialog) {
+	     studio.componentDiagnosticsDialog = new wm.Dialog({owner: studio, 
+								name: "componentDiagnosticsDialog",
+								width: "300px",
+								height: "500px",
+								useContainerWidget: true,
+								positionNear: studio.PIContents.getId(),
+								corner: "cl",
+								modal: false,
+								noEscape: false});
+	     studio.componentDiagnosticsDialog.html = new wm.Html({owner: studio.componentDiagnosticsDialog,
+								   parent: studio.componentDiagnosticsDialog.containerWidget,
+								   width: "100%",
+								   height: "100%"});
+	 }
+	 studio.componentDiagnosticsDialog.setTitle("Component Synopsis: " + this.inspected.getId());
+	 studio.componentDiagnosticsDialog.html.setHtml(html);
+	 studio.componentDiagnosticsDialog.show();
+     },
+
      getDefaultEditorProps: function(inComponent, inProp, inValue, inOwner, inParent) {
 	 var editorProps = {
 	     propDef: inProp,

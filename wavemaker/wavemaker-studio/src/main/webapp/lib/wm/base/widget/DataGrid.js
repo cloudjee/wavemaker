@@ -154,7 +154,6 @@ dojo.declare("wm.DataGridColumn", wm.Component, {
 	caption: "",
 	columnWidth: "120px",
 	display: "",
-	format: "(details)",
 	index: 0,
 	showing: true,
 	addColumn:  function() {this.owner.doAddColumn();},
@@ -295,8 +294,6 @@ wm.DataGridColumn.extend({
 	    switch (inName) {
 	    case "field":
 		return new wm.SelectMenu(dojo.mixin(inEditorProps, {options: this.owner._listFields()}));
-	    case "display":
-		return new wm.SelectMenu(dojo.mixin(inEditorProps, {options: [""].concat(wm.formatters)}));
 		}
 		return this.inherited(arguments);
 	}
@@ -926,28 +923,22 @@ wm.DataGrid.extend({
 		this._clearColumns();
 		this.dataSetToColumns();
 		this.renderGrid();
-	},
-	makePropEdit: function(inName, inValue, inDefault) {
-		switch (inName) {
-
-			case "dataSet":
-				return new wm.propEdit.DataSetSelect({component: this, name: inName, value: this.dataSet ? this.dataSet.getId() : "", allowAllTypes: true, listMatch: true});
-		}
-		return this.inherited(arguments);
 	}
 });
 
 // design-time only
 wm.Object.extendSchema(wm.DataGridColumn, {
 	caption: { group: "common", order: 100, focus: 1 },
+
+    /* Operations gropu */
     addColumn: { group: "operation", order: 10,operation:1},
     removeColumn: { group: "operation", order: 20,operation:1},
 	autoSize: { group: "layout", order: 10 },
     columnWidth: { group: "layout", order: 20, editor: "wm.prop.SizeEditor"},
 	index: { group: "layout", order: 30 },
-    field: { group: "data", order: 10, editor: "wm.prop.FieldSelect",  },
+    field: { group: "data", order: 10, editor: "wm.prop.FieldSelect"},
 	dataExpression: { group: "data", order: 15 },
-	display: { group: "data", order: 20 },
+    display: { group: "data", order: 20, options: [""].concat(wm.formatters) },
 	format: { group: "data", order: 30, categoryParent: "Properties", categoryProps: {component: "format"}},
     showing: {ignore: 1},
     format:{ignore:1}
@@ -957,10 +948,10 @@ wm.Object.extendSchema(wm.DataGrid, {
 	selectedItem: { ignore: true, isObject: true, bindSource: true, simpleBindProp: true },
 	emptySelection: { ignore: true, bindSource: 1, type: "Boolean" },
     dataSet: { readonly: true, group: "data", order: 0, type: "wm.Variable", isList: true, bindTarget: true, createWire: 1, editor: "wm.prop.DataSetSelect", editorProps: {listMatch: true, widgetDataSets: true, allowAllTypes: true}},
-	addColumn: { group: "operation", order: 1},
-	autoColumns: { group: "operation", order: 5},
-	clearColumns: { group: "operation", order: 10},
-	updateNow: { group: "operation", order: 15},
+    addColumn: { group: "operation", order: 1, operation:1},
+	autoColumns: { group: "operation", order: 5, operation:1},
+	clearColumns: { group: "operation", order: 10, operation:1},
+	updateNow: { group: "operation", order: 15, operation:1},
 	collection: { ignore: true },
 	disabled: { ignore: true }
 });

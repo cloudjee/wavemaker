@@ -400,6 +400,7 @@ dojo.declare("wm._BaseEditor", wm.Widget, {
 
 // design only...
 wm.Object.extendSchema(wm._BaseEditor, {
+    onEnterKeyPress: {ignore:1},
 	name: { ignore: 1 },
 	showing: { ignore: 1 },
 	disabled: { ignore: 1},

@@ -1972,3 +1972,12 @@ li {
 .wmpicture.onClickEvent {
     cursor: pointer;
 }
+
+.wmmobile .dijitMenuPopup .dijitMenuItem {
+    font-size: 16px;
+    font-weight: normal;
+}
+
+body.wmmobile button.wmtablayers-tab {
+    height: 32px;
+}

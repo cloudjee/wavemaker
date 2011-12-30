@@ -1277,6 +1277,8 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 
 	this.setHeight(this.getPreferredFitToContentHeight() + "px");
 	this.setDataValue(this.inspected.styles);
+	if (this.basicLayer.c$.length == 0)
+	    this.basicLayer.hide();
     },
     getDataValue: function() {return this.inspected.styles},
     reinspect: function() {
@@ -1741,6 +1743,7 @@ dojo.declare("wm.prop.SubComponentEditor", wm.Container, {
 	this.removeAllControls();
 	var props = studio.inspector.props;
 	studio.inspector.props = studio.inspector.getProps(this.subinspected,true);
+	debugger;
 	studio.inspector._generateEditors(this.subinspected, this, studio.inspector.props, true);
 	studio.inspector.props = props;
 	this.setBestHeight();
