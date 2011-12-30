@@ -49,13 +49,17 @@ wm.Object.extendSchema(wm.DojoChart, {
     xMajorTickStep:  {group: "widgetName", subgroup: "xaxis", order: 23, advanced:1},
     xMinorTicks:   {group: "widgetName", subgroup: "xaxis", order: 24, advanced:1},
     xMinorTickStep:  {group: "widgetName", subgroup: "xaxis", order: 25, advanced:1},
-    
+    xdisplay:    {group: "widgetName", subgroup: "xaxis", order: 30 }, // shows the display property
+    xformat:     {group: "widgetName",subgroup: "xaxis", order: 31, editor: "wm.prop.FormatterEditor"}, // shows the properties made available by the display property    
+
+
     yAxis: {group: "widgetName", subgroup: "yaxis",  order: 30,requiredGroup:1, editor: "wm.prop.FieldList"},
     includeY: {group: "widgetName", subgroup: "yaxis",  order: 35, advanced:1},
     yAxisTitle: {group: "widgetName", subgroup: "yaxis",  order: 35},
     yUpperRange: {group: "widgetName", subgroup: "yaxis",  order: 36, advanced:1},
         //isTimeXAxis: {group: "edit", order: 21, type: "string"},
-
+    ydisplay:    {group: "widgetName", subgroup: "yaxis", order: 30 }, // shows the display property
+    yformat:     {group: "widgetName",subgroup: "yaxis", order: 31, editor: "wm.prop.FormatterEditor"}, // shows the properties made available by the display property    
     
     maxTimePoints: {group: "widgetName", subgroup: "display", order: 22, advanced:1},
     chartColor: {group: "widgetName", subgroup: "display", order: 40},
@@ -119,6 +123,63 @@ wm.DojoChart.description = "A dojo chart.";
 wm.DojoChart.extend({
     scrim: true,
     themeable: false,
+	makePropEdit: function(inName, inValue, inEditorProps) {
+	    switch (inName) {
+	    case "xdisplay":
+		var funcName = this.generateEventName("onReadOnlyNodeFormat");
+		var customFunction = (this.xformatter == funcName) ? funcName : "Custom Function";
+		inEditorProps.options = ["", customFunction].concat(wm.formatters);
+		inEditorProps.displayField = inEditorProps.dataField = "dataValue";
+		inEditorProps.restrictValues = false;
+		return new wm.SelectMenu(inEditorProps);
+	    case "ydisplay":
+		var funcName = this.generateEventName("onReadOnlyNodeFormat");
+		var customFunction = (this.yformatter == funcName) ? funcName : "Custom Function";
+		inEditorProps.options = ["", customFunction].concat(wm.formatters);
+		inEditorProps.displayField = inEditorProps.dataField = "dataValue";
+		inEditorProps.restrictValues = false;
+		return new wm.SelectMenu(inEditorProps);
+
+	    }
+	    return this.inherited(arguments);
+	},
+    set_xdisplay: function(inDisplay) {
+	if (this.xdisplay == inDisplay)
+	    return;
+	this.xdisplay = inDisplay;
+	var ctor = this.xdisplay ? wm.getFormatter(this.xdisplay) : null;
+	if (this.components.xformat)
+	    this.components.xformat.destroy();
+
+	var funcName = this.generateEventName("onReadOnlyNodeFormat");
+	if (this.xdisplay == "Custom Function" || this.xdisplay == funcName) {
+	    this.xdisplay = funcName;
+	    eventEdit(this, "onFormat", funcName, this.owner == studio.application, "inValue");
+	    } else if (ctor) {
+		var ctor = wm.getFormatter(this.xdisplay);
+		new ctor({name: "xformat", owner: this});
+	    } 
+	this.renderDojoObj(); // If there was a formatter on it before chaning the display property, we need to show that this formatter no longer is applied
+	},
+    set_ydisplay: function(inDisplay) {
+	if (this.ydisplay == inDisplay)
+	    return;
+	this.ydisplay = inDisplay;
+	var ctor = this.ydisplay ? wm.getFormatter(this.ydisplay) : null;
+	if (this.components.yformat)
+	    this.components.yformat.destroy();
+
+	var funcName = this.generateEventName("onReadOnlyNodeFormat");
+	if (this.ydisplay == "Custom Function" || this.ydisplay == funcName) {
+	    this.ydisplay = funcName;
+	    eventEdit(this, "onFormat", funcName, this.owner == studio.application, "inValue");
+	    } else if (ctor) {
+		var ctor = wm.getFormatter(this.ydisplay);
+		new ctor({name: "yformat", owner: this});
+	    } 
+	this.renderDojoObj(); // If there was a formatter on it before chaning the display property, we need to show that this formatter no longer is applied
+	},
+
     set_hideLegend: function(inHide) {
 	this.hideLegend = inHide;
 	this.legendHeight = inHide ? "0px" : "50px";

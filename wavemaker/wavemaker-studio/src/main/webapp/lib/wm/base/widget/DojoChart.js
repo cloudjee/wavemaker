@@ -13,7 +13,7 @@
  */
 
 dojo.provide("wm.base.widget.DojoChart");
-
+dojo.require("wm.base.widget.Formatters");
 
 dojo.declare("wm.DojoChart", wm.Control, {
     chartTitle: "",
@@ -261,10 +261,6 @@ dojo.declare("wm.DojoChart", wm.Control, {
 		return ds;
 	},
 	updateXLabelSet: function (){
-/*
-		if (this.isTimeXAxis)
-			return [];
-			*/
 		this.xLabels = {};
 		if (this.xAxis == 'wmDefaultX')
 		  var ds = this.defaultXY;
@@ -273,11 +269,15 @@ dojo.declare("wm.DojoChart", wm.Control, {
 		
 		var x = this.xAxis;
 		dojo.forEach(ds, function(obj,idx){
-			var label = obj[x];
-			this.xLabels[label] = this.addXLabel(label);
+		    var originalLabel = obj[x];
+		    var label = this.xaxisFormatter(originalLabel);
+		    this.xLabels[originalLabel] = this.addXLabel(label);
 		}, this);
 
 		return this.xLabels;
+	},
+	formatChanged: function() {
+		this.renderDojoObj();
 	},
 	isPieChart: function(){
 		return this.chartType == 'Pie';
@@ -287,10 +287,10 @@ dojo.declare("wm.DojoChart", wm.Control, {
 		var ds = this.getChartDataSet();
 		var xField = this.xAxis;
 		dojo.forEach(ds, function(dataObj, i){
-			var obj = {y: columnName in dataObj ? dataObj[columnName] : 0};
+		    var obj = {y: columnName in dataObj ? dataObj[columnName] : 0};
 			if (this.isPieChart()) {
 				if (xField != '')
-					obj.legend = dataObj[xField];
+				    obj.legend = this.xaxisFormatter(dataObj[xField]);
 				if (this.chartColor != '') {
 					if (this.chartColor instanceof Array) {
 						var color = this.chartColor[i];
@@ -391,9 +391,29 @@ dojo.declare("wm.DojoChart", wm.Control, {
 				yProp.majorTickStep = this.yMajorTickStep;
 		        if (this.yAxisTitle)
 		            yProp.title = this.yAxisTitle;
+		    yProp.labelFunc = dojo.hitch(this, "yaxisFormatter");
 			this.dojoObj.addAxis("y", yProp);
 		}
 	},
+    yaxisFormatter: function(inValue) {
+	if (this.$.yformat) {
+	    return this.$.yformat.format(inValue);
+	} else if (this.ydisplay && dojo.isFunction(this.owner[this.ydisplay])) {
+	    return this.owner[this.ydisplay](this, inValue);
+	} else {
+	    return inValue;
+	}
+    },
+    xaxisFormatter: function(inValue) {
+	if (this.$.xformat) {
+	    return this.$.xformat.format(inValue);
+	} else if (this.xdisplay && dojo.isFunction(this.owner[this.xdisplay])) {
+	    return this.owner[this.xdisplay](this, inValue);
+	} else {
+	    return inValue;
+	}
+    },
+
 	getFontProperty: function(){
 		var defaultFontProp = {style: "normal", variant:"normal", weight:"normal", size:"7pt", family:"Tahoma"};
 		var results = {};
