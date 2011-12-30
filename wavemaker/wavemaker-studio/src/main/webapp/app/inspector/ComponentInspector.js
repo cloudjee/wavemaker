@@ -536,7 +536,11 @@
 		 var wire = inComponent.$.binding.wires[propPath];
 		 newVal = wire.source || wire.expression; // TODO: prefix with str,numb, bool, expr
 	     } else {
-		 newVal = inComponent.getValue(propPath);
+		 if (inProp.treeBindRoot) {
+		     newVal = inComponent.getValue(propPath);
+		 } else {
+		     newVal = inComponent.getProp(propPath);
+		 }
 		 if (newVal instanceof wm.Component) {
 		     if (newVal === inComponent || newVal.isOwnedBy(inComponent)) {
 			 // don't show the value if the value is self or is something being managed internally; binding
@@ -770,7 +774,7 @@
 	 var isBound = false;
 	 var propName = inProp.name;
 	 var fullPropName = inProp.fullName || propName;
-
+	 var hashId = (optionalAppendToHashName ? optionalAppendToHashName + "_" : "") +  this.getHashId(inComponent,fullPropName);
 	 /**********************************************************
 	  * Get the panel we'll insert our editor into 
 	  **********************************************************/
@@ -795,8 +799,12 @@
 	 if (isBound) {
 	     var wire = inComponent.$.binding.wires[fullPropName || propName];
 	     value = wire.source || wire.expression; // TODO: prefix with str,numb, bool, expr
-	 } else {
+	 } else if (inProp.treeBindRoot) {
 	     value = inComponent.getValue(propName);
+	 } else {
+	     value = inComponent.getProp(propName);
+	 }
+
 	     if (value instanceof wm.Component) {
 		 if (value === inComponent || value.isOwnedBy(inComponent)) {
 		      // don't show the value if the value is self or is something being managed internally; binding
@@ -804,12 +812,12 @@
 		     value = "";
 		 }
 	     }
-	 }
+
 
 	 /**********************************************************
 	  * Get the editor properties 
 	  **********************************************************/
-	 var editorProps = this.getDefaultEditorProps(inComponent, inProp, value, this, panel);	 
+	 var editorProps = this.getDefaultEditorProps(inComponent, inProp, value, this, panel, hashId);	 
 	 editorProps.showing = !isBound;
 
 	 if (inProp.editorProps) {
@@ -822,7 +830,7 @@
 	 if (inProp.isEvent) {
 	     editorProps.propName = inProp.name;
 	     var e = new wm.prop.EventEditorSet(editorProps);
-	     this.editorHash[(optionalAppendToHashName ? optionalAppendToHashName + "_" : "") +  this.getHashId(inComponent,fullPropName)] = e;
+	     this.editorHash[hashId] = e;
 	 } else {
 	     var e = inComponent.makePropEdit(inProp.name, value, editorProps);
 	     if (!e || e instanceof wm.Control == false) {
@@ -843,7 +851,7 @@
 	 }
      
 	 /* Cache a refernce to the editor so that reinspect can quickly find it */
-	 this.editorHash[(optionalAppendToHashName ? optionalAppendToHashName + "_" : "") +  this.getHashId(inComponent,fullPropName)] = e;
+	 this.editorHash[hashId] = e;
 
 
 	 /**********************************************************
@@ -1010,7 +1018,11 @@
 	      */
 	     if (!e.createWire) {
 		 /* TODO: PROPINSPECTOR CHANGE: Need to use the UNDOABLE TASK MANAGER */
-		 inComponent.setValue(inProp.name, inDataValue);
+		 if (e instanceof wm.prop.FieldGroupEditor) {
+		     inComponent.setValue(inProp.name, inDataValue);
+		 } else {
+		     inComponent.setValue(inProp.name, inDataValue);
+		 }
 	     } 
 
 	     /* Else we need to create a wm.Wire for the new value */
@@ -1576,14 +1588,14 @@
 	 studio.componentDiagnosticsDialog.show();
      },
 
-     getDefaultEditorProps: function(inComponent, inProp, inValue, inOwner, inParent) {
+     getDefaultEditorProps: function(inComponent, inProp, inValue, inOwner, inParent, inName) {
 	 var editorProps = {
 	     propDef: inProp,
 	     owner: inOwner,
 	     parent: inParent,
 	     disabled: Boolean(inProp.ignoretmp || inProp.writeonly),
 	     hint: inProp.ignoretmp && inProp.ignoreHint ? this.ignoreHintPrefix + inProp.ignoreHint : "",
-	     name: "propEdit_" + inProp.name,
+	     name: "propEdit_" + (inName ? inName : inProp.name),
 	     propName: inProp.name,
 	     width: "100%",
 	     height: "42px",
