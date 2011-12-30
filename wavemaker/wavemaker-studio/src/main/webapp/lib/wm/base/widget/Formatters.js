@@ -229,11 +229,17 @@ dojo.declare("wm.ImageFormatter", wm.DataFormatter, {
 });
 
 dojo.declare("wm.PercentFormatter", wm.NumberFormatter, {
+        divideBy100: false,
 	getFormatProps: function() {
 	   var p = this.inherited(arguments);
 	   p.type = "percent";
 	   return p;
 	},
+	format: function(inDatum) {
+	inDatum = Number(inDatum);
+	if (this.divideBy100) inDatum = inDatum/100;
+	return this.inherited(arguments,[inDatum]);
+	}
 });
 
 // design only...
