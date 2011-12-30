@@ -177,10 +177,10 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 						plugins: this.plugins,
 						disabled: this.disabled},
 					       this.editorNode);
-		this.onLoad();
+		this._onLoad();
 		return this.editor;
 	},
-	onLoad: function() {
+    _onLoad: function() {
 		this._ready = true;
 		this._cupdating = false;
 		this.sizeEditor();
