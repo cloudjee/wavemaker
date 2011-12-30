@@ -1929,6 +1929,10 @@ background-repeat:no-repeat;
     cursor: pointer;
 }
 
+.dojoxGridCell{ 
+   word-wrap: break-word; 
+} 
+
 .wmeditor .wmCheckboxSet {
     overflow-y: auto;
     border-style: solid;
