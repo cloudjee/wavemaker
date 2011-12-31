@@ -1340,7 +1340,7 @@ wm.Variable.extend({
 	if (this.displayField) {
 	    return inItem.getValue(this.displayField);
 	} else if (this.displayExpression) {
-	    return wm.expression.getValue(this.displayExpression, inItem);
+	    return wm.expression.getValue(this.displayExpression, inItem, this.getRoot());
 	} else {
 	    return undefined;
 	}

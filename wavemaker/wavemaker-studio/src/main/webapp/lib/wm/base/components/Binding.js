@@ -111,7 +111,8 @@ dojo.declare("wm.Wire", wm.Component, {
 		if (wm.bindingsDisabled)
 			return;
 
-		inValue = this.expression ? wm.expression.getValue(this.expression, this.getRoot()) : inValue;
+	    var r = this.getRoot();
+	    inValue = this.expression ? wm.expression.getValue(this.expression, r,r) : inValue;
 	        if (this.canSetValue()) {
 		    // ignore expressions that don't reference any variables; presume these to be
 		    // literals or otherwise uninteresting to log

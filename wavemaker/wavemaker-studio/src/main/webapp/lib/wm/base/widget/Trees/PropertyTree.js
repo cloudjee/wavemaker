@@ -94,7 +94,7 @@ dojo.declare("wm.PropertyTree", wm.Tree, {
 	    var hasChild = !wm.isEmpty(childProps);
 	    var content;
 	    if (this._treeConfig.displayExpression) {
-		content = wm.expression.getValue(this._treeConfig.displayExpression, item);
+		content = wm.expression.getValue(this._treeConfig.displayExpression, item,this.owner);
 	    } else {
 		content = item.getValue(this._treeConfig.displayField);
 	    }
@@ -125,7 +125,7 @@ dojo.declare("wm.PropertyTree", wm.Tree, {
 			var item = variable.getItem(i);
 			var content;
 			if (props.displayExpression) {
-			    content = wm.expression.getValue(props.displayExpression, item);
+			    content = wm.expression.getValue(props.displayExpression, item,this.owner);
 			} else {
 			    content = item.getValue(props.displayField);
 			}
@@ -162,7 +162,7 @@ dojo.declare("wm.PropertyTree", wm.Tree, {
 	    } else {
 		    var content;
 		    if (parentChildProps[prop].displayExpression) {
-			content = wm.expression.getValue(parentChildProps[prop].displayExpression, inParentNode.data);
+			content = wm.expression.getValue(parentChildProps[prop].displayExpression, inParentNode.data,this.owner);
 		    } else {
 			content = value;
 		    }

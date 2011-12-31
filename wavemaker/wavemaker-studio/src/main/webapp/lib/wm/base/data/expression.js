@@ -42,9 +42,16 @@ wm.expression = {
 var exp = '"Half of " + ${editor1.dataValue} + " is " + ${editor1.dataValue}/2.';
 wm.expression.getValue(exp, app.main);
 	*/
-	getValue: function(inExpression, inRoot) {
-		var v = wm.expression._getText(inExpression, inRoot);
-		return wm.evalJs(v);
+       getValue: function(inExpression, inRoot, inOwner) {
+	   var v = wm.expression._getText(inExpression, inRoot);
+	   var result = "";
+	   try {
+	       var f  = function() {	
+		   result = eval(v);	
+	       }.call(inOwner);
+	   } catch(e){}
+	   return result;
+	   //return wm.evalJs(v,inRoot);
 	},
 	getSources: function(inExpression) {
 		var re = wm.expression._getSourceRegEx

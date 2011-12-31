@@ -85,7 +85,8 @@ dojo.declare("wm.debug.BindPanel", wm.Layer, {
 	if (b) {
 	    for (var name in b.wires) {
 		var w = b.wires[name];
-		var dataValue = w.expression ? wm.expression.getValue(w.expression, w.getRoot()) : w.getValueById(w.source);
+		var r = w.getRoot();
+		var dataValue = w.expression ? wm.expression.getValue(w.expression, r,r) : w.getValueById(w.source);
 		if (dataValue instanceof wm.Component)
 		    dataValue = dataValue.toString();
 

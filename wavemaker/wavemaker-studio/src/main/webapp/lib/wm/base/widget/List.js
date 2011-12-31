@@ -412,13 +412,13 @@ dojo.declare("wm.List", wm.VirtualList, {
 		    inRow = this._formatIndex != null ? this._formatIndex : this.getCount();
 		    var data = this._data[inRow];
 		    if (col.backgroundColor) {
-			var backgroundColor = wm.expression.getValue(col.backgroundColor, data);
+			var backgroundColor = wm.expression.getValue(col.backgroundColor, data,this.owner);
 			if (backgroundColor) {
 			    text.push("background-color:" + backgroundColor);
 			}
 		    }
 		    if (col.textColor) {
-			var textColor = wm.expression.getValue(col.textColor, data);
+			var textColor = wm.expression.getValue(col.textColor, data,this.owner);
 			if (textColor) {
 			    text.push("color:" + textColor);
 			}
@@ -460,7 +460,7 @@ wm.List.extend({
 	var value = "";
 	if (col.expression) {
 	    try	{
-		value = wm.expression.getValue(col.expression, inItem);
+		value = wm.expression.getValue(col.expression, inItem,this.owner);
 	    }catch(e){}
 	} else {
 	    value = inValue;
@@ -766,7 +766,7 @@ wm.List.extend({
 	    var col = this.columns[inCol];
 	    var data = this._data[inRow];
 	    if (col.cssClass) {
-		return wm.expression.getValue(col.cssClass, data);
+		return wm.expression.getValue(col.cssClass, data,this.owner);
 	    }
 	}
 	return "";

@@ -227,7 +227,7 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
             inVariable.setData(dojo.clone(inObj));
         }
 	var de = this.displayExpression, v = inVariable;
-	var result = de ? wm.expression.getValue(de, v) : inVariable.getValue(this.displayField);
+	var result = de ? wm.expression.getValue(de, v,this.owner) : inVariable.getValue(this.displayField);
         if (this.displayType && this.displayType != 'Text')
             result = this.formatData(result);
         return result == null ? "" : String(result);
