@@ -17,7 +17,7 @@ dojo.provide("wm.base.widget.Dialogs.GenericDialog");
 dojo.require("wm.base.widget.Dialogs.WidgetsJsDialog");
 
 dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
-    enterKeyIsButton1: true,
+    enterKeyIsButton: 1,
     noEscape: true,
     title: "Generic Dialog",
     footerBorder: "",
@@ -36,6 +36,10 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
     showInput: false,
     prepare: function() {
         this.inherited(arguments);
+	if ("enterKeyIsButton1" in this) {
+	    this.enterKeyIsButton = this.enterKeyIsButton1 ? 1 : 0;
+	    delete this.enterKeyIsButton1;
+	}
         this.widgets_data = {
 	    genericInfoPanel: ["wm.Panel", {layoutKind: "top-to-bottom", 
 					    width: "100%", 
@@ -178,9 +182,8 @@ dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
 	    this.buttonBar.setShowing(this.button1Caption || this.button2Caption || this.button3Caption || this.button4Caption);
     },
     onEnterKeyPress: function(inText, inEvent) {
-        if (this.enterKeyIsButton1) {
-            if (this.button1Close) this.dismiss();
-            this.onButton1Click(this.button1, inText);
+        if (this.enterKeyIsButton) {
+	    this.buttonClick(this.$["button" + this.enterKeyIsButton]);
 	    dojo.stopEvent(inEvent);
         }
     },

@@ -127,7 +127,7 @@ wm.Object.extendSchema(wm.GenericDialog, {
     button4Caption: {group: "subwidgets", subgroup: "buttons", order: 67},
 
     /* Subwidgets group; behavior subgroup */
-    enterKeyIsButton1: {group: "subwidgets", subgroup: "behavior", order: 60},
+    enterKeyIsButton: {group: "subwidgets", subgroup: "behavior", order: 60, options: ["","1","2","3","4"]},
     button1Close: {group: "subwidgets", subgroup: "behavior", order: 62},
     button2Close: {group: "subwidgets", subgroup: "behavior", order: 64},
     button3Close: {group: "subwidgets", subgroup: "behavior", order: 66},
