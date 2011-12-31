@@ -176,6 +176,32 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
                      *          start value.  End result is that b["l" or "t"] has been updated.
                      */
 		    b[inFitOrd] = fitOrd;  // bounds["l" or "t"] = the "l" or "t" inContainer.
+
+
+                    /* Step 7d: Verify that sizes have not been reduced below user-set or widget-preferred minimums
+                     * TODO: This may be the third time in this _flow that we've called getMinHeight/WidthProp; 
+                     * definitely need to cache the result for the duration of this call
+                     */
+		    if (c._percEx.h) {
+			var minHeight = c.getMinHeightProp();
+			if (minHeight > b.h) {
+			    b.h = minHeight;
+			    if (inFitAxis == "h")
+				cFitSize = b.h;
+			}
+			
+		    }
+		    if (c._percEx.w) {
+			var minWidth  = c.getMinWidthProp();
+			if (minWidth > b.w) {
+			    b.w = minWidth;			    
+			    if (inFitAxis == "w")
+				cFitSize = b.w;
+			}
+
+		    }
+
+
 		    switch (inFitAlign) {
 		    case "justified": // no longer supported
             		if (djConfig.isDebug && !wm.isInstanceType(inContainer, wm.Editor) && inContainer.isDesignedComponent() && inFitAxis == "w" && !wm.isInstanceType(inContainer, wm.Layers) && !wm.isInstanceType(inContainer.owner, wm.Layers))
@@ -191,19 +217,6 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 		    case "right":
 			b[inFitOrd] = fitOrd + fitBound - cFitSize;  
 			break;
-		    }
-
-                    /* Step 7d: Verify that sizes have not been reduced below user-set or widget-preferred minimums
-                     * TODO: This may be the third time in this _flow that we've called getMinHeight/WidthProp; 
-                     * definitely need to cache the result for the duration of this call
-                     */
-		    if (c._percEx.h) {
-			var minHeight = c.getMinHeightProp();
-			if (minHeight > b.h) b.h = minHeight;
-		    }
-		    if (c._percEx.w) {
-			var minWidth  = c.getMinWidthProp();
-			if (minWidth > b.w) b.w = minWidth;			    
 		    }
 
                     /* Step 7e:  Update the bounds for the control; any bounds that were deleted or set to NaN will be left as is */
