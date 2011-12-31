@@ -119,9 +119,18 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    isSelected = true;
 
 	  if (isSelected) {
-	      if (rowIndex < this.getRowCount()) {
+	      /* If this returns an empty object, its because the row hasn't been processed by the grid, and will only be processed 
+	       * when scrolled into view
+	       */
+	      if (wm.isEmpty(this.getRow(rowIndex))) {
+		  this.dojoObj.scrollToRow(rowIndex);
+		  wm.onidle(this, function() {
+		      this.setSelectedRow(rowIndex);
+		  });
+	      } else {
 		  this.dojoObj.selection.select(rowIndex);
 		  this.onSelectionChange();
+		  this.dojoObj.scrollToRow(rowIndex);
 	      }
 	  } else {
 	    this.dojoObj.selection.setSelected(rowIndex,isSelected);
