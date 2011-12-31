@@ -438,9 +438,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 	else
 	    this.setMargin(wm.Dialog.prototype.margin);
 
-	this.setWidth((this._dockData.w-20) + "px");
-	this.setHeight((this._dockData.h-20) + "px");
-	this.setBounds({t: this._dockData.t, l: this._dockData.l});
+	this.setWidth( ((this._dockData.w||this.bounds.w) -20) + "px");
+	this.setHeight(((this._dockData.h||this.bounds.h) -20) + "px");
+	this.setBounds({t: this._dockData.t || this.bounds.t, l: this._dockData.l || this.bounds.l});
 	this._cupdating = false;
 
 	delete this._dockData;

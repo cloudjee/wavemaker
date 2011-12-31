@@ -285,7 +285,7 @@ Studio.widgets = {
 	    panel1: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 			benchbevel11: ["wm.Bevel", {border: ""}, {}],
 		dockLeftPanel: ["wm.Panel", {height: "100%", width: "200px", border: "0", dockLeft: true, verticalAlign: "top",horizontalAlign: "left"}, {}, {
-		    panel2: ["wm.Dialog", {_classes: {domNode: ["studiodialog"]}, title: "Palette", height: "100%", width: "200px", border: "0", margin: "0", verticalAlign: "top", horizontalAlign: "left", modal:false,docked: true, minWidth: "150", minHeight: "400", noTopBottomDocking: true}, {onClose: "dockPalette"}, {
+		    panel2: ["wm.Dialog", {_classes: {domNode: ["studiodialog"]}, title: "Palette", height: "100%", width: "200px", border: "0", _dockData:{border:"3",edge:"l"}, margin: "0", verticalAlign: "top", horizontalAlign: "left", modal:false,docked: true, minWidth: "150", minHeight: "400", noTopBottomDocking: true}, {onClose: "dockPalette"}, {
 /*
 				leftToolbarButtons: ["wm.Panel", {height: "29px", width: "100%", layoutKind: "left-to-right", verticalAlign: "top", border: 0, padding: "0,4"}, {}, {
 					nspcr4: ["wm.Spacer", {width: "2px"}, {}],
@@ -389,7 +389,7 @@ Studio.widgets = {
 					}],
 			splitter3b: ["wm.Splitter", {border: ""}, {}],
 			    PIPanel: ["wm.Panel", { height: "100%", width: "250px", border: "0", padding: "0", layoutKind: "top-to-bottom", dockRight:true}, {}, {
-				PIContents: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, width: "100%", height: "100%", border: "0", maring: "0", containerWidget:"inspector",modal:false,docked: true, minWidth: "150", minHeight: "300", noTopBottomDocking: true}, {onClose: "dockPropertyPanel"}, {
+				PIContents: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, width: "100%", height: "100%", _dockData: {border:"3", edge: "r", w: 400}, border: "0", margin: "0", containerWidget:"inspector",modal:false,docked: true, minWidth: "150", minHeight: "300", noTopBottomDocking: true}, {onClose: "dockPropertyPanel"}, {
 
 				    inspectorToolbar2: ["wm.Panel", {width: "100%", height: "22px", layoutKind: "left-to-right", horizontalAlign: "left", verticalAlign: "top",padding:"0"},{},{				    
 					propertySearchBar: ["wm.Text", {resetButton: true, width: "130px", changeOnKey: true, emptyValue: "emptyString", placeHolder: "Find Property"},{onchange: "inspector.propertySearch"}],
