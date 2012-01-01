@@ -188,20 +188,17 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		this.updateReadOnlyNodeStyle();
     },
 	setDisabled: function(inDisabled) {
-	    inDisabled = Boolean(inDisabled);
-		var d = this.disabled;
-		this.inherited(arguments);
+	    this.inherited(arguments);
 	    if (this.editor) {
-		if (this.editor instanceof wm.Control && d != this.editor.disabled) {
-		    this.editor.setDisabled(inDisabled);
-		    dojo[this.disabled ? "addClass" : "removeClass"](this.captionNode, "wmeditor-caption-disabled");
-		} else if (d != this.disabled) {
-		    this.editor.set("disabled", Boolean(inDisabled));
-		    dojo[this.disabled ? "addClass" : "removeClass"](this.captionNode, "wmeditor-caption-disabled");
+		if (this.editor instanceof wm.Control) {
+		    dojo[this._disabled ? "addClass" : "removeClass"](this.captionNode, "wmeditor-caption-disabled");
+		} else {
+		    if (this._disabled != this.editor.get("disabled")) {
+			this.editor.set("disabled", Boolean(this._disabled));
+			dojo[this._disabled ? "addClass" : "removeClass"](this.captionNode, "wmeditor-caption-disabled");
+		    }
 		}
-		
 	    }
-	    this.disabled = inDisabled;
 	},
 
 	destroy: function() {

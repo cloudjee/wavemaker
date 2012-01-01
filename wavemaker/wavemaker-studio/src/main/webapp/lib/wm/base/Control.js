@@ -378,6 +378,8 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
        @type Boolean
     */
     disabled: false,
+    _parentDisabled: false,
+    _disabled: false, // combines disabled and _parentDisabled
     container: false,
     _classes: {domNode:[]}, // prototype gets a blank object for us to clone; allows theme to provide default classes
     scrollX: false,
@@ -1454,12 +1456,19 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	*/
 	setDisabled: function(inDisabled) {
 	    var d = Boolean(inDisabled);
-	    for (var i in this.widgets) {
-		this.widgets[i].setDisabled(d);
-	    }
 	    this.disabled = d;
-	    dojo.toggleClass(this.domNode, "Disabled", inDisabled);
+	    this._disabled = d || this._parentDisabled;
+
+	    for (var i in this.widgets) {
+		this.widgets[i].setParentDisabled(this._disabled);
+	    }
+	    
+	    dojo.toggleClass(this.domNode, "Disabled", this._disabled);
 	},
+    setParentDisabled: function(inDisabled) {
+	this._parentDisabled = inDisabled;
+	this.setDisabled(this.disabled);
+    },
 	setBackgroundColor: function(inColor) {
 	    this.backgroundColor = inColor;
 	    this.invalidCss = true;

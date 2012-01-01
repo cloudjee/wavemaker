@@ -491,18 +491,19 @@ dojo.declare("wm.CheckboxSet", wm.DataSetEditor, {
 	for (var i = 0; i < this.dijits.length; i++) {
 	    var e = this.dijits[i];
 	    var checked = e.get("checked");
-	    e.set("disabled", this.readonly || this.disabled);
+	    e.set("disabled", this.readonly || this._disabled);
 	    if (!checked) {
 		e.domNode.parentNode.style.display = this.readonly ? "none" : "";
 	    }
 	}
     },
     setDisabled: function(inDisabled) {
-	this.disabled = Boolean(inDisabled);
+	this.inherited(arguments);
+	var d = this._disabled;
 	if (!this.dijits) return;
 	for (var i = 0; i < this.dijits.length; i++) {
 	    var e = this.dijits[i];
-	    e.set("disabled", this.disabled || this.readonly);
+	    e.set("disabled", this._disabled || this.readonly);
 	}
     },
     deselectAll: function() {
@@ -644,9 +645,10 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 
     setDisabled: function(inDisabled) {
 	this.disabled = Boolean(inDisabled);
+	var disabled = this.disabled || this._parentDisabled;
 	if (this.grid) {
-	    dojo.toggleClass(this.domNode, "Disabled", this.disabled);
-	    this.grid.setSelectionMode(inDisabled ? "none" : "multiple");
+	    dojo.toggleClass(this.domNode, "Disabled", disabled);
+	    this.grid.setSelectionMode(disabled ? "none" : "multiple");
 	}
     }
 });

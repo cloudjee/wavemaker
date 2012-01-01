@@ -89,10 +89,11 @@ dojo.declare("wm.ToolButton", wm.Control, {
         onclick: function() {
 	},
 	setDisabled: function(inDisabled) {
-	    if (inDisabled != this.disabled || this._firstCall === undefined) {
-		this.inherited(arguments);
-		this.btnNode.disabled = inDisabled ? "disabled" : "";
-		dojo[inDisabled ? "addClass" : "removeClass"](this.domNode, "wmbutton-disabled");
+	    this.inherited(arguments);
+	    var disabled = this._disabled;
+	    if (Boolean(inDisabled) != disabled || this._cupdating) {
+		this.btnNode.disabled = disabled ? "disabled" : "";
+		dojo[disabled ? "addClass" : "removeClass"](this.domNode, "wmbutton-disabled");
 
 		/* Used to always call render, which destroys and recreates the button. Unfortunately,
 		 * it had an annoying tendency to do this while the user is trying to click on it, which often
@@ -101,7 +102,6 @@ dojo.declare("wm.ToolButton", wm.Control, {
 		if (this._imageList && parseInt(this.imageIndex) != NaN && this.imageIndex != -1 && this.declaredClass == "wm.ToolButton") 
 		    this.updateImageListButtonHtml();
 	    }
-	    this._firstCall = false; // either false or undefined; if undefined, then this is our first call to setDisabled, which means inDisabled is always == this.disabled because its initial properties... but dom state hasn't been set to disabled yet
 	},
 	setSelected: function(inSelected) {
 	    this.selected = inSelected;
