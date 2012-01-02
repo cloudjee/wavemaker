@@ -83,7 +83,7 @@ dojo.declare("wm.Variable", wm.Component, {
 		if (this.json)
 			this.setJson(this.json);
 		else
-			this._clearData(false);
+			this._clearData();
 
 	    this._inPostInit = false;
 
@@ -232,27 +232,25 @@ dojo.declare("wm.Variable", wm.Component, {
 		Clear all data values.
 	*/
 	clearData: function() {
-		this._clearData(false);
+		this._clearData();
 	        this.setType(this.type, true);
 	        if (this.type && this.type != this.declaredClass)
 		    this.notify();
 	},
-	_clearData: function(forceEmpty) {
+	_clearData: function() {
 		this._isNull = false;
 		this._nostub = false;
 		if (!this.data)
 			this.data = {};
 		if (this.isList)
 			this.data = {list: []};
-	    else if (forceEmpty) 
-		this.data = {};
 	    else {
 			// maintain any subNards (to one depth anyways), but otherwise clear data
 			var d;
 			for (var i in this.data) {
 				d = this.data[i];
 				if (d instanceof wm.Variable)
-					d._clearData(true);
+					d._clearData();
 				else
 					delete this.data[i];
 			}
@@ -348,7 +346,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	},
 	_setObjectData: function(inObject) {
 		this.beginUpdate();
-		this._clearData(false);
+		this._clearData();
 		this.isList = false;
 		if (!("list" in this._dataSchema))
 			delete this.data.list;
@@ -417,6 +415,8 @@ dojo.declare("wm.Variable", wm.Component, {
 		    }
 		} else if (flattenPrimitives && this.isPrimitive && this.data["dataValue"] !== undefined) {
 		    return this.data.dataValue;
+		} else if (this.isEmpty()) {
+		    return null;
 		} else {
 			var data = {};
 			var props = this.listDataProperties();
@@ -508,11 +508,20 @@ dojo.declare("wm.Variable", wm.Component, {
     isEmpty: function() {
 	if (!this.data)
 	    return true;
-	else if (this.data.list)
+
+	if (this.data.list)
 	    return !Boolean(this.data.list.length);
-	else
-	    return wm.isEmpty(this.data);
+
+	for (var propName in this.data) {
+	    if (this.data[propName] instanceof wm.Variable) {
+		if (!this.data[propName].isEmpty()) return false;
+	    } else if (this.data[propName] != null) { // covers undefined as well
+		return false;
+	    }
+	}
+	return true;
     },
+
 	_isEmpty: function(obj) {
 		for (var prop in obj) {
 			if(obj.hasOwnProperty(prop)) return false;
