@@ -108,7 +108,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		this.selectedItem.setLiveView((this.variable|| 0).liveView);
 		this.selectedItem.setType(this.variable && this.variable.type ? this.variable.type : "any");
 	},
-	setSelectedRow: function(rowIndex, isSelected) {
+        setSelectedRow: function(rowIndex, isSelected, onSuccess) {
 	    if (!this.dataSet) return;
 	    if (this._setRowTimeout) {
 		window.clearTimeout(this._setRowTimeout);
@@ -126,11 +126,13 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		  this.dojoObj.scrollToRow(rowIndex);
 		  wm.onidle(this, function() {
 		      this.setSelectedRow(rowIndex);
+		      if (onSuccess) onSuccess();
 		  });
 	      } else {
 		  this.dojoObj.selection.select(rowIndex);
 		  this.onSelectionChange();
 		  this.dojoObj.scrollToRow(rowIndex);
+		  if (onSuccess) onSuccess();
 	      }
 	  } else {
 	    this.dojoObj.selection.setSelected(rowIndex,isSelected);
@@ -204,8 +206,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    this.onSelectionChange();
 	},
 
-    select: function(rowIndex, isSelected) {
-        this.setSelectedRow(rowIndex, isSelected);
+    select: function(rowIndex, isSelected, onSuccess) {
+        this.setSelectedRow(rowIndex, isSelected, onSuccess);
     },
 /* Functionality moved to selectionChange
 	select: function() {
