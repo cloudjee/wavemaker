@@ -140,6 +140,7 @@
 						<include name="wm_charts.js" />
 						<include name="wm_menus.js" />
 						<include name="wm_dojo_grid.js" />
+						<include name="wm_data_grid.js" />
 						<include name="wm_list.js" />
 						<include name="wm_editors.js" />
 						<include name="wm_editors_old.js" />
@@ -158,6 +159,8 @@
 					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_menus.js.gz" />
 				<gzip src="${dojo.release.dir}/dojo/dojo/wm_dojo_grid.js"
 					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_dojo_grid.js.gz" />
+				<gzip src="${dojo.release.dir}/dojo/dojo/wm_data_grid.js"
+					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_data_grid.js.gz" />
 				<gzip src="${dojo.release.dir}/dojo/dojo/wm_list.js"
 					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_list.js.gz" />
 				<gzip src="${dojo.release.dir}/dojo/dojo/wm_editors.js"
@@ -315,6 +318,7 @@
                 <include name="wm_charts.js" />
                 <include name="wm_menus.js" />
                 <include name="wm_dojo_grid.js" />
+                <include name="wm_data_grid.js" />
                 <include name="wm_list.js" />
                 <include name="wm_editors.js" />
                 <include name="wm_editors_old.js" />
@@ -329,6 +333,7 @@
         <gzip src="${dojo.release.dir}/dojo/dojo/wm_charts.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_charts.js.gz"/>    	
         <gzip src="${dojo.release.dir}/dojo/dojo/wm_menus.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_menus.js.gz"/>    	
         <gzip src="${dojo.release.dir}/dojo/dojo/wm_dojo_grid.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_dojo_grid.js.gz"/>    	
+        <gzip src="${dojo.release.dir}/dojo/dojo/wm_data_grid.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_data_grid.js.gz"/>    	
         <gzip src="${dojo.release.dir}/dojo/dojo/wm_list.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_list.js.gz"/>    	
         <gzip src="${dojo.release.dir}/dojo/dojo/wm_editors.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_editors.js.gz"/>    	
         <gzip src="${dojo.release.dir}/dojo/dojo/wm_editors_old.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_editors_old.js.gz"/>    	
