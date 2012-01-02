@@ -33,9 +33,9 @@ wm.Object.extendSchema(wm.gadget.GoogleMap, {
     selectedItem: { ignore: 1, bindSource: 1, isObject: true, simpleBindProp: true },
 
     /* Display group; visual subgroup */
-    latitude: {group: "display", subgroup: "visual", order: 1, bindTarget: 1},
+    latitude:  {group: "display", subgroup: "visual", order: 1, bindTarget: 1},
     longitude: {group: "display", subgroup: "visual", order: 2, bindTarget: 1},
-    zoom: {group: "display", subgroup: "visual", order: 3, options: ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21"]},
+    zoom:      {group: "display", subgroup: "visual", order: 3, bindTarget: 1, options: ["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21"]},
     mapType: {group: "display", subgroup: "visual", order: 4, options:["ROADMAP", "SATELLITE", "HYBRID", "TERRAIN"]},
 
     /* Method group */
