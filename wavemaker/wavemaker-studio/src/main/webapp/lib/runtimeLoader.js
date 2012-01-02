@@ -47,12 +47,6 @@ try
 	    ["language", window.location.pathname.replace(/[^\/]*$/,"language")]
 	);	
 
-	    wm.locale = {};
-	    dojo.requireLocalization("wm.language", "components");
-	    wm.locale.phrases = dojo.i18n.getLocalization("wm.language", "components");
-	    
-	    dojo.requireLocalization("wm.language", "properties");
-	    wm.locale.props = dojo.i18n.getLocalization("wm.language", "properties");
 
 
 	// Load minified built version of libraries when not booting in debug mode

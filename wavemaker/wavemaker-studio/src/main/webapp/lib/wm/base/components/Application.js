@@ -35,6 +35,8 @@ dojo.declare("wm.Application", wm.Component, {
         _lastTheme: "",
     //IERoundedCorners: false,
 	init: function() {
+	    this.requireLocalization();// load system dictionaries
+
 	    if (wm.isMobile) {
 		dojo.addClass(document.body, "wmmobile")
 	    }
@@ -42,6 +44,8 @@ dojo.declare("wm.Application", wm.Component, {
 		app = wm.application = wm.application || this;
 		this.connectList = [];
 		this.app = this;
+
+	    /* Load application dictionaries */
 	        if (this.i18n) {
 		    try {
 			dojo["requireLocalization"]("language", "app");
@@ -201,6 +205,15 @@ dojo.declare("wm.Application", wm.Component, {
 		221:']',
 		222:'"'};
 	},
+
+    requireLocalization: function() {
+	    wm.locale = {};
+	    dojo.requireLocalization("wm.language", "components");
+	    wm.locale.phrases = dojo.i18n.getLocalization("wm.language", "components");
+	    
+	    dojo.requireLocalization("wm.language", "properties");
+	    wm.locale.props = dojo.i18n.getLocalization("wm.language", "properties");
+    },
     createDebugDialog: function() {
 		dojo["require"]("wm.base.debug.Dialog");
 		dojo["require"]("wm.base.components.JsonRpcService");
