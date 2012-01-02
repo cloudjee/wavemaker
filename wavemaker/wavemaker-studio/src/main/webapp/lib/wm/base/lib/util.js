@@ -310,7 +310,9 @@ wm.onidle = function(/*hitch args*/) {
 	    app.debugDialog.restoreEventChain(eventChain);
 	}
 	dojo.hitch.apply(null, args)();
-	app.debugDialog.clearEventChain();
+	if (eventChain) {
+	    app.debugDialog.clearEventChain();
+	}
     },1);
 }
 wm.onidleChain = function(functionList, stateObj) {
@@ -338,7 +340,9 @@ wm.job = function(inName, inDelay, inJob) {
 	    app.debugDialog.restoreEventChain(eventChain);
 	}
 	inJob();
-	app.debugDialog.clearEventChain();
+	if (eventChain) {
+	    app.debugDialog.clearEventChain();
+	}
     }
     wm._jobs[inName] = setTimeout(job, inDelay);
 }

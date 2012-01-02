@@ -202,8 +202,8 @@ dojo.declare("wm.Application", wm.Component, {
 		222:'"'};
 	},
     createDebugDialog: function() {
-		dojo.require("wm.base.debug.Dialog");
-		dojo.require("wm.base.components.JsonRpcService");
+		dojo["require"]("wm.base.debug.Dialog");
+		dojo["require"]("wm.base.components.JsonRpcService");
 	if (!this.debugDialog) {
 	    this.debugDialog = new wm.debug.Dialog({owner: this, 
 						       name: "debugDialog",
