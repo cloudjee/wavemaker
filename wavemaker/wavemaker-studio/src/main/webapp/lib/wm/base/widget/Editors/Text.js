@@ -412,6 +412,9 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 	if (!this._cupdating)
 	    this.createEditor();
     },
+    selectText: function() {
+	dijit.selectInputText(this.editor.focusNode);
+    },
 
 /* a way to create an html editor and transform it to a dijit onclick; this approach may still be desired at some point... for both performance and usability reasons.  Usability reasons though could be handled with a click to exit readonly mode
     __createEditor: function(node,inProps) {

@@ -57,7 +57,8 @@ wm.Object.extendSchema(wm.Text, {
     /* METHODS */
     setPlaceHolder: {method:1},
     setPassword: {method:1},
-    setRegExp: {method:1}
+    setRegExp: {method:1},
+    selectText: {method:1}
 
     
 });
