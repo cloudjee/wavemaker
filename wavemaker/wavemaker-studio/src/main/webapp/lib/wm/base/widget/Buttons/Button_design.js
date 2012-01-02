@@ -97,6 +97,13 @@ wm.Object.extendSchema(wm.RoundedButton, {
 });
 
 
+wm.Object.extendSchema(wm.IconButton, {
+    iconUrl: {ignore: true},
+    imageList:  {ignore: true},
+    imageIndex: {ignore: true},
+    iconMargin: {ignore: true},
+    editImageIndex: {ignore: 1}
+});
 
 wm.PopupMenuButton.extend({
     themeableStyles: [{name: "wm.PopupMenuButton_Image", displayName: "Icon"}]
@@ -117,12 +124,7 @@ wm.Object.extendSchema(wm.PopupMenuButton, {
     fullStructure: {hidden: true},
     fullStructure: {hidden: true},
     hint: {ignore: true},
-    iconUrl: {ignore: true},
-    imageList:  {ignore: true},
-    imageIndex: {ignore: true},
-    iconMargin: {ignore: true},
     dojoMenu: {ignore: true, doc: 1},
-    editImageIndex: {ignore: 1},
 
     /* Method group */
     setIconClass: {method:1}

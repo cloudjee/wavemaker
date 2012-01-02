@@ -17,7 +17,7 @@ dojo.provide("wm.base.widget.Buttons.PopupMenuButton");
 dojo.require("wm.base.widget.Buttons.Button");
 
 
-dojo.declare("wm.PopupMenuButton", wm.Button, {
+dojo.declare("wm.PopupMenuButton", wm.IconButton, {
     width: "120px",
     rememberWithCookie: true,
     classNames: "wmbutton wmPopupButton",
@@ -127,19 +127,6 @@ dojo.declare("wm.PopupMenuButton", wm.Button, {
 	this.render(true);
     },
     */
-    build: function() {
-	this.inherited(arguments);
-	var html = "<table class='dijitMenuTable' style='width:100%'><tbody class='dijitReset'><tr class='dijitMenuItem dijitReset'><td class='dijitReset dijitMenuItemIconCell' style='width:"+(parseInt(this.iconWidth)+4) + "px;'><div style='width:"+this.iconWidth + ";height:"+this.iconHeight+";'/></td><td class='dijitReset dijitMenuItemLabel'>"+this.caption + "</td><td class='dijitReset dijitMenuArrow'><div class='popupIcon'/></td></tr></tbody></table>";
-	this.domNode.innerHTML = html;
-/*
-	var div = dojo.query(".popupIcon", this.domNode)[0];
-	    this.connect(div, "onclick", this, function(e) {
-		if (this.disabled) return;
-		dojo.stopEvent(e);
-		this.dojoMenu.update(e, this, true);
-	    });
-	    */
-    },
     click: function(inEvent) {
 	if (this.disabled) return;
 	var coords = dojo.coords(dojo.query(".popupIcon", this.domNode)[0]);
@@ -157,20 +144,9 @@ dojo.declare("wm.PopupMenuButton", wm.Button, {
 
     // TODO: I want code that will change how we render a button and its icon if there is an icon... 
     render: function(forceRender) {
-	if (!forceRender && (!this.invalidCss || !this.isReflowEnabled())) return;
-	wm.Control.prototype.render.call(this, forceRender);
-	dojo.query(".dijitMenuItemLabel",this.domNode)[0].innerHTML = this.caption;
-	var img = dojo.query(".dijitMenuItemIconCell div",this.domNode)[0];
-	img.className = this.iconClass;
-	img.style.width = this.iconWidth;
-	img.style.height = this.iconHeight;
-
-	var width = parseInt(this.iconWidth) || 0;
-	img.parentNode.style.width = (width+4) + "px";
-/*
-	var height = parseInt(this.iconHeight) || 0;
-	img.parentNode.style.height = (height+4) + "px";
-	*/
+	this.inherited(arguments);
+	if (this._iconImage)
+	    this._iconImage.className = this.iconClass;
     },
     setIconClass: function(inClass) {
 	this.iconClass = inClass;

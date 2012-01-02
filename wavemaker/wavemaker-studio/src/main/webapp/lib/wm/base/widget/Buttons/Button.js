@@ -31,3 +31,31 @@ dojo.declare("wm.Button", wm.ToolButton, {
 	this.inherited(arguments);
     }
 });
+
+dojo.declare("wm.IconButton", wm.Button, {
+    build: function() {
+	this.inherited(arguments);
+	var html = "<table class='dijitMenuTable' style='width:100%'><tbody class='dijitReset'><tr class='dijitMenuItem dijitReset'><td class='dijitReset dijitMenuItemIconCell' style='width:"+(parseInt(this.iconWidth)+4) + "px;'><" + (this._useIconUrl ? "img":"div") + " style='display:none;width:"+this.iconWidth + ";height:"+this.iconHeight+";'/></td><td class='dijitReset dijitMenuItemLabel'>"+this.caption + "</td><td class='dijitReset dijitMenuArrow'><div class='popupIcon'/></td></tr></tbody></table>";
+	this.domNode.innerHTML = html;
+    },
+    // TODO: I want code that will change how we render a button and its icon if there is an icon... 
+    render: function(forceRender) {
+	if (!forceRender && (!this.invalidCss || !this.isReflowEnabled())) return;
+	wm.Control.prototype.render.call(this, forceRender);
+	dojo.query(".dijitMenuItemLabel",this.domNode)[0].innerHTML = this.caption;
+	var img = this._iconImage = dojo.query(".dijitMenuItemIconCell " + (this._useIconUrl ? "img":"div"),this.domNode)[0];
+	img.style.width = this.iconWidth;
+	img.style.height = this.iconHeight;
+	if (this.iconUrl) {
+	    img.src = this.iconUrl;
+	}
+	img.style.display = this.iconUrl || this.iconClass ? "block" : "none";
+	var width = parseInt(this.iconWidth) || 0;
+	img.parentNode.style.width = (width+4) + "px";
+/*
+	var height = parseInt(this.iconHeight) || 0;
+	img.parentNode.style.height = (height+4) + "px";
+	*/
+    }
+
+});
