@@ -76,6 +76,10 @@ dojo.declare(
 	_handleOffsetCoord: "left",
 	_progressPixelSize: "width",
 
+    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+     * WaveMaker: dynamicSlider property added by VMware */
+    dynamicSlider: false,
+
 	_onKeyUp: function(/*Event*/ e){
 		if(this.disabled || this.readOnly || e.altKey || e.ctrlKey || e.metaKey){ return; }
 		this._setValueAttr(this.value, true);
@@ -137,6 +141,10 @@ dojo.declare(
 	},
 
 	_setPixelValue: function(/*Number*/ pixelValue, /*Number*/ maxPixels, /*Boolean?*/ priorityChange){
+	    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+	     * WaveMaker: dynamicSlider property added by VMware */
+	    if (this.dynamicSlider) priorityChange = true;
+
 		if(this.disabled || this.readOnly){ return; }
 		pixelValue = pixelValue < 0 ? 0 : maxPixels < pixelValue ? maxPixels : pixelValue;
 		var count = this.discreteValues;

@@ -67,6 +67,9 @@ wm.Object.extendSchema(wm.Slider, {
     discreteValues: {group: "editor", subgroup: "value", order: 2},
     minimum:  { group: "editor", subgroup: "value", order: 3, bindTarget: true},
     maximum: { group: "editor", subgroup: "value", order: 4, bindTarget: true},
+    integerValues: {group: "editor", subgroup:"value", order: 10},
+
+    dynamicSlider: {group: "editor", subgroup: "behavior"},
 
     /* Display group; visual subgroup */
     showButtons: {  group: "display", subgroup: "visual", order: 5},

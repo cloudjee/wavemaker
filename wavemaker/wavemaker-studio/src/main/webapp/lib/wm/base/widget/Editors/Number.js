@@ -337,6 +337,8 @@ dojo.declare("wm.Slider", wm.AbstractEditor, {
 	discreteValues: "",
 	verticalSlider: false,
         editorBorder: false,
+        integerValues: true,
+        dynamicSlider: false,
 	reflow: function() {},
 	setVerticalSlider: function(inVerticalSlider) {
 		this.verticalSlider = inVerticalSlider;
@@ -356,6 +358,7 @@ dojo.declare("wm.Slider", wm.AbstractEditor, {
 			v = this.displayValue = minV;
 
 		return dojo.mixin(this.inherited(arguments), {
+		    dynamicSlider: this.dynamicSlider,
 			minimum: Number(this.minimum),
 			maximum: Number(this.maximum),
 			showButtons: Boolean(this.showButtons),
@@ -403,7 +406,14 @@ dojo.declare("wm.Slider", wm.AbstractEditor, {
 			return;
 	        this.inherited(arguments);
 	    this.editor._setStyleAttr("height: " + this.editor.domNode.style.height + ";width:" +  this.editor.domNode.style.width);
-	}
+	},
+    getEditorValue: function() {
+	var value = this.inherited(arguments);
+	if (this.integerValues)
+	    return Math.round(value);
+	else
+	    return value;
+    }
 				       
 /*
 	sizeEditor: function() {
