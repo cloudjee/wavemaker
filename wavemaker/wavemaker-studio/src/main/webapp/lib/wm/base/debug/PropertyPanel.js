@@ -87,5 +87,5 @@ dojo.declare("wm.debug.PropertyPanel", wm.Layer, {
 		this.selectedItem[inName] = inDataValue;
 	    }
 	});
-    },
+    }
 });
