@@ -56,6 +56,10 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
 	this._markers = [];
 	this.inherited(arguments);
 	this.selectedItem = new wm.Variable({name: "selectedItem", owner: this});
+	if (!this._isDesignLoaded) {
+	    if (!this.latitudeField) this.latitudeField = "_latitude";
+	    if (!this.longitudeField) this.longitudeField = "_longitude";
+	}
     },
     postInit: function() {
 	this.inherited(arguments);
@@ -150,6 +154,10 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
 		this.generateMarkers();
 	    }
 	},
+
+    /* If errors occur (other than QUOTA_LIMIT errors which cause us to retry the address) calls this */
+    onGeocodeError: function(inResponse, inData) {},
+
     geocode: function(inData) {
 	this._dataToGeocode.push(inData);
 	this.geocodeNext();
@@ -174,114 +182,7 @@ dojo.declare("wm.gadget.GoogleMap", wm.Control, {
 
     /* If errors occur (other than QUOTA_LIMIT errors which cause us to retry the address) calls this */
     onGeocodeError: function(inResponse, inData) {},
-    _geocode: function(inData, onCompleteFunc) {
-        var self = this;
-        var icon;
-	if (!this.geocoder) {
-	    this.geocoder = new google.maps.Geocoder();
-	}
-        this.geocoder.geocode({
-            'address': inData[this.addressField]
-        }, function(results, status) {
-	    self._geocoding = false;
-            if (status == google.maps.GeocoderStatus.OK) {
-                var location = results[0].geometry.location;
-		inData[self.latitudeField] = location.lat();
-		inData[self.longitudeField] = location.lng();
-		self.generateMarker(inData);
-		self.onGeocodeSuccess(inData);
-            } else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
-                console.log("GEOCODING: " + status + ". DELAY and then redo " + inData[self.addressField]);
-                self._dataToGeocode.push(inData);
-                wm.job("geocodeNext", 500, dojo.hitch(self, "geocodeNext"));
-                return;
-            } else {
-                console.error("Failed to geocode " + inData[self.addressField] + "; " + status);
-		self.onGeocodeError(status, inData);
-            }
-            if (onCompleteFunc) {
-                onCompleteFunc();
-            }
-        });
-    },
-    geocode: function(inData) {
-	this._dataToGeocode.push(inData);
-	this.geocodeNext();
-    },
-    geocodeNext: function() {
-	if (this._geocoding) return;
-	this._geocoding = true;
-	this.onIncrementGeocodeCount(this._dataToGeocode.length, this.dataSet.getCount());
-        this._geocode(this._dataToGeocode.shift(), this._dataToGeocode.length ? dojo.hitch(this, "geocodeNext") : dojo.hitch(this, "onGeocodeComplete"));    
-    },
 
-    /* This is called before each geocode attempt; lets you update a progress bar; TODO: Make this bindable to a progressbar */
-    onIncrementGeocodeCount: function(remainingItems, totalItems) {},
-
-    /* Called after ALL addresses in the dataSet that needed to be geocoded have been geocoded */
-    onGeocodeComplete: function() {},
-    
-    /* Called for each successful geocode of each individual address in the dataset; will be called many times; if updating a wm.Variable with the results,
-     * you should precede your updates with this.variable.beginUpdate/endUpdate so that the map isn't repeatedly regenerated/regeocoded
-     */
-    onGeocodeSuccess: function(inItem) {},
-
-    /* If errors occur (other than QUOTA_LIMIT errors which cause us to retry the address) calls this */
-    onGeocodeError: function(inResponse, inData) {},
-    _geocode: function(inData, onCompleteFunc) {
-        var self = this;
-        var icon;
-	if (!this.geocoder) {
-	    this.geocoder = new google.maps.Geocoder();
-	}
-        this.geocoder.geocode({
-            'address': inData[this.addressField]
-        }, function(results, status) {
-	    self._geocoding = false;
-            if (status == google.maps.GeocoderStatus.OK) {
-                var location = results[0].geometry.location;
-		inData[self.latitudeField] = location.lat();
-		inData[self.longitudeField] = location.lng();
-		self.generateMarker(inData);
-		self.onGeocodeSuccess(inData);
-            } else if (status == google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
-                console.log("GEOCODING: " + status + ". DELAY and then redo " + inData[self.addressField]);
-                self._dataToGeocode.push(inData);
-                wm.job("geocodeNext", 500, dojo.hitch(self, "geocodeNext"));
-                return;
-            } else {
-                console.error("Failed to geocode " + inData[self.addressField] + "; " + status);
-		self.onGeocodeError(status, inData);
-            }
-            if (onCompleteFunc) {
-                onCompleteFunc();
-            }
-        });
-    },
-    geocode: function(inData) {
-	this._dataToGeocode.push(inData);
-	this.geocodeNext();
-    },
-    geocodeNext: function() {
-	if (this._geocoding) return;
-	this._geocoding = true;
-	this.onIncrementGeocodeCount(this._dataToGeocode.length, this.dataSet.getCount());
-        this._geocode(this._dataToGeocode.shift(), this._dataToGeocode.length ? dojo.hitch(this, "geocodeNext") : dojo.hitch(this, "onGeocodeComplete"));    
-    },
-
-    /* This is called before each geocode attempt; lets you update a progress bar; TODO: Make this bindable to a progressbar */
-    onIncrementGeocodeCount: function(remainingItems, totalItems) {},
-
-    /* Called after ALL addresses in the dataSet that needed to be geocoded have been geocoded */
-    onGeocodeComplete: function() {},
-    
-    /* Called for each successful geocode of each individual address in the dataset; will be called many times; if updating a wm.Variable with the results,
-     * you should precede your updates with this.variable.beginUpdate/endUpdate so that the map isn't repeatedly regenerated/regeocoded
-     */
-    onGeocodeSuccess: function(inItem) {},
-
-    /* If errors occur (other than QUOTA_LIMIT errors which cause us to retry the address) calls this */
-    onGeocodeError: function(inResponse, inData) {},
     _geocode: function(inData, onCompleteFunc) {
         var self = this;
         var icon;
