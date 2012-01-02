@@ -280,18 +280,29 @@ dependencies = {
 			layerDependencies: ["lib_build.js"],
 			dependencies: [
 	   		"dojox.grid.DataGrid",
-			    "dijit.tree.ForestStoreModel",
-			    "dojox.grid.TreeGrid",
-				"dojox.grid.cells.dijit",
-				"dojo.data.ItemFileWriteStore",
-				"dojo.string",
-			        "dojox.grid._CheckBoxSelector",
-			        "dojox.grid._RadioSelector",
-				"wm.base.lib.currencyMappings",
-				"wm.base.widget.DataGrid",
-				"wm.base.widget.DojoGrid"
+			    "dojox.grid.cells.dijit",
+			    "dojo.data.ItemFileWriteStore",
+			    "dojo.string",
+			    "dojox.grid._CheckBoxSelector",
+			    "dojox.grid._RadioSelector",
+			    "wm.base.lib.currencyMappings",
+			    "wm.base.widget.DojoGrid"
 			]
 		},
+		{
+			name: "wm_data_grid.js",
+			resourceName: "wm.compressed.wm_data_grid",
+			layerDependencies: ["lib_build.js"],
+			dependencies: [
+	   		    "dojox.grid.compat.Grid",
+			    "dojo.data.ItemFileWriteStore",
+			    "dojo.string",
+			    "wm.base.lib.currencyMappings",
+			    "wm.base.widget.DataGrid",
+			    "wm.base.widget.dijit.Grid"
+			]
+		},
+
                 {
 			name: "wm_list.js",
 			resourceName: "wm.compressed.wm_list",

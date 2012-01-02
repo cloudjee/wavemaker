@@ -26,7 +26,7 @@ dojo.provide('wm.base.components.componentList');
  ************************************************************************************/
 wm.componentFixList = {};
 wm.componentList = {
-	'wm.DataGrid': ['build.Gzipped.wm_dojo_grid'],
+	'wm.DataGrid': ['build.Gzipped.wm_data_grid'],
 	'wm.DojoGrid': ['build.Gzipped.wm_dojo_grid'],
 	'wm.DojoMenu': ['build.Gzipped.wm_menus'],
         'wm.PopupMenu': ['build.Gzipped.wm_menus'],
