@@ -36,5 +36,9 @@ wm.Object.extendSchema(wm.Bevel, {
 wm.Bevel.extend({
     themeableProps: ["bevelSize", "border", "borderColor"],
 	scrim: true,
-	sizeable: false
+    sizeable: false,
+    set_bevelSize: function(inValue) {
+	this.bevelSize = inValue;
+	this.updateSize();
+    }
 });
