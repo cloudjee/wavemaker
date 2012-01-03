@@ -501,6 +501,7 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
+	try {
         List<Resource> files = this.fileSystem.listChildren(folder, new ResourceFilter() {
 
             @Override
@@ -509,7 +510,6 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
                 return name.endsWith(".gif") || name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".jpeg");
             }
         });
-
         if (files.size() > 0) {
             String[] imageFiles = new String[files.size()];
             for (int i = 0; i < files.size(); i++) {
@@ -519,6 +519,7 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
         } else {
             return new String[0];
         }
+	} catch(Exception e) {return new String[0];}
     }
 
     private boolean validJavaVarPart(String val) {
