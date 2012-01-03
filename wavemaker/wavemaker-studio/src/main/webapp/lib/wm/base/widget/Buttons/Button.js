@@ -18,18 +18,14 @@ dojo.require("wm.base.widget.Buttons.ToolButton");
 
 
 dojo.declare("wm.Button", wm.ToolButton, {
-        mobileHeight: "40px",
+        mobileHeight: "40px", 
 	height: "32px",
 	border: 1,
 	borderColor: "#ABB8CF",
 	margin: 4,
     /* TODO: Localize This */
 	caption: "Button",
-    classNames: "wmbutton",
-    init: function() {
-	if (wm.isMobile && this.height.match(/px/)) this.height = this.mobileHeight;
-	this.inherited(arguments);
-    }
+    classNames: "wmbutton"
 });
 
 dojo.declare("wm.IconButton", wm.Button, {
@@ -57,5 +53,19 @@ dojo.declare("wm.IconButton", wm.Button, {
 	img.parentNode.style.height = (height+4) + "px";
 	*/
     }
+
+});
+
+dojo.declare("wm.MobileIconButton", wm.ToolButton, {
+    direction: "down",
+    build: function() {
+	this.inherited(arguments);
+	var icon = this.iconNode = document.createElement("div");
+	dojo.addClass(icon, "mblArrow " + "mbl" + wm.capitalize(this.direction) + "Arrow");
+	this.domNode.appendChild(icon);
+    },
+    render: function(forceRender, noInherited) {
+	wm.Control.prototype.render.call(this, forceRender);
+    },
 
 });
