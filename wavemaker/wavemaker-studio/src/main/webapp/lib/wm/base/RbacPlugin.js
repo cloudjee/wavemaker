@@ -14,6 +14,7 @@
  
 dojo.provide("wm.base.RbacPlugin");
 dojo.require("wm.base.Control");
+dojo.require("wm.base.components.ServiceVariable");
 dojo.require("wm.base.widget.Layers");
 dojo.require("wm.base.Plugin");
 
