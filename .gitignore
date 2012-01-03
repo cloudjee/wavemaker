@@ -17,3 +17,6 @@ wavemaker/wavemaker-studio/src/main/webapp/types.js
 wavemaker/wavemaker-studio/src/main/webapp/lib/dojo/dojo/dojo_build.js
 wavemaker/wavemaker-studio/src/main/webapp/lib/dojo/release-temp/
 wavemaker/wavemaker-studio/src/main/webapp/lib/dojo/release/
+wavemaker/wavemaker-studio/src/main/webapp/build
+wavemaker/wavemaker-studio/src/main/webapp/lib/build
+wavemaker/wavemaker-studio/src/main/webapp/lib/compressed
