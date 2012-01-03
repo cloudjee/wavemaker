@@ -86,6 +86,9 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    if (this.columns) {
 		this.setColumns(this.columns);
 	    }
+	    if (this.noHeader) { // another grid property
+		this.headerVisible = false;
+	    }
 		this.inherited(arguments);
 		this.createSelectedItem();
 		this.createBuilder();
@@ -452,6 +455,9 @@ dojo.declare("wm.List", wm.VirtualList, {
 
 /* This block contains methods created solely to work with this.columns; or added for DojoGrid compatability */
 wm.List.extend({
+    renderDojoObj: function() {
+	this._render();
+    },
     formatCell: function(inField, inValue, inItem, inRowId,inColumnIndex) {
 	if (!this._columnsHash) {
 	    return inValue;
@@ -584,7 +590,10 @@ wm.List.extend({
 	this.onGridButtonClick(fieldName, rowData, rowIndex);
     },
     onGridButtonClick: function(fieldName, rowData, rowIndex) {},
-    select: function(inItemOrIndex) {
+    setSelectedRow: function(inIndex) {
+	this.eventSelect(this.items[inIndex]);
+    },
+    select: function(inItemOrIndex) { 
 	if (typeof inItemOrIndex != "object") {
 	    this.eventSelect(this.items[inItemOrIndex]);
 	} else {
