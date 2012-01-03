@@ -59,7 +59,7 @@
 .wmPopupButton {
     padding-right: 0px;
 }
-.wmPopupButton table {
+.wmPopupButton table, .wmBusyButton table {
     background-color: transparent;
 }
 .wmPopupButton .dijitMenuArrow {
@@ -1984,4 +1984,49 @@ li {
 
 body.wmmobile button.wmtablayers-tab {
     height: 32px;
+}
+
+
+
+.mblArrow {
+	position: absolute;
+
+	width: 15px;
+	height: 16px;
+	font-size: 1px;
+	border-width: 5px 5px 0px 0px;
+	border-style: solid;
+	border-color: #808080;
+}
+.mblRightArrow {
+	top: 8px;
+	right: 8px;
+    -webkit-transform: rotate(45deg);
+}
+.mblLeftArrow {
+	top: 8px;
+	right: 2px;
+    -webkit-transform: rotate(225deg);
+}
+.mblDownArrow {
+	top: 2px;
+	right: 8px;
+    -webkit-transform: rotate(135deg);
+}
+.mblUpArrow {
+	top: 12px;
+	right: 8px;
+    -webkit-transform: rotate(315deg);
+}
+
+.wmmobile .dijitCalendarMonthContainer .dijitCalendarMonthLabel,
+.wmmobile .dijitCalendarYearContainer td,
+.wmmobile .dijitCalendarYearContainer td h3,
+.wmmobile .dijitCalendarYearContainer td h3 span {
+    height: 30px;
+    line-height:30px;
+    font-size: 14px;
+} 
+.wmmobile .dijitCalendarDateLabel {
+    font-size: 12px;
 }
