@@ -718,7 +718,6 @@ public class DesignServiceManager {
 
         try {
             ConfigurationCompiler.generateServices(project, ConfigurationCompiler.getRuntimeServicesXml(project), allServices);
-
             ConfigurationCompiler.generateManagers(project, ConfigurationCompiler.getRuntimeManagersXml(project), allServices);
         } catch (JAXBException ex) {
             throw new WMRuntimeException(ex);
@@ -727,11 +726,13 @@ public class DesignServiceManager {
         ConfigurationCompiler.generateSMDs(project, services);
 
         // For dsalesforce, add an additional smd for loginService
-        Service svc = services.first();
-        if (svc.getId().equals(CommonConstants.SALESFORCE_SERVICE)) {
-            SortedSet<Service> svcs = new TreeSet<Service>();
-            svcs.add(getCurrentServiceDefinition(CommonConstants.SFLOGIN_SERVICE));
-            ConfigurationCompiler.generateSMDs(project, svcs);
+        if (!services.isEmpty()) {
+            Service svc = services.first();
+            if (svc.getId().equals(CommonConstants.SALESFORCE_SERVICE)) {
+                SortedSet<Service> svcs = new TreeSet<Service>();
+                svcs.add(getCurrentServiceDefinition(CommonConstants.SFLOGIN_SERVICE));
+                ConfigurationCompiler.generateSMDs(project, svcs);
+            }
         }
 
         ConfigurationCompiler.generateTypes(project, ConfigurationCompiler.getTypesFile(project), allServices, getPrimitiveDataObjects());

@@ -14,6 +14,7 @@
 
 package com.wavemaker.studio.data;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -145,25 +146,17 @@ public class DataService {
 
     public void writeConnectionProperties(String dataModelName, Properties connectionProperties) {
 
-        String cxnUrl = connectionProperties.getProperty(DataServiceConstants.DB_URL_KEY);
-        if (cxnUrl.contains(DataModelManager.HSQLDB)) {
-            // cxnUrl = JDBCUtils.reWriteConnectionUrl(
-            // dataModelMgr.getWebAppRoot() + "/" +
-            // DataModelManager.HSQL_SAMPLE_DB_SUB_DIR, cxnUrl);
-            ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().getAttribute(
-                DataServiceConstants.CURRENT_PROJECT_MANAGER);
-            String projRoot = projMgr.getCurrentProject().getWebAppRoot().getFilename();
-            cxnUrl = JDBCUtils.reWriteConnectionUrl(cxnUrl, projRoot);
+        String connectionUrl = connectionProperties.getProperty(DataServiceConstants.DB_URL_KEY);
 
-            // String projName = RuntimeAccess.getProjectName();
-            // cxnUrl = StringUtils.replacePlainStr(cxnUrl, projName, DataServiceConstants.PROJ_TOKEN);
+        connectionUrl = rewriteConnectionUrlIfNecessary(connectionUrl);
 
+        if (connectionUrl.contains(DataModelManager.HSQLDB)) {
             // Now update the property to the rewitten value
-            connectionProperties.setProperty(DataServiceConstants.DB_URL_KEY, cxnUrl);
+            connectionProperties.setProperty(DataServiceConstants.DB_URL_KEY, connectionUrl);
 
             // Also set the hsqldbFile name
-            int n = cxnUrl.indexOf("/data") + 6;
-            String partialCxn = cxnUrl.substring(n);
+            int n = connectionUrl.indexOf("/data") + 6;
+            String partialCxn = connectionUrl.substring(n);
             int k = partialCxn.indexOf(';');
             String hsqldbFileName = partialCxn.substring(0, k);
             connectionProperties.setProperty(DataModelManager.HSQLFILE_PROP, hsqldbFileName);
@@ -180,15 +173,7 @@ public class DataService {
         String schemaFilter, String driverClassName, String dialectClassName, String revengNamingStrategyClassName, boolean impersonateUser,
         String activeDirectoryDomain) {
 
-        if (connectionUrl.contains(DataModelManager.HSQLDB)) {
-            // connectionUrl = JDBCUtils.reWriteConnectionUrl(
-            // dataModelMgr.getWebAppRoot() + "/" +
-            // DataModelManager.HSQL_SAMPLE_DB_SUB_DIR, connectionUrl);
-            ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().getAttribute(
-                DataServiceConstants.CURRENT_PROJECT_MANAGER);
-            String projRoot = projMgr.getCurrentProject().getWebAppRoot().getFilename();
-            connectionUrl = JDBCUtils.reWriteConnectionUrl(connectionUrl, projRoot);
-        }
+        connectionUrl = rewriteConnectionUrlIfNecessary(connectionUrl);
 
         this.dataModelMgr.importDatabase(username, password, connectionUrl, serviceId, packageName, tableFilter, schemaFilter, null, driverClassName,
             dialectClassName, revengNamingStrategyClassName, impersonateUser, activeDirectoryDomain);
@@ -243,15 +228,7 @@ public class DataService {
         String schemaFilter, String driverClassName, String dialectClassName, String revengNamingStrategyClassName, boolean impersonateUser,
         String activeDirectoryDomain) {
 
-        if (connectionUrl.contains(DataModelManager.HSQLDB)) {
-            // connectionUrl = JDBCUtils.reWriteConnectionUrl(
-            // dataModelMgr.getWebAppRoot() + "/" +
-            // DataModelManager.HSQL_SAMPLE_DB_SUB_DIR, connectionUrl);
-            ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().getAttribute(
-                DataServiceConstants.CURRENT_PROJECT_MANAGER);
-            String projRoot = projMgr.getCurrentProject().getWebAppRoot().getFilename();
-            connectionUrl = JDBCUtils.reWriteConnectionUrl(connectionUrl, projRoot);
-        }
+        connectionUrl = rewriteConnectionUrlIfNecessary(connectionUrl);
 
         this.dataModelMgr.reImport(dataModelName, username, password, connectionUrl, tableFilter, schemaFilter, driverClassName, dialectClassName,
             revengNamingStrategyClassName, impersonateUser, activeDirectoryDomain);
@@ -267,15 +244,7 @@ public class DataService {
             password = SystemUtils.decrypt(password);
         }
 
-        if (connectionUrl.contains(DataModelManager.HSQLDB)) {
-            // connectionUrl = JDBCUtils.reWriteConnectionUrl(
-            // dataModelMgr.getWebAppRoot() + "/" +
-            // DataModelManager.HSQL_SAMPLE_DB_SUB_DIR, connectionUrl);
-            ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().getAttribute(
-                DataServiceConstants.CURRENT_PROJECT_MANAGER);
-            String projRoot = projMgr.getCurrentProject().getWebAppRoot().getFilename();
-            connectionUrl = JDBCUtils.reWriteConnectionUrl(connectionUrl, projRoot);
-        }
+        connectionUrl = rewriteConnectionUrlIfNecessary(connectionUrl);
 
         TestDBConnection t = new TestDBConnection();
         t.setUsername(username);
@@ -294,6 +263,20 @@ public class DataService {
             throw com.wavemaker.runtime.data.util.DataServiceUtils.unwrap(ex);
         } finally {
             t.dispose();
+        }
+    }
+
+    private String rewriteConnectionUrlIfNecessary(String connectionUrl) {
+        try {
+            if (connectionUrl.contains(DataModelManager.HSQLDB)) {
+                ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().getAttribute(
+                    DataServiceConstants.CURRENT_PROJECT_MANAGER);
+                String projRoot = projMgr.getCurrentProject().getWebAppRoot().getFile().getCanonicalPath();
+                return JDBCUtils.reWriteConnectionUrl(connectionUrl, projRoot);
+            }
+            return connectionUrl;
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
         }
     }
 

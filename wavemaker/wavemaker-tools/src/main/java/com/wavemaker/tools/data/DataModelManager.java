@@ -41,7 +41,6 @@ import com.wavemaker.runtime.data.DataServiceInternal;
 import com.wavemaker.runtime.data.DataServiceType;
 import com.wavemaker.runtime.data.ExternalDataModelConfig;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
-import com.wavemaker.runtime.data.util.JDBCUtils;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
 import com.wavemaker.runtime.ws.WebServiceType;
 import com.wavemaker.tools.common.ConfigurationException;
@@ -161,10 +160,6 @@ public class DataModelManager {
     public String getExportDDL(String username, String password, String connectionUrl, String serviceId, String schemaFilter, String driverClassName,
         String dialectClassName, boolean overrideTable) {
 
-        if (connectionUrl.contains(HSQLDB)) {
-            connectionUrl = reWriteCxnUrlForHsqlDB(connectionUrl);
-        }
-
         ExportDB exporter = getExporter(username, password, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName, overrideTable);
 
         exporter.setExportToDB(false);
@@ -184,10 +179,6 @@ public class DataModelManager {
 
     public String exportDatabase(String username, String password, String connectionUrl, String serviceId, String schemaFilter,
         String driverClassName, String dialectClassName, String revengNamingStrategyClassName, boolean overrideTable) {
-
-        if (connectionUrl.contains(HSQLDB)) {
-            connectionUrl = reWriteCxnUrlForHsqlDB(connectionUrl);
-        }
 
         ExportDB exporter = getExporter(username, password, connectionUrl, serviceId, schemaFilter, driverClassName, dialectClassName, overrideTable);
 
@@ -557,14 +548,6 @@ public class DataModelManager {
     private ExportDB getExporter(String username, String password, String connectionUrl, String serviceId, String schemaFilter,
         String driverClassName, String dialectClassName, boolean overrideTable) {
 
-        //
-        // Re-write the connection url if it is HSQLDB so that the db is
-        // always under the webAppRoot
-        //
-        if (connectionUrl.contains(HSQLDB)) {
-            connectionUrl = reWriteCxnUrlForHsqlDB(connectionUrl);
-        }
-
         // composite classes must be compiled
         compile();
 
@@ -802,14 +785,6 @@ public class DataModelManager {
         String schemaFilter, String catalogName, String driverClassName, String dialectClassName, String revengNamingStrategyClassName,
         boolean impersonateUser, String activeDirectoryDomain, File outputDir, File classesDir) {
 
-        //
-        // Re-write the connection url if it is HSQLDB so that the db is
-        // always under the webAppRoot
-        //
-        if (connectionUrl.contains(HSQLDB)) {
-            connectionUrl = reWriteCxnUrlForHsqlDB(connectionUrl);
-        }
-
         if (ObjectUtils.isNullOrEmpty(packageName)) {
             throw new IllegalArgumentException("package must be set");
         }
@@ -900,15 +875,6 @@ public class DataModelManager {
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
-    }
-
-    private String reWriteCxnUrlForHsqlDB(String connectionUrl) {
-        // File webAppRoot = projectManager.getCurrentProject().getWebAppRoot();
-
-        // return JDBCUtils.reWriteConnectionUrl(webAppRoot.getPath() + "/" + HSQL_SAMPLE_DB_SUB_DIR,
-        // connectionUrl);
-
-        return JDBCUtils.reWriteConnectionUrl(connectionUrl, getWebAppRoot());
     }
 
     private String extractHsqlDBFileName(String connectionUrl) {
