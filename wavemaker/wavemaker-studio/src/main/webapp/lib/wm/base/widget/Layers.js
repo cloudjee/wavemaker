@@ -337,7 +337,7 @@ dojo.declare("wm.Layers", wm.Container, {
 		    if (!found)
 			this.setLayerIndex(this.layers.length == 0 ? -1 : (i > 0 ? i - 1 : 0));
 			*/
-		    if (isActive && !this._isDestroying && this.layers.length) {
+		    if (isActive && !this._isLayerDestroying && this.layers.length) {
 			if (this.layers.length > i) {
 			    this.layerIndex = -1;
 			    this.setLayerIndex(i);

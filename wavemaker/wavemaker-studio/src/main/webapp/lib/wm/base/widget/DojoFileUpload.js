@@ -784,7 +784,7 @@ dojo.declare("wm.DojoFileUpload", wm.Container, {
         this.disabled = inDisabled;
         if (this.button) {
             try {
-                this.button.setDisabled(inDisabled || this._parentDisabled);
+                this.button.setDisabled(inDisabled);
             } catch(e) {}
         }
     },

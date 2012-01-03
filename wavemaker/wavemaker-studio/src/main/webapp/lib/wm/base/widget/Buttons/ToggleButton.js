@@ -19,7 +19,6 @@ dojo.require("wm.base.widget.Buttons.ToolButton");
 
 
 dojo.declare("wm.ToggleButton", wm.ToolButton, {
-        mobileHeight: "40px",
 	height: "32px",
 	border: 1,
 	borderColor: "#ABB8CF",

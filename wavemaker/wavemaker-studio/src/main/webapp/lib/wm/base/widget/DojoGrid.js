@@ -1146,11 +1146,6 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	if (index != -1)
 	    return this.columns[index];
     },
-    setColumns: function(inColumns) {
-	this.columns = inColumns;
-	this.renderDojoObj();
-    },
-
     setColumnShowing: function(inFieldName, inShowing, noRender) {
 	var index = this.getColumnIndex(inFieldName);
 	if (index != -1 && this.columns[index].show != inShowing) {	    
