@@ -33,6 +33,7 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
     restrictValues: true,
     _selectedData: null,
 	init: function() {
+	    if (wm.isMobile) this.comboBox = false;
 	    this.inherited(arguments);
 	},
         // STORE ACCESS
@@ -52,22 +53,6 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 	    return new wm.base.data.SimpleStore(data, "name", this);
 	},
 	getEditorProps: function(inNode, inProps) {
-	    if (!this.comboBox) {
-		var p = this.inherited(arguments);
-		p.options = [];
-		if (this.allowNone) {
-		    p.options.push({label: "", value: null});
-		}
-		if (this.dataSet) {
-		    var count = this.dataSet.getCount();
-		    for (var i = 0; i < count; i++) {
-			var item = this.dataSet.getItem(i);
-			p.options.push({label: this._getDisplayData(item),
-					value: String(i)});
-		    }
-		}
-		return p;
-	    } else {
 		var store = this.generateStore();
 		return dojo.mixin(this.inherited(arguments), {
 		        placeHolder: this.placeHolder,
@@ -78,16 +63,25 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 		    searchAttr: "name",
 		    pageSize: this.pageSize ? this.pageSize : Infinity // dijit requires 1 higher or it will still print the "more" link
 		}, inProps || {});
-	    }
 	},
+    doOnfocus: function() {
+	if (!this.comboBox && this.editor) {
+	    this.editor.loadDropDown(function() {});
+	}
+	this.inherited(arguments);
+    },
+	
 	_createEditor: function(inNode, inProps) {
-	    if (!this.comboBox) {
-		return new dijit.form.Select(this.getEditorProps(inNode, inProps));
-	    } else if (this.restrictValues) {
-		return new dijit.form.FilteringSelect(this.getEditorProps(inNode, inProps));
+	    var e;
+	    if (this.restrictValues) {
+		e =  new dijit.form.FilteringSelect(this.getEditorProps(inNode, inProps));
 	    } else {
-		return new dijit.form.ComboBox(this.getEditorProps(inNode, inProps));
+		e = new dijit.form.ComboBox(this.getEditorProps(inNode, inProps));
 	    }
+	    if (!this.comboBox) { 
+		dojo.attr(e.focusNode, "readonly", true);
+	    }
+	    return e;
 	},
         setPlaceHolder: function(inPlaceHolder) {
 	    this.placeHolder = inPlaceHolder;
@@ -107,21 +101,9 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 		if (this._cupdating)
 			return;
 		this.inherited(arguments);
-	    if (this.comboBox) {
-		if (!this.editorNode.style.height) return;
-		var h = this.editorNode.style.height.match(/\d+/)[0];
-
-		//this.editorNode.style.lineHeight = '';
-		if (dojo.isIE && dojo.isIE < 8 && !this.readonly) { // tested for IE7
-	            var n = dojo.query(".dijitArrowButtonInner", this.domNode)[0];
-                    var s = n.style;
-                    var c = dojo.coords(n);
-                    s.position = "relative";
-                    s.top = Math.floor((h-c.h)/2) + "px";
-		}
-	    } else {
 		var h = this._editorHeight;
-		var s = this.editor.containerNode.parentNode.style;
+	    if (this.editor.containerNode) {
+	    var s = this.editor.containerNode ? this.editor.containerNode.parentNode.style : this.editor.domNode.style;
 		s.display = "block";
 		s.lineHeight = s.height = h + "px";
 		s.width = (this._editorWidth-24) + "px";
@@ -136,7 +118,6 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 		arrow.style.margin = "0";
 		arrow.style.border = "solid 1px " + this.borderColor;
 		arrow.style.borderLeft = "solid 1px #999";
-
 	    }
 
 
@@ -642,14 +623,12 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 	this.doOnblur();
     },
     changed: function() {
+	if (!this.comboBox && this.editor && this.editor.focusNode == document.activeElement) {
+	    this.editor.focusNode.blur();
+	    return; // blur will trigger changed call
+	}
 	var item;
 	var index;
-	if (!this.comboBox) {
-	    index = this.editor.get("value");
-	    var result = this.dataSet.getItem(index);
-	    this.selectedItem.setData(result);
-	    return this.inherited(arguments);
-	} else {
 	    item = this.editor.get('item');
 	    var result = null;
 	    var displayedValue = this.editor.get("displayedValue");
@@ -667,17 +646,13 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 	    }
 
 	    return this.inherited(arguments);
-	}
+
     },
     selectItem: function(rowIndex) {
 	if (!this.editor) return;
 	var item = this.dataSet.getItem(rowIndex);
 	this.selectedItem.setData(item);
-	if (this.comboBox) {
-	    this.editor.set('displayedValue', this._getDisplayData(item), false);
-	} else {
-	    this.editor.set("value", String(item.getIndexInOwner()), false);
-	}
+	this.editor.set("value", String(item.getIndexInOwner()), false);
     }
 
 /*
