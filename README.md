@@ -107,7 +107,7 @@ Build and deploy the project using Maven:
 
 <pre>
     cd wavemaker
-    mvn -DskipTests clean install
+    mvn clean install
     cd wavemaker-studio
     mvn -PInplace resources:resources war:inplace tomcat:inplace
 </pre>
