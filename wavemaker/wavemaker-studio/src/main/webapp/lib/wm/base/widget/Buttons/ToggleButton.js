@@ -19,10 +19,11 @@ dojo.require("wm.base.widget.Buttons.ToolButton");
 
 
 dojo.declare("wm.ToggleButton", wm.ToolButton, {
+        mobileHeight: "40px",
 	height: "32px",
 	border: 1,
 	borderColor: "#ABB8CF",
-	margin: 4,
+	margin: 4, 
     /* TODO: Localize This */
 	captionUp: "Btn Up",
     /* TODO: Localize This */
