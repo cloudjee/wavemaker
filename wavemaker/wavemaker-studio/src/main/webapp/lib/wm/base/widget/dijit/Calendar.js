@@ -149,11 +149,13 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
 		this.minimum = wm.convertValueToDate(inValue);
 	    }
 	    if (this.dijit) {
+		var value = this.dijit.value;
 		var currentFocus = this.dijit.currentFocus;
 		this.dijit.destroy();
 		this.initDijit(this.domNode);
 		this.renderBounds();
 		this.dijit.set("currentFocus", currentFocus);
+		this.setDate(value);
 	    }
 	}
     },
@@ -175,11 +177,13 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
 		this.maximum =  wm.convertValueToDate(inValue);
 	    }
 	    if (this.dijit) {
+		var value =  this.dijit.value;
 		var currentFocus = this.dijit.currentFocus;
 		this.dijit.destroy();
 		this.initDijit(this.domNode);
 		this.renderBounds();
 		this.dijit.set("currentFocus", currentFocus);
+		this.setDate(value);
 	    }
 	}
     },
@@ -190,7 +194,7 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
 	},
 	setDate: function(inValue) {
 	    var d = wm.convertValueToDate(inValue);
-	    if (!this.useLocalTime)
+	    if (d && !this.useLocalTime) 
 		d.setHours(d.getHours() + wm.timezoneOffset);
 	    this.dijit.set("value",d);
 	},
