@@ -191,7 +191,7 @@ wm.loadLibs([
 /*	"wm.base.widget.EditArea",*/
 	"wm.base.widget.EditPanel",
 	"wm.base.widget.Ticker",
-	"wm.base.widget.Composite",
+       "wm.base.widget.Composite",
     //"wm.base.widget.Cards",
         //"wm.base.widget.Bespin",
 	// Dijits

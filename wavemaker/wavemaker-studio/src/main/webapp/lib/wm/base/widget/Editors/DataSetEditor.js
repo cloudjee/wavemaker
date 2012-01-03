@@ -556,6 +556,10 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 	    this.grid.setDataSet(inDataSet);
 	}
     },
+    changed: function() {
+	this.selectedItem.setData(this.grid.selectedItem);
+	this.inherited(arguments);
+    },
     _onShowParent: function() {
 	if (this.grid)
 	    this.grid.renderDojoObj();
@@ -619,16 +623,24 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 					   margin: "0",
 					   padding: "0",
 					   border: "0",
-					   selectionMode: "multiple"});
+					 minWidth: 10,
+					 selectionMode: this._multiSelect ? "multiple":"single"});
+	if (this.grid.declaredClass == "wm.DojoGrid") {
+	    this.grid.connect(this.grid, "renderDojoObj", this, "renderGrid");
+	}
 	    this.grid._isDesignLoaded = false;
-	    this.grid.columns = [{show: true,
+	this.grid.setColumns([{show: true,
 				    width: "100%",
 				    field: this.displayExpression ? "_name" : this.displayField,
-				    expression: this.displayExpression}];
+			       expression: this.displayExpression}]);
 	if (this.dataSet) {
 	    this.grid.setDataSet(this.dataSet);
 	}
 	return this.editor;
+    },
+    renderGrid: function() {
+	if (this.grid.dojoObj)
+	    this.grid.dojoObj.scroller.contentNodes[0].parentNode.style.overflowX = "hidden";
     },
     connectEditor: function() {
 	if (!this.$.binding) 

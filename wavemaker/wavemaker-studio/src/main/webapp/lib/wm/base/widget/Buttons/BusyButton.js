@@ -28,8 +28,9 @@
 dojo.provide("wm.base.widget.Buttons.BusyButton");
 dojo.require("wm.base.widget.Buttons.Button");
 
-dojo.declare("wm.BusyButton", wm.Button, {
-
+dojo.declare("wm.BusyButton", wm.IconButton, {
+    _useIconUrl:true,
+    classNames: "wmbutton wmBusyButton",
       // Three User configurable paths to icons that represent the state of the request the button has triggered
       iconLoadingUrl: wm.theme.getImagesPath() + "loadingThrobber.gif",
       iconErrorUrl:  wm.theme.getImagesPath() + "error.png",
@@ -37,7 +38,7 @@ dojo.declare("wm.BusyButton", wm.Button, {
 
       // This is the icon to show when nothing else is happening.  Defaults to no icon, but a developer may
       // use an icon here much as they would for a regular button
-      defaultIconUrl: null,
+      defaultIconUrl: "",
 
       // Space to allocate for the icon
       iconWidth: "22px",
@@ -57,7 +58,7 @@ dojo.declare("wm.BusyButton", wm.Button, {
        * allocates space for the icon, and therefore doens't have to push text around 
        * to show status icons when they show up. */
       setDefaultIconUrl: function(inUrl) {
-          if (!inUrl) inUrl = wm.theme.getImagesPath() + "blank.gif";
+          if (!inUrl) inUrl = "";
           this.defaultIconUrl = inUrl;
 	  this.setIconUrl(this.defaultIconUrl);
        },

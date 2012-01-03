@@ -210,7 +210,7 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 	setDisabled: function(inDisabled) {
 	    this.disabled = inDisabled;
 	    if (this.editor)
-		this.editor.set("disabled",inDisabled);
+		this.editor.set("disabled",this.disabled || this._parentDisabled);
 	},
 	getEditorValue: function() {
 		try {

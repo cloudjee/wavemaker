@@ -853,6 +853,7 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
 					parent: topPanel,
 					_classes: {domNode: ["wmPlusToolButton"]},
 					caption: "+",
+					showing: this.inspected instanceof wm.Page == false && this.inspected instanceof wm.Application == false,
 					align: "center",
 					width: "20px",
 					height: "18px",
@@ -1130,6 +1131,14 @@ dojo.declare("wm.prop.EventEditor", wm.SelectMenu, {
 });
 
 
+dojo.declare("wm.prop.ImagePicker", wm.prop.SelectMenu, {
+    restrictValues: false,
+    updateOptions: function() {
+	this.options = studio.deploymentService.requestSync("listThemeImages", [studio.application.theme]).results[0];
+    }
+
+});
+
 /* TODO: Figure out an upgrade script so we can treat border,borderColor, margin and padding as just more styles */
 /* TODO: Figure out how to let the user pick a resources for backgroundImage; also need backgroundPosition and gradient */
 dojo.declare("wm.prop.StyleEditor", wm.Container, {
@@ -1146,6 +1155,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	{name: "margin", editor: "wm.Text", layerName: "basicLayer"},
 	{name: "padding",editor: "wm.Text", layerName: "basicLayer"},*/
 	{name: "backgroundColor", editor: "wm.ColorPicker"},
+	{name: "backgroundImage", editor: "wm.Text"},
 	{name: "backgroundRepeat", editor: "wm.SelectMenu", editorProps: {options: ["no-repeat","repeat-x","repeat-y","repeat"]}, advanced:1},
 	{name: "color", editor: "wm.ColorPicker"},
 	{name: "fontWeight", editor: "wm.SelectMenu", editorProps: {options: ["normal","bold","bolder","lighter"]}},
@@ -1771,7 +1781,6 @@ dojo.declare("wm.prop.SubComponentEditor", wm.Container, {
 dojo.declare("wm.prop.FormatterEditor", wm.prop.SubComponentEditor, {
     margin: "0,0,0,15"
 });
-
 
 dojo.declare("wm.prop.DeviceListEditor", wm.CheckboxSet, {
     noBindColumn: true,

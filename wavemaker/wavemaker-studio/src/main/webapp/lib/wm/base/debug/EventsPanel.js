@@ -140,7 +140,7 @@ dojo.declare("wm.debug.EventsPanel", wm.Container, {
 	    field1010: ["wm.TypeDefinitionField", {"fieldName":"boundExpression","fieldType":"string"}, {}],
 	    field1011: ["wm.TypeDefinitionField", {"fieldName":"isBinding","fieldType":"boolean"}, {}],
 	    field1012: ["wm.TypeDefinitionField", {"fieldName":"causeList","fieldType":"NumberData", isList: true}, {}],
-	    field1013: ["wm.TypeDefinitionField", {"fieldName":"message","fieldType":"string"}, {}],
+	    field1013: ["wm.TypeDefinitionField", {"fieldName":"message","fieldType":"string"}, {}]
 	}]}, this)[0];
 	//typeDef.setOwner(this);
 	wm.typeManager.types.debugEventType.fields.id.include = ["update"];

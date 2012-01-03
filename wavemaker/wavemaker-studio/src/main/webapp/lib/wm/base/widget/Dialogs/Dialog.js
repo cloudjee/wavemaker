@@ -331,6 +331,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		}
 	    });
 	    this.connect(this.dojoMoveable, "onMoveStop", this, function() {
+		if (this._openingTitleBarMenu) return;
 		this._userSized = true;
 		this.bounds.l = parseInt(this.domNode.style.left);
 		this.bounds.t = parseInt(this.domNode.style.top);		
@@ -354,11 +355,11 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    this.dialogScrim.setShowing(this.modal);
 	    wm.bgIframe.setShowing(!this.modal && !this.isDesignedComponent());
 	}
-	this.titleButtonPanel.setShowing(!this.modal && !this.docked && !wm.isMobile);
+	this.titleButtonPanel.setShowing(!this.modal && !this.docked);
     },
     setNoEscape: function(inNoEscape) {
 	this.noEscape = inNoEscape;
-	this.titleClose.setShowing(!this.modal && !this.noEscape);
+	this.titleClose.setShowing(!this.modal && !this.noEscape  && !wm.isMobile);
     },	
     setDocked: function(inDock, optionalParent, optionalEdge) {
 	var wasDocked = this.docked
@@ -384,7 +385,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		edge = "r";
 	}
 	if (!this.showTitleButtonsWhenDocked) {
-	    this.titleClose.parent.hide();
+	    this.titleButtonPanel.hide();
 	}
 
 	this._dockData = dojo.clone(this.bounds);
@@ -419,7 +420,10 @@ dojo.declare("wm.Dialog", wm.Container, {
     },
     _undock: function() {
 	this.docked = false;
-	this.titleClose.parent.show();
+	if (!wm.isMobile) {
+	    this.titleButtonPanel.show();
+	}
+
 	if (!this._dockData) {
 	    this._dockData = dojo.clone(this.bounds);
 	}
@@ -1015,34 +1019,51 @@ dojo.declare("wm.Dialog", wm.Container, {
 	if (wm.isMobile) {
 	    if (!wm.Dialog.titlebarMenu) {
 		wm.Dialog.titlebarMenu = app.createComponents({	
-		    _dialogTitlebarMenu: ["wm.PopupMenu", {"fullStructure":[
-			{"label":"Close","separator":undefined,"defaultLabel":"Close","iconClass":undefined,"imageList":undefined,"idInPage":undefined,"isCheckbox":false,"onClick":undefined,"children":[]},
-			{"label":"Minimize","separator":undefined,"defaultLabel":"Minimize","iconClass":undefined,"imageList":undefined,"idInPage":undefined,"isCheckbox":false,"onClick":undefined,"children":[]},
-			{"label":"Full Size","separator":undefined,"defaultLabel":"Full Size","iconClass":undefined,"imageList":undefined,"idInPage":undefined,"isCheckbox":false,"onClick":undefined,"children":[]}
-		    ]}]
+		    _dialogTitlebarMenu: ["wm.PopupMenu", {}]
 		},app)[0];
 	    }
-	    /* TODO: Change to ontouch */
-	    this.titleBar.connect(this.titleBar.domNode, "ontouch", dojo.hitch(this, function(inEvent) {
-		wm.Dialog.titlebarMenu.setItemShowing("Close", !this.noEscape);
-		wm.Dialog.titlebarMenu.setItemShowing("Minify", !this.noMinify);
-		wm.Dialog.titlebarMenu.setItemShowing("Full Size", !this.noMaxify);
-		wm.Dialog.titlebarMenu.update(inEvent);
-	    }));
 	}
+
 
 
 	var buttonPanel = this.titleButtonPanel = new wm.Panel({parent: this.titleBar,
 					owner: this,
-								name: "titleButtonBar",
-					width: (!this.noEscape ? 20 : 0) + (!this.noMinify ? 20 : 0) + (!this.noMaxify ? 20 : 0) + "px",
+					name: "titleButtonBar",
+					width: wm.isMobile ? this.mobileTitlebarHeight + "px": (!this.noEscape ? 20 : 0) + (!this.noMinify ? 20 : 0) + (!this.noMaxify ? 20 : 0) + "px",
 					height: "100%",
 					layoutKind: "left-to-right",
 					horizontalAlign: "left",
 					verticalAlign: "top",
-					showing: !this.modal && !this.docked && !wm.isMobile
+					showing: !this.modal && !this.docked
 				       });
+	if (wm.isMobile) {
+	    this.menuButton = new wm.MobileIconButton({
+		                                 direction: "down",
+						 noInspector: true,
+						 name: "menuButton",
+						 width: this.mobileTitlebarHeight + "px",
+						 height: "100%",
+						 margin: "0",
+						 parent: buttonPanel,
+						 owner: this,
+						 onclick: dojo.hitch(this, function(inEvent) {
+						     wm.Dialog.titlebarMenu.setFullStructure([
+							 {"label":"Close","separator":undefined,"defaultLabel":"Close","iconClass":undefined,"imageList":undefined,"idInPage":undefined,"isCheckbox":false,"onClick":dojo.hitch(this,"hide"),"children":[]},
+							 {"label":"Minimize","separator":undefined,"defaultLabel":"Minimize","iconClass":undefined,"imageList":undefined,"idInPage":undefined,"isCheckbox":false,"onClick":dojo.hitch(this,"minify"),"children":[]},
+							 {"label":"Full Size","separator":undefined,"defaultLabel":"Full Size","iconClass":undefined,"imageList":undefined,"idInPage":undefined,"isCheckbox":false,"onClick":dojo.hitch(this,"maxify"),"children":[]},
+							 {"label":"Normal Size","separator":undefined,"defaultLabel":"Normal Size","iconClass":undefined,"imageList":undefined,"idInPage":undefined,"isCheckbox":false,"onClick":dojo.hitch(this,"maxify"),"children":[]}
+						     ]);
+						     wm.Dialog.titlebarMenu.renderDojoObj();
+						     wm.Dialog.titlebarMenu.setItemShowing("Close", !this.noEscape);
+						     wm.Dialog.titlebarMenu.setItemShowing("Minify", !this.noMinify);
+						     wm.Dialog.titlebarMenu.setItemShowing("Full Size", !this.noMaxify && !this._maxified);
+						     wm.Dialog.titlebarMenu.setItemShowing("Normal Size", this._maxified);
+						     wm.Dialog.titlebarMenu.update(inEvent);
+						 })
+	    });
+						 
 
+	}
 	this.titleClose = new wm.ToolButton({_classes: {domNode: ["dialogclosebutton"]},
 					     noInspector: true,
 					     name: "titleClose",
@@ -1052,7 +1073,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 					     margin: "3,0,0,3",
 					     parent: buttonPanel,
 					     owner: this,
-					     showing: !this.noEscape });
+					     showing: !this.noEscape && !wm.isMobile});
 	this.titleMinify = new wm.ToolButton({_classes: {domNode: ["dialogminifybutton"]},
 					      noInspector: true,
                                              hint: wm.getDictionaryItem("wm.Dialog.HINT_MINIFY"),
@@ -1062,7 +1083,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 					      margin: "3,0,0,3",
 					     parent: buttonPanel,
 					      owner: this,
-					      showing:  !this.noMinify});	
+					      showing:  !this.noMinify  && !wm.isMobile});	
 
 	this.titleMaxify = new wm.ToolButton({_classes: {domNode: ["dialogmaxifybutton"]},
 					  noInspector: true,
@@ -1074,7 +1095,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 					      margin: "3,0,0,3",
 					     parent: buttonPanel,
 					      owner: this,
-					      showing: !this.noMaxify});	
+					      showing: !this.noMaxify && !wm.isMobile});	
     
 	this.titleLabel = new wm.Label({
 					  noInspector: true,
@@ -1095,12 +1116,12 @@ dojo.declare("wm.Dialog", wm.Container, {
     setNoMinify: function(val) {
         this.noMinify = val;
         if (this.titleMinify)
-            this.titleMinify.setShowing(!val);
+            this.titleMinify.setShowing(!val && !wm.isMobile);
     },
     setNoMaxify: function(val) {
         this.noMaxify = val;
         if (this.titleMaxify)
-            this.titleMaxify.setShowing(!val);
+            this.titleMaxify.setShowing(!val && !wm.isMobile);
     },
     setTitle: function(inTitle) {
 	this.title = inTitle;

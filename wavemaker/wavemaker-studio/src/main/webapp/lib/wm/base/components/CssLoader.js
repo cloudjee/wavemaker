@@ -44,7 +44,6 @@ dojo.declare("wm.CssLoader", wm.Component, {
 		var sheet = document.createElement("style");
 		sheet.setAttribute("type", "text/css");
 	        document.getElementsByTagName("head")[0].appendChild(sheet);
-	        //document.getElementbody.previousSibling.appendChild(sheet); in Firefox 4 beta, this come up as a <TextNode/>
 		return sheet;
 	},
 	setUrl: function(inUrl) {
