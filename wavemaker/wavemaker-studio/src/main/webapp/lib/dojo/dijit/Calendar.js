@@ -115,7 +115,14 @@ dojo.declare(
 	
 					if(!this.isDisabledDate(value, this.lang)){
 						this._set("value", value);
-		
+
+			    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+			     * WaveMaker: Added code to change the class of the selected cell when selected via code */
+					    var newCells = dojo.query("[dijitDateValue=" + value.valueOf() + "]", this.domNode);
+					    if (newCells) {
+						dojo.addClass(newCells[0], "dijitCalendarSelectedDate");
+					    }
+
 						// Set focus cell to the new value.   Arguably this should only happen when there isn't a current
 						// focus point.   This will also repopulate the grid, showing the new selected value (and possibly
 						// new month/year).
