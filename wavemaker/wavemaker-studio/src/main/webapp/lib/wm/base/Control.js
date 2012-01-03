@@ -460,6 +460,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	}
     },
     init: function() {
+	if (wm.isMobile && this.mobileHeight != undefined && !this.height.match(/\%/)) this.height = this.mobileHeight;
 
 	this.initDomNode();
 	this.inherited(arguments);

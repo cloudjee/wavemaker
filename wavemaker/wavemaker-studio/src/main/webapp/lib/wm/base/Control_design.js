@@ -420,7 +420,7 @@ wm.Object.extendSchema(wm.Control, {
     height: { group: "display", subgroup: "layout",  order: 30, doc: 1, editor: "wm.prop.SizeEditor"},
     minWidth: { group: "display", subgroup: "layout", order: 40, advanced: true, ignoreHint: "minWidth is only available when width is % sized"},
     minHeight: { group: "display", subgroup: "layout", order: 50, advanced: true, ignoreHint: "minHeight is only available when height is % sized"},
-
+    mobileHeight:{ group: "display", subgroup: "layout",  order: 80, doc: 1, editor: "wm.prop.SizeEditor", advanced: true},
 
     parent: { ignore: 1, doc: 1, prototype: "wm.Control" },
     domNode: { ignore: 1, doc: 1 },
