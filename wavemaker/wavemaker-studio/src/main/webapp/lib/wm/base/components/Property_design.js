@@ -91,8 +91,12 @@ wm.Property.extend({
 wm.Object.extendSchema(wm.Property, {
     type: {writeonly: true},
     owner: { ignore: 1},
-    property: {order: 2},
-    selectProperty: {order: 3,operation:"beginSelectProperty"}
+    property: {group: "widgetName", order: 2},
+    selectProperty: {group: "widgetName", order: 3,operation:"beginSelectProperty"},
+    bindSource: {group: "widgetName", order: 10},
+    bindTarget: {group: "widgetName", order: 11},
+    isEvent: {group: "widgetName", order: 20},
+    readonly: {group: "widgetName", order: 30}
 });
 
 /*

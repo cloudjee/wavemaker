@@ -175,9 +175,9 @@ wm.DojoGrid.extend({
 wm.Object.extendSchema(wm.DojoGrid, {
     /* widgetName group */
     dataSet:           {group: "widgetName", subgroup: "data", order: 1, requiredGroup: 1, bindTarget: 1, isList: true, simpleBindTarget: true, editor: "wm.prop.DataSetSelect", editorProps: {listMatch: true, widgetDataSets: true, allowAllTypes: true}},
-    editColumns:       {group: "widgetName", subgroup: "data", order:5, requiredGroup: 1, contextMenu: true, operation: 1},
-    deleteColumn:      {group: "widgetName", subgroup: "data",  order: 10, advanced:1},
-    caseSensitiveSort: {group: "widgetName", subgroup: "data", order: 40, advanced:1},
+    editColumns:       {group: "widgetName", subgroup: "layout", order:5, requiredGroup: 1, contextMenu: true, operation: 1},
+    deleteColumn:      {group: "widgetName", subgroup: "behavior",  order: 10, advanced:1},
+    caseSensitiveSort: {group: "widgetName", subgroup: "behavior", order: 40, advanced:1},
     selectFirstRow:    {group: "widgetName", subgroup: "selection", order: 41},
     selectionMode:     {group: "widgetName", subgroup: "selection", order: 31, options: ["single", "multiple", "extended", "none", "checkbox", "radio"]},
     deleteConfirm:     {group: "widgetName", subgroup: "confirmation", order: 10, advanced:1},
@@ -185,7 +185,8 @@ wm.Object.extendSchema(wm.DojoGrid, {
     liveEditing:       {group: "widgetName", subgroup: "editing", order: 1},
 
     /* Display group; layout subgroup */
-    noHeader: {group: "display", subgroup: "layout", order: 50, advanced:1},
+    //noHeader: {group: "display", subgroup: "layout", order: 50, advanced:1},
+    noHeader: {group: "widgetName", subgroup: "layout", order: 50, advanced:1},
 
     /* Operations group */
     updateNow: {group:"operation", operation: 1},

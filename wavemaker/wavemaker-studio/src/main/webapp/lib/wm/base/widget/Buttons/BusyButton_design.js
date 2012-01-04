@@ -19,17 +19,17 @@ dojo.require("wm.base.widget.Buttons.Button_design");
 wm.Object.extendSchema(wm.BusyButton, {
 
     /* display group; misc subgroup */
-    clickVariable:  {group: "display", subgroup: "misc", bindTarget: 1, order: 29, type: "wm.ServiceVariable", createWire: 1, editor: "wm.prop.DataSetSelect", editorProps: {servicesOnly: true, listMatch: undefined}, requiredGroup:1},
+    clickVariable:  {group: "widgetName", subgroup: "data", bindTarget: 1, order: 29, type: "wm.ServiceVariable", createWire: 1, editor: "wm.prop.DataSetSelect", editorProps: {servicesOnly: true, listMatch: undefined}, requiredGroup:1},
 
     /* display group, layout subgroup */
-    defaultIconUrl: {group: "display", subgroup: "visual", bindTarget: true, order: 30, type: "String", subtype: "File"},
-    iconLoadingUrl: {group: "display", subgroup: "visual", bindTarget: true, order: 31, type: "String", subtype: "File"},
-    iconSuccessUrl: {group: "display", subgroup: "visual", bindTarget: true, order: 32, type: "String", subtype: "File"},
-    iconErrorUrl:   {group: "display", subgroup: "visual", bindTarget: true, order: 33, type: "String", subtype: "File"},
+    defaultIconUrl: {group: "widgetName", subgroup: "graphics", bindTarget: true, order: 30, type: "String", subtype: "File"},
+    iconLoadingUrl: {group: "widgetName", subgroup: "graphics", bindTarget: true, order: 31, type: "String", subtype: "File"},
+    iconSuccessUrl: {group: "widgetName", subgroup: "graphics", bindTarget: true, order: 32, type: "String", subtype: "File"},
+    iconErrorUrl:   {group: "widgetName", subgroup: "graphics", bindTarget: true, order: 33, type: "String", subtype: "File"},
 
-    iconWidth:       {group: "display", subgroup: "layout", order: 34},
-    iconHeight:      {group: "display", subgroup: "layout", order: 35},
-    iconMargin:      {group: "display", subgroup: "layout", order: 36},
+    iconWidth:       {group: "widgetName", subgroup: "graphics", order: 34},
+    iconHeight:      {group: "widgetName", subgroup: "graphics", order: 35},
+    iconMargin:      {group: "widgetName", subgroup: "graphics", order: 36},
 
     /* Events group */
     onError: {advanced:1},

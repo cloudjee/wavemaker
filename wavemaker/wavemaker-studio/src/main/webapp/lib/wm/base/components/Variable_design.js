@@ -28,7 +28,7 @@ wm.Object.extendSchema(wm.Variable, {
     /* Data group; type subgroup */
     type: {ignore: 0, group: "data", subgroup: "type", order: 1, editor: "wm.prop.DataTypeSelect", editorProps: {liveTypes: 0}, requiredGroup: 1},
     isList: { group: "data", subgroup: "type", order: 4, requiredGroup: 1},
-    editJson: {operation: 1, group:"data", subgroup: "type", order:5},
+    editJson: {operation: 1, group:"data", subgroup: "data", order:5},
 
     /* Data group; custom subgroup */
     dataSet: { bindable: 1, group: "data", order: 0, defaultBindTarget: 1, isObject: true, editor: "wm.prop.FieldGroupEditor"},

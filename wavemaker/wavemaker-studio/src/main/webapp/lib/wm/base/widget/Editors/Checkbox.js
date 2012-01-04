@@ -182,13 +182,13 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 	setDisabled: function(inDisabled) {
 	    this.inherited(arguments);
 	    if (!this.editor) return;
-	    this.editor.set("disabled",inReadonly || this._disabled);
+	    this.editor.set("disabled",this.readonly || this._disabled);
 	},
 	setReadonly: function(inReadonly) {
 	    this.readonly = inReadonly;
 	    if (!this.editor) return;
 	    if (!this.readOnlyNode) this.readOnlyNode = this.editor;	    
-	    this.editor.set("disabled",inReadonly || this._disabled);
+	    this.editor.set("disabled",this.readonly || this._disabled);
 	},
 	getMinWidthProp: function() {
 		if (this.minWidth) return this.minWidth;

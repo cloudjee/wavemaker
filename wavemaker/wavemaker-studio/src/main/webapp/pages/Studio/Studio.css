@@ -1233,7 +1233,8 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #app_importDatabase_panel1 > .wmtablayers-tabbar,
 #studio_sourceTabs .wmtablayers-tabbar,
 .ResourceManager .wmtablayers-tabbar,
-.EditVariable .EditVariable-tabs .wmtablayers-tabbar
+.EditVariable .EditVariable-tabs .wmtablayers-tabbar,
+#studio_inspectorToolbarOuter
  {
    /*
         background: -webkit-gradient(linear, left top, left bottom, from(#222222), to(#5D6778));

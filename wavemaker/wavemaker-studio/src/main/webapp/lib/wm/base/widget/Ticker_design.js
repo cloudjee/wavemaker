@@ -29,10 +29,10 @@ wm.Object.extendSchema(wm.Ticker, {
     scrollX: {ignore: true, writeonly: 1},
     lock: {ignore: 1},
     freeze: {ignore: 1},
-    delay: {group: "display",subgroup:"scrolling"},
+    delay: {group: "widgetName",subgroup:"behavior"},
     imageList: {ignore: 1},
-    motion: {group: "display", subgroup: "scrolling"},
-    rewindDelay: {group: "display", subgroup: "scrolling"},
+    motion: {group: "widgetName", subgroup: "behavior"},
+    rewindDelay: {group: "widgetName", subgroup: "behavior"},
     autoScroll: {ignore: 1},
     customGetValidate: {ignore:1}
 });

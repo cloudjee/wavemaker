@@ -58,7 +58,18 @@ wm.DataSetEditor.extend({
     updateNow: function() {
 	return this.update();
     },
-
+    set_displayValue: function(inValue) {
+	if (this._multiSelect) {
+	    inValue =  inValue ? inValue.split(/\s*,\s*/) : [];
+	}
+	this.setDisplayValue(inValue);
+    },
+    set_dataValue: function(inValue) {
+	if (this._multiSelect) {
+	    inValue =  inValue ? inValue.split(/\s*,\s*/) : [];
+	}
+	this.setDataValue(inValue);
+    },
     set_displayExpression: function(inExpr) {
 	if (inExpr) {
 		var ex2 = inExpr.replace(/\$\{.*?}/g, 1); // replace all ${...} with the value 1 for a quick and easy test to validate the expression
@@ -108,7 +119,7 @@ wm.Object.extendSchema(wm.DataSetEditor, {
     displayExpression: {group: "editor", subgroup: "dataSet",order: 20, displayExpression: "displayExpression", displayExpressionDataSet: "dataSet"}, /* displayExpressionDataSet is the name of the field that is used as a display expression */
 
     /* Editor group; display subgroup */
-    displayType:{group: "editor", subgroup: "display", order: 21, options: wm.selectDisplayTypes},
+/*    displayType:{group: "editor", subgroup: "display", order: 21, options: wm.selectDisplayTypes},*/
 
     selectedItem: { ignore: 1, bindSource: true, isObject: true, bindSource: true, doc: 1},
 
@@ -118,7 +129,9 @@ wm.Object.extendSchema(wm.DataSetEditor, {
 
     /* Ignored group */
     optionsVar: {ignore:1},    
+    format: {ignore: 1},
     formatter: {ignore: 1},
+    displayType: {ignore:1},
     emptyValue: {ignore: 1},
     optionsVar: {ignore:1},
     
@@ -129,7 +142,7 @@ wm.Object.extendSchema(wm.DataSetEditor, {
 
 
 wm.Object.extendSchema(wm.ListSet, {
-    searchBar: {group: "subwidgets", subgroup: "layout", order: 100}, 
+    searchBar: {group: "editor", subgroup: "behavior", order: 100}, 
     onblur: {ignore: 1},
     onfocus: {ignore: 1}
 

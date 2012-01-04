@@ -28,8 +28,8 @@ wm.Splitter.extend({
 */
 wm.Object.extendSchema(wm.Splitter, {
     /* Display group; layout subgroup */
-    minimum: { group: "display", subgroup: "layout", order: 1},
-    maximum: { group: "display", subgroup: "layout", order: 5},
+    minimum: { group: "widgetName", subgroup: "behavior", order: 1},
+    maximum: { group: "widgetName", subgroup: "behavior", order: 5},
 
     /* Ignored group */
     left: {ignore: 1},

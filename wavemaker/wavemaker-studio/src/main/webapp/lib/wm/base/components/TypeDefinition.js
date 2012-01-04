@@ -65,8 +65,13 @@ dojo.declare("wm.TypeDefinitionField", wm.Component, {
 });
 
 wm.Object.extendSchema(wm.TypeDefinitionField, {
+    owner: {ignore:1},
     addField: {operation:1},
-    fieldType: {editor: "wm.prop.DataTypeSelect", editorProps: {useLiterals:1}},
+    fieldName: {group: "widgetName", subgroup: "fields", order: 1},
+    fieldType: {group: "widgetName", subgroup: "fields", order: 2, editor: "wm.prop.DataTypeSelect", editorProps: {useLiterals:1}},
+    isList:  {group: "widgetName", subgroup: "fields", order: 3},
+    isObject:  {group: "widgetName", subgroup: "fields", order: 4},
+    addField:  {group: "widgetName", subgroup: "fields", order: 5, operation: true},
     documentation: {ignore: true},
     generateDocumentation: {ignore: true}
 });
@@ -126,7 +131,7 @@ dojo.declare("wm.TypeDefinition", wm.Component, {
 });
 
 wm.Object.extendSchema(wm.TypeDefinition, {
-    addField: {group: "operation", order: 1, operation:true},
+    addField: {group: "operation", order: 1, operation:true, requiredGroup:1},
     internal: {ignore: true}, // only way to set something as internal is to hardcode it into widgets.js; should only be internal if in use by studio to define a type for use by studio but not by the user
     owner: {ignore: true}
 });

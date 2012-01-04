@@ -69,15 +69,15 @@ wm.ListViewer.extend({
 
 wm.Object.extendSchema(wm.ListViewer, {
     /* Display group; layout subgroup */
-    avgHeight: {group: "display", subgroup: "layout", type: "Number"},
+    avgHeight: {group: "widgetName", subgroup: "layout", type: "Number"},
 
     /* Data group; data subgroup */
-    dataSet: { readonly: true, group: "data", subgroup: "data", order: 1, requiredGroup: 1, bindTarget: 1, type: "wm.Variable", isList: true, editor: "wm.prop.DataSetSelect", editorProps: {listMatch: true, widgetDataSets: true, allowAllTypes: true}},
-    manageLiveVar: {group: "data", subgroup: "behavior"},
+    dataSet: { readonly: true, group: "widgetName", subgroup: "data", order: 1, requiredGroup: 1, bindTarget: 1, type: "wm.Variable", isList: true, editor: "wm.prop.DataSetSelect", editorProps: {listMatch: true, widgetDataSets: true, allowAllTypes: true}},
+    manageLiveVar: {group: "widgetName", subgroup: "behavior"},
 
     /* Display group; misc subgroup */
-    pageName: {group: "display", subgroup: "misc", type: "string", order: 1, requiredGroup: 1, editor: "wm.prop.PagesSelect"},
-    rowBorder: {group: "display", subgroup: "misc", type: "string", order: 2},
+    pageName: {group: "widgetName", subgroup: "data", type: "string", order: 1, requiredGroup: 1, editor: "wm.prop.PagesSelect"},
+    rowBorder: {group: "widgetName", subgroup: "style", type: "string", order: 2},
 
     /* widgetName group; selection subgroup */
     allowRowSelection: {group: "widgetName", subgroup: "selection"},

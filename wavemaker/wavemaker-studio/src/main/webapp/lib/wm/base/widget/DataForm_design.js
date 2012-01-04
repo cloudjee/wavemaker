@@ -19,12 +19,12 @@ dojo.require("wm.base.widget.Container_design");
 
 wm.Object.extendSchema(wm.FormPanel, {
     /* Editor group;  */
-    readonly:       {group: "editor", subgroup: "behavior", order: 6},
-    editorWidth:    {group: "subwidgets", subgroup: "layout",order: 200, editor: "wm.prop.SizeEditor"},
-    editorHeight:   {group: "subwidgets", subgroup: "layout",order: 201, editor: "wm.prop.SizeEditor"},
-    captionSize:    {group: "subwidgets", subgroup: "text",  order: 210, editor: "wm.prop.SizeEditor"},
-    captionAlign:   {group: "subwidgets", subgroup: "text",  order: 230, options: ["left", "center", "right"]},
-    captionPosition:{group: "subwidgets", subgroup: "text",  order: 240, options: ["top", "left", "bottom", "right"]},
+    readonly:       {group: "widgetName", subgroup: "behavior", order: 6},
+    editorWidth:    {group: "widgetName", subgroup: "layout",order: 200, editor: "wm.prop.SizeEditor"},
+    editorHeight:   {group: "widgetName", subgroup: "layout",order: 201, editor: "wm.prop.SizeEditor"},
+    captionSize:    {group: "widgetName", subgroup: "text",  order: 210, editor: "wm.prop.SizeEditor"},
+    captionAlign:   {group: "widgetName", subgroup: "text",  order: 230, options: ["left", "center", "right"]},
+    captionPosition:{group: "widgetName", subgroup: "text",  order: 240, options: ["top", "left", "bottom", "right"]},
 
     /* Display group */
     layoutKind: {requiredGroup:0},
@@ -37,26 +37,22 @@ wm.Object.extendSchema(wm.FormPanel, {
     newButton: {ignore:1},
     lock: {ignore: 1},
     freeze: {ignore: 1},
-    imageList: {ignore: 1},
-
-    /* Hidden group */
-    horizontalAlign: {writeonly: 1},
-    verticalAlign: {writeonly: 1}
+    imageList: {ignore: 1}
 });
 
 wm.Object.extendSchema(wm.DataForm, {
     /* Editor group; value subgroup */
-    type:       {group: "editor", subgroup: "value", order: 1, requiredGroup: 1, editor: "wm.prop.DataTypeSelect"},
-    dataSet:    {group: "editor", subgroup: "value", order: 2, readonly: 1, bindTarget: 1, type: "wm.Variable", editor: "wm.prop.DataSetSelect"},
+    type:       {group: "widgetName", subgroup: "data", order: 1, requiredGroup: 1, editor: "wm.prop.DataTypeSelect"},
+    dataSet:    {group: "widgetName", subgroup: "data", order: 2, readonly: 1, bindTarget: 1, type: "wm.Variable", editor: "wm.prop.DataSetSelect"},
 
     /* Editor group */
-    dataOutput: {group: "editor", subgroup: "",      order: 3, readonly: 1, bindable: 1,   type: "wm.Variable", simpleBindProp: true, editor: "wm.prop.FieldGroupEditor"},
+    dataOutput: {group: "widgetName", subgroup: "",  order: 3, readonly: 1, bindable: 1, advanced:1,  type: "wm.Variable", simpleBindProp: true, editor: "wm.prop.FieldGroupEditor"},
 
     /* Editor group; behavior subgroup */
-    confirmChangeOnDirty:    {group: "editor", subgroup: "behavior", order: 100, advanced:1},
-    setReadonlyOnPrimaryKeys:{group: "editor", subgroup: "behavior", order: 101, advanced:1},
-    generateInputBindings:   {group: "editor", subgroup: "behavior", order: 200, advanced:1},
-    generateOutputBindings:  {group: "editor", subgroup: "behavior", order: 201, advanced:1},
+    confirmChangeOnDirty:    {group: "widgetName", subgroup: "behavior", order: 100, advanced:1},
+    setReadonlyOnPrimaryKeys:{group: "widgetName", subgroup: "behavior", order: 101, advanced:1},
+    generateInputBindings:   {group: "widgetName", subgroup: "behavior", order: 200, advanced:1},
+    generateOutputBindings:  {group: "widgetName", subgroup: "behavior", order: 201, advanced:1},
 
 
     /* Operations gropu */
@@ -78,12 +74,12 @@ wm.Object.extendSchema(wm.DBForm, {
     type: {editorProps: {liveTypes: true}},
 
     /* Editor group; behavior subgroup */
-    formBehavior:      {group: "editor", subgroup: "behavior", order: 1, requiredGroup:1, options: ["standard", "insertOnly", "updateOnly"]},
-    readonlyManager:   {group: "editor", subgroup: "behavior", order: 10},
-    deleteConfirmation:{group: "editor", subgroup: "behavior", order: 500, advanced:1},
+    formBehavior:      {group: "widgetName", subgroup: "behavior", order: 1, requiredGroup:1, options: ["standard", "insertOnly", "updateOnly"]},
+    readonlyManager:   {group: "widgetName", subgroup: "behavior", order: 10},
+    deleteConfirmation:{group: "widgetName", subgroup: "confirmation", order: 500, advanced:1},
 
     /* Display group */
-    useLoadingDialog:  {group: "display",subgroup: "visual", order: 60},
+    useLoadingDialog:  {group: "widgetName",subgroup: "graphics", order: 60},
 
     /* Ignored/hidden group */
     operation: {ignore:1},
@@ -166,6 +162,18 @@ wm.DataForm.extend({
     },
 
 
+	getFormSubDataSetNames: function(inForm) {
+		var ds=[], id = inForm.getId() + ".dataSet.", schema = (inForm.dataSet || 0)._dataSchema;
+		for (var i in schema) {
+			var ti = schema[i];
+			if (ti.isList) {
+			} else if (wm.typeManager.isStructuredType(ti.type)) {
+				ds.push(id + i);
+			}
+		}
+		return ds;
+	},
+
     /****************
      * METHOD: makePropEdit (DESIGNTIME)
      * DESCRIPTION: Generates property editors
@@ -177,7 +185,7 @@ wm.DataForm.extend({
 	    case "dataSet":
 		    var p = wm.getParentForm(this);
 		    if (p) {
-			return new wm.prop.Select(dojo.mixin(inEditorProps, {options: this.getFormSubDataSetNames(p)}));
+			return new wm.prop.SelectMenu(dojo.mixin(inEditorProps, {options: this.getFormSubDataSetNames(p)}));
 		    } else {
 			return new wm.prop.DataSetSelect(dojo.mixin(inEditorProps, {widgetDataSets: true, listMatch: undefined, noForms:true}));
 		    }
@@ -693,7 +701,7 @@ wm.DBForm.extend({
 	    case "dataSet":
 		    var p = wm.getParentForm(this);
 		    if (p) {
-			return new wm.prop.Select(dojo.mixin(inEditorProps, {options: this.getFormSubDataSetNames(p)}));
+			return new wm.prop.SelectMenu(dojo.mixin(inEditorProps, {options: this.getFormSubDataSetNames(p)}));
 		    } else {
 			return new wm.prop.DataSetSelect(dojo.mixin(inEditorProps, {widgetDataSets: true, listMatch: undefined, noForms:true, allowAllTypes: false, liveServicesOnly: true}));
 		    }
@@ -1001,7 +1009,10 @@ wm.SubForm.extend({
 });
 
 wm.Object.extendSchema(wm.SubForm, {
-    formField: {group: "editor", subgroup: "value", requiredGroup:1, order: 500, editor: "wm.prop.FormFieldSelect", editorProps: {relatedFields: true}},
+    formField: {group: "widgetName", subgroup: "data", requiredGroup:1, order: 3, editor: "wm.prop.FormFieldSelect", editorProps: {relatedFields: true}},
+    dataSet: {ignore:1},
+    type: {ignore:1},
+    confirmChangeOnDirty: {ignore:1},
     editingMode: {hidden:true}
 });
 
@@ -1018,7 +1029,7 @@ wm.Object.extendSchema(wm.ServiceInputForm, {
     onDataSetChanging: {ignore:1},
     onCancelEdit: {ignore: 1},
 
-    serviceVariable: { readonly: 1, group: "editor", subgroup: "behavior", requiredGroup:1, order: 1, bindTarget: 1, type: "wm.Variable", createWire:1, editor: "wm.prop.WidgetSelect", editorProps: {widgetType: wm.ServiceVariable, excludeType: wm.LiveVariable}}
+    serviceVariable: { readonly: 1, group: "widgetName", subgroup: "data", requiredGroup:1, order: 5, bindTarget: 1, type: "wm.Variable", createWire:1, editor: "wm.prop.WidgetSelect", editorProps: {widgetType: wm.ServiceVariable, excludeType: wm.LiveVariable}}
     
 });
 wm.ServiceInputForm.extend({

@@ -365,7 +365,7 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
     getEditorValue: function() {
 	if (!this.selectedItem)
 	    return null;
-	if (this.dataValueValid)
+	if (this._dataValueValid)
 	    return this.dataValue;
 	if (this.dataSet.getCount() == 0)
 	    return this.dataValue;
@@ -475,10 +475,10 @@ dojo.declare("wm.CheckboxSet", wm.DataSetEditor, {
 		data.push(this.dataSet.getItem(i));
 	    }
 	}
-	this.dataValueValid = false;
+	this._dataValueValid = false;
 	this.selectedItem.setData(data);
 	this.inherited(arguments);
-	this.dataValueValid = true;
+	this._dataValueValid = true;
     },
     destroy: function() {
 	dojo.forEach(this.dijits, function(d) {d.destroy();});
@@ -534,9 +534,9 @@ dojo.declare("wm.RadioSet", wm.CheckboxSet, {
 	for (var i = 0; i < this.dijits.length; i++) {
 	    if (this.dijits[i].checked) {
 		this.selectedItem.setData(this.dataSet.getItem(i));
-		this.dataValueValid = false;
+		this._dataValueValid = false;
 		wm.AbstractEditor.prototype.changed.call(this);
-		this.dataValueValid = true;
+		this._dataValueValid = true;
 		return;
 	    }
 	}

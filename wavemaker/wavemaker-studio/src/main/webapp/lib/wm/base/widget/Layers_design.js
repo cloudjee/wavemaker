@@ -19,12 +19,12 @@ dojo.require("wm.base.widget.Container_design");
 // design-time
 wm.Object.extendSchema(wm.Layer, {
     /* Display group; text subgroup */
-    caption: { group: "display", subgroup: "text", order: 200, bindTarget: true},
+    caption: { group: "widgetName", subgroup: "text", order: 200, bindTarget: true},
 
     /* Display group; visual subgroup */
-    closable:      {group: "display", subgroup: "visual", order: 250, advanced:1},
-    destroyable:   {group: "display", subgroup: "visual", order: 251, advanced:1},
-    showDirtyFlag: {group: "display", subgroup: "visual", order: 252, advanced:1},
+    closable:      {group: "widgetName", subgroup: "behavior", order: 250, advanced:1},
+    destroyable:   {group: "widgetName", subgroup: "behavior", order: 251, advanced:1},
+    showDirtyFlag: {group: "widgetName", subgroup: "behavior", order: 252, advanced:1},
 
     /* Style group */
     themeStyleType: {ignore: 0},
@@ -34,8 +34,10 @@ wm.Object.extendSchema(wm.Layer, {
     movePrevious: { group: "operation", order: 2, contextMenu: false, operation: 1 },
 
     /* Events/custom methods group */
-    onCloseOrDestroy:     {advanced:1},
-    customCloseOrDestroy: {advanced:1},
+    onDeactivate: {group:"events",order: 1},
+    onShow: {advanced:0},
+    onCloseOrDestroy:     {group:"events",advanced:1},
+    customCloseOrDestroy: {group:"custommethods",advanced:1},
 
     /* Ignored group */
     title: { ignore: 1 },
@@ -122,23 +124,23 @@ wm.Layer.extend({
 
 wm.Object.extendSchema(wm.Layers, {
     /* Display group; visual subgroup */
-    transition: {group: "display", subgroup: "visual", options: ["none","fade","slide"]},
+    transition: {group: "widgetName", subgroup: "behavior", options: ["none","fade","slide"]},
 
     /* Display group; misc subgroup */
-    defaultLayer: { group: "display", subgroup: "misc", order: 105, doc: 1},
-    layersType:   { group: "display", subgroup: "misc", order: 110, options:["Layers", "RoundedTabs", "Tabs", "Accordion"] },
+    defaultLayer: { group: "widgetName", subgroup: "selection", order: 105, doc: 1},
+    layersType:   { group: "widgetName", subgroup: "behavior", order: 110, options:["Layers", "RoundedTabs", "Tabs", "Accordion"] },
 
     /* Display group; layout subgroup */
-    headerHeight: {ignore:1, group: "display", subgroup: "layout", order: 50, editor: "wm.prop.SizeEditor", editorProps: {pxOnly: 1}},
-    headerWidth: {ignore:1,  group: "display", subgroup: "layout", order: 50, editor: "wm.prop.SizeEditor", editorProps: {pxOnly: 1}},
-
+    headerHeight: {ignore:1, group: "widgetName", subgroup: "layout", order: 50, editor: "wm.prop.SizeEditor", editorProps: {pxOnly: 1}},
+    headerWidth: {ignore:1,  group: "widgetName", subgroup: "layout", order: 50, editor: "wm.prop.SizeEditor", editorProps: {pxOnly: 1}},
+    mobileHeaderHeight: {ignore:1, group: "widgetName", subgroup: "layout", order: 51, editor: "wm.prop.SizeEditor", editorProps: {pxOnly: 1}, advanced:1},
 
     /* Operations group */
-	add: { group: "operation", order: 1, operation: 1 },
+    add: { group: "operation", order: 1, operation: 1 },
 
     /* Styles group */
-    clientBorder: {group: "style", order: 1, shortname: "layerBorder"},
-    clientBorderColor: {group: "style", order: 2, shortname: "layerBorderColor", editor: "wm.ColorPicker"},
+    clientBorder: {group: "widgetName", subgroup: "style", order: 1, shortname: "layerBorder"},
+    clientBorderColor: {group: "widgetName", subgroup: "style", order: 2, shortname: "layerBorderColor", editor: "wm.ColorPicker"},
 
     /* Events/custom methods group */
     oncanchange: {advanced:1, order: 100},
@@ -303,13 +305,13 @@ wm.Object.extendSchema(wm.AccordionLayers, {
     scrollY: {ignore: 0},
 
     /* Display group; visual subgroup */
-    multiActive: {group: "display", subgroup: "visual"},
+    multiActive: {group: "widgetName", subgroup: "behavior"},
 
     /* Display group; layout subgroup */
-    captionHeight: {group: "display", subgroup: "layout"},
+    captionHeight: {group: "widgetName", subgroup: "layout"},
 
     /* Styles group */
-    layerBorder: {group: "style", order: 1},
+    layerBorder: {group: "widgetName", subgroup: "style", order: 1},
 
     /* Ignored group */
     transition: {ignore: true},
@@ -317,8 +319,8 @@ wm.Object.extendSchema(wm.AccordionLayers, {
     clientBorder: {ignore: 1}
 });
 wm.Object.extendSchema(wm.TabLayers, {
-    conditionalTabButtons: {group: "display", subgroup: "visual"},
-    verticalButtons: {group: "display", subgroup: "layout"},
+    conditionalTabButtons: {group: "widgetName", subgroup: "behavior"},
+    verticalButtons: {group: "widgetName", subgroup: "layout"},
     layoutKind: { writeonly: 1},
     headerHeight: {ignore: 0},
     headerWidth: {ignore: 0}
@@ -328,8 +330,8 @@ wm.Object.extendSchema(wm.WizardLayers, {
     layoutKind: { writeonly: 1},
     headerHeight: {ignore: 0},
     headerWidth: {ignore: 0},
-    verticalButtons: {group: "display", subgroup: "layout"},
-    bottomButtons: {group: "subwidgets", subgroup: "buttons"}
+    verticalButtons: {group: "widgetName", subgroup: "layout"},
+    bottomButtons: {group: "layout", subgroup: "buttons"}
 });
 
 

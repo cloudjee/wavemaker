@@ -20,18 +20,26 @@ dojo.require("wm.base.Control_design");
 
 wm.Object.extendSchema(wm.Container, {
     /* Display group; layout subgroup */
+/*
     layoutKind:         {group: "display", subgroup: "layout", order: 100, options: ["top-to-bottom","left-to-right","fluid"], requiredGroup: true},
     horizontalAlign:    {group: "display", subgroup: "layout", order: 110, options: ["left","center","right"]},
     verticalAlign:      {group: "display", subgroup: "layout", order: 120, options: ["top","middle","bottom"]},
+    */
     fitToContentWidth:  {group: "display", subgroup: "layout", order: 150, shortname: "Auto Width", type: "Boolean", advanced: true},
     fitToContentHeight: {group: "display", subgroup: "layout", order: 151, shortname: "Auto Height", type: "Boolean", advanced: true},
     resizeToFit:        {group: "display", subgroup: "layout", order: 152, operation: true},
+
+    layoutKind:         {group: "display", subgroup: "panel", order: 100, options: ["top-to-bottom","left-to-right","fluid"], requiredGroup: true},
+    horizontalAlign:    {group: "display", subgroup: "panel", order: 110, options: ["left","center","right"]},
+    verticalAlign:      {group: "display", subgroup: "panel", order: 120, options: ["top","middle","bottom"]},
+
 
     /* Display group; scrolling subgroup */
     autoScroll: {writeonly: 0},
     touchScrolling: {group: "display", subgroup: "scrolling", order: 103, ignore: 0, advanced: true},
 
     /* Style group */
+    //themeStyleType: {ignore: true, group: "style", order: 20, options: ["", "MainContent", "EmphasizedContent", "HeaderContent"]},
     themeStyleType: {ignore: true, group: "style", order: 20, options: ["", "MainContent", "EmphasizedContent", "HeaderContent"]},
 
     /* Custom methods group */
@@ -42,8 +50,8 @@ wm.Object.extendSchema(wm.Container, {
     isDirty: { ignore: 1, bindSource: 1, readonly: 1, type: "Boolean" },
 
     /* Display group; misc subgroup */
-    lock:   {group: "display", subgroup: "misc", order: 2000, type: "Boolean", advanced:1 },
-    freeze: {group: "display", subgroup: "misc", order: 2001, type: "Boolean", advanced:1 },
+    lock:   {group: "display", subgroup: "panel", order: 2000, type: "Boolean", advanced:1 },
+    freeze: {group: "display", subgroup: "panel", order: 2001, type: "Boolean", advanced:1 },
 
     /* Methods group */
     setThemeStyleType: {method:1},

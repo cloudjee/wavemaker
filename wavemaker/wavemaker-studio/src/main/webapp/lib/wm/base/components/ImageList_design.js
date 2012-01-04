@@ -17,7 +17,13 @@ dojo.require("wm.base.components.ImageList");
 
 
 wm.Object.extendSchema(wm.ImageList, {
-    url: { group: "display", bindable: 1, type: "String", subtype: "File", order: 10, focus: 1, extensionMatch: ["jpg","jpeg","gif","png","tiff"]  }
+    url: { group: "widgetName", subgroup: "graphics", bindable: 1, type: "String", subtype: "File", order: 10, focus: 1, extensionMatch: ["jpg","jpeg","gif","png","tiff"]  },
+    iconCount: {group: "widgetName", subgroup: "graphics", type: "number", order: 20},
+    colCount: {group: "widgetName", subgroup: "graphics", type: "number", order: 30},
+
+    width: {group: "widgetName", subgroup: "layout", type: "number", order: 20},
+    height: {group: "widgetName", subgroup: "layout", type: "number", order: 21}
+    
 });
 
 wm.ImageList.extend({

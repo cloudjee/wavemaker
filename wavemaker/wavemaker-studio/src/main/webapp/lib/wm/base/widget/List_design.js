@@ -46,10 +46,10 @@ wm.Object.extendSchema(wm.VirtualList, {
 // design-time only
 wm.Object.extendSchema(wm.List, {
     /* widgetName group; data subgroup */
-    editColumns:       {group: "widgetName", subgroup: "data", order:5, requiredGroup: 1, contextMenu: true, operation: 1},
+    editColumns:       {group: "widgetName", subgroup: "layout", order:5, requiredGroup: 1, contextMenu: true, operation: 1},
     dataSet:           {group: "widgetName", subgroup: "data", order: 1, requiredGroup: 1, bindTarget: 1, isList: true, simpleBindTarget: true, editor: "wm.prop.DataSetSelect", editorProps: {listMatch: true, widgetDataSets: true, allowAllTypes: true}},
     dataFields:        {group: "widgetName", subgroup: "data", order: 50, advanced:1},
-    columnWidths:      {group: "widgetName", subgroup: "data", order: 51, advanced:1},
+    columnWidths:      {group: "widgetName", subgroup: "layout", order: 51, advanced:1},
 
     /* Display group; layout subgroup */
     headerVisible: {group: "display", subgroup: "layout", order: 1}, /* Or does this go in the style group? or in the widgetName group? */

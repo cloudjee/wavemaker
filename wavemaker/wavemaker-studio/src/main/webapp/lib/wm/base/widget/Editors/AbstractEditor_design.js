@@ -150,11 +150,18 @@ wm.Object.extendSchema(wm.AbstractEditor, {
     
     /* DISPLAY GROUP */
     /* Text subgroup */
+/*
     caption: {group: "display", subgroup: "text", order: 1, bindTarget:true, requiredGroup:1},
     captionPosition: {group: "display", subgroup: "text", order: 2, options: ["top", "left", "bottom", "right"]},
     captionAlign: {group: "display", subgroup: "text", order: 3, options: ["left", "center", "right"]},
     captionSize: {group: "display",subgroup: "text", order: 4, editor: "wm.prop.SizeEditor"},
     singleLine: {group: "display", subgroup: "text", order: 5},
+    */
+    caption: {group: "editor text", subgroup: "caption", order: 1, bindTarget:true, requiredGroup:1},
+    captionPosition: {group: "editor text", subgroup: "caption", order: 2, options: ["top", "left", "bottom", "right"]},
+    captionAlign: {group: "editor text", subgroup: "caption", order: 3, options: ["left", "center", "right"]},
+    captionSize: {group: "editor text",subgroup: "caption", order: 4, editor: "wm.prop.SizeEditor"},
+    singleLine: {group: "editor text", subgroup: "caption", order: 5},
 
     /* Text subgroup */
     setCaption: {method:1},
@@ -163,14 +170,20 @@ wm.Object.extendSchema(wm.AbstractEditor, {
     setCaptionPosition:{method:1},
 
     /* Format subgroup */
+/*
     formatter: { group: "display", subgroup: "format", order: 20, shortname: "readonlyFormatter", advanced:1 },
     format:     {group: "display", subgroup: "format", order: 21, editor: "wm.prop.FormatterEditor", advanced:1}, // shows the properties made available by the formatter property
+	*/
+    formatter: { group: "editor text", subgroup: "format", order: 20, shortname: "readonlyFormatter", advanced:1 },
+    format:     {group: "editor text", subgroup: "format", order: 21, editor: "wm.prop.FormatterEditor", advanced:1}, // shows the properties made available by the formatter property
 
     /* Help subgroup */
-    helpText: {group: "display", subgroup: "help", order: 10},
+    //helpText: {group: "display", subgroup: "help", order: 10},
+    helpText: {group: "editor text", subgroup: "help", order: 10},
 
     /* Layout subgroup */
-    minEditorWidth: {group: "display", subgroup: "layout", order: 500, ignoreHint: "minEditorWidth is only relevant for percent sized editors with captionPosition of left or right", advanced: 1},
+    //minEditorWidth: {group: "display", subgroup: "layout", order: 500, ignoreHint: "minEditorWidth is only relevant for percent sized editors with captionPosition of left or right", advanced: 1},
+    minEditorWidth: {group: "editor text", subgroup: "caption", order: 500, ignoreHint: "minEditorWidth is only relevant for percent sized editors with captionPosition of left or right", advanced: 1},
 
     /* END DISPLAY GROUP */
 
@@ -184,7 +197,7 @@ wm.Object.extendSchema(wm.AbstractEditor, {
     required: {group: "editor", subgroup: "validation", order: 1},    
 
     /* Value subgroup */
-    formField: {group: "editor", subgroup: "value", order: 20, editor: "wm.prop.FormFieldSelect", editorProps: {relatedFields: false}, ignoreHint: "formField is only available when the editor is in a form", requiredGroup: 1},
+    formField: {group: "editor", subgroup: "dataSet", order: 20, editor: "wm.prop.FormFieldSelect", editorProps: {relatedFields: false}, ignoreHint: "formField is only available when the editor is in a form", requiredGroup: 1},
     defaultInsert:{type: "String", bindTarget: 1, group: "editor", subgroup: "value", order: 21, ignoreHint: "defaultInsert is only relevant if the editor is in a form"},
     displayValue: {group: "editor", subgroup: "value", order: 10}, // use getDisplayValue()
     dataValue: {bindable: 1, group: "editor", subgroup: "value", order: 11, simpleBindProp: true, type: "String"}, // use getDataValue()

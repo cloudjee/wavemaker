@@ -67,13 +67,13 @@ dojo.declare("wm.ComponentPublisher", wm.Component, {
 
 wm.Object.extendSchema(wm.ComponentPublisher, {
 	removeSource: {ignore: 1},
-	publishName: {group: "Events", order: 10},
-	namespace: {group: "Events", order: 20},
-	group: {group: "Events", order: 30},
-	displayName: {group: "Events", order: 40},
-	description: {group: "Events", order: 50},
-    width: {group: "layout", order: 20, editor: "wm.prop.SizeEditor"},
-	height: {group: "layout", order: 30, editor: "wm.prop.SizeEditor"},
+	publishName: {group: "widgetName", order: 10},
+	namespace: {group: "widgetName", order: 20},
+	group: {group: "widgetName", order: 30},
+	displayName: {group: "widgetName", order: 40},
+	description: {group: "widgetName", order: 50},
+    width: {group: "display", subgroup: "layout", order: 20, editor: "wm.prop.SizeEditor"},
+	height: {group: "display", subgroup: "layout", order: 30, editor: "wm.prop.SizeEditor"},
     deploy: {group: "operation", order: 10, operation: "doDeploy"},
     undeploy: {group: "operation", order: 20, operation: true},
 	owner: {ignore: 1}
@@ -197,6 +197,11 @@ dojo.declare("wm.TemplatePublisher", wm.ComponentPublisher, {
 		return r
 	}
 });
+
+wm.Object.extendSchema(wm.TemplatePublisher, {
+    isFullPageTemplate: {group: "widgetName", order: 50}
+});
+
 
 /*
 wm.registerPackage(["Components", "Template Publisher", "wm.TemplatePublisher", "wm.base.components.Publisher", "images/flash.png"]);

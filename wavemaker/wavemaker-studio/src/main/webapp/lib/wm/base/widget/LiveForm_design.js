@@ -20,22 +20,22 @@ wm.Object.extendSchema(wm.LiveFormBase, {
     layoutKind: {requiredGroup: 0},
 
     /* Editor group; value subgroup */
-    dataSet: {readonly: 1, group: "editor", subgroup: "value", order: 1, requiredGroup: 1, bindTarget: 1, type: "wm.Variable", editor: "wm.prop.DataSetSelect"},
+    dataSet: {readonly: 1, group: "widgetName", subgroup: "data", order: 1, requiredGroup: 1, bindTarget: 1, type: "wm.Variable", editor: "wm.prop.DataSetSelect"},
 
     /* Editor group */
-    dataOutput: {readonly:1, group: "editor", order: 2, bindable: 1, type: "wm.Variable", simpleBindProp: true, editor: "wm.prop.FieldGroupEditor", advanced:1},
+    dataOutput: {readonly:1, group: "widgetName", subgroup: "data", order: 2, bindable: 1, type: "wm.Variable", simpleBindProp: true, editor: "wm.prop.FieldGroupEditor", advanced:1},
 
     /* Editor group; behavior subgroup */
-    readonly: { group: "editor", subgroup: "behavior", order: 6},
+    readonly: { group: "widgetName", subgroup: "behavior", order: 6},
 
     /* subwidgets group; layout subgroup */
-    editorWidth:  {group: "subwidgets", subgroup: "layout", order: 200, editor: "wm.prop.SizeEditor"},
-    editorHeight: {group: "subwidgets", subgroup: "layout", order: 201, editor: "wm.prop.SizeEditor"},
+    editorWidth:  {group: "widgetName", subgroup: "layout", order: 200, editor: "wm.prop.SizeEditor"},
+    editorHeight: {group: "widgetName", subgroup: "layout", order: 201, editor: "wm.prop.SizeEditor"},
 
     /* subwidgets group; text subgroup */
-    captionSize:     { group: "subwidgets", subgroup:"text", order: 210, editor: "wm.prop.SizeEditor"},
-    captionAlign:    { group: "subwidgets", subgroup:"text", order: 230, options: ["left","center","right"]},
-    captionPosition: { group: "subwidgets", subgroup:"text", order: 240, options: ["top", "left", "bottom", "right"]},
+    captionSize:     { group: "widgetName", subgroup:"text", order: 210, editor: "wm.prop.SizeEditor"},
+    captionAlign:    { group: "widgetName", subgroup:"text", order: 230, options: ["left","center","right"]},
+    captionPosition: { group: "widgetName", subgroup:"text", order: 240, options: ["top", "left", "bottom", "right"]},
 
     /* Styles group */
     themeStyleType: {group: "style", order: 150},
@@ -619,15 +619,15 @@ wm.LiveForm.description = "Displays a detailed form.";
 
 wm.Object.extendSchema(wm.LiveForm, {
     /* Editor group; behavior subgroup */
-    liveEditing:    {group: "editor", subgroup: "behavior", order: 5, type: "Boolean"},
-    alwaysPopulateEditors: {group: "editor", subgroup: "behavior", order: 4, type: "Boolean"},
-    operation:      {group: "editor", subgroup: "behavior", order: 10, options: ["insert", "update", "delete"], type: "String", advanced:1},     
-    saveOnEnterKey: {group: "editor", subgroup: "behavior", order: 20, type: "Boolean", advanced:1},
-    confirmDelete:  {group: "editor", subgroup: "behavior", order: 30, advanced:1},
+    liveEditing:    {group: "widgetName", subgroup: "behavior", order: 5, type: "Boolean"},
+    alwaysPopulateEditors: {group: "widgetName", subgroup: "behavior", order: 4, type: "Boolean"},
+    operation:      {group: "widgetName", subgroup: "behavior", order: 10, options: ["insert", "update", "delete"], type: "String", advanced:1},     
+    saveOnEnterKey: {group: "widgetName", subgroup: "behavior", order: 20, type: "Boolean", advanced:1},
+    confirmDelete:  {group: "widgetName", subgroup: "confirmation", order: 30, advanced:1},
 
 
     /* Editor group; validation subgroup */
-    displayErrors: { group: "editor", subgroup: "validation", order: 15, advanced:1},
+    displayErrors: { group: "widgetName", subgroup: "behavior", order: 15, advanced:1},
 
     /* Operations group */
     generateButtons: {group: "operation", order: 12, operation:1},

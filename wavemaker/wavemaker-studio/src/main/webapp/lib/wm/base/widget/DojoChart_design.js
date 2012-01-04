@@ -41,7 +41,7 @@ wm.Object.extendSchema(wm.DojoChart, {
 	legend:{ignore:1},
 
     /* widgetName group */
-    dataSet: {writeonly: 1, bindTarget: 1, group: "widgetName", subgroup: "data", order: 10, requiredGroup:1,isList: true},
+    dataSet: {bindTarget: 1, group: "widgetName", subgroup: "data", order: 10, requiredGroup:1,isList: true, editor: "wm.prop.DataSetSelect", editorProps: {listMatch: undefined, widgetDataSets: true, allowAllTypes: true}},
 
     xAxis: {group: "widgetName", subgroup: "xaxis", order: 20,requiredGroup:1, editor: "wm.prop.FieldList"},
     includeX: {group: "widgetName", subgroup: "xaxis", order: 21, advanced:1},
@@ -61,9 +61,9 @@ wm.Object.extendSchema(wm.DojoChart, {
     ydisplay:    {group: "widgetName", subgroup: "yaxis", order: 30 }, // shows the display property
     yformat:     {group: "widgetName",subgroup: "yaxis", order: 31, editor: "wm.prop.FormatterEditor"}, // shows the properties made available by the display property    
     
-    maxTimePoints: {group: "widgetName", subgroup: "display", order: 22, advanced:1},
-    chartColor: {group: "widgetName", subgroup: "display", order: 40},
-    chartType: {group: "widgetName", subgroup: "behavior", order: 10, options:  [
+    maxTimePoints: {group: "widgetName", subgroup: "layout", order: 22, advanced:1},
+    chartColor: {group: "widgetName", subgroup: "style", order: 40},
+    chartType: {group: "widgetName", subgroup: "behavior", order: 10, requiredGroup: 1, options:  [
   	"Columns",
 	"ClusteredColumns",
 	"StackedColumns",
@@ -75,7 +75,7 @@ wm.Object.extendSchema(wm.DojoChart, {
 	"Pie",
 	"Lines"
     ]},
-    theme: {group: "widgetName", subgroup: "display", order: 20, options: [
+    theme: {group: "widgetName", subgroup: "style", order: 20, options: [
       		"GreySkies",
       		"Adobebricks",
       		"Algae",
@@ -105,15 +105,15 @@ wm.Object.extendSchema(wm.DojoChart, {
       		"PlotKit.purple",
       		"PlotKit.red"
     ]},
-    gap: {group: "widgetName", subgroup: "display"},
+    gap: {group: "widgetName", subgroup: "layout"},
     hideLegend: {group: "widgetName", subgroup: "legend", advanced:1},
     legendHeight: {group: "widgetName", subgroup: "legend", advanced:1},
     legendWidth: {group: "widgetName", subgroup: "legend", advanced:1},
     verticalLegend: {group: "widgetName", subgroup: "legend", advanced:1},
     
-    includeGrid: {group: "widgetName", subgroup: "display", advanced:1},
-    enableAnimation: {group: "widgetName", subgroup: "display", advanced:1},
-    chartTitle: {group: "widgetName", subgroup: "display", advanced:1},
+    includeGrid: {group: "widgetName", subgroup: "layout", advanced:1},
+    enableAnimation: {group: "widgetName", subgroup: "behavior", advanced:1},
+    chartTitle: {group: "widgetName", subgroup: "text", advanced:1},
     
 	addSilverlight:{ignore:1}
 });
