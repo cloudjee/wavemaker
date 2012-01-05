@@ -1,0 +1,17 @@
+PROPERTIES TODO:
+1. background-image
+2. Advanced nonvisual components
+
+MOBILE PHILOSOPHY: 
+1. We are not building dedicated mobile apps; we are building scalable apps
+1a. This means there are no mobile widgets, only adaptable layouts
+1b. While there may be mobile stylesheets, a button that is 20px high, remains 20px high in a touch environment; developer must chose defaults that will work in both touch and click environments.
+2. We are achieving scalable apps using a variant of "Responsive Design" http://coding.smashingmagazine.com/2011/01/12/guidelines-for-responsive-web-design/
+2a. While we don't scale images for the user at this time, images can be adjusted using ${app.deviceSize} > 1000 ? "image1.png" : "image2.png"
+
+MOBILE TODO:
+1. Fluid layout: Drag and drop support
+4. Build sample app
+5. Build mobile template
+8. Touch friendly checkbox/radio
+9. Handling of mobileHeight in short containers

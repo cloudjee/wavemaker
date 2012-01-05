@@ -417,6 +417,7 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 	    for (i = i-1; i >= 0; i--)
 		if (this.decoree.layers[i].showing) break;
 	    this.decoree.setLayerIndex(i);
+	    this.decoree.layers[i].focusFirstEditor();
 	}
     },
     tabClicked: function(inLayer, e) {
@@ -431,9 +432,11 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 
         // If the user clicks on to the very next tab, then this is the same as clicking the "Next" button.
         // We've already validated the current layer so procede
-        if (oldindex + 1 == newindex)
-            return this.inherited(arguments);
-
+        if (oldindex + 1 == newindex) {
+            this.inherited(arguments);
+	    this.decoree.getActiveLayer().focusFirstEditor();
+	    return;
+	}
         // So, the current layer is valid, and we're skipping ahead at least two layers, this is ONLY ok
         // if all layers between oldindex and newindex are valid AND if they are all tagged as "Done".
         if (oldindex < newindex) {
@@ -449,8 +452,8 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
         } else {
             this.validateCurrentLayer(true);
         }
-
-	return this.inherited(arguments);
+	 this.inherited(arguments);
+	this.decoree.getActiveLayer().focusFirstEditor();
     }
 
 });

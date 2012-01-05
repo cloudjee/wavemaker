@@ -32,7 +32,7 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 		a.className = "wmcheckbox_x";
 		a.innerHTML = "X"
 		e.domNode.appendChild(a);
-		dojo.connect(this.domNode, "onclick", this, function() {
+		dojo.connect(a, "onclick", this, function() {
 		    this.setChecked(!this.getChecked());
 		});
 /*

@@ -44,7 +44,7 @@ dojo.declare("wm.debug.RequestPanel", wm.Layer, {
     postInit: function() {
 	this.inherited(arguments);
 	this.createComponents({
-	    dataEditor: ["wm.AceEditor", {"height":"100%","name":"dataEditor","width":"100%"}],
+	    dataEditor: [wm.isMobile ? "wm.LargeTextArea" : "wm.AceEditor", {"height":"100%","name":"dataEditor","width":"100%"}],
 	    setRequestButton: ["wm.Button", {name: "fireButton", caption: "setRequest()", width: "120px", height:"20px",margin:"2",border:"1",borderColor:"#666"},{onclick: "callSetRequest"}]
 	}, this);
     },
@@ -72,7 +72,8 @@ dojo.declare("wm.debug.RequestPanel", wm.Layer, {
 	    }
 	    this.dataEditor.setDataValue(js_beautify(dojo.toJson(data)));
 	}
-	this.dataEditor.setLineNumber(0);
+	if (this.dataEditor.setLineNumber)
+	    this.dataEditor.setLineNumber(0);
     },
     callSetRequest: function() {
 	var data = this.dataEditor.getDataValue();

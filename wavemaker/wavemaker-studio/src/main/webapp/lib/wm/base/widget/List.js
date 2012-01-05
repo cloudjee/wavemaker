@@ -320,7 +320,11 @@ dojo.declare("wm.List", wm.VirtualList, {
 		    var a = d[key];
                     if (dojo.isString(a)) a = a.replace(/\\([^\\])/g,"$1");
 		    var b = this.query[key];
-                    if (dojo.isString(b)) b = b.replace(/\\([^\\])/g,"$1");
+                    if (dojo.isString(b)) {
+			b = b.replace(/\\([^\\])/g,"$1");
+			if (b.charAt(0) == w)
+			    b = b.substring(1);
+		    }
 		    if (b == w)
 			continue;
 		    if (dojo.isString(a) && dojo.isString(b)) {

@@ -104,8 +104,12 @@ dojo.declare("wm.debug.WidgetPanel", wm.Container, {
 	this.showWidget(null, this.selectedItem.parent.getRuntimeId());
     },
 	showWidget: function(inSender, altId) {
-	var id = altId || this.widgetGrid.selectedItem.getValue("id");
-	if (!id) {
+	    if (this._inShowWidget) return;
+	    this._inShowWidget = true;
+	    try {
+	    var id = altId || this.widgetGrid.selectedItem.getValue("id");
+	    this.selectedItem = id ? app.getValueById(id) : null;
+	if (!this.selectedItem) {
 	    this.selectedItem = null;
 	    this.widgetGrid.setColumnShowing("page",true, true);
 	    this.widgetGrid.setColumnShowing("type",true, false); 
@@ -121,10 +125,10 @@ dojo.declare("wm.debug.WidgetPanel", wm.Container, {
 	    this.searchClassText.hide();
 	    this.pagesMenu.hide();
 
-	this.selectedItem = app.getValueById(id);
+
 	this.widgetGrid.setColumnShowing("page",false, true);
 	this.widgetGrid.setColumnShowing("type",false, false);
-	this.inspector.setShowing(true);	
+	this.inspector.setShowing(true);
 	    this.$.gridPanel.setWidth("300px");
 	this.inspector.inspect(this.selectedItem);
 
@@ -145,6 +149,9 @@ dojo.declare("wm.debug.WidgetPanel", wm.Container, {
 		self.selectionNode.style.display = "none";
 	    });
 	}
+	    } catch(e) {
+	    } finally {this._inShowWidget = false;}
+	    
     },
 
     searchChange: function(inSender) {

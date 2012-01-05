@@ -409,6 +409,7 @@ dojo.declare("wm.CheckboxSet", wm.DataSetEditor, {
     _multiSelect: true,
     _focused: false,
     height: "100px",
+    mobileHeight: "150px",
     editors: null,
     _dijitClass: "dijit.form.CheckBox",
     setDataSet: function(inDataSet) {
@@ -442,6 +443,19 @@ dojo.declare("wm.CheckboxSet", wm.DataSetEditor, {
 	    }
 	    this.editor.innerHTML = html;
 	    this.dijits = dojo.parser.parse(this.editor);
+	    if (wm.isMobile) {
+		dojo.forEach(this.dijits, dojo.hitch(this, function(e,i) {
+		    var a = document.createElement("div");
+		    a.className = "wmcheckbox_x";
+		    a.innerHTML = "X"
+		    a.id = this.getRuntimeId() + "_x_" + i;
+		    e.domNode.appendChild(a);
+		    dojo.connect(a, "onclick", this, function(event) {
+			e.set("checked", !e.checked);
+		    });
+		}));
+	    }
+
 	    var self = this;
 	    dojo.forEach(this.dijits, function(dijit) {
 		self.connect(dijit, "onChange", self, "changed");
@@ -549,6 +563,7 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
     searchBar: true,
     _multiSelect: true,
     height: "100px",
+    mobileHeight: "150px",
     editors: null,
     setDataSet: function(inDataSet) {
 	this.inherited(arguments);
