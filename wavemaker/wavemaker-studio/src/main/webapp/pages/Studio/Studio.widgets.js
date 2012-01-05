@@ -390,7 +390,7 @@ Studio.widgets = {
 			splitter3b: ["wm.Splitter", {border: ""}, {}],
 			    PIPanel: ["wm.Panel", { height: "100%", width: "250px", border: "0", padding: "0", layoutKind: "top-to-bottom", dockRight:true}, {}, {
 				PIContents: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, width: "100%", height: "100%", _dockData: {border:"3", edge: "r", w: 400}, border: "0", margin: "0", containerWidget:"inspector",modal:false,docked: true, minWidth: "150", minHeight: "300", noTopBottomDocking: true}, {onClose: "dockPropertyPanel"}, {
-				    inspectorToolbarOuter: ["wm.Panel", {width:"100%", height: "47px", layoutKind: "top-to-bottom", horizontalAlign: "left", verticalAlign: "top",padding:"0"},{},{				    
+				    inspectorToolbarOuter: ["wm.Panel", {width:"100%", height: "49px", layoutKind: "top-to-bottom", horizontalAlign: "left", verticalAlign: "top",padding:"0,0,2,0"},{},{
 				    inspectorToolbar2: ["wm.Panel", {width: "100%", height: "22px", layoutKind: "left-to-right", horizontalAlign: "left", verticalAlign: "top",padding:"0"},{},{				    
 					propertySearchBar: ["wm.Text", {resetButton: true, width: "130px", changeOnKey: true, emptyValue: "emptyString", placeHolder: "Find Property"},{onchange: "inspector.propertySearch"}],
 					propertySearchBarSpacer: ["wm.Spacer", {width: "100%"}],
@@ -406,8 +406,8 @@ Studio.widgets = {
 				    }],
 
 				    inspectorToolbar: ["wm.Panel", {width: "100%", height: "25px", layoutKind: "left-to-right", horizontalAlign: "center", verticalAlign: "top",margin:"3,0,0,0"},{},{
-					togglePropertiesButton: ["wm.Button", {_classes: {domNode: ["wmtogglebutton","toggleButtonDown"]}, height: "100%", width: "100px", caption: "Recommended", border:"1",borderColor:"black",margin:"0",clicked:true}, {onclick: "inspector.toggleAdvancedPropertiesSome"}],
-					togglePropertiesButton2: ["wm.Button", {_classes: {domNode: ["wmtogglebutton"]}, height: "100%", width: "50px", caption: "All", border:"1",borderColor:"black",margin:"0"}, {onclick: "inspector.toggleAdvancedPropertiesAll"}]
+					togglePropertiesButton: ["wm.Button", {_classes: {domNode: ["wmtogglebutton","toggleButtonDown"]}, height: "100%", width: "48%", minWidth: 100, caption: "Recommended", border:"1,0,1,1",borderColor:"black",margin:"0",clicked:true}, {onclick: "inspector.toggleAdvancedPropertiesSome"}],
+					togglePropertiesButton2: ["wm.Button", {_classes: {domNode: ["wmtogglebutton"]}, height: "100%", width: "48%", caption: "All", border:"1",borderColor:"black",margin:"0"}, {onclick: "inspector.toggleAdvancedPropertiesAll"}]
 				    }]
 				    }],
 				    inspector: ["wm.PropertyInspector", {_classes: {domNode: ["wm-darksnazzy"]},height: "100%", width:"100%",border: "0"}, {}, {}]
