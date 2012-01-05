@@ -26,9 +26,11 @@ dojo.declare("wm.ComponentPublisher", wm.Component, {
 	undeploy: "(undeploy)",
 	group: "Published",
 	init: function() {
-		this.inherited(arguments);
+	    this.inherited(arguments);
+	    if (window["studio"]) {
 		var p = studio.project;
 		this.publishName = this.publishName || p.projectName + p.pageName;
+	    }
 	},
 	deploy: function() {
 		wm.Property.deploy = true;
