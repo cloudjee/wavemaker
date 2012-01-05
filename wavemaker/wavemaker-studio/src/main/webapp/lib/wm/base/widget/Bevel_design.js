@@ -18,7 +18,7 @@ dojo.require("wm.base.Control_design");
 
 // design-time
 wm.Object.extendSchema(wm.Bevel, {
-    bevelSize: {group: "display", subgroup: "layout", doc: 1, type: "number"},
+    bevelSize: {group: "widgetName", subgroup: "layout", doc: 1, type: "number"},
 
     /* Ignored Group */
 	vertical: { ignore: 1 },

@@ -140,22 +140,22 @@ wm.Dashboard.extend({
 wm.Dashboard.description = "A dojo Grid Container that is used as a dashboard element.";
 
 wm.Object.extendSchema(wm.Dashboard, {
+    configPortlets: {group: "widgetName", subgroup: "data", order: 10, contextMenu: 1, operation:1, requiredGroup:1 },
 
     /* Display group; misc subgroup */
-    configPortlets: {group: "display", subgroup: "misc", order: 10, contextMenu: 1, operation:1, requiredGroup:1 },
-    saveInCookie:   {group: "display", subgroup: "misc", order: 111},
+    saveInCookie:   {group: "widgetName", subgroup: "behavior", order: 111},
 
-    /* Display group; scrolling subgroup */
-    allowAutoScroll: {group: "display", subgroup: "scrolling", type: "boolean"},
+    /* WidgetName group; scrolling subgroup */
+    allowAutoScroll: {group: "widgetName", subgroup: "behavior", type: "boolean"},
 
     /* Display group; layout subgroup */
-    minChildWidth:       {group: "display", subgroup: "layout", order: 100},
-    minColWidth:         {group: "display", subgroup: "layout", order: 101},
-    nbZones:             {group: "display", subgroup: "layout", order: 102},
+    minChildWidth:       {group: "widgetName", subgroup: "layout", order: 100},
+    minColWidth:         {group: "widgetName", subgroup: "layout", order: 101},
+    nbZones:             {group: "widgetName", subgroup: "layout", order: 102},
 
     /* Display group; visual subgroup */
-    hasResizableColumns: {group: "display", subgroup: "visual", order: 102, type: "boolean"},
-    withHandles:         {group: "display", subgroup: "visual", type: "boolean"},
+    hasResizableColumns: {group: "widgetName", subgroup: "graphics", order: 102, type: "boolean"},
+    withHandles:         {group: "widgetName", subgroup: "graphics", type: "boolean"},
 
     /* Ignored/hidden group */
     autoScroll: {ignore:1},

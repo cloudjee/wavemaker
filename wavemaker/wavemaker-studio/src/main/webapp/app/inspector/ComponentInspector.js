@@ -386,7 +386,7 @@
  dojo.declare("wm.PropertyInspector", wm.AccordionLayers, {    
      preferredMultiActive: false,
      multiActive: false,
-     ignoreHintPrefix: "<p><b>Disabled</b></p>",
+     ignoreHintPrefix: "<p><b>Why is this disabled?</b></p>",
      classNames: "wminspector",
      layerBorder: 0,
      autoScroll: true,
@@ -571,7 +571,7 @@
 	     /* In advanced mode we disable editors that aren't applicable and set a mouseover hint to explain why its disabled.
 	      * In basic mode, just hide the editor
 	      */
-	     e.setDisabled(inProp.ignoretmp); // make sure though to change the disabled property if ignoretmp changed...
+	     e.setDisabled(inProp.ignoretmp || e.alwaysDisabled); // make sure though to change the disabled property if ignoretmp changed...
 	     if (this.isAdvancedMode()) {
 		 e.setHint(inProp.ignoretmp && inProp.ignoretmp ? this.ignoreHintPrefix +  inProp.ignoreHint : "");
 	     } else {
@@ -585,7 +585,7 @@
 		 binde.setShowing(Boolean(isBound));
 		 console.log(binde.toString());
 		 e.parent.setHeight((isBound ? binde.bounds.h : e.bounds.h) +  "px");
-		 var wire = inComponent.$.binding.wires[propPath];
+		 var wire = inComponent.$.binding && inComponent.$.binding.wires[propPath];
 		 binde.setDataValue(wire ?this.getFormattedBoundValue(inProp.type, wire.source,wire.expression) : "");
 	     }
 	 }
@@ -867,7 +867,7 @@
 	 }
 	 var self = this;
 	 if (!e.noHelpButton) {
-	     this.createHelpButton(inComponent, inProp, panel);
+	     this.createHelpButton(inComponent, inProp, panel, e.captionPosition == "top" ? parseInt(e.captionSize) : 0);
 	 }
 	 panel.setBestHeight();
 	 return e;
@@ -927,13 +927,14 @@
      /**************************************************************************************
       * Creates a help button that opens a dialog showing property docs
       **************************************************************************************/
-     createHelpButton: function(inComponent, inProp, inPanel) {
+     createHelpButton: function(inComponent, inProp, inPanel, captionHeight) {
 	 var self = this;
 	 wm.Label({owner: this,
 		   caption: "",
 		   parent: inPanel,
 		   width: "20px",
-		   height: "20px",
+		   height: (20 + captionHeight) + "px",
+		   margin: captionHeight + ",0,0,0",
 		   onclick: function() {
 		       studio.helpPopup = self.getHelpDialog();
 		       self.beginHelp(inProp.name, inPanel.domNode, inComponent.declaredClass);
@@ -984,12 +985,14 @@
 	 this.bindEditorHash[(optionalAppendToHashName ? optionalAppendToHashName + "_" : "") +  this.getHashId(inComponent,inProp.fullName || inProp.name)] = bindableEditor;
 
 	 if (!e.hideBindColumn) {
+	     var captionHeight = (bindableEditor.captionPosition == "top" ? parseInt(bindableEditor.captionSize) : 0);
 	 var l = new wm.Label({owner:this,
 			       parent: e.parent,
 			       _classes: {domNode: ["wminspector-bindProp"]},
 			       caption: "",
-			       width: "20px",
-			       height: "20px"});
+			       margin: captionHeight + ",0,0,0",
+			       width: "20px",			       
+			       height: captionHeight + 20 + "px"});
 	 var self = this;
 	 l.onclick = function() {
 	     //studio.bindDialog.page.update({object: inComponent, targetProperty: inProp.treeBindField || inProp.name});
@@ -1073,6 +1076,7 @@
      },
 
      generateEditorFromProps: function(inProp, editorProps, value) {
+	 var ctor;
 	 if (inProp.editor) {
 	     ctor = dojo.getObject(inProp.editor);
 	     if (!inProp.editorProps || !inProp.editorProps.height) {
@@ -1156,6 +1160,8 @@
      parseExpressionForWire: function(inValue) {
 	 // A bind wire expression must be a string 
 	 if (typeof inValue == "number") {
+	     return String(inValue);
+	 } else if (typeof inValue == "boolean") {
 	     return String(inValue);
 	 } else if (typeof inValue == "object") {
 	     return inValue; // may need to handle this some day... but this shouldn't ever happen
@@ -1633,22 +1639,42 @@ wm.addPropertyGroups({
     display: {displayName: "Display", 
 	      order: 15,
 	      subgroups: {
+		  /* Confirmed */
 		  layout: {displayName: "Layout",
 			   order: 1},
+		  /* Confirmed */
+		  panel: {displayName: "Panel",
+			  order: 5},
+		  /* NOT Confirmed */
 		  text: {displayName: "Text",
 			 order: 10},
+		  /* NOT Confirmed */
 		  formatter: {displayName: "Formatting",
 			      order: 40},
+		  /* NOT Confirmed */
 		  help: {displayName: "Help",
 			 order: 50},
+		  /* Confirmed */
 		  scrolling: {displayName: "Scrolling",
 			       order: 80},
+		  /* NOT Confirmed */
 		  visual: {displayName: "Visual",
 			   order: 100},
+		  /* NOT Confirmed */
+		  graphics: {displayName: "Graphics",
+			     order: 120},
+		  /* NOT Confirmed */
 		  misc: {displayName: "Misc",
 			 order: 200}
 	      }
 	     },
+    container: {displayName: "Panel",
+		order: 40,
+		subgroups: {
+		    layout: {displayName: "Layout", order: 1},
+		    style: {displayName: "Style", order: 10}
+		}
+	       },
     /* Philosophy of use for widgetName (proposal):
      * For a widget with a small number of properties beyond wm.Control,
      * its a good place to put the properties to highlight them instead of making the user
@@ -1657,24 +1683,70 @@ wm.addPropertyGroups({
     widgetName: {displayName: "", // set to class name
 		 order: 45,
 		 subgroups: {
-		     selection: {displayName: "Selection",
-				 order: 10},
-		     data:      {displayName: "Data",
+		     /* COnfirmed */
+		     text:      {displayName: "Text",
 				 order: 1},
+		     /* Confirmed */
+		     data:      {displayName: "Data",
+				 order: 10},
+		     /* Confirmed */
 		     fields:    {displayName: "Fields",
-				 order: 2},
-		     confirmation: {displayName: "Confirmation",
-				    order: 20},
-		     editing:    {displayName: "Editing",
+				 order: 20},
+		     /* Confirmed for DojoChart only */
+		     xaxis:     {displayName: "X-Axis",
+				 order: 25},
+		     /* Confirmed for DojoChart only */
+		     yaxis:     {displayName: "Y-Axis",
+				 order: 26},
+
+		     /* Confirmed */
+		     layout:    {displayName: "Layout",
 				  order: 30},
-		     behavior:   {displayName: "Behavior",
+		     /* Confirmed */
+		     graphics:   {displayName: "Graphics",
 				  order: 40},
-		     display:    {displayName: "Display",
-				  order: 50}
+		     style:   {displayName: "Style",
+				  order: 45},
+
+		     /* Confirmed */
+		     editing:    {displayName: "Editing",
+				  order: 50},
+		     /* Confirmed (DojoMenu) */
+		     behavior:   {displayName: "Behavior",
+				  order: 60},
+		     /* Confirmed */
+		     selection: {displayName: "Selection",
+				 order: 70},
+		     /* Confirmed */
+		     confirmation: {displayName: "Confirmation",
+				    order: 80},
+
+		     /* Confirmed */
+		     format:     {displayName: "Format",
+				  order: 90},
+
+		     /* Confirmed for DojoChart only */
+		     legend:     {displayName: "Legend",
+				  order: 120},
 		 }
 		},
+    /* Confirmed */
+    "editor text": {displayName: "Editor Text",
+		    order: 50,
+		    subgroups: {		    
+			caption: {displayName: "Caption",
+				  order: 0},
+			help: {displayName: "Help",
+			       order: 10},
+			format: {displayName: "Format",
+				 order: 20},
+			"dojo tooltips": {displayName: "Dojo Tooltips",
+					  order: 50}
+		    }
+		   },
+    /* Confirmed */
     editor: {displayName: "Editor", 
-	     order: 50,
+	     order: 60,
 	     subgroups: {
 		 value: {displayName: "Values",
 			 order: 1},
@@ -1684,12 +1756,15 @@ wm.addPropertyGroups({
 			     order: 20},
 		 behavior: {displayName: "Behaviors",
 			    order: 30},
+		 layout: {displayName: "Layout",
+			     order: 40},
+		 toolbar: {displayName: "Toolbar",// Richtext only
+			     order: 50},
 		 validation: {displayName: "Validation",
-			      order: 40},
-		 "dojo tooltips": {displayName: "Dojo Tooltips",
-				   order: 50}
+			      order: 50}
 	     }
 	    },
+    /* Confirmed */
     dialog: {displayName: "Dialog",
 		 order: 55,
 		 subgroups: {
@@ -1717,17 +1792,27 @@ wm.addPropertyGroups({
 	   subgroups: {
 	       data: {displayName: "Data",
 		      order: 1},
+	       type: {displayName: "Type",
+		      order: 5},
+	       service: {displayName: "Service",
+			 order: 10},
 	       serverOptions: {displayName: "Server Options",
-			       order: 10},
+			       order: 20},
 	       behavior: {displayName: "Behavior",
-			  order: 20}
+			  order: 30}
 	   }
 	  },
+	/* Confirmed */
     style: {displayName: "Style", order: 80},
+    /* Confirmed */
     events: {displayName: "Events", order: 100},
+    /* Confirmed */
     custommethods: {displayName: "Custom Methods", order: 101},
+    /* Confirmed */
     roles: {displayName: "Roles", order: 110},
+    /* Confirmed */
     devices: {displayName: "Devices", order: 120},
+    /* Confirmed */
     deprecated: {displayName: "Deprecated", order: 100000},
 /* OLD SCHEMA */
 

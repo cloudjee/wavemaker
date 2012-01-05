@@ -244,17 +244,17 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
  
  wm.Object.extendSchema(wm.RichText, {
      /* subwidget group; buttons subgroup */
-     toolbarUndo: {group: "subwidgets", subgroup: "buttons", order: 1, shortname: "undo"},
-     toolbarStyle: {group: "subwidgets", subgroup: "buttons", order: 2, shortname: "styles"},
-     toolbarStyleAll: {group: "subwidgets", subgroup: "buttons", order: 3, shortname: "more styles"},
-     toolbarAlign: {group: "subwidgets", subgroup: "buttons", order: 4, shortname: "align"},
-     toolbarList: {group: "subwidgets", subgroup: "buttons", order: 5, shortname: "lists"},
-     toolbarLink: {group: "subwidgets", subgroup: "buttons", order: 6, shortname: "link"},
-     toolbarFontName: {group: "subwidgets", subgroup: "buttons", order: 7, shortname: "fontName"},
-     toolbarFormatName: {group: "subwidgets", subgroup: "buttons", order: 8, shortname: "formatName"},
-     toolbarSize: {group: "subwidgets", subgroup: "buttons", order: 9, shortname: "size"},
-     toolbarColor: {group: "subwidgets", subgroup: "buttons", order: 11, shortname: "color"},
-     toolbarFind: {group: "subwidgets", subgroup: "buttons", order: 12, shortname: "find & replace"},
+     toolbarUndo: {group: "editor", subgroup: "toolbar", order: 1, shortname: "undo"},
+     toolbarStyle: {group: "editor", subgroup: "toolbar", order: 2, shortname: "styles"},
+     toolbarStyleAll: {group: "editor", subgroup: "toolbar", order: 3, shortname: "more styles"},
+     toolbarAlign: {group: "editor", subgroup: "toolbar", order: 4, shortname: "align"},
+     toolbarList: {group: "editor", subgroup: "toolbar", order: 5, shortname: "lists"},
+     toolbarLink: {group: "editor", subgroup: "toolbar", order: 6, shortname: "link"},
+     toolbarFontName: {group: "editor", subgroup: "toolbar", order: 7, shortname: "fontName"},
+     toolbarFormatName: {group: "editor", subgroup: "toolbar", order: 8, shortname: "formatName"},
+     toolbarSize: {group: "editor", subgroup: "toolbar", order: 9, shortname: "size"},
+     toolbarColor: {group: "editor", subgroup: "toolbar", order: 11, shortname: "color"},
+     toolbarFind: {group: "editor", subgroup: "toolbar", order: 12, shortname: "find & replace"},
 
      /* Ignored group */
      selectOnClick: {ignore: 1},

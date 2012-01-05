@@ -26,21 +26,21 @@ wm.Object.extendSchema(wm.gadget.Facebook, {
 
 wm.Object.extendSchema(wm.gadget.FacebookLikeButton, {
     href: {bindTarget: true},
-    layout: {group: "widgetName", subgroup: "display", options: ["standard", "button_count", "box_count"]},
-    action: {group: "widgetName", subgroup: "display",  options: ["like", "recommend"]},
-    font: {group: "widgetName",  subgroup: "display", options: ["arial", "licida grande", "segoe ui", "tahoma", "trebuchet ms", "verdana"]},
-    show_faces: {group:"widgetName", subgroup: "display"},
-    colorscheme: {group: "widgetName",  subgroup: "display", options: ["dark","light"]},
+    layout: {group: "widgetName", subgroup: "layout", options: ["standard", "button_count", "box_count"]},
+    action: {group: "widgetName", subgroup: "text",  options: ["like", "recommend"]},
+    font: {group: "widgetName",  subgroup: "style", options: ["arial", "licida grande", "segoe ui", "tahoma", "trebuchet ms", "verdana"]},
+    show_faces: {group:"widgetName", subgroup: "behavior"},
+    colorscheme: {group: "widgetName",  subgroup: "style", options: ["dark","light"]},
     href: {group:"widgetName", subgroup: "data"},
     ref: {group:"widgetName", subgroup: "data"}
 });
 wm.Object.extendSchema(wm.gadget.FacebookActivityFeed, {
-    colorscheme: {group:"widgetName", subgroup: "display"},
-    font:  {group:"widgetName", subgroup: "display"},
-    showHeader: {group: "widgetName", subgroup: "display"},
+    colorscheme: {group:"widgetName", subgroup: "style"},
+    font:  {group:"widgetName", subgroup: "style"},
+    showHeader: {group: "widgetName", subgroup: "layout"},
     showRecommendations: {group: "widgetName", subgroup: "behavior"},
-    font: {group: "widgetName",subgroup:"display", options:["arial", "licida grande", "segoe ui", "tahoma", "trebuchet ms", "verdana"]},
-    colorscheme: {group: "widgetName", subgroup:"display", options: ["dark","light"]}, 
+    font: {group: "widgetName",subgroup:"style", options:["arial", "licida grande", "segoe ui", "tahoma", "trebuchet ms", "verdana"]},
+    colorscheme: {group: "widgetName", subgroup:"style", options: ["dark","light"]}, 
     ref: {group: "widgetName", subgroup: "data"},
     site: {group: "widgetName", subgroup: "data"}
 

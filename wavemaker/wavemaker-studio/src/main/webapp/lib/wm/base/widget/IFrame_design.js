@@ -18,7 +18,7 @@ dojo.require("wm.base.Control_design");
 // design only...
 wm.Object.extendSchema(wm.IFrame, {
     /* Display group; misc subgroup */
-    source: { group:"display", subgroup: "misc", type: "String", bindable: 1, requiredGroup:1},
+    source: { group:"widgetName", subgroup: "data", type: "String", bindable: 1, requiredGroup:1},
 
     /* Method group */
     setSource: {method:1},

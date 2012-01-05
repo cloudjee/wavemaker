@@ -653,6 +653,8 @@ wm.Container.extend({
 		max = Math.round(max * 100/percentUsed);
 	    }
                 // Never return less than 30px wide; mostly this is for design mode where users still need to be able to find and drop widgets into the container.
+	    if (this.layoutKind == "fluid") return Math.min(this.bounds.w, max);
+
 	        var result = ((this.layoutKind == "top-to-bottom") ? max : sum) + extra;
 	    return Math.max(this.minWidth,Math.max(result, wm.Control.prototype.getMinWidthProp.call(this)));
 	},

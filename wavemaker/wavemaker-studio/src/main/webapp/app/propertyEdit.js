@@ -746,6 +746,7 @@ dojo.declare("wm.prop.WidgetSelect", wm.prop.SelectMenu, {
     allowNone: true,
     widgetType: null,
     excludeType: null,
+    useOwner: null,
     updateOptions: function() {
 	if (this.widgetType && typeof this.widgetType == "string")
 	    this.widgetType = dojo.getObject(this.widgetType);
@@ -755,7 +756,7 @@ dojo.declare("wm.prop.WidgetSelect", wm.prop.SelectMenu, {
 	this.inherited(arguments);
 
 
-	var components = wm.listComponents([this.inspected.owner], this.widgetType);
+	var components = wm.listComponents([this.useOwner || this.inspected.owner], this.widgetType);
 	var result = [];
 	if (this.excludeType) {
 	    for (var i = 0; i < components.length; i++) {
@@ -1585,6 +1586,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	propDef.editorProps.matchComponentType = true;
 	if (this.propDef.putWiresInSubcomponent) {
 	    propDef.editorProps.disabled = true;
+	    propDef.editorProps.alwaysDisabled = true;
 	    propDef.editorProps.hideBindColumn = true;
 	}
 
@@ -1629,7 +1631,22 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 		    fullName = this.propDef.name + "." + fieldName;
 		}
 		/* dojo.mixin used this way insures we work on a copy of propDef and don't modify e.propDef before its onclick is fired */
-		propDef = dojo.mixin({}, propDef, {
+		propDef = this.getPropDef(propDef, fieldName, fullName,type, isStructured);
+		e = studio.inspector.generateEditor(inspected, /* Component we are editing (or subcomponent in our case) */
+						    propDef, /* Property we are editing within the component */
+						    panel, /* Parent panel */
+						    null, /* ignore */
+						    this.propDef.name /* Append this to the editor name to avoid naming colisions */
+						   );
+		this.editors[inspected.getId() + "." + fieldName] = e;
+	    }));
+	    this.fieldPanel.setBestHeight();
+	}
+	this.setBestHeight();
+	this.reflow();
+    },
+    getPropDef: function(sourcePropDef, fieldName, fullName, type, isStructured) {
+	var propDef = dojo.mixin({}, sourcePropDef, {
 
 		    /* The name of the field we are editing is "fieldName"; this is used for
 		     * 1. Naming the editor
@@ -1666,19 +1683,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 		    createWire: true,
 		    noHelpButton: true
 		});
-
-		e = studio.inspector.generateEditor(inspected, /* Component we are editing (or subcomponent in our case) */
-						    propDef, /* Property we are editing within the component */
-						    panel, /* Parent panel */
-						    null, /* ignore */
-						    this.propDef.name /* Append this to the editor name to avoid naming colisions */
-						   );
-		this.editors[inspected.getId() + "." + fieldName] = e;
-	    }));
-	    this.fieldPanel.setBestHeight();
-	}
-	this.setBestHeight();
-	this.reflow();
+	return propDef;
     },
     reinspect: function() {
 	var inspected = this.inspectedSubcomponent || this.inspected;
@@ -1731,6 +1736,49 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
     }
 });
 
+
+dojo.declare("wm.prop.NavigationGroupEditor", wm.prop.FieldGroupEditor, { 
+    getPropDef: function(sourcePropDef, fieldName, fullName, type, isStructured) {
+	var propDef = this.inherited(arguments);
+	switch(fieldName) {
+	case "pageName":
+	    propDef.editor =  "wm.prop.PagesSelect";
+	    break;
+	case "pageContainer":
+	    propDef.editor = "wm.prop.WidgetSelect";
+	    propDef.editorProps.widgetType = wm.PageContainer;
+	    propDef.editorProps.useOwner = this.inspected.owner;
+	    propDef.editorProps.createExpressionWire = false;
+	    break;
+	case "layer":
+	    propDef.editor = "wm.prop.WidgetSelect";
+	    propDef.editorProps.widgetType = wm.Layer;	    
+	    propDef.editorProps.useOwner = this.inspected.owner;
+	    propDef.editorProps.createExpressionWire = false;
+	    break;
+	case "layers":
+	    propDef.editor = "wm.prop.WidgetSelect";
+	    propDef.editorProps.widgetType = wm.Layers;	    
+	    propDef.editorProps.useOwner = this.inspected.owner;
+	    propDef.editorProps.createExpressionWire = false;
+	    break;
+	case "cssClasses":
+	    propDef.editor = "";
+	    propDef.options = ["Success", "Error", "Warning", "Info", "Misc"];
+	    break;
+	case "duration":
+	    propDef.editor = "";
+	    propDef.options = ["1000", "2000", "3000", "4000", "5000", "6000", "8000", "10000", "15000"];
+	    break;
+	case "dialogPosition":
+	    propDef.editor = "";
+	    propDef.options = ["", "top left", "top center", "top right", "center left", "center center", "center right", "bottom left", "bottom center", "bottom right"];
+	    break;
+	} 
+
+	return propDef;
+    }
+});
 
 dojo.declare("wm.prop.SubComponentEditor", wm.Container, {
     noHelpButton: true,/* This container doesn't get a help button; the editors in it do */

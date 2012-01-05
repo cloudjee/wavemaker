@@ -82,6 +82,9 @@ wm.Object.extendSchema(wm.Dialog, {
     noTopBottomDocking: {group: "dialog", subgroup: "docking", type: "boolean"},
     noLeftRightDocking: {group: "dialog", subgroup: "docking", type: "boolean"},
 
+    onShow: {advanced:0},
+    onHide: {advanced:0},
+
     /* Ignore group */
     resizeToFit: {ignore: 1},
     fixPositionNode: {ignore: 1},

@@ -36,7 +36,7 @@ dojo.declare("wm.NavigationService", wm.Service, {
 	_operations: {
 		gotoLayer: {
 			parameters: {
-			        layer: { type: "wm.Layer"},
+			    layer: { type: "wm.Layer", },
 				showOnlyParentLayer: {type: "boolean"}
 			},
 			returnType: "any",
@@ -58,7 +58,7 @@ dojo.declare("wm.NavigationService", wm.Service, {
 		},
 		gotoPage: {
 			parameters: {
-				pageName: { type: "string" }
+			    pageName: { type: "string" }
 			},
 			returnType: "any",
 			hint: "This operation displays a different page and requires a pageName."
@@ -221,7 +221,7 @@ dojo.declare("wm.NavigationService", wm.Service, {
 	*/
 	    gotoDialogPage: function(inPageName, inHideControls, inTitle, inModal, inWidth, inHeight) {
 		this._resultConnect = dojo.connect(app.pageDialog, "onPageReady", this, "doResult");
-		app.pageDialog.showPage(inPageName, inHideControls, String(inWidth || 450) +"px", String(inHeight || 300) +"px", inTitle, inModal);
+		app.pageDialog.showPage(inPageName, inHideControls, String(inWidth || 450) +"px", String(inHeight || 300) +"px", inTitle, Boolean(inModal));
 	},
         showToast: function(inContent, inDuration, cssClasses, toastPosition) {
 	    app.toastDialog.showToast(inContent, inDuration, cssClasses, toastPosition);

@@ -25,10 +25,8 @@ wm.dijit.ProgressBar.extend({
 
 wm.Object.extendSchema(wm.dijit.ProgressBar, {
     /* Editor group; value subgroup */
-    progress: {group: "editor", subgroup: "value", order: 1},
-    indeterminate:  {group: "editor", subgroup: "value", order: 2},
+    progress: {group: "widgetName", subgroup: "data", order: 1, bindable:1},
+    indeterminate:  {group: "widgetName", subgroup: "behavior", order: 2, bindable: 1},
 
-	disabled: { ignore: 1 },
-	progress: { bindable: 1 },
-	indeterminate: { bindable: 1 }
+	disabled: { ignore: 1 }
 });

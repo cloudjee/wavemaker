@@ -21,8 +21,8 @@ wm.Content.description = "Displays markup content.";
 
 wm.Object.extendSchema(wm.Content, {
     /* Display group; text subgroup */
-    content:    {group: "display", subgroup: "text"},
-    resource:   {group: "display", subgroup: "text", type: "String", subtype: "File", bindTarget: true, extensionMatch: ["html","txt"] },
+    content:    {group: "widgetName", subgroup: "text"},
+    resource:   {group: "widgetName", subgroup: "text", type: "String", subtype: "File", bindTarget: true, extensionMatch: ["html","txt"] },
 
     /* Display group; scrolling subgroup */
     autoScroll: {group: "display", subgroup: "scrolling", order: 100},

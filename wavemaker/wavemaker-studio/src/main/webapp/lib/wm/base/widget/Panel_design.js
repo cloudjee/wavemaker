@@ -40,8 +40,8 @@ wm.FancyPanel.extend({
 // TODO: 6.5: test the docking properties for FancyPanel
 wm.Object.extendSchema(wm.FancyPanel, {
     /* Display group; text subgroup */
-    title:       {group: "display", subgroup: "text", order: 10, requiredGroup: true, type: "String", bindTarget: 1},
-    labelHeight: {group: "display", subgroup: "text", order: 20, advanced: 1},
+    title:       {group: "widgetName", subgroup: "text", order: 10, requiredGroup: true, type: "String", bindTarget: 1},
+    labelHeight: {group: "widgetName", subgroup: "text", order: 20, advanced: 1},
     
     /* Display group; layout subgroup */
     innerLayoutKind:      {group: "display", subgroup: "layout", order: 100, shortname: "layoutKind", options: ["top-to-bottom", "left-to-right"], requiredGroup:1},
@@ -52,6 +52,10 @@ wm.Object.extendSchema(wm.FancyPanel, {
     innerBorder: {group: "style", order: 100, shortname: "border",  doc: 1},
 
     /* Ignored group */
+    dockBottom:{ignore:1},
+    dockTop:{ignore:1},
+    dockLeft:{ignore:1},
+    dockRight:{ignore:1},
     labelWidget: {ignore: 1,  doc: 1},
     themeStyleType:  {ignore: 1},
     containerWidget: {ignore: 1,  doc: 1},

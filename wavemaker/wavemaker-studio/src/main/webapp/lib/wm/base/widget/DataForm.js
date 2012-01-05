@@ -690,6 +690,7 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 
 /* TODO: Needs formField */
 dojo.declare("wm.SubForm", wm.DataForm, {
+    confirmChangeOnDirty: "",
     formField:"",
     editingMode: "one-to-one", // "one-to-one", "one-to-many" (adds a grid); should not be user editable
     _placeEditorOffset: 0,

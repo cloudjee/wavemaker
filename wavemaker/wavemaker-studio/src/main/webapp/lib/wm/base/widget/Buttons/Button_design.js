@@ -23,10 +23,17 @@ dojo.require("wm.base.Control_design");
 wm.Object.extendSchema(wm.ToolButton, {
 
     /* Display group; visual subgroup */
+/*
     iconUrl:    {group: "display", subgroup: "visual", order: 100, bindTarget: true, type: "String", subtype: "File", advanced:1}, // resource manager
     iconWidth:  {group: "display", subgroup: "visual", order: 101, editor: "wm.prop.SizeEditor", advanced:1},
     iconHeight: {group: "display", subgroup: "visual", order: 102, editor: "wm.prop.SizeEditor", advanced:1},
     iconMargin: {group: "display", subgroup: "visual", order: 103, type: "String", advanced:1}, 
+    */
+
+    iconUrl:    {group: "widgetName", subgroup: "graphics", order: 100, bindTarget: true, type: "String", subtype: "File", advanced:1}, // resource manager
+    iconWidth:  {group: "widgetName", subgroup: "graphics", order: 101, editor: "wm.prop.SizeEditor", advanced:1},
+    iconHeight: {group: "widgetName", subgroup: "graphics", order: 102, editor: "wm.prop.SizeEditor", advanced:1},
+    iconMargin: {group: "widgetName", subgroup: "graphics", order: 103, type: "String", advanced:1}, 
 
     /* Events group */
     onclick: {requiredGroup: 1, order: 50}, 
@@ -49,7 +56,8 @@ wm.ToolButton.extend({
 wm.Object.extendSchema(wm.Button, {
 
     /* Display group; text subgroup */
-    caption: { group: "display", subgroup: "text", bindable: 1, order: 10, focus: 1, type: "String", requiredGroup: true },
+/*    caption: { group: "display", subgroup: "text", bindable: 1, order: 10, focus: 1, type: "String", requiredGroup: true },*/
+    caption: { group: "widgetName", subgroup: "text", bindable: 1, order: 10, focus: 1, type: "String", requiredGroup: true },
 
     /* Methods group */
     setCaption: {method:1},
@@ -61,11 +69,11 @@ wm.Object.extendSchema(wm.Button, {
 
 wm.Object.extendSchema(wm.ToggleButton, {
     /* Display group; text subgroup */
-    captionUp: { group: "display", subgroup: "text", bindTarget: 1, order: 10, focus: 1, requiredGroup: true},
-    captionDown: { group: "display", subgroup: "text",  bindTarget: 1, order: 11, requiredGroup: true},
+    captionUp: { group: "widgetName", subgroup: "text", bindTarget: 1, order: 10, focus: 1, requiredGroup: true},
+    captionDown: { group: "widgetName", subgroup: "text",  bindTarget: 1, order: 11, requiredGroup: true},
 
     /* Display group; misc subgroup */
-    clicked: { group: "display", subgroup: "misc", type: "Boolean", bindTarget: 1, bindSource: 1, order: 12, simpleBindProp: true},
+    clicked: { group: "widgetName", subgroup: "editing", type: "Boolean", bindTarget: 1, bindSource: 1, order: 12, simpleBindProp: true},
 
     /* Ignored group */
     caption: {ignore: 1},
@@ -112,8 +120,8 @@ wm.PopupMenuButton.extend({
 wm.Object.extendSchema(wm.PopupMenuButton, {
     /* Display group; text subgroup */
     caption: { bindSource:1 },
-    editMenuItems: {group: "display", subgroup: "text", operation: 1, order: 30, requiredGroup: true},    
-    rememberWithCookie: {group: "display", subgroup: "text", order: 40},
+    editMenuItems: {group: "widgetName", subgroup: "text", operation: 1, order: 30, requiredGroup: true},    
+    rememberWithCookie: {group: "widgetName", subgroup: "behavior", order: 40},
 
     /* Events group */
     onchangeNoInit: {advanced:1},

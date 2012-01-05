@@ -1791,8 +1791,8 @@ float: none;
         -moz-border-radius-topright: 4px !important;
         -webkit-border-top-left-radius: 4px !important;
         -webkit-border-top-right-radius: 4px !important;
-         border-radius-topleft: 4px !important;
-         border-radius-topright: 4px !important;    
+         border-top-left-radius: 4px !important;
+         border-top-right-radius: 4px !important;    
 }
 
 .wm_Border_TopStyleCurved8px {
@@ -1800,7 +1800,8 @@ float: none;
         -moz-border-radius-topright: 8px !important;
         -webkit-border-top-left-radius: 8px !important;
         -webkit-border-top-right-radius: 8px !important;
-         border-radius-topright: 8px !important;    
+         border-top-right-radius: 8px !important;    
+         border-top-left-radius: 8px !important;    
 }
 
 .wm_Border_TopStyleCurved12px {
@@ -1808,8 +1809,8 @@ float: none;
         -moz-border-radius-topright: 12px !important;
         -webkit-border-top-left-radius: 12px !important;
         -webkit-border-top-right-radius: 12px !important;
-         border-radius-topleft: 12px !important;
-         border-radius-topright: 12px !important;    
+         border-top-left-radius: 12px !important;
+         border-top-right-radius: 12px !important;    
 }
 
 .wm_Border_BottomStyleCurved4px {
@@ -1817,8 +1818,8 @@ float: none;
         -moz-border-radius-bottomright: 4px !important;
         -webkit-border-bottom-right-radius: 4px !important;
         -webkit-border-bottom-left-radius: 4px !important;
-         border-radius-bottomleft: 4px !important;
-         border-radius-bottomright: 4px !important;    
+         border-bottom-left-radius: 4px !important;
+         border-bottom-right-radius: 4px !important;    
 }
 
 .wm_Border_BottomStyleCurved8px {
@@ -1826,8 +1827,8 @@ float: none;
         -moz-border-radius-bottomright: 8px !important;
         -webkit-border-bottom-right-radius: 8px !important;
         -webkit-border-bottom-left-radius: 8px !important;
-         border-radius-bottomleft: 8px !important;
-         border-radius-bottomright: 8px !important;    
+         border-bottom-left-radius: 8px !important;
+         border-bottom-right-radius: 8px !important;    
 }
 
 .wm_Border_BottomStyleCurved12px {
@@ -1835,8 +1836,8 @@ float: none;
         -moz-border-radius-bottomright: 12px !important;
         -webkit-border-bottom-right-radius: 12px !important;
         -webkit-border-bottom-left-radius: 12px !important;
-         border-radius-bottomleft: 12px !important;
-         border-radius-bottomright: 12px !important;    
+         border-bottom-left-radius: 12px !important;
+         border-bottom-right-radius: 12px !important;    
 }
 
 .wm_Border_DropShadow {
@@ -2029,4 +2030,38 @@ body.wmmobile button.wmtablayers-tab {
 } 
 .wmmobile .dijitCalendarDateLabel {
     font-size: 12px;
+}
+
+.wmmobile.tundra .dijitCheckBox .wmcheckbox_x, .wmmobile.tundra .dijitCheckBoxIcon .wmcheckbox_x,
+.wmmobile.tundra .dijitRadio .wmcheckbox_x {
+    font-size: 30px;
+    position: absolute;
+    left: 6px;
+    top: 2px;
+}
+
+.wmmobile.tundra .dijitCheckBox, .wmmobile.tundra .dijitCheckBoxIcon, .wmmobile.tundra .dijitRadio  {
+    background-image: none;
+    border: solid 1px #333;
+    color: transparent;
+}
+.wmmobile.tundra .dijitRadio  {
+    -moz-border-radius: 16px;
+    -webkit-border-radius: 16px;
+    border-radius: 16px;
+}
+.wmmobile.tundra .dijitCheckBoxChecked, .wmmobile.tundra .dijitToggleButtonChecked .dijitCheckBoxIcon {
+    color: black;
+}
+.wmmobile.tundra .dijitRadioChecked {
+    background-color: black;
+    margin: 
+}
+.wmmobile.tundra .Disabled .dijitCheckBox, .wmmobile.tundra .Disabled .dijitCheckBoxIcon, .wmmobile.tundra .Disabled .dijitRadio {
+    border-color: #aaa;
+}
+
+.wmmobile .dijitCheckBoxInput {
+width: 32px;
+height:32px;
 }

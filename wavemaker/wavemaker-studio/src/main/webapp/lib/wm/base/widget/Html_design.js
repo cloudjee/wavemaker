@@ -26,7 +26,7 @@ wm.Object.extendSchema(wm.Html, {
     autoScroll: {writeonly: 0},
 
     /* Display group; text subgroup */
-    html: {group: "display", subgroup: "text", order: 100,  type: "String", bindable: 1, editor: "wm.LargeTextArea", editorProps: {height: "250px"}, requiredGroup:1 },
+    html: {group: "widgetName", subgroup: "text", order: 100,  type: "String", bindable: 1, editor: "wm.LargeTextArea", editorProps: {height: "250px"}, requiredGroup:1 },
 
     /* Ignored/writeonly group */
     autoSizeHeight: { writeonly: true},
