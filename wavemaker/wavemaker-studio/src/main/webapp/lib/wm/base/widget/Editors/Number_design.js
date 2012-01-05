@@ -35,7 +35,7 @@ wm.Object.extendSchema(wm.Number, {
 
 
     /* Editor group; dojo tooltips subgroup */
-    rangeMessage: {  group: "editor", subgroup: "dojo tooltips", order: 5, advanced:1},
+    rangeMessage: {  group: "editor text", subgroup: "dojo tooltips", order: 5, advanced:1},
 
     /* Editor group; behavior subgroup */
     spinnerButtons: {group: "editor", subgroup: "behavior", order: 6, type: "boolean"},
@@ -64,16 +64,17 @@ wm.Object.extendSchema(wm.Currency, {
 
 wm.Object.extendSchema(wm.Slider, {
     /* Editor group; value subgroup */
-    discreteValues: {group: "editor", subgroup: "value", order: 2},
-    minimum:  { group: "editor", subgroup: "value", order: 3, bindTarget: true},
-    maximum: { group: "editor", subgroup: "value", order: 4, bindTarget: true},
-    integerValues: {group: "editor", subgroup:"value", order: 10},
+    discreteValues: {group: "editor", subgroup: "value", order: 50},
+    integerValues: {group: "editor", subgroup:"value", order: 51},
+    minimum:  { group: "editor", subgroup: "value", order: 60, bindTarget: true},
+    maximum: { group: "editor", subgroup: "value", order: 61, bindTarget: true},
 
-    dynamicSlider: {group: "editor", subgroup: "behavior"},
+
+    dynamicSlider: {group: "editor", subgroup: "behavior", order: 1},
 
     /* Display group; visual subgroup */
-    showButtons: {  group: "display", subgroup: "visual", order: 5},
-    verticalSlider: {  group: "display", subgroup: "visual", order: 6, ignore: 1},
+    showButtons: {  group: "editor", subgroup: "layout", order: 5},
+    verticalSlider: {  group: "editor", subgroup: "layout", order: 6, ignore: 1},
 
     /* Ignored group */
     editorBorder: { ignore: 1 },

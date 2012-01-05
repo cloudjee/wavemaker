@@ -38,7 +38,7 @@ wm.Object.extendSchema(wm.TreeNode, {
 
 wm.Object.extendSchema(wm.Tree, {
 
-    connectors: {group: "display", subgroup: "visual", order: 100},
+    connectors: {group: "widgetName", subgroup: "graphics", order: 100},
 
     /* Events group */
     onselect: {order: 1},
@@ -90,5 +90,5 @@ wm.Object.extendSchema(wm.ObjectTree, {
 
 
 wm.Object.extendSchema(wm.DraggableTree, {
-    dropBetweenNodes: {group: "display", subgroup: "visual"}
+    dropBetweenNodes: {group: "widgetName", subgroup: "behavior"}
 });

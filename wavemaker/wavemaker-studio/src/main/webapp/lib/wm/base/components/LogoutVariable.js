@@ -70,6 +70,7 @@ dojo.declare("wm.LogoutVariable", wm.ServiceVariable, {
       });
 
 wm.Object.extendSchema(wm.LogoutVariable, {
+    clearDataOnLogout: {group: "widgetName", subgroup: "behavior"},
     downloadFile: {ignore: 1},
 	logoutNavCall: {ignore: 1},
 	operation: { ignore:1},

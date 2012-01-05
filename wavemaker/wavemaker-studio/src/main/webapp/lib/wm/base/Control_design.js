@@ -384,9 +384,9 @@ wm.Control.extend({
 });
 
 wm.Object.extendSchema(wm.Control, {
-    imageList: {ignore: 1, group: "format", order: 50, editor: "wm.prop.ImageListSelect"},
-    imageIndex: {ignore: 1, group: "format", order: 51, type: "Number",  doc: 1},
-    editImageIndex: {ignore: 1, group: "format", order: 52, type: "String", doc: 1, operation: 1},
+    imageList: {ignore: 1, group: "widgetName", subgroup: "graphics", order: 50, editor: "wm.prop.ImageListSelect"},
+    imageIndex: {ignore: 1, group: "widgetName", subgroup: "graphics", order: 51, type: "Number",  doc: 1},
+    editImageIndex: {ignore: 1, group: "widgetName", subgroup: "graphics", order: 52, type: "String", doc: 1, operation: 1},
         noInspector: {ignore: 1}, // obsolete property, but still don't want it showing in property panels
         numTabbableWidgets: {ignore: 1},
         internalTabIndex: {writeonly: 1, ignore: 1},
@@ -410,6 +410,8 @@ wm.Object.extendSchema(wm.Control, {
 
 	sizeable: { ignore: 1 }, // Property tells designer if a given class of widgets can be resized; splitter is an example of a widget where you might want this set to false
 
+    onShow: {group: "events", order: 500, advanced:1},
+    onHide: {group: "events", order: 500, advanced:1},
     onRightClick: {group: "events", order: 2000, advanced: 1},
     onMouseOver: {group: "events", order: 2001, advanced: 1},
     onMouseOut: {group: "events", order: 2002, advanced: 1},

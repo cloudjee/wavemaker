@@ -47,11 +47,12 @@ wm.Object.extendSchema(wm.NavigationCall,{
         startUpdateComplete: { ignore: 1},
 	startUpdate: {ignore: 1},
 	service: {ignore: 1, writeonly: 1},
-	operation: { group: "common", order: 24},
+	operation: { group: "data", order: 1},
 	updateNow: { ignore: 1},
-	queue: { group: "operation", order: 20},
-	clearInput: { group: "operation", order: 30},
-    input: { ignore: 1 , writeonly: 1, componentonly: 1, categoryParent: "Properties", categoryProps: {component: "input", bindToComponent: true, inspector: "Navigation"}, doc: 1}
+    queue: { group: "operation", operation:1, order: 20},
+    clearInput: { group: "operation", operation:1, order: 30},
+    input: {group: "data", order: 3, putWiresInSubcomponent: "input", bindTarget: 1, treeBindField: true, editor: "wm.prop.NavigationGroupEditor"},
+    inFlightBehavior: {ignore:1}
 });
 
 // design only...

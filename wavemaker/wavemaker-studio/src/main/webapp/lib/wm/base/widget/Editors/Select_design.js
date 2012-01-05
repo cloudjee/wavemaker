@@ -34,10 +34,10 @@ wm.SelectMenu.extend({
 
 wm.Object.extendSchema(wm.SelectMenu, {
     /* DISPLAY GROUP; help subgroup */
-    placeHolder: {group: "display", subgroup: "help"}, 
+    placeHolder: {group: "editor text", subgroup: "help"}, 
 
     /* DISPLAY GROUP; visual subgroup */
-    hasDownArrow: {group: "editor",subgroup: "visual", order: 26},
+    hasDownArrow: {group: "editor",subgroup: "layout", order: 26},
 
     /* Events group */
     onEnterKeyPress: {ignore: 0},

@@ -19,19 +19,29 @@ dojo.require("wm.base.widget.Label");
 // design only...
 wm.Object.extendSchema(wm.Label, {
     /* Display group; text subgroup */
-    caption:    {group: "display", subgroup: "text", type: "String", bindable: 1, order: 100, focus: true, requiredGroup: true},
+    //caption:    {group: "display", subgroup: "text", type: "String", bindable: 1, order: 100, focus: true, requiredGroup: true},
+    caption:    {group: "widgetName", subgroup: "display", type: "String", bindable: 1, order: 10, focus: true, requiredGroup: true},
 
     /* Display group; misc subgroup */
-    link:       {group: "display", subgroup: "misc",  type: "String", bindable: 1, order: 20 },
+    //link:       {group: "display", subgroup: "misc",  type: "String", bindable: 1, order: 20 },
+    link:       {group: "widgetName", subgroup: "behavior",  type: "String", bindable: 1, order: 20 },
 
     /* Display group; format subgroup */
-    display:    {group: "display", subgroup: "format", order: 30 }, // shows the display property
-    format:     {group: "display", subgroup: "format", order: 31, editor: "wm.prop.FormatterEditor"}, // shows the properties made available by the display property
+/*    display:    {group: "display", subgroup: "format", order: 30 }, // shows the display property
+    format:     {group: "display", subgroup: "format", order: 31, editor: "wm.prop.FormatterEditor"}, // shows the properties made available by the display property*/
+    display:    {group: "widgetName", subgroup: "format", order: 30 }, // shows the display property
+    format:     {group: "widgetName", subgroup: "format", order: 31, editor: "wm.prop.FormatterEditor"}, // shows the properties made available by the display property
 
     /* Display group; layout subgroup */
+/*
     align:         {group: "display", subgroup: "layout", order: 25, options: ["none", "left", "center", "right", "justify"] },
     singleLine:    {group: "display", subgroup: "layout", order: 50},
     resizeToFit:   {group: "display", subgroup: "layout", order: 80, operation:true },
+    */
+    align:         {group: "widgetName", subgroup: "display", order: 25, options: ["none", "left", "center", "right", "justify"] },
+    singleLine:    {group: "widgetName", subgroup: "display", order: 50},
+    resizeToFit:   {group: "widgetName", subgroup: "display", order: 80, operation:true },
+
     autoSizeHeight:{group: "display", subgroup: "layout", type: "Boolean", writeonly: true}, // hidden
     autoSizeWidth: {group: "display", subgroup: "layout", type: "Boolean", writeonly: true},  // hidden
     autoSize:      {group: "display", subgroup: "layout", order: 60, options: ["none", "width", "height"]},

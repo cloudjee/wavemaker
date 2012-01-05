@@ -89,9 +89,10 @@ dojo.declare("wm.ToolButton", wm.Control, {
         onclick: function() {
 	},
 	setDisabled: function(inDisabled) {
+	    var wasdisabled = this._disabled;
 	    this.inherited(arguments);
 	    var disabled = this._disabled;
-	    if (Boolean(inDisabled) != disabled || this._cupdating) {
+	    if (Boolean(wasdisabled) != Boolean(disabled) || this._cupdating) {
 		this.btnNode.disabled = disabled ? "disabled" : "";
 		dojo[disabled ? "addClass" : "removeClass"](this.domNode, "wmbutton-disabled");
 

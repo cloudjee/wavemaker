@@ -197,10 +197,10 @@ wm.Object.extendSchema(wm.FeedList, {
     selectedLink: {ignore:1, bindSource: 1, type: "String"},
     selectedItem: {ignore: 1},
 
-    showLink: {group: "widgetName", subgroup: "display"},
-    totalItems: {group: "widgetName", subgroup: "data"},
-    headerVisible:  {group: "widgetName", subgroup: "display"},
-    expand:   {group: "widgetName", subgroup: "display"}
+    showLink: {group: "widgetName", subgroup: "behavior"},
+    totalItems: {group: "widgetName", subgroup: "behavior"},
+    headerVisible:  {group: "widgetName", subgroup: "layout"},
+    expand:   {group: "widgetName", subgroup: "behavior"}
 });
 
 wm.FeedList.description = "A feed list.";

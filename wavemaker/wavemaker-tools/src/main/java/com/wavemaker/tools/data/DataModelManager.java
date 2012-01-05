@@ -823,8 +823,6 @@ public class DataModelManager {
         }
         importer.setDataPackage(dataPackage);
 
-        importer.setGenerateServiceClass(false);
-
         if (!ObjectUtils.isNullOrEmpty(tableFilter)) {
             importer.setTableFilterSplit(tableFilter);
         }

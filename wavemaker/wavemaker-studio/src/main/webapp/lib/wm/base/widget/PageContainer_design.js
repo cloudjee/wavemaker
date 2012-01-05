@@ -222,10 +222,14 @@ wm.PageContainer.extend({
 })
 
 wm.Object.extendSchema(wm.PageContainer, {
+/*
     pageName: {group: "display", subgroup: "misc", requiredGroup:1,bindable: 1, type: "string", order: 50, pageProperty: "page", editor: "wm.prop.PagesSelect"},
     deferLoad: {group: "display", subgroup: "misc", order: 100, type: "boolean"},
     loadParentFirst: {group: "display", subgroup: "misc", order: 101, type: "boolean", advanced:1},
-
+    */
+    pageName: {group: "widgetName", subgroup: "data", requiredGroup:1,bindable: 1, type: "string", order: 50, pageProperty: "page", editor: "wm.prop.PagesSelect"},
+    deferLoad: {group: "widgetName", subgroup: "behavior", order: 100, type: "boolean"},
+    loadParentFirst: {group: "widgetName", subgroup: "behavior", order: 101, type: "boolean", advanced:1},
 
     /* Hidden group */
     subpageProplist: {writeonly: 1},

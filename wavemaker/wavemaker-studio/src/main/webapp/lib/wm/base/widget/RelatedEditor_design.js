@@ -18,9 +18,9 @@ dojo.require("wm.base.widget.LiveForm_design");
 
 wm.Object.extendSchema(wm.RelatedEditor, {
     /* Editor group */
-    editingMode: {group: "editor", subgroup: "behavior", order: 100, requiredGroup: 1},
-    formField:   {group: "editor", subgroup: "value",    order: 500, requiredGroup: 1, editor: "wm.prop.FormFieldSelect", editorProps: {relatedFields: true}},
-    ignoreParentReadonly: {group: "editor", subgroup: "behavior", order: 100, type: "Boolean"},
+    editingMode: {group: "widgetName", subgroup: "behavior", order: 100, requiredGroup: 1},
+    formField:   {group: "widgetName", subgroup: "data",    order: 1, requiredGroup: 1, editor: "wm.prop.FormFieldSelect", editorProps: {relatedFields: true}},
+    ignoreParentReadonly: {group: "widgetName", subgroup: "behavior", order: 100, type: "Boolean"},
 
     /* Ignored group */
 	dataSet: {ignore: 1},

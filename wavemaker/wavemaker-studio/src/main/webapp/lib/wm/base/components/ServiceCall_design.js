@@ -45,8 +45,8 @@ wm.Object.extendSchema(wm.ServiceVariable, {
     onBeforeUpdate: {advanced:1},
 
     /* Data group; type subgroup */
-    service:          {group: "data", subgroup: "type", order: 23, requiredGroup: 1 },
-    operation:        {group: "data", subgroup: "type", order: 24, requiredGroup: 1, bindTarget: 1 },
+    service:          {group: "data", subgroup: "service", order: 23, requiredGroup: 1 },
+    operation:        {group: "data", subgroup: "service", order: 24, requiredGroup: 1, bindTarget: 1 },
 
     /* Data group; behavior subgroup */
     autoUpdate:       {group: "data", subgroup: "behavior", order: 25, requiredGroup: 1},

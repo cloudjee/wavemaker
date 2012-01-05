@@ -75,7 +75,8 @@ wm.Component.extend({
 		var props = this.inherited(arguments);
 	    if (this.isDesignLoaded() && (this.owner != studio.application && this.owner != studio.page)) {
                 props = dojo.clone(props);
-		props.owner = {ignoretmp: 1};
+		if (props.owner) props.owner.ignoretmp = 1;
+		else props.owner = {ignoretmp: 1};
             }
 
 	    if (this.deletionDisabled) {

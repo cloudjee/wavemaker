@@ -74,7 +74,7 @@ import com.wavemaker.tools.spring.beans.Property;
 import com.wavemaker.tools.ws.salesforce.SalesforceHelper;
 
 /**
- * The DesignServiceManager provides design-time access to service descriptor information, including types..
+ * The DesignServiceManager provides design-time access to service descriptor information, including types.
  * 
  * @author Matt Small
  * @author Jeremy Grelle

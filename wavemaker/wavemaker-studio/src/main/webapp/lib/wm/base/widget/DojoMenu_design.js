@@ -19,16 +19,16 @@ dojo.require("wm.base.widget.DojoMenu");
 // design only...
 wm.Object.extendSchema(wm.DojoMenu, {
     /* Display group; text subgroup */
-    editMenuItems: {group: "display", subgroup: "text", operation: 1, requiredGroup: 1},
+    editMenuItems: {group: "widgetName", subgroup: "text", operation: 1, requiredGroup: 1},
 
     /* Display group; layout subgroup */
-    vertical: {group: "display", subgroup: "layout"},
+    vertical: {group: "widgetName", subgroup: "display"},
 
     /* Display group; misc subgroup */
-    openOnHover: {group: "display", subgroup: "misc"},
+    openOnHover: {group: "widgetName", subgroup: "behavior", advanced:1},
 
     /* Style group */
-    transparent: {group: "style", order: 150, type: "Boolean"},
+    transparent: {group: "widgetName", subgroup: "display", order: 150, type: "Boolean"},
 
     /* Hidden group: These properties are generated through interactions and are not directly edited on the property panel; written but not shown */
     fullStructure: {hidden: true, nonlocalizable: true},

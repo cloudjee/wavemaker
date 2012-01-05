@@ -20,9 +20,9 @@ dojo.require("wm.base.widget.DataNavigator");
 wm.Object.extendSchema(wm.DataNavigator, {
 
     /* Data group; serverOptions subgroup */
-    byPage: {group: "data", subgroup: "serverOptions", order: 250},
+    byPage: {group: "widgetName", subgroup: "behavior", order: 250},
 
-    liveSource: {group: "data", subgroup: "data", order: 1, requiredGroup:1, readonly: 1, bindable: 1, type: "wm.LiveVariable",editor: "wm.prop.DataSetSelect", editorProps: {widgetDataSet: 1, listMatch:1}},
+    liveSource: {group: "widgetName", subgroup: "data", order: 1, requiredGroup:1, readonly: 1, bindable: 1, type: "wm.LiveVariable",editor: "wm.prop.DataSetSelect", editorProps: {widgetDataSet: 1, listMatch:1}},
 
     /* Operations group */
     firstRecord: { group: "operation", order: 5, operation:"setFirst"},

@@ -8,6 +8,7 @@
 			http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd">
 
 	<import resource="classpath:springapp.xml" />
+	<import resource="classpath:**/*.spring.xml" />
 	<import resource="project-config.xml" />
 	<import resource="project-services.xml" />
 	<import resource="project-managers.xml" />

@@ -24,7 +24,6 @@ dojo.declare("wm.JsonStatus", wm.Control, {
     border: "2",
     iconWidth: 20,
     iconHeight: 20,
-    statusBar: false,
     argsList: null,
     minimize: false,
     build: function() {
@@ -82,9 +81,8 @@ dojo.declare("wm.JsonStatus", wm.Control, {
 });
 
 wm.Object.extendSchema(wm.JsonStatus, {
-    iconWidth: {group: "display"},
-    iconHeight: {group: "display"},
-    minimize: {group: "display"},
-    statusBar: {group: "display"},
+    iconWidth: {group: "widgetName", subgroup: "layout"},
+    iconHeight: {group: "widgetName", subgroup: "layout"},
+    minimize: {group: "widgetName", subgroup: "layout"},
     disabled: {ignore: 1}
 });

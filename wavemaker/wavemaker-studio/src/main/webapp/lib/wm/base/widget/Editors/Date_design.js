@@ -57,11 +57,8 @@ wm.Object.extendSchema(wm.DateTime, {
     formatLength: {group: "editor", subgroup: "display", order: 3, options:["short", "medium", "long"]},
 
     /* Editor group; value subgroup */
-    dateMode: {group: "editor", subgroup: "value", order: 2,options:["Date and Time", "Date", "Time"]},
-    useLocalTime: {group: "editor", subgroup: "value", order: 4, advanced: 1},
-
-    /* Subwidget group; layout subgroup */
-    timePanelHeight: {group: "subwidgets", subgroup: "layout", editor: "wm.prop.SizeEditor", editorProps: {pxOnly: 1}, advanced: 1}
+    dateMode: {group: "editor", subgroup: "value", order: 20,options:["Date and Time", "Date", "Time"]},
+    useLocalTime: {group: "editor", subgroup: "value", order: 21, advanced: 1}
 });
 
 wm.DateTime.extend({
