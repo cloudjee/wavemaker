@@ -79,7 +79,7 @@ public class TestProjectCompiler {
         Resource fooSrc = project.getProjectRoot().createRelative("src/Foo.java");
         project.writeFile(fooSrc, "public class Foo{public int getInt(){return 12;}}");
 
-        this.projectCompiler.compileProject("ProjectCompilerProject");
+        this.projectCompiler.compile("ProjectCompilerProject");
 
         Resource fooClass = project.getWebInfClasses().createRelative("Foo.class");
         assertTrue(fooClass.exists());
@@ -95,7 +95,7 @@ public class TestProjectCompiler {
         Resource barSrc = project.getProjectRoot().createRelative("src/com/mycompany/bar/Bar.java");
         project.writeFile(barSrc, "package com.mycompany.bar;\n\npublic class Bar{public String getString(){return \"blah blah\";}}");
 
-        this.projectCompiler.compileProject("ProjectCompilerProject");
+        this.projectCompiler.compile("ProjectCompilerProject");
 
         Resource fooClass = project.getWebInfClasses().createRelative("com/mycompany/foo/Foo.class");
         assertTrue(fooClass.exists());
@@ -121,7 +121,7 @@ public class TestProjectCompiler {
             "import com.wavemaker.runtime.service.annotations.ExposeToClient;\n\n@ExposeToClient\npublic class FooService{public int getInt(){return 12;}\n"
                 + "\tpublic int getInt2(java.util.List<String[]> strings){return 0;}\n}");
 
-        this.projectCompiler.compileProject("ProjectCompilerProject");
+        this.projectCompiler.compile("ProjectCompilerProject");
 
         Resource fooClass = project.getWebInfClasses().createRelative("com/mycompany/foo/Foo.class");
         assertTrue(fooClass.exists());
@@ -150,7 +150,7 @@ public class TestProjectCompiler {
             "import com.wavemaker.runtime.service.annotations.ExposeToClient;\n\n@ExposeToClient\npublic class FooService{public int getInt(){return 12;}\n"
                 + "\tpublic int getInt2(java.util.List<String[]> strings){return 0;}\n}");
 
-        this.projectCompiler.compileProject("ProjectCompilerProject");
+        this.projectCompiler.compile("ProjectCompilerProject");
 
         Resource serviceClass = project.getWebInfClasses().createRelative("FooService.class");
         assertTrue(serviceClass.exists());
@@ -170,7 +170,7 @@ public class TestProjectCompiler {
         project.writeFile(fooSrc,
             "package com.foo;\n\npublic class FooSubClass extends com.wavemaker.runtime.javaservice.JavaServiceSuperClass {public int getInt(){return 12;}}");
 
-        this.projectCompiler.compileProject("ProjectCompilerProject");
+        this.projectCompiler.compile("ProjectCompilerProject");
 
         Resource fooClass = project.getWebInfClasses().createRelative("com/foo/FooSubClass.class");
         assertTrue(fooClass.exists());
@@ -187,7 +187,7 @@ public class TestProjectCompiler {
             javaSrc,
             "package com.bar;\n\nimport com.wavemaker.runtime.service.annotations.ExposeToClient;\n\n@ExposeToClient\npublic class BarService extends com.wavemaker.runtime.javaservice.JavaServiceSuperClass {public int getInt(){return 12;}}");
 
-        this.projectCompiler.compileProject("ProjectCompilerProject");
+        this.projectCompiler.compile("ProjectCompilerProject");
 
         Resource barClass = project.getWebInfClasses().createRelative("com/bar/BarService.class");
         assertTrue(barClass.exists());
@@ -197,36 +197,13 @@ public class TestProjectCompiler {
     }
 
     @Test
-    public void testCompileSingleService() throws IOException {
-        Project project = this.projectManager.getCurrentProject();
-
-        String serviceId = "serviceA";
-        Resource serviceASrc = project.getProjectRoot().createRelative(DesignServiceManager.getRuntimeRelativeDir(serviceId));
-        Resource javaSrc = serviceASrc.createRelative("FooService.java");
-        project.writeFile(javaSrc,
-            "import com.wavemaker.runtime.service.annotations.ExposeToClient;\n\n@ExposeToClient\npublic class FooService{public int getInt(){return 12;}\n"
-                + "\tpublic int getInt2(java.util.List<String[]> strings){return 0;}\n}");
-
-        this.projectCompiler.compileService("ProjectCompilerProject", serviceId);
-
-        Resource serviceClass = project.getWebInfClasses().createRelative("FooService.class");
-        assertTrue(serviceClass.exists());
-
-        Resource serviceDef = project.getProjectRoot().createRelative(DesignServiceManager.getDesigntimeRelativeDir(serviceId) + "servicedef.xml");
-        assertTrue(serviceDef.exists());
-
-        Resource types = project.getWebAppRoot().createRelative("types.js");
-        assertTrue(types.exists());
-    }
-
-    @Test
     public void testCompileAndCopyResources() throws IOException {
         Project project = this.projectManager.getCurrentProject();
 
         Resource fooSrc = project.getProjectRoot().createRelative("src/Foo.java");
         project.writeFile(fooSrc, "public class Foo{public int getInt(){return 12;}}");
 
-        this.projectCompiler.compileProject("ProjectCompilerProject");
+        this.projectCompiler.compile("ProjectCompilerProject");
 
         Resource fooClass = project.getWebInfClasses().createRelative("Foo.class");
         assertTrue(fooClass.exists());

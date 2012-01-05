@@ -193,11 +193,10 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
     public String compile() {
         try {
             antExecute(getProjectDir().getFile().getCanonicalPath(), getDeployName(), COPY_JARS_OPERATION);
-            this.projectCompiler.compileProject(this.projectManager.getCurrentProject().getProjectName());
+            return this.projectCompiler.compile(this.projectManager.getCurrentProject().getProjectName());
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
-        return null;
     }
 
     /**
@@ -403,12 +402,12 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
 
     private String antExecute(String projectDir, String deployName, String targetName, Map<String, String> properties) {
 
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        PrintStream ps = new PrintStream(baos);
-        DefaultLogger dl = new DefaultLogger();
-        dl.setErrorPrintStream(ps);
-        dl.setOutputPrintStream(ps);
-        dl.setMessageOutputLevel(Project.MSG_INFO);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        PrintStream printStream = new PrintStream(byteArrayOutputStream);
+        DefaultLogger logger = new DefaultLogger();
+        logger.setErrorPrintStream(printStream);
+        logger.setOutputPrintStream(printStream);
+        logger.setMessageOutputLevel(Project.MSG_INFO);
 
         Project antProject = parseAntFile(projectDir, deployName, properties);
 
@@ -416,7 +415,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
         for (Object bl : antProject.getBuildListeners()) {
             antProject.removeBuildListener((BuildListener) bl);
         }
-        antProject.addBuildListener(dl);
+        antProject.addBuildListener(logger);
 
         try {
             try {
@@ -424,16 +423,17 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
                 antProject.executeTarget(targetName);
                 LocalDeploymentManager.logger.info("END ANT");
             } finally {
-                ps.close();
+                printStream.close();
             }
         } catch (BuildException e) {
-            LocalDeploymentManager.logger.error("build failed with compiler output:\n" + baos.toString() + "\nmessage: " + e.getMessage(), e);
-            throw new BuildExceptionWithOutput(e.getMessage(), baos.toString() + "\nmessage: " + e.getMessage(), e);
+            LocalDeploymentManager.logger.error(
+                "build failed with compiler output:\n" + byteArrayOutputStream.toString() + "\nmessage: " + e.getMessage(), e);
+            throw new BuildExceptionWithOutput(e.getMessage(), byteArrayOutputStream.toString() + "\nmessage: " + e.getMessage(), e);
         }
 
-        String compilerOutput = baos.toString();
-        LocalDeploymentManager.logger.warn("build succeeded with compiler output:\n" + compilerOutput);
-        return compilerOutput;
+        String loggedOutput = byteArrayOutputStream.toString();
+        LocalDeploymentManager.logger.warn("Ant succeeded with logged output:\n" + loggedOutput);
+        return loggedOutput;
     }
 
     private Project parseAntFile(String projectDir, String deployName, Map<String, String> properties) {
