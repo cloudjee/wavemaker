@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <beans xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <bean class="com.wavemaker.runtime.service.RuntimeService" scope="singleton" lazy-init="true" id="runtimeService"/>
+    <bean class="com.wavemaker.runtime.service.RuntimeService" scope="singleton" lazy-init="true" id="runtimeService">
+		<property name="runtimeAccess">
+			<ref bean="runtimeAccess" />
+		</property>
+		<property name="typeManager">
+			<ref bean="typeManager" />
+		</property>
+		<property name="serviceManager">
+			<ref bean="serviceManager" />
+		</property>
+		<property name="serviceEventNotifier">
+			<ref bean="serviceEventNotifier" />
+		</property>
+		<property name="internalRuntime">
+			<ref bean="internalRuntime" />
+		</property>
+	</bean>
     <bean class="com.wavemaker.runtime.service.reflect.ReflectServiceWire" scope="singleton" lazy-init="false">
         <property name="serviceId" value="runtimeService"/>
         <property name="serviceType" ref="JavaService"/>

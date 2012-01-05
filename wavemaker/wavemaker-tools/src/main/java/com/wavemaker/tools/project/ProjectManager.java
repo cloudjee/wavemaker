@@ -17,6 +17,7 @@ package com.wavemaker.tools.project;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.SortedSet;
@@ -56,13 +57,14 @@ public class ProjectManager {
 
     public static final String _TEMPLATE_APP_RESOURCE_NAME = "com/wavemaker/tools/project/templateapp.zip";
 
-    private static final List<String> runtimeServices;
+    private static final List<String> RUNTIME_SERVICES;
 
     static {
-        runtimeServices = new ArrayList<String>();
-        runtimeServices.add("securityService");
-        runtimeServices.add("runtimeService");
-        runtimeServices.add("waveMakerService");
+        ArrayList<String> list = new ArrayList<String>();
+        list.add("securityService");
+        list.add("runtimeService");
+        list.add("waveMakerService");
+        RUNTIME_SERVICES = Collections.unmodifiableList(list);
     }
 
     private final List<String> projectCopyExclusions;
@@ -225,7 +227,7 @@ public class ProjectManager {
 
         Resource studioServices = this.fileSystem.getStudioWebAppRoot().createRelative("services/");
         Resource studioClasspath = this.fileSystem.getStudioWebAppRoot().createRelative("WEB-INF/classes/");
-        for (String runtimeService : runtimeServices) {
+        for (String runtimeService : RUNTIME_SERVICES) {
             Resource runtimeServiceSmd = studioServices.createRelative(runtimeService + ".smd");
             this.fileSystem.copyFile(getCurrentProject().getWebAppRoot(), runtimeServiceSmd.getInputStream(),
                 "services/" + runtimeServiceSmd.getFilename());
