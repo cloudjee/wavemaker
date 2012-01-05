@@ -26,7 +26,16 @@ dojo.declare("wm.RadioButton", wm.Checkbox, {
 	radioGroup: "default",
 	dataType: "string",
 	_createEditor: function(inNode, inProps) {
-		return new dijit.form.RadioButton(this.getEditorProps(inNode, inProps));
+	    var e = new dijit.form.RadioButton(this.getEditorProps(inNode, inProps));
+	    if (wm.isMobile) {
+/*
+		if (this.captionSize.match(/px/)) {
+		    this.captionSize = Math.max(0,parseInt(this.captionSize) - 16) + "px";
+		}
+		*/
+	    }
+
+	    return e;
 	},
 	getEditorProps: function(inNode, inProps) {
 		return dojo.mixin(this.inherited(arguments), {

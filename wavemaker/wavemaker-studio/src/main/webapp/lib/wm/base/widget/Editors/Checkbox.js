@@ -26,7 +26,22 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 	startChecked: false,
         checkedValue: true,
 	_createEditor: function(inNode, inProps) {
-		return new dijit.form.CheckBox(this.getEditorProps(inNode, inProps));
+		var e = new dijit.form.CheckBox(this.getEditorProps(inNode, inProps));
+	    if (wm.isMobile) {
+		var a = document.createElement("div");
+		a.className = "wmcheckbox_x";
+		a.innerHTML = "X"
+		e.domNode.appendChild(a);
+		dojo.connect(this.domNode, "onclick", this, function() {
+		    this.setChecked(!this.getChecked());
+		});
+/*
+		if (this.captionSize.match(/px/)) {
+		    this.captionSize = Math.max(0,parseInt(this.captionSize) - 16) + "px";
+		}
+		*/
+	    }
+	    return e;
 	},
 	setRequired: function() {
 	},
@@ -43,10 +58,11 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 		return;
 	    this.inherited(arguments);
 	    var node = this.editorNode;
-	    node.style.width = "16px";
-	    node.style.height = "16px";
+	    var size = wm.isMobile ? 32 : 16;
+	    node.style.width = size + "px";
+	    node.style.height =  size + "px";
             var height = parseInt(node.style.lineHeight);
-            node.style.marginTop = (Math.floor(height-16)/2) + "px";
+            node.style.marginTop = (Math.floor(height-size)/2) + "px";
 	},
 
 	styleEditor: function() {
@@ -192,9 +208,11 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 	},
 	getMinWidthProp: function() {
 		if (this.minWidth) return this.minWidth;
+	    var editorSize = wm.isMobile ? 32 : 16;
+	    var captionSize = 64;
 		if (this.captionPosition == "top" || this.captionPosition == "bottom" || !this.caption) return 40;
-		else if (this.captionSize.match(/\%/)) return 80;
-		else return 20 + parseInt(this.captionSize);
+	    else if (this.captionSize.match(/\%/)) return editorSize + captionSize;
+	    else return editorSize + 4 + parseInt(this.captionSize);
 	}
 
 });
