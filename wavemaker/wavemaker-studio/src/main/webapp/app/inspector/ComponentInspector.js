@@ -386,7 +386,7 @@
  dojo.declare("wm.PropertyInspector", wm.AccordionLayers, {    
      preferredMultiActive: false,
      multiActive: false,
-     ignoreHintPrefix: "<p><b>Disabled</b></p>",
+     ignoreHintPrefix: "<p><b>Why is this disabled?</b></p>",
      classNames: "wminspector",
      layerBorder: 0,
      autoScroll: true,
@@ -867,7 +867,7 @@
 	 }
 	 var self = this;
 	 if (!e.noHelpButton) {
-	     this.createHelpButton(inComponent, inProp, panel);
+	     this.createHelpButton(inComponent, inProp, panel, e.captionPosition == "top" ? parseInt(e.captionSize) : 0);
 	 }
 	 panel.setBestHeight();
 	 return e;
@@ -927,13 +927,14 @@
      /**************************************************************************************
       * Creates a help button that opens a dialog showing property docs
       **************************************************************************************/
-     createHelpButton: function(inComponent, inProp, inPanel) {
+     createHelpButton: function(inComponent, inProp, inPanel, captionHeight) {
 	 var self = this;
 	 wm.Label({owner: this,
 		   caption: "",
 		   parent: inPanel,
 		   width: "20px",
-		   height: "20px",
+		   height: (20 + captionHeight) + "px",
+		   margin: captionHeight + ",0,0,0",
 		   onclick: function() {
 		       studio.helpPopup = self.getHelpDialog();
 		       self.beginHelp(inProp.name, inPanel.domNode, inComponent.declaredClass);
@@ -984,12 +985,14 @@
 	 this.bindEditorHash[(optionalAppendToHashName ? optionalAppendToHashName + "_" : "") +  this.getHashId(inComponent,inProp.fullName || inProp.name)] = bindableEditor;
 
 	 if (!e.hideBindColumn) {
+	     var captionHeight = (bindableEditor.captionPosition == "top" ? parseInt(bindableEditor.captionSize) : 0);
 	 var l = new wm.Label({owner:this,
 			       parent: e.parent,
 			       _classes: {domNode: ["wminspector-bindProp"]},
 			       caption: "",
-			       width: "20px",
-			       height: "20px"});
+			       margin: captionHeight + ",0,0,0",
+			       width: "20px",			       
+			       height: captionHeight + 20 + "px"});
 	 var self = this;
 	 l.onclick = function() {
 	     //studio.bindDialog.page.update({object: inComponent, targetProperty: inProp.treeBindField || inProp.name});
