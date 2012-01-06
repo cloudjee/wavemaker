@@ -19,7 +19,7 @@
 package com.wavemaker.tools.spring;
 
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.json.TestJSONSerialization.CycleA;
+import com.wavemaker.json.JSONSerializationTest.CycleA;
 import com.wavemaker.json.type.FieldDefinition;
 import com.wavemaker.json.type.ObjectTypeDefinition;
 import com.wavemaker.json.type.TypeDefinition;

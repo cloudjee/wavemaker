@@ -49,8 +49,7 @@ public class CFDeploymentManager extends AbstractDeploymentManager {
 
     @Override
     public String compile() {
-        this.projectCompiler.compileProject(this.projectManager.getCurrentProject().getProjectName());
-        return "";
+        return this.projectCompiler.compile(this.projectManager.getCurrentProject().getProjectName());
     }
 
     @Override

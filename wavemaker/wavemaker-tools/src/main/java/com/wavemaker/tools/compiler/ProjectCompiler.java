@@ -15,6 +15,8 @@
 package com.wavemaker.tools.compiler;
 
 import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -52,10 +54,9 @@ public class ProjectCompiler {
 
     private DesignServiceManager designServiceManager;
 
-    public void compileProject(String projectName) {
-
+    public String compile(String projectName) {
+        StringWriter out = new StringWriter();
         Project project = this.projectManager.getProject(projectName, true);
-
         JavaCompiler compiler = newJavaCompiler();
         ClassFileManager projectFileManager;
         Iterable<JavaFileObject> sourceFiles = null;
@@ -82,42 +83,14 @@ public class ProjectCompiler {
         options.add("-A" + ServiceProcessorConstants.PROJECT_NAME_PROP + "=" + projectName);
 
         if (sourceFiles.iterator().hasNext()) {
-            JavaCompiler.CompilationTask task = compiler.getTask(null, projectFileManager, null, options, null, sourceFiles);
+            JavaCompiler.CompilationTask task = compiler.getTask(out, projectFileManager, null, options, null, sourceFiles);
             task.setProcessors(Collections.singleton(createServiceDefProcessor(projectFileManager)));
             if (!task.call()) {
-                return;
+                throw new WMRuntimeException("Compile failed with output:\n\n" + out.toString());
             }
         }
-        executeConfigurationProcessor(compiler, projectFileManager, projectName);
-    }
-
-    public void compileService(String projectName, String serviceId) {
-
-        Project project = this.projectManager.getProject(projectName, true);
-
-        JavaCompiler compiler = newJavaCompiler();
-        ClassFileManager projectFileManager;
-        Iterable<JavaFileObject> sourceFiles;
-        try {
-            projectFileManager = new ClassFileManager(compiler.getStandardFileManager(null, null, null), this.fileSystem, project);
-            sourceFiles = projectFileManager.list(StandardLocation.SOURCE_PATH, "", Collections.singleton(Kind.SOURCE), true);
-        } catch (IOException e) {
-            throw new WMRuntimeException("Could not create Java file manager for project " + projectName, e);
-        }
-
-        List<String> options = new ArrayList<String>();
-
-        options.add("-encoding");
-        options.add("utf8");
-
-        options.add("-A" + ServiceProcessorConstants.PROJECT_NAME_PROP + "=" + projectName);
-
-        if (sourceFiles.iterator().hasNext()) {
-            JavaCompiler.CompilationTask task = compiler.getTask(null, projectFileManager, null, options, null, sourceFiles);
-            task.setProcessors(Collections.singleton(createServiceDefProcessor(projectFileManager)));
-            task.call();
-        }
-        executeConfigurationProcessor(compiler, projectFileManager, projectName);
+        executeConfigurationProcessor(compiler, projectFileManager, projectName, out);
+        return out.toString();
     }
 
     private JavaCompiler newJavaCompiler() {
@@ -137,7 +110,7 @@ public class ProjectCompiler {
     }
 
     @SuppressWarnings("unchecked")
-    private void executeConfigurationProcessor(JavaCompiler compiler, JavaFileManager projectFileManager, String projectName) {
+    private void executeConfigurationProcessor(JavaCompiler compiler, JavaFileManager projectFileManager, String projectName, Writer out) {
         List<String> options = new ArrayList<String>();
 
         options.add("-encoding");
@@ -150,9 +123,11 @@ public class ProjectCompiler {
 
         options.add("-A" + ServiceProcessorConstants.PROJECT_NAME_PROP + "=" + projectName);
 
-        JavaCompiler.CompilationTask task = compiler.getTask(null, projectFileManager, null, options, null, Collections.EMPTY_SET);
+        JavaCompiler.CompilationTask task = compiler.getTask(out, projectFileManager, null, options, null, Collections.EMPTY_SET);
         task.setProcessors(Collections.singleton(createServiceConfigProcessor()));
-        task.call();
+        if (!task.call()) {
+            throw new WMRuntimeException("Compiler/Annotation processing failed with output:\n\n" + out.toString());
+        }
     }
 
     private Processor createServiceConfigProcessor() {

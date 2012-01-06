@@ -43,7 +43,6 @@ import com.wavemaker.tools.service.definitions.Operation;
 import com.wavemaker.tools.service.definitions.Operation.Parameter;
 import com.wavemaker.tools.service.definitions.OperationComparator;
 import com.wavemaker.tools.service.definitions.Service;
-import com.wavemaker.tools.service.definitions.ServiceComparator;
 import com.wavemaker.tools.service.smd.Method;
 import com.wavemaker.tools.service.smd.Param;
 import com.wavemaker.tools.service.smd.SMD;
@@ -57,7 +56,6 @@ import com.wavemaker.tools.spring.beans.Bean;
 import com.wavemaker.tools.spring.beans.Beans;
 import com.wavemaker.tools.spring.beans.DefaultableBoolean;
 import com.wavemaker.tools.spring.beans.Entry;
-import com.wavemaker.tools.spring.beans.Import;
 import com.wavemaker.tools.spring.beans.Property;
 import com.wavemaker.tools.spring.beans.Value;
 import com.wavemaker.tools.ws.salesforce.SalesforceHelper;
@@ -181,26 +179,10 @@ public class ConfigurationCompiler {
     }
 
     public static void generateServices(FileService fileService, Resource servicesXml, SortedSet<Service> services) throws JAXBException, IOException {
-
-        SortedSet<Service> allServices = new TreeSet<Service>(new ServiceComparator());
-        allServices.addAll(services);
-
-        Beans beans = new Beans();
-        List<Object> imports = beans.getImportsAndAliasAndBean();
-
-        for (Service service : allServices) {
-
-            if (service.getSpringFile() == null) {
-                throw new WMRuntimeException(MessageResource.NO_EXTERNAL_BEAN_DEF, service.getId());
-            } else {
-                Import i = new Import();
-                i.setResource("classpath:" + service.getSpringFile());
-
-                imports.add(i);
-            }
-        }
-
-        SpringConfigSupport.writeBeans(beans, servicesXml, fileService);
+        // Previously the top service file included imports for service bean spring definitions, since 6.5 all
+        // *.spring.xml files are loaded using classpath scanning so the imports are no londer necessary. For now we
+        // still write an empty file to ensure older projects remain operational.
+        SpringConfigSupport.writeBeans(new Beans(), servicesXml, fileService);
     }
 
     public static SortedSet<Method> getMethods(List<Operation> ops, String serviceName) {

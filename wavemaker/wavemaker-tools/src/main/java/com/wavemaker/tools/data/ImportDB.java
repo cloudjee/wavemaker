@@ -399,14 +399,7 @@ public class ImportDB extends BaseDataModelSetup {
         if (!this.classesdir.exists()) {
             this.classesdir.mkdirs();
         }
-
-        this.projectCompiler.compileService(this.currentProjectName, this.serviceName);
-
-        /*
-         * String includes = packageName.replace(".", "/") + "/* "; if (!packageName.equals(dataPackage)) { includes +=
-         * dataPackage.replace(".", "/") + "/*"; } AntUtils.javac(destdir.getAbsolutePath(), classesdir, includes);
-         */
-
+        this.projectCompiler.compile(this.currentProjectName);
     }
 
     protected void writePropertiesFile(Configuration cfg) {

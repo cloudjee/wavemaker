@@ -38,8 +38,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.JSONObject;
-import com.wavemaker.json.TestJSONSerialization.CycleA;
-import com.wavemaker.json.TestJSONSerialization.CycleB;
+import com.wavemaker.json.JSONSerializationTest.CycleA;
+import com.wavemaker.json.JSONSerializationTest.CycleB;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.server.DownloadResponse;
 import com.wavemaker.runtime.server.InternalRuntime;
