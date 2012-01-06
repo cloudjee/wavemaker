@@ -1841,11 +1841,13 @@ dojo.declare("wm.prop.DeviceListEditor", wm.CheckboxSet, {
 	this.displaySizes = new wm.Variable({owner: this, type: "EntryData", isList:1});
 	this.displaySizes.setData([{name: "All",
 				    dataValue: ""},
-				   {name: ">= 1000<div style='margin-left:20px'>full screen/widescreen tablet; to use in design mode, undock properties and palette panels</div>", // NOTE: ipad in landscape mode is 1024px
-				    dataValue: "1000"},
-				   {name: "800px-1000px<div style='margin-left:20px'>desktop/tablet</div>",
-				    dataValue: "800"},
-				   {name: "600px-800px<div style='margin-left:20px'>laptop/tablet</div>",
+				   {name: ">= 1150<div style='margin-left:20px'>large/full screen</div>", // NOTE: ipad in landscape mode is 1024px
+				    dataValue: "1150"},
+				   {name: "900px-1150px<div style='margin-left:20px'>large/widescreen desktop/tablet</div>",
+				    dataValue: "900"},
+				   {name: "750px-900px<div style='margin-left:20px'>medium desktop/tablet</div>",
+				    dataValue: "750"},
+				   {name: "600px-750px<div style='margin-left:20px'>small laptop/tablet</div>",
 				    dataValue: "600"},
 				   {name: "450px-600px<div style='margin-left:20px'>tablet</div>",
 				    dataValue: "450"},
@@ -1898,7 +1900,6 @@ dojo.declare("wm.prop.DeviceListEditor", wm.CheckboxSet, {
 	    }
 	    delete this._inDoChange;
 	    this.inherited(arguments);
-	    this.inspected.setRoles(this.getDataValue());
 	}
     },
     reinspect: function() {return true;}
