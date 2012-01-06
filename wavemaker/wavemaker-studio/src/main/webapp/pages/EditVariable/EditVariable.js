@@ -18,6 +18,7 @@ dojo.declare("EditVariable", wm.Page, {
     start: function() {
 
 	this.helpButton = new wm.ToolButton({_classes: {domNode: ["StudioHelpIcon"]},
+					     owner: this,
 					     width: "20px",
 					     height: "20px",
 					     parent: this.owner.owner.titleBar,

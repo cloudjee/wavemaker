@@ -548,7 +548,7 @@ dojo.declare("wm.layout.Fluid", wm.layout.Base, {
 	    var minWidths = {};
 	    for (var i = 0; i < inContainer.c$.length; i++) {
 		var c = inContainer.c$[i];
-		if (!this.inFlow(c)) continue;
+		if (!this.inFlow(c)) continue;		
 		minWidths[c.getRuntimeId()] = c.getMinWidthProp();
 	    }
 
@@ -557,32 +557,47 @@ dojo.declare("wm.layout.Fluid", wm.layout.Base, {
 	    var currentRow = rows[0];
 	    var currentWidth = 0;
 	    var maxWidth = b.w;
+	    var requiredHeight = 0;
+	    var currentRowHeight = 0;
 	    for (var i = 0; i < inContainer.c$.length; i++) {
 		var c = inContainer.c$[i];
 		if (!this.inFlow(c)) continue;
 		if (!c.bounds.w) c.updateBounds();
-		var minWidth = (!c._percEx.w) ? c.bounds.w : minWidths[c.getRuntimeId()];
+		var requestedWidth;
+		if  (!c._percEx.w) {
+		    requestedWidth = c.bounds.w;
+		} else {
+		    requestedWidth =  maxWidth/100*c._percEx.w;
+		    if (requestedWidth < minWidths[c.getRuntimeId()])
+			requestedWidth = minWidths[c.getRuntimeId()];
+		}
+		//var minWidth = (!c._percEx.w) ? c.bounds.w : minWidths[c.getRuntimeId()];
 		/* If there are no items in this row, then add the next item no matter what its size is;
 		 * if this one widget is wider than the container's width it will be adjusted later 
 		 */
 		if (currentRow.length == 0) {
 		    currentRow.push(c);
-		    currentWidth = minWidth;
+		    currentWidth = requestedWidth;
+		    currentRowHeight = c.bounds.h;
 		}
 
 		/* If there's no more room, its time to move on to the next row */
-		else if (currentWidth + minWidth > maxWidth) {
+		else if (currentWidth + requestedWidth > maxWidth) {
 		    currentRow = [c];
 		    rows.push(currentRow);
-		    currentWidth = minWidth;
+		    currentWidth = requestedWidth;
+		    requiredHeight += currentRowHeight;
+		    currentRowHeight = c.bounds.h;
 		}
 
 		else {
 		    currentRow.push(c);
-		    currentWidth += minWidth;
+		    currentWidth += requestedWidth;
+		    currentRowHeight = Math.max(c.bounds.h, currentRowHeight);
 		}
 	    }
-
+	    requiredHeight += currentRowHeight;
+	    if (reflowTest) return requiredHeight;
 	    /* Now iterate over each row, and layout the widgets for each row */
 	    var top = inContainer.padBorderMargin.t;
 	    for (var rowId = 0; rowId < rows.length; rowId++) {
@@ -591,7 +606,8 @@ dojo.declare("wm.layout.Fluid", wm.layout.Base, {
 	    if (inContainer.bounds.h != top) {
 		if (top === inContainer.padBorderMargin.t) top = 15;
 		top += inContainer.padBorderMargin.b;
-		inContainer.setHeight(top + "px"); // will trigger a reflowParent, and result in a second pass which we will block
+		//inContainer.setHeight(top + "px"); // will trigger a reflowParent, and result in a second pass which we will block
+		inContainer.height = top + "px";
 	    }
 	} catch(e) {
 	} finally {
