@@ -26,9 +26,9 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.server.DownloadResponse;
 import com.wavemaker.runtime.server.FileUploadResponse;
 import com.wavemaker.runtime.server.ParamName;
+import com.wavemaker.runtime.service.ServiceSuperClass;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
-import com.wavemaker.runtime.service.ServiceSuperClass;
 import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.deployment.DeploymentTargetManager;
 import com.wavemaker.tools.deployment.DeploymentType;
@@ -98,10 +98,6 @@ public class DeploymentService extends ServiceSuperClass {
         }
     }
 
-    public String exportProject() {
-        return this.deploymentManager.exportProject();
-    }
-
     /*
      * THIS ASSUMES exportProject has already been called, and the war file is already prepared. Why don't we just let
      * the client pass in a path to the file they want? Because we're dealing with files internal to the studio where
@@ -150,33 +146,21 @@ public class DeploymentService extends ServiceSuperClass {
      * THIS ASSUMES exportProject has already been called, and the zip file is already prepared
      */
     public DownloadResponse downloadProjectZip() {
-
-        String filename = this.deploymentManager.getExportPath();
-
-        try {
-            DownloadResponse ret = new DownloadResponse();
-
-            File localFile = new File(filename);
-            FileInputStream fis = new FileInputStream(localFile);
-
-            ret.setContents(fis);
-            filename = filename.substring(filename.lastIndexOf(File.separator) + 1);
-            ret.setContentType("application/zip");
-            ret.setFileName(filename);
-            return ret;
-        } catch (IOException e) {
-
-        }
-        return null;
+        // FIXME Download of a response has been broken since 6.5. This export functionality had been changed to include
+        // a version number but the download always tried to export the file without an extension. We need to re-think
+        // the concept of export in the cloud world. Perhaps export should just stream a response, rather than saving
+        // it inside the projects folder.
+        throw new UnsupportedOperationException();
     }
 
+    /**
+     * Export the current project to a zip file with the given name.
+     * 
+     * @param zipFileName the name of the file, excluding any path.
+     * @return the full path of the exported file to be displayed to the user
+     */
     public String exportProject(String zipFileName) {
-        System.out.println("ZIP FILE NAME SERVCIE:" + zipFileName);
-        File f = new File(this.deploymentManager.getExportPath());
-        f = new File(f.getParentFile(), zipFileName);
-        String path = f.getAbsolutePath();
-        this.deploymentManager.exportProject(path);
-        return path;
+        return this.deploymentManager.exportProject(zipFileName);
     }
 
     public FileUploadResponse uploadProjectZipFile(@ParamName(name = "file") MultipartFile file) throws IOException {

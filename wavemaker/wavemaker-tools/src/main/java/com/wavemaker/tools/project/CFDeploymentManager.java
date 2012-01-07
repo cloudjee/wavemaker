@@ -122,13 +122,7 @@ public class CFDeploymentManager extends AbstractDeploymentManager {
     }
 
     @Override
-    public void exportProject(String zipFileName) {
+    public String exportProject(String zipFileName) {
         throw new UnsupportedOperationException("Haven't implemented this yet.");
     }
-
-    @Override
-    public String exportProject() {
-        throw new UnsupportedOperationException("Haven't implemented this yet.");
-    }
-
 }
