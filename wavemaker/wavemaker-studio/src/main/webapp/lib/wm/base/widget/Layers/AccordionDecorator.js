@@ -49,6 +49,7 @@ dojo.declare("wm.AccordionDecorator", wm.LayersDecorator, {
 		if (d.isDesignLoaded())
 			dojo.stopEvent(e);
 		d.setProp(inLayer.active && d.multiActive ? "layerInactive" : "layer", inLayer);
+	    inLayer.focusFirstEditor();
 	},
 	getNewLayerIndex: function(inLayer) {
 		for (var i=0, layers=this.decoree.layers, l; (l=layers[i]); i++)
