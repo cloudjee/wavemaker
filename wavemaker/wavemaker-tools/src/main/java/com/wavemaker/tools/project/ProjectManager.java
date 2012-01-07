@@ -494,12 +494,6 @@ public class ProjectManager {
     }
 
     public String getCurrentUsername() {
-
-        /*
-         * com.wavemaker.runtime.security.SecurityService securityService =
-         * (com.wavemaker.runtime.security.SecurityService) RuntimeAccess.getInstance().getService("securityService");
-         * String username = securityService.getUserName();
-         */
         try {
             org.acegisecurity.Authentication authentication = org.acegisecurity.context.SecurityContextHolder.getContext().getAuthentication();
             String username = authentication.getName();

@@ -15,6 +15,7 @@
 package com.wavemaker.tools.project;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Collections;
@@ -31,6 +32,7 @@ import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.springframework.core.io.Resource;
+import org.springframework.util.StringUtils;
 
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 import com.wavemaker.common.WMRuntimeException;
@@ -368,26 +370,25 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
         return antExecute(projectDirPath, EXPORT_PROJECT_OPERATION, properties);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void exportProject(String zipFileName) {
+    public String exportProject(String zipFileName) {
         try {
-            exportProject(getProjectDir().getFile().getCanonicalPath(), zipFileName);
+            String userProjectPrefix = this.projectManager.getUserProjectPrefix();
+            if (StringUtils.hasLength(userProjectPrefix)) {
+                ;
+            }
+            Resource exportDir;
+            if (this.projectManager.getUserProjectPrefix().length() > 0) {
+                exportDir = this.projectManager.getTmpDir();
+            } else {
+                exportDir = getProjectDir().createRelative(EXPORT_DIR_DEFAULT);
+            }
+            File file = exportDir.createRelative(zipFileName).getFile();
+            exportProject(getProjectDir().getFile().getCanonicalPath(), file.getCanonicalPath());
+            return file.getCanonicalPath();
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String exportProject() {
-        String zipFileName = getExportPath();
-        exportProject(zipFileName);
-        return zipFileName;
     }
 
     public String antExecute(String projectDir, String targetName, Map<String, String> properties) {

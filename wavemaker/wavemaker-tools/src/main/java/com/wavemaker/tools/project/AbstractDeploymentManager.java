@@ -54,24 +54,6 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
         return this.fileSystem;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getExportPath() {
-        try {
-            Resource exportDir;
-            if (this.projectManager.getUserProjectPrefix().length() > 0) {
-                exportDir = this.projectManager.getTmpDir();
-            } else {
-                exportDir = getProjectDir().createRelative(EXPORT_DIR_DEFAULT);
-            }
-            return exportDir.createRelative(getDeployName() + ".zip").getURI().toString();
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
-    }
-
     public void setFileSystem(StudioFileSystem fileSystem) {
         this.fileSystem = fileSystem;
     }
@@ -501,25 +483,27 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
-	try {
-        List<Resource> files = this.fileSystem.listChildren(folder, new ResourceFilter() {
+        try {
+            List<Resource> files = this.fileSystem.listChildren(folder, new ResourceFilter() {
 
-            @Override
-            public boolean accept(Resource file) {
-                String name = file.getFilename().toLowerCase();
-                return name.endsWith(".gif") || name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".jpeg");
+                @Override
+                public boolean accept(Resource file) {
+                    String name = file.getFilename().toLowerCase();
+                    return name.endsWith(".gif") || name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".jpeg");
+                }
+            });
+            if (files.size() > 0) {
+                String[] imageFiles = new String[files.size()];
+                for (int i = 0; i < files.size(); i++) {
+                    imageFiles[i] = prepend + "url(images/" + (folderName == null ? "" : folderName + "/") + files.get(i).getFilename() + ")";
+                }
+                return imageFiles;
+            } else {
+                return new String[0];
             }
-        });
-        if (files.size() > 0) {
-            String[] imageFiles = new String[files.size()];
-            for (int i = 0; i < files.size(); i++) {
-                imageFiles[i] = prepend + "url(images/" + (folderName == null ? "" : folderName + "/") + files.get(i).getFilename() + ")";
-            }
-            return imageFiles;
-        } else {
+        } catch (Exception e) {
             return new String[0];
         }
-	} catch(Exception e) {return new String[0];}
     }
 
     private boolean validJavaVarPart(String val) {

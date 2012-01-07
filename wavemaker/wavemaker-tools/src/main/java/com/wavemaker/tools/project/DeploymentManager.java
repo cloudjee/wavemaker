@@ -57,11 +57,13 @@ public interface DeploymentManager {
 
     public abstract String undeploy();
 
-    public abstract void exportProject(String zipFileName);
-
-    public abstract String getExportPath();
-
-    public abstract String exportProject();
+    /**
+     * Export the current project to a zip file with the given name.
+     * 
+     * @param zipFileName the name of the file, excluding any path.
+     * @return the full path of the exported file to be displayed to the user
+     */
+    public abstract String exportProject(String zipFileName);
 
     /**
      * This function takes a zip file as input, unzips it and moves it into the project folder
