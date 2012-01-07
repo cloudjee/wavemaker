@@ -32,7 +32,7 @@ dojo.declare("wm.Layer", wm.Container, {
 		//console.info('layer destroy called');
 	    this._isLayerDestroying = true;
 	    var parent = this.parent;
-	    if (parent) 
+	    if (parent && parent instanceof wm.Layer) 
 		parent.setCaptionMapLayer(this.caption, null);	    
 	    this.inherited(arguments);
 	    if (parent && parent.conditionalTabButtons && !parent.decorator.tabsControl.isDestroyed)
@@ -47,6 +47,7 @@ dojo.declare("wm.Layer", wm.Container, {
 			delete this.title;
 		}
 		this.setCaption(this.caption);
+	    if (this.parent instanceof wm.Layers == false) this.active = true;
 		if (!this.isRelativePositioned)
 			dojo.addClass(this.domNode, "wmlayer");
             this.setBorder(this.parent.clientBorder);
@@ -67,7 +68,7 @@ dojo.declare("wm.Layer", wm.Container, {
 	},
 	activate: function() {
 		var p = this.parent;
-		if (p && this.showing && !this.isActive())
+		if (p instanceof wm.Layer && this.showing && !this.isActive())
 			p.setLayer(this);
 	},
     /* Called when the layer is the event handler */
@@ -78,15 +79,18 @@ dojo.declare("wm.Layer", wm.Container, {
 		return this.active;
 	},
 	setShowing: function(inShowing) {
+	    if (this.parent instanceof wm.Layer == false) return this.inherited(arguments);
 		if (!this.canChangeShowing())
 			return;
 	        var p = this.parent;
 		if (this.showing != inShowing) {
-			this.showing = inShowing;
+		    this.showing = inShowing;
+		    if (this.parent instanceof wm.Layers) {
 			this.decorator.setLayerShowing(this, inShowing);
 			if (!inShowing && p.layerIndex == this.getIndex()) {
 				p.setNext();
 			}
+		    }
 		}
 	    if (p && p.conditionalTabButtons && !p.decorator.tabsControl.isDestroyed)
 		p.decorator.tabsControl.setShowing(p.getVisibleLayerCount() > 1);
@@ -99,7 +103,7 @@ dojo.declare("wm.Layer", wm.Container, {
 	},
 	setCaption: function(inCaption) {
 		this.caption = inCaption;
-		if (this.parent)
+		if (this.parent && this.parent instanceof wm.Layers)
 			this.parent.setCaptionMapLayer(inCaption, this);
 	        if (this.decorator)
 		    this.decorator.applyLayerCaption(this);
