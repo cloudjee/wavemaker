@@ -15,6 +15,7 @@
 Studio.widgets = {
         loadingDialog: ["wm.LoadingDialog", {}],
         themesListVar: ["wm.Variable", {type: "StringData"}],
+    deviceSizeVar: ["wm.Variable", {type: "EntryData", isList: 1, json: '[{name: "All", dataValue: ""}, {name: ">= 1150", dataValue: "1150"}, {name: "900px-1150px", dataValue: "900"}, {name: "750px-900px", dataValue: "750"}, {name: "600px-750px", dataValue: "600"}, {name: "450px-600px", dataValue: "450"}, {name: "300px-450px", dataValue: "300"}, {name: "< 300px", dataValue: "tiny"}]'}],
 	studioService: ["wm.JsonRpcService", {service: "studioService", sync: true}, {}],
 	servicesService: ["wm.JsonRpcService", {service: "servicesService", sync: true}, {}],
 	pagesService: ["wm.JsonRpcService", {service: "pagesService", sync: true}, {}],
@@ -285,7 +286,7 @@ Studio.widgets = {
 	    panel1: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right", verticalAlign: "top", horizontalAlign: "left"}, {}, {
 			benchbevel11: ["wm.Bevel", {border: ""}, {}],
 		dockLeftPanel: ["wm.Panel", {height: "100%", width: "200px", border: "0", dockLeft: true, verticalAlign: "top",horizontalAlign: "left"}, {}, {
-		    panel2: ["wm.Dialog", {_classes: {domNode: ["studiodialog"]}, title: "Palette", height: "100%", width: "200px", border: "0", _dockData:{border:"3",edge:"l"}, margin: "0", verticalAlign: "top", horizontalAlign: "left", modal:false,docked: true, minWidth: "150", minHeight: "400", noTopBottomDocking: true}, {onClose: "dockPalette"}, {
+		    panel2: ["wm.Dialog", {_classes: {domNode: ["studiodialog"]}, title: "Palette", height: "100%", width: "100%", border: "0", _dockData:{border:"3",edge:"l"}, margin: "0", verticalAlign: "top", horizontalAlign: "left", modal:false,docked: true, minWidth: "150", minHeight: "400", noTopBottomDocking: true}, {onClose: "dockPalette"}, {
 /*
 				leftToolbarButtons: ["wm.Panel", {height: "29px", width: "100%", layoutKind: "left-to-right", verticalAlign: "top", border: 0, padding: "0,4"}, {}, {
 					nspcr4: ["wm.Spacer", {width: "2px"}, {}],
@@ -368,6 +369,11 @@ Studio.widgets = {
 						    pageSelect: ["wm.SelectMenu", {caption: "Open Page", margin:"4,0,4,20", width: "50%", maxWidth: "250", height: "24px", captionSize: "70px", displayField: "dataValue", dataField: "dataValue"},{onchange: "pageSelectChanged"},{
 							binding: ["wm.Binding",{},{}, {
 							    wire: ["wm.Wire", {"source":"app.pagesListVar","targetProperty":"dataSet"}, {}]
+							}]
+						    }],
+						    deviceSelect: ["wm.SelectMenu", {caption: "Devices", margin:"4,0,4,20", width: "50%", maxWidth: "150", height: "24px", captionSize: "50px", dataValue: "", displayField: "name", dataField: "dataValue"},{onchange: "deviceSelectChanged"},{
+							binding: ["wm.Binding",{},{}, {
+							    wire: ["wm.Wire", {"source":"deviceSizeVar","targetProperty":"dataSet"}, {}]
 							}]
 						    }],
 						    languageSelect: ["wm.SelectMenu", {caption: "Language", margin:"4,0,4,20", width: "50%", maxWidth: "180", height: "24px", captionSize: "70px", displayField: "dataValue", dataField: "dataValue", dataValue: "default", options: "default", restrictValues: false},{onchange: "languageSelectChanged"},{

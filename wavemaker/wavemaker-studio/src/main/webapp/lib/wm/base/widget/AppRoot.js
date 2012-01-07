@@ -73,10 +73,12 @@ dojo.declare("wm.AppRoot", wm.Container, {
 		this.inherited(arguments);
 	},
     calcDeviceSize: function(width) {	
-	if (width >= 1000) {
-	    return "1000";
-	} else if (width >= 800) {
-	    return "800";
+	if (width >= 1150) {
+	    return "1150";
+	} else if (width >= 900) {
+	    return "900";
+	} else if (width >= 750) {
+	    return "750";
 	} else if (width >= 600) {
 	    return "600";
 	} else if (width >= 450) {

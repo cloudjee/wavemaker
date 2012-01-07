@@ -663,7 +663,11 @@ wm.Container.extend({
      * top-to-bottom container: height is the sum of the heights of all px sized children and the sum of all minHeights for % sized children.
      * left-to-right container: height is the max of the heights of all px sized children and the minHeights for % sized children
      */
+    getFluidHeight: function() {
+	return this.layout.flow(this,true);
+    },
 	getPreferredFitToContentHeight: function() {
+	    if (this.layoutKind == "fluid") return this.getFluidHeight();
 		// get the maximum width in this column; 
 		// and get the sum of height in this row... we'll worry later about whether its a row or column
             var extra = this.padBorderMargin.t + this.padBorderMargin.b;	

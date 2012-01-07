@@ -384,6 +384,7 @@ wm.Control.extend({
 });
 
 wm.Object.extendSchema(wm.Control, {
+    generateForDevice: {group: "devices", shortname: "generateForDeviceSizes", editor: "wm.prop.DeviceListEditor", advanced:1},
     imageList: {ignore: 1, group: "widgetName", subgroup: "graphics", order: 50, editor: "wm.prop.ImageListSelect"},
     imageIndex: {ignore: 1, group: "widgetName", subgroup: "graphics", order: 51, type: "Number",  doc: 1},
     editImageIndex: {ignore: 1, group: "widgetName", subgroup: "graphics", order: 52, type: "String", doc: 1, operation: 1},

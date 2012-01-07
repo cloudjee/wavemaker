@@ -581,9 +581,7 @@
 	     /* If its a bindable property, update whether the bindeditor or regular editor is showing and update the bindeditor's value. */
 	     if (inProp.bindable || inProp.bindTarget) {
 		 e.setShowing(!isBound);
-		 console.log(e.toString());
 		 binde.setShowing(Boolean(isBound));
-		 console.log(binde.toString());
 		 e.parent.setHeight((isBound ? binde.bounds.h : e.bounds.h) +  "px");
 		 var wire = inComponent.$.binding && inComponent.$.binding.wires[propPath];
 		 binde.setDataValue(wire ?this.getFormattedBoundValue(inProp.type, wire.source,wire.expression) : "");

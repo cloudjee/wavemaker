@@ -121,7 +121,13 @@ wm.Plugin.plugin("mobile", wm.Control, {
     deviceSizes: '',
     prepare: function() {
 	this.mobileSocket(arguments);
-	if (this.deviceSizes) {
+/*
+	if (!this.deviceSizes && this.generateForDevice) {
+	    this.deviceSizes = dojo.clone(this.generateForDevice);
+	} else if (this.deviceSizes && this.generateForDevice) {
+	    this.deviceSizes = this.deviceSizes.concat(this.generateForDevice);
+	}*/
+	if (this.deviceSizes || window["studio"] && this.generateForDevice) {
 	    this._mobileShowingRequested = this.showing;
 	    this.showing = this.updateMobileShowing(this.showing);
 	    this.subscribe("deviceSizeRecalc", this, "reshowMobile");
@@ -141,15 +147,24 @@ wm.Plugin.plugin("mobile", wm.Control, {
     updateMobileShowing: function(inValue) {
 	if (!this._cupdating)
 	    this._mobileShowingRequested = inValue; // cache whether it should be showing even if we don't let it show
-	if (this.deviceSizes && this.deviceSizes.length) {
+	if (this.deviceSizes && this.deviceSizes.length || this._isDesignLoaded && this.generateForDevice) {
 	    return inValue && this.isMobileShowAllowed();
 	} else {
 	    return inValue;
 	}
     },
     isMobileShowAllowed: function() {
-	var deviceSize = this._isDesignLoaded ? app.appRoot.calcDeviceSize(studio.designer.bounds.w) : app.appRoot.deviceSize;
-	return (!deviceSize || dojo.indexOf(this.deviceSizes, deviceSize) != -1);
+	if (this._isDesignLoaded) {
+	    var deviceSize = studio.deviceSelect.getDataValue();
+	    if (!deviceSize) return true;
+	    var isOk = true;
+	    if (this.deviceSizes && dojo.indexOf(this.deviceSizes, deviceSize) == -1) return false;
+	    if (this.generateForDevice && dojo.indexOf(this.generateForDevice, deviceSize) == -1) return false;
+	    return true;
+	} else {
+	    var deviceSize = app.appRoot.deviceSize;
+	    return (!deviceSize || dojo.indexOf(this.deviceSizes, deviceSize) != -1);
+	}
     }
 });
 

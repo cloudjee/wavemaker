@@ -1492,6 +1492,9 @@ dojo.declare("Studio", wm.Page, {
     revertThemeClick: function(inSender) {
 	this.themesPage.page.revertTheme();
     },
+    deviceSelectChanged: function(inSender) {
+	dojo.publish("deviceSizeRecalc");
+    },
     languageSelectChanged: function(inSender, optionalPageName) {
 	if (this._changingLanguage) return;	
 	var lastValue = this.languageSelect._lastValue;
