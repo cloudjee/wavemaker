@@ -20,8 +20,8 @@ dojo.declare("NewLiveFormDialog", wm.Page, {
     },
     setForm: function(inForm) {
 	this.form = inForm;
-	this.typeSelect.postInit(); // update the list of values
-	this.dataSetSelect.postInit();
+	this.typeSelect.refreshOptions();
+	this.dataSetSelect.refreshOptions();
     },
     onCancelClick: function() {
         this.owner.owner.dismiss();
