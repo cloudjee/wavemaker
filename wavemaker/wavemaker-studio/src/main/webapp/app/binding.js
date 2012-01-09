@@ -529,7 +529,11 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
         var nodeName = inProp.rootName || inProp.name;
 	var rootName = nodeName;
 	this.selectedPropTreeField = inProp.fullName;
-	var sourceProp = inObject.listProperties()[rootName];
+	if (!inProp.putWiresInSubcomponent) {
+	    var sourceProp = inObject.listProperties()[rootName];
+	} else {
+	    var sourceProp = inObject.owner.listProperties()[rootName];	    
+	}
 	sourceProp.name = rootName;
 
         var wire = inObject.$.binding && inObject.$.binding.wires[rootName];
@@ -551,13 +555,13 @@ dojo.declare("wm.BinderSource", [wm.Panel], {
             data: {
                 object: inObject,
 		propDef: sourceProp,
-                fieldName: rootName,
-                fullFieldName: rootName,
+                fieldName: inProp.putWiresInSubcomponent ? "" : rootName,
+                fullFieldName: inProp.putWiresInSubcomponent ? "" : rootName,
                 type: inObject.type
             }
         });
 	this._propTreeInitializing = false;
-	if (inProp.name == this.selectedPropTreeField) {
+	if (sourceProp.name == this.selectedPropTreeField) {
 	    this.propTree.select(rootNode);
 	}
     },

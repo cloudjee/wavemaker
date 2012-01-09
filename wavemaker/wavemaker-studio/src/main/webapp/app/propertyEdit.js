@@ -1691,12 +1691,12 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
     reinspect: function() {
 	var inspected = this.inspectedSubcomponent || this.inspected;
 	 var isBound = studio.inspector.isPropBound(inspected, this.propDef); 
-	if (!isBound && !this.fieldPanel.showing) {
+	if (!isBound && this.fieldPanel && !this.fieldPanel.showing) {
 	    this.fieldPanel.show();
 	    this.fieldPanel.setBestHeight();
 	    this.setBestHeight();
 	    this.parent.setBestHeight();
-	} else if (isBound && this.fieldPanel.showing) {
+	} else if (isBound && this.fieldPanel && this.fieldPanel.showing) {
 	    this.fieldPanel.hide();
 	    this.setBestHeight();
 	    this.parent.setBestHeight();
