@@ -686,6 +686,7 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 // Lookup Editor
 //===========================================================================
 dojo.declare("wm.Lookup", wm.SelectMenu, {
+    datatype: "",
 	dataField: "",
 	autoDataSet: true,
 	startUpdate: true,
@@ -695,7 +696,6 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		this.inherited(arguments);
 		if (this.autoDataSet && this.formField)
 		    this.createDataSet();
-            this.dataField = ""; // just in case someone somehow changed it, this must be all fields to work.
 	},
 	createDataSet: function() {
 	    wm.fire(this.$.liveVariable, "destroy");
@@ -714,7 +714,14 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		var ff = wm.getFormField(this);
 		
 		try {
-		    var currentType = parentType && parentType != "any" ? wm.typeManager.getType(parentType).fields[ff].type : "string";
+		    var currentType;
+		    if (this.dataType) {
+			currentType = this.dataType;
+		    } else if (parentType && parentType != "any") {
+			currentType = wm.typeManager.getType(parentType).fields[ff].type ;
+		    } else {
+			currentType = "string";
+		    }
 		} catch(e) {}
 		
 		if (view && !this._isDesignLoaded) {
@@ -740,10 +747,13 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 	
 
 	createDataSetWire: function(inDataSet) {
+	    if (!this.$.binding) {
+		new wm.Binding({name: "binding", owner: this});
+	    }
 		var w = this._dataSetWire = new wm.Wire({
 			name: "dataFieldWire",
 			target: this,
-			owner: this,
+			owner: this.$.binding,
 			source: inDataSet.getId(),
 			targetProperty: "dataSet"
 		});

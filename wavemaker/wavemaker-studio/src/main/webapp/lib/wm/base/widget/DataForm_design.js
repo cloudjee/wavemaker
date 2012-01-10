@@ -120,7 +120,6 @@ wm.Object.extendSchema(wm.DBForm, {
 });
 
 wm.DataForm.extend({
-    _placeEditorOffset: 1,
     /****************
      * METHODS: afterPaletteDrop
      * DESCRIPTION:  Setup onEnterKeyPress event handler 
@@ -258,7 +257,7 @@ wm.DataForm.extend({
 	addEditorToForm: function(inEditor) {
 		var e = inEditor, ff = e.formField && this.getViewDataIndex(e.formField || "");
 		if (ff) {
-                    if (wm.isInstanceType(e, wm.SubForm))
+                    if (wm.isInstanceType(e, wm.DataForm))
 			var f = this.addEditorToView(e, ff);
 		    if (f)
 			wm.updateFieldEditorProps(e, f)
@@ -276,7 +275,7 @@ wm.DataForm.extend({
 
 		if (v) {
 		    if (wm.isInstanceType(inEditor, wm.Lookup) ||
-			wm.isInstanceType(inEditor, wm.SubForm)) {
+			wm.isInstanceType(inEditor, wm.DataForm)) {
 			v.addRelated(inField);
 			lvar.update();
 		    } else {
@@ -345,9 +344,43 @@ wm.DataForm.extend({
 
 	    typeDef = this.getTypeDef();
 	    if (typeDef) {
+		var dataSource = "object"; // either liveData, compositeKey or object
+		if (typeDef.liveService) {
+		    dataSource = "liveData";
+		} else {
+		    var service = typeDef.service;
+		    var serviceList = studio.application.getServerComponents();
+		    for (var i = 0; i < serviceList.length; i++) {
+			if (service == serviceList[i].name) {
+			    dataSource = "compositeKey";
+			    break;
+			}
+		    }
+		}
 		fields = wm.typeManager.getFilteredPropNames(typeDef.fields);
-	    }
+		if (dataSource == "compositeKey") {
+		    var def = studio.dataService.requestSync("getRelated", [service, this.getParentForm().serviceVariable.type.replace(/^.*\./,"")]);
+		    def.addCallback(function(inData) {
+			for (var i = 0; i < inData.length; i++) {
+			    var relationship = inData[i];
+			    for (var j = 0; j < relationship.columnNames.length; j++) {
+				var fieldName = relationship.columnNames[j];
+				var fieldNameAlt = fieldName.replace(/_./g, function(inText) {
+				    return inText.charAt(1).toUpperCase();
+				});
+				if (typeDef.fields[fieldName]) {
+				    typeDef.fields[fieldName].type = relationship.fullyQualifiedType;
+				} else if (typeDef.fields[fieldNameAlt]) {
+				    typeDef.fields[fieldNameAlt].type = relationship.fullyQualifiedType;
+				}
+			    }
+			}
+		    });
 
+
+		}
+	    }
+	    
 
 	    var editors = this.getEditorsArray();
 
@@ -359,7 +392,11 @@ wm.DataForm.extend({
 		for (var i = 0; i < fields.length; i++) {
 		    var fieldName = fields[i];
 		    var fieldDef = typeDef.fields[fieldName];
-		    this.makeEditor(fieldDef, fieldName);
+		    var e = this.makeEditor(fieldDef, fieldName);
+		    if (e instanceof wm.Lookup && dataSource == "compositeKey") {
+			e.dataField = e.formField;
+			e.dataType = fieldDef.type;
+		    }
 		}
 	    }
 	},
@@ -423,16 +460,20 @@ wm.DataForm.extend({
 		}
 	},
     placeEditor: function(inEditor) {
-	var offset = this._placeEditorOffset;
-		    var editors = this.getEditorsArray(); // getEditorsArray includes the newly created editor which screws with what should be obvious math...
-		    if (editors.length == offset) {
-			this.moveControl(inEditor,0);
+		    var editors = this.getEditorsArray(true); // getEditorsArray includes the newly created editor which screws with what should be obvious math...
+		    if (editors.length == 1) {
+			this.moveControl(inEditor,0);// in case it was put after the button panel
 		    } else {
-			var lastIndex = this.indexOfControl(editors[editors.length-1 - offset]);
-			var parent = editors[editors.length-1-offset].parent;
-			if (parent != inEditor.parent) 
-			    inEditor.setParent(parent);
-			parent.moveControl(inEditor,lastIndex+1);
+			for (var i = editors.length-1; i >= 0; i--) {
+			    if (editors[i] != inEditor) {
+				var parent = editors[i].parent;
+				if (parent != inEditor.parent) {
+				    inEditor.setParent(parent);				
+				}
+				parent.moveControl(inEditor,i+1);
+				break;
+			    }
+			}
 		    }
     },
 
@@ -502,7 +543,7 @@ wm.DataForm.extend({
 	    var targetProperty = null;
 	    if (inEditor instanceof wm.AbstractEditor) {
 		targetProperty =  "dataValue";
-	    } else if (wm.isInstanceType(inEditor, wm.SubForm)) {
+	    } else if (wm.isInstanceType(inEditor, wm.DataForm)) {
 		targetProperty = "dataSet";
 	    }
 	    var dataSet = this.dataSet;
@@ -516,7 +557,7 @@ wm.DataForm.extend({
 	    var sourceProp = null;
 	    if (inEditor instanceof wm.AbstractEditor) {
 		sourceProp =  "dataValue";
-	    } else if (wm.isInstanceType(inEditor, wm.SubForm)) {
+	    } else if (wm.isInstanceType(inEditor, wm.DataForm)) {
 		sourceProp = "dataOutput" ;
 	    }
 	    var source = inEditor.getId() + (sourceProp ? "." + sourceProp : "");
@@ -590,6 +631,7 @@ wm.DataForm.extend({
 		this._bindEditor(e);
 	    }
 	}
+	return e;
     },
     generateButtons: function() {
 	var buttonPanel = new wm.Panel({
@@ -631,7 +673,46 @@ wm.DataForm.extend({
 	    this.reflow();
 	    studio.refreshDesignTrees();
 	// reflow called by caller
-    }
+    },
+
+
+    /****************
+     * METHOD: _getFormField (DESIGNTIME)
+     * DESCRIPTION: This form can have this.firstname or this.manager, but can NOT have this.manager.firstname.
+     *              Return valid formFields or return nothing.
+     ***************/
+    _getFormField: function(inFieldIndex, inFieldName) {
+	if (inFieldIndex === undefined)
+	    return inFieldName;
+	if (inFieldIndex.indexOf(".") == -1)
+	    return inFieldIndex;
+	},
+
+    /****************
+     * METHOD: _getEditorForField (DESIGNTIME)
+     * DESCRIPTION: Returns an editor for the specified formField. Used to determine if we need to create an editor for that field
+     ***************/
+	_getEditorForField: function(inField) {
+		var editors = this._currentEditors = this.getEditorsArray();
+		for (var i=0, editors, e; (e=editors[i]); i++)
+			if (e.formField == inField) {
+				return e;
+			}
+	},
+
+    /****************
+     * METHOD: _getFormEditorProps (DESIGNTIME)
+     * DESCRIPTION: Returns the properties to use when initializing a new wm.AbstractEditor class
+     ***************/
+	getFormEditorProps: function() {
+		return {
+			size: this.editorSize,
+			readonly: this.readonly,
+			captionSize: this.captionSize,
+			captionAlign: this.captionAlign,
+			captionPosition: this.captionPosition
+		}
+	}
 
 });
 
@@ -652,22 +733,25 @@ wm.DBForm.extend({
      * METHODS: afterPaletteDrop
      * DESCRIPTION:  Setup onEnterKeyPress event handler and generate the buttons panel
      ***************/
-    afterPaletteDrop: function() {
-	this.inherited(arguments);
-
-	if (!studio.newLiveFormDialog) {
-	    studio.newLiveFormDialog = new wm.PageDialog({owner: studio,
-							  name: "newLiveFormDialog",
-								       pageName: "NewLiveFormDialog",
-								       width: "400px",
-								       height: "300px",
-								       modal: true,
-								       hideControls: true,
-								       title: studio.getDictionaryItem("wm.DBForm.DIALOG_TITLE")});
-	    }
-	    studio.newLiveFormDialog.show();
-	studio.newLiveFormDialog.page.setForm(this);
+    afterPaletteDrop: function () {
+        this.inherited(arguments);
+        if (!studio.newLiveFormDialog) {
+            studio.newLiveFormDialog = new wm.PageDialog({
+                owner: studio,
+                name: "newLiveFormDialog",
+                pageName: "NewLiveFormDialog",
+                width: "400px",
+                height: "300px",
+                modal: true,
+                hideControls: true,
+                title: studio.getDictionaryItem("wm.DBForm.DIALOG_TITLE")
+            });
+        }
+        studio.newLiveFormDialog.show();
+        studio.newLiveFormDialog.page.setForm(this);
     },
+
+
 
     set_readonlyManager: function(inValue) {
 	this.readonlyManager = Boolean(inValue);
@@ -917,6 +1001,15 @@ wm.ServiceForm.extend({
 });
 
 
+-wm.Object.extendSchema(wm.SubForm, {
+    formField: {group: "widgetName", subgroup: "data", requiredGroup:1, order: 3, editor: "wm.prop.FormFieldSelect", editorProps: {relatedFields: true}},
+    dataSet: {ignore:1},
+    type: {hidden:1},
+    confirmChangeOnDirty: {ignore:1},
+    editingMode: {hidden:true}
+});
+
+
 wm.SubForm.extend({
     afterPaletteDrop: function() {
 	this.inherited(arguments);
@@ -1008,13 +1101,7 @@ wm.SubForm.extend({
 	}
 });
 
-wm.Object.extendSchema(wm.SubForm, {
-    formField: {group: "widgetName", subgroup: "data", requiredGroup:1, order: 3, editor: "wm.prop.FormFieldSelect", editorProps: {relatedFields: true}},
-    dataSet: {ignore:1},
-    type: {ignore:1},
-    confirmChangeOnDirty: {ignore:1},
-    editingMode: {hidden:true}
-});
+
 
 
 wm.Object.extendSchema(wm.ServiceInputForm, {
@@ -1033,7 +1120,7 @@ wm.Object.extendSchema(wm.ServiceInputForm, {
     
 });
 wm.ServiceInputForm.extend({
-    _placeEditorOffset: 0,
+
     getTypeSchema: function() {
 	return this.serviceVariable._dataSchema;
     },
@@ -1058,3 +1145,4 @@ wm.ServiceInputForm.extend({
 	}
     }
 });
+
