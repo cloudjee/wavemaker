@@ -573,7 +573,10 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
 		    r = r.concat(this.getDataSets([w],matchType));
 	    }));
 	r = r.sort();
-	wm.Array.removeElement(r,this.inspected.getId());
+	/* If called from something other than the property panel, then this.inspected may not exist */
+	if (this.inspected) {
+	    wm.Array.removeElement(r,this.inspected.getId());
+	}
 	this.setOptions(r);
     },
 
@@ -1411,7 +1414,7 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 				captionSize: "80px",
 				width: "100%",
 				height: "100%",
-				      onEnterKeyPress: dojo.hitch(this, "addClass")});
+				      onEnterKeyPress: dojo.hitch(this, "_addClass")});
 	this.addButton = new wm.Label({owner: this,
 					    parent: addPanel,
 					    name: "addButton",

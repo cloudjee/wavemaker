@@ -1330,9 +1330,6 @@
 		     this.generateEditors(inComponent, group.name, l);
 		     l.reflow();
 		 }
-		 if (layer.parent && !layer.parent.multiActive) {
-		     l.focusFirstEditor();
-		 }
 	     });
 	 }
 	 for (var i = 0; i < this.layers.length; i++) {

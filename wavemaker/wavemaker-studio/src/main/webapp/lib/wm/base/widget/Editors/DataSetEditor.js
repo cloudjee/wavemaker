@@ -565,6 +565,8 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
     height: "100px",
     mobileHeight: "150px",
     editors: null,
+    deleteColumn: false,
+    deleteConfirm: "Are you sure you want to delete this?",
     setDataSet: function(inDataSet) {
 	this.inherited(arguments);
 	if (this.grid) {
@@ -639,6 +641,8 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 					   padding: "0",
 					   border: "0",
 					 minWidth: 10,
+					 deleteColumn: this.deleteColumn,
+					 deleteConfirm: this.deleteConfirm,
 					 selectionMode: this._multiSelect ? "multiple":"single"});
 	if (this.grid.declaredClass == "wm.DojoGrid") {
 	    this.grid.connect(this.grid, "renderDojoObj", this, "renderGrid");
@@ -652,6 +656,14 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 	    this.grid.setDataSet(this.dataSet);
 	}
 	return this.editor;
+    },
+    setDeleteColumn: function(inColumn) {
+	this.deleteColumn = inColumn;
+	if (this.grid) this.grid.setDeleteColumn(inColumn);
+    },
+    setDeleteConfirm: function(inConfirm) {
+	this.deleteConfirm = inConfirm;
+	if (this.grid) this.grid.deleteConfirm = inConfirm;
     },
     renderGrid: function() {
 	if (this.grid.dojoObj) 

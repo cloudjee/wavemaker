@@ -591,7 +591,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 
     isAncestorHiddenLayer: function() {
 	if (this instanceof wm.Layout && this.owner == app._page) return false;
-	if (this instanceof wm.Layer && this.parent && this.parent.getActiveLayer() != this) return true;
+	if (this instanceof wm.Layer && this.parent instanceof wm.Layers && this.parent.getActiveLayer() != this) return true;
         var parent;
         if (this.parent && this.parent instanceof wm.Control) 
             parent = this.parent;
@@ -603,7 +603,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     isAncestorHidden: function() {
         if (!this.showing) return true;
 	if (this instanceof wm.Layout && this.owner == app._page || this instanceof wm.Dialog) return false;
-	if (this instanceof wm.Layer && this.parent.getActiveLayer() != this) return true;
+	if (this instanceof wm.Layer && this.parent instanceof wm.Layers && this.parent.getActiveLayer() != this) return true;
         var parent;
         if (this.parent && this.parent instanceof wm.Control) 
             parent = this.parent;
