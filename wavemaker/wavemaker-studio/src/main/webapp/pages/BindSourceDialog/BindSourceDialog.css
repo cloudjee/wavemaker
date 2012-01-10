@@ -44,3 +44,9 @@
    width: 100px;
    overflow: hidden;
 }
+
+.BindSourceDialog .wmtree-selected .WireExpression,
+.BindSourceDialog .wmtree-selected .WireSource {
+    border-color: white;
+    color: white;
+}

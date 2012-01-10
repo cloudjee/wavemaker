@@ -76,7 +76,8 @@ wm.Object.extendSchema(wm.Lookup, {
     /* Ignored group */
     ignoreCase: {ignore: 1},
     options: {ignore: 1},
-    dataField: {ignore: 1},
+    dataField: {hidden: 1},
+    dataType: {hidden: 1},
     liveVariable: {ignore: 1} /* else it writes its liveVariable subcomponent */
 });
 

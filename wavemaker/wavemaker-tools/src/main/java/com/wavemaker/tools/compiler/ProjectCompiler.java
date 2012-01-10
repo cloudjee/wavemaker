@@ -58,13 +58,13 @@ public class ProjectCompiler {
         StringWriter out = new StringWriter();
         Project project = this.projectManager.getProject(projectName, true);
         JavaCompiler compiler = newJavaCompiler();
-        ClassFileManager projectFileManager;
+        JavaFileManager fileManager;
         Iterable<JavaFileObject> sourceFiles = null;
         Iterable<JavaFileObject> resourceFiles = null;
         try {
-            projectFileManager = new ClassFileManager(compiler.getStandardFileManager(null, null, null), this.fileSystem, project);
-            sourceFiles = projectFileManager.list(StandardLocation.SOURCE_PATH, "", Collections.singleton(Kind.SOURCE), true);
-            resourceFiles = projectFileManager.list(StandardLocation.SOURCE_PATH, "", Collections.singleton(Kind.OTHER), true);
+            fileManager = new ClassFileManager(compiler.getStandardFileManager(null, null, null), this.fileSystem, project);
+            sourceFiles = fileManager.list(StandardLocation.SOURCE_PATH, "", Collections.singleton(Kind.SOURCE), true);
+            resourceFiles = fileManager.list(StandardLocation.SOURCE_PATH, "", Collections.singleton(Kind.OTHER), true);
             for (JavaFileObject resourceFile : resourceFiles) {
                 Assert.isTrue(resourceFile instanceof GenericResourceFileObject, "Expected a Resource-based JavaFileObject");
                 this.fileSystem.copyFile(project.getWebInfClasses(), resourceFile.openInputStream(),
@@ -83,13 +83,13 @@ public class ProjectCompiler {
         options.add("-A" + ServiceProcessorConstants.PROJECT_NAME_PROP + "=" + projectName);
 
         if (sourceFiles.iterator().hasNext()) {
-            JavaCompiler.CompilationTask task = compiler.getTask(out, projectFileManager, null, options, null, sourceFiles);
-            task.setProcessors(Collections.singleton(createServiceDefProcessor(projectFileManager)));
+            JavaCompiler.CompilationTask task = compiler.getTask(out, fileManager, null, options, null, sourceFiles);
+            task.setProcessors(Collections.singleton(createServiceDefProcessor(fileManager)));
             if (!task.call()) {
                 throw new WMRuntimeException("Compile failed with output:\n\n" + out.toString());
             }
         }
-        executeConfigurationProcessor(compiler, projectFileManager, projectName, out);
+        executeConfigurationProcessor(compiler, fileManager, projectName, out);
         return out.toString();
     }
 
@@ -137,7 +137,7 @@ public class ProjectCompiler {
         return processor;
     }
 
-    private Processor createServiceDefProcessor(ClassFileManager projectFileManager) {
+    private Processor createServiceDefProcessor(JavaFileManager projectFileManager) {
         ServiceDefProcessor processor = new ServiceDefProcessor();
         processor.setFileSystem(this.fileSystem);
         processor.setDesignServiceManager(this.designServiceManager);
