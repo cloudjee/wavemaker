@@ -40,13 +40,15 @@ dojo.declare("wm.AceEditor", wm.Control, {
     width: "100%",
     height: "200px",
     margin: "6",
+    libPrefix: "app/lib/ace/",
     init: function() {
 	var head = document.getElementsByTagName("head")[0];
 	if (!wm.AceEditor.libraryLoading) {
 	    wm.AceEditor.libraryLoading = true;
 	    var script = document.createElement("script");
 	    
-	    script.src = "/wavemaker/app/lib/ace/" + ((djConfig.isDebug || dojo.isIE == 8) ? "ace-uncompressed.js" : "ace.js");
+	    script.src = this.libPrefix + ((djConfig.isDebug || dojo.isIE == 8) ? "ace-uncompressed.js" : "ace.js");
+	    alert(script.src);
 	    head.appendChild(script);
 	}
 	this.inherited(arguments);
