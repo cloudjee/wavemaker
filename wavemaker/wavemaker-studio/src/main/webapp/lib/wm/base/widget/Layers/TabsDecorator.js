@@ -34,10 +34,15 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 		    name: "tabsControl"
 		});
 		this.decoree.moveControl(this.tabsControl, 0);
+	    if (this.decoree.dndTargetName) {
+    		this.dndObj = new dojo.dnd.Source(this.tabsControl.domNode, {accept: [this.decoree.dndTargetName]});
+		this.dndObjConnect = this.tabsControl.connect(this.dndObj, "onDndDrop", this, "onTabDrop");
+	    }
+
 	},
 	createTab: function(inCaption, inIndex, inLayer) {
 	    var b = this.btns[inIndex] = document.createElement("button");
-
+	    dojo.attr(b,"id", this.decoree.domNode.id + "_decorator_button" + this.btns.length);
 	    dojo.attr(b,"type", "button");
 	    dojo.attr(b,"type", "button");
 	        //b.style.outline = "none";
@@ -64,7 +69,47 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 	    b.className=this.decorationClass + tabstyleName +  (inLayer.closable || inLayer.destroyable ? " " + this.decorationClass + "-closabletab" : "");
 	    if (!inCaption) b.style.display = "none";
 	    this.tabsControl.domNode.appendChild(b);
+
+	    if (this.dndObj) {
+		this.dndObj.destroy()
+		dojo.disconnect(this.dndObjConnect);
+		dojo.addClass(b, "dojoDndItem");
+		dojo.attr(b, "dndType", this.decoree.dndTargetName);
+    		this.dndObj = new dojo.dnd.Source(this.tabsControl.domNode, {accept: [this.decoree.dndTargetName]});
+		this.dndObjConnect = this.tabsControl.connect(this.dndObj, "onDndDrop", this, "onTabDrop");
+	    }
 	},
+	 onTabDrop: function(dndSource,nodes,copy,dndTarget,event) {
+	     if (dojo.dnd.manager().target != this.dndObj) return;
+	     var tabLayers = wm.getWidgetByDomNode(nodes[0]);
+	     var index = dojo.indexOf(tabLayers.decorator.btns, nodes[0]);
+	     if (index == -1) return;
+	     var layer = tabLayers.layers[index];
+	     if (!layer) return;
+	     if (layer.parent != this.decoree) {
+		 layer.setParent(this.decoree);
+		 var selectedIndex = tabLayers.layerIndex;
+		 tabLayers.layerIndex = -1;
+		 tabLayers.setLayerIndex(tabLayers.layers.length > selectedIndex ? selectedIndex : tabLayers.layers.length-1);
+	     }
+    
+	     var managedButtons = this.btns;
+	     var currentButtons = this.tabsControl.domNode.childNodes;
+	     for (var i = 0; i < currentButtons.length; i++) {
+		 var b = currentButtons[i];
+		 if (dojo.indexOf(managedButtons,b) == -1) {
+		     this.decoree.moveLayer(layer, i);
+		     dojo.destroy(b);
+		     break;
+		 }
+	     }
+             layer.activate();
+	     layer.onTabDrop();
+	     if (tabLayers != this.decoree) {
+		 tabLayers.onTabRemoved();
+	     }
+	     this.decoree.onTabDrop();
+	 },
 	tabClicked: function(inLayer, e) {
 		var d = this.decoree;
 

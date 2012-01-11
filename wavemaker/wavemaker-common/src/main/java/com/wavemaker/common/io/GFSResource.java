@@ -46,7 +46,7 @@ import com.wavemaker.common.WMRuntimeException;
  */
 public class GFSResource implements Resource {
 
-    private static final String METADATA_PATH_KEY = "Path";
+    private static final String METADATA_FOLDER_KEY = "FOLDER";
 
     private final GridFS gfs;
 
@@ -61,8 +61,9 @@ public class GFSResource implements Resource {
     protected final DBObject dirsDoc;
 
     /**
-     * Creates a Resource from a GridFS and a String If path does not end in a filename extension, it will be considered
-     * a directory. Directory paths must always end in "/". Must call save() OR close() on outputStream to save data
+     * Creates a Resource from a GridFS and a String. If path does not end in a filename extension, it will be
+     * considered a directory. Directory paths must always end in "/". Must call save() OR close() on outputStream to
+     * save data. For files, path contains both path and filename.
      * 
      * @see com.mongodb.gridfs.GridFS.html#createFile(java.io.InputStream, java.lang.String)
      */
@@ -114,7 +115,7 @@ public class GFSResource implements Resource {
      */
     public List<GridFSDBFile> listFiles() {
         Assert.isTrue(isDirectory(), "Can only list files of a directory");
-        return this.gfs.find(new BasicDBObject(METADATA_PATH_KEY, this.path));
+        return this.gfs.find(new BasicDBObject(METADATA_FOLDER_KEY, this.path));
     }
 
     /**
@@ -136,8 +137,8 @@ public class GFSResource implements Resource {
      * 
      */
     public void deleteFile() {
-        Assert.notNull(getFilename(), "Can't delete without a filename");
-        this.gfs.remove(getFilename());
+        Assert.notNull(this.path, "Can't delete without a filename");
+        this.gfs.remove(this.path);
     }
 
     /**
@@ -231,11 +232,11 @@ public class GFSResource implements Resource {
      */
     public OutputStream getOutputStream() throws IOException {
         if (this.exists()) {
-            // TODO - delete the old version
+            this.deleteFile();
         }
         GridFSInputFile gfsFile = this.gfs.createFile(this.path);
         String parentDir = this.path.substring(0, this.path.lastIndexOf(this.filename));
-        gfsFile.put(METADATA_PATH_KEY, parentDir);
+        gfsFile.put(METADATA_FOLDER_KEY, parentDir);
         return gfsFile.getOutputStream();
     }
 

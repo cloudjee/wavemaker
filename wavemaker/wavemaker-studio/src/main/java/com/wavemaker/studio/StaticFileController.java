@@ -76,8 +76,10 @@ public final class StaticFileController extends AbstractController {
         boolean addExpiresTag = false;
         String reqPath = request.getRequestURI();
         reqPath = reqPath.replaceAll("%20", " ");
-        // trim off the servlet name
-        reqPath = reqPath.substring(reqPath.indexOf('/', 1));
+        if (request.getContextPath() != "") {
+            // trim off the servlet name
+            reqPath = reqPath.substring(reqPath.indexOf('/', 1));
+        }
         if (reqPath.matches("\\/projects\\/.+")) {
             String userprefix = getProjectManager().getUserProjectPrefix();
             reqPath = "/projects/" + userprefix + reqPath.substring(10);
