@@ -143,7 +143,8 @@ dojo.declare("wm.Layer", wm.Container, {
        setDestroyable: function(isClosable) {
 	   this.destroyable = isClosable;
 	   this.decorator.applyLayerCaption(this);
-       }
+       },
+    onTabDrop: function() {}
 });
 
 dojo.declare("wm.Layers", wm.Container, {    
@@ -642,6 +643,7 @@ dojo.declare("wm.Layers", wm.Container, {
 
 
 dojo.declare("wm.TabLayers", wm.Layers, {
+       dndTargetName: "",
         //useDesignBorder: 0,
        themeStyleType: "ContentPanel",
        layersType: 'Tabs',
@@ -671,7 +673,9 @@ dojo.declare("wm.TabLayers", wm.Layers, {
     },
     customCloseOrDestroy: function(inLayer) {
 
-    }
+    },
+    onTabDrop: function() {},
+    onTabRemoved: function() {}
 /*,
 	   afterPaletteDrop: function(){
 	   	this.inherited(arguments);
