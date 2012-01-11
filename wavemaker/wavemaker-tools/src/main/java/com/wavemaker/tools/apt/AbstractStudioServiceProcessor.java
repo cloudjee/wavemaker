@@ -24,6 +24,7 @@ import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic.Kind;
 import javax.tools.JavaCompiler;
+import javax.tools.JavaFileManager;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 
@@ -50,7 +51,7 @@ public abstract class AbstractStudioServiceProcessor extends AbstractProcessor {
 
     protected DesignServiceManager designServiceManager;
 
-    protected ClassFileManager fileManager;
+    protected JavaFileManager fileManager;
 
     protected final StudioFileSystem getFileSystem() {
         return this.fileSystem;
@@ -128,7 +129,7 @@ public abstract class AbstractStudioServiceProcessor extends AbstractProcessor {
         this.designServiceManager = designServiceManager;
     }
 
-    public void setFileManager(ClassFileManager fileManager) {
+    public void setFileManager(JavaFileManager fileManager) {
         this.fileManager = fileManager;
     }
 

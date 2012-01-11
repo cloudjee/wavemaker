@@ -245,7 +245,7 @@ wm.LivePanel.extend({
 
 	var columns = this.dataGrid.columns;
 	var r = this.getRoot();
-	debugger;
+
 	var type = wm.typeManager.getType(lvar.type)
 	for (var i = 0; i < columns.length; i++) {
 	    var fieldName = columns[i].field;
@@ -304,7 +304,7 @@ wm.LivePanel.extend({
 					   name: studio.page.getUniqueName(this.liveDataName + "LiveVariable1"),
 					   liveSource: this.liveSource,
 					   operation: "read"});
-	this.dataGrid.set_dataSet(livevar.name);
+	this.dataGrid.setDataSet(livevar.name);
 
     },
     createLiveForm: function() {
@@ -378,7 +378,7 @@ wm.LivePanel.extend({
 		this.liveForm.dataSet.maxResults = 30;
 		navigator.setLiveSource(lvar);
 	    }
-	    	this.dataGrid.$.binding.addWire("", "dataSet", lvar.name, "");
+	    	this.dataGrid.$.binding.addWire("", "dataSet", lvar, "");
 		this.liveForm.set_dataSet(this.dataGrid.name + ".selectedItem");
 		this.liveForm.eventBindings.onSuccess = lvar;
 		fancyPanel2.setFitToContentHeight(true);
