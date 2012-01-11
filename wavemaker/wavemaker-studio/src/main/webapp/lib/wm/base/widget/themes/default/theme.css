@@ -1925,7 +1925,7 @@ body div.dojoxGridContent .dojoxGridCell .wmDeleteColumn {
 background-position: -560px 0px;
 width: 16px !important;
 height: 16px !important;
-background-image: url(/wavemaker/lib/images/silkIcons/silk.png);
+background-image: url(../../../../../images/silkIcons/silk.png);
 background-repeat:no-repeat;
     cursor: pointer;
 }

@@ -27,7 +27,7 @@
 
 
 .HandleRequiredJars .wmbutton {
-	background-image:url(/wavemaker/images/dark_btn_bg.gif);
+	background-image:url(../../images/dark_btn_bg.gif);
 	background-repeat:repeat-x;
 	color: #FFF;
 	border-left: 1px solid #c0c4ca;

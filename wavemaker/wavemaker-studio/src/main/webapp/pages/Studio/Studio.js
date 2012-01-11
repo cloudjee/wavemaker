@@ -57,7 +57,9 @@ dojo.declare("Studio", wm.Page, {
 	//=========================================================================
 	start: function() {   
 	    wm.applyFrameworkFixes();
-
+	    studio.studioService.requestAsync("getStudioEnv", [], function(inResult) {
+		wm.studioConfig.environment = inResult;
+	    });
 	    if (dojo.isIE && dojo.isIE < 8) {
 		app.alert(this.getDictionaryItem("ALERT_OLD_IE_BAD"));
 		app.alertDialog.setButton1Caption("");

@@ -14,13 +14,13 @@
 
 /*
 .Studio .studioProjectRun, .Studio .studioProjectTest, .Studio .studioProjectCompile {
-    background-image: url(/wavemaker/images/runapp_24.png);
+    background-image: url(images/runapp_24.png);
     width: 24px !important;
     height: 24px !important;
 }
 */
 
-@import "/wavemaker/pages/Studio/properties.css";
+@import "pages/Studio/properties.css";
 
 .Studio .studioProjectRun, .Studio .studioProjectTest, .Studio .studioProjectCompile {
     width: 24px !important;
@@ -28,13 +28,13 @@
     background-repeat: no-repeat;
 }
 .Studio .studioProjectRun {
-    background-image: url(/wavemaker/images/runapp_24.png);    
+    background-image: url(images/runapp_24.png);    
 }
 .Studio .studioProjectTest {
-    background-image: url(/wavemaker/images/debugapp_24.png);    	
+    background-image: url(images/debugapp_24.png);    	
 }
 .Studio .studioProjectCompile {
-    background-image: url(/wavemaker/images/compileapp_24.png);    	    
+    background-image: url(images/compileapp_24.png);    	    
 }
 /* MenuBar */
 .wm-darksnazzy .dojoMenu {
@@ -226,19 +226,19 @@ table.studio_navigationMenu_PopupMenu .dijitMenuItem {
 }
 
 table.studio_contextualMenu_CSS .dijitMenuItem .wm_tablayers {
-    background-image: url(/wavemaker/images/wm/tabbook.png)
+    background-image: url(images/wm/tabbook.png)
 }
 
 table.studio_contextualMenu_CSS .dijitMenuItem .wm_wizardlayers {
-    background-image: url(/wavemaker/images/wm/tabbook.png)
+    background-image: url(images/wm/tabbook.png)
 }
 
 table.studio_contextualMenu_CSS .dijitMenuItem .wm_layers {
-    background-image: url(/wavemaker/images/wm/notebook.png)    
+    background-image: url(images/wm/notebook.png)    
 }
 
 table.studio_contextualMenu_CSS .dijitMenuItem .wm_accordionlayers {
-    background-image: url(/wavemaker/images/wm/press.png)        
+    background-image: url(images/wm/press.png)        
 }
 
 table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.lightbox_16 {
@@ -944,12 +944,12 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
     width: 19px;
 }
 .StudioAddIcon {
-    background-image: url(/wavemaker/images/add.png);
+    background-image: url(images/add.png);
     width: 16px;
     height: 16px;
 }
 .StudioHelpIcon, .wminspector-help {
-    background-image: url(/wavemaker/images/grayhelp.png);
+    background-image: url(images/grayhelp.png);
     background-repeat: no-repeat;
     width: 16px;
     height: 16px;
@@ -1454,7 +1454,7 @@ body #studio_inspector .wmaccordion-header,
 }
 
 .Studio .Studio-bench {
-	background-image: url(/wavemaker/images/hash.png);
+	background-image: url(images/hash.png);
 }
 
 /*.Studio .Studio-projects button {
@@ -1540,7 +1540,7 @@ background-color: transparent;
 }
 
 .Studio-runPopup.wmPopupButton .popupIcon {
-    background-image: url(/wavemaker/lib/wm/base/widget/themes/default/images/comboArrowDownLight.png);
+    background-image: url(lib/wm/base/widget/themes/default/images/comboArrowDownLight.png);
 } 
 
 .Studio-imageListPopupDialog .wmlist-item img {
@@ -1700,7 +1700,7 @@ color: rgb(0,270,0);
 }
 
 .InsertMenuAdvanced {
-    background: transparent url(/wavemaker/images/wm/component_16.png) no-repeat;
+    background: transparent url(images/wm/component_16.png) no-repeat;
 }
 
 .Studio-scriptRibbon, 

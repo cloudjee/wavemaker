@@ -12,14 +12,14 @@
  *  limitations under the License.
  */
 {
-renameFolderButton: {caption: "<img src='/wavemaker/images/resourceManagerIcons/rename32.png'> 名前変更"},
-deleteFolderButton: {caption: "<img src='/wavemaker/images/resourceManagerIcons/f_delete32.png'> 削除"},
-downloadFolderButton: {caption: "<img src='/wavemaker/images/resourceManagerIcons/f_download32.png'> ダウンロード"},
-addFolderButton: {caption: "<img src='/wavemaker/images/resourceManagerIcons/f_add32.png'> フォルダー追加"},
-renameFileButton: {caption: "<img src='/wavemaker/images/resourceManagerIcons/rename32.png'> 名前変更"},
-deleteFileButton: {caption: "<img src='/wavemaker/images/resourceManagerIcons/d_delete32.png'> 削除"},
-downloadFileButton: {caption: "<img src='/wavemaker/images/resourceManagerIcons/d_download32.png'> ダウンロード"},
-addFileButton: {buttonCaption: "<img src='/wavemaker/images/resourceManagerIcons/d_add32.png'> ファイル追加"},
+renameFolderButton: {caption: "<img src='images/resourceManagerIcons/rename32.png'> 名前変更"},
+deleteFolderButton: {caption: "<img src='images/resourceManagerIcons/f_delete32.png'> 削除"},
+downloadFolderButton: {caption: "<img src='images/resourceManagerIcons/f_download32.png'> ダウンロード"},
+addFolderButton: {caption: "<img src='images/resourceManagerIcons/f_add32.png'> フォルダー追加"},
+renameFileButton: {caption: "<img src='images/resourceManagerIcons/rename32.png'> 名前変更"},
+deleteFileButton: {caption: "<img src='images/resourceManagerIcons/d_delete32.png'> 削除"},
+downloadFileButton: {caption: "<img src='images/resourceManagerIcons/d_download32.png'> ダウンロード"},
+addFileButton: {buttonCaption: "<img src='images/resourceManagerIcons/d_add32.png'> ファイル追加"},
 resourcePropertiesHeaderLabel: {caption: "プロパティ"},
 PROMPT_NAME: "'${oldName}'の名前を変更します。:",
 PROMPT_FOLDER_NAME: "フォルダー名を選択してください",
