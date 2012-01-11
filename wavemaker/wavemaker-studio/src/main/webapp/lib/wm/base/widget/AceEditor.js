@@ -48,7 +48,6 @@ dojo.declare("wm.AceEditor", wm.Control, {
 	    var script = document.createElement("script");
 	    
 	    script.src = this.libPrefix + ((djConfig.isDebug || dojo.isIE == 8) ? "ace-uncompressed.js" : "ace.js");
-	    alert(script.src);
 	    head.appendChild(script);
 	}
 	this.inherited(arguments);
