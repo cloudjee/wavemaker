@@ -79,7 +79,7 @@ dojo.declare("wm.Layer", wm.Container, {
 		return this.active;
 	},
 	setShowing: function(inShowing) {
-	    if (this.parent instanceof wm.Layer == false) return this.inherited(arguments);
+	    if (this.parent instanceof wm.Layers == false) return this.inherited(arguments);
 		if (!this.canChangeShowing())
 			return;
 	        var p = this.parent;
