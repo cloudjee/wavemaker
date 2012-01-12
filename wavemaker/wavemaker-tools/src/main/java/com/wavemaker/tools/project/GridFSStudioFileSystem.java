@@ -1,10 +1,7 @@
 
 package com.wavemaker.tools.project;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
@@ -264,6 +261,39 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
                 }
             } else {
                 FileCopyUtils.copy(root.getInputStream(), getOutputStream(target));
+            }
+
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
+        return target;
+
+    }
+
+    @Override
+    public Resource copyRecursive(File root, Resource target, final List<String> exclusions) {
+        try {
+            if (root.isDirectory()) {
+
+                File[] children = root.listFiles(new FileFilter() {
+
+                    @Override
+                    public boolean accept(File pathName) {
+                        return !exclusions.contains(pathName.getName());
+                    }
+                });
+
+                for (File child : children) {
+                    if (child.isDirectory()) {
+                        copyRecursive(child, target.createRelative(child.getName() + "/"), exclusions);
+                    } else {
+                        InputStream isc = new FileInputStream(child);
+                        FileCopyUtils.copy(isc, getOutputStream(target.createRelative(child.getName())));
+                    }
+                }
+            } else {
+                InputStream isp = new FileInputStream(root);
+                FileCopyUtils.copy(isp, getOutputStream(target));
             }
 
         } catch (IOException ex) {

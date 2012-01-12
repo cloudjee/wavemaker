@@ -36,6 +36,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.tool.ant.ExporterTask;
 import org.hibernate.tool.ant.Hbm2HbmXmlExporterTask;
 import org.hibernate.tool.ant.Hbm2JavaExporterTask;
+import org.hibernate.tool.ant.HibernateToolTask;
 import org.springframework.core.io.FileSystemResource;
 
 import com.wavemaker.common.WMRuntimeException;
@@ -45,6 +46,7 @@ import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.common.Bootstrap;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.compiler.ProjectCompiler;
@@ -57,6 +59,7 @@ import com.wavemaker.tools.service.DefaultCompileService;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.util.AntUtils;
+import net.sf.cglib.proxy.Enhancer;
 
 /**
  * Database import.
@@ -124,12 +127,15 @@ public class ImportDB extends BaseDataModelSetup {
 
     private ProjectCompiler projectCompiler;
 
+    private ExporterFactory exporterFactory;
+
     /**
      * Main method ctor.
      */
     public ImportDB() {
         // bootstrap has to be called before creating the Project instance
         this(bootstrap(), new Project(), true);
+        this.exporterFactory = (ExporterFactory)RuntimeAccess.getInstance().getSpringBean("exporterFactory");
     }
 
     /**
@@ -440,20 +446,19 @@ public class ImportDB extends BaseDataModelSetup {
     }
 
     protected ExporterTask getHibernateCfgExporter() {
-        return new HibernateConfigExporterTask(getParentTask());
+        return exporterFactory.getExporter("config", getParentTask(), null);
     }
 
     protected ExporterTask getJavaExporter() {
-        return new Hbm2JavaExporterTask(getParentTask());
+        return exporterFactory.getExporter("java", getParentTask(), null);
     }
 
     protected ExporterTask getHQLExporter() {
-        return new QueryExporterTask(getParentTask(), this.serviceName);
+        return exporterFactory.getExporter("query", getParentTask(), null);
     }
 
     protected ExporterTask getMappingExporter() {
-        return new Hbm2HbmXmlExporterTask(getParentTask());
-
+        return exporterFactory.getExporter("mapping", getParentTask(), null);
     }
 
     private String getDefaultRevengMetaDataDialect() {

@@ -47,4 +47,8 @@ public class QueryExporterTask extends GenericExporterTask {
     public String getName() {
         return "ag-queryexportertask (Generates a set of ql.xml files)";
     }
+
+    public HibernateToolTask getParent() {
+        return super.parent;
+    }
 }

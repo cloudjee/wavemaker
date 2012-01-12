@@ -3,93 +3,80 @@ package com.wavemaker.tools.deployment.cloudfoundry;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.cloudfoundry.client.lib.archive.AbstractApplicationArchiveEntry;
+import org.cloudfoundry.client.lib.archive.ApplicationArchive;
+import org.cloudfoundry.client.lib.archive.ApplicationArchive.Entry;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.tools.deployment.cloudfoundry.LoggingStatusCallback.Timer;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ResourceFilter;
 import com.wavemaker.tools.project.StudioFileSystem;
 
 public class WebAppAssembler implements InitializingBean {
 
-    private static final Log log = LogFactory.getLog(WebAppAssembler.class);
-
     private StudioFileSystem fileSystem;
 
-    private Map<String, Resource> studioWebAppFiles;
-
-    private Future<List<Map<String, Object>>> studioHashes;
+    private Future<List<ApplicationArchive.Entry>> studioApplicationArchiveEnties;
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        this.studioWebAppFiles = new HashMap<String, Resource>();
-        Resource root = this.fileSystem.getStudioWebAppRoot();
-        final String studioBasePath = this.fileSystem.getPath(root);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        this.studioApplicationArchiveEnties = executor.submit(new StudioApplicationArchiveEntriesCollector());
+    }
 
+    public ApplicationArchive assemble(Project project) {
         try {
-            collectFiles(this.studioWebAppFiles, studioBasePath, root.createRelative("images/"));
-            collectFiles(this.studioWebAppFiles, studioBasePath, root.createRelative("WEB-INF/lib/"));
-            collectFiles(this.studioWebAppFiles, studioBasePath, root.createRelative("lib/"), new ResourceFilter() {
+            final String filename = project.getProjectName();
+            final List<Entry> entries = new ArrayList<ApplicationArchive.Entry>();
+            String projectBasePath = this.fileSystem.getPath(project.getWebAppRoot());
+            collectFiles(entries, projectBasePath, project.getWebAppRoot());
+            entries.addAll(this.studioApplicationArchiveEnties.get());
+            return new ApplicationArchive() {
 
                 @Override
-                public boolean accept(Resource resource) {
-                    String path = WebAppAssembler.this.fileSystem.getPath(resource).replace(studioBasePath, "");
-                    if (path.startsWith("wm/common/") || path.startsWith("dojo/utils/") || path.startsWith("dojo/") && path.contains("tests/")) {
-                        return false;
-                    }
-                    return true;
+                public String getFilename() {
+                    return filename;
                 }
-            });
-            collectFiles(this.studioWebAppFiles, this.fileSystem.getPath(this.fileSystem.getCommonDir()), this.fileSystem.getCommonDir(), null,
-                "lib/wm/common/");
 
-            ExecutorService executor = Executors.newSingleThreadExecutor();
-            this.studioHashes = executor.submit(new StudioHashCalculator());
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
-        }
-    }
-
-    public Map<String, Resource> getWebAppFilesForDeployment(Project project) {
-        Map<String, Resource> projectWebAppFiles = new HashMap<String, Resource>();
-
-        try {
-
-            String projectBasePath = this.fileSystem.getPath(project.getWebAppRoot());
-            collectFiles(projectWebAppFiles, projectBasePath, project.getWebAppRoot());
-            // projectWebAppFiles.add("WEB-INF/web.xml", new ClassPathResource(""));
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
-        }
-
-        return projectWebAppFiles;
-    }
-
-    public Map<String, Resource> getSharedStudioFiles() {
-        return this.studioWebAppFiles;
-    }
-
-    public List<Map<String, Object>> getStudioHashes() {
-        try {
-            return this.studioHashes.get();
+                @Override
+                public Iterable<Entry> getEntries() {
+                    return entries;
+                }
+            };
         } catch (Exception e) {
             throw new WMRuntimeException(e);
+        }
+    }
+
+    private void collectFiles(List<ApplicationArchive.Entry> files, String basePath, Resource root) throws IOException {
+        collectFiles(files, basePath, root, null);
+    }
+
+    private void collectFiles(List<ApplicationArchive.Entry> files, String basePath, Resource root, ResourceFilter filter) throws IOException {
+        collectFiles(files, basePath, root, filter, "");
+    }
+
+    private void collectFiles(List<ApplicationArchive.Entry> files, String basePath, Resource root, ResourceFilter filter, String newPath)
+        throws IOException {
+        filter = filter == null ? ResourceFilter.NO_FILTER : filter;
+        List<Resource> children = this.fileSystem.listChildren(root, filter);
+        for (Resource child : children) {
+            String name = newPath + this.fileSystem.getPath(child).replace(basePath, "");
+            if (this.fileSystem.isDirectory(child)) {
+                files.add(new ApplicationArchiveEntry(name));
+                collectFiles(files, basePath, child, filter);
+            } else {
+                files.add(new ApplicationArchiveEntry(name, child));
+            }
         }
     }
 
@@ -97,87 +84,78 @@ public class WebAppAssembler implements InitializingBean {
         this.fileSystem = fileSystem;
     }
 
-    private void collectFiles(Map<String, Resource> files, String basePath, Resource root) throws IOException {
-        collectFiles(files, basePath, root, null);
-    }
-
-    private void collectFiles(Map<String, Resource> files, String basePath, Resource root, ResourceFilter filter) throws IOException {
-        collectFiles(files, basePath, root, filter, "");
-    }
-
-    private void collectFiles(Map<String, Resource> files, String basePath, Resource root, ResourceFilter filter, String newPath) throws IOException {
-        List<Resource> children;
-        if (filter == null) {
-            children = this.fileSystem.listChildren(root);
-        } else {
-            children = this.fileSystem.listChildren(root, filter);
-        }
-        for (Resource child : children) {
-            if (this.fileSystem.isDirectory(child)) {
-                collectFiles(files, basePath, child, filter);
-            } else {
-                files.put(newPath + this.fileSystem.getPath(child).replace(basePath, ""), child);
-            }
-        }
-    }
-
-    public List<Map<String, Object>> generateResourcePayload(Map<String, Resource> webAppFiles) throws IOException {
-        Timer fingerPrintTimer = new Timer();
-        fingerPrintTimer.start();
-        List<Map<String, Object>> payload = new ArrayList<Map<String, Object>>();
-        for (Entry<String, Resource> file : webAppFiles.entrySet()) {
-            String sha1sum = computeSha1Digest(file.getValue().getInputStream());
-            Map<String, Object> entryPayload = new HashMap<String, Object>();
-            entryPayload.put("size", file.getValue().contentLength());
-            entryPayload.put("sha1", sha1sum);
-            entryPayload.put("fn", file.getKey());
-            payload.add(entryPayload);
-        }
-        log.info("Web app hashes calculated in " + fingerPrintTimer.stop() + "ms");
-
-        return payload;
-    }
-
-    private String computeSha1Digest(InputStream in) throws IOException {
-        MessageDigest digest;
-        try {
-            digest = MessageDigest.getInstance("SHA-1");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-
-        byte[] buffer = new byte[16 * 1024];
-        while (true) {
-            int read = in.read(buffer);
-            if (read == -1) {
-                break;
-            }
-            digest.update(buffer, 0, read);
-        }
-        in.close();
-        return bytesToHex(digest.digest());
-    }
-
-    private static final String HEX_CHARS = "0123456789ABCDEF";
-
-    private static String bytesToHex(byte[] bytes) {
-        if (bytes == null) {
-            return null;
-        }
-        final StringBuilder hex = new StringBuilder(2 * bytes.length);
-        for (final byte b : bytes) {
-            hex.append(HEX_CHARS.charAt((b & 0xF0) >> 4)).append(HEX_CHARS.charAt(b & 0x0F));
-        }
-        return hex.toString();
-    }
-
-    private final class StudioHashCalculator implements Callable<List<Map<String, Object>>> {
+    private final class StudioApplicationArchiveEntriesCollector implements Callable<List<ApplicationArchive.Entry>> {
 
         @Override
-        public List<Map<String, Object>> call() throws Exception {
-            return generateResourcePayload(WebAppAssembler.this.studioWebAppFiles);
+        public List<ApplicationArchive.Entry> call() throws Exception {
+            try {
+                ArrayList<Entry> entries = new ArrayList<ApplicationArchive.Entry>();
+                collectStudioEntries(entries);
+                loadSha1Digests(entries);
+                return entries;
+            } catch (Throwable e) {
+                throw new WMRuntimeException(e);
+            }
         }
 
+        private void collectStudioEntries(List<Entry> entries) throws IOException {
+
+            Resource commonDir = WebAppAssembler.this.fileSystem.getCommonDir();
+            String commonDirPath = WebAppAssembler.this.fileSystem.getPath(commonDir);
+            Resource webAppRoot = WebAppAssembler.this.fileSystem.getStudioWebAppRoot();
+            final String webAppRootPath = WebAppAssembler.this.fileSystem.getPath(webAppRoot);
+
+            collectFiles(entries, webAppRootPath, webAppRoot.createRelative("images/"));
+            collectFiles(entries, webAppRootPath, webAppRoot.createRelative("WEB-INF/lib/"));
+            collectFiles(entries, webAppRootPath, webAppRoot.createRelative("lib/"), new ResourceFilter() {
+
+                @Override
+                public boolean accept(Resource resource) {
+                    String path = WebAppAssembler.this.fileSystem.getPath(resource).replace(webAppRootPath, "");
+                    if (path.startsWith("wm/common/") || path.startsWith("dojo/utils/") || path.startsWith("dojo/") && path.contains("tests/")) {
+                        return false;
+                    }
+                    return true;
+                }
+            });
+            collectFiles(entries, commonDirPath, commonDir, null, "lib/wm/common/");
+        }
+
+        private void loadSha1Digests(List<Entry> entries) {
+            for (Entry entry : entries) {
+                entry.getSha1Digest();
+            }
+        }
     }
 
+    private static class ApplicationArchiveEntry extends AbstractApplicationArchiveEntry {
+
+        private final String name;
+
+        private Resource resource;
+
+        public ApplicationArchiveEntry(String name) {
+            this.name = name;
+        }
+
+        public ApplicationArchiveEntry(String name, Resource resource) {
+            this.name = name;
+            this.resource = resource;
+        }
+
+        @Override
+        public InputStream getInputStream() throws IOException {
+            return this.resource == null ? null : this.resource.getInputStream();
+        }
+
+        @Override
+        public String getName() {
+            return this.name;
+        }
+
+        @Override
+        public boolean isDirectory() {
+            return this.resource == null;
+        }
+    }
 }
