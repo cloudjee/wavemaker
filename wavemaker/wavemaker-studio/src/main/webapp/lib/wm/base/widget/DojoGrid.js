@@ -334,9 +334,14 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     writeSelectedItem: function() {
 	var deferred;
 	var rowIndex = this.getSelectedIndex();
+	if (dojo.isArray(rowIndex)) {
+	    if (rowIndex.length == 0) return;
+	    rowIndex = rowIndex[0];
+	}
 	var row = this.getRow(rowIndex);
 	var operation = row._wmVariable.data._new ? "insert" : "update";
 	var sourceData = this.selectedItem.getData();
+	if (dojo.isArray(sourceData)) sourceData = sourceData[0];
 	if (operation == "insert") {
 	    /*
 	    for (prop in sourceData) {
@@ -405,8 +410,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     handleInsertResult: function(deferred,rowIndex) {
 	deferred.addCallback(dojo.hitch(this, 
 				    function(result) {
-					var row = this.getRow(rowIndex);
-					delete row._wmVariable.data._new;
+					var data = this.getRowData(rowIndex);
+					delete data._wmVariable[0].data._new;
 					this.setUneditableFields(rowIndex, result);
 					this.updateSelectedItem(rowIndex);
 				    }));
@@ -782,7 +787,6 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		wm.job(this.getRuntimeId() + ".renderBounds", 1, function() {
 		    self.renderBounds();		    
 		});
-
 	    }
 	},
 
@@ -1752,7 +1756,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		return this.getRowCount();
 	},
 	getRow: function(idx){
-		return this.itemToJSONObject(this.store, this.getRowData(idx) || {});
+	    var rowData = this.getRowData(idx) || {};
+	    var json =  this.itemToJSONObject(this.store, rowData);
+	    if (rowData._wmVariable)
+		json._wmVariable = rowData._wmVariable[0];
+	    return json;
 	}
 	
 	/* Helper functions for developers */
