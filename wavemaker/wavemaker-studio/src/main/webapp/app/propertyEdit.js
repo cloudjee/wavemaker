@@ -703,7 +703,9 @@ dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
     displayField: "dataValue",    
     relatedFields: false,
     insepected: null,
-    allowNone: false,   
+    allowNone: false,
+    oneToMany: undefined,
+    liveFields: true,
     updateOptions: function() {
 	this.inherited(arguments);
 	var f = this.inspected.getParentForm();
@@ -727,7 +729,47 @@ dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
 	this.setOptions(options);
     },
 	getSchemaOptions: function(inSchema) {
-		return [""].concat(wm.typeManager[this.relatedFields ? "getStructuredPropNames" : "getSimplePropNames"](inSchema));
+	    var result =  wm.typeManager[this.relatedFields ? "getStructuredPropNames" : "getSimplePropNames"](inSchema);
+	    if (this.oneToMany === true || this.oneToMany === false) {
+		var f = this.inspected.getParentForm();
+		var dataSet;
+		if (f instanceof wm.ServiceInputForm) {
+		    dataSet = f.serviceVariable.input;
+		} else if (f && f.dataSet && wm.typeManager.getType(f.dataSet.type)) {
+		    dataSet = f && f.dataSet;
+		}
+		var fields = dataSet._dataSchema;
+		var newresults = [];
+		for (var i = 0; i < result.length; i++) {		    
+		    if (fields[result[i]].isList && this.oneToMany || !fields[result[i]].isList && !this.oneToMany) {
+			newresults.push(result[i]);
+		    }
+		}
+		result = newresults;
+	    }
+
+	    if (this.liveTypes != true) {
+		var f = this.inspected.getParentForm();
+		var dataSet;
+		if (f instanceof wm.ServiceInputForm) {
+		    dataSet = f.serviceVariable.input;
+		} else if (f && f.dataSet && wm.typeManager.getType(f.dataSet.type)) {
+		    dataSet = f && f.dataSet;
+		}
+		var fields = dataSet._dataSchema;
+		var newresults = [];
+		for (var i = 0; i < result.length; i++) {		    
+		    var type = fields[result[i]].type;
+		    var typeDef = wm.typeManager.getType(type);
+		    if (!typeDef.liveService) {
+			newresults.push(result[i]);
+		    }
+		}
+		result = newresults;
+	}
+
+	    result.unshift("");
+	    return result;
 	}
 });
 

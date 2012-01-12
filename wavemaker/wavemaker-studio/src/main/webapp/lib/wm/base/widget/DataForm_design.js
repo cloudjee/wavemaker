@@ -47,6 +47,7 @@ wm.Object.extendSchema(wm.DataForm, {
 
     /* Editor group */
     dataOutput: {group: "widgetName", subgroup: "",  order: 3, readonly: 1, bindable: 1, advanced:1,  type: "wm.Variable", simpleBindProp: true, editor: "wm.prop.FieldGroupEditor"},
+    dataSet: {group: "widgetName", subgroup: "",  order: 3, readonly: 1, bindSource: 1, hidden: 1},
 
     /* Editor group; behavior subgroup */
     confirmChangeOnDirty:    {group: "widgetName", subgroup: "behavior", order: 100, advanced:1},
@@ -65,6 +66,7 @@ wm.Object.extendSchema(wm.DataForm, {
     editCurrentObject:{method: 1},
 
     /* Ignored group */
+    isCompositeKey: {hidden:1},
     noDataSet: {ignore: 1, bindSource: 1}
     
 });
@@ -357,25 +359,44 @@ wm.DataForm.extend({
 			}
 		    }
 		}
+
 		fields = wm.typeManager.getFilteredPropNames(typeDef.fields);
+		this.isCompositeKey = dataSource == "compositeKey";
+		/* If its a composite key, see if there are any foreign keys, and change their types from int/string to the type of the foreign object */
 		if (dataSource == "compositeKey") {
+
 		    var def = studio.dataService.requestSync("getRelated", [service, this.getParentForm().serviceVariable.type.replace(/^.*\./,"")]);
-		    def.addCallback(function(inData) {
+		    def.addCallback(dojo.hitch(this, function(inData) {
+			var relationshipsToDelete = [];
 			for (var i = 0; i < inData.length; i++) {
 			    var relationship = inData[i];
 			    for (var j = 0; j < relationship.columnNames.length; j++) {
+				relationshipsToDelete.push(relationship.name);
 				var fieldName = relationship.columnNames[j];
 				var fieldNameAlt = fieldName.replace(/_./g, function(inText) {
 				    return inText.charAt(1).toUpperCase();
 				});
 				if (typeDef.fields[fieldName]) {
 				    typeDef.fields[fieldName].type = relationship.fullyQualifiedType;
+				    typeDef.fields[fieldName].relationshipName = relationship.name;
 				} else if (typeDef.fields[fieldNameAlt]) {
 				    typeDef.fields[fieldNameAlt].type = relationship.fullyQualifiedType;
+				    typeDef.fields[fieldNameAlt].relationshipName = relationship.name;
 				}
 			    }
 			}
-		    });
+			wm.onidle(this, function() {
+			    var form = this.getParentForm();
+			    var editors = form.getEditorsArray();
+			    for (var i = 0; i < editors.length; i++) {
+				if (dojo.indexOf(relationshipsToDelete, editors[i].formField) != -1) {
+				    editors[i].destroy();
+				}
+			    }
+			    form.reflow();
+			    studio.refreshDesignTrees();
+			});
+		    }));
 
 
 		}
@@ -395,7 +416,8 @@ wm.DataForm.extend({
 		    var e = this.makeEditor(fieldDef, fieldName);
 		    if (e instanceof wm.Lookup && dataSource == "compositeKey") {
 			e.dataField = e.formField;
-			e.dataType = fieldDef.type;
+			e.dataType = fieldDef.type; 
+			e.relationshipName = fieldDef.relationshipName; // TODO: If the user changes formField on this editor, the relationshipName won't by in sync, and the project will break
 		    }
 		}
 	    }
@@ -532,8 +554,14 @@ wm.DataForm.extend({
 
 	    /* Remove bindings from Editor to form */
 	    var binding = inEditor.components.binding;
-	    if (binding)
-		binding.removeWire("dataValue");
+	    if (binding) {
+		if (wm.isInstanceType(inEditor, [wm.DataForm, wm.OneToMany])) {
+		    binding.removeWire("dataSet");
+		} else if (inEditor instanceof wm.AbstractEditor) {
+		    binding.removeWire("dataValue");
+		}
+	    }
+
 	},
 
 	// make binding from which editor gets data
@@ -541,10 +569,10 @@ wm.DataForm.extend({
 	_getInputBindInfo: function(inEditor) {
 	    var formField = inEditor.formField;
 	    var targetProperty = null;
-	    if (inEditor instanceof wm.AbstractEditor) {
-		targetProperty =  "dataValue";
-	    } else if (wm.isInstanceType(inEditor, wm.DataForm)) {
+	    if (wm.isInstanceType(inEditor, [wm.DataForm, wm.OneToMany])) {
 		targetProperty = "dataSet";
+	    } else if (inEditor instanceof wm.AbstractEditor) {
+		targetProperty =  "dataValue";
 	    }
 	    var dataSet = this.dataSet;
 	    var source = dataSet ? (dataSet.getId() + (formField ? "." + formField : "")) : "";
@@ -570,9 +598,13 @@ wm.DataForm.extend({
 	},
 	// push data from editor to form
 	_bindEditorOutput: function(inEditor) {
-		var info = this._getOutputBindInfo(inEditor);
-		if (info)
-			this.components.binding.addWire("", info.targetProperty, info.source);
+	    var info = this._getOutputBindInfo(inEditor);
+	    if (info) {
+		this.components.binding.addWire("", info.targetProperty, info.source);
+		if (this.isComposite && inEditor instanceof wm.Lookup) {
+		    //this.getParentForm().components.binding.addWire("", fieldName, info.source);
+		}
+	    }
 	},
     _bindEditor: function(inEditor) {
 	if (!inEditor)
@@ -612,6 +644,7 @@ wm.DataForm.extend({
 
 	    /* If its a liveService and it IS a list type, create a readonly grid related editor */
 	    else if (relatedTypeDef.liveService && inFieldInfo.isList) {
+		var e = this.owner.loadComponent(wm.makeNameForProp(inFormField, "OneToMany"), this, "wm.OneToMany", props);
 		/* don't automatically add grids
 		    props.editingMode = "readonly";
 		    var e = this.owner.loadComponent(wm.makeNameForProp(inFormField, "RelatedDataEditor"), this, "wm.RelatedDataEditor", props);		
@@ -1001,8 +1034,8 @@ wm.ServiceForm.extend({
 });
 
 
--wm.Object.extendSchema(wm.SubForm, {
-    formField: {group: "widgetName", subgroup: "data", requiredGroup:1, order: 3, editor: "wm.prop.FormFieldSelect", editorProps: {relatedFields: true}},
+wm.Object.extendSchema(wm.SubForm, {
+    formField: {group: "widgetName", subgroup: "data", requiredGroup:1, order: 3, editor: "wm.prop.FormFieldSelect", editorProps: {relatedFields: true, liveFields:false}},
     dataSet: {ignore:1},
     type: {hidden:1},
     confirmChangeOnDirty: {ignore:1},

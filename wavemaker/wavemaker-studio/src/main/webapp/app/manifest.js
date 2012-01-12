@@ -67,6 +67,7 @@ wm.loadLibs([
 	"wm.base.widget.Editors.Select_design",
 	"wm.base.widget.Editors.Checkbox_design",
 	"wm.base.widget.Editors.DataSetEditor_design",
+	"wm.base.widget.Editors.OneToMany_design",
 	"wm.base.widget.RelatedEditor_design",
 /*	"wm.base.widget.EditArea_design",*/
 	"wm.base.widget.Splitter_design",

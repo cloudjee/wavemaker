@@ -841,7 +841,7 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 	var serviceVar = this.serviceVariable;
 
 	this.connect(serviceVar, "onSuccess", this, "operationSucceeded");
-	this.connect(serviceVar, "onResult", this, "onResult");
+	this.connect(serviceVar, "onResult", this, "operationResult");
 	this.connect(serviceVar, "onError", this, "operationFailed");
     },
 
@@ -1087,37 +1087,46 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 	    this.onBeforeDeleteCall(data);
 	    break;
 	}
-	this._insertData = data;
 
-	var subforms = this.getRelatedEditorsArray();
-	dojo.forEach(subforms, dojo.hitch(this, function(form) {
-	    if (form.getIsDirty()) {
-	    if (!form.serviceVariable) {
-		form.serviceVariable = new wm.LiveVariable({
-		    name: "serviceVariable",
-		    owner: form,
-		    type: this.serviceVariable._dataSchema[form.formField].type,
-		    startUpdate: false,
-		    autoUpdate: false,
-		    onSuccess: dojo.hitch(this, "subFormSuccess")
-		});
-		form.serviceVariable.setOperation(this.operation);
-		if (data[form.formField]) {
-		    form.serviceVariable.sourceData.setData(data[form.formField]);
-		    form.serviceVariable.update();
+	/* Any wm.SubForm in a DBForm must be a composite primary key;
+	 * currently the server does not support updates on composite primary keys, such entries must be deleted and reinserted.
+	 * Check to see if its dirty and in need of reinsertion.
+	*/
+	var isDirty = false;
+	if (this.operation == "update") {
+	    var subforms = this.getRelatedEditorsArray();
+	    dojo.forEach(subforms, dojo.hitch(this, function(form) {
+		if (form.getIsDirty()) {
+		    isDirty = true;
 		}
-	    }
-	    }
-	}));
-	this.subFormSuccess();
-    },
-    subFormSuccess: function() {
-	var subforms = this.getRelatedEditorsArray();
-	for (var i = 0; i < subforms.length; i++) {
-	    if (subforms[i].serviceVariable && subforms[i].serviceVariable._requester) return;
+	    }));
 	}
-	this.setServerParams(this._insertData);
-	this.serviceVariable.update();
+
+	this.setServerParams(data);
+	if (!isDirty) {
+	    this.serviceVariable.update();
+	} else {
+	    this._disableEventHandling = true;
+	    this.serviceVariable.setOperation("delete");
+	    this.serviceVariable.sourceData.setData(this.dataSet); // delete the original dataset
+	    var def = this.serviceVariable.update();	    
+	    def.addCallbacks(
+		dojo.hitch(this, function() {		    
+		    this.setServerParams(data); // onsuccess insert the new data values
+		    this.serviceVariable.setOperation("insert");
+		    this.serviceVariable.update();
+		    wm.onidle(this, function() {
+			delete this._disableEventHandling;
+			this.serviceVariable.setOperation("update");
+		    });
+		}),
+		dojo.hitch(this, function() {
+		    wm.onidle(this, function() {
+			delete this._disableEventHandling;
+			this.serviceVariable.setOperation("update");
+		    });
+		}));
+	}
     },
     setServerParams: function(inData) {
 	this.serviceVariable.sourceData.setData(inData);
@@ -1133,6 +1142,7 @@ dojo.declare("wm.DBForm", wm.DataForm, {
      *    2. Calls onBeforeInsertCall/onBeforeUpdateCall/onBeforeDeleteCall to allow developers to modify what is sent to the server
      ***************/
     operationSucceeded: function(inResult) {
+	if (this._disableEventHandling) return;
 	/* if we get result as an array, take the first one */
 	if (dojo.isArray(inResult))
 	    inResult = inResult[0];
@@ -1247,6 +1257,7 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 		/* We've already updated our originalDataSet, but we need to update the dataSetToUpdate; eg:
 		 * grid.selectedItem was updated above, but the grid.dataSet needs to be updated */
 		if (d) {
+		    var subforms = this.getRelatedEditorsArray();
 		    var item = dataSetToUpdate.getItem(originalDataSet.dataSet.itemIndex);
 		    item.beginUpdate();
 		    item.setData(d);
@@ -1271,6 +1282,10 @@ dojo.declare("wm.DBForm", wm.DataForm, {
     onSuccess: function(inResult) {},
     onResult: function(inResult) {},
 
+    operationResult: function(inResult) {
+	if (this._disableEventHandling) return;
+	this.onResult(inResult);
+    },
     operationFailed: function(inError) {
 	switch (this.operation) {
 	case this.insertOp:

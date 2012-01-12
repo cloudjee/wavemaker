@@ -487,7 +487,11 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 	*/
     setDataSet: function(inDataSet) {
 	this.inherited(arguments);
-	this.createEditor();
+	if (this.editor) {
+	    this.editor.set("store", this.generateStore());
+	    this.setEditorValue(this.dataValue);
+	}
+
     },
 	clear: function() {
 		// note: hack to call internal dijit function to ensure we can
@@ -629,8 +633,10 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 	}
 	var item;
 	var index;
+	if (this.editor)
 	    item = this.editor.get('item');
 	    var result = null;
+	if (this.editor)
 	    var displayedValue = this.editor.get("displayedValue");
 
 	    /* item may still be set in the dijit even though the displayed value no longer matches it */
@@ -641,7 +647,7 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 	    } else {
 		this.selectedItem.setData(null);
 	    }
-	    if (this.editor._lastValueReported === "" && displayedValue !== "") {
+	    if (this.editor && this.editor._lastValueReported === "" && displayedValue !== "") {
 		this.editor._lastValueReported = displayedValue;
 	    }
 
@@ -809,6 +815,13 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		}
 	    }
 	}
+
+	    /* If this is a wm.Lookup within a composite key acting to select an id, we need to propagate its value up to the parent form's relationship */
+	    if (this.relationshipName && !this.selectedItem.isEmpty()) {
+		var subform = this.getParentForm();
+		var mainform = subform.getParentForm();
+		mainform.dataOutput.setValue(this.relationshipName, this.selectedItem);
+	    }
 	}
 });
 

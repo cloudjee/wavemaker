@@ -74,6 +74,7 @@ wm.Object.extendSchema(wm.Lookup, {
     maxResults: {group: "editor", subgroup: "behavior", order: 100},
 
     /* Ignored group */
+    relationshipName: {hidden:1},
     ignoreCase: {ignore: 1},
     options: {ignore: 1},
     dataField: {hidden: 1},
