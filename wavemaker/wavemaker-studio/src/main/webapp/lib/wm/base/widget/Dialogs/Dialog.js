@@ -108,6 +108,7 @@ dojo.declare("wm.DialogResize", wm.MouseDrag, {
 
 
 dojo.declare("wm.Dialog", wm.Container, {
+    titlebarButtons: "",
     containerClass: "MainContent",
     corner: "cc", // center vertical, center horizontal; this is almost always the desired default... but for some nonmodal dialogs, its useful to have other options
     scrim: true,
@@ -1112,6 +1113,33 @@ dojo.declare("wm.Dialog", wm.Container, {
 	this.connect(this.titleMinify, "onclick", this, "minify");
 	this.connect(this.titleMaxify, "onclick", this, "maxify");
 
+	if (this.titlebarButtons && !wm.isMobile) {
+	    var buttonList = this.titlebarButtons.split(/\s*,\s*/);
+	    for (var i = 0; i < buttonList.length; i++) {
+		new wm.ToolButton({_classes: {domNode: [buttonList[i]]},
+				   noInspector: true,
+				   name: buttonList[i],
+				   caption: " ",
+				   width: "19px",
+				   height: "19px",
+				   margin: "3,0,0,3",
+				   parent: this.titleBar,
+				   owner: this,
+				   onclick: dojo.hitch(this, "onMiscButtonClick", buttonList[i])
+				  });
+	    }
+	    new wm.Spacer({owner: this,
+			   parent: this.titleBar,
+			   width: "5px"});
+	}
+    },
+    onMiscButtonClick: function(inButtonName) {},
+    setTitlebarButtons: function(inButtons) {
+	this.titlebarButtons = inButtons;
+	this.titleBar.destroy();
+	this.createTitle();
+	this.moveControl(this.titleBar,0);
+	this.reflow();
     },
     setNoMinify: function(val) {
         this.noMinify = val;
