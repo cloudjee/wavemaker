@@ -518,6 +518,10 @@
             </property>
         </bean>
 
+		<bean id="exporterFactory" class="com.wavemaker.tools.data.LocalExporterFactory"
+            scope="singleton">
+        </bean>
+
         <bean id="deploymentManager" class="com.wavemaker.tools.project.LocalDeploymentManager"
             scope="singleton" lazy-init="true">
             <property name="projectManager">
@@ -548,6 +552,10 @@
             <property name="runtimeAccess" ref="runtimeAccess"/>
         </bean>
 
+		<bean id="exporterFactory" class="com.wavemaker.tools.data.CFExporterFactory"
+            scope="singleton">
+        </bean>
+
         <bean id="deploymentManager" class="com.wavemaker.tools.project.CFDeploymentManager"
             scope="singleton" lazy-init="true">
             <property name="projectManager" ref="projectManager" />
@@ -568,6 +576,10 @@
             scope="singleton">
             <constructor-arg ref="fileSystem"/>
             <property name="runtimeAccess" ref="runtimeAccess"/>
+        </bean>
+
+		<bean id="exporterFactory" class="com.wavemaker.tools.data.CFExporterFactory"
+            scope="singleton">
         </bean>
 
         <bean id="deploymentManager" class="com.wavemaker.tools.project.CFDeploymentManager"

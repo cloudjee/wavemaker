@@ -285,7 +285,7 @@ wm.fullTemplates.topMenuTemplate = {
 /*
 wm.fullTemplates.fancyCenteredTemplate = {
     layoutKind: "top-to-bottom",
-    thumbnail: "/wavemaker/app/templates/widgetTemplateImages/template1.png",
+    thumbnail: "app/templates/widgetTemplateImages/template1.png",
     displayName: "Fancy Centered", // currently only used in new project dialog
     width: "100%",
     height: "100%",

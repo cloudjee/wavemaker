@@ -72,11 +72,11 @@ body #studio_PIContents #studio_togglePropertiesButton2 {
 .wminspector .EditorHelpIcon {
     background-repeat: no-repeat;
     background-position: 50% 50%;
-    background-image: url(/wavemaker/images/grayhelp.png);
+    background-image: url(../../images/grayhelp.png);
 }
 
 .wminspector .wminspector-bindProp {
-	background-image: url(/wavemaker/images/inspector_bound.gif);
+	background-image: url(../../images/inspector_bound.gif);
 }
 
 .tundra .wminspector  .wminspector-boundvalue.Disabled .wmeditor-caption {
@@ -100,7 +100,7 @@ body #studio_PIContents #studio_togglePropertiesButton2 {
 }
 
 #studio_propMenuButton {
-   background: transparent url(/wavemaker/images/wm/component_16.png) no-repeat 50% 50%;
+   background: transparent url(../../images/wm/component_16.png) no-repeat 50% 50%;
    cursor: pointer;
 }
 
@@ -142,7 +142,7 @@ body #studio_PIContents #studio_togglePropertiesButton2 {
 	border-bottom: 1px solid silver;
 	padding: 4px;
 	text-align: center;
-	background: white url(/wavemaker/images/toolbar_btn_bg.gif) repeat-x;
+	background: white url(../../images/toolbar_btn_bg.gif) repeat-x;
 }
 
 .wminspector, #studio_inspectorLayers_classListPanel {
@@ -237,7 +237,7 @@ body #studio_PIContents #studio_togglePropertiesButton2 {
 }
 
 .wminspector-header.wminspector-binding {
-	background-image: url(/wavemaker/images/inspector_bound.gif);
+	background-image: url(../../images/inspector_bound.gif);
 }
 
 
@@ -358,7 +358,7 @@ body #studio_PIContents #studio_togglePropertiesButton2 {
 .wminspector .bound-prop-button {
 	padding: 0px;
 	width: 16px;
-	background: url(/wavemaker/images/inspector_bind_disabled.gif) no-repeat 50% 50%;
+	background: url(../../images/inspector_bind_disabled.gif) no-repeat 50% 50%;
 }
 
 
@@ -377,11 +377,11 @@ body #studio_PIContents #studio_togglePropertiesButton2 {
 
 
 .Studio-PITreeTopBorderl, .Studio-PITopBorderl {
-	background-image: url(/wavemaker/images/pi_ul.gif);
+	background-image: url(../../images/pi_ul.gif);
 }
 
 .Studio-PITreeTopBorderr, .Studio-PITopBorderr {
-	background-image: url(/wavemaker/images/pi_ur.gif);
+	background-image: url(../../images/pi_ur.gif);
 }
 
 .Studio-inspectorLayers .wmtree-root-leaf, .Studio-inspectorLayers .wmtree-root-last-leaf, .Studio-inspectorLayers .wmtree-last-item { 

@@ -61,4 +61,8 @@ public class HibernateConfigExporterTask extends Hbm2CfgXmlExporterTask {
         return rtn;
     }
 
+    public HibernateToolTask getParent() {
+        return super.parent;
+    }
+
 }

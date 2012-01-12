@@ -555,45 +555,6 @@ Studio.widgets = {
 			    securitySubTab: ["wm.TabLayers", {border: "0", width: "100%", height: "100%",conditionalTabButtons:true, clientBorder: "2,0,0,0", clientBorderColor: "#959DAB", customCloseOrDestroy: "closeServiceTab"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {}]
 			}]
 
-
-
-/*,
-				servicesTab: ["wm.Layer", {caption: "Services", layoutKind: "left-to-right"}, {}, {
-					servicesPane: ["wm.PageContainer", {pageName: "Services", deferLoad: true, border: "0", width: "100%", height: "100%"}, {}]
-				}],
-				javaServiceEditor: ["wm.Layer", {caption: "Java Service Editor", layoutKind: "left-to-right"}, {}, {
-					javaServicePage: ["wm.PageContainer", {pageName: "JavaEditor", deferLoad: true, border: "0", width: "100%", height: "100%"}, {}]
-				}],
-				dataObjectsTab: ["wm.Layer", {caption: "Data Model"}, {}, {
-					dataObjectsPane: ["wm.PageContainer", {pageName: "DataObjectsEditor", deferLoad: true, border: "0", width: "100%", height: "100%"}, {}]
-				}],
-				liveViewsEditor: ["wm.Layer", {caption: "Live Views"}, {}, {
-					liveViewPageContainer: ["wm.PageContainer", {pageName: "LiveViewEditor", deferLoad: true, border: "0", width: "100%", height: "100%"}, {}]
-				}],
-				hqlQueryEditor: ["wm.Layer", {caption: "HQL Query Editor"}, {}, {
-					hqlQueryPage: ["wm.PageContainer", {pageName: "QueryEditor", deferLoad: true, border: "0", width: "100%", height: "100%"}, {}]
-				}],
-				securityTab: ["wm.Layer", {caption: "Security"}, {}, {
-					securityPane: ["wm.PageContainer", {pageName: "Security", deferLoad: true, border: "0", width: "100%", height: "100%"}, {}]
-				}],
-				apiDocTab: ["wm.Layer", {caption: "IDE"}, {}, {
-					apiRibbon: ["wm.Panel", {height: "29px", border: "0", layoutKind: "left-to-right"}, {}, {
-						apiToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
-						apiLogoBottomHolder: ["wm.Panel", {width: "221px", border: "0"}, {}]
-					}],
-					apiTabs: ["wm.TabLayers", {border: "0", width: "100%", height: "100%"}, {}, {
-						apiTab: ["wm.Layer", {caption: "JavaScript (Client) Reference"}, {}, {
-							javadocFrame: ["wm.IFrame", {source: "/wavemaker/jsdoc/", width: "100%", height: "100%"}, {}]
-						}],
-						javadocTab: ["wm.Layer", {caption: "Java (Server) Reference"}, {}, {
-							javadocFrame1: ["wm.IFrame", {source: "/wavemaker/javadoc/", width: "100%", height: "100%"}, {}]
-						}],
-						diagnosticsTab: ["wm.Layer", {caption: "Diagnostics"}, {}, {
-							//diagnosticsPane: ["wm.PageContainer", {pageName: "Diagnostics", width: "100%", height: "100%"}, {}]
-						}]
-					}]
-				}]
-				*/
 			}]
 		}],
 		console: ["wm.Box", {height: "96", showing: false}, {}],
