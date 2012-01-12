@@ -82,9 +82,11 @@ wm.Plugin.plugin("rbacservice", wm.ServiceVariable, {
 	roles: '',
     update: function() {
 	if (!this.roles || this.isRbacUpdateAllowed())
-	    this.rbacserviceSocket(arguments);
-	else
+	    return this.rbacserviceSocket(arguments);
+	else {
 	    console.log(this.getId() + " blocked by role settings");
+	    return new dojo.Deferred();
+	}
     },
     updateInternal: function() {
 	if (!this.roles || this.isRbacUpdateAllowed())
