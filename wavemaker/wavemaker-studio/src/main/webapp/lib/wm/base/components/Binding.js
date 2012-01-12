@@ -90,13 +90,14 @@ dojo.declare("wm.Wire", wm.Component, {
 		}
 	    } else if (this.expression) {
 		firingId = "expression";
-	    }
+	    }	    
+		
 	    this.debugId = app.debugDialog.newLogEvent({eventType: "bindingEvent",
 							eventName: "Binding",
 							affectedId: this.target.getRuntimeId(),
 							firingId: firingId,
 							boundProperty: this.targetProperty,
-							boundValue: inValue instanceof wm.Component ? inValue.toString() : inValue,
+							boundValue: inValue instanceof wm.Component ? inValue.toString() : (typeof inValue == "object" && inValue !== null && inValue.length) ? "[ARRAY]" : inValue,
 							boundSource: this.source,
 							boundExpression: this.expression});
 	}
