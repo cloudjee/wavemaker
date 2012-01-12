@@ -7,11 +7,21 @@ import java.lang.reflect.Method;
 import java.io.File;
 
 import org.hibernate.tool.ant.HibernateToolTask;
-import org.hibernate.tool.ant.ExporterTask;
-import org.apache.commons.io.FileUtils;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.FileSystemResource;
 import com.wavemaker.common.util.IOUtils;
+import com.wavemaker.tools.project.StudioFileSystem;
+import com.wavemaker.runtime.RuntimeAccess;
+
 
 public class ExporterTaskInterceptor implements MethodInterceptor {
+
+    private StudioFileSystem fileSystem;
+
+    public ExporterTaskInterceptor() {
+        fileSystem = (StudioFileSystem)RuntimeAccess.getInstance().getSpringBean("fileSystem");
+    }
+
     public Object intercept(Object object, Method method, Object[] args,
                             MethodProxy methodProxy) throws Throwable {
 
@@ -42,7 +52,10 @@ public class ExporterTaskInterceptor implements MethodInterceptor {
 
         Object rtn = methodProxy.invokeSuper(object, args);
 
-        FileUtils.copyDirectory(tempDestDir, origDestDir);
+        //FileUtils.copyDirectory(tempDestDir, origDestDir);
+        Resource target = new FileSystemResource(origDestDir);
+        fileSystem.copyRecursive(tempDestDir, target, null);
+
         parent.setDestDir(origDestDir);
 
         return rtn;

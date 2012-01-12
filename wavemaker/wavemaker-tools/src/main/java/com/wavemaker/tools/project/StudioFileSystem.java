@@ -4,6 +4,7 @@ package com.wavemaker.tools.project;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.File;
 import java.util.List;
 
 import org.springframework.core.io.Resource;
@@ -144,6 +145,16 @@ public interface StudioFileSystem {
      * @return the target resource
      */
     Resource copyRecursive(Resource root, Resource target, List<String> exclusions);
+
+    /**
+     * Recursively copy files and directories from the given root in the conventional file system to a target location.
+     *
+     * @param root the root to copy
+     * @param target the target destination
+     * @param exclusions a list of exclusions that should not be copied
+     * @return the target resource
+     */
+    Resource copyRecursive(File root, Resource target, List<String> exclusions);
 
     /**
      * Rename the specified resource
