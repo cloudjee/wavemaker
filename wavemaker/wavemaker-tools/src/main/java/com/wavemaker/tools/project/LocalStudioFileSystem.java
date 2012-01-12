@@ -229,6 +229,11 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
     }
 
     @Override
+    public Resource copyRecursive(File root, Resource target, List<String> exclusions) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public void rename(Resource oldResource, Resource newResource) {
         Assert.isInstanceOf(FileSystemResource.class, oldResource, "Expected a FileSystemResource");
         Assert.isInstanceOf(FileSystemResource.class, newResource, "Expected a FileSystemResource");

@@ -270,7 +270,7 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
 
     }
 
-    //Copy files from local file system to Cloud Foundry file repository (mongodb)
+    @Override
     public Resource copyRecursive(File root, Resource target, final List<String> exclusions) {
         try {
             if (root.isDirectory()) {
