@@ -25,9 +25,9 @@ public class CFDeploymentManager extends AbstractDeploymentManager {
         compile();
         DeploymentTarget target = this.deploymentTargetManager.getDeploymentTarget(DeploymentType.CLOUD_FOUNDRY);
         DeploymentInfo deployment = findCloudFoundryDeploymentInfo(target);
-        if (deployment != null) {
-            target.deploy(this.projectManager.getCurrentProject(), deployment);
-        }
+        // FIXME PW HACK if (deployment != null) {
+        target.deploy(this.projectManager.getCurrentProject(), deployment);
+        // }
         return null;
     }
 
