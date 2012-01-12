@@ -555,7 +555,7 @@ dojo.declare("wm.studio.Project", null, {
 	    f.push(dojo.hitch(this, function() {
 		var themename = studio.application.theme;
 		var path;
-		if (this.deployingProject)
+		if (this.deployingProject || wm.studioConfig.environment != "local")
                     path = (themename.match(/^wm_/)) ? "lib/wm/base/widget/themes/" + themename + "/theme.css" : "lib/wm/common/themes/" + themename + "/theme.css";
 		else
                     path = (themename.match(/^wm_/)) ? "/wavemaker/lib/wm/base/widget/themes/" + themename + "/theme.css" : "/wavemaker/lib/wm/common/themes/" + themename + "/theme.css";
