@@ -955,6 +955,7 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
      * other onclick editor must update
      */
     reinspect: function() {
+
 	this.panel.removeAllControls();
 	this.addEditors();
 	return true;
@@ -992,7 +993,7 @@ dojo.declare("wm.prop.EventEditor", wm.SelectMenu, {
     //FIXME: cache this
     postInit: function() {
 	this.inherited(arguments);
-
+	this._inPostInit = true;
 	var sc = wm.listComponents([studio.application, studio.page], wm.ServiceVariable).sort();
 	var lightboxList = wm.listComponents([studio.application, studio.page], wm.DojoLightbox);
 	var nc = wm.listComponents([studio.application, studio.page], wm.NavigationCall).sort();
@@ -1120,10 +1121,13 @@ dojo.declare("wm.prop.EventEditor", wm.SelectMenu, {
 	    type: "EntryData"
 	});
 	v.setData(items);
+
 	this.setDataSet(v);
+	this._inPostInit = false;
     },
     onchange: function() {
 	this.inherited(arguments);
+	if (this._inPostInit) return;
 	var value = this.dataValue;
 	var c = this.inspected;
 	if (this.isEventAction(value))
