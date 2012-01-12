@@ -445,9 +445,9 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		    if (e == this.readOnlyNode)
 			this.updateReadOnlyNodeStyle(b.h);
 
+		    this._editorHeight = b.h;
+		    this._editorWidth = b.w;
 		}
-	    this._editorHeight = b.h;
-	    this._editorWidth = b.w;
 	    if (this.helpText && this.helpNode) {
 		var s = this.helpNode.style;
 		s.top = (this.caption) ? (parseInt(this.captionNode.style.top) + (this.captionPosition == "bottom" ? 5 : 0)) + "px" : b.t + "px";
