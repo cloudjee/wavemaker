@@ -88,7 +88,7 @@ DeploymentDialog.widgets = {
 		    deleteButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Delete","height":"100%","margin":"1","width":"100%"}, {"onclick":"deleteButtonClick"}],
 		    copyButton: ["wm.Button", {"_classes":{"domNode":["StudioButton"]},"caption":"Copy","height":"100%","margin":"1","width":"45px"}, {"onclick":"copyButtonClick"}]
 		}],
-		deploymentList: ["wm.List", {dataFields: "name", headerVisible: false, innerBorder:"1",borderColor:"black","height":"100%","width":"100%"}, {onselect: "deploymentListSelect"/*, onRightClick: "deploymentListPopupMenuOpen"*/}, {
+		deploymentList: ["wm.List", {_renderHiddenGrid:1,dataFields: "name", headerVisible: false, innerBorder:"1",borderColor:"black","height":"100%","width":"100%"}, {onselect: "deploymentListSelect"/*, onRightClick: "deploymentListPopupMenuOpen"*/}, {
 		    binding: ["wm.Binding", {}, {}, {
 			wire: ["wm.Wire", {"source":"deploymentListVar","targetProperty":"dataSet"}, {}]
 		    }]
