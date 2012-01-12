@@ -1,3 +1,17 @@
+/*
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
 dojo.provide("wm.base.widget.Editors.DataSetEditor");
 dojo.require("wm.base.widget.Editors.AbstractEditor");
 
@@ -560,17 +574,23 @@ dojo.declare("wm.RadioSet", wm.CheckboxSet, {
 /* TODO: onchange Events */
 dojo.declare("wm.ListSet", wm.DataSetEditor, {
     singleLine: false,
-    searchBar: true,
+    showSearchBar: true,
     _multiSelect: true,
     height: "100px",
     mobileHeight: "150px",
     editors: null,
     deleteColumn: false,
     deleteConfirm: "Are you sure you want to delete this?",
+    prepare: function(inProps) {
+	if (inProps && inProps.readonly) delete inProps.readonly;
+	this.inherited(arguments);
+    },
     setDataSet: function(inDataSet) {
 	this.inherited(arguments);
 	if (this.grid) {
+	    var dataValue = this.dataValue;
 	    this.grid.setDataSet(inDataSet);
+	    this.setEditorValue(dataValue);
 	}
     },
     changed: function() {
@@ -586,28 +606,28 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 	    this.editor.flow();
 	}
     },
-    setSearchBar: function(inShow) {
-	this.searchBar = Boolean(inShow);
+    setShowSearchBar: function(inShow) {
+	this.showSearchBar = Boolean(inShow);
 	if (this.searchBar) {
-	    if (!this._searchBar) {
+	    if (!this.searchBar) {
 		this.createSearchBar();
-		this.editor.moveControl(this._searchBar,0);
+		this.editor.moveControl(this.searchBar,0);
 	    } else {
-		this._searchBar.show();
+		this.searchBar.show();
 	    }
-	} else if (this._searchBar) {
-	    this._searchBar.hide();
+	} else if (this.searchBar) {
+	    this.searchBar.hide();
 	}
     },
     createSearchBar: function() {
-	    this._searchBar = new wm.Text({owner: this,
+	    this.searchBar = new wm.Text({owner: this,
 					   parent: this.editor,
 					   width: "100%",
 					   caption: "",
 					   changeOnKey: true,
 					   emptyValue: "emptyString",
 					   name: "searchBar"});
-	this.connect(this._searchBar, "onchange", this, "filterList");
+	this.connect(this.searchBar, "onchange", this, "filterList");
     },
     filterList: function(inDisplayValue, inDataValue) {
 	var count = this.grid.getRowCount();
@@ -616,6 +636,9 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 	if (inDisplayValue)
 	    query[this.grid.columns[0].field] = "*" + inDisplayValue + "*";
 	this.grid.setQuery(query);
+    },
+    flow: function() {
+	this.editor.flow();
     },
     _createEditor: function(inNode) {
 	this.editor = new wm.Container({owner: this,
@@ -627,10 +650,10 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 					verticalAlign: "top",
 					horizontalAlign: "left"});
 
-	if (this.searchBar) {
+	if (this.showSearchBar) {
 	    this.createSearchBar();
 	}
-
+	
 	    this.grid = new wm.DojoGrid({owner: this, 
 					 parent: this.editor,
 					   name: "editor",
@@ -646,6 +669,7 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 					 selectionMode: this._multiSelect ? "multiple":"single"});
 	if (this.grid.declaredClass == "wm.DojoGrid") {
 	    this.grid.connect(this.grid, "renderDojoObj", this, "renderGrid");
+	    this.grid.connect(this.grid, "onRowDeleted", this, "onRowDeleted");
 	}
 	    this.grid._isDesignLoaded = false;
 	this.grid.setColumns([{show: true,
@@ -656,6 +680,9 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 	    this.grid.setDataSet(this.dataSet);
 	}
 	return this.editor;
+    },
+    setReadonly: function(inValue){
+	// does not have readonly mode
     },
     setDeleteColumn: function(inColumn) {
 	this.deleteColumn = inColumn;
@@ -689,5 +716,6 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 	    dojo.toggleClass(this.domNode, "Disabled", disabled);
 	    this.grid.setSelectionMode(disabled ? "none" : "multiple");
 	}
-    }
+    },
+    onRowDeleted: function(rowId, rowData) {}
 });

@@ -65,7 +65,7 @@ wm.DataSetEditor.extend({
 	this.setDisplayValue(inValue);
     },
     set_dataValue: function(inValue) {
-	if (this._multiSelect) {
+	if (this._multiSelect && typeof inValue == "string") {
 	    inValue =  inValue ? inValue.split(/\s*,\s*/) : [];
 	}
 	this.setDataValue(inValue);
@@ -142,7 +142,9 @@ wm.Object.extendSchema(wm.DataSetEditor, {
 
 
 wm.Object.extendSchema(wm.ListSet, {
-    searchBar: {group: "editor", subgroup: "behavior", order: 100}, 
+    showSearchBar: {group: "editor", subgroup: "behavior", order: 100}, 
+    readonly: {ignore:1},
+    searchBar: {ignore: 1},
     onblur: {ignore: 1},
     onfocus: {ignore: 1}
 
