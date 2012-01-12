@@ -288,5 +288,8 @@ Studio.extend({
 	this.deploymentDialog.setPage("DeploymentDialog"); // insures the dialog is initialized, but does not show it
 	this.deploymentDialog.page.showCloudFoundryAppListDialog();
     },
+    deploymentHelp: function() {
+	window.open(studio.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}));
+    },
     _end: 0
 });
