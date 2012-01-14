@@ -63,7 +63,7 @@ dojo.declare("wm.FormPanel", wm.Container, {
     padding: "2",
     editorHeight: "26px",
     editorWidth: "100%",
-    captionSize: "200px",
+    captionSize: "150px",
     captionAlign: "right",
     captionPosition: "left",
     height: "250px",
