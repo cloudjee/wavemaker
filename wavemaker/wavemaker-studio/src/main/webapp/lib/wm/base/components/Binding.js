@@ -69,6 +69,7 @@ dojo.declare("wm.Wire", wm.Component, {
 		return true;
 	},
     debugBindingEvent: function(inValue) {
+	try {
 	/* Ignore expressions that are just literals; they provide lots of initialization "events" but no interaction events */
 	if (djConfig.isDebug && !this.isAncestor(app.debugDialog) && !this.owner._inRefresh && (!this.expression || this.expression.match(/\$/))) {
 	    var firingId = "";
@@ -101,6 +102,7 @@ dojo.declare("wm.Wire", wm.Component, {
 							boundSource: this.source,
 							boundExpression: this.expression});
 	}
+	} catch(e) {}
     },
     endDebugBindingEvent: function() {
 	if (this.debugId) {
