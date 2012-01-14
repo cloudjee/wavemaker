@@ -1455,7 +1455,16 @@ display: block;
 .wmwizardlayers .wmwizardlayers-verticaltab.wmwizardlayers-selected {
     text-decoration: underline;
 }
-
+.wmbreadcrumblayers-tab {
+	cursor: pointer;
+	border: 1px solid transparent;
+	background-color: transparent;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.wmbreadcrumblayers-tab.wmbreadcrumblayers-selected {
+    font-weight:bold;
+}
 
 body.tundra div.wmtoast.wmtoastExtraSpecific {
     font-size: 12pt;

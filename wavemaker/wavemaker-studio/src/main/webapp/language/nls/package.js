@@ -41,6 +41,7 @@
 	"Rounded_Panel" : "Titled Panel",
 	"Tabs" : "Tabs",
 	"Wizards" : "Wizard/Cards",
+	"Breadcrumbs" : "Breadcrumbs",
 
         "FormsGroup": "Forms",
         "EditorsGroup": "Editors",

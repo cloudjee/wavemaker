@@ -66,9 +66,10 @@ wm.Object.extendSchema(wm.Layer, {
 wm.Layer.extend({
     themeable: false,
         sizeable: false,
+	moveable: false,
 	designCreate: function() {
 		this.inherited(arguments);
-		if (this.designWrapper)
+		if (this.designWrapper && !studio.selected == this)
 			this.designWrapper.setShowing(false);
 	},
 	domNodeShowingChanged: function(inShowing) {
@@ -117,7 +118,7 @@ wm.Layer.extend({
 	    props.closable.ignoretmp = (this.parent.layersType != 'Tabs');
 	    props.destroyable.ignoretmp = (this.parent.layersType != 'Tabs');
 	    props.showDirtyFlag.ignoretmp = (this.parent.layersType != 'Tabs');
-	    props.caption.requiredGroup = (this.parent.layersType == 'Tabs');
+	    props.caption.requiredGroup = (dojo.indexOf(["Tabs","Wizard","Breadcrumb"], this.parent.layersType) != -1);
 	    return props;
 	}
 });
@@ -331,7 +332,7 @@ wm.Object.extendSchema(wm.WizardLayers, {
     headerHeight: {ignore: 0},
     headerWidth: {ignore: 0},
     verticalButtons: {group: "widgetName", subgroup: "layout"},
-    bottomButtons: {group: "layout", subgroup: "buttons"}
+    bottomButtons: {group: "widgetName", subgroup: "layout"}
 });
 
 
@@ -339,6 +340,10 @@ wm.TabLayers.extend({
     themeable: true,
     themeableProps: ["border", "borderColor", "clientBorder", "clientBorderColor", "headerHeight"],
     themeableStyles: [{name: "wm.TabLayers-Button_Height", displayName: "Tab Button Height"}, {name: "wm.TabLayers-Button_TextSize", displayName: "Tab Font Size"}, {name: "wm.TabLayers-BorderStyle_Shadow", displayName: "Shadow (Default)"}, {name: "wm.TabLayers-Hover-BorderStyle_Shadow", displayName: "Shadow (Hover)"}, {name: "wm.TabLayers-Active-BorderStyle_Shadow", displayName: "Shadow (Active)"}],
+    set_conditionalTabButtons: function(inValue) {
+	this.conditionalTabButtons = Boolean(inValue);
+	this.decorator.tabsControl.setShowing(!this.conditionalTabButtons || this.layers.length > 1);
+    },
     set_verticalButtons: function(inValue) {
 	this.verticalButtons = Boolean(inValue);
 	if (inValue) {
@@ -359,6 +364,11 @@ wm.TabLayers.extend({
 wm.WizardLayers.extend({
     themeable: true,
     themeableProps: ["border", "borderColor", "clientBorder", "clientBorderColor"],
+    set_hasButtonBar: function(inValue) {
+	this.hasButtonBar = inValue;
+	if (this.decorator.buttonPanel)
+	    this.decorator.buttonPanel.setShowing(inValue);
+    },
     set_bottomButtons: function(inValue) {
 	this.bottomButtons = inValue;
 	this.generateBottomButtonEvents();
@@ -393,9 +403,20 @@ wm.WizardLayers.extend({
 });
 
 
+wm.BreadcrumbLayers.extend({
+    themeable: true,
+    themeableProps: ["border", "borderColor", "clientBorder", "clientBorderColor"],
+    set_headerWidth: function(inWidth) {
+	this.headerWidth = inWidth;
+	this.c$[0].setWidth(inWidth);
+    }
+});
+
+
 
 wm.Layers.description = "Show widgets on layers.";
 
 wm.TabLayers.description = "Layers with tab navigation.";
 
 wm.AccordionLayers.description = "Expandable layers.";
+

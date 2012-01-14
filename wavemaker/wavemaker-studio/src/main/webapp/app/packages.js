@@ -50,10 +50,12 @@
 [ bundlePackage.Containers, bundlePackage.Panel, "wm.Panel", "wm.base.widget.Panel", "Studio_paletteImageList_16", bundlePackage.descPanel, {}, false],
 [ bundlePackage.Containers, bundlePackage.Rounded_Panel, "wm.FancyPanel", "wm.base.widget.Panel", "Studio_paletteImageList_16", bundlePackage.descFancyPanel, {}, false],
 
+
 [ bundlePackage.Containers + "/" + bundlePackage.Containers_Layer_Category, bundlePackage.Accordion, "wm.AccordionLayers", "wm.base.widget.Layers", "Studio_paletteImageList_18", bundlePackage.descAccordion, {}, false],
 [ bundlePackage.Containers + "/" +  bundlePackage.Containers_Layer_Category, bundlePackage.Layers, "wm.Layers", "wm.base.widget.Layers", "Studio_paletteImageList_12", bundlePackage.descLayers, {}, false],
 [ bundlePackage.Containers + "/" +  bundlePackage.Containers_Layer_Category, bundlePackage.Tabs, "wm.TabLayers", "wm.base.widget.Layers", "Studio_paletteImageList_23",bundlePackage.descTabs, {}, false],
 [ bundlePackage.Containers + "/" +  bundlePackage.Containers_Layer_Category, bundlePackage.Wizards, "wm.WizardLayers", "wm.base.widget.Layers", "Studio_paletteImageList_23", bundlePackage.descWizard, {}, false],
+[ bundlePackage.Containers + "/" +  bundlePackage.Containers_Layer_Category, bundlePackage.Breadcrumbs, "wm.BreadcrumbLayers", "wm.base.widget.Layers", "Studio_paletteImageList_23", bundlePackage.descWizard, {}, false],
 
 
 [ bundlePackage.Dialogs, bundlePackage.GenericDialog, "wm.GenericDialog", "wm.base.widget.Dialogs.GenericDialog", "Studio_paletteImageList_4", bundlePackage.descGenericDialog, {}, false],
