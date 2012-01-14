@@ -398,6 +398,8 @@
 	     return this.reinspect();
 	 }
 	 this._inspecting = true;
+	 this._inspectedName = inComponent.name;
+
 	 var activeLayer = this.getActiveLayer();
 	 if (activeLayer)
 	     this._activeLayer = activeLayer.caption;
@@ -428,7 +430,7 @@
 	 }
      },
      getHashId: function(inComponent, propName) {
-	 var id = inComponent.getId();
+	 var id = this._inspectedName;
 	 if (this.processingRequiredGroup) {
 	     id = "required_" + id;
 	 }
@@ -797,10 +799,12 @@
 	 if (isBound) {
 	     var wire = inComponent.$.binding.wires[fullPropName || propName];
 	     value = wire.source || wire.expression; // TODO: prefix with str,numb, bool, expr
-	 } else if (inProp.treeBindRoot) {
-	     value = inComponent.getValue(propName);
-	 } else {
-	     value = inComponent.getProp(propName);
+	 } else if (!inProp.bindValuesOnly) {
+	     if (inProp.treeBindRoot) {
+		 value = inComponent.getValue(propName);
+	     } else {
+		 value = inComponent.getProp(propName);
+	     }
 	 }
 
 	     if (value instanceof wm.Component) {
@@ -1060,15 +1064,8 @@
 	  ************************************************************************************************************/
 	 if (inComponent.isDestroyed) return;
 
-	 // if the name field changes, then all of our editorHash IDs are invalidated.
-	 // make sure that this isn't a name field such as for sourceData/input/filter/dataSet/dataOutput,
-	 // and if it IS our widget's name, then do a full fresh inspect
-	 if (inProp.name == "name" && !inProp.bindTarget) {
-	     this.inspect(inComponent, true);
-	 }
-
 	 /* Sometimes an editor knows reinspecting is not needed or will cause side-effects; The Roles editor uses this */
-	 else if (!e.noReinspect) {
+	 if (!e.noReinspect) {
 	     this.reinspect();
 	 }
      },
@@ -1362,7 +1359,7 @@
 	 if (wm.propertyGroups[inName]) {
 	     result.order = wm.propertyGroups[inName].order;
 	     if (inName == "widgetName") {
-		 result.displayName = this.inspected.declaredClass.replace(/^.*\./,"");
+		 result.displayName = this.inspected.declaredClass.replace(/^.*\./,"") + " Component"; // TODO: Localize
 	     } else {
 		 result.displayName = wm.propertyGroups[inName].displayName;
 	     }
