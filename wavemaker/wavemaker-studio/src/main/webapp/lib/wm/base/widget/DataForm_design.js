@@ -470,9 +470,7 @@ wm.DataForm.extend({
 			e.emptyValue = "zero";
 		    } 
 
-		    if (wm.isInstanceType(e, wm.Date) && this.bounds.w > 400)
-			e.setWidth("400px");
-                    else if (e.parent.horizontalAlign != "justified")
+		    if (e.parent.horizontalAlign != "justified")
 			e.setWidth(this.editorWidth);
                     else 
                         e.setWidth("100%"); // because its going to be 100% anyway so why confuse the user?
