@@ -554,7 +554,7 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
     updateOptions: function() {
 	this.inherited(arguments)
 	var matchType = "";
-	if (this.matchComponentType && this.propDef.treeBindField) {
+	if (this.matchComponentType) {
 	    matchType = this.inspected.getValue(this.propDef.name).type;
 	}
 	var sp = studio.page;
@@ -1716,6 +1716,8 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 
 		    /* If its a structured type, use a DataSetSelect editor to pick a suitable value; else use the default editor for that type */
 		    editor: isStructured  ? "wm.prop.DataSetSelect" : undefined,
+
+	            bindValuesOnly: true,
 
 		    editorProps: {
 			/* If its a DataSetSelect, only list components of matching types */
