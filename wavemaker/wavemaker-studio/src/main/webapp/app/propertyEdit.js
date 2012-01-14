@@ -555,7 +555,9 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
 	this.inherited(arguments)
 	var matchType = "";
 	if (this.matchComponentType) {
-	    matchType = this.inspected.getValue(this.propDef.name).type;
+	    var value =  this.inspected.getValue(this.propDef.name)
+	    if (value)
+		matchType = value.type;
 	}
 	var sp = studio.page;
 	var r = this.getDataSets([sp, sp.app], matchType);
