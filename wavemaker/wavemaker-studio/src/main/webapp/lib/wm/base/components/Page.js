@@ -129,9 +129,6 @@ dojo.declare("wm.Page", wm.Component, {
 								firingId: this.getRuntimeId()});
 		}
 		this.loadComponents(widgets, null);
-		if (app.appRoot.deviceSize == "tiny" || app.appRoot.deviceSize == "300") {
-		    this.generateMobileTabbedUI();
-		}
 		if (this.debugId) {
 		    app.debugDialog.endLogEvent(this.debugId);
 		    delete this.debugId;
@@ -498,25 +495,6 @@ dojo.declare("wm.Page", wm.Component, {
 		t += "; PAGE LOADING";
 	    }
 	    return this.inherited(arguments, [t]);
-	},
-        generateMobileTabbedUI: function() {
-	    var layers = [];
-	    wm.forEachWidget(this.root, function(w) {
-		if (w instanceof wm.Layer && w.parent instanceof wm.Layers == false)
-		    layers.push(w);
-	    }, true);
-	    if (layers.length) {
-		var t = new wm.TabLayers({owner: this,
-				  parent: layers[0].parent,
-				  name: "_mobileLayers",
-				  width: layers[0].width,
-				  height:layers[0].height});
-		t.parent.moveControl(t, t.parent.indexOfControl(layers[0]));
-		for (var i = 0; i < layers.length; i++) {
-		    layers[i].setParent(t);
-		}
-		t.setLayerIndex(0);
-	    }
 	},
 	_end: 0
 });
