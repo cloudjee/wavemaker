@@ -512,6 +512,7 @@ dojo.declare("wm.BreadcrumbDecorator", wm.TabsDecorator, {
      * Whenever a layer is set to inactive, we need to hide it if the current layer is left of this layer.
      */
     setLayerActive: function(inLayer, inActive) {
+	var wasShowing = inLayer.showing;
 	this.inherited(arguments);
 	if (inLayer._isDesignLoaded || this.decoree._cupdating ) return;
 
@@ -519,7 +520,7 @@ dojo.declare("wm.BreadcrumbDecorator", wm.TabsDecorator, {
 
 	/* If we're activating a hidden layer, show that layer and move it after the last visisible layer so
 	 * that it appears to be the last breadcrumb/step. */
-	if (inActive && !inLayer.showing) {
+	if (inActive && !wasShowing) {
 	    var layerIndex = inLayer.getIndex();
 	    for (var i = layers.length-1; i > layerIndex; i--) {
 		if (layers[i].showing)
@@ -541,13 +542,14 @@ dojo.declare("wm.BreadcrumbDecorator", wm.TabsDecorator, {
 	    }
 	}
 
-	/* If deactivating a layer, hide it if its after the newly active layer, else let it continue showing */
-	else if (!inActive) {
-	    var i = inLayer.getIndex();
-	    if (i > this.decoree.layerIndex) {
-		inLayer.hide();
+	/* If hide all layers after the layer that is activated */
+	if (inActive) {
+	    var count = this.decoree.layers.length;
+	    for (var i = inLayer.getIndex() + 1; i < count; i++) {
+		if (this.decoree.layers[i].showing)
+		    this.decoree.layers[i].hide();
 	    }
-	}	
+	}
     },
 
 });
