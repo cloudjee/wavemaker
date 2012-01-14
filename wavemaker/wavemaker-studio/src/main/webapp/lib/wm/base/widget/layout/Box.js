@@ -85,6 +85,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 
             /* Step 3: Get the container's bounds; must be done after autoScroll modifies the bounds */
 	    var b = inContainer.getContentBounds();
+	    var originalB = dojo.clone(b);
 	    if (inContainer.autoScroll) {
 		if (inContainer._preferredWidth > b.w) {
 		    b.w = inContainer._preferredWidth;
@@ -200,7 +201,9 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 			}
 
 		    }
-
+		    if (wm.isMobile && b.w > originalB.w) {
+			b.w = originalB.w;
+		    }
 
 		    switch (inFitAlign) {
 		    case "justified": // no longer supported
