@@ -131,12 +131,14 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	      } else {
 		  this.dojoObj.selection.select(rowIndex);
 		  this.onSelectionChange();
+		  this.onSelect();
 		  this.dojoObj.scrollToRow(rowIndex);
 		  if (onSuccess) onSuccess();
 	      }
 	  } else {
-	    this.dojoObj.selection.setSelected(rowIndex,isSelected);
+	      this.dojoObj.selection.setSelected(rowIndex,isSelected);
 	      this.onSelectionChange();
+	      this.onDeselect();
 	  }
 
 	},
@@ -204,6 +206,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                 this.dojoObj.selection.clear();
 	    this.updateSelectedItem(-1);
 	    this.onSelectionChange();
+	    this.onDeselect();
 	},
 
     select: function(rowIndex, isSelected, onSuccess) {
@@ -231,8 +234,14 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		} else {
 			this.updateSelectedItem( this.getSelectedIndex());
 		}
-		if (!this.rendering)
+		if (!this.rendering) {
 		    this.onSelectionChange();
+		    if (newSelection) {
+			this.onSelect();
+		    } else {
+			this.onDeselect();
+		    }
+		}
                 this._curSelectionObj = [];
                 for (var i = 0; i < newSelection.length; i++)
                     this._curSelectionObj.push(newSelection[i]);
@@ -1398,6 +1407,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	onHeaderClick: function(evt, selectedItem, rowId, fieldId, rowNode, cellNode){
   }, 
   onSelectionChange: function() {},
+  onSelect: function() {},
+    onDeselect: function() {},
         addColumnToCSV: function(csvArray, value, formatFunc){
 	    if (dojo.isString(value))
 		value = value.replace(/\"/g, '\\\"');

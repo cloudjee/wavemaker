@@ -273,7 +273,13 @@ dojo.declare("wm.List", wm.VirtualList, {
 	},
 	//
 	renderDataSet: function(inDataSet) {
+	    if (this.owner instanceof wm.Page) {
+		console.log("ANCESTOR: " + this.isAncestorHidden());
+	    }
 	    if (this.isAncestorHidden() && !this._renderHiddenGrid) {
+		if (this.owner instanceof wm.Page) {
+		    console.log(this.parent);
+		}
 		this._renderDojoObjSkipped = true;
 		return;
 	    } 
@@ -411,7 +417,8 @@ dojo.declare("wm.List", wm.VirtualList, {
 	getCellStyle: function(inRow, inCol) {
 	    if (this.columns) {
 		var text = [];
-		var col = this.columns[inCol];
+		var field = this._dataFields[inCol];
+		var col = this._columnsHash[field];
 		var align = col.align;
 
 		if (inRow != -1) {
@@ -776,7 +783,8 @@ wm.List.extend({
 	if (inRow != -1) {
 	    // ignore inRow parameter; its always -1 or 0 (header or cell)
 	    inRow = this._formatIndex != null ? this._formatIndex : this.getCount();
-	    var col = this.columns[inCol];
+	    var field = this._dataFields[inCol];
+	    var col = this._columnsHash[field];
 	    var data = this._data[inRow];
 	    if (col.cssClass) {
 		return wm.expression.getValue(col.cssClass, data,this.owner);
