@@ -307,6 +307,10 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
       top: {writeonly: 1, ignore: 1}
       },
     */
+    mobileFolding: false,
+    mobileFoldingIndex: "",
+    mobileFoldingCaption: "",
+
     imageList: "",
     imageIndex: -1,
     renderedOnce: 0,
@@ -460,7 +464,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	}
     },
     init: function() {
-	if (wm.isMobile && this.mobileHeight != undefined && !this.height.match(/\%/)) this.height = this.mobileHeight;
+	if (wm.isMobile && this.mobileHeight != undefined && !this.height.match(/\%/) && parseInt(this.mobileHeight) > parseInt(this.height)) this.height = this.mobileHeight;
 
 	this.initDomNode();
 	this.inherited(arguments);
@@ -601,9 +605,9 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	return parent.isAncestorHiddenLayer();
     },
     isAncestorHidden: function() {
-        if (!this.showing) return true;
+        if (!this.showing && this instanceof wm.Layer == false) return true;
 	if (this instanceof wm.Layout && this.owner == app._page || this instanceof wm.Dialog) return false;
-	if (this instanceof wm.Layer && this.parent instanceof wm.Layers && this.parent.getActiveLayer() != this) return true;
+	if (this instanceof wm.Layer && !this.active) return true;
         var parent;
         if (this.parent && this.parent instanceof wm.Control) 
             parent = this.parent;
