@@ -78,7 +78,6 @@ dojo.declare("wm.Layer", wm.Container, {
 	},
     /* Called when the layer is the event handler */
         update: function() {
-	    if (!this.showing) this.setShowing(true);
 	    this.activate();
 	},
 	isActive: function() {
@@ -238,7 +237,7 @@ dojo.declare("wm.Layers", wm.Container, {
 		var dl = this.getLayer(d);
 		// call private index setter so we avoid canShow; however, honor showing property
 		if (dl && !dl.showing) {
-			d = this._getPrevNextShownIndex(d);
+			d = this._getNextShownIndex(d);
 			dl = this.getLayer(d);
 		}
 		if (dl)
@@ -518,6 +517,22 @@ dojo.declare("wm.Layers", wm.Container, {
 			// do nothing as this might happen when we are trying to destroy all the layers.
 		}
 	},
+    _getNextShownIndex: function(inIndex, isSecondCall) {
+	var count = this.layers.length;
+	for (var i = inIndex + 1; i < count && !this.layers[i].showing; i++) ;
+	if (this.layers[i] && this.layers[i].showing) return i;
+	if (!isSecondCall)
+	    return this._getPrevShownIndex(inIndex,true);
+	return 0;
+    },
+    _getPrevShownIndex: function(inIndex, isSecondCall) {
+	for (var i = inIndex - 1; i >= 0 && !this.layers[i].showing; i--) ;
+	if (this.layers[i] && this.layers[i].showing) return i;
+	if (!isSecondCall)
+	    return this._getNextShownIndex(inIndex,true);
+	return 0;
+    },
+/*
 	_getPrevNextShownIndex: function(inIndex, inPrev, inBounded) {
 		var
 			d = inPrev ? -1 : 1,
@@ -540,13 +555,14 @@ dojo.declare("wm.Layers", wm.Container, {
 			}
 		}
 	},
+	*/
 	setNext: function(inBounded) {
-		var p = this._getPrevNextShownIndex(Number(this.layerIndex), false, inBounded);
+		var p = this._getNextShownIndex(Number(this.layerIndex), false);
 		if (p !== undefined)
 			this.setLayerIndex(p);
 	},
 	setPrevious: function(inBounded) {
-		var p = this._getPrevNextShownIndex(Number(this.layerIndex), true, inBounded);
+		var p = this._getPrevShownIndex(Number(this.layerIndex), false);
 		if (p !== undefined)
 			this.setLayerIndex(p);
 	},
