@@ -34,20 +34,6 @@ Studio.extend({
 
 		this.navGoToDeploymentPage();
 	},
-        onDeployOkClicked: function(jndiNames, optionalCallback) {
-	    var msg = this.getDictionaryItem("WAIT_BUILDING_WAR");
-		studio.beginWait(msg);
-		var _this = this;
-
-	    studio.deploymentService.requestAsync("buildWar", [jndiNames], 
-						  function(inResponse) {
-						      studio.endWait(msg);
-						      app.alert(this.getDictionaryItem("ALERT_BUILDING_WAR_SUCCESS", {inResponse: inResponse}));
-						      app.alertDialog.setWidth("600px");
-						      optionalCallback();
-						  });
-
-	},
 	deployClickError: function(inError) {
 	    studio.endWait();
 	    app.alert(this.getDictionaryItem("ALERT_BUILDING_WAR_FAILED", {error: inError.message}));
