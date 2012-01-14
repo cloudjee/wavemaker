@@ -715,7 +715,7 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		if (!wm.getFormLiveView || !wm.getFormField) return;
 
 		var view = wm.getFormLiveView(parentForm);
-		var parentType = parentForm instanceof wm.DataForm ? parentForm.type : parentForm.dataSet.type;
+		var parentType = wm.isInstanceType(parentForm, wm.DataForm) ? parentForm.type : parentForm.dataSet && parentForm.dataSet.type;
 
 		var ff = wm.getFormField(this);
 		
