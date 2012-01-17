@@ -71,8 +71,6 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
 
     public static final String EAR_FILE_NAME_PROPERTY = "ear.file.name";
 
-    public static final String PROJ_DIRECTORY_PROPERTY = "orig.proj.dir";
-
     public static final String CUSTOM_WM_DIR_NAME_PROPERTY = "custom.wm.dir";
 
     public static final String ZIP_FILE_NAME_PROPERTY = "zip.file.name";
@@ -263,12 +261,12 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
         properties.put(CUSTOM_WM_DIR_NAME_PROPERTY, AbstractStudioFileSystem.COMMON_DIR);
 
         try {
-            properties.put(WAVEMAKER_HOME, getFileSystem().getWaveMakerHome().getURI().toString());
+            properties.put(WAVEMAKER_HOME, getFileSystem().getWaveMakerHome().getFile().getPath());
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
 
-        properties.put(PROJ_DIRECTORY_PROPERTY, projectDir);
+        properties.put(PROJECT_DIR_PROPERTY, projectDir);
         properties.put(DEPLOY_NAME_PROPERTY, getFileSystem().getResourceForURI(projectDir).getFilename());
 
         build();
@@ -285,7 +283,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
      */
     @Override
     public String buildWar(Resource warFile, boolean includeEar) throws IOException {
-        String warFileLocation = warFile.getURI().toString();
+        String warFileLocation = warFile.getFile().getPath();
         buildWar(warFileLocation, includeEar);
         return warFileLocation;
     }
@@ -297,7 +295,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
     public void buildWar(String warFileLocation, boolean includeEar) throws IOException {
         Resource buildDir = getFileSystem().createTempDir();
         try {
-            buildWar(getProjectDir().getFile().getCanonicalPath(), buildDir.getURI().toString(), warFileLocation, includeEar);
+            buildWar(getProjectDir().getFile().getCanonicalPath(), buildDir.getFile().getPath(), warFileLocation, includeEar);
         } finally {
             getFileSystem().deleteFile(buildDir);
         }

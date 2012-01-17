@@ -26,6 +26,7 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.data.DataServiceType;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.DataModelDeploymentConfiguration;
+import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.LocalDeploymentManager;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
@@ -41,158 +42,159 @@ import com.wavemaker.tools.util.DesignTimeUtils;
  */
 public class ServiceDeploymentManager {
 
-	private List<ServiceDeployment> serviceDeployments = new ArrayList<ServiceDeployment>(1);
+    private List<ServiceDeployment> serviceDeployments = new ArrayList<ServiceDeployment>(1);
 
-	private StudioFileSystem fileSystem;
+    private StudioFileSystem fileSystem;
 
-	private ProjectManager projectMgr;
+    private ProjectManager projectMgr;
 
-	public ServiceDeploymentManager() {
-		// hack: these should be managed by Spring
-		this.serviceDeployments.add(new DataModelDeploymentConfiguration());
-	}
+    private DeploymentManager deploymentManager;
 
-	public Resource generateWebapp(DeploymentInfo info) {
-		Map<String, String> allDbProps = new HashMap<String, String>();
-		for (DeploymentDB db : info.getDatabases()) {
-			allDbProps.putAll(db.asProperties());
-		}
-		return generateWebapp(getProjectRoot(), allDbProps, info.getArchiveType().equals(ArchiveType.EAR));
-	}
+    public ServiceDeploymentManager() {
+        // hack: these should be managed by Spring
+        this.serviceDeployments.add(new DataModelDeploymentConfiguration());
+    }
 
-	// FIXME PW Delete this method if possible
-	@Deprecated
-	public Resource generateWebapp(Map<String, String> properties) {
-		return generateWebapp(getProjectRoot(), properties, false);
-	}
+    public Resource generateWebapp(DeploymentInfo info) {
+        Map<String, String> allDbProps = new HashMap<String, String>();
+        for (DeploymentDB db : info.getDatabases()) {
+            allDbProps.putAll(db.asProperties());
+        }
+        return generateWebapp(getProjectRoot(), allDbProps, info.getArchiveType().equals(ArchiveType.EAR));
+    }
 
-	public Resource generateWebapp(Resource projectRoot, Map<String, String> properties, boolean includeEar) {
-		Resource stagingProjectDir = null;
-		try {
-			stagingProjectDir = this.fileSystem.createTempDir();
-			this.fileSystem.copyRecursive(projectRoot, stagingProjectDir, new ArrayList<String>());
-			DesignServiceManager mgr = DesignTimeUtils.getDSMForProjectRoot(stagingProjectDir);
-			prepareForDeployment(mgr, properties);
-			return buildWar(mgr.getProjectManager(), getWarFile(), includeEar);
-		} catch (IOException ex) {
-			throw new ConfigurationException(ex);
-		} finally {
-			try {
-				this.fileSystem.deleteFile(stagingProjectDir);
-			} catch (Exception ignore) {
-			}
-		}
-	}
+    public Resource generateWebapp(Map<String, String> properties) {
+        return generateWebapp(getProjectRoot(), properties, false);
+    }
 
-	public Resource getWarFile() {
-		Resource projectRoot = getProjectRoot();
-		try {
-			Resource destDir = projectRoot.createRelative(LocalDeploymentManager.DIST_DIR_DEFAULT);
+    public Resource generateWebapp(Resource projectRoot, Map<String, String> properties, boolean includeEar) {
+        Resource stagingProjectDir = null;
+        try {
+            stagingProjectDir = this.fileSystem.createTempDir();
+            this.fileSystem.copyRecursive(projectRoot, stagingProjectDir, new ArrayList<String>());
+            DesignServiceManager mgr = DesignTimeUtils.getDSMForProjectRoot(stagingProjectDir);
+            prepareForDeployment(mgr, properties);
+            return buildWar(mgr.getProjectManager(), getWarFile(), includeEar);
+        } catch (IOException ex) {
+            throw new ConfigurationException(ex);
+        } finally {
+            try {
+                this.fileSystem.deleteFile(stagingProjectDir);
+            } catch (Exception ignore) {
+            }
+        }
+    }
 
-			// Let's drop the user account info if it is embedded in the war
-			// file name
-			String warFileName = projectRoot.getFilename();
-			String acctInfo = this.projectMgr.getUserProjectPrefix();
-			if (warFileName.contains(acctInfo)) {
-				int len = acctInfo.length();
-				warFileName = warFileName.substring(len);
-			}
+    public Resource getWarFile() {
+        Resource projectRoot = getProjectRoot();
+        try {
+            Resource destDir = projectRoot.createRelative(LocalDeploymentManager.DIST_DIR_DEFAULT);
 
-			return destDir.createRelative(warFileName + LocalDeploymentManager.WAR_EXTENSION);
-		} catch (IOException ex) {
-			throw new WMRuntimeException(ex);
-		}
-	}
+            // Let's drop the user account info if it is embedded in the war
+            // file name
+            String warFileName = projectRoot.getFilename();
+            String acctInfo = this.projectMgr.getUserProjectPrefix();
+            if (warFileName.contains(acctInfo)) {
+                int len = acctInfo.length();
+                warFileName = warFileName.substring(len);
+            }
 
-	public Resource getEarFile() {
-		Resource projectRoot = getProjectRoot();
-		Resource destDir;
-		try {
-			destDir = projectRoot.createRelative(LocalDeploymentManager.DIST_DIR_DEFAULT);
+            return destDir.createRelative(warFileName + LocalDeploymentManager.WAR_EXTENSION);
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
+    }
 
-			// Let's drop the user account info if it is embedded in the war
-			// file
-			// name
-			String earFileName = projectRoot.getFilename();
-			String acctInfo = this.projectMgr.getUserProjectPrefix();
-			if (earFileName.contains(acctInfo)) {
-				int len = acctInfo.length();
-				earFileName = earFileName.substring(len);
-			}
+    public Resource getEarFile() {
+        Resource projectRoot = getProjectRoot();
+        Resource destDir;
+        try {
+            destDir = projectRoot.createRelative(LocalDeploymentManager.DIST_DIR_DEFAULT);
 
-			return destDir.createRelative(earFileName + LocalDeploymentManager.EAR_EXTENSION);
+            // Let's drop the user account info if it is embedded in the war
+            // file
+            // name
+            String earFileName = projectRoot.getFilename();
+            String acctInfo = this.projectMgr.getUserProjectPrefix();
+            if (earFileName.contains(acctInfo)) {
+                int len = acctInfo.length();
+                earFileName = earFileName.substring(len);
+            }
 
-		} catch (IOException ex) {
-			throw new WMRuntimeException(ex);
-		}
-	}
+            return destDir.createRelative(earFileName + LocalDeploymentManager.EAR_EXTENSION);
 
-	public void setServiceDeployments(List<ServiceDeployment> serviceDeployments) {
-		this.serviceDeployments = serviceDeployments;
-	}
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
+    }
 
-	public void setFileSystem(StudioFileSystem fileSystem) {
-		this.fileSystem = fileSystem;
-	}
+    public void setServiceDeployments(List<ServiceDeployment> serviceDeployments) {
+        this.serviceDeployments = serviceDeployments;
+    }
 
-	public void setProjectManager(ProjectManager projectMgr) {
-		this.projectMgr = projectMgr;
-	}
+    public void setFileSystem(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
+    }
 
-	public ProjectManager getProjectManager() {
-		return this.projectMgr;
-	}
+    public void setProjectManager(ProjectManager projectMgr) {
+        this.projectMgr = projectMgr;
+    }
 
-	private Resource getProjectRoot() {
-		return this.projectMgr.getCurrentProject().getProjectRoot();
-	}
+    public ProjectManager getProjectManager() {
+        return this.projectMgr;
+    }
 
-	private Resource buildWar(ProjectManager projectMgr, Resource warFile, boolean includeEar) throws IOException {
-		// call into existing deployment code to generate war
-		// would be super nice to refactor this
-		LocalDeploymentManager deploymentMgr = new LocalDeploymentManager();
-		deploymentMgr.setProjectManager(projectMgr);
-		deploymentMgr.setFileSystem(this.fileSystem);
-		String war = deploymentMgr.buildWar(warFile, includeEar);
-		return this.fileSystem.getResourceForURI(war);
-	}
+    public void setDeploymentManager(DeploymentManager deploymentManager) {
+        this.deploymentManager = deploymentManager;
+    }
 
-	private void prepareForDeployment(DesignServiceManager mgr, Map<String, String> properties) {
+    private Resource getProjectRoot() {
+        return this.projectMgr.getCurrentProject().getProjectRoot();
+    }
 
-		for (Service service : mgr.getServices()) {
-			// hack: only run for dataservices for now
-			if (!service.getType().equals(DataServiceType.TYPE_NAME)) {
-				continue;
-			}
+    private Resource buildWar(ProjectManager projectMgr, Resource warFile, boolean includeEar) throws IOException {
+        // call into existing deployment code to generate war
+        // would be super nice to refactor this
+        String war = this.deploymentManager.buildWar(warFile, includeEar);
+        return this.fileSystem.getResourceForURI(war);
+    }
 
-			storeProperties(properties);
+    private void prepareForDeployment(DesignServiceManager mgr, Map<String, String> properties) {
 
-			Map<String, String> m = getServiceProperties(properties, service.getId());
+        for (Service service : mgr.getServices()) {
+            // hack: only run for dataservices for now
+            if (!service.getType().equals(DataServiceType.TYPE_NAME)) {
+                continue;
+            }
 
-			int indx = 0;
-			for (ServiceDeployment sd : this.serviceDeployments) {
-				indx++;
-				sd.prepare(service.getId(), m, mgr, indx);
-			}
-		}
-	}
+            storeProperties(properties);
 
-	private void storeProperties(Map<String, String> properties) {
-		Project p = this.projectMgr.getCurrentProject();
-		p.clearProperties(ServiceDeploymentManager.class);
-		for (Map.Entry<String, String> e : properties.entrySet()) {
-			p.setProperty(ServiceDeploymentManager.class, e.getKey(), e.getValue());
-		}
-	}
+            Map<String, String> m = getServiceProperties(properties, service.getId());
 
-	private Map<String, String> getServiceProperties(Map<String, String> properties, String serviceName) {
-		Map<String, String> rtn = new HashMap<String, String>();
-		String s = serviceName + ProjectConstants.PROP_SEP;
-		for (Map.Entry<String, String> e : properties.entrySet()) {
-			if (e.getKey().startsWith(s)) {
-				rtn.put(e.getKey().substring(s.length()), e.getValue());
-			}
-		}
-		return rtn;
-	}
+            int indx = 0;
+            for (ServiceDeployment sd : this.serviceDeployments) {
+                indx++;
+                sd.prepare(service.getId(), m, mgr, indx);
+            }
+        }
+    }
+
+    private void storeProperties(Map<String, String> properties) {
+        Project p = this.projectMgr.getCurrentProject();
+        p.clearProperties(ServiceDeploymentManager.class);
+        for (Map.Entry<String, String> e : properties.entrySet()) {
+            p.setProperty(ServiceDeploymentManager.class, e.getKey(), e.getValue());
+        }
+    }
+
+    private Map<String, String> getServiceProperties(Map<String, String> properties, String serviceName) {
+        Map<String, String> rtn = new HashMap<String, String>();
+        String s = serviceName + ProjectConstants.PROP_SEP;
+        for (Map.Entry<String, String> e : properties.entrySet()) {
+            if (e.getKey().startsWith(s)) {
+                rtn.put(e.getKey().substring(s.length()), e.getValue());
+            }
+        }
+        return rtn;
+    }
 }

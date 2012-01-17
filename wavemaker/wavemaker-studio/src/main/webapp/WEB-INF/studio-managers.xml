@@ -56,15 +56,18 @@
         <aop:scoped-proxy />
     </bean>
 
-    <bean id="serviceDeploymentManager" class="com.wavemaker.tools.deployment.ServiceDeploymentManager"
-        scope="singleton" lazy-init="true">
-        <property name="projectManager">
-            <ref bean="projectManager" />
-        </property>
-        <property name="fileSystem">
-            <ref bean="fileSystem" />
-        </property>
-    </bean>
+	<bean id="serviceDeploymentManager" class="com.wavemaker.tools.deployment.ServiceDeploymentManager"
+		scope="singleton" lazy-init="true">
+		<property name="projectManager">
+			<ref bean="projectManager" />
+		</property>
+		<property name="fileSystem">
+			<ref bean="fileSystem" />
+		</property>
+		<property name="deploymentManager">
+			<ref bean="deploymentManager" />
+		</property>
+	</bean>
 
     <bean id="tomcatDeploymentTarget"
         class="com.wavemaker.tools.deployment.tomcat.TomcatDeploymentTarget"
