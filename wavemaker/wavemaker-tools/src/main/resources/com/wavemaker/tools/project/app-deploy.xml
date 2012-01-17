@@ -13,7 +13,7 @@
 
     <property name="tomcat.config.xml" value="${project.dir}/${deploy.name}.xml"/>
     
-    <property name="app.webapproot.dir" value="${project.dir}/webapproot" />
+    <property name="app.webapproot.dir" value="${project.dir}/webapproot"/>
 
     <property name="build.app.webapproot.dir" value="${app.webapproot.dir}"/>
     <property name="build.app.webinf.dir" value="${build.app.webapproot.dir}/WEB-INF"/>
@@ -230,9 +230,9 @@
 		</war>
     </target>
 
-	<target name="build-war-temp" depends="init">
+	<target name="build-war-temp" depends="init, build-temp">
         <!-- copy js files -->
-        <copy todir="${build.app.webapproot.dir}/lib">
+	        <copy todir="${build.app.webapproot.dir}/lib"> 
             <fileset dir="${studio.webapproot.dir}/lib">
                 <exclude name="wm/${custom.wm.dir}/**"/>
                 <exclude name="dojo/util/**"/>
@@ -295,8 +295,8 @@
             war="${war.file.name}"
             failonerror="true" />
     </target>
-
-    <target name="prepare-webapproot" unless="build.inline" depends="init">
+  
+	<target name="prepare-webapproot" unless="build.inline" depends="init">
         <copy todir="${build.app.webapproot.dir}">
             <fileset dir="${app.webapproot.dir}">
                 <exclude name="**/.svn/**/*.*" />
