@@ -16,10 +16,6 @@ public class CFDeploymentManager extends AbstractDeploymentManager {
 
     private DeploymentTargetManager deploymentTargetManager;
 
-    public void setDeploymentTargetManager(DeploymentTargetManager deploymentTargetManager) {
-        this.deploymentTargetManager = deploymentTargetManager;
-    }
-
     @Override
     public String testRunStart() {
         compile();
@@ -124,5 +120,9 @@ public class CFDeploymentManager extends AbstractDeploymentManager {
     @Override
     public String exportProject(String zipFileName) {
         throw new UnsupportedOperationException("Haven't implemented this yet.");
+    }
+
+    public void setDeploymentTargetManager(DeploymentTargetManager deploymentTargetManager) {
+        this.deploymentTargetManager = deploymentTargetManager;
     }
 }

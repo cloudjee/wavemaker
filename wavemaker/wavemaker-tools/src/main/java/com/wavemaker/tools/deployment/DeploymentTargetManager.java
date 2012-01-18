@@ -14,34 +14,30 @@
 
 package com.wavemaker.tools.deployment;
 
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.tools.common.ConfigurationException;
 
 /**
+ * Manager for the various deployment targets supported by WaveMaker.
+ * 
  * @author Simon Toens
  */
 public class DeploymentTargetManager {
 
     private Map<DeploymentType, DeploymentTarget> deploymentTargets = new HashMap<DeploymentType, DeploymentTarget>();
 
-    public Collection<String> getDeploymentTargetNames() {
-        Set<String> names = new HashSet<String>();
-        for (DeploymentType type : DeploymentType.values()) {
-            names.add(type.toString());
-        }
-        return names;
-    }
-
+    /**
+     * Return a {@link DeploymentTarget} for the specified {@link DeploymentType}.
+     * 
+     * @param deploymentType the deployment type
+     * @return the {@link DeploymentTarget} that can be used to manage deployements.
+     */
     public DeploymentTarget getDeploymentTarget(DeploymentType deploymentType) {
-
-        if (this.deploymentTargets == null) {
+        if (this.deploymentTargets == null || this.deploymentTargets.isEmpty()) {
             SpringUtils.throwSpringNotInitializedError(this.getClass());
         }
 
@@ -56,5 +52,4 @@ public class DeploymentTargetManager {
         this.deploymentTargets = deploymentTargets;
 
     }
-
 }
