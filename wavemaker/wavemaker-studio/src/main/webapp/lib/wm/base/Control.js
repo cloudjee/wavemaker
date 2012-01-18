@@ -311,6 +311,9 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     mobileFoldingIndex: "",
     mobileFoldingCaption: "",
 
+    mobileAppFolding: false,
+    mobileAppFoldingIndex: "",
+
     imageList: "",
     imageIndex: -1,
     renderedOnce: 0,
@@ -352,8 +355,9 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
        @type String
     */
     height: '',
-    minHeight: 0, // number represents pixels
+    minHeight: 0, // number represents pixels    
     minWidth: 0,
+    minMobileHeight: 0,
     //maxHeight: 0, // number represents pixels
     //maxWidth: 0,
 
@@ -960,7 +964,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	// We either have a minSize passed in from user set properties, or we let the widget itself decide what its minimum size should be.
 	var minName = "min"    + wm.capitalize(n);
 	var getMin  = "getMin" + wm.capitalize(n) + "Prop";
-	var minSize = inMinSize || this[getMin]();
+	var minSize = !wm.isMobile && inMinSize  || this[getMin]();
 
 	v = this.adjustSetSizeProp(n,v);
 
@@ -1032,7 +1036,8 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	return parseInt(this.minWidth) || 30;
     },
     getMinHeightProp: function() {
-	return parseInt(this.minHeight) || 15;
+	
+	return parseInt(wm.isMobile ? this.minMobileHeight : this.minHeight) || 15;
     },
     /*
       setMaxWidth: function(inMaxWidth) {

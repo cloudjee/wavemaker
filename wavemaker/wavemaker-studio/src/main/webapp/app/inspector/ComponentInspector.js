@@ -1766,6 +1766,19 @@ wm.addPropertyGroups({
 			    order: 2}
 		 }
 		},
+	/* Confirmed */
+    mobile: {displayName: "Mobile",
+	     order: 60,
+	     subgroups: {
+		 layout: {displayName: "Layout",
+			  order: 1},
+		 layerfolding: {displayName: "Mobile Folding",
+				order: 10},
+		 appnav: {displayName: "Nav Buttons",
+			  order: 20}
+	     }
+	    },
+
     subwidgets: {displayName: "Children", 
 		 order: 60,
 		 subgroups: {

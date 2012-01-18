@@ -2093,3 +2093,9 @@ border-bottom: solid 1px #999;
 font-size: 14px;
 min-height: 32px;
 }
+
+.wmMobileToolBar .wmbutton {
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+}
