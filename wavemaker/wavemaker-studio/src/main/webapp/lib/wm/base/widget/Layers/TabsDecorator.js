@@ -544,13 +544,14 @@ dojo.declare("wm.BreadcrumbDecorator", wm.TabsDecorator, {
 
 	/* If hide all layers after the layer that is activated */
 	if (inActive) {
+	    this.decoree.layerIndex = inLayer.getIndex();
 	    var count = this.decoree.layers.length;
 	    for (var i = inLayer.getIndex() + 1; i < count; i++) {
 		if (this.decoree.layers[i].showing)
 		    this.decoree.layers[i].hide();
 	    }
 	}
-    },
+    }
 
 });
 
