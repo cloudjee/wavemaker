@@ -40,14 +40,18 @@ dojo.declare("wm.AceEditor", wm.Control, {
     width: "100%",
     height: "200px",
     margin: "6",
-    libPrefix: "app/lib/ace/",
+    //libPrefix: "lib/github/ace/", 
+    libPrefix: "app/lib/ace/", 
     init: function() {
 	var head = document.getElementsByTagName("head")[0];
 	if (!wm.AceEditor.libraryLoading) {
 	    wm.AceEditor.libraryLoading = true;
 	    var script = document.createElement("script");
-	    
-	    script.src = this.libPrefix + ((djConfig.isDebug || dojo.isIE == 8) ? "ace-uncompressed.js" : "ace.js");
+	    var prefix = this.libPrefix;
+	    if (prefix.indexOf("lib/") == 0) {
+		prefix = dojo.moduleUrl("lib").path + prefix.substring(4);
+	    }
+	    script.src = prefix + ((djConfig.isDebug || dojo.isIE == 8) ? "ace-uncompressed.js" : "ace.js");
 	    head.appendChild(script);
 	}
 	this.inherited(arguments);
@@ -83,13 +87,12 @@ dojo.declare("wm.AceEditor", wm.Control, {
 	 */
 	if (e.ctrlKey && app._keys[e.keyCode] != "CTRL" && !e.altKey) {
 	    if (dojo.indexOf(this.reservedCtrlKeys, app._keys[e.keyCode]) == -1) {
-		this.onCtrlKey(app._keys[e.keyCode]);
+		this.onCtrlKey(app._keys[e.keyCode], e.shiftKey);
 		dojo.stopEvent(e);
 	    }
 	}
     },
         onCtrlKey: function(letter) {
-
 	},
 
     focus: function() {
@@ -177,6 +180,63 @@ dojo.declare("wm.AceEditor", wm.Control, {
 	    var rows = text.split(/\n/);
 	    this.setCursorPosition(rows.length-1, wm.Array.last(rows).length);
 	}
+    },
+    getPositionInText: function() {
+
+	var range = this.getSelectionRange();
+	var text = this.getDataValue();
+	var startRowNumb = range.start.row;
+	var currentRowNumb = 0;
+	for (var i = 0; i < text.length; i++) {
+	    if (text[i] == "\n") currentRowNumb++;
+	    if (currentRowNumb >= startRowNumb) break;
+	}
+	return i + range.start.column;
+    },
+    selectCurrentBlock: function() {
+	var startCharIndex = this.getPositionInText();
+	var startBlockIndex, endBlockIndex;
+	var braceCount = 0;
+	var text = this.getDataValue();
+	
+	// find the start of the block
+	for (var i = startCharIndex; i >= 0; i--) {
+	    if (text[i] == "{") {
+		braceCount++;
+		if (braceCount > 0) {
+		    startBlockIndex = i;
+		    break;
+		}
+	    } else if (text[i] == "}") {
+		braceCount--; // likely to go negative
+	    }
+	}
+	
+	// find the end of the block
+	var length = text.length;
+	braceCount = 0;
+	for (var i = startCharIndex; i < length; i++) {
+	    if (text[i] == "}") {
+		braceCount++;
+		if (braceCount > 0) {
+		    endBlockIndex = i;
+		    break;
+		}
+	    } else if (text[i] == "{") {
+		braceCount--;
+	    }
+	}
+	if (startBlockIndex !== undefined && endBlockIndex !== undefined) {
+	    var startRowData = text.substring(0,startBlockIndex).split(/\n/);
+	    var startRow = startRowData.length-1;
+	    var startColumn = startRowData[startRowData.length-1].length;
+
+	    var endRowData = text.substring(0,endBlockIndex).split(/\n/);
+	    var endRow = endRowData.length-1;
+	    var endColumn = endRowData[endRowData.length-1].length+1;
+	    this.setSelectionRange(startRow, startColumn, endRow, endColumn);
+	}
+
     },
     replaceSelectedText: function(inText) {
 	if (this._editor)
@@ -314,7 +374,7 @@ dojo.declare("wm.AceEditor", wm.Control, {
 					      caption: "Search",
 					      captionSize: "100px",
 						 captionAlign: "left",
-					      width: "100%",					      
+					      width: "100%",
 					      onEnterKeyPress: dojo.hitch(this, "onFindClick")});
 	    
 	    this._searchEditor.editor.set("selectOnClick",true);
@@ -375,6 +435,7 @@ dojo.declare("wm.AceEditor", wm.Control, {
 					      caption: "Replace All",
 					      width: "100px",
 						    onclick: dojo.hitch(this, "onReplaceAllClick")});
+	    this._searchDialog.connect(this,_searchDialog, "onShow", this._searchEditor, "selectText");
 	}
 	this._searchDialog.show();
 	this._searchEditor.focus();
