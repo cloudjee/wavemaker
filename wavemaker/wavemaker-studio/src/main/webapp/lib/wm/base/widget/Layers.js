@@ -76,6 +76,19 @@ dojo.declare("wm.Layer", wm.Container, {
 	    if ((this.showing || this.parent instanceof wm.BreadcrumbLayers) && !this.isActive())
 		p.setLayer(this);
 	},
+	activateAllParents: function() {
+	    var p = this.parent;
+	    p.setLayer(this);
+	    var ancestor = this.parent.isAncestorInstanceOf(wm.Layer);
+	    if (ancestor) {
+		ancestor.activateAllParents();
+	    } else {
+		ancestor = this.parent.isAncestorInstanceOf(wm.Dialog);
+		if (ancestor) {
+		    ancestor.show();
+		}
+	    }
+	},
     /* Called when the layer is the event handler */
         update: function() {
 	    this.activate();
@@ -307,12 +320,14 @@ dojo.declare("wm.Layers", wm.Container, {
         },    
 	// public api for adding a layer
     addLayer: function(inCaption, doNotSelect) {
-		var pg = this.createLayer(inCaption);
+	var pg = this.createLayer(inCaption);
 	if (!doNotSelect) {
-		this._setLayerIndex(this.getCount()-1);
+	    this._setLayerIndex(this.getCount()-1);
+	} else {
+	    pg.active = false;
 	}
-		return pg;
-	},
+	return pg;
+    },
 	// called by owner automatically.
 	addWidget: function(inWidget) {
 		if (inWidget instanceof wm.Layer) {
