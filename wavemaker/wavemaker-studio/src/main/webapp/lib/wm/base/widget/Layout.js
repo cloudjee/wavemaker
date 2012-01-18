@@ -145,8 +145,14 @@ dojo.declare("wm.Layout", wm.Container, {
 
 	    wm.forEachWidget(this, function(w) {
 		if (w._mobileFoldingParent) {
-		    w.setParent(w._mobileFoldingParent);
-		    w.parent.moveControl(w,w._mobileFoldingParentIndex);
+		    if (w.parent != w._mobileFoldingParent) {
+			w.setParent(w._mobileFoldingParent);
+		    }
+		    if (w instanceof wm.Layer) {
+			w.parent.setLayerIndex(w,w._mobileFoldingParentIndex);
+		    } else {
+			w.parent.moveControl(w,w._mobileFoldingParentIndex);
+		    }
 		    if (w._mobileFoldingWidth) {
 			w.setWidth(w._mobileFoldingWidth);
 			w.setHeight(w._mobileFoldingHeight);
