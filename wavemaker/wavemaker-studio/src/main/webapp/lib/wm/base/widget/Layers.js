@@ -369,7 +369,7 @@ dojo.declare("wm.Layers", wm.Container, {
 		    	} else {
 		    	    this.setLayerIndex(i-1);
 		    	}
-		    } else if (!this._isDestroying && i < this.layerIndex) {
+		    } else if (!this._isDestroying && i <= this.layerIndex) {
                 this.layerIndex--;
 		    }
 		} else {
