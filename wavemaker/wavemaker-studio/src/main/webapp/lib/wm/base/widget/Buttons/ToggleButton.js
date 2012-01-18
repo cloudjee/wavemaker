@@ -66,3 +66,41 @@ dojo.declare("wm.ToggleButton", wm.ToolButton, {
             this.setCaption(inCaption);
     }
 });
+
+dojo.declare("wm.ToggleButtonPanel", wm.Container, {
+    classNames: "wmtogglebuttonpanel",
+    layoutKind: "left-to-right",
+    currentIndex: -1,
+    postInit: function() {
+	this.inherited(arguments);
+	this._btns = [];
+	for (var i = 0; i < this.c$.length; i++) {
+	    if (this.c$[i] instanceof wm.ToolButton) {
+		this.c$[i].connect(this.c$[i], "onclick", dojo.hitch(this, "changed", this.c$[i]));
+		this._btns.push(this.c$[i]);
+	    }
+	}
+    },
+    addWidget: function(inWidget) {
+	this.inherited(arguments);
+	if (inWidget instanceof wm.ToolButton) {
+	    this._btns.push(inWidget);
+	    inWidget.connect(inWidget, "onclick", dojo.hitch(this, "changed", inWidget));
+	}
+    },
+    removeWidget: function(inWidget) {
+	this.inherited(arguments);
+	wm.Array.removeElement(this._btns, inWidget);
+    },
+    changed: function(inButton) {
+	if (this.currentIndex >= 0) {
+	    dojo.removeClass(this._btns[this.currentIndex].domNode, "toggleButtonDown");
+	}
+	if (inButton) {
+	    this.currentIndex = dojo.indexOf(this._btns, inButton);
+	    dojo.addClass(inButton.domNode, "toggleButtonDown");
+	} else {
+	    this.currentIndex = -1;
+	}
+    }
+});
