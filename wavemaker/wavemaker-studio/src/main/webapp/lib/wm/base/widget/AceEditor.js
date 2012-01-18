@@ -41,7 +41,7 @@ dojo.declare("wm.AceEditor", wm.Control, {
     height: "200px",
     margin: "6",
     //libPrefix: "lib/github/ace/", 
-    libPrefix: "app/lib/ace/", 
+    libPrefix: "/wavemaker/app/lib/ace/", 
     init: function() {
 	var head = document.getElementsByTagName("head")[0];
 	if (!wm.AceEditor.libraryLoading) {
