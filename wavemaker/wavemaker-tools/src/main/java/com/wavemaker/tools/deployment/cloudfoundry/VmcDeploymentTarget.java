@@ -35,6 +35,9 @@ import com.wavemaker.tools.deployment.DeploymentDB;
 import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.deployment.DeploymentTarget;
 import com.wavemaker.tools.deployment.cloudfoundry.LoggingStatusCallback.Timer;
+import com.wavemaker.tools.deployment.cloudfoundry.archive.ContentModifier;
+import com.wavemaker.tools.deployment.cloudfoundry.archive.ModifiedContentApplicationArchive;
+import com.wavemaker.tools.deployment.cloudfoundry.archive.StringReplaceContentModifier;
 import com.wavemaker.tools.project.Project;
 
 public class VmcDeploymentTarget implements DeploymentTarget {
@@ -118,7 +121,13 @@ public class VmcDeploymentTarget implements DeploymentTarget {
     public String deploy(Project project, DeploymentInfo deploymentInfo) {
         deploymentInfo = hackSetupDeploymentInfo(deploymentInfo);
         ApplicationArchive applicationArchive = this.webAppAssembler.assemble(project);
+        applicationArchive = modifyApplicationArchive(applicationArchive);
         return doDeploy(applicationArchive, deploymentInfo);
+    }
+
+    private ApplicationArchive modifyApplicationArchive(ApplicationArchive applicationArchive) {
+        ContentModifier modifier = new StringReplaceContentModifier().forEntryName("index.html", "config.js").replaceAll("\\/wavemaker\\/", "/");
+        return new ModifiedContentApplicationArchive(applicationArchive, modifier);
     }
 
     private String doDeploy(ApplicationArchive applicationArchive, DeploymentInfo deploymentInfo) {
@@ -376,7 +385,7 @@ public class VmcDeploymentTarget implements DeploymentTarget {
     private CloudFoundryClient hackGetClient(DeploymentInfo deploymentInfo) {
         // FIXME PW HACK
         try {
-            CloudFoundryClient client = new CloudFoundryClient("username", "password", "http://api.xxxx.cloudfoundry.me");
+            CloudFoundryClient client = new CloudFoundryClient("phil.webb@orbweaver.co.uk", "password", "http://api.pwebb.cloudfoundry.me");
             client.login();
             return client;
         } catch (MalformedURLException e) {
