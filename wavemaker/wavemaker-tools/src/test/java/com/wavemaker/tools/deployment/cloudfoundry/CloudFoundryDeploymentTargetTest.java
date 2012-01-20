@@ -16,7 +16,9 @@ import org.cloudfoundry.client.lib.CloudFoundryException;
 import org.cloudfoundry.client.lib.CloudService;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -33,11 +35,15 @@ import com.wavemaker.tools.data.DataModelConfiguration;
 import com.wavemaker.tools.data.DataModelManager;
 import com.wavemaker.tools.deployment.DeploymentDB;
 import com.wavemaker.tools.deployment.DeploymentInfo;
+import com.wavemaker.tools.deployment.DeploymentStatusException;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @IfProfileValue(name = "spring.profiles", value = "cloud-test")
 @TestExecutionListeners({})
 public class CloudFoundryDeploymentTargetTest {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     private static File testapp;
 
@@ -77,7 +83,7 @@ public class CloudFoundryDeploymentTargetTest {
     }
 
     @Test
-    public void testDeployWithDisallowedAppName() {
+    public void testDeployWithDisallowedAppName() throws DeploymentStatusException {
         DeploymentInfo deployment1 = new DeploymentInfo();
         deployment1.setToken(token);
         deployment1.setTarget("https://api.cloudfoundry.com");
@@ -86,16 +92,16 @@ public class CloudFoundryDeploymentTargetTest {
         db1.setDbName("wmcftestdb");
         deployment1.getDatabases().add(db1);
 
-        String result;
         CloudFoundryDeploymentTarget target = new CloudFoundryDeploymentTarget();
         target.setDataModelManager(this.dmMgr);
 
-        result = target.deploy(testapp, deployment1);
-        assertEquals("ERROR: The URI: \"inflickr.cloudfoundry.com\" has already been taken or reserved", result);
+        this.thrown.expect(DeploymentStatusException.class);
+        this.thrown.expectMessage("ERROR: The URI: \"inflickr.cloudfoundry.com\" has already been taken or reserved");
+        target.deploy(testapp, deployment1);
     }
 
     @Test
-    public void testValidateWithDisallowedAppName() {
+    public void testValidateWithDisallowedAppName() throws DeploymentStatusException {
         DeploymentInfo deployment1 = new DeploymentInfo();
         deployment1.setToken(token);
         deployment1.setTarget("https://api.cloudfoundry.com");
@@ -104,12 +110,12 @@ public class CloudFoundryDeploymentTargetTest {
         db1.setDbName("wmcftestdb");
         deployment1.getDatabases().add(db1);
 
-        String result;
         CloudFoundryDeploymentTarget target = new CloudFoundryDeploymentTarget();
         target.setDataModelManager(this.dmMgr);
 
-        result = target.validateDeployment(deployment1);
-        assertEquals("ERROR: The URI: \"inflickr.cloudfoundry.com\" has already been taken or reserved", result);
+        this.thrown.expect(DeploymentStatusException.class);
+        this.thrown.expectMessage("ERROR: The URI: \"inflickr.cloudfoundry.com\" has already been taken or reserved");
+        target.validateDeployment(deployment1);
     }
 
     @Test
@@ -147,7 +153,7 @@ public class CloudFoundryDeploymentTargetTest {
     }
 
     @Test
-    public void testDeployWithExpiredToken() throws MalformedURLException {
+    public void testDeployWithExpiredToken() throws MalformedURLException, DeploymentStatusException {
         DeploymentInfo deployment1 = new DeploymentInfo();
         deployment1.setToken("invalid");
         deployment1.setTarget("https://api.cloudfoundry.com");
@@ -156,16 +162,16 @@ public class CloudFoundryDeploymentTargetTest {
         db1.setDbName("wmcftestdb");
         deployment1.getDatabases().add(db1);
 
-        String result;
         CloudFoundryDeploymentTarget target = new CloudFoundryDeploymentTarget();
         target.setDataModelManager(this.dmMgr);
 
-        result = target.deploy(testapp, deployment1);
-        assertEquals(CloudFoundryDeploymentTarget.TOKEN_EXPIRED_RESULT, result);
+        this.thrown.expect(DeploymentStatusException.class);
+        this.thrown.expectMessage(CloudFoundryDeploymentTarget.TOKEN_EXPIRED_RESULT);
+        target.deploy(testapp, deployment1);
     }
 
     @Test
-    public void testValidateWithExpiredToken() throws MalformedURLException {
+    public void testValidateWithExpiredToken() throws MalformedURLException, DeploymentStatusException {
         DeploymentInfo deployment1 = new DeploymentInfo();
         deployment1.setToken("invalid");
         deployment1.setTarget("https://api.cloudfoundry.com");
@@ -174,16 +180,17 @@ public class CloudFoundryDeploymentTargetTest {
         db1.setDbName("wmcftestdb");
         deployment1.getDatabases().add(db1);
 
-        String result;
         CloudFoundryDeploymentTarget target = new CloudFoundryDeploymentTarget();
         target.setDataModelManager(this.dmMgr);
 
-        result = target.validateDeployment(deployment1);
-        assertEquals(CloudFoundryDeploymentTarget.TOKEN_EXPIRED_RESULT, result);
+        this.thrown.expect(DeploymentStatusException.class);
+        this.thrown.expectMessage(CloudFoundryDeploymentTarget.TOKEN_EXPIRED_RESULT);
+
+        target.validateDeployment(deployment1);
     }
 
     @Test
-    public void testValidateValidDeployment() {
+    public void testValidateValidDeployment() throws DeploymentStatusException {
         DeploymentInfo deployment1 = new DeploymentInfo();
         deployment1.setToken(token);
         deployment1.setTarget("https://api.cloudfoundry.com");
@@ -196,12 +203,11 @@ public class CloudFoundryDeploymentTargetTest {
         CloudFoundryDeploymentTarget target = new CloudFoundryDeploymentTarget();
         target.setDataModelManager(this.dmMgr);
 
-        result = target.validateDeployment(deployment1);
-        assertEquals(CloudFoundryDeploymentTarget.SUCCESS_RESULT, result);
+        target.validateDeployment(deployment1);
     }
 
     @Test
-    public void testFullAppLifecycle() {
+    public void testFullAppLifecycle() throws Exception {
         Properties dbProps = new Properties();
         dbProps.setProperty(DataServiceConstants.DB_URL_KEY, "jdbc:mysql://localhost:3306/wmcftestdb");
         when(this.config.readConnectionProperties()).thenReturn(dbProps);
@@ -224,35 +230,29 @@ public class CloudFoundryDeploymentTargetTest {
         db2.setDbName("wmcftestdb");
         deployment2.getDatabases().add(db2);
 
-        String result;
         CloudApplication app;
         CloudFoundryDeploymentTarget target = new CloudFoundryDeploymentTarget();
         target.setDataModelManager(this.dmMgr);
 
-        result = target.deploy(testapp, deployment1);
-        assertEquals(CloudFoundryDeploymentTarget.SUCCESS_RESULT, result);
+        target.deploy(testapp, deployment1);
         app = testClient.getApplication("wmcftest");
         assertNotNull(app);
         assertEquals(CloudApplication.AppState.STARTED, app.getState());
 
-        result = target.deploy(testapp, deployment1);
-        assertEquals(CloudFoundryDeploymentTarget.SUCCESS_RESULT, result);
+        target.deploy(testapp, deployment1);
         app = testClient.getApplication("wmcftest");
         assertNotNull(app);
         assertEquals(CloudApplication.AppState.STARTED, app.getState());
 
-        result = target.deploy(testapp, deployment2);
-        assertEquals(CloudFoundryDeploymentTarget.SUCCESS_RESULT, result);
+        target.deploy(testapp, deployment2);
         app = testClient.getApplication("wmcftest2");
         assertNotNull(app);
         assertEquals(CloudApplication.AppState.STARTED, app.getState());
 
-        result = target.undeploy(deployment1, false);
-        assertEquals(CloudFoundryDeploymentTarget.SUCCESS_RESULT, result);
+        target.undeploy(deployment1, false);
         assertNotNull(testClient.getService("wmcftestdb"));
 
-        result = target.undeploy(deployment2, true);
-        assertEquals(CloudFoundryDeploymentTarget.SUCCESS_RESULT, result);
+        target.undeploy(deployment2, true);
         try {
             app = testClient.getApplication("wmcftest2");
             fail("Application still available after undeploy.");

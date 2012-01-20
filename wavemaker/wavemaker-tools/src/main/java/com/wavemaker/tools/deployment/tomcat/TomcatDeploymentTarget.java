@@ -28,6 +28,7 @@ import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.common.util.Tuple;
 import com.wavemaker.tools.deployment.AppInfo;
 import com.wavemaker.tools.deployment.DeploymentInfo;
+import com.wavemaker.tools.deployment.DeploymentStatusException;
 import com.wavemaker.tools.deployment.DeploymentTarget;
 import com.wavemaker.tools.project.LocalDeploymentManager;
 import com.wavemaker.tools.project.Project;
@@ -60,20 +61,29 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
     }
 
     @Override
-    public String deploy(Project project, DeploymentInfo deploymentInfo) {
+    public void deploy(Project project, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
         try {
             Resource warFile = project.getProjectRoot().createRelative(LocalDeploymentManager.DIST_DIR_DEFAULT + project.getProjectName() + ".war");
             TomcatServer tomcat = initTomcat(deploymentInfo);
-            return tomcat.deploy(warFile.getFile(), deploymentInfo.getApplicationName());
+            verifyOK(tomcat.deploy(warFile.getFile(), deploymentInfo.getApplicationName()));
         } catch (IOException e) {
             throw new WMRuntimeException(e);
         }
     }
 
     @Override
-    public String undeploy(DeploymentInfo deploymentInfo, boolean deleteServices) {
+    public void undeploy(DeploymentInfo deploymentInfo, boolean deleteServices) throws DeploymentStatusException {
         TomcatServer tomcat = initTomcat(deploymentInfo);
-        return tomcat.undeploy(deploymentInfo.getApplicationName());
+        verifyOK(tomcat.undeploy(deploymentInfo.getApplicationName()));
+    }
+
+    private void verifyOK(String output) throws DeploymentStatusException {
+        if (output != null) {
+            if (output.trim().startsWith("OK") || output.trim().equals("SUCCESS")) {
+                return;
+            }
+        }
+        throw new DeploymentStatusException(output);
     }
 
     @Deprecated
@@ -134,8 +144,7 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
      * {@inheritDoc}
      */
     @Override
-    public String validateDeployment(DeploymentInfo deploymentInfo) {
+    public void validateDeployment(DeploymentInfo deploymentInfo) {
         // No-op
-        return "SUCCESS";
     }
 }

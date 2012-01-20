@@ -32,6 +32,7 @@ import com.wavemaker.tools.data.DataModelManager;
 import com.wavemaker.tools.deployment.ArchiveType;
 import com.wavemaker.tools.deployment.DeploymentDB;
 import com.wavemaker.tools.deployment.DeploymentInfo;
+import com.wavemaker.tools.deployment.DeploymentStatusException;
 import com.wavemaker.tools.deployment.DeploymentTarget;
 import com.wavemaker.tools.deployment.cloudfoundry.LoggingStatusCallback.Timer;
 import com.wavemaker.tools.deployment.cloudfoundry.archive.ContentModifier;
@@ -54,8 +55,6 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     public static final Map<String, String> CONFIGURABLE_PROPERTIES;
 
     private static final String DEFAULT_URL = "https://api.cloudfoundry.com";
-
-    private static final String HREF_TEMPLATE = "<a href=\"url\" target=\"_blank\">url</a>";
 
     private static final String SERVICE_TYPE = "database";
 
@@ -92,36 +91,31 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     }
 
     @Override
-    public String validateDeployment(DeploymentInfo deploymentInfo) {
+    public void validateDeployment(DeploymentInfo deploymentInfo) throws DeploymentStatusException {
         deploymentInfo = hackSetupDeploymentInfo(deploymentInfo);
         CloudFoundryClient client = getClient(deploymentInfo);
-        try {
-            uploadProject(client, deploymentInfo);
-            return "SUCCESS";
-        } catch (StatusException e) {
-            return e.getMessage();
-        }
+        uploadProject(client, deploymentInfo);
     }
 
     @Deprecated
-    String deploy(File webapp, DeploymentInfo deploymentInfo) {
+    void deploy(File webapp, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
         deploymentInfo = hackSetupDeploymentInfo(deploymentInfo);
         try {
             validateWar(webapp);
             ZipFile zipFile = new ZipFile(webapp);
             ApplicationArchive applicationArchive = new ZipApplicationArchive(zipFile);
-            return doDeploy(applicationArchive, deploymentInfo);
+            doDeploy(applicationArchive, deploymentInfo);
         } catch (IOException e) {
             throw new WMRuntimeException(e);
         }
     }
 
     @Override
-    public String deploy(Project project, DeploymentInfo deploymentInfo) {
+    public void deploy(Project project, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
         deploymentInfo = hackSetupDeploymentInfo(deploymentInfo);
         ApplicationArchive applicationArchive = this.webAppAssembler.assemble(project);
         applicationArchive = modifyApplicationArchive(applicationArchive);
-        return doDeploy(applicationArchive, deploymentInfo);
+        doDeploy(applicationArchive, deploymentInfo);
     }
 
     private ApplicationArchive modifyApplicationArchive(ApplicationArchive applicationArchive) {
@@ -129,46 +123,41 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         return new ModifiedContentApplicationArchive(applicationArchive, modifier);
     }
 
-    private String doDeploy(ApplicationArchive applicationArchive, DeploymentInfo deploymentInfo) {
+    private void doDeploy(ApplicationArchive applicationArchive, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
         CloudFoundryClient client = getClient(deploymentInfo);
+        uploadProject(client, deploymentInfo);
+        setupServices(client, deploymentInfo);
+        Timer timer = new Timer();
         try {
-            uploadProject(client, deploymentInfo);
-            setupServices(client, deploymentInfo);
-            Timer timer = new Timer();
-            try {
-                client.uploadApplication(deploymentInfo.getApplicationName(), applicationArchive, new LoggingStatusCallback(timer));
-            } catch (IOException ex) {
-                throw new WMRuntimeException("Error ocurred while trying to upload WAR file.", ex);
-            }
+            client.uploadApplication(deploymentInfo.getApplicationName(), applicationArchive, new LoggingStatusCallback(timer));
+        } catch (IOException ex) {
+            throw new WMRuntimeException("Error ocurred while trying to upload WAR file.", ex);
+        }
 
-            log.info("Application upload completed in " + timer.stop() + "ms");
+        log.info("Application upload completed in " + timer.stop() + "ms");
 
-            try {
-                CloudApplication application = client.getApplication(deploymentInfo.getApplicationName());
-                if (application.getState().equals(CloudApplication.AppState.STARTED)) {
-                    doRestart(deploymentInfo, client);
-                } else {
-                    doStart(deploymentInfo, client);
-                }
-            } catch (CloudFoundryException ex) {
-                return "ERROR: Could not start application. " + ex.getDescription();
+        try {
+            CloudApplication application = client.getApplication(deploymentInfo.getApplicationName());
+            if (application.getState().equals(CloudApplication.AppState.STARTED)) {
+                doRestart(deploymentInfo, client);
+            } else {
+                doStart(deploymentInfo, client);
             }
-            return SUCCESS_RESULT;
-        } catch (StatusException e) {
-            return e.getMessage();
+        } catch (CloudFoundryException ex) {
+            throw new DeploymentStatusException("ERROR: Could not start application. " + ex.getDescription(), ex);
         }
     }
 
-    private void uploadProject(CloudFoundryClient client, DeploymentInfo deploymentInfo) throws StatusException {
+    private void uploadProject(CloudFoundryClient client, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
         List<String> uris = getUris(deploymentInfo);
         try {
             client.createApplication(deploymentInfo.getApplicationName(), CloudApplication.SPRING,
                 client.getDefaultApplicationMemory(CloudApplication.SPRING), uris, null, true);
         } catch (CloudFoundryException e) {
             if (HttpStatus.FORBIDDEN == e.getStatusCode()) {
-                throw new StatusException(TOKEN_EXPIRED_RESULT, e);
+                throw new DeploymentStatusException(TOKEN_EXPIRED_RESULT, e);
             } else if (HttpStatus.BAD_REQUEST == e.getStatusCode()) {
-                throw new StatusException("ERROR: " + e.getDescription(), e);
+                throw new DeploymentStatusException("ERROR: " + e.getDescription(), e);
             } else {
                 throw e;
             }
@@ -266,7 +255,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     }
 
     @Override
-    public String undeploy(DeploymentInfo deploymentInfo, boolean deleteServices) {
+    public void undeploy(DeploymentInfo deploymentInfo, boolean deleteServices) throws DeploymentStatusException {
         deploymentInfo = hackSetupDeploymentInfo(deploymentInfo);
         CloudFoundryClient client = getClient(deploymentInfo);
         log.info("Deleting application " + deploymentInfo.getApplicationName());
@@ -283,12 +272,11 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
             log.info("Application " + deploymentInfo.getApplicationName() + " deleted successfully in " + timer.stop() + "ms");
         } catch (CloudFoundryException ex) {
             if (HttpStatus.FORBIDDEN == ex.getStatusCode()) {
-                return TOKEN_EXPIRED_RESULT;
+                throw new DeploymentStatusException(TOKEN_EXPIRED_RESULT, ex);
             } else {
                 throw ex;
             }
         }
-        return SUCCESS_RESULT;
     }
 
     private void doRestart(DeploymentInfo deploymentInfo, CloudFoundryClient client) {
@@ -350,14 +338,5 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         Assert.notNull(war, "war cannot be null");
         Assert.isTrue(war.exists(), "war does not exist");
         Assert.isTrue(!war.isDirectory(), "war cannot be a directory");
-    }
-
-    private static class StatusException extends Exception {
-
-        private static final long serialVersionUID = 1L;
-
-        public StatusException(String message, Throwable cause) {
-            super(message, cause);
-        }
     }
 }

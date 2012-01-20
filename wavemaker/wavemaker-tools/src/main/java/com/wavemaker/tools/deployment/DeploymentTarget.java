@@ -27,7 +27,7 @@ public interface DeploymentTarget {
      * @param deploymentInfo
      * @return status message
      */
-    String validateDeployment(DeploymentInfo deploymentInfo);
+    void validateDeployment(DeploymentInfo deploymentInfo) throws DeploymentStatusException;
 
     // FIXME deprecate validateDeployment
 
@@ -38,7 +38,7 @@ public interface DeploymentTarget {
      * @param deploymentInfo
      * @return status message
      */
-    String deploy(Project project, DeploymentInfo deploymentInfo);
+    void deploy(Project project, DeploymentInfo deploymentInfo) throws DeploymentStatusException;
 
     /**
      * Undeploy an app.
@@ -48,5 +48,5 @@ public interface DeploymentTarget {
      * 
      * @return status message
      */
-    String undeploy(DeploymentInfo deploymentInfo, boolean deleteServices);
+    void undeploy(DeploymentInfo deploymentInfo, boolean deleteServices) throws DeploymentStatusException;
 }

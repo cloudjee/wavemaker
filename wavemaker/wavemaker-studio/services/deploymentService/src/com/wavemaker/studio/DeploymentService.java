@@ -30,6 +30,7 @@ import com.wavemaker.runtime.service.ServiceSuperClass;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.deployment.DeploymentInfo;
+import com.wavemaker.tools.deployment.DeploymentStatusException;
 import com.wavemaker.tools.deployment.DeploymentTargetManager;
 import com.wavemaker.tools.deployment.DeploymentType;
 import com.wavemaker.tools.deployment.ServiceDeploymentManager;
@@ -43,6 +44,8 @@ import com.wavemaker.tools.project.DeploymentManager;
  */
 @ExposeToClient
 public class DeploymentService extends ServiceSuperClass {
+
+    private static final String SUCCESS = "SUCCESS";
 
     private DeploymentManager deploymentManager;
 
@@ -169,7 +172,7 @@ public class DeploymentService extends ServiceSuperClass {
     public String delete(String deploymentId) {
         this.deploymentManager.deleteDeploymentInfo(deploymentId);
         // FIXME this may was well return void
-        return "SUCCESS";
+        return SUCCESS;
     }
 
     /**
@@ -181,24 +184,25 @@ public class DeploymentService extends ServiceSuperClass {
      * @throws IOException
      */
     public String deploy(DeploymentInfo deploymentInfo) throws IOException {
-        if (deploymentInfo.getDeploymentType() != DeploymentType.FILE) {
-            String validateResult = this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).validateDeployment(
-                deploymentInfo);
-            if (!validateResult.equals("SUCCESS")) {
-                return validateResult;
+        try {
+            if (deploymentInfo.getDeploymentType() != DeploymentType.FILE) {
+                this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).validateDeployment(deploymentInfo);
             }
+            if (deploymentInfo.getDeploymentType() != DeploymentType.CLOUD_FOUNDRY) {
+                File f = this.serviceDeploymentManager.generateWebapp(deploymentInfo).getFile();
+                if (!f.exists()) {
+                    throw new AssertionError("Application archive file doesn't exist at " + f.getAbsolutePath());
+                }
+                if (deploymentInfo.getDeploymentType() == DeploymentType.FILE) {
+                    return SUCCESS;
+                }
+            }
+            this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).deploy(
+                this.serviceDeploymentManager.getProjectManager().getCurrentProject(), deploymentInfo);
+            return SUCCESS;
+        } catch (DeploymentStatusException e) {
+            return e.getStatusMessage();
         }
-        if (deploymentInfo.getDeploymentType() != DeploymentType.CLOUD_FOUNDRY) {
-            File f = this.serviceDeploymentManager.generateWebapp(deploymentInfo).getFile();
-            if (!f.exists()) {
-                throw new AssertionError("Application archive file doesn't exist at " + f.getAbsolutePath());
-            }
-            if (deploymentInfo.getDeploymentType() == DeploymentType.FILE) {
-                return "SUCCESS";
-            }
-        }
-        return this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).deploy(
-            this.serviceDeploymentManager.getProjectManager().getCurrentProject(), deploymentInfo);
     }
 
     /**
@@ -211,9 +215,14 @@ public class DeploymentService extends ServiceSuperClass {
      */
     public String undeploy(DeploymentInfo deploymentInfo, boolean deleteServices) {
         if (deploymentInfo.getDeploymentType() != DeploymentType.FILE) {
-            this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).undeploy(deploymentInfo, deleteServices);
+            try {
+                this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).undeploy(deploymentInfo, deleteServices);
+            } catch (DeploymentStatusException e) {
+                // FIXME Before this exception existed the string return was ignored, we continue to do so but this
+                // should be reviewed.
+            }
         }
-        return "SUCCESS";
+        return SUCCESS;
     }
 
     /**
