@@ -399,7 +399,7 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
     @Override
     public Resource getParent(Resource resource) {
         GFSResource gfsResource = (GFSResource)resource;
-        String path = gfsResource.getParent();
+        String path = gfsResource.getParent() + "/";
         return (new GFSResource(this.gfs, this.dirsDoc, path));
     }
 }
