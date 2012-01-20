@@ -147,6 +147,17 @@ public interface StudioFileSystem {
     Resource copyRecursive(Resource root, Resource target, List<String> exclusions);
 
     /**
+     * Recursively copy files and directories from the given root to a target location.
+     *
+     * @param root the root to copy
+     * @param target the target destination
+     * @param includedPattern the ant-style path pattern to be included
+     * @param excludedPattern the ant-style path pattern to be excluded
+     * @return the target resource
+     */
+    Resource copyRecursive(Resource root, Resource target, String includedPattern, String excludedPattern);
+
+    /**
      * Recursively copy files and directories from the given root in the conventional file system to a target location.
      *
      * @param root the root to copy
@@ -183,4 +194,12 @@ public interface StudioFileSystem {
      * Returns a string indicating the studio filesystem being used
      */
     String getStudioEnv();
+
+    /**
+     * Returns the parent resource or null if none
+     *
+     * @param resource the current resource
+     * @return the parent resource
+     */
+    Resource getParent(Resource resource);
 }

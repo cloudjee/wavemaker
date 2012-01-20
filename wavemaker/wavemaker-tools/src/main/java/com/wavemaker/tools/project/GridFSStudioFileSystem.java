@@ -9,9 +9,7 @@ import java.util.List;
 import org.springframework.core.io.Resource;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
-import org.springframework.util.Assert;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.StringUtils;
+import org.springframework.util.*;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -271,6 +269,41 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
     }
 
     @Override
+    public Resource copyRecursive(Resource root, Resource target, final String includedPattern,
+                                  final String excludedPattern) {
+        try {
+            if (isDirectory(root)) {
+
+                List<Resource> children = this.listChildren(root, new ResourceFilter() {
+
+                    @Override
+                    public boolean accept(Resource resource) {
+                        PathMatcher matcher = new AntPathMatcher();
+                        return (!matcher.match(excludedPattern, resource.getFilename()) &&
+                                 matcher.match(includedPattern, resource.getFilename()));
+                    }
+                });
+
+                for (Resource child : children) {
+                    if (isDirectory(child)) {
+                        copyRecursive(child, target.createRelative(child.getFilename() + "/"),
+                                includedPattern, excludedPattern);
+                    } else {
+                        FileCopyUtils.copy(child.getInputStream(), getOutputStream(target.createRelative(child.getFilename())));
+                    }
+                }
+            } else {
+                FileCopyUtils.copy(root.getInputStream(), getOutputStream(target));
+            }
+
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
+        return target;
+
+    }
+
+    @Override
     public Resource copyRecursive(File root, Resource target, final List<String> exclusions) {
         try {
             if (root.isDirectory()) {
@@ -361,5 +394,12 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
     @Override
     protected String getFSType() {
         return new String("CF-GFS");
+    }
+
+    @Override
+    public Resource getParent(Resource resource) {
+        GFSResource gfsResource = (GFSResource)resource;
+        String path = gfsResource.getParent();
+        return (new GFSResource(this.gfs, this.dirsDoc, path));
     }
 }

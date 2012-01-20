@@ -229,6 +229,16 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
     }
 
     @Override
+    public Resource copyRecursive(Resource root, Resource target, String includedPattern, String excludedPattern) {
+        try {
+            IOUtils.copy(root.getFile(), target.getFile(), includedPattern, excludedPattern);
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
+        return target;
+    }
+
+    @Override
     public Resource copyRecursive(File root, Resource target, List<String> exclusions) {
         throw new UnsupportedOperationException();
     }
@@ -359,5 +369,17 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
     @Override
     protected String getFSType() {
         return new String("local");
+    }
+
+    @Override
+    public Resource getParent(Resource resource) {
+        File f;
+        try {
+            f = resource.getFile().getParentFile();
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
+
+        return new FileSystemResource(f);
     }
 }
