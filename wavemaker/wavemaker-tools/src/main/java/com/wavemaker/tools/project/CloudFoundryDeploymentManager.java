@@ -12,7 +12,7 @@ import com.wavemaker.tools.deployment.DeploymentTarget;
 import com.wavemaker.tools.deployment.DeploymentTargetManager;
 import com.wavemaker.tools.deployment.DeploymentType;
 
-public class CFDeploymentManager extends AbstractDeploymentManager {
+public class CloudFoundryDeploymentManager extends AbstractDeploymentManager {
 
     private DeploymentTargetManager deploymentTargetManager;
 

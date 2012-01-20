@@ -37,7 +37,7 @@ import com.wavemaker.tools.deployment.DeploymentInfo;
 @RunWith(SpringJUnit4ClassRunner.class)
 @IfProfileValue(name = "spring.profiles", value = "cloud-test")
 @TestExecutionListeners({})
-public class VmcDeploymentTargetTest {
+public class CloudFoundryDeploymentTargetTest {
 
     private static File testapp;
 
@@ -87,7 +87,7 @@ public class VmcDeploymentTargetTest {
         deployment1.getDatabases().add(db1);
 
         String result;
-        VmcDeploymentTarget target = new VmcDeploymentTarget();
+        CloudFoundryDeploymentTarget target = new CloudFoundryDeploymentTarget();
         target.setDataModelManager(this.dmMgr);
 
         result = target.deploy(testapp, deployment1);
@@ -105,7 +105,7 @@ public class VmcDeploymentTargetTest {
         deployment1.getDatabases().add(db1);
 
         String result;
-        VmcDeploymentTarget target = new VmcDeploymentTarget();
+        CloudFoundryDeploymentTarget target = new CloudFoundryDeploymentTarget();
         target.setDataModelManager(this.dmMgr);
 
         result = target.validateDeployment(deployment1);
@@ -157,11 +157,11 @@ public class VmcDeploymentTargetTest {
         deployment1.getDatabases().add(db1);
 
         String result;
-        VmcDeploymentTarget target = new VmcDeploymentTarget();
+        CloudFoundryDeploymentTarget target = new CloudFoundryDeploymentTarget();
         target.setDataModelManager(this.dmMgr);
 
         result = target.deploy(testapp, deployment1);
-        assertEquals(VmcDeploymentTarget.TOKEN_EXPIRED_RESULT, result);
+        assertEquals(CloudFoundryDeploymentTarget.TOKEN_EXPIRED_RESULT, result);
     }
 
     @Test
@@ -175,11 +175,11 @@ public class VmcDeploymentTargetTest {
         deployment1.getDatabases().add(db1);
 
         String result;
-        VmcDeploymentTarget target = new VmcDeploymentTarget();
+        CloudFoundryDeploymentTarget target = new CloudFoundryDeploymentTarget();
         target.setDataModelManager(this.dmMgr);
 
         result = target.validateDeployment(deployment1);
-        assertEquals(VmcDeploymentTarget.TOKEN_EXPIRED_RESULT, result);
+        assertEquals(CloudFoundryDeploymentTarget.TOKEN_EXPIRED_RESULT, result);
     }
 
     @Test
@@ -193,11 +193,11 @@ public class VmcDeploymentTargetTest {
         deployment1.getDatabases().add(db1);
 
         String result;
-        VmcDeploymentTarget target = new VmcDeploymentTarget();
+        CloudFoundryDeploymentTarget target = new CloudFoundryDeploymentTarget();
         target.setDataModelManager(this.dmMgr);
 
         result = target.validateDeployment(deployment1);
-        assertEquals(VmcDeploymentTarget.SUCCESS_RESULT, result);
+        assertEquals(CloudFoundryDeploymentTarget.SUCCESS_RESULT, result);
     }
 
     @Test
@@ -226,33 +226,33 @@ public class VmcDeploymentTargetTest {
 
         String result;
         CloudApplication app;
-        VmcDeploymentTarget target = new VmcDeploymentTarget();
+        CloudFoundryDeploymentTarget target = new CloudFoundryDeploymentTarget();
         target.setDataModelManager(this.dmMgr);
 
         result = target.deploy(testapp, deployment1);
-        assertEquals(VmcDeploymentTarget.SUCCESS_RESULT, result);
+        assertEquals(CloudFoundryDeploymentTarget.SUCCESS_RESULT, result);
         app = testClient.getApplication("wmcftest");
         assertNotNull(app);
         assertEquals(CloudApplication.AppState.STARTED, app.getState());
 
         result = target.deploy(testapp, deployment1);
-        assertEquals(VmcDeploymentTarget.SUCCESS_RESULT, result);
+        assertEquals(CloudFoundryDeploymentTarget.SUCCESS_RESULT, result);
         app = testClient.getApplication("wmcftest");
         assertNotNull(app);
         assertEquals(CloudApplication.AppState.STARTED, app.getState());
 
         result = target.deploy(testapp, deployment2);
-        assertEquals(VmcDeploymentTarget.SUCCESS_RESULT, result);
+        assertEquals(CloudFoundryDeploymentTarget.SUCCESS_RESULT, result);
         app = testClient.getApplication("wmcftest2");
         assertNotNull(app);
         assertEquals(CloudApplication.AppState.STARTED, app.getState());
 
         result = target.undeploy(deployment1, false);
-        assertEquals(VmcDeploymentTarget.SUCCESS_RESULT, result);
+        assertEquals(CloudFoundryDeploymentTarget.SUCCESS_RESULT, result);
         assertNotNull(testClient.getService("wmcftestdb"));
 
         result = target.undeploy(deployment2, true);
-        assertEquals(VmcDeploymentTarget.SUCCESS_RESULT, result);
+        assertEquals(CloudFoundryDeploymentTarget.SUCCESS_RESULT, result);
         try {
             app = testClient.getApplication("wmcftest2");
             fail("Application still available after undeploy.");

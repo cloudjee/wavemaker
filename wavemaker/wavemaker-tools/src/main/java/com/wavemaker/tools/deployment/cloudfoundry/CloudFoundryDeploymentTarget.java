@@ -39,7 +39,7 @@ import com.wavemaker.tools.deployment.cloudfoundry.archive.ModifiedContentApplic
 import com.wavemaker.tools.deployment.cloudfoundry.archive.StringReplaceContentModifier;
 import com.wavemaker.tools.project.Project;
 
-public class VmcDeploymentTarget implements DeploymentTarget {
+public class CloudFoundryDeploymentTarget implements DeploymentTarget {
 
     public static final String SUCCESS_RESULT = "SUCCESS";
 
@@ -69,7 +69,7 @@ public class VmcDeploymentTarget implements DeploymentTarget {
 
     private static final String SERVICE_TIER = "free";
 
-    private static final Log log = LogFactory.getLog(VmcDeploymentTarget.class);
+    private static final Log log = LogFactory.getLog(CloudFoundryDeploymentTarget.class);
 
     private DataModelManager dataModelManager;
 

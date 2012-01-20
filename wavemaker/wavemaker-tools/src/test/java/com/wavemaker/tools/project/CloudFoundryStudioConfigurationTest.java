@@ -56,9 +56,9 @@ import com.wavemaker.common.util.IOUtils;
 @RunWith(SpringJUnit4ClassRunner.class)
 @IfProfileValue(name = "spring.profiles", value = "cloud-test")
 @TestExecutionListeners({ DependencyInjectionTestExecutionListener.class })
-public class CFStudioConfigurationTest {
+public class CloudFoundryStudioConfigurationTest {
 
-    private final Log log = LogFactory.getLog(CFStudioConfigurationTest.class);
+    private final Log log = LogFactory.getLog(CloudFoundryStudioConfigurationTest.class);
 
     private static String PROJECT_TYPE = System.getProperty("test.project.type");
 
@@ -135,7 +135,7 @@ public class CFStudioConfigurationTest {
             File tempDir = null;
             try {
                 tempDir = IOUtils.createTempDirectory();
-                File tempProjectsDir = new File(tempDir, CFStudioConfiguration.PROJECTS_DIR);
+                File tempProjectsDir = new File(tempDir, CloudFoundryStudioConfiguration.PROJECTS_DIR);
 
                 assertTrue(!tempProjectsDir.exists());
 
@@ -210,7 +210,7 @@ public class CFStudioConfigurationTest {
     @Test
     public void testGetCurrentVersionInfo() throws Exception {
 
-        VersionInfo vi = CFStudioConfiguration.getCurrentVersionInfo();
+        VersionInfo vi = CloudFoundryStudioConfiguration.getCurrentVersionInfo();
         assertNotNull(vi);
         assertTrue(vi.getMajor() > 4);
     }
