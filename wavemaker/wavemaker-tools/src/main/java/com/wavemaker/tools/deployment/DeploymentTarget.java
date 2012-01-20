@@ -14,10 +14,6 @@
 
 package com.wavemaker.tools.deployment;
 
-import java.io.File;
-import java.util.List;
-import java.util.Map;
-
 import com.wavemaker.tools.project.Project;
 
 /**
@@ -33,14 +29,7 @@ public interface DeploymentTarget {
      */
     String validateDeployment(DeploymentInfo deploymentInfo);
 
-    /**
-     * Deploy an app.
-     * 
-     * @param webapp Either exploded or archived webapp to deploy
-     * @param deploymentInfo
-     * @return status message
-     */
-    String deploy(File webapp, DeploymentInfo deploymentInfo);
+    // FIXME deprecate validateDeployment
 
     /**
      * Deploy a project.
@@ -60,48 +49,4 @@ public interface DeploymentTarget {
      * @return status message
      */
     String undeploy(DeploymentInfo deploymentInfo, boolean deleteServices);
-
-    /**
-     * Redeploy an already deployed app.
-     * 
-     * @param deploymentInfo
-     * 
-     * @return status message
-     */
-    String redeploy(DeploymentInfo deploymentInfo);
-
-    /**
-     * start a deployed app.
-     * 
-     * @param deploymentInfo
-     * 
-     * @return status message
-     */
-    String start(DeploymentInfo deploymentInfo);
-
-    /**
-     * stop a deployed app.
-     * 
-     * @param deploymentInfo
-     * 
-     * @return status message
-     */
-    String stop(DeploymentInfo deploymentInfo);
-
-    /**
-     * @param deploymentInfo
-     * @return current deployments
-     */
-    List<AppInfo> listDeploymentNames(DeploymentInfo deploymentInfo);
-
-    /**
-     * @return Properties that can be configured for this DeploymentTarget, optionally with default values. for example:
-     *         <ul>
-     *         <li>hostname</li>
-     *         <li>port</li>
-     *         <li>etc</li>
-     *         </ul>
-     *         The property values are passed into the deployment methods.
-     */
-    Map<String, String> getConfigurableProperties();
 }

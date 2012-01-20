@@ -3,14 +3,11 @@ package com.wavemaker.tools.deployment.cloudfoundry;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import org.cloudfoundry.client.lib.CloudApplication;
@@ -34,7 +31,6 @@ import org.springframework.web.client.HttpClientErrorException;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.data.DataModelConfiguration;
 import com.wavemaker.tools.data.DataModelManager;
-import com.wavemaker.tools.deployment.AppInfo;
 import com.wavemaker.tools.deployment.DeploymentDB;
 import com.wavemaker.tools.deployment.DeploymentInfo;
 
@@ -245,38 +241,11 @@ public class VmcDeploymentTargetTest {
         assertNotNull(app);
         assertEquals(CloudApplication.AppState.STARTED, app.getState());
 
-        result = target.redeploy(deployment1);
-        assertEquals(VmcDeploymentTarget.SUCCESS_RESULT, result);
-        app = testClient.getApplication("wmcftest");
-        assertNotNull(app);
-        assertEquals(CloudApplication.AppState.STARTED, app.getState());
-
         result = target.deploy(testapp, deployment2);
         assertEquals(VmcDeploymentTarget.SUCCESS_RESULT, result);
         app = testClient.getApplication("wmcftest2");
         assertNotNull(app);
         assertEquals(CloudApplication.AppState.STARTED, app.getState());
-
-        result = target.stop(deployment2);
-        assertEquals(VmcDeploymentTarget.SUCCESS_RESULT, result);
-        app = testClient.getApplication("wmcftest2");
-        assertNotNull(app);
-        assertEquals(CloudApplication.AppState.STOPPED, app.getState());
-
-        result = target.start(deployment2);
-        assertEquals(VmcDeploymentTarget.SUCCESS_RESULT, result);
-        app = testClient.getApplication("wmcftest2");
-        assertNotNull(app);
-        assertEquals(CloudApplication.AppState.STARTED, app.getState());
-
-        List<AppInfo> apps = target.listDeploymentNames(deployment1);
-        List<String> appNames = new ArrayList<String>();
-        for (AppInfo appInfo : apps) {
-            assertTrue(appInfo.getHref().contains("http://" + appInfo.getName() + ".cloudfoundry.com"));
-            appNames.add(appInfo.getName());
-        }
-        assertTrue(appNames.contains("wmcftest"));
-        assertTrue(appNames.contains("wmcftest2"));
 
         result = target.undeploy(deployment1, false);
         assertEquals(VmcDeploymentTarget.SUCCESS_RESULT, result);

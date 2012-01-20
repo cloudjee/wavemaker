@@ -14,7 +14,6 @@
 
 package com.wavemaker.tools.deployment.tomcat;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,16 +60,11 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
     }
 
     @Override
-    public String deploy(File f, DeploymentInfo deploymentInfo) {
-        TomcatServer tomcat = initTomcat(deploymentInfo);
-        return tomcat.deploy(f, deploymentInfo.getApplicationName());
-    }
-
-    @Override
     public String deploy(Project project, DeploymentInfo deploymentInfo) {
         try {
             Resource warFile = project.getProjectRoot().createRelative(LocalDeploymentManager.DIST_DIR_DEFAULT + project.getProjectName() + ".war");
-            return deploy(warFile.getFile(), deploymentInfo);
+            TomcatServer tomcat = initTomcat(deploymentInfo);
+            return tomcat.deploy(warFile.getFile(), deploymentInfo.getApplicationName());
         } catch (IOException e) {
             throw new WMRuntimeException(e);
         }
@@ -82,25 +76,25 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
         return tomcat.undeploy(deploymentInfo.getApplicationName());
     }
 
-    @Override
+    @Deprecated
     public String redeploy(DeploymentInfo deploymentInfo) {
         TomcatServer tomcat = initTomcat(deploymentInfo);
         return tomcat.redeploy(deploymentInfo.getApplicationName());
     }
 
-    @Override
+    @Deprecated
     public String start(DeploymentInfo deploymentInfo) {
         TomcatServer tomcat = initTomcat(deploymentInfo);
         return tomcat.start(deploymentInfo.getApplicationName());
     }
 
-    @Override
+    @Deprecated
     public String stop(DeploymentInfo deploymentInfo) {
         TomcatServer tomcat = initTomcat(deploymentInfo);
         return tomcat.stop(deploymentInfo.getApplicationName());
     }
 
-    @Override
+    @Deprecated
     public List<AppInfo> listDeploymentNames(DeploymentInfo deploymentInfo) {
         TomcatServer tomcat = initTomcat(deploymentInfo);
         List<Tuple.Two<String, String>> apps = tomcat.listDeployments();
@@ -118,7 +112,7 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
         return rtn;
     }
 
-    @Override
+    @Deprecated
     public Map<String, String> getConfigurableProperties() {
         return CONFIGURABLE_PROPERTIES;
     }

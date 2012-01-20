@@ -29,7 +29,6 @@ import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.data.BaseDataModelSetup;
 import com.wavemaker.tools.data.DataModelConfiguration;
 import com.wavemaker.tools.data.DataModelManager;
-import com.wavemaker.tools.deployment.AppInfo;
 import com.wavemaker.tools.deployment.ArchiveType;
 import com.wavemaker.tools.deployment.DeploymentDB;
 import com.wavemaker.tools.deployment.DeploymentInfo;
@@ -104,8 +103,8 @@ public class VmcDeploymentTarget implements DeploymentTarget {
         }
     }
 
-    @Override
-    public String deploy(File webapp, DeploymentInfo deploymentInfo) {
+    @Deprecated
+    String deploy(File webapp, DeploymentInfo deploymentInfo) {
         deploymentInfo = hackSetupDeploymentInfo(deploymentInfo);
         try {
             validateWar(webapp);
@@ -290,52 +289,6 @@ public class VmcDeploymentTarget implements DeploymentTarget {
             }
         }
         return SUCCESS_RESULT;
-    }
-
-    @Override
-    public String redeploy(DeploymentInfo deploymentInfo) {
-        deploymentInfo = hackSetupDeploymentInfo(deploymentInfo);
-        CloudFoundryClient client = getClient(deploymentInfo);
-        doRestart(deploymentInfo, client);
-        return SUCCESS_RESULT;
-    }
-
-    @Override
-    public String start(DeploymentInfo deploymentInfo) {
-        deploymentInfo = hackSetupDeploymentInfo(deploymentInfo);
-        CloudFoundryClient client = getClient(deploymentInfo);
-        doStart(deploymentInfo, client);
-        return SUCCESS_RESULT;
-    }
-
-    @Override
-    public String stop(DeploymentInfo deploymentInfo) {
-        deploymentInfo = hackSetupDeploymentInfo(deploymentInfo);
-        CloudFoundryClient client = getClient(deploymentInfo);
-        log.info("Stopping application " + deploymentInfo.getApplicationName());
-        Timer timer = new Timer();
-        timer.start();
-        client.stopApplication(deploymentInfo.getApplicationName());
-        log.info("Application " + deploymentInfo.getApplicationName() + " stopped successfully in " + timer.stop() + "ms");
-        return SUCCESS_RESULT;
-    }
-
-    @Override
-    public List<AppInfo> listDeploymentNames(DeploymentInfo deploymentInfo) {
-        deploymentInfo = hackSetupDeploymentInfo(deploymentInfo);
-        CloudFoundryClient client = getClient(deploymentInfo);
-        List<AppInfo> infoList = new ArrayList<AppInfo>();
-        List<CloudApplication> cloudApps = client.getApplications();
-        for (CloudApplication app : cloudApps) {
-            String href = HREF_TEMPLATE.replaceAll("url", "http://" + app.getUris().get(0));
-            infoList.add(new AppInfo(app.getName(), href, app.getState().toString()));
-        }
-        return infoList;
-    }
-
-    @Override
-    public Map<String, String> getConfigurableProperties() {
-        return CONFIGURABLE_PROPERTIES;
     }
 
     private void doRestart(DeploymentInfo deploymentInfo, CloudFoundryClient client) {
