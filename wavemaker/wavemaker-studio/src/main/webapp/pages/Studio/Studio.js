@@ -634,14 +634,18 @@ dojo.declare("Studio", wm.Page, {
 	    application._deployStatus = "deployed";
 
 	this.setLiveLayoutReady(true);
+	var previewWindowOptions = this.getPreviewWindowOptions();
+	if (this.previewWindow && this.previewWindowOptions != previewWindowOptions)
+	    this.previewWindow.close();
+	this.previewWindowOptions = previewWindowOptions;
 	switch(this._runRequested) {
 	case "studioProjectCompile":
 	    break;
-	case "studioProjectTest":
-	    wm.openUrl(this.getPreviewUrl(true), studio.getDictionaryItem("POPUP_BLOCKER_LAUNCH_CAPTION"), "_wmPreview");
+	case "studioProjectTest":	    
+	    this.previewWindow = wm.openUrl(this.getPreviewUrl(true), studio.getDictionaryItem("POPUP_BLOCKER_LAUNCH_CAPTION"), "_wmPreview", this.previewWindowOptions);
 	    break;
 	case "studioProjectRun":
-	    wm.openUrl(this.getPreviewUrl(false), studio.getDictionaryItem("POPUP_BLOCKER_LAUNCH_CAPTION"), "_wmPreview");
+	    this.previewWindow = wm.openUrl(this.getPreviewUrl(false), studio.getDictionaryItem("POPUP_BLOCKER_LAUNCH_CAPTION"), "_wmPreview", this.previewWindowOptions);
 	    break;
 	}
 	this._runRequested = false;
@@ -803,8 +807,10 @@ dojo.declare("Studio", wm.Page, {
 			// flag for behavior to occur only upon initial creation
 			inProps._studioCreating = true;
 			var c = isWidget ? this.newWidget(inType, inProps) : this.newComponent(inType, inProps);
-			if (c)
+		    if (c) {
 				c._studioCreating = false;
+			studio.inspect(c);
+		    }
 			return c;
 		}
 	},
@@ -1494,7 +1500,10 @@ dojo.declare("Studio", wm.Page, {
     revertThemeClick: function(inSender) {
 	this.themesPage.page.revertTheme();
     },
-    deviceSelectChanged: function(inSender) {
+    deviceSizeSelectChanged: function(inSender) {
+	dojo.publish("deviceSizeRecalc");
+    },
+    deviceTypeSelectChanged: function(inSender) {
 	dojo.publish("deviceSizeRecalc");
     },
     languageSelectChanged: function(inSender, optionalPageName) {
