@@ -130,8 +130,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		  });
 	      } else {
 		  this.dojoObj.selection.select(rowIndex);
-		  this.onSelectionChange();
-		  this.onSelect();
+		  if (!this._cupdating) {
+		      this.onSelectionChange();
+		      this.onSelect();
+		  }
 		  this.dojoObj.scrollToRow(rowIndex);
 		  if (onSuccess) onSuccess();
 	      }
@@ -193,7 +195,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			this._setRowTimeout = setTimeout(function(){
 			    _this.dojoObj.scrollToRow(idx);
 			    wm.onidle(_this, function() {
+				this._cupdating = true; // don't trigger events since we're actually reselecting the same value that was already selected
 				this.setSelectedRow(idx);
+				this._cupdating = false; 
 			    });
 			},0);
                     } else 
@@ -234,7 +238,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		} else {
 			this.updateSelectedItem( this.getSelectedIndex());
 		}
-		if (!this.rendering) {
+		if (!this.rendering && !this._cupdating) {
 		    this.onSelectionChange();
 		    if (newSelection) {
 			this.onSelect();
