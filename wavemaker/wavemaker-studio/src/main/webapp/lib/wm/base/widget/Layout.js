@@ -96,36 +96,60 @@ dojo.declare("wm.Layout", wm.Container, {
 		    else 
 			return -1;
 		});
+		var generatedTabs = [];
 		for (var i = 0; i < layers.length; i++) {
 		    layers[i]._mobileFoldingParent = layers[i].parent;
 		    layers[i]._mobileFoldingParentIndex = layers[i].parent.indexOfControl(layers[i]);
 		    if (layers[i] instanceof wm.Layer == false) {
 			layers[i]._mobileFoldingWidth = layers[i].width;
 			layers[i]._mobileFoldingHeight = layers[i].height;
-			var l = parentLayers.addLayer(layers[i].mobileFoldingCaption,true);
+			var currentParentLayers;
+			// If its already in a layer, we can't just rip it out of that Layers, nor can we leave it alone because
+			// presumably there are multiple panels in this Layers that need folding.  So see if this Layers has
+			// a mobileLayer generated for it, and if not, generate one
+			var ancestorLayers = layers[i].isAncestorInstanceOf(wm.Layer);
+			if (ancestorLayers) {
+			    if (ancestorLayers._mobileLayer) {
+				currentParentLayers = ancestorLayers._mobileLayer;
+			    } else {
+				currentParentLayers = ancestorLayers._mobileLayer = new wm.TabLayers({owner: ancestorLayers,
+												      parent: ancestorLayers,
+												      name: "_mobileLayers",
+												      _generatedTabs: true,
+												      width: "100%",
+												      height: "100%"});
+				generatedTabs.push(currentParentLayers);
+			    }
+			} else {
+			    currentParentLayers = parentLayers;
+			}
+			var l = currentParentLayers.addLayer(layers[i].mobileFoldingCaption,true);
 			layers[i].setParent(l);
 			layers[i].setWidth("100%");
 			layers[i].setHeight("100%");
 			l._mobileFoldingGenerated = true;			
-		    } else if (layers[i].parent != parentLayers) {
+		    } else if (layers[i].parent != currentParentLayers) {
 			var l = layers[i];
-			layers[i].setParent(parentLayers);
+			layers[i].setParent(currentParentLayers);
 		    } else {
 			var l = layers[i];
 		    }
 
 		    if (String(layers[i].mobileFoldingIndex).length) {
-			parentLayers.moveLayerIndex(parentLayers.layers[parentLayers.layers.length-1], Number(layers[i].mobileFoldingIndex));
+			currentParentLayers.moveLayerIndex(currentParentLayers.layers[currentParentLayers.layers.length-1], Number(layers[i].mobileFoldingIndex));
 			if (layers[i].active)
-			    parentLayers.layerIndex = layers[i].getIndex();
+			    currentParentLayers.layerIndex = layers[i].getIndex();
 		    }
 		}
-
+		if (parentLayers.layers.length == 0) parentLayers.destroy();
 		parentLayers._cupdating = false;
 		if (currentLayer) {
 		    currentLayer.activate();
 		} else {
 		    parentLayers.setLayerIndex(0);
+		}
+		for (var i = 0; i < generatedTabs.length; i++) {
+		    generatedTabs[i].setLayerIndex(0);
 		}
 		parentLayers.transition = animation;
 
@@ -155,6 +179,7 @@ dojo.declare("wm.Layout", wm.Container, {
 	    }, true);	
 	var newLayerIndex;
 	var layers;
+	var generatedTabs = [];
 	    wm.forEachWidget(this, function(w) {
 		if (w._mobileFoldingGenerated) {
 		    w._cupdating = true;
@@ -166,12 +191,18 @@ dojo.declare("wm.Layout", wm.Container, {
 			newLayerIndex--;
 		    w.destroy();
 		    w._cupdating = false;
+		} else if (w._generatedTabs) {
+		    generatedTabs.push(w);
 		}
 	    }, true);
-	if (this.owner._mobileLayers) {
+	if (this.owner._mobileLayers) {	    
 	    this.owner._mobileLayers.destroy();
 	    delete this.owner._mobileLayers;
 	}
+	dojo.forEach(generatedTabs, function(t) {
+	    delete t.parent._mobileLayer;
+	    t.destroy();
+	});
 	if (layers) layers.setLayerIndex(Math.max(0,newLayerIndex));
 
 	wm.fire(this.owner,"onMobileUnfolding");
