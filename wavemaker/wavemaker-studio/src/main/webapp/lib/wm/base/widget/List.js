@@ -387,9 +387,21 @@ dojo.declare("wm.List", wm.VirtualList, {
 		cellData = '<div>' + this.getHeading(dataFields);
 	    } 
 
+/*
 	    else if (this.columns) {
 		var value = this._data[i];
 		cellData = value[dataFields];
+		cellData = this.formatCell(dataFields,cellData, value, i, inCol);
+	    }
+	    */
+	    else if (this.columns) {
+		var value = this._data[i];
+		var cellData = value;
+		var props = dataFields.split(".");
+		for (var propIndex = 0; propIndex < props.length; propIndex++) {
+		    cellData = cellData[props[propIndex]];
+		}
+
 		cellData = this.formatCell(dataFields,cellData, value, i, inCol);
 	    }
 
@@ -606,6 +618,7 @@ wm.List.extend({
     },
     select: function(inItemOrIndex) { 
 	if (typeof inItemOrIndex != "object") {
+	    this.deselectAll(true);
 	    this.eventSelect(this.items[inItemOrIndex]);
 	} else {
 	    this.inherited(arguments);
@@ -644,6 +657,9 @@ wm.List.extend({
 	    }
 	}
     },
+	getIsRowSelected: function(){
+		return !this.getEmptySelection();
+	},
     deleteRow: function(rowIndex) {
 	this.dataSet.removeItem(rowIndex);
 	this._render();
