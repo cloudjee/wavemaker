@@ -51,7 +51,7 @@ dojo.declare("wm.ColorPicker", wm.Text, {
             this.cancelValue = this.getDataValue();
             if (!this.colorPickerDialog)
                 this.createColorPicker();
-            this.colorPickerDialog.setValue(v);
+            this.colorPickerDialog.setDijitValue(v);
             this.colorPickerDialog.setShowing(true);
         }
     },
