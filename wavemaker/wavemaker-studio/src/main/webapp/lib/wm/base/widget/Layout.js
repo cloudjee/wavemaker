@@ -61,11 +61,11 @@ dojo.declare("wm.Layout", wm.Container, {
 	    var layers = [];
 	    var hasMobileFolding = false;
 	    wm.forEachWidget(this, function(w) {
-		if (w.mobileFolding) {
+		if (w._mobileFoldingParent) {
+		    ;
+		} else if (w.mobileFolding) {
 		    layers.push(w);
 		    hasMobileFolding = true;
-		} else if (w.mobileAppFolding) {
-		    layers.push(w);
 		} else if (w instanceof wm.Layers && !parentLayers) {
 		    parentLayers = w;
 		}
@@ -73,13 +73,17 @@ dojo.declare("wm.Layout", wm.Container, {
 	    if (layers.length) {		
 		var currentLayer;
 		if (parentLayers) {
+		    if (parentLayers.showing) {
+			parentLayers.setShowing(true);
+		    }
 		    currentLayer = parentLayers.layerIndex > 0 ? parentLayers.getActiveLayer() : null;
 		} else {
-		    parentLayers = new wm.TabLayers({owner: this,
+		    parentLayers = new wm.TabLayers({owner: this.owner,
 						  parent: layers[0].parent,
 						  name: "_mobileLayers",
 						  width: layers[0].width,
 						  height:layers[0].height});
+		    this.owner._mobileLayers = parentLayers;
 		    parentLayers.parent.moveControl(parentLayers, parentLayers.parent.indexOfControl(layers[0]));
 		}
 		var animation = parentLayers.transition;
@@ -110,23 +114,10 @@ dojo.declare("wm.Layout", wm.Container, {
 			var l = layers[i];
 		    }
 
-		    if (layers[i].mobileFoldingIndex || layers[i].mobileFoldingIndex === 0) {
-			parentLayers.moveLayerIndex(parentLayers.layers[parentLayers.layers.length-1], layers[i].mobileFoldingIndex);
+		    if (String(layers[i].mobileFoldingIndex).length) {
+			parentLayers.moveLayerIndex(parentLayers.layers[parentLayers.layers.length-1], Number(layers[i].mobileFoldingIndex));
 			if (layers[i].active)
 			    parentLayers.layerIndex = layers[i].getIndex();
-		    }
-		}
-
-		layers = layers.sort(function(a,b) { 
-		    if (a.mobileAppFoldingIndex === b.mobileAppFoldingIndex ||
-			a.mobileAppFoldingIndex > b.mobileAppFoldingIndex)
-			return 1;
-		    else 
-			return -1;
-		});
-		for (var i = 0; i < layers.length; i++) {
-		    if (layers[i].mobileAppFolding) {
-			app.addMobileTab(layers[i] instanceof wm.Layer ? layers[i] : layers[i].parent, layers[i].mobileFoldingCaption);
 		    }
 		}
 
@@ -139,6 +130,7 @@ dojo.declare("wm.Layout", wm.Container, {
 		parentLayers.transition = animation;
 
 	    }
+	wm.fire(this.owner,"onMobileFolding");
 	},
     unfoldUI: function() {
 	    this._mobileFolded = false;
@@ -160,13 +152,6 @@ dojo.declare("wm.Layout", wm.Container, {
 		    delete w._mobileFoldingParent;
 		    delete w._mobileFoldingParentIndex;
 		}
-		if (w.mobileAppFolding) {
-		    if (w instanceof wm.Layer) {
-			app.removeMobileTab(w);
-		    } else {
-			app.removeMobileTab(w.parent);
-		    }
-		}
 	    }, true);	
 	var newLayerIndex;
 	var layers;
@@ -183,7 +168,13 @@ dojo.declare("wm.Layout", wm.Container, {
 		    w._cupdating = false;
 		}
 	    }, true);
+	if (this.owner._mobileLayers) {
+	    this.owner._mobileLayers.destroy();
+	    delete this.owner._mobileLayers;
+	}
 	if (layers) layers.setLayerIndex(Math.max(0,newLayerIndex));
+
+	wm.fire(this.owner,"onMobileUnfolding");
     },
 	updateBounds: function() {
 	    this._percEx = {w:100, h: 100};
