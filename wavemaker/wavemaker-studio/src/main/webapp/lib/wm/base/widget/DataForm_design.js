@@ -18,6 +18,8 @@ dojo.require("wm.base.widget.Container_design");
 
 
 wm.Object.extendSchema(wm.FormPanel, {
+    type:       {group: "widgetName", subgroup: "data", order: 1, requiredGroup: 1, editor: "wm.prop.DataTypeSelect"},
+
     /* Editor group;  */
     readonly:       {group: "widgetName", subgroup: "behavior", order: 6},
     editorWidth:    {group: "widgetName", subgroup: "layout",order: 200, editor: "wm.prop.SizeEditor"},
@@ -40,164 +42,12 @@ wm.Object.extendSchema(wm.FormPanel, {
     imageList: {ignore: 1}
 });
 
-wm.Object.extendSchema(wm.DataForm, {
-    /* Editor group; value subgroup */
-    type:       {group: "widgetName", subgroup: "data", order: 1, requiredGroup: 1, editor: "wm.prop.DataTypeSelect"},
-    dataSet:    {group: "widgetName", subgroup: "data", order: 2, readonly: 1, bindTarget: 1, type: "wm.Variable", editor: "wm.prop.DataSetSelect"},
-
-    /* Editor group */
-    dataOutput: {group: "widgetName", subgroup: "",  order: 3, readonly: 1, bindable: 1, advanced:1,  type: "wm.Variable", simpleBindProp: true, editor: "wm.prop.FieldGroupEditor"},
-    dataSet: {group: "widgetName", subgroup: "",  order: 3, readonly: 1, bindSource: 1, hidden: 1},
-
-    /* Editor group; behavior subgroup */
-    confirmChangeOnDirty:    {group: "widgetName", subgroup: "behavior", order: 100, advanced:1},
-    setReadonlyOnPrimaryKeys:{group: "widgetName", subgroup: "behavior", order: 101, advanced:1},
-    generateInputBindings:   {group: "widgetName", subgroup: "behavior", order: 200, advanced:1},
-    generateOutputBindings:  {group: "widgetName", subgroup: "behavior", order: 201, advanced:1},
-
-
-    /* Operations gropu */
-    addEditors: {operation: true, group: "operation"},
-    removeEditors: {operation: true, group: "operation"},
-    generateButtons:{operation: true, group: "operation"},
-
-    /* Methods group */
-    editNewObject: {method: 1},
-    editCurrentObject:{method: 1},
-
-    /* Ignored group */
-    isCompositeKey: {hidden:1},
-    noDataSet: {ignore: 1, bindSource: 1}
-    
-});
-
-wm.Object.extendSchema(wm.DBForm, {
-    /* Editor group; value subgroup */
-    type: {editorProps: {liveTypes: true}},
-
-    /* Editor group; behavior subgroup */
-    formBehavior:      {group: "widgetName", subgroup: "behavior", order: 1, requiredGroup:1, options: ["standard", "insertOnly", "updateOnly"]},
-    readonlyManager:   {group: "widgetName", subgroup: "behavior", order: 10},
-    deleteConfirmation:{group: "widgetName", subgroup: "confirmation", order: 500, advanced:1},
-
-    /* Display group */
-    useLoadingDialog:  {group: "widgetName",subgroup: "graphics", order: 60},
-
-    /* Ignored/hidden group */
-    operation: {ignore:1},
-    service: {hidden: 1},
-    insertOp: {ignore:1},
-    deleteOp: {ignore:1},
-    updateOp: {ignore:1},
-    serviceVariable: {ignore:1},
-
-    /* Operations group */
-    generateDeleteButton:{operation: true, group: "operation"},
-    generateCancelButton:{operation: true, group: "operation"},
-    generateEditButton:{operation: true, group: "operation"},
-    generateNewButton:{operation: true, group: "operation"},
-    generateSaveButton:{operation: true, group: "operation"},
-
-    /* Events group */
-    onEnterKeyPress:    {order:0},
-    onSuccess:          {order:1},
-    onInsertSuccess:    {order:2},
-    onUpdateSuccess:    {order:3},
-    onDeleteSuccess:    {order:3},
-    onError:           {order:4},
-    onInsertError:     {order:5},
-    onUpdateError:     {order:6},
-    onDeleteError:     {order:7},
-    onResult:          {order:10},
-    onBeforeDeleteCall: {advanced:1, order: 100},
-    onBeforeInsertCall: {advanced:1, order: 101},
-    onBeforeUpdateCall: {advanced:1, order: 102},
-    onCancelDelete:     {advanced:1, order: 103},
-    onCancelEdit:       {advanced:1, order: 104},
-    onDataSetChanged:   {advanced:1, order: 90},
-    onDataSetChanging:  {advanced:1, order: 91},
-    onEditCurrentObject:{advanced:1, order: 120},
-    onEditNewObject:    {advanced:1, order: 121},
-    onSaveInvalidated:  {advanced:1, order: 150},
-});
-
-wm.DataForm.extend({
-    /****************
-     * METHODS: afterPaletteDrop
-     * DESCRIPTION:  Setup onEnterKeyPress event handler 
-     ***************/
-    afterPaletteDrop: function() {
-	this.inherited(arguments);
-    },
-
-
-    /****************
-     * METHOD: set_type (DESIGN)
-     * DESCRIPTION: Each time either the user or set_dataSet changes type, generate a new set of editors
-     ***************/
+wm.FormPanel.extend({
     set_type: function(inType) {
-	if (inType != this.type) {
 	    this._removeEditors();
 	    this.type = inType;
-	    this.dataOutput.setType(inType);
-	    this.dataSet.setType(inType);
 	    this.addEditors();
-	    return true;
-	} else {
-	    return false;
-	}
     },
-
-    /****************
-     * METHOD: set_dataSet (DESIGN)
-     * DESCRIPTION: 
-     *       1. Takes in a name of a variable and creates a binding from that variable to our dataSet property.
-     *          The binding then immediately calls set_dataSet(wm.Variable).
-     *       2. Takes in a Variable and makes it our dataSet property and updates our type and form fields
-     ***************/
-    set_dataSet: function(inDataSet) {
-	this.setDataSet(inDataSet);
-	if (inDataSet && inDataSet.type != "any" && inDataSet.type != this.type) {
-		this.set_type(inDataSet.type);
-	}
-    },
-
-
-	getFormSubDataSetNames: function(inForm) {
-		var ds=[], id = inForm.getId() + ".dataSet.", schema = (inForm.dataSet || 0)._dataSchema;
-		for (var i in schema) {
-			var ti = schema[i];
-			if (ti.isList) {
-			} else if (wm.typeManager.isStructuredType(ti.type)) {
-				ds.push(id + i);
-			}
-		}
-		return ds;
-	},
-
-    /****************
-     * METHOD: makePropEdit (DESIGNTIME)
-     * DESCRIPTION: Generates property editors
-     ***************/
-	makePropEdit: function(inName, inValue, inEditorProps) {
-	var prop = this.schema ? this.schema[inName] : null;
-	var name =  (prop && prop.shortname) ? prop.shortname : inName;
-	    switch (inName) {
-	    case "dataSet":
-		    var p = wm.getParentForm(this);
-		    if (p) {
-			return new wm.prop.SelectMenu(dojo.mixin(inEditorProps, {options: this.getFormSubDataSetNames(p)}));
-		    } else {
-			return new wm.prop.DataSetSelect(dojo.mixin(inEditorProps, {widgetDataSets: true, listMatch: undefined, noForms:true}));
-		    }
-	    }
-	    return this.inherited(arguments);
-	},
-
-    getTypeSchema: function() {
-	return wm.typeManager.getTypeSchema(this.type);
-    },
-
     /****************
      * METHOD: addEditors (DESIGNTIME)
      * DESCRIPTION: Entry point method for generating all editors needed for the current type
@@ -221,114 +71,16 @@ wm.DataForm.extend({
 	this.reflow();
 	wm.fire(this, "updateDesignTrees");
     },
-	destroyEditors: function() {
-		this._currentEditors = null;
-		for(var i=0, eds = this.getEditorsArray(), e; (e=eds[i]); i++) {
-			this._removeBindingForEditor(e);
-			e.destroy();
-		}
-
-		for(var i=0, eds = this.getRelatedEditorsArray(), e; (e=eds[i]); i++) {
-			this._removeBindingForEditor(e);
-			e.destroy();
-		}
-	},
-
-
-    /****************
-     * METHOD: finishAddEditors (DESIGNTIME)
-     * DESCRIPTION: After the editors are generated; populate them (unless we bound each editor's dataValue),
-     *              and switch from fixed height (allows us to see the form) to autoHeight (now that the form is not empty).
-     *              Finish by updating the model.
-     ***************/
-	finishAddEditors: function() {
-	    var eds = this.getEditorsArray();		
-	    if (!this.generateInputBindings) {
-		this.populateEditors();
-	    }
-	    this.setHeight(this.getPreferredFitToContentHeight() + "px");
+    destroyEditors: function() {
+	    var eds, e;
+	for(var i=0, eds = this.getEditorsArray(), e; (e=eds[i]); i++) {
+	    e.destroy();
+	}
+    },
+    finishAddEditors: function() {
 	    this.reflow();
 	    studio.refreshDesignTrees();
-	},
-
-/* DESIGN TIME */
-	getViewDataIndex: function(inFormField) {
-		return inFormField;
-	},
-
-	addEditorToForm: function(inEditor) {
-		var e = inEditor, ff = e.formField && this.getViewDataIndex(e.formField || "");
-		if (ff) {
-                    if (wm.isInstanceType(e, wm.DataForm))
-			var f = this.addEditorToView(e, ff);
-		    if (f)
-			wm.updateFieldEditorProps(e, f)
-		}
-		inEditor.setReadonly(this.readonly);
-		this._bindEditor(inEditor);
-		this.populateEditors();
-	},
-/* DESIGN TIME; only relevant if the dataSet is a LiveVariable; ServiceVariables dont support LiveViews and must get
- * any extra data needed some other way.
- */
-	addEditorToView: function(inEditor, inField) {
-	    var lvar = this.getLiveVariable();
-	    var v = lvar && lvar.liveView;
-
-		if (v) {
-		    if (wm.isInstanceType(inEditor, wm.Lookup) ||
-			wm.isInstanceType(inEditor, wm.DataForm)) {
-			v.addRelated(inField);
-			lvar.update();
-		    } else {
-			return v.addField(inField);
-		    }
-		}
-	},
-    getLiveView: function() {
-	if (lvar) return lvar.liveView;
     },
-	getLiveVariable: function() {
-		// Not sure why we were not checking for liveVariable instance in the object itself,
-		// before digging deep and trying to find liveVariable elsewhere. 
-		/*
-		if (this.liveVariable && wm.isInstanceType(this.liveVariable, wm.LiveVariable))
-			return this.liveVariable;
-		*/
-		var
-			s = this.dataSet.dataSet,
-			o = s && s.owner,
-			ds = null;
-		  o = o && !(wm.isInstanceType(o, wm.Variable)) ? o : null;
-			
-			if (o){
-				try{
-				    if (wm.isInstanceType(o, wm.DojoGrid)) {
-					ds = o.variable;
-				    } else {
-					ds = o.dataSet;
-				    }
-				} catch(e) {
-					// This might happen if wm.DojoGrid class itself is not loaded.
-					ds = o.dataSet;
-				}
-			}
-			// if source not owned by a variable but it has a dataSet, use it if it's a LiveVariable
-	        
-			if (o && ds && wm.isInstanceType(ds, wm.LiveVariable)) {
-				return ds;
-		}
-		// otherwise walk owners to look for a LiveVariable
-		while (s) {
-			if (wm.isInstanceType(s, wm.LiveVariable)) {
-				return s;
-			}
-			s = s.owner;
-			if (!(wm.isInstanceType(s.owner, wm.Variable))) {
-				break;
-			}
-		}
-	},
 
 
     /****************
@@ -453,9 +205,55 @@ wm.DataForm.extend({
 	if (e) {
 	    if (!e.caption)
 		e.setCaption(wm.capitalize(inFormField));
-	    this._bindEditor(e);
 	}
-	return true;
+	return e;
+    },
+
+    /****************
+     * METHOD: makeRelatedEditor (DESIGNTIME)
+     * DESCRIPTION: Create a wm.Lookup or wm.RelatedEditor/Subform based on type information
+     ***************/
+    makeRelatedEditor: function(inFieldInfo, inFormField) {
+	var props = this.getFormEditorProps();
+	props.caption = wm.capitalize(inFormField);
+	props.formField = inFormField;
+        props.width = this.editorWidth;
+
+	var typeDef = this.getTypeDef();
+	if (typeDef)
+	    var fieldDef = typeDef.fields[inFormField];
+	if (fieldDef)
+	    var relatedTypeDef = wm.typeManager.getType(fieldDef.type);
+
+	if (relatedTypeDef) {
+	    /* If its a liveService and its not a list type, create a wm.Lookup */
+	    if (relatedTypeDef.liveService && !inFieldInfo.isList) {
+		    props.name = wm.makeNameForProp(inFormField, "Lookup")
+		    var e = wm.createFieldEditor(this.getEditorParent(), fieldDef, props, {}, "wm.Lookup");
+	    }
+
+	    /* If its a liveService and it IS a list type, create a readonly grid related editor */
+	    else if (relatedTypeDef.liveService && inFieldInfo.isList) {
+		var e = this.owner.loadComponent(wm.makeNameForProp(inFormField, "OneToMany"), this, "wm.OneToMany", props);
+		/* don't automatically add grids
+		    props.editingMode = "readonly";
+		    var e = this.owner.loadComponent(wm.makeNameForProp(inFormField, "RelatedDataEditor"), this, "wm.RelatedDataEditor", props);		
+		e.set_type(fieldDef.type);
+		*/
+	    } 
+
+	    /* Anything else, and  just get an editable subform for lack of a better idea */
+	    else {
+		props.editingMode = "one-to-one";
+		var e = this.owner.loadComponent(wm.makeNameForProp(inFormField, "SubForm"), this, "wm.SubForm", props);
+		e.set_type(fieldDef.type);
+	    }
+
+	    if (e) {
+		this.placeEditor(e);
+	    }
+	}
+	return e;
     },
 
     /****************
@@ -496,6 +294,329 @@ wm.DataForm.extend({
 			}
 		    }
     },
+    /****************
+     * METHOD: _getFormField (DESIGNTIME)
+     * DESCRIPTION: This form can have this.firstname or this.manager, but can NOT have this.manager.firstname.
+     *              Return valid formFields or return nothing.
+     ***************/
+    _getFormField: function(inFieldIndex, inFieldName) {
+	if (inFieldIndex === undefined)
+	    return inFieldName;
+	if (inFieldIndex.indexOf(".") == -1)
+	    return inFieldIndex;
+	},
+
+    /****************
+     * METHOD: _getEditorForField (DESIGNTIME)
+     * DESCRIPTION: Returns an editor for the specified formField. Used to determine if we need to create an editor for that field
+     ***************/
+	_getEditorForField: function(inField) {
+		var editors = this._currentEditors = this.getEditorsArray();
+		for (var i=0, editors, e; (e=editors[i]); i++)
+			if (e.formField == inField) {
+				return e;
+			}
+	},
+
+    /****************
+     * METHOD: _getFormEditorProps (DESIGNTIME)
+     * DESCRIPTION: Returns the properties to use when initializing a new wm.AbstractEditor class
+     ***************/
+	getFormEditorProps: function() {
+		return {
+			size: this.editorSize,
+			readonly: this.readonly,
+			captionSize: this.captionSize,
+			captionAlign: this.captionAlign,
+			captionPosition: this.captionPosition,
+		    changeOnKey: true
+		}
+	}
+});
+
+wm.Object.extendSchema(wm.DataForm, {
+    /* Editor group; value subgroup */
+
+
+    /* Editor group */
+    dataOutput: {group: "widgetName", subgroup: "",  order: 3, readonly: 1, bindable: 1, advanced:1,  type: "wm.Variable", simpleBindProp: true, editor: "wm.prop.FieldGroupEditor"},
+    dataSet:    {group: "widgetName", subgroup: "", order: 2, readonly: 1, bindTarget: 1, type: "wm.Variable", editor: "wm.prop.DataSetSelect"},
+
+    /* Editor group; behavior subgroup */
+    confirmChangeOnDirty:    {group: "widgetName", subgroup: "behavior", order: 100, advanced:1},
+    setReadonlyOnPrimaryKeys:{group: "widgetName", subgroup: "behavior", order: 101, advanced:1},
+    generateInputBindings:   {group: "widgetName", subgroup: "behavior", order: 200, advanced:1},
+    generateOutputBindings:  {group: "widgetName", subgroup: "behavior", order: 201, advanced:1},
+
+
+    /* Operations gropu */
+    addEditors: {operation: true, group: "operation"},
+    removeEditors: {operation: true, group: "operation"},
+    generateButtons:{operation: true, group: "operation"},
+
+    /* Methods group */
+    editNewObject: {method: 1},
+    editCurrentObject:{method: 1},
+
+    /* Ignored group */
+    isCompositeKey: {hidden:1},
+    noDataSet: {ignore: 1, bindSource: 1}
+    
+});
+
+wm.Object.extendSchema(wm.DBForm, {
+    /* Editor group; value subgroup */
+    type: {editorProps: {liveTypes: true}},
+
+    /* Editor group; behavior subgroup */
+    formBehavior:      {group: "widgetName", subgroup: "behavior", order: 1, requiredGroup:1, options: ["standard", "insertOnly", "updateOnly"]},
+    readonlyManager:   {group: "widgetName", subgroup: "behavior", order: 10},
+    deleteConfirmation:{group: "widgetName", subgroup: "confirmation", order: 500, advanced:1},
+
+    /* Display group */
+    useLoadingDialog:  {group: "widgetName",subgroup: "graphics", order: 60},
+
+    /* Ignored/hidden group */
+    operation: {ignore:1},
+    service: {hidden: 1},
+    insertOp: {ignore:1},
+    deleteOp: {ignore:1},
+    updateOp: {ignore:1},
+    serviceVariable: {ignore:1},
+
+    /* Operations group */
+    generateDeleteButton:{operation: true, group: "operation"},
+    generateCancelButton:{operation: true, group: "operation"},
+    generateEditButton:{operation: true, group: "operation"},
+    generateNewButton:{operation: true, group: "operation"},
+    generateSaveButton:{operation: true, group: "operation"},
+
+    /* Events group */
+    onEnterKeyPress:    {order:0},
+    onSuccess:          {order:1},
+    onInsertSuccess:    {order:2},
+    onUpdateSuccess:    {order:3},
+    onDeleteSuccess:    {order:3},
+    onError:           {order:4},
+    onInsertError:     {order:5},
+    onUpdateError:     {order:6},
+    onDeleteError:     {order:7},
+    onResult:          {order:10},
+    onBeforeDeleteCall: {advanced:1, order: 100},
+    onBeforeInsertCall: {advanced:1, order: 101},
+    onBeforeUpdateCall: {advanced:1, order: 102},
+    onCancelDelete:     {advanced:1, order: 103},
+    onCancelEdit:       {advanced:1, order: 104},
+    onDataSetChanged:   {advanced:1, order: 90},
+    onDataSetChanging:  {advanced:1, order: 91},
+    onEditCurrentObject:{advanced:1, order: 120},
+    onEditNewObject:    {advanced:1, order: 121},
+    onSaveInvalidated:  {advanced:1, order: 150},
+});
+
+wm.DataForm.extend({
+    /****************
+     * METHODS: afterPaletteDrop
+     * DESCRIPTION:  Setup onEnterKeyPress event handler 
+     ***************/
+    afterPaletteDrop: function() {
+	this.inherited(arguments);
+    },
+
+
+    /****************
+     * METHOD: set_type (DESIGN)
+     * DESCRIPTION: Each time either the user or set_dataSet changes type, generate a new set of editors
+     ***************/
+    set_type: function(inType) {
+	if (inType != this.type) {
+	    this.dataOutput.setType(inType);
+	    this.dataSet.setType(inType);
+	    this.inherited(arguments);
+	    return true;
+	} else {
+	    return false;
+	}
+    },
+
+    /****************
+     * METHOD: set_dataSet (DESIGN)
+     * DESCRIPTION: 
+     *       1. Takes in a name of a variable and creates a binding from that variable to our dataSet property.
+     *          The binding then immediately calls set_dataSet(wm.Variable).
+     *       2. Takes in a Variable and makes it our dataSet property and updates our type and form fields
+     ***************/
+    set_dataSet: function(inDataSet) {
+	this.setDataSet(inDataSet);
+	if (inDataSet && inDataSet.type != "any" && inDataSet.type != this.type) {
+		this.set_type(inDataSet.type);
+	}
+    },
+
+
+	getFormSubDataSetNames: function(inForm) {
+		var ds=[], id = inForm.getId() + ".dataSet.", schema = (inForm.dataSet || 0)._dataSchema;
+		for (var i in schema) {
+			var ti = schema[i];
+			if (ti.isList) {
+			} else if (wm.typeManager.isStructuredType(ti.type)) {
+				ds.push(id + i);
+			}
+		}
+		return ds;
+	},
+
+    /****************
+     * METHOD: makePropEdit (DESIGNTIME)
+     * DESCRIPTION: Generates property editors
+     ***************/
+	makePropEdit: function(inName, inValue, inEditorProps) {
+	var prop = this.schema ? this.schema[inName] : null;
+	var name =  (prop && prop.shortname) ? prop.shortname : inName;
+	    switch (inName) {
+	    case "dataSet":
+		    var p = wm.getParentForm(this);
+		    if (p) {
+			return new wm.prop.SelectMenu(dojo.mixin(inEditorProps, {options: this.getFormSubDataSetNames(p)}));
+		    } else {
+			return new wm.prop.DataSetSelect(dojo.mixin(inEditorProps, {widgetDataSets: true, listMatch: undefined, noForms:true}));
+		    }
+	    }
+	    return this.inherited(arguments);
+	},
+
+    getTypeSchema: function() {
+	return wm.typeManager.getTypeSchema(this.type);
+    },
+
+    /****************
+     * METHOD: addEditors (DESIGNTIME)
+     * DESCRIPTION: Entry point method for generating all editors needed for the current type
+     ***************/
+    addEditors: function() {
+	this._currentEditors = this.getEditorsArray();
+	// we don't want updates while making editors
+	this.makeEditors();
+	this.finishAddEditors();
+	this._currentEditors = null;
+    },
+
+    makeBasicEditor: function(inFieldInfo, inFormField) {
+	var e = this.inherited(arguments);
+	if (e) {
+	    this._bindEditor(e);
+	}
+	return e;
+    },
+	destroyEditors: function() {
+	    var eds, e;
+		this._currentEditors = null;
+		for(var i=0, eds = this.getEditorsArray(), e; (e=eds[i]); i++) {
+			this._removeBindingForEditor(e);
+			e.destroy();
+		}
+
+		for(var i=0, eds = this.getRelatedEditorsArray(), e; (e=eds[i]); i++) {
+			this._removeBindingForEditor(e);
+			e.destroy();
+		}
+	},
+
+
+    /****************
+     * METHOD: finishAddEditors (DESIGNTIME)
+     * DESCRIPTION: After the editors are generated; populate them (unless we bound each editor's dataValue),
+     *              and switch from fixed height (allows us to see the form) to autoHeight (now that the form is not empty).
+     *              Finish by updating the model.
+     ***************/
+	finishAddEditors: function() {
+	    var eds = this.getEditorsArray();		
+	    if (!this.generateInputBindings) {
+		this.populateEditors();
+	    }
+	    this.setHeight(this.getPreferredFitToContentHeight() + "px");
+	    this.inherited(arguments);
+	},
+
+/* DESIGN TIME */
+	getViewDataIndex: function(inFormField) {
+		return inFormField;
+	},
+
+	addEditorToForm: function(inEditor) {
+		var e = inEditor, ff = e.formField && this.getViewDataIndex(e.formField || "");
+		if (ff) {
+                    if (wm.isInstanceType(e, wm.DataForm))
+			var f = this.addEditorToView(e, ff);
+		    if (f)
+			wm.updateFieldEditorProps(e, f)
+		}
+		inEditor.setReadonly(this.readonly);
+		this._bindEditor(inEditor);
+		this.populateEditors();
+	},
+/* DESIGN TIME; only relevant if the dataSet is a LiveVariable; ServiceVariables dont support LiveViews and must get
+ * any extra data needed some other way.
+ */
+	addEditorToView: function(inEditor, inField) {
+	    var lvar = this.getLiveVariable();
+	    var v = lvar && lvar.liveView;
+
+		if (v) {
+		    if (wm.isInstanceType(inEditor, wm.Lookup) ||
+			wm.isInstanceType(inEditor, wm.DataForm)) {
+			v.addRelated(inField);
+			lvar.update();
+		    } else {
+			return v.addField(inField);
+		    }
+		}
+	},
+    getLiveView: function() {
+	if (lvar) return lvar.liveView;
+    },
+	getLiveVariable: function() {
+		// Not sure why we were not checking for liveVariable instance in the object itself,
+		// before digging deep and trying to find liveVariable elsewhere. 
+		/*
+		if (this.liveVariable && wm.isInstanceType(this.liveVariable, wm.LiveVariable))
+			return this.liveVariable;
+		*/
+		var
+			s = this.dataSet.dataSet,
+			o = s && s.owner,
+			ds = null;
+		  o = o && !(wm.isInstanceType(o, wm.Variable)) ? o : null;
+			
+			if (o){
+				try{
+				    if (wm.isInstanceType(o, wm.DojoGrid)) {
+					ds = o.variable;
+				    } else {
+					ds = o.dataSet;
+				    }
+				} catch(e) {
+					// This might happen if wm.DojoGrid class itself is not loaded.
+					ds = o.dataSet;
+				}
+			}
+			// if source not owned by a variable but it has a dataSet, use it if it's a LiveVariable
+	        
+			if (o && ds && wm.isInstanceType(ds, wm.LiveVariable)) {
+				return ds;
+		}
+		// otherwise walk owners to look for a LiveVariable
+		while (s) {
+			if (wm.isInstanceType(s, wm.LiveVariable)) {
+				return s;
+			}
+			s = s.owner;
+			if (!(wm.isInstanceType(s.owner, wm.Variable))) {
+				break;
+			}
+		}
+	},
+
 
 
     /****************
@@ -622,45 +743,9 @@ wm.DataForm.extend({
      * DESCRIPTION: Create a wm.Lookup or wm.RelatedEditor/Subform based on type information
      ***************/
     makeRelatedEditor: function(inFieldInfo, inFormField) {
-	var props = this.getFormEditorProps();
-	props.caption = wm.capitalize(inFormField);
-	props.formField = inFormField;
-        props.width = this.editorWidth;
-
-	var typeDef = this.getTypeDef();
-	if (typeDef)
-	    var fieldDef = typeDef.fields[inFormField];
-	if (fieldDef)
-	    var relatedTypeDef = wm.typeManager.getType(fieldDef.type);
-
-	if (relatedTypeDef) {
-	    /* If its a liveService and its not a list type, create a wm.Lookup */
-	    if (relatedTypeDef.liveService && !inFieldInfo.isList) {
-		    props.name = wm.makeNameForProp(inFormField, "Lookup")
-		    var e = wm.createFieldEditor(this.getEditorParent(), fieldDef, props, {}, "wm.Lookup");
-	    }
-
-	    /* If its a liveService and it IS a list type, create a readonly grid related editor */
-	    else if (relatedTypeDef.liveService && inFieldInfo.isList) {
-		var e = this.owner.loadComponent(wm.makeNameForProp(inFormField, "OneToMany"), this, "wm.OneToMany", props);
-		/* don't automatically add grids
-		    props.editingMode = "readonly";
-		    var e = this.owner.loadComponent(wm.makeNameForProp(inFormField, "RelatedDataEditor"), this, "wm.RelatedDataEditor", props);		
-		e.set_type(fieldDef.type);
-		*/
-	    } 
-
-	    /* Anything else, and  just get an editable subform for lack of a better idea */
-	    else {
-		props.editingMode = "one-to-one";
-		var e = this.owner.loadComponent(wm.makeNameForProp(inFormField, "SubForm"), this, "wm.SubForm", props);
-		e.set_type(fieldDef.type);
-	    }
-
-	    if (e) {
-		this.placeEditor(e);
-		this._bindEditor(e);
-	    }
+	var e = this.inherited(arguments);
+	if (e) {
+	    this._bindEditor(e);
 	}
 	return e;
     },
@@ -707,43 +792,7 @@ wm.DataForm.extend({
     },
 
 
-    /****************
-     * METHOD: _getFormField (DESIGNTIME)
-     * DESCRIPTION: This form can have this.firstname or this.manager, but can NOT have this.manager.firstname.
-     *              Return valid formFields or return nothing.
-     ***************/
-    _getFormField: function(inFieldIndex, inFieldName) {
-	if (inFieldIndex === undefined)
-	    return inFieldName;
-	if (inFieldIndex.indexOf(".") == -1)
-	    return inFieldIndex;
-	},
 
-    /****************
-     * METHOD: _getEditorForField (DESIGNTIME)
-     * DESCRIPTION: Returns an editor for the specified formField. Used to determine if we need to create an editor for that field
-     ***************/
-	_getEditorForField: function(inField) {
-		var editors = this._currentEditors = this.getEditorsArray();
-		for (var i=0, editors, e; (e=editors[i]); i++)
-			if (e.formField == inField) {
-				return e;
-			}
-	},
-
-    /****************
-     * METHOD: _getFormEditorProps (DESIGNTIME)
-     * DESCRIPTION: Returns the properties to use when initializing a new wm.AbstractEditor class
-     ***************/
-	getFormEditorProps: function() {
-		return {
-			size: this.editorSize,
-			readonly: this.readonly,
-			captionSize: this.captionSize,
-			captionAlign: this.captionAlign,
-			captionPosition: this.captionPosition
-		}
-	}
 
 });
 

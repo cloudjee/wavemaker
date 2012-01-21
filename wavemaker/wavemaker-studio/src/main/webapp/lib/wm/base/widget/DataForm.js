@@ -193,6 +193,10 @@ dojo.declare("wm.FormPanel", wm.Container, {
 	});
     },
 
+    // don't really need this...
+	getEditorParent: function() {
+		return this;
+	},
     
     _end: 0
 });
@@ -631,13 +635,6 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 	}
 	return true;
     },
-
-
-    // don't really need this...
-	getEditorParent: function() {
-		return this;
-	},
-
 
 
     cancelEdit: function() {
