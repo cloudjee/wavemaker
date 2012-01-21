@@ -486,12 +486,13 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 	},
 	*/
     setDataSet: function(inDataSet) {
+	this._inSetDataSet = true;
 	this.inherited(arguments);
 	if (this.editor) {
 	    this.editor.set("store", this.generateStore());
 	    this.setEditorValue(this.dataValue);
 	}
-
+	delete 	this._inSetDataSet;
     },
 	clear: function() {
 		// note: hack to call internal dijit function to ensure we can
@@ -504,6 +505,9 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 			    this.editor.set("value", undefined, false);
 			}
 		    this._lastValue = this.makeEmptyValue();
+
+		// need to preserve the values if we're in the middle of a dataSet change or we'll be firing onchange events even though the value remains unchanged
+		if (!this._inSetDataSet) {
 		    this.displayValue = "";
 		    this.dataValue = null;
 
@@ -513,7 +517,8 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
                         this.editor._lastValueReported = "";
 			this.updateReadonlyValue();
 		    this.resetState(); 
-                    if (valueWas  && this.hasValues()) 
+		}
+                    if (!this._cupdating && valueWas  && this.hasValues()) 
                         this.changed();
 		} else {
 		    this.resetState(); 
