@@ -471,7 +471,7 @@ wm.LivePanel.extend({
 						     name: this.liveDataName + "GridPanel",
                                                      minHeight: 180,
 						     mobileFolding: true,
-						     mobileFoldingCaption:wm.capitalize(this.liveDataName),
+						     mobileFoldingCaption:wm.capitalize(this.liveDataName) + " List",
 						     mobileFoldingIndex: 0,						     
 						     title: wm.capitalize(this.liveDataName)});
 		this.dataGrid = new wm.DojoGrid({
@@ -496,7 +496,7 @@ wm.LivePanel.extend({
 						     owner: this.owner,
 						     name: this.liveDataName + "DetailsPanel",
 						     mobileFolding: true,
-						     mobileFoldingCaption:wm.capitalize(this.liveDataName),
+						     mobileFoldingCaption:"Edit " + wm.capitalize(this.liveDataName),
 						     mobileFoldingIndex: 0,
 						     title: studio.getDictionaryItem("wm.LivePanel.DETAILS_PANEL_TITLE")});
 		this.liveForm = new wm.LiveForm({
