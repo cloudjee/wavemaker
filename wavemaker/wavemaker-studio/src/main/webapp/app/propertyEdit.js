@@ -621,7 +621,7 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
 
 			    return true;
 			}
-	    }));
+	    }),true);
 	}
 });
 
@@ -788,6 +788,7 @@ dojo.declare("wm.prop.ImageListSelect", wm.prop.SelectMenu, {
 });
 
 dojo.declare("wm.prop.WidgetSelect", wm.prop.SelectMenu, {
+    inspectedChildrenOnly: false,
     dataField: "dataValue",
     displayField: "dataValue",
     allowNone: true,
@@ -802,7 +803,6 @@ dojo.declare("wm.prop.WidgetSelect", wm.prop.SelectMenu, {
 
 	this.inherited(arguments);
 
-
 	var components = wm.listComponents([this.useOwner || this.inspected.owner], this.widgetType);
 	var result = [];
 	if (this.excludeType) {
@@ -813,6 +813,15 @@ dojo.declare("wm.prop.WidgetSelect", wm.prop.SelectMenu, {
 	    }
 	} else {
 	    result = components;
+	}
+	if (this.inspectedChildrenOnly) {
+	    components = result;
+	    result = [];
+	    for (var i = 0; i < components.length; i++) {
+		if (components[i].isAncestor(this.inspected)) {
+		    result.push(components[i]);
+		}
+	    }
 	}
 	var ids = [];
 	for (var i = 0; i < result.length; i++) {
@@ -1635,6 +1644,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	    propDef.editorProps = {};
 	}
 	propDef.editorProps.matchComponentType = true;
+	propDef.editorProps.widgetDataSets = true;
 	if (this.propDef.putWiresInSubcomponent) {
 	    propDef.editorProps.disabled = true;
 	    propDef.editorProps.alwaysDisabled = true;
