@@ -64,8 +64,8 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
 		var eventId = app.debugDialog.newLogEvent({eventType: "startUpdate",
 							   eventName: "startUpdate",
 							   method: "update",
-							   affectedId: this.dataSet.getRuntimeId(),
-							   firingId: this.getRuntimeId(),
+							   affectedId: this.getRuntimeId(),
+							   //firingId: this.getRuntimeId(),
 							   method: "update"});
 	    }
 	    var d = this.dataSet.updateInternal(); // use internal because we're logging the cause of the update call here
@@ -300,7 +300,10 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
 	this.beginEditUpdate();
 	try {
 	    var lastValue = this._lastValue;
+	    var cupdatingWas = this._cupdating;
+	    this._cupdating = true;
 	    this.deselectAll();
+	    this._cupdating = cupdatingWas;
 	    this._lastValue = lastValue;
 
 	    if (inValue instanceof wm.Variable) {
