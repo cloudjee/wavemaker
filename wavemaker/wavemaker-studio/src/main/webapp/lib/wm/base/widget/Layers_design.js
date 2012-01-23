@@ -326,6 +326,7 @@ wm.Object.extendSchema(wm.AccordionLayers, {
     clientBorder: {ignore: 1}
 });
 wm.Object.extendSchema(wm.TabLayers, {
+    dndTargetName:  {group: "widgetName", subgroup: "behavior", order: 500, advanced: 1},
     conditionalTabButtons: {group: "widgetName", subgroup: "behavior"},
     verticalButtons: {group: "widgetName", subgroup: "layout"},
     layoutKind: { writeonly: 1},
@@ -346,6 +347,7 @@ wm.TabLayers.extend({
     themeable: true,
     themeableProps: ["border", "borderColor", "clientBorder", "clientBorderColor", "headerHeight"],
     themeableStyles: [{name: "wm.TabLayers-Button_Height", displayName: "Tab Button Height"}, {name: "wm.TabLayers-Button_TextSize", displayName: "Tab Font Size"}, {name: "wm.TabLayers-BorderStyle_Shadow", displayName: "Shadow (Default)"}, {name: "wm.TabLayers-Hover-BorderStyle_Shadow", displayName: "Shadow (Hover)"}, {name: "wm.TabLayers-Active-BorderStyle_Shadow", displayName: "Shadow (Active)"}],
+
     set_conditionalTabButtons: function(inValue) {
 	this.conditionalTabButtons = Boolean(inValue);
 	this.decorator.tabsControl.setShowing(!this.conditionalTabButtons || this.layers.length > 1);

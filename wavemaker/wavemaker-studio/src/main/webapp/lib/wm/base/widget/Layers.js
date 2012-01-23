@@ -266,7 +266,10 @@ dojo.declare("wm.Layers", wm.Container, {
 	return count;
     },
 	createLayer: function(inCaption) {
-	    var caption = inCaption || "layer1";
+	    var caption = inCaption;
+	    if (!caption) {
+		caption = this.owner.getUniqueName("layer1");
+	    }
 	    var name = caption;
 	    if (name)
 		name = name.replace(/\s/g,"_");
@@ -743,6 +746,7 @@ dojo.declare("wm.AccordionLayers", wm.Layers, {
     layersType: 'Accordion',
     layerBorder: 1,
     captionHeight: 26, // used by decorator
+    dndTargetName: "",
     postInit: function() {
         this.inherited(arguments);
         this.setLayerBorder(this.layerBorder);
