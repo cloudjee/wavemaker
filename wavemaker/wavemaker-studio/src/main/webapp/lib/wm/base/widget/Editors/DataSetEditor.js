@@ -50,12 +50,23 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
     /* find a best guess at an initial displayField */
     _setDisplayField: function() {
 	var dataSet = this.dataSet;
-	if (dataSet && dataSet.type) {
+	if (!dataSet && this.formField) {
+	    var form = this.getParentForm();
+	    if (form) {
+		dataSet = form.dataSet;
+	    }
+	    if (dataSet) {
+		var fields = dataSet._dataSchema;
+		var field = fields[this.formField];
+		var type = field.type;
+		var fieldName = wm.typeManager.getDisplayField(type);
+	    }
+	} else if (dataSet && dataSet.type) {
 	    var type = dataSet.type;
 	    var fieldName = wm.typeManager.getDisplayField(type);
-	    if (fieldName) {
-		return this.setDisplayField(fieldName);
-	    }
+	}
+	if (fieldName) {
+	    return this.setDisplayField(fieldName);
 	}
     },
     update: function() {

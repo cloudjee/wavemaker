@@ -3,6 +3,11 @@ dojo.require("wm.base.widget.Editors.DataSetEditor");
 
 wm.DataSetEditor.extend({
 	updateNow: "(updateNow)",
+    set_formField: function(inFormField) {
+	this.inherited(arguments);
+	if (!this.displayField && !this.displayExpression)
+	    this._setDisplayField();
+    },
     /* Don't show optionsVar in the dataSet property field */
         get_dataSet: function() {
 	    if (this.dataSet == this.$.optionsVar)
@@ -36,7 +41,7 @@ wm.DataSetEditor.extend({
 		this.setDataSet(inDataSet);
 
 		/* If there is no displayExpression, and either no displayField or an invalid displayField, get a new displayField */
-		if (!this.displayExpression &&
+		if (!this.displayExpression && inDataSet && inDataSet.type &&
 		    (!this.displayField || !wm.typeManager.getType(inDataSet.type) || !wm.typeManager.getType(inDataSet.type).fields[this.displayField])) {
                     this._setDisplayField();                                                                                
                 }

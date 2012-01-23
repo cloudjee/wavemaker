@@ -637,10 +637,27 @@ dojo.declare("wm.prop.FieldSelect", wm.prop.SelectMenu, {
 	this.inherited(arguments)
 	var ds = this.inspected.getProp(this.dataSetProp);
 	var options;
-	if (ds) {
-	    options = wm.typeManager.getSimplePropNames(ds._dataSchema);
-	} else {
-	    options = [];
+	if (!ds && this.inspected.formField) {
+	    var form = this.inspected.getParentForm();
+	    if (form) {
+		var schema = form.dataSet._dataSchema[this.inspected.formField]; // doesn't work if formField is x.y, only x
+		if (schema) {
+		    var type = schema.type;
+		}
+		if (type) {
+		    var typeDef = wm.typeManager.getType(type);
+		}
+		if (typeDef) {
+		    options = wm.typeManager.getSimplePropNames(typeDef.fields)
+		}
+	    }
+	}
+	if (!options) {
+	    if (ds) {
+		options = wm.typeManager.getSimplePropNames(ds._dataSchema);
+	    } else {
+		options = [];
+	    }
 	}
 	if (this.emptyLabel) {
 	    this.allowNone = false;

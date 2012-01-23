@@ -12,6 +12,8 @@
  *  limitations under the License.
  */
 
+/* WARNING: This gets its data using synchronous lazyloading, and as such users should be warned not to use it with large datasets without picking a custom dataSet */
+
 dojo.provide("wm.base.widget.Editors.OneToMany");
 dojo.require("wm.base.widget.Editors.DataSetEditor");
 
