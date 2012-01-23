@@ -14,5 +14,6 @@
 {
     TRADITIONAL: "Traditional",
     DIALOG: "Dialog",
-    GRID: "Editable Grid"
+    GRID: "Editable Grid",
+    BREADCRUMB: "Breadcrumb Layers"
 }

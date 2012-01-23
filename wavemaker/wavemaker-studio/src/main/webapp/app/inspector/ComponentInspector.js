@@ -349,6 +349,9 @@
   * ignoretmp: This property is ignored for its current state; currently we disable/enable the disabled property editor; previously hidden/shown as needed
   * ignoreHint: Hint to give to property editors shown as disabled due to ignoretmp
   * options: array of options for a wm.SelectMenu
+  * bindSource: Shows up in the bind dialog as something that can be bound to
+  * bindTarget: Has a bind button next to it and can be bound to other values
+  * bindable: both bindTarget and bindSource are true
   * shortname: Alternate name to show instead of the real name; used for localization and for human readable prop names
   * operation: Show a button instead of an editor; component must have a method with the same name as the property name. If boolean, calls this.propertyName(); if a string it calls this[prop.operation]()
   * method: treat a property as a method, there only for property documentation and autocompletion
@@ -1768,7 +1771,7 @@ wm.addPropertyGroups({
 		},
 	/* Confirmed */
     mobile: {displayName: "Mobile",
-	     order: 60,
+	     order: 100,
 	     subgroups: {
 		 layout: {displayName: "Layout",
 			  order: 1},

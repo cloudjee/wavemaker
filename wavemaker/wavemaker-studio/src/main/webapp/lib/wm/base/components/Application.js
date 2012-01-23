@@ -226,39 +226,46 @@ dojo.declare("wm.Application", wm.Component, {
 	}
     },
     setTheme: function(inTheme, isInit, optionalCss, optionalPrototype, noRegen, forceUpdate) {
-	    var node = this._isDesignLoaded ? studio.designer.domNode : document.body;
-	    dojo.removeClass(node, this.theme);
-            this._lastTheme = this.theme;
-	    this.theme = inTheme;
-	    dojo.addClass(node, this.theme);
-
 	var themematch = window.location.search.match(/theme\=(.*?)\&/) ||
 	    window.location.search.match(/theme\=(.*?)$/);
 
-	    if (this._isDesignLoaded || !isInit || themematch) {
-		try {
-		    this.loadThemeCss(this.theme, this._isDesignLoaded, optionalCss);
-		    // write before we change the prototype so defaults are left blank
-		    if (this._isDesignLoaded && !isInit) {
-			this._themeChanged = true;
-			this.cacheWidgets();
-		    }
-		    this.loadThemePrototype(this.theme, optionalPrototype);
-		    if (this._isDesignLoaded && !isInit && !noRegen) {
-			this.useWidgetCache();
-		    }
-		} catch(e) {
-		    if (inTheme != "wm_notheme")  {
-			this.setTheme("wm_notheme", isInit, optionalCss, optionalPrototype, noRegen);
-			app.alert(wm.getDictionaryItem("wm.Application.ALERT_MISSING_THEME", {name: inTheme}));
-		    } else  {
-			app.alert(wm.getDictionaryItem("wm.Application.ALERT_MISSING_NOTHEME", {name: inTheme}));
-		    }
-		return;
+	var node = this._isDesignLoaded ? studio.designer.domNode : document.body;
+	dojo.removeClass(node, this.theme);
+	
+	if (this._isDesignLoaded && !isInit) {
+	    try {
+		// write before we change the prototype so defaults are left blank
+		if (this._isDesignLoaded && !isInit) {
+		    this._themeChanged = true;
+		    this.cacheWidgets();
 		}
-	    } else {
-		    this.loadThemePrototype(this.theme, optionalPrototype);
+	    } catch(e) {}
+	}
+
+        this._lastTheme = this.theme;
+	this.theme = inTheme;
+	dojo.addClass(node, this.theme);
+
+
+	if (this._isDesignLoaded || !isInit || themematch) {
+	    try {
+		this.loadThemeCss(this.theme, this._isDesignLoaded, optionalCss);
+		this.loadThemePrototype(this.theme, optionalPrototype);
+		if (this._isDesignLoaded && !isInit && !noRegen) {
+		    this.useWidgetCache();
+		}
+	    } catch(e) {
+		if (inTheme != "wm_notheme")  {
+		    this.setTheme("wm_notheme", isInit, optionalCss, optionalPrototype, noRegen);
+		    app.alert(wm.getDictionaryItem("wm.Application.ALERT_MISSING_THEME", {name: inTheme}));
+		} else  {
+		    app.alert(wm.getDictionaryItem("wm.Application.ALERT_MISSING_NOTHEME", {name: inTheme}));
+		}
+		return;
 	    }
+	} else {
+	    this.loadThemePrototype(this.theme, optionalPrototype);
+	}
 
     },
             // don't regenerate over and over; as long as the user remains in the theme designer,

@@ -371,11 +371,13 @@ Studio.widgets = {
 							    wire: ["wm.Wire", {"source":"app.pagesListVar","targetProperty":"dataSet"}, {}]
 							}]
 						    }],
-						    deviceSelect: ["wm.SelectMenu", {caption: "Devices", margin:"4,0,4,20", width: "50%", maxWidth: "150", height: "24px", captionSize: "50px", dataValue: "", displayField: "name", dataField: "dataValue"},{onchange: "deviceSelectChanged"},{
+						    deviceSizeSelect: ["wm.SelectMenu", {caption: "Size", margin:"4,0,4,20", width: "120px", height: "24px", captionSize: "50px", dataValue: "", displayField: "name", dataField: "dataValue"},{onchange: "deviceSizeSelectChanged"},{
 							binding: ["wm.Binding",{},{}, {
 							    wire: ["wm.Wire", {"source":"deviceSizeVar","targetProperty":"dataSet"}, {}]
 							}]
 						    }],
+						    deviceTypeSelect: ["wm.SelectMenu", {caption: "Device", margin:"4,0,4,20", width: "120px", height: "24px", captionSize: "50px", dataValue: "", options: ["", "Desktop", "Mobile"], emptyValue: "emptyString"},{onchange: "deviceTypeSelectChanged"}],
+
 						    languageSelect: ["wm.SelectMenu", {caption: "Language", margin:"4,0,4,20", width: "50%", maxWidth: "180", height: "24px", captionSize: "70px", displayField: "dataValue", dataField: "dataValue", dataValue: "default", options: "default", restrictValues: false},{onchange: "languageSelectChanged"},{
 						    }]
 

@@ -188,6 +188,12 @@ wm.Object.extendSchema(wm.Layers, {
 wm.Layers.extend({
     themeable: false,
 	_noCreate: true,
+        afterPaletteDrop: function(){
+	    this.inherited(arguments);
+	    this.addLayer();
+	    this.setClientBorder(this.clientBorder);
+	    this.setClientBorderColor(this.clientBorderColor);
+	},
 	set_defaultLayer: function(inLayerIndex) {
 		this.setDefaultLayer(inLayerIndex);
 		if (this.defaultLayer != -1)

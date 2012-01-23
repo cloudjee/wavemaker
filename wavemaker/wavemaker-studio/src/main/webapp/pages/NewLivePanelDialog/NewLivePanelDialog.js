@@ -25,6 +25,8 @@ dojo.declare("NewLivePanelDialog", wm.Page, {
 				       img: "images/GridLiveForm.png"},
 				      {name: this.getDictionaryItem("DIALOG"),
 				       img: "images/GridLiveFormDialog.png"},
+				      {name: this.getDictionaryItem("BREADCRUMB"),
+				       img: "images/GridLiveFormDialog.png"},
 				      {name: this.getDictionaryItem("GRID"),
 				       img: "images/GridLiveFormDialog.png"}];
 	

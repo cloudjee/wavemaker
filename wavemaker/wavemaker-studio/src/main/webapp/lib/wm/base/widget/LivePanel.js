@@ -25,7 +25,11 @@ dojo.declare("wm.LivePanel", wm.Panel, {
      * and update the grid's data
      */
     popupLiveFormSuccess: function() {
-	this.dialog.hide();
+	if (this.dialog) {
+	    this.dialog.hide();
+	} else if (this.gridLayer) {
+	    this.gridLayer.activate();
+	}
 	this.dataGrid.getDataSet().update();
     },
     /* Whenever the LiveForm's variable sends a request, 
@@ -53,7 +57,11 @@ dojo.declare("wm.LivePanel", wm.Panel, {
 		if (!e.readonly) e.setReadonly(true);
 	    }
 	}));
-	this.dialog.show();
+	if (this.dialog) {
+	    this.dialog.show();
+	} else if (this.detailsLayer) {
+	    this.detailsLayer.activate();
+	}
     },
 
     /* When the user hits New, update the liveform's edit state to "insert" and show the dialog */
@@ -68,7 +76,11 @@ dojo.declare("wm.LivePanel", wm.Panel, {
 		if (!e.readonly) e.setReadonly(true);
 	    }
 	}));
-	this.dialog.show();
+	if (this.dialog) {
+	    this.dialog.show();
+	} else if (this.detailsLayer) {
+	    this.detailsLayer.activate();
+	}
     }
 
 

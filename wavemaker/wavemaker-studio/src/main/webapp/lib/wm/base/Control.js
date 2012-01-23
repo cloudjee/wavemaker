@@ -311,9 +311,6 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     mobileFoldingIndex: "",
     mobileFoldingCaption: "",
 
-    mobileAppFolding: false,
-    mobileAppFoldingIndex: "",
-
     imageList: "",
     imageIndex: -1,
     renderedOnce: 0,
@@ -1701,7 +1698,13 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 			t = t.parent;
 		}
 		return t ? t.imageList : null;
-	}
+	},
+        update: function() {
+	    this.show();
+	    if (this.parent) {
+		this.parent.update();
+	    }
+	},
 
     });
 

@@ -29,7 +29,18 @@ if (location.search.indexOf("dojo.locale=") != -1) {
     } catch(e) {}
 wm = window["wm"] || {};
 wm.version = '6.4.3RC';
-wm.isMobile = navigator.userAgent.match(/mobile|android/i);
+
+if (location.search.match(/(\?|\&)wmmobile=(.)/)) {
+    wm.isMobile = location.search.match(/(\?|\&)wmmobile=(\d)/)[2] !== "0";   
+} else {
+    wm.isMobile = navigator.userAgent.match(/mobile|android/i);
+}
+
+if (location.search.match(/(\?|\&)wmdevicesize=(\d+)/)) {
+    wm.deviceSize = location.search.match(/(\?|\&)wmdevicesize=(\d+)/)[2];
+}
+
+
 // loading via append element
 wm.createElement = function(inTag, inAttrs) {
 	var tag = document.createElement(inTag);

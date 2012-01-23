@@ -375,11 +375,18 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
     public Resource getParent(Resource resource) {
         File f;
         try {
-            f = resource.getFile().getParentFile();
+            f = resource.getFile().getParentFile(); 
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
 
-        return new FileSystemResource(f);
+        Resource parent = null;
+
+        if (f != null) {
+            String path = f.getAbsolutePath() + "/";
+            parent = new FileSystemResource(path);
+        }
+        
+        return parent;
     }
 }
