@@ -203,10 +203,17 @@ wm.ToggleButtonPanel.extend({
 	    this.inherited(arguments);
 	    new wm.Button({owner: this.owner,
 			   parent: this,
+			   name: "togglePanelButton1",
 			   caption: "Toggle1",
-			   height: "100%"
+			   height: "100%",
+			   width: "100%"
 			  });
-	}
+	    this.reflow();
+	},
+    set_buttonMargins: function(inMargin) {
+	this.buttonMargins = inMargin;
+	dojo.forEach(this._btns, function(b) {b.setMargin(inMargin);});
+    }
 });
 
 wm.Object.extendSchema(wm.ToggleButtonPanel, {

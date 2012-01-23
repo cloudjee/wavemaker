@@ -73,6 +73,7 @@ dojo.declare("wm.ToggleButtonPanel", wm.Container, {
     currentButton: -1,
     height: "40px",
     width: "100%",
+    buttonMargins: "0",
     init: function() {
 	this._btns = [];
 	this.inherited(arguments);
@@ -94,6 +95,7 @@ dojo.declare("wm.ToggleButtonPanel", wm.Container, {
 	    inWidget.setHeight("100%");
 	    this._btns.push(inWidget);
 	    inWidget.connect(inWidget, "onclick", dojo.hitch(this, "changed", inWidget));
+	    inWidget.setMargin(this.buttonMargins);
 	}
     },
     removeWidget: function(inWidget) {
