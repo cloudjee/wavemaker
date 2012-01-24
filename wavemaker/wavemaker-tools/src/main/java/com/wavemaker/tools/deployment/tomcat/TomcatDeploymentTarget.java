@@ -14,7 +14,6 @@
 
 package com.wavemaker.tools.deployment.tomcat;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -29,6 +28,7 @@ import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.common.util.Tuple;
 import com.wavemaker.tools.deployment.AppInfo;
 import com.wavemaker.tools.deployment.DeploymentInfo;
+import com.wavemaker.tools.deployment.DeploymentStatusException;
 import com.wavemaker.tools.deployment.DeploymentTarget;
 import com.wavemaker.tools.project.LocalDeploymentManager;
 import com.wavemaker.tools.project.Project;
@@ -61,46 +61,50 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
     }
 
     @Override
-    public String deploy(File f, DeploymentInfo deploymentInfo) {
-        TomcatServer tomcat = initTomcat(deploymentInfo);
-        return tomcat.deploy(f, deploymentInfo.getApplicationName());
-    }
-
-    @Override
-    public String deploy(Project project, DeploymentInfo deploymentInfo) {
+    public void deploy(Project project, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
         try {
             Resource warFile = project.getProjectRoot().createRelative(LocalDeploymentManager.DIST_DIR_DEFAULT + project.getProjectName() + ".war");
-            return deploy(warFile.getFile(), deploymentInfo);
+            TomcatServer tomcat = initTomcat(deploymentInfo);
+            verifyOK(tomcat.deploy(warFile.getFile(), deploymentInfo.getApplicationName()));
         } catch (IOException e) {
             throw new WMRuntimeException(e);
         }
     }
 
     @Override
-    public String undeploy(DeploymentInfo deploymentInfo, boolean deleteServices) {
+    public void undeploy(DeploymentInfo deploymentInfo, boolean deleteServices) throws DeploymentStatusException {
         TomcatServer tomcat = initTomcat(deploymentInfo);
-        return tomcat.undeploy(deploymentInfo.getApplicationName());
+        verifyOK(tomcat.undeploy(deploymentInfo.getApplicationName()));
     }
 
-    @Override
+    private void verifyOK(String output) throws DeploymentStatusException {
+        if (output != null) {
+            if (output.trim().startsWith("OK") || output.trim().equals("SUCCESS")) {
+                return;
+            }
+        }
+        throw new DeploymentStatusException(output);
+    }
+
+    @Deprecated
     public String redeploy(DeploymentInfo deploymentInfo) {
         TomcatServer tomcat = initTomcat(deploymentInfo);
         return tomcat.redeploy(deploymentInfo.getApplicationName());
     }
 
-    @Override
+    @Deprecated
     public String start(DeploymentInfo deploymentInfo) {
         TomcatServer tomcat = initTomcat(deploymentInfo);
         return tomcat.start(deploymentInfo.getApplicationName());
     }
 
-    @Override
+    @Deprecated
     public String stop(DeploymentInfo deploymentInfo) {
         TomcatServer tomcat = initTomcat(deploymentInfo);
         return tomcat.stop(deploymentInfo.getApplicationName());
     }
 
-    @Override
+    @Deprecated
     public List<AppInfo> listDeploymentNames(DeploymentInfo deploymentInfo) {
         TomcatServer tomcat = initTomcat(deploymentInfo);
         List<Tuple.Two<String, String>> apps = tomcat.listDeployments();
@@ -118,7 +122,7 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
         return rtn;
     }
 
-    @Override
+    @Deprecated
     public Map<String, String> getConfigurableProperties() {
         return CONFIGURABLE_PROPERTIES;
     }
@@ -140,8 +144,7 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
      * {@inheritDoc}
      */
     @Override
-    public String validateDeployment(DeploymentInfo deploymentInfo) {
+    public void validateDeployment(DeploymentInfo deploymentInfo) {
         // No-op
-        return "SUCCESS";
     }
 }

@@ -74,7 +74,7 @@
         scope="singleton" lazy-init="true" />
 
     <bean id="cloudFoundryDeploymentTarget"
-        class="com.wavemaker.tools.deployment.cloudfoundry.VmcDeploymentTarget"
+        class="com.wavemaker.tools.deployment.cloudfoundry.CloudFoundryDeploymentTarget"
         scope="singleton" lazy-init="true">
         <property name="dataModelManager" ref="dataModelManager" />
         <property name="webAppAssembler" ref="webAppAssembler"/>
@@ -559,7 +559,7 @@
             scope="singleton">
         </bean>
 
-        <bean id="deploymentManager" class="com.wavemaker.tools.project.CFDeploymentManager"
+        <bean id="deploymentManager" class="com.wavemaker.tools.project.CloudFoundryDeploymentManager"
             scope="singleton" lazy-init="true">
             <property name="projectManager" ref="projectManager" />
             <property name="fileSystem" ref="fileSystem" />
@@ -575,7 +575,7 @@
             <constructor-arg ref="mongoDbFactory"/>
         </bean>
     
-        <bean id="studioConfiguration" class="com.wavemaker.tools.project.CFStudioConfiguration"
+        <bean id="studioConfiguration" class="com.wavemaker.tools.project.CloudFoundryStudioConfiguration"
             scope="singleton">
             <constructor-arg ref="fileSystem"/>
             <property name="runtimeAccess" ref="runtimeAccess"/>
@@ -585,7 +585,7 @@
             scope="singleton">
         </bean>
 
-        <bean id="deploymentManager" class="com.wavemaker.tools.project.CFDeploymentManager"
+        <bean id="deploymentManager" class="com.wavemaker.tools.project.CloudFoundryDeploymentManager"
             scope="singleton" lazy-init="true">
             <property name="projectManager" ref="projectManager" />
             <property name="fileSystem" ref="fileSystem" />
