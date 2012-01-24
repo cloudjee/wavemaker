@@ -29,7 +29,6 @@ import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.data.BaseDataModelSetup;
 import com.wavemaker.tools.data.DataModelConfiguration;
 import com.wavemaker.tools.data.DataModelManager;
-import com.wavemaker.tools.deployment.ArchiveType;
 import com.wavemaker.tools.deployment.DeploymentDB;
 import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.deployment.DeploymentStatusException;
@@ -38,6 +37,7 @@ import com.wavemaker.tools.deployment.cloudfoundry.LoggingStatusCallback.Timer;
 import com.wavemaker.tools.deployment.cloudfoundry.archive.ContentModifier;
 import com.wavemaker.tools.deployment.cloudfoundry.archive.ModifiedContentApplicationArchive;
 import com.wavemaker.tools.deployment.cloudfoundry.archive.StringReplaceContentModifier;
+import com.wavemaker.tools.project.CloudFoundryDeploymentManager;
 import com.wavemaker.tools.project.Project;
 
 public class CloudFoundryDeploymentTarget implements DeploymentTarget {
@@ -92,14 +92,12 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
 
     @Override
     public void validateDeployment(DeploymentInfo deploymentInfo) throws DeploymentStatusException {
-        deploymentInfo = hackSetupDeploymentInfo(deploymentInfo);
         CloudFoundryClient client = getClient(deploymentInfo);
         uploadProject(client, deploymentInfo);
     }
 
     @Deprecated
     void deploy(File webapp, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
-        deploymentInfo = hackSetupDeploymentInfo(deploymentInfo);
         try {
             validateWar(webapp);
             ZipFile zipFile = new ZipFile(webapp);
@@ -112,10 +110,55 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
 
     @Override
     public void deploy(Project project, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
-        deploymentInfo = hackSetupDeploymentInfo(deploymentInfo);
         ApplicationArchive applicationArchive = this.webAppAssembler.assemble(project);
         applicationArchive = modifyApplicationArchive(applicationArchive);
         doDeploy(applicationArchive, deploymentInfo);
+    }
+
+    /**
+     * Initiate the test/run operation for the given project on the cloud foundry instance that is running studio. This
+     * method is not part of the {@link DeploymentTarget} interface but is called directly from
+     * {@link CloudFoundryDeploymentManager#testRunClean()} in order to reuse CloudFoundry deployment code.
+     * 
+     * @param project
+     */
+    public void testRunStartFromSelf(Project project) {
+        try {
+            ApplicationArchive applicationArchive = this.webAppAssembler.assemble(project);
+            applicationArchive = modifyApplicationArchive(applicationArchive);
+            doDeploy(applicationArchive, getSelfDeploymentInfo(project));
+        } catch (DeploymentStatusException e) {
+            throw new WMRuntimeException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * undeploy the given project from the cloud foundry instance that is running studio.. This method is not part of
+     * the {@link DeploymentTarget} interface but is called directly from {@link CloudFoundryDeploymentManager} in order
+     * to reuse CloudFoundry deployment code.
+     * 
+     * @param project
+     */
+    public void undeployFromSelf(Project project) {
+        try {
+            undeploy(getSelfDeploymentInfo(project), false);
+        } catch (DeploymentStatusException e) {
+            throw new WMRuntimeException(e.getMessage(), e);
+        }
+    }
+
+    private DeploymentInfo getSelfDeploymentInfo(Project project) {
+        try {
+            DeploymentInfo deploymentInfo = new DeploymentInfo();
+            CloudFoundryClient cloudFoundryClient = new CloudFoundryClient("xxx", "xxx", "http://xxx.cloudfoundry.me");
+            String token = cloudFoundryClient.login();
+            deploymentInfo.setToken(token);
+            deploymentInfo.setApplicationName("deployedproject");
+            deploymentInfo.setTarget("http://xxx.cloudfoundry.me");
+            return deploymentInfo;
+        } catch (Exception e) {
+            throw new WMRuntimeException(e);
+        }
     }
 
     private ApplicationArchive modifyApplicationArchive(ApplicationArchive applicationArchive) {
@@ -256,7 +299,6 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
 
     @Override
     public void undeploy(DeploymentInfo deploymentInfo, boolean deleteServices) throws DeploymentStatusException {
-        deploymentInfo = hackSetupDeploymentInfo(deploymentInfo);
         CloudFoundryClient client = getClient(deploymentInfo);
         log.info("Deleting application " + deploymentInfo.getApplicationName());
         Timer timer = new Timer();
@@ -296,9 +338,6 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     }
 
     private CloudFoundryClient getClient(DeploymentInfo deploymentInfo) {
-        if (true) {
-            return hackGetClient(deploymentInfo);
-        }
         Assert.hasText(deploymentInfo.getToken(), "CloudFoundry login token not supplied.");
         String url = deploymentInfo.getTarget();
         if (!StringUtils.hasText(url)) {
@@ -306,28 +345,6 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         }
         try {
             CloudFoundryClient client = new CloudFoundryClient(deploymentInfo.getToken(), url);
-            return client;
-        } catch (MalformedURLException e) {
-            throw new WMRuntimeException("CloudFoundry target URL is invalid", e);
-        }
-    }
-
-    private DeploymentInfo hackSetupDeploymentInfo(DeploymentInfo deploymentInfo) {
-        // FIXME PW HACK
-        if (deploymentInfo == null) {
-            deploymentInfo = new DeploymentInfo();
-            deploymentInfo.setApplicationName("project1");
-            deploymentInfo.setArchiveType(ArchiveType.WAR);
-            deploymentInfo.setTarget("http://deployedproject.pwebb.cloudfoundry.me");
-        }
-        return deploymentInfo;
-    }
-
-    private CloudFoundryClient hackGetClient(DeploymentInfo deploymentInfo) {
-        // FIXME PW HACK
-        try {
-            CloudFoundryClient client = new CloudFoundryClient("phil.webb@orbweaver.co.uk", "password", "http://api.pwebb.cloudfoundry.me");
-            client.login();
             return client;
         } catch (MalformedURLException e) {
             throw new WMRuntimeException("CloudFoundry target URL is invalid", e);

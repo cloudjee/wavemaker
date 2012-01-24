@@ -178,9 +178,9 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
      * {@inheritDoc}
      */
     @Override
-    public String testRunStart() {
+    public void testRunStart() {
         try {
-            return testRunStart(getProjectDir().getFile().getCanonicalPath(), getDeployName());
+            testRunStart(getProjectDir().getFile().getCanonicalPath(), getDeployName());
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
@@ -320,17 +320,17 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
      * {@inheritDoc}
      */
     @Override
-    public String testRunClean(String projectDir, String deployName) {
-        return antExecute(projectDir, deployName, TEST_RUN_CLEAN_OPERATION);
+    public void testRunClean(String projectDir, String deployName) {
+        antExecute(projectDir, deployName, TEST_RUN_CLEAN_OPERATION);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public String testRunClean() {
+    public void testRunClean() {
         try {
-            return testRunClean(getProjectDir().getFile().getCanonicalPath(), getDeployName());
+            testRunClean(getProjectDir().getFile().getCanonicalPath(), getDeployName());
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
@@ -340,9 +340,9 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
      * {@inheritDoc}
      */
     @Override
-    public String undeploy() {
+    public void undeploy() {
         try {
-            return undeploy(getProjectDir().getFile().getCanonicalPath(), getDeployName());
+            undeploy(getProjectDir().getFile().getCanonicalPath(), getDeployName());
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }

@@ -5,50 +5,23 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.core.io.Resource;
+import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import com.wavemaker.tools.deployment.DeploymentInfo;
-import com.wavemaker.tools.deployment.DeploymentStatusException;
 import com.wavemaker.tools.deployment.DeploymentTarget;
 import com.wavemaker.tools.deployment.DeploymentTargetManager;
 import com.wavemaker.tools.deployment.DeploymentType;
+import com.wavemaker.tools.deployment.cloudfoundry.CloudFoundryDeploymentTarget;
 
 public class CloudFoundryDeploymentManager extends AbstractDeploymentManager {
 
     private DeploymentTargetManager deploymentTargetManager;
 
     @Override
-    public String testRunStart() {
+    public void testRunStart() {
         compile();
-        DeploymentTarget target = this.deploymentTargetManager.getDeploymentTarget(DeploymentType.CLOUD_FOUNDRY);
-        DeploymentInfo deployment = findCloudFoundryDeploymentInfo(target);
-        try {
-            // FIXME PW HACK if (deployment != null) {
-            target.deploy(this.projectManager.getCurrentProject(), deployment);
-            // }
-        } catch (DeploymentStatusException e) {
-            return e.getStatusMessage();
-        }
-        return null;
-    }
-
-    private DeploymentInfo findCloudFoundryDeploymentInfo(DeploymentTarget target) {
-        List<DeploymentInfo> deployments = this.getDeploymentInfo();
-        return findCloudFoundryDeploymentInfo(target, deployments);
-    }
-
-    private DeploymentInfo findCloudFoundryDeploymentInfo(DeploymentTarget target, List<DeploymentInfo> deployments) {
-        for (DeploymentInfo deployment : deployments) {
-            if (deployment.getDeploymentType() == DeploymentType.CLOUD_FOUNDRY) {
-                try {
-                    target.validateDeployment(deployment);
-                    return deployment;
-                } catch (DeploymentStatusException e) {
-                    // Swallow and continue
-                }
-            }
-        }
-        return null;
+        CloudFoundryDeploymentTarget cloudFoundryDeploymentTarget = getCloudFoundryDeploymentTarget();
+        cloudFoundryDeploymentTarget.testRunStartFromSelf(this.projectManager.getCurrentProject());
     }
 
     @Override
@@ -107,37 +80,33 @@ public class CloudFoundryDeploymentManager extends AbstractDeploymentManager {
     }
 
     @Override
-    public String testRunClean() {
-        return undeploy();
+    public void testRunClean() {
+        undeploy();
     }
 
     @Override
-    public String testRunClean(String projectDir, String deployName) {
-        DeploymentTarget target = this.deploymentTargetManager.getDeploymentTarget(DeploymentType.CLOUD_FOUNDRY);
+    public void testRunClean(String projectDir, String deployName) {
         Project project = this.projectManager.getProject(projectDir, true);
-        try {
-            target.undeploy(findCloudFoundryDeploymentInfo(target, readDeployments().forProject(project.getProjectName())), false);
-        } catch (DeploymentStatusException e) {
-            return e.getStatusMessage();
-        }
-        return "SUCCESS";
+        CloudFoundryDeploymentTarget target = getCloudFoundryDeploymentTarget();
+        target.undeployFromSelf(project);
     }
 
     @Override
-    public String undeploy() {
-        DeploymentTarget target = this.deploymentTargetManager.getDeploymentTarget(DeploymentType.CLOUD_FOUNDRY);
+    public void undeploy() {
         Project project = this.projectManager.getCurrentProject();
-        try {
-            target.undeploy(findCloudFoundryDeploymentInfo(target, readDeployments().forProject(project.getProjectName())), false);
-        } catch (DeploymentStatusException e) {
-            return e.getStatusMessage();
-        }
-        return "SUCCESS";
+        CloudFoundryDeploymentTarget target = getCloudFoundryDeploymentTarget();
+        target.undeployFromSelf(project);
     }
 
     @Override
     public String exportProject(String zipFileName) {
         throw new UnsupportedOperationException("Haven't implemented this yet.");
+    }
+
+    private CloudFoundryDeploymentTarget getCloudFoundryDeploymentTarget() {
+        DeploymentTarget deploymentTarget = this.deploymentTargetManager.getDeploymentTarget(DeploymentType.CLOUD_FOUNDRY);
+        Assert.isInstanceOf(CloudFoundryDeploymentTarget.class, deploymentTarget);
+        return (CloudFoundryDeploymentTarget) deploymentTarget;
     }
 
     public void setDeploymentTargetManager(DeploymentTargetManager deploymentTargetManager) {
