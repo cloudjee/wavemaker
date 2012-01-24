@@ -1775,7 +1775,7 @@ Studio.extend({
 		return "/" + projectPrefix + this.project.projectName + (s.length ? "/?" + s.join("&") : "");
 	},
 	*/
-	getPreviewUrl: function(isTest) {
+    getPreviewUrl: function(inUrl, isTest) {
 	    var s = [], q="", c = wm.studioConfig;
 	    if (isTest)
 		s.push("debug");
@@ -1785,8 +1785,10 @@ Studio.extend({
 		s.push("dojo.locale=" + studio.languageSelect.getDisplayValue());
 	    if (studio.deviceTypeSelect.getDataValue().toLowerCase() == "mobile")
 		s.push("wmmobile=1");
-	    var projectPrefix = studio.projectPrefix;
-	    return "/" + projectPrefix + this.project.projectName + (s.length ? "/?" + s.join("&") : "");
+
+	var url = inUrl; //inUrl.match(/https?\:/) ? inUrl : 
+
+	    return url + (s.length ? "/?" + s.join("&") : "");
 	},
     getPreviewWindowOptions: function() {
 	var size = studio.deviceSizeSelect.getDataValue() || "";

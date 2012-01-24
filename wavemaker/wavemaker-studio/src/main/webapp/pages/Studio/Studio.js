@@ -47,7 +47,6 @@ dojo.declare("Studio", wm.Page, {
 	_outlineClass: "Studio-outline",
         _explodeClass: "Studio-exploded",
 	studioKeyPriority: false,
-        projectPrefix: "",
         userName: "",
         resourcesLastUpdate: 0,
         _deploying: false, //obsolete?
@@ -628,7 +627,7 @@ dojo.declare("Studio", wm.Page, {
 	setLiveLayoutReady: function(inReady) {
 		this._liveLayoutReady = inReady;
 	},
-    deploySuccess: function() {
+    deploySuccess: function(inUrl) {
 	var application = this.application || this._application;
 	if (application._deployStatus == "deploying")
 	    application._deployStatus = "deployed";
@@ -642,10 +641,10 @@ dojo.declare("Studio", wm.Page, {
 	case "studioProjectCompile":
 	    break;
 	case "studioProjectTest":	    
-	    this.previewWindow = wm.openUrl(this.getPreviewUrl(true), studio.getDictionaryItem("POPUP_BLOCKER_LAUNCH_CAPTION"), "_wmPreview", this.previewWindowOptions);
+	    this.previewWindow = wm.openUrl(this.getPreviewUrl(inUrl,true), studio.getDictionaryItem("POPUP_BLOCKER_LAUNCH_CAPTION"), "_wmPreview", this.previewWindowOptions);
 	    break;
 	case "studioProjectRun":
-	    this.previewWindow = wm.openUrl(this.getPreviewUrl(false), studio.getDictionaryItem("POPUP_BLOCKER_LAUNCH_CAPTION"), "_wmPreview", this.previewWindowOptions);
+	    this.previewWindow = wm.openUrl(this.getPreviewUrl(inUrl,false), studio.getDictionaryItem("POPUP_BLOCKER_LAUNCH_CAPTION"), "_wmPreview", this.previewWindowOptions);
 	    break;
 	}
 	this._runRequested = false;
@@ -1667,11 +1666,6 @@ dojo.declare("Studio", wm.Page, {
 		if (inResponse) {
 		    this.setUserName(inResponse);
 		    this.userLabel.setCaption(this.userName);
-                        this.projectPrefix = this.userName;
-                        this.projectPrefix = this.projectPrefix.replace(/_/g,"__");
-                        this.projectPrefix = this.projectPrefix.replace(/\@/,"_AT_");
-                        this.projectPrefix = this.projectPrefix.replace(/\./g,"_DOT_");
-                        this.projectPrefix += "___";
                 }
 	},
 	requestUserNameFailure: function(inResponse) {
