@@ -44,9 +44,11 @@ import com.wavemaker.common.WMRuntimeException;
 /**
  * @author Ed Callahan
  */
-public class GFSResource implements Resource {
+public class GFSResource implements Resource, Sha1DigestCacheable {
 
     private static final String METADATA_FOLDER_KEY = "FOLDER";
+
+    private static final String METADATA_SHA1_KEY = "SHA1";
 
     private final GridFS gfs;
 
@@ -126,10 +128,8 @@ public class GFSResource implements Resource {
         if (isDirectory()) {
             return this.dirsDoc.containsField(this.path);
         }
-        if (this.file == null) {
-            this.file = this.gfs.findOne(this.path);
-        }
-        return this.file != null;
+
+        return getGridFSDBFile(false) != null;
     }
 
     /**
@@ -179,7 +179,7 @@ public class GFSResource implements Resource {
      */
     @Override
     public long contentLength() throws IOException {
-        return this.file.getLength();
+        return getGridFSDBFile(true).getLength();
     }
 
     /**
@@ -190,7 +190,7 @@ public class GFSResource implements Resource {
      */
     @Override
     public long lastModified() throws IOException {
-        return this.file.getUploadDate().getTime();
+        return getGridFSDBFile(true).getUploadDate().getTime();
     }
 
     @Override
@@ -203,7 +203,7 @@ public class GFSResource implements Resource {
      * Return the MD5 for this resource
      */
     public String getMD5() {
-        return this.file.getMD5();
+        return getGridFSDBFile(true).getMD5();
     }
 
     /**
@@ -224,7 +224,7 @@ public class GFSResource implements Resource {
         if (!this.exists()) {
             throw new IOException("File does not exist at path: " + this.path);
         }
-        return this.file.getInputStream();
+        return getGridFSDBFile(true).getInputStream();
     }
 
     /**
@@ -267,6 +267,32 @@ public class GFSResource implements Resource {
     @Override
     public File getFile() {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public byte[] getSha1Digest() {
+        GridFSDBFile file = getGridFSDBFile(false);
+        if (file != null) {
+            return (byte[]) file.get(METADATA_SHA1_KEY);
+        }
+        return null;
+    }
+
+    @Override
+    public void setSha1Digest(byte[] digest) {
+        GridFSDBFile file = getGridFSDBFile(false);
+        if (file != null) {
+            file.put(METADATA_SHA1_KEY, digest);
+            file.save();
+        }
+    }
+
+    private GridFSDBFile getGridFSDBFile(boolean required) {
+        if (this.file == null) {
+            this.file = this.gfs.findOne(this.path);
+        }
+        Assert.state(!required || this.file != null, "File does not exist at path: " + this.path);
+        return this.file;
     }
 
 }

@@ -18,10 +18,10 @@ public class CloudFoundryDeploymentManager extends AbstractDeploymentManager {
     private DeploymentTargetManager deploymentTargetManager;
 
     @Override
-    public void testRunStart() {
+    public String testRunStart() {
         compile();
         CloudFoundryDeploymentTarget cloudFoundryDeploymentTarget = getCloudFoundryDeploymentTarget();
-        cloudFoundryDeploymentTarget.testRunStartFromSelf(this.projectManager.getCurrentProject());
+        return cloudFoundryDeploymentTarget.testRunStartFromSelf(this.projectManager.getCurrentProject());
     }
 
     @Override

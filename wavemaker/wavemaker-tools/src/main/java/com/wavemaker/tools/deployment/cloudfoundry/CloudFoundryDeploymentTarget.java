@@ -4,10 +4,8 @@ package com.wavemaker.tools.deployment.cloudfoundry;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipFile;
 
@@ -121,12 +119,13 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
      * {@link CloudFoundryDeploymentManager#testRunClean()} in order to reuse CloudFoundry deployment code.
      * 
      * @param project
+     * @return
      */
-    public void testRunStartFromSelf(Project project) {
+    public String testRunStartFromSelf(Project project) {
         try {
             ApplicationArchive applicationArchive = this.webAppAssembler.assemble(project);
             applicationArchive = modifyApplicationArchive(applicationArchive);
-            doDeploy(applicationArchive, getSelfDeploymentInfo(project));
+            return doDeploy(applicationArchive, getSelfDeploymentInfo(project));
         } catch (DeploymentStatusException e) {
             throw new WMRuntimeException(e.getMessage(), e);
         }
@@ -149,12 +148,15 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
 
     private DeploymentInfo getSelfDeploymentInfo(Project project) {
         try {
+            String cloudControllerUrl = "http://api.pwebb.cloudfoundry.me";
+            String email = "email";
+            String password = "password";
             DeploymentInfo deploymentInfo = new DeploymentInfo();
-            CloudFoundryClient cloudFoundryClient = new CloudFoundryClient("xxx", "xxx", "http://xxx.cloudfoundry.me");
+            CloudFoundryClient cloudFoundryClient = new CloudFoundryClient(email, password, cloudControllerUrl);
             String token = cloudFoundryClient.login();
             deploymentInfo.setToken(token);
             deploymentInfo.setApplicationName("deployedproject");
-            deploymentInfo.setTarget("http://xxx.cloudfoundry.me");
+            deploymentInfo.setTarget(cloudControllerUrl);
             return deploymentInfo;
         } catch (Exception e) {
             throw new WMRuntimeException(e);
@@ -166,9 +168,9 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         return new ModifiedContentApplicationArchive(applicationArchive, modifier);
     }
 
-    private void doDeploy(ApplicationArchive applicationArchive, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
+    private String doDeploy(ApplicationArchive applicationArchive, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
         CloudFoundryClient client = getClient(deploymentInfo);
-        uploadProject(client, deploymentInfo);
+        String url = uploadProject(client, deploymentInfo);
         setupServices(client, deploymentInfo);
         Timer timer = new Timer();
         try {
@@ -189,13 +191,14 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         } catch (CloudFoundryException ex) {
             throw new DeploymentStatusException("ERROR: Could not start application. " + ex.getDescription(), ex);
         }
+        return url;
     }
 
-    private void uploadProject(CloudFoundryClient client, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
-        List<String> uris = getUris(deploymentInfo);
+    private String uploadProject(CloudFoundryClient client, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
+        String url = getUrl(deploymentInfo);
         try {
             client.createApplication(deploymentInfo.getApplicationName(), CloudApplication.SPRING,
-                client.getDefaultApplicationMemory(CloudApplication.SPRING), uris, null, true);
+                client.getDefaultApplicationMemory(CloudApplication.SPRING), Collections.singletonList(url), null, true);
         } catch (CloudFoundryException e) {
             if (HttpStatus.FORBIDDEN == e.getStatusCode()) {
                 throw new DeploymentStatusException(TOKEN_EXPIRED_RESULT, e);
@@ -205,16 +208,15 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
                 throw e;
             }
         }
+        return url;
     }
 
-    private List<String> getUris(DeploymentInfo deploymentInfo) {
-        List<String> uris = new ArrayList<String>();
+    private String getUrl(DeploymentInfo deploymentInfo) {
         String url = deploymentInfo.getTarget();
         if (!StringUtils.hasText(url)) {
             url = DEFAULT_URL;
         }
-        uris.add(url.replace("api", deploymentInfo.getApplicationName()));
-        return uris;
+        return url.replace("api", deploymentInfo.getApplicationName());
     }
 
     /**
