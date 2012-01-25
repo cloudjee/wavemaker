@@ -148,8 +148,8 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
 
     private DeploymentInfo getSelfDeploymentInfo(Project project) {
         try {
-            String cloudControllerUrl = "http://api.pwebb.cloudfoundry.me";
-            String email = "email";
+            String cloudControllerUrl = "http://api.vcap.me";
+            String email = "wavemaker@vmware.com";
             String password = "password";
             DeploymentInfo deploymentInfo = new DeploymentInfo();
             CloudFoundryClient cloudFoundryClient = new CloudFoundryClient(email, password, cloudControllerUrl);
@@ -327,7 +327,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         log.info("Restarting application " + deploymentInfo.getApplicationName());
         Timer timer = new Timer();
         timer.start();
-        client.restartApplication(deploymentInfo.getApplicationName());
+        CloudFoundryClientUtils.restartApplicationAndWaitUntilRunning(client, deploymentInfo.getApplicationName());
         log.info("Application " + deploymentInfo.getApplicationName() + " restarted successfully in " + timer.stop() + "ms");
     }
 
@@ -335,7 +335,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         log.info("Starting application " + deploymentInfo.getApplicationName());
         Timer timer = new Timer();
         timer.start();
-        client.startApplication(deploymentInfo.getApplicationName());
+        CloudFoundryClientUtils.startApplicationAndWaitUntilRunning(client, deploymentInfo.getApplicationName());
         log.info("Application " + deploymentInfo.getApplicationName() + " started successfully in " + timer.stop() + "ms");
     }
 
