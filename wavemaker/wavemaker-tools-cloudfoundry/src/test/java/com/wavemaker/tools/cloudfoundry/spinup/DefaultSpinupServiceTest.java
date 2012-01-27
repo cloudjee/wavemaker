@@ -31,13 +31,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 
-import com.wavemaker.tools.cloudfoundry.spinup.ApplicationArchiveFactory;
-import com.wavemaker.tools.cloudfoundry.spinup.ApplicationDetails;
-import com.wavemaker.tools.cloudfoundry.spinup.ApplicationNamingStrategy;
-import com.wavemaker.tools.cloudfoundry.spinup.ApplicationNamingStrategyContext;
-import com.wavemaker.tools.cloudfoundry.spinup.DefaultSpinupService;
-import com.wavemaker.tools.cloudfoundry.spinup.InvalidLoginCredentialsException;
-import com.wavemaker.tools.cloudfoundry.spinup.StartedApplication;
 import com.wavemaker.tools.cloudfoundry.spinup.authentication.AuthenticationToken;
 import com.wavemaker.tools.cloudfoundry.spinup.authentication.LoginCredentials;
 import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecret;
@@ -119,14 +112,15 @@ public class DefaultSpinupServiceTest {
         given(this.namingStrategy.isMatch(isA(ApplicationDetails.class))).willReturn(false);
         given(this.namingStrategy.newApplicationDetails(isA(ApplicationNamingStrategyContext.class))).willReturn(this.applicationDetails);
         given(this.cloudFoundryClient.getApplication(APPLICATION_NAME)).willReturn(this.application);
-        StartedApplication started = this.service.start(this.secret, this.credentials);
+        TransportToken token = this.service.login(this.secret, this.credentials);
+        String url = this.service.start(this.secret, this.credentials.getUsername(), token);
         verify(this.cloudFoundryClient).uploadApplication(APPLICATION_NAME, this.archive);
         verify(this.cloudFoundryClient).createApplication(APPLICATION_NAME, CloudApplication.SPRING, 512, Collections.singletonList(APPLICATION_URL),
             null, true);
         verify(this.propagation).sendTo(this.cloudFoundryClient, this.secret, APPLICATION_NAME);
         verify(this.cloudFoundryClient).startApplication(APPLICATION_NAME);
-        assertThat(started.getApplicationUrl(), is(equalTo(APPLICATION_URL)));
-        assertThat(started.getTransportToken(), is(this.transportToken));
+        assertThat(url, is(equalTo(APPLICATION_URL)));
+        assertThat(this.transportToken, is(this.transportToken));
     }
 
     @Test
@@ -137,22 +131,22 @@ public class DefaultSpinupServiceTest {
         List<CloudApplication> applications = Collections.singletonList(deployedApplication);
         given(this.cloudFoundryClient.getApplications()).willReturn(applications);
         given(this.namingStrategy.isMatch(isA(ApplicationDetails.class))).willReturn(true);
-        StartedApplication started = this.service.start(this.secret, this.credentials);
+        TransportToken token = this.service.login(this.secret, this.credentials);
+        String url = this.service.start(this.secret, this.credentials.getUsername(), token);
         verify(this.cloudFoundryClient).login();
         verify(this.cloudFoundryClient).getApplications();
         verify(this.propagation).sendTo(this.cloudFoundryClient, this.secret, APPLICATION_NAME);
         verify(this.cloudFoundryClient).startApplication(APPLICATION_NAME);
         verifyNoMoreInteractions(this.cloudFoundryClient);
-        assertThat(started.getApplicationUrl(), is(equalTo(APPLICATION_URL)));
-        assertThat(started.getTransportToken(), is(this.transportToken));
-        assertThat(started.getDomain(), is(equalTo(".cloudfoundry.com")));
+        assertThat(url, is(equalTo(APPLICATION_URL)));
+        assertThat(token, is(this.transportToken));
     }
 
     @Test
     public void shouldThrowInvalidCredentialsOnHttpStatusError() throws Exception {
         given(this.cloudFoundryClient.login()).willThrow(new CloudFoundryException(HttpStatus.FORBIDDEN));
         this.thrown.expect(InvalidLoginCredentialsException.class);
-        this.service.start(this.secret, this.credentials);
+        this.service.login(this.secret, this.credentials);
     }
 
     @Test
@@ -161,7 +155,8 @@ public class DefaultSpinupServiceTest {
         given(this.namingStrategy.newApplicationDetails(isA(ApplicationNamingStrategyContext.class))).willReturn(this.applicationDetails);
         willThrow(new CloudFoundryException(HttpStatus.BAD_REQUEST)).willNothing().given(this.cloudFoundryClient).createApplication(APPLICATION_NAME,
             CloudApplication.SPRING, 512, Collections.singletonList(APPLICATION_URL), null, true);
-        this.service.start(this.secret, this.credentials);
+        TransportToken token = this.service.login(this.secret, this.credentials);
+        this.service.start(this.secret, this.credentials.getUsername(), token);
         verify(this.namingStrategy, times(2)).newApplicationDetails(isA(ApplicationNamingStrategyContext.class));
     }
 
@@ -172,12 +167,18 @@ public class DefaultSpinupServiceTest {
         willThrow(new CloudFoundryException(HttpStatus.BAD_REQUEST)).given(this.cloudFoundryClient).createApplication(APPLICATION_NAME,
             CloudApplication.SPRING, 512, Collections.singletonList(APPLICATION_URL), null, true);
         try {
-            this.service.start(this.secret, this.credentials);
+            TransportToken token = this.service.login(this.secret, this.credentials);
+            this.service.start(this.secret, this.credentials.getUsername(), token);
             fail("Did not throw");
         } catch (CloudFoundryException e) {
             assertThat(e.getStatusCode(), is(HttpStatus.BAD_REQUEST));
         }
         verify(this.namingStrategy, times(5)).newApplicationDetails(isA(ApplicationNamingStrategyContext.class));
+    }
+
+    @Test
+    public void shouldGetDomain() throws Exception {
+        assertThat(this.service.getDomain(), is(".cloudfoundry.com"));
     }
 
 }

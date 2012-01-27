@@ -48,19 +48,6 @@ public class DefaultSpinupService implements SpinupService {
     private SharedSecretPropagation propagation = new SharedSecretPropagation();
 
     @Override
-    @Deprecated
-    public StartedApplication start(SharedSecret secret, LoginCredentials credentials) throws InvalidLoginCredentialsException {
-        Assert.notNull(secret, "Secret must not be null");
-        Assert.notNull(credentials, "Credentials must not be null");
-        if (this.logger.isDebugEnabled()) {
-            this.logger.debug("Starting Cloud Foundry application");
-        }
-        TransportToken transportToken = login(secret, credentials);
-        String applicationUrl = start(secret, credentials.getUsername(), transportToken);
-        return new DefaultStartedApplication(transportToken, applicationUrl, getDomain());
-    }
-
-    @Override
     public String getDomain() {
         String domain = getControllerUrl().toLowerCase();
         domain = stripPrefix(domain, "http://");
