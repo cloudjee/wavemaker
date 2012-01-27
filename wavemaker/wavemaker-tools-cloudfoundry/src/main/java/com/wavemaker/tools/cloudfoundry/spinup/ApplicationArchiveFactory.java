@@ -1,5 +1,5 @@
 
-package com.wavemaker.tools.cloudfoundry;
+package com.wavemaker.tools.cloudfoundry.spinup;
 
 import org.cloudfoundry.client.lib.archive.ApplicationArchive;
 

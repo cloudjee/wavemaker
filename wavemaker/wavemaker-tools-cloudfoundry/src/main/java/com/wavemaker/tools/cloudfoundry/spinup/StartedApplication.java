@@ -1,7 +1,7 @@
 
-package com.wavemaker.tools.cloudfoundry;
+package com.wavemaker.tools.cloudfoundry.spinup;
 
-import com.wavemaker.tools.cloudfoundry.authentication.TransportToken;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportToken;
 
 /**
  * A started application returned from the {@link SpinupService}. Generally clients will need to store the transport

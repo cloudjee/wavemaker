@@ -1,5 +1,5 @@
 
-package com.wavemaker.tools.cloudfoundry.util;
+package com.wavemaker.tools.cloudfoundry.spinup.util;
 
 import java.io.Serializable;
 import java.util.Arrays;

@@ -1,12 +1,12 @@
 
-package com.wavemaker.tools.cloudfoundry.authentication;
+package com.wavemaker.tools.cloudfoundry.spinup.authentication;
 
 import java.util.Arrays;
 
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 
-import com.wavemaker.tools.cloudfoundry.util.HexString;
+import com.wavemaker.tools.cloudfoundry.spinup.util.HexString;
 
 /**
  * A security token that can be stored and transported between systems. Transport tokens are {@link AuthenticationToken

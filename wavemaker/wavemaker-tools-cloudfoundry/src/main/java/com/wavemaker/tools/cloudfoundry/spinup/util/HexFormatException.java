@@ -1,5 +1,5 @@
 
-package com.wavemaker.tools.cloudfoundry.util;
+package com.wavemaker.tools.cloudfoundry.spinup.util;
 
 /**
  * Exception thrown for strings that are not valid hexadecimal.

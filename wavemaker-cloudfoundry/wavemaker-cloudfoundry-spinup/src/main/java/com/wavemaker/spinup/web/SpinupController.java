@@ -28,11 +28,11 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.support.RequestContextUtils;
 
-import com.wavemaker.tools.cloudfoundry.InvalidLoginCredentialsException;
-import com.wavemaker.tools.cloudfoundry.SpinupService;
-import com.wavemaker.tools.cloudfoundry.authentication.SharedSecret;
-import com.wavemaker.tools.cloudfoundry.authentication.SharedSecretPropagation;
-import com.wavemaker.tools.cloudfoundry.authentication.TransportToken;
+import com.wavemaker.tools.cloudfoundry.spinup.InvalidLoginCredentialsException;
+import com.wavemaker.tools.cloudfoundry.spinup.SpinupService;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecret;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecretPropagation;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportToken;
 
 /**
  * Web {@link Controller} for spinning up wavemaker.

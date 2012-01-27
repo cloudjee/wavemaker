@@ -1,5 +1,5 @@
 
-package com.wavemaker.tools.cloudfoundry;
+package com.wavemaker.tools.cloudfoundry.spinup;
 
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;

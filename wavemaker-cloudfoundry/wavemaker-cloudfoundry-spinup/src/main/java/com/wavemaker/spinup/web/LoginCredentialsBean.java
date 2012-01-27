@@ -3,7 +3,7 @@ package com.wavemaker.spinup.web;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import com.wavemaker.tools.cloudfoundry.authentication.LoginCredentials;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.LoginCredentials;
 
 /**
  * Data holder used to collect {@link LoginCredentials}.

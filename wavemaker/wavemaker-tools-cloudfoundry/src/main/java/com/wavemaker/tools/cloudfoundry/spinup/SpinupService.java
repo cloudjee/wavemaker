@@ -1,9 +1,9 @@
 
-package com.wavemaker.tools.cloudfoundry;
+package com.wavemaker.tools.cloudfoundry.spinup;
 
-import com.wavemaker.tools.cloudfoundry.authentication.LoginCredentials;
-import com.wavemaker.tools.cloudfoundry.authentication.SharedSecret;
-import com.wavemaker.tools.cloudfoundry.authentication.TransportToken;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.LoginCredentials;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecret;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportToken;
 
 /**
  * Service that can be used to deploy, start and transfer a {@link SharedSecret} to a particular cloud foundry

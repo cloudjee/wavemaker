@@ -1,5 +1,5 @@
 
-package com.wavemaker.tools.cloudfoundry.authentication;
+package com.wavemaker.tools.cloudfoundry.spinup.authentication;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -12,7 +12,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.util.Assert;
 
-import com.wavemaker.tools.cloudfoundry.util.HexString;
+import com.wavemaker.tools.cloudfoundry.spinup.util.HexString;
 
 /**
  * Represents a shared secret used by client and server to encrypt/decrypt tokens. Shared secrets should never be

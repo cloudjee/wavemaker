@@ -1,5 +1,5 @@
 
-package com.wavemaker.tools.cloudfoundry.authentication;
+package com.wavemaker.tools.cloudfoundry.spinup.authentication;
 
 /**
  * Login credentials (username and password).

@@ -1,9 +1,9 @@
 
-package com.wavemaker.tools.cloudfoundry;
+package com.wavemaker.tools.cloudfoundry.spinup;
 
 import org.springframework.util.Assert;
 
-import com.wavemaker.tools.cloudfoundry.authentication.TransportToken;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportToken;
 
 /**
  * Default implementation of {@link StartedApplication}.

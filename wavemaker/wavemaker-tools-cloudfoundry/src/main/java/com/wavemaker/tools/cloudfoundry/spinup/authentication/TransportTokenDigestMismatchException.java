@@ -1,5 +1,5 @@
 
-package com.wavemaker.tools.cloudfoundry.authentication;
+package com.wavemaker.tools.cloudfoundry.spinup.authentication;
 
 /**
  * Exception thrown when a {@link TransportToken} digest does not match.

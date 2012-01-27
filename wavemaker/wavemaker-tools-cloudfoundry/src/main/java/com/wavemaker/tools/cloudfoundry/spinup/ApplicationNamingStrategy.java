@@ -1,5 +1,5 @@
 
-package com.wavemaker.tools.cloudfoundry;
+package com.wavemaker.tools.cloudfoundry.spinup;
 
 /**
  * Strategy interface used to name deployed applications.

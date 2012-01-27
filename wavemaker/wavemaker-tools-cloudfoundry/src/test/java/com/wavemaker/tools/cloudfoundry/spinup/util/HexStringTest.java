@@ -1,5 +1,5 @@
 
-package com.wavemaker.tools.cloudfoundry.util;
+package com.wavemaker.tools.cloudfoundry.spinup.util;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -10,8 +10,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.wavemaker.tools.cloudfoundry.util.HexFormatException;
-import com.wavemaker.tools.cloudfoundry.util.HexString;
+import com.wavemaker.tools.cloudfoundry.spinup.util.HexFormatException;
+import com.wavemaker.tools.cloudfoundry.spinup.util.HexString;
 
 /**
  * Tests for {@link HexString}.

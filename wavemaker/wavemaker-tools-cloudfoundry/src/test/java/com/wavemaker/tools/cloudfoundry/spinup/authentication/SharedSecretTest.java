@@ -1,5 +1,5 @@
 
-package com.wavemaker.tools.cloudfoundry.authentication;
+package com.wavemaker.tools.cloudfoundry.spinup.authentication;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -14,10 +14,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.wavemaker.tools.cloudfoundry.authentication.AuthenticationToken;
-import com.wavemaker.tools.cloudfoundry.authentication.SharedSecret;
-import com.wavemaker.tools.cloudfoundry.authentication.TransportToken;
-import com.wavemaker.tools.cloudfoundry.authentication.TransportTokenDigestMismatchException;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.AuthenticationToken;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecret;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportToken;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportTokenDigestMismatchException;
 
 /**
  * Tests for {@link SharedSecret}.

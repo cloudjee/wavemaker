@@ -1,6 +1,11 @@
 
-package com.wavemaker.tools.cloudfoundry;
+package com.wavemaker.tools.cloudfoundry.spinup;
 
+/**
+ * Context object used by {@link ApplicationNamingStrategy}.
+ * 
+ * @author Phillip Webb
+ */
 public interface ApplicationNamingStrategyContext {
 
     /**

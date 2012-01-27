@@ -1,5 +1,5 @@
 
-package com.wavemaker.tools.cloudfoundry;
+package com.wavemaker.tools.cloudfoundry.spinup;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -9,7 +9,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import com.wavemaker.tools.cloudfoundry.ApplicationDetails;
+import com.wavemaker.tools.cloudfoundry.spinup.ApplicationDetails;
 
 /**
  * Tests for {@link ApplicationDetails}.

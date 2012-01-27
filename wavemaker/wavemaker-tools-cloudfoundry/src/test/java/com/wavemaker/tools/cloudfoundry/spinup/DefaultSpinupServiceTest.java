@@ -1,5 +1,5 @@
 
-package com.wavemaker.tools.cloudfoundry;
+package com.wavemaker.tools.cloudfoundry.spinup;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -31,18 +31,18 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 
-import com.wavemaker.tools.cloudfoundry.ApplicationArchiveFactory;
-import com.wavemaker.tools.cloudfoundry.ApplicationDetails;
-import com.wavemaker.tools.cloudfoundry.ApplicationNamingStrategy;
-import com.wavemaker.tools.cloudfoundry.ApplicationNamingStrategyContext;
-import com.wavemaker.tools.cloudfoundry.DefaultSpinupService;
-import com.wavemaker.tools.cloudfoundry.InvalidLoginCredentialsException;
-import com.wavemaker.tools.cloudfoundry.StartedApplication;
-import com.wavemaker.tools.cloudfoundry.authentication.AuthenticationToken;
-import com.wavemaker.tools.cloudfoundry.authentication.LoginCredentials;
-import com.wavemaker.tools.cloudfoundry.authentication.SharedSecret;
-import com.wavemaker.tools.cloudfoundry.authentication.SharedSecretPropagation;
-import com.wavemaker.tools.cloudfoundry.authentication.TransportToken;
+import com.wavemaker.tools.cloudfoundry.spinup.ApplicationArchiveFactory;
+import com.wavemaker.tools.cloudfoundry.spinup.ApplicationDetails;
+import com.wavemaker.tools.cloudfoundry.spinup.ApplicationNamingStrategy;
+import com.wavemaker.tools.cloudfoundry.spinup.ApplicationNamingStrategyContext;
+import com.wavemaker.tools.cloudfoundry.spinup.DefaultSpinupService;
+import com.wavemaker.tools.cloudfoundry.spinup.InvalidLoginCredentialsException;
+import com.wavemaker.tools.cloudfoundry.spinup.StartedApplication;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.AuthenticationToken;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.LoginCredentials;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecret;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecretPropagation;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportToken;
 
 /**
  * Tests for {@link DefaultSpinupService}.
