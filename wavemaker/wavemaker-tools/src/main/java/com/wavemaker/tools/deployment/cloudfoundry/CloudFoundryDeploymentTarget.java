@@ -24,6 +24,7 @@ import org.springframework.util.StringUtils;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
+import com.wavemaker.tools.cloudfoundry.CloudFoundryUtils;
 import com.wavemaker.tools.data.BaseDataModelSetup;
 import com.wavemaker.tools.data.DataModelConfiguration;
 import com.wavemaker.tools.data.DataModelManager;
@@ -327,7 +328,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         log.info("Restarting application " + deploymentInfo.getApplicationName());
         Timer timer = new Timer();
         timer.start();
-        CloudFoundryClientUtils.restartApplicationAndWaitUntilRunning(client, deploymentInfo.getApplicationName());
+        CloudFoundryUtils.restartApplicationAndWaitUntilRunning(client, deploymentInfo.getApplicationName());
         log.info("Application " + deploymentInfo.getApplicationName() + " restarted successfully in " + timer.stop() + "ms");
     }
 
@@ -335,7 +336,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         log.info("Starting application " + deploymentInfo.getApplicationName());
         Timer timer = new Timer();
         timer.start();
-        CloudFoundryClientUtils.startApplicationAndWaitUntilRunning(client, deploymentInfo.getApplicationName());
+        CloudFoundryUtils.startApplicationAndWaitUntilRunning(client, deploymentInfo.getApplicationName());
         log.info("Application " + deploymentInfo.getApplicationName() + " started successfully in " + timer.stop() + "ms");
     }
 

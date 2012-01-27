@@ -18,7 +18,7 @@ import org.springframework.util.Assert;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.context.support.ServletContextResource;
 
-import com.wavemaker.spinup.ApplicationArchiveFactory;
+import com.wavemaker.tools.cloudfoundry.ApplicationArchiveFactory;
 
 /**
  * {@link ApplicationArchiveFactory} used to access the wavemaker studio WAR.

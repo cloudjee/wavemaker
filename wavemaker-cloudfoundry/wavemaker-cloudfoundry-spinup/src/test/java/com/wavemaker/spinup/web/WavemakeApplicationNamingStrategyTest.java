@@ -12,9 +12,9 @@ import static org.mockito.Mockito.mock;
 
 import org.junit.Test;
 
-import com.wavemaker.spinup.ApplicationDetails;
-import com.wavemaker.spinup.ApplicationNamingStrategyContext;
-import com.wavemaker.spinup.util.HexString;
+import com.wavemaker.tools.cloudfoundry.ApplicationDetails;
+import com.wavemaker.tools.cloudfoundry.ApplicationNamingStrategyContext;
+import com.wavemaker.tools.cloudfoundry.util.HexString;
 
 /**
  * Tests for {@link WavemakeApplicationNamingStrategy}.

@@ -8,10 +8,10 @@ import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Component;
 
-import com.wavemaker.spinup.ApplicationDetails;
-import com.wavemaker.spinup.ApplicationNamingStrategy;
-import com.wavemaker.spinup.ApplicationNamingStrategyContext;
-import com.wavemaker.spinup.util.HexString;
+import com.wavemaker.tools.cloudfoundry.ApplicationDetails;
+import com.wavemaker.tools.cloudfoundry.ApplicationNamingStrategy;
+import com.wavemaker.tools.cloudfoundry.ApplicationNamingStrategyContext;
+import com.wavemaker.tools.cloudfoundry.util.HexString;
 
 /**
  * {@link ApplicationNamingStrategy} for WaveMaker.

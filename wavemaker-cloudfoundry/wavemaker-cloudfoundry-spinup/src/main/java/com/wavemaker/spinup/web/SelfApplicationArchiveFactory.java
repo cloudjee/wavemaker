@@ -11,7 +11,7 @@ import org.cloudfoundry.client.lib.archive.DirectoryApplicationArchive;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.context.support.ServletContextResource;
 
-import com.wavemaker.spinup.ApplicationArchiveFactory;
+import com.wavemaker.tools.cloudfoundry.ApplicationArchiveFactory;
 
 /**
  * {@link ApplicationArchiveFactory} used to deploy self, use for testing only.
