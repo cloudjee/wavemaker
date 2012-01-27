@@ -34,7 +34,7 @@ public class WavemakerStudioApplicationArchiveFactory implements ApplicationArch
     public void setServletContext(ServletContext servletContext) {
         try {
             String version = getVersion(servletContext);
-            String path = "/resources/wm-studio-" + version + ".war";
+            String path = "/resources/wavemaker-studio-" + version + ".war";
             if (this.logger.isDebugEnabled()) {
                 this.logger.debug("Using studio resource " + path);
             }

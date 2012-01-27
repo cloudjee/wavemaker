@@ -22,7 +22,7 @@
         	var callbackAdded = false;
         	$.atmosphere.subscribe(deployUrl, !callbackAdded ? callback : null, $.atmosphere.request = { transport: 'long-polling' });
         	callbackAdded = true;
-        	$.atmosphere.response.push(deployUrl, null, $.atmosphere.request = {data: 'username=phil'});
+        	$.atmosphere.response.push(deployUrl);
         });
 	</script>
 			
