@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.wavemaker</groupId>
-		<artifactId>wavemaker-cloudfoundry</artifactId>
+		<artifactId>wavemaker</artifactId>
 		<version>6.5.0.BUILD-SNAPSHOT</version>
 	</parent>
 	<artifactId>wavemaker-tools-cloudfoundry</artifactId>
