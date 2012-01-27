@@ -14,6 +14,5 @@
 	</properties>
 	<modules>
 		<module>wavemaker-cloudfoundry-spinup</module>
-		<module>wavemaker-cloudfoundry-spinup-war</module>
 	</modules>
 </project>

@@ -11,5 +11,5 @@ Class-Path: aopalliance-1.0.jar atmosphere-compat-jbossweb-0.8.1.jar a
  0.RELEASE.jar spring-context-support-3.1.0.RELEASE.jar spring-core-3.
  1.0.RELEASE.jar spring-expression-3.1.0.RELEASE.jar spring-web-3.1.0.
  RELEASE.jar spring-webmvc-3.1.0.RELEASE.jar validation-api-1.0.0.GA.j
- ar wavemaker-cloudfoundry-spinup.jar
+ ar wavemaker-tools-cloudfoundry.jar
 
