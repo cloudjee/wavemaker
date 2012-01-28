@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import com.wavemaker.tools.cloudfoundry.CloudFoundryUtils;
 import com.wavemaker.tools.cloudfoundry.spinup.authentication.AuthenticationToken;
 import com.wavemaker.tools.cloudfoundry.spinup.authentication.LoginCredentials;
 import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecret;
@@ -225,7 +226,7 @@ public class DefaultSpinupService implements SpinupService {
             if (DefaultSpinupService.this.logger.isDebugEnabled()) {
                 DefaultSpinupService.this.logger.debug("Starting application " + applicationDetails.getName());
             }
-            this.cloudFoundryClient.startApplication(applicationDetails.getName());
+            CloudFoundryUtils.restartApplicationAndWaitUntilRunning(this.cloudFoundryClient, applicationDetails.getName());
             return applicationDetails.getUrl();
         }
 
@@ -239,7 +240,7 @@ public class DefaultSpinupService implements SpinupService {
                     ApplicationDetails applicationDetails = new ApplicationDetails(application.getName(), uri);
                     if (DefaultSpinupService.this.namingStrategy.isMatch(applicationDetails)) {
                         if (DefaultSpinupService.this.logger.isDebugEnabled()) {
-                            DefaultSpinupService.this.logger.debug("Skipping deployment of already running application "
+                            DefaultSpinupService.this.logger.debug("Skipping deployment of already installed application "
                                 + applicationDetails.getName());
                         }
                         return applicationDetails;
@@ -283,7 +284,7 @@ public class DefaultSpinupService implements SpinupService {
                     }
                     List<String> uris = Collections.singletonList(applicationDetails.getUrl());
                     this.cloudFoundryClient.createApplication(applicationDetails.getName(), DefaultSpinupService.this.framework, memory, uris,
-                        DefaultSpinupService.this.serviceNames, true);
+                        DefaultSpinupService.this.serviceNames, false);
                     return applicationDetails;
                 } catch (CloudFoundryException e) {
                     if (!HttpStatus.BAD_REQUEST.equals(e.getStatusCode()) || attempt >= MAX_ATTEMPTS) {

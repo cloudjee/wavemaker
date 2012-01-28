@@ -13,16 +13,17 @@
 	<script type="text/javascript">
         $(document).ready(function() {
 			function callback(response) {
-				if (response.status == 200) {
+				if (response.status == 200 && !(response.responseBody === "")) {
+					responseBodyLocation = response.responseBody;
 					$.atmosphere.unsubscribe();
-					window.location = response.responseBody;
+					window.location = responseBodyLocation;
 				}
 			}
-			var deployUrl = "<c:url value='/deploy'/>";
+		 	deployUrl = "<c:url value='/deploy'/>";
         	var callbackAdded = false;
         	$.atmosphere.subscribe(deployUrl, !callbackAdded ? callback : null, $.atmosphere.request = { transport: 'long-polling' });
         	callbackAdded = true;
-        	$.atmosphere.response.push(deployUrl);
+        	$.atmosphere.response.push(deployUrl, null, $.atmosphere.request = {data: ''});
         });
 	</script>
 			

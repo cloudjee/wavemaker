@@ -12,9 +12,9 @@ import javax.validation.Valid;
 
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.Broadcaster;
-import org.atmosphere.cpr.Broadcaster.SCOPE;
 import org.atmosphere.cpr.BroadcasterFactory;
 import org.atmosphere.cpr.FrameworkConfig;
+import org.atmosphere.cpr.HeaderConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.Assert;
@@ -116,7 +116,8 @@ public class SpinupController {
     @ResponseBody
     public void deploymentStaus(HttpServletRequest request) {
         AtmosphereResource<HttpServletRequest, HttpServletResponse> resource = getAtmosphereResource(request);
-        resource.setBroadcaster(getBroadcaster());
+        Broadcaster broadcaster = getBroadcaster(request);
+        resource.setBroadcaster(broadcaster);
         resource.suspend(TIMEOUT, false);
     }
 
@@ -127,7 +128,7 @@ public class SpinupController {
     @RequestMapping(value = "/deploy", method = RequestMethod.POST)
     @ResponseBody
     public void startDeployment(final HttpServletRequest request, @CookieValue(value = COOKIE_NAME, required = false) String encodedTransportToken) {
-        final Broadcaster broadcaster = getBroadcaster();
+        final Broadcaster broadcaster = getBroadcaster(request);
         final TransportToken transportToken = TransportToken.decode(encodedTransportToken);
         final SharedSecret secret = getSecret(request);
         final String username = "wavemaker@vmware.com"; // FIXME
@@ -137,6 +138,7 @@ public class SpinupController {
             public void run() {
                 try {
                     String url = SpinupController.this.spinupService.start(secret, username, transportToken);
+                    url = url + "?debug"; // FIXME
                     broadcaster.broadcast(url);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -146,10 +148,9 @@ public class SpinupController {
         });
     }
 
-    private Broadcaster getBroadcaster() {
-        Broadcaster broadcaster = BroadcasterFactory.getDefault().lookup(BROADCASTER_ID, true);
-        broadcaster.setScope(SCOPE.REQUEST);
-        return broadcaster;
+    private Broadcaster getBroadcaster(HttpServletRequest request) {
+        String trackingId = request.getHeader(HeaderConfig.X_ATMOSPHERE_TRACKING_ID);
+        return BroadcasterFactory.getDefault().lookup(BROADCASTER_ID + trackingId, true);
     }
 
     @SuppressWarnings("unchecked")

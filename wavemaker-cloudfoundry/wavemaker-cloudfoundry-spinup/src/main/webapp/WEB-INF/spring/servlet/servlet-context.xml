@@ -21,7 +21,7 @@
 	</bean>
 
 
-	<bean name="spinupService" class="com.wavemaker.spinup.DefaultSpinupService" autowire="byType">
+	<bean name="spinupService" class="com.wavemaker.tools.cloudfoundry.spinup.DefaultSpinupService" autowire="byType">
 	<property name="serviceNames">
 		<list>
 			<value>wavemaker</value>
@@ -29,7 +29,7 @@
 	</property>
 	</bean>
 
-	<bean class="com.wavemaker.spinup.authentication.SharedSecretPropagation" />
+	<bean class="com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecretPropagation" />
 
 
 </beans>
