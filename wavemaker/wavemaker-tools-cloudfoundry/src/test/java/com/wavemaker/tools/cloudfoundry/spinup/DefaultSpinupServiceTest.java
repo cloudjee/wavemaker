@@ -13,12 +13,12 @@ import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.util.Collections;
 import java.util.List;
 
 import org.cloudfoundry.client.lib.CloudApplication;
+import org.cloudfoundry.client.lib.CloudApplication.AppState;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
 import org.cloudfoundry.client.lib.CloudFoundryException;
 import org.cloudfoundry.client.lib.archive.ApplicationArchive;
@@ -105,6 +105,7 @@ public class DefaultSpinupServiceTest {
         given(this.cloudFoundryClient.getDefaultApplicationMemory(anyString())).willReturn(512);
         given(this.secret.encrypt(eq(new AuthenticationToken(this.authenticationToken)))).willReturn(this.transportToken);
         given(this.archiveFactory.getArchive()).willReturn(this.archive);
+        given(this.application.getState()).willReturn(AppState.STARTED);
     }
 
     @Test
@@ -116,9 +117,9 @@ public class DefaultSpinupServiceTest {
         String url = this.service.start(this.secret, this.credentials.getUsername(), token);
         verify(this.cloudFoundryClient).uploadApplication(APPLICATION_NAME, this.archive);
         verify(this.cloudFoundryClient).createApplication(APPLICATION_NAME, CloudApplication.SPRING, 512, Collections.singletonList(APPLICATION_URL),
-            null, true);
+            null, false);
         verify(this.propagation).sendTo(this.cloudFoundryClient, this.secret, APPLICATION_NAME);
-        verify(this.cloudFoundryClient).startApplication(APPLICATION_NAME);
+        verify(this.cloudFoundryClient).restartApplication(APPLICATION_NAME);
         assertThat(url, is(equalTo(APPLICATION_URL)));
         assertThat(this.transportToken, is(this.transportToken));
     }
@@ -128,16 +129,17 @@ public class DefaultSpinupServiceTest {
         CloudApplication deployedApplication = mock(CloudApplication.class);
         given(deployedApplication.getName()).willReturn(APPLICATION_NAME);
         given(deployedApplication.getUris()).willReturn(Collections.singletonList(APPLICATION_URL));
+        given(deployedApplication.getState()).willReturn(AppState.STARTED);
         List<CloudApplication> applications = Collections.singletonList(deployedApplication);
         given(this.cloudFoundryClient.getApplications()).willReturn(applications);
+        given(this.cloudFoundryClient.getApplication(APPLICATION_NAME)).willReturn(deployedApplication);
         given(this.namingStrategy.isMatch(isA(ApplicationDetails.class))).willReturn(true);
         TransportToken token = this.service.login(this.secret, this.credentials);
         String url = this.service.start(this.secret, this.credentials.getUsername(), token);
         verify(this.cloudFoundryClient).login();
         verify(this.cloudFoundryClient).getApplications();
         verify(this.propagation).sendTo(this.cloudFoundryClient, this.secret, APPLICATION_NAME);
-        verify(this.cloudFoundryClient).startApplication(APPLICATION_NAME);
-        verifyNoMoreInteractions(this.cloudFoundryClient);
+        verify(this.cloudFoundryClient).restartApplication(APPLICATION_NAME);
         assertThat(url, is(equalTo(APPLICATION_URL)));
         assertThat(token, is(this.transportToken));
     }
@@ -151,10 +153,11 @@ public class DefaultSpinupServiceTest {
 
     @Test
     public void shouldCallNamerAgainOnUrlClash() throws Exception {
+        given(this.cloudFoundryClient.getApplication(APPLICATION_NAME)).willReturn(this.application);
         given(this.namingStrategy.isMatch(isA(ApplicationDetails.class))).willReturn(false);
         given(this.namingStrategy.newApplicationDetails(isA(ApplicationNamingStrategyContext.class))).willReturn(this.applicationDetails);
         willThrow(new CloudFoundryException(HttpStatus.BAD_REQUEST)).willNothing().given(this.cloudFoundryClient).createApplication(APPLICATION_NAME,
-            CloudApplication.SPRING, 512, Collections.singletonList(APPLICATION_URL), null, true);
+            CloudApplication.SPRING, 512, Collections.singletonList(APPLICATION_URL), null, false);
         TransportToken token = this.service.login(this.secret, this.credentials);
         this.service.start(this.secret, this.credentials.getUsername(), token);
         verify(this.namingStrategy, times(2)).newApplicationDetails(isA(ApplicationNamingStrategyContext.class));
@@ -162,10 +165,11 @@ public class DefaultSpinupServiceTest {
 
     @Test
     public void shouldFailAfterTooManyNamerCalls() throws Exception {
+        given(this.cloudFoundryClient.getApplication(APPLICATION_NAME)).willReturn(this.application);
         given(this.namingStrategy.isMatch(isA(ApplicationDetails.class))).willReturn(false);
         given(this.namingStrategy.newApplicationDetails(isA(ApplicationNamingStrategyContext.class))).willReturn(this.applicationDetails);
         willThrow(new CloudFoundryException(HttpStatus.BAD_REQUEST)).given(this.cloudFoundryClient).createApplication(APPLICATION_NAME,
-            CloudApplication.SPRING, 512, Collections.singletonList(APPLICATION_URL), null, true);
+            CloudApplication.SPRING, 512, Collections.singletonList(APPLICATION_URL), null, false);
         try {
             TransportToken token = this.service.login(this.secret, this.credentials);
             this.service.start(this.secret, this.credentials.getUsername(), token);
