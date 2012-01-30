@@ -21,6 +21,7 @@ package com.wavemaker.tools.data;
 import java.io.File;
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.core.io.FileSystemResource;
 
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.common.util.SpringUtils;
@@ -40,7 +41,7 @@ public class SpringCfgGeneratorTest extends WMTestCase {
         try {
             SpringUtils.initSpringConfig();
             SpringCfgGenerator g = new SpringCfgGenerator();
-            g.setDestDir(f);
+            g.setDestDir(new FileSystemResource(f));
             g.setClassName("Foo");
             g.setPackage("com.blah");
             g.run();

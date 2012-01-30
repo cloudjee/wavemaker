@@ -27,6 +27,7 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.util.DesignTimeUtils;
+import org.springframework.core.io.FileSystemResource;
 
 /**
  * @author Simon Toens
@@ -52,7 +53,8 @@ public abstract class BaseDataUpgradeTask implements UpgradeTask {
     }
 
     protected DataModelConfiguration getDataModelConfiguration(Service service) {
-        return new DataModelConfiguration(getCfgFile(service.getId()));
+        //Todo: cftempfix
+        return new DataModelConfiguration(new FileSystemResource(getCfgFile(service.getId())));
     }
 
     protected abstract void upgrade(Service service);

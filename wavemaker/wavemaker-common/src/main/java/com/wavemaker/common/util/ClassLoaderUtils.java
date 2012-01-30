@@ -23,11 +23,13 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Arrays;
 import java.util.List;
+import java.util.ArrayList;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.io.GFSResource;
 
 /**
  * @author Simon Toens
@@ -122,12 +124,17 @@ public class ClassLoaderUtils {
             ConversionUtils.convertToResourceList(Arrays.asList(files)).toArray(new Resource[files.length]));
     }
 
-    public static ClassLoader getClassLoaderForResources(ClassLoader parent, Resource... files) {
+    public static ClassLoader getClassLoaderForResources(ClassLoader parent, Resource... resources) {
+        if (resources[0] instanceof GFSResource || !(resources[0] instanceof GFSResource)) {
+            return getClassLoaderForCFResources(parent, resources);
+        }
+
         try {
+
             final ClassLoader parentF = parent;
-            final URL[] urls = new URL[files.length];
-            for (int i = 0; i < files.length; i++) {
-                urls[i] = files[i].getURL();
+            final URL[] urls = new URL[resources.length];
+            for (int i = 0; i < resources.length; i++) {
+                urls[i] = resources[i].getURI().toURL();
             }
 
             URLClassLoader ret = AccessController.doPrivileged(new PrivilegedAction<URLClassLoader>() {
@@ -143,6 +150,19 @@ public class ClassLoaderUtils {
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
+    }
+
+    public static ClassLoader getClassLoaderForCFResources(ClassLoader parent, final Resource[] resources) {
+        final ClassLoader parentF = parent;
+
+        CFClassLoader ret = AccessController.doPrivileged(new PrivilegedAction<CFClassLoader>() {
+
+            @Override
+            public CFClassLoader run() {
+                return new CFClassLoader(resources, parentF);
+            }
+        });
+        return ret;
     }
 
     public static ClassLoader getClassLoaderForFile(ClassLoader parent, java.io.File... files) {

@@ -24,9 +24,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.cloudfoundry.runtime.env.CloudEnvironment;
+import org.cloudfoundry.runtime.env.RdbmsServiceInfo;
+
 import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.runtime.RuntimeAccess;
+import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.client.TreeNode;
 import com.wavemaker.runtime.data.Input;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
@@ -309,4 +313,34 @@ public class DataService {
             }
         });
     }
+
+    // Cloud foundry specific operations
+    
+    public void cfTestConnection(String serviceId) {
+        CloudEnvironment cfEnv = WMAppContext.getInstance().getCloudEnvironment();
+        if (cfEnv != null) {
+            RdbmsServiceInfo info = cfEnv.getServiceInfo(serviceId, RdbmsServiceInfo.class);
+            String url = info.getUrl();
+            String username = info.getUserName();
+            String password = info.getPassword();
+            testConnection(username, password, url, "");
+        } else {
+            throw new UnsupportedOperationException();
+        }
+    }
+
+    public void cfImportDatabase(String serviceId, String packageName, String tableFilter,
+        String schemaFilter, String driverClassName, String dialectClassName, String revengNamingStrategyClassName, boolean impersonateUser,
+        String activeDirectoryDomain) {CloudEnvironment cfEnv = WMAppContext.getInstance().getCloudEnvironment();
+        if (cfEnv != null) {
+            RdbmsServiceInfo info = cfEnv.getServiceInfo(serviceId, RdbmsServiceInfo.class);
+            String connectionUrl = info.getUrl();
+            String username = info.getUserName();
+            String password = info.getPassword();
+            importDatabase(serviceId, packageName, username, password, connectionUrl, tableFilter, schemaFilter,
+                    driverClassName, dialectClassName, revengNamingStrategyClassName, impersonateUser, activeDirectoryDomain);
+        } else {
+            throw new UnsupportedOperationException();
+        }
+    }   
 }

@@ -31,6 +31,7 @@ import java.util.Properties;
 import javax.xml.bind.JAXBException;
 
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.common.util.ObjectUtils;
@@ -38,6 +39,7 @@ import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.common.util.Tuple;
 import com.wavemaker.common.util.XMLWriter;
+import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.type.OperationEnumeration;
 import com.wavemaker.runtime.data.DataServiceDefinition;
 import com.wavemaker.runtime.data.DataServiceInternal;
@@ -47,6 +49,7 @@ import com.wavemaker.runtime.data.ExternalDataModelConfig;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.BeanInfo;
 import com.wavemaker.tools.data.ColumnInfo;
@@ -65,6 +68,7 @@ import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.spring.SpringConfigSupport;
 import com.wavemaker.tools.spring.SpringServiceDefinitionWrapper;
 import com.wavemaker.tools.spring.beans.Beans;
+import com.wavemaker.tools.project.StudioFileSystem;
 
 /**
  * @author Simon Toens
@@ -287,6 +291,31 @@ public class DataServiceUtils {
         }
     }
 
+    public static void writeProperties(Properties p, Resource destdir, String serviceName) {
+        StudioFileSystem fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
+        //File f = new File(destdir, serviceName + DataServiceConstants.PROPERTIES_FILE_EXT);
+        Resource f = null;
+        try {
+            f = destdir.createRelative(serviceName + DataServiceConstants.PROPERTIES_FILE_EXT);
+        } catch(IOException ex) {
+
+        }
+
+        OutputStream fos = null;
+        try {
+            //fos = new FileOutputStream(f);
+            fos = fileSystem.getOutputStream(f);
+            writeProperties(p, fos, serviceName);
+        //} catch (IOException ex) {
+        //    throw new DataServiceRuntimeException(ex);
+        } finally {
+            try {
+                fos.close();
+            } catch (Exception ignore) {
+            }
+        }
+    }
+
     public static void writeProperties(Properties p, OutputStream os, String serviceName) {
 
         String comment = getPropertiesFileComment(serviceName);
@@ -312,17 +341,25 @@ public class DataServiceUtils {
         return addPrefix(prefix, p);
     }
 
-    public static File createEmptyDataModel(File destDir, String serviceId, String packageName) {
+    public static Resource createEmptyDataModel(StudioFileSystem fileSystem, Resource destDir, String serviceId, String packageName) {
         return createEmptyDataModel(destDir, serviceId, packageName, packageName);
     }
 
-    public static File createEmptyDataModel(File destDir, String serviceId, String packageName, String dataPackage) {
+    public static Resource createEmptyDataModel(Resource destDir, String serviceId, String packageName, String dataPackage) {
 
-        File rtn = new File(destDir, getCfgFileName(serviceId));
+        //File rtn = new File(destDir, getCfgFileName(serviceId));
+        Resource rtn;
+        try {
+            rtn = destDir.createRelative(getCfgFileName(serviceId));
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
+
+        StudioFileSystem fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
 
         SpringCfgGenerator g = new SpringCfgGenerator();
         try {
-            g.setDestDir(rtn.getParentFile());
+            g.setDestDir(fileSystem.getParent(rtn));
             g.setPackage(packageName);
             g.setDataPackage(dataPackage);
             g.setServiceName(serviceId);

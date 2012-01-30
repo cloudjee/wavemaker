@@ -78,7 +78,20 @@ public class DataServiceSpringConfiguration {
 
     public DataServiceSpringConfiguration(FileService fileService, String rootPath, String configFile, String serviceName) {
         this.rootPath = rootPath;
-        this.path = rootPath + "/" + configFile;
+        if (this.rootPath.length() == 0 || !this.rootPath.substring(this.rootPath.length()-1).equals("/")) {
+            if (configFile != null && configFile.length() > 0 && configFile.substring(0, 1).equals("/")) {
+                this.path = rootPath + configFile;
+            } else {
+                this.path = rootPath + "/" + configFile;
+            }
+        } else {
+            if (configFile != null && configFile.length() > 0 && configFile.substring(0, 1).equals("/")) {
+                this.path = rootPath + configFile.substring(1);
+            } else {
+                this.path = rootPath + configFile;
+            }
+        }
+
         this.fileService = fileService;
         this.beans = DataServiceUtils.readBeans(fileService, this.path);
         this.serviceId = serviceName;

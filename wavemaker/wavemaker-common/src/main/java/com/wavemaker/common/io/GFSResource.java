@@ -28,6 +28,7 @@ import java.io.OutputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.net.MalformedURLException;
 import java.util.List;
 
 import org.springframework.core.io.Resource;
@@ -47,6 +48,7 @@ import com.wavemaker.common.WMRuntimeException;
 public class GFSResource implements Resource {
 
     private static final String METADATA_FOLDER_KEY = "FOLDER";
+    
 
     private final GridFS gfs;
 
@@ -245,7 +247,12 @@ public class GFSResource implements Resource {
      */
     @Override
     public URL getURL() {
-        throw new UnsupportedOperationException();
+        try {
+            return getURI().toURL();
+        } catch(MalformedURLException ex) {
+            throw new WMRuntimeException(ex);
+        }
+        //throw new UnsupportedOperationException();
     }
 
     /**

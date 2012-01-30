@@ -32,6 +32,8 @@ import java.sql.Statement;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.common.util.IOUtils;
@@ -225,14 +227,14 @@ public class HSQLDBTest {
             importer.setConnectionUrl(url);
             importer.testConnection();
 
-            importer.setDestDir(outputDir);
+            importer.setDestDir(new FileSystemResource(outputDir));
             importer.setPackage("com.foo.blah");
             importer.setClassName("Service");
             importer.setTableFilter("COUNTRY");
             importer.setGenerateServiceClass(true);
             importer.setCompileServiceClass(true);
 
-            File javaDir = DataModelManager.getJavaDir(outputDir, "com.foo.blah");
+            Resource javaDir = DataModelManager.getJavaDir(new FileSystemResource(outputDir), "com.foo.blah");
             importer.setJavaDir(javaDir);
 
             importer.run();

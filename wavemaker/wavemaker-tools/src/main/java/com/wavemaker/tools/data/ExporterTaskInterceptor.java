@@ -26,6 +26,7 @@ public class ExporterTaskInterceptor implements MethodInterceptor {
                             MethodProxy methodProxy) throws Throwable {
 
         HibernateToolTask parent = null;
+        Resource destDir = null;
 
         if (!method.getName().equals("execute")) {
             return methodProxy.invokeSuper(object, args);
@@ -34,29 +35,33 @@ public class ExporterTaskInterceptor implements MethodInterceptor {
         if (object instanceof HibernateConfigExporterTask) {
             HibernateConfigExporterTask task = (HibernateConfigExporterTask)object;
             parent = task.getParent();
+            destDir = task.getDestDir();
         } else if (object instanceof Hbm2JavaExporterTaskWrapper) {
             Hbm2JavaExporterTaskWrapper task = (Hbm2JavaExporterTaskWrapper)object;
             parent = task.getParent();
+            destDir = task.getDestDir();
         } else if (object instanceof QueryExporterTask) {
             QueryExporterTask task = (QueryExporterTask)object;
             parent = task.getParent();
+            destDir = task.getDestDir();
         } else if (object instanceof Hbm2HbmXmlExporterTaskWrapper) {
             Hbm2HbmXmlExporterTaskWrapper task = (Hbm2HbmXmlExporterTaskWrapper)object;
             parent = task.getParent();
+            destDir = task.getDestDir();
+        } else if (object instanceof HibernateSpringConfigExporterTask) {
+            HibernateSpringConfigExporterTask task = (HibernateSpringConfigExporterTask)object;
+            parent = task.getParent();
+            destDir = task.getDestDir();
         }
 
-        File origDestDir = new File(parent.getDestDir().getAbsolutePath());
+        //File origDestDir = new File(parent.getDestDir().getAbsolutePath());
 
-        File tempDestDir = IOUtils.createTempDirectory();
+        File tempDestDir = IOUtils.createTempDirectory("dataService_directory", null);
         parent.setDestDir(tempDestDir);
 
         Object rtn = methodProxy.invokeSuper(object, args);
 
-        //FileUtils.copyDirectory(tempDestDir, origDestDir);
-        Resource target = new FileSystemResource(origDestDir);
-        fileSystem.copyRecursive(tempDestDir, target, null);
-
-        parent.setDestDir(origDestDir);
+        fileSystem.copyRecursive(tempDestDir, destDir, null);
 
         return rtn;
     }

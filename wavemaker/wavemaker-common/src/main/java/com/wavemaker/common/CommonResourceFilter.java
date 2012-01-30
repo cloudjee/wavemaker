@@ -1,12 +1,11 @@
 
-package com.wavemaker.tools.project;
+package com.wavemaker.common;
 
 import org.springframework.core.io.Resource;
-import com.wavemaker.common.CommonResourceFilter;
 
-public interface ResourceFilter {
+public interface CommonResourceFilter {
 
-    public static final ResourceFilter NO_FILTER = new ResourceFilter() {
+    public static final CommonResourceFilter NO_FILTER = new CommonResourceFilter() {
 
         @Override
         public boolean accept(Resource resource) {
