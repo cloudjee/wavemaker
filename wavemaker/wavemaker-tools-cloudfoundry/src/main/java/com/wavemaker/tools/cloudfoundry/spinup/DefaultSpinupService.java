@@ -3,7 +3,9 @@ package com.wavemaker.tools.cloudfoundry.spinup;
 
 import java.net.MalformedURLException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -29,6 +31,8 @@ import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportToken;
  * @author Phillip Webb
  */
 public class DefaultSpinupService implements SpinupService {
+
+    private static final String CLOUD_CONTROLLER_VARIABLE_NAME = "cloudcontroller";
 
     private final Log logger = LogFactory.getLog(getClass());
 
@@ -139,11 +143,11 @@ public class DefaultSpinupService implements SpinupService {
         if (StringUtils.hasLength(this.controllerUrl)) {
             return this.controllerUrl;
         }
-        String systemEnv = System.getenv("spinup_target");
+        String systemEnv = System.getenv(CLOUD_CONTROLLER_VARIABLE_NAME);
         if (StringUtils.hasLength(systemEnv)) {
             return systemEnv;
         }
-        systemEnv = System.getProperty("spinup_target");
+        systemEnv = System.getProperty(CLOUD_CONTROLLER_VARIABLE_NAME);
         if (StringUtils.hasLength(systemEnv)) {
             return systemEnv;
         }
@@ -253,6 +257,10 @@ public class DefaultSpinupService implements SpinupService {
                 DefaultSpinupService.this.logger.debug("Uploading application " + applicationDetails.getName());
             }
             uploadApplication(applicationDetails.getName());
+            CloudApplication application = this.cloudFoundryClient.getApplication(applicationDetails.getName());
+            Map<String, String> env = new HashMap<String, String>(application.getEnvAsMap());
+            env.put(CLOUD_CONTROLLER_VARIABLE_NAME, getControllerUrl());
+            this.cloudFoundryClient.updateApplicationEnv(applicationDetails.getName(), env);
             return applicationDetails;
         }
 

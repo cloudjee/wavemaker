@@ -70,12 +70,17 @@ public class SharedSecretPropagation {
      * {@link #sendTo(CloudFoundryClient, SharedSecret, CloudApplication) sent} the {@link SharedSecret} to the running
      * application.
      * 
+     * @param required
+     * 
      * @return the shared secret
      * @throw IllegalStateException if the secret cannot be obtained
      */
-    public SharedSecret getForSelf() throws IllegalStateException {
+    public SharedSecret getForSelf(boolean required) throws IllegalStateException {
         try {
             String secret = getEnv(ENV_KEY);
+            if (!StringUtils.hasLength(secret) && !required) {
+                return null;
+            }
             Assert.state(StringUtils.hasLength(secret), "No shared secret has been propagated");
             return SharedSecret.fromBytes(Hex.decodeHex(secret.toCharArray()));
         } catch (DecoderException e) {

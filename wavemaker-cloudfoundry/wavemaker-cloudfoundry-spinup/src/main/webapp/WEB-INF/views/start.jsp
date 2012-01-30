@@ -14,7 +14,7 @@
         $(document).ready(function() {
 			function callback(response) {
 				if (response.status == 200 && !(response.responseBody === "")) {
-					responseBodyLocation = response.responseBody;
+					var responseBodyLocation = response.responseBody;
 					$.atmosphere.unsubscribe();
 					window.location = responseBodyLocation;
 				}
