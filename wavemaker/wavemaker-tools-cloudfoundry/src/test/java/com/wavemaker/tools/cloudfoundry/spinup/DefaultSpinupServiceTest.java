@@ -11,6 +11,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -21,6 +22,7 @@ import org.cloudfoundry.client.lib.CloudApplication;
 import org.cloudfoundry.client.lib.CloudApplication.AppState;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
 import org.cloudfoundry.client.lib.CloudFoundryException;
+import org.cloudfoundry.client.lib.CloudService;
 import org.cloudfoundry.client.lib.archive.ApplicationArchive;
 import org.junit.Before;
 import org.junit.Rule;
@@ -183,6 +185,38 @@ public class DefaultSpinupServiceTest {
     @Test
     public void shouldGetDomain() throws Exception {
         assertThat(this.service.getDomain(), is(".cloudfoundry.com"));
+    }
+
+    @Test
+    public void shouldCreateService() throws Exception {
+        CloudService cloudService = new CloudService();
+        cloudService.setName("test");
+        cloudService.setType("test");
+        List<CloudService> cloudServices = Collections.singletonList(cloudService);
+        this.service.setServices(cloudServices);
+
+        given(this.cloudFoundryClient.getApplication(APPLICATION_NAME)).willReturn(this.application);
+        given(this.namingStrategy.isMatch(isA(ApplicationDetails.class))).willReturn(false);
+        given(this.namingStrategy.newApplicationDetails(isA(ApplicationNamingStrategyContext.class))).willReturn(this.applicationDetails);
+
+        this.service.start(this.secret, this.credentials.getUsername(), this.transportToken);
+        verify(this.cloudFoundryClient).createService(cloudService);
+    }
+
+    @Test
+    public void shouldNotReplaceExistingService() throws Exception {
+        CloudService cloudService = new CloudService();
+        cloudService.setName("test");
+        cloudService.setType("test");
+        List<CloudService> cloudServices = Collections.singletonList(cloudService);
+        this.service.setServices(cloudServices);
+        given(this.cloudFoundryClient.getServices()).willReturn(cloudServices);
+        given(this.cloudFoundryClient.getApplication(APPLICATION_NAME)).willReturn(this.application);
+        given(this.namingStrategy.isMatch(isA(ApplicationDetails.class))).willReturn(false);
+        given(this.namingStrategy.newApplicationDetails(isA(ApplicationNamingStrategyContext.class))).willReturn(this.applicationDetails);
+
+        this.service.start(this.secret, this.credentials.getUsername(), this.transportToken);
+        verify(this.cloudFoundryClient, never()).createService(cloudService);
     }
 
 }

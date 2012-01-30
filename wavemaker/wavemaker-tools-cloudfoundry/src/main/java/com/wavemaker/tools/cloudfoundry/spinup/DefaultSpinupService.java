@@ -12,6 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import org.cloudfoundry.client.lib.CloudApplication;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
 import org.cloudfoundry.client.lib.CloudFoundryException;
+import org.cloudfoundry.client.lib.CloudService;
 import org.cloudfoundry.client.lib.archive.ApplicationArchive;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.HttpStatus;
@@ -45,6 +46,8 @@ public class DefaultSpinupService implements SpinupService {
     private ApplicationArchiveFactory archiveFactory;
 
     private String framework = CloudApplication.SPRING;
+
+    private List<CloudService> services;
 
     private List<String> serviceNames = null;
 
@@ -183,12 +186,21 @@ public class DefaultSpinupService implements SpinupService {
     }
 
     /**
+     * Sets the services that should be created (if they don't already exist).
+     * 
+     * @param services the services to create
+     */
+    public void setServices(List<CloudService> services) {
+        this.services = services;
+    }
+
+    /**
      * Sets the service names that should be created with the application. Can be <tt>null</tt>.
      * 
      * @param serviceNames the service names
+     * @see
      */
     public void setServiceNames(List<String> serviceNames) {
-        // FIXME we may need a way to provision services as well as define the names
         this.serviceNames = serviceNames;
     }
 
@@ -251,7 +263,7 @@ public class DefaultSpinupService implements SpinupService {
                     }
                 }
             }
-
+            addMissingServices();
             ApplicationDetails applicationDetails = createApplicationWithUniqueUrl();
             if (DefaultSpinupService.this.logger.isDebugEnabled()) {
                 DefaultSpinupService.this.logger.debug("Uploading application " + applicationDetails.getName());
@@ -275,6 +287,27 @@ public class DefaultSpinupService implements SpinupService {
             } catch (Exception e) {
                 throw new IllegalStateException(e);
             }
+        }
+
+        private void addMissingServices() {
+            if (DefaultSpinupService.this.services != null) {
+                Map<String, CloudService> servicesByName = getServicesByName();
+                List<CloudService> existingServices = this.cloudFoundryClient.getServices();
+                for (CloudService existingService : existingServices) {
+                    servicesByName.remove(existingService.getName());
+                }
+                for (CloudService cloudService : servicesByName.values()) {
+                    this.cloudFoundryClient.createService(cloudService);
+                }
+            }
+        }
+
+        private Map<String, CloudService> getServicesByName() {
+            Map<String, CloudService> servicesByName = new HashMap<String, CloudService>();
+            for (CloudService service : DefaultSpinupService.this.services) {
+                servicesByName.put(service.getName(), service);
+            }
+            return servicesByName;
         }
 
         private ApplicationDetails createApplicationWithUniqueUrl() {
