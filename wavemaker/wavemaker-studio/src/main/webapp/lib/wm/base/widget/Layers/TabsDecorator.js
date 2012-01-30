@@ -34,8 +34,9 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 		    name: "tabsControl"
 		});
 		this.decoree.moveControl(this.tabsControl, 0);
-	    if (this.decoree.dndTargetName) {
-    		this.dndObj = new dojo.dnd.Source(this.tabsControl.domNode, {accept: [this.decoree.dndTargetName]});
+	    if (this.decoree.dndTargetName || this.decoree.isDesignLoaded()) {
+		dojo.require("dojo.dnd.Source");
+    		this.dndObj = new dojo.dnd.Source(this.tabsControl.domNode, {accept: [this.decoree.dndTargetName || "designMoveLayers"]});
 		this.dndObjConnect = this.tabsControl.connect(this.dndObj, "onDndDrop", this, "onTabDrop");
 	    }
 
@@ -74,38 +75,83 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 		this.dndObj.destroy()
 		dojo.disconnect(this.dndObjConnect);
 		dojo.addClass(b, "dojoDndItem");
-		dojo.attr(b, "dndType", this.decoree.dndTargetName);
-    		this.dndObj = new dojo.dnd.Source(this.tabsControl.domNode, {accept: [this.decoree.dndTargetName]});
+		dojo.attr(b, "dndType", this.decoree.dndTargetName || "designMoveLayers");
+    		this.dndObj = new dojo.dnd.Source(this.tabsControl.domNode, {accept: [this.decoree.dndTargetName || "designMoveLayers"]});
 		this.dndObjConnect = this.tabsControl.connect(this.dndObj, "onDndDrop", this, "onTabDrop");
 	    }
 	},
 	 onTabDrop: function(dndSource,nodes,copy,dndTarget,event) {
 	     if (dojo.dnd.manager().target != this.dndObj) return;
 	     var tabLayers = wm.getWidgetByDomNode(nodes[0]);
-	     var index = dojo.indexOf(tabLayers.decorator.btns, nodes[0]);
-	     if (index == -1) return;
-	     var layer = tabLayers.layers[index];
+
+	     var indexWas = dojo.indexOf(tabLayers.decorator.btns, nodes[0]);
+	     if (indexWas == -1) return;
+	     var layer = tabLayers.layers[indexWas];
 	     if (!layer) return;
-	     if (layer.parent != this.decoree) {
+
+	     var indexIs = dojo.indexOf(this.tabsControl.domNode.childNodes, nodes[0]);
+	     var findNewIndex = false;
+	     var changeParent = layer.parent != this.decoree;
+	     if (changeParent) {
 		 layer.setParent(this.decoree);
 		 var selectedIndex = tabLayers.layerIndex;
 		 tabLayers.layerIndex = -1;
 		 tabLayers.setLayerIndex(tabLayers.layers.length > selectedIndex ? selectedIndex : tabLayers.layers.length-1);
-	     }
     
-	     var managedButtons = this.btns;
-	     var currentButtons = this.tabsControl.domNode.childNodes;
-	     for (var i = 0; i < currentButtons.length; i++) {
-		 var b = currentButtons[i];
-		 if (dojo.indexOf(managedButtons,b) == -1) {
-		     this.decoree.moveLayer(layer, i);
-		     dojo.destroy(b);
-		     break;
+		 var managedButtons = this.btns;
+		 var currentButtons = this.tabsControl.domNode.childNodes;
+		 if (indexIs == this.btns.length-1) {
+		     findNewIndex = true;
 		 }
+		 // Find any buttons currently in the tabControl that aren't in this.btns; this is a new tab dragged in from elsewhere
+		 // and needs to be handled
+/*
+		 for (var i = 0; i < currentButtons.length; i++) {
+		     var b = currentButtons[i];
+		     if (dojo.indexOf(managedButtons,b) == -1) {
+			 draggedFromElsewhere = true;
+			 this.decoree.moveLayerIndex(layer, i);
+			 dojo.destroy(b);
+			 break;
+		     }
+		 }
+		 */
+		 if (nodes[0].parentNode)
+		     dojo.destroy(nodes[0]);
+	     } else if (indexWas == indexIs) {
+		 findNewIndex = true;
+	     }
+
+	     /* we generally need to find a new index when the user drops a tab between two tabs because dojo fails
+	      * to handle this case
+	      */
+	     if (findNewIndex) {
+		 // use the event to see if the index SHOULD have been changed but dojo just messed up.
+		 var x = event.offsetX;
+		 var found = false;
+		 for (var i = 0; i < this.btns.length; i++) {
+		     var b = this.btns[i];
+		     var coords = dojo.marginBox(b);
+		     coords.l += dojo._getContentBox(b).l;
+		     if (coords.l > x) {
+			 indexIs = i;
+			 found = true;
+			 break;
+		     }
+		 }
+		 if (!found) {
+		     indexIs = this.btns.length;
+		 } else if (indexIs > indexWas && !changeParent) {
+		     indexIs--;
+		 }
+	     }
+	     this.decoree.moveLayerIndex(layer, indexIs);
+	     if (this.decoree.isDesignLoaded()) {
+		 studio.refreshWidgetsTree();
 	     }
              layer.activate();
 	     layer.onTabDrop();
-	     if (tabLayers != this.decoree) {
+	     if (tabLayers != this.decoree && tabLayers.onTabRemoved) {
 		 tabLayers.onTabRemoved();
 	     }
 	     this.decoree.onTabDrop();

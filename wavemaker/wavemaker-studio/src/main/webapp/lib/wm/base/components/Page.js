@@ -263,7 +263,7 @@ dojo.declare("wm.Page", wm.Component, {
 		return this.inherited(arguments);
 	},
 	loadComponent: function(inName, inParent, inType, inProps, inEvents, inChildren, isSecond) {
-	    if (wm.isMobile && inProps.generateForDevice && app.appRoot.deviceSize && dojo.indexOf(inProps.generateForDevice,app.appRoot.deviceSize) == -1)
+	    if (!this._isDesignLoaded && (inProps.generateForDevice == "mobile" && !wm.isMobile || inProps.generateForDevice == "desktop" && wm.isMobile))
 		return;
 
 		// Some code for debugging performance; normally skipped
@@ -638,7 +638,9 @@ wm.Page.extend({
     },
     getValidateVisibleOnly: function() {
 	return this.getPageProperty("validateVisibleOnly");
-    }
+    },
+    onMobileFolding: function() {},
+    onMobileUnfolding: function() {}
 });
 
 wm.Object.extendSchema(wm.Page, {

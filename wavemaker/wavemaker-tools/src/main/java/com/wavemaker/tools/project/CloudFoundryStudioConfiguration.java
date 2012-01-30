@@ -33,7 +33,7 @@ import com.wavemaker.runtime.RuntimeAccess;
  * @author Jeremy Grelle
  * @author Ed Callahan
  */
-public class CFStudioConfiguration implements StudioConfiguration {
+public class CloudFoundryStudioConfiguration implements StudioConfiguration {
 
     private static final String WMHOME_KEY = "wavemakerHome";
 
@@ -47,7 +47,7 @@ public class CFStudioConfiguration implements StudioConfiguration {
 
     private RuntimeAccess runtimeAccess;
 
-    public CFStudioConfiguration(GridFSStudioFileSystem fileSystem) {
+    public CloudFoundryStudioConfiguration(GridFSStudioFileSystem fileSystem) {
         this.fileSystem = fileSystem;
     }
 
@@ -94,8 +94,8 @@ public class CFStudioConfiguration implements StudioConfiguration {
 
     public static String getCurrentVersionInfoString() throws IOException {
 
-        String versionFile = CFStudioConfiguration.class.getPackage().getName().replace(".", "/") + "/" + VERSION_FILE;
-        InputStream is = CFStudioConfiguration.class.getClassLoader().getResourceAsStream(versionFile);
+        String versionFile = CloudFoundryStudioConfiguration.class.getPackage().getName().replace(".", "/") + "/" + VERSION_FILE;
+        InputStream is = CloudFoundryStudioConfiguration.class.getClassLoader().getResourceAsStream(versionFile);
         String versionFileString = org.apache.commons.io.IOUtils.toString(is);
 
         return versionFileString;

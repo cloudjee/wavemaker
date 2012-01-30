@@ -135,8 +135,7 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		var p = '';
 		// this window.studio test is needed for the login page to run when not in debug mode
 		if(this.isDesignLoaded() && window.studio && studio.project) {
-		    var projectPrefix = studio.projectPrefix;
-		    p = '/' + projectPrefix + studio.project.getProjectPath() + '/';
+		    p = '/' + studio.project.getProjectPath() + '/';
 		}
 		return p;
 	},

@@ -26,7 +26,8 @@ wm.Component.extend({
 				r.push(v);
 		}
 		this.roles = r;
-		this.setShowing(true);
+	        if (this.setShowing)
+		    this.setShowing(true);
 	},
     set_deviceSizes: function(inSize) {
 	this.deviceSizes = inSize;
@@ -41,8 +42,11 @@ wm.Component.extend({
 	    this.subscribe("deviceSizeRecalc", this, "reshowMobile");
 	}
     },
-    set_generateForDevice: function(inSize) {
-	this.generateForDevice = inSize;
+    set_generateForDevice: function(inType) {
+	this.generateForDevice = inType;
+	var deviceType = studio.deviceTypeSelect.getDataValue().toLowerCase();
+	this.setShowing(this._mobileShowingRequested || this.showing);
+
 	var found = false;
 	for (var i = 0; i < this._subscriptions.length; i++) {
 	    if (this._subscriptions[i][0] == "deviceSizeRecalc") {

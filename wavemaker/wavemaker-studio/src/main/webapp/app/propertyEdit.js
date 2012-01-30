@@ -621,7 +621,7 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
 
 			    return true;
 			}
-	    }));
+	    }),true);
 	}
 });
 
@@ -637,10 +637,27 @@ dojo.declare("wm.prop.FieldSelect", wm.prop.SelectMenu, {
 	this.inherited(arguments)
 	var ds = this.inspected.getProp(this.dataSetProp);
 	var options;
-	if (ds) {
-	    options = wm.typeManager.getSimplePropNames(ds._dataSchema);
-	} else {
-	    options = [];
+	if (!ds && this.inspected.formField) {
+	    var form = this.inspected.getParentForm();
+	    if (form) {
+		var schema = form.dataSet._dataSchema[this.inspected.formField]; // doesn't work if formField is x.y, only x
+		if (schema) {
+		    var type = schema.type;
+		}
+		if (type) {
+		    var typeDef = wm.typeManager.getType(type);
+		}
+		if (typeDef) {
+		    options = wm.typeManager.getSimplePropNames(typeDef.fields)
+		}
+	    }
+	}
+	if (!options) {
+	    if (ds) {
+		options = wm.typeManager.getSimplePropNames(ds._dataSchema);
+	    } else {
+		options = [];
+	    }
 	}
 	if (this.emptyLabel) {
 	    this.allowNone = false;
@@ -788,6 +805,7 @@ dojo.declare("wm.prop.ImageListSelect", wm.prop.SelectMenu, {
 });
 
 dojo.declare("wm.prop.WidgetSelect", wm.prop.SelectMenu, {
+    inspectedChildrenOnly: false,
     dataField: "dataValue",
     displayField: "dataValue",
     allowNone: true,
@@ -802,7 +820,6 @@ dojo.declare("wm.prop.WidgetSelect", wm.prop.SelectMenu, {
 
 	this.inherited(arguments);
 
-
 	var components = wm.listComponents([this.useOwner || this.inspected.owner], this.widgetType);
 	var result = [];
 	if (this.excludeType) {
@@ -813,6 +830,15 @@ dojo.declare("wm.prop.WidgetSelect", wm.prop.SelectMenu, {
 	    }
 	} else {
 	    result = components;
+	}
+	if (this.inspectedChildrenOnly) {
+	    components = result;
+	    result = [];
+	    for (var i = 0; i < components.length; i++) {
+		if (components[i].isAncestor(this.inspected)) {
+		    result.push(components[i]);
+		}
+	    }
 	}
 	var ids = [];
 	for (var i = 0; i < result.length; i++) {
@@ -1635,6 +1661,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	    propDef.editorProps = {};
 	}
 	propDef.editorProps.matchComponentType = true;
+	propDef.editorProps.widgetDataSets = true;
 	if (this.propDef.putWiresInSubcomponent) {
 	    propDef.editorProps.disabled = true;
 	    propDef.editorProps.alwaysDisabled = true;

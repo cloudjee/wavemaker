@@ -317,7 +317,8 @@ wm.LiveFormBase.extend({
 			readonly: this.readonly,
 			captionSize: this.captionSize,
 			captionAlign: this.captionAlign,
-			captionPosition: this.captionPosition
+		    captionPosition: this.captionPosition,
+		    changeOnKey: true
 		}
 	},
 	getEditorParent: function() {

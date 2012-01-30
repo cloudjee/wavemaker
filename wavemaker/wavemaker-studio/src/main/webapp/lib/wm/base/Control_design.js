@@ -384,7 +384,7 @@ wm.Control.extend({
 });
 
 wm.Object.extendSchema(wm.Control, {
-    generateForDevice: {group: "devices", shortname: "generateForDeviceSizes", editor: "wm.prop.DeviceListEditor", advanced:1},
+    generateForDevice: {group: "devices", options: ["", "mobile", "desktop"], advanced:1},
     imageList: {ignore: 1, group: "widgetName", subgroup: "graphics", order: 50, editor: "wm.prop.ImageListSelect"},
     imageIndex: {ignore: 1, group: "widgetName", subgroup: "graphics", order: 51, type: "Number",  doc: 1},
     editImageIndex: {ignore: 1, group: "widgetName", subgroup: "graphics", order: 52, type: "String", doc: 1, operation: 1},
@@ -430,9 +430,6 @@ wm.Object.extendSchema(wm.Control, {
     mobileFolding: {group: "mobile", subgroup: "layerfolding", order: 1, advanced: true},
     mobileFoldingCaption: {group: "mobile", subgroup: "layerfolding", order: 2, advanced: true},
     mobileFoldingIndex: {group: "mobile", subgroup: "layerfolding", order: 3, advanced: true},
-
-    mobileAppFolding: {group: "mobile", subgroup: "appnav", order: 1, advanced: true},
-    mobileAppFoldingIndex: {group: "mobile", subgroup: "appnav", type: "number", order: 2, advanced: true},
     
     parent: { ignore: 1, doc: 1, prototype: "wm.Control" },
     domNode: { ignore: 1, doc: 1 },

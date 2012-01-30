@@ -1464,6 +1464,7 @@ display: block;
 }
 .wmbreadcrumblayers-tab.wmbreadcrumblayers-selected {
     font-weight:bold;
+    text-decoration: none;
 }
 
 body.tundra div.wmtoast.wmtoastExtraSpecific {
@@ -2094,8 +2095,11 @@ font-size: 14px;
 min-height: 32px;
 }
 
-.wmMobileToolBar .wmbutton {
+.wmlayout .wmtogglebuttonpanel .wmbutton {
     -moz-border-radius: 0px;
     -webkit-border-radius: 0px;
     border-radius: 0px;
+     -moz-box-shadow: 0px 0px 0px black;
+     -webkit-box-shadow: 0px 0px 0px black;
+     box-shadow: 0px 0px 0px black;
 }

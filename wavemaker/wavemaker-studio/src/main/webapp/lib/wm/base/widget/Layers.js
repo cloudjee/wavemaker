@@ -73,8 +73,10 @@ dojo.declare("wm.Layer", wm.Container, {
 	},
 	activate: function() {
 	    var p = this.parent;
-	    if ((this.showing || this.parent instanceof wm.BreadcrumbLayers) && !this.isActive())
+	    if ((this.showing || this.parent instanceof wm.BreadcrumbLayers) && !this.isActive()) {
+		if (!this.showing) this.show();
 		p.setLayer(this);
+	    }
 	},
 	activateAllParents: function() {
 	    var p = this.parent;
@@ -224,8 +226,10 @@ dojo.declare("wm.Layers", wm.Container, {
 	},
 	postInit: function() {
 		this.inherited(arguments);
+/*
 		if (!this.getCount() && this._isDesignLoaded)
 			this.addLayer();
+			*/
 		this._initDefaultLayer();
 		// fire onshow when loaded
 		if (wm.widgetIsShowing(this))
@@ -239,11 +243,7 @@ dojo.declare("wm.Layers", wm.Container, {
 	    return  this.padBorderMargin.l +  this.padBorderMargin.r + this.getActiveLayer().getPreferredFitToContentWidth();
 	},
 	*/
-        afterPaletteDrop: function(){
-	    this.inherited(arguments);
-	    this.setClientBorder(this.clientBorder);
-	    this.setClientBorderColor(this.clientBorderColor);
-	},
+
 	_initDefaultLayer: function() {
 		var d = this.defaultLayer;
 		d = d != -1 ? d : 0;
@@ -266,9 +266,16 @@ dojo.declare("wm.Layers", wm.Container, {
 	return count;
     },
 	createLayer: function(inCaption) {
+	    var caption = inCaption;
+	    if (!caption) {
+		caption = this.owner.getUniqueName("layer1");
+	    }
+	    var name = caption;
+	    if (name)
+		name = name.replace(/\s/g,"_");
 		var
-			defName = this.owner.getUniqueName(inCaption || "layer1"),
-	    props = {width: "100%", height: "100%", caption: defName, parent: this, horizontalAlign: "left", verticalAlign: "top", themeStyleType: this.themeStyleType},
+	    defName = this.owner.getUniqueName(name);
+	    props = {width: "100%", height: "100%", caption: caption, parent: this, horizontalAlign: "left", verticalAlign: "top", themeStyleType: this.themeStyleType},
 			o = this.getRoot();
 		if (o)
 			return o.createComponent(defName, "wm.Layer", props);
@@ -739,6 +746,7 @@ dojo.declare("wm.AccordionLayers", wm.Layers, {
     layersType: 'Accordion',
     layerBorder: 1,
     captionHeight: 26, // used by decorator
+    dndTargetName: "",
     postInit: function() {
         this.inherited(arguments);
         this.setLayerBorder(this.layerBorder);
@@ -837,8 +845,10 @@ dojo.declare("wm.BreadcrumbLayers", wm.Layers, {
     layersType: 'Breadcrumb',
     transition: "fade",
     headerWidth: "50px",
+    layerBorder: 1,
     postInit: function() {
 	this.inherited(arguments);
+	this._inBreadcrumbPostInit = true;
 	var active = this.getActiveLayer();
 	if (!this._isDesignLoaded) {
 	    for (var i= 0; i < this.layers.length; i++) {
@@ -847,11 +857,23 @@ dojo.declare("wm.BreadcrumbLayers", wm.Layers, {
 		}
 	    }
 	}
+	delete this._inBreadcrumbPostInit ;
     },
     oncanchange: function(inChangeInfo) {
 	var l = this.getLayer(inChangeInfo.newIndex);
 	inChangeInfo.canChange = l;
     },
+    addWidget: function(inWidget) {
+	this.inherited(arguments);	
+	if (!this._isDesignLoaded && !this._loading && inWidget instanceof wm.Layer && !inWidget.isActive()) {
+	    inWidget.setShowing(false);
+	}
+    },
+    _setLayerIndex: function(inIndex) {
+	var l = this.layers[inIndex];
+	if (l) l.setShowing(true);
+	this.inherited(arguments);
+    }
 });
 
 
