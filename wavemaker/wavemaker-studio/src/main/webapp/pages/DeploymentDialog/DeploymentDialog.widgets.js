@@ -101,7 +101,7 @@ DeploymentDialog.widgets = {
 		}],
 		editLayer: ["wm.Layer", {}, {}, {
 		    editPanel: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]},"autoScroll":true,"border":"0","height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%", borderColor: "#525A6A", border: "2,0,2,0"}, {}, {
-			settingsPanel: ["wm.FancyPanel", {"borderColor":"black","fitToContentHeight":true,"height":"166px","innerBorder":"1","labelHeight":"24","margin":"10,10,10,0","title":"Settings"}, {}, {
+			settingsPanel: ["wm.FancyPanel", {"borderColor":"black","fitToContentHeight":false,"height":"180px","innerBorder":"1","labelHeight":"24","margin":"10,10,10,0","title":"Settings"}, {}, {
 			    settingLayers: ["wm.Layers", {margin: "5,50,5,50", height: "100%", width: "100%"}, {}, {
 				tomcatLayer: ["wm.Layer", {"border":"0","borderColor":"","caption":"layer1","horizontalAlign":"left","themeStyleType":"","verticalAlign":"top"}, {}, {
 				    tcDeploymentNameEditor: ["wm.Text", {"border":"0","caption":"Deployment name","captionAlign":"left","captionSize":"140px","changeOnKey":true,"displayValue":"New Tomcat Deployment","width":"100%", required: true}, {onchange: "deploymentNameChange"}],

@@ -18,15 +18,18 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.json.JSONObject;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.server.DownloadResponse;
 import com.wavemaker.runtime.server.FileUploadResponse;
 import com.wavemaker.runtime.server.ParamName;
-import com.wavemaker.runtime.service.ServiceSuperClass;
+import com.wavemaker.runtime.server.ServiceResponse;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.deployment.DeploymentInfo;
@@ -43,7 +46,7 @@ import com.wavemaker.tools.project.DeploymentManager;
  * @author Jeremy Grelle
  */
 @ExposeToClient
-public class DeploymentService extends ServiceSuperClass {
+public class DeploymentService { // extends ServiceSuperClass {
 
     private static final String SUCCESS = "SUCCESS";
 
@@ -52,6 +55,47 @@ public class DeploymentService extends ServiceSuperClass {
     private DeploymentTargetManager deploymentTargetManager;
 
     private ServiceDeploymentManager serviceDeploymentManager;
+
+    private ServiceResponse serviceResponse = null;
+
+    /*
+     * TODO: This should be ServiceSuperClass Remove this and extend super class after fixing SMD generation
+     */
+    public JSONObject getResponseFromService(String requestId) {
+        if (this.serviceResponse == null) {
+            this.serviceResponse = (ServiceResponse) RuntimeAccess.getInstance().getSpringBean("serviceResponse");
+        }
+
+        JSONObject result = this.serviceResponse.getResponseFromService(requestId);
+        String status = (String) result.get("status");
+        if (status.equals("processing")) {
+            Thread originalThread = this.serviceResponse.getRequestThread(requestId);
+            if (originalThread == null || !originalThread.isAlive() || !originalThread.isAlive()) {
+                result = this.serviceResponse.getResponseFromService(requestId);
+                status = (String) result.get("status");
+                if (status.equals("processing")) {
+                    if (originalThread == null || !originalThread.isAlive()) {
+                        JSONObject resp = new JSONObject();
+                        resp.put("status", "error");
+                        resp.put("result", "Error: The original request thread is lost");
+                        return resp;
+                    } else if (!originalThread.isAlive()) {
+                        JSONObject resp = new JSONObject();
+                        resp.put("status", "error");
+                        resp.put("result", "Error: The original request thread has been terminated");
+                        return resp;
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public String getRequestId() {
+        UUID uuid = UUID.randomUUID();
+        return uuid.toString();
+    }
 
     /**
      * Start a 'test run' for the given project. This method should ensure that the current project is compiled,
@@ -189,7 +233,7 @@ public class DeploymentService extends ServiceSuperClass {
      */
     public String deploy(DeploymentInfo deploymentInfo) throws IOException {
         try {
-            if (deploymentInfo.getDeploymentType() != DeploymentType.FILE) {
+            if (deploymentInfo.getDeploymentType() != DeploymentType.FILE && deploymentInfo.getDeploymentType() != DeploymentType.CLOUD_FOUNDRY) {
                 this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).validateDeployment(deploymentInfo);
             }
             if (deploymentInfo.getDeploymentType() != DeploymentType.CLOUD_FOUNDRY) {

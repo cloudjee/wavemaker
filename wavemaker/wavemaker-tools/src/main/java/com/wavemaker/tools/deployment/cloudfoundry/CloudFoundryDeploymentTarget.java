@@ -21,6 +21,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
@@ -153,8 +155,17 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
             String email = "wavemaker@vmware.com";
             String password = "password";
             DeploymentInfo deploymentInfo = new DeploymentInfo();
+            String token = null;
             CloudFoundryClient cloudFoundryClient = new CloudFoundryClient(email, password, cloudControllerUrl);
-            String token = cloudFoundryClient.login();
+            try {
+                token = cloudFoundryClient.login();
+            } catch (CloudFoundryException cfe) {
+                if (cfe.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+                    log.error("CF client login error: " + cfe.getLocalizedMessage());
+                } else {
+                    throw new WMRuntimeException(cfe);
+                }
+            }
             deploymentInfo.setToken(token);
             deploymentInfo.setApplicationName("deployedproject");
             deploymentInfo.setTarget(cloudControllerUrl);
@@ -178,6 +189,11 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
             client.uploadApplication(deploymentInfo.getApplicationName(), applicationArchive, new LoggingStatusCallback(timer));
         } catch (IOException ex) {
             throw new WMRuntimeException("Error ocurred while trying to upload WAR file.", ex);
+        } catch (HttpServerErrorException e) {
+            log.error("Exception in application upload " + e.getLocalizedMessage());
+            if (e.getStatusCode() != HttpStatus.GATEWAY_TIMEOUT) {
+                throw new WMRuntimeException("Error uploading application", e);
+            }
         }
 
         log.info("Application upload completed in " + timer.stop() + "ms");
@@ -195,11 +211,34 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         return url;
     }
 
+    private Boolean appNameInUse(CloudFoundryClient client, String appName) {
+        try {
+            if (client.getApplication(appName) != null) {
+                log.info("ApplicatonName: " + appName + " is already in use");
+                return true;
+            } else {
+                log.info("ApplicatonName with name: " + appName + "was NOT found");
+                return false;
+            }
+        } catch (HttpClientErrorException e) {
+            log.info("Failed to find aplicatonName with name: " + appName + ". Response was: " + e.getLocalizedMessage());
+            if (e.getStatusCode() != HttpStatus.NOT_FOUND) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
     private String uploadProject(CloudFoundryClient client, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
         String url = getUrl(deploymentInfo);
         try {
-            client.createApplication(deploymentInfo.getApplicationName(), CloudApplication.SPRING,
-                client.getDefaultApplicationMemory(CloudApplication.SPRING), Collections.singletonList(url), null, true);
+            if (!appNameInUse(client, deploymentInfo.getApplicationName())) {
+                client.createApplication(deploymentInfo.getApplicationName(), CloudApplication.SPRING,
+                    client.getDefaultApplicationMemory(CloudApplication.SPRING), Collections.singletonList(url), null, true);
+            } else {
+                throw new DeploymentStatusException("ERROR: Application name " + deploymentInfo.getApplicationName() + " already in use");
+            }
         } catch (CloudFoundryException e) {
             if (HttpStatus.FORBIDDEN == e.getStatusCode()) {
                 throw new DeploymentStatusException(TOKEN_EXPIRED_RESULT, e);
