@@ -293,7 +293,10 @@ public class DataServiceUtils {
 
     public static void writeProperties(Properties p, Resource destdir, String serviceName) {
         StudioFileSystem fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
-        //File f = new File(destdir, serviceName + DataServiceConstants.PROPERTIES_FILE_EXT);
+        writeProperties(p, destdir, serviceName, fileSystem);
+    }
+
+     public static void writeProperties(Properties p, Resource destdir, String serviceName, StudioFileSystem fileSystem) {
         Resource f = null;
         try {
             f = destdir.createRelative(serviceName + DataServiceConstants.PROPERTIES_FILE_EXT);

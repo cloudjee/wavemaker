@@ -125,7 +125,7 @@ public class ClassLoaderUtils {
     }
 
     public static ClassLoader getClassLoaderForResources(ClassLoader parent, Resource... resources) {
-        if (resources[0] instanceof GFSResource || !(resources[0] instanceof GFSResource)) {
+        if (resources[0] instanceof GFSResource) {
             return getClassLoaderForCFResources(parent, resources);
         }
 

@@ -969,6 +969,14 @@ public abstract class BaseDataModelSetup {
         }
     }
 
+    public void setFileSystem(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
+    }
+
+    public void setExporterFactory(ExporterFactory exporterFactory) {
+        this.exporterFactory = exporterFactory;
+    }
+
     private void checkProperties(Collection<String> requiredProperties) {
         if (!requiredProperties.isEmpty()) {
             throw new ConfigurationException(MessageResource.MISSING_SYS_PROPERTIES.getMessage(ObjectUtils.toString(requiredProperties, ", ")));

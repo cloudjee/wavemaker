@@ -40,6 +40,10 @@ public class DataServiceDefinitionFactory implements ServiceDefinitionFactory, S
         this.fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
     }
 
+    public DataServiceDefinitionFactory(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
+    }
+
     @Override
     public ServiceDefinition getServiceDefinition(Resource f, String serviceId, DesignServiceManager serviceMgr) {
 
