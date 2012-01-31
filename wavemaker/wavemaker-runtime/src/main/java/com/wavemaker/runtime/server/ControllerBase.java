@@ -152,6 +152,7 @@ public abstract class ControllerBase extends AbstractController {
 
             return handleError(message, t);
         } finally {
+            RuntimeAccess.setRuntimeBean(null);
             NDC.pop();
             NDC.remove();
         }
@@ -238,16 +239,12 @@ public abstract class ControllerBase extends AbstractController {
         return ret;
     }
 
-    protected TypedServiceReturn invokeMethod(ServiceWire sw,
-            String method, JSONArray jsonArgs, Map<String, Object[]> mapParams)
-            throws WMException {
+    protected TypedServiceReturn invokeMethod(ServiceWire sw, String method, JSONArray jsonArgs, Map<String, Object[]> mapParams) throws WMException {
         return invokeMethod(sw, method, jsonArgs, mapParams, null, false, null);
     }
 
-    protected TypedServiceReturn invokeMethod(ServiceWire sw,
-            String method, JSONArray jsonArgs, Map<String, Object[]> mapParams,
-            ServiceResponse serviceResponse, boolean longResponseTime, String requestId)
-            throws WMException {
+    protected TypedServiceReturn invokeMethod(ServiceWire sw, String method, JSONArray jsonArgs, Map<String, Object[]> mapParams,
+        ServiceResponse serviceResponse, boolean longResponseTime, String requestId) throws WMException {
 
         try {
             if (jsonArgs != null && mapParams != null) {

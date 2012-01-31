@@ -3,6 +3,7 @@ package com.wavemaker.tools.cloudfoundry.spinup.authentication;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyString;
@@ -24,9 +25,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecret;
-import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecretPropagation;
 
 /**
  * Tests for {@link SharedSecretPropagation}.
@@ -105,14 +103,19 @@ public class SharedSecretPropagationTest {
     @Test
     public void shouldGetForSelf() throws Exception {
         this.systemEnv.put(SharedSecretPropagation.ENV_KEY, "000102");
-        SharedSecret selfSecret = this.propagation.getForSelf();
+        SharedSecret selfSecret = this.propagation.getForSelf(true);
         assertThat(selfSecret.getBytes(), is(equalTo(this.secret.getBytes())));
     }
 
     @Test
     public void shouldThrowIfCantGetForSelf() throws Exception {
         this.thrown.expect(IllegalStateException.class);
-        this.propagation.getForSelf();
+        this.propagation.getForSelf(true);
+    }
+
+    @Test
+    public void shouldReturnNullIfCantGetForSelf() throws Exception {
+        assertNull(this.propagation.getForSelf(false));
     }
 
     private class SharedSecretPropagationWithMockEnv extends SharedSecretPropagation {
