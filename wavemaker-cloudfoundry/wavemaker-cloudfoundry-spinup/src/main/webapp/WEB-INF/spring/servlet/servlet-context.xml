@@ -20,13 +20,25 @@
 		<property name="suffix" value=".jsp" />
 	</bean>
 
+	<bean name="wavemakerMongoService" class="org.cloudfoundry.client.lib.CloudService">
+		<property name="name" value="wavemaker"/>
+		<property name="type" value="database"/>
+		<property name="vendor" value="mongodb"/>
+		<property name="version" value="1.8"/>
+		<property name="tier" value="free"/>
+	</bean>
 
 	<bean name="spinupService" class="com.wavemaker.tools.cloudfoundry.spinup.DefaultSpinupService" autowire="byType">
-	<property name="serviceNames">
-		<list>
-			<value>wavemaker</value>
-		</list>
-	</property>
+		<property name="serviceNames">
+			<list>
+				<value>wavemaker</value>
+			</list>
+		</property>
+		<property name="services">
+			<list>
+				<ref bean="wavemakerMongoService"/>
+			</list>
+		</property>
 	</bean>
 
 	<bean class="com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecretPropagation" />

@@ -39,6 +39,9 @@
         <property name="internalRuntime">
             <ref bean="internalRuntime"/>
         </property>
+        <property name="commonRuntimeAccess">
+	            <ref bean="commonRuntimeAccess"/>
+        </property>
 		<property name="serviceResponse">
             <ref bean="serviceResponse"/>
         </property>
@@ -67,6 +70,9 @@
         <property name="internalRuntime">
             <ref bean="internalRuntime"/>
         </property>
+		<property name="commonRuntimeAccess">
+	            <ref bean="commonRuntimeAccess"/>
+        </property>
 
         <!-- controller configuration -->
         <property name="supportedMethods" value="POST" />
@@ -92,6 +98,9 @@
         <property name="internalRuntime">
             <ref bean="internalRuntime"/>
         </property>
+		<property name="commonRuntimeAccess">
+	            <ref bean="commonRuntimeAccess"/>
+        </property>
 
         <!-- controller configuration -->
         <property name="supportedMethods" value="POST" />
@@ -116,6 +125,9 @@
         </property>
         <property name="internalRuntime">
             <ref bean="internalRuntime"/>
+        </property>
+		<property name="commonRuntimeAccess">
+	            <ref bean="commonRuntimeAccess"/>
         </property>
 
         <!-- controller configuration -->
@@ -144,6 +156,11 @@
             <ref bean="serviceManager"/>
         </property>
 
+        <aop:scoped-proxy/>
+    </bean>
+
+	<bean id="commonRuntimeAccess"
+			class="com.wavemaker.common.CommonRuntimeAccess" scope="request">
         <aop:scoped-proxy/>
     </bean>
 

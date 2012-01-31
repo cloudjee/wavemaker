@@ -21,6 +21,7 @@ import org.apache.tools.ant.BuildException;
 import org.hibernate.tool.ant.Hbm2CfgXmlExporterTask;
 import org.hibernate.tool.ant.HibernateToolTask;
 import org.hibernate.tool.hbm2x.Exporter;
+import org.springframework.core.io.Resource;
 
 /**
  * @author Simon Toens
@@ -28,9 +29,11 @@ import org.hibernate.tool.hbm2x.Exporter;
 public class HibernateConfigExporterTask extends Hbm2CfgXmlExporterTask {
 
     private String configurationFile = null;
+    private Resource destDir;
 
-    public HibernateConfigExporterTask(HibernateToolTask parent) {
+    public HibernateConfigExporterTask(HibernateToolTask parent, Resource destDir) {
         super(parent);
+        this.destDir = destDir;
     }
 
     public void setConfigurationFile(String configurationFile) {
@@ -63,6 +66,14 @@ public class HibernateConfigExporterTask extends Hbm2CfgXmlExporterTask {
 
     public HibernateToolTask getParent() {
         return super.parent;
+    }
+
+    public void setDestDir(Resource destDir) {
+        this.destDir = destDir;
+    }
+
+    public Resource getDestDir() {
+        return this.destDir;
     }
 
 }

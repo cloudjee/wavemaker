@@ -9,6 +9,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.zip.ZipFile;
 
+import javax.servlet.http.Cookie;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cloudfoundry.client.lib.CloudApplication;
@@ -23,10 +25,16 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.util.WebUtils;
 
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.cloudfoundry.CloudFoundryUtils;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.AuthenticationToken;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecret;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecretPropagation;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportToken;
 import com.wavemaker.tools.data.BaseDataModelSetup;
 import com.wavemaker.tools.data.DataModelConfiguration;
 import com.wavemaker.tools.data.DataModelManager;
@@ -42,6 +50,8 @@ import com.wavemaker.tools.project.CloudFoundryDeploymentManager;
 import com.wavemaker.tools.project.Project;
 
 public class CloudFoundryDeploymentTarget implements DeploymentTarget {
+
+    private static final String CLOUD_CONTROLLER_VARIABLE_NAME = "cloudcontroller";
 
     public static final String SUCCESS_RESULT = "SUCCESS";
 
@@ -74,6 +84,8 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     private DataModelManager dataModelManager;
 
     private WebAppAssembler webAppAssembler;
+
+    private final SharedSecretPropagation propagation = new SharedSecretPropagation();
 
     static {
         Map<String, String> props = new LinkedHashMap<String, String>();
@@ -119,12 +131,12 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     /**
      * Initiate the test/run operation for the given project on the cloud foundry instance that is running studio. This
      * method is not part of the {@link DeploymentTarget} interface but is called directly from
-     * {@link CloudFoundryDeploymentManager#testRunClean()} in order to reuse CloudFoundry deployment code.
+     * {@link CloudFoundryDeploymentManager#testRunStart()} in order to reuse CloudFoundry deployment code.
      * 
      * @param project
      * @return
      */
-    public String testRunStartFromSelf(Project project) {
+    public String testRunStart(Project project) {
         try {
             ApplicationArchive applicationArchive = this.webAppAssembler.assemble(project);
             applicationArchive = modifyApplicationArchive(applicationArchive);
@@ -135,13 +147,13 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     }
 
     /**
-     * undeploy the given project from the cloud foundry instance that is running studio.. This method is not part of
-     * the {@link DeploymentTarget} interface but is called directly from {@link CloudFoundryDeploymentManager} in order
-     * to reuse CloudFoundry deployment code.
+     * undeploy the given project from the cloud foundry instance that is running studio. This method is not part of the
+     * {@link DeploymentTarget} interface but is called directly from {@link CloudFoundryDeploymentManager} in order to
+     * reuse CloudFoundry deployment code.
      * 
      * @param project
      */
-    public void undeployFromSelf(Project project) {
+    public void undeploy(Project project) {
         try {
             undeploy(getSelfDeploymentInfo(project), false);
         } catch (DeploymentStatusException e) {
@@ -151,28 +163,55 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
 
     private DeploymentInfo getSelfDeploymentInfo(Project project) {
         try {
-            String cloudControllerUrl = "http://api.vcap.me";
-            String email = "wavemaker@vmware.com";
-            String password = "password";
-            DeploymentInfo deploymentInfo = new DeploymentInfo();
-            String token = null;
-            CloudFoundryClient cloudFoundryClient = new CloudFoundryClient(email, password, cloudControllerUrl);
-            try {
-                token = cloudFoundryClient.login();
-            } catch (CloudFoundryException cfe) {
-                if (cfe.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
-                    log.error("CF client login error: " + cfe.getLocalizedMessage());
-                } else {
-                    throw new WMRuntimeException(cfe);
-                }
+            String cloudControllerUrl = getControllerUrl();
+            AuthenticationToken token = getAuthenticationToken();
+            if (token == null) {
+                // FIXME remove hard coded details
+                String email = "wavemaker@vmware.com";
+                String password = "password";
+                CloudFoundryClient cloudFoundryClient = new CloudFoundryClient(email, password, cloudControllerUrl);
+                token = new AuthenticationToken(cloudFoundryClient.login());
             }
-            deploymentInfo.setToken(token);
+            DeploymentInfo deploymentInfo = new DeploymentInfo();
+            deploymentInfo.setToken(token.toString());
             deploymentInfo.setApplicationName("deployedproject");
             deploymentInfo.setTarget(cloudControllerUrl);
             return deploymentInfo;
         } catch (Exception e) {
             throw new WMRuntimeException(e);
         }
+    }
+
+    private AuthenticationToken getAuthenticationToken() {
+        RuntimeAccess runtimeAccess = RuntimeAccess.getInstance();
+        if (runtimeAccess == null) {
+            return null;
+        }
+        Cookie cookie = WebUtils.getCookie(runtimeAccess.getRequest(), "wavemaker_authentication_token");
+        if (cookie == null || !StringUtils.hasLength(cookie.getValue())) {
+            return null;
+        }
+        SharedSecret sharedSecret = this.propagation.getForSelf(false);
+        if (sharedSecret == null) {
+            return null;
+        }
+        AuthenticationToken authenticationToken = sharedSecret.decrypt(TransportToken.decode(cookie.getValue()));
+        return authenticationToken;
+    }
+
+    /**
+     * @return The actual controller URL to use.
+     */
+    private String getControllerUrl() {
+        String systemEnv = System.getenv(CLOUD_CONTROLLER_VARIABLE_NAME);
+        if (StringUtils.hasLength(systemEnv)) {
+            return systemEnv;
+        }
+        systemEnv = System.getProperty(CLOUD_CONTROLLER_VARIABLE_NAME);
+        if (StringUtils.hasLength(systemEnv)) {
+            return systemEnv;
+        }
+        return "http://api.cloudfoundry.com";
     }
 
     private ApplicationArchive modifyApplicationArchive(ApplicationArchive applicationArchive) {

@@ -50,17 +50,17 @@ public class HibernateSpringConfigExporter extends GenericExporter {
 
     private static final String DEFAULT_QUERIES_FILE = "com/wavemaker/tools/data/DefaultQueries.ql.xml";
 
-    private final String serviceName;
+    private String serviceName;
 
-    private final String dataPackage;
+    private String dataPackage;
 
-    private final String serviceClass;
+    private String serviceClass;
 
-    private final boolean useIndividualCRUDOperations;
+    private boolean useIndividualCRUDOperations;
 
-    private final boolean impersonateUser;
+    private boolean impersonateUser;
 
-    private final String activeDirectoryDomain;
+    private String activeDirectoryDomain;
 
     public HibernateSpringConfigExporter(String serviceName, String packageName, String dataPackage, String serviceClass,
         boolean useIndividualCRUDOperations, boolean impersonateUser, String activeDirectoryDomain) {

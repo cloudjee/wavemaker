@@ -3,13 +3,16 @@ package com.wavemaker.tools.cloudfoundry.spinup;
 
 import java.net.MalformedURLException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.cloudfoundry.client.lib.CloudApplication;
 import org.cloudfoundry.client.lib.CloudFoundryClient;
 import org.cloudfoundry.client.lib.CloudFoundryException;
+import org.cloudfoundry.client.lib.CloudService;
 import org.cloudfoundry.client.lib.archive.ApplicationArchive;
 import org.springframework.beans.factory.annotation.Required;
 import org.springframework.http.HttpStatus;
@@ -30,6 +33,8 @@ import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportToken;
  */
 public class DefaultSpinupService implements SpinupService {
 
+    private static final String CLOUD_CONTROLLER_VARIABLE_NAME = "cloudcontroller";
+
     private final Log logger = LogFactory.getLog(getClass());
 
     private static final int MAX_ATTEMPTS = 5;
@@ -41,6 +46,8 @@ public class DefaultSpinupService implements SpinupService {
     private ApplicationArchiveFactory archiveFactory;
 
     private String framework = CloudApplication.SPRING;
+
+    private List<CloudService> services;
 
     private List<String> serviceNames = null;
 
@@ -139,11 +146,11 @@ public class DefaultSpinupService implements SpinupService {
         if (StringUtils.hasLength(this.controllerUrl)) {
             return this.controllerUrl;
         }
-        String systemEnv = System.getenv("spinup_target");
+        String systemEnv = System.getenv(CLOUD_CONTROLLER_VARIABLE_NAME);
         if (StringUtils.hasLength(systemEnv)) {
             return systemEnv;
         }
-        systemEnv = System.getProperty("spinup_target");
+        systemEnv = System.getProperty(CLOUD_CONTROLLER_VARIABLE_NAME);
         if (StringUtils.hasLength(systemEnv)) {
             return systemEnv;
         }
@@ -179,12 +186,21 @@ public class DefaultSpinupService implements SpinupService {
     }
 
     /**
+     * Sets the services that should be created (if they don't already exist).
+     * 
+     * @param services the services to create
+     */
+    public void setServices(List<CloudService> services) {
+        this.services = services;
+    }
+
+    /**
      * Sets the service names that should be created with the application. Can be <tt>null</tt>.
      * 
      * @param serviceNames the service names
+     * @see
      */
     public void setServiceNames(List<String> serviceNames) {
-        // FIXME we may need a way to provision services as well as define the names
         this.serviceNames = serviceNames;
     }
 
@@ -247,12 +263,16 @@ public class DefaultSpinupService implements SpinupService {
                     }
                 }
             }
-
+            addMissingServices();
             ApplicationDetails applicationDetails = createApplicationWithUniqueUrl();
             if (DefaultSpinupService.this.logger.isDebugEnabled()) {
                 DefaultSpinupService.this.logger.debug("Uploading application " + applicationDetails.getName());
             }
             uploadApplication(applicationDetails.getName());
+            CloudApplication application = this.cloudFoundryClient.getApplication(applicationDetails.getName());
+            Map<String, String> env = new HashMap<String, String>(application.getEnvAsMap());
+            env.put(CLOUD_CONTROLLER_VARIABLE_NAME, getControllerUrl());
+            this.cloudFoundryClient.updateApplicationEnv(applicationDetails.getName(), env);
             return applicationDetails;
         }
 
@@ -267,6 +287,27 @@ public class DefaultSpinupService implements SpinupService {
             } catch (Exception e) {
                 throw new IllegalStateException(e);
             }
+        }
+
+        private void addMissingServices() {
+            if (DefaultSpinupService.this.services != null) {
+                Map<String, CloudService> servicesByName = getServicesByName();
+                List<CloudService> existingServices = this.cloudFoundryClient.getServices();
+                for (CloudService existingService : existingServices) {
+                    servicesByName.remove(existingService.getName());
+                }
+                for (CloudService cloudService : servicesByName.values()) {
+                    this.cloudFoundryClient.createService(cloudService);
+                }
+            }
+        }
+
+        private Map<String, CloudService> getServicesByName() {
+            Map<String, CloudService> servicesByName = new HashMap<String, CloudService>();
+            for (CloudService service : DefaultSpinupService.this.services) {
+                servicesByName.put(service.getName(), service);
+            }
+            return servicesByName;
         }
 
         private ApplicationDetails createApplicationWithUniqueUrl() {

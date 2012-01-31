@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.List;
 
 import org.springframework.core.io.Resource;
+import com.wavemaker.common.CommonStudioFileSystem;
 
 /**
  * Provides a virtual files system for use with WaveMaker. Files are exposed using the Spring {@link Resource} interface
@@ -18,7 +19,7 @@ import org.springframework.core.io.Resource;
  * @author Jeremy Grelle
  * @author Phillip Webb
  */
-public interface StudioFileSystem {
+public interface StudioFileSystem extends CommonStudioFileSystem {
 
     /**
      * Returns the WaveMaker home directory.
@@ -115,6 +116,16 @@ public interface StudioFileSystem {
      * @see #listChildren(Resource)
      */
     List<Resource> listChildren(Resource resource, ResourceFilter filter);
+
+    /**
+     * Search all files recursively and return the result. Tis method returns only files, not directories.
+     *
+     * @param resource the resource
+     * @param filter a resource filter used to limit results
+     * @return a list of child files
+     * @see #listChildren(Resource)
+     */
+    //List<Resource> listAllChildren(Resource resource, ResourceFilter filter);      
 
     /**
      * Create and return a resource for the specified path as applied to the given resource.

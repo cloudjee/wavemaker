@@ -57,6 +57,6 @@ public class SpringCfgGenerator extends BaseDataModelSetup {
         p.setProperty(this.serviceName + DataServiceConstants.DB_DRIVER_CLASS_NAME, getDriverClassName() == null ? "" : getDriverClassName());
         p.setProperty(this.serviceName + DataServiceConstants.DB_DIALECT, getDialect() == null ? "" : getDialect());
 
-        DataServiceUtils.writeProperties(p, this.destdir, this.serviceName);
+        DataServiceUtils.writeProperties(p, this.destdir, this.serviceName, fileSystem);
     }
 }

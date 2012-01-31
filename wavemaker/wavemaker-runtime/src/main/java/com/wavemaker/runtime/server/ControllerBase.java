@@ -35,6 +35,7 @@ import org.springframework.web.servlet.mvc.AbstractController;
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMException;
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.CommonRuntimeAccess;
 import com.wavemaker.json.JSONArray;
 import com.wavemaker.json.JSONState;
 import com.wavemaker.json.type.FieldDefinition;
@@ -78,6 +79,8 @@ public abstract class ControllerBase extends AbstractController {
     private InternalRuntime internalRuntime;
 
     private RuntimeAccess runtimeAccess;
+
+    private CommonRuntimeAccess commonRuntimeAccess;
 
     /**
      * Create the default JSONState.
@@ -149,6 +152,7 @@ public abstract class ControllerBase extends AbstractController {
 
             return handleError(message, t);
         } finally {
+            RuntimeAccess.setRuntimeBean(null);
             NDC.pop();
             NDC.remove();
         }
@@ -235,16 +239,12 @@ public abstract class ControllerBase extends AbstractController {
         return ret;
     }
 
-    protected TypedServiceReturn invokeMethod(ServiceWire sw,
-            String method, JSONArray jsonArgs, Map<String, Object[]> mapParams)
-            throws WMException {
+    protected TypedServiceReturn invokeMethod(ServiceWire sw, String method, JSONArray jsonArgs, Map<String, Object[]> mapParams) throws WMException {
         return invokeMethod(sw, method, jsonArgs, mapParams, null, false, null);
     }
 
-    protected TypedServiceReturn invokeMethod(ServiceWire sw,
-            String method, JSONArray jsonArgs, Map<String, Object[]> mapParams,
-            ServiceResponse serviceResponse, boolean longResponseTime, String requestId)
-            throws WMException {
+    protected TypedServiceReturn invokeMethod(ServiceWire sw, String method, JSONArray jsonArgs, Map<String, Object[]> mapParams,
+        ServiceResponse serviceResponse, boolean longResponseTime, String requestId) throws WMException {
 
         try {
             if (jsonArgs != null && mapParams != null) {
@@ -280,12 +280,14 @@ public abstract class ControllerBase extends AbstractController {
 
         RuntimeAccess.setRuntimeBean(getRuntimeAccess());
         InternalRuntime.setInternalRuntimeBean(getInternalRuntime());
+        CommonRuntimeAccess.setCommonRuntimeBean(getCommonRuntimeAccess());
 
         // when you remove this, also remove the SuppressWarnings anno
         com.activegrid.runtime.AGRuntime.setRuntimeBean(getRuntime());
 
         getRuntimeAccess().setRequest(request);
         initializeRuntimeController(request);
+        getCommonRuntimeAccess().setRequest(request);
     }
 
     public void setServiceManager(ServiceManager spm) {
@@ -340,5 +342,13 @@ public abstract class ControllerBase extends AbstractController {
 
     public void setServiceResponse(ServiceResponse serviceResponse) {
         this.serviceResponse = serviceResponse;
+    }
+
+    public CommonRuntimeAccess getCommonRuntimeAccess() {
+        return this.commonRuntimeAccess;
+    }
+
+    public void setCommonRuntimeAccess(CommonRuntimeAccess commonRuntimeAccess) {
+        this.commonRuntimeAccess = commonRuntimeAccess;
     }
 }

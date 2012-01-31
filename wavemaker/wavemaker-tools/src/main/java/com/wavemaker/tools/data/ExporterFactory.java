@@ -16,6 +16,7 @@ package com.wavemaker.tools.data;
 
 import org.hibernate.tool.ant.ExporterTask;
 import org.hibernate.tool.ant.HibernateToolTask;
+import org.springframework.core.io.Resource;
 
 /**
  * This interface defines methods to return hibernate exporter factory
@@ -29,9 +30,28 @@ public interface ExporterFactory {
      * Generates the list of services for a partner.
      * 
      * @param type the exporter type (config, java, query, mapping)
-     * @parent parent the hibernate tool task
-     * @parent serviceName the service name
+     * @param parent the hibernate tool task
+     * @param serviceName the service name
      * @return an instance of the exporter factory
      */
     public ExporterTask getExporter(String type, HibernateToolTask parent, String serviceName);
+
+    /**
+     * Sets the destination directory for cloud foundry
+     *
+     * @param destDir the destination directory
+     */
+    public void setDestDir(Resource destDir);
+
+    public void setPackageName(String packageName);
+
+    public void setDataPackage(String dataPackage);
+    
+    public void setClassName(String className);
+
+    public void setUseIndividualCRUDOperations(boolean useIndividualCRUDOperations);
+
+    public void setImpersonateUser(boolean impersonateUser);
+
+    public void setActiveDirectoryDomain(String activeDirectoryDomain);
 }

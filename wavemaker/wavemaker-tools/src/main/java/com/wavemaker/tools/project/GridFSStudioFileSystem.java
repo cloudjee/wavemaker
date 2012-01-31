@@ -21,6 +21,7 @@ import com.mongodb.MongoException;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.CommonResourceFilter;
 import com.wavemaker.common.io.GFSResource;
 import com.wavemaker.common.util.IOUtils;
 
@@ -40,7 +41,7 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
     private final GridFS gfs;
 
     private DBObject dirsDoc;
-
+                                                   
     private final DBCollection dirsCollection;
 
     /**
@@ -201,6 +202,35 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
         return children;
     }
 
+    @Override
+    public List<Resource> listAllChildren(Resource resource, CommonResourceFilter filter) {
+        if (!(resource instanceof GFSResource)) {
+           return this.delegate.listAllChildren(resource, filter);
+        }
+        GFSResource gfsRoot = (GFSResource) resource;
+        List<Resource> children = new ArrayList<Resource>();
+        List<GridFSDBFile> files;
+        try {
+            files = gfsRoot.listFiles();
+        } catch (Exception e) {
+            throw new WMRuntimeException(e);
+        }
+        if (files != null) {
+            for (GridFSDBFile file : files) {
+                GFSResource fileResource = new GFSResource(this.gfs, this.dirsDoc, file.getFilename());
+                if (filter == null || filter.accept(fileResource)) {
+                    children.add(fileResource);
+                }
+            }
+        }
+        List<Resource> childDirs = listChildDirectories(gfsRoot);
+        for (Resource childDir : childDirs) {
+            children.addAll(listAllChildren(childDir, filter));
+        }
+        return children;
+    }
+
+
     private List<Resource> listChildDirectories(GFSResource resource) {
         List<Resource> gfsDirs = new ArrayList<Resource>();
         BasicDBList childDirs = (BasicDBList) this.dirsDoc.get(resource.getPath());
@@ -312,7 +342,7 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
 
                     @Override
                     public boolean accept(File pathName) {
-                        return !exclusions.contains(pathName.getName());
+                        return (exclusions == null || !exclusions.contains(pathName.getName()));
                     }
                 });
 

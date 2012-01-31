@@ -18,6 +18,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.core.NamedThreadLocal;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -51,7 +52,7 @@ import com.wavemaker.runtime.service.reflect.ReflectServiceWire;
  */
 public class RuntimeAccess {
 
-    private static RuntimeAccess staticRuntime = null;
+    private static ThreadLocal<RuntimeAccess> runtimeThreadLocal = new NamedThreadLocal<RuntimeAccess>("Wavemake Runtime");
 
     private HttpServletRequest request = null;
 
@@ -75,12 +76,11 @@ public class RuntimeAccess {
      * @return The RuntimeAccess instance.
      */
     public static RuntimeAccess getInstance() {
-
-        if (RuntimeAccess.staticRuntime == null) {
+        RuntimeAccess runtimeAccess = runtimeThreadLocal.get();
+        if (runtimeAccess == null) {
             throw new WMRuntimeInitException("RuntimeAccess uninitialized; request init failed.");
         }
-
-        return RuntimeAccess.staticRuntime;
+        return runtimeAccess;
     }
 
     /**
@@ -147,7 +147,11 @@ public class RuntimeAccess {
     }
 
     public static void setRuntimeBean(RuntimeAccess bean) {
-        RuntimeAccess.staticRuntime = bean;
+        if (bean == null) {
+            runtimeThreadLocal.remove();
+        } else {
+            runtimeThreadLocal.set(bean);
+        }
     }
 
     public void setRequest(HttpServletRequest request) {
