@@ -78,19 +78,8 @@ public class DataServiceSpringConfiguration {
 
     public DataServiceSpringConfiguration(FileService fileService, String rootPath, String configFile, String serviceName) {
         this.rootPath = rootPath;
-        if (this.rootPath.length() == 0 || !this.rootPath.substring(this.rootPath.length()-1).equals("/")) {
-            if (configFile != null && configFile.length() > 0 && configFile.substring(0, 1).equals("/")) {
-                this.path = rootPath + configFile;
-            } else {
-                this.path = rootPath + "/" + configFile;
-            }
-        } else {
-            if (configFile != null && configFile.length() > 0 && configFile.substring(0, 1).equals("/")) {
-                this.path = rootPath + configFile.substring(1);
-            } else {
-                this.path = rootPath + configFile;
-            }
-        }
+      
+        this.path = StringUtils.appendPaths(this.rootPath, configFile);
 
         this.fileService = fileService;
         this.beans = DataServiceUtils.readBeans(fileService, this.path);
@@ -296,7 +285,7 @@ public class DataServiceSpringConfiguration {
     }
 
     /**
-     * @param property
+     * @param dbName
      */
     void configureDbAlias(String dbName) {
         if (!hasText(dbName)) {
@@ -498,7 +487,7 @@ public class DataServiceSpringConfiguration {
         for (Bean b : propertyPlaceholders) {
             List<String> l = b.getProperty(DataServiceConstants.SPRING_CFG_LOCATIONS_ATTR).getListValue();
             for (String s : l) {
-                rtn = this.rootPath + "/" + StringUtils.fromFirstOccurrence(s, "classpath:");
+                rtn = StringUtils.appendPaths(this.rootPath, StringUtils.fromFirstOccurrence(s, "classpath:"));
             }
         }
 

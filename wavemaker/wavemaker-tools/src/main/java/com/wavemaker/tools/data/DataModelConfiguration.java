@@ -1893,7 +1893,8 @@ public class DataModelConfiguration {
     // return rel path starting from service root dir
     private String getRelServicePath(String relPath) {
         StringBuilder sb = new StringBuilder(this.cfgPath.length() + relPath.length() + 1);
-        sb.append(this.cfgPath).append("/").append(relPath);
+        //sb.append(this.cfgPath).append("/").append(relPath);
+        sb.append(StringUtils.appendPaths(this.cfgPath,relPath));
         return sb.toString();
     }
 
