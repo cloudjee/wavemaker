@@ -27,10 +27,8 @@ Studio.widgets = {
 	securityConfigService: ["wm.JsonRpcService", {service: "securityConfigService", sync: true}, {}],
 	securityService: ["wm.JsonRpcService", {service: "securityService", sync: true}, {}, {}],
 	securityServiceJOSSO: ["wm.JsonRpcService", {service: "securityServiceJOSSO", sync: true}, {}, {}],
-	//registrationService: ["wm.JsonRpcService", {service: "registrationService", sync: true}, {}],
-	UserService: ["wm.JsonRpcService", {service: "UserService", sync: true}, {}],
 	resourceManagerService: ["wm.JsonRpcService", {service: "resourceFileService", sync: true}, {}],
-        jarListService: ["wm.JsonRpcService", {service: "studioService", sync: false}, {}],
+    jarListService: ["wm.JsonRpcService", {service: "studioService", sync: false}, {}],
     gridDesignerDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, title: "Grid Designer", pageName: "GridDesigner", modal: false, deferLoad: true,  border: "2", borderColor: "white", width: "600px", height: "500px", hideControls: true, noEscape: true, minHeight: "200", noLeftRightDocking: true}],
     liveViewEditDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, title: "LiveView Editor", pageName: "LiveViewEditor", modal: true, deferLoad: true,  border: "2", borderColor: "white", width: "600px", height: "500px", hideControls: true, noEscape: true}],
     editVariableDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, title: "Edit JSON", pageName: "EditVariable", modal: false, deferLoad: true,  border: "2", borderColor: "white", width: "500px", height: "400px", hideControls: true, noEscape: true}],
@@ -44,7 +42,7 @@ Studio.widgets = {
 
 	//tempData used to show grid on FancyTemplate
 	varTemplateData: ["wm.Variable", {"json":"[{name: \"Vestibulum\", dataValue: \"sodales magna mollis purus iaculis sagittis\"},\n{name: \"Lacinia\", dataValue: \" aliquam mauris nulla, consequat\"},\n{name: \"Consequat\", dataValue: \"rhoncus diam metus id arcu\"},\n{name: \"Elementum\", dataValue: \"quis odio sodales ornare quis eu\"},\n{name: \"Sagittis\", dataValue: \"torquent per conubia nostra, per inceptos\"},\n{name: \"Aliquam\", dataValue: \"molestie auctor tortor ac tincidunt\"},\n{name: \"Nullam\", dataValue: \"in orci eros, vitae convallis neque\"},\n{name: \"Mauris\", dataValue: \"luctus adipiscing ligula urna a nisl\"},\n{name: \"Pellentesque\", dataValue: \" ante lectus, mollis ut suscipit id\"}]","type":"EntryData"}, {}],
-        silkIconImageList: ["wm.ImageList", {"colCount":39,"height":16,"iconCount":90,"url":"lib/images/silkIcons/silk.png","width":16}, {}],
+    silkIconImageList: ["wm.ImageList", {"colCount":39,"height":16,"iconCount":90,"url":"lib/images/silkIcons/silk.png","width":16}, {}],
 	paletteImageList: ["wm.ImageList", {"colCount":50,"height":16,"iconCount":50,"url":"images/palette_imagelist.png","width":16}, {}],
 
 	navImageList: ["wm.ImageList", {width: 24, height: 28, colCount: 10, url: "images/navBtns.png"}, {}],
