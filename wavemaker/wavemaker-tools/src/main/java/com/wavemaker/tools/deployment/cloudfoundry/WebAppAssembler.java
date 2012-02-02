@@ -30,6 +30,8 @@ public class WebAppAssembler implements InitializingBean {
 
     private final String[] IGNORED_LIB_PREFIXES = { "lib/wm/common/", "lib/dojo/util/", "lib/dojo/util/buildscripts/", "lib/wm/base/deprecated/" };
 
+    private static final Entry WEB_INF_ENTRY = new ApplicationArchiveEntry("WEB-INF");
+
     @Override
     public void afterPropertiesSet() throws Exception {
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -43,6 +45,7 @@ public class WebAppAssembler implements InitializingBean {
             String projectBasePath = this.fileSystem.getPath(project.getWebAppRoot());
             collectFiles(entries, projectBasePath, project.getWebAppRoot());
             entries.addAll(this.studioApplicationArchiveEnties.get());
+            ensureAtLeastOneDirectoryEntry(entries);
             return new ApplicationArchive() {
 
                 @Override
@@ -58,6 +61,20 @@ public class WebAppAssembler implements InitializingBean {
         } catch (Exception e) {
             throw new WMRuntimeException(e);
         }
+    }
+
+    /**
+     * Ensure that the specified entries always contains at least one directory. This is required for a valid zip file.
+     * 
+     * @param entries entries to modify
+     */
+    private void ensureAtLeastOneDirectoryEntry(List<Entry> entries) {
+        for (Entry entry : entries) {
+            if (entry.isDirectory()) {
+                return;
+            }
+        }
+        entries.add(WEB_INF_ENTRY);
     }
 
     private void collectFiles(List<ApplicationArchive.Entry> files, String basePath, Resource root) throws IOException {

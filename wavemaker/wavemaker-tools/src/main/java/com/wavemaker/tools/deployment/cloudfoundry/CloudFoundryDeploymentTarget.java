@@ -106,7 +106,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     @Override
     public void validateDeployment(DeploymentInfo deploymentInfo) throws DeploymentStatusException {
         CloudFoundryClient client = getClient(deploymentInfo);
-        uploadProject(client, deploymentInfo);
+        createApplication(client, deploymentInfo, true);
     }
 
     @Deprecated
@@ -140,7 +140,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         try {
             ApplicationArchive applicationArchive = this.webAppAssembler.assemble(project);
             applicationArchive = modifyApplicationArchive(applicationArchive);
-            return doDeploy(applicationArchive, getSelfDeploymentInfo(project));
+            return doDeploy(applicationArchive, getSelfDeploymentInfo(project), false);
         } catch (DeploymentStatusException e) {
             throw new WMRuntimeException(e.getMessage(), e);
         }
@@ -219,24 +219,28 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         return new ModifiedContentApplicationArchive(applicationArchive, modifier);
     }
 
-    private String doDeploy(ApplicationArchive applicationArchive, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
-        CloudFoundryClient client = getClient(deploymentInfo);
-        String url = uploadProject(client, deploymentInfo);
-        setupServices(client, deploymentInfo);
+    private void uploadAppliation(CloudFoundryClient client, String appName, ApplicationArchive applicationArchive) throws DeploymentStatusException {
         Timer timer = new Timer();
         try {
-            client.uploadApplication(deploymentInfo.getApplicationName(), applicationArchive, new LoggingStatusCallback(timer));
+            client.uploadApplication(appName, applicationArchive, new LoggingStatusCallback(timer));
+            log.info("Application upload completed in " + timer.stop() + "ms");
+        } catch (HttpServerErrorException e) {
+            throw new DeploymentStatusException("ERROR in upload application: " + e.getLocalizedMessage(), e);
         } catch (IOException ex) {
             throw new WMRuntimeException("Error ocurred while trying to upload WAR file.", ex);
-        } catch (HttpServerErrorException e) {
-            log.error("Exception in application upload " + e.getLocalizedMessage());
-            if (e.getStatusCode() != HttpStatus.GATEWAY_TIMEOUT) {
-                throw new WMRuntimeException("Error uploading application", e);
-            }
         }
+    }
 
-        log.info("Application upload completed in " + timer.stop() + "ms");
+    private String doDeploy(ApplicationArchive applicationArchive, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
+        return doDeploy(applicationArchive, deploymentInfo, true);
+    }
 
+    private String doDeploy(ApplicationArchive applicationArchive, DeploymentInfo deploymentInfo, boolean checkExist)
+        throws DeploymentStatusException {
+        CloudFoundryClient client = getClient(deploymentInfo);
+        String url = createApplication(client, deploymentInfo, checkExist);
+        setupServices(client, deploymentInfo);
+        uploadAppliation(client, deploymentInfo.getApplicationName(), applicationArchive);
         try {
             CloudApplication application = client.getApplication(deploymentInfo.getApplicationName());
             if (application.getState().equals(CloudApplication.AppState.STARTED)) {
@@ -269,25 +273,19 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         }
     }
 
-    private String uploadProject(CloudFoundryClient client, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
+    private String createApplication(CloudFoundryClient client, DeploymentInfo deploymentInfo, boolean checkExist) throws DeploymentStatusException {
         String url = getUrl(deploymentInfo);
-        try {
-            if (!appNameInUse(client, deploymentInfo.getApplicationName())) {
-                client.createApplication(deploymentInfo.getApplicationName(), CloudApplication.SPRING,
-                    client.getDefaultApplicationMemory(CloudApplication.SPRING), Collections.singletonList(url), null, true);
-            } else {
-                throw new DeploymentStatusException("ERROR: Application name " + deploymentInfo.getApplicationName() + " already in use");
-            }
-        } catch (CloudFoundryException e) {
-            if (HttpStatus.FORBIDDEN == e.getStatusCode()) {
-                throw new DeploymentStatusException(TOKEN_EXPIRED_RESULT, e);
-            } else if (HttpStatus.BAD_REQUEST == e.getStatusCode()) {
-                throw new DeploymentStatusException("ERROR: " + e.getDescription(), e);
-            } else {
-                throw e;
-            }
+        String appName = deploymentInfo.getApplicationName();
+        Integer memory = client.getDefaultApplicationMemory(CloudApplication.SPRING);
+        if (checkExist && appNameInUse(client, appName)) {
+            throw new DeploymentStatusException("ERROR: Application name already in use. Choose another name");
         }
-        return url;
+        try {
+            client.createApplication(appName, CloudApplication.SPRING, memory, Collections.singletonList(url), null, true);
+            return url;
+        } catch (CloudFoundryException e) {
+            throw new DeploymentStatusException("ERROR in createApplication: " + e.getDescription(), e);
+        }
     }
 
     private String getUrl(DeploymentInfo deploymentInfo) {

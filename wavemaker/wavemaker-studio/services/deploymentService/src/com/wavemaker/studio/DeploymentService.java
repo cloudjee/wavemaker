@@ -70,7 +70,7 @@ public class DeploymentService { // extends ServiceSuperClass {
         String status = (String) result.get("status");
         if (status.equals("processing")) {
             Thread originalThread = this.serviceResponse.getRequestThread(requestId);
-            if (originalThread == null || !originalThread.isAlive() || !originalThread.isAlive()) {
+            if (originalThread == null || !originalThread.isAlive()) {
                 result = this.serviceResponse.getResponseFromService(requestId);
                 status = (String) result.get("status");
                 if (status.equals("processing")) {
