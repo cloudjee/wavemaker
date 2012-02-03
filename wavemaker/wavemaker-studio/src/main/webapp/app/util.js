@@ -132,7 +132,7 @@ wm.openUrl = function(inUrl, inTitle, inWindowName, inWindowOptions) {
         if (dojo.isChrome) {
 	    wm.job(inWindowName, 3000, function() {
 		if (w.closed) return;
-		if (w.document.body && w.outerWidth == 0)
+		if (w.document && w.document.body && w.outerWidth == 0)
 		    wm.openUrlDialog(inUrl,inTitle,inWindowName+1);
 	    });
 	} else if (!w) {
