@@ -22,6 +22,7 @@
 package com.wavemaker.common.io;
 
 import java.io.File;
+import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -127,9 +128,8 @@ public class GFSResource implements Resource, Sha1DigestCacheable {
     @Override
     public boolean exists() {
         if (isDirectory()) {
-            return this.dirsDoc.containsField(this.path);
+            return this.dirsDoc.containsField(getPath() + getFilename());
         }
-
         return getGridFSDBFile(false) != null;
     }
 
@@ -225,7 +225,8 @@ public class GFSResource implements Resource, Sha1DigestCacheable {
         if (!this.exists()) {
             throw new IOException("File does not exist at path: " + this.path);
         }
-        return getGridFSDBFile(true).getInputStream();
+        GridFSDBFile gridFSDBFile = getGridFSDBFile(true);
+        return new GFSResourceAwareInputStream(gridFSDBFile.getInputStream());
     }
 
     /**
@@ -301,4 +302,52 @@ public class GFSResource implements Resource, Sha1DigestCacheable {
         return this.file;
     }
 
+    @Override
+    public String toString() {
+        return getPath() + getFilename();
+    }
+
+    /**
+     * {@link InputStream} that is aware of the {@link GFSResource} and can provide more meaningful IO exceptions.
+     */
+    private class GFSResourceAwareInputStream extends FilterInputStream {
+
+        protected GFSResourceAwareInputStream(InputStream in) {
+            super(in);
+        }
+
+        @Override
+        public int read() throws IOException {
+            try {
+                return this.in.read();
+            } catch (IOException e) {
+                rethrow(e);
+                throw new IllegalStateException();
+            }
+        }
+
+        @Override
+        public int read(final byte[] b) throws IOException {
+            try {
+                return this.in.read(b);
+            } catch (IOException e) {
+                rethrow(e);
+                throw new IllegalStateException();
+            }
+        }
+
+        @Override
+        public int read(final byte[] b, int off, int len) throws IOException {
+            try {
+                return this.in.read(b, off, len);
+            } catch (IOException e) {
+                rethrow(e);
+                throw new IllegalStateException();
+            }
+        }
+
+        private void rethrow(IOException e) throws IOException {
+            throw new IOException(e.getMessage() + " accessing file " + getFilename());
+        }
+    }
 }
