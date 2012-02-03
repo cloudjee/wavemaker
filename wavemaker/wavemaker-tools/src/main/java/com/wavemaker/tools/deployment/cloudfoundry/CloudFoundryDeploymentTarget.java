@@ -237,21 +237,26 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
 
     private String doDeploy(ApplicationArchive applicationArchive, DeploymentInfo deploymentInfo, boolean checkExist)
         throws DeploymentStatusException {
-        CloudFoundryClient client = getClient(deploymentInfo);
-        String url = createApplication(client, deploymentInfo, checkExist);
-        setupServices(client, deploymentInfo);
-        uploadAppliation(client, deploymentInfo.getApplicationName(), applicationArchive);
         try {
-            CloudApplication application = client.getApplication(deploymentInfo.getApplicationName());
-            if (application.getState().equals(CloudApplication.AppState.STARTED)) {
-                doRestart(deploymentInfo, client);
-            } else {
-                doStart(deploymentInfo, client);
+            CloudFoundryClient client = getClient(deploymentInfo);
+            String url = createApplication(client, deploymentInfo, checkExist);
+            setupServices(client, deploymentInfo);
+            uploadAppliation(client, deploymentInfo.getApplicationName(), applicationArchive);
+            try {
+                CloudApplication application = client.getApplication(deploymentInfo.getApplicationName());
+                if (application.getState().equals(CloudApplication.AppState.STARTED)) {
+                    doRestart(deploymentInfo, client);
+                } else {
+                    doStart(deploymentInfo, client);
+                }
+            } catch (CloudFoundryException ex) {
+                throw new DeploymentStatusException("ERROR: Could not start application. " + ex.getDescription(), ex);
             }
-        } catch (CloudFoundryException ex) {
-            throw new DeploymentStatusException("ERROR: Could not start application. " + ex.getDescription(), ex);
+            return url;
+        } catch (HttpServerErrorException e) {
+            throw new DeploymentStatusException("ERROR: Clould not deploy application due to remote exception\n" + e.getMessage() + "\n\n"
+                + e.getStatusText());
         }
-        return url;
     }
 
     private Boolean appNameInUse(CloudFoundryClient client, String appName) {

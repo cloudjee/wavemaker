@@ -25,10 +25,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.MalformedURLException;
 import java.util.List;
 
 import org.springframework.core.io.Resource;
@@ -48,7 +48,6 @@ import com.wavemaker.common.WMRuntimeException;
 public class GFSResource implements Resource, Sha1DigestCacheable {
 
     private static final String METADATA_FOLDER_KEY = "FOLDER";
-    
 
     private static final String METADATA_SHA1_KEY = "SHA1";
 
@@ -249,10 +248,10 @@ public class GFSResource implements Resource, Sha1DigestCacheable {
     public URL getURL() {
         try {
             return getURI().toURL();
-        } catch(MalformedURLException ex) {
+        } catch (MalformedURLException ex) {
             throw new WMRuntimeException(ex);
         }
-        //throw new UnsupportedOperationException();
+        // throw new UnsupportedOperationException();
     }
 
     /**
