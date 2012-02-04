@@ -266,7 +266,8 @@ public abstract class ControllerBase extends AbstractController {
 
             getInternalRuntime().setDeserializedProperties(args.getGettersCalled());
 
-            return ServerUtils.invokeMethodWithEvents(getServiceEventNotifier(), sw, method, args, jsonState, false);
+            return ServerUtils.invokeMethodWithEvents(getServiceEventNotifier(), sw, method, args, jsonState, false,
+                    serviceResponse, longResponseTime, requestId);
         } catch (WMRuntimeException ex) {
             if (longResponseTime) {
                 serviceResponse.addError(requestId, ex);
