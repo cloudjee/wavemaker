@@ -304,9 +304,6 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 			} else if (inResult.result.status == "done") {
 				r = this.fullResult = inResult.result;
 				this.result = (r || 0).result;
-				if (invoker instanceof wm.ServiceVariable) {
-					invoker.result(this.result);
-				}
 				longDeferred.callback(this.result);
 			} else {
 				inArgs = [inResult.result.requestId];
