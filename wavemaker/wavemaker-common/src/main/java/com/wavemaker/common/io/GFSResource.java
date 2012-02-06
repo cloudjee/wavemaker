@@ -322,8 +322,10 @@ public class GFSResource implements Resource, Sha1DigestCacheable {
                 return this.in.read();
             } catch (IOException e) {
                 rethrow(e);
-                throw new IllegalStateException();
+            } catch (RuntimeException e) {
+                rethrow(e);
             }
+            throw new IllegalStateException();
         }
 
         @Override
@@ -332,8 +334,10 @@ public class GFSResource implements Resource, Sha1DigestCacheable {
                 return this.in.read(b);
             } catch (IOException e) {
                 rethrow(e);
-                throw new IllegalStateException();
+            } catch (RuntimeException e) {
+                rethrow(e);
             }
+            throw new IllegalStateException();
         }
 
         @Override
@@ -342,11 +346,17 @@ public class GFSResource implements Resource, Sha1DigestCacheable {
                 return this.in.read(b, off, len);
             } catch (IOException e) {
                 rethrow(e);
-                throw new IllegalStateException();
+            } catch (RuntimeException e) {
+                rethrow(e);
             }
+            throw new IllegalStateException();
         }
 
         private void rethrow(IOException e) throws IOException {
+            throw new IOException(e.getMessage() + " accessing file " + getFilename());
+        }
+
+        private void rethrow(RuntimeException e) throws IOException {
             throw new IOException(e.getMessage() + " accessing file " + getFilename());
         }
     }
