@@ -76,7 +76,7 @@ Start.widgets = {
 						}]
 					}]
 				}],
-			    copyright: ["wm.Html", {_classes: {domNode: ["wm_TextAlign_Center"]}, height: "20px", width: "100%", html: "Copyright &copy; 2008-2011 <a target='_blank' href='http://www.wavemaker.com' style='color:0000ff;'>WaveMaker Software</a>, Studio Version: "}, {}]
+			    copyright: ["wm.Html", {_classes: {domNode: ["wm_TextAlign_Center"]}, height: "20px", width: "100%", html: "Copyright &copy; 2008-2012 <a target='_blank' href='http://www.wavemaker.com' style='color:0000ff;'>WaveMaker Software</a>, Studio Version: "}, {}]
 			}]
 		}]
 	}]
