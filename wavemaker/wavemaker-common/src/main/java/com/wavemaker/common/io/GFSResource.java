@@ -128,7 +128,7 @@ public class GFSResource implements Resource, Sha1DigestCacheable {
     @Override
     public boolean exists() {
         if (isDirectory()) {
-            return this.dirsDoc.containsField(getPath() + getFilename());
+            return this.dirsDoc.containsField(getPath());
         }
         return getGridFSDBFile(false) != null;
     }

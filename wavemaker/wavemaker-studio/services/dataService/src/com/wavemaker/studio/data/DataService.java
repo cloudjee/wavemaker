@@ -27,6 +27,7 @@ import java.util.Properties;
 import org.cloudfoundry.runtime.env.CloudEnvironment;
 import org.cloudfoundry.runtime.env.RdbmsServiceInfo;
 
+import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.runtime.RuntimeAccess;
@@ -315,11 +316,11 @@ public class DataService {
     }
 
     // Cloud foundry specific operations
-    
+
     public void cfTestConnection(String serviceId) {
         CloudEnvironment cfEnv = WMAppContext.getInstance().getCloudEnvironment();
         if (cfEnv != null) {
-            RdbmsServiceInfo info = cfEnv.getServiceInfo(serviceId, RdbmsServiceInfo.class);
+            RdbmsServiceInfo info = getCFRdbmsServiceInfo(cfEnv, serviceId);
             String url = info.getUrl();
             String username = info.getUserName();
             String password = info.getPassword();
@@ -329,18 +330,26 @@ public class DataService {
         }
     }
 
-    public void cfImportDatabase(String serviceId, String packageName, String tableFilter,
-        String schemaFilter, String driverClassName, String dialectClassName, String revengNamingStrategyClassName, boolean impersonateUser,
-        String activeDirectoryDomain) {CloudEnvironment cfEnv = WMAppContext.getInstance().getCloudEnvironment();
+    public void cfImportDatabase(String serviceId, String packageName, String tableFilter, String schemaFilter, String driverClassName,
+        String dialectClassName, String revengNamingStrategyClassName, boolean impersonateUser, String activeDirectoryDomain) {
+        CloudEnvironment cfEnv = WMAppContext.getInstance().getCloudEnvironment();
         if (cfEnv != null) {
-            RdbmsServiceInfo info = cfEnv.getServiceInfo(serviceId, RdbmsServiceInfo.class);
+            RdbmsServiceInfo info = getCFRdbmsServiceInfo(cfEnv, serviceId);
             String connectionUrl = info.getUrl();
             String username = info.getUserName();
             String password = info.getPassword();
-            importDatabase(serviceId, packageName, username, password, connectionUrl, tableFilter, schemaFilter,
-                    driverClassName, dialectClassName, revengNamingStrategyClassName, impersonateUser, activeDirectoryDomain);
+            importDatabase(serviceId, packageName, username, password, connectionUrl, tableFilter, schemaFilter, driverClassName, dialectClassName,
+                revengNamingStrategyClassName, impersonateUser, activeDirectoryDomain);
         } else {
             throw new UnsupportedOperationException();
         }
-    }   
+    }
+
+    public RdbmsServiceInfo getCFRdbmsServiceInfo(CloudEnvironment cfEnv, String serviceId) throws WMRuntimeException {
+        try {
+            return cfEnv.getServiceInfo(serviceId, RdbmsServiceInfo.class);
+        } catch (NullPointerException npe) {
+            throw new WMRuntimeException("Unable to find service: " + serviceId + ". Ensure service is bound");
+        }
+    }
 }
