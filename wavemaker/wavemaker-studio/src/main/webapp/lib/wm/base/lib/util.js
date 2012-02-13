@@ -541,8 +541,15 @@ wm.isClassInstanceType = function(inClass, type) {
     } catch(e) {}
     return false;
 }
-wm.isInstanceType = function(obj, type){
-    return type && obj instanceof type;
+wm.isInstanceType = function(obj, types){
+    if (types && typeof types == "object" && types.length) {
+	for (var i = 0; i < types.length; i++) {
+	    if (obj instanceof types[i]) return true;
+	}
+	return false;
+    } else {
+	return types && obj instanceof types;
+    }
 }
 /* Obsolete with dojo 1.4 
 wm.isClassInstanceType = function(inClass, type) {

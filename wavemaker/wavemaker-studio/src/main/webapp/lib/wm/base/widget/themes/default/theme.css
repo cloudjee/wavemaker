@@ -1455,7 +1455,17 @@ display: block;
 .wmwizardlayers .wmwizardlayers-verticaltab.wmwizardlayers-selected {
     text-decoration: underline;
 }
-
+.wmbreadcrumblayers-tab {
+	cursor: pointer;
+	border: 1px solid transparent;
+	background-color: transparent;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.wmbreadcrumblayers-tab.wmbreadcrumblayers-selected {
+    font-weight:bold;
+    text-decoration: none;
+}
 
 body.tundra div.wmtoast.wmtoastExtraSpecific {
     font-size: 12pt;
@@ -1925,7 +1935,7 @@ body div.dojoxGridContent .dojoxGridCell .wmDeleteColumn {
 background-position: -560px 0px;
 width: 16px !important;
 height: 16px !important;
-background-image: url(/wavemaker/lib/images/silkIcons/silk.png);
+background-image: url(../../../../../images/silkIcons/silk.png);
 background-repeat:no-repeat;
     cursor: pointer;
 }
@@ -2083,4 +2093,13 @@ border-bottom: solid 1px #999;
 .wmmobile .wmlist-item {
 font-size: 14px;
 min-height: 32px;
+}
+
+.wmlayout .wmtogglebuttonpanel .wmbutton {
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+     -moz-box-shadow: 0px 0px 0px black;
+     -webkit-box-shadow: 0px 0px 0px black;
+     box-shadow: 0px 0px 0px black;
 }

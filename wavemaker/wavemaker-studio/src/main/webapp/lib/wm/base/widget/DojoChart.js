@@ -86,6 +86,12 @@ dojo.declare("wm.DojoChart", wm.Control, {
 			}
 		}
 		
+	    if (this.isAncestorHidden()) {
+		this._renderDojoObjSkipped = true;
+		return;
+	    }
+	    this._renderDojoObjSkipped = false;
+
 		this.dojoDiv = dojo.doc.createElement('div');
 		this.updateChartDivHeight();
 		this.updateChartDivWidth();
@@ -107,6 +113,12 @@ dojo.declare("wm.DojoChart", wm.Control, {
 			self.connectDojoEvents();
 		});
 	},
+	    _onShowParent: function() {
+		if (this._renderDojoObjSkipped) {
+		    this.renderDojoObj();
+		}
+	    },
+
     renderBounds: function() {
 		this.inherited(arguments);
 	    this.resizeDijit();

@@ -20,6 +20,7 @@
 	<modules>
 		<module>wavemaker</module>
 		<module>wavemaker-desktop</module>
+		<module>wavemaker-cloudfoundry</module>
 	</modules>
 
 	<distributionManagement>
@@ -336,7 +337,7 @@
 			<dependency>
 				<groupId>org.cloudfoundry</groupId>
 				<artifactId>cloudfoundry-client-lib</artifactId>
-				<version>0.7.1.BUILD-SNAPSHOT</version>
+				<version>0.7.1</version>
 			</dependency>
 			<dependency>
 				<groupId>org.cloudfoundry</groupId>

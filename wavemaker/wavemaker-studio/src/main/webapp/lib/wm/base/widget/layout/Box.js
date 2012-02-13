@@ -85,6 +85,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 
             /* Step 3: Get the container's bounds; must be done after autoScroll modifies the bounds */
 	    var b = inContainer.getContentBounds();
+	    var originalB = dojo.clone(b);
 	    if (inContainer.autoScroll) {
 		if (inContainer._preferredWidth > b.w) {
 		    b.w = inContainer._preferredWidth;
@@ -114,8 +115,10 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 	        for (var i=0, c; c=inContainer.c$[i]; i++) {
 		    if (this.inFlow(c)) {                
                         var size = c._percEx[inFlowAxis] ? (flowEx.ratio * c._percEx[inFlowAxis]) : 0;
-                        if (size < c["min" + (inFlowAxis == "w" ? "Width":"Height")]) 
-                            size = c["min" + (inFlowAxis == "w" ? "Width":"Height")];
+			var minName = inFlowAxis == "w" ? "minWidth" : wm.isMobile ? "minMobileHeight" : "minHeight";
+			var min = c[minName];
+                        if (size < min) 
+                            size = min;
                         free -= size;
                     }
                 }
@@ -156,8 +159,9 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
                      * If px sized: We aren't calculating this bounds axis, its a fixed size, so just set it to NaN
                      */
 		    b[inFlowAxis] = c._percEx[inFlowAxis] ? Math.round((flowEx.ratio * c._percEx[inFlowAxis])) : NaN;		
-                    if (b[inFlowAxis] < c["min" + (inFlowAxis == "w" ? "Width":"Height")]) 
-                        b[inFlowAxis] = c["min" + (inFlowAxis == "w" ? "Width":"Height")];
+		    var minName = inFlowAxis == "w" ? "minWidth" : wm.isMobile ? "minMobileHeight" : "minHeight";
+                    if (b[inFlowAxis] < c[minName])
+                        b[inFlowAxis] = c[minName];
 
                     /* Step 7b: Calculate the bounds against the flow, and update the bounds and set cFitSize
                      * If its % sized: then set bounds and cFitSize to a size calculated from the parent's size * this widget's % size
@@ -198,7 +202,9 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 			    if (inFitAxis == "w")
 				cFitSize = b.w;
 			}
-
+		    }
+		    if (wm.isMobile && b.w > originalB.w) {
+			b.w = originalB.w;
 		    }
 
 
@@ -676,8 +682,10 @@ dojo.declare("wm.layout.Fluid", wm.layout.Base, {
 	    } else {
 		b.w = b.w; // no change
 	    }
-	    if (b.h < c.minHeight) {
+	    if (!wm.isMobile && b.h < c.minHeight) {
 		b.h = c.minHeight;
+	    } else if (wm.isMobile && b.h < c.minMobileHeight) {
+		b.h = c.minMobileHeight;
 	    }
 	    c.setBounds(b);
 	    c.renderBounds();

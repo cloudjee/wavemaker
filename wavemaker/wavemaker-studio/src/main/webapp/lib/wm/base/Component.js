@@ -690,7 +690,6 @@ this.panel1.createComponent("custom", "wm.Panel", {
 });
 	*/
 	createComponent: function(inName, inType, inProps, inEvents, inChildren, inOwner) {
-
 	       if (wm.debugPerformance) {
 		 if (inType == "wm.Layout") {
 		   if (dojo.isFF)

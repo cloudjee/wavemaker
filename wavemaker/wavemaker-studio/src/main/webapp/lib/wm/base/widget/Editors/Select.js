@@ -486,8 +486,13 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 	},
 	*/
     setDataSet: function(inDataSet) {
+	this._inSetDataSet = true;
 	this.inherited(arguments);
-	this.createEditor();
+	if (this.editor) {
+	    this.editor.set("store", this.generateStore());
+	    this.setEditorValue(this.dataValue);
+	}
+	delete 	this._inSetDataSet;
     },
 	clear: function() {
 		// note: hack to call internal dijit function to ensure we can
@@ -500,6 +505,9 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 			    this.editor.set("value", undefined, false);
 			}
 		    this._lastValue = this.makeEmptyValue();
+
+		// need to preserve the values if we're in the middle of a dataSet change or we'll be firing onchange events even though the value remains unchanged
+		if (!this._inSetDataSet) {
 		    this.displayValue = "";
 		    this.dataValue = null;
 
@@ -509,7 +517,8 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
                         this.editor._lastValueReported = "";
 			this.updateReadonlyValue();
 		    this.resetState(); 
-                    if (valueWas  && this.hasValues()) 
+		}
+                    if (!this._cupdating && valueWas  && this.hasValues()) 
                         this.changed();
 		} else {
 		    this.resetState(); 
@@ -629,8 +638,10 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 	}
 	var item;
 	var index;
+	if (this.editor)
 	    item = this.editor.get('item');
 	    var result = null;
+	if (this.editor)
 	    var displayedValue = this.editor.get("displayedValue");
 
 	    /* item may still be set in the dijit even though the displayed value no longer matches it */
@@ -641,7 +652,7 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 	    } else {
 		this.selectedItem.setData(null);
 	    }
-	    if (this.editor._lastValueReported === "" && displayedValue !== "") {
+	    if (this.editor && this.editor._lastValueReported === "" && displayedValue !== "") {
 		this.editor._lastValueReported = displayedValue;
 	    }
 
@@ -686,6 +697,7 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 // Lookup Editor
 //===========================================================================
 dojo.declare("wm.Lookup", wm.SelectMenu, {
+    datatype: "",
 	dataField: "",
 	autoDataSet: true,
 	startUpdate: true,
@@ -695,7 +707,6 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		this.inherited(arguments);
 		if (this.autoDataSet && this.formField)
 		    this.createDataSet();
-            this.dataField = ""; // just in case someone somehow changed it, this must be all fields to work.
 	},
 	createDataSet: function() {
 	    wm.fire(this.$.liveVariable, "destroy");
@@ -709,12 +720,19 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		if (!wm.getFormLiveView || !wm.getFormField) return;
 
 		var view = wm.getFormLiveView(parentForm);
-		var parentType = parentForm instanceof wm.DataForm ? parentForm.type : parentForm.dataSet.type;
+		var parentType = wm.isInstanceType(parentForm, wm.DataForm) ? parentForm.type : parentForm.dataSet && parentForm.dataSet.type;
 
 		var ff = wm.getFormField(this);
 		
 		try {
-		    var currentType = parentType && parentType != "any" ? wm.typeManager.getType(parentType).fields[ff].type : "string";
+		    var currentType;
+		    if (this.dataType) {
+			currentType = this.dataType;
+		    } else if (parentType && parentType != "any") {
+			currentType = wm.typeManager.getType(parentType).fields[ff].type ;
+		    } else {
+			currentType = "string";
+		    }
 		} catch(e) {}
 		
 		if (view && !this._isDesignLoaded) {
@@ -740,10 +758,13 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 	
 
 	createDataSetWire: function(inDataSet) {
+	    if (!this.$.binding) {
+		new wm.Binding({name: "binding", owner: this});
+	    }
 		var w = this._dataSetWire = new wm.Wire({
 			name: "dataFieldWire",
 			target: this,
-			owner: this,
+			owner: this.$.binding,
 			source: inDataSet.getId(),
 			targetProperty: "dataSet"
 		});
@@ -799,6 +820,13 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		}
 	    }
 	}
+
+	    /* If this is a wm.Lookup within a composite key acting to select an id, we need to propagate its value up to the parent form's relationship */
+	    if (this.relationshipName && !this.selectedItem.isEmpty()) {
+		var subform = this.getParentForm();
+		var mainform = subform.getParentForm();
+		mainform.dataOutput.setValue(this.relationshipName, this.selectedItem);
+	    }
 	}
 });
 

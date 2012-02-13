@@ -227,6 +227,10 @@ public class WMAppContext {
         return this.cloudEnvironment.getInstanceInfo() != null;
     }
 
+    public CloudEnvironment getCloudEnvironment() {
+        return this.cloudEnvironment;
+    }
+
     public void setTenantIdForUser(String userName, int tenantId) {
         tenantIdMap.put(userName, tenantId);
     }

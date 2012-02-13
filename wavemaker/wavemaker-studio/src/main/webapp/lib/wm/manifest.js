@@ -114,6 +114,7 @@ wm.loadLibs([
 	"wm.base.widget.Editors.Date",
 	"wm.base.widget.Editors.Checkbox",
 	"wm.base.widget.Editors.DataSetEditor",
+	"wm.base.widget.Editors.OneToMany",
 	"wm.base.widget.Editors.Radiobutton",
 	"wm.base.widget.Editors.Select",
 	"wm.base.widget.Editors.ColorPicker",

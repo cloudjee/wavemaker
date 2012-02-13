@@ -54,7 +54,7 @@ Start.widgets = {
 										format: ["wm.DataFormatter", {}, {}]
 									}]
 								}],
-							    iframe: ["wm.IFrame", {source: "/wavemaker/studioService.download?method=getContent&inUrl=http://wavemaker.com/splash", width: "100%", height: "100%", border: "1", borderColor: "#000F19", margin: "0,8,10,0", showing: false}]
+							    iframe: ["wm.IFrame", {source: "studioService.download?method=getContent&inUrl=http://wavemaker.com/splash", width: "100%", height: "100%", border: "1", borderColor: "#000F19", margin: "0,8,10,0", showing: false}]
 								}]
 							}]
 					}],
@@ -76,7 +76,7 @@ Start.widgets = {
 						}]
 					}]
 				}],
-			    copyright: ["wm.Html", {_classes: {domNode: ["wm_TextAlign_Center"]}, height: "20px", width: "100%", html: "Copyright &copy; 2008-2011 <a target='_blank' href='http://www.wavemaker.com' style='color:0000ff;'>WaveMaker Software</a>, Studio Version: "}, {}]
+			    copyright: ["wm.Html", {_classes: {domNode: ["wm_TextAlign_Center"]}, height: "20px", width: "100%", html: "Copyright &copy; 2008-2012 <a target='_blank' href='http://www.wavemaker.com' style='color:0000ff;'>WaveMaker Software</a>, Studio Version: "}, {}]
 			}]
 		}]
 	}]

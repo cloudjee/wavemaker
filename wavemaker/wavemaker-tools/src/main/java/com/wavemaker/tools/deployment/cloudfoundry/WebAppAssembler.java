@@ -3,181 +3,261 @@ package com.wavemaker.tools.deployment.cloudfoundry;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.cloudfoundry.client.lib.archive.AbstractApplicationArchiveEntry;
+import org.cloudfoundry.client.lib.archive.ApplicationArchive;
+import org.cloudfoundry.client.lib.archive.ApplicationArchive.Entry;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
+import org.springframework.util.ObjectUtils;
 
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.tools.deployment.cloudfoundry.LoggingStatusCallback.Timer;
+import com.wavemaker.common.io.Sha1DigestCacheable;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ResourceFilter;
 import com.wavemaker.tools.project.StudioFileSystem;
 
 public class WebAppAssembler implements InitializingBean {
 
-    private static final Log log = LogFactory.getLog(WebAppAssembler.class);
-
     private StudioFileSystem fileSystem;
 
-    private Map<String, Resource> studioWebAppFiles;
+    private Future<Set<ApplicationArchiveEntry>> studioApplicationArchiveEnties;
 
-    private Future<List<Map<String, Object>>> studioHashes;
+    private final String[] IGNORED_LIB_PREFIXES = { "lib/wm/common/", "lib/dojo/util/", "lib/dojo/util/buildscripts/", "lib/wm/base/deprecated/" };
+
+    private static final ApplicationArchiveEntry WEB_INF_ENTRY = new ApplicationArchiveEntry("WEB-INF");
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        this.studioWebAppFiles = new HashMap<String, Resource>();
-        Resource root = this.fileSystem.getStudioWebAppRoot();
-        final String studioBasePath = this.fileSystem.getPath(root);
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        this.studioApplicationArchiveEnties = executor.submit(new StudioApplicationArchiveEntriesCollector());
+    }
 
+    public ApplicationArchive assemble(Project project) {
         try {
-            collectFiles(this.studioWebAppFiles, studioBasePath, root.createRelative("images/"));
-            collectFiles(this.studioWebAppFiles, studioBasePath, root.createRelative("WEB-INF/lib/"));
-            collectFiles(this.studioWebAppFiles, studioBasePath, root.createRelative("lib/"), new ResourceFilter() {
+            final String filename = project.getProjectName();
+            final Set<ApplicationArchiveEntry> entries = new LinkedHashSet<ApplicationArchiveEntry>();
+            String projectBasePath = this.fileSystem.getPath(project.getWebAppRoot());
+            collectEntries(entries, projectBasePath, project.getWebAppRoot());
+            entries.addAll(this.studioApplicationArchiveEnties.get());
+            ensureAtLeastOneDirectoryEntry(entries);
+            return new ApplicationArchive() {
 
                 @Override
-                public boolean accept(Resource resource) {
-                    String path = WebAppAssembler.this.fileSystem.getPath(resource).replace(studioBasePath, "");
-                    if (path.startsWith("wm/common/") || path.startsWith("dojo/utils/") || path.startsWith("dojo/") && path.contains("tests/")) {
-                        return false;
-                    }
-                    return true;
+                public String getFilename() {
+                    return filename;
                 }
-            });
-            collectFiles(this.studioWebAppFiles, this.fileSystem.getPath(this.fileSystem.getCommonDir()), this.fileSystem.getCommonDir(), null,
-                "lib/wm/common/");
 
-            ExecutorService executor = Executors.newSingleThreadExecutor();
-            this.studioHashes = executor.submit(new StudioHashCalculator());
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
-        }
-    }
-
-    public Map<String, Resource> getWebAppFilesForDeployment(Project project) {
-        Map<String, Resource> projectWebAppFiles = new HashMap<String, Resource>();
-
-        try {
-
-            String projectBasePath = this.fileSystem.getPath(project.getWebAppRoot());
-            collectFiles(projectWebAppFiles, projectBasePath, project.getWebAppRoot());
-            // projectWebAppFiles.add("WEB-INF/web.xml", new ClassPathResource(""));
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
-        }
-
-        return projectWebAppFiles;
-    }
-
-    public Map<String, Resource> getSharedStudioFiles() {
-        return this.studioWebAppFiles;
-    }
-
-    public List<Map<String, Object>> getStudioHashes() {
-        try {
-            return this.studioHashes.get();
+                @Override
+                public Iterable<Entry> getEntries() {
+                    return Collections.<ApplicationArchive.Entry> unmodifiableSet(entries);
+                }
+            };
         } catch (Exception e) {
             throw new WMRuntimeException(e);
         }
+    }
+
+    /**
+     * Ensure that the specified entries always contains at least one directory. This is required for a valid zip file.
+     * 
+     * @param entries entries to modify
+     */
+    private void ensureAtLeastOneDirectoryEntry(Set<ApplicationArchiveEntry> entries) {
+        for (Entry entry : entries) {
+            if (entry.isDirectory()) {
+                return;
+            }
+        }
+        entries.add(WEB_INF_ENTRY);
+    }
+
+    private void collectEntries(Set<ApplicationArchiveEntry> entries, String basePath, Resource root) throws IOException {
+        collectEntries(entries, basePath, root, null);
+    }
+
+    private void collectEntries(Set<ApplicationArchiveEntry> entries, String basePath, Resource root, ResourceFilter filter) throws IOException {
+        collectEntries(entries, basePath, root, filter, "");
+    }
+
+    private void collectEntries(Set<ApplicationArchiveEntry> entries, String basePath, Resource root, ResourceFilter filter, String newPath)
+        throws IOException {
+        filter = filter == null ? ResourceFilter.NO_FILTER : filter;
+        List<Resource> children = this.fileSystem.listChildren(root, filter);
+        for (Resource child : children) {
+            String name = newPath + this.fileSystem.getPath(child).replace(basePath, "");
+            if (this.fileSystem.isDirectory(child)) {
+                addDirectoryEntries(entries, name);
+                collectEntries(entries, basePath, child, filter);
+            } else {
+                addDirectoryEntries(entries, getParentDirectoryName(name));
+                entries.add(new ApplicationArchiveEntry(name, child));
+            }
+        }
+    }
+
+    /**
+     * Add directory entries, recursively ensuring that parent entries are also added (this is required for a valid zip
+     * file).
+     * 
+     * @param entries the entries to add
+     * @param name the name (can be null)
+     */
+    private void addDirectoryEntries(Set<ApplicationArchiveEntry> entries, String name) {
+        if (name != null) {
+            if (name.endsWith("/")) {
+                name.substring(0, name.length() - 1);
+            }
+            String parent = getParentDirectoryName(name);
+            addDirectoryEntries(entries, parent);
+            entries.add(new ApplicationArchiveEntry(name + "/"));
+        }
+    }
+
+    private String getParentDirectoryName(String name) {
+        int lastSlash = name.lastIndexOf("/");
+        if (lastSlash != -1) {
+            return name.substring(0, lastSlash);
+        }
+        return null;
     }
 
     public void setFileSystem(StudioFileSystem fileSystem) {
         this.fileSystem = fileSystem;
     }
 
-    private void collectFiles(Map<String, Resource> files, String basePath, Resource root) throws IOException {
-        collectFiles(files, basePath, root, null);
-    }
-
-    private void collectFiles(Map<String, Resource> files, String basePath, Resource root, ResourceFilter filter) throws IOException {
-        collectFiles(files, basePath, root, filter, "");
-    }
-
-    private void collectFiles(Map<String, Resource> files, String basePath, Resource root, ResourceFilter filter, String newPath) throws IOException {
-        List<Resource> children;
-        if (filter == null) {
-            children = this.fileSystem.listChildren(root);
-        } else {
-            children = this.fileSystem.listChildren(root, filter);
-        }
-        for (Resource child : children) {
-            if (this.fileSystem.isDirectory(child)) {
-                collectFiles(files, basePath, child, filter);
-            } else {
-                files.put(newPath + this.fileSystem.getPath(child).replace(basePath, ""), child);
-            }
-        }
-    }
-
-    public List<Map<String, Object>> generateResourcePayload(Map<String, Resource> webAppFiles) throws IOException {
-        Timer fingerPrintTimer = new Timer();
-        fingerPrintTimer.start();
-        List<Map<String, Object>> payload = new ArrayList<Map<String, Object>>();
-        for (Entry<String, Resource> file : webAppFiles.entrySet()) {
-            String sha1sum = computeSha1Digest(file.getValue().getInputStream());
-            Map<String, Object> entryPayload = new HashMap<String, Object>();
-            entryPayload.put("size", file.getValue().contentLength());
-            entryPayload.put("sha1", sha1sum);
-            entryPayload.put("fn", file.getKey());
-            payload.add(entryPayload);
-        }
-        log.info("Web app hashes calculated in " + fingerPrintTimer.stop() + "ms");
-
-        return payload;
-    }
-
-    private String computeSha1Digest(InputStream in) throws IOException {
-        MessageDigest digest;
-        try {
-            digest = MessageDigest.getInstance("SHA-1");
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-
-        byte[] buffer = new byte[16 * 1024];
-        while (true) {
-            int read = in.read(buffer);
-            if (read == -1) {
-                break;
-            }
-            digest.update(buffer, 0, read);
-        }
-        in.close();
-        return bytesToHex(digest.digest());
-    }
-
-    private static final String HEX_CHARS = "0123456789ABCDEF";
-
-    private static String bytesToHex(byte[] bytes) {
-        if (bytes == null) {
-            return null;
-        }
-        final StringBuilder hex = new StringBuilder(2 * bytes.length);
-        for (final byte b : bytes) {
-            hex.append(HEX_CHARS.charAt((b & 0xF0) >> 4)).append(HEX_CHARS.charAt(b & 0x0F));
-        }
-        return hex.toString();
-    }
-
-    private final class StudioHashCalculator implements Callable<List<Map<String, Object>>> {
+    private final class StudioApplicationArchiveEntriesCollector implements Callable<Set<ApplicationArchiveEntry>> {
 
         @Override
-        public List<Map<String, Object>> call() throws Exception {
-            return generateResourcePayload(WebAppAssembler.this.studioWebAppFiles);
+        public Set<ApplicationArchiveEntry> call() throws Exception {
+            try {
+                Set<ApplicationArchiveEntry> entries = new LinkedHashSet<ApplicationArchiveEntry>();
+                collectStudioEntries(entries);
+                loadSha1Digests(entries);
+                return entries;
+            } catch (Throwable e) {
+                throw new WMRuntimeException(e);
+            }
         }
 
+        private void collectStudioEntries(Set<ApplicationArchiveEntry> entries) throws IOException {
+
+            Resource commonDir = WebAppAssembler.this.fileSystem.getCommonDir();
+            String commonDirPath = WebAppAssembler.this.fileSystem.getPath(commonDir);
+            Resource webAppRoot = WebAppAssembler.this.fileSystem.getStudioWebAppRoot();
+            final String webAppRootPath = WebAppAssembler.this.fileSystem.getPath(webAppRoot);
+
+            collectEntries(entries, webAppRootPath, webAppRoot.createRelative("images/"));
+            collectEntries(entries, webAppRootPath, webAppRoot.createRelative("WEB-INF/lib/"));
+            collectEntries(entries, webAppRootPath, webAppRoot.createRelative("lib/"), new ResourceFilter() {
+
+                @Override
+                public boolean accept(Resource resource) {
+                    String path = WebAppAssembler.this.fileSystem.getPath(resource).replace(webAppRootPath, "");
+                    if (path.startsWith("lib/dojo/") && path.contains("tests/")) {
+                        return false;
+                    }
+                    for (String prefix : WebAppAssembler.this.IGNORED_LIB_PREFIXES) {
+                        if (path.startsWith(prefix)) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+            });
+            collectEntries(entries, commonDirPath, commonDir, null, "lib/wm/common/");
+        }
+
+        private void loadSha1Digests(Set<ApplicationArchiveEntry> entries) {
+            for (ApplicationArchiveEntry entry : entries) {
+                entry.getSha1Digest();
+            }
+        }
     }
 
+    private static class ApplicationArchiveEntry extends AbstractApplicationArchiveEntry {
+
+        private final String name;
+
+        private Resource resource;
+
+        public ApplicationArchiveEntry(String name) {
+            this.name = name;
+        }
+
+        public ApplicationArchiveEntry(String name, Resource resource) {
+            this.name = name;
+            this.resource = resource;
+        }
+
+        @Override
+        public InputStream getInputStream() throws IOException {
+            return this.resource == null ? null : this.resource.getInputStream();
+        }
+
+        @Override
+        public String getName() {
+            return this.name;
+        }
+
+        @Override
+        public boolean isDirectory() {
+            return this.resource == null;
+        }
+
+        @Override
+        public long getSize() {
+            if (isDirectory()) {
+                return 0;
+            }
+            try {
+                return this.resource.contentLength();
+            } catch (IOException e) {
+                return super.getSize();
+            }
+        }
+
+        @Override
+        public byte[] getSha1Digest() {
+            if (isDirectory()) {
+                return null;
+            }
+            Sha1DigestCacheable cache = Sha1DigestCacheable.NONE;
+            if (this.resource instanceof Sha1DigestCacheable) {
+                cache = (Sha1DigestCacheable) this.resource;
+            }
+            byte[] sha1 = cache.getSha1Digest();
+            if (sha1 == null) {
+                sha1 = super.getSha1Digest();
+                cache.setSha1Digest(sha1);
+            }
+            return sha1;
+        }
+
+        @Override
+        public String toString() {
+            return getName();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj instanceof ApplicationArchiveEntry) {
+                return ObjectUtils.nullSafeEquals(((ApplicationArchiveEntry) obj).getName(), getName());
+            }
+            return super.equals(obj);
+        }
+
+        @Override
+        public int hashCode() {
+            return ObjectUtils.nullSafeHashCode(getName());
+        }
+    }
 }

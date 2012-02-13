@@ -15,6 +15,7 @@
 package com.wavemaker.tools.data;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -34,6 +35,7 @@ import org.hibernate.dialect.SQLServerDialect;
 import org.hibernate.tool.ant.ExporterTask;
 import org.hibernate.tool.ant.GenericExporterTask;
 import org.hibernate.tool.hbm2x.Exporter;
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.MessageResource;
@@ -47,6 +49,8 @@ import com.wavemaker.runtime.data.util.JDBCUtils;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.reveng.DefaultRevengNamingStrategy;
 import com.wavemaker.tools.data.reveng.MSSQLRevengNamingStrategy;
+import com.wavemaker.tools.compiler.ProjectCompiler;
+import com.wavemaker.tools.project.StudioFileSystem;
 
 /**
  * @author Simon Toens
@@ -204,9 +208,9 @@ public abstract class BaseDataModelSetup {
     // data objects package
     protected String dataPackage = null;
 
-    protected File destdir = null;
+    protected Resource destdir = null;
 
-    protected File javadir = null;
+    protected Resource javadir = null;
 
     protected Properties properties = new Properties();
 
@@ -216,14 +220,28 @@ public abstract class BaseDataModelSetup {
 
     protected String activeDirectoryDomain = null;
 
+    protected ProjectCompiler projectCompiler;
+
+    protected ExporterFactory exporterFactory;
+
+    protected StudioFileSystem fileSystem;
+
     private final List<File> tmpFiles = new ArrayList<File>();
 
-    public void setDestDir(File destdir) {
+    public void setDestDir(Resource destdir) {
         this.destdir = destdir;
-        getParentTask().setDestDir(destdir);
+        try {
+            File f = this.destdir.getFile();
+            getParentTask().setDestDir(f);
+        } catch(IOException ex) {
+            exporterFactory.setDestDir(destdir);     
+        } catch(UnsupportedOperationException ex) {
+            exporterFactory.setDestDir(destdir);     
+        }
+        //getParentTask().setDestDir(destdir);
     }
 
-    public void setJavaDir(File javadir) {
+    public void setJavaDir(Resource javadir) {
         this.javadir = javadir;
     }
 
@@ -794,7 +812,7 @@ public abstract class BaseDataModelSetup {
         if (this.destdir == null) {
             String s = this.properties.getProperty(DESTDIR_SYSTEM_PROPERTY);
             if (s != null) {
-                setDestDir(new File(s));
+                setDestDir(fileSystem.getResourceForURI(s));
             }
         }
 
@@ -802,8 +820,9 @@ public abstract class BaseDataModelSetup {
             requiredProperties.add(DESTDIR_SYSTEM_PROPERTY);
         } else {
             if (this.destdir.exists()) {
-                if (this.destdir.isFile()) {
-                    throw new ConfigurationException(MessageResource.PROPERTY_MUST_BE_DIR, DESTDIR_SYSTEM_PROPERTY, this.destdir.getAbsolutePath());
+                if (!fileSystem.isDirectory(this.destdir)) {
+                    throw new ConfigurationException(MessageResource.PROPERTY_MUST_BE_DIR, DESTDIR_SYSTEM_PROPERTY,
+                            fileSystem.getPath(this.destdir));
                 }
             }
         }
@@ -847,15 +866,15 @@ public abstract class BaseDataModelSetup {
     }
 
     protected ExporterTask getConfigurationExporter() {
-        return new GenericExporterTask(getParentTask()) {
 
-            @Override
-            public Exporter createExporter() {
-                return new HibernateSpringConfigExporter(BaseDataModelSetup.this.serviceName, BaseDataModelSetup.this.packageName,
-                    BaseDataModelSetup.this.dataPackage, BaseDataModelSetup.this.className, getUseIndividualCRUDOperations(),
-                    BaseDataModelSetup.this.impersonateUser, BaseDataModelSetup.this.activeDirectoryDomain);
-            };
-        };
+        exporterFactory.setPackageName(BaseDataModelSetup.this.packageName);
+        exporterFactory.setDataPackage(BaseDataModelSetup.this.dataPackage);
+        exporterFactory.setClassName(BaseDataModelSetup.this.className);
+        exporterFactory.setUseIndividualCRUDOperations(getUseIndividualCRUDOperations());
+        exporterFactory.setImpersonateUser(BaseDataModelSetup.this.impersonateUser);
+        exporterFactory.setActiveDirectoryDomain(BaseDataModelSetup.this.activeDirectoryDomain);
+        
+        return exporterFactory.getExporter("springConfig", getParentTask(), this.serviceName);
     }
 
     protected boolean getUseIndividualCRUDOperations() {
@@ -948,6 +967,14 @@ public abstract class BaseDataModelSetup {
             }
             JDBCUtils.getConnection(this.connectionUrl, this.username, this.password, this.driverClassName);
         }
+    }
+
+    public void setFileSystem(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
+    }
+
+    public void setExporterFactory(ExporterFactory exporterFactory) {
+        this.exporterFactory = exporterFactory;
     }
 
     private void checkProperties(Collection<String> requiredProperties) {

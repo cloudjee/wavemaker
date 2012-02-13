@@ -25,10 +25,12 @@ dojo.declare("NewLiveFormDialog", wm.Page, {
     },
     onCancelClick: function() {
         this.owner.owner.dismiss();
+	this.form.destroy();
     },
     onOkClick: function(selectedName) {
 	this.form.setName(wm.decapitalize(this.typeSelect.getDisplayValue().replace(/^.*\./,"")) + "DBForm");
-	this.form.set_type(this.typeSelect.getDataValue());
+	if (this.typeSelect.getDataValue())
+	    this.form.set_type(this.typeSelect.getDataValue());
 	this.form.set_formBehavior(this.formBehavior.getDataValue());
 	this.form.set_readonlyManager(this.readonlyManager.getDataValue());
 	if (this.form.formBehavior != "insertOnly" && this.dataSetSelect.getDataValue()) {

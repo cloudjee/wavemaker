@@ -21,6 +21,7 @@ import org.springframework.util.StringUtils;
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.CommonResourceFilter;
 import com.wavemaker.common.util.FileAccessException;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.tools.config.ConfigurationStore;
@@ -45,7 +46,7 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
     /**
      * WaveMaker demo directory override, used for testing. NEVER set this in production.
      */
-    private File testDemoDir = null;
+    private File testDemoDir = null;         
 
     /**
      * WaveMaker home override, used for testing. NEVER set this in production.
@@ -182,6 +183,32 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
     }
 
     @Override
+    public List<Resource> listAllChildren(Resource resource, CommonResourceFilter filter) {
+        List<Resource> children = new ArrayList<Resource>();
+        File[] files;
+        try {
+            files = resource.getFile().listFiles();
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        }
+        if (files == null) {
+            return children;
+        }
+        for (File file : files) {
+            Resource fileResource = createResource(file.getAbsolutePath() + "/");
+            if (file.isDirectory()) {
+                List<Resource> rscs = listAllChildren(fileResource, filter);
+                children.addAll(rscs);
+            } else {
+                if (filter == null || filter.accept(fileResource)) {
+                    children.add(fileResource);
+                }
+            }
+        }
+        return children;
+    }
+
+    @Override
     public Resource createPath(Resource resource, String path) {
         Assert.isInstanceOf(FileSystemResource.class, resource, "Expected a FileSystemResource");
         try {
@@ -226,6 +253,21 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
             throw new WMRuntimeException(ex);
         }
         return target;
+    }
+
+    @Override
+    public Resource copyRecursive(Resource root, Resource target, String includedPattern, String excludedPattern) {
+        try {
+            IOUtils.copy(root.getFile(), target.getFile(), includedPattern, excludedPattern);
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
+        return target;
+    }
+
+    @Override
+    public Resource copyRecursive(File root, Resource target, List<String> exclusions) {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -354,5 +396,24 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
     @Override
     protected String getFSType() {
         return new String("local");
+    }
+
+    @Override
+    public Resource getParent(Resource resource) {
+        File f;
+        try {
+            f = resource.getFile().getParentFile(); 
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
+
+        Resource parent = null;
+
+        if (f != null) {
+            String path = f.getAbsolutePath() + "/";
+            parent = new FileSystemResource(path);
+        }
+        
+        return parent;
     }
 }

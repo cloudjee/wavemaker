@@ -197,8 +197,10 @@ wm.Object.extendSchema(wm.DojoGrid, {
     isRowSelected: { ignore: true, bindSource: 1, type: "Boolean",   doc: 1},
 
     /* Event handlers */
-    onSelectionChange:{order:1},
-    onSort:           {order:2},
+    onSelectionChange:{order:3, advanced:1},
+    onSelect: {order: 1},
+    onDeselect: {order: 2},
+    onSort:           {order:10},
     onCellEdited:     {order:20},
     onLiveEditBeforeUpdate:  {events: ["js", "sharedjs", "sharedEventHandlers"], order: 500, advanced:1},
     onLiveEditBeforeInsert:  {events: ["js", "sharedjs", "sharedEventHandlers"], order: 501, advanced:1},

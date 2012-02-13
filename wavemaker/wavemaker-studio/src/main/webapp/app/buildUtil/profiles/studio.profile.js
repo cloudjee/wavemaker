@@ -186,6 +186,7 @@ dependencies = {
 				"wm.base.widget.Editors.AbstractEditor",
 				"wm.base.widget.Editors.AbstractEditor_design",
 				"wm.base.widget.Editors.DataSetEditor_design",
+			        "wm.base.widget.Editors.OneToMany_design",
 				"wm.base.widget.Editors.Text_design",
 				"wm.base.widget.Editors.Text",
 				"wm.base.widget.Editors.Number",

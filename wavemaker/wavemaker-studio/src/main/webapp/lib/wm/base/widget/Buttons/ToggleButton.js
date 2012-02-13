@@ -66,3 +66,73 @@ dojo.declare("wm.ToggleButton", wm.ToolButton, {
             this.setCaption(inCaption);
     }
 });
+
+dojo.declare("wm.ToggleButtonPanel", wm.Container, {
+    classNames: "wmtogglebuttonpanel",
+    layoutKind: "left-to-right",
+    currentButton: -1,
+    height: "40px",
+    width: "100%",
+    buttonMargins: "0",
+    init: function() {
+	this._btns = [];
+	this.inherited(arguments);
+    },
+    postInit: function() {
+	this.inherited(arguments);
+/*
+	for (var i = 0; i < this.c$.length; i++) {
+	    if (this.c$[i] instanceof wm.ToolButton) {
+		this.c$[i].connect(this.c$[i], "onclick", dojo.hitch(this, "changed", this.c$[i]));
+		this._btns.push(this.c$[i]);
+	    }
+	}
+	*/
+    },
+    addWidget: function(inWidget) {
+	this.inherited(arguments);
+	if (inWidget instanceof wm.ToolButton) {
+	    inWidget.setHeight("100%");
+	    this._btns.push(inWidget);
+	    inWidget.connect(inWidget, "onclick", dojo.hitch(this, "changed", inWidget));
+	    inWidget.setMargin(this.buttonMargins);
+	}
+    },
+    removeWidget: function(inWidget) {
+	this.inherited(arguments);
+	wm.Array.removeElement(this._btns, inWidget);
+    },
+    changed: function(inButton) {
+	var currentButtonWas = this.currentButton;
+	if (currentButtonWas instanceof wm.ToolButton && currentButtonWas != inButton) {
+	    dojo.removeClass(currentButtonWas.domNode, "toggleButtonDown");
+	}
+	if (inButton instanceof wm.ToolButton) {
+	    this.currentButton = inButton;
+	    if (inButton) {
+		dojo.addClass(inButton.domNode, "toggleButtonDown");
+	    }
+	    if (this.currentButton !== currentButtonWas) {
+		this.valueChanged("currentButton", this.currentButton); // currentButton is a bindSource
+		this.onChange(this.currentButton);
+	    }
+	} else {
+	    this.currentButton = null;
+	    if (currentButtonWas instanceof wm.ToolButton) {
+		this.valueChanged("currentButton", this.currentButton); // currentButton is a bindSource
+		this.onChange(this.currentButton);
+	    }
+	}
+    },
+    setCurrentButton: function(inButton) { // currentIndex is a bindTarget
+	// why wm.onidle? Without this, a button click event could be clicked before the layer or pagecontainer its trying trigger a navigation to is created
+	wm.onidle(this, function() {
+	    if (inButton instanceof wm.ToolButton) {
+		inButton.click();
+	    } else {
+		this.changed(null);
+	    }
+	});
+    },
+    onChange: function(inIndex) {}
+});

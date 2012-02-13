@@ -197,3 +197,28 @@ wm.PopupMenuButton.extend({
 	studio.menuDesignerDialog.show();
     }
 });
+
+wm.ToggleButtonPanel.extend({
+        afterPaletteDrop: function(){
+	    this.inherited(arguments);
+	    new wm.Button({owner: this.owner,
+			   parent: this,
+			   name: "togglePanelButton1",
+			   caption: "Toggle1",
+			   height: "100%",
+			   width: "100%"
+			  });
+	    this.reflow();
+	},
+    set_buttonMargins: function(inMargin) {
+	this.buttonMargins = inMargin;
+	dojo.forEach(this._btns, function(b) {b.setMargin(inMargin);});
+    }
+});
+
+wm.Object.extendSchema(wm.ToggleButtonPanel, {
+    currentButton: {group: "widgetName", subgroup: "behavior", bindable:1, readonly: 1, editor: "wm.prop.WidgetSelect", createWire: 1,editorProps: {widgetType: "wm.ToolButton", inspectedChildrenOnly: true}},
+
+    themeStyleType: {group: "style", order: 150}
+
+});

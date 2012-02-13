@@ -85,6 +85,7 @@ wm.expression.getValue(exp, app.main);
 					var arr = inSource.split('.');
 					var v = inRoot;		
 					dojo.forEach(arr, function(prop){
+					    if (v != null)
 						v = v[prop];
 					});
 				} else {

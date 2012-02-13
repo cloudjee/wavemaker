@@ -20,5 +20,6 @@
 		<module>wavemaker-test-support</module>
 		<module>wavemaker-tools</module>
 		<module>wavemaker-tools-filesystem</module>
+		<module>wavemaker-tools-cloudfoundry</module>
 	</modules>
 </project>

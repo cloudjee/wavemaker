@@ -692,7 +692,7 @@ wm.Container.extend({
 				} else if (!c._percEx.h) {
 					v = c.bounds.h;
 				} else {
-				    v =  parseInt(c.minHeight) || c.getMinHeightProp();
+				    v =  c.getMinHeightProp();
 				    if (c.bounds.h > v || this.c$.length == 1) {
 					if (percentUsed < 100)
 					    percentUsed += c._percEx.h;
@@ -712,7 +712,7 @@ wm.Container.extend({
 
             // never return less than 15px height
             var result =  ((this.layoutKind == "left-to-right") ? max : sum) + extra;
-	    return Math.max(this.minHeight,Math.max(result, wm.Control.prototype.getMinHeightProp.call(this)));
+	    return Math.max(result, wm.Control.prototype.getMinHeightProp.call(this));
 	},
     setBestWidth: function() {
 	this.setWidth(this.getPreferredFitToContentWidth() + "px");

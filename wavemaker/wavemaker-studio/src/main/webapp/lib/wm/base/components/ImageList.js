@@ -41,7 +41,7 @@ dojo.declare("wm.ImageList", wm.Component, {
 	if (this.url.indexOf("lib/") == 0) 
 	    url = dojo.moduleUrl("lib").path.replace(/lib\/$/, "") + url;
 	else if(this.isDesignLoaded() && this.owner != studio) {
-	    url = "/" + studio.projectPrefix + studio.project.getProjectPath() + "/" + url;
+	    url = "/" + studio.project.getProjectPath() + "/" + url;
 	}
 
 

@@ -34,10 +34,16 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 		    name: "tabsControl"
 		});
 		this.decoree.moveControl(this.tabsControl, 0);
+	    if (this.decoree.dndTargetName || this.decoree.isDesignLoaded()) {
+		dojo.require("dojo.dnd.Source");
+    		this.dndObj = new dojo.dnd.Source(this.tabsControl.domNode, {accept: [this.decoree.dndTargetName || "designMoveLayers"]});
+		this.dndObjConnect = this.tabsControl.connect(this.dndObj, "onDndDrop", this, "onTabDrop");
+	    }
+
 	},
 	createTab: function(inCaption, inIndex, inLayer) {
 	    var b = this.btns[inIndex] = document.createElement("button");
-
+	    dojo.attr(b,"id", this.decoree.domNode.id + "_decorator_button" + this.btns.length);
 	    dojo.attr(b,"type", "button");
 	    dojo.attr(b,"type", "button");
 	        //b.style.outline = "none";
@@ -64,7 +70,92 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 	    b.className=this.decorationClass + tabstyleName +  (inLayer.closable || inLayer.destroyable ? " " + this.decorationClass + "-closabletab" : "");
 	    if (!inCaption) b.style.display = "none";
 	    this.tabsControl.domNode.appendChild(b);
+
+	    if (this.dndObj) {
+		this.dndObj.destroy()
+		dojo.disconnect(this.dndObjConnect);
+		dojo.addClass(b, "dojoDndItem");
+		dojo.attr(b, "dndType", this.decoree.dndTargetName || "designMoveLayers");
+    		this.dndObj = new dojo.dnd.Source(this.tabsControl.domNode, {accept: [this.decoree.dndTargetName || "designMoveLayers"]});
+		this.dndObjConnect = this.tabsControl.connect(this.dndObj, "onDndDrop", this, "onTabDrop");
+	    }
 	},
+	 onTabDrop: function(dndSource,nodes,copy,dndTarget,event) {
+	     if (dojo.dnd.manager().target != this.dndObj) return;
+	     var tabLayers = wm.getWidgetByDomNode(nodes[0]);
+
+	     var indexWas = dojo.indexOf(tabLayers.decorator.btns, nodes[0]);
+	     if (indexWas == -1) return;
+	     var layer = tabLayers.layers[indexWas];
+	     if (!layer) return;
+
+	     var indexIs = dojo.indexOf(this.tabsControl.domNode.childNodes, nodes[0]);
+	     var findNewIndex = false;
+	     var changeParent = layer.parent != this.decoree;
+	     if (changeParent) {
+		 layer.setParent(this.decoree);
+		 var selectedIndex = tabLayers.layerIndex;
+		 tabLayers.layerIndex = -1;
+		 tabLayers.setLayerIndex(tabLayers.layers.length > selectedIndex ? selectedIndex : tabLayers.layers.length-1);
+    
+		 var managedButtons = this.btns;
+		 var currentButtons = this.tabsControl.domNode.childNodes;
+		 if (indexIs == this.btns.length-1) {
+		     findNewIndex = true;
+		 }
+		 // Find any buttons currently in the tabControl that aren't in this.btns; this is a new tab dragged in from elsewhere
+		 // and needs to be handled
+/*
+		 for (var i = 0; i < currentButtons.length; i++) {
+		     var b = currentButtons[i];
+		     if (dojo.indexOf(managedButtons,b) == -1) {
+			 draggedFromElsewhere = true;
+			 this.decoree.moveLayerIndex(layer, i);
+			 dojo.destroy(b);
+			 break;
+		     }
+		 }
+		 */
+		 if (nodes[0].parentNode)
+		     dojo.destroy(nodes[0]);
+	     } else if (indexWas == indexIs) {
+		 findNewIndex = true;
+	     }
+
+	     /* we generally need to find a new index when the user drops a tab between two tabs because dojo fails
+	      * to handle this case
+	      */
+	     if (findNewIndex) {
+		 // use the event to see if the index SHOULD have been changed but dojo just messed up.
+		 var x = event.offsetX;
+		 var found = false;
+		 for (var i = 0; i < this.btns.length; i++) {
+		     var b = this.btns[i];
+		     var coords = dojo.marginBox(b);
+		     coords.l += dojo._getContentBox(b).l;
+		     if (coords.l > x) {
+			 indexIs = i;
+			 found = true;
+			 break;
+		     }
+		 }
+		 if (!found) {
+		     indexIs = this.btns.length;
+		 } else if (indexIs > indexWas && !changeParent) {
+		     indexIs--;
+		 }
+	     }
+	     this.decoree.moveLayerIndex(layer, indexIs);
+	     if (this.decoree.isDesignLoaded()) {
+		 studio.refreshWidgetsTree();
+	     }
+             layer.activate();
+	     layer.onTabDrop();
+	     if (tabLayers != this.decoree && tabLayers.onTabRemoved) {
+		 tabLayers.onTabRemoved();
+	     }
+	     this.decoree.onTabDrop();
+	 },
 	tabClicked: function(inLayer, e) {
 		var d = this.decoree;
 
@@ -170,8 +261,8 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 					d.insertBefore(f, nl);
 			}
 		}
-		this.btns[inToIndex] = f;
-		this.btns[inFromIndex] = t;
+	    wm.Array.removeElement(this.btns, f);
+	    wm.Array.insertElementAt(this.btns, f, inToIndex);
 	}
 });
 
@@ -297,6 +388,7 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
 	    this.buttonPanel = new wm.Panel({name: "buttonPanel",
 					     parent: this.wrapperContainer,
 					     owner: this.decoree,
+					     showing: this.decoree.hasButtonBar,
 					     layoutKind: "left-to-right",
 					     height: wm.Button.prototype.height,
 					     width: "100%",
@@ -457,6 +549,59 @@ dojo.declare("wm.WizardDecorator", wm.TabsDecorator, {
     }
 
 });
+
+dojo.declare("wm.BreadcrumbDecorator", wm.TabsDecorator, {
+    decorationClass: "wmbreadcrumblayers",
+    decoratorPadding: "2",
+
+    /* Whenever a layer is set to active, we need to show it, and make it the rightmost visible layer
+     * Whenever a layer is set to inactive, we need to hide it if the current layer is left of this layer.
+     */
+    setLayerActive: function(inLayer, inActive) {
+	var wasShowing = inLayer.showing;
+	this.inherited(arguments);
+	if (inLayer._isDesignLoaded || this.decoree._cupdating ) return;
+
+	var layers = this.decoree.layers;
+
+	/* If we're activating a hidden layer, show that layer and move it after the last visisible layer so
+	 * that it appears to be the last breadcrumb/step. */
+	if (inActive && !wasShowing) {
+	    var layerIndex = inLayer.getIndex();
+	    for (var i = layers.length-1; i > layerIndex; i--) {
+		if (layers[i].showing)
+		    break;
+	    }
+	    if (i > layerIndex) {
+		this.decoree.moveLayerIndex(inLayer,i+1);
+	    }
+	    inLayer.show();
+	    if (inLayer.showing) {
+		inLayer.domNode.style.display = "";
+		inLayer.reflow();
+	    }
+	}
+	/* If activating a layer that is already showing, hide any layers that are after this layer */
+	else if (inActive) {
+	    for (var i = inLayer.getIndex()+1; i < layers.length; i++) {
+		if (layers[i].showing) layers[i].setShowing(false);
+	    }
+	}
+
+	/* If hide all layers after the layer that is activated */
+	if (inActive) {
+	    this.decoree.layerIndex = inLayer.getIndex();
+	    var count = this.decoree.layers.length;
+	    for (var i = inLayer.getIndex() + 1; i < count; i++) {
+		if (this.decoree.layers[i].showing)
+		    this.decoree.layers[i].hide();
+	    }
+	}
+    }
+
+});
+
+
 
 dojo.declare("wm.TabsControl", wm.Control, {
 	height: "27px",

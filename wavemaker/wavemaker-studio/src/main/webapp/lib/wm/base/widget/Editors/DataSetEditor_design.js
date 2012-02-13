@@ -3,6 +3,11 @@ dojo.require("wm.base.widget.Editors.DataSetEditor");
 
 wm.DataSetEditor.extend({
 	updateNow: "(updateNow)",
+    set_formField: function(inFormField) {
+	this.inherited(arguments);
+	if (!this.displayField && !this.displayExpression)
+	    this._setDisplayField();
+    },
     /* Don't show optionsVar in the dataSet property field */
         get_dataSet: function() {
 	    if (this.dataSet == this.$.optionsVar)
@@ -36,7 +41,7 @@ wm.DataSetEditor.extend({
 		this.setDataSet(inDataSet);
 
 		/* If there is no displayExpression, and either no displayField or an invalid displayField, get a new displayField */
-		if (!this.displayExpression &&
+		if (!this.displayExpression && inDataSet && inDataSet.type &&
 		    (!this.displayField || !wm.typeManager.getType(inDataSet.type) || !wm.typeManager.getType(inDataSet.type).fields[this.displayField])) {
                     this._setDisplayField();                                                                                
                 }
@@ -65,7 +70,7 @@ wm.DataSetEditor.extend({
 	this.setDisplayValue(inValue);
     },
     set_dataValue: function(inValue) {
-	if (this._multiSelect) {
+	if (this._multiSelect && typeof inValue == "string") {
 	    inValue =  inValue ? inValue.split(/\s*,\s*/) : [];
 	}
 	this.setDataValue(inValue);
@@ -112,7 +117,7 @@ wm.Object.extendSchema(wm.DataSetEditor, {
     startUpdate: { group: "editor", subgroup: "behavior", order: 5, advanced: 1},
 
     /* Editor group; dataSet subgroup */
-    dataSet: { group: "editor", subgroup: "dataSet", order: 4, type: "wm.Variable", isList: true, bindTarget: true, editor: "wm.prop.DataSetSelect", requiredGroup:1},
+    dataSet: { group: "editor", subgroup: "dataSet", order: 4, type: "wm.Variable", isList: true, bindTarget: true, editor: "wm.prop.DataSetSelect", editorProps: {widgetDataSets: true}, requiredGroup:1},
     options: {group: "editor", subgroup: "dataSet", order: 7, requiredGroup: 1},
     dataField: {group: "editor", subgroup: "dataSet",order: 10, editor:"wm.prop.FieldSelect", editorProps: { emptyLabel: "All Fields"}, requiredGroup: 1},
     displayField: {group: "editor", subgroup: "dataSet",order: 15, editor:"wm.prop.FieldSelect", editorProps: {}, requiredGroup: 1},
@@ -142,7 +147,9 @@ wm.Object.extendSchema(wm.DataSetEditor, {
 
 
 wm.Object.extendSchema(wm.ListSet, {
-    searchBar: {group: "editor", subgroup: "behavior", order: 100}, 
+    showSearchBar: {group: "editor", subgroup: "behavior", order: 100}, 
+    readonly: {ignore:1},
+    searchBar: {ignore: 1},
     onblur: {ignore: 1},
     onfocus: {ignore: 1}
 

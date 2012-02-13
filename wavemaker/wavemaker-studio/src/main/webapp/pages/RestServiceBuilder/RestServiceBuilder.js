@@ -15,11 +15,10 @@
 dojo.provide("wm.studio.pages.RestServiceBuilder.RestServiceBuilder");
 
 dojo.declare("RestServiceBuilder", wm.Page, {
-        i18n: true,
+        i18n: true, 
 	IMPORT_TYPE_URL: "URL",
 	IMPORT_TYPE_FILE: "File",
 	start: function() {
-		this.updateSelect(this.inParamTypeInput, ["string", "int"]);
 		this.updateSelect(this.methodInput, ["GET", "POST"]);
 		this.methodInput.setValue("displayValue", "GET");
 		this.contentTypeInput.setValue("displayValue", "text/xml");
@@ -36,7 +35,11 @@ dojo.declare("RestServiceBuilder", wm.Page, {
 			o = inData.join(",");
 		}
 		s.displayValue = "";
+	    if (inSelect instanceof wm.SelectMenu) {
+		s.setOptions(o);
+	    } else {
 		s.editor.setOptions(o);
+	    }
 	},
 	saveButtonClick: function(inSender) {
 		this.buildRestService(false);
@@ -49,7 +52,12 @@ dojo.declare("RestServiceBuilder", wm.Page, {
 		    app.alert(this.getDictionaryItem("ALERT_INPUT_NEEDED"));
 			return;
 		}
-		var d = this.inParamsList._data;
+		//var d = this.inParamsList._data;
+	    var d = this.inputFieldListVar.getData();
+	    for (var i = 0; i < d.length; i++) {
+		d[i].location = d[i].isHeader ? "header" : "url";
+		delete d[i].isHeader;
+	    }
 		var url = this.urlInput.getValue("displayValue");
 		if (!url || url.length == 0) {
 		    app.alert(this.getDictionaryItem("ALERT_NO_URL"));
@@ -106,7 +114,8 @@ dojo.declare("RestServiceBuilder", wm.Page, {
 		this.serviceOpInput.clear();
 		this.methodInput.setValue("displayValue", "GET");
 		this.contentTypeInput.setValue("displayValue", "text/xml");
-		this.inParamsList.clear();
+	    //this.inParamsList.clear();
+	    this.inputFieldListVar.clearData();
 		this.urlInput.clear();
 		this.updateSelect(this.outTypeInput, null);
 		this.outTypeInput.clear();
@@ -150,7 +159,8 @@ dojo.declare("RestServiceBuilder", wm.Page, {
 		this.serviceNameInput.setValue("displayValue", inResponse.serviceName);
 		this.serviceOpInput.setValue("displayValue", inResponse.operationName);
 		var d = inResponse.inputs;
-		this.inParamsList.renderData(d);
+	    this.inputFieldListVar.setData(d);
+	    //this.inParamsList.renderData(d);
 		this.urlInput.setValue("displayValue", inResponse.parameterizedUrl);
 		this.schemaTextRadioInput.components.editor.setChecked(true);
 		if (inResponse.outputType && inResponse.outputType == "string") {
@@ -168,6 +178,18 @@ dojo.declare("RestServiceBuilder", wm.Page, {
 		var name = dojo.trim(this.inParamNameInput.getValue("displayValue"));
 		var type = dojo.trim(this.inParamTypeInput.getValue("displayValue"));
 		if (name && type) {
+		    var count = this.inputFieldListVar.getCount();
+		    for (var i = 0; i < count; i++) {
+			var item = this.inputFieldListVar.getItem(i);
+			if (item.getValue("name") == name) {
+			    app.alert(this.getDictionaryItem("ALERT_PARAMETER_EXISTS"));
+			    return;
+			}
+		    }
+		    this.inputFieldListVar.addItem({isHeader: false, name: name, type: type});
+		    this.updateParameters();
+		    this.inParamNameInput.focus();
+/*
 			var d = this.inParamsList._data;
 			if (d == null) {
 				d = [];
@@ -181,37 +203,59 @@ dojo.declare("RestServiceBuilder", wm.Page, {
 			d.push({name: name, type: type});
 
 			this.inParamsList.renderData(d);
+			*/
 			this.inParamNameInput.clear();
 			this.inParamTypeInput.clear();
 		}
 	},
 	removeInParamButtonClick: function(inSender) {
-		if (this.inParamsList.selected) {
-			var d = this.inParamsList._data;
-			var nd = [];
-			for (var i = 0; i < d.length; i++) {
-				if (i != this.inParamsList.selected.index) {
-					nd.push(d[i]);
-				}
-			}
-			this.inParamsList.renderData(nd);
+	    var data = this.inParamsGrid.selectedItem.getData();
+	    if (!data) return;
+	    var count = this.inputFieldListVar.getCount();
+	    for (var i = 0; i < count; i++) {
+		var item = this.inputFieldListVar.getItem(i);
+		if (item.getValue("name") == data.name) {
+		    this.inputFieldListVar.removeItem(i);
+		    this.updateParameters();
+		    return;
 		}
+	    }
 	},
-	parameterizedButtonClick: function(inSender) {
+    onHeaderCheckboxChange: function(inSender, inValue, rowId, fieldId) {
+      try {
+          var data = inSender.getRow(rowId);
+	  var count = this.inputFieldListVar.getCount();
+	  for (var i = 0; i < count; i++) {
+	      var item = this.inputFieldListVar.getItem(i);
+	      if (item.getValue("name") == data.name) {
+		  item.beginUpdate();
+		  item.setValue("isHeader", data.isHeader);
+		  item.endUpdate();
+		  this.updateParameters();
+		  return;
+	      }
+	  }
+	  
+          
+      } catch(e) {
+          console.error('ERROR IN dojoGrid1CellEdited: ' + e); 
+      } 
+    },
+    updateParameters: function(inSender) {
 		var url = this.urlInput.getValue("displayValue");
 		if (url) {
-			var d = this.inParamsList._data;
-			if (d && d.length > 0) {
-				var queryString = "";
-				for (var i = 0; i < d.length; i++) {
-					queryString = queryString + d[i].name + "={" + d[i].name + "}" + (i+1 == d.length ? "" : "&");
-				}
-			    app.confirm(this.getDictionaryItem("CONFIRM_APPEND", {query: queryString}), false,
-                                        dojo.hitch(this, function() {
-					    this.urlInput.setValue("displayValue", (url + (url.indexOf("?") > -1 ? "&" : "?") + queryString));
-                                        }));
-				}
-			}
+		    url = url.replace(/\?.*$/,"");
+		    var data = this.inputFieldListVar.getData();
+		    var d = [];
+		    for (var i = 0; i < data.length; i++) {
+			if (!data[i].isHeader) d.push(data[i]);
+		    }
+		    var queryString = "";
+		    for (var i = 0; i < d.length; i++) {
+			queryString = queryString + d[i].name + "={" + d[i].name + "}" + (i+1 == d.length ? "" : "&");
+		    }
+		    this.urlInput.setValue("displayValue", (url + "?" + queryString));
+		}
         },
 	outIsRawStringInputChange: function(inSender, inDisplayValue, inDataValue) {
 		var b = inSender.getChecked();
@@ -275,7 +319,7 @@ dojo.declare("RestServiceBuilder", wm.Page, {
 	getSchemaElementTypesSuccess: function(inType, inResponse) {
 		var r = inResponse;
 		if (r) {
-			var o = (this.inParamTypeInput.editor.options.split(",")).concat(r);
+			var o = (this.inParamTypeInput.options.split(",")).concat(r);
 			this.updateSelect(this.inParamTypeInput, o);
 			r.push("(None)");
 		}

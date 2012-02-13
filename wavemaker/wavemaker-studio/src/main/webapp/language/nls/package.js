@@ -23,6 +23,7 @@
 	"Button" : "Button",
 	"PopupButton" : "PopupButton",
 	"Toggle_Button" : "Toggle Button",
+	"Toggle_Button_Panel" : "Toggle Button Panel",
 	"Rounded_Button" : "Rounded Button",
 	"DataGrid" : "DataGrid",
 	"DojoGrid" : "Grid",
@@ -41,6 +42,7 @@
 	"Rounded_Panel" : "Titled Panel",
 	"Tabs" : "Tabs",
 	"Wizards" : "Wizard/Cards",
+	"Breadcrumbs" : "Breadcrumbs",
 
         "FormsGroup": "Forms",
         "EditorsGroup": "Editors",
@@ -189,6 +191,7 @@
     "descButton": "A simple button",
     "descPopupButton": "A button with a Menu",
     "descToggleButton": "A button that stays clicked until clicked again",
+    "descToggleButtonPanel": "A panel that manages the toggled state of its buttons (use wm.Button not wm.ToggleButton)",
     "descBusyButton": "A button with a status indicator",
 
     "descLabel": "Basic text on page",

@@ -23,11 +23,10 @@ dojo.declare("wm.Layer", wm.Container, {
 	width: "100%",
 	caption: "",
 	layoutKind: "top-to-bottom",
-	moveable: false,
         closable: false,
         destroyable: false,
         showDirtyFlag: false,
-	_requiredParent: "wm.Layers",
+    //_requiredParent: "wm.Layers",
 	destroy: function() {
 		//console.info('layer destroy called');
 	    this._isLayerDestroying = true;
@@ -47,13 +46,19 @@ dojo.declare("wm.Layer", wm.Container, {
 			delete this.title;
 		}
 		this.setCaption(this.caption);
-	    if (this.parent instanceof wm.Layers == false) this.active = true;
+		
 		if (!this.isRelativePositioned)
 			dojo.addClass(this.domNode, "wmlayer");
+	},
+
+
+    setParent: function(inParent) {
+	this.inherited(arguments);
+	if (this.parent) {
             this.setBorder(this.parent.clientBorder);
             this.setBorderColor(this.parent.clientBorderColor);
-
-	},
+	}
+    },
 
 	// FIXME: override so that we do not remove and re-add layer
 	// this is nasty but avoids dealing with layer order changing
@@ -67,9 +72,24 @@ dojo.declare("wm.Layer", wm.Container, {
 		this.addRemoveDefaultCssClass(true);
 	},
 	activate: function() {
-		var p = this.parent;
-		if (p instanceof wm.Layers && this.showing && !this.isActive())
-			p.setLayer(this);
+	    var p = this.parent;
+	    if ((this.showing || this.parent instanceof wm.BreadcrumbLayers) && !this.isActive()) {
+		if (!this.showing) this.show();
+		p.setLayer(this);
+	    }
+	},
+	activateAllParents: function() {
+	    var p = this.parent;
+	    p.setLayer(this);
+	    var ancestor = this.parent.isAncestorInstanceOf(wm.Layer);
+	    if (ancestor) {
+		ancestor.activateAllParents();
+	    } else {
+		ancestor = this.parent.isAncestorInstanceOf(wm.Dialog);
+		if (ancestor) {
+		    ancestor.show();
+		}
+	    }
 	},
     /* Called when the layer is the event handler */
         update: function() {
@@ -79,17 +99,14 @@ dojo.declare("wm.Layer", wm.Container, {
 		return this.active;
 	},
 	setShowing: function(inShowing) {
-	    if (this.parent instanceof wm.Layer == false) return this.inherited(arguments);
 		if (!this.canChangeShowing())
 			return;
 	        var p = this.parent;
 		if (this.showing != inShowing) {
 		    this.showing = inShowing;
-		    if (this.parent instanceof wm.Layers) {
-			this.decorator.setLayerShowing(this, inShowing);
-			if (!inShowing && p.layerIndex == this.getIndex()) {
-				p.setNext();
-			}
+		    this.decorator.setLayerShowing(this, inShowing);
+		    if (!inShowing && p.layerIndex == this.getIndex()) {
+			p.setNext();
 		    }
 		}
 	    if (p && p.conditionalTabButtons && !p.decorator.tabsControl.isDestroyed)
@@ -102,11 +119,12 @@ dojo.declare("wm.Layer", wm.Container, {
 	    this.setShowing(false);
 	},
 	setCaption: function(inCaption) {
-		this.caption = inCaption;
-		if (this.parent && this.parent instanceof wm.Layers)
-			this.parent.setCaptionMapLayer(inCaption, this);
-	        if (this.decorator)
-		    this.decorator.applyLayerCaption(this);
+	    this.caption = inCaption;
+	    if (this.parent) {
+		this.parent.setCaptionMapLayer(inCaption, this);
+	    }
+	    if (this.decorator)
+		this.decorator.applyLayerCaption(this);
 	},
         setIsDirty: function(inDirty) {
 	    if (this.isDirty != inDirty) {
@@ -143,7 +161,8 @@ dojo.declare("wm.Layer", wm.Container, {
        setDestroyable: function(isClosable) {
 	   this.destroyable = isClosable;
 	   this.decorator.applyLayerCaption(this);
-       }
+       },
+    onTabDrop: function() {}
 });
 
 dojo.declare("wm.Layers", wm.Container, {    
@@ -207,8 +226,10 @@ dojo.declare("wm.Layers", wm.Container, {
 	},
 	postInit: function() {
 		this.inherited(arguments);
+/*
 		if (!this.getCount() && this._isDesignLoaded)
 			this.addLayer();
+			*/
 		this._initDefaultLayer();
 		// fire onshow when loaded
 		if (wm.widgetIsShowing(this))
@@ -222,18 +243,14 @@ dojo.declare("wm.Layers", wm.Container, {
 	    return  this.padBorderMargin.l +  this.padBorderMargin.r + this.getActiveLayer().getPreferredFitToContentWidth();
 	},
 	*/
-        afterPaletteDrop: function(){
-	    this.inherited(arguments);
-	    this.setClientBorder(this.clientBorder);
-	    this.setClientBorderColor(this.clientBorderColor);
-	},
+
 	_initDefaultLayer: function() {
 		var d = this.defaultLayer;
 		d = d != -1 ? d : 0;
 		var dl = this.getLayer(d);
 		// call private index setter so we avoid canShow; however, honor showing property
 		if (dl && !dl.showing) {
-			d = this._getPrevNextShownIndex(d);
+			d = this._getNextShownIndex(d);
 			dl = this.getLayer(d);
 		}
 		if (dl)
@@ -249,9 +266,16 @@ dojo.declare("wm.Layers", wm.Container, {
 	return count;
     },
 	createLayer: function(inCaption) {
+	    var caption = inCaption;
+	    if (!caption) {
+		caption = this.owner.getUniqueName("layer1");
+	    }
+	    var name = caption;
+	    if (name)
+		name = name.replace(/\s/g,"_");
 		var
-			defName = this.owner.getUniqueName(inCaption || "layer1"),
-	    props = {width: "100%", height: "100%", caption: defName, parent: this, horizontalAlign: "left", verticalAlign: "top", themeStyleType: this.themeStyleType},
+	    defName = this.owner.getUniqueName(name);
+	    props = {width: "100%", height: "100%", caption: caption, parent: this, horizontalAlign: "left", verticalAlign: "top", themeStyleType: this.themeStyleType},
 			o = this.getRoot();
 		if (o)
 			return o.createComponent(defName, "wm.Layer", props);
@@ -302,11 +326,15 @@ dojo.declare("wm.Layers", wm.Container, {
                 this.layers[i].setBorderColor(inBorderColor);
         },    
 	// public api for adding a layer
-	addLayer: function(inCaption) {
-		var pg = this.createLayer(inCaption);
-		this._setLayerIndex(this.getCount()-1);
-		return pg;
-	},
+    addLayer: function(inCaption, doNotSelect) {
+	var pg = this.createLayer(inCaption);
+	if (!doNotSelect) {
+	    this._setLayerIndex(this.getCount()-1);
+	} else {
+	    pg.active = false;
+	}
+	return pg;
+    },
 	// called by owner automatically.
 	addWidget: function(inWidget) {
 		if (inWidget instanceof wm.Layer) {
@@ -342,12 +370,14 @@ dojo.declare("wm.Layers", wm.Container, {
 			this.setLayerIndex(this.layers.length == 0 ? -1 : (i > 0 ? i - 1 : 0));
 			*/
 		    if (isActive && !this._isDestroying && this.layers.length) {
-			if (this.layers.length > i) {
-			    this.layerIndex = -1;
-			    this.setLayerIndex(i);
-			} else {
-			    this.setLayerIndex(i-1);
-			}
+			    if (this.layers.length > i) {
+			       this.layerIndex = -1;
+			       this.setLayerIndex(i);
+		    	} else {
+		    	    this.setLayerIndex(i-1);
+		    	}
+		    } else if (!this._isDestroying && i <= this.layerIndex) {
+                this.layerIndex--;
 		    }
 		} else {
 			this.inherited(arguments);
@@ -438,7 +468,7 @@ dojo.declare("wm.Layers", wm.Container, {
 	    if (fireEvents) {
 	        var info = {
 	            newIndex: inIndex,
-	            canChange: l && l.showing
+	            canChange: undefined
 	        };
 	        this.oncanchange(info);
 	        if (info.canChange === false) return;
@@ -511,6 +541,22 @@ dojo.declare("wm.Layers", wm.Container, {
 			// do nothing as this might happen when we are trying to destroy all the layers.
 		}
 	},
+    _getNextShownIndex: function(inIndex, isSecondCall) {
+	var count = this.layers.length;
+	for (var i = inIndex + 1; i < count && !this.layers[i].showing; i++) ;
+	if (this.layers[i] && this.layers[i].showing) return i;
+	if (!isSecondCall)
+	    return this._getPrevShownIndex(inIndex,true);
+	return 0;
+    },
+    _getPrevShownIndex: function(inIndex, isSecondCall) {
+	for (var i = inIndex - 1; i >= 0 && !this.layers[i].showing; i--) ;
+	if (this.layers[i] && this.layers[i].showing) return i;
+	if (!isSecondCall)
+	    return this._getNextShownIndex(inIndex,true);
+	return 0;
+    },
+/*
 	_getPrevNextShownIndex: function(inIndex, inPrev, inBounded) {
 		var
 			d = inPrev ? -1 : 1,
@@ -533,17 +579,18 @@ dojo.declare("wm.Layers", wm.Container, {
 			}
 		}
 	},
+	*/
 	setNext: function(inBounded) {
-		var p = this._getPrevNextShownIndex(Number(this.layerIndex), false, inBounded);
+		var p = this._getNextShownIndex(Number(this.layerIndex), false);
 		if (p !== undefined)
 			this.setLayerIndex(p);
 	},
 	setPrevious: function(inBounded) {
-		var p = this._getPrevNextShownIndex(Number(this.layerIndex), true, inBounded);
+		var p = this._getPrevShownIndex(Number(this.layerIndex), false);
 		if (p !== undefined)
 			this.setLayerIndex(p);
 	},
-	moveLayerIndex: function(inLayer, inIndex) {
+    moveLayerIndex: function(inLayer, inIndex) {
 		var i = inLayer.getIndex(), inIndex = Math.max(0, Math.min(inIndex, this.getCount()-1));
 		if (i == inIndex)
 			return;
@@ -553,7 +600,16 @@ dojo.declare("wm.Layers", wm.Container, {
 		// decorate
 		this.decorator.moveLayerIndex(i, inIndex);
 		// change layer
-		this._setLayerIndex(inIndex);
+	        if (inLayer.active) {
+		    this._setLayerIndex(inIndex);
+		} else {
+		    for (var i = 0; i < this.layers.length; i++) {
+			if (this.layers[i].active) {
+			    this.layerIndex = i;
+			    break;
+			}
+		    }
+		}
 	},
 	_fireLayerOnShow: function() {
 		var l = this.getLayer(this.layerIndex);
@@ -572,6 +628,8 @@ dojo.declare("wm.Layers", wm.Container, {
 	},
 	// events
 	oncanchange: function(inChangeInfo) {
+	    var l = this.getLayer(inChangeInfo.newIndex);
+	    inChangeInfo.canChange =  (l && l.showing);
 	},
 	onchange: function(inIndex) {
 	},
@@ -642,6 +700,7 @@ dojo.declare("wm.Layers", wm.Container, {
 
 
 dojo.declare("wm.TabLayers", wm.Layers, {
+       dndTargetName: "",
         //useDesignBorder: 0,
        themeStyleType: "ContentPanel",
        layersType: 'Tabs',
@@ -652,7 +711,7 @@ dojo.declare("wm.TabLayers", wm.Layers, {
 	    this.headerHeight = inHeight;
 	    this.c$[0].setHeight(inHeight);
 	},
-	addLayer: function(inCaption) {
+    addLayer: function(inCaption, doNotSelect) {
 	    var result = this.inherited(arguments);
 	    if (!this._cupdating && !this.owner._loadingPage)
 		this.renderBounds();
@@ -671,7 +730,9 @@ dojo.declare("wm.TabLayers", wm.Layers, {
     },
     customCloseOrDestroy: function(inLayer) {
 
-    }
+    },
+    onTabDrop: function() {},
+    onTabRemoved: function() {}
 /*,
 	   afterPaletteDrop: function(){
 	   	this.inherited(arguments);
@@ -685,6 +746,7 @@ dojo.declare("wm.AccordionLayers", wm.Layers, {
     layersType: 'Accordion',
     layerBorder: 1,
     captionHeight: 26, // used by decorator
+    dndTargetName: "",
     postInit: function() {
         this.inherited(arguments);
         this.setLayerBorder(this.layerBorder);
@@ -709,11 +771,10 @@ dojo.declare("wm.AccordionLayers", wm.Layers, {
 	    this.layers[i].setBorderColor(this.borderColor);
 	}
     },
-    addLayer: function() {
+    addLayer: function(inCaption, doNotSelect) {
         var result = this.inherited(arguments);
         result.setBorder(this.layerBorder);
         result.setBorderColor(this.layerBorderColor);
-	return result;
 	return result;
     }
 });
@@ -740,6 +801,7 @@ dojo.declare("wm.WizardLayers", wm.Layers, {
     headerWidth: "50px",
     verticalButtons: false,
     bottomButtons: "",
+    hasButtonBar: true,
     //useDesignBorder: 0,
     init: function() {
 	this.generateBottomButtonEvents();
@@ -773,6 +835,44 @@ dojo.declare("wm.WizardLayers", wm.Layers, {
      * validation to be build into wm.Layer */
     onLayerValidation: function(inLayer, outResult) {
 
+    }
+});
+
+
+dojo.declare("wm.BreadcrumbLayers", wm.Layers, {
+    conditionalTabButtons: true,
+    themeStyleType: "ContentPanel",
+    layersType: 'Breadcrumb',
+    transition: "fade",
+    headerWidth: "50px",
+    layerBorder: 1,
+    postInit: function() {
+	this.inherited(arguments);
+	this._inBreadcrumbPostInit = true;
+	var active = this.getActiveLayer();
+	if (!this._isDesignLoaded) {
+	    for (var i= 0; i < this.layers.length; i++) {
+		if (this.layers[i] != active) {
+		    this.layers[i].setShowing(false);
+		}
+	    }
+	}
+	delete this._inBreadcrumbPostInit ;
+    },
+    oncanchange: function(inChangeInfo) {
+	var l = this.getLayer(inChangeInfo.newIndex);
+	inChangeInfo.canChange = l;
+    },
+    addWidget: function(inWidget) {
+	this.inherited(arguments);	
+	if (!this._isDesignLoaded && !this._loading && inWidget instanceof wm.Layer && !inWidget.isActive()) {
+	    inWidget.setShowing(false);
+	}
+    },
+    _setLayerIndex: function(inIndex) {
+	var l = this.layers[inIndex];
+	if (l) l.setShowing(true);
+	this.inherited(arguments);
     }
 });
 

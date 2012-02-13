@@ -97,7 +97,8 @@ dojo.declare("wm.VirtualList", wm.Control, {
 		this.domNode.appendChild(this.headerNode);
 		this.domNode.appendChild(this.listNode);
 		this.setHeaderVisible(this.headerVisible);
-
+	    this.connect(this, "onSelect", this, "onselect"); // changed from onselect to onSelect for grid compatibility
+	    this.connect(this, "onDeselect", this, "ondeselect");// changed from onselect to onSelect for grid compatibility
 	    if (app._touchEnabled) {
 		wm.conditionalRequire("lib.github.touchscroll.touchscroll");
 		this._listTouchScroll = new TouchScroll(this.listNode, {/*elastic:true, */owner: this});
@@ -269,7 +270,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 		});
 		this.selection = [];
 		if (!ignoreSelectedItem) {
-		  this._setSelected(null);
+		    this._setSelected(null);
 		    this.onSelectionChange();
 		}
 	},
@@ -321,7 +322,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 		else
 			this.deselectAll(ignoreSelectedItem);
 	    if (!ignoreSelectedItem) {
-		this.ondeselect(inItem);
+		this.onDeselect(inItem);
 		this.onSelectionChange();
 	    }
 	},
@@ -331,7 +332,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 		if (selectInfo.canSelect) {
 			/* candidate for a wm.onidle, but unfortunately, that will make javascript calls that use this async and will likely fail */
 			this.addToSelection(inItem);
-			this.onselect(inItem);
+			this.onSelect(inItem);
 		    this.onSelectionChange();
 		}
 	},
@@ -362,6 +363,11 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	},
 	ondeselect: function(inItem) {
 	},
+	onSelect: function(inItem) {
+	},
+	onDeselect: function(inItem) {
+	},
+
 	_oncanselect: function(inItem, inSelectInfo) {
 	},
 	_onmouseover: function(inEvent, inItem) {

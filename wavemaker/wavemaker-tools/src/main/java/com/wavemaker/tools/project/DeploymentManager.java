@@ -12,7 +12,25 @@ import com.wavemaker.tools.deployment.DeploymentInfo;
 
 public interface DeploymentManager {
 
+    /**
+     * Start a 'test run' for the given project. This method should ensure that the current project is compiled,
+     * deployed and active.
+     * 
+     * @return return the URL of the deployed application. URLs can be relative paths (eg. '/Project1') or fully
+     *         qualified URLS (eg. 'http://project1.cloudfoundry.com'). returned URLs should not include parameters as
+     *         these are always managed by the client.
+     */
     public abstract String testRunStart();
+
+    public abstract void testRunClean();
+
+    /**
+     * Clean build artifacts
+     * 
+     * @param projectDir The name of the project.
+     * @param deployName The deployment target.
+     */
+    public abstract void testRunClean(String projectDir, String deployName);
 
     /**
      * Compile java src.
@@ -45,17 +63,7 @@ public interface DeploymentManager {
 
     public abstract String deployWar(String warFileName, String deployName);
 
-    public abstract String testRunClean();
-
-    /**
-     * Clean build artifacts
-     * 
-     * @param projectDir The name of the project.
-     * @param deployName The deployment target.
-     */
-    public abstract String testRunClean(String projectDir, String deployName);
-
-    public abstract String undeploy();
+    public abstract void undeploy();
 
     /**
      * Export the current project to a zip file with the given name.
@@ -66,15 +74,13 @@ public interface DeploymentManager {
     public abstract String exportProject(String zipFileName);
 
     /**
-     * This function takes a zip file as input, unzips it and moves it into the project folder
+     * This function takes a zip file as input, unzips it and moves it into the projects folder.
      */
     public abstract FileUploadResponse importFromZip(MultipartFile file) throws IOException;
 
     public abstract void deployClientComponent(String name, String namespace, String data) throws IOException;
 
     public abstract void deployTheme(String themename, String filename, String data) throws IOException;
-
-    public abstract boolean undeployTheme(String themename) throws IOException;
 
     public abstract String[] listThemes() throws IOException;
 

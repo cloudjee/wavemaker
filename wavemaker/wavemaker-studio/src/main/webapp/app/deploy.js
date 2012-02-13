@@ -34,20 +34,6 @@ Studio.extend({
 
 		this.navGoToDeploymentPage();
 	},
-        onDeployOkClicked: function(jndiNames, optionalCallback) {
-	    var msg = this.getDictionaryItem("WAIT_BUILDING_WAR");
-		studio.beginWait(msg);
-		var _this = this;
-
-	    studio.deploymentService.requestAsync("buildWar", [jndiNames], 
-						  function(inResponse) {
-						      studio.endWait(msg);
-						      app.alert(this.getDictionaryItem("ALERT_BUILDING_WAR_SUCCESS", {inResponse: inResponse}));
-						      app.alertDialog.setWidth("600px");
-						      optionalCallback();
-						  });
-
-	},
 	deployClickError: function(inError) {
 	    studio.endWait();
 	    app.alert(this.getDictionaryItem("ALERT_BUILDING_WAR_FAILED", {error: inError.message}));
@@ -287,6 +273,9 @@ Studio.extend({
     cloudFoundryDeploymentsClick: function() {
 	this.deploymentDialog.setPage("DeploymentDialog"); // insures the dialog is initialized, but does not show it
 	this.deploymentDialog.page.showCloudFoundryAppListDialog();
+    },
+    deploymentHelp: function() {
+	window.open(studio.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}));
     },
     _end: 0
 });

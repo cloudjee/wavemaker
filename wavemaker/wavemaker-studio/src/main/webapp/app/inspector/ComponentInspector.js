@@ -349,6 +349,9 @@
   * ignoretmp: This property is ignored for its current state; currently we disable/enable the disabled property editor; previously hidden/shown as needed
   * ignoreHint: Hint to give to property editors shown as disabled due to ignoretmp
   * options: array of options for a wm.SelectMenu
+  * bindSource: Shows up in the bind dialog as something that can be bound to
+  * bindTarget: Has a bind button next to it and can be bound to other values
+  * bindable: both bindTarget and bindSource are true
   * shortname: Alternate name to show instead of the real name; used for localization and for human readable prop names
   * operation: Show a button instead of an editor; component must have a method with the same name as the property name. If boolean, calls this.propertyName(); if a string it calls this[prop.operation]()
   * method: treat a property as a method, there only for property documentation and autocompletion
@@ -398,6 +401,8 @@
 	     return this.reinspect();
 	 }
 	 this._inspecting = true;
+	 this._inspectedName = inComponent.name;
+
 	 var activeLayer = this.getActiveLayer();
 	 if (activeLayer)
 	     this._activeLayer = activeLayer.caption;
@@ -428,7 +433,7 @@
 	 }
      },
      getHashId: function(inComponent, propName) {
-	 var id = inComponent.getId();
+	 var id = this._inspectedName;
 	 if (this.processingRequiredGroup) {
 	     id = "required_" + id;
 	 }
@@ -797,10 +802,12 @@
 	 if (isBound) {
 	     var wire = inComponent.$.binding.wires[fullPropName || propName];
 	     value = wire.source || wire.expression; // TODO: prefix with str,numb, bool, expr
-	 } else if (inProp.treeBindRoot) {
-	     value = inComponent.getValue(propName);
-	 } else {
-	     value = inComponent.getProp(propName);
+	 } else if (!inProp.bindValuesOnly) {
+	     if (inProp.treeBindRoot) {
+		 value = inComponent.getValue(propName);
+	     } else {
+		 value = inComponent.getProp(propName);
+	     }
 	 }
 
 	     if (value instanceof wm.Component) {
@@ -1060,15 +1067,8 @@
 	  ************************************************************************************************************/
 	 if (inComponent.isDestroyed) return;
 
-	 // if the name field changes, then all of our editorHash IDs are invalidated.
-	 // make sure that this isn't a name field such as for sourceData/input/filter/dataSet/dataOutput,
-	 // and if it IS our widget's name, then do a full fresh inspect
-	 if (inProp.name == "name" && !inProp.bindTarget) {
-	     this.inspect(inComponent, true);
-	 }
-
 	 /* Sometimes an editor knows reinspecting is not needed or will cause side-effects; The Roles editor uses this */
-	 else if (!e.noReinspect) {
+	 if (!e.noReinspect) {
 	     this.reinspect();
 	 }
      },
@@ -1362,7 +1362,7 @@
 	 if (wm.propertyGroups[inName]) {
 	     result.order = wm.propertyGroups[inName].order;
 	     if (inName == "widgetName") {
-		 result.displayName = this.inspected.declaredClass.replace(/^.*\./,"");
+		 result.displayName = this.inspected.declaredClass.replace(/^.*\./,"") + " Component"; // TODO: Localize
 	     } else {
 		 result.displayName = wm.propertyGroups[inName].displayName;
 	     }
@@ -1769,6 +1769,19 @@ wm.addPropertyGroups({
 			    order: 2}
 		 }
 		},
+	/* Confirmed */
+    mobile: {displayName: "Mobile",
+	     order: 100,
+	     subgroups: {
+		 layout: {displayName: "Layout",
+			  order: 1},
+		 layerfolding: {displayName: "Mobile Folding",
+				order: 10},
+		 appnav: {displayName: "Nav Buttons",
+			  order: 20}
+	     }
+	    },
+
     subwidgets: {displayName: "Children", 
 		 order: 60,
 		 subgroups: {

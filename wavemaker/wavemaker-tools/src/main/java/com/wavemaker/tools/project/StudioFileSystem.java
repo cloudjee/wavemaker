@@ -4,9 +4,11 @@ package com.wavemaker.tools.project;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.File;
 import java.util.List;
 
 import org.springframework.core.io.Resource;
+import com.wavemaker.common.CommonStudioFileSystem;
 
 /**
  * Provides a virtual files system for use with WaveMaker. Files are exposed using the Spring {@link Resource} interface
@@ -17,7 +19,7 @@ import org.springframework.core.io.Resource;
  * @author Jeremy Grelle
  * @author Phillip Webb
  */
-public interface StudioFileSystem {
+public interface StudioFileSystem extends CommonStudioFileSystem {
 
     /**
      * Returns the WaveMaker home directory.
@@ -116,6 +118,16 @@ public interface StudioFileSystem {
     List<Resource> listChildren(Resource resource, ResourceFilter filter);
 
     /**
+     * Search all files recursively and return the result. Tis method returns only files, not directories.
+     *
+     * @param resource the resource
+     * @param filter a resource filter used to limit results
+     * @return a list of child files
+     * @see #listChildren(Resource)
+     */
+    //List<Resource> listAllChildren(Resource resource, ResourceFilter filter);      
+
+    /**
      * Create and return a resource for the specified path as applied to the given resource.
      * 
      * @param resource the resource
@@ -146,6 +158,27 @@ public interface StudioFileSystem {
     Resource copyRecursive(Resource root, Resource target, List<String> exclusions);
 
     /**
+     * Recursively copy files and directories from the given root to a target location.
+     *
+     * @param root the root to copy
+     * @param target the target destination
+     * @param includedPattern the ant-style path pattern to be included
+     * @param excludedPattern the ant-style path pattern to be excluded
+     * @return the target resource
+     */
+    Resource copyRecursive(Resource root, Resource target, String includedPattern, String excludedPattern);
+
+    /**
+     * Recursively copy files and directories from the given root in the conventional file system to a target location.
+     *
+     * @param root the root to copy
+     * @param target the target destination
+     * @param exclusions a list of exclusions that should not be copied
+     * @return the target resource
+     */
+    Resource copyRecursive(File root, Resource target, List<String> exclusions);
+
+    /**
      * Rename the specified resource
      * 
      * @param oldResource the old resource
@@ -172,4 +205,12 @@ public interface StudioFileSystem {
      * Returns a string indicating the studio filesystem being used
      */
     String getStudioEnv();
+
+    /**
+     * Returns the parent resource or null if none
+     *
+     * @param resource the current resource
+     * @return the parent resource
+     */
+    Resource getParent(Resource resource);
 }

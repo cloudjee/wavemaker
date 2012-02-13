@@ -130,13 +130,17 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		  });
 	      } else {
 		  this.dojoObj.selection.select(rowIndex);
-		  this.onSelectionChange();
+		  if (!this._cupdating) {
+		      this.onSelectionChange();
+		      this.onSelect();
+		  }
 		  this.dojoObj.scrollToRow(rowIndex);
 		  if (onSuccess) onSuccess();
 	      }
 	  } else {
-	    this.dojoObj.selection.setSelected(rowIndex,isSelected);
+	      this.dojoObj.selection.setSelected(rowIndex,isSelected);
 	      this.onSelectionChange();
+	      this.onDeselect();
 	  }
 
 	},
@@ -191,7 +195,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			this._setRowTimeout = setTimeout(function(){
 			    _this.dojoObj.scrollToRow(idx);
 			    wm.onidle(_this, function() {
+				this._cupdating = true; // don't trigger events since we're actually reselecting the same value that was already selected
 				this.setSelectedRow(idx);
+				this._cupdating = false; 
 			    });
 			},0);
                     } else 
@@ -204,6 +210,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                 this.dojoObj.selection.clear();
 	    this.updateSelectedItem(-1);
 	    this.onSelectionChange();
+	    this.onDeselect();
 	},
 
     select: function(rowIndex, isSelected, onSuccess) {
@@ -231,8 +238,14 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		} else {
 			this.updateSelectedItem( this.getSelectedIndex());
 		}
-		if (!this.rendering)
+		if (!this.rendering && !this._cupdating) {
 		    this.onSelectionChange();
+		    if (newSelection) {
+			this.onSelect();
+		    } else {
+			this.onDeselect();
+		    }
+		}
                 this._curSelectionObj = [];
                 for (var i = 0; i < newSelection.length; i++)
                     this._curSelectionObj.push(newSelection[i]);
@@ -334,9 +347,14 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     writeSelectedItem: function() {
 	var deferred;
 	var rowIndex = this.getSelectedIndex();
+	if (dojo.isArray(rowIndex)) {
+	    if (rowIndex.length == 0) return;
+	    rowIndex = rowIndex[0];
+	}
 	var row = this.getRow(rowIndex);
 	var operation = row._wmVariable.data._new ? "insert" : "update";
 	var sourceData = this.selectedItem.getData();
+	if (dojo.isArray(sourceData)) sourceData = sourceData[0];
 	if (operation == "insert") {
 	    /*
 	    for (prop in sourceData) {
@@ -405,8 +423,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     handleInsertResult: function(deferred,rowIndex) {
 	deferred.addCallback(dojo.hitch(this, 
 				    function(result) {
-					var row = this.getRow(rowIndex);
-					delete row._wmVariable.data._new;
+					var data = this.getRowData(rowIndex);
+					delete data._wmVariable[0].data._new;
 					this.setUneditableFields(rowIndex, result);
 					this.updateSelectedItem(rowIndex);
 				    }));
@@ -782,7 +800,6 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		wm.job(this.getRuntimeId() + ".renderBounds", 1, function() {
 		    self.renderBounds();		    
 		});
-
 	    }
 	},
 
@@ -1394,6 +1411,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	onHeaderClick: function(evt, selectedItem, rowId, fieldId, rowNode, cellNode){
   }, 
   onSelectionChange: function() {},
+  onSelect: function() {},
+    onDeselect: function() {},
         addColumnToCSV: function(csvArray, value, formatFunc){
 	    if (dojo.isString(value))
 		value = value.replace(/\"/g, '\\\"');
@@ -1752,7 +1771,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		return this.getRowCount();
 	},
 	getRow: function(idx){
-		return this.itemToJSONObject(this.store, this.getRowData(idx) || {});
+	    var rowData = this.getRowData(idx) || {};
+	    var json =  this.itemToJSONObject(this.store, rowData);
+	    if (rowData._wmVariable)
+		json._wmVariable = rowData._wmVariable[0];
+	    return json;
 	}
 	
 	/* Helper functions for developers */

@@ -26,6 +26,7 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.data.DataServiceType;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.DataModelDeploymentConfiguration;
+import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.LocalDeploymentManager;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
@@ -46,6 +47,8 @@ public class ServiceDeploymentManager {
     private StudioFileSystem fileSystem;
 
     private ProjectManager projectMgr;
+
+    private DeploymentManager deploymentManager;
 
     public ServiceDeploymentManager() {
         // hack: these should be managed by Spring
@@ -141,6 +144,10 @@ public class ServiceDeploymentManager {
         return this.projectMgr;
     }
 
+    public void setDeploymentManager(DeploymentManager deploymentManager) {
+        this.deploymentManager = deploymentManager;
+    }
+
     private Resource getProjectRoot() {
         return this.projectMgr.getCurrentProject().getProjectRoot();
     }
@@ -148,10 +155,7 @@ public class ServiceDeploymentManager {
     private Resource buildWar(ProjectManager projectMgr, Resource warFile, boolean includeEar) throws IOException {
         // call into existing deployment code to generate war
         // would be super nice to refactor this
-        LocalDeploymentManager deploymentMgr = new LocalDeploymentManager();
-        deploymentMgr.setProjectManager(projectMgr);
-        deploymentMgr.setFileSystem(this.fileSystem);
-        String war = deploymentMgr.buildWar(warFile, includeEar);
+        String war = this.deploymentManager.buildWar(warFile, includeEar);
         return this.fileSystem.getResourceForURI(war);
     }
 

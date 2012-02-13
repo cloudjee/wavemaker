@@ -273,7 +273,13 @@ dojo.declare("wm.List", wm.VirtualList, {
 	},
 	//
 	renderDataSet: function(inDataSet) {
+	    if (this.owner instanceof wm.Page) {
+		console.log("ANCESTOR: " + this.isAncestorHidden());
+	    }
 	    if (this.isAncestorHidden() && !this._renderHiddenGrid) {
+		if (this.owner instanceof wm.Page) {
+		    console.log(this.parent);
+		}
 		this._renderDojoObjSkipped = true;
 		return;
 	    } 
@@ -381,9 +387,21 @@ dojo.declare("wm.List", wm.VirtualList, {
 		cellData = '<div>' + this.getHeading(dataFields);
 	    } 
 
+/*
 	    else if (this.columns) {
 		var value = this._data[i];
 		cellData = value[dataFields];
+		cellData = this.formatCell(dataFields,cellData, value, i, inCol);
+	    }
+	    */
+	    else if (this.columns) {
+		var value = this._data[i];
+		var cellData = value;
+		var props = dataFields.split(".");
+		for (var propIndex = 0; propIndex < props.length; propIndex++) {
+		    cellData = cellData[props[propIndex]];
+		}
+
 		cellData = this.formatCell(dataFields,cellData, value, i, inCol);
 	    }
 
@@ -411,7 +429,8 @@ dojo.declare("wm.List", wm.VirtualList, {
 	getCellStyle: function(inRow, inCol) {
 	    if (this.columns) {
 		var text = [];
-		var col = this.columns[inCol];
+		var field = this._dataFields[inCol];
+		var col = this._columnsHash[field];
 		var align = col.align;
 
 		if (inRow != -1) {
@@ -599,6 +618,7 @@ wm.List.extend({
     },
     select: function(inItemOrIndex) { 
 	if (typeof inItemOrIndex != "object") {
+	    this.deselectAll(true);
 	    this.eventSelect(this.items[inItemOrIndex]);
 	} else {
 	    this.inherited(arguments);
@@ -637,6 +657,9 @@ wm.List.extend({
 	    }
 	}
     },
+	getIsRowSelected: function(){
+		return !this.getEmptySelection();
+	},
     deleteRow: function(rowIndex) {
 	this.dataSet.removeItem(rowIndex);
 	this._render();
@@ -776,7 +799,8 @@ wm.List.extend({
 	if (inRow != -1) {
 	    // ignore inRow parameter; its always -1 or 0 (header or cell)
 	    inRow = this._formatIndex != null ? this._formatIndex : this.getCount();
-	    var col = this.columns[inCol];
+	    var field = this._dataFields[inCol];
+	    var col = this._columnsHash[field];
 	    var data = this._data[inRow];
 	    if (col.cssClass) {
 		return wm.expression.getValue(col.cssClass, data,this.owner);

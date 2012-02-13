@@ -242,7 +242,7 @@ wm.Control.extend({
 	p.autoSizeWidth.ignoretmp = (!this.isSizeable() && !this.autoSizeWidth) || (this.schema.autoSizeWidth && this.schema.autoSizeWidth.ignore);
 	p.autoSizeHeight.ignoretmp = (!this.isSizeable() && !this.autoSizeHeight) || (this.schema.autoSizeHeight && this.schema.autoSizeHeight.ignore);
         p.minWidth.ignoretmp = !this.schema.minWidth || this.schema.minWidth.ignore || (!this._percEx.w && !this.autoSizeWidth); // minWidth only applies if width is % or autosize is on
-        p.minHeight.ignoretmp = this.schema.minHeight.ignore || (!this._percEx.h && !this.autoSizeHeight); // minHeight only applies if height is % or autosize is on
+        p.minMobileHeight.ignoretmp = p.minHeight.ignoretmp = this.schema.minHeight.ignore || (!this._percEx.h && !this.autoSizeHeight); // minHeight only applies if height is % or autosize is on
 	//p.width.ignore = p.width.writeonly = !this.isSizeable() || !this.canSetWidth();
 	//p.height.ignore = p.height.writeonly = !this.isSizeable() || !this.canSetHeight();
 	p.width.ignoretmp = p.width.writeonly = this.schema.width.ignore || !this.isSizeable() || this.autoSizeWidth;
@@ -384,7 +384,7 @@ wm.Control.extend({
 });
 
 wm.Object.extendSchema(wm.Control, {
-    generateForDevice: {group: "devices", shortname: "generateForDeviceSizes", editor: "wm.prop.DeviceListEditor", advanced:1},
+    generateForDevice: {group: "devices", options: ["", "mobile", "desktop"], advanced:1},
     imageList: {ignore: 1, group: "widgetName", subgroup: "graphics", order: 50, editor: "wm.prop.ImageListSelect"},
     imageIndex: {ignore: 1, group: "widgetName", subgroup: "graphics", order: 51, type: "Number",  doc: 1},
     editImageIndex: {ignore: 1, group: "widgetName", subgroup: "graphics", order: 52, type: "String", doc: 1, operation: 1},
@@ -423,8 +423,14 @@ wm.Object.extendSchema(wm.Control, {
     height: { group: "display", subgroup: "layout",  order: 30, doc: 1, editor: "wm.prop.SizeEditor"},
     minWidth: { group: "display", subgroup: "layout", order: 40, advanced: true, ignoreHint: "minWidth is only available when width is % sized"},
     minHeight: { group: "display", subgroup: "layout", order: 50, advanced: true, ignoreHint: "minHeight is only available when height is % sized"},
-    mobileHeight:{ group: "display", subgroup: "layout",  order: 80, doc: 1, editor: "wm.prop.SizeEditor", advanced: true},
 
+    
+    minMobileHeight: { group: "mobile", subgroup: "layout", order: 50, advanced: true, ignoreHint: "minHeight is only available when height is % sized"},
+    mobileHeight:{ group: "mobile", subgroup: "layout",  order: 80, doc: 1, editor: "wm.prop.SizeEditor", advanced: true},
+    mobileFolding: {group: "mobile", subgroup: "layerfolding", order: 1, advanced: true},
+    mobileFoldingCaption: {group: "mobile", subgroup: "layerfolding", order: 2, advanced: true},
+    mobileFoldingIndex: {group: "mobile", subgroup: "layerfolding", order: 3, advanced: true},
+    
     parent: { ignore: 1, doc: 1, prototype: "wm.Control" },
     domNode: { ignore: 1, doc: 1 },
 	parentNode: { ignore: 1 },

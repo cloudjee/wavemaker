@@ -555,7 +555,7 @@ dojo.declare("wm.studio.Project", null, {
 	    f.push(dojo.hitch(this, function() {
 		var themename = studio.application.theme;
 		var path;
-		if (this.deployingProject)
+		if (this.deployingProject || wm.studioConfig.environment != "local")
                     path = (themename.match(/^wm_/)) ? "lib/wm/base/widget/themes/" + themename + "/theme.css" : "lib/wm/common/themes/" + themename + "/theme.css";
 		else
                     path = (themename.match(/^wm_/)) ? "/wavemaker/lib/wm/base/widget/themes/" + themename + "/theme.css" : "/wavemaker/lib/wm/common/themes/" + themename + "/theme.css";
@@ -1775,7 +1775,7 @@ Studio.extend({
 		return "/" + projectPrefix + this.project.projectName + (s.length ? "/?" + s.join("&") : "");
 	},
 	*/
-	getPreviewUrl: function(isTest) {
+    getPreviewUrl: function(inUrl, isTest) {
 	    var s = [], q="", c = wm.studioConfig;
 	    if (isTest)
 		s.push("debug");
@@ -1783,10 +1783,36 @@ Studio.extend({
 		s.push("popup");
 	    if (studio.languageSelect.getDisplayValue() != "default")
 		s.push("dojo.locale=" + studio.languageSelect.getDisplayValue());
-	    var projectPrefix = studio.projectPrefix;
-	    return "/" + projectPrefix + this.project.projectName + (s.length ? "/?" + s.join("&") : "");
-	},
+	    if (studio.deviceTypeSelect.getDataValue().toLowerCase() == "mobile")
+		s.push("wmmobile=1");
 
+	var url = inUrl; //inUrl.match(/https?\:/) ? inUrl : 
+
+	    return url + (s.length ? "/?" + s.join("&") : "");
+	},
+    getPreviewWindowOptions: function() {
+	var size = studio.deviceSizeSelect.getDataValue() || "";
+	
+	switch(size.toLowerCase()) {
+	case "all":
+	    return undefined;
+	case "1150":
+	    return "resizable=1,scrollbars=1,width=1155,height=900";
+	case "900":
+	    return "resizable=1,scrollbars=1,width=905,height=800";
+	case "750":
+	    return "resizable=1,scrollbars=1,width=755,height=750";
+	case "600":
+	    return "resizable=1,scrollbars=1,width=605,height=750";
+	case "450":
+	    return "resizable=1,scrollbars=1,width=455,height=600";
+	case "300":
+	    return "resizable=1,scrollbars=1,width=305,height=450";
+	case "tiny":
+	    return "resizable=1,scrollbars=1,width=250,height=350";
+	}
+
+    },
     runProjectChange: function(inSender, inLabel, inIconClass, inEvent) {
 	if (inIconClass == "studioProjectCompile")
 	    inSender.setWidth(this.getDictionaryItem("COMPILE_BUTTON_WIDTH"));

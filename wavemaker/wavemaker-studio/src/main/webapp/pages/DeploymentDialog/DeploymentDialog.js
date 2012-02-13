@@ -65,16 +65,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
     },
 
     start: function() {
-	this.helpButton = new wm.ToolButton({_classes: {domNode: ["StudioHelpIcon"]},
-					     width: "20px",
-					     height: "20px",
-					     parent: this.owner.owner.titleBar,
-					     onclick: function() {
-						 window.open(studio.getDictionaryItem("URL_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}));
-					     }});
-	this.owner.owner.titleBar.reflow();
 	this.localizeStuff();
-
     },
     onShow: function() {
 
@@ -503,7 +494,7 @@ dojo.declare("DeploymentDialog", wm.Page, {
 	    var memory = inResult.match(/\d+[MG]/);
 	    this.manageCloudFoundryButtonClick();
 	    app.alert(this.getDictionaryItem("ALERT_CF_OUT_OF_MEMORY", {memory: memory[0] || "unknown"}));
-	} else if (inResult.match(/^ERROR\:.*The URI.*has already been taken or reserved/)) {
+	} else if (inResult.match(/^ERROR.*The URI.*has already been taken or reserved/)) {
 	    app.alert(this.getDictionaryItem("ALERT_CF_NAME_TAKEN", {name: inData.applicationName}));
 	    this.cfNameEditor.setInvalid();
 	} else {

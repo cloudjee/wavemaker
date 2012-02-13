@@ -27,10 +27,8 @@ Studio.widgets = {
 	securityConfigService: ["wm.JsonRpcService", {service: "securityConfigService", sync: true}, {}],
 	securityService: ["wm.JsonRpcService", {service: "securityService", sync: true}, {}, {}],
 	securityServiceJOSSO: ["wm.JsonRpcService", {service: "securityServiceJOSSO", sync: true}, {}, {}],
-	//registrationService: ["wm.JsonRpcService", {service: "registrationService", sync: true}, {}],
-	UserService: ["wm.JsonRpcService", {service: "UserService", sync: true}, {}],
 	resourceManagerService: ["wm.JsonRpcService", {service: "resourceFileService", sync: true}, {}],
-        jarListService: ["wm.JsonRpcService", {service: "studioService", sync: false}, {}],
+    jarListService: ["wm.JsonRpcService", {service: "studioService", sync: false}, {}],
     gridDesignerDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, title: "Grid Designer", pageName: "GridDesigner", modal: false, deferLoad: true,  border: "2", borderColor: "white", width: "600px", height: "500px", hideControls: true, noEscape: true, minHeight: "200", noLeftRightDocking: true}],
     liveViewEditDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, title: "LiveView Editor", pageName: "LiveViewEditor", modal: true, deferLoad: true,  border: "2", borderColor: "white", width: "600px", height: "500px", hideControls: true, noEscape: true}],
     editVariableDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, title: "Edit JSON", pageName: "EditVariable", modal: false, deferLoad: true,  border: "2", borderColor: "white", width: "500px", height: "400px", hideControls: true, noEscape: true}],
@@ -44,7 +42,7 @@ Studio.widgets = {
 
 	//tempData used to show grid on FancyTemplate
 	varTemplateData: ["wm.Variable", {"json":"[{name: \"Vestibulum\", dataValue: \"sodales magna mollis purus iaculis sagittis\"},\n{name: \"Lacinia\", dataValue: \" aliquam mauris nulla, consequat\"},\n{name: \"Consequat\", dataValue: \"rhoncus diam metus id arcu\"},\n{name: \"Elementum\", dataValue: \"quis odio sodales ornare quis eu\"},\n{name: \"Sagittis\", dataValue: \"torquent per conubia nostra, per inceptos\"},\n{name: \"Aliquam\", dataValue: \"molestie auctor tortor ac tincidunt\"},\n{name: \"Nullam\", dataValue: \"in orci eros, vitae convallis neque\"},\n{name: \"Mauris\", dataValue: \"luctus adipiscing ligula urna a nisl\"},\n{name: \"Pellentesque\", dataValue: \" ante lectus, mollis ut suscipit id\"}]","type":"EntryData"}, {}],
-        silkIconImageList: ["wm.ImageList", {"colCount":39,"height":16,"iconCount":90,"url":"lib/images/silkIcons/silk.png","width":16}, {}],
+    silkIconImageList: ["wm.ImageList", {"colCount":39,"height":16,"iconCount":90,"url":"lib/images/silkIcons/silk.png","width":16}, {}],
 	paletteImageList: ["wm.ImageList", {"colCount":50,"height":16,"iconCount":50,"url":"images/palette_imagelist.png","width":16}, {}],
 
 	navImageList: ["wm.ImageList", {width: 24, height: 28, colCount: 10, url: "images/navBtns.png"}, {}],
@@ -54,7 +52,7 @@ Studio.widgets = {
     contextualMenu: ["wm.PopupMenu", {"fullStructureStr":"[{\"label\":\"Help\",\"iconClass\":undefined,\"imageList\":null,\"children\":[]}]"},{onclick: "contextualMenuClick"}],
     genericDialog: ["wm.GenericDialog", {}],
     startPageDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, width: "790px", height: "465px", title: "", modal: true, hideControls: true, noEscape: true, pageName: "Start", border: "4", borderColor: "#222222", corner: "cc" }],
-    deploymentDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, width: "900px", height: "680px", title: "Deployment", modal: true, hideControls: true, noEscape: true, pageName: "DeploymentDialog", deferLoad: true, border: "2", borderColor: "white"}],
+    deploymentDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, width: "900px", height: "680px", title: "Deployment", modal: true, hideControls: true, noEscape: true, pageName: "DeploymentDialog", deferLoad: true, border: "2", borderColor: "white", titlebarButtons: "StudioHelpIcon"},{onMiscButtonClick: "deploymentHelp"}],
     loginDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, width: "250px", height: "325px", title: "Login", modal: true, hideControls: true, noEscape: true, pageName: "Login", deferLoad: true}],
     newProjectDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, width: "492px", height: "430px", title: "New Project", modal: true, hideControls: true, noEscape: false, pageName: "", border: "4", borderColor: "#222222", titlebarBorder: "1"}],
     helpDialog: ["wm.GenericDialog", {_classes: {domNode: ["studiodialog"]}, "height":"77px","modal":false,"noEscape":false,"title":"Help","userPrompt":"","width":"300px", modal: false,button1Caption: "OK", button1Close: true, corner: "tr"}, {}],
@@ -371,11 +369,13 @@ Studio.widgets = {
 							    wire: ["wm.Wire", {"source":"app.pagesListVar","targetProperty":"dataSet"}, {}]
 							}]
 						    }],
-						    deviceSelect: ["wm.SelectMenu", {caption: "Devices", margin:"4,0,4,20", width: "50%", maxWidth: "150", height: "24px", captionSize: "50px", dataValue: "", displayField: "name", dataField: "dataValue"},{onchange: "deviceSelectChanged"},{
+						    deviceSizeSelect: ["wm.SelectMenu", {caption: "Size", margin:"4,0,4,20", width: "120px", height: "24px", captionSize: "50px", dataValue: "", displayField: "name", dataField: "dataValue"},{onchange: "deviceSizeSelectChanged"},{
 							binding: ["wm.Binding",{},{}, {
 							    wire: ["wm.Wire", {"source":"deviceSizeVar","targetProperty":"dataSet"}, {}]
 							}]
 						    }],
+						    deviceTypeSelect: ["wm.SelectMenu", {caption: "Device", margin:"4,0,4,20", width: "120px", height: "24px", captionSize: "50px", dataValue: "", options: ["", "Desktop", "Mobile"], emptyValue: "emptyString"},{onchange: "deviceTypeSelectChanged"}],
+
 						    languageSelect: ["wm.SelectMenu", {caption: "Language", margin:"4,0,4,20", width: "50%", maxWidth: "180", height: "24px", captionSize: "70px", displayField: "dataValue", dataField: "dataValue", dataValue: "default", options: "default", restrictValues: false},{onchange: "languageSelectChanged"},{
 						    }]
 
@@ -555,45 +555,6 @@ Studio.widgets = {
 			    securitySubTab: ["wm.TabLayers", {border: "0", width: "100%", height: "100%",conditionalTabButtons:true, clientBorder: "2,0,0,0", clientBorderColor: "#959DAB", customCloseOrDestroy: "closeServiceTab"}, {onchange: "sourceTabsChange", oncanchange: "sourceTabsCanChange"}, {}]
 			}]
 
-
-
-/*,
-				servicesTab: ["wm.Layer", {caption: "Services", layoutKind: "left-to-right"}, {}, {
-					servicesPane: ["wm.PageContainer", {pageName: "Services", deferLoad: true, border: "0", width: "100%", height: "100%"}, {}]
-				}],
-				javaServiceEditor: ["wm.Layer", {caption: "Java Service Editor", layoutKind: "left-to-right"}, {}, {
-					javaServicePage: ["wm.PageContainer", {pageName: "JavaEditor", deferLoad: true, border: "0", width: "100%", height: "100%"}, {}]
-				}],
-				dataObjectsTab: ["wm.Layer", {caption: "Data Model"}, {}, {
-					dataObjectsPane: ["wm.PageContainer", {pageName: "DataObjectsEditor", deferLoad: true, border: "0", width: "100%", height: "100%"}, {}]
-				}],
-				liveViewsEditor: ["wm.Layer", {caption: "Live Views"}, {}, {
-					liveViewPageContainer: ["wm.PageContainer", {pageName: "LiveViewEditor", deferLoad: true, border: "0", width: "100%", height: "100%"}, {}]
-				}],
-				hqlQueryEditor: ["wm.Layer", {caption: "HQL Query Editor"}, {}, {
-					hqlQueryPage: ["wm.PageContainer", {pageName: "QueryEditor", deferLoad: true, border: "0", width: "100%", height: "100%"}, {}]
-				}],
-				securityTab: ["wm.Layer", {caption: "Security"}, {}, {
-					securityPane: ["wm.PageContainer", {pageName: "Security", deferLoad: true, border: "0", width: "100%", height: "100%"}, {}]
-				}],
-				apiDocTab: ["wm.Layer", {caption: "IDE"}, {}, {
-					apiRibbon: ["wm.Panel", {height: "29px", border: "0", layoutKind: "left-to-right"}, {}, {
-						apiToolbarSpacerPanel: ["wm.Panel", {height: "100%", width: "100%", border: "0", layoutKind: "left-to-right"}, {}],
-						apiLogoBottomHolder: ["wm.Panel", {width: "221px", border: "0"}, {}]
-					}],
-					apiTabs: ["wm.TabLayers", {border: "0", width: "100%", height: "100%"}, {}, {
-						apiTab: ["wm.Layer", {caption: "JavaScript (Client) Reference"}, {}, {
-							javadocFrame: ["wm.IFrame", {source: "/wavemaker/jsdoc/", width: "100%", height: "100%"}, {}]
-						}],
-						javadocTab: ["wm.Layer", {caption: "Java (Server) Reference"}, {}, {
-							javadocFrame1: ["wm.IFrame", {source: "/wavemaker/javadoc/", width: "100%", height: "100%"}, {}]
-						}],
-						diagnosticsTab: ["wm.Layer", {caption: "Diagnostics"}, {}, {
-							//diagnosticsPane: ["wm.PageContainer", {pageName: "Diagnostics", width: "100%", height: "100%"}, {}]
-						}]
-					}]
-				}]
-				*/
 			}]
 		}],
 		console: ["wm.Box", {height: "96", showing: false}, {}],

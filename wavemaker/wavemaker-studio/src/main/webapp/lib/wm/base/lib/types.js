@@ -40,6 +40,13 @@ wm.typeManager = {
 				delete this.types[i];
 		}
 	},
+        getPrimaryKey: function(inType) {
+	    if (!inType || !inType.fields) return "";
+	    for (var fieldName in inType.fields) {
+		if (inType.fields[fieldName].include.length)
+		    return fieldName;
+	    }
+	},
 	getPrimitiveType: function(inTypeName) {
 		return (this.types[inTypeName] || 0).primitiveType;
 	},

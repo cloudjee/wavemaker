@@ -14,10 +14,7 @@
 
 package com.wavemaker.tools.data;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +22,7 @@ import java.util.Map;
 import org.apache.log4j.NDC;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.core.io.Resource;
 
 import com.sun.codemodel.JBlock;
 import com.sun.codemodel.JClass;
@@ -57,6 +55,7 @@ import com.wavemaker.runtime.service.LiveDataService;
 import com.wavemaker.runtime.service.PagingOptions;
 import com.wavemaker.runtime.service.PropertyOptions;
 import com.wavemaker.runtime.service.TypedServiceReturn;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.tools.service.codegen.BeanGenerator;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
@@ -64,6 +63,7 @@ import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
 import com.wavemaker.tools.ws.wsdl.ServiceInfo;
 import com.wavemaker.tools.ws.wsdl.WSDL;
+import com.wavemaker.tools.project.StudioFileSystem;
 
 /**
  * DataService class generation.
@@ -134,6 +134,8 @@ public class DataServiceGenerator extends ServiceGenerator {
         this.constantsClass = new BeanGenerator(DataServiceUtils.getConstantsClassName(serviceClass));
 
         this.useNDCLogging = false;
+
+        this.fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
     }
 
     public void setGenerateMain(boolean generateMain) {
@@ -413,18 +415,18 @@ public class DataServiceGenerator extends ServiceGenerator {
         this.constantsClass.addClassJavadoc(" Query names for service \"" + this.serviceDefinition.getServiceId() + "\"\n"
             + StringUtils.getFormattedDate());
         String relPath = StringUtils.classNameToSrcFilePath(this.constantsClass.getFullyQualifiedClassName());
-        BufferedOutputStream bos = null;
+        OutputStream os = null;
         try {
-            File f = new File(this.configuration.getOutputDirectory().getFile(), relPath);
-            f.getParentFile().mkdirs();
-            bos = new BufferedOutputStream(new FileOutputStream(f));
-            this.constantsClass.generate(bos);
-            bos.close();
+            Resource f = this.configuration.getOutputDirectory().createRelative(relPath);
+            fileSystem.createPath(fileSystem.getParent(f), "");
+            os = fileSystem.getOutputStream(f);
+            this.constantsClass.generate(os);
+            os.close();
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         } finally {
             try {
-                bos.close();
+                os.close();
             } catch (Exception ignore) {
             }
         }

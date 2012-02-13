@@ -28,7 +28,9 @@
 [ bundlePackage.BasicWidgets + "/" + bundlePackage.Button_Category, bundlePackage.Button, "wm.Button", "wm.base.widget.Buttons.Button", "Studio_paletteImageList_4", bundlePackage.descButton, {}, false],
 [ bundlePackage.BasicWidgets + "/" +  bundlePackage.Button_Category, bundlePackage.PopupButton, "wm.PopupMenuButton", "wm.base.widget.Buttons.PopupMenuButton", "Studio_paletteImageList_4", bundlePackage.descPopupButton, {}, false],
 [  bundlePackage.BasicWidgets + "/" +  bundlePackage.Button_Category, bundlePackage.Toggle_Button, "wm.ToggleButton", "wm.base.widget.Buttons.ToggleButton", "Studio_paletteImageList_4", bundlePackage.descToggleButton, {}, false],
+[  bundlePackage.BasicWidgets + "/" +  bundlePackage.Button_Category, bundlePackage.Toggle_Button_Panel, "wm.ToggleButtonPanel", "wm.base.widget.Buttons.ToggleButton", "Studio_paletteImageList_4", bundlePackage.descToggleButtonPanel, {}, true],
 [  bundlePackage.BasicWidgets + "/" +  bundlePackage.Button_Category, bundlePackage.BusyButton, "wm.BusyButton", "wm.base.widget.Buttons.BusyButton", "Studio_paletteImageList_4", bundlePackage.descBusyButton, {}, true],
+
 
 
 [ bundlePackage.BasicWidgets + "/" +  bundlePackage.Formatting_Category, bundlePackage.Label, "wm.Label", "wm.base.widget.Label", "Studio_paletteImageList_7", bundlePackage.descLabel, {}, false],
@@ -50,10 +52,12 @@
 [ bundlePackage.Containers, bundlePackage.Panel, "wm.Panel", "wm.base.widget.Panel", "Studio_paletteImageList_16", bundlePackage.descPanel, {}, false],
 [ bundlePackage.Containers, bundlePackage.Rounded_Panel, "wm.FancyPanel", "wm.base.widget.Panel", "Studio_paletteImageList_16", bundlePackage.descFancyPanel, {}, false],
 
+
 [ bundlePackage.Containers + "/" + bundlePackage.Containers_Layer_Category, bundlePackage.Accordion, "wm.AccordionLayers", "wm.base.widget.Layers", "Studio_paletteImageList_18", bundlePackage.descAccordion, {}, false],
 [ bundlePackage.Containers + "/" +  bundlePackage.Containers_Layer_Category, bundlePackage.Layers, "wm.Layers", "wm.base.widget.Layers", "Studio_paletteImageList_12", bundlePackage.descLayers, {}, false],
 [ bundlePackage.Containers + "/" +  bundlePackage.Containers_Layer_Category, bundlePackage.Tabs, "wm.TabLayers", "wm.base.widget.Layers", "Studio_paletteImageList_23",bundlePackage.descTabs, {}, false],
 [ bundlePackage.Containers + "/" +  bundlePackage.Containers_Layer_Category, bundlePackage.Wizards, "wm.WizardLayers", "wm.base.widget.Layers", "Studio_paletteImageList_23", bundlePackage.descWizard, {}, false],
+[ bundlePackage.Containers + "/" +  bundlePackage.Containers_Layer_Category, bundlePackage.Breadcrumbs, "wm.BreadcrumbLayers", "wm.base.widget.Layers", "Studio_paletteImageList_23", bundlePackage.descWizard, {}, false],
 
 
 [ bundlePackage.Dialogs, bundlePackage.GenericDialog, "wm.GenericDialog", "wm.base.widget.Dialogs.GenericDialog", "Studio_paletteImageList_4", bundlePackage.descGenericDialog, {}, false],
@@ -69,6 +73,7 @@
 [bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "Database Form", "wm.DBForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descDBForm, {}, false],
 [bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "Service Input Form", "wm.ServiceInputForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descServiceInputForm, {}, false],
 [bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "SubForm", "wm.SubForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descServiceInputForm, {}, false],
+[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "OneToMany", "wm.OneToMany", "wm.base.widget.Editors.OneToMany", "Studio_paletteImageList_7", bundlePackage.descServiceInputForm, {}, false],
 
 
 [bundlePackage.EditorsGroup, bundlePackage.Checkbox, "wm.Checkbox", "wm.base.widget.Editors.Checkbox", "Studio_paletteImageList_9", bundlePackage.descCheckbox, {}, false],

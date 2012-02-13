@@ -3,14 +3,11 @@ package com.wavemaker.tools.deployment.cloudfoundry;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import org.cloudfoundry.client.lib.CloudApplication;
@@ -19,7 +16,9 @@ import org.cloudfoundry.client.lib.CloudFoundryException;
 import org.cloudfoundry.client.lib.CloudService;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -34,14 +33,17 @@ import org.springframework.web.client.HttpClientErrorException;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.tools.data.DataModelConfiguration;
 import com.wavemaker.tools.data.DataModelManager;
-import com.wavemaker.tools.deployment.AppInfo;
 import com.wavemaker.tools.deployment.DeploymentDB;
 import com.wavemaker.tools.deployment.DeploymentInfo;
+import com.wavemaker.tools.deployment.DeploymentStatusException;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @IfProfileValue(name = "spring.profiles", value = "cloud-test")
 @TestExecutionListeners({})
-public class VmcDeploymentTargetTest {
+public class CloudFoundryDeploymentTargetTest {
+
+    @Rule
+    public ExpectedException thrown = ExpectedException.none();
 
     private static File testapp;
 
@@ -81,7 +83,7 @@ public class VmcDeploymentTargetTest {
     }
 
     @Test
-    public void testDeployWithDisallowedAppName() {
+    public void testDeployWithDisallowedAppName() throws DeploymentStatusException {
         DeploymentInfo deployment1 = new DeploymentInfo();
         deployment1.setToken(token);
         deployment1.setTarget("https://api.cloudfoundry.com");
@@ -90,16 +92,16 @@ public class VmcDeploymentTargetTest {
         db1.setDbName("wmcftestdb");
         deployment1.getDatabases().add(db1);
 
-        String result;
-        VmcDeploymentTarget target = new VmcDeploymentTarget();
+        CloudFoundryDeploymentTarget target = new CloudFoundryDeploymentTarget();
         target.setDataModelManager(this.dmMgr);
 
-        result = target.deploy(testapp, deployment1);
-        assertEquals("ERROR: The URI: \"inflickr.cloudfoundry.com\" has already been taken or reserved", result);
+        this.thrown.expect(DeploymentStatusException.class);
+        this.thrown.expectMessage("ERROR: The URI: \"inflickr.cloudfoundry.com\" has already been taken or reserved");
+        target.deploy(testapp, deployment1);
     }
 
     @Test
-    public void testValidateWithDisallowedAppName() {
+    public void testValidateWithDisallowedAppName() throws DeploymentStatusException {
         DeploymentInfo deployment1 = new DeploymentInfo();
         deployment1.setToken(token);
         deployment1.setTarget("https://api.cloudfoundry.com");
@@ -108,12 +110,12 @@ public class VmcDeploymentTargetTest {
         db1.setDbName("wmcftestdb");
         deployment1.getDatabases().add(db1);
 
-        String result;
-        VmcDeploymentTarget target = new VmcDeploymentTarget();
+        CloudFoundryDeploymentTarget target = new CloudFoundryDeploymentTarget();
         target.setDataModelManager(this.dmMgr);
 
-        result = target.validateDeployment(deployment1);
-        assertEquals("ERROR: The URI: \"inflickr.cloudfoundry.com\" has already been taken or reserved", result);
+        this.thrown.expect(DeploymentStatusException.class);
+        this.thrown.expectMessage("ERROR: The URI: \"inflickr.cloudfoundry.com\" has already been taken or reserved");
+        target.validateDeployment(deployment1);
     }
 
     @Test
@@ -151,7 +153,7 @@ public class VmcDeploymentTargetTest {
     }
 
     @Test
-    public void testDeployWithExpiredToken() throws MalformedURLException {
+    public void testDeployWithExpiredToken() throws MalformedURLException, DeploymentStatusException {
         DeploymentInfo deployment1 = new DeploymentInfo();
         deployment1.setToken("invalid");
         deployment1.setTarget("https://api.cloudfoundry.com");
@@ -160,16 +162,16 @@ public class VmcDeploymentTargetTest {
         db1.setDbName("wmcftestdb");
         deployment1.getDatabases().add(db1);
 
-        String result;
-        VmcDeploymentTarget target = new VmcDeploymentTarget();
+        CloudFoundryDeploymentTarget target = new CloudFoundryDeploymentTarget();
         target.setDataModelManager(this.dmMgr);
 
-        result = target.deploy(testapp, deployment1);
-        assertEquals(VmcDeploymentTarget.TOKEN_EXPIRED_RESULT, result);
+        this.thrown.expect(DeploymentStatusException.class);
+        this.thrown.expectMessage(CloudFoundryDeploymentTarget.TOKEN_EXPIRED_RESULT);
+        target.deploy(testapp, deployment1);
     }
 
     @Test
-    public void testValidateWithExpiredToken() throws MalformedURLException {
+    public void testValidateWithExpiredToken() throws MalformedURLException, DeploymentStatusException {
         DeploymentInfo deployment1 = new DeploymentInfo();
         deployment1.setToken("invalid");
         deployment1.setTarget("https://api.cloudfoundry.com");
@@ -178,16 +180,17 @@ public class VmcDeploymentTargetTest {
         db1.setDbName("wmcftestdb");
         deployment1.getDatabases().add(db1);
 
-        String result;
-        VmcDeploymentTarget target = new VmcDeploymentTarget();
+        CloudFoundryDeploymentTarget target = new CloudFoundryDeploymentTarget();
         target.setDataModelManager(this.dmMgr);
 
-        result = target.validateDeployment(deployment1);
-        assertEquals(VmcDeploymentTarget.TOKEN_EXPIRED_RESULT, result);
+        this.thrown.expect(DeploymentStatusException.class);
+        this.thrown.expectMessage(CloudFoundryDeploymentTarget.TOKEN_EXPIRED_RESULT);
+
+        target.validateDeployment(deployment1);
     }
 
     @Test
-    public void testValidateValidDeployment() {
+    public void testValidateValidDeployment() throws DeploymentStatusException {
         DeploymentInfo deployment1 = new DeploymentInfo();
         deployment1.setToken(token);
         deployment1.setTarget("https://api.cloudfoundry.com");
@@ -197,15 +200,14 @@ public class VmcDeploymentTargetTest {
         deployment1.getDatabases().add(db1);
 
         String result;
-        VmcDeploymentTarget target = new VmcDeploymentTarget();
+        CloudFoundryDeploymentTarget target = new CloudFoundryDeploymentTarget();
         target.setDataModelManager(this.dmMgr);
 
-        result = target.validateDeployment(deployment1);
-        assertEquals(VmcDeploymentTarget.SUCCESS_RESULT, result);
+        target.validateDeployment(deployment1);
     }
 
     @Test
-    public void testFullAppLifecycle() {
+    public void testFullAppLifecycle() throws Exception {
         Properties dbProps = new Properties();
         dbProps.setProperty(DataServiceConstants.DB_URL_KEY, "jdbc:mysql://localhost:3306/wmcftestdb");
         when(this.config.readConnectionProperties()).thenReturn(dbProps);
@@ -228,62 +230,29 @@ public class VmcDeploymentTargetTest {
         db2.setDbName("wmcftestdb");
         deployment2.getDatabases().add(db2);
 
-        String result;
         CloudApplication app;
-        VmcDeploymentTarget target = new VmcDeploymentTarget();
+        CloudFoundryDeploymentTarget target = new CloudFoundryDeploymentTarget();
         target.setDataModelManager(this.dmMgr);
 
-        result = target.deploy(testapp, deployment1);
-        assertEquals(VmcDeploymentTarget.SUCCESS_RESULT, result);
+        target.deploy(testapp, deployment1);
         app = testClient.getApplication("wmcftest");
         assertNotNull(app);
         assertEquals(CloudApplication.AppState.STARTED, app.getState());
 
-        result = target.deploy(testapp, deployment1);
-        assertEquals(VmcDeploymentTarget.SUCCESS_RESULT, result);
+        target.deploy(testapp, deployment1);
         app = testClient.getApplication("wmcftest");
         assertNotNull(app);
         assertEquals(CloudApplication.AppState.STARTED, app.getState());
 
-        result = target.redeploy(deployment1);
-        assertEquals(VmcDeploymentTarget.SUCCESS_RESULT, result);
-        app = testClient.getApplication("wmcftest");
-        assertNotNull(app);
-        assertEquals(CloudApplication.AppState.STARTED, app.getState());
-
-        result = target.deploy(testapp, deployment2);
-        assertEquals(VmcDeploymentTarget.SUCCESS_RESULT, result);
+        target.deploy(testapp, deployment2);
         app = testClient.getApplication("wmcftest2");
         assertNotNull(app);
         assertEquals(CloudApplication.AppState.STARTED, app.getState());
 
-        result = target.stop(deployment2);
-        assertEquals(VmcDeploymentTarget.SUCCESS_RESULT, result);
-        app = testClient.getApplication("wmcftest2");
-        assertNotNull(app);
-        assertEquals(CloudApplication.AppState.STOPPED, app.getState());
-
-        result = target.start(deployment2);
-        assertEquals(VmcDeploymentTarget.SUCCESS_RESULT, result);
-        app = testClient.getApplication("wmcftest2");
-        assertNotNull(app);
-        assertEquals(CloudApplication.AppState.STARTED, app.getState());
-
-        List<AppInfo> apps = target.listDeploymentNames(deployment1);
-        List<String> appNames = new ArrayList<String>();
-        for (AppInfo appInfo : apps) {
-            assertTrue(appInfo.getHref().contains("http://" + appInfo.getName() + ".cloudfoundry.com"));
-            appNames.add(appInfo.getName());
-        }
-        assertTrue(appNames.contains("wmcftest"));
-        assertTrue(appNames.contains("wmcftest2"));
-
-        result = target.undeploy(deployment1, false);
-        assertEquals(VmcDeploymentTarget.SUCCESS_RESULT, result);
+        target.undeploy(deployment1, false);
         assertNotNull(testClient.getService("wmcftestdb"));
 
-        result = target.undeploy(deployment2, true);
-        assertEquals(VmcDeploymentTarget.SUCCESS_RESULT, result);
+        target.undeploy(deployment2, true);
         try {
             app = testClient.getApplication("wmcftest2");
             fail("Application still available after undeploy.");

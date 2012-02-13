@@ -445,9 +445,9 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		    if (e == this.readOnlyNode)
 			this.updateReadOnlyNodeStyle(b.h);
 
+		    this._editorHeight = b.h;
+		    this._editorWidth = b.w;
 		}
-	    this._editorHeight = b.h;
-	    this._editorWidth = b.w;
 	    if (this.helpText && this.helpNode) {
 		var s = this.helpNode.style;
 		s.top = (this.caption) ? (parseInt(this.captionNode.style.top) + (this.captionPosition == "bottom" ? 5 : 0)) + "px" : b.t + "px";
@@ -597,7 +597,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		    this.invalidate();
 
             // just because the editor doesn't have validation doesn't mean that the container won't need to validate the sum of all inputs
-		wm.job(this.getRuntimeId(), 25, dojo.hitch(this, function() {
+	    wm.job(this.getRuntimeId() + "_validate", 25, dojo.hitch(this, function() {
 		    if (!this.isDestroyed) {
 			if (this.parent) 
 				wm.fire(this.parent, "validate");

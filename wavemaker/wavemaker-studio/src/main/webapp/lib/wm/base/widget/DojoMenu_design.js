@@ -271,6 +271,7 @@ wm.DojoMenu.extend({
 
 	this.setFullStructure(inStruct);
 	this.renderDojoObj();
+	wm.onidle(this, function() {studio.reinspect(true);});
     },
     findItemInFullStructure: function(inStruct, inDefaultLabel) {
 	for (var i = 0; i < inStruct.children.length; i++) {

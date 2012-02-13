@@ -63,7 +63,7 @@ dojo.declare("wm.FormPanel", wm.Container, {
     padding: "2",
     editorHeight: "26px",
     editorWidth: "100%",
-    captionSize: "200px",
+    captionSize: "150px",
     captionAlign: "right",
     captionPosition: "left",
     height: "250px",
@@ -193,6 +193,10 @@ dojo.declare("wm.FormPanel", wm.Container, {
 	});
     },
 
+    // don't really need this...
+	getEditorParent: function() {
+		return this;
+	},
     
     _end: 0
 });
@@ -457,6 +461,7 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
     populateEditors: function() {
 	var item = this.dataSet;
 	var data = item ? item.getData() : null;
+	if (!data) data = {};
 	dojo.forEach(this.getEditorsArray(), dojo.hitch(this, function(e) {
 	    /* If we have a form inside of this form, call populateEditors on it */
 
@@ -512,9 +517,9 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
      * METHOD: getEditorsArray (PRIVATE)
      * DESCRIPTION: Overrides getEditorsArray to only return editors in this form with formFields that are set 
      ***************/
-    getEditorsArray: function() {
+    getEditorsArray: function(includeRelated) {
 	return wm.getMatchingFormWidgets(this, function(w) {
-	    return (w instanceof wm.AbstractEditor) && (w.formField !== undefined);
+	    return (w instanceof wm.AbstractEditor || includeRelated && w instanceof wm.SubForm) && (w.formField !== undefined);
 	});
     },
 
@@ -525,7 +530,7 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
      ***************/ 
     getRelatedEditorsArray: function() {
 	return wm.getMatchingFormWidgets(this, function(w) {
-	    return (wm.isInstanceType(w, wm.DataForm) && w.formField);
+	    return (wm.isInstanceType(w, wm.SubForm) && w.formField);
 	});
     },
 
@@ -631,50 +636,6 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 	return true;
     },
 
-    /****************
-     * METHOD: _getFormField (DESIGNTIME)
-     * DESCRIPTION: This form can have this.firstname or this.manager, but can NOT have this.manager.firstname.
-     *              Return valid formFields or return nothing.
-     ***************/
-    _getFormField: function(inFieldIndex, inFieldName) {
-	if (inFieldIndex === undefined)
-	    return inFieldName;
-	if (inFieldIndex.indexOf(".") == -1)
-	    return inFieldIndex;
-	},
-
-    /****************
-     * METHOD: _getEditorForField (DESIGNTIME)
-     * DESCRIPTION: Returns an editor for the specified formField. Used to determine if we need to create an editor for that field
-     ***************/
-	_getEditorForField: function(inField) {
-		var editors = this._currentEditors = this._currentEditors || this.getEditorsArray();
-		for (var i=0, editors, e; (e=editors[i]); i++)
-			if (e.formField == inField) {
-				return e;
-			}
-	},
-
-    /****************
-     * METHOD: _getFormEditorProps (DESIGNTIME)
-     * DESCRIPTION: Returns the properties to use when initializing a new wm.AbstractEditor class
-     ***************/
-	getFormEditorProps: function() {
-		return {
-			size: this.editorSize,
-			readonly: this.readonly,
-			captionSize: this.captionSize,
-			captionAlign: this.captionAlign,
-			captionPosition: this.captionPosition
-		}
-	},
-
-    // don't really need this...
-	getEditorParent: function() {
-		return this;
-	},
-
-
 
     cancelEdit: function() {
 	this.clearDirty();
@@ -688,12 +649,8 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 });
 
 
-/* TODO: Needs formField */
 dojo.declare("wm.SubForm", wm.DataForm, {
-    confirmChangeOnDirty: "",
     formField:"",
-    editingMode: "one-to-one", // "one-to-one", "one-to-many" (adds a grid); should not be user editable
-    _placeEditorOffset: 0,
 
 	_getFormField: function(inField) {
 		if (inField.indexOf(".") == -1)
@@ -723,7 +680,6 @@ dojo.declare("wm.SubForm", wm.DataForm, {
 	}
     
 });
-
 
 
 /* WHAT I'd LIKE TO DO HERE:
@@ -871,7 +827,8 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 		type: this.type,
 		liveView: this.getSourceLiveView(),
 		operation: this.operation || "insert",
-		autoUpdate: false
+		autoUpdate: false/*,
+		inFlightBehavior: "executeAll" // needed for saving of subforms*/
 	    });
 	    this.insertOp = "insert";
 	    this.updateOp = "update";
@@ -881,7 +838,7 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 	var serviceVar = this.serviceVariable;
 
 	this.connect(serviceVar, "onSuccess", this, "operationSucceeded");
-	this.connect(serviceVar, "onResult", this, "onResult");
+	this.connect(serviceVar, "onResult", this, "operationResult");
 	this.connect(serviceVar, "onError", this, "operationFailed");
     },
 
@@ -1128,10 +1085,45 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 	    break;
 	}
 
-	this.setServerParams(data);
+	/* Any wm.SubForm in a DBForm must be a composite primary key;
+	 * currently the server does not support updates on composite primary keys, such entries must be deleted and reinserted.
+	 * Check to see if its dirty and in need of reinsertion.
+	*/
+	var isDirty = false;
+	if (this.operation == "update") {
+	    var subforms = this.getRelatedEditorsArray();
+	    dojo.forEach(subforms, dojo.hitch(this, function(form) {
+		if (form.getIsDirty()) {
+		    isDirty = true;
+		}
+	    }));
+	}
 
-	/* Send the data to the server */
-	serviceVar.update();
+	this.setServerParams(data);
+	if (!isDirty) {
+	    this.serviceVariable.update();
+	} else {
+	    this._disableEventHandling = true;
+	    this.serviceVariable.setOperation("delete");
+	    this.serviceVariable.sourceData.setData(this.dataSet); // delete the original dataset
+	    var def = this.serviceVariable.update();	    
+	    def.addCallbacks(
+		dojo.hitch(this, function() {		    
+		    this.setServerParams(data); // onsuccess insert the new data values
+		    this.serviceVariable.setOperation("insert");
+		    this.serviceVariable.update();
+		    wm.onidle(this, function() {
+			delete this._disableEventHandling;
+			this.serviceVariable.setOperation("update");
+		    });
+		}),
+		dojo.hitch(this, function() {
+		    wm.onidle(this, function() {
+			delete this._disableEventHandling;
+			this.serviceVariable.setOperation("update");
+		    });
+		}));
+	}
     },
     setServerParams: function(inData) {
 	this.serviceVariable.sourceData.setData(inData);
@@ -1147,6 +1139,7 @@ dojo.declare("wm.DBForm", wm.DataForm, {
      *    2. Calls onBeforeInsertCall/onBeforeUpdateCall/onBeforeDeleteCall to allow developers to modify what is sent to the server
      ***************/
     operationSucceeded: function(inResult) {
+	if (this._disableEventHandling) return;
 	/* if we get result as an array, take the first one */
 	if (dojo.isArray(inResult))
 	    inResult = inResult[0];
@@ -1261,6 +1254,7 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 		/* We've already updated our originalDataSet, but we need to update the dataSetToUpdate; eg:
 		 * grid.selectedItem was updated above, but the grid.dataSet needs to be updated */
 		if (d) {
+		    var subforms = this.getRelatedEditorsArray();
 		    var item = dataSetToUpdate.getItem(originalDataSet.dataSet.itemIndex);
 		    item.beginUpdate();
 		    item.setData(d);
@@ -1285,6 +1279,10 @@ dojo.declare("wm.DBForm", wm.DataForm, {
     onSuccess: function(inResult) {},
     onResult: function(inResult) {},
 
+    operationResult: function(inResult) {
+	if (this._disableEventHandling) return;
+	this.onResult(inResult);
+    },
     operationFailed: function(inError) {
 	switch (this.operation) {
 	case this.insertOp:
@@ -1308,6 +1306,7 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 
     _end: 0
 });
+
 
 
 

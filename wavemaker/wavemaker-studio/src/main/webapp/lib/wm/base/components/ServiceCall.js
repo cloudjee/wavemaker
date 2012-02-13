@@ -713,7 +713,7 @@ dojo.declare("wm.ServiceInput", wm.Variable, {
 		var data= this.getData(true), args=[], d;
 		// convert to array
 		for (var p in this._dataSchema) {
-			if (data !== undefined)
+			if (data != undefined)
 				d = data[p];
 			args.push(d !== undefined ? d : null);
 /* Seung's temporary fix

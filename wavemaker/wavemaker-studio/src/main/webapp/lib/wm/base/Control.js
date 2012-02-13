@@ -307,6 +307,10 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
       top: {writeonly: 1, ignore: 1}
       },
     */
+    mobileFolding: false,
+    mobileFoldingIndex: "",
+    mobileFoldingCaption: "",
+
     imageList: "",
     imageIndex: -1,
     renderedOnce: 0,
@@ -348,8 +352,9 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
        @type String
     */
     height: '',
-    minHeight: 0, // number represents pixels
+    minHeight: 0, // number represents pixels    
     minWidth: 0,
+    minMobileHeight: 0,
     //maxHeight: 0, // number represents pixels
     //maxWidth: 0,
 
@@ -460,7 +465,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	}
     },
     init: function() {
-	if (wm.isMobile && this.mobileHeight != undefined && !this.height.match(/\%/)) this.height = this.mobileHeight;
+	if (wm.isMobile && this.mobileHeight != undefined && !this.height.match(/\%/) && parseInt(this.mobileHeight) > parseInt(this.height)) this.height = this.mobileHeight;
 
 	this.initDomNode();
 	this.inherited(arguments);
@@ -601,9 +606,9 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	return parent.isAncestorHiddenLayer();
     },
     isAncestorHidden: function() {
-        if (!this.showing) return true;
+        if (!this.showing && this instanceof wm.Layer == false) return true;
 	if (this instanceof wm.Layout && this.owner == app._page || this instanceof wm.Dialog) return false;
-	if (this instanceof wm.Layer && this.parent instanceof wm.Layers && this.parent.getActiveLayer() != this) return true;
+	if (this instanceof wm.Layer && !this.active) return true;
         var parent;
         if (this.parent && this.parent instanceof wm.Control) 
             parent = this.parent;
@@ -956,7 +961,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	// We either have a minSize passed in from user set properties, or we let the widget itself decide what its minimum size should be.
 	var minName = "min"    + wm.capitalize(n);
 	var getMin  = "getMin" + wm.capitalize(n) + "Prop";
-	var minSize = inMinSize || this[getMin]();
+	var minSize = !wm.isMobile && inMinSize  || this[getMin]();
 
 	v = this.adjustSetSizeProp(n,v);
 
@@ -1028,7 +1033,8 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	return parseInt(this.minWidth) || 30;
     },
     getMinHeightProp: function() {
-	return parseInt(this.minHeight) || 15;
+	
+	return parseInt(wm.isMobile ? this.minMobileHeight : this.minHeight) || 15;
     },
     /*
       setMaxWidth: function(inMaxWidth) {
@@ -1692,7 +1698,13 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 			t = t.parent;
 		}
 		return t ? t.imageList : null;
-	}
+	},
+        update: function() {
+	    this.show();
+	    if (this.parent) {
+		this.parent.update();
+	    }
+	},
 
     });
 

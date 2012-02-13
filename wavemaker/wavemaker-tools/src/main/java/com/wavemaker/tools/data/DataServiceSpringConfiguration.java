@@ -78,7 +78,9 @@ public class DataServiceSpringConfiguration {
 
     public DataServiceSpringConfiguration(FileService fileService, String rootPath, String configFile, String serviceName) {
         this.rootPath = rootPath;
-        this.path = rootPath + "/" + configFile;
+      
+        this.path = StringUtils.appendPaths(this.rootPath, configFile);
+
         this.fileService = fileService;
         this.beans = DataServiceUtils.readBeans(fileService, this.path);
         this.serviceId = serviceName;
@@ -283,7 +285,7 @@ public class DataServiceSpringConfiguration {
     }
 
     /**
-     * @param property
+     * @param dbName
      */
     void configureDbAlias(String dbName) {
         if (!hasText(dbName)) {
@@ -485,7 +487,7 @@ public class DataServiceSpringConfiguration {
         for (Bean b : propertyPlaceholders) {
             List<String> l = b.getProperty(DataServiceConstants.SPRING_CFG_LOCATIONS_ATTR).getListValue();
             for (String s : l) {
-                rtn = this.rootPath + "/" + StringUtils.fromFirstOccurrence(s, "classpath:");
+                rtn = StringUtils.appendPaths(this.rootPath, StringUtils.fromFirstOccurrence(s, "classpath:"));
             }
         }
 

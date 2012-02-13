@@ -235,6 +235,10 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 			    if (e.editingMode != "lookup" || !this._operationSucceeded) {
 				    wm.fire(e, "populateEditors");
 			    }
+			} else if (wm.isInstanceType(e, wm.OneToMany)) {
+			    if (e.formField && data) {
+				e.setDataSet(i.getValue(e.formField));
+			    }
 			} else {
                             if (wm.isInstanceType(e,wm.Lookup) && (!e.dataSet || !e.dataSet.type)) 
                                 e.setAutoDataSet(e.autoDataSet);

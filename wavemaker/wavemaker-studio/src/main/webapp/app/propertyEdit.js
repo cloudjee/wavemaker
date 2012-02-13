@@ -554,8 +554,10 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
     updateOptions: function() {
 	this.inherited(arguments)
 	var matchType = "";
-	if (this.matchComponentType && this.propDef.treeBindField) {
-	    matchType = this.inspected.getValue(this.propDef.name).type;
+	if (this.matchComponentType) {
+	    var value =  this.inspected.getValue(this.propDef.name)
+	    if (value)
+		matchType = value.type;
 	}
 	var sp = studio.page;
 	var r = this.getDataSets([sp, sp.app], matchType);
@@ -619,7 +621,7 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
 
 			    return true;
 			}
-	    }));
+	    }),true);
 	}
 });
 
@@ -635,10 +637,27 @@ dojo.declare("wm.prop.FieldSelect", wm.prop.SelectMenu, {
 	this.inherited(arguments)
 	var ds = this.inspected.getProp(this.dataSetProp);
 	var options;
-	if (ds) {
-	    options = wm.typeManager.getSimplePropNames(ds._dataSchema);
-	} else {
-	    options = [];
+	if (!ds && this.inspected.formField) {
+	    var form = this.inspected.getParentForm();
+	    if (form) {
+		var schema = form.dataSet._dataSchema[this.inspected.formField]; // doesn't work if formField is x.y, only x
+		if (schema) {
+		    var type = schema.type;
+		}
+		if (type) {
+		    var typeDef = wm.typeManager.getType(type);
+		}
+		if (typeDef) {
+		    options = wm.typeManager.getSimplePropNames(typeDef.fields)
+		}
+	    }
+	}
+	if (!options) {
+	    if (ds) {
+		options = wm.typeManager.getSimplePropNames(ds._dataSchema);
+	    } else {
+		options = [];
+	    }
 	}
 	if (this.emptyLabel) {
 	    this.allowNone = false;
@@ -703,7 +722,9 @@ dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
     displayField: "dataValue",    
     relatedFields: false,
     insepected: null,
-    allowNone: false,   
+    allowNone: false,
+    oneToMany: undefined,
+    liveFields: true,
     updateOptions: function() {
 	this.inherited(arguments);
 	var f = this.inspected.getParentForm();
@@ -727,7 +748,47 @@ dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
 	this.setOptions(options);
     },
 	getSchemaOptions: function(inSchema) {
-		return [""].concat(wm.typeManager[this.relatedFields ? "getStructuredPropNames" : "getSimplePropNames"](inSchema));
+	    var result =  wm.typeManager[this.relatedFields ? "getStructuredPropNames" : "getSimplePropNames"](inSchema);
+	    if (this.oneToMany === true || this.oneToMany === false) {
+		var f = this.inspected.getParentForm();
+		var dataSet;
+		if (f instanceof wm.ServiceInputForm) {
+		    dataSet = f.serviceVariable.input;
+		} else if (f && f.dataSet && wm.typeManager.getType(f.dataSet.type)) {
+		    dataSet = f && f.dataSet;
+		}
+		var fields = dataSet._dataSchema;
+		var newresults = [];
+		for (var i = 0; i < result.length; i++) {		    
+		    if (fields[result[i]].isList && this.oneToMany || !fields[result[i]].isList && !this.oneToMany) {
+			newresults.push(result[i]);
+		    }
+		}
+		result = newresults;
+	    }
+
+	    if (this.liveTypes != true) {
+		var f = this.inspected.getParentForm();
+		var dataSet;
+		if (f instanceof wm.ServiceInputForm) {
+		    dataSet = f.serviceVariable.input;
+		} else if (f && f.dataSet && wm.typeManager.getType(f.dataSet.type)) {
+		    dataSet = f && f.dataSet;
+		}
+		var fields = dataSet._dataSchema;
+		var newresults = [];
+		for (var i = 0; i < result.length; i++) {		    
+		    var type = fields[result[i]].type;
+		    var typeDef = wm.typeManager.getType(type);
+		    if (!typeDef.liveService) {
+			newresults.push(result[i]);
+		    }
+		}
+		result = newresults;
+	}
+
+	    result.unshift("");
+	    return result;
 	}
 });
 
@@ -744,6 +805,7 @@ dojo.declare("wm.prop.ImageListSelect", wm.prop.SelectMenu, {
 });
 
 dojo.declare("wm.prop.WidgetSelect", wm.prop.SelectMenu, {
+    inspectedChildrenOnly: false,
     dataField: "dataValue",
     displayField: "dataValue",
     allowNone: true,
@@ -758,7 +820,6 @@ dojo.declare("wm.prop.WidgetSelect", wm.prop.SelectMenu, {
 
 	this.inherited(arguments);
 
-
 	var components = wm.listComponents([this.useOwner || this.inspected.owner], this.widgetType);
 	var result = [];
 	if (this.excludeType) {
@@ -769,6 +830,15 @@ dojo.declare("wm.prop.WidgetSelect", wm.prop.SelectMenu, {
 	    }
 	} else {
 	    result = components;
+	}
+	if (this.inspectedChildrenOnly) {
+	    components = result;
+	    result = [];
+	    for (var i = 0; i < components.length; i++) {
+		if (components[i].isAncestor(this.inspected)) {
+		    result.push(components[i]);
+		}
+	    }
 	}
 	var ids = [];
 	for (var i = 0; i < result.length; i++) {
@@ -913,6 +983,7 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
      * other onclick editor must update
      */
     reinspect: function() {
+
 	this.panel.removeAllControls();
 	this.addEditors();
 	return true;
@@ -950,7 +1021,7 @@ dojo.declare("wm.prop.EventEditor", wm.SelectMenu, {
     //FIXME: cache this
     postInit: function() {
 	this.inherited(arguments);
-
+	this._inPostInit = true;
 	var sc = wm.listComponents([studio.application, studio.page], wm.ServiceVariable).sort();
 	var lightboxList = wm.listComponents([studio.application, studio.page], wm.DojoLightbox);
 	var nc = wm.listComponents([studio.application, studio.page], wm.NavigationCall).sort();
@@ -1078,10 +1149,13 @@ dojo.declare("wm.prop.EventEditor", wm.SelectMenu, {
 	    type: "EntryData"
 	});
 	v.setData(items);
+
 	this.setDataSet(v);
+	this._inPostInit = false;
     },
     onchange: function() {
 	this.inherited(arguments);
+	if (this._inPostInit) return;
 	var value = this.dataValue;
 	var c = this.inspected;
 	if (this.isEventAction(value))
@@ -1587,6 +1661,7 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	    propDef.editorProps = {};
 	}
 	propDef.editorProps.matchComponentType = true;
+	propDef.editorProps.widgetDataSets = true;
 	if (this.propDef.putWiresInSubcomponent) {
 	    propDef.editorProps.disabled = true;
 	    propDef.editorProps.alwaysDisabled = true;
@@ -1671,6 +1746,8 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 		    /* If its a structured type, use a DataSetSelect editor to pick a suitable value; else use the default editor for that type */
 		    editor: isStructured  ? "wm.prop.DataSetSelect" : undefined,
 
+	            bindValuesOnly: true,
+
 		    editorProps: {
 			/* If its a DataSetSelect, only list components of matching types */
 			matchComponentType: isStructured,
@@ -1691,12 +1768,12 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
     reinspect: function() {
 	var inspected = this.inspectedSubcomponent || this.inspected;
 	 var isBound = studio.inspector.isPropBound(inspected, this.propDef); 
-	if (!isBound && !this.fieldPanel.showing) {
+	if (!isBound && this.fieldPanel && !this.fieldPanel.showing) {
 	    this.fieldPanel.show();
 	    this.fieldPanel.setBestHeight();
 	    this.setBestHeight();
 	    this.parent.setBestHeight();
-	} else if (isBound && this.fieldPanel.showing) {
+	} else if (isBound && this.fieldPanel && this.fieldPanel.showing) {
 	    this.fieldPanel.hide();
 	    this.setBestHeight();
 	    this.parent.setBestHeight();

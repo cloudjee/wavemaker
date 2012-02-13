@@ -445,14 +445,26 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 		      result = new dijit.form.TextBox(this.getEditorProps(inNode, inProps));
 	    if (this.resetButton) {
 		dojo.addClass(this.domNode, "wmreseteditor");
-		this._resetButtonNode = document.createElement("img");
-		this._resetButtonNode.src = this._resetButtonUrl || dojo.moduleUrl("lib.images.boolean.Signage") + "Close_gray.png";
-		var s = this._resetButtonNode.style;
-		s.position = "absolute";
-		s.width = "16px";
-		s.height = "16px";
-		s.top = "1px";
-		s.right = "1px";
+		if (wm.isMobile) {
+		    this._resetButtonNode = document.createElement("span");
+		    this._resetButtonNode.innerHTML = "X";
+		    var s = this._resetButtonNode.style;
+		    s.position = "absolute";
+		    s.fontWeight = "bold";
+		    s.top = "1px";
+		    s.right = "1px";
+		    s.width = "16px";
+		    s.textShadow = "2px 1px #aaa";
+		} else {
+		    this._resetButtonNode = document.createElement("img");
+		    this._resetButtonNode.src = this._resetButtonUrl || dojo.moduleUrl("lib.images.boolean.Signage") + "Close_gray.png";
+		    var s = this._resetButtonNode.style;
+		    s.position = "absolute";
+		    s.width = "16px";
+		    s.height = "16px";
+		    s.top = "1px";
+		    s.right = "1px";
+		}
 		result.domNode.appendChild(this._resetButtonNode);
 		this._resetButtonConnect = dojo.connect(this._resetButtonNode, "onclick", this, function() {
 		    wm.onidle(this, function() {

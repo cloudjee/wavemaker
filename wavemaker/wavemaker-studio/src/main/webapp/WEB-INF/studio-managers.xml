@@ -27,6 +27,9 @@
         <property name="designServiceManager">
             <ref bean="designServiceManager" />
         </property>
+		<property name="fileSystem">
+            <ref bean="fileSystem" />
+        </property>
     </bean>
 
     <bean name="studio-typeManager" id="typeManager"
@@ -56,22 +59,25 @@
         <aop:scoped-proxy />
     </bean>
 
-    <bean id="serviceDeploymentManager" class="com.wavemaker.tools.deployment.ServiceDeploymentManager"
-        scope="singleton" lazy-init="true">
-        <property name="projectManager">
-            <ref bean="projectManager" />
-        </property>
-        <property name="fileSystem">
-            <ref bean="fileSystem" />
-        </property>
-    </bean>
+	<bean id="serviceDeploymentManager" class="com.wavemaker.tools.deployment.ServiceDeploymentManager"
+		scope="singleton" lazy-init="true">
+		<property name="projectManager">
+			<ref bean="projectManager" />
+		</property>
+		<property name="fileSystem">
+			<ref bean="fileSystem" />
+		</property>
+		<property name="deploymentManager">
+			<ref bean="deploymentManager" />
+		</property>
+	</bean>
 
     <bean id="tomcatDeploymentTarget"
         class="com.wavemaker.tools.deployment.tomcat.TomcatDeploymentTarget"
         scope="singleton" lazy-init="true" />
 
     <bean id="cloudFoundryDeploymentTarget"
-        class="com.wavemaker.tools.deployment.cloudfoundry.VmcDeploymentTarget"
+        class="com.wavemaker.tools.deployment.cloudfoundry.CloudFoundryDeploymentTarget"
         scope="singleton" lazy-init="true">
         <property name="dataModelManager" ref="dataModelManager" />
         <property name="webAppAssembler" ref="webAppAssembler"/>
@@ -506,6 +512,8 @@
         </property>
     </bean>
 
+	<bean class="com.wavemaker.runtime.data.cloudfoundry.CloudFoundryDataServiceBeanFactoryPostProcessor"/>
+
     <beans profile="default">
     
     	<bean id="fileSystem" class="com.wavemaker.tools.project.LocalStudioFileSystem"/>
@@ -516,6 +524,10 @@
             <property name="runtimeAccess">
                 <ref bean="runtimeAccess" />
             </property>
+        </bean>
+
+		<bean id="exporterFactory" class="com.wavemaker.tools.data.LocalExporterFactory"
+            scope="singleton">
         </bean>
 
         <bean id="deploymentManager" class="com.wavemaker.tools.project.LocalDeploymentManager"
@@ -548,7 +560,11 @@
             <property name="runtimeAccess" ref="runtimeAccess"/>
         </bean>
 
-        <bean id="deploymentManager" class="com.wavemaker.tools.project.CFDeploymentManager"
+		<bean id="exporterFactory" class="com.wavemaker.tools.data.CFExporterFactory"
+            scope="singleton">
+        </bean>
+
+        <bean id="deploymentManager" class="com.wavemaker.tools.project.CloudFoundryDeploymentManager"
             scope="singleton" lazy-init="true">
             <property name="projectManager" ref="projectManager" />
             <property name="fileSystem" ref="fileSystem" />
@@ -564,13 +580,17 @@
             <constructor-arg ref="mongoDbFactory"/>
         </bean>
     
-        <bean id="studioConfiguration" class="com.wavemaker.tools.project.CFStudioConfiguration"
+        <bean id="studioConfiguration" class="com.wavemaker.tools.project.CloudFoundryStudioConfiguration"
             scope="singleton">
             <constructor-arg ref="fileSystem"/>
             <property name="runtimeAccess" ref="runtimeAccess"/>
         </bean>
 
-        <bean id="deploymentManager" class="com.wavemaker.tools.project.CFDeploymentManager"
+		<bean id="exporterFactory" class="com.wavemaker.tools.data.CFExporterFactory"
+            scope="singleton">
+        </bean>
+
+        <bean id="deploymentManager" class="com.wavemaker.tools.project.CloudFoundryDeploymentManager"
             scope="singleton" lazy-init="true">
             <property name="projectManager" ref="projectManager" />
             <property name="fileSystem" ref="fileSystem" />

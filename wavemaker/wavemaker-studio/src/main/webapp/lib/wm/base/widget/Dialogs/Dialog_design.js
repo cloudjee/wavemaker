@@ -44,48 +44,59 @@ wm.Dialog.extend({
 	    }
 	});
 	studio.refreshDesignTrees();
+    },
+    set_containerPadding: function(inPadding) {
+	this.containerPadding = inPadding;
+	if (this.containerWidget) this.containerWidget.setPadding(inPadding);
     }
 });
 
 
 wm.Object.extendSchema(wm.Dialog, {
     /* Display group; text subgroup */
-    title: {group: "display", subgroup: "text", order: 1, requiredGroup: 1, bindTarget: true},
+    title: {group: "widgetName", subgroup: "text", order: 1, requiredGroup: 1, bindTarget: true},
 
     /* Display group; layout subgroup */
-    positionNear: {group: "display", subgroup: "layout", order: 61, editor: "wm.prop.WidgetSelect", editorProps: {
+    positionNear: {group: "widgetName", subgroup: "layout", order: 61, editor: "wm.prop.WidgetSelect", editorProps: {
 	widgetType: "wm.Control", excludeType: "wm.Dialog"
     }},
-    corner:       {group: "display", subgroup: "layout", order: 60, editor: "wm.prop.SelectMenu", editorProps: {
+    corner:       {group: "widgetName", subgroup: "layout", order: 60, editor: "wm.prop.SelectMenu", editorProps: {
 	options: ["top left", "top center", "top right", "center left", "center center", "center right", "bottom left", "bottom center", "bottom right"],
 	values: ["tl", "tc", "tr", "cl", "cc", "cr", "bl", "bc", "br"]
     }},
+    mobileTitlebarHeight: {group: "widgetName", subgroup: "layout", order: 100, advanced:1},
+    titlebarButtons: {group: "widgetName", subgroup: "layout", order: 120,advanced:1},
 
     /* Common group */
     owner: {ignore:0},
 
     /* Styles group */
-    titlebarBorder:      {group: "style", order: 5},
-    titlebarBorderColor: {group: "style", order: 6, editor: "wm.ColorPicker"},
-    titlebarHeight:      {group: "style", order: 7},
-    footerBorder:        {group: "style", order: 8},
-    footerBorderColor:   {group: "style", order: 9, editor: "wm.ColorPicker"},
+    titlebarBorder:      {group: "widgetName", subgroup: "style", order: 5},
+    titlebarBorderColor: {group: "widgetName", subgroup: "style", order: 6, editor: "wm.ColorPicker"},
+    titlebarHeight:      {group: "widgetName", subgroup: "style", order: 7},
+    footerBorder:        {group: "widgetName", subgroup: "style", order: 8},
+    footerBorderColor:   {group: "widgetName", subgroup: "style", order: 9, editor: "wm.ColorPicker"},
+    containerPadding: {group: "widgetName", subgroup: "style", order: 10},
 
     /* Dialog group; behaviors subgroup */
-    modal:    {group: "dialog", subgroup: "behavior",  order: 50},
-    noEscape: {group: "dialog", subgroup: "behavior",  order: 51},
-    noMinify: {group: "dialog", subgroup: "behavior",  order: 53},
-    noMaxify: {group: "dialog", subgroup: "behavior",  order: 54},
+    modal:    {group: "widgetName", subgroup: "behavior",  order: 50},
+    noEscape: {group: "widgetName", subgroup: "behavior",  order: 51},
+    noMinify: {group: "widgetName", subgroup: "behavior",  order: 53},
+    noMaxify: {group: "widgetName", subgroup: "behavior",  order: 54},
 
 
     /* Docking group */
     noTopBottomDocking: {group: "dialog", subgroup: "docking", type: "boolean"},
     noLeftRightDocking: {group: "dialog", subgroup: "docking", type: "boolean"},
+    showTitleButtonsWhenDocked:{group: "dialog", subgroup: "docking", type: "boolean"},
 
     onShow: {advanced:0},
     onHide: {advanced:0},
+    onMiscButtonClick: {advanced:1},
 
     /* Ignore group */
+    buttonBarId: {hidden:1},
+    containerWidgetId: {hidden:1},
     resizeToFit: {ignore: 1},
     fixPositionNode: {ignore: 1},
     noBevel: {ignore: 1},
