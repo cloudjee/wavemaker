@@ -2,6 +2,8 @@
 package com.wavemaker.tools.filesystem;
 
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Writer;
 
 import com.sun.tools.hat.internal.parser.Reader;
 
@@ -46,4 +48,18 @@ public interface FileContent {
      * @return the contents as a new byte array.
      */
     byte[] asBytes();
+
+    /**
+     * Copy the contents of the file to another stream, closing the stream when complete.
+     * 
+     * @param outputStream
+     */
+    void copyTo(OutputStream outputStream);
+
+    /**
+     * Copy the contents of the file to another writer, closing the writer when complete.
+     * 
+     * @param outputStream
+     */
+    void copyTo(Writer writer);
 }

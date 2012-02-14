@@ -1,7 +1,6 @@
 
 package com.wavemaker.tools.filesystem;
 
-
 /**
  * An {@link Iterable} collections of {@link Resource}s.
  * 

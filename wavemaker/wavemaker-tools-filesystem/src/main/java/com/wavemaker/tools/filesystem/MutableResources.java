@@ -6,6 +6,6 @@ package com.wavemaker.tools.filesystem;
  * 
  * @author Phillip Webb
  */
-public interface MutableResources<T extends Resource> extends Resources<T>, MutableResourceOperations {
+public interface MutableResources<T extends MutableResource> extends Resources<T>, MutableResourceOperations {
 
 }

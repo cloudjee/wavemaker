@@ -15,9 +15,9 @@ public interface MutableFolder extends Folder, MutableResource {
     MutableFile getFile(String name);
 
     @Override
-    MutableResources<Resource> list();
+    <T extends MutableResource> MutableResources<T> list();
 
     @Override
-    <T extends Resource> MutableResources<T> list(ResourceFilter<T> filter);
+    <T extends MutableResource> MutableResources<T> list(ResourceFilter<T> filter);
 
 }

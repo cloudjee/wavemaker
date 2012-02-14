@@ -9,6 +9,11 @@ package com.wavemaker.tools.filesystem;
 public interface MutableResourceOperations {
 
     /**
+     * Delete the current resource (and any children). If this resource does not exist then no operation is performed.
+     */
+    void delete();
+
+    /**
      * Move this resource to the specified folder. Any duplicate {@link File}s will be replaced (existing {@link Folder}
      * resources will be merged).
      * 
@@ -25,10 +30,5 @@ public interface MutableResourceOperations {
      * @throws ResourceDoesNotExistException if this resource no longer exists
      */
     void copyTo(MutableFolder folder);
-
-    /**
-     * Delete the current resource. If this resource does not exist then no operation is performed.
-     */
-    void delete();
 
 }

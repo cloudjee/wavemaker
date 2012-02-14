@@ -24,4 +24,10 @@ public interface ToSort {
      * @throws ResourceDoesNotExistException if this resource no longer exists
      */
     void unpack(ZipInputStream zipInputStream);
+
+    // FIXME
+
+    // zip contents
+
+    // temporary files
 }

@@ -28,7 +28,8 @@ public interface Resource {
     boolean exists();
 
     /**
-     * Returns the name of the resource. This name does not include any path element.
+     * Returns the name of the resource. This name does not include any path element. Root folders will have an empty
+     * string name.
      * 
      * @return the name of the resource, for example <tt>"file.txt"</tt>
      * @throws ResourceDoesNotExistException if this resource no longer exists
@@ -36,11 +37,10 @@ public interface Resource {
     String getName();
 
     /**
-     * Returns the complete name of the resource. This name includes path elements.
+     * Returns the complete name of the resource. This name includes path elements. Folders always end in '/'.
      * 
-     * @return the full name of the resource, for example <tt>"/folder/file.txt"</tt>
+     * @return the full name of the resource, for example <tt>"/folder/file.txt"</tt> or <tt>"/folder/"</tt>
      */
     @Override
     public String toString();
-
 }

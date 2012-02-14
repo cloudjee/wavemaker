@@ -1,7 +1,11 @@
 
 package com.wavemaker.tools.filesystem.tosort;
 
+import java.io.OutputStream;
+
+import com.wavemaker.tools.filesystem.File;
 import com.wavemaker.tools.filesystem.Folder;
+import com.wavemaker.tools.filesystem.MutableFile;
 import com.wavemaker.tools.filesystem.MutableFolder;
 import com.wavemaker.tools.filesystem.ResourceFilter;
 
@@ -59,6 +63,27 @@ public class CommonUseCases {
         for (Folder child : folder.list(ResourceFilter.FOLDERS)) {
             System.out.println(child);
         }
+    }
+
+    public void getSha1() throws Exception {
+        Folder folder = null;
+        folder.getFile("file.txt").getSha1Digest();
+    }
+
+    public void uploadToCloudFoundry() throws Exception {
+        // FolderApplicationArchiveAdapter archiveAdapter = new FolderApplicationArchiveAdapter(folder);
+    }
+
+    public void sendBinaryOverTheWire() throws Exception {
+        File file = null;
+        OutputStream outputStream = null; // HttpResponse.getOutputStream()
+        file.getSize(); // Set content-length
+        file.getContent().copyTo(outputStream);
+    }
+
+    public void testName(MutableFile givenFile) throws Exception {
+        MutableFolder myFolder = null;
+        givenFile.copyTo(myFolder);
     }
 
 }

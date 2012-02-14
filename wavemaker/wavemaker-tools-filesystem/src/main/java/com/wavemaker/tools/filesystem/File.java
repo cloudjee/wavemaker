@@ -2,8 +2,8 @@
 package com.wavemaker.tools.filesystem;
 
 /**
- * A file that may be stored on a physical disk or using some other mechanism. This interface provides read-only access
- * to files, for a mutable variant see {@link MutableFile}.
+ * A file {@link Resource} that may be stored on a physical disk or using some other mechanism. This interface provides
+ * read-only access to files, for a mutable variant see {@link MutableFile}.
  * 
  * @see Folder
  * @see MutableFile
@@ -27,6 +27,11 @@ public interface File extends Resource {
      *         occurred, or if the operation is not supported
      */
     long getLastModified();
+
+    /**
+     * Get the SHA1 digest of the contents of the file.
+     */
+    byte[] getSha1Digest();
 
     /**
      * Provides access to file content.
