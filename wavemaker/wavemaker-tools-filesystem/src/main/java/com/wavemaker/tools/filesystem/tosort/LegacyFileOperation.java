@@ -1,7 +1,9 @@
 
-package com.wavemaker.tools.filesystem;
+package com.wavemaker.tools.filesystem.tosort;
 
 import java.io.File;
+
+import com.wavemaker.tools.filesystem.Resource;
 
 /**
  * Callback interface used to perform a legacy file operation. See

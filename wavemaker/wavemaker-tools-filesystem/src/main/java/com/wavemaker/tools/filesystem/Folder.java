@@ -1,13 +1,12 @@
 
 package com.wavemaker.tools.filesystem;
 
-import java.util.zip.ZipInputStream;
-
-import com.wavemaker.tools.filesystem.exception.ResourceDoesNotExistException;
-import com.wavemaker.tools.filesystem.exception.ResourceTypeMissmatchException;
-
 /**
- * A {@link Resource} that represents a folder that may be stored on a physical disk or using some other mechanism
+ * A {@link Resource} that represents a folder that may be stored on a physical disk or using some other mechanism.This
+ * interface provides read-only access to folders, for a mutable variant see {@link MutableFolder}.
+ * 
+ * @see File
+ * @see MutableFolder
  * 
  * @author Phillip Webb
  */
@@ -21,7 +20,7 @@ public interface Folder extends Resource {
      * @param name the name of the folder to get
      * @return the {@link Folder}.
      */
-    Folder getFolder(String name) throws ResourceTypeMissmatchException;
+    Folder getFolder(String name);
 
     /**
      * Get a child file of the current folder. If the <tt>name</tt> includes '/' characters then the file will be
@@ -33,29 +32,25 @@ public interface Folder extends Resource {
      */
     File getFile(String name);
 
+    // FIXME do we need getExistingResource(name), my preference is not
+
     /**
-     * List all child resource of this folder.
+     * List all immediate child resources of this folder.
      * 
      * @return a list of all immediate child resources
      * @throws ResourceDoesNotExistException if this resource no longer exists
      */
-    ResourceList<Resource> list() throws ResourceDoesNotExistException;
+    Resources<Resource> list();
 
     /**
-     * List child resource of this folder, filtering results as necessary.
+     * List immediate child resource of this folder, filtering results as necessary.
      * 
      * @param filter a filter used to restrict results.
      * @return a list of immediate child resources that match the filter
      * @throws ResourceDoesNotExistException if this resource no longer exists
      */
-    <T extends Resource> ResourceList<T> list(ResourceFilter<T> filter) throws ResourceDoesNotExistException;
+    <T extends Resource> Resources<T> list(ResourceFilter<T> filter);
 
-    /**
-     * Unpack the specified {@link ZipInputStream} into the current folder.
-     * 
-     * @param zipInputStream the zip input stream to unpack
-     * @throws ResourceDoesNotExistException if this resource no longer exists
-     */
-    void unpack(ZipInputStream zipInputStream) throws ResourceDoesNotExistException;
+    // FIXME do we need recursive versions of the list() methods.
 
 }

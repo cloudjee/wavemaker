@@ -1,15 +1,16 @@
 
 package com.wavemaker.tools.filesystem;
 
-import com.wavemaker.tools.filesystem.exception.ResourceDoesNotExistException;
-
 /**
  * Base abstract for {@link File}s and {@link Folder}s that may be stored on a physical disk or using some other
  * mechanism. Subclasses will either implement {@link File} or {@link Folder} (but never both).
  * 
+ * @see File
+ * @see Folder
+ * 
  * @author Phillip Webb
  */
-public interface Resource extends ResourceOperations {
+public interface Resource {
 
     /**
      * Returns the parent folder of the resource or <tt>null</tt> if this is the root folder.
@@ -17,36 +18,29 @@ public interface Resource extends ResourceOperations {
      * @return the parent folder or <tt>null</tt>
      * @throws ResourceDoesNotExistException if this resource no longer exists
      */
-    Folder getParent() throws ResourceDoesNotExistException;
+    Folder getParent();
 
     /**
      * Returns <tt>true</tt> if the resource exists in the underlying store.
      * 
      * @return <tt>true</tt> if the resource exists.
      */
-    boolean exits();
-
-    /**
-     * Recursively creates an empty representation of this resource and all {@link #getParent() parent}s.
-     */
-    void touch();
+    boolean exists();
 
     /**
      * Returns the name of the resource. This name does not include any path element.
      * 
-     * @return the name of the resource
+     * @return the name of the resource, for example <tt>"file.txt"</tt>
      * @throws ResourceDoesNotExistException if this resource no longer exists
      */
-    String getName() throws ResourceDoesNotExistException;
+    String getName();
 
     /**
-     * Perform an operation with the resource accessed as a standard java file. NOTE: This method is designed to support
-     * legacy operations ONLY and may cause performance problems. Some virtual file systems will copy content to a
-     * temporary location in order to support this method.
+     * Returns the complete name of the resource. This name includes path elements.
      * 
-     * @param callable the operation to run.
-     * @return the result of the operation
-     * @throws ResourceDoesNotExistException if this resource no longer exists
+     * @return the full name of the resource, for example <tt>"/folder/file.txt"</tt>
      */
-    <T> T performLegacyOperation(LegacyFileOperation<T> callable) throws ResourceDoesNotExistException;
+    @Override
+    public String toString();
+
 }

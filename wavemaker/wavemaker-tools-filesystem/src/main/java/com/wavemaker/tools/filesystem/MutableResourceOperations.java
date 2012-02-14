@@ -1,14 +1,12 @@
 
 package com.wavemaker.tools.filesystem;
 
-import com.wavemaker.tools.filesystem.exception.ResourceDoesNotExistException;
-
 /**
- * Various operations that can be performed on a {@link Resource} or a {@link ResourceList}.
+ * Various operations that can be performed on a {@link Resource} or a {@link Resources}.
  * 
  * @author Phillip Webb
  */
-public interface ResourceOperations {
+public interface MutableResourceOperations {
 
     /**
      * Move this resource to the specified folder. Any duplicate {@link File}s will be replaced (existing {@link Folder}
@@ -17,7 +15,7 @@ public interface ResourceOperations {
      * @param folder the folder to move the resource to
      * @throws ResourceDoesNotExistException if this resource no longer exists
      */
-    void moveTo(Folder folder) throws ResourceDoesNotExistException;
+    void moveTo(MutableFolder folder);
 
     /**
      * Recursively copy this resource to the specified folder.Any duplicate {@link File}s will be replaced (existing
@@ -26,7 +24,7 @@ public interface ResourceOperations {
      * @param folder the folder to copy the resource to
      * @throws ResourceDoesNotExistException if this resource no longer exists
      */
-    void copyTo(Folder folder) throws ResourceDoesNotExistException;
+    void copyTo(MutableFolder folder);
 
     /**
      * Delete the current resource. If this resource does not exist then no operation is performed.
