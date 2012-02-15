@@ -8,8 +8,16 @@ import com.wavemaker.tools.filesystem.Folder;
 import com.wavemaker.tools.filesystem.Resource;
 import com.wavemaker.tools.filesystem.Resources;
 
+/**
+ * Abstract base for {@link Resources} implementations.
+ * 
+ * @author Phillip Webb
+ */
 public abstract class AbstractResources<T extends Resource> implements Resources<T> {
 
+    /**
+     * Empty implementation.
+     */
     @SuppressWarnings("rawtypes")
     private static final Resources<?> EMPTY = new AbstractResources() {
 
@@ -19,6 +27,11 @@ public abstract class AbstractResources<T extends Resource> implements Resources
         }
     };
 
+    /**
+     * Returns an empty {@link Resources} instance.
+     * 
+     * @return empty {@link Resources}
+     */
     @SuppressWarnings("unchecked")
     public static final <T extends Resource> Resources<T> empty() {
         return (Resources<T>) EMPTY;

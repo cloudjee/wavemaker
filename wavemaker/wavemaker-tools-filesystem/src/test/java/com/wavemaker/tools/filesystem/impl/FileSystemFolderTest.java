@@ -24,8 +24,14 @@ import org.mockito.stubbing.Answer;
 import com.wavemaker.tools.filesystem.File;
 import com.wavemaker.tools.filesystem.Folder;
 import com.wavemaker.tools.filesystem.Resource;
+import com.wavemaker.tools.filesystem.ResourceFilter;
 import com.wavemaker.tools.filesystem.Resources;
 
+/**
+ * Tests for {@link FileSystemFolder}.
+ * 
+ * @author Phillip Webb
+ */
 public class FileSystemFolderTest {
 
     @Rule
@@ -187,6 +193,20 @@ public class FileSystemFolderTest {
         assertThat(resourceB, is(File.class));
         assertThat(resourceA.toString(), is("/a/"));
         assertThat(resourceB.toString(), is("/b"));
+    }
+
+    @Test
+    public void shouldListFilteredResources() throws Exception {
+        Path pathA = new Path().get("a");
+        Path pathB = new Path().get("b");
+        given(this.fileSystem.list(this.folder.getKey())).willReturn(Arrays.<Object> asList(pathA, pathB));
+        given(this.fileSystem.getResourceType(pathA)).willReturn(ResourceType.FOLDER);
+        given(this.fileSystem.getResourceType(pathB)).willReturn(ResourceType.FILE);
+        Resources<File> resources = this.folder.list(ResourceFilter.FILES);
+        Iterator<File> iterator = resources.iterator();
+        File file = iterator.next();
+        assertThat(iterator.hasNext(), is(false));
+        assertThat(file.toString(), is("/b"));
     }
 
     @Test
