@@ -31,8 +31,6 @@ public interface Folder extends Resource {
      */
     File getFile(String name);
 
-    // FIXME do we need getExistingResource(name), my preference is not
-
     /**
      * List all immediate child resources of this folder. If this resource does not exist empty resources are returned.
      * 
@@ -48,7 +46,4 @@ public interface Folder extends Resource {
      * @return a list of immediate child resources that match the filter
      */
     <T extends Resource> Resources<T> list(ResourceFilter<T> filter);
-
-    // FIXME do we need recursive versions of the list() methods.
-
 }

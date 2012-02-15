@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
@@ -14,6 +15,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import com.wavemaker.tools.filesystem.File;
 import com.wavemaker.tools.filesystem.Folder;
@@ -26,31 +29,35 @@ public class FileSystemFolderTest {
     @Mock
     private FileSystem<Object> fileSystem;
 
-    @Mock
-    private Object root;
-
     private FileSystemFolder<Object> folder;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        this.folder = new FileSystemFolder<Object>(this.fileSystem, this.root, new Path());
-        // FIXME how to create + null path check
+        this.folder = new FileSystemFolder<Object>(new Path(), this.fileSystem, new Path());
+        given(this.fileSystem.getKey(any(Path.class))).willAnswer(new Answer<Object>() {
+
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return invocation.getArguments()[0];
+            }
+        });
     }
 
-    @Test
-    public void shouldNeedFileSystem() throws Exception {
-        this.thrown.expect(IllegalArgumentException.class);
-        this.thrown.expectMessage("FileSystem must not be null");
-        new FileSystemFolder<Object>(null, new Object(), null);
-    }
-
-    @Test
-    public void shouldNeedRoot() throws Exception {
-        this.thrown.expect(IllegalArgumentException.class);
-        this.thrown.expectMessage("Root must not be null");
-        new FileSystemFolder<Object>(this.fileSystem, null, null);
-    }
+    // FIXME
+    // @Test
+    // public void shouldNeedFileSystem() throws Exception {
+    // this.thrown.expect(IllegalArgumentException.class);
+    // this.thrown.expectMessage("FileSystem must not be null");
+    // new FileSystemFolder<Object>(new Object(), null, null);
+    // }
+    //
+    // @Test
+    // public void shouldNeedRoot() throws Exception {
+    // this.thrown.expect(IllegalArgumentException.class);
+    // this.thrown.expectMessage("Root must not be null");
+    // new FileSystemFolder<Object>(this.fileSystem, null, null);
+    // }
 
     @Test
     public void shouldCreateWithNoParent() throws Exception {
@@ -59,16 +66,16 @@ public class FileSystemFolderTest {
 
     @Test
     public void shouldDelete() throws Exception {
-        given(this.fileSystem.exists(this.root, this.folder.getPath())).willReturn(true);
+        given(this.fileSystem.exists(this.folder.getKey())).willReturn(true);
         this.folder.delete();
-        verify(this.fileSystem).deleteFolder(this.root, this.folder.getPath());
+        verify(this.fileSystem).deleteFolder(this.folder.getKey());
     }
 
     @Test
     public void shouldNotDeleteWhenDoesNotExist() throws Exception {
-        given(this.fileSystem.exists(this.root, this.folder.getPath())).willReturn(false);
+        given(this.fileSystem.exists(this.folder.getKey())).willReturn(false);
         this.folder.delete();
-        verify(this.fileSystem, never()).deleteFolder(this.root, this.folder.getPath());
+        verify(this.fileSystem, never()).deleteFolder(this.folder.getKey());
     }
 
     @Test
@@ -90,10 +97,9 @@ public class FileSystemFolderTest {
 
     @Test
     public void shouldDelegateToFileSystemForExists() throws Exception {
-        Path path = new Path();
-        given(this.fileSystem.exists(this.root, path)).willReturn(true);
+        given(this.fileSystem.exists(this.folder.getKey())).willReturn(true);
         assertThat(this.folder.exists(), is(true));
-        verify(this.fileSystem).exists(this.root, path);
+        verify(this.fileSystem).exists(this.folder.getKey());
     }
 
     @Test
@@ -135,15 +141,15 @@ public class FileSystemFolderTest {
     public void shouldTouchNewDirectory() throws Exception {
         FileSystemFolder<Object> child = this.folder.getFolder("a");
         child.touch();
-        verify(this.fileSystem).mkDirs(this.root, child.getPath());
+        verify(this.fileSystem).mkDirs(child.getKey());
     }
 
     @Test
     public void shouldNotTouchExistingDirectory() throws Exception {
         FileSystemFolder<Object> child = this.folder.getFolder("a");
-        given(this.fileSystem.exists(this.root, child.getPath())).willReturn(true);
+        given(this.fileSystem.exists(child.getKey())).willReturn(true);
         child.touch();
-        verify(this.fileSystem, never()).mkDirs(this.root, child.getPath());
+        verify(this.fileSystem, never()).mkDirs(child.getKey());
     }
 
     @Test

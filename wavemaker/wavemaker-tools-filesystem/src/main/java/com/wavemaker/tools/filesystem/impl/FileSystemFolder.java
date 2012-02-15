@@ -8,22 +8,24 @@ import com.wavemaker.tools.filesystem.Resource;
 import com.wavemaker.tools.filesystem.ResourceFilter;
 import com.wavemaker.tools.filesystem.Resources;
 
-public class FileSystemFolder<R> extends FileSystemResource<R> implements Folder {
+public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder {
 
-    protected FileSystemFolder(FileSystem<R> fileSystem, R root, Path path) {
-        super(fileSystem, root, path);
+    protected FileSystemFolder(Path path, FileSystem<K> fileSystem, K key) {
+        super(path, fileSystem, key);
     }
 
     @Override
-    public FileSystemFolder<R> getFolder(String name) {
+    public FileSystemFolder<K> getFolder(String name) {
         Path folderPath = getPath().get(name);
-        return new FileSystemFolder<R>(getFileSystem(), getRoot(), folderPath);
+        K folderKey = getFileSystem().getKey(folderPath);
+        return new FileSystemFolder<K>(folderPath, getFileSystem(), folderKey);
     }
 
     @Override
-    public FileSystemFile<R> getFile(String name) {
+    public FileSystemFile<K> getFile(String name) {
         Path filePath = getPath().get(name);
-        return new FileSystemFile<R>(getFileSystem(), getRoot(), filePath);
+        K fileKey = getFileSystem().getKey(filePath);
+        return new FileSystemFile<K>(filePath, getFileSystem(), fileKey);
     }
 
     @Override
@@ -37,7 +39,8 @@ public class FileSystemFolder<R> extends FileSystemResource<R> implements Folder
         if (!exists()) {
             return AbstractResources.empty();
         }
-        return null;
+        // FIXME
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -55,14 +58,14 @@ public class FileSystemFolder<R> extends FileSystemResource<R> implements Folder
     @Override
     public void delete() {
         if (exists()) {
-            getFileSystem().deleteFolder(getRoot(), getPath());
+            getFileSystem().deleteFolder(getKey());
         }
     }
 
     @Override
     public void touch() {
         if (!exists()) {
-            getFileSystem().mkDirs(getRoot(), getPath());
+            getFileSystem().mkDirs(getKey());
         }
     }
 

@@ -2,7 +2,7 @@
 package com.wavemaker.tools.filesystem;
 
 /**
- * An {@link Iterable} collections of {@link Resource}s.
+ * An {@link Iterable} collections of {@link Resource}s that also support various {@link ResourceOperations operations}.
  * 
  * @author Phillip Webb
  */

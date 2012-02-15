@@ -5,10 +5,10 @@ import com.wavemaker.tools.filesystem.File;
 import com.wavemaker.tools.filesystem.FileContent;
 import com.wavemaker.tools.filesystem.Folder;
 
-public class FileSystemFile<R> extends FileSystemResource<R> implements File {
+public class FileSystemFile<K> extends FileSystemResource<K> implements File {
 
-    public FileSystemFile(FileSystem<R> fileSystem, R root, Path path) {
-        super(fileSystem, root, path);
+    public FileSystemFile(Path path, FileSystem<K> fileSystem, K key) {
+        super(path, fileSystem, key);
     }
 
     @Override

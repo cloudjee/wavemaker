@@ -1,13 +1,13 @@
 
 package com.wavemaker.tools.filesystem.impl;
 
+public interface FileSystem<K> {
 
-public interface FileSystem<R> {
+    K getKey(Path path);
 
-    boolean exists(R root, Path path);
+    boolean exists(K key);
 
-    void deleteFolder(R root, Path path);
+    void deleteFolder(K key);
 
-    void mkDirs(R root, Path path);
-
+    void mkDirs(K key);
 }
