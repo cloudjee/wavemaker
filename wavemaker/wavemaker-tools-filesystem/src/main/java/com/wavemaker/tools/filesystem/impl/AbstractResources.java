@@ -4,14 +4,14 @@ package com.wavemaker.tools.filesystem.impl;
 import java.util.Collections;
 import java.util.Iterator;
 
-import com.wavemaker.tools.filesystem.MutableFolder;
-import com.wavemaker.tools.filesystem.MutableResource;
-import com.wavemaker.tools.filesystem.MutableResources;
+import com.wavemaker.tools.filesystem.Folder;
+import com.wavemaker.tools.filesystem.Resource;
+import com.wavemaker.tools.filesystem.Resources;
 
-public abstract class AbstractMutableResources<T extends MutableResource> implements MutableResources<T> {
+public abstract class AbstractResources<T extends Resource> implements Resources<T> {
 
     @SuppressWarnings("rawtypes")
-    private static final MutableResources<?> EMPTY = new AbstractMutableResources() {
+    private static final Resources<?> EMPTY = new AbstractResources() {
 
         @Override
         public Iterator iterator() {
@@ -20,8 +20,8 @@ public abstract class AbstractMutableResources<T extends MutableResource> implem
     };
 
     @SuppressWarnings("unchecked")
-    public static final <T extends MutableResource> MutableResources<T> empty() {
-        return (MutableResources<T>) EMPTY;
+    public static final <T extends Resource> Resources<T> empty() {
+        return (Resources<T>) EMPTY;
     }
 
     @Override
@@ -32,14 +32,14 @@ public abstract class AbstractMutableResources<T extends MutableResource> implem
     }
 
     @Override
-    public void moveTo(MutableFolder folder) {
+    public void moveTo(Folder folder) {
         for (T resource : this) {
             resource.moveTo(folder);
         }
     }
 
     @Override
-    public void copyTo(MutableFolder folder) {
+    public void copyTo(Folder folder) {
         for (T resource : this) {
             resource.copyTo(folder);
         }

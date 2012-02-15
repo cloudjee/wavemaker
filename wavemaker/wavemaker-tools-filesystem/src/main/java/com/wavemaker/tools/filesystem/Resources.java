@@ -6,5 +6,5 @@ package com.wavemaker.tools.filesystem;
  * 
  * @author Phillip Webb
  */
-public interface Resources<T extends Resource> extends Iterable<T> {
+public interface Resources<T extends Resource> extends Iterable<T>, ResourceOperations {
 }

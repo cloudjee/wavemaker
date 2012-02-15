@@ -15,10 +15,10 @@ import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.wavemaker.tools.filesystem.MutableFile;
-import com.wavemaker.tools.filesystem.MutableFolder;
+import com.wavemaker.tools.filesystem.File;
+import com.wavemaker.tools.filesystem.Folder;
 
-public class FileSystemMutableFolderTest {
+public class FileSystemFolderTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -29,12 +29,12 @@ public class FileSystemMutableFolderTest {
     @Mock
     private Object root;
 
-    private FileSystemMutableFolder<Object> folder;
+    private FileSystemFolder<Object> folder;
 
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        this.folder = new FileSystemMutableFolder<Object>(this.fileSystem, this.root, new Path());
+        this.folder = new FileSystemFolder<Object>(this.fileSystem, this.root, new Path());
         // FIXME how to create + null path check
     }
 
@@ -42,14 +42,14 @@ public class FileSystemMutableFolderTest {
     public void shouldNeedFileSystem() throws Exception {
         this.thrown.expect(IllegalArgumentException.class);
         this.thrown.expectMessage("FileSystem must not be null");
-        new FileSystemMutableFolder<Object>(null, new Object(), null);
+        new FileSystemFolder<Object>(null, new Object(), null);
     }
 
     @Test
     public void shouldNeedRoot() throws Exception {
         this.thrown.expect(IllegalArgumentException.class);
         this.thrown.expectMessage("Root must not be null");
-        new FileSystemMutableFolder<Object>(this.fileSystem, null, null);
+        new FileSystemFolder<Object>(this.fileSystem, null, null);
     }
 
     @Test
@@ -73,7 +73,7 @@ public class FileSystemMutableFolderTest {
 
     @Test
     public void shouldGetParent() throws Exception {
-        MutableFolder parent = this.folder.getFolder("a/b").getParent();
+        Folder parent = this.folder.getFolder("a/b").getParent();
         assertThat(parent.getName(), is("a"));
         assertThat(parent.toString(), is("/a/"));
     }
@@ -98,49 +98,49 @@ public class FileSystemMutableFolderTest {
 
     @Test
     public void shouldGetChildFolder() throws Exception {
-        MutableFolder child = this.folder.getFolder("a");
+        Folder child = this.folder.getFolder("a");
         assertThat(child.getName(), is("a"));
         assertThat(child.toString(), is("/a/"));
     }
 
     @Test
     public void shouldGetNestedChildFolder() throws Exception {
-        MutableFolder child = this.folder.getFolder("a/b");
+        Folder child = this.folder.getFolder("a/b");
         assertThat(child.getName(), is("b"));
         assertThat(child.toString(), is("/a/b/"));
     }
 
     @Test
     public void shouldGetRelativeChildFolder() throws Exception {
-        MutableFolder child = this.folder.getFolder("a/b/../c");
+        Folder child = this.folder.getFolder("a/b/../c");
         assertThat(child.getName(), is("c"));
         assertThat(child.toString(), is("/a/c/"));
     }
 
     @Test
     public void shouldGetNestedChildFile() throws Exception {
-        MutableFile child = this.folder.getFile("a/b");
+        File child = this.folder.getFile("a/b");
         assertThat(child.getName(), is("b"));
         assertThat(child.toString(), is("/a/b"));
     }
 
     @Test
     public void shouldGetRelativeChildFile() throws Exception {
-        MutableFile child = this.folder.getFile("a/b/../c");
+        File child = this.folder.getFile("a/b/../c");
         assertThat(child.getName(), is("c"));
         assertThat(child.toString(), is("/a/c"));
     }
 
     @Test
     public void shouldTouchNewDirectory() throws Exception {
-        FileSystemMutableFolder<Object> child = this.folder.getFolder("a");
+        FileSystemFolder<Object> child = this.folder.getFolder("a");
         child.touch();
         verify(this.fileSystem).mkDirs(this.root, child.getPath());
     }
 
     @Test
     public void shouldNotTouchExistingDirectory() throws Exception {
-        FileSystemMutableFolder<Object> child = this.folder.getFolder("a");
+        FileSystemFolder<Object> child = this.folder.getFolder("a");
         given(this.fileSystem.exists(this.root, child.getPath())).willReturn(true);
         child.touch();
         verify(this.fileSystem, never()).mkDirs(this.root, child.getPath());

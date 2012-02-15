@@ -1,13 +1,13 @@
 
 package com.wavemaker.tools.filesystem.impl;
 
-import com.wavemaker.tools.filesystem.MutableFile;
-import com.wavemaker.tools.filesystem.MutableFileContent;
-import com.wavemaker.tools.filesystem.MutableFolder;
+import com.wavemaker.tools.filesystem.File;
+import com.wavemaker.tools.filesystem.FileContent;
+import com.wavemaker.tools.filesystem.Folder;
 
-public class FileSystemMutableFile<R> extends FileSystemMutableResource<R> implements MutableFile {
+public class FileSystemFile<R> extends FileSystemResource<R> implements File {
 
-    public FileSystemMutableFile(FileSystem<R> fileSystem, R root, Path path) {
+    public FileSystemFile(FileSystem<R> fileSystem, R root, Path path) {
         super(fileSystem, root, path);
     }
 
@@ -30,19 +30,19 @@ public class FileSystemMutableFile<R> extends FileSystemMutableResource<R> imple
     }
 
     @Override
-    public MutableFileContent getContent() {
+    public FileContent getContent() {
         // TODO Auto-generated method stub
         return null;
     }
 
     @Override
-    public void copyTo(MutableFolder folder) {
+    public void copyTo(Folder folder) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void moveTo(MutableFolder folder) {
+    public void moveTo(Folder folder) {
         // TODO Auto-generated method stub
 
     }

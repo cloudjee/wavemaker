@@ -10,7 +10,7 @@ package com.wavemaker.tools.filesystem;
  * 
  * @author Phillip Webb
  */
-public interface Resource {
+public interface Resource extends ResourceOperations {
 
     /**
      * Returns the parent folder of the resource or <tt>null</tt> if this is the root folder.
@@ -19,13 +19,6 @@ public interface Resource {
      * @throws ResourceDoesNotExistException if this resource no longer exists
      */
     Folder getParent();
-
-    /**
-     * Returns <tt>true</tt> if the resource exists in the underlying store.
-     * 
-     * @return <tt>true</tt> if the resource exists.
-     */
-    boolean exists();
 
     /**
      * Returns the name of the resource. This name does not include any path element. Root folders will have an empty
@@ -43,4 +36,17 @@ public interface Resource {
      */
     @Override
     public String toString();
+
+    /**
+     * Returns <tt>true</tt> if the resource exists in the underlying store.
+     * 
+     * @return <tt>true</tt> if the resource exists.
+     */
+    boolean exists();
+
+    /**
+     * Recursively creates an empty representation of this resource and all {@link #getParent() parent}s. Calling this
+     * method on an existing resource has not effect.
+     */
+    void touch();
 }

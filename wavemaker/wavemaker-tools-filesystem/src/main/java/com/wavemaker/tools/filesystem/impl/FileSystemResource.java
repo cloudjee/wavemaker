@@ -3,10 +3,10 @@ package com.wavemaker.tools.filesystem.impl;
 
 import org.springframework.util.Assert;
 
-import com.wavemaker.tools.filesystem.MutableFolder;
-import com.wavemaker.tools.filesystem.MutableResource;
+import com.wavemaker.tools.filesystem.Folder;
+import com.wavemaker.tools.filesystem.Resource;
 
-public abstract class FileSystemMutableResource<R> implements MutableResource {
+public abstract class FileSystemResource<R> implements Resource {
 
     private final FileSystem<R> fileSystem;
 
@@ -14,7 +14,7 @@ public abstract class FileSystemMutableResource<R> implements MutableResource {
 
     private final Path path;
 
-    protected FileSystemMutableResource(FileSystem<R> fileSystem, R root, Path path) {
+    protected FileSystemResource(FileSystem<R> fileSystem, R root, Path path) {
         Assert.notNull(fileSystem, "FileSystem must not be null");
         Assert.notNull(root, "Root must not be null");
         this.fileSystem = fileSystem;
@@ -35,12 +35,12 @@ public abstract class FileSystemMutableResource<R> implements MutableResource {
     }
 
     @Override
-    public MutableFolder getParent() {
+    public Folder getParent() {
         Path parentPath = this.path.getParent();
         if (parentPath == null) {
             return null;
         }
-        return new FileSystemMutableFolder<R>(this.fileSystem, this.root, parentPath);
+        return new FileSystemFolder<R>(this.fileSystem, this.root, parentPath);
     }
 
     @Override

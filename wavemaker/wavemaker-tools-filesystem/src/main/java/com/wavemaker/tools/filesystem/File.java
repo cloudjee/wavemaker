@@ -2,8 +2,7 @@
 package com.wavemaker.tools.filesystem;
 
 /**
- * A file {@link Resource} that may be stored on a physical disk or using some other mechanism. This interface provides
- * read-only access to files, for a mutable variant see {@link MutableFile}.
+ * A file {@link Resource} that may be stored on a physical disk or using some other mechanism.
  * 
  * @see Folder
  * @see MutableFile

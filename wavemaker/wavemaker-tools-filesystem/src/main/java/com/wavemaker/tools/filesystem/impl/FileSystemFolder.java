@@ -3,51 +3,51 @@ package com.wavemaker.tools.filesystem.impl;
 
 import org.springframework.util.Assert;
 
-import com.wavemaker.tools.filesystem.MutableFolder;
-import com.wavemaker.tools.filesystem.MutableResource;
-import com.wavemaker.tools.filesystem.MutableResources;
+import com.wavemaker.tools.filesystem.Folder;
+import com.wavemaker.tools.filesystem.Resource;
 import com.wavemaker.tools.filesystem.ResourceFilter;
+import com.wavemaker.tools.filesystem.Resources;
 
-public class FileSystemMutableFolder<R> extends FileSystemMutableResource<R> implements MutableFolder {
+public class FileSystemFolder<R> extends FileSystemResource<R> implements Folder {
 
-    protected FileSystemMutableFolder(FileSystem<R> fileSystem, R root, Path path) {
+    protected FileSystemFolder(FileSystem<R> fileSystem, R root, Path path) {
         super(fileSystem, root, path);
     }
 
     @Override
-    public FileSystemMutableFolder<R> getFolder(String name) {
+    public FileSystemFolder<R> getFolder(String name) {
         Path folderPath = getPath().get(name);
-        return new FileSystemMutableFolder<R>(getFileSystem(), getRoot(), folderPath);
+        return new FileSystemFolder<R>(getFileSystem(), getRoot(), folderPath);
     }
 
     @Override
-    public FileSystemMutableFile<R> getFile(String name) {
+    public FileSystemFile<R> getFile(String name) {
         Path filePath = getPath().get(name);
-        return new FileSystemMutableFile<R>(getFileSystem(), getRoot(), filePath);
+        return new FileSystemFile<R>(getFileSystem(), getRoot(), filePath);
     }
 
     @Override
-    public MutableResources<MutableResource> list() {
+    public Resources<Resource> list() {
         return list(ResourceFilter.NONE);
     }
 
     @Override
-    public <T extends MutableResource> MutableResources<T> list(ResourceFilter<T> filter) {
+    public <T extends Resource> Resources<T> list(ResourceFilter<T> filter) {
         Assert.notNull(filter, "Filter must not be null");
         if (!exists()) {
-            return AbstractMutableResources.empty();
+            return AbstractResources.empty();
         }
         return null;
     }
 
     @Override
-    public void copyTo(MutableFolder folder) {
+    public void copyTo(Folder folder) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void moveTo(MutableFolder folder) {
+    public void moveTo(Folder folder) {
         // TODO Auto-generated method stub
 
     }

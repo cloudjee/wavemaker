@@ -5,8 +5,6 @@ import java.io.OutputStream;
 
 import com.wavemaker.tools.filesystem.File;
 import com.wavemaker.tools.filesystem.Folder;
-import com.wavemaker.tools.filesystem.MutableFile;
-import com.wavemaker.tools.filesystem.MutableFolder;
 import com.wavemaker.tools.filesystem.ResourceFilter;
 
 public class CommonUseCases {
@@ -17,49 +15,49 @@ public class CommonUseCases {
     }
 
     public void replaceStringContent() throws Exception {
-        MutableFolder folder = null;
+        Folder folder = null;
         folder.getFile("/some/file.txt").getContent().write("New Content");
     }
 
     public void copyAFile() throws Exception {
-        MutableFolder folder = null;
-        MutableFolder destination = folder.getFolder("/other");
+        Folder folder = null;
+        Folder destination = folder.getFolder("/other");
         folder.getFile("/some/file.txt").copyTo(destination);
     }
 
     public void moveAFolder() throws Exception {
-        MutableFolder folder = null;
-        MutableFolder destination = folder.getFolder("/other");
+        Folder folder = null;
+        Folder destination = folder.getFolder("/other");
         folder.getFolder("/some").moveTo(destination);
     }
 
     public void deleteAFile() throws Exception {
-        MutableFolder folder = null;
+        Folder folder = null;
         folder.getFile("/some/file.txt").delete();
     }
 
     public void deletAllBackupFiles() throws Exception {
-        MutableFolder folder = null;
+        Folder folder = null;
         folder.list(new PatternResourceFilter("*.bak")).delete();
     }
 
     public void createFolder() throws Exception {
-        MutableFolder folder = null;
+        Folder folder = null;
         folder.getFolder("/somefolder").touch();
     }
 
     public void getTheSizeOfAFile() throws Exception {
-        MutableFolder folder = null;
+        Folder folder = null;
         folder.getFile("/some/file.txt").getSize();
     }
 
     public void getTheLastModifiedAFile() throws Exception {
-        MutableFolder folder = null;
+        Folder folder = null;
         folder.getFile("/some/file.txt").getLastModified();
     }
 
     public void getChildFolders() throws Exception {
-        MutableFolder folder = null;
+        Folder folder = null;
         for (Folder child : folder.list(ResourceFilter.FOLDERS)) {
             System.out.println(child);
         }
@@ -81,8 +79,8 @@ public class CommonUseCases {
         file.getContent().copyTo(outputStream);
     }
 
-    public void testName(MutableFile givenFile) throws Exception {
-        MutableFolder myFolder = null;
+    public void testName(File givenFile) throws Exception {
+        Folder myFolder = null;
         givenFile.copyTo(myFolder);
     }
 
