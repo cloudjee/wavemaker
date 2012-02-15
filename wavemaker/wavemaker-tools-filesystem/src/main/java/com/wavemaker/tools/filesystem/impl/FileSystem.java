@@ -5,9 +5,14 @@ public interface FileSystem<K> {
 
     K getKey(Path path);
 
-    boolean exists(K key);
+    Path getPath(K key);
+
+    ResourceType getResourceType(K key);
 
     void deleteFolder(K key);
 
-    void mkDirs(K key);
+    void mkDir(K key);
+
+    Iterable<K> list(K key);
+
 }

@@ -9,6 +9,9 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
+import java.util.Arrays;
+import java.util.Iterator;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,6 +23,8 @@ import org.mockito.stubbing.Answer;
 
 import com.wavemaker.tools.filesystem.File;
 import com.wavemaker.tools.filesystem.Folder;
+import com.wavemaker.tools.filesystem.Resource;
+import com.wavemaker.tools.filesystem.Resources;
 
 public class FileSystemFolderTest {
 
@@ -40,6 +45,13 @@ public class FileSystemFolderTest {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 return invocation.getArguments()[0];
+            }
+        });
+        given(this.fileSystem.getPath(any(Object.class))).willAnswer(new Answer<Path>() {
+
+            @Override
+            public Path answer(InvocationOnMock invocation) throws Throwable {
+                return (Path) invocation.getArguments()[0];
             }
         });
     }
@@ -72,14 +84,14 @@ public class FileSystemFolderTest {
 
     @Test
     public void shouldDelete() throws Exception {
-        given(this.fileSystem.exists(this.folder.getKey())).willReturn(true);
+        given(this.fileSystem.getResourceType(this.folder.getKey())).willReturn(ResourceType.FOLDER);
         this.folder.delete();
         verify(this.fileSystem).deleteFolder(this.folder.getKey());
     }
 
     @Test
     public void shouldNotDeleteWhenDoesNotExist() throws Exception {
-        given(this.fileSystem.exists(this.folder.getKey())).willReturn(false);
+        given(this.fileSystem.getResourceType(this.folder.getKey())).willReturn(ResourceType.UNKNOWN);
         this.folder.delete();
         verify(this.fileSystem, never()).deleteFolder(this.folder.getKey());
     }
@@ -103,9 +115,9 @@ public class FileSystemFolderTest {
 
     @Test
     public void shouldDelegateToFileSystemForExists() throws Exception {
-        given(this.fileSystem.exists(this.folder.getKey())).willReturn(true);
+        given(this.fileSystem.getResourceType(this.folder.getKey())).willReturn(ResourceType.FOLDER);
         assertThat(this.folder.exists(), is(true));
-        verify(this.fileSystem).exists(this.folder.getKey());
+        verify(this.fileSystem).getResourceType(this.folder.getKey());
     }
 
     @Test
@@ -146,21 +158,35 @@ public class FileSystemFolderTest {
     @Test
     public void shouldTouchNewDirectory() throws Exception {
         FileSystemFolder<Object> child = this.folder.getFolder("a");
+        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.UNKNOWN);
         child.touch();
-        verify(this.fileSystem).mkDirs(child.getKey());
+        verify(this.fileSystem).mkDir(child.getKey());
     }
 
     @Test
     public void shouldNotTouchExistingDirectory() throws Exception {
         FileSystemFolder<Object> child = this.folder.getFolder("a");
-        given(this.fileSystem.exists(child.getKey())).willReturn(true);
+        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
         child.touch();
-        verify(this.fileSystem, never()).mkDirs(child.getKey());
+        verify(this.fileSystem, never()).mkDir(child.getKey());
     }
 
     @Test
     public void shouldListResources() throws Exception {
-
+        Path pathA = new Path().get("a");
+        Path pathB = new Path().get("b");
+        given(this.fileSystem.list(this.folder.getKey())).willReturn(Arrays.<Object> asList(pathA, pathB));
+        given(this.fileSystem.getResourceType(pathA)).willReturn(ResourceType.FOLDER);
+        given(this.fileSystem.getResourceType(pathB)).willReturn(ResourceType.FILE);
+        Resources<Resource> resources = this.folder.list();
+        Iterator<Resource> iterator = resources.iterator();
+        Resource resourceA = iterator.next();
+        Resource resourceB = iterator.next();
+        assertThat(iterator.hasNext(), is(false));
+        assertThat(resourceA, is(Folder.class));
+        assertThat(resourceB, is(File.class));
+        assertThat(resourceA.toString(), is("/a/"));
+        assertThat(resourceB.toString(), is("/b"));
     }
 
     @Test

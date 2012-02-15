@@ -7,7 +7,7 @@ import com.wavemaker.tools.filesystem.Folder;
 
 public class FileSystemFile<K> extends FileSystemResource<K> implements File {
 
-    public FileSystemFile(Path path, FileSystem<K> fileSystem, K key) {
+    FileSystemFile(Path path, FileSystem<K> fileSystem, K key) {
         super(path, fileSystem, key);
     }
 

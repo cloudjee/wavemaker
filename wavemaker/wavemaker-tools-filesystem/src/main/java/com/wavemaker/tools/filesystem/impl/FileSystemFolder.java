@@ -10,7 +10,7 @@ import com.wavemaker.tools.filesystem.Resources;
 
 public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder {
 
-    protected FileSystemFolder(Path path, FileSystem<K> fileSystem, K key) {
+    FileSystemFolder(Path path, FileSystem<K> fileSystem, K key) {
         super(path, fileSystem, key);
     }
 
@@ -39,8 +39,9 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
         if (!exists()) {
             return AbstractResources.empty();
         }
-        // FIXME
-        throw new UnsupportedOperationException();
+        Iterable<K> keys = getFileSystem().list(getKey());
+        Resources<Resource> resources = new FileSystemResources<K>(getFileSystem(), keys);
+        return FilteredResources.apply(resources, filter);
     }
 
     @Override
@@ -65,7 +66,7 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
     @Override
     public void touch() {
         if (!exists()) {
-            getFileSystem().mkDirs(getKey());
+            getFileSystem().mkDir(getKey());
         }
     }
 

@@ -14,7 +14,7 @@ public abstract class FileSystemResource<K> implements Resource {
 
     private final Path path;
 
-    protected FileSystemResource(Path path, FileSystem<K> fileSystem, K key) {
+    FileSystemResource(Path path, FileSystem<K> fileSystem, K key) {
         Assert.notNull(path, "Path must not be null");
         Assert.notNull(fileSystem, "FileSystem must not be null");
         Assert.notNull(key, "Key must not be null");
@@ -47,7 +47,7 @@ public abstract class FileSystemResource<K> implements Resource {
 
     @Override
     public boolean exists() {
-        return this.fileSystem.exists(getKey());
+        return this.fileSystem.getResourceType(getKey()) != ResourceType.UNKNOWN;
     }
 
     @Override
