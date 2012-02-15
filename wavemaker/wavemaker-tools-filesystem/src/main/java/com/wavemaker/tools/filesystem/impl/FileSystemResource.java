@@ -17,7 +17,7 @@ public abstract class FileSystemResource<K> implements Resource {
     protected FileSystemResource(Path path, FileSystem<K> fileSystem, K key) {
         Assert.notNull(path, "Path must not be null");
         Assert.notNull(fileSystem, "FileSystem must not be null");
-        Assert.notNull(key, "Root must not be null");
+        Assert.notNull(key, "Key must not be null");
         this.fileSystem = fileSystem;
         this.key = key;
         this.path = path;

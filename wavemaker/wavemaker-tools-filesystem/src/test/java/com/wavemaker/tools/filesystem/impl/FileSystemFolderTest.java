@@ -44,20 +44,26 @@ public class FileSystemFolderTest {
         });
     }
 
-    // FIXME
-    // @Test
-    // public void shouldNeedFileSystem() throws Exception {
-    // this.thrown.expect(IllegalArgumentException.class);
-    // this.thrown.expectMessage("FileSystem must not be null");
-    // new FileSystemFolder<Object>(new Object(), null, null);
-    // }
-    //
-    // @Test
-    // public void shouldNeedRoot() throws Exception {
-    // this.thrown.expect(IllegalArgumentException.class);
-    // this.thrown.expectMessage("Root must not be null");
-    // new FileSystemFolder<Object>(this.fileSystem, null, null);
-    // }
+    @Test
+    public void shouldNeedPath() throws Exception {
+        this.thrown.expect(IllegalArgumentException.class);
+        this.thrown.expectMessage("Path must not be null");
+        new FileSystemFolder<Object>(null, this.fileSystem, new Object());
+    }
+
+    @Test
+    public void shouldNeedFileSystem() throws Exception {
+        this.thrown.expect(IllegalArgumentException.class);
+        this.thrown.expectMessage("FileSystem must not be null");
+        new FileSystemFolder<Object>(new Path(), null, new Object());
+    }
+
+    @Test
+    public void shouldNeedKey() throws Exception {
+        this.thrown.expect(IllegalArgumentException.class);
+        this.thrown.expectMessage("Key must not be null");
+        new FileSystemFolder<Object>(new Path(), this.fileSystem, null);
+    }
 
     @Test
     public void shouldCreateWithNoParent() throws Exception {
