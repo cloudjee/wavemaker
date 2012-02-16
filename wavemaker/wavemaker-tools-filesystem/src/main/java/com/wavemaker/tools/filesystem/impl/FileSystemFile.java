@@ -1,6 +1,11 @@
 
 package com.wavemaker.tools.filesystem.impl;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import org.springframework.util.Assert;
+
 import com.wavemaker.tools.filesystem.File;
 import com.wavemaker.tools.filesystem.FileContent;
 import com.wavemaker.tools.filesystem.Folder;
@@ -12,56 +17,71 @@ import com.wavemaker.tools.filesystem.Folder;
  */
 public class FileSystemFile<K> extends FileSystemResource<K> implements File {
 
+    // FIXME check type if exists?
+
+    private final FileContent content = new AbstractFileContent() {
+
+        @Override
+        public InputStream asInputStream() {
+            return getFileSystem().getInputStream(getKey());
+        }
+
+        @Override
+        public OutputStream asOutputStream() {
+            return getFileSystem().getOutputStream(getKey());
+        }
+    };
+
     FileSystemFile(Path path, FileSystem<K> fileSystem, K key) {
         super(path, fileSystem, key);
     }
 
     @Override
     public long getSize() {
-        // TODO Auto-generated method stub
-        return 0;
+        return getFileSystem().getSize(getKey());
     }
 
     @Override
     public long getLastModified() {
-        // TODO Auto-generated method stub
-        return 0;
+        return getFileSystem().getLastModified(getKey());
     }
 
     @Override
     public byte[] getSha1Digest() {
-        // TODO Auto-generated method stub
-        return null;
+        return getFileSystem().getSha1Digest(getKey());
     }
 
     @Override
     public FileContent getContent() {
-        // TODO Auto-generated method stub
-        return null;
+        return this.content;
     }
 
     @Override
-    public void copyTo(Folder folder) {
-        // TODO Auto-generated method stub
-
+    public void delete() {
+        if (exists()) {
+            getFileSystem().deleteFile(getKey());
+        }
     }
 
     @Override
     public void moveTo(Folder folder) {
+        Assert.notNull(folder, "Folder must not be null");
+
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void copyTo(Folder folder) {
+        Assert.notNull(folder, "Folder must not be null");
         // TODO Auto-generated method stub
 
     }
 
     @Override
     public void touch() {
-        // TODO Auto-generated method stub
-
+        if (!exists()) {
+            getFileSystem().touch(getKey());
+        }
     }
-
-    @Override
-    public void delete() {
-        // TODO Auto-generated method stub
-
-    }
-
 }

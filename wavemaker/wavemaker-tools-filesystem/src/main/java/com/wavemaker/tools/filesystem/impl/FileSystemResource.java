@@ -55,7 +55,7 @@ public abstract class FileSystemResource<K> implements Resource {
 
     @Override
     public boolean exists() {
-        return this.fileSystem.getResourceType(getKey()) != ResourceType.UNKNOWN;
+        return this.fileSystem.getResourceType(getKey()) != ResourceType.DOES_NOT_EXIST;
     }
 
     @Override

@@ -21,6 +21,7 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
 
     @Override
     public FileSystemFolder<K> getFolder(String name) {
+        Assert.hasLength(name, "Name must not be empty");
         Path folderPath = getPath().get(name);
         K folderKey = getFileSystem().getKey(folderPath);
         return new FileSystemFolder<K>(folderPath, getFileSystem(), folderKey);
@@ -28,6 +29,7 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
 
     @Override
     public FileSystemFile<K> getFile(String name) {
+        Assert.hasLength(name, "Name must not be empty");
         Path filePath = getPath().get(name);
         K fileKey = getFileSystem().getKey(filePath);
         return new FileSystemFile<K>(filePath, getFileSystem(), fileKey);
@@ -54,6 +56,7 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
 
     @Override
     public void copyTo(Folder folder) {
+        Assert.notNull(folder, "Folder must not be empty");
         if (exists()) {
             Assert.state(getPath().getParent() != null, "Unable to copy a root folder");
             Folder destination = createDestinationFolder(folder);
@@ -65,6 +68,7 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
 
     @Override
     public void moveTo(Folder folder) {
+        Assert.notNull(folder, "Folder must not be empty");
         if (exists()) {
             Assert.state(getPath().getParent() != null, "Unable to move a root folder");
             Folder destination = createDestinationFolder(folder);
@@ -83,6 +87,9 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
     @Override
     public void delete() {
         if (exists()) {
+            for (Resource child : list()) {
+                child.delete();
+            }
             getFileSystem().deleteFolder(getKey());
         }
     }
@@ -90,6 +97,9 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
     @Override
     public void touch() {
         if (!exists()) {
+            if (getParent() != null) {
+                getParent().touch();
+            }
             getFileSystem().mkDir(getKey());
         }
     }

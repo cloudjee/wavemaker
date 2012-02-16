@@ -4,6 +4,8 @@ package com.wavemaker.tools.filesystem.impl;
 import java.util.Collections;
 import java.util.Iterator;
 
+import org.springframework.util.Assert;
+
 import com.wavemaker.tools.filesystem.Folder;
 import com.wavemaker.tools.filesystem.Resource;
 import com.wavemaker.tools.filesystem.Resources;
@@ -46,6 +48,7 @@ public abstract class AbstractResources<T extends Resource> implements Resources
 
     @Override
     public void moveTo(Folder folder) {
+        Assert.notNull(folder, "Folder must not be null");
         for (T resource : this) {
             resource.moveTo(folder);
         }
@@ -53,9 +56,9 @@ public abstract class AbstractResources<T extends Resource> implements Resources
 
     @Override
     public void copyTo(Folder folder) {
+        Assert.notNull(folder, "Folder must not be null");
         for (T resource : this) {
             resource.copyTo(folder);
         }
     }
-
 }

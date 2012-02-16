@@ -100,9 +100,20 @@ public class FileSystemFolderTest {
 
     @Test
     public void shouldNotDeleteWhenDoesNotExist() throws Exception {
-        given(this.fileSystem.getResourceType(this.folder.getKey())).willReturn(ResourceType.UNKNOWN);
+        given(this.fileSystem.getResourceType(this.folder.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
         this.folder.delete();
         verify(this.fileSystem, never()).deleteFolder(this.folder.getKey());
+    }
+
+    @Test
+    public void shouldDeleteChildren() throws Exception {
+        FileSystemFolder<Object> child = this.folder.getFolder("a");
+        given(this.fileSystem.getResourceType(this.folder.getKey())).willReturn(ResourceType.FOLDER);
+        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
+        given(this.fileSystem.list(this.folder.getKey())).willReturn(Collections.singleton(child.getKey()));
+        this.folder.delete();
+        verify(this.fileSystem).deleteFolder(child.getKey());
+        verify(this.fileSystem).deleteFolder(this.folder.getKey());
     }
 
     @Test
@@ -167,7 +178,7 @@ public class FileSystemFolderTest {
     @Test
     public void shouldTouchNewDirectory() throws Exception {
         FileSystemFolder<Object> child = this.folder.getFolder("a");
-        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.UNKNOWN);
+        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
         child.touch();
         verify(this.fileSystem).mkDir(child.getKey());
     }
@@ -178,6 +189,17 @@ public class FileSystemFolderTest {
         given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
         child.touch();
         verify(this.fileSystem, never()).mkDir(child.getKey());
+    }
+
+    @Test
+    public void shouldTouchParent() throws Exception {
+        FileSystemFolder<Object> child = this.folder.getFolder("a");
+        FileSystemFolder<Object> grandChild = child.getFolder("b");
+        given(this.fileSystem.getResourceType(grandChild.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
+        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
+        grandChild.touch();
+        verify(this.fileSystem).mkDir(grandChild.getKey());
+        verify(this.fileSystem).mkDir(child.getKey());
     }
 
     @Test
@@ -235,7 +257,7 @@ public class FileSystemFolderTest {
     public void shouldNotMoveIfDoesNotExist() throws Exception {
         Folder destination = mock(Folder.class);
         FileSystemFolder<Object> child = this.folder.getFolder("a");
-        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.UNKNOWN);
+        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
         child.moveTo(destination);
         verifyNoMoreInteractions(destination);
     }
@@ -280,7 +302,7 @@ public class FileSystemFolderTest {
     public void shouldNotCopyIfDoesNotExist() throws Exception {
         Folder destination = mock(Folder.class);
         FileSystemFolder<Object> child = this.folder.getFolder("a");
-        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.UNKNOWN);
+        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
         child.copyTo(destination);
         verifyNoMoreInteractions(destination);
     }
@@ -309,4 +331,9 @@ public class FileSystemFolderTest {
         verify(destinationGrandchild).touch();
     }
 
+    @Test
+    public void shouldAppendPathToToString() throws Exception {
+        FileSystemFolder<Object> child = this.folder.getFolder("a/b/c");
+        assertThat(child.toString(), is("/a/b/c/"));
+    }
 }
