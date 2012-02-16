@@ -5,6 +5,11 @@ import com.wavemaker.tools.filesystem.File;
 import com.wavemaker.tools.filesystem.FileContent;
 import com.wavemaker.tools.filesystem.Folder;
 
+/**
+ * {@link File} implementation backed by a {@link FileSystem}.
+ * 
+ * @author Phillip Webb
+ */
 public class FileSystemFile<K> extends FileSystemResource<K> implements File {
 
     FileSystemFile(Path path, FileSystem<K> fileSystem, K key) {

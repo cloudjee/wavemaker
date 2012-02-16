@@ -7,6 +7,11 @@ import org.springframework.util.Assert;
 
 import com.wavemaker.tools.filesystem.Resource;
 
+/**
+ * {@link Resources} implementation backed by a {@link FileSystem}.
+ * 
+ * @author Phillip Webb
+ */
 public class FileSystemResources<K> extends AbstractResources<Resource> {
 
     private final FileSystem<K> fileSystem;
@@ -14,6 +19,8 @@ public class FileSystemResources<K> extends AbstractResources<Resource> {
     private final Iterable<K> keys;
 
     public FileSystemResources(FileSystem<K> fileSystem, Iterable<K> keys) {
+        Assert.notNull(fileSystem, "FileSystem must not be null");
+        Assert.notNull(keys, "Keys must not be null");
         this.fileSystem = fileSystem;
         this.keys = keys;
     }

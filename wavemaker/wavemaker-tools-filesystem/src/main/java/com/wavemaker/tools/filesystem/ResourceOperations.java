@@ -15,7 +15,7 @@ public interface ResourceOperations {
 
     /**
      * Move this resource to the specified folder. Any duplicate {@link File}s will be replaced (existing {@link Folder}
-     * resources will be merged).
+     * resources will be merged). If the resource does not exist no operation is performed.
      * 
      * @param folder the folder to move the resource to
      * @throws ResourceDoesNotExistException if this resource no longer exists
@@ -24,7 +24,7 @@ public interface ResourceOperations {
 
     /**
      * Recursively copy this resource to the specified folder.Any duplicate {@link File}s will be replaced (existing
-     * {@link Folder} resources will be merged).
+     * {@link Folder} resources will be merged). If the resource does not exist no operation is performed.
      * 
      * @param folder the folder to copy the resource to
      * @throws ResourceDoesNotExistException if this resource no longer exists

@@ -6,6 +6,14 @@ import org.springframework.util.Assert;
 import com.wavemaker.tools.filesystem.Folder;
 import com.wavemaker.tools.filesystem.Resource;
 
+/**
+ * {@link Resource} implementation backed by a {@link FileSystem}.
+ * 
+ * @see FileSystemResource
+ * @see FileSystemFile
+ * 
+ * @author Phillip Webb
+ */
 public abstract class FileSystemResource<K> implements Resource {
 
     private final FileSystem<K> fileSystem;

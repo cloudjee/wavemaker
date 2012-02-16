@@ -6,10 +6,13 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 
 import org.junit.Before;
@@ -215,4 +218,95 @@ public class FileSystemFolderTest {
         this.thrown.expectMessage("Filter must not be null");
         this.folder.list(null);
     }
+
+    @Test
+    public void shouldMoveWithoutChildren() throws Exception {
+        Folder destination = mock(Folder.class);
+        Folder destinationChild = mock(Folder.class);
+        FileSystemFolder<Object> child = this.folder.getFolder("a");
+        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
+        given(destination.getFolder("a")).willReturn(destinationChild);
+        child.moveTo(destination);
+        verify(destination).getFolder("a");
+        verify(destinationChild).touch();
+    }
+
+    @Test
+    public void shouldNotMoveIfDoesNotExist() throws Exception {
+        Folder destination = mock(Folder.class);
+        FileSystemFolder<Object> child = this.folder.getFolder("a");
+        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.UNKNOWN);
+        child.moveTo(destination);
+        verifyNoMoreInteractions(destination);
+    }
+
+    @Test
+    public void shouldNotMoveRoot() throws Exception {
+        Folder destination = mock(Folder.class);
+        this.thrown.expect(IllegalStateException.class);
+        this.thrown.expectMessage("Unable to move a root folder");
+        this.folder.moveTo(destination);
+    }
+
+    @Test
+    public void shouldMoveChildren() throws Exception {
+        Folder destination = mock(Folder.class);
+        Folder destinationChild = mock(Folder.class);
+        Folder destinationGrandchild = mock(Folder.class);
+        FileSystemFolder<Object> child = this.folder.getFolder("a");
+        FileSystemFolder<Object> grandchild = child.getFolder("b");
+        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
+        given(this.fileSystem.getResourceType(grandchild.getKey())).willReturn(ResourceType.FOLDER);
+        given(this.fileSystem.list(child.getKey())).willReturn(Collections.singleton(grandchild.getKey()));
+        given(destination.getFolder("a")).willReturn(destinationChild);
+        given(destinationChild.getFolder("b")).willReturn(destinationGrandchild);
+        child.moveTo(destination);
+        verify(destinationGrandchild).touch();
+    }
+
+    @Test
+    public void shouldCopyWithoutChildren() throws Exception {
+        Folder destination = mock(Folder.class);
+        Folder destinationChild = mock(Folder.class);
+        FileSystemFolder<Object> child = this.folder.getFolder("a");
+        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
+        given(destination.getFolder("a")).willReturn(destinationChild);
+        child.copyTo(destination);
+        verify(destination).getFolder("a");
+        verify(destinationChild).touch();
+    }
+
+    @Test
+    public void shouldNotCopyIfDoesNotExist() throws Exception {
+        Folder destination = mock(Folder.class);
+        FileSystemFolder<Object> child = this.folder.getFolder("a");
+        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.UNKNOWN);
+        child.copyTo(destination);
+        verifyNoMoreInteractions(destination);
+    }
+
+    @Test
+    public void shouldNotCopyRoot() throws Exception {
+        Folder destination = mock(Folder.class);
+        this.thrown.expect(IllegalStateException.class);
+        this.thrown.expectMessage("Unable to copy a root folder");
+        this.folder.copyTo(destination);
+    }
+
+    @Test
+    public void shouldCopyChildren() throws Exception {
+        Folder destination = mock(Folder.class);
+        Folder destinationChild = mock(Folder.class);
+        Folder destinationGrandchild = mock(Folder.class);
+        FileSystemFolder<Object> child = this.folder.getFolder("a");
+        FileSystemFolder<Object> grandchild = child.getFolder("b");
+        given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
+        given(this.fileSystem.getResourceType(grandchild.getKey())).willReturn(ResourceType.FOLDER);
+        given(this.fileSystem.list(child.getKey())).willReturn(Collections.singleton(grandchild.getKey()));
+        given(destination.getFolder("a")).willReturn(destinationChild);
+        given(destinationChild.getFolder("b")).willReturn(destinationGrandchild);
+        child.copyTo(destination);
+        verify(destinationGrandchild).touch();
+    }
+
 }
