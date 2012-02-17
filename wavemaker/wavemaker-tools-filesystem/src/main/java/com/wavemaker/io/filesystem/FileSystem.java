@@ -34,29 +34,78 @@ public interface FileSystem<K> {
     /**
      * Return the resource type for the specified key.
      * 
-     * @param key
-     * @return
+     * @param key the file system key
+     * @return the resource type
      */
     ResourceType getResourceType(K key);
 
-    void deleteFolder(K key);
+    /**
+     * Create a new file for the specified key.
+     * 
+     * @param key the file system key
+     */
+    void createFile(K key);
 
-    void deleteFile(K key);
+    /**
+     * Create a new folder for the specified key.
+     * 
+     * @param key the file system key
+     */
+    void createFolder(K key);
 
-    void mkDir(K key);
+    /**
+     * List the contents of a folder
+     * 
+     * @param key the file system key
+     */
+    Iterable<String> list(K key);
 
-    Iterable<K> list(K key);
-
+    /**
+     * Get the size of a file
+     * 
+     * @param key the file system key
+     * @return the size
+     */
     long getSize(K key);
 
+    /**
+     * Get the last modified date/time of a file.
+     * 
+     * @param key the file system key
+     * @return the last modified time
+     */
     long getLastModified(K key);
 
+    /**
+     * Get the SHA1 digest of the file.
+     * 
+     * @param key the file system key
+     * @return the SHA1 digest
+     */
     byte[] getSha1Digest(K key);
 
+    /**
+     * Get the file contents as an input stream for reading.
+     * 
+     * @param key the file system key
+     * @return the input stream
+     */
     InputStream getInputStream(K key);
 
+    /**
+     * Get the file contents as an output stream for writing.
+     * 
+     * @param key the file system key
+     * @return the output stream
+     */
     OutputStream getOutputStream(K key);
 
-    void touch(Object key);
+    /**
+     * Delete the file or folder for the specified key. The key can refer to a file or folder resource, in the case of
+     * folder all children will have previously been deleted.
+     * 
+     * @param key the key to delete.
+     */
+    void delete(K key);
 
 }

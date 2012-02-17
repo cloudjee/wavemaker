@@ -62,7 +62,7 @@ public class FileSystemFile<K> extends FileSystemResource<K> implements File {
     @Override
     public void delete() {
         if (exists()) {
-            getFileSystem().deleteFile(getKey());
+            getFileSystem().delete(getKey());
         }
     }
 
@@ -72,7 +72,7 @@ public class FileSystemFile<K> extends FileSystemResource<K> implements File {
         if (exists()) {
             File destination = folder.getFile(getName());
             destination.getContent().write(getContent().asInputStream());
-            getFileSystem().deleteFile(getKey());
+            getFileSystem().delete(getKey());
         }
     }
 
@@ -89,7 +89,7 @@ public class FileSystemFile<K> extends FileSystemResource<K> implements File {
     public void touch() {
         if (!exists()) {
             touchParent();
-            getFileSystem().touch(getKey());
+            getFileSystem().createFile(getKey());
         }
     }
 }

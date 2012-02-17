@@ -28,7 +28,7 @@ public interface FileContent {
      * required. The reader should be closed by the caller.
      * 
      * @return the file contents {@link Reader}
-     * @throws ResourceIOException
+     * @throws ResourceException
      */
     Reader asReader();
 
@@ -37,34 +37,34 @@ public interface FileContent {
      * large files.
      * 
      * @return the contents as a <tt>String</tt>
-     * @throws ResourceIOException
+     * @throws ResourceException
      */
-    String asString() throws ResourceIOException;
+    String asString() throws ResourceException;
 
     /**
      * Return the contents of the file as a new <tt>byte array</tt>. This method should be used with caution if working
      * with large files.
      * 
      * @return the contents as a new byte array.
-     * @throws ResourceIOException
+     * @throws ResourceException
      */
-    byte[] asBytes() throws ResourceIOException;
+    byte[] asBytes() throws ResourceException;
 
     /**
      * Copy the contents of the file to another stream, closing the stream when complete.
      * 
      * @param outputStream
-     * @throws ResourceIOException
+     * @throws ResourceException
      */
-    void copyTo(OutputStream outputStream) throws ResourceIOException;
+    void copyTo(OutputStream outputStream) throws ResourceException;
 
     /**
      * Copy the contents of the file to another writer, closing the writer when complete.
      * 
      * @param outputStream
-     * @throws ResourceIOException
+     * @throws ResourceException
      */
-    void copyTo(Writer writer) throws ResourceIOException;
+    void copyTo(Writer writer) throws ResourceException;
 
     /**
      * Return an {@link OutputStream} that can be used to write file contents. The output stream should be closed by the
@@ -87,23 +87,23 @@ public interface FileContent {
      * Write the contents of the specified output stream to this file, closing the stream when complete.
      * 
      * @param inputStream the input stream to write
-     * @throws ResourceIOException
+     * @throws ResourceException
      */
-    void write(InputStream inputStream) throws ResourceIOException;
+    void write(InputStream inputStream) throws ResourceException;
 
     /**
      * Write the contents of the specified reader to this file, closing the reader when complete.
      * 
      * @param reader the reader to write
-     * @throws ResourceIOException
+     * @throws ResourceException
      */
-    void write(Reader reader) throws ResourceIOException;
+    void write(Reader reader) throws ResourceException;
 
     /**
      * Write the contents of the specified string to this file.
      * 
      * @param string the string contents
-     * @throws ResourceIOException
+     * @throws ResourceException
      */
-    void write(String string) throws ResourceIOException;
+    void write(String string) throws ResourceException;
 }

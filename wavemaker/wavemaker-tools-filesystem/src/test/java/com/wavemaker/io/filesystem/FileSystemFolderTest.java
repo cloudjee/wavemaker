@@ -78,14 +78,14 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
     public void shouldDelete() throws Exception {
         given(this.fileSystem.getResourceType(this.folder.getKey())).willReturn(ResourceType.FOLDER);
         this.folder.delete();
-        verify(this.fileSystem).deleteFolder(this.folder.getKey());
+        verify(this.fileSystem).delete(this.folder.getKey());
     }
 
     @Test
     public void shouldNotDeleteWhenDoesNotExist() throws Exception {
         given(this.fileSystem.getResourceType(this.folder.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
         this.folder.delete();
-        verify(this.fileSystem, never()).deleteFolder(this.folder.getKey());
+        verify(this.fileSystem, never()).delete(this.folder.getKey());
     }
 
     @Test
@@ -93,10 +93,10 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
         FileSystemFolder<Object> child = this.folder.getFolder("a");
         given(this.fileSystem.getResourceType(this.folder.getKey())).willReturn(ResourceType.FOLDER);
         given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
-        given(this.fileSystem.list(this.folder.getKey())).willReturn(Collections.singleton(child.getKey()));
+        given(this.fileSystem.list(this.folder.getKey())).willReturn(Collections.singleton("a"));
         this.folder.delete();
-        verify(this.fileSystem).deleteFolder(child.getKey());
-        verify(this.fileSystem).deleteFolder(this.folder.getKey());
+        verify(this.fileSystem).delete(child.getKey());
+        verify(this.fileSystem).delete(this.folder.getKey());
     }
 
     @Test
@@ -163,7 +163,7 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
         FileSystemFolder<Object> child = this.folder.getFolder("a");
         given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
         child.touch();
-        verify(this.fileSystem).mkDir(child.getKey());
+        verify(this.fileSystem).createFolder(child.getKey());
     }
 
     @Test
@@ -171,7 +171,7 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
         FileSystemFolder<Object> child = this.folder.getFolder("a");
         given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
         child.touch();
-        verify(this.fileSystem, never()).mkDir(child.getKey());
+        verify(this.fileSystem, never()).createFolder(child.getKey());
     }
 
     @Test
@@ -181,15 +181,15 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
         given(this.fileSystem.getResourceType(grandChild.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
         given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
         grandChild.touch();
-        verify(this.fileSystem).mkDir(grandChild.getKey());
-        verify(this.fileSystem).mkDir(child.getKey());
+        verify(this.fileSystem).createFolder(grandChild.getKey());
+        verify(this.fileSystem).createFolder(child.getKey());
     }
 
     @Test
     public void shouldListResources() throws Exception {
         FileSystemPath pathA = new FileSystemPath().get("a");
         FileSystemPath pathB = new FileSystemPath().get("b");
-        given(this.fileSystem.list(this.folder.getKey())).willReturn(Arrays.<Object> asList(pathA, pathB));
+        given(this.fileSystem.list(this.folder.getKey())).willReturn(Arrays.asList("a", "b"));
         given(this.fileSystem.getResourceType(pathA)).willReturn(ResourceType.FOLDER);
         given(this.fileSystem.getResourceType(pathB)).willReturn(ResourceType.FILE);
         Resources<Resource> resources = this.folder.list();
@@ -207,7 +207,7 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
     public void shouldListFilteredResources() throws Exception {
         FileSystemPath pathA = new FileSystemPath().get("a");
         FileSystemPath pathB = new FileSystemPath().get("b");
-        given(this.fileSystem.list(this.folder.getKey())).willReturn(Arrays.<Object> asList(pathA, pathB));
+        given(this.fileSystem.list(this.folder.getKey())).willReturn(Arrays.asList("a", "b"));
         given(this.fileSystem.getResourceType(pathA)).willReturn(ResourceType.FOLDER);
         given(this.fileSystem.getResourceType(pathB)).willReturn(ResourceType.FILE);
         Resources<File> resources = this.folder.list(ResourceFilter.FILES);
@@ -262,7 +262,7 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
         FileSystemFolder<Object> grandchild = child.getFolder("b");
         given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
         given(this.fileSystem.getResourceType(grandchild.getKey())).willReturn(ResourceType.FOLDER);
-        given(this.fileSystem.list(child.getKey())).willReturn(Collections.singleton(grandchild.getKey()));
+        given(this.fileSystem.list(child.getKey())).willReturn(Collections.singleton("b"));
         given(destination.getFolder("a")).willReturn(destinationChild);
         given(destinationChild.getFolder("b")).willReturn(destinationGrandchild);
         child.moveTo(destination);
@@ -307,7 +307,7 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
         FileSystemFolder<Object> grandchild = child.getFolder("b");
         given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
         given(this.fileSystem.getResourceType(grandchild.getKey())).willReturn(ResourceType.FOLDER);
-        given(this.fileSystem.list(child.getKey())).willReturn(Collections.singleton(grandchild.getKey()));
+        given(this.fileSystem.list(child.getKey())).willReturn(Collections.singleton("b"));
         given(destination.getFolder("a")).willReturn(destinationChild);
         given(destinationChild.getFolder("b")).willReturn(destinationGrandchild);
         child.copyTo(destination);

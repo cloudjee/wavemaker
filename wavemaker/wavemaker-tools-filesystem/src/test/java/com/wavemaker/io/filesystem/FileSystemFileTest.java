@@ -116,28 +116,28 @@ public class FileSystemFileTest extends AbstractFileSystemResourceTest {
     public void shouldDelete() throws Exception {
         given(this.fileSystem.getResourceType(this.file.getKey())).willReturn(ResourceType.FILE);
         this.file.delete();
-        verify(this.fileSystem).deleteFile(this.file.getKey());
+        verify(this.fileSystem).delete(this.file.getKey());
     }
 
     @Test
     public void shouldNotDeleteWhenDoesNotExist() throws Exception {
         given(this.fileSystem.getResourceType(this.file.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
         this.file.delete();
-        verify(this.fileSystem, never()).deleteFile(this.file.getKey());
+        verify(this.fileSystem, never()).delete(this.file.getKey());
     }
 
     @Test
     public void shouldTouchNewFile() throws Exception {
         given(this.fileSystem.getResourceType(this.file.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
         this.file.touch();
-        verify(this.fileSystem).touch(this.file.getKey());
+        verify(this.fileSystem).createFile(this.file.getKey());
     }
 
     @Test
     public void shouldNotTouchExistingFile() throws Exception {
         given(this.fileSystem.getResourceType(this.file.getKey())).willReturn(ResourceType.FOLDER);
         this.file.touch();
-        verify(this.fileSystem, never()).touch(this.file.getKey());
+        verify(this.fileSystem, never()).createFile(this.file.getKey());
     }
 
     @Test
@@ -160,7 +160,7 @@ public class FileSystemFileTest extends AbstractFileSystemResourceTest {
         given(this.fileSystem.getInputStream(this.file.getKey())).willReturn(inputStream);
         this.file.moveTo(destination);
         verify(destinationContent).write(inputStream);
-        verify(this.fileSystem).deleteFile(this.file.getKey());
+        verify(this.fileSystem).delete(this.file.getKey());
     }
 
     @Test
@@ -183,7 +183,7 @@ public class FileSystemFileTest extends AbstractFileSystemResourceTest {
         given(this.fileSystem.getInputStream(this.file.getKey())).willReturn(inputStream);
         this.file.copyTo(destination);
         verify(destinationContent).write(inputStream);
-        verify(this.fileSystem, never()).deleteFile(this.file.getKey());
+        verify(this.fileSystem, never()).delete(this.file.getKey());
     }
 
     @Test

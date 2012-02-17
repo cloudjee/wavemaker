@@ -7,6 +7,7 @@ import org.springframework.util.Assert;
 
 import com.wavemaker.io.AbstractResources;
 import com.wavemaker.io.Resource;
+import com.wavemaker.io.Resources;
 
 /**
  * {@link Resources} implementation backed by a {@link FileSystem}.
@@ -17,18 +18,22 @@ public class FileSystemResources<K> extends AbstractResources<Resource> {
 
     private final FileSystem<K> fileSystem;
 
-    private final Iterable<K> keys;
+    private final FileSystemPath parent;
 
-    public FileSystemResources(FileSystem<K> fileSystem, Iterable<K> keys) {
+    private final Iterable<String> list;
+
+    public FileSystemResources(FileSystem<K> fileSystem, FileSystemPath parent, Iterable<String> list) {
         Assert.notNull(fileSystem, "FileSystem must not be null");
-        Assert.notNull(keys, "Keys must not be null");
+        Assert.notNull(parent, "Parent must not be null");
+        Assert.notNull(list, "List must not be null");
         this.fileSystem = fileSystem;
-        this.keys = keys;
+        this.parent = parent;
+        this.list = list;
     }
 
     @Override
     public Iterator<Resource> iterator() {
-        final Iterator<K> iterator = this.keys.iterator();
+        final Iterator<String> iterator = this.list.iterator();
         return new Iterator<Resource>() {
 
             @Override
@@ -38,8 +43,8 @@ public class FileSystemResources<K> extends AbstractResources<Resource> {
 
             @Override
             public Resource next() {
-                K key = iterator.next();
-                FileSystemPath path = FileSystemResources.this.fileSystem.getPath(key);
+                FileSystemPath path = FileSystemResources.this.parent.get(iterator.next());
+                K key = FileSystemResources.this.fileSystem.getKey(path);
                 ResourceType resourceType = FileSystemResources.this.fileSystem.getResourceType(key);
                 Assert.state(resourceType != null, "No resource type found");
                 switch (resourceType) {

@@ -50,11 +50,11 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
         if (!exists()) {
             return ResourcesCollection.emptyResources();
         }
-        Iterable<K> keys = getFileSystem().list(getKey());
-        if (keys == null) {
+        Iterable<String> list = getFileSystem().list(getKey());
+        if (list == null) {
             return ResourcesCollection.emptyResources();
         }
-        Resources<Resource> resources = new FileSystemResources<K>(getFileSystem(), keys);
+        Resources<Resource> resources = new FileSystemResources<K>(getFileSystem(), getPath(), list);
         return FilteredResources.apply(resources, filter);
     }
 
@@ -94,7 +94,7 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
             for (Resource child : list()) {
                 child.delete();
             }
-            getFileSystem().deleteFolder(getKey());
+            getFileSystem().delete(getKey());
         }
     }
 
@@ -102,7 +102,7 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
     public void touch() {
         if (!exists()) {
             touchParent();
-            getFileSystem().mkDir(getKey());
+            getFileSystem().createFolder(getKey());
         }
     }
 

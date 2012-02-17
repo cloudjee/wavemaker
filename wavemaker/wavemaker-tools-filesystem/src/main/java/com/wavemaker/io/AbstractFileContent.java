@@ -28,38 +28,38 @@ public abstract class AbstractFileContent implements FileContent {
     }
 
     @Override
-    public String asString() throws ResourceIOException {
+    public String asString() throws ResourceException {
         try {
             return FileCopyUtils.copyToString(asReader());
         } catch (IOException e) {
-            throw new ResourceIOException(e);
+            throw new ResourceException(e);
         }
     }
 
     @Override
-    public byte[] asBytes() throws ResourceIOException {
+    public byte[] asBytes() throws ResourceException {
         try {
             return FileCopyUtils.copyToByteArray(asInputStream());
         } catch (IOException e) {
-            throw new ResourceIOException(e);
+            throw new ResourceException(e);
         }
     }
 
     @Override
-    public void copyTo(OutputStream outputStream) throws ResourceIOException {
+    public void copyTo(OutputStream outputStream) throws ResourceException {
         try {
             FileCopyUtils.copy(asInputStream(), outputStream);
         } catch (IOException e) {
-            throw new ResourceIOException(e);
+            throw new ResourceException(e);
         }
     }
 
     @Override
-    public void copyTo(Writer writer) throws ResourceIOException {
+    public void copyTo(Writer writer) throws ResourceException {
         try {
             FileCopyUtils.copy(asReader(), writer);
         } catch (IOException e) {
-            throw new ResourceIOException(e);
+            throw new ResourceException(e);
         }
     }
 
@@ -72,29 +72,29 @@ public abstract class AbstractFileContent implements FileContent {
     }
 
     @Override
-    public void write(InputStream inputStream) throws ResourceIOException {
+    public void write(InputStream inputStream) throws ResourceException {
         try {
             FileCopyUtils.copy(inputStream, asOutputStream());
         } catch (IOException e) {
-            throw new ResourceIOException(e);
+            throw new ResourceException(e);
         }
     }
 
     @Override
-    public void write(Reader reader) throws ResourceIOException {
+    public void write(Reader reader) throws ResourceException {
         try {
             FileCopyUtils.copy(reader, asWriter());
         } catch (IOException e) {
-            throw new ResourceIOException(e);
+            throw new ResourceException(e);
         }
     }
 
     @Override
-    public void write(String string) throws ResourceIOException {
+    public void write(String string) throws ResourceException {
         try {
             FileCopyUtils.copy(string, asWriter());
         } catch (IOException e) {
-            throw new ResourceIOException(e);
+            throw new ResourceException(e);
         }
     }
 }
