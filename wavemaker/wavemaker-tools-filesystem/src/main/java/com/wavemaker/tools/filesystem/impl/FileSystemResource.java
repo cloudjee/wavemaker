@@ -31,6 +31,8 @@ public abstract class FileSystemResource<K> implements Resource {
         this.path = path;
     }
 
+    // FIXME check type if exists?
+
     protected final FileSystem<K> getFileSystem() {
         return this.fileSystem;
     }
@@ -41,6 +43,12 @@ public abstract class FileSystemResource<K> implements Resource {
 
     protected final Path getPath() {
         return this.path;
+    }
+
+    protected void touchParent() {
+        if (getParent() != null) {
+            getParent().touch();
+        }
     }
 
     @Override

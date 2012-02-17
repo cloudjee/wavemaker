@@ -5,24 +5,18 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import com.wavemaker.tools.filesystem.File;
 import com.wavemaker.tools.filesystem.Folder;
@@ -35,34 +29,15 @@ import com.wavemaker.tools.filesystem.Resources;
  * 
  * @author Phillip Webb
  */
-public class FileSystemFolderTest {
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
-    @Mock
-    private FileSystem<Object> fileSystem;
+public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
 
     private FileSystemFolder<Object> folder;
 
     @Before
+    @Override
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        super.setup();
         this.folder = new FileSystemFolder<Object>(new Path(), this.fileSystem, new Path());
-        given(this.fileSystem.getKey(any(Path.class))).willAnswer(new Answer<Object>() {
-
-            @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
-                return invocation.getArguments()[0];
-            }
-        });
-        given(this.fileSystem.getPath(any(Object.class))).willAnswer(new Answer<Path>() {
-
-            @Override
-            public Path answer(InvocationOnMock invocation) throws Throwable {
-                return (Path) invocation.getArguments()[0];
-            }
-        });
     }
 
     @Test
@@ -84,6 +59,14 @@ public class FileSystemFolderTest {
         this.thrown.expect(IllegalArgumentException.class);
         this.thrown.expectMessage("Key must not be null");
         new FileSystemFolder<Object>(new Path(), this.fileSystem, null);
+    }
+
+    @Test
+    public void shouldNotCreateFolderFromFile() throws Exception {
+        given(this.fileSystem.getResourceType(new Path().get("a"))).willReturn(ResourceType.FILE);
+        this.thrown.expect(IllegalStateException.class);
+        this.thrown.expectMessage("Unable to access existing file '/a' as a folder");
+        this.folder.getFolder("a");
     }
 
     @Test
@@ -137,7 +120,7 @@ public class FileSystemFolderTest {
     public void shouldDelegateToFileSystemForExists() throws Exception {
         given(this.fileSystem.getResourceType(this.folder.getKey())).willReturn(ResourceType.FOLDER);
         assertThat(this.folder.exists(), is(true));
-        verify(this.fileSystem).getResourceType(this.folder.getKey());
+        verify(this.fileSystem, times(2)).getResourceType(this.folder.getKey());
     }
 
     @Test
@@ -259,7 +242,7 @@ public class FileSystemFolderTest {
         FileSystemFolder<Object> child = this.folder.getFolder("a");
         given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
         child.moveTo(destination);
-        verifyNoMoreInteractions(destination);
+        verifyZeroInteractions(destination);
     }
 
     @Test
@@ -304,7 +287,7 @@ public class FileSystemFolderTest {
         FileSystemFolder<Object> child = this.folder.getFolder("a");
         given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
         child.copyTo(destination);
-        verifyNoMoreInteractions(destination);
+        verifyZeroInteractions(destination);
     }
 
     @Test

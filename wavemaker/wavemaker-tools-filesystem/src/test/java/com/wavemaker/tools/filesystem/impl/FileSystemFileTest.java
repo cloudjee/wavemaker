@@ -8,35 +8,31 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+
+import com.wavemaker.tools.filesystem.File;
+import com.wavemaker.tools.filesystem.FileContent;
+import com.wavemaker.tools.filesystem.Folder;
 
 /**
  * Tests for {@link FileSystemFile}.
  * 
  * @author Phillip Webb
  */
-public class FileSystemFileTest {
-
-    @Rule
-    public ExpectedException thrown = ExpectedException.none();
-
-    @Mock
-    private FileSystem<Object> fileSystem;
+public class FileSystemFileTest extends AbstractFileSystemResourceTest {
 
     private FileSystemFile<Object> file;
 
     @Before
+    @Override
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        super.setup();
         Path path = new Path().get("file.txt");
         this.file = new FileSystemFile<Object>(path, this.fileSystem, path);
     }
@@ -60,6 +56,16 @@ public class FileSystemFileTest {
         this.thrown.expect(IllegalArgumentException.class);
         this.thrown.expectMessage("Key must not be null");
         new FileSystemFile<Object>(new Path(), this.fileSystem, null);
+    }
+
+    @Test
+    public void shouldNotCreateFolderFromFile() throws Exception {
+        Path path = new Path().get("a");
+        given(this.fileSystem.getResourceType(path)).willReturn(ResourceType.FOLDER);
+        this.thrown.expect(IllegalStateException.class);
+        this.thrown.expectMessage("Unable to access existing folder '/a' as a file");
+        new FileSystemFile<Object>(path, this.fileSystem, path);
+
     }
 
     @Test
@@ -135,41 +141,48 @@ public class FileSystemFileTest {
 
     @Test
     public void shouldNotMoveIfDoesNotExist() throws Exception {
-        // Folder destination = mock(Folder.class);
-        // FileSystemFolder<Object> child = this.folder.getFolder("a");
-        // given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
-        // child.moveTo(destination);
-        // verifyNoMoreInteractions(destination);
+        Folder destination = mock(Folder.class);
+        given(this.fileSystem.getResourceType(this.file.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
+        this.file.moveTo(destination);
+        verifyZeroInteractions(destination);
     }
 
     @Test
     public void shouldMove() throws Exception {
-
+        Folder destination = mock(Folder.class);
+        File destinationFile = mock(File.class);
+        FileContent destinationContent = mock(FileContent.class);
+        InputStream inputStream = mock(InputStream.class);
+        given(destination.getFile("file.txt")).willReturn(destinationFile);
+        given(destinationFile.getContent()).willReturn(destinationContent);
+        given(this.fileSystem.getResourceType(this.file.getKey())).willReturn(ResourceType.FILE);
+        given(this.fileSystem.getInputStream(this.file.getKey())).willReturn(inputStream);
+        this.file.moveTo(destination);
+        verify(destinationContent).write(inputStream);
+        verify(this.fileSystem).deleteFile(this.file.getKey());
     }
 
     @Test
     public void shouldNotCopyIfDoesNotExist() throws Exception {
-        // Folder destination = mock(Folder.class);
-        // FileSystemFolder<Object> child = this.folder.getFolder("a");
-        // given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
-        // child.copyTo(destination);
-        // verifyNoMoreInteractions(destination);
+        Folder destination = mock(Folder.class);
+        given(this.fileSystem.getResourceType(this.file.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
+        this.file.copyTo(destination);
+        verifyZeroInteractions(destination);
     }
 
     @Test
     public void shouldCopy() throws Exception {
-        // Folder destination = mock(Folder.class);
-        // Folder destinationChild = mock(Folder.class);
-        // Folder destinationGrandchild = mock(Folder.class);
-        // FileSystemFolder<Object> child = this.folder.getFolder("a");
-        // FileSystemFolder<Object> grandchild = child.getFolder("b");
-        // given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
-        // given(this.fileSystem.getResourceType(grandchild.getKey())).willReturn(ResourceType.FOLDER);
-        // given(this.fileSystem.list(child.getKey())).willReturn(Collections.singleton(grandchild.getKey()));
-        // given(destination.getFolder("a")).willReturn(destinationChild);
-        // given(destinationChild.getFolder("b")).willReturn(destinationGrandchild);
-        // child.copyTo(destination);
-        // verify(destinationGrandchild).touch();
+        Folder destination = mock(Folder.class);
+        File destinationFile = mock(File.class);
+        FileContent destinationContent = mock(FileContent.class);
+        InputStream inputStream = mock(InputStream.class);
+        given(destination.getFile("file.txt")).willReturn(destinationFile);
+        given(destinationFile.getContent()).willReturn(destinationContent);
+        given(this.fileSystem.getResourceType(this.file.getKey())).willReturn(ResourceType.FILE);
+        given(this.fileSystem.getInputStream(this.file.getKey())).willReturn(inputStream);
+        this.file.copyTo(destination);
+        verify(destinationContent).write(inputStream);
+        verify(this.fileSystem, never()).deleteFile(this.file.getKey());
     }
 
     @Test

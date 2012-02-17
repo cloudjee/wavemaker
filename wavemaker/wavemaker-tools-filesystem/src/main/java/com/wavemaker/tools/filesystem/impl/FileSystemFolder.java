@@ -17,6 +17,8 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
 
     FileSystemFolder(Path path, FileSystem<K> fileSystem, K key) {
         super(path, fileSystem, key);
+        ResourceType resourceType = getFileSystem().getResourceType(key);
+        Assert.state(resourceType != ResourceType.FILE, "Unable to access existing file '" + super.toString() + "' as a folder");
     }
 
     @Override
@@ -97,9 +99,7 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
     @Override
     public void touch() {
         if (!exists()) {
-            if (getParent() != null) {
-                getParent().touch();
-            }
+            touchParent();
             getFileSystem().mkDir(getKey());
         }
     }

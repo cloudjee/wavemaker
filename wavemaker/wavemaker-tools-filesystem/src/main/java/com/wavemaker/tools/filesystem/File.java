@@ -33,7 +33,8 @@ public interface File extends Resource {
     byte[] getSha1Digest();
 
     /**
-     * Provides access to file content.
+     * Provides access to file content. Calling any method on a file that does not {@link #exists() exist} will cause it
+     * to be created.
      * 
      * @return the file content
      */
