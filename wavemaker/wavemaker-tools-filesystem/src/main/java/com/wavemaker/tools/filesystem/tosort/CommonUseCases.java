@@ -3,9 +3,9 @@ package com.wavemaker.tools.filesystem.tosort;
 
 import java.io.OutputStream;
 
-import com.wavemaker.tools.filesystem.File;
-import com.wavemaker.tools.filesystem.Folder;
-import com.wavemaker.tools.filesystem.ResourceFilter;
+import com.wavemaker.io.File;
+import com.wavemaker.io.Folder;
+import com.wavemaker.io.ResourceFilter;
 
 public class CommonUseCases {
 

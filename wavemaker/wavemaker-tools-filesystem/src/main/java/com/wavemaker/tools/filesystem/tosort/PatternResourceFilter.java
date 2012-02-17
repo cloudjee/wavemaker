@@ -1,8 +1,8 @@
 
 package com.wavemaker.tools.filesystem.tosort;
 
-import com.wavemaker.tools.filesystem.Resource;
-import com.wavemaker.tools.filesystem.ResourceFilter;
+import com.wavemaker.io.Resource;
+import com.wavemaker.io.ResourceFilter;
 
 public class PatternResourceFilter implements ResourceFilter<Resource> {
 
