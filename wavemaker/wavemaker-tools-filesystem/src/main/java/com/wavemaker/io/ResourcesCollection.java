@@ -8,7 +8,6 @@ import java.util.Iterator;
 
 import org.springframework.util.Assert;
 
-
 /**
  * Implementation of {@link Resources} backed by a {@link Collection}.
  * 

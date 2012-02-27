@@ -12,7 +12,6 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-
 public abstract class AbstractFileSystemResourceTest {
 
     @Rule
@@ -39,5 +38,4 @@ public abstract class AbstractFileSystemResourceTest {
             }
         });
     }
-
 }

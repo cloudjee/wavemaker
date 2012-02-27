@@ -23,4 +23,9 @@ public class JavaFileSystemKey {
     public File getFile() {
         return this.file;
     }
+
+    @Override
+    public String toString() {
+        return this.file.toString();
+    }
 }

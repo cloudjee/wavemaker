@@ -190,5 +190,4 @@ public class FileSystemFileTest extends AbstractFileSystemResourceTest {
     public void shouldHaveToString() throws Exception {
         assertThat(this.file.toString(), is("/file.txt"));
     }
-
 }

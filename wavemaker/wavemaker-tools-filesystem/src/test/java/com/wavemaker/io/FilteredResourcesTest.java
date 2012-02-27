@@ -9,14 +9,6 @@ import java.util.Iterator;
 
 import org.junit.Test;
 
-import com.wavemaker.io.File;
-import com.wavemaker.io.FilteredResources;
-import com.wavemaker.io.Folder;
-import com.wavemaker.io.Resource;
-import com.wavemaker.io.ResourceFilter;
-import com.wavemaker.io.Resources;
-import com.wavemaker.io.ResourcesCollection;
-
 /**
  * Tests for {@link FilteredResources}.
  * 
@@ -58,5 +50,4 @@ public class FilteredResourcesTest {
         assertThat(filtered.next(), is((Resource) folder1));
         assertThat(filtered.hasNext(), is(false));
     }
-
 }

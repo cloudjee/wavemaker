@@ -8,8 +8,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-
-
 public class FileSystemPathTest {
 
     @Rule
@@ -104,6 +102,5 @@ public class FileSystemPathTest {
         FileSystemPath path = new FileSystemPath().get("a/b/").getParent();
         assertThat(path.getName(), is("a"));
         assertThat(path.toString(), is("/a"));
-
     }
 }

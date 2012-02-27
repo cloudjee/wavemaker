@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
+import java.util.Collections;
 
 import org.springframework.util.Assert;
 
@@ -18,6 +19,8 @@ import com.wavemaker.io.filesystem.FileSystemPath;
 import com.wavemaker.io.filesystem.ResourceType;
 
 public class JavaFileSystem implements FileSystem<JavaFileSystemKey> {
+
+    // FIXME assert file types?
 
     private final File root;
 
@@ -73,7 +76,7 @@ public class JavaFileSystem implements FileSystem<JavaFileSystemKey> {
 
     @Override
     public Iterable<String> list(JavaFileSystemKey key) {
-        return Arrays.asList(key.getFile().list());
+        return Collections.unmodifiableList(Arrays.asList(key.getFile().list()));
     }
 
     @Override
