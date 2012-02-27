@@ -231,7 +231,12 @@ public abstract class IOUtils {
                 throw new IOException("Can't copy directory (" + source.getAbsolutePath() + ") to non-directory: " + destination.getAbsolutePath());
             }
 
-            File files[] = source.listFiles();
+            File files[] = source.listFiles(new java.io.FilenameFilter() {
+			@Override
+			    public boolean accept(File dir, String name) {
+			    return name.indexOf("#") == -1 && name.indexOf("~") == -1;
+			}
+		    });
             for (int i = 0; i < files.length; i++) {
                 copy(files[i], new File(destination, files[i].getName()), excludes);
             }
@@ -283,7 +288,13 @@ public abstract class IOUtils {
                 throw new IOException("Can't copy directory (" + source.getAbsolutePath() + ") to non-directory: " + destination.getAbsolutePath());
             }
 
-            File files[] = source.listFiles();
+            File files[] = source.listFiles(new java.io.FilenameFilter() {
+			@Override
+			    public boolean accept(File dir, String name) {
+			    return name.indexOf("#") == -1 && name.indexOf("~") == -1;
+			}
+		    });
+
             for (int i = 0; i < files.length; i++) {
                 copy(files[i], new File(destination, files[i].getName()), includedPattern, excludedPattern);
             }

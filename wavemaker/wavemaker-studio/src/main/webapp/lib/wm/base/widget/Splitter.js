@@ -14,6 +14,7 @@
 
 dojo.provide("wm.base.widget.Splitter");
 dojo.require("wm.base.widget.Bevel");
+dojo.require("wm.base.drag.drag");
 
 /**
 	@class
@@ -131,7 +132,6 @@ dojo.declare("wm.Splitter", wm.Bevel, {
 			case 0:
 				// slowest, best feedback
 				this.adjustSize();
-				this.reflowParent();
 				break;
 			/*case 1:
 				// slower, partial feedback
@@ -150,7 +150,6 @@ dojo.declare("wm.Splitter", wm.Bevel, {
 	},
 	change: function() {
 		this.adjustSize();
-		this.reflowParent();
 	},
 	boundValue: function(inValue) {
 		var x = inValue;
@@ -192,7 +191,10 @@ dojo.declare("wm.Splitter", wm.Bevel, {
 	    var h = this.size.h + (this.layout=="bottom" ? -dy : dy);
 		//console.log(w, h, dx, dy);
 		//dojo._setMarginBox(this.sizeNode, NaN, NaN, w, h);
-		this.sizeControl.setBounds(NaN, NaN, w, h);
+	    if (this.layout == "top" || this.layout == "bottom")
+		this.sizeControl.setHeight(h + "px");
+	    else
+		this.sizeControl.setWidth(w + "px");
 	},
 	move: function(inD, inOrd, inExtent) {
 		if (inD == 0)

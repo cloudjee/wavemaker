@@ -173,6 +173,7 @@ dojo.declare("wm.debug.Dialog", wm.Dialog, {
 					  verticalAlign: "top",
 					  layoutKind: "left-to-right",
 					  width: "100%",
+					  fitToContentHeight: true,
 					  height: "35px"});
 	var bindButton = new wm.ToggleButton({owner: this,
 					      parent: treeButtonBar,

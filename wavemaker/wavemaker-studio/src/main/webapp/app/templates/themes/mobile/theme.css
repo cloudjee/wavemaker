@@ -1,0 +1,59 @@
+/*
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+
+  /**************************************************************************************************
+   * TYPE:        Button Focus for wm.Button and TabControls
+   *
+   * DESCRIPTION: get rid of focus outline whose color isn't at all in common with this theme,
+   *              and which some browsers make a bit harder to control (further work may make this 
+   *              unnecessary
+   ************************************************************************************************/
+body .wm_template input:focus,
+.wm_template button, .wm_template button:focus {
+    outline-width: 0 !important;
+}
+
+
+
+@media screen { /* HeaderContent-Level */ 
+    #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_template .wmlayout .HeaderContent a,
+    #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_template .wmlayout .HeaderContent a:visited,
+    #studio_designer.wm_template .wmlayout .HeaderContent a,
+    #studio_designer.wm_template .wmlayout .HeaderContent a:visited,
+    .wm_template #wavemakerNode .wmlayout .HeaderContent a,
+    .wm_template #wavemakerNode .wmlayout .HeaderContent a:visited {
+	color: #FFFFFF; /* HeaderContent-Styles-Font_Color */
+    }
+}
+
+@media screen { /* MainContent-Level */ 
+    #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_template .wmlayout  a,
+    #studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_template .wmlayout  a:visited,
+    #studio_designer.wm_template .wmlayout  a,
+    #studio_designer.wm_template .wmlayout  a:visited,
+    .wm_template #wavemakerNode .wmlayout  a,
+    .wm_template #wavemakerNode  .wmlayout  a:visited {
+	color: #FFFFFF; /* MainContent-Styles-Font_Color */
+    }
+}
+
+
+/* END SECTION wm.Layout */
+
+
+
+
+
+/* Custom CSS goes below this line */

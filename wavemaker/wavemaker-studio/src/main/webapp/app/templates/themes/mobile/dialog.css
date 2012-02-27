@@ -1,0 +1,220 @@
+/*
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+
+  /**************************************************************************************************
+   * TYPE:        wm.Dialog main styles
+   *
+   * DESCRIPTION: Sets the rounding, shadowing and background for the dialog
+   *
+   * NOTE:        Style of dialog main panel and button is not affected by panel type because its
+   *              parent is always the body tag
+   ************************************************************************************************/
+.wm_template .wmdialog {
+    /* Borders-Panel_BorderStyle_Radius */
+    -moz-border-radius: 4px; /* Borders-Panel_BorderStyle_Radius */
+    -webkit-border-radius: 4px; /* Borders-Panel_BorderStyle_Radius */
+    border-radius: 4px;  /* Borders-Panel_BorderStyle_Radius */
+
+    /* Floating-Shadow should automatically be calculated as min 2px 2px 2px black and preferred
+     * 1.5 times the value of wm.Content-BorderStyle_Shadow */
+    -moz-box-shadow: 3px 3px 3px black;   /* Floating-Shadow */
+    -webkit-box-shadow: 3px 3px 3px black; /* Floating-Shadow */
+    box-shadow: 3px 3px 3px black; /* Floating-Shadow */
+
+}
+
+
+ /**************************************************************************************************
+   * TYPE:        wm.Dialog Title Bar
+   *
+   * DESCRIPTION: Sets the font and backgound colors, and rounding for
+   *              the titlebar
+   ************************************************************************************************/
+
+.wm_template .dialogtitlebar .wmlabel{    
+    /* Dialogs-Styles-Font */
+    font-family: sans-serif; /* Dialogs-Styles-Font_Family */
+    font-size: 12pt; /* Dialogs-Styles-Font_TextSize */
+    color: #FFFFFF; /* Dialogs-Styles-Font_Color */
+    font-weight: bold; /* Dialogs-Styles-Font_Weight */
+}
+.wm_template .dialogtitlebar {
+    /* Dialogs-Styles-Background */
+    background-color: #444444; /* Dialogs-Styles-Background_Color */
+    background-image: url(images/repeatx/brightEdge1.png); /* Dialogs-Styles-Background_Image */
+    background-position: left top;  /* Dialogs-Styles-Background_Image-Position */
+    background-repeat: repeat-x; /* Dialogs-Styles-Background_Image-Repeat */
+
+    /* Automatically calculated to be 2px less than MainContent-Styles-Border_Style-Radius */
+    -moz-border-radius-topleft: 2px; /* wm.Dialog_Inner-Radius */
+    -moz-border-radius-topright: 2px;/* wm.Dialog_Inner-Radius */
+    -webkit-border-top-left-radius: 2px;/* wm.Dialog_Inner-Radius */
+    -webkit-border-top-right-radius: 2px;/* wm.Dialog_Inner-Radius */
+    border-radius-topleft: 2px;/* wm.Dialog_Inner-Radius */
+    border-radius-topright: 2px;/* wm.Dialog_Inner-Radius */
+}
+
+
+  /**************************************************************************************************
+   * TYPE:        wm.Dialog button panel
+   *
+   * DESCRIPTION: Sets the font and backgound colors, and rounding for
+   *              the button panel at the bottom of the dialog
+   ************************************************************************************************/
+.wm_template .dialogfooter, 
+.wm_template .wmpagedialog-controlspanel {
+    /* Dialogs-Styles-Font */
+    font-family: sans-serif; /* Dialogs-Styles-Font_Family */
+    font-size: 12pt; /* Dialogs-Styles-Font_TextSize */
+    color: #FFFFFF; /* Dialogs-Styles-Font_Color */
+    font-weight: bold; /* Dialogs-Styles-Font_Weight */
+
+    /* Dialogs-Styles-Background */
+    background-color: #444444; /* Dialogs-Styles-Background_Color */
+    /*background-image: url(images/repeatx/brightEdge1.png); / * Dialogs-Styles-Background_Image * / */
+    background-position: left top;  /* Dialogs-Styles-Background_Image-Position */
+    background-repeat: repeat-x; /* Dialogs-Styles-Background_Image-Repeat */
+
+    /* Automatically calculated to be 2px less than MainContent-Styles-Border_Style-Radius */
+    -moz-border-radius-bottomleft: 2px; /* wm.Dialog_Inner-Radius */
+    -moz-border-radius-bottomright: 2px;/* wm.Dialog_Inner-Radius */
+    -webkit-border-bottom-left-radius: 2px;/* wm.Dialog_Inner-Radius */
+    -webkit-border-bottom-right-radius: 2px;/* wm.Dialog_Inner-Radius */
+    border-radius-bottomleft: 2px;/* wm.Dialog_Inner-Radius */
+    border-radius-bottomright: 2px;/* wm.Dialog_Inner-Radius */
+}
+
+
+  /**************************************************************************************************
+   * TYPE:        wm.Dialog titlebar buttons
+   *
+   * DESCRIPTION: Fixes the font size and padding etc to insure proper
+   *              fit/alignment of button text/images
+   ************************************************************************************************/
+body.wm_template .dialogtitlebar .wmbutton,
+body .wm_template .dialogtitlebar .wmbutton {
+    /* Dialogs-TitleButtonsDefault-Background */
+    background-color: #444444; /* Dialogs-TitleButtonsDefault-Background_Color */
+    background-image: url(images/repeatx/brightEdge1.png); /* Dialogs-TitleButtonsDefault-Background_Image */
+    background-position: left top;  /* Dialogs-TitleButtonsDefault-Background_Image-Position */
+    background-repeat: repeat-x; /* Dialogs-TitleButtonsDefault-Background_Image-Repeat */
+
+    color: #444444; /* Dialogs-TitleButtonsDefault-Font_Color */
+
+    /* Not customizable yet; the "X" and "-" must fit somewhat precisely, so I don't like users messing with this unless
+     * they are ready to muck about with the css themselves */
+    font-size: 12pt !important;
+    font-weight: normal !important;
+    padding: 2px 0px 0px 2px !important;
+    font-family: sans-serif !important;
+
+    /* I may change my mind in the future, but using the button default radius here seems a mistake */
+    -moz-border-radius: 0px !important;
+    -webkit-border-radius: 0px !important;
+    border-radius: 0px !important;
+
+    -moz-box-shadow: 4px 4px 4px black; /* Dialogs-TitleButtonsDefault-BorderStyle_Shadow */
+    -webkit-box-shadow: 4px 4px 4px black; /* Dialogs-TitleButtonsDefault-BorderStyle_Shadow */
+    box-shadow: 4px 4px 4px black; /* Dialogs-TitleButtonsDefault-BorderStyle_Shadow */
+}
+
+  /**************************************************************************************************
+   * TYPE:        wm.Dialog button panel buttons
+   *
+   * DESCRIPTION: Sets font for buttons in the button panel
+   ************************************************************************************************/
+body.wm_template .dialogfooter .wmbutton,
+body .wm_template .dialogfooter .wmbutton {
+    /* Dialogs-FooterButtonsDefault-Font */
+    font-family: sans-serif; /* Dialogs-FooterButtonsDefault-Font_Family */
+    font-size: 12pt; /* Dialogs-FooterButtonsDefault-Font_TextSize */
+    color: #FFFFFF; /* Dialogs-FooterButtonsDefault-Font_Color */
+    font-weight: bold; /* Dialogs-FooterButtonsDefault-Font_Weight */
+
+    /* Dialogs-FooterButtonsDefault-Background */
+    background-color: #444444; /* Dialogs-FooterButtonsDefault-Background_Color */
+    background-image: url(images/repeatx/brightEdge1.png); /* Dialogs-FooterButtonsDefault-Background_Image */
+    background-position: left top;  /* Dialogs-FooterButtonsDefault-Background_Image-Position */
+    background-repeat: repeat-x; /* Dialogs-FooterButtonsDefault-Background_Image-Repeat */
+
+
+    -moz-box-shadow: 4px 4px 4px black; /* Dialogs-FooterButtonsDefault-BorderStyle_Shadow */
+    -webkit-box-shadow: 4px 4px 4px black; /* Dialogs-FooterButtonsDefault-BorderStyle_Shadow */
+    box-shadow: 4px 4px 4px black; /* Dialogs-FooterButtonsDefault-BorderStyle_Shadow */
+}
+
+
+  /**************************************************************************************************
+   * TYPE:        wm.Dialog button panel and titlebar buttons HOVER
+   *
+   * DESCRIPTION: Sets background for buttons with mouseover
+   ************************************************************************************************/
+
+body.wm_template .dialogtitlebar .wmbutton:hover,
+body.wm_template .dialogtitlebar .wmbutton:focus,
+body.wm_template .dialogtitlebar .wmbutton:active {
+    /* Dialogs-TitleButtonsHover-Font */
+    color: #FFFFFF; /* Dialogs-TitleButtonsHover-Font_Color */
+
+    /* Dialogs-TitleButtonsHover-Background */
+    background-color: #444444; /* Dialogs-TitleButtonsHover-Background_Color */
+    background-image: url(images/repeatx/brightEdge1.png); /* Dialogs-TitleButtonsHover-Background_Image */
+    background-position: left top;  /* Dialogs-TitleButtonsHover-Background_Image-Position */
+    background-repeat: repeat-x; /* Dialogs-TitleButtonsHover-Background_Image-Repeat */
+
+
+    -moz-box-shadow: 4px 4px 4px black; /* Dialogs-TitleButtonsHover-BorderStyle_Shadow */
+    -webkit-box-shadow: 4px 4px 4px black; /* Dialogs-TitleButtonsHover-BorderStyle_Shadow */
+    box-shadow: 4px 4px 4px black; /* Dialogs-TitleButtonsHover-BorderStyle_Shadow */
+}
+
+body.wm_template .dialogfooter .wmbutton.toggleButtonDown,
+body .wm_template .dialogfooter .wmbutton.toggleButtonDown,
+body.wm_template .dialogfooter .wmbutton:hover,
+body.wm_template .dialogfooter .wmbutton:active,
+body.wm_template .dialogfooter .wmbutton:focus {
+    /* Dialogs-FooterButtonsHover-Font */
+    color: #FFFFFF; /* Dialogs-FooterButtonsHover-Font_Color */
+
+    /* Dialogs-FooterButtonsHover-Background */
+    background-color: #444444; /* Dialogs-FooterButtonsHover-Background_Color */
+    background-image: url(images/repeatx/brightEdge1.png); /* Dialogs-FooterButtonsHover-Background_Image */
+    background-position: left top;  /* Dialogs-FooterButtonsHover-Background_Image-Position */
+    background-repeat: repeat-x; /* Dialogs-FooterButtonsHover-Background_Image-Repeat */
+`
+    -moz-box-shadow: 4px 4px 4px black; /* Dialogs-FooterButtonsHover-BorderStyle_Shadow */
+    -webkit-box-shadow: 4px 4px 4px black; /* Dialogs-FooterButtonsHover-BorderStyle_Shadow */
+    box-shadow: 4px 4px 4px black; /* Dialogs-FooterButtonsHover-BorderStyle_Shadow */
+}
+
+/* Including dialogtitlebar should make it more specific than wm_studio/theme.css,
+* so don't add this level of specificity to wm_studio
+*/
+.wm_template .dialogtitlebar .dialogminifybutton {
+    background-position: -16px 0px; /* Dialogs-Titlebar_MinifyIconWidth */
+}
+
+.wm_template .dialogtitlebar .dialogmaxifybutton {
+    background-position: -32px 0px; /* Dialogs-Titlebar_MaxifyIconWidth */
+}
+
+.wm_template .dialogtitlebar .dialogmaxifybutton,
+.wm_template .dialogtitlebar .dialogclosebutton,
+.wm_template .dialogtitlebar .dialogminifybutton {
+    background-image: url(images/DialogIconsWhite.png) !important; /* Dialogs-Titlebar_Icons */
+    background-repeat: no-repeat;
+}
+
+

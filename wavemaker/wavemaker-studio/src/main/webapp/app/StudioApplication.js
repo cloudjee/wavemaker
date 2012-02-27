@@ -15,6 +15,7 @@
 dojo.provide("wm.studio.app.StudioApplication");
 
 dojo.declare("StudioApplication", wm.Application, {
+    manageURL:false,
 	main: "Main",
         theme: "wm_studio",
 	widgets: {

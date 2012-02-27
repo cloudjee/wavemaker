@@ -36,10 +36,12 @@ dojo.declare("wm.Dashboard", wm.Control, {
 		    this.portlets = [];
 	        if (!this.dijitPortlets)
 		    this.dijitPortlets = [];
-		dojo['require']("dojox.layout.GridContainer");
-		dojo['require']("dojox.widget.Portlet");
-		dojo['require']("dijit.TooltipDialog");
+		dojo.require("dojox.layout.GridContainer");
+		dojo.require("dojox.widget.Portlet");
+		dojorequire("dijit.TooltipDialog");
 		this.inherited(arguments);
+            //wm.requireCss("lib.dojo.dijit.layout.ContentPane");
+            //wm.requireCss("lib.dojo.dijit.layout.BorderContainer");
                 wm.requireCss("lib.dojo.dojox.layout.resources.GridContainer");
                 wm.requireCss("lib.dojo.dojox.widget.Portlet.Portlet");
 	},
@@ -247,7 +249,7 @@ dojo.declare("wm.Dashboard", wm.Control, {
 	//props: {id:'portlet', title:'Portlet 1', page:'Page_widget_1', isOpen:true, isClosable:false, x:0, y:0}
 	if (!props.isOpen)
 	    return;
-	var portletProps = {'title':props.title, 'class':'soria', 'dndType': 'Portlet', 'closable':props.isClosable};
+	var portletProps = {'title':props.title, /*'class':'soria',*/ 'dndType': 'Portlet', 'closable':props.isClosable};
 	var portlet = new dojox.widget.Portlet(portletProps, dojo.create('div'));
 	portlet.wmProps = props;
 	if (this.isDesignLoaded()){

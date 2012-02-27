@@ -40,6 +40,14 @@ dojo.declare("wm.Service", wm.Component, {
 		l.sort();
 		return l;
 	},
+	makePropEdit: function(inName, inValue, inEditorProps) {
+	    var prop = this.schema ? this.schema[inName] : null;
+	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
+		switch (inName) {
+		case "operation":
+		    return new wm.SelectMenu(dojo.mixin(inEditorProps, {options: this.getOperationsList()}));
+		}
+	},
 	getOperation: function(inOperation) {
 		return this._operations[inOperation];
 	},
@@ -160,3 +168,6 @@ wm.services = {
 		wm.fire(this._services[inService.name], "destroy");
 	}
 };
+wm.Object.extendSchema(wm.Service, {
+    operation: {type: "string"}
+});

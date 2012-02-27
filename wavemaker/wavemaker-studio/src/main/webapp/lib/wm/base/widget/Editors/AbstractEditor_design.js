@@ -17,6 +17,53 @@ dojo.provide("wm.base.widget.Editors.AbstractEditor_design");
 dojo.require("wm.base.widget.Editors.AbstractEditor");
 
 
+wm.editors = [ 
+    "Text", "Date", "Time", "DateTime", "Number", "Currency", "SelectMenu", "Checkbox", "TextArea", "RadioButton", "Lookup", "Slider"
+];
+
+wm.createFieldEditor = function(inParent, inFieldInfo, inProps, inEvents, inClass) {
+	var props = dojo.mixin({}, wm.getFieldEditorProps(inFieldInfo), inProps);
+	var name = wm.getValidJsName(props.name || "editor1");
+	return inParent.owner.loadComponent(name, inParent, inClass ||"wm._TextEditor1", props, inEvents);
+};
+
+wm.getFieldEditorProps = function(inFieldInfo) {
+	var
+		f = inFieldInfo,
+		props = {
+		    caption: f.caption || wm.capitalize(f.name),
+			display: wm.getEditorType(f.displayType || f.type),
+			readonly: f.readonly,
+			editorInitProps: {required: f.required},
+      required: f.required,
+			subType: f.subType //xxx
+		};
+	// fixup: ensure checkbox is boolean type
+	if (props.display == "CheckBox") {
+		props.editorInitProps.dataType = "boolean";
+		props.displayValue = true;
+		props.emptyValue = "false";
+	} else if (props.display == "Date") {
+	    props.dateMode = "Date";
+	}
+	return props;
+};
+
+wm.updateFieldEditorProps = function(inEditor, inFieldInfo) {
+	var
+		e = inEditor,
+		props = wm.getFieldEditorProps(inFieldInfo),
+		editor = props.editorInitProps;
+	delete props.formField;
+	delete props.editorInitProps;
+	//
+	for (var i in props)
+		e.setProp(i, props[i]);
+	for (var i in editor)
+		e.editor.setProp(i, editor[i]);
+}
+
+
 wm.AbstractEditor.extend({
         themeableDemoProps: {height: "24px"},
     themeableSharedStyles: ["-Editor Borders", "Editor-Border-Color", "Editor-Hover-Border-Color", "Editor-Focused-Border-Color",  "Editor-Radius",
@@ -47,10 +94,11 @@ wm.AbstractEditor.extend({
 		if (this.width == wm.AbstractEditor.prototype.width)
 		    this.setWidth(liveform.editorWidth);
 
+/*
 		// don't set the height if the editor uses a custom height
 		if (this.constructor.prototype.height == wm.AbstractEditor.prototype.height)
 		    this.setHeight(liveform.editorHeight);
-
+		    */
 		if (this.constructor.prototype.width == wm.AbstractEditor.prototype.width)
 		    this.setWidth(liveform.editorWidth);
 		this.setReadonly(liveform.readonly);

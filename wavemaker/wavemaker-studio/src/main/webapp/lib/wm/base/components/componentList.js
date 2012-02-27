@@ -26,32 +26,39 @@ dojo.provide('wm.base.components.componentList');
  ************************************************************************************/
 wm.componentFixList = {};
 wm.componentList = {
+        'wm.Content': ['wm.base.widget.Content'],
 	'wm.DataGrid': ['build.Gzipped.wm_data_grid'],
 	'wm.DojoGrid': ['build.Gzipped.wm_dojo_grid'],
 	'wm.DojoMenu': ['build.Gzipped.wm_menus'],
         'wm.PopupMenu': ['build.Gzipped.wm_menus'],
 	'wm.DojoChart': ['build.Gzipped.wm_charts'],
 	'wm.DojoGauge': ['build.Gzipped.wm_charts'],
-	'wm.Dashboard':['wm.base.widget.Dashboard'],
-    'wm.ColorPickerDialog': ['wm.base.widget.Dialogs.ColorPickerDialog'],
+	'wm.Dashboard':['build.Gzipped.wm_dashboard'],
+	'wm.AccordionLayers':['build.Gzipped.wm_accordion'],
+	'wm.WizardLayers':['build.Gzipped.wm_wizardlayer'],
+    'wm.ColorPickerDialog': ['build.Gzipped.wm_colorpicker'],
+    'wm.ColorPicker': ['build.Gzipped.wm_colorpicker'],
+    'wm.RichTextDialog': ['wm.base.widget.Dialogs.RichTextDialog'],
 	'wm.DojoFisheye': ['wm.base.widget.DojoFisheye'],
 	'wm.DojoLightbox': ['wm.base.widget.DojoLightbox'],
 	'wm.TwitterFeed':['wm.base.widget.TwitterFeed'],
         'wm.JsonStatus':['build.Gzipped.wm_editors'],
-	'wm.Tree': ['wm.base.widget.Trees.Tree'],
-	'wm.PropertyTree': ['wm.base.widget.Trees.PropertyTree'],
-	'wm.ObjectTree': ['wm.base.widget.Trees.ObjectTree'],
-        "wm.DraggableTree":['wm.base.widget.Trees.DraggableTree'],
-	'wm.Gadget': ['build.Gzipped.wm_gadgets'],
-	'wm.gadget.YouTube': ['build.Gzipped.wm_gadgets'],
-	'wm.gadget.FacebookLikeButton': ['build.Gzipped.wm_gadgets'],
-	'wm.gadget.FacebookActivityFeed': ['build.Gzipped.wm_gadgets'],
-	'wm.gadget.GoogleMap': ['build.Gzipped.wm_gadgets'],
-	'wm.gadget.Stocks': ['build.Gzipped.wm_gadgets'],
-	'wm.gadget.Weather': ['build.Gzipped.wm_gadgets'],
-	//'wm.ImageList':['wm.base.components.ImageList'],
-	'wm.Splitter': ['wm.base.drag.capture','wm.base.drag.drag','wm.base.widget.Splitter'],
-
+	'wm.Tree': ['build.Gzipped.wm_trees'],
+	'wm.PropertyTree': ['build.Gzipped.wm_trees'],
+	'wm.ObjectTree':  ['build.Gzipped.wm_trees'],
+        "wm.DraggableTree":  ['build.Gzipped.wm_trees'],
+    'wm.Gadget': ["wm.base.widget.gadget.Gadget"],
+    'wm.gadget.YouTube': ["wm.base.widget.gadget.YouTube"],
+    'wm.gadget.YouTube': ["wm.base.widget.gadget.YouTube"],
+	'wm.gadget.FacebookLikeButton':  ["wm.base.widget.gadget.Facebook"],
+	'wm.gadget.FacebookActivityFeed': ["wm.base.widget.gadget.Facebook"],
+	'wm.gadget.GoogleMap': ["wm.base.widget.gadget.GoogleMap"],
+	'wm.gadget.Stocks': ["wm.base.widget.gadget.Stocks"],
+	'wm.gadget.Weather': ["wm.base.widget.gadget.Weather"],
+	'wm.gadget.TwitterFollowButton': ["wm.base.widget.gadget.TwitterGadgets"],
+	'wm.gadget.TwitterTweetButton': ["wm.base.widget.gadget.TwitterGadgets"],
+	'wm.gadget.TwitterList': ["wm.base.widget.gadget.TwitterGadgets"],
+    
 	'wm.RichText':['build.Gzipped.wm_editors','build.Gzipped.wm_richTextEditor'],
 
 	'wm.CheckBoxEditor':['build.Gzipped.wm_editors_old'],
@@ -79,34 +86,46 @@ wm.componentList = {
 	'wm.ListSet':['build.Gzipped.wm_editors'],
 	'wm.Number':['build.Gzipped.wm_editors'],
 	'wm.Checkbox':['build.Gzipped.wm_editors'],
-	'wm.RadioButton':['build.Gzipped.wm_editors'],
+	'wm.RadioButton':['build.Gzipped.wm_editors_misc'],
+	'wm.RadioSet':['build.Gzipped.wm_editors_misc'],
 	'wm.Currency':['build.Gzipped.wm_editors'],
 
-	'wm.Slider':['build.Gzipped.wm_editors'],
+	'wm.Slider':['build.Gzipped.wm_editors_misc'],
 	'wm.Text':['build.Gzipped.wm_editors'],
 	'wm.TextArea':['build.Gzipped.wm_editors'],
 	'wm.Time':['build.Gzipped.wm_editors'],
 	'wm.LargeTextArea':['build.Gzipped.wm_editors'],
 
-
-	'wm.dijit.ProgressBar':['wm.base.widget.dijit.ProgressBar'],
+	'wm.dijit.Dijit':['wm.base.widget.dijit.Dijit'],
+	'wm.dijit.ProgressBar':['build.Gzipped.wm_progressbar'],
 	'wm.RoundedButton':['wm.base.widget.Buttons.RoundedButton'],    
 	'wm.BusyButton':['wm.base.widget.Buttons.BusyButton'],
 	'wm.PopupMenuButton':['build.Gzipped.wm_menus'],
 	'wm.ToggleButton':['build.Gzipped.wm_editors'],
 	'wm.Timer':['wm.base.components.Timer'],
 	
+	/* Old forms and related widgets */
     'wm.SimpleForm': ['build.Gzipped.wm_livepanel'],
     'wm.LiveForm': ['build.Gzipped.wm_livepanel'],
     'wm.RelatedEditor': ['build.Gzipped.wm_livepanel'],
     'wm.LivePanel':  ['build.Gzipped.wm_livepanel'],
     'wm.EditPanel':  ['build.Gzipped.wm_livepanel'],
-	'wm.DataNavigator':  ['build.Gzipped.wm_livepanel'],
-
-
+    'wm.DataNavigator':  ['build.Gzipped.wm_livepanel'],
+    'wm.RegularExpressionFormatter': ["wm.base.widget.FormattersMisc"],
+    'wm.EvaluationFormatter': ["wm.base.widget.FormattersMisc"],
+    'wm.LinkFormatter': ["wm.base.widget.FormattersMisc"],
+    'wm.ImageFormatter': ["wm.base.widget.FormattersMisc"],
+    /* New Forms */
+    'wm.DataForm': ['build.Gzipped.wm_dataform'],
+    'wm.FormPanel': ['build.Gzipped.wm_dataform'],
+    'wm.SubForm': ['build.Gzipped.wm_dataform'],
+    'wm.DBForm': ['build.Gzipped.wm_dataform'],
+    'wm.ServiceInputForm': ['build.Gzipped.wm_dataform'],
+    'wm.ServiceQueue': ['wm.base.components.ServiceQueue'],
 	//'wm.Picture': ["wm.base.widget.Picture"],
-	'wm.dijit.Calendar':["wm.base.widget.dijit.Calendar"],
+	'wm.dijit.Calendar':["build.Gzipped.wm_editors"],
 	'wm.Html':['wm.base.widget.Html'],
+	'wm.Template':['wm.base.widget.Template'],
 	'wm.NavigationCall':["wm.base.components.NavigationCall"],
 	'wm.Property':["wm.base.components.Property"],
 	'wm.ComponentPublisher':["wm.base.components.Publisher"],
@@ -116,8 +135,8 @@ wm.componentList = {
 	'wm.CompositeMixin':['wm.base.widget.Composite'],
 	'wm.Ticker':['wm.base.widget.Ticker'],
 	'wm.FileUpload':['wm.base.widget.FileUpload'],
-	'wm.DojoFileUpload':['wm.base.widget.DojoFileUpload'],
-	'wm.DojoFlashFileUpload':['wm.base.widget.DojoFlashFileUpload'],
+        'wm.DojoFileUpload':['build.Gzipped.wm_fileupload'],
+	'wm.DojoFlashFileUpload':['build.Gzipped.wm_fileupload'],
         'wm.DijitDesigner': ["wm.base.widget.dijit.Dijit"],
 
         //'wm.Popup':['wm.base.widget.Popup'],
@@ -147,8 +166,7 @@ wm.require = function(inType, inCommon) {
 
 wm.getComponentStructure = function(inType){
 	//console.info('Loading ' + inType + ' dynamically.');
-    var isMobile = navigator.userAgent.match(/mobile/i);
-    if (inType == "wm.DojoGrid" && isMobile) {
+    if (inType == "wm.DojoGrid" && wm.isMobile) {
 	inType = "wm.List";
     }
     var requireList = wm.componentList[inType];
@@ -185,7 +203,7 @@ wm.getComponentStructure = function(inType){
 		    }
 		}
 	}
-    if (isMobile && inType == "wm.List") {
+    if (wm.isMobile && inType == "wm.List") {
 	wm.DojoGrid = wm.List;
     }
 }

@@ -15,6 +15,7 @@
 dojo.provide("wm.base.widget.DojoGrid");
 
 dojo.declare("wm.DojoGrid", wm.Control, {
+    manageHistory: true,
     deleteConfirm: "Are you sure you want to delete this?",
     deleteColumn: false,
     noHeader: false,
@@ -45,7 +46,6 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		  "dojox.grid.cells.dijit",
 		  "dojo.data.ItemFileWriteStore",
 		  "dojo.string",
-		  "wm.base.lib.currencyMappings",
 		   "dojox.grid._CheckBoxSelector",
 		   "dojox.grid._RadioSelector"],
 
@@ -102,6 +102,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 	    if (this.variable && this.variable.getData() || this.columns && this.columns.length) {
 			this.renderDojoObj();
+	    }
+	    if (this._isDesignLoaded) {
+		this.subscribe("deviceSizeRecalc", dojo.hitch(this, "deviceTypeChange"));
 	    }
 	},
 	dataSetToSelectedItem: function() {
@@ -236,6 +239,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		if (this._selectionMode == 'multiple') {
 			this.updateAllSelectedItem();
 		} else {
+		if (!this._isDesignLoaded && !this._handlingBack && this.manageHistory) {
+		    app.addHistory({id: this.getRuntimeId(),
+				    options: {selectedRow: this._lastSelectedIndex},
+				    title: "SelectionChange"});
+		}
 			this.updateSelectedItem( this.getSelectedIndex());
 		}
 		if (!this.rendering && !this._cupdating) {
@@ -312,6 +320,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		this.onCellEdited(inValue, inRowIndex, inFieldName);
 	},
 	updateSelectedItem: function(selectedIndex) {
+	    this._lastSelectedIndex = selectedIndex;
 	    if (selectedIndex == -1 || this.getRowCount() == 0) {
 		this.selectedItem.clearData();
 	    } else {
@@ -1003,7 +1012,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
 	getStructure: function(){
 		var structure = [];
-
+	    var isMobile = this._isDesignLoaded ? studio.currentDeviceType == "phone" : wm.device == "phone";
 	    if (this.deleteColumn) {
 		structure.push({hidden: false,
 				name: "-",
@@ -1012,9 +1021,19 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 				field: "_deleteColumn"});
 	    }
 
+	    var useMobileColumn = false;
+	    if (isMobile) {
+		for (var i = 0; i < this.columns.length; i++) {
+		    if (this.columns[i].mobileColumn && this.columns[i].show) {
+			useMobileColumn = true;
+			break;
+		    }
+		}
+	    }
 		dojo.forEach(this.columns, function(col){
 		    var options = col.options || col.editorProps && col.editorProps.options; // editorProps is the currently supported method
-			var obj = {	hidden:(!col.show), 
+		    var show = useMobileColumn && col.mobileColumn || !useMobileColumn && !col.mobileColumn && col.show;
+			var obj = {	hidden:!show, 
 					field: col.field, 
 					constraint: col.constraints,
 					name:col.title ? col.title : "-", 
@@ -1265,7 +1284,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                 formatFunc = 'wm_date_formatter';
             }
             this.columns.push({
-                show: i < 15,
+                show: i < 10,
                 field: f.dataIndex,
                 title: wm.capitalize(f.dataIndex),
                 width: width,
@@ -1276,9 +1295,12 @@ dojo.declare("wm.DojoGrid", wm.Control, {
         }, this);
 
         var newcolumns = [];
+	var hasMobileColumn = false;
         dojo.forEach(this.columns, dojo.hitch(this, function (col) {
+	    if (col.mobileColumn) hasMobileColumn = true;
+
             // we don't update custom fields
-            if (col.isCustomField) {
+            if (col.isCustomField || col.mobileColumn) {
                 newcolumns.push(col);
                 return;
             }
@@ -1293,6 +1315,20 @@ dojo.declare("wm.DojoGrid", wm.Control, {
             // col is no longer relevant
             return;
         }));
+	if (!hasMobileColumn) {
+	    newcolumns.push({
+		mobileColumn: true,
+		align: "left",
+		field: "MOBILE COLUMN",
+		show: true,
+		title: "-",
+		width: "100%",
+		// Grid designer is needed to generate a the full expression, this at least will do something interesting
+		// until the designer/developer opens the grid designer.
+		expression: "'<div class=\"MobileRowTitle\">" + newcolumns[0].title + ": ' + \${" + newcolumns[0].field + "} + '</div>'"
+
+	    });
+	}
         this.columns = newcolumns;
 
 /*
@@ -1324,10 +1360,14 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	getViewFields: function(){
 		var fields = [];
 		if (this.variable instanceof wm.LiveVariable)
-			fields = this.variable.getViewFields();
-		else if (this.variable instanceof wm.Variable)
-      fields = wm.getDefaultView(this.variable.type) || [];
-		return fields;
+		    fields = this.variable.getViewFields();
+	    else if (this.variable instanceof wm.Variable && wm.typeManager.getType(this.variable.type) && wm.typeManager.getType(this.variable.type).liveService)
+		    fields = wm.getDefaultView(this.variable.type) || [];
+	    else {
+		fields = wm.typeManager.getFieldList(this.variable._dataSchema, "");
+	    }
+
+	    return fields;
 	},
     setDeleteColumn: function(inDelete) {
 	this.deleteColumn = inDelete;
@@ -1410,6 +1450,20 @@ dojo.declare("wm.DojoGrid", wm.Control, {
   onCellEdited: function(inValue, rowId, fieldId) {},
 	onHeaderClick: function(evt, selectedItem, rowId, fieldId, rowNode, cellNode){
   }, 
+
+
+    handleBack: function(inOptions) {
+	this._handlingBack = true;
+	try {
+	    var selectedRow = inOptions.selectedRow;
+	    if (selectedRow == -1)
+		this.deselectAll();
+	    else
+		this.select(selectedRow);
+	} catch(e) {}
+	delete 	this._handlingBack;
+	return true;
+    },
   onSelectionChange: function() {},
   onSelect: function() {},
     onDeselect: function() {},
@@ -1617,7 +1671,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    return expValue;
 	},
     dateFormatter: function(formatterProps, backgroundColorFunc, textColorFunc, cssClassFunc,inValue, rowIdx, cellObj){
-	this.handleColorFuncs(cellObj,backgroundColorFunc, textColorFunc,cssClassFunc, rowIdx);	
+	if (this instanceof wm.DojoGrid) {
+	    this.handleColorFuncs(cellObj,backgroundColorFunc, textColorFunc,cssClassFunc, rowIdx);	
+	}
 	    if (!inValue) {
 		return inValue;
 	    } else if (typeof inValue == "number") {
@@ -1633,7 +1689,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
     /* DEPRECATED */
 	localDateFormatter: function(formatterProps, backgroundColorFunc, textColorFunc,cssClassFunc,inValue, rowIdx, cellObj){
+	if (this instanceof wm.DojoGrid) {
 	    this.handleColorFuncs(cellObj,backgroundColorFunc, textColorFunc,cssClassFunc, rowIdx);
+	}
 	    if (!inValue) {
 		return inValue;
 	    } else if (typeof inValue == "number") {
@@ -1650,7 +1708,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
     /* DEPRECATED */
 	timeFormatter: function(formatterProps, backgroundColorFunc, textColorFunc,cssClassFunc,inValue, rowIdx, cellObj){
+	if (this instanceof wm.DojoGrid) {
 	    this.handleColorFuncs(cellObj,backgroundColorFunc, textColorFunc,cssClassFunc, rowIdx);
+	}
 	    if (!inValue) {
 		return inValue;
 	    } else if (typeof inValue == "number") {
@@ -1664,7 +1724,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    return dojo.date.locale.format(inValue, constraints);
 	},
 	numberFormatter: function(formatterProps, backgroundColorFunc, textColorFunc,cssClassFunc,inValue, rowIdx, cellObj){
+	if (this instanceof wm.DojoGrid) {
 	    this.handleColorFuncs(cellObj,backgroundColorFunc, textColorFunc,cssClassFunc, rowIdx);
+	}
 	    var constraints = {
 		places: formatterProps.dijits || 0, 
 		round: formatterProps.round ? 0 : -1,
@@ -1673,15 +1735,21 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    return dojo.number.format(inValue, constraints);
 	},
 	currencyFormatter: function(formatterProps, backgroundColorFunc, textColorFunc,cssClassFunc,inValue, rowIdx, cellObj){
-	    this.handleColorFuncs(cellObj,backgroundColorFunc, textColorFunc,cssClassFunc, rowIdx);
+	    var isDesignLoaded = false;
+	    if (this instanceof wm.DojoGrid) {
+		this.handleColorFuncs(cellObj,backgroundColorFunc, textColorFunc,cssClassFunc, rowIdx);
+		isDesignLoaded = this._isDesignLoaded;
+	    }
 	    return dojo.currency.format(inValue, {
-		currency: formatterProps.currency || (this._isDesignLoaded ? studio.application.currencyLocale : app.currencyLocale) || wm.getLocaleCurrency(),
+		currency: formatterProps.currency || (isDesignLoaded ? studio.application.currencyLocale : app.currencyLocale) || "USD",
 		places: formatterProps.dijits == undefined ? 2 : formatterProps.dijits,
 		round: formatterProps.round ? 0 : -1
 	    });
 	},
 	imageFormatter: function(formatterProps, backgroundColorFunc, textColorFunc,cssClassFunc,inValue, rowIdx, cellObj){
-	    this.handleColorFuncs(cellObj,backgroundColorFunc, textColorFunc,cssClassFunc, rowIdx);
+	    if (this instanceof wm.DojoGrid) {
+		this.handleColorFuncs(cellObj,backgroundColorFunc, textColorFunc,cssClassFunc, rowIdx);
+	    }
 	    if (inValue && inValue != '') {
 		var width = formatterProps.width ? ' width="' + formatterProps.width + 'px"' : "";
 		var height = formatterProps.height ? ' height="' + formatterProps.height + 'px"' : "";
@@ -1695,6 +1763,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    }
 		return inValue;
 	},
+    /* Can't support this for mobile because "this" is required */
     buttonFormatter: function(field, formatterProps, backgroundColorFunc, textColorFunc,cssClassFunc,inValue, rowIdx, cellObj){
 	    this.handleColorFuncs(cellObj,backgroundColorFunc, textColorFunc,cssClassFunc, rowIdx);
 	    if (inValue && inValue != '') {

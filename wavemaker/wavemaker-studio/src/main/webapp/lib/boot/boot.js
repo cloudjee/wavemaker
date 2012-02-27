@@ -31,9 +31,15 @@ wm = window["wm"] || {};
 wm.version = '6.4.3RC';
 
 if (location.search.match(/(\?|\&)wmmobile=(.)/)) {
-    wm.isMobile = location.search.match(/(\?|\&)wmmobile=(\d)/)[2] !== "0";   
+    wm.device = location.search.match(/(\?|\&)wmmobile=(.*)\b/)[2] || "desktop";
+    wm.isMobile = wm.device != "desktop";
 } else {
     wm.isMobile = navigator.userAgent.match(/mobile|android/i);
+    if (!wm.isMobile) {
+	wm.device = "desktop";
+    } else {
+	wm.device =  (window.screen && (window.screen.width > 450 || window.screen.height > 450)) ? "tablet" : "phone";
+    }
 }
 
 if (location.search.match(/(\?|\&)wmdevicesize=(\d+)/)) {
@@ -146,6 +152,15 @@ wm.registerPaths = function() {
 wm.registerPackage = registerPackage = function() {
 	// stub
 };
+
+/* Load theme before loading page */
+if (!djConfig.isDebug) {
+    wm.writeCssTag(wm.relativeLibPath + "/dojo/dijit/themes/tundra/" + (wm.isMobile ? "mtheme.css" : "t.css"));
+}
+
+if (window["wmThemeUrl"]) {
+    wm.writeCssTag(wm.device == "desktop" ? wmThemeUrl : wmThemeUrl.replace(/theme\.css/,"mtheme.css"));
+}
 
 (function(){
         if (window["wmChromeFramePath"]) return;

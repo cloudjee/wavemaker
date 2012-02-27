@@ -79,6 +79,7 @@ dojo.declare("wm.VirtualListItem", null, {
 });
 
 dojo.declare("wm.VirtualList", wm.Control, {
+        manageHistory: true,
 	headerVisible: true,
 	toggleSelect: false,
 	width: "250px",
@@ -97,19 +98,27 @@ dojo.declare("wm.VirtualList", wm.Control, {
 		this.domNode.appendChild(this.headerNode);
 		this.domNode.appendChild(this.listNode);
 		this.setHeaderVisible(this.headerVisible);
-	    this.connect(this, "onSelect", this, "onselect"); // changed from onselect to onSelect for grid compatibility
-	    this.connect(this, "onDeselect", this, "ondeselect");// changed from onselect to onSelect for grid compatibility
-	    if (app._touchEnabled) {
+	    if (this.onselect)
+		this.connect(this, "onSelect", this, "onselect"); // changed from onselect to onSelect for grid compatibility
+	    if (this.ondeselect)
+		this.connect(this, "onDeselect", this, "ondeselect");// changed from onselect to onSelect for grid compatibility
+	    if (true || app._touchEnabled) {
 		wm.conditionalRequire("lib.github.touchscroll.touchscroll");
 		this._listTouchScroll = new TouchScroll(this.listNode, {/*elastic:true, */owner: this});
 		this.listNode = this._listTouchScroll.scrollers.inner;
 		this._listTouchScroll.scrollers.outer.style.position = "absolute";
 		this._listTouchScroll.scrollers.outer.style.left = "0px";
 		this._listTouchScroll.scrollers.outer.style.top = "0px";
-
+		this.connect(this._listTouchScroll, "setupScroller", this, "postSetupScroller");
 	    }
 
 	},
+    postSetupScroller: function() {
+	var touchScrollOuter = this._listTouchScroll.scroller.outer;
+	if (touchScrollOuter) {
+	    touchScrollOuter.style.width = "100%";
+	}
+    },
 	dataSetToSelectedItem: function(inDataSet) {
 		this.selectedItem.setLiveView((inDataSet|| 0).liveView);
 		this.selectedItem.setType(inDataSet ? inDataSet.type : "any");
@@ -151,30 +160,40 @@ dojo.declare("wm.VirtualList", wm.Control, {
 
     renderBounds: function() {
 	this.inherited(arguments);
-	if (this.headerVisible && !this.isAncestorHidden()) {
-	    wm.job(this.getRuntimeId() + "ListRenderBounds", 1, dojo.hitch(this, "renderListBounds"));
+	var hidden = this.isAncestorHidden();
+	if (!this._listTouchScroll && this.headerVisible && !hidden) {
+	    wm.job(this.getRuntimeId() + ".postRenderBounds", 1, dojo.hitch(this, "postRenderBounds"));	    
+	}
+	if (this._listTouchScroll && !hidden) {
+	    wm.job(this.getRuntimeId() + ".postTouchRenderBounds", 1, dojo.hitch(this, "postTouchRenderBounds"));
+	}
+
+    },
+    postRenderBounds: function() {
+	if (!this.isAncestorHidden()) {
+	    var coords = dojo.marginBox(this.headerNode);
+	    var bodyheight = this.getContentBounds().h - coords.h;
+	    this.listNode.style.height = bodyheight + "px";
 	}
     },
-    renderListBounds: function() {
+    postTouchRenderBounds: function() {
 	var coords = dojo.marginBox(this.headerNode);
-	if (coords.h == 0 && !this.isAncestorHidden()) {
-	    return wm.job(this.getRuntimeId() + "ListRenderBounds", 1, dojo.hitch(this, "renderListBounds"));
-	}
 	var bodyheight = this.getContentBounds().h - coords.h;
-	if (!this._listTouchScroll) 
-	    this.listNode.style.height = bodyheight + "px";
-	else
-	    this._listTouchScroll.scrollers.outer.parentNode.height = bodyheight + "px";
+	this._listTouchScroll.scrollers.outer.parentNode.height = bodyheight + "px";
 
-	if (this._listTouchScroll) {
-	    var b = this.getContentBounds();
-	    this._listTouchScroll.scrollers.outer.style.width = b.w + "px";
-	    this._listTouchScroll.scrollers.outer.style.height = (b.h - coords.h) + "px";
-	    this._listTouchScroll.scrollers.outer.style.top = coords.h + "px";
-	    if (this.updateHeaderWidth)
-		this.updateHeaderWidth();
+	var b = this.getContentBounds();
+	var s = this._listTouchScroll.scrollers.outer.style;
+	var changed = s.width != (b.w + "px") || s.height != (b.h - coords.h) + "px";
+	if (changed) {
+	    this._listTouchScroll.scrollers.outer.parentNode.style.width = this.listNode.style.width = s.width = b.w + "px";
+	    s.height = (b.h - coords.h) + "px";
 	}
-
+	this._listTouchScroll.scrollers.outer.style.top = "0px";//coords.h + "px";
+	if (this.updateHeaderWidth)
+	    this.updateHeaderWidth();
+	if (changed) {
+	    this._listTouchScroll.setupScroller();
+	}
     },
 	clear: function() {
 		this._setHeaderVisible(false);
@@ -294,6 +313,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 			this.addToSelection(li);
 	},
 	clickSelect: function(inItem, inEvent) {
+	    var selectedIndexWas = this.getSelectedIndex();
 		if (this.multiSelect && (inEvent.ctrlKey || inEvent.shiftKey)) {
 			if (inEvent.ctrlKey)
 				this.ctrlSelect(inItem);
@@ -315,6 +335,12 @@ dojo.declare("wm.VirtualList", wm.Control, {
 					this.eventDeselect(inItem);
 			}
 		}
+		if (!this._isDesignLoaded && !this._handlingBack && this.manageHistory) {
+		    app.addHistory({id: this.getRuntimeId(),
+				    options: {selectedRow: selectedIndexWas},
+				    title: "SelectionChange"});
+		}
+	    
 	},
     eventDeselect: function(inItem, ignoreSelectedItem) {
 		if (this.multiSelect)
@@ -350,6 +376,15 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	getSelectedIndex: function() {
 		return this.selected ? this.selected.index : -1;
 	},
+    handleBack: function(inOptions) {
+	this._handlingBack = true;
+	try {
+	    var selectedRow = inOptions.selectedRow;
+	    this.select(selectedRow);
+	} catch(e) {}
+	delete 	this._handlingBack;
+	return true;
+    },
 	// events
 	_oncanmouseover: function(inEvent, inItem, inMouseOverInfo) {
 	},

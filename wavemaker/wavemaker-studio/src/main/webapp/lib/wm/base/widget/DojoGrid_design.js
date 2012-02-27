@@ -134,6 +134,20 @@ wm.DojoGrid.extend({
 	    }
 	    return l;
 	}	
+    },
+    deviceTypeChange: function() {
+	if (this.isDestroyed) return;
+	var hasMobileColumn;
+	for (var i = 0; i < this.columns.length; i++) {
+	    var c = this.columns[i];
+	    if (c.mobileColumn && c.show) {
+		hasMobileColumn = true;
+		break;
+	    }
+	}
+
+        dojo.toggleClass(this.domNode, "dojoGridNoHeader", this.noHeader || Boolean(hasMobileColumn && studio.currentDeviceType == "phone"));
+	this.renderDojoObj();
     }
 /*
 	update: function() {

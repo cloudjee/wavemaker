@@ -156,9 +156,11 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
                     /* Step 7a: Calculate the bounds in flow of axis.
                      * If its % sized: bounds.w or bounds.h is now the %size * our ratio multiplier that builds in amount of free space and normalizes % to total of 100%
                      *                 for all children.  
-                     * If px sized: We aren't calculating this bounds axis, its a fixed size, so just set it to NaN
                      */
-		    b[inFlowAxis] = c._percEx[inFlowAxis] ? Math.round((flowEx.ratio * c._percEx[inFlowAxis])) : NaN;		
+		    b[inFlowAxis] = c._percEx[inFlowAxis] ? Math.round((flowEx.ratio * c._percEx[inFlowAxis])) : NaN;
+		    if (wm.isMobile && isNaN(b[inFlowAxis]) ){
+			b[inFlowAxis] = parseInt(inFlowAxis == "w" ? c.width : c.height);
+		    }
 		    var minName = inFlowAxis == "w" ? "minWidth" : wm.isMobile ? "minMobileHeight" : "minHeight";
                     if (b[inFlowAxis] < c[minName])
                         b[inFlowAxis] = c[minName];
@@ -203,7 +205,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 				cFitSize = b.w;
 			}
 		    }
-		    if (wm.isMobile && b.w > originalB.w) {
+		    if (wm.isMobile && (b.w > originalB.w || isNaN(b.w) && c.bounds.w > originalB.w)) {
 			b.w = originalB.w;
 		    }
 
@@ -541,6 +543,7 @@ wm.layout.addCache("top-to-bottom", new wm.layout.VBox());
  *    scrollY: a fluid layout's height must be fluid and fit its children
  *    To scroll a fluid region you must make the parent container autoScrolling
  */
+/*
 dojo.declare("wm.layout.Fluid", wm.layout.Base, {
     flow: function(inContainer,reflowTest) {
 	if (inContainer._inFluidReflow) return;
@@ -558,7 +561,7 @@ dojo.declare("wm.layout.Fluid", wm.layout.Base, {
 		minWidths[c.getRuntimeId()] = c.getMinWidthProp();
 	    }
 
-	    /* PASS 1: figure out which widgets will go on which row */
+	    / * PASS 1: figure out which widgets will go on which row * /
 	    var rows = [[]];
 	    var currentRow = rows[0];
 	    var currentWidth = 0;
@@ -578,16 +581,16 @@ dojo.declare("wm.layout.Fluid", wm.layout.Base, {
 			requestedWidth = minWidths[c.getRuntimeId()];
 		}
 		//var minWidth = (!c._percEx.w) ? c.bounds.w : minWidths[c.getRuntimeId()];
-		/* If there are no items in this row, then add the next item no matter what its size is;
+		/ * If there are no items in this row, then add the next item no matter what its size is;
 		 * if this one widget is wider than the container's width it will be adjusted later 
-		 */
+		 * /
 		if (currentRow.length == 0) {
 		    currentRow.push(c);
 		    currentWidth = requestedWidth;
 		    currentRowHeight = c.bounds.h;
 		}
 
-		/* If there's no more room, its time to move on to the next row */
+		/ * If there's no more room, its time to move on to the next row * /
 		else if (currentWidth + requestedWidth > maxWidth) {
 		    currentRow = [c];
 		    rows.push(currentRow);
@@ -604,7 +607,7 @@ dojo.declare("wm.layout.Fluid", wm.layout.Base, {
 	    }
 	    requiredHeight += currentRowHeight;
 	    if (reflowTest) return requiredHeight;
-	    /* Now iterate over each row, and layout the widgets for each row */
+	    / * Now iterate over each row, and layout the widgets for each row * /
 	    var top = inContainer.padBorderMargin.t;
 	    for (var rowId = 0; rowId < rows.length; rowId++) {
 		top += this.renderRow(rows[rowId],b.l,maxWidth,top,minWidths);
@@ -623,7 +626,7 @@ dojo.declare("wm.layout.Fluid", wm.layout.Base, {
     renderRow: function(row,left,maxWidth, top,minWidths) {
 	var maxHeight = 0;
 
-	/* Step 1: normalize the % based widths */
+	/ * Step 1: normalize the % based widths * /
 	var totalPercent = 0;
 	var availableWidth = maxWidth;
 	for (var i = 0; i < row.length; i++) {
@@ -637,9 +640,9 @@ dojo.declare("wm.layout.Fluid", wm.layout.Base, {
 
 	var ratio = 100/totalPercent;
 
-	/* Step 2: find the widgets whose minWidth is greater than the width allocated via their percent size, and
+	/ * Step 2: find the widgets whose minWidth is greater than the width allocated via their percent size, and
 	 * remove them from the percent calculation
-	 */
+	 * /
 	var ignorePercent = {};
 	for (var i = 0; i < row.length; i++) {
 	    var c = row[i];
@@ -649,7 +652,7 @@ dojo.declare("wm.layout.Fluid", wm.layout.Base, {
 	    }
 	}
 
-	/* Step 3: Take a second pass at calculating the ratio */
+	/ * Step 3: Take a second pass at calculating the ratio * /
 	if (!wm.isEmpty(ignorePercent)) {
 	     totalPercent = 0;
 	     availableWidth = maxWidth;
@@ -738,3 +741,4 @@ dojo.declare("wm.layout.Fluid", wm.layout.Base, {
 
 wm.layout.register("fluid", wm.layout.Fluid);
 wm.layout.addCache("fluid", new wm.layout.Fluid());
+*/

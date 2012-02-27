@@ -1475,7 +1475,6 @@ buildUtil.optimizeJsDir = function(/*String*/startDir, /*RegeExp*/optimizeIgnore
 
 buildUtil.optimizeCss = function(/*String*/startDir, /*String*/optimizeType, /*String?*/cssImportIgnore){
 	//summmary: Optimizes CSS files in a directory.
-	
 	if(optimizeType.indexOf("comments") != -1){
 		//Make sure we have a delimited ignore list to make matching faster
 		if(cssImportIgnore){
@@ -1624,7 +1623,7 @@ buildUtil.flattenCss = function(/*String*/fileName, /*String*/fileContents, /*St
 
 			return importContents;
 		}catch(e){
-			logger.trace(fileName + "\n  Cannot inline css import, skipping: " + importFileName);
+		    logger.trace(fileName + "\n  Cannot inline css import, skipping: " + importFileName + "; E:" + e.toString());
 			return fullMatch;
 		}
 	});

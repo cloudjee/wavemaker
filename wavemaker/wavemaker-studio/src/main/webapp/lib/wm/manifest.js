@@ -21,7 +21,7 @@ wm.registerPaths(
 wm.loadLibs([ 
 	// Dijit
 	"css.dijit.themes.tundra.tundra",
-	"css.dijit.themes.soria.soria",
+        //"css.dijit.themes.soria.soria",
 	"css.dojox.grid.resources.Grid",
 	"css.dojox.grid.resources.tundraGrid",
 	"css.dojox.widget.Portlet.Portlet",
@@ -32,7 +32,7 @@ wm.loadLibs([
 	"dijit.form.FilteringSelect",
 	"dojox.html.styles",
 	// WM
-	"css.wm.base.widget.themes.default.theme",
+        "css.wm.base.widget.themes.default." + (wm.isMobile ? "m" : "") + "theme",
 	"css.wm.base.styles.wavemaker",
 	"css.wm.base.styles.progressBar",
 	"css.dojox.widget.FisheyeList.FisheyeList",
@@ -81,14 +81,14 @@ wm.loadLibs([
 	"wm.base.components.ServiceCall",
 	"wm.base.components.ServiceQueue",
 	"wm.base.components.ServiceVariable",
+	"wm.base.components.PhoneGapService",
 	"wm.base.components.Timer",
 	"wm.base.components.SalesForceMonitorVariable",
 	"wm.base.components.LiveView",
 	"wm.base.components.LiveVariable",
 	"wm.base.components.LogoutVariable",
-	"wm.base.components.NavigationCall",
 	"wm.base.components.NavigationService",
-	"wm.base.components.FunctionService",
+    //"wm.base.components.FunctionService",
 	"wm.base.components.TypeDefinition",
 	//"wm.base.components.FileTransferService",
 	"wm.base.components.JsonRpcService",
@@ -96,6 +96,7 @@ wm.loadLibs([
     //"wm.base.components.DomMacro",
 	// widgets
 	"wm.base.widget.Formatters",
+	"wm.base.widget.FormattersMisc",
 	"wm.base.widget.Editors.dijit",
 
     /* Old Editors */
@@ -138,8 +139,13 @@ wm.loadLibs([
 	"wm.base.widget.Splitter",
 	"wm.base.widget.Layers.Decorator",
 	"wm.base.widget.Layers.TabsDecorator",
+	"wm.base.widget.Layers.WizardDecorator",
+	"wm.base.widget.Layers.BreadcrumbDecorator",
 	"wm.base.widget.Layers.AccordionDecorator",
 	"wm.base.widget.Layers",
+	"wm.base.widget.AccordionLayers",
+	"wm.base.widget.WizardLayers",
+	"wm.base.widget.BreadcrumbLayers",
 	"wm.base.widget.Buttons.ToolButton",
 	"wm.base.widget.Buttons.Button",
 	"wm.base.widget.Buttons.ToggleButton",

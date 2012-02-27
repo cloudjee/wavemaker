@@ -839,7 +839,7 @@ dojo.declare(
 			    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 			     * WaveMaker: Added support for indenting menu items */
 			    if (item.indent)
-				dojo.addClass(menuitem, "indentOption" + (item.indent === true) ? "" : item.indent); 
+				dojo.addClass(menuitem, "indentOption" + ((item.indent === true) ? "" : item.indent)); 
 
 				dojo.attr(menuitem, "id", this.id + i);
 				this.domNode.insertBefore(menuitem, this.nextButton);

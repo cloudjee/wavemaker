@@ -38,7 +38,7 @@
 [ bundlePackage.BasicWidgets + "/" +  bundlePackage.Formatting_Category, bundlePackage.Spacer, "wm.Spacer", "wm.base.widget.Spacer", "Studio_paletteImageList_21", bundlePackage.descSpacer, {}, false],
 [ bundlePackage.BasicWidgets + "/" +  bundlePackage.Formatting_Category, bundlePackage.Splitter, "wm.Splitter", "wm.base.widget.Splitter", "Studio_paletteImageList_22", bundlePackage.descSplitter, {}, false],
 [ bundlePackage.BasicWidgets + "/" +  bundlePackage.Formatting_Category, bundlePackage.Bevel, "wm.Bevel", "wm.base.widget.Bevel", "Studio_paletteImageList_3", bundlePackage.descBevel, {}, false],
-[ bundlePackage.BasicWidgets + "/" +  bundlePackage.Formatting_Category, bundlePackage.Content, "wm.Content", "wm.base.widget.Content", "Studio_paletteImageList_7", bundlePackage.descContent, {}, false],
+//[ bundlePackage.BasicWidgets + "/" +  bundlePackage.Formatting_Category, bundlePackage.Content, "wm.Content", "wm.base.widget.Content", "Studio_paletteImageList_7", bundlePackage.descContent, {}, false],
 [ bundlePackage.BasicWidgets + "/" +  bundlePackage.Formatting_Category, bundlePackage.HTML, "wm.Html", "wm.base.widget.Html", "Studio_paletteImageList_7", bundlePackage.descHtml, {}, false],
 [ bundlePackage.BasicWidgets + "/" +  bundlePackage.Formatting_Category, bundlePackage.IFrame, "wm.IFrame", "wm.base.widget.IFrame", "Studio_paletteImageList_14", bundlePackage.descIFrame, {}, false],
 
@@ -53,11 +53,11 @@
 [ bundlePackage.Containers, bundlePackage.Rounded_Panel, "wm.FancyPanel", "wm.base.widget.Panel", "Studio_paletteImageList_16", bundlePackage.descFancyPanel, {}, false],
 
 
-[ bundlePackage.Containers + "/" + bundlePackage.Containers_Layer_Category, bundlePackage.Accordion, "wm.AccordionLayers", "wm.base.widget.Layers", "Studio_paletteImageList_18", bundlePackage.descAccordion, {}, false],
+[ bundlePackage.Containers + "/" + bundlePackage.Containers_Layer_Category, bundlePackage.Accordion, "wm.AccordionLayers", "wm.base.widget.AccordionLayers", "Studio_paletteImageList_18", bundlePackage.descAccordion, {}, false],
 [ bundlePackage.Containers + "/" +  bundlePackage.Containers_Layer_Category, bundlePackage.Layers, "wm.Layers", "wm.base.widget.Layers", "Studio_paletteImageList_12", bundlePackage.descLayers, {}, false],
 [ bundlePackage.Containers + "/" +  bundlePackage.Containers_Layer_Category, bundlePackage.Tabs, "wm.TabLayers", "wm.base.widget.Layers", "Studio_paletteImageList_23",bundlePackage.descTabs, {}, false],
-[ bundlePackage.Containers + "/" +  bundlePackage.Containers_Layer_Category, bundlePackage.Wizards, "wm.WizardLayers", "wm.base.widget.Layers", "Studio_paletteImageList_23", bundlePackage.descWizard, {}, false],
-[ bundlePackage.Containers + "/" +  bundlePackage.Containers_Layer_Category, bundlePackage.Breadcrumbs, "wm.BreadcrumbLayers", "wm.base.widget.Layers", "Studio_paletteImageList_23", bundlePackage.descWizard, {}, false],
+[ bundlePackage.Containers + "/" +  bundlePackage.Containers_Layer_Category, bundlePackage.Wizards, "wm.WizardLayers", "wm.base.widget.WizardLayers", "Studio_paletteImageList_23", bundlePackage.descWizard, {}, false],
+[ bundlePackage.Containers + "/" +  bundlePackage.Containers_Layer_Category, bundlePackage.Breadcrumbs, "wm.BreadcrumbLayers", "wm.base.widget.BreadcrumbLayers", "Studio_paletteImageList_23", bundlePackage.descWizard, {}, false],
 
 
 [ bundlePackage.Dialogs, bundlePackage.GenericDialog, "wm.GenericDialog", "wm.base.widget.Dialogs.GenericDialog", "Studio_paletteImageList_4", bundlePackage.descGenericDialog, {}, false],
@@ -202,8 +202,8 @@
 
 [ bundlePackage.Non_Visual_Components, bundlePackage.ServiceVariable, "wm.ServiceVariable", "wm.base.components.ServiceVariable", "Studio_paletteImageList_43", "", {},false],
 [ bundlePackage.Non_Visual_Components, bundlePackage.LiveVariable, "wm.LiveVariable", "wm.base.components.LiveVariable", "Studio_paletteImageList_37", "", {},false],
-[ bundlePackage.Non_Visual_Components, bundlePackage.NavigationCall, "wm.NavigationCall", "wm.base.components.NavigationCall", "Studio_paletteImageList_39", "", {},false],
-
+[ bundlePackage.Non_Visual_Components, bundlePackage.NavigationCall, "wm.NavigationCall", "wm.base.components.NavigationService", "Studio_paletteImageList_39", "", {},false],
+[ bundlePackage.Non_Visual_Components, "PhoneGapCall", "wm.PhoneGapCall", "wm.base.components.PhoneGapService", "Studio_paletteImageList_43", "", {},false],
 
 /*[ "Non-Visual Components", "SalesForceMonitorVariable", "wm.SalesForceMonitorVariable", "wm.base.components.SalesForceMonitorVariable", "images/wm/servicevar_24.png"],*/
 [ bundlePackage.Non_Visual_Components, bundlePackage.ImageList, "wm.ImageList", "wm.base.components.ImageList", "Studio_paletteImageList_17", "", {parentMenu: bundlePackage.Graphics}, false],

@@ -150,7 +150,7 @@ dojo.declare("wm.debug.EventsPanel", wm.Container, {
 	    eventListVar:  ["wm.Variable", {type: "debugEventType", isList: true}],
 	    eventChainListVar:  ["wm.Variable", {type: "debugEventType", isList: true}],
 	    gridPanel: ["wm.Panel", {layoutKind: "top-to-bottom", width: "100%", height: "100%",  verticalAlign: "top", horizontalAlign: "left"},{},{
-		searchPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "20px", verticalAlign: "top", horizontalAlign: "left"},{},{
+		searchPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "20px", fitToContentHeight: true,verticalAlign: "top", horizontalAlign: "left"},{},{
 		    showBindings: ["wm.Checkbox", {width: "150px", captionSize: "120px", caption: "Show Bindings"},{onchange: "searchChange"}],
 		    showErrors: ["wm.Checkbox", {width: "150px", captionSize: "120px", caption: "Errors Only"},{onchange: "searchChange"}],
 		    clearButton: ["wm.Button", {width: "60px", height: "20px", margin:"0",margin:"2",caption: "Clear",border:"1",borderColor:"#666"}, {onclick: "clearEvents"}]

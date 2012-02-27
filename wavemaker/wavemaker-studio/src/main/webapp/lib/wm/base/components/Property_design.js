@@ -17,6 +17,19 @@ dojo.require("wm.base.components.Property");
 
 
 wm.Property.extend({
+    designTimeInit: function() {
+	if (this.property) {
+	    /* onIdle because dojo.connect requires that the component be created, and it won't be created until the page finishes generating */
+	    wm.onidle(this, function() {
+		this.selectProperty(this.property);
+	    });
+
+	    
+	    this._nameChangeConnect = this.connect(c, "set_name", this, function() {
+		this.property = c.name + "." + prop;
+	    });
+	}
+    },
 	listProperties: function() {
 		var p = this.inherited(arguments);
 		p.bindTarget.ignoretmp = this.isEvent;

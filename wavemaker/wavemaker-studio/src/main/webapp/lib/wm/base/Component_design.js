@@ -81,7 +81,7 @@ wm.Component.extend({
 
 	    if (this.deletionDisabled) {
                 props = dojo.clone(props);
-		props.name = {ignoretmp: 1};
+		props.name = {hidden: 1};
 	    }
 		return props;
 	},

@@ -345,9 +345,8 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
 
 /* designer */
 
-.Studio-designer {
-	border: 2px solid #3d80df;
-	/*border-color: silver;*/
+.Studio-designer, .Studio-designer .wmlayout {
+    outline: 0px !important;
 }
 
 /* outlining */
@@ -482,41 +481,6 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
 	height: 24px;
 }
 */
-
-.Studio-designerCanvasBtn {
-	background-color: transparent;
-	background-image: url(images/canvas_btn_on.gif);
-	border: 0 none;
-}
-
-.Studio-designerSourceBtn {
-	background-image: url(images/source_btn_off.gif);
-	border: 0 none
-}
-
-.Studio-designerResourcesBtn {
-	background-image: url(images/resources_btn_off.gif);
-	border: 0 none
-}
-
-
-
-.Studio-sourceCanvasBtn {
-	background-image: url(images/canvas_btn_off.gif);
-	border: 0 none;
-}
-
-.Studio-sourceSourceBtn {
-	background-image: url(images/source_btn_on.gif);
-	border: 0 none;
-}
-
-.Studio-sourceResourceBtn {
-	background-image: url(images/resources_btn_on.gif);
-	border: 0 none;
-}
-
-
 
 .Studio-projectTasks {
 	padding: 0px 0px 2px 2px;
@@ -896,7 +860,7 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
 	background-position: center;
 }
 
-#studio_benchbevel, #studio_benchbevel2, #studio_benchbevel3, #studio_benchbevel4, #studio_benchbevel12, #studio_themesbevel, .studio_tabs_bevel, #studio_benchbevel8882, #studio_benchbevel11_11s, #studio_benchbevel11, #studio_splitter1 {
+#studio_benchbevel, #studio_benchbevel2, #studio_benchbevel3, #studio_benchbevel4, #studio_benchbevel12, #studio_themesbevel, .studio_tabs_bevel, #studio_benchbevel8882, #studio_benchbevel11_11s, #studio_benchbevel11, #studio_splitter1, #studio_docSplitter {
 	background-color: #959dab;
 	border-top: 1px solid #c0c4ca;
 	border-bottom: 1px solid #363b44;
@@ -1304,7 +1268,8 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #studio_PIContents .wmtogglebutton,
 .ResourceManager .wmtablayers-tab,
 .GridDesigner .wmtablayers-tab,
-#studio_inspector .wmaccordion-header
+#studio_inspector .wmaccordion-header,
+.StudioButton.wmtogglebutton
  {
 	-moz-border-radius-topleft: 4px; 
 	-moz-border-radius-topright: 4px; 
@@ -1325,7 +1290,12 @@ body.wm-darksnazzy .wmToolbar button:hover {
 	color: #FFF;
     padding: 2px 5px 3px 5px;
 }
-
+.StudioButton.wmtogglebutton {
+	-moz-border-radius: 0px; 
+	-webkit-border-radius: 0px; 
+	border-radius: 0px; 
+	background-image: none !important;
+}
 body #studio_inspector .wmaccordion-header,
 #studio_PIContents .wmtogglebutton {
 	-moz-border-radius: 4px; 
@@ -1372,7 +1342,8 @@ body #studio_inspector .wmaccordion-header,
 #studio_PIContents .wmtablayers-selected,
 #studio_PIContents .wmtogglebutton.toggleButtonDown,
 .ResourceManager .wmtablayers-selected,
-.GridDesigner .wmtablayers-selected
+.GridDesigner .wmtablayers-selected,
+.StudioButton.wmtogglebutton.toggleButtonDown
  {
 	border-top: 1px solid #c0c4ca;
 	border-right: 1px solid #363b44;
@@ -1532,7 +1503,7 @@ background-color: transparent;
     height: 16px;
 }
 
-.Studio .indentOption, .Studio .indentOption1 {
+.Studio .indentOption, .Studio .indentOption1, .studioIndentOption .dijitMenuItemLabel {
     padding-left: 20px !important;
 }
  .Studio .indentOption2 {
@@ -1705,6 +1676,7 @@ color: rgb(0,270,0);
 
 .Studio-scriptRibbon, 
 .Studio-ribbon,
+.Studio-devicesRibbon,
 .Studio-themesRibbon,
 .Studio-cssRibbon,
 .Studio-markupRibbon,
@@ -1801,3 +1773,10 @@ color: rgb(0,270,0);
 
 
 
+#studio_docHtml {
+    pointer: cursor;
+    text-decoration: underline;
+}
+#studio_docHtml:hover {
+background: transparent !important;
+}

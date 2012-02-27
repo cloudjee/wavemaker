@@ -4,13 +4,14 @@ designtime/
 .project
 .classpath
 .DS_Store
+*.class
 *#*
 *~
 wavemaker/wavemaker-studio/src/main/webapp/WEB-INF/classes/
 wavemaker/wavemaker-studio/src/main/webapp/WEB-INF/project-managers.xml
 wavemaker/wavemaker-studio/src/main/webapp/WEB-INF/project-services.xml
-wavemaker/wavemaker-studio/src/main/webapp/WEB-INF/classes
-wavemaker/wavemaker-studio/src/main/webapp/WEB-INF/lib
+wavemaker/wavemaker-studio/src/main/webapp/WEB-INF/classes/*
+wavemaker/wavemaker-studio/src/main/webapp/WEB-INF/lib/*
 wavemaker/wavemaker-studio/src/main/webapp/META-INF/MANIFEST.MF
 wavemaker/wavemaker-studio/src/main/webapp/services/
 wavemaker/wavemaker-studio/src/main/webapp/types.js
@@ -20,3 +21,6 @@ wavemaker/wavemaker-studio/src/main/webapp/lib/dojo/release/
 wavemaker/wavemaker-studio/src/main/webapp/build
 wavemaker/wavemaker-studio/src/main/webapp/lib/build
 wavemaker/wavemaker-studio/src/main/webapp/lib/compressed
+wavemaker/wavemaker-studio/src/main/webapp/lib/wm/compressed
+wavemaker/wavemaker-studio/src/main/webapp/lib/dojo/dijit/themes/tundra/t.css
+wavemaker/wavemaker-studio/src/main/webapp/lib/dojo/dojo/dojo_build.js.gz

@@ -14,7 +14,6 @@
 
 dojo.provide("wm.base.widget.Editors.Date");
 dojo.require("wm.base.lib.date");
-dojo.require("wm.base.widget.Editors.Base");
 dojo.require("dijit.form.DateTextBox");
 dojo.require("dijit.form.TimeTextBox");
 

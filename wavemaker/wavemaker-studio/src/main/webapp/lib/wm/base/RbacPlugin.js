@@ -81,6 +81,7 @@ wm.Plugin.plugin("rbacLayer", wm.Layer, {
 wm.Plugin.plugin("rbacservice", wm.ServiceVariable, {
 	roles: '',
     update: function() {
+	if (djConfig.isDebug) try { this.log("update", arguments.callee.caller.nom || arguments.callee.caller.name || "anonymous");} catch(e) {}
 	if (!this.roles || this.isRbacUpdateAllowed())
 	    return this.rbacserviceSocket(arguments);
 	else {
@@ -121,9 +122,9 @@ wm.Plugin.plugin("rbacservice", wm.ServiceVariable, {
 
 wm.Plugin.plugin("mobile", wm.Control, {
     deviceSizes: '',
-    prepare: function() {
+    prepare: function(inProps) {
 	this.mobileSocket(arguments);
-	if (this.deviceSizes || window["studio"] && this.generateForDevice) {
+	if (this.deviceSizes || inProps.deviceSizes || window["studio"] && this.deviceType) {
 	    this._mobileShowingRequested = this.showing;
 	    this.showing = this.updateMobileShowing(this.showing);
 	    this.subscribe("deviceSizeRecalc", this, "reshowMobile");
@@ -136,7 +137,7 @@ wm.Plugin.plugin("mobile", wm.Control, {
 	/* wm.Layer.setShowing calls TabDecorator.setShowing which calls wm.Control.setShowing, which would clobber our
 	 * _mobileShowingRequested value
 	 */
-	if (this instanceof wm.Layer == false && this.deviceSizes || this._isDesignLoaded && this.generateForDevice)
+	if (this instanceof wm.Layer == false && this.deviceSizes || this._isDesignLoaded && this.deviceType)
 	    inValue = this.updateMobileShowing(inValue);
 	this.mobileSocket(arguments);
     },
@@ -144,7 +145,7 @@ wm.Plugin.plugin("mobile", wm.Control, {
 	if (!this._cupdating)
 	    this._mobileShowingRequested = inValue; // cache whether it should be showing even if we don't let it show
 
-	if (this.deviceSizes && this.deviceSizes.length || this._isDesignLoaded && this.generateForDevice ) {
+	if (this.deviceSizes && this.deviceSizes.length || this._isDesignLoaded && this.deviceType ) {
 	    return inValue && this.isMobileShowAllowed();
 	} else {
 	    return inValue;
@@ -152,9 +153,8 @@ wm.Plugin.plugin("mobile", wm.Control, {
     },
     isMobileShowAllowed: function() {
 	if (this._isDesignLoaded) {
-	    var deviceType = studio.deviceTypeSelect.getDataValue().toLowerCase();
-	    if  (this.generateForDevice == "mobile" && deviceType == "desktop" ||
-		 this.generateForDevice == "desktop" && deviceType == "mobile") {
+	    var deviceType = studio.currentDeviceType;
+	    if (deviceType && this.deviceType && dojo.indexOf(this.deviceType, deviceType) == -1) {
 		return false;
 	    }
 

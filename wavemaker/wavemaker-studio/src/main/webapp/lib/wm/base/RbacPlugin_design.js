@@ -41,10 +41,11 @@ wm.Component.extend({
 	if (!found) {
 	    this.subscribe("deviceSizeRecalc", this, "reshowMobile");
 	}
+	this.reshowMobile();
     },
-    set_generateForDevice: function(inType) {
-	this.generateForDevice = inType;
-	var deviceType = studio.deviceTypeSelect.getDataValue().toLowerCase();
+    set_deviceType: function(inType) {
+	this.deviceType = inType;
+	var deviceType = studio.currentDeviceType;
 	this.setShowing(this._mobileShowingRequested || this.showing);
 
 	var found = false;
@@ -57,6 +58,7 @@ wm.Component.extend({
 	if (!found) {
 	    this.subscribe("deviceSizeRecalc", this, "reshowMobile");
 	}
+	this.reshowMobile();
     }
 });
 
@@ -66,7 +68,8 @@ wm.Component.extend({
 
 wm.Object.extendSchema(wm.Control, {
     roles: {group: "roles", editor: "wm.prop.RolesEditor", advanced: 1},
-    deviceSizes: {group: "devices", shortname: "showForDeviceSizes", editor: "wm.prop.DeviceListEditor", advanced: 1}
+    deviceSizes: {group: "mobile", subgroup: "devices", shortname: "showForDeviceSizes", editor: "wm.prop.DeviceSizeEditor", order: 101},
+    deviceType: {group: "mobile",  subgroup: "devices", editor: "wm.prop.DeviceListEditor",  order: 100}
 }, true);
 wm.Object.extendSchema(wm.ServiceVariable, {
     roles: {group: "roles", editor: "wm.prop.RolesEditor", advanced: 1}

@@ -25,9 +25,88 @@ dojo.declare("GridDesigner", wm.Page, {
 	this.initialColumns = inGrid.columns
 
 	var columns = dojo.clone(inGrid.columns);
+	var mobileIndex = -1;
+	for (var i = 0; i < columns.length; i++) {
+	    if (!columns[i].mobileColumn) {
+		columns[i].mobileColumn = false;
+	    } else
+		mobileIndex = i;
+	}
+	if (mobileIndex == -1) {
+	    columns.push({show: true,
+			  field: "MOBILE COLUMN",
+			  title: "-",
+			  width: "100%",
+			  align: "left",
+			  expression: "",
+			  mobileColumn: true});
+	    mobileIndex = columns.length-1;
+	}
 	this.columnsVar.setData(columns);
+	this.mobileColumn = this.columnsVar.getItem(mobileIndex);
+	this.regenerateMobileColumn();
 	this.updateFormatterList();
 	this.updateDataSets();
+    },
+    regenerateMobileColumn: function() {
+	if (this.mobileColumn.getValue("customField")) return;
+	var mobileExpr = "";
+	var count = this.columnsVar.getCount();
+
+
+	for (var i = 0; i < count; i++) {
+	    var column = this.columnsVar.getItem(i).getData();
+	    if (!column.mobileColumn && column.show) {
+
+		if (column.expression) {
+		    // don't even TRY to handle this
+		} else {
+		    var value = "\${" + column.field + "}";
+		    var formatProps = column.formatProps ? dojo.toJson(column.formatProps) : "{}";
+		    if (column.formatFunc) {
+			switch(column.formatFunc) {
+			case "wm_date_formatter": 
+			case 'Date (WaveMaker)': 
+			case 'wm_localdate_formatter':
+			case 'Local Date (WaveMaker)':				    
+			    value = "wm.DojoGrid.prototype.dateFormatter(" + formatProps + ", null,null,null," + value +")";
+			    break;
+			case 'wm_number_formatter':
+			case 'Number (WaveMaker)':				    
+			    value = "wm.DojoGrid.prototype.numberFormatter(" + formatProps + ", null,null,null," + value +")";
+			    break;
+			case 'wm_currency_formatter':
+			case 'Currency (WaveMaker)':				    
+			    value = "wm.DojoGrid.prototype.currencyFormatter(" + formatProps + ", null,null,null," + value +")";
+			    break;
+			case 'wm_image_formatter':
+			case 'Image (WaveMaker)':				    
+			    value = "wm.DojoGrid.prototype.imageFormatter(" + formatProps + ", null,null,null," + value +")";
+			    break;
+			case 'wm_link_formatter':
+			case 'Link (WaveMaker)':				    
+			    value = "wm.DojoGrid.prototype.linkFormatter(" + formatProps + ", null,null,null," + value +")";
+			    break;
+			case 'wm_button_formatter':
+			    value = null;
+			    break;
+			}
+		    }
+		    if (value) {
+			if (!mobileExpr) {
+			    mobileExpr = "\"<div class='MobileRowTitle'>" + wm.capitalize(column.field) + ": \" + " + value +  " + \"</div>\"\n";
+			} else {
+			    mobileExpr += "+ \"<div class='MobileRow'>" + wm.capitalize(column.field) + ": \" + " + value + " + \"</div>\"\n";
+			}
+		    }
+		}
+	    }
+	}
+	if (studio.currentDeviceType != "phone") 
+	    this.mobileColumn.beginUpdate();
+	this.mobileColumn.setValue("expression", mobileExpr);
+	if (studio.currentDeviceType != "phone") 
+	    this.mobileColumn.endUpdate();
     },
     getColumnByField: function(inName) {
 	for (var i = 0; i < this.currentGrid.columns.length; i++) {
@@ -88,6 +167,7 @@ dojo.declare("GridDesigner", wm.Page, {
 	var row = this.grid.getSelectedIndex() ;
 	if (row == -1) return;
 	this.columnsVar.removeItem(row);
+	this.updateGrid();
 	window.setTimeout(dojo.hitch(this, function() {
 	    this.grid.select(0);
 	}), 10);
@@ -99,16 +179,30 @@ dojo.declare("GridDesigner", wm.Page, {
 	if (row == -1) return;
 
 	var item = this.columnsVar.getItem(row);
+
+	if (item.getValue("mobileColumn") && inName == "expression") {
+	    item.beginUpdate();
+	    item.setValue("customField", true);
+	    item.endUpdate();
+	}
+
 	if (item.getValue(inName) != inValue) {
 	    item.beginUpdate(); // we don't need to regenerate the grid when this item changes
 	    item.setValue(inName, inValue);
 	    item.endUpdate();
+
+	    if (item.getValue("mobileColumn") == false) {
+		this.regenerateMobileColumn();
+	    }
+
 	    this.updateGrid(row);
+
 	    return true;
 	}
 	return false;
     },
     updateGrid: function() {
+	this.regenerateMobileColumn();
 	    var columns = this.columnsVar.getData();
 	for (var i = 0; i < columns.length; i++) {
 	    var col = columns[i];
@@ -348,5 +442,6 @@ dojo.declare("GridDesigner", wm.Page, {
     onCustomCssClassChange: function(inSender, inDisplayValue, inDataValue) {
 	this.changeItem("cssClass", inDataValue);
     },
+
   _end: 0
 });

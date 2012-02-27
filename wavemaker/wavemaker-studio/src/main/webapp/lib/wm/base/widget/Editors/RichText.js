@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2010-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -134,14 +134,18 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 		this.plugins = this.plugins.concat(this.customAddPlugins());
 	    }
 	},
-	setReadonly: function(inReadonly) {
-		if (this.readonly && !inReadonly) {
-			var val = this.getDataValue();
-      this.inherited(arguments, [inReadonly, true]);
-			this.setDataValue(val);
-		} else
-      this.inherited(arguments, [inReadonly, true]);
-	},
+    setReadonly: function(inReadonly) {
+	if (this.readonly && !inReadonly) {
+	    var val = this.getDataValue();
+	    this.inherited(arguments, [inReadonly, true]);
+	    if (this.editor instanceof dijit.form.SimpleTextarea) {
+		this.createEditor();
+	    }
+	    this.setDataValue(val);
+	} else {
+	    this.inherited(arguments, [inReadonly, true]);
+	}
+    },
 	//Character Formatting: bold, italic, underline, strikethrough, subscript, superscript, removeFormat, forecolor, hilitecolor
 	//Paragraph Formatting:: indent, outdent,justifyCenter, justifyFull, justifyLeft, justifyRight, delete, selectall
 	//Inserting Objects:insertOrderedList, insertUnorderedList, createlink (use LinkDialog plugin), inserthtml
@@ -150,19 +154,22 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 	//LinkDialog        Provides a dialog for inserting URLs
 	//TextColor
 	sizeEditor: function() {
-		if (!this._ready) return;
-		this.inherited(arguments);
-/* Tried commenting out this section; don't recall way; removing this breaks Documentation dialog in chrome */
-		var h = parseInt(this.editorNode.style.height);
-		var toolh = this.editorNode.childNodes[0].clientHeight;
-	        if (h <= toolh) {
-		    h = Math.max(40,this.bounds.h - 20);
-		    toolh = 20;
-		}
-		this.editor.iframe.style.height = (h-toolh) + "px";
-		if (this.editor.focusNode) {
+	    if (this.editor instanceof dijit.form.SimpleTextarea) {
+		return this.inherited(arguments);
+	    }
+	    if (!this._ready) return;
+	    this.inherited(arguments);
+	    /* Tried commenting out this section; don't recall way; removing this breaks Documentation dialog in chrome */
+	    var h = parseInt(this.editorNode.style.height);
+	    var toolh = this.editorNode.childNodes[0].clientHeight;
+	    if (h <= toolh) {
+		h = Math.max(40,this.bounds.h - 20);
+		toolh = 20;
+	    }
+	    this.editor.iframe.style.height = (h-toolh) + "px";
+	    if (this.editor.focusNode) {
   		this.editor.focusNode.style.height =  (h-toolh) + "px";
-		}
+	    }
 	    dojo.query(".dijitComboBox input, .dijitToolbar", this.domNode).forEach(function(node) {
 		node.style.lineHeight = "normal";
 		node.style.height = "";
@@ -170,6 +177,7 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 
 	},
 	_createEditor: function(inNode, inProps) {
+	    if (!this.readonly) {
 		this._ready = false;
 		this.editorNode = document.createElement("div");
 		this.domNode.appendChild(this.editorNode);
@@ -179,6 +187,11 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 					       this.editorNode);
 		this._onLoad();
 		return this.editor;
+	    } else {
+		var editor = new dijit.form.SimpleTextarea(this.getEditorProps(inNode, inProps));
+		editor.domNode.style.lineHeight = "normal"; // we test for this style before setting it to height of height px; if its normal we leave it alone
+		return editor;
+	    }
 	},
     _onLoad: function() {
 		this._ready = true;
@@ -212,6 +225,13 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 	    if (this.editor)
 		this.editor.set("disabled",this.disabled || this._parentDisabled); 
 	},
+    getDisplayValue: function() {
+	if (!this.editor || this.editor instanceof dijit.form.SimpleTextarea) {
+	    return this.dataValue;
+	} else {
+	    return this.inherited(arguments);
+	}
+    },
 	getEditorValue: function() {
 		try {
   		    var result =  this.inherited(arguments);
@@ -223,7 +243,12 @@ dojo.declare("wm.RichText", wm.LargeTextArea, {
 	},
 	_setEditorAttempts: 0,
 	setEditorValue: function(inValue) {
-    if (this.editor && !this.editor.isLoaded){
+	    this.dataValue = inValue;
+	    if (!this.editor || this.editor instanceof dijit.form.SimpleTextarea) {
+		this.updateReadonlyValue(inValue);
+		return;
+	    }
+	    if (this.editor && !this.editor.isLoaded){
 			this.editor.onLoadDeferred.addCallback(dojo.hitch(this, 'setEditorValue', inValue));
 		  return;
 		}

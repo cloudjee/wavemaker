@@ -19,6 +19,7 @@ dojo.require("wm.base.widget.Editors.AbstractEditor_design");
 
 
 wm.Checkbox.extend({
+    _regenerateOnDeviceChange: true,
     listProperties: function() {
 	var p = this.inherited(arguments);
 	var type;

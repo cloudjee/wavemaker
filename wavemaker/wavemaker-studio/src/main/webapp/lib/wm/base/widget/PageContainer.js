@@ -19,11 +19,15 @@ dojo.require("wm.base.widget.Panel");
 wm.pagesFolder = "pages/";
 
 dojo.declare("wm.PageContainer", wm.Control, {
+    manageHistory: false,
+    manageURL: false,
     subpageProplist: null,
     subpageEventlist: null,
 	width: "100%", 
 	height: "100%",
 	pageName: "",
+    phonePageName: "",
+    tabletPageName: "",
 	deferLoad: false,
 	loadParentFirst: true,
 	classNames: "wmpagecontainer",
@@ -32,8 +36,15 @@ dojo.declare("wm.PageContainer", wm.Control, {
 		this.inherited(arguments);
 		this.createPageLoader();
 		this.pageLoadedDeferred = new dojo.Deferred();
+
+	    this.updatePageName();
+	    if (app && app.locationState && app.locationState[this.getRuntimeId()]) {
+		this.pageName = this._pageName = app.locationState[this.getRuntimeId()];
+		this._locationState = app.locationState;
+	    }
+
 	        if (!this.deferLoad || !this.isAncestorHidden())
-		  this.loadPage(this.pageName);
+		  this.loadPage(this._pageName);
 		//this._connections.push(dojo.connect(window, "onbeforeunload", this, "destroy"));
 		dojo.addOnWindowUnload(this, 'destroy');
 
@@ -44,7 +55,22 @@ dojo.declare("wm.PageContainer", wm.Control, {
 		    }
 		}
 	    }
+	    if (this._isDesignLoaded) {
+		this.subscribe("deviceSizeRecalc", dojo.hitch(this, "updatePageName"));
+	    }
 	},
+    updatePageName: function() {
+	var device = this._isDesignLoaded ? studio.currentDeviceType : wm.device;
+	if (device == "phone" && this.phonePageName)
+	    this._pageName = this.phonePageName;
+	else if (device == "tablet" && this.tabletPageName)
+	    this._pageName = this.tabletPageName;
+	else
+	    this._pageName = this.pageName;
+	if (this._isDesignLoaded && !this._cupdating) {
+	    this.loadPage(this._pageName);
+	}
+    },
         postInit: function() {
 	    this.inherited(arguments);
 	    if (this.isDesignedComponent() && this.designWrapper) {
@@ -54,7 +80,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
 	    }
 	    if (this.isDesignedComponent() && this.getRoot() instanceof wm.Application) {
 		    this.subscribe("Page-Saved", dojo.hitch(this, function() {
-			if (this.pageName == studio.project.pageName) {
+			if (this._pageName == studio.project.pageName) {
 			    this.forceReloadPage();
 			}
 		    }));
@@ -200,6 +226,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
 		this._pageLoader.page.connect(this._pageLoader.page, "onStart", this, "onStart");
     },
 	onStart: function() {
+	    delete this._locationState;
 	    if (this.parent && this.page && !dojo.coords(this.page.root.domNode).w) 
 		this.parent.reflow();
 
@@ -221,36 +248,68 @@ dojo.declare("wm.PageContainer", wm.Control, {
 			this.setProp(propName, this[propName]);
 		}
 	    }
+
+	    if (this.manageHistory && this._lastPageName && this._lastPageName != this._pageName &&  !this._isDesignLoaded) {
+		app.addHistory({id: this.getRuntimeId(),
+				options: this._backState,
+				title: "Show " + this.title});
+		delete this._backState;
+	    }
 	},
+    handleBack: function(inOptions) {
+	if (!inOptions.pageName || inOptions.pageName == this._pageName)
+	    return false;
+	this._restoreBackState = inOptions
+	this.setPageName(inOptions.pageName);
+	delete this._restoreBackState;
+	return true;
+    },
+/*
+    restoreFromLocationHash: function(inValue, state) {
+	this._locationState = state;
+	this.setPageName(inValue);
+    },
+    */
+    generateStateUrl: function(stateObj) {
+	if (this.page) {
+	    stateObj[this.getRuntimeId()] = this._pageName;
+	    if (this.page.generateStateUrl) {
+		this.page.generateStateUrl(stateObj);
+	    }
+	}
+    },
 	forEachWidget: function(inFunc) {
 		if (this.page)
 			return this.page.forEachWidget(inFunc);
 	},
-	setPageName: function(inPageName) {
+    setPageName: function(inPageName, optionalInPageType) {
 		if (this._pageLoading)
 			return;
-	    if (this._isDesignLoaded && inPageName == studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION")) {
-	        return this.createNewPage();
-	    }
+	
+	if (this.manageHistory && this._lastPageName && this._pageName != inPageName &&  !this._isDesignLoaded && this.page && this.page.generateBackState) {
+	    this._backState = {pageName: this._pageName};
+	    this.page.generateBackState(this._backState);
+	}
+	this._lastPageName = this._pageName;
 
 	    if (this._designerOpenPageButton)
-		dojo[this.pageName ? "addClass" : "removeClass"](this._designerOpenPageButton, "hasPageName");
+		dojo[this._pageName ? "addClass" : "removeClass"](this._designerOpenPageButton, "hasPageName");
 
-		var o = this.pageName;
-		this.pageName = inPageName || "";
+		var o = this._pageName;
+	this._pageName = this[optionalInPageType || "pageName"] = inPageName || "";
 	    if (this.isDesignedComponent() && this.designWrapper) {
                 this.createOpenPageButton();
             }
 
 	    this.pageLoadedDeferred = new dojo.Deferred();
-            if (o != this.pageName)
-		this.loadPage(this.pageName);
-	    this.valueChanged("pageName", this.pageName);
+            if (o != this._pageName)
+		this.loadPage(this._pageName);
+	    this.valueChanged("pageName", this._pageName);
 	},
 
         // Provided for use in debugging. Note that when we do a better job of caching pages from server, we will need to deallocate them in this call
         forceReloadPage: function() {
-            var pageName = this.pageName;
+            var pageName = this._pageName;
             this.setPageName(null);
             delete window[pageName];
             this.setPageName(pageName);
@@ -263,7 +322,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
 	},
 	revealed: function() {
 	    if (!this.page)
-		this.loadPage(this.pageName);
+		this.loadPage(this._pageName);
 	    else {
 		this.page.onShow();
 		this.page.root.callOnShowParent();

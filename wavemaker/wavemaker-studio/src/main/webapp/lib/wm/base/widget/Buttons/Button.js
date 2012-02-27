@@ -18,7 +18,6 @@ dojo.require("wm.base.widget.Buttons.ToolButton");
 
 
 dojo.declare("wm.Button", wm.ToolButton, {
-        mobileHeight: "40px", 
 	height: "32px",
 	border: 1,
 	borderColor: "#ABB8CF",
@@ -58,6 +57,7 @@ dojo.declare("wm.IconButton", wm.Button, {
 
 dojo.declare("wm.MobileIconButton", wm.ToolButton, {
     direction: "down",
+    height: "40px",
     build: function() {
 	this.inherited(arguments);
 	var icon = this.iconNode = document.createElement("div");
@@ -66,6 +66,6 @@ dojo.declare("wm.MobileIconButton", wm.ToolButton, {
     },
     render: function(forceRender, noInherited) {
 	wm.Control.prototype.render.call(this, forceRender);
-    },
+    }
 
 });

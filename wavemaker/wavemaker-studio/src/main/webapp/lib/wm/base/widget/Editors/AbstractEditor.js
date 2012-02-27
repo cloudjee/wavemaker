@@ -17,6 +17,7 @@ dojo.provide("wm.base.widget.Editors.AbstractEditor");
 dojo.require("wm.base.widget.Editors.dijit");
 dojo.require("wm.base.widget.Formatters");
 
+
 // check if a property is not undefined or not same as in the object prototype
 wm.propertyIsChanged = function(inValue, inProp, inCtor) {
 	var p = (inCtor||0).prototype;
@@ -32,13 +33,6 @@ wm.defaultEmptyValue = function(inType){
 }
 
 
-wm.createFieldEditor = function(inParent, inFieldInfo, inProps, inEvents, inClass) {
-	var props = dojo.mixin({}, wm.getFieldEditorProps(inFieldInfo), inProps);
-	var name = wm.getValidJsName(props.name || "editor1");
-	return inParent.owner.loadComponent(name, inParent, inClass ||"wm._TextEditor1", props, inEvents);
-};
-
-
 
 dojo.declare("wm.AbstractEditor", wm.Control, {
     changeKeycodes: [dojo.keys.ENTER, dojo.keys.NUMPAD_ENTER, dojo.keys.DELETE, dojo.keys.BACKSPACE],
@@ -48,6 +42,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	formatter: '',
 	height: "24px",    
 	width: "300px",
+        enableTouchHeight: true,
         mobileHeight: "35px",
 	padding: "2",
 	border: "0",
@@ -79,6 +74,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
     /* Events */
         changeOnEnter: false,
         changeOnKey: false,
+        changeOnSetData: true, // change to false to only fire binding and onchange events when changes are made by the user
         _updating: 0,
 
     scrim: true,
@@ -146,8 +142,10 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    this.sizeEditor();
 	},
 	setCaptionAlign: function(inCaptionAlign) {
-		this.captionAlign = inCaptionAlign;
-	        dojo.style(this.captionNode, "textAlign", this.captionAlign);
+	    this.captionAlign = inCaptionAlign;
+	    if (this.captionNode) {
+		dojo.style(this.captionNode, "textAlign", this.captionAlign);
+	    }
 	},
     setCaptionPosition: function(pos) {
 	var oldPos = this.captionPosition;
@@ -496,7 +494,51 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
         getReadOnlyNodeWordWrap: function() {
 		return "normal";
 	},
+    adjustCaptionPositionForMobile: function() {
+		if (this.captionPosition == "left" || this.captionPosition == "right") {
+		// see if we need to switch to top
+		var minWidth = this.getMinWidthProp();
+		
+		if (minWidth > this.parent.getContentBounds().w) {
+		    this._captionPosition = this.captionPosition;
+		    this._captionAlign = this.captionAlign;
+		    this._captionSize = this.captionSize;
+		    this._editorHeight = this.height;
+		    this.captionPosition = "top";
+		    this.setCaptionAlign("left");
+		    var height = parseInt(this.height); // we know height is in px
+		    this.captionSize =  "20px";
+		    this.bounds.h = height+20;
+		    this.setBounds(this.bounds);
+		    this.parent.delayedReflow();
+		}
+	    } else if (this._captionPosition) {
+		this.captionPosition = this._captionPosition;
+		var captionSizeWas = this.captionSize;
+		this.captionSize = this._captionSize;
+		var minWidth = this.getMinWidthProp(true);
+		this.captionPosition = "top";
+		this.captionSize = captionSizeWas;
+		if (minWidth <= this.parent.getContentBounds().w) {
+		    this.captionPosition = this._captionPosition;
+		    delete this._captionPosition;
+		    this.setCaptionAlign(this._captionAlign);
+		    delete this._captionAlign;
+		    this.captionSize = this._captionSize;
+		    delete this._captionSize;
+		    this.bounds.h = this._editorHeight;
+		    delete this._editorHeight;
+		    this.setBounds(this.bounds);
+		    this.parent.delayedReflow();
+		}
+	    }
+    },
+
 	renderBounds: function() {
+	    if (!this._initializing && wm.device == "phone" && this.parent.layoutKind == "top-to-bottom" && !this._percEx.h) {
+		    this.adjustCaptionPositionForMobile();
+		
+	    }
 		this.inherited(arguments);
 		this.sizeEditor();
 	},
@@ -796,6 +838,12 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
      * Added to prevent onblur from firing bindings and onchange events if onKeyPress already fired that change.
      */
 	editorChanged: function() {
+	    if (this._inSetDataValue && !this.changeOnSetData) {
+		this.displayValue = this.getDisplayValue();
+		this.dataValue = this.getDataValue();
+		return false;
+	    }
+
 	    var displayValue = this.getDisplayValue();
 	    var changed = false;
 	    if (this.displayValue != displayValue) {
@@ -860,6 +908,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    }
 	},
 	setDataValue: function(inValue) {
+	    this._inSetDataValue = true;
 	    // for simplicity, treat undefined as null
 	    if (inValue === undefined)
 		inValue = null;
@@ -873,6 +922,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		this.resetState();
 	    if (!this.isUpdating())
 		this.clearDirty(); // calls to setDataValue should always clear the dirty indicator and assume the input value is "Good"
+	    delete this._inSetDataValue;
 	},
 	isUpdating: function() {
 		return this._updating > 0;

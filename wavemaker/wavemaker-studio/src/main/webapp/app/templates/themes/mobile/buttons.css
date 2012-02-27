@@ -1,0 +1,196 @@
+/*
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+
+  /**************************************************************************************************
+   * TYPE:        wm.Button
+   *
+   * DESCRIPTION: Sets the styles for wm.Button at each of three levels.  
+   ************************************************************************************************/
+
+@media screen { /* MainContent-Level */ 
+
+    
+    /**************************************************************************************************
+       * TYPE:        Default Styling
+       *
+       * DESCRIPTION: Sets font, rounding, shadowing and background for the standard button state
+       ************************************************************************************************/
+
+
+    .wm_template   .wmbutton,
+    .wm_template   .wmtogglebutton,
+    .wm_template   .wmbutton.wmbutton-disabled:hover,
+    .wm_template   .wmbutton.wmbutton-disabled:focus
+    {
+	/* MainContent-ClickablesDefault-Font */
+	font-family: sans-serif; /* MainContent-ClickablesDefault-Font_Family */
+	font-size: 12pt; /* MainContent-ClickablesDefault-Font_TextSize */
+	color: #FFFFFF; /* MainContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
+
+	/* MainContent-ClickablesDefault-Border */
+	-moz-border-radius: 4px; /* MainContent-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* MainContent-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* MainContent-ClickablesDefault-BorderStyle_Radius */
+	-moz-box-shadow: 4px 4px 4px black; /* MainContent-ClickablesDefault-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* MainContent-ClickablesDefault-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* MainContent-ClickablesDefault-BorderStyle_Shadow */
+
+	/* MainContent-ClickablesDefault-Background */
+	background-color: #444444; /* MainContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightEdge1.png); /* MainContent-ClickablesDefault-Background_Image */
+	background-position: left top;  /* MainContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesDefault-Background_Image-Repeat */
+    }
+    .wm_template  .wmbutton span {
+	font-weight: bold; /* MainContent-ClickablesDefault-Font_Weight */
+    }
+
+    /**************************************************************************************************
+       * TYPE:        Active Styling
+       *
+       * DESCRIPTION: Sets font, shadowing and background for an active ToggleButton
+       ************************************************************************************************/
+    .wm_template   .wmbutton.toggleButtonDown {
+	/* MainContent-ClickablesActive-Font */
+	color: #FFFFFF; /* MainContent-ClickablesActive-Font_Color */
+
+	/* MainContent-ClickablesActive-Background */
+	background-color: #444444; /* MainContent-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/brightEdge1.png); /* MainContent-ClickablesActive-Background_Image */
+	background-position: left top;  /* MainContent-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesActive-Background_Image-Repeat */
+
+	-moz-box-shadow: 4px 4px 4px black; /* MainContent-ClickablesActive-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* MainContent-ClickablesActive-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* MainContent-ClickablesActive-BorderStyle_Shadow */
+    }
+
+    /**************************************************************************************************
+       * TYPE:        Hover Styling
+       *
+       * DESCRIPTION: Sets font, shadowing and background for a wm.Button with a mouseover
+       ************************************************************************************************/
+    .wm_template   .wmbutton:active,
+    .wm_template   .wmbutton:focus {
+	/* MainContent-ClickablesHover-Font */
+	color: #FFFFFF; /* MainContent-ClickablesHover-Font_Color */
+
+	/* MainContent-ClickablesHover-Background */
+	background-color: #444444; /* MainContent-ClickablesHover-Background_Color */
+	background-image: url(images/repeatx/brightEdge1.png); /* MainContent-ClickablesHover-Background_Image */
+	background-position: left top;  /* MainContent-ClickablesHover-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-ClickablesHover-Background_Image-Repeat */
+
+	/* MainContent-ClickablesHover-BorderStyle_Shadow */
+	-moz-box-shadow: 4px 4px 4px black; /* MainContent-ClickablesHover-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* MainContent-ClickablesHover-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* MainContent-ClickablesHover-BorderStyle_Shadow */
+
+    }
+    
+    
+}
+
+
+
+@media screen { /* HeaderContent-Level */ 
+    /**************************************************************************************************
+       * TYPE:        Default Styling
+       *
+       * DESCRIPTION: Sets font, rounding, shadowing and background for the standard button state
+       ************************************************************************************************/
+    .wm_template .HeaderContent  .wmbutton,
+    .wm_template .HeaderContent  .wmtogglebutton,
+    .wm_template .HeaderContent  .wmbutton.wmbutton-disabled:active,
+    .wm_template .HeaderContent  .wmbutton.wmbutton-disabled:focus
+    {
+	/* HeaderContent-ClickablesDefault-Font */
+	font-family: sans-serif; /* HeaderContent-ClickablesDefault-Font_Family */
+	font-size: 12pt; /* HeaderContent-ClickablesDefault-Font_TextSize */
+	color: #FFFFFF; /* HeaderContent-ClickablesDefault-Font_Color */
+	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
+
+	/* HeaderContent-ClickablesDefault-Border */
+	-moz-border-radius: 4px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-radius: 4px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
+	border-radius: 4px; /* HeaderContent-ClickablesDefault-BorderStyle_Radius */
+	-moz-box-shadow: 4px 4px 4px black; /* HeaderContent-ClickablesDefault-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* HeaderContent-ClickablesDefault-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* HeaderContent-ClickablesDefault-BorderStyle_Shadow */
+
+	/* HeaderContent-ClickablesDefault-Background */
+	background-color: #444444; /* HeaderContent-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesDefault-Background_Image */
+	background-position: left top;  /* HeaderContent-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesDefault-Background_Image-Repeat */
+    }
+
+    .wm_template .HeaderContent .wmbutton span {
+	font-weight: bold; /* HeaderContent-ClickablesDefault-Font_Weight */
+    }
+
+    /**************************************************************************************************
+       * TYPE:        Active Styling
+       *
+       * DESCRIPTION: Sets font, shadowing and background for an active ToggleButton
+       ************************************************************************************************/
+    .wm_template .HeaderContent  .wmbutton.toggleButtonDown {
+	/* HeaderContent-ClickablesActive-Font */
+	color: #FFFFFF; /* HeaderContent-ClickablesActive-Font_Color */
+
+	/* HeaderContent-ClickablesActive-Background */
+	background-color: #444444; /* HeaderContent-ClickablesActive-Background_Color */
+	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesActive-Background_Image */
+	background-position: left top;  /* HeaderContent-ClickablesActive-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesActive-Background_Image-Repeat */
+
+	-moz-box-shadow: 4px 4px 4px black; /* HeaderContent-ClickablesActive-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* HeaderContent-ClickablesActive-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* HeaderContent-ClickablesActive-BorderStyle_Shadow */
+
+
+    }
+
+    /**************************************************************************************************
+       * TYPE:        Hover Styling
+       *
+       * DESCRIPTION: Sets font, shadowing and background for a wm.Button with a mouseover
+       ************************************************************************************************/
+
+    .wm_template .HeaderContent  .wmbutton:hover,
+    .wm_template .HeaderContent  .wmbutton:active {
+	/* HeaderContent-ClickablesHover-Font */
+	color: #FFFFFF; /* HeaderContent-ClickablesHover-Font_Color */
+
+	/* HeaderContent-ClickablesHover-Background */
+	background-color: #444444; /* HeaderContent-ClickablesHover-Background_Color */
+	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-ClickablesHover-Background_Image */
+	background-position: left top;  /* HeaderContent-ClickablesHover-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-ClickablesHover-Background_Image-Repeat */
+
+	/* HeaderContent-ClickablesHover-BorderStyle_Shadow */
+	-moz-box-shadow: 4px 4px 4px black; /* HeaderContent-ClickablesHover-BorderStyle_Shadow */
+	-webkit-box-shadow: 4px 4px 4px black; /* HeaderContent-ClickablesHover-BorderStyle_Shadow */
+	box-shadow: 4px 4px 4px black; /* HeaderContent-ClickablesHover-BorderStyle_Shadow */
+
+    }
+
+}
+
+
+.wm_template .wmPopupButton .popupIcon {
+   background-image: url("images/dropArrowBlack.png") !important; /* wm.PopupMenuButton_Image */
+}

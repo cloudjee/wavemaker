@@ -165,11 +165,13 @@ wm.FormPanel.extend({
 		for (var i = 0; i < fields.length; i++) {
 		    var fieldName = fields[i];
 		    var fieldDef = typeDef.fields[fieldName];
-		    var e = this.makeEditor(fieldDef, fieldName);
-		    if (e instanceof wm.Lookup && dataSource == "compositeKey") {
-			e.dataField = e.formField;
-			e.dataType = fieldDef.type; 
-			e.relationshipName = fieldDef.relationshipName; // TODO: If the user changes formField on this editor, the relationshipName won't by in sync, and the project will break
+		    if (!fieldDef.nogen && !fieldDef.readonly) {
+			var e = this.makeEditor(fieldDef, fieldName);
+			if (e instanceof wm.Lookup && dataSource == "compositeKey") {
+			    e.dataField = e.formField;
+			    e.dataType = fieldDef.type; 
+			    e.relationshipName = fieldDef.relationshipName; // TODO: If the user changes formField on this editor, the relationshipName won't by in sync, and the project will break
+			}
 		    }
 		}
 	    }
@@ -182,7 +184,7 @@ wm.FormPanel.extend({
     makeEditor: function(inFieldInfo, fieldName) {
 	var formField = this._getFormField(/*inFieldInfo.dataIndex */fieldName);
 	if (formField && !this._getEditorForField(formField)) {
-	    if (wm.typeManager.isStructuredType(inFieldInfo.type)) {
+	    if (wm.typeManager.isStructuredType(inFieldInfo.type) || inFieldInfo.isList) {
 		return this.makeRelatedEditor(inFieldInfo, formField);
 	    } else {
 		return this.makeBasicEditor(inFieldInfo, formField);
@@ -559,7 +561,7 @@ wm.DataForm.extend({
  * any extra data needed some other way.
  */
 	addEditorToView: function(inEditor, inField) {
-	    var lvar = this.getLiveVariable();
+	    var lvar = this.findLiveVariable();
 	    var v = lvar && lvar.liveView;
 
 		if (v) {
@@ -575,47 +577,6 @@ wm.DataForm.extend({
     getLiveView: function() {
 	if (lvar) return lvar.liveView;
     },
-	getLiveVariable: function() {
-		// Not sure why we were not checking for liveVariable instance in the object itself,
-		// before digging deep and trying to find liveVariable elsewhere. 
-		/*
-		if (this.liveVariable && wm.isInstanceType(this.liveVariable, wm.LiveVariable))
-			return this.liveVariable;
-		*/
-		var
-			s = this.dataSet.dataSet,
-			o = s && s.owner,
-			ds = null;
-		  o = o && !(wm.isInstanceType(o, wm.Variable)) ? o : null;
-			
-			if (o){
-				try{
-				    if (wm.isInstanceType(o, wm.DojoGrid)) {
-					ds = o.variable;
-				    } else {
-					ds = o.dataSet;
-				    }
-				} catch(e) {
-					// This might happen if wm.DojoGrid class itself is not loaded.
-					ds = o.dataSet;
-				}
-			}
-			// if source not owned by a variable but it has a dataSet, use it if it's a LiveVariable
-	        
-			if (o && ds && wm.isInstanceType(ds, wm.LiveVariable)) {
-				return ds;
-		}
-		// otherwise walk owners to look for a LiveVariable
-		while (s) {
-			if (wm.isInstanceType(s, wm.LiveVariable)) {
-				return s;
-			}
-			s = s.owner;
-			if (!(wm.isInstanceType(s.owner, wm.Variable))) {
-				break;
-			}
-		}
-	},
 
 
 
@@ -757,6 +718,7 @@ wm.DataForm.extend({
 	    layoutKind: "left-to-right",
 	    width: "100%",
 	    height: wm.Button.prototype.height,
+	    mobileHeight: wm.Button.prototype.mobileHeight,
 	    horizontalAlign: "right",
 	    verticalAlign: "top"});
 
