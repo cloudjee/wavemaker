@@ -1,0 +1,59 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+		<title>Untitled Page</title>
+		<style type="text/css">
+			#test {
+				position: relative;
+				width: 128px;
+				height: 500px;
+				border: 1px solid gray;
+				/*background-color: Silver;*/
+			}
+		</style>
+<script type="text/javascript">
+	var att=[],vtt=[],stt=[];
+	animate = function(d, at){
+		var v=0,s=0,a=0,t=0;
+		f = function(){
+			for (i=0;i<1;i++) {
+				if (t in at)
+					a = at[t] / d;
+				v += a;
+				s += v;
+				att[t] = a;
+				vtt[t] = v;
+				stt[t] = s;
+				t++;
+				n.style.left = (s - 128) + "px";
+			}
+			if (t < 100)
+				setTimeout(f, 0);
+			else
+				done();
+		}
+		f();
+	}
+	done = function() {
+	}
+	dump = function() {
+		var h = [];
+		for (var i=0; i<100; i++) {
+			h.push([att[i], vtt[i], stt[i]].join(", "), "<br/>");
+		}
+		document.getElementById("log").innerHTML = h.join("");
+		
+	}
+	go = function() {
+		n = document.getElementById("test");
+		animate(10, {0:1,30:0,58:-1,93:1});
+	}
+</script>
+</head>
+<body onclick="go()">
+	<button onclick="go()">Animate</button><button onclick="dump()">Dump</button>
+	<div id="test">Hello</div>
+	<div id="log"></div>
+</body>
+</html>
