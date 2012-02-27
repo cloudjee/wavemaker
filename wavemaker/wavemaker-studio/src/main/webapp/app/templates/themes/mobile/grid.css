@@ -1,0 +1,102 @@
+/*
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+
+
+  /**************************************************************************************************
+   * TYPE:        Grid rows (Even rows and odd rows)
+   *
+   * DESCRIPTION: The goal is to create alternating colors between even and odd rows.
+   *              Even rows are set by specifying the style for all rows; odd row styles override
+   *              the style for all rows.  Only vary the font and background-color.
+   ************************************************************************************************/
+.wm_template div.wmlist-item {
+
+    /* Tables-EvenRows-Font */
+    font-family: sans-serif; /* Tables-EvenRows-Font_Family */
+    font-size: 12pt; /* Tables-EvenRows-Font_TextSize */
+    color: #FFFFFF; /* Tables-EvenRows-Font_Color */
+    font-weight: bold; /* Tables-EvenRows-Font_Weight */
+
+    /* Tables-EvenRows-Background */
+    background-color: #444444; /* Tables-EvenRows-Background_Color */
+}
+
+/* Grid/List Odd rows: uses Tables-OddRows */
+.wm_template .wmlist-item.Odd {
+    /* Tables-OddRows-Font */
+    color: #FFFFFF; /* Tables-OddRows-Font_Color */
+
+    /* Tables-OddRows-Background */
+    background-color: #444444; /* Tables-OddRows-Background_Color */
+}
+
+  /**************************************************************************************************
+   * TYPE:        Grid cell borders
+   *
+   * DESCRIPTION: Set the border styles for cells (or in the case of wm.List of a cell-equivalent).
+   *              Basically, we leave top/bottom border to the alternating even/odd row background color,
+   *              and we don't need a right and left border (would double the border size between two cells)
+   *              so just use the border-right-width: 1px, and let the user control the color of that border.
+   * 
+   * TODO:        These settings are not well tested.
+   ************************************************************************************************/
+.wm_template .wmlist-cell {
+    border-style: solid;   
+    border-color: #AAAAAA; /* Tables-EvenRows-Border_Color */
+    border-left-width: 0px;
+    border-right-width: 1px; /* Tables-EvenRows-Border_BorderSize */
+    border-top-width: 0px;
+    border-bottom-width: 0px;
+}
+.wm_template .wmlist-header .wmlist-cell {
+    border-right-width: 0px;
+}
+
+  /**************************************************************************************************
+   * TYPE:        Header, Hover and Selected row styles
+   *
+   * DESCRIPTION: The style varies by what kind of panel its in.  If I want a single wm.List in my 
+   *              TOC, its going to look/feel different in its hover/selection/header than
+   *              a DojoGrid in my EmphasizedContent.
+   ************************************************************************************************/
+
+@media screen { /* MainContent-Level */ 
+
+    /* Selected color for rows: uses Clickables-Active */
+    .wm_template .wmlist-item.wmlist-item-selected {
+	/* Document-ClickablesActive-Background */
+	background-color: #333333 !important; /* Document-ClickablesActive-Background_Color */
+
+	/* Document-ClickablesActive-Font */
+	color: #FFFFFF; /* Document-ClickablesActive-Font_Color */
+    }
+
+    .wm_template .wmlist-header th {
+	font-family: sans-serif; /* Tables-HeaderRow-Font_Family */
+	color: #000000 !important;/* Tables-HeaderRow-Font_Color */
+	font-weight: bold; /* Tables-HeaderRow-Font_Weight */
+    }
+
+    /* Header-Row-Background */
+    body.tundra.wm_template .wmlist-header {
+	background-color: #444444; /* Tables-HeaderRow-Background_Color */
+	background-image: url(images/repeatx/brightEdge1.png); /* Tables-HeaderRow-Background_Image */
+	background-position: left top;     /* Tables-HeaderRow_Image-Position */
+	background-repeat: repeat-x;    /* Tables-HeaderRow_Image-Repeat */
+    }
+
+}
+
+

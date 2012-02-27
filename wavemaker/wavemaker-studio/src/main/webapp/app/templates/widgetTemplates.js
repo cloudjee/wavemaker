@@ -71,15 +71,13 @@ wm.fullTemplates.fancyTemplate = {
 		panel2: ["wm.HeaderContentPanel", {"borderColor":"#004c68","height":"60px","horizontalAlign":"left","layoutKind":"left-to-right","padding":"0,10","verticalAlign":"middle","width":"100%"}, {}, {
 			picture1: ["wm.Picture", {"border":"0","height":"50px","source":"lib/wm/base/widget/themes/default/images/wmLogo.png","width":"62px"}, {}],
 			label1: ["wm.Label", {"border":"0","caption":"Quisque Molestie Porta","width":"100%"}, {}, {
-				format: ["wm.DataFormatter", {}, {}]
 			}],
 			panel10: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"middle","width":"300px"}, {}, {
 				panel14: ["wm.Panel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
 					label4: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"border":"0","caption":"Welcome, ","height":"20px","width":"100%"}, {}, {
 						binding: ["wm.Binding", {}, {}, {
 							wire: ["wm.Wire", {"expression":"\"Welcome, \" + ${varTemplateUsername.dataValue}","targetProperty":"caption"}, {}]
-						}],
-						format: ["wm.DataFormatter", {}, {}]
+						}]
 					}],
 					button2: ["wm.Button", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"borderColor":"#666666","caption":"Log Out","height":"28px"}, {"onclick":"varTemplateLogout"}]
 				}],
@@ -142,10 +140,8 @@ wm.fullTemplates.fancyTemplate = {
 		panel5: ["wm.Panel", {"height":"28px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
 			picture2: ["wm.Picture", {"border":"0","height":"20px","source":"lib/wm/base/widget/themes/default/images/wmSmallLogo.png","width":"25px"}, {}],
 			label2: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"border":"0","caption":"Powered By Wavemaker","height":"100%","width":"100%"}, {}, {
-				format: ["wm.DataFormatter", {}, {}]
 			}],
 			label3: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","border":"0","caption":"Copyright [company name] 2011","height":"100%","width":"300px"}, {}, {
-				format: ["wm.DataFormatter", {}, {}]
 			}]
 		}]
 	}]}	
@@ -165,7 +161,6 @@ wm.fullTemplates.sideMenuTemplate = {
 		panel2: ["wm.HeaderContentPanel", {"border":"0,0,1,0","height":"65px","horizontalAlign":"left","layoutKind":"left-to-right","margin":"0","padding":"0,10,0,10","verticalAlign":"middle","width":"100%"}, {}, {
 			picture1: ["wm.Picture", {"border":"0","height":"50px","source":"lib/wm/base/widget/themes/default/images/wmLogo.png","width":"62px"}, {}],
 		    label3: ["wm.Label", {"border":"0","caption":"[Application Name]","width":"100%", height: "35px"}, {}, {
-				format: ["wm.DataFormatter", {}, {}]
 			}],
 			panel10: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"middle","width":"300px"}, {}, {
 				panel15: ["wm.Panel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
@@ -183,10 +178,8 @@ wm.fullTemplates.sideMenuTemplate = {
 		panel6: ["wm.HeaderContentPanel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 			picture2: ["wm.Picture", {"border":"0","height":"100%","source":"lib/wm/base/widget/themes/default/images/wmSmallLogo.png","width":"24px"}, {}],
 			label2: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"border":"0","caption":"Powered by WaveMaker","height":"100%"}, {}, {
-				format: ["wm.DataFormatter", {}, {}]
 			}],
 			label1: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","border":"0","caption":"Copyright [company name] 2011","height":"100%","width":"100%"}, {}, {
-				format: ["wm.DataFormatter", {}, {}]
 			}]
 		}]
 	    }]
@@ -207,7 +200,6 @@ wm.fullTemplates.tabTemplate = {
 		panel1: ["wm.HeaderContentPanel", {"border":"0,0,1,0","borderColor":"#333333","height":"65px","horizontalAlign":"left","layoutKind":"left-to-right","padding":"0,10","verticalAlign":"middle","width":"100%"}, {}, {
 			picture1: ["wm.Picture", {"border":"0","height":"50px","source":"lib/wm/base/widget/themes/default/images/wmLogo.png","width":"62px"}, {}],
 		    label3: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_20px","wm_FontSizePx_24px"]},"border":"0","caption":"[Application Name]","width":"100%", height: "35px"}, {}, {
-				format: ["wm.DataFormatter", {}, {}]
 			}],
 			panel5: ["wm.Panel", {"height":"100%","horizontalAlign":"right","verticalAlign":"middle","width":"100%"}, {}, {
 			    dojoMenu1: ["wm.DojoMenu", {"fullStructure":[{"label":"Help"},{"label":"About"}],"height":"24px","localizationStructure":{},"transparent":true,"width":"140px"}, {}]
@@ -228,10 +220,8 @@ wm.fullTemplates.tabTemplate = {
 		panel6: ["wm.HeaderContentPanel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 			picture2: ["wm.Picture", {"border":"0","height":"100%","source":"lib/wm/base/widget/themes/default/images/wmSmallLogo.png","width":"24px"}, {}],
 			label2: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"border":"0","caption":"Powered by WaveMaker","height":"100%"}, {}, {
-				format: ["wm.DataFormatter", {}, {}]
 			}],
 			label1: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","border":"0","caption":"Copyright [company name] 2011","height":"100%","width":"100%"}, {}, {
-				format: ["wm.DataFormatter", {}, {}]
 			}]
 		}]	
 	    }]
@@ -252,7 +242,6 @@ wm.fullTemplates.topMenuTemplate = {
 		panelHeader: ["wm.HeaderContentPanel", {"height":"65px","horizontalAlign":"left","layoutKind":"left-to-right","padding":"0,10,0,10","verticalAlign":"middle","width":"100%"}, {}, {
 			picture1: ["wm.Picture", {"border":"0","height":"50px","source":"lib/wm/base/widget/themes/default/images/wmLogo.png","width":"62px"}, {}],
 		    label2: ["wm.Label", {"border":"0","caption":"[Application Name]","width":"100%", height: "35px"}, {}, {
-				format: ["wm.DataFormatter", {}, {}]
 			}],
 			panel10: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"middle","width":"300px"}, {}, {
 				panel15: ["wm.Panel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"middle","width":"100%"}, {}, {
@@ -274,10 +263,8 @@ wm.fullTemplates.topMenuTemplate = {
 		panelFooter: ["wm.HeaderContentPanel", {"height":"24px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 			picture2: ["wm.Picture", {"border":"0","height":"100%","source":"lib/wm/base/widget/themes/default/images/wmSmallLogo.png","width":"24px"}, {}],
 			label1: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"border":"0","caption":"Powered by WaveMaker","height":"100%"}, {}, {
-				format: ["wm.DataFormatter", {}, {}]
 			}],
 			edFooterLabel: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"align":"right","border":"0","caption":"Copyright [company name] 2011","height":"100%","width":"100%"}, {}, {
-				format: ["wm.DataFormatter", {}, {}]
 			}]
 		}]	
 	}]}
@@ -298,7 +285,7 @@ wm.fullTemplates.fancyCenteredTemplate = {
 		panelHeader: ["wm.Panel", {"height":"80px","width":"100%","verticalAlign":"top","horizontalAlign":"left","layoutKind":"left-to-right"}, {}, {
 		    pictureHeader: ["wm.Panel", {horizontalAlign: "left", verticalAlign: "top", "_classes":{"domNode":["wm_Attribution_new"]},"height":"100%","width":"300px","margin":"0,0,0,20"}, {}],
 		    labelHeader: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_24px"]},"height":"100%","width":"100%","caption":"Application Name","border":"0","padding":"20", "align":"right"}, {}, {
-			format: ["wm.DataFormatter", {}, {}]
+
 		    }]
 		}],
                         
@@ -334,14 +321,14 @@ wm.fullTemplates.CenteredPageContainerWithHeaderFooter = {
 		    contentPanel: ["wm.Panel", {"width":"800px","height":"100%","border":"0,1"}, {}, {
 			TitleBar: ["wm.Template", {"_classes":{"domNode":["titlebar"]},"width":"100%","height":"96px","verticalAlign":"top","horizontalAlign":"left","layoutKind":"left-to-right","padding":"8", border: "0,0,4,0"}, {}, {
 					appNameLabel: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_24px"]},"caption":"Application Name","width":"100%","height":"100%"}, {}, {
-						format: ["wm.DataFormatter", {}, {}]
+
 					}],
 			    panel3: ["wm.Panel", {isMajorContent: true, "width":"284px","height":"100%","border":"1"}, {}]
 				}],
 			pageContainer1: ["wm.PageContainer", {_classes: {domNode: ["wmcontentarea"]}, "height":"100%"}, {}],
 				Footer: ["wm.Template", {"_classes":{"domNode":["toolbar"]},"width":"100%","height":"36px","verticalAlign":"middle","horizontalAlign":"center","padding":"2"}, {}, {
 				    footerLabel: ["wm.Label", {align: "center", "caption":"Copyright 2010 ACME, Inc.","width":"100%","height":"100%"}, {}, {
-						format: ["wm.DataFormatter", {}, {}]
+
 					}]
 				}]
 			}]
@@ -364,8 +351,7 @@ wm.widgetTemplates.securityTemplate = {
 	templateUserNameLabel: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"border":"0","caption":"Welcome, ","height":"20px","width":"100%"}, {}, {
 	    binding: ["wm.Binding", {}, {}, {
 		wire: ["wm.Wire", {"expression":"\"Welcome, \" + ${templateUsernameVar.dataValue}","targetProperty":"caption"}, {}]
-	    }],
-	    format: ["wm.DataFormatter", {}, {}]
+	    }]
         }],
 	templateLogoutButton: ["wm.Button", {"_classes":{"domNode":["wm_FontSizePx_10px"]},"borderColor":"#666666","caption":"Log Out","height":"28px"}, {"onclick":"templateLogoutVar"}]
     }
@@ -408,7 +394,6 @@ wm.widgetTemplates.toolbarWithGroupBox = {
 				panel4: ["wm.Panel", {height: "45px", border: "0"}, {}, {
 					panel6: ["wm.Panel", {width: "100%", height: "20px", border: "0", layoutKind: "left-to-right"}, {}],
 					label1: ["wm.Label", {caption: "Group Box", height: "100%", border: "", width: "100%"}, {}, {
-						format: ["wm.DataFormatter", {}, {}]
 					}]
 				}],
 				panel5: ["wm.Panel", {_classes: {domNode: ["wm_SilverBlueTheme_MainOutsetPanel"]}, width: "100%", height: "262px", border: "0", layoutKind: "left-to-right", horizontalAlign: "center"}, {}, {
@@ -458,7 +443,6 @@ wm.fullTemplates.complexLayout = {
 			panel4: ["wm.Panel", {width: "100%", height: "100%"}, {}, {
 				dataGrid1: ["wm.DataGrid", {height: "250px"}, {}, {
 					column: ["wm.DataGridColumn", {autoSize: true}, {}, {
-						format: ["wm.DataFormatter", {}, {}]
 					}]
 				}],
 				splitter2: ["wm.Splitter", {width: "100%"}, {}],
@@ -483,7 +467,6 @@ wm.widgetTemplates.searchListDetail = {
 		}],
 		dataGrid1: ["wm.DataGrid", {height: "226px"}, {}, {
 			column: ["wm.DataGridColumn", {autoSize: true}, {}, {
-				format: ["wm.DataFormatter", {}, {}]
 			}]
 		}],
 		splitter1: ["wm.Splitter", {layout: "top"}, {}],
@@ -504,7 +487,6 @@ wm.widgetTemplates.titleBar = {
 	_classes: {domNode: ["titlebar"]},
 	_template: {
 		appNameLabel: ["wm.Label", {_classes: {domNode: ["wm_FontSizePx_24px"]}, caption: "Application Name", height: "100%", width: "100%"}, {}, {
-			format: ["wm.DataFormatter", {}, {}]
 		}],
 	    panel3: ["wm.Panel", {isMajorContent: true, height: "100%", width: "222px", border: "1"}, {}]
 	}
@@ -543,7 +525,6 @@ wm.widgetTemplates.footer = {
 	_classes: {domNode: ["toolbar"]},
 	_template: {
 	    footerLabel: ["wm.Label", {align: "center", caption: "Copyright 2010 ACME, Inc.", width: "100%", height: "100%"}, {}, {
-			format: ["wm.DataFormatter", {}, {}]
 		}]
 	}
 }
@@ -554,7 +535,6 @@ wm.widgetTemplates.basic = {
 	width: "100%",
 	_template: {
 		headerLabel: ["wm.Label", {height: "40px", width: "100%", border: "0", padding: "10", caption: "Header", backgroundColor: "#C6D3E7"}, {}, {
-			format: ["wm.DataFormatter", {}, {}]
 		}],
 		mainPanel: ["wm.Panel", {height: "100%", width: "100%", layoutKind: "left-to-right", horizontalAlign: "left", verticalAlign: "top"}, {}, {
 			tabs: ["wm.TabLayers", {height: "100%", width: "100%", border: "0", verticalAlign: "top", horizontalAlign: "left"}, {}, {
@@ -563,7 +543,6 @@ wm.widgetTemplates.basic = {
 			}]
 		}],
 		footerLabel: ["wm.Label", {height: "30px", width: "100%", border: "0", padding: "10", caption: "Footer", backgroundColor: "#C6D3E7"}, {}, {
-			format: ["wm.DataFormatter", {}, {}]
 		}]
 	}
 }

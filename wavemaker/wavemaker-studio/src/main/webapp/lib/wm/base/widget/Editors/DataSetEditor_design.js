@@ -15,7 +15,7 @@ wm.DataSetEditor.extend({
 	    return this.dataSet;
 	},
 	set_dataSet: function(inDataSet) {
-	    // support setting dataSet via id from designer
+	    // support setting dataSet via id from designer; DEPRECATED
 	    if (inDataSet && !(inDataSet instanceof wm.Variable)) {
 		var ds = this.getValueById(inDataSet);
 		if (ds) {

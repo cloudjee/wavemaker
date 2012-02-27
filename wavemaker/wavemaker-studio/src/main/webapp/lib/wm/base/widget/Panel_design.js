@@ -34,6 +34,10 @@ wm.FancyPanel.extend({
     themeableProps: ["innerBorder","borderColor","labelHeight"],
     getOrderedWidgets: function() {
 	return this.containerWidget.getOrderedWidgets();
+    },
+    set_autoScroll: function(inVal) {
+	this.autoScroll = inVal;
+	this.containerWidget.setAutoScroll(inVal);
     }
 });
 

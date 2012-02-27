@@ -132,7 +132,7 @@ dojo.declare("wm.propEdit.UnitValue", wm.propEdit.Select, {
 		var value = wm.splitUnits(this.value);
 		var defaultValue = wm.splitUnits(this.defaultValue);
 		var html = [
-			'<table class="wminspector-property" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="border: 0 none;">',
+			'<table class="wminspector-property" width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td style="border: 0 none;">', 
 		    makeInputPropEdit(this.name + "_1", value.value, defaultValue.value),
 			'</td><td style="width: 1px; border-left: 1px solid gray">&nbsp;</td><td width="44">',
 		    makeSelectPropEdit(this.name + "_2", value.units, this.options, ""/*defaultValue.units*/, this.values),
@@ -526,6 +526,7 @@ dojo.declare("wm.prop.CheckboxSet", wm.CheckboxSet, {
 });
 
 dojo.declare("wm.prop.PagesSelect", wm.prop.SelectMenu, {
+    newPage: true,
     currentPageOK: false,
     updateOptions: function() {
 	this.inherited(arguments)
@@ -748,7 +749,7 @@ dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
 	this.setOptions(options);
     },
 	getSchemaOptions: function(inSchema) {
-	    var result =  wm.typeManager[this.relatedFields ? "getStructuredPropNames" : "getSimplePropNames"](inSchema);
+	    var result =  wm.typeManager[this.relatedFields ? "getStructuredPropNames" : "getSimplePropNames"](inSchema, true);
 	    if (this.oneToMany === true || this.oneToMany === false) {
 		var f = this.inspected.getParentForm();
 		var dataSet;
@@ -780,7 +781,7 @@ dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
 		for (var i = 0; i < result.length; i++) {		    
 		    var type = fields[result[i]].type;
 		    var typeDef = wm.typeManager.getType(type);
-		    if (!typeDef.liveService) {
+		    if (!typeDef || !typeDef.liveService) {
 			newresults.push(result[i]);
 		    }
 		}
@@ -989,10 +990,80 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
 	return true;
     }
 });
-dojo.declare("wm.prop.EventEditor", wm.SelectMenu, {
+dojo.declare("wm.prop.EventDijit", [dijit.form.ValidationTextBox, dijit._HasDropDown], {
+    baseClass: "dijitTextBox dijitComboBox dijitDateTextBox",
+    popupClass: "wm.DojoMenu",
+    hasDownArrow: true,
+    openOnClick: true,
+    templateString: dojo.cache("dijit.form", "templates/DropDownBox.html"),
+    currentIndex: 0,
+    postMixInProperties: function(){
+	this.inherited(arguments);
+	this._messages = dojo.i18n.getLocalization("dijit.form", "ComboBox", this.lang);
+    },
+
+    openDropDown: function(callback) {
+	if (!wm.prop.EventDijit.menu) {
+	    wm.prop.EventDijit.menu = new wm.PopupMenu({owner: studio,
+							_classes: {domNode: ["wmStudioEventMenu"]},
+						       name: "EventPicker"});
+	}
+	//wm.prop.EventDijit.menu.setFullStructure([{"label":"File","children":[{"label":"Save"},{"label":"Close"}]},{"label":"Edit","children":[{"label":"Cut"},{"label":"Copy"},{"label":"Paste"}]},{"label":"Help"}]);
+	this.structure = this.owner.getFullStructure();
+	this.generateIndex(0);
+    },
+    generateIndex: function(currentIndex) {
+	this.currentIndex = currentIndex;
+	var start = currentIndex;
+
+	var struct = [];
+	if (currentIndex) {
+            struct.push({label: "-- " + this._messages["previousMessage"] + " --", onClick: dojo.hitch(this, function() {
+		this.generateIndex(0);
+	    })});
+	}
+	for (var i = currentIndex; i < this.structure.length; i++) {
+	    if (this.structure[i].pageBreak)
+		break;
+	    struct.push(this.structure[i]);
+	}
+	if (i < this.structure.length) {
+            struct.push({label: "-- " + this._messages["nextMessage"] + " --", onClick: dojo.hitch(this, function() {
+		this.generateIndex(i+1);
+	    })});
+	}
+	wm.prop.EventDijit.menu.setFullStructure(struct);
+	wm.prop.EventDijit.menu.renderDojoObj();
+	var menuItems = wm.prop.EventDijit.menu._dijitHash;
+	for (var itemName in menuItems) {
+	    if (itemName.indexOf(" - ") !=0 && !itemName.match(/\:$/) && itemName.indexOf("-- ") != 0) {
+		dojo.addClass(menuItems[itemName].domNode, "studioIndentOption");
+	    }
+	}
+	wm.prop.EventDijit.menu.update(null, this.owner, true);
+/*
+	this.owner.connectOnce(wm.prop.EventDijit.menu, "onclick", this.owner, function(args) {
+	    this.setDataValue(args[0]);
+	});
+	*/
+    }
+});
+
+dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
+    /*indentField: "indent",
     restrictValues: false,
-    displayField: "dataValue",
-    dataField: "dataValue",
+    displayField: "name",
+    dataField: "dataValue",*/
+/*
+    setEditorValue: function(inValue) {
+	this.inherited(arguments);
+    },
+    */
+    _createEditor: function(inNode, inProps) {
+	var e =  new wm.prop.EventDijit(this.getEditorProps(inNode, inProps));
+	e.owner = this;
+	return e;
+    },    
     constructor: function() {
 	if (!wm.prop.EventEditor.eventActions) {
 	    wm.prop.EventEditor.eventActions =  {
@@ -1007,18 +1078,19 @@ dojo.declare("wm.prop.EventEditor", wm.SelectMenu, {
 		existingCalls: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_SHARED_JAVASCRIPT"), list: "sharedEventHandlers"},
 		dialogs: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_DIALOGS"), list: "dialogs"},
 		layers: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_LAYERS"), list: "layers"},
+		mobileFolding: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_MOBILE_FOLDING"), list: "mobileFolding"},
+		liveForms: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_LIVEFORMS"), list: "liveForms"},
+		dataForms: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_DATAFORMS"), list: "dataForms"},
 		dashboards: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_DASHBOARDS"), list: "dashboards"},
 		timers: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_TIMERS"), list: "timers"}
 	    };
 	}
     },
     isEventAction: function(inValue) {
-	var ea = wm.prop.EventEditor.eventActions;
-	for (var i in ea)
-	    if (inValue == ea[i].caption)
-		return true;
+	return Boolean(wm.prop.EventEditor.eventActions[inValue]);
     },
     //FIXME: cache this
+/*
     postInit: function() {
 	this.inherited(arguments);
 	this._inPostInit = true;
@@ -1033,9 +1105,20 @@ dojo.declare("wm.prop.EventEditor", wm.SelectMenu, {
 	if (wm.PopupMenu && this.inspected instanceof wm.PopupMenu)
 	    wm.Array.removeElement(dialogList, this.inspected);
 	
-	var layerList = wm.listComponents([studio.page], wm.Layer);
+	//var layerList = wm.listComponents([studio.page], wm.Layer);
+	var layerList = [];
+	var mobileFoldingList = [];
+	wm.forEachWidget(studio.page.root, function(w) {
+	    if (w instanceof wm.Layer)
+		layerList.push(w);
+	    else if (w.mobileFolding)
+		mobileFoldingList.push(w);
+	}, false);
 	layerList = layerList.sort();
+	mobileFoldingList = mobileFoldingList.sort();
 	
+
+
 	var dashboardList = wm.listComponents([studio.application, studio.page], wm.Dashboard).sort();
 	//var lf = wm.listComponents([studio.application, studio.page], wm.LiveForm);
 	var timers = wm.listComponents([studio.application, studio.page], wm.Timer).sort();
@@ -1068,16 +1151,21 @@ dojo.declare("wm.prop.EventEditor", wm.SelectMenu, {
 		    a = layerList;
 		    break;
 
+		case "mobileFolding":
+		    if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "mobileFolding") == -1) return;
+		    a = mobileFoldingList;
+		    break;
+
 		case "lightboxes":
 		    if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "lightbox") == -1) return;
 		    a = lightboxList;
 		    break;
 		case "liveForms":
-		    /*
+		    / *
 		      if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "liveForm") == -1) return;
 		      a = lf;
 		      break;
-		    */
+		    * /
 		case "dashboards":
 		    if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "dashboards") == -1) return;
 		    a = dashboardList;
@@ -1091,14 +1179,23 @@ dojo.declare("wm.prop.EventEditor", wm.SelectMenu, {
 		if (a && a.length) {
 		    items.push({name: n, dataValue: n});
 		    dojo.forEach(a, function(obj) {
-			var aa = (wm.isInstanceType(obj, wm.Component)) ? obj.getId() : obj;
+			var aa;
+			if (obj instanceof wm.Layer) {
+			    aa = obj.getRuntimeId().replace(/^studio\.wip\./,"");
+			} else if (obj instanceof wm.Component) {
+			    aa = obj.getId();
+			} else {
+			    aa = obj;
+			}
 			if (obj instanceof wm.Dialog){
 			    items.push({name: aa + '.show', dataValue: aa + '.show', indent: 1});
 			    items.push({name: aa + '.hide', dataValue: aa + '.hide', indent: 1});
+			} else if (l == "layers" && obj.mobileFolding && obj instanceof wm.Layer == false) {
+			    items.push({name: "mobile folding: " + aa, dataValue: aa, indent: 1});
                         } else {
 			    items.push({name: aa, dataValue: aa, indent:1});
                         }
-			/*
+			/ *
 			  if (obj instanceof wm.LiveForm){
 			  items.push({name: aa + '.beginDataInsert', dataValue: aa + '.beginDataInsert'});
 			  items.push({name: aa + '.saveData', dataValue: aa + '.saveData'});
@@ -1112,7 +1209,7 @@ dojo.declare("wm.prop.EventEditor", wm.SelectMenu, {
 			  } else {
 			  items.push({name: aa, dataValue: aa});
 			  }
-			*/
+			* /
 		    })
 		}
 	    } else {
@@ -1139,19 +1236,250 @@ dojo.declare("wm.prop.EventEditor", wm.SelectMenu, {
 		items.push({name: n, dataValue: n});
 	    }
 	});
-	/*
+	/ *
 	  dojo.forEach(sharedEventHandlers, function(e) {
 	  items.push({name: e, dataValue: e});
 	  });
-	*/
+	* /
+	var typeDef = this.createComponents({WMEventItem: ["wm.TypeDefinition", {internal: true}, {}, {
+	    eventField01: ["wm.TypeDefinitionField", {"fieldName":"name","fieldType":"string"}, {}],
+	    eventField02: ["wm.TypeDefinitionField", {"fieldName":"dataValue","fieldType":"string"}, {}],
+	    eventField03: ["wm.TypeDefinitionField", {"fieldName":"indent","fieldType":"string"}, {}]
+	}]});
+/ *
 	var v = new wm.Variable({
 	    owner:this,
-	    type: "EntryData"
+	    type: "WMEventItem"
 	});
 	v.setData(items);
-
-	this.setDataSet(v);
+	* /
+	this._items = items;
+	//this.setDataSet(v);
 	this._inPostInit = false;
+    },
+    */
+    getFullStructure: function() {
+	var structure = [];
+	this.getStructureFor(studio.page, structure);
+
+	var pageContainerList = wm.listComponents([studio.application, studio.page], wm.PageContainer);
+	var firstPageAdded = false;
+	for (var i = 0; i < pageContainerList.length; i++) {
+	    var page = pageContainerList[i].page;
+	    if (page) {
+		if (!firstPageAdded) {
+		    firstPageAdded = true;
+		    structure.push({defaultLabel: studio.getDictionaryItem("wm.EventEditor.LIST_PAGECONTAINERS")});
+		}
+		var submenu = {defaultLabel: pageContainerList[i].page.getRuntimeId().replace(/^studio\.wip\./,""), children: []};
+		structure.push(submenu);
+		this.getStructureFor(page, submenu.children);
+	    }
+	}
+	return structure;
+    },
+    getStructureFor: function(inPage, inStructure) {
+	if (inPage == studio.page) {
+	    var svarList = wm.listComponents([studio.application, studio.page], wm.ServiceVariable).sort();
+	    var lightboxList = wm.listComponents([studio.application, studio.page], wm.DojoLightbox);
+	    var navList = wm.listComponents([studio.application, studio.page], wm.NavigationCall).sort();
+	    var sharedEventHandlers =  eventList(this.inspected.getSharedEventLookupName(this.propName), wm.isInstanceType(studio.selected.owner, wm.Application) ? studio.appsourceEditor : studio.editArea);
+	    var dialogList = wm.listComponents([studio.application, studio.page], wm.Dialog);
+	    dialogList = dialogList.concat(lightboxList);
+	    dialogList = dialogList.concat(wm.listComponents([studio.application, studio.page], wm.PopupMenu));
+	    dialogList = dialogList.sort();
+	    if (wm.PopupMenu && this.inspected instanceof wm.PopupMenu)
+		wm.Array.removeElement(dialogList, this.inspected);
+	    var layerList = wm.listComponents([studio.application, studio.page], wm.Layer).sort();
+	    var mobileFoldingList = [];
+	    wm.forEachWidget(studio.page.root, function(w) {
+		if (w.mobileFolding)
+		    mobileFoldingList.push(w);
+	    }, true);
+	    mobileFoldingList = mobileFoldingList.sort();
+
+	    var dashboardList = wm.listComponents([studio.application, studio.page], wm.Dashboard).sort();
+	    var liveformList = wm.listComponents([studio.application, studio.page], wm.LiveForm).sort();
+	    var dataformList = wm.listComponents([studio.application, studio.page], wm.DataForm).sort();
+	    var timers = wm.listComponents([studio.application, studio.page], wm.Timer).sort();
+
+	} else {
+	    var svarList = wm.listComponents([inPage], wm.ServiceVariable).sort();
+	    var lightboxList = wm.listComponents([inPage], wm.DojoLightbox);
+	    var navList = wm.listComponents([inPage], wm.NavigationCall).sort();
+	    var sharedEventHandlers = [];
+	    var dialogList = wm.listComponents([inPage], wm.Dialog);
+	    dialogList = dialogList.concat(lightboxList);
+	    dialogList = dialogList.concat(wm.listComponents([inPage], wm.PopupMenu));
+	    dialogList = dialogList.sort();
+	    if (wm.PopupMenu && this.inspected instanceof wm.PopupMenu)
+		wm.Array.removeElement(dialogList, this.inspected);
+	    var layerList = wm.listComponents([inPage], wm.Layer).sort();
+	    var mobileFoldingList = [];
+	    wm.forEachWidget(inPage.root, function(w) {
+		if (w.mobileFolding)
+		    mobileFoldingList.push(w);
+	    }, true);
+	    mobileFoldingList = mobileFoldingList.sort();
+
+	    var dashboardList = wm.listComponents([inPage], wm.Dashboard).sort();
+	    var liveformList = wm.listComponents([inPage], wm.LiveForm).sort();
+	    var dataformList = wm.listComponents([inPage], wm.DataForm).sort();
+	    var timers = wm.listComponents([inPage], wm.Timer).sort();
+
+	}
+
+	var eventSchema = this.inspected.schema[this.propName];
+	var maxPageSize = 15;
+	var currentPageSize = 0;
+	wm.forEachProperty(wm.prop.EventEditor.eventActions, dojo.hitch(this, function(o, name) {
+	    var groupName = o.caption, l = o.list;
+	    if (l) {
+		var componentList;
+		switch(l) {
+		case "navigationCall":
+		    if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "navigation") == -1) return;
+		    componentList = navList;
+		    break;
+		case "serviceVariable":
+		    if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "service") == -1) return;
+		    componentList = svarList;
+		    break;
+		case "sharedEventHandlers":
+		    if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "js") == -1) return;
+		    componentList = sharedEventHandlers;
+		    break;
+		case "dialogs":
+		    if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "dialog") == -1) return;
+		    componentList = dialogList;
+		    break;
+		case "layers":
+		    if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "layer") == -1) return;
+		    componentList = layerList;
+		    break;
+
+		case "mobileFolding":
+		    if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "mobileFolding") == -1) return;
+		    componentList = mobileFoldingList;
+		    break;
+
+		case "lightboxes":
+		    if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "lightbox") == -1) return;
+		    componentList = lightboxList;
+		    break;
+		case "liveForms":
+		      if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "liveForm") == -1) return;
+		      componentList = liveformList;
+		      break;
+		case "dataForms":
+		      if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "dataForm") == -1) return;
+		      componentList = dataformList;
+		      break;
+
+		case "dashboards":
+		    if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "dashboards") == -1) return;
+		    componentList = dashboardList;
+		    break;
+		case "timers":
+		    if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "timers") == -1) return;
+		    componentList = timers;
+		    break;
+		}	
+		
+		if (componentList && componentList.length) {
+		    if (currentPageSize + componentList.length + 1 > maxPageSize && inPage == studio.page) {
+			inStructure.push({pageBreak:true});
+			currentPageSize = 1;
+		    } else {
+			currentPageSize += 1 + componentList.length;
+		    }
+		    var addToArray;
+		    if (studio.page == inPage) {
+			inStructure.push({label: groupName});
+			addToArray = inStructure;
+		    } else {
+			addToArray = [];
+			inStructure.push({label: groupName, children: addToArray});
+		    }
+		    dojo.forEach(componentList, function(obj) {
+			var cname, rname;
+			if (obj instanceof wm.Component) {
+			    cname = obj.getRuntimeId();
+			    rname = cname;
+			    if (cname.indexOf(inPage.getRuntimeId() + ".") == 0)
+				cname = cname.substring(inPage.getRuntimeId().length + 1);
+			    rname = rname.replace(/^studio\.wip\./,"");
+			} else {
+			    cname = rname = obj;
+			}
+			if (obj instanceof wm.Dialog){
+			    addToArray.push({defaultLabel: cname + ".show", onClick: dojo.hitch(this, "setEditorValue", rname + ".show")});
+			    addToArray.push({defaultLabel: cname + ".hide", onClick: dojo.hitch(this, "setEditorValue", rname + ".hide")});
+			} else if (obj instanceof wm.LiveForm) {
+			    var formSubmenu = {label: cname, children: []};
+			    addToArray.push(formSubmenu);
+			    formSubmenu.children.push({label: cname + ".beginDataInsert", onClick: dojo.hitch(this, "setEditorValue", rname + ".beginDataInsert")});
+			    formSubmenu.children.push({label: cname + ".beginDataUpdate", onClick: dojo.hitch(this, "setEditorValue", rname + ".beginDataUpdate")});
+			    formSubmenu.children.push({label: cname + ".saveData", onClick: dojo.hitch(this, "setEditorValue", rname + ".saveData")});
+			    formSubmenu.children.push({label: cname + ".deleteData", onClick: dojo.hitch(this, "setEditorValue", rname + ".deleteData")});
+			    formSubmenu.children.push({label: cname + ".cancelEdit", onClick: dojo.hitch(this, "setEditorValue", rname + ".cancelEdit")});
+			} else if (obj instanceof wm.DataForm) {
+			    var formSubmenu = {label: cname, children: []};
+			    addToArray.push(formSubmenu);
+			    formSubmenu.children.push({label: cname + ".editNewObject", onClick: dojo.hitch(this, "setEditorValue", rname + ".editNewObject")});
+			    formSubmenu.children.push({label: cname + ".editCurrentObject", onClick: dojo.hitch(this, "setEditorValue", rname + ".editCurrentObject")});
+			    formSubmenu.children.push({label: cname + ".saveData", onClick: dojo.hitch(this, "setEditorValue", rname + ".saveData")});
+			    formSubmenu.children.push({label: cname + ".deleteData", onClick: dojo.hitch(this, "setEditorValue", rname + ".deleteData")});
+			    formSubmenu.children.push({label: cname + ".cancelEdit", onClick: dojo.hitch(this, "setEditorValue", rname + ".cancelEdit")});
+                        } else {
+			    addToArray.push({defaultLabel: cname,  onClick: dojo.hitch(this, "setEditorValue", rname)});
+                        }
+			/*
+			  if (obj instanceof wm.LiveForm){
+			  items.push({name: aa + '.beginDataInsert', dataValue: aa + '.beginDataInsert'});
+			  items.push({name: aa + '.saveData', dataValue: aa + '.saveData'});
+			  items.push({name: aa + '.beginDataUpdate', dataValue: aa + '.beginDataUpdate'});
+			  //items.push({name: aa + '.updateData', dataValue: aa + '.updateData'});
+			  items.push({name: aa + '.cancelEdit', dataValue: aa + '.cancelEdit'});
+			  items.push({name: aa + '.deleteData', dataValue: aa + '.deleteData'});
+			  } else if (obj instanceof wm.Timer){
+			  items.push({name: aa + ".startTimer", dataValue: aa + ".startTimer"});
+			  items.push({name: aa + ".stopTimer", dataValue: aa + ".stopTimer"});
+			  } else {
+			  items.push({name: aa, dataValue: aa});
+			  }
+			*/
+		    },this)
+		}
+	    } else {
+		if (inPage != studio.page) return;
+		if (eventSchema && eventSchema.events) 
+		    switch(name) {
+		    case "noEvent":
+			if ( dojo.indexOf(eventSchema.events, "disableNoEvent") != -1) return;
+		    case "jsFunc":
+			if (dojo.indexOf(eventSchema.events, "js") == -1) return;
+			break;
+		    case "jsSharedFunc":
+			if (dojo.indexOf(eventSchema.events, "sharedjs") == -1) return;
+			break;
+		    case "newService":
+			if ( dojo.indexOf(eventSchema.events, "service") == -1) return;
+			break;
+		    case "newLiveVar":
+			if ( dojo.indexOf(eventSchema.events, "service") == -1) return;
+			break;
+		    case "newNavigation":
+			if (dojo.indexOf(eventSchema.events, "navigation") == -1) return;
+			break;
+		    }
+		currentPageSize++;
+		inStructure.push({label: groupName, onClick: dojo.hitch(this, "setEditorValue", name)});
+	    }
+	}));
+
+
+
     },
     onchange: function() {
 	this.inherited(arguments);
@@ -1163,18 +1491,22 @@ dojo.declare("wm.prop.EventEditor", wm.SelectMenu, {
 	else {
 	    this.inherited(arguments);
 	    this.inspected.setProp(this.propName, value);
+	    if (this.inspected == studio.selected) 
+		studio.inspector.reinspect();
+	    else
+		studio.layers.setLayerIndex(0);
+
 	}
-        studio.inspector.reinspect();
 	wm.job("studio.updateDirtyBit",10, function() {studio.updateProjectDirty();});
     },
 
 	doEventAction: function(inEventName) {
 		var ea = wm.prop.EventEditor.eventActions, c = this.inspected, p = this.propName, v;
 		switch (inEventName) {
-		        case ea.noEvent.caption:
+		        case "noEvent":
 		    this.setDisplayValue("");
 				break;
-			case ea.jsFunc.caption:
+			case "jsFunc":
 				v = c.generateEventName(p);
 		    window.setTimeout(dojo.hitch(this, function() {
 		        this.setDisplayValue(v);
@@ -1183,7 +1515,7 @@ dojo.declare("wm.prop.EventEditor", wm.SelectMenu, {
 				try{c.updatingEvent(p,v);}catch (e){/*do nothing as this might happen if there's a component which does not extends wm.control class*/}
 		                eventEdit(c, p.replace(/\d*$/,""), v, c == studio.application);
 				break;
-			case ea.jsSharedFunc.caption:
+			case "jsSharedFunc":
 				v = c.generateSharedEventName(p);
 		    window.setTimeout(dojo.hitch(this, function() {
 			this.setDisplayValue(v);
@@ -1192,15 +1524,15 @@ dojo.declare("wm.prop.EventEditor", wm.SelectMenu, {
 				try{c.updatingEvent(p,v);}catch (e){/*do nothing as this might happen if there's a component which does not extends wm.control class*/}
 				eventEdit(c, p, v, c == studio.application);
 				break;
-			case ea.newService.caption:
+			case "newService":
 				studio.newComponentButtonClick({componentType: "wm.ServiceVariable"});
 		    this.setDisplayValue(studio.selected.name);
 				break;
-			case ea.newLiveVar.caption:
+			case "newLiveVar":
 				studio.newComponentButtonClick({componentType: "wm.LiveVariable"});
 		    this.setDisplayValue(studio.selected.name);
 				break;
-			case ea.newNavigation.caption:
+			case "newNavigation":
 				studio.newComponentButtonClick({componentType: "wm.NavigationCall"});
 		    this.setDisplayValue(studio.selected.name);
 				break;
@@ -1823,6 +2155,7 @@ dojo.declare("wm.prop.NavigationGroupEditor", wm.prop.FieldGroupEditor, {
 	switch(fieldName) {
 	case "pageName":
 	    propDef.editor =  "wm.prop.PagesSelect";
+	    propDef.editorProps.newPage = false;
 	    break;
 	case "pageContainer":
 	    propDef.editor = "wm.prop.WidgetSelect";
@@ -1910,33 +2243,10 @@ dojo.declare("wm.prop.FormatterEditor", wm.prop.SubComponentEditor, {
     margin: "0,0,0,15"
 });
 
-dojo.declare("wm.prop.DeviceListEditor", wm.CheckboxSet, {
-    noBindColumn: true,
-    noReinspect: true,
-    height: "200px",
+
+dojo.declare("wm.prop.AllCheckboxSet", wm.CheckboxSet, {
     dataField: "dataValue",
     displayField: "name",
-    init: function() {
-	this.inherited(arguments);
-	this.displaySizes = new wm.Variable({owner: this, type: "EntryData", isList:1});
-	this.displaySizes.setData([{name: "All",
-				    dataValue: ""},
-				   {name: ">= 1150<div style='margin-left:20px'>large/full screen</div>", // NOTE: ipad in landscape mode is 1024px
-				    dataValue: "1150"},
-				   {name: "900px-1150px<div style='margin-left:20px'>large/widescreen desktop/tablet</div>",
-				    dataValue: "900"},
-				   {name: "750px-900px<div style='margin-left:20px'>medium desktop/tablet</div>",
-				    dataValue: "750"},
-				   {name: "600px-750px<div style='margin-left:20px'>small laptop/tablet</div>",
-				    dataValue: "600"},
-				   {name: "450px-600px<div style='margin-left:20px'>tablet</div>",
-				    dataValue: "450"},
-				   {name: "300px-450px<div style='margin-left:20px'>phone</div>",
-				    dataValue: "300"},
-				   {name: "< 300px<div style='margin-left:20px'>small phone</div>",
-				    dataValue: "tiny"}]);
-	this.setDataSet(this.displaySizes);
-    },
     setDataValue: function(inValue) {
 	if (wm.isEmpty(inValue)) {
 	    this.inherited(arguments, [["All"]]);
@@ -1983,4 +2293,52 @@ dojo.declare("wm.prop.DeviceListEditor", wm.CheckboxSet, {
 	}
     },
     reinspect: function() {return true;}
+});
+
+
+dojo.declare("wm.prop.DeviceSizeEditor", wm.prop.AllCheckboxSet, {
+    noBindColumn: true,
+    noReinspect: true,
+    height: "300px",
+    init: function() {
+	this.inherited(arguments);
+	this.displaySizes = new wm.Variable({owner: this, type: "EntryData", isList:1});
+	this.displaySizes.setData([{name: "All",
+				    dataValue: ""},
+				   {name: ">= 1150<div style='margin-left:20px'>large/full screen</div>", // NOTE: ipad in landscape mode is 1024px
+				    dataValue: "1150"},
+				   {name: "900px-1150px<div style='margin-left:20px'>large/widescreen desktop/tablet</div>",
+				    dataValue: "900"},
+				   {name: "750px-900px<div style='margin-left:20px'>medium desktop/tablet</div>",
+				    dataValue: "750"},
+				   {name: "600px-750px<div style='margin-left:20px'>small laptop/tablet</div>",
+				    dataValue: "600"},
+				   {name: "450px-600px<div style='margin-left:20px'>tablet</div>",
+				    dataValue: "450"},
+				   {name: "300px-450px<div style='margin-left:20px'>phone</div>",
+				    dataValue: "300"},
+				   {name: "< 300px<div style='margin-left:20px'>small phone</div>",
+				    dataValue: "tiny"}]);
+	this.setDataSet(this.displaySizes);
+    }
+});
+
+
+dojo.declare("wm.prop.DeviceListEditor", wm.prop.AllCheckboxSet, {
+    noBindColumn: true,
+    noReinspect: true,
+    height: "110px",
+    init: function() {
+	this.inherited(arguments);
+	this.deviceList = new wm.Variable({owner: this, type: "EntryData", isList:1});
+	this.deviceList.setData([{name: "All",
+				  dataValue: ""},
+				 {name: "Desktop",
+				  dataValue: "desktop"},
+				 {name: "Tablet",
+				  dataValue: "tablet"},
+				 {name: "Phone",
+				  dataValue: "phone"}]);
+	this.setDataSet(this.deviceList);
+    }
 });

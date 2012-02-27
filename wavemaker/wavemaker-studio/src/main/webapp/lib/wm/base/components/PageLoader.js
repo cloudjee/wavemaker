@@ -14,12 +14,15 @@
 
 dojo.provide("wm.base.components.PageLoader");
 
-wm.load = function(inFile, allowCache) {
+wm.load = function(inFile, allowCache,async) {
     if (djConfig.isDebug && !dojo.isFF) {
 	console.info("wm.load: " + inFile);
     }
-	
-    return dojo.xhrGet({url: inFile, sync: true, preventCache: !allowCache}).results[0];
+    if (async) {
+	return dojo.xhrGet({url: inFile, sync: false , preventCache: !allowCache});
+    } else {
+	return dojo.xhrGet({url: inFile, sync: !Boolean(async) , preventCache: !allowCache}).results[0];
+    }
 }
 
 // this function will load script file on the fly and uses dojo method to this.
@@ -75,8 +78,22 @@ dojo.declare("wm.PageLoader", wm.Component, {
 	getPageCtor: function() {
 		return dojo.getObject(this.className || "");
 	},
+    loadCombinedFiles: function(inName, inPath) {
+	var randpath = inPath + ".a.js?dojo.preventCache="+this.randomNum;
+	delete dojo._loadedUrls[randpath];
+	wm.dojoScriptLoader(randpath);
+	var ctor = dojo.getObject(inName);
+	if (ctor) {
+	    this.cssLoader.setCss(ctor.prototype._cssText);
+	    this.htmlLoader.setHtml(ctor.prototype._htmlText);
+	}
+	return ctor;
+    },
     loadController: function(inName, inPath) {
 	var ctor = dojo.getObject(inName);
+	if (!ctor && !djConfig.isDebug) {
+	    ctor = this.loadCombinedFiles(inName, inPath);
+	}
 	if (!ctor) {
 	    var randpath = inPath + ".js?dojo.preventCache="+this.randomNum;
 	    delete dojo._loadedUrls[randpath];
@@ -122,11 +139,14 @@ dojo.declare("wm.PageLoader", wm.Component, {
 	loadPageCode: function(inName) {
 		//console.info('this.getpath(): ' + this.getPath());		//console.info('wm.pagesFolder: ' + wm.pagesFolder);
 		
-		var path = this.getPath() + wm.pagesFolder + inName + "/" + inName;
-		var ctor = this.loadController(inName, path);
-	        if (ctor) {
+	    var path = this.getPath() + wm.pagesFolder + inName + "/" + inName;
+	    var ctor = dojo.getObject(inName);
+	    if (!ctor)
+		ctor = this.loadController(inName, path);
+	    if (ctor) {
+		if (ctor.prototype._cssText === undefined)
 		    this.loadSupport(ctor, path);
-		    if (ctor.prototype.i18n) {
+		if (ctor.prototype.i18n) {
 			try {
 			    dojo["requireLocalization"]("language", inName);
 			    ctor.prototype._i18nDictionary = dojo.i18n.getLocalization("language", inName);

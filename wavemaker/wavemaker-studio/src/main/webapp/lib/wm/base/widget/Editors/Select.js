@@ -22,6 +22,7 @@ dojo.require("dijit.form.ComboBox");
 // Select Editor
 //===========================================================================
 dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
+    indentField: "",
     comboBox: true,
         placeHolder: "",
         _storeNameField: "_selectMenuName",
@@ -42,8 +43,12 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 	    if (this.dataSet) {
 		var count = this.dataSet.getCount();
 		for (var i = 0; i < count; i++) {
-		    data.push({id: i,
-			       name: this._getDisplayData(this.dataSet.getItem(i))});
+		    var item = {id: i,
+				name: this._getDisplayData(this.dataSet.getItem(i))};
+		    if (this.indentField) {
+			item.indent = Boolean(this.dataSet.getItem(i).getValue(this.indentField));
+		    }
+		    data.push(item);
 		}
 	    }
 	    if (this.allowNone) {

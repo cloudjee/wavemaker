@@ -37,7 +37,7 @@
                     <mergemapper to="${build.webapproot.studio.dir}/studio_base.js"/>
                     <mergemapper to="${build.webapproot.studio.dir}/studio_wm.js"/>
                     <mergemapper to="${build.lib.webapproot.studio.dir}/lib_build.js"/>               
-                </compositemapper>
+                </compositemapper>  
             </mapper>
         </uptodate>
     </target>
@@ -96,6 +96,8 @@
 				<!-- these need to be clean before we build, or it'll interfere -->
 				<delete dir="${lib.webapproot.studio.dir}/wm/build" />
 				<delete dir="${build.webapproot.studio.dir}" />
+				<delete dir="${dojo.release.dir}" />
+				<delete dir="${dojo.release-temp.dir}" />
 
 				<!-- runtime build -->
 				<!-- parameters documented at http://dojotoolkit.org/reference-guide/build/buildScript.html -->
@@ -116,6 +118,91 @@
 					<!-- <arg value="cssOptimize=comments.keepLines"/> -->
 				</exec>
 				<echo>Done building dojo using exec</echo>
+
+
+<!-- Merge dictionary files so that they are all one small download instead of a lot of separate downloads; only do this for frequently used libraries -->
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_en.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_dojo_grid_en.js,wm_editors_en.js,wm_editors_misc_en.js,wm_progressbar_en.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_en-us.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_dojo_grid_en-us.js,wm_editors_en-us.js,wm_editors_misc_en-us.js,wm_progressbar_en-us.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_en-au.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_dojo_grid_en-au.js,wm_editors_en-au.js,wm_editors_misc_en-au.js,wm_progressbar_en-au.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_en-gb.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_dojo_grid_en-gb.js,wm_editors_en-gb.js,wm_editors_misc_en-gb.js,wm_progressbar_en-gb.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_ja.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_dojo_grid_ja.js,wm_editors_ja.js,wm_editors_misc_ja.js,wm_progressbar_ja.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_ja-jp.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_dojo_grid_ja-jp.js,wm_editors_ja-jp.js,wm_editors_misc_ja-jp.js,wm_progressbar_ja-jp.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_it.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_dojo_grid_it.js,wm_editors_it.js,wm_editors_misc_it.js,wm_progressbar_it.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_it-it.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_dojo_grid_it-it.js,wm_editors_it-it.js,wm_editors_misc_it-it.js,wm_progressbar_it-it.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_fr.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_dojo_grid_fr.js,wm_editors_fr.js,wm_editors_misc_fr.js,wm_progressbar_fr.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_fr-fr.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_dojo_grid_fr-fr.js,wm_editors_fr-fr.js,wm_editors_misc_fr-fr.js,wm_progressbar_fr-fr.js"/>
+	</concat>
+
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_es.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_dojo_grid_es.js,wm_editors_es.js,wm_editors_misc_es.js,wm_progressbar_es.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_es-es.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_dojo_grid_es-es.js,wm_editors_es-es.js,wm_editors_misc_es-es.js,wm_progressbar_es-es.js"/>
+	</concat>
+
+
+
+
+
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_mobile_en.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_editors_en.js,wm_editors_misc_en.js,wm_progressbar_en.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_mobile_en-us.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_editors_en-us.js,wm_editors_misc_en-us.js,wm_progressbar_en-us.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_mobile_en-au.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_editors_en-au.js,wm_editors_misc_en-au.js,wm_progressbar_en-au.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_mobile_en-gb.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_editors_en-gb.js,wm_editors_misc_en-gb.js,wm_progressbar_en-gb.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_mobile_ja.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_editors_ja.js,wm_editors_misc_ja.js,wm_progressbar_ja.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_mobile_ja-jp.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_editors_ja-jp.js,wm_editors_misc_ja-jp.js,wm_progressbar_ja-jp.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_mobile_it.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_editors_it.js,wm_editors_misc_it.js,wm_progressbar_it.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_mobile_it-it.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_editors_it-it.js,wm_editors_misc_it-it.js,wm_progressbar_it-it.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_mobile_fr.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_editors_fr.js,wm_editors_misc_fr.js,wm_progressbar_fr.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_mobile_fr-fr.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_editors_fr-fr.js,wm_editors_misc_fr-fr.js,wm_progressbar_fr-fr.js"/>
+	</concat>
+
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_mobile_es.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_editors_es.js,wm_editors_misc_es.js,wm_progressbar_es.js"/>
+	</concat>
+	<concat destfile="${dojo.release.dir}/dojo/dojo/nls/lib_build_mobile_es-es.js" append="true">
+	  <filelist dir="${dojo.release.dir}/dojo/dojo/nls" files="wm_editors_es-es.js,wm_editors_misc_es-es.js,wm_progressbar_es-es.js"/>
+	</concat>
+
+
+
 				<!-- copy the runtime built files out to the temp directory -->
 				<mkdir dir="${dojo.release-temp.dir}/wm_build" />
 				<copy todir="${dojo.release-temp.dir}/wm_build">
@@ -142,7 +229,17 @@
 						<include name="wm_dojo_grid.js" />
 						<include name="wm_data_grid.js" />
 						<include name="wm_list.js" />
+						<include name="wm_colorpicker.js" />
+						<include name="wm_progressbar.js" />
+						<include name="wm_breadcrumblayer.js" />
+						<include name="wm_wizardlayer.js" />
+						<include name="wm_accordion.js" />
+						<include name="wm_trees.js" />
+						<include name="wm_fileupload.js" />
+						<include name="wm_dataform.js" />
+						<include name="wm_dashboard.js" />
 						<include name="wm_editors.js" />
+						<include name="wm_editors_misc.js" />
 						<include name="wm_editors_old.js" />
 						<include name="wm_livepanel.js" />
 						<include name="wm_richTextEditor.js" />
@@ -150,29 +247,104 @@
 					</fileset>
 				</copy>
 
+
 				<mkdir dir="${dojo.release-temp.dir}/wm_build/Gzipped" />
 				<gzip src="${dojo.release-temp.dir}/wm_build/lib_build.js"
 					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/lib_build.js.gz" />
+				<copy file="${dojo.release-temp.dir}/wm_build/lib_build.js"
+					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
 				<gzip src="${dojo.release.dir}/dojo/dojo/wm_charts.js"
 					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_charts.js.gz" />
+				<copy file="${dojo.release.dir}/dojo/dojo/wm_charts.js"
+					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
 				<gzip src="${dojo.release.dir}/dojo/dojo/wm_menus.js"
 					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_menus.js.gz" />
+				<copy file="${dojo.release.dir}/dojo/dojo/wm_menus.js"
+					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
 				<gzip src="${dojo.release.dir}/dojo/dojo/wm_dojo_grid.js"
 					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_dojo_grid.js.gz" />
+				<copy file="${dojo.release.dir}/dojo/dojo/wm_dojo_grid.js"
+					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
 				<gzip src="${dojo.release.dir}/dojo/dojo/wm_data_grid.js"
 					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_data_grid.js.gz" />
+				<copy file="${dojo.release.dir}/dojo/dojo/wm_data_grid.js"
+					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
 				<gzip src="${dojo.release.dir}/dojo/dojo/wm_list.js"
 					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_list.js.gz" />
+				<copy file="${dojo.release.dir}/dojo/dojo/wm_list.js"
+					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
+
+				<gzip src="${dojo.release.dir}/dojo/dojo/wm_colorpicker.js"
+					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_colorpicker.js.gz" />
+				<copy file="${dojo.release.dir}/dojo/dojo/wm_colorpicker.js"
+					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
+
+				<gzip src="${dojo.release.dir}/dojo/dojo/wm_progressbar.js"
+					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_progressbar.js.gz" />
+				<copy file="${dojo.release.dir}/dojo/dojo/wm_progressbar.js"
+					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
+
+				<gzip src="${dojo.release.dir}/dojo/dojo/wm_breadcrumblayer.js"
+					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_breadcrumblayer.js.gz" />
+				<copy file="${dojo.release.dir}/dojo/dojo/wm_breadcrumblayer.js"
+					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
+
+				<gzip src="${dojo.release.dir}/dojo/dojo/wm_wizardlayer.js"
+					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_wizardlayer.js.gz" />
+				<copy file="${dojo.release.dir}/dojo/dojo/wm_wizardlayer.js"
+					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
+
+				<gzip src="${dojo.release.dir}/dojo/dojo/wm_accordion.js"
+					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_accordion.js.gz" />
+				<copy file="${dojo.release.dir}/dojo/dojo/wm_accordion.js"
+					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
+
+				<gzip src="${dojo.release.dir}/dojo/dojo/wm_trees.js"
+					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_trees.js.gz" />
+				<copy file="${dojo.release.dir}/dojo/dojo/wm_trees.js"
+					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
+
+
+				<gzip src="${dojo.release.dir}/dojo/dojo/wm_fileupload.js"
+					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_fileupload.js.gz" />
+				<copy file="${dojo.release.dir}/dojo/dojo/wm_fileupload.js"
+					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
+
+				<gzip src="${dojo.release.dir}/dojo/dojo/wm_dataform.js"
+					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_dataform.js.gz" />
+				<copy file="${dojo.release.dir}/dojo/dojo/wm_dataform.js"
+					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
+
+				<gzip src="${dojo.release.dir}/dojo/dojo/wm_dashboard.js"
+					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_dashboard.js.gz" />
+				<copy file="${dojo.release.dir}/dojo/dojo/wm_dashboard.js"
+					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
+
 				<gzip src="${dojo.release.dir}/dojo/dojo/wm_editors.js"
 					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_editors.js.gz" />
+				<copy file="${dojo.release.dir}/dojo/dojo/wm_editors.js"
+					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
+				<gzip src="${dojo.release.dir}/dojo/dojo/wm_editors_misc.js"
+					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_editors_misc.js.gz" />
+				<copy file="${dojo.release.dir}/dojo/dojo/wm_editors_misc.js"
+					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
 				<gzip src="${dojo.release.dir}/dojo/dojo/wm_editors_old.js"
 					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_editors_old.js.gz" />
+				<copy file="${dojo.release.dir}/dojo/dojo/wm_editors_old.js"
+					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
 				<gzip src="${dojo.release.dir}/dojo/dojo/wm_livepanel.js"
 					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_livepanel.js.gz" />
+				<copy file="${dojo.release.dir}/dojo/dojo/wm_livepanel.js"
+					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
 				<gzip src="${dojo.release.dir}/dojo/dojo/wm_richTextEditor.js"
 					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_richTextEditor.js.gz" />
+				<copy file="${dojo.release.dir}/dojo/dojo/wm_richTextEditor.js"
+					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
 				<gzip src="${dojo.release.dir}/dojo/dojo/wm_gadgets.js"
 					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_gadgets.js.gz" />
+				<copy file="${dojo.release.dir}/dojo/dojo/wm_gadgets.js"
+					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
+
 
 				<!-- copy files in; required for the studio build -->
 				<mkdir dir="${lib.webapproot.studio.dir}/wm/studio" />
@@ -182,6 +354,7 @@
 				<copy todir="${lib.webapproot.studio.dir}/wm/studio/app">
 					<fileset dir="${webapproot.studio.dir}/app" />
 				</copy>
+
 
 				<!-- studio build 1 (compressed) -->
 				<!-- parameters documented at http://dojotoolkit.org/reference-guide/build/buildScript.html 
@@ -201,6 +374,7 @@
 					<arg value="optimize=comments" />
 					<arg value="layerOptimize=comments" />
 					<arg value="cssOptimize=comments" />
+					<arg value="cssImportIgnore=" />
 					<arg value="stripConsole=normal" />
 					<arg value="log=0" />
 					<!-- <arg value="cssOptimize=comments.keepLines"/> -->
@@ -234,18 +408,25 @@
 					destfile="${dojo.release-temp.dir}/build/studio.js.gz" />
 
 				<!-- copy the built files to their destination -->
+				<echo>mkdir ${build.lib.webapproot.studio.dir}</echo>
 				<mkdir dir="${build.lib.webapproot.studio.dir}" />
+				<echo>cp -r ${dojo.release-temp.dir}/wm_build ${build.lib.webapproot.studio.dir}</echo>
 				<copy todir="${build.lib.webapproot.studio.dir}">
 					<fileset dir="${dojo.release-temp.dir}/wm_build" />
 				</copy>
+				<echo>mkdir ${build.webapproot.studio.dir}</echo>
 				<mkdir dir="${build.webapproot.studio.dir}" />
+				<echo>cp -r ${dojo.release-temp.dir}/build/ ${build.webapproot.studio.dir}</echo>
 				<copy todir="${build.webapproot.studio.dir}">
 					<fileset dir="${dojo.release-temp.dir}/build/" />
 				</copy>
 
 				<copy tofile="${dojo.src.dir}/dijit/themes/tundra/t.css"
 					file="${dojo.release-temp.dir}/wm_build/themes/tundra/tundra.css" />
+				<copy tofile="${dojo.src.dir}/dijit/themes/tundra/tmobile.css"
+					file="${dojo.release-temp.dir}/wm_build/themes/tundra/tundraMobile.css" />
 				<!-- also deleted as part of clean -->
+
 				<delete dir="${lib.webapproot.studio.dir}/wm/studio" />
 				<delete dir="${dojo.release.dir}" />
 				<delete dir="${dojo.release-temp.dir}" />
@@ -254,6 +435,9 @@
 				<!-- <move file="${build.lib.webapproot.studio.dir}/dojo.js" tofile="${dojo.build.file}"/> -->
 				<gzip src="${build.lib.webapproot.studio.dir}/dojo.js"
 					destfile="${dojo.build.file}.gz" />
+				<copy file="${build.lib.webapproot.studio.dir}/dojo.js"
+					tofile="${dojo.build.file}" />
+
 			</target>
 	
     <target name="-do-build" depends="check_uptodate" unless="jsbuild.uptodate">
@@ -312,6 +496,7 @@
             tofile="${dojo.release-temp.dir}/wm_build/lib_build_uncompressed.js" />
     	
     	<!-- copy the runtime built compressed modules to the compressed directory -->
+<!--
         <mkdir dir="${compressed.modules}"/>
         <copy todir="${compressed.modules}">
             <fileset dir="${dojo.release.dir}/dojo/dojo">
@@ -320,14 +505,25 @@
                 <include name="wm_dojo_grid.js" />
                 <include name="wm_data_grid.js" />
                 <include name="wm_list.js" />
+                <include name="wm_colorpicker.js" />
+                <include name="wm_progressbar.js" />
+                <include name="wm_breadcrumblayer.js" />
+                <include name="wm_wizardlayer.js" />
+                <include name="wm_accordion.js" />
+                <include name="wm_trees.js" />
+                <include name="wm_fileupload.js" />
+                <include name="wm_dataform.js" />
+                <include name="wm_dashboard.js" />
                 <include name="wm_editors.js" />
+                <include name="wm_editors_misc.js" />
                 <include name="wm_editors_old.js" />
                 <include name="wm_livepanel.js" />
                 <include name="wm_richTextEditor.js" />
             	  <include name="wm_gadgets.js" />
             </fileset>
         </copy>
-
+-->
+	<!-- I think most of these are no-ops, and that only the studio build files should be affected by this 
         <mkdir dir="${dojo.release-temp.dir}/wm_build/Gzipped"/>
         <gzip src="${dojo.release-temp.dir}/wm_build/lib_build.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/lib_build.js.gz"/>    	
         <gzip src="${dojo.release.dir}/dojo/dojo/wm_charts.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_charts.js.gz"/>    	
@@ -335,12 +531,22 @@
         <gzip src="${dojo.release.dir}/dojo/dojo/wm_dojo_grid.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_dojo_grid.js.gz"/>    	
         <gzip src="${dojo.release.dir}/dojo/dojo/wm_data_grid.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_data_grid.js.gz"/>    	
         <gzip src="${dojo.release.dir}/dojo/dojo/wm_list.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_list.js.gz"/>    	
+        <gzip src="${dojo.release.dir}/dojo/dojo/wm_colorpicker.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_colorpicker.js.gz"/>    	
+        <gzip src="${dojo.release.dir}/dojo/dojo/wm_progressbar.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_progressbar.js.gz"/>    	
+        <gzip src="${dojo.release.dir}/dojo/dojo/wm_breadcrumblayer.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_breadcrumblayer.js.gz"/>    	
+        <gzip src="${dojo.release.dir}/dojo/dojo/wm_wizardlayer.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_wizardlayer.js.gz"/>    	
+        <gzip src="${dojo.release.dir}/dojo/dojo/wm_accordion.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_accordion.js.gz"/>    	
+        <gzip src="${dojo.release.dir}/dojo/dojo/wm_trees.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_trees.js.gz"/>    	
+        <gzip src="${dojo.release.dir}/dojo/dojo/wm_fileupload.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_fileupload.js.gz"/>    	
+        <gzip src="${dojo.release.dir}/dojo/dojo/wm_dataform.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_dataform.js.gz"/>    	
+        <gzip src="${dojo.release.dir}/dojo/dojo/wm_dashboard.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_dashboard.js.gz"/>    	
         <gzip src="${dojo.release.dir}/dojo/dojo/wm_editors.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_editors.js.gz"/>    	
+        <gzip src="${dojo.release.dir}/dojo/dojo/wm_editors_misc.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_editors_misc.js.gz"/>    	
         <gzip src="${dojo.release.dir}/dojo/dojo/wm_editors_old.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_editors_old.js.gz"/>    	
         <gzip src="${dojo.release.dir}/dojo/dojo/wm_livepanel.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_livepanel.js.gz"/>    	
         <gzip src="${dojo.release.dir}/dojo/dojo/wm_richTextEditor.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_richTextEditor.js.gz"/>    	
         <gzip src="${dojo.release.dir}/dojo/dojo/wm_gadgets.js" destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_gadgets.js.gz"/>    	
-
+-->
         <!-- copy files in; required for the studio build -->
         <mkdir dir="${lib.webapproot.studio.dir}/wm/studio" />
         <copy todir="${lib.webapproot.studio.dir}/wm/studio/pages">
@@ -350,73 +556,6 @@
             <fileset dir="${webapproot.studio.dir}/app" />
         </copy>
 
-        <!-- studio build 1 (compressed) -->
-	<!-- parameters documented at http://dojotoolkit.org/reference-guide/build/buildScript.html
-	     NOTE: We'd like to use optimize=shrinksafe but this mangles parameter names, impacting
-	           all event handlers and autocompletion, so we just use "comments" and then gzip it.
-	-->
-		<echo>Building studio</echo>
-		<exec dir="${dojo.src.dir}/util/buildscripts/" executable="${dojo.executable.cmd}"	>
-			<arg value="${executable.cmd.variable}"/>
-			<arg value="${dojo.script-path-param}"/>
-       		<arg value="releaseDir=${dojo.release.dir}"/>
-       		<arg value="profileFile=${basedir}/webapproot/app/buildUtil/profiles/studio.profile.js"/>
-       		<arg value="version=1.6.1.24595"/>
-       		<arg value="copyTests=false"/>
-       		<arg value="action=clean,release"/>
-       		<arg value="optimize=comments"/>
-       		<arg value="layerOptimize=comments"/>
-		<arg value="cssOptimize=comments"/> 
-		<arg value="stripConsole=normal"/>
-		<arg value="log=0"/>
-<!--					<arg value="cssOptimize=comments.keepLines"/>-->
-		</exec>
-		<echo>Done building studio</echo>
-
-        <!-- copy the studio 1/compressed built files out to the temp directory -->
-        <mkdir dir="${dojo.release-temp.dir}/build" />
-        <copy todir="${dojo.release-temp.dir}/build">
-            <fileset dir="${dojo.release.dir}/dojo/dojo">
-                <include name="studio_wm.js" />
-            </fileset>
-        </copy>
-        <copy todir="${dojo.release-temp.dir}/build">
-            <fileset dir="${dojo.release.dir}/dojo/dojo">
-                <include name="studio_base.js" />
-                <include name="studio.js" />
-                <include name="nls/**" />
-            </fileset>
-            <fileset dir="${dojo.release.dir}/dojo/dijit">
-                <include name="themes/**"/>
-            </fileset>
-        </copy>
-        <gzip src="${dojo.release-temp.dir}/build/studio_base.js" destfile="${dojo.release-temp.dir}/build/studio_base.js.gz"/>    	
-        <gzip src="${dojo.release-temp.dir}/build/studio_base.js" destfile="${dojo.release-temp.dir}/build/studio_base.js.gz"/>    	
-        <gzip src="${dojo.release-temp.dir}/build/studio_wm.js" destfile="${dojo.release-temp.dir}/build/studio_wm.js.gz"/>    	
-        <gzip src="${dojo.release-temp.dir}/build/studio.js" destfile="${dojo.release-temp.dir}/build/studio.js.gz"/>    	
-
-        <!-- copy the built files to their destination -->
-        <mkdir dir="${build.lib.webapproot.studio.dir}" />
-        <copy todir="${build.lib.webapproot.studio.dir}">
-            <fileset dir="${dojo.release-temp.dir}/wm_build" />
-        </copy>
-        <mkdir dir="${build.webapproot.studio.dir}" />
-        <copy todir="${build.webapproot.studio.dir}">
-            <fileset dir="${dojo.release-temp.dir}/build/" />
-        </copy>
-
-        <copy tofile="${dojo.src.dir}/dijit/themes/tundra/t.css" file="${dojo.release-temp.dir}/wm_build/themes/tundra/tundra.css" />
-        <!-- also deleted as part of clean -->
-        <delete dir="${lib.webapproot.studio.dir}/wm/studio" />
-        <delete dir="${dojo.release.dir}" />
-        <delete dir="${dojo.release-temp.dir}" />
-
-        <!-- move dojo build to the source dojo folder -->
-		<!--
-    	<move
-              file="${build.lib.webapproot.studio.dir}/dojo.js"
-              tofile="${dojo.build.file}"/>
-        -->
         <gzip src="${build.lib.webapproot.studio.dir}/dojo.js" destfile="${dojo.build.file}.gz"/>    	
     </target>
 

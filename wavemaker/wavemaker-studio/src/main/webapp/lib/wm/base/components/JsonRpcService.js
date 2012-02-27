@@ -149,17 +149,20 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
     initService: function() {
 	var n = this.service || this.name;
 	var rand = this.owner && this.isDesignLoaded() ? studio.application.getFullVersionNumber() : (app && !window["studio"] ? app.getFullVersionNumber() : Math.floor(Math.random()*1000000));
+    var cachedName = this.url || n + ".smd";
 	var url = this.url || (n && (this.getServiceRoot() + n + ".smd?rand=" + rand));
 	this._service = null;
 	if (url) {
 	    try{
-		this._service = wm.JsonRpcService.smdCache[url];
-		if (this._service) {
-		    this.listOperations();
+		if (wm.JsonRpcService.smdCache[url]) {
+		    this._service = wm.JsonRpcService.smdCache[url];
+		} else if (wm.JsonRpcService.smdCache[cachedName]) {
+		    this._service = new wm.JsonRpc({smdObject: wm.JsonRpcService.smdCache[cachedName],
+						     serviceUrl: url});
 		} else {
-
 		    this._service = new wm.JsonRpc(url);
-
+		}
+		wm.JsonRpcService.smdCache[url] = this._service;
 		    //The following lines are not being used now.  They may be used in the future to differenciate requests from Studio from
 		    //requests deployed application.
 		    if (this._designTime)
@@ -171,7 +174,7 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 			this._service.serviceUrl = this.getJsonPath() + this._service.serviceUrl;
 			this.listOperations();
 		    }
-		}
+
 	    }catch(e){
 		console.debug(e);
 	    }
@@ -217,9 +220,11 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		this.result = null;
 		this.error = null;
 
-		var responseTime = this.getOperation(inMethod).responseTime;
-		var requestId;
-		if (responseTime && responseTime == "long") {
+	   var operation = this.getOperation(inMethod);
+	   if (operation)
+	       var responseTime = this.getOperation(inMethod).responseTime;
+	   var requestId;
+	   if (responseTime && responseTime == "long") {
 			var savedSync = this._service.sync;
 			this._service.sync = true;
 			var dd = this._service.callRemote("getRequestId", []);
@@ -232,6 +237,7 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		}
 
 		var d = this._service.callRemote(inMethod, inArgs || []);
+
 		if (responseTime && responseTime == "long" || inLoop && inMethod == "getResponseFromService")  {
 			var longDeferred = inLongDeferred || new dojo.Deferred();
 			d.addCallbacks(dojo.hitch(this, "onLongResponseTimeResult", owner, invoker, inLoop, responseTime, requestId, longDeferred), 

@@ -464,6 +464,7 @@ wm.LivePanel.extend({
 
     },
     	createTraditionalLivePanel: function(usePaging) {
+	    //this.set_deviceSizes(["1150","900","750","600","450"]);
 	        var fancyPanel1 = new wm.FancyPanel({parent: this,
                                                      horizontalAlign: "left",
                                                      verticalAlign: "top",

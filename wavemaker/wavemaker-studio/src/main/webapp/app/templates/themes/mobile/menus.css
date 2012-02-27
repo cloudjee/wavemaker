@@ -1,0 +1,166 @@
+/*
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+
+  /**************************************************************************************************
+   * TYPE:        wm.DojoMenu
+   *
+   * DESCRIPTION: Sets styles for menu.  Some styles (font-size) are going to be shared across all 
+   *              panel types
+   *
+   ************************************************************************************************/
+
+.wm_template .dijitMenu .dijitMenuArrowCell img.dijitMenuExpand {
+   background-image: url("images/dropArrowBlack.png") !important; /* wm.DojoMenu-Right_Image */    
+    background-position: 0% 50% !important;
+}
+
+.wm_template div.dijitMenuBar div.dijitMenuItem {
+   background-image: url("images/dropArrowBlack.png") !important; /* wm.DojoMenu-Down_Image */
+   background-position: 90% 50% !important;
+   background-repeat: no-repeat !important;
+    padding-right: 25px !important;
+}
+
+@media screen { /* Document-Level */ 
+    .wm_template .dojoMenu .dijitMenu,
+    .wm_template .dojoMenu .dijitMenuBar {
+	/* Document-ClickablesDefault-Font */
+	font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */
+	font-size: 12pt; /* Document-ClickablesDefault-Font_TextSize */
+	font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+	color: #FFFFFF; /* Document-Styles-Font_Color */
+	background-color: transparent;
+	background-image: none;
+    }
+    
+    .wm_template .dojoMenu.ClickableDojoMenu {
+	/* Document-ClickablesDefault-Background */
+	background-color: #444444; /* Document-ClickablesDefault-Background_Color */
+	background-image: url(images/repeatx/brightEdge1.png); /* Document-ClickablesDefault-Background_Image */
+	background-position: left top;  /* Document-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
+    }
+    .wm_template .dojoMenu.ClickableDojoMenu .dijitMenuItem {
+	color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
+    }
+    .wm_template .dojoMenu .dijitMenuItem {
+	color: #FFFFFF; /* Document-Styles-Font_Color */
+    }
+
+
+    /* Spacing between menu items */
+    .wm_template .dijitMenuBar .dijitMenuItem,
+    .tundra .wm-darksnazzy .wm_template .dijitMenuBar .dijitMenuItem {
+	margin-right: 10px; /* wm.DojoMenu-Right_Margin */
+    }
+
+    body.wm_template .dojoMenu .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+    body.wm_template .dojoMenu .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
+	/* Document-ClickablesHover-Font */
+	color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
+
+	/* Document-ClickablesHover-Background */
+	background-color: #444444; /* Document-ClickablesHover-Background_Color */
+	background-image: url(images/repeatx/brightEdge1.png); /* Document-ClickablesDefault-Background_Image */
+	background-position: left top;  /* Document-ClickablesDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* Document-ClickablesDefault-Background_Image-Repeat */
+
+
+	outline-width: 0;
+    }
+}
+
+
+
+  /**************************************************************************************************
+   * TYPE:        wm.DojoMenu Popup
+   *
+   * DESCRIPTION: Sets styles for menu.  Does not depend at this time on what kind of panel its in,
+   *              the popup is always under body; the menubar itself we may update to work anywhere.
+   *
+   ************************************************************************************************/
+.wm_template .dijitMenuPopup table.dijitMenuTable.dijitMenu.dijitReset,
+.wm_template .dijitPopup .dijitCalendarMonthLabel {
+    /* Document-ClickablesDefault-Font */
+    font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */
+    color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
+    font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+
+    /* Document-ClickablesDefault-Background */
+    background-color: #444444; /* Document-ClickablesDefault-Background_Color */
+    border: solid 1px black;
+    border-top: solid 1px #999999;
+
+    -moz-box-shadow: 3px 3px 4px black; /* Floating-Shadow */
+    -webkit-box-shadow: 3px 3px 4px black;/* Floating-Shadow */
+    box-shadow: 3px 3px 4px black; /* Floating-Shadow */
+}
+
+body.wm_template  .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelected
+ {
+
+    color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
+
+    /* Document-ClickablesHover-Background */
+    background-color: #444444; /* Document-ClickablesHover-Background_Color */
+    background-image: none;
+    outline-width: 0;
+}
+
+  /**************************************************************************************************
+   * TYPE:        wm.SelectMenu Popup, wm.Calendar Month list popup
+   *
+   * DESCRIPTION: Sets styles for menu.  Does not depend at this time on what kind of panel its in,
+   *              the popup is always under body; the menubar itself we may update to work anywhere.
+   *
+   ************************************************************************************************/
+body.wm_template ul.dijitMenu .dijitMenuItem,
+body.wm_template div.dijitMenu .dijitCalendarMonthLabel {
+
+    /* Tables-EvenRows-Font */
+    color: #FFFFFF; /* Tables-EvenRows-Font_Color */
+
+    /* Tables-EvenRows-Background */
+    background-color: #444444; /* Tables-EvenRows-Background_Color */
+
+    border-bottom-size: 1px;      /* Tables-EvenRows-Border_Size */
+    border-bottom-style: solid;   
+    border-bottom-color: #AAAAAA; /* Tables-EvenRows-Border_Color */
+}
+
+/* Combobox and Calendar Month Popup  items with hover/selected */
+body.wm_template  ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected,
+body.wm_template div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
+    /* Document-ClickablesHover-Font */
+    color: #FFFFFF; /* Document-ClickablesHover-Font_Color */
+
+    /* Document-ClickablesHover-Background */
+    background-color: #333333; /* Document-ClickablesHover-Background_Color */    
+
+    outline-width: 0;
+}
+
+/* Border around the entire menu */
+ body.tundra.wm_template .dijitPopup ul.dijitMenu {
+    border-width: 1px;
+    border-style: solid;
+    border-color: black; 
+
+    -moz-box-shadow: 4px 4px 8px black; /* Floating-Shadow */
+    -webkit-box-shadow: 4px 4px 8px black;  /* Floating-Shadow */
+    box-shadow: 4px 4px 8px black;  /* Floating-Shadow */
+}
+
+

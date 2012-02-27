@@ -180,13 +180,13 @@ dojo.declare("wm.LiveView", wm.Component, {
 			inView.sort(function(a, b) {
 				// if either has order, compare by order
 				if (wm.isNumber(a.order) || wm.isNumber(b.order)) {
-					return wm.compareNumbers(a.order, b.order);
+					return wm.data.compareNumbers(a.order, b.order);
 				// otherwise compare by "shallowest" or alpha
 				} else {
 					a = a.dataIndex;
 					b = b.dataIndex;
 					var al = a.split(".").length, bl = b.split(".").length;
-					return al == bl ? wm.data.compare(a, b) : wm.compareNumbers(al, bl);
+					return al == bl ? wm.data.compare(a, b) : wm.data.compareNumbers(al, bl);
 				}
 			});
 		}

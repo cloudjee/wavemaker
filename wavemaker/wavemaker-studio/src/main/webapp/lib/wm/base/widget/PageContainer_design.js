@@ -69,7 +69,7 @@ wm.PageContainer.extend({
 
     },
 
-    createNewPage: function() {
+    createNewPage: function(optionalInPageType) {
 	var pages = studio.project.getPageList();
 	var l = {};
 	dojo.forEach(pages, function(p) {
@@ -79,21 +79,36 @@ wm.PageContainer.extend({
                              dojo.hitch(this, function(n) {
 				 n = wm.capitalize(n);
 				 if (this.owner instanceof wm.PageDialog)
-				     this.owner.pageName = n;
+				     this.owner[optionalInPageType || "pageName"] = n;
 				 else
-				     this.pageName = n;
+				     this[optionalInPageType || "pageName"] = n;
 
+				 var onSuccess = function() {
+				     switch (optionalInPageType) {
+					     case "phonePageName":
+						 studio.phoneToggleButton.click();
+						 break;
+					     case "tabletPageName":
+						 studio.tabletToggleButton.click();
+						 break;
+					     default:
+						 studio.desktopToggleButton.click();
+						 break;
+					     }
+				 };
 				 studio.confirmSaveDialog.page.setup(
-				     studio.getDictionaryItem("CONFIRM_OPEN_PAGE", {oldPage: studio.project.pageName, newPage: this.pageName}),
+				     studio.getDictionaryItem("CONFIRM_OPEN_PAGE", {oldPage: studio.project.pageName, newPage: this[optionalInPageType || "pageName"]}),
 				     /* onSave */
 				     dojo.hitch(this, function() {
 					 studio.project.saveProject(false, dojo.hitch(this, function() {
 					     studio.project.newPage(n);
+					     onSuccess();
 					 }));
 				     }),
 				     /* onDontSave */
 				     dojo.hitch(this, function() {
 					 studio.project.newPage(n);
+					 onSuccess();
 				     }),
 				     null, /* onCancel */
 				     !studio.isPageDirty()); /* skip save */
@@ -104,6 +119,27 @@ wm.PageContainer.extend({
 		if (this.designWrapper)
 			dojo.addClass(this.designWrapper.domNode, "wmchrome-wrapper");
 	},
+    set_pageName: function(inName) {
+	if (inPageName == studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION")) {
+	    this.createNewPage(optionalInPageType);
+	} else {
+	    this.setPageName(inName);
+	}
+    },
+    set_tabletPageName: function(inName) {
+	if (inName == studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION")) {
+	    this.createNewPage("tabletPageName");
+	} else {
+	    this.setPageName(inName, "tabletPageName");
+	}
+    },
+    set_phonePageName: function(inName) {
+	if (inName == studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION")) {
+	    this.createNewPage("phonePageName");
+	} else {
+	    this.setPageName(inName, "phonePageName");
+	}
+    },
 	writeChildren: function() {
 		return [];
 	},
@@ -228,6 +264,8 @@ wm.Object.extendSchema(wm.PageContainer, {
     loadParentFirst: {group: "display", subgroup: "misc", order: 101, type: "boolean", advanced:1},
     */
     pageName: {group: "widgetName", subgroup: "data", requiredGroup:1,bindable: 1, type: "string", order: 50, pageProperty: "page", editor: "wm.prop.PagesSelect"},
+    phonePageName: {group: "mobile", subgroup: "data", type: "string",pageProperty: "page", editor: "wm.prop.PagesSelect"},
+    tabletPageName: {group: "mobile", subgroup: "data", type: "string",pageProperty: "page", editor: "wm.prop.PagesSelect"},
     deferLoad: {group: "widgetName", subgroup: "behavior", order: 100, type: "boolean"},
     loadParentFirst: {group: "widgetName", subgroup: "behavior", order: 101, type: "boolean", advanced:1},
 

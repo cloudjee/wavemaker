@@ -1,0 +1,989 @@
+/*
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+body .harrypotter input:focus,
+.harrypotter button, .harrypotter button:focus {
+outline-width: 0 !important;
+}
+@media screen {
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .harrypotter .wmlayout .HeaderContent a,
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .harrypotter .wmlayout .HeaderContent a:visited,
+#studio_designer.harrypotter .wmlayout .HeaderContent a,
+#studio_designer.harrypotter .wmlayout .HeaderContent a:visited,
+.harrypotter #wavemakerNode .wmlayout .HeaderContent a,
+.harrypotter #wavemakerNode .wmlayout .HeaderContent a:visited {
+color: #ffffff;
+}
+}
+@media screen {
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .harrypotter .wmlayout  a,
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .harrypotter .wmlayout  a:visited,
+#studio_designer.harrypotter .wmlayout  a,
+#studio_designer.harrypotter .wmlayout  a:visited,
+.harrypotter #wavemakerNode .wmlayout  a,
+.harrypotter #wavemakerNode  .wmlayout  a:visited {
+color: #232323;
+}
+}
+@media screen {
+.harrypotter   .wmbutton,
+.harrypotter   .wmtogglebutton,
+.harrypotter   .wmbutton.wmbutton-disabled:hover,
+.harrypotter   .wmbutton.wmbutton-disabled:focus
+{
+font-family: Verdana;
+font-size: 8pt;
+color: #232323;
+font-weight: bold;
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+-moz-box-shadow: 1px 1px 1px #444444;
+-webkit-box-shadow: 1px 1px 1px #444444;
+box-shadow: 1px 1px 1px #444444;
+background-color: #fe9603;
+background-image: url(images/repeatx/brightThickEdge0.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.harrypotter  .wmbutton span {
+font-weight: bold;
+}
+.harrypotter   .wmbutton.toggleButtonDown {
+color: #f7d053;
+background-color: #161616;
+background-image: url(images/repeatx/brightThickEdge0.png);
+background-position: top left;
+background-repeat: repeat-x;
+-moz-box-shadow: 0px 0px 0px #444444;
+-webkit-box-shadow: 0px 0px 0px #444444;
+box-shadow: 0px 0px 0px #444444;
+}
+.harrypotter   .wmbutton:active,
+.harrypotter   .wmbutton:focus {
+color: #ffffff;
+background-color: #f96a02;
+background-image: url(images/repeatx/brightThickEdge0.png);
+background-position: top left;
+background-repeat: repeat-x;
+-moz-box-shadow: 0px 0px 0px #444444;
+-webkit-box-shadow: 0px 0px 0px #444444;
+box-shadow: 0px 0px 0px #444444;
+}
+}
+@media screen {
+.harrypotter .HeaderContent  .wmbutton,
+.harrypotter .HeaderContent  .wmtogglebutton,
+.harrypotter .HeaderContent  .wmbutton.wmbutton-disabled:active,
+.harrypotter .HeaderContent  .wmbutton.wmbutton-disabled:focus
+{
+font-family: Verdana;
+font-size: 10pt;
+color: #39380e;
+font-weight: bold;
+-moz-border-radius: 2px;
+-webkit-border-radius: 2px;
+border-radius: 2px;
+-moz-box-shadow: 3px 3px 3px #000000;
+-webkit-box-shadow: 3px 3px 3px #000000;
+box-shadow: 3px 3px 3px #000000;
+background-color: #f5e67f;
+background-image: url(images/repeatx/greySliverEdge4.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.harrypotter .HeaderContent .wmbutton span {
+font-weight: bold;
+}
+.harrypotter .HeaderContent  .wmbutton.toggleButtonDown {
+color: #fcf892;
+background-color: #264a59;
+background-image: url(images/repeatx/brightSliverEdge4.png);
+background-position: top left;
+background-repeat: repeat-x;
+-moz-box-shadow: 0px 0px 0px #444444;
+-webkit-box-shadow: 0px 0px 0px #444444;
+box-shadow: 0px 0px 0px #444444;
+}
+.harrypotter .HeaderContent  .wmbutton:hover,
+.harrypotter .HeaderContent  .wmbutton:active {
+color: #fff79a;
+background-color: #333333;
+background-image: url(images/repeatx/brightSliverEdge4.png);
+background-position: top left;
+background-repeat: repeat-x;
+-moz-box-shadow: 0px 0px 0px #444444;
+-webkit-box-shadow: 0px 0px 0px #444444;
+box-shadow: 0px 0px 0px #444444;
+}
+}
+.harrypotter .wmPopupButton .popupIcon {
+background-image: url(images/comboArrowDownLight.png) !important;
+}
+.harrypotter table .dijitCalendarYearContainer tr {
+background-color: #b30000;
+border-style: solid;
+border-color: #fe9603;
+border-top-width: 1px;
+}
+.harrypotter table .dijitCalendarYearContainer td span {
+color: #ffffff !important;
+}
+.harrypotter .dijitCalendarYearLabel {
+font-size: 10px;
+}
+.harrypotter .dijitCalendarDayLabel,
+.harrypotter .dijitCalendarDateLabel {
+font-size: 12px;
+}
+.harrypotter tr.dijitCalendarMonthContainer th {
+font-family: Verdana;
+font-size: 10px;
+color: #ffffff;
+font-weight: bold;
+background-color: #b30000;
+background-image: none;
+}
+.harrypotter tr.dijitCalendarMonthContainer th .dijitCalendarMonthLabel {
+font-family: Verdana;
+font-size: 10px;
+color: #ffffff;
+font-weight: bold;
+border-width: 0px;
+-moz-box-shadow: 0px 0px 0px black;
+-webkit-box-shadow: 0px 0px 0px black;
+box-shadow: 0px 0px 0px black;
+}
+.harrypotter table.dijitCalendarContainer {
+border-color: #444444;
+border-style: solid;
+border-width: 4px;
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+}
+.harrypotter table.dijitCalendarContainer td.dijitCalendarCurrentMonth {
+background-color: #ffffff !important;
+color: #000000 !important;
+}
+.harrypotter .dijitCalendarBodyContainer td {
+border-style: solid;
+border-color: #444444;
+border-right-width: 1px;
+border-top-width: 1px;
+border-left-width: 0px;
+border-bottom-width: 0px;
+}
+.harrypotter .dijitCalendarContainer td.dijitCalendarSelectedDate,
+.harrypotter .dijitCalendarContainer td.dijitCalendarSelectedDate.dijitCalendarCurrentMonth,
+.harrypotter .dijitCalendarContainer .dijitCalendarSelectedYear {
+background-color: #161616 !important;
+color: #fdd949 !important;
+}
+.harrypotter .dijitCalendarContainer td.dijitCalendarHoveredDate,
+.harrypotter .dijitCalendarContainer td.dijitCalendarHoveredDate.dijitCalendarCurrentMonth,
+.harrypotter .dijitCalendarContainer .dijitCalendarHoveredYear,
+.harrypotter .dijitCalendarContainer .dijitCalendarNextYear:hover,
+.harrypotter .dijitCalendarContainer .dijitCalendarPreviousYear:hover {
+background-color: #fe9603 !important;
+color: #232323 !important;
+}
+.harrypotter .dijitCalendarContainer {
+background-color: #ffffff;
+}
+.harrypotter .dijitCalendarContainer .dijitCalendarPreviousMonth,
+.harrypotter .dijitCalendarContainer .dijitCalendarNextMonth,
+.harrypotter .dijitCalendarContainer .dijitCalendarDayLabelTemplate {
+background-color: #232323 !important;
+background-image: none;
+color: #ffffff;
+}
+.harrypotter .dijitCalendarDayLabelTemplate {
+border-style: solid;
+border-color: #444444;
+border-right-width: 1px;
+}
+.harrypotter .wmdialog {
+-moz-border-radius: 2px;
+-webkit-border-radius: 2px;
+border-radius: 2px;
+-moz-box-shadow: 3px 3px 3px black;
+-webkit-box-shadow: 3px 3px 3px black;
+box-shadow: 3px 3px 3px black;
+}
+.harrypotter .dialogtitlebar .wmlabel{
+font-family: Verdana;
+font-size: 8pt;
+color: #ffffff;
+font-weight: bold;
+}
+.harrypotter .dialogtitlebar {
+background-color: #666666;
+background-image: url(images/repeatx/brightThickEdge0.png);
+background-position: top left;
+background-repeat: repeat-x;
+-moz-border-radius-topleft: 0px;
+-moz-border-radius-topright: 0px;
+-webkit-border-top-left-radius: 0px;
+-webkit-border-top-right-radius: 0px;
+border-radius-topleft: 0px;
+border-radius-topright: 0px;
+}
+.harrypotter .dialogfooter,
+.harrypotter .wmpagedialog-controlspanel {
+font-family: Verdana;
+font-size: 8pt;
+color: #ffffff;
+font-weight: bold;
+background-color: #666666;
+background-position: top left;
+background-repeat: repeat-x;
+-moz-border-radius-bottomleft: 0px;
+-moz-border-radius-bottomright: 0px;
+-webkit-border-bottom-left-radius: 0px;
+-webkit-border-bottom-right-radius: 0px;
+border-radius-bottomleft: 0px;
+border-radius-bottomright: 0px;
+}
+body.harrypotter .dialogtitlebar .wmbutton,
+body .harrypotter .dialogtitlebar .wmbutton {
+background-color: #c6d3d7;
+background-image: url(images/repeatx/brightEdge2.png);
+background-position: top left;
+background-repeat: repeat-x;
+color: #000000;
+font-size: 12pt !important;
+font-weight: normal !important;
+padding: 2px 0px 0px 2px !important;
+font-family: sans-serif !important;
+-moz-border-radius: 0px !important;
+-webkit-border-radius: 0px !important;
+border-radius: 0px !important;
+-moz-box-shadow: 2px 2px 2px #444444;
+-webkit-box-shadow: 2px 2px 2px #444444;
+box-shadow: 2px 2px 2px #444444;
+}
+body.harrypotter .dialogfooter .wmbutton,
+body .harrypotter .dialogfooter .wmbutton {
+font-family: Verdana;
+font-size: 9pt;
+color: #000000;
+font-weight: bold;
+background-color: #e0f0f0;
+background-image: url(images/repeatx/brightEdge2.png);
+background-position: top left;
+background-repeat: repeat-x;
+-moz-box-shadow: 3px 3px 3px #000000;
+-webkit-box-shadow: 3px 3px 3px #000000;
+box-shadow: 3px 3px 3px #000000;
+}
+body.harrypotter .dialogtitlebar .wmbutton:hover,
+body.harrypotter .dialogtitlebar .wmbutton:focus,
+body.harrypotter .dialogtitlebar .wmbutton:active {
+color: #000000;
+background-color: #86a2ac;
+background-image: url(images/repeatx/brightEdge4.png);
+background-position: top left;
+background-repeat: repeat-x;
+-moz-box-shadow: 1px 1px 1px #000000;
+-webkit-box-shadow: 1px 1px 1px #000000;
+box-shadow: 1px 1px 1px #000000;
+}
+body.harrypotter .dialogfooter .wmbutton.toggleButtonDown,
+body .harrypotter .dialogfooter .wmbutton.toggleButtonDown,
+body.harrypotter .dialogfooter .wmbutton:hover,
+body.harrypotter .dialogfooter .wmbutton:active,
+body.harrypotter .dialogfooter .wmbutton:focus {
+color: #000000;
+background-color: #86a2ac;
+background-image: url(images/repeatx/brightEdge4.png);
+background-position: top left;
+background-repeat: repeat-x;
+`
+-moz-box-shadow: 1px 1px 1px #000000;
+-webkit-box-shadow: 1px 1px 1px #000000;
+box-shadow: 1px 1px 1px #000000;
+}
+.harrypotter .dialogtitlebar .dialogminifybutton {
+background-position: -16px;
+}
+.harrypotter .dialogtitlebar .dialogmaxifybutton {
+background-position: -32px;
+}
+.harrypotter .dialogtitlebar .dialogmaxifybutton,
+.harrypotter .dialogtitlebar .dialogclosebutton,
+.harrypotter .dialogtitlebar .dialogminifybutton {
+background-image: url(images/dialogIconsRedYellowOrange.png) !important;
+background-repeat: no-repeat;
+}
+.harrypotter .wmeditor .dijitTextBox.dijitFocused,
+.harrypotter .wmeditor .dijitTextArea.dijitFocused,
+.harrypotter .wmeditor .dijitComboBox.dijitFocused,
+.harrypotter .wmeditor .dijitSelect.dijitFocused {
+outline-width: 0 !important;
+}
+.harrypotter  .wmeditor .dijitTextBox,
+.harrypotter  .wmeditor .dijitTextArea,
+.harrypotter  .wmeditor .dijitComboBox
+{
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+}
+.harrypotter  .wmeditor .dijitSelect .dijitButtonContents {
+-moz-border-radius-bottomleft: 4px;
+-moz-border-radius-topleft: 4px;
+-webkit-border-top-left-radius: 4px;
+-webkit-border-bottom-left-radius: 4px;
+border-radius-bottomleft: 4px;
+border-radius-top-left: 4px;
+border-right: solid 0px transparent !important;
+display:block;
+}
+.harrypotter .wmeditor .dijitComboBox .dijitArrowButton,
+.harrypotter .wmeditor .dijitSelect .dijitArrowButton {
+height: 100% !important;
+-moz-border-radius-bottomright: 2px;
+-moz-border-radius-topright: 2px;
+-webkit-border-bottom-right-radius: 2px;
+-webkit-border-top-right-radius: 2px;
+border-radius-bottomright: 2px;
+border-radius-topright: 2px;
+}
+.harrypotter .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
+height: 100% !important;
+}
+.harrypotter .dijitComboBox .dijitArrowButton .dijitArrowButtonInner,
+.harrypotter .dijitSelect .dijitArrowButton .dijitArrowButtonInner {
+background-position: 50% 50%;
+background-image: url(images/comboArrowDownLight.png);
+-moz-border-radius-bottomright: 2px;
+-moz-border-radius-topright: 2px;
+-webkit-border-bottom-right-radius: 2px;
+-webkit-border-top-right-radius: 2px;
+border-radius-bottomright: 2px;
+border-radius-topright: 2px;
+}
+.harrypotter .dijitSpinner .dijitArrowButton .dijitArrowButtonInner {
+background-position: 30% 30%;
+background-image: url(images/comboArrowDownDark.png);
+}
+.harrypotter .dijitSpinner .dijitArrowButton.dijitUpArrowButton .dijitArrowButtonInner {
+background-image: url(images/comboArrowUpDark.png);
+}
+.harrypotter .dijitSlider .dijitProgressBarLabel {
+color: white;
+}
+.harrypotter .dijitSlider .dijitSliderImageHandleH {
+background: url(images/preciseSliderThumb.png) no-repeat 50% 0%;
+outline-width: 0;
+}
+@media screen {
+.harrypotter  .wmeditor .dijitSpinner .dijitArrowButton,
+.harrypotter  .wmeditor .dijitComboBox .dijitArrowButton,
+.harrypotter  .wmeditor .dijitSelect .dijitArrowButton {
+background-color: #fe9603;
+}
+.harrypotter  .wmeditor .dijitTextBox,
+.harrypotter  .wmeditor .dijitTextArea,
+.harrypotter  .wmeditor .dijitComboBox,
+.harrypotter  .wmeditor .dijitSelect .dijitButtonContents,
+.harrypotter  .dijitTimePickerItem {
+border-color: #333333;
+border-width: 1px;
+font-family: Verdana;
+font-size: 8pt;
+color: #000000;
+font-weight: normal;
+background-color: #f5f3f3;
+background-image: url(images/repeatx/greyEdge0.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.harrypotter  .wmeditor .dijitTextBox.dijitHover,
+.harrypotter  .wmeditor .dijitTextArea:hover,
+.harrypotter  .wmeditor .dijitComboBox.dijitHover,
+.harrypotter  .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
+.harrypotter  .dijitTimePickerMarker.dijitTimePickerMarkerHover,
+.harrypotter  .dijitTimePickerItem.dijitTimePickerItemHover {
+color: #000000;
+border-color: #333333;
+background-color: #dddddd;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+.harrypotter  .wmeditor .dijitTextBox.dijitFocused,
+.harrypotter  .wmeditor .dijitTextBox.dijitFocused.dijitHover,
+.harrypotter  .wmeditor .dijitTextArea.dijitFocused,
+.harrypotter  .wmeditor .dijitTextArea.dijitFocused:hover,
+.harrypotter  .wmeditor .dijitComboBox.dijitFocused,
+.harrypotter  .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+.harrypotter  .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
+.harrypotter  .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents {
+color: #000000;
+border-color: #000000;
+background-color: #fdeb91;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+}
+@media screen {
+.harrypotter .HeaderContent .wmeditor .dijitSpinner .dijitArrowButton,
+.harrypotter .HeaderContent .wmeditor .dijitComboBox .dijitArrowButton,
+.harrypotter .HeaderContent .wmeditor .dijitSelect .dijitArrowButton {
+background-color: #f5e67f;
+}
+.harrypotter .HeaderContent .wmeditor .dijitTextBox,
+.harrypotter .HeaderContent .wmeditor .dijitTextArea,
+.harrypotter .HeaderContent .wmeditor .dijitComboBox,
+.harrypotter .HeaderContent .wmeditor .dijitSelect .dijitButtonContents,
+.harrypotter .HeaderContent .dijitTimePickerItem {
+border-color: #434343;
+border-width: 1px;
+font-family: Verdana;
+font-size: 8pt;
+color: #000000;
+font-weight: normal;
+background-color: #ffffff;
+background-image: url(images/repeatx/greySliverEdge0.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.harrypotter .HeaderContent .wmeditor .dijitTextBox.dijitHover,
+.harrypotter .HeaderContent .wmeditor .dijitTextArea:hover,
+.harrypotter .HeaderContent .wmeditor .dijitComboBox.dijitHover,
+.harrypotter .HeaderContent .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
+.harrypotter .HeaderContent .dijitTimePickerMarker.dijitTimePickerMarkerHover,
+.harrypotter .HeaderContent .dijitTimePickerItem.dijitTimePickerItemHover {
+color: #000000;
+border-color: #333333;
+background-color: #faef99;
+background-image: url(images/repeatx/greySliverEdge0.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.harrypotter .HeaderContent .wmeditor .dijitTextBox.dijitFocused,
+.harrypotter .HeaderContent .wmeditor .dijitTextBox.dijitFocused.dijitHover,
+.harrypotter .HeaderContent .wmeditor .dijitTextArea.dijitFocused,
+.harrypotter .HeaderContent .wmeditor .dijitTextArea.dijitFocused:hover,
+.harrypotter .HeaderContent .wmeditor .dijitComboBox.dijitFocused,
+.harrypotter .HeaderContent .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+.harrypotter .HeaderContent .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
+.harrypotter .HeaderContent .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents{
+color: #000000;
+border-color: #000000;
+background-color: #faf2b2;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+}
+.harrypotter div.wmlist-item {
+font-family: Verdana;
+font-size: 8pt;
+color: #ffffff;
+font-weight: normal;
+background-color: #202020;
+}
+.harrypotter .wmlist-item.Odd {
+color: #ffffff;
+background-color: #282828;
+}
+.harrypotter .wmlist-cell {
+border-style: solid;
+border-color: #323232;
+border-left-width: 0px;
+border-right-width: 1px;
+border-top-width: 0px;
+border-bottom-width: 0px;
+}
+.harrypotter .wmlist-header .wmlist-cell {
+border-right-width: 0px;
+}
+@media screen {
+.harrypotter .wmlist-item.wmlist-item-selected {
+background-color: #161616 !important;
+color: #fdd949;
+}
+.harrypotter .wmlist-header th {
+font-family: Verdana;
+color: #771502 !important;
+font-weight: bold;
+}
+body.tundra.harrypotter .wmlist-header {
+background-color: #f96a02;
+background-image: url(images/repeatx/greySliverEdge3.png);
+background-position: left top;
+background-repeat: repeat-x;
+}
+}
+.harrypotter .dijitMenu .dijitMenuArrowCell img.dijitMenuExpand {
+background-image: url(images/arrowRightDark.png) !important;
+background-position: 0% 50% !important;
+}
+.harrypotter div.dijitMenuBar div.dijitMenuItem {
+background-image: url(images/comboArrowDownDark.png) !important;
+background-position: 90% 50% !important;
+background-repeat: no-repeat !important;
+padding-right: 25px !important;
+}
+@media screen {
+.harrypotter .dojoMenu .dijitMenu,
+.harrypotter .dojoMenu .dijitMenuBar {
+font-family: Verdana;
+font-size: 10pt;
+font-weight: bold;
+color: #ffffff;
+background-color: transparent;
+background-image: none;
+}
+.harrypotter .dojoMenu.ClickableDojoMenu {
+background-color: #b30000;
+background-image: url(images/repeatx/brightEdge0.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.harrypotter .dojoMenu.ClickableDojoMenu .dijitMenuItem {
+color: #ffffff;
+}
+.harrypotter .dojoMenu .dijitMenuItem {
+color: #ffffff;
+}
+.harrypotter .dijitMenuBar .dijitMenuItem,
+.tundra .wm-darksnazzy .harrypotter .dijitMenuBar .dijitMenuItem {
+margin-right: 15px;
+}
+body.harrypotter .dojoMenu .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+body.harrypotter .dojoMenu .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
+color: #232323;
+background-color: #fe9603;
+background-image: url(images/repeatx/brightEdge0.png);
+background-position: top left;
+background-repeat: repeat-x;
+outline-width: 0;
+}
+}
+.harrypotter .dijitMenuPopup table.dijitMenuTable.dijitMenu.dijitReset,
+.harrypotter .dijitPopup .dijitCalendarMonthLabel {
+font-family: Verdana;
+color: #ffffff;
+font-weight: bold;
+background-color: #b30000;
+border: solid 1px black;
+border-top: solid 1px #999999;
+-moz-box-shadow: 3px 3px 4px black;
+-webkit-box-shadow: 3px 3px 4px black;
+box-shadow: 3px 3px 4px black;
+}
+body.harrypotter  .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelected
+{
+color: #232323;
+background-color: #fe9603;
+background-image: none;
+outline-width: 0;
+}
+body.harrypotter ul.dijitMenu .dijitMenuItem,
+body.harrypotter div.dijitMenu .dijitCalendarMonthLabel {
+color: #ffffff;
+background-color: #202020;
+border-bottom-size: 1px;
+border-bottom-style: solid;
+border-bottom-color: #323232;
+}
+body.harrypotter  ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected,
+body.harrypotter div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
+color: #232323;
+background-color: #fe9603;
+outline-width: 0;
+}
+body.tundra.harrypotter .dijitPopup ul.dijitMenu {
+border-width: 1px;
+border-style: solid;
+border-color: black;
+-moz-box-shadow: 4px 4px 8px black;
+-webkit-box-shadow: 4px 4px 8px black;
+box-shadow: 4px 4px 8px black;
+}
+.harrypotter button.wmtablayers-tab {
+-moz-box-shadow: 1px 0px 1px #444444;
+-webkit-box-shadow: 1px 0px 1px #444444;
+box-shadow: 1px 0px 1px #444444;
+height: 23px;
+font-size: 9;
+}
+.harrypotter .wmtablayers-tab:hover, .harrypotter .wmtablayers-tab:focus {
+-moz-box-shadow: 0px 0px 0px #444444;
+-webkit-box-shadow: 0px 0px 0px #444444;
+box-shadow: 1px 0px 1px #444444;
+}
+.harrypotter .wmtablayers-tab.wmtablayers-selected,
+.harrypotter .wmtablayers-tab.wmtablayers-selected:focus,
+.harrypotter .wmtablayers-verticaltab.wmtablayers-selected,
+.harrypotter .wmtablayers-verticaltab.wmtablayers-selected:focus {
+-moz-box-shadow: 1px 0px 1px #444444;
+-webkit-box-shadow: 1px 0px 1px #444444;
+box-shadow: 1px 0px 1px #444444;
+}
+.harrypotter .wmtablayers-tab.wmtablayers-selected,
+.harrypotter .wmtablayers-tab.wmtablayers-tab {
+margin-left: 8px;
+-moz-border-radius-topleft: 4px;
+-moz-border-radius-topright: 4px;
+-webkit-border-top-left-radius: 4px;
+-webkit-border-top-right-radius: 4px;
+border-radius-topleft: 4px;
+border-radius-topright: 4px;
+}
+.harrypotter button.wmtablayers-verticaltab {
+-moz-box-shadow: 1px 0px 1px #444444;
+-webkit-box-shadow: 1px 0px 1px #444444;
+box-shadow: 1px 0px 1px #444444;
+font-size: 9;
+width: 95%;
+margin-left: 5%;
+}
+.harrypotter .wmtablayers-verticaltab:hover, .harrypotter .wmtablayers-verticaltab:focus {
+-moz-box-shadow: 0px 0px 0px #444444;
+-webkit-box-shadow: 0px 0px 0px #444444;
+box-shadow: -2px 2px 2px #444444;
+}
+.harrypotter .wmtablayers-verticaltab.wmtablayers-selected,
+.harrypotter .wmtablayers-verticaltab.wmtablayers-verticaltab {
+margin-bottom: 5px;
+-moz-border-radius-bottomleft: 4px;
+-moz-border-radius-topleft: 4px;
+-webkit-border-bottom-left-radius: 4px;
+-webkit-border-top-left-radius: 4px;
+border-radius-bottomleft: 4px;
+border-radius-topleft: 4px;
+}
+.harrypotter .wmtablayers-verticaltab:focus,
+.harrypotter .wmtablayers-tab:focus {
+outline-width: 0;
+}
+.harrypotter .wmFancyPanel-containerWidget {
+-moz-border-radius-topright: 0px !important;
+-webkit-border-top-left-radius: 0px !important;
+-webkit-border-top-right-radius: 0px !important;
+border-radius-topleft: 0px !important;
+border-radius-topright: 0px !important;
+-moz-box-shadow: 0px 0px 0px black !important;
+-webkit-box-shadow: 0px 0px 0px black !important;
+box-shadow: 0px 0px 0px black !important;
+}
+.harrypotter .wmaccordion .wmlayer {
+-moz-border-radius: 2px;
+-webkit-border-radius: 2px;
+border-radius: 2px;
+}
+body.tundra.harrypotter  div.wmheader,
+body.tundra .harrypotter  div.wmheader,
+.harrypotter  .wmTabLayers-client > .wmlayer,
+.harrypotter  .wmWizardLayers-client > .wmlayer {
+-moz-border-radius: 2px;
+-webkit-border-radius: 2px;
+border-radius: 2px;
+}
+.harrypotter .wmFancyPanel-containerWidget {
+-moz-border-radius-bottomleft: 2px;
+-moz-border-radius-bottomright: 2px;
+-webkit-border-bottom-left-radius: 2px;
+-webkit-border-bottom-right-radius: 2px;
+border-radius-bottomleft: 2px;
+border-radius-bottomright: 2px;
+}
+.harrypotter .wmFancyPanel-labelWidget {
+-moz-border-radius-topleft: 2px;
+-moz-border-radius-topright: 2px;
+-webkit-border-top-left-radius: 2px;
+-webkit-border-top-right-radius: 2px;
+border-radius-topleft: 2px;
+border-radius-topright: 2px;
+}
+.harrypotter .wmaccordion .wmaccordion-collapsed .accordionArrowNode {
+display: block;
+background-image: url(images/arrowRightLight.png);
+}
+.harrypotter .wmaccordion .accordionArrowNode {
+display: block;
+background-image: url(images/comboArrowDownLight.png);
+}
+.harrypotter .wmaccordion .wmaccordion-content {
+background-color: transparent;
+}
+.harrypotter div.wmtablayers-tabbar {
+background: transparent;
+}
+.harrypotter button.wmtablayers-tab {
+border-bottom-color: transparent;
+border-right-color: #444444;
+}
+.harrypotter button.wmtablayers-verticaltab {
+border-right-color: transparent;
+border-bottom-color: #444444;
+}
+.harrypotter .wmwizardlayers-tab:hover,
+.harrypotter .wmwizardlayers-verticaltab:hover {
+color: black;
+}
+.harrypotter  .MainContent,
+#studio_designer.harrypotter .MainContent {
+font-family: Verdana;
+font-size: 8pt;
+color: #232323;
+font-weight: normal;
+background-color: #fafafa;
+background-image: url(images/repeatx/greyEdge0.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.harrypotter div.wmaccordion-header {
+font-family: Verdana;
+font-size: 8pt;
+color: #f7d053;
+font-weight: bold;
+background-color: #161616;
+background-image: url(images/repeatx/brightThickEdge0.png);
+background-position: top left;
+background-repeat: repeat-x;
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+padding-left: 10px;
+}
+.harrypotter div.wmaccordion .wmaccordion-collapsed {
+color: #232323;
+font-weight: bold;
+font-family: Verdana;
+font-size: 8pt;
+background-color: #fe9603;
+background-image: url(images/repeatx/brightThickEdge0.png);
+background-position: top left;
+background-repeat: repeat-x;
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+}
+.harrypotter .wmfancypanel .wmFancyPanel-labelWidget {
+font-family: Verdana;
+font-size: 8pt;
+font-weight: bold;
+color: #f7d053;
+background-color: #161616;
+background-image: url(images/repeatx/brightThickEdge0.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.harrypotter button.wmtablayers-tab {
+font-family: Verdana;
+color: #232323;
+font-weight: bold;
+background-color: #fe9603;
+background-image: url(images/repeatx/brightThickEdge0.png);
+background-position: top left;
+background-repeat: repeat-x;
+border-bottom-color: transparent;
+border-top-color: #444444;
+border-left-color: #444444;
+border-width: 1px;
+border-style: solid;
+}
+.harrypotter .wmtablayers-tab:focus {
+color: #ffffff;
+background-color: #f96a02;
+background-image: url(images/repeatx/brightThickEdge0.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.harrypotter .wmtablayers-tab.wmtablayers-selected,
+.harrypotter .wmtablayers-tab.wmtablayers-selected:focus {
+color: #f7d053;
+background-color: #161616;
+background-image: url(images/repeatx/brightThickEdge0.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.harrypotter .wmwizardlayers-tab:focus,
+.harrypotter .wmwizardlayers-verticaltab:focus,
+color: black;
+}
+.harrypotter .HeaderContent {
+-moz-border-radius: 0px;
+-webkit-border-radius: 0px;
+border-radius: 0px;
+-moz-box-shadow: 2px 2px 2px #444444;
+-webkit-box-shadow: 2px 2px 2px #444444;
+box-shadow: 2px 2px 2px #444444;
+}
+.harrypotter  .HeaderContent {
+font-family: Verdana;
+font-size: 11pt;
+color: #ffffff;
+font-weight: normal;
+background-color: #ba2f1d;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+.harrypotter .HeaderContent div.wmaccordion-header {
+font-family: Verdana;
+font-size: 10pt;
+color: #fcf892;
+font-weight: bold;
+background-color: #264a59;
+background-image: url(images/repeatx/brightSliverEdge4.png);
+background-position: top left;
+background-repeat: repeat-x;
+-moz-border-radius: 2px;
+-webkit-border-radius: 2px;
+border-radius: 2px;
+padding-left: 10px;
+}
+.harrypotter .HeaderContent div.wmaccordion .wmaccordion-collapsed {
+color: #39380e;
+font-weight: bold;
+font-family: Verdana;
+font-size: 10pt;
+background-color: #f5e67f;
+background-image: url(images/repeatx/greySliverEdge4.png);
+background-position: top left;
+background-repeat: repeat-x;
+-moz-border-radius: 2px;
+-webkit-border-radius: 2px;
+border-radius: 2px;
+}
+.harrypotter .HeaderContent .wmfancypanel .wmFancyPanel-labelWidget {
+font-family: Verdana;
+font-size: 10pt;
+font-weight: bold;
+color: #fcf892;
+background-color: #264a59;
+background-image: url(images/repeatx/brightSliverEdge4.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.harrypotter .HeaderContent button.wmtablayers-tab {
+font-family: Verdana;
+color: #39380e;
+font-weight: bold;
+background-color: #f5e67f;
+background-image: url(images/repeatx/greySliverEdge4.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.harrypotter .wmtablayers-tab:focus {
+color: #fff79a;
+background-color: #333333;
+background-image: url(images/repeatx/brightSliverEdge4.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.harrypotter .HeaderContent .wmtablayers-tab.wmtablayers-selected,
+.harrypotter .HeaderContent .wmtablayers-tab.wmtablayers-selected:focus {
+color: #fcf892;
+background-color: #444444;
+background-image: url(images/repeatx/brightSliverEdge4.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.harrypotter .HeaderContent .wmwizardlayers-tab:focus,
+.harrypotter .HeaderContent .wmwizardlayers-verticaltab:focus {
+color: black;
+}
+.harrypotter #wmMinifiedDialogPanel {
+opacity: 0.6;
+background-color: #161616;
+-moz-box-shadow: 0px -2px 4px black;
+-webkit-box-shadow: 0px -2px 4px black;
+box-shadow: 0px -2px 4px black;
+}
+.harrypotter #wmMinifiedDialogPanel .wmbutton {
+-moz-border-radius: 0px !important;
+-webkit-border-radius: 0px !important;
+border-radius: 0px !important;
+font-size: 8pt;
+}
+.harrypotter .wmprogressbar .dijitProgressBar {
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+}
+.harrypotter .wmprogressbar .dijitProgressBarTile {
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+}
+.harrypotter .wmprogressbar .dijitProgressBarFull {
+border-right-width: 0px;
+}
+@media screen {
+.harrypotter  .wmprogressbar .dijitProgressBarTile {
+font-family: Verdana;
+font-size: 8pt;
+color: #232323;
+font-weight: bold;
+background-color: #fe9603;
+background-image: url(images/repeatx/brightThickEdge0.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.harrypotter  .wmprogressbar .dijitProgressBar {
+font-family: Verdana;
+font-size: 8pt;
+color: #000000;
+font-weight: normal;
+background-color: #f5f3f3;
+background-image: url(images/repeatx/greyEdge0.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+}
+@media screen {
+.harrypotter .HeaderContent .wmprogressbar .dijitProgressBarTile {
+font-family: Verdana;
+font-size: 10pt;
+color: #39380e;
+font-weight: bold;
+background-color: #f5e67f;
+background-image: url(images/repeatx/greySliverEdge4.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.harrypotter .HeaderContent .wmprogressbar .dijitProgressBar {
+font-family: Verdana;
+font-size: 8pt;
+color: #000000;
+font-weight: normal;
+background-color: #ffffff;
+background-image: url(images/repeatx/greySliverEdge0.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+}
+.harrypotter div.wmsplitter-h,
+.harrypotter div.wmsplitter-v,
+.harrypotter .wmbevel {
+background-color: #b30000;
+}
+.harrypotter div.wmsplitter-h:hover,
+.harrypotter div.wmsplitter-v:hover {
+background-color: #fe9603;
+}
+.harrypotter .wmsplitter-h {
+background-image: url(images/splitter_bg_h.png);
+}
+.harrypotter .wmsplitter-v {
+background-image: url(images/splitter_bg_v.png);
+}

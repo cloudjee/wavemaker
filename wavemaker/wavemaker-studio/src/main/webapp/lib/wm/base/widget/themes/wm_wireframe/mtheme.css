@@ -1,0 +1,989 @@
+/*
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+body .wm_wireframe input:focus,
+.wm_wireframe button, .wm_wireframe button:focus {
+outline-width: 0 !important;
+}
+@media screen {
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_wireframe .wmlayout .HeaderContent a,
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_wireframe .wmlayout .HeaderContent a:visited,
+#studio_designer.wm_wireframe .wmlayout .HeaderContent a,
+#studio_designer.wm_wireframe .wmlayout .HeaderContent a:visited,
+.wm_wireframe #wavemakerNode .wmlayout .HeaderContent a,
+.wm_wireframe #wavemakerNode .wmlayout .HeaderContent a:visited {
+color: #000000;
+}
+}
+@media screen {
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_wireframe .wmlayout  a,
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_wireframe .wmlayout  a:visited,
+#studio_designer.wm_wireframe .wmlayout  a,
+#studio_designer.wm_wireframe .wmlayout  a:visited,
+.wm_wireframe #wavemakerNode .wmlayout  a,
+.wm_wireframe #wavemakerNode  .wmlayout  a:visited {
+color: #000000;
+}
+}
+@media screen {
+.wm_wireframe   .wmbutton,
+.wm_wireframe   .wmtogglebutton,
+.wm_wireframe   .wmbutton.wmbutton-disabled:hover,
+.wm_wireframe   .wmbutton.wmbutton-disabled:focus
+{
+font-family: Verdana;
+font-size: 8pt;
+color: #000000;
+font-weight: bold;
+-moz-border-radius: 2px;
+-webkit-border-radius: 2px;
+border-radius: 2px;
+-moz-box-shadow: 1px 1px 1px #444444;
+-webkit-box-shadow: 1px 1px 1px #444444;
+box-shadow: 1px 1px 1px #444444;
+background-color: #ffffff;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+.wm_wireframe  .wmbutton span {
+font-weight: bold;
+}
+.wm_wireframe   .wmbutton.toggleButtonDown {
+color: #000000;
+background-color: #b2b2b2;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+-moz-box-shadow: 0px 0px 0px #444444;
+-webkit-box-shadow: 0px 0px 0px #444444;
+box-shadow: 0px 0px 0px #444444;
+}
+.wm_wireframe   .wmbutton:active,
+.wm_wireframe   .wmbutton:focus {
+color: #000000;
+background-color: #e5e5e5;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+-moz-box-shadow: 1px 1px 1px #444444;
+-webkit-box-shadow: 1px 1px 1px #444444;
+box-shadow: 1px 1px 1px #444444;
+}
+}
+@media screen {
+.wm_wireframe .HeaderContent  .wmbutton,
+.wm_wireframe .HeaderContent  .wmtogglebutton,
+.wm_wireframe .HeaderContent  .wmbutton.wmbutton-disabled:active,
+.wm_wireframe .HeaderContent  .wmbutton.wmbutton-disabled:focus
+{
+font-family: Verdana;
+font-size: 10pt;
+color: #000000;
+font-weight: bold;
+-moz-border-radius: 2px;
+-webkit-border-radius: 2px;
+border-radius: 2px;
+-moz-box-shadow: 3px 3px 3px #444444;
+-webkit-box-shadow: 3px 3px 3px #444444;
+box-shadow: 3px 3px 3px #444444;
+background-color: #ffffff;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+.wm_wireframe .HeaderContent .wmbutton span {
+font-weight: bold;
+}
+.wm_wireframe .HeaderContent  .wmbutton.toggleButtonDown {
+color: #000000;
+background-color: #b2b2b2;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+-moz-box-shadow: 0px 0px 0px #444444;
+-webkit-box-shadow: 0px 0px 0px #444444;
+box-shadow: 0px 0px 0px #444444;
+}
+.wm_wireframe .HeaderContent  .wmbutton:hover,
+.wm_wireframe .HeaderContent  .wmbutton:active {
+color: #000000;
+background-color: #e5e5e5;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+-moz-box-shadow: 0px 0px 0px #444444;
+-webkit-box-shadow: 0px 0px 0px #444444;
+box-shadow: 0px 0px 0px #444444;
+}
+}
+.wm_wireframe .wmPopupButton .popupIcon {
+background-image: url(images/comboArrowDownDark.png) !important;
+}
+.wm_wireframe table .dijitCalendarYearContainer tr {
+background-color: #ffffff;
+border-style: solid;
+border-color: #ffffff;
+border-top-width: 1px;
+}
+.wm_wireframe table .dijitCalendarYearContainer td span {
+color: #000000 !important;
+}
+.wm_wireframe .dijitCalendarYearLabel {
+font-size: 10px;
+}
+.wm_wireframe .dijitCalendarDayLabel,
+.wm_wireframe .dijitCalendarDateLabel {
+font-size: 9px;
+}
+.wm_wireframe tr.dijitCalendarMonthContainer th {
+font-family: Verdana;
+font-size: 10px;
+color: #000000;
+font-weight: bold;
+background-color: #ffffff;
+background-image: none;
+}
+.wm_wireframe tr.dijitCalendarMonthContainer th .dijitCalendarMonthLabel {
+font-family: Verdana;
+font-size: 10px;
+color: #000000;
+font-weight: bold;
+border-width: 0px;
+-moz-box-shadow: 0px 0px 0px black;
+-webkit-box-shadow: 0px 0px 0px black;
+box-shadow: 0px 0px 0px black;
+}
+.wm_wireframe table.dijitCalendarContainer {
+border-color: #444444;
+border-style: solid;
+border-width: 4px;
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+}
+.wm_wireframe table.dijitCalendarContainer td.dijitCalendarCurrentMonth {
+background-color: #ffffff !important;
+color: #000000 !important;
+}
+.wm_wireframe .dijitCalendarBodyContainer td {
+border-style: solid;
+border-color: #444444;
+border-right-width: 1px;
+border-top-width: 1px;
+border-left-width: 0px;
+border-bottom-width: 0px;
+}
+.wm_wireframe .dijitCalendarContainer td.dijitCalendarSelectedDate,
+.wm_wireframe .dijitCalendarContainer td.dijitCalendarSelectedDate.dijitCalendarCurrentMonth,
+.wm_wireframe .dijitCalendarContainer .dijitCalendarSelectedYear {
+background-color: #eeeeee !important;
+color: #000000 !important;
+}
+.wm_wireframe .dijitCalendarContainer td.dijitCalendarHoveredDate,
+.wm_wireframe .dijitCalendarContainer td.dijitCalendarHoveredDate.dijitCalendarCurrentMonth,
+.wm_wireframe .dijitCalendarContainer .dijitCalendarHoveredYear,
+.wm_wireframe .dijitCalendarContainer .dijitCalendarNextYear:hover,
+.wm_wireframe .dijitCalendarContainer .dijitCalendarPreviousYear:hover {
+background-color: #ffffff !important;
+color: #000000 !important;
+}
+.wm_wireframe .dijitCalendarContainer {
+background-color: #ffffff;
+}
+.wm_wireframe .dijitCalendarContainer .dijitCalendarPreviousMonth,
+.wm_wireframe .dijitCalendarContainer .dijitCalendarNextMonth,
+.wm_wireframe .dijitCalendarContainer .dijitCalendarDayLabelTemplate {
+background-color: #ffffff !important;
+background-image: none;
+color: #000000;
+}
+.wm_wireframe .dijitCalendarDayLabelTemplate {
+border-style: solid;
+border-color: #444444;
+border-right-width: 1px;
+}
+.wm_wireframe .wmdialog {
+-moz-border-radius: 2px;
+-webkit-border-radius: 2px;
+border-radius: 2px;
+-moz-box-shadow: 3px 3px 3px black;
+-webkit-box-shadow: 3px 3px 3px black;
+box-shadow: 3px 3px 3px black;
+}
+.wm_wireframe .dialogtitlebar .wmlabel{
+font-family: Verdana;
+font-size: 8pt;
+color: #000000;
+font-weight: bold;
+}
+.wm_wireframe .dialogtitlebar {
+background-color: #ffffff;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+-moz-border-radius-topleft: 0px;
+-moz-border-radius-topright: 0px;
+-webkit-border-top-left-radius: 0px;
+-webkit-border-top-right-radius: 0px;
+border-radius-topleft: 0px;
+border-radius-topright: 0px;
+}
+.wm_wireframe .dialogfooter,
+.wm_wireframe .wmpagedialog-controlspanel {
+font-family: Verdana;
+font-size: 8pt;
+color: #000000;
+font-weight: bold;
+background-color: #ffffff;
+background-position: top left;
+background-repeat: no-repeat;
+-moz-border-radius-bottomleft: 0px;
+-moz-border-radius-bottomright: 0px;
+-webkit-border-bottom-left-radius: 0px;
+-webkit-border-bottom-right-radius: 0px;
+border-radius-bottomleft: 0px;
+border-radius-bottomright: 0px;
+}
+body.wm_wireframe .dialogtitlebar .wmbutton,
+body .wm_wireframe .dialogtitlebar .wmbutton {
+background-color: #c6d3d7;
+background-image: url(images/repeatx/brightEdge2.png);
+background-position: top left;
+background-repeat: repeat-x;
+color: #000000;
+font-size: 12pt !important;
+font-weight: normal !important;
+padding: 2px 0px 0px 2px !important;
+font-family: sans-serif !important;
+-moz-border-radius: 0px !important;
+-webkit-border-radius: 0px !important;
+border-radius: 0px !important;
+-moz-box-shadow: 2px 2px 2px #444444;
+-webkit-box-shadow: 2px 2px 2px #444444;
+box-shadow: 2px 2px 2px #444444;
+}
+body.wm_wireframe .dialogfooter .wmbutton,
+body .wm_wireframe .dialogfooter .wmbutton {
+font-family: Verdana;
+font-size: 9pt;
+color: #000000;
+font-weight: bold;
+background-color: #ffffff;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+-moz-box-shadow: 1px 1px 1px #444444;
+-webkit-box-shadow: 1px 1px 1px #444444;
+box-shadow: 1px 1px 1px #444444;
+}
+body.wm_wireframe .dialogtitlebar .wmbutton:hover,
+body.wm_wireframe .dialogtitlebar .wmbutton:focus,
+body.wm_wireframe .dialogtitlebar .wmbutton:active {
+color: #000000;
+background-color: #86a2ac;
+background-image: url(images/repeatx/brightEdge4.png);
+background-position: top left;
+background-repeat: repeat-x;
+-moz-box-shadow: 1px 1px 1px #000000;
+-webkit-box-shadow: 1px 1px 1px #000000;
+box-shadow: 1px 1px 1px #000000;
+}
+body.wm_wireframe .dialogfooter .wmbutton.toggleButtonDown,
+body .wm_wireframe .dialogfooter .wmbutton.toggleButtonDown,
+body.wm_wireframe .dialogfooter .wmbutton:hover,
+body.wm_wireframe .dialogfooter .wmbutton:active,
+body.wm_wireframe .dialogfooter .wmbutton:focus {
+color: #000000;
+background-color: #eeeeee;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+`
+-moz-box-shadow: 0px 0px 0px #444444;
+-webkit-box-shadow: 0px 0px 0px #444444;
+box-shadow: 0px 0px 0px #444444;
+}
+.wm_wireframe .dialogtitlebar .dialogminifybutton {
+background-position: -16px;
+}
+.wm_wireframe .dialogtitlebar .dialogmaxifybutton {
+background-position: -32px;
+}
+.wm_wireframe .dialogtitlebar .dialogmaxifybutton,
+.wm_wireframe .dialogtitlebar .dialogclosebutton,
+.wm_wireframe .dialogtitlebar .dialogminifybutton {
+background-image: url(images/dialogIconsGray.png) !important;
+background-repeat: no-repeat;
+}
+.wm_wireframe .wmeditor .dijitTextBox.dijitFocused,
+.wm_wireframe .wmeditor .dijitTextArea.dijitFocused,
+.wm_wireframe .wmeditor .dijitComboBox.dijitFocused,
+.wm_wireframe .wmeditor .dijitSelect.dijitFocused {
+outline-width: 0 !important;
+}
+.wm_wireframe  .wmeditor .dijitTextBox,
+.wm_wireframe  .wmeditor .dijitTextArea,
+.wm_wireframe  .wmeditor .dijitComboBox
+{
+-moz-border-radius: 2px;
+-webkit-border-radius: 2px;
+border-radius: 2px;
+}
+.wm_wireframe  .wmeditor .dijitSelect .dijitButtonContents {
+-moz-border-radius-bottomleft: 2px;
+-moz-border-radius-topleft: 2px;
+-webkit-border-top-left-radius: 2px;
+-webkit-border-bottom-left-radius: 2px;
+border-radius-bottomleft: 2px;
+border-radius-top-left: 2px;
+border-right: solid 0px transparent !important;
+display:block;
+}
+.wm_wireframe .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_wireframe .wmeditor .dijitSelect .dijitArrowButton {
+height: 100% !important;
+-moz-border-radius-bottomright: 2px;
+-moz-border-radius-topright: 2px;
+-webkit-border-bottom-right-radius: 2px;
+-webkit-border-top-right-radius: 2px;
+border-radius-bottomright: 2px;
+border-radius-topright: 2px;
+}
+.wm_wireframe .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
+height: 100% !important;
+}
+.wm_wireframe .dijitComboBox .dijitArrowButton .dijitArrowButtonInner,
+.wm_wireframe .dijitSelect .dijitArrowButton .dijitArrowButtonInner {
+background-position: 50% 50%;
+background-image: url(images/comboArrowDownDark.png);
+-moz-border-radius-bottomright: 2px;
+-moz-border-radius-topright: 2px;
+-webkit-border-bottom-right-radius: 2px;
+-webkit-border-top-right-radius: 2px;
+border-radius-bottomright: 2px;
+border-radius-topright: 2px;
+}
+.wm_wireframe .dijitSpinner .dijitArrowButton .dijitArrowButtonInner {
+background-position: 30% 30%;
+background-image: url(images/comboArrowDownDark.png);
+}
+.wm_wireframe .dijitSpinner .dijitArrowButton.dijitUpArrowButton .dijitArrowButtonInner {
+background-image: url(images/comboArrowUpDark.png);
+}
+.wm_wireframe .dijitSlider .dijitProgressBarLabel {
+color: white;
+}
+.wm_wireframe .dijitSlider .dijitSliderImageHandleH {
+background: url(images/preciseSliderThumb.png) no-repeat 50% 0%;
+outline-width: 0;
+}
+@media screen {
+.wm_wireframe  .wmeditor .dijitSpinner .dijitArrowButton,
+.wm_wireframe  .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_wireframe  .wmeditor .dijitSelect .dijitArrowButton {
+background-color: #ffffff;
+}
+.wm_wireframe  .wmeditor .dijitTextBox,
+.wm_wireframe  .wmeditor .dijitTextArea,
+.wm_wireframe  .wmeditor .dijitComboBox,
+.wm_wireframe  .wmeditor .dijitSelect .dijitButtonContents,
+.wm_wireframe  .dijitTimePickerItem {
+border-color: #999999;
+border-width: 1px;
+font-family: Verdana;
+font-size: 8pt;
+color: #000000;
+font-weight: normal;
+background-color: #ffffff;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+.wm_wireframe  .wmeditor .dijitTextBox.dijitHover,
+.wm_wireframe  .wmeditor .dijitTextArea:hover,
+.wm_wireframe  .wmeditor .dijitComboBox.dijitHover,
+.wm_wireframe  .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
+.wm_wireframe  .dijitTimePickerMarker.dijitTimePickerMarkerHover,
+.wm_wireframe  .dijitTimePickerItem.dijitTimePickerItemHover {
+color: #000000;
+border-color: #999999;
+background-color: #eeeeee;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+.wm_wireframe  .wmeditor .dijitTextBox.dijitFocused,
+.wm_wireframe  .wmeditor .dijitTextBox.dijitFocused.dijitHover,
+.wm_wireframe  .wmeditor .dijitTextArea.dijitFocused,
+.wm_wireframe  .wmeditor .dijitTextArea.dijitFocused:hover,
+.wm_wireframe  .wmeditor .dijitComboBox.dijitFocused,
+.wm_wireframe  .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+.wm_wireframe  .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
+.wm_wireframe  .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents {
+color: #000000;
+border-color: #000000;
+background-color: #FFFFFF;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+}
+@media screen {
+.wm_wireframe .HeaderContent .wmeditor .dijitSpinner .dijitArrowButton,
+.wm_wireframe .HeaderContent .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_wireframe .HeaderContent .wmeditor .dijitSelect .dijitArrowButton {
+background-color: #ffffff;
+}
+.wm_wireframe .HeaderContent .wmeditor .dijitTextBox,
+.wm_wireframe .HeaderContent .wmeditor .dijitTextArea,
+.wm_wireframe .HeaderContent .wmeditor .dijitComboBox,
+.wm_wireframe .HeaderContent .wmeditor .dijitSelect .dijitButtonContents,
+.wm_wireframe .HeaderContent .dijitTimePickerItem {
+border-color: #999999;
+border-width: 1px;
+font-family: Verdana;
+font-size: 8pt;
+color: #000000;
+font-weight: normal;
+background-color: #ffffff;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+.wm_wireframe .HeaderContent .wmeditor .dijitTextBox.dijitHover,
+.wm_wireframe .HeaderContent .wmeditor .dijitTextArea:hover,
+.wm_wireframe .HeaderContent .wmeditor .dijitComboBox.dijitHover,
+.wm_wireframe .HeaderContent .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
+.wm_wireframe .HeaderContent .dijitTimePickerMarker.dijitTimePickerMarkerHover,
+.wm_wireframe .HeaderContent .dijitTimePickerItem.dijitTimePickerItemHover {
+color: #000000;
+border-color: #999999;
+background-color: #eeeeee;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+.wm_wireframe .HeaderContent .wmeditor .dijitTextBox.dijitFocused,
+.wm_wireframe .HeaderContent .wmeditor .dijitTextBox.dijitFocused.dijitHover,
+.wm_wireframe .HeaderContent .wmeditor .dijitTextArea.dijitFocused,
+.wm_wireframe .HeaderContent .wmeditor .dijitTextArea.dijitFocused:hover,
+.wm_wireframe .HeaderContent .wmeditor .dijitComboBox.dijitFocused,
+.wm_wireframe .HeaderContent .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+.wm_wireframe .HeaderContent .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
+.wm_wireframe .HeaderContent .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents{
+color: #000000;
+border-color: #000000;
+background-color: #FFFFFF;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+}
+.wm_wireframe div.wmlist-item {
+font-family: Verdana;
+font-size: 8pt;
+color: #000000;
+font-weight: normal;
+background-color: #eeeeee;
+}
+.wm_wireframe .wmlist-item.Odd {
+color: #000000;
+background-color: #dddddd;
+}
+.wm_wireframe .wmlist-cell {
+border-style: solid;
+border-color: #cccccc;
+border-left-width: 0px;
+border-right-width: 1px;
+border-top-width: 0px;
+border-bottom-width: 0px;
+}
+.wm_wireframe .wmlist-header .wmlist-cell {
+border-right-width: 0px;
+}
+@media screen {
+.wm_wireframe .wmlist-item.wmlist-item-selected {
+background-color: #eeeeee !important;
+color: #000000;
+}
+.wm_wireframe .wmlist-header th {
+font-family: Verdana;
+color: #000000 !important;
+font-weight: bold;
+}
+body.tundra.wm_wireframe .wmlist-header {
+background-color: #ffffff;
+background-image: none;
+background-position: left top;
+background-repeat: repeat-x;
+}
+}
+.wm_wireframe .dijitMenu .dijitMenuArrowCell img.dijitMenuExpand {
+background-image: url(images/arrowRightDark.png) !important;
+background-position: 0% 50% !important;
+}
+.wm_wireframe div.dijitMenuBar div.dijitMenuItem {
+background-image: url(images/comboArrowDownDark.png) !important;
+background-position: 90% 50% !important;
+background-repeat: no-repeat !important;
+padding-right: 25px !important;
+}
+@media screen {
+.wm_wireframe .dojoMenu .dijitMenu,
+.wm_wireframe .dojoMenu .dijitMenuBar {
+font-family: Verdana;
+font-size: 10pt;
+font-weight: bold;
+color: #000000;
+background-color: transparent;
+background-image: none;
+}
+.wm_wireframe .dojoMenu.ClickableDojoMenu {
+background-color: #ffffff;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+.wm_wireframe .dojoMenu.ClickableDojoMenu .dijitMenuItem {
+color: #000000;
+}
+.wm_wireframe .dojoMenu .dijitMenuItem {
+color: #000000;
+}
+.wm_wireframe .dijitMenuBar .dijitMenuItem,
+.tundra .wm-darksnazzy .wm_wireframe .dijitMenuBar .dijitMenuItem {
+margin-right: 15px;
+}
+body.wm_wireframe .dojoMenu .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+body.wm_wireframe .dojoMenu .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
+color: #000000;
+background-color: #ffffff;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+outline-width: 0;
+}
+}
+.wm_wireframe .dijitMenuPopup table.dijitMenuTable.dijitMenu.dijitReset,
+.wm_wireframe .dijitPopup .dijitCalendarMonthLabel {
+font-family: Verdana;
+color: #000000;
+font-weight: bold;
+background-color: #ffffff;
+border: solid 1px black;
+border-top: solid 1px #999999;
+-moz-box-shadow: 3px 3px 4px black;
+-webkit-box-shadow: 3px 3px 4px black;
+box-shadow: 3px 3px 4px black;
+}
+body.wm_wireframe  .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelected
+{
+color: #000000;
+background-color: #ffffff;
+background-image: none;
+outline-width: 0;
+}
+body.wm_wireframe ul.dijitMenu .dijitMenuItem,
+body.wm_wireframe div.dijitMenu .dijitCalendarMonthLabel {
+color: #000000;
+background-color: #eeeeee;
+border-bottom-size: 1px;
+border-bottom-style: solid;
+border-bottom-color: #cccccc;
+}
+body.wm_wireframe  ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected,
+body.wm_wireframe div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
+color: #000000;
+background-color: #ffffff;
+outline-width: 0;
+}
+body.tundra.wm_wireframe .dijitPopup ul.dijitMenu {
+border-width: 1px;
+border-style: solid;
+border-color: black;
+-moz-box-shadow: 4px 4px 8px black;
+-webkit-box-shadow: 4px 4px 8px black;
+box-shadow: 4px 4px 8px black;
+}
+.wm_wireframe button.wmtablayers-tab {
+-moz-box-shadow: 0px 0px 0px #444444;
+-webkit-box-shadow: 0px 0px 0px #444444;
+box-shadow: 0px 0px 0px #444444;
+height: 23px;
+font-size: 9;
+}
+.wm_wireframe .wmtablayers-tab:hover, .wm_wireframe .wmtablayers-tab:focus {
+-moz-box-shadow: 0px 0px 0px #444444;
+-webkit-box-shadow: 0px 0px 0px #444444;
+box-shadow: 1px 0px 1px #444444;
+}
+.wm_wireframe .wmtablayers-tab.wmtablayers-selected,
+.wm_wireframe .wmtablayers-tab.wmtablayers-selected:focus,
+.wm_wireframe .wmtablayers-verticaltab.wmtablayers-selected,
+.wm_wireframe .wmtablayers-verticaltab.wmtablayers-selected:focus {
+-moz-box-shadow: 0px 0px 0px #444444;
+-webkit-box-shadow: 0px 0px 0px #444444;
+box-shadow: 0px 0px 0px #444444;
+}
+.wm_wireframe .wmtablayers-tab.wmtablayers-selected,
+.wm_wireframe .wmtablayers-tab.wmtablayers-tab {
+margin-left: 8px;
+-moz-border-radius-topleft: 2px;
+-moz-border-radius-topright: 2px;
+-webkit-border-top-left-radius: 2px;
+-webkit-border-top-right-radius: 2px;
+border-radius-topleft: 2px;
+border-radius-topright: 2px;
+}
+.wm_wireframe button.wmtablayers-verticaltab {
+-moz-box-shadow: 0px 0px 0px #444444;
+-webkit-box-shadow: 0px 0px 0px #444444;
+box-shadow: 0px 0px 0px #444444;
+font-size: 9;
+width: 95%;
+margin-left: 5%;
+}
+.wm_wireframe .wmtablayers-verticaltab:hover, .wm_wireframe .wmtablayers-verticaltab:focus {
+-moz-box-shadow: 0px 0px 0px #444444;
+-webkit-box-shadow: 0px 0px 0px #444444;
+box-shadow: -2px 2px 2px #444444;
+}
+.wm_wireframe .wmtablayers-verticaltab.wmtablayers-selected,
+.wm_wireframe .wmtablayers-verticaltab.wmtablayers-verticaltab {
+margin-bottom: 5px;
+-moz-border-radius-bottomleft: 2px;
+-moz-border-radius-topleft: 2px;
+-webkit-border-bottom-left-radius: 2px;
+-webkit-border-top-left-radius: 2px;
+border-radius-bottomleft: 2px;
+border-radius-topleft: 2px;
+}
+.wm_wireframe .wmtablayers-verticaltab:focus,
+.wm_wireframe .wmtablayers-tab:focus {
+outline-width: 0;
+}
+.wm_wireframe .wmFancyPanel-containerWidget {
+-moz-border-radius-topright: 0px !important;
+-webkit-border-top-left-radius: 0px !important;
+-webkit-border-top-right-radius: 0px !important;
+border-radius-topleft: 0px !important;
+border-radius-topright: 0px !important;
+-moz-box-shadow: 0px 0px 0px black !important;
+-webkit-box-shadow: 0px 0px 0px black !important;
+box-shadow: 0px 0px 0px black !important;
+}
+.wm_wireframe .wmaccordion .wmlayer {
+-moz-border-radius: 2px;
+-webkit-border-radius: 2px;
+border-radius: 2px;
+}
+body.tundra.wm_wireframe  div.wmheader,
+body.tundra .wm_wireframe  div.wmheader,
+.wm_wireframe  .wmTabLayers-client > .wmlayer,
+.wm_wireframe  .wmWizardLayers-client > .wmlayer {
+-moz-border-radius: 2px;
+-webkit-border-radius: 2px;
+border-radius: 2px;
+}
+.wm_wireframe .wmFancyPanel-containerWidget {
+-moz-border-radius-bottomleft: 2px;
+-moz-border-radius-bottomright: 2px;
+-webkit-border-bottom-left-radius: 2px;
+-webkit-border-bottom-right-radius: 2px;
+border-radius-bottomleft: 2px;
+border-radius-bottomright: 2px;
+}
+.wm_wireframe .wmFancyPanel-labelWidget {
+-moz-border-radius-topleft: 2px;
+-moz-border-radius-topright: 2px;
+-webkit-border-top-left-radius: 2px;
+-webkit-border-top-right-radius: 2px;
+border-radius-topleft: 2px;
+border-radius-topright: 2px;
+}
+.wm_wireframe .wmaccordion .wmaccordion-collapsed .accordionArrowNode {
+display: block;
+background-image: url(images/arrowRightDark.png);
+}
+.wm_wireframe .wmaccordion .accordionArrowNode {
+display: block;
+background-image: url(images/comboArrowDownDark.png);
+}
+.wm_wireframe .wmaccordion .wmaccordion-content {
+background-color: transparent;
+}
+.wm_wireframe div.wmtablayers-tabbar {
+background: transparent;
+}
+.wm_wireframe button.wmtablayers-tab {
+border-bottom-color: transparent;
+border-right-color: #444444;
+}
+.wm_wireframe button.wmtablayers-verticaltab {
+border-right-color: transparent;
+border-bottom-color: #444444;
+}
+.wm_wireframe .wmwizardlayers-tab:hover,
+.wm_wireframe .wmwizardlayers-verticaltab:hover {
+color: black;
+}
+.wm_wireframe  .MainContent,
+#studio_designer.wm_wireframe .MainContent {
+font-family: Verdana;
+font-size: 8pt;
+color: #000000;
+font-weight: normal;
+background-color: #ffffff;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+.wm_wireframe div.wmaccordion-header {
+font-family: Verdana;
+font-size: 8pt;
+color: #000000;
+font-weight: bold;
+background-color: #b2b2b2;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+-moz-border-radius: 2px;
+-webkit-border-radius: 2px;
+border-radius: 2px;
+padding-left: 10px;
+}
+.wm_wireframe div.wmaccordion .wmaccordion-collapsed {
+color: #000000;
+font-weight: bold;
+font-family: Verdana;
+font-size: 8pt;
+background-color: #ffffff;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+-moz-border-radius: 2px;
+-webkit-border-radius: 2px;
+border-radius: 2px;
+}
+.wm_wireframe .wmfancypanel .wmFancyPanel-labelWidget {
+font-family: Verdana;
+font-size: 8pt;
+font-weight: bold;
+color: #000000;
+background-color: #b2b2b2;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+.wm_wireframe button.wmtablayers-tab {
+font-family: Verdana;
+color: #000000;
+font-weight: bold;
+background-color: #ffffff;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+border-bottom-color: transparent;
+border-top-color: #444444;
+border-left-color: #444444;
+border-width: 1px;
+border-style: solid;
+}
+.wm_wireframe .wmtablayers-tab:focus {
+color: #000000;
+background-color: #e5e5e5;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+.wm_wireframe .wmtablayers-tab.wmtablayers-selected,
+.wm_wireframe .wmtablayers-tab.wmtablayers-selected:focus {
+color: #000000;
+background-color: #b2b2b2;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+.wm_wireframe .wmwizardlayers-tab:focus,
+.wm_wireframe .wmwizardlayers-verticaltab:focus,
+color: black;
+}
+.wm_wireframe .HeaderContent {
+-moz-border-radius: 2px;
+-webkit-border-radius: 2px;
+border-radius: 2px;
+-moz-box-shadow: 0px 0px 0px #444444;
+-webkit-box-shadow: 0px 0px 0px #444444;
+box-shadow: 0px 0px 0px #444444;
+}
+.wm_wireframe  .HeaderContent {
+font-family: Verdana;
+font-size: 8pt;
+color: #000000;
+font-weight: bold;
+background-color: #bbbbbb;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+.wm_wireframe .HeaderContent div.wmaccordion-header {
+font-family: Verdana;
+font-size: 10pt;
+color: #000000;
+font-weight: bold;
+background-color: #b2b2b2;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+-moz-border-radius: 2px;
+-webkit-border-radius: 2px;
+border-radius: 2px;
+padding-left: 10px;
+}
+.wm_wireframe .HeaderContent div.wmaccordion .wmaccordion-collapsed {
+color: #000000;
+font-weight: bold;
+font-family: Verdana;
+font-size: 10pt;
+background-color: #ffffff;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+-moz-border-radius: 2px;
+-webkit-border-radius: 2px;
+border-radius: 2px;
+}
+.wm_wireframe .HeaderContent .wmfancypanel .wmFancyPanel-labelWidget {
+font-family: Verdana;
+font-size: 10pt;
+font-weight: bold;
+color: #000000;
+background-color: #b2b2b2;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+.wm_wireframe .HeaderContent button.wmtablayers-tab {
+font-family: Verdana;
+color: #000000;
+font-weight: bold;
+background-color: #ffffff;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+.wm_wireframe .wmtablayers-tab:focus {
+color: #000000;
+background-color: #e5e5e5;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+.wm_wireframe .HeaderContent .wmtablayers-tab.wmtablayers-selected,
+.wm_wireframe .HeaderContent .wmtablayers-tab.wmtablayers-selected:focus {
+color: #000000;
+background-color: #444444;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+.wm_wireframe .HeaderContent .wmwizardlayers-tab:focus,
+.wm_wireframe .HeaderContent .wmwizardlayers-verticaltab:focus {
+color: black;
+}
+.wm_wireframe #wmMinifiedDialogPanel {
+opacity: 0.6;
+background-color: #eeeeee;
+-moz-box-shadow: 0px -2px 4px black;
+-webkit-box-shadow: 0px -2px 4px black;
+box-shadow: 0px -2px 4px black;
+}
+.wm_wireframe #wmMinifiedDialogPanel .wmbutton {
+-moz-border-radius: 0px !important;
+-webkit-border-radius: 0px !important;
+border-radius: 0px !important;
+font-size: 8pt;
+}
+.wm_wireframe .wmprogressbar .dijitProgressBar {
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+}
+.wm_wireframe .wmprogressbar .dijitProgressBarTile {
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+}
+.wm_wireframe .wmprogressbar .dijitProgressBarFull {
+border-right-width: 0px;
+}
+@media screen {
+.wm_wireframe  .wmprogressbar .dijitProgressBarTile {
+font-family: Verdana;
+font-size: 8pt;
+color: #000000;
+font-weight: bold;
+background-color: #ffffff;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+.wm_wireframe  .wmprogressbar .dijitProgressBar {
+font-family: Verdana;
+font-size: 8pt;
+color: #000000;
+font-weight: normal;
+background-color: #ffffff;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+}
+@media screen {
+.wm_wireframe .HeaderContent .wmprogressbar .dijitProgressBarTile {
+font-family: Verdana;
+font-size: 10pt;
+color: #000000;
+font-weight: bold;
+background-color: #ffffff;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+.wm_wireframe .HeaderContent .wmprogressbar .dijitProgressBar {
+font-family: Verdana;
+font-size: 8pt;
+color: #000000;
+font-weight: normal;
+background-color: #ffffff;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+}
+.wm_wireframe div.wmsplitter-h,
+.wm_wireframe div.wmsplitter-v,
+.wm_wireframe .wmbevel {
+background-color: #ffffff;
+}
+.wm_wireframe div.wmsplitter-h:hover,
+.wm_wireframe div.wmsplitter-v:hover {
+background-color: #ffffff;
+}
+.wm_wireframe .wmsplitter-h {
+background-image: url(images/splitter_bg_h.png);
+}
+.wm_wireframe .wmsplitter-v {
+background-image: url(images/splitter_bg_v.png);
+}

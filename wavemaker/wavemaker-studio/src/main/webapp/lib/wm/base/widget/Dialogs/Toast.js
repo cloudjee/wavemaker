@@ -17,6 +17,7 @@ dojo.provide("wm.base.widget.Dialogs.Toast");
 dojo.require("wm.base.widget.Dialogs.WidgetsJsDialog");
 
 dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
+    _manageBack: false,
     classNames: "wmtoast wmtoastExtraSpecific",
     title: "",
     modal: false,

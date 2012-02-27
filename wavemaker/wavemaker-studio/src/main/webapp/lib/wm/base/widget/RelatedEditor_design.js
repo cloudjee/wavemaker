@@ -153,7 +153,7 @@ wm.RelatedEditor.extend({
 				if (this.editingMode == "lookup")
 					lookupAdded = this.makeLookup(fieldSchema);
 				if (!lookupAdded){
-					var	lv = this.getLiveVariable(),
+					var	lv = this.findLiveVariable(),
 						fields = wm.getDefaultView((this.dataSet || 0).type);
 					for (var i = 0; i < fields.length; i++) {
 						if (this.makeEditor(fields[i]) && this.editingMode != "editable subform" && i > 3)

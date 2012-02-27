@@ -484,6 +484,16 @@ dojo.declare("ThemeDesigner", wm.Page, {
             
             templateCssText = templateCssText.replace(/\.wm_template/g, "." + this.currentTheme);
             this.cssText = templateCssText;
+	    templateCssText = "";
+	    for (var i = 0; i < stylesheets.length; i++) {
+	        templateCssText += "/*****************************************\n * FILE: " + stylesheets[i] + "\n *****************************************/\n" + 
+		    dojo.xhrGet({url:dojo.moduleUrl("wm.studio.app") + "templates/themes/mobile/" + stylesheets[i], sync:true, preventCache:true}).results[0] +
+		    "/*****************************************\n * EOF: " + stylesheets[i] + "\n *****************************************/\n";
+	    }
+            templateCssText = templateCssText.replace(/\.wm_template/g, "." + this.currentTheme);
+            this.mobileCssText = templateCssText;
+	    
+
             
             /* Step 6: Load the themedescriptor file and store it in this.themeData */
 	    this.themeData =  dojo.fromJson(dojo.xhrGet({url:path + "themedescriptor.json", sync:true, preventCache:true}).results[0]);
@@ -510,6 +520,29 @@ dojo.declare("ThemeDesigner", wm.Page, {
                 }
             }
             this.cssText = lines.join("\n");
+            var lines =this.mobileCssText.match(/.*\S.*/g);
+            for (var i = 0; i < lines.length; i++) {
+                var l = lines[i];
+                var results = l.match(/(.*?)\:(.*?)(\s+\!important)?;\s*\/\* (\S+)_(\S+) \*\//);
+                if (results) {
+
+                    // results[1]: css styletag: background-color
+                    // results[2]: value that we're going to replace "#000000"
+                    // results[3]: !important?
+                    // results[4]: Style group name "Header"
+                    // results[5]: Style symbol "Background-Color"
+                    var group = this.themeData[results[4]];
+                    if (group) {
+                        var styleValue = group[results[5]];
+                        var important = (results[3]) ? " !important" : ""
+                        if (styleValue)
+                            lines[i] = results[1] + ": " + styleValue + important + "; /* " + results[4] + "_" + results[5] + " */";
+                    } 
+                }
+            }
+            this.mobileCssText = lines.join("\n");
+
+	    
 
 	    /* this.cssText must be set before calling these 
 	       this.setSectionEnabled("MainContent", this.themeData["MainContent-Enabled"]);
@@ -1815,6 +1848,10 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	
         this.cssText = this.cssText.replace(r, replacestr);
         this.cssText = this.cssText.replace(r2, replacestr2);
+
+        this.mobileCssText = this.mobileCssText.replace(r, replacestr);
+        this.mobileCssText = this.mobileCssText.replace(r2, replacestr2);
+	
 	studio.application.loadThemeCss(this.currentTheme, true, this.cssText);
     },
     setCssSymbol: function(inGroupName, inName, inValue) {
@@ -1837,6 +1874,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
         this.themeData[inGroupName][inName] = inValue;
         var r = new RegExp("(\\S+\\s*\\:\\s*)\\s*.*?(\\s+\!important)?\\s*(\\;\\s*\\/\\* " + symbolicName + " \\*\\/)", "g");
         this.cssText = this.cssText.replace(r, "$1" + inValue + "$2$3");
+        this.mobileCssText = this.mobileCssText.replace(r, "$1" + inValue + "$2$3");
 
         // If updating the border, we must set the prototype as well (redundant in some cases)
         if (inGroupName.match(/^(.*)[-_]Border$/)) {
@@ -1912,9 +1950,12 @@ dojo.declare("ThemeDesigner", wm.Page, {
     },
     saveTheme: function() {
         studio.beginWait("Saving...");
+	
 	var result = studio.deploymentService.requestSync("deployTheme", [this.currentTheme, "themedescriptor.json",dojo.toJson(this.themeData,true)]);
         if (result)
-            result = studio.deploymentService.requestSync("deployTheme", [this.currentTheme, "theme.css",this.cssText]);
+            result = studio.deploymentService.requestSync("deployTheme", [this.currentTheme, "theme.css",this.optimizeCSS(this.cssText)]);
+        if (result)
+            result = studio.deploymentService.requestSync("deployTheme", [this.currentTheme, "mtheme.css",this.optimizeCSS(this.mobileCssText)]);
         if (result)
             result = studio.deploymentService.requestSync("deployTheme", [this.currentTheme, "Theme.js",dojo.toJson(this.themePrototype, true)]);
         studio.endWait("Saving...");
@@ -1931,6 +1972,20 @@ dojo.declare("ThemeDesigner", wm.Page, {
             studio.application.setTheme(this.currentTheme);
         }
 */
+    },
+    optimizeMobileCSS: function(inText) {
+	
+
+	return this.optimizeCSS(inText);
+    },
+    optimizeCSS: function(inText) {
+	// strip out comments
+	inText = inText.replace(/\/\*(.|\n|\r)*?\*\//gm,"")
+
+	// strip out white space
+	inText = inText.replace(/^\s*/gm,"").replace(/\s*$/gm,"");
+
+	return inText;
     },
     copyThemeClick: function(inSender, inTheme) {
 	this.copyTheme = inTheme || this.currentTheme;

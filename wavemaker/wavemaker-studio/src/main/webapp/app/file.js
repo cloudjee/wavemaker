@@ -133,14 +133,18 @@ makeDebugLoaderJs = function() {
 		].join('\n');
 }
 
-makeIndexHtml = function(inProjectName) {
+makeIndexHtml = function(inProjectName, themeUrl) {
 	var macros = ['PROJECT'], data=[inProjectName], t = wm.studioConfig.appIndexTemplate;
 	// change template to index
 	for (var i=0, m, d; (m=macros[i]); i++){
 		d=data[i] || "";
 		t = t.replace(new RegExp(['{%', m, '}'].join(''), 'g'), d);
 	}
-
+    if (t.match(/var wmThemeUrl\s*=.*?;/)) {
+	t = t.replace(/var wmThemeUrl\s*=.*?;/, "var wmThemeUrl = \"" + themeUrl + "\";");
+    } else {
+	t = t.replace(/\<\/title\s*\>/, "</title>\n<script>var wmThemeUrl = \"" + themeUrl + "\";</script>");
+    }
     return t;
 }
 

@@ -48,7 +48,7 @@ wm.getParentForm = function(inWidget) {
 }
 
 wm.getFormLiveView = function(inForm) {
-	var lv = inForm && inForm.getLiveVariable();
+	var lv = inForm && inForm.findLiveVariable();
 	return lv && lv.liveView;
 }
 
@@ -155,7 +155,7 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 	_getDataType: function() {
 		var t = (this.dataSet || 0).type;
 		if (!wm.typeManager.isStructuredType(t)) {
-			var v = this.getLiveVariable();
+			var v = this.findLiveVariable();
 			t = v && v.type;
 		}
 		if (wm.typeManager.isStructuredType(t))
@@ -164,7 +164,7 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 	// get the liveVariable related to this dataSet
 	// currently just checks if dataSet is a liveVariable
 	// currently does not check for subNards that may be part of a dataSet
-	getLiveVariable: function() {
+    findLiveVariable: function() {
 		// Not sure why we were not checking for liveVariable instance in the object itself,
 		// before digging deep and trying to find liveVariable elsewhere. 
 		/*

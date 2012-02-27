@@ -42,8 +42,9 @@ try
 		["wm", wm.libPath + "/wm"],
 		["wm.packages", wm.libPath + "/wm/common/packages"],
 		["common", wm.libPath + "/wm/common"],
+	    ["github", wm.libPath + "/github"],
 	    ["wm.modules", wm.basePath + "modules/ep"],
-	    ["wm.language", wm.libPath + "/wm/language"],
+	    //["wm.language", wm.libPath + "/wm/language"],
 	    ["language", window.location.pathname.replace(/[^\/]*$/,"language")]
 	);	
 
@@ -56,27 +57,23 @@ try
 		dojo.registerModulePath("dojo.nls", wm.libPath + "/build/nls");
 	    //dojo.registerModulePath("dijit.themes.tundra", wm.libPath + "build/themes/tundra");
 		dojo.registerModulePath("build", wm.libPath + "/build");
-		
+	    if (wm.isMobile) {
+		dojo.require("build.Gzipped.lib_build_mobile", true);	
+	    } else {
 		dojo.require("build.Gzipped.lib_build", true);	
-		// START: The comments here are for debugging in non-debug mode. Please do not remove these comments
-		// To use lib_build_uncompressed, uncomment the next two lines AND comment out the above dojo.require for Gzipped.lib_build
-		//dojo.require("build.lib_build_uncompressed", true);
-		//wm.writeJsTag(wm.relativeLibPath + '/build/lib_build_uncompressed.js');
-		// END: The comments here are for debugging in non-debug mode. Please do not remove these comments
-  
-		/*
-		dojo.require("build.Gzipped.wm_dojo_grid", true);
-		dojo.require("build.Gzipped.wm_editors", true);
-	dojo.require("build.Gzipped.wm_editors_old", true);
-		dojo.require("build.Gzipped.wm_richTextEditor", true);
-		dojo.require("build.Gzipped.wm_livepanel", true);
-		dojo.require("build.Gzipped.wm_menus", true);
-		dojo.require("build.Gzipped.wm_charts", true);
-		dojo.require("build.Gzipped.wm_gadgets", true);
-		*/
+	    }
+/*
+	    wm.loadLibs([ 
+		wm.isMobile ? "css.dijit.themes.tundra.tmobile" :  "css.dijit.themes.tundra.t"
+	    ]);
+	    */
 
-
-		dojo.require("lib.runtime_manifest", true);
+	    if (dojo.isIE)
+	    {
+		wm.loadLibs([ 
+	  "wm.base.lib.Silverlight"
+		]);
+	    }
 
 	}
 	else
@@ -84,8 +81,6 @@ try
 		// Load lib manifest, ensuring anything not included in build will be loaded explicitly
 		dojo.require("lib.manifest", true);
 	}
-
-
 }
 catch (e)
 {

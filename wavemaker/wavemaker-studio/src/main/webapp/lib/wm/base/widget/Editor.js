@@ -20,10 +20,6 @@ dojo.provide("wm.base.widget.Editor");
 
 /* DEPRECATED! */
 
-wm.editors = [ 
-    "Text", "Date", "Time", "DateTime", "Number", "Currency", "SelectMenu", "Checkbox", "TextArea", "RadioButton", "Lookup", "Slider"
-];
-
 wm.getEditor = function(inName) {
 
 	var c = inName || "Text";
@@ -50,27 +46,6 @@ wm.getEditorType = function(inPrimitive) {
 	return dojo.indexOf(wm.editors, t) != -1 ? t : "Text";
 };
 
-wm.getFieldEditorProps = function(inFieldInfo) {
-	var
-		f = inFieldInfo,
-		props = {
-		    caption: f.caption || wm.capitalize(f.name),
-			display: wm.getEditorType(f.displayType || f.type),
-			readonly: f.readonly,
-			editorInitProps: {required: f.required},
-      required: f.required,
-			subType: f.subType //xxx
-		};
-	// fixup: ensure checkbox is boolean type
-	if (props.display == "CheckBox") {
-		props.editorInitProps.dataType = "boolean";
-		props.displayValue = true;
-		props.emptyValue = "false";
-	} else if (props.display == "Date") {
-	    props.dateMode = "Date";
-	}
-	return props;
-};
 
 wm.createFieldEditor = function(inParent, inFieldInfo, inProps, inEvents, inClass) {
 	var props = dojo.mixin({}, wm.getFieldEditorProps(inFieldInfo), inProps);
@@ -78,19 +53,6 @@ wm.createFieldEditor = function(inParent, inFieldInfo, inProps, inEvents, inClas
 	return inParent.owner.loadComponent(name, inParent, inClass ||"wm.Editor", props, inEvents);
 };
 
-wm.updateFieldEditorProps = function(inEditor, inFieldInfo) {
-	var
-		e = inEditor,
-		props = wm.getFieldEditorProps(inFieldInfo),
-		editor = props.editorInitProps;
-	delete props.formField;
-	delete props.editorInitProps;
-	//
-	for (var i in props)
-		e.setProp(i, props[i]);
-	for (var i in editor)
-		e.editor.setProp(i, editor[i]);
-}
 
 dojo.declare("wm.Editor", wm.Container, {
 	height: "24px",

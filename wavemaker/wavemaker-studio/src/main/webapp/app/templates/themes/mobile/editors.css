@@ -1,0 +1,269 @@
+/*
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+
+  /**************************************************************************************************
+   * TYPE:        wm.AbstractEditor / wm._BaseEditor
+   *
+   * DESCRIPTION: Sets the styling of all editors, as well as a few things I've arbitrarily linked to 
+   *              editor style such as the progress bar.  The first section of this document
+   *              consists of common editors styles regardless of what kind of panel the editor is in.
+   ************************************************************************************************/
+
+/* Give editors the standard border color, and get rid of the outline styling which is unnecessary and looks bad in webkit */
+.wm_template .wmeditor .dijitTextBox.dijitFocused,
+.wm_template .wmeditor .dijitTextArea.dijitFocused,
+.wm_template .wmeditor .dijitComboBox.dijitFocused,
+.wm_template .wmeditor .dijitSelect.dijitFocused {
+	outline-width: 0 !important;    
+}
+
+
+/* Make all editors equally rounded.  This is not for technical reasons.  It is my opinion that a theme should
+ * allow some things to vary, and other things should provide a consistent common look.
+ */
+.wm_template  .wmeditor .dijitTextBox,
+.wm_template  .wmeditor .dijitTextArea,
+.wm_template  .wmeditor .dijitComboBox
+ {
+     /* Borders-Editor_BorderStyle_Radius */
+     -moz-border-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
+     -webkit-border-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
+     border-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
+}
+
+.wm_template  .wmeditor .dijitSelect .dijitButtonContents {
+     /* Borders-Editor_BorderStyle_Radius */
+    -moz-border-radius-bottomleft: 4px; /* Borders-Editor_BorderStyle_Radius */
+    -moz-border-radius-topleft: 4px; /* Borders-Editor_BorderStyle_Radius */
+    -webkit-border-top-left-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
+    -webkit-border-bottom-left-radius: 4px; /* Borders-Editor_BorderStyle_Radius */
+    border-radius-bottomleft: 4px; /* Borders-Editor_BorderStyle_Radius */
+    border-radius-top-left: 4px; /* Borders-Editor_BorderStyle_Radius */
+    border-right: solid 0px transparent !important;
+    display:block;
+}
+
+
+.wm_template .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_template .wmeditor .dijitSelect .dijitArrowButton {
+    height: 100% !important;
+    -moz-border-radius-bottomright: 2px; /* wm.SelectMenu-Inner_Radius */
+    -moz-border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
+    -webkit-border-bottom-right-radius: 2px;/* wm.SelectMenu-Inner_Radius */
+    -webkit-border-top-right-radius: 2px;/* wm.SelectMenu-Inner_Radius */
+    border-radius-bottomright: 2px;/* wm.SelectMenu-Inner_Radius */
+    border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
+}
+
+.wm_template .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
+        height: 100% !important;
+}
+.wm_template .dijitComboBox .dijitArrowButton .dijitArrowButtonInner,
+.wm_template .dijitSelect .dijitArrowButton .dijitArrowButtonInner {
+        background-position: 50% 50%;
+	background-image: url(images/comboArrowDown.png); /* wm.SelectMenu-Down-Arrow_Image */
+        -moz-border-radius-bottomright: 2px;/* wm.SelectMenu-Inner_Radius */
+        -moz-border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
+        -webkit-border-bottom-right-radius: 2px;/* wm.SelectMenu-Inner_Radius */
+        -webkit-border-top-right-radius: 2px;/* wm.SelectMenu-Inner_Radius */
+         border-radius-bottomright: 2px;/* wm.SelectMenu-Inner_Radius */
+         border-radius-topright: 2px;/* wm.SelectMenu-Inner_Radius */
+}
+
+.wm_template .dijitSpinner .dijitArrowButton .dijitArrowButtonInner {
+	background-position: 30% 30%;
+	background-image: url(images/comboArrowDownLight.png); /* wm.NumberSpinner-Down-Arrow_Image */    
+}
+.wm_template .dijitSpinner .dijitArrowButton.dijitUpArrowButton .dijitArrowButtonInner {
+	background-image: url(images/comboArrowUpLight.png); /* wm.NumberSpinner-Up-Arrow_Image */    
+}
+  /**************************************************************************************************
+   * TYPE:        Slider
+   *
+   * TODO:        I haven't really worked in support for slider into themes.  Color and Background
+   *              should show up when editting the slider widget in the theme designer or colors/images
+   *              should be automatically assigned. I don't think this gets so much use that I've 
+   *              put in the effort just yet.
+   ************************************************************************************************/
+.wm_template .dijitSlider .dijitProgressBarLabel {
+    color: white;
+}
+
+.wm_template .dijitSlider .dijitSliderImageHandleH {
+    background: url(images/preciseSliderThumb.png) no-repeat 50% 0%;
+    outline-width: 0;
+}
+
+
+
+
+@media screen { /* MainContent-Level */ 
+  /**************************************************************************************************
+   * TYPE:        dijit.form.ComboBox/FilteringSelect/Select popup button
+   *
+   * DESCRIPTION: We need to set the background color and background image for the menu's popup
+   *              button. 
+   ************************************************************************************************/
+.wm_template  .wmeditor .dijitSpinner .dijitArrowButton,
+.wm_template  .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_template  .wmeditor .dijitSelect .dijitArrowButton {
+    background-color: #666666; /* MainContent-ClickablesDefault-Background_Color */
+}
+
+    .wm_template  .wmeditor .dijitTextBox,
+    .wm_template  .wmeditor .dijitTextArea,
+    .wm_template  .wmeditor .dijitComboBox,
+    .wm_template  .wmeditor .dijitSelect .dijitButtonContents,
+    .wm_template  .dijitTimePickerItem {
+	/* MainContent-EditorsDefault-Border */
+	border-color: #666666;  /* MainContent-EditorsDefault-Border_Color */
+	border-width: 1px; /* MainContent-EditorsDefault-Border_BorderSize */
+
+	/* MainContent-EditorsDefault-Font */
+	font-family: sans-serif; /* MainContent-EditorsDefault-Font_Family */
+	font-size: 12pt; /* MainContent-EditorsDefault-Font_TextSize */
+	color: #FFFFFF; /* MainContent-EditorsDefault-Font_Color */
+	font-weight: bold; /* MainContent-EditorsDefault-Font_Weight */
+
+	/* MainContent-EditorsDefault-Background */
+	background-color: #444444; /* MainContent-EditorsDefault-Background_Color */
+	background-image: url(images/repeatx/brightEdge1.png); /* MainContent-EditorsDefault-Background_Image */
+	background-position: left top;  /* MainContent-EditorsDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-EditorsDefault-Background_Image-Repeat */
+
+    }
+    .wm_template  .wmeditor .dijitTextBox.dijitHover,
+    .wm_template  .wmeditor .dijitTextArea:hover,
+    .wm_template  .wmeditor .dijitComboBox.dijitHover,
+    .wm_template  .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
+    .wm_template  .dijitTimePickerMarker.dijitTimePickerMarkerHover,
+    .wm_template  .dijitTimePickerItem.dijitTimePickerItemHover {
+	/* MainContent-EditorsHover-Font */
+	color: #FFFFFF; /* MainContent-EditorsHover-Font_Color */
+
+	border-color: #666666;  /* MainContent-EditorsHover-Border_Color */
+
+	/* MainContent-EditorsHover-Background */
+	background-color: #444444; /* MainContent-EditorsHover-Background_Color */
+	background-image: url(images/repeatx/brightEdge1.png); /* MainContent-EditorsHover-Background_Image */
+	background-position: left top;  /* MainContent-EditorsHover-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-EditorsHover-Background_Image-Repeat */
+    }
+
+    .wm_template  .wmeditor .dijitTextBox.dijitFocused,
+    .wm_template  .wmeditor .dijitTextBox.dijitFocused.dijitHover,
+    .wm_template  .wmeditor .dijitTextArea.dijitFocused,
+    .wm_template  .wmeditor .dijitTextArea.dijitFocused:hover,
+    .wm_template  .wmeditor .dijitComboBox.dijitFocused,
+    .wm_template  .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_template  .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
+    .wm_template  .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents {
+	/* MainContent-EditorsFocus-Font */
+	color: #FFFFFF; /* MainContent-EditorsFocus-Font_Color */
+
+	border-color: #666666;  /* MainContent-EditorsFocus-Border_Color */
+
+	/* MainContent-EditorsFocus-Background */
+	background-color: #444444; /* MainContent-EditorsFocus-Background_Color */
+	background-image: url(images/repeatx/brightEdge1.png); /* MainContent-EditorsFocus-Background_Image */
+	background-position: left top;  /* MainContent-EditorsFocus-Background_Image-Position */
+	background-repeat: repeat-x; /* MainContent-EditorsFocus-Background_Image-Repeat */
+    }
+
+    
+    
+}
+
+
+
+@media screen { /* HeaderContent-Level */ 
+  /**************************************************************************************************
+   * TYPE:        dijit.form.ComboBox/FilteringSelect/Select popup button
+   *
+   * DESCRIPTION: We need to set the background color and background image for the menu's popup
+   *              button. 
+   ************************************************************************************************/
+.wm_template .HeaderContent .wmeditor .dijitSpinner .dijitArrowButton,
+.wm_template .HeaderContent .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_template .HeaderContent .wmeditor .dijitSelect .dijitArrowButton {
+    background-color: #666666; /* HeaderContent-ClickablesDefault-Background_Color */
+}
+
+    /* BEGIN inner content panel editors */
+
+    .wm_template .HeaderContent .wmeditor .dijitTextBox,
+    .wm_template .HeaderContent .wmeditor .dijitTextArea,
+    .wm_template .HeaderContent .wmeditor .dijitComboBox,
+    .wm_template .HeaderContent .wmeditor .dijitSelect .dijitButtonContents,
+    .wm_template .HeaderContent .dijitTimePickerItem {
+	/* HeaderContent-EditorsDefault-Border */
+	border-color: #666666;  /* HeaderContent-EditorsDefault-Border_Color */
+	border-width: 1px; /* HeaderContent-EditorsDefault-Border_BorderSize */
+
+	/* HeaderContent-EditorsDefault-Font */
+	font-family: sans-serif; /* HeaderContent-EditorsDefault-Font_Family */
+	font-size: 12pt; /* HeaderContent-EditorsDefault-Font_TextSize */
+	color: #FFFFFF; /* HeaderContent-EditorsDefault-Font_Color */
+	font-weight: bold; /* HeaderContent-EditorsDefault-Font_Weight */
+
+	/* HeaderContent-EditorsDefault-Background */
+	background-color: #444444; /* HeaderContent-EditorsDefault-Background_Color */
+	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-EditorsDefault-Background_Image */
+	background-position: left top;  /* HeaderContent-EditorsDefault-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-EditorsDefault-Background_Image-Repeat */
+
+    }
+
+    .wm_template .HeaderContent .wmeditor .dijitTextBox.dijitHover,
+    .wm_template .HeaderContent .wmeditor .dijitTextArea:hover,
+    .wm_template .HeaderContent .wmeditor .dijitComboBox.dijitHover,
+    .wm_template .HeaderContent .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
+    .wm_template .HeaderContent .dijitTimePickerMarker.dijitTimePickerMarkerHover,
+    .wm_template .HeaderContent .dijitTimePickerItem.dijitTimePickerItemHover {
+	/* HeaderContent-EditorsHover-Font */
+	color: #FFFFFF; /* HeaderContent-EditorsHover-Font_Color */
+
+	border-color: #666666;  /* HeaderContent-EditorsHover-Border_Color */
+
+	/* HeaderContent-EditorsHover-Background */
+	background-color: #444444; /* HeaderContent-EditorsHover-Background_Color */
+	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-EditorsHover-Background_Image */
+	background-position: left top;  /* HeaderContent-EditorsHover-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-EditorsHover-Background_Image-Repeat */
+    }
+
+    .wm_template .HeaderContent .wmeditor .dijitTextBox.dijitFocused,
+    .wm_template .HeaderContent .wmeditor .dijitTextBox.dijitFocused.dijitHover,
+    .wm_template .HeaderContent .wmeditor .dijitTextArea.dijitFocused,
+    .wm_template .HeaderContent .wmeditor .dijitTextArea.dijitFocused:hover,
+    .wm_template .HeaderContent .wmeditor .dijitComboBox.dijitFocused,
+    .wm_template .HeaderContent .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+    .wm_template .HeaderContent .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
+    .wm_template .HeaderContent .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents{
+	/* HeaderContent-EditorsFocus-Font */
+	color: #FFFFFF; /* HeaderContent-EditorsFocus-Font_Color */
+
+	border-color: #666666;  /* HeaderContent-EditorsFocus-Border_Color */
+
+	/* HeaderContent-EditorsFocus-Background */
+	background-color: #444444; /* HeaderContent-EditorsFocus-Background_Color */
+	background-image: url(images/repeatx/brightEdge1.png); /* HeaderContent-EditorsFocus-Background_Image */
+	background-position: left top;  /* HeaderContent-EditorsFocus-Background_Image-Position */
+	background-repeat: repeat-x; /* HeaderContent-EditorsFocus-Background_Image-Repeat */
+    }
+    /* END inner content panel editors */
+    
+}
+

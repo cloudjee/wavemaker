@@ -281,9 +281,12 @@
     "wm.EventEditor.LIST_SHARED_JAVASCRIPT": "Service Event Handlers:",
     "wm.EventEditor.LIST_DIALOGS": "Dialogs:",
     "wm.EventEditor.LIST_LAYERS": "Layers:",
+    "wm.EventEditor.LIST_MOBILE_FOLDING": "Mobile Folding:",
     "wm.EventEditor.LIST_DASHBOARDS": "Dashboard Add Widget:",
+    "wm.EventEditor.LIST_LIVEFORMS": "Live Forms:",
+    "wm.EventEditor.LIST_DATAFORMS": "Data Forms:",
     "wm.EventEditor.LIST_TIMERS": "TIMERS:",
-
+    "wm.EventEditor.LIST_PAGECONTAINERS": "Page Containers:",
     /* Inspectors */
     "wm.DataInspector.TOAST_EXPRESSION_FAILED": "This value failed to compile; please try again.  Most common problem: lack of quotes",    
     "wm.ComponentInpsectorPanel.PROPERTY_NODE_CAPTION": "Properties",

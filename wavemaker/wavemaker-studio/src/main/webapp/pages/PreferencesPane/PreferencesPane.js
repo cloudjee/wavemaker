@@ -24,14 +24,12 @@ dojo.declare("PreferencesPane", wm.Page, {
   },
   update: function() {
     studio.studioService.requestSync("getPreferences", null, dojo.hitch(this, "getPreferencesCallBack"));
-    /*
-    this.debugEditor.beginEditUpdate();
-    this.debugEditor.setDataValue(studio.getUserSetting("previewDebug"));
-    this.debugEditor.endEditUpdate();
-    */
+
+/*
     this.useLopEditor.beginEditUpdate();
     this.useLopEditor.setDataValue(studio.getUserSetting("useLop"));
     this.useLopEditor.endEditUpdate();
+    */
   },
   getPreferencesCallBack: function(inResult) {
     this.wavemakerFolderEditor.setDataValue(inResult['wavemakerHome']);
@@ -60,8 +58,10 @@ dojo.declare("PreferencesPane", wm.Page, {
     studio.setUserSettings({previewDebug: inDataValue});
   },
   */
+/*
   useLopEditorChange: function(inSender, inDisplayValue, inDataValue) {
   	studio.setUserSettings({useLop: inDataValue});
   },
+  */
   _end: 0
 });

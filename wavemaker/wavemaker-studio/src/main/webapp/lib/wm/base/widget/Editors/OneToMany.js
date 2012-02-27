@@ -35,10 +35,11 @@ dojo.declare("wm.OneToMany", wm.ListSet, {
     calcIsDirty: function() {return false;},
     _createEditor: function(inNode) {
 	var e = this.inherited(arguments);
-	this.grid.setShowing(false);
+	var hasData = this.dataSet && !this.dataSet.isEmpty();
+	this.grid.setShowing(hasData);
 	this.noRelatedObjectsLabel = new wm.Label({parent: e,
 						   owner: this,
-						   showing: true,
+						   showing: !hasData,
 						   caption: this.noItemsLabel,
 						   width: "100%"});	
 	return e;

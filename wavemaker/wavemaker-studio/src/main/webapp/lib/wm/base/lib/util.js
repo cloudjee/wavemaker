@@ -111,11 +111,6 @@ wm.isNumber = function(v) {
 	return (typeof v == 'number') || (v instanceof Number);
 }
 
-wm.compareNumbers = function(a, b) {
-	var na = wm.isNumber(a), nb = wm.isNumber(b);
-	return na && nb ? a - b : (na ? -1 : (nb ? 1 : 0));
-}
-
 wm.max = function(list) {
   var max = list[0];
   for (var i = 1; i < list.length; i++) if (list[i] > max) max = list[i];
@@ -416,14 +411,17 @@ wm.forEachWidget = function(inWidget, inFunc, inIgnoreBuiltin) {
 		return false;
 	if (!inWidget)
 		return false;
-	for (var i=0, ws = inWidget.getOrderedWidgets(), r, w; w=ws[i]; i++) {
-	    if (w.forEachWidget && !inIgnoreBuiltin) {
-		r = inFunc(w);
-		if (r !== false)
-		    r = w.forEachWidget(inFunc);
-	    } else {
-		r = wm.forEachWidget(w, inFunc, inIgnoreBuiltin);
-	    }
+
+    for (var i=0, ws = inIgnoreBuiltin && inWidget instanceof wm.PageContainer ? [] : inWidget.getOrderedWidgets(), r, w; w=ws[i]; i++) {
+
+		if (w.forEachWidget && !inIgnoreBuiltin) {
+		    r = inFunc(w);
+		    if (r !== false)
+			r = w.forEachWidget(inFunc);
+		} else {
+		    r = wm.forEachWidget(w, inFunc, inIgnoreBuiltin);
+		}
+
 	    if (r === false)
 		return false;
 	}
@@ -445,7 +443,7 @@ wm.forEachVisibleWidget = function(inWidget, inFunc, inIgnoreBuiltin) {
 // themes
 wm.theme = {
 	getPath: function() {
-			return dojo.moduleUrl("wm.base","widget/themes/" + "default/");
+			return dojo.moduleUrl("lib.wm.base","widget/themes/" + "default/");
 	},
 	getImagesPath: function() {
 		return wm.theme.getPath() + "images/";

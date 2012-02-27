@@ -24,26 +24,32 @@ dojo.require("dijit.form.CurrencyTextBox");
 
 /* Fixes handling of places property in wm.Number */
 dijit.form.NumberTextBox.extend({
-        	format: function(value,  constraints){
-			// summary:
-			//		Formats the value as a Number, according to constraints.
-			// tags:
-			//		protected
-			var formattedValue = String(value);
-			if(typeof value != "number"){ return formattedValue; }
-			if(isNaN(value)){ return ""; }
-			// check for exponential notation that dojo.number.format chokes on
-			if(!("rangeCheck" in this && this.rangeCheck(value, constraints)) && constraints.exponent !== false && /de[-+]?d/i.test(formattedValue)){
-				return formattedValue;
-			}
-			constraints = dojo.mixin({}, constraints, this.editOptions);
-			return this._formatter(value, constraints);
-		}
+    format: function(value,  constraints){
+	// summary:
+	//		Formats the value as a Number, according to constraints.
+	// tags:
+	//		protected
+	var formattedValue = String(value);
+	if(typeof value != "number"){ return formattedValue; }
+	if(isNaN(value)){ return ""; }
+	// check for exponential notation that dojo.number.format chokes on
+	if(!("rangeCheck" in this && this.rangeCheck(value, constraints)) && constraints.exponent !== false && /de[-+]?d/i.test(formattedValue)){
+	    return formattedValue;
+	}
+	/* WaveMaker Removes Dojo IF statement:
+	   if(this.editOptions && this._focused){
+	*/
+	constraints = dojo.mixin({}, constraints, this.editOptions);
+	return this._formatter(value, constraints);
+    }
 });
 
-
-
-
+/* Enable the numeric keyboard on onscreen keyboards to show */
+if (wm.isMobile) {
+    dijit.form.NumberTextBox.extend({
+	type: "number"
+    });
+}
 
 //===========================================================================
 // Number Editor
@@ -73,22 +79,20 @@ dojo.declare("wm.Number", wm.Text, {
 			constraints.max = Number(this.maximum);
 		// NOTE: for constraining decimal places use pattern instead of places
 		// pattern is 'up to' while places is 'must be'
-		if (this.places)
-		{
-			var places = this._getPlaces();
-			if (places && places != '')
-			{
-			    constraints.places = parseInt(places) != NaN ? parseInt(places) : places;
-			}
-		}
-
+/* Uncomment this to cause invalid flag to be shown instead of to automatically round to the desired places value 
+	var places = this._getPlaces();
+	if (places !== "") {
+	    constraints.places = places;
+	}
+	*/
 	//constraints.pattern = this._getPattern();
 
 	return constraints;
     },
-     getEditorProps: function(inNode, inProps) {
-    var v = this.displayValue;
+    getEditorProps: function(inNode, inProps) {
+	var v = this.displayValue;
 	var constraints = this.getEditorConstraints();
+
 	var p = dojo.mixin(this.inherited(arguments), {
 	    constraints: constraints,
 	    //editPattern: constraints.pattern,
@@ -97,11 +101,16 @@ dojo.declare("wm.Number", wm.Text, {
 	    value: v ? Number(v) : "",
 	    editOptions: {}
 	}, inProps || {});
-	if (this.places) {
-	    p.editOptions.places = Number(this.places);
+	var places = this._getPlaces();
+	if (places !== "") {
+	    p.editOptions.places = places;
 	}
 	return p;
-     },
+    },
+	_getPlaces: function() {
+            if (this.places === '') return this.places; 
+            else return Number(this.places); 
+	},
 
 /*
     numberFormat: "",
@@ -161,9 +170,7 @@ dojo.declare("wm.Number", wm.Text, {
 	}
     },
     */
-	_getPlaces: function (){
-		return '';
-	},
+
 	_createEditor: function(inNode, inProps) {
 	    if (this.spinnerButtons)
 		return new dijit.form.NumberSpinner(this.getEditorProps(inNode, inProps));
@@ -281,9 +288,7 @@ dojo.declare("wm.Currency", wm.Number, {
 	    return dojo.currency.format( this.dataValue, {currency: this.currency || (this._isDesignLoaded ? studio.application.currencyLocale : app.currencyLocale) || "USD",
 							  places: parseInt(this.places)});
 	},
-	_getPlaces: function() {
-		return this.places;
-	},
+
     setEditorValue: function(inValue) {
 	var v = inValue;
 	if (this.editor)
@@ -327,119 +332,3 @@ dojo.declare("wm.Currency", wm.Number, {
 });
 
 
-//===========================================================================
-// Slider Editor
-//===========================================================================
-dojo.declare("wm.Slider", wm.AbstractEditor, {
-	minimum: 0,
-	maximum: 100,
-	showButtons: true,
-	discreteValues: "",
-	verticalSlider: false,
-        editorBorder: false,
-        integerValues: true,
-        dynamicSlider: false,
-	reflow: function() {},
-	setVerticalSlider: function(inVerticalSlider) {
-		this.verticalSlider = inVerticalSlider;
-		if (this.editor)
-			this.createEditor();
-	        if (this.verticalSlider) {
-		    this.editor.incrementButton.style.width = "auto";
-		    this.editor.decrementButton.style.width = "auto";
-		}
-	},
-	getEditorProps: function(inNode, inProps) {
-		// it is important to have this.displayValue as an integer and should always be at least equal to minimum value
-		// else sliders will throw exception on IE and will not show up.
-		var v = this.displayValue;
-		var minV = Number(this.minimum) ? Number(this.minimum) : 0;
-		if (!v || (Number(v) < minV))
-			v = this.displayValue = minV;
-
-		return dojo.mixin(this.inherited(arguments), {
-		    dynamicSlider: this.dynamicSlider,
-			minimum: Number(this.minimum),
-			maximum: Number(this.maximum),
-			showButtons: Boolean(this.showButtons),
-			discreteValues: Number(this.discreteValues) || Infinity,
-			value: v
-		}, inProps || {});
-	},
-	setMaximum: function(inMax) {
-	    this.maximum = (inMax === "") ? 100 : Number(inMax);
-	    if (this.editor) {
-		this.editor.maximum = this.maximum;
-		this.editor._setValueAttr(this.dataValue, true);
-	    }
-	},
-
-    setMinimum: function(inMin) {
-	    this.minimum = (inMin === "") ? 0 : Number(inMin);
-	    if (this.editor) {
-		this.editor.minimum = this.minimum;
-		this.editor._setValueAttr(this.dataValue, true);
-	    }
-	},
-
-
-	_createEditor: function(inNode, inProps) {
-		var div = dojo.create('div');
-		var dijitObj;
-		if (this.verticalSlider)
-		{
-			dijitObj = new dijit.form.VerticalSlider(this.getEditorProps(inNode, inProps));
-		}
-		else
-		{
-			dijitObj = new dijit.form.HorizontalSlider(this.getEditorProps(inNode, inProps));
-		}
-
-		div.appendChild(dijitObj.domNode);
-		dijitObj.domNode = div;
-		return dijitObj;
-
-	},
-
-	sizeEditor: function() {
-		if (this._cupdating)
-			return;
-	        this.inherited(arguments);
-	    this.editor._setStyleAttr("height: " + this.editor.domNode.style.height + ";width:" +  this.editor.domNode.style.width);
-	},
-    getEditorValue: function() {
-	var value = this.inherited(arguments);
-	if (this.integerValues)
-	    return Math.round(value);
-	else
-	    return value;
-    }
-				       
-/*
-	sizeEditor: function() {
-		if (this._cupdating)
-			return;
-	        this.inherited(arguments);
-
-		var e = this.editor;
-		if (e) {
-
-			var
-				bounds = this.getContentBounds(),
-				// note, subtract 2 from bounds for dijit editor border/margin
-				height = bounds.h ? bounds.h - 2 + "px" : "",
-				width = bounds.w ? bounds.w - 4 + "px" : "",
-				d = e && e.domNode,
-				s = d.style,
-				fc = d && d.firstChild;
-			if (!this.editorBorder) s.border = 0;
-			s.backgroundColor = this.editorBorder ? "" : "transparent";
-			s.backgroundImage = this.editorBorder ? "" : "none";
-			s.width = width;
-			s.height = height;
-
-
-		}
-	}
-			*/			
-});

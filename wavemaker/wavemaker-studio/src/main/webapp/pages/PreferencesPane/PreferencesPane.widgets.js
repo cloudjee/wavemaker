@@ -29,16 +29,13 @@ PreferencesPane.widgets = {
 						demoFolderEditor: ["wm.Text", {_classes: {captionNode: ["wm_FontColor_White"]}, captionSize: "130px", caption: "Demos Folder", width: "100%"}, {onEnterKeyPress: "okButtonClick"}, {
 						}]
 					}],
+/*
 					panel3: ["wm.Panel", {_classes: {domNode: ["wmGroupBox"]}, margin: "5,0,0,0", height: "100%", width: "100%", verticalAlign: "middle", horizontalAlign: "left"}, {}, {
-					    /*
-						debugEditor: ["wm.Editor", {captionSize: "400px", width: "100%", caption: "Run in debug mode", displayValue: true, display: "CheckBox", captionAlign: "left", captionPosition: "right"}, {onchange: "debugEditorChange"}, {
-							editor: ["wm._CheckBoxEditor", {dataType: "boolean"}, {}]
-						}],
-					    */
 						useLopEditor: ["wm.Editor", {captionSize: "400px", width: "100%", caption: "Open the last opened project on startup", displayValue: true, display: "CheckBox", captionAlign: "left", captionPosition: "right"}, {onchange: "useLopEditorChange"}, {
 							editor: ["wm._CheckBoxEditor", {dataType: "boolean"}, {}]
 						}]
 					}]
+					*/
 				}],
 				footer: ["wm.Panel", {height: "30px", layoutKind: "left-to-right", horizontalAlign: "right"}, {}, {
 					okButton: ["wm.Button", {caption: "OK", width: "70px", padding: "0"}, {onclick: "okButtonClick"}],

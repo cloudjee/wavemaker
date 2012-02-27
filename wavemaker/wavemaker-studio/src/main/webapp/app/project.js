@@ -173,49 +173,61 @@ dojo.declare("wm.studio.Project", null, {
 	    }
 	    studio.beginWait(studio.getDictionaryItem("wm.studio.Project.WAIT_OPEN_PROJECT"));
 	    studio.neededJars = {};
-	    var o = studio.studioService.requestAsync("openProject", [inProjectName],
+	    var deferred = new dojo.Deferred();
+	    studio.studioService.requestAsync("openProject", [inProjectName],
 						      dojo.hitch(this, function(o) {
  							  studio.endWait(studio.getDictionaryItem("wm.studio.Project.WAIT_OPEN_PROJECT"));
 							  studio._loadingApplication = true; 
 							  this.projectName = inProjectName;
 
-							  var f = function() {
-							      this.projectChanging();
-							      try {
-								  this.loadingProject = true;
-								  this.loadApplication();
-								  var ctor = dojo.getObject(this.projectName);
-								  this.pageName = inPageName || (ctor ? ctor.prototype.main : "Main");
-								  this.makeApplication();
-								  this.openPage(this.pageName);
-								  if (!wm.isEmpty(studio.neededJars)) {
-								      /* onidle insures it gets the higher z-index than the start page */
-								      wm.onidle(function() {
-									  studio.jarDownloadDialog.show();
-								      });
-								      throw "Missing Jar files are required for this project";
+							  // let openProject call cleanup before starting next set of calls
+							  wm.job("studio.openProject", 10, dojo.hitch(this, function() { 
+							      studio.updateServices();
+
+
+							      var f = function() {
+								  this.projectChanging();
+								  try {
+								      this.loadingProject = true;
+								      this.loadApplication();
+								      var ctor = dojo.getObject(this.projectName);
+								      this.pageName = inPageName || (ctor ? ctor.prototype.main : "Main");
+								      this.makeApplication();
+								      this.openPage(this.pageName);
+								      if (!wm.isEmpty(studio.neededJars)) {
+									  /* onidle insures it gets the higher z-index than the start page */
+									  wm.onidle(function() {
+									      studio.jarDownloadDialog.show();
+									  });
+									  throw "Missing Jar files are required for this project";
+								      }
+								      studio.startPageDialog.hide();
+								  } catch(e) {
+								      console.debug(e);
+								      this.loadError(studio.getDictionaryItem("wm.studio.Project.TOAST_OPEN_PROJECT_FAILED",
+													      {projectName: this.projectName, error: e}));
+								      
+								      this.projectName = "";
+								      this.pageName = "";
+								      studio.application = studio.page = null;
+								  } finally {
+								      studio._loadingApplication = false;
+								      this.loadingProject = false;
+								      this.projectChanged();
+								      if (this.projectName) {
+									  deferred.callback();
+								      } else {
+									  deferred.errback();
+								      }
 								  }
-								  studio.startPageDialog.hide();
-							      } catch(e) {
-								  console.debug(e);
-								  this.loadError(studio.getDictionaryItem("wm.studio.Project.TOAST_OPEN_PROJECT_FAILED",
-													  {projectName: this.projectName, error: e}));
-								  
-								  this.projectName = "";
-								  this.pageName = "";
-								  studio.application = studio.page = null;
-							      } finally {
-								  studio._loadingApplication = false;
-								  this.loadingProject = false;
-								  this.projectChanged();
+							      };
+							      if (o.upgradeMessages) {
+								  this.showUpgradeMessage(o.upgradeMessages);
+								  app.alertDialog.connectOnce(app.alertDialog, "onClose", this, f);
+							      } else {
+								  dojo.hitch(this, f)();
 							      }
-							  };
-							  if (o.upgradeMessages) {
-							      this.showUpgradeMessage(o.upgradeMessages);
-							      app.alertDialog.connectOnce(app.alertDialog, "onClose", this, f);
-							  } else {
-							      dojo.hitch(this, f)();
-							  }
+							  }));
 						      }),
 						      dojo.hitch(this, function(err) {
 							  studio.endWait(studio.getDictionaryItem("wm.studio.Project.WAIT_OPEN_PROJECT"));
@@ -223,6 +235,7 @@ dojo.declare("wm.studio.Project", null, {
 							  app.alert(err.toString() || "Failed to open project");
 							  this.closeProject();
 						      }));
+	    return deferred;
 /*
 		var o = studio.studioService.getResultSync("openProject", [inProjectName]);
 	        if (o) {
@@ -334,7 +347,7 @@ dojo.declare("wm.studio.Project", null, {
 	loadApplication: function() {
 		this.projectData = {
 			js: this.loadProjectData(this.projectName + ".js"),
-		    css: String(this.loadProjectData("app.css")).replace(/^\@import.*theme.css.*/,"").replace(/^\s*\n*/,""), // remove theme import from editable part of app.css
+		    css: String(this.loadProjectData("app.css")).replace(/^\s*\n*/,""),
 		        documentation: dojo.fromJson(this.loadProjectData(this.projectName + ".documentation.json"))
 		};
 		if (!this.projectData.js) {
@@ -367,8 +380,18 @@ dojo.declare("wm.studio.Project", null, {
 		        html: this.loadProjectData(p + ".html"),
 		        documentation: dojo.fromJson(this.loadProjectData(p + ".documentation.json"))
 		}
-		var ctor = dojo.declare(n, wm.Page);
-		eval(this.pageData.widgets);	    
+	    var ctor;
+	    if (this.pageData.js) {
+		try {
+		    eval(this.pageData.js);
+		    ctor = dojo.getObject(n);
+		} catch(e) {
+		}
+	    }
+	    if (!ctor) {
+		ctor = dojo.declare(n, wm.Page);
+	    }
+	    eval(this.pageData.widgets);	    
 	    if (!this.htmlLoader)
 		this.htmlLoader = new wm.HtmlLoader({owner: app, name: "projectHtmlLoader", relativeUrl: false});
 	    this.htmlLoader.setHtml(this.pageData.html);
@@ -424,6 +447,10 @@ dojo.declare("wm.studio.Project", null, {
 	this.saveProject(false);
     },
     saveProject: function(isDeployment, onSave) {
+	var isFolded = studio.page && studio.page.root._mobileFolded;
+	if (isFolded) {
+	    studio.page.root.unfoldUI();
+	}
                 this.deployingProject = isDeployment;
 	    this.saveApplication(dojo.hitch(this, function() {
 		this.savePage(dojo.hitch(this, function() {
@@ -437,6 +464,10 @@ dojo.declare("wm.studio.Project", null, {
 	            studio.incrementSaveProgressBar(1);
 		    this.saveComplete();
 		    if (onSave) onSave();
+		    if (isFolded) {
+			studio.page.root.foldUI();
+		    }
+
 		}));
 	    }));
 /*
@@ -495,7 +526,7 @@ dojo.declare("wm.studio.Project", null, {
 	     return this.projectName;
 	},
     getProgressIncrement: function(runtime) {
-	return runtime ? 0 : 12;
+	return runtime ? 0 : 16;
     },
 	saveApplication: function(callback) {
 
@@ -507,40 +538,120 @@ dojo.declare("wm.studio.Project", null, {
 	        if (studio.tree.selected && studio.tree.selected.component == studio.application)
 		    studio.inspector.reinspect();
 		
-
 	    var c = wm.studioConfig;
+	    
+	    var allProjectJS = "";
 
-	    f.push(dojo.hitch(this, function() {
-		    studio.application.saveCounter = (studio.application.saveCounter || 0) +1;
-		    var src = this.generateApplicationSource()
-	            studio.setSaveProgressBarMessage(this.projectName + ".js");
-		    this.saveProjectData(this.projectName + ".js", src);
-	            studio.incrementSaveProgressBar(1);
+	    var d = new dojo.Deferred();
+	    //d.addCallback(dojo.hitch(this, function() {
+	        studio.incrementSaveProgressBar(1);
+		allProjectJS += "wm.JsonRpcService.smdCache['runtimeService.smd'] = " + this.loadProjectData("services/runtimeService.smd") + ";\n";
+		allProjectJS += "wm.JsonRpcService.smdCache['wavemakerService.smd'] = " + this.loadProjectData("services/wavemakerService.smd") + ";\n";
+		allProjectJS += this.loadProjectData("types.js") + "\n";
+		var themename = studio.application.theme;
+		allProjectJS += "wm.Application.themeData['" + themename + "'] = " + dojo.toJson(wm.Application.themeData[themename]) + ";\n"; // TODO need to utilize this data
+	        studio.incrementSaveProgressBar(1);
+
+	    // Adds the boot.js file to the project's webapproot; may want to undo this
+
+		var bootJsPath = dojo.moduleUrl("lib.boot") + "boot.js";
+		var bootJs = loadDataSync(bootJsPath);
+
+		var dlocal = this.saveProjectData("boot.js", bootJs,false,true);
+		dlocal.addCallback(function() {d.callback();});
+	//}));
+
+	    var d1 = new dojo.Deferred();
+	    d.addCallback(dojo.hitch(this, function() {
+
+		studio.setSaveProgressBarMessage("Initializing PhoneGap (Please wait...)");
+		var dlocal = studio.studioService.requestAsync("setupPhonegapFiles", [location.port, studio.runPopup.iconClass == "studioProjectTest"]);
+		dlocal.addCallback(function() {d1.callback();});
 	    }));
 
-	    f.push(dojo.hitch(this, function() {
-			studio.setSaveProgressBarMessage(this.projectName + ".documentation.json");
-			var appdocumentation = studio.application.getDocumentationHash();
-			this.saveProjectData(this.projectName + ".documentation.json", dojo.toJson(appdocumentation, true));
-			studio.incrementSaveProgressBar(1);
+	    var d2 = new dojo.Deferred();
+	    d1.addCallback(dojo.hitch(this, function() {
+	        studio.incrementSaveProgressBar(1);
+		studio.application.saveCounter = (studio.application.saveCounter || 0) +1;
+		var src = this.generateApplicationSource()
+	        studio.setSaveProgressBarMessage(this.projectName + ".js");
+		allProjectJS += src;
+
+		var dlocal = this.saveProjectData(this.projectName + ".js", src, false, true);
+		dlocal.addCallback(function() {d2.callback();});
 	    }));
 
+	    var d3 = new dojo.Deferred();
+	    d2.addCallback(dojo.hitch(this, function() {
+		studio.incrementSaveProgressBar(1);
+		studio.setSaveProgressBarMessage(this.projectName + ".documentation.json");
+		var appdocumentation = studio.application.getDocumentationHash();
 
-	    f.push(dojo.hitch(this, function() {
+		var dlocal = this.saveProjectData(this.projectName + ".documentation.json", dojo.toJson(appdocumentation, true), false, true);
+		dlocal.addCallback(function() {d3.callback();});
+	    }));
+
+	    var d4 = new dojo.Deferred();
+	    d3.addCallback(dojo.hitch(this, function() {
+		studio.incrementSaveProgressBar(1);
+
 		// save html file, config file, and debug loader + css
 	        studio.setSaveProgressBarMessage(c.appIndexFileName);
-	        this.saveProjectData(c.appIndexFileName, makeIndexHtml(this.projectName, studio.application.theme), true);
-	        studio.incrementSaveProgressBar(1);
+		var themename = studio.application.theme;
+		var themeUrl;
+		if (this.deployingProject || wm.studioConfig.environment != "local") {
+                    themeUrl = (themename.match(/^wm_/)) ? "lib/wm/base/widget/themes/" + themename + "/theme.css" : "lib/wm/common/themes/" + themename + "/theme.css";
+		} else {
+                    themeUrl = (themename.match(/^wm_/)) ? "/wavemaker/lib/wm/base/widget/themes/" + themename + "/theme.css" : "/wavemaker/lib/wm/common/themes/" + themename + "/theme.css";
+		}
+
+		if (webFileExists(c.appIndexFileName)) {
+		    var indexHtml = this.loadProjectData(c.appIndexFileName);
+		    if (indexHtml.match(/var wmThemeUrl\s*=.*?;/)) {
+			indexHtml = indexHtml.replace(/var wmThemeUrl\s*=.*?;/, "var wmThemeUrl = \"" + themeUrl + "\";");
+		    } else {
+			indexHtml = indexHtml.replace(/\<\/title\s*\>/, "</title>\n<script>var wmThemeUrl = \"" + themeUrl + "\";</script>");
+		    }
+
+	            var dlocal = this.saveProjectData(c.appIndexFileName, indexHtml, false, true);
+		} else {
+	            var dlocal = this.saveProjectData(c.appIndexFileName, makeIndexHtml(this.projectName, themeUrl), false, true);
+		}
+		dlocal.addCallback(function() {d4.callback();});
 	    }));
 
-	    f.push(dojo.hitch(this, function() {
+	    var d5 = new dojo.Deferred();
+	    d4.addCallback(dojo.hitch(this, function() {
+		studio.incrementSaveProgressBar(1);
+		if (webFileExists("login.html")) {
+		    var t = this.loadProjectData("login.html");
+		    if (t.match(/var wmThemeUrl\s*=.*?;/)) {
+			t = t.replace(/var wmThemeUrl\s*=.*?;/, "var wmThemeUrl = \"" + themeUrl + "\";");
+		    } else {
+			t = t.replace(/\<\/title\s*\>/, "</title>\n<script>var wmThemeUrl = \"" + themeUrl + "\";</script>");
+		    }
+		    var dlocal = this.saveProjectData("login.html", t, false, true);
+		    dlocal.addCallback(function() {d5.callback();});
+		} else {
+		    d5.callback();
+		}
+	    }));
+
+
+	    /* TODO: This should be moved into project template... but is here as it simplifies project upgrades */
+	    var d6 = new dojo.Deferred();
+	    d5.addCallback(dojo.hitch(this, function() {
+		studio.incrementSaveProgressBar(1);
 		// save html file, config file, and debug loader + css
 	        studio.setSaveProgressBarMessage(c.appChromeFileName);
-	        this.saveProjectData(c.appChromeFileName, c.appChromeTemplate, true);
-	        studio.incrementSaveProgressBar(1);
+
+	        var dlocal = this.saveProjectData(c.appChromeFileName, c.appChromeTemplate, true, true);
+		dlocal.addCallback(function() {d6.callback();});
 	    }));
 
-	    f.push(dojo.hitch(this, function() {
+	    var d7 = new dojo.Deferred();
+	    d6.addCallback(dojo.hitch(this, function() {
+		studio.incrementSaveProgressBar(1);
 		/* 
 		// Fix config.js if there is a username associated with this project (projectdir contains username or is empty string)
 		if (window.studio && studio.getProjectDir() &&  c.appConfigTemplate.indexOf('"../wavemaker/') != -1) {
@@ -548,40 +659,70 @@ dojo.declare("wm.studio.Project", null, {
 		}	
 		*/	
 	        studio.setSaveProgressBarMessage(c.appConfigFileName);
-		this.saveProjectData(c.appConfigFileName, c.appConfigTemplate, true);
-	        studio.incrementSaveProgressBar(1);
+
+		var dlocal = this.saveProjectData(c.appConfigFileName, c.appConfigTemplate, true, true);
+		dlocal.addCallback(function() {d7.callback();});
 	    }));
 
-	    f.push(dojo.hitch(this, function() {
+
+	    var d8 = new dojo.Deferred();
+	    d7.addCallback(dojo.hitch(this, function() {
+		studio.incrementSaveProgressBar(1);
 		var themename = studio.application.theme;
 		var path;
-		if (this.deployingProject || wm.studioConfig.environment != "local")
+/*
+		if (this.deployingProject || wm.studioConfig.environment != "local") {
                     path = (themename.match(/^wm_/)) ? "lib/wm/base/widget/themes/" + themename + "/theme.css" : "lib/wm/common/themes/" + themename + "/theme.css";
-		else
+		} else {
                     path = (themename.match(/^wm_/)) ? "/wavemaker/lib/wm/base/widget/themes/" + themename + "/theme.css" : "/wavemaker/lib/wm/common/themes/" + themename + "/theme.css";
-
-		studio.setSaveProgressBarMessage(c.appCssFileName);
-		this.saveProjectData(c.appCssFileName, '@import "' + path + '";\n' +  studio.getAppCss());
-		studio.incrementSaveProgressBar(1);
-	    }));
-
-	    f.push(dojo.hitch(this, function() {
-		studio.setSaveProgressBarMessage(c.appDebugBootFileName);
-		this.saveProjectData(c.appDebugBootFileName, '', true);
-		studio.incrementSaveProgressBar(1);
-
-		if (wm.studioConfig.isPalmApp) {
-		    this.saveProjectData(c.appPalmAppInfoFileName, makePalmAppInfo(this.projectName), true);
-		    this.saveProjectData("app/views/first/first-scene.html", "", true);
 		}
-		studio.setCleanApp();
+		*/
+		studio.setSaveProgressBarMessage(c.appCssFileName);
+		var css = studio.getAppCss();
+
+		var cssArray = [];
+		dojo.forEach(css.split(/\n/), function(line) {
+		    if (line.match(/\S/)) 
+			cssArray.push(line.replace(/^\s*/g,"").replace(/\'/g,"\"").replace(/\s+$/g,"") + "\\\n");
+		});
+		allProjectJS += "\n" + studio.project.projectName + ".prototype._css = '" + cssArray.join("") + "';";
+
+		var dlocal = this.saveProjectData(c.appCssFileName, css, false, true);
+		dlocal.addCallback(function() {d8.callback();});
 	    }));
-		   
-	    f.push(callback);
-	    
-	    // In order to update the progress bar, we need a moment of idle time between each step.  For the cost of some 
-	    // extra code and 12 extra miliseconds, we get a progres bar.
-	    wm.onidleChain(f);
+
+	    var d9 = new dojo.Deferred();
+	    d8.addCallback(dojo.hitch(this, function() {
+		studio.incrementSaveProgressBar(1);
+		var d = wm.load("lib/wm/common/" + wm.version.replace(/[^a-zA-Z0-9]/g,"") + "_patches.js",false,true);
+
+		d.addCallback(function(inResponse) {
+		    allProjectJS += "\n" + inResponse;
+		    d9.callback();
+		});
+		d.addErrback(function() {d9.callback();});
+	    }));
+
+	    var d10 = new dojo.Deferred();
+	    d9.addCallback(dojo.hitch(this, function() {
+		studio.incrementSaveProgressBar(1);
+		var dlocal = this.saveProjectData("project.js", allProjectJS, false, true);
+		dlocal.addCallback(function() {d10.callback();});
+	    }));
+
+	    var d11 = new dojo.Deferred();
+	    d10.addCallback(dojo.hitch(this, function() {
+		studio.setSaveProgressBarMessage("Update PhoneGap Setup");
+		var dlocal = studio.studioService.requestAsync("updatePhonegapFiles", [location.port, studio.runPopup.iconClass == "studioProjectTest"]);
+		dlocal.addCallback(function() {d11.callback();});
+	    }));
+
+	    var d12 = new dojo.Deferred();
+	    d11.addCallback(dojo.hitch(this, function() {
+		studio.incrementSaveProgressBar(1);
+		callback();
+	    }));
+
 				       
 	},
 
@@ -632,6 +773,8 @@ dojo.declare("wm.studio.Project", null, {
 	    var f = [];
 	    var self = this;
 
+	    var allPageTxt = "";
+
 	    f.push(dojo.hitch(this, function() {
 		studio.setSaveProgressBarMessage(this.pageName + ".js");
 
@@ -643,6 +786,14 @@ dojo.declare("wm.studio.Project", null, {
 		var text = studio.getScript();
 
 		var def = this.savePageData(this.pageName + ".js", text);
+
+		var codeLines = [];
+		dojo.forEach(text.split(/\n/), function(line) {
+		    if (line.match(/\S/)) 
+			codeLines.push(line.replace(/^\s*/g,"").replace(/\s+$/g,""));
+		});
+
+		allPageTxt += codeLines.join("\n") + "\n\n";
 	    }));
 
 	    f.push(dojo.hitch(this, function() {
@@ -651,8 +802,15 @@ dojo.declare("wm.studio.Project", null, {
 
 		if (studio._designLanguage === undefined) // hasn't been set by languageSelectChanged
 		    studio._designLanguage = lang;
-		this.savePageData(this.pageName + ".widgets.js", studio.getWidgets());
+		var widgets = studio.getWidgets();
+		this.savePageData(this.pageName + ".widgets.js", widgets);
+		var widgetLines = [];
+		dojo.forEach(widgets.split(/\n/), function(line) {
+		    if (line.match(/\S/)) 
+			widgetLines.push(line.replace(/^\s*/g,"").replace(/\s+$/g,""));
+		});
 
+		allPageTxt += widgetLines.join("\n") + ";\n";
 		if (lang != "default") {
 		    var dictionary = studio.page.getLanguageWidgets();
 		    var oldDictionaryStr = wm.load("projects/" + studio.project.projectName + "/language/nls/" + lang + "/" + studio.project.pageName + ".js");
@@ -674,11 +832,31 @@ dojo.declare("wm.studio.Project", null, {
 	    f.push(dojo.hitch(this, function() {	    
 		studio.setSaveProgressBarMessage(this.pageName + ".css");
 		this.savePageData(this.pageName + ".css", studio.getCss());
+		allPageTxt += "\n" + studio.project.pageName + ".prototype._cssText = '";
+		var cssArray = [];
+		dojo.forEach(studio.getCss().split(/\n/), function(line) {
+		    if (line.match(/\S/)) 
+			cssArray.push(line.replace(/^\s*/g,"").replace(/\'/g,"\"").replace(/\s+$/g,"") + "\\\n");
+		});
+		allPageTxt += cssArray.join("") + "';";
 	    }));
 
 	    f.push(dojo.hitch(this, function() {
 		studio.setSaveProgressBarMessage(this.pageName + ".html");
 		this.savePageData(this.pageName + ".html", studio.getMarkup());
+		allPageTxt += "\n" + studio.project.pageName + ".prototype._htmlText = '";
+		var markupArray = [];
+		dojo.forEach(studio.getMarkup().split(/\n/), function(line) {
+		    if (line.match(/\S/)) 
+			markupArray.push(line.replace(/^\s*/g,"").replace(/\'/g,"&#39;").replace(/\s+$/g,"") + "\\\n");
+		});
+		allPageTxt += markupArray.join("") + "';";
+
+	    }));
+
+	    f.push(dojo.hitch(this, function() {
+		studio.setSaveProgressBarMessage(this.pageName + ".html");
+		this.savePageData(this.pageName + ".a.js", allPageTxt);
 	    }));
 
 	    f.push(dojo.hitch(this, function() {
@@ -700,9 +878,13 @@ dojo.declare("wm.studio.Project", null, {
 	    wm.onidleChain(f, this.saveStateObj);
 
 	},
-	saveProjectData: function(inPath, inData, inNoOverwrite) {
+	saveProjectData: function(inPath, inData, inNoOverwrite, async) {
 	    dojo.publish("studio-saveProjectData");
+	    if (async) {
+		return studio.studioService.requestAsync("writeWebFile", [inPath, inData, inNoOverwrite||false]);
+	    } else {
 		return studio.studioService.requestSync("writeWebFile", [inPath, inData, inNoOverwrite||false]);
+	    }
 	},
 	savePageData: function(inPath, inData, inNoOverwrite) {
 	        var self = this;
@@ -1317,10 +1499,10 @@ Studio.extend({
 	    this._saveErrors = [];
 	    
 	    /* If any source tab, canvas or app level variables are unsaved, then all source, canvas and app are saved at this time;
-	     * so if any of them are dirty, thats 6 saves in saveApplication (7 if there is a login.html file),
-	     * and 5 saves for the page level data; so if canvas or source are dirty, thats 12 save operations
+	     * so if any of them are dirty, thats 10.
+	     * and 5 saves for the page level data; so if canvas or source are dirty, thats 15 save operations
 	     */
-	    var counter = 0;
+	    var counter = 12;
 	    this._unsavedPages = [];
 
 	var tabs = [this.JavaEditorSubTab, this.databaseSubTab, this.webServiceSubTab, this.securitySubTab];
@@ -1653,6 +1835,7 @@ Studio.extend({
 		this.saveProjectClick();
 	},
 	projectSettingsClick: function(inSender) {
+	    debugger;
 		var d = this.preferencesDialog;
 		if (d) {
 			d.page.update();
@@ -1662,8 +1845,8 @@ Studio.extend({
 									modal: false,
 									owner: studio, 
 									hideControls: true, 
-									contentHeight: 250, 
-									contentWidth: 500});
+									height: "150px", 
+									width: "500px"});
 			d.onClose = function(inWhy) {
 			    /* Removal of projects tab
 				if (inWhy == "OK")
@@ -1783,12 +1966,14 @@ Studio.extend({
 		s.push("popup");
 	    if (studio.languageSelect.getDisplayValue() != "default")
 		s.push("dojo.locale=" + studio.languageSelect.getDisplayValue());
-	    if (studio.deviceTypeSelect.getDataValue().toLowerCase() == "mobile")
-		s.push("wmmobile=1");
 
-	var url = inUrl; //inUrl.match(/https?\:/) ? inUrl : 
+	    if (studio.currentDeviceType == "phone" ||
+		studio.currentDeviceType == "tablet") {
+		s.push("wmmobile=" + studio.currentDeviceType);
+	    }
+	
+	return (inUrl||"/" + studio.project.projectName)  + (s.length ? "/?" + s.join("&") : "");
 
-	    return url + (s.length ? "/?" + s.join("&") : "");
 	},
     getPreviewWindowOptions: function() {
 	var size = studio.deviceSizeSelect.getDataValue() || "";

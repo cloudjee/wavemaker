@@ -40,6 +40,7 @@ wm.Object.extendSchema(wm.Layer, {
     customCloseOrDestroy: {group:"custommethods",advanced:1},
 
     /* Ignored group */
+    wrapInPanel: {ignore:1},
     title: { ignore: 1 },
     disabled: { ignore: 1 },
     flex: {ignore: 1},
@@ -129,12 +130,13 @@ wm.Object.extendSchema(wm.Layers, {
 
     /* Display group; misc subgroup */
     defaultLayer: { group: "widgetName", subgroup: "selection", order: 105, doc: 1},
-    layersType:   { group: "widgetName", subgroup: "behavior", order: 110, options:["Layers", "RoundedTabs", "Tabs", "Accordion"] },
+    layersType:   { group: "widgetName", subgroup: "behavior", order: 110, options:["Layers", "Tabs", "Accordion", "Breadcrumb"] },
 
     /* Display group; layout subgroup */
     headerHeight: {ignore:1, group: "widgetName", subgroup: "layout", order: 50, editor: "wm.prop.SizeEditor", editorProps: {pxOnly: 1}},
     headerWidth: {ignore:1,  group: "widgetName", subgroup: "layout", order: 50, editor: "wm.prop.SizeEditor", editorProps: {pxOnly: 1}},
-    mobileHeaderHeight: {ignore:1, group: "widgetName", subgroup: "layout", order: 51, editor: "wm.prop.SizeEditor", editorProps: {pxOnly: 1}, advanced:1},
+    mobileHeaderHeight: {ignore:1, group: "widgetName", subgroup: "layout", order: 51, editor: "wm.prop.SizeEditor", editorProps: {pxOnly: 1}, advanced:1, hidden:1},
+    desktopHeaderHeight: {ignore:1, group: "widgetName", subgroup: "layout", order: 51, editor: "wm.prop.SizeEditor", editorProps: {pxOnly: 1}, advanced:1, hidden:1},
 
     /* Operations group */
     add: { group: "operation", order: 1, operation: 1 },
@@ -142,6 +144,9 @@ wm.Object.extendSchema(wm.Layers, {
     /* Styles group */
     clientBorder: {group: "widgetName", subgroup: "style", order: 1, shortname: "layerBorder"},
     clientBorderColor: {group: "widgetName", subgroup: "style", order: 2, shortname: "layerBorderColor", editor: "wm.ColorPicker"},
+
+    /* Mobile group */
+    isMobileFoldingParent: {group: "mobile", subgroup: "layerfolding",  order: 4, type: "boolean"},
 
     /* Events/custom methods group */
     oncanchange: {advanced:1, order: 100},
@@ -164,7 +169,6 @@ wm.Object.extendSchema(wm.Layers, {
         autoScroll: {ignore: 1}, // wm.Layer should have scrolling set, not the wm.Layers/TabLayers.  Accordion is an exception
     scrollX: {ignore: 1},
     scrollY: {ignore: 1},
-    touchScrolling: {ignore: 1},
     resizeToFit: {ignore:1},
 
 /* Methods group */
@@ -188,6 +192,38 @@ wm.Object.extendSchema(wm.Layers, {
 wm.Layers.extend({
     themeable: false,
 	_noCreate: true,
+    resetDesignHeight: function() {
+	this.inherited(arguments);
+	this.setHeaderHeight(studio.currentDeviceType != "desktop" ? this.mobileHeaderHeight || this.desktopHeaderHeight : this.desktopHeaderHeight);
+    },
+    set_isMobileFoldingParent: function(isParent) {
+	this.isMobileFoldingParent = Boolean(isParent);
+	var self = this;
+
+	/* There can be only one parent */
+	if (this.isMobileFoldingParent) {
+	    wm.forEachWidget(studio.page.root, function(w) {
+		if (w.isMobileFoldingParent && w != self) {
+		    w.isMobileFoldingParent = false;
+		}
+	    }, true);
+	}
+
+	if (studio.mobileFoldingToggleButton.clicked) {
+	    // redo mobile folding
+	    studio.designPhoneUI(false);
+	    studio.designMobileFolding(true);
+	}
+    },
+    set_headerHeight: function(inHeight) {
+	var isMobile = studio.currentDeviceType != "desktop";
+	if (isMobile)
+	    this.mobileHeaderHeight = inHeight;
+	else
+	    this.desktopHeaderHeight = inHeight;
+	this.userDefHeaderHeight = this.headerHeight;
+	this.setHeaderHeight(inHeight);
+    },
         afterPaletteDrop: function(){
 	    this.inherited(arguments);
 	    this.addLayer();
@@ -264,6 +300,7 @@ wm.Layers.extend({
 		var props = this.inherited(arguments);
 		props.headerHeight.ignoretmp = (this.layersType != 'Tabs' && this.layersType != 'RoundedTabs' && this.layersType != "Wizard" || this.verticalButtons);
 		props.headerWidth.ignoretmp = (this.layersType != 'Tabs' && this.layersType != 'RoundedTabs'  && this.layersType != "Wizard" || !this.verticalButtons);
+	        props.isMobileFoldingParent.ignoretmp = !studio.mobileFoldingToggleButton.clicked;
 		return props;
 	},
 	getOrderedWidgets: function() {
@@ -331,6 +368,8 @@ wm.Object.extendSchema(wm.TabLayers, {
     verticalButtons: {group: "widgetName", subgroup: "layout"},
     layoutKind: { writeonly: 1},
     headerHeight: {ignore: 0},
+    mobileHeaderHeight: {ignore: 0},
+    desktopHeaderHeight: {ignore: 0},
     headerWidth: {ignore: 0}
 });
 
@@ -338,6 +377,8 @@ wm.Object.extendSchema(wm.WizardLayers, {
     layoutKind: { writeonly: 1},
     headerHeight: {ignore: 0},
     headerWidth: {ignore: 0},
+    mobileHeaderHeight: {ignore: 0},
+    desktopHeaderHeight: {ignore: 0},
     verticalButtons: {group: "widgetName", subgroup: "layout"},
     bottomButtons: {group: "widgetName", subgroup: "layout"}
 });

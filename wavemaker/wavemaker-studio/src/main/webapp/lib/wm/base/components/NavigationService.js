@@ -231,3 +231,21 @@ dojo.declare("wm.NavigationService", wm.Service, {
 });
 
 wm.services.add({name: "navigationService", ctor: "wm.NavigationService", isClientService: true, clientHide: true});
+
+dojo.declare("wm.NavigationCall", [wm.Component, wm.ServiceCall], {
+	/** @lends wm.Variable.prototype */
+	service: "navigationService",
+	operation: "gotoLayer",
+	// page navigation can lead to destruction, so abort processing
+	processResult: function(inResult) {
+		if (!this.owner)
+			return;
+		return this.inherited(arguments);
+	},
+	processError: function(inError) {
+		if (!this.owner)
+			return;
+		return this.inherited(arguments);
+	}
+});
+

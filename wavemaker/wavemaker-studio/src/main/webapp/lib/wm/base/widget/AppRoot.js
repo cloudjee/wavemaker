@@ -57,14 +57,15 @@ dojo.declare("wm.AppRoot", wm.Container, {
 		this.setBounds(0,0,screen.width,screen.height);
 	    } else {
 	    */
+	    var pn;
 	    if (wm.isMobile) {
-		var pn = this.domNode.parentNode;
+		pn = this.domNode.parentNode;
 		pn.style.height = "100%";
-		this.setBounds(0, 0, pn.offsetWidth, pn.offsetHeight);
 	    } else {
-		var pn = this.domNode.parentNode;
-		this.setBounds(0, 0, pn.offsetWidth, pn.offsetHeight);
+		pn = this.domNode.parentNode;
 	    }
+	    this.setBounds(0, 0, pn.offsetWidth, pn.offsetHeight);
+
 	},
 	reflow: function() {
 		if (this._cupdating)

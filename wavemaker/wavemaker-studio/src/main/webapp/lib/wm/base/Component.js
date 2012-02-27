@@ -132,6 +132,7 @@ dojo.declare("wm.Component", wm.Object, {
 	},
 
 	create: function(inProps){
+	        this._initializing = true;
 		if (wm.debugPerformance) this.startTimerWithName("create",this.declaredClass);
 		this.prepare(inProps);
 	    //this.startTimerWithName("build",this.declaredClass);
@@ -144,7 +145,8 @@ dojo.declare("wm.Component", wm.Object, {
 			wm.fire(this, "designCreate");
 		
 		if (!this._loading) {
-			this.postInit();
+		    this.postInit();
+	            delete this._initializing;
 		}
 		
 	        if (!this._temporaryComponent) 
@@ -204,6 +206,14 @@ dojo.declare("wm.Component", wm.Object, {
 	init: function() {
 	    if (this.isDesignLoaded())
 		this._isDesignLoaded = true;
+
+	    if (this.manageURL) {
+		var connectTo = app ? app : this.getRoot();
+		if (wm.Application && connectTo instanceof wm.Application) {
+		    this.connect(connectTo, "_generateStateUrl", this, "generateStateUrl");
+		}
+	    }
+
 	},
 	postInit: function() {
 		this.valueChanged("", this);
@@ -211,6 +221,7 @@ dojo.declare("wm.Component", wm.Object, {
 	loaded: function() {
 		  this._loading = false;
 		  this.postInit();
+	          delete this._initializing;
 	},
 	toString: function(inText) {
 	    var t = inText || "";
@@ -526,7 +537,7 @@ dojo.declare("wm.Component", wm.Object, {
 	var c = dojo.connect(sourceObj, sourceMethod, targetObj, function() {
 	    dojo.disconnect(c);
 	    wm.Array.removeElement(connections, c);
-	    dojo.hitch(this, targetMethod)();
+	    dojo.hitch(this, targetMethod)(arguments);
 	});
 	connections.push(c);
 	return c;

@@ -19,7 +19,8 @@ dojo.require("wm.base.widget.Layers.TabsDecorator");
 dojo.require("wm.base.widget.Layers.AccordionDecorator");
 
 dojo.declare("wm.Layer", wm.Container, {
-	height: "100%",
+    manageURL: false,
+    height: "100%",
 	width: "100%",
 	caption: "",
 	layoutKind: "top-to-bottom",
@@ -162,10 +163,27 @@ dojo.declare("wm.Layer", wm.Container, {
 	   this.destroyable = isClosable;
 	   this.decorator.applyLayerCaption(this);
        },
+    handleBack: function(inOptions) {
+	if (this.active)
+	    return false;
+
+	this.activate();
+	return true;
+    },
+    restoreFromLocationHash: function(inValue) {
+	this.activate();
+    },
+    generateStateUrl: function(stateObj) {
+	if (this.active && !this._mobileFoldingGenerated)
+	    stateObj[this.getRuntimeId()] = 1;
+    },
     onTabDrop: function() {}
 });
 
 dojo.declare("wm.Layers", wm.Container, {    
+        manageHistory: true,
+        manageURL: false,
+        isMobileFoldingParent: false,
         transition: "none",
         clientBorder: "",
         clientBorderColor: "",
@@ -199,7 +217,19 @@ dojo.declare("wm.Layers", wm.Container, {
 		this.setLayersType(this.layersType);
 	},
 	init: function() {
-	    if (wm.isMobile) this.headerHeight = this.mobileHeaderHeight;
+	    var isMobile = wm.isMobile || this._isDesignLoaded && studio.currentDeviceType != "desktop";
+	    if (!isMobile) {
+		if (this.desktopHeaderHeight != null) {
+		    this.headerHeight = this.desktopHeaderHeight;
+		} else if (this.headerHeight) {
+		this.desktopHeaderHeight = this.headerHeight;
+	    }
+	} else {
+	    if (this.mobileHeaderHeight) {
+		this.headerHeight = this.mobileHeaderHeight;
+	    } 
+	}
+
 	    this.userDefHeaderHeight = this.headerHeight;
 	    if (!this.isRelativePositioned)
 		dojo.addClass(this.domNode, "wmlayers");
@@ -234,6 +264,9 @@ dojo.declare("wm.Layers", wm.Container, {
 		// fire onshow when loaded
 		if (wm.widgetIsShowing(this))
 			this._fireLayerOnShow();
+	    if (this.manageURL && this.owner.locationState) {		
+		this.restoreFromLocationHash(this.owner.locationState[this.getRuntimeId()]);
+	    }
 	},
 /*
 	getPreferredFitToContentHeight: function() {
@@ -485,9 +518,12 @@ dojo.declare("wm.Layers", wm.Container, {
 	        oldLayer && oldLayer.onDeactivate();
 	    }
 	    if (fireEvents && this.lastLayerIndex != this.layerIndex) this.onchange(this.layerIndex);
+	    if (!this._initialization && oldLayer &&  !this._isDesignLoaded && this.manageHistory) {
+		app.addHistory({id: oldLayer.getRuntimeId(),
+			       options: {},
+				title: "Show " + l.caption});
+	    }
 	},
-	
-
 	_setLayerIndex: function(inIndex) {
 	    this.lastLayerIndex = this.layerIndex;
 	    this.layerIndex = inIndex;
@@ -637,7 +673,7 @@ dojo.declare("wm.Layers", wm.Container, {
 	headerHeight: "27px",
         mobileHeaderHeight: "37px",
 	setHeaderHeight: function(inHeight) {
-	    if (this.layersType != 'Tabs' && this.layersType != "RoundedTabs" && this.layersType != "Wizard")
+	    if (this.layersType != 'Tabs' && this.layersType != "RoundedTabs" && this.layersType != "Wizard" && this.layersType != "Breadcrumb")
 			return;
 		this.headerHeight = inHeight;
 		this.decorator && this.decorator.tabsControl && this.decorator.tabsControl.setHeight(inHeight);
@@ -646,10 +682,6 @@ dojo.declare("wm.Layers", wm.Container, {
 		this.renderBounds();
 
 	},
-    set_headerHeight: function(inHeight) {
-	        this.userDefHeaderHeight = this.headerHeight;
-	this.setHeaderHeight(inHeight);
-    },
         renderBounds: function() {
 	    this.inherited(arguments);
 	    if (this.layersType != 'Tabs' && this.layersType != "RoundedTabs")
@@ -665,6 +697,7 @@ dojo.declare("wm.Layers", wm.Container, {
 		this._lastTabHeight = dojo.marginBox(this.decorator.tabsControl.domNode).h;
 	    this.decorator.tabsControl.domNode.style.height = 'auto';
 	    wm.job(this.getRuntimeId() + ":updateHeaderHeight", 1, dojo.hitch(this, function() {
+		if (this.isDestroyed) return;
 		try {
 		    var newHeight = this.decorator.tabsControl.updateHeaderHeight();
 		    if (newHeight != this._lastTabHeight){
@@ -695,7 +728,21 @@ dojo.declare("wm.Layers", wm.Container, {
             var minWidth = 80;
             if (this.layersType.match(/tabs/i)) minWidth += 120; // need horiz space for tabs
             return minWidth;
-        }
+        },
+    restoreFromLocationHash: function(inValue) {
+	var value = inValue;
+	if (value !== undefined) {
+	    var w = this.manageHistory;
+	    this.manageHistory = false;
+	    var index = Number(inValue);
+	    this.setLayerIndex(inValue);
+	    this.manageHistory = w;
+	}
+    },
+    generateStateUrl: function(stateObj) {
+	if (this.getActiveLayer() && this.layerIndex != this.defaultLayer && !this.getActiveLayer()._mobileFoldingGenerated && !this._isDesignLoaded)
+	    stateObj[this.getRuntimeId()] = this.layerIndex;
+    }
 });
 
 
@@ -707,10 +754,12 @@ dojo.declare("wm.TabLayers", wm.Layers, {
        conditionalTabButtons: false,
        verticalButtons: false,
         headerWidth: "50px",
+/*
         setHeaderHeight: function(inHeight) {
 	    this.headerHeight = inHeight;
 	    this.c$[0].setHeight(inHeight);
 	},
+	*/
     addLayer: function(inCaption, doNotSelect) {
 	    var result = this.inherited(arguments);
 	    if (!this._cupdating && !this.owner._loadingPage)
@@ -740,103 +789,6 @@ dojo.declare("wm.TabLayers", wm.Layers, {
 	   }		*/
 });
 
-dojo.declare("wm.AccordionLayers", wm.Layers, {
-    multiActive: false,
-    themeStyleType: "ContentPanel",
-    layersType: 'Accordion',
-    layerBorder: 1,
-    captionHeight: 26, // used by decorator
-    dndTargetName: "",
-    postInit: function() {
-        this.inherited(arguments);
-        this.setLayerBorder(this.layerBorder);
-    },
-    setCaptionHeight: function(inHeight) {
-	this.captionHeight = inHeight;
-        for (var i = 0; i < this.layers.length; i++) {
-	    this.layers[i].header.setHeight(inHeight + "px");
-	}
-	
-    },
-    setBorderColor: function(inColor) {
-	this.inherited(arguments);
-        for (var i = 0; i < this.layers.length; i++) {
-	    this.layers[i].setBorderColor(this.borderColor);
-	}
-    },
-    setLayerBorder: function(inBorder) {
-        this.layerBorder = inBorder;
-        for (var i = 0; i < this.layers.length; i++) {
-            this.layers[i].setBorder(this.layerBorder);
-	    this.layers[i].setBorderColor(this.borderColor);
-	}
-    },
-    addLayer: function(inCaption, doNotSelect) {
-        var result = this.inherited(arguments);
-        result.setBorder(this.layerBorder);
-        result.setBorderColor(this.layerBorderColor);
-	return result;
-    }
-});
-
-
-/************************************************************************
- * FEATURES:
- * 1. Next/previous button built in to get user to next/previous step of wizard (or next/previous card)
- * 2. Turns tabs into breadcrumbs
- * 3. Manages state and clickability of each breadcrumb
- * 4. Manages carriage return, maps it to Next button.
- * 5. Autofocus on any invalid or missing required field and refuses to go to next step
- * 6. Autofocus on first editor after going to next step
- * 7. Introduces animated layer transitions
- * 8. The entire wizard comes with two events that fire if the user backs out of the wizard, or hits next after the wizard is complete (onCancelClick, onDoneClick)
- * 9. Added the ability to auto focus on a widget that fails validation or is required.
- * 10. Added animated transitions
- * 11. Custom validators per layer
- */
-dojo.declare("wm.WizardLayers", wm.Layers, {
-    themeStyleType: "ContentPanel",
-    layersType: 'Wizard',
-    transition: "fade",
-    headerWidth: "50px",
-    verticalButtons: false,
-    bottomButtons: "",
-    hasButtonBar: true,
-    //useDesignBorder: 0,
-    init: function() {
-	this.generateBottomButtonEvents();
-
-	this.inherited(arguments);
-	this.decorator.addFooter();
-	this.connect(this.domNode, "keydown", this, "keydown");
-    },
-    generateBottomButtonEvents: function() {
-	var bottomButtons = this.bottomButtons ? this.bottomButtons.split(/\s*,\s*/) : [];
-	for (var i = 0; i < bottomButtons.length; i++) {
-	    this["onBottom" + i + "Button"] = function() {}; // gives event handler something to connect to
-	}
-    },
-    keydown: function(e) {
-	var keyCode = e.keyCode;
-	if (e.keyCode == dojo.keys.ENTER || e.keyCode == dojo.keys.NUMPAD_ENTER) {
-	    this.decorator.nextClick();
-	    dojo.stopEvent(e);
-	    return false;
-	}
-	return true;
-    },
-    onCancelClick: function() {
-
-    },
-    onDoneClick: function() {
-
-    },
-    /* This should really be an event of wm.Layer, but we should first discuss whether we want form
-     * validation to be build into wm.Layer */
-    onLayerValidation: function(inLayer, outResult) {
-
-    }
-});
 
 
 dojo.declare("wm.BreadcrumbLayers", wm.Layers, {

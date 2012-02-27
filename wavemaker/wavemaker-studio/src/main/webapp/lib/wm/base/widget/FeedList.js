@@ -29,7 +29,14 @@ dojo.declare("wm.FeedList", wm.List, {
 	ondeselect: null,
         classNames: 'wmfeedlist',
 	init: function() {
-		this.inherited(arguments);
+	    this.inherited(arguments);
+	    if (!dojo.byId("feedcss")) {
+		var link = document.createElement("link");
+		link.rel = "stylesheet";
+		link.href = dojo.moduleUrl("wm.base.widget.themes.default").path + "feedlist.css";
+		link.id = "feedcss";
+		document.getElementsByTagName("head")[0].appendChild(link);
+	    }
 	},
     postInit: function() {
 	this.inherited(arguments);

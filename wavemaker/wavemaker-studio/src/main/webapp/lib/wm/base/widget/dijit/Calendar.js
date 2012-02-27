@@ -41,6 +41,8 @@ dojo.declare("wm.dijit.Calendar", wm.Dijit, {
 	dijitClass: dijit.Calendar,
 	width: "360px",
 	height: "160px",
+    mobileHeight: "210px",
+        enableTouchHeight: true,
         dialog: null,
         useDialog: true,
     // inDates is expected to be an array; but we'll need to turn it into a hash

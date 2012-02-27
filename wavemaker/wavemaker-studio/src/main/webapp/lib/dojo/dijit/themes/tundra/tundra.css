@@ -16,11 +16,13 @@
 @import url("../dijit.css");
 @import url("../../icons/commonIcons.css");/*sprite containing common icons to be used by all themes*/
 @import url("Common.css");
-@import url("layout/ContentPane.css");
-@import url("layout/TabContainer.css");
-@import url("layout/AccordionContainer.css");
-@import url("layout/SplitContainer.css");
-@import url("layout/BorderContainer.css");
+/*
+@ import url("layout/ContentPane.css");
+@ import url("layout/TabContainer.css");
+@ import url("layout/AccordionContainer.css");
+@ import url("layout/SplitContainer.css");
+@ import url("layout/BorderContainer.css");
+*/
 @import url("form/Common.css");
 @import url("form/Button.css");
 @import url("form/Checkbox.css");
@@ -29,11 +31,13 @@
 @import url("form/Select.css");
 @import url("Tree.css");
 @import url("ProgressBar.css");
-@import url("TitlePane.css");
+/*
+@ import url("TitlePane.css");
+*/
 @import url("Calendar.css");
 @import url("TimePicker.css");
 @import url("Toolbar.css");
-@import url("Dialog.css");
+/* @ import url("Dialog.css"); */
 @import url("Menu.css");
 @import url("Editor.css");
 @import url("../../icons/editorIcons.css"); /* sprite for editor icons to be used by all themes */
@@ -45,8 +49,11 @@
 @import url("../../../dojox/grid/resources/tundraGrid.css");
 @import url("../../../dojox/grid/resources/Grid.css");
 @import url("../../../dojox/widget/FisheyeList/FisheyeList.css"); /* not much used, but its small */
-/*@import url("../../../../wm/base/widget/themes/default/theme.css"); dojo's build won't load outside of dojo*/
-/*@import url("../../../../wm/base/css/wavemaker.css"); dojo's build won't load outside of dojo*/
-/*@import url("../../../../wm/base/css/progressBar.css"); dojo's build won't load outside of dojo*/
-/*@import url("../../../dojox/layout/resources/GridContainer.css"); removed as wm.Dashboard not common */
-/*@import url("../../../dojox/widget/Portlet/Portlet.css");  removed as wm.Dashboard not common */
+/*@ import url("../../../../wm/base/widget/themes/default/theme.css"); dojo's build won't load outside of dojo*/
+/*@ import url("../../../../wm/base/css/wavemaker.css"); dojo's build won't load outside of dojo*/
+/*@ import url("../../../../wm/base/css/progressBar.css"); dojo's build won't load outside of dojo*/
+/*@ import url("../../../dojox/layout/resources/GridContainer.css"); removed as wm.Dashboard not common */
+/*@ import url("../../../dojox/widget/Portlet/Portlet.css");  removed as wm.Dashboard not common */
+
+@import url("../../../../../../wm/base/widget/themes/default/theme.css");
+@import url("../../../../../../wm/base/styles/wavemaker.css");

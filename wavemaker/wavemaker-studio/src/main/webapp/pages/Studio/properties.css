@@ -109,6 +109,20 @@ body #studio_PIContents #studio_togglePropertiesButton2 {
     text-align: center;
 }
 
+.tundra .studio_EventPicker_CSS .dijitMenuItemIcon {
+    width:0px;
+}
+.studio_EventPicker_CSS .dijitMenuItemLabel {
+    width: 100%;
+}
+.wm_studio .studio_EventPicker_CSS.dijitMenu .dijitMenuArrowCell img.dijitMenuExpand,
+.wm_studio .studio_EventPicker_PopupMenu .dijitMenuArrowCell img.dijitMenuExpand {
+    background-image: url(../../lib/wm/base/widget/themes/wm_default/images/arrowRightDark.png) !important;
+}
+.wm_studio .studio_EventPicker_CSS.dijitMenu .dijitMenuItemHover .dijitMenuArrowCell img.dijitMenuExpand,
+.wm_studio .studio_EventPicker_PopupMenu.dijitMenu .dijitMenuItemHover .dijitMenuArrowCell img.dijitMenuExpand {
+    background-image: url(../../lib/wm/base/widget/themes/wm_default/images/arrowRightLight.png) !important;
+}
 /*
 
 .Studio-inspected {

@@ -1665,7 +1665,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	currencyFormatter: function(formatterProps, backgroundColorFunc, textColorFunc,cssClassFunc,inValue, rowIdx, cellObj){
 	    this.handleColorFuncs(cellObj,backgroundColorFunc, textColorFunc,cssClassFunc, rowIdx);
 	    return dojo.currency.format(inValue, {
-		currency: formatterProps.currency || (this._isDesignLoaded ? studio.application.currencyLocale : app.currencyLocale) || wm.getLocaleCurrency(),
+		currency: formatterProps.currency || (this._isDesignLoaded ? studio.application.currencyLocale : app.currencyLocale) || "USD",
 		places: formatterProps.dijits,
 		round: formatterProps.round ? 0 : -1
 	    });

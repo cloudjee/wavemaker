@@ -1,0 +1,46 @@
+/**/
+
+.wmfeedlist {
+}
+
+.wmfeedlist-list {
+	overflow: auto;
+	/* cheat to hide IE scrollbar */
+	overflow-x: hidden;
+	padding-top: 0.5em;
+}
+
+.wmfeedlist-header {
+	padding-top: 0.5em;
+	padding-left: 0.5em;
+	background: url(images/list_header_bg.gif);
+	border-bottom: 1px solid #939fb6;
+	font-size: 105%;
+	font-weight: bold;
+}
+
+.wmfeedlist-header, .wmfeedlist-header table {
+	height: 1.5em;
+}
+
+.wmfeedlist-row {
+	vertical-align: top;
+	height: 2.0em;
+}
+
+.wmfeedlist-row img {
+	vertical-align: middle;
+}
+
+.wmfeedlist-row a {
+	vertical-align: middle;
+	margin-left: 4px;
+}
+
+.wmfeedlist-row-desc {
+	margin: 5px 2px 6px 4px;
+	color: #888888;
+}
+.wmtwitterlist .feedlistexpander {
+    display: none;
+}

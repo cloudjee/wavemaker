@@ -19,7 +19,7 @@ dojo.require("wm.base.widget.DojoMenu");
 // design only...
 wm.Object.extendSchema(wm.DojoMenu, {
     /* Display group; text subgroup */
-    editMenuItems: {group: "widgetName", subgroup: "text", operation: 1, requiredGroup: 1},
+    editMenuItems: {group: "widgetName", subgroup: "text", operation: 1, requiredGroup: 1, contextMenu: 1},
 
     /* Display group; layout subgroup */
     vertical: {group: "widgetName", subgroup: "display"},

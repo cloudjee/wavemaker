@@ -74,6 +74,7 @@ wm.Object.extendSchema(wm.Lookup, {
     maxResults: {group: "editor", subgroup: "behavior", order: 100},
 
     /* Ignored group */
+    indentField: {hidden: 1}, // users can use it but its not designed to be meaningful for them
     relationshipName: {hidden:1},
     ignoreCase: {ignore: 1},
     options: {ignore: 1},
