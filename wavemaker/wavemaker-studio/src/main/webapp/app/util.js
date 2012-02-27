@@ -132,7 +132,7 @@ wm.openUrl = function(inUrl, inTitle, inWindowName, inWindowOptions) {
         if (dojo.isChrome) {
 	    wm.job(inWindowName, 3000, function() {
 		if (w.closed) return;
-		if (w.document.body && w.outerWidth == 0)
+		if (w.document && w.document.body && w.outerWidth == 0)
 		    wm.openUrlDialog(inUrl,inTitle,inWindowName+1);
 	    });
 	} else if (!w) {
@@ -154,11 +154,13 @@ wm.openUrlDialog = function(inUrl, inTitle, inWindowName) {
 	new wm.Label({parent: container,
 		      width: "100%",
 		      height: "100%",
+		      owner: d,
 		      caption: studio.getDictionaryItem("POPUP_BLOCKER_MESSAGE"), 
 		      singleLine: false,
 		      align: "center"});
 	new wm.Label({
 	    parent: container,
+	    owner: d,
 	    caption: studio.getDictionaryItem("POPUP_BLOCKER_LAUNCH_CAPTION"),
 	    width: "100%",
 	    align: "center"

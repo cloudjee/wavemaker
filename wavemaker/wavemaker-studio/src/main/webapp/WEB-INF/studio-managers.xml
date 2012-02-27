@@ -27,6 +27,9 @@
         <property name="designServiceManager">
             <ref bean="designServiceManager" />
         </property>
+		<property name="fileSystem">
+            <ref bean="fileSystem" />
+        </property>
     </bean>
 
     <bean name="studio-typeManager" id="typeManager"
@@ -508,6 +511,8 @@
             </bean>
         </property>
     </bean>
+
+	<bean class="com.wavemaker.runtime.data.cloudfoundry.CloudFoundryDataServiceBeanFactoryPostProcessor"/>
 
     <beans profile="default">
     

@@ -21,6 +21,7 @@ import org.springframework.util.StringUtils;
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.CommonResourceFilter;
 import com.wavemaker.common.util.FileAccessException;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.tools.config.ConfigurationStore;
@@ -45,7 +46,7 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
     /**
      * WaveMaker demo directory override, used for testing. NEVER set this in production.
      */
-    private File testDemoDir = null;
+    private File testDemoDir = null;         
 
     /**
      * WaveMaker home override, used for testing. NEVER set this in production.
@@ -179,6 +180,32 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
         }
         return children;
 
+    }
+
+    @Override
+    public List<Resource> listAllChildren(Resource resource, CommonResourceFilter filter) {
+        List<Resource> children = new ArrayList<Resource>();
+        File[] files;
+        try {
+            files = resource.getFile().listFiles();
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        }
+        if (files == null) {
+            return children;
+        }
+        for (File file : files) {
+            Resource fileResource = createResource(file.getAbsolutePath() + "/");
+            if (file.isDirectory()) {
+                List<Resource> rscs = listAllChildren(fileResource, filter);
+                children.addAll(rscs);
+            } else {
+                if (filter == null || filter.accept(fileResource)) {
+                    children.add(fileResource);
+                }
+            }
+        }
+        return children;
     }
 
     @Override

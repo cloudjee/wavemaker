@@ -32,8 +32,8 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
+import org.springframework.util.AntPathMatcher;
 
 import com.wavemaker.common.MessageResource;
 
@@ -209,7 +209,7 @@ public abstract class IOUtils {
 
     /**
      * Copy from: file to file, directory to directory, file to directory.
-     * 
+     *
      * @param source File object representing a file or directory to copy from.
      * @param destination File object representing the target; can only represent a file if the source is a file.
      * @param excludes A list of exclusion filenames.

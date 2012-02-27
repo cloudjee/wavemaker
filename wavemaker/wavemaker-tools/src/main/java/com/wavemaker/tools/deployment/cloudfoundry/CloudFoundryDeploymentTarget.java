@@ -4,12 +4,12 @@ package com.wavemaker.tools.deployment.cloudfoundry;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipFile;
+
+import javax.servlet.http.Cookie;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,9 +23,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.util.WebUtils;
 
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
+import com.wavemaker.tools.cloudfoundry.CloudFoundryUtils;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.AuthenticationToken;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecret;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.SharedSecretPropagation;
+import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportToken;
 import com.wavemaker.tools.data.BaseDataModelSetup;
 import com.wavemaker.tools.data.DataModelConfiguration;
 import com.wavemaker.tools.data.DataModelManager;
@@ -41,6 +50,8 @@ import com.wavemaker.tools.project.CloudFoundryDeploymentManager;
 import com.wavemaker.tools.project.Project;
 
 public class CloudFoundryDeploymentTarget implements DeploymentTarget {
+
+    private static final String CLOUD_CONTROLLER_VARIABLE_NAME = "cloudcontroller";
 
     public static final String SUCCESS_RESULT = "SUCCESS";
 
@@ -74,6 +85,8 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
 
     private WebAppAssembler webAppAssembler;
 
+    private final SharedSecretPropagation propagation = new SharedSecretPropagation();
+
     static {
         Map<String, String> props = new LinkedHashMap<String, String>();
         props.put(VMC_USERNAME_PROPERTY, "username@mydomain.com");
@@ -93,7 +106,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     @Override
     public void validateDeployment(DeploymentInfo deploymentInfo) throws DeploymentStatusException {
         CloudFoundryClient client = getClient(deploymentInfo);
-        uploadProject(client, deploymentInfo);
+        createApplication(client, deploymentInfo, true);
     }
 
     @Deprecated
@@ -118,28 +131,29 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
     /**
      * Initiate the test/run operation for the given project on the cloud foundry instance that is running studio. This
      * method is not part of the {@link DeploymentTarget} interface but is called directly from
-     * {@link CloudFoundryDeploymentManager#testRunClean()} in order to reuse CloudFoundry deployment code.
+     * {@link CloudFoundryDeploymentManager#testRunStart()} in order to reuse CloudFoundry deployment code.
      * 
      * @param project
+     * @return
      */
-    public void testRunStartFromSelf(Project project) {
+    public String testRunStart(Project project) {
         try {
             ApplicationArchive applicationArchive = this.webAppAssembler.assemble(project);
             applicationArchive = modifyApplicationArchive(applicationArchive);
-            doDeploy(applicationArchive, getSelfDeploymentInfo(project));
+            return doDeploy(applicationArchive, getSelfDeploymentInfo(project), false);
         } catch (DeploymentStatusException e) {
             throw new WMRuntimeException(e.getMessage(), e);
         }
     }
 
     /**
-     * undeploy the given project from the cloud foundry instance that is running studio.. This method is not part of
-     * the {@link DeploymentTarget} interface but is called directly from {@link CloudFoundryDeploymentManager} in order
-     * to reuse CloudFoundry deployment code.
+     * undeploy the given project from the cloud foundry instance that is running studio. This method is not part of the
+     * {@link DeploymentTarget} interface but is called directly from {@link CloudFoundryDeploymentManager} in order to
+     * reuse CloudFoundry deployment code.
      * 
      * @param project
      */
-    public void undeployFromSelf(Project project) {
+    public void undeploy(Project project) {
         try {
             undeploy(getSelfDeploymentInfo(project), false);
         } catch (DeploymentStatusException e) {
@@ -149,16 +163,55 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
 
     private DeploymentInfo getSelfDeploymentInfo(Project project) {
         try {
+            String cloudControllerUrl = getControllerUrl();
+            AuthenticationToken token = getAuthenticationToken();
+            if (token == null) {
+                // FIXME remove hard coded details
+                String email = "wavemaker@vmware.com";
+                String password = "password";
+                CloudFoundryClient cloudFoundryClient = new CloudFoundryClient(email, password, cloudControllerUrl);
+                token = new AuthenticationToken(cloudFoundryClient.login());
+            }
             DeploymentInfo deploymentInfo = new DeploymentInfo();
-            CloudFoundryClient cloudFoundryClient = new CloudFoundryClient("xxx", "xxx", "http://xxx.cloudfoundry.me");
-            String token = cloudFoundryClient.login();
-            deploymentInfo.setToken(token);
+            deploymentInfo.setToken(token.toString());
             deploymentInfo.setApplicationName("deployedproject");
-            deploymentInfo.setTarget("http://xxx.cloudfoundry.me");
+            deploymentInfo.setTarget(cloudControllerUrl);
             return deploymentInfo;
         } catch (Exception e) {
             throw new WMRuntimeException(e);
         }
+    }
+
+    private AuthenticationToken getAuthenticationToken() {
+        RuntimeAccess runtimeAccess = RuntimeAccess.getInstance();
+        if (runtimeAccess == null) {
+            return null;
+        }
+        Cookie cookie = WebUtils.getCookie(runtimeAccess.getRequest(), "wavemaker_authentication_token");
+        if (cookie == null || !StringUtils.hasLength(cookie.getValue())) {
+            return null;
+        }
+        SharedSecret sharedSecret = this.propagation.getForSelf(false);
+        if (sharedSecret == null) {
+            return null;
+        }
+        AuthenticationToken authenticationToken = sharedSecret.decrypt(TransportToken.decode(cookie.getValue()));
+        return authenticationToken;
+    }
+
+    /**
+     * @return The actual controller URL to use.
+     */
+    private String getControllerUrl() {
+        String systemEnv = System.getenv(CLOUD_CONTROLLER_VARIABLE_NAME);
+        if (StringUtils.hasLength(systemEnv)) {
+            return systemEnv;
+        }
+        systemEnv = System.getProperty(CLOUD_CONTROLLER_VARIABLE_NAME);
+        if (StringUtils.hasLength(systemEnv)) {
+            return systemEnv;
+        }
+        return "http://api.cloudfoundry.com";
     }
 
     private ApplicationArchive modifyApplicationArchive(ApplicationArchive applicationArchive) {
@@ -166,55 +219,86 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         return new ModifiedContentApplicationArchive(applicationArchive, modifier);
     }
 
-    private void doDeploy(ApplicationArchive applicationArchive, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
-        CloudFoundryClient client = getClient(deploymentInfo);
-        uploadProject(client, deploymentInfo);
-        setupServices(client, deploymentInfo);
+    private void uploadAppliation(CloudFoundryClient client, String appName, ApplicationArchive applicationArchive) throws DeploymentStatusException {
         Timer timer = new Timer();
         try {
-            client.uploadApplication(deploymentInfo.getApplicationName(), applicationArchive, new LoggingStatusCallback(timer));
+            client.uploadApplication(appName, applicationArchive, new LoggingStatusCallback(timer));
+            log.info("Application upload completed in " + timer.stop() + "ms");
+        } catch (HttpServerErrorException e) {
+            throw new DeploymentStatusException("ERROR in upload application: " + e.getLocalizedMessage(), e);
         } catch (IOException ex) {
             throw new WMRuntimeException("Error ocurred while trying to upload WAR file.", ex);
         }
+    }
 
-        log.info("Application upload completed in " + timer.stop() + "ms");
+    private String doDeploy(ApplicationArchive applicationArchive, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
+        return doDeploy(applicationArchive, deploymentInfo, true);
+    }
 
+    private String doDeploy(ApplicationArchive applicationArchive, DeploymentInfo deploymentInfo, boolean checkExist)
+        throws DeploymentStatusException {
         try {
-            CloudApplication application = client.getApplication(deploymentInfo.getApplicationName());
-            if (application.getState().equals(CloudApplication.AppState.STARTED)) {
-                doRestart(deploymentInfo, client);
-            } else {
-                doStart(deploymentInfo, client);
+            CloudFoundryClient client = getClient(deploymentInfo);
+            String url = createApplication(client, deploymentInfo, checkExist);
+            setupServices(client, deploymentInfo);
+            uploadAppliation(client, deploymentInfo.getApplicationName(), applicationArchive);
+            try {
+                CloudApplication application = client.getApplication(deploymentInfo.getApplicationName());
+                if (application.getState().equals(CloudApplication.AppState.STARTED)) {
+                    doRestart(deploymentInfo, client);
+                } else {
+                    doStart(deploymentInfo, client);
+                }
+            } catch (CloudFoundryException ex) {
+                throw new DeploymentStatusException("ERROR: Could not start application. " + ex.getDescription(), ex);
             }
-        } catch (CloudFoundryException ex) {
-            throw new DeploymentStatusException("ERROR: Could not start application. " + ex.getDescription(), ex);
+            return url;
+        } catch (HttpServerErrorException e) {
+            throw new DeploymentStatusException("ERROR: Clould not deploy application due to remote exception\n" + e.getMessage() + "\n\n"
+                + e.getStatusText());
         }
     }
 
-    private void uploadProject(CloudFoundryClient client, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
-        List<String> uris = getUris(deploymentInfo);
+    private Boolean appNameInUse(CloudFoundryClient client, String appName) {
         try {
-            client.createApplication(deploymentInfo.getApplicationName(), CloudApplication.SPRING,
-                client.getDefaultApplicationMemory(CloudApplication.SPRING), uris, null, true);
+            if (client.getApplication(appName) != null) {
+                log.info("ApplicatonName: " + appName + " is already in use");
+                return true;
+            } else {
+                log.info("ApplicatonName with name: " + appName + "was NOT found");
+                return false;
+            }
+        } catch (HttpClientErrorException e) {
+            log.info("Failed to find aplicatonName with name: " + appName + ". Response was: " + e.getLocalizedMessage());
+            if (e.getStatusCode() != HttpStatus.NOT_FOUND) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    private String createApplication(CloudFoundryClient client, DeploymentInfo deploymentInfo, boolean checkExist) throws DeploymentStatusException {
+        String url = getUrl(deploymentInfo);
+        String appName = deploymentInfo.getApplicationName();
+        Integer memory = client.getDefaultApplicationMemory(CloudApplication.SPRING);
+        if (checkExist && appNameInUse(client, appName)) {
+            throw new DeploymentStatusException("ERROR: Application name already in use. Choose another name");
+        }
+        try {
+            client.createApplication(appName, CloudApplication.SPRING, memory, Collections.singletonList(url), null, true);
+            return url;
         } catch (CloudFoundryException e) {
-            if (HttpStatus.FORBIDDEN == e.getStatusCode()) {
-                throw new DeploymentStatusException(TOKEN_EXPIRED_RESULT, e);
-            } else if (HttpStatus.BAD_REQUEST == e.getStatusCode()) {
-                throw new DeploymentStatusException("ERROR: " + e.getDescription(), e);
-            } else {
-                throw e;
-            }
+            throw new DeploymentStatusException("ERROR in createApplication: " + e.getDescription(), e);
         }
     }
 
-    private List<String> getUris(DeploymentInfo deploymentInfo) {
-        List<String> uris = new ArrayList<String>();
+    private String getUrl(DeploymentInfo deploymentInfo) {
         String url = deploymentInfo.getTarget();
         if (!StringUtils.hasText(url)) {
             url = DEFAULT_URL;
         }
-        uris.add(url.replace("api", deploymentInfo.getApplicationName()));
-        return uris;
+        return url.replace("api", deploymentInfo.getApplicationName());
     }
 
     /**
@@ -325,7 +409,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         log.info("Restarting application " + deploymentInfo.getApplicationName());
         Timer timer = new Timer();
         timer.start();
-        client.restartApplication(deploymentInfo.getApplicationName());
+        CloudFoundryUtils.restartApplicationAndWaitUntilRunning(client, deploymentInfo.getApplicationName());
         log.info("Application " + deploymentInfo.getApplicationName() + " restarted successfully in " + timer.stop() + "ms");
     }
 
@@ -333,7 +417,7 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         log.info("Starting application " + deploymentInfo.getApplicationName());
         Timer timer = new Timer();
         timer.start();
-        client.startApplication(deploymentInfo.getApplicationName());
+        CloudFoundryUtils.startApplicationAndWaitUntilRunning(client, deploymentInfo.getApplicationName());
         log.info("Application " + deploymentInfo.getApplicationName() + " started successfully in " + timer.stop() + "ms");
     }
 

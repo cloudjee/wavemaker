@@ -62,6 +62,7 @@ import com.wavemaker.tools.data.parser.HbmWriter;
 import com.wavemaker.tools.data.spring.SpringService;
 import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.ProjectManager;
+import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.AbstractFileService;
 import com.wavemaker.tools.service.ClassLoaderFactory;
 import com.wavemaker.tools.service.CompileService;
@@ -71,6 +72,7 @@ import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.FileService;
 import com.wavemaker.tools.service.codegen.ServiceDataObjectGenerator;
 import com.wavemaker.tools.service.definitions.Service;
+import com.wavemaker.tools.compiler.ProjectCompiler;
 
 /**
  * Manages a single Hibernate Data Model.
@@ -95,9 +97,6 @@ public class DataModelConfiguration {
 
     // used for reading and writing files
     private final FileService fileService;
-
-    // used for compiling entity types
-    private final CompileService compileService;
 
     // for initializing Hibernate
     private final ClassLoaderFactory classLoaderFactory;
@@ -175,21 +174,31 @@ public class DataModelConfiguration {
 
     private final Collection<String> deletedSFDataObjects = new HashSet<String>(); // salesforce
 
+    private StudioFileSystem fileSystem;
+
+    private ProjectCompiler projectCompiler;
+
+    private ProjectManager projMgr;
+
     // =================================================
 
     private final Collection<String> writtenBackupFiles = new HashSet<String>();
 
-    public DataModelConfiguration(File cfgFile, FileService fileService, String serviceId, ExternalDataModelConfig externalConfig,
-        ClassLoaderFactory classLoaderFactory, CompileService compileService) throws IOException {
+    public DataModelConfiguration(Resource cfgFile, FileService fileService, String serviceId, ExternalDataModelConfig externalConfig,
+        ClassLoaderFactory classLoaderFactory) throws IOException {
 
         this.name = serviceId;
-        this.cfgFile = cfgFile.getName();
+        this.cfgFile = cfgFile.getFilename();
         this.cfgPath = DesignServiceManager.getRuntimeRelativeDir(serviceId);
         this.fileService = fileService;
         this.externalConfig = externalConfig;
         this.classLoaderFactory = classLoaderFactory;
-        this.compileService = compileService;
         this.springConfiguration = new DataServiceSpringConfiguration(fileService, this.cfgPath, this.cfgFile, serviceId);
+        this.projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().
+                getAttribute(DataServiceConstants.CURRENT_PROJECT_MANAGER);
+
+        this.projectCompiler = (ProjectCompiler)RuntimeAccess.getInstance().getSpringBean("projectCompiler");
+        this.fileSystem = (StudioFileSystem)RuntimeAccess.getInstance().getSpringBean("fileSystem");
 
         if (!serviceId.equals(CommonConstants.SALESFORCE_SERVICE)) {
             setup();
@@ -198,36 +207,79 @@ public class DataModelConfiguration {
         }
     }
 
-    public DataModelConfiguration(File springConfig) {
+    //public DataModelConfiguration(StudioFileSystem fileSystem, Resource springConfig) {
+    //    this(fileSystem, springConfig, com.wavemaker.tools.data.util.DataServiceUtils.getDummyExternalConfig());
+    //}
+
+    public DataModelConfiguration(Resource springConfig) {
         this(springConfig, com.wavemaker.tools.data.util.DataServiceUtils.getDummyExternalConfig());
     }
 
-    public DataModelConfiguration(File springConfig, ClassLoaderFactory classLoaderFactory, CompileService compileService) {
-        this(springConfig, com.wavemaker.tools.data.util.DataServiceUtils.getDummyExternalConfig(), classLoaderFactory, compileService);
+    public DataModelConfiguration(Resource springConfig, ClassLoaderFactory classLoaderFactory) {
+        this(springConfig, com.wavemaker.tools.data.util.DataServiceUtils.getDummyExternalConfig(),
+                classLoaderFactory);
     }
 
-    public DataModelConfiguration(File springConfig, ExternalDataModelConfig externalConfig) {
-        this(springConfig, externalConfig, new DefaultClassLoaderFactory(springConfig.getParentFile()), new DefaultCompileService(
-            springConfig.getParentFile()));
-    }
+    //public DataModelConfiguration(StudioFileSystem fileSystem, Resource springConfig, ExternalDataModelConfig externalConfig) {
+    //    this(fileSystem, springConfig, externalConfig, new DefaultClassLoaderFactory(springConfig.getParentFile()), new DefaultCompileService(
+    //        springConfig.getParentFile()));
+    //}
 
-    private DataModelConfiguration(File springConfig, ExternalDataModelConfig externalConfig, ClassLoaderFactory classLoaderFactory,
-        CompileService compileService) {
-        this.name = StringUtils.fromFirstOccurrence(springConfig.getName(), ".", -1);
-        this.cfgPath = ".";
-        this.cfgFile = springConfig.getName();
-        final File baseDir = springConfig.getParentFile();
-        this.classLoaderFactory = classLoaderFactory;
+    //public DataModelConfiguration(Resource springConfig, ExternalDataModelConfig externalConfig) {
+    //    this(springConfig, externalConfig, new DefaultClassLoaderFactory(fileSystem.getParent(springConfig)));
+    //}
+
+    public DataModelConfiguration(Resource springConfig, ExternalDataModelConfig externalConfig) {
+        this.projectCompiler = (ProjectCompiler)RuntimeAccess.getInstance().getSpringBean("projectCompiler");
+        this.fileSystem = (StudioFileSystem)RuntimeAccess.getInstance().getSpringBean("fileSystem");
+        this.name = StringUtils.fromFirstOccurrence(springConfig.getFilename(), ".", -1);
+        //this.cfgPath = ".";
+        this.cfgPath = "";
+        this.cfgFile = springConfig.getFilename();
+        final Resource baseDir = fileSystem.getParent(springConfig);
+        this.classLoaderFactory = new DefaultClassLoaderFactory(fileSystem.getParent(springConfig));
         this.externalConfig = externalConfig;
-        this.compileService = compileService;
+        this.fileSystem = fileSystem;
+        this.projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().
+                getAttribute(DataServiceConstants.CURRENT_PROJECT_MANAGER);
 
-        this.fileService = new AbstractFileService(new LocalStudioFileSystem()) {
+        this.fileService = new AbstractFileService(fileSystem) {
 
             @Override
             public Resource getFileServiceRoot() {
-                return new FileSystemResource(baseDir.getAbsolutePath() + "/");
+                return baseDir;
             }
         };
+
+
+        this.springConfiguration = new DataServiceSpringConfiguration(this.fileService, this.cfgPath, this.cfgFile, this.name);
+
+        setup();
+    }
+
+    public DataModelConfiguration(Resource springConfig, ExternalDataModelConfig externalConfig,
+                                  ClassLoaderFactory classLoaderFactory) {
+        this.projectCompiler = (ProjectCompiler)RuntimeAccess.getInstance().getSpringBean("projectCompiler");
+        this.fileSystem = (StudioFileSystem)RuntimeAccess.getInstance().getSpringBean("fileSystem");
+        this.name = StringUtils.fromFirstOccurrence(springConfig.getFilename(), ".", -1);
+        //this.cfgPath = ".";
+        this.cfgPath = "";
+        this.cfgFile = springConfig.getFilename();
+        final Resource baseDir = fileSystem.getParent(springConfig);
+        this.classLoaderFactory = classLoaderFactory;
+        this.externalConfig = externalConfig;
+        this.fileSystem = fileSystem;
+        this.projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().
+                getAttribute(DataServiceConstants.CURRENT_PROJECT_MANAGER);
+
+        this.fileService = new AbstractFileService(fileSystem) {
+
+            @Override
+            public Resource getFileServiceRoot() {
+                return baseDir;
+            }
+        };
+
 
         this.springConfiguration = new DataServiceSpringConfiguration(this.fileService, this.cfgPath, this.cfgFile, this.name);
 
@@ -638,10 +690,10 @@ public class DataModelConfiguration {
     }
 
     private String getProjectRoot() {
-        ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().getAttribute(DataServiceConstants.CURRENT_PROJECT_MANAGER);
+        //ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().getAttribute(DataServiceConstants.CURRENT_PROJECT_MANAGER);
         String projRoot;
         try {
-            projRoot = projMgr.getCurrentProject().getProjectRoot().getURI().toString();
+            projRoot = this.projMgr.getCurrentProject().getProjectRoot().getURI().toString();
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
@@ -795,10 +847,10 @@ public class DataModelConfiguration {
 
     public synchronized void writeConnectionProperties(Properties props) {
         String connUrl = props.getProperty(DataServiceConstants.DB_URL_KEY);
-        ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().getAttribute(DataServiceConstants.CURRENT_PROJECT_MANAGER);
+        //ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().getAttribute(DataServiceConstants.CURRENT_PROJECT_MANAGER);
         String projRoot;
         try {
-            projRoot = projMgr.getCurrentProject().getWebAppRoot().getFile().getPath();
+            projRoot = this.projMgr.getCurrentProject().getWebAppRoot().getFile().getPath();
             connUrl = StringUtils.replacePlainStr(connUrl, projRoot, DataServiceConstants.WEB_ROOT_TOKEN);
             props.setProperty(DataServiceConstants.DB_URL_KEY, connUrl);
 
@@ -914,7 +966,7 @@ public class DataModelConfiguration {
 
         if (updateService) {
             if (compile) {
-                this.compileService.compile(cleanCompile);
+                this.projectCompiler.compile(this.projMgr.getCurrentProject().getProjectName());
             }
             updateService(callback);
         }
@@ -946,7 +998,7 @@ public class DataModelConfiguration {
         this.springConfiguration.revert();
 
         if (compile) {
-            this.compileService.compile(true);
+            this.projectCompiler.compile(this.projMgr.getCurrentProject().getProjectName());
         }
     }
 
@@ -1841,7 +1893,8 @@ public class DataModelConfiguration {
     // return rel path starting from service root dir
     private String getRelServicePath(String relPath) {
         StringBuilder sb = new StringBuilder(this.cfgPath.length() + relPath.length() + 1);
-        sb.append(this.cfgPath).append("/").append(relPath);
+        //sb.append(this.cfgPath).append("/").append(relPath);
+        sb.append(StringUtils.appendPaths(this.cfgPath,relPath));
         return sb.toString();
     }
 

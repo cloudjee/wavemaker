@@ -22,10 +22,13 @@ ALERT_USER_INPUT_REQUIRED: "Username and Password fields cannot be empty!",
 WAIT_TEST_SQL: "Running Query...",
 WAIT_TEST_LDAP: "Testing LDAP Connection...",
 TEST_LDAP_MESSAGE_SUCCESS: "Connection Successful.",
+
 ALERT_ROLE_EXISTS: "Role already exists, please type in another one!",
 ALERT_JOSSO_ONLY_ONE_ROLE: "JOSSO only allows one role.  Delete existing role before entering new one.",
-
+ALERT_NO_SECURITY_PROVIDER: "No Security Provider selected",
+ALERT_NO_ROLE_PROVIDER: "User Role is checked, but no User Role Provider selected",
 ALERT_ROLE_EMPTY: "Role field cannot be empty!",
+
 DEMO_USER_USERNAME: "Username",
 DEMO_USER_PASSWORD: "Password",
 DEMO_USER_ROLE: "Role",

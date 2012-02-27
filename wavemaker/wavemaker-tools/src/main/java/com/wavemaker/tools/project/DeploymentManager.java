@@ -12,7 +12,15 @@ import com.wavemaker.tools.deployment.DeploymentInfo;
 
 public interface DeploymentManager {
 
-    public abstract void testRunStart();
+    /**
+     * Start a 'test run' for the given project. This method should ensure that the current project is compiled,
+     * deployed and active.
+     * 
+     * @return return the URL of the deployed application. URLs can be relative paths (eg. '/Project1') or fully
+     *         qualified URLS (eg. 'http://project1.cloudfoundry.com'). returned URLs should not include parameters as
+     *         these are always managed by the client.
+     */
+    public abstract String testRunStart();
 
     public abstract void testRunClean();
 

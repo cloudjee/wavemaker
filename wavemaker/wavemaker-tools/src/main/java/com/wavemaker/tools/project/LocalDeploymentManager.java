@@ -178,9 +178,11 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
      * {@inheritDoc}
      */
     @Override
-    public void testRunStart() {
+    public String testRunStart() {
         try {
-            testRunStart(getProjectDir().getFile().getCanonicalPath(), getDeployName());
+            String deployName = getDeployName();
+            testRunStart(getProjectDir().getFile().getCanonicalPath(), deployName);
+            return "/" + this.projectManager.getUserProjectPrefix() + deployName;
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }

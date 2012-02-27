@@ -18,10 +18,10 @@ public class CloudFoundryDeploymentManager extends AbstractDeploymentManager {
     private DeploymentTargetManager deploymentTargetManager;
 
     @Override
-    public void testRunStart() {
+    public String testRunStart() {
         compile();
         CloudFoundryDeploymentTarget cloudFoundryDeploymentTarget = getCloudFoundryDeploymentTarget();
-        cloudFoundryDeploymentTarget.testRunStartFromSelf(this.projectManager.getCurrentProject());
+        return cloudFoundryDeploymentTarget.testRunStart(this.projectManager.getCurrentProject());
     }
 
     @Override
@@ -88,14 +88,14 @@ public class CloudFoundryDeploymentManager extends AbstractDeploymentManager {
     public void testRunClean(String projectDir, String deployName) {
         Project project = this.projectManager.getProject(projectDir, true);
         CloudFoundryDeploymentTarget target = getCloudFoundryDeploymentTarget();
-        target.undeployFromSelf(project);
+        target.undeploy(project);
     }
 
     @Override
     public void undeploy() {
         Project project = this.projectManager.getCurrentProject();
         CloudFoundryDeploymentTarget target = getCloudFoundryDeploymentTarget();
-        target.undeployFromSelf(project);
+        target.undeploy(project);
     }
 
     @Override

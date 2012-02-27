@@ -1,7 +1,12 @@
 
 package com.wavemaker.tools.project;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,7 +14,11 @@ import java.util.List;
 import org.springframework.core.io.Resource;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
-import org.springframework.util.*;
+import org.springframework.util.AntPathMatcher;
+import org.springframework.util.Assert;
+import org.springframework.util.FileCopyUtils;
+import org.springframework.util.PathMatcher;
+import org.springframework.util.StringUtils;
 
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
@@ -20,6 +29,7 @@ import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
+import com.wavemaker.common.CommonResourceFilter;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.io.GFSResource;
 import com.wavemaker.common.util.IOUtils;
@@ -94,8 +104,8 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
     }
 
     @Override
-    protected void makeDirectories(Resource projectsDir) {
-        createResource(((GFSResource) projectsDir).getPath());
+    protected void makeDirectories(Resource dir) {
+        prepareForWriting(dir);
     }
 
     @Override
@@ -201,6 +211,34 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
         return children;
     }
 
+    @Override
+    public List<Resource> listAllChildren(Resource resource, CommonResourceFilter filter) {
+        if (!(resource instanceof GFSResource)) {
+            return this.delegate.listAllChildren(resource, filter);
+        }
+        GFSResource gfsRoot = (GFSResource) resource;
+        List<Resource> children = new ArrayList<Resource>();
+        List<GridFSDBFile> files;
+        try {
+            files = gfsRoot.listFiles();
+        } catch (Exception e) {
+            throw new WMRuntimeException(e);
+        }
+        if (files != null) {
+            for (GridFSDBFile file : files) {
+                GFSResource fileResource = new GFSResource(this.gfs, this.dirsDoc, file.getFilename());
+                if (filter == null || filter.accept(fileResource)) {
+                    children.add(fileResource);
+                }
+            }
+        }
+        List<Resource> childDirs = listChildDirectories(gfsRoot);
+        for (Resource childDir : childDirs) {
+            children.addAll(listAllChildren(childDir, filter));
+        }
+        return children;
+    }
+
     private List<Resource> listChildDirectories(GFSResource resource) {
         List<Resource> gfsDirs = new ArrayList<Resource>();
         BasicDBList childDirs = (BasicDBList) this.dirsDoc.get(resource.getPath());
@@ -269,8 +307,7 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
     }
 
     @Override
-    public Resource copyRecursive(Resource root, Resource target, final String includedPattern,
-                                  final String excludedPattern) {
+    public Resource copyRecursive(Resource root, Resource target, final String includedPattern, final String excludedPattern) {
         try {
             if (isDirectory(root)) {
 
@@ -279,15 +316,13 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
                     @Override
                     public boolean accept(Resource resource) {
                         PathMatcher matcher = new AntPathMatcher();
-                        return (!matcher.match(excludedPattern, resource.getFilename()) &&
-                                 matcher.match(includedPattern, resource.getFilename()));
+                        return !matcher.match(excludedPattern, resource.getFilename()) && matcher.match(includedPattern, resource.getFilename());
                     }
                 });
 
                 for (Resource child : children) {
                     if (isDirectory(child)) {
-                        copyRecursive(child, target.createRelative(child.getFilename() + "/"),
-                                includedPattern, excludedPattern);
+                        copyRecursive(child, target.createRelative(child.getFilename() + "/"), includedPattern, excludedPattern);
                     } else {
                         FileCopyUtils.copy(child.getInputStream(), getOutputStream(target.createRelative(child.getFilename())));
                     }
@@ -312,7 +347,7 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
 
                     @Override
                     public boolean accept(File pathName) {
-                        return !exclusions.contains(pathName.getName());
+                        return exclusions == null || !exclusions.contains(pathName.getName());
                     }
                 });
 
@@ -398,8 +433,8 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
 
     @Override
     public Resource getParent(Resource resource) {
-        GFSResource gfsResource = (GFSResource)resource;
+        GFSResource gfsResource = (GFSResource) resource;
         String path = gfsResource.getParent() + "/";
-        return (new GFSResource(this.gfs, this.dirsDoc, path));
+        return new GFSResource(this.gfs, this.dirsDoc, path);
     }
 }

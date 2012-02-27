@@ -461,6 +461,25 @@ public abstract class StringUtils {
 
     }
 
+    public static String appendPaths(String rootPath, String childPath) {
+        String path;
+        if (rootPath.length() == 0 || !rootPath.substring(rootPath.length()-1).equals("/")) {
+            if (childPath != null && childPath.length() > 0 && childPath.substring(0, 1).equals("/")) {
+                path = rootPath + childPath;
+            } else {
+                path = rootPath + "/" + childPath;
+            }
+        } else {
+            if (childPath != null && childPath.length() > 0 && childPath.substring(0, 1).equals("/")) {
+                path = rootPath + childPath.substring(1);
+            } else {
+                path = rootPath + childPath;
+            }
+        }
+        
+        return path;
+    }
+
     private static String substring(String s, int i, String substring, int direction) {
         if (direction >= 0) {
             return s.substring(i + substring.length());

@@ -317,8 +317,11 @@ public class ProjectManager {
             if (!projectDir.exists() && !ignoreDemos && this.fileSystem.getDemoDir() != null) {
                 Resource demoProjectDir = this.fileSystem.getDemoDir().createRelative(projectName + "/");
                 if (demoProjectDir.exists()) {
-                    projectDir = demoProjectDir;
+                    return demoProjectDir;
                 }
+            }
+            if (!projectDir.exists()) {
+                this.fileSystem.prepareForWriting(projectDir);
             }
             return projectDir;
         } catch (IOException ex) {
