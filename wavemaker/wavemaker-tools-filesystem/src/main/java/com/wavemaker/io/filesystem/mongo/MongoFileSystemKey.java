@@ -3,6 +3,11 @@ package com.wavemaker.io.filesystem.mongo;
 
 import com.wavemaker.io.filesystem.FileSystemPath;
 
+/**
+ * Key used with {@link MongoFileSystem}.
+ * 
+ * @author Phillip Webb
+ */
 public class MongoFileSystemKey {
 
     private final FileSystemPath path;
