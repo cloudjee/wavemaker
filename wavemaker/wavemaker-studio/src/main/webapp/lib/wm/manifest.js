@@ -112,6 +112,7 @@ wm.loadLibs([
 	"wm.base.widget.Editors.AbstractEditor",
 	"wm.base.widget.Editors.Text",
 	"wm.base.widget.Editors.Number",
+    "wm.base.widget.Editors.Slider",
 	"wm.base.widget.Editors.Date",
 	"wm.base.widget.Editors.Checkbox",
 	"wm.base.widget.Editors.DataSetEditor",
