@@ -39,18 +39,21 @@ dijit.form.NumberTextBox.extend({
 	/* WaveMaker Removes Dojo IF statement:
 	   if(this.editOptions && this._focused){
 	*/
-	constraints = dojo.mixin({}, constraints, this.editOptions);
+	constraints = dojo.mixin({}, constraints, this.editOptions);	
+	if (!this._focused)
+	    delete constraints.pattern;
 	return this._formatter(value, constraints);
     }
 });
 
-/* Enable the numeric keyboard on onscreen keyboards to show */
+/* Enable the numeric keyboard on onscreen keyboards to show ; abandoned because webkit's number editor sticks commas in that break all kinds of things
+ * and "tel" setting loses access to "."
 if (wm.isMobile) {
     dijit.form.NumberTextBox.extend({
 	type: "number"
     });
 }
-
+*/
 //===========================================================================
 // Number Editor
 //===========================================================================
@@ -99,7 +102,7 @@ dojo.declare("wm.Number", wm.Text, {
 	    rangeMessage: this.rangeMessage,
 	    required: this.required,
 	    value: v ? Number(v) : "",
-	    editOptions: {}
+	    editOptions: dojo.clone(dijit.form.NumberTextBox.prototype.editOptions)
 	}, inProps || {});
 	var places = this._getPlaces();
 	if (places !== "") {
@@ -175,11 +178,7 @@ dojo.declare("wm.Number", wm.Text, {
 	    if (this.spinnerButtons && !wm.isMobile)
 		return new dijit.form.NumberSpinner(this.getEditorProps(inNode, inProps));
 	    else {
-		var e =  new dijit.form.NumberTextBox(this.getEditorProps(inNode, inProps));
-		if (wm.isMobile) {
-		    e.focusNode.type = "number";
-		}
-		return e;
+		return  new dijit.form.NumberTextBox(this.getEditorProps(inNode, inProps));
 	    }
 	},
 /*
