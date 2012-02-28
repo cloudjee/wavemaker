@@ -101,7 +101,8 @@
 [ bundlePackage.EditorsGroup + "/" + bundlePackage.RelatedEditorGroup, bundlePackage.RelatedEditor, "wm.RelatedEditor", "wm.base.widget.RelatedEditor", "Studio_paletteImageList_9",bundlePackage.descRelatedEditor, {}, false],
 [ bundlePackage.EditorsGroup + "/" + bundlePackage.Misc, bundlePackage.DojoFileUpload, "wm.DojoFileUpload", "wm.base.widget.DojoFileUpload", "Studio_paletteImageList_4",bundlePackage.descDojoFileUpload, {}, true],
 [ bundlePackage.EditorsGroup + "/" + bundlePackage.Misc, bundlePackage.DojoFlashFileUpload, "wm.DojoFlashFileUpload", "wm.base.widget.DojoFlashFileUpload", "Studio_paletteImageList_4",bundlePackage.descDojoFlashFileUpload, {}, true],
-[bundlePackage.EditorsGroup + "/" + bundlePackage.Misc, bundlePackage.Slider, "wm.Slider", "wm.base.widget.Editors.Number", "Studio_paletteImageList_9",bundlePackage.descSlider, {}, false],
+[bundlePackage.EditorsGroup + "/" + bundlePackage.Misc, bundlePackage.Slider, "wm.Slider", "wm.base.widget.Editors.Slider", "Studio_paletteImageList_9",bundlePackage.descSlider, {}, false],
+[bundlePackage.EditorsGroup + "/" + bundlePackage.Misc, bundlePackage.RangeSlider, "wm.RangeSlider", "wm.base.widget.Editors.Slider", "Studio_paletteImageList_9",bundlePackage.descSlider, {}, false],
 
 [ bundlePackage.DataWidget + "/" + bundlePackage.DataWidgetSingle, bundlePackage.Gauge, "wm.DojoGauge", "wm.base.widget.DojoGauge",  "images/wm.dijit/ProgressBar.png", bundlePackage.descGauge, {}, true],
 [ bundlePackage.DataWidget + "/" + bundlePackage.DataWidgetSingle, bundlePackage.ProgressBar, "wm.dijit.ProgressBar", "wm.base.widget.dijit.ProgressBar", "images/wm.dijit/ProgressBar.png", bundlePackage.descProgressBar, {}, false],

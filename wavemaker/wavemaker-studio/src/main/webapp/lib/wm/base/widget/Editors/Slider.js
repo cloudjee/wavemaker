@@ -30,7 +30,7 @@ dojo.declare("wm.Slider", wm.AbstractEditor, {
 	getEditorProps: function(inNode, inProps) {
 		// it is important to have this.displayValue as an integer and should always be at least equal to minimum value
 		// else sliders will throw exception on IE and will not show up.
-		var v = this.displayValue;
+	    var v = this.dataValue;
 		var minV = Number(this.minimum) ? Number(this.minimum) : 0;
 		if (!v || (Number(v) < minV))
 			v = this.displayValue = minV;
@@ -120,4 +120,59 @@ dojo.declare("wm.Slider", wm.AbstractEditor, {
 		}
 	}
 			*/			
+});
+
+
+dojo.require("dojox.form.RangeSlider");
+dojo.declare("wm.RangeSlider", wm.Slider, {
+    dynamicSlider: true,
+    init: function() {
+	this.inherited(arguments);
+	if (this.displayValue) {
+	    this.dataValue = this.displayValue.split(/,/);
+	}
+	wm.addStyleSheet("/wavemaker/lib/dojo/dojox/form/resources/RangeSlider.css");
+    },
+    _createEditor: function(inNode, inProps) {
+	var div = dojo.create('div');
+	var dijitObj = new dojox.form.HorizontalRangeSlider(this.getEditorProps(inNode, inProps));
+	div.appendChild(dijitObj.domNode);
+	dijitObj.domNode = div;
+	return dijitObj;
+    },
+    getEditorValue: function() {
+	var values = wm.AbstractEditor.prototype.getEditorValue.call(this)
+	if (this.integerValues) {
+	    values[0] = Math.round(values[0]);
+	    values[1] = Math.round(values[1]);
+	}
+	return values;
+    },
+    getDisplayValue: function() {
+	var values = this.getEditorValue();
+	return values[0] + "," + values[1];
+    },
+    getTopValue: function() {
+	return this.getEditorValue()[1];
+    },
+    getBottomValue: function() {
+	return this.getEditorValue()[0];
+    },
+    setTopValue: function(inValue) {
+	this.setDataValue([this.getBottomValue(), inValue]);
+    },
+    setBottomValue: function(inValue) {
+	this.setDataValue([inValue, this.getTopValue()]);
+    },
+    calcIsDirty: function(newValue, oldValue) {
+	if (!newValue && oldValue || !oldValue && newValue) return true;
+	return (newValue[0] == oldValue[0] && newValue[1] == oldValue[1]);
+    },
+    editorChanged: function() {
+	this.inherited(arguments);
+	var values = this.getEditorValue();
+	this.valueChanged("bottomValue", values[0]);
+	this.valueChanged("topValue", values[1]);
+    }
+    
 });

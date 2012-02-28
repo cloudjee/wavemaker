@@ -172,10 +172,15 @@ dojo.declare("wm.Number", wm.Text, {
     */
 
 	_createEditor: function(inNode, inProps) {
-	    if (this.spinnerButtons)
+	    if (this.spinnerButtons && !wm.isMobile)
 		return new dijit.form.NumberSpinner(this.getEditorProps(inNode, inProps));
-	    else
-		return new dijit.form.NumberTextBox(this.getEditorProps(inNode, inProps));
+	    else {
+		var e =  new dijit.form.NumberTextBox(this.getEditorProps(inNode, inProps));
+		if (wm.isMobile) {
+		    e.focusNode.type = "number";
+		}
+		return e;
+	    }
 	},
 /*
 	_getPattern: function() {

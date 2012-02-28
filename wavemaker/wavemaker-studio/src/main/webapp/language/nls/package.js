@@ -64,6 +64,7 @@
 	"Lookup" : "Lookup",
         "FilteringLookup": "Filtering Lookup",
 	"Slider" : "Slider",
+	"RangeSlider" : "Range Slider",
 	"Text" : "Text",
 	"TextArea" : "TextArea",
 	"Time" : "Time",
