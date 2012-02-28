@@ -1,13 +1,14 @@
 
 package com.wavemaker.tools.project;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.File;
 import java.util.List;
 
 import org.springframework.core.io.Resource;
+
 import com.wavemaker.common.CommonStudioFileSystem;
 
 /**
@@ -28,34 +29,37 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
      */
     Resource getWaveMakerHome();
 
+    // FIXME this is the root of all stuff. Under here is /projects /logs /common (by default this is
+    // /documents/wavemaker)
+
     /**
      * Return the directory used to store WaveMaker projects.
      * 
      * @return the projects directory
      * @throws IOException
      */
-    Resource getProjectsDir();
+    Resource getProjectsDir(); // Same as wavemaker home /projects
 
     /**
      * Returns the directory containing WaveMaker demo projects.
      * 
      * @return the demo directory or <tt>null</tt>
      */
-    Resource getDemoDir();
+    Resource getDemoDir(); // In desktop land this is shipped with WM, in /app/wm/examples. This is mutable.
 
     /**
      * Returns the root resource of the packaged Studio application.
      * 
      * @return the web app root
      */
-    Resource getStudioWebAppRoot();
+    Resource getStudioWebAppRoot(); // This is studio itself
 
     /**
      * Get the common WaveMaker directory.
      * 
      * @throws IOException
      */
-    Resource getCommonDir() throws IOException;
+    Resource getCommonDir() throws IOException; // This is WM home /common
 
     /**
      * Determine if the resource specified is a directory.
@@ -119,13 +123,13 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
 
     /**
      * Search all files recursively and return the result. Tis method returns only files, not directories.
-     *
+     * 
      * @param resource the resource
      * @param filter a resource filter used to limit results
      * @return a list of child files
      * @see #listChildren(Resource)
      */
-    //List<Resource> listAllChildren(Resource resource, ResourceFilter filter);      
+    // List<Resource> listAllChildren(Resource resource, ResourceFilter filter);
 
     /**
      * Create and return a resource for the specified path as applied to the given resource.
@@ -159,7 +163,7 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
 
     /**
      * Recursively copy files and directories from the given root to a target location.
-     *
+     * 
      * @param root the root to copy
      * @param target the target destination
      * @param includedPattern the ant-style path pattern to be included
@@ -170,7 +174,7 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
 
     /**
      * Recursively copy files and directories from the given root in the conventional file system to a target location.
-     *
+     * 
      * @param root the root to copy
      * @param target the target destination
      * @param exclusions a list of exclusions that should not be copied
@@ -208,7 +212,7 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
 
     /**
      * Returns the parent resource or null if none
-     *
+     * 
      * @param resource the current resource
      * @return the parent resource
      */

@@ -5,6 +5,11 @@ import java.io.File;
 
 import com.wavemaker.io.filesystem.FileSystemPath;
 
+/**
+ * Key used with {@link JavaFileSystem}.
+ * 
+ * @author Phillip Webb
+ */
 public class JavaFileSystemKey {
 
     private final FileSystemPath path;

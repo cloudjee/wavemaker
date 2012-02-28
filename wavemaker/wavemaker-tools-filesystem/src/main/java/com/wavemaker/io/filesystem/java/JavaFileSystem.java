@@ -18,9 +18,12 @@ import com.wavemaker.io.filesystem.FileSystem;
 import com.wavemaker.io.filesystem.FileSystemPath;
 import com.wavemaker.io.filesystem.ResourceType;
 
+/**
+ * {@link FileSystem} implementation backed by standard {@link File java.io.File}s.
+ * 
+ * @author Phillip Webb
+ */
 public class JavaFileSystem implements FileSystem<JavaFileSystemKey> {
-
-    // FIXME assert file types?
 
     private final File root;
 
@@ -91,8 +94,8 @@ public class JavaFileSystem implements FileSystem<JavaFileSystemKey> {
 
     @Override
     public byte[] getSha1Digest(JavaFileSystemKey key) {
-        // TODO Auto-generated method stub
-        return null;
+        // FIXME
+        throw new UnsupportedOperationException();
     }
 
     @Override

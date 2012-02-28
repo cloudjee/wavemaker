@@ -20,6 +20,11 @@ import com.wavemaker.io.filesystem.FileSystem;
 import com.wavemaker.io.filesystem.FileSystemPath;
 import com.wavemaker.io.filesystem.ResourceType;
 
+/**
+ * {@link FileSystem} implementation backed by a Mongo database.
+ * 
+ * @author Phillip Webb
+ */
 public class MongoFileSystem implements FileSystem<MongoFileSystemKey> {
 
     private static final String PARENT = "parent";
