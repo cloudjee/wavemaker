@@ -114,7 +114,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 
 	},
     postSetupScroller: function() {
-	var touchScrollOuter = this._listTouchScroll.scroller.outer;
+	var touchScrollOuter = this._listTouchScroll.scroller ? this._listTouchScroll.scroller.outer : null;
 	if (touchScrollOuter) {
 	    touchScrollOuter.style.width = "100%";
 	}
