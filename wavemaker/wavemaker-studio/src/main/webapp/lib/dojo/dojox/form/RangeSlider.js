@@ -220,6 +220,9 @@ dojo.require("dojox.fx");
 		_setValueAttr: function(/*Array or Number*/ value, /*Boolean, optional*/ priorityChange, /*Boolean, optional*/ isMaxVal){
 			// we pass an array, when we move the slider with the bar
 			var actValue = this.value;
+			if(!dojo.isArray(actValue)){
+			    actValue = [0,0];
+			}
 			if(!dojo.isArray(value)){
 				if(isMaxVal){
 					if(this._isReversed()){
