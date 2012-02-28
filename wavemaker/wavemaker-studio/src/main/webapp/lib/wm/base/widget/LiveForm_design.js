@@ -212,7 +212,7 @@ wm.LiveFormBase.extend({
 	},
 	makeEditors: function() {
 		var
-			lv = this.getLiveVariable(),
+			lv = this.findLiveVariable(),
 			fields = lv ? lv.getViewFields() : wm.getDefaultView((this.dataSet || 0).type);
 		dojo.forEach(fields, dojo.hitch(this, "makeEditor"));
 		// make a related editor for each relationship in relevant liveView
@@ -279,7 +279,7 @@ wm.LiveFormBase.extend({
 		props.formField = inFormField;
                 props.width = this.editorWidth;
 
-	        var lv = this.getLiveVariable();
+	        var lv = this.findLiveVariable();
 	        var typeDef = wm.typeManager.getType(lv.type);
 	        if (typeDef)
 		    var fieldDef = typeDef.fields[inFormField];
@@ -317,7 +317,8 @@ wm.LiveFormBase.extend({
 			readonly: this.readonly,
 			captionSize: this.captionSize,
 			captionAlign: this.captionAlign,
-			captionPosition: this.captionPosition
+		    captionPosition: this.captionPosition,
+		    changeOnKey: true
 		}
 	},
 	getEditorParent: function() {
@@ -373,7 +374,7 @@ wm.LiveFormBase.extend({
 	addEditorToView: function(inEditor, inField) {
 		var
 			ff = inField,
-			lv = this.getLiveVariable(),
+			lv = this.findLiveVariable(),
 			v = lv && lv.liveView;
 		if (v) {
 			if (inEditor instanceof wm.Editor)
@@ -545,13 +546,18 @@ wm.LiveFormBase.extend({
 	    dialog.connect(dialog, "onButton2Click", this, function() {
 		var panel = this.owner.loadComponent(this.name + "ButtonPanel", this, "wm.Panel", 
 						 {height: wm.Button.prototype.height,
+						  mobileHeight: wm.Button.prototype.mobileHeight,
+						  enableTouchHeight: true,
 						  layoutKind: "left-to-right",
+						  verticalAlign: "top",
+						  horizontalAlign: "right",						  
 						  width: "100%"});		
 
 		/* Generate a save button that is only enabled if data is valid and calls saveDataIfValid */
 		var saveButton = this.saveButton = new wm.Button({owner: studio.page,
 								  name: studio.page.getUniqueName(this.name + "SaveButton"),
 								  parent: panel,
+								  height: "100%",
 								  caption:  studio.getDictionaryItem("wm.LiveForm.GENERATE_BUTTONS_SAVE")});
 		saveButton.eventBindings.onclick = this.name + ".saveDataIfValid";
 		this.saveButton.$.binding.addWire(null, "disabled", this.name + ".invalid","");
@@ -562,6 +568,7 @@ wm.LiveFormBase.extend({
 		var cancelButton = new wm.Button({owner: studio.page,
 						  name: studio.page.getUniqueName(this.name + "CancelButton"),
 						  parent: panel,
+						  height: "100%",
 						  caption:  studio.getDictionaryItem("wm.LiveForm.GENERATE_BUTTONS_CANCEL")});
 		cancelButton.eventBindings.onclick = this.name + ".cancelEdit";
 
@@ -569,6 +576,7 @@ wm.LiveFormBase.extend({
 		var newButton = new wm.Button({owner: studio.page,
 					       name: studio.page.getUniqueName(this.name + "NewButton"),
 					       parent: panel,
+					       height: "100%",
 					       caption:  studio.getDictionaryItem("wm.LiveForm.GENERATE_BUTTONS_NEW")});
 		newButton.eventBindings.onclick = this.name + ".beginDataInsert";
 
@@ -576,6 +584,7 @@ wm.LiveFormBase.extend({
 		var updateButton = new wm.Button({owner: studio.page,
 						  name: studio.page.getUniqueName(this.name + "UpdateButton"),
 						  parent: panel,
+						  height: "100%",
 						  caption:  studio.getDictionaryItem("wm.LiveForm.GENERATE_BUTTONS_UPDATE")});
 		updateButton.eventBindings.onclick = this.name + ".beginDataUpdate";
 
@@ -584,6 +593,7 @@ wm.LiveFormBase.extend({
 		var deleteButton = new wm.Button({owner: studio.page,
 						  name: studio.page.getUniqueName(this.name + "DeleteButton"),
 						  parent: panel,
+						  height: "100%",
 						  caption:  studio.getDictionaryItem("wm.LiveForm.GENERATE_BUTTONS_DELETE")});
 		deleteButton.eventBindings.onclick = this.name + ".deleteData";
 

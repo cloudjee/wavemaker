@@ -17,6 +17,7 @@ dojo.provide("wm.base.widget.Trees.DraggableTree");
 dojo.require("wm.base.widget.Trees.Tree");
 
 dojo.declare("wm.DraggableTree", wm.Tree, {
+    dragEnabled: true,
     classNames: "wmtree wmdraggabletree",
     dropBetweenNodes: false,
     init: function() {
@@ -130,10 +131,12 @@ dojo.declare("wm.DraggableTree", wm.Tree, {
     drag: function(node,inEvent) {
 	this.dragger.root = this.root;
 	this.draggedItem = node;
-	this.dragger.beginDrag(inEvent, {
-	    caption: node.content,
-	    control: node
-	});
+	if (this.dragEnabled) {
+	    this.dragger.beginDrag(inEvent, {
+		caption: node.content,
+		control: node
+	    });
+	}
     },
 
     treeMouseUp: function(inSender,inEvent, inNode) {

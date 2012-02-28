@@ -18,6 +18,81 @@ dojo.require("wm.base.components.ServiceVariable");
 dojo.require("wm.base.components.Variable_design");
 
 
+/**#@+ @design */
+wm.ServiceCall.extend({
+	clearInput: "(clear input)",
+	updateNow: "(update now)",
+	queue: "(serviceCalls)",
+	getUniqueName: function(inName) {
+	    if (inName === "input") return "input";
+	    return this.inherited(arguments);
+	},
+	/** @lends wm.ServiceCall.prototype */
+	doDesigntimeUpdate: function() {
+		this._designTime = true; //The line is not being used now.  It may be used in the future to differenciate requests from 
+		//Studio from requests deployed application.
+		return studio.makeLiveDataCall(dojo.hitch(this, "_update"));
+	},
+	doClearInput: function() {
+		this.input.destroy();
+		this.input = this.createInput();
+	},
+	set_operation: function(inOperation) {
+		this.setOperation(inOperation);
+		if (this.isDesignLoaded() && studio.selected == this)
+			studio.inspector.inspect(studio.selected);
+	},
+	getServicesList: function() {
+		return [""].concat(wm.services.getNamesList()||[]);
+	},
+	showQueueDialog: function() {
+		var d = wm.ServiceQueue.dialog, q = this.$.queue;
+		if (d) {
+			d.page.binding = q;
+			d.page.update();
+		}else{
+		    /* TODO: Convert to new dialogs */
+			wm.ServiceQueue.dialog = d = new wm.PageDialog({
+				name: "queueDialog",
+				owner: studio,
+				contentWidth: 600,
+				contentHeight: 400,
+				hideControls: true,
+				pageName: "QueueDialog",
+				pageProperties: {binding: q}
+			});
+		}
+		d.show();
+	},
+
+
+	makePropEdit: function(inName, inValue, inEditorProps) {
+	    var prop = this.schema ? this.schema[inName] : null;
+	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
+	    var prop = this.schema ? this.schema[inName] : null;
+	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
+		switch (inName) {
+			case "service":
+		    return new wm.SelectMenu(dojo.mixin(inEditorProps, {options: this.getServicesList()}));
+		case "operation":
+				var
+					s = this._service,
+					valueOk = s && s.getOperation(inValue),
+					methods = s && s.getOperationsList();
+				if (!valueOk){
+					inValue = methods ? methods[0] : "";
+					if (inValue)
+						this.set_operation(inValue);
+				}
+				if (methods)
+				    return new wm.SelectMenu(dojo.mixin(inEditorProps, {options: methods}));
+				break;
+		}
+		return this.inherited(arguments);
+	}
+});
+
+
 wm.Object.extendSchema(wm.ServiceCall, {
     startUpdateComplete: { ignore: 1},
     setService: {method:1},
@@ -98,6 +173,7 @@ wm.ServiceVariable.description = "Data from a service.";
 
 /**#@+ @design */
 wm.ServiceVariable.extend({
+
 	/** @lends wm.ServiceVariable.prototype */
 	listProperties: function() {
 	    var p = this.inherited(arguments);

@@ -98,7 +98,6 @@ wm.Object.extendSchema(wm.ListViewer, {
     lock: {ignore: true},
     autoScroll: {ignore: true, writeonly: 1},
     scrollX: {ignore: true, writeonly: 1},
-    scrollY: {ignore: true, writeonly: 1},
-    touchScrolling: {ignore: true, writeonly: 1}
+    scrollY: {ignore: true, writeonly: 1}
 });
 

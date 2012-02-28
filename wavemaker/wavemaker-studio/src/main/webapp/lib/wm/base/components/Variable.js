@@ -1371,7 +1371,7 @@ wm.Variable.extend({
     },
     _end: 0
 });
-dojo.extend(wm.Variable,dojo.data.util.simpleFetch); // adds in the fetch call
+// uncomment this when ready to use wm.Variable as a dojo.store: dojo.extend(wm.Variable,dojo.data.util.simpleFetch); // adds in the fetch call
 
 
 /******

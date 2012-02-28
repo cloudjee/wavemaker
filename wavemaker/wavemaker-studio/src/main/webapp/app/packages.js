@@ -28,7 +28,9 @@
 [ bundlePackage.BasicWidgets + "/" + bundlePackage.Button_Category, bundlePackage.Button, "wm.Button", "wm.base.widget.Buttons.Button", "Studio_paletteImageList_4", bundlePackage.descButton, {}, false],
 [ bundlePackage.BasicWidgets + "/" +  bundlePackage.Button_Category, bundlePackage.PopupButton, "wm.PopupMenuButton", "wm.base.widget.Buttons.PopupMenuButton", "Studio_paletteImageList_4", bundlePackage.descPopupButton, {}, false],
 [  bundlePackage.BasicWidgets + "/" +  bundlePackage.Button_Category, bundlePackage.Toggle_Button, "wm.ToggleButton", "wm.base.widget.Buttons.ToggleButton", "Studio_paletteImageList_4", bundlePackage.descToggleButton, {}, false],
+[  bundlePackage.BasicWidgets + "/" +  bundlePackage.Button_Category, bundlePackage.Toggle_Button_Panel, "wm.ToggleButtonPanel", "wm.base.widget.Buttons.ToggleButton", "Studio_paletteImageList_4", bundlePackage.descToggleButtonPanel, {}, true],
 [  bundlePackage.BasicWidgets + "/" +  bundlePackage.Button_Category, bundlePackage.BusyButton, "wm.BusyButton", "wm.base.widget.Buttons.BusyButton", "Studio_paletteImageList_4", bundlePackage.descBusyButton, {}, true],
+
 
 
 [ bundlePackage.BasicWidgets + "/" +  bundlePackage.Formatting_Category, bundlePackage.Label, "wm.Label", "wm.base.widget.Label", "Studio_paletteImageList_7", bundlePackage.descLabel, {}, false],
@@ -36,7 +38,7 @@
 [ bundlePackage.BasicWidgets + "/" +  bundlePackage.Formatting_Category, bundlePackage.Spacer, "wm.Spacer", "wm.base.widget.Spacer", "Studio_paletteImageList_21", bundlePackage.descSpacer, {}, false],
 [ bundlePackage.BasicWidgets + "/" +  bundlePackage.Formatting_Category, bundlePackage.Splitter, "wm.Splitter", "wm.base.widget.Splitter", "Studio_paletteImageList_22", bundlePackage.descSplitter, {}, false],
 [ bundlePackage.BasicWidgets + "/" +  bundlePackage.Formatting_Category, bundlePackage.Bevel, "wm.Bevel", "wm.base.widget.Bevel", "Studio_paletteImageList_3", bundlePackage.descBevel, {}, false],
-[ bundlePackage.BasicWidgets + "/" +  bundlePackage.Formatting_Category, bundlePackage.Content, "wm.Content", "wm.base.widget.Content", "Studio_paletteImageList_7", bundlePackage.descContent, {}, false],
+//[ bundlePackage.BasicWidgets + "/" +  bundlePackage.Formatting_Category, bundlePackage.Content, "wm.Content", "wm.base.widget.Content", "Studio_paletteImageList_7", bundlePackage.descContent, {}, false],
 [ bundlePackage.BasicWidgets + "/" +  bundlePackage.Formatting_Category, bundlePackage.HTML, "wm.Html", "wm.base.widget.Html", "Studio_paletteImageList_7", bundlePackage.descHtml, {}, false],
 [ bundlePackage.BasicWidgets + "/" +  bundlePackage.Formatting_Category, bundlePackage.IFrame, "wm.IFrame", "wm.base.widget.IFrame", "Studio_paletteImageList_14", bundlePackage.descIFrame, {}, false],
 
@@ -51,11 +53,11 @@
 [ bundlePackage.Containers, bundlePackage.Rounded_Panel, "wm.FancyPanel", "wm.base.widget.Panel", "Studio_paletteImageList_16", bundlePackage.descFancyPanel, {}, false],
 
 
-[ bundlePackage.Containers + "/" + bundlePackage.Containers_Layer_Category, bundlePackage.Accordion, "wm.AccordionLayers", "wm.base.widget.Layers", "Studio_paletteImageList_18", bundlePackage.descAccordion, {}, false],
+[ bundlePackage.Containers + "/" + bundlePackage.Containers_Layer_Category, bundlePackage.Accordion, "wm.AccordionLayers", "wm.base.widget.AccordionLayers", "Studio_paletteImageList_18", bundlePackage.descAccordion, {}, false],
 [ bundlePackage.Containers + "/" +  bundlePackage.Containers_Layer_Category, bundlePackage.Layers, "wm.Layers", "wm.base.widget.Layers", "Studio_paletteImageList_12", bundlePackage.descLayers, {}, false],
 [ bundlePackage.Containers + "/" +  bundlePackage.Containers_Layer_Category, bundlePackage.Tabs, "wm.TabLayers", "wm.base.widget.Layers", "Studio_paletteImageList_23",bundlePackage.descTabs, {}, false],
-[ bundlePackage.Containers + "/" +  bundlePackage.Containers_Layer_Category, bundlePackage.Wizards, "wm.WizardLayers", "wm.base.widget.Layers", "Studio_paletteImageList_23", bundlePackage.descWizard, {}, false],
-[ bundlePackage.Containers + "/" +  bundlePackage.Containers_Layer_Category, bundlePackage.Breadcrumbs, "wm.BreadcrumbLayers", "wm.base.widget.Layers", "Studio_paletteImageList_23", bundlePackage.descWizard, {}, false],
+[ bundlePackage.Containers + "/" +  bundlePackage.Containers_Layer_Category, bundlePackage.Wizards, "wm.WizardLayers", "wm.base.widget.WizardLayers", "Studio_paletteImageList_23", bundlePackage.descWizard, {}, false],
+[ bundlePackage.Containers + "/" +  bundlePackage.Containers_Layer_Category, bundlePackage.Breadcrumbs, "wm.BreadcrumbLayers", "wm.base.widget.BreadcrumbLayers", "Studio_paletteImageList_23", bundlePackage.descWizard, {}, false],
 
 
 [ bundlePackage.Dialogs, bundlePackage.GenericDialog, "wm.GenericDialog", "wm.base.widget.Dialogs.GenericDialog", "Studio_paletteImageList_4", bundlePackage.descGenericDialog, {}, false],
@@ -99,7 +101,8 @@
 [ bundlePackage.EditorsGroup + "/" + bundlePackage.RelatedEditorGroup, bundlePackage.RelatedEditor, "wm.RelatedEditor", "wm.base.widget.RelatedEditor", "Studio_paletteImageList_9",bundlePackage.descRelatedEditor, {}, false],
 [ bundlePackage.EditorsGroup + "/" + bundlePackage.Misc, bundlePackage.DojoFileUpload, "wm.DojoFileUpload", "wm.base.widget.DojoFileUpload", "Studio_paletteImageList_4",bundlePackage.descDojoFileUpload, {}, true],
 [ bundlePackage.EditorsGroup + "/" + bundlePackage.Misc, bundlePackage.DojoFlashFileUpload, "wm.DojoFlashFileUpload", "wm.base.widget.DojoFlashFileUpload", "Studio_paletteImageList_4",bundlePackage.descDojoFlashFileUpload, {}, true],
-[bundlePackage.EditorsGroup + "/" + bundlePackage.Misc, bundlePackage.Slider, "wm.Slider", "wm.base.widget.Editors.Number", "Studio_paletteImageList_9",bundlePackage.descSlider, {}, false],
+[bundlePackage.EditorsGroup + "/" + bundlePackage.Misc, bundlePackage.Slider, "wm.Slider", "wm.base.widget.Editors.Slider", "Studio_paletteImageList_9",bundlePackage.descSlider, {}, false],
+[bundlePackage.EditorsGroup + "/" + bundlePackage.Misc, bundlePackage.RangeSlider, "wm.RangeSlider", "wm.base.widget.Editors.Slider", "Studio_paletteImageList_9",bundlePackage.descSlider, {}, false],
 
 [ bundlePackage.DataWidget + "/" + bundlePackage.DataWidgetSingle, bundlePackage.Gauge, "wm.DojoGauge", "wm.base.widget.DojoGauge",  "images/wm.dijit/ProgressBar.png", bundlePackage.descGauge, {}, true],
 [ bundlePackage.DataWidget + "/" + bundlePackage.DataWidgetSingle, bundlePackage.ProgressBar, "wm.dijit.ProgressBar", "wm.base.widget.dijit.ProgressBar", "images/wm.dijit/ProgressBar.png", bundlePackage.descProgressBar, {}, false],
@@ -200,8 +203,8 @@
 
 [ bundlePackage.Non_Visual_Components, bundlePackage.ServiceVariable, "wm.ServiceVariable", "wm.base.components.ServiceVariable", "Studio_paletteImageList_43", "", {},false],
 [ bundlePackage.Non_Visual_Components, bundlePackage.LiveVariable, "wm.LiveVariable", "wm.base.components.LiveVariable", "Studio_paletteImageList_37", "", {},false],
-[ bundlePackage.Non_Visual_Components, bundlePackage.NavigationCall, "wm.NavigationCall", "wm.base.components.NavigationCall", "Studio_paletteImageList_39", "", {},false],
-
+[ bundlePackage.Non_Visual_Components, bundlePackage.NavigationCall, "wm.NavigationCall", "wm.base.components.NavigationService", "Studio_paletteImageList_39", "", {},false],
+[ bundlePackage.Non_Visual_Components, "PhoneGapCall", "wm.PhoneGapCall", "wm.base.components.PhoneGapService", "Studio_paletteImageList_43", "", {},false],
 
 /*[ "Non-Visual Components", "SalesForceMonitorVariable", "wm.SalesForceMonitorVariable", "wm.base.components.SalesForceMonitorVariable", "images/wm/servicevar_24.png"],*/
 [ bundlePackage.Non_Visual_Components, bundlePackage.ImageList, "wm.ImageList", "wm.base.components.ImageList", "Studio_paletteImageList_17", "", {parentMenu: bundlePackage.Graphics}, false],

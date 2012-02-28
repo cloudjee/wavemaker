@@ -27,6 +27,8 @@ dojo.declare("wm.EditPanel", wm.Panel, {
 	formInvalid: true,
 	width: "100%",
 	height: "40px",
+        mobileHeight: "40px",
+        enableTouchHeight: true,
         editPanelStyle: "wm.Button",
         isCustomized: false,
 	destroy: function() {

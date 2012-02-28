@@ -43,6 +43,7 @@ import com.wavemaker.runtime.service.definition.ReflectServiceDefinition;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Operation;
+import org.springframework.core.io.Resource;
 
 /**
  * @author Simon Toens
@@ -65,14 +66,15 @@ public class DataServiceDefinition extends AbstractDeprecatedServiceDefinition i
 
     private ElementTypeFactory elementTypeFactory = DEFAULT_ELEMENT_TYPE_FACTORY;
 
-    public DataServiceDefinition(String serviceId, ExternalDataModelConfig externalConfig, DesignServiceManager serviceManager, File serviceDir)
+    public DataServiceDefinition(String serviceId, ExternalDataModelConfig externalConfig,
+                                 DesignServiceManager serviceManager, Resource serviceDir)
         throws IOException {
 
         this.owner = true;
         this.serviceId = serviceId;
         this.serviceManager = serviceManager;
         this.dataCfg = new DataModelConfiguration(serviceDir, serviceManager.getProjectManager().getCurrentProject(), serviceId, externalConfig,
-            null, null);
+            null);
         this.serviceClass = serviceManager.getService(serviceId).getClazz();
         this.packageName = StringUtils.splitPackageAndClass(this.serviceClass).v1;
         initOperationManager();

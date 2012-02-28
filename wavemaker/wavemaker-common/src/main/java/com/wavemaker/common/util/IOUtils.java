@@ -32,6 +32,8 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.springframework.util.PathMatcher;
+import org.springframework.util.AntPathMatcher;
 
 import com.wavemaker.common.MessageResource;
 
@@ -207,7 +209,7 @@ public abstract class IOUtils {
 
     /**
      * Copy from: file to file, directory to directory, file to directory.
-     * 
+     *
      * @param source File object representing a file or directory to copy from.
      * @param destination File object representing the target; can only represent a file if the source is a file.
      * @param excludes A list of exclusion filenames.
@@ -229,9 +231,72 @@ public abstract class IOUtils {
                 throw new IOException("Can't copy directory (" + source.getAbsolutePath() + ") to non-directory: " + destination.getAbsolutePath());
             }
 
-            File files[] = source.listFiles();
+            File files[] = source.listFiles(new java.io.FilenameFilter() {
+			@Override
+			    public boolean accept(File dir, String name) {
+			    return name.indexOf("#") == -1 && name.indexOf("~") == -1;
+			}
+		    });
             for (int i = 0; i < files.length; i++) {
                 copy(files[i], new File(destination, files[i].getName()), excludes);
+            }
+        } else if (source.isFile()) {
+            if (destination.isDirectory()) {
+                destination = new File(destination, source.getName());
+            }
+
+            InputStream in = new FileInputStream(source);
+            OutputStream out = new FileOutputStream(destination);
+
+            copy(in, out);
+
+            in.close();
+            out.close();
+
+        } else {
+            throw new IOException("Don't know how to copy " + source.getAbsolutePath() + "; it's neither a directory nor a file");
+        }
+    }
+
+    /**
+     * Copy from: file to file, directory to directory, file to directory.
+     *
+     * @param source File object representing a file or directory to copy from.
+     * @param destination File object representing the target; can only represent a file if the source is a file.
+     * @param includedPattern the ant-style path pattern to be included
+     * @param excludedPattern the ant-style path pattern to be excluded
+     * @throws IOException
+     */
+    public static void copy(File source, File destination, String includedPattern, String excludedPattern)
+                throws IOException {
+
+        if (!source.exists()) {
+            throw new IOException("Can't copy from non-existent file: " + source.getAbsolutePath());
+        } else {
+            PathMatcher matcher = new AntPathMatcher();
+            if (!matcher.match(includedPattern, source.getName()) ||
+                    matcher.match(excludedPattern, source.getName())) {
+                return;
+            }
+        }
+
+        if (source.isDirectory()) {
+            if (!destination.exists()) {
+                FileUtils.forceMkdir(destination);
+            }
+            if (!destination.isDirectory()) {
+                throw new IOException("Can't copy directory (" + source.getAbsolutePath() + ") to non-directory: " + destination.getAbsolutePath());
+            }
+
+            File files[] = source.listFiles(new java.io.FilenameFilter() {
+			@Override
+			    public boolean accept(File dir, String name) {
+			    return name.indexOf("#") == -1 && name.indexOf("~") == -1;
+			}
+		    });
+
+            for (int i = 0; i < files.length; i++) {
+                copy(files[i], new File(destination, files[i].getName()), includedPattern, excludedPattern);
             }
         } else if (source.isFile()) {
             if (destination.isDirectory()) {

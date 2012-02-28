@@ -338,7 +338,7 @@ public class SecurityConfigService {
 
         String roleTable = null;
 
-        if (roleProvider.equals("Database")) {
+        if (roleProvider != null && roleProvider.equals("Database")) {
             DataModelConfiguration dataModel = this.dataModelMgr.getDataModel(roleModel);
             EntityInfo entity = dataModel.getEntity(roleEntity);
             roleTable = entity.getTableName();

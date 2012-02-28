@@ -29,14 +29,14 @@ wm.Object.extendSchema(wm.Container, {
     fitToContentHeight: {group: "display", subgroup: "layout", order: 151, shortname: "Auto Height", type: "Boolean", advanced: true},
     resizeToFit:        {group: "display", subgroup: "layout", order: 152, operation: true},
 
-    layoutKind:         {group: "display", subgroup: "panel", order: 100, options: ["top-to-bottom","left-to-right","fluid"], requiredGroup: true},
+    layoutKind:         {group: "display", subgroup: "panel", order: 100, options: ["top-to-bottom","left-to-right"], requiredGroup: true},
     horizontalAlign:    {group: "display", subgroup: "panel", order: 110, options: ["left","center","right"]},
     verticalAlign:      {group: "display", subgroup: "panel", order: 120, options: ["top","middle","bottom"]},
 
 
     /* Display group; scrolling subgroup */
     autoScroll: {writeonly: 0},
-    touchScrolling: {group: "display", subgroup: "scrolling", order: 103, ignore: 0, advanced: true},
+    touchScrolling: {group: "display", subgroup: "scrolling", order: 103, ignore: 0, advanced: true, ignore:1}, // now just uses autoScroll
 
     /* Style group */
     //themeStyleType: {ignore: true, group: "style", order: 20, options: ["", "MainContent", "EmphasizedContent", "HeaderContent"]},
@@ -131,6 +131,7 @@ wm.Container.extend({
 		this.designWrapper._setBounds(inBounds);
 	},
     designResizeForNewChild: function(layoutKind, reduceSize) {
+	if (this.owner != studio.page) return;
 	if (!this.autoScroll && 
 	    !this.scrollX && 
 	    !this.scrollY && 

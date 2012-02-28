@@ -24,16 +24,6 @@ dojo.declare("wm.Property", wm.Component, {
 	init: function() {
 		this.inherited(arguments);
 	    this.type = '';
-	    if (this._isDesignLoaded && this.property) {
-		/* onIdle because dojo.connect requires that the component be created, and it won't be created until the page finishes generating */
-		wm.onidle(this, function() {
-			  this.selectProperty(this.property);
-		});
-
-		
-		this._nameChangeConnect = this.connect(c, "set_name", this, function() {
-		    this.property = c.name + "." + prop;
-		});
-	    }
+	    if (this._isDesignLoaded) this.designTimeInit();
 	}
 });

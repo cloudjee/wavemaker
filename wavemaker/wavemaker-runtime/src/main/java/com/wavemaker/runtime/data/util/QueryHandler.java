@@ -30,6 +30,7 @@ import org.hibernate.mapping.PersistentClass;
 
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.WMAppContext;
+import com.wavemaker.common.util.StringUtils;
 
 /**
  * This class wraps Hibernate APIs to incorporate the tenant ID in the DB queries.
@@ -587,14 +588,14 @@ public class QueryHandler implements InvocationHandler {
         return true;
     }
 
-    private boolean tenantFieldExists(String className, String fldName) {
+    private boolean tenantFieldExists (String className, String fldName) {
 
         try {
-            Iterator classList = this.cfg.getClassMappings();
+            Iterator classList = cfg.getClassMappings();
             while (classList.hasNext()) {
-                Class cls = ((PersistentClass) classList.next()).getMappedClass();
-                String clsName = cls.getName();
-                if (clsName.contains(className)) {
+                Class cls = ((PersistentClass)classList.next()).getMappedClass();
+                String clsName = StringUtils.getClassName(cls.getName());
+                if (clsName.equals(StringUtils.getClassName(className))) {
                     String s = fldName.substring(0, 1).toUpperCase();
                     String setterName = "set" + s + fldName.substring(1);
                     cls.getMethod(setterName, Integer.class);
@@ -603,11 +604,8 @@ public class QueryHandler implements InvocationHandler {
             }
         } catch (NoSuchMethodException ne) {
             return false;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
         }
-        return true;
+        return false;
     }
 
     private int getFirstNoneDelimiterPosBackward(int pos, List<String> words) {

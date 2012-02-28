@@ -349,6 +349,10 @@
   * ignoretmp: This property is ignored for its current state; currently we disable/enable the disabled property editor; previously hidden/shown as needed
   * ignoreHint: Hint to give to property editors shown as disabled due to ignoretmp
   * options: array of options for a wm.SelectMenu
+  * bindSource: Shows up in the bind dialog as something that can be bound to
+  * bindTarget: Has a bind button next to it and can be bound to other values
+  * bindable: both bindTarget and bindSource are true
+  * contextMenu: Property (presumably an operation) shows up in the context menu for the widget
   * shortname: Alternate name to show instead of the real name; used for localization and for human readable prop names
   * operation: Show a button instead of an editor; component must have a method with the same name as the property name. If boolean, calls this.propertyName(); if a string it calls this[prop.operation]()
   * method: treat a property as a method, there only for property documentation and autocompletion
@@ -445,13 +449,21 @@
      },
      reinspect: function(inSubComponent) {
 	 /* the previous reinspect will trigger onEditorChange events which will trigger additional reinspects; insure that all of the onEditorChange
-	  * events combined can only trigger a single additional reinspect
+	  * events combined can only trigger a single additional reinspect.
+	  * Test for hasJob though is so we don't disrupt calls to studio.inspect that may have been triggered by a property change.
 	  */
-	 wm.job("studio.inspect", 10, dojo.hitch(this, "_reinspect", inSubComponent));
+	 if (!wm.hasJob("studio.inspect")) {
+	     wm.job("studio.inspect", 10, dojo.hitch(this, "_reinspect", inSubComponent));
+	 }
      },
 
      _reinspect: function(inSubComponent) {
 	 var inComponent = inSubComponent || this.inspected;
+	 if (inComponent.isDestroyed) {
+	     if (studio.page && studio.page.root) {
+		 return this.inspect(studio.page.root);
+	     }
+	 }
 	 this._inspecting = true;
 	 try {
 	     var props = this.getProps(inComponent,false);
@@ -576,6 +588,8 @@
 	     e.setDisabled(inProp.ignoretmp || e.alwaysDisabled); // make sure though to change the disabled property if ignoretmp changed...
 	     if (this.isAdvancedMode()) {
 		 e.setHint(inProp.ignoretmp && inProp.ignoretmp ? this.ignoreHintPrefix +  inProp.ignoreHint : "");
+	     } else if (e instanceof wm.Button) {
+		 e.setShowing(!inProp.ignoretmp);
 	     } else {
 		 e.parent.setShowing(!inProp.ignoretmp);
 	     }
@@ -724,6 +738,7 @@
 	 } else {
 	     this._generateEditors(inComponent, inLayer, this.props, !this.isAdvancedMode());
 	 }
+	 inLayer.setShowing(inLayer.c$.length);
      },
 
      _generateEditors: function(inComponent, inLayer, inPropList, skipIgnoreTmp) {
@@ -1026,7 +1041,7 @@
 		 if (e instanceof wm.prop.FieldGroupEditor) {
 		     inComponent.setValue(inProp.name, inDataValue);
 		 } else {
-		     inComponent.setValue(inProp.name, inDataValue);
+		     inComponent.setProp(inProp.name, inDataValue);
 		 }
 	     } 
 
@@ -1359,7 +1374,7 @@
 	 if (wm.propertyGroups[inName]) {
 	     result.order = wm.propertyGroups[inName].order;
 	     if (inName == "widgetName") {
-		 result.displayName = this.inspected.declaredClass.replace(/^.*\./,"") + " Component"; // TODO: Localize
+		 result.displayName = this.inspected.declaredClass.replace(/^.*\./,"") + " Properties"; // TODO: Localize
 	     } else {
 		 result.displayName = wm.propertyGroups[inName].displayName;
 	     }
@@ -1768,14 +1783,18 @@ wm.addPropertyGroups({
 		},
 	/* Confirmed */
     mobile: {displayName: "Mobile",
-	     order: 60,
+	     order: 100,
 	     subgroups: {
 		 layout: {displayName: "Layout",
 			  order: 1},
+		 data: {displayName: "Data",
+			order: 5},
 		 layerfolding: {displayName: "Mobile Folding",
 				order: 10},
 		 appnav: {displayName: "Nav Buttons",
-			  order: 20}
+			  order: 20},
+		 devices: {displayName: "Devices",
+			   order: 30}
 	     }
 	    },
 

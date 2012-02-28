@@ -86,7 +86,11 @@
 			<artifactId>wavemaker-runtime</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>wavemaker-tools-cloudfoundry</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>wavemaker-runtime</artifactId>

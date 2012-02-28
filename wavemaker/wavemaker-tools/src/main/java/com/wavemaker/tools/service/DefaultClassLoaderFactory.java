@@ -17,26 +17,27 @@ package com.wavemaker.tools.service;
 import java.io.File;
 
 import com.wavemaker.common.util.ClassLoaderUtils;
+import org.springframework.core.io.Resource;
 
 /**
  * @author Simon Toens
  */
 public class DefaultClassLoaderFactory implements ClassLoaderFactory {
 
-    private final File[] paths;
+    private final Resource[] paths;
 
-    public DefaultClassLoaderFactory(File path) {
-        this(new File[] { path });
+    public DefaultClassLoaderFactory(Resource path) {
+        this(new Resource[] { path });
     }
 
-    public DefaultClassLoaderFactory(File... paths) {
+    public DefaultClassLoaderFactory(Resource... paths) {
         this.paths = paths;
     }
 
     @SuppressWarnings("deprecation")
     @Override
     public ClassLoader getClassLoader() {
-        return ClassLoaderUtils.getClassLoaderForFile(this.paths);
+        return ClassLoaderUtils.getClassLoaderForResources(this.paths);
     }
 
 }

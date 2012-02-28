@@ -32,7 +32,7 @@ wm.define("wm.Container", wm.Control, {
 	        autoScroll: {group: "scrolling", order: 100, ignore: 0, type: "Boolean"}
 	},
 	*/
-    touchScrolling: false,
+    //touchScrolling: false,
 	imageList: "",
 	border: "0",
 	container: true,
@@ -63,8 +63,8 @@ wm.define("wm.Container", wm.Control, {
 	    if (this.dockBottom) {
 		app.dockBottom = this;
 	    }
-	    if (this.touchScrolling && app._touchEnabled) {
-		wm.conditionalRequire("lib.github.touchscroll.touchscroll");
+	    if (this.autoScroll && app._touchEnabled) {
+		wm.conditionalRequire("lib.github.touchscroll.touchscroll" + (djConfig.isDebug ? "" : "-min"));
 		this._touchScroll = new TouchScroll(this.domNode, {elastic:true, owner: this});
 		this._touchScroll.scrollers.outer.style.position = "absolute";
 		this._touchScroll.scrollers.outer.style.left = "0px";

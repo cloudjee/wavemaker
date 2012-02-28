@@ -95,6 +95,7 @@ wm.Object.extendSchema(wm.Dialog, {
     onMiscButtonClick: {advanced:1},
 
     /* Ignore group */
+    wrapInPanel: {ignore:1},
     buttonBarId: {hidden:1},
     containerWidgetId: {hidden:1},
     resizeToFit: {ignore: 1},

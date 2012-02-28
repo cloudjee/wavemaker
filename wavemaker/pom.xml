@@ -19,5 +19,6 @@
 		<module>wavemaker-studio</module>
 		<module>wavemaker-test-support</module>
 		<module>wavemaker-tools</module>
+		<module>wavemaker-tools-cloudfoundry</module>
 	</modules>
 </project>

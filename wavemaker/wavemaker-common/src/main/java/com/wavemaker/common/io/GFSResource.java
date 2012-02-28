@@ -22,9 +22,11 @@
 package com.wavemaker.common.io;
 
 import java.io.File;
+import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -44,9 +46,11 @@ import com.wavemaker.common.WMRuntimeException;
 /**
  * @author Ed Callahan
  */
-public class GFSResource implements Resource {
+public class GFSResource implements Resource, Sha1DigestCacheable {
 
     private static final String METADATA_FOLDER_KEY = "FOLDER";
+
+    private static final String METADATA_SHA1_KEY = "SHA1";
 
     private final GridFS gfs;
 
@@ -124,12 +128,9 @@ public class GFSResource implements Resource {
     @Override
     public boolean exists() {
         if (isDirectory()) {
-            return this.dirsDoc.containsField(this.path);
+            return this.dirsDoc.containsField(getPath());
         }
-        if (this.file == null) {
-            this.file = this.gfs.findOne(this.path);
-        }
-        return this.file != null;
+        return getGridFSDBFile(false) != null;
     }
 
     /**
@@ -179,7 +180,7 @@ public class GFSResource implements Resource {
      */
     @Override
     public long contentLength() throws IOException {
-        return this.file.getLength();
+        return getGridFSDBFile(true).getLength();
     }
 
     /**
@@ -190,7 +191,7 @@ public class GFSResource implements Resource {
      */
     @Override
     public long lastModified() throws IOException {
-        return this.file.getUploadDate().getTime();
+        return getGridFSDBFile(true).getUploadDate().getTime();
     }
 
     @Override
@@ -203,7 +204,7 @@ public class GFSResource implements Resource {
      * Return the MD5 for this resource
      */
     public String getMD5() {
-        return this.file.getMD5();
+        return getGridFSDBFile(true).getMD5();
     }
 
     /**
@@ -224,7 +225,8 @@ public class GFSResource implements Resource {
         if (!this.exists()) {
             throw new IOException("File does not exist at path: " + this.path);
         }
-        return this.file.getInputStream();
+        GridFSDBFile gridFSDBFile = getGridFSDBFile(true);
+        return new GFSResourceAwareInputStream(gridFSDBFile.getInputStream());
     }
 
     /**
@@ -245,7 +247,12 @@ public class GFSResource implements Resource {
      */
     @Override
     public URL getURL() {
-        throw new UnsupportedOperationException();
+        try {
+            return getURI().toURL();
+        } catch (MalformedURLException ex) {
+            throw new WMRuntimeException(ex);
+        }
+        // throw new UnsupportedOperationException();
     }
 
     /**
@@ -269,4 +276,88 @@ public class GFSResource implements Resource {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public byte[] getSha1Digest() {
+        GridFSDBFile file = getGridFSDBFile(false);
+        if (file != null) {
+            return (byte[]) file.get(METADATA_SHA1_KEY);
+        }
+        return null;
+    }
+
+    @Override
+    public void setSha1Digest(byte[] digest) {
+        GridFSDBFile file = getGridFSDBFile(false);
+        if (file != null) {
+            file.put(METADATA_SHA1_KEY, digest);
+            file.save();
+        }
+    }
+
+    private GridFSDBFile getGridFSDBFile(boolean required) {
+        if (this.file == null) {
+            this.file = this.gfs.findOne(this.path);
+        }
+        Assert.state(!required || this.file != null, "File does not exist at path: " + this.path);
+        return this.file;
+    }
+
+    @Override
+    public String toString() {
+        return getPath() + getFilename();
+    }
+
+    /**
+     * {@link InputStream} that is aware of the {@link GFSResource} and can provide more meaningful IO exceptions.
+     */
+    private class GFSResourceAwareInputStream extends FilterInputStream {
+
+        protected GFSResourceAwareInputStream(InputStream in) {
+            super(in);
+        }
+
+        @Override
+        public int read() throws IOException {
+            try {
+                return this.in.read();
+            } catch (IOException e) {
+                rethrow(e);
+            } catch (RuntimeException e) {
+                rethrow(e);
+            }
+            throw new IllegalStateException();
+        }
+
+        @Override
+        public int read(final byte[] b) throws IOException {
+            try {
+                return this.in.read(b);
+            } catch (IOException e) {
+                rethrow(e);
+            } catch (RuntimeException e) {
+                rethrow(e);
+            }
+            throw new IllegalStateException();
+        }
+
+        @Override
+        public int read(final byte[] b, int off, int len) throws IOException {
+            try {
+                return this.in.read(b, off, len);
+            } catch (IOException e) {
+                rethrow(e);
+            } catch (RuntimeException e) {
+                rethrow(e);
+            }
+            throw new IllegalStateException();
+        }
+
+        private void rethrow(IOException e) throws IOException {
+            throw new IOException(e.getMessage() + " accessing file " + getFilename());
+        }
+
+        private void rethrow(RuntimeException e) throws IOException {
+            throw new IOException(e.getMessage() + " accessing file " + getFilename());
+        }
+    }
 }

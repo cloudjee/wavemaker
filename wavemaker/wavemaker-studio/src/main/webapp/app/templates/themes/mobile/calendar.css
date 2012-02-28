@@ -1,0 +1,128 @@
+/*
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+
+  /**************************************************************************************************
+   * TYPE:        wm.Calendar and the popup from wm.Date
+   *
+   * DESCRIPTION: Sets colors and rounding for calendar, calendar hover and calendar selection
+   *
+   * NOTE:        Style of Date Popup is not affected by panel type because its
+   *              parent is always the body tag.  We may in the future want Calendar itself to depend 
+   *              on its parent...
+   ************************************************************************************************/
+
+
+.wm_template table .dijitCalendarYearContainer tr {
+    background-color: #444444; /* Document-ClickablesDefault-Background_Color */
+    border-style: solid;
+    border-color: #AAAAAA; /* Document-ClickablesHover-Background_Color */
+    border-top-width: 1px;
+}
+.wm_template table .dijitCalendarYearContainer td span {
+    color: #FFFFFF !important; /* Document-ClickablesDefault-Font_Color */
+}
+.wm_template .dijitCalendarYearLabel {
+    font-size: 10px; /*Document-ClickablesDefault-Font_Size */
+}
+
+.wm_template .dijitCalendarDayLabel,
+.wm_template .dijitCalendarDateLabel {
+    font-size: 12px; /* wm.Calendar-Font_Size */  
+}
+
+.wm_template tr.dijitCalendarMonthContainer th {
+    /* Document-ClickablesDefault-Font */
+    font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */ 
+    font-size: 10px; /*Document-ClickablesDefault-Font_Size */
+    color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
+    font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+
+    /* Document-ClickablesDefault-Background */
+    background-color: #444444; /* Document-ClickablesDefault-Background_Color */
+    background-image: none; /* Document -ClickablesDefault-Background_ Image */
+}
+
+.wm_template tr.dijitCalendarMonthContainer th .dijitCalendarMonthLabel {
+    /* Document-ClickablesDefault-Font */
+    font-family: sans-serif; /* Document-ClickablesDefault-Font_Family */
+    font-size: 10px; /*Document-ClickablesDefault-Font_Size */
+    color: #FFFFFF; /* Document-ClickablesDefault-Font_Color */
+    font-weight: bold; /* Document-ClickablesDefault-Font_Weight */
+    border-width: 0px;
+    -moz-box-shadow: 0px 0px 0px black; 
+    -webkit-box-shadow: 0px 0px 0px black;
+    box-shadow: 0px 0px 0px black;
+}
+
+.wm_template table.dijitCalendarContainer {
+    border-color: #666666; /* Borders-Clickable_Border_Color */
+    border-style: solid;
+    border-width: 4px;
+
+    -moz-border-radius: 4px; /* PageContent-Styles-Border_Radius */
+    -webkit-border-radius: 4px; /* PageContent-Styles-Border_Radius */
+    border-radius: 4px; /* PageContent-Styles-Border_Radius */
+}
+
+
+.wm_template table.dijitCalendarContainer td.dijitCalendarCurrentMonth {
+    background-color: #444444 !important; /* PageContent-Styles-Background_Color */
+    color: #FFFFFF !important; /* PageContent-Styles-Font_Color */
+}
+
+.wm_template .dijitCalendarBodyContainer td {
+    border-style: solid;
+    border-color: #666666; /* Borders-Clickable_Border_Color */
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-left-width: 0px;
+    border-bottom-width: 0px;
+}
+
+.wm_template .dijitCalendarContainer td.dijitCalendarSelectedDate,
+.wm_template .dijitCalendarContainer td.dijitCalendarSelectedDate.dijitCalendarCurrentMonth,
+.wm_template .dijitCalendarContainer .dijitCalendarSelectedYear {
+    background-color: #AAAAAA !important; /* Document-ClickablesActive-Background_Color */
+    color: #FFFFFF !important; /* Document-ClickablesActive-Font_Color */
+}
+
+.wm_template .dijitCalendarContainer td.dijitCalendarHoveredDate,
+.wm_template .dijitCalendarContainer td.dijitCalendarHoveredDate.dijitCalendarCurrentMonth,
+.wm_template .dijitCalendarContainer .dijitCalendarHoveredYear,
+.wm_template .dijitCalendarContainer .dijitCalendarNextYear:hover,
+.wm_template .dijitCalendarContainer .dijitCalendarPreviousYear:hover {
+    background-color: #AAAAAA !important; /* Document-ClickablesHover-Background_Color */
+    color: #FFFFFF !important; /* Document-ClickablesHover-Font_Color */
+}
+
+
+
+.wm_template .dijitCalendarContainer {
+    background-color: #FFFFFF; /* PageContent-Styles-Background_Color */
+}
+
+.wm_template .dijitCalendarContainer .dijitCalendarPreviousMonth,
+.wm_template .dijitCalendarContainer .dijitCalendarNextMonth,
+.wm_template .dijitCalendarContainer .dijitCalendarDayLabelTemplate {
+    background-color: #DDDDDD !important; /* Document-Styles-Background_Color */
+    background-image: none;
+    color: #FFFFFF; /* Document-Styles-Font_Color */
+}
+
+.wm_template .dijitCalendarDayLabelTemplate {
+    border-style: solid;
+    border-color: #666666; /* Borders-Clickable_Border_Color */
+    border-right-width: 1px;
+}

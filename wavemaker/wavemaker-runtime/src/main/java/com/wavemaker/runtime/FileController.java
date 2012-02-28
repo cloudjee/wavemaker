@@ -94,7 +94,7 @@ public final class FileController extends AbstractController {
             reqPath += ".gz";
         } else if (reqPath.startsWith(WM_BUILD_DOJO_THEMES_URL) || reqPath.startsWith(WM_BUILD_WM_THEMES_URL)
             || reqPath.startsWith(WM_BUILD_DOJO_FOLDER_URL) || reqPath.equals(WM_BOOT_URL) || reqPath.equals(WM_RUNTIME_LOADER_URL)
-            || reqPath.startsWith(WM_IMAGE_URL) || reqPath.startsWith(WM_STUDIO_BUILD_URL)) {
+            || reqPath.startsWith(WM_IMAGE_URL) || reqPath.startsWith(WM_STUDIO_BUILD_URL)) { 
             addExpiresTag = true;
         } else if (!reqPath.contains(WM_CONFIG_URL)) {
             throw new WMRuntimeException(MessageResource.STUDIO_UNKNOWN_LOCATION, reqPath, request.getRequestURI());
@@ -143,7 +143,16 @@ public final class FileController extends AbstractController {
                     language = index == -1 ? language : language.substring(0, index);
                     content += "\r\n" + "wm.localeString = '" + language + "';";
                 }
-
+		File bootFile = new File(sendFile.getParent(), "boot.js");
+		if (bootFile.exists()) {
+		    InputStream is2 = new FileInputStream(bootFile);
+		    String bootString = IOUtils.toString(is2);
+		    bootString = bootString.substring(bootString.indexOf("*/") + 2);
+		    content += bootString;
+		    is2.close();
+		} else {
+		    System.out.println("Boot file not found");
+		}
                 IOUtils.write(content, os);
             } else {
                 IOUtils.copy(is, os);

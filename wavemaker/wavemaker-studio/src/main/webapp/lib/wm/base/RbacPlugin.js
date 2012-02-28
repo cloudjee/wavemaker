@@ -81,6 +81,7 @@ wm.Plugin.plugin("rbacLayer", wm.Layer, {
 wm.Plugin.plugin("rbacservice", wm.ServiceVariable, {
 	roles: '',
     update: function() {
+	if (djConfig.isDebug) try { this.log("update", arguments.callee.caller.nom || arguments.callee.caller.name || "anonymous");} catch(e) {}
 	if (!this.roles || this.isRbacUpdateAllowed())
 	    return this.rbacserviceSocket(arguments);
 	else {
@@ -121,35 +122,30 @@ wm.Plugin.plugin("rbacservice", wm.ServiceVariable, {
 
 wm.Plugin.plugin("mobile", wm.Control, {
     deviceSizes: '',
-    prepare: function() {
+    prepare: function(inProps) {
 	this.mobileSocket(arguments);
-/*
-	if (!this.deviceSizes && this.generateForDevice) {
-	    this.deviceSizes = dojo.clone(this.generateForDevice);
-	} else if (this.deviceSizes && this.generateForDevice) {
-	    this.deviceSizes = this.deviceSizes.concat(this.generateForDevice);
-	}*/
-	if (this.deviceSizes || window["studio"] && this.generateForDevice) {
+	if (this.deviceSizes || inProps.deviceSizes || window["studio"] && this.deviceType) {
 	    this._mobileShowingRequested = this.showing;
 	    this.showing = this.updateMobileShowing(this.showing);
 	    this.subscribe("deviceSizeRecalc", this, "reshowMobile");
 	}
     },
     reshowMobile: function() {
-	this.setShowing(this._mobileShowingRequested);
+	this.setShowing(this._mobileShowingRequested || this.showing);
     },
     setShowing: function(inValue) {
 	/* wm.Layer.setShowing calls TabDecorator.setShowing which calls wm.Control.setShowing, which would clobber our
 	 * _mobileShowingRequested value
 	 */
-	if (this instanceof wm.Layer == false && this.deviceSizes)
+	if (this instanceof wm.Layer == false && this.deviceSizes || this._isDesignLoaded && this.deviceType)
 	    inValue = this.updateMobileShowing(inValue);
 	this.mobileSocket(arguments);
     },
     updateMobileShowing: function(inValue) {
 	if (!this._cupdating)
 	    this._mobileShowingRequested = inValue; // cache whether it should be showing even if we don't let it show
-	if (this.deviceSizes && this.deviceSizes.length || this._isDesignLoaded && this.generateForDevice) {
+
+	if (this.deviceSizes && this.deviceSizes.length || this._isDesignLoaded && this.deviceType ) {
 	    return inValue && this.isMobileShowAllowed();
 	} else {
 	    return inValue;
@@ -157,11 +153,15 @@ wm.Plugin.plugin("mobile", wm.Control, {
     },
     isMobileShowAllowed: function() {
 	if (this._isDesignLoaded) {
-	    var deviceSize = studio.deviceSelect.getDataValue();
+	    var deviceType = studio.currentDeviceType;
+	    if (deviceType && this.deviceType && dojo.indexOf(this.deviceType, deviceType) == -1) {
+		return false;
+	    }
+
+	    var deviceSize = studio.deviceSizeSelect.getDataValue();
 	    if (!deviceSize) return true;
 	    var isOk = true;
 	    if (this.deviceSizes && dojo.indexOf(this.deviceSizes, deviceSize) == -1) return false;
-	    if (this.generateForDevice && dojo.indexOf(this.generateForDevice, deviceSize) == -1) return false;
 	    return true;
 	} else {
 	    var deviceSize = app.appRoot.deviceSize;

@@ -221,7 +221,7 @@ public class TomcatServer extends Server {
         con.setRequestProperty("User-Agent", "Catalina-Ant-Task/1.0");
 
         String input = this.username + ":" + this.password;
-        String output = new String(new Base64().encode(input.getBytes()));
+        String output = new String(new Base64().encode(input.getBytes())).trim();
         con.setRequestProperty("Authorization", "Basic " + output);
 
         try {

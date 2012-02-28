@@ -197,6 +197,11 @@ dojo.require("dojox.fx");
 		},
 	
 		_setPixelValue: function(/*Number*/ pixelValue, /*Number*/ maxPixels, /*Boolean*/ priorityChange, /*Boolean*/ isMaxVal){
+		    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+		     * WaveMaker: dynamicSlider property added by VMware */
+		    if (this.dynamicSlider) priorityChange = true;
+
+
 			if(this.disabled || this.readOnly){ return; }
 			var myValue = this._getValueByPixelValue(pixelValue, maxPixels);
 			this._setValueAttr(myValue, priorityChange, isMaxVal);
@@ -215,6 +220,9 @@ dojo.require("dojox.fx");
 		_setValueAttr: function(/*Array or Number*/ value, /*Boolean, optional*/ priorityChange, /*Boolean, optional*/ isMaxVal){
 			// we pass an array, when we move the slider with the bar
 			var actValue = this.value;
+			if(!dojo.isArray(actValue)){
+			    actValue = [0,0];
+			}
 			if(!dojo.isArray(value)){
 				if(isMaxVal){
 					if(this._isReversed()){

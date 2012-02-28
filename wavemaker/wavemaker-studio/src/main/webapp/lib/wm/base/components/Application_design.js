@@ -86,10 +86,55 @@ wm.Application.extend({
 	}
 	return this.inherited(arguments);
     },
-    setMain: function(inMain) {
+    set_main: function(inMain) {
+	if (inMain == studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION")) {
+	    return this.createNewPage();
+	}
 	this.main = inMain;
 	studio.setProjectMainPage(inMain);
     },
+    set_phoneMain: function(inMain) {
+	if (inMain == studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION")) {
+	    return this.createNewPage("phoneMain");
+	}
+	this.phoneMain = inMain;
+    },
+    set_tabletMain: function(inMain) {
+	if (inMain == studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION")) {
+	    return this.createNewPage("tabletMain");
+	}
+	this.tabletMain = inMain;
+    },
+
+    createNewPage: function(optionalInPageType) {
+	var pages = studio.project.getPageList();
+	var l = {};
+	dojo.forEach(pages, function(p) {
+	    l[p] = true;
+	});
+
+        studio.promptForName("page", wm.findUniqueName(optionalInPageType ? wm.capitalize(optionalInPageType) : "Page", [l]), pages,
+                             dojo.hitch(this, function(n) {
+				 n = wm.capitalize(n);
+				 this[optionalInPageType || "main"] = n;
+				 studio.project.saveProject(false, dojo.hitch(this, function() {
+				     studio.project.newPage(n);
+				     switch(optionalInPageType) {
+				     case "tabletMain":
+						 studio.tabletToggleButton.click();
+						 break;
+				     case "phoneMain":
+						 studio.phoneToggleButton.click();
+						 break;
+				     default:
+						 studio.desktopToggleButton.click();
+						 break;
+				     }
+				 }));
+			     }));
+    },
+
+
     incSubversionNumber: function() {
 	if (dojo.isString(this.projectSubVersion)) {
 	    if (parseInt(this.projectSubVersion) + "" == this.projectSubVersion)
@@ -125,20 +170,25 @@ wm.Application.extend({
 wm.Object.extendSchema(wm.Application, {
     deviceSize: {ignore: 1, bindSource:1},
     name: {ignore: 1}, // at some point, we might provide this as a way to rename the project... but renaming is really a server side op, so requires confirmation. 
-    main: {shortname: "mainPageName", order: 5, editor: "wm.prop.PagesSelect", editorProps: {currentPageOK:true}},
-    promptChromeFrame: {order: 10, type: "string", options: ["chromeframe.html", "http://google.com/chrome", "Allow IE 6 and 7"]},
-    toastPosition: {editor: "wm.prop.SelectMenu", editorProps: {
+    main: {group: "mobile", shortname: "mainPageName", order: 5, editor: "wm.prop.PagesSelect", editorProps: {currentPageOK:true, newPage: true}},
+    tabletMain: {group: "mobile", order: 6, editor: "wm.prop.PagesSelect", editorProps: {currentPageOK:true, newPage: true}},
+    phoneMain: {group: "mobile", order: 7, editor: "wm.prop.PagesSelect", editorProps: {currentPageOK:true, newPage: true}},
+    promptChromeFrame: {group: "widgetName",  subgroup: "behavior", order: 10, type: "string", options: ["chromeframe.html", "http://google.com/chrome", "Allow IE 6 and 7"]},
+    toastPosition: {group: "widgetName",  subgroup: "behavior", editor: "wm.prop.SelectMenu", editorProps: {
 	options: ["top left", "top center", "top right", "center left", "center center", "center right", "bottom left", "bottom center", "bottom right"],
 	values: ["tl", "tc", "tr", "cl", "cc", "cr", "bl", "bc", "br"]}},
-    i18n: {type: "boolean", order: 6},
-    theme: {type: "string", order: 7},
-    currencyLocale: {type: "string", order: 8},
+    i18n: {group: "widgetName", type: "boolean", order: 6},
+    theme: {group: "widgetName", type: "string", order: 7},
+    currencyLocale: {group: "widgetName",  subgroup: "behavior", type: "string", order: 8},
     saveCounter: {writeonly: true},
     //IERoundedCorners: {ignore: true},
-    studioVersion: {writeonly: true, type: "string", order: 105},
-    dialogAnimationTime: {type: "number", order: 200},
-    projectVersion: {type: "string", order: 100},
-    projectSubVersion: {type: "string", order: 101},
+    dialogAnimationTime: {group: "widgetName", subgroup: "behavior", type: "number", order: 200},
+    disableDirtyEditorTracking: {group: "widgetName", subgroup: "behavior", type: "boolean", order: 250},
+    manageURL: {group: "widgetName", subgroup: "behavior", type: "boolean", order: 50},
+    manageHistory: {group: "widgetName", subgroup: "behavior", type: "boolean", order: 51},
+    studioVersion: {group: "widgetName",  subgroup: "version", writeonly: true, type: "string", order: 105},
+    projectVersion: {group: "widgetName",  subgroup: "version", type: "string", order: 100},
+    projectSubVersion: {group: "widgetName", subgroup: "version", type: "string", order: 101},
     firstThemeChange: {ignore: true},
     documentation: {ignore: true},
     generateDocumentation: {ignore: true},

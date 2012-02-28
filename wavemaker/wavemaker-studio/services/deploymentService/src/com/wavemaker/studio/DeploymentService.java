@@ -18,18 +18,22 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.json.JSONObject;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.server.DownloadResponse;
 import com.wavemaker.runtime.server.FileUploadResponse;
 import com.wavemaker.runtime.server.ParamName;
-import com.wavemaker.runtime.service.ServiceSuperClass;
+import com.wavemaker.runtime.server.ServiceResponse;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.deployment.DeploymentInfo;
+import com.wavemaker.tools.deployment.DeploymentStatusException;
 import com.wavemaker.tools.deployment.DeploymentTargetManager;
 import com.wavemaker.tools.deployment.DeploymentType;
 import com.wavemaker.tools.deployment.ServiceDeploymentManager;
@@ -42,7 +46,9 @@ import com.wavemaker.tools.project.DeploymentManager;
  * @author Jeremy Grelle
  */
 @ExposeToClient
-public class DeploymentService extends ServiceSuperClass {
+public class DeploymentService { // extends ServiceSuperClass {
+
+    private static final String SUCCESS = "SUCCESS";
 
     private DeploymentManager deploymentManager;
 
@@ -50,12 +56,57 @@ public class DeploymentService extends ServiceSuperClass {
 
     private ServiceDeploymentManager serviceDeploymentManager;
 
+    private ServiceResponse serviceResponse = null;
+
+    /*
+     * TODO: This should be ServiceSuperClass Remove this and extend super class after fixing SMD generation
+     */
+    public JSONObject getResponseFromService(String requestId) {
+        if (this.serviceResponse == null) {
+            this.serviceResponse = (ServiceResponse) RuntimeAccess.getInstance().getSpringBean("serviceResponse");
+        }
+
+        JSONObject result = this.serviceResponse.getResponseFromService(requestId);
+        String status = (String) result.get("status");
+        if (status.equals("processing")) {
+            Thread originalThread = this.serviceResponse.getRequestThread(requestId);
+            if (originalThread == null || !originalThread.isAlive()) {
+                result = this.serviceResponse.getResponseFromService(requestId);
+                status = (String) result.get("status");
+                if (status.equals("processing")) {
+                    if (originalThread == null || !originalThread.isAlive()) {
+                        JSONObject resp = new JSONObject();
+                        resp.put("status", "error");
+                        resp.put("result", "Error: The original request thread is lost");
+                        return resp;
+                    } else if (!originalThread.isAlive()) {
+                        JSONObject resp = new JSONObject();
+                        resp.put("status", "error");
+                        resp.put("result", "Error: The original request thread has been terminated");
+                        return resp;
+                    }
+                }
+            }
+        }
+
+        return result;
+    }
+
+    public String getRequestId() {
+        UUID uuid = UUID.randomUUID();
+        return uuid.toString();
+    }
+
     /**
      * Start a 'test run' for the given project. This method should ensure that the current project is compiled,
      * deployed and active.
+     * 
+     * @return return the URL of the deployed application. URLs can be relative paths (eg. '/Project1') or fully
+     *         qualified URLS (eg. 'http://project1.cloudfoundry.com'). returned URLs should not include parameters as
+     *         these are always managed by the client.
      */
-    public void testRunStart() {
-        this.deploymentManager.testRunStart();
+    public String testRunStart() {
+        return this.deploymentManager.testRunStart();
     }
 
     /**
@@ -169,7 +220,7 @@ public class DeploymentService extends ServiceSuperClass {
     public String delete(String deploymentId) {
         this.deploymentManager.deleteDeploymentInfo(deploymentId);
         // FIXME this may was well return void
-        return "SUCCESS";
+        return SUCCESS;
     }
 
     /**
@@ -181,24 +232,25 @@ public class DeploymentService extends ServiceSuperClass {
      * @throws IOException
      */
     public String deploy(DeploymentInfo deploymentInfo) throws IOException {
-        if (deploymentInfo.getDeploymentType() != DeploymentType.FILE) {
-            String validateResult = this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).validateDeployment(
-                deploymentInfo);
-            if (!validateResult.equals("SUCCESS")) {
-                return validateResult;
+        try {
+            if (deploymentInfo.getDeploymentType() != DeploymentType.FILE && deploymentInfo.getDeploymentType() != DeploymentType.CLOUD_FOUNDRY) {
+                this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).validateDeployment(deploymentInfo);
             }
+            if (deploymentInfo.getDeploymentType() != DeploymentType.CLOUD_FOUNDRY) {
+                File f = this.serviceDeploymentManager.generateWebapp(deploymentInfo).getFile();
+                if (!f.exists()) {
+                    throw new AssertionError("Application archive file doesn't exist at " + f.getAbsolutePath());
+                }
+                if (deploymentInfo.getDeploymentType() == DeploymentType.FILE) {
+                    return SUCCESS;
+                }
+            }
+            this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).deploy(
+                this.serviceDeploymentManager.getProjectManager().getCurrentProject(), deploymentInfo);
+            return SUCCESS;
+        } catch (DeploymentStatusException e) {
+            return e.getStatusMessage();
         }
-        if (deploymentInfo.getDeploymentType() != DeploymentType.CLOUD_FOUNDRY) {
-            File f = this.serviceDeploymentManager.generateWebapp(deploymentInfo).getFile();
-            if (!f.exists()) {
-                throw new AssertionError("Application archive file doesn't exist at " + f.getAbsolutePath());
-            }
-            if (deploymentInfo.getDeploymentType() == DeploymentType.FILE) {
-                return "SUCCESS";
-            }
-        }
-        return this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).deploy(
-            this.serviceDeploymentManager.getProjectManager().getCurrentProject(), deploymentInfo);
     }
 
     /**
@@ -211,9 +263,14 @@ public class DeploymentService extends ServiceSuperClass {
      */
     public String undeploy(DeploymentInfo deploymentInfo, boolean deleteServices) {
         if (deploymentInfo.getDeploymentType() != DeploymentType.FILE) {
-            this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).undeploy(deploymentInfo, deleteServices);
+            try {
+                this.deploymentTargetManager.getDeploymentTarget(deploymentInfo.getDeploymentType()).undeploy(deploymentInfo, deleteServices);
+            } catch (DeploymentStatusException e) {
+                // FIXME Before this exception existed the string return was ignored, we continue to do so but this
+                // should be reviewed.
+            }
         }
-        return "SUCCESS";
+        return SUCCESS;
     }
 
     /**

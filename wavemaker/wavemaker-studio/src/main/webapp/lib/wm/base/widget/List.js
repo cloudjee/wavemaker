@@ -17,7 +17,7 @@ dojo.require("wm.base.widget.VirtualList");
 dojo.require("wm.base.widget.Table.builder");
 dojo.require('wm.base.lib.data');
 
-// Data List: a list with a model
+// Data; List: a list with a model
 dojo.declare("wm.ListItem", wm.VirtualListItem, {
 	create: function() {
 		this.inherited(arguments);
@@ -109,6 +109,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 		this.builder.getCellContent = dojo.hitch(this, 'getCellContent');
 		this.builder.getCellStyle = dojo.hitch(this, 'getCellStyle');
 		this.builder.getCellClass = dojo.hitch(this, 'getCellClass');
+
 	},
 	createItem: function(inContent) {
 		return new wm.ListItem(this, inContent);
@@ -137,8 +138,24 @@ dojo.declare("wm.List", wm.VirtualList, {
 	_setDataFields: function(inDataFields) {
 	    if (this.columns) {
 		this._dataFields = [];
+		var useMobileColumn = false;
+		if (wm.device == "phone") {
+		    for (var i = 0; i < this.columns.length; i++) {
+			var c = this.columns[i];
+			if (c.mobileColumn && c.show) {
+			    useMobileColumn = true;
+			    break;
+			}
+		    }
+		}
+		this._useMobileColumn = useMobileColumn;
+		if (useMobileColumn && !this._isDesignLoaded) {
+		    this.headerVisible = false;
+		}
 		for (var i = 0; i < this.columns.length; i++) {
-		    if (this.columns[i].show) {
+		    var c = this.columns[i];
+		    var show = useMobileColumn && c.mobileColumn || !useMobileColumn && !c.mobileColumn && c.show;
+		    if (show) {
 			this._dataFields.push(this.columns[i].field);
 		    }
 		}		
@@ -224,12 +241,13 @@ dojo.declare("wm.List", wm.VirtualList, {
 	renderHeader: function() {
 		var s = this.shouldShowHeader();
 		this._setHeaderVisible(s);
-		if (s) {
+	    if (s) {
 			this.headerNode.innerHTML = this.getHeaderContent();
 			this.updateHeaderWidth();
 		}
 	},
 	updateHeaderWidth: function() {
+	    if (this.columns) return;
 	    var f = this.items&&this.items[0];
 	    var n = f&&f.domNode.firstChild;
 	    var b = n&&dojo.marginBox(n);
@@ -309,8 +327,8 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    dojo.query(".wmlist-item:nth-child(odd)",this.domNode).addClass("Odd");
 		this.reflow();
 
-	    if (this._listTouchScroll) {
-		wm.job(this.getRuntimeId() + "ListSetupScroller", 1, dojo.hitch(this._listTouchScroll, "setupScroller"));
+	    if (this._listTouchScroll && !this._listTouchScroll.scrollers.outer.style.width) {
+		wm.job(this.getRuntimeId() + "ListSetupScroller", 1, this._listTouchScroll, "setupScroller");
 	    }
 	},
     runQuery: function(inData) {
@@ -387,9 +405,21 @@ dojo.declare("wm.List", wm.VirtualList, {
 		cellData = '<div>' + this.getHeading(dataFields);
 	    } 
 
+/*
 	    else if (this.columns) {
 		var value = this._data[i];
 		cellData = value[dataFields];
+		cellData = this.formatCell(dataFields,cellData, value, i, inCol);
+	    }
+	    */
+	    else if (this.columns) {
+		var value = this._data[i];
+		var cellData = value;
+		var props = dataFields.split(".");
+		for (var propIndex = 0; propIndex < props.length; propIndex++) {
+		    cellData = cellData[props[propIndex]];
+		}
+
 		cellData = this.formatCell(dataFields,cellData, value, i, inCol);
 	    }
 
@@ -438,7 +468,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 			}
 		    }
 		}
-		var width = this.getColWidth(inCol);
+		var width = col.width;
 		if (width) {
 		    text.push("width:" + width);
 		}
@@ -487,31 +517,31 @@ wm.List.extend({
 	    switch(col.formatFunc){
 	    case 'wm_date_formatter':
 	    case 'Date (WaveMaker)':				    
-		value = this.dateFormatter(col.formatProps||{}, value);
+		value = this.dateFormatter(col.formatProps||{}, null,null,null,value);
 		break;
 	    case 'wm_localdate_formatter':
 	    case 'Local Date (WaveMaker)':				    
-		value = this.localDateFormatter(col.formatProps||{}, value);
+		value = this.localDateFormatter(col.formatProps||{}, null,null,null,value);
 		break;
 	    case 'wm_time_formatter':
 	    case 'Time (WaveMaker)':				    
-		value = this.timeFormatter(col.formatProps||{}, value);
+		value = this.timeFormatter(col.formatProps||{}, null,null,null,value);
 		break;
 	    case 'wm_number_formatter':
 	    case 'Number (WaveMaker)':				    
-		value = this.numberFormatter(col.formatProps||{}, value);
+		value = this.numberFormatter(col.formatProps||{}, null,null,null,value);
 		break;
 	    case 'wm_currency_formatter':
 	    case 'Currency (WaveMaker)':				    
-		value = this.currencyFormatter(col.formatProps||{}, value);
+		value = this.currencyFormatter(col.formatProps||{}, null,null,null,value);
 		break;
 	    case 'wm_image_formatter':
 	    case 'Image (WaveMaker)':				    
-		value = this.imageFormatter(col.formatProps||{}, value);	
+		value = this.imageFormatter(col.formatProps||{}, null,null,null,value);	
 		break;
 	    case 'wm_link_formatter':
 	    case 'Link (WaveMaker)':				    
-		value = this.linkFormatter(col.formatProps||{}, value);	
+		value = this.linkFormatter(col.formatProps||{}, null,null,null,value);	
 		break;
 	    case 'wm_button_formatter':
 		value = this.buttonFormatter(inField, col.formatProps||{}, inRowId, value);
@@ -530,7 +560,7 @@ wm.List.extend({
 	return value;
 	}
     },
-    dateFormatter: function(formatterProps, inValue) {
+    dateFormatter: function(formatterProps, ignore1,ignore2,ignore3,inValue) {
 	    if (!inValue) {
 		return inValue;
 	    } else if (typeof inValue == "number") {
@@ -544,7 +574,7 @@ wm.List.extend({
 	var constraints = {selector:formatterProps.dateType || 'date', formatLength:formatterProps.formatLength || 'short', locale:dojo.locale, datePattern: formatterProps.datePattern, timePattern: formatterProps.timePattern};
 	    return dojo.date.locale.format(inValue, constraints);
 	},
-    numberFormatter: function(formatterProps, inValue) {
+    numberFormatter: function(formatterProps, ignore1,ignore2,ignore3, inValue) {
 	    var constraints = {
 		places: formatterProps.dijits || 0, 
 		round: formatterProps.round ? 0 : -1,
@@ -552,14 +582,19 @@ wm.List.extend({
 	    };
 	    return dojo.number.format(inValue, constraints);
 	},
-    currencyFormatter: function(formatterProps, inValue) {
+    currencyFormatter: function(formatterProps, ignore1,ignore2,ignore3, inValue) {
+	    var isDesignLoaded = false;
+	    if (this instanceof wm.DojoGrid) {
+		isDesignLoaded = this._isDesignLoaded;
+	    }
+
 	    return dojo.currency.format(inValue, {
-		currency: formatterProps.currency || (this._isDesignLoaded ? studio.application.currencyLocale : app.currencyLocale) || wm.getLocaleCurrency(),
+		currency: formatterProps.currency || (isDesignLoaded ? studio.application.currencyLocale : app.currencyLocale) || "USD",
 		places: formatterProps.dijits == undefined ? 2 : formatterProps.dijits,
 		round: formatterProps.round ? 0 : -1
 	    });
 	},
-    imageFormatter: function(formatterProps, inValue) {
+    imageFormatter: function(formatterProps, ignore1,ignore2,ignore3, inValue) {
 	if (inValue && inValue != '') {
 	    var width = formatterProps.width ? ' width="' + formatterProps.width + 'px"' : "";
 	    var height = formatterProps.height ? ' height="' + formatterProps.height + 'px"' : "";
@@ -573,7 +608,7 @@ wm.List.extend({
 	}
 	return "";
     },
-    linkFormatter: function(formatterProps, inValue) {
+    linkFormatter: function(formatterProps, ignore1,ignore2,ignore3, inValue) {
 	    if (inValue && inValue != '') {
 		var displayValue = String(inValue);
 		var linkValue = String(inValue);
@@ -606,6 +641,7 @@ wm.List.extend({
     },
     select: function(inItemOrIndex) { 
 	if (typeof inItemOrIndex != "object") {
+	    this.deselectAll(true);
 	    this.eventSelect(this.items[inItemOrIndex]);
 	} else {
 	    this.inherited(arguments);
@@ -644,6 +680,9 @@ wm.List.extend({
 	    }
 	}
     },
+	getIsRowSelected: function(){
+		return !this.getEmptySelection();
+	},
     deleteRow: function(rowIndex) {
 	this.dataSet.removeItem(rowIndex);
 	this._render();
@@ -756,8 +795,11 @@ wm.List.extend({
     },
     getColumnShowing: function(inFieldName, inShowing, noRender) {
 	var index = this.getColumnIndex(inFieldName);
-	if (index != -1) 
-	    return this.columns[index].show;
+	if (index != -1) {
+	    var c = this.columns[index];
+	    var show = this._useMobileColumn && c.mobileColumn || !this._useMobileColumn && !c.mobileColumn && c.show;
+	    return show;
+	}
     },
     setColumnShowing: function(inFieldName, inShowing, noRender) {
 	var index = this.getColumnIndex(inFieldName);

@@ -108,6 +108,8 @@ dojo.declare("wm.DialogResize", wm.MouseDrag, {
 
 
 dojo.declare("wm.Dialog", wm.Container, {
+    manageHistory: true,
+    manageURL: false,
     titlebarButtons: "",
     containerClass: "MainContent",
     corner: "cc", // center vertical, center horizontal; this is almost always the desired default... but for some nonmodal dialogs, its useful to have other options
@@ -281,6 +283,8 @@ dojo.declare("wm.Dialog", wm.Container, {
 				       parent: this,
 				       width: "100%",
 				       height: wm.Button.prototype.height,
+				       mobileHeight: wm.Button.prototype.mobileHeight,
+				       enableTouchHeight: true,
 				       horizontalAlign: "right",
 				       verticalAlign: "top",
 				       layoutKind: "left-to-right",
@@ -822,6 +826,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		this.dialogScrim.setShowing(inShowing);
 
 	    var wasShowing = this.showing;
+	    var showingChanging = Boolean(this.showing) != inShowing;
 
 	    // set it to showing so that rendering can happen
 	    if (inShowing) {
@@ -937,8 +942,12 @@ dojo.declare("wm.Dialog", wm.Container, {
 			this.onClose("");
 		}
 	    }
-
-
+	    // add to history whether we show or hide so that the URL updates
+	    if (!this._initializing && !this._isDesignLoaded &&  showingChanging && this.manageHistory) {
+		app.addHistory({id: this.getRuntimeId(),
+				options: {},
+				title: "Hide " + this.title});
+	    }
 
 	},
 
@@ -997,6 +1006,20 @@ dojo.declare("wm.Dialog", wm.Container, {
 	},
 	onClose: function(inWhy) {
 	},
+        handleBack: function(inOptions) {
+	    if (!this.showing && !this._showAnimation)
+		return false;
+
+	    this.hide();
+	    return true;
+	},
+    restoreFromLocationHash: function(inValue) {
+	this.show();
+    },
+    generateStateUrl: function(stateObj) {
+	if (this.showing || this._showAnimation && !this._isDesignLoaded)
+	    stateObj[this.getRuntimeId()] = 1;
+    },
     setTitlebarHeight: function(inHeight) {
         this.titlebarHeight = inHeight;
         if (this.titleBar) this.titleBar.setHeight(inHeight + "px");

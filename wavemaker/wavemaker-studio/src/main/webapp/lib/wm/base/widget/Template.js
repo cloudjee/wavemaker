@@ -26,6 +26,20 @@ dojo.declare("wm.Template", wm.Panel, {
 			if (dojo.isObject(this._template))
 				this._template = dojo.toJson(this._template);
 			this.readComponents(this._template);
+		    if (this.destroyTemplate) {
+			var index = this.getIndexInParent();
+			for (var i = this.c$.length-1; i >= 0; i--) {
+			    var c = this.c$[i];
+			    c.setParent(this.parent);
+			    c.setIndexInParent(index);
+			}
+			this.destroy();
+		    } else {
+			/* Replace this with a panel so we don't need to include it in the build layers,
+			 * the widget is still a wm.Tmeplate, but will be written to widgets.js as a Panel
+			 */
+			this.publishClass = this.declaredClass = "wm.Panel"; 
+		    }
 		}
 	},
         adjustChildProps: function(inCtor, inProps) {

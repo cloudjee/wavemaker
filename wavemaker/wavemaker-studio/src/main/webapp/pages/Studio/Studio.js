@@ -26,7 +26,6 @@ dojo.require("wm.base.widget.Layers");
 dojo.require("wm.base.widget.LayoutBox");
 dojo.require("wm.base.widget.Tree");
 dojo.require("wm.base.design.Designer");
-dojo.require("wm.base.layout.console");
 
 //wm.logging = true;
 
@@ -39,6 +38,7 @@ wm.disEnableButton = function(inBtn, inDisEnable) {
 }
 
 dojo.declare("Studio", wm.Page, {
+        manageURL: true,
         i18n: true,
 
 	// FIXME: flag for testing if we're actual studio class
@@ -47,15 +47,15 @@ dojo.declare("Studio", wm.Page, {
 	_outlineClass: "Studio-outline",
         _explodeClass: "Studio-exploded",
 	studioKeyPriority: false,
-        projectPrefix: "",
         userName: "",
         resourcesLastUpdate: 0,
         _deploying: false, //obsolete?
         _runRequested: false,
+        currentDeviceType: "desktop",
 	//=========================================================================
 	// initialization
 	//=========================================================================
-	start: function() {   
+    start: function(inBackState, inLocationState) {   
 	    wm.applyFrameworkFixes();
 	    studio.studioService.requestAsync("getStudioEnv", [], function(inResult) {
 		wm.studioConfig.environment = inResult;
@@ -88,6 +88,7 @@ dojo.declare("Studio", wm.Page, {
 		}
 		
             this.trackerImage.setSource("http://wavemaker.com/img/blank.gif?op=studioLoad&v=" + escape(wm.studioConfig.studioVersion) + "&r=" + String(Math.random(new Date().getTime())).replace(/\D/,"").substring(0,8));
+
 		this.project = new wm.studio.Project();
 /*
 		this.startEditor = studio.addEditor("Start");
@@ -122,7 +123,6 @@ dojo.declare("Studio", wm.Page, {
 	    this.bindDialog = this.getBindDialog();
 
 		this.clearTrees();
-		this.initConsole();
 		// Listen to some events
 	    //this.connect(document, "keydown", this, "keydown");
 		this.connect(wm.inflight, "change", this, "inflightChange");
@@ -139,25 +139,16 @@ dojo.declare("Studio", wm.Page, {
 		if (this.isCloud()) {
 		    this.requestUserName();
 		}
-		var defaultProject = this.getUserSetting("defaultProject");
-	        var reopenProject = this.getUserSetting("reopenProject");
-	        if (reopenProject)
-	            this.setUserSettings({reopenProject: ""});
-		/*
-		if (this.isCloud()) {
-		    this.startLayer.activate();
-		    if (defaultProject) {
-			this.startEditor.page.openProjectTab();
-			this.startEditor.page.selectProjectInList(defaultProject);
-		    }
-	} else */
-		if (this.getUserSetting("useLop") && defaultProject) {
-			this.project.openProject(defaultProject);
-		} else if (reopenProject) {
-			this.project.openProject(reopenProject);
-		} else { 
-		    studio.disableMenuBar(true);
-		}
+	var reopenProject = this.getUserSetting("reopenProject");
+	if (reopenProject) {
+	    this.setUserSettings({reopenProject: ""}); 
+	    this.project.openProject(reopenProject);
+	} else if (inLocationState) {
+	    this.restoreFromLocationHash(inLocationState);
+	} else { 
+	    studio.disableMenuBar(true);
+	}
+
 		if (this.isCloud()) {
 		    this.navLogoutBtn.setShowing(true);
 		    this.navEditAccountBtn.setShowing(true);
@@ -217,6 +208,10 @@ dojo.declare("Studio", wm.Page, {
 	    this.pageSelect.renderBounds = function() {};
 		*/
 	    this.togglePropertiesMultiactiveItem.set("checked",!this.inspector.multiActive);
+
+	this.connect(this.devicesRibbonInner, "setShowing", this.ribbon, "setBestHeight");
+	this.connect(this.docRibbonInner, "setShowing", this.ribbon, "setBestHeight");
+	this.ribbon.setBestHeight();
 	},
 /*
 	 startPageOnStart: function() {
@@ -298,11 +293,6 @@ dojo.declare("Studio", wm.Page, {
 		// safari requires value to be returned like this...
 		return m;
 	},
-	initConsole: function() {
-		this.console.inFlow = false;
-		adaptConsole(this.console.domNode);
-		this.reflow();
-	},
 	//=========================================================================
 	// User Settings
 	//=========================================================================
@@ -312,9 +302,6 @@ dojo.declare("Studio", wm.Page, {
 		    this._userSettings.version  != wm.studioConfig.studioVersion)
 		  delete this._userSettings.defaultProject;
 
-		var dp = location.hash.slice(1) || wm.defaultProject;		
-		if (dp)
-			this.setUserSettings({defaultProject: dp});
 	},
 	setUserSettings: function(inProps) {
 		dojo.mixin(this._userSettings, inProps || {});
@@ -359,12 +346,11 @@ dojo.declare("Studio", wm.Page, {
 	    if (this.propertiesDialog.showing)
 		this.propertiesDialog.hide();
 		*/
+	    if (!this._loadingApplication) {
 		wm.typeManager.clearTypes();
 		wm.services.clear();
-		if (this._loadingApplication) {
-		    this.updateServices();
-		}
 		wm.roles = [];
+	    }
 	    this.updateProjectDirty();
 		//
 		if (this.project.projectName)
@@ -398,6 +384,11 @@ dojo.declare("Studio", wm.Page, {
 			     this.languageSelect.setOptions(options.join(","));
 			 }));
 			 this.disableMenuBar(false);
+			 if (this.currentDeviceType == "phone") {
+			     this.designPhoneUI(false);
+			 } else if (this.currentDeviceType == "tablet") {
+			     this.designTabletUI(true);
+			 }
 		     } else if (!this.isLoginShowing()) {
 			 if (!wm.isEmpty(this.project.projectData)) {
 			     if (app.alertDialog && app.alertDialog.showing && !app.alertDialog._hideAnimation)
@@ -513,7 +504,7 @@ dojo.declare("Studio", wm.Page, {
 		this.editAreaFullPath.setCaption("webapproot/pages/" + inName + "/" + inName + ".js");
 		this.cssEditAreaFullPath.setCaption("webapproot/pages/" + inName + "/" + inName + ".css");
 		this.markupEditAreaFullPath.setCaption("webapproot/pages/" + inName + "/" + inName + ".html");
-
+	        this.mobileFoldingToggleButton.setDisabled(!studio.page || !studio.page.enableMobileFolding);
 
 	        if (this.page) {
 		    this.select(this.page.root);
@@ -534,6 +525,32 @@ dojo.declare("Studio", wm.Page, {
  		this.updateProjectTree();
 		*/
 	},
+    restoreFromLocationHash: function(inValue) {
+	if (inValue && typeof inValue == "object" && inValue.studio && inValue.studio.projectName && inValue.studio.pageName) {
+	    var d = this.project.openProject(inValue.studio.projectName, inValue.studio.pageName);
+	    if (inValue.deviceType == "tablet") {
+		this.devicesTogglePanel.setCurrentButton(this.tabletToggleButton);
+	    } else if (inValue.deviceType == "phone") {
+		this.devicesTogglePanel.setCurrentButton(this.phoneToggleButton);
+	    }
+
+	    d.addCallback(dojo.hitch(this, function() {
+		this.tabs.setLayerIndex(inValue[studio.tabs.getRuntimeId()]);
+		this.left.setLayerIndex(inValue[studio.left.getRuntimeId()]);
+	    }));
+	}
+    },
+    generateStateUrl: function(stateObj) {
+	if (this.project && this.project.projectName && this.project.pageName) {
+	    stateObj[this.getRuntimeId()] = {pageName: this.project.pageName,
+					     projectName: this.project.projectName,
+					     deviceType: this.currentDeviceType};
+	} else {
+	    stateObj[this.getRuntimeId()] = {deviceType: this.currentDeviceType};
+
+	}
+    },
+
 	updateWindowTitle: function() {
 		var project = studio.application ? studio.application.declaredClass : "";
 		var page = studio.page ? studio.page.declaredClass : "";
@@ -628,20 +645,24 @@ dojo.declare("Studio", wm.Page, {
 	setLiveLayoutReady: function(inReady) {
 		this._liveLayoutReady = inReady;
 	},
-    deploySuccess: function() {
+    deploySuccess: function(inUrl) {
 	var application = this.application || this._application;
 	if (application._deployStatus == "deploying")
 	    application._deployStatus = "deployed";
 
 	this.setLiveLayoutReady(true);
+	var previewWindowOptions = this.getPreviewWindowOptions();
+	if (this.previewWindow && this.previewWindowOptions != previewWindowOptions)
+	    this.previewWindow.close();
+	this.previewWindowOptions = previewWindowOptions;
 	switch(this._runRequested) {
 	case "studioProjectCompile":
 	    break;
-	case "studioProjectTest":
-	    wm.openUrl(this.getPreviewUrl(true), studio.getDictionaryItem("POPUP_BLOCKER_LAUNCH_CAPTION"), "_wmPreview");
+	case "studioProjectTest":	    
+	    this.previewWindow = wm.openUrl(this.getPreviewUrl(inUrl,true), studio.getDictionaryItem("POPUP_BLOCKER_LAUNCH_CAPTION"), "_wmPreview", this.previewWindowOptions);
 	    break;
 	case "studioProjectRun":
-	    wm.openUrl(this.getPreviewUrl(false), studio.getDictionaryItem("POPUP_BLOCKER_LAUNCH_CAPTION"), "_wmPreview");
+	    this.previewWindow = wm.openUrl(this.getPreviewUrl(inUrl,false), studio.getDictionaryItem("POPUP_BLOCKER_LAUNCH_CAPTION"), "_wmPreview", this.previewWindowOptions);
 	    break;
 	}
 	this._runRequested = false;
@@ -803,8 +824,10 @@ dojo.declare("Studio", wm.Page, {
 			// flag for behavior to occur only upon initial creation
 			inProps._studioCreating = true;
 			var c = isWidget ? this.newWidget(inType, inProps) : this.newComponent(inType, inProps);
-			if (c)
+		    if (c) {
 				c._studioCreating = false;
+			studio.inspect(c);
+		    }
 			return c;
 		}
 	},
@@ -910,6 +933,7 @@ dojo.declare("Studio", wm.Page, {
 	    }
 		try {
 			var s = this.selected = inComponent;
+		    this.updateDocToolbar();
 			// make sure selected widget and all ancestors are showing
 		    if (!this._dontNavOnPageChange) {
 			this.revealSelected();
@@ -1333,6 +1357,12 @@ dojo.declare("Studio", wm.Page, {
 	//=========================================================================
 	toggleControlSize: function(inControl, inDimension) {
             if (!inControl.canResize(inDimension)) return;
+/*
+	    var useDimension = inDimension;
+	    if (this.currentDeviceType != "desktop" && this.page.enableMobileHeight && inDimension == "height") {
+		useDimension = "mobileHeight";
+	    }
+	    */
 	    new wm.PropTask(inControl, inDimension, inControl[inDimension]);
 	    var d = String(inControl.getProp(inDimension));
             if (d.indexOf("%") >= 0) {
@@ -1351,13 +1381,19 @@ dojo.declare("Studio", wm.Page, {
 	toggleWidthClick: function() {
 		var s = this.selected;
 		if (s) {
+		    if (s.fitToContentWidth) {
+			s.setFitToContentWidth(false);
+		    }
 		    this.toggleControlSize(s, "width");
                     this.inspector.reinspect();
 		}
 	},
-	toggleHeightClick: function() {
+	toggleHeightClick: function() { 
 		var s = this.selected;
 		if (s) {
+		    if (s.fitToContentHeight) {
+			s.setFitToContentHeight(false);
+		    }
 		    this.toggleControlSize(s, "height");
                     this.inspector.reinspect();
 		}
@@ -1494,8 +1530,147 @@ dojo.declare("Studio", wm.Page, {
     revertThemeClick: function(inSender) {
 	this.themesPage.page.revertTheme();
     },
-    deviceSelectChanged: function(inSender) {
+    devicesToggleClick: function(inSender){ 
+	if (inSender.clicked) {
+	    app.warnOnce("Please note that design for tablet and phone is in beta.  We encourage users to send feedback and suggestions on the forums.  But we do not gaurentee that this functionality is complete, and we may in the future choose to follow a different strategy and use different tools.");
+	}
+    },
+    deviceSizeSelectChanged: function(inSender) {
+	if (!this.panel2.docked)
+	    this.panel2.setDocked(true);
+	if (!this.PIContents.docked)
+	    this.PIContents.setDocked(true);
+	var requestedCanvasWidth = inSender.getDataValue();
+	if (requestedCanvasWidth == "tiny") 
+	    requestedCanvasWidth = 300;
+	else if  (requestedCanvasWidth == "") {
+	    this.PIPanel.setWidth("250px");
+	    requestedCanvasWidth = 0;
+	} else {
+	    requestedCanvasWidth = parseInt(requestedCanvasWidth);
+	}
+	if (requestedCanvasWidth) {
+	    if  (requestedCanvasWidth >= this.designer.bounds.w) {
+		this.designer.setMargin("0");
+	    } else {
+		var margin = Math.floor((this.designer.bounds.w - requestedCanvasWidth)/2);
+		this.designer.setMargin("0," + margin + ",0," + margin);
+	    }
+	    this.designer.reflow();
+	    
+/*
+	    var availWidth = this.bench.bounds.w + this.PIPanel.bounds.w;
+	    var minPIPanelWidth = 250;
+	    var PIWidth = availWidth - requestedCanvasWidth;
+	    if (PIWidth < minPIPanelWidth)
+		PIWidth = minPIPanelWidth;
+	    this.PIPanel.setWidth(PIWidth + "px");
+	    */
+	}
 	dojo.publish("deviceSizeRecalc");
+    },
+/*
+    deviceTypeSelectChanged: function(inSender) {
+	dojo.publish("deviceSizeRecalc");
+    },
+    */
+    designDesktopUI: function() {
+	this.widgetsTree.dragEnabled = true;
+	if (studio.page && studio.page.root._mobileFolded) {
+		studio.page.root.unfoldUI();
+	    studio.page.root.reflow();
+	    studio.refreshDesignTrees();
+	}
+	
+	this.currentDeviceType = "desktop";
+	app.addHistory({});
+	dojo.removeClass(this.designer.domNode, "wmmobile");
+	if (studio.page) {
+	    var self = this;
+	    wm.forEachWidget(studio.page.root, function(w) {
+		if (w._regenerateOnDeviceChange) {
+		    w = self.regenerateOnDeviceChange(w);
+		}
+
+		w.resetDesignHeight();
+	    });
+	}
+	this.deviceSizeSelect.setDataValue("1150");
+	this.reinspect(); // some properties may change like height/minHeight
+    },
+    designTabletUI: function() {
+	this.widgetsTree.dragEnabled = true;
+	if (studio.page && studio.page.root._mobileFolded) {
+		studio.page.root.unfoldUI();
+	    studio.page.root.reflow();
+	    studio.refreshDesignTrees();
+	}
+	this.currentDeviceType = "tablet";
+	app.addHistory({});
+	dojo.addClass(this.designer.domNode, "wmmobile");
+	if (studio.page) {
+	    var self = this;
+	    wm.forEachWidget(studio.page.root, function(w) {
+		if (w._regenerateOnDeviceChange) {
+		    w = self.regenerateOnDeviceChange(w);
+		}
+		w.resetDesignHeight();
+
+	    });
+	}
+	this.deviceSizeSelect.setDataValue("600");
+	this.reinspect(); // some properties may change like height/minHeight
+    },
+    designPhoneUIClick: function(inSender) {
+	this.designPhoneUI(false);
+    },
+    designPhoneUI: function(inMobileFolding) {
+	this.widgetsTree.dragEnabled = true;
+	if (studio.page && studio.page.root._mobileFolded && !inMobileFolding) {
+	    studio.page.root.unfoldUI();
+	    studio.page.root.reflow();
+	    studio.refreshDesignTrees();
+	}
+	this.currentDeviceType = "phone";
+	app.addHistory({});
+	dojo.addClass(this.designer.domNode, "wmmobile");
+	if (studio.page) {
+	    var self = this;
+	    wm.forEachWidget(studio.page.root, function(w) {
+		if (w._regenerateOnDeviceChange) {
+		    w = self.regenerateOnDeviceChange(w);
+		}
+		w.resetDesignHeight();
+	    });
+	}
+	this.deviceSizeSelect.setDataValue("300");
+	this.reinspect(); // some properties may change like height/minHeight
+    },
+    designMobileFoldingClick: function(inSender) {
+	this.designMobileFolding(false);
+    },
+    designMobileFolding: function(inSkipWarning) {
+	if (studio.page) {
+	    this.designPhoneUI(true);
+	    this.widgetsTree.dragEnabled = false;
+	    studio.page.root.foldUI();
+	    //studio.page.root.unfoldUI();
+	    studio.page.root.reflow();
+	    studio.refreshDesignTrees();
+	    if (inSkipWarning !== true) {
+		app.warnOnce("mobileFoldingWarning", "Mobile Folding is a powerful but complicated feature which is in beta, and may not be supported in the future.  While in Mobile Folding view, you can not <li>Move widgets</li><li>Edit any layer objects that are generated</li></ol>You must leave the Mobile Folding view to perform these actions.");
+	    }
+
+	}
+    },
+    regenerateOnDeviceChange: function(w) {
+	var json = "{" + w.write("") + "}";
+	var parent = w.parent;
+	var index = w.getIndexInParent();
+	w.destroy();
+	w = parent.createComponents(dojo.fromJson(json), parent.owner)[0];
+	w.setIndexInParent(index);
+	return w;
     },
     languageSelectChanged: function(inSender, optionalPageName) {
 	if (this._changingLanguage) return;	
@@ -1658,11 +1833,6 @@ dojo.declare("Studio", wm.Page, {
 		if (inResponse) {
 		    this.setUserName(inResponse);
 		    this.userLabel.setCaption(this.userName);
-                        this.projectPrefix = this.userName;
-                        this.projectPrefix = this.projectPrefix.replace(/_/g,"__");
-                        this.projectPrefix = this.projectPrefix.replace(/\@/,"_AT_");
-                        this.projectPrefix = this.projectPrefix.replace(/\./g,"_DOT_");
-                        this.projectPrefix += "___";
                 }
 	},
 	requestUserNameFailure: function(inResponse) {
@@ -1685,10 +1855,20 @@ dojo.declare("Studio", wm.Page, {
         saveDocumentation: function() {
 	    var html = this.documentationDialog.getHtml();	   
 	    this.documentationDialog.editComponent.documentation = html;
+	    this.updateDocToolbar();
 	    if (this.documentationDialog.editComponent == studio.selected)
 		this.inspector.reinspect();
 	    this.writeDocumentationMenuItem.set("checked",Boolean(studio.selected.documentation));
 	},
+    updateDocToolbar: function() {
+	if (!this.selected) {
+	    this.docHtml.setHtml("<i>Nothing selected</i>");
+	} else if (this.selected.documentation) {
+	    this.docHtml.setHtml(dojo.trim(this.selected.documentation));
+	} else {
+	    this.docHtml.setHtml("<i>No documentation for " + studio.selected.name + "</i>");
+	}
+    },
         loadThemeList: function(optionalCallback) {
 
             var d = studio.deploymentService.requestAsync("listThemes");
@@ -1702,6 +1882,22 @@ dojo.declare("Studio", wm.Page, {
             if (optionalCallback)
                 d.addCallback(optionalCallback);
         },
+    showDeviceBarHelp: function() {
+	studio.helpPopup = studio.inspector.getHelpDialog();
+	studio.helpPopup.page.setHeader("Devices Toolbar", "Introduction");
+	studio.helpPopup.page.setContent("");
+	studio.helpPopup.show();
+
+	var url = studio.getDictionaryItem("URL_DOCS", {studioVersionNumber:  wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}) + "WM65RelNotes";
+	studio.studioService.requestAsync("getPropertyHelp", [url + "?synopsis"], function(inResponse) {
+	    wm.cancelJob("PropDoc");
+	    this._loadingContent = false;
+	    if (inResponse.indexOf("No documentation found for this topic") != -1 || !inResponse)
+		inResponse = "<a href='" + url + "' target='docs'>Open Docs</a><br/>" + inResponse;
+	    studio.helpPopup.page.setContent(inResponse);
+
+	});
+    },
     loadHelp: function(inType, inPropName, onSuccess) {
 	      var url = studio.getDictionaryItem("URL_PROPDOCS", {studioVersionNumber:  wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")});
 	      if (inType == studio.project.projectName) inType = "wm.Application";

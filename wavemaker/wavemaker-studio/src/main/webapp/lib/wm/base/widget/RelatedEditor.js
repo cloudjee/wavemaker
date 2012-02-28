@@ -45,9 +45,9 @@ dojo.declare("wm.RelatedEditor", wm.LiveFormBase, {
 	//===========================================================================
 	// LiveVariable / View info
 	//===========================================================================
-	getLiveVariable: function() {
+	findLiveVariable: function() {
 		var f = this._getLiveForm();
-		return f && f.getLiveVariable();
+		return f && f.findLiveVariable();
 	},
 	_getLiveForm: function() {
 		var p = wm.getParentForm(this);

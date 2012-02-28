@@ -13,7 +13,6 @@
  */
 
 dojo.provide("wm.base.components.Page");
-dojo.require("wm.base.Widget");
 
 dojo.connect(window, "onresize", function(){ dojo.publish("window-resize"); });
 
@@ -32,6 +31,7 @@ dojo.declare("wm.Page", wm.Component, {
         i18n: false,
 	name: '',
         deletionDisabled: 1,
+        enableMobileFolding: false,
 	create: function() {
 	    this.inherited(arguments);
 	    if (!this.name) 
@@ -108,6 +108,11 @@ dojo.declare("wm.Page", wm.Component, {
 		if (!wm.disablePageLoadingToast)
 		    app.toastError(wm.getDictionaryItem("wm.Page.PAGE_ERRORS", {name: this.name}));
             }
+
+	    if (this.owner) {
+		this.locationState = (this.owner == app.pageContainer) ? app.locationState : this.owner._locationState;
+	    }
+
 	    if (wm.useDojoParser) {
 		var oldOwner = wm._dojoParserCurrentOwner;
 		wm._dojoParserCurrentOwner = this;
@@ -146,18 +151,18 @@ dojo.declare("wm.Page", wm.Component, {
 		//this.onShow();
 	    //} else
 		
-	    dojo.addOnLoad(dojo.hitch(this, function(){
-		this.postRender();
-		if (notAppOwned)
-		    ds.left = previousStyleLeft;
-                if (!this.root.isAncestorHidden())
-		    this.onShow();
+		dojo.addOnLoad(dojo.hitch(this, function(){
+		    this.postRender();
+		    if (notAppOwned)
+			ds.left = previousStyleLeft;
+                    if (!this.root.isAncestorHidden())
+			this.onShow();
 		    //alert("Page rendered in " + ( new Date().getTime() - startTime) + " ms");
-			//console.timeEnd('renderTime ');
-			//console.info('postInitCalled = ' + postInitCalled);
-			//postInitCalled = 0;
-	    }));
-
+		    //console.timeEnd('renderTime ');
+		    //console.info('postInitCalled = ' + postInitCalled);
+		    //postInitCalled = 0;
+		}));
+	    
 		//console.profile();
 
 	},
@@ -188,7 +193,11 @@ dojo.declare("wm.Page", wm.Component, {
 								    firingId: this.getRuntimeId()});
 		    }
 
-		    this.start();
+		    var backState = this.owner ? this.owner._restoreBackState : undefined; // owner is PageContainer
+
+		    if (!this._isDesignLoaded) {
+			this.start(backState, this.locationState);
+		    }
 		    if (this.debugId) {
 			app.debugDialog.endLogEvent(this.debugId);
 			delete this.debugId;
@@ -199,8 +208,9 @@ dojo.declare("wm.Page", wm.Component, {
 
 		    console.log("PAGE "+ timeToLoad + " ms");
 		}
-
-		    this.onStart();
+		    if (!this._isDesignLoaded) {
+			this.onStart();
+		    }
 
                     /* Moved to Application.pageChanged
 		    if (this.owner == app) {
@@ -218,7 +228,7 @@ dojo.declare("wm.Page", wm.Component, {
 	},
 	addComponent: function(inComponent) {
 		this[inComponent.name] = inComponent;
-		if (inComponent instanceof wm.Widget) {
+		if (inComponent instanceof wm.Control) {
 			// FIXME: hack to resolve clickability problem on IE at design-time
 			// nodes must have some background or content to receive mouse events
 			// on IE.
@@ -263,7 +273,7 @@ dojo.declare("wm.Page", wm.Component, {
 		return this.inherited(arguments);
 	},
 	loadComponent: function(inName, inParent, inType, inProps, inEvents, inChildren, isSecond) {
-	    if (wm.isMobile && inProps.generateForDevice && app.appRoot.deviceSize && dojo.indexOf(inProps.generateForDevice,app.appRoot.deviceSize) == -1)
+	    if (!this._isDesignLoaded && inProps.deviceType && wm.device && dojo.indexOf(inProps.deviceType, wm.device) == -1)
 		return;
 
 		// Some code for debugging performance; normally skipped
@@ -303,7 +313,7 @@ dojo.declare("wm.Page", wm.Component, {
 		// FIXME: this check really needs to go
 		// yuk
 		var props = {};
-		isWidget = (ctor.prototype instanceof wm.Widget || ctor.prototype instanceof dijit._Widget);
+		isWidget = (ctor.prototype instanceof wm.Control || ctor.prototype instanceof dijit._Widget);
 		if (isWidget){
 			var parentNode = (inParent ? inParent.containerNode || inParent.domNode : this.domNode);
 			props = {
@@ -638,7 +648,18 @@ wm.Page.extend({
     },
     getValidateVisibleOnly: function() {
 	return this.getPageProperty("validateVisibleOnly");
-    }
+    },
+    set_enableMobileFolding: function(inFolding) {
+	this.enableMobileFolding = Boolean(inFolding);
+	if (this._isDesignLoaded) {
+	    this.setPageProperty("enableMobileFolding", this.enableMobileFolding);
+	    if (studio.currentDeviceType == "phone") {
+		studio.mobileFoldingToggleButton.setDisabled(!inFolding);
+	    }
+	}
+    },
+    onMobileFolding: function() {},
+    onMobileUnfolding: function() {}
 });
 
 wm.Object.extendSchema(wm.Page, {
@@ -650,8 +671,9 @@ wm.Object.extendSchema(wm.Page, {
     onEnterKey: {}, // allow all events
     onLetterKey: {events: ["js", "disableNoEvent"]},
     onMiscKey: {events: ["js", "disableNoEvent"]},
-    i18n: {group: "display"},
-    validateVisibleOnly: {group: "validation"}
+    i18n: {group: "widgetName"},
+    validateVisibleOnly: {group: "widgetName"},
+    enableMobileFolding: {group: "widgetName"}
 });
 
 // bc

@@ -16,6 +16,7 @@ Studio.widgets = {
         loadingDialog: ["wm.LoadingDialog", {}],
         themesListVar: ["wm.Variable", {type: "StringData"}],
     deviceSizeVar: ["wm.Variable", {type: "EntryData", isList: 1, json: '[{name: "All", dataValue: ""}, {name: ">= 1150", dataValue: "1150"}, {name: "900px-1150px", dataValue: "900"}, {name: "750px-900px", dataValue: "750"}, {name: "600px-750px", dataValue: "600"}, {name: "450px-600px", dataValue: "450"}, {name: "300px-450px", dataValue: "300"}, {name: "< 300px", dataValue: "tiny"}]'}],
+    deviceTypeVar: ["wm.Variable", {type: "EntryData", isList: 1, json: '[{name: "All", dataValue: ""}, {name: "Desktop", dataValue: "desktop"}, {name: "Tablet", dataValue: "tablet"}, {name: "Phone", dataValue: "phone"}]'}],
 	studioService: ["wm.JsonRpcService", {service: "studioService", sync: true}, {}],
 	servicesService: ["wm.JsonRpcService", {service: "servicesService", sync: true}, {}],
 	pagesService: ["wm.JsonRpcService", {service: "pagesService", sync: true}, {}],
@@ -27,10 +28,8 @@ Studio.widgets = {
 	securityConfigService: ["wm.JsonRpcService", {service: "securityConfigService", sync: true}, {}],
 	securityService: ["wm.JsonRpcService", {service: "securityService", sync: true}, {}, {}],
 	securityServiceJOSSO: ["wm.JsonRpcService", {service: "securityServiceJOSSO", sync: true}, {}, {}],
-	//registrationService: ["wm.JsonRpcService", {service: "registrationService", sync: true}, {}],
-	UserService: ["wm.JsonRpcService", {service: "UserService", sync: true}, {}],
 	resourceManagerService: ["wm.JsonRpcService", {service: "resourceFileService", sync: true}, {}],
-        jarListService: ["wm.JsonRpcService", {service: "studioService", sync: false}, {}],
+    jarListService: ["wm.JsonRpcService", {service: "studioService", sync: false}, {}],
     gridDesignerDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, title: "Grid Designer", pageName: "GridDesigner", modal: false, deferLoad: true,  border: "2", borderColor: "white", width: "600px", height: "500px", hideControls: true, noEscape: true, minHeight: "200", noLeftRightDocking: true}],
     liveViewEditDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, title: "LiveView Editor", pageName: "LiveViewEditor", modal: true, deferLoad: true,  border: "2", borderColor: "white", width: "600px", height: "500px", hideControls: true, noEscape: true}],
     editVariableDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, title: "Edit JSON", pageName: "EditVariable", modal: false, deferLoad: true,  border: "2", borderColor: "white", width: "500px", height: "400px", hideControls: true, noEscape: true}],
@@ -44,7 +43,7 @@ Studio.widgets = {
 
 	//tempData used to show grid on FancyTemplate
 	varTemplateData: ["wm.Variable", {"json":"[{name: \"Vestibulum\", dataValue: \"sodales magna mollis purus iaculis sagittis\"},\n{name: \"Lacinia\", dataValue: \" aliquam mauris nulla, consequat\"},\n{name: \"Consequat\", dataValue: \"rhoncus diam metus id arcu\"},\n{name: \"Elementum\", dataValue: \"quis odio sodales ornare quis eu\"},\n{name: \"Sagittis\", dataValue: \"torquent per conubia nostra, per inceptos\"},\n{name: \"Aliquam\", dataValue: \"molestie auctor tortor ac tincidunt\"},\n{name: \"Nullam\", dataValue: \"in orci eros, vitae convallis neque\"},\n{name: \"Mauris\", dataValue: \"luctus adipiscing ligula urna a nisl\"},\n{name: \"Pellentesque\", dataValue: \" ante lectus, mollis ut suscipit id\"}]","type":"EntryData"}, {}],
-        silkIconImageList: ["wm.ImageList", {"colCount":39,"height":16,"iconCount":90,"url":"lib/images/silkIcons/silk.png","width":16}, {}],
+    silkIconImageList: ["wm.ImageList", {"colCount":39,"height":16,"iconCount":90,"url":"lib/images/silkIcons/silk.png","width":16}, {}],
 	paletteImageList: ["wm.ImageList", {"colCount":50,"height":16,"iconCount":50,"url":"images/palette_imagelist.png","width":16}, {}],
 
 	navImageList: ["wm.ImageList", {width: 24, height: 28, colCount: 10, url: "images/navBtns.png"}, {}],
@@ -294,7 +293,7 @@ Studio.widgets = {
 					designerSourceBtn: ["wm.ToolButton", {border: "0", borderColor: "#294473", margin: "0", padding: "0,6", height: "100%", width: "57px", caption: "", hint: bundleStudio.T_SourceTip}, {onclick: "navGotoSourceClick"}]
 				}],
 */
-			    left: ["wm.TabLayers", {_classes: {domNode: ["wm-darksnazzy"]}, border: "0", width: "100%", height: "100%", headerHeight: "32px", clientBorder: "3,0,0,0",clientBorderColor: "#959DAB"}, {onchange: "leftTabsChange"}, {
+			left: ["wm.TabLayers", {_classes: {domNode: ["wm-darksnazzy"]}, border: "0", width: "100%", height: "100%", headerHeight: "32px", clientBorder: "3,0,0,0",clientBorderColor: "#959DAB",manageURL: true}, {onchange: "leftTabsChange"}, {
 				    mlpal: ["wm.Layer", {_classes: {domNode: ["wm-palette"]}, caption: "Palette"}, {onShow: "resetPaletteSearch"}, {
 					paletteSearch: ["wm.Text", {caption: "", width: "100%", height: "27px", placeHolder: "Find Component/Widget", padding: "2,5,2,5", margin: "2,0,2,0", changeOnKey: true, resetButton: true}, {onchange: "paletteSearchChange"}],
 					benchbevel6_6: ["wm.Bevel", {border: ""}, {}],
@@ -344,11 +343,12 @@ Studio.widgets = {
 			}]
 		}],
 			splitter1: ["wm.Splitter", {border: "0", layout: "left"}, {}],
-		tabs: ["wm.TabLayers", {conditionalTabButtons:true, border: "0", width: "100%", height: "100%", headerHeight: "32px",clientBorder: "3,0,0,0", clientBorderColor: "#959DAB",customCloseOrDestroy: "closeServiceParentTab"}, {oncanchange: "tabsCanChange", onchange: "tabsChange"}, {
+		tabs: ["wm.TabLayers", {conditionalTabButtons:true, border: "0", width: "100%", height: "100%", headerHeight: "32px",clientBorder: "3,0,0,0", clientBorderColor: "#959DAB",customCloseOrDestroy: "closeServiceParentTab",manageURL: true}, {oncanchange: "tabsCanChange", onchange: "tabsChange"}, {
 		    workspace: ["wm.Layer", {caption: "Canvas", layoutKind: "top-to-bottom"}, {}, {
 			workspaceInner: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right"}, {}, {
 			    main: ["wm.Panel", {height: "100%", width: "100%", border: "", layoutKind: "top-to-bottom", borderColor: "#666E80"}, {}, {
-				ribbon: ["wm.Panel", {height: "30px", width: "100%", border: "0", layoutKind: "left-to-right", padding: "0"}, {}, {
+				ribbon: ["wm.Panel", {height: "30px", width: "100%", border: "0", layoutKind: "top-to-bottom", padding: "0"}, {}, {
+				ribbonInner: ["wm.Panel", {height: "30px", width: "100%", border: "0", layoutKind: "left-to-right", padding: "0"}, {}, {
 						studioToolbarButtons: ["wm.Panel", {height: "100%", width: "100%", border: "", layoutKind: "left-to-right", imageList: "canvasToolbarImageList16"}, {}, {
 							/*pagePopupBtn: ["wm.PopupButton", {width: "32px", caption: "<img src=\"images/dropArrow.png\"/>", popupWidth: "150", imageIndex: 14, imageList: "smallToolbarImageList"}, {}, {
 								pageBtnItem4: ["wm.Item", {caption: "New Page...", imageIndex: 5}, {onclick: "newPageClick"}],
@@ -371,16 +371,56 @@ Studio.widgets = {
 							    wire: ["wm.Wire", {"source":"app.pagesListVar","targetProperty":"dataSet"}, {}]
 							}]
 						    }],
-						    deviceSelect: ["wm.SelectMenu", {caption: "Devices", margin:"4,0,4,20", width: "50%", maxWidth: "150", height: "24px", captionSize: "50px", dataValue: "", displayField: "name", dataField: "dataValue"},{onchange: "deviceSelectChanged"},{
-							binding: ["wm.Binding",{},{}, {
-							    wire: ["wm.Wire", {"source":"deviceSizeVar","targetProperty":"dataSet"}, {}]
-							}]
-						    }],
 						    languageSelect: ["wm.SelectMenu", {caption: "Language", margin:"4,0,4,20", width: "50%", maxWidth: "180", height: "24px", captionSize: "70px", displayField: "dataValue", dataField: "dataValue", dataValue: "default", options: "default", restrictValues: false},{onchange: "languageSelectChanged"},{
-						    }]
+						    }],
+						    deviceDesignToggle: ["wm.ToggleButton", {_classes: {domNode: ["StudioButton"]},iconUrl: "lib/images/silkIcons/phone.png", captionUp: "", captionDown: "", clicked: true, width: "25px", height: "100%"}, {onclick: "devicesToggleClick"}],
+						    docToggleBtn: ["wm.ToggleButton", {_classes: {domNode: ["StudioButton"]},iconUrl: "lib/images/silkIcons/note_edit.png", captionUp: "", captionDown: "", clicked: false, width: "25px", height: "100%"}]
 
 						}]
 					}],
+				devicesRibbonInner: ["wm.Panel", {height: "30px", width: "100%", layoutKind: "left-to-right", border:"1,0,0,0", borderColor: "#999"}, {}, {
+				    binding: ["wm.Binding",{},{}, {
+					wire: ["wm.Wire", {"source":"deviceDesignToggle.clicked","targetProperty":"showing"}, {}]
+				    }],
+				    devicesTogglePanel: ["wm.ToggleButtonPanel", {width: "400px", height: "100%", layoutKind: "left-to-right"}, {}, {
+					binding: ["wm.Binding",{},{}, {
+					    wire: ["wm.Wire", {"source":"desktopToggleButton","targetProperty":"currentButton"}, {}]
+					}],
+					desktopToggleButton: ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]}, "width": "100%", height: "100%", margin: "0", caption: "Desktop"}, {onclick: "designDesktopUI"}],
+					tabletToggleButton:  ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]},"width": "100%", height: "100%", margin: "0", caption: "Tablet"},  {onclick: "designTabletUI"}],
+					phoneToggleButton:   ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]},"width": "100%", height: "100%", margin: "0", caption: "Phone"},   {onclick: "designPhoneUIClick"}],
+					mobileFoldingToggleButton:   ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]},"width": "100%", height: "100%", margin: "0", caption: "Folding"},   {onclick: "designMobileFolding"}]
+				    }],
+
+/*
+
+						    deviceTypeSelect: ["wm.SelectMenu", {caption: "Device", margin:"4,0,4,20", width: "120px", height: "24px", captionSize: "50px", dataValue: "desktop", displayField: "name", dataField: "dataValue", emptyValue: "emptyString"},{onchange: "deviceTypeSelectChanged"},{
+							binding: ["wm.Binding",{},{}, {
+							    wire: ["wm.Wire", {"source":"deviceTypeVar","targetProperty":"dataSet"}, {}]
+							}]
+						    }]
+						    */
+				    deviceSizeSelect: ["wm.SelectMenu", {caption: "Size", margin:"4,0,4,15", width: "100%", height: "24px", captionSize: "50px", dataValue: "1150", displayField: "name", dataField: "dataValue"},{onchange: "deviceSizeSelectChanged"},{
+					binding: ["wm.Binding",{},{}, {
+					    wire: ["wm.Wire", {"source":"deviceSizeVar","targetProperty":"dataSet"}, {}]
+					}]
+				    }],
+				    deviceBarHelpBtn: ["wm.ToolButton", {width: "20px", height: "20px", margin: "5,0,0,0", hint: "Help", _classes: {domNode: ["StudioHelpIcon"]}}, {onclick: "showDeviceBarHelp"}]
+				}],
+				    docRibbonInner: ["wm.Panel", {height: "100%", minHeight: "30px", width: "100%", layoutKind: "left-to-right", border: "0", showing: false, border:"1,0,0,0", borderColor: "#999", horizontalAlign: "left", verticalAlign: "top"}, {}, {
+					binding: ["wm.Binding",{},{}, {
+					    wire: ["wm.Wire", {"expression":"${docToggleBtn.clicked}","targetProperty":"showing"}, {}]
+					}],
+					docLabel: ["wm.Label", {caption: "Docs:",width: "40px", singleLine: false, padding: "2"}],
+					docHtml: ["wm.Html", {width: "100%", height: "100%", autoScroll: true, padding: "2"}],
+					docHtmlButton: ["wm.ToolButton", {width: "20px", height: "20px", hint: "Edit", imageIndex: 75, imageList: "silkIconImageList"}, {onclick: "selected.viewDocumentation"}]
+				    }]
+				}],
+				docSplitter: ["wm.Splitter", {border: ""},{},{
+				    binding: ["wm.Binding",{},{}, {
+					wire: ["wm.Wire", {"expression":"${docToggleBtn.clicked}","targetProperty":"showing"}, {}]
+				    }]					
+				}],
 				bench: ["wm.Panel", {_classes: {domNode: ["WMApp"]}, width: "100%", height: "100%", border: "1, 0, 0, 0", backgroundColor: "silver", borderColor: "#666E80", verticalAlign: "middle", horizontalAlign: "center"}, {}, {
 				    designerSpacer1: ["wm.Spacer", {showing: false, height: "100%"}],
 				    designer: ["wm.Designer", {_classes: {domNode: ["studio_tree_dropTarget"]}, height: "100%", width: "100%", backgroundColor: "white", borderColor: "black", border: ""}, {onselect: "designerSelect", onmove: "designerMove"}],
@@ -557,7 +597,6 @@ Studio.widgets = {
 
 			}]
 		}],
-		console: ["wm.Box", {height: "96", showing: false}, {}],
 		markup: ["wm.Html", {height: "0", showing: false}, {}]
 		/*,
 		footer: ["wm.Html", {height: "18px", html: "Copyright &copy; 2008 <a target=\"_blank\" href=\"http://www.wavemaker.com\" style=\"color:#b4d5f0;\">WaveMaker Software</a>, Studio Version: wmVersionNumber", showing: false}, {}]*/

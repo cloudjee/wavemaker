@@ -68,12 +68,14 @@ wm.Control.extend({
                     this.autoSizeWidth = false;
 		}
 		if (("h" in inBounds) /*&& domBox.h != inBounds.h*/) {
-			if (!this.fitToContentHeight)			
-				this.height = domBox.h + "px";
+		    if (!this.fitToContentHeight) {
+			this.set_height(domBox.h + "px");
+		    }
                     this.autoSizeHeight = false;
 		}
 
 	        this._needsAutoResize = true; 
+
 	},
     designResize: function(inBounds, isUndo) {
 	        if (!isUndo) {
@@ -121,6 +123,33 @@ wm.Control.extend({
         this.inherited(arguments);
         if (this.designWrapper)
             this.designWrapper.controlNameChanged();
+    },
+    afterPaletteDrop: function(){
+	this.inherited(arguments);
+	this.desktopHeight = this.constructor.prototype.height;
+    },
+    set_height: function(inHeight) {
+	var isMobile = studio.currentDeviceType != "desktop";
+	if (isMobile && this.enableTouchHeight) {
+	    this.mobileHeight = inHeight;
+	} else {
+	    this.desktopHeight = inHeight;
+	}
+	this.setSizeProp("height", inHeight, this.minHeight);
+    },
+    set_minHeight: function(inHeight) {
+	var height = inHeight ? parseInt(inHeight) : 0;
+	var isMobile = studio.currentDeviceType != "desktop";
+	if (isMobile && this.enableTouchHeight) {
+	    this.minMobileHeight = height;
+	} else {
+	    this.minDesktopHeight = height;
+	}
+	this.setSizeProp("height", this.height, height);
+    },
+    resetDesignHeight: function() {
+	this.setHeight(studio.currentDeviceType != "desktop" ? this.mobileHeight || this.desktopHeight : this.desktopHeight);
+	this.setMinHeight(studio.currentDeviceType != "desktop" ? this.minMobileHeight || this.minDesktopHeight : this.minDesktopHeight);
     },
 	// Begin design border
 	/*
@@ -234,6 +263,30 @@ wm.Control.extend({
 		this.setShowing(inShowing);
 		wm.fire(this.designWrapper, "setShowing", [inShowing]);
 	},
+    set_mobileFolding: function(inFolding) {
+	this.mobileFolding = inFolding;
+	if (studio.mobileFoldingToggleButton.clicked) {
+	    // redo mobile folding
+	    studio.designPhoneUI(false);
+	    studio.designMobileFolding(true);
+	}
+    },
+    set_mobileFoldingCaption: function(inCaption) {
+	this.mobileFoldingCaption = inCaption;
+	if (studio.mobileFoldingToggleButton.clicked) {
+	    // redo mobile folding
+	    studio.designPhoneUI(false);
+	    studio.designMobileFolding(true);
+	}
+    },
+    set_mobileFoldingIndex: function(inIndex) {
+	this.mobileFoldingIndex = inIndex;
+	if (studio.mobileFoldingToggleButton.clicked) {
+	    // redo mobile folding
+	    studio.designPhoneUI(false);
+	    studio.designMobileFolding(true);
+	}
+    },
     //=======================================================
     // Properties
     //=======================================================
@@ -242,11 +295,13 @@ wm.Control.extend({
 	p.autoSizeWidth.ignoretmp = (!this.isSizeable() && !this.autoSizeWidth) || (this.schema.autoSizeWidth && this.schema.autoSizeWidth.ignore);
 	p.autoSizeHeight.ignoretmp = (!this.isSizeable() && !this.autoSizeHeight) || (this.schema.autoSizeHeight && this.schema.autoSizeHeight.ignore);
         p.minWidth.ignoretmp = !this.schema.minWidth || this.schema.minWidth.ignore || (!this._percEx.w && !this.autoSizeWidth); // minWidth only applies if width is % or autosize is on
-        p.minMobileHeight.ignoretmp = p.minHeight.ignoretmp = this.schema.minHeight.ignore || (!this._percEx.h && !this.autoSizeHeight); // minHeight only applies if height is % or autosize is on
 	//p.width.ignore = p.width.writeonly = !this.isSizeable() || !this.canSetWidth();
 	//p.height.ignore = p.height.writeonly = !this.isSizeable() || !this.canSetHeight();
 	p.width.ignoretmp = p.width.writeonly = this.schema.width.ignore || !this.isSizeable() || this.autoSizeWidth;
 	p.height.ignoretmp = p.height.writeonly = this.schema.height.ignore || !this.isSizeable() || this.autoSizeHeight;
+
+	p.mobileFolding.ignoretmp = p.mobileFoldingCaption.ignoretmp = p.mobileFoldingIndex.ignoretmp = !studio.mobileFoldingToggleButton.clicked;
+
 	// _classes as array for bc; now an object that supports storing sets of classes
 	if (p._classes)
 	    p._classes.writeonly = (dojo.isArray(this._classes) && this._classes.length) || !wm.isEmpty(this._classes);
@@ -339,7 +394,27 @@ wm.Control.extend({
 	*/
 	writeChildren: function(inNode, inIndent, inOptions) {
 		return [];
-	}
+	},
+    wrapInPanel: function() {
+	var index = this.getIndexInParent();
+	var parent = this.parent;
+	var p = new wm.Panel({owner: this.owner,
+			      parent: parent,
+			      name: this.name + "Panel",
+			      width: this.width,
+			      height: this.height,
+			      verticalAlign: "top",
+			      horizontalAlign: "left",
+			      layoutKind: parent.layoutKind == "left-to-right" ? "top-to-bottom" : "left-to-right"});
+	p.setIndexInParent(index);
+	this.setParent(p);
+	this.setWidth("100%");
+	parent.reflow();
+	studio.refreshDesignTrees();
+	studio.select(p);
+	
+    }
+
 	// EXPERIMENTAL: use property ui to do binding...
 	// NOTE: does not currently handle app bindings or Expressions
 	/*makePropEdit: function(inName, inValue, inDefault) {
@@ -384,10 +459,10 @@ wm.Control.extend({
 });
 
 wm.Object.extendSchema(wm.Control, {
-    generateForDevice: {group: "devices", shortname: "generateForDeviceSizes", editor: "wm.prop.DeviceListEditor", advanced:1},
     imageList: {ignore: 1, group: "widgetName", subgroup: "graphics", order: 50, editor: "wm.prop.ImageListSelect"},
     imageIndex: {ignore: 1, group: "widgetName", subgroup: "graphics", order: 51, type: "Number",  doc: 1},
     editImageIndex: {ignore: 1, group: "widgetName", subgroup: "graphics", order: 52, type: "String", doc: 1, operation: 1},
+    wrapInPanel: {operation: 1, group: "operation", shortname: "Wrap in Panel"},
         noInspector: {ignore: 1}, // obsolete property, but still don't want it showing in property panels
         numTabbableWidgets: {ignore: 1},
         internalTabIndex: {writeonly: 1, ignore: 1},
@@ -423,16 +498,15 @@ wm.Object.extendSchema(wm.Control, {
     height: { group: "display", subgroup: "layout",  order: 30, doc: 1, editor: "wm.prop.SizeEditor"},
     minWidth: { group: "display", subgroup: "layout", order: 40, advanced: true, ignoreHint: "minWidth is only available when width is % sized"},
     minHeight: { group: "display", subgroup: "layout", order: 50, advanced: true, ignoreHint: "minHeight is only available when height is % sized"},
-
     
-    minMobileHeight: { group: "mobile", subgroup: "layout", order: 50, advanced: true, ignoreHint: "minHeight is only available when height is % sized"},
-    mobileHeight:{ group: "mobile", subgroup: "layout",  order: 80, doc: 1, editor: "wm.prop.SizeEditor", advanced: true},
-    mobileFolding: {group: "mobile", subgroup: "layerfolding", order: 1, advanced: true},
-    mobileFoldingCaption: {group: "mobile", subgroup: "layerfolding", order: 2, advanced: true},
-    mobileFoldingIndex: {group: "mobile", subgroup: "layerfolding", order: 3, advanced: true},
-
-    mobileAppFolding: {group: "mobile", subgroup: "appnav", order: 1, advanced: true},
-    mobileAppFoldingIndex: {group: "mobile", subgroup: "appnav", type: "number", order: 2, advanced: true},
+    minMobileHeight: {hidden:1, group: "mobile", subgroup: "layout", order: 50, advanced: true, ignoreHint: "minHeight is only available when height is % sized"},
+    minDesktopHeight: {hidden:1, group: "mobile", subgroup: "layout", order: 50, advanced: true, ignoreHint: "minHeight is only available when height is % sized"},
+    mobileHeight:{ group: "mobile", subgroup: "layout",  order: 80, doc: 1, editor: "wm.prop.SizeEditor", hidden: true},
+    desktopHeight:{ hidden: true},
+    enableTouchHeight: {group: "mobile", subgroup: "layout", order: 80, type: "boolean"},
+    mobileFolding: {group: "mobile", subgroup: "layerfolding", order: 1, ignoreHint: "To enable, select your page in the model and select 'enableMobileFolding'"},
+    mobileFoldingCaption: {group: "mobile", subgroup: "layerfolding", order: 2, ignoreHint: "To enable, select your page in the model and select 'enableMobileFolding'"},
+    mobileFoldingIndex: {group: "mobile", subgroup: "layerfolding", order: 3, ignoreHint: "To enable, select your page in the model and select 'enableMobileFolding'"},
     
     parent: { ignore: 1, doc: 1, prototype: "wm.Control" },
     domNode: { ignore: 1, doc: 1 },

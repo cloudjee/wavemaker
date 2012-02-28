@@ -1,0 +1,989 @@
+/*
+ *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+body .wm_green input:focus,
+.wm_green button, .wm_green button:focus {
+outline-width: 0 !important;
+}
+@media screen {
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_green .wmlayout .HeaderContent a,
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_green .wmlayout .HeaderContent a:visited,
+#studio_designer.wm_green .wmlayout .HeaderContent a,
+#studio_designer.wm_green .wmlayout .HeaderContent a:visited,
+.wm_green #wavemakerNode .wmlayout .HeaderContent a,
+.wm_green #wavemakerNode .wmlayout .HeaderContent a:visited {
+color: #ffffff;
+}
+}
+@media screen {
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_green .wmlayout  a,
+#studio_themesPage_themeDesigner_demoPanelTabLayers_client .wm_green .wmlayout  a:visited,
+#studio_designer.wm_green .wmlayout  a,
+#studio_designer.wm_green .wmlayout  a:visited,
+.wm_green #wavemakerNode .wmlayout  a,
+.wm_green #wavemakerNode  .wmlayout  a:visited {
+color: #000000;
+}
+}
+@media screen {
+.wm_green   .wmbutton,
+.wm_green   .wmtogglebutton,
+.wm_green   .wmbutton.wmbutton-disabled:hover,
+.wm_green   .wmbutton.wmbutton-disabled:focus
+{
+font-family: Verdana;
+font-size: 8pt;
+color: #333333;
+font-weight: bold;
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+-moz-box-shadow: 1px 1px 1px #444444;
+-webkit-box-shadow: 1px 1px 1px #444444;
+box-shadow: 1px 1px 1px #444444;
+background-color: #cccccc;
+background-image: url(images/repeatx/greyThickEdge2.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.wm_green  .wmbutton span {
+font-weight: bold;
+}
+.wm_green   .wmbutton.toggleButtonDown {
+color: #ffffff;
+background-color: #5e7f11;
+background-image: url(images/repeatx/brightThickEdge2.png);
+background-position: top left;
+background-repeat: repeat-x;
+-moz-box-shadow: 0px 0px 0px #444444;
+-webkit-box-shadow: 0px 0px 0px #444444;
+box-shadow: 0px 0px 0px #444444;
+}
+.wm_green   .wmbutton:active,
+.wm_green   .wmbutton:focus {
+color: #ffffff;
+background-color: #444444;
+background-image: url(images/repeatx/brightThickEdge0.png);
+background-position: top left;
+background-repeat: repeat-x;
+-moz-box-shadow: 1px 1px 1px #444444;
+-webkit-box-shadow: 1px 1px 1px #444444;
+box-shadow: 1px 1px 1px #444444;
+}
+}
+@media screen {
+.wm_green .HeaderContent  .wmbutton,
+.wm_green .HeaderContent  .wmtogglebutton,
+.wm_green .HeaderContent  .wmbutton.wmbutton-disabled:active,
+.wm_green .HeaderContent  .wmbutton.wmbutton-disabled:focus
+{
+font-family: Verdana;
+font-size: 10pt;
+color: #FFFFFF;
+font-weight: bold;
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+-moz-box-shadow: 3px 3px 3px #444444;
+-webkit-box-shadow: 3px 3px 3px #444444;
+box-shadow: 3px 3px 3px #444444;
+background-color: #666666;
+background-image: url(images/repeatx/brightThickEdge1.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.wm_green .HeaderContent .wmbutton span {
+font-weight: bold;
+}
+.wm_green .HeaderContent  .wmbutton.toggleButtonDown {
+color: #000000;
+background-color: #999999;
+background-image: url(images/repeatx/greyThickEdge1.png);
+background-position: top left;
+background-repeat: repeat-x;
+-moz-box-shadow: 0px 0px 0px #444444;
+-webkit-box-shadow: 0px 0px 0px #444444;
+box-shadow: 0px 0px 0px #444444;
+}
+.wm_green .HeaderContent  .wmbutton:hover,
+.wm_green .HeaderContent  .wmbutton:active {
+color: #ffffff;
+background-color: #333333;
+background-image: url(images/repeatx/brightSliverEdge4.png);
+background-position: top left;
+background-repeat: repeat-x;
+-moz-box-shadow: 0px 0px 0px #444444;
+-webkit-box-shadow: 0px 0px 0px #444444;
+box-shadow: 0px 0px 0px #444444;
+}
+}
+.wm_green .wmPopupButton .popupIcon {
+background-image: url(images/comboArrowDownLight.png) !important;
+}
+.wm_green table .dijitCalendarYearContainer tr {
+background-color: #a19fa0;
+border-style: solid;
+border-color: #d7d1d5;
+border-top-width: 1px;
+}
+.wm_green table .dijitCalendarYearContainer td span {
+color: #ffffff !important;
+}
+.wm_green .dijitCalendarYearLabel {
+font-size: 10px;
+}
+.wm_green .dijitCalendarDayLabel,
+.wm_green .dijitCalendarDateLabel {
+font-size: 9px;
+}
+.wm_green tr.dijitCalendarMonthContainer th {
+font-family: Verdana;
+font-size: 10px;
+color: #ffffff;
+font-weight: bold;
+background-color: #a19fa0;
+background-image: none;
+}
+.wm_green tr.dijitCalendarMonthContainer th .dijitCalendarMonthLabel {
+font-family: Verdana;
+font-size: 10px;
+color: #ffffff;
+font-weight: bold;
+border-width: 0px;
+-moz-box-shadow: 0px 0px 0px black;
+-webkit-box-shadow: 0px 0px 0px black;
+box-shadow: 0px 0px 0px black;
+}
+.wm_green table.dijitCalendarContainer {
+border-color: #444444;
+border-style: solid;
+border-width: 4px;
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+}
+.wm_green table.dijitCalendarContainer td.dijitCalendarCurrentMonth {
+background-color: #ffffff !important;
+color: #000000 !important;
+}
+.wm_green .dijitCalendarBodyContainer td {
+border-style: solid;
+border-color: #444444;
+border-right-width: 1px;
+border-top-width: 1px;
+border-left-width: 0px;
+border-bottom-width: 0px;
+}
+.wm_green .dijitCalendarContainer td.dijitCalendarSelectedDate,
+.wm_green .dijitCalendarContainer td.dijitCalendarSelectedDate.dijitCalendarCurrentMonth,
+.wm_green .dijitCalendarContainer .dijitCalendarSelectedYear {
+background-color: #636162 !important;
+color: #000000 !important;
+}
+.wm_green .dijitCalendarContainer td.dijitCalendarHoveredDate,
+.wm_green .dijitCalendarContainer td.dijitCalendarHoveredDate.dijitCalendarCurrentMonth,
+.wm_green .dijitCalendarContainer .dijitCalendarHoveredYear,
+.wm_green .dijitCalendarContainer .dijitCalendarNextYear:hover,
+.wm_green .dijitCalendarContainer .dijitCalendarPreviousYear:hover {
+background-color: #d7d1d5 !important;
+color: #000000 !important;
+}
+.wm_green .dijitCalendarContainer {
+background-color: #ffffff;
+}
+.wm_green .dijitCalendarContainer .dijitCalendarPreviousMonth,
+.wm_green .dijitCalendarContainer .dijitCalendarNextMonth,
+.wm_green .dijitCalendarContainer .dijitCalendarDayLabelTemplate {
+background-color: #dadada !important;
+background-image: none;
+color: #444444;
+}
+.wm_green .dijitCalendarDayLabelTemplate {
+border-style: solid;
+border-color: #444444;
+border-right-width: 1px;
+}
+.wm_green .wmdialog {
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+-moz-box-shadow: 3px 3px 3px black;
+-webkit-box-shadow: 3px 3px 3px black;
+box-shadow: 3px 3px 3px black;
+}
+.wm_green .dialogtitlebar .wmlabel{
+font-family: Verdana;
+font-size: 8pt;
+color: #ffffff;
+font-weight: bold;
+}
+.wm_green .dialogtitlebar {
+background-color: #666666;
+background-image: url(images/repeatx/brightThickEdge0.png);
+background-position: top left;
+background-repeat: repeat-x;
+-moz-border-radius-topleft: 2px;
+-moz-border-radius-topright: 2px;
+-webkit-border-top-left-radius: 2px;
+-webkit-border-top-right-radius: 2px;
+border-radius-topleft: 2px;
+border-radius-topright: 2px;
+}
+.wm_green .dialogfooter,
+.wm_green .wmpagedialog-controlspanel {
+font-family: Verdana;
+font-size: 8pt;
+color: #ffffff;
+font-weight: bold;
+background-color: #666666;
+background-position: top left;
+background-repeat: repeat-x;
+-moz-border-radius-bottomleft: 2px;
+-moz-border-radius-bottomright: 2px;
+-webkit-border-bottom-left-radius: 2px;
+-webkit-border-bottom-right-radius: 2px;
+border-radius-bottomleft: 2px;
+border-radius-bottomright: 2px;
+}
+body.wm_green .dialogtitlebar .wmbutton,
+body .wm_green .dialogtitlebar .wmbutton {
+background-color: #c6d3d7;
+background-image: url(images/repeatx/brightEdge2.png);
+background-position: top left;
+background-repeat: repeat-x;
+color: #000000;
+font-size: 12pt !important;
+font-weight: normal !important;
+padding: 2px 0px 0px 2px !important;
+font-family: sans-serif !important;
+-moz-border-radius: 0px !important;
+-webkit-border-radius: 0px !important;
+border-radius: 0px !important;
+-moz-box-shadow: 2px 2px 2px #444444;
+-webkit-box-shadow: 2px 2px 2px #444444;
+box-shadow: 2px 2px 2px #444444;
+}
+body.wm_green .dialogfooter .wmbutton,
+body .wm_green .dialogfooter .wmbutton {
+font-family: Verdana;
+font-size: 9pt;
+color: #000000;
+font-weight: bold;
+background-color: #dbe1e1;
+background-image: url(images/repeatx/brightEdge2.png);
+background-position: top left;
+background-repeat: repeat-x;
+-moz-box-shadow: 3px 3px 3px #000000;
+-webkit-box-shadow: 3px 3px 3px #000000;
+box-shadow: 3px 3px 3px #000000;
+}
+body.wm_green .dialogtitlebar .wmbutton:hover,
+body.wm_green .dialogtitlebar .wmbutton:focus,
+body.wm_green .dialogtitlebar .wmbutton:active {
+color: #000000;
+background-color: #86a2ac;
+background-image: url(images/repeatx/brightEdge4.png);
+background-position: top left;
+background-repeat: repeat-x;
+-moz-box-shadow: 1px 1px 1px #000000;
+-webkit-box-shadow: 1px 1px 1px #000000;
+box-shadow: 1px 1px 1px #000000;
+}
+body.wm_green .dialogfooter .wmbutton.toggleButtonDown,
+body .wm_green .dialogfooter .wmbutton.toggleButtonDown,
+body.wm_green .dialogfooter .wmbutton:hover,
+body.wm_green .dialogfooter .wmbutton:active,
+body.wm_green .dialogfooter .wmbutton:focus {
+color: #000000;
+background-color: #a2a7a9;
+background-image: url(images/repeatx/brightEdge4.png);
+background-position: top left;
+background-repeat: repeat-x;
+`
+-moz-box-shadow: 1px 1px 1px #000000;
+-webkit-box-shadow: 1px 1px 1px #000000;
+box-shadow: 1px 1px 1px #000000;
+}
+.wm_green .dialogtitlebar .dialogminifybutton {
+background-position: -16px;
+}
+.wm_green .dialogtitlebar .dialogmaxifybutton {
+background-position: -32px;
+}
+.wm_green .dialogtitlebar .dialogmaxifybutton,
+.wm_green .dialogtitlebar .dialogclosebutton,
+.wm_green .dialogtitlebar .dialogminifybutton {
+background-image: url(images/dialogIconsGray.png) !important;
+background-repeat: no-repeat;
+}
+.wm_green .wmeditor .dijitTextBox.dijitFocused,
+.wm_green .wmeditor .dijitTextArea.dijitFocused,
+.wm_green .wmeditor .dijitComboBox.dijitFocused,
+.wm_green .wmeditor .dijitSelect.dijitFocused {
+outline-width: 0 !important;
+}
+.wm_green  .wmeditor .dijitTextBox,
+.wm_green  .wmeditor .dijitTextArea,
+.wm_green  .wmeditor .dijitComboBox
+{
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+}
+.wm_green  .wmeditor .dijitSelect .dijitButtonContents {
+-moz-border-radius-bottomleft: 4px;
+-moz-border-radius-topleft: 4px;
+-webkit-border-top-left-radius: 4px;
+-webkit-border-bottom-left-radius: 4px;
+border-radius-bottomleft: 4px;
+border-radius-top-left: 4px;
+border-right: solid 0px transparent !important;
+display:block;
+}
+.wm_green .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_green .wmeditor .dijitSelect .dijitArrowButton {
+height: 100% !important;
+-moz-border-radius-bottomright: 2px;
+-moz-border-radius-topright: 2px;
+-webkit-border-bottom-right-radius: 2px;
+-webkit-border-top-right-radius: 2px;
+border-radius-bottomright: 2px;
+border-radius-topright: 2px;
+}
+.wm_green .dijitComboBox .dijitArrowButton .dijitArrowButtonInner {
+height: 100% !important;
+}
+.wm_green .dijitComboBox .dijitArrowButton .dijitArrowButtonInner,
+.wm_green .dijitSelect .dijitArrowButton .dijitArrowButtonInner {
+background-position: 50% 50%;
+background-image: url(images/comboArrowDownLight.png);
+-moz-border-radius-bottomright: 2px;
+-moz-border-radius-topright: 2px;
+-webkit-border-bottom-right-radius: 2px;
+-webkit-border-top-right-radius: 2px;
+border-radius-bottomright: 2px;
+border-radius-topright: 2px;
+}
+.wm_green .dijitSpinner .dijitArrowButton .dijitArrowButtonInner {
+background-position: 30% 30%;
+background-image: url(images/comboArrowDownDark.png);
+}
+.wm_green .dijitSpinner .dijitArrowButton.dijitUpArrowButton .dijitArrowButtonInner {
+background-image: url(images/comboArrowUpDark.png);
+}
+.wm_green .dijitSlider .dijitProgressBarLabel {
+color: white;
+}
+.wm_green .dijitSlider .dijitSliderImageHandleH {
+background: url(images/preciseSliderThumb.png) no-repeat 50% 0%;
+outline-width: 0;
+}
+@media screen {
+.wm_green  .wmeditor .dijitSpinner .dijitArrowButton,
+.wm_green  .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_green  .wmeditor .dijitSelect .dijitArrowButton {
+background-color: #cccccc;
+}
+.wm_green  .wmeditor .dijitTextBox,
+.wm_green  .wmeditor .dijitTextArea,
+.wm_green  .wmeditor .dijitComboBox,
+.wm_green  .wmeditor .dijitSelect .dijitButtonContents,
+.wm_green  .dijitTimePickerItem {
+border-color: #333333;
+border-width: 1px;
+font-family: Verdana;
+font-size: 8pt;
+color: #000000;
+font-weight: normal;
+background-color: #eeeeee;
+background-image: url(images/repeatx/greyEdge2.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.wm_green  .wmeditor .dijitTextBox.dijitHover,
+.wm_green  .wmeditor .dijitTextArea:hover,
+.wm_green  .wmeditor .dijitComboBox.dijitHover,
+.wm_green  .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
+.wm_green  .dijitTimePickerMarker.dijitTimePickerMarkerHover,
+.wm_green  .dijitTimePickerItem.dijitTimePickerItemHover {
+color: #000000;
+border-color: #333333;
+background-color: #dddddd;
+background-image: url(images/repeatx/greyEdge4.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.wm_green  .wmeditor .dijitTextBox.dijitFocused,
+.wm_green  .wmeditor .dijitTextBox.dijitFocused.dijitHover,
+.wm_green  .wmeditor .dijitTextArea.dijitFocused,
+.wm_green  .wmeditor .dijitTextArea.dijitFocused:hover,
+.wm_green  .wmeditor .dijitComboBox.dijitFocused,
+.wm_green  .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+.wm_green  .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
+.wm_green  .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents {
+color: #000000;
+border-color: #000000;
+background-color: #FFFFFF;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+}
+@media screen {
+.wm_green .HeaderContent .wmeditor .dijitSpinner .dijitArrowButton,
+.wm_green .HeaderContent .wmeditor .dijitComboBox .dijitArrowButton,
+.wm_green .HeaderContent .wmeditor .dijitSelect .dijitArrowButton {
+background-color: #666666;
+}
+.wm_green .HeaderContent .wmeditor .dijitTextBox,
+.wm_green .HeaderContent .wmeditor .dijitTextArea,
+.wm_green .HeaderContent .wmeditor .dijitComboBox,
+.wm_green .HeaderContent .wmeditor .dijitSelect .dijitButtonContents,
+.wm_green .HeaderContent .dijitTimePickerItem {
+border-color: #333333;
+border-width: 1px;
+font-family: Verdana;
+font-size: 8pt;
+color: #000000;
+font-weight: normal;
+background-color: #eeeeee;
+background-image: url(images/repeatx/greyEdge2.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.wm_green .HeaderContent .wmeditor .dijitTextBox.dijitHover,
+.wm_green .HeaderContent .wmeditor .dijitTextArea:hover,
+.wm_green .HeaderContent .wmeditor .dijitComboBox.dijitHover,
+.wm_green .HeaderContent .wmeditor .dijitSelect.dijitHover .dijitButtonContents,
+.wm_green .HeaderContent .dijitTimePickerMarker.dijitTimePickerMarkerHover,
+.wm_green .HeaderContent .dijitTimePickerItem.dijitTimePickerItemHover {
+color: #000000;
+border-color: #333333;
+background-color: #dddddd;
+background-image: url(images/repeatx/greyEdge4.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.wm_green .HeaderContent .wmeditor .dijitTextBox.dijitFocused,
+.wm_green .HeaderContent .wmeditor .dijitTextBox.dijitFocused.dijitHover,
+.wm_green .HeaderContent .wmeditor .dijitTextArea.dijitFocused,
+.wm_green .HeaderContent .wmeditor .dijitTextArea.dijitFocused:hover,
+.wm_green .HeaderContent .wmeditor .dijitComboBox.dijitFocused,
+.wm_green .HeaderContent .wmeditor .dijitComboBox.dijitFocused.dijitHover,
+.wm_green .HeaderContent .wmeditor .dijitSelect.dijitFocused .dijitButtonContents,
+.wm_green .HeaderContent .wmeditor .dijitSelect.dijitFocused.dijitHover .dijitButtonContents{
+color: #000000;
+border-color: #000000;
+background-color: #FFFFFF;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+}
+.wm_green div.wmlist-item {
+font-family: Verdana;
+font-size: 8pt;
+color: #000000;
+font-weight: normal;
+background-color: #eeeeee;
+}
+.wm_green .wmlist-item.Odd {
+color: #000000;
+background-color: #dddddd;
+}
+.wm_green .wmlist-cell {
+border-style: solid;
+border-color: #cccccc;
+border-left-width: 0px;
+border-right-width: 1px;
+border-top-width: 0px;
+border-bottom-width: 0px;
+}
+.wm_green .wmlist-header .wmlist-cell {
+border-right-width: 0px;
+}
+@media screen {
+.wm_green .wmlist-item.wmlist-item-selected {
+background-color: #636162 !important;
+color: #000000;
+}
+.wm_green .wmlist-header th {
+font-family: Verdana;
+color: #ffffff !important;
+font-weight: bold;
+}
+body.tundra.wm_green .wmlist-header {
+background-color: #686868;
+background-image: url(images/repeatx/brightEdge1.png);
+background-position: left top;
+background-repeat: repeat-x;
+}
+}
+.wm_green .dijitMenu .dijitMenuArrowCell img.dijitMenuExpand {
+background-image: url(images/arrowRightLight.png) !important;
+background-position: 0% 50% !important;
+}
+.wm_green div.dijitMenuBar div.dijitMenuItem {
+background-image: url(images/comboArrowDownLight.png) !important;
+background-position: 90% 50% !important;
+background-repeat: no-repeat !important;
+padding-right: 25px !important;
+}
+@media screen {
+.wm_green .dojoMenu .dijitMenu,
+.wm_green .dojoMenu .dijitMenuBar {
+font-family: Verdana;
+font-size: 10pt;
+font-weight: bold;
+color: #444444;
+background-color: transparent;
+background-image: none;
+}
+.wm_green .dojoMenu.ClickableDojoMenu {
+background-color: #a19fa0;
+background-image: url(images/repeatx/brightEdge2.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.wm_green .dojoMenu.ClickableDojoMenu .dijitMenuItem {
+color: #ffffff;
+}
+.wm_green .dojoMenu .dijitMenuItem {
+color: #444444;
+}
+.wm_green .dijitMenuBar .dijitMenuItem,
+.tundra .wm-darksnazzy .wm_green .dijitMenuBar .dijitMenuItem {
+margin-right: 15px;
+}
+body.wm_green .dojoMenu .dijitMenuPassive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+body.wm_green .dojoMenu .dijitMenuActive.dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
+color: #000000;
+background-color: #d7d1d5;
+background-image: url(images/repeatx/brightEdge2.png);
+background-position: top left;
+background-repeat: repeat-x;
+outline-width: 0;
+}
+}
+.wm_green .dijitMenuPopup table.dijitMenuTable.dijitMenu.dijitReset,
+.wm_green .dijitPopup .dijitCalendarMonthLabel {
+font-family: Verdana;
+color: #ffffff;
+font-weight: bold;
+background-color: #a19fa0;
+border: solid 1px black;
+border-top: solid 1px #999999;
+-moz-box-shadow: 3px 3px 4px black;
+-webkit-box-shadow: 3px 3px 4px black;
+box-shadow: 3px 3px 4px black;
+}
+body.wm_green  .dijitMenu.dijitMenuTable .dijitMenuItem.dijitMenuItemSelected
+{
+color: #000000;
+background-color: #d7d1d5;
+background-image: none;
+outline-width: 0;
+}
+body.wm_green ul.dijitMenu .dijitMenuItem,
+body.wm_green div.dijitMenu .dijitCalendarMonthLabel {
+color: #000000;
+background-color: #eeeeee;
+border-bottom-size: 1px;
+border-bottom-style: solid;
+border-bottom-color: #cccccc;
+}
+body.wm_green  ul.dijitMenu .dijitMenuItem.dijitMenuItemSelected,
+body.wm_green div.dijitMenu .dijitCalendarMonthLabel.dijitMenuItemHover {
+color: #000000;
+background-color: #d7d1d5;
+outline-width: 0;
+}
+body.tundra.wm_green .dijitPopup ul.dijitMenu {
+border-width: 1px;
+border-style: solid;
+border-color: black;
+-moz-box-shadow: 4px 4px 8px black;
+-webkit-box-shadow: 4px 4px 8px black;
+box-shadow: 4px 4px 8px black;
+}
+.wm_green button.wmtablayers-tab {
+-moz-box-shadow: 1px 0px 1px #444444;
+-webkit-box-shadow: 1px 0px 1px #444444;
+box-shadow: 1px 0px 1px #444444;
+height: 23px;
+font-size: 9;
+}
+.wm_green .wmtablayers-tab:hover, .wm_green .wmtablayers-tab:focus {
+-moz-box-shadow: 0px 0px 0px #444444;
+-webkit-box-shadow: 0px 0px 0px #444444;
+box-shadow: 1px 0px 1px #444444;
+}
+.wm_green .wmtablayers-tab.wmtablayers-selected,
+.wm_green .wmtablayers-tab.wmtablayers-selected:focus,
+.wm_green .wmtablayers-verticaltab.wmtablayers-selected,
+.wm_green .wmtablayers-verticaltab.wmtablayers-selected:focus {
+-moz-box-shadow: 0px 0px 0px #444444;
+-webkit-box-shadow: 0px 0px 0px #444444;
+box-shadow: 0px 0px 0px #444444;
+}
+.wm_green .wmtablayers-tab.wmtablayers-selected,
+.wm_green .wmtablayers-tab.wmtablayers-tab {
+margin-left: 8px;
+-moz-border-radius-topleft: 4px;
+-moz-border-radius-topright: 4px;
+-webkit-border-top-left-radius: 4px;
+-webkit-border-top-right-radius: 4px;
+border-radius-topleft: 4px;
+border-radius-topright: 4px;
+}
+.wm_green button.wmtablayers-verticaltab {
+-moz-box-shadow: 1px 0px 1px #444444;
+-webkit-box-shadow: 1px 0px 1px #444444;
+box-shadow: 1px 0px 1px #444444;
+font-size: 9;
+width: 95%;
+margin-left: 5%;
+}
+.wm_green .wmtablayers-verticaltab:hover, .wm_green .wmtablayers-verticaltab:focus {
+-moz-box-shadow: 0px 0px 0px #444444;
+-webkit-box-shadow: 0px 0px 0px #444444;
+box-shadow: -2px 2px 2px #444444;
+}
+.wm_green .wmtablayers-verticaltab.wmtablayers-selected,
+.wm_green .wmtablayers-verticaltab.wmtablayers-verticaltab {
+margin-bottom: 5px;
+-moz-border-radius-bottomleft: 4px;
+-moz-border-radius-topleft: 4px;
+-webkit-border-bottom-left-radius: 4px;
+-webkit-border-top-left-radius: 4px;
+border-radius-bottomleft: 4px;
+border-radius-topleft: 4px;
+}
+.wm_green .wmtablayers-verticaltab:focus,
+.wm_green .wmtablayers-tab:focus {
+outline-width: 0;
+}
+.wm_green .wmFancyPanel-containerWidget {
+-moz-border-radius-topright: 0px !important;
+-webkit-border-top-left-radius: 0px !important;
+-webkit-border-top-right-radius: 0px !important;
+border-radius-topleft: 0px !important;
+border-radius-topright: 0px !important;
+-moz-box-shadow: 0px 0px 0px black !important;
+-webkit-box-shadow: 0px 0px 0px black !important;
+box-shadow: 0px 0px 0px black !important;
+}
+.wm_green .wmaccordion .wmlayer {
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+}
+body.tundra.wm_green  div.wmheader,
+body.tundra .wm_green  div.wmheader,
+.wm_green  .wmTabLayers-client > .wmlayer,
+.wm_green  .wmWizardLayers-client > .wmlayer {
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+}
+.wm_green .wmFancyPanel-containerWidget {
+-moz-border-radius-bottomleft: 4px;
+-moz-border-radius-bottomright: 4px;
+-webkit-border-bottom-left-radius: 4px;
+-webkit-border-bottom-right-radius: 4px;
+border-radius-bottomleft: 4px;
+border-radius-bottomright: 4px;
+}
+.wm_green .wmFancyPanel-labelWidget {
+-moz-border-radius-topleft: 4px;
+-moz-border-radius-topright: 4px;
+-webkit-border-top-left-radius: 4px;
+-webkit-border-top-right-radius: 4px;
+border-radius-topleft: 4px;
+border-radius-topright: 4px;
+}
+.wm_green .wmaccordion .wmaccordion-collapsed .accordionArrowNode {
+display: block;
+background-image: url(images/arrowRightLight.png);
+}
+.wm_green .wmaccordion .accordionArrowNode {
+display: block;
+background-image: url(images/comboArrowDownDark.png);
+}
+.wm_green .wmaccordion .wmaccordion-content {
+background-color: transparent;
+}
+.wm_green div.wmtablayers-tabbar {
+background: transparent;
+}
+.wm_green button.wmtablayers-tab {
+border-bottom-color: transparent;
+border-right-color: #444444;
+}
+.wm_green button.wmtablayers-verticaltab {
+border-right-color: transparent;
+border-bottom-color: #444444;
+}
+.wm_green .wmwizardlayers-tab:hover,
+.wm_green .wmwizardlayers-verticaltab:hover {
+color: black;
+}
+.wm_green  .MainContent,
+#studio_designer.wm_green .MainContent {
+font-family: Verdana;
+font-size: 10pt;
+color: #000000;
+font-weight: normal;
+background-color: #ffffff;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+.wm_green div.wmaccordion-header {
+font-family: Verdana;
+font-size: 8pt;
+color: #ffffff;
+font-weight: bold;
+background-color: #5e7f11;
+background-image: url(images/repeatx/brightThickEdge2.png);
+background-position: top left;
+background-repeat: repeat-x;
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+padding-left: 10px;
+}
+.wm_green div.wmaccordion .wmaccordion-collapsed {
+color: #333333;
+font-weight: bold;
+font-family: Verdana;
+font-size: 8pt;
+background-color: #cccccc;
+background-image: url(images/repeatx/greyThickEdge2.png);
+background-position: top left;
+background-repeat: repeat-x;
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+}
+.wm_green .wmfancypanel .wmFancyPanel-labelWidget {
+font-family: Verdana;
+font-size: 8pt;
+font-weight: bold;
+color: #ffffff;
+background-color: #5e7f11;
+background-image: url(images/repeatx/brightThickEdge2.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.wm_green button.wmtablayers-tab {
+font-family: Verdana;
+color: #333333;
+font-weight: bold;
+background-color: #cccccc;
+background-image: url(images/repeatx/greyThickEdge2.png);
+background-position: top left;
+background-repeat: repeat-x;
+border-bottom-color: transparent;
+border-top-color: #444444;
+border-left-color: #444444;
+border-width: 1px;
+border-style: solid;
+}
+.wm_green .wmtablayers-tab:focus {
+color: #ffffff;
+background-color: #444444;
+background-image: url(images/repeatx/brightThickEdge0.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.wm_green .wmtablayers-tab.wmtablayers-selected,
+.wm_green .wmtablayers-tab.wmtablayers-selected:focus {
+color: #ffffff;
+background-color: #5e7f11;
+background-image: url(images/repeatx/brightThickEdge2.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.wm_green .wmwizardlayers-tab:focus,
+.wm_green .wmwizardlayers-verticaltab:focus,
+color: black;
+}
+.wm_green .HeaderContent {
+-moz-border-radius: 0px;
+-webkit-border-radius: 0px;
+border-radius: 0px;
+-moz-box-shadow: 2px 2px 2px #444444;
+-webkit-box-shadow: 2px 2px 2px #444444;
+box-shadow: 2px 2px 2px #444444;
+}
+.wm_green  .HeaderContent {
+font-family: Verdana;
+font-size: 12pt;
+color: #ffffff;
+font-weight: bold;
+background-color: #99c433;
+background-image: none;
+background-position: top left;
+background-repeat: no-repeat;
+}
+.wm_green .HeaderContent div.wmaccordion-header {
+font-family: Verdana;
+font-size: 10pt;
+color: #000000;
+font-weight: bold;
+background-color: #999999;
+background-image: url(images/repeatx/greyThickEdge1.png);
+background-position: top left;
+background-repeat: repeat-x;
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+padding-left: 10px;
+}
+.wm_green .HeaderContent div.wmaccordion .wmaccordion-collapsed {
+color: #FFFFFF;
+font-weight: bold;
+font-family: Verdana;
+font-size: 10pt;
+background-color: #666666;
+background-image: url(images/repeatx/brightThickEdge1.png);
+background-position: top left;
+background-repeat: repeat-x;
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+}
+.wm_green .HeaderContent .wmfancypanel .wmFancyPanel-labelWidget {
+font-family: Verdana;
+font-size: 10pt;
+font-weight: bold;
+color: #000000;
+background-color: #999999;
+background-image: url(images/repeatx/greyThickEdge1.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.wm_green .HeaderContent button.wmtablayers-tab {
+font-family: Verdana;
+color: #FFFFFF;
+font-weight: bold;
+background-color: #666666;
+background-image: url(images/repeatx/brightThickEdge1.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.wm_green .wmtablayers-tab:focus {
+color: #ffffff;
+background-color: #333333;
+background-image: url(images/repeatx/brightSliverEdge4.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.wm_green .HeaderContent .wmtablayers-tab.wmtablayers-selected,
+.wm_green .HeaderContent .wmtablayers-tab.wmtablayers-selected:focus {
+color: #000000;
+background-color: #444444;
+background-image: url(images/repeatx/greyThickEdge1.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.wm_green .HeaderContent .wmwizardlayers-tab:focus,
+.wm_green .HeaderContent .wmwizardlayers-verticaltab:focus {
+color: black;
+}
+.wm_green #wmMinifiedDialogPanel {
+opacity: 0.6;
+background-color: #636162;
+-moz-box-shadow: 0px -2px 4px black;
+-webkit-box-shadow: 0px -2px 4px black;
+box-shadow: 0px -2px 4px black;
+}
+.wm_green #wmMinifiedDialogPanel .wmbutton {
+-moz-border-radius: 0px !important;
+-webkit-border-radius: 0px !important;
+border-radius: 0px !important;
+font-size: 8pt;
+}
+.wm_green .wmprogressbar .dijitProgressBar {
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+}
+.wm_green .wmprogressbar .dijitProgressBarTile {
+-moz-border-radius: 4px;
+-webkit-border-radius: 4px;
+border-radius: 4px;
+}
+.wm_green .wmprogressbar .dijitProgressBarFull {
+border-right-width: 0px;
+}
+@media screen {
+.wm_green  .wmprogressbar .dijitProgressBarTile {
+font-family: Verdana;
+font-size: 8pt;
+color: #333333;
+font-weight: bold;
+background-color: #cccccc;
+background-image: url(images/repeatx/greyThickEdge2.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.wm_green  .wmprogressbar .dijitProgressBar {
+font-family: Verdana;
+font-size: 8pt;
+color: #000000;
+font-weight: normal;
+background-color: #eeeeee;
+background-image: url(images/repeatx/greyEdge2.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+}
+@media screen {
+.wm_green .HeaderContent .wmprogressbar .dijitProgressBarTile {
+font-family: Verdana;
+font-size: 10pt;
+color: #FFFFFF;
+font-weight: bold;
+background-color: #666666;
+background-image: url(images/repeatx/brightThickEdge1.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+.wm_green .HeaderContent .wmprogressbar .dijitProgressBar {
+font-family: Verdana;
+font-size: 8pt;
+color: #000000;
+font-weight: normal;
+background-color: #eeeeee;
+background-image: url(images/repeatx/greyEdge2.png);
+background-position: top left;
+background-repeat: repeat-x;
+}
+}
+.wm_green div.wmsplitter-h,
+.wm_green div.wmsplitter-v,
+.wm_green .wmbevel {
+background-color: #a19fa0;
+}
+.wm_green div.wmsplitter-h:hover,
+.wm_green div.wmsplitter-v:hover {
+background-color: #d7d1d5;
+}
+.wm_green .wmsplitter-h {
+background-image: url(images/splitter_bg_h.png);
+}
+.wm_green .wmsplitter-v {
+background-image: url(images/splitter_bg_v.png);
+}

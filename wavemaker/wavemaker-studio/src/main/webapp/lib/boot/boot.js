@@ -29,7 +29,24 @@ if (location.search.indexOf("dojo.locale=") != -1) {
     } catch(e) {}
 wm = window["wm"] || {};
 wm.version = '6.4.3RC';
-wm.isMobile = navigator.userAgent.match(/mobile|android/i);
+
+if (location.search.match(/(\?|\&)wmmobile=(.)/)) {
+    wm.device = location.search.match(/(\?|\&)wmmobile=(.*)\b/)[2] || "desktop";
+    wm.isMobile = wm.device != "desktop";
+} else {
+    wm.isMobile = navigator.userAgent.match(/mobile|android/i);
+    if (!wm.isMobile) {
+	wm.device = "desktop";
+    } else {
+	wm.device =  (window.screen && (window.screen.width > 450 || window.screen.height > 450)) ? "tablet" : "phone";
+    }
+}
+
+if (location.search.match(/(\?|\&)wmdevicesize=(\d+)/)) {
+    wm.deviceSize = location.search.match(/(\?|\&)wmdevicesize=(\d+)/)[2];
+}
+
+
 // loading via append element
 wm.createElement = function(inTag, inAttrs) {
 	var tag = document.createElement(inTag);
@@ -43,6 +60,13 @@ wm.createElement = function(inTag, inAttrs) {
 wm.headAppend = function(inElement) {
 	var head= document.getElementsByTagName("head")[0];
 	head.appendChild(inElement);
+};
+
+wm.addStyleSheet = function(inPath) {
+    var link = document.createElement("link");
+    dojo.attr(link, "rel", "stylesheet");
+    dojo.attr(link, "href", inPath);
+    wm.headAppend(link);
 };
 
 // loading via document.write
@@ -135,6 +159,15 @@ wm.registerPaths = function() {
 wm.registerPackage = registerPackage = function() {
 	// stub
 };
+
+/* Load theme before loading page */
+if (!djConfig.isDebug) {
+    wm.writeCssTag(wm.relativeLibPath + "/dojo/dijit/themes/tundra/" + (wm.isMobile ? "mtheme.css" : "t.css"));
+}
+
+if (window["wmThemeUrl"]) {
+    wm.writeCssTag(wm.device == "desktop" ? wmThemeUrl : wmThemeUrl.replace(/theme\.css/,"mtheme.css"));
+}
 
 (function(){
         if (window["wmChromeFramePath"]) return;

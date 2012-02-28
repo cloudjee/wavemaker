@@ -22,8 +22,12 @@ wm.registerComponentLoader = function(inType, inLoader){
 };
 
 dojo.declare("wm.Application", wm.Component, {
+    manageURL: true,
+    manageHistory: true,
     i18n: false,
-	main: "Main",
+    main: "Main",
+    tabletMain: "",
+    phoneMain: "",
         disableDirtyEditorTracking: false,
         deletionDisabled: 1,
         projectSubVersion: "Alpha",
@@ -34,13 +38,19 @@ dojo.declare("wm.Application", wm.Component, {
         toastPosition: "br",
         _lastTheme: "",
     //IERoundedCorners: false,
-	init: function() {
+	init: function() {	    
+	    if (window["onpopstate"] !== undefined) {
+		this.history = [];
+		this._initializingBack = true;
+		this.connect(window, "onpopstate", this, "_onBack");
+	    }
+	    
 	    this.requireLocalization();// load system dictionaries
 
-	    if (wm.isMobile) {
-		dojo.addClass(document.body, "wmmobile")
+	    /* Patches is inlined into Project.a.js so it doesn't need a separate request unless in debug mode */
+	    if (djConfig.isDebug) {
+		dojo["require"]("common." + wm.version.replace(/[^a-zA-Z0-9]/g,"") + "_patches",true);
 	    }
-	    dojo["require"]("common." + wm.version.replace(/[^a-zA-Z0-9]/g,"") + "_patches",true);
 		app = wm.application = wm.application || this;
 		this.connectList = [];
 		this.app = this;
@@ -62,9 +72,10 @@ dojo.declare("wm.Application", wm.Component, {
 		document.getElementsByTagName("head")[0].appendChild(style);	
 	    }
 		this.inherited(arguments);
-		wm.typeManager.initTypes();
 
 	    this._isDesignLoaded = (window["studio"] && this != app);
+	    if (!this._isDesignLoaded)
+		wm.typeManager.initTypes();
 
 	    /* There are times when we need to access studio.application before we've finished initializing the app in design mode;
 	     * this gives us early access to it without mucking up existing logic for when its set/cleared
@@ -83,6 +94,12 @@ dojo.declare("wm.Application", wm.Component, {
 		                 window.location.search.match(/theme\=(.*?)$/);
 
 	        this.setTheme(themematch ? themematch[1] : this.theme, true);
+
+	    if (this._css) {
+		this._cssLoader = new wm.CssLoader({owner: this});
+		this._cssLoader.setCss(this._css);
+	    }
+
 	        if (dojo.isIE && dojo.isIE < 8) this.dialogAnimationTime = 0;
 
 		this.components = {};
@@ -207,6 +224,10 @@ dojo.declare("wm.Application", wm.Component, {
 	},
 
     requireLocalization: function() {
+	/* Compiled into nls/lib_build for non-debug mode */
+	if (djConfig.isDebug) {
+	    dojo.registerModulePath("wm.language", wm.libPath + "/wm/language");
+	}
 	    wm.locale = {};
 	    dojo.requireLocalization("wm.language", "components");
 	    wm.locale.phrases = dojo.i18n.getLocalization("wm.language", "components");
@@ -226,39 +247,46 @@ dojo.declare("wm.Application", wm.Component, {
 	}
     },
     setTheme: function(inTheme, isInit, optionalCss, optionalPrototype, noRegen, forceUpdate) {
-	    var node = this._isDesignLoaded ? studio.designer.domNode : document.body;
-	    dojo.removeClass(node, this.theme);
-            this._lastTheme = this.theme;
-	    this.theme = inTheme;
-	    dojo.addClass(node, this.theme);
-
 	var themematch = window.location.search.match(/theme\=(.*?)\&/) ||
 	    window.location.search.match(/theme\=(.*?)$/);
 
-	    if (this._isDesignLoaded || !isInit || themematch) {
-		try {
-		    this.loadThemeCss(this.theme, this._isDesignLoaded, optionalCss);
-		    // write before we change the prototype so defaults are left blank
-		    if (this._isDesignLoaded && !isInit) {
-			this._themeChanged = true;
-			this.cacheWidgets();
-		    }
-		    this.loadThemePrototype(this.theme, optionalPrototype);
-		    if (this._isDesignLoaded && !isInit && !noRegen) {
-			this.useWidgetCache();
-		    }
-		} catch(e) {
-		    if (inTheme != "wm_notheme")  {
-			this.setTheme("wm_notheme", isInit, optionalCss, optionalPrototype, noRegen);
-			app.alert(wm.getDictionaryItem("wm.Application.ALERT_MISSING_THEME", {name: inTheme}));
-		    } else  {
-			app.alert(wm.getDictionaryItem("wm.Application.ALERT_MISSING_NOTHEME", {name: inTheme}));
-		    }
-		return;
+	var node = this._isDesignLoaded ? studio.designer.domNode : document.body;
+	dojo.removeClass(node, this.theme);
+	
+	if (this._isDesignLoaded && !isInit) {
+	    try {
+		// write before we change the prototype so defaults are left blank
+		if (this._isDesignLoaded && !isInit) {
+		    this._themeChanged = true;
+		    this.cacheWidgets();
 		}
-	    } else {
-		    this.loadThemePrototype(this.theme, optionalPrototype);
+	    } catch(e) {}
+	}
+
+        this._lastTheme = this.theme;
+	this.theme = inTheme;
+	dojo.addClass(node, this.theme);
+
+
+	if (this._isDesignLoaded || !isInit || themematch) {
+	    try {
+		this.loadThemeCss(this.theme, this._isDesignLoaded, optionalCss);
+		this.loadThemePrototype(this.theme, optionalPrototype);
+		if (this._isDesignLoaded && !isInit && !noRegen) {
+		    this.useWidgetCache();
+		}
+	    } catch(e) {
+		if (inTheme != "wm_notheme")  {
+		    this.setTheme("wm_notheme", isInit, optionalCss, optionalPrototype, noRegen);
+		    app.alert(wm.getDictionaryItem("wm.Application.ALERT_MISSING_THEME", {name: inTheme}));
+		} else  {
+		    app.alert(wm.getDictionaryItem("wm.Application.ALERT_MISSING_NOTHEME", {name: inTheme}));
+		}
+		return;
 	    }
+	} else {
+	    this.loadThemePrototype(this.theme, optionalPrototype);
+	}
 
     },
             // don't regenerate over and over; as long as the user remains in the theme designer,
@@ -367,7 +395,8 @@ dojo.declare("wm.Application", wm.Component, {
 
 
 	/* Localization of default properties */
-	var ctorData = wm.locale.props[declaredClass];
+	if (wm.locale.props)
+	    var ctorData = wm.locale.props[declaredClass];
 	if (ctorData) {
 	    for (var j in ctorData) {
                 ctor.prototype[j] = ctorData[j];
@@ -448,7 +477,40 @@ dojo.declare("wm.Application", wm.Component, {
 	createPageContainer: function() {
 	    if (!this._isDesignLoaded) {
 		this.appRoot = new wm.AppRoot({owner: this, name: "appRoot"});
-		this.pageContainer = new wm.PageContainer({owner: this, parent: this.appRoot, width: "100%", height: "100%", getRuntimeId: function() {return ""}});
+		if (wm.isMobile) {
+		    dojo.addClass(this.appRoot.domNode, "wmmobile")
+		}
+		if (window["PhoneGap"]) {
+		    var titlebar = new wm.Panel({
+						 owner: this, 
+						 parent: this.appRoot,
+						 name: "appTitleBar",
+						 width: "100%",
+						 height: "35px",
+						 layoutKind: "left-to-right",
+						 verticalAlign: "middle",
+						 horizontalAlign: "left"});
+		    this.backButton = new wm.MobileIconButton({owner: this,
+							       parent: titlebar,
+							       name: "backButton",
+							       direction: "left",
+							       height: "100%",
+							       width: "28px",
+							       disabled: true,
+					     onclick: dojo.hitch(this, function() {
+						 delete this._initializingBack;
+						 this._onBack();
+					     })});
+		    new wm.Label({owner: this,
+				  parent: titlebar,
+				  name: "appTitleLabel",
+				  align: "center",
+				  width: "100%",
+				  height: "100%",
+				  caption: this.declaredClass});
+					
+		}
+		this.pageContainer = new wm.PageContainer({manageHistory: this.manageHistory, manageURL: this.manageURL, owner: this, parent: this.appRoot, width: "100%", height: "100%", getRuntimeId: function() {return ""}});
 		this.connectList[this.connectList.length] = this.connect(this.pageContainer._pageLoader, "onBeforeCreatePage", this, "beforeCreatePage");
 		this.connectList[this.connectList.length] = this.connect(this.pageContainer._pageLoader, "onPageChanged", this, "pageChanged");
 	    }
@@ -549,14 +611,23 @@ dojo.declare("wm.Application", wm.Component, {
 	doRun: function() {
 		this.appRoot.domNode = this.domNode = dojo.byId(this.domNode) || document.body;
 	        this.reflow()
-	    /* WM-2794: ENTER key in a text input causes focus to move to first button and fire it; make sure its a button that does nothing; only certain this is an issue in IE 8 
+	    /* WM-2794: ENTER key in a text input causes focus to move to first button and fire it; make sure its a button that does nothing; only certain this is an issue in IE 8 */
 	    if (dojo.isIE <= 8) {
 		var button = document.createElement("BUTTON");
 		button.style.width = "1px";
 		button.style.height = "1px";
 		this.domNode.appendChild(button);
-	    }*/
-		this.loadPage(app.main);
+	    }
+	    var main;
+	    if (wm.device == "tablet") {
+		main = this.tabletMain;
+	    } else if (wm.device == "phone") {
+		main = this.phoneMain;
+	    }
+	    if (!main) {
+		main = this.main;
+	    }
+		this.loadPage(main);
 	        this.hideLoadingIndicator();
 	},
 	start: function() {
@@ -628,11 +699,18 @@ dojo.declare("wm.Application", wm.Component, {
 		this.onPageChanged(inPage, inPreviousPage);
 	},
 	loadPage: function(inName) {
-            this._pageName = inName;
+	    var firstPage = !Boolean(this.pageContainer.page);
+	    var hash = window.location.hash;
+	    if (hash.length > 1) {
+		try {
+		    this.locationState = dojo.fromJson(hash.substring(1));
+		} catch(e){}
+	    }
+            this._pageName = this.locationState && this.locationState.app  && typeof this.locationState.app == "string" ? this.locationState.app : inName;
 		//this._pageLoader.unloadSupport();
 		try 
 		{
-		    this.pageContainer.setPageName(inName);//_pageLoader.loadPage(inName, inName.toLowerCase());
+		    this.pageContainer.setPageName(this._pageName);//_pageLoader.loadPage(inName, inName.toLowerCase());
 		}
 		catch (e)
 		{
@@ -684,6 +762,27 @@ dojo.declare("wm.Application", wm.Component, {
 	
 	this.echoFileService.input.setData({contents: filecontents, fileType: filetype,fileName: filename});
 	this.echoFileService.update();
+    },
+    warnOnce: function(inCookieName, inAlertText) {
+	var cookie = dojo.cookie(inCookieName);
+	if (cookie) return;
+	this.alert(inAlertText);
+	var c = new wm.Checkbox({owner: this.alertDialog,
+				 parent: this.alertDialog.containerWidget.c$[0],
+				 margin: "10,0,0,0",
+				 height: "30px",
+				 width: "100%",
+				 caption: "Don't warn again",
+				 captionPosition: "right",
+				 captionAlign: "left",
+				 captionSize: "100%"
+				});
+	this.alertDialog.connectOnce(this.alertDialog, "onClose", this, function() {
+	    if (c.getChecked())
+		dojo.cookie(inCookieName, true);
+	    c.destroy();
+	});
+				 
     },
         alert: function(inText, nonmodal) {
             if (!this.alertDialog) {
@@ -1058,6 +1157,55 @@ dojo.declare("wm.Application", wm.Component, {
 	    delete inLayer._appRootButton;
 	}
 	this._bottomDock.setShowing(this._bottomDock.c$.length > 1);
+    },
+
+    addHistory: function(state) {
+	if (this.history && !this._handlingBack) {
+	    this.history.push({id: state.id, options: state.options});
+	    var currentState = {};
+	    this._handlingBack = true;
+	    this._generateStateUrl(currentState);
+	    delete this._handlingBack;
+	    window.history.pushState(null, state.title, wm.isEmpty(currentState) ? "" : "#" + dojo.toJson(currentState));
+	    if (state.title) {
+		var title = dojo.query("title")[0];
+		var titleHtml = title.innerHTML.replace(/\#.*$/,"");
+		title.innerHTML = titleHtml +  "#" + state.title;
+	    }
+	    if (this.backButton) {
+		this.backButton.setDisabled(this.history.length == 0);
+	    }
+	}
+    },
+    _generateStateUrl: function() {},
+    generateStateUrl: function(currentState) {
+    },
+    _onBack: function(inEvent) {
+	/* onBack is called as a result of loading the page as well as from hitting the back button */
+	if (this._initializingBack) {
+	    delete this._initializingBack;
+	    return;
+	}
+	var state = this.history.pop();
+	try {
+	    if (state) {
+		var id = state.id;
+		var c = this.getValueById(id);
+		if (c instanceof wm.Component && c.handleBack) {
+		    try {
+			this._handlingBack = true;
+			if (!c.handleBack(state.options))
+			    this._onBack();
+		    } catch(e) {}
+		    delete this._handlingBack ;
+		} else if (this.history.length) {
+		    this._onBack();
+		}
+	    }
+	} catch(e) {}
+	if (this.backButton) {
+	    this.backButton.setDisabled(this.history.length == 0);
+	}
     }
 });
 

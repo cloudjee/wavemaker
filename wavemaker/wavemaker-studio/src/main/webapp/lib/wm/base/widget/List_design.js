@@ -55,7 +55,7 @@ wm.Object.extendSchema(wm.List, {
     headerVisible: {group: "display", subgroup: "layout", order: 1}, /* Or does this go in the style group? or in the widgetName group? */
     
     /* Events group; flagged as advanced any event NOT compatable with DojoGrid */
-    onSelectionChange: {order: 1, group: "events", advanced},
+    onSelectionChange: {order: 1, group: "events", advanced:1},
     onselect: {order: 2, advanced:1, group: "events", hidden:1},   
     ondeselect: {order: 3, advanced:1, group: "events",hidden:1},
     onSelect: {order: 2, advanced:1, group: "events"},   

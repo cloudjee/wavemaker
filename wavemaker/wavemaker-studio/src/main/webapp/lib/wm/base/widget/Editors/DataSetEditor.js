@@ -50,12 +50,23 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
     /* find a best guess at an initial displayField */
     _setDisplayField: function() {
 	var dataSet = this.dataSet;
-	if (dataSet && dataSet.type) {
+	if (!dataSet && this.formField) {
+	    var form = this.getParentForm();
+	    if (form) {
+		dataSet = form.dataSet;
+	    }
+	    if (dataSet) {
+		var fields = dataSet._dataSchema;
+		var field = fields[this.formField];
+		var type = field.type;
+		var fieldName = wm.typeManager.getDisplayField(type);
+	    }
+	} else if (dataSet && dataSet.type) {
 	    var type = dataSet.type;
 	    var fieldName = wm.typeManager.getDisplayField(type);
-	    if (fieldName) {
-		return this.setDisplayField(fieldName);
-	    }
+	}
+	if (fieldName) {
+	    return this.setDisplayField(fieldName);
 	}
     },
     update: function() {
@@ -64,8 +75,8 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
 		var eventId = app.debugDialog.newLogEvent({eventType: "startUpdate",
 							   eventName: "startUpdate",
 							   method: "update",
-							   affectedId: this.dataSet.getRuntimeId(),
-							   firingId: this.getRuntimeId(),
+							   affectedId: this.getRuntimeId(),
+							   //firingId: this.getRuntimeId(),
 							   method: "update"});
 	    }
 	    var d = this.dataSet.updateInternal(); // use internal because we're logging the cause of the update call here
@@ -94,7 +105,7 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
 		this.selectedItem.setType(this.dataSet instanceof wm.Variable ? this.dataSet.type : "AnyData");
 	        var dataValue = this.dataValue;
 	        var displayValue = this.displayValue;
-		if (this.dataValue !== null && wm.propertyIsChanged(dataValue, "dataValue", wm._BaseEditor))
+		if (this.dataValue !== null && wm.propertyIsChanged(dataValue, "dataValue", wm.AbstractEditor))
 			this.setEditorValue(dataValue)
 		else
 			this.setDisplayValue(displayValue);
@@ -300,7 +311,10 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
 	this.beginEditUpdate();
 	try {
 	    var lastValue = this._lastValue;
+	    var cupdatingWas = this._cupdating;
+	    this._cupdating = true;
 	    this.deselectAll();
+	    this._cupdating = cupdatingWas;
 	    this._lastValue = lastValue;
 
 	    if (inValue instanceof wm.Variable) {
@@ -548,28 +562,6 @@ dojo.declare("wm.CheckboxSet", wm.DataSetEditor, {
     }
 });
 
-dojo.declare("wm.RadioSet", wm.CheckboxSet, {
-    singleLine: false,
-    _multiSelect: false,
-    _dijitClass: "dijit.form.RadioButton",
-    setDataSet: function(inDataSet) {
-	this.inherited(arguments);
-	this.createEditor();
-    },
-    changed: function() {
-	if (!this.dijits) return;
-	var data = [];
-	for (var i = 0; i < this.dijits.length; i++) {
-	    if (this.dijits[i].checked) {
-		this.selectedItem.setData(this.dataSet.getItem(i));
-		this._dataValueValid = false;
-		wm.AbstractEditor.prototype.changed.call(this);
-		this._dataValueValid = true;
-		return;
-	    }
-	}
-    }
-});
 
 /* TODO: onchange Events */
 dojo.declare("wm.ListSet", wm.DataSetEditor, {

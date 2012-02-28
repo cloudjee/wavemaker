@@ -22,6 +22,7 @@ dojo.declare("NewLiveFormDialog", wm.Page, {
 	this.form = inForm;
 	this.typeSelect.refreshOptions();
 	this.dataSetSelect.refreshOptions();
+	this.root.clearData();
     },
     onCancelClick: function() {
         this.owner.owner.dismiss();

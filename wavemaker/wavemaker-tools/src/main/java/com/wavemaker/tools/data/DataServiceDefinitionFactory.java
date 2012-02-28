@@ -14,8 +14,6 @@
 
 package com.wavemaker.tools.data;
 
-import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 
 import org.springframework.core.io.Resource;
@@ -24,29 +22,45 @@ import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.data.ExternalDataModelConfig;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.data.salesforce.SalesForceDataServiceGenerator;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.ServiceDefinitionFactory;
 import com.wavemaker.tools.service.ServiceGeneratorFactory;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
+import com.wavemaker.tools.project.StudioFileSystem;
+import com.wavemaker.tools.project.ResourceFilter;
 
 public class DataServiceDefinitionFactory implements ServiceDefinitionFactory, ServiceGeneratorFactory {
+
+    private StudioFileSystem fileSystem;
+
+    public DataServiceDefinitionFactory() {
+        this.fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
+    }
+
+    public DataServiceDefinitionFactory(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
+    }
 
     @Override
     public ServiceDefinition getServiceDefinition(Resource f, String serviceId, DesignServiceManager serviceMgr) {
 
         try {
-            if (f.getFile().isDirectory()) {
-                for (String s : f.getFile().list(new FilenameFilter() {
+            if (fileSystem.isDirectory(f)) {
+                //for (String s : f.getFile().list(new FilenameFilter() {
+                for (final Resource child : fileSystem.listChildren(f, (new ResourceFilter() {
 
                     @Override
-                    public boolean accept(File dir, String file) {
-                        return file.endsWith(".xml");
+                    public boolean accept(Resource resource) {
+                        return resource.getFilename().endsWith(".xml");
                     }
-                })) {
+                }))) {
 
-                    File potential = new File(f.getFile(), s);
+                    String s = child.getFilename();
+                    //File potential = new File(f.getFile(), s);
+                    Resource potential = f.createRelative(s);
 
                     ServiceDefinition rtn = initServiceDefinition(potential, serviceId, serviceMgr);
                     if (rtn != null) {
@@ -54,7 +68,7 @@ public class DataServiceDefinitionFactory implements ServiceDefinitionFactory, S
                     }
                 }
             } else {
-                return initServiceDefinition(f.getFile(), serviceId, serviceMgr);
+                return initServiceDefinition(f, serviceId, serviceMgr);
             }
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
@@ -78,9 +92,9 @@ public class DataServiceDefinitionFactory implements ServiceDefinitionFactory, S
         return null;
     }
 
-    private ServiceDefinition initServiceDefinition(File f, String serviceId, DesignServiceManager serviceMgr) {
+    private ServiceDefinition initServiceDefinition(Resource f, String serviceId, DesignServiceManager serviceMgr) {
 
-        if (!f.getName().endsWith(".xml")) {
+        if (!f.getFilename().endsWith(".xml")) {
             return null;
         }
         DataServiceDefinition rtn = null;

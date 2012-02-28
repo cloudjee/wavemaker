@@ -23,6 +23,7 @@
 	"Button" : "Button",
 	"PopupButton" : "PopupButton",
 	"Toggle_Button" : "Toggle Button",
+	"Toggle_Button_Panel" : "Toggle Button Panel",
 	"Rounded_Button" : "Rounded Button",
 	"DataGrid" : "DataGrid",
 	"DojoGrid" : "Grid",
@@ -63,6 +64,7 @@
 	"Lookup" : "Lookup",
         "FilteringLookup": "Filtering Lookup",
 	"Slider" : "Slider",
+	"RangeSlider" : "Range Slider",
 	"Text" : "Text",
 	"TextArea" : "TextArea",
 	"Time" : "Time",
@@ -190,6 +192,7 @@
     "descButton": "A simple button",
     "descPopupButton": "A button with a Menu",
     "descToggleButton": "A button that stays clicked until clicked again",
+    "descToggleButtonPanel": "A panel that manages the toggled state of its buttons (use wm.Button not wm.ToggleButton)",
     "descBusyButton": "A button with a status indicator",
 
     "descLabel": "Basic text on page",

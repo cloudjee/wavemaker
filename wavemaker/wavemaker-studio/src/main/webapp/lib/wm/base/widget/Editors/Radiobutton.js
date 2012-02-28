@@ -14,10 +14,33 @@
 
 
 dojo.provide("wm.base.widget.Editors.Radiobutton");
+dojo.require("wm.base.widget.Editors.DataSetEditor");
 dojo.require("wm.base.widget.Editors.Checkbox");
 dojo.require("dijit.form.RadioButton");
 
 
+dojo.declare("wm.RadioSet", wm.CheckboxSet, {
+    singleLine: false,
+    _multiSelect: false,
+    _dijitClass: "dijit.form.RadioButton",
+    setDataSet: function(inDataSet) {
+	this.inherited(arguments);
+	this.createEditor();
+    },
+    changed: function() {
+	if (!this.dijits) return;
+	var data = [];
+	for (var i = 0; i < this.dijits.length; i++) {
+	    if (this.dijits[i].checked) {
+		this.selectedItem.setData(this.dataSet.getItem(i));
+		this._dataValueValid = false;
+		wm.AbstractEditor.prototype.changed.call(this);
+		this._dataValueValid = true;
+		return;
+	    }
+	}
+    }
+});
 
 //===========================================================================
 // RadioButton Editor

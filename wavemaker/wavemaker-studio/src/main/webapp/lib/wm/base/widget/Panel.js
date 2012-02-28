@@ -125,7 +125,7 @@ dojo.declare("wm.FancyPanel", wm.Panel, {
                                                      owner:          this,
                                                      parent:         this,
                                                      noInspector:    true,
-                                                     autoScroll:     true,
+                                                     autoScroll:     this.autoScroll,
                                                      horizontalAlign:this.innerHorizontalAlign,
                                                      verticalAlign:  this.innerVerticalAlign,
                                                      fitToContentHeight: this.fitToContentHeight,

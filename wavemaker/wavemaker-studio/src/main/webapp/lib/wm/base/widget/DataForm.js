@@ -36,8 +36,8 @@ wm.getMatchingFormWidgets = function(inForm, inMatch) {
 
 
 /* Used by RelatedEditor/SubForm and wm.Lookup */
-wm.getFormLiveView = function(inForm) {
-    var lv = inForm && (inForm.getLiveVariable && inForm.getLiveVariable() || inForm.getDataSetServiceVariable && inForm.getDataSetServiceVariable());
+wm.getDataFormLiveView = function(inForm) {
+    var lv = inForm && (inForm.findLiveVariable && inForm.findLiveVariable() || inForm.getDataSetServiceVariable && inForm.getDataSetServiceVariable());
 	return lv && lv.liveView;
 }
 
@@ -193,6 +193,10 @@ dojo.declare("wm.FormPanel", wm.Container, {
 	});
     },
 
+    // don't really need this...
+	getEditorParent: function() {
+		return this;
+	},
     
     _end: 0
 });
@@ -633,13 +637,6 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
     },
 
 
-    // don't really need this...
-	getEditorParent: function() {
-		return this;
-	},
-
-
-
     cancelEdit: function() {
 	this.clearDirty();
 	if (this.$.binding && this.$.binding.wires.dataSet) {
@@ -648,6 +645,59 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 	this.onCancelEdit();
     },
     onCancelEdit: function() {},
+
+    // LiveForm compatability
+    beginDataInsert: function() {
+	this.editNewObject();
+    },
+    beginDataUpdate: function() {
+	this.editCurrentObject();
+    },
+    getFormEditorsArray: function() {
+	return this.getEditorsArray();
+    },
+	findLiveVariable: function() {
+		// Not sure why we were not checking for liveVariable instance in the object itself,
+		// before digging deep and trying to find liveVariable elsewhere. 
+		/*
+		if (this.liveVariable && wm.isInstanceType(this.liveVariable, wm.LiveVariable))
+			return this.liveVariable;
+		*/
+		var
+			s = this.dataSet.dataSet,
+			o = s && s.owner,
+			ds = null;
+		  o = o && !(wm.isInstanceType(o, wm.Variable)) ? o : null;
+			
+			if (o){
+				try{
+				    if (wm.isInstanceType(o, wm.DojoGrid)) {
+					ds = o.variable;
+				    } else {
+					ds = o.dataSet;
+				    }
+				} catch(e) {
+					// This might happen if wm.DojoGrid class itself is not loaded.
+					ds = o.dataSet;
+				}
+			}
+			// if source not owned by a variable but it has a dataSet, use it if it's a LiveVariable
+	        
+			if (o && ds && wm.isInstanceType(ds, wm.LiveVariable)) {
+				return ds;
+		}
+		// otherwise walk owners to look for a LiveVariable
+		while (s) {
+			if (wm.isInstanceType(s, wm.LiveVariable)) {
+				return s;
+			}
+			s = s.owner;
+			if (!(wm.isInstanceType(s.owner, wm.Variable))) {
+				break;
+			}
+		}
+	},
+
     _end: 0
 });
 

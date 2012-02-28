@@ -271,7 +271,7 @@ dojo.declare("Security", wm.Page, {
 		studio.securityConfigService.requestSync("getLDAPOptions", null, dojo.hitch(this, "getLDAPOptionsResult"));
 	},
 	getLDAPOptionsResult: function(inResponse) {
-		this.ldapOptions = inResponse; //GD: Added this since I need to refer to the response later on (database security has a similar databaseOptions page level variable)
+		this.ldapOptions = inResponse; 
 		this.ldapUrlInput.setDataValue(inResponse.ldapUrl);
 		this.ldapManagerDnInput.setDataValue(inResponse.managerDn);
 		this.ldapManagerPasswordInput.setDataValue(inResponse.managerPassword);
@@ -280,22 +280,17 @@ dojo.declare("Security", wm.Page, {
 		this.ldapGroupSearchBaseInput.setDataValue(inResponse.groupSearchBase);
 		this.ldapGroupRoleAttributeInput.setDataValue(inResponse.groupRoleAttribute);
 		this.ldapGroupSearchFilterInput.setDataValue(inResponse.groupSearchFilter);
-		//GD
 		this.ldapRoleProviderInput.setDataValue(inResponse.roleProvider);
 		this.ldapRoleDbDataModelInput.setDataValue(inResponse.roleModel);
-		this.ldapRoleDbDataModelInput.changed();
 		this.ldapRoleBySQLCheckbox.setChecked(inResponse.roleQuery);
 		this.ldapRoleBySQLInput.setDataValue(inResponse.roleQuery);
+		this.ldapRoleDbEntityInput.setDataValue(inResponse.roleEntity);
+		this.ldapRoleDbEntityInputChange();
 	},
 	saveButtonClick: function(inSender) {
 	    studio.saveAll(this);
 	},
 	toastToSuccess: function() {
-		/*
-	    studio.endWait("Saving Security Settings");
-		app.toastDialog.showToast("Security settings saved; Security is " + 
-			(this.secEnableInput.getChecked() ? "ON" : "OFF"), 5000,"Success");
-		 */
 	    this.onSaveSuccess();
 	},
 	saveError: function(inError) {
@@ -847,6 +842,16 @@ dojo.declare("Security", wm.Page, {
 	return this.dirty;
     },
     save: function() {
+			if (this.secProviderInput.getDataValue() == this.SELECT_ONE) {
+			this.saveError({owner: this,
+				 message:this.getDictionaryItem("ALERT_NO_SECURITY_PROVIDER")});
+			return;
+		}
+		if (this.ldapSearchRoleCheckbox.getChecked() === true
+				&& this.ldapRoleProviderInput.getDataValue() === null) {
+			this.saveError({owner: this, message: this.getDictionaryItem("ALERT_NO_ROLE_PROVIDER")});
+			return;
+		}
 		if (this.secProviderInput.getDataValue() == this.SELECT_ONE) {
 			return;
 		}

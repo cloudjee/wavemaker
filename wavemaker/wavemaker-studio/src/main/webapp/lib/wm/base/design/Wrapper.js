@@ -101,6 +101,10 @@ dojo.declare("wm.DesignHandles", wm.DomBorder, {
 
 dojo.declare("wm.WrapperMover", wm.design.Mover, {
 	beginDrag: function(e, inWrapper) {
+	    if (studio.mobileFoldingToggleButton.clicked) {
+		//app.toastWarning("You can not move widgets while in MobileFolding view"); // fired even if not ondrag event
+		throw "No moving widgets while in mobile folding view";
+	    }
 		this.wrapper = inWrapper;
 		this.inherited(arguments, [e, {
 			control: this.wrapper.control, 

@@ -17,6 +17,8 @@ dojo.provide("wm.base.widget.Buttons.ToolButton");
 dojo.require("wm.base.Control");
 
 dojo.declare("wm.ToolButton", wm.Control, {
+        enableTouchHeight: true,
+        mobileHeight: "40px", 
 	width: "80px", 
 	border: 0,
 	padding: "",

@@ -160,5 +160,11 @@ dojo.mixin(wm.data, {
 			b === null ? 1 :
 			a > b ? 1 :
 			-1;
-	}
+	},
+
+    compareNumbers: function(a, b) {
+	var na = wm.isNumber(a), nb = wm.isNumber(b);
+	return na && nb ? a - b : (na ? -1 : (nb ? 1 : 0));
+    }
+
 });

@@ -87,7 +87,7 @@ public abstract class AbstractStudioFileSystem implements StudioFileSystem, Serv
         return false;
     }
 
-    protected abstract void makeDirectories(Resource projectsDir) throws FileAccessException, IOException;
+    protected abstract void makeDirectories(Resource dir) throws FileAccessException, IOException;
 
     @Override
     public Resource getCommonDir() throws IOException {

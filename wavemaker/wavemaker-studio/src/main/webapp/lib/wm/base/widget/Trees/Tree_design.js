@@ -90,5 +90,6 @@ wm.Object.extendSchema(wm.ObjectTree, {
 
 
 wm.Object.extendSchema(wm.DraggableTree, {
-    dropBetweenNodes: {group: "widgetName", subgroup: "behavior"}
+    dropBetweenNodes: {group: "widgetName", subgroup: "behavior"},
+    dragEnabled: {ignore: 1}
 });

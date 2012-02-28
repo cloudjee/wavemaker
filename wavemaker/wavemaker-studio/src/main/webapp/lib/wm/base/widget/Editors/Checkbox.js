@@ -20,14 +20,14 @@ dojo.require("dijit.form.CheckBox");
 dojo.declare("wm.Checkbox", wm.AbstractEditor, {
     /* Formating */
     classNames: "wmeditor wmeditor-cbeditor",
-	width: "120px",
+	width: "180px",
 
 	dataType: "boolean", /* TODO: WARNING, this may cause upgrade problems changing this from string to boolean */
 	startChecked: false,
         checkedValue: true,
 	_createEditor: function(inNode, inProps) {
 		var e = new dijit.form.CheckBox(this.getEditorProps(inNode, inProps));
-	    if (wm.isMobile) {
+	    if (wm.isMobile || this._isDesignLoaded && studio.currentDeviceType != "desktop") {
 		var a = document.createElement("div");
 		a.className = "wmcheckbox_x";
 		a.innerHTML = "X"
@@ -58,7 +58,7 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 		return;
 	    this.inherited(arguments);
 	    var node = this.editorNode;
-	    var size = wm.isMobile ? 32 : 16;
+	    var size = wm.isMobile || this._isDesignLoaded && studio.currentDeviceType != "desktop" ? 32 : 16;
 	    node.style.width = size + "px";
 	    node.style.height =  size + "px";
             var height = parseInt(node.style.lineHeight);
@@ -85,6 +85,11 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 			this.setChecked(true);
 		this.endEditUpdate();
 	},
+    changed: function() {
+	if (this.editor)
+            this.editor._lastValueReported = this.getChecked();
+        this.inherited(arguments);
+    },
 	getChecked: function() {
 	    if (this.editor)
 		return Boolean(this.editor.checked);
@@ -208,7 +213,7 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 	},
 	getMinWidthProp: function() {
 		if (this.minWidth) return this.minWidth;
-	    var editorSize = wm.isMobile ? 32 : 16;
+	    var editorSize = wm.isMobile || this._isDesignLoaded && studio.currentDeviceType != "desktop" ? 32 : 16;
 	    var captionSize = 64;
 		if (this.captionPosition == "top" || this.captionPosition == "bottom" || !this.caption) return 40;
 	    else if (this.captionSize.match(/\%/)) return editorSize + captionSize;

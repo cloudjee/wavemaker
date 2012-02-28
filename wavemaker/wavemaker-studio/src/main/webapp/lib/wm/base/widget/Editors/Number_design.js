@@ -16,6 +16,7 @@
 dojo.provide("wm.base.widget.Editors.Text_design");
 dojo.require("wm.base.widget.Editors.Text");
 dojo.require("wm.base.widget.Editors.AbstractEditor_design");
+dojo.require("wm.base.widget.Editors.Number");
 
 wm.Number.extend({
     themeableStyles: [{name: "wm.NumberSpinner-Down-Arrow_Image", displayName: "Down Arrow"}, {name: "wm.NumberSpinner-Up-Arrow_Image", displayName: "Up Arrow"}]
@@ -62,6 +63,7 @@ wm.Object.extendSchema(wm.Currency, {
 });
 
 
+dojo.require("wm.base.widget.Editors.Slider");
 wm.Object.extendSchema(wm.Slider, {
     /* Editor group; value subgroup */
     discreteValues: {group: "editor", subgroup: "value", order: 50},
@@ -83,3 +85,8 @@ wm.Object.extendSchema(wm.Slider, {
 });
 
 
+wm.Object.extendSchema(wm.RangeSlider, {
+    dataValue: {ignore: 1},
+    topValue:  {bindable: 1, group: "editor", subgroup: "value", order: 11, simpleBindProp: true, type: "Number"}, 
+    bottomValue:  {bindable: 1, group: "editor", subgroup: "value", order: 11, simpleBindProp: true, type: "Number"}
+ });

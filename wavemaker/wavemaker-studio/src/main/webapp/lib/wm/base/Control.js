@@ -311,9 +311,6 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     mobileFoldingIndex: "",
     mobileFoldingCaption: "",
 
-    mobileAppFolding: false,
-    mobileAppFoldingIndex: "",
-
     imageList: "",
     imageIndex: -1,
     renderedOnce: 0,
@@ -358,6 +355,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     minHeight: 0, // number represents pixels    
     minWidth: 0,
     minMobileHeight: 0,
+    enableTouchHeight: false,
     //maxHeight: 0, // number represents pixels
     //maxWidth: 0,
 
@@ -468,10 +466,45 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	}
     },
     init: function() {
-	if (wm.isMobile && this.mobileHeight != undefined && !this.height.match(/\%/) && parseInt(this.mobileHeight) > parseInt(this.height)) this.height = this.mobileHeight;
 
 	this.initDomNode();
 	this.inherited(arguments);
+	var isMobile = wm.isMobile || this._isDesignLoaded && studio.currentDeviceType != "desktop";
+	if (!isMobile || !this.enableTouchHeight) {
+	    if (this.desktopHeight != null) {
+		this.height = this.desktopHeight;
+	    } else if (this.height) {
+		this.desktopHeight = this.height;
+	    } else {
+		this.height = this.desktopHeight = this.constructor.prototype.height;
+	    }
+	    if (this.minDesktopHeight != null) {
+		this.minHeight = this.minDesktopHeight;
+	    } else if (this.minHeight) {
+		this.minDesktopHeight = this.minHeight;
+	    } else {
+		this.minHeight = this.minDesktopHeight = this.constructor.prototype.minHeight;
+	    }
+
+	} else {
+	    if (this._isDesignLoaded) {
+		this.desktopHeight = this.height || this.mobileHeight;
+	    }
+	    if (this.mobileHeight) {
+		this.height = this.mobileHeight;
+	    } else if (this.height) {
+		this.mobileHeight = this.height;
+	    } else {
+		this.height = this.mobileHeight = this.constructor.prototype.height;
+	    } 
+	    if (this.minMobileHeight) {
+		this.minHeight = this.minMobileHeight;
+	    } else {
+		this.minHeight = this.minMobileHeight = this.constructor.prototype.minHeight;
+	    } 
+	}
+
+	//if (() && (!this.owner || this.owner.enableTouchHeight) && this.mobileHeight != undefined && !this.height.match(/\%/) && parseInt(this.mobileHeight) > parseInt(this.height)) this.height = this.mobileHeight;
 	this.bc(); // mostly in here to support wm.Container's bc method
 	//
 
@@ -852,7 +885,11 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     */
     // <-- BC
     getScrollMargins: function() {
-	return {w: (this.scrollY || this._xscrollY) ? 17 : 0, h: (this.scrollX || this._xscrollX) ? 17 : 0};
+	if (wm.isMobile) {
+	    return {w: (this.scrollY || this._xscrollY) ? 2 : 0, h: (this.scrollX || this._xscrollX) ? 2 : 0};
+	} else {
+	    return {w: (this.scrollY || this._xscrollY) ? 17 : 0, h: (this.scrollX || this._xscrollX) ? 17 : 0};
+	}
 	/*
 	  if (!this.autoScroll) {
 	  return {w: (this.scrollY) ? 17 : 0, h: (this.scrollX) ? 17 : 0};
@@ -1036,8 +1073,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	return parseInt(this.minWidth) || 30;
     },
     getMinHeightProp: function() {
-	
-	return parseInt(wm.isMobile ? this.minMobileHeight : this.minHeight) || 15;
+	return parseInt(this.minHeight) || 15;
     },
     /*
       setMaxWidth: function(inMaxWidth) {
@@ -1445,6 +1481,15 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		node.appendChild(this.domNode);
 	    }
 	},
+    getIndexInParent: function() {
+	if (this.parent)
+	    return this.parent.indexOfControl(this);
+	return -1;
+    },
+    setIndexInParent: function(inIndex) {
+	if (this.parent)
+	    this.parent.moveControl(this, inIndex);
+    },
 	canChangeShowing: function() {
 	    return true;
 	},
@@ -1701,7 +1746,13 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 			t = t.parent;
 		}
 		return t ? t.imageList : null;
-	}
+	},
+        update: function() {
+	    this.show();
+	    if (this.parent) {
+		this.parent.update();
+	    }
+	},
 
     });
 

@@ -29,7 +29,8 @@ wm.OneToMany.extend({
 	var service = typeDef.service;
 
 	/* step 1: find the relationship represented by this editor */
-	var def = studio.dataService.requestSync("getRelated", [service, parentForm.serviceVariable.type.replace(/^.*\./,"")]);
+	var type = (parentForm.serviceVariable || parentForm).type;
+	var def = studio.dataService.requestSync("getRelated", [service, type.replace(/^.*\./,"")]);
 	var fieldName, tableName;
 	def.addCallback(dojo.hitch(this, function(inData) {
 	    for (var i = 0; i < inData.length; i++) {

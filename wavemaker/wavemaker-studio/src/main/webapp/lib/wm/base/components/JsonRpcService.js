@@ -16,7 +16,7 @@ dojo.provide("wm.base.components.JsonRpcService");
 dojo.require("wm.base.components.Service");
 dojo.require("dojo.rpc.JsonService");
 
-wm.inflight = {
+wm.inflight = { 
 	_inflight: [],
         _inflightNames: [],
 	getCount: function() {
@@ -149,17 +149,20 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
     initService: function() {
 	var n = this.service || this.name;
 	var rand = this.owner && this.isDesignLoaded() ? studio.application.getFullVersionNumber() : (app && !window["studio"] ? app.getFullVersionNumber() : Math.floor(Math.random()*1000000));
+    var cachedName = this.url || n + ".smd";
 	var url = this.url || (n && (this.getServiceRoot() + n + ".smd?rand=" + rand));
 	this._service = null;
 	if (url) {
 	    try{
-		this._service = wm.JsonRpcService.smdCache[url];
-		if (this._service) {
-		    this.listOperations();
+		if (wm.JsonRpcService.smdCache[url]) {
+		    this._service = wm.JsonRpcService.smdCache[url];
+		} else if (wm.JsonRpcService.smdCache[cachedName]) {
+		    this._service = new wm.JsonRpc({smdObject: wm.JsonRpcService.smdCache[cachedName],
+						     serviceUrl: url});
 		} else {
-
 		    this._service = new wm.JsonRpc(url);
-
+		}
+		wm.JsonRpcService.smdCache[url] = this._service;
 		    //The following lines are not being used now.  They may be used in the future to differenciate requests from Studio from
 		    //requests deployed application.
 		    if (this._designTime)
@@ -171,7 +174,7 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 			this._service.serviceUrl = this.getJsonPath() + this._service.serviceUrl;
 			this.listOperations();
 		    }
-		}
+
 	    }catch(e){
 		console.debug(e);
 	    }
@@ -194,9 +197,9 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		}
 	},
 	invoke: function(inMethod, inArgs, owner, invoker) {
-		this.invoke(inMethod, inArgs, owner, invoker, false);
+		this.invoke(inMethod, inArgs, owner, invoker, false, false);
 	},
-	invoke: function(inMethod, inArgs, owner, invoker, inLoop) {
+	invoke: function(inMethod, inArgs, owner, invoker, inLoop, inLongDeferred) {
 		if (!this._service) 
 			return null;
 		this._service.sync = this.sync;
@@ -217,9 +220,11 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		this.result = null;
 		this.error = null;
 
-		var responseTime = this.getOperation(inMethod).responseTime;
-		var requestId;
-		if (responseTime && responseTime == "long") {
+	   var operation = this.getOperation(inMethod);
+	   if (operation)
+	       var responseTime = this.getOperation(inMethod).responseTime;
+	   var requestId;
+	   if (responseTime && responseTime == "long") {
 			var savedSync = this._service.sync;
 			this._service.sync = true;
 			var dd = this._service.callRemote("getRequestId", []);
@@ -232,8 +237,15 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		}
 
 		var d = this._service.callRemote(inMethod, inArgs || []);
-		d.addCallbacks(dojo.hitch(this, "onResult", owner, invoker, inLoop, responseTime, requestId), 
-			dojo.hitch(this, "onError", owner, invoker, inLoop, responseTime, requestId));
+
+		if (responseTime && responseTime == "long" || inLoop && inMethod == "getResponseFromService")  {
+			var longDeferred = inLongDeferred || new dojo.Deferred();
+			d.addCallbacks(dojo.hitch(this, "onLongResponseTimeResult", owner, invoker, inLoop, responseTime, requestId, longDeferred), 
+				dojo.hitch(this, "onLongResponseTimeError", owner, invoker, inLoop, responseTime, requestId, longDeferred));
+			d = longDeferred;
+		} else {
+			d.addCallbacks(dojo.hitch(this, "onResult"), dojo.hitch(this, "onError"));
+		}
 	    //wm.inflight.add(d, this.service == "runtimeService" ? (inArgs[0] ? inArgs[0] : "LazyLoad Data") + ": " + inArgs[1] : this.name + "." + inMethod, inMethod, inArgs, invoker);
 	    wm.inflight.add(d, this.service, this.name, inArgs, inMethod, invoker);
 		this.inflight = true;
@@ -282,32 +294,55 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		var d = this.requestSync(inMethod, inArgs);
 		return d.results[0];
 	},
-	onResult: function(owner, invoker, inLoop, responseTime, requestId, inResult) {
+	onLongResponseTimeResult: function(owner, invoker, inLoop, responseTime, requestId, longDeferred, inResult) {
 		var r;
 	    this.inflight = false;
+		var callInvoke = false;
+		var inArgs;
+		var inMethod = "getResponseFromService";
 		if (responseTime == "long" || inLoop) {
 			if (inResult.result.status == "processing") {
-				var inArgs = [requestId];
-				var inMethod = "getResponseFromService";
-				this.invoke(inMethod, inArgs, owner, invoker, true);
+				inArgs = [requestId];
+				inMethod = "getResponseFromService";
+				callInvoke = true;
 			} else if (inResult.result.status == "error") {
-				this.onError(owner, invoker, inLoop, responseTime, requestId, inResult.result.result);
+				return this.onLongResponseTimeError(owner, invoker, inLoop, responseTime, requestId, inResult.result.result);
 			} else if (inResult.result.status == "done") {
 				r = this.fullResult = inResult.result;
 				this.result = (r || 0).result;
-				if (invoker instanceof wm.ServiceVariable) {
-					invoker.result(this.result);
-				}
+				longDeferred.callback(this.result);
 			} else {
-				var inArgs = [inResult.result.requestId];
-				var inMethod = "getResponseFromService";
-				this.invoke(inMethod, inArgs, owner, invoker, true);
-				//return null;
+				inArgs = [inResult.result.requestId];
+				inMethod = "getResponseFromService";
+				callInvoke = true;
 			}
-		} else {
-			r = this.fullResult = inResult;
-			this.result = (r || 0).result;
+			if (callInvoke) {
+				wm.onidle(this, function() {
+					this.invoke(inMethod, inArgs, owner, invoker, true, longDeferred);
+				});
+			}
 		}
+
+		return this.onResult(inResult);
+	},
+	onLongResponseTimeError: function(owner, invoker, inLoop, responseTime, requestId, longDeferred, inError) {
+		if (responseTime == "long" && typeof inError == "string") {
+			if (inError.indexOf("status:502") > 0 || inError.indexOf("status:504") > 0) {
+				var inArgs = [requestId];
+				var inMethod = "getResponseFromService";
+				wm.onidle(this, function() {
+					this.invoke(inMethod, inArgs, owner, invoker, true, longDeferred);
+				});
+			}
+		}
+
+		return this.onError(inError);
+	},
+
+	onResult: function(inResult) {
+		this.inflight = false;
+		var r = this.fullResult = inResult;
+		this.result = (r || 0).result;
 /*
 		if (djConfig.isDebug && !dojo.isFF) {
 			console.group("Service Call Completed: " + this.name + "." + this.debugLastMethod);
@@ -321,15 +356,7 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		*/
 		return this.result;
 	},
-	onError: function(owner, invoker, inLoop, responseTime, requestId, inError) {
-		if (responseTime == "long" && typeof inError == "string") {
-			if (inError.indexOf("status:502") > 0 || inError.indexOf("status:504") > 0) {
-				var inArgs = [requestId];
-				var inMethod = "getResponseFromService";
-				this.invoke(inMethod, inArgs, owner, invoker, true);
-				return null;
-			}
-		}
+	onError: function(inError) {
 	    this.inflight = false;
 	    var message = inError != null && dojo.isObject(inError) ? inError.message : inError;
 	    try {
@@ -363,6 +390,7 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 	    this.reportError(inError);
 	    return this.error = inError;
 	},
+
 	reportError: function(inError) {
 		var m = dojo.isString(inError) ? inError : (inError.message ? "Error: " + inError.message : "Unspecified Error");
 		m = (this.name ? this.name + ": " : "") + m;

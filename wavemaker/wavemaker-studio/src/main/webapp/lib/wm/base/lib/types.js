@@ -134,9 +134,27 @@ wm.typeManager = {
 			return !wm.typeManager.isStructuredType((p || 0).type);
 		});
 	},
-	getStructuredPropNames: function(inTypeSchema) {
+    getFieldList: function(inTypeSchema, inPath) {
+
+	if (typeof inTypeSchema == "string")
+	    inTypeSchema = this.getType(inTypeSchema).fields;
+
+	var result = [];
+	for (var i in inTypeSchema) {
+	    if (wm.typeManager.isStructuredType(inTypeSchema[i].type)) {
+		result = result.concat(this.getFieldList(inTypeSchema[i].type, i));
+	    } else {
+		result.push({dataIndex: (inPath ? inPath + "." : "") + i,
+			     caption: wm.capitalize(i),
+			     displayType: wm.capitalize(inTypeSchema[i].type)});
+	    }
+	}
+	    return result;
+	},
+
+        getStructuredPropNames: function(inTypeSchema, includeIsList) {
 		return this.getFilteredPropNames(inTypeSchema, function(p) {
-			return wm.typeManager.isStructuredType((p || 0).type);
+			return wm.typeManager.isStructuredType((p || 0).type) || includeIsList && p.isList;
 		});
 	},
 	getPropNames: function(inTypeSchema, inStructured) {

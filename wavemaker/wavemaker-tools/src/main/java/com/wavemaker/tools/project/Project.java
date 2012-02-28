@@ -237,6 +237,13 @@ public class Project extends AbstractFileService {
         writeFile(file, data);
     }
 
+    public boolean fileExists(String path) throws IOException {
+
+        Resource file = this.projectRoot.createRelative(path);
+        return file.exists();
+    }
+
+
     /**
      * Return the name of the project. Currently, this is the name of the directory the project is stored in.
      * 

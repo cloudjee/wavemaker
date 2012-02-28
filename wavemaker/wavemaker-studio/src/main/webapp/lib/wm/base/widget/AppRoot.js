@@ -22,7 +22,7 @@ dojo.declare("wm.AppRoot", wm.Container, {
         deviceSize: "",
 	create: function() {
 	    this.inherited(arguments);
-	    this.deviceSize = this.calcDeviceSize(window.innerWidth);
+	    this.deviceSize = wm.deviceSize || this.calcDeviceSize(window.innerWidth);
 	    app.valueChanged("deviceSize",this.deviceSize); // bindable event
 	},
 	build: function() {
@@ -36,13 +36,14 @@ dojo.declare("wm.AppRoot", wm.Container, {
 	},
     getRuntimeId: function() {return "approot";},
 	resize: function() {
-
-	    var deviceSize = this.deviceSize;
+	    if (!wm.deviceSize) {
+		var deviceSize = this.deviceSize;
 		this.updateBounds();
-	    this.deviceSize = this.calcDeviceSize(this.bounds.w);
-	    if (deviceSize != this.deviceSize) {
-		app.valueChanged("deviceSize",this.deviceSize); // bindable event
-		dojo.publish("deviceSizeRecalc");
+		this.deviceSize = this.calcDeviceSize(this.bounds.w);
+		if (deviceSize != this.deviceSize) {
+		    app.valueChanged("deviceSize",this.deviceSize); // bindable event
+		    dojo.publish("deviceSizeRecalc");
+		}
 	    }
 	    this.reflow();
 
@@ -56,14 +57,15 @@ dojo.declare("wm.AppRoot", wm.Container, {
 		this.setBounds(0,0,screen.width,screen.height);
 	    } else {
 	    */
+	    var pn;
 	    if (wm.isMobile) {
-		var pn = this.domNode.parentNode;
+		pn = this.domNode.parentNode;
 		pn.style.height = "100%";
-		this.setBounds(0, 0, pn.offsetWidth, pn.offsetHeight);
 	    } else {
-		var pn = this.domNode.parentNode;
-		this.setBounds(0, 0, pn.offsetWidth, pn.offsetHeight);
+		pn = this.domNode.parentNode;
 	    }
+	    this.setBounds(0, 0, pn.offsetWidth, pn.offsetHeight);
+
 	},
 	reflow: function() {
 		if (this._cupdating)

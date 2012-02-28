@@ -64,7 +64,7 @@ wm.listMatchingComponents = function(inOwners, inMatch, inRecurse) {
 				if (inMatch(c))
 					l.push(c);
 				if (inRecurse)
-					l = l.concat(wm.listMatchingComponents([o], inMatch, inRecurse));
+					l = l.concat(wm.listMatchingComponents([c], inMatch, inRecurse));
 			});
 		});
 	return l;
@@ -127,17 +127,18 @@ wm.listComponentIds = function(inOwners, inClass, inStrict) {
 }
 
 // open a url and present user with a dialog if popups are blocked.
-wm.openUrl = function(inUrl, inTitle, inWindowName) {
-	var w = window.open(inUrl, inWindowName);
+wm.openUrl = function(inUrl, inTitle, inWindowName, inWindowOptions) {
+	var w = window.open(inUrl, inWindowName, inWindowOptions);
         if (dojo.isChrome) {
 	    wm.job(inWindowName, 3000, function() {
 		if (w.closed) return;
-		if (w.document.body && w.outerWidth == 0)
+		if (w.document && w.document.body && w.outerWidth == 0)
 		    wm.openUrlDialog(inUrl,inTitle,inWindowName+1);
 	    });
 	} else if (!w) {
 	    wm.openUrlDialog(inUrl,inTitle,inWindowName);
 	}
+    return w;
 }
 wm.openUrlDialog = function(inUrl, inTitle, inWindowName) {
     var d = wm.openUrl.dialog;
@@ -153,11 +154,13 @@ wm.openUrlDialog = function(inUrl, inTitle, inWindowName) {
 	new wm.Label({parent: container,
 		      width: "100%",
 		      height: "100%",
+		      owner: d,
 		      caption: studio.getDictionaryItem("POPUP_BLOCKER_MESSAGE"), 
 		      singleLine: false,
 		      align: "center"});
 	new wm.Label({
 	    parent: container,
+	    owner: d,
 	    caption: studio.getDictionaryItem("POPUP_BLOCKER_LAUNCH_CAPTION"),
 	    width: "100%",
 	    align: "center"

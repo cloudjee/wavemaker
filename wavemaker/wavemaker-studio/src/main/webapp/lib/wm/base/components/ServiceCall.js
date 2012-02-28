@@ -310,7 +310,7 @@ dojo.declare("wm.ServiceCall", null, {
 		to monitor the outcome of the service call.
 	*/
 	update: function() {
-	    if (djConfig.isDebug) try { this.log("update", arguments.callee.caller.nom || arguments.callee.caller.name || "anonymous");} catch(e) {}
+	    // moved to RBacPlugin; if (djConfig.isDebug) try { this.log("update", arguments.callee.caller.nom || arguments.callee.caller.name || "anonymous");} catch(e) {}
 	    return this._isDesignLoaded ? this.doDesigntimeUpdate() : this._update();
 	},
     /* Users call "update" event handlers and autoUpdate/startUpdate call updateInternal; used for tracking/debugging purposes */
@@ -501,7 +501,6 @@ dojo.declare("wm.ServiceCall", null, {
 	// Result Processing
 	//=======================================================
 	result: function(inResult) {
-
 	    if (djConfig.isDebug) this.log("serviceCallResponse");
 
 	    this._requester = false;
@@ -645,8 +644,6 @@ wm.ServiceCall.extend({
 
 
 	makePropEdit: function(inName, inValue, inEditorProps) {
-	    var prop = this.schema ? this.schema[inName] : null;
-	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
 	    var prop = this.schema ? this.schema[inName] : null;
 	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
 		switch (inName) {

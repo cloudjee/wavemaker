@@ -15,6 +15,7 @@
 package com.wavemaker.tools.data;
 
 import com.wavemaker.tools.service.ServiceFactoryManager;
+import com.wavemaker.tools.project.LocalStudioFileSystem;
 
 /**
  * Registers factories for the data subsystem.
@@ -25,7 +26,7 @@ public class Bootstrap {
 
     public static void main(String[] args) {
         ServiceFactoryManager mgr = ServiceFactoryManager.getInstance();
-        DataServiceDefinitionFactory fac = new DataServiceDefinitionFactory();
+        DataServiceDefinitionFactory fac = new DataServiceDefinitionFactory(new LocalStudioFileSystem());
         mgr.addServiceDefinitionFactory(fac);
         mgr.addServiceGeneratorFactory(fac);
     }

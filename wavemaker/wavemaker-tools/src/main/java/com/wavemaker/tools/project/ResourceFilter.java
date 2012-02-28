@@ -2,6 +2,7 @@
 package com.wavemaker.tools.project;
 
 import org.springframework.core.io.Resource;
+import com.wavemaker.common.CommonResourceFilter;
 
 public interface ResourceFilter {
 
