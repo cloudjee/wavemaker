@@ -57,6 +57,7 @@ wm.Object.extendSchema(wm.DojoChart, {
     includeY: {group: "widgetName", subgroup: "yaxis",  order: 35, advanced:1},
     yAxisTitle: {group: "widgetName", subgroup: "yaxis",  order: 35},
     yUpperRange: {group: "widgetName", subgroup: "yaxis",  order: 36, advanced:1},
+    yLowerRange: {group: "widgetName", subgroup: "yaxis",  order: 37, advanced:1},
         //isTimeXAxis: {group: "edit", order: 21, type: "string"},
     ydisplay:    {group: "widgetName", subgroup: "yaxis", order: 30 }, // shows the display property
     yformat:     {group: "widgetName",subgroup: "yaxis", order: 31, editor: "wm.prop.FormatterEditor"}, // shows the properties made available by the display property    
