@@ -3,7 +3,7 @@ package com.wavemaker.io.filesystem.java;
 
 import java.io.File;
 
-import com.wavemaker.io.filesystem.FileSystemPath;
+import com.wavemaker.io.ResourcePath;
 
 /**
  * Key used with {@link JavaFileSystem}.
@@ -12,16 +12,16 @@ import com.wavemaker.io.filesystem.FileSystemPath;
  */
 public class JavaFileSystemKey {
 
-    private final FileSystemPath path;
+    private final ResourcePath path;
 
     private final File file;
 
-    public JavaFileSystemKey(File root, FileSystemPath path) {
+    public JavaFileSystemKey(File root, ResourcePath path) {
         this.path = path;
         this.file = new File(root, path.toString());
     }
 
-    public FileSystemPath getPath() {
+    public ResourcePath getPath() {
         return this.path;
     }
 

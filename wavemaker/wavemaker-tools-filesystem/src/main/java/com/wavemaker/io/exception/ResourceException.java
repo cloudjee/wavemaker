@@ -1,6 +1,7 @@
 
-package com.wavemaker.io;
+package com.wavemaker.io.exception;
 
+import com.wavemaker.io.Resource;
 
 /**
  * {@link RuntimeException} used to wrap {@link Resource} {@link Exception}s.
@@ -10,6 +11,9 @@ package com.wavemaker.io;
 public class ResourceException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
+
+    public ResourceException() {
+    }
 
     public ResourceException(Exception source) {
         super(source);

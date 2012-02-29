@@ -7,9 +7,9 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,7 +22,9 @@ import com.wavemaker.io.File;
 import com.wavemaker.io.Folder;
 import com.wavemaker.io.Resource;
 import com.wavemaker.io.ResourceFilter;
+import com.wavemaker.io.ResourcePath;
 import com.wavemaker.io.Resources;
+import com.wavemaker.io.exception.ResourceDoesNotExistException;
 
 /**
  * Tests for {@link FileSystemFolder}.
@@ -37,7 +39,7 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
     @Override
     public void setup() {
         super.setup();
-        this.folder = new FileSystemFolder<Object>(new FileSystemPath(), this.fileSystem, new FileSystemPath());
+        this.folder = new FileSystemFolder<Object>(new ResourcePath(), this.fileSystem, new ResourcePath());
     }
 
     @Test
@@ -51,19 +53,19 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
     public void shouldNeedFileSystem() throws Exception {
         this.thrown.expect(IllegalArgumentException.class);
         this.thrown.expectMessage("FileSystem must not be null");
-        new FileSystemFolder<Object>(new FileSystemPath(), null, new Object());
+        new FileSystemFolder<Object>(new ResourcePath(), null, new Object());
     }
 
     @Test
     public void shouldNeedKey() throws Exception {
         this.thrown.expect(IllegalArgumentException.class);
         this.thrown.expectMessage("Key must not be null");
-        new FileSystemFolder<Object>(new FileSystemPath(), this.fileSystem, null);
+        new FileSystemFolder<Object>(new ResourcePath(), this.fileSystem, null);
     }
 
     @Test
     public void shouldNotCreateFolderFromFile() throws Exception {
-        given(this.fileSystem.getResourceType(new FileSystemPath().get("a"))).willReturn(ResourceType.FILE);
+        given(this.fileSystem.getResourceType(new ResourcePath().get("a"))).willReturn(ResourceType.FILE);
         this.thrown.expect(IllegalStateException.class);
         this.thrown.expectMessage("Unable to access existing file '/a' as a folder");
         this.folder.getFolder("a");
@@ -159,6 +161,32 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
     }
 
     @Test
+    public void shouldGetExistingFile() throws Exception {
+        given(this.fileSystem.getResourceType(this.folder.getPath().get("a"))).willReturn(ResourceType.FILE);
+        Resource child = this.folder.getExisting("a");
+        assertThat(child, is(File.class));
+        assertThat(child.getName(), is("a"));
+        assertThat(child.toString(), is("/a"));
+    }
+
+    @Test
+    public void shouldGetExistingFolder() throws Exception {
+        given(this.fileSystem.getResourceType(this.folder.getPath().get("a"))).willReturn(ResourceType.FOLDER);
+        Resource child = this.folder.getExisting("a");
+        assertThat(child, is(Folder.class));
+        assertThat(child.getName(), is("a"));
+        assertThat(child.toString(), is("/a/"));
+    }
+
+    @Test
+    public void shouldNotGetExistingIfDoesNotExist() throws Exception {
+        given(this.fileSystem.getResourceType(this.folder.getPath().get("a"))).willReturn(ResourceType.DOES_NOT_EXIST);
+        this.thrown.expect(ResourceDoesNotExistException.class);
+        this.thrown.expectMessage("The resource 'a' does not exist in the folder '/'");
+        this.folder.getExisting("a");
+    }
+
+    @Test
     public void shouldTouchNewDirectory() throws Exception {
         FileSystemFolder<Object> child = this.folder.getFolder("a");
         given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
@@ -187,8 +215,8 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
 
     @Test
     public void shouldListResources() throws Exception {
-        FileSystemPath pathA = new FileSystemPath().get("a");
-        FileSystemPath pathB = new FileSystemPath().get("b");
+        ResourcePath pathA = new ResourcePath().get("a");
+        ResourcePath pathB = new ResourcePath().get("b");
         given(this.fileSystem.list(this.folder.getKey())).willReturn(Arrays.asList("a", "b"));
         given(this.fileSystem.getResourceType(pathA)).willReturn(ResourceType.FOLDER);
         given(this.fileSystem.getResourceType(pathB)).willReturn(ResourceType.FILE);
@@ -205,8 +233,8 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
 
     @Test
     public void shouldListFilteredResources() throws Exception {
-        FileSystemPath pathA = new FileSystemPath().get("a");
-        FileSystemPath pathB = new FileSystemPath().get("b");
+        ResourcePath pathA = new ResourcePath().get("a");
+        ResourcePath pathB = new ResourcePath().get("b");
         given(this.fileSystem.list(this.folder.getKey())).willReturn(Arrays.asList("a", "b"));
         given(this.fileSystem.getResourceType(pathA)).willReturn(ResourceType.FOLDER);
         given(this.fileSystem.getResourceType(pathB)).willReturn(ResourceType.FILE);
@@ -241,8 +269,8 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
         Folder destination = mock(Folder.class);
         FileSystemFolder<Object> child = this.folder.getFolder("a");
         given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
+        this.thrown.expect(ResourceDoesNotExistException.class);
         child.moveTo(destination);
-        verifyZeroInteractions(destination);
     }
 
     @Test
@@ -286,8 +314,8 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
         Folder destination = mock(Folder.class);
         FileSystemFolder<Object> child = this.folder.getFolder("a");
         given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
+        this.thrown.expect(ResourceDoesNotExistException.class);
         child.copyTo(destination);
-        verifyZeroInteractions(destination);
     }
 
     @Test
@@ -315,8 +343,59 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
     }
 
     @Test
+    public void shouldRename() throws Exception {
+        // FIXME
+    }
+
+    @Test
+    public void shouldNotRenameIfDoesNotExist() throws Exception {
+        // FIXME
+    }
+
+    @Test
+    public void shouldNotRenameIfNameInUse() throws Exception {
+        // FIXME
+    }
+
+    @Test
     public void shouldAppendPathToToString() throws Exception {
         FileSystemFolder<Object> child = this.folder.getFolder("a/b/c");
         assertThat(child.toString(), is("/a/b/c/"));
+    }
+
+    @Test
+    public void shouldNeedNameForGet() throws Exception {
+        this.thrown.expect(IllegalArgumentException.class);
+        this.thrown.expectMessage("Name must not be empty");
+        this.folder.get("", File.class);
+    }
+
+    @Test
+    public void shouldNeedTypeForGet() throws Exception {
+        this.thrown.expect(IllegalArgumentException.class);
+        this.thrown.expectMessage("ResourceType must not be null");
+        this.folder.get("name", null);
+    }
+
+    @Test
+    public void shouldGetFile() throws Exception {
+        this.folder = spy(this.folder);
+        this.folder.get("name", File.class);
+        verify(this.folder).getFile("name");
+    }
+
+    @Test
+    public void shouldGetFolder() throws Exception {
+        this.folder = spy(this.folder);
+        this.folder.get("name", Folder.class);
+        verify(this.folder).getFolder("name");
+    }
+
+    @Test
+    public void shouldGetResource() throws Exception {
+        given(this.fileSystem.getResourceType(this.folder.getPath().get("name"))).willReturn(ResourceType.FILE);
+        this.folder = spy(this.folder);
+        this.folder.get("name", Resource.class);
+        verify(this.folder).getExisting("name");
     }
 }

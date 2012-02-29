@@ -10,6 +10,8 @@ import com.wavemaker.io.AbstractFileContent;
 import com.wavemaker.io.File;
 import com.wavemaker.io.FileContent;
 import com.wavemaker.io.Folder;
+import com.wavemaker.io.ResourcePath;
+import com.wavemaker.io.exception.ResourceExistsException;
 
 /**
  * {@link File} implementation backed by a {@link FileSystem}.
@@ -33,7 +35,7 @@ public class FileSystemFile<K> extends FileSystemResource<K> implements File {
         }
     };
 
-    FileSystemFile(FileSystemPath path, FileSystem<K> fileSystem, K key) {
+    FileSystemFile(ResourcePath path, FileSystem<K> fileSystem, K key) {
         super(path, fileSystem, key);
         ResourceType resourceType = getFileSystem().getResourceType(key);
         Assert.state(resourceType != ResourceType.FOLDER, "Unable to access existing folder '" + super.toString() + "' as a file");
@@ -67,22 +69,28 @@ public class FileSystemFile<K> extends FileSystemResource<K> implements File {
     }
 
     @Override
-    public void moveTo(Folder folder) {
+    public File moveTo(Folder folder) {
         Assert.notNull(folder, "Folder must not be null");
-        if (exists()) {
-            File destination = folder.getFile(getName());
-            destination.getContent().write(getContent().asInputStream());
-            getFileSystem().delete(getKey());
-        }
+        ensureExists();
+        File destination = folder.getFile(getName());
+        destination.getContent().write(getContent().asInputStream());
+        getFileSystem().delete(getKey());
+        return destination;
     }
 
     @Override
-    public void copyTo(Folder folder) {
+    public File copyTo(Folder folder) {
         Assert.notNull(folder, "Folder must not be null");
-        if (exists()) {
-            File destination = folder.getFile(getName());
-            destination.getContent().write(getContent().asInputStream());
-        }
+        ensureExists();
+        File destination = folder.getFile(getName());
+        destination.getContent().write(getContent().asInputStream());
+        return destination;
+    }
+
+    @Override
+    public File rename(String name) throws ResourceExistsException {
+        K newKey = doRename(name);
+        return new FileSystemFile<K>(getFileSystem().getPath(newKey), getFileSystem(), newKey);
     }
 
     @Override

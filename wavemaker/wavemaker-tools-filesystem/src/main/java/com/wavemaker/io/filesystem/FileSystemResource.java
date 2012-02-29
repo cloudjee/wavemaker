@@ -5,6 +5,9 @@ import org.springframework.util.Assert;
 
 import com.wavemaker.io.Folder;
 import com.wavemaker.io.Resource;
+import com.wavemaker.io.ResourcePath;
+import com.wavemaker.io.exception.ResourceDoesNotExistException;
+import com.wavemaker.io.exception.ResourceExistsException;
 
 /**
  * {@link Resource} implementation backed by a {@link FileSystem}.
@@ -20,9 +23,9 @@ public abstract class FileSystemResource<K> implements Resource {
 
     private final K key;
 
-    private final FileSystemPath path;
+    private final ResourcePath path;
 
-    FileSystemResource(FileSystemPath path, FileSystem<K> fileSystem, K key) {
+    FileSystemResource(ResourcePath path, FileSystem<K> fileSystem, K key) {
         Assert.notNull(path, "Path must not be null");
         Assert.notNull(fileSystem, "FileSystem must not be null");
         Assert.notNull(key, "Key must not be null");
@@ -30,8 +33,6 @@ public abstract class FileSystemResource<K> implements Resource {
         this.key = key;
         this.path = path;
     }
-
-    // FIXME check type if exists?
 
     protected final FileSystem<K> getFileSystem() {
         return this.fileSystem;
@@ -41,8 +42,14 @@ public abstract class FileSystemResource<K> implements Resource {
         return this.key;
     }
 
-    protected final FileSystemPath getPath() {
+    protected final ResourcePath getPath() {
         return this.path;
+    }
+
+    protected void ensureExists() {
+        if (!exists()) {
+            throw new ResourceDoesNotExistException(this);
+        }
     }
 
     protected void touchParent() {
@@ -51,9 +58,21 @@ public abstract class FileSystemResource<K> implements Resource {
         }
     }
 
+    protected K doRename(String name) {
+        Assert.hasLength(name, "Name must not be empty");
+        Assert.isTrue(!name.contains("/"), "Name must not contain path elements");
+        ensureExists();
+        Assert.state(getPath().getParent() != null, "Root folders cannot be renamed");
+        K newKey = getFileSystem().rename(getKey(), name);
+        if (getFileSystem().getResourceType(newKey) != ResourceType.DOES_NOT_EXIST) {
+            throw new ResourceExistsException("Unable to rename '" + toString() + "' to '" + name + "' due to an existing resource");
+        }
+        return newKey;
+    }
+
     @Override
     public Folder getParent() {
-        FileSystemPath parentPath = this.path.getParent();
+        ResourcePath parentPath = this.path.getParent();
         if (parentPath == null) {
             return null;
         }
@@ -75,4 +94,28 @@ public abstract class FileSystemResource<K> implements Resource {
     public String toString() {
         return this.path.toString();
     }
+
+    @Override
+    public int hashCode() {
+        return toString().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        FileSystemResource<?> other = (FileSystemResource<?>) obj;
+        if (!this.fileSystem.equals(other.fileSystem)) {
+            return false;
+        }
+        return this.path.equals(other.path);
+    }
+
 }

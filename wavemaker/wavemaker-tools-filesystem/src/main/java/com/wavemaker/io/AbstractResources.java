@@ -1,8 +1,10 @@
 
 package com.wavemaker.io;
 
-import org.springframework.util.Assert;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.springframework.util.Assert;
 
 /**
  * Abstract base for {@link Resources} implementations.
@@ -19,18 +21,24 @@ public abstract class AbstractResources<T extends Resource> implements Resources
     }
 
     @Override
-    public void moveTo(Folder folder) {
+    @SuppressWarnings("unchecked")
+    public Resources<T> moveTo(Folder folder) {
         Assert.notNull(folder, "Folder must not be null");
+        List<T> movedResources = new ArrayList<T>();
         for (T resource : this) {
-            resource.moveTo(folder);
+            movedResources.add((T) resource.moveTo(folder));
         }
+        return new ResourcesCollection<T>(movedResources);
     }
 
     @Override
-    public void copyTo(Folder folder) {
+    @SuppressWarnings("unchecked")
+    public Resources<T> copyTo(Folder folder) {
         Assert.notNull(folder, "Folder must not be null");
+        List<T> copiedResources = new ArrayList<T>();
         for (T resource : this) {
-            resource.copyTo(folder);
+            copiedResources.add((T) resource.copyTo(folder));
         }
+        return new ResourcesCollection<T>(copiedResources);
     }
 }

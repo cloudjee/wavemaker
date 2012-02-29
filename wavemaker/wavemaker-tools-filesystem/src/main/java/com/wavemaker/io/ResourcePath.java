@@ -1,5 +1,5 @@
 
-package com.wavemaker.io.filesystem;
+package com.wavemaker.io;
 
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
@@ -9,16 +9,16 @@ import org.springframework.util.ObjectUtils;
  * 
  * @author Phillip Webb
  */
-public final class FileSystemPath {
+public final class ResourcePath {
 
-    private final FileSystemPath parent;
+    private final ResourcePath parent;
 
     private final String name;
 
     /**
      * Create a new root path instance.
      */
-    public FileSystemPath() {
+    public ResourcePath() {
         this(null, "");
     }
 
@@ -29,7 +29,7 @@ public final class FileSystemPath {
      * @param name the name of the path element
      * @see #get(String)
      */
-    private FileSystemPath(FileSystemPath parent, String name) {
+    private ResourcePath(ResourcePath parent, String name) {
         Assert.notNull(name, "Name must not be null");
         this.parent = parent;
         this.name = name;
@@ -63,11 +63,11 @@ public final class FileSystemPath {
      * @param path the path to obtain.
      * @return a new path
      */
-    public FileSystemPath get(String path) {
+    public ResourcePath get(String path) {
         Assert.hasLength(path, "Path must not be empty");
-        FileSystemPath rtn = this;
+        ResourcePath rtn = this;
         if (path.startsWith("/")) {
-            rtn = new FileSystemPath();
+            rtn = new ResourcePath();
             path = path.substring(1);
         }
         while (path.indexOf("/") != -1) {
@@ -83,7 +83,7 @@ public final class FileSystemPath {
      * @param name the name of the path
      * @return the new Path element
      */
-    private FileSystemPath newPath(String name) {
+    private ResourcePath newPath(String name) {
         if ("".equals(name)) {
             return this;
         }
@@ -91,7 +91,7 @@ public final class FileSystemPath {
             Assert.state(this.parent != null);
             return this.parent;
         }
-        return new FileSystemPath(this, name);
+        return new ResourcePath(this, name);
     }
 
     /**
@@ -99,7 +99,7 @@ public final class FileSystemPath {
      * 
      * @return the parent or <tt>null</tt>
      */
-    public FileSystemPath getParent() {
+    public ResourcePath getParent() {
         return this.parent;
     }
 
@@ -116,8 +116,8 @@ public final class FileSystemPath {
         if (obj == this) {
             return true;
         }
-        if (obj instanceof FileSystemPath) {
-            FileSystemPath other = (FileSystemPath) obj;
+        if (obj instanceof ResourcePath) {
+            ResourcePath other = (ResourcePath) obj;
             return ObjectUtils.nullSafeEquals(getParent(), other.getParent()) && this.name.equals(other.name);
         }
         return false;

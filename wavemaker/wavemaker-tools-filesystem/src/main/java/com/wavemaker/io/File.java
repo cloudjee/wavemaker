@@ -1,6 +1,8 @@
 
 package com.wavemaker.io;
 
+import com.wavemaker.io.exception.ResourceExistsException;
+
 /**
  * A file {@link Resource} that may be stored on a physical disk or using some other mechanism.
  * 
@@ -10,6 +12,15 @@ package com.wavemaker.io;
  * @author Phillip Webb
  */
 public interface File extends Resource {
+
+    @Override
+    File moveTo(Folder folder);
+
+    @Override
+    File copyTo(Folder folder);
+
+    @Override
+    File rename(String name) throws ResourceExistsException;
 
     /**
      * Returns the size in bytes of the virtual file.

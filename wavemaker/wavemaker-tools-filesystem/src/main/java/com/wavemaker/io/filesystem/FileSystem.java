@@ -4,6 +4,8 @@ package com.wavemaker.io.filesystem;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import com.wavemaker.io.ResourcePath;
+
 /**
  * Strategy interface used to abstract file system operations from {@link FileSystemFile} and {@link FileSystemFolder}
  * implementations.
@@ -21,7 +23,7 @@ public interface FileSystem<K> {
      * @param path the path
      * @return a file system specific key
      */
-    K getKey(FileSystemPath path);
+    K getKey(ResourcePath path);
 
     /**
      * Return the path that is represented by the specified key.
@@ -29,7 +31,7 @@ public interface FileSystem<K> {
      * @param key the file system key
      * @return the path
      */
-    FileSystemPath getPath(K key);
+    ResourcePath getPath(K key);
 
     /**
      * Return the resource type for the specified key.
@@ -107,5 +109,14 @@ public interface FileSystem<K> {
      * @param key the key to delete.
      */
     void delete(K key);
+
+    /**
+     * Rename the file of folder for the specified key. The key can refer to a file or folder resource.
+     * 
+     * @param key the key to rename
+     * @param name the new name (this does not include path elements)
+     * @return the new renamed key
+     */
+    K rename(K key, String name);
 
 }

@@ -6,7 +6,6 @@ import java.util.Iterator;
 import org.springframework.core.GenericTypeResolver;
 import org.springframework.util.Assert;
 
-
 /**
  * Implementation of of {@link Resources} that dynamically filters items based on a {@link ResourceFilter}.
  * 

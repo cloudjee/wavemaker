@@ -13,9 +13,9 @@ import java.util.Collections;
 
 import org.springframework.util.Assert;
 
-import com.wavemaker.io.ResourceException;
+import com.wavemaker.io.ResourcePath;
+import com.wavemaker.io.exception.ResourceException;
 import com.wavemaker.io.filesystem.FileSystem;
-import com.wavemaker.io.filesystem.FileSystemPath;
 import com.wavemaker.io.filesystem.ResourceType;
 
 /**
@@ -39,12 +39,12 @@ public class JavaFileSystem implements FileSystem<JavaFileSystemKey> {
     }
 
     @Override
-    public JavaFileSystemKey getKey(FileSystemPath path) {
+    public JavaFileSystemKey getKey(ResourcePath path) {
         return new JavaFileSystemKey(this.root, path);
     }
 
     @Override
-    public FileSystemPath getPath(JavaFileSystemKey key) {
+    public ResourcePath getPath(JavaFileSystemKey key) {
         return key.getPath();
     }
 
@@ -122,5 +122,36 @@ public class JavaFileSystem implements FileSystem<JavaFileSystemKey> {
         if (!file.delete()) {
             throw new ResourceException("Unable to delete " + file);
         }
+    }
+
+    @Override
+    public JavaFileSystemKey rename(JavaFileSystemKey key, String name) {
+        File file = key.getFile();
+        File dest = new File(file.getParentFile(), name);
+        if (!file.renameTo(dest)) {
+            throw new ResourceException("Unable to rename file '" + file + "' to '" + dest + "'");
+        }
+        ResourcePath newPath = key.getPath().getParent().get(name);
+        return new JavaFileSystemKey(this.root, newPath);
+    }
+
+    @Override
+    public int hashCode() {
+        return this.root.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        JavaFileSystem other = (JavaFileSystem) obj;
+        return this.root.equals(other.root);
     }
 }

@@ -8,6 +8,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import com.wavemaker.io.ResourcePath;
+
 public class FileSystemPathTest {
 
     @Rule
@@ -15,7 +17,7 @@ public class FileSystemPathTest {
 
     @Test
     public void shouldCreateRoot() throws Exception {
-        FileSystemPath path = new FileSystemPath();
+        ResourcePath path = new ResourcePath();
         assertThat(path.getName(), is(""));
         assertThat(path.toString(), is(""));
     }
@@ -24,47 +26,47 @@ public class FileSystemPathTest {
     public void shouldNotCreateNullNested() throws Exception {
         this.thrown.expect(IllegalArgumentException.class);
         this.thrown.expectMessage("Path must not be empty");
-        new FileSystemPath().get(null);
+        new ResourcePath().get(null);
     }
 
     @Test
     public void shouldNotCreateEmptyNested() throws Exception {
         this.thrown.expect(IllegalArgumentException.class);
         this.thrown.expectMessage("Path must not be empty");
-        new FileSystemPath().get("");
+        new ResourcePath().get("");
     }
 
     @Test
     public void shouldGetSimpleNested() throws Exception {
-        FileSystemPath path = new FileSystemPath().get("a");
+        ResourcePath path = new ResourcePath().get("a");
         assertThat(path.getName(), is("a"));
         assertThat(path.toString(), is("/a"));
     }
 
     @Test
     public void shouldGetDoubleNested() throws Exception {
-        FileSystemPath path = new FileSystemPath().get("a").get("b");
+        ResourcePath path = new ResourcePath().get("a").get("b");
         assertThat(path.getName(), is("b"));
         assertThat(path.toString(), is("/a/b"));
     }
 
     @Test
     public void shouldGetNestedString() throws Exception {
-        FileSystemPath path = new FileSystemPath().get("a/b");
+        ResourcePath path = new ResourcePath().get("a/b");
         assertThat(path.getName(), is("b"));
         assertThat(path.toString(), is("/a/b"));
     }
 
     @Test
     public void shouldGetRelative() throws Exception {
-        FileSystemPath path = new FileSystemPath().get("a/b/../c");
+        ResourcePath path = new ResourcePath().get("a/b/../c");
         assertThat(path.getName(), is("c"));
         assertThat(path.toString(), is("/a/c"));
     }
 
     @Test
     public void shouldGetRelativeAtEnd() throws Exception {
-        FileSystemPath path = new FileSystemPath().get("a/b/c/d/../..");
+        ResourcePath path = new ResourcePath().get("a/b/c/d/../..");
         assertThat(path.getName(), is("b"));
         assertThat(path.toString(), is("/a/b"));
 
@@ -73,33 +75,33 @@ public class FileSystemPathTest {
     @Test
     public void shouldNotAllowRelativePastRoot() throws Exception {
         this.thrown.expect(IllegalStateException.class);
-        new FileSystemPath().get("a/b/../../..");
+        new ResourcePath().get("a/b/../../..");
     }
 
     @Test
     public void shouldSupportSlashAtFront() throws Exception {
-        FileSystemPath path = new FileSystemPath().get("a").get("/b");
+        ResourcePath path = new ResourcePath().get("a").get("/b");
         assertThat(path.getName(), is("b"));
         assertThat(path.toString(), is("/b"));
     }
 
     @Test
     public void shouldSupportSlashAtEnd() throws Exception {
-        FileSystemPath path = new FileSystemPath().get("a/b/");
+        ResourcePath path = new ResourcePath().get("a/b/");
         assertThat(path.getName(), is("b"));
         assertThat(path.toString(), is("/a/b"));
     }
 
     @Test
     public void shouldIgnoreDoubleSlash() throws Exception {
-        FileSystemPath path = new FileSystemPath().get("a///b/");
+        ResourcePath path = new ResourcePath().get("a///b/");
         assertThat(path.getName(), is("b"));
         assertThat(path.toString(), is("/a/b"));
     }
 
     @Test
     public void shouldGetParent() throws Exception {
-        FileSystemPath path = new FileSystemPath().get("a/b/").getParent();
+        ResourcePath path = new ResourcePath().get("a/b/").getParent();
         assertThat(path.getName(), is("a"));
         assertThat(path.toString(), is("/a"));
     }

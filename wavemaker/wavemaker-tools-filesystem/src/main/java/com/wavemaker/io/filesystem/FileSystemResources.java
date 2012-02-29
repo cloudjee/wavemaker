@@ -6,6 +6,7 @@ import java.util.Iterator;
 import org.springframework.util.Assert;
 
 import com.wavemaker.io.AbstractResources;
+import com.wavemaker.io.ResourcePath;
 import com.wavemaker.io.Resource;
 import com.wavemaker.io.Resources;
 
@@ -18,11 +19,11 @@ public class FileSystemResources<K> extends AbstractResources<Resource> {
 
     private final FileSystem<K> fileSystem;
 
-    private final FileSystemPath parent;
+    private final ResourcePath parent;
 
     private final Iterable<String> list;
 
-    public FileSystemResources(FileSystem<K> fileSystem, FileSystemPath parent, Iterable<String> list) {
+    public FileSystemResources(FileSystem<K> fileSystem, ResourcePath parent, Iterable<String> list) {
         Assert.notNull(fileSystem, "FileSystem must not be null");
         Assert.notNull(parent, "Parent must not be null");
         Assert.notNull(list, "List must not be null");
@@ -43,7 +44,7 @@ public class FileSystemResources<K> extends AbstractResources<Resource> {
 
             @Override
             public Resource next() {
-                FileSystemPath path = FileSystemResources.this.parent.get(iterator.next());
+                ResourcePath path = FileSystemResources.this.parent.get(iterator.next());
                 K key = FileSystemResources.this.fileSystem.getKey(path);
                 ResourceType resourceType = FileSystemResources.this.fileSystem.getResourceType(key);
                 Assert.state(resourceType != null, "No resource type found");

@@ -8,7 +8,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -20,6 +19,8 @@ import com.wavemaker.io.AbstractFileContent;
 import com.wavemaker.io.File;
 import com.wavemaker.io.FileContent;
 import com.wavemaker.io.Folder;
+import com.wavemaker.io.ResourcePath;
+import com.wavemaker.io.exception.ResourceDoesNotExistException;
 
 /**
  * Tests for {@link FileSystemFile}.
@@ -34,7 +35,7 @@ public class FileSystemFileTest extends AbstractFileSystemResourceTest {
     @Override
     public void setup() {
         super.setup();
-        FileSystemPath path = new FileSystemPath().get("file.txt");
+        ResourcePath path = new ResourcePath().get("file.txt");
         this.file = new FileSystemFile<Object>(path, this.fileSystem, path);
     }
 
@@ -49,19 +50,19 @@ public class FileSystemFileTest extends AbstractFileSystemResourceTest {
     public void shouldNeedFileSystem() throws Exception {
         this.thrown.expect(IllegalArgumentException.class);
         this.thrown.expectMessage("FileSystem must not be null");
-        new FileSystemFile<Object>(new FileSystemPath(), null, new Object());
+        new FileSystemFile<Object>(new ResourcePath(), null, new Object());
     }
 
     @Test
     public void shouldNeedKey() throws Exception {
         this.thrown.expect(IllegalArgumentException.class);
         this.thrown.expectMessage("Key must not be null");
-        new FileSystemFile<Object>(new FileSystemPath(), this.fileSystem, null);
+        new FileSystemFile<Object>(new ResourcePath(), this.fileSystem, null);
     }
 
     @Test
     public void shouldNotCreateFolderFromFile() throws Exception {
-        FileSystemPath path = new FileSystemPath().get("a");
+        ResourcePath path = new ResourcePath().get("a");
         given(this.fileSystem.getResourceType(path)).willReturn(ResourceType.FOLDER);
         this.thrown.expect(IllegalStateException.class);
         this.thrown.expectMessage("Unable to access existing folder '/a' as a file");
@@ -144,8 +145,8 @@ public class FileSystemFileTest extends AbstractFileSystemResourceTest {
     public void shouldNotMoveIfDoesNotExist() throws Exception {
         Folder destination = mock(Folder.class);
         given(this.fileSystem.getResourceType(this.file.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
+        this.thrown.expect(ResourceDoesNotExistException.class);
         this.file.moveTo(destination);
-        verifyZeroInteractions(destination);
     }
 
     @Test
@@ -167,8 +168,8 @@ public class FileSystemFileTest extends AbstractFileSystemResourceTest {
     public void shouldNotCopyIfDoesNotExist() throws Exception {
         Folder destination = mock(Folder.class);
         given(this.fileSystem.getResourceType(this.file.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
+        this.thrown.expect(ResourceDoesNotExistException.class);
         this.file.copyTo(destination);
-        verifyZeroInteractions(destination);
     }
 
     @Test
@@ -184,6 +185,21 @@ public class FileSystemFileTest extends AbstractFileSystemResourceTest {
         this.file.copyTo(destination);
         verify(destinationContent).write(inputStream);
         verify(this.fileSystem, never()).delete(this.file.getKey());
+    }
+
+    @Test
+    public void shouldRename() throws Exception {
+        // FIXME
+    }
+
+    @Test
+    public void shouldNotRenameIfDoesNotExist() throws Exception {
+        // FIXME
+    }
+
+    @Test
+    public void shouldNotRenameIfNameInUse() throws Exception {
+        // FIXME
     }
 
     @Test

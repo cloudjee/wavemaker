@@ -41,5 +41,17 @@ public interface ResourceFilter<R extends Resource> {
         }
     };
 
+    /**
+     * Filter to remove hidden (ie starting with '.') resources
+     */
+    public static final ResourceFilter<Resource> HIDDEN_RESOURCES = new ResourceFilter<Resource>() {
+
+        @Override
+        public boolean include(Resource resource) {
+            return !resource.getName().startsWith(".");
+        }
+
+    };
+
     boolean include(R resource);
 }

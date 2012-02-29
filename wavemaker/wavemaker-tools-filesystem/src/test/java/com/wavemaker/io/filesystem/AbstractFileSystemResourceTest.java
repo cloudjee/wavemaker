@@ -12,6 +12,8 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
+import com.wavemaker.io.ResourcePath;
+
 public abstract class AbstractFileSystemResourceTest {
 
     @Rule
@@ -23,18 +25,18 @@ public abstract class AbstractFileSystemResourceTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        given(this.fileSystem.getKey(any(FileSystemPath.class))).willAnswer(new Answer<Object>() {
+        given(this.fileSystem.getKey(any(ResourcePath.class))).willAnswer(new Answer<Object>() {
 
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
                 return invocation.getArguments()[0];
             }
         });
-        given(this.fileSystem.getPath(any(Object.class))).willAnswer(new Answer<FileSystemPath>() {
+        given(this.fileSystem.getPath(any(Object.class))).willAnswer(new Answer<ResourcePath>() {
 
             @Override
-            public FileSystemPath answer(InvocationOnMock invocation) throws Throwable {
-                return (FileSystemPath) invocation.getArguments()[0];
+            public ResourcePath answer(InvocationOnMock invocation) throws Throwable {
+                return (ResourcePath) invocation.getArguments()[0];
             }
         });
     }

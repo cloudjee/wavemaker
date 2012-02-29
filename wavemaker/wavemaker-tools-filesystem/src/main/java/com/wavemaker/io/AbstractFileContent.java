@@ -11,6 +11,7 @@ import java.io.Writer;
 
 import org.springframework.util.FileCopyUtils;
 
+import com.wavemaker.io.exception.ResourceException;
 
 /**
  * Abstract base class for {@link FileContent}.

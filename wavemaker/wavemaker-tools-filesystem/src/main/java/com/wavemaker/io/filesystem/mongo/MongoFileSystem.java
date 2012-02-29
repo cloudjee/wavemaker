@@ -15,9 +15,9 @@ import com.mongodb.DBObject;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.mongodb.gridfs.GridFSInputFile;
-import com.wavemaker.io.ResourceException;
+import com.wavemaker.io.ResourcePath;
+import com.wavemaker.io.exception.ResourceException;
 import com.wavemaker.io.filesystem.FileSystem;
-import com.wavemaker.io.filesystem.FileSystemPath;
 import com.wavemaker.io.filesystem.ResourceType;
 
 /**
@@ -40,12 +40,12 @@ public class MongoFileSystem implements FileSystem<MongoFileSystemKey> {
     }
 
     @Override
-    public MongoFileSystemKey getKey(FileSystemPath path) {
+    public MongoFileSystemKey getKey(ResourcePath path) {
         return new MongoFileSystemKey(path);
     }
 
     @Override
-    public FileSystemPath getPath(MongoFileSystemKey key) {
+    public ResourcePath getPath(MongoFileSystemKey key) {
         return key.getPath();
     }
 
@@ -119,11 +119,16 @@ public class MongoFileSystem implements FileSystem<MongoFileSystemKey> {
         this.fs.remove(getFilename(key));
     }
 
+    @Override
+    public MongoFileSystemKey rename(MongoFileSystemKey key, String name) {
+        throw new UnsupportedOperationException(); // FIXME
+    }
+
     private GridFSInputFile create(MongoFileSystemKey key, ResourceType type) {
         Assert.notNull(type, "Type must not be null");
         Assert.state(type != ResourceType.DOES_NOT_EXIST);
         GridFSInputFile file = this.fs.createFile(getFilename(key));
-        FileSystemPath parent = key.getPath().getParent();
+        ResourcePath parent = key.getPath().getParent();
         if (parent != null) {
             file.put(PARENT, parent.toString());
         }
@@ -139,6 +144,26 @@ public class MongoFileSystem implements FileSystem<MongoFileSystemKey> {
 
     private String getFilename(MongoFileSystemKey key) {
         return key.getPath().toString();
+    }
+
+    @Override
+    public int hashCode() {
+        return this.fs.getBucketName().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        MongoFileSystem other = (MongoFileSystem) obj;
+        return this.fs.getBucketName().equals(other.fs.getBucketName()) && this.fs.getDB().getName().equals(other.fs.getDB().getName());
     }
 
     private static class FileListIterable implements Iterable<String> {
@@ -172,7 +197,7 @@ public class MongoFileSystem implements FileSystem<MongoFileSystemKey> {
         public String next() {
             DBObject next = this.iterator.next();
             String filename = (String) next.get("filename");
-            FileSystemPath path = new FileSystemPath().get(filename);
+            ResourcePath path = new ResourcePath().get(filename);
             return path.getName();
         }
 

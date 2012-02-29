@@ -1,7 +1,7 @@
 
 package com.wavemaker.io.filesystem.mongo;
 
-import com.wavemaker.io.filesystem.FileSystemPath;
+import com.wavemaker.io.ResourcePath;
 
 /**
  * Key used with {@link MongoFileSystem}.
@@ -10,13 +10,13 @@ import com.wavemaker.io.filesystem.FileSystemPath;
  */
 public class MongoFileSystemKey {
 
-    private final FileSystemPath path;
+    private final ResourcePath path;
 
-    public MongoFileSystemKey(FileSystemPath path) {
+    public MongoFileSystemKey(ResourcePath path) {
         this.path = path;
     }
 
-    public FileSystemPath getPath() {
+    public ResourcePath getPath() {
         return this.path;
     }
 

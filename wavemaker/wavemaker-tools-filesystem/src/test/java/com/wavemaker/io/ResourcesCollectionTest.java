@@ -18,11 +18,6 @@ import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.wavemaker.io.File;
-import com.wavemaker.io.Folder;
-import com.wavemaker.io.Resource;
-import com.wavemaker.io.ResourcesCollection;
-
 /**
  * Tests for {@link ResourcesCollection}.
  * 
@@ -87,8 +82,8 @@ public class ResourcesCollectionTest {
         Folder destination = mock(Folder.class);
         collection.moveTo(destination);
         InOrder ordered = inOrder(this.folder, this.file);
-        ordered.verify(this.folder).moveTo(destination);
-        ordered.verify(this.file).moveTo(destination);
+        ordered.verify((Resource) this.folder).moveTo(destination);
+        ordered.verify((Resource) this.file).moveTo(destination);
     }
 
     @Test
@@ -97,7 +92,7 @@ public class ResourcesCollectionTest {
         Folder destination = mock(Folder.class);
         collection.copyTo(destination);
         InOrder ordered = inOrder(this.folder, this.file);
-        ordered.verify(this.folder).copyTo(destination);
-        ordered.verify(this.file).copyTo(destination);
+        ordered.verify((Resource) this.folder).copyTo(destination);
+        ordered.verify((Resource) this.file).copyTo(destination);
     }
 }
