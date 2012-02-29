@@ -1,5 +1,6 @@
 
 package com.wavemaker.common;
+
 import java.util.List;
 
 import org.springframework.core.io.Resource;
@@ -9,18 +10,21 @@ import org.springframework.core.io.Resource;
  * and as such do not actually need to be stored on Disk, for example an files system implementation may use a database
  * as the underlying storage mechanism.
  * 
- * @author slee
+ * @author Seung Lee
  */
 public interface CommonStudioFileSystem {
 
-
-    List<Resource> listAllChildren(Resource resource, CommonResourceFilter filter);      
+    // FIXME PW filesystem refactor
 
     /**
-     * Create and return a resource for the specified path as applied to the given resource.
+     * Search all files recursively and return the result. Tis method returns only files, not directories.
      * 
      * @param resource the resource
-     * @param path the child path (relative to the resource)
-     * @return A newly created path
+     * @param filter a resource filter used to limit results
+     * @return a list of child files
+     * @see #listChildren(Resource)
      */
+    @Deprecated
+    List<Resource> listAllChildren(Resource resource, CommonResourceFilter filter);
+
 }

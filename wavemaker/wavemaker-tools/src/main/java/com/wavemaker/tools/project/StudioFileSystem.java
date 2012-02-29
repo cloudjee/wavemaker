@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.CommonStudioFileSystem;
+import com.wavemaker.io.Folder;
 
 /**
  * Provides a virtual files system for use with WaveMaker. Files are exposed using the Spring {@link Resource} interface
@@ -22,14 +23,19 @@ import com.wavemaker.common.CommonStudioFileSystem;
  */
 public interface StudioFileSystem extends CommonStudioFileSystem {
 
+    // FIXME PW filesystem : remove this interface and find another way to access common
+
+    Folder getCommon();
+
     /**
      * Returns the WaveMaker home directory.
      * 
      * @return the home directory
      */
+    @Deprecated
     Resource getWaveMakerHome();
 
-    // FIXME this is the root of all stuff. Under here is /projects /logs /common (by default this is
+    // this is the root of all stuff. Under here is /projects /logs /common (by default this is
     // /documents/wavemaker)
 
     /**
@@ -38,6 +44,7 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
      * @return the projects directory
      * @throws IOException
      */
+    @Deprecated
     Resource getProjectsDir(); // Same as wavemaker home /projects
 
     /**
@@ -45,6 +52,7 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
      * 
      * @return the demo directory or <tt>null</tt>
      */
+    @Deprecated
     Resource getDemoDir(); // In desktop land this is shipped with WM, in /app/wm/examples. This is mutable.
 
     /**
@@ -52,6 +60,7 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
      * 
      * @return the web app root
      */
+    @Deprecated
     Resource getStudioWebAppRoot(); // This is studio itself
 
     /**
@@ -59,6 +68,7 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
      * 
      * @throws IOException
      */
+    @Deprecated
     Resource getCommonDir() throws IOException; // This is WM home /common
 
     /**
@@ -67,6 +77,7 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
      * @param resource the resource
      * @return <tt>true</tt> if the resource is a directory.
      */
+    @Deprecated
     boolean isDirectory(Resource resource);
 
     /**
@@ -75,6 +86,7 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
      * @param resource the resource
      * @return the path of the resource
      */
+    @Deprecated
     String getPath(Resource resource);
 
     /**
@@ -83,6 +95,7 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
      * @param uri The URI of the resource
      * @return a resource for the given URI
      */
+    @Deprecated
     Resource getResourceForURI(String uri);
 
     /**
@@ -92,6 +105,7 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
      * @param resource The resource
      * @return a {@link OutputStream} for the resource
      */
+    @Deprecated
     OutputStream getOutputStream(Resource resource);
 
     /**
@@ -100,6 +114,7 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
      * 
      * @param resource The resource to prepare
      */
+    @Deprecated
     void prepareForWriting(Resource resource);
 
     /**
@@ -109,6 +124,7 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
      * @return a list of resource children
      * @see #listChildren(Resource, ResourceFilter)
      */
+    @Deprecated
     List<Resource> listChildren(Resource resource);
 
     /**
@@ -119,17 +135,8 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
      * @return a list of resource children
      * @see #listChildren(Resource)
      */
+    @Deprecated
     List<Resource> listChildren(Resource resource, ResourceFilter filter);
-
-    /**
-     * Search all files recursively and return the result. Tis method returns only files, not directories.
-     * 
-     * @param resource the resource
-     * @param filter a resource filter used to limit results
-     * @return a list of child files
-     * @see #listChildren(Resource)
-     */
-    // List<Resource> listAllChildren(Resource resource, ResourceFilter filter);
 
     /**
      * Create and return a resource for the specified path as applied to the given resource.
@@ -138,6 +145,7 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
      * @param path the child path (relative to the resource)
      * @return A newly created path
      */
+    @Deprecated
     Resource createPath(Resource resource, String path);
 
     /**
@@ -149,6 +157,7 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
      * @param filePath the path of the written file (relative to root)
      * @return The newly written resource.
      */
+    @Deprecated
     Resource copyFile(Resource root, InputStream source, String filePath);
 
     /**
@@ -159,6 +168,7 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
      * @param exclusions a list of exclusions that should not be copied
      * @return the target resource
      */
+    @Deprecated
     Resource copyRecursive(Resource root, Resource target, List<String> exclusions);
 
     /**
@@ -170,6 +180,7 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
      * @param excludedPattern the ant-style path pattern to be excluded
      * @return the target resource
      */
+    @Deprecated
     Resource copyRecursive(Resource root, Resource target, String includedPattern, String excludedPattern);
 
     /**
@@ -180,6 +191,7 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
      * @param exclusions a list of exclusions that should not be copied
      * @return the target resource
      */
+    @Deprecated
     Resource copyRecursive(File root, Resource target, List<String> exclusions);
 
     /**
@@ -188,6 +200,7 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
      * @param oldResource the old resource
      * @param newResource the new resource
      */
+    @Deprecated
     void rename(Resource oldResource, Resource newResource);
 
     /**
@@ -196,6 +209,7 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
      * @param resource the resource to delete
      * @return <tt>true</tt> if the resource was deleted
      */
+    @Deprecated
     boolean deleteFile(Resource resource);
 
     /**
@@ -203,11 +217,13 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
      * 
      * @return the temporary directory
      */
+    @Deprecated
     Resource createTempDir();
 
     /**
      * Returns a string indicating the studio filesystem being used
      */
+    @Deprecated
     String getStudioEnv();
 
     /**
@@ -216,5 +232,6 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
      * @param resource the current resource
      * @return the parent resource
      */
+    @Deprecated
     Resource getParent(Resource resource);
 }

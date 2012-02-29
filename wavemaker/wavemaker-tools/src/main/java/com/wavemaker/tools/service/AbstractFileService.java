@@ -37,7 +37,10 @@ import com.wavemaker.tools.project.StudioFileSystem;
  * @author Matt Small
  * @author Jeremy Grelle
  */
+@Deprecated
 public abstract class AbstractFileService implements FileService {
+
+    // FIXME PW filesystem : remove this class
 
     private StudioFileSystem fileSystem;
 

@@ -27,6 +27,9 @@ import org.springframework.util.StringUtils;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.CastUtils;
+import com.wavemaker.io.Folder;
+import com.wavemaker.io.filesystem.RootFileSystemFolderFactory;
+import com.wavemaker.io.filesystem.java.JavaFileSystem;
 import com.wavemaker.tools.serializer.FileSerializerException;
 import com.wavemaker.tools.serializer.FileSerializerFactory;
 import com.wavemaker.tools.service.AbstractFileService;
@@ -39,6 +42,8 @@ import com.wavemaker.tools.service.AbstractFileService;
  * @author Jeremy Grelle
  */
 public class Project extends AbstractFileService {
+
+    // FIXME PW filesystem : remove deprecated methods
 
     public static final String PROJECT_PROPERTIES = ".wmproject.properties";
 
@@ -60,10 +65,22 @@ public class Project extends AbstractFileService {
         }
     }
 
+    @Deprecated
     public Resource getProjectRoot() {
         return this.projectRoot;
     }
 
+    public Folder getRoot() {
+        // FIXME implement properly
+        try {
+            JavaFileSystem fileSystem = new JavaFileSystem(getProjectRoot().getFile());
+            return RootFileSystemFolderFactory.getRoot(fileSystem);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Deprecated
     public Resource getWebAppRoot() {
         try {
             if (this.mavenProject) {
@@ -80,6 +97,7 @@ public class Project extends AbstractFileService {
         return this.mavenProject;
     }
 
+    @Deprecated
     public Resource getMainSrc() {
         try {
             if (this.mavenProject) {
@@ -92,6 +110,7 @@ public class Project extends AbstractFileService {
         }
     }
 
+    @Deprecated
     public List<Resource> getAllServiceSrcDirs() {
         try {
             List<Resource> serviceSrcDirs = new ArrayList<Resource>();
@@ -110,6 +129,7 @@ public class Project extends AbstractFileService {
         }
     }
 
+    @Deprecated
     public Resource getLogFolder() {
         try {
             return this.projectRoot.createRelative(ProjectConstants.LOG_DIR);
@@ -118,6 +138,7 @@ public class Project extends AbstractFileService {
         }
     }
 
+    @Deprecated
     public Resource getWebInf() {
         try {
             return getWebAppRoot().createRelative(ProjectConstants.WEB_INF);
@@ -126,6 +147,7 @@ public class Project extends AbstractFileService {
         }
     }
 
+    @Deprecated
     public Resource getWebXml() {
         try {
             return getWebInf().createRelative(ProjectConstants.WEB_XML);
@@ -134,6 +156,7 @@ public class Project extends AbstractFileService {
         }
     }
 
+    @Deprecated
     public Resource getWsBindingsFile() {
         try {
             return getWebInf().createRelative(ProjectConstants.WS_BINDINGS_FILE);
@@ -142,6 +165,7 @@ public class Project extends AbstractFileService {
         }
     }
 
+    @Deprecated
     public Resource getSecurityXml() {
         try {
             return getWebInf().createRelative(ProjectConstants.SECURITY_XML);
@@ -150,6 +174,7 @@ public class Project extends AbstractFileService {
         }
     }
 
+    @Deprecated
     public Resource getWebInfLib() {
         try {
             return getWebInf().createRelative(ProjectConstants.LIB_DIR);
@@ -158,6 +183,7 @@ public class Project extends AbstractFileService {
         }
     }
 
+    @Deprecated
     public Resource getWebInfClasses() {
         try {
             return getWebInf().createRelative(ProjectConstants.CLASSES_DIR);
@@ -204,8 +230,8 @@ public class Project extends AbstractFileService {
     }
 
     @Override
+    @Deprecated
     public void writeFile(String path, String data) throws IOException {
-
         writeFile(path, data, false);
     }
 
@@ -218,6 +244,7 @@ public class Project extends AbstractFileService {
      * @param noClobber If true, don't overwrite file.
      * @throws IOException
      */
+    @Deprecated
     public void writeFile(String path, String data, boolean noClobber) throws IOException {
 
         Resource file = this.projectRoot.createRelative(path);
@@ -237,12 +264,12 @@ public class Project extends AbstractFileService {
         writeFile(file, data);
     }
 
+    @Override
+    @Deprecated
     public boolean fileExists(String path) throws IOException {
-
         Resource file = this.projectRoot.createRelative(path);
         return file.exists();
     }
-
 
     /**
      * Return the name of the project. Currently, this is the name of the directory the project is stored in.

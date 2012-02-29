@@ -33,6 +33,7 @@ import com.wavemaker.common.CommonResourceFilter;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.io.GFSResource;
 import com.wavemaker.common.util.IOUtils;
+import com.wavemaker.io.Folder;
 
 /**
  * Implementation of {@link StudioFileSystem} backed by {@link GridFS}.
@@ -85,6 +86,12 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
             this.dirsCollection.insert(this.dirsDoc);
         }
         this.delegate = new LocalStudioFileSystem();
+    }
+
+    @Override
+    public Folder getCommon() {
+        throw new UnsupportedOperationException();
+        // FIXME PW filesystem
     }
 
     @Override

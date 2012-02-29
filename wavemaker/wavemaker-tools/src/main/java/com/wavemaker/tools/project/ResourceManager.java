@@ -44,6 +44,8 @@ import com.wavemaker.tools.util.NoCloseInputStream;
 
 public class ResourceManager {
 
+    // FIXME PW filesystem : remove deprecated calls
+
     /**
      * @deprecated
      */
@@ -232,6 +234,7 @@ public class ResourceManager {
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
+    @Deprecated
     public static Hashtable[] getListing(StudioFileSystem fileSystem, Resource curdir) {
         List<Resource> listings = fileSystem.listChildren(curdir, new ResourceFilter() {
 
