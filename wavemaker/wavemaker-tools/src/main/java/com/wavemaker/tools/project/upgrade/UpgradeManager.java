@@ -70,7 +70,7 @@ public class UpgradeManager implements InitializingBean {
             try {
                 Resource exportFile = project.getProjectRoot().createRelative(
                     AbstractDeploymentManager.EXPORT_DIR_DEFAULT + project.getProjectName() + "-upgrade-" + projectVersion + ".zip");
-                this.deploymentManager.exportProject(exportFile.getURI().toString());
+                this.deploymentManager.exportProject(exportFile.getFilename());
                 ret.setBackupExportFile(exportFile);
             } catch (IOException ex) {
                 throw new WMRuntimeException(ex);
