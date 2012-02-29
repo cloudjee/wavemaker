@@ -218,7 +218,9 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		this.result = null;
 		this.error = null;
 
-		var responseTime = this.getOperation(inMethod).responseTime;
+	        var operation = this.getOperation(inMethod);
+	        if (operation)
+		    var responseTime = operation.responseTime;
 		var requestId;
 		if (responseTime && responseTime == "long") {
 			var savedSync = this._service.sync;
