@@ -719,7 +719,7 @@ public class StudioService extends ClassLoader {
     @ExposeToClient
     public String getJavaServiceTemplate(String templateName) throws IOException {
         return getProjectManager().getCurrentProject().readFile(
-            this.fileSystem.getStudioWebAppRoot().createRelative("/app/templates/javaservices" + templateName));
+            this.fileSystem.getStudioWebAppRoot().createRelative("/app/templates/javaservices/" + templateName));
     }
 
     @ExposeToClient
