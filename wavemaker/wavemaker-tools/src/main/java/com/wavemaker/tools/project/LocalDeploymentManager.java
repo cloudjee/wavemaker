@@ -120,10 +120,6 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
 
     public static final String CLEAN_OPERATION = "clean";
 
-    public static final String BUILD_TEMP_OPERATION = "build-temp";
-
-    public static final String BUILD_WAR_TEMP_OPERATION = "build-war-temp";
-
     public static final String TEST_RUN_START_PREP_OPERATION = "testrunstart-prep";
 
     public static final String TEST_RUN_START_TEMP_OPERATION = "testrunstart-temp";
@@ -169,7 +165,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
         }
 
         antExecute(projectDir, deployName, TEST_RUN_START_PREP_OPERATION);
-        antExecute(projectDir, deployName, BUILD_TEMP_OPERATION);
+        antExecute(projectDir, deployName, BUILD_OPERATION);
         compile();
         return antExecute(projectDir, deployName, TEST_RUN_START_TEMP_OPERATION);
     }
@@ -220,7 +216,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
     @Override
     public String build() {
         try {
-            antExecute(getProjectDir().getFile().getCanonicalPath(), getDeployName(), BUILD_TEMP_OPERATION);
+            antExecute(getProjectDir().getFile().getCanonicalPath(), getDeployName(), BUILD_OPERATION);
             return compile();
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
@@ -273,7 +269,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
 
         build();
 
-        antExecute(projectDir, BUILD_WAR_TEMP_OPERATION, properties);
+        antExecute(projectDir, BUILD_WAR_OPERATION, properties);
 
         if (includeEar) {
             antExecute(projectDir, BUILD_EAR_OPERATION, properties);
