@@ -20,8 +20,6 @@ import java.util.Hashtable;
 import java.util.List;
 
 import org.springframework.util.Assert;
-import org.springframework.util.FileCopyUtils;
-import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wavemaker.common.WMRuntimeException;
@@ -213,40 +211,51 @@ public class ResourceFileService {
         return new DownloadableFolder((Folder) resource, this.projectManager.getCurrentProject().getProjectName());
     }
 
-    // FIXME here down
-
+    /**
+     * Uploads a file to the given path
+     * 
+     * @param file the file contents being uploaded
+     * @param path the path where the file should be uploaded
+     * @return an upload response
+     * @throws IOException
+     * @see {@link #unzipAndMoveNewFile(String)}
+     */
     public FileUploadResponse uploadFile(@ParamName(name = "file") MultipartFile file, String path) throws IOException {
-        FileUploadResponse ret = new FileUploadResponse();
+        FileUploadResponse response = new FileUploadResponse();
         try {
-            org.springframework.core.io.Resource dir = getRequestedFile(path, true);
-            org.springframework.core.io.Resource outputFile = dir.createRelative(file.getOriginalFilename().replaceAll("[^a-zA-Z0-9.\\-_ ]", ""));
-            FileCopyUtils.copy(file.getInputStream(), this.fileSystem.getOutputStream(outputFile));
-            ret.setPath(outputFile.getDescription());
-            ret.setError("");
-            ret.setWidth("");
-            ret.setHeight("");
-
+            Folder folder = getResource(path, Folder.class);
+            String filename = getSafeFilename(file.getOriginalFilename());
+            folder.getFile(filename).getContent().write(file.getInputStream());
         } catch (Exception e) {
-            ret.setError(e.getMessage());
+            response.setError(e.getMessage());
         }
-        return ret;
+        return response;
+    }
+
+    private String getSafeFilename(String filename) {
+        return filename.replaceAll("[^a-zA-Z0-9.\\-_ ]", "");
     }
 
     /**
-     * Unzips a zip file in the tmp folder and moves it to the specified location. NOTE: Will not overwrite an existing
-     * folder at that location; instead will rename to avoid collision NOTE:
+     * Unzips the specifed file. The file will be unzip into a folder with the same name as the file. The zip file will
+     * be deleted after unzip.
      * 
-     * @see ProjectManager#openProject(String)
-     * @return An OpenProjectReturn object containing the current web path, as well as any upgrades that were performed.
+     * @see #uploadFile(MultipartFile, String)
+     * @return <tt>true</tt> if the file was unzipped.
      */
     public boolean unzipAndMoveNewFile(@ParamName(name = "file") String path) {
-        try {
-            org.springframework.core.io.Resource zipfile = getRequestedFile(path, false);
-            org.springframework.core.io.Resource zipfolder = com.wavemaker.tools.project.ResourceManager.unzipFile(this.fileSystem, zipfile);
-            return zipfolder.exists() && StringUtils.getFilenameExtension(zipfolder.getFilename()) == null;
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
+        File zipFile = getResource(path, File.class);
+        String unpackName = zipFile.getName();
+        if (unpackName.indexOf(".") != -1) {
+            unpackName = unpackName.substring(0, unpackName.lastIndexOf("."));
         }
+        if (zipFile.getParent().hasExisting(unpackName)) {
+            unpackName = generateUniqueNumberedFileName(zipFile.getParent(), unpackName);
+        }
+        Folder unpackFolder = zipFile.getParent().getFolder(unpackName);
+        unpackFolder.unzip(zipFile);
+        zipFile.delete();
+        return unpackFolder.exists();
     }
 
     @HideFromClient
@@ -258,6 +267,8 @@ public class ResourceFileService {
     public void setFileSystem(StudioFileSystem fileSystem) {
         this.fileSystem = fileSystem;
     }
+
+    // FIXME Delete down
 
     @HideFromClient
     private org.springframework.core.io.Resource getProjectDir() {
