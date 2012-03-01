@@ -63,11 +63,12 @@ public abstract class FileSystemResource<K> implements Resource {
         Assert.isTrue(!name.contains("/"), "Name must not contain path elements");
         ensureExists();
         Assert.state(getPath().getParent() != null, "Root folders cannot be renamed");
-        K newKey = getFileSystem().rename(getKey(), name);
-        if (getFileSystem().getResourceType(newKey) != ResourceType.DOES_NOT_EXIST) {
-            throw new ResourceExistsException("Unable to rename '" + toString() + "' to '" + name + "' due to an existing resource");
+        try {
+            K newKey = getFileSystem().rename(getKey(), name);
+            return newKey;
+        } catch (RuntimeException e) {
+            throw new ResourceExistsException("Unable to rename '" + toString() + "' to '" + name + "'", e);
         }
-        return newKey;
     }
 
     @Override

@@ -23,4 +23,8 @@ public class ResourceException extends RuntimeException {
         super(message);
     }
 
+    public ResourceException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
 }

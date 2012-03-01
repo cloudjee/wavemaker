@@ -14,4 +14,8 @@ public class ResourceExistsException extends ResourceException {
         super(message);
     }
 
+    public ResourceExistsException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
 }

@@ -12,7 +12,7 @@ import com.wavemaker.io.exception.ResourceExistsException;
  * 
  * @author Phillip Webb
  */
-public interface Folder extends Resource {
+public interface Folder extends Resource, Iterable<Resource> {
 
     @Override
     Folder moveTo(Folder folder);
@@ -24,9 +24,30 @@ public interface Folder extends Resource {
     Folder rename(String name) throws ResourceExistsException;
 
     /**
-     * Get a child folder of the current folder. If the <tt>name</tt> includes '/' characters then nested folders will
-     * be returned. Paths are relative unless they begin with '/', in which case they are taken from the topmost
-     * {@link #getParent() parent}. Use '..' to refer to a parent folder.
+     * Return a child from the current folder that refers to an existing {@link File} or {@link Folder}. If the
+     * <tt>name</tt> includes '/' characters then the file will be returned from nested folders. Paths are relative
+     * unless they begin with '/', in which case they are taken from the topmost {@link #getParent() parent}. Use '..'
+     * to refer to a parent folder.
+     * 
+     * @param name the name of the resource
+     * @return a {@link File} or {@link Folder} resource
+     * @throws ResourceDoesNotExistException if the resource does not exist
+     * @see #hasExisting(String)
+     */
+    Resource getExisting(String name) throws ResourceDoesNotExistException;
+
+    /**
+     * Returns <tt>true</tt> if this folder already contains a resource with the specified name.
+     * 
+     * @param name the name of the resource
+     * @return <tt>true</tt> if the resource is contained in the folder
+     * @see #getExisting(String)
+     */
+    boolean hasExisting(String name);
+
+    /**
+     * Get a child folder of the current folder. This method supports the same naming rules as
+     * {@link #getExisting(String)}.
      * 
      * @param name the name of the folder to get
      * @return the {@link Folder}.
@@ -34,9 +55,8 @@ public interface Folder extends Resource {
     Folder getFolder(String name);
 
     /**
-     * Get a child file of the current folder. If the <tt>name</tt> includes '/' characters then the file will be
-     * returned from nested folders. Paths are relative unless they begin with '/', in which case they are taken from
-     * the topmost {@link #getParent() parent}. Use '..' to refer to a parent folder.
+     * Get a child file of the current folder. This method supports the same naming rules as
+     * {@link #getExisting(String)}.
      * 
      * @param name the name of the file to get
      * @return the {@link File}
@@ -44,20 +64,9 @@ public interface Folder extends Resource {
     File getFile(String name);
 
     /**
-     * Return a child from the current folder that refers to an existing {@link File} or {@link Folder}. If the
-     * <tt>name</tt> includes '/' characters then the file will be returned from nested folders. Paths are relative
-     * unless they begin with '/', in which case they are taken from the topmost {@link #getParent() parent}. Use '..'
-     * to refer to a parent folder.
-     * 
-     * @param name the name of the resource
-     * @return a {@link File} or {@link Folder} resource.
-     * @throws ResourceDoesNotExistException if the resource does not exist.
-     */
-    Resource getExisting(String name) throws ResourceDoesNotExistException;
-
-    /**
      * Get a child file or folder of the current folder. Depending on the <tt>resourceType</tt> {@link #getFile(String)}
-     * , {@link #getFolder(String)} or {@link #getExisting(String)} will be called.
+     * , {@link #getFolder(String)} or {@link #getExisting(String)} will be called. This method supports the same naming
+     * rules as {@link #getExisting(String)}.
      * 
      * @param name the name of the resource to get
      * @param resourceType the resource type

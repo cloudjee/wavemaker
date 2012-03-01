@@ -1,6 +1,8 @@
 
 package com.wavemaker.io.filesystem;
 
+import java.util.Iterator;
+
 import org.springframework.util.Assert;
 
 import com.wavemaker.io.File;
@@ -28,6 +30,29 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
     }
 
     @Override
+    public Resource getExisting(String name) throws ResourceDoesNotExistException {
+        Assert.hasLength(name, "Name must not be empty");
+        ResourcePath resourcePath = getPath().get(name);
+        K resourceKey = getFileSystem().getKey(resourcePath);
+        ResourceType resourceType = getFileSystem().getResourceType(resourceKey);
+        switch (resourceType) {
+            case FILE:
+                return new FileSystemFile<K>(resourcePath, getFileSystem(), resourceKey);
+            case FOLDER:
+                return new FileSystemFolder<K>(resourcePath, getFileSystem(), resourceKey);
+        }
+        throw new ResourceDoesNotExistException(this, name);
+    }
+
+    @Override
+    public boolean hasExisting(String name) {
+        Assert.hasLength(name, "Name must not be empty");
+        ResourcePath resourcePath = getPath().get(name);
+        K resourceKey = getFileSystem().getKey(resourcePath);
+        return getFileSystem().getResourceType(resourceKey) != ResourceType.DOES_NOT_EXIST;
+    }
+
+    @Override
     public FileSystemFolder<K> getFolder(String name) {
         Assert.hasLength(name, "Name must not be empty");
         ResourcePath folderPath = getPath().get(name);
@@ -43,21 +68,6 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
         return new FileSystemFile<K>(filePath, getFileSystem(), fileKey);
     }
 
-    @Override
-    public Resource getExisting(String name) throws ResourceDoesNotExistException {
-        Assert.hasLength(name, "Name must not be empty");
-        ResourcePath resourcePath = getPath().get(name);
-        K resourceKey = getFileSystem().getKey(resourcePath);
-        ResourceType resourceType = getFileSystem().getResourceType(resourceKey);
-        switch (resourceType) {
-            case FILE:
-                return new FileSystemFile<K>(resourcePath, getFileSystem(), resourceKey);
-            case FOLDER:
-                return new FileSystemFolder<K>(resourcePath, getFileSystem(), resourceKey);
-        }
-        throw new ResourceDoesNotExistException(this, name);
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public <T extends Resource> T get(String name, Class<T> resourceType) {
@@ -70,6 +80,11 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
             return (T) getFile(name);
         }
         return (T) getExisting(name);
+    }
+
+    @Override
+    public Iterator<Resource> iterator() {
+        return list().iterator();
     }
 
     @Override

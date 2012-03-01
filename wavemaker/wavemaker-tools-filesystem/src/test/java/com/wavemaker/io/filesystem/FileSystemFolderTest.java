@@ -187,6 +187,20 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
     }
 
     @Test
+    public void shouldHaveExistingFile() throws Exception {
+        given(this.fileSystem.getResourceType(this.folder.getPath().get("a"))).willReturn(ResourceType.FOLDER);
+        boolean actual = this.folder.hasExisting("a");
+        assertThat(actual, is(true));
+    }
+
+    @Test
+    public void shouldNotHaveExistingFileIfDoesNotExist() throws Exception {
+        given(this.fileSystem.getResourceType(this.folder.getPath().get("a"))).willReturn(ResourceType.DOES_NOT_EXIST);
+        boolean actual = this.folder.hasExisting("a");
+        assertThat(actual, is(false));
+    }
+
+    @Test
     public void shouldTouchNewDirectory() throws Exception {
         FileSystemFolder<Object> child = this.folder.getFolder("a");
         given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
