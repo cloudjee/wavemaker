@@ -20,9 +20,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -40,19 +38,16 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.wavemaker.common.util.SystemUtils;
-
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.FileAccessException;
 import com.wavemaker.common.util.IOUtils;
+import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.server.FileUploadResponse;
-import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.project.DeploymentManager;
-import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.project.StudioConfiguration;
@@ -60,7 +55,6 @@ import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeManager;
 import com.wavemaker.tools.pws.install.PwsInstall;
-import com.wavemaker.tools.serializer.FileSerializerException;
 
 /**
  * Main Studio service interface. This service will manage the other studio services, their inclusion into the
@@ -83,47 +77,6 @@ public class StudioService extends ClassLoader {
 
     private StudioConfiguration studioConfiguration;
 
-    @ExposeToClient
-    public String closurecompile(String s) {
-        String result = null;
-        URL url = null;
-        try {
-            System.out.println("A");
-            url = new URL("http://closure-compiler.appspot.com/compile");
-        } catch (MalformedURLException e) {
-            System.out.println(e.toString());
-            return "";
-        }
-        System.out.println("B");
-        try {
-            URLConnection conn = url.openConnection();
-            conn.setDoOutput(true);
-            OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
-            System.out.println("C");
-            String data = "output_format=json&output_info=errors&js_code=" + java.net.URLEncoder.encode(s, ServerConstants.DEFAULT_ENCODING);
-
-            // write parameters
-            writer.write(data);
-            writer.flush();
-            System.out.println("D");
-            StringBuffer answer = new StringBuffer();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            System.out.println("E");
-            String line;
-            while ((line = reader.readLine()) != null) {
-                answer.append(line);
-            }
-            System.out.println("F");
-            writer.close();
-            reader.close();
-            result = answer.toString();
-        } catch (Exception e) {
-            System.out.println(e.toString());
-        }
-        System.out.println("F: " + result);
-        return result;
-    }
-
     /**
      * Undeploy and close the project.
      * 
@@ -133,14 +86,11 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public void closeProject() throws IOException {
-
         try {
             this.deploymentManager.undeploy();
         } catch (RuntimeException ignore) {
-            // if Tomcat isn't running, or we can't do it for some other reason,
-            // just close the project
+            // Ignore failures and continue to close the project
         }
-
         this.projectManager.closeProject();
     }
 
@@ -150,12 +100,11 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public OpenProjectReturn openProject(String projectName) throws IOException {
-        this.projectManager.openProject(this.projectManager.getUserProjectPrefix() + projectName);
-
-        OpenProjectReturn ret = new OpenProjectReturn();
-        ret.setUpgradeMessages(getUpgradeManager().doUpgrades(this.projectManager.getCurrentProject()));
-        ret.setWebPath(getWebPath());
-        return ret;
+        this.projectManager.openProject(getPrefixedProjectName(projectName));
+        OpenProjectReturn rtn = new OpenProjectReturn();
+        rtn.setUpgradeMessages(getUpgradeManager().doUpgrades(this.projectManager.getCurrentProject()));
+        rtn.setWebPath(getWebPath());
+        return rtn;
     }
 
     /**
@@ -164,20 +113,12 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public String newProject(String projectName) throws IOException {
-
-        this.projectManager.newProject(this.projectManager.getUserProjectPrefix() + projectName);
+        this.projectManager.newProject(getPrefixedProjectName(projectName));
         return getWebPath();
     }
 
-    /**
-     * @see ProjectManager#newProject(String, boolean)
-     * @return getWebPath()
-     */
-    @ExposeToClient
-    public String newProjectNoTemplate(String projectName) throws IOException {
-
-        this.projectManager.newProject(this.projectManager.getUserProjectPrefix() + projectName, true);
-        return getWebPath();
+    private String getWebPath() {
+        return this.projectManager.getCurrentProject().getProjectName() + "/" + ProjectConstants.WEB_DIR;
     }
 
     /**
@@ -187,18 +128,15 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public void deleteProject(String projectName) throws IOException {
-        String pName = this.projectManager.getUserProjectPrefix() + projectName;
+        String prefixedProjectName = getPrefixedProjectName(projectName);
         try {
-            this.deploymentManager.testRunClean(this.projectManager.getProjectDir(pName, true).getURI().toString(), pName);
+            this.deploymentManager.testRunClean(this.projectManager.getProjectDir(prefixedProjectName, true).getURI().toString(), prefixedProjectName);
         } catch (WMRuntimeException e) {
-            // if Tomcat isn't running, or we can't do it for some other reason,
-            // just delete the project
+            // Swallow and continue to delete project
         } catch (BuildException e) {
-            // if Tomcat isn't running, or we can't do it for some other reason,
-            // just delete the project
+            // Swallow and continue to delete project
         }
-
-        this.projectManager.deleteProject(pName);
+        this.projectManager.deleteProject(prefixedProjectName);
     }
 
     /**
@@ -206,8 +144,7 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public void copyProject(String sourceProjectName, String destinationProjectName) throws IOException {
-        this.projectManager.copyProject(this.projectManager.getUserProjectPrefix() + sourceProjectName, this.projectManager.getUserProjectPrefix()
-            + destinationProjectName);
+        this.projectManager.copyProject(getPrefixedProjectName(sourceProjectName), getPrefixedProjectName(destinationProjectName));
     }
 
     /**
@@ -218,75 +155,16 @@ public class StudioService extends ClassLoader {
     public String[] listProjects() throws FileAccessException {
         String prefix = this.projectManager.getUserProjectPrefix();
         SortedSet<String> projects = this.projectManager.listProjects(prefix);
-        Object[] projectListO = projects.toArray();
-        String[] projectList = new String[projectListO.length];
-        for (int i = 0; i < projectListO.length; i++) {
-            String s = projectListO[i].toString();
-            if (s.startsWith(prefix)) {
-                projectList[i] = s.substring(prefix.length());
-            } else {
-                projectList[i] = s;
+        String[] projectsWithoutPrefixes = new String[projects.size()];
+        int i = 0;
+        for (String project : projects) {
+            if (project.startsWith(prefix)) {
+                project = project.substring(prefix.length());
             }
+            projectsWithoutPrefixes[i] = project;
+            i++;
         }
-        return projectList;
-    }
-
-    /**
-     * Write a file to the project, with specified relativePath and contents of a serialization of obj.
-     * 
-     * @param relativePath The path to the object (relative to the project's root).
-     * @param obj The Object representing the contents of the file.
-     * @throws FileSerializerException
-     */
-    @ExposeToClient
-    public void writeObject(String relativePath, Object obj) throws FileSerializerException {
-
-        this.projectManager.getCurrentProject().writeObject(relativePath, obj);
-    }
-
-    /**
-     * Read a file from the project, with specified relativePath. Returns the Object representing the contents of the
-     * file.
-     * 
-     * @param relativePath The path to the object (relative to the project's root).
-     * @return The Object representing the contents of the file, or null if the file doesn't exist.
-     * @throws ProjectFileSerializerException
-     */
-    @ExposeToClient
-    public Object readObject(String relativePath) throws FileSerializerException {
-        return this.projectManager.getCurrentProject().readObject(relativePath);
-    }
-
-    /**
-     * Write arbitrary data to a file. The file can be relative to the activeGridHome, or eventually absolute. This will
-     * clobber existing files.
-     * 
-     * @param path The path to write to (relative to the project root).
-     * @param data The data to write (as a String).
-     * @throws IOException
-     */
-    @ExposeToClient
-    public void writeFile(String path, String data) throws IOException {
-
-        writeFile(path, data, false);
-    }
-
-    @ExposeToClient
-    public void writeFile(String path, String data, boolean noClobber) throws IOException {
-
-        this.projectManager.getCurrentProject().writeFile(path, data, noClobber);
-    }
-
-    /**
-     * Read arbitrary data from a file.
-     * 
-     * @param path The path to read from (relative to the project root).
-     * @return The data read
-     * @throws IOException
-     */
-    @ExposeToClient
-    public String readFile(String path) throws IOException {
-        return this.projectManager.getCurrentProject().readFile(path);
+        return projectsWithoutPrefixes;
     }
 
     /**
@@ -336,9 +214,6 @@ public class StudioService extends ClassLoader {
             }
             str = sbuf.toString();
             in.close();
-            /*
-             * int startDiv = str.indexOf("<div class=\"main layoutsubsection\">");
-             */
 
             String startDivStr = "PATCHCODE'>";
             int startDiv = str.indexOf(startDivStr);
@@ -365,7 +240,6 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public void writeWebFile(String path, String data) throws IOException {
-
         writeWebFile(path, data, false);
     }
 
@@ -377,126 +251,146 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public void writeWebFile(String path, String data, boolean noClobber) throws IOException {
-	path = path.trim();
+        path = path.trim();
         if (path.startsWith("/common")) {
             Resource newCommonFile = this.fileSystem.getCommonDir().createRelative(path.replaceFirst("/common", ""));
-	    if (!newCommonFile.exists() || !noClobber) {
-		FileCopyUtils.copy(data, new OutputStreamWriter(this.fileSystem.getOutputStream(newCommonFile)));
-	    }
+            if (!newCommonFile.exists() || !noClobber) {
+                FileCopyUtils.copy(data, new OutputStreamWriter(this.fileSystem.getOutputStream(newCommonFile)));
+            }
         } else {
             String newPath = ProjectConstants.WEB_DIR + (path.startsWith("/") ? path.substring(1) : path);
             this.projectManager.getCurrentProject().writeFile(newPath, data, noClobber);
         }
 
-	String projectName = this.projectManager.getCurrentProject().getProjectName();
-	String pathPrefix = "phonegap/" + projectName +  "/www/";
-	Resource phonegap = this.projectManager.getCurrentProject().getProjectRoot().createRelative(pathPrefix);
+        String projectName = this.projectManager.getCurrentProject().getProjectName();
+        String pathPrefix = "phonegap/" + projectName + "/www/";
+        Resource phonegap = this.projectManager.getCurrentProject().getProjectRoot().createRelative(pathPrefix);
 
-	if (phonegap.exists()) {
-	    Resource lib = phonegap.createRelative("lib");
-	    this.projectManager.getCurrentProject().writeFile(pathPrefix + (path.startsWith("/") ? path.substring(1) : path), data, false);
-	}
-    }
-    @ExposeToClient
-	public void setupPhonegapFiles(int portNumb, boolean isDebug) throws IOException {
-	String projectName = this.projectManager.getCurrentProject().getProjectName();
-	String pathPrefix = "phonegap/" + projectName +  "/www/";
-	Resource phonegap = this.projectManager.getCurrentProject().getProjectRoot().createRelative(pathPrefix);
-	if (phonegap.exists()) {
-	    Resource lib = phonegap.createRelative("lib");
-	    if (!lib.exists()) {
-		// Copy studio's lib folder into phonegap's folder
-		IOUtils.copy(new File(this.fileSystem.getStudioWebAppRoot().getFile(), "lib"), lib.getFile());
-
-		// Copy the project's pages folder into phonegap's folder
-		IOUtils.copy(this.projectManager.getCurrentProject().getWebAppRoot().createRelative("pages").getFile(), phonegap.createRelative("pages").getFile());
-
-		// Copy the common folder into phonegap's folder
-		IOUtils.copy(this.fileSystem.getCommonDir().getFile(), phonegap.createRelative("common").getFile());
-
-		Resource MainViewerLib = this.projectManager.getCurrentProject().getProjectRoot().createRelative("phonegap/" + projectName + "/"+projectName + "/Classes/MainViewController.m");
-		System.out.println("MAINVIEWER: " + MainViewerLib.getFile().getAbsolutePath());
-		String MainViewerStr = IOUtils.read(MainViewerLib.getFile());
-		String MainViewerSearchStr = "(BOOL)shouldAutorotateToInterfaceOrientation";
-		int MainViewerStart = MainViewerStr.indexOf(MainViewerSearchStr);
-		int MainViewerEnd = MainViewerStr.indexOf("}", MainViewerStart)+1;
-		MainViewerStr = MainViewerStr.substring(0,MainViewerStart) + 
-		    "(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation\n{\nreturn YES;\n}\n" +
-		    MainViewerStr.substring(MainViewerEnd);
-		System.out.println("MainViewer:" + MainViewerStart + " | " + MainViewerEnd + " | " + MainViewerStr);
-		IOUtils.write(MainViewerLib.getFile(), MainViewerStr);
-	    }
-	}
+        if (phonegap.exists()) {
+            Resource lib = phonegap.createRelative("lib");
+            this.projectManager.getCurrentProject().writeFile(pathPrefix + (path.startsWith("/") ? path.substring(1) : path), data, false);
+        }
     }
 
     @ExposeToClient
-	public void updatePhonegapFiles(int portNumb, boolean isDebug) throws IOException {
-	String projectName = this.projectManager.getCurrentProject().getProjectName();
-	String pathPrefix = "phonegap/" + projectName +  "/www/";
-	Resource phonegap = this.projectManager.getCurrentProject().getProjectRoot().createRelative(pathPrefix);
-	if (phonegap.exists()) {
-	    Resource lib = phonegap.createRelative("lib");
-	    Resource indexhtml = phonegap.createRelative("index.html");
-	    String indexhtml_text = IOUtils.read(indexhtml.getFile());
-	    // Update paths in index.html
-	    indexhtml_text =  indexhtml_text.replaceAll("/wavemaker/","");
-		
-	    // Add phonegap library
-	    File[] listing = phonegap.getFile().listFiles(new java.io.FilenameFilter() {
-		    @Override
-			public boolean accept(File dir, String name) {
-			return name.indexOf("phonegap-") == 0 && name.indexOf(".js") != -1;
-		    }
-		});
-	    if (indexhtml_text.indexOf("<script type=\"text/javascript\" src=\"" + listing[0].getName() + "\"></script>") == -1)
-		indexhtml_text = indexhtml_text.replace("runtimeLoader.js\"></script>", "runtimeLoader.js\"></script>\n<script type=\"text/javascript\" src=\"" + listing[0].getName() + "\"></script>");
-	    IOUtils.write(indexhtml.getFile(), indexhtml_text);
+    public void setupPhonegapFiles(int portNumb, boolean isDebug) throws IOException {
+        String projectName = this.projectManager.getCurrentProject().getProjectName();
+        String pathPrefix = "phonegap/" + projectName + "/www/";
+        Resource phonegap = this.projectManager.getCurrentProject().getProjectRoot().createRelative(pathPrefix);
+        if (phonegap.exists()) {
+            Resource lib = phonegap.createRelative("lib");
+            if (!lib.exists()) {
+                // Copy studio's lib folder into phonegap's folder
+                IOUtils.copy(new File(this.fileSystem.getStudioWebAppRoot().getFile(), "lib"), lib.getFile());
 
-	    // Concatenate boot.js and config.js together and save as config.js
-	    Resource configjs = phonegap.createRelative("config.js");
-	    String configjs_text = readWebFile("config.js"); // get the project config.js rather than the phonegap version which has already been modified; TODO: This is bad to constantly clobber changes to config.js; future versions of config.js maybe need to build in boot.js or else add back in loading of boot.js
-	    String boottext = IOUtils.read(lib.createRelative("boot").createRelative("boot.js").getFile());
-		
-	    int startDebug = configjs_text.indexOf("djConfig.debugBoot");
-	    int endDebug = configjs_text.indexOf(";", startDebug);	    
-	    configjs_text = configjs_text.substring(0, startDebug) + "djConfig.debugBoot = " + isDebug + configjs_text.substring(endDebug);
-	    System.out.println("START: " + startDebug + "; END: " + endDebug );
-	    configjs_text = configjs_text.replaceAll("/wavemaker/","/").replace("wm.relativeLibPath = \"../lib/\";","wm.relativeLibPath = \"lib/\";") + 
-		"\nwm.xhrPath = 'http://" + SystemUtils.getIP() + ":" + portNumb + "/" + projectName + "/';\n" + boottext;
-	    IOUtils.write(configjs.getFile(), configjs_text);
+                // Copy the project's pages folder into phonegap's folder
+                IOUtils.copy(this.projectManager.getCurrentProject().getWebAppRoot().createRelative("pages").getFile(),
+                    phonegap.createRelative("pages").getFile());
 
-	    // Update phonegap.plist
-	    File phonegap_plist_file = new File(phonegap.getFile().getParent(), projectName + "/PhoneGap.plist");
-	    String phonegap_plist = IOUtils.read(phonegap_plist_file);
-	    String startExpression = "<key>ExternalHosts</key>";
-	    int startindex = phonegap_plist.indexOf(startExpression);
-	    int startindex1 = startindex  + startExpression.length();
-	    int endindex1 = phonegap_plist.indexOf("</array>", startindex1);
-	    if (endindex1 != -1) endindex1 += "</array>".length();
-	    int endindex2 = phonegap_plist.indexOf("<array/>", startindex1);
-	    if (endindex2 != -1) endindex2 += "<array/>".length();
-	    int endindex;
-	    if (endindex1 == -1) endindex = endindex2;
-	    else if (endindex2 == -1) endindex = endindex1;
-	    else if (endindex1 > endindex2) endindex =  endindex2;
-	    else endindex =  endindex1;
-	    phonegap_plist = phonegap_plist.substring(0,startindex1) +
-		"<array><string>" + SystemUtils.getIP() + "</string></array>" +
-		phonegap_plist.substring(endindex);
-	    IOUtils.write(phonegap_plist_file, phonegap_plist);
+                // Copy the common folder into phonegap's folder
+                IOUtils.copy(this.fileSystem.getCommonDir().getFile(), phonegap.createRelative("common").getFile());
 
-	    // Recopy common; TODO: Update registering of modules for this new path
-	    if (phonegap.createRelative("common").getFile().exists()) {
-		IOUtils.deleteRecursive(phonegap.createRelative("common").getFile());
-	    }
-	    IOUtils.copy(this.fileSystem.getCommonDir().getFile(), phonegap.createRelative("common").getFile());
+                Resource MainViewerLib = this.projectManager.getCurrentProject().getProjectRoot().createRelative(
+                    "phonegap/" + projectName + "/" + projectName + "/Classes/MainViewController.m");
+                System.out.println("MAINVIEWER: " + MainViewerLib.getFile().getAbsolutePath());
+                String MainViewerStr = IOUtils.read(MainViewerLib.getFile());
+                String MainViewerSearchStr = "(BOOL)shouldAutorotateToInterfaceOrientation";
+                int MainViewerStart = MainViewerStr.indexOf(MainViewerSearchStr);
+                int MainViewerEnd = MainViewerStr.indexOf("}", MainViewerStart) + 1;
+                MainViewerStr = MainViewerStr.substring(0, MainViewerStart)
+                    + "(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation\n{\nreturn YES;\n}\n"
+                    + MainViewerStr.substring(MainViewerEnd);
+                System.out.println("MainViewer:" + MainViewerStart + " | " + MainViewerEnd + " | " + MainViewerStr);
+                IOUtils.write(MainViewerLib.getFile(), MainViewerStr);
+            }
+        }
+    }
 
-	    // Recopy resources
-	    if (phonegap.createRelative("resources").getFile().exists()) {
-		IOUtils.deleteRecursive(phonegap.createRelative("resources").getFile());
-	    }
-	    IOUtils.copy(this.projectManager.getCurrentProject().getWebAppRoot().createRelative("resources").getFile(), phonegap.createRelative("resources").getFile());
-	}
+    @ExposeToClient
+    public void updatePhonegapFiles(int portNumb, boolean isDebug) throws IOException {
+        String projectName = this.projectManager.getCurrentProject().getProjectName();
+        String pathPrefix = "phonegap/" + projectName + "/www/";
+        Resource phonegap = this.projectManager.getCurrentProject().getProjectRoot().createRelative(pathPrefix);
+        if (phonegap.exists()) {
+            Resource lib = phonegap.createRelative("lib");
+            Resource indexhtml = phonegap.createRelative("index.html");
+            String indexhtml_text = IOUtils.read(indexhtml.getFile());
+            // Update paths in index.html
+            indexhtml_text = indexhtml_text.replaceAll("/wavemaker/", "");
+
+            // Add phonegap library
+            File[] listing = phonegap.getFile().listFiles(new java.io.FilenameFilter() {
+
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.indexOf("phonegap-") == 0 && name.indexOf(".js") != -1;
+                }
+            });
+            if (indexhtml_text.indexOf("<script type=\"text/javascript\" src=\"" + listing[0].getName() + "\"></script>") == -1) {
+                indexhtml_text = indexhtml_text.replace("runtimeLoader.js\"></script>",
+                    "runtimeLoader.js\"></script>\n<script type=\"text/javascript\" src=\"" + listing[0].getName() + "\"></script>");
+            }
+            IOUtils.write(indexhtml.getFile(), indexhtml_text);
+
+            // Concatenate boot.js and config.js together and save as config.js
+            Resource configjs = phonegap.createRelative("config.js");
+            String configjs_text = readWebFile("config.js"); // get the project config.js rather than the phonegap
+                                                             // version which has already been modified; TODO: This is
+                                                             // bad to constantly clobber changes to config.js; future
+                                                             // versions of config.js maybe need to build in boot.js or
+                                                             // else add back in loading of boot.js
+            String boottext = IOUtils.read(lib.createRelative("boot").createRelative("boot.js").getFile());
+
+            int startDebug = configjs_text.indexOf("djConfig.debugBoot");
+            int endDebug = configjs_text.indexOf(";", startDebug);
+            configjs_text = configjs_text.substring(0, startDebug) + "djConfig.debugBoot = " + isDebug + configjs_text.substring(endDebug);
+            System.out.println("START: " + startDebug + "; END: " + endDebug);
+            configjs_text = configjs_text.replaceAll("/wavemaker/", "/").replace("wm.relativeLibPath = \"../lib/\";",
+                "wm.relativeLibPath = \"lib/\";")
+                + "\nwm.xhrPath = 'http://" + SystemUtils.getIP() + ":" + portNumb + "/" + projectName + "/';\n" + boottext;
+            IOUtils.write(configjs.getFile(), configjs_text);
+
+            // Update phonegap.plist
+            File phonegap_plist_file = new File(phonegap.getFile().getParent(), projectName + "/PhoneGap.plist");
+            String phonegap_plist = IOUtils.read(phonegap_plist_file);
+            String startExpression = "<key>ExternalHosts</key>";
+            int startindex = phonegap_plist.indexOf(startExpression);
+            int startindex1 = startindex + startExpression.length();
+            int endindex1 = phonegap_plist.indexOf("</array>", startindex1);
+            if (endindex1 != -1) {
+                endindex1 += "</array>".length();
+            }
+            int endindex2 = phonegap_plist.indexOf("<array/>", startindex1);
+            if (endindex2 != -1) {
+                endindex2 += "<array/>".length();
+            }
+            int endindex;
+            if (endindex1 == -1) {
+                endindex = endindex2;
+            } else if (endindex2 == -1) {
+                endindex = endindex1;
+            } else if (endindex1 > endindex2) {
+                endindex = endindex2;
+            } else {
+                endindex = endindex1;
+            }
+            phonegap_plist = phonegap_plist.substring(0, startindex1) + "<array><string>" + SystemUtils.getIP() + "</string></array>"
+                + phonegap_plist.substring(endindex);
+            IOUtils.write(phonegap_plist_file, phonegap_plist);
+
+            // Recopy common; TODO: Update registering of modules for this new path
+            if (phonegap.createRelative("common").getFile().exists()) {
+                IOUtils.deleteRecursive(phonegap.createRelative("common").getFile());
+            }
+            IOUtils.copy(this.fileSystem.getCommonDir().getFile(), phonegap.createRelative("common").getFile());
+
+            // Recopy resources
+            if (phonegap.createRelative("resources").getFile().exists()) {
+                IOUtils.deleteRecursive(phonegap.createRelative("resources").getFile());
+            }
+            IOUtils.copy(this.projectManager.getCurrentProject().getWebAppRoot().createRelative("resources").getFile(),
+                phonegap.createRelative("resources").getFile());
+        }
     }
 
     /**
@@ -507,20 +401,8 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public String readWebFile(String path) throws IOException {
-
         String newPath = ProjectConstants.WEB_DIR + "/" + this.projectManager.getUserProjectPrefix() + path;
         return this.projectManager.getCurrentProject().readFile(newPath);
-    }
-
-    /**
-     * Return the web path of the current project (including the project name). For instance, if your project is named
-     * "foo", this will return "foo/webapproot".
-     * 
-     * @return
-     */
-    @ExposeToClient
-    public String getWebPath() {
-        return this.projectManager.getCurrentProject().getProjectName() + "/" + ProjectConstants.WEB_DIR;
     }
 
     /**
@@ -551,25 +433,6 @@ public class StudioService extends ClassLoader {
     }
 
     /**
-     * Get the projec type for the current build of studio (right now, one of enterprise, community, or cloud).
-     * 
-     * @throws IOException
-     */
-    @ExposeToClient
-    public String getStudioProjectType() throws IOException {
-
-        String versionFileContents = LocalStudioConfiguration.getCurrentVersionInfoString();
-        final Pattern p = Pattern.compile("^Build type: (.*)$", Pattern.MULTILINE);
-
-        Matcher m = p.matcher(versionFileContents);
-        if (!m.find()) {
-            throw new WMRuntimeException("bad version string: " + versionFileContents);
-        }
-        return m.group(1);
-
-    }
-
-    /**
      * Get the studio configuration env
      */
     @ExposeToClient
@@ -587,9 +450,7 @@ public class StudioService extends ClassLoader {
     @ExposeToClient
     public Hashtable<String, Object> getLogUpdate(String filename, String lastStamp) throws IOException {
         File logFolder = new File(System.getProperty("catalina.home") + "/logs/ProjectLogs", this.projectManager.getCurrentProject().getProjectName());
-        // File logFolder = projectManager.getCurrentProject().getLogFolder();
         File logFile = new File(logFolder, filename);
-        // System.out.println("READING LOG FILE : " + logFile.toString());
         if (!logFile.exists()) {
             Hashtable<String, Object> PEmpty = new Hashtable<String, Object>();
             PEmpty.put("logs", "");
@@ -599,7 +460,6 @@ public class StudioService extends ClassLoader {
         String s = IOUtils.read(logFile);
 
         if (lastStamp.length() > 0) {
-
             // remove everything up to START_WM_LOG_LINE lastStamp
             Pattern newStuffPattern = Pattern.compile("^.*START_WM_LOG_LINE\\s+" + lastStamp + "\\s+", java.util.regex.Pattern.DOTALL);
             Matcher newStuffMatcher = newStuffPattern.matcher(s);
@@ -656,9 +516,6 @@ public class StudioService extends ClassLoader {
             str = sbuf.toString();
 
             in.close();
-            /*
-             * int startDiv = str.indexOf("<div class=\"main layoutsubsection\">");
-             */
 
             String startDivStr = "</h2><p/>";
             int startDiv = str.indexOf(startDivStr);
@@ -679,37 +536,6 @@ public class StudioService extends ClassLoader {
         }
 
         return s;
-    }
-
-    @ExposeToClient
-    public String getContent(String inUrl) throws IOException {
-        // System.out.println("URL:"+inUrl);
-        URL url = new URL(inUrl);
-        String str = "";
-        try {
-            // Read all the text returned by the server
-            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-
-            StringBuffer sbuf = new StringBuffer();
-            while ((str = in.readLine()) != null) {
-                sbuf.append(str + "\n");
-                // str is one line of text; readLine() strips the newline
-                // character(s)
-            }
-            str = sbuf.toString();
-
-            in.close();
-            str = str.replace("<head>", "<head><base href='" + inUrl
-                + "' /><base target='_blank' /><script>top.studio.startPageIFrameLoaded();</script>");
-
-            // str = str.replaceAll("<a ", "<a target='newspage' ");
-            // str = str.replaceAll("/wiki/bin/",
-            // "http://dev.wavemaker.com/wiki/bin/");
-        } catch (Exception e) {
-            str = "";
-        }
-
-        return str;
     }
 
     /*
@@ -893,78 +719,6 @@ public class StudioService extends ClassLoader {
         return ret;
     }
 
-    public RuntimeAccess getRuntimeAccess() {
-        return this.runtimeAccess;
-    }
-
-    public void setRuntimeAccess(RuntimeAccess runtimeAccess) {
-        this.runtimeAccess = runtimeAccess;
-    }
-
-    public ProjectManager getProjectManager() {
-        return this.projectManager;
-    }
-
-    public void setProjectManager(ProjectManager projectManager) {
-        this.projectManager = projectManager;
-    }
-
-    public DeploymentManager getDeploymentManager() {
-        return this.deploymentManager;
-    }
-
-    public void setDeploymentManager(DeploymentManager deploymentManager) {
-        this.deploymentManager = deploymentManager;
-    }
-
-    public void setFileSystem(StudioFileSystem fileSystem) {
-        this.fileSystem = fileSystem;
-    }
-
-    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
-        this.studioConfiguration = studioConfiguration;
-    }
-
-    public UpgradeManager getUpgradeManager() {
-        return this.upgradeManager;
-    }
-
-    public void setUpgradeManager(UpgradeManager upgradeManager) {
-        this.upgradeManager = upgradeManager;
-    }
-
-    // inner classes
-    /**
-     * An inner class containing the return from an openProject operation. This includes the web path to the project,
-     * and any messages to display to the user about the project.
-     */
-    public static class OpenProjectReturn {
-
-        private String webPath;
-
-        private UpgradeInfo upgradeMessages;
-
-        public String getWebPath() {
-            return this.webPath;
-        }
-
-        public void setWebPath(String webPath) {
-            this.webPath = webPath;
-        }
-
-        public UpgradeInfo getUpgradeMessages() {
-            return this.upgradeMessages;
-        }
-
-        public void setUpgradeMessages(UpgradeInfo upgradeMessages) {
-            this.upgradeMessages = upgradeMessages;
-        }
-    }
-
-    // db2jcc.jar - com.ibm.db2.app.DB2StructOutput.class
-    // ojdbc.jar - oracle.jdbc.driver.OracleDatabaseMetaData
-    // wsdl4j.jar - javax.wsdl.factory.WSDLFactory.class
-    // hibernate3.jar - org.hibernate.cfg.Environment.class
     @ExposeToClient
     public List<String> getMissingJars() {
         Map<String, String> jarHash = new HashMap<String, String>();
@@ -1019,6 +773,77 @@ public class StudioService extends ClassLoader {
             ret.setError(e.getMessage());
         }
         return ret;
-
     }
+
+    private String getPrefixedProjectName(String projectName) {
+        return this.projectManager.getUserProjectPrefix() + projectName;
+    }
+
+    public RuntimeAccess getRuntimeAccess() {
+        return this.runtimeAccess;
+    }
+
+    public void setRuntimeAccess(RuntimeAccess runtimeAccess) {
+        this.runtimeAccess = runtimeAccess;
+    }
+
+    public ProjectManager getProjectManager() {
+        return this.projectManager;
+    }
+
+    public void setProjectManager(ProjectManager projectManager) {
+        this.projectManager = projectManager;
+    }
+
+    public DeploymentManager getDeploymentManager() {
+        return this.deploymentManager;
+    }
+
+    public void setDeploymentManager(DeploymentManager deploymentManager) {
+        this.deploymentManager = deploymentManager;
+    }
+
+    public void setFileSystem(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
+    }
+
+    public void setStudioConfiguration(StudioConfiguration studioConfiguration) {
+        this.studioConfiguration = studioConfiguration;
+    }
+
+    public UpgradeManager getUpgradeManager() {
+        return this.upgradeManager;
+    }
+
+    public void setUpgradeManager(UpgradeManager upgradeManager) {
+        this.upgradeManager = upgradeManager;
+    }
+
+    /**
+     * An inner class containing the return from an openProject operation. This includes the web path to the project,
+     * and any messages to display to the user about the project.
+     */
+    public static class OpenProjectReturn {
+
+        private String webPath;
+
+        private UpgradeInfo upgradeMessages;
+
+        public String getWebPath() {
+            return this.webPath;
+        }
+
+        public void setWebPath(String webPath) {
+            this.webPath = webPath;
+        }
+
+        public UpgradeInfo getUpgradeMessages() {
+            return this.upgradeMessages;
+        }
+
+        public void setUpgradeMessages(UpgradeInfo upgradeMessages) {
+            this.upgradeMessages = upgradeMessages;
+        }
+    }
+
 }

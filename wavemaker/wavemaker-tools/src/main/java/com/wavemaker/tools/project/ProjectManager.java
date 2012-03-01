@@ -191,34 +191,20 @@ public class ProjectManager {
     }
 
     /**
-     * Creates a new project in the default path (from studioConfiguration).
-     * 
-     * @param projectName
-     * @throws IOException
-     */
-    public void newProject(String projectName) throws IOException {
-
-        newProject(projectName, false);
-    }
-
-    /**
      * Create a new project in the specified path. A new directory containing the project will be created in
      * path/projectName.
      * 
      * @param projectName the name of the project to create.
-     * @param noTemplate if this is true, do not use the template.
      * @throws IOException
      */
-    public void newProject(String projectName, boolean noTemplate) throws IOException {
+    public void newProject(String projectName) throws IOException {
 
         checkNewProject(projectName);
 
         Resource projectDir = this.fileSystem.getProjectsDir().createRelative(projectName + "/");
         if (!projectDir.exists()) {
             this.fileSystem.createPath(this.fileSystem.getProjectsDir(), projectName + "/");
-            if (!noTemplate) {
-                createProjectFromTemplate(projectDir);
-            }
+            createProjectFromTemplate(projectDir);
         }
 
         openProject(projectName);

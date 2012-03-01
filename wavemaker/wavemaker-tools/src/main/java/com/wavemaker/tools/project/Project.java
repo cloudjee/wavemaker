@@ -30,8 +30,6 @@ import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.io.Folder;
 import com.wavemaker.io.filesystem.RootFileSystemFolderFactory;
 import com.wavemaker.io.filesystem.java.JavaFileSystem;
-import com.wavemaker.tools.serializer.FileSerializerException;
-import com.wavemaker.tools.serializer.FileSerializerFactory;
 import com.wavemaker.tools.service.AbstractFileService;
 
 /**
@@ -190,43 +188,6 @@ public class Project extends AbstractFileService {
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
-    }
-
-    /**
-     * Read a project file.
-     * 
-     * @param path A path to the file, relative to the project's root.
-     * @return An object representing contents of the file.
-     * @throws FileSerializerException
-     */
-    public Object readObject(String path) throws FileSerializerException {
-
-        Resource file;
-        try {
-            file = this.projectRoot.createRelative(path);
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
-        return FileSerializerFactory.getInstance().readObject(this, file);
-    }
-
-    /**
-     * Write to a file project. The Object should be a representation (such as that returned by readObject()) of the
-     * object, with the proper format.
-     * 
-     * @param path A path to the file, relative to the project's root.
-     * @param obj A representation of the object. This must be an instance of a known project type.
-     * @throws FileSerializerException
-     */
-    public void writeObject(String path, Object obj) throws FileSerializerException {
-
-        Resource file;
-        try {
-            file = this.projectRoot.createRelative(path);
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
-        FileSerializerFactory.getInstance().writeObject(this, obj, file);
     }
 
     @Override
