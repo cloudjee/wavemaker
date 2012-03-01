@@ -370,37 +370,6 @@ th {
 
 /**/
 
-.wmaccordion {
-	/*border-bottom: 1px solid #3399FF;*/
-}
-
-.wmaccordion-header {
-	color: #294473;
-	background: #9EBFEF url(images/accordion_bg_on.gif) top right no-repeat;
-	cursor: pointer;
-	white-space:nowrap;
-	padding: 4px;
-	border: 1px solid;
-	border-top-color: #eaf0f9;
-	border-left-color: #eaf0f9;
-	border-right-color: #939fb6;
-	border-bottom-color: #939fb6;
-}
-
-.wmaccordion .wmaccordion-collapsed {
-	color: #294473;
-	background: #939fb6 url(images/accordion_bg_off.gif) top right no-repeat;
-	border: 1px solid;
-	border-top-color: #eaf0f9;
-	border-left-color: #eaf0f9;
-	border-right-color: #939fb6;
-	border-bottom-color: #939fb6;
-}
-
-.wmaccordion-content {
-	overflow: auto;
-	overflow-x: hidden;
-}
 
 .wmscrim {
 	background: url(images/blank.gif);
