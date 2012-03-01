@@ -438,8 +438,8 @@ Studio.widgets = {
 				PIContents: ["wm.DesignableDialog", {_classes: {domNode: ["studiodialog"]}, width: "100%", height: "100%", _dockData: {border:"3", edge: "r", w: 400}, border: "0", margin: "0", containerWidget:"inspector",modal:false,docked: true, minWidth: "150", minHeight: "300", noTopBottomDocking: true}, {onClose: "dockPropertyPanel"}, {
 				    inspectorToolbarOuter: ["wm.Panel", {width:"100%", height: "49px", layoutKind: "top-to-bottom", horizontalAlign: "left", verticalAlign: "top",padding:"0,0,2,0"},{},{
 				    inspectorToolbar2: ["wm.Panel", {width: "100%", height: "22px", layoutKind: "left-to-right", horizontalAlign: "left", verticalAlign: "top",padding:"0"},{},{				    
-					propertySearchBar: ["wm.Text", {resetButton: true, width: "130px", changeOnKey: true, emptyValue: "emptyString", placeHolder: "Find Property"},{onchange: "inspector.propertySearch"}],
-					propertySearchBarSpacer: ["wm.Spacer", {width: "100%"}],
+					propertySearchBar: ["wm.Text", {resetButton: true, width: "100%", changeOnKey: true, emptyValue: "emptyString", placeHolder: "Find Property"},{onchange: "inspector.propertySearch"}],
+					propertySearchBarSpacer: ["wm.Spacer", {width: "20px"}],
 					propertiesMenu: ["wm.PopupMenu", {
 					    "fullStructure":[
 						{idInPage: "togglePropertiesMultiactiveItem", "label":"One Accordion Open","separator":undefined,"defaultLabel":"One Accordion Open","isCheckbox":true,"onClick":"inspector.toggleMultiactive"},
