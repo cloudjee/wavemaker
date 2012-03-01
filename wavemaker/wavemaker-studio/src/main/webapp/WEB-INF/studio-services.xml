@@ -7,22 +7,6 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd 
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
 
-	<bean id="fileSerializerFactory" class="com.wavemaker.tools.serializer.FileSerializerFactory"
-		scope="singleton">
-		<property name="serializerMap">
-			<map merge="true">
-				<entry key="xml">
-					<list>
-						<ref bean="springBeansSerializer" />
-					</list>
-				</entry>
-			</map>
-		</property>
-	</bean>
-	<bean id="springBeansSerializer" class="com.wavemaker.tools.serializer.SpringBeansSerializer"
-		scope="singleton" lazy-init="true">
-	</bean>
-
 	<import resource="classpath:studioService.spring.xml" />
 	<import resource="classpath:dataService.spring.xml" />
 	<import resource="classpath:javaService.spring.xml" />
