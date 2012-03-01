@@ -27,16 +27,13 @@ import com.wavemaker.runtime.server.DojoFileUploaderResponse;
 import com.wavemaker.runtime.server.ServerConstants;
 
 /**
- * Provides a suitable view for download servlets. If a DownloadObject is present, it will send the pieces from that; if
- * not, the String representation of the result will be sent.
- * 
  * @author Matt Small
  */
+@Deprecated
 public class FlashUploadResponseView extends AbstractView implements TypedView {
 
     @Override
-    protected void renderMergedOutputModel(@SuppressWarnings("unchecked") Map model, HttpServletRequest request, HttpServletResponse response)
-        throws Exception {
+    protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         Object result = model.get(ServerConstants.RESULTS_PART);
 

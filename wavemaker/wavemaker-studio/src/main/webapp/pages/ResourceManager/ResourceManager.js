@@ -863,7 +863,7 @@ wm.ResourceItem.extend({
       return this.treeNode.parent.data;
     },
     downloadItem: function() {
-      studio.downloadInIFrame("services/resourceFileService.download?method=downloadFile&folder=" + ((this.isRoot()) ? "" : this.getParent().getResourcelessFilePath()) + "&filename=" + ((this.isRoot()) ? "" : this.getItemName()));
+      studio.downloadInIFrame("services/resourceFileService.download?method=downloadFile&file=" + this.getFilePath());
     }
 
 });

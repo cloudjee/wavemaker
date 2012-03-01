@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
@@ -32,11 +31,13 @@ import com.wavemaker.io.Resource;
 import com.wavemaker.io.ResourceFilter;
 import com.wavemaker.io.ResourcePath;
 import com.wavemaker.io.Resources;
-import com.wavemaker.runtime.server.DownloadResponse;
+import com.wavemaker.runtime.server.Downloadable;
 import com.wavemaker.runtime.server.FileUploadResponse;
 import com.wavemaker.runtime.server.ParamName;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
+import com.wavemaker.tools.project.DownloadableFile;
+import com.wavemaker.tools.project.DownloadableFolder;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.project.StudioFileSystem;
 
@@ -45,10 +46,6 @@ import com.wavemaker.tools.project.StudioFileSystem;
  */
 @ExposeToClient
 public class ResourceFileService {
-
-    // FIXME PW filesystem refactor
-
-    protected final Logger logger = Logger.getLogger(getClass());
 
     private ProjectManager projectManager;
 
@@ -107,9 +104,14 @@ public class ResourceFileService {
         file.getContent().write(filetext);
     }
 
-    /*
-     * Respond's to user's request to rename/move a file. Will append a number to the name if there is already a file
-     * with the requested name
+    /**
+     * Rename a file or folder.
+     * 
+     * @param from the source to rename, this will be a complete reference to a file or folder
+     * @param to the destination name, this will be a complete reference to the new name (including path)
+     * @param overwrite <tt>true</tt> if any existing destination should be overwritten. If this parameter is
+     *        <tt>false</tt> a unique name should be generated based on <tt>to</tt>.
+     * @return the name of the new file (excluding the path)
      */
     public String renameFile(@ParamName(name = "from") String from, @ParamName(name = "to") String to,
         @ParamName(name = "overwrite") boolean overwrite) {
@@ -117,15 +119,13 @@ public class ResourceFileService {
         Resource source = getResource(from, Resource.class);
 
         ResourcePath destination = new ResourcePath().get(to);
-        com.wavemaker.io.Folder destinationFolder = getResource(destination.getParent().toString(), Folder.class);
+        Folder destinationFolder = getResource(destination.getParent().toString(), Folder.class);
         Assert.state(destinationFolder.exists(), "The destination folder '" + destinationFolder + "' does not exist");
 
         String destinationName = destination.getName();
-
-        // FIXME if destination name is used and we are not overwriting
-        // if(destinationFolder.hasExisting(destinationName) && !overwrite) {
-        // destinationName = generateUniqueName();
-        // }
+        if (destinationFolder.hasExisting(destinationName) && !overwrite) {
+            destinationName = generateUniqueNumberedFileName(destinationFolder, destinationName);
+        }
 
         Resource renamed = source;
         if (!destinationFolder.equals(renamed.getParent())) {
@@ -135,6 +135,44 @@ public class ResourceFileService {
             renamed = renamed.rename(destinationName);
         }
         return renamed.getName();
+    }
+
+    private String generateUniqueNumberedFileName(Folder folder, String name) {
+        String ext = "";
+        if (name.lastIndexOf(".") != -1) {
+            ext = name.substring(name.lastIndexOf("."));
+            name = name.substring(0, name.length() - ext.length());
+        }
+        for (int i = 0; true; i++) {
+            String candidate = name + i + ext;
+            if (!folder.hasExisting(candidate)) {
+                return candidate;
+            }
+        }
+    }
+
+    /**
+     * Create a new folder
+     * 
+     * @param name the full name of the folder to create (including the path)
+     * @return <tt>true</tt> if the folder was created
+     */
+    public boolean createFolder(@ParamName(name = "name") String name) {
+        Folder folder = getResource(name, Folder.class);
+        folder.touch();
+        return folder.exists();
+    }
+
+    /**
+     * Delete a file or folder
+     * 
+     * @param name the complete path of the folder or file
+     * @return <tt>true<tt> if the file/folder was deleted
+     */
+    public boolean deleteFile(@ParamName(name = "name") String name) {
+        Resource resource = getResource(name, Resource.class);
+        resource.delete();
+        return !resource.exists();
     }
 
     @SuppressWarnings("unchecked")
@@ -161,165 +199,21 @@ public class ResourceFileService {
         return root.get(name, resourceType);
     }
 
-    // FIXME here down
-
-    private org.springframework.core.io.Resource getRequestedFile(String requestedFile, boolean isFolder) throws IOException {
-        return getRequestedFile(requestedFile, isFolder, false);
-    }
-
-    private org.springframework.core.io.Resource getRequestedFile(String requestedFile, boolean isFolder, boolean create) throws IOException {
-        org.springframework.core.io.Resource root;
-        if (requestedFile.startsWith("/common")) {
-            try {
-                root = this.fileSystem.getCommonDir();
-            } catch (IOException e) {
-                root = this.projectManager.getCurrentProject().getProjectRoot(); // don't know what to do if exception
-                                                                                 // thrown...
-            }
-            requestedFile = requestedFile.substring(7);
-            System.out.println("requestedFile:" + requestedFile);
-        } else {
-            root = this.projectManager.getCurrentProject().getProjectRoot();
-        }
-        if (requestedFile != null && requestedFile.length() > 0) {
-            if (create) {
-                return this.fileSystem.createPath(root, requestedFile + (isFolder ? "/" : ""));
-            } else {
-                return root.createRelative(requestedFile + (isFolder ? "/" : ""));
-            }
-        } else {
-            return root;
-        }
-    }
-
-    public DownloadResponse downloadFile(@ParamName(name = "folder") String folderpath, @ParamName(name = "filename") String filename)
-        throws IOException {
-        boolean isZip = false;
-        org.springframework.core.io.Resource parentDir = getRequestedFile(folderpath, true);
-        org.springframework.core.io.Resource localFile = parentDir.createRelative(filename + (filename.indexOf(".") == -1 ? "/" : ""));
-        if (StringUtils.getFilenameExtension(filename) == null) {
-            localFile = com.wavemaker.tools.project.ResourceManager.createZipFile(this.fileSystem, localFile, this.projectManager.getTmpDir());
-            if (localFile == null) {
-                return null;
-            }
-            isZip = true;
-            filename = localFile.getFilename();
-        }
-
-        return com.wavemaker.tools.project.ResourceManager.downloadFile(localFile, filename, isZip);
-
-    }
-
-    /*
-     * Respond's to user's request to rename/move a file. Will append a number to the name if there is already a file
-     * with the requested name
-     */
-    public String xrenameFile(@ParamName(name = "from") String from, @ParamName(name = "to") String to,
-        @ParamName(name = "overwrite") boolean overwrite) {
-
-        try {
-            org.springframework.core.io.Resource dest = getRequestedFile(to, to.indexOf(".") == -1);
-            if (!overwrite) {
-                int lastIndexOfPeriod = to.lastIndexOf(".");
-                String to1 = lastIndexOfPeriod != -1 ? to.substring(0, to.lastIndexOf(".")) : to;
-                String to_ext = lastIndexOfPeriod != -1 ? to.substring(to.lastIndexOf(".") + 1) : "";
-                for (int i = 0; i < 1000 && dest.exists(); i++) {
-                    dest = getRequestedFile(to1 + i + (lastIndexOfPeriod != -1 ? "." : "") + to_ext, to.indexOf(".") == -1);
-                }
-            }
-            org.springframework.core.io.Resource f = getRequestedFile(from, from.indexOf(".") == -1);
-            System.out.println("RENAME " + f.getDescription() + " TO " + dest.getDescription());
-            this.fileSystem.rename(f, dest);
-            return dest.getFilename();
-        } catch (Exception e) {
-            throw new WMRuntimeException(e);
-        }
-    }
-
-    /*
-     * Moves a file that was uploaded to the tmp folder to the requested destination. All uploads go to tmp folder
-     * 
-     * public String moveNewFile(@ParamName(name = "from") String from,
-     * 
-     * @ParamName(name = "to") String to,
-     * 
-     * @ParamName(name = "overwrite") boolean overwrite) { Resource resourceDir = this.getResourcesDir();
-     * 
-     * try { Resource dest = resourceDir.createRelative(to);
-     * 
-     * if (!overwrite) { String to1 = (to.lastIndexOf(".") != -1) ? to.substring(0, to.lastIndexOf(".")) : to; String
-     * to_ext = (to.lastIndexOf(".") != -1) ? to.substring(to .lastIndexOf(".") + 1) : ""; for (int i = 0; i < 1000 &&
-     * dest.exists(); i++) { dest = resourceDir.createRelative(to1 + i + "." + to_ext); } }
-     * 
-     * Resource f = projectManager.getTmpDir().createRelative(from); studioConfiguration.rename(f, dest); return
-     * dest.getFilename(); } catch (Exception e) { throw new WMRuntimeException(e); } }
-     */
-    /*
-     * Create a folder; name should have the full relative path within the resources folder
-     */
-    public boolean createFolder(@ParamName(name = "name") String name) {
-        try {
-            org.springframework.core.io.Resource newFolder = getRequestedFile(name, true, true);
-            return newFolder.exists();
-        } catch (Exception e) {
-            throw new WMRuntimeException(e);
-        }
-    }
-
-    /*
-     * Delete the file; name should be the full relative path within resources folder
-     */
-    public boolean deleteFile(@ParamName(name = "name") String name) {
-        try {
-            org.springframework.core.io.Resource f = getRequestedFile(name, name.indexOf(".") == -1);
-            this.fileSystem.deleteFile(f);
-            return !f.exists();
-        } catch (Exception e) {
-            throw new WMRuntimeException(e);
-        }
-    }
-
     /**
-     * Returns the contents of the resources folder.
-     * 
+     * @param folderpath The folder
+     * @param filename
      * @return
-     * @throws WMRuntimeException
+     * @throws IOException
      */
-    public Hashtable<String, Object> getResourceFolder() throws WMRuntimeException {
-        org.springframework.core.io.Resource resourceDir = this.getResourcesDir();
-        Hashtable<String, Object> rtn = new Hashtable<String, Object>();
-        try {
-            rtn.put("files", com.wavemaker.tools.project.ResourceManager.getListing(this.fileSystem, resourceDir));
-        } catch (Exception e) {
-            throw new WMRuntimeException(e);
+    public Downloadable downloadFile(@ParamName(name = "file") String file) throws IOException {
+        Resource resource = getResource(file, Resource.class);
+        if (resource instanceof File) {
+            return new DownloadableFile((File) resource);
         }
-        rtn.put("file", resourceDir.getFilename());
-        rtn.put("type", "folder");
-        return rtn;
+        return new DownloadableFolder((Folder) resource, this.projectManager.getCurrentProject().getProjectName());
     }
 
-    /*
-     * Gets the project's resources folder; initializes it if it doesn't yet exist
-     */
-    @HideFromClient
-    private org.springframework.core.io.Resource getResourcesDir() {
-        org.springframework.core.io.Resource resources;
-        try {
-            resources = getProjectDir().createRelative("resources/");
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
-        }
-        if (!resources.exists()) {
-            resources = this.fileSystem.createPath(getProjectDir(), "resources/");
-            this.fileSystem.createPath(resources, "images/imagelists/");
-            this.fileSystem.createPath(resources, "images/buttons/");
-            this.fileSystem.createPath(resources, "images/logos/");
-            this.fileSystem.createPath(resources, "javascript/");
-            this.fileSystem.createPath(resources, "css/");
-            this.fileSystem.createPath(resources, "htmlcontent/");
-        }
-        return resources;
-    }
+    // FIXME here down
 
     public FileUploadResponse uploadFile(@ParamName(name = "file") MultipartFile file, String path) throws IOException {
         FileUploadResponse ret = new FileUploadResponse();
@@ -369,4 +263,78 @@ public class ResourceFileService {
     private org.springframework.core.io.Resource getProjectDir() {
         return this.projectManager.getCurrentProject().getWebAppRoot();
     }
+
+    private org.springframework.core.io.Resource getRequestedFile(String requestedFile, boolean isFolder) throws IOException {
+        return getRequestedFile(requestedFile, isFolder, false);
+    }
+
+    private org.springframework.core.io.Resource getRequestedFile(String requestedFile, boolean isFolder, boolean create) throws IOException {
+        org.springframework.core.io.Resource root;
+        if (requestedFile.startsWith("/common")) {
+            try {
+                root = this.fileSystem.getCommonDir();
+            } catch (IOException e) {
+                root = this.projectManager.getCurrentProject().getProjectRoot(); // don't know what to do if exception
+                                                                                 // thrown...
+            }
+            requestedFile = requestedFile.substring(7);
+            System.out.println("requestedFile:" + requestedFile);
+        } else {
+            root = this.projectManager.getCurrentProject().getProjectRoot();
+        }
+        if (requestedFile != null && requestedFile.length() > 0) {
+            if (create) {
+                return this.fileSystem.createPath(root, requestedFile + (isFolder ? "/" : ""));
+            } else {
+                return root.createRelative(requestedFile + (isFolder ? "/" : ""));
+            }
+        } else {
+            return root;
+        }
+    }
+
+    // FIXME this method is now only used to create the resource folder, we should do this via templates instead
+
+    /**
+     * Returns the contents of the resources folder.
+     * 
+     * @return
+     * @throws WMRuntimeException
+     */
+    public Hashtable<String, Object> getResourceFolder() throws WMRuntimeException {
+        org.springframework.core.io.Resource resourceDir = this.getResourcesDir();
+        Hashtable<String, Object> rtn = new Hashtable<String, Object>();
+        try {
+            rtn.put("files", com.wavemaker.tools.project.ResourceManager.getListing(this.fileSystem, resourceDir));
+        } catch (Exception e) {
+            throw new WMRuntimeException(e);
+        }
+        rtn.put("file", resourceDir.getFilename());
+        rtn.put("type", "folder");
+        return rtn;
+    }
+
+    /*
+     * Gets the project's resources folder; initializes it if it doesn't yet exist
+     */
+    @HideFromClient
+    private org.springframework.core.io.Resource getResourcesDir() {
+        org.springframework.core.io.Resource resources;
+        try {
+            resources = getProjectDir().createRelative("resources/");
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        }
+        if (!resources.exists()) {
+            resources = this.fileSystem.createPath(getProjectDir(), "resources/");
+            this.fileSystem.createPath(resources, "images/imagelists/");
+            this.fileSystem.createPath(resources, "images/buttons/");
+            this.fileSystem.createPath(resources, "images/logos/");
+            this.fileSystem.createPath(resources, "javascript/");
+            this.fileSystem.createPath(resources, "css/");
+            this.fileSystem.createPath(resources, "htmlcontent/");
+        }
+        return resources;
+    }
+
 }

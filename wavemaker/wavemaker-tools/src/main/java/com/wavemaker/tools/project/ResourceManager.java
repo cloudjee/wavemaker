@@ -44,7 +44,7 @@ import com.wavemaker.tools.util.NoCloseInputStream;
 
 public class ResourceManager {
 
-    // FIXME PW filesystem : remove deprecated calls
+    // FIXME PW filesystem : remove deprecated calls + unused methods
 
     /**
      * @deprecated
