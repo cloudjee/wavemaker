@@ -50,6 +50,11 @@ wm.Object.extendSchema(wm.TypeDefinitionField, {
 });
 
 wm.TypeDefinition.extend({
+    afterPaletteDrop: function() {
+	this.inherited(arguments);
+	this.setOwner(studio.application);
+    },
+
     set_name: function(inName) {
         this.doRemoveType();
         this.inherited(arguments);

@@ -1,3 +1,16 @@
+#studio_PIContents .wmaccordion .wmaccordion-collapsed .accordionArrowNode {
+display: block;
+background-image: url(../../lib/wm/base/widget/themes/wm_default/images/arrowRightDark.png);
+}
+#studio_PIContents .wmaccordion .accordionArrowNode {
+display: block;
+background-image: url(../../lib/wm/base/widget/themes/wm_default/images/comboArrowDownDark.png);
+}
+
+.tundra .studio_EventPicker_PopupMenu .dijitMenuItemIcon {
+    display: none;
+}
+
 body #studio_PIContents #studio_togglePropertiesButton {
 	-moz-border-radius-top-right: 0px; 
 	-moz-border-radius-bottom-right: 0px; 

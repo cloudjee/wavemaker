@@ -182,7 +182,7 @@ dojo.declare("wm.JavaService", wm.ServerComponent, {
             }),
             function(error) {
                 studio.endWait();
-                app.toastWarning(error);
+                app.toastWarning(error.toString());
             });
         
     },

@@ -15,7 +15,7 @@ SetCompressor /FINAL LZMA
 !define COMPANY "WaveMaker Software, Inc"
 !define URL http://www.wavemaker.com
 !define DESCRIPTION "${PRODUCT_NAME} Studio and Runtime"
-!define COPYRIGHT "WaveMaker Software, Inc, 2011."
+!define COPYRIGHT "WaveMaker Software, Inc, 2012."
 /* 
  * The WaveMaker platform consists of two components: 
  * WaveMaker Studio for developing rich internet applications and 

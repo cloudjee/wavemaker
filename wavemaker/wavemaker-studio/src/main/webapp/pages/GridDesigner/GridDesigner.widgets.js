@@ -241,6 +241,7 @@ GridDesigner.widgets = {
 			    }]
 			}],
 			editorPanels: ["wm.Panel", {title: "Editors", width: "100%", height: "100%", margin: "0", padding: "0", border: "1", fitToContentHeight: true, layoutKind: "top-to-bottom"}, {}, {
+			    editorPanelNote: ["wm.Label", {caption: "Please note that edit fields will not work on tablets and phones", width: "100%"}],
 			    editorSelector: ["wm.SelectMenu", {changeOnSetData: false, "caption":"Edit Field Type","captionAlign":"left","helpText":"Leave this blank unless you want your users to be able to edit your grid.  NOTE: You'll need onCellEditted event handlers for any changes in value to have meaning.", dataField: "dataValue", displayField: "name", width: "100%"}, {onchange: "onEditFieldChange"}, {
 				binding: ["wm.Binding", {}, {}, {
 				    wire: ["wm.Wire", {"expression":undefined,"source":"grid.selectedItem.fieldType","targetProperty":"dataValue"}, {}],

@@ -374,11 +374,8 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
     public String exportProject(String zipFileName) {
         try {
             String userProjectPrefix = this.projectManager.getUserProjectPrefix();
-            if (StringUtils.hasLength(userProjectPrefix)) {
-                ;
-            }
             Resource exportDir;
-            if (this.projectManager.getUserProjectPrefix().length() > 0) {
+            if (StringUtils.hasLength(userProjectPrefix)) {
                 exportDir = this.projectManager.getTmpDir();
             } else {
                 exportDir = getProjectDir().createRelative(EXPORT_DIR_DEFAULT);

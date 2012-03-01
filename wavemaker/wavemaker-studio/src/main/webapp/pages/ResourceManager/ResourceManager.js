@@ -251,7 +251,7 @@ dojo.declare("ResourceManager", wm.Page, {
 	var _this = this;
 	this._loadingResources = this._loadingResources ? this._loadingResources + 1 : 1;
 	this.getReadmeFile(root);
-	studio.resourceManagerService.requestAsync("getFolder", [root], 
+	studio.resourceManagerService.requestAsync("getFolder", [root||""], 
                                                    function(rootfolder) {
 						       _this._loadingResources--;
 						       if (_this._loadingResources === 0) {
@@ -338,7 +338,7 @@ dojo.declare("ResourceManager", wm.Page, {
 	var root = this.tree.root.kids[0].data;
 	var rootPath = root.rootPath;
 	var tree = this.tree;
-		     studio.resourceManagerService.requestAsync("getFolder", [rootPath], 
+		     studio.resourceManagerService.requestAsync("getFolder", [rootPath||""], 
 					     function(rootfolder) { 
 					       var openFolderHash;
 					       if (keepOpenFolders && _this.resourcesFolder) {

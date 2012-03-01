@@ -30,11 +30,6 @@ dojo.declare("wm.TypeDefinition", wm.Component, {
     internal: false,
     collection: "Fields",
     fields: null,
-    init: function() {
-	this.inherited(arguments);
-	if (this._isDesignLoaded) 
-	    this.setOwner(studio.application);
-    },
     // not init; must wait for page loader to load all subcomponents (typedefinitionfields) which postInit waits for
     postInit: function() {
 	delete this.fields;
