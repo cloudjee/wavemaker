@@ -1010,8 +1010,19 @@ dojo.declare("wm.prop.EventDijit", [dijit.form.ValidationTextBox, dijit._HasDrop
 	}
 	//wm.prop.EventDijit.menu.setFullStructure([{"label":"File","children":[{"label":"Save"},{"label":"Close"}]},{"label":"Edit","children":[{"label":"Cut"},{"label":"Copy"},{"label":"Paste"}]},{"label":"Help"}]);
 	this.structure = this.owner.getFullStructure();
-	this.generateIndex(0);
+	wm.prop.EventDijit.menu.setFullStructure(this.structure);
+	wm.prop.EventDijit.menu.renderDojoObj();
+	var menuItems = wm.prop.EventDijit.menu._dijitHash;
+/*
+	for (var itemName in menuItems) {
+	    if (itemName.indexOf(" - ") !=0 && !itemName.match(/\:$/) && itemName.indexOf("-- ") != 0) {
+		dojo.addClass(menuItems[itemName].domNode, "studioIndentOption");
+	    }
+	}
+	*/
+	wm.prop.EventDijit.menu.update(null, this.owner, true);
     },
+/*
     generateIndex: function(currentIndex) {
 	this.currentIndex = currentIndex;
 	var start = currentIndex;
@@ -1041,12 +1052,8 @@ dojo.declare("wm.prop.EventDijit", [dijit.form.ValidationTextBox, dijit._HasDrop
 	    }
 	}
 	wm.prop.EventDijit.menu.update(null, this.owner, true);
-/*
-	this.owner.connectOnce(wm.prop.EventDijit.menu, "onclick", this.owner, function(args) {
-	    this.setDataValue(args[0]);
-	});
-	*/
     }
+    */
 });
 
 dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
@@ -1332,9 +1339,15 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 	var eventSchema = this.inspected.schema[this.propName];
 	var maxPageSize = 15;
 	var currentPageSize = 0;
+	var separatorAdded = false;
+
 	wm.forEachProperty(wm.prop.EventEditor.eventActions, dojo.hitch(this, function(o, name) {
 	    var groupName = o.caption, l = o.list;
 	    if (l) {
+		if (!separatorAdded) {
+		    inStructure.push({separator:true});
+		    separatorAdded = true;
+		}
 		var componentList;
 		switch(l) {
 		case "navigationCall":
@@ -1387,20 +1400,22 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 		}	
 		
 		if (componentList && componentList.length) {
+/*
 		    if (currentPageSize + componentList.length + 1 > maxPageSize && inPage == studio.page) {
 			inStructure.push({pageBreak:true});
 			currentPageSize = 1;
-		    } else {
+		    } else {		    
 			currentPageSize += 1 + componentList.length;
 		    }
+
 		    var addToArray;
 		    if (studio.page == inPage) {
 			inStructure.push({label: groupName});
 			addToArray = inStructure;
 		    } else {
-			addToArray = [];
-			inStructure.push({label: groupName, children: addToArray});
-		    }
+			    */
+		    var addToArray = [];
+		    inStructure.push({label: groupName, children: addToArray});
 		    dojo.forEach(componentList, function(obj) {
 			var cname, rname;
 			if (obj instanceof wm.Component) {
@@ -1473,7 +1488,7 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 			if (dojo.indexOf(eventSchema.events, "navigation") == -1) return;
 			break;
 		    }
-		currentPageSize++;
+		//currentPageSize++;
 		inStructure.push({label: groupName, onClick: dojo.hitch(this, "setEditorValue", name)});
 	    }
 	}));
