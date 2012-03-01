@@ -20,8 +20,8 @@ dojo.require("wm.base.Control_design");
 wm.Object.extendSchema(wm.VirtualList, {
 
     /* wm.List group; selection subgroup */
-    multiSelect: { ignore: 1, group: "widgetName", subgroup: "selection", order: 40},    // FIXME: disabling this as we're not using it at all, and grid supports it.
-    toggleSelect: {group: "widgetName", subgroup: "selection", order: 41},
+    selectionMode:     {group: "widgetName", subgroup: "selection", order: 40, options: ["single", "multiple", "extended", "none", "checkbox", "radio"]},
+    toggleSelect: {group: "widgetName", subgroup: "selection", order: 41, ignoreHint: "Only available for single selection mode"},
 
     /* Ignored Group */
     box: { ignore: 1 },
@@ -90,6 +90,7 @@ wm.List.description = "Displays list of items.";
 
 wm.List.extend({
     updateNow: function() {this.update();},
+
     showMenuDialog: function(e){
 	if (!this.columns) {
 	    this.columns = [];
@@ -97,6 +98,12 @@ wm.List.extend({
 	}
 	studio.gridDesignerDialog.show();
 	studio.gridDesignerDialog.page.setGrid(this);
+    },
+    set_selectionMode: function(inMode) {
+	this.selectionMode = inMode;
+	this.setSelectionMode(inMode);
+	this.selectedItem.setIsList(inMode == "multiple");
+	this._render();
     },
     updateColumnData: function () {
 	var defaultSchema = {dataValue: {type: this.dataSet.type}}; // this is the schema to use if there is no schema (i.e. the type is a literal)
@@ -121,6 +128,7 @@ wm.List.extend({
                 width = '80px';
                 formatFunc = 'wm_date_formatter';
             }
+
             this.columns.push({
                 show: i < 15,
                 field: f.dataIndex,
@@ -150,6 +158,7 @@ wm.List.extend({
             // col is no longer relevant
             return;
         }));
+	debugger;
         this.columns = newcolumns;
     },
 	getViewFields: function(){
@@ -167,8 +176,19 @@ wm.List.extend({
     set_columns: function(inColumns){
 	this.setColumns(inColumns);
 	this._render();
+    },
+    listProperties: function() {
+	var props = this.inherited(arguments);
+	props.toggleSelect.ignoretmp = Boolean(this.selectionMode == "multiple");
+	return props;
+    },
+    writeProps: function() {
+	var props = this.inherited(arguments);
+	if (props.columns && props.columns[0].controller) {
+	    props.columns.shift();
+	}
+	return props;
     }
-
 });
 
 

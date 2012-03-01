@@ -69,8 +69,8 @@ dojo.declare("wm.VirtualListItem", null, {
 		this.list.ondblclick(e, this);
 	},
 	select: function() {
-		this.selected = true;
-		dojo.addClass(this.domNode, this.className +'-selected');
+	    this.selected = true;
+	    dojo.addClass(this.domNode, this.className +'-selected');
 	},
 	deselect: function() {
 		this.selected = false;
@@ -85,14 +85,15 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	width: "250px",
 	height: "150px",
 	box: "v",
-	multiSelect: false,
+	selectionMode: "single",
+        _selectionMode: "single",
 	className: "wmlist",
 	selectedItem: null,
 	init: function() {
 		this.inherited(arguments);
 		this.items = [];
 		this.selection = [];
-		this.selectedItem = new wm.Variable({name: "selectedItem", owner: this}); // only use if multiSelect is false
+	    this.selectedItem = new wm.Variable({name: "selectedItem", owner: this, isList: this._selectionMode == "multiple"});
 		this.createHeaderNode();
 		this.createListNode();
 		this.domNode.appendChild(this.headerNode);
@@ -200,7 +201,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 		while (this.getCount())
 			this.removeItem(this.getCount()-1);
 		this.deselectAll();
-		this._setSelected(null);
+	        this._clearSelectedData();
 	},
 	createItem: function(inContent) {
 		return new wm.VirtualListItem(this, inContent);
@@ -263,6 +264,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 		}
 	},
 	// selection
+/*
 	_setSelected: function(inItem) {
 		this.selected = inItem;
 		if (this.selected)
@@ -270,18 +272,63 @@ dojo.declare("wm.VirtualList", wm.Control, {
 		else
 			this.selectedItem.clearData();
 	},
+	*/
+    _addSelectedData: function(inItem) {
+	if (this._selectionMode == "multiple") {
+	    if (!dojo.isArray(this.selected))
+		this.selected = [];
+	    if (inItem && dojo.indexOf(this.selected,inItem.index) == -1)
+		this.selected.push(inItem.index);
+	    var data = [];
+	    dojo.forEach(this.selected, dojo.hitch(this, function(index) {
+		var v = this.getItemData(index);
+		if (typeof v == "object") {
+		    data.push(v);
+		} else {
+		    data.push({dataValue: v});
+		}
+	    }));
+	    this.selectedItem.setData(data);
+	    this.setValue("emptySelection", this.selected.length == 0);
+	} else {
+		this.selected = inItem;
+		var
+			d = this.selected ? this.selected.getData() : {},
+			s = this.selectedItem;
+		if (dojo.isObject(d) && !wm.typeManager.getType(s.type))
+			s.setDataSchema(d);
+		if (this.selected && dojo.isObject(d))
+			s.setData(d);
+		else
+			s.clearData();
+		this.setValue("emptySelection", Boolean(!this.selected));
+	    }
+	},
+    _removeSelectedData: function(inItem) {
+	if (this._selectionMode == "multiple") {
+	    this.selected = wm.Array.removeElement(this.selected, inItem.index);
+	}
+	this._addSelectedData(null);
+    },
+    _clearSelectedData: function() {
+	this.selected = this._selectionMode == "multiple" ? [] : null;
+	this.selectedItem.setData(null);
+	this.setValue("emptySelection", true);
+    },
+
 	addToSelection: function(inItem) {
 		if (!inItem)
 			return;
 		this.selection[inItem.index] = true;
 		this.lastSelected = this.selected;
-		this._setSelected(inItem);
+		this._addSelectedData(inItem);
 		inItem.select();
 	},
 	removeFromSelection: function(inItem) {
 		this.selection[inItem.index] = false;
 		inItem.deselect();
-		this._setSelected(this.lastSelected);
+	    this._removeSelectedData(inItem);
+		//this._setSelected(this.lastSelected);
 	},
 	deselectAll: function(ignoreSelectedItem) {
 		dojo.forEach(this.items, function(i) {
@@ -289,7 +336,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 		});
 		this.selection = [];
 		if (!ignoreSelectedItem) {
-		    this._setSelected(null);
+		    this._clearSelectedData();
 		    this.onSelectionChange();
 		}
 	},
@@ -313,13 +360,14 @@ dojo.declare("wm.VirtualList", wm.Control, {
 			this.addToSelection(li);
 	},
 	clickSelect: function(inItem, inEvent) {
+	    if (this._selectionMode == "none") return;
 	    var selectedIndexWas = this.getSelectedIndex();
-		if (this.multiSelect && (inEvent.ctrlKey || inEvent.shiftKey)) {
+		if (this._selectionMode == "multiple" && (inEvent.ctrlKey || inEvent.shiftKey)) {
 			if (inEvent.ctrlKey)
 				this.ctrlSelect(inItem);
 			else if (inEvent.shiftKey)
 				this.shiftSelect(inItem);
-		} else if (this.multiSelect) {
+		} else if (this._selectionMode == "multiple") {
 		    if (dojo.indexOf(this.selected, inItem.index) == -1) {
 			this.addToSelection(inItem);
 		    } else {
@@ -331,7 +379,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 			        this.eventDeselect(inItem,true);			        
 				this.eventSelect(inItem);
 			} else {
-				if (this.toggleSelect)
+			    if (this.toggleSelect) 
 					this.eventDeselect(inItem);
 			}
 		}
@@ -343,7 +391,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	    
 	},
     eventDeselect: function(inItem, ignoreSelectedItem) {
-		if (this.multiSelect)
+		if (this._selectionMode == "multiple")
 			this.removeFromSelection(inItem);
 		else
 			this.deselectAll(ignoreSelectedItem);
@@ -389,7 +437,22 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	_oncanmouseover: function(inEvent, inItem, inMouseOverInfo) {
 	},
 	onclick: function(inEvent, inItem) {
+	    if (inEvent.target.tagName == "INPUT" && dojo.attr(inEvent.target, "wmcontroller")) {
+		if (inEvent.target.type == "checkbox") {
+		    if (inEvent.target.checked) {
+			this.addToSelection(inItem);
+		    } else {
+			this.removeFromSelection(inItem);
+		    }
+		} else if (inEvent.target.type == "radio") {
+		    var toggleSelectWas = this.toggleSelect;
+		    this.toggleSelect = false;
+		    this.clickSelect(inItem, inEvent);
+		    this.toggleSelect = toggleSelectWas;
+		}
+	    } else {
 		this.clickSelect(inItem, inEvent);
+	    }
 	},
 	ondblclick: function(inEvent, inItem) {
 	},
