@@ -72,7 +72,7 @@ public class FileSystemFile<K> extends FileSystemResource<K> implements File {
     public File moveTo(Folder folder) {
         Assert.notNull(folder, "Folder must not be null");
         ensureExists();
-        File destination = folder.getFile(getName());
+        File destination = folder.getFile(getName().toString());
         destination.getContent().write(getContent().asInputStream());
         getFileSystem().delete(getKey());
         return destination;
@@ -82,7 +82,7 @@ public class FileSystemFile<K> extends FileSystemResource<K> implements File {
     public File copyTo(Folder folder) {
         Assert.notNull(folder, "Folder must not be null");
         ensureExists();
-        File destination = folder.getFile(getName());
+        File destination = folder.getFile(getName().toString());
         destination.getContent().write(getContent().asInputStream());
         return destination;
     }

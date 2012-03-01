@@ -48,7 +48,7 @@ public interface ResourceFilter<R extends Resource> {
 
         @Override
         public boolean include(Resource resource) {
-            return !resource.getName().startsWith(".");
+            return !resource.getName().toString().startsWith(".");
         }
 
     };

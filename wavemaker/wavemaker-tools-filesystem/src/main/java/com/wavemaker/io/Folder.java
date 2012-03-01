@@ -1,6 +1,8 @@
 
 package com.wavemaker.io;
 
+import java.io.InputStream;
+
 import com.wavemaker.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.io.exception.ResourceExistsException;
 
@@ -89,4 +91,20 @@ public interface Folder extends Resource, Iterable<Resource> {
      * @return a list of immediate child resources that match the filter
      */
     <T extends Resource> Resources<T> list(ResourceFilter<T> filter);
+
+    /**
+     * Unzip the specified zip file into the current folder.
+     * 
+     * @param file the file to unzip (this must reference a zip file)
+     * @see #unzip(InputStream)
+     */
+    void unzip(File file);
+
+    /**
+     * Unzip the specified input stream into the current folder.
+     * 
+     * @param inputStream the input stream to unzip (this must contain zip contents)
+     * @see #unzip(File)
+     */
+    void unzip(InputStream inputStream);
 }

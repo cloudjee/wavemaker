@@ -5,16 +5,25 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -411,5 +420,46 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
         this.folder = spy(this.folder);
         this.folder.get("name", Resource.class);
         verify(this.folder).getExisting("name");
+    }
+
+    @Test
+    public void shouldNeedUnzipInputStream() throws Exception {
+        this.thrown.expect(IllegalArgumentException.class);
+        this.thrown.expectMessage("InputStream must not be null");
+        this.folder.unzip((InputStream) null);
+    }
+
+    @Test
+    public void shouldUnzip() throws Exception {
+        ByteArrayOutputStream outputStreamB = new ByteArrayOutputStream();
+        ByteArrayOutputStream outputStreamD = new ByteArrayOutputStream();
+        given(this.fileSystem.getResourceType(any())).willReturn(ResourceType.DOES_NOT_EXIST);
+        given(this.fileSystem.getOutputStream(new ResourcePath().get("a/b.txt"))).willReturn(outputStreamB);
+        given(this.fileSystem.getOutputStream(new ResourcePath().get("c/d.txt"))).willReturn(outputStreamD);
+        InputStream zipStream = getSampleZip();
+        this.folder.unzip(zipStream);
+        verify(this.fileSystem, atLeastOnce()).createFolder(new ResourcePath().get("a"));
+        verify(this.fileSystem, atLeastOnce()).getResourceType(new ResourcePath().get("a/b.txt"));
+        assertThat(new String(outputStreamB.toByteArray()), is("ab"));
+        verify(this.fileSystem, atLeastOnce()).createFolder(new ResourcePath().get("c"));
+        verify(this.fileSystem, atLeastOnce()).getResourceType(new ResourcePath().get("c/d.txt"));
+        assertThat(new String(outputStreamD.toByteArray()), is("cd"));
+    }
+
+    private InputStream getSampleZip() throws IOException {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream);
+        zipOutputStream.putNextEntry(new ZipEntry("a/"));
+        zipOutputStream.closeEntry();
+        zipOutputStream.putNextEntry(new ZipEntry("a/b.txt"));
+        IOUtils.write("ab", zipOutputStream);
+        zipOutputStream.closeEntry();
+        zipOutputStream.putNextEntry(new ZipEntry("c/"));
+        zipOutputStream.closeEntry();
+        zipOutputStream.putNextEntry(new ZipEntry("c/d.txt"));
+        IOUtils.write("cd", zipOutputStream);
+        zipOutputStream.closeEntry();
+        zipOutputStream.close();
+        return new ByteArrayInputStream(outputStream.toByteArray());
     }
 }

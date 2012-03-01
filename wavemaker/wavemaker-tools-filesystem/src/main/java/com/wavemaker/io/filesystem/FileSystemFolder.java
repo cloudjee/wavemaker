@@ -1,19 +1,26 @@
 
 package com.wavemaker.io.filesystem;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Iterator;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import org.springframework.util.Assert;
 
 import com.wavemaker.io.File;
 import com.wavemaker.io.FilteredResources;
 import com.wavemaker.io.Folder;
+import com.wavemaker.io.NoCloseInputStream;
 import com.wavemaker.io.Resource;
 import com.wavemaker.io.ResourceFilter;
 import com.wavemaker.io.ResourcePath;
 import com.wavemaker.io.Resources;
 import com.wavemaker.io.ResourcesCollection;
 import com.wavemaker.io.exception.ResourceDoesNotExistException;
+import com.wavemaker.io.exception.ResourceException;
 import com.wavemaker.io.exception.ResourceExistsException;
 
 /**
@@ -157,6 +164,38 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
         if (!exists()) {
             touchParent();
             getFileSystem().createFolder(getKey());
+        }
+    }
+
+    @Override
+    public void unzip(File file) {
+        Assert.notNull(file, "File must not be null");
+        unzip(file.getContent().asInputStream());
+    }
+
+    @Override
+    public void unzip(InputStream inputStream) {
+        Assert.notNull(inputStream, "InputStream must not be null");
+        touch();
+        ZipInputStream zip = new ZipInputStream(new BufferedInputStream(inputStream));
+        try {
+            InputStream noCloseZip = new NoCloseInputStream(zip);
+            ZipEntry entry = zip.getNextEntry();
+            while (entry != null) {
+                if (entry.isDirectory()) {
+                    getFolder(entry.getName()).touch();
+                } else {
+                    getFile(entry.getName()).getContent().write(noCloseZip);
+                }
+                entry = zip.getNextEntry();
+            }
+        } catch (IOException e) {
+            throw new ResourceException(e);
+        } finally {
+            try {
+                zip.close();
+            } catch (IOException e) {
+            }
         }
     }
 
