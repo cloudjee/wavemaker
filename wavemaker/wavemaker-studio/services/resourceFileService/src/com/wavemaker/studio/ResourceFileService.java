@@ -22,7 +22,6 @@ import java.util.List;
 import org.springframework.util.Assert;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.io.File;
 import com.wavemaker.io.Folder;
 import com.wavemaker.io.Resource;
@@ -174,6 +173,7 @@ public class ResourceFileService {
     }
 
     @SuppressWarnings("unchecked")
+    @HideFromClient
     private <T extends Resource> T getResource(String name, Class<T> resourceType) {
         Assert.notNull(name, "Name must not be null");
         Assert.notNull(resourceType, "ResourceType must not be null");
@@ -267,85 +267,4 @@ public class ResourceFileService {
     public void setFileSystem(StudioFileSystem fileSystem) {
         this.fileSystem = fileSystem;
     }
-
-    // FIXME Delete down
-
-    @HideFromClient
-    private org.springframework.core.io.Resource getProjectDir() {
-        return this.projectManager.getCurrentProject().getWebAppRoot();
-    }
-
-    private org.springframework.core.io.Resource getRequestedFile(String requestedFile, boolean isFolder) throws IOException {
-        return getRequestedFile(requestedFile, isFolder, false);
-    }
-
-    private org.springframework.core.io.Resource getRequestedFile(String requestedFile, boolean isFolder, boolean create) throws IOException {
-        org.springframework.core.io.Resource root;
-        if (requestedFile.startsWith("/common")) {
-            try {
-                root = this.fileSystem.getCommonDir();
-            } catch (IOException e) {
-                root = this.projectManager.getCurrentProject().getProjectRoot(); // don't know what to do if exception
-                                                                                 // thrown...
-            }
-            requestedFile = requestedFile.substring(7);
-            System.out.println("requestedFile:" + requestedFile);
-        } else {
-            root = this.projectManager.getCurrentProject().getProjectRoot();
-        }
-        if (requestedFile != null && requestedFile.length() > 0) {
-            if (create) {
-                return this.fileSystem.createPath(root, requestedFile + (isFolder ? "/" : ""));
-            } else {
-                return root.createRelative(requestedFile + (isFolder ? "/" : ""));
-            }
-        } else {
-            return root;
-        }
-    }
-
-    // FIXME this method is now only used to create the resource folder, we should do this via templates instead
-
-    /**
-     * Returns the contents of the resources folder.
-     * 
-     * @return
-     * @throws WMRuntimeException
-     */
-    public Hashtable<String, Object> getResourceFolder() throws WMRuntimeException {
-        org.springframework.core.io.Resource resourceDir = this.getResourcesDir();
-        Hashtable<String, Object> rtn = new Hashtable<String, Object>();
-        try {
-            rtn.put("files", com.wavemaker.tools.project.ResourceManager.getListing(this.fileSystem, resourceDir));
-        } catch (Exception e) {
-            throw new WMRuntimeException(e);
-        }
-        rtn.put("file", resourceDir.getFilename());
-        rtn.put("type", "folder");
-        return rtn;
-    }
-
-    /*
-     * Gets the project's resources folder; initializes it if it doesn't yet exist
-     */
-    @HideFromClient
-    private org.springframework.core.io.Resource getResourcesDir() {
-        org.springframework.core.io.Resource resources;
-        try {
-            resources = getProjectDir().createRelative("resources/");
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
-        }
-        if (!resources.exists()) {
-            resources = this.fileSystem.createPath(getProjectDir(), "resources/");
-            this.fileSystem.createPath(resources, "images/imagelists/");
-            this.fileSystem.createPath(resources, "images/buttons/");
-            this.fileSystem.createPath(resources, "images/logos/");
-            this.fileSystem.createPath(resources, "javascript/");
-            this.fileSystem.createPath(resources, "css/");
-            this.fileSystem.createPath(resources, "htmlcontent/");
-        }
-        return resources;
-    }
-
 }

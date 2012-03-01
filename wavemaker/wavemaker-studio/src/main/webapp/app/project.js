@@ -67,8 +67,6 @@ dojo.declare("wm.studio.Project", null, {
 			     studio.endWait(studio.getDictionaryItem("wm.studio.Project.WAIT_CREATING_PROJECT"));
 			     studio._loadingApplication = false;
 			 }));
-	    studio.resourceManagerService.requestAsync("getResourceFolder", []);
-		//studio.deploy("Configuring Project...");
 	},
     // pageType and argHash are typically empty
     // argHash is a way to pass in custom parameters when creating a non-basic

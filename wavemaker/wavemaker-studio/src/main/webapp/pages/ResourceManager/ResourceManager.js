@@ -331,10 +331,7 @@ dojo.declare("ResourceManager", wm.Page, {
 
     loadResourcesData: function(keepOpenFolders) {
 
-	// var manager = this.getResourceManager();
-	// manager.setOperation("getResourceFolder");
-		     // 	manager.update(); 	
-		     var _this = this;
+    var _this = this;
 	var root = this.tree.root.kids[0].data;
 	var rootPath = root.rootPath;
 	var tree = this.tree;
