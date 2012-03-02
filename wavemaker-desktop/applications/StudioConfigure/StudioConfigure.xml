@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 
-<Context antiJARLocking="true" antiResourceLocking="false" docBase="/Users/administrator/WaveMaker/trunk/dev/Applications/StudioConfigure/webapproot" privileged="true"></Context>
+<Context antiJARLocking="true" antiResourceLocking="false" docBase="C:\wavemaker\projects\StudioConfigure/webapproot" privileged="true"></Context>
 
