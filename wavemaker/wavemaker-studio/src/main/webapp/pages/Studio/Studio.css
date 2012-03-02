@@ -978,7 +978,7 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
 	-moz-outline: none;
 }
 
-.wmDialogTitleBar, .wmdialog.studiodialog > .dialogtitlebar {
+.wmDialogTitleBar, .wmDialogTitleBar, .Studio > .wmdialog .dialogtitlebar,.wmdialog.studiodialog > .dialogtitlebar {
 	background-image:url(images/dark_toolbar_bg.gif);
 	background-repeat:repeat-x;
 	border-bottom:1px #363b44 solid;
@@ -990,7 +990,7 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
 }
 
 .wmDialogFooter,  .Studio > .wmdialog  .dialogfooter {
-	background-image:url(images/dark_toolbar_bg.gif);
+        background-image:url(images/dark_toolbar_bg.gif);
 	background-repeat:repeat-x;
 	border-bottom:1px #363b44 solid;
 	color: #FFF;
