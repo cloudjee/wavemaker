@@ -460,7 +460,7 @@ dojo.declare("wm.DateTimePicker", wm.Container, {
 	
 	this.hours = new wm.ListSet({owner: this,
 					parent: this.panel,
-				       searchBar:false,
+				     showSearchBar:false,
 				     _multiSelect:false,
 				      name:"hours",
 					caption: "Hour", // Localize
@@ -476,7 +476,7 @@ dojo.declare("wm.DateTimePicker", wm.Container, {
 					onchange: onchange});
 
 	this.minutes = new wm.ListSet({owner: this,
-				       searchBar:false,
+				       showSearchBar:false,
 				     _multiSelect:false,
 				    parent: this.panel,
 				    caption: "Minute", // Localize
