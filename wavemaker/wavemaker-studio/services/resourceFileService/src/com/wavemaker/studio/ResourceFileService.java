@@ -180,10 +180,12 @@ public class ResourceFileService {
 
         Folder root;
         String resourceName;
-
-        if (name.startsWith("/common")) {
+        if (name.equals("/common")) {
             root = this.fileSystem.getCommon();
-            resourceName = name.substring("/common".length());
+            resourceName = "";
+        } else if (name.startsWith("/common/")) {
+            root = this.fileSystem.getCommon();
+            resourceName = name.substring("/common/".length());
         } else {
             root = this.projectManager.getCurrentProject().getRoot();
             resourceName = name;
@@ -194,7 +196,7 @@ public class ResourceFileService {
             return (T) root;
         }
 
-        return root.get(name, resourceType);
+        return root.get(resourceName, resourceType);
     }
 
     /**

@@ -39,7 +39,8 @@ public interface Folder extends Resource, Iterable<Resource> {
     Resource getExisting(String name) throws ResourceDoesNotExistException;
 
     /**
-     * Returns <tt>true</tt> if this folder already contains a resource with the specified name.
+     * Returns <tt>true</tt> if this folder already contains a resource with the specified name. This method supports
+     * the same naming rules as {@link #getExisting(String)}.
      * 
      * @param name the name of the resource
      * @return <tt>true</tt> if the resource is contained in the folder

@@ -42,6 +42,7 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.FileAccessException;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.common.util.SystemUtils;
+import com.wavemaker.io.Folder;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.server.FileUploadResponse;
@@ -171,29 +172,11 @@ public class StudioService extends ClassLoader {
      * Returns true if the file exists.
      * 
      * @param path The path to check (relative to the project root).
-     * @return True iff the path points to an existant file or directory.
+     * @return <tt>true</tt> if the path points to an existing file or directory.
      */
     @ExposeToClient
     public boolean fileExists(String path) {
-        try {
-            return this.projectManager.getCurrentProject().fileExists(this.projectManager.getUserProjectPrefix() + path);
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
-        }
-    }
-
-    @ExposeToClient
-    public void writeCommonFile(String path, String data) throws IOException {
-        Resource commonDir = this.fileSystem.getCommonDir();
-        Resource writeFile = commonDir.createRelative(path);
-        if (writeFile.exists()) {
-            String original = this.projectManager.getCurrentProject().readFile(writeFile);
-
-            if (original.equals(data)) {
-                return;
-            }
-        }
-        this.projectManager.getCurrentProject().writeFile(writeFile, data);
+        return getCurrentProjectRoot().hasExisting(path);
     }
 
     @ExposeToClient
@@ -777,6 +760,10 @@ public class StudioService extends ClassLoader {
 
     private String getPrefixedProjectName(String projectName) {
         return this.projectManager.getUserProjectPrefix() + projectName;
+    }
+
+    private Folder getCurrentProjectRoot() {
+        return this.getProjectManager().getCurrentProject().getRoot();
     }
 
     public RuntimeAccess getRuntimeAccess() {
