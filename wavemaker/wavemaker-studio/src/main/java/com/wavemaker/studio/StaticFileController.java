@@ -81,8 +81,7 @@ public final class StaticFileController extends AbstractController {
             reqPath = reqPath.substring(reqPath.indexOf('/', 1));
         }
         if (reqPath.matches("\\/projects\\/.+")) {
-            String userprefix = getProjectManager().getUserProjectPrefix();
-            reqPath = "/projects/" + userprefix + reqPath.substring(10);
+            reqPath = "/projects/" + reqPath.substring(10);
         }
         Resource sendFile = null;
 
@@ -204,9 +203,7 @@ public final class StaticFileController extends AbstractController {
         response.setContentType("text/html");
         Writer writer = response.getWriter();
         writer.write("<html><body>\n");
-        String userprefix = getProjectManager().getUserProjectPrefix();
-        for (String project : getProjectManager().listProjects(userprefix)) {
-            project = project.substring(userprefix.length());
+        for (String project : getProjectManager().listProjects()) {
             writer.write("\t<a href=\"" + reqFqURL + project + "/\">" + project + "/</a>\n");
             writer.write("\t<br/>\n");
         }

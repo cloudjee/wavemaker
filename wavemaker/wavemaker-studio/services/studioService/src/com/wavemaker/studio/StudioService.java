@@ -99,7 +99,7 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public OpenProjectReturn openProject(String projectName) throws IOException {
-        this.projectManager.openProject(getPrefixedProjectName(projectName));
+        this.projectManager.openProject(projectName);
         OpenProjectReturn rtn = new OpenProjectReturn();
         rtn.setUpgradeMessages(getUpgradeManager().doUpgrades(this.projectManager.getCurrentProject()));
         rtn.setWebPath(getWebPath());
@@ -112,7 +112,7 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public String newProject(String projectName) throws IOException {
-        this.projectManager.newProject(getPrefixedProjectName(projectName));
+        this.projectManager.newProject(projectName);
         return getWebPath();
     }
 
@@ -127,15 +127,14 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public void deleteProject(String projectName) throws IOException {
-        String prefixedProjectName = getPrefixedProjectName(projectName);
         try {
-            this.deploymentManager.testRunClean(this.projectManager.getProjectDir(prefixedProjectName, true).getURI().toString(), prefixedProjectName);
+            this.deploymentManager.testRunClean(this.projectManager.getProjectDir(projectName, true).getURI().toString(), projectName);
         } catch (WMRuntimeException e) {
             // Swallow and continue to delete project
         } catch (BuildException e) {
             // Swallow and continue to delete project
         }
-        this.projectManager.deleteProject(prefixedProjectName);
+        this.projectManager.deleteProject(projectName);
     }
 
     /**
@@ -143,7 +142,7 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public void copyProject(String sourceProjectName, String destinationProjectName) throws IOException {
-        this.projectManager.copyProject(getPrefixedProjectName(sourceProjectName), getPrefixedProjectName(destinationProjectName));
+        this.projectManager.copyProject(sourceProjectName, destinationProjectName);
     }
 
     /**
@@ -152,18 +151,8 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public String[] listProjects() throws FileAccessException {
-        String prefix = this.projectManager.getUserProjectPrefix();
-        SortedSet<String> projects = this.projectManager.listProjects(prefix);
-        String[] projectsWithoutPrefixes = new String[projects.size()];
-        int i = 0;
-        for (String project : projects) {
-            if (project.startsWith(prefix)) {
-                project = project.substring(prefix.length());
-            }
-            projectsWithoutPrefixes[i] = project;
-            i++;
-        }
-        return projectsWithoutPrefixes;
+        SortedSet<String> projects = this.projectManager.listProjects();
+        return new ArrayList<String>(projects).toArray(new String[projects.size()]);
     }
 
     /**
@@ -646,10 +635,6 @@ public class StudioService extends ClassLoader {
             ret.setError(e.getMessage());
         }
         return ret;
-    }
-
-    private String getPrefixedProjectName(String projectName) {
-        return this.projectManager.getUserProjectPrefix() + projectName;
     }
 
     private Folder getCurrentProjectRoot() {
