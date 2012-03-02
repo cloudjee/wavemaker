@@ -122,6 +122,7 @@ wm.Lookup.extend({
 		props.dataSet.bindTarget = !props.dataSet.ignoretmp;
 	        props.maxResults.ignoretmp = !this.autoDataSet;
 	        props.startUpdate.ignoretmp = !this.autoDataSet;
+	        props.displayExpression.ignoretmp = this.autoDataSet;
 		return props;
 	},
 	set_formField: function(inFieldName) {
@@ -152,6 +153,6 @@ wm.Object.extendSchema(wm.FilteringLookup, {
     restrictValues: {ignore: true}, // by definition, we must find objects; if no match, no data
     hasDownArrow: {ignore: true}, // Downarrow will not work with this
     displayType: {ignore: true}, // can only filter on text
-    displayExpression: {ignore: true}, // can only filter on a single field, can not filter on expression text
+    displayExpression: {ignoreHint: "Turn off autoDataSet to use displayExpression"}, // can only filter on a single field, can not filter on expression text
     startUpdate: {ignore: true} // only update when the user types
 });
