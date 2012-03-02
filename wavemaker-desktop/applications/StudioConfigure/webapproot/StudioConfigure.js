@@ -5,7 +5,8 @@ dojo.declare("StudioConfigure", wm.Application, {
 	"main": "Main", 
 	"projectSubVersion": 139, 
 	"projectVersion": 1, 
-	"studioVersion": "6.4.1Beta", 
+	"saveCounter": 1, 
+	"studioVersion": "6.5.0DevBuild", 
 	"theme": "wm_studio", 
 	"toastPosition": "br",
 	"widgets": {

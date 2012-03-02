@@ -1,5 +1,5 @@
 Main.widgets = {
-	downloadAndInstallServiceVar: ["wm.ServiceVariable", {"operation":"DownloadPackages","service":"InstallService"}, {"onSuccess":"downloadAndInstallServiceVarSuccess","onError":"downloadAndInstallServiceVarError"}, {
+	downloadAndInstallServiceVar: ["wm.ServiceVariable", {"operation":"DownloadPackages","service":"InstallService"}, {"onError":"downloadAndInstallServiceVarError","onSuccess":"downloadAndInstallServiceVarSuccess"}, {
 		input: ["wm.ServiceInput", {"type":"DownloadPackagesInputs"}, {}]
 	}],
 	gotoMainLayer: ["wm.NavigationCall", {}, {}, {
@@ -49,15 +49,7 @@ Main.widgets = {
 							label4: ["wm.Label", {"border":"0","caption":"Step 2: Upload the zip into studio","height":"100%","padding":"4","width":"100%"}, {}, {
 								format: ["wm.DataFormatter", {}, {}]
 							}],
-							dojoFileUpload1: ["wm.DojoFileUpload", {"border":"1","borderColor":"#ABB8CF","height":"100%","margin":"4","operation":"uploadPackage","service":"InstallService","useList":false,"width":"130px"}, {"onSuccess":"dojoFileUpload1Success","onError":"dojoFileUpload1Error"}, {
-								_variable: ["wm.Variable", {"isList":true,"type":"wm.DojoFileUpload.FileData"}, {}],
-								_uploadedVariable: ["wm.Variable", {"isList":true,"type":"wm.DojoFileUpload.FileData"}, {}],
-								_variable1: ["wm.Variable", {"isList":true,"type":"wm.DojoFileUpload.FileData"}, {}],
-								_uploadedVariable1: ["wm.Variable", {"isList":true,"type":"wm.DojoFileUpload.FileData"}, {}],
-								_variable2: ["wm.Variable", {"isList":true,"type":"wm.DojoFileUpload.FileData"}, {}],
-								_uploadedVariable2: ["wm.Variable", {"isList":true,"type":"wm.DojoFileUpload.FileData"}, {}],
-								_variable3: ["wm.Variable", {"isList":true,"type":"wm.DojoFileUpload.FileData"}, {}],
-								_uploadedVariable3: ["wm.Variable", {"isList":true,"type":"wm.DojoFileUpload.FileData"}, {}],
+							dojoFileUpload1: ["wm.DojoFileUpload", {"border":"1","borderColor":"#ABB8CF","height":"100%","margin":"4","operation":"uploadPackage","service":"InstallService","useList":false,"width":"130px"}, {"onError":"dojoFileUpload1Error","onSuccess":"dojoFileUpload1Success"}, {
 								input1: ["wm.ServiceInput", {"type":"uploadPackageInputs"}, {}],
 								input2: ["wm.ServiceInput", {"type":"uploadPackageInputs"}, {}],
 								input3: ["wm.ServiceInput", {"type":"uploadPackageInputs"}, {}],
