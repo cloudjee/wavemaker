@@ -56,7 +56,8 @@ dojo.declare("wm.debug.EventsPanel", wm.Container, {
 	    isBinding: false,
 	    causeList: dojo.clone(this.currentEventChain)
 	});
-	
+	if (this.eventListVar.getCount() > 500)
+	    this.eventListVar.removeItem(0);
     },
     newLogEvent: function(inData) {
 	if (!this.currentEventChain) this.currentEventChain = [];
@@ -79,7 +80,8 @@ dojo.declare("wm.debug.EventsPanel", wm.Container, {
 	    causeList: dojo.clone(this.currentEventChain)
 	});
 	this.currentEventChain.push({dataValue:id, data: inData});
-
+	if (this.eventListVar.getCount() > 500)
+	    this.eventListVar.removeItem(0);
 	return id;
     },
     endLogEvent: function(inId) {
