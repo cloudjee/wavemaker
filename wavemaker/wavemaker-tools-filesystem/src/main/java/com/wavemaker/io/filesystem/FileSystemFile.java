@@ -12,6 +12,7 @@ import com.wavemaker.io.FileContent;
 import com.wavemaker.io.Folder;
 import com.wavemaker.io.ResourcePath;
 import com.wavemaker.io.exception.ResourceExistsException;
+import com.wavemaker.io.exception.ResourceTypeMismatchException;
 
 /**
  * {@link File} implementation backed by a {@link FileSystem}.
@@ -38,7 +39,7 @@ public class FileSystemFile<K> extends FileSystemResource<K> implements File {
     FileSystemFile(ResourcePath path, FileSystem<K> fileSystem, K key) {
         super(path, fileSystem, key);
         ResourceType resourceType = getFileSystem().getResourceType(key);
-        Assert.state(resourceType != ResourceType.FOLDER, "Unable to access existing folder '" + super.toString() + "' as a file");
+        ResourceTypeMismatchException.throwOnMismatch(path, resourceType, ResourceType.FILE);
     }
 
     @Override

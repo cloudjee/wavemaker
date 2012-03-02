@@ -5,6 +5,7 @@ import java.io.InputStream;
 
 import com.wavemaker.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.io.exception.ResourceExistsException;
+import com.wavemaker.io.exception.ResourceTypeMismatchException;
 
 /**
  * A folder {@link Resource} that may be stored on a physical disk or using some other mechanism.
@@ -53,9 +54,10 @@ public interface Folder extends Resource, Iterable<Resource> {
      * {@link #getExisting(String)}.
      * 
      * @param name the name of the folder to get
-     * @return the {@link Folder}.
+     * @return the {@link Folder}
+     * @throws ResourceTypeMismatchException if the an existing resource exits that is not a folder
      */
-    Folder getFolder(String name);
+    Folder getFolder(String name) throws ResourceTypeMismatchException;
 
     /**
      * Get a child file of the current folder. This method supports the same naming rules as
@@ -63,8 +65,9 @@ public interface Folder extends Resource, Iterable<Resource> {
      * 
      * @param name the name of the file to get
      * @return the {@link File}
+     * @throws ResourceTypeMismatchException if the an existing resource exits that is not a file
      */
-    File getFile(String name);
+    File getFile(String name) throws ResourceTypeMismatchException;
 
     /**
      * Get a child file or folder of the current folder. Depending on the <tt>resourceType</tt> {@link #getFile(String)}
@@ -74,8 +77,9 @@ public interface Folder extends Resource, Iterable<Resource> {
      * @param name the name of the resource to get
      * @param resourceType the resource type
      * @return the resource.
+     * @throws ResourceTypeMismatchException if the an existing resource exits that is of the wrong type
      */
-    <T extends Resource> T get(String name, Class<T> resourceType);
+    <T extends Resource> T get(String name, Class<T> resourceType) throws ResourceTypeMismatchException;
 
     /**
      * List all immediate child resources of this folder. If this resource does not exist empty resources are returned.

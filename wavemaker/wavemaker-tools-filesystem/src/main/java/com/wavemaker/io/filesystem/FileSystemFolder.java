@@ -22,6 +22,7 @@ import com.wavemaker.io.ResourcesCollection;
 import com.wavemaker.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.io.exception.ResourceException;
 import com.wavemaker.io.exception.ResourceExistsException;
+import com.wavemaker.io.exception.ResourceTypeMismatchException;
 
 /**
  * {@link Folder} implementation backed by a {@link FileSystem}.
@@ -33,7 +34,7 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
     FileSystemFolder(ResourcePath path, FileSystem<K> fileSystem, K key) {
         super(path, fileSystem, key);
         ResourceType resourceType = getFileSystem().getResourceType(key);
-        Assert.state(resourceType != ResourceType.FILE, "Unable to access existing file '" + super.toString() + "' as a folder");
+        ResourceTypeMismatchException.throwOnMismatch(path, resourceType, ResourceType.FOLDER);
     }
 
     @Override

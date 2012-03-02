@@ -34,6 +34,7 @@ import com.wavemaker.io.ResourceFilter;
 import com.wavemaker.io.ResourcePath;
 import com.wavemaker.io.Resources;
 import com.wavemaker.io.exception.ResourceDoesNotExistException;
+import com.wavemaker.io.exception.ResourceTypeMismatchException;
 
 /**
  * Tests for {@link FileSystemFolder}.
@@ -75,8 +76,8 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
     @Test
     public void shouldNotCreateFolderFromFile() throws Exception {
         given(this.fileSystem.getResourceType(new ResourcePath().get("a"))).willReturn(ResourceType.FILE);
-        this.thrown.expect(IllegalStateException.class);
-        this.thrown.expectMessage("Unable to access existing file '/a' as a folder");
+        this.thrown.expect(ResourceTypeMismatchException.class);
+        this.thrown.expectMessage("Unable to access resource '/a' as folder due to existing file");
         this.folder.getFolder("a");
     }
 
