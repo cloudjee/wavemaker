@@ -28,6 +28,7 @@ import com.wavemaker.io.Resource;
 import com.wavemaker.io.ResourceFilter;
 import com.wavemaker.io.ResourcePath;
 import com.wavemaker.io.Resources;
+import com.wavemaker.io.exception.ResourceTypeMismatchException;
 import com.wavemaker.runtime.server.Downloadable;
 import com.wavemaker.runtime.server.FileUploadResponse;
 import com.wavemaker.runtime.server.ParamName;
@@ -94,11 +95,27 @@ public class ResourceFileService {
      * 
      * @param filePath the file to write
      * @param filetext the contexts of the file.
-     * @throws IOException
      */
-    public void writeFile(String filePath, String filetext) throws IOException {
+    public void writeFile(String filePath, String filetext) {
         File file = getResource(filePath, File.class);
         file.getContent().write(filetext);
+    }
+
+    /**
+     * Write the contents of the given file only if the file does not already exist
+     * 
+     * @param filePath the file to write
+     * @param filetext the contents of the file
+     */
+    public void writeFileIfDoesNotExist(String filePath, String filetext) {
+        try {
+            File file = getResource(filePath, File.class);
+            if (!file.exists()) {
+                file.getContent().write(filetext);
+            }
+        } catch (ResourceTypeMismatchException e) {
+            // File exists but is of the wrong type, ignore
+        }
     }
 
     /**

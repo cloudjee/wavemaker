@@ -67,7 +67,7 @@ dojo.declare("Studio", wm.Page, {
 	    }
 
 	    /* Create an empty patches file if there isn't one already */
-	    studio.studioService.requestSync("writeWebFile", ["/common/" + wm.version.replace(/[^a-zA-Z0-9]/g,"") + "_patches.js", "", true]);
+	    studio.resourceManagerService.requestSync("writeFileIfDoesNotExist", ["/common/" + wm.version.replace(/[^a-zA-Z0-9]/g,"") + "_patches.js", ""]);
 
 	    if (wm.EditArea && this.editArea instanceof wm.EditArea) {
 		this.scriptPageCompletionsBtn.hide();
