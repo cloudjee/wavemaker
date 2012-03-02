@@ -15,24 +15,14 @@ and is an ideal location for end-users to put any code they need.
             class="com.wavemaker.tools.deployment.tomcat.TomcatDeploymentTarget"
             scope="singleton"
             lazy-init="true"/>
-	
-	<bean id="websphereDeploymentTarget"
-			class="com.wavemaker.tools.deployment.websphere.WebSphereDeploymentTarget"
-			scope="singleton"
-			lazy-init="true"/>
-
     <bean id="deploymentTargetManager"
             class="com.wavemaker.tools.deployment.DeploymentTargetManager"
             scope="singleton"
             lazy-init="true">
         <property name="deploymentTargets">
             <map>
-                <entry key="tomcat">
+                <entry key="TOMCAT">
                     <ref bean="tomcatDeploymentTarget"/>
-                </entry>
-					
-                <entry key="websphere">
-					<ref bean="websphereDeploymentTarget"/>    
                 </entry>
             </map>
         </property>
