@@ -15,7 +15,6 @@
 package com.wavemaker.studio;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -40,6 +39,7 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.FileAccessException;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.common.util.SystemUtils;
+import com.wavemaker.io.File;
 import com.wavemaker.io.Folder;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.WMAppContext;
@@ -197,9 +197,7 @@ public class StudioService extends ClassLoader {
     @ExposeToClient
     public void writeWebFile(String path, String data, boolean noClobber) throws IOException {
         boolean canClobber = !noClobber;
-        path = path.trim();
-        String newPath = ProjectConstants.WEB_DIR + (path.startsWith("/") ? path.substring(1) : path);
-        com.wavemaker.io.File file = this.projectManager.getCurrentProject().getRoot().getFile(newPath);
+        File file = this.projectManager.getCurrentProject().getRoot().getFile(getWebDirPath(path));
         if (!file.exists() || canClobber) {
             file.getContent().write(data);
         }
@@ -214,8 +212,13 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public String readWebFile(String path) throws IOException {
-        String newPath = ProjectConstants.WEB_DIR + "/" + this.projectManager.getUserProjectPrefix() + path;
-        return this.projectManager.getCurrentProject().readFile(newPath);
+        com.wavemaker.io.File file = this.projectManager.getCurrentProject().getRoot().getFile(getWebDirPath(path));
+        return file.getContent().asString();
+    }
+
+    private String getWebDirPath(String path) {
+        path = path.trim();
+        return ProjectConstants.WEB_DIR + (path.startsWith("/") ? path.substring(1) : path);
     }
 
     /**
@@ -262,8 +265,9 @@ public class StudioService extends ClassLoader {
 
     @ExposeToClient
     public Hashtable<String, Object> getLogUpdate(String filename, String lastStamp) throws IOException {
-        File logFolder = new File(System.getProperty("catalina.home") + "/logs/ProjectLogs", this.projectManager.getCurrentProject().getProjectName());
-        File logFile = new File(logFolder, filename);
+        java.io.File logFolder = new java.io.File(System.getProperty("catalina.home") + "/logs/ProjectLogs",
+            this.projectManager.getCurrentProject().getProjectName());
+        java.io.File logFile = new java.io.File(logFolder, filename);
         if (!logFile.exists()) {
             Hashtable<String, Object> PEmpty = new Hashtable<String, Object>();
             PEmpty.put("logs", "");
@@ -420,9 +424,9 @@ public class StudioService extends ClassLoader {
     @ExposeToClient
     public FileUploadResponse uploadExtensionZip(MultipartFile file) {
         FileUploadResponse ret = new FileUploadResponse();
-        File tmpDir;
+        java.io.File tmpDir;
         try {
-            File webapproot = new File(WMAppContext.getInstance().getAppContextRoot());
+            java.io.File webapproot = new java.io.File(WMAppContext.getInstance().getAppContextRoot());
 
             String filename = file.getOriginalFilename();
             int dotindex = filename.lastIndexOf(".");
@@ -434,42 +438,42 @@ public class StudioService extends ClassLoader {
             }
 
             String originalName = file.getOriginalFilename();
-            tmpDir = new File(webapproot, "tmp");
+            tmpDir = new java.io.File(webapproot, "tmp");
             IOUtils.makeDirectories(tmpDir, webapproot);
 
-            File outputFile = new File(tmpDir, originalName);
+            java.io.File outputFile = new java.io.File(tmpDir, originalName);
             String newName = originalName.replaceAll("[ 0-9()]*.zip$", "");
             System.out.println("OLD NAME:" + originalName + "; NEW NAME:" + newName);
             FileOutputStream fos = new FileOutputStream(outputFile);
             IOUtils.copy(file.getInputStream(), fos);
             file.getInputStream().close();
             fos.close();
-            File extFolder = com.wavemaker.tools.project.ResourceManager.unzipFile(this.fileSystem, new FileSystemResource(outputFile)).getFile();
+            java.io.File extFolder = com.wavemaker.tools.project.ResourceManager.unzipFile(this.fileSystem, new FileSystemResource(outputFile)).getFile();
 
             /*
              * Import the pages from the pages folder STATUS: DONE
              */
-            File webapprootPages = new File(webapproot, "pages");
-            File pagesFolder = new File(extFolder, "pages");
-            File[] pages = pagesFolder.listFiles();
+            java.io.File webapprootPages = new java.io.File(webapproot, "pages");
+            java.io.File pagesFolder = new java.io.File(extFolder, "pages");
+            java.io.File[] pages = pagesFolder.listFiles();
             for (int i = 0; i < pages.length; i++) {
-                IOUtils.copy(pages[i], new File(webapprootPages, pages[i].getName()));
+                IOUtils.copy(pages[i], new java.io.File(webapprootPages, pages[i].getName()));
             }
 
             /*
              * Import the language files from the dictionaries folder and subfolder STATUS: DONE
              */
-            File dictionaryDest = new File(webapproot, "language/nls");
-            File dictionarySrc = new File(extFolder, "language/nls");
-            File[] languages = dictionarySrc.listFiles();
+            java.io.File dictionaryDest = new java.io.File(webapproot, "language/nls");
+            java.io.File dictionarySrc = new java.io.File(extFolder, "language/nls");
+            java.io.File[] languages = dictionarySrc.listFiles();
             for (int i = 0; i < languages.length; i++) {
                 if (languages[i].isDirectory()) {
                     System.out.println("GET LISTING OF " + languages[i].getName());
-                    File[] languages2 = languages[i].listFiles();
+                    java.io.File[] languages2 = languages[i].listFiles();
                     for (int j = 0; j < languages2.length; j++) {
                         System.out.println("COPY " + languages2[j].getName() + " TO "
-                            + new File(dictionaryDest, languages[i].getName()).getAbsolutePath());
-                        IOUtils.copy(languages2[j], new File(dictionaryDest, languages[i].getName()));
+                            + new java.io.File(dictionaryDest, languages[i].getName()).getAbsolutePath());
+                        IOUtils.copy(languages2[j], new java.io.File(dictionaryDest, languages[i].getName()));
                     }
                 } else {
                     IOUtils.copy(languages[i], dictionaryDest);
@@ -479,9 +483,9 @@ public class StudioService extends ClassLoader {
             /*
              * Import the designtime jars STATUS: DONE
              */
-            File studioLib = new File(webapproot, "WEB-INF/lib");
-            File designtimeFolder = new File(extFolder, "designtime");
-            File[] designJars = designtimeFolder.listFiles();
+            java.io.File studioLib = new java.io.File(webapproot, "WEB-INF/lib");
+            java.io.File designtimeFolder = new java.io.File(extFolder, "designtime");
+            java.io.File[] designJars = designtimeFolder.listFiles();
             for (int i = 0; i < designJars.length; i++) {
                 IOUtils.copy(designJars[i], studioLib);
             }
@@ -489,9 +493,9 @@ public class StudioService extends ClassLoader {
             /*
              * Import the runtime jars STATUS: DONE
              */
-            File templatesPwsFolder = new File(webapproot, "app/templates/pws/" + newName);
-            File templatesPwsWEBINFFolder = new File(templatesPwsFolder, "WEB-INF");
-            File templatesPwsWEBINFLibFolder = new File(templatesPwsWEBINFFolder, "lib");
+            java.io.File templatesPwsFolder = new java.io.File(webapproot, "app/templates/pws/" + newName);
+            java.io.File templatesPwsWEBINFFolder = new java.io.File(templatesPwsFolder, "WEB-INF");
+            java.io.File templatesPwsWEBINFLibFolder = new java.io.File(templatesPwsWEBINFFolder, "lib");
             /* Delete any old jars from prior imports */
             if (templatesPwsFolder.exists()) {
                 IOUtils.deleteRecursive(templatesPwsFolder);
@@ -499,8 +503,8 @@ public class StudioService extends ClassLoader {
 
             IOUtils.makeDirectories(templatesPwsWEBINFLibFolder, webapproot);
 
-            File runtimeFolder = new File(extFolder, "runtime");
-            File[] runJars = runtimeFolder.listFiles();
+            java.io.File runtimeFolder = new java.io.File(extFolder, "runtime");
+            java.io.File[] runJars = runtimeFolder.listFiles();
             for (int i = 0; i < runJars.length; i++) {
                 IOUtils.copy(runJars[i], studioLib);
                 IOUtils.copy(runJars[i], templatesPwsWEBINFLibFolder);
@@ -509,11 +513,11 @@ public class StudioService extends ClassLoader {
             /*
              * Import packages.js
              */
-            File packagesFile = new File(webapproot, "app/packages.js");
+            java.io.File packagesFile = new java.io.File(webapproot, "app/packages.js");
             String packagesExt = "";
             try {
                 // Get the packages.js file from our extensions.zip file */
-                packagesExt = IOUtils.read(new File(extFolder, "packages.js"));
+                packagesExt = IOUtils.read(new java.io.File(extFolder, "packages.js"));
             } catch (Exception e) {
                 packagesExt = "";
             }
@@ -545,9 +549,9 @@ public class StudioService extends ClassLoader {
             /*
              * Import spring config files STATUS: DONE
              */
-            File webinf = new File(webapproot, "WEB-INF");
-            File designxml = new File(extFolder, newName + "-tools-beans.xml");
-            File runtimexml = new File(extFolder, newName + "-runtime-beans.xml");
+            java.io.File webinf = new java.io.File(webapproot, "WEB-INF");
+            java.io.File designxml = new java.io.File(extFolder, newName + "-tools-beans.xml");
+            java.io.File runtimexml = new java.io.File(extFolder, newName + "-runtime-beans.xml");
             IOUtils.copy(designxml, webinf);
             IOUtils.copy(runtimexml, webinf);
             IOUtils.copy(runtimexml, templatesPwsWEBINFFolder);
@@ -555,19 +559,19 @@ public class StudioService extends ClassLoader {
             /*
              * Modify Spring files to include beans in the partner package.
              */
-            File studioSpringApp = new File(webinf, "studio-springapp.xml");
+            java.io.File studioSpringApp = new java.io.File(webinf, "studio-springapp.xml");
             PwsInstall.insertImport(studioSpringApp, newName + "-tools-beans.xml");
             PwsInstall.insertImport(studioSpringApp, newName + "-runtime-beans.xml");
 
-            File studioPartnerBeans = new File(webinf, "studio-partner-beans.xml");
+            java.io.File studioPartnerBeans = new java.io.File(webinf, "studio-partner-beans.xml");
             PwsInstall.insertEntryKey(studioPartnerBeans, runJars, designJars, newName);
 
-            File templatesPwsRootFolder = new File(webapproot, "app/templates/pws/");
-            File templatesPwsRootWEBINFFolder = new File(templatesPwsRootFolder, "WEB-INF");
-            File projectSpringApp = new File(templatesPwsRootWEBINFFolder, "project-springapp.xml");
+            java.io.File templatesPwsRootFolder = new java.io.File(webapproot, "app/templates/pws/");
+            java.io.File templatesPwsRootWEBINFFolder = new java.io.File(templatesPwsRootFolder, "WEB-INF");
+            java.io.File projectSpringApp = new java.io.File(templatesPwsRootWEBINFFolder, "project-springapp.xml");
             PwsInstall.insertImport(projectSpringApp, newName + "-runtime-beans.xml");
 
-            File projectPartnerBeans = new File(templatesPwsRootWEBINFFolder, "project-partner-beans.xml");
+            java.io.File projectPartnerBeans = new java.io.File(templatesPwsRootWEBINFFolder, "project-partner-beans.xml");
             PwsInstall.insertEntryKey(projectPartnerBeans, runJars, designJars, newName);
 
             ret.setPath("/tmp");
@@ -623,12 +627,12 @@ public class StudioService extends ClassLoader {
                 throw new IOException("Please upload a jar file, not a " + ext + " file");
             }
 
-            File destDir = new File(WMAppContext.getInstance().getAppContextRoot());
-            destDir = new File(destDir, "WEB-INF/lib");
+            java.io.File destDir = new java.io.File(WMAppContext.getInstance().getAppContextRoot());
+            destDir = new java.io.File(destDir, "WEB-INF/lib");
 
             // Write the zip file to outputFile
             String originalName = file.getOriginalFilename();
-            File outputFile = new File(destDir, originalName);
+            java.io.File outputFile = new java.io.File(destDir, originalName);
 
             FileOutputStream fos = new FileOutputStream(outputFile);
             IOUtils.copy(file.getInputStream(), fos);
@@ -654,6 +658,7 @@ public class StudioService extends ClassLoader {
 
     // FIXME PW discuss and possibly remove phone gap
     private void writePhoneGapFile(String path, String data) throws IOException {
+        path = path.trim();
         String projectName = this.projectManager.getCurrentProject().getProjectName();
         String pathPrefix = "phonegap/" + projectName + "/www/";
         Resource phonegap = this.projectManager.getCurrentProject().getProjectRoot().createRelative(pathPrefix);
@@ -673,7 +678,7 @@ public class StudioService extends ClassLoader {
             Resource lib = phonegap.createRelative("lib");
             if (!lib.exists()) {
                 // Copy studio's lib folder into phonegap's folder
-                IOUtils.copy(new File(this.fileSystem.getStudioWebAppRoot().getFile(), "lib"), lib.getFile());
+                IOUtils.copy(new java.io.File(this.fileSystem.getStudioWebAppRoot().getFile(), "lib"), lib.getFile());
 
                 // Copy the project's pages folder into phonegap's folder
                 IOUtils.copy(this.projectManager.getCurrentProject().getWebAppRoot().createRelative("pages").getFile(),
@@ -711,10 +716,10 @@ public class StudioService extends ClassLoader {
             indexhtml_text = indexhtml_text.replaceAll("/wavemaker/", "");
 
             // Add phonegap library
-            File[] listing = phonegap.getFile().listFiles(new java.io.FilenameFilter() {
+            java.io.File[] listing = phonegap.getFile().listFiles(new java.io.FilenameFilter() {
 
                 @Override
-                public boolean accept(File dir, String name) {
+                public boolean accept(java.io.File dir, String name) {
                     return name.indexOf("phonegap-") == 0 && name.indexOf(".js") != -1;
                 }
             });
@@ -743,7 +748,7 @@ public class StudioService extends ClassLoader {
             IOUtils.write(configjs.getFile(), configjs_text);
 
             // Update phonegap.plist
-            File phonegap_plist_file = new File(phonegap.getFile().getParent(), projectName + "/PhoneGap.plist");
+            java.io.File phonegap_plist_file = new java.io.File(phonegap.getFile().getParent(), projectName + "/PhoneGap.plist");
             String phonegap_plist = IOUtils.read(phonegap_plist_file);
             String startExpression = "<key>ExternalHosts</key>";
             int startindex = phonegap_plist.indexOf(startExpression);
