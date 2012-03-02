@@ -24,9 +24,11 @@ import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.common.util.ClassLoaderUtils.TaskNoRtn;
 import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.Project;
+import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.util.AntUtils;
 import com.wavemaker.tools.util.DesignTimeUtils;
+import com.wavemaker.runtime.RuntimeAccess;
 
 /**
  * Base Task.
@@ -48,6 +50,8 @@ public abstract class CompilerTask extends Task {
 
     private DesignServiceManager designServiceManager = null;
 
+    protected StudioFileSystem fileSystem;
+
     protected CompilerTask() {
         this(false);
     }
@@ -56,6 +60,7 @@ public abstract class CompilerTask extends Task {
         if (init) {
             AntUtils.bootstrap(getClass().getClassLoader());
         }
+        fileSystem = (StudioFileSystem)RuntimeAccess.getInstance().getSpringBean("fileSystem");
     }
 
     // REVIEW 25-Sep-07 stoens@activegrid.com -- We also need to handle

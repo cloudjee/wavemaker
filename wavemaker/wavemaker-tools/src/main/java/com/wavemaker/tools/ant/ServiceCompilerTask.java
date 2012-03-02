@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.apache.tools.ant.BuildException;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.tools.service.ServiceClassGenerator;
 
@@ -42,15 +43,16 @@ public class ServiceCompilerTask extends CompilerTask {
         this.destDir = destDir;
     }
 
-    private List<File> getServiceFiles(File srcDir) {
+    private List<Resource> getServiceFiles(Resource srcDir) throws IOException {
 
-        List<File> rtn = new ArrayList<File>();
+        List<Resource> rtn = new ArrayList<Resource>();
 
         if (srcDir != null && srcDir.exists()) {
-            for (String s : srcDir.list()) {
-                File f = new File(srcDir, s);
+            List<Resource> children = fileSystem.listChildren(srcDir);
+            for (Resource child : children) {
+                Resource f = srcDir.createRelative(fileSystem.getPath(child));
                 // lets skip directories and properties files for now
-                if (f.isDirectory() || f.getName().endsWith(".properties")) {
+                if (fileSystem.isDirectory(f) || f.getFilename().endsWith(".properties")) {
                     continue;
                 }
                 rtn.add(f);
@@ -65,12 +67,8 @@ public class ServiceCompilerTask extends CompilerTask {
 
         for (String serviceId : getDesignServiceManager().getServiceIds()) {
 
-            File srcDir;
-            try {
-                srcDir = getDesignServiceManager().getServiceRuntimeDirectory(serviceId).getFile();
-            } catch (IOException ex) {
-                throw new BuildException(ex);
-            }
+            Resource srcDir;
+            srcDir = getDesignServiceManager().getServiceRuntimeDirectory(serviceId);
 
             if (srcDir == null) {
                 throw new BuildException("Could not locate service home for " + serviceId);
@@ -78,10 +76,14 @@ public class ServiceCompilerTask extends CompilerTask {
 
             ServiceClassGenerator generator = new ServiceClassGenerator();
 
-            generator.addServiceFiles(getServiceFiles(srcDir), serviceId);
+            try {
+                generator.addServiceFiles(getServiceFiles(srcDir), serviceId);
+            } catch (IOException ex) {
+                throw new BuildException(ex);
+            }
 
             if (this.destDir == null) {
-                generator.setOutputDirectory(new FileSystemResource(srcDir));
+                generator.setOutputDirectory(srcDir);
             } else {
                 generator.setOutputDirectory(new FileSystemResource(this.destDir));
             }
