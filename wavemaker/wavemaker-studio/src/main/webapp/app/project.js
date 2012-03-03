@@ -455,12 +455,6 @@ dojo.declare("wm.studio.Project", null, {
 	    this.saveApplication(dojo.hitch(this, function() {
 		this.savePage(dojo.hitch(this, function() {
 	            studio.setSaveProgressBarMessage("login.html");
-		    // in case the theme has changed, resave the login.html page (synchronous)
-		    if (webFileExists("login.html")) {
-			var templateFolder = dojo.moduleUrl("wm.studio.app") + "templates/security/";
-			var loginhtml = loadDataSync(templateFolder + "login.html");
-			studio.project.saveProjectData("login.html", wm.makeLoginHtml(loginhtml, studio.project.projectName, studio.application.theme));
-		    }
 	            studio.incrementSaveProgressBar(1);
 		    this.saveComplete();
 		    if (onSave) onSave();
@@ -592,13 +586,13 @@ dojo.declare("wm.studio.Project", null, {
 	    }));
 
 	    var d4 = new dojo.Deferred();
+	    var themeUrl;
 	    d3.addCallback(dojo.hitch(this, function() {
 		studio.incrementSaveProgressBar(1);
 
 		// save html file, config file, and debug loader + css
 	        studio.setSaveProgressBarMessage(c.appIndexFileName);
 		var themename = studio.application.theme;
-		var themeUrl;
 		if (this.deployingProject || wm.studioConfig.environment != "local") {
                     themeUrl = (themename.match(/^wm_/)) ? "lib/wm/base/widget/themes/" + themename + "/theme.css" : "lib/wm/common/themes/" + themename + "/theme.css";
 		} else {

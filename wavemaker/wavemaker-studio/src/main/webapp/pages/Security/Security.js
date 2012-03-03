@@ -705,7 +705,7 @@ dojo.declare("Security", wm.Page, {
 	    }else {
 		if (!webFileExists("login.html")) {
 			var loginhtml = loadDataSync(this.loginTemplateFolder + "login.html");
-		    studio.project.saveProjectData("login.html", wm.makeLoginHtml(loginhtml, studio.project.projectName, studio.application.theme));
+		    studio.project.saveProjectData("login.html", wm.makeLoginHtml(loginhtml, studio.project.projectName));
 		}
 		if (!webFileExists(wm.pagesFolder + "Login/Login.js")) {
 			var loginPageCss = loadDataSync(this.loginPageTemplateFolder + "Login.css");
