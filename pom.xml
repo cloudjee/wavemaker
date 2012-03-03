@@ -357,17 +357,17 @@
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate</artifactId>
-				<version>3.2.4.ga</version>
+				<version>3.2.4.sp1</version>
 			</dependency>
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-entitymanager</artifactId>
-				<version>3.6.4.Final</version>
+				<version>3.2.4.sp1</version>
 			</dependency>
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-tools</artifactId>
-				<version>3.2.4.GA</version>
+				<version>3.2.4.ga</version>
 			</dependency>
 			<dependency>
 				<groupId>org.json</groupId>
