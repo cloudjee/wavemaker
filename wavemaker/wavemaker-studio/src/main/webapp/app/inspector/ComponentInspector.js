@@ -776,11 +776,15 @@
 	 var b = new wm.Button({
 	     owner: this,
 	     parent: inLayer,
+	     name: "wminspector-" + inLayer.name + "-" + inProp.name,
 	     width: "100%",
 	     height: "30px",
 	     caption: inProp.shortname || inProp.name,
 	     margin: "4,40,4,40",
-	     propDef: inProp
+	     propDef: inProp,
+	     showing: !inProp.ignoretmp || this.isAdvancedMode(),
+	     hint: inProp.ignoretmp && inProp.ignoreHint ? this.ignoreHintPrefix + inProp.ignoreHint : "",
+	     disabled: inProp.ignoretmp
 	 });
 	 this.editorHash[this.getHashId(inComponent,inProp.name)] = b;
 	 b.connect(b, "onclick", this, function() {
