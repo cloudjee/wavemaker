@@ -96,7 +96,7 @@ dojo.declare("wm.Slider", wm.AbstractEditor, {
     editorChanged: function() {
 	var result = this.inherited(arguments);
 	if (result) {
-	    if (this.showToolTip && this.dynamicSlider) {
+	    if (this.showToolTip && this.dynamicSlider && !this._cupdating) {
 		app.createToolTip(this.getDisplayValue(), this.domNode, null, this);
 
 	    }
