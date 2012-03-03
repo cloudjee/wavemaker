@@ -143,7 +143,21 @@ dojo.declare(
 	_setPixelValue: function(/*Number*/ pixelValue, /*Number*/ maxPixels, /*Boolean?*/ priorityChange){
 	    /* Copyright (C) 2011 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
 	     * WaveMaker: dynamicSlider property added by VMware */
-	    if (this.dynamicSlider) priorityChange = true;
+	    if (this.dynamicSlider) {
+		var now = new Date().getTime();
+		if (!this._dynamicSliderTimestamp || this._dynamicSliderTimestamp + 100 < now) {
+		    priorityChange = true;
+		    this._dynamicSliderTimestamp = now;
+		    if (this.domNode && this.domNode.id) {
+			wm.cancelJob(this.domNode.id + "._setPixelValue");
+		    }
+		} else if (this.domNode && this.domNode.id) {
+		    var self = this;
+		    wm.job(this.domNode.id + "._setPixelValue", 60, function() {
+			self._setValueAttr((this.maximum-this.minimum)*wholeIncrements/count + this.minimum, true);
+		    });
+		}
+	    }
 
 		if(this.disabled || this.readOnly){ return; }
 		pixelValue = pixelValue < 0 ? 0 : maxPixels < pixelValue ? maxPixels : pixelValue;

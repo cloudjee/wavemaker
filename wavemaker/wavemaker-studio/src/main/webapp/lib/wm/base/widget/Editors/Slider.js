@@ -16,7 +16,8 @@ dojo.declare("wm.Slider", wm.AbstractEditor, {
 	verticalSlider: false,
         editorBorder: false,
         integerValues: true,
-        dynamicSlider: false,
+        dynamicSlider: true,
+        showToolTip: true,
 	reflow: function() {},
 	setVerticalSlider: function(inVerticalSlider) {
 		this.verticalSlider = inVerticalSlider;
@@ -91,6 +92,16 @@ dojo.declare("wm.Slider", wm.AbstractEditor, {
 	    return Math.round(value);
 	else
 	    return value;
+    },
+    editorChanged: function() {
+	var result = this.inherited(arguments);
+	if (result) {
+	    if (this.showToolTip && this.dynamicSlider) {
+		app.createToolTip(this.getDisplayValue(), this.domNode, null, this);
+
+	    }
+	}
+	return result;
     }
 				       
 /*
@@ -125,7 +136,6 @@ dojo.declare("wm.Slider", wm.AbstractEditor, {
 
 dojo.require("dojox.form.RangeSlider");
 dojo.declare("wm.RangeSlider", wm.Slider, {
-    dynamicSlider: true,
     init: function() {
 	this.inherited(arguments);
 	if (this.displayValue) {
