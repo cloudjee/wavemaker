@@ -762,6 +762,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 	doOperation: function(inOperation) {
 		this.populateDataOutput();
 		var data = this.dataOutput.getData();
+	        this.onBeforeServiceCall(inOperation, data);
 		if (this.liveSaving) {
 			var lv = this.liveVariable;
 
@@ -770,7 +771,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 			lv.setLiveSource(this.dataOutput.type);
                     }
 			lv.setOperation(inOperation);
-			lv.sourceData.setData(this.dataOutput.getData());
+		        lv.sourceData.setData(data);
 			return lv.update();
 		} else {
 			switch (this.operation) {
@@ -788,6 +789,7 @@ dojo.declare("wm.LiveForm", wm.LiveFormBase, {
 			return this._getDeferredSuccess();
 		}
 	},
+        onBeforeServiceCall: function(inOperation, inData) {},
 	operationSucceeded: function(inResult) {
 		// if we get result as an array, take the frist one
 		if (dojo.isArray(inResult))
