@@ -44,7 +44,8 @@ dojo.declare("wm.debug.DataPanel", wm.Layer, {
     postInit: function() {
 	this.inherited(arguments);
 	this.createComponents({
-	    dataEditor: [wm.isMobile ? "wm.LargeTextArea" : "wm.AceEditor", {"height":"100%","name":"dataEditor","width":"100%"}],
+	    //dataEditor: [wm.isMobile ? "wm.LargeTextArea" : "wm.AceEditor", {"height":"100%","name":"dataEditor","width":"100%"}],
+	    dataEditor: ["wm.LargeTextArea", {"height":"100%","name":"dataEditor","width":"100%"}],
 	    setDataButton: ["wm.Button", {name: "fireButton", caption: "setData()", width: "120px", height: "20px",margin:"2",border:"1",borderColor:"#666"},{onclick: "callSetData"}],
 		errorLabel: ["wm.Html", {name: "errorLabel", width: "100%", height: "50px", border: "1", borderColor: "red"}, {}, {}]
 	}, this);
