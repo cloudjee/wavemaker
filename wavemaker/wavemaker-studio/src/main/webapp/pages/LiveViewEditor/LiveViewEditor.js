@@ -65,6 +65,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
 		var noView = Boolean(!this.clientLiveView);
 		this.nameEdit.setDisabled(noView);
 		this.nameEdit.endEditUpdate();
+	    /* removing preview grid and panels
 		if (noView) {
 			this.previewBox.setChecked(false);
 			this.dataGrid1.doClearColumns();
@@ -72,6 +73,8 @@ dojo.declare("LiveViewEditor", wm.Page, {
 		}
 		this.previewBox.setDisabled(noView);
 		this.dataGrid1.setDataSet(this.liveVariable);
+		*/
+
 		this.tree1.clear();
 		var t = (this.liveVariable.type || "").split(".").pop();
 		if (t) {
@@ -83,7 +86,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
 			this.schemaToNode(node, wm.typeManager.getTypeSchema(this.liveVariable.type));
 		}
 		this.clearFieldForm();
-		this.runtimeServiceFetch();
+	    //this.runtimeServiceFetch(); commented out because removing preview panels
 	        this._cachedData = this.clientLiveView.write("");
 	},
 	accept: function() {
@@ -223,7 +226,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
                 app.confirm(this.getDictionaryItem("CONFIRM_DESELECT"), false,
                             dojo.hitch(this, function() {
 		                this._checkChildren(inNode, inCheck);
-		                this.runtimeServiceFetch();
+				//this.runtimeServiceFetch(); commented out because removing preview panels
 		                this.accept();
                             }), dojo.hitch(this, function() {
 				inNode.setChecked(true);
@@ -376,6 +379,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
 	//
 	// UI Actions
 	//
+/*
 	previewBoxChange: function(inSender, inDisplayValue, inDataValue) {
 		// careful, this is a designtime only function
 		this.dataGrid1.doClearColumns();
@@ -389,6 +393,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
 			this.previewPanel.setHeight("30px");
 		}
 	},
+	*/
 	tree1DblClick: function(inSender, inNode) {
 		if (inNode.hasChildren) {
 			var c = true;
@@ -406,7 +411,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
 		// If we are checked, make sure all ancestor nodes are also checked
 		this.leafChecked(inNode);
 		// update preview
-		this.runtimeServiceFetch();
+	    //this.runtimeServiceFetch(); commented out because removing preview panels
 		this.accept();
 	    this.setDirty();
 	},
@@ -458,7 +463,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
 			var changed = this.viewField[f.name] != inDataValue;
 			this.setViewFieldProp(this.viewField, f.name, inDataValue);
 			if (changed) {
-				this.runtimeServiceFetch();
+			        //this.runtimeServiceFetch(); commented out because removing preview panels
 				this.accept();
 			}
 		}
@@ -476,6 +481,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
 	//
 	// Preview
 	//
+/*
 	runtimeServiceFetch: function() {
 		if (this.previewBox.getChecked()) {
 			var d = this.liveVariable;
@@ -491,6 +497,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
 			this.dataGrid1.setDataSet(this.liveVariable);
 		}
 	},
+	*/
 	tree1Select: function(inSender, inNode) {
 		this.fieldToForm(inNode);
 	},
