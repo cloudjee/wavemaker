@@ -1888,7 +1888,7 @@ Studio.extend({
 		/* Confirm == dont save */
 		onConfirm,
 		onCancel,
-		!this.isProjectDirty());
+		!this.isProjectDirty()); // svn -r31601: don't test for isPageDirty
 	},
         confirmAppChange: function(inMessage, inNewProject, onConfirm, onCancel) {
 	    var inMessage = dojo.string.substitute(inMessage, {project: '"' + this.project.projectName + '"', newProject: inNewProject});
