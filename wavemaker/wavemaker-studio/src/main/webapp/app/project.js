@@ -313,11 +313,9 @@ dojo.declare("wm.studio.Project", null, {
 	if (studio.bindDialog.showing && !studio.bindDialog._hideAnimation) 
 	    studio.bindDialog.dismiss();
 	
-/*
 	if (unsavedChanges) {
 	    studio.restoreCleanApp();
 	}
-	*/
 		this.pageChanging();
 		this.pageName = inName;
 		try {
@@ -1890,7 +1888,7 @@ Studio.extend({
 		/* Confirm == dont save */
 		onConfirm,
 		onCancel,
-		!this.isPageDirty());
+		!this.isProjectDirty());
 	},
         confirmAppChange: function(inMessage, inNewProject, onConfirm, onCancel) {
 	    var inMessage = dojo.string.substitute(inMessage, {project: '"' + this.project.projectName + '"', newProject: inNewProject});
