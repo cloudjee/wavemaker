@@ -325,6 +325,7 @@ Studio.widgets = {
 
 					compTree: ["wm.Tree", {height: "100%", border: "", padding: "4,0,0,0"}, {onselect: "treeSelect"}]
 				    }]
+
 /*
 				    projects: ["wm.Layer", {caption: bundleStudio.Projects}, {onShow: "resetProjectsSearch"}, {
 					ptoolbar: ["wm.Panel", {height: "29px", border: "0", padding: "4,4", layoutKind: "left-to-right", imageList: "smallToolbarImageList", backgroundColor: "#959DAB"}, {}, {
@@ -373,8 +374,7 @@ Studio.widgets = {
 						    }],
 						    languageSelect: ["wm.SelectMenu", {caption: "Language", margin:"4,0,4,20", width: "50%", maxWidth: "180", height: "24px", captionSize: "70px", displayField: "dataValue", dataField: "dataValue", dataValue: "default", options: "default", restrictValues: false},{onchange: "languageSelectChanged"},{
 						    }],
-						    deviceDesignToggle: ["wm.ToggleButton", {_classes: {domNode: ["StudioButton"]},iconUrl: "lib/images/silkIcons/phone.png", captionUp: "", captionDown: "", clicked: true, width: "25px", height: "100%"}, {onclick: "devicesToggleClick"}],
-						    docToggleBtn: ["wm.ToggleButton", {_classes: {domNode: ["StudioButton"]},iconUrl: "lib/images/silkIcons/note_edit.png", captionUp: "", captionDown: "", clicked: false, width: "25px", height: "100%"}]
+						    deviceDesignToggle: ["wm.ToggleButton", {_classes: {domNode: ["StudioButton"]},iconUrl: "lib/images/silkIcons/phone.png", captionUp: "", captionDown: "", clicked: true, width: "25px", height: "100%"}, {onclick: "devicesToggleClick"}]
 
 						}]
 					}],
@@ -391,15 +391,6 @@ Studio.widgets = {
 					phoneToggleButton:   ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]},"width": "100%", height: "100%", margin: "0", caption: "Phone"},   {onclick: "designPhoneUIClick"}],
 					mobileFoldingToggleButton:   ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]},"width": "100%", height: "100%", margin: "0", caption: "Folding"},   {onclick: "designMobileFolding"}]
 				    }],
-
-/*
-
-						    deviceTypeSelect: ["wm.SelectMenu", {caption: "Device", margin:"4,0,4,20", width: "120px", height: "24px", captionSize: "50px", dataValue: "desktop", displayField: "name", dataField: "dataValue", emptyValue: "emptyString"},{onchange: "deviceTypeSelectChanged"},{
-							binding: ["wm.Binding",{},{}, {
-							    wire: ["wm.Wire", {"source":"deviceTypeVar","targetProperty":"dataSet"}, {}]
-							}]
-						    }]
-						    */
 				    deviceSizeSelect: ["wm.SelectMenu", {caption: "Size", margin:"4,0,4,15", width: "100%", height: "24px", captionSize: "50px", dataValue: "1150", displayField: "name", dataField: "dataValue"},{onchange: "deviceSizeSelectChanged"},{
 					binding: ["wm.Binding",{},{}, {
 					    wire: ["wm.Wire", {"source":"deviceSizeVar","targetProperty":"dataSet"}, {}]
@@ -407,19 +398,6 @@ Studio.widgets = {
 				    }],
 				    deviceBarHelpBtn: ["wm.ToolButton", {width: "20px", height: "20px", margin: "5,0,0,0", hint: "Help", _classes: {domNode: ["StudioHelpIcon"]}}, {onclick: "showDeviceBarHelp"}]
 				}],
-				    docRibbonInner: ["wm.Panel", {height: "100%", minHeight: "30px", width: "100%", layoutKind: "left-to-right", border: "0", showing: false, border:"1,0,0,0", borderColor: "#999", horizontalAlign: "left", verticalAlign: "top"}, {}, {
-					binding: ["wm.Binding",{},{}, {
-					    wire: ["wm.Wire", {"expression":"${docToggleBtn.clicked}","targetProperty":"showing"}, {}]
-					}],
-					docLabel: ["wm.Label", {caption: "Docs:",width: "40px", singleLine: false, padding: "2"}],
-					docHtml: ["wm.Html", {width: "100%", height: "100%", autoScroll: true, padding: "2"}],
-					docHtmlButton: ["wm.ToolButton", {width: "20px", height: "20px", hint: "Edit", imageIndex: 75, imageList: "silkIconImageList"}, {onclick: "selected.viewDocumentation"}]
-				    }]
-				}],
-				docSplitter: ["wm.Splitter", {border: ""},{},{
-				    binding: ["wm.Binding",{},{}, {
-					wire: ["wm.Wire", {"expression":"${docToggleBtn.clicked}","targetProperty":"showing"}, {}]
-				    }]					
 				}],
 				bench: ["wm.Panel", {_classes: {domNode: ["WMApp"]}, width: "100%", height: "100%", border: "1, 0, 0, 0", backgroundColor: "silver", borderColor: "#666E80", verticalAlign: "middle", horizontalAlign: "center"}, {}, {
 				    designerSpacer1: ["wm.Spacer", {showing: false, height: "100%"}],
@@ -443,9 +421,11 @@ Studio.widgets = {
 					propertiesMenu: ["wm.PopupMenu", {
 					    "fullStructure":[
 						{idInPage: "togglePropertiesMultiactiveItem", "label":"One Accordion Open","separator":undefined,"defaultLabel":"One Accordion Open","isCheckbox":true,"onClick":"inspector.toggleMultiactive"},
+/*
 						{"separator":true,"defaultLabel":"Separator"},
 						{"label":"Component Info","defaultLabel":"Component Info","isCheckbox":false,"onClick":"generateDiagnostics", onClick: "inspector.generateComponentInfo"},
 						{idInPage: "writeDocumentationMenuItem", "label":"Write Documentation","defaultLabel":"Write Documentation","isCheckbox":true,"onClick":"selected.viewDocumentation"},
+						*/
 						{"separator":true,"defaultLabel":"Separator"}
 					    ]}, {}],					
 					propMenuButton: ["wm.ToolButton", {height: "100%", width: "20px", caption: ""}, {onclick: "propertiesMenu"}]

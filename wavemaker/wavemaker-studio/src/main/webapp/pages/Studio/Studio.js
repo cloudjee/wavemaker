@@ -77,6 +77,7 @@ dojo.declare("Studio", wm.Page, {
 
 	    app._page = this;// not sure why this was failing to set, but I don't have time to investigate...
 	    this.neededJars = {};
+    /*
 		try{
 		    this.documentationDialog = new wm.RichTextDialog({_classes: {domNode: ["studiodialog"]},
 								      owner: this, 
@@ -86,7 +87,8 @@ dojo.declare("Studio", wm.Page, {
 		catch(e){
 			console.info('error while creating RichTextDialog for documentation.');	
 		}
-		
+		*/
+
             this.trackerImage.setSource("http://wavemaker.com/img/blank.gif?op=studioLoad&v=" + escape(wm.studioConfig.studioVersion) + "&r=" + String(Math.random(new Date().getTime())).replace(/\D/,"").substring(0,8));
 
 		this.project = new wm.studio.Project();
@@ -933,7 +935,6 @@ dojo.declare("Studio", wm.Page, {
 	    }
 		try {
 			var s = this.selected = inComponent;
-		    this.updateDocToolbar();
 			// make sure selected widget and all ancestors are showing
 		    if (!this._dontNavOnPageChange) {
 			this.revealSelected();
@@ -953,7 +954,6 @@ dojo.declare("Studio", wm.Page, {
 			// show in inspector
 		    if (s && !s.noInspector) {
 			    this.inspect(s, true);
-			this.writeDocumentationMenuItem.set("checked",Boolean(s.documentation));
 		    }
 		} finally {
 		}
@@ -1852,23 +1852,15 @@ dojo.declare("Studio", wm.Page, {
 	logoutSuccess: function(inResponse) {
 		window.location.reload();
 	},
+/*
         saveDocumentation: function() {
 	    var html = this.documentationDialog.getHtml();	   
 	    this.documentationDialog.editComponent.documentation = html;
-	    this.updateDocToolbar();
 	    if (this.documentationDialog.editComponent == studio.selected)
 		this.inspector.reinspect();
 	    this.writeDocumentationMenuItem.set("checked",Boolean(studio.selected.documentation));
 	},
-    updateDocToolbar: function() {
-	if (!this.selected) {
-	    this.docHtml.setHtml("<i>Nothing selected</i>");
-	} else if (this.selected.documentation) {
-	    this.docHtml.setHtml(dojo.trim(this.selected.documentation));
-	} else {
-	    this.docHtml.setHtml("<i>No documentation for " + studio.selected.name + "</i>");
-	}
-    },
+	*/
         loadThemeList: function(optionalCallback) {
 
             var d = studio.deploymentService.requestAsync("listThemes");
@@ -1882,24 +1874,10 @@ dojo.declare("Studio", wm.Page, {
             if (optionalCallback)
                 d.addCallback(optionalCallback);
         },
-    showDeviceBarHelp: function() {
-	studio.helpPopup = studio.inspector.getHelpDialog();
-	studio.helpPopup.page.setHeader("Devices Toolbar", "Introduction");
-	studio.helpPopup.page.setContent("");
-	studio.helpPopup.show();
-
-	var url = studio.getDictionaryItem("URL_DOCS", {studioVersionNumber:  wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")}) + "WM65RelNotes";
-	studio.studioService.requestAsync("getPropertyHelp", [url + "?synopsis"], function(inResponse) {
-	    wm.cancelJob("PropDoc");
-	    this._loadingContent = false;
-	    if (inResponse.indexOf("No documentation found for this topic") != -1 || !inResponse)
-		inResponse = "<a href='" + url + "' target='docs'>Open Docs</a><br/>" + inResponse;
-	    studio.helpPopup.page.setContent(inResponse);
-
-	});
-    },
     loadHelp: function(inType, inPropName, onSuccess) {
-	      var url = studio.getDictionaryItem("URL_PROPDOCS", {studioVersionNumber:  wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1")});
+	    var version = "6.4" || wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1"); // TODO: Get rid of 6.4
+	    var url = studio.getDictionaryItem("URL_PROPDOCS", {studioVersionNumber:  version});
+
 	      if (inType == studio.project.projectName) inType = "wm.Application";
 
 	      inType = inType.substring(inType.indexOf(".")+1);
@@ -1913,7 +1891,9 @@ dojo.declare("Studio", wm.Page, {
 
 	      inType = inType.replace(/\./g, "_");
 
-	studio.studioService.requestAsync("getPropertyHelp", [url + inType + "_" + inPropName + "?synopsis"], onSuccess);
+	url = url + inType + (inPropName ? "_" + inPropName : "");;
+	studio.studioService.requestAsync("getPropertyHelp", [url + "?synopsis"], onSuccess);
+	return url;
     },
     startPageIFrameLoaded: function() {
 	if (this.startPageDialog.page)

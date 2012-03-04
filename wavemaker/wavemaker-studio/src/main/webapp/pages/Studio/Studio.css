@@ -1187,6 +1187,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 
 .Studio .Security-tabs > .wmtablayers-tabbar,
 #studio_left > .wmtablayers-tabbar,
+#studio_documentationTabs > .wmtablayers-tabbar,
 #studio_tabs > .wmtablayers-tabbar,
 #studio_themesPage_themeDesigner_demoPanelTabLayers .wmtablayers-tabbar,
 .JavaEditor-logTabs .wmtablayers-tabbar,
@@ -1212,6 +1213,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 
 .Studio .Security-tabs > .wmtablayers-tabbar,
 #studio_left > .wmtablayers-tabbar,
+#studio_documentationTabs > .wmtablayers-tabbar,
 #studio_tabs > .wmtablayers-tabbar,
 #studio_themesPage_themeDesigner_demoPanelTabLayers .wmtablayers-tabbar,
 .JavaEditor-logTabs .wmtablayers-tabbar,
@@ -1252,6 +1254,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 
 .Studio .Security-tabs > .wmtablayers-tabbar > .wmtablayers-tab,
 #studio_left > .wmtablayers-tabbar >  .wmtablayers-tab,
+#studio_documentationTabs > .wmtablayers-tabbar > .wmtablayers-tab,
 #studio_themesPage_themeDesigner_demoPanelTabLayers > .wmtablayers-tabbar > .wmtablayers-tab,
 .JavaEditor-logTabs .wmtablayers-tab,
 #studio_tabs > .wmtablayers-tabbar > .wmtablayers-tab,
@@ -1328,6 +1331,7 @@ body #studio_inspector .wmaccordion-header,
 
 .Studio .Security-tabs > .wmtablayers-tabbar > .wmtablayers-selected,
 #studio_left > .wmtablayers-tabbar > .wmtablayers-selected,
+#studio_documentationTabs > .wmtablayers-tabbar > .wmtablayers-selected,
 #studio_tabs > .wmtablayers-tabbar >  .wmtablayers-selected,
 #studio_themesPage_themeDesigner_demoPanelTabLayers > .wmtablayers-tabbar > .wmtablayers-selected,
 .JavaEditor-logTabs .wmtablayers-selected,
@@ -1769,14 +1773,4 @@ color: rgb(0,270,0);
 
 .Studio-navigationBar {
     font-family: "Nimbus Sans L", sans-serif;
-}
-
-
-
-#studio_docHtml {
-    pointer: cursor;
-    text-decoration: underline;
-}
-#studio_docHtml:hover {
-background: transparent !important;
 }

@@ -112,6 +112,19 @@ body #studio_PIContents #studio_togglePropertiesButton2 {
      border-radius: 0px;     
 }
 
+.wminspector .wmrichtext .dijitEditor {
+    background-color: white;
+    color: black;
+}
+.wminspector .wmhtml a,
+.wminspector .wmhtml a:visited {
+    color: white;
+}
+#studio_inspector_propEdit_layoutBox1_diagnostics_docsHtml ul,
+#studio_inspector_propEdit_layoutBox1_diagnostics_docsHtml ol {
+    padding-left: 10px;
+    list-style-position: inside;
+}
 #studio_propMenuButton {
    background: transparent url(../../images/wm/component_16.png) no-repeat 50% 50%;
    cursor: pointer;
