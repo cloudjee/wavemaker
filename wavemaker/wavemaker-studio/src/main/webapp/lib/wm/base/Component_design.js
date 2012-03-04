@@ -19,6 +19,7 @@ dojo.require('wm.base.Component');
 // Design Schema
 //===========================================================================
 wm.Object.extendSchema(wm.Component, {
+    diagnostics: {group: "diagnostics", editor: "wm.prop.Diagnostics"},
     viewDocumentation: {group: "docs", writeonly: true},
     //generateDocumentation: {group: "docs", readonly: true, order: 2, shortname: "Generate Docs", operation: true},
         themeable: {ignore: 1},

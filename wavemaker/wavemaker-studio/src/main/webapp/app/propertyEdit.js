@@ -1621,7 +1621,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 		    classListEditor: ["wm.prop.ClassListEditor", {width: "100%", inspected: this.inspected}]
 		}]
 	    }]
-	})[0];
+	},true)[0];
 	this.connect(this.tabs,"onchange",this, function() {
 	    if (this.parent._isDestroying) return;
 	    this.setHeight(this.getPreferredFitToContentHeight());
@@ -2355,5 +2355,84 @@ dojo.declare("wm.prop.DeviceListEditor", wm.prop.AllCheckboxSet, {
 				 {name: "Phone",
 				  dataValue: "phone"}]);
 	this.setDataSet(this.deviceList);
+    }
+});
+
+dojo.declare("wm.prop.Diagnostics", wm.Container, {
+    noHelpButton: true,
+    noBindColumn: true,
+    height: "300px",
+    fitToContentHeight: true,
+    postInit: function() {
+	this.inherited(arguments);
+	this.editors = {};
+	this.parent.setFitToContentHeight(true);
+	this.tabs = this.createComponents({
+	    tabs: ["wm.TabLayers", {width: "100%", height: "300px", fitToContentHeight: true, clientBorder: "1,0,0,0",clientBorderColor: "#959DAB", margin: "0", padding: "0"}, {}, {
+		descLayer: ["wm.Layer", {caption: "Description"}, {},{
+		    descHtml: ["wm.Html", {width: "100%", height: "100px", autoSizeHeight: true, padding: "3", autoScroll:false}],
+		}],
+		notesLayer: ["wm.Layer", {caption: "Notes"}, {},{
+		    notesEditor: ["wm.RichText", {syntax: "text", width: "100%", height: "300px"}]
+		}],
+		docsLayer: ["wm.Layer", {caption: "Docs"}, {}, {
+		    docsHtml: ["wm.Html", {width: "100%", height: "100px", padding: "3", autoSizeHeight: true, autoScroll:false}]
+		}]
+	    }]
+	},this)[0];
+	this.descLayer  = this.tabs.layers[0];
+	this.descHtml  = this.descLayer.c$[0];
+	this.notesLayer = this.tabs.layers[1];
+	this.notesEditor = this.notesLayer.c$[0];
+	this.docsLayer  = this.tabs.layers[2];
+	this.docsHtml = this.docsLayer.c$[0];
+	this.descHtml.scheduleAutoSize = this.docsHtml.scheduleAutoSize = function() {
+	    if (!this._cupdating)
+		this.doAutoSize(true,true);
+	};
+	this.notesEditor.connect(this.notesEditor, "onchange", this, dojo.hitch(this, function(inDataValue, inDisplayValue) {
+	    this.inspected.documentation = inDataValue;
+	}));
+	this.tabs.connect(this.tabs, "onchange", this, function() {
+	    dojo.cookie("wm.prop.Diagnostics.layerIndex", this.tabs.layerIndex);
+	    if (this.docsLayer.isActive()) {
+		if (!this.docsHtml.html) {
+		    this.update();
+		}
+	    } else if (this.descLayer.isActive()) {
+		this.descHtml.doAutoSize(true,true);
+	    }
+	});
+	this.tabs.setLayerIndex(dojo.cookie("wm.prop.Diagnostics.layerIndex") || 0);
+	this.update();
+	this.connect(this, "onShow", this, "update");
+    },
+    destroy: function() {
+	delete this.descLayer;
+	delete this.descHtml;
+	delete this.notesLayer;
+	delete this.notesEditor;
+	delete this.descLayer;
+	delete this.docsHtml;
+	this.inherited(arguments);
+    },
+    setDataValue: function() {
+	this.update();
+    },
+    reinspect: function() {
+	this.update();
+	return true;
+    },
+    update: function() {
+	if (this.isAncestorHidden()) return;
+	this.descHtml.setHtml(this.inspected.generateDocumentation());
+	this.notesEditor.setDataValue(this.inspected.documentation || "");
+	
+	if (!this.docsHtml.isAncestorHidden()) {	
+	    var url = studio.loadHelp(this.inspected.declaredClass, "", dojo.hitch(this, function(inData) {
+		this.docsHtml.setHtml(inData);
+	    }));
+	    this.docsHtml.setHtml("Loading <a target='docs' href='" + url + ">docs...</a>");
+	}
     }
 });

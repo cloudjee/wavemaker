@@ -1920,6 +1920,11 @@ wm.addPropertyGroups({
     /* Confirmed */
     devices: {displayName: "Devices", order: 120},
     /* Confirmed */
+    operation: {displayName: "Operations", order: 200},
+    /* Confirmed */
+    diagnostics: {displayName: "Docs/Diagnostics", order: 300},
+
+    /* Confirmed */
     deprecated: {displayName: "Deprecated", order: 100000},
 /* OLD SCHEMA */
 
@@ -1942,7 +1947,6 @@ wm.addPropertyGroups({
 	validation: {displayName: "Validation", order: 150},
 	columns: {displayName: "Columns", order: 999},
 	ungrouped: {displayName: "Other", order: 1000},
-	operation: {displayName: "Operations", order: 2000},
     docs: {displayName: "Documentation", order: 3000}
 
 });
