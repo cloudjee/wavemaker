@@ -2430,9 +2430,10 @@ dojo.declare("wm.prop.Diagnostics", wm.Container, {
 	
 	if (!this.docsHtml.isAncestorHidden()) {	
 	    var url = studio.loadHelp(this.inspected.declaredClass, "", dojo.hitch(this, function(inData) {
-		this.docsHtml.setHtml(inData);
+		if (inData)
+		    this.docsHtml.setHtml(inData);
 	    }));
-	    this.docsHtml.setHtml("Loading <a target='docs' href='" + url + ">docs...</a>");
+	    this.docsHtml.setHtml("Loading <a target='docs' href='" + url + "'>docs...</a>");
 	}
     }
 });
