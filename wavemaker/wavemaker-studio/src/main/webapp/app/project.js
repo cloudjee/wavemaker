@@ -313,10 +313,11 @@ dojo.declare("wm.studio.Project", null, {
 	if (studio.bindDialog.showing && !studio.bindDialog._hideAnimation) 
 	    studio.bindDialog.dismiss();
 	
+/*
 	if (unsavedChanges) {
 	    studio.restoreCleanApp();
 	}
-
+	*/
 		this.pageChanging();
 		this.pageName = inName;
 		try {
@@ -714,6 +715,7 @@ dojo.declare("wm.studio.Project", null, {
 	    var d12 = new dojo.Deferred();
 	    d11.addCallback(dojo.hitch(this, function() {
 		studio.incrementSaveProgressBar(1);
+		studio.setCleanApp();
 		callback();
 	    }));
 
