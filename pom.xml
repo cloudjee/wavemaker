@@ -367,7 +367,7 @@
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-tools</artifactId>
-				<version>3.2.4.ga</version>
+				<version>3.2.4.GA</version>
 			</dependency>
 			<dependency>
 				<groupId>org.json</groupId>
