@@ -38,11 +38,9 @@ import com.wavemaker.common.util.ClassLoaderUtils;
 /**
  * A ClassLoader that loads a list of resources
  * 
- * @author slee
+ * @author Seung Lee
  */
 public class CFClassLoader extends ClassLoader {
-
-    // FIXME PW this looks like it is in the wrong package, we should move to tools
 
     private final Resource[] resources;
 
