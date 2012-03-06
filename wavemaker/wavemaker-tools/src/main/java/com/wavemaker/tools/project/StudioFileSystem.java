@@ -9,7 +9,6 @@ import java.util.List;
 
 import org.springframework.core.io.Resource;
 
-import com.wavemaker.common.CommonStudioFileSystem;
 import com.wavemaker.tools.io.Folder;
 
 /**
@@ -21,7 +20,7 @@ import com.wavemaker.tools.io.Folder;
  * @author Jeremy Grelle
  * @author Phillip Webb
  */
-public interface StudioFileSystem extends CommonStudioFileSystem {
+public interface StudioFileSystem {
 
     // FIXME PW filesystem : remove this interface and find another way to access common
 
@@ -150,6 +149,17 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
      */
     @Deprecated
     List<Resource> listChildren(Resource resource, ResourceFilter filter);
+
+    /**
+     * Search all files recursively and return the result. This method returns only files, not directories.
+     * 
+     * @param resource the resource
+     * @param filter a resource filter used to limit results
+     * @return a list of child files
+     * @see #listChildren(Resource)
+     */
+    @Deprecated
+    List<Resource> listAllChildren(Resource resource, ResourceFilter filter);
 
     /**
      * Create and return a resource for the specified path as applied to the given resource.

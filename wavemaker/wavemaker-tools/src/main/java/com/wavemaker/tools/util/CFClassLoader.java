@@ -29,11 +29,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
 
 import com.wavemaker.common.CommonRuntimeAccess;
-import com.wavemaker.common.CommonStudioFileSystem;
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.io.GFSResource;
 import com.wavemaker.common.util.ClassLoaderUtils;
+import com.wavemaker.tools.project.StudioFileSystem;
 
 /**
  * A ClassLoader that loads a list of resources
@@ -48,14 +48,14 @@ public class CFClassLoader extends ClassLoader {
 
     private final File tempDir = null;
 
-    private final CommonStudioFileSystem fileSystem;
+    private final StudioFileSystem fileSystem;
 
     public CFClassLoader(Resource[] resources, ClassLoader parent) {
 
         super(null);
         this.resources = resources;
         this.parentClassLoader = parent;
-        this.fileSystem = (CommonStudioFileSystem) CommonRuntimeAccess.getInstance().getSpringBean("fileSystem");
+        this.fileSystem = (StudioFileSystem) CommonRuntimeAccess.getInstance().getSpringBean("fileSystem");
     }
 
     @Override

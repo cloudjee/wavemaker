@@ -29,7 +29,6 @@ import com.mongodb.Mongo;
 import com.mongodb.MongoException;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
-import com.wavemaker.common.CommonResourceFilter;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.io.GFSResource;
 import com.wavemaker.common.util.IOUtils;
@@ -231,7 +230,8 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
     }
 
     @Override
-    public List<Resource> listAllChildren(Resource resource, CommonResourceFilter filter) {
+    public List<Resource> listAllChildren(Resource resource, ResourceFilter filter) {
+        // FIXME looks very similar to listChildren, can we combine
         if (!(resource instanceof GFSResource)) {
             return this.delegate.listAllChildren(resource, filter);
         }

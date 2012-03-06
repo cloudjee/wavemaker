@@ -19,7 +19,6 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 
 import com.wavemaker.common.CommonConstants;
-import com.wavemaker.common.CommonResourceFilter;
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.FileAccessException;
@@ -210,7 +209,8 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
     }
 
     @Override
-    public List<Resource> listAllChildren(Resource resource, CommonResourceFilter filter) {
+    public List<Resource> listAllChildren(Resource resource, ResourceFilter filter) {
+        // FIXME looks very similar to listChildren, can we combine
         List<Resource> children = new ArrayList<Resource>();
         File[] files;
         try {
