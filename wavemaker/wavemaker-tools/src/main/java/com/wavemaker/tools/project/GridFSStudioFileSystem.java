@@ -87,12 +87,6 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
     }
 
     @Override
-    public Folder getFolderForResource(Resource resource) {
-        throw new UnsupportedOperationException();
-        // FIXME PW filesystem
-    }
-
-    @Override
     public Folder getCommonFolder() {
         throw new UnsupportedOperationException();
         // FIXME PW filesystem

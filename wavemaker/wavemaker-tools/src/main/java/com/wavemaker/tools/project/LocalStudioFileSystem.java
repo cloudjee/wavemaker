@@ -56,9 +56,9 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
     private File testWMHome = null;
 
     @Override
-    public Folder getFolderForResource(Resource resource) {
+    public Folder getCommonFolder() {
         try {
-            LocalFileSystem fileSystem = new LocalFileSystem(resource.getFile());
+            LocalFileSystem fileSystem = new LocalFileSystem(getCommonDir().getFile());
             return FileSystemFolder.getRoot(fileSystem);
         } catch (IOException e) {
             throw new IllegalStateException(e);
@@ -66,17 +66,13 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
     }
 
     @Override
-    public Folder getCommonFolder() {
+    public Folder getWaveMakerHomeFolder() {
         try {
-            return getFolderForResource(getCommonDir());
+            LocalFileSystem fileSystem = new LocalFileSystem(getWaveMakerHome().getFile());
+            return FileSystemFolder.getRoot(fileSystem);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
-    }
-
-    @Override
-    public Folder getWaveMakerHomeFolder() {
-        return getFolderForResource(getWaveMakerHome());
     }
 
     @Override
