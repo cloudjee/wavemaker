@@ -2,10 +2,10 @@
 package com.wavemaker.tools.io.filesystem;
 
 import org.springframework.util.Assert;
+import org.springframework.util.ObjectUtils;
 
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
-import com.wavemaker.tools.io.ResourcePath;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
 
@@ -19,19 +19,19 @@ import com.wavemaker.tools.io.exception.ResourceExistsException;
  */
 public abstract class FileSystemResource<K> implements Resource {
 
+    private final JailedResourcePath path;
+
     private final FileSystem<K> fileSystem;
 
     private final K key;
 
-    private final ResourcePath path;
-
-    FileSystemResource(ResourcePath path, FileSystem<K> fileSystem, K key) {
+    FileSystemResource(JailedResourcePath path, FileSystem<K> fileSystem, K key) {
         Assert.notNull(path, "Path must not be null");
         Assert.notNull(fileSystem, "FileSystem must not be null");
         Assert.notNull(key, "Key must not be null");
+        this.path = path;
         this.fileSystem = fileSystem;
         this.key = key;
-        this.path = path;
     }
 
     protected final FileSystem<K> getFileSystem() {
@@ -42,7 +42,7 @@ public abstract class FileSystemResource<K> implements Resource {
         return this.key;
     }
 
-    protected final ResourcePath getPath() {
+    protected final JailedResourcePath getPath() {
         return this.path;
     }
 
@@ -62,7 +62,7 @@ public abstract class FileSystemResource<K> implements Resource {
         Assert.hasLength(name, "Name must not be empty");
         Assert.isTrue(!name.contains("/"), "Name must not contain path elements");
         ensureExists();
-        Assert.state(getPath().getParent() != null, "Root folders cannot be renamed");
+        Assert.state(getPath().getPath().getParent() != null, "Root folders cannot be renamed");
         try {
             K newKey = getFileSystem().rename(getKey(), name);
             return newKey;
@@ -73,7 +73,7 @@ public abstract class FileSystemResource<K> implements Resource {
 
     @Override
     public Folder getParent() {
-        ResourcePath parentPath = this.path.getParent();
+        JailedResourcePath parentPath = this.path.getParent();
         if (parentPath == null) {
             return null;
         }
@@ -88,12 +88,12 @@ public abstract class FileSystemResource<K> implements Resource {
 
     @Override
     public String getName() {
-        return this.path.getName();
+        return this.path.getPath().getName();
     }
 
     @Override
     public String toString() {
-        return this.path.toString();
+        return this.path.getPath().toString();
     }
 
     @Override
@@ -116,7 +116,7 @@ public abstract class FileSystemResource<K> implements Resource {
         if (!this.fileSystem.equals(other.fileSystem)) {
             return false;
         }
-        return this.path.equals(other.path);
+        return ObjectUtils.nullSafeEquals(this.path, other.path);
     }
 
 }

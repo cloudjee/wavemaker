@@ -1,6 +1,7 @@
 
 package com.wavemaker.tools.io.filesystem;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -10,7 +11,12 @@ import org.junit.rules.ExpectedException;
 
 import com.wavemaker.tools.io.ResourcePath;
 
-public class FileSystemPathTest {
+/**
+ * Tests for {@link ResourcePath}.
+ * 
+ * @author Phillip Webb
+ */
+public class ResourcePathTest {
 
     @Rule
     public ExpectedException thrown = ExpectedException.none();
@@ -104,5 +110,27 @@ public class FileSystemPathTest {
         ResourcePath path = new ResourcePath().get("a/b/").getParent();
         assertThat(path.getName(), is("a"));
         assertThat(path.toString(), is("/a"));
+    }
+
+    @Test
+    public void shouldBeRootPath() throws Exception {
+        ResourcePath path = new ResourcePath();
+        assertThat(path.isRootPath(), is(true));
+    }
+
+    @Test
+    public void shouldNoteBeRootPath() throws Exception {
+        ResourcePath path = new ResourcePath().get("a");
+        assertThat(path.isRootPath(), is(false));
+    }
+
+    @Test
+    public void shouldAppendPath() throws Exception {
+        ResourcePath root = new ResourcePath();
+        ResourcePath ab = new ResourcePath().get("a/b");
+        ResourcePath cd = new ResourcePath().get("c/d");
+        assertThat(root.append(ab), is(equalTo(ab)));
+        assertThat(ab.append(root), is(equalTo(ab)));
+        assertThat(ab.append(cd), is(equalTo(new ResourcePath().get("a/b/c/d"))));
     }
 }

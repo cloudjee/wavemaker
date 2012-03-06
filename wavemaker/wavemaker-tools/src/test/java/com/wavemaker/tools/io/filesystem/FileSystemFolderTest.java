@@ -31,7 +31,6 @@ import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceFilter;
-import com.wavemaker.tools.io.ResourcePath;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
@@ -49,7 +48,7 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
     @Override
     public void setup() {
         super.setup();
-        this.folder = new FileSystemFolder<Object>(new ResourcePath(), this.fileSystem, new ResourcePath());
+        this.folder = new FileSystemFolder<Object>(new JailedResourcePath(), this.fileSystem, new JailedResourcePath());
     }
 
     @Test
@@ -63,19 +62,19 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
     public void shouldNeedFileSystem() throws Exception {
         this.thrown.expect(IllegalArgumentException.class);
         this.thrown.expectMessage("FileSystem must not be null");
-        new FileSystemFolder<Object>(new ResourcePath(), null, new Object());
+        new FileSystemFolder<Object>(new JailedResourcePath(), null, new Object());
     }
 
     @Test
     public void shouldNeedKey() throws Exception {
         this.thrown.expect(IllegalArgumentException.class);
         this.thrown.expectMessage("Key must not be null");
-        new FileSystemFolder<Object>(new ResourcePath(), this.fileSystem, null);
+        new FileSystemFolder<Object>(new JailedResourcePath(), this.fileSystem, null);
     }
 
     @Test
     public void shouldNotCreateFolderFromFile() throws Exception {
-        given(this.fileSystem.getResourceType(new ResourcePath().get("a"))).willReturn(ResourceType.FILE);
+        given(this.fileSystem.getResourceType(new JailedResourcePath().get("a"))).willReturn(ResourceType.FILE);
         this.thrown.expect(ResourceTypeMismatchException.class);
         this.thrown.expectMessage("Unable to access resource '/a' as folder due to existing file");
         this.folder.getFolder("a");
@@ -239,8 +238,8 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
 
     @Test
     public void shouldListResources() throws Exception {
-        ResourcePath pathA = new ResourcePath().get("a");
-        ResourcePath pathB = new ResourcePath().get("b");
+        JailedResourcePath pathA = new JailedResourcePath().get("a");
+        JailedResourcePath pathB = new JailedResourcePath().get("b");
         given(this.fileSystem.list(this.folder.getKey())).willReturn(Arrays.asList("a", "b"));
         given(this.fileSystem.getResourceType(pathA)).willReturn(ResourceType.FOLDER);
         given(this.fileSystem.getResourceType(pathB)).willReturn(ResourceType.FILE);
@@ -257,8 +256,8 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
 
     @Test
     public void shouldListFilteredResources() throws Exception {
-        ResourcePath pathA = new ResourcePath().get("a");
-        ResourcePath pathB = new ResourcePath().get("b");
+        JailedResourcePath pathA = new JailedResourcePath().get("a");
+        JailedResourcePath pathB = new JailedResourcePath().get("b");
         given(this.fileSystem.list(this.folder.getKey())).willReturn(Arrays.asList("a", "b"));
         given(this.fileSystem.getResourceType(pathA)).willReturn(ResourceType.FOLDER);
         given(this.fileSystem.getResourceType(pathB)).willReturn(ResourceType.FILE);
@@ -435,15 +434,15 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
         ByteArrayOutputStream outputStreamB = new ByteArrayOutputStream();
         ByteArrayOutputStream outputStreamD = new ByteArrayOutputStream();
         given(this.fileSystem.getResourceType(any())).willReturn(ResourceType.DOES_NOT_EXIST);
-        given(this.fileSystem.getOutputStream(new ResourcePath().get("a/b.txt"))).willReturn(outputStreamB);
-        given(this.fileSystem.getOutputStream(new ResourcePath().get("c/d.txt"))).willReturn(outputStreamD);
+        given(this.fileSystem.getOutputStream(new JailedResourcePath().get("a/b.txt"))).willReturn(outputStreamB);
+        given(this.fileSystem.getOutputStream(new JailedResourcePath().get("c/d.txt"))).willReturn(outputStreamD);
         InputStream zipStream = getSampleZip();
         this.folder.unzip(zipStream);
-        verify(this.fileSystem, atLeastOnce()).createFolder(new ResourcePath().get("a"));
-        verify(this.fileSystem, atLeastOnce()).getResourceType(new ResourcePath().get("a/b.txt"));
+        verify(this.fileSystem, atLeastOnce()).createFolder(new JailedResourcePath().get("a"));
+        verify(this.fileSystem, atLeastOnce()).getResourceType(new JailedResourcePath().get("a/b.txt"));
         assertThat(new String(outputStreamB.toByteArray()), is("ab"));
-        verify(this.fileSystem, atLeastOnce()).createFolder(new ResourcePath().get("c"));
-        verify(this.fileSystem, atLeastOnce()).getResourceType(new ResourcePath().get("c/d.txt"));
+        verify(this.fileSystem, atLeastOnce()).createFolder(new JailedResourcePath().get("c"));
+        verify(this.fileSystem, atLeastOnce()).getResourceType(new JailedResourcePath().get("c/d.txt"));
         assertThat(new String(outputStreamD.toByteArray()), is("cd"));
     }
 
@@ -462,5 +461,12 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
         zipOutputStream.closeEntry();
         zipOutputStream.close();
         return new ByteArrayInputStream(outputStream.toByteArray());
+    }
+
+    @Test
+    public void shouldJail() throws Exception {
+        Folder jailed = this.folder.getFolder("a").jail();
+        Folder sub = jailed.getFolder("/b");
+        assertThat(sub.toString(), is("/b/"));
     }
 }

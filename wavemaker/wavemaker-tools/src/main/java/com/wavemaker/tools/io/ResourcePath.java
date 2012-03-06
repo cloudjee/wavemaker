@@ -103,6 +103,35 @@ public final class ResourcePath {
         return this.parent;
     }
 
+    /**
+     * Returns <tt>true</tt> if this path is a root path.
+     * 
+     * @return if this is a root path
+     */
+    public boolean isRootPath() {
+        if (this.parent != null) {
+            return false;
+        }
+        return "".equals(this.name);
+    }
+
+    /**
+     * Append the given path to this path
+     * 
+     * @param path the path to append
+     * @return a new path
+     */
+    public ResourcePath append(ResourcePath path) {
+        Assert.notNull(path, "Path must not be null");
+        if (path.isRootPath()) {
+            return this;
+        }
+        if (path.getParent() == null) {
+            return new ResourcePath(this, path.getName());
+        }
+        return new ResourcePath(append(path.getParent()), path.getName());
+    }
+
     @Override
     public int hashCode() {
         return toString().hashCode();

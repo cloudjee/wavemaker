@@ -31,16 +31,16 @@ import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
  */
 public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder {
 
-    FileSystemFolder(ResourcePath path, FileSystem<K> fileSystem, K key) {
+    FileSystemFolder(JailedResourcePath path, FileSystem<K> fileSystem, K key) {
         super(path, fileSystem, key);
         ResourceType resourceType = getFileSystem().getResourceType(key);
-        ResourceTypeMismatchException.throwOnMismatch(path, resourceType, ResourceType.FOLDER);
+        ResourceTypeMismatchException.throwOnMismatch(path.getPath(), resourceType, ResourceType.FOLDER);
     }
 
     @Override
     public Resource getExisting(String name) throws ResourceDoesNotExistException {
         Assert.hasLength(name, "Name must not be empty");
-        ResourcePath resourcePath = getPath().get(name);
+        JailedResourcePath resourcePath = getPath().get(name);
         K resourceKey = getFileSystem().getKey(resourcePath);
         ResourceType resourceType = getFileSystem().getResourceType(resourceKey);
         switch (resourceType) {
@@ -55,7 +55,7 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
     @Override
     public boolean hasExisting(String name) {
         Assert.hasLength(name, "Name must not be empty");
-        ResourcePath resourcePath = getPath().get(name);
+        JailedResourcePath resourcePath = getPath().get(name);
         K resourceKey = getFileSystem().getKey(resourcePath);
         return getFileSystem().getResourceType(resourceKey) != ResourceType.DOES_NOT_EXIST;
     }
@@ -63,7 +63,7 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
     @Override
     public FileSystemFolder<K> getFolder(String name) {
         Assert.hasLength(name, "Name must not be empty");
-        ResourcePath folderPath = getPath().get(name);
+        JailedResourcePath folderPath = getPath().get(name);
         K folderKey = getFileSystem().getKey(folderPath);
         return new FileSystemFolder<K>(folderPath, getFileSystem(), folderKey);
     }
@@ -71,7 +71,7 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
     @Override
     public FileSystemFile<K> getFile(String name) {
         Assert.hasLength(name, "Name must not be empty");
-        ResourcePath filePath = getPath().get(name);
+        JailedResourcePath filePath = getPath().get(name);
         K fileKey = getFileSystem().getKey(filePath);
         return new FileSystemFile<K>(filePath, getFileSystem(), fileKey);
     }
@@ -110,7 +110,7 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
         if (list == null) {
             return ResourcesCollection.emptyResources();
         }
-        Resources<Resource> resources = new FileSystemResources<K>(getFileSystem(), getPath(), list);
+        Resources<Resource> resources = new FileSystemResources<K>(getPath(), getFileSystem(), list);
         return FilteredResources.apply(resources, filter);
     }
 
@@ -201,6 +201,13 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
     }
 
     @Override
+    public Folder jail() {
+        JailedResourcePath jailedPath = new JailedResourcePath(getPath().getPath(), new ResourcePath());
+        K jailedKey = getFileSystem().getKey(jailedPath);
+        return new FileSystemFolder<K>(jailedPath, getFileSystem(), jailedKey);
+    }
+
+    @Override
     public String toString() {
         return super.toString() + "/";
     }
@@ -212,7 +219,7 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
      * @return the root folder
      */
     public static <K> Folder getRoot(FileSystem<K> fileSystem) {
-        ResourcePath path = new ResourcePath();
+        JailedResourcePath path = new JailedResourcePath();
         K key = fileSystem.getKey(path);
         return new FileSystemFolder<K>(path, fileSystem, key);
     }

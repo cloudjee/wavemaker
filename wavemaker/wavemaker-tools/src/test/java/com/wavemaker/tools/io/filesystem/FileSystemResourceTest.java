@@ -13,7 +13,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
-import com.wavemaker.tools.io.ResourcePath;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
 
 /**
@@ -30,11 +29,11 @@ public class FileSystemResourceTest {
     @Mock
     private FileSystem<Object> fileSystem2;
 
-    private final ResourcePath path1a = new ResourcePath().get("path1");
+    private final JailedResourcePath path1a = new JailedResourcePath().get("path1");
 
-    private final ResourcePath path1b = new ResourcePath().get("path1");
+    private final JailedResourcePath path1b = new JailedResourcePath().get("path1");
 
-    private final ResourcePath path2 = new ResourcePath().get("path2");
+    private final JailedResourcePath path2 = new JailedResourcePath().get("path2");
 
     private final Object key = new Object();
 
@@ -61,7 +60,7 @@ public class FileSystemResourceTest {
 
     private static class MockFileSystemResource extends FileSystemResource<Object> {
 
-        MockFileSystemResource(ResourcePath path, FileSystem<Object> fileSystem, Object key) {
+        MockFileSystemResource(JailedResourcePath path, FileSystem<Object> fileSystem, Object key) {
             super(path, fileSystem, key);
         }
 

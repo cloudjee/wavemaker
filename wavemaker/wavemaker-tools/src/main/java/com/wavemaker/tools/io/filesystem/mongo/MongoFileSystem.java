@@ -18,6 +18,7 @@ import com.mongodb.gridfs.GridFSInputFile;
 import com.wavemaker.tools.io.ResourcePath;
 import com.wavemaker.tools.io.exception.ResourceException;
 import com.wavemaker.tools.io.filesystem.FileSystem;
+import com.wavemaker.tools.io.filesystem.JailedResourcePath;
 import com.wavemaker.tools.io.filesystem.ResourceType;
 
 /**
@@ -40,12 +41,12 @@ public class MongoFileSystem implements FileSystem<MongoFileSystemKey> {
     }
 
     @Override
-    public MongoFileSystemKey getKey(ResourcePath path) {
+    public MongoFileSystemKey getKey(JailedResourcePath path) {
         return new MongoFileSystemKey(path);
     }
 
     @Override
-    public ResourcePath getPath(MongoFileSystemKey key) {
+    public JailedResourcePath getPath(MongoFileSystemKey key) {
         return key.getPath();
     }
 
@@ -81,7 +82,7 @@ public class MongoFileSystem implements FileSystem<MongoFileSystemKey> {
 
     @Override
     public Iterable<String> list(MongoFileSystemKey key) {
-        BasicDBObject query = new BasicDBObject(PARENT, key.getPath().toString());
+        BasicDBObject query = new BasicDBObject(PARENT, key.getPath().getUnjailedPath().toString());
         final DBCursor list = this.fs.getFileList(query);
         return new FileListIterable(list);
     }
@@ -128,9 +129,9 @@ public class MongoFileSystem implements FileSystem<MongoFileSystemKey> {
         Assert.notNull(type, "Type must not be null");
         Assert.state(type != ResourceType.DOES_NOT_EXIST);
         GridFSInputFile file = this.fs.createFile(getFilename(key));
-        ResourcePath parent = key.getPath().getParent();
+        JailedResourcePath parent = key.getPath().getParent();
         if (parent != null) {
-            file.put(PARENT, parent.toString());
+            file.put(PARENT, parent.getUnjailedPath().toString());
         }
         file.put(RESOURCE_TYPE, type.name());
         return file;
@@ -143,7 +144,7 @@ public class MongoFileSystem implements FileSystem<MongoFileSystemKey> {
     }
 
     private String getFilename(MongoFileSystemKey key) {
-        return key.getPath().toString();
+        return key.getPath().getUnjailedPath().toString();
     }
 
     @Override

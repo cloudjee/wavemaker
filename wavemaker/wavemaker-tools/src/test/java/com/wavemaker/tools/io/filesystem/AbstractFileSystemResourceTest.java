@@ -25,7 +25,7 @@ public abstract class AbstractFileSystemResourceTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        given(this.fileSystem.getKey(any(ResourcePath.class))).willAnswer(new Answer<Object>() {
+        given(this.fileSystem.getKey(any(JailedResourcePath.class))).willAnswer(new Answer<Object>() {
 
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {

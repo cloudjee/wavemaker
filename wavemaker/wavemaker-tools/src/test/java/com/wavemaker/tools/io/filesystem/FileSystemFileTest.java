@@ -19,7 +19,6 @@ import com.wavemaker.tools.io.AbstractFileContent;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.FileContent;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.ResourcePath;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
 
@@ -36,7 +35,7 @@ public class FileSystemFileTest extends AbstractFileSystemResourceTest {
     @Override
     public void setup() {
         super.setup();
-        ResourcePath path = new ResourcePath().get("file.txt");
+        JailedResourcePath path = new JailedResourcePath().get("file.txt");
         this.file = new FileSystemFile<Object>(path, this.fileSystem, path);
     }
 
@@ -51,19 +50,19 @@ public class FileSystemFileTest extends AbstractFileSystemResourceTest {
     public void shouldNeedFileSystem() throws Exception {
         this.thrown.expect(IllegalArgumentException.class);
         this.thrown.expectMessage("FileSystem must not be null");
-        new FileSystemFile<Object>(new ResourcePath(), null, new Object());
+        new FileSystemFile<Object>(new JailedResourcePath(), null, new Object());
     }
 
     @Test
     public void shouldNeedKey() throws Exception {
         this.thrown.expect(IllegalArgumentException.class);
         this.thrown.expectMessage("Key must not be null");
-        new FileSystemFile<Object>(new ResourcePath(), this.fileSystem, null);
+        new FileSystemFile<Object>(new JailedResourcePath(), this.fileSystem, null);
     }
 
     @Test
     public void shouldNotCreateFolderFromFile() throws Exception {
-        ResourcePath path = new ResourcePath().get("a");
+        JailedResourcePath path = new JailedResourcePath().get("a");
         given(this.fileSystem.getResourceType(path)).willReturn(ResourceType.FOLDER);
         this.thrown.expect(ResourceTypeMismatchException.class);
         this.thrown.expectMessage("Unable to access resource '/a' as file due to existing folder");

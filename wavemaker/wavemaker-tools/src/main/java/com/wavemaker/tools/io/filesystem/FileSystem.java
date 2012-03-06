@@ -4,8 +4,6 @@ package com.wavemaker.tools.io.filesystem;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import com.wavemaker.tools.io.ResourcePath;
-
 /**
  * Strategy interface used to abstract file system operations from {@link FileSystemFile} and {@link FileSystemFolder}
  * implementations.
@@ -23,7 +21,7 @@ public interface FileSystem<K> {
      * @param path the path
      * @return a file system specific key
      */
-    K getKey(ResourcePath path);
+    K getKey(JailedResourcePath path);
 
     /**
      * Return the path that is represented by the specified key.
@@ -31,7 +29,7 @@ public interface FileSystem<K> {
      * @param key the file system key
      * @return the path
      */
-    ResourcePath getPath(K key);
+    JailedResourcePath getPath(K key);
 
     /**
      * Return the resource type for the specified key.

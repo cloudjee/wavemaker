@@ -7,7 +7,6 @@ import org.springframework.util.Assert;
 
 import com.wavemaker.tools.io.AbstractResources;
 import com.wavemaker.tools.io.Resource;
-import com.wavemaker.tools.io.ResourcePath;
 import com.wavemaker.tools.io.Resources;
 
 /**
@@ -19,16 +18,16 @@ public class FileSystemResources<K> extends AbstractResources<Resource> {
 
     private final FileSystem<K> fileSystem;
 
-    private final ResourcePath parent;
+    private final JailedResourcePath parent;
 
     private final Iterable<String> list;
 
-    public FileSystemResources(FileSystem<K> fileSystem, ResourcePath parent, Iterable<String> list) {
-        Assert.notNull(fileSystem, "FileSystem must not be null");
+    public FileSystemResources(JailedResourcePath parent, FileSystem<K> fileSystem, Iterable<String> list) {
         Assert.notNull(parent, "Parent must not be null");
+        Assert.notNull(fileSystem, "FileSystem must not be null");
         Assert.notNull(list, "List must not be null");
-        this.fileSystem = fileSystem;
         this.parent = parent;
+        this.fileSystem = fileSystem;
         this.list = list;
     }
 
@@ -44,15 +43,16 @@ public class FileSystemResources<K> extends AbstractResources<Resource> {
 
             @Override
             public Resource next() {
-                ResourcePath path = FileSystemResources.this.parent.get(iterator.next());
-                K key = FileSystemResources.this.fileSystem.getKey(path);
-                ResourceType resourceType = FileSystemResources.this.fileSystem.getResourceType(key);
+                JailedResourcePath path = FileSystemResources.this.parent.get(iterator.next());
+                FileSystem<K> fileSystem = FileSystemResources.this.fileSystem;
+                K key = fileSystem.getKey(path);
+                ResourceType resourceType = fileSystem.getResourceType(key);
                 Assert.state(resourceType != null, "No resource type found");
                 switch (resourceType) {
                     case FILE:
-                        return new FileSystemFile<K>(path, FileSystemResources.this.fileSystem, key);
+                        return new FileSystemFile<K>(path, fileSystem, key);
                     case FOLDER:
-                        return new FileSystemFolder<K>(path, FileSystemResources.this.fileSystem, key);
+                        return new FileSystemFolder<K>(path, fileSystem, key);
                 }
                 throw new IllegalStateException("Unknown resource type");
             }

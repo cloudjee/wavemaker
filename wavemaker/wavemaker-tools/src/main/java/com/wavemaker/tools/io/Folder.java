@@ -112,4 +112,12 @@ public interface Folder extends Resource, Iterable<Resource> {
      * @see #unzip(File)
      */
     void unzip(InputStream inputStream);
+
+    /**
+     * Return a new folder that is jailed at the current location. A jailed folder acts as a root folder at the current
+     * location.
+     * 
+     * @return a new jailed folder
+     */
+    Folder jail();
 }

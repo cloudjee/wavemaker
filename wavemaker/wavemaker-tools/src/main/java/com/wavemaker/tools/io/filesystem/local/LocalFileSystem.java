@@ -13,9 +13,9 @@ import java.util.Collections;
 
 import org.springframework.util.Assert;
 
-import com.wavemaker.tools.io.ResourcePath;
 import com.wavemaker.tools.io.exception.ResourceException;
 import com.wavemaker.tools.io.filesystem.FileSystem;
+import com.wavemaker.tools.io.filesystem.JailedResourcePath;
 import com.wavemaker.tools.io.filesystem.ResourceType;
 
 /**
@@ -39,12 +39,12 @@ public class LocalFileSystem implements FileSystem<LocalFileSystemKey> {
     }
 
     @Override
-    public LocalFileSystemKey getKey(ResourcePath path) {
+    public LocalFileSystemKey getKey(JailedResourcePath path) {
         return new LocalFileSystemKey(this.root, path);
     }
 
     @Override
-    public ResourcePath getPath(LocalFileSystemKey key) {
+    public JailedResourcePath getPath(LocalFileSystemKey key) {
         return key.getPath();
     }
 
@@ -131,7 +131,7 @@ public class LocalFileSystem implements FileSystem<LocalFileSystemKey> {
         if (!file.renameTo(dest)) {
             throw new ResourceException("Unable to rename file '" + file + "' to '" + dest + "'");
         }
-        ResourcePath newPath = key.getPath().getParent().get(name);
+        JailedResourcePath newPath = key.getPath().getParent().get(name);
         return new LocalFileSystemKey(this.root, newPath);
     }
 

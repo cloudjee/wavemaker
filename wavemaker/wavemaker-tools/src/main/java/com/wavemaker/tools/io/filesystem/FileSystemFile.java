@@ -10,7 +10,6 @@ import com.wavemaker.tools.io.AbstractFileContent;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.FileContent;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.ResourcePath;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
 import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
 
@@ -36,10 +35,10 @@ public class FileSystemFile<K> extends FileSystemResource<K> implements File {
         }
     };
 
-    FileSystemFile(ResourcePath path, FileSystem<K> fileSystem, K key) {
+    FileSystemFile(JailedResourcePath path, FileSystem<K> fileSystem, K key) {
         super(path, fileSystem, key);
         ResourceType resourceType = getFileSystem().getResourceType(key);
-        ResourceTypeMismatchException.throwOnMismatch(path, resourceType, ResourceType.FILE);
+        ResourceTypeMismatchException.throwOnMismatch(path.getPath(), resourceType, ResourceType.FILE);
     }
 
     @Override
@@ -91,7 +90,8 @@ public class FileSystemFile<K> extends FileSystemResource<K> implements File {
     @Override
     public File rename(String name) throws ResourceExistsException {
         K newKey = doRename(name);
-        return new FileSystemFile<K>(getFileSystem().getPath(newKey), getFileSystem(), newKey);
+        JailedResourcePath newPath = getFileSystem().getPath(newKey);
+        return new FileSystemFile<K>(newPath, getFileSystem(), newKey);
     }
 
     @Override

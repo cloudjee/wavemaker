@@ -3,7 +3,7 @@ package com.wavemaker.tools.io.filesystem.local;
 
 import java.io.File;
 
-import com.wavemaker.tools.io.ResourcePath;
+import com.wavemaker.tools.io.filesystem.JailedResourcePath;
 
 /**
  * Key used with {@link LocalFileSystem}.
@@ -12,16 +12,16 @@ import com.wavemaker.tools.io.ResourcePath;
  */
 public class LocalFileSystemKey {
 
-    private final ResourcePath path;
+    private final JailedResourcePath path;
 
     private final File file;
 
-    public LocalFileSystemKey(File root, ResourcePath path) {
+    public LocalFileSystemKey(File root, JailedResourcePath path) {
         this.path = path;
-        this.file = new File(root, path.toString());
+        this.file = new File(root, path.getUnjailedPath().toString());
     }
 
-    public ResourcePath getPath() {
+    public JailedResourcePath getPath() {
         return this.path;
     }
 
