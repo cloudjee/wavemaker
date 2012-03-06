@@ -679,6 +679,8 @@ dojo.declare("wm.DojoChart", wm.Control, {
 
     toHtml: function() {
 	return this.dojoObj.node.innerHTML;
-    }
+    },
+    createMouseOverConnect: function() {}, // ignore parent method
+    createMouseOutConnect: function() {} // ignore parent method
 });
 
