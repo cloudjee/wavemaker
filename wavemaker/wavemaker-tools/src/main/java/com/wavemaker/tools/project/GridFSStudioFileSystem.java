@@ -30,7 +30,6 @@ import com.mongodb.MongoException;
 import com.mongodb.gridfs.GridFS;
 import com.mongodb.gridfs.GridFSDBFile;
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.io.GFSResource;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.tools.io.Folder;
 

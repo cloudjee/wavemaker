@@ -12,8 +12,8 @@ import java.util.concurrent.Callable;
 import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.io.GFSResource;
 import com.wavemaker.common.util.ClassLoaderUtils;
+import com.wavemaker.tools.project.GFSResource;
 
 /**
  * Class Loader Utils specifically designed to work with {@link Resource}s. Migrated from {@link ClassLoaderUtils} in

@@ -19,7 +19,7 @@
  * @see com.mongodb.gridfs.GridFSInputFile
  */
 
-package com.wavemaker.common.io;
+package com.wavemaker.tools.project;
 
 import java.io.File;
 import java.io.IOException;

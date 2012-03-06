@@ -45,7 +45,6 @@ import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
 
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.io.GFSResource;
 import com.wavemaker.common.util.IOUtils;
 
 /**

@@ -31,8 +31,8 @@ import org.springframework.util.FileCopyUtils;
 import com.wavemaker.common.CommonRuntimeAccess;
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.io.GFSResource;
 import com.wavemaker.common.util.ClassLoaderUtils;
+import com.wavemaker.tools.project.GFSResource;
 import com.wavemaker.tools.project.StudioFileSystem;
 
 /**
