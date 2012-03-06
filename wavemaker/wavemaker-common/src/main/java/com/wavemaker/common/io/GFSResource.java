@@ -46,11 +46,9 @@ import com.wavemaker.common.WMRuntimeException;
 /**
  * @author Ed Callahan
  */
-public class GFSResource implements Resource, Sha1DigestCacheable {
+public class GFSResource implements Resource {
 
     private static final String METADATA_FOLDER_KEY = "FOLDER";
-
-    private static final String METADATA_SHA1_KEY = "SHA1";
 
     private final GridFS gfs;
 
@@ -274,24 +272,6 @@ public class GFSResource implements Resource, Sha1DigestCacheable {
     @Override
     public File getFile() {
         throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public byte[] getSha1Digest() {
-        GridFSDBFile file = getGridFSDBFile(false);
-        if (file != null) {
-            return (byte[]) file.get(METADATA_SHA1_KEY);
-        }
-        return null;
-    }
-
-    @Override
-    public void setSha1Digest(byte[] digest) {
-        GridFSDBFile file = getGridFSDBFile(false);
-        if (file != null) {
-            file.put(METADATA_SHA1_KEY, digest);
-            file.save();
-        }
     }
 
     private GridFSDBFile getGridFSDBFile(boolean required) {

@@ -20,7 +20,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.util.ObjectUtils;
 
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.io.Sha1DigestCacheable;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ResourceFilter;
 import com.wavemaker.tools.project.StudioFileSystem;
@@ -223,23 +222,6 @@ public class WebAppAssembler implements InitializingBean {
             } catch (IOException e) {
                 return super.getSize();
             }
-        }
-
-        @Override
-        public byte[] getSha1Digest() {
-            if (isDirectory()) {
-                return null;
-            }
-            Sha1DigestCacheable cache = Sha1DigestCacheable.NONE;
-            if (this.resource instanceof Sha1DigestCacheable) {
-                cache = (Sha1DigestCacheable) this.resource;
-            }
-            byte[] sha1 = cache.getSha1Digest();
-            if (sha1 == null) {
-                sha1 = super.getSha1Digest();
-                cache.setSha1Digest(sha1);
-            }
-            return sha1;
         }
 
         @Override

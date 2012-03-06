@@ -13,21 +13,25 @@
  */
 
 package com.wavemaker.common.util;
-import java.io.*;
-import java.net.URL;
-import java.util.List;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.jar.JarFile;
 
 import org.apache.commons.io.IOUtils;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
 
+import com.wavemaker.common.CommonRuntimeAccess;
+import com.wavemaker.common.CommonStudioFileSystem;
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.CommonStudioFileSystem;
-import com.wavemaker.common.CommonRuntimeAccess;
 import com.wavemaker.common.io.GFSResource;
 
 /**
@@ -37,26 +41,28 @@ import com.wavemaker.common.io.GFSResource;
  */
 public class CFClassLoader extends ClassLoader {
 
+    // FIXME PW this looks like it is in the wrong package, we should move to tools
+
     private final Resource[] resources;
 
     private final ClassLoader parentClassLoader;
 
-    private File tempDir = null;
+    private final File tempDir = null;
 
-    private CommonStudioFileSystem fileSystem;
+    private final CommonStudioFileSystem fileSystem;
 
     public CFClassLoader(Resource[] resources, ClassLoader parent) {
 
         super(null);
         this.resources = resources;
         this.parentClassLoader = parent;
-        this.fileSystem = (CommonStudioFileSystem)CommonRuntimeAccess.getInstance().getSpringBean("fileSystem");
+        this.fileSystem = (CommonStudioFileSystem) CommonRuntimeAccess.getInstance().getSpringBean("fileSystem");
     }
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
 
-        if (name.substring(0, 12).equals("com.mytestdb")) { //xxx
+        if (name.substring(0, 12).equals("com.mytestdb")) { // xxx
             System.out.println("************** class name = " + name);
         }
 
@@ -69,8 +75,8 @@ public class CFClassLoader extends ClassLoader {
         String classNamePath = name.replace('.', '/') + ".class";
 
         List<Resource> files = new ArrayList<Resource>();
-        for (int i=0; i<this.resources.length; i++) {
-            files.addAll(fileSystem.listAllChildren(this.resources[i], null));
+        for (int i = 0; i < this.resources.length; i++) {
+            files.addAll(this.fileSystem.listAllChildren(this.resources[i], null));
         }
 
         byte[] fileBytes = null;
@@ -83,7 +89,7 @@ public class CFClassLoader extends ClassLoader {
                 int len1 = resourcePath.length();
                 int len2 = classNamePath.length();
                 if (len1 > len2) {
-                    if (resourcePath.substring(len1-len2, len1).equals(classNamePath)) {
+                    if (resourcePath.substring(len1 - len2, len1).equals(classNamePath)) {
                         is = entry.getInputStream();
                         break;
                     }
@@ -118,7 +124,7 @@ public class CFClassLoader extends ClassLoader {
             } else {
                 ret = defineClass(name, fileBytes, 0, fileBytes.length);
             }
-        } catch(WMRuntimeException ex) { //xxx
+        } catch (WMRuntimeException ex) { // xxx
             ret = null;
         }
 
@@ -134,10 +140,10 @@ public class CFClassLoader extends ClassLoader {
         if (name.substring(0, 12).equals("com.mytestdb")) {
             System.out.println("================== resource name = " + name);
         }
-        
+
         List<Resource> files = new ArrayList<Resource>();
-        for (int i=0; i<this.resources.length; i++) {
-            files.addAll(fileSystem.listAllChildren(this.resources[i], null));
+        for (int i = 0; i < this.resources.length; i++) {
+            files.addAll(this.fileSystem.listAllChildren(this.resources[i], null));
         }
 
         InputStream ret;
@@ -148,7 +154,7 @@ public class CFClassLoader extends ClassLoader {
                 int len1 = resourcePath.length();
                 int len2 = name.length();
                 if (len1 > len2) {
-                    if (resourcePath.substring(len1-len2, len1).equals(name)) {
+                    if (resourcePath.substring(len1 - len2, len1).equals(name)) {
                         return entry.getInputStream();
                     }
                 }
@@ -160,21 +166,21 @@ public class CFClassLoader extends ClassLoader {
         ret = this.parentClassLoader.getResourceAsStream(name);
 
         return ret;
-        //return super.getResourceAsStream(name);
+        // return super.getResourceAsStream(name);
     }
 
     private String getPath(Resource resource) {
         String path;
         if (resource instanceof GFSResource) {
-            path = ((GFSResource)resource).getPath();
+            path = ((GFSResource) resource).getPath();
         } else {
-            path = ((FileSystemResource)resource).getPath();
+            path = ((FileSystemResource) resource).getPath();
         }
 
         int len = path.length();
 
-        if (path.substring(len-1, len).equals("/")) {
-            path = path.substring(0, len-1);
+        if (path.substring(len - 1, len).equals("/")) {
+            path = path.substring(0, len - 1);
         }
 
         return path;

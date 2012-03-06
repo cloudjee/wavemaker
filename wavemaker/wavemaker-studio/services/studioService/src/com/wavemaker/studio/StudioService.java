@@ -248,7 +248,7 @@ public class StudioService extends ClassLoader {
 
     @ExposeToClient
     public String getMainLog(int lines) throws IOException {
-        File logFile = this.fileSystem.getWavemMakerHomeFolder().getFile("logs/wm.log");
+        File logFile = this.fileSystem.getWaveMakerHomeFolder().getFile("logs/wm.log");
         if (!logFile.exists()) {
             return "";
         }

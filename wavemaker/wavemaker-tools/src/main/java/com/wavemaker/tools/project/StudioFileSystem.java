@@ -25,9 +25,20 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
 
     // FIXME PW filesystem : remove this interface and find another way to access common
 
+    /**
+     * Get the related folder for a Resource.
+     * 
+     * @param resource the resource
+     * @return the folder
+     * @deprecated This method provides a temporary adapter between the older Resource based folders and the new
+     *             {@link com.wavemaker.tools.io.Folder} interface.
+     */
+    @Deprecated
+    Folder getFolderForResource(Resource resource);
+
     Folder getCommonFolder();
 
-    Folder getWavemMakerHomeFolder();
+    Folder getWaveMakerHomeFolder();
 
     /**
      * Returns the WaveMaker home directory.
