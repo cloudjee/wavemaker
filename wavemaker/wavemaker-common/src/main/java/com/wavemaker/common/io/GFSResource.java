@@ -22,7 +22,6 @@
 package com.wavemaker.common.io;
 
 import java.io.File;
-import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -224,7 +223,7 @@ public class GFSResource implements Resource {
             throw new IOException("File does not exist at path: " + this.path);
         }
         GridFSDBFile gridFSDBFile = getGridFSDBFile(true);
-        return new GFSResourceAwareInputStream(gridFSDBFile.getInputStream());
+        return gridFSDBFile.getInputStream();
     }
 
     /**
@@ -285,59 +284,5 @@ public class GFSResource implements Resource {
     @Override
     public String toString() {
         return getPath() + getFilename();
-    }
-
-    /**
-     * {@link InputStream} that is aware of the {@link GFSResource} and can provide more meaningful IO exceptions.
-     */
-    private class GFSResourceAwareInputStream extends FilterInputStream {
-
-        protected GFSResourceAwareInputStream(InputStream in) {
-            super(in);
-        }
-
-        @Override
-        public int read() throws IOException {
-            try {
-                return this.in.read();
-            } catch (IOException e) {
-                rethrow(e);
-            } catch (RuntimeException e) {
-                rethrow(e);
-            }
-            throw new IllegalStateException();
-        }
-
-        @Override
-        public int read(final byte[] b) throws IOException {
-            try {
-                return this.in.read(b);
-            } catch (IOException e) {
-                rethrow(e);
-            } catch (RuntimeException e) {
-                rethrow(e);
-            }
-            throw new IllegalStateException();
-        }
-
-        @Override
-        public int read(final byte[] b, int off, int len) throws IOException {
-            try {
-                return this.in.read(b, off, len);
-            } catch (IOException e) {
-                rethrow(e);
-            } catch (RuntimeException e) {
-                rethrow(e);
-            }
-            throw new IllegalStateException();
-        }
-
-        private void rethrow(IOException e) throws IOException {
-            throw new IOException(e.getMessage() + " accessing file " + getFilename());
-        }
-
-        private void rethrow(RuntimeException e) throws IOException {
-            throw new IOException(e.getMessage() + " accessing file " + getFilename());
-        }
     }
 }
