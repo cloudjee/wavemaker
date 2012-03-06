@@ -65,12 +65,27 @@
 								<mkdir dir="${buildroot}/Samples" />
 								
 								<!-- Studio Configure Application -->
-								<unzip src="${com.wavemaker:wavemaker-studio:war}" dest="${buildroot}/studio" />
+								<unzip src="${com.wavemaker:wavemaker-studio:war}" dest="${buildroot}/studio">
+										<patternset>
+											<exclude name="**/lib/ace/**"/>
+											<exclude name="**/jtds*.jar"/>
+											<exclude name="**/hibernate*.jar"/>
+											<exclude name="**/db2jcc.jar" />
+											<exclude name="**/ojdbc14.jar" />
+											<exclude name="**/wsdl4j.jar" />
+										</patternset>
+									</unzip>
 								<copy todir="${buildroot}/studioConfig">
-									<fileset
-										dir="${basedir}/../applications/StudioConfigure/webapproot" />
-								</copy>
-								
+										<fileset
+										dir="${basedir}/../applications/StudioConfigure/webapproot" >
+											<exclude name="**/lib/ace/**"/>
+											<exclude name="**/jtds*.jar"/>
+											<exclude name="**/hibernate*.jar"/>
+											<exclude name="**/db2jcc.jar" />
+											<exclude name="**/ojdbc14.jar" />
+											<exclude name="**/wsdl4j.jar" />
+										</fileset>	
+									</copy>								
 								<!-- Licence -->
 								<copy todir="${project.build.directory}">
 									<fileset
