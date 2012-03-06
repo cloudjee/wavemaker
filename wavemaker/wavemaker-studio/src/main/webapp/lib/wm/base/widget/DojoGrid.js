@@ -704,7 +704,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    return Math.max(this.dojoObj.rowCount, this.dojoObj._by_idx.length);
 	},
 	hasSelection: function() {
-	  return Boolean(this.getSelectedIndex() != -1);
+	    var index = this.getSelectedIndex();
+	    if (dojo.isArray(index))
+		return Boolean(index.length);
+	    else
+		return Boolean(index != -1);
 	},
 
 	getEmptySelection: function() {
