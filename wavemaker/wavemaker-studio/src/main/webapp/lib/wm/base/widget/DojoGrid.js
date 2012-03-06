@@ -1676,11 +1676,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	}
 	    if (!inValue) {
 		return inValue;
-	    } else if (typeof inValue == "number") {
-		inValue = new Date(inValue);
+	    } else if (typeof inValue == "number" || inValue instanceof Date) {
+		inValue = new Date(inValue); // clone the object if its a date; create the object if its a number
 	    } else if (inValue instanceof Date == false) {
 		return inValue;
-	    }
+	    } 
 	    if (!formatterProps.useLocalTime) {
 		inValue.setHours(inValue.getHours() + wm.timezoneOffset);
 	    }
@@ -1694,8 +1694,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	}
 	    if (!inValue) {
 		return inValue;
-	    } else if (typeof inValue == "number") {
-		inValue = new Date(inValue);
+	    } else if (typeof inValue == "number" || inValue instanceof Date) {
+		inValue = new Date(inValue); // clone the object if its a date; create the object if its a number
 	    } else if (inValue instanceof Date == false) {
 		return inValue;
 	    } else if (typeof inDatum == "number") {
@@ -1713,8 +1713,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	}
 	    if (!inValue) {
 		return inValue;
-	    } else if (typeof inValue == "number") {
-		inValue = new Date(inValue);
+	    } else if (typeof inValue == "number" || inValue instanceof Date) {
+		inValue = new Date(inValue); // clone the object if its a date; create the object if its a number
 	    } else if (inValue instanceof Date == false) {
 		return inValue;
 	    }
