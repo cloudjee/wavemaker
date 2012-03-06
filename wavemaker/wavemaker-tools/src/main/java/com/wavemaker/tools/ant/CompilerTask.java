@@ -15,13 +15,17 @@
 package com.wavemaker.tools.ant;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.common.util.ClassLoaderUtils.TaskNoRtn;
+import com.wavemaker.common.util.ConversionUtils;
 import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.service.DesignServiceManager;
@@ -162,7 +166,8 @@ public abstract class CompilerTask extends Task {
             for (int i = 0; i < paths.length; i++) {
                 classPathFiles[i] = new File(paths[i]);
             }
-            return ClassLoaderUtils.getClassLoaderForFile(parent, classPathFiles);
+            List<Resource> classPathResources = ConversionUtils.convertToResourceList(Arrays.asList(classPathFiles));
+            return ClassLoaderUtils.getClassLoaderForResources(parent, classPathResources.toArray(new Resource[classPathFiles.length]));
         }
 
     }

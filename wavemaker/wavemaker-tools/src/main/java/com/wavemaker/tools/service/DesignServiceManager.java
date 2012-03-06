@@ -923,17 +923,12 @@ public class DesignServiceManager {
 
     @SuppressWarnings("deprecation")
     public ClassLoader getServiceRuntimeClassLoader(String sid) {
-
         // classloader has service runtime home (src) dir and build dir.
         // it has the src dir also so that services have the option of not
         // relying on 'testrun' having run
         // TODO - revisit this for Cloud Foundry
-        try {
-            return ClassLoaderUtils.getClassLoaderForFile(getServiceRuntimeDirectory(sid).getFile(),
-                this.projectManager.getCurrentProject().getWebInfClasses().getFile());
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
+        return ClassLoaderUtils.getClassLoaderForResources(getServiceRuntimeDirectory(sid),
+            this.projectManager.getCurrentProject().getWebInfClasses());
     }
 
     // -----------------------------------------------------------------------

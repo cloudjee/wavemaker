@@ -23,7 +23,6 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ArrayList;
 
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -115,15 +114,6 @@ public class ClassLoaderUtils {
         return getClassLoaderForResources(getClassLoader(), files);
     }
 
-    /**
-     * @deprecated - use {@link #getClassLoaderForResources(Resource...)}
-     */
-    @Deprecated
-    public static ClassLoader getClassLoaderForFile(java.io.File... files) {
-        return getClassLoaderForResources(getClassLoader(),
-            ConversionUtils.convertToResourceList(Arrays.asList(files)).toArray(new Resource[files.length]));
-    }
-
     public static ClassLoader getClassLoaderForResources(ClassLoader parent, Resource... resources) {
         if (resources[0] instanceof GFSResource) {
             return getClassLoaderForCFResources(parent, resources);
@@ -163,10 +153,6 @@ public class ClassLoaderUtils {
             }
         });
         return ret;
-    }
-
-    public static ClassLoader getClassLoaderForFile(ClassLoader parent, java.io.File... files) {
-        return getClassLoaderForResources(parent, ConversionUtils.convertToResourceList(Arrays.asList(files)).toArray(new Resource[files.length]));
     }
 
     /**
