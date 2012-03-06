@@ -892,7 +892,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		}
 	    } catch(e) {}
 	},
-        onStyleRow: function(inRow/* inRow.customClasses += " myClass" */, rowData) {},
+        onStyleRow: function(inRow/* inRow.customClasses += " myClass"; inRow.customStyles += ";background-color:red"; */, rowData) {},
 	getDataSet: function() {
 		return this.variable;
 	},
@@ -1638,7 +1638,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 						default:
 							if (!this.isDesignLoaded())
-							    value = dojo.hitch(this.owner, col.formatFunc)(value, rowId, idx, col.field || col.id, {}, obj);
+							    value = dojo.hitch(this.owner, col.formatFunc)(value, rowId, idx, col.field || col.id, {customStyles:[], customClasses:[]}, obj);
 							break;
 					}
 				}
