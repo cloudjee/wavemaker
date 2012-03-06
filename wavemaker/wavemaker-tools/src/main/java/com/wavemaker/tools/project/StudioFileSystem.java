@@ -25,7 +25,9 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
 
     // FIXME PW filesystem : remove this interface and find another way to access common
 
-    Folder getCommon();
+    Folder getCommonFolder();
+
+    Folder getWavemMakerHomeFolder();
 
     /**
      * Returns the WaveMaker home directory.

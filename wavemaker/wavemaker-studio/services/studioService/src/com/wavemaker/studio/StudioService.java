@@ -33,6 +33,7 @@ import java.util.regex.Pattern;
 import org.apache.tools.ant.BuildException;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wavemaker.common.WMRuntimeException;
@@ -167,6 +168,18 @@ public class StudioService extends ClassLoader {
     }
 
     /**
+     * Read arbitrary data from a file in this project's web directory.
+     * 
+     * @param path
+     * @param data
+     */
+    @ExposeToClient
+    public String readWebFile(String path) throws IOException {
+        com.wavemaker.io.File file = this.projectManager.getCurrentProject().getRoot().getFile(getWebDirPath(path));
+        return file.getContent().asString();
+    }
+
+    /**
      * Write arbitrary data to a file in this project's web directory.
      * 
      * @param path
@@ -191,18 +204,6 @@ public class StudioService extends ClassLoader {
             file.getContent().write(data);
         }
         writePhoneGapFile(path, data);
-    }
-
-    /**
-     * Read arbitrary data from a file in this project's web directory.
-     * 
-     * @param path
-     * @param data
-     */
-    @ExposeToClient
-    public String readWebFile(String path) throws IOException {
-        com.wavemaker.io.File file = this.projectManager.getCurrentProject().getRoot().getFile(getWebDirPath(path));
-        return file.getContent().asString();
     }
 
     private String getWebDirPath(String path) {
@@ -247,9 +248,29 @@ public class StudioService extends ClassLoader {
 
     @ExposeToClient
     public String getMainLog(int lines) throws IOException {
-        Resource logDir = this.fileSystem.createPath(this.fileSystem.getWaveMakerHome(), "logs/");
-        Resource logFile = logDir.createRelative("wm.log");
-        return IOUtils.tail(logFile.getFile(), lines);
+        File logFile = this.fileSystem.getWavemMakerHomeFolder().getFile("logs/wm.log");
+        if (!logFile.exists()) {
+            return "";
+        }
+        return tail(logFile, lines);
+    }
+
+    private String tail(File file, int maxSize) throws IOException {
+        List<String> lines = new ArrayList<String>();
+        BufferedReader reader = new BufferedReader(file.getContent().asReader());
+        try {
+            String line = reader.readLine();
+            while (line != null) {
+                lines.add(line);
+                if (lines.size() > maxSize) {
+                    lines.remove(0);
+                }
+                line = reader.readLine();
+            }
+            return StringUtils.collectionToDelimitedString(lines, "\n");
+        } finally {
+            reader.close();
+        }
     }
 
     @ExposeToClient

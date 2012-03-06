@@ -89,7 +89,13 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
     }
 
     @Override
-    public Folder getCommon() {
+    public Folder getCommonFolder() {
+        throw new UnsupportedOperationException();
+        // FIXME PW filesystem
+    }
+
+    @Override
+    public Folder getWavemMakerHomeFolder() {
         throw new UnsupportedOperationException();
         // FIXME PW filesystem
     }

@@ -57,10 +57,21 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
     private File testWMHome = null;
 
     @Override
-    public Folder getCommon() {
+    public Folder getCommonFolder() {
         // FIXME PW filesystem : implement properly
         try {
             JavaFileSystem fileSystem = new JavaFileSystem(getCommonDir().getFile());
+            return RootFileSystemFolderFactory.getRoot(fileSystem);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Override
+    public Folder getWavemMakerHomeFolder() {
+        // FIXME PW filesystem : implement properly
+        try {
+            JavaFileSystem fileSystem = new JavaFileSystem(getWaveMakerHome().getFile());
             return RootFileSystemFolderFactory.getRoot(fileSystem);
         } catch (IOException e) {
             throw new IllegalStateException(e);

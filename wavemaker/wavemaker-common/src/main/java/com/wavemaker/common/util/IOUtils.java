@@ -32,8 +32,8 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.springframework.util.PathMatcher;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.util.PathMatcher;
 
 import com.wavemaker.common.MessageResource;
 
@@ -42,6 +42,7 @@ import com.wavemaker.common.MessageResource;
  * @author Matt Small
  * @author Jeremy Grelle
  */
+@Deprecated
 public abstract class IOUtils {
 
     private static final int DEFAULT_BUFFER_SIZE = 1024;
@@ -209,7 +210,7 @@ public abstract class IOUtils {
 
     /**
      * Copy from: file to file, directory to directory, file to directory.
-     *
+     * 
      * @param source File object representing a file or directory to copy from.
      * @param destination File object representing the target; can only represent a file if the source is a file.
      * @param excludes A list of exclusion filenames.
@@ -232,11 +233,12 @@ public abstract class IOUtils {
             }
 
             File files[] = source.listFiles(new java.io.FilenameFilter() {
-			@Override
-			    public boolean accept(File dir, String name) {
-			    return name.indexOf("#") == -1 && name.indexOf("~") == -1;
-			}
-		    });
+
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.indexOf("#") == -1 && name.indexOf("~") == -1;
+                }
+            });
             for (int i = 0; i < files.length; i++) {
                 copy(files[i], new File(destination, files[i].getName()), excludes);
             }
@@ -260,22 +262,20 @@ public abstract class IOUtils {
 
     /**
      * Copy from: file to file, directory to directory, file to directory.
-     *
+     * 
      * @param source File object representing a file or directory to copy from.
      * @param destination File object representing the target; can only represent a file if the source is a file.
      * @param includedPattern the ant-style path pattern to be included
      * @param excludedPattern the ant-style path pattern to be excluded
      * @throws IOException
      */
-    public static void copy(File source, File destination, String includedPattern, String excludedPattern)
-                throws IOException {
+    public static void copy(File source, File destination, String includedPattern, String excludedPattern) throws IOException {
 
         if (!source.exists()) {
             throw new IOException("Can't copy from non-existent file: " + source.getAbsolutePath());
         } else {
             PathMatcher matcher = new AntPathMatcher();
-            if (!matcher.match(includedPattern, source.getName()) ||
-                    matcher.match(excludedPattern, source.getName())) {
+            if (!matcher.match(includedPattern, source.getName()) || matcher.match(excludedPattern, source.getName())) {
                 return;
             }
         }
@@ -289,11 +289,12 @@ public abstract class IOUtils {
             }
 
             File files[] = source.listFiles(new java.io.FilenameFilter() {
-			@Override
-			    public boolean accept(File dir, String name) {
-			    return name.indexOf("#") == -1 && name.indexOf("~") == -1;
-			}
-		    });
+
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.indexOf("#") == -1 && name.indexOf("~") == -1;
+                }
+            });
 
             for (int i = 0; i < files.length; i++) {
                 copy(files[i], new File(destination, files[i].getName()), includedPattern, excludedPattern);

@@ -198,10 +198,10 @@ public class ResourceFileService {
         Folder root;
         String resourceName;
         if (name.equals("/common")) {
-            root = this.fileSystem.getCommon();
+            root = this.fileSystem.getCommonFolder();
             resourceName = "";
         } else if (name.startsWith("/common/")) {
-            root = this.fileSystem.getCommon();
+            root = this.fileSystem.getCommonFolder();
             resourceName = name.substring("/common/".length());
         } else {
             root = this.projectManager.getCurrentProject().getRoot();
