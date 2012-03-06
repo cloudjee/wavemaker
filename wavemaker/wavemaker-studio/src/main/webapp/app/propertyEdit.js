@@ -1621,7 +1621,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 		    classListEditor: ["wm.prop.ClassListEditor", {width: "100%", inspected: this.inspected}]
 		}]
 	    }]
-	},true)[0];
+	},this)[0];
 	this.connect(this.tabs,"onchange",this, function() {
 	    if (this.parent._isDestroying) return;
 	    this.setHeight(this.getPreferredFitToContentHeight());
@@ -1727,6 +1727,8 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	    if (styleProp.postFix && inValue) {
 		var value = this.inspected.getStyle(styleName);
 		value = value.replace(new RegExp(styleProp.postFix + "$"),"");
+	    } else {
+		value = inValue[styleName];
 	    }
 	    if (this.editors[styleProp.name]) {
 		this.editors[styleProp.name].setDataValue(value);
