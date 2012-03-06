@@ -12,7 +12,7 @@
  *  limitations under the License.
  */
 
-package com.wavemaker.common.util;
+package com.wavemaker.tools.util;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -33,6 +33,7 @@ import com.wavemaker.common.CommonStudioFileSystem;
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.io.GFSResource;
+import com.wavemaker.common.util.ClassLoaderUtils;
 
 /**
  * A ClassLoader that loads a list of resources

@@ -40,7 +40,6 @@ import org.springframework.core.io.Resource;
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.json.type.FieldDefinition;
@@ -71,6 +70,7 @@ import com.wavemaker.tools.spring.beans.Bean;
 import com.wavemaker.tools.spring.beans.Beans;
 import com.wavemaker.tools.spring.beans.DefaultableBoolean;
 import com.wavemaker.tools.spring.beans.Property;
+import com.wavemaker.tools.util.ResourceClassLoaderUtils;
 import com.wavemaker.tools.ws.salesforce.SalesforceHelper;
 
 /**
@@ -927,7 +927,7 @@ public class DesignServiceManager {
         // it has the src dir also so that services have the option of not
         // relying on 'testrun' having run
         // TODO - revisit this for Cloud Foundry
-        return ClassLoaderUtils.getClassLoaderForResources(getServiceRuntimeDirectory(sid),
+        return ResourceClassLoaderUtils.getClassLoaderForResources(getServiceRuntimeDirectory(sid),
             this.projectManager.getCurrentProject().getWebInfClasses());
     }
 

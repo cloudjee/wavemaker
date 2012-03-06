@@ -16,9 +16,7 @@ package com.wavemaker.common.util;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Arrays;
@@ -28,7 +26,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.io.GFSResource;
 
 /**
  * @author Simon Toens
@@ -110,51 +107,6 @@ public class ClassLoaderUtils {
         return cl.getResourceAsStream(path);
     }
 
-    public static ClassLoader getClassLoaderForResources(Resource... files) {
-        return getClassLoaderForResources(getClassLoader(), files);
-    }
-
-    public static ClassLoader getClassLoaderForResources(ClassLoader parent, Resource... resources) {
-        if (resources[0] instanceof GFSResource) {
-            return getClassLoaderForCFResources(parent, resources);
-        }
-
-        try {
-
-            final ClassLoader parentF = parent;
-            final URL[] urls = new URL[resources.length];
-            for (int i = 0; i < resources.length; i++) {
-                urls[i] = resources[i].getURI().toURL();
-            }
-
-            URLClassLoader ret = AccessController.doPrivileged(new PrivilegedAction<URLClassLoader>() {
-
-                @Override
-                public URLClassLoader run() {
-                    return new URLClassLoader(urls, parentF);
-                }
-            });
-            return ret;
-        } catch (MalformedURLException ex) {
-            throw new AssertionError(ex);
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
-    }
-
-    public static ClassLoader getClassLoaderForCFResources(ClassLoader parent, final Resource[] resources) {
-        final ClassLoader parentF = parent;
-
-        CFClassLoader ret = AccessController.doPrivileged(new PrivilegedAction<CFClassLoader>() {
-
-            @Override
-            public CFClassLoader run() {
-                return new CFClassLoader(resources, parentF);
-            }
-        });
-        return ret;
-    }
-
     /**
      * Get a temporary classloader. By default, this will use the parent classloader as a base.
      * 
@@ -201,38 +153,5 @@ public class ClassLoaderUtils {
             throw new IOException("Cannot access " + ret.toString());
         }
         return ret;
-    }
-
-    public static Object runInClassLoaderContext(TaskType task, Resource... files) {
-        return runInClassLoaderContext(task, getClassLoaderForResources(files));
-    }
-
-    public static Object runInClassLoaderContext(TaskType task, ClassLoader cl) {
-        ClassLoader c = Thread.currentThread().getContextClassLoader();
-        try {
-            Thread.currentThread().setContextClassLoader(cl);
-
-            if (task instanceof TaskRtn) {
-                return ((TaskRtn) task).run();
-            } else {
-                ((TaskNoRtn) task).run();
-                return null;
-            }
-        } finally {
-            Thread.currentThread().setContextClassLoader(c);
-        }
-    }
-
-    private static interface TaskType {
-    }
-
-    public static interface TaskNoRtn extends TaskType {
-
-        void run();
-    }
-
-    public static interface TaskRtn extends TaskType {
-
-        Object run();
     }
 }
