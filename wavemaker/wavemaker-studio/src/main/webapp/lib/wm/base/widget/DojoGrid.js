@@ -1045,7 +1045,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		    var show = useMobileColumn && col.mobileColumn || !useMobileColumn && !col.mobileColumn && col.show;
 		    var width = col.width;
 		if (show && width.indexOf("%") != -1)
-		    width = Math.floor((parseInt(width) / totalPercentWidth)) + "%";
+		    width = Math.floor((100*parseInt(width) / totalPercentWidth)) + "%";
 		    var obj = {	hidden:!show, 
 					field: col.field, 
 					constraint: col.constraints,
