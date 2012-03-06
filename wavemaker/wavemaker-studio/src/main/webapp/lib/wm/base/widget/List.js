@@ -141,10 +141,13 @@ dojo.declare("wm.List", wm.VirtualList, {
 		return new wm.ListItem(this, inContent);
 	},
 	getEmptySelection: function() {
-	  return Boolean(!this.selected);
+	    return !this.hasSelection();
 	},
 	hasSelection: function() {
-	    return Boolean(this.selected);
+	    if (!dojo.isArray(this.selected))
+		return this.selected.length > 0;
+	    else
+		return Boolean(this.selected);
 	},
 
 	_setDataFields: function(inDataFields) {
