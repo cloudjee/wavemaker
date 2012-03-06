@@ -24,10 +24,10 @@ import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.FileAccessException;
 import com.wavemaker.common.util.IOUtils;
-import com.wavemaker.io.Folder;
-import com.wavemaker.io.filesystem.RootFileSystemFolderFactory;
-import com.wavemaker.io.filesystem.java.JavaFileSystem;
 import com.wavemaker.tools.config.ConfigurationStore;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.filesystem.RootFileSystemFolderFactory;
+import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 
 /**
  * Implementation of {@link StudioFileSystem} backed by a local files system.
@@ -60,7 +60,7 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
     public Folder getCommonFolder() {
         // FIXME PW filesystem : implement properly
         try {
-            JavaFileSystem fileSystem = new JavaFileSystem(getCommonDir().getFile());
+            LocalFileSystem fileSystem = new LocalFileSystem(getCommonDir().getFile());
             return RootFileSystemFolderFactory.getRoot(fileSystem);
         } catch (IOException e) {
             throw new IllegalStateException(e);
@@ -71,7 +71,7 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
     public Folder getWavemMakerHomeFolder() {
         // FIXME PW filesystem : implement properly
         try {
-            JavaFileSystem fileSystem = new JavaFileSystem(getWaveMakerHome().getFile());
+            LocalFileSystem fileSystem = new LocalFileSystem(getWaveMakerHome().getFile());
             return RootFileSystemFolderFactory.getRoot(fileSystem);
         } catch (IOException e) {
             throw new IllegalStateException(e);

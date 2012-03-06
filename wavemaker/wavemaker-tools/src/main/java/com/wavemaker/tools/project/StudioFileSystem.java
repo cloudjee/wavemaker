@@ -10,7 +10,7 @@ import java.util.List;
 import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.CommonStudioFileSystem;
-import com.wavemaker.io.Folder;
+import com.wavemaker.tools.io.Folder;
 
 /**
  * Provides a virtual files system for use with WaveMaker. Files are exposed using the Spring {@link Resource} interface

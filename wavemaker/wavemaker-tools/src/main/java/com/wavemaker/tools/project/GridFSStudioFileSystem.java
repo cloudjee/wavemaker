@@ -33,7 +33,7 @@ import com.wavemaker.common.CommonResourceFilter;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.io.GFSResource;
 import com.wavemaker.common.util.IOUtils;
-import com.wavemaker.io.Folder;
+import com.wavemaker.tools.io.Folder;
 
 /**
  * Implementation of {@link StudioFileSystem} backed by {@link GridFS}.

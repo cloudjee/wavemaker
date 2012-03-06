@@ -14,8 +14,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.wavemaker.io.File;
-import com.wavemaker.io.FileContent;
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.FileContent;
 
 /**
  * Tests fpor {@link DownloadableFile}.

@@ -13,9 +13,9 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.wavemaker.io.Folder;
-import com.wavemaker.io.Resource;
-import com.wavemaker.tools.filesystem.adapter.zip.ZippedFolderInputStream;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.Resource;
+import com.wavemaker.tools.io.ZippedFolderInputStream;
 
 /**
  * Tests for {@link DownloadableFolder}.

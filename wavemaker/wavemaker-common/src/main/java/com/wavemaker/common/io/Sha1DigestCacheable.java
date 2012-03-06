@@ -8,7 +8,9 @@ import org.springframework.core.io.Resource;
  * {@link Resource} must remove the cache if the contents is changed.
  * 
  * @author Phillip Webb
+ * @deprecated Use the new File API if possible
  */
+@Deprecated
 public interface Sha1DigestCacheable {
 
     public static final Sha1DigestCacheable NONE = new Sha1DigestCacheable() {

@@ -3,8 +3,8 @@ package com.wavemaker.tools.project;
 
 import java.io.InputStream;
 
-import com.wavemaker.io.File;
 import com.wavemaker.runtime.server.Downloadable;
+import com.wavemaker.tools.io.File;
 
 /**
  * Adapter class that presents a {@link File} as a {@link Downloadable}.
