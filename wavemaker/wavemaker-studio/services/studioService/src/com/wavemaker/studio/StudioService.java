@@ -175,7 +175,7 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public String readWebFile(String path) throws IOException {
-        com.wavemaker.tools.io.File file = this.projectManager.getCurrentProject().getRoot().getFile(getWebDirPath(path));
+        com.wavemaker.tools.io.File file = this.projectManager.getCurrentProject().getRootFolder().getFile(getWebDirPath(path));
         return file.getContent().asString();
     }
 
@@ -199,7 +199,7 @@ public class StudioService extends ClassLoader {
     @ExposeToClient
     public void writeWebFile(String path, String data, boolean noClobber) throws IOException {
         boolean canClobber = !noClobber;
-        File file = this.projectManager.getCurrentProject().getRoot().getFile(getWebDirPath(path));
+        File file = this.projectManager.getCurrentProject().getRootFolder().getFile(getWebDirPath(path));
         if (!file.exists() || canClobber) {
             file.getContent().write(data);
         }
@@ -659,7 +659,7 @@ public class StudioService extends ClassLoader {
     }
 
     private Folder getCurrentProjectRoot() {
-        return this.getProjectManager().getCurrentProject().getRoot();
+        return this.getProjectManager().getCurrentProject().getRootFolder();
     }
 
     // FIXME PW discuss and possibly remove phone gap

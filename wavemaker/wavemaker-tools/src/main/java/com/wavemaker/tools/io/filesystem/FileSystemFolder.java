@@ -204,4 +204,16 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
     public String toString() {
         return super.toString() + "/";
     }
+
+    /**
+     * Factory method that can be used to get the root {@link Folder} for a given {@link FileSystem}.
+     * 
+     * @param fileSystem the file system
+     * @return the root folder
+     */
+    public static <K> Folder getRoot(FileSystem<K> fileSystem) {
+        ResourcePath path = new ResourcePath();
+        K key = fileSystem.getKey(path);
+        return new FileSystemFolder<K>(path, fileSystem, key);
+    }
 }

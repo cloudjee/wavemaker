@@ -26,7 +26,7 @@ import com.wavemaker.common.util.FileAccessException;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.tools.config.ConfigurationStore;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.filesystem.RootFileSystemFolderFactory;
+import com.wavemaker.tools.io.filesystem.FileSystemFolder;
 import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 
 /**
@@ -61,7 +61,7 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
         // FIXME PW filesystem : implement properly
         try {
             LocalFileSystem fileSystem = new LocalFileSystem(getCommonDir().getFile());
-            return RootFileSystemFolderFactory.getRoot(fileSystem);
+            return FileSystemFolder.getRoot(fileSystem);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
@@ -72,7 +72,7 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
         // FIXME PW filesystem : implement properly
         try {
             LocalFileSystem fileSystem = new LocalFileSystem(getWaveMakerHome().getFile());
-            return RootFileSystemFolderFactory.getRoot(fileSystem);
+            return FileSystemFolder.getRoot(fileSystem);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

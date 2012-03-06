@@ -17,7 +17,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.springframework.util.FileCopyUtils;
 
-import com.wavemaker.tools.io.filesystem.RootFileSystemFolderFactory;
+import com.wavemaker.tools.io.filesystem.FileSystemFolder;
 import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 
 /**
@@ -37,7 +37,7 @@ public class ZippedFolderInputStreamTest {
         File root = this.temporaryFolder.newFolder("ziptest");
         System.out.println(root);
         LocalFileSystem fileSystem = new LocalFileSystem(root);
-        Folder rootFolder = RootFileSystemFolderFactory.getRoot(fileSystem);
+        Folder rootFolder = FileSystemFolder.getRoot(fileSystem);
         rootFolder.getFolder("y/a").getFile("aa.txt").getContent().write("aa test");
         rootFolder.getFolder("y/a").getFile("ab.txt").getContent().write("ab test");
         rootFolder.getFolder("y/b").getFile("ba.txt").getContent().write("ba test");

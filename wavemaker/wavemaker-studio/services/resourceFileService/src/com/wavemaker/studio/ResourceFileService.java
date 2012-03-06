@@ -204,7 +204,7 @@ public class ResourceFileService {
             root = this.fileSystem.getCommonFolder();
             resourceName = name.substring("/common/".length());
         } else {
-            root = this.projectManager.getCurrentProject().getRoot();
+            root = this.projectManager.getCurrentProject().getRootFolder();
             resourceName = name;
         }
 

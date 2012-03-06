@@ -28,7 +28,7 @@ import org.springframework.util.StringUtils;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.filesystem.RootFileSystemFolderFactory;
+import com.wavemaker.tools.io.filesystem.FileSystemFolder;
 import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 import com.wavemaker.tools.service.AbstractFileService;
 
@@ -68,11 +68,11 @@ public class Project extends AbstractFileService {
         return this.projectRoot;
     }
 
-    public Folder getRoot() {
+    public Folder getRootFolder() {
         // FIXME implement properly
         try {
             LocalFileSystem fileSystem = new LocalFileSystem(getProjectRoot().getFile());
-            return RootFileSystemFolderFactory.getRoot(fileSystem);
+            return FileSystemFolder.getRoot(fileSystem);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
