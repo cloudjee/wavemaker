@@ -1030,14 +1030,27 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		    }
 		}
 	    }
-		dojo.forEach(this.columns, function(col){
+
+	    /* IE 9 requires that widths be normalized */
+	    var totalPercentWidth = 0;
+	    dojo.forEach(this.columns, function(col){
+		var show = useMobileColumn && col.mobileColumn || !useMobileColumn && !col.mobileColumn && col.show;
+		if (show && col.width.indexOf("%") != -1) {
+		    totalPercentWidth += parseInt(col.width);
+		}
+	    });
+
+	    dojo.forEach(this.columns, function(col){
 		    var options = col.options || col.editorProps && col.editorProps.options; // editorProps is the currently supported method
 		    var show = useMobileColumn && col.mobileColumn || !useMobileColumn && !col.mobileColumn && col.show;
-			var obj = {	hidden:!show, 
+		    var width = col.width;
+		if (show && width.indexOf("%") != -1)
+		    width = Math.floor((parseInt(width) / totalPercentWidth)) + "%";
+		    var obj = {	hidden:!show, 
 					field: col.field, 
 					constraint: col.constraints,
 					name:col.title ? col.title : "-", 
-					width: col.width,
+					width: width,
 					fieldType:col.fieldType == "dojox.grid.cells._Widget" && col.editorProps && col.editorProps.regExp ? "dojox.grid.cells.ValidationTextBox" : col.fieldType,
 					widgetProps: col.editorProps,
 					options: typeof options == "string" ? options.split(/\s*,\s*/) : options,
