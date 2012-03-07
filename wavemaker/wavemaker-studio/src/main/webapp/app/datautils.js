@@ -396,7 +396,8 @@ getAnnotatedNode = function(inNode, inAnno) {
 }
 
 initDBTypeDropdown = function(inDropdown) {
-	var l = [HSQL_DB_TYPE, MYSQL_DB_TYPE, POSTGRESQL_DB_TYPE];
+        var l = [HSQL_DB_TYPE, MYSQL_DB_TYPE, POSTGRESQL_DB_TYPE, ORACLE_DB_TYPE, DB2_DB_TYPE, SQL_SERVER_DB_TYPE];
+/*
 	if (studio) {
 		if (studio.isModuleEnabled("jdbc-driver", "wm.oracle"))
 			l.push(ORACLE_DB_TYPE);
@@ -405,6 +406,7 @@ initDBTypeDropdown = function(inDropdown) {
 		if (studio.isModuleEnabled("jdbc-driver", "wm.mssql"))
 			l.push(SQL_SERVER_DB_TYPE);
 	}
+	*/
 	l.sort();
 	l = [OTHER_DB_TYPE].concat(l);
     if (inDropdown instanceof wm.SelectMenu)

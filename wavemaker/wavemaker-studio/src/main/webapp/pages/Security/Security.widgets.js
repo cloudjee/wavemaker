@@ -32,7 +32,7 @@ Security.widgets = {
 			secConfigPanel: ["wm.Panel", {"border":"0","height":"70px","horizontalAlign":"center","layoutKind":"left-to-right","width":"100%"}, {}, {
 			    secConfigControls: ["wm.Panel", {"border":"0","width":"638px"}, {}, {
 				panel16: ["wm.Panel", {"border":"0","height":"100%"}, {}, {
-				    secProviderInput: ["wm.SelectMenu", {"border":"0","caption":"Security Provider","captionAlign":"left","captionSize":"120px","display":"Select","emptyValue":"null","padding":"2","width":"300px"}, {"onchange":"secProviderInputChange"}],
+				    secProviderInput: ["wm.SelectMenu", {options: "- Select One -,Demo,Database,LDAP,JOSSO", "border":"0","caption":"Security Provider","captionAlign":"left","captionSize":"120px","display":"Select","emptyValue":"null","padding":"2","width":"300px"}, {"onchange":"secProviderInputChange"}],
 				    panel3: ["wm.Panel", {"border":"0","height":"56px"}, {}, {
 					secEnableInput: ["wm.Checkbox", {"border":"0","caption":"Enable Security","captionAlign":"left","captionSize":"120px","displayValue":"1","margin":"0,0,0,30","padding":"2","width":"100%"}, {"onchange":"securityCheckboxChange"}],
 					showLoginPageInput: ["wm.Checkbox", {"border":"0","caption":"Show Login Page","captionAlign":"left","captionSize":"120px","displayValue":"1","margin":"0,0,0,60","padding":"2","width":"100%"}, {"onchange":"setDirty"}]
