@@ -90,7 +90,7 @@ dojo.declare("wm.JsonRpc", dojo.rpc.JsonService, {
 		//requests deployed application.
 		if (this._designTime) 
 					url = url + "?designTime=true";
-
+	    
 		var props = {
 			url: url||this.serviceUrl,
 			postData: this.createRequest(method, parameters || []),
@@ -99,6 +99,9 @@ dojo.declare("wm.JsonRpc", dojo.rpc.JsonService, {
 			handleAs: "json",
 			sync: this.sync
 		}
+	    if (wm.xhrPath) {
+		props.url = wm.xhrPath + props.url;
+	    }
 		var def = dojo.rawXhrPost(props);
 		def.addCallbacks(this.resultCallback(deferredRequestHandler), this.errorCallback(deferredRequestHandler));
 	},
