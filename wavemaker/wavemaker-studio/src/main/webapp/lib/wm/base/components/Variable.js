@@ -99,7 +99,7 @@ dojo.declare("wm.Variable", wm.Component, {
 		this.beginUpdate();
 	    if (this.isPrimitive || wm.typeManager.isType(this.type)) 
 		this.setType(this.type);
-	    if (studio.inspector.inspected == this) {
+	    if (studio.inspector && studio.inspector.inspected == this) {
 		studio.inspect(this);
 	    }
 	    if (this.owner instanceof wm.Variable)
