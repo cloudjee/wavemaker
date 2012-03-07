@@ -144,7 +144,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    return !this.hasSelection();
 	},
 	hasSelection: function() {
-	    if (!dojo.isArray(this.selected))
+	    if (dojo.isArray(this.selected))
 		return this.selected.length > 0;
 	    else
 		return Boolean(this.selected);
