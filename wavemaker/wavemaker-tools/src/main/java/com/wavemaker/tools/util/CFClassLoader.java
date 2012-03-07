@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.jar.JarFile;
 
 import org.apache.commons.io.IOUtils;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.FileCopyUtils;
 
@@ -32,7 +31,6 @@ import com.wavemaker.common.CommonRuntimeAccess;
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.ClassLoaderUtils;
-import com.wavemaker.tools.project.GFSResource;
 import com.wavemaker.tools.project.StudioFileSystem;
 
 /**
@@ -169,19 +167,11 @@ public class CFClassLoader extends ClassLoader {
     }
 
     private String getPath(Resource resource) {
-        String path;
-        if (resource instanceof GFSResource) {
-            path = ((GFSResource) resource).getPath();
-        } else {
-            path = ((FileSystemResource) resource).getPath();
-        }
-
+        String path = this.fileSystem.getPath(resource);
         int len = path.length();
-
         if (path.substring(len - 1, len).equals("/")) {
             path = path.substring(0, len - 1);
         }
-
         return path;
     }
 
