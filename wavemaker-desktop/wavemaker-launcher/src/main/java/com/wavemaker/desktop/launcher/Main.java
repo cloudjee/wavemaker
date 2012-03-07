@@ -16,14 +16,7 @@ package com.wavemaker.desktop.launcher;
 
 import java.awt.DisplayMode;
 import java.awt.GraphicsEnvironment;
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.Writer;
+import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -36,6 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.catalina.startup.Catalina;
+import org.springframework.util.StringUtils;
 
 import com.wavemaker.desktop.launcher.ui.MainConsole;
 import com.wavemaker.desktop.launcher.ui.ProgressDialog;
@@ -59,6 +53,16 @@ public class Main {
     public static final String SRC_DEMOS_DIR = "Samples";
 
     public static final String DEST_DEMOS_DIR = "samples";
+
+    private static final String FOLDER_SEPARATOR = "/";
+
+	private static final String WINDOWS_FOLDER_SEPARATOR = "\\";
+
+	private static final String TOP_PATH = "..";
+
+	private static final String CURRENT_PATH = ".";
+
+	private static final char EXTENSION_SEPARATOR = '.';
 
     public static File CatalinaHome;
 
@@ -581,16 +585,56 @@ public class Main {
         return result;
     }
 
-    // Few critic jars must exists.
+    // Few critical jars must exist.
     // This method tests if hibernate-tools.jar is missing to tell if jars are missing.
     public static boolean jarsAreMissing() throws URISyntaxException {
-        boolean missing = false;
-        File studioDir = getStudioDir();
-        File hibToolsJar = new File(studioDir, "WEB-INF/lib/hibernate-tools.jar");
-        if (!hibToolsJar.exists()) {
-            missing = true;
-        }
+        boolean missing;
+        File studioDir = new File(getStudioDir(), "WEB-INF/lib");
 
+        File[] jars = studioDir.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                boolean accepted = false;
+                if (hasLength(getFilenameExtension(name))
+                        && getFilenameExtension(name).equals("jar")
+                        && getFilename(name).length() >= 15
+                        && getFilename(name).substring(0, 15).equals("hibernate-tools")) {
+                    accepted = true;
+                }
+                return accepted;
+            }
+        });
+
+        missing = !(jars != null && jars.length > 0);
         return missing;
     }
+
+    //TODO: Hoprfully, the following three methods should be replaced the equivalence from Spring framework once
+    //TODO: the class load problem is resolved
+    private static String getFilenameExtension(String path) {
+		if (path == null) {
+			return null;
+		}
+		int extIndex = path.lastIndexOf(EXTENSION_SEPARATOR);
+		if (extIndex == -1) {
+			return null;
+		}
+		int folderIndex = path.lastIndexOf(FOLDER_SEPARATOR);
+		if (folderIndex > extIndex) {
+			return null;
+		}
+		return path.substring(extIndex + 1);
+	}
+
+    private static String getFilename(String path) {
+		if (path == null) {
+			return null;
+		}
+		int separatorIndex = path.lastIndexOf(FOLDER_SEPARATOR);
+		return (separatorIndex != -1 ? path.substring(separatorIndex + 1) : path);
+	}
+
+    private static boolean hasLength(CharSequence str) {
+		return (str != null && str.length() > 0);
+	}
 }
