@@ -153,7 +153,10 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 	this._service = null;
 	if (url) {
 	    try{
-		if (wm.JsonRpcService.smdCache[url]) {
+		/* SMD files change at design time, never use a cached SMD file at design time */
+		if (window["studio"]) {
+		    this._service = new wm.JsonRpc(url + "?rand=" + Math.floor(Math.random() * new Date().getTime()));
+		} else if (wm.JsonRpcService.smdCache[url]) {
 		    this._service = wm.JsonRpcService.smdCache[url];
 		} else if (wm.JsonRpcService.smdCache[cachedName]) {
 		    this._service = new wm.JsonRpc({smdObject: wm.JsonRpcService.smdCache[cachedName],
