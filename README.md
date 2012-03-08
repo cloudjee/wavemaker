@@ -31,7 +31,7 @@ INSTRUCTIONS
 Cloning
 --------
 Due to the use of submodules, cloning should be with --recursive, e.g.
-`git clone --recursive https://SpringSource/wavemaker.git`
+`git clone --recursive https://github.comSpringSource/wavemaker.git`
 Otherwise `wavemaker/dev/studio/src/main/webapp/app/lib/ace` will be missing.
 
 
