@@ -245,16 +245,6 @@ th {
 /*	background: url(images/tree_leaf.gif) no-repeat;*/
 }
 
-.touchScroll li {
-    margin-bottom: 5px;
-}
-.touchScroll .wmtree-content {
-    font-size: 18px;
-}
-.touchScroll .wmtree-leaf { 
-    background: url(images/touch_tree_leaf.gif) no-repeat;
-}
-
 
 
 .wmtree .wmtree-empty { 
