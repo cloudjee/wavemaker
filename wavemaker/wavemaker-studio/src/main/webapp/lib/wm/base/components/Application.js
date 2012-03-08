@@ -584,10 +584,10 @@ dojo.declare("wm.Application", wm.Component, {
 	    else
 		return "app";
 	},
-	reflow: function() {
+	reflow: function(resize) {
 		var d = this.domNode;
 		d.scrollTop = 0;
-	    this.appRoot.reflow();
+	        this.appRoot.reflow();
 	},
 	reflowParent: function() {
 		this.reflow();
@@ -611,7 +611,7 @@ dojo.declare("wm.Application", wm.Component, {
 		setTimeout(dojo.hitch(this, "doRun"), dojo.isIE < 7 ? 100 : 1);
 	},
 	doRun: function() {
-		this.appRoot.domNode = this.domNode = dojo.byId(this.domNode) || document.body;
+	        this.domNode = this.appRoot.domNode;
 	        this.reflow()
 	    /* WM-2794: ENTER key in a text input causes focus to move to first button and fire it; make sure its a button that does nothing; only certain this is an issue in IE 8 */
 	    if (dojo.isIE <= 8) {
