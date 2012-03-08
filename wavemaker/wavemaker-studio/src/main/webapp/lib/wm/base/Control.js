@@ -487,10 +487,12 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    }
 
 	} else {
-	    if (this._isDesignLoaded) {
+	    if (this._isDesignLoaded || this.desktopHeight == undefined) {
 		this.desktopHeight = this.height || this.mobileHeight;
 	    }
-	    if (this.mobileHeight) {
+	    if (this.desktopHeight && typeof this.desktopHeight == "string" && this.desktopHeight.match(/\%/)) {
+		this.height = this.desktopHeight;
+	    } else if (this.mobileHeight) {
 		this.height = this.mobileHeight;
 	    } else if (this.height) {
 		this.mobileHeight = this.height;
