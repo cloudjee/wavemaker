@@ -35,6 +35,10 @@ wm.decapitalize = function(s) {
 	return s ? s.charAt(0).toLowerCase() + s.slice(1) : "";
 }
 
+wm.camelcase = function(s) {
+    return s.replace(/[\.-](.?)/g, function(inChar) {console.log(inChar);return inChar[1].toUpperCase();})
+}
+
 wm.flattenObject = function(inObj, keepOld) {
     var outObj = {};
     for (var prop in inObj) {
