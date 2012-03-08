@@ -186,7 +186,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                         }
 		    var idx =  _this.dojoObj.getItemIndex(items[0]);
 		    if (idx == -1)
-			idx = _this.variable.getItemIndexByPrimaryKey(obj, pkList) || -1;
+			idx = _this.variable.getItemIndexByPrimaryKey(obj, pkList);
 		    if (idx == -1 && this.selectFirstRow)
 			idx = 0;
 
