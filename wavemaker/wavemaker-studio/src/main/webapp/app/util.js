@@ -172,13 +172,13 @@ wm.openUrlDialog = function(inUrl, inTitle, inWindowName) {
     d.show();
 }
 
-wm.makeLoginHtml =  function(fileTemplate, inProjectName, themeName) {
+wm.makeLoginHtml =  function(fileTemplate, inProjectName) {
     var macros = ['PROJECT'], data=[inProjectName], t = fileTemplate;
     // change template to index
     for (var i=0, m, d; (m=macros[i]); i++){
 	d=data[i] || "";
 	t = t.replace(new RegExp(['{%', m, '}'].join(''), 'g'), d);
-        t = t.replace(/\wavemakerNode\"\}/, "wavemakerNode\", theme:\"" + themeName + "\", name:\"" + studio.project.projectName + "\"}");
+        //t = t.replace(/\wavemakerNode\"\}/, "wavemakerNode\", theme:\"" + themeName + "\", name:\"" + studio.project.projectName + "\"}");
     }
     return t;
 }

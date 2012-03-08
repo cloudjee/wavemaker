@@ -94,7 +94,10 @@ wm.expression.getValue(exp, app.main);
 				// objects cannot be returned directly since they are eval'd.
 				if (v instanceof wm.Object || v === undefined)
 					v = "";
-				// do we want to automatically jsonify all values?
+				
+			    if (v instanceof Date)
+				return "new Date(" + v.getTime() + ")";
+			    else
 				return dojo.toJson(v);
 			} catch(e) {}
 		});

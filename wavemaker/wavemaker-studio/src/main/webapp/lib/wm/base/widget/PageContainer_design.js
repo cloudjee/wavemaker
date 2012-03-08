@@ -120,8 +120,8 @@ wm.PageContainer.extend({
 			dojo.addClass(this.designWrapper.domNode, "wmchrome-wrapper");
 	},
     set_pageName: function(inName) {
-	if (inPageName == studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION")) {
-	    this.createNewPage(optionalInPageType);
+	if (inName == studio.getDictionaryItem("wm.PageContainer.NEW_PAGE_OPTION")) {
+	    this.createNewPage("");
 	} else {
 	    this.setPageName(inName);
 	}

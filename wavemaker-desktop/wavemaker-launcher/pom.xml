@@ -28,7 +28,7 @@
 								lib/catalina-ha.jar lib/catalina-tribes.jar
 								lib/commons-logging-api-1.1.1.jar lib/ejb-api-3.0.jar
 								lib/el-api.jar lib/jasper.jar lib/jasper-el.jar
-								lib/jasper-jdt.jar lib/jaxws-api-2.2.1.jar lib/jsp-api.jar
+								lib/jaxws-api-2.2.1.jar lib/jsp-api.jar
 								lib/jsr250-api-1.0.jar lib/persistence-api-1.0.2.jar
 								lib/servlet-api.jar lib/tomcat-coyote.jar lib/tomcat-dbcp.jar
 								lib/tomcat-i18n-es.jar lib/tomcat-i18n-fr.jar

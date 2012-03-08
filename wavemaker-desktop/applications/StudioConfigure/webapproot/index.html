@@ -1,6 +1,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
+<meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; chrome=1">
+<!--[if lt IE 8]>
+<script type="text/javascript">
+var wmChromeFramePath = "chromeframe.html";
+</script>
+<![endif]-->
+
 <meta http-equiv="X-UA-Compatible" content="IE=8" />	
 <meta http-equiv="X-UA-Compatible" content="chrome=1">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -41,12 +48,13 @@ body {
 <body class="tundra">
 	<!-- Begin StudioConfigure -->
 	<div id="wavemakerNode">
-		<div id="_wm_googleChromeDialog" class='chromeFramePrompt' style='display:none;'>
-			<div style='float:right' onclick='closeChromeFramePrompt()'>
-				<img src='/wavemaker/images/delete_24.png' style='cursor:pointer;'>
-			</div>
-			<table><tr><td><div id='googleChromeFrameDiv' style='z-index:999;'></div></td></tr></table>
-		</div>
+<!--[if lt IE 8]>
+<style>.BrowserNotSupported {   background-color: #aaa;   padding: 0px 40px;   height: 100%;}.BrowserNotSupported div {  padding-top: 15px;  text-align: center;  font-size: 16pt;  height: 65px;}.BrowserNotSupported iframe {  border: solid 2px #333;  height: 80%;  width: 100%;}</style><script type="text/javascript">
+  if (window["wmChromeFramePath"]) {
+      document.writeln('<div class="BrowserNotSupported"><div>Project6 can not be run in this browser; please review the information below on upgrading your browser</div><iframe id="_wm_googleChromeDialog" class="chromeFramePrompt" src="' + wmChromeFramePath + '"></iframe></div>');
+  }
+</script>
+<![endif]-->
 	<div id="_wm_loading" class="studio_loader" style="z-index: 100;">
 		<table><tr><td></td></tr></table>
 	</div>
@@ -57,22 +65,7 @@ body {
 	<script type="text/javascript" src="types.js"></script>
 	<script type="text/javascript" src="StudioConfigure.js"></script>
 	<script type="text/javascript">
-		function promptGoogleFrame()
-		{
-			dojo.byId('_wm_googleChromeDialog').style.display = 'block';
-			//alert('Please install Google Chrome Frame');
-		}
 
-		function closeChromeFramePrompt()
-		{
-			dojo.byId('_wm_googleChromeDialog').style.display = 'none';
-			dojo.cookie("stopChromeFramePrompt",true,{expires: 365});
-		}
-
-		if (wm.checkGoogleFrame && !dojo.cookie("stopChromeFramePrompt"))
-		{
-			CFInstall.check({node:'googleChromeFrameDiv', preventPrompt:false, onmissing: dojo.hitch(window, 'promptGoogleFrame')});
-		}
 
 		new StudioConfigure({domNode: "wavemakerNode"}).run();
 	</script>

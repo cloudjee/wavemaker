@@ -16,7 +16,7 @@ dojo.provide("wm.base.components.JsonRpcService");
 dojo.require("wm.base.components.Service");
 dojo.require("dojo.rpc.JsonService");
 
-wm.inflight = { 
+wm.inflight = {
 	_inflight: [],
         _inflightNames: [],
 	getCount: function() {
@@ -90,7 +90,7 @@ dojo.declare("wm.JsonRpc", dojo.rpc.JsonService, {
 		//requests deployed application.
 		if (this._designTime) 
 					url = url + "?designTime=true";
-
+	    
 		var props = {
 			url: url||this.serviceUrl,
 			postData: this.createRequest(method, parameters || []),
@@ -99,6 +99,9 @@ dojo.declare("wm.JsonRpc", dojo.rpc.JsonService, {
 			handleAs: "json",
 			sync: this.sync
 		}
+	    if (wm.xhrPath) {
+		props.url = wm.xhrPath + props.url;
+	    }
 		var def = dojo.rawXhrPost(props);
 		def.addCallbacks(this.resultCallback(deferredRequestHandler), this.errorCallback(deferredRequestHandler));
 	},
@@ -135,8 +138,7 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		var p = '';
 		// this window.studio test is needed for the login page to run when not in debug mode
 		if(this.isDesignLoaded() && window.studio && studio.project) {
-		    var projectPrefix = studio.projectPrefix;
-		    p = '/' + projectPrefix + studio.project.getProjectPath() + '/';
+		    p = '/' + studio.project.getProjectPath() + '/';
 		}
 		return p;
 	},
@@ -150,17 +152,20 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 	var n = this.service || this.name;
 	var rand = this.owner && this.isDesignLoaded() ? studio.application.getFullVersionNumber() : (app && !window["studio"] ? app.getFullVersionNumber() : Math.floor(Math.random()*1000000));
     var cachedName = this.url || n + ".smd";
-	var url = this.url || (n && (this.getServiceRoot() + n + ".smd?rand=" + rand));
+	var url = this.url || (n && (this.getServiceRoot() + n + ".smd"));
 	this._service = null;
 	if (url) {
 	    try{
-		if (wm.JsonRpcService.smdCache[url]) {
+		/* SMD files change at design time, never use a cached SMD file at design time */
+		if (window["studio"]) {
+		    this._service = new wm.JsonRpc(url + "?rand=" + Math.floor(Math.random() * new Date().getTime()));
+		} else if (wm.JsonRpcService.smdCache[url]) {
 		    this._service = wm.JsonRpcService.smdCache[url];
 		} else if (wm.JsonRpcService.smdCache[cachedName]) {
 		    this._service = new wm.JsonRpc({smdObject: wm.JsonRpcService.smdCache[cachedName],
-						     serviceUrl: url});
+						    serviceUrl: url.replace(/\.smd/,".json")});
 		} else {
-		    this._service = new wm.JsonRpc(url);
+		    this._service = new wm.JsonRpc(url + "?rand=" + rand);
 		}
 		wm.JsonRpcService.smdCache[url] = this._service;
 		    //The following lines are not being used now.  They may be used in the future to differenciate requests from Studio from
@@ -174,7 +179,6 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 			this._service.serviceUrl = this.getJsonPath() + this._service.serviceUrl;
 			this.listOperations();
 		    }
-
 	    }catch(e){
 		console.debug(e);
 	    }
@@ -220,11 +224,11 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		this.result = null;
 		this.error = null;
 
-	   var operation = this.getOperation(inMethod);
-	   if (operation)
-	       var responseTime = this.getOperation(inMethod).responseTime;
-	   var requestId;
-	   if (responseTime && responseTime == "long") {
+	        var operation = this.getOperation(inMethod);
+	        if (operation)
+		    var responseTime = operation.responseTime;
+		var requestId;
+		if (responseTime && responseTime == "long") {
 			var savedSync = this._service.sync;
 			this._service.sync = true;
 			var dd = this._service.callRemote("getRequestId", []);
@@ -237,7 +241,6 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		}
 
 		var d = this._service.callRemote(inMethod, inArgs || []);
-
 		if (responseTime && responseTime == "long" || inLoop && inMethod == "getResponseFromService")  {
 			var longDeferred = inLongDeferred || new dojo.Deferred();
 			d.addCallbacks(dojo.hitch(this, "onLongResponseTimeResult", owner, invoker, inLoop, responseTime, requestId, longDeferred), 
@@ -390,7 +393,7 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 	    this.reportError(inError);
 	    return this.error = inError;
 	},
-
+	
 	reportError: function(inError) {
 		var m = dojo.isString(inError) ? inError : (inError.message ? "Error: " + inError.message : "Unspecified Error");
 		m = (this.name ? this.name + ": " : "") + m;

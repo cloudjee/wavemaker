@@ -71,13 +71,9 @@ public class ServiceClassGenerator {
         }
     }
 
-    /**
-     * @deprecated - use {@link #addService(List, String) addService} instead
-     */
-    @Deprecated
-    public void addServiceFiles(List<File> serviceFiles, String serviceId) {
-        for (File f : serviceFiles) {
-            addService(new FileSystemResource(f), serviceId);
+    public void addServiceFiles(List<Resource> serviceFiles, String serviceId) {
+        for (Resource f : serviceFiles) {
+            addService(f, serviceId);
         }
     }
 

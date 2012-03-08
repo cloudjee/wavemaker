@@ -27,7 +27,7 @@ dojo.declare("wm.AccordionDecorator", wm.LayersDecorator, {
                 var captionHeight = inLayer.parent.captionHeight;
 		var p = this.decoree.client;
 		var h = inLayer.header = new wm.Label({
-		    caption: inLayer.caption + "<span class='accordionArrowNode'></span>",
+		    caption: inLayer.caption,
 		        width: "100%",
 		        margin: "0,0,2,0",
 		        height: captionHeight + "px",
@@ -39,6 +39,7 @@ dojo.declare("wm.AccordionDecorator", wm.LayersDecorator, {
 		        border: this.captionBorder,
 		        borderColor: this.captionBorderColor
 		});
+	    h.domNode.appendChild(dojo.create("span", {innerHTML: "", className: "accordionArrowNode"}));
 		p.moveControl(h, inIndex*2);
 		dojo.addClass(inLayer.domNode, "wmaccordion-content");
 		this.decoree.connect(h.domNode, 'onclick', dojo.hitch(this, "headerClicked", inLayer));
@@ -81,13 +82,14 @@ dojo.declare("wm.AccordionDecorator", wm.LayersDecorator, {
 	setLayerShowing: function(inLayer, inShowing) {
 		inLayer.header.setShowing(inShowing);
 		this.inherited(arguments);
+		inLayer.domNode.style.display = inLayer.active && inLayer.showing ? '' : 'none';
 	},
 	setLayerActive: function(inLayer, inShowing) {
 		dojo[inShowing ? 'removeClass' : 'addClass'](inLayer.header.domNode, 'wmaccordion-collapsed');
 		this.inherited(arguments);
 	},
 	applyLayerCaption: function(inLayer) {
-	    inLayer.header.setCaption(inLayer.caption +  "<span class='accordionArrowNode'></span>");
+	    inLayer.header.setCaption(inLayer.caption);
 	},
 	moveLayerIndex: function(inFromIndex, inToIndex) {
 		var d = this.decoree, client = d.client, l = d.getLayer(inFromIndex);

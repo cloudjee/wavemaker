@@ -1122,7 +1122,16 @@ public class DesignServiceManager {
                     throw new IllegalStateException("Unable to close service def file", e);
                 }
             }
+            // XXX MAV-569 should do a real build here, or actually outside
+            // this method maybe
+            SortedSet<Service> s = new TreeSet<Service>();
+            s.add(service);
+            generateRuntimeConfiguration(s);
         } catch (JAXBException e) {
+            throw new WMRuntimeException(e);
+        } catch (IOException e) {
+            throw new WMRuntimeException(e);
+        } catch (NoSuchMethodException e) {
             throw new WMRuntimeException(e);
         }
     }

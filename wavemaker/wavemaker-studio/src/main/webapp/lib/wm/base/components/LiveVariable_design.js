@@ -23,7 +23,7 @@ wm.Object.extendSchema(wm.LiveVariable, {
     /* Data group; type subgroup */
     operation: { group: "data", subgroup: "type"}, // do not try and set the options here; parent class overrides this usage by handling operation in makePropEdit
     liveSource: { group: "data", subgroup: "type", order: 1, editor: "wm.prop.DataTypeSelect", editorProps: {liveTypes: 1, includeLiveViews: true}, ignoreHint: "LiveSource is a deprecated property; it is only enabled for LiveVariables already using it"},
-    editView: {group: "data", subgroup: "type", operation:1},
+    editView: {group: "data", subgroup: "type", operation:1, ignoreHint: "The type property before you can edit the view"},
 
     /* Data group; custom subgroup */
     sourceData: {group: "data", readonly: 1, order: 3, bindTarget: 1, editor: "wm.prop.FieldGroupEditor"},
@@ -68,7 +68,9 @@ wm.LiveVariable.extend({
 	        p.sourceData.ignoretmp = r;
 
 	    p.liveSource.ignoretmp = !this.liveSource; // if there's no liveSource, hide the prop because its deprecated 
-	    p.editView.ignoretmp = Boolean(this.liveSource);
+	    var hasLiveSource = Boolean(this.liveSource);
+	    p.editView.ignoretmp = hasLiveSource // if its got a liveSource its using an app-level live view, don't let it editView.
+		|| !this.type; // if it doesn't have a type, don't allow editing of its view
 
 
 	        p.sourceData.categoryParent = !r ? "Properties" : "";

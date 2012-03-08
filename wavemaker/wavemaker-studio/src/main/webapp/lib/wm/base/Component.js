@@ -569,6 +569,13 @@ dojo.declare("wm.Component", wm.Object, {
 		    return con;
 	    }
 	},
+        findSubscription: function(inEvent) {
+	    for (var i = 0; i < this._subscriptions.length; i++) {
+		var con = this._subscriptions[i];
+		if (con[0] == inEvent)
+		    return con;
+	    }
+	},
 	subscribe: function() {
             var s = dojo.subscribe.apply(dojo, arguments);
 	    this._subscriptions.push(s);
@@ -840,9 +847,9 @@ this.panel1.createComponent("custom", "wm.Panel", {
 				}
 
 			    } else if (n.match(/^onMouseOver\d*$/)) {
-				this.createMouseOverConnect();
+				inComponent.createMouseOverConnect();
 			    } else if (n.match(/^onMouseOut\d*$/)) {
-				this.createMouseOutConnect();
+				inComponent.createMouseOutConnect();
 			    } else if (n.match(/^onEnterKeyPress\d*$/) && inComponent instanceof wm.Container) {
 				inComponent.connectOnEnterKey();
 			    }

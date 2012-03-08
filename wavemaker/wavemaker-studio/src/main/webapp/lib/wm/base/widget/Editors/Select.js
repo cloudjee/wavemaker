@@ -490,12 +490,14 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 		return this.inherited(arguments) && this.hasValues();
 	},
 	*/
-    setDataSet: function(inDataSet) {
+    setDataSet: function(inDataSet, noSetEditorValue) {
 	this._inSetDataSet = true;
 	this.inherited(arguments);
 	if (this.editor) {
 	    this.editor.set("store", this.generateStore());
-	    this.setEditorValue(this.dataValue);
+	    if (!noSetEditorValue) {
+		this.setEditorValue(this.dataValue);
+	    }
 	}
 	delete 	this._inSetDataSet;
     },
@@ -835,7 +837,6 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 	}
 });
 
-/* ignore displayExpresion and maxResults */
 dojo.declare("wm.FilteringLookup", wm.Lookup, {
     startUpdate: false,
     restrictValues: true, // looking up up objects; partial match is useless
@@ -850,6 +851,8 @@ dojo.declare("wm.FilteringLookup", wm.Lookup, {
 	this.maxResults = this.pageSize;
 	this.filterField = this.displayField;
 	this.orderBy = "asc: " + this.displayField;
+	if (!this.autoDataSet)
+	    this.changeOnKey = true;
     },
 /*
     createDataSet: function() {
@@ -861,9 +864,9 @@ dojo.declare("wm.FilteringLookup", wm.Lookup, {
     },
     */
     setDataSet: function(inDataSet) {
-	this.inherited(arguments);
+	this.inherited(arguments, [inDataSet, true]);
 	if (this.dataSet) {
-	    wm.onidle(this, function() {
+	    wm.job(this.getRuntimeId() + ".handleSetDataSet", 1, dojo.hitch(this, function() {
 		var item = this.editor.get("item");
 		if (item) {
 		    if (item[this._storeNameField] != this.editor.get("displayedValue"))
@@ -873,7 +876,7 @@ dojo.declare("wm.FilteringLookup", wm.Lookup, {
 		    this.editor._startSearchFromInput();
 		}
 		this._onchange(); // see if there have been any new characters since our last request was fired
-	    });
+	    }));
 	}
     },
     setDataValue: function(inData) {
@@ -906,10 +909,13 @@ dojo.declare("wm.FilteringLookup", wm.Lookup, {
 	    this.inherited(arguments);
 	}
     },
+
     _onchange: function() {
 	if (this.disabled || this.readonly) return;
 	var value = this.editor.get("displayedValue");
-	var lastValue = this.dataSet.filter.getValue(this.filterField);
+	if (this.autoDataSet) {
+	    var lastValue = this.dataSet.filter.getValue(this.filterField);
+	}
 
 	/* Insure that oldValue doesn't get used in setDataSet if there is no current item */
 	if (!this.editor.get("item")) {
@@ -919,11 +925,19 @@ dojo.declare("wm.FilteringLookup", wm.Lookup, {
 	/* Don't update the filter if its already firing; keep it at its last value so we'll know when it returns
 	 * what was requested
 	 */
-	if (value != lastValue && !this.dataSet._requester) {
-	    this.dataSet.filter.setValue(this.filterField, value);
-	    if (value === undefined || value === null || value === "") {
-		this.dataSet.setData([]);
+	if (value != this._lastQueryValue) {
+	    this._lastQueryValue = value;
+
+	    if (this.autoDataSet) {
+		this.dataSet.filter.setValue(this.filterField, value);
+		if (value === undefined || value === null || value === "") {
+		    this.dataSet.setData([]);
+		} else {
+		    this.dataSet.update();
+		}
 	    } else {
+		this.displayValue = value;
+		this.valueChanged("displayValue", value);
 		this.dataSet.update();
 	    }
 	}

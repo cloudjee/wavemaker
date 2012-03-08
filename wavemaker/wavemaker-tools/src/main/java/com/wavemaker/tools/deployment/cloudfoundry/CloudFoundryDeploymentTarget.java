@@ -440,4 +440,20 @@ public class CloudFoundryDeploymentTarget implements DeploymentTarget {
         Assert.isTrue(war.exists(), "war does not exist");
         Assert.isTrue(!war.isDirectory(), "war cannot be a directory");
     }
+
+    @Override
+    public String redeploy(DeploymentInfo deploymentInfo) {
+        return null;
+    }
+
+    @Override
+    public String start(DeploymentInfo deploymentInfo) {
+        return null;
+    }
+
+    @Override
+    public String stop(DeploymentInfo deploymentInfo) {
+        return null;
+    }
+
 }

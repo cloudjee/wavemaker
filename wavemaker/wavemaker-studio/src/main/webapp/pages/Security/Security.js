@@ -70,7 +70,7 @@ dojo.declare("Security", wm.Page, {
 		// 1) reset all inputs.
 		// 2) retrieve project Security settings and populate those settings in the Editor.
 		this.clearSelectInput(this.secProviderInput);
-		this.initSecProviderInput();
+	    this.initSecProviderInput();
 		this.initLdapRoleProviderInput(); // added by Girish
 		this.databaseOptions = {};
 		this.ldapOptions = {};
@@ -91,13 +91,8 @@ dojo.declare("Security", wm.Page, {
 	},
     /* TODO: Localize "Demo" and "Database"; challenge: make sure that if the server sends words like "Demo" and "Database" that we don't mess with tests on that */
 	initSecProviderInput: function() {
-		var l = [this.SELECT_ONE, "Demo", "Database"];
-		if (studio.isModuleEnabled("security-driver", "wm.ldap"))
-			l.push("LDAP");
-		if (studio.isModuleEnabled("security-driver", "wm.josso"))
-			l.push("JOSSO");
-		this.updateSelect(this.secProviderInput, l);
-		this.secProviderInputChange(this.secProviderInput, this.secProviderInput.getDataValue());
+	    this.secProviderInput.setOptions(this.SELECT_ONE + "," + this.secProviderInput.options);
+	    this.secProviderInputChange(this.secProviderInput, this.secProviderInput.getDataValue());
 	},
 	/**
 	 * Added by Girish
@@ -705,7 +700,7 @@ dojo.declare("Security", wm.Page, {
 	    }else {
 		if (!webFileExists("login.html")) {
 			var loginhtml = loadDataSync(this.loginTemplateFolder + "login.html");
-		    studio.project.saveProjectData("login.html", wm.makeLoginHtml(loginhtml, studio.project.projectName, studio.application.theme));
+		    studio.project.saveProjectData("login.html", wm.makeLoginHtml(loginhtml, studio.project.projectName));
 		}
 		if (!webFileExists(wm.pagesFolder + "Login/Login.js")) {
 			var loginPageCss = loadDataSync(this.loginPageTemplateFolder + "Login.css");
@@ -752,7 +747,7 @@ dojo.declare("Security", wm.Page, {
 	    this.securityCheckboxChange();
 
 	    var roles = this.roleList._data;
-	    if (roles.length) {
+	    if (roles && roles.length) {
 				this.roleList._render();
 	    }
 	},

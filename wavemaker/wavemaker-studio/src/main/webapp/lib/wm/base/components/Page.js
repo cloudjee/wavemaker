@@ -438,7 +438,7 @@ dojo.declare("wm.Page", wm.Component, {
 	    }
 
 	    // only the application's main page should be receiving keyboard events
-	      if (this.owner != app || this != app._page) return true;
+	      if (this.owner != app.pageContainer || this != app._page) return true;
 
 	    var isInput = (e.target.tagName == "INPUT");
 	    var chr = app._keys[e.keyCode];

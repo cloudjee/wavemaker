@@ -15,7 +15,7 @@ SetCompressor /FINAL LZMA
 !define COMPANY "WaveMaker Software, Inc"
 !define URL http://www.wavemaker.com
 !define DESCRIPTION "${PRODUCT_NAME} Studio and Runtime"
-!define COPYRIGHT "WaveMaker Software, Inc, 2011."
+!define COPYRIGHT "WaveMaker Software, Inc, 2012."
 /* 
  * The WaveMaker platform consists of two components: 
  * WaveMaker Studio for developing rich internet applications and 
@@ -498,29 +498,9 @@ Function .onInit
             ; Previous Installation Detected
             ${VersionCompare} ${VERSION} $1 $0
             ${If} $0 = 1
-                ; Older Version
-                StrCpy $3 'A previous version of ${PRODUCT_NAME}($1) has been found. Would you like to uninstall the previous version or retain both versions?$\r$\nClick "Yes" to uninstall the previous version.$\r$\nClick "No" to continue installing ${PRODUCT_NAME} ${VERSION}.'
-                MessageBox MB_YESNO|MB_ICONQUESTION|MB_TOPMOST $3 /SD IDYES IDNO "IgnoreUnInstall"
-                   ; Read UninstallString
-                   ${If} $5 == "Old"
-                      ReadRegStr $4 HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" UninstallString
-                   ${Else}
-                      ReadRegStr $4 HKLM "SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}-$1" UninstallString
-                   ${EndIf}
-                   ; Write Studio Config
-                   Push $0
-                   DetailPrint "Running uninstaller..."
-                   ClearErrors
-                   ExecWait '"$4"' $0
-                   ${If} ${Errors}
-                      DetailPrint "Error($0) uninstalling old installation."
-                      ClearErrors
-                   ${Else}
-                      DetailPrint "Old installation uninstalled successfully."
-                   ${EndIf}
-                   Pop $0
-                IgnoreUnInstall:
-                   StrCpy $4 '0'
+                ; Older Version is installed
+                StrCpy $3 'A previous version of ${PRODUCT_NAME}($1) has been found. Would you like to uninstall the previous version or retain both versions?$\r$\nClick "Yes" to uninstall the previous version.$\r$\nClick "No" to continue installing ${PRODUCT_NAME} ${VERSION}.'		
+                StrCpy $4 '0'
             ${ElseIf} $0 = 2
                 ; Newer Version
                 StrCpy $3 "A newer version of ${PRODUCT_NAME}($1) is already installed. Please uninstall the newer version to run this installer."

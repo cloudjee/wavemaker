@@ -793,6 +793,8 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 
 		/* If updateReadonlyValue is called before this.changed, then this.dataValue will not yet have been set */
 		this.updateReadonlyValue();
+	    } else {
+		this.dataValue = inValue;
 	    }
 	},
 	setDisplayValue: function(inValue) {

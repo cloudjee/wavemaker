@@ -58,6 +58,7 @@ dojo.declare("QueryEditor", wm.Page, {
 		this.selectedQueryName = null;
 		this._enableAll(false);
 		this._clear();
+		this._loadTypes();
 		this.updateDataModelInput();
 		//this._loadQueries();
 	},
@@ -119,7 +120,6 @@ dojo.declare("QueryEditor", wm.Page, {
 		this.updateDataModelInput();
 
 		this._clear();
-
 		this._loadTypes();
 
 		this._enableAll(true);
@@ -578,7 +578,7 @@ dojo.declare("QueryEditor", wm.Page, {
 			this.typesLongNameLookup[shortName] = longName;
 			this.typesShortNameLookup[longName] = shortName;
 		}
-
+	    
 		this.bindTypeInput.editor.setOptions(names.join());
 		// set an initial type value so it cannot be created blank.
 		this.bindTypeInput.beginEditUpdate();

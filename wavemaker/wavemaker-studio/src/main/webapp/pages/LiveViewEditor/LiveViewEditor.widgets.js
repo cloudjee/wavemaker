@@ -14,7 +14,7 @@
  
 LiveViewEditor.widgets = {
 	smallToolbarImageList: ["wm.ImageList", {width: 16, height: 16, colCount: 32, url: "images/smallToolbarBtns.png"}, {}],
-	liveVariable: ["wm.LiveVariable", {autoUpdate: false, startUpdate: false}, {onSuccess: "updateSuccess"}],
+	liveVariable: ["wm.LiveVariable", {autoUpdate: false, startUpdate: false}, {/*onSuccess: "updateSuccess"*/}],
 	layoutBox1: ["wm.Layout", {_classes: {domNode: ["wm-darksnazzy"]}, height: "100%", width: "100%", imageList: "smallToolbarImageList"}, {}, {
 		managerToolbar: ["wm.Panel", {border: "0", padding: "0,4", height: "29px", layoutKind: "left-to-right"}, {}, {
 			toolbarBtnHolder: ["wm.Panel", {border: "0", height: "100%", layoutKind: "left-to-right", width: "100%"}, {}, {
@@ -71,6 +71,7 @@ LiveViewEditor.widgets = {
 				}]
 			}]
 		}],
+/*
 		splitter2: ["wm.Splitter", {border: "", layout: "bottom"}, {}],
 		previewPanel: ["wm.Panel", {border: "0", height: "30px", width: "100%"}, {}, {
 			panel4: ["wm.Panel", {border: "0", height: "24px", width: "100%", layoutKind: "left-to-right"}, {}, {
@@ -85,6 +86,7 @@ LiveViewEditor.widgets = {
 				}]
 			}]
 		}],
+		*/
 	    benchbevel4: ["wm.Bevel", {border: "0"}, {}],
 	    buttonBar: ["wm.Panel", {showing: false, _classes: {domNode: ["dialogfooter"]}, height: "20px", "horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%", padding: "2,0,2,0", border: "1,0,0,0", height: "34px", horizontalAlign: "right"}, {}, {
 			 OKButton: ["wm.Button", {_classes: {domNode: ["StudioButton"]},caption: "OK"}, {onclick: "okClick"}]

@@ -39,6 +39,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 
 	yAxis:'wmDefaultY',
 	yUpperRange:'',
+        yLowerRange: '',
 	chartColor:'',
 	includeX: true,
 	includeY:true,
@@ -654,7 +655,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	dojoChartEvent: function(e){
 		var type = e.type;
 		var idx = e.index;
-		if (!this.variable || !type || !idx || type == null || idx == null || this.variable == null)
+		if (!this.variable || !type || type == null || idx == null || this.variable == null)
 			return;
 
 		var dataObj = null;
@@ -678,6 +679,8 @@ dojo.declare("wm.DojoChart", wm.Control, {
 
     toHtml: function() {
 	return this.dojoObj.node.innerHTML;
-    }
+    },
+    createMouseOverConnect: function() {}, // ignore parent method
+    createMouseOutConnect: function() {} // ignore parent method
 });
 

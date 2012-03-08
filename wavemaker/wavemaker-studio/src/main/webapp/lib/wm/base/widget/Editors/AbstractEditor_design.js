@@ -247,7 +247,7 @@ wm.Object.extendSchema(wm.AbstractEditor, {
     /* Value subgroup */
     formField: {group: "editor", subgroup: "dataSet", order: 20, editor: "wm.prop.FormFieldSelect", editorProps: {relatedFields: false}, ignoreHint: "formField is only available when the editor is in a form", requiredGroup: 1},
     defaultInsert:{type: "String", bindTarget: 1, group: "editor", subgroup: "value", order: 21, ignoreHint: "defaultInsert is only relevant if the editor is in a form"},
-    displayValue: {group: "editor", subgroup: "value", order: 10}, // use getDisplayValue()
+    displayValue: {group: "editor", subgroup: "value", bindSource: 1, order: 10}, // use getDisplayValue()
     dataValue: {bindable: 1, group: "editor", subgroup: "value", order: 11, simpleBindProp: true, type: "String"}, // use getDataValue()
     emptyValue: {group: "editor", subgroup: "value",  order: 12, options: ["unset", "null", "emptyString", "false", "zero"]},
 

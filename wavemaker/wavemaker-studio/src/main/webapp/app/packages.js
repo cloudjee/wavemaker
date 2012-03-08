@@ -101,7 +101,8 @@
 [ bundlePackage.EditorsGroup + "/" + bundlePackage.RelatedEditorGroup, bundlePackage.RelatedEditor, "wm.RelatedEditor", "wm.base.widget.RelatedEditor", "Studio_paletteImageList_9",bundlePackage.descRelatedEditor, {}, false],
 [ bundlePackage.EditorsGroup + "/" + bundlePackage.Misc, bundlePackage.DojoFileUpload, "wm.DojoFileUpload", "wm.base.widget.DojoFileUpload", "Studio_paletteImageList_4",bundlePackage.descDojoFileUpload, {}, true],
 [ bundlePackage.EditorsGroup + "/" + bundlePackage.Misc, bundlePackage.DojoFlashFileUpload, "wm.DojoFlashFileUpload", "wm.base.widget.DojoFlashFileUpload", "Studio_paletteImageList_4",bundlePackage.descDojoFlashFileUpload, {}, true],
-[bundlePackage.EditorsGroup + "/" + bundlePackage.Misc, bundlePackage.Slider, "wm.Slider", "wm.base.widget.Editors.Number", "Studio_paletteImageList_9",bundlePackage.descSlider, {}, false],
+[bundlePackage.EditorsGroup + "/" + bundlePackage.Misc, bundlePackage.Slider, "wm.Slider", "wm.base.widget.Editors.Slider", "Studio_paletteImageList_9",bundlePackage.descSlider, {}, false],
+[bundlePackage.EditorsGroup + "/" + bundlePackage.Misc, bundlePackage.RangeSlider, "wm.RangeSlider", "wm.base.widget.Editors.Slider", "Studio_paletteImageList_9",bundlePackage.descSlider, {}, false],
 
 [ bundlePackage.DataWidget + "/" + bundlePackage.DataWidgetSingle, bundlePackage.Gauge, "wm.DojoGauge", "wm.base.widget.DojoGauge",  "images/wm.dijit/ProgressBar.png", bundlePackage.descGauge, {}, true],
 [ bundlePackage.DataWidget + "/" + bundlePackage.DataWidgetSingle, bundlePackage.ProgressBar, "wm.dijit.ProgressBar", "wm.base.widget.dijit.ProgressBar", "images/wm.dijit/ProgressBar.png", bundlePackage.descProgressBar, {}, false],
@@ -212,7 +213,9 @@
 [ bundlePackage.Non_Visual_Components, bundlePackage.LogoutVariable, "wm.LogoutVariable", "wm.base.components.LogoutVariable", "Studio_paletteImageList_43", "", {parentMenu: bundlePackage.Advanced}, false],
 [ bundlePackage.Non_Visual_Components, bundlePackage.Timer, "wm.Timer", "wm.base.components.Timer", "Studio_paletteImageList_42", "", {parentMenu: bundlePackage.Advanced}, false],
 [ bundlePackage.Non_Visual_Components, bundlePackage.TypeDefinition, "wm.TypeDefinition", "wm.base.components.TypeDefinition", "Studio_paletteImageList_42", "", {parentMenu: bundlePackage.Advanced}, false],
-
+[ bundlePackage.Non_Visual_Components, bundlePackage.Composite_Publisher, "wm.CompositePublisher", "wm.base.components.Publisher", "images/flash.png", "", {parentMenu: bundlePackage.Advanced}, false],
+[ bundlePackage.Non_Visual_Components, bundlePackage.Property, "wm.Property", "wm.base.components.Property", "images/flash.png" , "", {parentMenu: bundlePackage.Advanced}, false],
+[ bundlePackage.Non_Visual_Components, bundlePackage.Template_Publisher, "wm.TemplatePublisher", "wm.base.components.Publisher", "images/flash.png", "", {parentMenu: bundlePackage.Advanced}, false],
 
 [ bundlePackage.Services, bundlePackage.Database_Service, "wm.DataModel", "wm.base.components.DataModel", "images/wm/data_blue.png", "", {}, false],
 [ bundlePackage.Services, bundlePackage.Database_Design, "wm.DataModel", "wm.base.components.DataModel", "images/wm/data_blue.png", "", {_type: "New"}, false],
@@ -226,3 +229,5 @@
 // hidden (don't show up in palette, but images are defined)
 [ "", bundlePackage.Layer, "wm.Layer", "wm.base.widget.Layers", "Studio_paletteImageList_21", "", {}, false],
 [ "", bundlePackage.Layout, "wm.Layout", "wm.base.widget.Layout", "Studio_paletteImageList_16", "", {}, false]
+
+

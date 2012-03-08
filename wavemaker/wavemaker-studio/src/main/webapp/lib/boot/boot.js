@@ -62,6 +62,13 @@ wm.headAppend = function(inElement) {
 	head.appendChild(inElement);
 };
 
+wm.addStyleSheet = function(inPath) {
+    var link = document.createElement("link");
+    dojo.attr(link, "rel", "stylesheet");
+    dojo.attr(link, "href", inPath);
+    wm.headAppend(link);
+};
+
 // loading via document.write
 wm.tags = {
 	js: [ '<scrip', 't type="text/javascript" src="', '', '"></scrip', 't>' ],

@@ -20,8 +20,8 @@ dojo.require("wm.base.Control_design");
 wm.Object.extendSchema(wm.VirtualList, {
 
     /* wm.List group; selection subgroup */
-    multiSelect: { ignore: 1, group: "widgetName", subgroup: "selection", order: 40},    // FIXME: disabling this as we're not using it at all, and grid supports it.
-    toggleSelect: {group: "widgetName", subgroup: "selection", order: 41},
+    selectionMode:     {group: "widgetName", subgroup: "selection", order: 40, options: ["single", "multiple", "extended", "none", "checkbox", "radio"], ignoreHint: "You need to use the 'editColumns' dialog to setup columns before this feature becomes available"},
+    toggleSelect: {group: "widgetName", subgroup: "selection", order: 41, ignoreHint: "Only available for single selection mode"},
 
     /* Ignored Group */
     box: { ignore: 1 },
@@ -89,7 +89,9 @@ wm.Object.extendSchema(wm.List, {
 wm.List.description = "Displays list of items.";
 
 wm.List.extend({
+
     updateNow: function() {this.update();},
+
     showMenuDialog: function(e){
 	if (!this.columns) {
 	    this.columns = [];
@@ -98,9 +100,28 @@ wm.List.extend({
 	studio.gridDesignerDialog.show();
 	studio.gridDesignerDialog.page.setGrid(this);
     },
+    set_selectionMode: function(inMode) {
+	this.selectionMode = inMode;
+	this.setSelectionMode(inMode);
+	this.selectedItem.setIsList(inMode == "multiple");
+	this._render();
+    },
     updateColumnData: function () {
+	if (!dojo.isArray(this.columns)) {
+	    this.columns = [];
+	}
 	var defaultSchema = {dataValue: {type: this.dataSet.type}}; // this is the schema to use if there is no schema (i.e. the type is a literal)
-        var viewFields = this.getViewFields() || defaultSchema;
+        var viewFields = this.getViewFields();
+/*
+	if (!viewFields || viewFields.length == 0) {
+	    viewFields =  [];
+	    wm.forEachProperty(defaultSchema, function(item, fieldName) {
+		item = dojo.clone(item);
+		item.name = fieldName;
+		viewFields.push(item);
+	    });
+	}
+	*/
         dojo.forEach(viewFields, function (f, i) {
             // if the column already exists, skip it
             if (dojo.some(this.columns, function (item) {
@@ -121,6 +142,7 @@ wm.List.extend({
                 width = '80px';
                 formatFunc = 'wm_date_formatter';
             }
+
             this.columns.push({
                 show: i < 15,
                 field: f.dataIndex,
@@ -151,6 +173,7 @@ wm.List.extend({
             return;
         }));
         this.columns = newcolumns;
+	this.setColumns(this.columns);
     },
 	getViewFields: function(){
 	    var fields = [];
@@ -167,8 +190,20 @@ wm.List.extend({
     set_columns: function(inColumns){
 	this.setColumns(inColumns);
 	this._render();
+    },
+    listProperties: function() {
+	var props = this.inherited(arguments);
+	props.toggleSelect.ignoretmp = Boolean(this.selectionMode == "multiple");
+	props.selectionMode.ignoretmp = Boolean(!this.columns);
+	return props;
+    },
+    writeProps: function() {
+	var props = this.inherited(arguments);
+	if (props.columns && props.columns[0].controller) {
+	    props.columns.shift();
+	}
+	return props;
     }
-
 });
 
 

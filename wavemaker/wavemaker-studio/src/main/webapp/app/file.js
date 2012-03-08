@@ -92,12 +92,12 @@ if (wm.studioConfig.isPalmApp)
 	dojo.addOnLoad(_initPalmProjectTemplates);
 else
 	dojo.addOnLoad(_initProjectTemplates);
-
+/*
 _saveToFile = function(inPath, inData, inNoOverwrite) {
 	// blocking
 	return studio.studioService.requestSync("writeWebFile", [inPath, inData, inNoOverwrite||false]);
 }
-
+*/
 _fileExists = function(inPath) {
 	return studio.studioService.getResultSync("fileExists", [inPath]);
 }

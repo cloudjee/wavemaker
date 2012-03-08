@@ -13,6 +13,8 @@ import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.deployment.DeploymentTargetManager;
+import com.wavemaker.tools.deployment.DeploymentType;
+import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.deployment.tomcat.TomcatDeploymentTarget;
 
 
@@ -223,21 +225,20 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
     public void restartStudioApp() throws Exception {
         String result;
 
-        Map<String, String> m = new LinkedHashMap<String, String>(4);
-        m.put(TomcatDeploymentTarget.HOST_PROPERTY_NAME, "localhost");
-        String port = Integer.toString(RuntimeAccess.getInstance().getRequest().getServerPort());
-        m.put(TomcatDeploymentTarget.PORT_PROPERTY_NAME, port);
-        m.put(TomcatDeploymentTarget.MANAGER_USER_PROPERTY_NAME, "manager");
-        m.put(TomcatDeploymentTarget.MANAGER_PASSWORD_PROPERTY_NAME, "manager");
-        Map<String, String> props = Collections.unmodifiableMap(m);
+        DeploymentInfo info = new DeploymentInfo();
+        info.setApplicationName(studioContextName);
+        info.setHost("localhost");
+        info.setPort(RuntimeAccess.getInstance().getRequest().getServerPort());
+        info.setUsername("manager");
+        info.setPassword("manager");
 
-        result = deploymentTargetManager.getDeploymentTarget("tomcat")
-            .stop(studioContextName, props);
+        result = deploymentTargetManager.getDeploymentTarget(DeploymentType.TOMCAT)
+            .stop(info);
 
         System.out.println(result);
 
-        result = deploymentTargetManager.getDeploymentTarget("tomcat")
-            .start(studioContextName, props);
+        result = deploymentTargetManager.getDeploymentTarget(DeploymentType.TOMCAT)
+            .start(info);
 
         System.out.println(result);
     }

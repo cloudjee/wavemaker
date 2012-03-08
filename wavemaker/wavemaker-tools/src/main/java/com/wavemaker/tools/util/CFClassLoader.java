@@ -14,18 +14,14 @@
 
 package com.wavemaker.tools.util;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.jar.JarFile;
 
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.Resource;
-import org.springframework.util.FileCopyUtils;
 
 import com.wavemaker.common.CommonRuntimeAccess;
 import com.wavemaker.common.MessageResource;
@@ -44,8 +40,6 @@ public class CFClassLoader extends ClassLoader {
 
     private final ClassLoader parentClassLoader;
 
-    private final File tempDir = null;
-
     private final StudioFileSystem fileSystem;
 
     public CFClassLoader(Resource[] resources, ClassLoader parent) {
@@ -58,10 +52,6 @@ public class CFClassLoader extends ClassLoader {
 
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
-
-        if (name.substring(0, 12).equals("com.mytestdb")) { // xxx
-            System.out.println("************** class name = " + name);
-        }
 
         if (this.resources == null) {
             throw new ClassNotFoundException("invalid search root: " + this.resources);
@@ -121,7 +111,7 @@ public class CFClassLoader extends ClassLoader {
             } else {
                 ret = defineClass(name, fileBytes, 0, fileBytes.length);
             }
-        } catch (WMRuntimeException ex) { // xxx
+        } catch (WMRuntimeException ex) {
             ret = null;
         }
 
@@ -134,10 +124,6 @@ public class CFClassLoader extends ClassLoader {
 
     @Override
     public InputStream getResourceAsStream(String name) {
-        if (name.substring(0, 12).equals("com.mytestdb")) {
-            System.out.println("================== resource name = " + name);
-        }
-
         List<Resource> files = new ArrayList<Resource>();
         for (int i = 0; i < this.resources.length; i++) {
             files.addAll(this.fileSystem.listAllChildren(this.resources[i], null));
@@ -163,7 +149,6 @@ public class CFClassLoader extends ClassLoader {
         ret = this.parentClassLoader.getResourceAsStream(name);
 
         return ret;
-        // return super.getResourceAsStream(name);
     }
 
     private String getPath(Resource resource) {
@@ -173,16 +158,5 @@ public class CFClassLoader extends ClassLoader {
             path = path.substring(0, len - 1);
         }
         return path;
-    }
-
-    private File copyResourceToTempFile(File dir, Resource resource, String fileName) throws IOException {
-        File tempFile = new File(dir, fileName);
-        InputStream is = resource.getInputStream();
-        OutputStream os = new FileOutputStream(tempFile);
-        FileCopyUtils.copy(is, os);
-        is.close();
-        os.close();
-
-        return tempFile;
     }
 }

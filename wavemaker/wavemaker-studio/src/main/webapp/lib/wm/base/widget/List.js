@@ -52,7 +52,19 @@ dojo.declare("wm.ListItem", wm.VirtualListItem, {
 					return i;
 		}
 		return -1;
+	},
+    select: function() {
+	this.inherited(arguments);
+	if (this.list.columns && (this.list.selectionMode == "checkbox" || this.list.selectionMode == "radio")) {
+	    dojo.query("input",this.domNode)[0].checked = true;
 	}
+    },
+    deselect: function() {
+	this.inherited(arguments);
+	if (this.list.columns && (this.list.selectionMode == "checkbox" || this.list.selectionMode == "radio")) {
+	    dojo.query("input",this.domNode)[0].checked = false;
+	}
+    }
 });
 
 wm.Object.extendSchema(wm.ListItem, {
@@ -82,7 +94,21 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    this._columnsHash[column.field] = column;
 	}
     },
+	setSelectionMode: function(inMode) {
+	  this.selectionMode = inMode;
+	    if (inMode == "checkbox")
+		inMode = "multiple";
+	    else if (inMode == "radio")
+		inMode = "single";
+	    else if (inMode == "extended") {
+		inMode = this.selectionMode = "multiple";
+	    }
+
+	    this._selectionMode = inMode;
+	},
+
 	init: function() {
+	    this.setSelectionMode(this.selectionMode);
 	    if (this.columns) {
 		this.setColumns(this.columns);
 	    }
@@ -114,25 +140,14 @@ dojo.declare("wm.List", wm.VirtualList, {
 	createItem: function(inContent) {
 		return new wm.ListItem(this, inContent);
 	},
-	_setSelected: function(inItem) {
-		this.selected = inItem;
-		var
-			d = this.selected ? this.selected.getData() : {},
-			s = this.selectedItem;
-		if (dojo.isObject(d) && !wm.typeManager.getType(s.type))
-			s.setDataSchema(d);
-		if (this.selected && dojo.isObject(d))
-			s.setData(d);
-		else
-			s.clearData();
-		this.setValue("emptySelection", Boolean(!this.selected));
-
-	},
 	getEmptySelection: function() {
-	  return Boolean(!this.selected);
+	    return !this.hasSelection();
 	},
 	hasSelection: function() {
-	    return Boolean(this.selected);
+	    if (dojo.isArray(this.selected))
+		return this.selected.length > 0;
+	    else
+		return Boolean(this.selected);
 	},
 
 	_setDataFields: function(inDataFields) {
@@ -313,6 +328,12 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    },
 
 	renderData: function(inData) {
+		if (this.selectionMode == "checkbox" || this.selectionMode == "radio") {
+		    this.columns.unshift({width: "30px", title: "-", controller: this.selectionMode, field: "_selector", show: true});
+		    this._columnsHash._selector = this.columns[0];
+		}
+
+
 		this.clear();
 		this._data = inData;
 		if (!this.dataFields)
@@ -329,6 +350,10 @@ dojo.declare("wm.List", wm.VirtualList, {
 
 	    if (this._listTouchScroll && !this._listTouchScroll.scrollers.outer.style.width) {
 		wm.job(this.getRuntimeId() + "ListSetupScroller", 1, this._listTouchScroll, "setupScroller");
+	    }
+	    if (this.selectionMode == "checkbox" || this.selectionMode == "radio") {
+		this.columns.shift();
+		delete this._columnsHash._selector;
 	    }
 	},
     runQuery: function(inData) {
@@ -413,14 +438,18 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    }
 	    */
 	    else if (this.columns) {
-		var value = this._data[i];
-		var cellData = value;
-		var props = dataFields.split(".");
-		for (var propIndex = 0; propIndex < props.length; propIndex++) {
-		    cellData = cellData[props[propIndex]];
+		var columnDef = this.columns[inCol];
+		if (columnDef.controller) {
+		    cellData = "<input wmcontroller='true' type='" + columnDef.controller + "' />";
+		} else {
+		    var value = this._data[i];
+		    var cellData = value;
+		    var props = dataFields.split(".");
+		    for (var propIndex = 0; propIndex < props.length; propIndex++) {
+			cellData = cellData[props[propIndex]];
+		    }
+		    cellData = this.formatCell(dataFields,cellData, value, i, inCol);
 		}
-
-		cellData = this.formatCell(dataFields,cellData, value, i, inCol);
 	    }
 
 	    /* Else if the data came from a call to renderData([{randomHash},{randomHash},....]) */
@@ -833,7 +862,7 @@ wm.List.extend({
 	    }
 	}
 	return "";
-    },
+    }
 });
 
 if (wm.isMobile) {

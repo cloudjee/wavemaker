@@ -70,9 +70,6 @@ loadPackages = function() {
     //studio.palette.beginUpdate();
     loadData(dojo.moduleUrl("wm.studio.app") + "packages.js", _loadPackages);
     loadData(dojo.moduleUrl("wm.packages") + "packages.js", _loadPackages);
-
-	if (!studio.isCloud()) 
-	    loadData(dojo.moduleUrl("wm.studio.app") + "packages.noncloud.js", _loadPackages);
 	//console.dir(__packageRegistry);
 	installPackages(__packageRegistry);
 	//studio.palette.endUpdate();

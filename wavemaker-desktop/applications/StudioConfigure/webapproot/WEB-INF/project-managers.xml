@@ -3,13 +3,6 @@
     <bean scope="singleton" parent="typeManagerBase" class="com.wavemaker.runtime.service.TypeManager" id="typeManager">
         <property name="types">
             <map merge="true">
-                <entry key="InstallService">
-                    <list>
-                        <value>java.io.File</value>
-                        <value>com.wavemaker.runtime.server.FileUploadResponse</value>
-                        <value>org.springframework.web.multipart.MultipartFile</value>
-                    </list>
-                </entry>
                 <entry key="runtimeService">
                     <list>
                         <value>com.wavemaker.runtime.service.PagingOptions</value>

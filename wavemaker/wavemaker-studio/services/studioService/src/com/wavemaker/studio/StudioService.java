@@ -428,7 +428,7 @@ public class StudioService extends ClassLoader {
     @ExposeToClient
     public String getJavaServiceTemplate(String templateName) throws IOException {
         return getProjectManager().getCurrentProject().readFile(
-            this.fileSystem.getStudioWebAppRoot().createRelative("/app/templates/javaservices" + templateName));
+            this.fileSystem.getStudioWebAppRoot().createRelative("/app/templates/javaservices/" + templateName));
     }
 
     @ExposeToClient
@@ -664,10 +664,19 @@ public class StudioService extends ClassLoader {
 
     // FIXME PW discuss and possibly remove phone gap
     private void writePhoneGapFile(String path, String data) throws IOException {
-        path = path.trim();
+        // XCODE
         String projectName = this.projectManager.getCurrentProject().getProjectName();
         String pathPrefix = "phonegap/" + projectName + "/www/";
         Resource phonegap = this.projectManager.getCurrentProject().getProjectRoot().createRelative(pathPrefix);
+
+        if (phonegap.exists()) {
+            Resource lib = phonegap.createRelative("lib");
+            this.projectManager.getCurrentProject().writeFile(pathPrefix + (path.startsWith("/") ? path.substring(1) : path), data, false);
+        }
+
+        // ECLIPSE
+        pathPrefix = "phonegap/assets/www/";
+        phonegap = this.projectManager.getCurrentProject().getProjectRoot().createRelative(pathPrefix);
 
         if (phonegap.exists()) {
             Resource lib = phonegap.createRelative("lib");
@@ -678,8 +687,19 @@ public class StudioService extends ClassLoader {
     @ExposeToClient
     public void setupPhonegapFiles(int portNumb, boolean isDebug) throws IOException {
         String projectName = this.projectManager.getCurrentProject().getProjectName();
+
+        // XCODE
         String pathPrefix = "phonegap/" + projectName + "/www/";
         Resource phonegap = this.projectManager.getCurrentProject().getProjectRoot().createRelative(pathPrefix);
+        setupPhonegapFiles(portNumb, projectName, phonegap);
+
+        // Eclipse
+        pathPrefix = "phonegap/assets/www/";
+        phonegap = this.projectManager.getCurrentProject().getProjectRoot().createRelative(pathPrefix);
+        setupPhonegapFiles(portNumb, projectName, phonegap);
+    }
+
+    private void setupPhonegapFiles(int portNumb, String projectName, Resource phonegap) throws IOException {
         if (phonegap.exists()) {
             Resource lib = phonegap.createRelative("lib");
             if (!lib.exists()) {
@@ -695,29 +715,42 @@ public class StudioService extends ClassLoader {
 
                 Resource MainViewerLib = this.projectManager.getCurrentProject().getProjectRoot().createRelative(
                     "phonegap/" + projectName + "/" + projectName + "/Classes/MainViewController.m");
-                System.out.println("MAINVIEWER: " + MainViewerLib.getFile().getAbsolutePath());
-                String MainViewerStr = IOUtils.read(MainViewerLib.getFile());
-                String MainViewerSearchStr = "(BOOL)shouldAutorotateToInterfaceOrientation";
-                int MainViewerStart = MainViewerStr.indexOf(MainViewerSearchStr);
-                int MainViewerEnd = MainViewerStr.indexOf("}", MainViewerStart) + 1;
-                MainViewerStr = MainViewerStr.substring(0, MainViewerStart)
-                    + "(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation\n{\nreturn YES;\n}\n"
-                    + MainViewerStr.substring(MainViewerEnd);
-                System.out.println("MainViewer:" + MainViewerStart + " | " + MainViewerEnd + " | " + MainViewerStr);
-                IOUtils.write(MainViewerLib.getFile(), MainViewerStr);
+                if (MainViewerLib.exists()) {
+                    System.out.println("MAINVIEWER: " + MainViewerLib.getFile().getAbsolutePath());
+                    String MainViewerStr = IOUtils.read(MainViewerLib.getFile());
+                    String MainViewerSearchStr = "(BOOL)shouldAutorotateToInterfaceOrientation";
+                    int MainViewerStart = MainViewerStr.indexOf(MainViewerSearchStr);
+                    int MainViewerEnd = MainViewerStr.indexOf("}", MainViewerStart) + 1;
+                    MainViewerStr = MainViewerStr.substring(0, MainViewerStart)
+                        + "(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation\n{\nreturn YES;\n}\n"
+                        + MainViewerStr.substring(MainViewerEnd);
+                    IOUtils.write(MainViewerLib.getFile(), MainViewerStr);
+                }
             }
         }
     }
 
     @ExposeToClient
     public void updatePhonegapFiles(int portNumb, boolean isDebug) throws IOException {
+
+        // XCODE
         String projectName = this.projectManager.getCurrentProject().getProjectName();
         String pathPrefix = "phonegap/" + projectName + "/www/";
         Resource phonegap = this.projectManager.getCurrentProject().getProjectRoot().createRelative(pathPrefix);
+        updatePhonegapFiles(portNumb, isDebug, projectName, phonegap);
+
+        // ECLIPSE
+        pathPrefix = "phonegap/assets/www/";
+        phonegap = this.projectManager.getCurrentProject().getProjectRoot().createRelative(pathPrefix);
+        updatePhonegapFiles(portNumb, isDebug, projectName, phonegap);
+    }
+
+    private void updatePhonegapFiles(int portNumb, boolean isDebug, String projectName, Resource phonegap) throws IOException {
         if (phonegap.exists()) {
             Resource lib = phonegap.createRelative("lib");
             Resource indexhtml = phonegap.createRelative("index.html");
             String indexhtml_text = IOUtils.read(indexhtml.getFile());
+
             // Update paths in index.html
             indexhtml_text = indexhtml_text.replaceAll("/wavemaker/", "");
 
@@ -753,33 +786,35 @@ public class StudioService extends ClassLoader {
                 + "\nwm.xhrPath = 'http://" + SystemUtils.getIP() + ":" + portNumb + "/" + projectName + "/';\n" + boottext;
             IOUtils.write(configjs.getFile(), configjs_text);
 
-            // Update phonegap.plist
+            // Update phonegap.plist (IOS only)
             java.io.File phonegap_plist_file = new java.io.File(phonegap.getFile().getParent(), projectName + "/PhoneGap.plist");
-            String phonegap_plist = IOUtils.read(phonegap_plist_file);
-            String startExpression = "<key>ExternalHosts</key>";
-            int startindex = phonegap_plist.indexOf(startExpression);
-            int startindex1 = startindex + startExpression.length();
-            int endindex1 = phonegap_plist.indexOf("</array>", startindex1);
-            if (endindex1 != -1) {
-                endindex1 += "</array>".length();
+            if (phonegap_plist_file.exists()) {
+                String phonegap_plist = IOUtils.read(phonegap_plist_file);
+                String startExpression = "<key>ExternalHosts</key>";
+                int startindex = phonegap_plist.indexOf(startExpression);
+                int startindex1 = startindex + startExpression.length();
+                int endindex1 = phonegap_plist.indexOf("</array>", startindex1);
+                if (endindex1 != -1) {
+                    endindex1 += "</array>".length();
+                }
+                int endindex2 = phonegap_plist.indexOf("<array/>", startindex1);
+                if (endindex2 != -1) {
+                    endindex2 += "<array/>".length();
+                }
+                int endindex;
+                if (endindex1 == -1) {
+                    endindex = endindex2;
+                } else if (endindex2 == -1) {
+                    endindex = endindex1;
+                } else if (endindex1 > endindex2) {
+                    endindex = endindex2;
+                } else {
+                    endindex = endindex1;
+                }
+                phonegap_plist = phonegap_plist.substring(0, startindex1) + "<array><string>" + SystemUtils.getIP() + "</string></array>"
+                    + phonegap_plist.substring(endindex);
+                IOUtils.write(phonegap_plist_file, phonegap_plist);
             }
-            int endindex2 = phonegap_plist.indexOf("<array/>", startindex1);
-            if (endindex2 != -1) {
-                endindex2 += "<array/>".length();
-            }
-            int endindex;
-            if (endindex1 == -1) {
-                endindex = endindex2;
-            } else if (endindex2 == -1) {
-                endindex = endindex1;
-            } else if (endindex1 > endindex2) {
-                endindex = endindex2;
-            } else {
-                endindex = endindex1;
-            }
-            phonegap_plist = phonegap_plist.substring(0, startindex1) + "<array><string>" + SystemUtils.getIP() + "</string></array>"
-                + phonegap_plist.substring(endindex);
-            IOUtils.write(phonegap_plist_file, phonegap_plist);
 
             // Recopy common; TODO: Update registering of modules for this new path
             if (phonegap.createRelative("common").getFile().exists()) {

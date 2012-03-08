@@ -314,7 +314,6 @@ dojo.declare("wm.studio.Project", null, {
 	if (unsavedChanges) {
 	    studio.restoreCleanApp();
 	}
-
 		this.pageChanging();
 		this.pageName = inName;
 		try {
@@ -453,12 +452,6 @@ dojo.declare("wm.studio.Project", null, {
 	    this.saveApplication(dojo.hitch(this, function() {
 		this.savePage(dojo.hitch(this, function() {
 	            studio.setSaveProgressBarMessage("login.html");
-		    // in case the theme has changed, resave the login.html page (synchronous)
-		    if (webFileExists("login.html")) {
-			var templateFolder = dojo.moduleUrl("wm.studio.app") + "templates/security/";
-			var loginhtml = loadDataSync(templateFolder + "login.html");
-			studio.project.saveProjectData("login.html", wm.makeLoginHtml(loginhtml, studio.project.projectName, studio.application.theme));
-		    }
 	            studio.incrementSaveProgressBar(1);
 		    this.saveComplete();
 		    if (onSave) onSave();
@@ -563,7 +556,7 @@ dojo.declare("wm.studio.Project", null, {
 	    d.addCallback(dojo.hitch(this, function() {
 
 		studio.setSaveProgressBarMessage("Initializing PhoneGap (Please wait...)");
-		var dlocal = studio.studioService.requestAsync("setupPhonegapFiles", [location.port, studio.runPopup.iconClass == "studioProjectTest"]);
+		var dlocal = studio.studioService.requestAsync("setupPhonegapFiles", [location.port || 80, studio.runPopup.iconClass == "studioProjectTest"]);
 		dlocal.addCallback(function() {d1.callback();});
 	    }));
 
@@ -590,13 +583,13 @@ dojo.declare("wm.studio.Project", null, {
 	    }));
 
 	    var d4 = new dojo.Deferred();
+	    var themeUrl;
 	    d3.addCallback(dojo.hitch(this, function() {
 		studio.incrementSaveProgressBar(1);
 
 		// save html file, config file, and debug loader + css
 	        studio.setSaveProgressBarMessage(c.appIndexFileName);
 		var themename = studio.application.theme;
-		var themeUrl;
 		if (this.deployingProject || wm.studioConfig.environment != "local") {
                     themeUrl = (themename.match(/^wm_/)) ? "lib/wm/base/widget/themes/" + themename + "/theme.css" : "lib/wm/common/themes/" + themename + "/theme.css";
 		} else {
@@ -711,13 +704,14 @@ dojo.declare("wm.studio.Project", null, {
 	    var d11 = new dojo.Deferred();
 	    d10.addCallback(dojo.hitch(this, function() {
 		studio.setSaveProgressBarMessage("Update PhoneGap Setup");
-		var dlocal = studio.studioService.requestAsync("updatePhonegapFiles", [location.port, studio.runPopup.iconClass == "studioProjectTest"]);
+		var dlocal = studio.studioService.requestAsync("updatePhonegapFiles", [location.port || 80, studio.runPopup.iconClass == "studioProjectTest"]);
 		dlocal.addCallback(function() {d11.callback();});
 	    }));
 
 	    var d12 = new dojo.Deferred();
 	    d11.addCallback(dojo.hitch(this, function() {
 		studio.incrementSaveProgressBar(1);
+		studio.setCleanApp();
 		callback();
 	    }));
 
@@ -1892,7 +1886,7 @@ Studio.extend({
 		/* Confirm == dont save */
 		onConfirm,
 		onCancel,
-		!this.isPageDirty());
+		!this.isProjectDirty()); // svn -r31601: don't test for isPageDirty
 	},
         confirmAppChange: function(inMessage, inNewProject, onConfirm, onCancel) {
 	    var inMessage = dojo.string.substitute(inMessage, {project: '"' + this.project.projectName + '"', newProject: inNewProject});

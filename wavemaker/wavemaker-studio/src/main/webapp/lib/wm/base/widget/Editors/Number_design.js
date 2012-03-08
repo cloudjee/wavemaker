@@ -85,3 +85,8 @@ wm.Object.extendSchema(wm.Slider, {
 });
 
 
+wm.Object.extendSchema(wm.RangeSlider, {
+    dataValue: {ignore: 1},
+    topValue:  {bindable: 1, group: "editor", subgroup: "value", order: 11, simpleBindProp: true, type: "Number"}, 
+    bottomValue:  {bindable: 1, group: "editor", subgroup: "value", order: 11, simpleBindProp: true, type: "Number"}
+ });
