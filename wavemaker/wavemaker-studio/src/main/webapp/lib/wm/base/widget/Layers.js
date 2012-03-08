@@ -208,27 +208,30 @@ dojo.declare("wm.Layers", wm.Container, {
 		this.client = null;
 	},
 	prepare: function() {
-		this.layers = [];
-		this.captionMap =[];
-		this.inherited(arguments);
+	    this.layers = [];
+	    this.captionMap =[];
+	    this.inherited(arguments);
+
+	    // needs to happen before build generates the tabsControl or other affected widget
+	    var isMobile = wm.isMobile || this._isDesignLoaded && studio.currentDeviceType != "desktop";
+	    if (!isMobile) {
+		if (this.desktopHeaderHeight != null) {
+		    this.headerHeight = this.desktopHeaderHeight;
+		} else if (this.headerHeight) {
+		    this.desktopHeaderHeight = this.headerHeight;
+		}
+	    } else {
+		if (this.mobileHeaderHeight) {
+		    this.headerHeight = this.mobileHeaderHeight;
+		} 
+	    }
 	},
 	build: function() {
 		this.inherited(arguments);
 		this.setLayersType(this.layersType);
 	},
 	init: function() {
-	    var isMobile = wm.isMobile || this._isDesignLoaded && studio.currentDeviceType != "desktop";
-	    if (!isMobile) {
-		if (this.desktopHeaderHeight != null) {
-		    this.headerHeight = this.desktopHeaderHeight;
-		} else if (this.headerHeight) {
-		this.desktopHeaderHeight = this.headerHeight;
-	    }
-	} else {
-	    if (this.mobileHeaderHeight) {
-		this.headerHeight = this.mobileHeaderHeight;
-	    } 
-	}
+
 
 	    this.userDefHeaderHeight = this.headerHeight;
 	    if (!this.isRelativePositioned)
@@ -237,7 +240,9 @@ dojo.declare("wm.Layers", wm.Container, {
 		this.setHeaderHeight('20px');
             // vertical defaults to justified; once we get rid of justified, we can remove this property
 	    this.client = new wm.Panel({isRelativePositioned:this.isRelativePositioned, 
-					border: 0, 
+					border: "0", 
+					margin: "0",
+					padding: "0",
 					name: "client", 
 					parent: this, 
 					owner: this, 
