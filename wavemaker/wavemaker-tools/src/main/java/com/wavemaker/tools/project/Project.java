@@ -71,7 +71,11 @@ public class Project extends AbstractFileService {
     public Folder getRootFolder() {
         // FIXME implement properly
         try {
-            LocalFileSystem fileSystem = new LocalFileSystem(getProjectRoot().getFile());
+            Resource projectRoot = getProjectRoot();
+            if (projectRoot instanceof ResourceAdapter) {
+                return (Folder) ((ResourceAdapter) projectRoot).getExistingResource(true);
+            }
+            LocalFileSystem fileSystem = new LocalFileSystem(projectRoot.getFile());
             return FileSystemFolder.getRoot(fileSystem);
         } catch (IOException e) {
             throw new IllegalStateException(e);

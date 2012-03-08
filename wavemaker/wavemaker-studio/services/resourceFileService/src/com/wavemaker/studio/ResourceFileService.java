@@ -213,7 +213,7 @@ public class ResourceFileService {
             return (T) root;
         }
 
-        return root.get(resourceName, resourceType);
+        return root.jail().get(resourceName, resourceType);
     }
 
     /**

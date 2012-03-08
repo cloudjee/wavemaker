@@ -7,31 +7,24 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.core.io.Resource;
 import org.springframework.data.mongodb.MongoDbFactory;
-import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.PathMatcher;
-import org.springframework.util.StringUtils;
 
-import com.mongodb.BasicDBList;
-import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.Mongo;
-import com.mongodb.MongoException;
 import com.mongodb.gridfs.GridFS;
-import com.mongodb.gridfs.GridFSDBFile;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.ResourcePath;
+import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.mongo.MongoFileSystem;
 
 /**
  * Implementation of {@link StudioFileSystem} backed by {@link GridFS}.
@@ -41,61 +34,43 @@ import com.wavemaker.tools.io.Folder;
  * @author Joel Hare
  * @author Matt Small
  * @author Phillip Webb
+ * 
+ * @deprecated prefer the new wavemaker {@link com.wavemaker.tools.io.Resource} abstraction
  */
+@Deprecated
 public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
 
+    private final Folder rootFolder;
+
     private final LocalStudioFileSystem delegate;
-
-    private final GridFS gfs;
-
-    private DBObject dirsDoc;
-
-    private final DBCollection dirsCollection;
 
     /**
      * WaveMaker home override, used for testing. NEVER set this in production.
      */
+    @Deprecated
     private File testWMHome;
-
-    /**
-     * WaveMaker demo directory override, used for testing. NEVER set this in production.
-     */
-    private File testDemoDir;
-
-    public GridFSStudioFileSystem() throws UnknownHostException, MongoException {
-        this(new SimpleMongoDbFactory(new Mongo("127.0.0.1"), "testThisDB"));
-    }
 
     public GridFSStudioFileSystem(MongoDbFactory mongoFactory) {
         DB db = mongoFactory.getDb();
-        this.gfs = new GridFS(mongoFactory.getDb());
-        this.dirsCollection = db.getCollection("fs.dirs");
-        DBObject existingDoc = this.dirsCollection.findOne();
-        if (existingDoc != null) {
-            this.dirsDoc = existingDoc;
-        } else {
-            this.dirsDoc = new BasicDBObject();
-            BasicDBList homeChildren = new BasicDBList();
-            homeChildren.add("/" + COMMON_DIR);
-            homeChildren.add("/" + PROJECTS_DIR);
-            this.dirsDoc.put("/", homeChildren);
-            this.dirsDoc.put("/" + COMMON_DIR, new BasicDBList());
-            this.dirsDoc.put("/" + PROJECTS_DIR, new BasicDBList());
-            this.dirsCollection.insert(this.dirsDoc);
-        }
+        MongoFileSystem fileSystem = new MongoFileSystem(db, GridFS.DEFAULT_BUCKET);
+        this.rootFolder = FileSystemFolder.getRoot(fileSystem);
         this.delegate = new LocalStudioFileSystem();
+        setupBasicStructure();
+    }
+
+    private void setupBasicStructure() {
+        getCommonFolder().touch();
+        this.rootFolder.getFolder(PROJECTS_DIR).touch();
     }
 
     @Override
     public Folder getCommonFolder() {
-        throw new UnsupportedOperationException();
-        // FIXME PW filesystem
+        return this.rootFolder.getFolder(COMMON_DIR);
     }
 
     @Override
     public Folder getWaveMakerHomeFolder() {
-        throw new UnsupportedOperationException();
-        // FIXME PW filesystem
+        return this.rootFolder;
     }
 
     @Override
@@ -103,15 +78,11 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
         if (this.testWMHome != null) {
             return createResource(this.testWMHome.toString() + "/");
         }
-        return internalGetWaveMakerHome();
+        return new GFSResource(this.rootFolder, "/");
     }
 
     public void setTestWaveMakerHome(File file) {
         this.testWMHome = file;
-    }
-
-    private Resource internalGetWaveMakerHome() {
-        return createResource("/");
     }
 
     @Override
@@ -121,9 +92,6 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
 
     @Override
     public Resource getDemoDir() {
-        if (this.testDemoDir != null) {
-            return createResource(this.testDemoDir.toString() + "/");
-        }
         try {
             return getStudioWebAppRoot().createRelative("../Samples");
         } catch (IOException ex) {
@@ -131,16 +99,13 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
         }
     }
 
-    public void setTestDemoDir(File file) {
-        this.testDemoDir = file;
-    }
-
     @Override
     public boolean isDirectory(Resource resource) {
         if (!(resource instanceof GFSResource)) {
             return this.delegate.isDirectory(resource);
         }
-        return ((GFSResource) resource).isDirectory();
+        com.wavemaker.tools.io.Resource existingResource = ((GFSResource) resource).getExistingResource(false);
+        return existingResource != null && existingResource instanceof Folder;
     }
 
     @Override
@@ -154,7 +119,9 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
     @Override
     public OutputStream getOutputStream(Resource resource) {
         try {
-            Assert.isTrue(!((GFSResource) resource).isDirectory(), "Cannot get an output stream for a directory.");
+            if (isDirectory(resource)) {
+                throw new IllegalArgumentException("Cannot get an output stream for directory '" + resource.getDescription() + "'");
+            }
             prepareForWriting(resource);
             return ((GFSResource) resource).getOutputStream();
         } catch (Exception ex) {
@@ -165,30 +132,9 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
     @Override
     public void prepareForWriting(Resource resource) {
         Assert.isInstanceOf(GFSResource.class, resource, "This implementation can only write to Grid FS");
-        GFSResource gfsFile = (GFSResource) resource;
-        String path = gfsFile.isDirectory() ? gfsFile.getPath()
-            : gfsFile.getPath().substring(0, gfsFile.getPath().lastIndexOf(gfsFile.getFilename()));
-        boolean isDirty = false;
-        while (path.length() > 1) {
-            String currentDir = StringUtils.getFilename(path.substring(0, path.length() - 1));
-            String parent = path.substring(0, path.lastIndexOf(currentDir));
-            BasicDBList children;
-            if (this.dirsDoc.containsField(parent)) {
-                children = (BasicDBList) this.dirsDoc.get(parent);
-            } else {
-                children = new BasicDBList();
-                this.dirsDoc.put(parent, children);
-            }
-            if (!children.contains(path)) {
-                children.add(path);
-                isDirty = true;
-            }
-            Assert.isTrue(!path.equals(parent), "Invalid output path for resource: " + gfsFile.getPath());
-            path = parent;
-        }
-        if (isDirty) {
-            Object id = this.dirsDoc.get("_id");
-            this.dirsCollection.update(new BasicDBObject("_id", id), this.dirsDoc);
+        GFSResource parent = getParent(resource);
+        if (parent != null) {
+            parent.getResource(Folder.class).touch();
         }
     }
 
@@ -197,70 +143,36 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
         if (!(resource instanceof GFSResource)) {
             return this.delegate.listChildren(resource, filter);
         }
-        GFSResource gfsRoot = (GFSResource) resource;
         List<Resource> children = new ArrayList<Resource>();
-        List<GridFSDBFile> files;
-        try {
-            files = gfsRoot.listFiles();
-        } catch (Exception e) {
-            throw new WMRuntimeException(e);
-        }
-        if (files != null) {
-            for (GridFSDBFile file : files) {
-                GFSResource fileResource = new GFSResource(this.gfs, this.dirsDoc, file.getFilename());
-                if (filter.accept(fileResource)) {
-                    children.add(fileResource);
-                }
-            }
-        }
-        List<Resource> childDirs = listChildDirectories(gfsRoot);
-        for (Resource childDir : childDirs) {
-            if (filter.accept(childDir)) {
-                children.add(childDir);
-            }
-        }
+        collectChildren(children, (GFSResource) resource, filter == null ? ResourceFilter.NO_FILTER : filter, false);
         return children;
     }
 
     @Override
     public List<Resource> listAllChildren(Resource resource, ResourceFilter filter) {
-        // FIXME looks very similar to listChildren, can we combine
         if (!(resource instanceof GFSResource)) {
             return this.delegate.listAllChildren(resource, filter);
         }
-        GFSResource gfsRoot = (GFSResource) resource;
         List<Resource> children = new ArrayList<Resource>();
-        List<GridFSDBFile> files;
-        try {
-            files = gfsRoot.listFiles();
-        } catch (Exception e) {
-            throw new WMRuntimeException(e);
-        }
-        if (files != null) {
-            for (GridFSDBFile file : files) {
-                GFSResource fileResource = new GFSResource(this.gfs, this.dirsDoc, file.getFilename());
-                if (filter == null || filter.accept(fileResource)) {
-                    children.add(fileResource);
-                }
-            }
-        }
-        List<Resource> childDirs = listChildDirectories(gfsRoot);
-        for (Resource childDir : childDirs) {
-            children.addAll(listAllChildren(childDir, filter));
-        }
+        collectChildren(children, (GFSResource) resource, filter == null ? ResourceFilter.NO_FILTER : filter, true);
         return children;
     }
 
-    private List<Resource> listChildDirectories(GFSResource resource) {
-        List<Resource> gfsDirs = new ArrayList<Resource>();
-        BasicDBList childDirs = (BasicDBList) this.dirsDoc.get(resource.getPath());
-        if (childDirs != null) {
-            for (int i = 0; i < childDirs.size(); i++) {
-                String childDir = (String) childDirs.get(i);
-                gfsDirs.add(createResource(childDir));
+    private void collectChildren(List<Resource> children, GFSResource resource, ResourceFilter resourceFilter, boolean allChildren) {
+        com.wavemaker.tools.io.Resource existingResource = resource.getExistingResource(false);
+        if (existingResource != null && existingResource instanceof Folder) {
+            Folder folder = (Folder) existingResource;
+            for (com.wavemaker.tools.io.Resource child : folder.list()) {
+                GFSResource childResource = new GFSResource(this.rootFolder, child.toString());
+                if (allChildren && child instanceof Folder) {
+                    collectChildren(children, childResource, resourceFilter, allChildren);
+                } else {
+                    if (resourceFilter.accept(childResource)) {
+                        children.add(childResource);
+                    }
+                }
             }
         }
-        return gfsDirs;
     }
 
     @Override
@@ -291,7 +203,6 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
     public Resource copyRecursive(Resource root, Resource target, final List<String> exclusions) {
         try {
             if (isDirectory(root)) {
-
                 List<Resource> children = this.listChildren(root, new ResourceFilter() {
 
                     @Override
@@ -322,7 +233,6 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
     public Resource copyRecursive(Resource root, Resource target, final String includedPattern, final String excludedPattern) {
         try {
             if (isDirectory(root)) {
-
                 List<Resource> children = this.listChildren(root, new ResourceFilter() {
 
                     @Override
@@ -354,7 +264,6 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
     public Resource copyRecursive(File root, Resource target, final List<String> exclusions) {
         try {
             if (root.isDirectory()) {
-
                 File[] children = root.listFiles(new FileFilter() {
 
                     @Override
@@ -399,29 +308,12 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
     @Override
     public boolean deleteFile(Resource resource) {
         Assert.isInstanceOf(Resource.class, resource, "GFS: Expected a Resource");
-        GFSResource fileResource = (GFSResource) resource;
-        recursiveDelete(fileResource);
-        if (fileResource.isDirectory()) {
-            Object id = this.dirsDoc.get("_id");
-            this.dirsCollection.update(new BasicDBObject("_id", id), this.dirsDoc);
+        GFSResource gfsResource = (GFSResource) resource;
+        com.wavemaker.tools.io.Resource existingResource = gfsResource.getExistingResource(false);
+        if (existingResource != null) {
+            existingResource.delete();
         }
         return true;
-    }
-
-    private void recursiveDelete(GFSResource fileResource) {
-        if (fileResource.isDirectory()) {
-            try {
-                List<Resource> children = listChildren(fileResource);
-                for (Resource child : children) {
-                    deleteFile(child);
-                }
-                this.dirsDoc.removeField(fileResource.getPath());
-            } catch (Exception ex) {
-                throw new WMRuntimeException(ex);
-            }
-        } else {
-            fileResource.deleteFile();
-        }
     }
 
     @Override
@@ -435,7 +327,7 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
 
     @Override
     protected Resource createResource(String path) {
-        return new GFSResource(this.gfs, this.dirsDoc, path);
+        return new GFSResource(this.rootFolder, path);
     }
 
     @Override
@@ -444,9 +336,12 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
     }
 
     @Override
-    public Resource getParent(Resource resource) {
+    public GFSResource getParent(Resource resource) {
         GFSResource gfsResource = (GFSResource) resource;
-        String path = gfsResource.getParent() + "/";
-        return new GFSResource(this.gfs, this.dirsDoc, path);
+        ResourcePath resourcePath = new ResourcePath().get(gfsResource.getPath());
+        if (resourcePath.getParent() == null) {
+            return null;
+        }
+        return new GFSResource(this.rootFolder, resourcePath.getParent().toString());
     }
 }

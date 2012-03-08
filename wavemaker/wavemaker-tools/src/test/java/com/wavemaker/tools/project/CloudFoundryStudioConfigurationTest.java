@@ -19,7 +19,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -45,7 +44,6 @@ import org.springframework.util.Assert;
 import org.springframework.util.FileCopyUtils;
 
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.util.IOUtils;
 
 /**
  * @author Jeremy Grelle
@@ -126,31 +124,6 @@ public class CloudFoundryStudioConfigurationTest {
         StudioFileSystem sf = new GridFSStudioFileSystem(this.mongoFactory);
         Resource home = sf.getWaveMakerHome();
         assertTrue("we expected the home to exist; home: " + home, home.exists());
-    }
-
-    @Test
-    public void testCommonDir() throws Exception {
-        if (!"cloud".equals(PROJECT_TYPE)) {
-            File tempDir = null;
-            try {
-                tempDir = IOUtils.createTempDirectory();
-                File tempProjectsDir = new File(tempDir, CloudFoundryStudioConfiguration.PROJECTS_DIR);
-
-                assertTrue(!tempProjectsDir.exists());
-
-                GridFSStudioFileSystem sf = new GridFSStudioFileSystem(this.mongoFactory);
-                sf.setTestWaveMakerHome(tempDir);
-                sf.setServletContext(this.servletContext);
-                Resource projects = sf.getProjectsDir();
-                Resource common = sf.getCommonDir();
-
-                assertEquals(((GFSResource) projects).getParent(), ((GFSResource) common).getParent());
-            } finally {
-                if (tempDir != null && tempDir.exists()) {
-                    IOUtils.deleteRecursive(tempDir);
-                }
-            }
-        }
     }
 
     @Test
