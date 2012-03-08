@@ -1970,5 +1970,9 @@ dojo.declare("Studio", wm.Page, {
     },
     searchProperties: function(inSender,inDisplayValue,inDataValue) {
 	this.inspector.propertySearch(inDisplayValue);
+    },
+    editPublishedProperties: function() {
+	this.publishedPropsDialog.show();
+	this.publishedPropsDialog.page.reset(this.selected);
     }
 });

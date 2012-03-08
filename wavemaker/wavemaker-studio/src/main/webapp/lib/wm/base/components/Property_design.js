@@ -23,11 +23,6 @@ wm.Property.extend({
 	    wm.onidle(this, function() {
 		this.selectProperty(this.property);
 	    });
-
-	    
-	    this._nameChangeConnect = this.connect(c, "set_name", this, function() {
-		this.property = c.name + "." + prop;
-	    });
 	}
     },
 	listProperties: function() {

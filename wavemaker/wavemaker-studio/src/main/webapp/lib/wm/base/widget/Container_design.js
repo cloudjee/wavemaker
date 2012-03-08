@@ -27,7 +27,7 @@ wm.Object.extendSchema(wm.Container, {
     */
     fitToContentWidth:  {group: "display", subgroup: "layout", order: 150, shortname: "Auto Width", type: "Boolean", advanced: true},
     fitToContentHeight: {group: "display", subgroup: "layout", order: 151, shortname: "Auto Height", type: "Boolean", advanced: true},
-    resizeToFit:        {group: "display", subgroup: "layout", order: 152, operation: true},
+    resizeToFit:        {group: "display", subgroup: "layout", order: 152, operation: true, doNotPublish:1},
 
     layoutKind:         {group: "display", subgroup: "panel", order: 100, options: ["top-to-bottom","left-to-right"], requiredGroup: true},
     horizontalAlign:    {group: "display", subgroup: "panel", order: 110, options: ["left","center","right"]},
@@ -50,8 +50,8 @@ wm.Object.extendSchema(wm.Container, {
     isDirty: { ignore: 1, bindSource: 1, readonly: 1, type: "Boolean" },
 
     /* Display group; misc subgroup */
-    lock:   {group: "display", subgroup: "panel", order: 2000, type: "Boolean", advanced:1 },
-    freeze: {group: "display", subgroup: "panel", order: 2001, type: "Boolean", advanced:1 },
+    lock:   {group: "display", subgroup: "panel", order: 2000, type: "Boolean", advanced:1, doNotPublish:1 },
+    freeze: {group: "display", subgroup: "panel", order: 2001, type: "Boolean", advanced:1, doNotPublish:1 },
 
     /* Methods group */
     setThemeStyleType: {method:1},
