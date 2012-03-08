@@ -1,3 +1,9 @@
+#studio_PIContents .isPublishedProp label,
+#studio_PIContents .isPublishedProp.wmlabel {
+    background-image: url(../../lib/images/silkIcons/arrow_up.png);
+    background-repeat: no-repeat;
+    background-position: 100% 50%;
+}
 #studio_PIContents .wmaccordion .wmaccordion-collapsed .accordionArrowNode {
 display: block;
 background-image: url(../../lib/wm/base/widget/themes/wm_default/images/arrowRightDark.png);

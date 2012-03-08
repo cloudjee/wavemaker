@@ -62,19 +62,19 @@ dojo.declare("wm.debug.WidgetPanel", wm.Container, {
 
 	    classListVar:["wm.Variable", {type: "StringData", isList: true}],
 	    gridPanel: ["wm.Panel", {layoutKind: "top-to-bottom", width: "100%", height: "100%",  verticalAlign: "top", horizontalAlign: "left"},{},{
-		searchPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "30px", verticalAlign: "top", horizontalAlign: "left"},{},{
-		    searchNameText: ["wm.Text", {resetButton: true, _resetButtonUrl: dojo.moduleUrl("lib.images.silkIcons").path + "arrow_undo.png", width: "100px", placeHolder: "Widget Name", changeOnKey: true},{onchange: "searchChange"}],
-		    searchClassText: ["wm.SelectMenu", {allowNone: true, emptyValue: "emptyString", restrictValues: false, width: "100px", placeHolder: "Class Name", changeOnKey: true},{onchange: "searchChange"},{
+		searchPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", mobileHeight: "40px", height: "30px", verticalAlign: "top", horizontalAlign: "left"},{},{
+		    searchNameText: ["wm.Text", {resetButton: true, _resetButtonUrl: dojo.moduleUrl("lib.images.silkIcons").path + "arrow_undo.png", width: "100px", mobileHeight: "100%", placeHolder: "Widget Name", changeOnKey: true},{onchange: "searchChange"}],
+		    searchClassText: ["wm.SelectMenu", {allowNone: true, emptyValue: "emptyString", restrictValues: false, width: "100px",  mobileHeight: "100%", placeHolder: "Class Name", changeOnKey: true},{onchange: "searchChange"},{
 			binding: ["wm.Binding", {"name":"binding"}, {}, {
 			    wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"classListVar","targetProperty":"dataSet"}, {}]
 			}]
 		    }],
-		    pagesMenu: ["wm.SelectMenu", {placeHolder: "Page name", width: "80px",displayField: "dataValue", dataField: "dataValue", allowNone:true},{onchange: "searchChange"},{
+		    pagesMenu: ["wm.SelectMenu", {placeHolder: "Page name", width: "80px", mobileHeight: "100%", displayField: "dataValue", dataField: "dataValue", allowNone:true},{onchange: "searchChange"},{
 			binding: ["wm.Binding", {"name":"binding"}, {}, {
 			    wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"pageListVar","targetProperty":"dataSet"}, {}]
 			}]
 		    }],		    
-		    inspectParentButton: ["wm.Button",  {width: "80px", height: "20px", margin:"0",margin:"2",caption: "Inspect Parent",border:"1",borderColor:"#666"}, {onclick: "inspectParent"},{
+		    inspectParentButton: ["wm.Button",  {width: "100px", height: "20px", mobileHeight: "100%", margin:"0",margin:"2",caption: "Inspect Parent",border:"1",borderColor:"#666"}, {onclick: "inspectParent"},{
 			binding: ["wm.Binding", {"name":"binding"}, {}, {
 			    wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"widgetGrid.emptySelection","targetProperty":"disabled"}, {}]
 			}]
@@ -87,7 +87,7 @@ dojo.declare("wm.debug.WidgetPanel", wm.Container, {
 				 {"show":true,"field":"type","title":"Class","width":"120px","align":"left","formatFunc":""}
 			     ],
 			      "margin":"4",
-			      "name":"widgetGrid"}, {onSelectionChange: "showWidget"}, {
+			      "name":"widgetGrid"}, {onSelect: "showWidgetEvent"}, {
 				  binding: ["wm.Binding", {"name":"binding"}, {}, {
 				      wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"widgetListVar","targetProperty":"dataSet"}, {}]
 				  }]
@@ -99,9 +99,13 @@ dojo.declare("wm.debug.WidgetPanel", wm.Container, {
     },
 	XClick: function() {
 	    this.widgetGrid.deselectAll();
+	    this.showWidget(this.widgetGrid);
 	},
     inspectParent: function() {
 	this.showWidget(null, this.selectedItem.parent.getRuntimeId());
+    },
+    showWidgetEvent: function() {
+	this.showWidget();
     },
 	showWidget: function(inSender, altId) {
 	    if (this._inShowWidget) return;
@@ -171,7 +175,9 @@ dojo.declare("wm.debug.WidgetPanel", wm.Container, {
 	    q.page = page;
 	}
 	this.widgetGrid.setQuery(q);
-	inSender.focus();
+	if (!wm.isMobile) {
+	    inSender.focus();
+	}
     },
    activate: function() {
 	this.generateWidgetList();
@@ -225,6 +231,13 @@ dojo.declare("wm.debug.WidgetPanel", wm.Container, {
 		this.classListVar.addItem({dataValue: name});
 	    }
 	}
+	this.classListVar.sort(function(a,b) {
+	    var ad = a.getValue("dataValue");
+	    var bd = b.getValue("dataValue");
+	    if (ad > bd) return 1;
+	    else if (ad < bd) return -1;
+	    return 0;
+	});
 	this.classListVar.endUpdate();
 	this.classListVar.notify();
     },

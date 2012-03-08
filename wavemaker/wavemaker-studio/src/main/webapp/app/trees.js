@@ -133,7 +133,7 @@ Studio.extend({
 	        n.component = this.page;
 	        this.page._studioTreeNode = n;
 
-	    var components  = this.getTreeComponents(this.page.components, [wm.Control, wm.DojoLightbox]);
+	    var components  = this.getTreeComponents(this.page.components, [wm.Control, wm.DojoLightbox, wm.Property]);
 
 		    if (this._searchText) {
 			var _components = {};

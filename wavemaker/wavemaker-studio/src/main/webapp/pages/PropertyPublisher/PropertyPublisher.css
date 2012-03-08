@@ -1,0 +1,38 @@
+/*
+ * Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+ 
+#studio_publishedPropsDialog_propertyPublisher_fullList div.dojoxGridHeader {
+	background-color: #444444;
+	color: #FFF;
+}
+#studio_publishedPropsDialog_propertyPublisher_fullList div.dojoxGridHeader .dojoxGridCell {
+	background: inherit;
+
+	border-right-width: 1px; 
+	border-right-style: solid;
+	border-right-color: #AAAAAA;
+
+	font-family: sans-serif;
+	font-size: 10pt;
+	color: #fff !important;
+	font-weight: bold;
+}
+#studio_publishedPropsDialog_propertyPublisher_fullList div.dojoxGridRow.dojoxGridRowOdd {
+    background-color: rgb(230,230,230);
+}
+
+#studio_publishedPropsDialog_propertyPublisher_fullList div.dojoxGridRow.dojoxGridRowSelected, 
+#studio_publishedPropsDialog_propertyPublisher_fullList div.dojoxGridRow.dojoxGridRowOdd.dojoxGridRowSelected {
+    background-color: #3D80DF;
+}

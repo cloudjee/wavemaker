@@ -104,8 +104,7 @@ dojo.declare("Studio", wm.Page, {
 
 		// get user configuration settings
 		this.initUserSettings();
-		// load module configuration
-		this.loadModuleConfig();
+
 		// FIXME: hack
 	        //this.owner = app;
 
@@ -265,7 +264,8 @@ dojo.declare("Studio", wm.Page, {
 	    }
 	},
 	isCloud: function() {
-	  return  this.isModuleEnabled("cloud", "wm.cloud");
+	    return wm.studioConfig.environment && wm.studioConfig.environment != "local";
+	    //return  this.isModuleEnabled("cloud", "wm.cloud");
         },
 	preloadImages: function() {
 		var p = "images/", t = "lib/wm/base/widget/themes/default/images/";
@@ -317,21 +317,6 @@ dojo.declare("Studio", wm.Page, {
 	//=========================================================================
 	// Module Management
 	//=========================================================================
-	loadModuleConfig: function() {
-		loadData(dojo.moduleUrl("wm.modules") + "../modules.js", dojo.hitch(this, "_loadModuleConfig"));
-	},
-	_loadModuleConfig: function(d) {
-		this.moduleConfig = eval("(" + d + ")");
-	},
-	isModuleEnabled: function(inExtensionPoint, inModuleName) {
-		var ep = this.moduleConfig && this.moduleConfig.extensionPoints && this.moduleConfig.extensionPoints[inExtensionPoint];
-		if (ep) {
-			for (var i = 0, k; (k = ep[i]); i++) {
-				if (k == inModuleName)
-					return true;
-			}
-		}
-	},
 	//=========================================================================
 	// Project Related Management
 	//=========================================================================
@@ -1985,5 +1970,9 @@ dojo.declare("Studio", wm.Page, {
     },
     searchProperties: function(inSender,inDisplayValue,inDataValue) {
 	this.inspector.propertySearch(inDisplayValue);
+    },
+    editPublishedProperties: function() {
+	this.publishedPropsDialog.show();
+	this.publishedPropsDialog.page.reset(this.selected);
     }
 });

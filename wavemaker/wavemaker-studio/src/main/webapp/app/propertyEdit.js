@@ -919,7 +919,8 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
 				   layoutKind: "left-to-right",
 				   verticalAlign: "top",
 				   horizontalAlign: "left"});				     
-	var title = new wm.Label({owner: this,
+	this.title =new wm.Label({owner: this,
+				  name: "title",
 				  parent: topPanel,
 				  width: "100%",
 				  height: "20px",
@@ -952,6 +953,7 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
 	this.addEditors();
     },
     addEditors: function() {
+	dojo.toggleClass(this.title.domNode, "isPublishedProp", this.propDef.isPublished ? true : false);
 	this.editors = [];
 	this.addEditor(0,this.inspected.getProp(this.propName));
 	for (var i = 1; i < 20; i++) {
@@ -1621,7 +1623,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 		    classListEditor: ["wm.prop.ClassListEditor", {width: "100%", inspected: this.inspected}]
 		}]
 	    }]
-	},true)[0];
+	},this)[0];
 	this.connect(this.tabs,"onchange",this, function() {
 	    if (this.parent._isDestroying) return;
 	    this.setHeight(this.getPreferredFitToContentHeight());
@@ -1727,6 +1729,8 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	    if (styleProp.postFix && inValue) {
 		var value = this.inspected.getStyle(styleName);
 		value = value.replace(new RegExp(styleProp.postFix + "$"),"");
+	    } else {
+		value = inValue[styleName];
 	    }
 	    if (this.editors[styleProp.name]) {
 		this.editors[styleProp.name].setDataValue(value);

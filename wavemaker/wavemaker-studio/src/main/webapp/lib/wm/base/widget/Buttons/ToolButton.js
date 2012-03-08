@@ -121,8 +121,19 @@ dojo.declare("wm.ToolButton", wm.Control, {
 	    this.valueChanged("caption", this.caption);
 	},
 	setIconUrl: function(inUrl) {
-		this.iconUrl = inUrl;
-	        this.invalidCss = true;
+	    var root = "";
+	    if (inUrl) {
+		if (inUrl.slice(0, 4) == "http" || inUrl.slice(0, 1) == "/") {
+		    root = "";
+		} else if (inUrl.indexOf("lib/") == 0) {
+		    root = dojo.moduleUrl("lib").path.replace(/lib\/$/, "");
+		} else {
+		    root = this.getPath();
+		}
+	    }
+
+	    this.iconUrl = root + inUrl;
+	    this.invalidCss = true;
 	    this.render(true,true);
 	},
 	setIconWidth: function(w) {

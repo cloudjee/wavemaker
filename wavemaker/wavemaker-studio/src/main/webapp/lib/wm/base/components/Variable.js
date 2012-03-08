@@ -99,7 +99,7 @@ dojo.declare("wm.Variable", wm.Component, {
 		this.beginUpdate();
 	    if (this.isPrimitive || wm.typeManager.isType(this.type)) 
 		this.setType(this.type);
-	    if (studio.inspector.inspected == this) {
+	    if (studio.inspector && studio.inspector.inspected == this) {
 		studio.inspect(this);
 	    }
 	    if (this.owner instanceof wm.Variable)
@@ -693,7 +693,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	},
 	getItemIndexByPrimaryKey: function(inVariable, pkList){
 		if (!this.isList || !pkList || pkList.length < 1)
-			return;
+		    return -1;
 		var obj = inVariable;
 		if (obj instanceof wm.Variable){
 			obj = inVariable.getData();			
@@ -714,7 +714,7 @@ dojo.declare("wm.Variable", wm.Component, {
 			if (isEqual)
 				return i;
 		}
-		
+	        return -1;
 	},
 	//===========================================================================
 	// Update Messaging

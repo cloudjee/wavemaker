@@ -369,6 +369,7 @@
   * categoryProps.inspector: OLD DEF: Specifies which inspector to use to inspect this component
   * createWire: creates a wire instead of calling setProp
   * readonly: useful for bindable props; user can see them, bind them, but not directly edit the property.  They only write the binding, not the value! TODO: USE THIS!  NOTE: readonly is ignored when setting the property editor's readonly state; the property is shown to be edited.  Use editorProps to make the editor readonly.
+  * doNotPublish: property is not publishable (i.e. can't be exposed to parent pagecontainer)  hidden, ignored and writeonly properties are already skipped
   * 
   * subcomponent: the property refers to a subcomponent whose properties should be displayed in the property panel
   *
@@ -402,6 +403,8 @@
 	 if (this.inspected == inComponent && !forceInspect) {
 	     return this.reinspect();
 	 }
+	 this.propComponentList = this.gatherPropComponents(inComponent);
+
 	 this._inspecting = true;
 	 this._inspectedName = inComponent.name;
 	 this.moreLabelList = [];
@@ -458,7 +461,18 @@
 	     wm.job("studio.inspect", 10, dojo.hitch(this, "_reinspect", inSubComponent));
 	 }
      },
-
+     gatherPropComponents: function(inComponent) {
+	 if (inComponent.owner != studio.page) return {};
+	 var propComponentList = wm.listComponents([studio.page], wm.Property);
+	 var componentHash = {};
+	dojo.forEach(propComponentList, function(prop) {
+	    if (!prop.parent)
+		prop.parent = studio.page.getValue(prop.property.replace(/\..*?$/,""));
+	    if (prop.parent == inComponent)
+		componentHash[prop.property] = prop;
+	});
+	 return componentHash;
+     },
      _reinspect: function(inSubComponent) {
 	 var inComponent = inSubComponent || this.inspected;
 	 if (inComponent.isDestroyed) {
@@ -466,6 +480,9 @@
 		 return this.inspect(studio.page.root);
 	     }
 	 }
+
+	 this.propComponentList = this.gatherPropComponents(inComponent);
+
 	 this._inspecting = true;
 	 try {
 	     var props = this.getProps(inComponent,false);
@@ -675,10 +692,10 @@
 	 }
 
 	 var allProps = inComponent ? inComponent.listProperties() : {};
-	 var props = [];
+	 var props = {};
 	 for (var i in allProps) {
 	     if (this.isEditableProp(allProps[i], true, true)) {	     
-		     var p = dojo.mixin({name: i}, allProps[i]);
+		 var p = dojo.mixin({name: i}, allProps[i]);
 		 if (allProps[i].isEvent || inComponent.isEventProp(i)) {
 		     p.group = "events";
 		     if (i.match(/\d$/)) continue; // ignore events that end in numbers; these are the "and-then" events, which are handled by the event editor
@@ -765,6 +782,9 @@
 	 for (var i = 0; i < inPropList.length; i++) {
 	     var p = inPropList[i];
 	     var propName = p.name;
+	     if (this.propComponentList[this.inspected.getId() + "." + p.name]) {
+		 p.isPublished = true;
+	     }
 	     if (p.operation) {
 		 this.generateButton(inComponent, p, inLayer);
 	     } else {
@@ -779,7 +799,8 @@
 	     name: "wminspector-" + inLayer.name + "-" + inProp.name,
 	     width: "100%",
 	     height: "30px",
-	     caption: inProp.shortname || inProp.name,
+	     caption: (inProp.shortname || inProp.name),
+	     _classes: {domNode: [inProp.isPublished ? "isPublishedProp":""]},
 	     margin: "4,40,4,40",
 	     propDef: inProp,
 	     showing: !inProp.ignoretmp || this.isAdvancedMode(),
@@ -1002,7 +1023,7 @@
 	     dojo.mixin(editorProps, 
 			{ captionSize: (e.captionSize == "100%") ? "80px" : e.captionSize, // 100% for checkbox; need more than 16px to show bind value
 			  disabled: true,
-			  _classes: {domNode: ["wminspector-boundvalue"]},
+			  _classes: {domNode: ["wminspector-boundvalue",inProp.isPublished ? "isPublishedProp":""]},
 			  hint: inProp.ignoretmp && inProp.ignoreHint ?  this.ignoreHintPrefix + inProp.ignoreHint : "", // a bound editor of an ignored property
 			  resetButton: true,
 			  showing: isBound,
@@ -1436,7 +1457,7 @@
 	 }
 	 subgroupObj.props.push(inPropDef);
      },
-	 buildGroups: function(inProps) {
+     buildGroups: function(inProps,showAllProps) {
 
 	     var groups = {"required": this.makeNewGroupObj("required")}; // hash of all of the groups and subgroups and properties in those groups
 	     var groupsArray = []; // We'll copy the groups hash into the array before returning it
@@ -1444,7 +1465,7 @@
 
 	     dojo.forEach(inProps, dojo.hitch(this, function(inPropDef, index) {
 		 var groupName = (inPropDef && inPropDef.group) || defaultGroup;
-		 if (!this.isEditableProp(inPropDef, false, Boolean(groups[groupName])))
+		 if (!this.isEditableProp(inPropDef, false, showAllProps || Boolean(groups[groupName])))
 		     return;
 		 var subgroupName = inPropDef && inPropDef.subgroup || "";
 
@@ -1698,7 +1719,8 @@
 	     captionSize: "20px",
 	     captionPosition: "top",
 	     captionAlign: "left",
-	     caption: inProp.shortname || inProp.name,
+	     caption: (inProp.shortname || inProp.name),
+	     _classes: {domNode: [inProp.isPublished ? "isPublishedProp":""]},
 	     dataValue: inValue,
 	     inspected: inComponent /* Used by some of the custom editors in propertyEdit.js */
 	 };
@@ -1817,7 +1839,7 @@ wm.addPropertyGroups({
 
 		     /* Confirmed for DojoChart only */
 		     legend:     {displayName: "Legend",
-				  order: 120},
+				  order: 120}
 		 }
 		},
     /* Confirmed */

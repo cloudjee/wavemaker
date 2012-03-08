@@ -186,7 +186,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                         }
 		    var idx =  _this.dojoObj.getItemIndex(items[0]);
 		    if (idx == -1)
-			idx = _this.variable.getItemIndexByPrimaryKey(obj, pkList) || -1;
+			idx = _this.variable.getItemIndexByPrimaryKey(obj, pkList);
 		    if (idx == -1 && this.selectFirstRow)
 			idx = 0;
 
@@ -704,7 +704,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    return Math.max(this.dojoObj.rowCount, this.dojoObj._by_idx.length);
 	},
 	hasSelection: function() {
-	  return Boolean(this.getSelectedIndex() != -1);
+	    var index = this.getSelectedIndex();
+	    if (dojo.isArray(index))
+		return Boolean(index.length);
+	    else
+		return Boolean(index != -1);
 	},
 
 	getEmptySelection: function() {
@@ -892,7 +896,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		}
 	    } catch(e) {}
 	},
-        onStyleRow: function(inRow/* inRow.customClasses += " myClass" */, rowData) {},
+        onStyleRow: function(inRow/* inRow.customClasses += " myClass"; inRow.customStyles += ";background-color:red"; */, rowData) {},
 	getDataSet: function() {
 		return this.variable;
 	},
@@ -1030,14 +1034,27 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		    }
 		}
 	    }
-		dojo.forEach(this.columns, function(col){
+
+	    /* IE 9 requires that widths be normalized */
+	    var totalPercentWidth = 0;
+	    dojo.forEach(this.columns, function(col){
+		var show = useMobileColumn && col.mobileColumn || !useMobileColumn && !col.mobileColumn && col.show;
+		if (show && col.width.indexOf("%") != -1) {
+		    totalPercentWidth += parseInt(col.width);
+		}
+	    });
+
+	    dojo.forEach(this.columns, function(col){
 		    var options = col.options || col.editorProps && col.editorProps.options; // editorProps is the currently supported method
 		    var show = useMobileColumn && col.mobileColumn || !useMobileColumn && !col.mobileColumn && col.show;
-			var obj = {	hidden:!show, 
+		    var width = col.width;
+		if (show && width.indexOf("%") != -1)
+		    width = Math.floor((100*parseInt(width) / totalPercentWidth)) + "%";
+		    var obj = {	hidden:!show, 
 					field: col.field, 
 					constraint: col.constraints,
 					name:col.title ? col.title : "-", 
-					width: col.width,
+					width: width,
 					fieldType:col.fieldType == "dojox.grid.cells._Widget" && col.editorProps && col.editorProps.regExp ? "dojox.grid.cells.ValidationTextBox" : col.fieldType,
 					widgetProps: col.editorProps,
 					options: typeof options == "string" ? options.split(/\s*,\s*/) : options,
@@ -1638,7 +1655,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 						default:
 							if (!this.isDesignLoaded())
-							    value = dojo.hitch(this.owner, col.formatFunc)(value, rowId, idx, col.field || col.id, {}, obj);
+							    value = dojo.hitch(this.owner, col.formatFunc)(value, rowId, idx, col.field || col.id, {customStyles:[], customClasses:[]}, obj);
 							break;
 					}
 				}

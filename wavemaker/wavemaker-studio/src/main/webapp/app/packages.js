@@ -213,7 +213,9 @@
 [ bundlePackage.Non_Visual_Components, bundlePackage.LogoutVariable, "wm.LogoutVariable", "wm.base.components.LogoutVariable", "Studio_paletteImageList_43", "", {parentMenu: bundlePackage.Advanced}, false],
 [ bundlePackage.Non_Visual_Components, bundlePackage.Timer, "wm.Timer", "wm.base.components.Timer", "Studio_paletteImageList_42", "", {parentMenu: bundlePackage.Advanced}, false],
 [ bundlePackage.Non_Visual_Components, bundlePackage.TypeDefinition, "wm.TypeDefinition", "wm.base.components.TypeDefinition", "Studio_paletteImageList_42", "", {parentMenu: bundlePackage.Advanced}, false],
-
+[ bundlePackage.Non_Visual_Components, bundlePackage.Composite_Publisher, "wm.CompositePublisher", "wm.base.components.Publisher", "images/flash.png", "", {parentMenu: bundlePackage.Advanced}, false],
+/*[ bundlePackage.Non_Visual_Components, bundlePackage.Property, "wm.Property", "wm.base.components.Property", "images/flash.png" , "", {parentMenu: bundlePackage.Advanced}, false],*/
+[ bundlePackage.Non_Visual_Components, bundlePackage.Template_Publisher, "wm.TemplatePublisher", "wm.base.components.Publisher", "images/flash.png", "", {parentMenu: bundlePackage.Advanced}, false],
 
 [ bundlePackage.Services, bundlePackage.Database_Service, "wm.DataModel", "wm.base.components.DataModel", "images/wm/data_blue.png", "", {}, false],
 [ bundlePackage.Services, bundlePackage.Database_Design, "wm.DataModel", "wm.base.components.DataModel", "images/wm/data_blue.png", "", {_type: "New"}, false],
@@ -227,3 +229,5 @@
 // hidden (don't show up in palette, but images are defined)
 [ "", bundlePackage.Layer, "wm.Layer", "wm.base.widget.Layers", "Studio_paletteImageList_21", "", {}, false],
 [ "", bundlePackage.Layout, "wm.Layout", "wm.base.widget.Layout", "Studio_paletteImageList_16", "", {}, false]
+
+

@@ -20,7 +20,7 @@ dojo.require("wm.base.Control_design");
 wm.Object.extendSchema(wm.VirtualList, {
 
     /* wm.List group; selection subgroup */
-    selectionMode:     {group: "widgetName", subgroup: "selection", order: 40, options: ["single", "multiple", "extended", "none", "checkbox", "radio"]},
+    selectionMode:     {group: "widgetName", subgroup: "selection", order: 40, options: ["single", "multiple", "extended", "none", "checkbox", "radio"], ignoreHint: "You need to use the 'editColumns' dialog to setup columns before this feature becomes available"},
     toggleSelect: {group: "widgetName", subgroup: "selection", order: 41, ignoreHint: "Only available for single selection mode"},
 
     /* Ignored Group */
@@ -89,6 +89,7 @@ wm.Object.extendSchema(wm.List, {
 wm.List.description = "Displays list of items.";
 
 wm.List.extend({
+
     updateNow: function() {this.update();},
 
     showMenuDialog: function(e){
@@ -106,8 +107,21 @@ wm.List.extend({
 	this._render();
     },
     updateColumnData: function () {
+	if (!dojo.isArray(this.columns)) {
+	    this.columns = [];
+	}
 	var defaultSchema = {dataValue: {type: this.dataSet.type}}; // this is the schema to use if there is no schema (i.e. the type is a literal)
-        var viewFields = this.getViewFields() || defaultSchema;
+        var viewFields = this.getViewFields();
+/*
+	if (!viewFields || viewFields.length == 0) {
+	    viewFields =  [];
+	    wm.forEachProperty(defaultSchema, function(item, fieldName) {
+		item = dojo.clone(item);
+		item.name = fieldName;
+		viewFields.push(item);
+	    });
+	}
+	*/
         dojo.forEach(viewFields, function (f, i) {
             // if the column already exists, skip it
             if (dojo.some(this.columns, function (item) {
@@ -158,8 +172,8 @@ wm.List.extend({
             // col is no longer relevant
             return;
         }));
-	debugger;
         this.columns = newcolumns;
+	this.setColumns(this.columns);
     },
 	getViewFields: function(){
 	    var fields = [];
@@ -180,6 +194,7 @@ wm.List.extend({
     listProperties: function() {
 	var props = this.inherited(arguments);
 	props.toggleSelect.ignoretmp = Boolean(this.selectionMode == "multiple");
+	props.selectionMode.ignoretmp = Boolean(!this.columns);
 	return props;
     },
     writeProps: function() {

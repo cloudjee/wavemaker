@@ -153,8 +153,8 @@ dojo.declare("wm.debug.EventsPanel", wm.Container, {
 	    eventChainListVar:  ["wm.Variable", {type: "debugEventType", isList: true}],
 	    gridPanel: ["wm.Panel", {layoutKind: "top-to-bottom", width: "100%", height: "100%",  verticalAlign: "top", horizontalAlign: "left"},{},{
 		searchPanel: ["wm.Panel", {layoutKind: "left-to-right", width: "100%", height: "20px", fitToContentHeight: true,verticalAlign: "top", horizontalAlign: "left"},{},{
-		    showBindings: ["wm.Checkbox", {width: "150px", captionSize: "120px", caption: "Show Bindings"},{onchange: "searchChange"}],
-		    showErrors: ["wm.Checkbox", {width: "150px", captionSize: "120px", caption: "Errors Only"},{onchange: "searchChange"}],
+		    showBindings: ["wm.Checkbox", {width: "160px", captionSize: "120px", caption: "Show Bindings"},{onchange: "searchChange"}],
+		    showErrors: ["wm.Checkbox", {width: "160px", captionSize: "120px", caption: "Errors Only"},{onchange: "searchChange"}],
 		    clearButton: ["wm.Button", {width: "60px", height: "20px", margin:"0",margin:"2",caption: "Clear",border:"1",borderColor:"#666"}, {onclick: "clearEvents"}]
 		}],
 
@@ -170,7 +170,7 @@ dojo.declare("wm.debug.EventsPanel", wm.Container, {
 				      }},
 				     {"show":true,"field":"duration","title":"Length (ms)","width":"80px","align":"left","formatFunc": "wm_number_formatter"}
 				 ],
-				  "margin":"4"}, {onSelectionChange: "showEvent"}, {
+				  "margin":"4"}, {onSelect: "showEvent"}, {
 				      binding: ["wm.Binding", {"name":"binding"}, {}, {
 					  wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"eventListVar","targetProperty":"dataSet"}, {}]
 				      }]
@@ -207,6 +207,7 @@ dojo.declare("wm.debug.EventsPanel", wm.Container, {
     },
 	XClick: function() {
 	    this.eventsGrid.deselectAll();
+	    this.showEvent(this.eventsGrid);
 	},
     getEventType: function(inValue, rowId, cellId, cellField, cellObj, rowObj){
 	var eventType = rowObj.eventType;

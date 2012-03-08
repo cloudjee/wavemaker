@@ -527,7 +527,7 @@
         </bean>
 
 		<bean id="exporterFactory" class="com.wavemaker.tools.data.LocalExporterFactory"
-            scope="singleton">
+            scope="singleton" lazy-init="true">
         </bean>
 
         <bean id="deploymentManager" class="com.wavemaker.tools.project.LocalDeploymentManager"

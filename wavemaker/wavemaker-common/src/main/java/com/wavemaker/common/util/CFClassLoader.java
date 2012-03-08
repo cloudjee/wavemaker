@@ -56,10 +56,6 @@ public class CFClassLoader extends ClassLoader {
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException {
 
-        if (name.substring(0, 12).equals("com.mytestdb")) { //xxx
-            System.out.println("************** class name = " + name);
-        }
-
         if (this.resources == null) {
             throw new ClassNotFoundException("invalid search root: " + this.resources);
         } else if (name == null) {
@@ -118,7 +114,7 @@ public class CFClassLoader extends ClassLoader {
             } else {
                 ret = defineClass(name, fileBytes, 0, fileBytes.length);
             }
-        } catch(WMRuntimeException ex) { //xxx
+        } catch(WMRuntimeException ex) {
             ret = null;
         }
 
@@ -131,9 +127,6 @@ public class CFClassLoader extends ClassLoader {
 
     @Override
     public InputStream getResourceAsStream(String name) {
-        if (name.substring(0, 12).equals("com.mytestdb")) {
-            System.out.println("================== resource name = " + name);
-        }
         
         List<Resource> files = new ArrayList<Resource>();
         for (int i=0; i<this.resources.length; i++) {
@@ -160,7 +153,6 @@ public class CFClassLoader extends ClassLoader {
         ret = this.parentClassLoader.getResourceAsStream(name);
 
         return ret;
-        //return super.getResourceAsStream(name);
     }
 
     private String getPath(Resource resource) {
@@ -178,16 +170,5 @@ public class CFClassLoader extends ClassLoader {
         }
 
         return path;
-    }
-
-    private File copyResourceToTempFile(File dir, Resource resource, String fileName) throws IOException {
-        File tempFile = new File(dir, fileName);
-        InputStream is = resource.getInputStream();
-        OutputStream os = new FileOutputStream(tempFile);
-        FileCopyUtils.copy(is, os);
-        is.close();
-        os.close();
-
-        return tempFile;
     }
 }

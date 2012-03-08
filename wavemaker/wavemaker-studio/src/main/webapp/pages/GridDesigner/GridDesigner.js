@@ -276,7 +276,7 @@ dojo.declare("GridDesigner", wm.Page, {
 	default:
 	    this.formatBlankLayer.activate();
 	    if (isCustom) {
-		eventEdit(this.currentGrid, "_fomratterSignature", inDataValue, true);
+		eventEdit(this.currentGrid, "_formatterSignature", inDataValue, true);
 		this.owner.owner.hide();
 	    }
 	}

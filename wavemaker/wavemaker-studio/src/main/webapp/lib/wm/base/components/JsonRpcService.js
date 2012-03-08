@@ -90,7 +90,7 @@ dojo.declare("wm.JsonRpc", dojo.rpc.JsonService, {
 		//requests deployed application.
 		if (this._designTime) 
 					url = url + "?designTime=true";
-
+	    
 		var props = {
 			url: url||this.serviceUrl,
 			postData: this.createRequest(method, parameters || []),
@@ -99,6 +99,9 @@ dojo.declare("wm.JsonRpc", dojo.rpc.JsonService, {
 			handleAs: "json",
 			sync: this.sync
 		}
+	    if (wm.xhrPath) {
+		props.url = wm.xhrPath + props.url;
+	    }
 		var def = dojo.rawXhrPost(props);
 		def.addCallbacks(this.resultCallback(deferredRequestHandler), this.errorCallback(deferredRequestHandler));
 	},
@@ -153,7 +156,10 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 	this._service = null;
 	if (url) {
 	    try{
-		if (wm.JsonRpcService.smdCache[url]) {
+		/* SMD files change at design time, never use a cached SMD file at design time */
+		if (window["studio"]) {
+		    this._service = new wm.JsonRpc(url + "?rand=" + Math.floor(Math.random() * new Date().getTime()));
+		} else if (wm.JsonRpcService.smdCache[url]) {
 		    this._service = wm.JsonRpcService.smdCache[url];
 		} else if (wm.JsonRpcService.smdCache[cachedName]) {
 		    this._service = new wm.JsonRpc({smdObject: wm.JsonRpcService.smdCache[cachedName],
