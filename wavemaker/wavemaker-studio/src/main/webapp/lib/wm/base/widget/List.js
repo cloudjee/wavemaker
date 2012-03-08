@@ -306,9 +306,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	},
 	//
 	renderDataSet: function(inDataSet) {
-	    if (this.owner instanceof wm.Page) {
-		console.log("ANCESTOR: " + this.isAncestorHidden());
-	    }
+
 	    if (this.isAncestorHidden() && !this._renderHiddenGrid) {
 		if (this.owner instanceof wm.Page) {
 		    console.log(this.parent);
@@ -333,7 +331,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 		    this._columnsHash._selector = this.columns[0];
 		}
 
-
+	        var selectedData = this.selectedItem.getData();
 		this.clear();
 		this._data = inData;
 		if (!this.dataFields)
@@ -349,15 +347,74 @@ dojo.declare("wm.List", wm.VirtualList, {
 		this.reflow();
 
 	    if (this._listTouchScroll && !this._listTouchScroll.scrollers.outer.style.width) {
-		wm.job(this.getRuntimeId() + "ListSetupScroller", 1, this._listTouchScroll, "setupScroller");
+		wm.job(this.getRuntimeId() + "ListSetupScroller", 1, dojo.hitch(this._listTouchScroll, "setupScroller"));
 	    }
 	    if (this.selectionMode == "checkbox" || this.selectionMode == "radio") {
 		this.columns.shift();
 		delete this._columnsHash._selector;
 	    }
+
+	    var isSelectedDataArray = dojo.isArray(selectedData);
+	    if (this.columns && ( isSelectedDataArray && selectedData.length || !isSelectedDataArray && selectedData || this.selectFirstRow))
+			this.selectItemOnGrid(selectedData);
 	},
-    runQuery: function(inData) {
-	if (wm.isEmpty(this.query)) {
+	selectItemOnGrid: function(obj, pkList){
+	        if (obj instanceof wm.Variable)
+		    obj = obj.getData();
+	        if (obj === undefined || obj === null)
+		    obj = {};
+
+		var dateFields = [];
+		dojo.forEach(this.columns, function(col){
+			if (col.displayType == 'Date')
+				dateFields.push(col.field)	;
+		});
+
+
+		if (!pkList)
+		    pkList = wm.data.getIncludeFields(this.dataSet.type);
+
+	    /* If there are no primary keys, then all fields are used to match this item -- this may fail, not trying will definitely fail */
+	        if (pkList.length == 0) {
+		    var fields = wm.typeManager.getTypeSchema(this.dataSet.type)
+		    for (var fieldName in fields) {
+			pkList.push(fieldName);
+		    }
+		}
+
+		var q = {};
+		dojo.forEach(pkList, function(f){
+			q[f] = obj[f];
+		        if (dojo.indexOf(dateFields, f) != -1)
+				q[f] = new Date(obj[f]);
+		});
+
+	    var items = this.runQuery(this._data,q);
+	    if (items.length < 1) {
+		if (this.selectFirstRow) {
+		    this.setSelectedRow(0);
+		} else {
+		    this.deselectAll();
+		}
+		return;
+            }
+	    var idx = this.dataSet.getItemIndexByPrimaryKey(obj, pkList);
+	    if (idx == -1 && this.selectFirstRow)
+		idx = 0;
+
+	    if (idx >= 0) {
+		this._cupdating = true; // don't trigger events since we're actually reselecting the same value that was already selected
+		this.setSelectedRow(idx);
+		this._cupdating = false; 
+            } else {
+                this.deselectAll();
+	    }
+
+	},
+
+    runQuery: function(inData, optionalQuery) {
+	var query = optionalQuery || this.query;
+	if (wm.isEmpty(query)) {
 	    return inData;
 	} else {
 	    var newData = [];
@@ -365,14 +422,17 @@ dojo.declare("wm.List", wm.VirtualList, {
 		var d = inData[i];
 		var w = "*";
 		var isMatch = true;
-		for (var key in this.query) {
+		for (var key in query) {
 		    var a = d[key];
                     if (dojo.isString(a)) a = a.replace(/\\([^\\])/g,"$1");
-		    var b = this.query[key];
+		    var b = query[key];
+		    var matchStart = true;
                     if (dojo.isString(b)) {
 			b = b.replace(/\\([^\\])/g,"$1");
-			if (b.charAt(0) == w)
+			if (b.charAt(0) == w) {
 			    b = b.substring(1);
+			    matchStart = false;
+			}
 		    }
 		    if (b == w)
 			continue;
@@ -381,7 +441,9 @@ dojo.declare("wm.List", wm.VirtualList, {
 			    b = b.slice(0, -1);
 			a = a.toLowerCase();
 			b = b.toLowerCase();
-			if (a.indexOf(b) != 0) {
+			var matchIndex = a.indexOf(b);
+			if (matchIndex == -1 ||
+			   matchIndex > 0 && matchStart) {
 			    isMatch = false;
 			    break;
 			}
