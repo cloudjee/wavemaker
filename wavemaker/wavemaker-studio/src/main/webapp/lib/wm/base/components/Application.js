@@ -102,6 +102,10 @@ dojo.declare("wm.Application", wm.Component, {
 
 	        if (dojo.isIE && dojo.isIE < 8) this.dialogAnimationTime = 0;
 
+	        if (this._touchEnabled === undefined)
+		    this._touchEnabled = navigator.userAgent.match(/AppleWebKit/) &&
+		navigator.userAgent.match(/Mobile/);
+
 		this.components = {};
 	        this.createPageContainer();
 
@@ -115,9 +119,7 @@ dojo.declare("wm.Application", wm.Component, {
 	        //this.createPageLoader();
 
 
-	        if (this._touchEnabled === undefined)
-		    this._touchEnabled = navigator.userAgent.match(/AppleWebKit/) &&
-		navigator.userAgent.match(/Mobile/);
+
 	    //this.scrim = new wm.Scrim();
 		this.loadComponents(this.constructor.widgets || this.widgets);
 
@@ -478,7 +480,7 @@ dojo.declare("wm.Application", wm.Component, {
 	    if (!this._isDesignLoaded) {
 		this.appRoot = new wm.AppRoot({owner: this, name: "appRoot"});
 		if (wm.isMobile) {
-		    dojo.addClass(this.appRoot.domNode, "wmmobile")
+		    dojo.addClass(document.body, "wmmobile")
 		}
 		if (window["PhoneGap"]) {
 		    var titlebar = new wm.Panel({
