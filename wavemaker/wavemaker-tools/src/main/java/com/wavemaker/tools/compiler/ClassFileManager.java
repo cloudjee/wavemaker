@@ -18,7 +18,11 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.security.SecureClassLoader;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.tools.FileObject;
 import javax.tools.ForwardingJavaFileManager;
@@ -30,7 +34,6 @@ import javax.tools.StandardLocation;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
-import org.apache.commons.lang.ArrayUtils;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.project.Project;
@@ -264,16 +267,7 @@ public class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFile
                         return StringUtils.getFilenameExtension(name).equals("jar");
                     }
                 });
-                File[] extraJars = this.project.getProjectRoot().createRelative("lib/").getFile().listFiles(new FilenameFilter() {
-
-                    @Override
-                    public boolean accept(File dir, String name) {
-                        return StringUtils.getFilenameExtension(name).equals("jar");
-                    }
-                });
-
-                File[] allJars = (File[]) ArrayUtils.addAll(jars, extraJars);
-                return Arrays.asList(allJars);
+                return Arrays.asList(jars);
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new WMRuntimeException(e);
