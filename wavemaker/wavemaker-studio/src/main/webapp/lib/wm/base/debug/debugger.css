@@ -10,6 +10,9 @@
 }
 
 /* Styling of Tab Buttons */
+.wmmobile #debugDialog .wmtablayers-tab {
+    height: 31px;
+}
 #debugDialog .wmtablayers-tab {
     cursor: pointer;
     height: 15px;

@@ -60,8 +60,13 @@ dojo.declare("wm.debug.RequestPanel", wm.Layer, {
 	this.show();
 	if (inGridItem) {
 	    var data = inGridItem.getValue('request');
-	    var cleanData = wm.DojoGrid.prototype.itemToJSONObject(app.debugDialog.serviceGridPanel.serviceGrid.store,data);
-	    this.dataEditor.setDataValue(js_beautify(dojo.toJson(cleanData)));
+	    var cleanData;
+	    if (app.debugDialog.serviceGridPanel.declaredClass == "wm.DojoGrid") {
+		cleanData = wm.DojoGrid.prototype.itemToJSONObject(app.debugDialog.serviceGridPanel.serviceGrid.store,data);
+	    } else {
+		cleanData = data;
+	    }
+	    this.dataEditor.setDataValue(js_beautify(dojo.toJson(cleanData||"")));
 	} else {
 	    var data;
 	    if (inComponent instanceof wm.LiveVariable && inComponent.operation == "read") {
