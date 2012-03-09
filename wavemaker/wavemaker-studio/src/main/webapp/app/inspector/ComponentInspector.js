@@ -1498,7 +1498,8 @@
 	     /* Build the groupsArray; make sure required group is first */
 	     for (var i in groups) {
 		 if (i == "required") {
-		     groupsArray.unshift(groups.required);
+		     if (groups.required.props.length)
+			 groupsArray.unshift(groups.required);
 		 } else {
 		     groupsArray.push(groups[i]);
 		 }
