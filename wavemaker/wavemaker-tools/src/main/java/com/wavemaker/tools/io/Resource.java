@@ -10,6 +10,7 @@ import com.wavemaker.tools.io.exception.ResourceExistsException;
  * 
  * @see File
  * @see Folder
+ * @see ResourceURL
  * 
  * @author Phillip Webb
  */
