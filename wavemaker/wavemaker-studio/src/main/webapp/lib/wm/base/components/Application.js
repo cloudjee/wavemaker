@@ -1163,20 +1163,28 @@ dojo.declare("wm.Application", wm.Component, {
 
     addHistory: function(state) {
 	if (this.history && !this._handlingBack) {
-	    this.history.push({id: state.id, options: state.options});
-	    var currentState = {};
-	    this._handlingBack = true;
-	    this._generateStateUrl(currentState);
-	    delete this._handlingBack;
-	    window.history.pushState(null, state.title, wm.isEmpty(currentState) ? "" : "#" + dojo.toJson(currentState));
-	    if (state.title) {
-		var title = dojo.query("title")[0];
-		var titleHtml = title.innerHTML.replace(/\#.*$/,"");
-		title.innerHTML = titleHtml +  "#" + state.title;
-	    }
-	    if (this.backButton) {
-		this.backButton.setDisabled(this.history.length == 0);
-	    }
+	    try {
+		this.history.push({id: state.id, options: state.options});
+		var currentState = {};
+		this._handlingBack = true;
+		this._generateStateUrl(currentState);
+		delete this._handlingBack;
+		if (window.history.pushState)
+		    window.history.pushState(null, state.title, wm.isEmpty(currentState) ? "" : "#" + dojo.toJson(currentState));
+
+		/* By adding this to the title, a user who views their history can see MyPage#SomeHint in their history instead of just 20 "MyPage" repeated without differentiation */
+		if (state.title) {
+		    var title = dojo.query("title")[0];
+		    if (title) {
+			var titleHtml = title.innerHTML.replace(/\#.*$/,"");
+			title.innerHTML = titleHtml +  "#" + state.title;
+		    }
+		}
+
+		if (this.backButton) {
+		    this.backButton.setDisabled(this.history.length == 0);
+		}
+	    } catch(e) {}
 	}
     },
     _generateStateUrl: function() {},
