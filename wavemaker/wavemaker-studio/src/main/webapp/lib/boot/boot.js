@@ -38,7 +38,7 @@ if (location.search.match(/(\?|\&)wmmobile=(.)/)) {
     if (!wm.isMobile) {
 	wm.device = "desktop";
     } else {
-	wm.device =  (window.screen && (window.screen.width > 450 || window.screen.height > 450)) ? "tablet" : "phone";
+	wm.device =  (window.screen && (window.screen.width > 450 && window.screen.height > 450)) ? "tablet" : "phone";
     }
 }
 
