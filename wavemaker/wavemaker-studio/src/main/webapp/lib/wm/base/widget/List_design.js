@@ -91,7 +91,8 @@ wm.List.description = "Displays list of items.";
 wm.List.extend({
 
     updateNow: function() {this.update();},
-
+    _formatterSignature: function(inValue, rowId, cellId, cellField, cellObj, rowObj){
+    },
     showMenuDialog: function(e){
 	if (!this.columns) {
 	    this.columns = [];

@@ -129,11 +129,15 @@ wm.Control.extend({
 	this.desktopHeight = this.constructor.prototype.height;
     },
     set_height: function(inHeight) {
-	var isMobile = studio.currentDeviceType != "desktop";
-	if (isMobile && this.enableTouchHeight && this.desktopHeight.match(/px/) && inHeight.match(/px/)) {
-	    this.mobileHeight = inHeight;
+	if (inHeight.match(/px/)) {
+	    this.desktopHeight = this.mobileHeight = inHeight;
 	} else {
-	    this.desktopHeight = inHeight;
+	    var isMobile = studio.currentDeviceType != "desktop";
+	    if (isMobile && this.enableTouchHeight) {
+		this.mobileHeight = inHeight;
+	    } else {
+		this.desktopHeight = inHeight;
+	    }
 	}
 	this.setSizeProp("height", inHeight, this.minHeight);
     },

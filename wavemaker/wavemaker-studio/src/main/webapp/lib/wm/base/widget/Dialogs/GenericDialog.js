@@ -17,6 +17,8 @@ dojo.provide("wm.base.widget.Dialogs.GenericDialog");
 dojo.require("wm.base.widget.Dialogs.WidgetsJsDialog");
 
 dojo.declare("wm.GenericDialog", wm.WidgetsJsDialog, {
+    manageHistory: false,
+    manageURL: false,
     enterKeyIsButton: 1,
     noEscape: true,
     title: "Generic Dialog",
