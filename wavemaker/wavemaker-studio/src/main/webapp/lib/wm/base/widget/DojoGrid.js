@@ -248,7 +248,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		}
 		if (!this.rendering && !this._cupdating) {
 		    this.onSelectionChange();
-		    if (newSelection) {
+		    /* TODO: This will fire onSelect when in multiselect mode and something is deselected */
+		    if (newSelection && newSelection.length) {
 			this.onSelect();
 		    } else {
 			this.onDeselect();
@@ -1367,12 +1368,19 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
 	setSelectionMode: function(inMode) {
 	  this.selectionMode = inMode;
-	    if (inMode == "checkbox")
-		inMode = "multiple";
-	    else if (inMode == "radio")
-		inMode = "single";
-	    this._selectionMode = inMode;
-	  if (this.dojoObj) this.dojoObj.selection.setMode(inMode);
+	    if (inMode == "checkbox") {
+		this._selectionMode = "multiple";
+		if (this.dojoObj) this.dojoObj.selection.setMode("multiple");
+	    } else if (inMode == "radio") {
+		this._selectionMode = "single";
+		if (this.dojoObj) this.dojoObj.selection.setMode("single");
+	    } else if (inMode == "extended") {
+		this._selectionMode = "multiple";
+		if (this.dojoObj) this.dojoObj.selection.setMode(inMode);
+	    } else {
+		this._selectionMode = inMode;
+		if (this.dojoObj) this.dojoObj.selection.setMode(inMode);
+	    }
 	},
 	getViewFields: function(){
 		var fields = [];
