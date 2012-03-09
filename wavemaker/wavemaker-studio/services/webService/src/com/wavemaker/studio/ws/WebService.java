@@ -121,11 +121,6 @@ public class WebService {
         return getWSToolsMgr().convertXmlToSchema(xml);
     }
 
-    public List<String> invokeRestCall(String endpointAddress) {
-        List<String> rtn = getWSToolsMgr().invokeRestCall(endpointAddress);
-        return rtn;
-    }
-
     public List<String> invokeRestCall(String endpointAddress, boolean basicAuth, String userName, String password) {
         List<String> rtn = getWSToolsMgr().invokeRestCall(endpointAddress, basicAuth, userName, password);
         return rtn;
@@ -136,8 +131,9 @@ public class WebService {
         return getWSToolsMgr().invokeRestCall(endpointAddress, method, contentType, postData, basicAuth, userName, password);
     }
 
-    public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress) throws WebServiceException, IOException, XmlException {
-        return getWSToolsMgr().generateRESTWsdlSettings(endpointAddress);
+    public List<String> invokeRestCall(String endpointAddress) {
+        List<String> rtn = getWSToolsMgr().invokeRestCall(endpointAddress);
+        return rtn;
     }
 
     public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress, boolean basicAuth, String userName, String password)
@@ -148,6 +144,10 @@ public class WebService {
     public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress, String method, String contentType, String postData, boolean basicAuth,
         String userName, String password) throws WebServiceException, IOException, XmlException {
         return getWSToolsMgr().generateRESTWsdlSettings(endpointAddress, method, contentType, postData, basicAuth, userName, password);
+    }
+
+    public RESTWsdlSettings generateRESTWsdlSettings(String endpointAddress) throws WebServiceException, IOException, XmlException {
+        return getWSToolsMgr().generateRESTWsdlSettings(endpointAddress);
     }
 
     public String registerFeedService() throws JAXBException, IOException {
