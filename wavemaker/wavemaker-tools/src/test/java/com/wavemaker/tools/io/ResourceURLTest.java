@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
@@ -125,5 +127,16 @@ public class ResourceURLTest {
         URLClassLoader classLoader = new URLClassLoader(new URL[] { ResourceURL.get(jail) });
         assertThat(IOUtils.toString(classLoader.getResourceAsStream("/a/b/c.txt")), is(equalTo("c")));
         assertThat(classLoader.getResource("/x/y/z.txt").toString(), is(equalTo("rfs:/x/y/z.txt")));
+    }
+
+    @Test
+    public void shouldGetForCollection() throws Exception {
+        List<Folder> folders = new ArrayList<Folder>();
+        folders.add(this.root.getFolder("/jail/a"));
+        folders.add(this.root.getFolder("/jail/a/b"));
+        List<URL> url = ResourceURL.getForResources(folders);
+        assertThat(url.size(), is(2));
+        assertThat(url.get(0).toString(), is(equalTo("rfs:/jail/a/")));
+        assertThat(url.get(1).toString(), is(equalTo("rfs:/jail/a/b/")));
     }
 }

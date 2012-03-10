@@ -47,6 +47,7 @@ import com.wavemaker.tools.project.StudioFileSystem;
  * @author Seung Lee
  * @author Jeremy Grelle
  */
+@Deprecated
 public class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> implements StandardJavaFileManager {
 
     private final Project project;

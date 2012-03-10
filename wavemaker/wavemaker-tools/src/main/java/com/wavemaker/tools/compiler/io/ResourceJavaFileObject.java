@@ -36,5 +36,4 @@ public class ResourceJavaFileObject extends ResourceFileObject implements JavaFi
     public Modifier getAccessLevel() {
         return null;
     }
-
 }

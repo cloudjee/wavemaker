@@ -2,6 +2,9 @@
 package com.wavemaker.tools.compiler.io;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -11,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.tools.FileObject;
+import javax.tools.ForwardingJavaFileManager;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
@@ -21,36 +25,54 @@ import org.springframework.util.StringUtils;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
+import com.wavemaker.tools.io.ResourceURL;
 
 /**
- * A {@link JavaFileManager} backed by {@link Resource} {@link Folder}s.
+ * A {@link ForwardingJavaFileManager} that manages files contained in {@link com.wavemaker.tools.io.Folder}s.
  * 
  * @author Phillip Webb
  */
-public class ResourceFolderJavaFileManager implements JavaFileManager {
+public class ResourceFolderJavaFileManager extends ForwardingJavaFileManager<JavaFileManager> {
 
     private static final Set<Kind> CLASS_OR_SOURCE_KIND = EnumSet.of(Kind.CLASS, Kind.SOURCE);
 
     private final Map<String, Iterable<Folder>> locations = new HashMap<String, Iterable<Folder>>();
 
+    public ResourceFolderJavaFileManager(JavaFileManager fileManager) {
+        super(fileManager);
+    }
+
     @Override
     public ClassLoader getClassLoader(Location location) {
-        // TODO Auto-generated method stub
-        return null;
+        try {
+            Iterable<Folder> folders = getLocation(location);
+            if (folders == null) {
+                return null;
+            }
+            List<URL> urls = ResourceURL.getForResources(folders);
+            ClassLoader parent = super.getClassLoader(location);
+            return new URLClassLoader(urls.toArray(new URL[urls.size()]), parent);
+        } catch (MalformedURLException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     @Override
     public Iterable<JavaFileObject> list(Location location, String packageName, Set<Kind> kinds, boolean recurse) throws IOException {
-        Iterable<Folder> folders = getRequiredLocation(location);
-        String packagePath = asPath(packageName);
-        List<JavaFileObject> list = new ArrayList<JavaFileObject>();
-        for (Folder folder : folders) {
-            addTolist(list, folder, packagePath, kinds, recurse);
+        List<JavaFileObject> javaFileObjects = new ArrayList<JavaFileObject>();
+        Iterable<Folder> folders = getLocation(location);
+        if (folders != null) {
+            String packagePath = asPath(packageName);
+            for (Folder folder : folders) {
+                collectJavaFileObjects(javaFileObjects, folder, packagePath, kinds, recurse);
+            }
         }
-        return list;
+        addAll(javaFileObjects, super.list(location, packageName, kinds, recurse));
+        return javaFileObjects;
     }
 
-    private void addTolist(List<JavaFileObject> list, Folder folder, String packagePath, Set<Kind> kinds, boolean recurse) {
+    private void collectJavaFileObjects(List<JavaFileObject> list, Folder root, String packagePath, Set<Kind> kinds, boolean recurse) {
+        Folder folder = root.getFolder(packagePath);
         if (!folder.exists() || folder.toString().endsWith(packagePath)) {
             return;
         }
@@ -58,7 +80,7 @@ public class ResourceFolderJavaFileManager implements JavaFileManager {
             if (child instanceof Folder) {
                 Folder childFolder = (Folder) child;
                 if (recurse) {
-                    addTolist(list, childFolder, packagePath, kinds, recurse);
+                    collectJavaFileObjects(list, root, packagePath + "/" + childFolder.getName(), kinds, recurse);
                 }
             } else {
                 File childFile = (File) child;
@@ -83,59 +105,66 @@ public class ResourceFolderJavaFileManager implements JavaFileManager {
 
     @Override
     public String inferBinaryName(Location location, JavaFileObject file) {
-        String name = getFilenameWithoutExtension(file.getName());
-        try {
-            JavaFileObject javaFileObject = getJavaFileForInput(location, name, file.getKind());
-            if (javaFileObject != null) {
-                return asPath(name);
+        String name = getNameWithoutExtension(file.getName());
+        ResourceJavaFileObject javaFileObject = getJavaFile(location, name, file.getKind(), true);
+        if (javaFileObject != null) {
+            String binaryName = javaFileObject.getFile().toString();
+            while (binaryName.startsWith("/")) {
+                binaryName = binaryName.substring(1);
             }
-        } catch (IOException e) {
+            binaryName = getNameWithoutExtension(binaryName);
+            binaryName = binaryName.replace("/", ".");
+            return binaryName;
         }
-        return null;
+        return super.inferBinaryName(location, file);
     }
 
     @Override
     public boolean isSameFile(FileObject a, FileObject b) {
-        Assert.isInstanceOf(ResourceFileObject.class, a);
-        Assert.isInstanceOf(ResourceFileObject.class, b);
-        return a.equals(b);
-    }
-
-    @Override
-    public int isSupportedOption(String option) {
-        return -1;
-    }
-
-    @Override
-    public boolean handleOption(String current, Iterator<String> remaining) {
-        return false;
+        if (a instanceof ResourceFileObject && b instanceof ResourceFileObject) {
+            return a.equals(b);
+        }
+        return super.isSameFile(a, b);
     }
 
     @Override
     public boolean hasLocation(Location location) {
-        return getLocation(location) != null;
+        if (getLocation(location) != null) {
+            return true;
+        }
+        return super.hasLocation(location);
     }
 
     @Override
     public JavaFileObject getJavaFileForInput(Location location, String className, Kind kind) throws IOException {
-        return getJavaFile(location, className, kind);
+        JavaFileObject javaFileObject = getJavaFile(location, className, kind, true);
+        if (javaFileObject == null) {
+            javaFileObject = super.getJavaFileForInput(location, className, kind);
+        }
+        return javaFileObject;
     }
 
     @Override
     public JavaFileObject getJavaFileForOutput(Location location, String className, Kind kind, FileObject sibling) throws IOException {
-        JavaFileObject javaFileObject = getJavaFile(location, className, kind);
-        Assert.notNull(javaFileObject, "Location '" + location + "' is empty");
+        JavaFileObject javaFileObject = getJavaFile(location, className, kind, false);
+        if (javaFileObject == null) {
+            javaFileObject = super.getJavaFileForOutput(location, className, kind, sibling);
+        }
+        Assert.notNull(javaFileObject, "Unable to get JavaFileObject for output");
         return javaFileObject;
     }
 
-    private JavaFileObject getJavaFile(Location location, String className, Kind kind) {
-        Assert.isTrue(CLASS_OR_SOURCE_KIND.contains(kind), "Invalid kind " + kind);
-        Iterable<Folder> folders = getRequiredLocation(location);
-        String path = asPath(className) + kind.extension;
-        for (Folder folder : folders) {
-            File file = folder.getFile(path);
-            if (file.exists()) {
-                return new ResourceJavaFileObject(file, kind);
+    private ResourceJavaFileObject getJavaFile(Location location, String className, Kind kind, boolean mustExist) {
+        if (CLASS_OR_SOURCE_KIND.contains(kind)) {
+            Iterable<Folder> folders = getLocation(location);
+            if (folders != null) {
+                String path = asPath(className) + kind.extension;
+                for (Folder folder : folders) {
+                    File file = folder.getFile(path);
+                    if (file.exists() || !mustExist) {
+                        return new ResourceJavaFileObject(file, kind);
+                    }
+                }
             }
         }
         return null;
@@ -143,40 +172,35 @@ public class ResourceFolderJavaFileManager implements JavaFileManager {
 
     @Override
     public FileObject getFileForInput(Location location, String packageName, String relativeName) throws IOException {
-        return getFile(location, packageName, relativeName);
+        FileObject fileObject = getFile(location, packageName, relativeName);
+        if (fileObject == null) {
+            fileObject = super.getFileForInput(location, packageName, relativeName);
+        }
+        return fileObject;
     }
 
     @Override
     public FileObject getFileForOutput(Location location, String packageName, String relativeName, FileObject sibling) throws IOException {
         FileObject fileObject = getFile(location, packageName, relativeName);
-        Assert.notNull(fileObject, "Location '" + location + "' is empty");
+        if (fileObject == null) {
+            fileObject = super.getFileForOutput(location, packageName, relativeName, sibling);
+        }
+        Assert.notNull(fileObject, "Unable to get FileObject for output");
         return fileObject;
     }
 
-    private FileObject getFile(Location location, String packageName, String relativeName) throws IOException {
-        Iterable<Folder> folders = getRequiredLocation(location);
-        String filename = asPath(packageName) + "/" + relativeName.replace("\\", "/");
-        for (Folder folder : folders) {
-            File file = folder.getFile(filename);
-            if (file.exists()) {
-                return new ResourceFileObject(file);
+    private ResourceFileObject getFile(Location location, String packageName, String relativeName) throws IOException {
+        Iterable<Folder> folders = getLocation(location);
+        if (folders != null) {
+            String filename = asPath(packageName) + "/" + relativeName.replace("\\", "/");
+            for (Folder folder : folders) {
+                File file = folder.getFile(filename);
+                if (file.exists()) {
+                    return new ResourceFileObject(file);
+                }
             }
         }
         return null;
-    }
-
-    @Override
-    public void flush() throws IOException {
-    }
-
-    @Override
-    public void close() throws IOException {
-    }
-
-    private Iterable<Folder> getRequiredLocation(Location location) {
-        Iterable<Folder> folders = getLocation(location);
-        Assert.notNull(folders, "Unknown location '" + location + "'");
-        return folders;
     }
 
     public Iterable<Folder> getLocation(Location location) {
@@ -195,12 +219,12 @@ public class ResourceFolderJavaFileManager implements JavaFileManager {
         this.locations.put(location.getName(), folders);
     }
 
-    private String getFilenameWithoutExtension(String name) {
+    private String getNameWithoutExtension(String name) {
         String extension = StringUtils.getFilenameExtension(name);
         if (name == null || extension == null) {
             return name;
         }
-        return name.substring(0, name.length() - extension.length());
+        return name.substring(0, name.length() - extension.length() - 1);
     }
 
     private String asPath(String name) {
@@ -214,4 +238,9 @@ public class ResourceFolderJavaFileManager implements JavaFileManager {
         return classNamePath.toString();
     }
 
+    private <T> void addAll(List<T> list, Iterable<T> iterable) {
+        for (T item : iterable) {
+            list.add(item);
+        }
+    }
 }

@@ -7,27 +7,35 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.URI;
+import java.net.URISyntaxException;
 
 import javax.tools.FileObject;
 
 import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.ResourceURL;
 
 public class ResourceFileObject implements FileObject {
 
     private final File file;
 
+    private URI uri;
+
     public ResourceFileObject(File file) {
         this.file = file;
+        try {
+            this.uri = new URI(ResourceURL.PROTOCOL + ":" + getName());
+        } catch (URISyntaxException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
-    protected final File getFile() {
+    public final File getFile() {
         return this.file;
     }
 
     @Override
     public URI toUri() {
-        // TODO Auto-generated method stub
-        return null;
+        return this.uri;
     }
 
     @Override
@@ -73,7 +81,11 @@ public class ResourceFileObject implements FileObject {
         } catch (Exception e) {
             return false;
         }
+    }
 
+    @Override
+    public String toString() {
+        return this.file.toString();
     }
 
     // FIXME hashCode equals

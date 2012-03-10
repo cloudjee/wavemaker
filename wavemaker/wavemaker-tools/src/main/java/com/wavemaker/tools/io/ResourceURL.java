@@ -8,6 +8,9 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
 
@@ -20,7 +23,7 @@ import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
  */
 public abstract class ResourceURL {
 
-    private static final String PROTOCOL = "rfs";
+    public static final String PROTOCOL = "rfs";
 
     /**
      * Get a URL for the given {@link Resource}.
@@ -33,6 +36,21 @@ public abstract class ResourceURL {
         String spec = getSpec(resource);
         ResourceURLStreamHandler handler = new ResourceURLStreamHandler(resource);
         return new URL(null, spec, handler);
+    }
+
+    /**
+     * Get a {@link List} of {@link URL}s for the given {@link Resource}s.
+     * 
+     * @param resources
+     * @return
+     * @throws MalformedURLException
+     */
+    public static List<URL> getForResources(Iterable<? extends Resource> resources) throws MalformedURLException {
+        List<URL> urls = new ArrayList<URL>();
+        for (Resource resource : resources) {
+            urls.add(get(resource));
+        }
+        return Collections.unmodifiableList(urls);
     }
 
     private static String getSpec(Resource resource) {
@@ -48,6 +66,11 @@ public abstract class ResourceURL {
 
         public ResourceURLStreamHandler(Resource resource) {
             this.root = findRoot(resource);
+        }
+
+        @Override
+        protected void parseURL(URL u, String spec, int start, int limit) {
+            super.parseURL(u, spec, start, limit);
         }
 
         private Folder findRoot(Resource resource) {
@@ -94,5 +117,4 @@ public abstract class ResourceURL {
             return this.file.getContent().asInputStream();
         }
     }
-
 }
