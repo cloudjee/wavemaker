@@ -1,17 +1,14 @@
 
 package com.wavemaker.tools.project;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Collections;
 
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
 import org.springframework.util.AntPathMatcher;
@@ -436,5 +433,32 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
         GFSResource gfsResource = (GFSResource) resource;
         String path = gfsResource.getParent() + "/";
         return new GFSResource(this.gfs, this.dirsDoc, path);
+    }
+
+    @Override
+    public Resource createProjectLib(Project project) {
+        File tempProjLib;
+        try {
+            tempProjLib = IOUtils.createTempDirectory(project.getProjectName() + "_lib", null);
+            Resource cfProjLib = project.getProjectRoot().createRelative("lib/");
+
+            List<Resource> children = this.listChildren(cfProjLib, new ResourceFilter() {
+
+                @Override
+                public boolean accept(Resource resource) {
+                    return StringUtils.getFilenameExtension(resource.getFilename()).equals("jar");
+                }
+            });
+
+            for (Resource child : children) {
+                InputStream is = child.getInputStream();
+                OutputStream os = new FileOutputStream(new File(tempProjLib, child.getFilename()));
+                FileCopyUtils.copy(is, os);
+            }
+        } catch (IOException ex) {
+            throw new WMRuntimeException(ex);
+        }
+
+        return (new FileSystemResource(tempProjLib));
     }
 }

@@ -584,10 +584,10 @@ dojo.declare("wm.Application", wm.Component, {
 	    else
 		return "app";
 	},
-	reflow: function() {
+	reflow: function(resize) {
 		var d = this.domNode;
 		d.scrollTop = 0;
-	    this.appRoot.reflow();
+	        this.appRoot.reflow();
 	},
 	reflowParent: function() {
 		this.reflow();
@@ -611,7 +611,7 @@ dojo.declare("wm.Application", wm.Component, {
 		setTimeout(dojo.hitch(this, "doRun"), dojo.isIE < 7 ? 100 : 1);
 	},
 	doRun: function() {
-		this.appRoot.domNode = this.domNode = dojo.byId(this.domNode) || document.body;
+	        this.domNode = this.appRoot.domNode;
 	        this.reflow()
 	    /* WM-2794: ENTER key in a text input causes focus to move to first button and fire it; make sure its a button that does nothing; only certain this is an issue in IE 8 */
 	    if (dojo.isIE <= 8) {
@@ -1164,20 +1164,28 @@ dojo.declare("wm.Application", wm.Component, {
 
     addHistory: function(state) {
 	if (this.history && !this._handlingBack) {
-	    this.history.push({id: state.id, options: state.options});
-	    var currentState = {};
-	    this._handlingBack = true;
-	    this._generateStateUrl(currentState);
-	    delete this._handlingBack;
-	    window.history.pushState(null, state.title, wm.isEmpty(currentState) ? "" : "#" + dojo.toJson(currentState));
-	    if (state.title) {
-		var title = dojo.query("title")[0];
-		var titleHtml = title.innerHTML.replace(/\#.*$/,"");
-		title.innerHTML = titleHtml +  "#" + state.title;
-	    }
-	    if (this.backButton) {
-		this.backButton.setDisabled(this.history.length == 0);
-	    }
+	    try {
+		this.history.push({id: state.id, options: state.options});
+		var currentState = {};
+		this._handlingBack = true;
+		this._generateStateUrl(currentState);
+		delete this._handlingBack;
+		if (window.history.pushState)
+		    window.history.pushState(null, state.title, wm.isEmpty(currentState) ? "" : "#" + dojo.toJson(currentState));
+
+		/* By adding this to the title, a user who views their history can see MyPage#SomeHint in their history instead of just 20 "MyPage" repeated without differentiation */
+		if (state.title) {
+		    var title = dojo.query("title")[0];
+		    if (title) {
+			var titleHtml = title.innerHTML.replace(/\#.*$/,"");
+			title.innerHTML = titleHtml +  "#" + state.title;
+		    }
+		}
+
+		if (this.backButton) {
+		    this.backButton.setDisabled(this.history.length == 0);
+		}
+	    } catch(e) {}
 	}
     },
     _generateStateUrl: function() {},

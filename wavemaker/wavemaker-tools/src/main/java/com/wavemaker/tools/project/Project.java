@@ -50,6 +50,8 @@ public class Project extends AbstractFileService {
 
     private final boolean mavenProject;
 
+    private Resource projectLib;
+
     public Project(Resource projectRoot, StudioFileSystem fileSystem) {
         super(fileSystem);
         this.projectRoot = projectRoot;
@@ -319,6 +321,14 @@ public class Project extends AbstractFileService {
         Properties p = getProperties();
         p.setProperty(getPropertyName(clazz, key), String.valueOf(value));
         setProperties(p);
+    }
+
+    public void setProjectLib(Resource projectTempLib) {
+        this.projectLib = projectTempLib;
+    }
+
+    public Resource getProjectLib() {
+        return this.projectLib;
     }
 
     protected Properties getProperties() {

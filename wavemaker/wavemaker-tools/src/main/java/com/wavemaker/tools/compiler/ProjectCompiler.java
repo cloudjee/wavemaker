@@ -56,7 +56,7 @@ public class ProjectCompiler {
 
     public String compile(String projectName) {
         StringWriter out = new StringWriter();
-        Project project = this.projectManager.getProject(projectName, true);
+        Project project = this.projectManager.getCurrentProject();
         JavaCompiler compiler = newJavaCompiler();
         JavaFileManager fileManager;
         Iterable<JavaFileObject> sourceFiles = null;

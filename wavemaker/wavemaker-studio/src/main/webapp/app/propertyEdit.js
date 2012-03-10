@@ -821,7 +821,7 @@ dojo.declare("wm.prop.WidgetSelect", wm.prop.SelectMenu, {
 
 	this.inherited(arguments);
 
-	var components = wm.listComponents([this.useOwner || this.inspected.owner], this.widgetType);
+	var components = wm.listComponents([studio.getValueById(this.useOwner) || this.inspected.owner], this.widgetType);
 	var result = [];
 	if (this.excludeType) {
 	    for (var i = 0; i < components.length; i++) {
@@ -2179,19 +2179,19 @@ dojo.declare("wm.prop.NavigationGroupEditor", wm.prop.FieldGroupEditor, {
 	case "pageContainer":
 	    propDef.editor = "wm.prop.WidgetSelect";
 	    propDef.editorProps.widgetType = wm.PageContainer;
-	    propDef.editorProps.useOwner = this.inspected.owner;
+	    propDef.editorProps.useOwner = this.inspected.owner.getRuntimeId();
 	    propDef.editorProps.createExpressionWire = false;
 	    break;
 	case "layer":
 	    propDef.editor = "wm.prop.WidgetSelect";
 	    propDef.editorProps.widgetType = wm.Layer;	    
-	    propDef.editorProps.useOwner = this.inspected.owner;
+	    propDef.editorProps.useOwner = this.inspected.owner.getRuntimeId();
 	    propDef.editorProps.createExpressionWire = false;
 	    break;
 	case "layers":
 	    propDef.editor = "wm.prop.WidgetSelect";
 	    propDef.editorProps.widgetType = wm.Layers;	    
-	    propDef.editorProps.useOwner = this.inspected.owner;
+	    propDef.editorProps.useOwner = this.inspected.owner.getRuntimeId();
 	    propDef.editorProps.createExpressionWire = false;
 	    break;
 	case "cssClasses":

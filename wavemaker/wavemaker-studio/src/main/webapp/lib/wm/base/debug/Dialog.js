@@ -29,6 +29,8 @@ dojo.require("wm.base.debug.RequestPanel");
 dojo.require("wm.base.debug.EventDetailsPanel");
 
 dojo.declare("wm.debug.Dialog", wm.Dialog, {
+    manageHistory: false,
+    manageURL: false,
     border: "4", // easy to resize!
     _noAnimation:true,
     showTitleButtonsWhenDocked: true,
