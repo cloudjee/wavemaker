@@ -51,7 +51,11 @@ dojo.declare("wm.LayersDecorator", null, {
 	undecorateLayer: function() {
 	},
 	setLayerShowing: function(inLayer, inShowing) {
+	    if (this.active) {
 		wm.Control.prototype.setShowing.call(inLayer, inShowing);
+	    } else {
+		inLayer.showing = inShowing;
+	    }
 	},
 	setLayerActive: function(inLayer, inActive) {
 	    if (inLayer.active == inActive)
