@@ -1137,9 +1137,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 				    break;
 					default:
-
-					     obj.formatter = dojo.hitch(this, 'customFormatter', col.formatFunc, col.backgroundColor, col.textColor, col.cssClass);
-
+				             try {
+						 obj.formatter = dojo.hitch(this, 'customFormatter', col.formatFunc, col.backgroundColor, col.textColor, col.cssClass);
+					     } catch(e) {}
 				    
 						break;
 				}
@@ -1812,6 +1812,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    return inValue;
 	},
     customFormatter: function(formatFunc, backgroundColorFunc, textColorFunc,cssClassFunc, inValue, rowIdx, cellObj){
+	try {
 	var rowObj = this.getRow(rowIdx);
 	this.handleColorFuncs(cellObj,backgroundColorFunc, textColorFunc,cssClassFunc, rowIdx);
 
@@ -1820,6 +1821,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	}else {
 	    return inValue;
 	}
+	} catch(e) {} return "";
     },
     handleColorFuncs: function(cellObj, backgroundColorFunc, textColorFunc,cssClassFunc, rowIdx) {
 	var rowObj = this.getRow(rowIdx);
