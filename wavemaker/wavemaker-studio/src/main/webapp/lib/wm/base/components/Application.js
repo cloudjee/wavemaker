@@ -629,6 +629,7 @@ dojo.declare("wm.Application", wm.Component, {
 	    if (!main) {
 		main = this.main;
 	    }
+	        this.pageContainer._initialPageName = main;
 		this.loadPage(main);
 	        this.hideLoadingIndicator();
 	},
@@ -682,7 +683,7 @@ dojo.declare("wm.Application", wm.Component, {
 	},
 	pageChanged: function(inPage, inPreviousPage) {
 		// establish page reference
-		this._page = inPage;
+	        this.page = this._page = inPage;
 		var n = inPage.name, o = (inPreviousPage || 0).name;
 		// clean up previous reference
 		if (o) {
