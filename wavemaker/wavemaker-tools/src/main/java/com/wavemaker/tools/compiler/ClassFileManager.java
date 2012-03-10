@@ -264,7 +264,7 @@ public class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFile
                         return StringUtils.getFilenameExtension(name).equals("jar");
                     }
                 });
-                File[] extraJars = this.project.getProjectRoot().createRelative("lib/").getFile().listFiles(new FilenameFilter() {
+                File[] extraJars = this.project.getProjectLib().getFile().listFiles(new FilenameFilter() {
 
                     @Override
                     public boolean accept(File dir, String name) {
@@ -272,7 +272,8 @@ public class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFile
                     }
                 });
 
-                File[] allJars = (File[]) ArrayUtils.addAll(jars, extraJars);
+                //File[] allJars = (File[]) ArrayUtils.addAll(jars, extraJars);
+                File[] allJars = (File[]) ArrayUtils.addAll(jars, jars);
                 return Arrays.asList(allJars);
             } catch (IOException e) {
                 e.printStackTrace();

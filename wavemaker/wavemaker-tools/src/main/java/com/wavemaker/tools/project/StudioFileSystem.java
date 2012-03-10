@@ -213,4 +213,14 @@ public interface StudioFileSystem extends CommonStudioFileSystem {
      * @return the parent resource
      */
     Resource getParent(Resource resource);
+
+    /**
+     * Create project's lib folder under the servlet context
+     *
+     * @param project the current project
+     * @return the resource for the project lib folder
+     */
+    Resource createProjectLib(Project project);
+
+
 }
