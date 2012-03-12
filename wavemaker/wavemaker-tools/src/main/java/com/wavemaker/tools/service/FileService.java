@@ -31,6 +31,7 @@ import org.springframework.core.io.Resource;
  * @author Matt Small
  * @author Jeremy Grelle
  */
+@Deprecated
 public interface FileService {
 
     /**

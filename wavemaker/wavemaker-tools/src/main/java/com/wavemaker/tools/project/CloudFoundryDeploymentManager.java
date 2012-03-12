@@ -26,7 +26,7 @@ public class CloudFoundryDeploymentManager extends AbstractDeploymentManager {
 
     @Override
     public String compile() {
-        return this.projectCompiler.compile(this.projectManager.getCurrentProject().getProjectName());
+        return this.projectCompiler.compile();
     }
 
     @Override

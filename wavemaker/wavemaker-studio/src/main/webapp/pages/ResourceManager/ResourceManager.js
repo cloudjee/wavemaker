@@ -331,10 +331,7 @@ dojo.declare("ResourceManager", wm.Page, {
 
     loadResourcesData: function(keepOpenFolders) {
 
-	// var manager = this.getResourceManager();
-	// manager.setOperation("getResourceFolder");
-		     // 	manager.update(); 	
-		     var _this = this;
+    var _this = this;
 	var root = this.tree.root.kids[0].data;
 	var rootPath = root.rootPath;
 	var tree = this.tree;
@@ -863,7 +860,7 @@ wm.ResourceItem.extend({
       return this.treeNode.parent.data;
     },
     downloadItem: function() {
-      studio.downloadInIFrame("services/resourceFileService.download?method=downloadFile&folder=" + ((this.isRoot()) ? "" : this.getParent().getResourcelessFilePath()) + "&filename=" + ((this.isRoot()) ? "" : this.getItemName()));
+      studio.downloadInIFrame("services/resourceFileService.download?method=downloadFile&file=" + this.getFilePath());
     }
 
 });

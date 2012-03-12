@@ -36,13 +36,14 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.io.GFSResource;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.server.DownloadResponse;
 import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.tools.util.NoCloseInputStream;
 
 public class ResourceManager {
+
+    // FIXME PW filesystem : remove deprecated calls + unused methods
 
     /**
      * @deprecated
@@ -54,27 +55,6 @@ public class ResourceManager {
         // Setup the DownloadResponse
         FileInputStream fis = new FileInputStream(f);
         ret.setContents(fis);
-        ret.setContentType(isZip ? "application/zip" : "application/unknown");
-        ret.setFileName(filename);
-        return ret;
-    }
-
-    public static DownloadResponse downloadFile(Resource f, String filename, boolean isZip) throws IOException {
-        DownloadResponse ret = new DownloadResponse();
-
-        InputStream is;
-        if (f instanceof GFSResource) {
-            File tempFile = new File(IOUtils.createTempDirectory("resourceMgr", null), filename);
-            FileOutputStream os = new FileOutputStream(tempFile);
-            IOUtils.copy(f.getInputStream(), os);
-            os.close();
-            is = new FileInputStream(tempFile);
-        } else {
-            is = f.getInputStream();
-        }
-
-        // Setup the DownloadResponse
-        ret.setContents(is);
         ret.setContentType(isZip ? "application/zip" : "application/unknown");
         ret.setFileName(filename);
         return ret;
@@ -232,6 +212,7 @@ public class ResourceManager {
     }
 
     @SuppressWarnings({ "rawtypes", "unchecked" })
+    @Deprecated
     public static Hashtable[] getListing(StudioFileSystem fileSystem, Resource curdir) {
         List<Resource> listings = fileSystem.listChildren(curdir, new ResourceFilter() {
 

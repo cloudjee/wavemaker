@@ -32,7 +32,6 @@ import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.ProjectHelper;
 import org.springframework.core.io.Resource;
-import org.springframework.util.StringUtils;
 
 import com.sun.xml.bind.marshaller.NamespacePrefixMapper;
 import com.wavemaker.common.WMRuntimeException;
@@ -178,7 +177,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
         try {
             String deployName = getDeployName();
             testRunStart(getProjectDir().getFile().getCanonicalPath(), deployName);
-            return "/" + this.projectManager.getUserProjectPrefix() + deployName;
+            return "/" + deployName;
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
@@ -191,7 +190,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
     public String compile() {
         try {
             antExecute(getProjectDir().getFile().getCanonicalPath(), getDeployName(), COPY_JARS_OPERATION);
-            return this.projectCompiler.compile(this.projectManager.getCurrentProject().getProjectName());
+            return this.projectCompiler.compile();
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
@@ -369,13 +368,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
     @Override
     public String exportProject(String zipFileName) {
         try {
-            String userProjectPrefix = this.projectManager.getUserProjectPrefix();
-            Resource exportDir;
-            if (StringUtils.hasLength(userProjectPrefix)) {
-                exportDir = this.projectManager.getTmpDir();
-            } else {
-                exportDir = getProjectDir().createRelative(EXPORT_DIR_DEFAULT);
-            }
+            Resource exportDir = getProjectDir().createRelative(EXPORT_DIR_DEFAULT);
             File file = exportDir.createRelative(zipFileName).getFile();
             exportProject(getProjectDir().getFile().getCanonicalPath(), file.getCanonicalPath());
             return file.getCanonicalPath();
@@ -470,8 +463,8 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
         LocalDeploymentManager.logger.info("PUT NAME: " + projectName);
 
         if (deployName != null) {
-            newProperties.put(DEPLOY_NAME_PROPERTY, this.projectManager.getUserProjectPrefix() + deployName);
-            System.setProperty("wm.proj." + DEPLOY_NAME_PROPERTY, this.projectManager.getUserProjectPrefix() + deployName);
+            newProperties.put(DEPLOY_NAME_PROPERTY, deployName);
+            System.setProperty("wm.proj." + DEPLOY_NAME_PROPERTY, deployName);
         }
 
         for (Map.Entry<String, Object> mapEntry : newProperties.entrySet()) {

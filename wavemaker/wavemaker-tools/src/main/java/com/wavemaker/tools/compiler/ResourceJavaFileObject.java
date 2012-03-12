@@ -30,6 +30,7 @@ import com.wavemaker.tools.project.Project;
  * 
  * @author Jeremy Grelle
  */
+@Deprecated
 public abstract class ResourceJavaFileObject extends GenericResourceFileObject implements JavaFileObject {
 
     private final Kind kind;

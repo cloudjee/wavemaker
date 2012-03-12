@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
+import java.util.concurrent.Callable;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,10 +32,10 @@ import org.hibernate.tool.hbm2ddl.DatabaseMetadata;
 import org.hibernate.tool.hbm2ddl.SchemaExport;
 import org.hibernate.tool.hbm2ddl.SchemaUpdate;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.util.ReflectionUtils;
 
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.util.CastUtils;
-import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.Tuple;
@@ -42,6 +43,7 @@ import com.wavemaker.runtime.data.DataServiceRuntimeException;
 import com.wavemaker.runtime.data.util.JDBCUtils;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.parser.HbmParser;
+import com.wavemaker.tools.util.ResourceClassLoaderUtils;
 
 /**
  * @author Simon Toens
@@ -115,22 +117,24 @@ public class ExportDB extends BaseDataModelSetup {
         SchemaUpdate update = null;
         File ddlFile = null;
 
-        ClassLoaderUtils.TaskRtn t;
-
         try {
             if (this.overrideTable) {
-                t = new ClassLoaderUtils.TaskRtn() {
+                Callable<SchemaExport> t = new Callable<SchemaExport>() {
 
                     @Override
-                    public SchemaExport run() {
+                    public SchemaExport call() {
                         return new SchemaExport(cfg);
                     }
                 };
 
                 if (this.classesDir == null) {
-                    export = (SchemaExport) t.run();
+                    try {
+                        export = t.call();
+                    } catch (Exception e) {
+                        ReflectionUtils.rethrowRuntimeException(e);
+                    }
                 } else {
-                    export = (SchemaExport) ClassLoaderUtils.runInClassLoaderContext(t, new FileSystemResource(this.classesDir));
+                    export = ResourceClassLoaderUtils.runInClassLoaderContext(t, new FileSystemResource(this.classesDir));
                 }
 
                 ddlFile = File.createTempFile("ddl", ".sql");
@@ -153,18 +157,22 @@ public class ExportDB extends BaseDataModelSetup {
                     this.ddl = extraddl + "\n" + this.ddl;
                 }
             } else {
-                t = new ClassLoaderUtils.TaskRtn() {
+                Callable<SchemaUpdate> t = new Callable<SchemaUpdate>() {
 
                     @Override
-                    public SchemaUpdate run() {
+                    public SchemaUpdate call() {
                         return new SchemaUpdate(cfg);
                     }
                 };
 
                 if (this.classesDir == null) {
-                    update = (SchemaUpdate) t.run();
+                    try {
+                        update = t.call();
+                    } catch (Exception e) {
+                        ReflectionUtils.rethrowRuntimeException(e);
+                    }
                 } else {
-                    update = (SchemaUpdate) ClassLoaderUtils.runInClassLoaderContext(t, new FileSystemResource(this.classesDir));
+                    update = ResourceClassLoaderUtils.runInClassLoaderContext(t, new FileSystemResource(this.classesDir));
                 }
 
                 prepareForExport(this.exportToDatabase);

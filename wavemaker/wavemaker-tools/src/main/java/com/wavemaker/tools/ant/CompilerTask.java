@@ -15,20 +15,24 @@
 package com.wavemaker.tools.ant;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.util.ClassLoaderUtils;
-import com.wavemaker.common.util.ClassLoaderUtils.TaskNoRtn;
+import com.wavemaker.common.util.ConversionUtils;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.util.AntUtils;
 import com.wavemaker.tools.util.DesignTimeUtils;
-import com.wavemaker.runtime.RuntimeAccess;
+import com.wavemaker.tools.util.ResourceClassLoaderUtils;
 
 /**
  * Base Task.
@@ -60,7 +64,7 @@ public abstract class CompilerTask extends Task {
         if (init) {
             AntUtils.bootstrap(getClass().getClassLoader());
         }
-        fileSystem = (StudioFileSystem)RuntimeAccess.getInstance().getSpringBean("fileSystem");
+        this.fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
     }
 
     // REVIEW 25-Sep-07 stoens@activegrid.com -- We also need to handle
@@ -108,7 +112,7 @@ public abstract class CompilerTask extends Task {
 
         validate();
 
-        ClassLoaderUtils.TaskNoRtn task = new TaskNoRtn() {
+        Runnable task = new Runnable() {
 
             @Override
             public void run() {
@@ -116,7 +120,7 @@ public abstract class CompilerTask extends Task {
             }
         };
 
-        ClassLoaderUtils.runInClassLoaderContext(task, getClassLoader());
+        ResourceClassLoaderUtils.runInClassLoaderContext(task, getClassLoader());
     }
 
     protected abstract void doExecute();
@@ -167,7 +171,8 @@ public abstract class CompilerTask extends Task {
             for (int i = 0; i < paths.length; i++) {
                 classPathFiles[i] = new File(paths[i]);
             }
-            return ClassLoaderUtils.getClassLoaderForFile(parent, classPathFiles);
+            List<Resource> classPathResources = ConversionUtils.convertToResourceList(Arrays.asList(classPathFiles));
+            return ResourceClassLoaderUtils.getClassLoaderForResources(parent, classPathResources.toArray(new Resource[classPathFiles.length]));
         }
 
     }
