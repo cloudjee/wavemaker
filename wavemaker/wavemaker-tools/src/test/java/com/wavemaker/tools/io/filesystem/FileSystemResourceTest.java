@@ -65,7 +65,7 @@ public class FileSystemResourceTest {
         }
 
         @Override
-        public void touch() {
+        public void createIfMissing() {
         }
 
         @Override

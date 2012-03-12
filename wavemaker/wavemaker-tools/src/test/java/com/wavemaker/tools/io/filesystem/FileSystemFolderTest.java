@@ -213,7 +213,7 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
     public void shouldTouchNewDirectory() throws Exception {
         FileSystemFolder<Object> child = this.folder.getFolder("a");
         given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
-        child.touch();
+        child.createIfMissing();
         verify(this.fileSystem).createFolder(child.getKey());
     }
 
@@ -221,7 +221,7 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
     public void shouldNotTouchExistingDirectory() throws Exception {
         FileSystemFolder<Object> child = this.folder.getFolder("a");
         given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
-        child.touch();
+        child.createIfMissing();
         verify(this.fileSystem, never()).createFolder(child.getKey());
     }
 
@@ -231,7 +231,7 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
         FileSystemFolder<Object> grandChild = child.getFolder("b");
         given(this.fileSystem.getResourceType(grandChild.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
         given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
-        grandChild.touch();
+        grandChild.createIfMissing();
         verify(this.fileSystem).createFolder(grandChild.getKey());
         verify(this.fileSystem).createFolder(child.getKey());
     }
@@ -284,7 +284,7 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
         given(destination.getFolder("a")).willReturn(destinationChild);
         child.moveTo(destination);
         verify(destination).getFolder("a");
-        verify(destinationChild).touch();
+        verify(destinationChild).createIfMissing();
     }
 
     @Test
@@ -317,7 +317,7 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
         given(destination.getFolder("a")).willReturn(destinationChild);
         given(destinationChild.getFolder("b")).willReturn(destinationGrandchild);
         child.moveTo(destination);
-        verify(destinationGrandchild).touch();
+        verify(destinationGrandchild).createIfMissing();
     }
 
     @Test
@@ -329,7 +329,7 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
         given(destination.getFolder("a")).willReturn(destinationChild);
         child.copyTo(destination);
         verify(destination).getFolder("a");
-        verify(destinationChild).touch();
+        verify(destinationChild).createIfMissing();
     }
 
     @Test
@@ -362,7 +362,7 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
         given(destination.getFolder("a")).willReturn(destinationChild);
         given(destinationChild.getFolder("b")).willReturn(destinationGrandchild);
         child.copyTo(destination);
-        verify(destinationGrandchild).touch();
+        verify(destinationGrandchild).createIfMissing();
     }
 
     @Test

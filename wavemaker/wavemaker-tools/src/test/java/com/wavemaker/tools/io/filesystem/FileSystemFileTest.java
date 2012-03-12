@@ -130,14 +130,14 @@ public class FileSystemFileTest extends AbstractFileSystemResourceTest {
     @Test
     public void shouldTouchNewFile() throws Exception {
         given(this.fileSystem.getResourceType(this.file.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
-        this.file.touch();
+        this.file.createIfMissing();
         verify(this.fileSystem).createFile(this.file.getKey());
     }
 
     @Test
     public void shouldNotTouchExistingFile() throws Exception {
         given(this.fileSystem.getResourceType(this.file.getKey())).willReturn(ResourceType.FOLDER);
-        this.file.touch();
+        this.file.createIfMissing();
         verify(this.fileSystem, never()).createFile(this.file.getKey());
     }
 

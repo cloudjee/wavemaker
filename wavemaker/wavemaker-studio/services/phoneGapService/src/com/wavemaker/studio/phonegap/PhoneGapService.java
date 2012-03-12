@@ -58,7 +58,7 @@ public class PhoneGapService implements ApplicationListener<StudioServiceWriteWe
         boolean phoneGapFolderExists = phoneFolder.exists();
 
         // Creating a sub-folder
-        phoneFolder.getFolder("assets/www").touch();
+        phoneFolder.getFolder("assets/www").createIfMissing();
 
         // Reading contents
         String content = phoneFolder.getFile("example/folder/file.txt").getContent().asString();

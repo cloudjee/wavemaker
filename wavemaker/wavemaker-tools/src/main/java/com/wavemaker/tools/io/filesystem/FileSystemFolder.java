@@ -140,7 +140,7 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
 
     private Folder createDestinationFolder(Folder folder) {
         Folder destination = folder.getFolder(getName());
-        destination.touch();
+        destination.createIfMissing();
         return destination;
     }
 
@@ -161,7 +161,7 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
     }
 
     @Override
-    public void touch() {
+    public void createIfMissing() {
         if (!exists()) {
             touchParent();
             getFileSystem().createFolder(getKey());
@@ -177,14 +177,14 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
     @Override
     public void unzip(InputStream inputStream) {
         Assert.notNull(inputStream, "InputStream must not be null");
-        touch();
+        createIfMissing();
         ZipInputStream zip = new ZipInputStream(new BufferedInputStream(inputStream));
         try {
             InputStream noCloseZip = new NoCloseInputStream(zip);
             ZipEntry entry = zip.getNextEntry();
             while (entry != null) {
                 if (entry.isDirectory()) {
-                    getFolder(entry.getName()).touch();
+                    getFolder(entry.getName()).createIfMissing();
                 } else {
                     getFile(entry.getName()).getContent().write(noCloseZip);
                 }

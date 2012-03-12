@@ -62,8 +62,8 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
     }
 
     private void setupBasicStructure() {
-        getCommonFolder().touch();
-        this.rootFolder.getFolder(PROJECTS_DIR).touch();
+        getCommonFolder().createIfMissing();
+        this.rootFolder.getFolder(PROJECTS_DIR).createIfMissing();
     }
 
     @Override
@@ -137,7 +137,7 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
         Assert.isInstanceOf(GFSResource.class, resource, "This implementation can only write to Grid FS");
         GFSResource parent = getParent(resource);
         if (parent != null) {
-            parent.getResource(Folder.class).touch();
+            parent.getResource(Folder.class).createIfMissing();
         }
     }
 

@@ -54,7 +54,7 @@ public abstract class FileSystemResource<K> implements Resource {
 
     protected void touchParent() {
         if (getParent() != null) {
-            getParent().touch();
+            getParent().createIfMissing();
         }
     }
 

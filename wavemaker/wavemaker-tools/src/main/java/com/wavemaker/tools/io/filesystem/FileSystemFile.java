@@ -95,7 +95,7 @@ public class FileSystemFile<K> extends FileSystemResource<K> implements File {
     }
 
     @Override
-    public void touch() {
+    public void createIfMissing() {
         if (!exists()) {
             touchParent();
             getFileSystem().createFile(getKey());

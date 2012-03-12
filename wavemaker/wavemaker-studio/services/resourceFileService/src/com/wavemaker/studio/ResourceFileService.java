@@ -173,7 +173,7 @@ public class ResourceFileService {
      */
     public boolean createFolder(@ParamName(name = "name") String name) {
         Folder folder = getResource(name, Folder.class);
-        folder.touch();
+        folder.createIfMissing();
         return folder.exists();
     }
 
