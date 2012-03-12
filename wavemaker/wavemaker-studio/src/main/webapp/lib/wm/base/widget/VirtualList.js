@@ -196,11 +196,11 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	    this._listTouchScroll.setupScroller();
 	}
     },
-	clear: function() {
+	clear: function(noEvents) {
 		this._setHeaderVisible(false);
 		while (this.getCount())
 			this.removeItem(this.getCount()-1);
-		this.deselectAll();
+		this.deselectAll(noEvents);
 	        this._clearSelectedData();
 	},
 	createItem: function(inContent) {
@@ -463,7 +463,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	ondblclick: function(inEvent, inItem) {
 	},
     onSelectionChange: function() {}, // Added for DojoGrid compatability
-	onselect: function(inItem) {
+    onselect: function(inItem) {
 	},
 	ondeselect: function(inItem) {
 	},

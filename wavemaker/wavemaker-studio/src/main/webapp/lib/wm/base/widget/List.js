@@ -272,7 +272,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	_render: function() {
 		this.renderData(this._data);
 	},
-	clear: function() {
+	clear: function(noEvents) {
 		this._data = null;
 		this.inherited(arguments);
 	},
@@ -332,7 +332,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 		}
 
 	        var selectedData = this.selectedItem.getData();
-		this.clear();
+		this.clear(true);
 		this._data = inData;
 		if (!this.dataFields)
 			this._setDataFields();
