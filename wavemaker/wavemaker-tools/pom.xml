@@ -93,11 +93,6 @@
 		</dependency>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>wavemaker-tools-filesystem</artifactId>
-			<version>${project.version}</version>
-		</dependency>		
-		<dependency>
-			<groupId>${project.groupId}</groupId>
 			<artifactId>wavemaker-runtime</artifactId>
 			<version>${project.version}</version>
 			<type>test-jar</type>
