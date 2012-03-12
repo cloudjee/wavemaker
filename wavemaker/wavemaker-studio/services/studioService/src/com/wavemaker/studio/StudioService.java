@@ -15,8 +15,10 @@
 package com.wavemaker.studio;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
@@ -30,16 +32,17 @@ import java.util.SortedSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.BuildException;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.core.io.FileSystemResource;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.FileAccessException;
-import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.server.FileUploadResponse;
@@ -64,6 +67,10 @@ import com.wavemaker.tools.pws.install.PwsInstall;
  */
 @HideFromClient
 public class StudioService extends ClassLoader implements ApplicationEventPublisherAware {
+
+    private static final String LOG_UPDATE_LOGS = "logs";
+
+    private static final String LOG_UPDATE_LAST_STAMP = "lastStamp";
 
     private RuntimeAccess runtimeAccess;
 
@@ -282,70 +289,55 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
         java.io.File logFile = new java.io.File(logFolder, filename);
         if (!logFile.exists()) {
             Hashtable<String, Object> PEmpty = new Hashtable<String, Object>();
-            PEmpty.put("logs", "");
-            PEmpty.put("lastStamp", 0);
+            PEmpty.put(LOG_UPDATE_LOGS, "");
+            PEmpty.put(LOG_UPDATE_LAST_STAMP, 0);
             return PEmpty;
         }
-        String s = IOUtils.read(logFile);
+        InputStream inputStream = new FileInputStream(logFile);
+        try {
+            String logFileContent = IOUtils.toString(inputStream);
+            if (lastStamp.length() > 0) {
+                // remove everything up to START_WM_LOG_LINE lastStamp
+                Pattern pattern = Pattern.compile("^.*START_WM_LOG_LINE\\s+" + lastStamp + "\\s+", Pattern.DOTALL);
+                Matcher matcher = pattern.matcher(logFileContent);
+                logFileContent = matcher.replaceFirst("");
+                // Replace everything from the start of whats left of this line to END_WM_LOG_LINE
+                logFileContent = logFileContent.replaceFirst("^.*?END_WM_LOG_LINE", "");
+            }
 
-        if (lastStamp.length() > 0) {
-            // remove everything up to START_WM_LOG_LINE lastStamp
-            Pattern newStuffPattern = Pattern.compile("^.*START_WM_LOG_LINE\\s+" + lastStamp + "\\s+", java.util.regex.Pattern.DOTALL);
-            Matcher newStuffMatcher = newStuffPattern.matcher(s);
-            s = newStuffMatcher.replaceFirst("");
-            s = s.replaceFirst("^.*?END_WM_LOG_LINE", ""); // replace everything
-                                                           // from the start of
-                                                           // whats left of
-                                                           // this
-                                                           // line to
-                                                           // END_WM_LOG_LINE
-        }
+            Pattern htmlTagPattern = Pattern.compile("(START_WM_LOG_LINE\\s+\\d+\\:\\d+\\:\\d+,\\d+\\s+)(\\S+) (\\(.*\\))");
+            Matcher htmlTagMatcher = htmlTagPattern.matcher(logFileContent);
+            logFileContent = htmlTagMatcher.replaceAll("$1<span class='LogType$2'>$2</span> <span class='LogLocation'>$3</span>");
 
-        java.util.regex.Pattern htmlTagPattern = java.util.regex.Pattern.compile("(START_WM_LOG_LINE\\s+\\d+\\:\\d+\\:\\d+,\\d+\\s+)(\\S+) (\\(.*\\))");
-        java.util.regex.Matcher htmlTagMatcher = htmlTagPattern.matcher(s);
-        s = htmlTagMatcher.replaceAll("$1<span class='LogType$2'>$2</span> <span class='LogLocation'>$3</span>");
-        java.util.regex.Pattern p = java.util.regex.Pattern.compile("START_WM_LOG_LINE\\s+\\d+\\:\\d+\\:\\d+,\\d+");
-        java.util.regex.Matcher m = p.matcher(s);
-        String timestamp = "";
-        while (m.find()) {
-            timestamp = m.group();
-            timestamp = timestamp.replaceFirst("START_WM_LOG_LINE\\s+.*?", "");
+            Pattern p = Pattern.compile("START_WM_LOG_LINE\\s+\\d+\\:\\d+\\:\\d+,\\d+");
+            Matcher m = p.matcher(logFileContent);
+            String timestamp = "";
+            while (m.find()) {
+                timestamp = m.group();
+                timestamp = timestamp.replaceFirst("START_WM_LOG_LINE\\s+.*?", "");
+            }
+            Hashtable<String, Object> logUpdate = new Hashtable<String, Object>();
+            logFileContent = m.replaceAll(""); // remove all START_WM_LOG_LINE xxx:xxx:xxx,xxx
+            logFileContent = logFileContent.replaceAll(" END_WM_LOG_LINE", "");
+            if (logFileContent.matches("^\\s+$")) {
+                logFileContent = "";
+            }
+            logFileContent = logFileContent.replaceAll("(\\S+)(\\n\\r|\\r\\n|\\n|\\r)", "$1<br/>");
+            Pattern trimPattern = Pattern.compile("^\\s*", Pattern.MULTILINE);
+            Matcher trimMatcher = trimPattern.matcher(logFileContent);
+            logFileContent = trimMatcher.replaceAll("");
+            logUpdate.put(LOG_UPDATE_LOGS, logFileContent);
+            logUpdate.put(LOG_UPDATE_LAST_STAMP, timestamp);
+            return logUpdate;
+        } finally {
+            inputStream.close();
         }
-        Hashtable<String, Object> P = new Hashtable<String, Object>();
-        s = m.replaceAll(""); // remove all START_WM_LOG_LINE xxx:xxx:xxx,xxx
-        s = s.replaceAll(" END_WM_LOG_LINE", "");
-        if (s.matches("^\\s+$")) {
-            s = "";
-        }
-        s = s.replaceAll("(\\S+)(\\n\\r|\\r\\n|\\n|\\r)", "$1<br/>");
-        Pattern trimPattern = Pattern.compile("^\\s*", Pattern.MULTILINE);
-        Matcher trimMatcher = trimPattern.matcher(s);
-        s = trimMatcher.replaceAll("");
-        P.put("logs", s);
-        P.put("lastStamp", timestamp);
-        return P;
     }
-
-    // FIXME getPropertyHelp, getContent and getLatestPatches all look very similar, can we refactor common aspects?
 
     @ExposeToClient
     public String getPropertyHelp(String url) throws IOException {
-        URL help_url;
-        String s = "";
         try {
-            help_url = new URL(url);
-
-            // Read all the text returned by the server
-            BufferedReader in = new BufferedReader(new InputStreamReader(help_url.openStream()));
-            String str;
-            StringBuffer sbuf = new StringBuffer();
-            while ((str = in.readLine()) != null) {
-                sbuf.append(str + "\n");
-            }
-            str = sbuf.toString();
-
-            in.close();
-
+            String str = getRemoteContent(url);
             String startDivStr = "</h2><p/>";
             int startDiv = str.indexOf(startDivStr);
             if (startDiv == -1) {
@@ -356,71 +348,47 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
             int endDivID = str.indexOf("\"xwikidata\"");
             int endDiv = str.lastIndexOf("<div", endDivID);
 
-            s = str.substring(startDiv, endDiv);
-            s = s.replaceAll("<a ", "<a target='wiki' ");
+            str = str.substring(startDiv, endDiv);
+            str = str.replaceAll("<a ", "<a target='wiki' ");
+            return str;
         } catch (Exception e) {
-            s += "No documentation found for this topic";
+            return "No documentation found for this topic";
         }
-
-        return s;
     }
 
     @ExposeToClient
     public String getContent(String inUrl) throws IOException {
-        URL url = new URL(inUrl);
-        String str = "";
         try {
-            // Read all the text returned by the server
-            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-
-            StringBuffer sbuf = new StringBuffer();
-            while ((str = in.readLine()) != null) {
-                sbuf.append(str + "\n");
-            }
-            str = sbuf.toString();
-
-            in.close();
+            String str = getRemoteContent(inUrl);
             str = str.replace("<head>", "<head><base href='" + inUrl
                 + "' /><base target='_blank' /><script>top.studio.startPageIFrameLoaded();</script>");
+            return str;
         } catch (Exception e) {
-            str = "";
+            return "";
         }
-
-        return str;
     }
 
     @ExposeToClient
     public String getLatestPatches(String url) {
-        URL patch_url;
-        String s = "";
         try {
-            patch_url = new URL(url);
-
-            // Read all the text returned by the server
-            BufferedReader in = new BufferedReader(new InputStreamReader(patch_url.openStream()));
-            String str;
-            StringBuffer sbuf = new StringBuffer();
-            while ((str = in.readLine()) != null) {
-                sbuf.append(str + "\n");
-            }
-            str = sbuf.toString();
-            in.close();
-
+            String str = getRemoteContent(url);
             String startDivStr = "PATCHCODE'>";
             int startDiv = str.indexOf(startDivStr);
             if (startDiv == -1) {
                 return "";
             }
             startDiv += startDivStr.length();
-
             int endDiv = str.indexOf("</textarea>");
-            s = str.substring(startDiv, endDiv);
+            str = str.substring(startDiv, endDiv);
+            return str;
         } catch (Exception e) {
-            System.out.println("ERROR:" + e.toString());
-            s += "Could not find patches";
+            return "Could not find patches";
         }
+    }
 
-        return s;
+    private String getRemoteContent(String url) throws IOException {
+        BufferedReader in = new BufferedReader(new InputStreamReader(new URL(url).openStream()));
+        return FileCopyUtils.copyToString(in);
     }
 
     /*
@@ -429,8 +397,9 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
      */
     @ExposeToClient
     public String getJavaServiceTemplate(String templateName) throws IOException {
-        return getProjectManager().getCurrentProject().readFile(
-            this.fileSystem.getStudioWebAppRoot().createRelative("/app/templates/javaservices/" + templateName));
+        Folder webAppRoot = this.fileSystem.getStudioWebAppRootFolder();
+        File templateFile = webAppRoot.getFile("/app/templates/javaservices/" + templateName);
+        return templateFile.getContent().asString();
     }
 
     @ExposeToClient
@@ -451,13 +420,13 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
 
             String originalName = file.getOriginalFilename();
             tmpDir = new java.io.File(webapproot, "tmp");
-            IOUtils.makeDirectories(tmpDir, webapproot);
+            com.wavemaker.common.util.IOUtils.makeDirectories(tmpDir, webapproot);
 
             java.io.File outputFile = new java.io.File(tmpDir, originalName);
             String newName = originalName.replaceAll("[ 0-9()]*.zip$", "");
             System.out.println("OLD NAME:" + originalName + "; NEW NAME:" + newName);
             FileOutputStream fos = new FileOutputStream(outputFile);
-            IOUtils.copy(file.getInputStream(), fos);
+            com.wavemaker.common.util.IOUtils.copy(file.getInputStream(), fos);
             file.getInputStream().close();
             fos.close();
             java.io.File extFolder = com.wavemaker.tools.project.ResourceManager.unzipFile(this.fileSystem, new FileSystemResource(outputFile)).getFile();
@@ -469,7 +438,7 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
             java.io.File pagesFolder = new java.io.File(extFolder, "pages");
             java.io.File[] pages = pagesFolder.listFiles();
             for (int i = 0; i < pages.length; i++) {
-                IOUtils.copy(pages[i], new java.io.File(webapprootPages, pages[i].getName()));
+                com.wavemaker.common.util.IOUtils.copy(pages[i], new java.io.File(webapprootPages, pages[i].getName()));
             }
 
             /*
@@ -485,10 +454,10 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
                     for (int j = 0; j < languages2.length; j++) {
                         System.out.println("COPY " + languages2[j].getName() + " TO "
                             + new java.io.File(dictionaryDest, languages[i].getName()).getAbsolutePath());
-                        IOUtils.copy(languages2[j], new java.io.File(dictionaryDest, languages[i].getName()));
+                        com.wavemaker.common.util.IOUtils.copy(languages2[j], new java.io.File(dictionaryDest, languages[i].getName()));
                     }
                 } else {
-                    IOUtils.copy(languages[i], dictionaryDest);
+                    com.wavemaker.common.util.IOUtils.copy(languages[i], dictionaryDest);
                 }
             }
 
@@ -499,7 +468,7 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
             java.io.File designtimeFolder = new java.io.File(extFolder, "designtime");
             java.io.File[] designJars = designtimeFolder.listFiles();
             for (int i = 0; i < designJars.length; i++) {
-                IOUtils.copy(designJars[i], studioLib);
+                com.wavemaker.common.util.IOUtils.copy(designJars[i], studioLib);
             }
 
             /*
@@ -510,16 +479,16 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
             java.io.File templatesPwsWEBINFLibFolder = new java.io.File(templatesPwsWEBINFFolder, "lib");
             /* Delete any old jars from prior imports */
             if (templatesPwsFolder.exists()) {
-                IOUtils.deleteRecursive(templatesPwsFolder);
+                com.wavemaker.common.util.IOUtils.deleteRecursive(templatesPwsFolder);
             }
 
-            IOUtils.makeDirectories(templatesPwsWEBINFLibFolder, webapproot);
+            com.wavemaker.common.util.IOUtils.makeDirectories(templatesPwsWEBINFLibFolder, webapproot);
 
             java.io.File runtimeFolder = new java.io.File(extFolder, "runtime");
             java.io.File[] runJars = runtimeFolder.listFiles();
             for (int i = 0; i < runJars.length; i++) {
-                IOUtils.copy(runJars[i], studioLib);
-                IOUtils.copy(runJars[i], templatesPwsWEBINFLibFolder);
+                com.wavemaker.common.util.IOUtils.copy(runJars[i], studioLib);
+                com.wavemaker.common.util.IOUtils.copy(runJars[i], templatesPwsWEBINFLibFolder);
             }
 
             /*
@@ -529,7 +498,7 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
             String packagesExt = "";
             try {
                 // Get the packages.js file from our extensions.zip file */
-                packagesExt = IOUtils.read(new java.io.File(extFolder, "packages.js"));
+                packagesExt = com.wavemaker.common.util.IOUtils.read(new java.io.File(extFolder, "packages.js"));
             } catch (Exception e) {
                 packagesExt = "";
             }
@@ -540,7 +509,7 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
                 String endPackagesExt = "/* END PARTNER " + newName + " */\n";
                 packagesExt = ",\n" + startPackagesExt + packagesExt + "\n" + endPackagesExt;
 
-                String packages = IOUtils.read(packagesFile);
+                String packages = com.wavemaker.common.util.IOUtils.read(packagesFile);
 
                 /* Remove previous packages entries for this partner */
                 int packagesStartIndex = packages.indexOf(startPackagesExt);
@@ -555,7 +524,7 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
 
                 /* Append the string to packages.js and write it */
                 packages += packagesExt;
-                IOUtils.write(packagesFile, packages);
+                com.wavemaker.common.util.IOUtils.write(packagesFile, packages);
             }
 
             /*
@@ -564,9 +533,9 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
             java.io.File webinf = new java.io.File(webapproot, "WEB-INF");
             java.io.File designxml = new java.io.File(extFolder, newName + "-tools-beans.xml");
             java.io.File runtimexml = new java.io.File(extFolder, newName + "-runtime-beans.xml");
-            IOUtils.copy(designxml, webinf);
-            IOUtils.copy(runtimexml, webinf);
-            IOUtils.copy(runtimexml, templatesPwsWEBINFFolder);
+            com.wavemaker.common.util.IOUtils.copy(designxml, webinf);
+            com.wavemaker.common.util.IOUtils.copy(runtimexml, webinf);
+            com.wavemaker.common.util.IOUtils.copy(runtimexml, templatesPwsWEBINFFolder);
 
             /*
              * Modify Spring files to include beans in the partner package.
@@ -597,7 +566,7 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
         }
 
         try {
-            IOUtils.deleteRecursive(tmpDir);
+            com.wavemaker.common.util.IOUtils.deleteRecursive(tmpDir);
         } catch (Exception e) {
             return ret;
         }
@@ -647,7 +616,7 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
             java.io.File outputFile = new java.io.File(destDir, originalName);
 
             FileOutputStream fos = new FileOutputStream(outputFile);
-            IOUtils.copy(file.getInputStream(), fos);
+            com.wavemaker.common.util.IOUtils.copy(file.getInputStream(), fos);
             file.getInputStream().close();
             fos.close();
             ret.setPath(outputFile.getName());

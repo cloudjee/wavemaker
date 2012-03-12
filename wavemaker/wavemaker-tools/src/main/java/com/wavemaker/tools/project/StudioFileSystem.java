@@ -24,9 +24,26 @@ public interface StudioFileSystem {
 
     // FIXME PW filesystem : remove this interface and find another way to access common
 
+    /**
+     * Returns the WaveMaker common folder.
+     * 
+     * @return the common folder
+     */
     Folder getCommonFolder();
 
+    /**
+     * Returns the WaveMaker home folder
+     * 
+     * @return the home folder
+     */
     Folder getWaveMakerHomeFolder();
+
+    /**
+     * Returns the Studio WebApplication root folder. This allows accessed to resources packaged inside the studio WAR.
+     * 
+     * @return the studio web application root folder
+     */
+    Folder getStudioWebAppRootFolder();
 
     /**
      * Returns the WaveMaker home directory.
@@ -249,11 +266,10 @@ public interface StudioFileSystem {
 
     /**
      * Create project's lib folder under the servlet context
-     *
+     * 
      * @param project the current project
      * @return the resource for the project lib folder
      */
     Resource createProjectLib(Project project);
-
 
 }

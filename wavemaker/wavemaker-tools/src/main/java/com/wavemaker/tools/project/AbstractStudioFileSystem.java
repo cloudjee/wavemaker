@@ -1,6 +1,8 @@
 
 package com.wavemaker.tools.project;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -9,12 +11,16 @@ import javax.servlet.ServletContext;
 import org.springframework.core.io.Resource;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.context.support.ServletContextResource;
+import org.springframework.web.util.WebUtils;
 
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.FileAccessException;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.RuntimeAccess;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 
 /**
  * Abstract base implementation of {@link StudioFileSystem}.
@@ -41,6 +47,22 @@ public abstract class AbstractStudioFileSystem implements StudioFileSystem, Serv
     public static final String DEMOHOME_KEY = "demoHome";
 
     private ServletContext servletContext;
+
+    private Folder studioWebAppRootFolder;
+
+    @Override
+    public Folder getStudioWebAppRootFolder() {
+        if (this.studioWebAppRootFolder == null) {
+            try {
+                File servletPath = new File(WebUtils.getRealPath(this.servletContext, "/"));
+                LocalFileSystem fileSystem = new LocalFileSystem(servletPath);
+                this.studioWebAppRootFolder = FileSystemFolder.getRoot(fileSystem);
+            } catch (FileNotFoundException e) {
+                throw new IllegalStateException(e);
+            }
+        }
+        return this.studioWebAppRootFolder;
+    }
 
     @Override
     public void setServletContext(ServletContext servletContext) {
