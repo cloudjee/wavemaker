@@ -241,7 +241,7 @@ wm.LiveFormBase.extend({
 /*		    e = this.createEditor(f, props, {onEnterKeyPress: this.getId() + ".saveDataIfValid"}, wm.getEditorClassName(f.displayType));*/
 		    e = this.createEditor(f, props, {}, wm.getEditorClassName(f.displayType));
 		    if (e) {
-			if (e instanceof wm.Number)
+			if (e instanceof wm.Number || e instanceof wm.Date || e instanceof wm.DateTime)
 			    e.emptyValue = "zero";
 			else if (e instanceof wm.Text)
 			    e.emptyValue = "emptyString";

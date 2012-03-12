@@ -266,9 +266,11 @@ wm.FormPanel.extend({
 		var e = wm.createFieldEditor(this.getEditorParent(), inFieldInfo, inProps, inEvents, inClass);
 		if (e) {		    
 		    this.placeEditor(e);
-		    if (wm.isInstanceType(e, wm.Number) && inFieldInfo.exclude && inFieldInfo.exclude.indexOf("insert") != -1) {
+		    if (wm.isInstanceType(e, wm.Number) || wm.isInstanceType(e, wm.Date) ||  wm.isInstanceType(e, wm.DateTime)) {
 			e.emptyValue = "zero";
-		    } 
+		    } else {
+			e.emptyValue = "emptyString";
+		    }
 
 		    if (e.parent.horizontalAlign != "justified")
 			e.setWidth(this.editorWidth);
