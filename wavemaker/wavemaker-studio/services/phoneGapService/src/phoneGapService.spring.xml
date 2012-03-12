@@ -3,22 +3,22 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans">
 
-	<bean id="deploymentService" class="com.wavemaker.studio.DeploymentService"
+	<bean id="phoneGapService" class="com.wavemaker.studio.phonegap.PhoneGapService"
 		scope="singleton" lazy-init="true">
-		<property name="deploymentManager">
-			<ref bean="deploymentManager" />
+		<property name="projectManager">
+			<ref bean="projectManager" />
 		</property>
-		<property name="serviceDeploymentManager">
-			<ref bean="serviceDeploymentManager" />
+		<property name="fileSystem">
+			<ref bean="fileSystem" />
 		</property>
-		<property name="deploymentTargetManager">
-			<ref bean="deploymentTargetManager" />
+		<property name="studioService">
+			<ref bean="studioService" />
 		</property>
 	</bean>
 
 	<bean lazy-init="false" scope="singleton"
 		class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
-		<property name="serviceId" value="deploymentService" />
+		<property name="serviceId" value="phoneGapService" />
 		<property name="serviceType" ref="JavaService" />
 	</bean>
 </beans>

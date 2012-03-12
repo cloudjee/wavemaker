@@ -1,34 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<beans xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans">
-    <bean lazy-init="true" scope="singleton"
-            class="com.wavemaker.studio.data.DataService" id="dataService">
-        <property name="dataModelManager">
-            <ref bean="dataModelManager" />
-        </property>
-    </bean>
+<beans
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans">
 
-    <!-- events -->
-    <bean class="com.wavemaker.runtime.service.events.EventWire">
-        <property name="serviceWire" ref="dataServiceServiceWire" />
-        <property name="eventListener">
-            <bean class="com.wavemaker.tools.data.DesignDataServiceEventListener" />
-        </property>
-    </bean>
+	<bean lazy-init="true" scope="singleton"
+		class="com.wavemaker.studio.data.DataService" id="dataService">
+		<property name="dataModelManager">
+			<ref bean="dataModelManager" />
+		</property>
+	</bean>
 
-    <bean class="com.wavemaker.runtime.service.events.EventWire">
-        <property name="eventListener">
-            <bean class="com.wavemaker.studio.data.DataServiceProjectEventListener">
-                <property name="dataModelManager">
-                    <ref bean="dataModelManager" />
-                </property>
-            </bean>
-        </property>
-    </bean>
+	<!-- events -->
+	<bean class="com.wavemaker.runtime.service.events.EventWire">
+		<property name="serviceWire" ref="dataServiceServiceWire" />
+		<property name="eventListener">
+			<bean class="com.wavemaker.tools.data.DesignDataServiceEventListener" />
+		</property>
+	</bean>
 
-    <bean id="dataServiceServiceWire" lazy-init="false"
-            scope="singleton"
-            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
-        <property value="dataService" name="serviceId"/>
-        <property name="serviceType" ref="JavaService"/>
-    </bean>
+	<bean class="com.wavemaker.runtime.service.events.EventWire">
+		<property name="eventListener">
+			<bean class="com.wavemaker.studio.data.DataServiceProjectEventListener">
+				<property name="dataModelManager">
+					<ref bean="dataModelManager" />
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="dataServiceServiceWire" lazy-init="false" scope="singleton"
+		class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+		<property name="serviceId" value="dataService"/>
+		<property name="serviceType" ref="JavaService" />
+	</bean>
 </beans>

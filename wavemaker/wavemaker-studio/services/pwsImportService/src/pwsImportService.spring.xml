@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<beans xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-    <bean lazy-init="true" scope="singleton" class="com.wavemaker.studio.pws.PwsImportService" id="pwsImportService">
+<beans
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+	<bean lazy-init="true" scope="singleton"
+		class="com.wavemaker.studio.pws.PwsImportService" id="pwsImportService">
 		<property name="pwsLoginManagerBeanFactory">
-            <ref bean="pwsLoginManagerBeanFactory"/>
-        </property>
+			<ref bean="pwsLoginManagerBeanFactory" />
+		</property>
 		<property name="pwsRestImporterBeanFactory">
-            <ref bean="pwsRestImporterBeanFactory"/>
-        </property>
+			<ref bean="pwsRestImporterBeanFactory" />
+		</property>
 	</bean>
-    <bean lazy-init="false" scope="singleton" class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
-        <property value="pwsImportService" name="serviceId"/>
-        <property ref="JavaService" name="serviceType"/>
-    </bean>
+
+	<bean lazy-init="false" scope="singleton"
+		class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+		<property name="serviceId" value="pwsImportService" />
+		<property ref="JavaService" name="serviceType" />
+	</bean>
 </beans>

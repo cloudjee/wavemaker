@@ -52,12 +52,16 @@ dojo.declare("RestServiceBuilder", wm.Page, {
 		    app.alert(this.getDictionaryItem("ALERT_INPUT_NEEDED"));
 			return;
 		}
-		//var d = this.inParamsList._data;
-	    var d = this.inputFieldListVar.getData();
-	    for (var i = 0; i < d.length; i++) {
-		d[i].location = d[i].isHeader ? "header" : "url";
-		delete d[i].isHeader;
-	    }
+		if(this.inputFieldListVar.getCount() > 0 ) {
+			var d = this.inputFieldListVar.getData();
+			for (var i = 0; i < d.length; i++) {
+			d[i].location = d[i].isHeader ? "header" : "url";
+			delete d[i].isHeader;
+			}
+		}
+		else{
+			d =  [];
+		}
 		var url = this.urlInput.getValue("displayValue");
 		if (!url || url.length == 0) {
 		    app.alert(this.getDictionaryItem("ALERT_NO_URL"));

@@ -556,7 +556,7 @@ dojo.declare("wm.studio.Project", null, {
 	    d.addCallback(dojo.hitch(this, function() {
 		if (!studio.isCloud()) {
 		    studio.setSaveProgressBarMessage("Initializing PhoneGap (Please wait...)");
-		    var dlocal = studio.studioService.requestAsync("setupPhonegapFiles", [location.port || 80, studio.runPopup.iconClass == "studioProjectTest"]);
+		    var dlocal = studio.phoneGapService.requestAsync("setupPhonegapFiles", [location.port || 80, studio.runPopup.iconClass == "studioProjectTest"]);
 		    dlocal.addCallback(function() {d1.callback();});
 		} else {
 		    d1.callback();
@@ -708,7 +708,7 @@ dojo.declare("wm.studio.Project", null, {
 	    d10.addCallback(dojo.hitch(this, function() {
 		if (!studio.isCloud()) {
 		    studio.setSaveProgressBarMessage("Update PhoneGap Setup");
-		    var dlocal = studio.studioService.requestAsync("updatePhonegapFiles", [location.port || 80, studio.runPopup.iconClass == "studioProjectTest"]);
+		    var dlocal = studio.phoneGapService.requestAsync("updatePhonegapFiles", [location.port || 80, studio.runPopup.iconClass == "studioProjectTest"]);
 		    dlocal.addCallback(function() {d11.callback();});
 		} else {
 		    d11.callback();

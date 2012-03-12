@@ -14,6 +14,7 @@
 
 package com.wavemaker.tools.project;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -27,12 +28,12 @@ import java.util.zip.ZipInputStream;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
-import org.apache.commons.io.FileUtils;
 
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.MessageResource;
@@ -390,23 +391,22 @@ public class ProjectManager {
      * @throws IOException
      */
     public void closeProject() throws IOException {
-
         RuntimeAccess.getInstance().getSession().removeAttribute(OPEN_PROJECT_SESSION_NAME);
-
         if (this.currentProject == null) {
             return;
         }
-
         if (getProjectEventNotifier() != null) {
             getProjectEventNotifier().executeCloseProject(this.currentProject);
         }
-
-        Resource projLib = this.currentProject.getProjectLib();
-        if (projLib != null) {
-            FileUtils.forceDelete(projLib.getFile());
+        try {
+            Resource projLib = this.currentProject.getProjectLib();
+            if (projLib != null) {
+                FileUtils.forceDelete(projLib.getFile());
+            }
+        } catch (FileNotFoundException ex) {
+        } finally {
+            this.currentProject = null;
         }
-
-        this.currentProject = null;
     }
 
     /**
