@@ -96,7 +96,7 @@ dojo.declare("wm.List", wm.VirtualList, {
     },
 	setSelectionMode: function(inMode) {
 	  this.selectionMode = inMode;
-	    if (inMode == "checkbox")
+	    if (inMode == "checkbox" || inMode == "extended")
 		inMode = "multiple";
 	    else if (inMode == "radio")
 		inMode = "single";
