@@ -405,10 +405,17 @@ public class ImportDB extends BaseDataModelSetup {
     }
 
     private void compile() {
+<<<<<<< HEAD
         // if (!this.classesdir.exists()) {
         // this.classesdir.mkdirs();
         // }
         this.projectCompiler.compile(this.currentProjectName);
+=======
+        //if (!this.classesdir.exists()) {
+        //    this.classesdir.mkdirs();
+        //}
+        this.projectCompiler.compile();
+>>>>>>> origin/master
     }
 
     protected void writePropertiesFile(Configuration cfg) {

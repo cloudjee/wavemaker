@@ -57,7 +57,7 @@
 		"clientBorderColor": "#444444"
 	}, 
 	"wm.Layer": {
-		"margin": "2,0,2,0"
+
 	}, 
 	"wm.Dialog": {
 		"border": "3", 

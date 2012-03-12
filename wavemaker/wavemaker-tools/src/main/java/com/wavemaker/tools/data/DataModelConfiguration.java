@@ -960,7 +960,7 @@ public class DataModelConfiguration {
 
         if (updateService) {
             if (compile) {
-                this.projectCompiler.compile(this.projMgr.getCurrentProject().getProjectName());
+                this.projectCompiler.compile();
             }
             updateService(callback);
         }
@@ -992,7 +992,7 @@ public class DataModelConfiguration {
         this.springConfiguration.revert();
 
         if (compile) {
-            this.projectCompiler.compile(this.projMgr.getCurrentProject().getProjectName());
+            this.projectCompiler.compile();
         }
     }
 

@@ -1,7 +1,7 @@
 WaveMaker
 =========
 
-**Copyright 2009-2011 the original author or authors**
+**Copyright 2009-2012 the original author or authors**
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ INSTRUCTIONS
 Cloning
 --------
 Due to the use of submodules, cloning should be with --recursive, e.g.
-`git clone --recursive https://SpringSource/wavemaker.git`
+`git clone --recursive https://github.comSpringSource/wavemaker.git`
 Otherwise `wavemaker/dev/studio/src/main/webapp/app/lib/ace` will be missing.
 
 

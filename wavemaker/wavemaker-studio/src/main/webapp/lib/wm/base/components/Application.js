@@ -102,6 +102,10 @@ dojo.declare("wm.Application", wm.Component, {
 
 	        if (dojo.isIE && dojo.isIE < 8) this.dialogAnimationTime = 0;
 
+	        if (this._touchEnabled === undefined)
+		    this._touchEnabled = navigator.userAgent.match(/AppleWebKit/) &&
+		navigator.userAgent.match(/Mobile/);
+
 		this.components = {};
 	        this.createPageContainer();
 
@@ -115,9 +119,7 @@ dojo.declare("wm.Application", wm.Component, {
 	        //this.createPageLoader();
 
 
-	        if (this._touchEnabled === undefined)
-		    this._touchEnabled = navigator.userAgent.match(/AppleWebKit/) &&
-		navigator.userAgent.match(/Mobile/);
+
 	    //this.scrim = new wm.Scrim();
 		this.loadComponents(this.constructor.widgets || this.widgets);
 
@@ -478,7 +480,7 @@ dojo.declare("wm.Application", wm.Component, {
 	    if (!this._isDesignLoaded) {
 		this.appRoot = new wm.AppRoot({owner: this, name: "appRoot"});
 		if (wm.isMobile) {
-		    dojo.addClass(this.appRoot.domNode, "wmmobile")
+		    dojo.addClass(document.body, "wmmobile")
 		}
 		if (window["PhoneGap"]) {
 		    var titlebar = new wm.Panel({
@@ -582,10 +584,10 @@ dojo.declare("wm.Application", wm.Component, {
 	    else
 		return "app";
 	},
-	reflow: function() {
+	reflow: function(resize) {
 		var d = this.domNode;
 		d.scrollTop = 0;
-	    this.appRoot.reflow();
+	        this.appRoot.reflow();
 	},
 	reflowParent: function() {
 		this.reflow();
@@ -609,7 +611,7 @@ dojo.declare("wm.Application", wm.Component, {
 		setTimeout(dojo.hitch(this, "doRun"), dojo.isIE < 7 ? 100 : 1);
 	},
 	doRun: function() {
-		this.appRoot.domNode = this.domNode = dojo.byId(this.domNode) || document.body;
+	        this.domNode = this.appRoot.domNode;
 	        this.reflow()
 	    /* WM-2794: ENTER key in a text input causes focus to move to first button and fire it; make sure its a button that does nothing; only certain this is an issue in IE 8 */
 	    if (dojo.isIE <= 8) {
@@ -627,6 +629,7 @@ dojo.declare("wm.Application", wm.Component, {
 	    if (!main) {
 		main = this.main;
 	    }
+	        this.pageContainer._initialPageName = main;
 		this.loadPage(main);
 	        this.hideLoadingIndicator();
 	},
@@ -680,7 +683,7 @@ dojo.declare("wm.Application", wm.Component, {
 	},
 	pageChanged: function(inPage, inPreviousPage) {
 		// establish page reference
-		this._page = inPage;
+	        this.page = this._page = inPage;
 		var n = inPage.name, o = (inPreviousPage || 0).name;
 		// clean up previous reference
 		if (o) {
@@ -1161,20 +1164,28 @@ dojo.declare("wm.Application", wm.Component, {
 
     addHistory: function(state) {
 	if (this.history && !this._handlingBack) {
-	    this.history.push({id: state.id, options: state.options});
-	    var currentState = {};
-	    this._handlingBack = true;
-	    this._generateStateUrl(currentState);
-	    delete this._handlingBack;
-	    window.history.pushState(null, state.title, wm.isEmpty(currentState) ? "" : "#" + dojo.toJson(currentState));
-	    if (state.title) {
-		var title = dojo.query("title")[0];
-		var titleHtml = title.innerHTML.replace(/\#.*$/,"");
-		title.innerHTML = titleHtml +  "#" + state.title;
-	    }
-	    if (this.backButton) {
-		this.backButton.setDisabled(this.history.length == 0);
-	    }
+	    try {
+		this.history.push({id: state.id, options: state.options});
+		var currentState = {};
+		this._handlingBack = true;
+		this._generateStateUrl(currentState);
+		delete this._handlingBack;
+		if (window.history.pushState)
+		    window.history.pushState(null, state.title, wm.isEmpty(currentState) ? "" : "#" + dojo.toJson(currentState));
+
+		/* By adding this to the title, a user who views their history can see MyPage#SomeHint in their history instead of just 20 "MyPage" repeated without differentiation */
+		if (state.title) {
+		    var title = dojo.query("title")[0];
+		    if (title) {
+			var titleHtml = title.innerHTML.replace(/\#.*$/,"");
+			title.innerHTML = titleHtml +  "#" + state.title;
+		    }
+		}
+
+		if (this.backButton) {
+		    this.backButton.setDisabled(this.history.length == 0);
+		}
+	    } catch(e) {}
 	}
     },
     _generateStateUrl: function() {},

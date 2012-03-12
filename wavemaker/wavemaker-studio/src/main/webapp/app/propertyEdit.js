@@ -821,7 +821,7 @@ dojo.declare("wm.prop.WidgetSelect", wm.prop.SelectMenu, {
 
 	this.inherited(arguments);
 
-	var components = wm.listComponents([this.useOwner || this.inspected.owner], this.widgetType);
+	var components = wm.listComponents([studio.getValueById(this.useOwner) || this.inspected.owner], this.widgetType);
 	var result = [];
 	if (this.excludeType) {
 	    for (var i = 0; i < components.length; i++) {
@@ -919,7 +919,8 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
 				   layoutKind: "left-to-right",
 				   verticalAlign: "top",
 				   horizontalAlign: "left"});				     
-	var title = new wm.Label({owner: this,
+	this.title =new wm.Label({owner: this,
+				  name: "title",
 				  parent: topPanel,
 				  width: "100%",
 				  height: "20px",
@@ -952,6 +953,7 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
 	this.addEditors();
     },
     addEditors: function() {
+	dojo.toggleClass(this.title.domNode, "isPublishedProp", this.propDef.isPublished ? true : false);
 	this.editors = [];
 	this.addEditor(0,this.inspected.getProp(this.propName));
 	for (var i = 1; i < 20; i++) {
@@ -2177,19 +2179,19 @@ dojo.declare("wm.prop.NavigationGroupEditor", wm.prop.FieldGroupEditor, {
 	case "pageContainer":
 	    propDef.editor = "wm.prop.WidgetSelect";
 	    propDef.editorProps.widgetType = wm.PageContainer;
-	    propDef.editorProps.useOwner = this.inspected.owner;
+	    propDef.editorProps.useOwner = this.inspected.owner.getRuntimeId();
 	    propDef.editorProps.createExpressionWire = false;
 	    break;
 	case "layer":
 	    propDef.editor = "wm.prop.WidgetSelect";
 	    propDef.editorProps.widgetType = wm.Layer;	    
-	    propDef.editorProps.useOwner = this.inspected.owner;
+	    propDef.editorProps.useOwner = this.inspected.owner.getRuntimeId();
 	    propDef.editorProps.createExpressionWire = false;
 	    break;
 	case "layers":
 	    propDef.editor = "wm.prop.WidgetSelect";
 	    propDef.editorProps.widgetType = wm.Layers;	    
-	    propDef.editorProps.useOwner = this.inspected.owner;
+	    propDef.editorProps.useOwner = this.inspected.owner.getRuntimeId();
 	    propDef.editorProps.createExpressionWire = false;
 	    break;
 	case "cssClasses":

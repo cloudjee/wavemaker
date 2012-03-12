@@ -31,6 +31,7 @@ import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -268,7 +269,21 @@ public class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFile
                         return StringUtils.getFilenameExtension(name).equals("jar");
                     }
                 });
-                return Arrays.asList(jars);
+
+                // If project lib rsource is null, it means that the project is not open yet. Create project lib in that
+                // case.
+                Resource projectLib = this.project.getProjectLib() == null ? this.fileSystem.createProjectLib(this.project)
+                    : this.project.getProjectLib();
+                File[] extraJars = projectLib.getFile().listFiles(new FilenameFilter() {
+
+                    @Override
+                    public boolean accept(File dir, String name) {
+                        return StringUtils.getFilenameExtension(name).equals("jar");
+                    }
+                });
+
+                File[] allJars = (File[]) ArrayUtils.addAll(jars, extraJars);
+                return Arrays.asList(allJars);
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new WMRuntimeException(e);

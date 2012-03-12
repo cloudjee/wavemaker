@@ -693,7 +693,7 @@ dojo.declare("wm.Variable", wm.Component, {
 	},
 	getItemIndexByPrimaryKey: function(inVariable, pkList){
 		if (!this.isList || !pkList || pkList.length < 1)
-			return;
+		    return -1;
 		var obj = inVariable;
 		if (obj instanceof wm.Variable){
 			obj = inVariable.getData();			
@@ -714,7 +714,7 @@ dojo.declare("wm.Variable", wm.Component, {
 			if (isEqual)
 				return i;
 		}
-		
+	        return -1;
 	},
 	//===========================================================================
 	// Update Messaging

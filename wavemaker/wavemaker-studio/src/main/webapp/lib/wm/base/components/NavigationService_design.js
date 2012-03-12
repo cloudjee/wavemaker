@@ -2,12 +2,13 @@ dojo.provide("wm.base.components.NavigationService_design");
 dojo.require("wm.base.components.NavigationService");
 
 wm.Object.extendSchema(wm.NavigationCall,{
-	owner: { group: "common", order: 1, readonly: true, options: ["Page", "Application"]},
+    owner: {ignoreHint: "Owner only available for some types of operations"},
 	autoUpdate: {ignore: 1},
         startUpdateComplete: { ignore: 1},
 	startUpdate: {ignore: 1},
 	service: {ignore: 1, writeonly: 1},
-	operation: { group: "data", order: 1},
+    name: {requiredGroup: 0}, // hide the required group; too few properties to justify it
+    operation: { group: "data", order: 1},
 	updateNow: { ignore: 1},
     queue: { group: "operation", operation:1, order: 20},
     clearInput: { group: "operation", operation:1, order: 30},

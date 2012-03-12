@@ -896,6 +896,7 @@ li {
     font-weight: normal;
 }
 
+body.wmmobile button.wmtablayers-tab,
 body .wmmobile button.wmtablayers-tab {
     height: 32px;
 }
@@ -945,6 +946,9 @@ body .wmmobile button.wmtablayers-tab {
     font-size: 12px;
 }
 
+.tundra.wmmobile .dijitCheckBox .wmcheckbox_x, 
+.tundra.wmmobile .dijitCheckBoxIcon .wmcheckbox_x,
+.tundra.wmmobile .dijitRadio .wmcheckbox_x,
 .tundra .wmmobile .dijitCheckBox .wmcheckbox_x, 
 .tundra .wmmobile .dijitCheckBoxIcon .wmcheckbox_x,
 .tundra .wmmobile .dijitRadio .wmcheckbox_x {
@@ -954,13 +958,17 @@ body .wmmobile button.wmtablayers-tab {
     top: 2px;
 }
 
+.tundra.wmmobile .wmCheckboxSetItem .dijitCheckBox .wmcheckbox_x,
 .tundra .wmmobile .wmCheckboxSetItem .dijitCheckBox .wmcheckbox_x {
    top: -4px;
 }
 
+.tundra.wmmobile .dijitCheckBox, 
+.tundra.wmmobile .dijitCheckBoxIcon,
+.tundra.wmmobile .dijitRadio,
 .tundra .wmmobile .dijitCheckBox, 
 .tundra .wmmobile .dijitCheckBoxIcon,
-.tundra .wmmobile .dijitRadio  {
+.tundra .wmmobile .dijitRadio {
     background-image: none;
     border: solid 1px #333;
     color: transparent;
@@ -968,18 +976,25 @@ body .wmmobile button.wmtablayers-tab {
     width: 32px;
     position: relative;
 }
+.tundra.wmmobile .dijitRadio,
 .tundra .wmmobile .dijitRadio  {
     -moz-border-radius: 16px;
     -webkit-border-radius: 16px;
     border-radius: 16px;
 }
+.tundra.wmmobile .dijitCheckBoxChecked, 
+.tundra.wmmobile .dijitToggleButtonChecked .dijitCheckBoxIcon,
 .tundra .wmmobile .dijitCheckBoxChecked, 
 .tundra .wmmobile .dijitToggleButtonChecked .dijitCheckBoxIcon {
     color: black;
 }
+.tundra.wmmobile .dijitRadioChecked,
 .tundra .wmmobile .dijitRadioChecked {
     background-color: black;    
 }
+.tundra.wmmobile .Disabled .dijitCheckBox, 
+.tundra.wmmobile .Disabled .dijitCheckBoxIcon, 
+.tundra.wmmobile .Disabled .dijitRadio,
 .tundra .wmmobile .Disabled .dijitCheckBox, 
 .tundra .wmmobile .Disabled .dijitCheckBoxIcon, 
 .tundra .wmmobile .Disabled .dijitRadio {
@@ -1036,3 +1051,12 @@ min-height: 32px;
     border-color: #fff;
 }
 
+.wmmobile li {
+    margin-bottom: 5px;
+}
+.wmmobile .wmtree-content {
+    font-size: 18px;
+}
+.wmmobile .wmtree-leaf { 
+    background: url(images/touch_tree_leaf.gif) no-repeat;
+}

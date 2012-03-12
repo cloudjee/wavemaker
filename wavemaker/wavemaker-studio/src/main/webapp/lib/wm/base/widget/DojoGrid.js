@@ -186,7 +186,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
                         }
 		    var idx =  _this.dojoObj.getItemIndex(items[0]);
 		    if (idx == -1)
-			idx = _this.variable.getItemIndexByPrimaryKey(obj, pkList) || -1;
+			idx = _this.variable.getItemIndexByPrimaryKey(obj, pkList);
 		    if (idx == -1 && this.selectFirstRow)
 			idx = 0;
 
@@ -248,7 +248,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		}
 		if (!this.rendering && !this._cupdating) {
 		    this.onSelectionChange();
-		    if (newSelection) {
+		    /* TODO: This will fire onSelect when in multiselect mode and something is deselected */
+		    if (newSelection && newSelection.length) {
 			this.onSelect();
 		    } else {
 			this.onDeselect();
@@ -1137,9 +1138,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 
 				    break;
 					default:
-
-					     obj.formatter = dojo.hitch(this, 'customFormatter', col.formatFunc, col.backgroundColor, col.textColor, col.cssClass);
-
+				             try {
+						 obj.formatter = dojo.hitch(this, 'customFormatter', col.formatFunc, col.backgroundColor, col.textColor, col.cssClass);
+					     } catch(e) {}
 				    
 						break;
 				}
@@ -1367,12 +1368,19 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
 	setSelectionMode: function(inMode) {
 	  this.selectionMode = inMode;
-	    if (inMode == "checkbox")
-		inMode = "multiple";
-	    else if (inMode == "radio")
-		inMode = "single";
-	    this._selectionMode = inMode;
-	  if (this.dojoObj) this.dojoObj.selection.setMode(inMode);
+	    if (inMode == "checkbox") {
+		this._selectionMode = "multiple";
+		if (this.dojoObj) this.dojoObj.selection.setMode("multiple");
+	    } else if (inMode == "radio") {
+		this._selectionMode = "single";
+		if (this.dojoObj) this.dojoObj.selection.setMode("single");
+	    } else if (inMode == "extended") {
+		this._selectionMode = "multiple";
+		if (this.dojoObj) this.dojoObj.selection.setMode(inMode);
+	    } else {
+		this._selectionMode = inMode;
+		if (this.dojoObj) this.dojoObj.selection.setMode(inMode);
+	    }
 	},
 	getViewFields: function(){
 		var fields = [];
@@ -1693,11 +1701,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	}
 	    if (!inValue) {
 		return inValue;
-	    } else if (typeof inValue == "number") {
-		inValue = new Date(inValue);
+	    } else if (typeof inValue == "number" || inValue instanceof Date) {
+		inValue = new Date(inValue); // clone the object if its a date; create the object if its a number
 	    } else if (inValue instanceof Date == false) {
 		return inValue;
-	    }
+	    } 
 	    if (!formatterProps.useLocalTime) {
 		inValue.setHours(inValue.getHours() + wm.timezoneOffset);
 	    }
@@ -1711,8 +1719,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	}
 	    if (!inValue) {
 		return inValue;
-	    } else if (typeof inValue == "number") {
-		inValue = new Date(inValue);
+	    } else if (typeof inValue == "number" || inValue instanceof Date) {
+		inValue = new Date(inValue); // clone the object if its a date; create the object if its a number
 	    } else if (inValue instanceof Date == false) {
 		return inValue;
 	    } else if (typeof inDatum == "number") {
@@ -1730,8 +1738,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	}
 	    if (!inValue) {
 		return inValue;
-	    } else if (typeof inValue == "number") {
-		inValue = new Date(inValue);
+	    } else if (typeof inValue == "number" || inValue instanceof Date) {
+		inValue = new Date(inValue); // clone the object if its a date; create the object if its a number
 	    } else if (inValue instanceof Date == false) {
 		return inValue;
 	    }
@@ -1812,6 +1820,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    return inValue;
 	},
     customFormatter: function(formatFunc, backgroundColorFunc, textColorFunc,cssClassFunc, inValue, rowIdx, cellObj){
+	try {
 	var rowObj = this.getRow(rowIdx);
 	this.handleColorFuncs(cellObj,backgroundColorFunc, textColorFunc,cssClassFunc, rowIdx);
 
@@ -1820,6 +1829,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	}else {
 	    return inValue;
 	}
+	} catch(e) {} return "";
     },
     handleColorFuncs: function(cellObj, backgroundColorFunc, textColorFunc,cssClassFunc, rowIdx) {
 	var rowObj = this.getRow(rowIdx);

@@ -454,7 +454,7 @@ dojo.declare("wm.Text", wm.ResizableEditor, {
 		    s.top = "1px";
 		    s.right = "1px";
 		    s.width = "16px";
-		    s.textShadow = "2px 1px #aaa";
+		    s.textShadow = "1px 1px #aaa";
 		} else {
 		    this._resetButtonNode = document.createElement("img");
 		    this._resetButtonNode.src = this._resetButtonUrl || dojo.moduleUrl("lib.images.boolean.Signage") + "Close_gray.png";

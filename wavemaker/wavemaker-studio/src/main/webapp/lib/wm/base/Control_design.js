@@ -129,11 +129,15 @@ wm.Control.extend({
 	this.desktopHeight = this.constructor.prototype.height;
     },
     set_height: function(inHeight) {
-	var isMobile = studio.currentDeviceType != "desktop";
-	if (isMobile && this.enableTouchHeight) {
-	    this.mobileHeight = inHeight;
+	if (inHeight.match(/px/)) {
+	    this.desktopHeight = this.mobileHeight = inHeight;
 	} else {
-	    this.desktopHeight = inHeight;
+	    var isMobile = studio.currentDeviceType != "desktop";
+	    if (isMobile && this.enableTouchHeight) {
+		this.mobileHeight = inHeight;
+	    } else {
+		this.desktopHeight = inHeight;
+	    }
 	}
 	this.setSizeProp("height", inHeight, this.minHeight);
     },
@@ -462,7 +466,7 @@ wm.Object.extendSchema(wm.Control, {
     imageList: {ignore: 1, group: "widgetName", subgroup: "graphics", order: 50, editor: "wm.prop.ImageListSelect"},
     imageIndex: {ignore: 1, group: "widgetName", subgroup: "graphics", order: 51, type: "Number",  doc: 1},
     editImageIndex: {ignore: 1, group: "widgetName", subgroup: "graphics", order: 52, type: "String", doc: 1, operation: 1},
-    wrapInPanel: {operation: 1, group: "operation", shortname: "Wrap in Panel"},
+    wrapInPanel: {operation: 1, group: "operation", shortname: "Wrap in Panel", doNotPublish:1},
         noInspector: {ignore: 1}, // obsolete property, but still don't want it showing in property panels
         numTabbableWidgets: {ignore: 1},
         internalTabIndex: {writeonly: 1, ignore: 1},

@@ -70,7 +70,7 @@ dojo.declare("wm.debug.ServicePanel", wm.Container, {
 		{"show":true,"field":"data","title":"Data","width":"80px","align":"left","formatFunc":"showDataCell", expression: ""}
 	    ],
 					  "margin":"4",
-					  "name":"serviceGrid"}, {onSelectionChange: "showDataTabs"}, {
+					  "name":"serviceGrid"}, {onSelect: "showDataTabs"}, {
 					      binding: ["wm.Binding", {"name":"binding"}, {}, {
 						  wire: ["wm.Wire", {"expression":undefined,"name":"wire","source":"serviceListVar","targetProperty":"dataSet"}, {}]
 					      }]
@@ -80,7 +80,8 @@ dojo.declare("wm.debug.ServicePanel", wm.Container, {
 	},this);	
     },
     XClick: function() {
-	    this.serviceGrid.deselectAll();
+	this.serviceGrid.deselectAll();
+	this.showDataTabs(this.serviceGrid);
     },
     showDataCell: function(inValue, rowId, cellId, cellField, cellObj, rowObj) {
 	var data = rowObj.data;

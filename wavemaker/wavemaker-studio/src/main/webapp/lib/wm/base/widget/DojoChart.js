@@ -58,7 +58,6 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	init: function() {
 		if (this.showAddSilverlight())
 			return;
-	
 		dojo['require']("dojox.charting.Chart2D");
 		dojo['require']("dojox.charting.widget.Legend");
 	        dojo['require']("dojox.charting.widget.SelectableLegend");
@@ -78,26 +77,32 @@ dojo.declare("wm.DojoChart", wm.Control, {
 			return;
 		}
 
-		if (this.dojoObj != null)
-		{
-			this.dojoObj.destroy();
-			while(this.domNode.childNodes.length > 0)
-			{
-				this.domNode.removeChild(this.domNode.childNodes[0]);
-			}
-		}
-		
 	    if (this.isAncestorHidden()) {
 		this._renderDojoObjSkipped = true;
 		return;
 	    }
 	    this._renderDojoObjSkipped = false;
 
+		if (this.dojoObj != null)
+		{
+		    try {
+			this.dojoObj.destroy();
+			while(this.domNode.childNodes.length > 0)
+			{
+			    this.domNode.removeChild(this.domNode.childNodes[0]);
+			}
+		    } catch(e) {}
+		}
+
+
 		this.dojoDiv = dojo.doc.createElement('div');
 		this.updateChartDivHeight();
 		this.updateChartDivWidth();
 		this.domNode.appendChild(this.dojoDiv);
-	    this.dojoObj = new dojox.charting.Chart2D(this.dojoDiv, {title: this.chartTitle, titlePos: "top", titleGap: 5, margins: {l:0,t:5,r:5,b:15}});
+
+	    try {
+		this.dojoObj = new dojox.charting.Chart2D(this.dojoDiv, {title: this.chartTitle, titlePos: "top", titleGap: 5, margins: {l:0,t:5,r:5,b:15}});
+	    } catch(e) {if (!wm.charterror) console.error(e.toString());wm.charterror = true;return;}
 		this.setChartTheme();
 		this.updateChartType();
 		this.addXAxis();
@@ -105,7 +110,6 @@ dojo.declare("wm.DojoChart", wm.Control, {
 		if(this.includeGrid){
 			this.dojoObj.addPlot("grid", {type: "Grid", hMinorLines: true, vMinorLines: true});
 		}
-
 		this.addAnimation();
 		this.addChartSeries();
 		var self = this;

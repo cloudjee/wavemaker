@@ -31,10 +31,16 @@ dojo.declare("wm.AppRoot", wm.Container, {
 	},
 	init: function() {
 	    this.inherited(arguments);
-	    var orientationEvent = ("onorientationchange" in window) ? "orientationchange" : "resize";
-	    window.addEventListener(orientationEvent, dojo.hitch(this,"resize"));
+	    /* orientationChange events fire BEFORE sizes have been updated on some devices making this hard to use; resize event fires AFTER so only use resize 
+	    if ("onorientationchange" in window) {
+		window.addEventListener("orientationchange", dojo.hitch(this, "_onOrientationChange"));
+	    } else {
+	    */
+		window.addEventListener("resize", dojo.hitch(this,"resize"));
+	//}
 	},
     getRuntimeId: function() {return "approot";},
+
 	resize: function() {
 	    if (!wm.deviceSize) {
 		var deviceSize = this.deviceSize;
@@ -46,26 +52,19 @@ dojo.declare("wm.AppRoot", wm.Container, {
 		}
 	    }
 	    this.reflow();
-
+	    if (wm.device != "desktop" && app.wmMinifiedDialogPanel) {
+		app.wmMinifiedDialogPanel.hide();
+		wm.onidle(app.wmMinifiedDialogPanel, "show");
+	    }
 	},
 	updateBounds: function() {
 	    this._percEx = {w:100, h: 100};
 
-	    /* Even though desktop may have window.screen, some desktop apps may not occupy the entire page */
-/*
-	    if (wm.isMobile && window["screen"]) {
-		this.setBounds(0,0,screen.width,screen.height);
-	    } else {
-	    */
-	    var pn;
+	    var pn = this.domNode.parentNode;
 	    if (wm.isMobile) {
-		pn = this.domNode.parentNode;
 		pn.style.height = "100%";
-	    } else {
-		pn = this.domNode.parentNode;
 	    }
 	    this.setBounds(0, 0, pn.offsetWidth, pn.offsetHeight);
-
 	},
 	reflow: function() {
 		if (this._cupdating)

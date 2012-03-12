@@ -29,6 +29,8 @@ dojo.require("wm.base.debug.RequestPanel");
 dojo.require("wm.base.debug.EventDetailsPanel");
 
 dojo.declare("wm.debug.Dialog", wm.Dialog, {
+    manageHistory: false,
+    manageURL: false,
     border: "4", // easy to resize!
     _noAnimation:true,
     showTitleButtonsWhenDocked: true,
@@ -65,7 +67,7 @@ dojo.declare("wm.debug.Dialog", wm.Dialog, {
 	this.inherited(arguments);
 	this.commands = [];
 	this.containerWidget.createComponents({
-	    tabLayers: ["wm.TabLayers", {width: "100%", height: "100%", headerHeight: "20px", clientBorder: "1,0,0,0", margin: "0"}, {}, {
+	    tabLayers: ["wm.TabLayers", {width: "100%", height: "100%", headerHeight: "20px", clientBorder: "0", margin: "0"}, {}, {
 		servicesLayer: ["wm.Layer", {caption: "Services",padding:"0",margin:"0"}, {onShow: "serviceGridPanel.activate", onDeactivate: "serviceGridPanel.deactivate"}, {
 		    serviceGridPanel: ["wm.debug.ServicePanel", {width: "100%", height: "100%", autoScroll: true}]
 		}],
@@ -264,7 +266,7 @@ dojo.declare("wm.debug.Inspector", wm.Container, {
     borderColor: "#888",
     postInit: function() {
 	this.createComponents({
-	    tabs: ["wm.TabLayers", {width: "100%", height: "100%", headerHeight: "20px", clientBorder: "1,0,0,0", margin: "0"}, {}, {
+	    tabs: ["wm.TabLayers", {width: "100%", height: "100%", headerHeight: "20px", clientBorder: "1,0,0,0", margin: "0", padding: "0"}, {}, {
 		eventsPanel: ["wm.debug.EventDetailsPanel",{}],
 		propertiesPanel: ["wm.debug.PropertyPanel", {},{},{}],
 		bindPanel: ["wm.debug.BindPanel", {}],		
@@ -274,7 +276,6 @@ dojo.declare("wm.debug.Inspector", wm.Container, {
 	    }]
 	}, this);
 	this.inherited(arguments);
-
 	var x = document.createElement("span");
 	dojo.addClass(x, "TabCloseIcon DebuggerCloseButton");
 	x.innerHTML = "x";

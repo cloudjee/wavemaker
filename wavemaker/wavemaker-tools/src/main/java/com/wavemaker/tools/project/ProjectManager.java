@@ -32,6 +32,7 @@ import org.json.JSONObject;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
+import org.apache.commons.io.FileUtils;
 
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.MessageResource;
@@ -192,6 +193,9 @@ public class ProjectManager {
         if (wmApp != null) {
             wmApp.setTenantInfoForProj(projectName, tenantFieldName, defTenantID, tenantColumnName);
         }
+
+        Resource projLib = this.fileSystem.createProjectLib(this.currentProject);
+        this.currentProject.setProjectLib(projLib);
 
         // Store types.js contents in memory
         Resource typesFile = project.getWebAppRoot().createRelative("/types.js");
@@ -395,6 +399,11 @@ public class ProjectManager {
 
         if (getProjectEventNotifier() != null) {
             getProjectEventNotifier().executeCloseProject(this.currentProject);
+        }
+
+        Resource projLib = this.currentProject.getProjectLib();
+        if (projLib != null) {
+            FileUtils.forceDelete(projLib.getFile());
         }
 
         this.currentProject = null;

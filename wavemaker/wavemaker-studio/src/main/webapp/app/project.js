@@ -554,10 +554,13 @@ dojo.declare("wm.studio.Project", null, {
 
 	    var d1 = new dojo.Deferred();
 	    d.addCallback(dojo.hitch(this, function() {
-
-		studio.setSaveProgressBarMessage("Initializing PhoneGap (Please wait...)");
-		var dlocal = studio.studioService.requestAsync("setupPhonegapFiles", [location.port || 80, studio.runPopup.iconClass == "studioProjectTest"]);
-		dlocal.addCallback(function() {d1.callback();});
+		if (!studio.isCloud()) {
+		    studio.setSaveProgressBarMessage("Initializing PhoneGap (Please wait...)");
+		    var dlocal = studio.studioService.requestAsync("setupPhonegapFiles", [location.port || 80, studio.runPopup.iconClass == "studioProjectTest"]);
+		    dlocal.addCallback(function() {d1.callback();});
+		} else {
+		    d1.callback();
+		}
 	    }));
 
 	    var d2 = new dojo.Deferred();
@@ -703,9 +706,13 @@ dojo.declare("wm.studio.Project", null, {
 
 	    var d11 = new dojo.Deferred();
 	    d10.addCallback(dojo.hitch(this, function() {
-		studio.setSaveProgressBarMessage("Update PhoneGap Setup");
-		var dlocal = studio.studioService.requestAsync("updatePhonegapFiles", [location.port || 80, studio.runPopup.iconClass == "studioProjectTest"]);
-		dlocal.addCallback(function() {d11.callback();});
+		if (!studio.isCloud()) {
+		    studio.setSaveProgressBarMessage("Update PhoneGap Setup");
+		    var dlocal = studio.studioService.requestAsync("updatePhonegapFiles", [location.port || 80, studio.runPopup.iconClass == "studioProjectTest"]);
+		    dlocal.addCallback(function() {d11.callback();});
+		} else {
+		    d11.callback();
+		}
 	    }));
 
 	    var d12 = new dojo.Deferred();
