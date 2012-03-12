@@ -191,7 +191,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
     public String compile() {
         try {
             antExecute(getProjectDir().getFile().getCanonicalPath(), getDeployName(), COPY_JARS_OPERATION);
-            return this.projectCompiler.compile(this.projectManager.getCurrentProject().getProjectName());
+            return this.projectCompiler.compile();
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
