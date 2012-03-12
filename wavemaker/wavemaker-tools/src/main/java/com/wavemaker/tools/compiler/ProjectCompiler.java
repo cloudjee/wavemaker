@@ -55,8 +55,17 @@ public class ProjectCompiler {
     private DesignServiceManager designServiceManager;
 
     public String compile(String projectName) {
-        StringWriter out = new StringWriter();
         Project project = this.projectManager.getProject(projectName, true);
+        return compile(project);
+    }
+
+    public String compile() {
+        Project project = this.projectManager.getCurrentProject();
+        return compile(project);
+    }
+
+    public String compile(Project project) {
+        StringWriter out = new StringWriter();
         JavaCompiler compiler = newJavaCompiler();
         JavaFileManager fileManager;
         Iterable<JavaFileObject> sourceFiles = null;
@@ -72,7 +81,7 @@ public class ProjectCompiler {
             }
 
         } catch (IOException e) {
-            throw new WMRuntimeException("Could not create Java file manager for project " + projectName, e);
+            throw new WMRuntimeException("Could not create Java file manager for project " + project.getProjectName(), e);
         }
 
         List<String> options = new ArrayList<String>();
@@ -80,7 +89,7 @@ public class ProjectCompiler {
         options.add("-encoding");
         options.add("utf8");
 
-        options.add("-A" + ServiceProcessorConstants.PROJECT_NAME_PROP + "=" + projectName);
+        options.add("-A" + ServiceProcessorConstants.PROJECT_NAME_PROP + "=" + project.getProjectName());
         options.add("-g");
 
         if (sourceFiles.iterator().hasNext()) {
@@ -90,7 +99,7 @@ public class ProjectCompiler {
                 throw new WMRuntimeException("Compile failed with output:\n\n" + out.toString());
             }
         }
-        executeConfigurationProcessor(compiler, fileManager, projectName, out);
+        executeConfigurationProcessor(compiler, fileManager, project.getProjectName(), out);
         return out.toString();
     }
 

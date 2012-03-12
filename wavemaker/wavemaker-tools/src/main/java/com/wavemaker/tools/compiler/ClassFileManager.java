@@ -264,7 +264,10 @@ public class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFile
                         return StringUtils.getFilenameExtension(name).equals("jar");
                     }
                 });
-                File[] extraJars = this.project.getProjectRoot().createRelative("lib/").getFile().listFiles(new FilenameFilter() {
+                //If project lib rsource is null, it means that the project is not open yet.  Create project lib in that case.
+                Resource projectLib = this.project.getProjectLib() == null ?
+                        this.fileSystem.createProjectLib(this.project) : this.project.getProjectLib();
+                File[] extraJars = projectLib.getFile().listFiles(new FilenameFilter() {
 
                     @Override
                     public boolean accept(File dir, String name) {

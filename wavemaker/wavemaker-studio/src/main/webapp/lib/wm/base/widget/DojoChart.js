@@ -77,20 +77,23 @@ dojo.declare("wm.DojoChart", wm.Control, {
 			return;
 		}
 
-		if (this.dojoObj != null)
-		{
-			this.dojoObj.destroy();
-			while(this.domNode.childNodes.length > 0)
-			{
-				this.domNode.removeChild(this.domNode.childNodes[0]);
-			}
-		}
-		
 	    if (this.isAncestorHidden()) {
 		this._renderDojoObjSkipped = true;
 		return;
 	    }
 	    this._renderDojoObjSkipped = false;
+
+		if (this.dojoObj != null)
+		{
+		    try {
+			this.dojoObj.destroy();
+			while(this.domNode.childNodes.length > 0)
+			{
+			    this.domNode.removeChild(this.domNode.childNodes[0]);
+			}
+		    } catch(e) {}
+		}
+
 
 		this.dojoDiv = dojo.doc.createElement('div');
 		this.updateChartDivHeight();

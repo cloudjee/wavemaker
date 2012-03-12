@@ -362,16 +362,19 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	clickSelect: function(inItem, inEvent) {
 	    if (this._selectionMode == "none") return;
 	    var selectedIndexWas = this.getSelectedIndex();
-		if (this._selectionMode == "multiple" && (inEvent.ctrlKey || inEvent.shiftKey)) {
-			if (inEvent.ctrlKey)
-				this.ctrlSelect(inItem);
-			else if (inEvent.shiftKey)
-				this.shiftSelect(inItem);
-		} else if (this._selectionMode == "multiple") {
+	    if (this._selectionMode == "multiple" && (inEvent.ctrlKey || inEvent.shiftKey)) {
+		if (inEvent.ctrlKey) {
+		    this.ctrlSelect(inItem);
+		} else if (inEvent.shiftKey) {
+		    this.shiftSelect(inItem);
+		}
+	    } else if (this._selectionMode == "multiple") {
 		    if (dojo.indexOf(this.selected, inItem.index) == -1) {
-			this.addToSelection(inItem);
+			//this.addToSelection(inItem);
+			this.eventSelect(inItem);
 		    } else {
-			this.removeFromSelection(inItem);
+			//this.removeFromSelection(inItem);
+			this.eventDeselect(inItem, false);
 		    }
 		} else {
 			var s = this.selected, oldIndex = s && s.index, newIndex = inItem.index;
@@ -422,6 +425,9 @@ dojo.declare("wm.VirtualList", wm.Control, {
 			this.select(i);
 	},
 	getSelectedIndex: function() {
+	    if (this._selectionMode == "multiple")
+		return this.selected;
+	    else
 		return this.selected ? this.selected.index : -1;
 	},
     handleBack: function(inOptions) {

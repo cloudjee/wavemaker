@@ -411,7 +411,7 @@ public class ImportDB extends BaseDataModelSetup {
         //if (!this.classesdir.exists()) {
         //    this.classesdir.mkdirs();
         //}
-        this.projectCompiler.compile(this.currentProjectName);
+        this.projectCompiler.compile();
     }
 
     protected void writePropertiesFile(Configuration cfg) {

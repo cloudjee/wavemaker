@@ -38,6 +38,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
 		this.pageLoadedDeferred = new dojo.Deferred();
 
 	    this.updatePageName();
+	    this._initialPageName = this._pageName;
 	    if (app && app.locationState && app.locationState[this.getRuntimeId()]) {
 		this.pageName = this._pageName = app.locationState[this.getRuntimeId()];
 		this._locationState = app.locationState;
@@ -271,7 +272,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
     },
     */
     generateStateUrl: function(stateObj) {
-	if (this.page) {
+	if (this.page && this._pageName !== this._initialPageName) {
 	    stateObj[this.getRuntimeId()] = this._pageName;
 	    if (this.page.generateStateUrl) {
 		this.page.generateStateUrl(stateObj);
