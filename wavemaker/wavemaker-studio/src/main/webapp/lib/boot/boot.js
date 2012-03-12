@@ -34,7 +34,7 @@ if (location.search.match(/(\?|\&)wmmobile=(.)/)) {
     wm.device = location.search.match(/(\?|\&)wmmobile=(.*)\b/)[2] || "desktop";
     wm.isMobile = wm.device != "desktop";
 } else {
-    wm.isMobile = navigator.userAgent.match(/mobile|android/i);
+    wm.isMobile = navigator.userAgent.match(/mobile|android/i) || "onorientationchange" in window;
     if (!wm.isMobile) {
 	wm.device = "desktop";
     } else {
