@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<beans xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans">
-    <bean id="cloudFoundryService"
-            class="com.wavemaker.studio.CloudFoundryService"
-            scope="singleton"
-            lazy-init="true">
-    </bean>
+<beans
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans">
 
-    <bean lazy-init="false"
-            scope="singleton"
-            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
-        <property value="cloudFoundryService" name="serviceId"/>
-        <property name="serviceType" ref="JavaService"/>
-    </bean>
+	<bean id="cloudFoundryService" class="com.wavemaker.studio.CloudFoundryService"
+		scope="singleton" lazy-init="true">
+	</bean>
+
+	<bean lazy-init="false" scope="singleton"
+		class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+		<property name="serviceId" value="cloudFoundryService"/>
+		<property name="serviceType" ref="JavaService" />
+	</bean>
 </beans>

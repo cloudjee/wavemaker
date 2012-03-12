@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<beans xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans">
-    <bean lazy-init="true" 
-	  scope="singleton" 
-	  class="com.wavemaker.studio.ResourceFileService" 
-	  id="resourceFileService">
-        <property name="projectManager">
-            <ref bean="projectManager" />
-        </property>
-        <property name="fileSystem">
-            <ref bean="fileSystem" />
-        </property>
-     </bean>
+<beans
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.springframework.org/schema/beans">
 
-    <bean lazy-init="false"
-            scope="singleton"
-            class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
-        <property value="resourceFileService" name="serviceId"/>
-        <property name="serviceType" ref="JavaService"/>
-    </bean>
-				   
+	<bean lazy-init="true" scope="singleton"
+		class="com.wavemaker.studio.ResourceFileService" id="resourceFileService">
+		<property name="projectManager">
+			<ref bean="projectManager" />
+		</property>
+		<property name="fileSystem">
+			<ref bean="fileSystem" />
+		</property>
+	</bean>
+
+	<bean lazy-init="false" scope="singleton"
+		class="com.wavemaker.runtime.service.reflect.ReflectServiceWire">
+		<property name="serviceId" value="resourceFileService" />
+		<property name="serviceType" ref="JavaService" />
+	</bean>
+
 </beans>

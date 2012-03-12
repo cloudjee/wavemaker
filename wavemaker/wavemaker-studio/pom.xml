@@ -32,6 +32,7 @@
 								<source>services/deploymentService/src</source>
 								<source>services/javaService/src</source>
 								<source>services/pagesService/src</source>
+								<source>services/phoneGapService/src</source>
 								<source>services/pwsImportService/src</source>
 								<source>services/resourceFileService/src</source>
 								<source>services/runtimeService/src</source>
@@ -96,6 +97,11 @@
 									</excludes>
 								</resource>
 								<resource>
+									<directory>services/phoneGapService/src</directory>
+									<excludes>
+										<exclude>**/*.java</exclude>
+									</excludes>
+								</resource>								<resource>
 									<directory>services/pwsImportService/src</directory>
 									<excludes>
 										<exclude>**/*.java</exclude>

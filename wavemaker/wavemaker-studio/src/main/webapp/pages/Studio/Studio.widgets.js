@@ -18,6 +18,7 @@ Studio.widgets = {
     deviceSizeVar: ["wm.Variable", {type: "EntryData", isList: 1, json: '[{name: "All", dataValue: ""}, {name: ">= 1150", dataValue: "1150"}, {name: "900px-1150px", dataValue: "900"}, {name: "750px-900px", dataValue: "750"}, {name: "600px-750px", dataValue: "600"}, {name: "450px-600px", dataValue: "450"}, {name: "300px-450px", dataValue: "300"}, {name: "< 300px", dataValue: "tiny"}]'}],
     deviceTypeVar: ["wm.Variable", {type: "EntryData", isList: 1, json: '[{name: "All", dataValue: ""}, {name: "Desktop", dataValue: "desktop"}, {name: "Tablet", dataValue: "tablet"}, {name: "Phone", dataValue: "phone"}]'}],
 	studioService: ["wm.JsonRpcService", {service: "studioService", sync: true}, {}],
+	phoneGapService: ["wm.JsonRpcService", {service: "phoneGapService", sync: true}, {}],
 	servicesService: ["wm.JsonRpcService", {service: "servicesService", sync: true}, {}],
 	pagesService: ["wm.JsonRpcService", {service: "pagesService", sync: true}, {}],
 	deploymentService: ["wm.JsonRpcService", {service: "deploymentService", sync: true}, {}],
