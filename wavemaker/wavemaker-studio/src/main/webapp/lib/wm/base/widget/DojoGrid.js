@@ -1530,7 +1530,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		var dataList = this.variable.getData();
 	dojo.forEach(dataList, function(obj, rowId){
 			dojo.forEach(this.columns, function(col, idx){
-				if (!col.show)
+				if (!col.show || col.mobileColumn)
 					return;
 			    try {
 				var value = obj[col.field || col.id];
@@ -1551,23 +1551,23 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 					switch(col.formatFunc){
 						case 'wm_date_formatter':
 					        case 'Date (WaveMaker)':				    
-							value = this.dateFormatter(value);			
+					    value = this.dateFormatter(col.formatProps||{}, "","","", value);			
 							break;
 						case 'wm_localdate_formatter':
 					        case 'Local Date (WaveMaker)':				    
-							value = this.localDateFormatter(value);			
+							value = this.localDateFormatter(col.formatProps||{}, "","","", value);			
 							break;
 						case 'wm_time_formatter':
 					        case 'Time (WaveMaker)':				    
-							value = this.timeFormatter(value);			
+							value = this.timeFormatter(col.formatProps||{}, "","","", value);			
 							break;
 						case 'wm_number_formatter':
 					        case 'Number (WaveMaker)':				    
-							value = this.numberFormatter(value);	
+							value = this.numberFormatter(col.formatProps||{}, "","","", value);			
 							break;
 						case 'wm_currency_formatter':
 					        case 'Currency (WaveMaker)':				    
-							value = this.currencyFormatter(value);	
+							value = this.currencyFormatter(col.formatProps||{}, "","","", value);			
 							break;
 						case 'wm_image_formatter':
 					        case 'Image (WaveMaker)':				    
