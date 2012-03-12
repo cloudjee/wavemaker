@@ -334,8 +334,9 @@ dojo.declare("wm.VirtualList", wm.Control, {
 		dojo.forEach(this.items, function(i) {
 			i.deselect();
 		});
+	        var count = this.selection ? this.selection.length : 0;
 		this.selection = [];
-		if (!ignoreSelectedItem) {
+		if (!ignoreSelectedItem && count) {
 		    this._clearSelectedData();
 		    this.onSelectionChange();
 		}

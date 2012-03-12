@@ -209,11 +209,14 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		this.store.fetch({query:q, onComplete: sItem});
 	},
 	deselectAll: function() {
+	    var hasSelection = this.hasSelection();
             if (this.dojoObj)
                 this.dojoObj.selection.clear();
 	    this.updateSelectedItem(-1);
-	    this.onSelectionChange();
-	    this.onDeselect();
+	    if (hasSelection) {
+		this.onSelectionChange();
+		this.onDeselect();
+	    }
 	},
 
     select: function(rowIndex, isSelected, onSuccess) {
