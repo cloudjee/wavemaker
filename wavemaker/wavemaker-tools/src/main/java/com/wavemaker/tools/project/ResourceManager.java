@@ -328,10 +328,10 @@ public class ResourceManager {
 
         try {
             System.out.println("UNZIP FILE: " + zipfile.getDescription());
-            Resource zipFolder = zipfile.createRelative(folderName + "/");
+            Resource zipFolder = fileSystem.getParent(zipfile).createRelative(folderName + "/");
             System.out.println("UNZIP FOLDER: " + zipFolder.getDescription());
             for (int i = 0; zipFolder.exists(); i++) {
-                zipFolder = zipfile.createRelative(folderName + i + "/");
+                zipFolder = fileSystem.getParent(zipfile).createRelative(folderName + i + "/");
             }
             fileSystem.prepareForWriting(zipFolder);
 
