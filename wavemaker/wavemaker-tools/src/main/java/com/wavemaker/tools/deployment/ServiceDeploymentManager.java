@@ -89,16 +89,7 @@ public class ServiceDeploymentManager {
         Resource projectRoot = getProjectRoot();
         try {
             Resource destDir = projectRoot.createRelative(LocalDeploymentManager.DIST_DIR_DEFAULT);
-
-            // Let's drop the user account info if it is embedded in the war
-            // file name
             String warFileName = projectRoot.getFilename();
-            String acctInfo = this.projectMgr.getUserProjectPrefix();
-            if (warFileName.contains(acctInfo)) {
-                int len = acctInfo.length();
-                warFileName = warFileName.substring(len);
-            }
-
             return destDir.createRelative(warFileName + LocalDeploymentManager.WAR_EXTENSION);
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
@@ -110,17 +101,7 @@ public class ServiceDeploymentManager {
         Resource destDir;
         try {
             destDir = projectRoot.createRelative(LocalDeploymentManager.DIST_DIR_DEFAULT);
-
-            // Let's drop the user account info if it is embedded in the war
-            // file
-            // name
             String earFileName = projectRoot.getFilename();
-            String acctInfo = this.projectMgr.getUserProjectPrefix();
-            if (earFileName.contains(acctInfo)) {
-                int len = acctInfo.length();
-                earFileName = earFileName.substring(len);
-            }
-
             return destDir.createRelative(earFileName + LocalDeploymentManager.EAR_EXTENSION);
 
         } catch (IOException ex) {

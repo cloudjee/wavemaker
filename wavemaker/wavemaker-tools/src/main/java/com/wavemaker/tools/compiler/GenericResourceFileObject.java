@@ -33,6 +33,7 @@ import com.wavemaker.tools.project.Project;
  * 
  * @author Jeremy Grelle
  */
+@Deprecated
 public class GenericResourceFileObject implements FileObject {
 
     protected Project project;

@@ -27,8 +27,9 @@ import org.springframework.util.StringUtils;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.CastUtils;
-import com.wavemaker.tools.serializer.FileSerializerException;
-import com.wavemaker.tools.serializer.FileSerializerFactory;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 import com.wavemaker.tools.service.AbstractFileService;
 
 /**
@@ -39,6 +40,8 @@ import com.wavemaker.tools.service.AbstractFileService;
  * @author Jeremy Grelle
  */
 public class Project extends AbstractFileService {
+
+    // FIXME PW filesystem : remove deprecated methods
 
     public static final String PROJECT_PROPERTIES = ".wmproject.properties";
 
@@ -62,10 +65,26 @@ public class Project extends AbstractFileService {
         }
     }
 
+    @Deprecated
     public Resource getProjectRoot() {
         return this.projectRoot;
     }
 
+    public Folder getRootFolder() {
+        // FIXME implement properly
+        try {
+            Resource projectRoot = getProjectRoot();
+            if (projectRoot instanceof ResourceAdapter) {
+                return (Folder) ((ResourceAdapter) projectRoot).getExistingResource(true);
+            }
+            LocalFileSystem fileSystem = new LocalFileSystem(projectRoot.getFile());
+            return FileSystemFolder.getRoot(fileSystem);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Deprecated
     public Resource getWebAppRoot() {
         try {
             if (this.mavenProject) {
@@ -82,6 +101,7 @@ public class Project extends AbstractFileService {
         return this.mavenProject;
     }
 
+    @Deprecated
     public Resource getMainSrc() {
         try {
             if (this.mavenProject) {
@@ -94,6 +114,7 @@ public class Project extends AbstractFileService {
         }
     }
 
+    @Deprecated
     public List<Resource> getAllServiceSrcDirs() {
         try {
             List<Resource> serviceSrcDirs = new ArrayList<Resource>();
@@ -112,6 +133,7 @@ public class Project extends AbstractFileService {
         }
     }
 
+    @Deprecated
     public Resource getLogFolder() {
         try {
             return this.projectRoot.createRelative(ProjectConstants.LOG_DIR);
@@ -120,6 +142,7 @@ public class Project extends AbstractFileService {
         }
     }
 
+    @Deprecated
     public Resource getWebInf() {
         try {
             return getWebAppRoot().createRelative(ProjectConstants.WEB_INF);
@@ -128,6 +151,7 @@ public class Project extends AbstractFileService {
         }
     }
 
+    @Deprecated
     public Resource getWebXml() {
         try {
             return getWebInf().createRelative(ProjectConstants.WEB_XML);
@@ -136,6 +160,7 @@ public class Project extends AbstractFileService {
         }
     }
 
+    @Deprecated
     public Resource getWsBindingsFile() {
         try {
             return getWebInf().createRelative(ProjectConstants.WS_BINDINGS_FILE);
@@ -144,6 +169,7 @@ public class Project extends AbstractFileService {
         }
     }
 
+    @Deprecated
     public Resource getSecurityXml() {
         try {
             return getWebInf().createRelative(ProjectConstants.SECURITY_XML);
@@ -152,6 +178,7 @@ public class Project extends AbstractFileService {
         }
     }
 
+    @Deprecated
     public Resource getWebInfLib() {
         try {
             return getWebInf().createRelative(ProjectConstants.LIB_DIR);
@@ -160,6 +187,7 @@ public class Project extends AbstractFileService {
         }
     }
 
+    @Deprecated
     public Resource getWebInfClasses() {
         try {
             return getWebInf().createRelative(ProjectConstants.CLASSES_DIR);
@@ -168,46 +196,9 @@ public class Project extends AbstractFileService {
         }
     }
 
-    /**
-     * Read a project file.
-     * 
-     * @param path A path to the file, relative to the project's root.
-     * @return An object representing contents of the file.
-     * @throws FileSerializerException
-     */
-    public Object readObject(String path) throws FileSerializerException {
-
-        Resource file;
-        try {
-            file = this.projectRoot.createRelative(path);
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
-        return FileSerializerFactory.getInstance().readObject(this, file);
-    }
-
-    /**
-     * Write to a file project. The Object should be a representation (such as that returned by readObject()) of the
-     * object, with the proper format.
-     * 
-     * @param path A path to the file, relative to the project's root.
-     * @param obj A representation of the object. This must be an instance of a known project type.
-     * @throws FileSerializerException
-     */
-    public void writeObject(String path, Object obj) throws FileSerializerException {
-
-        Resource file;
-        try {
-            file = this.projectRoot.createRelative(path);
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
-        FileSerializerFactory.getInstance().writeObject(this, obj, file);
-    }
-
     @Override
+    @Deprecated
     public void writeFile(String path, String data) throws IOException {
-
         writeFile(path, data, false);
     }
 
@@ -220,6 +211,7 @@ public class Project extends AbstractFileService {
      * @param noClobber If true, don't overwrite file.
      * @throws IOException
      */
+    @Deprecated
     public void writeFile(String path, String data, boolean noClobber) throws IOException {
 
         Resource file = this.projectRoot.createRelative(path);
@@ -239,12 +231,12 @@ public class Project extends AbstractFileService {
         writeFile(file, data);
     }
 
+    @Override
+    @Deprecated
     public boolean fileExists(String path) throws IOException {
-
         Resource file = this.projectRoot.createRelative(path);
         return file.exists();
     }
-
 
     /**
      * Return the name of the project. Currently, this is the name of the directory the project is stored in.

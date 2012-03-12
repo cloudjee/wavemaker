@@ -15,14 +15,10 @@
 package com.wavemaker.studio;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -37,22 +33,21 @@ import java.util.regex.Pattern;
 import org.apache.tools.ant.BuildException;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.util.FileCopyUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
-
-import com.wavemaker.common.util.SystemUtils;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.FileAccessException;
 import com.wavemaker.common.util.IOUtils;
+import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.server.FileUploadResponse;
-import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.project.DeploymentManager;
-import com.wavemaker.tools.project.LocalStudioConfiguration;
 import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.project.StudioConfiguration;
@@ -60,7 +55,6 @@ import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeManager;
 import com.wavemaker.tools.pws.install.PwsInstall;
-import com.wavemaker.tools.serializer.FileSerializerException;
 
 /**
  * Main Studio service interface. This service will manage the other studio services, their inclusion into the
@@ -83,47 +77,6 @@ public class StudioService extends ClassLoader {
 
     private StudioConfiguration studioConfiguration;
 
-    @ExposeToClient
-    public String closurecompile(String s) {
-        String result = null;
-        URL url = null;
-        try {
-            System.out.println("A");
-            url = new URL("http://closure-compiler.appspot.com/compile");
-        } catch (MalformedURLException e) {
-            System.out.println(e.toString());
-            return "";
-        }
-        System.out.println("B");
-        try {
-            URLConnection conn = url.openConnection();
-            conn.setDoOutput(true);
-            OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
-            System.out.println("C");
-            String data = "output_format=json&output_info=errors&js_code=" + java.net.URLEncoder.encode(s, ServerConstants.DEFAULT_ENCODING);
-
-            // write parameters
-            writer.write(data);
-            writer.flush();
-            System.out.println("D");
-            StringBuffer answer = new StringBuffer();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-            System.out.println("E");
-            String line;
-            while ((line = reader.readLine()) != null) {
-                answer.append(line);
-            }
-            System.out.println("F");
-            writer.close();
-            reader.close();
-            result = answer.toString();
-        } catch (Exception e) {
-            System.out.println(e.toString());
-        }
-        System.out.println("F: " + result);
-        return result;
-    }
-
     /**
      * Undeploy and close the project.
      * 
@@ -133,14 +86,11 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public void closeProject() throws IOException {
-
         try {
             this.deploymentManager.undeploy();
         } catch (RuntimeException ignore) {
-            // if Tomcat isn't running, or we can't do it for some other reason,
-            // just close the project
+            // Ignore failures and continue to close the project
         }
-
         this.projectManager.closeProject();
     }
 
@@ -150,12 +100,11 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public OpenProjectReturn openProject(String projectName) throws IOException {
-        this.projectManager.openProject(this.projectManager.getUserProjectPrefix() + projectName);
-
-        OpenProjectReturn ret = new OpenProjectReturn();
-        ret.setUpgradeMessages(getUpgradeManager().doUpgrades(this.projectManager.getCurrentProject()));
-        ret.setWebPath(getWebPath());
-        return ret;
+        this.projectManager.openProject(projectName);
+        OpenProjectReturn rtn = new OpenProjectReturn();
+        rtn.setUpgradeMessages(getUpgradeManager().doUpgrades(this.projectManager.getCurrentProject()));
+        rtn.setWebPath(getWebPath());
+        return rtn;
     }
 
     /**
@@ -164,20 +113,12 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public String newProject(String projectName) throws IOException {
-
-        this.projectManager.newProject(this.projectManager.getUserProjectPrefix() + projectName);
+        this.projectManager.newProject(projectName);
         return getWebPath();
     }
 
-    /**
-     * @see ProjectManager#newProject(String, boolean)
-     * @return getWebPath()
-     */
-    @ExposeToClient
-    public String newProjectNoTemplate(String projectName) throws IOException {
-
-        this.projectManager.newProject(this.projectManager.getUserProjectPrefix() + projectName, true);
-        return getWebPath();
+    private String getWebPath() {
+        return this.projectManager.getCurrentProject().getProjectName() + "/" + ProjectConstants.WEB_DIR;
     }
 
     /**
@@ -187,18 +128,14 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public void deleteProject(String projectName) throws IOException {
-        String pName = this.projectManager.getUserProjectPrefix() + projectName;
         try {
-            this.deploymentManager.testRunClean(this.projectManager.getProjectDir(pName, true).getURI().toString(), pName);
+            this.deploymentManager.testRunClean(this.projectManager.getProjectDir(projectName, true).getURI().toString(), projectName);
         } catch (WMRuntimeException e) {
-            // if Tomcat isn't running, or we can't do it for some other reason,
-            // just delete the project
+            // Swallow and continue to delete project
         } catch (BuildException e) {
-            // if Tomcat isn't running, or we can't do it for some other reason,
-            // just delete the project
+            // Swallow and continue to delete project
         }
-
-        this.projectManager.deleteProject(pName);
+        this.projectManager.deleteProject(projectName);
     }
 
     /**
@@ -206,8 +143,7 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public void copyProject(String sourceProjectName, String destinationProjectName) throws IOException {
-        this.projectManager.copyProject(this.projectManager.getUserProjectPrefix() + sourceProjectName, this.projectManager.getUserProjectPrefix()
-            + destinationProjectName);
+        this.projectManager.copyProject(sourceProjectName, destinationProjectName);
     }
 
     /**
@@ -216,145 +152,31 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public String[] listProjects() throws FileAccessException {
-        String prefix = this.projectManager.getUserProjectPrefix();
-        SortedSet<String> projects = this.projectManager.listProjects(prefix);
-        Object[] projectListO = projects.toArray();
-        String[] projectList = new String[projectListO.length];
-        for (int i = 0; i < projectListO.length; i++) {
-            String s = projectListO[i].toString();
-            if (s.startsWith(prefix)) {
-                projectList[i] = s.substring(prefix.length());
-            } else {
-                projectList[i] = s;
-            }
-        }
-        return projectList;
-    }
-
-    /**
-     * Write a file to the project, with specified relativePath and contents of a serialization of obj.
-     * 
-     * @param relativePath The path to the object (relative to the project's root).
-     * @param obj The Object representing the contents of the file.
-     * @throws FileSerializerException
-     */
-    @ExposeToClient
-    public void writeObject(String relativePath, Object obj) throws FileSerializerException {
-
-        this.projectManager.getCurrentProject().writeObject(relativePath, obj);
-    }
-
-    /**
-     * Read a file from the project, with specified relativePath. Returns the Object representing the contents of the
-     * file.
-     * 
-     * @param relativePath The path to the object (relative to the project's root).
-     * @return The Object representing the contents of the file, or null if the file doesn't exist.
-     * @throws ProjectFileSerializerException
-     */
-    @ExposeToClient
-    public Object readObject(String relativePath) throws FileSerializerException {
-        return this.projectManager.getCurrentProject().readObject(relativePath);
-    }
-
-    /**
-     * Write arbitrary data to a file. The file can be relative to the activeGridHome, or eventually absolute. This will
-     * clobber existing files.
-     * 
-     * @param path The path to write to (relative to the project root).
-     * @param data The data to write (as a String).
-     * @throws IOException
-     */
-    @ExposeToClient
-    public void writeFile(String path, String data) throws IOException {
-
-        writeFile(path, data, false);
-    }
-
-    @ExposeToClient
-    public void writeFile(String path, String data, boolean noClobber) throws IOException {
-
-        this.projectManager.getCurrentProject().writeFile(path, data, noClobber);
-    }
-
-    /**
-     * Read arbitrary data from a file.
-     * 
-     * @param path The path to read from (relative to the project root).
-     * @return The data read
-     * @throws IOException
-     */
-    @ExposeToClient
-    public String readFile(String path) throws IOException {
-        return this.projectManager.getCurrentProject().readFile(path);
+        SortedSet<String> projects = this.projectManager.listProjects();
+        return new ArrayList<String>(projects).toArray(new String[projects.size()]);
     }
 
     /**
      * Returns true if the file exists.
      * 
      * @param path The path to check (relative to the project root).
-     * @return True iff the path points to an existant file or directory.
+     * @return <tt>true</tt> if the path points to an existing file or directory.
      */
     @ExposeToClient
     public boolean fileExists(String path) {
-        try {
-            return this.projectManager.getCurrentProject().fileExists(this.projectManager.getUserProjectPrefix() + path);
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
-        }
+        return getCurrentProjectRoot().hasExisting(path);
     }
 
+    /**
+     * Read arbitrary data from a file in this project's web directory.
+     * 
+     * @param path
+     * @param data
+     */
     @ExposeToClient
-    public void writeCommonFile(String path, String data) throws IOException {
-        Resource commonDir = this.fileSystem.getCommonDir();
-        Resource writeFile = commonDir.createRelative(path);
-        if (writeFile.exists()) {
-            String original = this.projectManager.getCurrentProject().readFile(writeFile);
-
-            if (original.equals(data)) {
-                return;
-            }
-        }
-        this.projectManager.getCurrentProject().writeFile(writeFile, data);
-    }
-
-    @ExposeToClient
-    public String getLatestPatches(String url) {
-        URL patch_url;
-        String s = "";
-        try {
-            patch_url = new URL(url);
-
-            // Read all the text returned by the server
-            BufferedReader in = new BufferedReader(new InputStreamReader(patch_url.openStream()));
-            String str;
-            StringBuffer sbuf = new StringBuffer();
-            while ((str = in.readLine()) != null) {
-                sbuf.append(str + "\n");
-                // str is one line of text; readLine() strips the newline
-                // character(s)
-            }
-            str = sbuf.toString();
-            in.close();
-            /*
-             * int startDiv = str.indexOf("<div class=\"main layoutsubsection\">");
-             */
-
-            String startDivStr = "PATCHCODE'>";
-            int startDiv = str.indexOf(startDivStr);
-            if (startDiv == -1) {
-                return "";
-            }
-            startDiv += startDivStr.length();
-
-            int endDiv = str.indexOf("</textarea>");
-            s = str.substring(startDiv, endDiv);
-        } catch (Exception e) {
-            System.out.println("ERROR:" + e.toString());
-            s += "Could not find patches";
-        }
-
-        return s;
+    public String readWebFile(String path) throws IOException {
+        com.wavemaker.tools.io.File file = this.projectManager.getCurrentProject().getRootFolder().getFile(getWebDirPath(path));
+        return file.getContent().asString();
     }
 
     /**
@@ -365,7 +187,6 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public void writeWebFile(String path, String data) throws IOException {
-
         writeWebFile(path, data, false);
     }
 
@@ -377,186 +198,17 @@ public class StudioService extends ClassLoader {
      */
     @ExposeToClient
     public void writeWebFile(String path, String data, boolean noClobber) throws IOException {
-	path = path.trim();
-        if (path.startsWith("/common")) {
-            Resource newCommonFile = this.fileSystem.getCommonDir().createRelative(path.replaceFirst("/common", ""));
-	    if (!newCommonFile.exists() || !noClobber) {
-		FileCopyUtils.copy(data, new OutputStreamWriter(this.fileSystem.getOutputStream(newCommonFile)));
-	    }
-        } else {
-            String newPath = ProjectConstants.WEB_DIR + (path.startsWith("/") ? path.substring(1) : path);
-            this.projectManager.getCurrentProject().writeFile(newPath, data, noClobber);
+        boolean canClobber = !noClobber;
+        File file = this.projectManager.getCurrentProject().getRootFolder().getFile(getWebDirPath(path));
+        if (!file.exists() || canClobber) {
+            file.getContent().write(data);
         }
-
-	// XCODE
-	String projectName = this.projectManager.getCurrentProject().getProjectName();
-	String pathPrefix = "phonegap/" + projectName +  "/www/";
-	Resource phonegap = this.projectManager.getCurrentProject().getProjectRoot().createRelative(pathPrefix);
-
-	if (phonegap.exists()) {
-	    Resource lib = phonegap.createRelative("lib");
-	    this.projectManager.getCurrentProject().writeFile(pathPrefix + (path.startsWith("/") ? path.substring(1) : path), data, false);
-	}
-
-	// ECLIPSE
-	pathPrefix = "phonegap/assets/www/";
-	phonegap = this.projectManager.getCurrentProject().getProjectRoot().createRelative(pathPrefix);
-
-	if (phonegap.exists()) {
-	    Resource lib = phonegap.createRelative("lib");
-	    this.projectManager.getCurrentProject().writeFile(pathPrefix + (path.startsWith("/") ? path.substring(1) : path), data, false);
-	}
-
-
-    }
-    @ExposeToClient
-	public void setupPhonegapFiles(int portNumb, boolean isDebug) throws IOException {
-	String projectName = this.projectManager.getCurrentProject().getProjectName();
-
-	// XCODE
-	String pathPrefix = "phonegap/" + projectName +  "/www/";
-	Resource phonegap = this.projectManager.getCurrentProject().getProjectRoot().createRelative(pathPrefix);
-	setupPhonegapFiles(portNumb, projectName,phonegap);
-
-	// Eclipse
-	pathPrefix = "phonegap/assets/www/";
-	phonegap = this.projectManager.getCurrentProject().getProjectRoot().createRelative(pathPrefix);
-	setupPhonegapFiles(portNumb, projectName,phonegap);
-    }
-    private void setupPhonegapFiles(int portNumb, String projectName, Resource phonegap) throws IOException {
-	if (phonegap.exists()) {
-	    Resource lib = phonegap.createRelative("lib");
-	    if (!lib.exists()) {
-		// Copy studio's lib folder into phonegap's folder
-		IOUtils.copy(new File(this.fileSystem.getStudioWebAppRoot().getFile(), "lib"), lib.getFile());
-
-		// Copy the project's pages folder into phonegap's folder
-		IOUtils.copy(this.projectManager.getCurrentProject().getWebAppRoot().createRelative("pages").getFile(), phonegap.createRelative("pages").getFile());
-
-		// Copy the common folder into phonegap's folder
-		IOUtils.copy(this.fileSystem.getCommonDir().getFile(), phonegap.createRelative("common").getFile());
-
-		Resource MainViewerLib = this.projectManager.getCurrentProject().getProjectRoot().createRelative("phonegap/" + projectName + "/"+projectName + "/Classes/MainViewController.m");
-		if (MainViewerLib.exists()) {
-		    System.out.println("MAINVIEWER: " + MainViewerLib.getFile().getAbsolutePath());
-		    String MainViewerStr = IOUtils.read(MainViewerLib.getFile());
-		    String MainViewerSearchStr = "(BOOL)shouldAutorotateToInterfaceOrientation";
-		    int MainViewerStart = MainViewerStr.indexOf(MainViewerSearchStr);
-		    int MainViewerEnd = MainViewerStr.indexOf("}", MainViewerStart)+1;
-		    MainViewerStr = MainViewerStr.substring(0,MainViewerStart) + 
-			"(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation\n{\nreturn YES;\n}\n" +
-			MainViewerStr.substring(MainViewerEnd);
-		    IOUtils.write(MainViewerLib.getFile(), MainViewerStr);
-		}
-	    }
-	}
+        writePhoneGapFile(path, data);
     }
 
-    @ExposeToClient
-	public void updatePhonegapFiles(int portNumb, boolean isDebug) throws IOException {
-
-	// XCODE
-	String projectName = this.projectManager.getCurrentProject().getProjectName();
-	String pathPrefix = "phonegap/" + projectName +  "/www/";
-	Resource phonegap = this.projectManager.getCurrentProject().getProjectRoot().createRelative(pathPrefix);
-	updatePhonegapFiles(portNumb,isDebug, projectName, phonegap);
-
-	// ECLIPSE
-	pathPrefix = "phonegap/assets/www/";
-	phonegap = this.projectManager.getCurrentProject().getProjectRoot().createRelative(pathPrefix);
-	updatePhonegapFiles(portNumb,isDebug, projectName, phonegap);
-    }
-    private void updatePhonegapFiles(int portNumb, boolean isDebug, String projectName, Resource phonegap) throws IOException {
-	if (phonegap.exists()) {
-	    Resource lib = phonegap.createRelative("lib");
-	    Resource indexhtml = phonegap.createRelative("index.html");
-	    String indexhtml_text = IOUtils.read(indexhtml.getFile());
-
-	    // Update paths in index.html
-	    indexhtml_text =  indexhtml_text.replaceAll("/wavemaker/","");
-		
-	    // Add phonegap library
-	    File[] listing = phonegap.getFile().listFiles(new java.io.FilenameFilter() {
-		    @Override
-			public boolean accept(File dir, String name) {
-			return name.indexOf("phonegap-") == 0 && name.indexOf(".js") != -1;
-		    }
-		});
-	    if (indexhtml_text.indexOf("<script type=\"text/javascript\" src=\"" + listing[0].getName() + "\"></script>") == -1)
-		indexhtml_text = indexhtml_text.replace("runtimeLoader.js\"></script>", "runtimeLoader.js\"></script>\n<script type=\"text/javascript\" src=\"" + listing[0].getName() + "\"></script>");
-	    IOUtils.write(indexhtml.getFile(), indexhtml_text);
-
-	    // Concatenate boot.js and config.js together and save as config.js
-	    Resource configjs = phonegap.createRelative("config.js");
-	    String configjs_text = readWebFile("config.js"); // get the project config.js rather than the phonegap version which has already been modified; TODO: This is bad to constantly clobber changes to config.js; future versions of config.js maybe need to build in boot.js or else add back in loading of boot.js
-	    String boottext = IOUtils.read(lib.createRelative("boot").createRelative("boot.js").getFile());
-		
-	    int startDebug = configjs_text.indexOf("djConfig.debugBoot");
-	    int endDebug = configjs_text.indexOf(";", startDebug);	    
-	    configjs_text = configjs_text.substring(0, startDebug) + "djConfig.debugBoot = " + isDebug + configjs_text.substring(endDebug);
-	    System.out.println("START: " + startDebug + "; END: " + endDebug );
-	    configjs_text = configjs_text.replaceAll("/wavemaker/","/").replace("wm.relativeLibPath = \"../lib/\";","wm.relativeLibPath = \"lib/\";") + 
-		"\nwm.xhrPath = 'http://" + SystemUtils.getIP() + ":" + portNumb + "/" + projectName + "/';\n" + boottext;
-	    IOUtils.write(configjs.getFile(), configjs_text);
-
-	    // Update phonegap.plist (IOS only)
-	    File phonegap_plist_file = new File(phonegap.getFile().getParent(), projectName + "/PhoneGap.plist");
-	    if (phonegap_plist_file.exists()) {
-		String phonegap_plist = IOUtils.read(phonegap_plist_file);
-		String startExpression = "<key>ExternalHosts</key>";
-		int startindex = phonegap_plist.indexOf(startExpression);
-		int startindex1 = startindex  + startExpression.length();
-		int endindex1 = phonegap_plist.indexOf("</array>", startindex1);
-		if (endindex1 != -1) endindex1 += "</array>".length();
-		int endindex2 = phonegap_plist.indexOf("<array/>", startindex1);
-		if (endindex2 != -1) endindex2 += "<array/>".length();
-		int endindex;
-		if (endindex1 == -1) endindex = endindex2;
-		else if (endindex2 == -1) endindex = endindex1;
-		else if (endindex1 > endindex2) endindex =  endindex2;
-		else endindex =  endindex1;
-		phonegap_plist = phonegap_plist.substring(0,startindex1) +
-		    "<array><string>" + SystemUtils.getIP() + "</string></array>" +
-		    phonegap_plist.substring(endindex);
-		IOUtils.write(phonegap_plist_file, phonegap_plist);
-	    }
-
-	    // Recopy common; TODO: Update registering of modules for this new path
-	    if (phonegap.createRelative("common").getFile().exists()) {
-		IOUtils.deleteRecursive(phonegap.createRelative("common").getFile());
-	    }
-	    IOUtils.copy(this.fileSystem.getCommonDir().getFile(), phonegap.createRelative("common").getFile());
-
-	    // Recopy resources
-	    if (phonegap.createRelative("resources").getFile().exists()) {
-		IOUtils.deleteRecursive(phonegap.createRelative("resources").getFile());
-	    }
-	    IOUtils.copy(this.projectManager.getCurrentProject().getWebAppRoot().createRelative("resources").getFile(), phonegap.createRelative("resources").getFile());
-	}
-    }
-
-    /**
-     * Read arbitrary data from a file in this project's web directory.
-     * 
-     * @param path
-     * @param data
-     */
-    @ExposeToClient
-    public String readWebFile(String path) throws IOException {
-
-        String newPath = ProjectConstants.WEB_DIR + "/" + this.projectManager.getUserProjectPrefix() + path;
-        return this.projectManager.getCurrentProject().readFile(newPath);
-    }
-
-    /**
-     * Return the web path of the current project (including the project name). For instance, if your project is named
-     * "foo", this will return "foo/webapproot".
-     * 
-     * @return
-     */
-    @ExposeToClient
-    public String getWebPath() {
-        return this.projectManager.getCurrentProject().getProjectName() + "/" + ProjectConstants.WEB_DIR;
+    private String getWebDirPath(String path) {
+        path = path.trim();
+        return ProjectConstants.WEB_DIR + (path.startsWith("/") ? path.substring(1) : path);
     }
 
     /**
@@ -587,25 +239,6 @@ public class StudioService extends ClassLoader {
     }
 
     /**
-     * Get the projec type for the current build of studio (right now, one of enterprise, community, or cloud).
-     * 
-     * @throws IOException
-     */
-    @ExposeToClient
-    public String getStudioProjectType() throws IOException {
-
-        String versionFileContents = LocalStudioConfiguration.getCurrentVersionInfoString();
-        final Pattern p = Pattern.compile("^Build type: (.*)$", Pattern.MULTILINE);
-
-        Matcher m = p.matcher(versionFileContents);
-        if (!m.find()) {
-            throw new WMRuntimeException("bad version string: " + versionFileContents);
-        }
-        return m.group(1);
-
-    }
-
-    /**
      * Get the studio configuration env
      */
     @ExposeToClient
@@ -615,17 +248,36 @@ public class StudioService extends ClassLoader {
 
     @ExposeToClient
     public String getMainLog(int lines) throws IOException {
-        Resource logDir = this.fileSystem.createPath(this.fileSystem.getWaveMakerHome(), "logs/");
-        Resource logFile = logDir.createRelative("wm.log");
-        return IOUtils.tail(logFile.getFile(), lines);
+        File logFile = this.fileSystem.getWaveMakerHomeFolder().getFile("logs/wm.log");
+        if (!logFile.exists()) {
+            return "";
+        }
+        return tail(logFile, lines);
+    }
+
+    private String tail(File file, int maxSize) throws IOException {
+        List<String> lines = new ArrayList<String>();
+        BufferedReader reader = new BufferedReader(file.getContent().asReader());
+        try {
+            String line = reader.readLine();
+            while (line != null) {
+                lines.add(line);
+                if (lines.size() > maxSize) {
+                    lines.remove(0);
+                }
+                line = reader.readLine();
+            }
+            return StringUtils.collectionToDelimitedString(lines, "\n");
+        } finally {
+            reader.close();
+        }
     }
 
     @ExposeToClient
     public Hashtable<String, Object> getLogUpdate(String filename, String lastStamp) throws IOException {
-        File logFolder = new File(System.getProperty("catalina.home") + "/logs/ProjectLogs", this.projectManager.getCurrentProject().getProjectName());
-        // File logFolder = projectManager.getCurrentProject().getLogFolder();
-        File logFile = new File(logFolder, filename);
-        // System.out.println("READING LOG FILE : " + logFile.toString());
+        java.io.File logFolder = new java.io.File(System.getProperty("catalina.home") + "/logs/ProjectLogs",
+            this.projectManager.getCurrentProject().getProjectName());
+        java.io.File logFile = new java.io.File(logFolder, filename);
         if (!logFile.exists()) {
             Hashtable<String, Object> PEmpty = new Hashtable<String, Object>();
             PEmpty.put("logs", "");
@@ -635,7 +287,6 @@ public class StudioService extends ClassLoader {
         String s = IOUtils.read(logFile);
 
         if (lastStamp.length() > 0) {
-
             // remove everything up to START_WM_LOG_LINE lastStamp
             Pattern newStuffPattern = Pattern.compile("^.*START_WM_LOG_LINE\\s+" + lastStamp + "\\s+", java.util.regex.Pattern.DOTALL);
             Matcher newStuffMatcher = newStuffPattern.matcher(s);
@@ -673,6 +324,8 @@ public class StudioService extends ClassLoader {
         return P;
     }
 
+    // FIXME getPropertyHelp, getContent and getLatestPatches all look very similar, can we refactor common aspects?
+
     @ExposeToClient
     public String getPropertyHelp(String url) throws IOException {
         URL help_url;
@@ -686,15 +339,10 @@ public class StudioService extends ClassLoader {
             StringBuffer sbuf = new StringBuffer();
             while ((str = in.readLine()) != null) {
                 sbuf.append(str + "\n");
-                // str is one line of text; readLine() strips the newline
-                // character(s)
             }
             str = sbuf.toString();
 
             in.close();
-            /*
-             * int startDiv = str.indexOf("<div class=\"main layoutsubsection\">");
-             */
 
             String startDivStr = "</h2><p/>";
             int startDiv = str.indexOf(startDivStr);
@@ -708,8 +356,6 @@ public class StudioService extends ClassLoader {
 
             s = str.substring(startDiv, endDiv);
             s = s.replaceAll("<a ", "<a target='wiki' ");
-            // s = s.replaceAll("/wiki/bin/",
-            // "http://dev.wavemaker.com/wiki/bin/");
         } catch (Exception e) {
             s += "No documentation found for this topic";
         }
@@ -719,7 +365,6 @@ public class StudioService extends ClassLoader {
 
     @ExposeToClient
     public String getContent(String inUrl) throws IOException {
-        // System.out.println("URL:"+inUrl);
         URL url = new URL(inUrl);
         String str = "";
         try {
@@ -729,23 +374,51 @@ public class StudioService extends ClassLoader {
             StringBuffer sbuf = new StringBuffer();
             while ((str = in.readLine()) != null) {
                 sbuf.append(str + "\n");
-                // str is one line of text; readLine() strips the newline
-                // character(s)
             }
             str = sbuf.toString();
 
             in.close();
             str = str.replace("<head>", "<head><base href='" + inUrl
                 + "' /><base target='_blank' /><script>top.studio.startPageIFrameLoaded();</script>");
-
-            // str = str.replaceAll("<a ", "<a target='newspage' ");
-            // str = str.replaceAll("/wiki/bin/",
-            // "http://dev.wavemaker.com/wiki/bin/");
         } catch (Exception e) {
             str = "";
         }
 
         return str;
+    }
+
+    @ExposeToClient
+    public String getLatestPatches(String url) {
+        URL patch_url;
+        String s = "";
+        try {
+            patch_url = new URL(url);
+
+            // Read all the text returned by the server
+            BufferedReader in = new BufferedReader(new InputStreamReader(patch_url.openStream()));
+            String str;
+            StringBuffer sbuf = new StringBuffer();
+            while ((str = in.readLine()) != null) {
+                sbuf.append(str + "\n");
+            }
+            str = sbuf.toString();
+            in.close();
+
+            String startDivStr = "PATCHCODE'>";
+            int startDiv = str.indexOf(startDivStr);
+            if (startDiv == -1) {
+                return "";
+            }
+            startDiv += startDivStr.length();
+
+            int endDiv = str.indexOf("</textarea>");
+            s = str.substring(startDiv, endDiv);
+        } catch (Exception e) {
+            System.out.println("ERROR:" + e.toString());
+            s += "Could not find patches";
+        }
+
+        return s;
     }
 
     /*
@@ -761,9 +434,9 @@ public class StudioService extends ClassLoader {
     @ExposeToClient
     public FileUploadResponse uploadExtensionZip(MultipartFile file) {
         FileUploadResponse ret = new FileUploadResponse();
-        File tmpDir;
+        java.io.File tmpDir;
         try {
-            File webapproot = new File(WMAppContext.getInstance().getAppContextRoot());
+            java.io.File webapproot = new java.io.File(WMAppContext.getInstance().getAppContextRoot());
 
             String filename = file.getOriginalFilename();
             int dotindex = filename.lastIndexOf(".");
@@ -775,42 +448,42 @@ public class StudioService extends ClassLoader {
             }
 
             String originalName = file.getOriginalFilename();
-            tmpDir = new File(webapproot, "tmp");
+            tmpDir = new java.io.File(webapproot, "tmp");
             IOUtils.makeDirectories(tmpDir, webapproot);
 
-            File outputFile = new File(tmpDir, originalName);
+            java.io.File outputFile = new java.io.File(tmpDir, originalName);
             String newName = originalName.replaceAll("[ 0-9()]*.zip$", "");
             System.out.println("OLD NAME:" + originalName + "; NEW NAME:" + newName);
             FileOutputStream fos = new FileOutputStream(outputFile);
             IOUtils.copy(file.getInputStream(), fos);
             file.getInputStream().close();
             fos.close();
-            File extFolder = com.wavemaker.tools.project.ResourceManager.unzipFile(this.fileSystem, new FileSystemResource(outputFile)).getFile();
+            java.io.File extFolder = com.wavemaker.tools.project.ResourceManager.unzipFile(this.fileSystem, new FileSystemResource(outputFile)).getFile();
 
             /*
              * Import the pages from the pages folder STATUS: DONE
              */
-            File webapprootPages = new File(webapproot, "pages");
-            File pagesFolder = new File(extFolder, "pages");
-            File[] pages = pagesFolder.listFiles();
+            java.io.File webapprootPages = new java.io.File(webapproot, "pages");
+            java.io.File pagesFolder = new java.io.File(extFolder, "pages");
+            java.io.File[] pages = pagesFolder.listFiles();
             for (int i = 0; i < pages.length; i++) {
-                IOUtils.copy(pages[i], new File(webapprootPages, pages[i].getName()));
+                IOUtils.copy(pages[i], new java.io.File(webapprootPages, pages[i].getName()));
             }
 
             /*
              * Import the language files from the dictionaries folder and subfolder STATUS: DONE
              */
-            File dictionaryDest = new File(webapproot, "language/nls");
-            File dictionarySrc = new File(extFolder, "language/nls");
-            File[] languages = dictionarySrc.listFiles();
+            java.io.File dictionaryDest = new java.io.File(webapproot, "language/nls");
+            java.io.File dictionarySrc = new java.io.File(extFolder, "language/nls");
+            java.io.File[] languages = dictionarySrc.listFiles();
             for (int i = 0; i < languages.length; i++) {
                 if (languages[i].isDirectory()) {
                     System.out.println("GET LISTING OF " + languages[i].getName());
-                    File[] languages2 = languages[i].listFiles();
+                    java.io.File[] languages2 = languages[i].listFiles();
                     for (int j = 0; j < languages2.length; j++) {
                         System.out.println("COPY " + languages2[j].getName() + " TO "
-                            + new File(dictionaryDest, languages[i].getName()).getAbsolutePath());
-                        IOUtils.copy(languages2[j], new File(dictionaryDest, languages[i].getName()));
+                            + new java.io.File(dictionaryDest, languages[i].getName()).getAbsolutePath());
+                        IOUtils.copy(languages2[j], new java.io.File(dictionaryDest, languages[i].getName()));
                     }
                 } else {
                     IOUtils.copy(languages[i], dictionaryDest);
@@ -820,9 +493,9 @@ public class StudioService extends ClassLoader {
             /*
              * Import the designtime jars STATUS: DONE
              */
-            File studioLib = new File(webapproot, "WEB-INF/lib");
-            File designtimeFolder = new File(extFolder, "designtime");
-            File[] designJars = designtimeFolder.listFiles();
+            java.io.File studioLib = new java.io.File(webapproot, "WEB-INF/lib");
+            java.io.File designtimeFolder = new java.io.File(extFolder, "designtime");
+            java.io.File[] designJars = designtimeFolder.listFiles();
             for (int i = 0; i < designJars.length; i++) {
                 IOUtils.copy(designJars[i], studioLib);
             }
@@ -830,9 +503,9 @@ public class StudioService extends ClassLoader {
             /*
              * Import the runtime jars STATUS: DONE
              */
-            File templatesPwsFolder = new File(webapproot, "app/templates/pws/" + newName);
-            File templatesPwsWEBINFFolder = new File(templatesPwsFolder, "WEB-INF");
-            File templatesPwsWEBINFLibFolder = new File(templatesPwsWEBINFFolder, "lib");
+            java.io.File templatesPwsFolder = new java.io.File(webapproot, "app/templates/pws/" + newName);
+            java.io.File templatesPwsWEBINFFolder = new java.io.File(templatesPwsFolder, "WEB-INF");
+            java.io.File templatesPwsWEBINFLibFolder = new java.io.File(templatesPwsWEBINFFolder, "lib");
             /* Delete any old jars from prior imports */
             if (templatesPwsFolder.exists()) {
                 IOUtils.deleteRecursive(templatesPwsFolder);
@@ -840,8 +513,8 @@ public class StudioService extends ClassLoader {
 
             IOUtils.makeDirectories(templatesPwsWEBINFLibFolder, webapproot);
 
-            File runtimeFolder = new File(extFolder, "runtime");
-            File[] runJars = runtimeFolder.listFiles();
+            java.io.File runtimeFolder = new java.io.File(extFolder, "runtime");
+            java.io.File[] runJars = runtimeFolder.listFiles();
             for (int i = 0; i < runJars.length; i++) {
                 IOUtils.copy(runJars[i], studioLib);
                 IOUtils.copy(runJars[i], templatesPwsWEBINFLibFolder);
@@ -850,11 +523,11 @@ public class StudioService extends ClassLoader {
             /*
              * Import packages.js
              */
-            File packagesFile = new File(webapproot, "app/packages.js");
+            java.io.File packagesFile = new java.io.File(webapproot, "app/packages.js");
             String packagesExt = "";
             try {
                 // Get the packages.js file from our extensions.zip file */
-                packagesExt = IOUtils.read(new File(extFolder, "packages.js"));
+                packagesExt = IOUtils.read(new java.io.File(extFolder, "packages.js"));
             } catch (Exception e) {
                 packagesExt = "";
             }
@@ -886,9 +559,9 @@ public class StudioService extends ClassLoader {
             /*
              * Import spring config files STATUS: DONE
              */
-            File webinf = new File(webapproot, "WEB-INF");
-            File designxml = new File(extFolder, newName + "-tools-beans.xml");
-            File runtimexml = new File(extFolder, newName + "-runtime-beans.xml");
+            java.io.File webinf = new java.io.File(webapproot, "WEB-INF");
+            java.io.File designxml = new java.io.File(extFolder, newName + "-tools-beans.xml");
+            java.io.File runtimexml = new java.io.File(extFolder, newName + "-runtime-beans.xml");
             IOUtils.copy(designxml, webinf);
             IOUtils.copy(runtimexml, webinf);
             IOUtils.copy(runtimexml, templatesPwsWEBINFFolder);
@@ -896,19 +569,19 @@ public class StudioService extends ClassLoader {
             /*
              * Modify Spring files to include beans in the partner package.
              */
-            File studioSpringApp = new File(webinf, "studio-springapp.xml");
+            java.io.File studioSpringApp = new java.io.File(webinf, "studio-springapp.xml");
             PwsInstall.insertImport(studioSpringApp, newName + "-tools-beans.xml");
             PwsInstall.insertImport(studioSpringApp, newName + "-runtime-beans.xml");
 
-            File studioPartnerBeans = new File(webinf, "studio-partner-beans.xml");
+            java.io.File studioPartnerBeans = new java.io.File(webinf, "studio-partner-beans.xml");
             PwsInstall.insertEntryKey(studioPartnerBeans, runJars, designJars, newName);
 
-            File templatesPwsRootFolder = new File(webapproot, "app/templates/pws/");
-            File templatesPwsRootWEBINFFolder = new File(templatesPwsRootFolder, "WEB-INF");
-            File projectSpringApp = new File(templatesPwsRootWEBINFFolder, "project-springapp.xml");
+            java.io.File templatesPwsRootFolder = new java.io.File(webapproot, "app/templates/pws/");
+            java.io.File templatesPwsRootWEBINFFolder = new java.io.File(templatesPwsRootFolder, "WEB-INF");
+            java.io.File projectSpringApp = new java.io.File(templatesPwsRootWEBINFFolder, "project-springapp.xml");
             PwsInstall.insertImport(projectSpringApp, newName + "-runtime-beans.xml");
 
-            File projectPartnerBeans = new File(templatesPwsRootWEBINFFolder, "project-partner-beans.xml");
+            java.io.File projectPartnerBeans = new java.io.File(templatesPwsRootWEBINFFolder, "project-partner-beans.xml");
             PwsInstall.insertEntryKey(projectPartnerBeans, runJars, designJars, newName);
 
             ret.setPath("/tmp");
@@ -927,6 +600,235 @@ public class StudioService extends ClassLoader {
             return ret;
         }
         return ret;
+    }
+
+    @ExposeToClient
+    public List<String> getMissingJars() {
+        Map<String, String> jarHash = new HashMap<String, String>();
+        jarHash.put("db2jcc.jar", "COM.ibm.db2.app.DB2StructOutput");
+        jarHash.put("ojdbc.jar", "oracle.jdbc.driver.OracleDatabaseMetaData");
+        jarHash.put("wsdl4j.jar", "javax.wsdl.factory.WSDLFactory");
+        jarHash.put("hibernate3.jar", "org.hibernate.cfg.Environment");
+
+        List<String> missingJars = new ArrayList<String>();
+
+        Set<Map.Entry<String, String>> entries = jarHash.entrySet();
+        for (Map.Entry<String, String> entry : entries) {
+            try {
+                Class.forName(entry.getValue());
+            } catch (ClassNotFoundException ex) {
+                missingJars.add(entry.getKey());
+            }
+        }
+
+        return missingJars;
+    }
+
+    @ExposeToClient
+    public FileUploadResponse uploadJar(MultipartFile file) {
+        FileUploadResponse ret = new FileUploadResponse();
+        try {
+            String filename = file.getOriginalFilename();
+            int dotindex = filename.lastIndexOf(".");
+            String ext = dotindex == -1 ? "" : filename.substring(dotindex + 1);
+            if (dotindex == -1) {
+                throw new IOException("Please upload a jar file");
+            } else if (!ext.equals("jar")) {
+                throw new IOException("Please upload a jar file, not a " + ext + " file");
+            }
+
+            java.io.File destDir = new java.io.File(WMAppContext.getInstance().getAppContextRoot());
+            destDir = new java.io.File(destDir, "WEB-INF/lib");
+
+            // Write the zip file to outputFile
+            String originalName = file.getOriginalFilename();
+            java.io.File outputFile = new java.io.File(destDir, originalName);
+
+            FileOutputStream fos = new FileOutputStream(outputFile);
+            IOUtils.copy(file.getInputStream(), fos);
+            file.getInputStream().close();
+            fos.close();
+            ret.setPath(outputFile.getName());
+            ret.setError("");
+            ret.setWidth("");
+            ret.setHeight("");
+        } catch (IOException e) {
+            ret.setError(e.getMessage());
+        }
+        return ret;
+    }
+
+    private Folder getCurrentProjectRoot() {
+        return this.getProjectManager().getCurrentProject().getRootFolder();
+    }
+
+    // FIXME PW discuss and possibly remove phone gap
+    private void writePhoneGapFile(String path, String data) throws IOException {
+        // XCODE
+        String projectName = this.projectManager.getCurrentProject().getProjectName();
+        String pathPrefix = "phonegap/" + projectName + "/www/";
+        Resource phonegap = this.projectManager.getCurrentProject().getProjectRoot().createRelative(pathPrefix);
+
+        if (phonegap.exists()) {
+            Resource lib = phonegap.createRelative("lib");
+            this.projectManager.getCurrentProject().writeFile(pathPrefix + (path.startsWith("/") ? path.substring(1) : path), data, false);
+        }
+
+        // ECLIPSE
+        pathPrefix = "phonegap/assets/www/";
+        phonegap = this.projectManager.getCurrentProject().getProjectRoot().createRelative(pathPrefix);
+
+        if (phonegap.exists()) {
+            Resource lib = phonegap.createRelative("lib");
+            this.projectManager.getCurrentProject().writeFile(pathPrefix + (path.startsWith("/") ? path.substring(1) : path), data, false);
+        }
+    }
+
+    @ExposeToClient
+    public void setupPhonegapFiles(int portNumb, boolean isDebug) throws IOException {
+        String projectName = this.projectManager.getCurrentProject().getProjectName();
+
+        // XCODE
+        String pathPrefix = "phonegap/" + projectName + "/www/";
+        Resource phonegap = this.projectManager.getCurrentProject().getProjectRoot().createRelative(pathPrefix);
+        setupPhonegapFiles(portNumb, projectName, phonegap);
+
+        // Eclipse
+        pathPrefix = "phonegap/assets/www/";
+        phonegap = this.projectManager.getCurrentProject().getProjectRoot().createRelative(pathPrefix);
+        setupPhonegapFiles(portNumb, projectName, phonegap);
+    }
+
+    private void setupPhonegapFiles(int portNumb, String projectName, Resource phonegap) throws IOException {
+        if (phonegap.exists()) {
+            Resource lib = phonegap.createRelative("lib");
+            if (!lib.exists()) {
+                // Copy studio's lib folder into phonegap's folder
+                IOUtils.copy(new java.io.File(this.fileSystem.getStudioWebAppRoot().getFile(), "lib"), lib.getFile());
+
+                // Copy the project's pages folder into phonegap's folder
+                IOUtils.copy(this.projectManager.getCurrentProject().getWebAppRoot().createRelative("pages").getFile(),
+                    phonegap.createRelative("pages").getFile());
+
+                // Copy the common folder into phonegap's folder
+                IOUtils.copy(this.fileSystem.getCommonDir().getFile(), phonegap.createRelative("common").getFile());
+
+                Resource MainViewerLib = this.projectManager.getCurrentProject().getProjectRoot().createRelative(
+                    "phonegap/" + projectName + "/" + projectName + "/Classes/MainViewController.m");
+                if (MainViewerLib.exists()) {
+                    System.out.println("MAINVIEWER: " + MainViewerLib.getFile().getAbsolutePath());
+                    String MainViewerStr = IOUtils.read(MainViewerLib.getFile());
+                    String MainViewerSearchStr = "(BOOL)shouldAutorotateToInterfaceOrientation";
+                    int MainViewerStart = MainViewerStr.indexOf(MainViewerSearchStr);
+                    int MainViewerEnd = MainViewerStr.indexOf("}", MainViewerStart) + 1;
+                    MainViewerStr = MainViewerStr.substring(0, MainViewerStart)
+                        + "(BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation\n{\nreturn YES;\n}\n"
+                        + MainViewerStr.substring(MainViewerEnd);
+                    IOUtils.write(MainViewerLib.getFile(), MainViewerStr);
+                }
+            }
+        }
+    }
+
+    @ExposeToClient
+    public void updatePhonegapFiles(int portNumb, boolean isDebug) throws IOException {
+
+        // XCODE
+        String projectName = this.projectManager.getCurrentProject().getProjectName();
+        String pathPrefix = "phonegap/" + projectName + "/www/";
+        Resource phonegap = this.projectManager.getCurrentProject().getProjectRoot().createRelative(pathPrefix);
+        updatePhonegapFiles(portNumb, isDebug, projectName, phonegap);
+
+        // ECLIPSE
+        pathPrefix = "phonegap/assets/www/";
+        phonegap = this.projectManager.getCurrentProject().getProjectRoot().createRelative(pathPrefix);
+        updatePhonegapFiles(portNumb, isDebug, projectName, phonegap);
+    }
+
+    private void updatePhonegapFiles(int portNumb, boolean isDebug, String projectName, Resource phonegap) throws IOException {
+        if (phonegap.exists()) {
+            Resource lib = phonegap.createRelative("lib");
+            Resource indexhtml = phonegap.createRelative("index.html");
+            String indexhtml_text = IOUtils.read(indexhtml.getFile());
+
+            // Update paths in index.html
+            indexhtml_text = indexhtml_text.replaceAll("/wavemaker/", "");
+
+            // Add phonegap library
+            java.io.File[] listing = phonegap.getFile().listFiles(new java.io.FilenameFilter() {
+
+                @Override
+                public boolean accept(java.io.File dir, String name) {
+                    return name.indexOf("phonegap-") == 0 && name.indexOf(".js") != -1;
+                }
+            });
+            if (indexhtml_text.indexOf("<script type=\"text/javascript\" src=\"" + listing[0].getName() + "\"></script>") == -1) {
+                indexhtml_text = indexhtml_text.replace("runtimeLoader.js\"></script>",
+                    "runtimeLoader.js\"></script>\n<script type=\"text/javascript\" src=\"" + listing[0].getName() + "\"></script>");
+            }
+            IOUtils.write(indexhtml.getFile(), indexhtml_text);
+
+            // Concatenate boot.js and config.js together and save as config.js
+            Resource configjs = phonegap.createRelative("config.js");
+            String configjs_text = readWebFile("config.js"); // get the project config.js rather than the phonegap
+                                                             // version which has already been modified; TODO: This is
+                                                             // bad to constantly clobber changes to config.js; future
+                                                             // versions of config.js maybe need to build in boot.js or
+                                                             // else add back in loading of boot.js
+            String boottext = IOUtils.read(lib.createRelative("boot").createRelative("boot.js").getFile());
+
+            int startDebug = configjs_text.indexOf("djConfig.debugBoot");
+            int endDebug = configjs_text.indexOf(";", startDebug);
+            configjs_text = configjs_text.substring(0, startDebug) + "djConfig.debugBoot = " + isDebug + configjs_text.substring(endDebug);
+            System.out.println("START: " + startDebug + "; END: " + endDebug);
+            configjs_text = configjs_text.replaceAll("/wavemaker/", "/").replace("wm.relativeLibPath = \"../lib/\";",
+                "wm.relativeLibPath = \"lib/\";")
+                + "\nwm.xhrPath = 'http://" + SystemUtils.getIP() + ":" + portNumb + "/" + projectName + "/';\n" + boottext;
+            IOUtils.write(configjs.getFile(), configjs_text);
+
+            // Update phonegap.plist (IOS only)
+            java.io.File phonegap_plist_file = new java.io.File(phonegap.getFile().getParent(), projectName + "/PhoneGap.plist");
+            if (phonegap_plist_file.exists()) {
+                String phonegap_plist = IOUtils.read(phonegap_plist_file);
+                String startExpression = "<key>ExternalHosts</key>";
+                int startindex = phonegap_plist.indexOf(startExpression);
+                int startindex1 = startindex + startExpression.length();
+                int endindex1 = phonegap_plist.indexOf("</array>", startindex1);
+                if (endindex1 != -1) {
+                    endindex1 += "</array>".length();
+                }
+                int endindex2 = phonegap_plist.indexOf("<array/>", startindex1);
+                if (endindex2 != -1) {
+                    endindex2 += "<array/>".length();
+                }
+                int endindex;
+                if (endindex1 == -1) {
+                    endindex = endindex2;
+                } else if (endindex2 == -1) {
+                    endindex = endindex1;
+                } else if (endindex1 > endindex2) {
+                    endindex = endindex2;
+                } else {
+                    endindex = endindex1;
+                }
+                phonegap_plist = phonegap_plist.substring(0, startindex1) + "<array><string>" + SystemUtils.getIP() + "</string></array>"
+                    + phonegap_plist.substring(endindex);
+                IOUtils.write(phonegap_plist_file, phonegap_plist);
+            }
+
+            // Recopy common; TODO: Update registering of modules for this new path
+            if (phonegap.createRelative("common").getFile().exists()) {
+                IOUtils.deleteRecursive(phonegap.createRelative("common").getFile());
+            }
+            IOUtils.copy(this.fileSystem.getCommonDir().getFile(), phonegap.createRelative("common").getFile());
+
+            // Recopy resources
+            if (phonegap.createRelative("resources").getFile().exists()) {
+                IOUtils.deleteRecursive(phonegap.createRelative("resources").getFile());
+            }
+            IOUtils.copy(this.projectManager.getCurrentProject().getWebAppRoot().createRelative("resources").getFile(),
+                phonegap.createRelative("resources").getFile());
+        }
     }
 
     public RuntimeAccess getRuntimeAccess() {
@@ -969,7 +871,6 @@ public class StudioService extends ClassLoader {
         this.upgradeManager = upgradeManager;
     }
 
-    // inner classes
     /**
      * An inner class containing the return from an openProject operation. This includes the web path to the project,
      * and any messages to display to the user about the project.
@@ -997,64 +898,4 @@ public class StudioService extends ClassLoader {
         }
     }
 
-    // db2jcc.jar - com.ibm.db2.app.DB2StructOutput.class
-    // ojdbc.jar - oracle.jdbc.driver.OracleDatabaseMetaData
-    // wsdl4j.jar - javax.wsdl.factory.WSDLFactory.class
-    // hibernate3.jar - org.hibernate.cfg.Environment.class
-    @ExposeToClient
-    public List<String> getMissingJars() {
-        Map<String, String> jarHash = new HashMap<String, String>();
-        jarHash.put("db2jcc.jar", "COM.ibm.db2.app.DB2StructOutput");
-        jarHash.put("ojdbc.jar", "oracle.jdbc.driver.OracleDatabaseMetaData");
-        jarHash.put("wsdl4j.jar", "javax.wsdl.factory.WSDLFactory");
-        jarHash.put("hibernate3.jar", "org.hibernate.cfg.Environment");
-
-        List<String> missingJars = new ArrayList<String>();
-
-        Set<Map.Entry<String, String>> entries = jarHash.entrySet();
-        for (Map.Entry<String, String> entry : entries) {
-            try {
-                Class.forName(entry.getValue());
-            } catch (ClassNotFoundException ex) {
-                missingJars.add(entry.getKey());
-            }
-        }
-
-        return missingJars;
-    }
-
-    @ExposeToClient
-    public FileUploadResponse uploadJar(MultipartFile file) {
-        FileUploadResponse ret = new FileUploadResponse();
-        try {
-            String filename = file.getOriginalFilename();
-            int dotindex = filename.lastIndexOf(".");
-            String ext = dotindex == -1 ? "" : filename.substring(dotindex + 1);
-            if (dotindex == -1) {
-                throw new IOException("Please upload a jar file");
-            } else if (!ext.equals("jar")) {
-                throw new IOException("Please upload a jar file, not a " + ext + " file");
-            }
-
-            File destDir = new File(WMAppContext.getInstance().getAppContextRoot());
-            destDir = new File(destDir, "WEB-INF/lib");
-
-            // Write the zip file to outputFile
-            String originalName = file.getOriginalFilename();
-            File outputFile = new File(destDir, originalName);
-
-            FileOutputStream fos = new FileOutputStream(outputFile);
-            IOUtils.copy(file.getInputStream(), fos);
-            file.getInputStream().close();
-            fos.close();
-            ret.setPath(outputFile.getName());
-            ret.setError("");
-            ret.setWidth("");
-            ret.setHeight("");
-        } catch (IOException e) {
-            ret.setError(e.getMessage());
-        }
-        return ret;
-
-    }
 }

@@ -22,7 +22,13 @@ import java.io.InputStream;
  * 
  * @author Matt Small
  */
-public class DownloadResponse {
+public class DownloadResponse implements Downloadable {
+
+    private InputStream contents;
+
+    private String contentType;
+
+    private String fileName;
 
     public DownloadResponse() {
     }
@@ -33,12 +39,7 @@ public class DownloadResponse {
         this.fileName = fileName;
     }
 
-    private InputStream contents;
-
-    private String contentType;
-
-    private String fileName;
-
+    @Override
     public InputStream getContents() {
         return this.contents;
     }
@@ -47,6 +48,7 @@ public class DownloadResponse {
         this.contents = contents;
     }
 
+    @Override
     public String getContentType() {
         return this.contentType;
     }
@@ -55,11 +57,17 @@ public class DownloadResponse {
         this.contentType = contentType;
     }
 
+    @Override
     public String getFileName() {
         return this.fileName;
     }
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    @Override
+    public Integer getContentLength() {
+        return null;
     }
 }

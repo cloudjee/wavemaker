@@ -21,10 +21,12 @@ import org.springframework.util.StringUtils;
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.CommonResourceFilter;
 import com.wavemaker.common.util.FileAccessException;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.tools.config.ConfigurationStore;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 
 /**
  * Implementation of {@link StudioFileSystem} backed by a local files system.
@@ -46,12 +48,32 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
     /**
      * WaveMaker demo directory override, used for testing. NEVER set this in production.
      */
-    private File testDemoDir = null;         
+    private File testDemoDir = null;
 
     /**
      * WaveMaker home override, used for testing. NEVER set this in production.
      */
     private File testWMHome = null;
+
+    @Override
+    public Folder getCommonFolder() {
+        try {
+            LocalFileSystem fileSystem = new LocalFileSystem(getCommonDir().getFile());
+            return FileSystemFolder.getRoot(fileSystem);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
+    @Override
+    public Folder getWaveMakerHomeFolder() {
+        try {
+            LocalFileSystem fileSystem = new LocalFileSystem(getWaveMakerHome().getFile());
+            return FileSystemFolder.getRoot(fileSystem);
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+    }
 
     @Override
     public Resource getWaveMakerHome() {
@@ -183,7 +205,8 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
     }
 
     @Override
-    public List<Resource> listAllChildren(Resource resource, CommonResourceFilter filter) {
+    public List<Resource> listAllChildren(Resource resource, ResourceFilter filter) {
+        // FIXME looks very similar to listChildren, can we combine
         List<Resource> children = new ArrayList<Resource>();
         File[] files;
         try {
@@ -402,7 +425,7 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
     public Resource getParent(Resource resource) {
         File f;
         try {
-            f = resource.getFile().getParentFile(); 
+            f = resource.getFile().getParentFile();
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
@@ -413,7 +436,7 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
             String path = f.getAbsolutePath() + "/";
             parent = new FileSystemResource(path);
         }
-        
+
         return parent;
     }
 

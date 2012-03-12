@@ -50,7 +50,7 @@ public class PagesService {
     @ExposeToClient
     public SortedSet<String> listPages(String projectName) throws FileAccessException {
 
-        return this.pagesManager.listPages(this.pagesManager.getProjectManager().getUserProjectPrefix() + projectName);
+        return this.pagesManager.listPages(projectName);
     }
 
     /**
@@ -77,7 +77,7 @@ public class PagesService {
     @ExposeToClient
     public void copyPage(String sourceProjectName, String sourcePageName, String destPageName) throws IOException {
 
-        this.pagesManager.copyPage(this.pagesManager.getProjectManager().getUserProjectPrefix() + sourceProjectName, sourcePageName, destPageName);
+        this.pagesManager.copyPage(sourceProjectName, sourcePageName, destPageName);
     }
 
     /**
