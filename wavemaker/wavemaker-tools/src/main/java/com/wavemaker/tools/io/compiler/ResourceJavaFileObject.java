@@ -1,5 +1,5 @@
 
-package com.wavemaker.tools.compiler.io;
+package com.wavemaker.tools.io.compiler;
 
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.NestingKind;
@@ -7,6 +7,11 @@ import javax.tools.JavaFileObject;
 
 import com.wavemaker.tools.io.File;
 
+/**
+ * Adapts {@link com.wavemaker.toos.io.File}s to {@link javax.toosl.JavaFileObject}s.
+ * 
+ * @author Phillip Webb
+ */
 public class ResourceJavaFileObject extends ResourceFileObject implements JavaFileObject {
 
     private final Kind kind;

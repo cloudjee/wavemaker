@@ -1,5 +1,5 @@
 
-package com.wavemaker.tools.compiler.io;
+package com.wavemaker.tools.io.compiler;
 
 import static org.junit.Assert.assertTrue;
 
@@ -32,12 +32,11 @@ import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
  */
 public class ResourceFolderJavaFileManagerTest {
 
-    @Test
-    public void test() throws IOException {
+    // FIXME PW write tests for ResourceFolderJavaFileManager
 
-        // File m2Repo = new File("/Users/pwebb/.m2/repository").getAbsoluteFile();
-        // Folder m2RepoFolder = FileSystemFolder.getRoot(new LocalFileSystem(m2Repo));
-        // Folder faces = m2RepoFolder.getFolder("com/sun/faces/jsf-api/2.1.7/temp").jail();
+    @Test
+    @Ignore
+    public void test() throws IOException {
 
         File testSourceFolder = new File("src/test/java").getAbsoluteFile();
         LocalFileSystem fileSystem = new LocalFileSystem(testSourceFolder);
@@ -48,7 +47,6 @@ public class ResourceFolderJavaFileManagerTest {
         ResourceFolderJavaFileManager fileManager = new ResourceFolderJavaFileManager(standardFileManager);
         fileManager.setLocation(StandardLocation.SOURCE_PATH, Arrays.asList(root));
         fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Arrays.asList(root));
-        // fileManager.setLocation(StandardLocation.CLASS_PATH, Arrays.asList(faces));
 
         JavaFileObject example = fileManager.getJavaFileForInput(StandardLocation.SOURCE_PATH, "com.wavemaker.tools.compiler.io.ExampleClass",
             Kind.SOURCE);

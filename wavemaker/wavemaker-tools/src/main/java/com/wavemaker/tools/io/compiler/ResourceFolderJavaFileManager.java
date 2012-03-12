@@ -1,5 +1,5 @@
 
-package com.wavemaker.tools.compiler.io;
+package com.wavemaker.tools.io.compiler;
 
 import java.io.IOException;
 import java.net.MalformedURLException;

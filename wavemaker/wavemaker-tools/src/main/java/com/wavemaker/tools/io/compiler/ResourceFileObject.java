@@ -1,5 +1,5 @@
 
-package com.wavemaker.tools.compiler.io;
+package com.wavemaker.tools.io.compiler;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,9 +11,16 @@ import java.net.URISyntaxException;
 
 import javax.tools.FileObject;
 
+import org.springframework.util.Assert;
+
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.ResourceURL;
 
+/**
+ * Adapts {@link com.wavemaker.toos.io.File}s to {@link javax.toosl.FileObject}s.
+ * 
+ * @author Phillip Webb
+ */
 public class ResourceFileObject implements FileObject {
 
     private final File file;
@@ -21,6 +28,7 @@ public class ResourceFileObject implements FileObject {
     private URI uri;
 
     public ResourceFileObject(File file) {
+        Assert.notNull(file, "File must not be null");
         this.file = file;
         try {
             this.uri = new URI(ResourceURL.PROTOCOL + ":" + getName());
@@ -88,6 +96,23 @@ public class ResourceFileObject implements FileObject {
         return this.file.toString();
     }
 
-    // FIXME hashCode equals
+    @Override
+    public int hashCode() {
+        return this.file.hashCode();
+    }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        ResourceFileObject other = (ResourceFileObject) obj;
+        return other.file.equals(other.file);
+    }
 }
