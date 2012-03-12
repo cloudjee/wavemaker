@@ -446,9 +446,9 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	    if (inEvent.target.tagName == "INPUT" && dojo.attr(inEvent.target, "wmcontroller")) {
 		if (inEvent.target.type == "checkbox") {
 		    if (inEvent.target.checked) {
-			this.addToSelection(inItem);
+			this.eventSelect(inItem);
 		    } else {
-			this.removeFromSelection(inItem);
+			this.eventDeselect(inItem);
 		    }
 		} else if (inEvent.target.type == "radio") {
 		    var toggleSelectWas = this.toggleSelect;

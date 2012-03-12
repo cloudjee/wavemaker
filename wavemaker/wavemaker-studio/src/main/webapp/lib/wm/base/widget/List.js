@@ -327,7 +327,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 
 	renderData: function(inData) {
 		if (this.selectionMode == "checkbox" || this.selectionMode == "radio") {
-		    this.columns.unshift({width: "30px", title: "-", controller: this.selectionMode, field: "_selector", show: true});
+		    this.columns.unshift({width: "16px", title: "-", controller: this.selectionMode, field: "_selector", show: true});
 		    this._columnsHash._selector = this.columns[0];
 		}
 
