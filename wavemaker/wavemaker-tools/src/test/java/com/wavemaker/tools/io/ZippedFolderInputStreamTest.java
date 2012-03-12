@@ -2,13 +2,15 @@
 package com.wavemaker.tools.io;
 
 import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -45,16 +47,18 @@ public class ZippedFolderInputStreamTest {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         FileCopyUtils.copy(inputStream, outputStream);
         this.readInputStream = new ZipInputStream(new ByteArrayInputStream(outputStream.toByteArray()));
-        assertEntry(this.readInputStream.getNextEntry(), "x/a/");
-        assertEntry(this.readInputStream.getNextEntry(), "x/a/aa.txt");
-        assertEntry(this.readInputStream.getNextEntry(), "x/a/ab.txt");
-        assertEntry(this.readInputStream.getNextEntry(), "x/b/");
-        assertEntry(this.readInputStream.getNextEntry(), "x/b/ba.txt");
-        assertThat(this.readInputStream.getNextEntry(), is(nullValue()));
-    }
-
-    private void assertEntry(ZipEntry entry, String name) throws IOException {
-        assertThat(entry.getName(), is(name));
-        this.readInputStream.closeEntry();
+        List<String> entryNames = new ArrayList<String>();
+        ZipEntry entry = this.readInputStream.getNextEntry();
+        while (entry != null) {
+            entryNames.add(entry.getName());
+            this.readInputStream.closeEntry();
+            entry = this.readInputStream.getNextEntry();
+        }
+        assertThat(entryNames.size(), is(5));
+        assertTrue(entryNames.contains("x/a/"));
+        assertTrue(entryNames.contains("x/a/aa.txt"));
+        assertTrue(entryNames.contains("x/a/ab.txt"));
+        assertTrue(entryNames.contains("x/b/"));
+        assertTrue(entryNames.contains("x/b/ba.txt"));
     }
 }
