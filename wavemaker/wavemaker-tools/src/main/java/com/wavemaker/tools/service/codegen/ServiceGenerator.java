@@ -40,13 +40,13 @@ import com.sun.codemodel.JMod;
 import com.sun.codemodel.JTryBlock;
 import com.sun.codemodel.JType;
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.io.GFSResource;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
 import com.wavemaker.tools.ws.wsdl.ServiceInfo;
 import com.wavemaker.tools.ws.wsdl.WSDL;
+import com.wavemaker.tools.project.GFSResource;
 import com.wavemaker.tools.project.StudioFileSystem;
 
 /**

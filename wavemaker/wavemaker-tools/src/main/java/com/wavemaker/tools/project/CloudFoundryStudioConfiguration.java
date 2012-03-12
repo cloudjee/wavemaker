@@ -22,7 +22,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.io.GFSResource;
 import com.wavemaker.runtime.RuntimeAccess;
 
 /**
@@ -53,21 +52,11 @@ public class CloudFoundryStudioConfiguration implements StudioConfiguration {
 
     @Override
     public Map<String, String> getPreferencesMap() {
-
+        // As setPreferencesMap is a no-op we return empty data here
         Map<String, String> prefs = new HashMap<String, String>();
-
-        try {
-            prefs.put(WMHOME_KEY, ((GFSResource) this.fileSystem.getWaveMakerHome()).getPath());
-        } catch (Exception ex) {
-            throw new WMRuntimeException(ex);
-        }
-
-        try {
-            prefs.put(DEMOHOME_KEY, ((GFSResource) this.fileSystem.getDemoDir()).getPath());
-            return prefs;
-        } catch (Exception ex) {
-            throw new WMRuntimeException(ex);
-        }
+        prefs.put(WMHOME_KEY, "");
+        prefs.put(DEMOHOME_KEY, "");
+        return prefs;
     }
 
     @Override

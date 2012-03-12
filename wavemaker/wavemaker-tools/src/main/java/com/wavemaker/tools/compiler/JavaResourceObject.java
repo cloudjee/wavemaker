@@ -27,6 +27,7 @@ import com.wavemaker.tools.project.Project;
  * @author Seung Lee
  * @author Jeremy Grelle
  */
+@Deprecated
 public class JavaResourceObject extends ResourceJavaFileObject {
 
     /**

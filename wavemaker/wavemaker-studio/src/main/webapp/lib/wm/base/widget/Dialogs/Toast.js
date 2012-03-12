@@ -65,7 +65,6 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
 
         this.inherited(arguments);
         if (inShow) {
-	    alert("TOASTED!");
             this.renderBounds();
 	    this.domNode.style.zIndex = 1000;
 	}
@@ -84,7 +83,6 @@ dojo.declare("wm.Toast", wm.WidgetsJsDialog, {
     },
     // classes supported "Success", "Error", "Warning", "Info".  User may add their own classes via css file
     showToast: function(inContent,inDuration, inCssClasses, inPosition, optionalTitle) {
-	alert("SHOW TOAST");
 	if (inContent instanceof Error) inContent = inContent.toString();
 	if (!inCssClasses)
 	    inCssClasses = "Info";

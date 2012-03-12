@@ -14,6 +14,8 @@
 
 package com.wavemaker.runtime.server.view;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Writer;
 import java.util.Map;
 
@@ -24,7 +26,7 @@ import org.apache.commons.io.IOUtils;
 import org.springframework.web.servlet.view.AbstractView;
 
 import com.wavemaker.json.type.FieldDefinition;
-import com.wavemaker.runtime.server.DownloadResponse;
+import com.wavemaker.runtime.server.Downloadable;
 import com.wavemaker.runtime.server.ServerConstants;
 
 /**
@@ -36,28 +38,37 @@ import com.wavemaker.runtime.server.ServerConstants;
 public class DownloadView extends AbstractView implements TypedView {
 
     @Override
-    protected void renderMergedOutputModel(@SuppressWarnings("unchecked") Map model, HttpServletRequest request, HttpServletResponse response)
-        throws Exception {
+    protected void renderMergedOutputModel(Map<String, Object> model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
         Object result = model.get(ServerConstants.RESULTS_PART);
 
         if (result == null) {
-            // no response string
-        } else if (result instanceof DownloadResponse) {
-            DownloadResponse dr = (DownloadResponse) result;
+            return;
+        }
 
-            response.setContentType(dr.getContentType());
-            response.setContentLength(dr.getContents().available());
-            if (dr.getFileName() != null) {
-                response.setHeader("Content-disposition", "attachment; filename=\"" + dr.getFileName() + "\"");
+        if (result instanceof Downloadable) {
+            sendDownloadable((Downloadable) result, response);
+            return;
+        }
+
+        Writer writer = response.getWriter();
+        writer.write(result.toString());
+        writer.close();
+    }
+
+    private void sendDownloadable(Downloadable downloadable, HttpServletResponse response) throws IOException {
+        InputStream contents = downloadable.getContents();
+        try {
+            response.setContentType(downloadable.getContentType());
+            if (downloadable.getContentLength() != null) {
+                response.setContentLength(downloadable.getContentLength());
             }
-
-            IOUtils.copy(dr.getContents(), response.getOutputStream());
-            dr.getContents().close();
-        } else {
-            Writer writer = response.getWriter();
-            writer.write(result.toString());
-            writer.close();
+            if (downloadable.getFileName() != null) {
+                response.setHeader("Content-disposition", "attachment; filename=\"" + downloadable.getFileName() + "\"");
+            }
+            IOUtils.copy(contents, response.getOutputStream());
+        } finally {
+            contents.close();
         }
     }
 

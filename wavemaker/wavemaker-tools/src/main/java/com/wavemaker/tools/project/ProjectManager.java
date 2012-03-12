@@ -14,6 +14,7 @@
 
 package com.wavemaker.tools.project;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -27,12 +28,12 @@ import java.util.zip.ZipInputStream;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.util.StringUtils;
-import org.apache.commons.io.FileUtils;
 
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.MessageResource;
@@ -82,6 +83,7 @@ public class ProjectManager {
         this.projectCopyExclusions.add(LocalDeploymentManager.DIST_DIR_DEFAULT);
     }
 
+    // FIXME PW filesystem find a better way then remove the username method
     public Resource getTmpDir() {
         try {
             Resource tmpDir = this.fileSystem.getCommonDir();
@@ -92,6 +94,25 @@ public class ProjectManager {
             return tmpDir;
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
+        }
+    }
+
+    @Deprecated
+    private String getCurrentUsername() {
+        try {
+            org.acegisecurity.Authentication authentication = org.acegisecurity.context.SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+            username = username.replaceAll("_", "__"); // insures that users
+                                                       // can't type in
+                                                       // mkantor_AT_wavemaker.com;
+                                                       // because that gets
+                                                       // turned into
+                                                       // mkantor__AT__wavemaker.com
+            username = username.replaceAll("\\.", "_DOT_");
+            username = username.replaceAll("@", "_AT_");
+            return username;
+        } catch (Exception e) {
+            return null;
         }
     }
 
@@ -195,34 +216,20 @@ public class ProjectManager {
     }
 
     /**
-     * Creates a new project in the default path (from studioConfiguration).
-     * 
-     * @param projectName
-     * @throws IOException
-     */
-    public void newProject(String projectName) throws IOException {
-
-        newProject(projectName, false);
-    }
-
-    /**
      * Create a new project in the specified path. A new directory containing the project will be created in
      * path/projectName.
      * 
      * @param projectName the name of the project to create.
-     * @param noTemplate if this is true, do not use the template.
      * @throws IOException
      */
-    public void newProject(String projectName, boolean noTemplate) throws IOException {
+    public void newProject(String projectName) throws IOException {
 
         checkNewProject(projectName);
 
         Resource projectDir = this.fileSystem.getProjectsDir().createRelative(projectName + "/");
         if (!projectDir.exists()) {
             this.fileSystem.createPath(this.fileSystem.getProjectsDir(), projectName + "/");
-            if (!noTemplate) {
-                createProjectFromTemplate(projectDir);
-            }
+            createProjectFromTemplate(projectDir);
         }
 
         openProject(projectName);
@@ -271,8 +278,8 @@ public class ProjectManager {
                 this.fileSystem.deleteFile(tomcatXml);
             }
             // update the projectname.js file
-            String shortSourceName = sourceProjectName.substring(getUserProjectPrefix().length());
-            String shortDestName = destinationProjectName.substring(getUserProjectPrefix().length());
+            String shortSourceName = sourceProjectName;
+            String shortDestName = destinationProjectName;
 
             String serviceStr = "\"service\":\"" + shortSourceName + "\"";
             String dummyStr = "nothingicandoifyouwanttoscrewup";
@@ -384,23 +391,22 @@ public class ProjectManager {
      * @throws IOException
      */
     public void closeProject() throws IOException {
-
         RuntimeAccess.getInstance().getSession().removeAttribute(OPEN_PROJECT_SESSION_NAME);
-
         if (this.currentProject == null) {
             return;
         }
-
         if (getProjectEventNotifier() != null) {
             getProjectEventNotifier().executeCloseProject(this.currentProject);
         }
-
-        Resource projLib = this.currentProject.getProjectLib();
-        if (projLib != null) {
-            FileUtils.forceDelete(projLib.getFile());
+        try {
+            Resource projLib = this.currentProject.getProjectLib();
+            if (projLib != null) {
+                FileUtils.forceDelete(projLib.getFile());
+            }
+        } catch (FileNotFoundException ex) {
+        } finally {
+            this.currentProject = null;
         }
-
-        this.currentProject = null;
     }
 
     /**
@@ -409,14 +415,13 @@ public class ProjectManager {
      * @return The list of all current projects.
      * @throws FileAccessException
      */
-    public SortedSet<String> listProjects(String prefixIn) {
-        final String prefix = prefixIn;
+    public SortedSet<String> listProjects() {
         SortedSet<String> ret = new TreeSet<String>();
 
         Resource projectsDir = this.fileSystem.getProjectsDir();
         if (projectsDir != null && projectsDir.exists()) {
             for (Resource possibleProject : this.fileSystem.listChildren(projectsDir)) {
-                if (!possibleProject.getFilename().startsWith(prefix) || !checkProjectName(possibleProject.getFilename())) {
+                if (!checkProjectName(possibleProject.getFilename())) {
                     continue;
                 }
                 if (this.fileSystem.listChildren(possibleProject).size() > 0) {
@@ -494,33 +499,6 @@ public class ProjectManager {
 
     public void setUpgradeManager(UpgradeManager upgradeManager) {
         this.upgradeManager = upgradeManager;
-    }
-
-    public String getUserProjectPrefix() {
-        String s = getCurrentUsername();
-        if (s == null) {
-            return "";
-        } else {
-            return s + "___";
-        }
-    }
-
-    public String getCurrentUsername() {
-        try {
-            org.acegisecurity.Authentication authentication = org.acegisecurity.context.SecurityContextHolder.getContext().getAuthentication();
-            String username = authentication.getName();
-            username = username.replaceAll("_", "__"); // insures that users
-                                                       // can't type in
-                                                       // mkantor_AT_wavemaker.com;
-                                                       // because that gets
-                                                       // turned into
-                                                       // mkantor__AT__wavemaker.com
-            username = username.replaceAll("\\.", "_DOT_");
-            username = username.replaceAll("@", "_AT_");
-            return username;
-        } catch (Exception e) {
-            return null;
-        }
     }
 
     // other bean-style properties

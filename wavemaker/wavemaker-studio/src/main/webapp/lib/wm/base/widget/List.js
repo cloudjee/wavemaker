@@ -96,7 +96,7 @@ dojo.declare("wm.List", wm.VirtualList, {
     },
 	setSelectionMode: function(inMode) {
 	  this.selectionMode = inMode;
-	    if (inMode == "checkbox")
+	    if (inMode == "checkbox" || inMode == "extended")
 		inMode = "multiple";
 	    else if (inMode == "radio")
 		inMode = "single";
@@ -272,7 +272,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	_render: function() {
 		this.renderData(this._data);
 	},
-	clear: function() {
+	clear: function(noEvents) {
 		this._data = null;
 		this.inherited(arguments);
 	},
@@ -327,12 +327,12 @@ dojo.declare("wm.List", wm.VirtualList, {
 
 	renderData: function(inData) {
 		if (this.selectionMode == "checkbox" || this.selectionMode == "radio") {
-		    this.columns.unshift({width: "30px", title: "-", controller: this.selectionMode, field: "_selector", show: true});
+		    this.columns.unshift({width: "16px", title: "-", controller: this.selectionMode, field: "_selector", show: true});
 		    this._columnsHash._selector = this.columns[0];
 		}
 
 	        var selectedData = this.selectedItem.getData();
-		this.clear();
+		this.clear(true);
 		this._data = inData;
 		if (!this.dataFields)
 			this._setDataFields();

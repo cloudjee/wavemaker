@@ -196,11 +196,11 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	    this._listTouchScroll.setupScroller();
 	}
     },
-	clear: function() {
+	clear: function(noEvents) {
 		this._setHeaderVisible(false);
 		while (this.getCount())
 			this.removeItem(this.getCount()-1);
-		this.deselectAll();
+		this.deselectAll(noEvents);
 	        this._clearSelectedData();
 	},
 	createItem: function(inContent) {
@@ -334,8 +334,9 @@ dojo.declare("wm.VirtualList", wm.Control, {
 		dojo.forEach(this.items, function(i) {
 			i.deselect();
 		});
+	        var count = this.selection ? this.selection.length : 0;
 		this.selection = [];
-		if (!ignoreSelectedItem) {
+		if (!ignoreSelectedItem && count) {
 		    this._clearSelectedData();
 		    this.onSelectionChange();
 		}
@@ -446,9 +447,9 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	    if (inEvent.target.tagName == "INPUT" && dojo.attr(inEvent.target, "wmcontroller")) {
 		if (inEvent.target.type == "checkbox") {
 		    if (inEvent.target.checked) {
-			this.addToSelection(inItem);
+			this.eventSelect(inItem);
 		    } else {
-			this.removeFromSelection(inItem);
+			this.eventDeselect(inItem);
 		    }
 		} else if (inEvent.target.type == "radio") {
 		    var toggleSelectWas = this.toggleSelect;
@@ -463,7 +464,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	ondblclick: function(inEvent, inItem) {
 	},
     onSelectionChange: function() {}, // Added for DojoGrid compatability
-	onselect: function(inItem) {
+    onselect: function(inItem) {
 	},
 	ondeselect: function(inItem) {
 	},

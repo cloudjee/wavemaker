@@ -15,11 +15,9 @@
 package com.wavemaker.runtime.server;
 
 /**
- * A class containing a download response. This should be used as the return type for any operation which handles
- * download requests.
- * 
  * @author Matt Small
  */
+@Deprecated
 public class DojoFileUploaderResponse {
 
     public DojoFileUploaderResponse() {

@@ -31,8 +31,6 @@ import org.apache.tools.ant.types.Path;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ResourceUtils;
 
-import com.wavemaker.common.util.ClassLoaderUtils;
-import com.wavemaker.common.util.ClassLoaderUtils.TaskNoRtn;
 import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.tools.common.Bootstrap;
 
@@ -45,7 +43,7 @@ public class AntUtils {
 
         // Ant doesn't set the context classloader, and Spring depends on
         // it for loading files
-        ClassLoaderUtils.runInClassLoaderContext(new TaskNoRtn() {
+        ResourceClassLoaderUtils.runInClassLoaderContext(new Runnable() {
 
             @Override
             public void run() {

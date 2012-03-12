@@ -79,7 +79,7 @@ dojo.declare("AddPatch", wm.Page, {
 	*/
 	this.fullText = patch;
 
-	studio.studioService.requestSync("writeCommonFile", [this.fileName, this.fullText]);
+	studio.resourceManagerService.requestSync("writeFile", ["/common/" + this.fileName, this.fullText]);
 	app.toastSuccess(this.getDictionaryItem("SAVED"));
 	this.owner.owner.hide();
     },
