@@ -403,6 +403,50 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
     }
 
     @ExposeToClient
+    public List<String> getMissingJars() {
+        Map<String, String> jarHash = new HashMap<String, String>();
+        jarHash.put("db2jcc.jar", "COM.ibm.db2.app.DB2StructOutput");
+        jarHash.put("ojdbc.jar", "oracle.jdbc.driver.OracleDatabaseMetaData");
+        jarHash.put("wsdl4j.jar", "javax.wsdl.factory.WSDLFactory");
+        jarHash.put("hibernate3.jar", "org.hibernate.cfg.Environment");
+
+        List<String> missingJars = new ArrayList<String>();
+
+        Set<Map.Entry<String, String>> entries = jarHash.entrySet();
+        for (Map.Entry<String, String> entry : entries) {
+            try {
+                Class.forName(entry.getValue());
+            } catch (ClassNotFoundException ex) {
+                missingJars.add(entry.getKey());
+            }
+        }
+
+        return missingJars;
+    }
+
+    @ExposeToClient
+    public FileUploadResponse uploadJar(MultipartFile file) {
+        FileUploadResponse ret = new FileUploadResponse();
+        try {
+            String filename = file.getOriginalFilename();
+            String filenameExtension = StringUtils.getFilenameExtension(filename);
+            if (!StringUtils.hasLength(filenameExtension)) {
+                throw new IOException("Please upload a jar file");
+            }
+            if (!"jar".equals(filenameExtension)) {
+                throw new IOException("Please upload a jar file, not a " + filenameExtension + " file");
+            }
+            Folder destinationFolder = this.fileSystem.getStudioWebAppRootFolder().getFolder("WEB-INF/lib");
+            File destinationFile = destinationFolder.getFile(filename);
+            destinationFile.getContent().write(file.getInputStream());
+            ret.setPath(destinationFile.getName());
+        } catch (IOException e) {
+            ret.setError(e.getMessage());
+        }
+        return ret;
+    }
+
+    @ExposeToClient
     public FileUploadResponse uploadExtensionZip(MultipartFile file) {
         FileUploadResponse ret = new FileUploadResponse();
         java.io.File tmpDir;
@@ -569,62 +613,6 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
             com.wavemaker.common.util.IOUtils.deleteRecursive(tmpDir);
         } catch (Exception e) {
             return ret;
-        }
-        return ret;
-    }
-
-    @ExposeToClient
-    public List<String> getMissingJars() {
-        Map<String, String> jarHash = new HashMap<String, String>();
-        jarHash.put("db2jcc.jar", "COM.ibm.db2.app.DB2StructOutput");
-        jarHash.put("ojdbc.jar", "oracle.jdbc.driver.OracleDatabaseMetaData");
-        jarHash.put("wsdl4j.jar", "javax.wsdl.factory.WSDLFactory");
-        jarHash.put("hibernate3.jar", "org.hibernate.cfg.Environment");
-
-        List<String> missingJars = new ArrayList<String>();
-
-        Set<Map.Entry<String, String>> entries = jarHash.entrySet();
-        for (Map.Entry<String, String> entry : entries) {
-            try {
-                Class.forName(entry.getValue());
-            } catch (ClassNotFoundException ex) {
-                missingJars.add(entry.getKey());
-            }
-        }
-
-        return missingJars;
-    }
-
-    @ExposeToClient
-    public FileUploadResponse uploadJar(MultipartFile file) {
-        FileUploadResponse ret = new FileUploadResponse();
-        try {
-            String filename = file.getOriginalFilename();
-            int dotindex = filename.lastIndexOf(".");
-            String ext = dotindex == -1 ? "" : filename.substring(dotindex + 1);
-            if (dotindex == -1) {
-                throw new IOException("Please upload a jar file");
-            } else if (!ext.equals("jar")) {
-                throw new IOException("Please upload a jar file, not a " + ext + " file");
-            }
-
-            java.io.File destDir = new java.io.File(WMAppContext.getInstance().getAppContextRoot());
-            destDir = new java.io.File(destDir, "WEB-INF/lib");
-
-            // Write the zip file to outputFile
-            String originalName = file.getOriginalFilename();
-            java.io.File outputFile = new java.io.File(destDir, originalName);
-
-            FileOutputStream fos = new FileOutputStream(outputFile);
-            com.wavemaker.common.util.IOUtils.copy(file.getInputStream(), fos);
-            file.getInputStream().close();
-            fos.close();
-            ret.setPath(outputFile.getName());
-            ret.setError("");
-            ret.setWidth("");
-            ret.setHeight("");
-        } catch (IOException e) {
-            ret.setError(e.getMessage());
         }
         return ret;
     }
