@@ -1,5 +1,5 @@
 
-package com.wavemaker.tools.io;
+package com.wavemaker.tools.io.zip;
 
 import java.io.FilterInputStream;
 import java.io.IOException;
@@ -11,6 +11,11 @@ import org.cloudfoundry.client.lib.io.DynamicZipInputStream;
 import org.cloudfoundry.client.lib.io.DynamicZipInputStream.Entry;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.Resource;
+import com.wavemaker.tools.io.ResourcePath;
 
 /**
  * Adapter class that can be used to convert a {@link Folder} into a zipped {@link InputStream}.
