@@ -101,7 +101,8 @@
 									<excludes>
 										<exclude>**/*.java</exclude>
 									</excludes>
-								</resource>								<resource>
+								</resource>
+								<resource>
 									<directory>services/pwsImportService/src</directory>
 									<excludes>
 										<exclude>**/*.java</exclude>
@@ -232,17 +233,17 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework</groupId>
-			<artifactId>spring-test</artifactId>
-		</dependency>
+		<!-- Provided -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<!-- Test -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
