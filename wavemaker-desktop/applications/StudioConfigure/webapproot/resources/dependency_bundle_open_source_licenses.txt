@@ -1,4 +1,5 @@
-System Dependencies Bundle for VMware WaveMaker 6.4.x
+<pre>
+System Dependencies Bundle for VMware WaveMaker 6.5.x
 
 ===========================================================================
 
@@ -1172,3 +1173,4 @@ years from the date you acquired this Software product. Alternatively,
 the Source Files may accompany the VMware product.
 
 [DEPENDBUNDLEWAVEMAKER64XKP090111]
+</pre>

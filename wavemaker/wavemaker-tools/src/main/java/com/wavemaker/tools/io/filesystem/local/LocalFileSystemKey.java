@@ -10,7 +10,7 @@ import com.wavemaker.tools.io.filesystem.JailedResourcePath;
  * 
  * @author Phillip Webb
  */
-public class LocalFileSystemKey {
+class LocalFileSystemKey {
 
     private final JailedResourcePath path;
 

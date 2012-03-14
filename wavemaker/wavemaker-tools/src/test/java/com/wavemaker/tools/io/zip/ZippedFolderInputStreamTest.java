@@ -1,5 +1,5 @@
 
-package com.wavemaker.tools.io;
+package com.wavemaker.tools.io.zip;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -8,7 +8,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipEntry;
@@ -19,6 +18,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.springframework.util.FileCopyUtils;
 
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.filesystem.FileSystemFolder;
 import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 

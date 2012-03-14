@@ -1,18 +1,16 @@
 
-package com.wavemaker.tools.io.filesystem.mongo;
+package com.wavemaker.tools.io.zip;
+
+import org.springframework.util.Assert;
 
 import com.wavemaker.tools.io.filesystem.JailedResourcePath;
 
-/**
- * Key used with {@link MongoFileSystem}.
- * 
- * @author Phillip Webb
- */
-class MongoFileSystemKey {
+class ZipFileSystemKey {
 
     private final JailedResourcePath path;
 
-    public MongoFileSystemKey(JailedResourcePath path) {
+    public ZipFileSystemKey(JailedResourcePath path) {
+        Assert.notNull(path, "Path must not be null");
         this.path = path;
     }
 
@@ -24,4 +22,5 @@ class MongoFileSystemKey {
     public String toString() {
         return this.path.toString();
     }
+
 }

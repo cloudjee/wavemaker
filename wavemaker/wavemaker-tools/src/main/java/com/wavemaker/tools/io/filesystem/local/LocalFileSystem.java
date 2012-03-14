@@ -79,7 +79,9 @@ public class LocalFileSystem implements FileSystem<LocalFileSystemKey> {
 
     @Override
     public Iterable<String> list(LocalFileSystemKey key) {
-        return Collections.unmodifiableList(Arrays.asList(key.getFile().list()));
+        String[] list = key.getFile().list();
+        Assert.state(list != null, "Unable to list files for " + key.getFile());
+        return Collections.unmodifiableList(Arrays.asList(list));
     }
 
     @Override

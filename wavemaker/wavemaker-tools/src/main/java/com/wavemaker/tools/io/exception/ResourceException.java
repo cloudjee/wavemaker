@@ -1,7 +1,6 @@
 
 package com.wavemaker.tools.io.exception;
 
-
 /**
  * {@link RuntimeException} used to wrap {@link Resource} {@link Exception}s.
  * 
@@ -14,8 +13,8 @@ public class ResourceException extends RuntimeException {
     public ResourceException() {
     }
 
-    public ResourceException(Exception source) {
-        super(source);
+    public ResourceException(Throwable cause) {
+        super(cause);
     }
 
     public ResourceException(String message) {
