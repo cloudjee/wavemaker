@@ -380,44 +380,49 @@ wm.LivePanel.extend({
 
 	var type = wm.typeManager.getType(lvar.type)
 	for (var i = 0; i < columns.length; i++) {
-	    var fieldName = columns[i].field;
-	    if (fieldName.indexOf(".") != -1) {
-		/* Editing a subobject */
-		var objectName = fieldName.replace(/\..*?$/, "");
-		var obj = lvar.getValue(objectName);
-		var displayField = wm.typeManager.getDisplayField(obj.type);
+	    if (columns[i].mobileColumn) {
+		;
+	    } else {
+		var fieldName = columns[i].field;
+		if (fieldName.indexOf(".") != -1) {
+		    /* Editing a subobject */
+		    var objectName = fieldName.replace(/\..*?$/, "");
+		    var obj = lvar.getValue(objectName);
+		    var displayField = wm.typeManager.getDisplayField(obj.type);
 
-	        var fieldName = fieldName.replace(/^.*?\./,"");
-	        if (fieldName != displayField) {
-		    columns[i].show = false;
+	            var fieldName = fieldName.replace(/^.*?\./,"");
+	            if (fieldName != displayField) {
+			columns[i].show = false;
+		    } else {
+  			var subvar = r.createComponent(objectName + "LiveVariable1", "wm.LiveVariable", {type: obj.type});
+			columns[i].title = wm.capitalize(objectName);
+			columns[i].fieldType = "dojox.grid.cells.ComboBox";
+			columns[i].editorProps = {selectDataSet: subvar.name,
+						  displayField: displayField};
+		    }
+
 		} else {
-  		    var subvar = r.createComponent(objectName + "LiveVariable1", "wm.LiveVariable", {type: obj.type});
-		    columns[i].title = wm.capitalize(objectName);
-		    columns[i].fieldType = "dojox.grid.cells.ComboBox";
-		    columns[i].editorProps = {selectDataSet: subvar.name,
-					      displayField: displayField};
+		    /* Editing a field of the main object */
+		    var field = type.fields[fieldName];
+		    if (field.exclude.length == 0) { 
+			switch(field.type) {
+			case "java.util.Date":
+			    columns[i].fieldType = "dojox.grid.cells.DateTextBox";
+			    break;
+			case "java.lang.Boolean":
+			    columns[i].fieldType = "dojox.grid.cells.Bool";
+			    break;
+			case "java.lang.Integer":
+			case "java.lang.Double":
+			case "java.lang.Float":
+			case "java.lang.Short":
+			    columns[i].fieldType = "dojox.grid.cells.NumberTextBox";
+			    break;
+			default:
+			    columns[i].fieldType = "dojox.grid.cells._Widget";
+			}
+		    }
 		}
-	} else {
-		/* Editing a field of the main object */
-		var field = type.fields[fieldName];
-	    if (field.exclude.length == 0) { 
-		switch(field.type) {
-		case "java.util.Date":
-		    columns[i].fieldType = "dojox.grid.cells.DateTextBox";
-		    break;
-		case "java.lang.Boolean":
-		    columns[i].fieldType = "dojox.grid.cells.Bool";
-		    break;
-		case "java.lang.Integer":
-		case "java.lang.Double":
-		case "java.lang.Float":
-		case "java.lang.Short":
-		    columns[i].fieldType = "dojox.grid.cells.NumberTextBox";
-		    break;
-		default:
-		    columns[i].fieldType = "dojox.grid.cells._Widget";
-		}
-	    }
 	    }
 	}
 	    this.dataGrid.renderDojoObj();
