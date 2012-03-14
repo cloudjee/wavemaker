@@ -435,9 +435,11 @@ dojo.declare("wm.DateTimePicker", wm.Container, {
     setUse24Time: function(inVal) {
 	this.use24Time = inVal;
 	this.ampm.setShowing(!inVal);
-	var hours = [];
-	for (var i = 1; i <= (inVal ? 24 : 12); i++) hours.push(String(i));
-	this.hours.setOptions(hours);
+	if (this.hours.showing) {
+	    var hours = [];
+	    for (var i = 1; i <= (inVal ? 24 : 12); i++) hours.push(String(i));
+	    this.hours.setOptions(hours);
+	}
     },
     postInit: function() {
 	var onchange = dojo.hitch(this, "changed");
