@@ -505,7 +505,46 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
 	getCell: function(rowIndex, fieldName) {
 	    var item = this.dojoObj.getItem(rowIndex);
-	    return this.dojoObj.store.getValue(item,fieldName);
+	    var col;
+	    var idx;
+	    for (var i = 0; i < this.columns.length; i++) {
+		if (this.columns[i].field == fieldName ||
+		   this.columns[i].id == fieldName) {
+		    col = this.columns[i];
+		    idx = i;
+		    break;
+		}
+	    }
+	    if (col && col.isCustomField) {
+		if (col.expression) {
+		    return this.getExpressionValue(col.expression, rowIndex, this.getRow(rowIndex), true);
+
+		} else if (col.formatFunc){
+		    switch(col.formatFunc){
+		    case 'wm_date_formatter':
+		    case 'Date (WaveMaker)':				    
+		    case 'wm_localdate_formatter':
+		    case 'Local Date (WaveMaker)':				    
+		    case 'wm_time_formatter':
+		    case 'Time (WaveMaker)':				    
+		    case 'wm_number_formatter':
+		    case 'Number (WaveMaker)':				    
+		    case 'wm_currency_formatter':
+		    case 'Currency (WaveMaker)':				    
+		    case 'wm_image_formatter':
+		    case 'Image (WaveMaker)':				    
+		    case 'wm_link_formatter':
+		    case 'Link (WaveMaker)':				    
+			return undefined;// custom field with a formatter rather than a func to generate a value? Empty cell.
+		    default:
+			if (!this.isDesignLoaded())
+			    return dojo.hitch(this.owner, col.formatFunc)("", rowIndex, idx, col.field || col.id, {customStyles:[], customClasses:[]}, this.getRow(rowIndex));
+		    }		    	    
+		}
+		return undefined;// custom field with no function to generate a value? Empty cell.
+	    } else {
+		return this.dojoObj.store.getValue(item,fieldName);
+	    }
 	},
         getCellNode: function(rowIndex, fieldName) {
 	    var cells = this.dojoObj.layout.cells;
@@ -1521,7 +1560,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
     toHtml: function() {
 	var html = "<table border='0' cellspacing='0' cellpadding='0' class='wmdojogrid'><thead><tr>";
 		dojo.forEach(this.columns, function(col, idx){
-			if (!col.show)
+			if (!col.show || col.mobileColumn)
 				return;
 		    html += "<th style='" + (col.width.match(/px/) ? col.width : "") + "'>" + col.title + "</th>";
 		}, this);
@@ -1534,7 +1573,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 					return;
 			    try {
 				var value = obj[col.field || col.id];
-			    if (!value) {
+			    if (!value && !col.isCustomField) {
 				var value = obj;
 				var colid = col.field || col.id;
 				while(colid.indexOf(".") != -1) {
