@@ -49,7 +49,7 @@ dojo.declare("GridDesigner", wm.Page, {
 	this.updateDataSets();
     },
     regenerateMobileColumn: function() {
-	if (this.mobileColumn.getValue("customField")) return;
+	if (this.mobileColumn.getValue("isCustomField")) return;
 	var mobileExpr = "";
 	var count = this.columnsVar.getCount();
 
@@ -182,7 +182,7 @@ dojo.declare("GridDesigner", wm.Page, {
 
 	if (item.getValue("mobileColumn") && inName == "expression") {
 	    item.beginUpdate();
-	    item.setValue("customField", true);
+	    item.setValue("isCustomField", true);
 	    item.endUpdate();
 	}
 
