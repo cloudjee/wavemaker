@@ -33,6 +33,8 @@ import com.wavemaker.tools.project.Project;
 @Deprecated
 public class ClassResourceObject extends ResourceJavaFileObject {
 
+    // FIXME PW delete
+
     /**
      * Represents a compiled class object
      * 

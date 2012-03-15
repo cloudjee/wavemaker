@@ -33,6 +33,8 @@ import com.wavemaker.tools.project.Project;
 @Deprecated
 public abstract class ResourceJavaFileObject extends GenericResourceFileObject implements JavaFileObject {
 
+    // FIXME PW delete
+
     private final Kind kind;
 
     protected ResourceJavaFileObject(Kind kind, Project project, Resource resource) throws IOException {

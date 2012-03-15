@@ -19,10 +19,10 @@ import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.ResourceFilter;
 import com.wavemaker.tools.io.Resources;
-import com.wavemaker.tools.io.compiler.ResourceFolderJavaFileManager;
+import com.wavemaker.tools.io.compiler.ResourceJavaFileManager;
 
 /**
- * Adapter class that exposes {@link wavemaker.tools.io.Folder}s from a {@link ResourceFolderJavaFileManager} as eclipse
+ * Adapter class that exposes {@link wavemaker.tools.io.Folder}s from a {@link ResourceJavaFileManager} as eclipse
  * {@link FileSystem.Classpath}s.
  * 
  * @author Phillip Webb

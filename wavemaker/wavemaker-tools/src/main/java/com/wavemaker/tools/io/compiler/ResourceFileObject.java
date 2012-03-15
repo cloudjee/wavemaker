@@ -14,6 +14,7 @@ import javax.tools.FileObject;
 import org.springframework.util.Assert;
 
 import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.ResourceStringFormat;
 import com.wavemaker.tools.io.ResourceURL;
 
 /**
@@ -48,7 +49,7 @@ public class ResourceFileObject implements FileObject {
 
     @Override
     public String getName() {
-        return this.file.toString();
+        return this.file.toString(ResourceStringFormat.UNJAILED);
     }
 
     @Override

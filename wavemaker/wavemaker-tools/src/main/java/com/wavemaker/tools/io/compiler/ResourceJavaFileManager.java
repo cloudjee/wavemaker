@@ -6,9 +6,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,27 +25,32 @@ import org.springframework.util.StringUtils;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
+import com.wavemaker.tools.io.ResourcePath;
 import com.wavemaker.tools.io.ResourceURL;
+import com.wavemaker.tools.io.filesystem.FileSystemFolder;
+import com.wavemaker.tools.io.zip.ZipFileSystem;
 
 /**
- * A {@link ForwardingJavaFileManager} that manages files contained in {@link com.wavemaker.tools.io.Folder}s.
+ * A {@link ForwardingJavaFileManager} that manages files contained in {@link com.wavemaker.tools.io.Resource}s.
  * 
  * @author Phillip Webb
  */
-public class ResourceFolderJavaFileManager extends ForwardingJavaFileManager<JavaFileManager> {
+public class ResourceJavaFileManager extends ForwardingJavaFileManager<JavaFileManager> {
 
     private static final Set<Kind> CLASS_OR_SOURCE_KIND = EnumSet.of(Kind.CLASS, Kind.SOURCE);
 
-    private final Map<String, Iterable<Folder>> locations = new HashMap<String, Iterable<Folder>>();
+    private final Map<String, Iterable<Resource>> locations = new HashMap<String, Iterable<Resource>>();
 
-    public ResourceFolderJavaFileManager(JavaFileManager fileManager) {
+    private final Map<String, Iterable<Folder>> locationFolders = new HashMap<String, Iterable<Folder>>();
+
+    public ResourceJavaFileManager(JavaFileManager fileManager) {
         super(fileManager);
     }
 
     @Override
     public ClassLoader getClassLoader(Location location) {
         try {
-            Iterable<Folder> folders = getLocation(location);
+            Iterable<Resource> folders = getLocation(location);
             if (folders == null) {
                 return null;
             }
@@ -60,27 +65,31 @@ public class ResourceFolderJavaFileManager extends ForwardingJavaFileManager<Jav
     @Override
     public Iterable<JavaFileObject> list(Location location, String packageName, Set<Kind> kinds, boolean recurse) throws IOException {
         List<JavaFileObject> javaFileObjects = new ArrayList<JavaFileObject>();
-        Iterable<Folder> folders = getLocation(location);
+        Iterable<Folder> folders = getLocationFolders(location);
         if (folders != null) {
-            String packagePath = asPath(packageName);
+            ResourcePath packagePath = asPath(packageName);
             for (Folder folder : folders) {
                 collectJavaFileObjects(javaFileObjects, folder, packagePath, kinds, recurse);
             }
         }
-        addAll(javaFileObjects, super.list(location, packageName, kinds, recurse));
+        try {
+            addAll(javaFileObjects, super.list(location, packageName, kinds, recurse));
+        } catch (Exception e) {
+            // Treat as missing
+        }
         return javaFileObjects;
     }
 
-    private void collectJavaFileObjects(List<JavaFileObject> list, Folder root, String packagePath, Set<Kind> kinds, boolean recurse) {
-        Folder folder = root.getFolder(packagePath);
-        if (!folder.exists() || folder.toString().endsWith(packagePath)) {
+    private void collectJavaFileObjects(List<JavaFileObject> list, Folder root, ResourcePath packagePath, Set<Kind> kinds, boolean recurse) {
+        Folder folder = packagePath.isRootPath() ? root : root.getFolder(packagePath.toString());
+        if (!folder.exists() || !folder.toString().endsWith(packagePath + "/")) {
             return;
         }
         for (Resource child : folder.list()) {
             if (child instanceof Folder) {
                 Folder childFolder = (Folder) child;
                 if (recurse) {
-                    collectJavaFileObjects(list, root, packagePath + "/" + childFolder.getName(), kinds, recurse);
+                    collectJavaFileObjects(list, root, packagePath.get(childFolder.getName()), kinds, recurse);
                 }
             } else {
                 File childFile = (File) child;
@@ -156,7 +165,7 @@ public class ResourceFolderJavaFileManager extends ForwardingJavaFileManager<Jav
 
     private ResourceJavaFileObject getJavaFile(Location location, String className, Kind kind, boolean mustExist) {
         if (CLASS_OR_SOURCE_KIND.contains(kind)) {
-            Iterable<Folder> folders = getLocation(location);
+            Iterable<Folder> folders = getLocationFolders(location);
             if (folders != null) {
                 String path = asPath(className) + kind.extension;
                 for (Folder folder : folders) {
@@ -190,7 +199,7 @@ public class ResourceFolderJavaFileManager extends ForwardingJavaFileManager<Jav
     }
 
     private ResourceFileObject getFile(Location location, String packageName, String relativeName) throws IOException {
-        Iterable<Folder> folders = getLocation(location);
+        Iterable<Folder> folders = getLocationFolders(location);
         if (folders != null) {
             String filename = asPath(packageName) + "/" + relativeName.replace("\\", "/");
             for (Folder folder : folders) {
@@ -203,20 +212,38 @@ public class ResourceFolderJavaFileManager extends ForwardingJavaFileManager<Jav
         return null;
     }
 
-    public Iterable<Folder> getLocation(Location location) {
+    public Iterable<Resource> getLocation(Location location) {
         return this.locations.get(location.getName());
     }
 
-    public void setLocation(Location location, Iterable<Folder> folders) {
-        if (location.isOutputLocation()) {
-            Iterator<Folder> iterator = folders.iterator();
-            if (iterator.hasNext()) {
-                iterator.next();
-                boolean onlyHasOnlyOnePath = !iterator.hasNext();
-                Assert.isTrue(onlyHasOnlyOnePath, "Output location '" + location + "' can only have one path");
-            }
+    public void setLocation(Location location, Iterable<? extends Resource> resources) {
+        Assert.notNull(location, "Location must not be null");
+
+        List<Resource> resourceList = new ArrayList<Resource>();
+        List<Folder> folderList = new ArrayList<Folder>();
+
+        for (Resource resource : resources) {
+            resourceList.add(resource);
+            folderList.add(asFolder(resource).jail());
         }
-        this.locations.put(location.getName(), folders);
+        if (location.isOutputLocation()) {
+            Assert.isTrue(resourceList.size() <= 1, "Output location '" + location + "' can only have one path");
+        }
+        this.locations.put(location.getName(), Collections.unmodifiableList(resourceList));
+        this.locationFolders.put(location.getName(), Collections.unmodifiableList(folderList));
+    }
+
+    public Iterable<Folder> getLocationFolders(Location location) {
+        return this.locationFolders.get(location.getName());
+    }
+
+    private Folder asFolder(Resource resource) {
+        if (resource instanceof Folder) {
+            return (Folder) resource;
+        }
+        File file = (File) resource;
+        Assert.isTrue(file.getName().endsWith(".jar") || file.getName().endsWith(".zip"), file + " does not have a jar or zip extension");
+        return FileSystemFolder.getRoot(new ZipFileSystem(file));
     }
 
     private String getNameWithoutExtension(String name) {
@@ -227,7 +254,10 @@ public class ResourceFolderJavaFileManager extends ForwardingJavaFileManager<Jav
         return name.substring(0, name.length() - extension.length() - 1);
     }
 
-    private String asPath(String name) {
+    private ResourcePath asPath(String name) {
+        if ("".equals(name)) {
+            return new ResourcePath();
+        }
         StringBuffer classNamePath = new StringBuffer(name.length());
         for (char c : name.toCharArray()) {
             if (c == '\\' || c == '.') {
@@ -235,7 +265,7 @@ public class ResourceFolderJavaFileManager extends ForwardingJavaFileManager<Jav
             }
             classNamePath.append(c);
         }
-        return classNamePath.toString();
+        return new ResourcePath().get(classNamePath.toString());
     }
 
     private <T> void addAll(List<T> list, Iterable<T> iterable) {

@@ -28,9 +28,10 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.springframework.core.io.Resource;
+
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.OneToManyMap;
 import com.wavemaker.common.util.StringUtils;
@@ -54,8 +55,6 @@ import com.wavemaker.tools.service.ClassLoaderFactory;
 import com.wavemaker.tools.service.CompileService;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
-import com.wavemaker.tools.util.AntUtils;
-import org.springframework.core.io.Resource;
 
 /**
  * @author Simon Toens
@@ -119,11 +118,11 @@ public class DataModelManager {
 
         Resource outputDir = getServicePath(serviceId);
         Resource classesDir;
-        //try {
-            classesDir = this.projectManager.getCurrentProject().getWebInfClasses();
-        //} catch (IOException ex) {
-        //    throw new WMRuntimeException(ex);
-        //}
+        // try {
+        classesDir = this.projectManager.getCurrentProject().getWebInfClasses();
+        // } catch (IOException ex) {
+        // throw new WMRuntimeException(ex);
+        // }
 
         ImportDB importer = null;
 
@@ -149,14 +148,12 @@ public class DataModelManager {
             }
 
         } catch (RuntimeException ex) {
-            //cftempfix - uncommented the following lines
-            /*try {
-                // if import fails, don't leave artifacts from
-                // import attempt around
-                this.serviceManager.deleteService(serviceId);
-            } catch (IOException ignore) {
-            } catch (NoSuchMethodException ignore) {
-            }*/
+            // cftempfix - uncommented the following lines
+            /*
+             * try { // if import fails, don't leave artifacts from // import attempt around
+             * this.serviceManager.deleteService(serviceId); } catch (IOException ignore) { } catch
+             * (NoSuchMethodException ignore) { }
+             */
 
             throw ex;
         } finally {
@@ -244,12 +241,12 @@ public class DataModelManager {
         // import into a tmp location first in case something goes wrong
         Resource tmpServiceRoot = null;
 
-        //try {
-            //tmpServiceRoot = IOUtils.createTempDirectory();
-            tmpServiceRoot = this.fileSystem.createTempDir();
-        //} catch (IOException ex) {
-        //    throw new ConfigurationException(ex);
-        //}
+        // try {
+        // tmpServiceRoot = IOUtils.createTempDirectory();
+        tmpServiceRoot = this.fileSystem.createTempDir();
+        // } catch (IOException ex) {
+        // throw new ConfigurationException(ex);
+        // }
 
         // keep queries, then add them to new datamodel below
         Collection<QueryInfo> queries = cfg.getQueries();
@@ -267,7 +264,7 @@ public class DataModelManager {
                 tmpServiceRoot);
 
             Resource tmpCfgFile;
-            //File tmpCfgFile = new File(tmpServiceRoot, serviceId + DataServiceConstants.SPRING_CFG_EXT);
+            // File tmpCfgFile = new File(tmpServiceRoot, serviceId + DataServiceConstants.SPRING_CFG_EXT);
             try {
                 tmpCfgFile = tmpServiceRoot.createRelative(serviceId + DataServiceConstants.SPRING_CFG_EXT);
             } catch (IOException ex) {
@@ -301,15 +298,15 @@ public class DataModelManager {
             // copy imported files into their final service dir home
             Resource serviceRoot = getServicePath(serviceId);
 
-            //AntUtils.copyDir(tmpServiceRoot, serviceRoot, null, "**/*.class");
+            // AntUtils.copyDir(tmpServiceRoot, serviceRoot, null, "**/*.class");
             this.fileSystem.copyRecursive(tmpServiceRoot, serviceRoot, null, "**/*.class");
             Resource classesDir;
-            //try {
-                classesDir = this.projectManager.getCurrentProject().getWebInfClasses();
-            //} catch (IOException ex) {
-            //    throw new WMRuntimeException(ex);
-            //}
-            //AntUtils.copyDir(tmpServiceRoot, classesDir, "**/*.class", null);
+            // try {
+            classesDir = this.projectManager.getCurrentProject().getWebInfClasses();
+            // } catch (IOException ex) {
+            // throw new WMRuntimeException(ex);
+            // }
+            // AntUtils.copyDir(tmpServiceRoot, classesDir, "**/*.class", null);
             this.fileSystem.copyRecursive(tmpServiceRoot, classesDir, "**/*.class", null);
 
             registerService(serviceId, importer);
@@ -337,11 +334,11 @@ public class DataModelManager {
             if (tmpCfg != null) {
                 tmpCfg.dispose();
             }
-            //try {
-                //IOUtils.deleteRecursive(tmpServiceRoot);
-                this.fileSystem.deleteFile(tmpServiceRoot);
-            //} catch (IOException ignore) {
-            //}
+            // try {
+            // IOUtils.deleteRecursive(tmpServiceRoot);
+            this.fileSystem.deleteFile(tmpServiceRoot);
+            // } catch (IOException ignore) {
+            // }
         }
 
     }
@@ -690,11 +687,11 @@ public class DataModelManager {
 
     // private File getServicePath(String serviceId) {
     public Resource getServicePath(String serviceId) {
-        //try {
-            return this.serviceManager.getServiceRuntimeDirectory(serviceId);
-        //} catch (IOException ex) {
-        //    throw new WMRuntimeException(ex);
-        //}
+        // try {
+        return this.serviceManager.getServiceRuntimeDirectory(serviceId);
+        // } catch (IOException ex) {
+        // throw new WMRuntimeException(ex);
+        // }
     }
 
     private String getProjectName() {
@@ -747,7 +744,7 @@ public class DataModelManager {
             }
         }
 
-        //File cfg = new File(getServicePath(serviceId), DataServiceUtils.getCfgFileName(serviceId));
+        // File cfg = new File(getServicePath(serviceId), DataServiceUtils.getCfgFileName(serviceId));
         Resource cfg = null;
         try {
             cfg = getServicePath(serviceId).createRelative(DataServiceUtils.getCfgFileName(serviceId));
@@ -793,8 +790,7 @@ public class DataModelManager {
                 }
             };
 
-            rtn = new DataModelConfiguration(cfg, this.projectManager.getCurrentProject(),
-                    serviceId, externalConfig, clf);
+            rtn = new DataModelConfiguration(cfg, this.projectManager.getCurrentProject(), serviceId, externalConfig, clf);
 
             this.dataModels.put(getKey(serviceId), rtn);
             this.dataModelNames.put(getProjectName(), serviceId);
@@ -912,7 +908,7 @@ public class DataModelManager {
     }
 
     public static Resource getJavaDir(Resource dir, String pathname) {
-        //return new File(dir, pathname.replace(".", "/") + "/data");
+        // return new File(dir, pathname.replace(".", "/") + "/data");
         Resource rtn = null;
         try {
             rtn = dir.createRelative(pathname.replace(".", "/") + "/data");

@@ -36,6 +36,8 @@ import com.wavemaker.tools.project.Project;
 @Deprecated
 public class GenericResourceFileObject implements FileObject {
 
+    // FIXME PW delete
+
     protected Project project;
 
     protected Resource resource;

@@ -48,17 +48,14 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.StringUtils;
 
-import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.type.FieldDefinition;
 import com.wavemaker.json.type.PrimitiveTypeDefinition;
 import com.wavemaker.json.type.TypeDefinition;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.runtime.service.definition.ServiceOperation;
-import com.wavemaker.tools.compiler.ResourceJavaFileObject;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.javaservice.JavaServiceDefinition;
-import com.wavemaker.tools.project.Project;
-import com.wavemaker.tools.service.DesignServiceManager;
 
 @SupportedAnnotationTypes({ "com.wavemaker.runtime.service.annotations.ExposeToClient", "com.wavemaker.runtime.service.annotations.HideFromClient" })
 @SupportedSourceVersion(SourceVersion.RELEASE_6)
@@ -70,27 +67,21 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
     private Properties classPathServices = null;
 
     @Override
-    protected void doInit(ProcessingEnvironment processingEnv) {
-        Project project = this.designServiceManager.getProjectManager().getCurrentProject();
-        try {
-            Resource classPathServicesProps = project.getProjectRoot().createRelative(
-                "services/" + ServiceProcessorConstants.CLASS_PATH_SERVICES_FILE);
-            if (classPathServicesProps.exists()) {
-                this.classPathServices = new Properties();
-                InputStream inputStream = classPathServicesProps.getInputStream();
-                try {
-                    this.classPathServices.load(inputStream);
-                } finally {
-                    inputStream.close();
-                }
+    protected void doInit(ProcessingEnvironment processingEnv) throws Exception {
+        File classPathServicesProps = getProject().getRootFolder().getFile("services/" + ServiceProcessorConstants.CLASS_PATH_SERVICES_FILE);
+        if (classPathServicesProps.exists()) {
+            this.classPathServices = new Properties();
+            InputStream inputStream = classPathServicesProps.getContent().asInputStream();
+            try {
+                this.classPathServices.load(inputStream);
+            } finally {
+                inputStream.close();
             }
-        } catch (IOException e) {
-            this.processingEnv.getMessager().printMessage(Kind.ERROR, "Could not load " + ServiceProcessorConstants.CLASS_PATH_SERVICES_FILE);
         }
     }
 
     @Override
-    protected boolean doProcess(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+    protected boolean doProcess(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) throws Exception {
 
         if (!isInitialized()) {
             return false;
@@ -100,8 +91,6 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
             return false;
         }
 
-        Project project = this.designServiceManager.getProjectManager().getCurrentProject();
-
         for (TypeElement annotation : annotations) {
             Set<? extends Element> elements = roundEnv.getElementsAnnotatedWith(annotation);
             for (Element e : elements) {
@@ -109,8 +98,8 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
                     TypeElement type = (TypeElement) e;
                     String serviceId = "";
                     try {
-                        JavaFileObject file = this.fileManager.getJavaFileForInput(StandardLocation.SOURCE_PATH, type.getQualifiedName().toString(),
-                            JavaFileObject.Kind.SOURCE);
+                        JavaFileObject file = getJavaFileManager().getJavaFileForInput(StandardLocation.SOURCE_PATH,
+                            type.getQualifiedName().toString(), JavaFileObject.Kind.SOURCE);
                         if (file != null && file.toUri().getPath().contains("/src/")) {
                             String path = file.toUri().getPath();
                             String servicePath = path.substring(0, path.lastIndexOf("/src/"));
@@ -143,10 +132,10 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
                         if (processService(serviceId, type)) {
                             return true;
                         }
-                        Resource serviceDef = this.designServiceManager.getServiceDefXml(serviceId);
+                        Resource serviceDef = getDesignServiceManager().getServiceDefXml(serviceId);
                         try {
-                            getFileSystem().copyFile(project.getWebInfClasses(), serviceDef.getInputStream(),
-                                "services/" + serviceId + "/" + serviceDef.getFilename());
+                            File file = getProject().getClassOutputFolder().getFile("services/" + serviceId + "/" + serviceDef.getFilename());
+                            file.getContent().write(serviceDef.getInputStream());
                         } catch (IOException ex) {
                             this.processingEnv.getMessager().printMessage(Kind.ERROR,
                                 "Could not copy servicedef for runtime service " + serviceId + " to classpath.");
@@ -155,56 +144,43 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
                 }
             }
         }
-        try {
-            copySpringXml();
-        } catch (IOException e) {
-            this.processingEnv.getMessager().printMessage(Kind.ERROR, "Could not copy Spring xml config to classpath.");
-        }
+        copySpringXml();
         return false;
     }
 
-    @Override
-    public void setDesignServiceManager(DesignServiceManager designServiceManager) {
-        this.designServiceManager = designServiceManager;
-    }
-
     private void copySpringXml() throws IOException {
-        Project project = this.designServiceManager.getProjectManager().getCurrentProject();
-        if (!project.isMavenProject()) {
-            Iterable<JavaFileObject> matchedFiles = this.fileManager.list(StandardLocation.SOURCE_PATH, "",
+        if (!getProject().isMavenProject()) {
+            Iterable<JavaFileObject> matchedFiles = getJavaFileManager().list(StandardLocation.SOURCE_PATH, "",
                 Collections.singleton(JavaFileObject.Kind.OTHER), false);
             for (JavaFileObject match : matchedFiles) {
-                if (match instanceof ResourceJavaFileObject) {
-                    ResourceJavaFileObject resource = (ResourceJavaFileObject) match;
-                    if (resource.getFilename().endsWith("spring.xml")) {
-                        getFileSystem().copyFile(project.getWebInfClasses(), resource.openInputStream(), resource.getFilename());
-                    }
+                String name = match.toUri().toString();
+                name.replace('\\', '/');
+                int lastSlash = name.lastIndexOf("/");
+                if (lastSlash != -1) {
+                    name = name.substring(lastSlash + 1);
+                }
+                if (name.endsWith("spring.xml")) {
+                    getProject().getClassOutputFolder().getFile(name).getContent().write(match.openInputStream());
                 }
             }
         }
     }
 
-    private boolean processService(String serviceId, TypeElement type) {
-        Resource serviceDefXml = this.designServiceManager.getServiceDefXml(serviceId);
-        try {
-            Resource sourceFile = this.designServiceManager.getServiceRuntimeDirectory(serviceId).createRelative(
-                JavaServiceDefinition.getRelPathFromClass(type.getQualifiedName().toString()));
-            if (!sourceFile.exists()) {
-                ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(ClassUtils.getDefaultClassLoader());
-                String classFile = JavaServiceDefinition.getRelPathFromClass(type.getQualifiedName().toString()).replace(".java", ".class");
-                Resource[] matches = resolver.getResources("classpath*:/" + classFile);
-                if (matches.length == 0) {
-                    this.processingEnv.getMessager().printMessage(Kind.ERROR,
-                        "Could not locate source or class file for " + type.getQualifiedName().toString());
-                    return true;
-                }
+    private boolean processService(String serviceId, TypeElement type) throws IOException {
+        // FIXME the code below looks like an quick way of skipping the processing, can we remove it
+        Resource serviceDefXml = getDesignServiceManager().getServiceDefXml(serviceId);
+        Resource sourceFile = getDesignServiceManager().getServiceRuntimeDirectory(serviceId).createRelative(
+            JavaServiceDefinition.getRelPathFromClass(type.getQualifiedName().toString()));
+        if (!sourceFile.exists()) {
+            ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(ClassUtils.getDefaultClassLoader());
+            String classFile = JavaServiceDefinition.getRelPathFromClass(type.getQualifiedName().toString()).replace(".java", ".class");
+            Resource[] matches = resolver.getResources("classpath*:/" + classFile);
+            if (matches.length > 0) {
                 sourceFile = matches[0];
             }
-            if (serviceDefXml.exists() && sourceFile.lastModified() <= serviceDefXml.lastModified()) {
-                return false;
-            }
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
+        }
+        if (sourceFile != null && serviceDefXml.exists() && sourceFile.lastModified() <= serviceDefXml.lastModified()) {
+            return false;
         }
 
         this.processingEnv.getMessager().printMessage(Kind.NOTE, "Creating servicdedef for service " + serviceId);
@@ -216,7 +192,7 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
             serviceDef.setLiveDataService(true);
         }
         serviceDef = type.accept(new JavaServiceScanner(), serviceDef);
-        this.designServiceManager.defineService(serviceDef);
+        getDesignServiceManager().defineService(serviceDef);
 
         return false;
     }
@@ -239,7 +215,7 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
 
         public JavaServiceVisitor(CompileTypeState typeState, String serviceId) {
             this.typeState = typeState;
-            this.excludeTypeNames = ServiceDefProcessor.this.designServiceManager.getExcludeTypeNames(serviceId);
+            this.excludeTypeNames = getDesignServiceManager().getExcludeTypeNames(serviceId);
         }
 
         @Override

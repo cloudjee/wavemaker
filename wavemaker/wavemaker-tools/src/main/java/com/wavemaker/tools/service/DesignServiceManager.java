@@ -54,6 +54,7 @@ import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.compiler.ProjectCompiler;
 import com.wavemaker.tools.data.DataModelConfiguration;
 import com.wavemaker.tools.data.util.DataServiceUtils;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
@@ -439,7 +440,9 @@ public class DesignServiceManager {
      * Return the services directory.
      * 
      * @return
+     * @deprecated use getServicesFolder
      */
+    @Deprecated
     public Resource getServicesDir() {
         try {
             return getProjectManager().getCurrentProject().getProjectRoot().createRelative(SERVICES_DIR);
@@ -449,17 +452,38 @@ public class DesignServiceManager {
     }
 
     /**
+     * Return the services folder.
+     * 
+     * @return
+     */
+    public Folder getServicesFolder() {
+        return getProjectManager().getCurrentProject().getRootFolder().getFolder(SERVICES_DIR);
+    }
+
+    /**
      * Return the service directory.
      * 
      * @param serviceId
      * @return
+     * @deprecated use getServiceFolder
      */
+    @Deprecated
     public Resource getServiceHome(String serviceId) {
         try {
             return getServicesDir().createRelative(serviceId + "/");
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
+    }
+
+    /**
+     * Return the service folder.
+     * 
+     * @param serviceId
+     * @return
+     */
+    public Folder getServiceFolder(String serviceId) {
+        return getServicesFolder().getFolder(serviceId);
     }
 
     /**
@@ -481,7 +505,9 @@ public class DesignServiceManager {
      * 
      * @param serviceId
      * @return
+     * @deprecated use getServiceDesigntimeFolder
      */
+    @Deprecated
     public Resource getServiceDesigntimeDirectory(String serviceId) {
         try {
             return getServiceHome(serviceId).createRelative(DESIGNTIME_DIR);
@@ -491,11 +517,22 @@ public class DesignServiceManager {
     }
 
     /**
+     * Return the service's design time directory.
+     * 
+     * @param serviceId
+     * @return
+     */
+    public Folder getServiceDesigntimeFolder(String serviceId) {
+        return getServiceFolder(serviceId).getFolder(DESIGNTIME_DIR);
+    }
+
+    /**
      * Return the path to a service's design-time service definition xml.
      * 
      * @param serviceId
      * @return
      */
+    @Deprecated
     public Resource getServiceDefXml(String serviceId) {
         try {
             Resource serviceDef = getServiceDesigntimeDirectory(serviceId).createRelative(SERVICE_DEF_XML);
@@ -510,6 +547,8 @@ public class DesignServiceManager {
             throw new WMRuntimeException(ex);
         }
     }
+
+    // FIXME we need an alternative to getServiceDefXml that returns a File
 
     /**
      * Return the path to a service's bean definition file.
@@ -662,7 +701,6 @@ public class DesignServiceManager {
      * @return
      */
     public Service getService(String serviceId) {
-
         return getCurrentServiceDefinition(serviceId);
     }
 

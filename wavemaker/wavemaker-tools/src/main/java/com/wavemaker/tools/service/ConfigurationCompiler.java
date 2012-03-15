@@ -35,6 +35,7 @@ import com.wavemaker.json.JSONMarshaller;
 import com.wavemaker.json.JSONState;
 import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.runtime.service.TypeManager;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.service.definitions.DataObject;
 import com.wavemaker.tools.service.definitions.DataObject.Element;
@@ -178,11 +179,19 @@ public class ConfigurationCompiler {
         return getTypesFile(project.getWebAppRoot());
     }
 
+    @Deprecated
     public static void generateServices(FileService fileService, Resource servicesXml, SortedSet<Service> services) throws JAXBException, IOException {
         // Previously the top service file included imports for service bean spring definitions, since 6.5 all
         // *.spring.xml files are loaded using classpath scanning so the imports are no londer necessary. For now we
         // still write an empty file to ensure older projects remain operational.
         SpringConfigSupport.writeBeans(new Beans(), servicesXml, fileService);
+    }
+
+    public static void generateServices(File servicesXml, SortedSet<Service> services) throws JAXBException, IOException {
+        // Previously the top service file included imports for service bean spring definitions, since 6.5 all
+        // *.spring.xml files are loaded using classpath scanning so the imports are no londer necessary. For now we
+        // still write an empty file to ensure older projects remain operational.
+        SpringConfigSupport.writeBeans(new Beans(), servicesXml);
     }
 
     public static SortedSet<Method> getMethods(List<Operation> ops, String serviceName) {
@@ -302,8 +311,18 @@ public class ConfigurationCompiler {
         writer.close();
     }
 
+    @Deprecated
     public static void generateManagers(FileService fileService, Resource managersXml, SortedSet<Service> services) throws JAXBException, IOException {
+        Beans beans = getManagers(services);
+        SpringConfigSupport.writeBeans(beans, managersXml, fileService);
+    }
 
+    public static void generateManagers(File managersXml, SortedSet<Service> services) throws JAXBException, IOException {
+        Beans beans = getManagers(services);
+        SpringConfigSupport.writeBeans(beans, managersXml);
+    }
+
+    private static Beans getManagers(SortedSet<Service> services) {
         Beans beans = new Beans();
 
         // create a type manager
@@ -342,24 +361,31 @@ public class ConfigurationCompiler {
         tm.addProperty(prop);
 
         beans.addBean(tm);
-
-        SpringConfigSupport.writeBeans(beans, managersXml, fileService);
+        return beans;
     }
 
+    @Deprecated
     public static void generateTypes(FileService fileService, Resource typesFile, SortedSet<Service> services, List<DataObject> primitiveTypes)
         throws IOException {
-
-        Types types = getTypesFromServices(services, primitiveTypes);
-
         Writer writer = fileService.getWriter(typesFile);
-        writer.write(WM_TYPES_PREPEND);
+        generateTypes(services, primitiveTypes, writer);
+    }
 
-        JSONState js = new JSONState();
-        js.setValueTransformer(new TypeValueTransformer());
+    public static void generateTypes(File typesFile, SortedSet<Service> services, List<DataObject> primitiveTypes) throws IOException {
+        generateTypes(services, primitiveTypes, typesFile.getContent().asWriter());
+    }
 
-        JSONMarshaller.marshal(writer, types, js, true, true);
-        writer.write(WM_TYPES_APPEND);
-        writer.close();
+    private static void generateTypes(SortedSet<Service> services, List<DataObject> primitiveTypes, Writer writer) throws IOException {
+        try {
+            Types types = getTypesFromServices(services, primitiveTypes);
+            writer.write(WM_TYPES_PREPEND);
+            JSONState js = new JSONState();
+            js.setValueTransformer(new TypeValueTransformer());
+            JSONMarshaller.marshal(writer, types, js, true, true);
+            writer.write(WM_TYPES_APPEND);
+        } finally {
+            writer.close();
+        }
     }
 
     public static Types getTypesFromServices(SortedSet<Service> services, List<DataObject> primitiveTypes) {

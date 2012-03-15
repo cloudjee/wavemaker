@@ -26,6 +26,7 @@ import javax.xml.bind.Unmarshaller;
 
 import org.springframework.core.io.Resource;
 
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.service.FileService;
 import com.wavemaker.tools.spring.beans.Beans;
 
@@ -55,6 +56,7 @@ public class SpringConfigSupport {
         return ret;
     }
 
+    @Deprecated
     public static Beans readBeans(Resource configFile, FileService fileService) throws JAXBException, IOException {
         Reader reader = fileService.getReader(configFile);
         Beans ret = readBeans(reader);
@@ -67,15 +69,22 @@ public class SpringConfigSupport {
         return (Beans) unmarshaller.unmarshal(reader);
     }
 
+    @Deprecated
     public static void writeBeans(Beans beans, Resource configFile, FileService fileService) throws JAXBException, IOException {
         Writer writer = fileService.getWriter(configFile);
         writeBeans(beans, writer);
         writer.close();
     }
 
-    /**
-     * This writer should be initialized with an appropriate encoding, ideally through a FileService.
-     */
+    public static void writeBeans(Beans beans, File file) throws JAXBException, IOException {
+        Writer writer = file.getContent().asWriter();
+        try {
+            writeBeans(beans, writer);
+        } finally {
+            writer.close();
+        }
+    }
+
     public static void writeBeans(Beans beans, Writer writer) throws JAXBException, IOException {
         Marshaller marshaller = getJAXBContext().createMarshaller();
         marshaller.setProperty("jaxb.formatted.output", true);

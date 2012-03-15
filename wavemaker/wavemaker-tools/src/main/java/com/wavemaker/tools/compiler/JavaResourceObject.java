@@ -30,6 +30,8 @@ import com.wavemaker.tools.project.Project;
 @Deprecated
 public class JavaResourceObject extends ResourceJavaFileObject {
 
+    // FIXME PW delete
+
     /**
      * Represents a Java source file
      * 

@@ -51,6 +51,8 @@ import com.wavemaker.tools.project.StudioFileSystem;
 @Deprecated
 public class ClassFileManager extends ForwardingJavaFileManager<StandardJavaFileManager> implements StandardJavaFileManager {
 
+    // FIXME PW delete
+
     private final Project project;
 
     private final List<Resource> sourceLocations = new ArrayList<Resource>();
