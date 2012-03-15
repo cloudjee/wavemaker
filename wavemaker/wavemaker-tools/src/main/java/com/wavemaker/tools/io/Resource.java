@@ -87,9 +87,19 @@ public interface Resource {
      * Returns the complete name of the resource. This name includes path elements. Folders always end in '/'.
      * 
      * @return the full name of the resource, for example <tt>"/folder/file.txt"</tt> or <tt>"/folder/"</tt>
+     * @see #getName()
+     * @see #toString(ResourceStringFormat)
      */
     @Override
     public String toString();
+
+    /**
+     * Returns the name of the resource in the specified format.
+     * 
+     * @param format the format used for the name
+     * @return the name
+     */
+    public String toString(ResourceStringFormat format);
 
     /**
      * Determines if this resource is equal to another object. Any resources that have the same type, path and are

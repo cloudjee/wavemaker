@@ -6,6 +6,7 @@ import org.springframework.util.ObjectUtils;
 
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
+import com.wavemaker.tools.io.ResourceStringFormat;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
 
@@ -52,9 +53,9 @@ public abstract class FileSystemResource<K> implements Resource {
         }
     }
 
-    protected void touchParent() {
+    protected void createParentIfMissing() {
         if (getParent() != null) {
-            getParent().createIfMissing();
+            getParent(true).createIfMissing();
         }
     }
 
@@ -73,7 +74,11 @@ public abstract class FileSystemResource<K> implements Resource {
 
     @Override
     public Folder getParent() {
-        JailedResourcePath parentPath = this.path.getParent();
+        return getParent(false);
+    }
+
+    private Folder getParent(boolean unjailed) {
+        JailedResourcePath parentPath = (unjailed ? this.path.unjail() : this.path).getParent();
         if (parentPath == null) {
             return null;
         }
@@ -93,7 +98,12 @@ public abstract class FileSystemResource<K> implements Resource {
 
     @Override
     public String toString() {
-        return this.path.getPath().toString();
+        return toString(ResourceStringFormat.FULL);
+    }
+
+    @Override
+    public String toString(ResourceStringFormat format) {
+        return this.path.toString(format);
     }
 
     @Override

@@ -31,6 +31,7 @@ import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceFilter;
+import com.wavemaker.tools.io.ResourceStringFormat;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
@@ -210,7 +211,7 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
     }
 
     @Test
-    public void shouldTouchNewDirectory() throws Exception {
+    public void shouldCreateMissingDirectory() throws Exception {
         FileSystemFolder<Object> child = this.folder.getFolder("a");
         given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
         child.createIfMissing();
@@ -218,7 +219,7 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
     }
 
     @Test
-    public void shouldNotTouchExistingDirectory() throws Exception {
+    public void shouldNotCreateExistingDirectory() throws Exception {
         FileSystemFolder<Object> child = this.folder.getFolder("a");
         given(this.fileSystem.getResourceType(child.getKey())).willReturn(ResourceType.FOLDER);
         child.createIfMissing();
@@ -226,7 +227,7 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
     }
 
     @Test
-    public void shouldTouchParent() throws Exception {
+    public void shouldCreateParent() throws Exception {
         FileSystemFolder<Object> child = this.folder.getFolder("a");
         FileSystemFolder<Object> grandChild = child.getFolder("b");
         given(this.fileSystem.getResourceType(grandChild.getKey())).willReturn(ResourceType.DOES_NOT_EXIST);
@@ -384,6 +385,14 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
     public void shouldAppendPathToToString() throws Exception {
         FileSystemFolder<Object> child = this.folder.getFolder("a/b/c");
         assertThat(child.toString(), is("/a/b/c/"));
+    }
+
+    @Test
+    public void shouldFormatToString() throws Exception {
+        FileSystemFolder<Object> child = this.folder.getFolder("a").jail().getFolder("b/c");
+        assertThat(child.toString(), is("/b/c/"));
+        assertThat(child.toString(ResourceStringFormat.FULL), is("/b/c/"));
+        assertThat(child.toString(ResourceStringFormat.UNJAILED), is("/a/b/c/"));
     }
 
     @Test
