@@ -1060,3 +1060,6 @@ min-height: 32px;
 .wmmobile .wmtree-leaf { 
     background: url(images/touch_tree_leaf.gif) no-repeat;
 }
+.dijitComboBox .dijitInputContainer, .dijitComboBox .dijitInputContainer input {
+height: 100%;
+}

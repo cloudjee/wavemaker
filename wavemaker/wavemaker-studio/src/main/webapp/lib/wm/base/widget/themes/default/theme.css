@@ -1298,3 +1298,7 @@ li {
      -webkit-box-shadow: 0px 0px 0px black;
      box-shadow: 0px 0px 0px black;
 }
+
+.dijitComboBox .dijitInputContainer, .dijitComboBox .dijitInputContainer input {
+height: 100%;
+}
