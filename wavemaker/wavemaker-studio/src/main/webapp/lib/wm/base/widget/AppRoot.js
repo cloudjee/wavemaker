@@ -31,20 +31,52 @@ dojo.declare("wm.AppRoot", wm.Container, {
 	},
 	init: function() {
 	    this.inherited(arguments);
-	    /* orientationChange events fire BEFORE sizes have been updated on some devices making this hard to use; resize event fires AFTER so only use resize 
-	    if ("onorientationchange" in window) {
+	    /* using onorientationchange is unreliable for android browser; may need to re-review this */
+	    /* The Android browser shipped by google with 2.x devices can not find the width and height of the screen when the onorientationchange event fires, and
+	     * the result is a big gap in the margin of the page.  While a delay could be used, on a test device the delay was significant and unpredictable.
+	     *
+	     * WARNING: onresize may not be provided to android devices within phonegap applications.
+	     */
+	    if (navigator.vendor.match(/Google/i) && navigator.userAgent.match(/android/i)) {
+		window.addEventListener("resize", dojo.hitch(this,"resize"));
+	    } else if ("onorientationchange" in window) {
 		window.addEventListener("orientationchange", dojo.hitch(this, "_onOrientationChange"));
 	    } else {
-	    */
 		window.addEventListener("resize", dojo.hitch(this,"resize"));
-	//}
+	    }
 	},
     getRuntimeId: function() {return "approot";},
 
+    /* Assumes that wavemaker app is the only thing on the page; some of these calculations fail if there is other html outside of the wavemakerNode */
+    _onOrientationChange: function() {
+	    this._inResize = true;
+	    var max = Math.max(screen.width, screen.height);
+	    var min = Math.min(screen.width, screen.height);
+	    console.log("MAX:" + max + "; MIN: " + min);
+	    switch(window.orientation) {
+	    case 90:
+	    case -90:
+	    case 270:
+		this.setBounds(null,null, max, min);
+		if (app.appTitleBar)
+		    app.appTitleBar.hide();
+		break;
+	    default: 
+		this.setBounds(null,null, min,max);
+		if (app.appTitleBar)
+		    app.appTitleBar.show();
+	    }
+	    app.valueChanged("deviceSize",this.deviceSize); // bindable event
+	    dojo.publish("deviceSizeRecalc");
+	    this.reflow();
+	    this._inResize = false;
+    },
 	resize: function() {
+	    this._inResize = true;
 	    if (!wm.deviceSize) {
 		var deviceSize = this.deviceSize;
 		this.updateBounds();
+		console.log("RESIZE: WIDTH: " + this.bounds.w + " | " + this.bounds.h);
 		this.deviceSize = this.calcDeviceSize(this.bounds.w);
 		if (deviceSize != this.deviceSize) {
 		    app.valueChanged("deviceSize",this.deviceSize); // bindable event
@@ -56,22 +88,27 @@ dojo.declare("wm.AppRoot", wm.Container, {
 		app.wmMinifiedDialogPanel.hide();
 		wm.onidle(app.wmMinifiedDialogPanel, "show");
 	    }
+	    this._inResize = false;
 	},
 	updateBounds: function() {
 	    this._percEx = {w:100, h: 100};
 
 	    var pn = this.domNode.parentNode;
-	    if (wm.isMobile) {
+	    if (window["PhoneGap"]) {
+		pn.style.height = screen.height + "px";
+	    } else if (wm.isMobile) {
 		pn.style.height = "100%";
 	    }
 	    this.setBounds(0, 0, pn.offsetWidth, pn.offsetHeight);
 	},
 	reflow: function() {
-		if (this._cupdating)
-			return;
-	        this.updateBounds();
-		this.renderBounds();
-		this.inherited(arguments);
+	    if (this._cupdating)
+		return;
+	    if (!this._inResize) {
+		this.updateBounds();
+	    }
+	    this.renderBounds();
+	    this.inherited(arguments);
 	},
     calcDeviceSize: function(width) {	
 	if (width >= 1150) {
