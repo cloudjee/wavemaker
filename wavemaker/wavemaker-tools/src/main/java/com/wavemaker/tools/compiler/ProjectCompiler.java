@@ -123,8 +123,12 @@ public class ProjectCompiler {
         for (String serviceName : RUNTIME_SERVICE_NAMES) {
             File smdFile = webAppRoot.getFile("services/" + serviceName + ".smd");
             File springFile = webAppRoot.getFile("WEB-INF/classes/" + serviceName + ".spring.xml");
-            smdFile.copyTo(project.getWebAppRootFolder().getFolder("services"));
-            springFile.copyTo(project.getClassOutputFolder());
+            if (smdFile.exists()) {
+                smdFile.copyTo(project.getWebAppRootFolder().getFolder("services"));
+            }
+            if (springFile.exists()) {
+                springFile.copyTo(project.getClassOutputFolder());
+            }
         }
     }
 
