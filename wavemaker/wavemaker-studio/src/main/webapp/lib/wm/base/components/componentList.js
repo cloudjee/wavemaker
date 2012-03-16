@@ -87,7 +87,7 @@ wm.componentList = {
 	'wm.Number':['build.Gzipped.wm_editors'],
 	'wm.Checkbox':['build.Gzipped.wm_editors'],
 	'wm.RadioButton':['build.Gzipped.wm_editors_misc'],
-	'wm.RadioSet':['build.Gzipped.wm_editors_misc'],
+    //'wm.RadioSet':['build.Gzipped.wm_editors_misc'],
 	'wm.Currency':['build.Gzipped.wm_editors'],
 
 	'wm.Slider':['build.Gzipped.wm_editors_misc'],
@@ -195,6 +195,9 @@ wm.getComponentStructure = function(inType){
 		{
 			var relpath = dojo._getModuleSymbols(requireList[i]).join("/") + ".js";
 			var uri = ((relpath.charAt(0) == "/" || relpath.match(/^\w+:/)) ? "" : dojo.baseUrl) + relpath;
+		    while (uri.match(/[^\/]\/\.\.\//)) {
+			uri = uri.replace(/[^\/]*\/\.\.\//,"")
+		    }
 			wm.dojoScriptLoader(uri);
 		    if (wm.componentFixList[requireList[i]]) {
 			var fixes = wm.componentFixList[requireList[i]];
