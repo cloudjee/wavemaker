@@ -326,8 +326,8 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    },
 
 	renderData: function(inData) {
-		if (this.selectionMode == "checkbox" || this.selectionMode == "radio") {
-		    this.columns.unshift({width: "16px", title: "-", controller: this.selectionMode, field: "_selector", show: true});
+	    if (this.columns && (this.selectionMode == "checkbox" || this.selectionMode == "radio")) {
+		    this.columns.unshift({width: "25px", title: "-", controller: this.selectionMode, field: "_selector", show: true});
 		    this._columnsHash._selector = this.columns[0];
 		}
 
@@ -349,7 +349,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    if (this._listTouchScroll && !this._listTouchScroll.scrollers.outer.style.width) {
 		wm.job(this.getRuntimeId() + "ListSetupScroller", 1, dojo.hitch(this._listTouchScroll, "setupScroller"));
 	    }
-	    if (this.selectionMode == "checkbox" || this.selectionMode == "radio") {
+	    if (this.columns && (this.selectionMode == "checkbox" || this.selectionMode == "radio")) {
 		this.columns.shift();
 		delete this._columnsHash._selector;
 	    }
@@ -398,18 +398,19 @@ dojo.declare("wm.List", wm.VirtualList, {
 		}
 		return;
             }
-	    var idx = this.dataSet.getItemIndexByPrimaryKey(obj, pkList);
-	    if (idx == -1 && this.selectFirstRow)
-		idx = 0;
+	    if (this.dataSet) {
+		var idx = this.dataSet.getItemIndexByPrimaryKey(obj, pkList);
+		if (idx == -1 && this.selectFirstRow)
+		    idx = 0;
 
-	    if (idx >= 0) {
-		this._cupdating = true; // don't trigger events since we're actually reselecting the same value that was already selected
-		this.setSelectedRow(idx);
-		this._cupdating = false; 
-            } else {
-                this.deselectAll();
+		if (idx >= 0) {
+		    this._cupdating = true; // don't trigger events since we're actually reselecting the same value that was already selected
+		    this.setSelectedRow(idx);
+		    this._cupdating = false; 
+		} else {
+                    this.deselectAll();
+		}
 	    }
-
 	},
 
     runQuery: function(inData, optionalQuery) {
@@ -420,11 +421,46 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    var newData = [];
 	    for (var i = 0; i < inData.length; i++) {
 		var d = inData[i];
-		var w = "*";
-		var isMatch = true;
-		for (var key in query) {
-		    var a = d[key];
-                    if (dojo.isString(a)) a = a.replace(/\\([^\\])/g,"$1");
+		if (this.queryItem(query, d, i)) {
+		    newData.push(d);
+		}
+	    }
+	    return newData;
+	}
+    },
+    queryItem: function(query, inItem, inRowIndex) {
+	var w = "*";
+	var isMatch = true;
+	for (var key in query) {
+	    if (this._columnsHash && this._columnsHash[key] && this._columnsHash[key].isCustomField) {
+		var col = this._columnsHash[key];
+		if (col.expression) {    
+		    inItem[key] = wm.expression.getValue(col.expression, inItem,this.owner);
+		} else if (col.formatFunc){
+		    switch(col.formatFunc){
+		    case 'wm_date_formatter':
+		    case 'Date (WaveMaker)':				    
+		    case 'wm_localdate_formatter':
+		    case 'Local Date (WaveMaker)':				    
+		    case 'wm_time_formatter':
+		    case 'Time (WaveMaker)':				    
+		    case 'wm_number_formatter':
+		    case 'Number (WaveMaker)':				    
+		    case 'wm_currency_formatter':
+		    case 'Currency (WaveMaker)':				    
+		    case 'wm_image_formatter':
+		    case 'Image (WaveMaker)':				    
+		    case 'wm_link_formatter':
+		    case 'Link (WaveMaker)':				    
+			break;
+		    default:
+			if (!this.isDesignLoaded())
+			    inItem[key] = dojo.hitch(this.owner, col.formatFunc)("", inRowIndex, dojo.indexOf(this.columns, col), key, {customStyles:[], customClasses:[]}, inItem);
+		    }
+		}
+	    }
+	    var a = inItem[key];
+            if (dojo.isString(a)) a = a.replace(/\\([^\\])/g,"$1");
 		    var b = query[key];
 		    var matchStart = true;
                     if (dojo.isString(b)) {
@@ -454,14 +490,8 @@ dojo.declare("wm.List", wm.VirtualList, {
 			break;
 		    }
 		}
-		if (isMatch) {
-		    newData.push(d);
-		}
-	    }
-	    return newData;
-	}
+	return isMatch;
     },
-
 	getHeading: function(inField) {
 	    if (this.columns) {
 		var column = this._columnsHash[inField];
@@ -751,13 +781,45 @@ wm.List.extend({
 	}
 	return -1;
     },
-    getCell: function(rowIndex, fieldName) {
+    getCell: function(rowIndex, inFieldName) {
 	var row = this._data[rowIndex];
 	if (row) {
-	    return row[fieldName];
+
+	var col = this._columnsHash ? this._columnsHash[inFieldName] : null;
+	if (col && col.isCustomField) {
+	    if (col.expression) {
+		return wm.expression.getValue(col.expression, row,this.owner);
+
+	    } else if (col.formatFunc){
+		switch(col.formatFunc){
+		case 'wm_date_formatter':
+		case 'Date (WaveMaker)':				    
+		case 'wm_localdate_formatter':
+		case 'Local Date (WaveMaker)':				    
+		case 'wm_time_formatter':
+		case 'Time (WaveMaker)':				    
+		case 'wm_number_formatter':
+		case 'Number (WaveMaker)':				    
+		case 'wm_currency_formatter':
+		case 'Currency (WaveMaker)':				    
+		case 'wm_image_formatter':
+		case 'Image (WaveMaker)':				    
+		case 'wm_link_formatter':
+		case 'Link (WaveMaker)':				    
+		    return undefined;// custom field with a formatter rather than a func to generate a value? Empty cell.
+		default:
+		    if (!this.isDesignLoaded())
+			return dojo.hitch(this.owner, col.formatFunc)("", rowIndex, dojo.indexOf(this.columns, col), inFieldName, {customStyles:[], customClasses:[]}, row);
+		}		    	    
+	    }
+	    return undefined;// custom field with no function to generate a value? Empty cell.
+	} else {
+		    return row[inFieldName];
+		
+	    }
 	}
-	return "";
-    },
+	    return "";
+	},
     setCell: function(rowIndex, fieldName, newValue, noRendering) {
 	var item = this.dataSet.getItem(rowIndex);
 	item.beginUpdate();
