@@ -104,7 +104,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	    if (this.ondeselect)
 		this.connect(this, "onDeselect", this, "ondeselect");// changed from onselect to onSelect for grid compatibility
 	    if (app._touchEnabled) {
-		wm.conditionalRequire("lib.github.touchscroll.touchscroll");
+		wm.conditionalRequire("lib.github.touchscroll.touchscroll"+ (djConfig.isDebug ? "" : "min"));
 		this._listTouchScroll = new TouchScroll(this.listNode, {elastic:true,owner: this});
 		this.listNode = this._listTouchScroll.scrollers.inner;
 		this._listTouchScroll.scrollers.outer.style.position = "absolute";
