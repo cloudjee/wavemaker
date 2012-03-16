@@ -310,12 +310,6 @@
                 <fileset dir="${project.dir}">
                     <include name="services/*/designtime/servicedef.xml" />
                 </fileset>
-                <javaresource
-                        name="com/wavemaker/runtime/service/waveMakerServiceDef.xml"
-                        classpathref="app.classpath" />
-                <javaresource
-                        name="com/wavemaker/runtime/service/runtimeServiceDef.xml"
-                        classpathref="app.classpath" />
             </resources>
         </configc>
 
