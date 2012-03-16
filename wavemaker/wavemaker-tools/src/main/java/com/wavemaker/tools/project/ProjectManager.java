@@ -17,7 +17,6 @@ package com.wavemaker.tools.project;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.SortedSet;
@@ -56,16 +55,6 @@ public class ProjectManager {
     public static final String OPEN_PROJECT_SESSION_NAME = "agOpenProjectName";
 
     public static final String _TEMPLATE_APP_RESOURCE_NAME = "com/wavemaker/tools/project/templateapp.zip";
-
-    private static final List<String> RUNTIME_SERVICES;
-
-    static {
-        ArrayList<String> list = new ArrayList<String>();
-        list.add("securityService");
-        list.add("runtimeService");
-        list.add("waveMakerService");
-        RUNTIME_SERVICES = Collections.unmodifiableList(list);
-    }
 
     private final List<String> projectCopyExclusions;
 
@@ -218,30 +207,14 @@ public class ProjectManager {
      * @throws IOException
      */
     public void newProject(String projectName) throws IOException {
-
         checkNewProject(projectName);
-
         Resource projectDir = this.fileSystem.getProjectsDir().createRelative(projectName + "/");
         if (!projectDir.exists()) {
             this.fileSystem.createPath(this.fileSystem.getProjectsDir(), projectName + "/");
             createProjectFromTemplate(projectDir);
         }
-
         openProject(projectName);
-
         Project project = getCurrentProject();
-
-        Resource studioServices = this.fileSystem.getStudioWebAppRoot().createRelative("services/");
-        Resource studioClasspath = this.fileSystem.getStudioWebAppRoot().createRelative("WEB-INF/classes/");
-        for (String runtimeService : RUNTIME_SERVICES) {
-            Resource runtimeServiceSmd = studioServices.createRelative(runtimeService + ".smd");
-            this.fileSystem.copyFile(getCurrentProject().getWebAppRoot(), runtimeServiceSmd.getInputStream(),
-                "services/" + runtimeServiceSmd.getFilename());
-            Resource runtimeServiceSpringDef = studioClasspath.createRelative(runtimeService + ".spring.xml");
-            this.fileSystem.copyFile(getCurrentProject().getWebInfClasses(), runtimeServiceSpringDef.getInputStream(),
-                runtimeServiceSpringDef.getFilename());
-        }
-
         project.setProjectVersion(getUpgradeManager().getCurrentVersion());
     }
 

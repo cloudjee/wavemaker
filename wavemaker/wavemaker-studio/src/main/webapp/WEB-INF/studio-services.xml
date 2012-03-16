@@ -1,24 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<!-- Server definition of all services; -->
-
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd 
-		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd">
-
-	<import resource="classpath:studioService.spring.xml" />
-	<import resource="classpath:dataService.spring.xml" />
-	<import resource="classpath:javaService.spring.xml" />
-	<import resource="classpath:pagesService.spring.xml" />
-	<import resource="classpath:deploymentService.spring.xml" />
-	<import resource="classpath:cloudFoundryService.spring.xml" />
-	<import resource="classpath:resourceFileService.spring.xml" />
-	<import resource="classpath:runtimeService.spring.xml" />
-	<import resource="classpath:webService.spring.xml" />
-	<import resource="classpath:securityConfigService.spring.xml" />
-	<import resource="classpath:servicesService.spring.xml" />
-	<import resource="classpath:waveMakerService.spring.xml" />
-	<import resource="classpath:pwsImportService.spring.xml" />
-	<import resource="classpath:phoneGapService.spring.xml" />
-</beans>
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<beans
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" />

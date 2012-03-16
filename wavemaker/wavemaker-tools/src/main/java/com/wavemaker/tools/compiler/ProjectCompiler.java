@@ -61,6 +61,16 @@ public class ProjectCompiler {
         }
     };
 
+    private static final List<String> RUNTIME_SERVICE_NAMES;
+
+    static {
+        ArrayList<String> list = new ArrayList<String>();
+        list.add("securityService");
+        list.add("runtimeService");
+        list.add("waveMakerService");
+        RUNTIME_SERVICE_NAMES = Collections.unmodifiableList(list);
+    }
+
     private ProjectManager projectManager;
 
     private DesignServiceManager designServiceManager;
@@ -74,6 +84,7 @@ public class ProjectCompiler {
 
     private String compile(Project project) {
         try {
+            copyRuntimeServiceFiles(project);
             JavaCompiler compiler = new WaveMakerJavaCompiler();
             StandardJavaFileManager standardFileManager = compiler.getStandardFileManager(null, null, null);
             ResourceJavaFileManager projectFileManager = new ResourceJavaFileManager(standardFileManager);
@@ -98,6 +109,22 @@ public class ProjectCompiler {
             return compilerOutput.toString();
         } catch (IOException e) {
             throw new WMRuntimeException("Unable to compile " + project.getProjectName(), e);
+        }
+    }
+
+    /**
+     * Copy the runtime services XML files from studio to the project. Service XML files are no long shipped inside the
+     * runtime jars.
+     * 
+     * @param project
+     */
+    private void copyRuntimeServiceFiles(Project project) {
+        Folder webAppRoot = this.fileSystem.getStudioWebAppRootFolder();
+        for (String serviceName : RUNTIME_SERVICE_NAMES) {
+            File smdFile = webAppRoot.getFile("services/" + serviceName + ".smd");
+            File springFile = webAppRoot.getFile("WEB-INF/classes/" + serviceName + ".spring.xml");
+            smdFile.copyTo(project.getWebAppRootFolder().getFolder("services"));
+            springFile.copyTo(project.getClassOutputFolder());
         }
     }
 
