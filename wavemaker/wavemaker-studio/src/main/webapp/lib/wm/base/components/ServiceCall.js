@@ -99,16 +99,17 @@ dojo.declare("wm.ServiceCall", null, {
 						       owner && owner.declaredClass == "StudioApplication") || new wm.Service({});
 		wm.fire(this._service, "setServiceCall", [this]);
 		this._setOperation(this.operation, 1); // update the operation's type; forceUpdate needed so that if the type name is the same but fields have changed it will still get updated
-/*
+
 		if (this._isDesignLoaded && this.service) {
-		    dojo.subscribe("ServiceTypeChanged-" +  this.service, dojo.hitch(this, function() {
-			this._service = wm.services.getService(this.service, 	
-							       owner && owner.declaredClass == "StudioApplication") || new wm.Service({});
-			wm.fire(this._service, "setServiceCall", [this]);
-			this._setOperation(this.operation, 1); // update the operation's type; forceUpdate needed so that if the type name is the same but fields have changed it will still get updated
-		    }));
+		    if (!this.findSubscription("ServiceTypeChanged-" +  this.service)) {
+			this.subscribe("ServiceTypeChanged-" +  this.service, dojo.hitch(this, function() {
+			    this._service = wm.services.getService(this.service, 	
+								   owner && owner.declaredClass == "StudioApplication") || new wm.Service({});
+			    wm.fire(this._service, "setServiceCall", [this]);
+			    this._setOperation(this.operation, 1); // update the operation's type; forceUpdate needed so that if the type name is the same but fields have changed it will still get updated
+			}));
+		    }
 		}      
-		*/
 	    } catch(e) {
 	    } finally {delete this._inSetService;}
 	    
@@ -327,7 +328,7 @@ dojo.declare("wm.ServiceCall", null, {
 		    this._inFlightBacklog.push({args: this.getArgs(),
 						operation: this.operation,
 						deferred: d,
-						eventChain:  app.debugDialog.cacheEventChain()
+						eventChain: app.debugDialog ?  app.debugDialog.cacheEventChain() : undefined
 					       });
 		}
 		return d;
