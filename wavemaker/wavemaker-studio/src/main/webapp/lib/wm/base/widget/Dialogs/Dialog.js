@@ -764,10 +764,11 @@ dojo.declare("wm.Dialog", wm.Container, {
 	}
 
 	//if (!this._isDesignLoaded) {
-	    if (w + 2 > W) w = W-2;
-	    if (h + 2 > H) h = H-2;
-	//}
         var buffer = 10;
+	if (w  > W-buffer*2) w = W-buffer*2;
+	if (h  > H-buffer*2) h = H-buffer*2;
+	//}
+
         var t,l;
         
         var top  = this.corner.substring(0,1);
@@ -1185,6 +1186,8 @@ dojo.declare("wm.Dialog", wm.Container, {
     },
     setSizeProp: function(n, v, inMinSize) {
 	this.inherited(arguments);
+	if (v && v.match("%")) {
+	}
 	if (this.docked) return;
 	if (this.isReflowEnabled())
 	    this.renderBounds();
