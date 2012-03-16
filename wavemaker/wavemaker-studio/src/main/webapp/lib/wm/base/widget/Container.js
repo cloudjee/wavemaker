@@ -63,8 +63,8 @@ wm.define("wm.Container", wm.Control, {
 	    if (this.dockBottom) {
 		app.dockBottom = this;
 	    }
-	    if (this.autoScroll && app._touchEnabled) {
-		wm.conditionalRequire("lib.github.touchscroll.touchscroll" + (djConfig.isDebug ? "" : "-min"));
+	    if (this.autoScroll && app._touchEnabled && !wm.disableTouchScroll) {
+		wm.conditionalRequire("lib.github.touchscroll.touchscroll" + (djConfig.isDebug ? "" : "min"));
 		this._touchScroll = new TouchScroll(this.domNode, {elastic:true, owner: this});
 		this._touchScroll.scrollers.outer.style.position = "absolute";
 		this._touchScroll.scrollers.outer.style.left = "0px";
@@ -906,6 +906,7 @@ wm.Container.runDelayedReflow = function() {
     wm.Container.delayedReflowWidgets = {};
     wm.Container._delayedReflowWidgetsId = 0;
     wm.forEachProperty(widgets, function(widget,widgetId) {
-	widget.reflow();
+	if (!widget.isDestroyed)
+	    widget.reflow();
     });
 };
