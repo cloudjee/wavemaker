@@ -405,7 +405,7 @@ public class PhoneGapService implements ApplicationListener<StudioServiceWriteWe
 
             int startDebug = configjs_text.indexOf("djConfig.debugBoot");
             int endDebug = configjs_text.indexOf(";", startDebug);
-            configjs_text = configjs_text.substring(0, startDebug) + "djConfig.debugBoot = " + isDebug + configjs_text.substring(endDebug);
+            //configjs_text = configjs_text.substring(0, startDebug) + "djConfig.debugBoot = " + isDebug + configjs_text.substring(endDebug);
             System.out.println("START: " + startDebug + "; END: " + endDebug);
             configjs_text = configjs_text.replaceAll("/wavemaker/", "/").replace("wm.relativeLibPath = \"../lib/\";",
                 "wm.relativeLibPath = \"lib/\";")
