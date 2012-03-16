@@ -483,7 +483,7 @@ dojo.declare("wm.Application", wm.Component, {
 		    dojo.addClass(document.body, "wmmobile")
 		}
 		if (window["PhoneGap"]) {
-		    var titlebar = new wm.Panel({
+		    this.appTitleBar = new wm.Panel({
 						 owner: this, 
 						 parent: this.appRoot,
 						 name: "appTitleBar",
@@ -493,7 +493,7 @@ dojo.declare("wm.Application", wm.Component, {
 						 verticalAlign: "middle",
 						 horizontalAlign: "left"});
 		    this.backButton = new wm.MobileIconButton({owner: this,
-							       parent: titlebar,
+							       parent: this.appTitleBar,
 							       name: "backButton",
 							       direction: "left",
 							       height: "100%",
@@ -504,7 +504,7 @@ dojo.declare("wm.Application", wm.Component, {
 						 this._onBack();
 					     })});
 		    new wm.Label({owner: this,
-				  parent: titlebar,
+				  parent: this.appTitleBar,
 				  name: "appTitleLabel",
 				  align: "center",
 				  width: "100%",
@@ -766,9 +766,24 @@ dojo.declare("wm.Application", wm.Component, {
 	this.echoFileService.input.setData({contents: filecontents, fileType: filetype,fileName: filename});
 	this.echoFileService.update();
     },
+    showLoadingDialog: function(inMessage, inMessageWidth) {
+	if (!this.loadingDialog) {
+	    this.loadingDialog = new wm.LoadingDialog({owner: this, 
+						       name: "loadingDialog", 
+						       widgetToCover: app.appRoot});
+	}
+	this.loadingDialog.setCaption(inMessage || "Loading...");
+	if (inMessageWidth)
+	    this.loadingDialog._label.setWidth(inMessageWidth);
+	this.loadingDialog.show();
+    },
+    hideLoadingDialog: function() {
+	if (this.loadingDialog) this.loadingDialog.hide();
+    },
     warnOnce: function(inCookieName, inAlertText) {
 	var cookie = dojo.cookie(inCookieName);
 	if (cookie) return;
+	wm.require("wm.Checkbox");
 	this.alert(inAlertText);
 	var c = new wm.Checkbox({owner: this.alertDialog,
 				 parent: this.alertDialog.containerWidget.c$[0],
