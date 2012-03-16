@@ -209,6 +209,7 @@
 					<fileset dir="${dojo.release.dir}/dojo/dojo">
 						<include name="dojo.js" />
 						<include name="lib_build.js" />
+						<include name="lib_build_mobile.js" />
 						<include name="nls/**" />
 					</fileset>
 					<fileset dir="${dojo.release.dir}/dojo/dijit">
@@ -219,6 +220,9 @@
 				<move
 					file="${dojo.release.dir}/dojo/dojo/lib_build.js.uncompressed.js"
 					tofile="${dojo.release-temp.dir}/wm_build/lib_build_uncompressed.js" />
+				<move
+					file="${dojo.release.dir}/dojo/dojo/lib_build_mobile.js.uncompressed.js"
+					tofile="${dojo.release-temp.dir}/wm_build/lib_build_mobile_uncompressed.js" />
 
 				<!-- copy the runtime built compressed modules to the compressed directory -->
 				<mkdir dir="${compressed.modules}" />
@@ -251,7 +255,11 @@
 				<mkdir dir="${dojo.release-temp.dir}/wm_build/Gzipped" />
 				<gzip src="${dojo.release-temp.dir}/wm_build/lib_build.js"
 					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/lib_build.js.gz" />
-				<copy file="${dojo.release-temp.dir}/wm_build/lib_build.js"
+				<copy file="${dojo.release-temp.dir}/wm_build/lib_build_mobile.js"
+					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
+				<gzip src="${dojo.release-temp.dir}/wm_build/lib_build_mobile.js"
+					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/lib_build_mobile.js.gz" />
+				<copy file="${dojo.release-temp.dir}/wm_build/lib_build_mobile.js"
 					todir="${dojo.release-temp.dir}/wm_build/Gzipped/" />
 				<gzip src="${dojo.release.dir}/dojo/dojo/wm_charts.js"
 					destfile="${dojo.release-temp.dir}/wm_build/Gzipped/wm_charts.js.gz" />
