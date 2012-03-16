@@ -158,13 +158,17 @@ dojo.declare("wm.PhoneGapService", wm.Service, {
 	}
     },
     readDataUrl: function(file, deferred) {
+        app.showLoadingDialog("Processing...");
+
         var reader = new FileReader();
         reader.onload = function(evt) {
 	    //alert("File Length: " + evt.target.result.length);
-	    deferred.callback(evt.target.result);
+	    app.hideLoadingDialog();
+	    deferred.callback({dataValue: evt.target.result});
         };
 	reader.onabort = reader.onerror = function(evt) {
 	    console.error("Reader Error:"+evt);
+	    app.hideLoadingDialog();
 	    deferred.errback(evt);
 	}
         reader.readAsDataURL(file);
@@ -173,7 +177,7 @@ dojo.declare("wm.PhoneGapService", wm.Service, {
 	var d = new dojo.Deferred();
 	d.callback();
 	if (window["PhoneGap"]) {
-	    navigator.notification.beep(times);
+	    navigator.notification.beep(times || 1);
 	}
 	return d;
     },
@@ -181,7 +185,7 @@ dojo.declare("wm.PhoneGapService", wm.Service, {
 	var d = new dojo.Deferred();
 	d.callback();
 	if (window["PhoneGap"]) {
-	    navigator.notification.vibrate(miliseconds);
+	    navigator.notification.vibrate(miliseconds || 100);
 	}
 	return d;
     },
