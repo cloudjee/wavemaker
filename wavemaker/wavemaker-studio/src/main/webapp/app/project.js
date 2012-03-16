@@ -624,6 +624,7 @@ dojo.declare("wm.studio.Project", null, {
 		    } else {
 			t = t.replace(/\<\/title\s*\>/, "</title>\n<script>var wmThemeUrl = \"" + themeUrl + "\";</script>");
 		    }
+		    t = t.replace(/\wavemakerNode\"\}/, "wavemakerNode\", theme:\"" + studio.application.theme + "\", name:\"" + studio.project.projectName + "\"}");
 		    var dlocal = this.saveProjectData("login.html", t, false, true);
 		    dlocal.addCallback(function() {d5.callback();});
 		} else {
@@ -708,7 +709,7 @@ dojo.declare("wm.studio.Project", null, {
 	    d10.addCallback(dojo.hitch(this, function() {
 		if (!studio.isCloud()) {
 		    studio.setSaveProgressBarMessage("Update PhoneGap Setup");
-		    var dlocal = studio.phoneGapService.requestAsync("updatePhonegapFiles", [location.port || 80, studio.runPopup.iconClass == "studioProjectTest"]);
+		    var dlocal = studio.phoneGapService.requestAsync("updatePhonegapFiles", [location.port || 80, studio.runPopup.iconClass == "studioProjectTest", studio.application.theme]);
 		    dlocal.addCallback(function() {d11.callback();});
 		} else {
 		    d11.callback();
