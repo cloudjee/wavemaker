@@ -32,6 +32,7 @@ wm.version = '6.4.3RC';
 
 if (location.search.match(/(\?|\&)wmmobile=(.)/)) {
     wm.device = location.search.match(/(\?|\&)wmmobile=(.*)\b/)[2] || "desktop";
+    wm.device = wm.device.replace(/\&.*$/,"");
     wm.isMobile = wm.device != "desktop";
 } else {
     wm.isMobile = navigator.userAgent.match(/mobile|android/i) || "onorientationchange" in window;
@@ -162,7 +163,7 @@ wm.registerPackage = registerPackage = function() {
 
 /* Load theme before loading page */
 if (!djConfig.isDebug) {
-    wm.writeCssTag(wm.relativeLibPath + "/dojo/dijit/themes/tundra/" + (wm.isMobile ? "mtheme.css" : "t.css"));
+    wm.writeCssTag(wm.relativeLibPath + "dojo/dijit/themes/tundra/" + (wm.isMobile ? "tmobile.css" : "t.css"));
 }
 
 if (window["wmThemeUrl"]) {
