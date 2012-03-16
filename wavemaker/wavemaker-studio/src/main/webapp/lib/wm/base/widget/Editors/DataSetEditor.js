@@ -186,6 +186,11 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
 	if (!this._cupdating)
 	    this.createEditor();
     },
+    setDisplayExpression: function(inExpr) {
+	this.displayExpression = inExpr
+	if (!this._cupdating)
+	    this.createEditor();
+    },
     setDataField: function(inDataField) {
 	if (inDataField == "All Fields")
 	    this.dataField = "";
@@ -568,6 +573,7 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
     singleLine: false,
     showSearchBar: true,
     _multiSelect: true,
+    _selectionMode: "multiple",
     height: "100px",
     mobileHeight: "150px",
     editors: null,
@@ -575,6 +581,8 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
     deleteConfirm: "Are you sure you want to delete this?",
     prepare: function(inProps) {
 	if (inProps && inProps.readonly) delete inProps.readonly;
+	if (inProps && inProps._selectionMode != "multiple" && inProps._selectionMode != "checkbox")
+	    inProps._multiSelect = false;
 	this.inherited(arguments);
     },
     setDataSet: function(inDataSet) {
@@ -586,7 +594,7 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 	}
     },
     changed: function() {
-	this.selectedItem.setData(this.grid.selectedItem);
+	this.selectedItem.setDataSet(this.grid.selectedItem);
 	this.inherited(arguments);
     },
     _onShowParent: function() {
@@ -626,7 +634,7 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 	var rows = dojo.query(".dojoxGridRow", this.grid.domNode);
 	var query = {};
 	if (inDisplayValue)
-	    query[this.grid.columns[0].field] = "*" + inDisplayValue + "*";
+	    query[this.grid.columns[0].field] = "*" + inDisplayValue + "*";// TODO: For DojoGrid: The dojostored object needs to include customFields such as our _name field; wm.List needs similar facility
 	this.grid.setQuery(query);
     },
     flow: function() {
@@ -658,15 +666,16 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 					 minWidth: 10,
 					 deleteColumn: this.deleteColumn,
 					 deleteConfirm: this.deleteConfirm,
-					 selectionMode: this._multiSelect ? "multiple":"single"});
+					 selectionMode: this._selectionMode ? this._selectionMode : this._multiSelect ? "multiple":"single"});
 	if (this.grid.declaredClass == "wm.DojoGrid") {
 	    this.grid.connect(this.grid, "renderDojoObj", this, "renderGrid");
 	    this.grid.connect(this.grid, "onRowDeleted", this, "onRowDeleted");
 	}
 	    this.grid._isDesignLoaded = false;
 	this.grid.setColumns([{show: true,
-				    width: "100%",
-				    field: this.displayExpression ? "_name" : this.displayField,
+			       width: "100%",
+			       isCustomField: Boolean(this.displayExpression),
+			       field: this.displayExpression ? "_name" : this.displayField,
 			       expression: this.displayExpression}]);
 	if (this.dataSet) {
 	    this.grid.setDataSet(this.dataSet);
