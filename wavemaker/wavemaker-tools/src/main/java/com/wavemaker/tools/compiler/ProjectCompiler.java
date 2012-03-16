@@ -16,24 +16,29 @@ package com.wavemaker.tools.compiler;
 
 import java.io.IOException;
 import java.io.StringWriter;
-import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.processing.Processor;
 import javax.tools.JavaCompiler;
+import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.JavaFileObject.Kind;
+import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 
-import org.springframework.util.Assert;
-
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.tools.apt.AbstractStudioServiceProcessor;
 import com.wavemaker.tools.apt.ServiceConfigurationProcessor;
 import com.wavemaker.tools.apt.ServiceDefProcessor;
 import com.wavemaker.tools.apt.ServiceProcessorConstants;
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.Resource;
+import com.wavemaker.tools.io.ResourceFilter;
+import com.wavemaker.tools.io.compiler.ResourceJavaFileManager;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.project.StudioFileSystem;
@@ -48,67 +53,112 @@ import com.wavemaker.tools.service.DesignServiceManager;
  */
 public class ProjectCompiler {
 
-    private StudioFileSystem fileSystem;
+    private static final ResourceFilter<File> JAR_FILE_FILTER = new ResourceFilter<File>() {
+
+        @Override
+        public boolean include(File resource) {
+            return resource.getName().toLowerCase().endsWith(".jar");
+        }
+    };
+
+    private static final List<String> RUNTIME_SERVICE_NAMES;
+
+    static {
+        ArrayList<String> list = new ArrayList<String>();
+        list.add("securityService");
+        list.add("runtimeService");
+        list.add("waveMakerService");
+        RUNTIME_SERVICE_NAMES = Collections.unmodifiableList(list);
+    }
 
     private ProjectManager projectManager;
 
     private DesignServiceManager designServiceManager;
 
-    public String compile(String projectName) {
-        Project project = this.projectManager.getProject(projectName, true);
-        return compile(project);
-    }
+    private StudioFileSystem fileSystem;
 
     public String compile() {
         Project project = this.projectManager.getCurrentProject();
         return compile(project);
     }
 
-    public String compile(Project project) {
-        StringWriter out = new StringWriter();
-        JavaCompiler compiler = newJavaCompiler();
-        JavaFileManager fileManager;
-        Iterable<JavaFileObject> sourceFiles = null;
-        Iterable<JavaFileObject> resourceFiles = null;
+    private String compile(Project project) {
         try {
-            fileManager = new ClassFileManager(compiler.getStandardFileManager(null, null, null), this.fileSystem, project);
-            sourceFiles = fileManager.list(StandardLocation.SOURCE_PATH, "", Collections.singleton(Kind.SOURCE), true);
-            resourceFiles = fileManager.list(StandardLocation.SOURCE_PATH, "", Collections.singleton(Kind.OTHER), true);
-            for (JavaFileObject resourceFile : resourceFiles) {
-                Assert.isTrue(resourceFile instanceof GenericResourceFileObject, "Expected a Resource-based JavaFileObject");
-                this.fileSystem.copyFile(project.getWebInfClasses(), resourceFile.openInputStream(),
-                    ((GenericResourceFileObject) resourceFile).getFilename());
+            copyRuntimeServiceFiles(project);
+            JavaCompiler compiler = new WaveMakerJavaCompiler();
+            StandardJavaFileManager standardFileManager = compiler.getStandardFileManager(null, null, null);
+            ResourceJavaFileManager projectFileManager = new ResourceJavaFileManager(standardFileManager);
+            projectFileManager.setLocation(StandardLocation.SOURCE_PATH, project.getSourceFolders());
+            projectFileManager.setLocation(StandardLocation.CLASS_OUTPUT, Collections.singleton(project.getClassOutputFolder()));
+            projectFileManager.setLocation(StandardLocation.CLASS_PATH, getClasspath(project));
+            for (Folder sourceFolder : project.getSourceFolders()) {
+                // FIXME filter out *.java and *.class
+                sourceFolder.list().copyTo(project.getClassOutputFolder());
             }
-
+            Iterable<JavaFileObject> compilationUnits = projectFileManager.list(StandardLocation.SOURCE_PATH, "", Collections.singleton(Kind.SOURCE),
+                true);
+            StringWriter compilerOutput = new StringWriter();
+            CompilationTask compilationTask = compiler.getTask(compilerOutput, projectFileManager, null, getCompilerOptions(project), null,
+                compilationUnits);
+            ServiceDefProcessor serviceDefProcessor = configure(new ServiceDefProcessor(), projectFileManager);
+            ServiceConfigurationProcessor serviceConfigurationProcessor = configure(new ServiceConfigurationProcessor(), projectFileManager);
+            compilationTask.setProcessors(Arrays.asList(serviceConfigurationProcessor, serviceDefProcessor));
+            if (!compilationTask.call()) {
+                throw new WMRuntimeException("Compile failed with output:\n\n" + compilerOutput.toString());
+            }
+            return compilerOutput.toString();
         } catch (IOException e) {
-            throw new WMRuntimeException("Could not create Java file manager for project " + project.getProjectName(), e);
+            throw new WMRuntimeException("Unable to compile " + project.getProjectName(), e);
         }
+    }
 
+    /**
+     * Copy the runtime services XML files from studio to the project. Service XML files are no long shipped inside the
+     * runtime jars.
+     * 
+     * @param project
+     */
+    private void copyRuntimeServiceFiles(Project project) {
+        Folder webAppRoot = this.fileSystem.getStudioWebAppRootFolder();
+        for (String serviceName : RUNTIME_SERVICE_NAMES) {
+            File smdFile = webAppRoot.getFile("services/" + serviceName + ".smd");
+            File springFile = webAppRoot.getFile("WEB-INF/classes/" + serviceName + ".spring.xml");
+            if (smdFile.exists()) {
+                smdFile.copyTo(project.getWebAppRootFolder().getFolder("services"));
+            }
+            if (springFile.exists()) {
+                springFile.copyTo(project.getClassOutputFolder());
+            }
+        }
+    }
+
+    private Iterable<? extends Resource> getClasspath(Project project) {
+        List<Resource> classpath = new ArrayList<Resource>();
+        addAll(classpath, project.getRootFolder().getFolder("lib").list(JAR_FILE_FILTER));
+        addAll(classpath, this.fileSystem.getStudioWebAppRootFolder().getFolder("WEB-INF/lib").list(JAR_FILE_FILTER));
+        return classpath;
+    }
+
+    private <T> void addAll(List<T> list, Iterable<? extends T> items) {
+        for (T t : items) {
+            list.add(t);
+        }
+    }
+
+    private <T extends AbstractStudioServiceProcessor> T configure(T processor, JavaFileManager javaFileManager) {
+        processor.setFileSystem(this.fileSystem);
+        processor.setDesignServiceManager(this.designServiceManager);
+        processor.setJavaFileManager(javaFileManager);
+        return processor;
+    }
+
+    private Iterable<String> getCompilerOptions(Project project) {
         List<String> options = new ArrayList<String>();
-
         options.add("-encoding");
         options.add("utf8");
-
         options.add("-A" + ServiceProcessorConstants.PROJECT_NAME_PROP + "=" + project.getProjectName());
         options.add("-g");
-
-        if (sourceFiles.iterator().hasNext()) {
-            JavaCompiler.CompilationTask task = compiler.getTask(out, fileManager, null, options, null, sourceFiles);
-            task.setProcessors(Collections.singleton(createServiceDefProcessor(fileManager)));
-            if (!task.call()) {
-                throw new WMRuntimeException("Compile failed with output:\n\n" + out.toString());
-            }
-        }
-        executeConfigurationProcessor(compiler, fileManager, project.getProjectName(), out);
-        return out.toString();
-    }
-
-    private JavaCompiler newJavaCompiler() {
-        return new WaveMakerJavaCompiler();
-    }
-
-    public void setFileSystem(StudioFileSystem fileSystem) {
-        this.fileSystem = fileSystem;
+        return options;
     }
 
     public void setProjectManager(ProjectManager projectManager) {
@@ -119,39 +169,7 @@ public class ProjectCompiler {
         this.designServiceManager = designServiceManager;
     }
 
-    @SuppressWarnings("unchecked")
-    private void executeConfigurationProcessor(JavaCompiler compiler, JavaFileManager projectFileManager, String projectName, Writer out) {
-        List<String> options = new ArrayList<String>();
-
-        options.add("-encoding");
-        options.add("utf8");
-
-        options.add("-proc:only");
-
-        options.add("-classNames");
-        options.add("java.lang.Object");
-
-        options.add("-A" + ServiceProcessorConstants.PROJECT_NAME_PROP + "=" + projectName);
-
-        JavaCompiler.CompilationTask task = compiler.getTask(out, projectFileManager, null, options, null, Collections.EMPTY_SET);
-        task.setProcessors(Collections.singleton(createServiceConfigProcessor()));
-        if (!task.call()) {
-            throw new WMRuntimeException("Compiler/Annotation processing failed with output:\n\n" + out.toString());
-        }
-    }
-
-    private Processor createServiceConfigProcessor() {
-        ServiceConfigurationProcessor processor = new ServiceConfigurationProcessor();
-        processor.setFileSystem(this.fileSystem);
-        processor.setDesignServiceManager(this.designServiceManager);
-        return processor;
-    }
-
-    private Processor createServiceDefProcessor(JavaFileManager projectFileManager) {
-        ServiceDefProcessor processor = new ServiceDefProcessor();
-        processor.setFileSystem(this.fileSystem);
-        processor.setDesignServiceManager(this.designServiceManager);
-        processor.setFileManager(projectFileManager);
-        return processor;
+    public void setFileSystem(StudioFileSystem fileSystem) {
+        this.fileSystem = fileSystem;
     }
 }

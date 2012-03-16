@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.ServiceLoader;
 
-import javax.annotation.processing.Processor;
 import javax.tools.Diagnostic;
 import javax.tools.DiagnosticListener;
 import javax.tools.JavaCompiler;
@@ -375,7 +374,7 @@ public class ServiceDefProcessorTest {
         assertTrue(classPathServiceDef.exists());
     }
 
-    private void buildWithProcessor(Project project, String serviceId, Processor processor) throws IOException {
+    private void buildWithProcessor(Project project, String serviceId, AbstractStudioServiceProcessor processor) throws IOException {
         // Get an instance of Eclipse compiler
         JavaCompiler compiler = ServiceLoader.load(JavaCompiler.class).iterator().next();
 
@@ -394,6 +393,8 @@ public class ServiceDefProcessorTest {
         } else {
             fileManager.setLocation(StandardLocation.SOURCE_PATH, Collections.singleton(project.getProjectRoot().createRelative("src/").getFile()));
         }
+
+        processor.setJavaFileManager(fileManager);
 
         // Get the list of java file objects
         Iterable<? extends JavaFileObject> compilationUnits = fileManager.list(StandardLocation.SOURCE_PATH, "", Collections.singleton(Kind.SOURCE),

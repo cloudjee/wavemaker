@@ -14,11 +14,9 @@
 
 package com.wavemaker.tools.project;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 import java.util.SortedSet;
@@ -28,7 +26,6 @@ import java.util.zip.ZipInputStream;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.core.io.ClassPathResource;
@@ -58,16 +55,6 @@ public class ProjectManager {
     public static final String OPEN_PROJECT_SESSION_NAME = "agOpenProjectName";
 
     public static final String _TEMPLATE_APP_RESOURCE_NAME = "com/wavemaker/tools/project/templateapp.zip";
-
-    private static final List<String> RUNTIME_SERVICES;
-
-    static {
-        ArrayList<String> list = new ArrayList<String>();
-        list.add("securityService");
-        list.add("runtimeService");
-        list.add("waveMakerService");
-        RUNTIME_SERVICES = Collections.unmodifiableList(list);
-    }
 
     private final List<String> projectCopyExclusions;
 
@@ -195,9 +182,6 @@ public class ProjectManager {
             wmApp.setTenantInfoForProj(projectName, tenantFieldName, defTenantID, tenantColumnName);
         }
 
-        Resource projLib = this.fileSystem.createProjectLib(this.currentProject);
-        this.currentProject.setProjectLib(projLib);
-
         // Store types.js contents in memory
         Resource typesFile = project.getWebAppRoot().createRelative("/types.js");
         if (!typesFile.exists()) {
@@ -223,30 +207,14 @@ public class ProjectManager {
      * @throws IOException
      */
     public void newProject(String projectName) throws IOException {
-
         checkNewProject(projectName);
-
         Resource projectDir = this.fileSystem.getProjectsDir().createRelative(projectName + "/");
         if (!projectDir.exists()) {
             this.fileSystem.createPath(this.fileSystem.getProjectsDir(), projectName + "/");
             createProjectFromTemplate(projectDir);
         }
-
         openProject(projectName);
-
         Project project = getCurrentProject();
-
-        Resource studioServices = this.fileSystem.getStudioWebAppRoot().createRelative("services/");
-        Resource studioClasspath = this.fileSystem.getStudioWebAppRoot().createRelative("WEB-INF/classes/");
-        for (String runtimeService : RUNTIME_SERVICES) {
-            Resource runtimeServiceSmd = studioServices.createRelative(runtimeService + ".smd");
-            this.fileSystem.copyFile(getCurrentProject().getWebAppRoot(), runtimeServiceSmd.getInputStream(),
-                "services/" + runtimeServiceSmd.getFilename());
-            Resource runtimeServiceSpringDef = studioClasspath.createRelative(runtimeService + ".spring.xml");
-            this.fileSystem.copyFile(getCurrentProject().getWebInfClasses(), runtimeServiceSpringDef.getInputStream(),
-                runtimeServiceSpringDef.getFilename());
-        }
-
         project.setProjectVersion(getUpgradeManager().getCurrentVersion());
     }
 
@@ -398,15 +366,7 @@ public class ProjectManager {
         if (getProjectEventNotifier() != null) {
             getProjectEventNotifier().executeCloseProject(this.currentProject);
         }
-        try {
-            Resource projLib = this.currentProject.getProjectLib();
-            if (projLib != null) {
-                FileUtils.forceDelete(projLib.getFile());
-            }
-        } catch (FileNotFoundException ex) {
-        } finally {
-            this.currentProject = null;
-        }
+        this.currentProject = null;
     }
 
     /**

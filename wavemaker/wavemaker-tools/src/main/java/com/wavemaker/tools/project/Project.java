@@ -17,6 +17,7 @@ package com.wavemaker.tools.project;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Iterator;
 import java.util.List;
@@ -28,6 +29,9 @@ import org.springframework.util.StringUtils;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.ResourceFilter;
+import com.wavemaker.tools.io.Resources;
+import com.wavemaker.tools.io.ResourcesCollection;
 import com.wavemaker.tools.io.filesystem.FileSystemFolder;
 import com.wavemaker.tools.io.filesystem.local.LocalFileSystem;
 import com.wavemaker.tools.service.AbstractFileService;
@@ -52,8 +56,6 @@ public class Project extends AbstractFileService {
     private final Resource projectRoot;
 
     private final boolean mavenProject;
-
-    private Resource projectLib;
 
     public Project(Resource projectRoot, StudioFileSystem fileSystem) {
         super(fileSystem);
@@ -97,6 +99,10 @@ public class Project extends AbstractFileService {
         }
     }
 
+    public Folder getWebAppRootFolder() {
+        return getRootFolder().getFolder(this.mavenProject ? ProjectConstants.MAVEN_WEB_DIR : ProjectConstants.WEB_DIR);
+    }
+
     public boolean isMavenProject() {
         return this.mavenProject;
     }
@@ -133,6 +139,27 @@ public class Project extends AbstractFileService {
         }
     }
 
+    /**
+     * Returns the service source folders or an empty list
+     * 
+     * @return the service source folder
+     */
+    public Resources<Folder> getSourceFolders() {
+        List<Folder> sourceFolders = new ArrayList<Folder>();
+        Folder mainSourceFolder = getRootFolder().getFolder(this.mavenProject ? ProjectConstants.MAVEN_SRC_DIR : ProjectConstants.SRC_DIR);
+        if (mainSourceFolder.exists()) {
+            sourceFolders.add(mainSourceFolder);
+        }
+        Resources<Folder> serviceFolders = getRootFolder().getFolder("services").list(ResourceFilter.FOLDERS);
+        for (Folder serviceFolder : serviceFolders) {
+            Folder serviceSourceFolder = serviceFolder.getFolder("src");
+            if (serviceSourceFolder.exists()) {
+                sourceFolders.add(serviceSourceFolder);
+            }
+        }
+        return new ResourcesCollection<Folder>(Collections.unmodifiableList(sourceFolders));
+    }
+
     @Deprecated
     public Resource getLogFolder() {
         try {
@@ -149,6 +176,10 @@ public class Project extends AbstractFileService {
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
+    }
+
+    public Folder getWebInfFolder() {
+        return getWebAppRootFolder().getFolder(ProjectConstants.WEB_INF);
     }
 
     @Deprecated
@@ -194,6 +225,10 @@ public class Project extends AbstractFileService {
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
+    }
+
+    public Folder getClassOutputFolder() {
+        return getWebInfFolder().getFolder(ProjectConstants.CLASSES_DIR);
     }
 
     @Override
@@ -313,14 +348,6 @@ public class Project extends AbstractFileService {
         Properties p = getProperties();
         p.setProperty(getPropertyName(clazz, key), String.valueOf(value));
         setProperties(p);
-    }
-
-    public void setProjectLib(Resource projectTempLib) {
-        this.projectLib = projectTempLib;
-    }
-
-    public Resource getProjectLib() {
-        return this.projectLib;
     }
 
     protected Properties getProperties() {

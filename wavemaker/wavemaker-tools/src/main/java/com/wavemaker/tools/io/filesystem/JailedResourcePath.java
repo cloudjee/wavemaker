@@ -4,6 +4,7 @@ package com.wavemaker.tools.io.filesystem;
 import org.springframework.util.Assert;
 
 import com.wavemaker.tools.io.ResourcePath;
+import com.wavemaker.tools.io.ResourceStringFormat;
 
 /**
  * A {@link ResourcePath} that is jailed to a specific location.
@@ -88,6 +89,15 @@ public final class JailedResourcePath {
     }
 
     /**
+     * Unjail the specified resource path
+     * 
+     * @return the unjailed version
+     */
+    public JailedResourcePath unjail() {
+        return new JailedResourcePath(new ResourcePath(), getUnjailedPath());
+    }
+
+    /**
      * Return the {@link #getPath() path} string.
      */
     @Override
@@ -113,5 +123,16 @@ public final class JailedResourcePath {
         }
         JailedResourcePath other = (JailedResourcePath) obj;
         return this.jailPath.equals(other.jailPath) && this.path.equals(other.path);
+    }
+
+    public String toString(ResourceStringFormat format) {
+        format = format == null ? ResourceStringFormat.FULL : format;
+        switch (format) {
+            case FULL:
+                return getPath().toString();
+            case UNJAILED:
+                return getUnjailedPath().toString();
+        }
+        throw new UnsupportedOperationException("Unable to display path with the format " + format);
     }
 }

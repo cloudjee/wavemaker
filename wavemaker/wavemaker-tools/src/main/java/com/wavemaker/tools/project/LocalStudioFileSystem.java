@@ -439,15 +439,4 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
 
         return parent;
     }
-
-    @Override
-    public Resource createProjectLib(Project project) {
-        Resource lib;
-        try {
-            lib = project.getProjectRoot().createRelative("lib/");
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }       
-        return lib;
-    }
 }

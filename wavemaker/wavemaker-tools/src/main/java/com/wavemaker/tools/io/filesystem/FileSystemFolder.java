@@ -17,6 +17,7 @@ import com.wavemaker.tools.io.NoCloseInputStream;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceFilter;
 import com.wavemaker.tools.io.ResourcePath;
+import com.wavemaker.tools.io.ResourceStringFormat;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.ResourcesCollection;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
@@ -163,7 +164,7 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
     @Override
     public void createIfMissing() {
         if (!exists()) {
-            touchParent();
+            createParentIfMissing();
             getFileSystem().createFolder(getKey());
         }
     }
@@ -201,15 +202,15 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
     }
 
     @Override
-    public Folder jail() {
+    public FileSystemFolder<K> jail() {
         JailedResourcePath jailedPath = new JailedResourcePath(getPath().getPath(), new ResourcePath());
         K jailedKey = getFileSystem().getKey(jailedPath);
         return new FileSystemFolder<K>(jailedPath, getFileSystem(), jailedKey);
     }
 
     @Override
-    public String toString() {
-        return super.toString() + "/";
+    public String toString(ResourceStringFormat format) {
+        return super.toString(format) + "/";
     }
 
     /**

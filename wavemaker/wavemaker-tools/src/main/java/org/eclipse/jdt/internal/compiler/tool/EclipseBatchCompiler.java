@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.processing.Processor;
+import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
 
@@ -16,13 +17,13 @@ import org.eclipse.jdt.internal.compiler.batch.FileSystem;
 
 import com.wavemaker.tools.compiler.WaveMakerJavaCompiler;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.compiler.ResourceFolderJavaFileManager;
+import com.wavemaker.tools.io.compiler.ResourceJavaFileManager;
 
 /**
  * Exposes a variant of the internal eclipse batch compiler for use by the {@link WaveMakerJavaCompiler}. This is an
  * internal WaveMaker class and should not be used directly.
  * <p>
- * Can compile classes not contained on the filesystem and support {@link ResourceFolderJavaFileManager}s.
+ * Can compile classes not contained on the filesystem and support {@link ResourceJavaFileManager}s.
  * 
  * @author Phillip Webb
  */
@@ -74,11 +75,22 @@ public class EclipseBatchCompiler extends EclipseCompilerImpl {
 
         // Override set paths to deal with any ResourceFolderJavaFileManagers.
 
-        super.setPaths(bootclasspaths, sourcepathClasspathArg, sourcepathClasspaths, classpaths, extdirsClasspaths, endorsedDirClasspaths,
-            customEncoding);
-        if (this.fileManager instanceof ResourceFolderJavaFileManager) {
-            ResourceFolderJavaFileManager resourceFolderJavaFileManager = (ResourceFolderJavaFileManager) this.fileManager;
-            Iterable<Folder> classPathFolders = resourceFolderJavaFileManager.getLocation(StandardLocation.CLASS_PATH);
+        // If we are using a ResourceFileManager call use the parent when setting paths
+        JavaFileManager originalFileManager = this.fileManager;
+        try {
+            if (this.fileManager instanceof ResourceJavaFileManager) {
+                this.fileManager = ((ResourceJavaFileManager) this.fileManager).getParentFileManager();
+            }
+            super.setPaths(bootclasspaths, sourcepathClasspathArg, sourcepathClasspaths, classpaths, extdirsClasspaths, endorsedDirClasspaths,
+                customEncoding);
+        } finally {
+            this.fileManager = originalFileManager;
+        }
+
+        // Add any classpath folders exposed by the ResourceJavaFileManager
+        if (this.fileManager instanceof ResourceJavaFileManager) {
+            ResourceJavaFileManager resourceFolderJavaFileManager = (ResourceJavaFileManager) this.fileManager;
+            Iterable<Folder> classPathFolders = resourceFolderJavaFileManager.getLocationFolders(StandardLocation.CLASS_PATH);
             if (classPathFolders != null) {
                 List<FileSystem.Classpath> checkedClasspathList = new ArrayList<FileSystem.Classpath>();
                 checkedClasspathList.addAll(Arrays.asList(this.checkedClasspaths));

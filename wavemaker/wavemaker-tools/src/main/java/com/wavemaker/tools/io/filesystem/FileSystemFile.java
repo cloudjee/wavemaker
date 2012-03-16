@@ -24,13 +24,13 @@ public class FileSystemFile<K> extends FileSystemResource<K> implements File {
 
         @Override
         public InputStream asInputStream() {
-            touchParent();
+            createParentIfMissing();
             return getFileSystem().getInputStream(getKey());
         }
 
         @Override
         public OutputStream asOutputStream() {
-            touchParent();
+            createParentIfMissing();
             return getFileSystem().getOutputStream(getKey());
         }
     };
@@ -97,7 +97,7 @@ public class FileSystemFile<K> extends FileSystemResource<K> implements File {
     @Override
     public void createIfMissing() {
         if (!exists()) {
-            touchParent();
+            createParentIfMissing();
             getFileSystem().createFile(getKey());
         }
     }
