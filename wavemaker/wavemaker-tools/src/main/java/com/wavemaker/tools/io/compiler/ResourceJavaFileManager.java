@@ -47,6 +47,10 @@ public class ResourceJavaFileManager extends ForwardingJavaFileManager<JavaFileM
         super(fileManager);
     }
 
+    public JavaFileManager getParentFileManager() {
+        return this.fileManager;
+    }
+
     @Override
     public ClassLoader getClassLoader(Location location) {
         try {

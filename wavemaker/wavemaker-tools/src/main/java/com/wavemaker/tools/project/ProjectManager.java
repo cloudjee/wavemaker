@@ -14,7 +14,6 @@
 
 package com.wavemaker.tools.project;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -28,7 +27,6 @@ import java.util.zip.ZipInputStream;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.core.io.ClassPathResource;
@@ -194,9 +192,6 @@ public class ProjectManager {
         if (wmApp != null) {
             wmApp.setTenantInfoForProj(projectName, tenantFieldName, defTenantID, tenantColumnName);
         }
-
-        Resource projLib = this.fileSystem.createProjectLib(this.currentProject);
-        this.currentProject.setProjectLib(projLib);
 
         // Store types.js contents in memory
         Resource typesFile = project.getWebAppRoot().createRelative("/types.js");
@@ -398,15 +393,7 @@ public class ProjectManager {
         if (getProjectEventNotifier() != null) {
             getProjectEventNotifier().executeCloseProject(this.currentProject);
         }
-        try {
-            Resource projLib = this.currentProject.getProjectLib();
-            if (projLib != null) {
-                FileUtils.forceDelete(projLib.getFile());
-            }
-        } catch (FileNotFoundException ex) {
-        } finally {
-            this.currentProject = null;
-        }
+        this.currentProject = null;
     }
 
     /**

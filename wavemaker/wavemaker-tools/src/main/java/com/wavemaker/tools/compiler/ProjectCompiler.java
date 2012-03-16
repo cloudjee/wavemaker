@@ -34,7 +34,10 @@ import com.wavemaker.tools.apt.AbstractStudioServiceProcessor;
 import com.wavemaker.tools.apt.ServiceConfigurationProcessor;
 import com.wavemaker.tools.apt.ServiceDefProcessor;
 import com.wavemaker.tools.apt.ServiceProcessorConstants;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.Resource;
+import com.wavemaker.tools.io.ResourceFilter;
 import com.wavemaker.tools.io.compiler.ResourceJavaFileManager;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
@@ -49,6 +52,14 @@ import com.wavemaker.tools.service.DesignServiceManager;
  * @author Jeremy Grelle
  */
 public class ProjectCompiler {
+
+    private static final ResourceFilter<File> JAR_FILE_FILTER = new ResourceFilter<File>() {
+
+        @Override
+        public boolean include(File resource) {
+            return resource.getName().toLowerCase().endsWith(".jar");
+        }
+    };
 
     private ProjectManager projectManager;
 
@@ -68,6 +79,7 @@ public class ProjectCompiler {
             ResourceJavaFileManager projectFileManager = new ResourceJavaFileManager(standardFileManager);
             projectFileManager.setLocation(StandardLocation.SOURCE_PATH, project.getSourceFolders());
             projectFileManager.setLocation(StandardLocation.CLASS_OUTPUT, Collections.singleton(project.getClassOutputFolder()));
+            projectFileManager.setLocation(StandardLocation.CLASS_PATH, getClasspath(project));
             for (Folder sourceFolder : project.getSourceFolders()) {
                 // FIXME filter out *.java and *.class
                 sourceFolder.list().copyTo(project.getClassOutputFolder());
@@ -86,6 +98,19 @@ public class ProjectCompiler {
             return compilerOutput.toString();
         } catch (IOException e) {
             throw new WMRuntimeException("Unable to compile " + project.getProjectName(), e);
+        }
+    }
+
+    private Iterable<? extends Resource> getClasspath(Project project) {
+        List<Resource> classpath = new ArrayList<Resource>();
+        addAll(classpath, project.getRootFolder().getFolder("lib").list(JAR_FILE_FILTER));
+        addAll(classpath, this.fileSystem.getStudioWebAppRootFolder().getFolder("WEB-INF/lib").list(JAR_FILE_FILTER));
+        return classpath;
+    }
+
+    private <T> void addAll(List<T> list, Iterable<? extends T> items) {
+        for (T t : items) {
+            list.add(t);
         }
     }
 

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.processing.Processor;
+import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardLocation;
 
@@ -74,8 +75,19 @@ public class EclipseBatchCompiler extends EclipseCompilerImpl {
 
         // Override set paths to deal with any ResourceFolderJavaFileManagers.
 
-        super.setPaths(bootclasspaths, sourcepathClasspathArg, sourcepathClasspaths, classpaths, extdirsClasspaths, endorsedDirClasspaths,
-            customEncoding);
+        // If we are using a ResourceFileManager call use the parent when setting paths
+        JavaFileManager originalFileManager = this.fileManager;
+        try {
+            if (this.fileManager instanceof ResourceJavaFileManager) {
+                this.fileManager = ((ResourceJavaFileManager) this.fileManager).getParentFileManager();
+            }
+            super.setPaths(bootclasspaths, sourcepathClasspathArg, sourcepathClasspaths, classpaths, extdirsClasspaths, endorsedDirClasspaths,
+                customEncoding);
+        } finally {
+            this.fileManager = originalFileManager;
+        }
+
+        // Add any classpath folders exposed by the ResourceJavaFileManager
         if (this.fileManager instanceof ResourceJavaFileManager) {
             ResourceJavaFileManager resourceFolderJavaFileManager = (ResourceJavaFileManager) this.fileManager;
             Iterable<Folder> classPathFolders = resourceFolderJavaFileManager.getLocationFolders(StandardLocation.CLASS_PATH);

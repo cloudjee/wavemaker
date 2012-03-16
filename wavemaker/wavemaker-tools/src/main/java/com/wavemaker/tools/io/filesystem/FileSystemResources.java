@@ -54,7 +54,7 @@ public class FileSystemResources<K> extends AbstractResources<Resource> {
                     case FOLDER:
                         return new FileSystemFolder<K>(path, fileSystem, key);
                 }
-                throw new IllegalStateException("Unknown resource type");
+                throw new IllegalStateException("Unknown resource type for key " + key);
             }
 
             @Override
