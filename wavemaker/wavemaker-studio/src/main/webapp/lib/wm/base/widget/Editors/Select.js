@@ -39,6 +39,7 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 	},
         // STORE ACCESS
 	generateStore: function() {
+	    if (wm.isMobile) return;
 	    var data = [];
 	    if (this.dataSet) {
 		var count = this.dataSet.getCount();
@@ -78,7 +79,12 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 	
 	_createEditor: function(inNode, inProps) {
 	    var e;
-	    if (this.restrictValues) {
+	    if (wm.isMobile) {
+		e = new wm.dijit.form.ComboBox(this.getEditorProps(inNode, inProps));
+		e.owner = this;
+		dojo.attr(e.focusNode, "readonly", true);
+		this.connect(e.focusNode, "onclick", this, "showPopup");
+	    } else if (this.restrictValues) {
 		e =  new dijit.form.FilteringSelect(this.getEditorProps(inNode, inProps));
 	    } else {
 		e = new dijit.form.ComboBox(this.getEditorProps(inNode, inProps));
@@ -87,6 +93,11 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 		dojo.attr(e.focusNode, "readonly", true);
 	    }
 	    return e;
+	},
+        showPopup: function() {
+	    if (this.editor) {
+		this.editor.openDropDown();
+	    }
 	},
         setPlaceHolder: function(inPlaceHolder) {
 	    this.placeHolder = inPlaceHolder;
@@ -651,8 +662,13 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 	if (this.editor)
 	    var displayedValue = this.editor.get("displayedValue");
 
-	    /* item may still be set in the dijit even though the displayed value no longer matches it */
-	    if (item && displayedValue == item.name) {
+	/* If there is an item its mobile then just use the item as the mobile version of the select editor's item is always good */
+	if (item && wm.isMobile) {
+	    this.selectedItem.setData(item);
+	}
+
+	/* item may still be set in the dijit even though the displayed value no longer matches it; */
+	else if (item && displayedValue == item.name) {
 		index =  item.id;
 		var result = this.dataSet.getItem(index);
 		this.selectedItem.setData(result);
@@ -959,3 +975,110 @@ dojo.declare("wm.FilteringLookup", wm.Lookup, {
 	},
     _end: 0
 });
+
+
+
+/* MOBILE CLASSES */
+dojo.declare(
+    "wm.dijit.form.ComboBox",
+    [dijit.form.ValidationTextBox, dijit._HasDropDown],
+    {
+	baseClass: "dijitTextBox dijitComboBox",
+	popupClass: "wm.ListSet",
+	forceWidth: false, // Force the popup to use its own width and not match the editor width
+	autoWidth: false,// Force the popup to use its own width and not match the editor width
+	value: "",
+
+	templateString: dojo.cache("dijit.form", "templates/DropDownBox.html"),
+
+	// hasDownArrow: [const] Boolean
+	//		Set this textbox to display a down arrow button, to open the drop down list.
+	hasDownArrow: true,
+	
+	// openOnClick: [const] Boolean
+	//		Set to true to open drop down upon clicking anywhere on the textbox.
+	openOnClick: true,
+
+
+	openDropDown: function(/*Function*/ callback){
+	    if (!this.dropDown) {
+		this.dropDown = new wm.Dialog({owner: this.owner,
+					       corner: wm.device == "phone" ? "cc" : "cc",
+					       fixPositionNode: wm.device == "tablet" ? this.focusNode : undefined,
+					       width: wm.device == "phone" ? "100%" : "350px",
+					       height: wm.device == "phone" ? "100%" : "600px",
+					       border: "1",
+					       borderColor: "#666",
+					       useContainerWidget: true,
+					       padding: "0",
+					       margin: "10",
+					       title: this.owner.caption,
+					       destroyRecursive: function() {if (!this.isDestroyed) this.destroy();} // this === this.dropDown
+					      });
+		var c = this.dropDown.containerWidget;
+		c.setPadding("0");
+		c.setMargin("0");
+
+		this.listSet = wm.ListSet({owner: this.dropDown,
+					parent: c,
+					_selectionMode: "radio",
+					captionAlign: "left",
+					captionPosition: "top",
+					caption: "",//this.owner.caption,
+					//captionSize: "20px",
+					border: "0",
+					editorBorder: false,
+					padding: "0",
+					width: "100%",
+					height: "100%",
+					onchange: dojo.hitch(this, function() {
+					    if (this._cupdating) return;
+					    var data = this.listSet.grid.selectedItem.getData();
+/*
+					    if (data) {
+						data.id = this.listSet.grid.getSelectedIndex();
+					    }
+					    */
+					    var value = this.owner._getDisplayData(data);
+					    this.set("value", value);
+					    data.name = this.listSet.grid.getCell(this.listSet.grid.getSelectedIndex(),"name");
+					    this.set("item", data);
+					    this.displayedValue = value;
+					    this.owner.changed();
+					    this.dropDown.hide();
+					})
+				       });
+		this.listSet.grid.setSelectionMode("radio");
+		this.closeButton = new wm.ToolButton({owner: this.owner,
+						      name: "closeButton",
+						      border: "1",
+						      borderColor: "#222",
+						      _classes: {domNode: ["SelectCloseButton"]},
+						      width: "60px",
+						      height: "100%",
+						      margin: "4",
+						      parent: main.selectMenu1.editor.dropDown.titleBar,
+						      caption: "Cancel",
+						      onclick: dojo.hitch(this, function() {
+							  this.dropDown.hide();
+						      })});
+	    }
+	    this._cupdating = true;
+	    this.dropDown.setTitle(this.owner.caption); // in case caption has changed
+	    this.listSet.setDataSet(null);
+	    this.dropDown.setShowing(true);
+	    
+	    if (this.owner.displayExpression) {
+		this.listSet.setDisplayField("");
+		this.listSet.setDisplayExpression(this.owner.displayExpression);
+	    } else {
+		this.listSet.setDisplayExpression("");
+		this.listSet.setDisplayField(this.owner.displayField);
+	    }
+	    this.listSet.setDataSet(this.owner.dataSet);
+	    this.listSet.setDataValue(this.owner.dataValue);
+	    // TODO: Need to preselect the current value!
+	    this._cupdating = false;
+	    return true;
+	}
+    });
