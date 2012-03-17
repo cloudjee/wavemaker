@@ -153,9 +153,6 @@ dojo.declare("wm.List", wm.VirtualList, {
 	_setDataFields: function(inDataFields) {
 	    if (this.columns) {
 		this._dataFields = [];
-		if (this.selectionMode == "checkbox" || this.selectionMode == "radio") {
-		    this._dataFields.push("_selector");
-		}
 		var useMobileColumn = false;
 		if (wm.device == "phone") {
 		    for (var i = 0; i < this.columns.length; i++) {
@@ -172,7 +169,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 		}
 		for (var i = 0; i < this.columns.length; i++) {
 		    var c = this.columns[i];
-		    var show = useMobileColumn && c.mobileColumn || !useMobileColumn && !c.mobileColumn && c.show;
+		    var show = useMobileColumn && c.mobileColumn || !useMobileColumn && !c.mobileColumn && c.show || c.controller;
 		    if (show) {
 			this._dataFields.push(this.columns[i].field);
 		    }
