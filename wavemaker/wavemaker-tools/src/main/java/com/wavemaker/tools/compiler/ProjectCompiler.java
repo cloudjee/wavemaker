@@ -38,6 +38,8 @@ import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceFilter;
+import com.wavemaker.tools.io.ResourceFiltering;
+import com.wavemaker.tools.io.ResourceOperations;
 import com.wavemaker.tools.io.compiler.ResourceJavaFileManager;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
@@ -82,7 +84,7 @@ public class ProjectCompiler {
         return compile(project);
     }
 
-    private String compile(Project project) {
+    private String compile(final Project project) {
         try {
             copyRuntimeServiceFiles(project);
             JavaCompiler compiler = new WaveMakerJavaCompiler();
@@ -91,10 +93,7 @@ public class ProjectCompiler {
             projectFileManager.setLocation(StandardLocation.SOURCE_PATH, project.getSourceFolders());
             projectFileManager.setLocation(StandardLocation.CLASS_OUTPUT, Collections.singleton(project.getClassOutputFolder()));
             projectFileManager.setLocation(StandardLocation.CLASS_PATH, getClasspath(project));
-            for (Folder sourceFolder : project.getSourceFolders()) {
-                // FIXME filter out *.java and *.class
-                sourceFolder.list().copyTo(project.getClassOutputFolder());
-            }
+            copyResources(project);
             Iterable<JavaFileObject> compilationUnits = projectFileManager.list(StandardLocation.SOURCE_PATH, "", Collections.singleton(Kind.SOURCE),
                 true);
             StringWriter compilerOutput = new StringWriter();
@@ -109,6 +108,18 @@ public class ProjectCompiler {
             return compilerOutput.toString();
         } catch (IOException e) {
             throw new WMRuntimeException("Unable to compile " + project.getProjectName(), e);
+        }
+    }
+
+    /**
+     * Copy all non java resources.
+     * 
+     * @param project
+     */
+    private void copyResources(final Project project) {
+        for (Folder sourceFolder : project.getSourceFolders()) {
+            sourceFolder.doRecursively(ResourceOperations.copyFilesKeepingSameFolderStructure(sourceFolder, project.getClassOutputFolder(),
+                ResourceFiltering.fileNames().notEnding(".java")));
         }
     }
 

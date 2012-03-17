@@ -1,6 +1,7 @@
 
 package com.wavemaker.tools.compiler;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -210,5 +211,8 @@ public class ProjectCompilerTest {
 
         Resource classPathProps = project.getWebInfClasses().createRelative("log4j.properties");
         assertTrue(classPathProps.exists());
+
+        Resource javaFile = project.getWebInfClasses().createRelative("Foo.java");
+        assertFalse(javaFile.exists());
     }
 }
