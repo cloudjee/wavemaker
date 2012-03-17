@@ -5,7 +5,7 @@ package com.wavemaker.tools.io;
  * An operation that can be performed on a {@link Resource}s.
  * 
  * @see Folder#performOperationRecursively(ResourceOperation)
- * 
+ * @see ResourceOperations
  * @author Phillip Webb
  */
 public interface ResourceOperation<T extends Resource> {
