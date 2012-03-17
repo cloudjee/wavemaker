@@ -42,7 +42,7 @@ public interface Resources<T extends Resource> extends Iterable<T> {
      * 
      * @param operation the operation to perform
      */
-    void doWith(ResourceOperation<T> operation);
+    void performOperation(ResourceOperation<T> operation);
 
     /**
      * Fetch all {@link Resource}s from this collection and return the result as a {@link List}. This will trigger

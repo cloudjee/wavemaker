@@ -118,7 +118,7 @@ public class ProjectCompiler {
      */
     private void copyResources(final Project project) {
         for (Folder sourceFolder : project.getSourceFolders()) {
-            sourceFolder.doRecursively(ResourceOperations.copyFilesKeepingSameFolderStructure(sourceFolder, project.getClassOutputFolder(),
+            sourceFolder.performOperationRecursively(ResourceOperations.copyFilesKeepingSameFolderStructure(sourceFolder, project.getClassOutputFolder(),
                 ResourceFiltering.fileNames().notEnding(".java")));
         }
     }

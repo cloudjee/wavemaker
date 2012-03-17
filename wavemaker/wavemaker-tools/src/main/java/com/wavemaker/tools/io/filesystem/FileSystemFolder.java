@@ -120,14 +120,14 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T extends Resource> void doRecursively(ResourceOperation<T> operation) {
+    public <T extends Resource> void performOperationRecursively(ResourceOperation<T> operation) {
         Class<?> supportedType = GenericTypeResolver.resolveTypeArgument(operation.getClass(), ResourceOperation.class);
         for (Resource child : list()) {
             if (supportedType.isInstance(child)) {
                 operation.perform((T) child);
             }
             if (child instanceof Folder) {
-                ((Folder) child).doRecursively(operation);
+                ((Folder) child).performOperationRecursively(operation);
             }
         }
     }

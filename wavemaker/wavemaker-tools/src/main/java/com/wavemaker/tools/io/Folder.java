@@ -102,7 +102,7 @@ public interface Folder extends Resource, Iterable<Resource> {
      * 
      * @param operation the operation to perform
      */
-    <T extends Resource> void doRecursively(ResourceOperation<T> operation);
+    <T extends Resource> void performOperationRecursively(ResourceOperation<T> operation);
 
     /**
      * Unzip the specified zip file into the current folder.

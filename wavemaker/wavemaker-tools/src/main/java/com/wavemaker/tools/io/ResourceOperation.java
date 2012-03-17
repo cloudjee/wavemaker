@@ -4,7 +4,7 @@ package com.wavemaker.tools.io;
 /**
  * An operation that can be performed on a {@link Resource}s.
  * 
- * @see Folder#doRecursively(ResourceOperation)
+ * @see Folder#performOperationRecursively(ResourceOperation)
  * 
  * @author Phillip Webb
  */

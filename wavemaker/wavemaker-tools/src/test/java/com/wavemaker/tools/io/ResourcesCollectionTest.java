@@ -108,7 +108,7 @@ public class ResourcesCollectionTest {
     @Test
     public void shouldPerformOperationAgainstResourceItems() throws Exception {
         ResourcesCollection<Resource> collection = new ResourcesCollection<Resource>(this.folder, this.file);
-        collection.doWith(this.resourceOperation);
+        collection.performOperation(this.resourceOperation);
         verify(this.resourceOperation).perform(this.folder);
         verify(this.resourceOperation).perform(this.file);
         verifyNoMoreInteractions(this.resourceOperation);

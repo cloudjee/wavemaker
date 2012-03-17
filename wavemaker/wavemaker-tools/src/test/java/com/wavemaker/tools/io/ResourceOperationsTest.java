@@ -32,7 +32,7 @@ public class ResourceOperationsTest {
         from.getFile("/a/b/f/g.txt").getContent().write("g");
 
         Folder source = from.getFolder("a");
-        source.doRecursively(ResourceOperations.copyFilesKeepingSameFolderStructure(source, destination,
+        source.performOperationRecursively(ResourceOperations.copyFilesKeepingSameFolderStructure(source, destination,
             ResourceFiltering.fileNames().notEnding(".bak")));
 
         assertThat(destination.getFile("b/c/d.txt").getContent().asString(), is("d"));

@@ -44,7 +44,7 @@ public abstract class AbstractResources<T extends Resource> implements Resources
     }
 
     @Override
-    public void doWith(ResourceOperation<T> operation) {
+    public void performOperation(ResourceOperation<T> operation) {
         for (T resource : this) {
             operation.perform(resource);
         }
