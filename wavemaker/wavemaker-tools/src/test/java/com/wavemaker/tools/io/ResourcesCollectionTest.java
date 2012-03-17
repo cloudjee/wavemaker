@@ -5,10 +5,13 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,6 +37,12 @@ public class ResourcesCollectionTest {
 
     @Mock
     private File file;
+
+    @Mock
+    private ResourceOperation<Resource> resourceOperation;
+
+    @Mock
+    private ResourceOperation<File> fileOperation;
 
     @Test
     public void shouldNeedResources() throws Exception {
@@ -94,5 +103,23 @@ public class ResourcesCollectionTest {
         InOrder ordered = inOrder(this.folder, this.file);
         ordered.verify((Resource) this.folder).copyTo(destination);
         ordered.verify((Resource) this.file).copyTo(destination);
+    }
+
+    @Test
+    public void shouldPerformOperationAgainstResourceItems() throws Exception {
+        ResourcesCollection<Resource> collection = new ResourcesCollection<Resource>(this.folder, this.file);
+        collection.doWith(this.resourceOperation);
+        verify(this.resourceOperation).perform(this.folder);
+        verify(this.resourceOperation).perform(this.file);
+        verifyNoMoreInteractions(this.resourceOperation);
+    }
+
+    @Test
+    public void shouldFetchAll() throws Exception {
+        ResourcesCollection<Resource> collection = new ResourcesCollection<Resource>(this.folder, this.file);
+        List<Resource> list = collection.fetchAll();
+        assertThat(list.size(), is(2));
+        assertThat(list.get(0), is((Resource) this.folder));
+        assertThat(list.get(1), is((Resource) this.file));
     }
 }

@@ -29,7 +29,7 @@ import org.springframework.util.StringUtils;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.tools.io.Folder;
-import com.wavemaker.tools.io.ResourceFilter;
+import com.wavemaker.tools.io.ResourceFiltering;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.ResourcesCollection;
 import com.wavemaker.tools.io.filesystem.FileSystemFolder;
@@ -150,7 +150,7 @@ public class Project extends AbstractFileService {
         if (mainSourceFolder.exists()) {
             sourceFolders.add(mainSourceFolder);
         }
-        Resources<Folder> serviceFolders = getRootFolder().getFolder("services").list(ResourceFilter.FOLDERS);
+        Resources<Folder> serviceFolders = getRootFolder().getFolder("services").list(ResourceFiltering.folders());
         for (Folder serviceFolder : serviceFolders) {
             Folder serviceSourceFolder = serviceFolder.getFolder("src");
             if (serviceSourceFolder.exists()) {

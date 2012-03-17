@@ -1,6 +1,8 @@
 
 package com.wavemaker.tools.io;
 
+import java.util.List;
+
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 
 /**
@@ -34,4 +36,19 @@ public interface Resources<T extends Resource> extends Iterable<T> {
      * @throws ResourceDoesNotExistException if this resource no longer exists
      */
     Resources<T> copyTo(Folder folder);
+
+    /**
+     * Perform the given operation with each {@link Resource} in this collection.
+     * 
+     * @param operation the operation to perform
+     */
+    void doWith(ResourceOperation<T> operation);
+
+    /**
+     * Fetch all {@link Resource}s from this collection and return the result as a {@link List}. This will trigger
+     * {@link #iterator() iteration} over each element.
+     * 
+     * @return a {@link List} of all {@link Resource}s in this collection.
+     */
+    List<T> fetchAll();
 }

@@ -8,6 +8,7 @@ import java.util.Iterator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.springframework.core.GenericTypeResolver;
 import org.springframework.util.Assert;
 
 import com.wavemaker.tools.io.File;
@@ -16,6 +17,8 @@ import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.NoCloseInputStream;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceFilter;
+import com.wavemaker.tools.io.ResourceFiltering;
+import com.wavemaker.tools.io.ResourceOperation;
 import com.wavemaker.tools.io.ResourcePath;
 import com.wavemaker.tools.io.ResourceStringFormat;
 import com.wavemaker.tools.io.Resources;
@@ -98,7 +101,7 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
 
     @Override
     public Resources<Resource> list() {
-        return list(ResourceFilter.NONE);
+        return list(ResourceFiltering.none());
     }
 
     @Override
@@ -113,6 +116,20 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
         }
         Resources<Resource> resources = new FileSystemResources<K>(getPath(), getFileSystem(), list);
         return FilteredResources.apply(resources, filter);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends Resource> void doRecursively(ResourceOperation<T> operation) {
+        Class<?> supportedType = GenericTypeResolver.resolveTypeArgument(operation.getClass(), ResourceOperation.class);
+        for (Resource child : list()) {
+            if (supportedType.isInstance(child)) {
+                operation.perform((T) child);
+            }
+            if (child instanceof Folder) {
+                ((Folder) child).doRecursively(operation);
+            }
+        }
     }
 
     @Override

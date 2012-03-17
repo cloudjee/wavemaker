@@ -86,6 +86,13 @@ public interface FileContent {
     Writer asWriter();
 
     /**
+     * Write the contents of the specified file to this file.
+     * 
+     * @param file the file to copy.
+     */
+    void write(File file);
+
+    /**
      * Write the contents of the specified output stream to this file, closing the stream when complete.
      * 
      * @param inputStream the input stream to write

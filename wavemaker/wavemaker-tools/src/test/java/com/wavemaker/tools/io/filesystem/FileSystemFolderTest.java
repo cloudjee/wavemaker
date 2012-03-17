@@ -31,6 +31,7 @@ import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceFilter;
+import com.wavemaker.tools.io.ResourceFiltering;
 import com.wavemaker.tools.io.ResourceStringFormat;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
@@ -262,11 +263,32 @@ public class FileSystemFolderTest extends AbstractFileSystemResourceTest {
         given(this.fileSystem.list(this.folder.getKey())).willReturn(Arrays.asList("a", "b"));
         given(this.fileSystem.getResourceType(pathA)).willReturn(ResourceType.FOLDER);
         given(this.fileSystem.getResourceType(pathB)).willReturn(ResourceType.FILE);
-        Resources<File> resources = this.folder.list(ResourceFilter.FILES);
+        Resources<File> resources = this.folder.list(ResourceFiltering.files());
         Iterator<File> iterator = resources.iterator();
         File file = iterator.next();
         assertThat(iterator.hasNext(), is(false));
         assertThat(file.toString(), is("/b"));
+    }
+
+    @Test
+    public void shouldListFilteredResourcesWithAnonymousClass() throws Exception {
+        JailedResourcePath pathA = new JailedResourcePath().get("a");
+        JailedResourcePath pathB = new JailedResourcePath().get("b");
+        given(this.fileSystem.list(this.folder.getKey())).willReturn(Arrays.asList("a", "b"));
+        given(this.fileSystem.getResourceType(pathA)).willReturn(ResourceType.FOLDER);
+        given(this.fileSystem.getResourceType(pathB)).willReturn(ResourceType.FILE);
+        Resources<File> resources = this.folder.list(new ResourceFilter<File>() {
+
+            @Override
+            public boolean include(File resource) {
+                return true;
+            }
+        });
+        Iterator<File> iterator = resources.iterator();
+        File file = iterator.next();
+        assertThat(iterator.hasNext(), is(false));
+        assertThat(file.toString(), is("/b"));
+
     }
 
     @Test

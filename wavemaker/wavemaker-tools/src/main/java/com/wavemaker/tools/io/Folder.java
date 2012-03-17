@@ -98,6 +98,13 @@ public interface Folder extends Resource, Iterable<Resource> {
     <T extends Resource> Resources<T> list(ResourceFilter<T> filter);
 
     /**
+     * Perform the specified operation on all children in folder, recursively processing all nested folders.
+     * 
+     * @param operation the operation to perform
+     */
+    <T extends Resource> void doRecursively(ResourceOperation<T> operation);
+
+    /**
      * Unzip the specified zip file into the current folder.
      * 
      * @param file the file to unzip (this must reference a zip file)

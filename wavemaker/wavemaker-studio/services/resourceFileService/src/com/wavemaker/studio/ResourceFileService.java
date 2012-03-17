@@ -30,7 +30,7 @@ import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
-import com.wavemaker.tools.io.ResourceFilter;
+import com.wavemaker.tools.io.ResourceFiltering;
 import com.wavemaker.tools.io.ResourcePath;
 import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.io.exception.ResourceTypeMismatchException;
@@ -63,7 +63,7 @@ public class ResourceFileService {
     }
 
     private List<Hashtable<String, Object>> listChildren(Folder folder) {
-        Resources<Resource> list = folder.list(ResourceFilter.HIDDEN_RESOURCES);
+        Resources<Resource> list = folder.list(ResourceFiltering.hiddenResources());
         List<Hashtable<String, Object>> children = new ArrayList<Hashtable<String, Object>>();
         for (Resource child : list) {
             children.add(asHashTable(child));

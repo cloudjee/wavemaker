@@ -73,6 +73,11 @@ public abstract class AbstractFileContent implements FileContent {
     }
 
     @Override
+    public void write(File file) {
+        write(file.getContent().asInputStream());
+    }
+
+    @Override
     public void write(InputStream inputStream) throws ResourceException {
         try {
             FileCopyUtils.copy(inputStream, asOutputStream());

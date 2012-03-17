@@ -2,6 +2,7 @@
 package com.wavemaker.tools.io;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.util.Assert;
@@ -40,5 +41,21 @@ public abstract class AbstractResources<T extends Resource> implements Resources
             copiedResources.add((T) resource.copyTo(folder));
         }
         return new ResourcesCollection<T>(copiedResources);
+    }
+
+    @Override
+    public void doWith(ResourceOperation<T> operation) {
+        for (T resource : this) {
+            operation.perform(resource);
+        }
+    }
+
+    @Override
+    public List<T> fetchAll() {
+        List<T> all = new ArrayList<T>();
+        for (T resource : this) {
+            all.add(resource);
+        }
+        return Collections.unmodifiableList(all);
     }
 }
