@@ -556,7 +556,7 @@ dojo.declare("wm.studio.Project", null, {
 	    d.addCallback(dojo.hitch(this, function() {
 		if (!studio.isCloud()) {
 		    studio.setSaveProgressBarMessage("Initializing PhoneGap (Please wait...)");
-		    var dlocal = studio.phoneGapService.requestAsync("setupPhonegapFiles", [location.port || 80, studio.runPopup.iconClass == "studioProjectTest"]);
+		    var dlocal = studio.phoneGapService.requestAsync("setupPhonegapFiles", []);
 		    dlocal.addCallback(function() {d1.callback();});
 		} else {
 		    d1.callback();
@@ -709,7 +709,7 @@ dojo.declare("wm.studio.Project", null, {
 	    d10.addCallback(dojo.hitch(this, function() {
 		if (!studio.isCloud()) {
 		    studio.setSaveProgressBarMessage("Update PhoneGap Setup");
-		    var dlocal = studio.phoneGapService.requestAsync("updatePhonegapFiles", [location.port || 80, studio.runPopup.iconClass == "studioProjectTest", studio.application.theme]);
+		    var dlocal = studio.phoneGapService.requestAsync("updatePhonegapFiles", [location.port || 80, studio.application.theme]);
 		    dlocal.addCallback(function() {d11.callback();});
 		} else {
 		    d11.callback();
@@ -725,7 +725,30 @@ dojo.declare("wm.studio.Project", null, {
 
 				       
 	},
+    getPhonegapBuild: function() {
+	var d = studio.phoneGapService.requestAsync("getDefaultHost", []);
+	d.addCallback(dojo.hitch(this, function(inHost) {
+	    app.prompt("Enter server name that you want the phonegap application to connect to.  eg. '" + studio.project.projectName + ".cloudfoundry.com' or 'www.mycompany.com/" + studio.project.projectName + "'; include port number if needed", inHost, dojo.hitch(this, function(inValue) {
+		var serverName, portNumb;
+		inValue = inValue.replace(/^http.?\:\/\//,"");
+		var results = inValue.split(/\:/);
+		serverName = results[0];
+		portNumb = results[1] || 80;
+		studio.beginWait("Generating");
+		var d = studio.phoneGapService.requestAsync("generateBuild", [serverName,portNumb,studio.application.theme]);
+		d.addCallbacks(
+		    dojo.hitch(this, function() {		
+			studio.downloadInIFrame("services/phoneGapService.download?method=downloadBuild");
+			studio.endWait();
+		    }),
+		    dojo.hitch(this, function(inError) {
+			studio.endWait();
+			app.toastError(inError);
+		    }));
 
+	    }));
+	}));
+    },
     // Right now, the documentation files are our only place for storing project meta data... stuff that should be widget level properties,
     // but which should not show up at runtime.  So we need a quick way to change them and save them
     setMetaDataFlag: function(key,value) {

@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.springframework.context.ApplicationListener;
 
+import com.wavemaker.runtime.server.DownloadResponse;
 import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
@@ -15,8 +16,11 @@ import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceFilter;
 import com.wavemaker.tools.io.Resources;
+import com.wavemaker.tools.io.zip.ZippedFolderInputStream;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.project.StudioFileSystem;
+import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 
 /**
  * Service for Phone Gap operations.
@@ -107,21 +111,60 @@ public class PhoneGapService implements ApplicationListener<StudioServiceWriteWe
     }
 
     @ExposeToClient
-    public void setupPhonegapFiles(int portNumb, boolean isDebug) throws IOException {
+	public String getDefaultHost() {
+	return SystemUtils.getIP();
+    }
+
+    @ExposeToClient
+	public void generateBuild(String serverName, int portNumb, String themeName) throws IOException {
+
+        String projectName = this.projectManager.getCurrentProject().getProjectName();	
+	Folder phonegapFolder = this.projectManager.getCurrentProject().getRootFolder().getFolder("phonegap");
+	phonegapFolder.createIfMissing();
+	Folder buildFolder = phonegapFolder.getFolder("build");
+	buildFolder.createIfMissing();
+        Folder sourceLib = this.fileSystem.getStudioWebAppRootFolder().getFolder("lib");
+        Folder commonFolder = this.fileSystem.getCommonFolder();
+        Folder theme = themeName.startsWith("wm_") ? sourceLib.getFolder("wm/base/widget/themes/" + themeName) : commonFolder.getFolder("themes/"
+            + themeName);
+
+	buildFolder.createIfMissing();
+	setupPhonegapFiles(projectName, buildFolder);
+	updatePhonegapFiles(serverName, portNumb, projectName, buildFolder, theme);
+
+        ZippedFolderInputStream inputStream = new ZippedFolderInputStream(buildFolder);
+        //ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+	File dest = phonegapFolder.getFile("build.zip");
+	dest.getContent().write(inputStream);
+    }
+    @ExposeToClient
+	public DownloadResponse downloadBuild() throws IOException {
+	Folder phonegapFolder = this.projectManager.getCurrentProject().getRootFolder().getFolder("phonegap");	
+	File dest = phonegapFolder.getFile("build.zip");
+        String projectName = this.projectManager.getCurrentProject().getProjectName();	
+	DownloadResponse ret = new DownloadResponse();
+	ret.setContents(dest.getContent().asInputStream());
+	ret.setContentType("application/unknown");
+	ret.setFileName(projectName + ".zip");
+	return ret;
+    }
+
+    @ExposeToClient
+    public void setupPhonegapFiles() throws IOException {
         String projectName = this.projectManager.getCurrentProject().getProjectName();
 
         // XCODE
         String pathPrefix = "phonegap/" + projectName + "/www/";
         Folder phonegapFolder = this.projectManager.getCurrentProject().getRootFolder().getFolder("/" + pathPrefix);
-        setupPhonegapFiles(portNumb, projectName, phonegapFolder);
+        setupPhonegapFiles(projectName, phonegapFolder);
 
         // Eclipse
         pathPrefix = "phonegap/android/assets/www/";
         phonegapFolder = this.projectManager.getCurrentProject().getRootFolder().getFolder("/" + pathPrefix);
-        setupPhonegapFiles(portNumb, projectName, phonegapFolder);
+        setupPhonegapFiles(projectName, phonegapFolder);
     }
 
-    private void setupPhonegapFiles(int portNumb, String projectName, Folder phonegap) throws IOException {
+    private void setupPhonegapFiles(String projectName, Folder phonegap) throws IOException {
         if (phonegap.exists()) {
             Folder lib = phonegap.getFolder("lib");
             if (!lib.exists()) {
@@ -328,34 +371,46 @@ public class PhoneGapService implements ApplicationListener<StudioServiceWriteWe
                 } catch (Exception e) {
                     System.out.println("FAILED:" + e.toString());
                 }
+		Folder sourceWebapproot = this.projectManager.getCurrentProject().getRootFolder().getFolder("webapproot");
+		String[] fileNameList = {"index.html", "login.html", "config.js", "boot.js"};
+		for (int i = 0; i < fileNameList.length; i++) {
+		    File f1 = phonegap.getFile(fileNameList[i]);
+		    if (!f1.exists()) {
+			File f2 = sourceWebapproot.getFile(fileNameList[i]);
+			if (f2.exists())
+			    f2.copyTo(phonegap);
+		    }
+		}
+
             }
             System.out.println("FINISHED PHONEGAP SETUP");
         }
     }
 
     @ExposeToClient
-    public void updatePhonegapFiles(int portNumb, boolean isDebug, String themeName) throws IOException {
+    public void updatePhonegapFiles(int portNumb, String themeName) throws IOException {
         Folder projectFolder = this.projectManager.getCurrentProject().getRootFolder();
         Folder sourceLib = this.fileSystem.getStudioWebAppRootFolder().getFolder("lib");
         Folder commonFolder = this.fileSystem.getCommonFolder();
         Folder theme = themeName.startsWith("wm_") ? sourceLib.getFolder("wm/base/widget/themes/" + themeName) : commonFolder.getFolder("themes/"
             + themeName);
+	String serverUrl = SystemUtils.getIP();
 
         // XCODE
         String projectName = this.projectManager.getCurrentProject().getProjectName();
         String pathPrefix = "phonegap/" + projectName + "/www/";
         Folder phonegapFolder = this.projectManager.getCurrentProject().getRootFolder().getFolder(pathPrefix);
         System.out.println("XCODE:" + phonegapFolder.toString());
-        updatePhonegapFiles(portNumb, isDebug, projectName, phonegapFolder, theme);
+        updatePhonegapFiles(serverUrl, portNumb, projectName, phonegapFolder, theme);
 
         // ANDROID
         pathPrefix = "phonegap/android/assets/www/";
         phonegapFolder = this.projectManager.getCurrentProject().getRootFolder().getFolder(pathPrefix);
         System.out.println("ANDROID:" + phonegapFolder.toString());
-        updatePhonegapFiles(portNumb, isDebug, projectName, phonegapFolder, theme);
+        updatePhonegapFiles(serverUrl, portNumb, projectName, phonegapFolder, theme);
     }
 
-    private void updatePhonegapFiles(int portNumb, boolean isDebug, String projectName, final Folder phonegap, Folder theme) throws IOException {
+    private void updatePhonegapFiles(String serverUrl, int portNumb, String projectName, final Folder phonegap, Folder theme) throws IOException {
         if (phonegap.exists()) {
 
             /* delete all pages, resources and project files so we can recopy updated version of them */
@@ -392,19 +447,22 @@ public class PhoneGapService implements ApplicationListener<StudioServiceWriteWe
                     }
                 });
 
+		String phonegapName = "phonegap.js"; // still used by phonegap build service, but may have to update to cordova.js
                 for (Resource resource : files) {
-                    if (indexhtml_text.indexOf("<script type=\"text/javascript\" src=\"" + resource.getName() + "\"></script>") == -1) {
+		    phonegapName = resource.getName();
+		}
+		if (indexhtml_text.indexOf("<script type=\"text/javascript\" src=\"" + phonegapName + "\"></script>") == -1) {
                         System.out.println("ADDED cordova.js");
                         indexhtml_text = indexhtml_text.replace("runtimeLoader.js\"></script>",
-                            "runtimeLoader.js\"></script>\n<script type=\"text/javascript\" src=\"" + resource.getName() + "\"></script>");
+                            "runtimeLoader.js\"></script>\n<script type=\"text/javascript\" src=\"" + phonegapName + "\"></script>");
                         if (!loginhtml_text.equals("")) {
                             loginhtml_text = loginhtml_text.replace("runtimeLoader.js\"></script>",
-                                "runtimeLoader.js\"></script>\n<script type=\"text/javascript\" src=\"" + resource.getName() + "\"></script>");
+                                "runtimeLoader.js\"></script>\n<script type=\"text/javascript\" src=\"" + phonegapName + "\"></script>");
                         }
 
-                    }
+		}
 
-                }
+
 
             } catch (Exception e) {
                 System.out.println("Search for Cordova has failed: " + e.toString());
@@ -452,7 +510,7 @@ public class PhoneGapService implements ApplicationListener<StudioServiceWriteWe
             System.out.println("START: " + startDebug + "; END: " + endDebug);
             configjs_text = configjs_text.replaceAll("/wavemaker/", "/").replace("wm.relativeLibPath = \"../lib/\";",
                 "wm.relativeLibPath = \"lib/\";")
-                + "\nwm.xhrPath = 'http://" + SystemUtils.getIP() + ":" + portNumb + "/" + projectName + "/';\n" + boottext;
+                + "\nwm.xhrPath = 'http://" + serverUrl + ":" + portNumb + "/" + projectName + "/';\n" + boottext;
             configjs.getContent().write(configjs_text);
 
             // Update phonegap.plist (IOS only)
