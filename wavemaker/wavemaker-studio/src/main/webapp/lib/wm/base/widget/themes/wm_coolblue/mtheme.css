@@ -70,6 +70,7 @@ background-repeat: repeat-x;
 box-shadow: 0px 0px 0px #444444;
 }
 .wm_coolblue   .wmbutton:active,
+.wm_coolblue   .wmbutton.Focused,
 .wm_coolblue   .wmbutton:focus {
 color: #ffffff;
 background-color: #444444;
@@ -288,6 +289,7 @@ background-repeat: repeat-x;
 box-shadow: 3px 3px 3px #000000;
 }
 body.wm_coolblue .dialogtitlebar .wmbutton:hover,
+body.wm_coolblue .dialogtitlebar .wmbutton.Focused,
 body.wm_coolblue .dialogtitlebar .wmbutton:focus,
 body.wm_coolblue .dialogtitlebar .wmbutton:active {
 color: #000000;
@@ -303,6 +305,7 @@ body.wm_coolblue .dialogfooter .wmbutton.toggleButtonDown,
 body .wm_coolblue .dialogfooter .wmbutton.toggleButtonDown,
 body.wm_coolblue .dialogfooter .wmbutton:hover,
 body.wm_coolblue .dialogfooter .wmbutton:active,
+body.wm_coolblue .dialogfooter .wmbutton.Focused,
 body.wm_coolblue .dialogfooter .wmbutton:focus {
 color: #000000;
 background-color: #86a2ac;

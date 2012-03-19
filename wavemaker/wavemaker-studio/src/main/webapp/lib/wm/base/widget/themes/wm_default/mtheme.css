@@ -69,6 +69,8 @@ background-repeat: repeat-x;
 -webkit-box-shadow: 0px 0px 0px #444444;
 box-shadow: 0px 0px 0px #444444;
 }
+
+.wm_default   .wmbutton.Focused,
 .wm_default   .wmbutton:active,
 .wm_default   .wmbutton:focus {
 color: #ffffff;
@@ -115,6 +117,7 @@ background-repeat: repeat-x;
 -webkit-box-shadow: 0px 0px 0px #444444;
 box-shadow: 0px 0px 0px #444444;
 }
+
 .wm_default .HeaderContent  .wmbutton:hover,
 .wm_default .HeaderContent  .wmbutton:active {
 color: #ffffff;
@@ -287,8 +290,10 @@ background-repeat: repeat-x;
 -webkit-box-shadow: 3px 3px 3px #000000;
 box-shadow: 3px 3px 3px #000000;
 }
+
 body.wm_default .dialogtitlebar .wmbutton:hover,
 body.wm_default .dialogtitlebar .wmbutton:focus,
+body.wm_default .dialogtitlebar .wmbutton.Focused,
 body.wm_default .dialogtitlebar .wmbutton:active {
 color: #000000;
 background-color: #86a2ac;
@@ -303,6 +308,7 @@ body.wm_default .dialogfooter .wmbutton.toggleButtonDown,
 body .wm_default .dialogfooter .wmbutton.toggleButtonDown,
 body.wm_default .dialogfooter .wmbutton:hover,
 body.wm_default .dialogfooter .wmbutton:active,
+body.wm_default .dialogfooter .wmbutton.Focused,
 body.wm_default .dialogfooter .wmbutton:focus {
 color: #000000;
 background-color: #86a2ac;

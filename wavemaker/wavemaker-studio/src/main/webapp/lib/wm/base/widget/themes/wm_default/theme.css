@@ -101,6 +101,7 @@ background-repeat: repeat-x;
 -webkit-box-shadow: 0px 0px 0px #444444;
 box-shadow: 0px 0px 0px #444444;
 }
+.wm_default   .wmbutton.Focused,
 .wm_default   .wmbutton:hover,
 .wm_default   .wmbutton:focus,
 .wm_default   .wmroundedbutton:hover,

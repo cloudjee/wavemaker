@@ -163,6 +163,7 @@ body .wm_template .dialogfooter .wmbutton {
    ************************************************************************************************/
 
 body.wm_template .dialogtitlebar .wmbutton:hover,
+body.wm_template .dialogtitlebar .wmbutton.Focused,
 body.wm_template .dialogtitlebar .wmbutton:focus,
 body.wm_template .dialogtitlebar .wmbutton:active {
     /* Dialogs-TitleButtonsHover-Font */
@@ -184,6 +185,7 @@ body.wm_template .dialogfooter .wmbutton.toggleButtonDown,
 body .wm_template .dialogfooter .wmbutton.toggleButtonDown,
 body.wm_template .dialogfooter .wmbutton:hover,
 body.wm_template .dialogfooter .wmbutton:active,
+body.wm_template .dialogfooter .wmbutton.Focused,
 body.wm_template .dialogfooter .wmbutton:focus {
     /* Dialogs-FooterButtonsHover-Font */
     color: #FFFFFF; /* Dialogs-FooterButtonsHover-Font_Color */

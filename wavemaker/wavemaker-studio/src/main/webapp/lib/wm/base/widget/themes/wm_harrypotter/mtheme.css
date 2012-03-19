@@ -70,6 +70,7 @@ background-repeat: repeat-x;
 box-shadow: 0px 0px 0px #444444;
 }
 .harrypotter   .wmbutton:active,
+.harrypotter   .wmbutton.Focused,
 .harrypotter   .wmbutton:focus {
 color: #ffffff;
 background-color: #f96a02;
@@ -288,6 +289,7 @@ background-repeat: repeat-x;
 box-shadow: 3px 3px 3px #000000;
 }
 body.harrypotter .dialogtitlebar .wmbutton:hover,
+body.harrypotter .dialogtitlebar .wmbutton.Focused,
 body.harrypotter .dialogtitlebar .wmbutton:focus,
 body.harrypotter .dialogtitlebar .wmbutton:active {
 color: #000000;
@@ -303,6 +305,7 @@ body.harrypotter .dialogfooter .wmbutton.toggleButtonDown,
 body .harrypotter .dialogfooter .wmbutton.toggleButtonDown,
 body.harrypotter .dialogfooter .wmbutton:hover,
 body.harrypotter .dialogfooter .wmbutton:active,
+body.harrypotter .dialogfooter .wmbutton.Focused,
 body.harrypotter .dialogfooter .wmbutton:focus {
 color: #000000;
 background-color: #86a2ac;
