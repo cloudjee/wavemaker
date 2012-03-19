@@ -84,12 +84,12 @@ public class ResourceFolderFileSystemClasspath implements FileSystem.Classpath {
             return null;
         }
         String filename = new String(typeName);
-        File file = this.folder.getFile(qualifiedBinaryFileName);
+        File file = this.folder.getFile(normalizePath(qualifiedBinaryFileName));
         if (file.exists()) {
             InputStream inputStream = file.getContent().asInputStream();
             try {
                 ClassFileReader reader = ClassFileReader.read(file.getContent().asInputStream(), qualifiedBinaryFileName);
-                String typeSearched = qualifiedPackageName.replace(FILE_SEPARATOR, '/') + "/" + filename;
+                String typeSearched = normalizePath(qualifiedPackageName) + "/" + filename;
                 if (!CharOperation.equals(reader.getName(), typeSearched.toCharArray())) {
                     reader = null;
                 }
@@ -115,10 +115,14 @@ public class ResourceFolderFileSystemClasspath implements FileSystem.Classpath {
         }
         Boolean isPackage = this.isPackageCache.get(qualifiedPackageName);
         if (isPackage == null) {
-            isPackage = this.folder.hasExisting(qualifiedPackageName);
+            isPackage = this.folder.hasExisting(normalizePath(qualifiedPackageName));
             this.isPackageCache.put(qualifiedPackageName, isPackage);
         }
         return isPackage;
+    }
+
+    private String normalizePath(String qualifiedPackageName) {
+        return qualifiedPackageName.replace(FILE_SEPARATOR, '/');
     }
 
     @Override
