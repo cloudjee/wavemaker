@@ -104,6 +104,7 @@ public class MainConsole extends javax.swing.JFrame
         }
         
         this.version = version;
+        //version is obtained from wavemaker-tools\src\main\resources\com\wavemaker\tools\project\version
         setTitle(bundle.getString("MainConsole.title") + " " + version);
 
         try
