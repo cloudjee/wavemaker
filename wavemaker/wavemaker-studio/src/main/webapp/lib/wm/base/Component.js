@@ -933,7 +933,7 @@ this.panel1.createComponent("custom", "wm.Panel", {
 				    var eventId = app.debugDialog.newLogEvent({eventType: "subcomponentEvent",
 							     eventName: eventName,
 							     firingId: inComponent.getRuntimeId(),
-							     affectedId: c.getRuntimeId(),
+						             affectedId: c instanceof wm.Component ? c.getRuntimeId() : undefined,
 							     method: m});
 				}
 				// changed from c[m]() so that inSender and all arguments get forwarded
