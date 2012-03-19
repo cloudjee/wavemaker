@@ -13,7 +13,7 @@
  */
 
 dojo.provide("wm.base.widget.Bevel");
-dojo.require("wm.base.Widget");
+dojo.require("wm.base.Control");
 
 dojo.declare("wm.Bevel", wm.Widget, {
 	className: "wmbevel",
