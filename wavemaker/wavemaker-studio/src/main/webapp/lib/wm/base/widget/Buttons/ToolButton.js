@@ -49,7 +49,7 @@ dojo.declare("wm.ToolButton", wm.Control, {
 
 	init: function() {
 	    this.inherited(arguments);
-	    this.connect(this.btnNode, "onclick", this, function(evt) {
+	    this.connect(this.btnNode, wm.isMobile && "ontouchstart" in this.btnNode ? "ontouchstart" : "onclick", this, function(evt) {
 		/* IE 8 loses the event after our setTimeout; to access data about the event, we have to copy it and pass on the copy.
 		 * Users should not see this pseudoevent and most definitely should not try to call stopEvent on this event
 		 * You can change this behavior if your not supporing IE 8 by removing the setTimeout.
@@ -69,7 +69,6 @@ dojo.declare("wm.ToolButton", wm.Control, {
 				 target: evt.target,
 				 currentTarget: evt.currentTarget,
 				 "type": evt.type};
-
 		window.setTimeout(dojo.hitch(this, "click",pseudoEvt), 5);
 	    });
 	    //this.setHint(this.title || this.hint);
@@ -80,6 +79,15 @@ dojo.declare("wm.ToolButton", wm.Control, {
 	    if (!this.disabled) {
 		if (!this.clicked) 
 		    this.setProp("clicked", true);
+
+		if (inEvent.type == "touchstart") {
+		    var node = this.domNode;
+		    dojo.addClass(node, "Focused");
+		    wm.job(this.getRuntimeId() + ".unfocus()", 1000, function() {
+			dojo.removeClass(node, "Focused");
+		    });
+		}
+
 	        this.onclick(inEvent, this);
 	    }
 

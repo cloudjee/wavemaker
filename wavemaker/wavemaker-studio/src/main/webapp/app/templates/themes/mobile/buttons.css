@@ -84,6 +84,7 @@
        * DESCRIPTION: Sets font, shadowing and background for a wm.Button with a mouseover
        ************************************************************************************************/
     .wm_template   .wmbutton:active,
+    .wm_template   .wmbutton.Focused,
     .wm_template   .wmbutton:focus {
 	/* MainContent-ClickablesHover-Font */
 	color: #FFFFFF; /* MainContent-ClickablesHover-Font_Color */
