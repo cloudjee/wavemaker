@@ -130,7 +130,11 @@ Studio.widgets = {
 								    onClick: "settingsDeployClick"},
 								   {label: "Manage CloudFoundry Apps...",
 								    idInPage: "cloudfoundryManagementItem",
-								    onClick: "cloudFoundryDeploymentsClick"}
+								    onClick: "cloudFoundryDeploymentsClick"},
+								   {separator:true},
+								   {label: "Phonegap Build",
+								    idInPage: "phonegapBuildItem",
+								    onClick: "project.getPhonegapBuild"}
 							       ],
 							       iconClass: "deployProjectItem"},                                      
                                                               {"defaultLabel": "Preferences...",
