@@ -17,7 +17,10 @@
 dojo.declare("Main", wm.Page, {
 	"i18n": true,
     start: function() {
-
+	var d = dojo.xhrGet({url: "resources/dependency_bundle_open_source_licenses.txt", sync: false , preventCache: true});
+	d.addCallback(dojo.hitch(this, function(inResult) {
+	    this.licenseHtml.setHtml(inResult.replace(/\</g, "&lt;"));
+	}));
     },
     downloadAndInstallServiceVarSuccess: function(inSender, inDeprecated) {
       try {
