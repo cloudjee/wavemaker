@@ -28,11 +28,14 @@ public class VersionInfo implements Comparable<VersionInfo> {
 
     private int revision;
 
-    private boolean isRelease;
-
-    private String releaseStatus;
+    private String remainder;
 
     public VersionInfo(String versionString) {
+
+        // Handle eclipse version
+        if ("${project.version}".equals(versionString)) {
+            versionString = "1000.0.0.BUILD-SNAPSHOT";
+        }
 
         int firstDot = versionString.indexOf('.');
         int secondDot = versionString.indexOf('.', firstDot + 1);
@@ -46,19 +49,12 @@ public class VersionInfo implements Comparable<VersionInfo> {
 
         this.revision = Integer.parseInt(revisionStatus.substring(0, 1));
         for (int i = 1; i < revisionStatus.length(); i++) {
-
             try {
                 this.revision = Integer.parseInt(revisionStatus.substring(0, i));
             } catch (NumberFormatException e) {
-                this.releaseStatus = revisionStatus.substring(i - 1);
+                this.remainder = revisionStatus.substring(i - 1);
                 break;
             }
-        }
-
-        if (this.releaseStatus != null) {
-            this.isRelease = false;
-        } else {
-            this.isRelease = true;
         }
     }
 
@@ -78,16 +74,19 @@ public class VersionInfo implements Comparable<VersionInfo> {
      * Return true iff this is not an alpha or beta release.
      */
     public boolean isRelease() {
-        return this.isRelease;
+        return this.remainder == null || ".RELEASE".equals(this.remainder);
     }
 
     public String getReleaseStatus() {
-        return this.releaseStatus;
+        if (this.remainder != null && this.remainder.startsWith(".")) {
+            return this.remainder.substring(1);
+        }
+        return this.remainder;
     }
 
     @Override
     public String toString() {
-        return this.getMajor() + "." + this.getMinor() + "." + this.getRevision() + (this.getReleaseStatus() != null ? this.getReleaseStatus() : "");
+        return this.getMajor() + "." + this.getMinor() + "." + this.getRevision() + (this.remainder != null ? this.remainder : "");
     }
 
     @Override

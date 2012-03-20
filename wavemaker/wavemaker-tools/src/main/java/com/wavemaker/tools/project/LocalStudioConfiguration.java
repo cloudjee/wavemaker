@@ -185,9 +185,7 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration {
      * Gets the current VersionInfo from the VERSION file.
      */
     public static VersionInfo getCurrentVersionInfo() throws IOException {
-
         String versionFileString = getCurrentVersionInfoString();
-
         final Pattern p = Pattern.compile("^Version: (.*)$", Pattern.MULTILINE);
         Matcher m = p.matcher(versionFileString);
         if (!m.find()) {
@@ -198,11 +196,9 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration {
     }
 
     public static String getCurrentVersionInfoString() throws IOException {
-
         String versionFile = LocalStudioConfiguration.class.getPackage().getName().replace(".", "/") + "/" + VERSION_FILE;
         InputStream is = LocalStudioConfiguration.class.getClassLoader().getResourceAsStream(versionFile);
         String versionFileString = org.apache.commons.io.IOUtils.toString(is);
-
         return versionFileString;
     }
 

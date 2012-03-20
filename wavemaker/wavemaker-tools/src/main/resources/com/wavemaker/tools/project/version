@@ -1,1 +1,1 @@
-Version: 6.5.0.DevBuild
+Version: ${project.version}

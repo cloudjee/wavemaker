@@ -173,7 +173,6 @@ public class ConfigurationStore {
     }
 
     protected static Preferences getExactVersionedNode(Class<?> klass, String key) {
-
         try {
             return getExactVersionedNode(klass, key, LocalStudioConfiguration.getCurrentVersionInfo());
         } catch (IOException e) {
