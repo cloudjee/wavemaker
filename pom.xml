@@ -706,6 +706,9 @@
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>versions-maven-plugin</artifactId>
 					<version>1.3.1</version>
+					<configuration>
+						<generateBackupPoms>false</generateBackupPoms>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.appfuse</groupId>
