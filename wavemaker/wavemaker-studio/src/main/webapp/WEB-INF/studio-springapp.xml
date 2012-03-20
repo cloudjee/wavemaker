@@ -6,6 +6,15 @@
   -->
 
 <beans>
+
+	<bean id="timeoutProtectionFilter"
+		class="com.wavemaker.studio.timeout.TimeoutProtectionFilter">
+		<property name="protector">
+			<bean
+				class="com.wavemaker.studio.timeout.HotSwappingTimeoutProtector" />
+		</property>
+	</bean>
+
     <import resource="classpath:config.xml"/>
     <import resource="classpath:managers.xml"/>
     <import resource="classpath:security.xml"/>

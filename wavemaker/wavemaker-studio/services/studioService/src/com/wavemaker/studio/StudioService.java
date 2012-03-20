@@ -122,6 +122,10 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
      */
     @ExposeToClient
     public String newProject(String projectName) throws IOException {
+        try {
+            Thread.sleep(1000 * 40);
+        } catch (InterruptedException e) {
+        }
         this.projectManager.newProject(projectName);
         return getWebPath();
     }

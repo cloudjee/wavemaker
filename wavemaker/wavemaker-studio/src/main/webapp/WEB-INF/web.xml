@@ -196,6 +196,16 @@
         </init-param>
     </filter>
 
+	<filter>
+		<filter-name>timeoutProtectionFilter</filter-name>
+		<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>timeoutProtectionFilter</filter-name>
+		<servlet-name>springapp</servlet-name>
+	</filter-mapping>
+
     <filter-mapping>
         <filter-name>Acegi Ajax Filter</filter-name>
         <url-pattern>/j_acegi_security_check</url-pattern>
