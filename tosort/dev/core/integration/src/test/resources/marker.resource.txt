@@ -1,1 +1,0 @@
-Used to find the studio WEB-INF directory.

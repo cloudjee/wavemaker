@@ -1,5 +1,0 @@
-<!DOCTYPE VerificationPoint>
-<VerificationPoint type="ObjectProperties" >
- <Description></Description>
- <Verification property="innerText" valueType="Value" type="char" object=":main_getFeedPane_getFeedPage_content_DIV" ><![CDATA[Description:  Supports all of the popular RSS and Atom formats including RSS 0.90, RSS 0.91 Netscape, RSS 0.91 Userland, RSS 0.92, RSS 0.93, RSS 0.94, RSS 1.0, RSS 2.0, Atom 0.3, and Atom 1.0.]]></Verification>
-</VerificationPoint>
