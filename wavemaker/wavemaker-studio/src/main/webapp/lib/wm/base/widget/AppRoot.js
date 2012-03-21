@@ -37,7 +37,8 @@ dojo.declare("wm.AppRoot", wm.Container, {
 	     *
 	     * WARNING: onresize may not be provided to android devices within phonegap applications.
 	     */
-	    if (navigator.vendor.match(/Google/i) && navigator.userAgent.match(/android/i)) {
+	    this._isOldAndroidBrowser = navigator.vendor.match(/Google/i) && navigator.userAgent.match(/android/i);
+	    if (this._isOldAndroidBrowser) {
 		window.addEventListener("resize", dojo.hitch(this,"resize"));
 	    } else if ("onorientationchange" in window) {
 		window.addEventListener("orientationchange", dojo.hitch(this, "_onOrientationChange"));
@@ -84,7 +85,7 @@ dojo.declare("wm.AppRoot", wm.Container, {
 		}
 	    }
 	    this.reflow();
-	    if (wm.device != "desktop" && app.wmMinifiedDialogPanel) {
+	    if (this._isOldAndroidBrowser && app.wmMinifiedDialogPanel) {
 		app.wmMinifiedDialogPanel.hide();
 		wm.onidle(app.wmMinifiedDialogPanel, "show");
 	    }
