@@ -513,18 +513,26 @@ dojo.declare("Studio", wm.Page, {
 		*/
 	},
     restoreFromLocationHash: function(inValue) {
-	if (inValue && typeof inValue == "object" && inValue.studio && inValue.studio.projectName && inValue.studio.pageName) {
-	    var d = this.project.openProject(inValue.studio.projectName, inValue.studio.pageName);
-	    if (inValue.deviceType == "tablet") {
-		this.devicesTogglePanel.setCurrentButton(this.tabletToggleButton);
-	    } else if (inValue.deviceType == "phone") {
-		this.devicesTogglePanel.setCurrentButton(this.phoneToggleButton);
+	if (inValue && typeof inValue == "object" && inValue.studio && inValue.studio && inValue.studio) {
+	    inValue = inValue.studio;
+	    if (inValue.projectName && inValue.pageName) {
+		var d = this.project.openProject(inValue.projectName, inValue.pageName);
+		if (inValue.deviceType == "tablet") {
+		    this.devicesTogglePanel.setCurrentButton(this.tabletToggleButton);
+		} else if (inValue.deviceType == "phone") {
+		    this.devicesTogglePanel.setCurrentButton(this.phoneToggleButton);
+		}
+		d.addCallback(dojo.hitch(this, function() {
+		    var tabsIndex = inValue[studio.tabs.getRuntimeId()];
+		    if (tabsIndex != undefined) {
+			this.tabs.setLayerIndex(tabsIndex);
+		    }
+		    var leftIndex = inValue[studio.tabs.getRuntimeId()];
+		    if (leftIndex != undefined) {
+			this.left.setLayerIndex(leftIndex);
+		    }
+		}));
 	    }
-
-	    d.addCallback(dojo.hitch(this, function() {
-		this.tabs.setLayerIndex(inValue[studio.tabs.getRuntimeId()]);
-		this.left.setLayerIndex(inValue[studio.left.getRuntimeId()]);
-	    }));
 	}
     },
     generateStateUrl: function(stateObj) {
