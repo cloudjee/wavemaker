@@ -77,6 +77,8 @@ dojo.declare("wm.List", wm.VirtualList, {
     height:'200px',
     minWidth: 150,
     minHeight: 60,
+    deleteColumn: false,
+    deleteConfirm: "Are you sure you want to delete this?",
         autoScroll: false,
 	constructor: function() {
 		this._data = [];
@@ -86,6 +88,15 @@ dojo.declare("wm.List", wm.VirtualList, {
         classNames: "wmlist",
     columns: "",
     _columnsHash: "",
+    deleteItem: function(inItem) {
+	var index = this.inherited(arguments);
+	dojo.query(".wmlist-item.Odd",this.domNode).removeClass("Odd");
+	dojo.query(".wmlist-item:nth-child(odd)",this.domNode).addClass("Odd");
+	var data = this._data[index];
+	wm.Array.removeElementAt(this._data, index);
+	this.onRowDeleted(index, data);
+    },
+	onRowDeleted: function(rowId, rowData){},
     setColumns: function(inColumns) {
 	this.columns = inColumns;
 	this._columnsHash = {};
@@ -150,9 +161,15 @@ dojo.declare("wm.List", wm.VirtualList, {
 		return Boolean(this.selected);
 	},
 
+    setDeleteColumn: function(inDelete) {
+	this.deleteColumn = inDelete;
+	this._render();
+    },
+
 	_setDataFields: function(inDataFields) {
 	    if (this.columns) {
 		this._dataFields = [];
+
 		var useMobileColumn = false;
 		if (wm.device == "phone") {
 		    for (var i = 0; i < this.columns.length; i++) {
@@ -270,6 +287,9 @@ dojo.declare("wm.List", wm.VirtualList, {
 		dojo.marginBox(this.headerNode.firstChild, {w: b.w});
 	},
 	_render: function() {
+	    if (this.dataSet)
+		this.renderDataSet(this.dataSet);
+	    else
 		this.renderData(this._data);
 	},
 	clear: function(noEvents) {
@@ -330,6 +350,11 @@ dojo.declare("wm.List", wm.VirtualList, {
 		    this.columns.unshift({width: "25px", title: "-", controller: this.selectionMode, field: "_selector", show: true});
 		    this._columnsHash._selector = this.columns[0];
 		}
+	    if (this.columns && this.deleteColumn) {
+		this.columns.unshift({width: "25px", title: "-", controller: "deleteColumn", field: "_deleteColumn", show: true});
+		this._columnsHash._deleteColumn = this.columns[0];
+	    }
+
 
 	        var selectedData = this.selectedItem.getData();
 		this.clear(true);
@@ -348,6 +373,10 @@ dojo.declare("wm.List", wm.VirtualList, {
 
 	    if (this._listTouchScroll && !this._listTouchScroll.scrollers.outer.style.width) {
 		wm.job(this.getRuntimeId() + "ListSetupScroller", 1, dojo.hitch(this._listTouchScroll, "setupScroller"));
+	    }
+	    if (this.columns && this.deleteColumn) {
+		this.columns.shift();
+		delete this._columnsHash._deleteColumn;
 	    }
 	    if (this.columns && (this.selectionMode == "checkbox" || this.selectionMode == "radio")) {
 		this.columns.shift();
@@ -372,10 +401,10 @@ dojo.declare("wm.List", wm.VirtualList, {
 
 
 		if (!pkList)
-		    pkList = wm.data.getIncludeFields(this.dataSet.type);
-
+		    pkList = this.dataSet ? wm.data.getIncludeFields(this.dataSet.type) : [];
+	    
 	    /* If there are no primary keys, then all fields are used to match this item -- this may fail, not trying will definitely fail */
-	        if (pkList.length == 0) {
+	        if (pkList.length == 0 && this.dataSet) {
 		    var fields = wm.typeManager.getTypeSchema(this.dataSet.type)
 		    for (var fieldName in fields) {
 			pkList.push(fieldName);
@@ -398,18 +427,14 @@ dojo.declare("wm.List", wm.VirtualList, {
 		}
 		return;
             }
-	    if (this.dataSet) {
-		var idx = this.dataSet.getItemIndexByPrimaryKey(obj, pkList);
-		if (idx == -1 && this.selectFirstRow)
-		    idx = 0;
-
-		if (idx >= 0) {
-		    this._cupdating = true; // don't trigger events since we're actually reselecting the same value that was already selected
-		    this.setSelectedRow(idx);
-		    this._cupdating = false; 
-		} else {
-                    this.deselectAll();
-		}
+	    if (items[0]._rowNumber != undefined) {
+		this._cupdating = true; // don't trigger events since we're actually reselecting the same value that was already selected (NOTE: If users call this method directly, the assumption may be invalid)
+		this.setSelectedRow(items[0]._rowNumber);
+		this._cupdating = false; 
+	    } else if (this.selectFirstRow) {
+		this.setSelectedRow(0);
+	    } else {
+                this.deselectAll();
 	    }
 	},
 
@@ -422,6 +447,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    for (var i = 0; i < inData.length; i++) {
 		var d = inData[i];
 		if (this.queryItem(query, d, i)) {
+		    d._rowNumber = i;
 		    newData.push(d);
 		}
 	    }
@@ -532,7 +558,11 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    else if (this.columns) {
 		var columnDef = this.columns[inCol];
 		if (columnDef.controller) {
-		    cellData = "<input wmcontroller='true' type='" + columnDef.controller + "' />";
+		    if (columnDef.controller == "deleteColumn") {
+			cellData = "<div wmcontroller='true' class='wmDeleteColumn'></div>";
+		    } else {
+			cellData = "<input wmcontroller='true' type='" + columnDef.controller + "' />";
+		    }
 		} else {
 		    var value = this._data[i];
 		    var cellData = value;
