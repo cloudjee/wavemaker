@@ -298,22 +298,44 @@ wm.define("wm.Container", wm.Control, {
 			this.flow();
 		}
 	},
-	flow: function() {
-	       if (this._boundsDirty && this.isReflowEnabled()) {
-			// call flow; if autoScroll is enabled, then this call to flow is just to test if scrollbars are needed.	
-			// If autoScroll is enabled, we'll need to call flow again, 
-                   /* all autoscroll calculations moved to Box.js
-			if (this.autoScroll) {
-			    // This call sets _xscrollX/_xscrollY and returns without doing a real traversal.
-			    // Setting these values means when we do the real call to flow we will get an adjusted return value when we call getContentBounds()
-			    this.layout.flow(this,true);  
-			} 
-                        */
-
-			this.layout.flow(this,false);
+    adjustFlowForMobile: function() {
+	if (this.autoScroll || this.fitToContentHeight  || studio.currentDeviceType == "desktop") return;
+	var max = 0;
+	if (this.layoutKind == "left-to-right") {
+	    max = this.bounds.h;
+	    for (var i = 0; i < this.c$.length; i++) {
+		var c = this.c$[i];
+		if (c.enableTouchHeight && !c._percEx.h && c.mobileHeight) { 
+		    if (c.bounds.h > max) max = c.bounds.h;
 		}
-		//else (!this._boundsDirty)
-		//	console.log(this.name, ": not flowing (clean bounds)");
+	    }
+	} else {
+	    var hasMobileHeight = false;
+	    for (var i = 0; i < this.c$.length; i++) {
+		var c = this.c$[i];
+		if (c.enableTouchHeight && !c._percEx.h && c.mobileHeight) { 
+		    hasMobileHeight = true;
+		    break;
+		}
+	    }
+	    if (hasMobileHeight)
+		max = this.getPreferredFitToContentHeight();
+	}
+	if (max > this.bounds.h) {
+	    this.enableTouchHeight = true;
+	    var h =  max + "px";
+	    this.mobileHeight = h;
+	    this.setHeight(h);
+	}
+
+    },
+	flow: function() {
+	    if (this._boundsDirty && this.isReflowEnabled()) {
+		if (this._isDesignLoaded) {
+		    this.adjustFlowForMobile();
+		}
+		this.layout.flow(this,false);
+	    }
 	},
 	renderControls: function() {
 	    // code to insure that a container's scrollbars are updated when a child is resized... 
