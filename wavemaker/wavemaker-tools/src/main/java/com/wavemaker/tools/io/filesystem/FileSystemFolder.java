@@ -145,6 +145,11 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
     }
 
     @Override
+    public Resources<Resource> copyContentsTo(Folder folder) {
+        return list().copyTo(folder);
+    }
+
+    @Override
     public Folder moveTo(Folder folder) {
         Assert.notNull(folder, "Folder must not be empty");
         ensureExists();
@@ -154,6 +159,11 @@ public class FileSystemFolder<K> extends FileSystemResource<K> implements Folder
             child.moveTo(destination);
         }
         return destination;
+    }
+
+    @Override
+    public Resources<Resource> moveContentsTo(Folder folder) {
+        return list().moveTo(folder);
     }
 
     private Folder createDestinationFolder(Folder folder) {

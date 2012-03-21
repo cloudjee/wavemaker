@@ -20,8 +20,28 @@ public interface Folder extends Resource, Iterable<Resource> {
     @Override
     Folder moveTo(Folder folder);
 
+    /**
+     * Convenience methods to move the contents of the folder. Equivalent to {@link #list()}.
+     * {@link Resources#moveTo(Folder) moveTo(folder)}.
+     * 
+     * @param folder the folder to move the resource to
+     * @return a resource collection containing the new destination resources
+     * @see Resources#moveTo(Folder)
+     */
+    Resources<Resource> moveContentsTo(Folder folder);
+
     @Override
     Folder copyTo(Folder folder);
+
+    /**
+     * Convenience methods to move the contents of the folder. Equivalent to {@link #list()}.
+     * {@link Resources#copyTo(Folder) copyTo(folder)}.
+     * 
+     * @param folder the folder to copy the resource to
+     * @return a resource collection containing the new destination resources
+     * @see Resources#copyTo(Folder)
+     */
+    Resources<Resource> copyContentsTo(Folder folder);
 
     @Override
     Folder rename(String name) throws ResourceExistsException;

@@ -9,7 +9,7 @@ import org.springframework.util.Assert;
 /**
  * Builder class that can be used to easily construct {@link ResourceFilter}s. Filters can be built for {@link File}s,
  * {@link Folder}s or {@link Resource}s with matching performed on {@link Resource#getName() names} or
- * {@link Resource#toString() paths}. Builders can be chained together to form compound.
+ * {@link Resource#toString() paths}. Builders can be chained together to form compound (AND) matches.
  * 
  * @author Phillip Webb
  */
