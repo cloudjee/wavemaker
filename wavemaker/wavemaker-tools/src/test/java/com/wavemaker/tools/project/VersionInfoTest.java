@@ -18,6 +18,8 @@
 
 package com.wavemaker.tools.project;
 
+import org.junit.Test;
+
 import com.wavemaker.infra.WMTestCase;
 
 /**
@@ -26,31 +28,26 @@ import com.wavemaker.infra.WMTestCase;
 public class VersionInfoTest extends WMTestCase {
 
     public void testBasic() throws Exception {
-
-        VersionInfo vi = new VersionInfo("1.2.3");
+        VersionInfo vi = new VersionInfo("1.2.35");
         assertEquals(1, vi.getMajor());
         assertEquals(2, vi.getMinor());
         assertEquals(3, vi.getRevision());
         assertTrue(vi.isRelease());
         assertNull(vi.getReleaseStatus());
-
         assertEquals("1.2.3", vi.toString());
     }
 
     public void testWithStatus() throws Exception {
-
         VersionInfo vi = new VersionInfo("1.2.3ALPHA");
         assertEquals(1, vi.getMajor());
         assertEquals(2, vi.getMinor());
         assertEquals(3, vi.getRevision());
         assertFalse(vi.isRelease());
         assertEquals("ALPHA", vi.getReleaseStatus());
-
         assertEquals("1.2.3ALPHA", vi.toString());
     }
 
     public void testLonger() throws Exception {
-
         VersionInfo vi = new VersionInfo("1.2.34ALPHA");
         assertEquals(1, vi.getMajor());
         assertEquals(2, vi.getMinor());
@@ -60,7 +57,6 @@ public class VersionInfoTest extends WMTestCase {
     }
 
     public void testCompare() throws Exception {
-
         VersionInfo vi = new VersionInfo("1.2.3ALPHA");
 
         VersionInfo other = new VersionInfo("2.2.3");
@@ -86,5 +82,38 @@ public class VersionInfoTest extends WMTestCase {
         other = new VersionInfo("1.2.3ALPHA2");
         assertTrue(vi.compareTo(other) < 0);
         assertTrue(other.compareTo(vi) > 0);
+    }
+
+    @Test
+    public void testMavenSnapshotStyle() throws Exception {
+        VersionInfo vi = new VersionInfo("1.2.3.BUILD-SNAPSHOT");
+        assertEquals(1, vi.getMajor());
+        assertEquals(2, vi.getMinor());
+        assertEquals(3, vi.getRevision());
+        assertFalse(vi.isRelease());
+        assertEquals("BUILD-SNAPSHOT", vi.getReleaseStatus());
+        assertEquals("1.2.3.BUILD-SNAPSHOT", vi.toString());
+    }
+
+    @Test
+    public void testMavenMilestoneStyle() throws Exception {
+        VersionInfo vi = new VersionInfo("1.2.3.M2");
+        assertEquals(1, vi.getMajor());
+        assertEquals(2, vi.getMinor());
+        assertEquals(3, vi.getRevision());
+        assertFalse(vi.isRelease());
+        assertEquals("M2", vi.getReleaseStatus());
+        assertEquals("1.2.3.M2", vi.toString());
+    }
+
+    @Test
+    public void testMavenReleaseStyle() throws Exception {
+        VersionInfo vi = new VersionInfo("1.2.3.RELEASE");
+        assertEquals(1, vi.getMajor());
+        assertEquals(2, vi.getMinor());
+        assertEquals(3, vi.getRevision());
+        assertTrue(vi.isRelease());
+        assertEquals("RELEASE", vi.getReleaseStatus());
+        assertEquals("1.2.3.RELEASE", vi.toString());
     }
 }

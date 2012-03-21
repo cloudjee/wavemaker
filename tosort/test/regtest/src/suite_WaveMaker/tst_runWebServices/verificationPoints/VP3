@@ -1,5 +1,0 @@
-<!DOCTYPE VerificationPoint>
-<VerificationPoint type="ObjectProperties" >
- <Description></Description>
- <Verification property="innerText" valueType="Value" type="char" object=":Timothy's email went on for about two weeks, so we've tried to edit it for length._TD" ><![CDATA[Timothy's email went on for about two weeks, so we've tried to edit it for length.]]></Verification>
-</VerificationPoint>

@@ -1,5 +1,0 @@
-<!DOCTYPE VerificationPoint>
-<VerificationPoint type="ObjectProperties" >
- <Description></Description>
- <Verification property="innerText" valueType="Value" type="char" object=":LastNameSWANK_DIV" ><![CDATA[LastNameSWANK]]></Verification>
-</VerificationPoint>

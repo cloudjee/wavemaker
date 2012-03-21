@@ -28,13 +28,6 @@ In the 'Source Code Bundle' section.
 INSTRUCTIONS
 ============
 
-Cloning
---------
-Due to the use of submodules, cloning should be with --recursive, e.g.
-`git clone --recursive https://github.comSpringSource/wavemaker.git`
-Otherwise `wavemaker/dev/studio/src/main/webapp/app/lib/ace` will be missing.
-
-
 Building
 --------
 In order to build WaveMaker you will need the following applications:
