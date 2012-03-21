@@ -1233,7 +1233,8 @@ body .AppToolTip {
 }
 
 
-body div.dojoxGridContent .dojoxGridCell .wmDeleteColumn {
+body div.dojoxGridContent .dojoxGridCell .wmDeleteColumn,
+.wmlist-cell .wmDeleteColumn {
 background-position: -560px 0px;
 width: 16px !important;
 height: 16px !important;
@@ -1301,4 +1302,25 @@ li {
 
 .dijitComboBox .dijitInputContainer, .dijitComboBox .dijitInputContainer input {
 height: 100%;
+}
+
+#app_DateTimePopup_amButton {
+        -moz-border-radius-bottomleft: 0px !important;
+        -moz-border-radius-bottomright: 0px !important;
+        -webkit-border-bottom-right-radius: 0px !important;
+        -webkit-border-bottom-left-radius: 012px !important;
+         border-bottom-left-radius: 0px !important;
+         border-bottom-right-radius: 0px !important;        
+}
+#app_DateTimePopup_pmButton {
+        -moz-border-radius-topleft: 0px !important;
+        -moz-border-radius-topright: 0px !important;
+        -webkit-border-top-right-radius: 0px !important;
+        -webkit-border-top-left-radius: 012px !important;
+         border-top-left-radius: 0px !important;
+         border-top-right-radius: 0px !important;        
+}
+
+#app_DateTimePopup_calendar .dijitCalendarContainer {
+    border-width: 0px;
 }
