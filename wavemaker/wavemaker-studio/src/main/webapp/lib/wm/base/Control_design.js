@@ -129,7 +129,7 @@ wm.Control.extend({
 	this.desktopHeight = this.constructor.prototype.height;
     },
     set_height: function(inHeight) {
-	if (inHeight.match(/px/)) {
+	if (inHeight.match(/\%/)) {
 	    this.desktopHeight = this.mobileHeight = inHeight;
 	} else {
 	    var isMobile = studio.currentDeviceType != "desktop";
