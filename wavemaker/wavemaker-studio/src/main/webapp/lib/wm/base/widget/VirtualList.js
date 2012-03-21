@@ -444,7 +444,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	_oncanmouseover: function(inEvent, inItem, inMouseOverInfo) {
 	},
 	onclick: function(inEvent, inItem) {
-	    if (inEvent.target.tagName == "INPUT" && dojo.attr(inEvent.target, "wmcontroller")) {
+	    if (inEvent.target && dojo.attr(inEvent.target, "wmcontroller")) {
 		if (inEvent.target.type == "checkbox") {
 		    if (inEvent.target.checked) {
 			this.eventSelect(inItem);
@@ -456,11 +456,27 @@ dojo.declare("wm.VirtualList", wm.Control, {
 		    this.toggleSelect = false;
 		    this.clickSelect(inItem, inEvent);
 		    this.toggleSelect = toggleSelectWas;
+		} else if (dojo.hasClass(inEvent.target, "wmDeleteColumn")) {
+		    this._deleteItem(inItem);
 		}
 	    } else {
 		this.clickSelect(inItem, inEvent);
 	    }
 	},
+    _deleteItem: function(inItem) {
+	if (this.deleteConfirm) {
+	    app.confirm(this.deleteConfirm, false, dojo.hitch(this, function() {
+		this.deleteItem(inItem);
+	    }));
+	} else {
+	    this.deleteItem(inItem);
+	}
+    },
+    deleteItem: function(inItem) {
+	var index = dojo.indexOf(this.items, inItem);
+	wm.Array.removeElementAt(this.items, index);
+	dojo.destroy(inItem.domNode);
+    },
 	ondblclick: function(inEvent, inItem) {
 	},
     onSelectionChange: function() {}, // Added for DojoGrid compatability
