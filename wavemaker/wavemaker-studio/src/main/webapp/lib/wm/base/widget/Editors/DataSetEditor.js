@@ -222,20 +222,25 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
 	    }
 	},
 	setOptions: function(inOptions) {		
-	    if (!this.displayField) {
-		this.displayField = "dataValue";
-		if (!this.dataField) {
-		    this.dataField = "dataValue";
+		var wasUpdating = this._cupdating;
+		this._cupdating = true;
+	    if (inOptions) {
+		if (this.$.binding && this.$.binding.wires.dataSet) {
+		    this.$.binding.removeWireByProp("dataSet");
 		}
-	    }
+		if (!this.displayField) {
+		    this.displayField = "dataValue";
+		    if (!this.dataField) {
+			this.dataField = "dataValue";
+		    }
+		}
 
 		this.options = inOptions;
 		this.setOptionsVariable();
-		var wasUpdating = this._cupdating;
-		this._cupdating = true;
-	    //this.createEditor();
-	    
-	    this.setDataSet(this.dataSet);
+		//this.createEditor();
+		
+		this.setDataSet(this.dataSet);
+	    }
 		if (!wasUpdating) {
 		    this._cupdating = false;
 		    if (!this.invalidCss)
@@ -573,7 +578,7 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
     singleLine: false,
     showSearchBar: true,
     _multiSelect: true,
-    _selectionMode: "multiple",
+    _selectionMode: "",
     height: "100px",
     mobileHeight: "150px",
     editors: null,
@@ -581,13 +586,29 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
     deleteConfirm: "Are you sure you want to delete this?",
     prepare: function(inProps) {
 	if (inProps && inProps.readonly) delete inProps.readonly;
-	if (inProps && inProps._selectionMode != "multiple" && inProps._selectionMode != "checkbox")
+	if (inProps && inProps._selectionMode && inProps._selectionMode != "multiple" && inProps._selectionMode != "checkbox")
 	    inProps._multiSelect = false;
 	this.inherited(arguments);
     },
+    setOptions: function(inOptions) {
+	this._typeWas = this.dataSet ? this.dataSet.type : "";
+	this.inherited(arguments);
+	delete this._typeWas;
+    },
+    /* If the type has changed, we need to either recreate the editor, or update the columns array.
+     * Lazy approach is recreate the editor.
+     */
     setDataSet: function(inDataSet) {
+	var typeWas;
+	if (this._typeWas)
+	    typeWas = this._typeWas;
+	else 
+	    typeWas = this.dataSet ? this.dataSet.type : "";
 	this.inherited(arguments);
 	if (this.grid) {
+	    if (inDataSet && inDataSet.type != typeWas) {
+		this.createEditor();
+	    }
 	    var dataValue = this.dataValue;
 	    this.grid.setDataSet(inDataSet);
 	    this.setEditorValue(dataValue);
@@ -608,7 +629,7 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
     },
     setShowSearchBar: function(inShow) {
 	this.showSearchBar = Boolean(inShow);
-	if (this.searchBar) {
+	if (this.showSearchBar) {
 	    if (!this.searchBar) {
 		this.createSearchBar();
 		this.editor.moveControl(this.searchBar,0);
@@ -654,7 +675,7 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 	    this.createSearchBar();
 	}
 	
-	    this.grid = new wm.DojoGrid({owner: this, 
+	    this.grid = new wm.List({owner: this, 
 					 parent: this.editor,
 					   name: "editor",
 					   width: "100%", 
@@ -667,6 +688,7 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 					 deleteColumn: this.deleteColumn,
 					 deleteConfirm: this.deleteConfirm,
 					 selectionMode: this._selectionMode ? this._selectionMode : this._multiSelect ? "multiple":"single"});
+
 	if (this.grid.declaredClass == "wm.DojoGrid") {
 	    this.grid.connect(this.grid, "renderDojoObj", this, "renderGrid");
 	    this.grid.connect(this.grid, "onRowDeleted", this, "onRowDeleted");
