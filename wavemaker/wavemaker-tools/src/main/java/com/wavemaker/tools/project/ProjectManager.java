@@ -130,6 +130,7 @@ public class ProjectManager {
      * @param projectName The name of the project (this should already be a project in the default project directory).
      * @param noSession if this is true, don't insert the project into the current session
      */
+    @Deprecated
     public void openProject(Resource projectDir, boolean noSession) throws IOException {
         String projectName = projectDir.getFilename();
         // check the path

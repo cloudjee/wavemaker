@@ -39,11 +39,6 @@ public interface File extends Resource {
     long getLastModified();
 
     /**
-     * Get the SHA1 digest of the contents of the file.
-     */
-    byte[] getSha1Digest();
-
-    /**
      * Provides access to file content. Calling any method on a file that does not {@link #exists() exist} will cause it
      * to be created.
      * 

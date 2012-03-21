@@ -77,14 +77,6 @@ public interface FileSystem<K> {
     long getLastModified(K key);
 
     /**
-     * Get the SHA1 digest of the file.
-     * 
-     * @param key the file system key
-     * @return the SHA1 digest
-     */
-    byte[] getSha1Digest(K key);
-
-    /**
      * Get the file contents as an input stream for reading.
      * 
      * @param key the file system key

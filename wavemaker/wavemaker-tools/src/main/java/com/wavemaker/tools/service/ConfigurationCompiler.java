@@ -36,6 +36,7 @@ import com.wavemaker.json.JSONState;
 import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.runtime.service.TypeManager;
 import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.service.definitions.DataObject;
 import com.wavemaker.tools.service.definitions.DataObject.Element;
@@ -151,7 +152,8 @@ public class ConfigurationCompiler {
      * @param serviceName service name
      * @return
      */
-    public static Resource getSmdFile(Resource servicesDir, String serviceName) {
+    @Deprecated
+    public static Resource getSmdResource(Resource servicesDir, String serviceName) {
         try {
             return servicesDir.createRelative(serviceName + "." + SERVICE_SMD_EXTENSION);
         } catch (IOException ex) {
@@ -159,12 +161,21 @@ public class ConfigurationCompiler {
         }
     }
 
-    public static Resource getSmdFile(Project currentProject, String serviceName) {
+    public static File getSmdFile(Folder servicesFolder, String serviceName) {
+        return servicesFolder.getFile(serviceName + "." + SERVICE_SMD_EXTENSION);
+    }
+
+    @Deprecated
+    public static Resource getSmdResource(Project currentProject, String serviceName) {
         try {
-            return getSmdFile(currentProject.getWebAppRoot().createRelative(RUNTIME_SERVICES_DIR), serviceName);
+            return getSmdResource(currentProject.getWebAppRoot().createRelative(RUNTIME_SERVICES_DIR), serviceName);
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
+    }
+
+    public static File getSmdFile(Project currentProject, String serviceName) {
+        return getSmdFile(currentProject.getWebAppRootFolder().getFolder(RUNTIME_SERVICES_DIR), serviceName);
     }
 
     public static Resource getTypesFile(Resource webAppRoot) {
@@ -281,34 +292,47 @@ public class ConfigurationCompiler {
     }
 
     public static void generateSMDs(Project currentProject, SortedSet<Service> services) throws IOException, NoSuchMethodException {
-
         Resource servicesDir = currentProject.getWebAppRoot().createRelative(RUNTIME_SERVICES_DIR);
         generateSMDs(currentProject, servicesDir, services);
     }
 
+    @Deprecated
     public static void generateSMDs(FileService fileService, Resource servicesDir, SortedSet<Service> services) throws IOException,
         NoSuchMethodException {
-
         for (Service service : services) {
             SMD smd = getSMD(service);
-
-            Resource smdFile = getSmdFile(servicesDir, service.getId());
-
+            Resource smdFile = getSmdResource(servicesDir, service.getId());
             JSONState js = new JSONState();
-
             Writer writer = fileService.getWriter(smdFile);
             JSONMarshaller.marshal(writer, smd, js, true, true);
             writer.close();
         }
     }
 
+    public static void generateSMDs(Folder servicesFolder, SortedSet<Service> services) throws IOException, NoSuchMethodException {
+        for (Service service : services) {
+            SMD smd = getSMD(service);
+            File smdFile = getSmdFile(servicesFolder, service.getId());
+            JSONState js = new JSONState();
+            Writer writer = smdFile.getContent().asWriter();
+            try {
+                JSONMarshaller.marshal(writer, smd, js, true, true);
+            } finally {
+                writer.close();
+            }
+        }
+    }
+
     public static void generateSMD(Project project, Service service) throws IOException, NoSuchMethodException {
         SMD smd = getSMD(service);
-        Resource smdFile = getSmdFile(project, service.getId());
+        File smdFile = getSmdFile(project, service.getId());
         JSONState js = new JSONState();
-        Writer writer = project.getWriter(smdFile);
-        JSONMarshaller.marshal(writer, smd, js, true, true);
-        writer.close();
+        Writer writer = smdFile.getContent().asWriter();
+        try {
+            JSONMarshaller.marshal(writer, smd, js, true, true);
+        } finally {
+            writer.close();
+        }
     }
 
     @Deprecated

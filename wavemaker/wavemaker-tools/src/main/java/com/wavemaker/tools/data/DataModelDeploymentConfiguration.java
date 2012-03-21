@@ -14,7 +14,6 @@
 
 package com.wavemaker.tools.data;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Iterator;
@@ -22,15 +21,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import org.springframework.core.io.Resource;
-
 import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.common.util.XMLUtils;
 import com.wavemaker.common.util.XMLWriter;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
-import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.tools.deployment.ServiceDeployment;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.FileService;
 
@@ -95,8 +92,7 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
         }
         String dsrcName = jndiName.substring(COMP_ENV.length());
         String drefName = dsrcName.replace("/", "_");
-        com.wavemaker.tools.project.Project project = mgr.getProjectManager().getCurrentProject();
-        Resource wsBindings = mgr.getProjectManager().getCurrentProject().getWsBindingsFile();
+        File wsBindings = mgr.getProjectManager().getCurrentProject().getWsBindingsFile();
         if (!wsBindings.exists()) {
             return;
         }
@@ -105,13 +101,9 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
         String toStr = "\t<resRefBindings xmi:id=\"ResourceRefBinding_" + indx + "\" jndiName=\"" + dsrcName + "\">"
             + "\r\n\t\t<bindingResourceRef href=\"WEB-INF/web.xml#" + drefName + "\"/>" + "\r\n\t</resRefBindings>" + "\r\n" + fromStr;
 
-        try {
-            String content = project.readFile(wsBindings);
-            content = content.replace(fromStr, toStr);
-            project.writeFile(wsBindings, content);
-        } catch (IOException ex) {
-            throw new ConfigurationException(ex);
-        }
+        String content = wsBindings.getContent().asString();
+        content = content.replace(fromStr, toStr);
+        wsBindings.getContent().write(content);
     }
 
     private void configureJNDI(DataServiceSpringConfiguration cfg, String jndiName) {
@@ -178,25 +170,13 @@ public class DataModelDeploymentConfiguration implements ServiceDeployment {
     private void addToWebXml(DesignServiceManager mgr, String xmlSnippet) {
 
         com.wavemaker.tools.project.Project project = mgr.getProjectManager().getCurrentProject();
-        Resource webXml = project.getWebXml();
-
-        try {
-            String s = project.readFile(webXml);
-
-            int i = s.indexOf(WEB_XML_INSERT_BEFORE);
-
-            if (i == -1) {
-                throw new AssertionError("Could not find marker in web.xml: " + WEB_XML_INSERT_BEFORE);
-            }
-
-            s = s.substring(0, i) + xmlSnippet + s.substring(i);
-
-            project.writeFile(webXml, s);
-
-        } catch (IOException ex) {
-            throw new ConfigurationException(ex);
+        File webXml = project.getWebXmlFile();
+        String s = webXml.getContent().asString();
+        int i = s.indexOf(WEB_XML_INSERT_BEFORE);
+        if (i == -1) {
+            throw new AssertionError("Could not find marker in web.xml: " + WEB_XML_INSERT_BEFORE);
         }
-
+        s = s.substring(0, i) + xmlSnippet + s.substring(i);
+        webXml.getContent().write(s);
     }
-
 }

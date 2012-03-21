@@ -128,7 +128,7 @@ public class ServiceClassGenerator {
 
             try {
                 Project project = this.serviceManager.getProjectManager().getCurrentProject();
-                Resource smdFile = ConfigurationCompiler.getSmdFile(project, serviceId);
+                Resource smdFile = ConfigurationCompiler.getSmdResource(project, serviceId);
                 String smdContent = project.readFile(smdFile);
                 generator.setSmdContent(smdContent);
                 generator.generate();

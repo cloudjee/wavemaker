@@ -64,7 +64,7 @@ public class ServiceConfigurationProcessor extends AbstractStudioServiceProcesso
             Resource serviceDef = getDesignServiceManager().getServiceDefXml(serviceId);
             Service service = DesignServiceManager.loadServiceDefinition(serviceDef.getInputStream(), true);
             services.add(service);
-            Resource smd = ConfigurationCompiler.getSmdFile(getProject(), serviceId);
+            Resource smd = ConfigurationCompiler.getSmdResource(getProject(), serviceId);
             if (!smd.exists() || smd.lastModified() < serviceDef.lastModified()) {
                 this.processingEnv.getMessager().printMessage(Kind.NOTE, "Generating SMD for " + serviceId);
                 ConfigurationCompiler.generateSMD(getProject(), service);

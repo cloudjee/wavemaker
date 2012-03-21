@@ -102,12 +102,6 @@ public class LocalFileSystem implements FileSystem<LocalFileSystemKey> {
     }
 
     @Override
-    public byte[] getSha1Digest(LocalFileSystemKey key) {
-        // FIXME
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public InputStream getInputStream(LocalFileSystemKey key) {
         try {
             return new FileInputStream(key.getFile());

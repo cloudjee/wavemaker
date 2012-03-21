@@ -28,8 +28,6 @@ import java.util.Properties;
 
 import javax.xml.bind.JAXBException;
 
-import org.springframework.core.io.Resource;
-
 import com.wavemaker.common.CommonConstants;
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
@@ -40,6 +38,7 @@ import com.wavemaker.tools.data.DataModelConfiguration;
 import com.wavemaker.tools.data.DataModelManager;
 import com.wavemaker.tools.data.EntityInfo;
 import com.wavemaker.tools.data.PropertyInfo;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.security.DatabaseOptions;
@@ -181,28 +180,32 @@ public class SecurityConfigService {
             props.setProperty(propNames[i], propValues[i]);
         }
         Project project = this.projectMgr.getCurrentProject();
-        Resource appProperties = project.getWebInf().createRelative(CommonConstants.APP_PROPERTY_FILE);
-        OutputStream os = this.projectMgr.getFileSystem().getOutputStream(appProperties);
-        props.store(os, null);
-        os.close();
+        File appProperties = project.getWebInfFolder().getFile(CommonConstants.APP_PROPERTY_FILE);
+        OutputStream os = appProperties.getContent().asOutputStream();
+        try {
+            props.store(os, null);
+        } finally {
+            os.close();
+        }
     }
 
     private void deleteAppProperty() throws IOException {
         Project project = this.projectMgr.getCurrentProject();
-        Resource appProperties = project.getWebInf().createRelative(CommonConstants.APP_PROPERTY_FILE);
-        if (appProperties.exists()) {
-            project.deleteFile(appProperties);
-        }
+        File appProperties = project.getWebInfFolder().getFile(CommonConstants.APP_PROPERTY_FILE);
+        appProperties.delete();
     }
 
     private DatabaseOptions setMultiTenancyParms(DatabaseOptions options) throws IOException {
         Properties props = new Properties();
         Project project = this.projectMgr.getCurrentProject();
-        Resource appProperties = project.getWebInf().createRelative(CommonConstants.APP_PROPERTY_FILE);
+        File appProperties = project.getWebInfFolder().getFile(CommonConstants.APP_PROPERTY_FILE);
         if (appProperties.exists()) {
-            InputStream is = appProperties.getInputStream();
-            props.load(is);
-            is.close();
+            InputStream is = appProperties.getContent().asInputStream();
+            try {
+                props.load(is);
+            } finally {
+                is.close();
+            }
             options.setTenantIdField(props.getProperty(DataServiceConstants.TENANT_FIELD_PROPERTY_NAME));
             options.setDefTenantId(Integer.parseInt(props.getProperty(DataServiceConstants.DEFAULT_TENANT_ID_PROPERTY_NAME)));
         }

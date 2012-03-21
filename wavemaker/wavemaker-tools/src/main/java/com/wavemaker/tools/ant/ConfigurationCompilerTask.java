@@ -153,7 +153,7 @@ public class ConfigurationCompilerTask extends AbstractServiceCompilerTask {
 
                 Service service = entry.getKey();
                 long mtime = entry.getValue();
-                File smdFile = ConfigurationCompiler.getSmdFile(new FileSystemResource(servicesDir.getAbsolutePath() + "/"), service.getId()).getFile();
+                File smdFile = ConfigurationCompiler.getSmdResource(new FileSystemResource(servicesDir.getAbsolutePath() + "/"), service.getId()).getFile();
 
                 if (!smdFile.exists() || smdFile.lastModified() < mtime) {
                     doBuildServices.add(service);

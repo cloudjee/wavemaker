@@ -72,6 +72,7 @@ public class WebXmlSupport {
         return wat;
     }
 
+    @Deprecated
     public static void writeWebXml(Project project, WebAppType webapp, Resource configFile) throws JAXBException, IOException {
         writeWebXml(webapp, project.getWriter(configFile));
     }

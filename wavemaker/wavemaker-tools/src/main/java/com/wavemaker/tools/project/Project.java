@@ -14,8 +14,11 @@
 
 package com.wavemaker.tools.project;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.InvalidPropertiesFormatException;
@@ -28,6 +31,7 @@ import org.springframework.util.StringUtils;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.CastUtils;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.ResourceFiltering;
 import com.wavemaker.tools.io.Resources;
@@ -65,6 +69,12 @@ public class Project extends AbstractFileService {
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
+    }
+
+    @Override
+    @Deprecated
+    public Writer getWriter(String path) throws UnsupportedEncodingException, FileNotFoundException, IOException {
+        return super.getWriter(path);
     }
 
     @Deprecated
@@ -191,13 +201,21 @@ public class Project extends AbstractFileService {
         }
     }
 
+    public File getWebXmlFile() {
+        return getWebInfFolder().getFile(ProjectConstants.WEB_XML);
+    }
+
     @Deprecated
-    public Resource getWsBindingsFile() {
+    public Resource getWsBindingsResource() {
         try {
             return getWebInf().createRelative(ProjectConstants.WS_BINDINGS_FILE);
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
+    }
+
+    public File getWsBindingsFile() {
+        return getWebInfFolder().getFile(ProjectConstants.WS_BINDINGS_FILE);
     }
 
     @Deprecated

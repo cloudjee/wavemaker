@@ -89,12 +89,6 @@ public class ZipFileSystem implements FileSystem<ZipFileSystemKey> {
     }
 
     @Override
-    public byte[] getSha1Digest(ZipFileSystemKey key) {
-        // FIXME
-        return null;
-    }
-
-    @Override
     public InputStream getInputStream(ZipFileSystemKey key) {
         return getZipFileDetails().getInputStream(key);
     }

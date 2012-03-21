@@ -33,14 +33,15 @@ import javax.xml.bind.JAXBException;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
+import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.common.util.ObjectUtils;
 import com.wavemaker.common.util.StringUtils;
 import com.wavemaker.common.util.SystemUtils;
 import com.wavemaker.common.util.Tuple;
 import com.wavemaker.common.util.XMLWriter;
-import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.type.OperationEnumeration;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.data.DataServiceDefinition;
 import com.wavemaker.runtime.data.DataServiceInternal;
 import com.wavemaker.runtime.data.DataServiceMetaData;
@@ -49,7 +50,6 @@ import com.wavemaker.runtime.data.ExternalDataModelConfig;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
-import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.BeanInfo;
 import com.wavemaker.tools.data.ColumnInfo;
@@ -59,6 +59,7 @@ import com.wavemaker.tools.data.PropertyInfo;
 import com.wavemaker.tools.data.RelatedInfo;
 import com.wavemaker.tools.data.SpringCfgGenerator;
 import com.wavemaker.tools.data.parser.HbmConstants;
+import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.FileService;
 import com.wavemaker.tools.service.codegen.GenerationUtils;
 import com.wavemaker.tools.service.definitions.DataObject;
@@ -68,7 +69,6 @@ import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.spring.SpringConfigSupport;
 import com.wavemaker.tools.spring.SpringServiceDefinitionWrapper;
 import com.wavemaker.tools.spring.beans.Beans;
-import com.wavemaker.tools.project.StudioFileSystem;
 
 /**
  * @author Simon Toens
@@ -296,21 +296,21 @@ public class DataServiceUtils {
         writeProperties(p, destdir, serviceName, fileSystem);
     }
 
-     public static void writeProperties(Properties p, Resource destdir, String serviceName, StudioFileSystem fileSystem) {
+    public static void writeProperties(Properties p, Resource destdir, String serviceName, StudioFileSystem fileSystem) {
         Resource f = null;
         try {
             f = destdir.createRelative(serviceName + DataServiceConstants.PROPERTIES_FILE_EXT);
-        } catch(IOException ex) {
+        } catch (IOException ex) {
 
         }
 
         OutputStream fos = null;
         try {
-            //fos = new FileOutputStream(f);
+            // fos = new FileOutputStream(f);
             fos = fileSystem.getOutputStream(f);
             writeProperties(p, fos, serviceName);
-        //} catch (IOException ex) {
-        //    throw new DataServiceRuntimeException(ex);
+            // } catch (IOException ex) {
+            // throw new DataServiceRuntimeException(ex);
         } finally {
             try {
                 fos.close();
@@ -350,7 +350,7 @@ public class DataServiceUtils {
 
     public static Resource createEmptyDataModel(Resource destDir, String serviceId, String packageName, String dataPackage) {
 
-        //File rtn = new File(destDir, getCfgFileName(serviceId));
+        // File rtn = new File(destDir, getCfgFileName(serviceId));
         Resource rtn;
         try {
             rtn = destDir.createRelative(getCfgFileName(serviceId));
@@ -486,6 +486,7 @@ public class DataServiceUtils {
         }
     }
 
+    @Deprecated
     public static void writeBeans(Beans beans, FileService fileService, String path) {
         Writer writer = null;
         try {
