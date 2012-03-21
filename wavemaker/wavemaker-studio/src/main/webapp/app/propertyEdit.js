@@ -636,7 +636,7 @@ dojo.declare("wm.prop.FieldSelect", wm.prop.SelectMenu, {
     emptyLabel: "",
     updateOptions: function() {
 	this.inherited(arguments)
-	var ds = this.inspected.getProp(this.dataSetProp);
+	var ds = this.inspected.getProp(this.dataSetProp) || this.inspected[this.dataSetProp];
 	var options;
 	if (!ds && this.inspected.formField) {
 	    var form = this.inspected.getParentForm();
@@ -689,7 +689,7 @@ dojo.declare("wm.prop.FieldList", wm.prop.CheckboxSet, {
     emptyLabel: "",
     updateOptions: function() {
 	this.inherited(arguments)
-	var ds = this.inspected.getProp(this.dataSetProp);
+	var ds = this.inspected.getProp(this.dataSetProp) || this.inspected[this.dataSetProp];
 	var options;
 	if (ds) {
 	    options = wm.typeManager.getSimplePropNames(ds._dataSchema);
@@ -1687,18 +1687,42 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	     };
 	propsArray.sort(mysort);
 
+
 	this.owner._generateEditors(this.inspected, this.basicLayer, propsArray);
 
-	var b = new wm.Button({
+
+	var p = new wm.Panel({
 	     owner: this,
 	     parent: this.styleLayer,
 	     width: "100%",
+	     height: "40px",
+	    layoutKind: "left-to-right",
+	    verticalAlign: "bottom"
+	});
+	var b = new wm.Button({
+	     owner: this,
+	     parent: p,
+	     width: "100px",
 	     height: "30px",
 	    caption: "Create Class",
 	    hint: "Creates a css class based on these styles",
 	    onclick: dojo.hitch(this, "generateCssRule")
-	 });
-
+	});
+	wm.Spacer({owner: this,
+		   width: "100%",
+		   parent: p});
+	 wm.Label({owner: this,
+		   caption: "",
+		   parent: p,
+		   width: "20px",
+		   height: "20px",
+		   margin: "0",
+		   onclick: function() {
+		       studio.helpPopup = studio.inspector.getHelpDialog();
+		       studio.inspector.beginHelp(null, p.domNode, null, "To create a new CSS class that contains the styles above and allows you to reuse that class across many of your widgets, click 'Create Class' and enter a name for the class.  All of the above styles will be removed from this panel and moved to the Source tab -> CSS subtab.");
+		       /* TODO: Localize */
+		   },
+		   _classes: {domNode: ["StudioHelpIcon"]}});
 
 	    /*
 	var b = new wm.Button({
@@ -1747,9 +1771,10 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 		cssText += styleName.replace(/([A-Z])/g, function(inText) {return "-" + inText.toLowerCase();}) + ": " + this.inspected.styles[styleName] + ";\n";
 		delete this.inspected.styles[styleName];
 	    }
-	    cssText += "\n}\n";
 	    this.setDataValue(this.inspected.styles);
 	}
+	    cssText += "\n}\n";
+
 	    this.classListEditor.addClass(inClassName);
 	    studio.cssLayer.activate();
 	    studio.sourceTab.activate();
@@ -1815,7 +1840,7 @@ dojo.declare("wm.prop.ClassListEditor", wm.Container, {
 	var grid = this.grid = 
 	    new wm.ListSet({owner: this,
 			    parent: this,
-			    searchBar: false,
+			    showSearchBar: false,
 			    width: "100%",
 			    height: "100%",
 			    dataField: "dataValue",
@@ -2233,7 +2258,6 @@ dojo.declare("wm.prop.SubComponentEditor", wm.Container, {
 	this.removeAllControls();
 	var props = studio.inspector.props;
 	studio.inspector.props = studio.inspector.getProps(this.subinspected,true);
-	debugger;
 	studio.inspector._generateEditors(this.subinspected, this, studio.inspector.props, true);
 	studio.inspector.props = props;
 	this.setBestHeight();
