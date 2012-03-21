@@ -1253,13 +1253,18 @@
 	    }
 	 return inValue;
      },
-	 beginHelp: function(inPropName, inNode, inType) {
+     beginHelp: function(inPropName, inNode, inType, altText) {
 	       var bd = studio.helpPopup;
+	 if (inType) {
 	       bd.page.setHeader(inType,inPropName);
-
 	       bd.sourceNode = inNode;
 	       //bd.positionNode = inNode.parentNode;
 	       bd.fixPositionNode = inNode.parentNode;
+
+	 } else {
+	     bd.page.setHeader("Help");
+	     bd.fixPositionNode = inNode;
+	 }
 	       bd.corner = "tl";
 	     if (window.location.search.match(/editpropdoc/)) {
 		 var classList = [];
@@ -1296,28 +1301,33 @@
 				       i * 1300);
 		 });
 	     } else {
-		 if (inType == studio.application.declaredClass)
-		     inType = "wm.Application";
-		 var url = studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1"),
-										  className: inType.replace(/^.*\./,"") + "_" + inPropName});
+		 if (!inType) {
+		     bd.show();
+		     bd.page.setContent(altText);
+		 } else {
+		     if (inType == studio.application.declaredClass)
+			 inType = "wm.Application";
+		     var url = studio.getDictionaryItem("wm.Palette.URL_CLASS_DOCS", {studioVersionNumber: wm.studioConfig.studioVersion.replace(/^(\d+\.\d+).*/,"$1"),
+										      className: inType.replace(/^.*\./,"") + "_" + inPropName});
 
-		 // clear previous content before showing.
-		 bd.page.setContent("");
-		 this._loadingContent = true;
-		 bd.show();
-		 studio.loadHelp(inType, inPropName, function(inResponse) {
-		     wm.cancelJob("PropDoc");
-		     this._loadingContent = false;
-		     if (inResponse.indexOf("No documentation found for this topic") != -1 || !inResponse)
-			 inResponse = "<a href='" + url + "' target='docs'>Open Docs</a><br/>" + inResponse;
-		     bd.page.setContent(inResponse);
-		 });
+		     // clear previous content before showing.
+		     bd.page.setContent("");
+		     this._loadingContent = true;
+		     bd.show();
+		     studio.loadHelp(inType, inPropName, function(inResponse) {
+			 wm.cancelJob("PropDoc");
+			 this._loadingContent = false;
+			 if (inResponse.indexOf("No documentation found for this topic") != -1 || !inResponse)
+			     inResponse = "<a href='" + url + "' target='docs'>Open Docs</a><br/>" + inResponse;
+			 bd.page.setContent(inResponse);
+		     });
 
-		 //  And in case of proxy problems, show the link so the user can open it themselves
-		 wm.job("PropDoc", 1700, dojo.hitch(this, function() {
-		     if (this._loadingContent)
-			 bd.page.setContent("<a href='" + url + "' target='docs'>Open Docs</a><br/>If docs fail to show here, this may be due to a proxy server; just click the link to open it in a new page"); 
-		 }));
+		     //  And in case of proxy problems, show the link so the user can open it themselves
+		     wm.job("PropDoc", 1700, dojo.hitch(this, function() {
+			 if (this._loadingContent)
+			     bd.page.setContent("<a href='" + url + "' target='docs'>Open Docs</a><br/>If docs fail to show here, this may be due to a proxy server; just click the link to open it in a new page"); 
+		     }));
+		 }
 	     }
 	       /*
 	       dojo.xhrGet({
