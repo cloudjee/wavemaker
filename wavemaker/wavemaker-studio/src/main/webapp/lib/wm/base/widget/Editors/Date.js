@@ -224,7 +224,18 @@ dojo.declare("wm.DateTime", wm.Date, {
     getEditorConstraints: function() {
 	var constraints = this.inherited(arguments);
 	constraints.formatLength = this.formatLength;
-	constraints.timePattern = this.use24Time ? "HH:mm" : "hh:mm a";
+	constraints.timePattern = this.use24Time ? "HH:mm" : "hh:mm a";	
+	switch(this.dateMode) {
+	case "Date and Time":
+	    constraints.selector = "datetime";
+	    break;
+	case "Date":
+	    constraints.selector = "date";
+	    break;
+	case "Time":
+	    constraints.selector = "date";
+	    break;
+	}
 	return constraints;
     },
     getEditorProps: function(inNode, inProps) {
@@ -325,7 +336,24 @@ dojo.declare("wm.DateTime", wm.Date, {
 	// must get value before changing formatLength because formatLength determines how to parse the value
 	var value = this.getDataValue();
 	this.dateMode = inValue; 
+	if (this.editor && this.editor.constraints) {
+	    switch(this.dateMode) {
+	    case "Date and Time":
+		this.editor.constraints.selector = "datetime";
+		break;
+	    case "Date":
+		this.editor.constraints.selector = "date";
+		break;
+	    case "Time":
+		this.editor.constraints.selector = "time";
+		break;
+	    }
+	}
 	this.setDataValue(value);
+    },
+    _getReadonlyValue: function() {
+	if (this.editor)
+	    return this.editor.get('displayedValue');
     }
 
 });
@@ -343,14 +371,30 @@ dojo.declare(
 	    openDropDown: function(/*Function*/ callback){
 		    if (!wm.DateTimePicker.dialog) {
 			wm.DateTimePicker.dialog = new wm.DateTimePicker({owner: this,
-										name: "DateTimePopup"});
+									  name: "DateTimePopup"});
 		    }
-		    this.dropDown = wm.DateTimePicker.dialog;
-		    this.dropDown._updating = true;
+
+		var phoneSize = app.appRoot.deviceSize == "tiny" || Number(app.appRoot.deviceSize) <= 450;
+		this.dropDown = wm.DateTimePicker.dialog;
+		this.dropDown.setMode(this._selector);
+		this.dropDown.okButton.setCaption("OK"); // TODO: Localize
+		this.dropDown.cancelButton.setCaption("Cancel"); // TODO: Localize
+		this.dropDown._updating = true;
+		var hoursMargin = "0";
+		var hoursBorder = "0,2,0,0";
+		var calendarBorder = "0";
 		switch(this._selector) {
 		case "datetime":
 		    this.dropDown.calendar.show();
-		    this.dropDown.panel.show();
+		    if (phoneSize) {
+			this.dropDown.panel.hide();
+			this.dropDown.okButton.setCaption("Next");
+		    } else {
+			this.dropDown.panel.show();
+			hoursMargin = "0,0,0,5";
+			hoursBorder = "0,2,0,2";
+			calendarBorder = "0,2,0,0";
+		    }
 		    this.dropDown.currentValueEditor.setDateMode("Date and Time");
 		    //this.dropDown.buttonPanel.show();
 		    break;
@@ -366,39 +410,86 @@ dojo.declare(
 		    this.dropDown.currentValueEditor.setDateMode("Date");
 		    //this.dropDown.buttonPanel.hide();
 		}
+		this.dropDown.calendar.setBorder(calendarBorder);
+		this.dropDown.hours.setMargin(hoursMargin);
+		this.dropDown.hours.setBorder(hoursBorder);
 		this.dropDown.currentValueEditor.setDataValue(this.get("value"));
 		this.dropDown.setUse24Time(this.use24Time);
-		this.dropDown.setHeight(this.dropDown.getPreferredFitToContentHeight() + "px");
 
 		
 		    this.dropDown._currentDijit = this;
-
+		this._aroundNode = app.appRoot.domNode;
+		this._preparedNode = true;
 		var result = dijit._HasDropDown.prototype.openDropDown.call(this, callback);
 
-		if (wm.isMobile && (app.appRoot.deviceSize == "tiny" || Number(app.appRoot.deviceSize) <= 450)) {		   
-		    var h = (this._selector == "time") ? 190 :app.appRoot.bounds.h - 10;
+		var noReposition = false;
+		    if (phoneSize) {
+		    noReposition = true;
+		    var h = app.appRoot.bounds.h - 20;
+		    var w = (this._selector == "time") ? 260 : app.appRoot.bounds.w - 20;
 			dojo.marginBox(this.dropDown.domNode.parentNode, {l: 5,
-							      t: 5,
-							      w:app.appRoot.bounds.w - 10,
+									  t: 5,
+									  w:w,
 									  h:h});
-		    this.dropDown.setWidth(app.appRoot.bounds.w - 10 + "px");
+		    this.dropDown.setWidth(w + "px");
 		    this.dropDown.setHeight(h + "px");
 		    this.dropDown.reflow();
 		} else if (wm.isMobile) {
-		    this.dropDown.setWidth(Math.min(350,app.appRoot.bounds.w) + "px");
-		switch(this._selector) {
-		case "datetime":
-		    this.dropDown.setHeight(Math.min(490, app.appRoot.bounds.h) + "px");
-		    break;
-		case "date":
-		    this.dropDown.setHeight(Math.min(340, app.appRoot.bounds.h) + "px");
-		    break;
-		case "time":
-		    this.dropDown.setHeight(Math.min(190, app.appRoot.bounds.h) + "px");
-		    break;
-		}	
-		    this.dropDown.reflow();
+		    this.dropDown.panel.setHeight
+		    //this.dropDown.setHeight(this.dropDown.getPreferredFitToContentHeight() + "px");
+		    this.dropDown.setHeight("350px");
+		    switch(this._selector) {
+		    case "datetime":
+			this.dropDown.setWidth("500px");
+			break;
+		    case "date":
+			this.dropDown.setWidth("300px");
+			break;
+		    case "time":
+			this.dropDown.setWidth("253px");
+			break;
+		    }	
+
+		    //this.dropDown.setWidth(Math.min(350,app.appRoot.bounds.w) + "px");
+		} else {
+		    //this.dropDown.setHeight(this.dropDown.getPreferredFitToContentHeight() + "px");
+		    this.dropDown.setHeight("240px");
+
+
+		    switch(this._selector) {
+		    case "datetime":
+			this.dropDown.setWidth("500px");
+			break;
+		    case "date":
+			this.dropDown.setWidth("300px");
+			break;
+		    case "time":
+			this.dropDown.setWidth("250px");
+			break;
+		    }	
+
+		}		   
+
+		this.dropDown.reflow();
+		if (!noReposition) {
+		    var editorPos = dojo.coords(this.owner.editor.domNode);
+		    var position = {h:  this.dropDown.bounds.h,
+				    w:  this.dropDown.bounds.w};
+
+		    if (editorPos.y + editorPos.h + position.h < app.appRoot.bounds.h) {
+			position.t = editorPos.y + editorPos.h;
+		    } else if (position.h < editorPos.y) {
+			position.t = editorPos.y - position.h;
+		    } else {
+			position.t = 0;
+		    }
+		    position.l = editorPos.x;
+		    if (position.l + position.w > app.appRoot.bounds.w) {
+			position.l = app.appRoot.bounds.w - position.w;
+		    }
+		    dojo.marginBox(this.dropDown.domNode.parentNode, position);
 		}
+	    
 		this.dropDown.buttonPanel.setShowing(wm.isMobile && this._selector != "date"); 
 		this.dropDown.callOnShowParent();
 		    this.dropDown.setDataValue(this.get("value"));
@@ -409,8 +500,9 @@ dojo.declare(
 		    this.dropDown._updating = false;
 		if (this.dropDown.calendar.showing)
 		    this.dropDown.calendar.focus();
+/*
 		else
-		    this.dropDown.hours.focus();
+		    this.dropDown.hours.focus();*/
 		return result;
 	    }
 	});
@@ -432,54 +524,101 @@ dojo.declare("wm.DateTimePicker", wm.Container, {
 	inProps.owner = app;
 	this.inherited(arguments);
     },
+    setMode: function(inMode) {
+	this._selector = inMode;
+    },
     setUse24Time: function(inVal) {
 	this.use24Time = inVal;
 	this.ampm.setShowing(!inVal);
 	if (this.hours.showing) {
 	    var hours = [];
-	    for (var i = 1; i <= (inVal ? 24 : 12); i++) hours.push(String(i));
-	    this.hours.setOptions(hours);
+	    for (var i = 1; i <= (inVal ? 24 : 12); i++) hours.push({dataValue: i});
+	    this.hours.renderData(hours);
 	}
     },
     postInit: function() {
 	var onchange = dojo.hitch(this, "changed");
+	this.mainPanel =  new wm.Panel({owner: this,
+					parent: this,
+					name: "mainDateTimePickerPanel",
+					layoutKind: "left-to-right",
+					horizontalAlign: "left",
+					verticalAlign: "center",
+					width: "100%", 
+					height: "100%"});
 	this.calendar = new wm.dijit.Calendar({owner: this,
-					       parent: this,
+					       parent: this.mainPanel,
+					       name: "calendar",
 					       userLocalTime: true,
-					       height: "180px",
-					       mobileHeight: "100%",
+					       height: "100%",
 					       width: "100%",
 					       onValueSelected: onchange});
 	this.panel = new wm.Panel({owner: this,
-				   parent: this,
+				   parent: this.mainPanel,
 				   name: "dateTimePickerPanel",
 				   layoutKind: "left-to-right",
 				   horizontalAlign: "left",
 				   verticalAlign: "center",
-				   margin: "0,0,3,0",
-				   width: "100%",
-				   height: "150px"});
-	
+				   margin: "0",
+				   width: "250px", 
+				   height: "100%"});
+	this.hours = new wm.List({owner: this,
+				  parent: this.panel,
+				  selectionMode: wm.isMobile ? "radio" : "single",
+				  name:"hours",
+				  columns: [{"show":true,"title":"Hour","width":"100%","align":"left","field": "dataValue"}],
+				  height: "100%",
+				  padding: "2",					
+				  width: "100%",
+				    minWidth: 100,
+				  border: "0,2,0,0",
+				    padding: "0",
+				    margin: "0",
+				  onSelect: onchange});
+	var hours = [];
+	for (var i = 0; i < 12; i++) hours.push({dataValue: i});
+	this.hours.renderData(hours);
+
+	this.minutes = new wm.List({owner: this,
+				    parent: this.panel,
+				    selectionMode: wm.isMobile ? "radio" : "single",
+				    name:"minutes",
+				  columns: [{"show":true,"title":"Minute","width":"100%","align":"left","field": "dataValue"}],
+				  height: "100%",
+				  padding: "2",					
+				  width: "100%",
+				    minWidth: 100,
+				    border: "0,2,0,0",
+				    padding: "0",
+				    margin: "0",
+				  onSelect: onchange});
+
+	var minutes = [];
+	for (var i = 0; i < 60; i+=5) minutes.push({dataValue: i});
+	this.minutes.renderData(minutes);
+/*
 	this.hours = new wm.ListSet({owner: this,
-					parent: this.panel,
+				     parent: this.panel,
 				     showSearchBar:false,
 				     _multiSelect:false,
-				      name:"hours",
-					caption: "Hour", // Localize
-					captionAlign: "left",
-					captionPosition: "top",
-					captionSize: "22px",
-					changeOnKey: true,
-					displayValue: "",
-					height: "100%",
-					options: ["1","2","3","4","5","6","7","8","9","10","11","12"],
-					padding: "2",					
-					width: "100%",
-					onchange: onchange});
+				     _selectionMode: wm.isMobile ? "radio" : "",
+				     name:"hours",
+				     caption: "Hour", // Localize
+				     captionAlign: "left",
+				     captionPosition: "top",
+				     captionSize: "22px",
+				     changeOnKey: true,
+				     displayValue: "",
+				     height: "100%",
+				     options: ["1","2","3","4","5","6","7","8","9","10","11","12"],
+				     padding: "2",					
+				     width: "100%",
+				     onchange: onchange});
 
 	this.minutes = new wm.ListSet({owner: this,
 				       showSearchBar:false,
 				     _multiSelect:false,
+				       _selectionMode: wm.isMobile ? "radio" : "",
 				    parent: this.panel,
 				    caption: "Minute", // Localize
 					name:"minutes",
@@ -494,9 +633,12 @@ dojo.declare("wm.DateTimePicker", wm.Container, {
 				    padding: "2",
 				    width: "100%",
 				    onchange: onchange});
+
 	var minutes = [];
 	for (var min = 0; min < 60; min+=5) minutes.push(String(min));
 	this.minutes.setOptions(minutes);
+				    */
+/*
 	this.ampm = new wm.ToggleButton({owner: this,
 					 parent: this.panel,
 					 name: "ampm",
@@ -506,6 +648,29 @@ dojo.declare("wm.DateTimePicker", wm.Container, {
 					 width: "50px",
 					 margin: "0,4,2,0",
 					 onclick: onchange});
+					 */
+	this.ampm = new wm.ToggleButtonPanel({owner: this,
+					      parent: this.panel,
+					      name: "ampm",
+					      height: "100%",
+					      width: "50px",
+					      layoutKind: "top-to-bottom",
+					      verticalAlign: "middle",
+					      margin: "0",
+					      padding: "80,5,80,5",
+					      onChange: onchange});
+	this.amButton = new wm.Button({owner: this,
+				       parent: this.ampm,
+				       height: "100%",
+				       caption: "AM",
+				       name: "amButton",
+				      });
+	this.pmButton = new wm.Button({owner: this,
+				       parent: this.ampm,
+				       height: "100%",
+				       caption: "PM",
+				       name: "pmButton",
+				      });
 	this.buttonPanel = new wm.Panel({owner: this,
 				   parent: this,
 			       _classes: {domNode: ["dialogfooter"]},
@@ -517,24 +682,8 @@ dojo.declare("wm.DateTimePicker", wm.Container, {
 				   width: "100%",
 					 mobileHeight:  wm.Button.prototype.mobileHeight,
 					 height: "32px"});
-	this.okButton = new wm.Button({owner: this,
-				       parent: this.buttonPanel,
-			       name: "okButton",
-			       caption: "OK",
-			       width: "80px",
-				       height: "100%",
-				       onclick: dojo.hitch(this,"onOkClick")});
-		new wm.Button({owner: this,
-				       parent: this.buttonPanel,
-			       name: "cancelButton",
-			       caption: "Cancel",
-			       width: "80px",
-				       height: "100%",
-			       onclick: dojo.hitch(this,"onCancelClick")});
-	new wm.Spacer({owner: this,
-		       parent: this.buttonPanel,
-		       width: "100%"
-		      });
+
+
 	this.currentValueEditor = new wm.DateTime({owner: this,
 						readonly: true,
 						name: "currentValue",
@@ -543,23 +692,45 @@ dojo.declare("wm.DateTimePicker", wm.Container, {
 						height: "100%",
 						width: "180px"
 						  });
+
+	new wm.Spacer({owner: this,
+		       parent: this.buttonPanel,
+		       width: "100%"
+		      });
 						   
+	this.okButton = new wm.Button({owner: this,
+				       parent: this.buttonPanel,
+				       name: "okButton",
+				       caption: "OK",
+				       width: "80px",
+				       height: "100%",
+				       onclick: dojo.hitch(this,"onOkClick")});
+	this.cancelButton = new wm.Button({owner: this,
+				       parent: this.buttonPanel,
+			       name: "cancelButton",
+			       caption: "Cancel",
+			       width: "80px",
+				       height: "100%",
+			       onclick: dojo.hitch(this,"onCancelClick")});
 	this.inherited(arguments);
 	this.reflow();
     },
 
     changed: function() {
 	if (this._updating) return;
-	if (this.calendar.showing) {
+	if (this._selector == "datetime" || this._selector == "date") {
 	    var date = new Date(this.calendar.getDateValue());
 	} else {
 	    var date = new Date(0);
 	}
 
-	if (this.panel.showing) {
-	    var hour = Number(this.hours.getDataValue()) || 1;
-	    var minute = Number(this.minutes.getDataValue()) || 0;
-	    var isPM = this.ampm.clicked;
+	if (this._selector == "time" || this._selector == "datetime") {
+	    //var hour = Number(this.hours.getDataValue()) || 1;
+	    //var minute = Number(this.minutes.getDataValue()) || 0;
+	    var hour = this.hours.selectedItem.getValue("dataValue");
+	    if (hour == 12) hour = 0;
+	    var minute = this.minutes.selectedItem.getValue("dataValue");
+	    var isPM = this.pmButton.clicked;
 	    date.setHours(hour + (isPM ? 12 : 0), minute);
 	}
 	this.dataValue = date;
@@ -567,8 +738,10 @@ dojo.declare("wm.DateTimePicker", wm.Container, {
 	if (this._currentDijit) {
 	    this._currentDijit.set("value", date);
 	}
-	if (this._currentDijit && this.calendar.showing && !this.panel.showing) {
+	if (this._currentDijit && this._selector == "date") {
 	    this._currentDijit.closeDropDown();
+	} else if (this._selector == "datetime" && !this.panel.showing) {
+	    this.onOkClick();
 	}
     },
     set: function(inName, inValue) {
@@ -601,25 +774,40 @@ dojo.declare("wm.DateTimePicker", wm.Container, {
 	this.dataValue = value;
 
 	if (value) {
-	    if (this.calendar.showing) {
+	    if (this._selector == "datetime" || this._selector == "date") {
 		this.calendar.setDate(value);
 	    }
-	    if (this.panel.showing) {
+	    if (this._selector == "datetime" || this._selector == "time") {
 		var time = dojo.date.locale.format(value, {selector:'time', timePattern: this.use24Time ?'HH:mm' : "hh:mm a"});
 		if (this.use24Time) {
 		    var timematches = time.match(/^(\d\d)\:(\d\d)$/);
 		} else {
 		    var timematches = time.match(/^(\d\d)\:(\d\d) (.*)$/);
 		}
-		this.minutes.setDataValue(timematches[2].replace(/^0*/,""));
+		//this.minutes.setDataValue(timematches[2].replace(/^0*/,""));
+		var minute = Number(timematches[2].replace(/^0*/,""));
 
+	    	this.minutes.deselectAll();
+		this.minutes.selectItemOnGrid({dataValue: minute}, ["dataValue"]);
+
+		var hour;
 		if (this.use24Time) {
-		    this.hours.setDataValue(Number(timematches[1]));
+		    hour = Number(timematches[1]);
+
 		} else {
 		    var isPM = timematches[3].toLowerCase() == "pm";
-		    this.hours.setDataValue(timematches[1].replace(/^0*/,""));
-		    this.ampm.setClicked(isPM);
+		    //this.hours.setDataValue(timematches[1].replace(/^0*/,""));
+		    hour = Number(timematches[1].replace(/^0*/,""));
+		    if (isPM) {
+			this.pmButton.onclick(this.pmButton);
+		    } else {
+			this.amButton.onclick(this.amButton);
+		    }
+		    
 		}
+		this.hours.deselectAll();
+		this.hours.selectItemOnGrid({dataValue: hour}, ["dataValue"]);
+
 	    }		
 	}
 	this.currentValueEditor.setDataValue(value);
@@ -627,12 +815,22 @@ dojo.declare("wm.DateTimePicker", wm.Container, {
     setMinimum: function(inMin) {this.calendar.setMinimum(inMin);},
     setMaximum: function(inMax) {this.calendar.setMaximum(inMax);},
     onOkClick: function() {
-	if (this._currentDijit) {
+	if (this._selector == "datetime" && !this.panel.showing) {
+	    this.calendar.hide();
+	    this.panel.show();
+	    this.okButton.setCaption("OK");
+	    this.cancelButton.setCaption("Back");
+	} else if (this._currentDijit) {
 	    this._currentDijit.closeDropDown();
 	}
     },
     onCancelClick: function() {
-	if (this._currentDijit) {
+	if (this._selector == "datetime" && !this.calendar.showing) {
+	    this.calendar.show();
+	    this.panel.hide();
+	    this.okButton.setCaption("Next");
+	    this.cancelButton.setCaption("Cancel");
+	} else if (this._currentDijit) {
 	    this._currentDijit.closeDropDown();
 	    this._currentDijit.set("value",this._initialValue);
 	}
