@@ -48,11 +48,12 @@ body #studio_PIContents #studio_togglePropertiesButton2 {
     display: inline-block;
 }
 
-.tundra .wminspector .dojoxGridRowOdd {
+.tundra .wminspector .wmlist-item.Odd {
     background-color: #eeeeee;
 }
-.tundra .wminspector .dojoxGridRow {
+.tundra .wminspector .wmlist {
     background-color: #f5f5f5;
+    color: black;
 }
 
 .wminspector .wmPropertyInspector-propEdit_dataSet li .wmtree-content {
