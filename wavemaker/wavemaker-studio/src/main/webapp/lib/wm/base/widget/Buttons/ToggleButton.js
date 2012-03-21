@@ -119,6 +119,7 @@ dojo.declare("wm.ToggleButtonPanel", wm.Container, {
 		this.valueChanged("currentButton", this.currentButton); // currentButton is a bindSource
 		this.onChange(this.currentButton);
 	    }
+	    this.currentButton.clicked = true; // there are paths where this fails to get set
 	} else {
 	    if (currentButtonWas instanceof wm.ToolButton) {
 		currentButtonWas.setValue("clicked", false);
@@ -135,7 +136,7 @@ dojo.declare("wm.ToggleButtonPanel", wm.Container, {
 	var self = this;
 	wm.job(this.getRuntimeId() + ".setCurrentButton", 1, function() {
 	    if (inButton instanceof wm.ToolButton) {
-		inButton.click();
+		inButton.click({type: "click"});
 	    } else {
 		self.changed(null);
 	    }
