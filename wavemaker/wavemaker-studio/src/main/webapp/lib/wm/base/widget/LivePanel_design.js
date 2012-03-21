@@ -310,6 +310,7 @@ wm.LivePanel.extend({
 	deleteButton.eventBindings.onclick = this.liveForm.name + ".deleteData";
 	saveButton.eventBindings.onclick = this.liveForm.name + ".saveDataIfValid";
 	cancelButton.eventBindings.onclick = this.dialog.name + ".hide";
+	cancelButton.eventBindings.onclick1 = this.liveForm.name + ".cancelEdit";
 
 	this.liveForm.eventBindings.onSuccess = this.name + ".popupLiveFormSuccess";
 	//this.liveForm.eventBindings.onResult = this.name + ".popupLiveFormResult";
