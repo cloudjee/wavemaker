@@ -83,7 +83,7 @@ wm.loadLibs([
 	"wm.base.components.ServiceVariable",
 	"wm.base.components.PhoneGapService",
 	"wm.base.components.Timer",
-	"wm.base.components.SalesForceMonitorVariable",
+    /*"wm.base.components.SalesForceMonitorVariable",*/
 	"wm.base.components.LiveView",
 	"wm.base.components.LiveVariable",
 	"wm.base.components.LogoutVariable",
