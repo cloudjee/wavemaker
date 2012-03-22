@@ -74,7 +74,7 @@ dojo.declare("wm.Layer", wm.Container, {
 	},
 	activate: function() {
 	    var p = this.parent;
-	    if ((this.showing || this.parent instanceof wm.BreadcrumbLayers) && !this.isActive()) {
+	    if ((this.showing || wm.BreadcrumbLayers && this.parent instanceof wm.BreadcrumbLayers) && !this.isActive()) {
 		if (!this.showing) this.show();
 		p.setLayer(this);
 	    }
