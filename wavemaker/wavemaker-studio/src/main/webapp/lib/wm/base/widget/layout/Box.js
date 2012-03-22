@@ -158,8 +158,8 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
                      *                 for all children.  
                      */
 		    b[inFlowAxis] = c._percEx[inFlowAxis] ? Math.round((flowEx.ratio * c._percEx[inFlowAxis])) : NaN;
-		    if (wm.isMobile && isNaN(b[inFlowAxis]) ){
-			b[inFlowAxis] = parseInt(inFlowAxis == "w" ? c.width : c.height);
+		    if (wm.isMobile && inFlowAxis == "w" && isNaN(b.w) ){
+			b.w = parseInt(c.width);
 		    }
 		    var minName = inFlowAxis == "w" ? "minWidth" : wm.isMobile ? "minMobileHeight" : "minHeight";
                     if (b[inFlowAxis] < c[minName])
