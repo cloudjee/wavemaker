@@ -91,7 +91,7 @@ wm.Plugin.plugin("rbacservice", wm.ServiceVariable, {
     },
     updateInternal: function() {
 	if (!this.roles || this.isRbacUpdateAllowed())
-	    this.rbacserviceSocket(arguments);
+	    return this.rbacserviceSocket(arguments);
 	else
 	    console.log(this.getId() + " blocked by role settings");
     },
