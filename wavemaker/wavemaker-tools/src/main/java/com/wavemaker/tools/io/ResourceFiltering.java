@@ -180,7 +180,7 @@ public abstract class ResourceFiltering {
      * @return the filter
      */
     public static ResourceFilter<Resource> hiddenResources() {
-        return resourceNames().starting(".");
+        return resourceNames().notStarting(".");
     }
 
     /**
