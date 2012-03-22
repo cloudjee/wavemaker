@@ -51,8 +51,10 @@ dojo.declare("wm.AppRoot", wm.Container, {
     /* Assumes that wavemaker app is the only thing on the page; some of these calculations fail if there is other html outside of the wavemakerNode */
     _onOrientationChange: function() {
 	    this._inResize = true;
-	    var max = Math.max(screen.width, screen.height);
-	    var min = Math.min(screen.width, screen.height);
+	var width = Math.min(screen.width, window.innerWidth);
+	var height = Math.min(screen.height, window.innerHeight);
+	    var max = Math.max(width,height);
+	    var min = Math.min(width,height);
 	    console.log("MAX:" + max + "; MIN: " + min);
 	    switch(window.orientation) {
 	    case 90:
@@ -70,6 +72,7 @@ dojo.declare("wm.AppRoot", wm.Container, {
 	    app.valueChanged("deviceSize",this.deviceSize); // bindable event
 	    dojo.publish("deviceSizeRecalc");
 	    this.reflow();
+	console.log("WIDTH:" + this.bounds.w + "; HEIGHT: " + this.bounds.h);
 	    this._inResize = false;
     },
 	resize: function() {
@@ -93,14 +96,18 @@ dojo.declare("wm.AppRoot", wm.Container, {
 	},
 	updateBounds: function() {
 	    this._percEx = {w:100, h: 100};
-
 	    var pn = this.domNode.parentNode;
+	    var width;
 	    if (window["PhoneGap"]) {
-		pn.style.height = screen.height + "px";
+		var height = Math.min(screen.height, window.innerHeight);
+		pn.style.height = height + "px";
 	    } else if (wm.isMobile) {
-		pn.style.height = "100%";
+		pn.style.height = "100%";		
 	    }
-	    this.setBounds(0, 0, pn.offsetWidth, pn.offsetHeight);
+	    if (wm.isMobile) {
+		width = Math.min(screen.width, window.innerWidth, pn.offsetWidth);
+	    }
+	    this.setBounds(0, 0, width || pn.offsetWidth, pn.offsetHeight);
 	},
 	reflow: function() {
 	    if (this._cupdating)
@@ -110,6 +117,12 @@ dojo.declare("wm.AppRoot", wm.Container, {
 	    }
 	    this.renderBounds();
 	    this.inherited(arguments);
+	    if (wm.isMobile) {
+		// get rid of the location bar on any mobile browser that is in landscape mode
+		// in an attempt to get a usable amount of height
+		document.body.scrollTop = (this.bounds.w > this.bounds.h) ? 1 : 0;
+		console.log("scrollTOP:" + document.body.scrollTop);
+	    }
 	},
     calcDeviceSize: function(width) {	
 	if (width >= 1150) {
