@@ -14,6 +14,7 @@ import org.eclipse.jdt.internal.compiler.batch.FileSystem.ClasspathSectionProble
 import org.eclipse.jdt.internal.compiler.classfmt.ClassFileReader;
 import org.eclipse.jdt.internal.compiler.classfmt.ClassFormatException;
 import org.eclipse.jdt.internal.compiler.env.NameEnvironmentAnswer;
+import org.springframework.util.StringUtils;
 
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
@@ -115,7 +116,8 @@ public class ResourceFolderFileSystemClasspath implements FileSystem.Classpath {
         }
         Boolean isPackage = this.isPackageCache.get(qualifiedPackageName);
         if (isPackage == null) {
-            isPackage = this.folder.hasExisting(normalizePath(qualifiedPackageName));
+            String packagePath = normalizePath(qualifiedPackageName);
+            isPackage = StringUtils.hasLength(packagePath) && this.folder.hasExisting(packagePath);
             this.isPackageCache.put(qualifiedPackageName, isPackage);
         }
         return isPackage;
