@@ -18,6 +18,8 @@ dojo.require("wm.base.widget.Editors.AbstractEditor");
 dojo.require("dijit.form.CheckBox");
 
 dojo.declare("wm.Checkbox", wm.AbstractEditor, {
+    _captionTagName: "label", // using this allows clicking the label to toggle the editor
+
     /* Formating */
     classNames: "wmeditor wmeditor-cbeditor",
 	width: "180px",
