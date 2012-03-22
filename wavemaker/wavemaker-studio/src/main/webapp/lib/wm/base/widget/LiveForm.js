@@ -73,7 +73,7 @@ dojo.declare("wm.LiveFormBase", wm.Container, {
 	/** @lends wm.LiveFormBase.prototype */
 	editorHeight: "26px",
 	editorWidth: "100%",
-	captionSize: "200px",
+	captionSize: "140px",
 	captionAlign: "right",
 	captionPosition: "left",
 	height: "228px",
