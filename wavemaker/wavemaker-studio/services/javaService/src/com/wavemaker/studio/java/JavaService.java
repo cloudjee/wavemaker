@@ -16,7 +16,6 @@ package com.wavemaker.studio.java;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -28,6 +27,7 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.javaservice.JavaServiceDefinition;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.ProjectManager;
@@ -47,95 +47,93 @@ public class JavaService {
 
         this.designServiceManager.validateServiceId(serviceId);
 
+        String sourceFilename = JavaServiceDefinition.getRelPathFromClass(fqClassName);
         String packageName = JavaServiceDefinition.getPackage(fqClassName);
         String className = JavaServiceDefinition.getClass(fqClassName);
 
-        Resource classFile = this.designServiceManager.getServiceRuntimeDirectory(serviceId).createRelative(
-            JavaServiceDefinition.getRelPathFromClass(fqClassName));
+        File sourceFile = this.designServiceManager.getServiceRuntimeFolder(serviceId).getFile(sourceFilename);
 
-        Writer classFileWriter = getProjectManager().getCurrentProject().getWriter(classFile);
-        BufferedWriter bw = new BufferedWriter(classFileWriter);
-
-        if (packageName != null) {
-            bw.write("package " + packageName + ";");
-            bw.newLine();
-            bw.newLine();
+        BufferedWriter writer = new BufferedWriter(sourceFile.getContent().asWriter());
+        try {
+            if (packageName != null) {
+                writer.write("package " + packageName + ";");
+                writer.newLine();
+                writer.newLine();
+            }
+            writer.write("import com.wavemaker.runtime.javaservice.JavaServiceSuperClass;");
+            writer.newLine();
+            writer.write("import com.wavemaker.runtime.service.annotations.ExposeToClient;");
+            writer.newLine();
+            writer.newLine();
+            writer.write("/**");
+            writer.newLine();
+            writer.write(" * This is a client-facing service class.  All");
+            writer.newLine();
+            writer.write(" * public methods will be exposed to the client.  Their return");
+            writer.newLine();
+            writer.write(" * values and parameters will be passed to the client or taken");
+            writer.newLine();
+            writer.write(" * from the client, respectively.  This will be a singleton");
+            writer.newLine();
+            writer.write(" * instance, shared between all requests. ");
+            writer.newLine();
+            writer.write(" * ");
+            writer.newLine();
+            writer.write(" * To log, call the superclass method log(LOG_LEVEL, String) or log(LOG_LEVEL, String, Exception).");
+            writer.newLine();
+            writer.write(" * LOG_LEVEL is one of FATAL, ERROR, WARN, INFO and DEBUG to modify your log level.");
+            writer.newLine();
+            writer.write(" * For info on these levels, look for tomcat/log4j documentation");
+            writer.newLine();
+            writer.write(" */");
+            writer.newLine();
+            writer.write("@ExposeToClient");
+            writer.newLine();
+            writer.write("public class " + className + " extends JavaServiceSuperClass {");
+            writer.newLine();
+            writer.write("    /* Pass in one of FATAL, ERROR, WARN,  INFO and DEBUG to modify your log level;");
+            writer.newLine();
+            writer.write("     *  recommend changing this to FATAL or ERROR before deploying.  For info on these levels, look for tomcat/log4j documentation");
+            writer.newLine();
+            writer.write("     */");
+            writer.newLine();
+            writer.write("    public " + className + "() {");
+            writer.newLine();
+            writer.write("       super(INFO);");
+            writer.newLine();
+            writer.write("    }");
+            writer.newLine();
+            writer.newLine();
+            writer.write("    public String sampleJavaOperation() {");
+            writer.newLine();
+            writer.write("       String result  = null;");
+            writer.newLine();
+            writer.write("       try {");
+            writer.newLine();
+            writer.write("          log(INFO, \"Starting sample operation\");");
+            writer.newLine();
+            writer.write("          result = \"Hello World\";");
+            writer.newLine();
+            writer.write("          log(INFO, \"Returning \" + result);");
+            writer.newLine();
+            writer.write("       } catch(Exception e) {");
+            writer.newLine();
+            writer.write("          log(ERROR, \"The sample java service operation has failed\", e);");
+            writer.newLine();
+            writer.write("       }");
+            writer.newLine();
+            writer.write("       return result;");
+            writer.newLine();
+            writer.write("    }");
+            writer.newLine();
+            writer.newLine();
+            writer.write("}");
+            writer.newLine();
+        } finally {
+            writer.close();
         }
-
-        bw.write("import com.wavemaker.runtime.javaservice.JavaServiceSuperClass;");
-        bw.newLine();
-        bw.write("import com.wavemaker.runtime.service.annotations.ExposeToClient;");
-        bw.newLine();
-        bw.newLine();
-        bw.write("/**");
-        bw.newLine();
-        bw.write(" * This is a client-facing service class.  All");
-        bw.newLine();
-        bw.write(" * public methods will be exposed to the client.  Their return");
-        bw.newLine();
-        bw.write(" * values and parameters will be passed to the client or taken");
-        bw.newLine();
-        bw.write(" * from the client, respectively.  This will be a singleton");
-        bw.newLine();
-        bw.write(" * instance, shared between all requests. ");
-        bw.newLine();
-        bw.write(" * ");
-        bw.newLine();
-        bw.write(" * To log, call the superclass method log(LOG_LEVEL, String) or log(LOG_LEVEL, String, Exception).");
-        bw.newLine();
-        bw.write(" * LOG_LEVEL is one of FATAL, ERROR, WARN, INFO and DEBUG to modify your log level.");
-        bw.newLine();
-        bw.write(" * For info on these levels, look for tomcat/log4j documentation");
-        bw.newLine();
-        bw.write(" */");
-        bw.newLine();
-        bw.write("@ExposeToClient");
-        bw.newLine();
-        bw.write("public class " + className + " extends JavaServiceSuperClass {");
-        bw.newLine();
-        bw.write("    /* Pass in one of FATAL, ERROR, WARN,  INFO and DEBUG to modify your log level;");
-        bw.newLine();
-        bw.write("     *  recommend changing this to FATAL or ERROR before deploying.  For info on these levels, look for tomcat/log4j documentation");
-        bw.newLine();
-        bw.write("     */");
-        bw.newLine();
-        bw.write("    public " + className + "() {");
-        bw.newLine();
-        bw.write("       super(INFO);");
-        bw.newLine();
-        bw.write("    }");
-        bw.newLine();
-        bw.newLine();
-        bw.write("    public String sampleJavaOperation() {");
-        bw.newLine();
-        bw.write("       String result  = null;");
-        bw.newLine();
-        bw.write("       try {");
-        bw.newLine();
-        bw.write("          log(INFO, \"Starting sample operation\");");
-        bw.newLine();
-        bw.write("          result = \"Hello World\";");
-        bw.newLine();
-        bw.write("          log(INFO, \"Returning \" + result);");
-        bw.newLine();
-        bw.write("       } catch(Exception e) {");
-        bw.newLine();
-        bw.write("          log(ERROR, \"The sample java service operation has failed\", e);");
-        bw.newLine();
-        bw.write("       }");
-        bw.newLine();
-        bw.write("       return result;");
-        bw.newLine();
-        bw.write("    }");
-        bw.newLine();
-        bw.newLine();
-        bw.write("}");
-        bw.newLine();
-        bw.close();
-
         this.deploymentManager.compile();
-
-        return getProjectManager().getCurrentProject().readFile(classFile);
+        return sourceFile.getContent().asString();
     }
 
     /**

@@ -21,10 +21,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.IOUtils;
-import org.springframework.core.io.Resource;
-import org.springframework.util.FileCopyUtils;
 
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.project.ProjectManager;
@@ -46,14 +45,13 @@ public class WebXmlUpgradeTask implements UpgradeTask {
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
-        Resource webXml = project.getWebXml();
+        File webXml = project.getWebXmlFile();
         if (webXml.exists()) {
             try {
-                Resource webXmlBak = project.getWebInf().createRelative(WEB_XML_BACKUP);
-                FileCopyUtils.copy(webXml.getInputStream(), this.filesSystem.getOutputStream(webXmlBak));
-                this.filesSystem.deleteFile(webXml);
-
-                Resource userWebXml = project.getWebInf().createRelative(ProjectConstants.USER_WEB_XML);
+                File webXmlBak = project.getWebInfFolder().getFile(WEB_XML_BACKUP);
+                webXmlBak.getContent().write(webXml);
+                webXml.delete();
+                File userWebXml = project.getWebInfFolder().getFile(ProjectConstants.USER_WEB_XML);
                 InputStream resourceStream = this.getClass().getClassLoader().getResourceAsStream(ProjectManager._TEMPLATE_APP_RESOURCE_NAME);
                 ZipInputStream resourceZipStream = new ZipInputStream(resourceStream);
 
@@ -61,7 +59,7 @@ public class WebXmlUpgradeTask implements UpgradeTask {
 
                 while ((zipEntry = resourceZipStream.getNextEntry()) != null) {
                     if ("webapproot/WEB-INF/user-web.xml".equals(zipEntry.getName())) {
-                        Writer writer = project.getWriter(userWebXml);
+                        Writer writer = userWebXml.getContent().asWriter();
                         IOUtils.copy(resourceZipStream, writer);
                         writer.close();
                     }

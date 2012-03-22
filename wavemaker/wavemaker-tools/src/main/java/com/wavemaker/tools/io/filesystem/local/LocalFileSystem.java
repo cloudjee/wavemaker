@@ -8,8 +8,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import org.springframework.util.Assert;
 
@@ -79,9 +80,15 @@ public class LocalFileSystem implements FileSystem<LocalFileSystemKey> {
 
     @Override
     public Iterable<String> list(LocalFileSystemKey key) {
-        String[] list = key.getFile().list();
-        Assert.state(list != null, "Unable to list files for " + key.getFile());
-        return Collections.unmodifiableList(Arrays.asList(list));
+        File[] files = key.getFile().listFiles();
+        Assert.state(files != null, "Unable to list files for " + key.getFile());
+        List<String> filenames = new ArrayList<String>();
+        for (File file : files) {
+            if (file.exists()) {
+                filenames.add(file.getName());
+            }
+        }
+        return Collections.unmodifiableList(filenames);
     }
 
     @Override
@@ -92,12 +99,6 @@ public class LocalFileSystem implements FileSystem<LocalFileSystemKey> {
     @Override
     public long getLastModified(LocalFileSystemKey key) {
         return key.getFile().lastModified();
-    }
-
-    @Override
-    public byte[] getSha1Digest(LocalFileSystemKey key) {
-        // FIXME
-        throw new UnsupportedOperationException();
     }
 
     @Override

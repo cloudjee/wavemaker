@@ -52,11 +52,6 @@ public class FileSystemFile<K> extends FileSystemResource<K> implements File {
     }
 
     @Override
-    public byte[] getSha1Digest() {
-        return getFileSystem().getSha1Digest(getKey());
-    }
-
-    @Override
     public FileContent getContent() {
         return this.content;
     }

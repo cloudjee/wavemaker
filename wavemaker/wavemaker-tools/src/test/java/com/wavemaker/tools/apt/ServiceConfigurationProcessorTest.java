@@ -96,8 +96,8 @@ public class ServiceConfigurationProcessorTest {
         File actualServices = new File(this.project.getWebInf().getFile(), "project-services.xml");
         assertTrue(actualServices.exists());
 
-        File smd_sd = ConfigurationCompiler.getSmdFile(this.project, sd.getServiceId()).getFile();
-        File smd_sd2 = ConfigurationCompiler.getSmdFile(this.project, sd2.getServiceId()).getFile();
+        File smd_sd = ConfigurationCompiler.getSmdResource(this.project, sd.getServiceId()).getFile();
+        File smd_sd2 = ConfigurationCompiler.getSmdResource(this.project, sd2.getServiceId()).getFile();
         assertTrue(smd_sd + " DNE", smd_sd.exists());
         assertTrue(smd_sd2 + " DNE", smd_sd2.exists());
 

@@ -49,7 +49,6 @@ public class DesignTimeUtils {
         } else {
             home = System.getProperty(AbstractStudioFileSystem.PROJECTHOME_PROP_KEY);
         }
-        // System.out.println("GET HOME IS " + home);
         return home;
     }
 
@@ -59,7 +58,6 @@ public class DesignTimeUtils {
         } else {
             System.setProperty(AbstractStudioFileSystem.PROJECTHOME_PROP_KEY, home);
         }
-        // System.out.println("SET HOME IS " + home);
     }
 
     private static void deleteDefaultProjectHomeProp() {
@@ -70,7 +68,6 @@ public class DesignTimeUtils {
             props.remove(AbstractStudioFileSystem.PROJECTHOME_PROP_KEY);
             System.setProperties(props);
         }
-        // System.out.println("DELETE HOME");
     }
 
     private static boolean isRuntime() {

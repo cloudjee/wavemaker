@@ -98,12 +98,6 @@ public class MongoFileSystem implements FileSystem<MongoFileSystemKey> {
     }
 
     @Override
-    public byte[] getSha1Digest(MongoFileSystemKey key) {
-        // FIXME
-        return null;
-    }
-
-    @Override
     public InputStream getInputStream(MongoFileSystemKey key) {
         return getFile(key).getInputStream();
     }

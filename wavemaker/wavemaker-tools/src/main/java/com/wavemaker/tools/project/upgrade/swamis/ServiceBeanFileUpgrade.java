@@ -14,9 +14,8 @@
 
 package com.wavemaker.tools.project.upgrade.swamis;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +27,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
@@ -76,19 +76,20 @@ public class ServiceBeanFileUpgrade implements UpgradeTask {
                 }
 
                 // edit the servicedef
-                Resource serviceDefFile = dsm.getServiceDefXml(service.getId());
+                File serviceDefFile = dsm.getServiceDefXmlFile(service.getId());
                 service.setSpringFile(serviceBeanFile.getFilename());
 
                 Marshaller marshaller;
                 try {
                     marshaller = definitionsContext.createMarshaller();
                     marshaller.setProperty("jaxb.formatted.output", true);
-                    marshaller.marshal(service, project.getWriter(serviceDefFile));
-                } catch (JAXBException e) {
-                    throw new WMRuntimeException(e);
-                } catch (UnsupportedEncodingException e) {
-                    throw new WMRuntimeException(e);
-                } catch (FileNotFoundException e) {
+                    Writer writer = serviceDefFile.getContent().asWriter();
+                    try {
+                        marshaller.marshal(service, writer);
+                    } finally {
+                        writer.close();
+                    }
+                } catch (Exception e) {
                     throw new WMRuntimeException(e);
                 }
 

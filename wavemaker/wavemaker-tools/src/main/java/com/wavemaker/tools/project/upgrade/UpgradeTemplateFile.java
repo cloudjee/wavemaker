@@ -21,9 +21,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.apache.commons.io.IOUtils;
-import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
 
@@ -48,7 +48,7 @@ public class UpgradeTemplateFile implements UpgradeTask {
         }
 
         try {
-            Resource localFile = project.getProjectRoot().createRelative(this.relativePath);
+            File localFile = project.getRootFolder().getFile(this.relativePath);
 
             InputStream resourceStream = this.getClass().getClassLoader().getResourceAsStream(ProjectManager._TEMPLATE_APP_RESOURCE_NAME);
             ZipInputStream resourceZipStream = new ZipInputStream(resourceStream);
@@ -57,7 +57,7 @@ public class UpgradeTemplateFile implements UpgradeTask {
 
             while ((zipEntry = resourceZipStream.getNextEntry()) != null) {
                 if (this.relativePath.equals(zipEntry.getName())) {
-                    Writer writer = project.getWriter(localFile);
+                    Writer writer = localFile.getContent().asWriter();
                     IOUtils.copy(resourceZipStream, writer);
                     writer.close();
                 }

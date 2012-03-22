@@ -87,14 +87,6 @@ public class FileSystemFileTest extends AbstractFileSystemResourceTest {
     }
 
     @Test
-    public void shouldGetSha1FromFileSystem() throws Exception {
-        byte[] sha1 = { 1, 2, 3 };
-        given(this.fileSystem.getSha1Digest(this.file.getKey())).willReturn(sha1);
-        assertThat(this.file.getSha1Digest(), is(equalTo(sha1)));
-        verify(this.fileSystem).getSha1Digest(this.file.getKey());
-    }
-
-    @Test
     public void shouldGetContentInputStreamFromFileSystem() throws Exception {
         InputStream inputStream = mock(InputStream.class);
         given(this.fileSystem.getInputStream(this.file.getKey())).willReturn(inputStream);

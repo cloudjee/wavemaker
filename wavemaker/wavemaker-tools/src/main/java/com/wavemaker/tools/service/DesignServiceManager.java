@@ -54,6 +54,8 @@ import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.compiler.ProjectCompiler;
 import com.wavemaker.tools.data.DataModelConfiguration;
 import com.wavemaker.tools.data.util.DataServiceUtils;
+import com.wavemaker.tools.io.ClassPathFile;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.Project;
@@ -284,7 +286,7 @@ public class DesignServiceManager {
         Resource serviceHome = getServiceHome(serviceId);
         Project project = this.projectManager.getCurrentProject();
         project.deleteFile(serviceHome);
-        project.deleteFile(ConfigurationCompiler.getSmdFile(project, serviceId));
+        project.deleteFile(ConfigurationCompiler.getSmdResource(project, serviceId));
 
         // salesforce - if salesforceService is deleted, delete the relevant
         // loginService as well
@@ -307,7 +309,7 @@ public class DesignServiceManager {
     public void deleteServiceSmd(String serviceId) throws IOException, NoSuchMethodException {
 
         Project project = getProjectManager().getCurrentProject();
-        project.deleteFile(ConfigurationCompiler.getSmdFile(project, serviceId));
+        project.deleteFile(ConfigurationCompiler.getSmdResource(project, serviceId));
         generateRuntimeConfiguration(null);// XXX MAV-569 should do a real build
         this.deploymentManager.testRunClean();
     }
@@ -492,12 +494,17 @@ public class DesignServiceManager {
      * @param serviceId
      * @return
      */
+    @Deprecated
     public Resource getServiceRuntimeDirectory(String serviceId) {
         try {
             return getServiceHome(serviceId).createRelative(RUNTIME_DIR);
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
+    }
+
+    public Folder getServiceRuntimeFolder(String serviceId) {
+        return getServiceFolder(serviceId).getFolder(RUNTIME_DIR);
     }
 
     /**
@@ -548,7 +555,23 @@ public class DesignServiceManager {
         }
     }
 
-    // FIXME we need an alternative to getServiceDefXml that returns a File
+    /**
+     * Return the path to a service's design-time service definition xml. NOTE: the returned file may be a
+     * {@link ClassPathFile} and as such may not have a parent folder.
+     * 
+     * @param serviceId
+     * @return the file.
+     */
+    public File getServiceDefXmlFile(String serviceId) {
+        File serviceDef = getServiceDesigntimeFolder(serviceId).getFile(SERVICE_DEF_XML);
+        if (!serviceDef.exists()) {
+            File runtimeServiceDef = new ClassPathFile(SERVICES_DIR + serviceId + "/" + SERVICE_DEF_XML);
+            if (runtimeServiceDef.exists()) {
+                return runtimeServiceDef;
+            }
+        }
+        return serviceDef;
+    }
 
     /**
      * Return the path to a service's bean definition file.
