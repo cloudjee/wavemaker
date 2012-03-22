@@ -35,6 +35,8 @@ wm.defaultEmptyValue = function(inType){
 
 
 dojo.declare("wm.AbstractEditor", wm.Control, {
+    _captionTagName: "div", // we should use "label", but using label causes the editor to receive events from the label node.  This means accidentlly clicking on a label
+    // such as while touch scrolling can cause an editor to focus, its popup to popup and all manner of unintended consequences.
     changeKeycodes: [dojo.keys.ENTER, dojo.keys.NUMPAD_ENTER, dojo.keys.DELETE, dojo.keys.BACKSPACE],
     classNames: "wmeditor",
 
@@ -97,7 +99,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		else return 80 + parseInt(this.captionSize);
 	},
 	createCaption: function() {		 
-		var labeldiv = document.createElement("label");
+		var labeldiv = document.createElement(this._captionTagName);
 		var s = labeldiv.style;
 		s.padding = "0px";
 		s.margin = "0px";
@@ -246,6 +248,9 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    this.startTimerWithName("CreateDijit", this.declaredClass);
 		this.editor = this._createEditor(n, inProps);
 	        dojo.attr(this.captionNode, "for", this.editor.id);
+	if (wm.isMobile && "ontouchstart" in this.editor.domNode) {
+	    dojo.query(".dijitArrowButton", this.editor.domNode).connect("ontouchstart", this.editor, "openDropDown");
+	}
 /*
             if (this.editor._onChangeHandle) {
                 window.clearTimeout(this.editor._onChangeHandle);
