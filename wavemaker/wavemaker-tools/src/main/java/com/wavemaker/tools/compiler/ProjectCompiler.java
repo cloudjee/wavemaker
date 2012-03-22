@@ -29,6 +29,9 @@ import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 
+import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
+
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.apt.AbstractStudioServiceProcessor;
 import com.wavemaker.tools.apt.ServiceConfigurationProcessor;
@@ -89,6 +92,7 @@ public class ProjectCompiler {
             copyRuntimeServiceFiles(project);
             JavaCompiler compiler = new WaveMakerJavaCompiler();
             StandardJavaFileManager standardFileManager = compiler.getStandardFileManager(null, null, null);
+            standardFileManager.setLocation(StandardLocation.CLASS_PATH, getStandardClassPath());
             ResourceJavaFileManager projectFileManager = new ResourceJavaFileManager(standardFileManager);
             projectFileManager.setLocation(StandardLocation.SOURCE_PATH, project.getSourceFolders());
             projectFileManager.setLocation(StandardLocation.CLASS_OUTPUT, Collections.singleton(project.getClassOutputFolder()));
@@ -118,8 +122,8 @@ public class ProjectCompiler {
      */
     private void copyResources(final Project project) {
         for (Folder sourceFolder : project.getSourceFolders()) {
-            sourceFolder.performOperationRecursively(ResourceOperations.copyFilesKeepingSameFolderStructure(sourceFolder, project.getClassOutputFolder(),
-                ResourceFiltering.fileNames().notEnding(".java")));
+            sourceFolder.performOperationRecursively(ResourceOperations.copyFilesKeepingSameFolderStructure(sourceFolder,
+                project.getClassOutputFolder(), ResourceFiltering.fileNames().notEnding(".java")));
         }
     }
 
@@ -143,10 +147,17 @@ public class ProjectCompiler {
         }
     }
 
-    private Iterable<? extends Resource> getClasspath(Project project) {
+    private Iterable<java.io.File> getStandardClassPath() {
+        String catalinaBase = System.getProperty("catalina.base");
+        Assert.state(StringUtils.hasLength(catalinaBase), "Unable to locate running tomcat instance");
+        return Collections.singleton(new java.io.File(catalinaBase + "/lib/servlet-api.jar"));
+    }
+
+    private Iterable<Resource> getClasspath(Project project) {
         List<Resource> classpath = new ArrayList<Resource>();
         addAll(classpath, project.getRootFolder().getFolder("lib").list(JAR_FILE_FILTER));
         addAll(classpath, this.fileSystem.getStudioWebAppRootFolder().getFolder("WEB-INF/lib").list(JAR_FILE_FILTER));
+
         return classpath;
     }
 

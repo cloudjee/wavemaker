@@ -50,6 +50,7 @@
         <fileset dir="${build.app.lib.dir}">
             <include name="*.jar"/>
         </fileset>
+    	<fileset file="${catalina.base}/lib/servlet-api.jar"/>
     </path>
 
 	<available file="${orig.proj.dir}/webapproot/WEB-INF/application.xml" property="appXmlExists">
