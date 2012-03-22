@@ -310,7 +310,7 @@ wm.LivePanel.extend({
 	deleteButton.eventBindings.onclick = this.liveForm.name + ".deleteData";
 	saveButton.eventBindings.onclick = this.liveForm.name + ".saveDataIfValid";
 	cancelButton.eventBindings.onclick = this.dialog.name + ".hide";
-	cancelButton.eventBindings.onclick1 = this.liveForm.name + ".cancelEdit";
+
 
 	this.liveForm.eventBindings.onSuccess = this.name + ".popupLiveFormSuccess";
 	//this.liveForm.eventBindings.onResult = this.name + ".popupLiveFormResult";
@@ -510,9 +510,10 @@ wm.LivePanel.extend({
 				name: studio.page.getUniqueName(this.liveDataName + "LiveForm1"),
 				owner: this.owner,
 		                parent: fancyPanel2.containerWidget, // wm.FancyPanel change; revert to returning "this"
-		                margin: "0,40,0,40",
+		                margin: "0",		    
 				verticalAlign: "top",
-				horizontalAlign: "left",
+				horizontalAlign: "center",
+		                editorWidth: "90%",
 				_liveSource: this.liveSource
 			});
 	        this.reflow(); // added for fancypanel support
