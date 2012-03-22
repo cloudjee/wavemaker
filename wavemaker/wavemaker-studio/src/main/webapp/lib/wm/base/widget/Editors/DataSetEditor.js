@@ -641,14 +641,16 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 	}
     },
     createSearchBar: function() {
-	    this.searchBar = new wm.Text({owner: this,
-					   parent: this.editor,
-					   width: "100%",
-					   caption: "",
-					   changeOnKey: true,
-					   emptyValue: "emptyString",
-					   name: "searchBar"});
-	this.connect(this.searchBar, "onchange", this, "filterList");
+	this.searchBar = new wm.Text({owner: this,
+				      parent: this.editor,
+				      width: "100%",
+				      caption: "",
+				      changeOnKey: true,
+				      emptyValue: "emptyString",
+				      name: "searchBar"});
+	if (!this._noFilter)
+	    this.connect(this.searchBar, "onchange", this, "filterList");
+
     },
     filterList: function(inDisplayValue, inDataValue) {
 	var count = this.grid.getRowCount();
