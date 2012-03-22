@@ -99,11 +99,13 @@ dojo.declare("wm.List", wm.VirtualList, {
 	onRowDeleted: function(rowId, rowData){},
     setColumns: function(inColumns) {
 	this.columns = inColumns;
+	this._setSelectionColumn(this.selectionMode); // add in any controllers based on selection mode
+	this._setDeleteColumn(this.deleteColumn); // add in any controllers based on deleteColumn
 	this._columnsHash = {};
 	for (var i = 0; i < this.columns.length; i++) {
 	    var column = this.columns[i];
 	    this._columnsHash[column.field] = column;
-	}
+	}	
     },
 	setSelectionMode: function(inMode) {
 	  this.selectionMode = inMode;
@@ -114,15 +116,58 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    else if (inMode == "extended") {
 		inMode = this.selectionMode = "multiple";
 	    }
-
 	    this._selectionMode = inMode;
-	},
 
-	init: function() {
-	    this.setSelectionMode(this.selectionMode);
-	    if (this.columns) {
+	    if (!this.columns) {
+		this.convertToColumns();
+	    } else {
 		this.setColumns(this.columns);
 	    }
+	    this._render();
+	},
+        _setSelectionColumn: function() {
+	    if (this.columns) {
+		var found = false;
+		for (var i = 0; i < this.columns.length; i++) {
+		    if (this.columns[i].controller == "radio" || this.columns[i].controller == "checkbox") {
+			found = true;
+			if (this.selectionMode == "checkbox" || this.selectionMode == "radio") {
+			    this.columns[i].controller = this.selectionMode;
+			} else {
+			    wm.Array.removeElementAt(this.columns,i);
+			}
+			break;
+		    }
+		}
+		if (!found && (this.selectionMode == "radio" || this.selectionMode == "checkbox")) {
+		    var index = this.columns[0].controller ? 1 : 0;
+		    wm.Array.insertElementAt(this.columns, {width: "25px", title: "-", controller: this.selectionMode, field: "_selector", show: true}, index);
+		}
+	    }
+	},
+    convertToColumns: function() {
+	if (this.dataFields) {
+	    var fields = this.dataFields.split(/\s*,\s*/);
+	} else if (this.dataSet && this.dataSet._dataSchema) {
+	    var fields = wm.typeManager.getSimplePropNames(this.dataSet._dataSchema);
+	}
+	if (fields && fields.length) {
+	    this.columns = [];
+	    for (var i = 0; i < fields.length; i++) {
+		this.columns.push({width: "100%",
+				   field: fields[i],
+				   show: true,
+				   title: wm.capitalize(fields[i])
+				  });
+	    }
+	}
+	if (this.columns) {
+	    this.setColumns(this.columns);
+	}
+	
+    },
+	init: function() {
+	    this.setSelectionMode(this.selectionMode);
 	    if (this.noHeader) { // another grid property
 		this.headerVisible = false;
 	    }
@@ -163,10 +208,35 @@ dojo.declare("wm.List", wm.VirtualList, {
 
     setDeleteColumn: function(inDelete) {
 	this.deleteColumn = inDelete;
+	if (!this.columns) {
+	    this.convertToColumns();
+	} else {
+	    this.setColumns(this.columns);
+	}
 	this._render();
+    },
+    _setDeleteColumn: function() {
+	if (this.columns) {
+	    var found = false;
+		for (var i = 0; i < this.columns.length; i++) {
+		    if (this.columns[i].controller == "deleteColumn") {
+			found = true;
+			if (!this.deleteColumn) {
+			    wm.Array.removeElementAt(this.columns,i);
+			}
+			break;
+		    }
+		}
+	    if (!found && this.deleteColumn) {
+		this.columns.unshift({width: "25px", title: "-", controller: "deleteColumn", field: "_deleteColumn", show: true});
+	    }
+	    }
     },
 
 	_setDataFields: function(inDataFields) {
+	    if (!this.columns && this.dataSet) {
+		this.convertToColumns();
+	    }
 	    if (this.columns) {
 		this._dataFields = [];
 
@@ -287,10 +357,12 @@ dojo.declare("wm.List", wm.VirtualList, {
 		dojo.marginBox(this.headerNode.firstChild, {w: b.w});
 	},
 	_render: function() {
-	    if (this.dataSet)
-		this.renderDataSet(this.dataSet);
-	    else
-		this.renderData(this._data);
+	    if (!this._cupdating) {
+		if (this.dataSet)
+		    this.renderDataSet(this.dataSet);
+		else
+		    this.renderData(this._data);
+	    }
 	},
 	clear: function(noEvents) {
 		this._data = null;
@@ -334,6 +406,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 		this._renderDojoObjSkipped = true;
 		return;
 	    } 
+
 	        this._renderDojoObjSkipped = false;
 		var d = inDataSet instanceof wm.Variable ? inDataSet.getData() : [];
 	        d = this.runQuery(d);
@@ -346,6 +419,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    },
 
 	renderData: function(inData) {
+/*
 	    if (this.columns && (this.selectionMode == "checkbox" || this.selectionMode == "radio")) {
 		    this.columns.unshift({width: "25px", title: "-", controller: this.selectionMode, field: "_selector", show: true});
 		    this._columnsHash._selector = this.columns[0];
@@ -354,6 +428,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 		this.columns.unshift({width: "25px", title: "-", controller: "deleteColumn", field: "_deleteColumn", show: true});
 		this._columnsHash._deleteColumn = this.columns[0];
 	    }
+	    */
 
 
 	        var selectedData = this.selectedItem.getData();
@@ -374,6 +449,8 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    if (this._listTouchScroll && !this._listTouchScroll.scrollers.outer.style.width) {
 		wm.job(this.getRuntimeId() + "ListSetupScroller", 1, dojo.hitch(this._listTouchScroll, "setupScroller"));
 	    }
+
+/*
 	    if (this.columns && this.deleteColumn) {
 		this.columns.shift();
 		delete this._columnsHash._deleteColumn;
@@ -382,6 +459,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 		this.columns.shift();
 		delete this._columnsHash._selector;
 	    }
+	    */
 
 	    var isSelectedDataArray = dojo.isArray(selectedData);
 	    if (this.columns && ( isSelectedDataArray && selectedData.length || !isSelectedDataArray && selectedData || this.selectFirstRow))
