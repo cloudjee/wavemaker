@@ -29,7 +29,8 @@ import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 
-import org.springframework.util.Assert;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.util.StringUtils;
 
 import com.wavemaker.common.WMRuntimeException;
@@ -57,6 +58,8 @@ import com.wavemaker.tools.service.DesignServiceManager;
  * @author Jeremy Grelle
  */
 public class ProjectCompiler {
+
+    private final Log logger = LogFactory.getLog(getClass());
 
     private static final ResourceFilter<File> JAR_FILE_FILTER = new ResourceFilter<File>() {
 
@@ -149,7 +152,10 @@ public class ProjectCompiler {
 
     private Iterable<java.io.File> getStandardClassPath() {
         String catalinaBase = System.getProperty("catalina.base");
-        Assert.state(StringUtils.hasLength(catalinaBase), "Unable to locate running tomcat instance");
+        if (!StringUtils.hasLength(catalinaBase)) {
+            this.logger.warn("Unable to locate running tomcat instance, servlet-api jar will not be available");
+            return null;
+        }
         return Collections.singleton(new java.io.File(catalinaBase + "/lib/servlet-api.jar"));
     }
 
@@ -157,7 +163,6 @@ public class ProjectCompiler {
         List<Resource> classpath = new ArrayList<Resource>();
         addAll(classpath, project.getRootFolder().getFolder("lib").list(JAR_FILE_FILTER));
         addAll(classpath, this.fileSystem.getStudioWebAppRootFolder().getFolder("WEB-INF/lib").list(JAR_FILE_FILTER));
-
         return classpath;
     }
 
