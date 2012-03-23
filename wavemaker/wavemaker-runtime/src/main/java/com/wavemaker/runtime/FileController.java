@@ -40,6 +40,7 @@ import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.data.DataServiceLoggers;
 import com.wavemaker.runtime.module.ModuleManager;
 import com.wavemaker.runtime.server.ServerUtils;
+import com.wavemaker.runtime.server.ServiceResponse;
 
 /**
  * Controller (in the MVC sense) providing the studio access to project files. Based off of the old StaticFileServlet.
@@ -71,6 +72,8 @@ public final class FileController extends AbstractController {
     private static final String WM_CONFIG_URL = "/config.js";
 
     private ModuleManager moduleManager;
+
+    private ServiceResponse serviceResponse;
 
     @Override
     protected ModelAndView handleRequestInternal(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -137,6 +140,7 @@ public final class FileController extends AbstractController {
             if (reqPath.contains(WM_CONFIG_URL)) {
                 String content = IOUtils.toString(is);
                 content += "\r\n" + "wm.serverTimeOffset = " + ServerUtils.getServerTimeOffset() + ";";
+                content += "\r\n" + "wm.connectionTimeout = " + serviceResponse.getConnectionTimeout() + ";";
                 String language = request.getHeader("accept-language");
                 if (language != null && language.length() > 0) {
                     int index = language.indexOf(",");
@@ -200,6 +204,10 @@ public final class FileController extends AbstractController {
 
     public ModuleManager getModuleManager() {
         return this.moduleManager;
+    }
+
+    public void setServiceResponse(ServiceResponse serviceResponse) {
+        this.serviceResponse = serviceResponse; 
     }
 
 }

@@ -61,6 +61,8 @@ public class RuntimeAccess {
 
     private ServiceManager serviceManager = null;
 
+    private long startTime;
+
     /**
      * Do not use this constructor; instead, use either {@link #getInstance()} or access this class through bean
      * properties.
@@ -191,5 +193,13 @@ public class RuntimeAccess {
 
      public HttpServletResponse getResponse() {
         return this.response;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+    public long getStartTime() {
+        return this.startTime;    
     }
 }

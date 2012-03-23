@@ -181,6 +181,9 @@
 		<property name="moduleManager">
             <ref bean="moduleManager"/>
         </property>
+		<property name="serviceResponse">
+            <ref bean="serviceResponse"/>
+        </property>
 
         <!-- controller configuration -->
         <!--property name="supportedMethods" value="GET" /-->
@@ -190,6 +193,8 @@
 		<property name="runtimeAccess">
             <ref bean="runtimeAccess"/>
         </property>
+		<!-- Set this value to your environment's connection timeout. Setting this value to zero means "no timeout" -->
+		<property name="connectionTimeout" value="0"/>
 	</bean>
     
     <bean class="com.wavemaker.runtime.data.cloudfoundry.CloudFoundryDataServiceBeanFactoryPostProcessor"/>

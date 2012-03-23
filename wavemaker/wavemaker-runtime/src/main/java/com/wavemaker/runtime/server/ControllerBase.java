@@ -248,6 +248,7 @@ public abstract class ControllerBase extends AbstractController {
     protected TypedServiceReturn invokeMethod(ServiceWire sw, String method, JSONArray jsonArgs,
                           Map<String, Object[]> mapParams, ServiceResponse serviceResponse)
             throws WMException {
+        runtimeAccess.setStartTime(System.currentTimeMillis());
         try {
             if (jsonArgs != null && mapParams != null) {
                 throw new WMRuntimeException(MessageResource.BOTH_ARGUMENT_TYPES, jsonArgs, mapParams);
@@ -271,9 +272,9 @@ public abstract class ControllerBase extends AbstractController {
             return ServerUtils.invokeMethodWithEvents(getServiceEventNotifier(), sw, method, args, jsonState, false,
                                     serviceResponse);
         } catch (WMRuntimeException ex) {
-            if (serviceResponse != null && !serviceResponse.isPollingRequest()) {
+            if (serviceResponse != null && !serviceResponse.isPollingRequest() &&
+                    (System.currentTimeMillis() - runtimeAccess.getStartTime() > (serviceResponse.getConnectionTimeout() * 1000))) {
                 serviceResponse.addError(ex);
-                return null;
             }
             throw ex;
         }

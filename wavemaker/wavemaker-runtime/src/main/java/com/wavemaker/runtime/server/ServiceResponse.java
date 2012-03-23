@@ -12,8 +12,8 @@ import java.lang.reflect.Method;
 
 public class ServiceResponse {
 
-    private static final int CONNECTION_TIMEOUT = 30;
-    private static final int PROCESSING_CUTOFF = CONNECTION_TIMEOUT - 5;
+    private static final int DEFAULT_CONNECTION_TIMEOUT = 30;
+    private static final int DEFAULT_PROCESSING_CUTOFF = DEFAULT_CONNECTION_TIMEOUT - 5;
     private static final String INITIAL_REQUEST = "wm-initial-request";
     private static final String POLLING_REQUEST = "wm-polling-request";
     private static final String JSON_RESPONSE_STATUS = "wm-json-response-status";
@@ -21,6 +21,7 @@ public class ServiceResponse {
     private final Map<String, Thread> threads = new Hashtable<String, Thread>();
 
     private RuntimeAccess runtimeAccess;
+    private int connectionTimeout;
 
     public ServiceResponse() {
     }
@@ -39,7 +40,7 @@ public class ServiceResponse {
 
     public synchronized Object addResponse(long startTime, Object obj) {
         String requestId = this.getRequestId();
-        if (System.currentTimeMillis() - startTime > PROCESSING_CUTOFF * 1000) {
+        if (System.currentTimeMillis() - runtimeAccess.getStartTime() > (connectionTimeout - 3) * 1000) {
             this.cleanup();
             JSONObject jsonObj = new JSONObject();
             jsonObj.put("status", "done");
@@ -61,7 +62,7 @@ public class ServiceResponse {
                 Tuple.Two<Long, JSONObject> t = this.serviceResponseTable.get(requestId);
                 if (t != null) {
                     long time = t.v1;
-                    if (System.currentTimeMillis() - time > PROCESSING_CUTOFF * 1000 * 2) {
+                    if (System.currentTimeMillis() - time > (connectionTimeout - 3) * 1000 * 2) {
                         this.serviceResponseTable.remove(requestId);
                         this.threads.remove(requestId);
                     }
@@ -113,7 +114,7 @@ public class ServiceResponse {
         int time = 0;
         JSONObject result;
 
-        while (time < PROCESSING_CUTOFF) {
+        while (time < (connectionTimeout - 3)) {
             try {
                 result = getResponse();
                 return result;
@@ -190,5 +191,13 @@ public class ServiceResponse {
 
     public void setRuntimeAccess(RuntimeAccess runtimeAccess) {
         this.runtimeAccess = runtimeAccess;
+    }
+
+    public void setConnectionTimeout(int connectionTimeout) {
+        this.connectionTimeout = connectionTimeout;
+    }
+
+    public int getConnectionTimeout() {
+        return this.connectionTimeout;
     }
 }
