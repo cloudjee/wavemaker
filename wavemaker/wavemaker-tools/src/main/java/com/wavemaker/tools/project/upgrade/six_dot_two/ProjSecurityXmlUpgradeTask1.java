@@ -14,10 +14,8 @@
 
 package com.wavemaker.tools.project.upgrade.six_dot_two;
 
-import java.io.IOException;
-
-import org.springframework.core.io.Resource;
-
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.exception.ResourceException;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
@@ -38,14 +36,13 @@ public class ProjSecurityXmlUpgradeTask1 implements UpgradeTask {
 
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
-        Resource secxml = project.getSecurityXml();
-
+        File securityXmlFile = project.getSecurityXmlFile();
         try {
-            String content = project.readFile(secxml);
+            String content = securityXmlFile.getContent().asString();
             content = content.replace(this.fromStr, this.toStr);
-            project.writeFile(secxml, content);
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
+            securityXmlFile.getContent().write(content);
+        } catch (ResourceException e) {
+            e.printStackTrace();
             this.error = true;
         }
 

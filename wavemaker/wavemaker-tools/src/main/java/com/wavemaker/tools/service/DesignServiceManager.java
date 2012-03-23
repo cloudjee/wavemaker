@@ -601,12 +601,23 @@ public class DesignServiceManager {
      * @param serviceId The service to find the bean definition file for.
      * @return The path to the bean definition file for service serviceId.
      */
+    @Deprecated
     public Resource getServiceBeanXml(String serviceId) {
         try {
             return getProjectManager().getCurrentProject().getProjectRoot().createRelative(getServiceBeanRelative(serviceId));
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
+    }
+
+    /**
+     * Return the path to a service's bean definition file.
+     * 
+     * @param serviceId The service to find the bean definition file for.
+     * @return The path to the bean definition file for service serviceId.
+     */
+    public File getServiceBeanXmlFile(String serviceId) {
+        return getProjectManager().getCurrentProject().getRootFolder().getFile(getServiceBeanRelative(serviceId));
     }
 
     /**

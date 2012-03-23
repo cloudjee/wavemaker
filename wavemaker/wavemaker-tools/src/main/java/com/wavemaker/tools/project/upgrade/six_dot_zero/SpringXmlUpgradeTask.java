@@ -20,6 +20,10 @@ import java.io.IOException;
 import org.apache.commons.io.FileUtils;
 
 import com.wavemaker.runtime.server.ServerConstants;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.Resource;
+import com.wavemaker.tools.io.ResourceFiltering;
+import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
@@ -41,16 +45,10 @@ public class SpringXmlUpgradeTask implements UpgradeTask {
 
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
-        String svcPath = project.getProjectRoot() + "/services";
-        File svc = new File(svcPath);
-
-        File[] mdls = svc.listFiles();
-        if (mdls == null || mdls.length == 0) {
-            return;
-        }
-
-        for (File mdl : mdls) {
-            File mdlsrc = new File(mdl.getAbsolutePath() + "/src");
+        Folder svc = project.getRootFolder().getFolder("services");
+        Resources<Folder> mdls = svc.list(ResourceFiltering.folders());
+        for (Folder mdl : mdls) {
+            Folder mdlsrc = mdl.getFolder("src");
             processSingleMdl(mdlsrc);
         }
 
@@ -64,18 +62,12 @@ public class SpringXmlUpgradeTask implements UpgradeTask {
         }
     }
 
-    private void processSingleMdl(File mdl) {
-        File[] xmls = mdl.listFiles();
-
-        if (xmls == null || xmls.length == 0) {
-            return;
-        }
-
-        for (File xmlf : xmls) {
-            if (xmlf.isDirectory()) {
-                continue;
+    private void processSingleMdl(Folder mdl) {
+        Resources<Resource> xmls = mdl.list();
+        for (Resource xmlf : xmls) {
+            if (xmlf instanceof File) {
+                processSingleXml((File) xmlf);
             }
-            processSingleXml(xmlf);
         }
     }
 
@@ -84,7 +76,6 @@ public class SpringXmlUpgradeTask implements UpgradeTask {
         if (!fileName.contains("spring.xml")) {
             return;
         }
-
         try {
             String content = FileUtils.readFileToString(xmlf, ServerConstants.DEFAULT_ENCODING);
             content = content.replace(this.fromStr, this.toStr);

@@ -228,6 +228,10 @@ public class Project extends AbstractFileService {
         }
     }
 
+    public File getSecurityXmlFile() {
+        return getWebInfFolder().getFile(ProjectConstants.SECURITY_XML);
+    }
+
     @Deprecated
     public Resource getWebInfLib() {
         try {

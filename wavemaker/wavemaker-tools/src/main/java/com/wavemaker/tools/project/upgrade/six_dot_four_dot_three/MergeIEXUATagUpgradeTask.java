@@ -5,66 +5,44 @@
 
 package com.wavemaker.tools.project.upgrade.six_dot_four_dot_three;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.apache.commons.io.FileUtils;
-
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.exception.ResourceException;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
 
 /**
  * @author Michael Kantor
- * 
  */
 public class MergeIEXUATagUpgradeTask implements UpgradeTask {
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see com.wavemaker.tools.project.upgrade.UpgradeTask#doUpgrade(com.wavemaker.tools.project.Project,
-     * com.wavemaker.tools.project.upgrade.UpgradeInfo)
-     */
 
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
         try {
-            File indexFile = new File(project.getWebAppRoot() + "/index.html");
-            String indexContent = FileUtils.readFileToString(indexFile);
-
-            // 1. rename /project/index.html to index.bak.6.4.3
-            File webapp = project.getWebAppRoot().getFile();
-            File bakIndexhtml = new File(webapp, "index.bak.6.4.3");
-
-            FileUtils.copyFile(indexFile, bakIndexhtml);
-
+            File indexFile = project.getWebAppRootFolder().getFile("index.html");
+            indexFile.rename("index.bak.6.4.3");
+            String indexContent = indexFile.getContent().asString();
             String newIndexContent = updateContent(indexContent);
             if (newIndexContent != indexContent) {
-                FileUtils.writeStringToFile(indexFile, newIndexContent);
+                indexFile.getContent().write(newIndexContent);
                 upgradeInfo.addMessage("\nIndex.html has been upgraded to use an improved X-UA-Compatible meta tag");
             } else {
                 upgradeInfo.addMessage("\nWARNING: Index.html was not upgraded to use an improved X-UA-Compatible meta tag");
             }
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
+        } catch (ResourceException e) {
+            e.printStackTrace();
             upgradeInfo.addMessage("\n*** Error upgrading index.html to use improved X-UA-Compatible tag ***");
         }
         try {
-            File loginFile = new File(project.getWebAppRoot() + "/login.html");
+            File loginFile = project.getWebAppRootFolder().getFile("login.html");
             if (loginFile.exists()) {
-
                 // 1. rename /project/login.html to login.bak.6.4.3
-                File webapp = project.getWebAppRoot().getFile();
-                File bakLoginHtml = new File(webapp, "login.bak.6.4.3");
-                FileUtils.copyFile(loginFile, bakLoginHtml);
-
-                String loginContent = FileUtils.readFileToString(loginFile);
-
+                loginFile.rename("login.bak.6.4.3");
+                String loginContent = loginFile.getContent().asString();
                 String newLoginContent = updateContent(loginContent);
                 if (newLoginContent != loginContent) {
-                    FileUtils.writeStringToFile(loginFile, newLoginContent);
+                    loginFile.getContent().write(newLoginContent);
                     upgradeInfo.addMessage("\nlogin.html has been upgraded to use improved X-UA-Compatible tag.");
                 } else {
                     upgradeInfo.addMessage("\nWARNING: login.html was not upgraded to use improved X-UA-Compatible tag.");
@@ -72,8 +50,8 @@ public class MergeIEXUATagUpgradeTask implements UpgradeTask {
             } else {
                 upgradeInfo.addMessage("\n\tInfo: No login page found in project to upgrade");
             }
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
+        } catch (ResourceException e) {
+            e.printStackTrace();
             upgradeInfo.addMessage("\n*** Error upgrading login.html to use improved X-UA-Compatible tag ***");
         }
     }
