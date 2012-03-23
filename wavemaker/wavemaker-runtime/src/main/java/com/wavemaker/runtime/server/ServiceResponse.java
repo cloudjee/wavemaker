@@ -2,40 +2,118 @@ package com.wavemaker.runtime.server;
 
 import com.wavemaker.common.WMUnfinishedProcException;
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.common.util.Tuple;
 import com.wavemaker.json.JSONObject;
+import com.wavemaker.runtime.RuntimeAccess;
 
 import java.util.Hashtable;
+import java.util.Map;
+import java.lang.reflect.Method;
 
 public class ServiceResponse {
 
-    private final Hashtable<String, JSONObject> responses = new Hashtable<String, JSONObject>();
-    private final Hashtable<String, Thread> threads = new Hashtable<String, Thread>();
+    private static final int CONNECTION_TIMEOUT = 30;
+    private static final int PROCESSING_CUTOFF = CONNECTION_TIMEOUT - 5;
+    private static final String INITIAL_REQUEST = "wm-initial-request";
+    private static final String POLLING_REQUEST = "wm-polling-request";
+    private static final String JSON_RESPONSE_STATUS = "wm-json-response-status";
+    private final Map<String, Tuple.Two<Long, JSONObject>> serviceResponseTable = new Hashtable<String, Tuple.Two<Long, JSONObject>>();
+    private final Map<String, Thread> threads = new Hashtable<String, Thread>();
+
+    private RuntimeAccess runtimeAccess;
 
     public ServiceResponse() {
     }
 
-    public synchronized JSONObject addResponse(String requestId, Object obj) {
-        JSONObject resp = new JSONObject();
-        resp.put("status", "done");
-        resp.put("result", obj);
-        this.responses.put(requestId, resp);
-        return resp;
+    public Object invokeMethod(Method method, Object serviceObject, Object[] args) throws Exception {
+        Object ret;
+        this.threads.put(this.getRequestId(), Thread.currentThread());
+        if (!isPollingRequest()) {
+            ret = addResponse(System.currentTimeMillis(), method.invoke(serviceObject, args));
+        } else {
+            ret = getResponseFromService();
+        }
+        
+        return ret;
     }
 
-    public synchronized void addError(String requestId, Object obj) {
+    public synchronized Object addResponse(long startTime, Object obj) {
+        String requestId = this.getRequestId();
+        if (System.currentTimeMillis() - startTime > PROCESSING_CUTOFF * 1000) {
+            this.cleanup();
+            JSONObject jsonObj = new JSONObject();
+            jsonObj.put("status", "done");
+            jsonObj.put("result", obj);
+            Tuple.Two<Long, JSONObject> t = new Tuple.Two<Long, JSONObject>(System.currentTimeMillis(), jsonObj);
+            this.serviceResponseTable.put(requestId, t);
+        } else {
+            this.threads.remove(requestId);
+        }
+
+        return obj;
+    }
+
+    private void cleanup() {
+        for (Map.Entry<String, Thread> entry : this.threads.entrySet()) {
+            String requestId = entry.getKey();
+            Thread thread = entry.getValue();
+            if (!thread.isAlive()) {
+                Tuple.Two<Long, JSONObject> t = this.serviceResponseTable.get(requestId);
+                if (t != null) {
+                    long time = t.v1;
+                    if (System.currentTimeMillis() - time > PROCESSING_CUTOFF * 1000 * 2) {
+                        this.serviceResponseTable.remove(requestId);
+                        this.threads.remove(requestId);
+                    }
+                }
+            }
+        }
+    }
+
+    public synchronized void addError(Object obj) {
         JSONObject resp = new JSONObject();
         resp.put("status", "error");
         resp.put("result", obj);
-        this.responses.put(requestId, resp);
+        Tuple.Two<Long, JSONObject> t = new Tuple.Two<Long, JSONObject>(System.currentTimeMillis(), resp);
+        this.serviceResponseTable.put(this.getRequestId(), t);
     }
 
-    public JSONObject getResponseFromService(String requestId) {
+    public Object getResponseFromService() {
+
+        JSONObject result = this.getResponseBeforeTimeout();
+        String status = (String)result.get("status");
+        if (status.equals("processing")) {
+            Thread originalThread = this.getRequestThread();
+            if (originalThread == null || !originalThread.isAlive()) {
+                result = this.getResponseTryOnce();
+                status = (String)result.get("status");
+                if (status.equals("processing")) {
+                    if (originalThread == null) {
+                        setJsonResponseStatus("error");
+                        return "Error: The original request thread is lost";
+                    } else {
+                        setJsonResponseStatus("error");
+                        return "Error: The original request thread has been terminated";
+                    }
+                }
+            }
+        }
+
+        setJsonResponseStatus((String)result.get("status"));
+        return result.get("result");
+    }
+
+    private void setJsonResponseStatus(String status) {
+        this.runtimeAccess.getResponse().setHeader(JSON_RESPONSE_STATUS, status);
+    }
+
+    public JSONObject getResponseBeforeTimeout() {
         int time = 0;
         JSONObject result;
 
-        while (time < 27) {
+        while (time < PROCESSING_CUTOFF) {
             try {
-                result = getResponse(requestId);
+                result = getResponse();
                 return result;
             } catch (WMUnfinishedProcException ex1) {
                 try {
@@ -49,14 +127,28 @@ public class ServiceResponse {
 
         result = new JSONObject();
         result.put("status", "processing");
-        result.put("requestId", requestId);
+        result.put("requestId", this.getRequestId());
         return result;
     }
 
-    public synchronized JSONObject getResponse(String requestId) {
-        if (this.responses.containsKey(requestId)) {
-            JSONObject rtn = this.responses.get(requestId);
-            this.responses.remove(requestId);
+    private JSONObject getResponseTryOnce() {
+        JSONObject result;
+        try {
+            result = getResponse();
+        } catch (WMUnfinishedProcException ex1) {
+            result = new JSONObject();
+            result.put("status", "processing");
+            result.put("requestId", this.getRequestId());
+        }
+        return result;
+    }
+
+    public synchronized JSONObject getResponse() {
+        String requestId = this.getRequestId();
+        if (this.serviceResponseTable.containsKey(requestId)) {
+            Tuple.Two<Long, JSONObject> t = this.serviceResponseTable.get(requestId);
+            JSONObject rtn = t.v2;
+            this.serviceResponseTable.remove(requestId);
             this.threads.remove(requestId);
             return rtn;
         } else {
@@ -68,7 +160,33 @@ public class ServiceResponse {
         this.threads.put(requestId, thread);
     }
 
-    public synchronized Thread getRequestThread(String requestId) {
-        return this.threads.get(requestId);
+    public synchronized Thread getRequestThread() {
+        return this.threads.get(this.getRequestId());
+    }
+
+    public boolean isPollingRequest() {
+        return (this.runtimeAccess.getRequest().getHeader(POLLING_REQUEST) != null);
+    }
+
+    public String getRequestId() {
+        String reqId;
+        reqId = this.runtimeAccess.getRequest().getHeader(POLLING_REQUEST);
+        if (reqId == null) {
+            reqId = this.runtimeAccess.getRequest().getHeader(INITIAL_REQUEST);
+        }
+        if (reqId == null) {
+            throw new WMRuntimeException("Service request Id is missing in the request, service = "
+                    + ServerUtils.getServiceName(this.runtimeAccess.getRequest()));
+        }
+
+        return reqId;
+    }
+
+    public RuntimeAccess getRuntimeAccess() {
+        return this.runtimeAccess;
+    }
+
+    public void setRuntimeAccess(RuntimeAccess runtimeAccess) {
+        this.runtimeAccess = runtimeAccess;
     }
 }

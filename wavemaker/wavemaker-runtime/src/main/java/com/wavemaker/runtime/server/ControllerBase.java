@@ -130,7 +130,7 @@ public abstract class ControllerBase extends AbstractController {
             response.setCharacterEncoding(ServerConstants.DEFAULT_ENCODING);
 
             getServletEventNotifier().executeStartRequest();
-            initializeRuntime(request);
+            initializeRuntime(request, response);
 
             // execute the request
             ret = executeRequest(request, response);
@@ -239,13 +239,15 @@ public abstract class ControllerBase extends AbstractController {
         return ret;
     }
 
-    protected TypedServiceReturn invokeMethod(ServiceWire sw, String method, JSONArray jsonArgs, Map<String, Object[]> mapParams) throws WMException {
-        return invokeMethod(sw, method, jsonArgs, mapParams, null, false, null);
+    protected TypedServiceReturn invokeMethod(ServiceWire sw,
+            String method, JSONArray jsonArgs, Map<String, Object[]> mapParams)
+            throws WMException {
+        return invokeMethod(sw, method, jsonArgs, mapParams, null);
     }
 
-    protected TypedServiceReturn invokeMethod(ServiceWire sw, String method, JSONArray jsonArgs, Map<String, Object[]> mapParams,
-        ServiceResponse serviceResponse, boolean longResponseTime, String requestId) throws WMException {
-
+    protected TypedServiceReturn invokeMethod(ServiceWire sw, String method, JSONArray jsonArgs,
+                          Map<String, Object[]> mapParams, ServiceResponse serviceResponse)
+            throws WMException {
         try {
             if (jsonArgs != null && mapParams != null) {
                 throw new WMRuntimeException(MessageResource.BOTH_ARGUMENT_TYPES, jsonArgs, mapParams);
@@ -267,17 +269,17 @@ public abstract class ControllerBase extends AbstractController {
             getInternalRuntime().setDeserializedProperties(args.getGettersCalled());
 
             return ServerUtils.invokeMethodWithEvents(getServiceEventNotifier(), sw, method, args, jsonState, false,
-                    serviceResponse, longResponseTime, requestId);
+                                    serviceResponse);
         } catch (WMRuntimeException ex) {
-            if (longResponseTime) {
-                serviceResponse.addError(requestId, ex);
+            if (serviceResponse != null && serviceResponse.isPollingRequest()) {
+                serviceResponse.addError(ex);
             }
             throw ex;
         }
     }
 
     @SuppressWarnings("deprecation")
-    private void initializeRuntime(HttpServletRequest request) {
+    private void initializeRuntime(HttpServletRequest request, HttpServletResponse response) {
 
         RuntimeAccess.setRuntimeBean(getRuntimeAccess());
         InternalRuntime.setInternalRuntimeBean(getInternalRuntime());
@@ -287,6 +289,7 @@ public abstract class ControllerBase extends AbstractController {
         com.activegrid.runtime.AGRuntime.setRuntimeBean(getRuntime());
 
         getRuntimeAccess().setRequest(request);
+        getRuntimeAccess().setResponse(response);
         initializeRuntimeController(request);
         getCommonRuntimeAccess().setRequest(request);
     }

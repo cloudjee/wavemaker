@@ -46,7 +46,7 @@ import com.wavemaker.tools.project.DeploymentManager;
  * @author Jeremy Grelle
  */
 @ExposeToClient
-public class DeploymentService { // extends ServiceSuperClass {
+public class DeploymentService {
 
     private static final String SUCCESS = "SUCCESS";
 
@@ -57,40 +57,6 @@ public class DeploymentService { // extends ServiceSuperClass {
     private ServiceDeploymentManager serviceDeploymentManager;
 
     private ServiceResponse serviceResponse = null;
-
-    /*
-     * TODO: This should be ServiceSuperClass Remove this and extend super class after fixing SMD generation
-     */
-    public JSONObject getResponseFromService(String requestId) {
-        if (this.serviceResponse == null) {
-            this.serviceResponse = (ServiceResponse) RuntimeAccess.getInstance().getSpringBean("serviceResponse");
-        }
-
-        JSONObject result = this.serviceResponse.getResponseFromService(requestId);
-        String status = (String) result.get("status");
-        if (status.equals("processing")) {
-            Thread originalThread = this.serviceResponse.getRequestThread(requestId);
-            if (originalThread == null || !originalThread.isAlive()) {
-                result = this.serviceResponse.getResponseFromService(requestId);
-                status = (String) result.get("status");
-                if (status.equals("processing")) {
-                    if (originalThread == null || !originalThread.isAlive()) {
-                        JSONObject resp = new JSONObject();
-                        resp.put("status", "error");
-                        resp.put("result", "Error: The original request thread is lost");
-                        return resp;
-                    } else if (!originalThread.isAlive()) {
-                        JSONObject resp = new JSONObject();
-                        resp.put("status", "error");
-                        resp.put("result", "Error: The original request thread has been terminated");
-                        return resp;
-                    }
-                }
-            }
-        }
-
-        return result;
-    }
 
     public String getRequestId() {
         UUID uuid = UUID.randomUUID();

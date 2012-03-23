@@ -74,17 +74,12 @@ public interface ServiceType {
      * @param jsonState The current JSONState object.
      * @param serviceResponse
      *            The response object that holds the result af a sevice call in case longResponseTime is true
-     * @param longResponseTime
-     *            indicates if the connection may time out due to long processing time
-     * @param requestId
-     *            The request Id in case longResponseTime is true
      * @return The TypedServiceReturn containing the return value for the
      *         service, as well as the type information.
      */
     public TypedServiceReturn invokeMethod(
             ServiceWire serviceWire, String methodName,
-            ParsedServiceArguments args, JSONState jsonState, ServiceResponse serviceResponse,
-            boolean longResponseTime, String requestId);
+            ParsedServiceArguments args, JSONState jsonState, ServiceResponse serviceResponse);
 
     public TypedServiceReturn invokeMethod(
             ServiceWire serviceWire, String methodName,

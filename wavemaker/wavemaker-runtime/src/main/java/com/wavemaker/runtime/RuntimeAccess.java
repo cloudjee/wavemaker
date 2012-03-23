@@ -17,6 +17,7 @@ package com.wavemaker.runtime;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.core.NamedThreadLocal;
 import org.springframework.web.context.WebApplicationContext;
@@ -55,6 +56,8 @@ public class RuntimeAccess {
     private static ThreadLocal<RuntimeAccess> runtimeThreadLocal = new NamedThreadLocal<RuntimeAccess>("Wavemake Runtime");
 
     private HttpServletRequest request = null;
+
+    private HttpServletResponse response = null;
 
     private ServiceManager serviceManager = null;
 
@@ -180,5 +183,13 @@ public class RuntimeAccess {
         WebApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(context);
 
         return applicationContext.getBean(beanId);
+    }
+
+    public void setResponse(HttpServletResponse response) {
+        this.response = response;
+    }
+
+     public HttpServletResponse getResponse() {
+        return this.response;
     }
 }
