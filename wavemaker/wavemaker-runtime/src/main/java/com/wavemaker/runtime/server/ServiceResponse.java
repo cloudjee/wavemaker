@@ -89,14 +89,16 @@ public class ServiceResponse {
                 status = (String)result.get("status");
                 if (status.equals("processing")) {
                     if (originalThread == null) {
-                        setJsonResponseStatus("error");
-                        return "Error: The original request thread is lost";
+                        throw new WMRuntimeException("Error: The original request thread is lost");
                     } else {
-                        setJsonResponseStatus("error");
-                        return "Error: The original request thread has been terminated";
+                        throw new WMRuntimeException("Error: The original request thread has been terminated");
                     }
                 }
             }
+        }
+
+        if (status.equals("error")) {
+            throw new WMRuntimeException((Exception)result.get("result"));
         }
 
         setJsonResponseStatus((String)result.get("status"));

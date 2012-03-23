@@ -271,8 +271,9 @@ public abstract class ControllerBase extends AbstractController {
             return ServerUtils.invokeMethodWithEvents(getServiceEventNotifier(), sw, method, args, jsonState, false,
                                     serviceResponse);
         } catch (WMRuntimeException ex) {
-            if (serviceResponse != null && serviceResponse.isPollingRequest()) {
+            if (serviceResponse != null && !serviceResponse.isPollingRequest()) {
                 serviceResponse.addError(ex);
+                return null;
             }
             throw ex;
         }
