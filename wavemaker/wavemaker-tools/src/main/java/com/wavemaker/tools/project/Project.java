@@ -14,11 +14,8 @@
 
 package com.wavemaker.tools.project;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.InvalidPropertiesFormatException;
@@ -57,13 +54,17 @@ public class Project extends AbstractFileService {
 
     protected static final String PROPERTY_PROJECT_VERSION_DEFAULT = "0.0";
 
-    private final Resource projectRoot;
+    private String projectName;
+
+    private Resource projectRoot;
 
     private final boolean mavenProject;
 
+    @Deprecated
     public Project(Resource projectRoot, StudioFileSystem fileSystem) {
         super(fileSystem);
         this.projectRoot = projectRoot;
+        this.projectName = projectRoot.getFilename();
         try {
             this.mavenProject = projectRoot.createRelative(ProjectConstants.POM_XML).exists();
         } catch (IOException ex) {
@@ -71,10 +72,10 @@ public class Project extends AbstractFileService {
         }
     }
 
-    @Override
-    @Deprecated
-    public Writer getWriter(String path) throws UnsupportedEncodingException, FileNotFoundException, IOException {
-        return super.getWriter(path);
+    public Project(Folder projectFolder, StudioFileSystem fileSystem) {
+        super(fileSystem);
+        // FIXME implement this
+        throw new UnsupportedOperationException();
     }
 
     @Deprecated
@@ -100,9 +101,9 @@ public class Project extends AbstractFileService {
     public Resource getWebAppRoot() {
         try {
             if (this.mavenProject) {
-                return this.projectRoot.createRelative(ProjectConstants.MAVEN_WEB_DIR);
+                return getProjectRoot().createRelative(ProjectConstants.MAVEN_WEB_DIR);
             } else {
-                return this.projectRoot.createRelative(ProjectConstants.WEB_DIR);
+                return getProjectRoot().createRelative(ProjectConstants.WEB_DIR);
             }
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
@@ -121,9 +122,9 @@ public class Project extends AbstractFileService {
     public Resource getMainSrc() {
         try {
             if (this.mavenProject) {
-                return this.projectRoot.createRelative(ProjectConstants.MAVEN_SRC_DIR);
+                return getProjectRoot().createRelative(ProjectConstants.MAVEN_SRC_DIR);
             } else {
-                return this.projectRoot.createRelative(ProjectConstants.SRC_DIR);
+                return getProjectRoot().createRelative(ProjectConstants.SRC_DIR);
             }
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
@@ -134,7 +135,7 @@ public class Project extends AbstractFileService {
     public List<Resource> getAllServiceSrcDirs() {
         try {
             List<Resource> serviceSrcDirs = new ArrayList<Resource>();
-            List<Resource> serviceDirs = getFileSystem().listChildren(this.projectRoot.createRelative("services/"));
+            List<Resource> serviceDirs = getFileSystem().listChildren(getProjectRoot().createRelative("services/"));
             for (Resource serviceDir : serviceDirs) {
                 if (StringUtils.getFilenameExtension(serviceDir.getFilename()) == null) {
                     Resource srcDir = serviceDir.createRelative("src/");
@@ -173,7 +174,7 @@ public class Project extends AbstractFileService {
     @Deprecated
     public Resource getLogFolder() {
         try {
-            return this.projectRoot.createRelative(ProjectConstants.LOG_DIR);
+            return getProjectRoot().createRelative(ProjectConstants.LOG_DIR);
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
@@ -266,15 +267,14 @@ public class Project extends AbstractFileService {
      */
     @Deprecated
     public void writeFile(String path, String data, boolean noClobber) throws IOException {
-
-        Resource file = this.projectRoot.createRelative(path);
+        Resource file = getProjectRoot().createRelative(path);
         if (file.exists()) {
             String original = readFile(file);
             if (original.equals(data)) {
                 return;
             }
         } else {
-            file = getFileSystem().createPath(this.projectRoot, path);
+            file = getFileSystem().createPath(getProjectRoot(), path);
         }
 
         if (noClobber && file.exists()) {
@@ -287,7 +287,7 @@ public class Project extends AbstractFileService {
     @Override
     @Deprecated
     public boolean fileExists(String path) throws IOException {
-        Resource file = this.projectRoot.createRelative(path);
+        Resource file = getProjectRoot().createRelative(path);
         return file.exists();
     }
 
@@ -297,12 +297,13 @@ public class Project extends AbstractFileService {
      * @return
      */
     public String getProjectName() {
-        return this.projectRoot.getFilename();
+        return this.projectName;
     }
 
     @Override
+    @Deprecated
     public Resource getFileServiceRoot() {
-        return this.projectRoot;
+        return getProjectRoot();
     }
 
     /**

@@ -227,9 +227,32 @@ public class DesignServiceManager {
      * @throws IOException
      * @throws JAXBException
      */
+    @Deprecated
     public static void generateSpringServiceConfig(String serviceId, String serviceClass, DesignServiceType designServiceType,
         Resource serviceBeanFile, Project project) throws JAXBException, IOException {
+        Beans beans = generateSpringServiceBeans(serviceId, serviceClass, designServiceType);
+        SpringConfigSupport.writeBeans(beans, serviceBeanFile, project);
+    }
 
+    /**
+     * Generates (and returns) a Beans object containing a single bean, one which will correctly create the specified
+     * bean.
+     * 
+     * @param serviceId The service's id.
+     * @param serviceClass The service's class.
+     * @param project
+     * @param serviceBeanFile
+     * @return A Beans object containing the correct service-specific bean.
+     * @throws IOException
+     * @throws JAXBException
+     */
+    public static void generateSpringServiceConfig(String serviceId, String serviceClass, DesignServiceType designServiceType, File serviceBeanFile,
+        Project project) throws JAXBException, IOException {
+        Beans beans = generateSpringServiceBeans(serviceId, serviceClass, designServiceType);
+        SpringConfigSupport.writeBeans(beans, serviceBeanFile);
+    }
+
+    private static Beans generateSpringServiceBeans(String serviceId, String serviceClass, DesignServiceType designServiceType) {
         Beans beans = new Beans();
         Bean bean = new Bean();
         bean.setClazz(serviceClass);
@@ -240,8 +263,7 @@ public class DesignServiceManager {
 
         Bean serviceWireBean = generateServiceWireBean(designServiceType, serviceId);
         beans.addBean(serviceWireBean);
-
-        SpringConfigSupport.writeBeans(beans, serviceBeanFile, project);
+        return beans;
     }
 
     /**

@@ -40,6 +40,8 @@ import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.WMAppContext;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.project.upgrade.UpgradeManager;
 import com.wavemaker.tools.util.NoCloseInputStream;
 
@@ -71,6 +73,7 @@ public class ProjectManager {
     }
 
     // FIXME PW filesystem find a better way then remove the username method
+    @Deprecated
     public Resource getTmpDir() {
         try {
             Resource tmpDir = this.fileSystem.getCommonDir();
@@ -133,70 +136,81 @@ public class ProjectManager {
     @Deprecated
     public void openProject(Resource projectDir, boolean noSession) throws IOException {
         String projectName = projectDir.getFilename();
-        // check the path
         if (!projectDir.exists()) {
             throw new WMRuntimeException(MessageResource.PROJECT_DNE, projectName, projectDir);
         }
-
         if (StringUtils.getFilenameExtension(projectDir.getFilename()) != null) {
             throw new WMRuntimeException(MessageResource.UTIL_FILEUTILS_PATHNOTDIR, projectDir);
         }
-
-        // create and open
         Project project = new Project(projectDir, this.fileSystem);
 
-        if (this.currentProject != null) {
-            closeProject();
+        openProject(project, noSession);
+    }
+
+    // FIXME broken until Project can be fixed
+    public void openProject(Folder projectFolder, boolean noSession) throws IOException {
+        String projectName = projectFolder.getName();
+        if (!projectFolder.exists()) {
+            throw new WMRuntimeException(MessageResource.PROJECT_DNE, projectName, projectFolder);
         }
+        Project project = new Project(projectFolder, this.fileSystem);
+        openProject(project, noSession);
+    }
+
+    private void openProject(Project project, boolean noSession) throws IOException {
+        closeProject();
         if (getProjectEventNotifier() != null) {
             getProjectEventNotifier().executeOpenProject(this.currentProject);
         }
-
         setCurrentProject(project);
         if (!noSession) {
-            RuntimeAccess.getInstance().getSession().setAttribute(OPEN_PROJECT_SESSION_NAME, projectName);
+            RuntimeAccess.getInstance().getSession().setAttribute(OPEN_PROJECT_SESSION_NAME, project.getProjectName());
             RuntimeAccess.getInstance().getSession().setAttribute(DataServiceConstants.CURRENT_PROJECT_MANAGER, this);
-            RuntimeAccess.getInstance().getSession().setAttribute(DataServiceConstants.CURRENT_PROJECT_NAME, projectName);
+            RuntimeAccess.getInstance().getSession().setAttribute(DataServiceConstants.CURRENT_PROJECT_NAME, project.getProjectName());
             RuntimeAccess.getInstance().getSession().setAttribute(DataServiceConstants.CURRENT_PROJECT_APP_ROOT,
                 project.getWebAppRoot().getURI().toString());
         }
 
-        Resource appPropFile = project.getWebInf().createRelative(CommonConstants.APP_PROPERTY_FILE);
+        readProjectTenantInformation(project);
+        readProjectTypes(project);
+    }
 
-        int defTenantID = DataServiceConstants.DEFAULT_TENANT_ID;
+    private void readProjectTenantInformation(Project project) throws IOException {
+        File applicationPropertiesFile = project.getWebInfFolder().getFile(CommonConstants.APP_PROPERTY_FILE);
         String tenantFieldName = DataServiceConstants.DEFAULT_TENANT_FIELD;
+        int defaultTenantID = DataServiceConstants.DEFAULT_TENANT_ID;
         String tenantColumnName = "";
-
-        if (appPropFile.exists()) {
-            Properties props = new Properties();
-            InputStream propsStream = appPropFile.getInputStream();
-            props.load(propsStream);
-            propsStream.close();
-
-            tenantFieldName = props.getProperty(DataServiceConstants.TENANT_FIELD_PROPERTY_NAME);
-            defTenantID = Integer.parseInt(props.getProperty(DataServiceConstants.DEFAULT_TENANT_ID_PROPERTY_NAME));
-            tenantColumnName = props.getProperty(DataServiceConstants.TENANT_FIELD_PROPERTY_NAME);
+        if (applicationPropertiesFile.exists()) {
+            Properties applicationProperties = new Properties();
+            InputStream propsStream = applicationPropertiesFile.getContent().asInputStream();
+            try {
+                applicationProperties.load(propsStream);
+                tenantFieldName = applicationProperties.getProperty(DataServiceConstants.TENANT_FIELD_PROPERTY_NAME);
+                defaultTenantID = Integer.parseInt(applicationProperties.getProperty(DataServiceConstants.DEFAULT_TENANT_ID_PROPERTY_NAME));
+                tenantColumnName = applicationProperties.getProperty(DataServiceConstants.TENANT_FIELD_PROPERTY_NAME);
+            } finally {
+                propsStream.close();
+            }
         }
-
         WMAppContext wmApp = WMAppContext.getInstance();
         if (wmApp != null) {
-            wmApp.setTenantInfoForProj(projectName, tenantFieldName, defTenantID, tenantColumnName);
+            wmApp.setTenantInfoForProj(project.getProjectName(), tenantFieldName, defaultTenantID, tenantColumnName);
         }
+    }
 
-        // Store types.js contents in memory
-        Resource typesFile = project.getWebAppRoot().createRelative("/types.js");
-        if (!typesFile.exists()) {
-            return;
-        }
-
-        String s = project.readFile(typesFile);
-        try {
-            JSONObject typesObj = new JSONObject(s.substring(11));
-            if (wmApp != null) {
-                wmApp.setTypesObject(typesObj);
+    private void readProjectTypes(Project project) {
+        File typesFile = project.getWebAppRootFolder().getFile("/types.js");
+        if (typesFile.exists()) {
+            String s = typesFile.getContent().asString();
+            try {
+                JSONObject typesObj = new JSONObject(s.substring(11));
+                WMAppContext wmApp = WMAppContext.getInstance();
+                if (wmApp != null) {
+                    wmApp.setTypesObject(typesObj);
+                }
+            } catch (JSONException ex) {
+                throw new WMRuntimeException(ex);
             }
-        } catch (JSONException ex) {
-            throw new WMRuntimeException(ex);
         }
     }
 
@@ -291,6 +305,7 @@ public class ProjectManager {
      * @return
      * @throws FileAccessException
      */
+    @Deprecated
     public Resource getProjectDir(String projectName, boolean ignoreDemos) {
         try {
             Resource projectDir = getBaseProjectDir().createRelative(projectName + "/");
@@ -360,9 +375,12 @@ public class ProjectManager {
      * @throws IOException
      */
     public void closeProject() throws IOException {
-        RuntimeAccess.getInstance().getSession().removeAttribute(OPEN_PROJECT_SESSION_NAME);
         if (this.currentProject == null) {
             return;
+        }
+        HttpSession session = RuntimeAccess.getInstance().getSession();
+        if (session != null) {
+            session.removeAttribute(OPEN_PROJECT_SESSION_NAME);
         }
         if (getProjectEventNotifier() != null) {
             getProjectEventNotifier().executeCloseProject(this.currentProject);

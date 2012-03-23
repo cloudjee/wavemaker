@@ -56,7 +56,7 @@ public class ServiceBeanFileUpgrade implements UpgradeTask {
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
-        DesignServiceManager dsm = DesignTimeUtils.getDSMForProjectRoot(project.getProjectRoot());
+        DesignServiceManager dsm = DesignTimeUtils.getDesignServiceManager(project);
         List<String> touchedProjects = new ArrayList<String>();
 
         for (Service service : dsm.getServices()) {

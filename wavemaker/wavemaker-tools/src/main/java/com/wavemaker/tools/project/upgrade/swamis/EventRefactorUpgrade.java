@@ -50,7 +50,7 @@ public class EventRefactorUpgrade implements UpgradeTask {
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
-        DesignServiceManager dsm = DesignTimeUtils.getDSMForProjectRoot(project.getProjectRoot());
+        DesignServiceManager dsm = DesignTimeUtils.getDesignServiceManager(project);
 
         try {
             // upgrade events

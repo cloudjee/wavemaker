@@ -63,7 +63,7 @@ public class SalesForceDataServiceGenerator extends DataServiceGenerator {
         this.useNDCLogging = false;
 
         ProjectManager projMgr = (ProjectManager) RuntimeAccess.getInstance().getSession().getAttribute(DataServiceConstants.CURRENT_PROJECT_MANAGER);
-        this.dsm = DesignTimeUtils.getDSMForProjectRoot(projMgr.getCurrentProject().getProjectRoot());
+        this.dsm = DesignTimeUtils.getDesignServiceManager(projMgr.getCurrentProject());
     }
 
     /**

@@ -16,13 +16,13 @@ package com.wavemaker.tools.project.upgrade;
 
 import java.io.IOException;
 
-import org.springframework.core.io.Resource;
-
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.json.JSON;
 import com.wavemaker.json.JSONMarshaller;
 import com.wavemaker.json.JSONState;
 import com.wavemaker.json.JSONUnmarshaller;
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.project.PagesManager;
 import com.wavemaker.tools.project.Project;
 
@@ -45,15 +45,14 @@ public abstract class AbstractWidgetsJSUpgradeTask implements UpgradeTask {
 
         try {
             for (String page : getPagesManager().listPages()) {
-                Resource pageDir = getPagesManager().getPageDir(project.getProjectName(), page);
-                Resource widgetsJS = pageDir.createRelative(page + "." + PagesManager.PAGE_WIDGETS);
-
+                Folder pageFolder = getPagesManager().getPageFolder(project, page);
+                File widgetsJS = pageFolder.getFile(page + "." + PagesManager.PAGE_WIDGETS);
                 if (widgetsJS.exists()) {
                     readAndUpgradeWidgets(project, widgetsJS);
                 }
             }
 
-            Resource appJs = project.getWebAppRoot().createRelative(project.getProjectName() + ".js");
+            File appJs = project.getWebAppRootFolder().getFile(project.getProjectName() + ".js");
             if (doUpgradeAppJS() && appJs.exists()) {
                 readAndUpgradeWidgets(project, appJs);
             }
@@ -62,27 +61,26 @@ public abstract class AbstractWidgetsJSUpgradeTask implements UpgradeTask {
         }
     }
 
-    private void readAndUpgradeWidgets(Project project, Resource widgetsJS) throws IOException {
+    private void readAndUpgradeWidgets(Project project, File widgetsJS) throws IOException {
+        String contents = widgetsJS.getContent().asString();
+        String ret = upgradeWidgets(contents);
+        widgetsJS.getContent().write(ret);
+    }
 
-        String contents = project.readFile(widgetsJS);
-
-        String jsonString = contents.substring(contents.indexOf('{'), contents.lastIndexOf('}') + 1);
-
-        JSON j = JSONUnmarshaller.unmarshal(jsonString);
-        upgradeWidgetsJS(j);
-
+    private String upgradeWidgets(String widgetsContent) throws IOException {
+        String jsonString = widgetsContent.substring(widgetsContent.indexOf('{'), widgetsContent.lastIndexOf('}') + 1);
+        JSON widgetsJson = JSONUnmarshaller.unmarshal(jsonString);
+        upgradeWidgetsJS(widgetsJson);
         JSONState js = new JSONState();
         js.setUnquoteKeys(true);
-
-        String ret = contents.substring(0, contents.indexOf('{')) + JSONMarshaller.marshal(j, js, false, true)
-            + contents.substring(contents.lastIndexOf('}') + 1);
-        project.writeFile(widgetsJS, ret);
+        return widgetsContent.substring(0, widgetsContent.indexOf('{')) + JSONMarshaller.marshal(widgetsJson, js, false, true)
+            + widgetsContent.substring(widgetsContent.lastIndexOf('}') + 1);
     }
 
     public abstract void upgradeWidgetsJS(JSON j);
 
     /**
-     * @return true iff the application js file should be upgraded as well.
+     * @return true if the application js file should be upgraded as well.
      */
     public abstract boolean doUpgradeAppJS();
 

@@ -14,7 +14,6 @@
 
 package com.wavemaker.tools.project.upgrade.five_dot_zero;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +21,12 @@ import java.util.Set;
 
 import javax.xml.bind.JAXBException;
 
-import org.springframework.core.io.FileSystemResource;
-
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.service.ServiceWire;
 import com.wavemaker.runtime.service.events.EventWire;
 import com.wavemaker.runtime.service.reflect.ReflectServiceWire;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
@@ -53,7 +51,7 @@ public class EventWireUpgradeTask implements UpgradeTask {
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
-        DesignServiceManager dsm = DesignTimeUtils.getDSMForProjectRoot(project.getProjectRoot());
+        DesignServiceManager dsm = DesignTimeUtils.getDesignServiceManager(project);
 
         Set<Service> services = dsm.getServices();
 
@@ -63,13 +61,10 @@ public class EventWireUpgradeTask implements UpgradeTask {
                 continue;
             }
 
-            // dsm.getServiceBeanXml(service.getId());
-
             boolean changed = false;
             try {
-                File beanFile = new File(dsm.getServiceRuntimeDirectory(service.getId()).getFile(), service.getSpringFile());
-
-                Beans beans = SpringConfigSupport.readBeans(new FileSystemResource(beanFile), project);
+                File beanFile = dsm.getServiceRuntimeFolder(service.getId()).getFile(service.getSpringFile());
+                Beans beans = SpringConfigSupport.readBeans(beanFile);
                 List<Bean> serviceWireBeans = beans.getBeansByType(ServiceWire.class);
                 serviceWireBeans.addAll(beans.getBeansByType(ReflectServiceWire.class));
                 if (serviceWireBeans.size() > 1 || serviceWireBeans.isEmpty()) {
@@ -119,7 +114,7 @@ public class EventWireUpgradeTask implements UpgradeTask {
                 }
 
                 if (changed) {
-                    SpringConfigSupport.writeBeans(beans, new FileSystemResource(beanFile), project);
+                    SpringConfigSupport.writeBeans(beans, beanFile);
                 }
             } catch (JAXBException e) {
                 throw new WMRuntimeException(e);

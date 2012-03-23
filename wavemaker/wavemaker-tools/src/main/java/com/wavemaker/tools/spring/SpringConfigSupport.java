@@ -64,6 +64,15 @@ public class SpringConfigSupport {
         return ret;
     }
 
+    public static Beans readBeans(File configFile) throws JAXBException, IOException {
+        Reader reader = configFile.getContent().asReader();
+        try {
+            return readBeans(reader);
+        } finally {
+            reader.close();
+        }
+    }
+
     public static Beans readBeans(Reader reader) throws JAXBException {
         Unmarshaller unmarshaller = getJAXBContext().createUnmarshaller();
         return (Beans) unmarshaller.unmarshal(reader);

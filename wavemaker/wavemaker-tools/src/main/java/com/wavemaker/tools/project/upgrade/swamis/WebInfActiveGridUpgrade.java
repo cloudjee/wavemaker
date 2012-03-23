@@ -57,7 +57,7 @@ public class WebInfActiveGridUpgrade implements UpgradeTask {
         List<String> changedFiles = new ArrayList<String>();
         List<String> regenedFiles = new ArrayList<String>();
 
-        DesignServiceManager dsm = DesignTimeUtils.getDSMForProjectRoot(project.getProjectRoot());
+        DesignServiceManager dsm = DesignTimeUtils.getDesignServiceManager(project);
 
         try {
             if (servicesConfig.exists()) {

@@ -14,14 +14,12 @@
 
 package com.wavemaker.tools.project.upgrade;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.SortedMap;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
@@ -66,16 +64,8 @@ public class UpgradeManager implements InitializingBean {
             throw new WMRuntimeException(MessageResource.PROJECT_NEWER_THAN_STUDIO, project.getProjectName(), projectVersion, projectMaxVersion);
         } else if (projectVersion < projectMaxVersion) {
             UpgradeInfo ret = new UpgradeInfo();
-
-            try {
-                Resource exportFile = project.getProjectRoot().createRelative(
-                    AbstractDeploymentManager.EXPORT_DIR_DEFAULT + project.getProjectName() + "-upgrade-" + projectVersion + ".zip");
-                this.deploymentManager.exportProject(exportFile.getFilename());
-                ret.setBackupExportFile(exportFile);
-            } catch (IOException ex) {
-                throw new WMRuntimeException(ex);
-            }
-
+            String exportName = AbstractDeploymentManager.EXPORT_DIR_DEFAULT + project.getProjectName() + "-upgrade-" + projectVersion + ".zip";
+            this.deploymentManager.exportProject(exportName);
             this.deploymentManager.testRunClean();
 
             for (Entry<Double, List<UpgradeTask>> entry : getUpgrades().entrySet()) {

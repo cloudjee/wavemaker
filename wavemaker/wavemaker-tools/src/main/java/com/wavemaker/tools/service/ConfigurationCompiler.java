@@ -134,15 +134,26 @@ public class ConfigurationCompiler {
     /**
      * Get the runtime projectname-managers.xml file.
      * 
-     * @param p
+     * @param project
      * @return
      */
-    public static Resource getRuntimeManagersXml(Project p) {
+    @Deprecated
+    public static Resource getRuntimeManagersXml(Project project) {
         try {
-            return p.getWebInf().createRelative(RUNTIME_MANAGERS);
+            return project.getWebInf().createRelative(RUNTIME_MANAGERS);
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
+    }
+
+    /**
+     * Get the runtime projectname-managers.xml file.
+     * 
+     * @param project
+     * @return
+     */
+    public static File getRuntimeManagersXmlFile(Project project) {
+        return project.getWebInfFolder().getFile(RUNTIME_MANAGERS);
     }
 
     /**

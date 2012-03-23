@@ -17,6 +17,8 @@ package com.wavemaker.tools.data.upgrade;
 import java.io.File;
 import java.io.IOException;
 
+import org.springframework.core.io.FileSystemResource;
+
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.data.DataServiceType;
 import com.wavemaker.tools.data.DataModelConfiguration;
@@ -27,7 +29,6 @@ import com.wavemaker.tools.project.upgrade.UpgradeTask;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.definitions.Service;
 import com.wavemaker.tools.util.DesignTimeUtils;
-import org.springframework.core.io.FileSystemResource;
 
 /**
  * @author Simon Toens
@@ -53,7 +54,7 @@ public abstract class BaseDataUpgradeTask implements UpgradeTask {
     }
 
     protected DataModelConfiguration getDataModelConfiguration(Service service) {
-        //Todo: cftempfix
+        // Todo: cftempfix
         return new DataModelConfiguration(new FileSystemResource(getCfgFile(service.getId())));
     }
 
@@ -65,7 +66,7 @@ public abstract class BaseDataUpgradeTask implements UpgradeTask {
 
     @Override
     public final void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
-        this.mgr = DesignTimeUtils.getDSMForProjectRoot(project.getProjectRoot());
+        this.mgr = DesignTimeUtils.getDesignServiceManager(project);
 
         for (Service service : this.mgr.getServices()) {
             if (0 == DataServiceType.TYPE_NAME.compareTo(service.getType())) {

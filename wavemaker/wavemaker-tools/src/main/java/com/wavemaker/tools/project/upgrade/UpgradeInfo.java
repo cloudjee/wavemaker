@@ -19,8 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.core.io.Resource;
-
 /**
  * A type describing the return of a series of upgrades. Messages will always be displayed to the user; verbose will
  * only be displayed if the user selects a "More Info" option. Therefore, info which requires user action should be
@@ -33,8 +31,6 @@ public class UpgradeInfo {
     private Map<String, List<String>> messages = new HashMap<String, List<String>>();
 
     private Map<String, List<String>> verbose = new HashMap<String, List<String>>();
-
-    private Resource backupExportFile;
 
     private double version = -1;
 
@@ -54,14 +50,6 @@ public class UpgradeInfo {
             this.verbose.put(versionStr, new ArrayList<String>());
         }
         this.verbose.get(versionStr).add(message);
-    }
-
-    public Resource getBackupExportFile() {
-        return this.backupExportFile;
-    }
-
-    public void setBackupExportFile(Resource backupExportFile) {
-        this.backupExportFile = backupExportFile;
     }
 
     public double getVersion() {

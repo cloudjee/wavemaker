@@ -6,20 +6,18 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.ServiceLoader;
 import java.util.Set;
 
 import javax.annotation.processing.Processor;
 import javax.tools.JavaCompiler;
 import javax.tools.JavaCompiler.CompilationTask;
 import javax.tools.JavaFileObject;
+import javax.tools.JavaFileObject.Kind;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.StandardLocation;
 import javax.xml.bind.JAXBException;
@@ -29,19 +27,20 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import com.wavemaker.json.type.OperationEnumeration;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.javaservice.JavaServiceType;
-import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.runtime.service.ElementType;
 import com.wavemaker.runtime.service.ServiceType;
 import com.wavemaker.runtime.service.definition.AbstractDeprecatedServiceDefinition;
 import com.wavemaker.runtime.service.definition.ReflectServiceDefinition;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
 import com.wavemaker.runtime.ws.WebServiceType;
+import com.wavemaker.tools.compiler.WaveMakerJavaCompiler;
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.compiler.ResourceJavaFileManager;
 import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.service.ConfigurationCompiler;
@@ -69,13 +68,13 @@ public class ServiceConfigurationProcessorTest {
         assertTrue(projectDir.exists());
         assertTrue(projectDir.createRelative("file_map_readme.txt").exists());
         this.project = new Project(projectDir, this.fileSystem);
-        this.localDSM = DesignTimeUtils.getDSMForProjectRoot(this.project.getProjectRoot());
+        this.localDSM = DesignTimeUtils.getDesignServiceManager(this.project);
         this.localDSM.setFileSystem(this.fileSystem);
     }
 
     @After
     public void tearDown() {
-        this.fileSystem.deleteFile(this.project.getProjectRoot());
+        this.project.getRootFolder().delete();
     }
 
     @Test
@@ -83,7 +82,7 @@ public class ServiceConfigurationProcessorTest {
         ServiceDefinition sd = new updateService_SD();
         ServiceDefinition sd2 = new updateService_SD2();
 
-        File actual = this.localDSM.getServiceDefXml(sd.getServiceId()).getFile();
+        File actual = this.localDSM.getServiceDefXmlFile(sd.getServiceId());
         assertFalse(actual.exists());
         this.localDSM.defineService(sd);
         assertTrue(actual.exists());
@@ -93,21 +92,21 @@ public class ServiceConfigurationProcessorTest {
         processor.setFileSystem(this.fileSystem);
         buildWithProcessor(this.project, "Foo", processor);
 
-        File actualServices = new File(this.project.getWebInf().getFile(), "project-services.xml");
+        File actualServices = this.project.getWebInfFolder().getFile("project-services.xml");
         assertTrue(actualServices.exists());
 
-        File smd_sd = ConfigurationCompiler.getSmdResource(this.project, sd.getServiceId()).getFile();
-        File smd_sd2 = ConfigurationCompiler.getSmdResource(this.project, sd2.getServiceId()).getFile();
+        File smd_sd = ConfigurationCompiler.getSmdFile(this.project, sd.getServiceId());
+        File smd_sd2 = ConfigurationCompiler.getSmdFile(this.project, sd2.getServiceId());
         assertTrue(smd_sd + " DNE", smd_sd.exists());
         assertTrue(smd_sd2 + " DNE", smd_sd2.exists());
 
-        Beans actualBeans = SpringConfigSupport.readBeans(new FileSystemResource(actualServices), this.project);
+        Beans actualBeans = SpringConfigSupport.readBeans(actualServices);
 
         assertEquals(0, actualBeans.getImportsAndAliasAndBean().size());
 
-        File actualManagers = new File(this.project.getWebInf().getFile(), "project-managers.xml");
+        File actualManagers = this.project.getWebInfFolder().getFile("project-managers.xml");
         assertTrue(actualManagers.exists());
-        actualBeans = SpringConfigSupport.readBeans(new FileSystemResource(actualManagers), this.project);
+        actualBeans = SpringConfigSupport.readBeans(actualManagers);
 
         assertNull(actualBeans.getBeanById("serviceManager"));
     }
@@ -118,20 +117,20 @@ public class ServiceConfigurationProcessorTest {
         ReflectServiceDefinition sd2 = new updateService_SD2();
         assertNull(sd.getRuntimeConfiguration());
 
-        File expected = this.localDSM.getServiceDefXml(sd.getServiceId()).getFile();
+        File expected = this.localDSM.getServiceDefXmlFile(sd.getServiceId());
         assertFalse(expected.exists());
 
         this.localDSM.defineService(sd);
         assertTrue(expected.exists());
-        this.localDSM.defineService(sd2);
 
+        this.localDSM.defineService(sd2);
         ServiceConfigurationProcessor processor = new ServiceConfigurationProcessor();
         processor.setFileSystem(this.fileSystem);
         buildWithProcessor(this.project, "Foo", processor);
 
-        File actualServices = ConfigurationCompiler.getRuntimeServicesXml(this.project).getFile();
-        File actualManagers = ConfigurationCompiler.getRuntimeManagersXml(this.project).getFile();
-        File actualTypes = ConfigurationCompiler.getTypesFile(this.project).getFile();
+        java.io.File actualServices = ConfigurationCompiler.getRuntimeServicesXml(this.project).getFile();
+        java.io.File actualManagers = ConfigurationCompiler.getRuntimeManagersXml(this.project).getFile();
+        java.io.File actualTypes = ConfigurationCompiler.getTypesFile(this.project).getFile();
         assertTrue(actualServices.exists());
         assertTrue(actualManagers.exists());
         assertTrue(actualTypes.exists());
@@ -148,8 +147,8 @@ public class ServiceConfigurationProcessorTest {
     @Test
     public void testWriteTypes() throws Exception {
 
-        File typesFile = ConfigurationCompiler.getTypesFile(this.project).getFile();
-        File managersFile = ConfigurationCompiler.getRuntimeManagersXml(this.project).getFile();
+        java.io.File typesFile = ConfigurationCompiler.getTypesFile(this.project).getFile();
+        java.io.File managersFile = ConfigurationCompiler.getRuntimeManagersXml(this.project).getFile();
         assertFalse(typesFile.exists());
 
         ServiceDefinition sd = new updateType_SD();
@@ -251,7 +250,6 @@ public class ServiceConfigurationProcessorTest {
 
         @Override
         public String getOperationType(String operationName) {
-            // TODO Auto-generated method stub
             return null;
         }
     }
@@ -319,7 +317,6 @@ public class ServiceConfigurationProcessorTest {
 
         @Override
         public String getOperationType(String operationName) {
-            // TODO Auto-generated method stub
             return null;
         }
     }
@@ -344,17 +341,13 @@ public class ServiceConfigurationProcessorTest {
 
         @Override
         public List<ElementType> getInputTypes(String operationName) {
-
             List<ElementType> ret = new ArrayList<ElementType>();
-
             if (operationName.equals("add")) {
                 ElementType a = new ElementType("a", int.class, false);
                 ElementType b = new ElementType("b", int.class, false);
-
                 ret.add(a);
                 ret.add(b);
             }
-
             return ret;
         }
 
@@ -365,13 +358,10 @@ public class ServiceConfigurationProcessorTest {
 
         @Override
         public ElementType getOutputType(String operationName) {
-
             ElementType ret = null;
-
             if (operationName.equals("add")) {
                 ret = new ElementType("result", long.class, false);
             }
-
             return ret;
         }
 
@@ -412,7 +402,6 @@ public class ServiceConfigurationProcessorTest {
 
         @Override
         public String getOperationType(String operationName) {
-            // TODO Auto-generated method stub
             return null;
         }
     }
@@ -464,24 +453,18 @@ public class ServiceConfigurationProcessorTest {
     }
 
     private void buildWithProcessor(Project project, String serviceClass, Processor processor) throws IOException {
-        // Get an instance of Eclipse compiler
-        JavaCompiler compiler = ServiceLoader.load(JavaCompiler.class).iterator().next();
+        JavaCompiler compiler = new WaveMakerJavaCompiler();
+        StandardJavaFileManager standardFileManager = compiler.getStandardFileManager(null, null, null);
+        ResourceJavaFileManager fileManager = new ResourceJavaFileManager(standardFileManager);
 
-        // Get an instance of Standard compiler
-        // JavaCompiler compiler =
-        // javax.tools.ToolProvider.getSystemJavaCompiler();
+        project.getClassOutputFolder().createIfMissing();
+        fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Collections.singleton(project.getClassOutputFolder()));
 
-        // Get a new instance of the standard file manager implementation
-        StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, Charset.forName(ServerConstants.DEFAULT_ENCODING));
+        File javaSrc = project.getRootFolder().getFile("services/src/Foo.java");
+        javaSrc.getContent().write("public class Foo{public int getInt(){return 12;}}");
 
-        project.getWebInfClasses().getFile().mkdirs();
-        fileManager.setLocation(StandardLocation.CLASS_OUTPUT, Collections.singleton(project.getWebInfClasses().getFile()));
-
-        Resource javaSrc = project.getProjectRoot().createRelative("services/src/Foo.java");
-        project.writeFile(javaSrc, "public class Foo{public int getInt(){return 12;}}");
-        // Get the list of java file objects, in this case we have only
-        // one file, TestClass.java
-        Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjectsFromFiles(Collections.singletonList(javaSrc.getFile()));
+        Iterable<? extends JavaFileObject> compilationUnits = fileManager.list(StandardLocation.SOURCE_PATH, "", Collections.singleton(Kind.SOURCE),
+            true);
 
         Set<String> options = new HashSet<String>();
         options.add("-A" + ServiceProcessorConstants.PROJECT_NAME_PROP + "=" + project.getProjectName());
