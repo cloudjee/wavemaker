@@ -141,7 +141,7 @@ dojo.declare("ImportDatabase", wm.Page, {
 					this.usernameInput.getDataValue(),
 					this.passwordInput.getDataValue(),
 					this.driverClassInput.getDataValue());
-		this._testConnection(this.extraInput.getDataValue());
+		//this._testConnection(this.extraInput.getDataValue());
 	},
 	importBtnClick: function(inSender) {
 	    if (this.dbdropdown.getDataValue("").toLowerCase() == "mysql" && dojo.isMac) {
