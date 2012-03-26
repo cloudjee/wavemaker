@@ -185,6 +185,7 @@ public class ProjectCompiler {
         options.add("utf8");
         options.add("-A" + ServiceProcessorConstants.PROJECT_NAME_PROP + "=" + project.getProjectName());
         options.add("-g");
+        options.add("-warn:-serial");
         return options;
     }
 

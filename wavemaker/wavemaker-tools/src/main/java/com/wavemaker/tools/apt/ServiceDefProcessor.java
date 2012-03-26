@@ -183,8 +183,6 @@ public class ServiceDefProcessor extends AbstractStudioServiceProcessor {
             return false;
         }
 
-        this.processingEnv.getMessager().printMessage(Kind.NOTE, "Creating servicdedef for service " + serviceId);
-
         JavaServiceDefinition serviceDef = new JavaServiceDefinition(type.getQualifiedName().toString(), serviceId);
         serviceDef.setPackageName(this.processingEnv.getElementUtils().getPackageOf(type).getQualifiedName().toString());
         TypeMirror dataServiceType = this.processingEnv.getElementUtils().getTypeElement(LIVE_SERVICE_CLASS).asType();
