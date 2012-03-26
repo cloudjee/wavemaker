@@ -22,7 +22,6 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Properties;
@@ -803,91 +802,4 @@ public class ImportDB extends BaseDataModelSetup {
         return true;
     }
 
-    public static void main(String args[]) {
-
-        Arrays.sort(args);
-
-        if (Arrays.binarySearch(args, "--help") > -1 || Arrays.binarySearch(args, "-h") > -1) {
-            System.out.println(getHelp(ImportDB.class));
-            return;
-        }
-
-        ImportDB importer = new ImportDB();
-
-        for (int i = 0; i < args.length; i++) {
-
-            if (!args[i].startsWith("-")) {
-
-                File f = new File(args[i]);
-
-                Properties p = com.wavemaker.runtime.data.util.DataServiceUtils.loadDBProperties(f);
-
-                importer.setProperties(p);
-            }
-        }
-
-        boolean ok = importer.init();
-        if (!ok) {
-            return;
-        }
-
-        if (Arrays.binarySearch(args, "--values") > -1 || Arrays.binarySearch(args, "-v") > -1) {
-            System.out.println(getValues(importer));
-            return;
-        }
-
-        try {
-            importer.run();
-        } finally {
-            try {
-                importer.dispose();
-            } catch (Exception ignore) {
-            }
-        }
-    }
-
-    private static String getValues(ImportDB db) {
-
-        String s = "Settings:\n\n";
-
-        s += "  Connection properties:\n";
-        s += "  user: " + db.username + "\n";
-        s += "  password: " + db.password + "\n";
-        s += "  url: " + db.connectionUrl + "\n";
-
-        s += "\n";
-
-        s += "  outputdir: " + db.destdir + "\n";
-        s += "  classesdir: " + db.classesdir + "\n";
-        s += "  service name: " + db.serviceName + "\n";
-        s += "  service class " + db.className + "\n";
-        s += "  java package: " + db.packageName + "\n";
-
-        s += "\n";
-
-        s += "  dbtype: " + db.dbtype + "\n";
-        s += "  dialect: " + db.dialect + "\n";
-
-        s += "\n";
-
-        s += "  import database: " + db.importDatabase + "\n";
-        s += "  generate service class: " + db.generateServiceClass;
-
-        return s;
-
-    }
-
-    public static String getHelp(Class<?> mainClass) {
-
-        return "\nUsage:\n\n" + "System Properties (optional in brackets):\n" + "  -D" + DESTDIR_SYSTEM_PROPERTY + "=<root output dir>\n" + "  -D"
-            + SERVICE_CLASS_SYSTEM_PROPERTY + "=<fully qualified service class name>\n" + "  -D" + USER_SYSTEM_PROPERTY + "=<db user>\n" + "  -D"
-            + CONNECTION_URL_SYSTEM_PROPERTY + "=<jdbc connection url>\n" + "  [-D" + PASS_SYSTEM_PROPERTY + "=<db password>]\n" + "  [-D"
-            + TABLE_FILTER_SYSTEM_PROPERTY + "=<regular expression>]\n" + "  [-D" + SCHEMA_FILTER_SYSTEM_PROPERTY + "=<regular expression>]\n"
-            + "  [-D" + CLASSES_DIR_SYSTEM_PROPERTY + "=<directory for generated classes>]\n" + "\n" + "Arguments (all optional):\n\n"
-            + "  path to properties file\n" + "  -v|--values: show runtime values of properties\n" + "  -h|--help: this message\n\n" + "Example:\n\n"
-            + "  java \\\n" + "    -D" + DESTDIR_SYSTEM_PROPERTY + "=servicedir \\\n" + "    -D" + SERVICE_CLASS_SYSTEM_PROPERTY
-            + "=com.test.DBService \\\n" + "    -D" + USER_SYSTEM_PROPERTY + "=root \\\n" + "    -D" + CONNECTION_URL_SYSTEM_PROPERTY
-            + "=jdbc:mysql://localhost:3306/sakila \\\n" + "    -D" + DRIVER_CLASS_NAME_SYSTEM_PROPERTY + "=com.mysql.jdbc.Driver \\\n" + "    "
-            + mainClass.getName() + "\n";
-    }
 }
