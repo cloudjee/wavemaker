@@ -21,7 +21,7 @@ wm.inflight = {
 	_inflight: [],
         _inflightNames: [],
 	getCount: function() {
-		return this._inflight.length; 
+		return this._inflight.length;
 	},
 	change: function() {
 	},
@@ -231,18 +231,26 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		}
 		this.result = null;
 		this.error = null;
-		if (inLoop) {
-			this._service.setRequestHeaders({"wm-polling-request" : requestId});
-		} else {
-			requestId = dojox.uuid.generateRandomUuid();
-			this._service.setRequestHeaders({"wm-initial-request" : requestId});
-		}
 
-		var d = this._service.callRemote(inMethod, inArgs || []);
-		var longDeferred = inLongDeferred || new dojo.Deferred();
-		d.addCallbacks(dojo.hitch(this, "onLongResponseTimeResult", inMethod, inArgs, owner, invoker, inLoop, requestId, longDeferred, d), 
-			dojo.hitch(this, "onLongResponseTimeError", inMethod, inArgs, owner, invoker, inLoop, requestId, longDeferred, d));
-		d = longDeferred;
+		var d;
+		if (wm.connectionTimeout > 0) {
+			if (inLoop) {
+				this._service.setRequestHeaders({"wm-polling-request" : requestId});
+			} else {
+				requestId = dojox.uuid.generateRandomUuid();
+				this._service.setRequestHeaders({"wm-initial-request" : requestId});
+			}
+
+			d = this._service.callRemote(inMethod, inArgs || []);
+
+			var longDeferred = inLongDeferred || new dojo.Deferred();
+			d.addCallbacks(dojo.hitch(this, "onLongResponseTimeResult", inMethod, inArgs, owner, invoker, inLoop, requestId, longDeferred, d), 
+				dojo.hitch(this, "onLongResponseTimeError", inMethod, inArgs, owner, invoker, inLoop, requestId, longDeferred, d));
+			d = longDeferred;
+		} else {
+			d = this._service.callRemote(inMethod, inArgs || []);
+			d.addCallbacks(dojo.hitch(this, "onResult"), dojo.hitch(this, "onError"));
+		}
 		
 	    wm.inflight.add(d, this.service, this.name, inArgs, inMethod, invoker);
 		this.inflight = true;
@@ -300,7 +308,7 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 			if (processStatus == "processing") {
 				callInvoke = true;
 			} else if (processStatus == "error") {
-				return this.onLongResponseTimeError(inMethod, inArgs, owner, invoker, inLoop, requestId, longDeferred, deferred, inResult.result);
+				return this.onLongResponseTimeError(inMethod, inArgs, owner, invoker, inLoop, requestId, longDeferred, inResult.result);
 			} else if (processStatus == "done") {
 				r = this.fullResult = inResult;
 				this.result = (r || 0).result;

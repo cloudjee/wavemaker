@@ -115,10 +115,10 @@ public abstract class ReflectServiceType implements ServiceType {
 
         Object ret = null;
         try {
-            if (serviceResponse == null || serviceResponse.getConnectionTimeout() == 0) {
-                ret = method.invoke(serviceObject, args.getArguments());
-            } else {
+            if (serviceResponse != null && serviceResponse.getConnectionTimeout() > 0) {
                 ret = serviceResponse.invokeMethod(method, serviceObject, args.getArguments());
+            } else {
+                ret = method.invoke(serviceObject, args.getArguments());
             }
 
         } catch (Exception e) {
