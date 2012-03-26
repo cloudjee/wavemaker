@@ -123,12 +123,23 @@ public class ConfigurationCompiler {
      * @param p
      * @return
      */
+    @Deprecated
     public static Resource getRuntimeServicesXml(Project p) {
         try {
             return p.getWebInf().createRelative(RUNTIME_SERVICES);
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
+    }
+
+    /**
+     * Get the runtime projectname-services.xml file.
+     * 
+     * @param p
+     * @return
+     */
+    public static File getRuntimeServicesXmlFile(Project p) {
+        return p.getWebInfFolder().getFile(RUNTIME_SERVICES);
     }
 
     /**

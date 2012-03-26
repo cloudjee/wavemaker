@@ -14,18 +14,19 @@
 
 package com.wavemaker.tools.project.upgrade.swamis;
 
-import java.io.File;
 import java.io.IOException;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 
+import org.apache.commons.io.FileUtils;
+import org.springframework.util.FileCopyUtils;
 import org.xml.sax.SAXException;
 
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.ws.WebServiceType;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
@@ -86,16 +87,15 @@ public class WebServiceUpgrade implements UpgradeTask {
                 } else {
                     File wsdlFile = wstm.getWSDLFile(serviceId);
                     if (wsdlFile != null) {
-                        File tempDir = IOUtils.createTempDirectory();
+                        java.io.File tempDir = java.io.File.createTempFile("wmkrmsd", null);
                         try {
-                            File tempWsdlFile = new File(tempDir, "temp.wsdl");
-                            IOUtils.copy(wsdlFile, tempWsdlFile);
-
+                            java.io.File tempWsdlFile = new java.io.File(tempDir, "temp.wsdl");
+                            FileCopyUtils.copy(wsdlFile.getContent().asBytes(), tempWsdlFile);
                             this.dsm.deleteService(serviceId);
                             wstm.importWSDL(tempWsdlFile.getCanonicalPath(), null, true, null, null, null);
                         } finally {
                             try {
-                                IOUtils.deleteRecursive(tempDir);
+                                FileUtils.forceDelete(tempDir);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }

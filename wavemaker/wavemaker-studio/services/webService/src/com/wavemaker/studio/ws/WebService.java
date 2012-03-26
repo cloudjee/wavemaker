@@ -26,7 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.xml.sax.SAXException;
 
 import com.wavemaker.common.util.SpringUtils;
-import com.wavemaker.runtime.server.DownloadResponse;
+import com.wavemaker.runtime.server.Downloadable;
 import com.wavemaker.runtime.server.ParamName;
 import com.wavemaker.runtime.service.annotations.ExposeToClient;
 import com.wavemaker.runtime.ws.BindingProperties;
@@ -158,7 +158,7 @@ public class WebService {
         return getWSToolsMgr().getWSDL(serviceId);
     }
 
-    public DownloadResponse downloadWSDL(@ParamName(name = "serviceId") String serviceId) throws IOException {
+    public Downloadable downloadWSDL(@ParamName(name = "serviceId") String serviceId) throws IOException {
         return getWSToolsMgr().downloadWSDL(serviceId);
     }
 

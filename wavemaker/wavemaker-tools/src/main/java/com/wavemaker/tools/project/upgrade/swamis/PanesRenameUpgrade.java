@@ -14,12 +14,7 @@
 
 package com.wavemaker.tools.project.upgrade.swamis;
 
-import java.io.IOException;
-
-import org.apache.commons.io.FileUtils;
-import org.springframework.core.io.Resource;
-
-import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
@@ -38,19 +33,13 @@ public class PanesRenameUpgrade implements UpgradeTask {
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
-        try {
-            Resource oldPanesDir = project.getWebAppRoot().createRelative(OLD_PANES_DIR);
+        Folder panesFolder = project.getWebAppRootFolder().getFolder(OLD_PANES_DIR);
 
-            // if the project doesn't contain any panes, don't do the upgrade
-            if (!oldPanesDir.exists()) {
-                return;
-            }
-
-            FileUtils.copyDirectory(oldPanesDir.getFile(), project.getWebAppRoot().createRelative(ProjectConstants.PAGES_DIR).getFile());
-            FileUtils.forceDelete(oldPanesDir.getFile());
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
+        // if the project doesn't contain any panes, don't do the upgrade
+        if (!panesFolder.exists()) {
+            return;
         }
+        panesFolder.rename("pages");
 
         upgradeInfo.addMessage("Moved old " + OLD_PANES_DIR + " to new " + ProjectConstants.PAGES_DIR + "; static references to " + OLD_PANES_DIR
             + " will have to be updated");

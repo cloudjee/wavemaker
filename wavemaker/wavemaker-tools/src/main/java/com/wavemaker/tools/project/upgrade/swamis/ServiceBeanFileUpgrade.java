@@ -24,7 +24,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.apache.commons.lang.StringUtils;
-import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.io.File;
@@ -62,7 +61,7 @@ public class ServiceBeanFileUpgrade implements UpgradeTask {
         for (Service service : dsm.getServices()) {
             if (service.getSpringFile() == null) {
                 // create the service bean file
-                Resource serviceBeanFile = dsm.getServiceBeanXml(service.getId());
+                File serviceBeanFile = dsm.getServiceBeanXmlFile(service.getId());
                 if (!serviceBeanFile.exists()) {
                     try {
                         DesignServiceManager.generateSpringServiceConfig(service.getId(), service.getClazz(),
@@ -77,7 +76,7 @@ public class ServiceBeanFileUpgrade implements UpgradeTask {
 
                 // edit the servicedef
                 File serviceDefFile = dsm.getServiceDefXmlFile(service.getId());
-                service.setSpringFile(serviceBeanFile.getFilename());
+                service.setSpringFile(serviceBeanFile.getName());
 
                 Marshaller marshaller;
                 try {

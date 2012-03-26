@@ -20,10 +20,9 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
-import org.springframework.core.io.Resource;
-
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.tools.common.ConfigurationException;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
@@ -104,7 +103,7 @@ public class SecurityUpgrade implements UpgradeTask {
     }
 
     private boolean upgradeSpringBeanAndCreateService(Project project, SecurityToolsManager stm) throws JAXBException, IOException {
-        Resource acegiSpringFile = stm.getAcegiSpringFile();
+        File acegiSpringFile = stm.getAcegiSpringFile();
         GeneralOptions generalOptions = stm.getGeneralOptions();
         if (generalOptions == null) {
             return false;
@@ -123,20 +122,20 @@ public class SecurityUpgrade implements UpgradeTask {
                 demoUser.setPassword(oldDemoUser.getPassword());
                 demoUsers.add(demoUser);
             }
-            project.deleteFile(acegiSpringFile);
+            acegiSpringFile.delete();
             stm.setGeneralOptions(generalOptions.isEnforceSecurity(), true);
             stm.configDemo(demoUsers.toArray(new DemoUser[0]));
 
         } else if (dataSourceType.equals(GeneralOptions.DATABASE_TYPE)) {
             DatabaseOptions oldDatabaseOptions = stm.getDatabaseOptions();
-            project.deleteFile(acegiSpringFile);
+            acegiSpringFile.delete();
             stm.setGeneralOptions(generalOptions.isEnforceSecurity(), true);
             stm.configDatabase(oldDatabaseOptions.getModelName(), oldDatabaseOptions.getTableName(), oldDatabaseOptions.getUnameColumnName(),
                 oldDatabaseOptions.getUidColumnName(), null, oldDatabaseOptions.getPwColumnName(), null, null);
 
         } else if (dataSourceType.equals(GeneralOptions.LDAP_TYPE)) {
             LDAPOptions oldLDAPOptions = stm.getLDAPOptions();
-            project.deleteFile(acegiSpringFile);
+            acegiSpringFile.delete();
             stm.setGeneralOptions(generalOptions.isEnforceSecurity(), true);
             stm.configLDAP(oldLDAPOptions.getLdapUrl(), oldLDAPOptions.getManagerDn(), oldLDAPOptions.getManagerPassword(),
                 oldLDAPOptions.getUserDnPattern(), true, null, null, null);
@@ -145,21 +144,15 @@ public class SecurityUpgrade implements UpgradeTask {
     }
 
     private boolean upgradeLoginHtml(Project project, SecurityToolsManager stm) throws IOException {
-        Resource webapp = project.getWebAppRoot();
-        Resource loginHtml = webapp.createRelative("login.html");
-        if (loginHtml.exists()) {
-            Resource loginTemplate = stm.getLoginHtmlTemplateFile();
-            if (loginTemplate == null) {
-                return false;
-            }
-
-            project.writeFile(webapp.createRelative("login.html.bak"), project.readFile(loginHtml));
-            String loginContent = project.readFile(loginTemplate);
+        File loginHtml = project.getWebAppRootFolder().getFile("login.html");
+        File loginTemplate = stm.getLoginHtmlTemplateFile();
+        if (loginHtml.exists() && loginTemplate.exists()) {
+            loginHtml.rename("login.html.bak");
+            String loginContent = loginTemplate.getContent().asString();
             loginContent = loginContent.replace("{%PROJECT}", project.getProjectName());
-            project.writeFile(loginHtml, loginContent);
+            loginHtml.getContent().write(loginContent);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 }
