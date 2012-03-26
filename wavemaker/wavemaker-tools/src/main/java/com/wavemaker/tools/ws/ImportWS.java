@@ -14,16 +14,13 @@
 
 package com.wavemaker.tools.ws;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.core.io.Resource;
 
-import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.ws.RESTInputParam;
 import com.wavemaker.tools.common.ConfigurationException;
-import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
@@ -38,8 +35,6 @@ import com.wavemaker.tools.ws.wsdl.WSDLManager;
  * @author Jeremy Grelle
  */
 public class ImportWS {
-
-    private StudioFileSystem fileSystem;
 
     private Resource destDir;
 
@@ -139,68 +134,6 @@ public class ImportWS {
         this.partnerName = partnerName;
     }
 
-    public void setFileSystem(StudioFileSystem fileSystem) {
-        this.fileSystem = fileSystem;
-    }
-
-    public void parseArguments(String[] args) {
-        for (int i = 0; i < args.length; i++) {
-            if (args[i].length() == 0) {
-                throw new ConfigurationException("Empty argument.");
-            }
-            if (args[i].charAt(0) == '-') {
-                int j = parseArguments(args, i);
-                if (j == 0) {
-                    throw new ConfigurationException("Unrecognized argument " + args[i]);
-                }
-                i += j - 1;
-            } else {
-                Resource wsdlFile = this.fileSystem.getResourceForURI(args[i]);
-                if (!wsdlFile.exists()) {
-                    throw new ConfigurationException("This file was not found: " + wsdlFile.toString());
-                }
-                try {
-                    setWsdlUri(wsdlFile.getURI().toString());
-                } catch (IOException ex) {
-                    throw new WMRuntimeException(ex);
-                }
-            }
-        }
-    }
-
-    protected int parseArguments(String[] args, int i) {
-        if (args[i].equals("-d")) {
-            this.destDir = this.fileSystem.getResourceForURI(requireArgument("-d", args, ++i));
-            return 2;
-        } else if (args[i].equals("-p")) {
-            this.packageName = requireArgument("-p", args, ++i);
-            return 2;
-        } else if (args[i].equals("-noOverwriteCustomization")) {
-            this.noOverwriteCustomizationFiles = true;
-            return 2;
-        } else if (args[i].equals("-skipInternalCustomization")) {
-            this.skipInternalCustomization = true;
-            return 2;
-        } else if (args[i].equals("-jaxb")) {
-            this.addJaxbCustomizationFile(this.fileSystem.getResourceForURI(requireArgument("-jaxb", args, ++i)));
-            return 2;
-        } else if (args[i].equals("-jaxws")) {
-            this.addJaxwsCustomizationFile(this.fileSystem.getResourceForURI(requireArgument("-jaxws", args, ++i)));
-            return 2;
-        }
-        if (this.destDir == null) {
-            this.destDir = this.fileSystem.getResourceForURI(".");
-        }
-        return 0;
-    }
-
-    public String requireArgument(String optionName, String[] args, int i) {
-        if (args[i].startsWith("-")) {
-            throw new ConfigurationException("Missing option argument " + args[i]);
-        }
-        return args[i];
-    }
-
     public WSDL generateServiceClass() {
         return generateServiceClass(null, null, null);
     }
@@ -238,18 +171,4 @@ public class ImportWS {
             throw new ConfigurationException(e);
         }
     }
-
-    public void run(String[] args) {
-        parseArguments(args);
-        generateServiceClass();
-    }
-
-    public static void usage(Class<?> mainClazz) {
-        System.out.println("");
-        System.out.println("Usage: " + mainClazz.getSimpleName() + " [options] <WSDL URI>");
-        System.out.println("where [options] include:");
-        System.out.println("-d <directory>            Specify where to place generated output files. Default is the current directory.");
-        System.out.println("-p <pkg>                  Specifies the target package. This will override the default package name algorithm based on the namesapce.");
-    }
-
 }
