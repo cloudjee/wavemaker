@@ -35,7 +35,6 @@ import org.springframework.web.servlet.mvc.AbstractController;
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMException;
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.common.CommonRuntimeAccess;
 import com.wavemaker.json.JSONArray;
 import com.wavemaker.json.JSONState;
 import com.wavemaker.json.type.FieldDefinition;
@@ -79,8 +78,6 @@ public abstract class ControllerBase extends AbstractController {
     private InternalRuntime internalRuntime;
 
     private RuntimeAccess runtimeAccess;
-
-    private CommonRuntimeAccess commonRuntimeAccess;
 
     /**
      * Create the default JSONState.
@@ -208,7 +205,7 @@ public abstract class ControllerBase extends AbstractController {
      * </ul>
      * 
      * @param view The current view.
-     * @param resultObject The result of the method invocation.
+     * @param typedServiceReturn The result of the method invocation.
      * @return A new ModelAndView object, set up properly depending on the type of resultObject.
      */
     protected ModelAndView getModelAndView(TypedView view, TypedServiceReturn typedServiceReturn) {
@@ -285,7 +282,6 @@ public abstract class ControllerBase extends AbstractController {
 
         RuntimeAccess.setRuntimeBean(getRuntimeAccess());
         InternalRuntime.setInternalRuntimeBean(getInternalRuntime());
-        CommonRuntimeAccess.setCommonRuntimeBean(getCommonRuntimeAccess());
 
         // when you remove this, also remove the SuppressWarnings anno
         com.activegrid.runtime.AGRuntime.setRuntimeBean(getRuntime());
@@ -293,7 +289,6 @@ public abstract class ControllerBase extends AbstractController {
         getRuntimeAccess().setRequest(request);
         getRuntimeAccess().setResponse(response);
         initializeRuntimeController(request);
-        getCommonRuntimeAccess().setRequest(request);
     }
 
     public void setServiceManager(ServiceManager spm) {
@@ -348,13 +343,5 @@ public abstract class ControllerBase extends AbstractController {
 
     public void setServiceResponse(ServiceResponse serviceResponse) {
         this.serviceResponse = serviceResponse;
-    }
-
-    public CommonRuntimeAccess getCommonRuntimeAccess() {
-        return this.commonRuntimeAccess;
-    }
-
-    public void setCommonRuntimeAccess(CommonRuntimeAccess commonRuntimeAccess) {
-        this.commonRuntimeAccess = commonRuntimeAccess;
     }
 }
