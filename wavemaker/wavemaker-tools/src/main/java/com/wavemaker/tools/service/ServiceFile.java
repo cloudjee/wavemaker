@@ -28,5 +28,4 @@ public final class ServiceFile {
     public Resource asResource() {
         return this.resource;
     }
-
 }
