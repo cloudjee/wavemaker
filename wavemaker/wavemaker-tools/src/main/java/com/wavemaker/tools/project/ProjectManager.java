@@ -69,7 +69,7 @@ public class ProjectManager {
     public ProjectManager() {
         this.projectCopyExclusions = new ArrayList<String>(IOUtils.DEFAULT_EXCLUSION);
         this.projectCopyExclusions.add(AbstractDeploymentManager.EXPORT_DIR_DEFAULT);
-        this.projectCopyExclusions.add(LocalDeploymentManager.DIST_DIR_DEFAULT);
+        this.projectCopyExclusions.add(DeploymentManager.DIST_DIR_DEFAULT);
     }
 
     // FIXME PW filesystem find a better way then remove the username method

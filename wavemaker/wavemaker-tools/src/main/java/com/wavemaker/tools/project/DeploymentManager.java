@@ -12,6 +12,8 @@ import com.wavemaker.tools.deployment.DeploymentInfo;
 
 public interface DeploymentManager {
 
+    public static final String DIST_DIR_DEFAULT = "dist/";
+
     /**
      * Start a 'test run' for the given project. This method should ensure that the current project is compiled,
      * deployed and active.
@@ -20,9 +22,9 @@ public interface DeploymentManager {
      *         qualified URLS (eg. 'http://project1.cloudfoundry.com'). returned URLs should not include parameters as
      *         these are always managed by the client.
      */
-    public abstract String testRunStart();
+    String testRunStart();
 
-    public abstract void testRunClean();
+    void testRunClean();
 
     /**
      * Clean build artifacts
@@ -30,40 +32,40 @@ public interface DeploymentManager {
      * @param projectDir The name of the project.
      * @param deployName The deployment target.
      */
-    public abstract void testRunClean(String projectDir, String deployName);
+    void testRunClean(String projectDir, String deployName);
 
     /**
      * Compile java src.
      */
-    public abstract String compile();
+    String compile();
 
     /**
      * Clean, then compile java src.
      */
-    public abstract String cleanCompile();
+    String cleanCompile();
 
     /**
      * Build the application (run the build target).
      */
-    public abstract String build();
+    String build();
 
     /**
      * Only generate the runtime files
      */
-    public abstract String generateRuntime();
+    String generateRuntime();
 
     /**
      * Clean, then build the application (run the build target).
      */
-    public abstract String cleanBuild();
+    String cleanBuild();
 
-    public abstract String buildWar(Resource warFile, boolean includeEar) throws IOException;
+    String buildWar(Resource warFile, boolean includeEar) throws IOException;
 
-    public abstract void buildWar(String warFileLocation, boolean includeEar) throws IOException;
+    void buildWar(String warFileLocation, boolean includeEar) throws IOException;
 
-    public abstract String deployWar(String warFileName, String deployName);
+    String deployWar(String warFileName, String deployName);
 
-    public abstract void undeploy();
+    void undeploy();
 
     /**
      * Export the current project to a zip file with the given name.
@@ -71,30 +73,30 @@ public interface DeploymentManager {
      * @param zipFileName the name of the file, excluding any path.
      * @return the full path of the exported file to be displayed to the user
      */
-    public abstract String exportProject(String zipFileName);
+    String exportProject(String zipFileName);
 
     /**
      * This function takes a zip file as input, unzips it and moves it into the projects folder.
      */
-    public abstract FileUploadResponse importFromZip(MultipartFile file) throws IOException;
+    FileUploadResponse importFromZip(MultipartFile file) throws IOException;
 
-    public abstract void deployClientComponent(String name, String namespace, String data) throws IOException;
+    void deployClientComponent(String name, String namespace, String data) throws IOException;
 
-    public abstract void deployTheme(String themename, String filename, String data) throws IOException;
+    void deployTheme(String themename, String filename, String data) throws IOException;
 
-    public abstract String[] listThemes() throws IOException;
+    String[] listThemes() throws IOException;
 
-    public abstract void copyTheme(String oldName, String newName) throws IOException;
+    void copyTheme(String oldName, String newName) throws IOException;
 
-    public abstract void deleteTheme(String name) throws IOException;
+    void deleteTheme(String name) throws IOException;
 
-    public abstract String[] listThemeImages(String themename) throws IOException;
+    String[] listThemeImages(String themename) throws IOException;
 
-    public abstract boolean undeployClientComponent(String name, String namespace, boolean removeSource) throws IOException;
+    boolean undeployClientComponent(String name, String namespace, boolean removeSource) throws IOException;
 
-    public abstract void deleteDeploymentInfo(String deploymentId);
+    void deleteDeploymentInfo(String deploymentId);
 
-    public abstract String saveDeploymentInfo(DeploymentInfo deploymentInfo);
+    String saveDeploymentInfo(DeploymentInfo deploymentInfo);
 
-    public abstract List<DeploymentInfo> getDeploymentInfo();
+    List<DeploymentInfo> getDeploymentInfo();
 }

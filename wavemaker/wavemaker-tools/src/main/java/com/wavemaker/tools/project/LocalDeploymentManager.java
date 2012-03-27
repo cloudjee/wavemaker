@@ -50,86 +50,65 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
     private LocalStudioConfiguration studioConfiguration;
 
     // ant properties
-    public static final String PROJECT_DIR_PROPERTY = "project.dir";
+    private static final String PROJECT_DIR_PROPERTY = "project.dir";
 
-    public static final String PROJECT_NAME_PROPERTY = "project.name";
+    private static final String PROJECT_NAME_PROPERTY = "project.name";
 
-    public static final String PROJECT_NEW_NAME_PROPERTY = "project.new.name";
+    private static final String PROJECT_NEW_NAME_PROPERTY = "project.new.name";
 
-    public static final String PROJECT_ENCODING_PROPERTY = "project.encoding";
+    private static final String PROJECT_ENCODING_PROPERTY = "project.encoding";
 
-    public static final String TOMCAT_HOST_PROPERTY = "tomcat.host";
+    private static final String TOMCAT_HOST_PROPERTY = "tomcat.host";
 
-    public static final String TOMCAT_PORT_PROPERTY = "tomcat.port";
+    private static final String TOMCAT_PORT_PROPERTY = "tomcat.port";
 
-    public static final String DEPLOY_NAME_PROPERTY = "deploy.name";
+    private static final String DEPLOY_NAME_PROPERTY = "deploy.name";
 
-    public static final String STUDIO_WEBAPPROOT_PROPERTY = "studio.webapproot.dir";
+    private static final String STUDIO_WEBAPPROOT_PROPERTY = "studio.webapproot.dir";
 
-    public static final String WAR_FILE_NAME_PROPERTY = "war.file.name";
+    private static final String WAR_FILE_NAME_PROPERTY = "war.file.name";
 
-    public static final String EAR_FILE_NAME_PROPERTY = "ear.file.name";
+    private static final String EAR_FILE_NAME_PROPERTY = "ear.file.name";
 
-    public static final String CUSTOM_WM_DIR_NAME_PROPERTY = "custom.wm.dir";
+    private static final String CUSTOM_WM_DIR_NAME_PROPERTY = "custom.wm.dir";
 
-    public static final String ZIP_FILE_NAME_PROPERTY = "zip.file.name";
+    private static final String ZIP_FILE_NAME_PROPERTY = "zip.file.name";
 
-    public static final String ZIP_FOLDER_NAME_PROPERTY = "zip.folder.name";
+    private static final String ZIP_FOLDER_NAME_PROPERTY = "zip.folder.name";
 
-    public static final String BUILD_WEBAPPROOT_PROPERTY = "build.app.webapproot.dir";
+    private static final String BUILD_WEBAPPROOT_PROPERTY = "build.app.webapproot.dir";
 
-    public static final String WAVEMAKER_HOME = "wavemaker.home";
+    private static final String WAVEMAKER_HOME = "wavemaker.home";
 
-    public static final String USER_NAME_PROPERTY = "wavemaker.user.name";
+    private static final String TMP_FOLDER_PROPERTY = "wavemaker.user.tmp";
 
-    public static final String TMP_FOLDER_PROPERTY = "wavemaker.user.tmp";
-
-    public static final String BUILD_RESOURCE_NAME = "app-deploy.xml";
+    private static final String BUILD_RESOURCE_NAME = "app-deploy.xml";
 
     // targets
-    public static final String TEST_RUN_START_OPERATION = "testrunstart";
 
-    public static final String TEST_RUN_RELOAD_OPERATION = "testrunreload";
+    private static final String TEST_RUN_CLEAN_OPERATION = "testrunclean";
 
-    public static final String TEST_RUN_CLEAN_OPERATION = "testrunclean";
+    private static final String UNDEPLOY_OPERATION = "undeploy";
 
-    public static final String UNDEPLOY_OPERATION = "undeploy";
+    private static final String BUILD_OPERATION = "build";
 
-    public static final String BUILD_OPERATION = "build";
+    private static final String BUILD_WAR_OPERATION = "build-war";
 
-    public static final String CLEAN_BUILD_OPERATION = "clean-build";
+    private static final String BUILD_EAR_OPERATION = "build-ear";
 
-    public static final String COMPILE_OPERATION = "compile";
+    private static final String DEPLOY_WAR_OPERATION = "deploy-war";
 
-    public static final String CLEAN_COMPILE_OPERATION = "clean-compile";
+    private static final String EXPORT_PROJECT_OPERATION = "export-project";
 
-    public static final String BUILD_WAR_OPERATION = "build-war";
+    private static final String GEN_RTFILES_OPERATION = "generate-runtime-files";
 
-    public static final String BUILD_EAR_OPERATION = "build-ear";
+    private static final String COPY_JARS_OPERATION = "copy-jars";
 
-    public static final String DEPLOY_WAR_OPERATION = "deploy-war";
+    private static final String CLEAN_OPERATION = "clean";
 
-    public static final String EXPORT_PROJECT_OPERATION = "export-project";
+    private static final String TEST_RUN_START_PREP_OPERATION = "testrunstart-prep";
 
-    public static final String IMPORT_RENAME_UTILS_OPERATION = "import-rename-utils";
-
-    public static final String GEN_RTFILES_OPERATION = "generate-runtime-files";
-
-    public static final String COPY_JARS_OPERATION = "copy-jars";
-
-    public static final String CLEAN_OPERATION = "clean";
-
-    public static final String TEST_RUN_START_PREP_OPERATION = "testrunstart-prep";
-
-    public static final String TEST_RUN_START_TEMP_OPERATION = "testrunstart-temp";
-
-    public static final String DIST_DIR_DEFAULT = "dist/";
-
-    public static final String WAR_EXTENSION = ".war";
-
-    public static final String EAR_EXTENSION = ".ear";
-
-    public static final String PACKAGES_JS_FILE = "packages.js";
+    private static final String TEST_RUN_START_TEMP_OPERATION = "testrunstart-temp";
 
     public class Undeployer implements HttpSessionBindingListener {
 
@@ -250,7 +229,7 @@ public class LocalDeploymentManager extends AbstractDeploymentManager {
     private void buildWar(String projectDir, String buildDir, String warFile, boolean includeEar) {
 
         int len = warFile.length();
-        String earFileName = warFile.substring(0, len - 4) + EAR_EXTENSION;
+        String earFileName = warFile.substring(0, len - 4) + ".ear";
         Map<String, String> properties = new HashMap<String, String>();
         properties.put(BUILD_WEBAPPROOT_PROPERTY, buildDir);
         properties.put(WAR_FILE_NAME_PROPERTY, warFile);
