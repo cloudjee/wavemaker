@@ -14,27 +14,24 @@
 
 package com.wavemaker.tools.data;
 
-import java.io.IOException;
-
 import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.CommonConstants;
-import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.data.ExternalDataModelConfig;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
-import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.data.salesforce.SalesForceDataServiceGenerator;
+import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.ServiceDefinitionFactory;
+import com.wavemaker.tools.service.ServiceFile;
 import com.wavemaker.tools.service.ServiceGeneratorFactory;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
-import com.wavemaker.tools.project.StudioFileSystem;
-import com.wavemaker.tools.project.ResourceFilter;
 
 public class DataServiceDefinitionFactory implements ServiceDefinitionFactory, ServiceGeneratorFactory {
 
-    private StudioFileSystem fileSystem;
+    private final StudioFileSystem fileSystem;
 
     public DataServiceDefinitionFactory() {
         this.fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
@@ -45,36 +42,8 @@ public class DataServiceDefinitionFactory implements ServiceDefinitionFactory, S
     }
 
     @Override
-    public ServiceDefinition getServiceDefinition(Resource f, String serviceId, DesignServiceManager serviceMgr) {
-
-        try {
-            if (fileSystem.isDirectory(f)) {
-                //for (String s : f.getFile().list(new FilenameFilter() {
-                for (final Resource child : fileSystem.listChildren(f, (new ResourceFilter() {
-
-                    @Override
-                    public boolean accept(Resource resource) {
-                        return resource.getFilename().endsWith(".xml");
-                    }
-                }))) {
-
-                    String s = child.getFilename();
-                    //File potential = new File(f.getFile(), s);
-                    Resource potential = f.createRelative(s);
-
-                    ServiceDefinition rtn = initServiceDefinition(potential, serviceId, serviceMgr);
-                    if (rtn != null) {
-                        return rtn;
-                    }
-                }
-            } else {
-                return initServiceDefinition(f, serviceId, serviceMgr);
-            }
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
-
-        return null;
+    public ServiceDefinition getServiceDefinition(ServiceFile serviceFile, String serviceId, DesignServiceManager serviceMgr) {
+        return initServiceDefinition(serviceFile.asResource(), serviceId, serviceMgr);
     }
 
     @Override

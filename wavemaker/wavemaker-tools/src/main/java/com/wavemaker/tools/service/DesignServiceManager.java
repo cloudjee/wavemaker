@@ -57,6 +57,8 @@ import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.tools.io.ClassPathFile;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.ResourceFiltering;
+import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
@@ -649,37 +651,27 @@ public class DesignServiceManager {
      * @return
      */
     public SortedSet<String> getServiceIds() {
-
-        SortedSet<String> ret = new TreeSet<String>();
-        Resource servicesDir = getServicesDir();
-        Resource serviceXml;
-
-        if (servicesDir.exists()) {
-            for (Resource child : this.fileSystem.listChildren(servicesDir)) {
-                if (org.springframework.util.StringUtils.getFilenameExtension(child.getFilename()) == null) {
-                    serviceXml = getServiceDefXml(child.getFilename());
-                    if (serviceXml.exists()) {
-                        ret.add(child.getFilename());
-                    }
-                }
+        SortedSet<String> serviceIds = new TreeSet<String>();
+        Resources<Folder> childFolders = getServicesFolder().list(ResourceFiltering.folders());
+        for (Folder child : childFolders) {
+            String serviceId = child.getName();
+            File serviceDefXmlFile = getServiceDefXmlFile(serviceId);
+            if (serviceDefXmlFile.exists()) {
+                serviceIds.add(serviceId);
             }
         }
-
-        return ret;
+        return serviceIds;
     }
 
     /**
      * Return all services in the current project.
      */
     public SortedSet<Service> getServices() {
-
         SortedSet<String> serviceIds = getServiceIds();
         SortedSet<Service> ret = new TreeSet<Service>(new ServiceComparator());
-
         for (String id : serviceIds) {
             ret.add(getService(id));
         }
-
         return ret;
     }
 

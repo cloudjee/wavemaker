@@ -17,8 +17,6 @@ package com.wavemaker.tools.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.core.io.Resource;
-
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
@@ -57,7 +55,7 @@ public class ServiceFactoryManager {
         this.sgf.add(f);
     }
 
-    public ServiceDefinition getServiceDefinition(Resource f, String serviceId, DesignServiceManager serviceManager) {
+    public ServiceDefinition getServiceDefinition(ServiceFile f, String serviceId, DesignServiceManager serviceManager) {
         for (ServiceDefinitionFactory fac : this.sdf) {
             ServiceDefinition rtn = fac.getServiceDefinition(f, serviceId, serviceManager);
             if (rtn != null) {

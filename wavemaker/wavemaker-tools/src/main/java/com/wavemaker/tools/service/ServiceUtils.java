@@ -14,8 +14,6 @@
 
 package com.wavemaker.tools.service;
 
-import org.springframework.core.io.Resource;
-
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
@@ -30,7 +28,7 @@ public class ServiceUtils {
 
     private static final ServiceFactoryManager factoryManager = ServiceFactoryManager.getInstance();
 
-    public static DeprecatedServiceDefinition getServiceDefinition(Resource f, String serviceId, DesignServiceManager serviceMgr) {
+    public static DeprecatedServiceDefinition getServiceDefinition(ServiceFile f, String serviceId, DesignServiceManager serviceMgr) {
 
         if (f == null) {
             throw new IllegalArgumentException("File cannot be null");
