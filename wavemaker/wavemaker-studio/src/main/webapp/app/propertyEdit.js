@@ -562,6 +562,7 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
 	}
 	var sp = studio.page;
 	var r = this.getDataSets([sp, sp.app], matchType);
+/*
 	if (this.showInputs) {
 	    var serviceVars = wm.listComponents([sp,sp.app], wm.ServiceVariable, true);
 	    for (var i = 0; i < serviceVars.length; i++) {
@@ -570,6 +571,7 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
 		}
 	    }
 	}
+	*/
 	if (this.widgetDataSets)
 	    wm.forEachWidget(sp.root, dojo.hitch(this, function(w) {
 		if (w !== this && !(w instanceof wm.LiveFormBase) && !(w instanceof wm.AbstractEditor && w.formField))
@@ -585,10 +587,13 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
 
 
     getDataSets: function(inOwners, matchType) {
+	console.log("getDataSets: " + inOwners[0].toString());
 	    return wm.listMatchingComponentIds(inOwners, dojo.hitch(this, function(c) {
 
-
 			if (!c.name || c.name.indexOf("_") === 0) return false;
+
+		if (c.owner instanceof wm.LiveVariable && (c.name == "filter" || c.name == "sourceData"))
+		    return false;
 
 		if (matchType) {
 		    return matchType == c.type;
@@ -597,6 +602,7 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
 			if (!this.allowAllTypes && !wm.typeManager.isStructuredType(c.type)) return false;
 
 			if (c instanceof wm.LiveVariable) return true; // always accept any LiveVariable no matter who owns it
+
 
 			if (c instanceof wm.Variable && !this.servicesOnly || c instanceof wm.ServiceVariable) {
 			    var typeDef = wm.typeManager.getType(c.type);
