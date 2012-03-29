@@ -22,6 +22,7 @@ wm.registerComponentLoader = function(inType, inLoader){
 };
 
 dojo.declare("wm.Application", wm.Component, {
+    eventDelay: wm.isMobile ? 100 : 0, // 100ms delay during which a user selection is highlighted and before the event is fired
     manageURL: true,
     manageHistory: true,
     i18n: false,
@@ -100,11 +101,24 @@ dojo.declare("wm.Application", wm.Component, {
 		this._cssLoader.setCss(this._css);
 	    }
 
-	        if (dojo.isIE && dojo.isIE < 8) this.dialogAnimationTime = 0;
+	    if (dojo.isIE && dojo.isIE < 8) this.dialogAnimationTime = 0;
 
-	        if (this._touchEnabled === undefined)
-		    this._touchEnabled = navigator.userAgent.match(/AppleWebKit/) &&
-		navigator.userAgent.match(/Mobile/);
+	    if (wm.isMobile) {
+		this.dialogAnimationTime = 0;
+	    }
+
+	    /* Determines if use of the touchscroll.js library is needed; latest versions of IOS no longer require it */
+	    if (this._touchEnabled === undefined) {
+		if (wm.isMobile && dojo.isWebKit) { // don't enable touchscrolling library for nonwebkit browsers; doesn't work
+		    if (navigator.userAgent.match(/Android (3|4|5|6|7|8|9)\./) ||
+			navigator.userAgent.match(/(phone|ipad)/i) ||
+			wm.isFakeMobile) {
+			;
+		    } else {
+			this._touchEnabled = true;
+		    }
+		}
+	    }
 
 		this.components = {};
 	        this.createPageContainer();
@@ -389,7 +403,9 @@ dojo.declare("wm.Application", wm.Component, {
             if (ctorData) {
 	        for (var j in ctorData) {
                     ctor.prototype[j] = ctorData[j];
-		    if (optionalWidget) optionalWidget[j] = ctorData[j];
+		    if (optionalWidget && oldCtorData && optionalWidget[j] === oldCtorData[j]) {
+			optionalWidget[j] = ctorData[j];
+		    }
                 }
             }
             wm.Application.themePrototypeData[declaredClass] = this.theme;
@@ -586,7 +602,6 @@ dojo.declare("wm.Application", wm.Component, {
 	},
 	reflow: function(resize) {
 		var d = this.domNode;
-		d.scrollTop = 0;
 	        this.appRoot.reflow();
 	},
 	reflowParent: function() {
@@ -766,12 +781,13 @@ dojo.declare("wm.Application", wm.Component, {
 	this.echoFileService.input.setData({contents: filecontents, fileType: filetype,fileName: filename});
 	this.echoFileService.update();
     },
-    showLoadingDialog: function(inMessage, inMessageWidth) {
+    showLoadingDialog: function(inMessage, inMessageWidth, optionalInTarget) {
 	if (!this.loadingDialog) {
 	    this.loadingDialog = new wm.LoadingDialog({owner: this, 
 						       name: "loadingDialog", 
-						       widgetToCover: app.appRoot});
+						       widgetToCover: this.appRoot});
 	}
+	this.loadingDialog.widgetToCover = optionalInTarget || this.appRoot;
 	this.loadingDialog.setCaption(inMessage || "Loading...");
 	if (inMessageWidth)
 	    this.loadingDialog._label.setWidth(inMessageWidth);
