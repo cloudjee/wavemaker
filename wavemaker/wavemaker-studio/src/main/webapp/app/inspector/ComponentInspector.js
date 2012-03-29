@@ -411,7 +411,7 @@
 	 this.subHeaderLabelList = [];
 	 var activeLayer = this.getActiveLayer();
 	 if (activeLayer)
-	     this._activeLayer = activeLayer.caption;
+	     this._activeLayer = activeLayer.propertyGroup.equivalentName || activeLayer.propertyGroup.name;
 	 try {
 	     this.inspected = inComponent;
 	     this.layerIndex = -1;
@@ -432,11 +432,22 @@
 	     this._inspecting = false;
 	 }
 	 this.layerIndex = -1; // make sure it rerenders when we call setLayerIndex
+	 var found = false;
+	 for (var i = 0; i < this.layers.length; i++) {
+	     var g = this.layers[i].propertyGroup;
+	     if (this._activeLayer == g.name || this._activeLayer && this._activeLayer == g.equivalentName) {
+		 this.layers[i].activate();
+		 found = true;
+	     }
+	 }
+	 if (!found) this.layers[0].activate();
+/*
 	 if (this._reselectLayerIndex !== undefined && this._reselectLayerIndex < this.layers.length) {
 	     this.setLayerIndex(this._reselectLayerIndex);
 	 } else {
 	     this.setLayerIndex(0);
 	 }
+	 */
      },
      getHashId: function(inComponent, propName) {
 	 var id = this._inspectedName;
@@ -1389,9 +1400,11 @@
 	     this.generateLayer = layer;
 	     //this.generateEditors(inComponent,g.name, layer);
 	     g.layer = layer;
-	     if (this._activeLayer == g.displayName) {
+/*
+	     if (this._activeLayer == g.name || g.equivalentName) {
 		 this._reselectLayerIndex = this.layers.length-1;		
 	     }
+	     */
 	     layer.connect(layer, "onShow", this, function() { 
 		 var l = this.getActiveLayer();
 		 var group = l.propertyGroup;
@@ -1432,6 +1445,7 @@
 		       order: 1000};
 	 if (wm.propertyGroups[inName]) {
 	     result.order = wm.propertyGroups[inName].order;
+	     result.equivalentName = wm.propertyGroups[inName].equivalentName;
 	     if (inName == "widgetName") {
 		 result.displayName = this.inspected.declaredClass.replace(/^.*\./,"") + " Properties"; // TODO: Localize
 	     } else {
@@ -1869,6 +1883,7 @@ wm.addPropertyGroups({
 		   },
     /* Confirmed */
     editor: {displayName: "Editor", 
+	     equivalentName: "widgetName",
 	     order: 60,
 	     subgroups: {
 		 value: {displayName: "Values",
