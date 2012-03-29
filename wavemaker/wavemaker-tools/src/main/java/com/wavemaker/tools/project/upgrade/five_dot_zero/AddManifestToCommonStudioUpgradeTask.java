@@ -14,12 +14,8 @@
 
 package com.wavemaker.tools.project.upgrade.five_dot_zero;
 
-import java.io.IOException;
-
-import org.springframework.core.io.Resource;
-import org.springframework.util.FileCopyUtils;
-
-import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.project.upgrade.StudioUpgradeTask;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
@@ -34,17 +30,11 @@ public class AddManifestToCommonStudioUpgradeTask implements StudioUpgradeTask {
 
     @Override
     public void doUpgrade(UpgradeInfo upgradeInfo) {
-
-        try {
-            Resource commonDir = this.fileSystem.getCommonDir();
-            Resource userManifest = commonDir.createRelative("manifest.js");
-
-            if (commonDir.exists() && !userManifest.exists()) {
-                Resource templateManifest = this.fileSystem.getStudioWebAppRoot().createRelative("lib/wm/common/manifest.js");
-                FileCopyUtils.copy(templateManifest.getInputStream(), this.fileSystem.getOutputStream(userManifest));
-            }
-        } catch (IOException e) {
-            throw new WMRuntimeException(e);
+        Folder commonFolder = this.fileSystem.getCommonFolder();
+        File userManifest = commonFolder.getFile("manifest.js");
+        if (commonFolder.exists() && !userManifest.exists()) {
+            File templateManifest = this.fileSystem.getStudioWebAppRootFolder().getFile("lib/wm/common/manifest.js");
+            userManifest.getContent().write(templateManifest);
         }
     }
 

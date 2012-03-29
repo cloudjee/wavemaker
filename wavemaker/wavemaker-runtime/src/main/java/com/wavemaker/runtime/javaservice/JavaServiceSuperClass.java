@@ -22,12 +22,11 @@ import org.apache.log4j.PropertyConfigurator;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.service.annotations.HideFromClient;
-import com.wavemaker.runtime.service.ServiceSuperClass;
 
 /**
  * @author Michael Kantor
  */
-public class JavaServiceSuperClass extends ServiceSuperClass {
+public class JavaServiceSuperClass {
 
     private Logger logger;
 

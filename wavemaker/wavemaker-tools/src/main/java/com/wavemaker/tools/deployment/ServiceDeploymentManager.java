@@ -27,7 +27,6 @@ import com.wavemaker.runtime.data.DataServiceType;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.DataModelDeploymentConfiguration;
 import com.wavemaker.tools.project.DeploymentManager;
-import com.wavemaker.tools.project.LocalDeploymentManager;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.project.ProjectManager;
@@ -88,9 +87,9 @@ public class ServiceDeploymentManager {
     public Resource getWarFile() {
         Resource projectRoot = getProjectRoot();
         try {
-            Resource destDir = projectRoot.createRelative(LocalDeploymentManager.DIST_DIR_DEFAULT);
+            Resource destDir = projectRoot.createRelative(DeploymentManager.DIST_DIR_DEFAULT);
             String warFileName = projectRoot.getFilename();
-            return destDir.createRelative(warFileName + LocalDeploymentManager.WAR_EXTENSION);
+            return destDir.createRelative(warFileName + ".war");
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
@@ -100,9 +99,9 @@ public class ServiceDeploymentManager {
         Resource projectRoot = getProjectRoot();
         Resource destDir;
         try {
-            destDir = projectRoot.createRelative(LocalDeploymentManager.DIST_DIR_DEFAULT);
+            destDir = projectRoot.createRelative(DeploymentManager.DIST_DIR_DEFAULT);
             String earFileName = projectRoot.getFilename();
-            return destDir.createRelative(earFileName + LocalDeploymentManager.EAR_EXTENSION);
+            return destDir.createRelative(earFileName + ".ear");
 
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);

@@ -25,6 +25,7 @@ import com.wavemaker.runtime.ws.util.Constants;
 import com.wavemaker.tools.pws.PwsRestServiceGeneratorBeanFactory;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.ServiceDefinitionFactory;
+import com.wavemaker.tools.service.ServiceFile;
 import com.wavemaker.tools.service.ServiceGeneratorFactory;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.ServiceGenerator;
@@ -44,6 +45,10 @@ public class WebServiceFactory implements ServiceDefinitionFactory, ServiceGener
     }
 
     @Override
+    public DeprecatedServiceDefinition getServiceDefinition(ServiceFile serviceFile, String serviceId, DesignServiceManager serviceMgr) {
+        return getServiceDefinition(serviceFile.asResource(), serviceId, serviceMgr);
+    }
+
     public DeprecatedServiceDefinition getServiceDefinition(Resource f, String serviceId, DesignServiceManager serviceMgr) {
         if (f.getFilename().endsWith(Constants.WSDL_EXT)) {
             try {

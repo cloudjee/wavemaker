@@ -26,6 +26,7 @@ import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.FileAccessException;
 import com.wavemaker.common.util.IOUtils;
+import com.wavemaker.tools.io.Folder;
 
 /**
  * Manages pages.
@@ -147,6 +148,7 @@ public class PagesManager {
         destProject.writeFile(destPane.createRelative(destPageName + "." + PAGE_WIDGETS), widgetsContents);
     }
 
+    @Deprecated
     public Resource getPagesDir(String projectName) {
         Project project = this.projectManager.getProject(projectName, false);
         try {
@@ -156,12 +158,25 @@ public class PagesManager {
         }
     }
 
+    public Folder getPagesFolder(String projectName) {
+        return getPagesFolder(this.projectManager.getProject(projectName, false));
+    }
+
+    public Folder getPagesFolder(Project project) {
+        return project.getWebAppRootFolder().getFolder(ProjectConstants.PAGES_DIR);
+    }
+
+    @Deprecated
     public Resource getPageDir(String projectName, String pageName) {
         try {
             return getPagesDir(projectName).createRelative(pageName + "/");
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
+    }
+
+    public Folder getPageFolder(Project project, String pageName) {
+        return getPagesFolder(project).getFolder(pageName);
     }
 
     public Resource getDictionariesDir(String projectName) {

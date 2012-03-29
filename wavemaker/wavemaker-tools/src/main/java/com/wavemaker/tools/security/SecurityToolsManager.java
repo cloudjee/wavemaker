@@ -45,6 +45,8 @@ import com.wavemaker.runtime.security.JOSSOSecurityService;
 import com.wavemaker.runtime.security.SecurityService;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.DataModelConfiguration;
+import com.wavemaker.tools.io.ClassPathFile;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.service.DesignServiceManager;
@@ -101,16 +103,26 @@ public class SecurityToolsManager {
         return ret;
     }
 
-    public Resource getAcegiSpringFile() throws IOException {
-        return getAcegiSpringFile(this.projectMgr.getCurrentProject());
+    @Deprecated
+    public Resource getAcegiSpringResource() throws IOException {
+        return getAcegiSpringResource(this.projectMgr.getCurrentProject());
     }
 
-    private Resource getAcegiSpringFile(Project currentProject) {
+    @Deprecated
+    private Resource getAcegiSpringResource(Project currentProject) {
         try {
             return currentProject.getWebInf().createRelative(ACEGI_SPRING_FILENAME);
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
+    }
+
+    public File getAcegiSpringFile() throws IOException {
+        return getAcegiSpringFile(this.projectMgr.getCurrentProject());
+    }
+
+    private File getAcegiSpringFile(Project currentProject) {
+        return currentProject.getWebInfFolder().getFile(ACEGI_SPRING_FILENAME);
     }
 
     /**
@@ -121,7 +133,7 @@ public class SecurityToolsManager {
      */
     private Beans getAcegiSpringBeans(boolean create) throws IOException, JAXBException {
         Project currentProject = this.projectMgr.getCurrentProject();
-        Resource securityXml = getAcegiSpringFile(currentProject);
+        Resource securityXml = getAcegiSpringResource(currentProject);
         Beans beans = null;
         if (securityXml.exists()) {
             try {
@@ -149,7 +161,7 @@ public class SecurityToolsManager {
      */
     private synchronized void saveAcegiSpringBeans(Beans beans) throws JAXBException, IOException {
         Project currentProject = this.projectMgr.getCurrentProject();
-        Resource securityXml = getAcegiSpringFile(currentProject);
+        Resource securityXml = getAcegiSpringResource(currentProject);
         SpringConfigSupport.writeBeans(beans, securityXml, currentProject);
     }
 
@@ -573,13 +585,18 @@ public class SecurityToolsManager {
         }
     }
 
-    public Resource getLoginHtmlTemplateFile() throws IOException {
+    @Deprecated
+    public Resource getLoginHtmlTemplateResource() throws IOException {
         ClassPathResource resource = new ClassPathResource(LOGIN_HTML_TEMPLATE_CLASSPATH);
         if (resource.exists()) {
             return resource;
         } else {
             return null;
         }
+    }
+
+    public File getLoginHtmlTemplateFile() {
+        return new ClassPathFile(LOGIN_HTML_TEMPLATE_CLASSPATH);
     }
 
     public void removeJOSSOConfig() throws JAXBException, IOException {

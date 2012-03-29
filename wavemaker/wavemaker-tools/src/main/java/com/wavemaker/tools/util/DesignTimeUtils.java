@@ -29,6 +29,7 @@ import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.project.AbstractStudioFileSystem;
 import com.wavemaker.tools.project.LocalDeploymentManager;
 import com.wavemaker.tools.project.LocalStudioFileSystem;
+import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.service.DesignServiceManager;
 import com.wavemaker.tools.service.DesignServiceType;
@@ -71,7 +72,6 @@ public class DesignTimeUtils {
     }
 
     private static boolean isRuntime() {
-
         try {
             if (RuntimeAccess.getInstance() != null && RuntimeAccess.getInstance().getRequest() != null) {
                 return true;
@@ -82,12 +82,24 @@ public class DesignTimeUtils {
     }
 
     /**
+     * Return a DesignServiceManager instance. This may not be very fast, so should be avoided when possible.
+     * 
+     * @param project
+     * @return DesignServiceManager instance
+     */
+    public static DesignServiceManager getDesignServiceManager(Project project) {
+        return getDSMForProjectRoot(project.getProjectRoot());
+    }
+
+    /**
      * Return a DesignServiceManager instance; this sets up an internal ProjectManager, and creates a Project based on
      * the projectRoot parameter. This may not be very fast, so should be avoided when possible.
      * 
      * @param projectRoot
      * @return DesignServiceManager instance
+     * @deprecated use getDesignServiceManager when possible
      */
+    @Deprecated
     public static DesignServiceManager getDSMForProjectRoot(Resource projectRoot) {
         try {
             String oldProp = getDefaultProjectHome();

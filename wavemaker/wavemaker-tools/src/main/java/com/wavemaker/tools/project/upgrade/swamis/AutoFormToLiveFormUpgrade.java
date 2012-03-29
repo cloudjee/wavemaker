@@ -17,9 +17,9 @@ package com.wavemaker.tools.project.upgrade.swamis;
 import java.io.IOException;
 import java.util.Set;
 
-import org.springframework.core.io.Resource;
-
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.project.PagesManager;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
@@ -37,18 +37,15 @@ public class AutoFormToLiveFormUpgrade implements UpgradeTask {
 
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
-
         try {
             Set<String> pages = getPagesManager().listPages();
-
             for (String page : pages) {
-                Resource pageDir = getPagesManager().getPageDir(project.getProjectName(), page);
-
-                Resource widgetsJS = pageDir.createRelative(page + "." + PagesManager.PAGE_WIDGETS);
+                Folder pageFolder = getPagesManager().getPageFolder(project, page);
+                File widgetsJS = pageFolder.getFile(page + "." + PagesManager.PAGE_WIDGETS);
                 if (widgetsJS.exists()) {
-                    String contents = project.readFile(widgetsJS);
+                    String contents = widgetsJS.getContent().asString();
                     contents = contents.replace("wm.AutoForm\"", "wm.LiveForm\"");
-                    project.writeFile(widgetsJS, contents);
+                    widgetsJS.getContent().write(contents);
                 }
             }
         } catch (IOException e) {

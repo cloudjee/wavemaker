@@ -4,20 +4,17 @@
 
 package com.wavemaker.tools.project.upgrade.six_dot_four;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.FileUtils;
-
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.exception.ResourceException;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
 
 /**
  * @author Ed Callahan
- * 
  */
 public class IE_XUATagUpgradeTask implements UpgradeTask {
 
@@ -34,24 +31,24 @@ public class IE_XUATagUpgradeTask implements UpgradeTask {
         Pattern XUAPattern = Pattern.compile(XUAmetaTagStr);
 
         try {
-            File indexFile = new File(project.getWebAppRoot() + "/index.html");
-            String indexContent = FileUtils.readFileToString(indexFile);
+            File indexFile = project.getWebAppRootFolder().getFile("index.html");
+            String indexContent = indexFile.getContent().asString();
             Matcher XUAMatcher = XUAPattern.matcher(indexContent);
             if (XUAMatcher.find()) {
                 indexContent = XUAMatcher.replaceAll(XUAmetaTagReplaceStr);
             } else {
                 indexContent = indexContent.replace(headStr, headReplaceStr);
             }
-            FileUtils.writeStringToFile(indexFile, indexContent);
+            indexFile.getContent().write(indexContent);
             upgradeInfo.addMessage("\nIndex.html has been upgraded to use IE9 mode. \n\tReview index.html if you are using other X-UA-Compatible modes");
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
+        } catch (ResourceException e) {
+            e.printStackTrace();
             upgradeInfo.addMessage("\n*** Error upgrading index.html to use IE9 mode ***");
         }
         try {
-            File loginFile = new File(project.getWebAppRoot() + "/login.html");
+            File loginFile = project.getWebAppRootFolder().getFile("login.html");
             if (loginFile.exists()) {
-                String loginContent = FileUtils.readFileToString(loginFile);
+                String loginContent = loginFile.getContent().asString();
 
                 Matcher XUAMatcher = XUAPattern.matcher(loginContent);
                 if (XUAMatcher.find()) {
@@ -59,13 +56,13 @@ public class IE_XUATagUpgradeTask implements UpgradeTask {
                 } else {
                     loginContent = loginContent.replace(headStr, headReplaceStr);
                 }
-                FileUtils.writeStringToFile(loginFile, loginContent);
+                loginFile.getContent().write(loginContent);
                 upgradeInfo.addMessage("\nlogin.html has been upgraded to use IE9 mode.\n\tReview login.html if you are using other X-UA-Compatible modes");
             } else {
                 upgradeInfo.addMessage("\n\tInfo: No login page found in project to upgrade");
             }
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
+        } catch (ResourceException e) {
+            e.printStackTrace();
             upgradeInfo.addMessage("\n*** Error upgrading login.html to use IE9 mode ***");
         }
 

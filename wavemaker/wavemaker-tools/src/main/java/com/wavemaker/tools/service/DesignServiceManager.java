@@ -57,6 +57,8 @@ import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.tools.io.ClassPathFile;
 import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.ResourceFiltering;
+import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectManager;
@@ -227,9 +229,32 @@ public class DesignServiceManager {
      * @throws IOException
      * @throws JAXBException
      */
+    @Deprecated
     public static void generateSpringServiceConfig(String serviceId, String serviceClass, DesignServiceType designServiceType,
         Resource serviceBeanFile, Project project) throws JAXBException, IOException {
+        Beans beans = generateSpringServiceBeans(serviceId, serviceClass, designServiceType);
+        SpringConfigSupport.writeBeans(beans, serviceBeanFile, project);
+    }
 
+    /**
+     * Generates (and returns) a Beans object containing a single bean, one which will correctly create the specified
+     * bean.
+     * 
+     * @param serviceId The service's id.
+     * @param serviceClass The service's class.
+     * @param project
+     * @param serviceBeanFile
+     * @return A Beans object containing the correct service-specific bean.
+     * @throws IOException
+     * @throws JAXBException
+     */
+    public static void generateSpringServiceConfig(String serviceId, String serviceClass, DesignServiceType designServiceType, File serviceBeanFile,
+        Project project) throws JAXBException, IOException {
+        Beans beans = generateSpringServiceBeans(serviceId, serviceClass, designServiceType);
+        SpringConfigSupport.writeBeans(beans, serviceBeanFile);
+    }
+
+    private static Beans generateSpringServiceBeans(String serviceId, String serviceClass, DesignServiceType designServiceType) {
         Beans beans = new Beans();
         Bean bean = new Bean();
         bean.setClazz(serviceClass);
@@ -240,8 +265,7 @@ public class DesignServiceManager {
 
         Bean serviceWireBean = generateServiceWireBean(designServiceType, serviceId);
         beans.addBean(serviceWireBean);
-
-        SpringConfigSupport.writeBeans(beans, serviceBeanFile, project);
+        return beans;
     }
 
     /**
@@ -579,12 +603,23 @@ public class DesignServiceManager {
      * @param serviceId The service to find the bean definition file for.
      * @return The path to the bean definition file for service serviceId.
      */
+    @Deprecated
     public Resource getServiceBeanXml(String serviceId) {
         try {
             return getProjectManager().getCurrentProject().getProjectRoot().createRelative(getServiceBeanRelative(serviceId));
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
+    }
+
+    /**
+     * Return the path to a service's bean definition file.
+     * 
+     * @param serviceId The service to find the bean definition file for.
+     * @return The path to the bean definition file for service serviceId.
+     */
+    public File getServiceBeanXmlFile(String serviceId) {
+        return getProjectManager().getCurrentProject().getRootFolder().getFile(getServiceBeanRelative(serviceId));
     }
 
     /**
@@ -616,37 +651,27 @@ public class DesignServiceManager {
      * @return
      */
     public SortedSet<String> getServiceIds() {
-
-        SortedSet<String> ret = new TreeSet<String>();
-        Resource servicesDir = getServicesDir();
-        Resource serviceXml;
-
-        if (servicesDir.exists()) {
-            for (Resource child : this.fileSystem.listChildren(servicesDir)) {
-                if (org.springframework.util.StringUtils.getFilenameExtension(child.getFilename()) == null) {
-                    serviceXml = getServiceDefXml(child.getFilename());
-                    if (serviceXml.exists()) {
-                        ret.add(child.getFilename());
-                    }
-                }
+        SortedSet<String> serviceIds = new TreeSet<String>();
+        Resources<Folder> childFolders = getServicesFolder().list(ResourceFiltering.folders());
+        for (Folder child : childFolders) {
+            String serviceId = child.getName();
+            File serviceDefXmlFile = getServiceDefXmlFile(serviceId);
+            if (serviceDefXmlFile.exists()) {
+                serviceIds.add(serviceId);
             }
         }
-
-        return ret;
+        return serviceIds;
     }
 
     /**
      * Return all services in the current project.
      */
     public SortedSet<Service> getServices() {
-
         SortedSet<String> serviceIds = getServiceIds();
         SortedSet<Service> ret = new TreeSet<Service>(new ServiceComparator());
-
         for (String id : serviceIds) {
             ret.add(getService(id));
         }
-
         return ret;
     }
 

@@ -123,6 +123,7 @@ public class ConfigurationCompiler {
      * @param p
      * @return
      */
+    @Deprecated
     public static Resource getRuntimeServicesXml(Project p) {
         try {
             return p.getWebInf().createRelative(RUNTIME_SERVICES);
@@ -132,17 +133,38 @@ public class ConfigurationCompiler {
     }
 
     /**
-     * Get the runtime projectname-managers.xml file.
+     * Get the runtime projectname-services.xml file.
      * 
      * @param p
      * @return
      */
-    public static Resource getRuntimeManagersXml(Project p) {
+    public static File getRuntimeServicesXmlFile(Project p) {
+        return p.getWebInfFolder().getFile(RUNTIME_SERVICES);
+    }
+
+    /**
+     * Get the runtime projectname-managers.xml file.
+     * 
+     * @param project
+     * @return
+     */
+    @Deprecated
+    public static Resource getRuntimeManagersXml(Project project) {
         try {
-            return p.getWebInf().createRelative(RUNTIME_MANAGERS);
+            return project.getWebInf().createRelative(RUNTIME_MANAGERS);
         } catch (IOException ex) {
             throw new WMRuntimeException(ex);
         }
+    }
+
+    /**
+     * Get the runtime projectname-managers.xml file.
+     * 
+     * @param project
+     * @return
+     */
+    public static File getRuntimeManagersXmlFile(Project project) {
+        return project.getWebInfFolder().getFile(RUNTIME_MANAGERS);
     }
 
     /**

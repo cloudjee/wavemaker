@@ -19,13 +19,13 @@ import org.apache.commons.io.filefilter.IOFileFilter;
 import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
 
 /**
  * @author Ed Callahan
- * 
  */
 public class RemoveMySQLHBMCatalogUpgradeTask implements UpgradeTask {
 
@@ -37,9 +37,10 @@ public class RemoveMySQLHBMCatalogUpgradeTask implements UpgradeTask {
 
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
+        Folder servicesFolder = project.getRootFolder().getFolder("services");
         // Don't bother if we do not have services
         try {
-            if (project.fileExists("services/")) {
+            if (servicesFolder.exists()) {
                 Resource servicesDir = project.getProjectRoot().createRelative("services/");
                 ArrayList<String> mySQLServices = new ArrayList<String>();
                 try {

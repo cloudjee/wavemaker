@@ -5,12 +5,8 @@
 
 package com.wavemaker.tools.project.upgrade.six_dot_four_dot_two;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.apache.commons.io.FileUtils;
-
-import com.wavemaker.common.util.IOUtils;
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.exception.ResourceException;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
@@ -39,41 +35,30 @@ public class OldMSIEUpgradeTask implements UpgradeTask {
         copyChromeframeFile(project, upgradeInfo);
 
         try {
-            File indexFile = new File(project.getWebAppRoot() + "/index.html");
-            String indexContent = FileUtils.readFileToString(indexFile);
-
-            // 1. rename /project/index.html to index.bak
-            File webapp = project.getWebAppRoot().getFile();
-            File bakIndexhtml = new File(webapp, "index.bak");
-
-            FileUtils.copyFile(indexFile, bakIndexhtml);
-
+            File indexFile = project.getWebAppRootFolder().getFile("index.html");
+            indexFile.rename("index.bak");
+            String indexContent = indexFile.getContent().asString();
             indexContent = updateContent(indexContent);
-            FileUtils.writeStringToFile(indexFile, indexContent);
+            indexFile.getContent().write(indexContent);
             upgradeInfo.addMessage("\nIndex.html has been upgraded to use IE9 mode and an improved Chromeframe. \n\tReview index.html if you are using other X-UA-Compatible modes");
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
+        } catch (ResourceException e) {
+            e.printStackTrace();
             upgradeInfo.addMessage("\n*** Error upgrading index.html to use IE9 mode ***");
         }
         try {
-            File loginFile = new File(project.getWebAppRoot() + "/login.html");
+            File loginFile = project.getWebAppRootFolder().getFile("login.html");
             if (loginFile.exists()) {
-
                 // 1. rename /project/login.html to login.bak
-                File webapp = project.getWebAppRoot().getFile();
-                File bakLoginHtml = new File(webapp, "login.bak");
-                FileUtils.copyFile(loginFile, bakLoginHtml);
-
-                String loginContent = FileUtils.readFileToString(loginFile);
-
+                loginFile.rename("login.bak");
+                String loginContent = loginFile.getContent().asString();
                 loginContent = updateContent(loginContent);
-                FileUtils.writeStringToFile(loginFile, loginContent);
+                loginFile.getContent().write(loginContent);
                 upgradeInfo.addMessage("\nlogin.html has been upgraded to use IE9 mode and an improved Chromeframe.\n\tReview login.html if you are using other X-UA-Compatible modes");
             } else {
                 upgradeInfo.addMessage("\n\tInfo: No login page found in project to upgrade");
             }
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
+        } catch (ResourceException e) {
+            e.printStackTrace();
             upgradeInfo.addMessage("\n*** Error upgrading login.html to use IE9 mode ***");
         }
 
@@ -81,14 +66,12 @@ public class OldMSIEUpgradeTask implements UpgradeTask {
 
     private void copyChromeframeFile(Project project, UpgradeInfo upgradeInfo) {
         try {
-            String relativePath = "chromeframe.html";
-            File chromeFrameFile = project.getWebAppRoot().createRelative(relativePath).getFile();
+            File chromeFrameFile = project.getWebAppRootFolder().getFile("chromeframe.html");
             if (!chromeFrameFile.exists()) {
-                IOUtils.copy(this.fileSystem.getStudioWebAppRoot().createRelative("app/templates/project/chromeframe.html").getFile(),
-                    chromeFrameFile);
+                chromeFrameFile.getContent().write(this.fileSystem.getStudioWebAppRootFolder().getFile("app/templates/project/chromeframe.html"));
             }
 
-        } catch (IOException ioe) {
+        } catch (ResourceException ioe) {
             ioe.printStackTrace();
             upgradeInfo.addMessage("\n*** Error copying in chromeframe.html ***");
         }

@@ -30,7 +30,7 @@ import com.wavemaker.tools.deployment.AppInfo;
 import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.deployment.DeploymentStatusException;
 import com.wavemaker.tools.deployment.DeploymentTarget;
-import com.wavemaker.tools.project.LocalDeploymentManager;
+import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.util.TomcatServer;
 
@@ -63,7 +63,7 @@ public class TomcatDeploymentTarget implements DeploymentTarget {
     @Override
     public void deploy(Project project, DeploymentInfo deploymentInfo) throws DeploymentStatusException {
         try {
-            Resource warFile = project.getProjectRoot().createRelative(LocalDeploymentManager.DIST_DIR_DEFAULT + project.getProjectName() + ".war");
+            Resource warFile = project.getProjectRoot().createRelative(DeploymentManager.DIST_DIR_DEFAULT + project.getProjectName() + ".war");
             TomcatServer tomcat = initTomcat(deploymentInfo);
             verifyOK(tomcat.deploy(warFile.getFile(), deploymentInfo.getApplicationName()));
         } catch (IOException e) {

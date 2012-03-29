@@ -27,6 +27,8 @@ import javax.xml.bind.JAXBException;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.types.Resource;
+import org.apache.tools.ant.types.ResourceCollection;
+import org.apache.tools.ant.types.resources.Resources;
 import org.springframework.core.io.FileSystemResource;
 
 import com.wavemaker.tools.project.LocalStudioFileSystem;
@@ -47,15 +49,17 @@ import com.wavemaker.tools.util.DesignTimeUtils;
  * @author Matt Small
  * @author Jeremy Grelle
  */
-public class ConfigurationCompilerTask extends AbstractServiceCompilerTask {
-
-    public ConfigurationCompilerTask() {
-        super(true);
-    }
+public class ConfigurationCompilerTask extends CompilerTask {
 
     private File destWebAppRoot;
 
     private File destServicesDir;
+
+    private final Resources union = new Resources();
+
+    public ConfigurationCompilerTask() {
+        super(true);
+    }
 
     public File getDestWebAppRoot() {
         return this.destWebAppRoot;
@@ -189,6 +193,13 @@ public class ConfigurationCompilerTask extends AbstractServiceCompilerTask {
         } catch (NoSuchMethodException ex) {
             throw new BuildException(ex);
         }
+    }
 
+    public Resources getUnion() {
+        return this.union;
+    }
+
+    public void add(ResourceCollection rc) {
+        this.union.add(rc);
     }
 }

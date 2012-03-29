@@ -14,12 +14,8 @@
 
 package com.wavemaker.tools.project.upgrade.six_dot_one;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.apache.commons.io.FileUtils;
-
-import com.wavemaker.runtime.server.ServerConstants;
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.exception.ResourceException;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
@@ -41,14 +37,14 @@ public class ProjSpringAppXmlUpgradeTask1 implements UpgradeTask {
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
-        File file = new File(project.getWebInf() + "/project-springapp.xml");
+        File file = project.getWebInfFolder().getFile("project-springapp.xml");
 
         try {
-            String content = FileUtils.readFileToString(file, ServerConstants.DEFAULT_ENCODING);
+            String content = file.getContent().asString();
             content = content.replace(this.fromStr, this.toStr);
-            FileUtils.writeStringToFile(file, content, ServerConstants.DEFAULT_ENCODING);
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
+            file.getContent().write(content);
+        } catch (ResourceException e) {
+            e.printStackTrace();
             this.error = true;
         }
 

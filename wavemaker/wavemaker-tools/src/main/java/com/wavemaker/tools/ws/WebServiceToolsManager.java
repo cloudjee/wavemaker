@@ -14,8 +14,6 @@
 
 package com.wavemaker.tools.ws;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -42,7 +40,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.ws.commons.schema.XmlSchema;
 import org.apache.ws.commons.schema.XmlSchemaCollection;
@@ -60,12 +57,10 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import com.wavemaker.common.CommonConstants;
-import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.CastUtils;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.runtime.RuntimeAccess;
-import com.wavemaker.runtime.server.DownloadResponse;
-import com.wavemaker.runtime.server.ServerConstants;
+import com.wavemaker.runtime.server.Downloadable;
 import com.wavemaker.runtime.ws.BindingProperties;
 import com.wavemaker.runtime.ws.HTTPBindingSupport;
 import com.wavemaker.runtime.ws.HTTPBindingSupport.HTTPRequestMethod;
@@ -73,7 +68,11 @@ import com.wavemaker.runtime.ws.RESTInputParam;
 import com.wavemaker.runtime.ws.WebServiceException;
 import com.wavemaker.runtime.ws.util.Constants;
 import com.wavemaker.tools.common.ConfigurationException;
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.ResourceFiltering;
 import com.wavemaker.tools.project.DeploymentManager;
+import com.wavemaker.tools.project.DownloadableFile;
 import com.wavemaker.tools.project.ProjectManager;
 import com.wavemaker.tools.pws.IPwsRestWsdlGenerator;
 import com.wavemaker.tools.pws.PwsRestWsdlGeneratorBeanFactory;
@@ -141,12 +140,12 @@ public class WebServiceToolsManager {
 
         // boolean isLocal = true;
         // create temp wsdl file if the URI is a web address
-        File tmpWsdlFile = null;
+        java.io.File tmpWsdlFile = null;
         if (wsdlPath.startsWith("http")) {
             // isLocal = false;
             WSDL tmpWsdl = WSDLManager.processWSDL(wsdlPath, serviceId, operationName_list, inputs_list);
-            File tempDir = IOUtils.createTempDirectory();
-            tmpWsdlFile = new File(tempDir, tmpWsdl.getServiceId() + Constants.WSDL_EXT);
+            java.io.File tempDir = IOUtils.createTempDirectory();
+            tmpWsdlFile = new java.io.File(tempDir, tmpWsdl.getServiceId() + Constants.WSDL_EXT);
             WSDLUtils.writeDefinition(tmpWsdl.getDefinition(), tmpWsdlFile);
             modifyServiceName(tmpWsdlFile);
             srcPath = tmpWsdlFile.getCanonicalPath();
@@ -155,12 +154,12 @@ public class WebServiceToolsManager {
         }
 
         WSDL origWsdl = null;
-        File origWsdlFile = null;
-        origWsdlFile = new File(srcPath);
+        java.io.File origWsdlFile = null;
+        origWsdlFile = new java.io.File(srcPath);
         if (origWsdlFile.isDirectory()) {
             String srvId = null;
-            File[] listFiles = origWsdlFile.listFiles();
-            for (File f : listFiles) {
+            java.io.File[] listFiles = origWsdlFile.listFiles();
+            for (java.io.File f : listFiles) {
                 if (f.getName().toLowerCase().endsWith(Constants.WSDL_EXT)) {
                     srvId = importWSDL(f.getCanonicalPath(), null, true, username, password, partnerName, serviceAlias, operationName_list,
                         inputs_list); // salesforce
@@ -175,23 +174,23 @@ public class WebServiceToolsManager {
         }
 
         // create service runtime folder
-        File runtimeDir = this.designServiceMgr.getServiceRuntimeDirectory(origWsdl.getServiceId()).getFile();
+        java.io.File runtimeDir = this.designServiceMgr.getServiceRuntimeDirectory(origWsdl.getServiceId()).getFile();
         if (!runtimeDir.exists()) {
             runtimeDir.mkdirs();
         }
 
         // create package folder under service runtime folder. This is the
         // place where we put the wsdl file and the service spring file.
-        File packageDir = CodeGenUtils.getPackageDir(runtimeDir, origWsdl.getPackageName());
+        java.io.File packageDir = CodeGenUtils.getPackageDir(runtimeDir, origWsdl.getPackageName());
         if (!packageDir.exists()) {
             packageDir.mkdirs();
         }
 
-        File wsdlFile;
+        java.io.File wsdlFile;
         String wsdlUri = null;
 
         // copy user-specified WSDL file to the package folder
-        wsdlFile = new File(packageDir, origWsdlFile.getName());
+        wsdlFile = new java.io.File(packageDir, origWsdlFile.getName());
         // wsdlUri = wsdlFile.toURI().toString();
         if (!wsdlFile.getCanonicalFile().equals(origWsdlFile.getCanonicalFile())) {
             IOUtils.copy(origWsdlFile, wsdlFile);
@@ -200,9 +199,9 @@ public class WebServiceToolsManager {
         Map<String, Element> schemas = origWsdl.getSchemas();
         if (schemas != null) {
             for (String systemId : schemas.keySet()) {
-                File xsdFile = getLocalXsdFileFromSystemId(systemId);
+                java.io.File xsdFile = getLocalXsdFileFromSystemId(systemId);
                 if (xsdFile != null && xsdFile.exists()) {
-                    IOUtils.copy(xsdFile, new File(packageDir, xsdFile.getName()));
+                    IOUtils.copy(xsdFile, new java.io.File(packageDir, xsdFile.getName()));
                 }
             }
         }
@@ -249,9 +248,9 @@ public class WebServiceToolsManager {
      */
     public String importWADL(String wadlPath, String serviceId, boolean overwrite) throws WSDLException, IOException, JAXBException,
         ParserConfigurationException, SAXException, TransformerException {
-        File tempDir = IOUtils.createTempDirectory();
+        java.io.File tempDir = IOUtils.createTempDirectory();
         try {
-            File wsdlFile = generateWsdlFromWadl(wadlPath, tempDir);
+            java.io.File wsdlFile = generateWsdlFromWadl(wadlPath, tempDir);
             return importWSDL(wsdlFile.getCanonicalPath(), serviceId, overwrite, null, null, null, null, null, null);
         } finally {
             IOUtils.deleteRecursive(tempDir);
@@ -272,11 +271,11 @@ public class WebServiceToolsManager {
      */
     public String importUploadedFile(MultipartFile file, String serviceId, String overwrite, String username, String password) throws IOException,
         WSDLException, JAXBException {
-        File tempDir = IOUtils.createTempDirectory();
+        java.io.File tempDir = IOUtils.createTempDirectory();
         String fileName = file.getOriginalFilename();
         boolean isWSDL = true;
         if (fileName != null && fileName.length() > 0) {
-            File f = new File(fileName);
+            java.io.File f = new java.io.File(fileName);
             fileName = f.getName();
             // assuming all WADL files have file extension .wadl
             if (fileName.toLowerCase().endsWith(".wadl")) {
@@ -288,7 +287,7 @@ public class WebServiceToolsManager {
             fileName = "temp.wsdl";
         }
         try {
-            File wsdlFile = new File(tempDir, fileName);
+            java.io.File wsdlFile = new java.io.File(tempDir, fileName);
             file.transferTo(wsdlFile);
             modifyServiceName(wsdlFile);
             if (isWSDL) {
@@ -445,9 +444,9 @@ public class WebServiceToolsManager {
             }
             restWsdlGenerator.setSchemaElements(schemaElements);
         }
-        File tempDir = IOUtils.createTempDirectory();
+        java.io.File tempDir = IOUtils.createTempDirectory();
         try {
-            File wsdlFile = new File(tempDir, serviceName + Constants.WSDL_EXT);
+            java.io.File wsdlFile = new java.io.File(tempDir, serviceName + Constants.WSDL_EXT);
             restWsdlGenerator.write(wsdlFile);
             return importWSDL(wsdlFile.getCanonicalPath(), null, overwrite, null, null, partnerName, serviceAlias, operationName_list, inputs_list); // salesforce
         } finally {
@@ -673,50 +672,35 @@ public class WebServiceToolsManager {
 
     public String getWSDL(String serviceId) throws IOException {
         File file = getWSDLFile(serviceId);
-        if (file != null) {
-            if (file.length() < 1000000) {
-                return FileUtils.readFileToString(file, ServerConstants.DEFAULT_ENCODING);
-            } else {
-                return "services/webService.download?method=downloadWSDL&serviceId=" + serviceId;
-            }
+        if (file == null) {
+            return null;
         }
-        return null;
+        if (file.getSize() < 1000000) {
+            return file.getContent().asString();
+        } else {
+            return "services/webService.download?method=downloadWSDL&serviceId=" + serviceId;
+        }
     }
 
     public File getWSDLFile(String serviceId) {
         Service service = this.designServiceMgr.getService(serviceId);
         if (service != null) {
-            File serviceRuntimeDirectory;
-            try {
-                serviceRuntimeDirectory = this.designServiceMgr.getServiceRuntimeDirectory(serviceId).getFile();
-            } catch (IOException ex) {
-                throw new WMRuntimeException(ex);
-            }
+            Folder serviceRuntimeDirectory = this.designServiceMgr.getServiceRuntimeFolder(serviceId);
             String clazz = service.getClazz();
             String packagePath = clazz.replace('.', '/');
             packagePath = packagePath.substring(0, packagePath.lastIndexOf('/'));
-            File packageDir = new File(serviceRuntimeDirectory, packagePath);
-            if (packageDir.exists()) {
-                File[] files = packageDir.listFiles();
-                if (files != null) {
-                    for (File file : files) {
-                        if (file.getName().toLowerCase().endsWith(Constants.WSDL_EXT)) {
-                            return file;
-                        }
-                    }
-                }
+            Folder packageDir = serviceRuntimeDirectory.getFolder(packagePath);
+            Iterator<File> wsdlFiles = packageDir.list(ResourceFiltering.fileNames().ending(Constants.WSDL_EXT)).iterator();
+            if (wsdlFiles.hasNext()) {
+                return wsdlFiles.next();
             }
         }
         return null;
     }
 
-    public DownloadResponse downloadWSDL(String serviceId) throws IOException {
-        DownloadResponse response = new DownloadResponse();
+    public Downloadable downloadWSDL(String serviceId) throws IOException {
         File wsdlFile = getWSDLFile(serviceId);
-        FileInputStream fis = new FileInputStream(wsdlFile);
-        response.setContents(fis);
-        response.setFileName(wsdlFile.getName());
-        return response;
+        return new DownloadableFile(wsdlFile);
     }
 
     /**
@@ -726,7 +710,7 @@ public class WebServiceToolsManager {
      * @param systemId
      * @return An XSD file.
      */
-    private static File getLocalXsdFileFromSystemId(String systemId) {
+    private static java.io.File getLocalXsdFileFromSystemId(String systemId) {
         if (!systemId.endsWith(Constants.XSD_EXT)) {
             return null;
         }
@@ -737,18 +721,18 @@ public class WebServiceToolsManager {
             return null;
         }
         if (url.getProtocol().equals("file") && url.getFile() != null) {
-            return new File(url.getFile());
+            return new java.io.File(url.getFile());
         } else {
             return null;
         }
     }
 
-    private static File generateWsdlFromWadl(String wadlPath, File outDir) {
+    private static java.io.File generateWsdlFromWadl(String wadlPath, java.io.File outDir) {
         String wadlUri = null;
         if (wadlPath.startsWith("http")) {
             wadlUri = wadlPath;
         } else {
-            File file = new File(wadlPath);
+            java.io.File file = new java.io.File(wadlPath);
             wadlUri = file.toURI().toString();
         }
         try {
@@ -827,7 +811,7 @@ public class WebServiceToolsManager {
         if (schemaPath.startsWith("http")) {
             url = new URL(schemaPath);
         } else {
-            File f = new File(schemaPath);
+            java.io.File f = new java.io.File(schemaPath);
             url = f.toURI().toURL();
         }
         InputSource input = new InputSource(url.openStream());
@@ -884,7 +868,7 @@ public class WebServiceToolsManager {
     // end of the service name to prevent the operation Java source file from
     // being overwritten
     // by the service Java source file.
-    private void modifyServiceName(File wsdlf) throws IOException, ParserConfigurationException, SAXException, TransformerException {
+    private void modifyServiceName(java.io.File wsdlf) throws IOException, ParserConfigurationException, SAXException, TransformerException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         dbf.setNamespaceAware(true);
         DocumentBuilder docBuilder = dbf.newDocumentBuilder();

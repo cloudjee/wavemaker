@@ -23,11 +23,11 @@ import java.util.jar.JarFile;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.Resource;
 
-import com.wavemaker.common.CommonRuntimeAccess;
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.ClassLoaderUtils;
 import com.wavemaker.tools.project.StudioFileSystem;
+import com.wavemaker.runtime.RuntimeAccess;
 
 /**
  * A ClassLoader that loads a list of resources
@@ -47,7 +47,7 @@ public class CFClassLoader extends ClassLoader {
         super(null);
         this.resources = resources;
         this.parentClassLoader = parent;
-        this.fileSystem = (StudioFileSystem) CommonRuntimeAccess.getInstance().getSpringBean("fileSystem");
+        this.fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
     }
 
     @Override

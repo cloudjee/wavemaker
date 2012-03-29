@@ -18,10 +18,9 @@ import java.io.IOException;
 
 import javax.xml.bind.JAXBException;
 
-import org.springframework.core.io.Resource;
-
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.service.events.EventWire;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
@@ -50,7 +49,7 @@ public class EventRefactorUpgrade implements UpgradeTask {
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
-        DesignServiceManager dsm = DesignTimeUtils.getDSMForProjectRoot(project.getProjectRoot());
+        DesignServiceManager dsm = DesignTimeUtils.getDesignServiceManager(project);
 
         try {
             // upgrade events
@@ -61,11 +60,10 @@ public class EventRefactorUpgrade implements UpgradeTask {
                 }
 
                 if (!service.getEventnotifier().isEmpty()) {
-                    Resource beansFile = dsm.getServiceBeanXml(service.getId());
-                    Beans beans = SpringConfigSupport.readBeans(beansFile, project);
+                    File beansFile = dsm.getServiceBeanXmlFile(service.getId());
+                    Beans beans = SpringConfigSupport.readBeans(beansFile);
 
                     for (EventNotifier event : service.getEventnotifier()) {
-
                         String existingBeanId = null;
                         for (Service srvc : dsm.getServices()) {
                             if (srvc.getClazz().equals(event.getName())) {
@@ -85,12 +83,12 @@ public class EventRefactorUpgrade implements UpgradeTask {
                     service.getEventnotifier().clear();
                     dsm.defineService(service);
 
-                    SpringConfigSupport.writeBeans(beans, beansFile, project);
+                    SpringConfigSupport.writeBeans(beans, beansFile);
                 }
             }
 
             // remove eventManager by regenerating project-managers.xml
-            ConfigurationCompiler.generateManagers(project, ConfigurationCompiler.getRuntimeManagersXml(project), dsm.getServices());
+            ConfigurationCompiler.generateManagers(ConfigurationCompiler.getRuntimeManagersXmlFile(project), dsm.getServices());
         } catch (IOException e) {
             throw new WMRuntimeException(e);
         } catch (JAXBException e) {

@@ -14,21 +14,19 @@
 
 package com.wavemaker.tools.service;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.util.Assert;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
 import com.wavemaker.tools.common.ConfigurationException;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
@@ -44,10 +42,7 @@ public class ServiceClassGenerator {
 
     private final Log logger = LogFactory.getLog(ServiceClassGenerator.class);
 
-    private final List<Resource> services = new ArrayList<Resource>();
-
-    // map service file to its service id
-    private final Map<Resource, String> serviceToServiceId = new HashMap<Resource, String>();
+    private final List<ServiceDetail> serviceDetails = new ArrayList<ServiceDetail>();
 
     private Resource outputDirectory = null;
 
@@ -61,88 +56,87 @@ public class ServiceClassGenerator {
         this.outputDirectory = outputDirectory;
     }
 
-    public void addService(List<Resource> serviceFiles) {
-        addService(serviceFiles, null);
-    }
-
-    public void addService(List<Resource> serviceFiles, String serviceId) {
-        for (Resource f : serviceFiles) {
+    public void addServiceFiles(List<ServiceFile> serviceFiles, String serviceId) {
+        for (ServiceFile f : serviceFiles) {
             addService(f, serviceId);
         }
     }
 
-    public void addServiceFiles(List<Resource> serviceFiles, String serviceId) {
-        for (Resource f : serviceFiles) {
-            addService(f, serviceId);
-        }
-    }
-
-    public void addService(Resource f) {
-        addService(f, null);
-    }
-
-    public void addService(Resource f, String serviceId) {
-        this.services.add(f);
-        if (serviceId != null) {
-            this.serviceToServiceId.put(f, serviceId);
-        }
+    private void addService(ServiceFile serviceFile, String serviceId) {
+        Assert.notNull(serviceId, "ServiceId must not be null");
+        this.serviceDetails.add(new ServiceDetail(serviceFile, serviceId));
     }
 
     public void run() {
-
         if (this.serviceManager == null) {
-            throw new ConfigurationException("serviceMgr cannot be null");
+            throw new ConfigurationException("serviceManager cannot be null");
         }
 
-        for (Resource f : this.services) {
+        for (ServiceDetail serviceDetail : this.serviceDetails) {
+            String serviceId = serviceDetail.getServiceId();
+            ServiceFile serviceFile = serviceDetail.getServiceFile();
 
-            String serviceId = this.serviceToServiceId.get(f);
+            DeprecatedServiceDefinition def = ServiceUtils.getServiceDefinition(serviceFile, serviceId, this.serviceManager);
 
-            DeprecatedServiceDefinition def = ServiceUtils.getServiceDefinition(f, serviceId, this.serviceManager);
+            if (def != null) {
+                GenerationConfiguration cfg = new GenerationConfiguration(def, this.outputDirectory);
+                ServiceGenerator generator = ServiceUtils.getServiceGenerator(cfg);
 
-            if (def == null) {
-                continue;
-            }
-
-            GenerationConfiguration cfg = new GenerationConfiguration(def, this.outputDirectory);
-
-            ServiceGenerator generator = ServiceUtils.getServiceGenerator(cfg);
-
-            Resource rtdir = this.serviceManager.getServiceRuntimeDirectory(serviceId);
-            long l;
-            try {
-                l = rtdir.lastModified();
-            } catch (IOException ex) {
-                throw new WMRuntimeException(ex);
-            }
-            if (generator.isUpToDate(l)) {
-                if (this.logger.isInfoEnabled()) {
-                    this.logger.info("service " + def.getServiceId() + " is up to date");
-                }
-                continue;
-            } else {
-                if (this.logger.isInfoEnabled()) {
-                    this.logger.info("service " + def.getServiceId() + " needs to be re-generated");
-                }
-            }
-
-            try {
-                Project project = this.serviceManager.getProjectManager().getCurrentProject();
-                Resource smdFile = ConfigurationCompiler.getSmdResource(project, serviceId);
-                String smdContent = project.readFile(smdFile);
-                generator.setSmdContent(smdContent);
-                generator.generate();
-            } catch (GenerationException ex) {
-                throw new WMRuntimeException(ex);
-            } catch (IOException ex) {
-                throw new WMRuntimeException(ex);
-            } finally {
+                Resource serviceRuntimeDirectory = this.serviceManager.getServiceRuntimeDirectory(serviceId);
+                long lastModified;
                 try {
-                    def.dispose();
-                } catch (RuntimeException ex) {
-                    this.logger.warn("Error while cleaning up", ex);
+                    lastModified = serviceRuntimeDirectory.lastModified();
+                } catch (IOException ex) {
+                    throw new WMRuntimeException(ex);
+                }
+                if (generator.isUpToDate(lastModified)) {
+                    if (this.logger.isInfoEnabled()) {
+                        this.logger.info("service " + def.getServiceId() + " is up to date");
+                    }
+                    continue;
+                } else {
+                    if (this.logger.isInfoEnabled()) {
+                        this.logger.info("service " + def.getServiceId() + " needs to be re-generated");
+                    }
+                }
+
+                try {
+                    Project project = this.serviceManager.getProjectManager().getCurrentProject();
+                    File smdFile = ConfigurationCompiler.getSmdFile(project, serviceId);
+                    String smdContent = smdFile.getContent().asString();
+                    generator.setSmdContent(smdContent);
+                    generator.generate();
+                } catch (GenerationException ex) {
+                    throw new WMRuntimeException(ex);
+                } finally {
+                    try {
+                        def.dispose();
+                    } catch (RuntimeException ex) {
+                        this.logger.warn("Error while cleaning up", ex);
+                    }
                 }
             }
+        }
+    }
+
+    private static class ServiceDetail {
+
+        private final ServiceFile serviceFile;
+
+        private final String serviceId;
+
+        public ServiceDetail(ServiceFile serviceFile, String serviceId) {
+            super();
+            this.serviceFile = serviceFile;
+            this.serviceId = serviceId;
+        }
+
+        public ServiceFile getServiceFile() {
+            return this.serviceFile;
+        }
+
+        public String getServiceId() {
+            return this.serviceId;
         }
     }
 }

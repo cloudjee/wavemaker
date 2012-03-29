@@ -15,6 +15,7 @@
 dojo.provide("wm.base.components.JsonRpcService");
 dojo.require("wm.base.components.Service");
 dojo.require("dojo.rpc.JsonService");
+dojo.require("dojox.uuid.generateRandomUuid");
 
 wm.inflight = {
 	_inflight: [],
@@ -72,14 +73,15 @@ dojo.declare("wm.JsonRpc", dojo.rpc.JsonService, {
 	smd: null,
 	required: false,
 	sync: false,
-        _designTime: false,
+    _designTime: false,
+	requestHeaders: {},
 	bind: function(method, parameters, deferredRequestHandler, url){
 		//console.log("method", method, "parameters", parameters || [], "url", url || this.serviceUrl);
 		url = url || this.serviceUrl;
 
 		//if a query is running for salesforceService, the query service must be provided by the customer application,
 		//not from Studio.
-		if (method == "runQuery" && parameters[0] == SALESFORCE_SERVICE) { //xxx
+		if (method == "runQuery" && parameters[0] == SALESFORCE_SERVICE) {
 			url = wm.services.getService(SALESFORCE_SERVICE)._service.serviceUrl;
 		}
 
@@ -97,17 +99,23 @@ dojo.declare("wm.JsonRpc", dojo.rpc.JsonService, {
 			contentType: this.contentType,
 			timeout: this.timeout, 
 			handleAs: "json",
-			sync: this.sync
+			sync: this.sync,
+			headers: this.requestHeaders
 		}
 	    if (wm.xhrPath) {
 		props.url = wm.xhrPath + props.url;
 	    }
 		var def = dojo.rawXhrPost(props);
+		deferredRequestHandler = dojo.mixin(deferredRequestHandler, def.ioArgs);
+
 		def.addCallbacks(this.resultCallback(deferredRequestHandler), this.errorCallback(deferredRequestHandler));
 	},
 	// override dojo default, we want full result object, not just {result: ...}
 	parseResults: function(obj){
 		return obj;
+	},
+	setRequestHeaders: function(reqHeaders) {
+		this.requestHeaders = reqHeaders;
 	}
 });
 
@@ -201,9 +209,9 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		}
 	},
 	invoke: function(inMethod, inArgs, owner, invoker) {
-		this.invoke(inMethod, inArgs, owner, invoker, false, false);
+		this.invoke(inMethod, inArgs, owner, invoker, false, false, null);
 	},
-	invoke: function(inMethod, inArgs, owner, invoker, inLoop, inLongDeferred) {
+	invoke: function(inMethod, inArgs, owner, invoker, inLoop, inLongDeferred, requestId) {
 		if (!this._service) 
 			return null;
 		this._service.sync = this.sync;
@@ -224,37 +232,31 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		this.result = null;
 		this.error = null;
 
-	        var operation = this.getOperation(inMethod);
-	        if (operation)
-		    var responseTime = operation.responseTime;
-		var requestId;
-		if (responseTime && responseTime == "long") {
-			var savedSync = this._service.sync;
-			this._service.sync = true;
-			var dd = this._service.callRemote("getRequestId", []);
-			requestId = dd.results[0].result;
-			this._service.sync = savedSync;
-			inArgs.push("longResponseTime");
-			inArgs.push(requestId);
-		} else if (inLoop && inMethod == "getResponseFromService") {
-			requestId = inArgs[0];
-		}
+		var d;
+		if (wm.connectionTimeout > 0) {
+			if (inLoop) {
+				this._service.setRequestHeaders({"wm-polling-request" : requestId});
+			} else {
+				requestId = dojox.uuid.generateRandomUuid();
+				this._service.setRequestHeaders({"wm-initial-request" : requestId});
+			}
 
-		var d = this._service.callRemote(inMethod, inArgs || []);
-		if (responseTime && responseTime == "long" || inLoop && inMethod == "getResponseFromService")  {
+			d = this._service.callRemote(inMethod, inArgs || []);
+
 			var longDeferred = inLongDeferred || new dojo.Deferred();
-			d.addCallbacks(dojo.hitch(this, "onLongResponseTimeResult", owner, invoker, inLoop, responseTime, requestId, longDeferred), 
-				dojo.hitch(this, "onLongResponseTimeError", owner, invoker, inLoop, responseTime, requestId, longDeferred));
+			d.addCallbacks(dojo.hitch(this, "onLongResponseTimeResult", inMethod, inArgs, owner, invoker, inLoop, requestId, longDeferred, d), 
+				dojo.hitch(this, "onLongResponseTimeError", inMethod, inArgs, owner, invoker, inLoop, requestId, longDeferred, d));
 			d = longDeferred;
 		} else {
+			d = this._service.callRemote(inMethod, inArgs || []);
 			d.addCallbacks(dojo.hitch(this, "onResult"), dojo.hitch(this, "onError"));
 		}
-	    //wm.inflight.add(d, this.service == "runtimeService" ? (inArgs[0] ? inArgs[0] : "LazyLoad Data") + ": " + inArgs[1] : this.name + "." + inMethod, inMethod, inArgs, invoker);
+		
 	    wm.inflight.add(d, this.service, this.name, inArgs, inMethod, invoker);
 		this.inflight = true;
 		return d;
 	},
-        request: function(inMethod, inArgs, inResult, inError, invoker) {
+    request: function(inMethod, inArgs, inResult, inError, invoker) {
 	    var d = this.invoke(inMethod, inArgs, null, invoker);
 		if (inResult) {
 			if (dojo.isFunction(inResult))
@@ -297,49 +299,39 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		var d = this.requestSync(inMethod, inArgs);
 		return d.results[0];
 	},
-	onLongResponseTimeResult: function(owner, invoker, inLoop, responseTime, requestId, longDeferred, inResult) {
+	onLongResponseTimeResult: function(inMethod, inArgs, owner, invoker, inLoop, requestId, longDeferred, deferred, inResult) {
 		var r;
 	    this.inflight = false;
 		var callInvoke = false;
-		var inArgs;
-		var inMethod = "getResponseFromService";
-		if (responseTime == "long" || inLoop) {
-			if (inResult.result.status == "processing") {
-				inArgs = [requestId];
-				inMethod = "getResponseFromService";
+		var processStatus = deferred.xhr.getResponseHeader("wm-json-response-status");
+		if (inLoop) {
+			if (processStatus == "processing") {
 				callInvoke = true;
-			} else if (inResult.result.status == "error") {
-				return this.onLongResponseTimeError(owner, invoker, inLoop, responseTime, requestId, inResult.result.result);
-			} else if (inResult.result.status == "done") {
-				r = this.fullResult = inResult.result;
+			} else if (processStatus == "error") {
+				return this.onLongResponseTimeError(inMethod, inArgs, owner, invoker, inLoop, requestId, longDeferred, inResult.result);
+			} else if (processStatus == "done") {
+				r = this.fullResult = inResult;
 				this.result = (r || 0).result;
 				longDeferred.callback(this.result);
 			} else {
-				inArgs = [inResult.result.requestId];
-				inMethod = "getResponseFromService";
 				callInvoke = true;
 			}
 			if (callInvoke) {
 				wm.onidle(this, function() {
-					this.invoke(inMethod, inArgs, owner, invoker, true, longDeferred);
+					this.invoke(inMethod, inArgs, owner, invoker, true, longDeferred, requestId);
 				});
 			}
-		}
+		} else {
 
-		return this.onResult(inResult);
+			longDeferred.callback(this.onResult(inResult));
+		}
 	},
-	onLongResponseTimeError: function(owner, invoker, inLoop, responseTime, requestId, longDeferred, inError) {
-		if (responseTime == "long" && typeof inError == "string") {
-			if (inError.indexOf("status:502") > 0 || inError.indexOf("status:504") > 0) {
-				var inArgs = [requestId];
-				var inMethod = "getResponseFromService";
-				wm.onidle(this, function() {
-					this.invoke(inMethod, inArgs, owner, invoker, true, longDeferred);
-				});
-			}
+	onLongResponseTimeError: function(inMethod, inArgs, owner, invoker, inLoop, requestId, longDeferred, deferred, inError) {
+		if (deferred.xhr.status == 504 || deferred.xhr.status == 502) {			
+			this.invoke(inMethod, inArgs, owner, invoker, true, longDeferred, requestId);
+		} else {
+			longDeferred.errback(this.onError(inError));
 		}
-
-		return this.onError(inError);
 	},
 
 	onResult: function(inResult) {
@@ -418,8 +410,8 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 			this._operations[op.name] = {
 			    parameters: this.paramArrayToHash(op.parameters || []),
 			    returnType: op.returnType || "any",
-			    operationType: op.operationType || "",
-				responseTime: op.responseTime || ""
+			    operationType: op.operationType || ""
+				//responseTime: op.responseTime || ""
 			};
 		}
 		this._methods.sort();

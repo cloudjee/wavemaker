@@ -21,9 +21,9 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.lang.StringUtils;
-import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
@@ -50,33 +50,33 @@ public class WebInfActiveGridUpgrade implements UpgradeTask {
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
-        Resource servicesConfig = ConfigurationCompiler.getRuntimeServicesXml(project);
-        Resource managersConfig = ConfigurationCompiler.getRuntimeManagersXml(project);
-        Resource webxml = project.getWebXml();
+        File servicesConfig = ConfigurationCompiler.getRuntimeServicesXmlFile(project);
+        File managersConfig = ConfigurationCompiler.getRuntimeManagersXmlFile(project);
+        File webxml = project.getWebXmlFile();
 
         List<String> changedFiles = new ArrayList<String>();
         List<String> regenedFiles = new ArrayList<String>();
 
-        DesignServiceManager dsm = DesignTimeUtils.getDSMForProjectRoot(project.getProjectRoot());
+        DesignServiceManager dsm = DesignTimeUtils.getDesignServiceManager(project);
 
         try {
             if (servicesConfig.exists()) {
-                ConfigurationCompiler.generateServices(project, servicesConfig, dsm.getServices());
+                ConfigurationCompiler.generateServices(servicesConfig, dsm.getServices());
                 regenedFiles.add(ConfigurationCompiler.RUNTIME_SERVICES);
             }
 
             if (managersConfig.exists()) {
-                ConfigurationCompiler.generateManagers(project, managersConfig, dsm.getServices());
+                ConfigurationCompiler.generateManagers(managersConfig, dsm.getServices());
                 regenedFiles.add(ConfigurationCompiler.RUNTIME_MANAGERS);
             }
 
             if (webxml.exists()) {
-                String webxmlContents = project.readFile(webxml);
+                String webxmlContents = webxml.getContent().asString();
                 webxmlContents = webxmlContents.replace("com.activegrid.runtime.server.CleanupListener",
                     "com.wavemaker.runtime.server.CleanupListener");
                 webxmlContents = webxmlContents.replace("com.activegrid.runtime.security.AcegiAjaxFilter",
                     "com.wavemaker.runtime.security.AcegiAjaxFilter");
-                project.writeFile(webxml, webxmlContents);
+                webxml.getContent().write(webxmlContents);
                 changedFiles.add(ProjectConstants.WEB_XML);
             }
         } catch (IOException e) {

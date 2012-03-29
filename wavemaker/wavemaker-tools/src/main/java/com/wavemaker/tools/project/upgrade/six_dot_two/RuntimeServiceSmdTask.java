@@ -14,11 +14,7 @@
 
 package com.wavemaker.tools.project.upgrade.six_dot_two;
 
-import java.io.IOException;
-
-import org.springframework.core.io.Resource;
-
-import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
@@ -36,26 +32,10 @@ public class RuntimeServiceSmdTask implements UpgradeTask {
 
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
-        Resource rtsmd;
-        try {
-            rtsmd = project.getWebAppRoot().createRelative("services/runtimeService.smd");
-        } catch (IOException ex) {
-            throw new WMRuntimeException(ex);
-        }
-
-        if (this.fileSystem.deleteFile(rtsmd)) {
-            upgradeInfo.addMessage("runtimeService.smd is successfully deleted for re-creation.");
-        } else {
-            upgradeInfo.addMessage("*** Cannot delete runtimeService.smd. Upgrade has failed ***");
-            return;
-        }
-
-        Resource webxml = project.getWebXml();
-        if (this.fileSystem.deleteFile(webxml)) {
-            upgradeInfo.addMessage("\r\n\tweb.xml is successfully deleted for re-creation.");
-        } else {
-            upgradeInfo.addMessage("*** Cannot delete web.xml. Upgrade has failed ***");
-        }
+        File runtimeServiceFile = project.getWebAppRootFolder().getFile("services/runtimeService.smd");
+        runtimeServiceFile.delete();
+        File webxml = project.getWebXmlFile();
+        webxml.delete();
     }
 
     public void setFileSystem(StudioFileSystem fileSystem) {

@@ -14,7 +14,6 @@
 
 package com.wavemaker.tools.project.upgrade.five_dot_zero;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +21,11 @@ import java.util.List;
 import javax.xml.bind.JAXBException;
 
 import org.apache.commons.lang.StringUtils;
-import org.springframework.core.io.FileSystemResource;
 
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.runtime.service.ServiceWire;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectUtils;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
@@ -49,7 +48,7 @@ public class AddServiceWireUpgradeTask implements UpgradeTask {
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
 
-        DesignServiceManager dsm = DesignTimeUtils.getDSMForProjectRoot(project.getProjectRoot());
+        DesignServiceManager dsm = DesignTimeUtils.getDesignServiceManager(project);
 
         // build, so we have access to all the classes
         try {
@@ -80,15 +79,14 @@ public class AddServiceWireUpgradeTask implements UpgradeTask {
             }
 
             try {
-                File springFile = new File(dsm.getServiceRuntimeDirectory(service.getId()).getFile(), service.getSpringFile());
-
-                if (springFile == null || !springFile.exists()) {
+                File springFile = dsm.getServiceRuntimeFolder(service.getId()).getFile(service.getSpringFile());
+                if (!springFile.exists()) {
                     DesignServiceManager.generateSpringServiceConfig(service.getId(), service.getClazz(),
-                        dsm.getDesignServiceType(service.getType()), new FileSystemResource(springFile), project);
+                        dsm.getDesignServiceType(service.getType()), springFile, project);
                     continue;
                 }
 
-                Beans beans = SpringConfigSupport.readBeans(new FileSystemResource(springFile), project);
+                Beans beans = SpringConfigSupport.readBeans(springFile);
 
                 boolean foundServiceWire = false;
                 for (Bean bean : beans.getBeanList()) {
@@ -105,9 +103,7 @@ public class AddServiceWireUpgradeTask implements UpgradeTask {
                 if (!foundServiceWire) {
                     Bean serviceWireBean = DesignServiceManager.generateServiceWireBean(dsm.getDesignServiceType(service.getType()), service.getId());
                     beans.addBean(serviceWireBean);
-
-                    SpringConfigSupport.writeBeans(beans, new FileSystemResource(springFile), project);
-
+                    SpringConfigSupport.writeBeans(beans, springFile);
                     touchedServices.add(service.getId());
                 }
             } catch (JAXBException e) {

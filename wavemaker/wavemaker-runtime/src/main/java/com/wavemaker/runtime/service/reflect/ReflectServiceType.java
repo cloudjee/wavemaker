@@ -89,13 +89,13 @@ public abstract class ReflectServiceType implements ServiceType {
     public TypedServiceReturn invokeMethod(
                 ServiceWire serviceWire, String methodName,
                 ParsedServiceArguments args, JSONState jsonState) {
-        return invokeMethod(serviceWire, methodName, args, jsonState, null, false, null);
+        return invokeMethod(serviceWire, methodName, args, jsonState, null);
     }
 
+    @Override
     public TypedServiceReturn invokeMethod(
-            ServiceWire serviceWire, String methodName,
-            ParsedServiceArguments args, JSONState jsonState, ServiceResponse serviceResponse, boolean longResponseTime,
-            String requestId) {
+                ServiceWire serviceWire, String methodName,
+                ParsedServiceArguments args, JSONState jsonState, ServiceResponse serviceResponse) {
 
         Method method;
         Object serviceObject;
@@ -115,12 +115,12 @@ public abstract class ReflectServiceType implements ServiceType {
 
         Object ret = null;
         try {
-            ret = method.invoke(serviceObject, args.getArguments());
-            if (longResponseTime) {
-                JSONObject retJson = serviceResponse.addResponse(requestId, ret);
-                FieldDefinition fd = new GenericFieldDefinition();
-                ret = new TypedServiceReturn(retJson, fd);
+            if (serviceResponse != null && serviceResponse.getConnectionTimeout() > 0) {
+                ret = serviceResponse.invokeMethod(method, serviceObject, args.getArguments());
+            } else {
+                ret = method.invoke(serviceObject, args.getArguments());
             }
+
         } catch (Exception e) {
             if (e.getCause() != null) {
                 throw new WMRuntimeException(MessageResource.JSONUTILS_FAILEDINVOKE, e.getCause(), method.getName(), method.getDeclaringClass());

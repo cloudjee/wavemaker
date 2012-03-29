@@ -17,9 +17,9 @@ package com.wavemaker.tools.project.upgrade.swamis;
 import java.io.IOException;
 import java.util.Set;
 
-import org.springframework.core.io.Resource;
-
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.project.PagesManager;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
@@ -44,11 +44,11 @@ public class CurrencyRenameUpgrade implements UpgradeTask {
             Set<String> pages = getPagesManager().listPages();
 
             for (String page : pages) {
-                Resource pageDir = getPagesManager().getPageDir(project.getProjectName(), page);
-                Resource widgetsJs = pageDir.createRelative(page + "." + PagesManager.PAGE_WIDGETS);
-                String pageContents = project.readFile(widgetsJs);
+                Folder pageFolder = getPagesManager().getPageFolder(project, page);
+                File widgetsJs = pageFolder.getFile(page + "." + PagesManager.PAGE_WIDGETS);
+                String pageContents = widgetsJs.getContent().asString();
                 pageContents = pageContents.replace("\"wm.MoneyFormatter\"", "\"wm.CurrencyFormatter\"");
-                project.writeFile(widgetsJs, pageContents);
+                widgetsJs.getContent().write(pageContents);
             }
         } catch (IOException e) {
             throw new WMRuntimeException(e);

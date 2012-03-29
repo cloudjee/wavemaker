@@ -229,6 +229,13 @@ public class ResourceFilteringTest {
         assertThat(filter.include(fileWithName("~xxkeepxx.bak")), is(false));
     }
 
+    @Test
+    public void shouldFilterHiddenResources() throws Exception {
+        ResourceFilter<Resource> filter = ResourceFiltering.hiddenResources();
+        assertThat(filter.include(fileWithName(".hidden")), is(false));
+        assertThat(filter.include(fileWithName("nothidden")), is(true));
+    }
+
     private File fileWithName(String name) {
         return resourceWithName(File.class, name, null);
     }

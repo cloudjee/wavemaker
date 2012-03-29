@@ -14,8 +14,6 @@
 
 package com.wavemaker.tools.service;
 
-import org.springframework.core.io.Resource;
-
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
 
 /**
@@ -28,9 +26,9 @@ public interface ServiceDefinitionFactory {
      * Returns ServiceDefintion instance if this ServiceDefinitionFactory knows how to handle the passed in File.
      * Returns null otherwise.
      * 
-     * @param f The file that represents a ServiceDefinition
+     * @param serviceFile The file that represents a ServiceDefinition
      * 
      * @return ServiceDefintion or null if file is unknown
      */
-    ServiceDefinition getServiceDefinition(Resource f, String serviceId, DesignServiceManager serviceMgr);
+    ServiceDefinition getServiceDefinition(ServiceFile serviceFile, String serviceId, DesignServiceManager serviceMgr);
 }

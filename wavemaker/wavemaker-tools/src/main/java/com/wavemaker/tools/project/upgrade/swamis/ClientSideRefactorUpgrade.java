@@ -19,9 +19,9 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.springframework.core.io.Resource;
-
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.project.PagesManager;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.ProjectConstants;
@@ -59,97 +59,86 @@ public class ClientSideRefactorUpgrade implements UpgradeTask {
 
         try {
             String projectJS = project.getProjectName() + ".js";
-            Resource fProjectJS = project.getWebAppRoot().createRelative(projectJS);
+            File fProjectJS = project.getWebAppRootFolder().getFile(projectJS);
             Set<String> pages = getPagesManager().listPages();
 
             // 1. rename /project/index.html to index.bak
-            Resource webapp = project.getWebAppRoot();
-            Resource indexhtml = webapp.createRelative(ProjectConstants.INDEX_HTML);
+            Folder webapp = project.getWebAppRootFolder();
+            File indexhtml = webapp.getFile(ProjectConstants.INDEX_HTML);
             if (indexhtml.exists()) {
-                Resource bakIndexhtml = webapp.createRelative(ProjectConstants.INDEX_HTML + "." + BACKUP_EXT);
-                project.writeFile(bakIndexhtml, project.readFile(indexhtml));
-                project.deleteFile(indexhtml);
-                upgradeInfo.addMessage("(generated) index.html renamed to index.html.bak");
+                indexhtml.rename(ProjectConstants.INDEX_HTML + "." + BACKUP_EXT);
             }
 
             // 5. in applicationN.js delete turbo.types json
             if (fProjectJS.exists()) {
-                String fProjectJSContents = project.readFile(fProjectJS);
+                String fProjectJSContents = fProjectJS.getContent().asString();
                 fProjectJSContents = trimOutTypes(fProjectJSContents);
-                project.writeFile(fProjectJS, fProjectJSContents);
+                fProjectJS.getContent().write(fProjectJSContents);
             }
 
             // 2. we need to change all instances of turbo to wm
             for (String page : pages) {
-                Resource pageDir = getPagesManager().getPageDir(project.getProjectName(), page);
-
-                Resource widgetsJS = pageDir.createRelative(page + "." + PagesManager.PAGE_WIDGETS);
+                Folder pageFolder = getPagesManager().getPageFolder(project, page);
+                File widgetsJS = pageFolder.getFile(page + "." + PagesManager.PAGE_WIDGETS);
                 if (widgetsJS.exists()) {
-                    String contents = project.readFile(widgetsJS);
+                    String contents = widgetsJS.getContent().asString();
                     contents = contents.replace("turbo.", "wm.");
-                    project.writeFile(widgetsJS, contents);
+                    widgetsJS.getContent().write(contents);
                 }
 
-                Resource pageJS = pageDir.createRelative(page + "." + PagesManager.PAGE_JS);
+                File pageJS = pageFolder.getFile(page + "." + PagesManager.PAGE_JS);
                 if (pageJS.exists()) {
-                    String contents = project.readFile(pageJS);
+                    String contents = pageJS.getContent().asString();
                     contents = contents.replace("turbo.Part", "wm.Page");
-                    project.writeFile(pageJS, contents);
+                    pageJS.getContent().write(contents);
                 }
             }
 
             if (fProjectJS.exists()) {
-                String contents = project.readFile(fProjectJS);
+                String contents = fProjectJS.getContent().asString();
                 contents = contents.replace("turbo.", "wm.");
-                project.writeFile(fProjectJS, contents);
+                fProjectJS.getContent().write(contents);
             }
 
             // 3. widget name changes
             for (String page : pages) {
-                Resource pageDir = getPagesManager().getPageDir(project.getProjectName(), page);
-
-                Resource widgetsJS = pageDir.createRelative(page + "." + PagesManager.PAGE_WIDGETS);
+                Folder pageFolder = getPagesManager().getPageFolder(project, page);
+                File widgetsJS = pageFolder.getFile(page + "." + PagesManager.PAGE_WIDGETS);
                 if (widgetsJS.exists()) {
-                    String contents = project.readFile(widgetsJS);
+                    String contents = widgetsJS.getContent().asString();
                     contents = contents.replace("wm.ServiceCall", "wm.ServiceVariable");
                     contents = contents.replace("wm.Pane\"", "wm.PageContainer\"");
-                    project.writeFile(widgetsJS, contents);
+                    widgetsJS.getContent().write(contents);
                 }
             }
 
             if (fProjectJS.exists()) {
-                String contents = project.readFile(fProjectJS);
+                String contents = fProjectJS.getContent().asString();
                 contents = contents.replace("wm.ServiceCall", "wm.ServiceVariable");
                 contents = contents.replace("wm.Pane\"", "wm.PageContainer\"");
-                project.writeFile(fProjectJS, contents);
+                fProjectJS.getContent().write(contents);
             }
 
             // 4. (hard) rename bindings associated with NavigationCall's
             for (String page : pages) {
-                Resource pageDir = getPagesManager().getPageDir(project.getProjectName(), page);
-
-                Resource widgetsJS = pageDir.createRelative(page + "." + PagesManager.PAGE_WIDGETS);
+                Folder pageFolder = getPagesManager().getPageFolder(project, page);
+                File widgetsJS = pageFolder.getFile(page + "." + PagesManager.PAGE_WIDGETS);
                 if (widgetsJS.exists()) {
-                    String contents = project.readFile(widgetsJS);
-
+                    String contents = widgetsJS.getContent().asString();
                     // * gotoPanePage -> gotoPageContainerPage
                     contents = this.panePagePattern.matcher(contents).replaceAll(this.panePageReplaceStr);
-
                     // * wm.Wire's with "pane" -> "pageContainer
                     contents = this.panePattern.matcher(contents).replaceAll(this.paneReplaceStr);
-
-                    project.writeFile(widgetsJS, contents);
+                    widgetsJS.getContent().write(contents);
                 }
             }
 
             // 7. Expression syntax has changed to Javascript
             for (String page : pages) {
-                Resource pageDir = getPagesManager().getPageDir(project.getProjectName(), page);
-
-                Resource widgetsJS = pageDir.createRelative(page + "." + PagesManager.PAGE_WIDGETS);
+                Folder pageFolder = getPagesManager().getPageFolder(project, page);
+                File widgetsJS = pageFolder.getFile(page + "." + PagesManager.PAGE_WIDGETS);
                 if (widgetsJS.exists()) {
-                    String contents = project.readFile(widgetsJS);
-
+                    String contents = widgetsJS.getContent().asString();
                     Matcher matcher = this.expressionPattern.matcher(contents);
                     StringBuffer sb = new StringBuffer();
                     while (matcher.find()) {
@@ -158,8 +147,7 @@ public class ClientSideRefactorUpgrade implements UpgradeTask {
                         matcher.appendReplacement(sb, "$1" + expression + "$3");
                     }
                     matcher.appendTail(sb);
-
-                    project.writeFile(widgetsJS, sb.toString());
+                    widgetsJS.getContent().write(sb.toString());
                 }
             }
 
@@ -167,16 +155,13 @@ public class ClientSideRefactorUpgrade implements UpgradeTask {
             // ServiceCall in 3.2.x) need to be changed from "wm.Variable" to
             // "wm.ServiceInputVariable"
             for (String page : pages) {
-                Resource pageDir = getPagesManager().getPageDir(project.getProjectName(), page);
-
-                Resource widgetsJS = pageDir.createRelative(page + "." + PagesManager.PAGE_WIDGETS);
+                Folder pageDir = getPagesManager().getPageFolder(project, page);
+                File widgetsJS = pageDir.getFile(page + "." + PagesManager.PAGE_WIDGETS);
                 if (widgetsJS.exists()) {
-                    String contents = project.readFile(widgetsJS);
-
+                    String contents = widgetsJS.getContent().asString();
                     // * gotoPanePage -> gotoPageContainerPage
                     contents = this.serviceInputVariablePattern.matcher(contents).replaceAll(this.serviceInputVariableReplaceStr);
-
-                    project.writeFile(widgetsJS, contents);
+                    widgetsJS.getContent().write(contents);
                 }
             }
 
@@ -239,9 +224,7 @@ public class ClientSideRefactorUpgrade implements UpgradeTask {
             } else if (str.charAt(start) == B) {
                 level--;
             }
-
             start++;
-
             if (0 == level) {
                 break;
             }

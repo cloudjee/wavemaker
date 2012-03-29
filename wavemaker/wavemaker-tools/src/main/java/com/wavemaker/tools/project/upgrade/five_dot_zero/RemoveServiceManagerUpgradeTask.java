@@ -14,14 +14,12 @@
 
 package com.wavemaker.tools.project.upgrade.five_dot_zero;
 
-import java.io.File;
 import java.io.IOException;
 
 import javax.xml.bind.JAXBException;
 
-import org.springframework.core.io.FileSystemResource;
-
 import com.wavemaker.common.WMRuntimeException;
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.upgrade.UpgradeInfo;
 import com.wavemaker.tools.project.upgrade.UpgradeTask;
@@ -41,14 +39,11 @@ public class RemoveServiceManagerUpgradeTask implements UpgradeTask {
     @Override
     public void doUpgrade(Project project, UpgradeInfo upgradeInfo) {
         try {
-            File managersXml = ConfigurationCompiler.getRuntimeManagersXml(project).getFile();
-
-            Beans beans = SpringConfigSupport.readBeans(new FileSystemResource(managersXml), project);
-
+            File managersXml = ConfigurationCompiler.getRuntimeManagersXmlFile(project);
+            Beans beans = SpringConfigSupport.readBeans(managersXml);
             if (beans.getBeanById(ConfigurationCompiler.SERVICE_MANAGER_BEAN_ID) != null) {
                 beans.removeBeanById(ConfigurationCompiler.SERVICE_MANAGER_BEAN_ID);
-                SpringConfigSupport.writeBeans(beans, new FileSystemResource(managersXml), project);
-
+                SpringConfigSupport.writeBeans(beans, managersXml);
                 upgradeInfo.addMessage("Removed servicesManager from " + ConfigurationCompiler.RUNTIME_SERVICES);
             }
         } catch (JAXBException e) {

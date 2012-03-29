@@ -39,9 +39,6 @@
         <property name="internalRuntime">
             <ref bean="internalRuntime"/>
         </property>
-        <property name="commonRuntimeAccess">
-	            <ref bean="commonRuntimeAccess"/>
-        </property>
 		<property name="serviceResponse">
             <ref bean="serviceResponse"/>
         </property>
@@ -70,9 +67,6 @@
         <property name="internalRuntime">
             <ref bean="internalRuntime"/>
         </property>
-		<property name="commonRuntimeAccess">
-	            <ref bean="commonRuntimeAccess"/>
-        </property>
 
         <!-- controller configuration -->
         <property name="supportedMethods" value="POST" />
@@ -98,9 +92,6 @@
         <property name="internalRuntime">
             <ref bean="internalRuntime"/>
         </property>
-		<property name="commonRuntimeAccess">
-	            <ref bean="commonRuntimeAccess"/>
-        </property>
 
         <!-- controller configuration -->
         <property name="supportedMethods" value="POST" />
@@ -125,9 +116,6 @@
         </property>
         <property name="internalRuntime">
             <ref bean="internalRuntime"/>
-        </property>
-		<property name="commonRuntimeAccess">
-	            <ref bean="commonRuntimeAccess"/>
         </property>
 
         <!-- controller configuration -->
@@ -159,11 +147,6 @@
         <aop:scoped-proxy/>
     </bean>
 
-	<bean id="commonRuntimeAccess"
-			class="com.wavemaker.common.CommonRuntimeAccess" scope="request">
-        <aop:scoped-proxy/>
-    </bean>
-
     <bean id="internalRuntime"
             class="com.wavemaker.runtime.server.InternalRuntime"
             scope="request">
@@ -181,12 +164,21 @@
 		<property name="moduleManager">
             <ref bean="moduleManager"/>
         </property>
+		<property name="serviceResponse">
+            <ref bean="serviceResponse"/>
+        </property>
 
         <!-- controller configuration -->
         <!--property name="supportedMethods" value="GET" /-->
     </bean>
 
-	<bean id="serviceResponse" class="com.wavemaker.runtime.server.ServiceResponse" scope="singleton" lazy-init="true"/>
+	<bean id="serviceResponse" class="com.wavemaker.runtime.server.ServiceResponse" scope="singleton" lazy-init="true">
+		<property name="runtimeAccess">
+            <ref bean="runtimeAccess"/>
+        </property>
+		<!-- Set this value to your environment's connection timeout. Setting this value to zero means "no timeout" -->
+		<property name="connectionTimeout" value="0"/>
+	</bean>
     
     <bean class="com.wavemaker.runtime.data.cloudfoundry.CloudFoundryDataServiceBeanFactoryPostProcessor"/>
 </beans>

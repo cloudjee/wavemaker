@@ -14,7 +14,6 @@
 
 package com.wavemaker.tools.ant;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +22,12 @@ import org.apache.tools.ant.BuildException;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
+import com.wavemaker.tools.io.File;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.ResourceFiltering;
+import com.wavemaker.tools.io.Resources;
 import com.wavemaker.tools.service.ServiceClassGenerator;
+import com.wavemaker.tools.service.ServiceFile;
 
 /**
  * Generate service classes.
@@ -33,63 +37,49 @@ import com.wavemaker.tools.service.ServiceClassGenerator;
  */
 public class ServiceCompilerTask extends CompilerTask {
 
-    private File destDir = null;
+    private java.io.File destDir = null;
 
     public ServiceCompilerTask() {
         super(true);
     }
 
-    public void setDestDir(File destDir) {
+    public void setDestDir(java.io.File destDir) {
         this.destDir = destDir;
     }
 
-    private List<Resource> getServiceFiles(Resource srcDir) throws IOException {
-
-        List<Resource> rtn = new ArrayList<Resource>();
-
-        if (srcDir != null && srcDir.exists()) {
-            List<Resource> children = fileSystem.listChildren(srcDir);
-            for (Resource child : children) {
-                Resource f = srcDir.createRelative(fileSystem.getPath(child));
-                // lets skip directories and properties files for now
-                if (fileSystem.isDirectory(f) || f.getFilename().endsWith(".properties")) {
-                    continue;
-                }
-                rtn.add(f);
-            }
-        }
-
-        return rtn;
+    private Resources<com.wavemaker.tools.io.File> getServiceFiles(Folder folder) {
+        return folder.list(ResourceFiltering.fileNames().notEnding(".properties"));
     }
 
     @Override
     protected void doExecute() {
-
         for (String serviceId : getDesignServiceManager().getServiceIds()) {
-
-            Resource srcDir;
-            srcDir = getDesignServiceManager().getServiceRuntimeDirectory(serviceId);
-
-            if (srcDir == null) {
+            Resource serviceDir = getDesignServiceManager().getServiceRuntimeDirectory(serviceId);
+            Folder serviceFolder = getDesignServiceManager().getServiceRuntimeFolder(serviceId);
+            if (!serviceFolder.exists()) {
                 throw new BuildException("Could not locate service home for " + serviceId);
             }
-
             ServiceClassGenerator generator = new ServiceClassGenerator();
-
-            try {
-                generator.addServiceFiles(getServiceFiles(srcDir), serviceId);
-            } catch (IOException ex) {
-                throw new BuildException(ex);
+            Resources<File> files = getServiceFiles(serviceFolder);
+            List<ServiceFile> serviceFiles = new ArrayList<ServiceFile>();
+            for (File file : files) {
+                Resource resource;
+                try {
+                    resource = serviceDir.createRelative(file.getName());
+                    serviceFiles.add(new ServiceFile(file, resource));
+                } catch (IOException e) {
+                    throw new IllegalStateException(e);
+                }
             }
+            generator.addServiceFiles(serviceFiles, serviceId);
 
             if (this.destDir == null) {
-                generator.setOutputDirectory(srcDir);
+                generator.setOutputDirectory(serviceDir);
             } else {
                 generator.setOutputDirectory(new FileSystemResource(this.destDir));
             }
 
             generator.setDesignServiceManager(getDesignServiceManager());
-
             generator.run();
         }
     }
