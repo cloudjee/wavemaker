@@ -116,6 +116,10 @@ dojo.declare("Studio", wm.Page, {
 		if (this.getUserSetting('explode')) {
 			this.explodedClick();
 		}
+	        var multiActiveProperties = this.getUserSetting("multiActive");
+	        studio.inspector.preferredMultiActive =(multiActiveProperties === undefined || multiActiveProperties);
+	        studio.inspector.multiActive = studio.inspector.preferredMultiActive;
+
 		/*
 		if (wm.studioConfig.preventLiveData)
 			this.liveLayoutBtn.setDisabled(true);
@@ -300,16 +304,14 @@ dojo.declare("Studio", wm.Page, {
 	//=========================================================================
 	initUserSettings: function() {	  
 		this._userSettings = dojo.fromJson(dojo.cookie("wmStudioSettings")) || {};
-		if (this._userSettings.location != window.location.href ||
-		    this._userSettings.version  != wm.studioConfig.studioVersion)
-		  delete this._userSettings.defaultProject;
-
 	},
 	setUserSettings: function(inProps) {
 		dojo.mixin(this._userSettings, inProps || {});
-		this._userSettings.location = window.location.href;
-		this._userSettings.version = wm.studioConfig.studioVersion;
 		dojo.cookie("wmStudioSettings", dojo.toJson(this._userSettings), { expires: 365 });
+	},
+        toggleMultiactive: function() {
+	    this.inspector.toggleMultiactive();
+	    this.setUserSettings(dojo.mixin(this._userSettings || {}, {multiActive: this.inspector.preferredMultiActive}));
 	},
 	getUserSetting: function(inProp) {
 		return (this._userSettings || 0)[inProp];
@@ -1011,6 +1013,7 @@ dojo.declare("Studio", wm.Page, {
 			     {l: "C-m", d: this.getDictionaryItem("SHORTCUTS_M")},
 			     {l: "C-s", d: this.getDictionaryItem("SHORTCUTS_S")},
 			     {l: "C-r", d: this.getDictionaryItem("SHORTCUTS_R")},
+			     {l: "C-f", d: this.getDictionaryItem("SHORTCUTS_F")},
 			     {l: "ESC", d: this.getDictionaryItem("SHORTCUTS_ESC_1")},
 			     {l: "ESC", d: this.getDictionaryItem("SHORTCUTS_ESC_2")},
 			     {l: "DEL", d: this.getDictionaryItem("SHORTCUTS_DEL")},
@@ -1391,11 +1394,10 @@ dojo.declare("Studio", wm.Page, {
                     this.inspector.reinspect();
 		}
 	},
-	toggleFlexBcClick: function() {
+	fitToContainerContentClick: function() {
 		var s = this.selected;
-		if (s) {
-			var pBox = s.parent && s.parent.layoutKind;
-			this.toggleControlSize(s, pBox == "top-to-bottom" ? "height" : "width");
+		if (s && s instanceof wm.Container) {
+		    s.resizeToFit();
 		}
 	},
 	toggleVerticalAlignClick: function() {

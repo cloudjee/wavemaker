@@ -399,6 +399,17 @@
      inspected: null,
      props: null,
      dataSets: [],
+     postInit: function() {
+	 this.inherited(arguments);
+	 this.connect(this.decorator, "headerClicked", this, "updateCurrentLayersList");
+	 this._activeLayers  = ["required", "widgetName"];
+     },
+     updateCurrentLayersList: function() {
+	 this._activeLayers = [];
+	 dojo.forEach(this.layers, function(l) {
+	     if (l.isActive()) this._activeLayers.push(l.propertyGroup.equivalentName || l.propertyGroup.name);
+	 }, this);
+     },
      inspect: function(inComponent, forceInspect) {	
 	 if (this.inspected == inComponent && !forceInspect) {
 	     return this.reinspect();
@@ -409,9 +420,7 @@
 	 this._inspectedName = inComponent.name;
 	 this.moreLabelList = [];
 	 this.subHeaderLabelList = [];
-	 var activeLayer = this.getActiveLayer();
-	 if (activeLayer)
-	     this._activeLayer = activeLayer.propertyGroup.equivalentName || activeLayer.propertyGroup.name;
+
 	 try {
 	     this.inspected = inComponent;
 	     this.layerIndex = -1;
@@ -432,15 +441,15 @@
 	     this._inspecting = false;
 	 }
 	 this.layerIndex = -1; // make sure it rerenders when we call setLayerIndex
-	 var found = false;
-	 for (var i = 0; i < this.layers.length; i++) {
-	     var g = this.layers[i].propertyGroup;
-	     if (this._activeLayer == g.name || this._activeLayer && this._activeLayer == g.equivalentName) {
-		 this.layers[i].activate();
-		 found = true;
+	 if (!this.selectLayers(this._activeLayers)) {
+	     while(this._activeLayers.length) this._activeLayers.pop();
+	     this._activeLayers.push("required");
+	     if (this.preferredMultiActive) {
+		 this._activeLayers.push("widgetName");
 	     }
+	     this.selectLayers(this._activeLayers);
 	 }
-	 if (!found) this.layers[0].activate();
+
 /*
 	 if (this._reselectLayerIndex !== undefined && this._reselectLayerIndex < this.layers.length) {
 	     this.setLayerIndex(this._reselectLayerIndex);
@@ -448,6 +457,17 @@
 	     this.setLayerIndex(0);
 	 }
 	 */
+     },
+     selectLayers: function(inGroupNames) {
+	 var found = false;
+	 for (var i = 0; i < this.layers.length; i++) {
+	     var g = this.layers[i].propertyGroup;
+	     if (dojo.indexOf(this._activeLayers, g.equivalentName || g.name) != -1) {
+		 this.layers[i].activate();
+		 found = true;
+	     }
+	 }
+	 return found;
      },
      getHashId: function(inComponent, propName) {
 	 var id = this._inspectedName;
@@ -1692,6 +1712,19 @@
      toggleMultiactive: function() {
 	 this.preferredMultiActive = !this.preferredMultiActive;
 	 this.multiActive = this.preferredMultiActive;
+	 if (!this.multiActive) {
+	     var found = false;
+	     dojo.forEach(this.layers, dojo.hitch(this, function(layer) {
+		 if (layer.isActive()) {
+		     if (!found) {
+			 found = true;
+		     } else {
+			 this.setLayerInactive(layer);
+		     }
+		 }
+	     }));
+
+	 }	 
      },
      toggleAdvancedPropertiesSome: function(inSender) {
 	 dojo.removeClass(studio.togglePropertiesButton2.domNode, "toggleButtonDown");

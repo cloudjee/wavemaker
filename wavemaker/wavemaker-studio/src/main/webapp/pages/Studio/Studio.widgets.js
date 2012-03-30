@@ -426,7 +426,7 @@ Studio.widgets = {
 					propertySearchBarSpacer: ["wm.Spacer", {width: "20px"}],
 					propertiesMenu: ["wm.PopupMenu", {
 					    "fullStructure":[
-						{idInPage: "togglePropertiesMultiactiveItem", "label":"One Accordion Open","separator":undefined,"defaultLabel":"One Accordion Open","isCheckbox":true,"onClick":"inspector.toggleMultiactive"},
+						{idInPage: "togglePropertiesMultiactiveItem", "label":"One Accordion Open","separator":undefined,"defaultLabel":"One Accordion Open","isCheckbox":true,"onClick":"toggleMultiactive"},
 						{idInPage: "openPublishedPropsItem", "label":"Publish Properties...","separator":undefined,"defaultLabel":"Publish Properties...","isCheckbox":false,"onClick":"editPublishedProperties"}/*,
 						{"separator":true,"defaultLabel":"Separator"},
 						{"label":"Component Info","defaultLabel":"Component Info","isCheckbox":false,"onClick":"generateDiagnostics", onClick: "inspector.generateComponentInfo"},
