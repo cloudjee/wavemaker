@@ -34,7 +34,6 @@ import com.wavemaker.common.util.ClassUtils;
 import com.wavemaker.common.util.IOUtils;
 import com.wavemaker.common.util.SpringUtils;
 import com.wavemaker.infra.WMTestCase;
-import com.wavemaker.tools.common.Bootstrap;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.util.AntUtils;
 import com.wavemaker.tools.ws.wsdl.WSDL;
@@ -60,7 +59,6 @@ public class RESTServiceGeneratorTest extends WMTestCase {
     }
 
     protected Class<?> generate(String wsdlResource) throws Exception {
-        Bootstrap.main(null);
         SpringUtils.initSpringConfig();
 
         String resource = ClassLoaderUtils.getResource(wsdlResource);
