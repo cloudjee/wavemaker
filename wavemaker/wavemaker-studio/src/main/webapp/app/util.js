@@ -178,7 +178,7 @@ wm.makeLoginHtml =  function(fileTemplate, inProjectName) {
     for (var i=0, m, d; (m=macros[i]); i++){
 	d=data[i] || "";
 	t = t.replace(new RegExp(['{%', m, '}'].join(''), 'g'), d);
-        t = t.replace(/\wavemakerNode\"\}/, "wavemakerNode\", theme:\"" + themeName + "\", name:\"" + studio.project.projectName + "\"}");
+        t = t.replace(/\wavemakerNode\"\}/, "wavemakerNode\", theme:\"" + studio.application.theme + "\", name:\"" + studio.project.projectName + "\"}");
     }
     return t;
 }
