@@ -30,7 +30,6 @@ import com.wavemaker.tools.project.LocalStudioFileSystem;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.DesignServiceManager;
-import com.wavemaker.tools.util.AntUtils;
 import com.wavemaker.tools.util.DesignTimeUtils;
 import com.wavemaker.tools.util.ResourceClassLoaderUtils;
 
@@ -61,9 +60,6 @@ public abstract class CompilerTask extends Task {
     }
 
     protected CompilerTask(boolean init) {
-        if (init) {
-            AntUtils.bootstrap(getClass().getClassLoader());
-        }
         this.fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
     }
 

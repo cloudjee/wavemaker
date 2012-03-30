@@ -32,25 +32,11 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.util.ResourceUtils;
 
 import com.wavemaker.common.util.ObjectUtils;
-import com.wavemaker.tools.common.Bootstrap;
 
 /**
  * @author Simon Toens
  */
 public class AntUtils {
-
-    public static void bootstrap(ClassLoader contextClassLoader) {
-
-        // Ant doesn't set the context classloader, and Spring depends on
-        // it for loading files
-        ResourceClassLoaderUtils.runInClassLoaderContext(new Runnable() {
-
-            @Override
-            public void run() {
-                Bootstrap.main(null);
-            }
-        }, contextClassLoader);
-    }
 
     public static void javac(String srcdir, File destdir) {
         javac(srcdir, destdir, null);
