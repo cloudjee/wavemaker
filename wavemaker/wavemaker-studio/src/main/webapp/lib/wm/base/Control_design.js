@@ -127,6 +127,9 @@ wm.Control.extend({
     afterPaletteDrop: function(){
 	this.inherited(arguments);
 	this.desktopHeight = this.constructor.prototype.height;
+	if (this.parent && this.parent.afterPaletteChildDrop) {
+	    this.parent.afterPaletteChildDrop(this);
+	}
     },
     set_height: function(inHeight) {
 	if (inHeight.match(/\%/)) {
@@ -198,21 +201,21 @@ wm.Control.extend({
 	},
 
     set_margin: function(inMargin) {
-	    inMargin = dojo.trim(String(inMargin));
+	    inMargin = dojo.trim(String(inMargin||0));
 	    inMargin = inMargin.replace(/\s*,\s*/g, ",");
 	    inMargin = inMargin.replace(/px/g,"");
 	    inMargin = inMargin.replace(/\s+/g,",");
 	this.setMargin(inMargin);
     },
     set_padding: function(inPadding) {
-	    inPadding = dojo.trim(String(inPadding));
+	    inPadding = dojo.trim(String(inPadding||0));
 	    inPadding = inPadding.replace(/\s*,\s*/g, ",");
 	    inPadding = inPadding.replace(/px/g,"");
 	    inPadding = inPadding.replace(/\s+/g,",");
 	this.setPadding(inPadding);
     },
 	set_border: function(inBorder) {
-	    inBorder = dojo.trim(String(inBorder));
+	    inBorder = dojo.trim(String(inBorder||0));
 	    inBorder = inBorder.replace(/\s*,\s*/g, ",");
 	    inBorder = inBorder.replace(/px/g,"");
 	    inBorder = inBorder.replace(/\s+/g,",");
@@ -416,7 +419,7 @@ wm.Control.extend({
 	parent.reflow();
 	studio.refreshDesignTrees();
 	studio.select(p);
-	
+	app.toastSuccess("A new panel has been created, and is currently selected");
     }
 
 	// EXPERIMENTAL: use property ui to do binding...
