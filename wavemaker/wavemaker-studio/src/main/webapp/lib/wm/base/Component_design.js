@@ -136,7 +136,7 @@ wm.Component.extend({
 	writeProps: function() {
 	    // make sure the proper prototype is loaded so we correctly write the properties that are different from default
 	    if (this._isDesignLoaded && studio && studio.application) 
-		studio.application.loadThemePrototypeForClass(this.constructor, this);
+		studio.application.loadThemePrototypeForClass(this.constructor);
 
 		// iterates over all props and checks it's writeable via isWriteableProp
 		// NOTE: previously used listWriteableProps, which was eliminated as unnecessary.  [MK: Added back for use in localization]
