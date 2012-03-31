@@ -51,6 +51,7 @@
 [ bundlePackage.Containers, bundlePackage.PageContainer, "wm.PageContainer", "wm.base.widget.PageContainer", "Studio_paletteImageList_14", bundlePackage.descPageContainer, {}, false],
 [ bundlePackage.Containers, bundlePackage.Panel, "wm.Panel", "wm.base.widget.Panel", "Studio_paletteImageList_16", bundlePackage.descPanel, {}, false],
 [ bundlePackage.Containers, bundlePackage.Rounded_Panel, "wm.FancyPanel", "wm.base.widget.Panel", "Studio_paletteImageList_16", bundlePackage.descFancyPanel, {}, false],
+[ bundlePackage.Containers, "FormPanel", "wm.FormPanel", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descFormPanel, {}, false],
 
 
 [ bundlePackage.Containers + "/" + bundlePackage.Containers_Layer_Category, bundlePackage.Accordion, "wm.AccordionLayers", "wm.base.widget.AccordionLayers", "Studio_paletteImageList_18", bundlePackage.descAccordion, {}, false],
@@ -68,12 +69,12 @@
 [bundlePackage.FormsGroup, bundlePackage.LiveForm, "wm.LiveForm", "wm.base.widget.LiveForm", "Studio_paletteImageList_7", bundlePackage.descLiveForm, {}, false],
 [ bundlePackage.FormsGroup, bundlePackage.SimpleForm, "wm.SimpleForm", "wm.base.widget.LiveForm","Studio_paletteImageList_7", bundlePackage.descSimpleForm,{}, true],
 [ bundlePackage.FormsGroup, bundlePackage.RelatedEditor, "wm.RelatedEditor", "wm.base.widget.RelatedEditor", "Studio_paletteImageList_9",bundlePackage.descRelatedEditor, {}, false],
-[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "FormPanel", "wm.FormPanel", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descFormPanel, {}, false],
+
 [bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "DataForm", "wm.DataForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descDataForm, {}, false],
 [bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "Database Form", "wm.DBForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descDBForm, {}, false],
 [bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "Service Input Form", "wm.ServiceInputForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descServiceInputForm, {}, false],
-[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "SubForm", "wm.SubForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descServiceInputForm, {}, false],
-[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup, "OneToMany", "wm.OneToMany", "wm.base.widget.Editors.OneToMany", "Studio_paletteImageList_7", bundlePackage.descServiceInputForm, {}, false],
+[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup + "/Related Objects", "SubForm", "wm.SubForm", "wm.base.widget.DataForm", "Studio_paletteImageList_7", bundlePackage.descServiceInputForm, {}, false],
+[bundlePackage.FormsGroup + "/" + bundlePackage.betaGroup + "/Related Objects", "OneToMany", "wm.OneToMany", "wm.base.widget.Editors.OneToMany", "Studio_paletteImageList_7", bundlePackage.descServiceInputForm, {}, false],
 
 
 [bundlePackage.EditorsGroup, bundlePackage.Checkbox, "wm.Checkbox", "wm.base.widget.Editors.Checkbox", "Studio_paletteImageList_9", bundlePackage.descCheckbox, {}, false],
