@@ -120,7 +120,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	},
 	    _onShowParent: function() {
 		if (this._renderDojoObjSkipped) {
-		    this.renderDojoObj();
+		    wm.onidle(this,"renderDojoObj");
 		}
 	    },
 
