@@ -334,7 +334,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	},
 	// rendering
 	shouldShowHeader: function() {
-		var dataHeader = this._dataFields && this.getCount();
+	    var dataHeader = this._dataFields;// && this.getCount();
 		return (this.headerVisible && (dataHeader || this._headerContent));
 	},
 	getHeaderContent: function() {
@@ -413,12 +413,12 @@ dojo.declare("wm.List", wm.VirtualList, {
 		this.renderData(d);
 	},
 	    _onShowParent: function() {
-		if (this._renderDojoObjSkipped) {
-		    this.renderDataSet(this.dataSet);
+		if (this._renderDojoObjSkipped && !this._headerRendered) {
+		    wm.onidle(this, "_render");
 		}
 	    },
 
-	renderData: function(inData) {
+	renderData_optimized: function(inData) {
 /*
 	    if (this.columns && (this.selectionMode == "checkbox" || this.selectionMode == "radio")) {
 		    this.columns.unshift({width: "25px", title: "-", controller: this.selectionMode, field: "_selector", show: true});
@@ -439,32 +439,101 @@ dojo.declare("wm.List", wm.VirtualList, {
 		this.updateBuilder();
 		if (!this._data)
 			return;
+
+	    this.renderHeader();
+	    this._headerRendered = true;
+	    /* changed from iterating over all items to doing 20 at a time so that rendering the grid, especially on mobile
+	     * devices would not block up the thread for large grids.  Rener 20, then do any other processing that is waiting,
+	     * then render the next 20
+	     */
+	    var i = 0;
+	    var f = dojo.hitch(this,function(start, interval,nextFunc,doneFunc) {
+		var max = Math.min(i+interval,this.getDataItemCount());
+		for (;i < max; i++) {
+		  this.addItem(this.getItemData(i), i);
+		}
+		if (i < this.getDataItemCount()) {
+		    wm.onidle(this, function() {
+			nextFunc(i,interval,nextFunc, doneFunc);
+		    });
+		} else {
+		    doneFunc();
+		}
+	    });
+
+	    var onDone = dojo.hitch(this, function() {
+		dojo.query(".wmlist-item:nth-child(odd)",this.domNode).addClass("Odd");
+		this.reflow();
+
+		if (this._listTouchScroll && !this._listTouchScroll.scrollers.outer.style.width) {
+		    wm.job(this.getRuntimeId() + "ListSetupScroller", 1, dojo.hitch(this._listTouchScroll, "setupScroller"));
+		}
+
+		/*
+		  if (this.columns && this.deleteColumn) {
+		  this.columns.shift();
+		  delete this._columnsHash._deleteColumn;
+		  }
+		  if (this.columns && (this.selectionMode == "checkbox" || this.selectionMode == "radio")) {
+		  this.columns.shift();
+		  delete this._columnsHash._selector;
+		  }
+		*/
+
+		var isSelectedDataArray = dojo.isArray(selectedData);
+		if (this.columns && ( isSelectedDataArray && selectedData.length || !isSelectedDataArray && selectedData || this.selectFirstRow))
+		    this.selectItemOnGrid(selectedData);
+		this.onRenderData();
+	    });
+
+	    f(0,20,f,onDone);
+/*
 		for (var i=0, l=this.getDataItemCount(); i<l; i++){
 		  this.addItem(this.getItemData(i), i);
 		}
-		this.renderHeader();
-	    dojo.query(".wmlist-item:nth-child(odd)",this.domNode).addClass("Odd");
+		this.renderHeader();*/
+
+	},
+	renderData: function(inData) {
+	    var selectedData = this.selectedItem.getData();
+	    this.clear(true);
+	    this._data = inData;
+	    if (!this.dataFields)
+		this._setDataFields();
+	    this.updateBuilder();
+	    if (!this._data)
+		return;
+
+	    this.renderHeader();
+ 
+	    for (var i=0, l=this.getDataItemCount(); i<l; i++){
+		this.addItem(this.getItemData(i), i);
+	    }
+		dojo.query(".wmlist-item:nth-child(odd)",this.domNode).addClass("Odd");
 		this.reflow();
 
-	    if (this._listTouchScroll && !this._listTouchScroll.scrollers.outer.style.width) {
-		wm.job(this.getRuntimeId() + "ListSetupScroller", 1, dojo.hitch(this._listTouchScroll, "setupScroller"));
-	    }
+		if (this._listTouchScroll && !this._listTouchScroll.scrollers.outer.style.width) {
+		    wm.job(this.getRuntimeId() + "ListSetupScroller", 1, dojo.hitch(this._listTouchScroll, "setupScroller"));
+		}
 
-/*
-	    if (this.columns && this.deleteColumn) {
-		this.columns.shift();
-		delete this._columnsHash._deleteColumn;
-	    }
-	    if (this.columns && (this.selectionMode == "checkbox" || this.selectionMode == "radio")) {
-		this.columns.shift();
-		delete this._columnsHash._selector;
-	    }
-	    */
+		/*
+		  if (this.columns && this.deleteColumn) {
+		  this.columns.shift();
+		  delete this._columnsHash._deleteColumn;
+		  }
+		  if (this.columns && (this.selectionMode == "checkbox" || this.selectionMode == "radio")) {
+		  this.columns.shift();
+		  delete this._columnsHash._selector;
+		  }
+		*/
 
-	    var isSelectedDataArray = dojo.isArray(selectedData);
-	    if (this.columns && ( isSelectedDataArray && selectedData.length || !isSelectedDataArray && selectedData || this.selectFirstRow))
-			this.selectItemOnGrid(selectedData);
+		var isSelectedDataArray = dojo.isArray(selectedData);
+		if (this.columns && ( isSelectedDataArray && selectedData.length || !isSelectedDataArray && selectedData || this.selectFirstRow))
+		    this.selectItemOnGrid(selectedData);
+		this.onRenderData();
+
 	},
+    onRenderData:function(){},
 	selectItemOnGrid: function(obj, pkList){
 	        if (obj instanceof wm.Variable)
 		    obj = obj.getData();
@@ -479,7 +548,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 
 
 		if (!pkList)
-		    pkList = this.dataSet ? wm.data.getIncludeFields(this.dataSet.type) : [];
+		    pkList = this.dataSet ? wm.data.getIncludeFields(this.dataSet.type) : this._pkList || [];
 	    
 	    /* If there are no primary keys, then all fields are used to match this item -- this may fail, not trying will definitely fail */
 	        if (pkList.length == 0 && this.dataSet) {
@@ -637,7 +706,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 		var columnDef = this.columns[inCol];
 		if (columnDef.controller) {
 		    if (columnDef.controller == "deleteColumn") {
-			cellData = "<div wmcontroller='true' class='wmDeleteColumn'></div>";
+			cellData = "<div wmcontroller='true' class='wmDeleteColumn'><div wmcontroller='true' class='wmDeleteColumnImage'/></div>";
 		    } else {
 			cellData = "<input wmcontroller='true' type='" + columnDef.controller + "' />";
 		    }
@@ -663,7 +732,7 @@ dojo.declare("wm.List", wm.VirtualList, {
 	    if (!this.inSetContent) {
 		this._formatIndex = null;
 	    }
-	    return info.data;
+	    return "<div class='wmlist-content'>" + info.data + "</div>";
 	},
 	getColWidth: function(inCol) {
 	    if (this.columns) {
