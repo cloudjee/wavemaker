@@ -49,23 +49,19 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 	        //b.style.outline = "none";
 		b.style.display = inLayer.showing ? "" : "none";
 	    this.setBtnText(b, inCaption, inLayer.closable || inLayer.destroyable);
-	    this.decoree.connect(b, "onclick", dojo.hitch(this, function(evt) {
-		// prevent designer click
-		if (this.decoree.isDesignLoaded())
-			dojo.stopEvent(evt);
-		/* IE 8 does not gaurentee that evt will still have its properties after a delay, so 
-		 * we capture the event properties we need and pass that rather than the event object itself.
-		 * Other browsers don't require this, but it seems like a good practice regardless.
-		 */
-		if (evt.type == "submit") return;
-		var pseudoEvent = {target: evt.target,
-				   clientX: evt.clientX,
-				   clientY: evt.clientY};
-				   
-		wm.onidle(this, function() {
-		    this.tabClicked(inLayer,pseudoEvent);
-		});
-	    }));
+	    
+	    if (!wm.isMobile) {
+		this.decoree.connect(b, "onclick", dojo.hitch(this, "onTabClick",inLayer));
+	    } else if (wm.isFakeMobile) {
+		this.decoree.connect(b,'onmousedown', dojo.hitch(this, "touchTabStart", inLayer));
+		this.decoree.connect(b,'onmousemove', dojo.hitch(this, "touchTabMove",  inLayer));
+		this.decoree.connect(b,'onmouseup',   dojo.hitch(this, "touchTabEnd",   inLayer));
+	    } else {
+		this.decoree.connect(b,'ontouchstart',dojo.hitch(this, "touchTabStart", inLayer));
+		this.decoree.connect(b,'ontouchmove', dojo.hitch(this, "touchTabMove",  inLayer));
+		this.decoree.connect(b,'ontouchend',  dojo.hitch(this, "touchTabEnd",   inLayer));
+	    }
+
 	    var tabstyleName = (this.decoree.verticalButtons) ? "-verticaltab" : "-tab";
 	    b.className=this.decorationClass + tabstyleName +  (inLayer.closable || inLayer.destroyable ? " " + this.decorationClass + "-closabletab" : "");
 	    if (!inCaption) b.style.display = "none";
@@ -80,6 +76,53 @@ dojo.declare("wm.TabsDecorator", wm.LayersDecorator, {
 		this.dndObjConnect = this.tabsControl.connect(this.dndObj, "onDndDrop", this, "onTabDrop");
 	    }
 	},
+
+		
+    onTabClick: function(inLayer,evt) {
+	// prevent designer click
+	if (this.decoree.isDesignLoaded())
+	    dojo.stopEvent(evt);
+
+	/* IE 8 does not gaurentee that evt will still have its properties after a delay, so 
+	 * we capture the event properties we need and pass that rather than the event object itself.
+	 * Other browsers don't require this, but it seems like a good practice regardless.
+	 */
+	if (evt.type == "submit") return;
+	var pseudoEvent = {target: evt.target,
+			   clientX: evt.clientX,
+			   clientY: evt.clientY};
+		
+	wm.onidle(this, function() {
+	    this.tabClicked(inLayer,pseudoEvent);
+	    pseudoEvent.target.style.borderWidth = null;
+	});
+    },
+    touchTabStart: function(inLayer,evt) {
+	if (!inLayer._touchStarted) {
+	    inLayer._touchStarted = true;
+	    inLayer._touchTarget = evt.target;
+	    this.btns[inLayer.getIndex()].style.borderWidth = "3px";
+	    wm.job(inLayer.getRuntimeId() + ".onClick", app.touchToClickDelay, dojo.hitch(this, "touchTabEnd", inLayer));
+	}
+    },
+    touchTabMove: function(inLayer,evt) {
+	if (inLayer._touchStarted) {
+	    wm.cancelJob(inLayer.getRuntimeId() + ".onClick");
+	    delete inLayer._touchStarted;
+	    delete inLayer._touchTarget;
+	    this.btns[inLayer.getIndex()].style.borderWidth = "";
+	}
+    },
+    touchTabEnd: function(inLayer,evt) {
+	if (inLayer._touchStarted) {
+	    delete inLayer._touchStarted;
+	    this.btns[inLayer.getIndex()].style.borderWidth = "";
+	    this.tabClicked(inLayer, {target: inLayer._touchTarget});
+	    delete inLayer._touchTarget;
+	}
+    },
+
+
 	 onTabDrop: function(dndSource,nodes,copy,dndTarget,event) {
 	     if (dojo.dnd.manager().target != this.dndObj) return;
 	     var tabLayers = wm.getWidgetByDomNode(nodes[0]);
