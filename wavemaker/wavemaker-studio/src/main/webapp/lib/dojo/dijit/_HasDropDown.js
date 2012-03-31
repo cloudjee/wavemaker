@@ -77,14 +77,19 @@ dojo.declare("dijit._HasDropDown",
 		_onDropDownMouseDown: function(/*Event*/ e){
 			// summary:
 			//		Callback when the user mousedown's on the arrow icon
-
 			if(this.disabled || this.readOnly){ return; }
 
+		    /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+		     * WaveMaker: Added the conditional around stopEvent */
+		    if (e) {
 			dojo.stopEvent(e);
+		    }
 
 			this._docHandler = this.connect(dojo.doc, "onmouseup", "_onDropDownMouseUp");
-
-			this.toggleDropDown();
+		    /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+		     * WaveMaker: This was misfiring on the ipad, and seems like you always want to open it */
+		    this._opened = false;
+		    this.toggleDropDown();
 		},
 
 		_onDropDownMouseUp: function(/*Event?*/ e){
@@ -168,17 +173,58 @@ dojo.declare("dijit._HasDropDown",
 			dojo.addClass(this._arrowWrapperNode || this._buttonNode, "dijit" + defaultPos + "ArrowButton");
 		},
 
+		    /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+		     * WaveMaker: Added handling of mobile and touch; START HERE */
 		postCreate: function(){
 			// summary:
 			//		set up nodes and connect our mouse and keypress events
 
 			this.inherited(arguments);
-
+		    if (!wm || !wm.isMobile) {
 			this.connect(this._buttonNode, "onmousedown", "_onDropDownMouseDown");
 			this.connect(this._buttonNode, "onclick", "_onDropDownClick");
+		    } else if (wm && wm.isFakeMobile) {
+			this.connect(this._buttonNode, "onmousedown", "touchStart");
+			this.connect(this._buttonNode, "onmousemove", "touchMove");
+			this.connect(this._buttonNode, "onmouseup", "touchEnd");
+		    } else {
+			this.connect(this._buttonNode, "ontouchstart", "touchStart");
+			this.connect(this._buttonNode, "ontouchmove", "touchMove");
+			this.connect(this._buttonNode, "ontouchend", "touchEnd");
+		    }
+		    
 			this.connect(this.focusNode, "onkeypress", "_onKey");
 			this.connect(this.focusNode, "onkeyup", "_onKeyUp");
 		},
+	    touchStart: function(e) {
+		dojo.stopEvent(e); 
+		if (!this._isTouched) {
+		    this._isTouched = true;
+		    this.domNode.style.backgroundColor = "black";
+		    this.domNode.style.color = "white";
+		    if (this.owner) {
+			wm.job(this.owner.getRuntimeId() + ".onTouch", app.touchToClickDelay, dojo.hitch(this, "touchEnd"));
+		    }
+		}
+	    },
+	    touchMove: function(e) {
+		if (this._isTouched) {
+		    delete this._isTouched;
+		    if (this.owner) {
+			wm.cancelJob(this.owner.getRuntimeId() + ".onTouch");
+		    }
+		    this.domNode.style.backgroundColor = "";
+		    this.domNode.style.color = "";
+		}
+	    },
+	    touchEnd: function(e) {
+		if (e) dojo.stopEvent(e);
+		this.domNode.style.backgroundColor = "";
+		this.domNode.style.color = "";
+		this._onDropDownMouseDown();
+	    },
+		    /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+		     * WaveMaker: Added handling of mobile and touch; END HERE */
 
 		destroy: function(){
 			if(this.dropDown){
