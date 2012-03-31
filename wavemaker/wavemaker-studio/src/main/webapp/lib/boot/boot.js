@@ -31,9 +31,10 @@ wm = window["wm"] || {};
 wm.version = '6.4.3RC';
 
 if (location.search.match(/(\?|\&)wmmobile=(.)/)) {
-    wm.device = location.search.match(/(\?|\&)wmmobile=(.*)\b/)[2] || "desktop";
+    wm.device = location.search.match(/(\?|\&)wmmobile=([^&]*)/)[2] || "desktop";
     wm.device = wm.device.replace(/\&.*$/,"");
     wm.isMobile = wm.device != "desktop";
+    wm.isFakeMobile = wm.isMobile;
 } else {
     wm.isMobile = navigator.userAgent.match(/mobile|android/i) || "onorientationchange" in window;
     if (!wm.isMobile) {
