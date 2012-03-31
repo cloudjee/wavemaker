@@ -813,7 +813,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    if ( isSelectedDataArray && selectedData.length || !isSelectedDataArray && selectedData || this.selectFirstRow)
 			this.selectItemOnGrid(this.selectedItem);
         
-
+	    this.onRenderData();
 /*
             if (this.isDesignLoaded()) {
                 var scrollNode = this.dojoObj.scroller.contentNodes[0].parentNode;
@@ -858,10 +858,10 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		});
 	    }
 	},
-
+    onRenderData:function(){},
 	    _onShowParent: function() {
 		if (this._renderDojoObjSkipped) {
-		    this.renderDojoObj();
+		    wm.onidle(this, "renderDojoObj");
 		}
 	    },
 
