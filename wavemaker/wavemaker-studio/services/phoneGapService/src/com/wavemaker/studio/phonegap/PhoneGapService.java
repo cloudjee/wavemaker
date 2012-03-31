@@ -53,6 +53,8 @@ public class PhoneGapService {
      */
     @ExposeToClient
     public void generateBuild(String serverName, int portNumb, String themeName) {
+        Project currentProject = this.projectManager.getCurrentProject();
+	currentProject.getRootFolder().getFolder("phonegap").createIfMissing();
         getPhoneGapFolder(FolderLayout.PHONEGAP_BUILD_SERVICE).createIfMissing();
         setupPhonegapFiles(FolderLayout.PHONEGAP_BUILD_SERVICE);
         updatePhonegapFiles(serverName, portNumb, FolderLayout.PHONEGAP_BUILD_SERVICE, themeName);
@@ -76,6 +78,7 @@ public class PhoneGapService {
     public void setupPhonegapFiles() {
         for (FolderLayout layout : FolderLayout.values()) {
             if (layout != FolderLayout.PHONEGAP_BUILD_SERVICE) {
+		System.out.println("LAYOUT:" + layout);
                 setupPhonegapFiles(layout);
             }
         }
@@ -97,32 +100,41 @@ public class PhoneGapService {
     }
 
     private void setupPhonegapFiles(FolderLayout layout) {
-        Folder phoneGapWebFolder = getPhoneGapFolder(layout).getFolder("www").jail();
+        Folder phoneGapWebFolder = getPhoneGapFolder(layout);
+	if (!phoneGapWebFolder.exists()) return;
+	System.out.println("ROOT:" + phoneGapWebFolder.toString());
         Folder phoneGapLibFolder = phoneGapWebFolder.getFolder("lib");
-        if (!phoneGapLibFolder.exists()) {
+	System.out.println("LIB:" + phoneGapLibFolder.toString());
+        if (phoneGapLibFolder.exists()) {
+	    System.out.println("EXISTS:" + phoneGapLibFolder.toString());
             return;
         }
+	System.out.println("NOT EXISTS:" + phoneGapLibFolder.toString());
         setupPhonegapProjectFiles(phoneGapWebFolder, phoneGapLibFolder);
         purgeUnnecessarySetupFiles(phoneGapLibFolder);
     }
 
     private void setupPhonegapProjectFiles(final Folder phoneGapWebFolder, Folder phoneGapLibFolder) {
         this.fileSystem.getStudioWebAppRootFolder().getFolder("lib").copyContentsTo(phoneGapLibFolder);
+	System.out.println("AFTER COPY:" + phoneGapLibFolder.exists());
         this.projectManager.getCurrentProject().getRootFolder().getFolder("webapproot/pages").copyContentsTo(phoneGapWebFolder.getFolder("pages"));
         this.fileSystem.getCommonFolder().copyContentsTo(phoneGapWebFolder.getFolder("common"));
         Folder sourceFolder = this.projectManager.getCurrentProject().getWebAppRootFolder();
-        for (String filename : new String[] { "index.html", "login.html", "config.js", "boot.js" }) {
+        for (String filename : new String[] { /*"index.html", "login.html",*/ "config.js", "boot.js" }) {
             File sourceFile = sourceFolder.getFile(filename);
             File destinationFile = phoneGapWebFolder.getFile(filename);
             if (sourceFile.exists() && !destinationFile.exists()) {
                 destinationFile.getContent().write(sourceFile);
             }
         }
+	System.out.println("AFTER COPY2:" + phoneGapLibFolder.exists());
     }
 
     private void fixupXCodeFilesFollowingSetup() {
         Folder xcodePhoneGapFolder = getPhoneGapFolder(FolderLayout.XCODE);
-        File mainViewControllerFile = xcodePhoneGapFolder.getFile("Classes/MainViewController.m");
+	String projectName = this.projectManager.getCurrentProject().getProjectName();
+        File mainViewControllerFile = xcodePhoneGapFolder.getFile("../" + projectName + "/Classes/MainViewController.m");
+
         if (mainViewControllerFile.exists()) {
             String content = mainViewControllerFile.getContent().asString();
             int start = content.indexOf("(BOOL)shouldAutorotateToInterfaceOrientation");
@@ -178,9 +190,12 @@ public class PhoneGapService {
         String url = "http://" + host + ":" + port + "/" + this.projectManager.getCurrentProject().getProjectName();
 
         // Delete all pages, resources and project files so we can re-copy updated version of them
-        ResourceAttributeFilter<Resource> skippedResources = ResourceFiltering.resourceNames().notMatching("index.html", "login.html", "config.js",
-            "lib");
+        //ResourceAttributeFilter<Resource> skippedResources = ResourceFiltering.resourceNames().notMatching("index.html", "login.html", "config.js", "lib");
+	ResourceAttributeFilter<Resource> skippedResources = ResourceFiltering.resourceNames().notMatching("config.js", "lib");
         phoneGapFolder.list(skippedResources.notStarting("cordova")).delete();
+	System.out.println("UPDATE2:" + phoneGapFolder.getFolder("lib").exists());
+        // Copy project files for phonegap
+        projectFolder.getFolder("webapproot").list(skippedResources.notMatching("WEB-INF")).copyTo(phoneGapFolder);
 
         // Update index and login HTML files
         String phonegapName = getPhoneGapScript(phoneGapFolder);
@@ -189,9 +204,6 @@ public class PhoneGapService {
 
         // Combine boot.js and config.js
         phoneGapFolder.getFile("config.js").getContent().write(combineBootAndConfig(url));
-
-        // Copy project files for phonegap
-        projectFolder.getFolder("webapproot").list(skippedResources.notMatching("WEB-INF")).copyTo(phoneGapFolder);
 
         // Copy theme
         Folder theme = getThemeFolder(themeName);
@@ -208,6 +220,7 @@ public class PhoneGapService {
     }
 
     private void updateHtmlFile(String phoneGapScript, File file) {
+	System.out.println("updateHtmlFile: " + file.toString() + " : " + file.exists());
         if (!file.exists()) {
             return;
         }
@@ -250,8 +263,11 @@ public class PhoneGapService {
 
     private void fixupXCodeFilesFollowingUpdate() {
         //
+
+	String projectName = this.projectManager.getCurrentProject().getProjectName();
+
         Folder xcodePhoneGapFolder = getPhoneGapFolder(FolderLayout.XCODE);
-        File file = xcodePhoneGapFolder.getFile("PhoneGap.plist");
+        File file = xcodePhoneGapFolder.getFile("../" + projectName + "/PhoneGap.plist");
         if (file.exists()) {
             String content = file.getContent().asString();
             String startExpression = "<key>ExternalHosts</key>";
@@ -284,11 +300,11 @@ public class PhoneGapService {
         Project currentProject = this.projectManager.getCurrentProject();
         switch (layout) {
             case XCODE:
-                return currentProject.getRootFolder().getFolder("phonegap/" + currentProject.getProjectName()).jail();
+                return currentProject.getRootFolder().getFolder("phonegap/" + currentProject.getProjectName() + "/www");
             case ECLIPSE:
-                return currentProject.getRootFolder().getFolder("phonegap/android/assets").jail();
+                return currentProject.getRootFolder().getFolder("phonegap/android/assets/www");
             case PHONEGAP_BUILD_SERVICE:
-                return currentProject.getRootFolder().getFolder("phonegap/build").jail();
+                return currentProject.getRootFolder().getFolder("phonegap/build");
         }
         throw new IllegalStateException("Uknown phonegap layout " + layout);
     }
