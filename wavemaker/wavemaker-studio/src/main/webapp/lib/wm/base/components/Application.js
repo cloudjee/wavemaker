@@ -22,6 +22,8 @@ wm.registerComponentLoader = function(inType, inLoader){
 };
 
 dojo.declare("wm.Application", wm.Component, {
+    touchToClickDelay: 500, // ms user must hold a touch for it to be treated as a click
+    touchToRightClickDelay: 1500, // ms user must hold a touch for it to be treated as a right click
     eventDelay: wm.isMobile ? 100 : 0, // 100ms delay during which a user selection is highlighted and before the event is fired
     manageURL: true,
     manageHistory: true,
