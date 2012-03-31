@@ -213,12 +213,19 @@ wm.ToggleButtonPanel.extend({
     set_buttonMargins: function(inMargin) {
 	this.buttonMargins = inMargin;
 	dojo.forEach(this._btns, function(b) {b.setMargin(inMargin);});
+    },
+    afterPaletteChildDrop: function(inButton) {
+	inButton.setWidth("100%");
+	inButton.setMargin("0");
+	inButton.setPadding("0");
+	inButton.setBorder("0,1,0,0");
     }
 });
 
 wm.Object.extendSchema(wm.ToggleButtonPanel, {
     currentButton: {group: "widgetName", subgroup: "behavior", bindable:1, readonly: 1, editor: "wm.prop.WidgetSelect", createWire: 1,editorProps: {widgetType: "wm.ToolButton", inspectedChildrenOnly: true}},
-
+    currentButtonName: {ignore:1,bindSource:true},
+    currentButtonCaption: {ignore:1,bindSource:true},
     themeStyleType: {group: "style", order: 150}
 
 });

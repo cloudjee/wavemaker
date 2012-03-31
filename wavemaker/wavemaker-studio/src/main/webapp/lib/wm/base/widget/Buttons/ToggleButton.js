@@ -70,6 +70,8 @@ dojo.declare("wm.ToggleButtonPanel", wm.Container, {
     classNames: "wmtogglebuttonpanel",
     layoutKind: "left-to-right",
     currentButton: -1,
+    currentButtonName: "",
+    currentButtonCaption: "",
     height: "40px",
     enableTouchHeight: true,
     width: "100%",
@@ -109,6 +111,8 @@ dojo.declare("wm.ToggleButtonPanel", wm.Container, {
 	}
 	if (inButton instanceof wm.ToolButton) {
 	    this.currentButton = inButton;
+	    this.currentButtonName = inButton.name;
+	    this.currentButtonCaption = inButton.caption;
 	    if (inButton) {
 		dojo.addClass(inButton.domNode, "toggleButtonDown");
 	    }
@@ -124,12 +128,14 @@ dojo.declare("wm.ToggleButtonPanel", wm.Container, {
 	    if (currentButtonWas instanceof wm.ToolButton) {
 		currentButtonWas.setValue("clicked", false);
 	    }
-	    this.currentButton = null;
+	    this.currentButton = null;	    
 	    if (currentButtonWas instanceof wm.ToolButton) {
 		this.valueChanged("currentButton", this.currentButton); // currentButton is a bindSource
 		this.onChange(this.currentButton);
-	    }
+	    }	    
 	}
+	this.valueChanged("currentButtonName", this.currentButtonName);
+	this.valueChanged("currentButtonCaption", this.currentButtonCaption);
     },
     setCurrentButton: function(inButton) { // currentIndex is a bindTarget
 	// why wm.onidle? Without this, a button click event could be clicked before the layer or pagecontainer its trying trigger a navigation to is created
