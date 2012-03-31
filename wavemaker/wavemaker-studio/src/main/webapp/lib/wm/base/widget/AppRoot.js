@@ -38,10 +38,11 @@ dojo.declare("wm.AppRoot", wm.Container, {
 	     * WARNING: onresize may not be provided to android devices within phonegap applications.
 	     */
 	    this._isOldAndroidBrowser = navigator.vendor.match(/Google/i) && navigator.userAgent.match(/android/i);
+	    this._isIOS = navigator.userAgent.match(/(ipad|iphone)/i);
 	    if (this._isOldAndroidBrowser) {
 		window.addEventListener("resize", dojo.hitch(this,"resize"));
 	    } else if ("onorientationchange" in window) {
-		window.addEventListener("orientationchange", dojo.hitch(this, "_onOrientationChange"));
+		window.addEventListener("orientationchange", dojo.hitch(this, "resize"));
 	    } else {
 		window.addEventListener("resize", dojo.hitch(this,"resize"));
 	    }
@@ -50,12 +51,21 @@ dojo.declare("wm.AppRoot", wm.Container, {
 
     /* Assumes that wavemaker app is the only thing on the page; some of these calculations fail if there is other html outside of the wavemakerNode */
     _onOrientationChange: function() {
-	    this._inResize = true;
+/*
+	wm.job("onOrientationChange", 10000, dojo.hitch(this, "resize"));
+	return;
+	return this.resize();
+	*/
+this._inResize = true;
+
+	/* for iphone, screen.height is height including area taken by location bar; and innerHeight is area between location bar and bottom bar;
+	 */
+
 	var width = Math.min(screen.width, window.innerWidth);
 	var height = Math.min(screen.height, window.innerHeight);
+
 	    var max = Math.max(width,height);
 	    var min = Math.min(width,height);
-	    console.log("MAX:" + max + "; MIN: " + min);
 	    switch(window.orientation) {
 	    case 90:
 	    case -90:
@@ -72,22 +82,24 @@ dojo.declare("wm.AppRoot", wm.Container, {
 	    app.valueChanged("deviceSize",this.deviceSize); // bindable event
 	    dojo.publish("deviceSizeRecalc");
 	    this.reflow();
-	console.log("WIDTH:" + this.bounds.w + "; HEIGHT: " + this.bounds.h);
 	    this._inResize = false;
     },
 	resize: function() {
 	    this._inResize = true;
-	    if (!wm.deviceSize) {
+
+	    if (!wm.deviceSize) {// set from URL
 		var deviceSize = this.deviceSize;
 		this.updateBounds();
-		console.log("RESIZE: WIDTH: " + this.bounds.w + " | " + this.bounds.h);
 		this.deviceSize = this.calcDeviceSize(this.bounds.w);
 		if (deviceSize != this.deviceSize) {
 		    app.valueChanged("deviceSize",this.deviceSize); // bindable event
 		    dojo.publish("deviceSizeRecalc");
 		}
 	    }
+
 	    this.reflow();
+
+
 	    if (this._isOldAndroidBrowser && app.wmMinifiedDialogPanel) {
 		app.wmMinifiedDialogPanel.hide();
 		wm.onidle(app.wmMinifiedDialogPanel, "show");
@@ -97,17 +109,43 @@ dojo.declare("wm.AppRoot", wm.Container, {
 	updateBounds: function() {
 	    this._percEx = {w:100, h: 100};
 	    var pn = this.domNode.parentNode;
-	    var width;
+	    var width,height;
+
 	    if (window["PhoneGap"]) {
-		var height = Math.min(screen.height, window.innerHeight);
+		height = Math.min(screen.height, window.innerHeight);
 		pn.style.height = height + "px";
+	    } else if (navigator.userAgent.match(/(iphone|ipad)/i)) {
+
+		if (window.orientation == 90 || window.orientation == -90) {
+		    var min = Math.min(window.innerWidth, window.innerHeight);
+		    var max = Math.max(window.innerWidth, window.innerHeight);
+		    width = max;
+		    height = min;
+		} else {
+		    height = Math.max(window.innerHeight, window.innerWidth); // don't assume width and height have updated since the last orientation change, just figure out width and height based on window.orientation = 0
+		    width = Math.min(window.innerHeight, window.innerWidth); 
+
+		}
+		console.log("HEY HO: " + width + " | " + height + " | " + window.orientation) ;
+		//pn.style.height = (height + 100) + "px"; // without that extra height, setting scrollTop will fail
+		this.domNode.style.position = "relative";
+	    } else if (wm.device == "phone") {
+
 	    } else if (wm.isMobile) {
 		pn.style.height = "100%";		
 	    }
+
 	    if (wm.isMobile) {
-		width = Math.min(screen.width, window.innerWidth, pn.offsetWidth);
+		if (!width)
+		    width = Math.min(screen.width, window.innerWidth, pn.offsetWidth);
+		if (!height)
+		    height = Math.min(screen.height, window.innerHeight, pn.offsetHeight || 1000);
+	    } else {
+		width = pn.offsetWidth;
+		height = pn.offsetHeight;
 	    }
-	    this.setBounds(0, 0, width || pn.offsetWidth, pn.offsetHeight);
+	    console.log("innerHeight: " + height + "; scrollTop:" + document.body.scrollTop);
+	    this.setBounds(0, 0, width, height);
 	},
 	reflow: function() {
 	    if (this._cupdating)
@@ -120,8 +158,8 @@ dojo.declare("wm.AppRoot", wm.Container, {
 	    if (wm.isMobile) {
 		// get rid of the location bar on any mobile browser that is in landscape mode
 		// in an attempt to get a usable amount of height
-		document.body.scrollTop = (this.bounds.w > this.bounds.h) ? 1 : 0;
-		console.log("scrollTOP:" + document.body.scrollTop);
+		//document.body.scrollTop = (this.bounds.w > this.bounds.h) ? 1 : 0;
+		console.log("SCROLL TOP " + document.body.scrollTop);
 	    }
 	},
     calcDeviceSize: function(width) {	
