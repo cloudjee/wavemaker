@@ -140,12 +140,30 @@ dojo.declare("wm.LoadingDialog", wm.Dialog, {
 	    this._label.setCaption(this.caption);
 	}
     }, 
-    
-    renderBounds: function() {
+    setShowing: function(inShowing, forceChange, skipOnClose) {
+	this.inherited(arguments);
+	if (inShowing) {
+	    this._getWidgetToCover();
+	    var node = this.widgetToCover.domNode;
+	    var zindex = node.style.zIndex || 0;
+	    while (node.parentNode && node.parentNode.tagName != "BODY") {
+		node = node.parentNode;
+		if (node.style.zIndex) {
+		    zindex = Math.max(zindex,node.style.zIndex);
+		}
+	    }
+	    this.domNode.style.zIndex = zindex+1;
+	}
+    },
+    _getWidgetToCover: function() {
 	if (this.widgetToCover) {
-	    if (dojo.isString(this.widgetToCover))
+	    if (dojo.isString(this.widgetToCover)) 
 		this.widgetToCover = this.owner.getValueById(this.widgetToCover);
 	}
+	return this.widgetToCover;
+    },
+    renderBounds: function() {
+	this._getWidgetToCover();
 	if (this.widgetToCover) {
 	    try {
 	    var parentNode = this.widgetToCover.domNode.parentNode;
