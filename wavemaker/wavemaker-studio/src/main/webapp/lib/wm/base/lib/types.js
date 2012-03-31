@@ -324,7 +324,8 @@ wm.defaultTypes = {
 	EntryData: {
 		fields: {
 			name: {type: "string"},
-			dataValue: {type: "any"}
+		    dataValue: {type: "any",
+				"include": ["delete","read","update","insert"]}
 		}
 	},
 	AnyData: {
