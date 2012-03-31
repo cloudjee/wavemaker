@@ -33,16 +33,56 @@ dojo.declare("wm.VirtualListItem", null, {
 	},
 	makeConnections: function() {
 		this.connections = [
-			dojo.connect(this.domNode, 'mouseover', this, 'mouseover'),
-			dojo.connect(this.domNode, 'mouseout', this, 'mouseout'),
-		        dojo.connect(this.domNode, 'click', this, function(evt) {
-			    wm.onidle(this,'click',evt);
-			}),
-		       dojo.connect(this.domNode, 'dblclick', this, function(evt) {
-			   wm.onidle(this, 'dblclick',evt);
-		       })
+		    dojo.connect(this.domNode, 'mouseover', this, 'mouseover'),
+		    dojo.connect(this.domNode, 'mouseout', this, 'mouseout')
 		];
+	    if (!wm.isMobile) {
+		this.connections.push(dojo.connect(this.domNode,'click', this, function(evt) {
+		    wm.onidle(this,'click',{target: evt.target});
+		}));
+		this.connections.push(
+		    dojo.connect(this.domNode, 'dblclick', this, function(evt) {
+			wm.onidle(this, 'dblclick',{target: evt.target});
+		    }));
+	    } else if (wm.isFakeMobile) {
+		this.connections.push(dojo.connect(this.domNode,'onmousedown', this, "touchStart"));
+		this.connections.push(dojo.connect(this.domNode,'onmousemove', this, "touchMove"));
+		this.connections.push(dojo.connect(this.domNode,'onmouseup', this, "touchEnd"));
+	    } else {
+		this.connections.push(dojo.connect(this.domNode,'ontouchstart', this, "touchStart"));
+		this.connections.push(dojo.connect(this.domNode,'ontouchmove', this, "touchMove"));
+		this.connections.push(dojo.connect(this.domNode,'ontouchend', this, "touchEnd"));
+	    }
 	},
+        touchStart: function(evt) {
+	    if (!this.selected) {
+		this._selectionIndicatorOnly = true;
+		this.select();
+		this.selected = false;
+	    }
+	    this.list._ontouchstart =  this;
+	    wm.job(this.list.getRuntimeId() + "_" + this.index, app.touchToClickDelay, dojo.hitch(this, "touchEnd"));
+	},
+        touchMove: function(evt) {
+    if (this.list._ontouchstart) {
+	wm.cancelJob(this.list.getRuntimeId()+"_"+this.index);
+	delete this.list._ontouchstart;
+	if(this._selectionIndicatorOnly){
+	    delete this._selectionIndicatorOnly;
+	    this.deselect();
+	}
+    }
+	},
+    touchEnd: function(evt) {
+	 wm.cancelJob(this.list.getRuntimeId() + "_" + this.index);
+	if (this.list._ontouchstart == this) {
+	    if (!evt) {
+		evt = {target: this.domNode};
+	    } 
+	    this.click(evt);
+	}
+	this.list._ontouchstart = null;
+    },
 	setContent: function(inContent) {
 	    this.domNode.innerHTML = inContent;
 	},
@@ -400,8 +440,10 @@ dojo.declare("wm.VirtualList", wm.Control, {
 		else
 			this.deselectAll(ignoreSelectedItem);
 	    if (!ignoreSelectedItem) {
-		this.onDeselect(inItem);
-		this.onSelectionChange();
+		//wm.job(this.getRuntimeId() + ".eventSelect", app.eventDelay, dojo.hitch(this, function() {
+		    this.onDeselect(inItem);
+		    this.onSelectionChange();
+	    //}));
 	    }
 	},
 	eventSelect: function(inItem) {
@@ -409,9 +451,14 @@ dojo.declare("wm.VirtualList", wm.Control, {
 		this._oncanselect(inItem, selectInfo);
 		if (selectInfo.canSelect) {
 			/* candidate for a wm.onidle, but unfortunately, that will make javascript calls that use this async and will likely fail */
-			this.addToSelection(inItem);
+		    this.addToSelection(inItem);
+
+		    /* Seperates the thread for indicating/giving feedback as to a selection and the thread for handling
+		     * events from the selection which might slow down the rendering or hide the rendering of the selection inidcator */
+		    //wm.job(this.getRuntimeId() + ".eventSelect", app.eventDelay, dojo.hitch(this, function() {
 			this.onSelect(inItem);
-		    this.onSelectionChange();
+			this.onSelectionChange();
+		//}));
 		}
 	},
 	select: function(inItem) {
@@ -444,19 +491,25 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	_oncanmouseover: function(inEvent, inItem, inMouseOverInfo) {
 	},
 	onclick: function(inEvent, inItem) {
-	    if (inEvent.target && dojo.attr(inEvent.target, "wmcontroller")) {
-		if (inEvent.target.type == "checkbox") {
-		    if (inEvent.target.checked) {
+	    
+	    var target = inEvent.target;
+	    if (target.firstChild && dojo.attr(target.firstChild, "wmcontroller")) {
+		target = target.firstChild;
+	    }
+
+	    if (target && dojo.attr(target, "wmcontroller")) {
+		if (target.type == "checkbox") {
+		    if (target.checked) {
 			this.eventSelect(inItem);
 		    } else {
 			this.eventDeselect(inItem);
 		    }
-		} else if (inEvent.target.type == "radio") {
+		} else if (target.type == "radio") {
 		    var toggleSelectWas = this.toggleSelect;
 		    this.toggleSelect = false;
 		    this.clickSelect(inItem, inEvent);
 		    this.toggleSelect = toggleSelectWas;
-		} else if (dojo.hasClass(inEvent.target, "wmDeleteColumn")) {
+		} else if (dojo.hasClass(target, "wmDeleteColumn") || dojo.hasClass(target, "wmDeleteColumnImage")) {
 		    this._deleteItem(inItem);
 		}
 	    } else {
@@ -476,6 +529,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	var index = dojo.indexOf(this.items, inItem);
 	wm.Array.removeElementAt(this.items, index);
 	dojo.destroy(inItem.domNode);
+	return index;
     },
 	ondblclick: function(inEvent, inItem) {
 	},
