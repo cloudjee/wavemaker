@@ -611,12 +611,18 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 	    }
 	    var dataValue = this.dataValue;
 	    this.grid.setDataSet(inDataSet);
+
 	    this.setEditorValue(dataValue);
 	}
     },
     changed: function() {
 	this.selectedItem.setDataSet(this.grid.selectedItem);
-	this.inherited(arguments);
+	this.doOnchange();
+    },
+    doOnchange: function() {
+	    var e = this.editor;
+	    if (!this._loading && !this.isUpdating() && !this.readonly && e && !this.isLoading())
+		this.onchange(this.getDisplayValue(), this.getDataValue());
     },
     _onShowParent: function() {
 	if (this.grid)
@@ -654,10 +660,11 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
     },
     filterList: function(inDisplayValue, inDataValue) {
 	var count = this.grid.getRowCount();
-	var rows = dojo.query(".dojoxGridRow", this.grid.domNode);
 	var query = {};
-	if (inDisplayValue)
-	    query[this.grid.columns[0].field] = "*" + inDisplayValue + "*";// TODO: For DojoGrid: The dojostored object needs to include customFields such as our _name field; wm.List needs similar facility
+	if (inDisplayValue) {
+	    for (var i = 0; i < this.grid.columns.length && this.grid.columns[i].controller; i++) ; // find the first non-controller column
+	    query[this.grid.columns[i].field] = "*" + inDisplayValue + "*";// TODO: For DojoGrid: The dojostored object needs to include customFields such as our _name field; wm.List needs similar facility
+	}
 	this.grid.setQuery(query);
     },
     flow: function() {
@@ -676,10 +683,10 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 	if (this.showSearchBar) {
 	    this.createSearchBar();
 	}
-	
+	wm.require("wm.List");
 	    this.grid = new wm.List({owner: this, 
 					 parent: this.editor,
-					   name: "editor",
+					   name: "grid",
 					   width: "100%", 
 					   height: "100%",
 					   noHeader: true,
