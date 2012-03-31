@@ -255,15 +255,15 @@ wm.LoadingDialog.extend({
 
 wm.Object.extendSchema(wm.LoadingDialog, {
     /* Display group; misc subgroup */
-    widgetToCover: {group: "display", subgroup: "layout", order: 1, requiredGroup: 1, bindTarget: 1, createWire: 1, editor: "wm.prop.WidgetSelect", editorProps: {widgetType: "wm.Control", excludeType: "wm.Dialog"}, order: 100},
-    serviceVariableToTrack: {group: "display", subgroup: "misc", order: 2, requiredGroup: 1, bindTarget: 1, createWire: 1, editor: "wm.prop.WidgetSelect", editorProps: {widgetType: "wm.ServiceVariable"}, order: 101},    
+    widgetToCover: {group: "widgetName", subgroup: "layout", order: 1, requiredGroup: 1, bindTarget: 1, createWire: 1, editor: "wm.prop.WidgetSelect", editorProps: {widgetType: "wm.Control", excludeType: "wm.Dialog"}, order: 100},
+    serviceVariableToTrack: {group: "widgetName", subgroup: "misc", order: 2, requiredGroup: 1, bindTarget: 1, createWire: 1, editor: "wm.prop.WidgetSelect", editorProps: {widgetType: "wm.ServiceVariable"}, order: 101},    
 
     /* Display group; text subgroup */
-    caption:      {group: "display", subgroup: "text", order: 102, bindTarget: 1},
-    captionWidth: {group: "display", subgroup: "text", order: 103, editor: "wm.prop.SizeEditor"},
-    image:        {group: "display", subgroup: "visual", order: 110, type: "String", bindTarget: 1, subtype: "File", extensionMatch: ["jpg","jpeg","gif","png","tiff"]},
-    imageWidth:   {group: "display", subgroup: "layout", order: 111, editor: "wm.prop.SizeEditor"},
-    imageHeight:  {group: "display", subgroup: "layout", order: 112, editor: "wm.prop.SizeEditor"},
+    caption:      {group: "widgetName", subgroup: "text", order: 102, bindTarget: 1},
+    captionWidth: {group: "widgetName", subgroup: "text", order: 103, editor: "wm.prop.SizeEditor"},
+    image:        {group: "widgetName", subgroup: "graphics", order: 110, type: "String", bindTarget: 1, subtype: "File", extensionMatch: ["jpg","jpeg","gif","png","tiff"]},
+    imageWidth:   {group: "widgetName", subgroup: "layout", order: 111, editor: "wm.prop.SizeEditor"},
+    imageHeight:  {group: "widgetName", subgroup: "layout", order: 112, editor: "wm.prop.SizeEditor"},
     
     /* Ignore group */
     positionNear: {ignore:1},
