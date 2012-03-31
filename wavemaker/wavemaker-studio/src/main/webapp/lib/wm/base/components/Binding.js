@@ -75,7 +75,9 @@ dojo.declare("wm.Wire", wm.Component, {
 	    var firingId = "";
 	    if (this.source && !this.expression) {
 		var source = this.source;
+		wm.disableLazyLoad = true;
 		var sourceObj = this.getValueById(source);
+		wm.disableLazyLoad = false;
 		while (source && sourceObj instanceof wm.Component == false) {
 		    if (source.indexOf(".") != -1) {
 			source = source.substring(0, source.lastIndexOf("."));

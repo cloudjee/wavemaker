@@ -938,8 +938,8 @@ dojo.declare("wm.Variable", wm.Component, {
 				if (!wm.isEmpty(d)) {
 					var args = [null, this.type, d, {properties: [inPropName]}];
 					wm.logging && console.log("lazyLoad", inVariable.owner && inVariable.owner.getId(), args);
-					var f = function() {
-					  var r = s.result, propData = r && r[inPropName];
+					var f = function(r) {
+					  var propData = r && r[inPropName];
 					  if (propData) {
 					    v.beginUpdate();
 					    v.setData(propData);
@@ -948,12 +948,16 @@ dojo.declare("wm.Variable", wm.Component, {
 					}					  
 					
 					// NOTE: Default is that async doesn't have a value; this feature seems unreliable so far so don't use
+				    var d;
 					if (this.async) {
-					  s.requestAsync("read", args, f);
+					  d = s.requestAsync("read", args);
 					} else {
-					  s.requestSync("read", args);
-					  f();
+					    d = s.requestSync("read", args);					  
 					}
+				    d.addCallback(dojo.hitch(this, function() {
+					f();
+				    }));
+
 				};
 			}
 		}catch(x){}
@@ -968,7 +972,7 @@ dojo.declare("wm.Variable", wm.Component, {
 		var o = this;
 		// if this variable or any owner does not allow lazy loading then cannot lazy load!
 		while (o instanceof wm.Variable) {
-			if (!o._allowLazyLoad)
+			if (!o._allowLazyLoad || wm.disableLazyLoad)
 				return false;
 			o = o.owner;
 		}
