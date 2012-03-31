@@ -1041,6 +1041,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 					  verticalAlign: "middle",
 					  layoutKind: "left-to-right",
 					  flags: {notInspectable: true}});
+/*
 	if (wm.isMobile) {
 	    if (!wm.Dialog.titlebarMenu) {
 		wm.Dialog.titlebarMenu = app.createComponents({	
@@ -1048,7 +1049,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		},app)[0];
 	    }
 	}
-
+	*/
 
 
 	var buttonPanel = this.titleButtonPanel = new wm.Panel({parent: this.titleBar,
@@ -1072,6 +1073,8 @@ dojo.declare("wm.Dialog", wm.Container, {
 						 parent: buttonPanel,
 						 owner: this,
 						 onclick: dojo.hitch(this, function(inEvent) {
+						     this.setShowing(false);
+/*
 						     wm.Dialog.titlebarMenu.setFullStructure([
 							 {"label":"Close","separator":undefined,"defaultLabel":"Close","iconClass":undefined,"imageList":undefined,"idInPage":undefined,"isCheckbox":false,"onClick":dojo.hitch(this,"hide"),"children":[]},
 							 {"label":"Minimize","separator":undefined,"defaultLabel":"Minimize","iconClass":undefined,"imageList":undefined,"idInPage":undefined,"isCheckbox":false,"onClick":dojo.hitch(this,"minify"),"children":[]},
@@ -1084,6 +1087,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 						     wm.Dialog.titlebarMenu.setItemShowing("Full Size", !this.noMaxify && !this._maxified);
 						     wm.Dialog.titlebarMenu.setItemShowing("Normal Size", this._maxified);
 						     wm.Dialog.titlebarMenu.update(inEvent);
+						     */
 						 })
 	    });
 						 
