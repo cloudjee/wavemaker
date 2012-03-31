@@ -1281,6 +1281,9 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		cssTextItems.push("background-color:" + cssObj.backgroundColor);
 	    cssTextItems.push("overflow-x:" + cssObj.overflowX);
 	    cssTextItems.push("overflow-y:" + cssObj.overflowY);
+	    if (wm.isMobile && dojo.isWebKit && (cssObj.overflowY == "auto"||cssObj.overflowY == "scroll")) {
+		cssTextItems.push("-webkit-overflow-scrolling: touch");
+	    }
 
 	    // why is it +=?  So that position: absolute isn't blown away; so that any custom widget styles aren't blown away.
 	    // How efficient is resetting cssText (cssText is "border:5", how efficient is cssText += ";border:10" handled?)
@@ -1304,6 +1307,9 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 			s[styleName] = cssObj[styleName];
 			this._appliedStyles[styleName] = cssObj[styleName];
 		    } 
+		    if (wm.isMobile && dojo.isWebKit && (s.overflowY == "scroll" || s.overflowY == "auto")) {
+			    s.WebkitOverflowScrolling = "touch";
+		    }
 		} catch(e) {
 		    console.error("Invalid style for " + this.name + "; " + styleName + ": " + cssObj[styleName]);
 		}
