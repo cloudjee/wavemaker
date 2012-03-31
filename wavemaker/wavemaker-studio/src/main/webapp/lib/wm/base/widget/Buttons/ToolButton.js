@@ -49,52 +49,92 @@ dojo.declare("wm.ToolButton", wm.Control, {
 
 	init: function() {
 	    this.inherited(arguments);
-	    this.connect(this.btnNode, wm.isMobile && "ontouchstart" in this.btnNode ? "ontouchstart" : "onclick", this, function(evt) {
+	    if (!wm.isMobile) {
 		/* IE 8 loses the event after our setTimeout; to access data about the event, we have to copy it and pass on the copy.
 		 * Users should not see this pseudoevent and most definitely should not try to call stopEvent on this event
 		 * You can change this behavior if your not supporing IE 8 by removing the setTimeout.
 		 * Be sure to test for timing issues when going from editting/focus on an editor to clicking on a save button;
 		 * Timing issue: focus leaves editor; editor validates; save button's disabled state is updated based on validation; did click happen before or after button's state was updated?
 		 */
-		var pseudoEvt = {clientX: evt.clientX,
-				 clientY: evt.clientY,
-				 offsetX: evt.offsetX,
-				 offsetY: evt.offsetY,
-				 screenX: evt.screenX,
-				 screenY: evt.screenY,
-				 pageX: evt.pageX,
-				 pageY: evt.pageY,
-				 x: evt.x,
-				 y: evt.y,
-				 target: evt.target,
-				 currentTarget: evt.currentTarget,
-				 "type": evt.type};
-		window.setTimeout(dojo.hitch(this, "click",pseudoEvt), 5);
-	    });
+		this.connect(this.btnNode, "onclick", this, function(evt) {
+		    this.click(evt,true);
+		});
+	    } else if (wm.isFakeMobile) {
+		this.connect(this.btnNode, "onmousedown", this, "touchStart");
+		this.connect(this.btnNode, "onmousemove", this, "touchMove");
+		this.connect(this.btnNode, "onmouseup", this, "touchEnd");
+	    } else {
+		this.connect(this.btnNode, "ontouchstart", this, "touchStart");
+		this.connect(this.btnNode, "ontouchmove", this, "touchMove");
+		this.connect(this.btnNode, "ontouchend", this, "touchEnd");
+	    }
+
 	    //this.setHint(this.title || this.hint);
 	    this.imageListChanged();
 
 	},
-        click: function(inEvent) {
-	    if (!this.disabled) {
-		if (!this.clicked) 
-		    this.setProp("clicked", true);
-
-		if (inEvent.type == "touchstart") {
-		    var node = this.domNode;
-		    dojo.addClass(node, "Focused");
-		    wm.job(this.getRuntimeId() + ".unfocus()", 1000, function() {
-			dojo.removeClass(node, "Focused");
-		    });
-		}
-
-	        this.onclick(inEvent, this);
+    touchStart: function(inEvent) {
+	if (!this._cachedBorder) {
+	    this._cachedBorder = this.border;
+	    this._touchTarget = inEvent.target;
+	    this.setBorder("3");
+	    wm.job(this.getRuntimeId() + "." + ".touch", app.touchToClickDelay, dojo.hitch(this, "touchEnd"));
+	}	
+    },
+    touchMove: function(inEvent) {
+	if (this._cachedBorder) {
+	    wm.cancelJob(this.getRuntimeId() + "." + ".touch");
+	    this.setBorder(this._cachedBorder);
+	    delete this._cachedBorder;
+	    delete this._touchTarget;
+	}
+    },
+    touchEnd: function(evt) {
+	wm.cancelJob(this.getRuntimeId() + "." + ".touch");
+	if (this._cachedBorder) {
+	    this.setBorder(this._cachedBorder);
+	    if (!evt) {
+		evt = {target: this._touchTarget};
+	    } else if (!evt.target) {
+		evt.target = this._touchTarget;
+	    }
+	    delete this._cachedBorder;
+	    delete this._touchTarget;
+	    this.click(evt, false);
+	}
+    },    
+    click: function(inEvent, useDelay) {
+	if (!this.disabled) {
+	    if (!this.clicked) {
+		this.setProp("clicked", true);
+	    }
+	    if (!useDelay) {
+		this.onclick(inEvent,this);
+	    } else {
+		var pseudoEvt = inEvent ? {clientX: inEvent.clientX,
+					   clientY: inEvent.clientY,
+					   offsetX: inEvent.offsetX,
+					   offsetY: inEvent.offsetY,
+					   screenX: inEvent.screenX,
+					   screenY: inEvent.screenY,
+					   pageX: inEvent.pageX,
+					   pageY: inEvent.pageY,
+					   x: inEvent.x,
+					   y: inEvent.y,
+					   target: inEvent.target,
+					   currentTarget: inEvent.currentTarget,
+					   "type": inEvent.type} : {};
+		wm.onidle(this, function() {
+		    if (!this._isDestroyed) {
+			this.onclick(pseudoEvt, this);
+		    }
+		});
 	    }
 
 	    if (app.toolTipDialog && this == app.toolTipDialog.tipOwner) {
 		app.toolTipDialog.hide();
 	    }
-
+	}
 	},
         onclick: function() {
 	},
