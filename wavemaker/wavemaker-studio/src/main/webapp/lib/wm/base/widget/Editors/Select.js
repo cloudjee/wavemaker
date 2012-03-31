@@ -34,9 +34,17 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
     restrictValues: true,
     _selectedData: null,
 	init: function() {
-	    if (wm.isMobile) this.comboBox = false;
+	    if (wm.isMobile) {
+		this.comboBox = false;
+		this.manageHistory = true;
+	    }
 	    this.inherited(arguments);
 	},
+    handleBack: function(inOptions) {
+	this.editor.closeDropDown();
+	this.editor.dropDown.hide();
+	return true;
+    },
         // STORE ACCESS
 	generateStore: function() {
 	    if (wm.isMobile) return;
@@ -70,20 +78,21 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 		    pageSize: this.pageSize ? this.pageSize : Infinity // dijit requires 1 higher or it will still print the "more" link
 		}, inProps || {});
 	},
+/*
     doOnfocus: function() {
 	if (!this.comboBox && this.editor) {
 	    this.editor.loadDropDown(function() {});
 	}
 	this.inherited(arguments);
     },
-	
+    */
 	_createEditor: function(inNode, inProps) {
 	    var e;
 	    if (wm.isMobile) {
 		e = new wm.dijit.form.ComboBox(this.getEditorProps(inNode, inProps));
 		e.owner = this;
 		dojo.attr(e.focusNode, "readonly", true);
-		this.connect(e.focusNode, "onclick", this, "showPopup");
+		//this.connect(e.domNode, "ontouchstart", this, "showPopup");
 	    } else if (this.restrictValues) {
 		e =  new dijit.form.FilteringSelect(this.getEditorProps(inNode, inProps));
 	    } else {
@@ -758,7 +767,7 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		    }
 		} catch(e) {}
 		
-		if (view && !this._isDesignLoaded) {
+		if (view) {
 		    view.addRelated(ff);
 		}
 		var lv = this.dataSet = new wm.LiveVariable({
@@ -797,7 +806,6 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		this.autoDataSet = inAutoDataSet;
 		if (this.autoDataSet) {
 			this.createDataSet();
-		    debugger;
 			this.update();
 		}
 	},
@@ -854,6 +862,18 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 	}
 });
 
+if (wm.isMobile) {
+    wm.Lookup.extend({
+	_createEditor: function() {
+	    var e = this.inherited(arguments);
+	    this.connect(e, "openDropDown", this, "_onOpenDropDown");
+	    return e;
+	},
+	_onOpenDropDown: function() {
+	    this.inherited(arguments);
+	}
+    });
+}
 dojo.declare("wm.FilteringLookup", wm.Lookup, {
     startUpdate: false,
     restrictValues: true, // looking up up objects; partial match is useless
@@ -969,23 +989,18 @@ if (!wm.isMobile) {
 	}
     },
 	
-	_hasConnectedPopup: false,
-	_createEditor: function() {
-	    this._hasConnectedPopup = false;
-	    var e = this.inherited(arguments);
-	    this.connect(e, "openDropDown", this, function() {
-		var l = e.listSet;
-		l.searchBar.setPlaceHolder(this.placeHolder);
-		if (this._searchBarChangeConnect) {
-		    dojo.disconnect(this._searchBarChangeConnect);
-		    wm.Array.removeElement(this._connections, this._searchBarChangeConnect);
-		}
-		this._searchBarChangeConnect = l.searchBar.connect(l.searchBar, "onchange", this, function(inDisplayValue, inDataValue) {
-		    this._onchange(inDisplayValue);
-		});
+	_onOpenDropDown: function() {
+	    var l = this.editor.listSet;
+	    l.searchBar.setPlaceHolder(this.placeHolder);
+	    if (this._searchBarChangeConnect) {
+		dojo.disconnect(this._searchBarChangeConnect);
+		wm.Array.removeElement(this._connections, this._searchBarChangeConnect);
+	    }
+	    this._searchBarChangeConnect = l.searchBar.connect(l.searchBar, "onchange", this, function(inDisplayValue, inDataValue) {
+		this._onchange(inDisplayValue);
 	    });
-	    return e;
 	},
+			     
     _end: 0
     });
 }
@@ -1014,7 +1029,10 @@ dojo.declare(
 	// openOnClick: [const] Boolean
 	//		Set to true to open drop down upon clicking anywhere on the textbox.
 	openOnClick: true,
-
+	buildRendering: function(){
+	    this.inherited(arguments);
+	    this._buttonNode = this.domNode;
+	},
 	createDropDown: function() {
 		this.dropDown = new wm.Dialog({owner: this.owner,
 					       corner: wm.device == "phone" ? "cc" : "cc",
@@ -1026,9 +1044,10 @@ dojo.declare(
 					       useContainerWidget: true,
 					       padding: "0",
 					       margin: "10",
-					       title: this.owner.caption,
+					       title: "",//this.owner.caption,  need this back if we reduce the margin
 					       destroyRecursive: function() {if (!this.isDestroyed) this.destroy();} // this === this.dropDown
 					      });
+	    this.dropDown.dialogScrim.connect(this.dropDown.dialogScrim.domNode, wm.isFakeMobile ? "onclick" : "ontouchstart", this.dropDown, "hide");
 		var c = this.dropDown.containerWidget;
 		c.setPadding("0");
 		c.setMargin("0");
@@ -1056,6 +1075,7 @@ dojo.declare(
 						this.set("item", data);
 						this.displayedValue = value;
 						this.owner.changed();
+						this.closeDropDown();
 						this.dropDown.hide();
 					    }
 					})
@@ -1072,13 +1092,20 @@ dojo.declare(
 						      parent: this.dropDown.titleBar,
 						      caption: "Cancel",
 						      onclick: dojo.hitch(this, function() {
+							  this.closeDropDown();
 							  this.dropDown.hide();
 						      })});
 	},
+
 	openDropDown: function(/*Function*/ callback){
+	    app.addHistory({id: this.owner.getRuntimeId(),
+			    options: {},
+			    title: "Hide Popup"});
+
 	    if (!this.dropDown) {
 		this.createDropDown();
 	    }
+	    this.listSet.setShowing(false); // improves performance
 	    this._cupdating = true;
 	    this.dropDown.setTitle(this.owner.caption); // in case caption has changed
 	    this.listSet.setDataSet(null);
@@ -1091,10 +1118,32 @@ dojo.declare(
 		this.listSet.setDisplayExpression("");
 		this.listSet.setDisplayField(this.owner.displayField);
 	    }
-	    this.listSet.setDataSet(this.owner.dataSet);
-	    this.listSet.setDataValue(this.owner.dataValue);
+	    if (this.owner.allowNone) {
+		if (!this.owner._dataSet) {
+		    this.owner._dataSet = new wm.Variable();
+		}
+		this.owner._dataSet.setDataSet(this.owner.dataSet);
+		var newItem = {};
+		for (var fieldName in this.owner._dataSet._dataSchema) {
+		    newItem[fieldName] = "";
+		}
+		this.owner._dataSet.addItem(newItem,0);
+		this.listSet.setDataSet(this.owner._dataSet);
+	    } else {
+		this.listSet.setDataSet(this.owner.dataSet);
+	    }
+	    /*
+	     this.listSet.setDataValue(this.owner.dataValue); // must be done after grid._render()
+	     this._cupdating = false;
+	     */
 	    // TODO: Need to preselect the current value!
-	    this._cupdating = false;
+
+	    wm.onidle(this, function() {
+		this.listSet.setShowing(true);
+		this.listSet.grid._render();
+		this.listSet.setDataValue(this.owner.dataValue);
+		this._cupdating = false;
+	    });
 	    return true;
 	}
     });
