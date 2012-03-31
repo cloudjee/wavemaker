@@ -112,7 +112,7 @@ wm.AbstractEditor.extend({
 	    
 	    props.formField.ignoretmp = !Boolean(hasForm);
 	    props.displayValue.readonly = this.formField;
-	    props.defaultInsert.ignoretmp = !this.isAncestorInstanceOf(wm.LiveFormBase) && !this.isAncestorInstanceOf(wm.DataForm);
+	    props.defaultInsert.ignoretmp = wm.LiveFormBase && !this.isAncestorInstanceOf(wm.LiveFormBase) && wm.DataForm && !this.isAncestorInstanceOf(wm.DataForm);
 	    props.ignoreParentReadonly.ignoretmp = props.defaultInsert.ignoretmp;
 	    props.minEditorWidth.ignoretmp = this.captionPosition == "top" || this.captionPosition == "bottom" || this.captionSize.match(/px/);
 		return props;
