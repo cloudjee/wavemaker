@@ -45,6 +45,7 @@
     SHORTCUTS_M: "Toggle between model and palette",
     SHORTCUTS_S: "Save project",
     SHORTCUTS_R: "Run project",
+    SHORTCUTS_F: "Resize container to fit contents",
     SHORTCUTS_ESC_1: "If dialog is open: Close the dialog",
     SHORTCUTS_ESC_2: "If no dialog: Select the parent of the selected widget",
     SHORTCUTS_DEL: "Delete selected component (unless a text field/property field is selected for editting in which case it edits the text field)",
