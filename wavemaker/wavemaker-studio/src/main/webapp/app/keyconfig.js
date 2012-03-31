@@ -23,7 +23,7 @@ wm.studioConfig.hotkeyMap = [
 	{key: "V", action: "pasteClick" },
 	{key: "W", action: "toggleWidthClick" },
 	{key: "H", action: "toggleHeightClick" },
-	{key: "F", action: "toggleFlexBcClick" },
+	{key: "F", action: "fitToContainerContentClick" },
 	{key: "O", action: "toggleHorizontalAlignClick" },
 	{key: "E", action: "toggleVerticalAlignClick" },
 	{key: "B", action: "toggleLayoutClick" },
