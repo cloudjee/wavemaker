@@ -322,6 +322,7 @@ dependencies = {
 			    "wm.base.widget.Bevel",
 			    "wm.base.widget.Splitter",
 			    "wm.base.widget.Buttons.Button",
+			    "wm.base.widget.Buttons.ToggleButton",
 			    "wm.base.widget.Picture",
 			    "wm.base.widget.Label",
 			    "wm.base.widget.Html",
@@ -411,7 +412,7 @@ dependencies = {
 			    "wm.base.widget.Editors.Checkbox",
 			    "wm.base.widget.Editors.DataSetEditor",
 			    "wm.base.widget.Editors.Select",
-			    "wm.base.widget.Editors.Date",
+
 
 			    // widgets
 			    "wm.base.widget.AppRoot",
@@ -419,7 +420,7 @@ dependencies = {
 			    "wm.base.widget.Label",
 			    "wm.base.widget.Spacer",
 			    "wm.base.widget.Container",
-			    "lib.github.touchscroll.touchscrollmin",
+			    //"lib.github.touchscroll.touchscrollmin",
 			    "wm.base.widget.Panel",
 			    "wm.base.widget.Layout",
 			    "wm.base.widget.Bevel",
@@ -536,7 +537,7 @@ dependencies = {
 			"dojo.dojo.parser", /* Used by DataSetEditor */
 			"wm.base.widget.Editors.DataSetEditor",
 			"wm.base.data.SimpleStore", /* Used by Select */
-			"wm.base.widget.Editors.Select",
+			"wm.base.widget.Editors.Select"
 			]		
 		},
 		{
