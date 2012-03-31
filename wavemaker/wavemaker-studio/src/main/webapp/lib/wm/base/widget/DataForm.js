@@ -28,7 +28,7 @@ wm.getMatchingFormWidgets = function(inForm, inMatch) {
 	wm.forEach(inForm.widgets, function(w) {
 			if (inMatch(w))
 				match.push(w);
-	    if (w instanceof wm.Container && w instanceof wm.LiveFormBase == false && w instanceof wm.DataForm == false) 
+	    if (w instanceof wm.Container && (!wm.LiveFormBase || w instanceof wm.LiveFormBase == false) && w instanceof wm.DataForm == false) 
 				match = match.concat(wm.getMatchingFormWidgets(w, inMatch));
 		});
 		return match;
@@ -352,7 +352,6 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 	 * page.liveVariable1 INTO this.dataSet, and we don't need to copy 500 items to edit just the one item.
 	 */
 	this.dataSet.setDataSet(inDataSet ? inDataSet.getCursorItem() : null);
-
 	if (inDataSet && this.dataOutput.type != inDataSet.type)
 	    this.dataOutput.setType(this.dataSet.type);
 
@@ -663,10 +662,16 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 		if (this.liveVariable && wm.isInstanceType(this.liveVariable, wm.LiveVariable))
 			return this.liveVariable;
 		*/
-		var
-			s = this.dataSet.dataSet,
-			o = s && s.owner,
-			ds = null;
+	    var s = this.dataSet.dataSet;
+	    if (!s) {
+		var source = this.$.binding && this.$.binding.wires.dataSet ? this.$.binding.wires.dataSet.source : "";
+		if (source)
+		    source = this.owner.getValueById(source);
+		/* Sadly, at runtime, we can't gaurentee that source has been created before this gets called; this only is reliable at design time */
+		s = source;
+	    }
+		var o = s && s.owner;
+		var ds = null;
 		  o = o && !(wm.isInstanceType(o, wm.Variable)) ? o : null;
 			
 			if (o){
