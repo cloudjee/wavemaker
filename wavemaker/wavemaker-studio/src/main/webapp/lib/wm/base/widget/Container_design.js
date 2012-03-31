@@ -125,6 +125,10 @@ wm.Container.extend({
     resizeToFit: function() {
 	this.designResizeForNewChild("left-to-right", true);
 	this.designResizeForNewChild("top-to-bottom", true);
+	if (!this._percEx.h)
+	    this.set_height(this.bounds.h + "px"); // design version handles mobileHeight vs desktopHeight
+	if (!this._percEx.w)
+	    this.setWidth(this.bounds.w + "px");
     },
 	resizeUpdate: function(inBounds) {
 		// update the boundary rectangle highlight only
