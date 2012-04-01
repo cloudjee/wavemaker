@@ -535,11 +535,20 @@ dojo.declare("wm.Component", wm.Object, {
 	},
     connectOnce: function(sourceObj, sourceMethod, targetObj, targetMethod) {
 	var connections = this._connections;
-	var c = dojo.connect(sourceObj, sourceMethod, targetObj, function() {
+	var args = [sourceObj,sourceMethod];
+	if (typeof targetObj == "function") {
+	    targetMethod = targetObj;
+	} else {
+	    args.push(targetObj);
+	}
+	args.push(function() {
 	    dojo.disconnect(c);
 	    wm.Array.removeElement(connections, c);
-	    dojo.hitch(this, targetMethod)(arguments);
+	    dojo.hitch(this, targetMethod)();
 	});
+	
+	var c = dojo.connect.apply(dojo,args);
+
 	connections.push(c);
 	return c;
     },

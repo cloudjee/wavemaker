@@ -415,8 +415,8 @@ dojo.declare("wm.studio.Project", null, {
 	makePage: function() {
 		var ctor = dojo.getObject(this.pageName);
 		if (ctor) {
-			studio.connect(ctor.prototype, "init", function() { studio.page = this; });
-			studio.connect(ctor.prototype, "start", function() { wm.fire(studio.application, "start"); });
+			studio.connectOnce(ctor.prototype, "init", function() { studio.page = this; });
+		        studio.connectOnce(ctor.prototype, "start", function() { wm.fire(studio.application, "start"); });
 			studio.page = new ctor({
 				name: "wip",
 				domNode: studio.designer.domNode,
