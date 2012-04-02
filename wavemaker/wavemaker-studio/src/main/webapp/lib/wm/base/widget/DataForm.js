@@ -267,6 +267,24 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
      *                         and don't depend upon populateDataOutput methods.
      * PROS: Users expect the form value to update any time an editor value changes.
      * CONS: Each time the dataSet changes, we have many bindings that must fire
+     *
+     * PERFORMANCE: analysis of running wi generateInputBindings and generateOutputBindings on a first generation ipad and 
+     * an ICS Assus tablet:
+     * generateBindings:
+     *     IPAD:
+     *          526,575,588,522ms to change dataSet and fire all bindings
+     *     ASUS:
+     *          653,525,551,820
+     * Without generateBindings:
+     *     IPAD:
+     *          312, 188, 234, 218ms
+     *     ASUS:
+     *          150, 129,148, 164
+     * 
+     *  CONCLUSION: This kind of performance drop is unacceptable,
+     *              especially given that the bigger the app/form/etc the larger
+     *              this difference will become. Therefore we need to
+     *              find better ways of working without bindings.
      */
     generateInputBindings: true,
     generateOutputBindings: true,
