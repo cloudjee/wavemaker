@@ -476,9 +476,9 @@ Studio.extend({
 		    return;
 		}
 		for (var i = classList.length-1; i >= 0; i--) {
-		    if (wm.Object.getSchemaClass(classList[i].constructor).prototype[p.name]) {
-			if (classList[i].declaredClass == "wm.Bounds")
-			    i--;
+		    if (classList[i].declaredClass == "wm.Bounds") {
+			;
+		    } else if (wm.Object.getSchemaClass(classList[i].constructor).prototype[p.name]) {			
 			p.prototype = classList[i];
 			if (!this._autoCompletionRemainder || p.name.indexOf(this._autoCompletionRemainder) == 0) 
 			    newshowprops.push(p);			
@@ -592,6 +592,7 @@ Studio.extend({
 			   height: "20px"});
 	    this.autoCompletionList = new wm.FocusableList({owner: this,
 							    name: "autoCompletionList",
+							    _renderHiddenGrid:true,
 							    parent: listPanel,
 							    width: "100px",
 							    height: "100%",
