@@ -248,7 +248,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    this.startTimerWithName("CreateDijit", this.declaredClass);
 		this.editor = this._createEditor(n, inProps);
 	        dojo.attr(this.captionNode, "for", this.editor.id);
-	if (wm.isMobile && "ontouchstart" in this.editor.domNode) {
+	if (this.editor.domNode && wm.isMobile && "ontouchstart" in this.editor.domNode) {
 	    dojo.query(".dijitArrowButton", this.editor.domNode).connect("ontouchstart", this.editor, "openDropDown");
 	}
 /*
