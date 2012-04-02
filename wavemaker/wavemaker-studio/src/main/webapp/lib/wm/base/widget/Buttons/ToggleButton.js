@@ -67,6 +67,8 @@ dojo.declare("wm.ToggleButton", wm.ToolButton, {
 });
 
 dojo.declare("wm.ToggleButtonPanel", wm.Container, {
+    manageURL: false,
+    manageHistory: false,
     classNames: "wmtogglebuttonpanel",
     layoutKind: "left-to-right",
     currentButton: -1,
@@ -82,6 +84,9 @@ dojo.declare("wm.ToggleButtonPanel", wm.Container, {
     },
     postInit: function() {
 	this.inherited(arguments);
+	if (this.manageURL && this.owner.locationState) {		
+	    this.restoreFromLocationHash(this.owner.locationState[this.getRuntimeId()]);
+	}
 /*
 	for (var i = 0; i < this.c$.length; i++) {
 	    if (this.c$[i] instanceof wm.ToolButton) {
@@ -108,6 +113,12 @@ dojo.declare("wm.ToggleButtonPanel", wm.Container, {
 	var currentButtonWas = this.currentButton;
 	if (currentButtonWas instanceof wm.ToolButton && currentButtonWas != inButton) {
 	    dojo.removeClass(currentButtonWas.domNode, "toggleButtonDown");
+	    if (!this._isDesignLoaded && !this._inBack && this.manageHistory && inButton) {
+		app.addHistory({id: this.getRuntimeId(),
+				options: {name:currentButtonWas.name},
+				title: inButton.caption + " Selected"});
+	    }
+
 	}
 	if (inButton instanceof wm.ToolButton) {
 	    this.currentButton = inButton;
@@ -148,5 +159,30 @@ dojo.declare("wm.ToggleButtonPanel", wm.Container, {
 	    }
 	});
     },
-    onChange: function(inIndex) {}
+
+
+    onChange: function(inButton) {},
+    handleBack: function(inOptions) {
+	this._inBack = true;
+	var name = inOptions ? inOptions.name : null;
+	var button = this.owner[name];
+	if (button && this.currentButton != button) {
+	    button.click({type: "click"});
+	}
+	delete this._inBack;
+	return true;
+    },
+    restoreFromLocationHash: function(inValue) {
+	this.manageHistory = false;
+	if (inValue !== undefined) {
+	    if (this.owner[inValue]) {
+		this.setCurrentButton(this.owner[inValue]);
+	    }
+	}
+	this.manageHistory = true;
+    },
+    generateStateUrl: function(stateObj) {
+	if (this.currentButton)
+	    stateObj[this.getRuntimeId()] = this.currentButton.name;
+    }
 });
