@@ -101,7 +101,8 @@ wm.componentList = {
 	'wm.RoundedButton':['wm.base.widget.Buttons.RoundedButton'],    
 	'wm.BusyButton':['wm.base.widget.Buttons.BusyButton'],
 	'wm.PopupMenuButton':['build.Gzipped.wm_menus'],
-	'wm.ToggleButton':['build.Gzipped.wm_editors'],
+	'wm.ToggleButton':['build.Gzipped.wm_editors'],   // currently in main build
+	'wm.ToggleButtonPanel':['build.Gzipped.wm_editors'],// currently in main build
 	'wm.Timer':['wm.base.components.Timer'],
 	
 	/* Old forms and related widgets */
