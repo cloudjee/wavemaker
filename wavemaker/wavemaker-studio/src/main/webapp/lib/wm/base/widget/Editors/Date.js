@@ -218,6 +218,7 @@ dojo.declare("wm.Time", wm.Date, {
 
 
 dojo.declare("wm.DateTime", wm.Date, {
+    manageHistory: true,
     use24Time: false,
     formatLength: "short",
     dateMode: "Date and Time",
@@ -247,7 +248,8 @@ dojo.declare("wm.DateTime", wm.Date, {
     _createEditor: function(inNode, inProps) {
 	var e = dijit.form.DateTimeTextBox(this.getEditorProps(inNode, inProps));
 	if (wm.isMobile) {
-	    dojo.attr(e.focusNode, "readonly", true);
+	    dojo.attr(e.focusNode, "readonly", true);	    
+	    //this.connect(e.domNode, "ontouchstart", e, "openDropDown");
 	}
 	return e;
     },
@@ -354,7 +356,12 @@ dojo.declare("wm.DateTime", wm.Date, {
     _getReadonlyValue: function() {
 	if (this.editor)
 	    return this.editor.get('displayedValue');
-    }
+    },
+    handleBack: function(inOptions) {
+	this.editor.closeDropDown();
+	return true;
+    },
+
 
 });
 
@@ -362,6 +369,7 @@ dojo.declare(
 	"dijit.form.DateTimeTextBox",
 	dijit.form._DateTimeTextBox,
 	{
+	    //templateString: dojo.cache("dijit.form", "templates/DropDownBoxMobile.html"),
 	    forceWidth: false, // Force the popup to use its own width and not match the editor width
 	    autoWidth: false,// Force the popup to use its own width and not match the editor width
 	    baseClass: "dijitTextBox dijitComboBox dijitDateTextBox", // use these classes in the editor
@@ -373,9 +381,9 @@ dojo.declare(
 			wm.DateTimePicker.dialog = new wm.DateTimePicker({owner: this,
 									  name: "DateTimePopup"});
 		    }
-
 		var phoneSize = app.appRoot.deviceSize == "tiny" || Number(app.appRoot.deviceSize) <= 450;
 		this.dropDown = wm.DateTimePicker.dialog;
+		this.dropDown._cupdating = true;
 		this.dropDown.setMode(this._selector);
 		this.dropDown.okButton.setCaption("OK"); // TODO: Localize
 		this.dropDown.cancelButton.setCaption("Cancel"); // TODO: Localize
@@ -423,10 +431,11 @@ dojo.declare(
 		var result = dijit._HasDropDown.prototype.openDropDown.call(this, callback);
 
 		var noReposition = false;
-		    if (phoneSize) {
-		    noReposition = true;
-		    var h = app.appRoot.bounds.h - 20;
-		    var w = (this._selector == "time") ? 260 : app.appRoot.bounds.w - 20;
+		if (phoneSize) {
+			noReposition = true;
+			var margin = 5;
+			var h = app.appRoot.bounds.h - margin*2;
+			var w = (this._selector == "time") ? 260 : app.appRoot.bounds.w - margin*2;
 			dojo.marginBox(this.dropDown.domNode.parentNode, {l: 5,
 									  t: 5,
 									  w:w,
@@ -498,11 +507,16 @@ dojo.declare(
 		    this.dropDown.setMaximum(this.constraints.max);
 		}
 		    this.dropDown._updating = false;
-		if (this.dropDown.calendar.showing)
-		    this.dropDown.calendar.focus();
 /*
 		else
 		    this.dropDown.hours.focus();*/
+
+		app.addHistory({id: this.owner.getRuntimeId(),
+				options: {},
+				title: "Hide Popup"});
+
+		this.dropDown._cupdating = false;
+		wm.onidle(this.dropDown, "showContents");
 		return result;
 	    }
 	});
@@ -520,6 +534,7 @@ dojo.declare("wm.DateTimePicker", wm.Container, {
     horizontalAlign: "left",
     verticalAlign: "top",
     dataValue: null,
+
     prepare: function(inProps) {
 	inProps.owner = app;
 	this.inherited(arguments);
@@ -536,16 +551,38 @@ dojo.declare("wm.DateTimePicker", wm.Container, {
 	    this.hours.renderData(hours);
 	}
     },
+
+    hideContents: function() {
+	this.mainPanel.setShowing(false);
+    },
+    showContents: function() {
+	if (!this.mainPanel.showing) {
+	    this._cupdating = true;	
+	    this.mainPanel.setShowing(true);
+	    this.hours.renderDojoObj();
+	    this.minutes.renderDojoObj();
+	    this._cupdating = false;
+	    this.reflow();
+	    this.renderBounds();
+	}
+	this._cupdating = true;
+	if (this.calendar.showing)
+	    this.calendar.focus();
+	this._cupdating = false;
+    },
+
     postInit: function() {
 	var onchange = dojo.hitch(this, "changed");
 	this.mainPanel =  new wm.Panel({owner: this,
 					parent: this,
+					showing: false,
 					name: "mainDateTimePickerPanel",
 					layoutKind: "left-to-right",
 					horizontalAlign: "left",
 					verticalAlign: "center",
 					width: "100%", 
 					height: "100%"});
+	wm.require("wm.dijit.Calendar");
 	this.calendar = new wm.dijit.Calendar({owner: this,
 					       parent: this.mainPanel,
 					       name: "calendar",
@@ -567,6 +604,7 @@ dojo.declare("wm.DateTimePicker", wm.Container, {
 				  selectionMode: wm.isMobile ? "radio" : "single",
 				  name:"hours",
 				  columns: [{"show":true,"title":"Hour","width":"100%","align":"left","field": "dataValue"}],
+				  _pkList: ["dataValue"],
 				  height: "100%",
 				  padding: "2",					
 				  width: "100%",
@@ -584,6 +622,7 @@ dojo.declare("wm.DateTimePicker", wm.Container, {
 				    selectionMode: wm.isMobile ? "radio" : "single",
 				    name:"minutes",
 				  columns: [{"show":true,"title":"Minute","width":"100%","align":"left","field": "dataValue"}],
+				  _pkList: ["dataValue"],
 				  height: "100%",
 				  padding: "2",					
 				  width: "100%",
@@ -690,13 +729,10 @@ dojo.declare("wm.DateTimePicker", wm.Container, {
 						parent: this.buttonPanel,
 						caption: "",
 						height: "100%",
-						width: "180px"
+						   width: "100%",
 						  });
 
-	new wm.Spacer({owner: this,
-		       parent: this.buttonPanel,
-		       width: "100%"
-		      });
+
 						   
 	this.okButton = new wm.Button({owner: this,
 				       parent: this.buttonPanel,
@@ -713,7 +749,7 @@ dojo.declare("wm.DateTimePicker", wm.Container, {
 				       height: "100%",
 			       onclick: dojo.hitch(this,"onCancelClick")});
 	this.inherited(arguments);
-	this.reflow();
+	//this.reflow();
     },
 
     changed: function() {
@@ -738,10 +774,12 @@ dojo.declare("wm.DateTimePicker", wm.Container, {
 	if (this._currentDijit) {
 	    this._currentDijit.set("value", date);
 	}
-	if (this._currentDijit && this._selector == "date") {
-	    this._currentDijit.closeDropDown();
-	} else if (this._selector == "datetime" && !this.panel.showing) {
-	    this.onOkClick();
+	if (!this._cupdating) {
+	    if (this._currentDijit && this._selector == "date") {
+		this._currentDijit.closeDropDown();
+	    } else if (this._selector == "datetime" && !this.panel.showing) {
+		this.onOkClick();
+	    }
 	}
     },
     set: function(inName, inValue) {
