@@ -55,6 +55,8 @@ dojo.declare("wm.VirtualListItem", null, {
 	    }
 	},
         touchStart: function(evt) {
+
+	    if (this.list._ontouchstart) return;
 	    if (!this.selected) {
 		this._selectionIndicatorOnly = true;
 		this.select();
@@ -64,7 +66,7 @@ dojo.declare("wm.VirtualListItem", null, {
 	    wm.job(this.list.getRuntimeId() + "_" + this.index, app.touchToClickDelay, dojo.hitch(this, "touchEnd"));
 	},
         touchMove: function(evt) {
-    if (this.list._ontouchstart) {
+    if (this.list._ontouchstart == this) {
 	wm.cancelJob(this.list.getRuntimeId()+"_"+this.index);
 	delete this.list._ontouchstart;
 	if(this._selectionIndicatorOnly){
@@ -76,12 +78,12 @@ dojo.declare("wm.VirtualListItem", null, {
     touchEnd: function(evt) {
 	 wm.cancelJob(this.list.getRuntimeId() + "_" + this.index);
 	if (this.list._ontouchstart == this) {
+	    this.list._ontouchstart = null;
 	    if (!evt) {
 		evt = {target: this.domNode};
 	    } 
 	    this.click(evt);
 	}
-	this.list._ontouchstart = null;
     },
 	setContent: function(inContent) {
 	    this.domNode.innerHTML = inContent;
@@ -109,6 +111,7 @@ dojo.declare("wm.VirtualListItem", null, {
 		this.list.ondblclick(e, this);
 	},
 	select: function() {
+	    console.log("SELECT:" + new Date().getTime() + ", " + dojo.indexOf(this.list.items, this));
 	    this.selected = true;
 	    dojo.addClass(this.domNode, this.className +'-selected');
 	},
@@ -440,10 +443,10 @@ dojo.declare("wm.VirtualList", wm.Control, {
 		else
 			this.deselectAll(ignoreSelectedItem);
 	    if (!ignoreSelectedItem) {
-		//wm.job(this.getRuntimeId() + ".eventSelect", app.eventDelay, dojo.hitch(this, function() {
+		wm.job(this.getRuntimeId() + ".eventSelect", 0, dojo.hitch(this, function() {
 		    this.onDeselect(inItem);
 		    this.onSelectionChange();
-	    //}));
+		}));
 	    }
 	},
 	eventSelect: function(inItem) {
@@ -455,9 +458,10 @@ dojo.declare("wm.VirtualList", wm.Control, {
 
 		    /* Seperates the thread for indicating/giving feedback as to a selection and the thread for handling
 		     * events from the selection which might slow down the rendering or hide the rendering of the selection inidcator */
-		    //wm.job(this.getRuntimeId() + ".eventSelect", app.eventDelay, dojo.hitch(this, function() {
+		    wm.job(this.getRuntimeId() + ".eventSelect", 0, dojo.hitch(this, function() {
 			this.onSelect(inItem);
 			this.onSelectionChange();
+		    }));
 		//}));
 		}
 	},
