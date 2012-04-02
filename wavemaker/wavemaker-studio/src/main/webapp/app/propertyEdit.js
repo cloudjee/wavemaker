@@ -574,9 +574,9 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
 	*/
 	if (this.widgetDataSets)
 	    wm.forEachWidget(sp.root, dojo.hitch(this, function(w) {
-		if (w !== this && !(w instanceof wm.LiveFormBase) && !(w instanceof wm.AbstractEditor && w.formField))
+		if (!(w instanceof wm.PageContainer) && w !== this && !(w instanceof wm.LiveFormBase) && !(w instanceof wm.AbstractEditor && w.formField))
 		    r = r.concat(this.getDataSets([w],matchType));
-	    }));
+	    }),true);
 	r = r.sort();
 	/* If called from something other than the property panel, then this.inspected may not exist */
 	if (this.inspected) {
@@ -589,8 +589,12 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
     getDataSets: function(inOwners, matchType) {
 	console.log("getDataSets: " + inOwners[0].toString());
 	    return wm.listMatchingComponentIds(inOwners, dojo.hitch(this, function(c) {
+		// if its owner is not a page, then the owner is something like DojoGrid; in other words,
+		// c might be dojogrid1.dataSet.  If the owner is the thing being inspected (dojogrid1),
+		// then don't include its subcomponents as bindable.
+		if (c.owner instanceof wm.Page == false && c.owner == this.inspected) return false;
 
-			if (!c.name || c.name.indexOf("_") === 0) return false;
+		if (!c.name || c.name.indexOf("_") === 0) return false;
 
 		if (c.owner instanceof wm.LiveVariable && (c.name == "filter" || c.name == "sourceData"))
 		    return false;
@@ -628,7 +632,7 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
 
 			    return true;
 			}
-	    }),true);
+	    }),true,true);
 	}
 });
 
