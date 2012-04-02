@@ -27,16 +27,46 @@ dojo.declare("wm.Checkbox", wm.AbstractEditor, {
 	dataType: "boolean", /* TODO: WARNING, this may cause upgrade problems changing this from string to boolean */
 	startChecked: false,
         checkedValue: true,
+    touchStart: function() {
+		    this._touched = true;
+		    this.editorNode.style.backgroundColor = "black";
+		    if (this.getChecked()) {
+			this.editorNode.style.color = "white";
+		    }
+	    wm.job(this.getRuntimeId() + "." + ".touch", app.touchToClickDelay, dojo.hitch(this, "touchEnd"));
+    },
+    touchMove: function() {
+	if (this._touched) {
+	    wm.cancelJob(this.getRuntimeId() + "." + ".touch");
+	    this.editorNode.style.backgroundColor = "";
+	    this.editorNode.style.color = "";
+	    this._touched = false;
+	}
+    },
+    touchEnd: function(evt) {
+	if (this._touched) {
+	    wm.cancelJob(this.getRuntimeId() + "." + ".touch");
+	    this.editorNode.style.backgroundColor = "";
+	    this.editorNode.style.color = "";
+	    this.setChecked(!this.getChecked());
+	    this._touched = false;
+	}
+    },
+
 	_createEditor: function(inNode, inProps) {
 		var e = new dijit.form.CheckBox(this.getEditorProps(inNode, inProps));
 	    if (wm.isMobile || this._isDesignLoaded && studio.currentDeviceType != "desktop") {
+		e._connects.forEach(function(c) {
+		    dojo.disconnect(c[0]);
+		});
+		e._connects = [];
 		var a = document.createElement("div");
 		a.className = "wmcheckbox_x";
 		a.innerHTML = "X"
 		e.domNode.appendChild(a);
-		dojo.connect(a, "onclick", this, function() {
-		    this.setChecked(!this.getChecked());
-		});
+		dojo.connect(this.domNode, wm.isFakeMobile ? "onmousedown" : "ontouchstart", this, "touchStart");		
+		dojo.connect(this.domNode, wm.isFakeMobile ? "onmousemove" : "ontouchmove", this, "touchMove");
+		dojo.connect(this.domNode, wm.isFakeMobile ? "onmouseup" : "ontouchend", this, "touchEnd");
 /*
 		if (this.captionSize.match(/px/)) {
 		    this.captionSize = Math.max(0,parseInt(this.captionSize) - 16) + "px";
