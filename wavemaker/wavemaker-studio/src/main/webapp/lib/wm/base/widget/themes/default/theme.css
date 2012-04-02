@@ -1255,7 +1255,12 @@ background-repeat:no-repeat;
     line-height: normal;
     padding: 2px 5px 2px 5px;
 }
-
+.wmeditor .wmCheckboxSetItem .dijitReset {
+    float: left;
+}
+.wmeditor .wmCheckboxSetItem label {
+    display: block;
+}
 .dojoGridNoHeader .dojoxGridMasterHeader {
     display: none !important;
 }
