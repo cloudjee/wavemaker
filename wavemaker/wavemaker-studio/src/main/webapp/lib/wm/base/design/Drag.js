@@ -289,7 +289,7 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 	},
 	isDesignable: function() {
 		var c = this.info.control || (dojo.getObject(this.info.type)).prototype;
-	    return c instanceof wm.Control && c instanceof wm.Dialog == false;
+	    return c instanceof wm.Control && c instanceof wm.Dialog == false || c instanceof wm.DataModelEntity;
 	}
 });
 
