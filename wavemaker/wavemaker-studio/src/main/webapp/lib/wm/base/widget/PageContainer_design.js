@@ -124,6 +124,7 @@ wm.PageContainer.extend({
 	    this.createNewPage("");
 	} else {
 	    this.setPageName(inName);
+	    studio.reinspect(true); // update the pagecontainer properties
 	}
     },
     set_tabletPageName: function(inName) {
@@ -131,6 +132,7 @@ wm.PageContainer.extend({
 	    this.createNewPage("tabletPageName");
 	} else {
 	    this.setPageName(inName, "tabletPageName");
+	    studio.reinspect(true); // update the pagecontainer properties
 	}
     },
     set_phonePageName: function(inName) {
@@ -138,6 +140,7 @@ wm.PageContainer.extend({
 	    this.createNewPage("phonePageName");
 	} else {
 	    this.setPageName(inName, "phonePageName");
+	    studio.reinspect(true); // update the pagecontainer properties
 	}
     },
 	writeChildren: function() {
@@ -148,7 +151,8 @@ wm.PageContainer.extend({
 	    /* Remove invalid bindings; typically caused by a wm.Property having been renamed or deleted */
 	    var props = this.listProperties();
 	    for (var propName in this.components.binding.wires) {
-		if (!props[propName] && !this.subpageProplist[propName]) {
+		var componentName = propName.replace(/\..*$/,"");
+		if (!props[propName] && !props[componentName] && !this.subpageProplist[componentName]) {
 		    this.components.binding.removeWire(propName);
 		}
 	    }
@@ -167,7 +171,7 @@ wm.PageContainer.extend({
 		    var pid = this.page[inName].property;
 		    var componentName = pid.replace(/\..*?$/,"");
 		    var c = this.page.getValueById(componentName);
-		    var editor =  c.makePropEdit(pid.replace(/^.*\./,""), inValue, inDefault);
+		    var editor =  c.makePropEdit(pid.replace(/^.*\./,""), inValue, inEditorProps);
 		    return editor;
 /* TODO: PROPINSPECTOR CHANGE: Need to fix this
 		    if (typeof editor == "string") 
@@ -221,6 +225,11 @@ wm.PageContainer.extend({
 		 })
 		};
     },
+    isEventProp: function(n) {
+	if (this.subpageEventlist != null && n in this.subpageEventlist)
+	    return true;
+	return this.inherited(arguments);
+    },
     listProperties: function() {
 	var props = this.inherited(arguments);
 	if (!this.page)
@@ -234,14 +243,17 @@ wm.PageContainer.extend({
 	    /* Don't clobber any existing properties */
 	    if (props[p.name] === undefined || !props[p.name].group) {
 		if (p.isEvent) {
-		    this.subpageEventlist[p.name] = this.eventBindings[p.name];
+		    this.subpageEventlist[p.name] = p.property;//this.eventBindings[p.name];
+/*
 		    if (this[p.name] === undefined) {
 			this[p.name] = function(){};
 		    }
+		    */
 		} else {
 		    this.subpageProplist[p.name] = p.property;
 		}
 		props[p.name] = {
+		    group: "subpageprops",
 		    name: p.name,
 		    type: p.type || "string",
 		    bindTarget: p.bindTarget,
@@ -250,6 +262,19 @@ wm.PageContainer.extend({
 		    readonly: p.readonly,
 		    propertyId: p.property
 		};
+		var propertyPath = p.property;
+		if (propertyPath.indexOf(".") != -1) {
+		    var componentId = propertyPath.substring(0, propertyPath.lastIndexOf("."));		
+		    var propertyName = propertyPath.substring(propertyPath.lastIndexOf(".")+1);
+		    var component = p.owner.getValueById(componentId);		    
+		    if (component && component instanceof wm.Component && propertyName) {
+			var propDef = component.listProperties()[propertyName];
+			dojo.mixin(props[p.name], {editor: propDef.editor,
+						   options: propDef.options,
+						   editorProps: propDef.editorProps});
+		    }
+		}
+
 	    }
 	}
 
