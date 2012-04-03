@@ -369,7 +369,6 @@ dojo.declare(
 	"dijit.form.DateTimeTextBox",
 	dijit.form._DateTimeTextBox,
 	{
-	    //templateString: dojo.cache("dijit.form", "templates/DropDownBoxMobile.html"),
 	    forceWidth: false, // Force the popup to use its own width and not match the editor width
 	    autoWidth: false,// Force the popup to use its own width and not match the editor width
 	    baseClass: "dijitTextBox dijitComboBox dijitDateTextBox", // use these classes in the editor
