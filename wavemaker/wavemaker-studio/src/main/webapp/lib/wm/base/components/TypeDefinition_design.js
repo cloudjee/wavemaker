@@ -70,17 +70,23 @@ wm.TypeDefinition.extend({
         return this.fields;
     },
         addField: function() {
+	    studio.componentModel.activate();
             this.fieldsAsTypes = null;
 	    var	defName = this.getUniqueName("field1");
-            var field = new wm.TypeDefinitionField({name: defName, owner: this});
+            var field = new wm.TypeDefinitionField({name: defName, 
+						    fieldName: defName, 
+						    _treeNodeName: defName,
+						    owner: this});
 
             this.fields = null; // force this to be recalculated
-	    if (this._isDesignLoaded && !this._cupdating && studio.page) {
-		studio.refreshComponentTree();
-		studio.select(field);
-	    }
+
             this.doRemoveType(); // old type def is missing this field
             this.doAddType(); // now we update the type def
+
+	    if (this._isDesignLoaded) {
+		studio.select(field);
+	    }
+
         },
     removeComponent: function(inComponent) {
 	if (this.$[inComponent.name]) {
