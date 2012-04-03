@@ -42,8 +42,9 @@ dojo.declare("wm.ServerComponent", wm.Component, {
 
     onServiceTreeDrop: function(inParent, inOwner, inNode) {
 	var operation = inNode.isOperation ? inNode.content : "";
+	var name = (operation ? this.name + "_" + operation : this.name);
 	var result = new wm.ServiceVariable({owner: inOwner,
-					   name: inOwner.getUniqueName(this.name + "SVar"),
+					   name: inOwner.getUniqueName(name + "SVar"),
 					   service: this.name,
 					   operation: operation,
 					   startUpdate: false,
