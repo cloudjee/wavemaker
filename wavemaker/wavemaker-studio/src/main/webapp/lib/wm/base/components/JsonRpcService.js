@@ -170,7 +170,9 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 		} else if (wm.JsonRpcService.smdCache[url]) {
 		    this._service = wm.JsonRpcService.smdCache[url];
 		} else if (wm.JsonRpcService.smdCache[cachedName]) {
-		    this._service = new wm.JsonRpc({smdObject: wm.JsonRpcService.smdCache[cachedName],
+			var cachedStruct = wm.JsonRpcService.smdCache[cachedName];
+		    this._service = new wm.JsonRpc({methods: cachedStruct.methods,
+							serviceType: cachedStruct.serviceType,
 						    serviceUrl: url.replace(/\.smd/,".json")});
 		} else {
 		    this._service = new wm.JsonRpc(url + "?rand=" + rand);
