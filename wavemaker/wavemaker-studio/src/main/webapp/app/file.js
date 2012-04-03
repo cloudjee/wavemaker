@@ -54,6 +54,7 @@ _initProjectTemplates = function() {
 		appIndexFileName: "index.html",
 		appChromeFileName: "chromeframe.html",
 		appConfigFileName: "config.js",
+		appChromeTemplate: "",
 		appCssFileName: "app.css",
 		appDebugBootFileName: "lib_project.js",
 		appIndexTemplate: "",
