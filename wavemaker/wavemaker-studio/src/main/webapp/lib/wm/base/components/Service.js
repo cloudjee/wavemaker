@@ -160,8 +160,8 @@ wm.services = {
 		var ctor = dojo.getObject(s.ctor || defaultCtor);
 		// FIXME: we don't want to be streamed so don't include owner
 		// otoh without owner, we don't know how to resolve paths at designTime
-		var service = new ctor({name: inName, service: inName});
-		service.owner = dojo.getObject("studio.wip.app") || app;
+	   var service = new ctor({name: inName, service: inName, owner: dojo.getObject("studio.wip.app") || app});
+	   //service.owner = dojo.getObject("studio.wip.app") || app;
 		return service;
 	},
 	_destroyService: function(inService) {
