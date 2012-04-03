@@ -63,32 +63,6 @@ wm.ServiceCall.extend({
 			});
 		}
 		d.show();
-	},
-
-
-	makePropEdit: function(inName, inValue, inEditorProps) {
-	    var prop = this.schema ? this.schema[inName] : null;
-	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
-	    var prop = this.schema ? this.schema[inName] : null;
-	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
-		switch (inName) {
-			case "service":
-		    return new wm.SelectMenu(dojo.mixin(inEditorProps, {options: this.getServicesList()}));
-		case "operation":
-				var
-					s = this._service,
-					valueOk = s && s.getOperation(inValue),
-					methods = s && s.getOperationsList();
-				if (!valueOk){
-					inValue = methods ? methods[0] : "";
-					if (inValue)
-						this.set_operation(inValue);
-				}
-				if (methods)
-				    return new wm.SelectMenu(dojo.mixin(inEditorProps, {options: methods}));
-				break;
-		}
-		return this.inherited(arguments);
 	}
 });
 

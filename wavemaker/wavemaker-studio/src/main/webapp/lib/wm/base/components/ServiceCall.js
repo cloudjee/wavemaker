@@ -643,7 +643,7 @@ wm.ServiceCall.extend({
 		d.show();
 	},
 
-
+    /* Fails to trigger from ServiceCall_design for wm.ServiceVariable; appears to be dojo bug */
 	makePropEdit: function(inName, inValue, inEditorProps) {
 	    var prop = this.schema ? this.schema[inName] : null;
 	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
@@ -666,6 +666,7 @@ wm.ServiceCall.extend({
 		}
 		return this.inherited(arguments);
 	}
+
 });
 	     
 //===========================================================================
