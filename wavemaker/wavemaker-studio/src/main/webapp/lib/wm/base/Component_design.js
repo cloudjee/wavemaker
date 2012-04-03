@@ -380,7 +380,7 @@ wm.Component.extend({
 	},
 	generateEventName: function(inEventName) {
 		var n = inEventName;
-	    return (this instanceof wm.Application) ? inEventName :  this.name + n.slice(2, 3).toUpperCase() + n.slice(3)
+	    return (this instanceof wm.Application) ? inEventName :  this.name + wm.capitalize(n.replace(/^on/,""));
 	},
         getSharedEventLookupName: function(inProp) {return inProp;},
 	generateSharedEventName: function(inEventName) {
@@ -608,6 +608,16 @@ wm.Component.extend({
 	    if (submenuOptions.children.length > 1)
 		menuObj.addAdvancedMenuChildren(menuObj.dojoObj, submenuOptions);
 	}
+
+	
+	menuObj.addAdvancedMenuChildren(menuObj.dojoObj, {iconClass: "Studio_paletteImageList_0",
+							  label: "Publish Properties",
+							  onClick: dojo.hitch(this, function() {
+							      studio.select(this);
+							      studio.editPublishedProperties();
+							  })
+							 });
+
 
 
 	menuObj.addAdvancedMenuChildren(menuObj.dojoObj, {iconClass: "StudioHelpIcon", 
