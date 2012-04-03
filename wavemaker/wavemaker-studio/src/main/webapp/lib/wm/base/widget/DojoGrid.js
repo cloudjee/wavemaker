@@ -690,10 +690,25 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	  }
 	},
     addEmptyRow: function(selectOnAdd) {
-	    var obj = {};
+	var set = function(obj, parts, value) {
+	    for (var partnum = 0; partnum < parts.length; partnum++) {
+		if (partnum +1 < parts.length) {
+		    if (!obj[parts[partnum]]) {
+			obj[parts[partnum]] = {};
+		    }
+		    obj = obj[parts[partnum]];
+		} else {
+		    obj[parts[partnum]] = value;
+		}
+	    }
+	};
+
+	    var obj = {};	
 	var hasVisibleValue = false;
+	var possibleFieldsToFill = [];
 	for (var i = 0; i < this.columns.length; i++) {
 	    var column = this.columns[i];
+	    if (column.mobileColumn) continue;
 	    var columnid = column.field||column.id;
 
 	    var parts = columnid.split(".");
@@ -717,30 +732,34 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    case "java.lang.Float":
 	    case "java.lang.Short":
 		value = 0;
+		if (column.show)
+		    hasVisibleValue = true;
+
 		break;
-	    case "java.lang.Date":
+	    case "java.util.Date":
 		value = new Date().getTime();
-		hasVisibleValue = true;
+		if (column.show)
+		    hasVisibleValue = true;
 		break;
 	    case "java.lang.Boolean":
 		value = false;
 		break;
 	    default:
-		value =	hasVisibleValue ? null :"&nbsp;";
-		hasVisibleValue = true;
-	     }
-	    var subobj = obj;
-	    for (var partnum = 0; partnum < parts.length; partnum++) {
-		if (partnum +1 < parts.length) {
-		    if (!subobj[parts[partnum]]) {
-			subobj[parts[partnum]] = {};
-		    }
-		    subobj = subobj[parts[partnum]];
-		} else {
-		    subobj[parts[partnum]] = value;
-		}
+		value =	"";
+		possibleFieldsToFill.push(column);
 	    }
+
+	    set(obj,parts,value);
 	}
+
+	    if (!hasVisibleValue && possibleFieldsToFill.length) {
+		var column = possibleFieldsToFill[0];
+		var columnid = column.field||column.id;
+		var parts = columnid.split(".");
+		set(obj,parts,value);
+		set(obj,parts, "&nbsp;");
+	    }
+
 	this.addRow(obj,selectOnAdd);
     },
 	getRowCount: function() {
@@ -1124,6 +1143,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			var selectDataSet = this.owner.getValueById(col.editorProps.selectDataSet);
 			if (selectDataSet) {
 			    if (!selectDataSet.isEmpty()) {
+				obj.options = selectDataSet.getData();
+/*
 				var options = [];
 				var count = selectDataSet.getCount();
 				for (var i = 0; i < count; i++) {
@@ -1131,6 +1152,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 				    options.push({name: item.getValue(col.editorProps.displayField), dataValue: item.getData()});
 				}
 				obj.options = options;
+				*/
 			    }
 			    if (this["_connectOnSetData." + col.field]) dojo.disconnect(this["_connectOnSetData." + col.field]);
 			    this["_connectOnSetData." + col.field] = this.connect(selectDataSet, "onSetData", dojo.hitch(this, "updateEditorDataSet", selectDataSet, col.field)); // recalculate the columns/regen the grid each time our dataSet changes
