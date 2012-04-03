@@ -49,7 +49,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
 		//this._connections.push(dojo.connect(window, "onbeforeunload", this, "destroy"));
 		dojo.addOnWindowUnload(this, 'destroy');
 
-	    if (this.subpageEventlist) {
+	    if (this.subpageEventlist && !this._isDesignLoaded) {
 		for (var propName in this.subpageEventlist) {
 		    if (this[propName] === undefined) {
 			this[propName] = function(){};
@@ -87,13 +87,22 @@ dojo.declare("wm.PageContainer", wm.Control, {
 		    }));
 		}
 	},
-    setProp: function(inName, inValue) {
-	if (this.subpageProplist !== null && this.page) {
+    setProp: function(inName, inValue) {	
+	if (this.subpageProplist !== null && this.page && this.subpageProplist[inName]) {
 	    var prop = this.subpageProplist[inName];
 	    if (prop) {
 		if (inValue instanceof wm.Component === false)
 		    this[inName] = inValue;
 		return this.page.setValue(prop, inValue);
+	    }
+	} else if (this.subpageEventlist !== null && this.page && this.subpageEventlist[inName]) {
+	    var prop = this.subpageEventlist[inName];
+	    if (prop) {
+		if (this._isDesignLoaded) {
+		    return this.setEvent(inName,inValue);
+		} else {
+		    return this.inherited(arguments);
+		}
 	    }
 	}
 	return this.inherited(arguments);
@@ -103,6 +112,12 @@ dojo.declare("wm.PageContainer", wm.Control, {
 	    var prop = this.subpageProplist[inName];
 	    if (prop) {
 		return this.page.getValue(prop);
+	    }
+	} 
+	if (this._isDesignLoaded && this.subpageEventlist !== null && this.page) {
+	    var prop = this.subpageEventlist[inName];
+	    if (prop) {
+		return this._getProp(inName);
 	    }
 	}
 	return this.inherited(arguments);
@@ -234,7 +249,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
 	    if (this.subpageEventlist && this.page) {
 		for (var propName in this.subpageEventlist) {
 		    var propComponent = this.page[propName];
-		    if (propComponent && propComponent.isEvent) {
+		    if (propComponent && propComponent.isEvent && !this._isDesignLoaded) {
 			var componentName = propComponent.property.replace(/\..*?$/,"");
 			var eventName =  propComponent.property.replace(/^.*\./,"");
 			var component = this.page.getValue(componentName);
