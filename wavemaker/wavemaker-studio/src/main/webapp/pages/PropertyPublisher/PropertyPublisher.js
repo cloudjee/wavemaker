@@ -21,10 +21,13 @@ dojo.declare("PropertyPublisher", wm.Page, {
     },
     reset: function(inComponent) {
 	this.inspected = inComponent;
-	this.tree.clear();
 	this.populateList();
-	this.propComponentList = studio.inspector.gatherPropComponents(inComponent);
 	this.treeHeader.setCaption(this.inspected.name + " Properties");
+	this.populateTree();
+    },
+    populateTree: function() {
+	this.propComponentList = studio.inspector.gatherPropComponents(this.inspected);
+	this.tree.clear();
 	var propsHash = this.inspected.listProperties();
 	var props = [];
 	 for (var i in propsHash) {
@@ -33,7 +36,7 @@ dojo.declare("PropertyPublisher", wm.Page, {
 		 continue;
 	     
 	     p = dojo.mixin({name: i},p);
-	     if (p.isEvent || inComponent.isEventProp(i)) {
+	     if (p.isEvent || this.inspected.isEventProp(i)) {
 		 p.group = "events";
 		 if (i.match(/\d$/)) 
 		     continue; // ignore events that end in numbers; these are the "and-then" events, which are handled by the event editor
@@ -78,6 +81,7 @@ dojo.declare("PropertyPublisher", wm.Page, {
 	    }
 	});
 	this.onChange();
+	this.populateTree();
     },
     generateProps: function(inNode, inProps) {
 	dojo.forEach(inProps, dojo.hitch(this, function(prop) {
@@ -102,12 +106,14 @@ dojo.declare("PropertyPublisher", wm.Page, {
 	}));
     },
     checkboxChange: function(inSender, inNode, inEvent) {
+	var isEvent = inNode.data.match(/^on/);
+	var name = (isEvent ? "on" + wm.capitalize(this.inspected.getId()) : this.inspected.getId()) + wm.capitalize(inNode.data.replace(/^on/,""));
 	var property = this.inspected.getId() + "." + inNode.data;
 	var propDef = this.inspected.listProperties()[inNode.data];
 	if (inNode.getChecked()) {
-	    if (!this.propComponentList[property]) {
-		var p = this.propComponentList[property] = new wm.Property({owner: studio.page,
-									    name: wm.camelcase(property)});
+	    if (!this.propComponentList[name]) {
+		var p = this.propComponentList[name] = new wm.Property({owner: studio.page,
+									name: name});
 		p.selectProperty(property);
 		if (!p.isEvent) {
 		    p.bindSource = propDef.bindable || propDef.bindSource;

@@ -23,8 +23,8 @@ PropertyPublisher.widgets = {
 		    tree: ["wm.Tree", {width: "100%", height: "100%"},{oncheckboxclick: "checkboxChange"}]
 		}],
 		listPanel: ["wm.Panel", {width: "250px", height: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left", border: "1", borderColor: "#333"}, {}, {
-		    listHeader: ["wm.Label", {width: "100%", caption: "All Published Properties", _classes: {domNode: ["dialogfooter"]}}],
-		    fullList: ["wm.DojoGrid", {width: "100%", height: "100%", deleteColumn: true, columns: [{show: true,title: "Name", field: "name", width: "100%"},
+		    listHeader: ["wm.Label", {width: "100%", caption: "Summary", _classes: {domNode: ["dialogfooter"]}}],
+		    fullList: ["wm.DojoGrid", {width: "100%", height: "100%", deleteColumn: true, columns: [{show: true,title: "Widget", field: "name", width: "100%"},
 													 {show: true,title: "Property", field: "dataValue", width: "100%"}]},
 			   {onRowDeleted: "listRowDeleted"},
 			   {
