@@ -556,7 +556,7 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
 	this.inherited(arguments)
 	var matchType = "";
 	if (this.matchComponentType) {
-	    var value =  this.inspected.getValue(this.propDef.name)
+	    var value =  this.inspected.getValue(this.propDef.fullName)
 	    if (value)
 		matchType = value.type;
 	}
@@ -589,6 +589,8 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
     getDataSets: function(inOwners, matchType) {
 	console.log("getDataSets: " + inOwners[0].toString());
 	    return wm.listMatchingComponentIds(inOwners, dojo.hitch(this, function(c) {
+		if (c instanceof wm.Property) return false;
+
 		// if its owner is not a page, then the owner is something like DojoGrid; in other words,
 		// c might be dojogrid1.dataSet.  If the owner is the thing being inspected (dojogrid1),
 		// then don't include its subcomponents as bindable.
@@ -2096,6 +2098,10 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 		}
 		/* dojo.mixin used this way insures we work on a copy of propDef and don't modify e.propDef before its onclick is fired */
 		propDef = this.getPropDef(propDef, fieldName, fullName,type, isStructured);
+		if (propDef.editor == "wm.prop.DataSetSelect" && propDef.editorProps)  {
+		    propDef.editorProps.widgetDataSets = true;
+		    propDef.editorProps.matchComponentType = true;
+		}
 		e = studio.inspector.generateEditor(inspected, /* Component we are editing (or subcomponent in our case) */
 						    propDef, /* Property we are editing within the component */
 						    panel, /* Parent panel */
