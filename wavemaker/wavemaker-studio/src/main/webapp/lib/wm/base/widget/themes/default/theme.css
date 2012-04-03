@@ -1235,12 +1235,12 @@ body .AppToolTip {
 
 body div.dojoxGridContent .dojoxGridCell .wmDeleteColumn,
 .wmlist-cell .wmDeleteColumn {
-background-position: -560px 0px;
 width: 16px !important;
 height: 16px !important;
-background-image: url(../../../../../images/silkIcons/silk.png);
+background-image: url(../../../../../images/common/smallx.png);
 background-repeat:no-repeat;
-    cursor: pointer;
+background-position:50% 50%;
+cursor: pointer;
 }
 
 .dojoxGridCell{ 

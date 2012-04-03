@@ -1935,6 +1935,11 @@ wm.addPropertyGroups({
 			      order: 50}
 	     }
 	    },
+
+    /* Confirmed for showing wm.Property within a wm.PageContainer's properties */
+    subpageprops: {displayName: "Page Properties",
+		   order: 70},
+
     /* Confirmed */
     dialog: {displayName: "Dialog",
 		 order: 55,

@@ -1090,10 +1090,10 @@ height: 100%;
 }
 
 .wmlist-cell .wmDeleteColumnImage {
-background-position: -560px 0px;
 width: 16px !important;
 height: 16px !important;
-background-image: url(../../../../../images/silkIcons/silk.png);
+background-image: url(../../../../../images/common/smallx.png);
+background-position:50% 50%;
 background-repeat:no-repeat;
 }
 .wmlist-cell .wmDeleteColumn {
