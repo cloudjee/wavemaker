@@ -90,7 +90,7 @@ dojo.declare("PropertyPublisher", wm.Page, {
 		data: prop.name,
 		closed: true,
 		hasChildren: false,
-		checked: this.propComponentList[this.inspected.getId() + "." + prop.name]
+		checked: this.propComponentList[this.inspected.id + "." + prop.name]
 	    });
 	}));
     },
@@ -105,15 +105,20 @@ dojo.declare("PropertyPublisher", wm.Page, {
 	    this.generateProps(node, group.props);
 	}));
     },
+    calcName: function(inPropName) {
+	var isEvent = inPropName.match(/^on/);
+	var name = (isEvent ? "on" + wm.capitalize(this.inspected.getId()) : this.inspected.getId()) + wm.capitalize(inPropName.replace(/^on/,""));
+	return name;
+    },
     checkboxChange: function(inSender, inNode, inEvent) {
-	var isEvent = inNode.data.match(/^on/);
-	var name = (isEvent ? "on" + wm.capitalize(this.inspected.getId()) : this.inspected.getId()) + wm.capitalize(inNode.data.replace(/^on/,""));
+	var name = this.calcName(inNode.data);
+
 	var property = this.inspected.getId() + "." + inNode.data;
 	var propDef = this.inspected.listProperties()[inNode.data];
 	if (inNode.getChecked()) {
-	    if (!this.propComponentList[name]) {
-		var p = this.propComponentList[name] = new wm.Property({owner: studio.page,
-									name: name});
+	    if (!this.propComponentList[property]) {
+		var p = this.propComponentList[property] = new wm.Property({owner: studio.page,
+									    name: name});
 		p.selectProperty(property);
 		if (!p.isEvent) {
 		    p.bindSource = propDef.bindable || propDef.bindSource;
