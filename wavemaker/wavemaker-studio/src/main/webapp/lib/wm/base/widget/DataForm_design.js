@@ -433,7 +433,12 @@ wm.DataForm.extend({
     afterPaletteDrop: function() {
 	this.inherited(arguments);
     },
-
+    afterPaletteChildDrop: function(inWidget) {
+	this.inherited(arguments);
+	if (inWidget instanceof wm.LiveFormBase) {
+	    app.alert("Using a " + inWidget.declaredClass + " in a DataForm is not supported.  Please use a wm.SubForm, wm.OneToMany or wm.Lookup instead");
+	}
+    },
 
     /****************
      * METHOD: set_type (DESIGN)
