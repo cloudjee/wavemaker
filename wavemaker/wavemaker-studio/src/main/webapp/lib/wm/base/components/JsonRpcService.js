@@ -158,7 +158,7 @@ dojo.declare("wm.JsonRpcService", wm.Service, {
 	// JsonRpcService has a few properties that make collapsing the number of them non-trivial (e.g. sync, timeout)
     initService: function() {
 	var n = this.service || this.name;
-	var rand = this.owner && this.isDesignLoaded() ? studio.application.getFullVersionNumber() : (app && !window["studio"] ? app.getFullVersionNumber() : Math.floor(Math.random()*1000000));
+	var rand = this.owner && this.isDesignLoaded() && studio.application ? studio.application.getFullVersionNumber() : (app && !window["studio"] ? app.getFullVersionNumber() : Math.floor(Math.random()*1000000));
     var cachedName = this.url || n + ".smd";
 	var url = this.url || (n && (this.getServiceRoot() + n + ".smd"));
 	this._service = null;
