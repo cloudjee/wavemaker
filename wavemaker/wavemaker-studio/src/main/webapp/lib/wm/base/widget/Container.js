@@ -124,13 +124,6 @@ wm.define("wm.Container", wm.Control, {
 			delete this.domNode.box;
 		this.inherited(arguments);
 	},
-	// backward-compatibility fixups
-	afterPaletteDrop: function() {
-		if (this.verticalAlign == "justified")
-			this.verticalAlign = "top";
-		if (this.horizontalAlign == "justified")
-			this.horizontalAlign = "left";
-	},
 	bc: function() {
 		this.inherited(arguments);
 		/*

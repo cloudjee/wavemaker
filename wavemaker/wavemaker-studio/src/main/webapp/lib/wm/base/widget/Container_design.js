@@ -78,6 +78,15 @@ wm.Object.extendSchema(wm.Container, {
 
 
 wm.Container.extend({
+	// backward-compatibility fixups
+	afterPaletteDrop: function() {
+	        this.inherited(arguments);
+		if (this.verticalAlign == "justified")
+			this.verticalAlign = "top";
+		if (this.horizontalAlign == "justified")
+			this.horizontalAlign = "left";
+	},
+
 	listProperties: function() {
 		var p = this.inherited(arguments);
 		p.freeze.ignoretmp = this.schema.freeze.ignore || this.getLock();
