@@ -1425,7 +1425,8 @@ dojo.declare("wm.ServiceInputForm", wm.DataForm, {
     serviceVariable: null,
     setReadonlyOnPrimaryKeys: false,
     generateInputBindings: false,
-    populateEditors: function() {}, // called because generateInputBindings is false
+    generateOutputBindings: true,
+    //populateEditors: function() {}, // called because generateInputBindings is false
     getTypeDef: function() {
 	if (this.serviceVariable && this.serviceVariable.input) {
 	    return {fields: this.serviceVariable.input._dataSchema};
