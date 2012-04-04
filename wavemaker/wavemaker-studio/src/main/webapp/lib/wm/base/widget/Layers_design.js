@@ -320,7 +320,7 @@ wm.Layers.extend({
 		optionalSubmenuArray.push({label: "add",
 					   iconClass: "Studio_silkIconImageList_30",
 					   onClick: dojo.hitch(this, function() {
-					       this.editProp("add");
+					       this.addLayer();
 					   })});
 		dojo.forEach(data.children, function(i) {optionalSubmenuArray.push(i);});
 	    } else
