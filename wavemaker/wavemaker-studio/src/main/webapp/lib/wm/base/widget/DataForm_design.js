@@ -102,12 +102,19 @@ wm.FormPanel.extend({
 		if (typeDef.liveService) {
 		    dataSource = "liveData";
 		} else {
-		    var service = typeDef.service;
-		    var serviceList = studio.application.getServerComponents();
-		    for (var i = 0; i < serviceList.length; i++) {
-			if (service == serviceList[i].name) {
-			    dataSource = "compositeKey";
-			    break;
+		    /* If there is a parent form and its a liveService and this subform's type is NOT liveSource then its a composite key */
+		    var parentForm = this.getParentForm();
+		    if (parentForm) {
+			var parentTypeDef = parentForm.getTypeDef();
+		    }
+		    if (parentTypeDef && parentTypeDef.liveService) {
+			var service = typeDef.service;
+			var serviceList = studio.application.getServerComponents();
+			for (var i = 0; i < serviceList.length; i++) {
+			    if (service == serviceList[i].name) {
+				dataSource = "compositeKey";
+				break;
+			    }
 			}
 		    }
 		}
@@ -116,8 +123,8 @@ wm.FormPanel.extend({
 		this.isCompositeKey = dataSource == "compositeKey";
 		/* If its a composite key, see if there are any foreign keys, and change their types from int/string to the type of the foreign object */
 		if (dataSource == "compositeKey") {
-
-		    var def = studio.dataService.requestSync("getRelated", [service, this.getParentForm().serviceVariable.type.replace(/^.*\./,"")]);
+		    
+		    var def = studio.dataService.requestSync("getRelated", [service, parentForm.type.replace(/^.*\./,"")]);
 		    def.addCallback(dojo.hitch(this, function(inData) {
 			var relationshipsToDelete = [];
 			for (var i = 0; i < inData.length; i++) {
