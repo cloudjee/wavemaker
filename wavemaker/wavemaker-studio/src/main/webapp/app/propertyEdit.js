@@ -793,7 +793,7 @@ dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
 		for (var i = 0; i < result.length; i++) {		    
 		    var type = fields[result[i]].type;
 		    var typeDef = wm.typeManager.getType(type);
-		    if (!typeDef || !typeDef.liveService) {
+		    if (!typeDef || !typeDef.liveService || this.relatedFields) {
 			newresults.push(result[i]);
 		    }
 		}
