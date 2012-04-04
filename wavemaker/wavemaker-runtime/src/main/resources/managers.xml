@@ -9,9 +9,9 @@ and every other time.
         xmlns:aop="http://www.springframework.org/schema/aop"
         xmlns:context="http://www.springframework.org/schema/context"
         xsi:schemaLocation="http://www.springframework.org/schema/beans
-                http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+                http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
                 http://www.springframework.org/schema/aop
-                http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+                http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
     <!-- ServiceManager bean.  This is autowired to have all the ServiceWires in the
         current configuration. -->
