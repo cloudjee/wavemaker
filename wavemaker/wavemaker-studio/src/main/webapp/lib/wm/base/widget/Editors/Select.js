@@ -760,6 +760,11 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		    var currentType;
 		    if (this.dataType) {
 			currentType = this.dataType;
+		    } else if (parentForm instanceof wm.ServiceInputForm) {
+			var typeDef = parentForm.dataOutput._dataSchema;
+			if (typeDef) {
+			    currentType = typeDef[ff] ? typeDef[ff].type : null;
+			}
 		    } else if (parentType && parentType != "any") {
 			currentType = wm.typeManager.getType(parentType).fields[ff].type ;
 		    } else {
