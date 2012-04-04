@@ -144,15 +144,17 @@ dojo.declare("wm.LoadingDialog", wm.Dialog, {
 	this.inherited(arguments);
 	if (inShowing) {
 	    this._getWidgetToCover();
-	    var node = this.widgetToCover.domNode;
-	    var zindex = node.style.zIndex || 0;
-	    while (node.parentNode && node.parentNode.tagName != "BODY") {
-		node = node.parentNode;
-		if (node.style.zIndex) {
-		    zindex = Math.max(zindex,node.style.zIndex);
+	    if (this.widgetToCover) {
+		var node = this.widgetToCover.domNode;
+		var zindex = node.style.zIndex || 0;
+		while (node.parentNode && node.parentNode.tagName != "BODY") {
+		    node = node.parentNode;
+		    if (node.style.zIndex) {
+			zindex = Math.max(zindex,node.style.zIndex);
+		    }
 		}
+		this.domNode.style.zIndex = zindex+1;
 	    }
-	    this.domNode.style.zIndex = zindex+1;
 	}
     },
     _getWidgetToCover: function() {
