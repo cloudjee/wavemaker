@@ -48,6 +48,18 @@ wm.Dialog.extend({
     set_containerPadding: function(inPadding) {
 	this.containerPadding = inPadding;
 	if (this.containerWidget) this.containerWidget.setPadding(inPadding);
+    },
+    /* Do not write showing=true to widgets.js */
+    write: function(inIndent, inOptions) {
+	if (!this.docked) {
+	    var showing = this.showing;
+	    this.showing = false;
+	    var result = this.inherited(arguments);
+	    this.showing = showing;
+	    return result;
+	} else {
+	    return this.inherited(arguments);
+	}
     }
 });
 
@@ -248,9 +260,14 @@ wm.LoadingDialog.extend({
 	this.captionWidth = inWidth;
 	this._label.setWidth(inWidth);
 	this._label.doAutoSize();
+    },
+    set_image: function(inImage) {	
+	this.setImage(inImage);
+	this.connectOnce(this._picture.img, "onload", this, function() {
+	    this.setImageWidth(this._picture.img.naturalWidth + "px");
+	    this.setImageHeight(this._picture.img.naturalHeight + "px");
+	});
     }
-
-
 });
 
 wm.Object.extendSchema(wm.LoadingDialog, {
