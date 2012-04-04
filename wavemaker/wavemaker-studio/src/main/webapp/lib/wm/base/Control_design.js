@@ -124,10 +124,12 @@ wm.Control.extend({
         if (this.designWrapper)
             this.designWrapper.controlNameChanged();
     },
+    afterPaletteChildDrop: function(inWidget) {
+    },
     afterPaletteDrop: function(){
 	this.inherited(arguments);
 	this.desktopHeight = this.constructor.prototype.height;
-	if (this.parent && this.parent.afterPaletteChildDrop) {
+	if (this.parent) {
 	    this.parent.afterPaletteChildDrop(this);
 	}
     },
