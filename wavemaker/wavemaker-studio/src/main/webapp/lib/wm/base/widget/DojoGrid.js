@@ -960,7 +960,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
         onStyleRow: function(inRow/* inRow.customClasses += " myClass"; inRow.customStyles += ";background-color:red"; */, rowData) {},
 	getDataSet: function() {
+	    if (this.variable)
 		return this.variable;
+	    else if (this.$.binding && this.$.binding.wires.dataSet) {
+		return this.getValueById(this.$.binding.wires.dataSet.source);
+	    }
 	},
 	setDataSet: function (inValue, inDefault){	    
 	    if (this._typeChangedConnect) {
