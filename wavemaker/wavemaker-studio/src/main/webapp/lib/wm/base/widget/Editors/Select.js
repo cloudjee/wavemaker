@@ -832,6 +832,7 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		this.inherited(arguments);
 	    if (wm.getParentForm) {
 		var f = wm.getParentForm(this);
+/*
 	    if (f instanceof wm.RelatedEditor) {
 		var s = this._getFormSource(f);
 		if (s) {
@@ -851,6 +852,7 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 			//wm.fire(f, "populateEditors");
 		}
 	    }
+	    */
 	}
 
 	    /* If this is a wm.Lookup within a composite key acting to select an id, we need to propagate its value up to the parent form's relationship */
