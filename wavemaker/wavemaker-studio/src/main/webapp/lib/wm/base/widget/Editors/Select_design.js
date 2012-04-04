@@ -126,11 +126,15 @@ wm.Lookup.extend({
 		return props;
 	},
 	set_formField: function(inFieldName) {
+	    var formFieldWas = this.formField;
 	    if (inFieldName) {
 		this.formField = inFieldName;
 		if (this.autoDataSet && this.formField)
 		    this.createDataSet();	    
 		this.inherited(arguments);
+		if (this.formField && this.formField != formFieldWas) {
+		    this._setDisplayField();
+		}
 	    } else {
 		delete this.formField; // undefined used in getFormEditorsArray
 	    }
