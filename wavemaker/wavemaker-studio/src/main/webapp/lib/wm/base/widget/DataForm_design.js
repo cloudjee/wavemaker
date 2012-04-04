@@ -192,6 +192,7 @@ wm.FormPanel.extend({
 	var formField = this._getFormField(/*inFieldInfo.dataIndex */fieldName);
 	if (formField && !this._getEditorForField(formField)) {
 	    if (wm.typeManager.isStructuredType(inFieldInfo.type) || inFieldInfo.isList) {
+		if (inFieldInfo.isList && (this.formBehavior == 'insertOnly' || this.subFormOnly)) return;
 		return this.makeRelatedEditor(inFieldInfo, formField);
 	    } else {
 		return this.makeBasicEditor(inFieldInfo, formField);
@@ -236,13 +237,13 @@ wm.FormPanel.extend({
 
 	if (relatedTypeDef) {
 	    /* If its a liveService and its not a list type, create a wm.Lookup */
-	    if (relatedTypeDef.liveService && !inFieldInfo.isList) {
+	    if (relatedTypeDef.liveService && !inFieldInfo.isList && !this.subFormOnly) {
 		    props.name = wm.makeNameForProp(inFormField, "Lookup")
 		    var e = wm.createFieldEditor(this.getEditorParent(), fieldDef, props, {}, "wm.Lookup");
 	    }
 
 	    /* If its a liveService and it IS a list type, create a readonly grid related editor */
-	    else if (relatedTypeDef.liveService && inFieldInfo.isList) {
+	    else if (relatedTypeDef.liveService && inFieldInfo.isList ) {
 		var e = this.owner.loadComponent(wm.makeNameForProp(inFormField, "OneToMany"), this, "wm.OneToMany", props);
 		/* don't automatically add grids
 		    props.editingMode = "readonly";
@@ -254,6 +255,7 @@ wm.FormPanel.extend({
 	    /* Anything else, and  just get an editable subform for lack of a better idea */
 	    else {
 		props.editingMode = "one-to-one";
+		props.subFormOnly = this.subFormOnly;
 		var e = this.owner.loadComponent(wm.makeNameForProp(inFormField, "SubForm"), this, "wm.SubForm", props);
 		e.set_type(fieldDef.type);
 	    }
@@ -283,7 +285,7 @@ wm.FormPanel.extend({
 			e.setWidth(this.editorWidth);
                     else 
                         e.setWidth("100%"); // because its going to be 100% anyway so why confuse the user?
-		    e.setHeight(this.editorHeight);
+		    e.set_height(this.editorHeight);
 		    //console.log(this.name, "createEditor", arguments, e);
 		    return e;
 		}
@@ -550,7 +552,7 @@ wm.DataForm.extend({
 	    if (!this.generateInputBindings) {
 		this.populateEditors();
 	    }
-	    this.setHeight(this.getPreferredFitToContentHeight() + "px");
+	    this.set_height(this.getPreferredFitToContentHeight() + "px");
 	    this.inherited(arguments);
 	},
 
@@ -761,7 +763,7 @@ wm.DataForm.extend({
 
 
 
-	this.setHeight(this.getPreferredFitToContentHeight() + "px");
+	this.set_height(this.getPreferredFitToContentHeight() + "px");
 	    this.reflow();
 	    studio.refreshDesignTrees();
 	// reflow called by caller
@@ -1176,7 +1178,7 @@ wm.Object.extendSchema(wm.ServiceInputForm, {
     
 });
 wm.ServiceInputForm.extend({
-
+    subFormOnly: true,
     getTypeSchema: function() {
 	return this.serviceVariable._dataSchema;
     },
@@ -1199,6 +1201,8 @@ wm.ServiceInputForm.extend({
 		this._removeEditors();
 	    }
 	}
+	if (inVar)
+	    this.type = inVar.input.type;
     }
 });
 
