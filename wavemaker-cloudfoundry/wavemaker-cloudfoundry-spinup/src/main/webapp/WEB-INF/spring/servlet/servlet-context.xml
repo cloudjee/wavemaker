@@ -12,7 +12,10 @@
 	<mvc:annotation-driven />
 
 	<mvc:resources mapping="/resources/**" location="/resources/" />
-	<mvc:resources mapping="/jquery/**" location="/jquery/" />
+	<mvc:resources mapping="/dijit/**" location="/dijit/" />
+	<mvc:resources mapping="/dojo/**" location="/dojo/" />
+	<mvc:resources mapping="/dojox/**" location="/dojox/" />
+	<mvc:resources mapping="/resources/**" location="/resources/" />
 
 	<bean
 		class="org.springframework.web.servlet.view.InternalResourceViewResolver">

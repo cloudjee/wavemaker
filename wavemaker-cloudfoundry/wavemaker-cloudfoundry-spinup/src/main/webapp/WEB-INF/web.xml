@@ -14,18 +14,10 @@
 	
 	<servlet>
 		<servlet-name>dispatcherServlet</servlet-name>
-		<servlet-class>org.atmosphere.cpr.MeteorServlet</servlet-class>
-		<init-param>
-			<param-name>org.atmosphere.servlet</param-name>
-			<param-value>org.springframework.web.servlet.DispatcherServlet</param-value>
-		</init-param>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
 			<param-value>/WEB-INF/spring/servlet/servlet-context.xml</param-value>
-		</init-param>
-		<init-param>
-			<param-name>org.atmosphere.cpr.CometSupport.maxInactiveActivity</param-name>
-			<param-value>30</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -37,6 +29,6 @@
 	</servlet-mapping>
 
 	<welcome-file-list>
-		<welcome-file></welcome-file>
+		<welcome-file>/login</welcome-file>
 	</welcome-file-list>
 </web-app>

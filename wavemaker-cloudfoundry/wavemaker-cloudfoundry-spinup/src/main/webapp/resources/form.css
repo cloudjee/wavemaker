@@ -98,3 +98,17 @@
 	font-weight:bold;
 	font-size:0.8em
 }
+
+#loading {
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	background: #fff
+		url('ajax-loader.gif')
+		no-repeat center center;
+	position: absolute;
+	z-index: 999;
+	top: 0;
+	left: 0;
+}

@@ -14,7 +14,6 @@ import org.apache.commons.logging.LogFactory;
 import org.cloudfoundry.client.lib.archive.ApplicationArchive;
 import org.cloudfoundry.client.lib.archive.ZipApplicationArchive;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Assert;
 import org.springframework.web.context.ServletContextAware;
 import org.springframework.web.context.support.ServletContextResource;
 
@@ -39,9 +38,11 @@ public class WavemakerStudioApplicationArchiveFactory implements ApplicationArch
                 this.logger.debug("Using studio resource " + path);
             }
             ServletContextResource studioResource = new ServletContextResource(servletContext, path);
-            Assert.state(studioResource.exists(), "Studio resource '" + path + "' does not exist");
-            Assert.state(studioResource.getFile() != null, "Studio resource '" + path + "' cannot be accessed as a File");
-            this.studioWarFile = studioResource.getFile();
+            // FIXME
+            // Assert.state(studioResource.exists(), "Studio resource '" + path + "' does not exist");
+            // Assert.state(studioResource.getFile() != null, "Studio resource '" + path +
+            // "' cannot be accessed as a File");
+            // this.studioWarFile = studioResource.getFile();
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

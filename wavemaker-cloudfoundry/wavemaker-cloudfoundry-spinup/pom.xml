@@ -11,7 +11,6 @@
 	<packaging>war</packaging>
 	<properties>
 		<main.basedir>${basedir}/../..</main.basedir>
-		<atmosphere.version>0.8.4</atmosphere.version>
 	</properties>
 	<build>
 		<plugins>
@@ -42,20 +41,16 @@
 				</executions>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
-				<version>2.1.1</version>
 				<configuration>
-					<archive>
-						<manifest>
-							<addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-						</manifest>
-					</archive>
 					<overlays>
 						<overlay>
-							<groupId>org.atmosphere</groupId>
-							<artifactId>atmosphere-jquery</artifactId>
+							<groupId>org.dojotoolkit</groupId>
+							<artifactId>dojo-war</artifactId>
 							<excludes>
-								<exclude>WEB-INF/web.xml</exclude>
+								<exclude>META-INF/**</exclude>
+								<exclude>WEB-INF/**</exclude>
 							</excludes>
 						</overlay>
 					</overlays>
@@ -92,17 +87,6 @@
 			<version>4.1.0.Final</version>
 		</dependency>
 		<dependency>
-			<groupId>org.atmosphere</groupId>
-			<artifactId>atmosphere-runtime</artifactId>
-			<version>${atmosphere.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.atmosphere</groupId>
-			<artifactId>atmosphere-jquery</artifactId>
-			<version>${atmosphere.version}</version>
-			<type>war</type>
-		</dependency>
-		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 			<scope>provided</scope>
@@ -124,26 +108,15 @@
 			<version>1.2</version>
 		</dependency>
 		<dependency>
+			<groupId>org.dojotoolkit</groupId>
+			<artifactId>dojo-war</artifactId>
+			<version>1.6.1</version>
+			<type>war</type>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.7</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.hamcrest</groupId>
-			<artifactId>hamcrest-all</artifactId>
-			<version>1.1</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>1.8.5</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

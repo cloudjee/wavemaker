@@ -7,8 +7,6 @@
 	<title>WaveMaker</title>
 	<link href="<c:url value="/resources/form.css" />" rel="stylesheet"  type="text/css" />
 	
-    <script type="text/javascript" src="jquery/jquery-1.6.4.js"></script>
-    <script type="text/javascript" src="jquery/jquery.atmosphere.js"></script>
     
 	<script type="text/javascript">
         $(document).ready(function() {
