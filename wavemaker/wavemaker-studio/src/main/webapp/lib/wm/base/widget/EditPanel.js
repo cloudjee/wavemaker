@@ -106,5 +106,12 @@ dojo.declare("wm.EditPanel", wm.Panel, {
 	},
 	cancelEdit: function() {
 		wm.fire(this.getValueById(this.liveForm), "cancelEdit");
+	},
+
+        setThemeStyleType: function(inType) {
+	    return wm.Container.prototype.setThemeStyleType.call(this, inType);
+	},
+        getThemeStyleType: function(inType) {
+	    return wm.Container.prototype.getThemeStyleType.call(this, inType);
 	}
 });
