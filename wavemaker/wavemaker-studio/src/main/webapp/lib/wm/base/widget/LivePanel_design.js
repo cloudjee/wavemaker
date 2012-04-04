@@ -22,8 +22,8 @@ wm.LivePanel.extend({
 		studio.LivePanelTypeChooserDialog = new wm.PageDialog({owner: studio,
 								       name: "LivePanelTypeChooserDialog",
 								       pageName: "NewLivePanelDialog",
-								       width: "510px",
-								       height: "300px",
+								       width: "415px",
+								       height: "400px",
 								       modal: true,
 								       hideControls: true,
 								       title: studio.getDictionaryItem("wm.LivePanel.CHOOSER_TITLE")});
@@ -55,11 +55,16 @@ wm.LivePanel.extend({
 				var lvar = this.createLiveSource(this.liveSource);
 				studio.select(lvar);
 				studio.endWait();
+				var parent = this.parent;
 				this.destroy();
-				studio.refreshComponentTree();
+				studio.refreshDesignTrees();
+				parent.reflow();
 				return;
 			    case studio.LivePanelTypeChooserDialog.page.getDictionaryItem("TRADITIONAL"):
 				this.createTraditionalLivePanel(inName.match(/Paging$/));
+				break;
+			    case studio.LivePanelTypeChooserDialog.page.getDictionaryItem("MENU"):
+				this.createMenuLivePanel(inName.match(/Paging$/));
 				break;
 			    case studio.LivePanelTypeChooserDialog.page.getDictionaryItem("DIALOG"):
 				this.createPopupLivePanel(inName.match(/Paging$/));
@@ -285,7 +290,7 @@ wm.LivePanel.extend({
 	var liveFormConnect = this.liveForm.connect(this.liveForm, "finishAddEditors", this, function() {
 	    dojo.disconnect(liveFormConnect);
 	    this.liveForm.setReadonly(false);
-	    this.dialog.setHeight(this.dialog.titleBar.bounds.h + this.liveForm.bounds.h + this.dialog.buttonBar.bounds.h + this.dialog.padBorderMargin.t + this.dialog.padBorderMargin.b + this.dialog.containerWidget.padBorderMargin.t + this.dialog.containerWidget.padBorderMargin.b);
+	    this.dialog.setHeight((this.dialog.titleBar.bounds.h + this.liveForm.bounds.h + this.dialog.buttonBar.bounds.h + this.dialog.padBorderMargin.t + this.dialog.padBorderMargin.b + this.dialog.containerWidget.padBorderMargin.t + this.dialog.containerWidget.padBorderMargin.b) + "px");
 	});	    
 
 		this.liveForm.set_dataSet(this.dataGrid.name + ".selectedItem");
@@ -528,6 +533,75 @@ wm.LivePanel.extend({
 		this.liveForm.set_dataSet(this.dataGrid.name + ".selectedItem");
 		this.liveForm.eventBindings.onSuccess = lvar;
 		fancyPanel2.setFitToContentHeight(true);
+	},
+
+
+    	createMenuLivePanel: function(usePaging) {
+	    this.setLayoutKind("left-to-right");
+	    this.dataGrid = new wm.DojoGrid({
+                border: "1", 
+		name: studio.page.getUniqueName(this.liveDataName + "DojoGrid"),
+		owner: this.owner,
+		height:'100%',
+		width: "200px",
+		parent: this
+	    });
+	    this.liveForm = new wm.LiveForm({
+		width: "100%",
+		height: "100%",
+		name: studio.page.getUniqueName(this.liveDataName + "LiveForm1"),
+		owner: this.owner,
+		parent: this,
+		margin: "0",		    
+		verticalAlign: "top",
+		horizontalAlign: "center",
+		editorWidth: "100%",
+		_liveSource: this.liveSource
+	    });
+
+	    this.liveForm.createLiveSource(this.liveSource);
+	    var lvar = this.liveForm.dataSet.name;
+
+	    this.dataGrid.$.binding.addWire("", "dataSet", lvar, "");
+	    this.liveForm.set_dataSet(this.dataGrid.name + ".selectedItem");
+	    this.liveForm.eventBindings.onSuccess = lvar;
+
+
+	    /* Now that the bindings are generated, all the editors and columns are generated and ready to manipulate */
+	    this.connectOnce(this.liveForm, "finishAddEditors", this, function() {
+		this.liveForm.setFitToContentHeight(false);
+		this.liveForm.setHeight("100%");
+		this.liveForm.setAutoScroll(true);
+		var editPanel = this.liveForm.getEditPanel();
+		if (editPanel) {
+		    var spacer = new wm.Spacer({owner: this.owner,
+						parent: this.liveForm,
+						name: studio.page.getUniqueName(this.liveDataName + "Spacer"),
+						width: "10px",
+						height: "100%"});
+		    this.liveForm.moveControl(spacer, this.liveForm.indexOfControl(editPanel));
+		}
+		this.reflow(); // added for fancypanel support
+
+		var displayField = wm.typeManager.getDisplayField(this.liveForm.dataSet.type);
+
+		if (this.dataGrid.columns) {
+		    var found = false;
+		    for (var i = 0; i < this.dataGrid.columns.length; i++) {
+			var col = this.dataGrid.columns[i];
+			if (col.field == displayField) {
+			    col.show = true;    
+			    found = true;
+			} else {
+			    col.show = false;
+			}
+		    }
+		    if (!found) {
+			this.dataGrid.columns[0].show = true;
+		    }
+		}
+	    });
+
 	},
 
 

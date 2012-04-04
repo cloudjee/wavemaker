@@ -327,9 +327,7 @@ wm.LiveFormBase.extend({
 	createEditor: function(inFieldInfo, inProps, inEvents, inClass) {
 		var e = wm.createFieldEditor(this.getEditorParent(), inFieldInfo, inProps, inEvents, inClass);
 		if (e) {
-		        if (e instanceof wm.Date && this.bounds.w > 400)
-			    e.setWidth("400px");
-                        else if (e.parent.horizontalAlign != "justified")
+		    if (e.parent.horizontalAlign != "justified")
 			    e.setWidth(this.editorWidth);
                         else 
                             e.setWidth("100%"); // because its going to be 100% anyway so why confuse the user?
@@ -684,19 +682,21 @@ wm.LiveForm.extend({
 		// remove bindings (but not dataSet binding)
 		// removing dataSet binding fails if triggered by the dataSet wire.
 	    studio.beginWait(studio.getDictionaryItem("wm.LiveForm.WAIT_ADD_EDITORS", {widgetName: this.getId()}));
-		wm.onidle(this, function() {
+	    wm.job(this.getRuntimeId() + ".addEditors", 0, dojo.hitch(this, function() {
 			try {
 			    if (!this.getEditPanel() && !this._noEditPanel) {
 				this.addEditPanel();
 			  }
 				wm.LiveFormBase.prototype.addEditors.call(this);
 			} catch(e) {
-				this.finishAddEditors();
+			    this.finishAddEditors(); // LiveFormBase.addEditors	calls this as well
 			}
-                        this.setHeight("500px"); // assuming fitToContentHeight is enabled, this will ignore the 500px and set to the preferred fitToContentHeight.
+		        if (this.fitToContentHeight)
+                            this.setHeight("500px"); // assuming fitToContentHeight is enabled, this will ignore the 500px and set to the preferred fitToContentHeight.
 			studio.select(null);
 			studio.select(this);
-		});
+
+	    }));
 	},
 	//===========================================================================
 	// Editor management / creation

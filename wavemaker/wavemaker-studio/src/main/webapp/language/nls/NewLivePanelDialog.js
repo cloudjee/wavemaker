@@ -12,6 +12,7 @@
  *  limitations under the License.
  */
 {
+    MENU: "Menu on Left",
     TRADITIONAL: "Traditional",
     DIALOG: "Dialog",
     GRID: "Editable Grid",

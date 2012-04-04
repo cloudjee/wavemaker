@@ -19,8 +19,9 @@ dojo.declare("NewLivePanelDialog", wm.Page, {
     options: null,
     start: function() {
 
-	var options = this.options = [{name: "wm.LiveVariable",
-				       img:""},
+	var options = this.options = [
+				      {name: this.getDictionaryItem("MENU"),
+				       img: "images/GridLiveFormDialog.png"},
 				       {name: this.getDictionaryItem("TRADITIONAL"),
 				       img: "images/GridLiveForm.png"},
 				      {name: this.getDictionaryItem("DIALOG"),
@@ -28,13 +29,15 @@ dojo.declare("NewLivePanelDialog", wm.Page, {
 				      {name: this.getDictionaryItem("BREADCRUMB"),
 				       img: "images/GridLiveFormDialog.png"},
 				      {name: this.getDictionaryItem("GRID"),
-				       img: "images/GridLiveFormDialog.png"}];
+				       img: "images/GridLiveFormDialog.png"},
+	                              {name: "wm.LiveVariable",
+				       img:""},];
 	
         var i = 0; 
 
 	for (var i = 0; i < options.length; i++) {
             var option = options[i];
-            if (i % 4 == 0) {
+            if (i % 3 == 0) {
                 var panel = new wm.Panel({width: "100%", height: "128px", layoutKind: "left-to-right", parent: this.templatesInsertPanel, owner: this, name: "templateRow" + i});
             }
             var imgpanel = new wm.Panel({_classes: {domNode: ["SelectableTemplate"]}, 
