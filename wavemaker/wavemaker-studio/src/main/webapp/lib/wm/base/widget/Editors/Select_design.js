@@ -118,7 +118,9 @@ wm.Lookup.extend({
 
 	listProperties: function() {
 		var props = this.inherited(arguments);
-		props.dataSet.ignoretmp = this.autoDataSet;
+	    var parentForm = this.getParentForm();
+	    props.autoDataSet.ignoretmp = !Boolean(parentForm);
+		props.dataSet.ignoretmp = parentForm && this.autoDataSet;
 		props.dataSet.bindTarget = !props.dataSet.ignoretmp;
 	        props.maxResults.ignoretmp = !this.autoDataSet;
 	        props.startUpdate.ignoretmp = !this.autoDataSet;
