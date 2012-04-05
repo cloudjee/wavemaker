@@ -33,7 +33,7 @@ NewLiveFormDialog.widgets = {
 		    wire: ["wm.Wire", {source: "readonlyManagerVar", targetProperty: "dataSet"}]
 		}]
 	    }],
-	    dataSetSelect: ["wm.prop.DataSetSelect", {width: "100%", captionSize: "130px", captionAlign: "left", caption: "dataSet", helpText: "Your form only needs a dataSet if you want to use it to edit existing entries; the dataSet provides an entry to edit", widgetDataSets: true, listMatch: undefined, noForms: true, allowAllTypes: false, liveServiceOnly: true, widgetDataSets: true}, {}, {
+	    dataSetSelect: ["wm.prop.DataSetSelect", {width: "100%", captionSize: "130px", captionAlign: "left", caption: "dataSet", helpText: "Your form only needs a dataSet if you want to use it to edit existing entries; the dataSet provides an entry to edit", widgetDataSets: true, listMatch: undefined, noForms: true, allowAllTypes: false, liveServiceOnly: true, widgetDataSets: true}, {onchange: "dataSetSelectChange"}, {
 		binding: ["wm.Binding", {},{},{
 		    wire: ["wm.Wire", {expression: "${formBehavior.dataValue} == 'insertOnly'", targetProperty: "disabled"}]
 		}]

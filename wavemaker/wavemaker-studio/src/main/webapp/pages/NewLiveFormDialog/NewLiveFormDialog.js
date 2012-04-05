@@ -28,8 +28,14 @@ dojo.declare("NewLiveFormDialog", wm.Page, {
         this.owner.owner.dismiss();
 	this.form.destroy();
     },
+    dataSetSelectChange: function(inSender, inDataValue, inDisplayValue) {
+	var c = studio.page.getValueById(inDataValue);
+	if (c && c.type) {
+	    this.typeSelect.setDataValue(c.type);
+	}
+    },
     onOkClick: function(selectedName) {
-	this.form.setName(wm.decapitalize(this.typeSelect.getDisplayValue().replace(/^.*\./,"")) + "DBForm");
+	this.form.setName(studio.page.getUniqueName(wm.decapitalize(this.typeSelect.getDisplayValue().replace(/^.*\./,"")) + "DBForm"));
 	this.form.set_formBehavior(this.formBehavior.getDataValue());
 	if (this.typeSelect.getDataValue())
 	    this.form.set_type(this.typeSelect.getDataValue());
