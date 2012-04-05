@@ -175,6 +175,9 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
 	},
     setDataSet: function(inDataSet) {
 	this.dataSet = inDataSet;
+	if (inDataSet && inDataSet.type != this.selectedItem.type) {
+	    this.selectedItem.setType(inDataSet.type);
+	}
 	var dataValue = this.dataValue;
 	this.updateIsDirty();
     },
