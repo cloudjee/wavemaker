@@ -286,8 +286,8 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
      *              this difference will become. Therefore we need to
      *              find better ways of working without bindings.
      */
-    generateInputBindings: true,
-    generateOutputBindings: true,
+    generateInputBindings: false,
+    generateOutputBindings: false,
 
     /****************
      * METHOD: Init (PRIVATE)
@@ -381,6 +381,7 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 	    this.beginEditUpdate();
 	    this.populateEditors();
 	    this.endEditUpdate();
+	    this.liveFormChanged();
 	}
 	
 	/* The outputData is the value of all of the editors; at the time of setDataSet, the outputData is either the same
@@ -388,7 +389,6 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 	 */
 	if (!this.generateOutputBindings) {
 	    this.dataOutput.setData(d);
-	    this.liveFormChanged();
 	}
 	this.updateNoDataSet(d.getData());
 	this.onDataSetChanged(this.dataSet.getData());
@@ -466,7 +466,8 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
     },
     liveFormChanged: function() {
 	dojo.forEach(this.getEditorsArray(), function(e) {
-	    wm.fire(e, "changed");
+	    if (e.changed) e.changed();
+	    if (e.clearDirty) e.clearDirty();
 	});
     },
 
@@ -479,7 +480,8 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 	var item = this.dataSet;
 	var data = item ? item.getData() : null;
 	if (!data) data = {};
-	dojo.forEach(this.getEditorsArray(), dojo.hitch(this, function(e) {
+	var editors = this.getEditorsArray();
+	dojo.forEach(editors, dojo.hitch(this, function(e) {
 	    /* If we have a form inside of this form, call populateEditors on it */
 
                 if (wm.Lookup && e instanceof wm.Lookup && (!e.dataSet || !e.dataSet.type)) 
@@ -492,9 +494,17 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 		e.setDataSet(data[e.formField]);
 	    }
 	}));
-
     },
-
+    applyDataValueBindings: function(inOperation) {
+	var editors = this.getEditorsArray();
+	dojo.forEach(editors, dojo.hitch(this, function(e) {
+	    if (e.$.binding) {
+		if (e.$.binding.wires.dataValue && (e.dataValueBindingEvaluated == "onInsert" && inOperation == "insert" || e.dataValueBindingEvaluated == "onUpdate" && inOperation == "update" || e.dataValueBindingEvaluated == "both")) {
+		    e.$.binding.wires.dataValue.refreshValue();
+		}
+	    }
+	}));
+    },
     /****************
      * METHOD: populateDataOutput (PRIVATE)
      * DESCRIPTION: We don't at this time use bindings to map data from the editors to the dataOutput.
@@ -516,6 +526,9 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 	    subform.populateDataOutput();
 	    d.setValue(subform.formField, subform.dataOutput);
 	}));
+
+	var wires = this.$.binding.findWires(function(wire) {return (wire.targetProperty == "dataOutput" || wire.targetProperty.indexOf("dataOutput.") == 0);});
+	dojo.forEach(wires, function(wire) { wire.refreshValue();});
         return this.dataOutput;
     },
 
@@ -524,8 +537,10 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
      * DESCRIPTION: This updates the value of dataOutput and then returns it
      ***************/
     getDataOutput: function() {
-	if (!this.generateOutputBindings) {
+	if (!this.generateOutputBindings && !this._inGetDataOutput) {
+	    this._inGetDataOutput = true; // was getting infinite loop when something is bound to the dataOutput.
 	    this.populateDataOutput();
+	    delete this._inGetDataOutput;
 	}
 	return this.dataOutput;
     },
@@ -572,8 +587,9 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 	this.clearDirty();
 	this.setDataSet(null);
 	//this.clearData();
-	this.setDefaultOnInsert();
+	//this.setDefaultOnInsert();
 	this.endEditUpdate();
+	this.applyDataValueBindings("insert");
 
 	/* If we are readonly, then there's no choice here but to make the editors editable if someone calls
 	 * editNewObject. But only make editable editors whose formField's type definition doesn't say "dont do that operation".
@@ -604,6 +620,7 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 	if (this.readonly || this.setReadonlyOnPrimaryKeys) {
   	    this._setReadonly(false, dojo.hitch(this, "_canChangeEditorReadonly", ["update"]));
 	}
+	this.applyDataValueBindings("update");
 	this.onEditCurrentObject();
 	wm.onidle(this, "focusFirstEditor");
     },
@@ -836,15 +853,6 @@ dojo.declare("wm.DBForm", wm.DataForm, {
     updateOp: "update",
     deleteOp: "delete",
 
-    /* Using bindings is nice because its automatic; but it doesn't perform quite as well as calling
-     * a populate method; as long as the only access to dataOutput comes from within the form component itself
-     * for use by its livevar/servicevar,
-     * there's no need for the user friendly approach. Makes it more of a black box, but ServiceForm is 
-     * more of a black box -- it attempts to automate client/server communication after all
-     */
-    generateOutputBindings: true,
-
-
     /****************
      * METHOD: init (Lifecycle)
      * DESCRIPTION: Initialize the subcomponents 
@@ -1026,21 +1034,21 @@ dojo.declare("wm.DBForm", wm.DataForm, {
      ****************/
     updateButtonShowingState: function(inEditing) {
 	if (this.readonlyManager) {
-	    if (this.saveButton)
+	    if (this.saveButton && this.saveButton.isAncestor(this))
 		this.saveButton.setShowing(inEditing);
-	    if (this.cancelButton)
+	    if (this.cancelButton && this.cancelButton.isAncestor(this))
 		this.cancelButton.setShowing(inEditing);
-	    if (this.editButton)
+	    if (this.editButton && this.editButton.isAncestor(this))
 		this.editButton.setShowing(!inEditing);
-	    if (this.deleteButton)
+	    if (this.deleteButton && this.deleteButton.isAncestor(this))
 		this.deleteButton.setShowing(!inEditing);
-	    if (this.newButton)
+	    if (this.newButton && this.newButton.isAncestor(this))
 		this.newButton.setShowing(!inEditing);
 	} else {
-	    if (this.newButton) {
+	    if (this.newButton && this.newButton.isAncestor(this)) {
 		this.newButton.setShowing(this.operation != "insert");
 	    }
-	    if (this.deleteButton) {
+	if (this.deleteButton && this.deleteButton.isAncestor(this)) {
 		this.deleteButton.setShowing(this.operation != "insert");
 	    }
 	}
@@ -1426,7 +1434,8 @@ dojo.declare("wm.ServiceInputForm", wm.DataForm, {
     setReadonlyOnPrimaryKeys: false,
     generateInputBindings: false,
     generateOutputBindings: true,
-    //populateEditors: function() {}, // called because generateInputBindings is false
+    populateEditors: function() {}, // There is no dataSet for ServiceInputForm because of the strange nature of service input
+    // types. Without dataSets, there is no need for a populateEditors call
     getTypeDef: function() {
 	if (this.serviceVariable && this.serviceVariable.input) {
 	    return {fields: this.serviceVariable.input._dataSchema};

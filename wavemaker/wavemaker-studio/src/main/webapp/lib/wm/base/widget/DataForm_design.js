@@ -854,7 +854,6 @@ wm.DBForm.extend({
     listProperties: function() {
 	var props = this.inherited(arguments);
 	props.dataSet.ignoretmp = this.formBehavior == "insertOnly";	
-	props.dataOutput.ignoretmp = !this.generateOutputBindings;
 	return props;
     },
 
