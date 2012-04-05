@@ -1,3 +1,4 @@
+
 package com.wavemaker.tools.cloudfoundry.timeout;
 
 import static org.hamcrest.Matchers.is;
@@ -12,14 +13,14 @@ import org.junit.Test;
  */
 public class TimeoutProtectionHttpHeaderTest {
 
-	@Test
-	public void shouldHaveInitialRequest() {
-		assertThat(TimeoutProtectionHttpHeader.INITIAL_REQUEST, is("x-cloudfoundry-timeout-protection-initial-request"));
-	}
+    @Test
+    public void shouldHaveInitialRequest() {
+        assertThat(TimeoutProtectionHttpHeader.INITIAL_REQUEST, is("X-CloudFoundry-Timeout-Protection-Initial-Request"));
+    }
 
-	@Test
-	public void shouldHavePollRequest() throws Exception {
-		assertThat(TimeoutProtectionHttpHeader.POLL, is("x-cloudfoundry-timeout-protection-poll"));
-	}
+    @Test
+    public void shouldHavePollRequest() throws Exception {
+        assertThat(TimeoutProtectionHttpHeader.POLL, is("X-CloudFoundry-Timeout-Protection-Poll"));
+    }
 
 }

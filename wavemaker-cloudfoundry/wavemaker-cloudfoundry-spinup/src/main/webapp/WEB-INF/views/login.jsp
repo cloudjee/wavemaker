@@ -8,13 +8,11 @@
 		<title>WaveMaker</title>
 		<link href="<c:url value="/resources/form.css" />" rel="stylesheet"  type="text/css" />
 		
-		<script src="http://ajax.googleapis.com/ajax/libs/dojo/1.6.0/dojo/dojo.xd.js"
-					data-dojo-config="isDebug: true,parseOnLoad: true">
+		<script type="text/javascript" src="<c:url value='/dojo/dojo.js.uncompressed.js'/>">
 		</script>
 		
-		<!--  
-		<script type="text/javascript" src="<c:url value='/dojo/dojo.js.uncompressed.js'/>"></script>
-		-->
+		<script type="text/javascript" src="<c:url value='cloudfoundry/cloudfoundry-timeout.js'/>">
+		</script>
 		
 		<script>
 			function attachFormHandler() {

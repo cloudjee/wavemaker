@@ -33,5 +33,4 @@ public class LoginCredentialsBean implements LoginCredentials {
     public void setPassword(String password) {
         this.password = password;
     }
-
 }

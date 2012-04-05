@@ -1,10 +1,13 @@
 
 package com.wavemaker.tools.cloudfoundry.timeout.monitor;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.Writer;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.ServletOutputStream;
@@ -19,7 +22,7 @@ import org.springframework.web.util.WebUtils;
  * A {@link HttpServletResponseWrapper wrapper} that can be used to {@link HttpServletResponseMonitor monitor} a
  * {@link HttpServletResponse}. All outgoing data is passed to the monitor as well as to the wrapped response. The
  * monitor is lazily created on the first suitable response invocation using the specified
- * {@link HttpServletResponseMonitorFactory}.
+ * {@link HttpServletResponseMonitorFactory}. NOTE: header invocations will not trigger the creation of the monitor.
  * 
  * @see HttpServletResponseMonitor
  * 
@@ -33,6 +36,8 @@ public class MonitoredHttpServletResponseWrapper extends HttpServletResponseWrap
      * The lazily loaded monitor (use {@link #getMonitor()}.
      */
     private HttpServletResponseMonitor monitor;
+
+    private final HeaderCalls headerCalls = new HeaderCalls();
 
     /**
      * Create a new {@link MonitoredHttpServletResponseWrapper} instance.
@@ -50,9 +55,10 @@ public class MonitoredHttpServletResponseWrapper extends HttpServletResponseWrap
     protected HttpServletResponseMonitor getMonitor() {
         if (this.monitor == null) {
             this.monitor = this.monitorFactory.getMonitor();
-        }
-        if (this.monitor == null) {
-            this.monitor = HttpServletResponseMonitor.NONE;
+            if (this.monitor == null) {
+                this.monitor = HttpServletResponseMonitor.NONE;
+            }
+            this.headerCalls.setMonitor(this.monitor);
         }
         return this.monitor;
     }
@@ -84,37 +90,37 @@ public class MonitoredHttpServletResponseWrapper extends HttpServletResponseWrap
     @Override
     public void setDateHeader(String name, long date) {
         super.setDateHeader(name, date);
-        getMonitor().setDateHeader(name, date);
+        this.headerCalls.headerCall(HeaderCallType.SET_DATE, name, date);
     }
 
     @Override
     public void addDateHeader(String name, long date) {
         super.addDateHeader(name, date);
-        getMonitor().addDateHeader(name, date);
+        this.headerCalls.headerCall(HeaderCallType.ADD_DATE, name, date);
     }
 
     @Override
     public void setHeader(String name, String value) {
         super.setHeader(name, value);
-        getMonitor().setHeader(name, value);
+        this.headerCalls.headerCall(HeaderCallType.SET, name, value);
     }
 
     @Override
     public void addHeader(String name, String value) {
         super.addHeader(name, value);
-        getMonitor().addHeader(name, value);
+        this.headerCalls.headerCall(HeaderCallType.ADD, name, value);
     }
 
     @Override
     public void setIntHeader(String name, int value) {
         super.setIntHeader(name, value);
-        getMonitor().setIntHeader(name, value);
+        this.headerCalls.headerCall(HeaderCallType.SET_INT, name, value);
     }
 
     @Override
     public void addIntHeader(String name, int value) {
         super.addIntHeader(name, value);
-        getMonitor().addIntHeader(name, value);
+        this.headerCalls.headerCall(HeaderCallType.ADD_INT, name, value);
     }
 
     @Override
@@ -177,13 +183,109 @@ public class MonitoredHttpServletResponseWrapper extends HttpServletResponseWrap
         if (characterEncoding == null) {
             characterEncoding = WebUtils.DEFAULT_CHARACTER_ENCODING;
         }
-        Writer out = new OutputStreamWriter(getOutputStream(), characterEncoding);
-        return new PrintWriter(out, true);
+        return new RecordingPrintWriter(getOutputStream(), characterEncoding);
     }
 
     @Override
     public ServletOutputStream getOutputStream() throws IOException {
+        // return super.getOutputStream();
         return new RecordingServletOutputStream(super.getOutputStream());
+    }
+
+    private static enum HeaderCallType {
+        ADD_INT {
+
+            @Override
+            public void invoke(HttpServletResponseMonitor monitor, String name, Object value) {
+                monitor.addIntHeader(name, (Integer) value);
+
+            }
+        },
+        SET_INT {
+
+            @Override
+            public void invoke(HttpServletResponseMonitor monitor, String name, Object value) {
+                monitor.setIntHeader(name, (Integer) value);
+
+            }
+        },
+        ADD {
+
+            @Override
+            public void invoke(HttpServletResponseMonitor monitor, String name, Object value) {
+                monitor.addHeader(name, (String) value);
+            }
+        },
+        SET {
+
+            @Override
+            public void invoke(HttpServletResponseMonitor monitor, String name, Object value) {
+                monitor.setHeader(name, (String) value);
+            }
+        },
+        ADD_DATE {
+
+            @Override
+            public void invoke(HttpServletResponseMonitor monitor, String name, Object value) {
+                monitor.addDateHeader(name, (Long) value);
+
+            }
+        },
+        SET_DATE {
+
+            @Override
+            public void invoke(HttpServletResponseMonitor monitor, String name, Object value) {
+                monitor.setDateHeader(name, (Long) value);
+            }
+        };
+
+        public abstract void invoke(HttpServletResponseMonitor monitor, String name, Object value);
+    };
+
+    private static class HeaderCalls {
+
+        private HttpServletResponseMonitor monitor;
+
+        private List<HeaderCall> calls;
+
+        public void setMonitor(HttpServletResponseMonitor monitor) {
+            this.monitor = monitor;
+            if (this.calls != null) {
+                for (HeaderCall call : this.calls) {
+                    call.invoke(monitor);
+                }
+            }
+        }
+
+        public void headerCall(HeaderCallType type, String name, Object value) {
+            if (this.monitor != null) {
+                type.invoke(this.monitor, name, value);
+            } else {
+                if (this.calls == null) {
+                    this.calls = new ArrayList<HeaderCall>();
+                }
+                this.calls.add(new HeaderCall(type, name, value));
+            }
+        }
+    }
+
+    private static class HeaderCall {
+
+        private final HeaderCallType type;
+
+        private final String name;
+
+        private final Object value;
+
+        public HeaderCall(HeaderCallType type, String name, Object value) {
+            this.type = type;
+            this.name = name;
+            this.value = value;
+        }
+
+        public void invoke(HttpServletResponseMonitor monitor) {
+            this.type.invoke(monitor, this.name, this.value);
+        }
     }
 
     private class RecordingServletOutputStream extends ServletOutputStream {
@@ -213,4 +315,194 @@ public class MonitoredHttpServletResponseWrapper extends HttpServletResponseWrap
         }
     }
 
+    private static class RecordingPrintWriter extends PrintWriter {
+
+        private final OutputStream outputStream;
+
+        private final Charset charset;
+
+        private final char[] lineSeparator;
+
+        private boolean error;
+
+        public RecordingPrintWriter(OutputStream stream, String characterEncoding) throws FileNotFoundException {
+            super(stream);
+            this.outputStream = stream;
+            this.charset = Charset.forName(characterEncoding);
+            this.lineSeparator = java.security.AccessController.doPrivileged(new sun.security.action.GetPropertyAction("line.separator")).toCharArray();
+        }
+
+        @Override
+        protected Object clone() throws CloneNotSupportedException {
+            throw new CloneNotSupportedException();
+        }
+
+        @Override
+        public boolean checkError() {
+            flush();
+            return this.error;
+        }
+
+        @Override
+        public void flush() {
+            if (!this.error) {
+                try {
+                    this.outputStream.flush();
+                } catch (IOException e) {
+                    this.error = true;
+                }
+            }
+        }
+
+        @Override
+        public void close() {
+            try {
+                this.outputStream.close();
+            } catch (IOException ex) {
+            }
+            this.error = false;
+        }
+
+        @Override
+        public void print(boolean b) {
+            write(b ? "true" : "false");
+        }
+
+        @Override
+        public void print(char c) {
+            write(c);
+        }
+
+        @Override
+        public void print(int i) {
+            write(String.valueOf(i));
+        }
+
+        @Override
+        public void print(long l) {
+            write(String.valueOf(l));
+        }
+
+        @Override
+        public void print(float f) {
+            write(String.valueOf(f));
+        }
+
+        @Override
+        public void print(double d) {
+            write(String.valueOf(d));
+        }
+
+        @Override
+        public void print(char s[]) {
+            write(s);
+        }
+
+        @Override
+        public void print(String s) {
+            write(String.valueOf(s));
+        }
+
+        @Override
+        public void print(Object obj) {
+            write(String.valueOf(obj));
+        }
+
+        @Override
+        public void println(boolean b) {
+            print(b);
+            println();
+        }
+
+        @Override
+        public void println(char c) {
+            print(c);
+            println();
+        }
+
+        @Override
+        public void println(int i) {
+            print(i);
+            println();
+        }
+
+        @Override
+        public void println(long l) {
+            print(l);
+            println();
+        }
+
+        @Override
+        public void println(float f) {
+            print(f);
+            println();
+        }
+
+        @Override
+        public void println(double d) {
+            print(d);
+            println();
+        }
+
+        @Override
+        public void println(char c[]) {
+            print(c);
+            println();
+        }
+
+        @Override
+        public void println(String s) {
+            print(s);
+            println();
+        }
+
+        @Override
+        public void println(Object o) {
+            print(o);
+            println();
+        }
+
+        @Override
+        public void println() {
+            write(this.lineSeparator);
+        }
+
+        @Override
+        public void write(int c) {
+            if (!this.error) {
+                try {
+                    this.outputStream.write(c);
+                } catch (IOException e) {
+                    this.error = true;
+                }
+            }
+        }
+
+        @Override
+        public void write(char buf[]) {
+            write(buf, 0, buf.length);
+        }
+
+        @Override
+        public void write(char buf[], int off, int len) {
+            write(new String(buf, off, len));
+        }
+
+        @Override
+        public void write(String s) {
+            write(s, 0, s.length());
+        }
+
+        @Override
+        public void write(String s, int off, int len) {
+            if (!this.error) {
+                try {
+                    this.outputStream.write(s.getBytes(this.charset), off, len);
+                } catch (IOException e) {
+                    this.error = true;
+                }
+            }
+        }
+
+    }
 }

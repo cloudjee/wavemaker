@@ -1,8 +1,6 @@
 
 package com.wavemaker.spinup.web;
 
-import java.util.concurrent.TimeUnit;
-
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,8 +31,6 @@ import com.wavemaker.tools.cloudfoundry.spinup.authentication.TransportToken;
 @Controller
 @SessionAttributes("loginCredentialsBean")
 public class SpinupController {
-
-    private static final String BROADCASTER_ID = "wavemaker-spinup";
 
     private static final String SHARED_SECRET_ATTRIBUTE_NAME = SpinupController.class.getName() + ".SECRET";
 
@@ -89,6 +85,9 @@ public class SpinupController {
             SharedSecret secret = getSecret(request);
             TransportToken transportToken = this.spinupService.login(secret, credentials);
             String url = performSpinup(credentials, secret, transportToken, response);
+            Cookie cookie = new Cookie(COOKIE_NAME, transportToken.encode());
+            cookie.setDomain(this.spinupService.getDomain());
+            response.addCookie(cookie);
             response.setHeader("X-Ajax-Redirect", url);
             response.setStatus(HttpStatus.NO_CONTENT.value());
             return null;
@@ -100,17 +99,14 @@ public class SpinupController {
     }
 
     private String performSpinup(LoginCredentialsBean credentials, SharedSecret secret, TransportToken transportToken, HttpServletResponse response) {
-        Cookie cookie = new Cookie(COOKIE_NAME, transportToken.encode());
-        cookie.setDomain(this.spinupService.getDomain());
-        response.addCookie(cookie);
         // String url = SpinupController.this.spinupService.start(secret, credentials.getUsername(), transportToken);
         // url = url + "?debug"; // FIXME
+        // return url;
         try {
-            Thread.sleep(TimeUnit.SECONDS.toMillis(40));
+            Thread.sleep(43000);
         } catch (InterruptedException e) {
         }
-        String url = "http://www.google.com";
-        return url;
+        return "http://www.google.com";
     }
 
     private SharedSecret getSecret(HttpServletRequest request) {

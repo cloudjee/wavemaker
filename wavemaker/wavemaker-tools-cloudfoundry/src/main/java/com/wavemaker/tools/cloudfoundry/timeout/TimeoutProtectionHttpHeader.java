@@ -1,3 +1,4 @@
+
 package com.wavemaker.tools.cloudfoundry.timeout;
 
 /**
@@ -8,14 +9,14 @@ package com.wavemaker.tools.cloudfoundry.timeout;
  */
 public class TimeoutProtectionHttpHeader {
 
-	/**
-	 * Header for an initial request that supports timeout protection.
-	 */
-	public static final String INITIAL_REQUEST = "x-cloudfoundry-timeout-protection-initial-request";
+    /**
+     * Header for an initial request that supports timeout protection.
+     */
+    public static final String INITIAL_REQUEST = "X-CloudFoundry-Timeout-Protection-Initial-Request";
 
-	/**
-	 * Header for a poll request.
-	 */
-	public static final String POLL = "x-cloudfoundry-timeout-protection-poll";
+    /**
+     * Header for a poll request.
+     */
+    public static final String POLL = "X-CloudFoundry-Timeout-Protection-Poll";
 
 }

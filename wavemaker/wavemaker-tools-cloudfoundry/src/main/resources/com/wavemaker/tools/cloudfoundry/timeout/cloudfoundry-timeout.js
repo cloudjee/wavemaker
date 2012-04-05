@@ -4,6 +4,8 @@
     "use strict";
     var TIMEOUT = 1000 * 60;
 
+    dojo.require("dojox.uuid.generateRandomUuid");
+
     // Replace XHR methods with long poll aware versions
     dojo.xhrGet = xhrLongPollOnTimeout(dojo.xhrGet);
     dojo.xhrPost = xhrLongPollOnTimeout(dojo.xhrPost);
@@ -21,12 +23,11 @@
      */
     function xhrLongPollOnTimeout(originalXhr) {
         return function(args) {
-            dojo.require("dojox.uuid.generateRandomUuid");
 
             var requestId = dojox.uuid.generateRandomUuid();
             var newArgs = dojo.mixin({}, args);
             var requestHeader = {
-                "x-cloudfoundry-timeout-protection-initial-request" : requestId
+                "X-CloudFoundry-Timeout-Protection-Initial-Request" : requestId
             };
 
             // Add a header, remove any load and error functions and attach our
@@ -65,11 +66,11 @@
             function longPollForResult(timeout) {
                 originalXhr({
                     headers : {
-                        "x-cloudfoundry-timeout-protection-poll" : requestId
+                        "X-CloudFoundry-Timeout-Protection-Poll" : requestId
                     },
                     url : args.url,
                     handle : function(result, ioargs) {
-                        if (ioargs.xhr.status === 204 && ioargs.xhr.getResponseHeader("x-cloudfoundry-timeout-protection-poll") === requestId) {
+                        if (ioargs.xhr.status === 204 && ioargs.xhr.getResponseHeader("X-CloudFoundry-Timeout-Protection-Poll") === requestId) {
                             // No content returned as yet, continue to poll
                             if (timeout) {
                                 longPollForResult(timeout);
