@@ -27,7 +27,10 @@ dojo.declare("wm.gadget.YouTube", wm.Gadget, {
     getSource: function() {
 	if (!this.videoId || this._isDesignLoaded)
 	    return "";
-	return "http://www.youtube.com/embed/" + (this.videoId ? this.videoId.replace(/^.*\//,"") : "");
+	var id = this.videoId || "";
+	id = id.replace(/^.*\//,"");
+	id = id.replace(/^watch\?v\=/,"");
+	return "http://www.youtube.com/embed/" + id;
     },
     setVideoId: function(inId) {
 	this.videoId = inId;
