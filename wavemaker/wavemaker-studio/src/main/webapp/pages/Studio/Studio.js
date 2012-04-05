@@ -575,9 +575,9 @@ dojo.declare("Studio", wm.Page, {
 	typesChanged: function(inData) {
 	    if (inData && inData.types) {
 		wm.typeManager.setTypes(inData.types);
-		wm.dataSources.update();
-		this.refreshDataPalette();
 	    }
+	    wm.dataSources.update();
+	    this.refreshDataPalette();
 	    if (this.application || this._application)
 		dojo.publish("wmtypes-changed");
 	},

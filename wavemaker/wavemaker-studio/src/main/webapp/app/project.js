@@ -49,6 +49,7 @@ dojo.declare("wm.studio.Project", null, {
 		return d;
 	},
         finishNewProject: function(inResult, optionalInTheme, optionalInTemplate) {
+	    studio.updateServices();
 		this.projectChanging();
 		this.createApplicationArtifacts();
 	        this.makeApplication({theme: optionalInTheme || "wm_default"});
@@ -66,7 +67,7 @@ dojo.declare("wm.studio.Project", null, {
 			     this.projectsChanged();
 			     studio.endWait(studio.getDictionaryItem("wm.studio.Project.WAIT_CREATING_PROJECT"));
 			     studio._loadingApplication = false;
-			 }));
+			 }));	    
 	},
     // pageType and argHash are typically empty
     // argHash is a way to pass in custom parameters when creating a non-basic

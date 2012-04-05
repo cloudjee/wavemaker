@@ -34,6 +34,9 @@ wm.typeManager = {
 	},
 	clearTypes: function() {
 		this._publicTypes = {};
+	        if (wm.dataSources) {
+	            wm.dataSources.clearSources();
+		}
 		// clear all non-user types
 		for (var i in this.types) {
 			if (!this.types[i].userType)
