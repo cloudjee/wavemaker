@@ -118,10 +118,10 @@ public class ReplayingTimeoutProtectionStrategyTest {
 
     @Test
     public void shouldTimeoutPoll() throws Exception {
-        this.strategy.setLongPollTime(100);
+        this.strategy.setLongPollTime(200);
         TimedPollThread timedPollThread = new TimedPollThread();
         timedPollThread.start();
-        timedPollThread.assertTime(100, 200);
+        timedPollThread.assertTime(190, 400);
     }
 
     @Test
