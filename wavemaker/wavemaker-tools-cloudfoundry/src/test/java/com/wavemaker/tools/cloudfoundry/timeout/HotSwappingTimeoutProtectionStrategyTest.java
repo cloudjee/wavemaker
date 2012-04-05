@@ -204,14 +204,14 @@ public class HotSwappingTimeoutProtectionStrategyTest {
 
     @Test
     public void shouldCoordinateSetPollResponseAfterAwait() throws Exception {
-        ThreadAssertion assertion = expectResponseWithin(50, 100, new Call() {
+        ThreadAssertion assertion = expectResponseWithin(100, 300, new Call() {
 
             @Override
             public void call() throws Exception {
                 HotSwappingTimeoutProtectionStrategyTest.this.realRequestCoordinator.awaitPollResponse(1000);
             }
         });
-        Thread.sleep(50);
+        Thread.sleep(200);
         this.realRequestCoordinator.setPollResponse(this.response);
         assertion.verify();
     }
@@ -220,7 +220,7 @@ public class HotSwappingTimeoutProtectionStrategyTest {
     public void shouldCoordinateConsumePollResponseBeforeAwait() throws Exception {
         this.realRequestCoordinator.setPollResponse(this.response);
         this.realRequestCoordinator.consumePollResponse();
-        ThreadAssertion assertion = expectResponseWithin(0, 100, new Call() {
+        ThreadAssertion assertion = expectResponseWithin(0, 300, new Call() {
 
             @Override
             public void call() throws Exception {
@@ -233,14 +233,14 @@ public class HotSwappingTimeoutProtectionStrategyTest {
     @Test
     public void shouldCoordinateConsumePollResponseAfterAwait() throws Exception {
         this.realRequestCoordinator.setPollResponse(this.response);
-        ThreadAssertion assertion = expectResponseWithin(50, 100, new Call() {
+        ThreadAssertion assertion = expectResponseWithin(10, 300, new Call() {
 
             @Override
             public void call() throws Exception {
                 HotSwappingTimeoutProtectionStrategyTest.this.realRequestCoordinator.awaitPollReponseConsumed(1000);
             }
         });
-        Thread.sleep(50);
+        Thread.sleep(100);
         this.realRequestCoordinator.consumePollResponse();
         assertion.verify();
     }
@@ -260,14 +260,14 @@ public class HotSwappingTimeoutProtectionStrategyTest {
 
     @Test
     public void shouldCoordinateCleanupAfterAwait() throws Exception {
-        ThreadAssertion assertion = expectResponseWithin(50, 100, new Call() {
+        ThreadAssertion assertion = expectResponseWithin(100, 300, new Call() {
 
             @Override
             public void call() throws Exception {
                 HotSwappingTimeoutProtectionStrategyTest.this.realRequestCoordinator.awaitFinish(1000);
             }
         });
-        Thread.sleep(50);
+        Thread.sleep(100);
         this.realRequestCoordinator.finish();
         assertion.verify();
     }
