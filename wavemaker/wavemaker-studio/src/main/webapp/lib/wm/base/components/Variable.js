@@ -998,8 +998,8 @@ dojo.declare("wm.Variable", wm.Component, {
 
     toString: function(inText) {   
 	var t = inText || "";
-	var hasData =  this.isEmpty();
-	t += "; " + wm.getDictionaryItem("wm.Variable.toString_TYPE", {type: this.type}) + "; " + wm.getDictionaryItem("wm.Variable.toString_ISEMPTY", {isEmpty: !hasData}); 
+	var isEmpty =  this.isEmpty();
+	t += "; " + wm.getDictionaryItem("wm.Variable.toString_TYPE", {type: this.type}) + "; " + wm.getDictionaryItem("wm.Variable.toString_ISEMPTY", {isEmpty: isEmpty}); 
 	return this.inherited(arguments, [t]);
     },
     _end: 0
