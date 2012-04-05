@@ -69,6 +69,7 @@ wm.ImageList.extend({
 	    var l = this._designList;
 	    var v = this._designVariable;
 	}
+	l.deselectAll();
 	var data = [];
 	for (var i = 0; i < this.iconCount; i++)
 	    data.push({dataValue: this.getImageHtml(i)});
