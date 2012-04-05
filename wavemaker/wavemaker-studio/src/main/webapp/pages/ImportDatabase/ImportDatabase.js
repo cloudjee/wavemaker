@@ -38,7 +38,7 @@ dojo.declare("ImportDatabase", wm.Page, {
 			this.passwordInput.setDataValue(d.password || "");
 			if (d.dbtype) {
 				this.dbdropdown.setDisplayValue(d.dbtype);
-				this.importDBdropdownChanged();
+			        this.importDBdropdownChanged(this.dbdropdown,this.dbdropdown.getDataValue());
 			}
 			this.hostInput.setDataValue(d.host || ((studio.isCloud()) ? "mysql.wavemaker.com" : "localhost"));
 			this.importHostChanged();
@@ -46,6 +46,7 @@ dojo.declare("ImportDatabase", wm.Page, {
 			this.importPortChanged()
 			this.extraInput.setDataValue(d.dbName || "");
 			this.importExtraChanged();
+		        this.importDBdropdownChanged(this.dbdropdown,this.dbdropdown.getDataValue());
 			if (d.noPrompt)
 				setTimeout(dojo.hitch(this, "importBtnClick"), 100);
 		}
