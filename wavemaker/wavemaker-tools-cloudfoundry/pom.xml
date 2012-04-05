@@ -8,6 +8,7 @@
 		<version>6.5.0.BUILD-SNAPSHOT</version>
 	</parent>
 	<artifactId>wavemaker-tools-cloudfoundry</artifactId>
+	<packaging>jar</packaging>
 	<properties>
 		<main.basedir>${basedir}/../..</main.basedir>
 	</properties>
@@ -24,5 +25,10 @@
 			<groupId>org.cloudfoundry</groupId>
 			<artifactId>cloudfoundry-client-lib</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>		
 	</dependencies>
 </project>
