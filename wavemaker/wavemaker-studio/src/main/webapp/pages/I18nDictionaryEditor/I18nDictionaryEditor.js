@@ -94,7 +94,7 @@ dojo.declare("I18nDictionaryEditor", wm.Page, {
 			     parent: this.editTermPanel,
 			     caption: lang,
 			     width: "100%",
-			     dataValue: this.dictionaryHash[lang][name]});
+			     dataValue: this.dictionaryHash[lang] ? this.dictionaryHash[lang][name] : null});
 	t.onchange = dojo.hitch(this, function() {
 	    this.onItemChange(t,lang);
 	});
@@ -131,6 +131,8 @@ dojo.declare("I18nDictionaryEditor", wm.Page, {
 	var index = this.dictionaryItemList.getSelectedIndex();	
 	if (index >= 0) {
 	    var name = this.dictionaryItemList.selectedItem.getValue("dataValue");
+	    if (!this.dictionaryHash[inLang])
+		this.dictionaryHash[inLang] = {};
 	    this.dictionaryHash[inLang][name] = editor.getDataValue();
 	}	
     },
