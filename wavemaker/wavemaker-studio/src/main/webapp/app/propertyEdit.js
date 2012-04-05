@@ -2032,17 +2032,19 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	this.editors = {};
 
 	/* Determine if this property should be shown or not */
+/*
 	if (this.propDef.advanced && !studio.inspector.isAdvancedMode()) {
 	    this.setShowing(false);
 	} else {
 	    this.setShowing(true); // wm.PropertyInspector will set this to hidden if the entire thing is bound assuming a bind-editor will be shown instead; not applicable for this particular editor
 	}
-
+	*/
 	this.generateEditors(this.inspected);
     },
     generateEditors: function(c) {
 	this.propDef.treeBindRoot = this.propDef.name;
 	var propDef = dojo.clone(this.propDef);	
+	propDef.advanced = false; // ComponentInspector's already taking care of this for us
 	propDef.editor = "wm.prop.DataSetSelect";
 	propDef.fullName = propDef.name;
 	if (!propDef.editorProps) {
