@@ -40,6 +40,11 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
     changeKeycodes: [dojo.keys.ENTER, dojo.keys.NUMPAD_ENTER, dojo.keys.DELETE, dojo.keys.BACKSPACE],
     classNames: "wmeditor",
 
+    // default is to only evaluate bindings on the dataValue when in a form when doing an insert operation
+    // but designer can also can it to be reevaluated when doing an update operation
+    // possible values are "onInsert", "onUpdate", "both"
+    dataValueBindingEvaluated: "onInsert",
+
     /* Formating */
 	formatter: '',
 	height: "24px",    
