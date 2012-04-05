@@ -517,6 +517,10 @@ th {
 	-moz-outline: none;
 }
 
+.dojoxGridHeader .dojoxGridCheckSelector {
+display: none; /* if shown, selecting 500 rows hangs even chrome */
+}
+
 /* master header */
 
 .dojoxGrid-master-header {
