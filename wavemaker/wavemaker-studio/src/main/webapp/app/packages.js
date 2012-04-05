@@ -148,12 +148,12 @@
 [ bundlePackage.Templates + "/" + bundlePackage.PanelLayoutTemplates, bundlePackage.TabbedTwoCol, "wm.Template", "wm.base.widget.Template", "Studio_paletteImageList_14", bundlePackage.descTabbedTwoColumnTemplate, wm.widgetTemplates.tabbedTwoColumn, false],
 //[ bundlePackage.SubTemplates, "ToolbarAndForm", "wm.Template", "wm.base.widget.Template", "Studio_paletteImageList_14", "A toolbar and simple form template.", wm.widgetTemplates.toolbarWithGroupBox],
 
-[ bundlePackage.Web_Content, "Maps", "wm.gadget.GoogleMap", "wm.base.widget.gadget.GoogleMap", "Studio_paletteImageList_35", bundlePackage.descYouTubeWidget, {},true],
-[ bundlePackage.Web_Content, bundlePackage.FacebookLikeButton, "wm.gadget.FacebookLikeButton", "wm.base.widget.gadget.Facebook", "Studio_paletteImageList_35", bundlePackage.descYouTubeWidget, {}, true],
-[ bundlePackage.Web_Content, bundlePackage.FacebookActivityFeed, "wm.gadget.FacebookActivityFeed", "wm.base.widget.gadget.Facebook", "Studio_paletteImageList_35", bundlePackage.descYouTubeWidget, {}, true],
-[ bundlePackage.Web_Content, "Twitter Follow Button", "wm.gadget.TwitterFollowButton", "wm.base.widget.gadget.TwitterGadgets", "Studio_paletteImageList_35", bundlePackage.descYouTubeWidget, {}, true],
-[ bundlePackage.Web_Content, "Twitter Tweet Button", "wm.gadget.TwitterTweetButton", "wm.base.widget.gadget.TwitterGadgets", "Studio_paletteImageList_35", bundlePackage.descYouTubeWidget, {}, true],
-[ bundlePackage.Web_Content, "Twitter List", "wm.gadget.TwitterList", "wm.base.widget.gadget.TwitterGadgets", "Studio_paletteImageList_35", bundlePackage.descYouTubeWidget, {}, true],
+[ bundlePackage.Web_Content, "Maps", "wm.gadget.GoogleMap", "wm.base.widget.gadget.GoogleMap", "Studio_paletteImageList_35", bundlePackage.descMapsWidget, {},true],
+[ bundlePackage.Web_Content, bundlePackage.FacebookLikeButton, "wm.gadget.FacebookLikeButton", "wm.base.widget.gadget.Facebook", "Studio_paletteImageList_35", bundlePackage.descFaceBookLikeWidget, {}, true],
+[ bundlePackage.Web_Content, bundlePackage.FacebookActivityFeed, "wm.gadget.FacebookActivityFeed", "wm.base.widget.gadget.Facebook", "Studio_paletteImageList_35", bundlePackage.descFaceBookActivityWidget, {}, true],
+[ bundlePackage.Web_Content, "Twitter Follow Button", "wm.gadget.TwitterFollowButton", "wm.base.widget.gadget.TwitterGadgets", "Studio_paletteImageList_35", bundlePackage.descTwitterFollowWidget, {}, true],
+[ bundlePackage.Web_Content, "Twitter Tweet Button", "wm.gadget.TwitterTweetButton", "wm.base.widget.gadget.TwitterGadgets", "Studio_paletteImageList_35", bundlePackage.descTwitterTweetWidget, {}, true],
+[ bundlePackage.Web_Content, "Twitter List", "wm.gadget.TwitterList", "wm.base.widget.gadget.TwitterGadgets", "Studio_paletteImageList_35", bundlePackage.descTwitterListWidget, {}, true],
 [ bundlePackage.Web_Content, bundlePackage.Feed_List, "wm.FeedList", "wm.base.widget.FeedList", "images/rss.png", bundlePackage.descFeedList, {}, false],
 [ bundlePackage.Web_Content, bundlePackage.Twitter_Feed, "wm.TwitterFeed", "wm.base.widget.TwitterFeed", "Studio_paletteImageList_26", bundlePackage.descTwitterFeed, {}, false],
 
