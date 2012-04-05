@@ -733,7 +733,7 @@ wm.Container.extend({
 	this.setWidth(this.getPreferredFitToContentWidth() + "px");
     },
     setBestHeight: function() {
-	this.setHeight(this.getPreferredFitToContentHeight() + "px");
+	this[this._isDesignLoaded ? "set_height" : "setHeight"](this.getPreferredFitToContentHeight() + "px");
     },
 	getMinWidthProp: function() {
             if (this.fitToContentWidth)
