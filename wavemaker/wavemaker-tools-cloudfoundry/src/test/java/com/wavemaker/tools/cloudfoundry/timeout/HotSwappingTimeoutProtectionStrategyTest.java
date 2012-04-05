@@ -192,7 +192,7 @@ public class HotSwappingTimeoutProtectionStrategyTest {
     @Test
     public void shouldCoordinateSetPollResponseBeforeAwait() throws Exception {
         this.realRequestCoordinator.setPollResponse(this.response);
-        ThreadAssertion assertion = expectResponseWithin(0, 100, new Call() {
+        ThreadAssertion assertion = expectResponseWithin(0, 500, new Call() {
 
             @Override
             public void call() throws Exception {
@@ -204,7 +204,7 @@ public class HotSwappingTimeoutProtectionStrategyTest {
 
     @Test
     public void shouldCoordinateSetPollResponseAfterAwait() throws Exception {
-        ThreadAssertion assertion = expectResponseWithin(100, 300, new Call() {
+        ThreadAssertion assertion = expectResponseWithin(150, 500, new Call() {
 
             @Override
             public void call() throws Exception {
@@ -220,7 +220,7 @@ public class HotSwappingTimeoutProtectionStrategyTest {
     public void shouldCoordinateConsumePollResponseBeforeAwait() throws Exception {
         this.realRequestCoordinator.setPollResponse(this.response);
         this.realRequestCoordinator.consumePollResponse();
-        ThreadAssertion assertion = expectResponseWithin(0, 300, new Call() {
+        ThreadAssertion assertion = expectResponseWithin(0, 500, new Call() {
 
             @Override
             public void call() throws Exception {
@@ -233,7 +233,7 @@ public class HotSwappingTimeoutProtectionStrategyTest {
     @Test
     public void shouldCoordinateConsumePollResponseAfterAwait() throws Exception {
         this.realRequestCoordinator.setPollResponse(this.response);
-        ThreadAssertion assertion = expectResponseWithin(10, 300, new Call() {
+        ThreadAssertion assertion = expectResponseWithin(50, 500, new Call() {
 
             @Override
             public void call() throws Exception {
@@ -248,7 +248,7 @@ public class HotSwappingTimeoutProtectionStrategyTest {
     @Test
     public void shouldCoordinateCleanupBeforeAwait() throws Exception {
         this.realRequestCoordinator.finish();
-        ThreadAssertion assertion = expectResponseWithin(0, 100, new Call() {
+        ThreadAssertion assertion = expectResponseWithin(0, 500, new Call() {
 
             @Override
             public void call() throws Exception {
@@ -260,7 +260,7 @@ public class HotSwappingTimeoutProtectionStrategyTest {
 
     @Test
     public void shouldCoordinateCleanupAfterAwait() throws Exception {
-        ThreadAssertion assertion = expectResponseWithin(100, 300, new Call() {
+        ThreadAssertion assertion = expectResponseWithin(50, 500, new Call() {
 
             @Override
             public void call() throws Exception {

@@ -111,9 +111,9 @@ public class ReplayingTimeoutProtectionStrategyTest {
         monitorFactory.getMonitor().sendError(100);
         TimedPollThread timedPollThread = new TimedPollThread();
         timedPollThread.start();
-        Thread.sleep(10);
+        Thread.sleep(100);
         this.strategy.afterRequest(this.request, monitorFactory);
-        timedPollThread.assertTime(10, 40);
+        timedPollThread.assertTime(90, 400);
     }
 
     @Test
