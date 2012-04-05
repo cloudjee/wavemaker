@@ -1247,7 +1247,7 @@ background-position:50% 50%;
 cursor: pointer;
 }
 
-.dojoxGridCell{ 
+.dojoxGridCell, .wmlist-cell { 
    word-wrap: break-word; 
 } 
 
