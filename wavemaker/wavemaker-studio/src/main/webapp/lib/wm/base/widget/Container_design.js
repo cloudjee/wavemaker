@@ -172,14 +172,14 @@ wm.Container.extend({
 		var height = this.bounds.h;
 		if (preferredHeight > height) {
 		    if (!this._percEx.h) {
-			this.setHeight(preferredHeight + "px");
+			this.set_height(preferredHeight + "px");
 		    } else {
 			if (this.parent && this.parent instanceof wm.Container && this.parent instanceof wm.Layout == false) {
 			    this.parent.designResizeForNewChild(layoutKind);
 			}
 		    }
 		} else if (reduceSize && !this._percEx.h) {
-		    this.setHeight(preferredHeight + "px");
+		    this.set_height(preferredHeight + "px");
 		}
 
 
