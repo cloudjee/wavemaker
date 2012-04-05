@@ -91,6 +91,7 @@ dojo.declare("wm.Label", wm.Control, {
 		//this.doAutoSize();
 	},
 	setCaption: function(inCaption) {
+	    if (inCaption == undefined) inCaption = "";
             var innerHTML = this.sizeNode.innerHTML;
 	    if (inCaption && dojo.isArray(inCaption))
 		inCaption = inCaption.join(', ');
