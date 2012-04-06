@@ -12,9 +12,9 @@
  *  limitations under the License.
  */
 {
-    MENU: "Menu on Left",
-    TRADITIONAL: "Traditional",
+    MENU: "Grid on Left",
+    TRADITIONAL: "Grid on Top",
     DIALOG: "Dialog",
     GRID: "Editable Grid",
-    BREADCRUMB: "Breadcrumb Layers"
+    BREADCRUMB: "Breadcrumbs"
 }

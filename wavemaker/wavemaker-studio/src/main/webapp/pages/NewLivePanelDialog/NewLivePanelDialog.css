@@ -18,14 +18,19 @@
 .NewLivePanelDialog  .SelectableTemplate .wmpicture{
         background-repeat: no-repeat;
 }
+
+/* Not selected, not hovered */
 .NewLivePanelDialog .SelectableTemplate {
         -moz-box-shadow: 2px 2px 4px #333333;
         -webkit-box-shadow: 2px 2px 4px #333333; 
         box-shadow: 2px 2px 4px #333333;
-        opacity: 0.6;
+        background-color: #cccccc;
+}
+.NewLivePanelDialog .SelectableTemplate .wmpicture {
         background-color: #dddddd;
 }
 
+/* Hovered */
 .NewLivePanelDialog .SelectableTemplate:hover,
 .NewLivePanelDialog .SelectableTemplate.Selected:hover {
         -moz-box-shadow: 0px 0px 1px #333333;
@@ -33,21 +38,29 @@
         box-shadow: 0px 0px 1px #333333;
         cursor: pointer;
 }
-.NewLivePanelDialog .SelectableTemplate:hover {
-        opacity: 1.0;
+
+.NewLivePanelDialog .SelectableTemplate:hover .wmpicture {
         background-color: #eeeeee;
 }
 
+/* Selected */
+.NewLivePanelDialog .SelectableTemplate.Selected:hover .wmpicture,
+.NewLivePanelDialog .SelectableTemplate.Selected .wmpicture {
+    background-color: white;
+}
 
 .NewLivePanelDialog .SelectableTemplate.Selected{
-        background-color: #ffffff;
+        background-color: #444;
         -moz-box-shadow: 0px 0px 0px #333333;
         -webkit-box-shadow: 0px 0px 0px #333333; 
         box-shadow: 0px 0px 0px #333333;
-        opacity: 1.0;
-/*        background-color: #333388;*/
-}
+/*        opacity: 1.0;*/
 
+}
+.NewLivePanelDialog .NewLivePanelDialog-templatesInsertPanel .SelectableTemplate.Selected .wmlabel {
+    font-weight: bold;
+    color: white;
+}
 .NewLivePanelDialog .NewLivePanelDialog-mainPanel,
 .NewLivePanelDialog .NewLivePanelDialog-mainPanel .wmeditor-caption {
 background-color: "#848c99";
