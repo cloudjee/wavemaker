@@ -915,7 +915,7 @@
 	  * Get the editor properties 
 	  **********************************************************/
 	 var editorProps = this.getDefaultEditorProps(inComponent, inProp, value, this, panel, hashId);	 
-	 editorProps.showing = !isBound;
+	 editorProps.showing = !isBound || inProp.editor == "wm.prop.FieldGroupEditor";
 
 	 if (inProp.editorProps) {
 	     editorProps = dojo.mixin(editorProps, inProp.editorProps);
