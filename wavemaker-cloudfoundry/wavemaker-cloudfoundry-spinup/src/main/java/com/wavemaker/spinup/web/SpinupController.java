@@ -112,14 +112,14 @@ public class SpinupController {
     }
 
     private String performSpinup(LoginCredentialsBean credentials, SharedSecret secret, TransportToken transportToken, HttpServletResponse response) {
-        // String url = SpinupController.this.spinupService.start(secret, credentials.getUsername(), transportToken);
-        // url = url + "?debug"; // FIXME
-        // return url;
+        String url = SpinupController.this.spinupService.start(secret, credentials.getUsername(), transportToken);
+        // Give CloudFoundry some time to start
         try {
-            Thread.sleep(43000);
+            Thread.sleep(500);
         } catch (InterruptedException e) {
         }
-        return "http://www.google.com";
+        url = url + "?debug"; // FIXME make this an option ?
+        return url;
     }
 
     private SharedSecret getSecret(HttpServletRequest request) {
