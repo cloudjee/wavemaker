@@ -46,16 +46,28 @@ wm.OneToMany.extend({
 
 	/* Step 2: Match that fieldName to the related object's relationship definitions because we need the name of the related object's relationship
 	 * to delete that relationship.*/
-	def = studio.dataService.requestSync("getRelated", [service, this.dataSet.type.replace(/^.*\./,"")]);
-	def.addCallback(dojo.hitch(this, function(inData) {
-	    for (var i = 0; i < inData.length; i++) {
-		var relationship = inData[i];
-		var columnNames = relationship.columnNames.join(",");
-		if (columnNames == fieldName && tableName == relationship.tableName  && relationship.cardinality.match(/\-one/)) {
-		    this.relationshipName = relationship.name; // setting this is what all of this set_formField method is all about
-		}
+	if (parentForm && parentForm.type) {
+	    var typeDef = wm.typeManager.getType(parentForm.type);
+	    if (typeDef) {
+		var subtypeDef = typeDef.fields[inField];
 	    }
-	}));
+	    if (subtypeDef) {
+		var subtype = subtypeDef.type;
+	    }
+	    if (subtype) {
+		def = studio.dataService.requestSync("getRelated", [service, subtype.replace(/^.*\./,"")]);
+		def.addCallback(dojo.hitch(this, function(inData) {
+		    for (var i = 0; i < inData.length; i++) {
+			var relationship = inData[i];
+			var columnNames = relationship.columnNames.join(",");
+			if (columnNames == fieldName && tableName == relationship.tableName  && relationship.cardinality.match(/\-one/)) {
+			    this.relationshipName = relationship.name; // setting this is what all of this set_formField method is all about
+			}
+		    }
+		}));
+	    }
+	}
+
     }
 });
 
