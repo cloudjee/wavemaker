@@ -152,11 +152,11 @@ dojo.declare("wm.FormPanel", wm.Container, {
 	this.captionPosition = pos;
 
 	if ((oldPos == "left" || oldPos == "right") && (pos == "bottom" || pos == "top")) {
-	    if (this.editorHeight.match(/px/) && parseInt(this.editorHeight) < 48)
-		this.editorHeight = "48px";
+	    if (this.editorHeight.match(/px/) && parseInt(this.editorHeight) < 54)
+		this.editorHeight = "54px";
 	    this.captionSize = "28px";
 	} else if ((pos == "left" || pos == "right") && (oldPos == "bottom" || oldPos == "top")) {
-	    if (this.editorHeight.match(/px/) && parseInt(this.editorHeight) >= 48)
+	    if (this.editorHeight.match(/px/) && parseInt(this.editorHeight) >= 54)
 		this.editorHeight = wm.AbstractEditor.prototype.height;
 	    
 	    if (this.captionSize.match(/px/) && parseInt(this.captionSize) < 100) {
@@ -482,11 +482,13 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 	if (!data) data = {};
 	var editors = this.getEditorsArray();
 	dojo.forEach(editors, dojo.hitch(this, function(e) {
-	    /* If we have a form inside of this form, call populateEditors on it */
-
-                if (wm.Lookup && e instanceof wm.Lookup && (!e.dataSet || !e.dataSet.type)) 
+	    if (wm.OneToMany && e instanceof wm.OneToMany) {
+		e.setDataSet(this.dataSet.getValue(e.formField));
+	    } else {
+		if (wm.Lookup && e instanceof wm.Lookup && (!e.dataSet || !e.dataSet.type)) 
                     e.setAutoDataSet(e.autoDataSet);
 		wm.fire(e, "setDataValue", [e.formField && data ? data[e.formField] : data]);
+	    }
 	    
 	}));
 	dojo.forEach(this.getRelatedEditorsArray(), dojo.hitch(this, function(e) {
