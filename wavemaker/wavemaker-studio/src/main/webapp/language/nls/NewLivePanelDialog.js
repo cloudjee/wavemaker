@@ -16,5 +16,6 @@
     TRADITIONAL: "Grid on Top",
     DIALOG: "Dialog",
     GRID: "Editable Grid",
-    BREADCRUMB: "Breadcrumbs"
+    BREADCRUMB: "Breadcrumbs",
+    LIVEVARIABLE: "LiveVariable"
 }
