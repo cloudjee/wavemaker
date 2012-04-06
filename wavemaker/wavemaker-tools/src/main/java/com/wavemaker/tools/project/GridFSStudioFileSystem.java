@@ -355,6 +355,8 @@ public class GridFSStudioFileSystem extends AbstractStudioFileSystem {
         if (resourcePath.getParent() == null) {
             return null;
         }
-        return new GFSResource(this.rootFolder, resourcePath.getParent().toString());
+        String path = resourcePath.getParent().toString();
+        path = path.substring(path.length()-1).equals("/") ? path : path + "/";
+        return new GFSResource(this.rootFolder, path);
     }
 }
