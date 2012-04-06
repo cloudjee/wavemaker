@@ -30,7 +30,7 @@ dojo.declare("NewLivePanelDialog", wm.Page, {
 				       img: "images/GridLiveFormBreadcrumbs.png"},
 				      {name: this.getDictionaryItem("GRID"),
 				       img: "images/GridLiveFormEditable.png"},
-	                              {name: "LiveVariable",
+	                              {name: this.getDictionaryItem("LIVEVARIABLE"),
 				       img:""},];
 	
         var i = 0; 
