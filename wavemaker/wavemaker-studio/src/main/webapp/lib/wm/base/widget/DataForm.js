@@ -189,7 +189,7 @@ dojo.declare("wm.FormPanel", wm.Container, {
     setEditorHeight: function(inEditorHeight) {
 	this.editorHeight = inEditorHeight;
 	dojo.forEach(this.getEditorsArray(), function(e) {
-	    e.setHeight(inEditorHeight);
+	    e.setValue("height",inEditorHeight);
 	});
     },
 
@@ -313,10 +313,19 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 	this.inherited(arguments);
 	if (wm.pasting)
 	    wm.fire(this, "designPasted");
-	if (!this.generateInputBindings)
+	if (!this.generateInputBindings) {
 	    this.populateEditors();
+	    var editors = this.getEditorsArray();
+	    dojo.forEach(editors, function(e) {
+		e.connect(e, "onchange", this, "_onEditorChange");
+	    }, this);
+	}
     },
-
+    _onEditorChange: function() {
+	if (!this._inDataSet) {
+	    this.populateDataOutput();
+	}
+    },
     _setReadonly: function(inReadonly, inCanChangeFunc) {
 	this.inherited(arguments);
 	dojo.forEach(this.getRelatedEditorsArray(), function(e) {
@@ -358,41 +367,48 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 	 return;	
 	 }*/
 
-	if (this.doConfirmChangeOnDirty(inDataSet))
-	    return;
+	this._inDataSet = true;
+	try {
+	    if (this.doConfirmChangeOnDirty(inDataSet))
+		return;
 
-	if (inDataSet) {
-	    this.onDataSetChanging(inDataSet.getCursorItem().getData());
-	}
+	    if (inDataSet) {
+		this.onDataSetChanging(inDataSet.getCursorItem().getData());
+	    }
 
-	/* It used to be we'd pass in the entire dataSet, and then the developer could use the cursor to edit different items 
-	 * in the dataSet.  But that was when this.dataSet == page.liveVariable1; instead we are copying all of the data from
-	 * page.liveVariable1 INTO this.dataSet, and we don't need to copy 500 items to edit just the one item.
-	 */
-	this.dataSet.setDataSet(inDataSet ? inDataSet.getCursorItem() : null);
-	if (inDataSet && this.dataOutput.type != inDataSet.type)
-	    this.dataOutput.setType(this.dataSet.type);
+	    /* It used to be we'd pass in the entire dataSet, and then the developer could use the cursor to edit different items 
+	     * in the dataSet.  But that was when this.dataSet == page.liveVariable1; instead we are copying all of the data from
+	     * page.liveVariable1 INTO this.dataSet, and we don't need to copy 500 items to edit just the one item.
+	     */
+	    this.dataSet.setDataSet(inDataSet ? inDataSet.getCursorItem() : null);
+	    if (inDataSet && this.dataOutput.type != inDataSet.type)
+		this.dataOutput.setType(this.dataSet.type);
 
-	/* Get the current wm.Variable item */
-	var d = this.dataSet;
-	
-	/* Disable binding and onchange events, put data in the editors and then reenable bindings/change events */
-	if (!this.generateInputBindings) {
-	    this.beginEditUpdate();
-	    this.populateEditors();
-	    this.endEditUpdate();
-	    this.liveFormChanged();
+	    /* Get the current wm.Variable item */
+	    var d = this.dataSet;
+	    
+	    /* Disable binding and onchange events, put data in the editors and then reenable bindings/change events */
+	    if (!this.generateInputBindings) {
+		this.beginEditUpdate();
+		this.populateEditors();
+		this.endEditUpdate();
+		this.liveFormChanged();
+	    }
+	    
+	    /* The outputData is the value of all of the editors; at the time of setDataSet, the outputData is either the same
+	     * as inDataSet, or its an item from inDataSet... until the user starts making changes
+	     */
+	    if (!this.generateOutputBindings) {
+		this.dataOutput.setData(d);
+	    }
+	    this.valueChanged("noDataSet", this.noDataSet = d.isEmpty());
+	    this.onDataSetChanged(this.dataSet.getData());
+	} catch(e) {
+	} finally {
+	    delete this._inDataSet;
 	}
-	
-	/* The outputData is the value of all of the editors; at the time of setDataSet, the outputData is either the same
-	 * as inDataSet, or its an item from inDataSet... until the user starts making changes
-	 */
-	if (!this.generateOutputBindings) {
-	    this.dataOutput.setData(d);
-	}
-	this.updateNoDataSet(d.getData());
-	this.onDataSetChanged(this.dataSet.getData());
     },
+/*
     updateNoDataSet: function(inData) {
 	if (!inData) {
 	    this.valueChanged("noDataSet", this.noDataSet = true);
@@ -412,6 +428,7 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 	    this.valueChanged("noDataSet", this.noDataSet = false);
 	}
     },
+    */
     onDataSetChanged: function(inData) {},
     onDataSetChanging: function(inData) {},
 
@@ -644,7 +661,9 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 	if (!this.setReadonlyOnPrimaryKeys) return true;
 
 	/* This test currently only supported for LiveVariables */
-	if (wm.isInstanceType(inEditor, wm.AbstractEditor) && inEditor.formField && this.serviceVariable instanceof wm.LiveVariable) {
+	var typeDef = wm.typeManager.getType(this.type);
+	var isLiveType = typeDef && typeDef.liveService;
+	if (wm.isInstanceType(inEditor, wm.AbstractEditor) && inEditor.formField && isLiveType) {
 	    var formField = inEditor.formField;
 	    var type = inForm.type;
 	    var typeDef = wm.typeManager.getType(type) ;
@@ -1175,20 +1194,22 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 	 * currently the server does not support updates on composite primary keys, such entries must be deleted and reinserted.
 	 * Check to see if its dirty and in need of reinsertion.
 	*/
-	var isDirty = false;
+	var isDirtySubForm = false;
 	if (this.operation == "update") {
 	    var subforms = this.getRelatedEditorsArray();
 	    dojo.forEach(subforms, dojo.hitch(this, function(form) {
 		if (form.getIsDirty()) {
-		    isDirty = true;
+		    isDirtySubForm = true;
 		}
 	    }));
 	}
 
 	this.setServerParams(data);
-	if (!isDirty) {
+
+    	if (!isDirtySubForm) {
 	    this.serviceVariable.update();
 	} else {
+	    /* Can't update forms with composite IDs; delete the current entry, and then insert a new entry */
 	    this._disableEventHandling = true;
 	    this.serviceVariable.setOperation("delete");
 	    this.serviceVariable.sourceData.setData(this.dataSet); // delete the original dataset
@@ -1210,6 +1231,7 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 		    });
 		}));
 	}
+
     },
     setServerParams: function(inData) {
 	this.serviceVariable.sourceData.setData(inData);
