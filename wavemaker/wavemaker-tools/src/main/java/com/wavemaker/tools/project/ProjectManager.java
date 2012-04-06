@@ -185,9 +185,11 @@ public class ProjectManager {
             InputStream propsStream = applicationPropertiesFile.getContent().asInputStream();
             try {
                 applicationProperties.load(propsStream);
-                tenantFieldName = applicationProperties.getProperty(DataServiceConstants.TENANT_FIELD_PROPERTY_NAME);
-                defaultTenantID = Integer.parseInt(applicationProperties.getProperty(DataServiceConstants.DEFAULT_TENANT_ID_PROPERTY_NAME));
-                tenantColumnName = applicationProperties.getProperty(DataServiceConstants.TENANT_FIELD_PROPERTY_NAME);
+                tenantFieldName = applicationProperties.getProperty(DataServiceConstants.TENANT_FIELD_PROPERTY_NAME,
+                        DataServiceConstants.DEFAULT_TENANT_FIELD);
+                defaultTenantID = Integer.parseInt(applicationProperties.getProperty(DataServiceConstants.DEFAULT_TENANT_ID_PROPERTY_NAME,
+                        DataServiceConstants.DEFAULT_TENANT_ID + ""));
+                tenantColumnName = applicationProperties.getProperty(DataServiceConstants.TENANT_FIELD_PROPERTY_NAME, "");
             } finally {
                 propsStream.close();
             }

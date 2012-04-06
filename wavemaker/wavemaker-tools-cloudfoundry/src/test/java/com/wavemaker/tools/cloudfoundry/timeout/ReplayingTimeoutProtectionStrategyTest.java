@@ -126,7 +126,7 @@ public class ReplayingTimeoutProtectionStrategyTest {
 
     @Test
     public void shouldNotTimeoutEarly() throws Exception {
-        this.strategy.setLongPollTime(100);
+        this.strategy.setLongPollTime(200);
         TimedPollThread timedPollThread = new TimedPollThread();
         timedPollThread.start();
         // Complete a second request to trigger notify
@@ -134,7 +134,7 @@ public class ReplayingTimeoutProtectionStrategyTest {
         monitorFactory.getMonitor();
         this.strategy.afterRequest(this.secondRequest, monitorFactory);
         // Poll should not return early
-        timedPollThread.assertTime(100, 200);
+        timedPollThread.assertTime(190, 400);
     }
 
     private class TimedPollThread extends Thread {
