@@ -90,7 +90,7 @@ wm.AbstractEditor.extend({
 		this.setCaptionAlign(liveform.captionAlign);
 		this.setCaptionSize(liveform.captionSize);
 		if (this.height == wm.AbstractEditor.prototype.height)
-		    this.setHeight(liveform.editorHeight);
+		    this.setValue("height",liveform.editorHeight);
 		if (this.width == wm.AbstractEditor.prototype.width)
 		    this.setWidth(liveform.editorWidth);
 
