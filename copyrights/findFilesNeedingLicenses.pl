@@ -91,3 +91,6 @@ if (-d $folder) {
 
 
 print("FOREIGN COPYRIGHTS:\n" . join("\n", @FOREIGN));
+
+
+print("\n\nTo scan the results, use\ngit diff |grep '^+'  | grep -v '^+++' |grep -v '^+ \*' |grep -v '^+/\*'\ngit diff | grep '^-'  |grep -v '^---'|grep -v '^- \*'\n");
