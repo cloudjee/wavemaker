@@ -353,13 +353,13 @@ wm.Object.extendSchema(wm.DataForm, {
 
     /* Editor group */
     dataOutput: {group: "widgetName", subgroup: "",  order: 3, readonly: 1, bindable: 1, advanced:1,  type: "wm.Variable", simpleBindProp: true, editor: "wm.prop.FieldGroupEditor"},
-    dataSet:    {group: "widgetName", subgroup: "", order: 2, readonly: 1, bindTarget: 1, type: "wm.Variable", editor: "wm.prop.DataSetSelect"},
+    dataSet:    {group: "widgetName", subgroup: "", order: 2, readonly: 1, bindTarget: 1, requiredGroup: 1, type: "wm.Variable", editor: "wm.prop.DataSetSelect"},
 
     /* Editor group; behavior subgroup */
     confirmChangeOnDirty:    {group: "widgetName", subgroup: "behavior", order: 100, advanced:1},
     setReadonlyOnPrimaryKeys:{group: "widgetName", subgroup: "behavior", order: 101, advanced:1},
-    generateInputBindings:   {group: "widgetName", subgroup: "behavior", order: 200, advanced:1},
-    generateOutputBindings:  {group: "widgetName", subgroup: "behavior", order: 201, advanced:1},
+    generateInputBindings:   {group: "widgetName", subgroup: "behavior", order: 200, advanced:1, ignore: 1},
+    generateOutputBindings:  {group: "widgetName", subgroup: "behavior", order: 201, advanced:1, ignore: 1},
 
 
     /* Operations gropu */
@@ -562,7 +562,8 @@ wm.DataForm.extend({
 	},
 
 	addEditorToForm: function(inEditor) {
-		var e = inEditor, ff = e.formField && this.getViewDataIndex(e.formField || "");
+	    var e = inEditor;
+	    var ff = e.formField && this.getViewDataIndex(e.formField || "");
 		if (ff) {
                     if (wm.isInstanceType(e, wm.DataForm))
 			var f = this.addEditorToView(e, ff);
