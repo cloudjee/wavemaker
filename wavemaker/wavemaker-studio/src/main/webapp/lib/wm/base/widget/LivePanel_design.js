@@ -51,7 +51,7 @@ wm.LivePanel.extend({
 			studio.beginWait(studio.getDictionaryItem("wm.LivePanel.WAIT_GENERATING"));
 			wm.onidle(this, function() {
 			    switch(inName) {
-			    case "wm.LiveVariable":
+			    case studio.LivePanelTypeChooserDialog.page.getDictionaryItem("LIVEVARIABLE"):
 				var lvar = this.createLiveSource(this.liveSource);
 				studio.select(lvar);
 				studio.endWait();
