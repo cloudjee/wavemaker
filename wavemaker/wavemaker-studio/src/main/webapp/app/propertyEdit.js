@@ -1075,11 +1075,14 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
     restrictValues: false,
     displayField: "name",
     dataField: "dataValue",*/
-/*
     setEditorValue: function(inValue) {
-	this.inherited(arguments);
+	if (this.isDestroyed) {
+	    this.dataValue = inValue;
+	    this.onchange();
+	} else {
+	    this.inherited(arguments);
+	}
     },
-    */
     _createEditor: function(inNode, inProps) {
 	var e =  new wm.prop.EventDijit(this.getEditorProps(inNode, inProps));
 	e.owner = this;
@@ -1457,8 +1460,10 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 			    addToArray.push(formSubmenu);
 			    formSubmenu.children.push({label: cname + ".editNewObject", onClick: dojo.hitch(this, "setEditorValue", rname + ".editNewObject")});
 			    formSubmenu.children.push({label: cname + ".editCurrentObject", onClick: dojo.hitch(this, "setEditorValue", rname + ".editCurrentObject")});
-			    formSubmenu.children.push({label: cname + ".saveData", onClick: dojo.hitch(this, "setEditorValue", rname + ".saveData")});
-			    formSubmenu.children.push({label: cname + ".deleteData", onClick: dojo.hitch(this, "setEditorValue", rname + ".deleteData")});
+			    if (obj instanceof wm.DBForm) {
+				formSubmenu.children.push({label: cname + ".saveData", onClick: dojo.hitch(this, "setEditorValue", rname + ".saveData")});
+				formSubmenu.children.push({label: cname + ".deleteData", onClick: dojo.hitch(this, "setEditorValue", rname + ".deleteData")});
+			    }
 			    formSubmenu.children.push({label: cname + ".cancelEdit", onClick: dojo.hitch(this, "setEditorValue", rname + ".cancelEdit")});
                         } else {
 			    addToArray.push({defaultLabel: cname,  onClick: dojo.hitch(this, "setEditorValue", rname)});
