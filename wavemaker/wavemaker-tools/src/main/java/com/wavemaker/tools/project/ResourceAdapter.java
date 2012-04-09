@@ -59,12 +59,20 @@ public class ResourceAdapter implements org.springframework.core.io.Resource, Wr
 
     @Override
     public InputStream getInputStream() throws IOException {
+        checkFileExists();
         return this.rootFolder.getFile(this.path).getContent().asInputStream();
     }
 
     @Override
     public OutputStream getOutputStream() throws IOException {
+        checkFileExists();
         return this.rootFolder.getFile(this.path).getContent().asOutputStream();
+    }
+
+    private void checkFileExists() throws FileNotFoundException {
+        if (!exists()) {
+            throw new FileNotFoundException(this.path);
+        }
     }
 
     @Override
