@@ -304,6 +304,7 @@ wm.Control.extend({
 	p.autoSizeWidth.ignoretmp = (!this.isSizeable() && !this.autoSizeWidth) || (this.schema.autoSizeWidth && this.schema.autoSizeWidth.ignore);
 	p.autoSizeHeight.ignoretmp = (!this.isSizeable() && !this.autoSizeHeight) || (this.schema.autoSizeHeight && this.schema.autoSizeHeight.ignore);
         p.minWidth.ignoretmp = !this.schema.minWidth || this.schema.minWidth.ignore || (!this._percEx.w && !this.autoSizeWidth); // minWidth only applies if width is % or autosize is on
+        p.minHeight.ignoretmp = !this.schema.minHeight || this.schema.minHeight.ignore || (!this._percEx.h && !this.autoSizeHeight); // minWidth only applies if width is % or autosize is on
 	//p.width.ignore = p.width.writeonly = !this.isSizeable() || !this.canSetWidth();
 	//p.height.ignore = p.height.writeonly = !this.isSizeable() || !this.canSetHeight();
 	p.width.ignoretmp = p.width.writeonly = this.schema.width.ignore || !this.isSizeable() || this.autoSizeWidth;
