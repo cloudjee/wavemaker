@@ -199,7 +199,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			    _this.dojoObj.scrollToRow(idx);
 			    wm.onidle(_this, function() {
 				this._cupdating = true; // don't trigger events since we're actually reselecting the same value that was already selected
-				this.setSelectedRow(idx);
+				try {
+				    this.setSelectedRow(idx);
+				} catch(e) {}
 				this._cupdating = false; 
 			    });
 			},0);
@@ -883,7 +885,13 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		    wm.onidle(this, "renderDojoObj");
 		}
 	    },
-
+    setShowing: function(inShowing) {
+	var wasShowing = this.showing;
+	this.inherited(arguments);
+	if (!wasShowing && inShowing) {
+	    this._onShowParent();
+	}
+    },
 	connectDojoEvents: function(){
 		//dojo.connect(this.dojoObj, 'onCellClick', this, 'onCellClick');
 
@@ -1124,7 +1132,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 					fieldType:col.fieldType == "dojox.grid.cells._Widget" && col.editorProps && col.editorProps.regExp ? "dojox.grid.cells.ValidationTextBox" : col.fieldType,
 					widgetProps: col.editorProps,
 					options: typeof options == "string" ? options.split(/\s*,\s*/) : options,
-					editable:col.editable || col.fieldType, // col.editable is obsolete
+				        editable:show && (col.editable || col.fieldType), // col.editable is obsolete.  While users may like to hide/show columns with editors, a hidden column of editors breaks tabbing from editor to editor.
 					expression:col.expression, 					
 					displayType:col.displayType};
 		    if (obj.widgetProps) {
