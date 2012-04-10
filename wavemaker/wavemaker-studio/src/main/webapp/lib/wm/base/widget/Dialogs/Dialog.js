@@ -360,7 +360,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    this.dialogScrim.setShowing(this.modal);
 	    wm.bgIframe.setShowing(!this.modal && !this.isDesignedComponent());
 	}
-	this.titleButtonPanel.setShowing(!this.modal && !this.docked);
+	this.titleButtonPanel.setShowing(!this.modal && (!this.docked || this.showTitleButtonsWhenDocked));
     },
     setNoEscape: function(inNoEscape) {
 	this.noEscape = inNoEscape;
@@ -1060,7 +1060,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 					layoutKind: "left-to-right",
 					horizontalAlign: "left",
 					verticalAlign: "top",
-					showing: !this.modal && !this.docked
+					showing: !this.modal && (!this.docked  || this.showTitleButtonsWhenDocked)
 				       });
 	if (wm.isMobile) {
 	    this.menuButton = new wm.MobileIconButton({
@@ -1236,10 +1236,8 @@ dojo.declare("wm.Dialog", wm.Container, {
 
 		if (leftTarget - 12 <= this.bounds.l && leftTarget + 12 >= this.bounds.l) {
 		    this._dragBorderX = "left";
-		    console.log("LEFT");
 		} else if (rightTarget - 12 <= this.bounds.r && rightTarget + 12 >= this.bounds.r) {
 		    this._dragBorderX = "right";
-		    console.log("RIGHT");
 		} else {
 		    this._dragBorderX = "";
 		}
@@ -1281,7 +1279,6 @@ dojo.declare("wm.Dialog", wm.Container, {
 	},
 	drag: function(inDx, inDy) {
 	    this._userSized = true;
-	    //console.log(inDx);
 	    if (this._dragBorderX == "left") {
 		this.setBounds(this._initialPosition.l + inDx, NaN, this._initialPosition.w - inDx, NaN);
 	    } else if (this._dragBorderX == "right") {
