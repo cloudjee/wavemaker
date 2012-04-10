@@ -261,7 +261,10 @@ dojo.declare("wm.PageContainer", wm.Control, {
 
 	    if (this.subpageProplist) {
 		for (var propName in this.subpageProplist) {
+		    var v = this[propName];
+		    if (v !== undefined) {
 			this.setProp(propName, this[propName]);
+		    }
 		}
 	    }
 
