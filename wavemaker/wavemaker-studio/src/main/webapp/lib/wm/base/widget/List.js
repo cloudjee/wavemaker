@@ -417,7 +417,13 @@ dojo.declare("wm.List", wm.VirtualList, {
 		    wm.onidle(this, "_render");
 		}
 	    },
-
+    setShowing: function(inShowing) {
+	var wasShowing = this.showing;
+	this.inherited(arguments);
+	if (!wasShowing && inShowing) {
+	    this._onShowParent();
+	}
+    },
 	renderData_optimized: function(inData) {
 /*
 	    if (this.columns && (this.selectionMode == "checkbox" || this.selectionMode == "radio")) {
