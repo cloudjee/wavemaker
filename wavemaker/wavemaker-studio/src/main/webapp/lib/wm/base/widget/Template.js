@@ -55,6 +55,7 @@ wm.Template.extend({
     // block wm.Panel's afterPaletteDrop
     afterPaletteDrop: function() {
         wm.Container.prototype.afterPaletteDrop.call(this); 
+	this.desktopHeight = this.height; // changed by Control_design.afterPaletteDrop
     }
 });
 wm.Template.description = "A set of built from a template.";
