@@ -510,7 +510,7 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 	}));
 	dojo.forEach(this.getRelatedEditorsArray(), dojo.hitch(this, function(e) {
 	    if (!this._operationSucceeded) {
-		e.setDataSet(data[e.formField]);
+		e.setDataSet(this.dataSet.getValue(e.formField)); // requires a wm.Variable, not a generic Object
 	    }
 	}));
     },
@@ -546,8 +546,10 @@ dojo.declare("wm.DataForm", wm.FormPanel, {
 	    d.setValue(subform.formField, subform.dataOutput);
 	}));
 
-	var wires = this.$.binding.findWires(function(wire) {return (wire.targetProperty == "dataOutput" || wire.targetProperty.indexOf("dataOutput.") == 0);});
-	dojo.forEach(wires, function(wire) { wire.refreshValue();});
+	if (this.$.binding) {
+	    var wires = this.$.binding.findWires(function(wire) {return (wire.targetProperty == "dataOutput" || wire.targetProperty.indexOf("dataOutput.") == 0);});
+	    dojo.forEach(wires, function(wire) { wire.refreshValue();});
+	}
         return this.dataOutput;
     },
 
@@ -1320,7 +1322,7 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 
 	    /* The dataSet should be updated with the new data.  Among other things, this means that when we add a new item,
 	     * a grid can select it */
-	    if (this.$.binding.wires.dataSet) {
+	    if (this.$.binding && this.$.binding.wires.dataSet) {
 		/* Get the component that is our dataSet */
 		var originalDataSet = this.owner.getValueById(this.$.binding.wires.dataSet.source);
 
