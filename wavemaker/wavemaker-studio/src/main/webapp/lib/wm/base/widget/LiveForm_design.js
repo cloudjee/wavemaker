@@ -331,7 +331,7 @@ wm.LiveFormBase.extend({
 			    e.setWidth(this.editorWidth);
                         else 
                             e.setWidth("100%"); // because its going to be 100% anyway so why confuse the user?
-			e.setHeight(this.editorHeight);
+			e.set_height(this.editorHeight);
 			//console.log(this.name, "createEditor", arguments, e);
 			return e;
 		}
@@ -692,7 +692,7 @@ wm.LiveForm.extend({
 			    this.finishAddEditors(); // LiveFormBase.addEditors	calls this as well
 			}
 		        if (this.fitToContentHeight)
-                            this.setHeight("500px"); // assuming fitToContentHeight is enabled, this will ignore the 500px and set to the preferred fitToContentHeight.
+                            this.set_height("500px"); // assuming fitToContentHeight is enabled, this will ignore the 500px and set to the preferred fitToContentHeight.
 			studio.select(null);
 			studio.select(this);
 
@@ -777,7 +777,7 @@ wm.LiveForm.extend({
 		    e.set_liveForm(this.getId());
 		}
 	    }
-            this.setHeight("500px"); // assuming fitToContentHeight is enabled, this will ignore the 500px and set to the preferred fitToContentHeight.
+            this.set_height("500px"); // assuming fitToContentHeight is enabled, this will ignore the 500px and set to the preferred fitToContentHeight.
 
 	},
 	isFormFieldInForm: function(ff){
