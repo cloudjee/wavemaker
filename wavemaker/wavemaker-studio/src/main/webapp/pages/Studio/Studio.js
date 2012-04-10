@@ -1750,8 +1750,8 @@ dojo.declare("Studio", wm.Page, {
 	this.setCleanPage();
 	studio.inspector.reinspect();
     },
-    pageSelectChanged: function(inSender, optionalPageName) {
-	if (!studio.page || this.disabledPageSelectChanged) return;
+    pageSelectChanged: function(inSender, optionalPageName, inDataValue, inSetByCode) {
+	if (!studio.page || this.disabledPageSelectChanged || inSetByCode) return;
 	var page = optionalPageName || inSender.getDataValue();
 	if (page == this.project.pageName || !page) return;
 
