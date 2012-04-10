@@ -249,6 +249,13 @@ wm.Layers.extend({
             case "Layers":
                 newClass = "wm.Layers";
                 break;
+            case "Breadcrumb":
+                newClass = "wm.BreadcrumbLayers";
+                break;
+            case "Wizard":
+                newClass = "wm.WizardLayers";
+                break;
+
             }
             var widgetsjs = this.write("");
             widgetsjs = dojo.fromJson(widgetsjs.replace(/^.*?\:/,""));
