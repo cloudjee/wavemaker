@@ -172,12 +172,12 @@ wm.DojoMenu.extend({
 		this.vertical = inValue;
 		if (this.vertical)
 		{
-			this.setHeight('100%');
+			this.set_height('100%');
 			this.setWidth('95px');
 		}
 		else
 		{
-			this.setHeight('35px');
+			this.set_height('35px');
 			this.setWidth('100%');
 		}
 
