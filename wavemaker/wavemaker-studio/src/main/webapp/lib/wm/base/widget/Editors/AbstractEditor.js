@@ -625,10 +625,12 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	if (this.editorChanged()) {
 	    var e = this.editor;
 	    if (!this._loading && !this.isUpdating() && !this.readonly && e && !this.isLoading())
-		this.onchange(this.getDisplayValue(), this.getDataValue());
+		
+
+		this.onchange(this.getDisplayValue(), this.getDataValue(), this._inSetDataValue);
 	}
     },
-    onchange: function(inDisplayValue, inDataValue) {},
+    onchange: function(inDisplayValue, inDataValue, inSetByCode) {},
 	_getValidatorNode: function() {
 		var n = this.editor && this.editor.domNode.firstChild;
 		if (!n)
@@ -849,12 +851,6 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
      * Added to prevent onblur from firing bindings and onchange events if onKeyPress already fired that change.
      */
 	editorChanged: function() {
-	    if (this._inSetDataValue) {
-		this.displayValue = this.getDisplayValue();
-		this.dataValue = this.getDataValue();
-		return false;
-	    }
-
 	    var displayValue = this.getDisplayValue();
 	    var changed = false;
 	    if (this.displayValue != displayValue) {
