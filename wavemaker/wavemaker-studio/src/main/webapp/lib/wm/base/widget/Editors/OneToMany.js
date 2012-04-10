@@ -22,7 +22,7 @@ dojo.declare("wm.OneToMany", wm.ListSet, {
     _multiSelect: false,
     showSearchBar: false,
     dataField: "",
-    autoDataSet: true,
+    //autoDataSet: true,
     startUpdate: true,
     deleteColumn: false,
     noItemsLabel: "No data",
