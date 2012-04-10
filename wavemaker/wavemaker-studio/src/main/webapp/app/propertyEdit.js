@@ -410,7 +410,6 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
 				    width: "100%",
 				    height: "100%",
 				    name: "editor",
-				    disabled: this.disabled,
 				    readonly: this.readonly
 				   });
 	this.numberEditor = new wm.Text({owner: this,
@@ -419,7 +418,6 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
 					   width: "100%",
 					   name: "numberEditor",
 					   padding: "0,1,0,0",
-				    disabled: this.disabled,
 				    readonly: this.readonly
 					  });
 	this.typeEditor = new wm.SelectMenu({owner: this,
@@ -430,7 +428,6 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
 					     displayField: "dataValue",
 					     width: "55px",
 					     padding: "0",
-				    disabled: this.disabled,
 				    readonly: this.readonly
 					    });
 	if (this.pxOnly) {
@@ -467,6 +464,12 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
 	} else {
 	    this.numberEditor.setDataValue(100);
 	    this.typeEditor.setDataValue("px");
+	}
+    },
+    setDisabled: function(inDisabled) {
+	this.inherited(arguments);
+	if (this.editor) {
+	    this.editor.setDisabled(this.disabled);
 	}
     }
 });
@@ -587,7 +590,6 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
 
 
     getDataSets: function(inOwners, matchType) {
-	console.log("getDataSets: " + inOwners[0].toString());
 	    return wm.listMatchingComponentIds(inOwners, dojo.hitch(this, function(c) {
 		if (c instanceof wm.Property) return false;
 
