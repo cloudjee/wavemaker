@@ -74,6 +74,7 @@ wm.OneToMany.extend({
 wm.Object.extendSchema(wm.OneToMany, {
     /* Editor group; value subgroup */
     formField: {editor: "wm.prop.FormFieldSelect", editorProps: {relatedFields: true, oneToMany: true, liveTypes: true}},
+    dataSet: {advanced: 1},
     editorType: {options: ["Lookup", "FilteringLookup", "OneToMany"]},
     showSearchBar: {ignore:1},
     searchBar: {ignore: 1},
