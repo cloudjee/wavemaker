@@ -1066,8 +1066,11 @@ dojo.declare("wm.Application", wm.Component, {
 	    } else {
 		created = true;
 		parentPanel = this._bottomDock = new wm.Panel({owner: this, name: "_bottomDock", width: "100%", height: "100px", border: "0", padding: "", layoutKind: "left-to-right", parent: this.appRoot});
+		if (this.wmMinifiedDialogPanel) {
+		    this.appRoot.moveControl(parentPanel, this.wmMinifiedDialogPanel.getIndexInParent());
+		}
 		this._bottomSplitter = new wm.Splitter({_classes: {domNode: ["docksplitter"]}, owner: this, parent: this.appRoot});
-		this.appRoot.moveControl(this._bottomSplitter,this.appRoot.c$.length-2);
+		this.appRoot.moveControl(this._bottomSplitter,parentPanel.getIndexInParent());
 		this._bottomSplitter.findLayout();
 	    }		
 	    break;
