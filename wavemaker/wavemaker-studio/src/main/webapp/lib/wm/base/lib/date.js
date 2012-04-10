@@ -27,7 +27,7 @@ wm.convertValueToDate = function(inValue, inParams) {
 	{
 		return null;
 	}
-	else if (Number(v))
+        else if (Number(v) || typeof(v) == "number")
 	{
 		return new Date(Number(v));
 	}
