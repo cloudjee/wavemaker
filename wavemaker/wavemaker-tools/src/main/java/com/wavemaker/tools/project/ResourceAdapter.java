@@ -14,7 +14,6 @@
 
 package com.wavemaker.tools.project;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +25,7 @@ import org.springframework.core.io.WritableResource;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourcePath;
@@ -59,20 +59,15 @@ public class ResourceAdapter implements org.springframework.core.io.Resource, Wr
 
     @Override
     public InputStream getInputStream() throws IOException {
-        checkFileExists();
+        if (!exists()) {
+            throw new FileNotFoundException(this.path);
+        }
         return this.rootFolder.getFile(this.path).getContent().asInputStream();
     }
 
     @Override
     public OutputStream getOutputStream() throws IOException {
-        checkFileExists();
         return this.rootFolder.getFile(this.path).getContent().asOutputStream();
-    }
-
-    private void checkFileExists() throws FileNotFoundException {
-        if (!exists()) {
-            throw new FileNotFoundException(this.path);
-        }
     }
 
     @Override
@@ -99,7 +94,7 @@ public class ResourceAdapter implements org.springframework.core.io.Resource, Wr
     public long contentLength() throws IOException {
         Resource resource = this.rootFolder.getExisting(this.path);
         if (resource instanceof File) {
-            return ((File) resource).length();
+            return ((File) resource).getSize();
         }
         throw new FileNotFoundException(getDescription() + " does not refer to a File");
     }
@@ -108,7 +103,7 @@ public class ResourceAdapter implements org.springframework.core.io.Resource, Wr
     public long lastModified() throws IOException {
         Resource resource = getExisting();
         if (resource instanceof File) {
-            return ((File) resource).lastModified();
+            return ((File) resource).getLastModified();
         }
         throw new FileNotFoundException(getDescription() + " cannot be resolved in the file system for resolving its last-modified timestamp");
     }
@@ -140,7 +135,7 @@ public class ResourceAdapter implements org.springframework.core.io.Resource, Wr
     }
 
     @Override
-    public File getFile() throws IOException {
+    public java.io.File getFile() throws IOException {
         throw new UnsupportedOperationException();
     }
 
