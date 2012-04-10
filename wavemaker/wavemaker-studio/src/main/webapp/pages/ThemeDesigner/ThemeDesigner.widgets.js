@@ -47,7 +47,7 @@ ThemeDesigner.widgets = {
 		    }],*/
 		    themeGroupListPanel: ["wm.Panel", {height: "100%", width: "190px", layoutKind: "top-to-bottom", border: "0,4,0,0", borderColor: "black"},{}, {
 			themeGroupListLabel: ["wm.Label", {height: "20px", width: "100%", caption: "Categories"}],
-			themeGroupList: ["wm.List", {height: "100%", width: "100%", dataFields: "name,help", columnWidths: "100%,10px", headerVisible: false}, {onselect: "themegroupselect"}, {
+			themeGroupList: ["wm.List", {height: "100%", width: "100%", columns:[{field: "name", width:"100%", show:true},{field: "help", width:"10px", show: true}], headerVisible: false}, {onselect: "themegroupselect"}, {
 			    binding: ["wm.Binding", {}, {}, {
 				wire: ["wm.Wire", {"targetProperty":"dataSet","source":"themeGroupListVar"}, {}]
 			    }]
@@ -55,7 +55,7 @@ ThemeDesigner.widgets = {
 		    }],
 		    themeSubGroupListPanel: ["wm.Panel", {height: "100%", width: "150px", layoutKind: "top-to-bottom", border: "0,4,0,0", borderColor: "black"},{}, {
                         themeSubGroupListLabel: ["wm.Label", {height: "20px", width: "100%", caption: "Style Group"}],
-                        themeSubGroupList: ["wm.List", {height: "100%", width: "100%", dataFields: "name,help", columnWidths: "100%,10px", headerVisible: false}, {onselect: "themegroupselect"}, {
+                        themeSubGroupList: ["wm.List", {height: "100%", width: "100%", columns:[{field: "name", width:"100%", show:true},{field: "help", width:"10px", show: true}], headerVisible: false}, {onselect: "themegroupselect"}, {
 			    binding: ["wm.Binding", {}, {}, {
 		                wire: ["wm.Wire", {"targetProperty":"dataSet","source":"themeSubGroupListVar"}, {}]
 			    }]
