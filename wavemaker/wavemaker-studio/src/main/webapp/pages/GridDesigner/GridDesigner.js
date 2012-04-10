@@ -62,7 +62,7 @@ dojo.declare("GridDesigner", wm.Page, {
 	this.updateDataSets();
     },
     regenerateMobileColumn: function() {
-	if (this.mobileColumn.getValue("isCustomField")) return;
+	if (!this.mobileColumn || this.mobileColumn.getValue("isCustomField")) return;
 	var mobileExpr = "";
 	var count = this.columnsVar.getCount();
 
