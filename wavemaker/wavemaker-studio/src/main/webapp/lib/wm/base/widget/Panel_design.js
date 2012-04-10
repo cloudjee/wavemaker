@@ -35,7 +35,7 @@ wm.Panel.extend({
 		if (pv)
 			this.setWidth("100%");
 		else
-			this.setHeight("100%");                 
+			this.set_height("100%");                 
 	//        this.setIsRounded(true);
 	}
 
