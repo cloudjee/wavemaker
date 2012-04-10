@@ -33,6 +33,12 @@ wm.Dialog.extend({
 	    studio.designer.domNode.appendChild(this.domNode);
 	    this.show();
 	},
+    listProperties: function() {
+	var p = this.inherited(arguments);
+	p.minHeight.ignoretmp = false; // need these to control docking behavior
+	p.minWidth.ignoretmp = false; // need these to control docking behavior
+	return p;
+    },
     set_owner: function(inOwner) {
 	var oldOwner = this.owner;
 	this.inherited(arguments);
