@@ -42,8 +42,10 @@ dojo.declare("wm.ColorPicker", wm.Text, {
 	wm.getComponentStructure("wm.ColorPickerDialog");
         this.colorPickerDialog = new wm.ColorPickerDialog({owner: this});
         this.colorPickerDialog.connect(this.colorPickerDialog, "onChange", this, function(inValue) {
-	    if (this.colorPickerDialog.showing)
+	    if (this.colorPickerDialog.showing) {
 		this.setDataValue(inValue);
+		this.onchange(inValue,inValue, this._inSetDataValue);
+	    }
         });
         this.colorPickerDialog.connect(this.colorPickerDialog, "onCancel", this, function(inValue) {
             var val = this.getDataValue();
