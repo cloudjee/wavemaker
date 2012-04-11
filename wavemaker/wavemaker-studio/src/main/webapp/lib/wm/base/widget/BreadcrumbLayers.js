@@ -46,7 +46,13 @@ dojo.declare("wm.BreadcrumbLayers", wm.Layers, {
     },
     _setLayerIndex: function(inIndex) {
 	var l = this.layers[inIndex];
-	if (l) l.setShowing(true);
+	if (l && !l.showing) {
+	    l.setShowing(true);
+	    l._isShowing = true;
+	}
 	this.inherited(arguments);
+	if (l) {
+	    delete l._isShowing;
+	}
     }
 });
