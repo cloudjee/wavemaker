@@ -152,7 +152,8 @@ dojo.declare("wm.PercentFormatter", wm.NumberFormatter, {
 // design only...
 
 wm.Object.extendSchema(wm.DataFormatter, {
-	name: { ignore: 1 }
+    name: { ignore: 1 },
+    diagnostics: {ignore:1}
 });
 
 wm.Object.extendSchema(wm.DateTimeFormatter, {
