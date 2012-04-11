@@ -1732,12 +1732,14 @@
 	 }	 
      },
      toggleAdvancedPropertiesSome: function(inSender) {
+	 studio.propertySearchBar.setDataValue("");
 	 dojo.removeClass(studio.togglePropertiesButton2.domNode, "toggleButtonDown");
 	 dojo.addClass(studio.togglePropertiesButton.domNode, "toggleButtonDown");
 	 this.advancedMode = false;
 	 this.inspect(this.inspected, true);
      },
      toggleAdvancedPropertiesAll: function(inSender) {
+	 studio.propertySearchBar.setDataValue("");
 	 dojo.addClass(studio.togglePropertiesButton2.domNode, "toggleButtonDown");
 	 dojo.removeClass(studio.togglePropertiesButton.domNode, "toggleButtonDown");
 	 this.advancedMode = true;
