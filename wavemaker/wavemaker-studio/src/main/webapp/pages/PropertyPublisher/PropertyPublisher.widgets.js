@@ -19,7 +19,7 @@ PropertyPublisher.widgets = {
 	    containerWidget: ["wm.Panel", {"height":"100%","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"100%", padding: "2"}, {}, {
 		mainPanel: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left", border: "1", borderColor: "#333"}, {}, {
 		    treeHeader: ["wm.Label", {width: "100%", caption: "", _classes: {domNode: ["dialogfooter"]}}],
-		    instructionsHtml: ["wm.Html", {padding: "0,3,8,3", width: "100%", height: "40px", autoSizeHeight: true, html: "Each property selected below can be editted in the properties panel of anuy PageContainer that contains this page"}],
+		    instructionsHtml: ["wm.Html", {padding: "0,3,8,3", width: "100%", height: "40px", autoSizeHeight: true, html: "Each property selected below can be editted in the properties panel of any PageContainer that contains this page"}],
 		    tree: ["wm.Tree", {width: "100%", height: "100%"},{oncheckboxclick: "checkboxChange"}]
 		}],
 		listPanel: ["wm.Panel", {width: "250px", height: "100%", layoutKind: "top-to-bottom", verticalAlign: "top", horizontalAlign: "left", border: "1", borderColor: "#333"}, {}, {
