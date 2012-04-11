@@ -133,7 +133,7 @@ Studio.extend({
 	        n.component = this.page;
 	        this.page._studioTreeNode = n;
 
-	    var components  = this.getTreeComponents(this.page.components, [wm.Control, wm.DojoLightbox, wm.Property]);
+	    var components  = this.getTreeComponents(this.page.components, [wm.Control, wm.DojoLightbox, wm.Property, wm.Service]);
 
 		    if (this._searchText) {
 			var _components = {};
@@ -207,7 +207,7 @@ Studio.extend({
 	    var n = this.newTreeNode(inTree.root, "images/project_16t.png", this.getDictionaryItem("MODELTREE_NODE_PROJECT_HEADING", {projectName: studio.project.projectName}));
 	        n.component = n.owner = this.application
 	    //this.application._studioTreeNode = n;
-	    this.excTypes = [wm.Query, wm.LiveView, wm.Control, wm.DojoLightbox];
+	    this.excTypes = [wm.Query, wm.LiveView, wm.Control, wm.DojoLightbox, wm.Property, wm.Service];
 		if (this.application) {
 		    this.otherComps = this.getTreeComponents(this.application.components, this.excTypes);
 		    		    
