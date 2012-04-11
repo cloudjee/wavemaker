@@ -262,6 +262,8 @@ dojo.declare("LiveViewEditor", wm.Page, {
 			showRequired = !isList && inTypeInfo.required && !inTypeInfo.exclude.length,
 			image = inTypeInfo.isList ? "index.png" : (s ? "link.png" : ""),
 			ctor = wm.TreeCheckNode;
+
+	    var isOpen = isRelated || isInView && Boolean(s);
 		var node = new ctor(inNode, { 
 			content: inName + (showRequired ? ' <span class="wmeditor-required">*</span>' : ''), 
 			as: wm.decapitalize(inName),
@@ -278,7 +280,7 @@ dojo.declare("LiveViewEditor", wm.Page, {
 			checked: isInView || isRelated,
 			canAddField: !s,
 			hasChildren: Boolean(s),
-			closed: !isRelated
+		        closed: !isOpen
 		});
 	},
 	//
