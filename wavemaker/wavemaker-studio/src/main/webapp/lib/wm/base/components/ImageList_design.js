@@ -45,21 +45,21 @@ wm.ImageList.extend({
 	var d = this._designPopupDialog;
 	if (!d) {
 	    d = this._designPopupDialog = new wm.Dialog({owner: studio,
-							     name: this.getRuntimeId() + "_designPopupDialog",
-							 width: (this.width + 35) + "px",
-							     height: "400px",
-							     useContainerWidget: true,
-							     modal: false,
-							 noMinify: true,
-							 noMaxify: true,
-							     title: "-"});
+							name: this.getRuntimeId() + "_designPopupDialog",
+							width: (this.width + 35) + "px",
+							height: "400px",
+							useContainerWidget: true,
+							modal: false,
+							noMinify: true,
+							noMaxify: true,
+							title: " "});
 	    d.containerWidget.setPadding("0");
 	    dojo.addClass(d.domNode, "Studio-imageListPopupDialog");
 	    var l = this._designList = new wm.List({owner: studio,
 						    name: this.getRuntimeId() + "_designList",
 						    parent: d.containerWidget,
 						    headerVisible: false,
-						    width: "100%",
+						    width: "42px",
 						    height: "100%"});
 	    var v = this._designVariable = new wm.Variable({owner: studio,
 							    name: this.getRuntimeId() + "_designVariable",
