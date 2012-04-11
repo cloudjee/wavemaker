@@ -478,7 +478,7 @@ dojo.declare("wm.Layers", wm.Container, {
 	},
 	setLayerByCaption: function(inCaption) {
 		var p = this.captionMap[inCaption];
-		this.setLayerByName(p || inCaption);
+	    this.setLayerByName(p && p.name ? p.name : inCaption);
 	},
 	setLayerByName: function(inName) {
 		var l = this.client.widgets[inName];
