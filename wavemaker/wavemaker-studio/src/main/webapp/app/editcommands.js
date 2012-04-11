@@ -90,6 +90,7 @@ Studio.extend({
 	    return this.editArea.promptGotoLine();
 	    */
 	case ".":
+	case " ":
 	    return this.listCompletions();
 	}
     },
@@ -433,8 +434,8 @@ Studio.extend({
 	    for (var i in props) {
 		var p = props[i];
 		var params = "";
-		if (p.group != "operation" && (p.group == "method" || !p.ignore && !p.tmpignore || p.doc)) {
-		    if (p.group == "method") {
+		if (p.group != "operation" && (p.method || !p.ignore && !p.tmpignore || p.doc)) {
+		    if (p.method) {
 			if (!this._autoCompletionRemainder || i.indexOf(this._autoCompletionRemainder) == 0) {
 			    var methodstring = String(object[i]).toString();
 			    var methodstringmatch = methodstring.match(/function\s*\(([^)]*)/);
