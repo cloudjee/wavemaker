@@ -721,13 +721,18 @@ dojo.declare("wm.Application", wm.Component, {
 	},
 	loadPage: function(inName) {
 	    var firstPage = !Boolean(this.pageContainer.page);
-	    var hash = window.location.hash;
-	    if (hash.length > 1) {
-		try {
-		    this.locationState = dojo.fromJson(hash.substring(1));
-		} catch(e){}
+	    if (firstPage) {
+		var hash = window.location.hash;
+		if (hash.length > 1) {
+		    try {
+			this.locationState = dojo.fromJson(hash.substring(1));
+		    } catch(e){}
+		}
+		this._pageName = this.locationState && this.locationState.pageName ? this.locationState.pageName : inName;
+	    } else {
+		this._pageName = inName;
 	    }
-            this._pageName = this.locationState && this.locationState.app  && typeof this.locationState.app == "string" ? this.locationState.app : inName;
+
 		//this._pageLoader.unloadSupport();
 		try 
 		{
