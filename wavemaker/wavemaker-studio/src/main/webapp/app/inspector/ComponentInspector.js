@@ -640,6 +640,8 @@
 		 e.setHint(inProp.ignoretmp && inProp.ignoretmp ? this.ignoreHintPrefix +  inProp.ignoreHint : "");
 	     } else if (e instanceof wm.Button) {
 		 e.setShowing(!inProp.ignoretmp);
+	     } else if (inProp.advanced && !e._showAllClicked) {
+		 ;
 	     } else {
 		 e.parent.setShowing(!inProp.ignoretmp);
 	     }
@@ -801,7 +803,10 @@
 			   align: "right",
 			   width: "80px"});	 
 	     l.onclick = function() {
-		 dojo.forEach(inLayer.c$, function(w) {if (!w.showing) {w.show();}});
+		 dojo.forEach(inLayer.c$, function(w) {if (!w.showing) {
+		     w._showAllClicked = true;
+		     w.show();
+		 }});
 		 l.hide();
 	     }
 	     this.moreLabelList.push(l);
