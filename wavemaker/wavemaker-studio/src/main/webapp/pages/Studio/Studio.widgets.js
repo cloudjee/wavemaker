@@ -395,7 +395,7 @@ Studio.widgets = {
 					desktopToggleButton: ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]}, "width": "100%", height: "100%", margin: "0", caption: "Desktop"}, {onclick: "designDesktopUI"}],
 					tabletToggleButton:  ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]},"width": "100%", height: "100%", margin: "0", caption: "Tablet"},  {onclick: "designTabletUI"}],
 					phoneToggleButton:   ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]},"width": "100%", height: "100%", margin: "0", caption: "Phone"},   {onclick: "designPhoneUIClick"}],
-					mobileFoldingToggleButton:   ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]},"width": "100%", height: "100%", margin: "0", caption: "Folding"},   {onclick: "designMobileFolding"}]
+					mobileFoldingToggleButton:   ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]},"width": "100%", height: "100%", margin: "0", caption: "Folding", hint: "Enable this button by enabling mobile folding in your Page's properties in the services tab"},   {onclick: "designMobileFolding"}]
 				    }],
 				    deviceSizeSelect: ["wm.SelectMenu", {caption: "Size", margin:"4,0,4,15", width: "100%", height: "24px", captionSize: "50px", dataValue: "1150", displayField: "name", dataField: "dataValue"},{onchange: "deviceSizeSelectChanged"},{
 					binding: ["wm.Binding",{},{}, {

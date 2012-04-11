@@ -494,6 +494,7 @@ dojo.declare("Studio", wm.Page, {
 		this.cssEditAreaFullPath.setCaption("webapproot/pages/" + inName + "/" + inName + ".css");
 		this.markupEditAreaFullPath.setCaption("webapproot/pages/" + inName + "/" + inName + ".html");
 	        this.mobileFoldingToggleButton.setDisabled(!studio.page || !studio.page.enableMobileFolding);
+	        dojo.attr(this.mobileFoldingToggleButton.domNode, "disabled", false); // disabled means no mouseover and no hint
 
 	        if (this.page) {
 		    this.select(this.page.root);
