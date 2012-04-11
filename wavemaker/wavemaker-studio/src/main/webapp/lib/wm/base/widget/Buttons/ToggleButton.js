@@ -111,15 +111,6 @@ dojo.declare("wm.ToggleButtonPanel", wm.Container, {
     },
     changed: function(inButton) {
 	var currentButtonWas = this.currentButton;
-	if (currentButtonWas instanceof wm.ToolButton && currentButtonWas != inButton) {
-	    dojo.removeClass(currentButtonWas.domNode, "toggleButtonDown");
-	    if (!this._isDesignLoaded && !this._inBack && this.manageHistory && inButton) {
-		app.addHistory({id: this.getRuntimeId(),
-				options: {name:currentButtonWas.name},
-				title: inButton.caption + " Selected"});
-	    }
-
-	}
 	if (inButton instanceof wm.ToolButton) {
 	    this.currentButton = inButton;
 	    this.currentButtonName = inButton.name;
@@ -147,6 +138,16 @@ dojo.declare("wm.ToggleButtonPanel", wm.Container, {
 	}
 	this.valueChanged("currentButtonName", this.currentButtonName);
 	this.valueChanged("currentButtonCaption", this.currentButtonCaption);
+
+	if (currentButtonWas instanceof wm.ToolButton && currentButtonWas != inButton) {
+	    dojo.removeClass(currentButtonWas.domNode, "toggleButtonDown");
+	    if (!this._isDesignLoaded && !this._inBack && this.manageHistory && inButton) {
+		app.addHistory({id: this.getRuntimeId(),
+				options: {name:currentButtonWas.name},
+				title: inButton.caption + " Selected"});
+	    }
+
+	}
     },
     setCurrentButton: function(inButton) { // currentIndex is a bindTarget
 	// why wm.onidle? Without this, a button click event could be clicked before the layer or pagecontainer its trying trigger a navigation to is created
