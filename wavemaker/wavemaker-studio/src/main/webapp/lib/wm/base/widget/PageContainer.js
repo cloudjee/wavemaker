@@ -269,9 +269,9 @@ dojo.declare("wm.PageContainer", wm.Control, {
 	    }
 
 	    if (this.manageHistory && this._lastPageName && this._lastPageName != this._pageName &&  !this._isDesignLoaded) {
-		app.addHistory({id: this.getRuntimeId(),
+		app.addHistory({id: app && app.pageContainer == this ? "app.pageContainer" : this.getRuntimeId(),
 				options: this._backState,
-				title: "Show " + this.title});
+				title: "Show " + this._pageName});
 		delete this._backState;
 	    }
 	},
@@ -291,7 +291,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
     */
     generateStateUrl: function(stateObj) {
 	if (this.page && this._pageName !== this._initialPageName) {
-	    stateObj[this.getRuntimeId()] = this._pageName;
+	    stateObj[app && app.pageContainer == this ? "pageName" : this.getRuntimeId()] = this._pageName;
 	    if (this.page.generateStateUrl) {
 		this.page.generateStateUrl(stateObj);
 	    }
@@ -305,9 +305,11 @@ dojo.declare("wm.PageContainer", wm.Control, {
 		if (this._pageLoading)
 			return;
 	
-	if (this.manageHistory && this._lastPageName && this._pageName != inPageName &&  !this._isDesignLoaded && this.page && this.page.generateBackState) {
+	if (this.manageHistory && this._pageName != inPageName &&  !this._isDesignLoaded) {
 	    this._backState = {pageName: this._pageName};
-	    this.page.generateBackState(this._backState);
+	    if (this.page && this.page.generateBackState) {
+		this.page.generateBackState(this._backState);
+	    }
 	}
 	this._lastPageName = this._pageName;
 
