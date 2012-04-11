@@ -46,6 +46,7 @@ public class JavaService {
     public String newClass(String serviceId, String fqClassName) throws IOException, ClassNotFoundException, LinkageError {
 
         this.designServiceManager.validateServiceId(serviceId);
+        this.designServiceManager.validateFqClassName(fqClassName);
 
         String sourceFilename = JavaServiceDefinition.getRelPathFromClass(fqClassName);
         String packageName = JavaServiceDefinition.getPackage(fqClassName);
