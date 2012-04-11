@@ -23,7 +23,6 @@ dojo.require("dijit.form.ComboBox");
 //===========================================================================
 dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
     indentField: "",
-    comboBox: true,
         placeHolder: "",
         _storeNameField: "_selectMenuName",
 	displayType:"Text",
@@ -35,7 +34,6 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
     _selectedData: null,
 	init: function() {
 	    if (wm.isMobile) {
-		this.comboBox = false;
 		this.manageHistory = true;
 	    }
 	    this.inherited(arguments);
@@ -78,14 +76,7 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 		    pageSize: this.pageSize ? this.pageSize : Infinity // dijit requires 1 higher or it will still print the "more" link
 		}, inProps || {});
 	},
-/*
-    doOnfocus: function() {
-	if (!this.comboBox && this.editor) {
-	    this.editor.loadDropDown(function() {});
-	}
-	this.inherited(arguments);
-    },
-    */
+
 	_createEditor: function(inNode, inProps) {
 	    var e;
 	    if (wm.isMobile) {
@@ -97,9 +88,6 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 		e =  new dijit.form.FilteringSelect(this.getEditorProps(inNode, inProps));
 	    } else {
 		e = new dijit.form.ComboBox(this.getEditorProps(inNode, inProps));
-	    }
-	    if (!this.comboBox) { 
-		dojo.attr(e.focusNode, "readonly", true);
 	    }
 	    return e;
 	},
@@ -551,7 +539,7 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 		    this.resetState(); 
 		}
 	},
-    validationEnabled: function() {return this.comboBox && !this.restrictValues;},
+    validationEnabled: function() {return !this.restrictValues;},
 	_getValidatorNode: function() {
 	    var result = dojo.query(".dijitValidationContainer", this.editor.domNode)[0];
 	    result.firstChild.value = "";
@@ -659,7 +647,7 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 	this.doOnblur();
     },
     changed: function() {
-	if (!this.comboBox && this.editor && this.editor.focusNode == document.activeElement) {
+	if (wm.isMobile && this.editor && this.editor.focusNode == document.activeElement) {
 	    this.editor.focusNode.blur();
 	    return; // blur will trigger changed call
 	}
@@ -900,9 +888,9 @@ dojo.declare("wm.FilteringLookup", wm.Lookup, {
     },
     _onchange: function(optionalValue) {
 	if (this.disabled || this.readonly || !this.isActive()) return;
-	debugger;
+	var autoDataSet = this.autoDataSet && this.getParentForm();
 	var value = optionalValue || this.editor.get("displayedValue");
-	if (this.autoDataSet) {
+	if (autoDataSet) {
 	    var lastValue = this.dataSet.filter.getValue(this.filterField);
 	}
 
@@ -917,7 +905,7 @@ dojo.declare("wm.FilteringLookup", wm.Lookup, {
 	if (value != this._lastQueryValue) {
 	    this._lastQueryValue = value;
 
-	    if (this.autoDataSet) {
+	    if (autoDataSet) {
 		this.dataSet.filter.setValue(this.filterField, value);
 		if (value === undefined || value === null || value === "") {
 		    this.dataSet.setData([]);
@@ -947,11 +935,16 @@ dojo.declare("wm.FilteringLookup", wm.Lookup, {
 	this.maxResults = this.pageSize = inValue;
     },
     isActive: function() {
-	return this.editor._focused || this.editor.dropDown && this.editor.dropDown.domNode.parentNode.style.display != "none";
+	return this.editor._focused || this.editor.dropDown && this.editor.dropDown.domNode.parentNode && this.editor.dropDown.domNode.parentNode.style.display != "none";
     }
 });
 if (!wm.isMobile) {
     wm.FilteringLookup.extend({
+	getEditorProps: function(inNode, inProps) {
+	    var p = this.inherited(arguments);
+	    p.queryExpr = "*";
+	    return p;
+	},
 
     setDataSet: function(inDataSet) {
 	this.inherited(arguments, [inDataSet, true]);
