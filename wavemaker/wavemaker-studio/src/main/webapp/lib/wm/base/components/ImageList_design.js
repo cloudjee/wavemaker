@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2011-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -69,6 +69,7 @@ wm.ImageList.extend({
 	    var l = this._designList;
 	    var v = this._designVariable;
 	}
+	l.deselectAll();
 	var data = [];
 	for (var i = 0; i < this.iconCount; i++)
 	    data.push({dataValue: this.getImageHtml(i)});

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
 		//this._connections.push(dojo.connect(window, "onbeforeunload", this, "destroy"));
 		dojo.addOnWindowUnload(this, 'destroy');
 
-	    if (this.subpageEventlist) {
+	    if (this.subpageEventlist && !this._isDesignLoaded) {
 		for (var propName in this.subpageEventlist) {
 		    if (this[propName] === undefined) {
 			this[propName] = function(){};
@@ -87,13 +87,22 @@ dojo.declare("wm.PageContainer", wm.Control, {
 		    }));
 		}
 	},
-    setProp: function(inName, inValue) {
-	if (this.subpageProplist !== null && this.page) {
+    setProp: function(inName, inValue) {	
+	if (this.subpageProplist !== null && this.page && this.subpageProplist[inName]) {
 	    var prop = this.subpageProplist[inName];
 	    if (prop) {
 		if (inValue instanceof wm.Component === false)
 		    this[inName] = inValue;
 		return this.page.setValue(prop, inValue);
+	    }
+	} else if (this.subpageEventlist !== null && this.page && this.subpageEventlist[inName]) {
+	    var prop = this.subpageEventlist[inName];
+	    if (prop) {
+		if (this._isDesignLoaded) {
+		    return this.setEvent(inName,inValue);
+		} else {
+		    return this.inherited(arguments);
+		}
 	    }
 	}
 	return this.inherited(arguments);
@@ -103,6 +112,12 @@ dojo.declare("wm.PageContainer", wm.Control, {
 	    var prop = this.subpageProplist[inName];
 	    if (prop) {
 		return this.page.getValue(prop);
+	    }
+	} 
+	if (this._isDesignLoaded && this.subpageEventlist !== null && this.page) {
+	    var prop = this.subpageEventlist[inName];
+	    if (prop) {
+		return this._getProp(inName);
 	    }
 	}
 	return this.inherited(arguments);
@@ -234,7 +249,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
 	    if (this.subpageEventlist && this.page) {
 		for (var propName in this.subpageEventlist) {
 		    var propComponent = this.page[propName];
-		    if (propComponent && propComponent.isEvent) {
+		    if (propComponent && propComponent.isEvent && !this._isDesignLoaded) {
 			var componentName = propComponent.property.replace(/\..*?$/,"");
 			var eventName =  propComponent.property.replace(/^.*\./,"");
 			var component = this.page.getValue(componentName);
@@ -246,14 +261,17 @@ dojo.declare("wm.PageContainer", wm.Control, {
 
 	    if (this.subpageProplist) {
 		for (var propName in this.subpageProplist) {
+		    var v = this[propName];
+		    if (v !== undefined) {
 			this.setProp(propName, this[propName]);
+		    }
 		}
 	    }
 
 	    if (this.manageHistory && this._lastPageName && this._lastPageName != this._pageName &&  !this._isDesignLoaded) {
-		app.addHistory({id: this.getRuntimeId(),
+		app.addHistory({id: app && app.pageContainer == this ? "app.pageContainer" : this.getRuntimeId(),
 				options: this._backState,
-				title: "Show " + this.title});
+				title: "Show " + this._pageName});
 		delete this._backState;
 	    }
 	},
@@ -273,7 +291,7 @@ dojo.declare("wm.PageContainer", wm.Control, {
     */
     generateStateUrl: function(stateObj) {
 	if (this.page && this._pageName !== this._initialPageName) {
-	    stateObj[this.getRuntimeId()] = this._pageName;
+	    stateObj[app && app.pageContainer == this ? "pageName" : this.getRuntimeId()] = this._pageName;
 	    if (this.page.generateStateUrl) {
 		this.page.generateStateUrl(stateObj);
 	    }
@@ -287,9 +305,11 @@ dojo.declare("wm.PageContainer", wm.Control, {
 		if (this._pageLoading)
 			return;
 	
-	if (this.manageHistory && this._lastPageName && this._pageName != inPageName &&  !this._isDesignLoaded && this.page && this.page.generateBackState) {
+	if (this.manageHistory && this._pageName != inPageName &&  !this._isDesignLoaded) {
 	    this._backState = {pageName: this._pageName};
-	    this.page.generateBackState(this._backState);
+	    if (this.page && this.page.generateBackState) {
+		this.page.generateBackState(this._backState);
+	    }
 	}
 	this._lastPageName = this._pageName;
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
+ * Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ dojo.declare("ImportDatabase", wm.Page, {
 			this.passwordInput.setDataValue(d.password || "");
 			if (d.dbtype) {
 				this.dbdropdown.setDisplayValue(d.dbtype);
-				this.importDBdropdownChanged();
+			        this.importDBdropdownChanged(this.dbdropdown,this.dbdropdown.getDataValue());
 			}
 			this.hostInput.setDataValue(d.host || ((studio.isCloud()) ? "mysql.wavemaker.com" : "localhost"));
 			this.importHostChanged();
@@ -46,6 +46,7 @@ dojo.declare("ImportDatabase", wm.Page, {
 			this.importPortChanged()
 			this.extraInput.setDataValue(d.dbName || "");
 			this.importExtraChanged();
+		        this.importDBdropdownChanged(this.dbdropdown,this.dbdropdown.getDataValue());
 			if (d.noPrompt)
 				setTimeout(dojo.hitch(this, "importBtnClick"), 100);
 		}
@@ -137,11 +138,11 @@ dojo.declare("ImportDatabase", wm.Page, {
 		this._updateImportConnectionUrl();
 	},
 	testConnectionBtnClick: function(inSender) {
-		/*this._testConnection(this.connectionUrlInput.getDataValue(),
+		this._testConnection(this.connectionUrlInput.getDataValue(),
 					this.usernameInput.getDataValue(),
 					this.passwordInput.getDataValue(),
-					this.driverClassInput.getDataValue());*/
-		this._testConnection(this.extraInput.getDataValue());
+					this.driverClassInput.getDataValue());
+		//this._testConnection(this.extraInput.getDataValue());
 	},
 	importBtnClick: function(inSender) {
 	    if (this.dbdropdown.getDataValue("").toLowerCase() == "mysql" && dojo.isMac) {
@@ -152,7 +153,7 @@ dojo.declare("ImportDatabase", wm.Page, {
 		this.importBtnClick2();
 	    }
 	},
-	/*importBtnClick2: function(inSender) {
+	importBtnClick2: function(inSender) {
 		this.dataModelName = null;
 	    studio.beginWait(this.getDictionaryItem("WAIT_IMPORTING"));
 		studio.dataService.requestAsync(IMPORT_DB_OP,
@@ -170,9 +171,9 @@ dojo.declare("ImportDatabase", wm.Page, {
 					 this.activeDirectoryDomain.getDataValue()],
 					dojo.hitch(this, "_importResult"), 
 					dojo.hitch(this, "_importError"));
-	},*/
+	},
 
-	importBtnClick2: function(inSender) {
+	/*importBtnClick2: function(inSender) {
 	this.dataModelName = null;
 	studio.beginWait(this.getDictionaryItem("WAIT_IMPORTING"));
 	studio.dataService.requestAsync("cfImportDatabase",
@@ -190,7 +191,7 @@ dojo.declare("ImportDatabase", wm.Page, {
 				 this.activeDirectoryDomain.getDataValue()],
 				dojo.hitch(this, "_importResult"), 
 				dojo.hitch(this, "_importError"));
-	},
+	},*/
 
 	_updatePackage: function() {
 		this.packageInput.setDataValue("");
@@ -220,20 +221,20 @@ dojo.declare("ImportDatabase", wm.Page, {
 		    e += "DB";
 		this.serviceNameInput.setDataValue(e);
 	},
-	/*_testConnection: function(url, username, password, driverClassName) {
+	_testConnection: function(url, username, password, driverClassName) {
 		studio.beginWait("Test Connection: " + url);
 		studio.dataService.requestAsync(TEST_CONNECTION_OP,
 			[username, password, url, driverClassName],
 			dojo.hitch(this, "_connectionSucceeded"), 
 			dojo.hitch(this, "_connectionFailed"));
-	},*/
-	_testConnection: function(serviceName) {
+	},
+	/*_testConnection: function(serviceName) {
 		studio.beginWait("Test Connection: " + serviceName);
 		studio.dataService.requestAsync("cfTestConnection",
 			[serviceName],
 			dojo.hitch(this, "_connectionSucceeded"), 
 			dojo.hitch(this, "_connectionFailed"));
-	},
+	},*/
 	_connectionSucceeded: function() {
 		studio.endWait();
 	    app.alert(this.getDictionaryItem("ALERT_CONNECTION_SUCCESS"));

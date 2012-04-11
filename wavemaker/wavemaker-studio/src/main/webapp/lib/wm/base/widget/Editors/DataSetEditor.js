@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2011-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -175,6 +175,9 @@ dojo.declare("wm.DataSetEditor", wm.AbstractEditor, {
 	},
     setDataSet: function(inDataSet) {
 	this.dataSet = inDataSet;
+	if (inDataSet && inDataSet.type != this.selectedItem.type) {
+	    this.selectedItem.setType(inDataSet.type);
+	}
 	var dataValue = this.dataValue;
 	this.updateIsDirty();
     },
@@ -622,7 +625,7 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
     doOnchange: function() {
 	    var e = this.editor;
 	    if (!this._loading && !this.isUpdating() && !this.readonly && e && !this.isLoading())
-		this.onchange(this.getDisplayValue(), this.getDataValue());
+		this.onchange(this.getDisplayValue(), this.getDataValue(), this._inSetDataValue);
     },
     _onShowParent: function() {
 	if (this.grid)
@@ -698,10 +701,10 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 					 deleteConfirm: this.deleteConfirm,
 					 selectionMode: this._selectionMode ? this._selectionMode : this._multiSelect ? "multiple":"single"});
 
-	if (this.grid.declaredClass == "wm.DojoGrid") {
+
 	    this.grid.connect(this.grid, "renderDojoObj", this, "renderGrid");
 	    this.grid.connect(this.grid, "onRowDeleted", this, "onRowDeleted");
-	}
+
 	    this.grid._isDesignLoaded = false;
 	this.grid.setColumns([{show: true,
 			       width: "100%",

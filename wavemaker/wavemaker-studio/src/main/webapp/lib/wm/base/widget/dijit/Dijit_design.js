@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -73,7 +73,7 @@ wm.DijitDesigner.extend({
 	this.initDijit(this.domNode);
 	var preferredSize = dojo.marginBox(this.dijit.domNode);
 	this.setWidth(preferredSize.w + "px");
-	this.setHeight(preferredSize.h + "px");
+	this.set_height(preferredSize.h + "px");
 	/* Reinspect to get the props/events of the new class */
 	if (this._isDesignLoaded) {
 	    studio.select(studio.page.root);

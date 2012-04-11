@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2011-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -144,15 +144,17 @@ dojo.declare("wm.LoadingDialog", wm.Dialog, {
 	this.inherited(arguments);
 	if (inShowing) {
 	    this._getWidgetToCover();
-	    var node = this.widgetToCover.domNode;
-	    var zindex = node.style.zIndex || 0;
-	    while (node.parentNode && node.parentNode.tagName != "BODY") {
-		node = node.parentNode;
-		if (node.style.zIndex) {
-		    zindex = Math.max(zindex,node.style.zIndex);
+	    if (this.widgetToCover) {
+		var node = this.widgetToCover.domNode;
+		var zindex = node.style.zIndex || 0;
+		while (node.parentNode && node.parentNode.tagName != "BODY") {
+		    node = node.parentNode;
+		    if (node.style.zIndex) {
+			zindex = Math.max(zindex,node.style.zIndex);
+		    }
 		}
+		this.domNode.style.zIndex = zindex+1;
 	    }
-	    this.domNode.style.zIndex = zindex+1;
 	}
     },
     _getWidgetToCover: function() {

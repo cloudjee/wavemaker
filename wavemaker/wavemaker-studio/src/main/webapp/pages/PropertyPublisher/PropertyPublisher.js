@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2011 VMware, Inc. All rights reserved.
+ * Copyright (C) 2011-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -21,10 +21,13 @@ dojo.declare("PropertyPublisher", wm.Page, {
     },
     reset: function(inComponent) {
 	this.inspected = inComponent;
-	this.tree.clear();
 	this.populateList();
-	this.propComponentList = studio.inspector.gatherPropComponents(inComponent);
 	this.treeHeader.setCaption(this.inspected.name + " Properties");
+	this.populateTree();
+    },
+    populateTree: function() {
+	this.propComponentList = studio.inspector.gatherPropComponents(this.inspected);
+	this.tree.clear();
 	var propsHash = this.inspected.listProperties();
 	var props = [];
 	 for (var i in propsHash) {
@@ -33,7 +36,7 @@ dojo.declare("PropertyPublisher", wm.Page, {
 		 continue;
 	     
 	     p = dojo.mixin({name: i},p);
-	     if (p.isEvent || inComponent.isEventProp(i)) {
+	     if (p.isEvent || this.inspected.isEventProp(i)) {
 		 p.group = "events";
 		 if (i.match(/\d$/)) 
 		     continue; // ignore events that end in numbers; these are the "and-then" events, which are handled by the event editor
@@ -78,6 +81,7 @@ dojo.declare("PropertyPublisher", wm.Page, {
 	    }
 	});
 	this.onChange();
+	this.populateTree();
     },
     generateProps: function(inNode, inProps) {
 	dojo.forEach(inProps, dojo.hitch(this, function(prop) {
@@ -86,7 +90,7 @@ dojo.declare("PropertyPublisher", wm.Page, {
 		data: prop.name,
 		closed: true,
 		hasChildren: false,
-		checked: this.propComponentList[this.inspected.getId() + "." + prop.name]
+		checked: this.propComponentList[this.inspected.id + "." + prop.name]
 	    });
 	}));
     },
@@ -101,13 +105,20 @@ dojo.declare("PropertyPublisher", wm.Page, {
 	    this.generateProps(node, group.props);
 	}));
     },
+    calcName: function(inPropName) {
+	var isEvent = inPropName.match(/^on/);
+	var name = (isEvent ? "on" + wm.capitalize(this.inspected.getId()) : this.inspected.getId()) + wm.capitalize(inPropName.replace(/^on/,""));
+	return name;
+    },
     checkboxChange: function(inSender, inNode, inEvent) {
+	var name = this.calcName(inNode.data);
+
 	var property = this.inspected.getId() + "." + inNode.data;
 	var propDef = this.inspected.listProperties()[inNode.data];
 	if (inNode.getChecked()) {
 	    if (!this.propComponentList[property]) {
 		var p = this.propComponentList[property] = new wm.Property({owner: studio.page,
-									    name: wm.camelcase(property)});
+									    name: name});
 		p.selectProperty(property);
 		if (!p.isEvent) {
 		    p.bindSource = propDef.bindable || propDef.bindSource;

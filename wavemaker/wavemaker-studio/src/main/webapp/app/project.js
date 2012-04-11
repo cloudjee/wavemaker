@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
+ * Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -49,6 +49,7 @@ dojo.declare("wm.studio.Project", null, {
 		return d;
 	},
         finishNewProject: function(inResult, optionalInTheme, optionalInTemplate) {
+	    studio.updateServices();
 		this.projectChanging();
 		this.createApplicationArtifacts();
 	        this.makeApplication({theme: optionalInTheme || "wm_default"});
@@ -66,7 +67,7 @@ dojo.declare("wm.studio.Project", null, {
 			     this.projectsChanged();
 			     studio.endWait(studio.getDictionaryItem("wm.studio.Project.WAIT_CREATING_PROJECT"));
 			     studio._loadingApplication = false;
-			 }));
+			 }));	    
 	},
     // pageType and argHash are typically empty
     // argHash is a way to pass in custom parameters when creating a non-basic

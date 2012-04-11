@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2011-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -78,6 +78,15 @@ wm.Object.extendSchema(wm.Container, {
 
 
 wm.Container.extend({
+	// backward-compatibility fixups
+	afterPaletteDrop: function() {
+	        this.inherited(arguments);
+		if (this.verticalAlign == "justified")
+			this.verticalAlign = "top";
+		if (this.horizontalAlign == "justified")
+			this.horizontalAlign = "left";
+	},
+
 	listProperties: function() {
 		var p = this.inherited(arguments);
 		p.freeze.ignoretmp = this.schema.freeze.ignore || this.getLock();
@@ -163,14 +172,14 @@ wm.Container.extend({
 		var height = this.bounds.h;
 		if (preferredHeight > height) {
 		    if (!this._percEx.h) {
-			this.setHeight(preferredHeight + "px");
+			this.set_height(preferredHeight + "px");
 		    } else {
 			if (this.parent && this.parent instanceof wm.Container && this.parent instanceof wm.Layout == false) {
 			    this.parent.designResizeForNewChild(layoutKind);
 			}
 		    }
 		} else if (reduceSize && !this._percEx.h) {
-		    this.setHeight(preferredHeight + "px");
+		    this.set_height(preferredHeight + "px");
 		}
 
 

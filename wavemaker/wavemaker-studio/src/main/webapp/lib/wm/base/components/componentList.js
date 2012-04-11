@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2010-2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2010-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -101,7 +101,8 @@ wm.componentList = {
 	'wm.RoundedButton':['wm.base.widget.Buttons.RoundedButton'],    
 	'wm.BusyButton':['wm.base.widget.Buttons.BusyButton'],
 	'wm.PopupMenuButton':['build.Gzipped.wm_menus'],
-	'wm.ToggleButton':['build.Gzipped.wm_editors'],
+	'wm.ToggleButton':['build.Gzipped.wm_editors'],   // currently in main build
+	'wm.ToggleButtonPanel':['build.Gzipped.wm_editors'],// currently in main build
 	'wm.Timer':['wm.base.components.Timer'],
 	
 	/* Old forms and related widgets */

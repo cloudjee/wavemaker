@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
+ * Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -575,9 +575,9 @@ dojo.declare("Studio", wm.Page, {
 	typesChanged: function(inData) {
 	    if (inData && inData.types) {
 		wm.typeManager.setTypes(inData.types);
-		wm.dataSources.update();
-		this.refreshDataPalette();
 	    }
+	    wm.dataSources.update();
+	    this.refreshDataPalette();
 	    if (this.application || this._application)
 		dojo.publish("wmtypes-changed");
 	},
@@ -1750,8 +1750,8 @@ dojo.declare("Studio", wm.Page, {
 	this.setCleanPage();
 	studio.inspector.reinspect();
     },
-    pageSelectChanged: function(inSender, optionalPageName) {
-	if (!studio.page || this.disabledPageSelectChanged) return;
+    pageSelectChanged: function(inSender, optionalPageName, inDataValue, inSetByCode) {
+	if (!studio.page || this.disabledPageSelectChanged || inSetByCode) return;
 	var page = optionalPageName || inSender.getDataValue();
 	if (page == this.project.pageName || !page) return;
 

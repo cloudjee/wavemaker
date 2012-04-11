@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2011-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -223,9 +223,15 @@ wm.ToggleButtonPanel.extend({
 });
 
 wm.Object.extendSchema(wm.ToggleButtonPanel, {
+    manageURL: {ignore:0},
+    manageHistory: {ignore:0},
+
     currentButton: {group: "widgetName", subgroup: "behavior", bindable:1, readonly: 1, editor: "wm.prop.WidgetSelect", createWire: 1,editorProps: {widgetType: "wm.ToolButton", inspectedChildrenOnly: true}},
-    currentButtonName: {ignore:1,bindSource:true},
-    currentButtonCaption: {ignore:1,bindSource:true},
-    themeStyleType: {group: "style", order: 150}
+    currentButtonName: {ignore:1,bindSource:true, doc:1},
+    currentButtonCaption: {ignore:1,bindSource:true, doc:1},
+    themeStyleType: {group: "style", order: 150},
+    
+    setCurrentButton: {method:1},
+    
 
 });

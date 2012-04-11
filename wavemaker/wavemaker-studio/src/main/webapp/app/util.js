@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
+ * Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -54,7 +54,7 @@ wm.listOfWidgetTypes = function(inTypes) {
 };
 
 // list components (not widgets) within owners by types
-wm.listMatchingComponents = function(inOwners, inMatch, inRecurse) {
+wm.listMatchingComponents = function(inOwners, inMatch, inRecurse,inNoPageContainerRecurse) {
 	var l=[];
 	if (inMatch)
 		dojo.forEach(inOwners, function(o) {
@@ -63,15 +63,15 @@ wm.listMatchingComponents = function(inOwners, inMatch, inRecurse) {
 			wm.forEachProperty(o.components, function(c) {
 				if (inMatch(c))
 					l.push(c);
-				if (inRecurse)
-					l = l.concat(wm.listMatchingComponents([c], inMatch, inRecurse));
+			        if (inRecurse && (!inNoPageContainerRecurse || c instanceof wm.PageContainer == false))
+				    l = l.concat(wm.listMatchingComponents([c], inMatch, inRecurse, inNoPageContainerRecurse));
 			});
 		});
 	return l;
 }
 
-wm.listMatchingComponentIds = function(inOwners, inMatch, inRecurse) {
-	var d = [], l = wm.listMatchingComponents.call(dojo.global, inOwners, inMatch, inRecurse);
+wm.listMatchingComponentIds = function(inOwners, inMatch, inRecurse, inNoPageContainerRecurse) {
+    var d = [], l = wm.listMatchingComponents.call(dojo.global, inOwners, inMatch, inRecurse,inNoPageContainerRecurse);
 	dojo.forEach(l, function(c) {
 		d.push(c.getId());
 	});

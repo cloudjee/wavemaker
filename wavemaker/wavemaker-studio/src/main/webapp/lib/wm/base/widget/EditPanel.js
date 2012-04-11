@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -106,5 +106,12 @@ dojo.declare("wm.EditPanel", wm.Panel, {
 	},
 	cancelEdit: function() {
 		wm.fire(this.getValueById(this.liveForm), "cancelEdit");
+	},
+
+        setThemeStyleType: function(inType) {
+	    return wm.Container.prototype.setThemeStyleType.call(this, inType);
+	},
+        getThemeStyleType: function(inType) {
+	    return wm.Container.prototype.getThemeStyleType.call(this, inType);
 	}
 });

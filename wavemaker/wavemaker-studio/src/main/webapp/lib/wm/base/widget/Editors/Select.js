@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -23,7 +23,6 @@ dojo.require("dijit.form.ComboBox");
 //===========================================================================
 dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
     indentField: "",
-    comboBox: true,
         placeHolder: "",
         _storeNameField: "_selectMenuName",
 	displayType:"Text",
@@ -35,7 +34,6 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
     _selectedData: null,
 	init: function() {
 	    if (wm.isMobile) {
-		this.comboBox = false;
 		this.manageHistory = true;
 	    }
 	    this.inherited(arguments);
@@ -78,14 +76,7 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 		    pageSize: this.pageSize ? this.pageSize : Infinity // dijit requires 1 higher or it will still print the "more" link
 		}, inProps || {});
 	},
-/*
-    doOnfocus: function() {
-	if (!this.comboBox && this.editor) {
-	    this.editor.loadDropDown(function() {});
-	}
-	this.inherited(arguments);
-    },
-    */
+
 	_createEditor: function(inNode, inProps) {
 	    var e;
 	    if (wm.isMobile) {
@@ -97,9 +88,6 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 		e =  new dijit.form.FilteringSelect(this.getEditorProps(inNode, inProps));
 	    } else {
 		e = new dijit.form.ComboBox(this.getEditorProps(inNode, inProps));
-	    }
-	    if (!this.comboBox) { 
-		dojo.attr(e.focusNode, "readonly", true);
 	    }
 	    return e;
 	},
@@ -551,7 +539,7 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 		    this.resetState(); 
 		}
 	},
-    validationEnabled: function() {return this.comboBox && !this.restrictValues;},
+    validationEnabled: function() {return !this.restrictValues;},
 	_getValidatorNode: function() {
 	    var result = dojo.query(".dijitValidationContainer", this.editor.domNode)[0];
 	    result.firstChild.value = "";
@@ -659,7 +647,7 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 	this.doOnblur();
     },
     changed: function() {
-	if (!this.comboBox && this.editor && this.editor.focusNode == document.activeElement) {
+	if (wm.isMobile && this.editor && this.editor.focusNode == document.activeElement) {
 	    this.editor.focusNode.blur();
 	    return; // blur will trigger changed call
 	}
@@ -696,7 +684,7 @@ dojo.declare("wm.SelectMenu", wm.DataSetEditor, {
 	var item = this.dataSet.getItem(rowIndex);
 	this.selectedItem.setData(item);
 	//this.editor.set("value", String(item.getIndexInOwner()), false);
-	this.editor.set("value", item.getValue(this.displayField), false);
+	this.editor.set("value", this._getDisplayData(item), false);
     }
 
 /*
@@ -760,6 +748,11 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		    var currentType;
 		    if (this.dataType) {
 			currentType = this.dataType;
+		    } else if (parentForm instanceof wm.ServiceInputForm) {
+			var typeDef = parentForm.dataOutput._dataSchema;
+			if (typeDef) {
+			    currentType = typeDef[ff] ? typeDef[ff].type : null;
+			}
 		    } else if (parentType && parentType != "any") {
 			currentType = wm.typeManager.getType(parentType).fields[ff].type ;
 		    } else {
@@ -832,6 +825,7 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 		this.inherited(arguments);
 	    if (wm.getParentForm) {
 		var f = wm.getParentForm(this);
+/*
 	    if (f instanceof wm.RelatedEditor) {
 		var s = this._getFormSource(f);
 		if (s) {
@@ -851,6 +845,7 @@ dojo.declare("wm.Lookup", wm.SelectMenu, {
 			//wm.fire(f, "populateEditors");
 		}
 	    }
+	    */
 	}
 
 	    /* If this is a wm.Lookup within a composite key acting to select an id, we need to propagate its value up to the parent form's relationship */
@@ -893,9 +888,9 @@ dojo.declare("wm.FilteringLookup", wm.Lookup, {
     },
     _onchange: function(optionalValue) {
 	if (this.disabled || this.readonly || !this.isActive()) return;
-	debugger;
+	var autoDataSet = this.autoDataSet && this.getParentForm();
 	var value = optionalValue || this.editor.get("displayedValue");
-	if (this.autoDataSet) {
+	if (autoDataSet) {
 	    var lastValue = this.dataSet.filter.getValue(this.filterField);
 	}
 
@@ -910,7 +905,7 @@ dojo.declare("wm.FilteringLookup", wm.Lookup, {
 	if (value != this._lastQueryValue) {
 	    this._lastQueryValue = value;
 
-	    if (this.autoDataSet) {
+	    if (autoDataSet) {
 		this.dataSet.filter.setValue(this.filterField, value);
 		if (value === undefined || value === null || value === "") {
 		    this.dataSet.setData([]);
@@ -940,11 +935,16 @@ dojo.declare("wm.FilteringLookup", wm.Lookup, {
 	this.maxResults = this.pageSize = inValue;
     },
     isActive: function() {
-	return this.editor._focused || this.editor.dropDown && this.editor.dropDown.domNode.parentNode.style.display != "none";
+	return this.editor._focused || this.editor.dropDown && this.editor.dropDown.domNode.parentNode && this.editor.dropDown.domNode.parentNode.style.display != "none";
     }
 });
 if (!wm.isMobile) {
     wm.FilteringLookup.extend({
+	getEditorProps: function(inNode, inProps) {
+	    var p = this.inherited(arguments);
+	    p.queryExpr = "*";
+	    return p;
+	},
 
     setDataSet: function(inDataSet) {
 	this.inherited(arguments, [inDataSet, true]);

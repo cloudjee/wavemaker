@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2011-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -63,32 +63,6 @@ wm.ServiceCall.extend({
 			});
 		}
 		d.show();
-	},
-
-
-	makePropEdit: function(inName, inValue, inEditorProps) {
-	    var prop = this.schema ? this.schema[inName] : null;
-	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
-	    var prop = this.schema ? this.schema[inName] : null;
-	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
-		switch (inName) {
-			case "service":
-		    return new wm.SelectMenu(dojo.mixin(inEditorProps, {options: this.getServicesList()}));
-		case "operation":
-				var
-					s = this._service,
-					valueOk = s && s.getOperation(inValue),
-					methods = s && s.getOperationsList();
-				if (!valueOk){
-					inValue = methods ? methods[0] : "";
-					if (inValue)
-						this.set_operation(inValue);
-				}
-				if (methods)
-				    return new wm.SelectMenu(dojo.mixin(inEditorProps, {options: methods}));
-				break;
-		}
-		return this.inherited(arguments);
 	}
 });
 

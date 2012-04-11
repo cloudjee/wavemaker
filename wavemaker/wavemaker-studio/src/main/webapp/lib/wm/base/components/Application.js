@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -585,7 +585,8 @@ dojo.declare("wm.Application", wm.Component, {
 	getRuntimeServiceDesignTime: function(owner) {
 		if (!this._runtimeService)
 		    this._runtimeService = new wm.JsonRpcService({service: "runtimeService",
-								  owner: owner, designTime: true});
+								  owner: owner || this, 
+								  designTime: true});
 		return this._runtimeService;
 	},
 
@@ -720,13 +721,18 @@ dojo.declare("wm.Application", wm.Component, {
 	},
 	loadPage: function(inName) {
 	    var firstPage = !Boolean(this.pageContainer.page);
-	    var hash = window.location.hash;
-	    if (hash.length > 1) {
-		try {
-		    this.locationState = dojo.fromJson(hash.substring(1));
-		} catch(e){}
+	    if (firstPage) {
+		var hash = window.location.hash;
+		if (hash.length > 1) {
+		    try {
+			this.locationState = dojo.fromJson(hash.substring(1));
+		    } catch(e){}
+		}
+		this._pageName = this.locationState && this.locationState.pageName ? this.locationState.pageName : inName;
+	    } else {
+		this._pageName = inName;
 	    }
-            this._pageName = this.locationState && this.locationState.app  && typeof this.locationState.app == "string" ? this.locationState.app : inName;
+
 		//this._pageLoader.unloadSupport();
 		try 
 		{
@@ -1065,8 +1071,11 @@ dojo.declare("wm.Application", wm.Component, {
 	    } else {
 		created = true;
 		parentPanel = this._bottomDock = new wm.Panel({owner: this, name: "_bottomDock", width: "100%", height: "100px", border: "0", padding: "", layoutKind: "left-to-right", parent: this.appRoot});
+		if (this.wmMinifiedDialogPanel) {
+		    this.appRoot.moveControl(parentPanel, this.wmMinifiedDialogPanel.getIndexInParent());
+		}
 		this._bottomSplitter = new wm.Splitter({_classes: {domNode: ["docksplitter"]}, owner: this, parent: this.appRoot});
-		this.appRoot.moveControl(this._bottomSplitter,this.appRoot.c$.length-2);
+		this.appRoot.moveControl(this._bottomSplitter,parentPanel.getIndexInParent());
 		this._bottomSplitter.findLayout();
 	    }		
 	    break;

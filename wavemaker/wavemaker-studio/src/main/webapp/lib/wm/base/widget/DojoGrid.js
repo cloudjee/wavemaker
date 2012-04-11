@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -199,7 +199,9 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			    _this.dojoObj.scrollToRow(idx);
 			    wm.onidle(_this, function() {
 				this._cupdating = true; // don't trigger events since we're actually reselecting the same value that was already selected
-				this.setSelectedRow(idx);
+				try {
+				    this.setSelectedRow(idx);
+				} catch(e) {}
 				this._cupdating = false; 
 			    });
 			},0);
@@ -690,10 +692,25 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	  }
 	},
     addEmptyRow: function(selectOnAdd) {
-	    var obj = {};
+	var set = function(obj, parts, value) {
+	    for (var partnum = 0; partnum < parts.length; partnum++) {
+		if (partnum +1 < parts.length) {
+		    if (!obj[parts[partnum]]) {
+			obj[parts[partnum]] = {};
+		    }
+		    obj = obj[parts[partnum]];
+		} else {
+		    obj[parts[partnum]] = value;
+		}
+	    }
+	};
+
+	    var obj = {};	
 	var hasVisibleValue = false;
+	var possibleFieldsToFill = [];
 	for (var i = 0; i < this.columns.length; i++) {
 	    var column = this.columns[i];
+	    if (column.mobileColumn) continue;
 	    var columnid = column.field||column.id;
 
 	    var parts = columnid.split(".");
@@ -717,30 +734,34 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	    case "java.lang.Float":
 	    case "java.lang.Short":
 		value = 0;
+		if (column.show)
+		    hasVisibleValue = true;
+
 		break;
-	    case "java.lang.Date":
+	    case "java.util.Date":
 		value = new Date().getTime();
-		hasVisibleValue = true;
+		if (column.show)
+		    hasVisibleValue = true;
 		break;
 	    case "java.lang.Boolean":
 		value = false;
 		break;
 	    default:
-		value =	hasVisibleValue ? null :"&nbsp;";
-		hasVisibleValue = true;
-	     }
-	    var subobj = obj;
-	    for (var partnum = 0; partnum < parts.length; partnum++) {
-		if (partnum +1 < parts.length) {
-		    if (!subobj[parts[partnum]]) {
-			subobj[parts[partnum]] = {};
-		    }
-		    subobj = subobj[parts[partnum]];
-		} else {
-		    subobj[parts[partnum]] = value;
-		}
+		value =	"";
+		possibleFieldsToFill.push(column);
 	    }
+
+	    set(obj,parts,value);
 	}
+
+	    if (!hasVisibleValue && possibleFieldsToFill.length) {
+		var column = possibleFieldsToFill[0];
+		var columnid = column.field||column.id;
+		var parts = columnid.split(".");
+		set(obj,parts,value);
+		set(obj,parts, "&nbsp;");
+	    }
+
 	this.addRow(obj,selectOnAdd);
     },
 	getRowCount: function() {
@@ -864,7 +885,13 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 		    wm.onidle(this, "renderDojoObj");
 		}
 	    },
-
+    setShowing: function(inShowing) {
+	var wasShowing = this.showing;
+	this.inherited(arguments);
+	if (!wasShowing && inShowing) {
+	    this._onShowParent();
+	}
+    },
 	connectDojoEvents: function(){
 		//dojo.connect(this.dojoObj, 'onCellClick', this, 'onCellClick');
 
@@ -941,7 +968,11 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 	},
         onStyleRow: function(inRow/* inRow.customClasses += " myClass"; inRow.customStyles += ";background-color:red"; */, rowData) {},
 	getDataSet: function() {
+	    if (this.variable)
 		return this.variable;
+	    else if (this.$.binding && this.$.binding.wires.dataSet) {
+		return this.getValueById(this.$.binding.wires.dataSet.source);
+	    }
 	},
 	setDataSet: function (inValue, inDefault){	    
 	    if (this._typeChangedConnect) {
@@ -1101,7 +1132,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 					fieldType:col.fieldType == "dojox.grid.cells._Widget" && col.editorProps && col.editorProps.regExp ? "dojox.grid.cells.ValidationTextBox" : col.fieldType,
 					widgetProps: col.editorProps,
 					options: typeof options == "string" ? options.split(/\s*,\s*/) : options,
-					editable:col.editable || col.fieldType, // col.editable is obsolete
+				        editable:show && (col.editable || col.fieldType), // col.editable is obsolete.  While users may like to hide/show columns with editors, a hidden column of editors breaks tabbing from editor to editor.
 					expression:col.expression, 					
 					displayType:col.displayType};
 		    if (obj.widgetProps) {
@@ -1124,6 +1155,8 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 			var selectDataSet = this.owner.getValueById(col.editorProps.selectDataSet);
 			if (selectDataSet) {
 			    if (!selectDataSet.isEmpty()) {
+				obj.options = selectDataSet.getData();
+/*
 				var options = [];
 				var count = selectDataSet.getCount();
 				for (var i = 0; i < count; i++) {
@@ -1131,6 +1164,7 @@ dojo.declare("wm.DojoGrid", wm.Control, {
 				    options.push({name: item.getValue(col.editorProps.displayField), dataValue: item.getData()});
 				}
 				obj.options = options;
+				*/
 			    }
 			    if (this["_connectOnSetData." + col.field]) dojo.disconnect(this["_connectOnSetData." + col.field]);
 			    this["_connectOnSetData." + col.field] = this.connect(selectDataSet, "onSetData", dojo.hitch(this, "updateEditorDataSet", selectDataSet, col.field)); // recalculate the columns/regen the grid each time our dataSet changes

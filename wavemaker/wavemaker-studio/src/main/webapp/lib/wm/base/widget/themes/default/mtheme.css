@@ -1,6 +1,6 @@
 
 /*
- *  Copyright (C) 2010-2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2010-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -297,6 +297,7 @@ th {
 
 .wmlist-cell {
 	padding: 0.2em 0.1em;
+	word-wrap: break-word; 
 }
 
 .wmlist-header th {
@@ -864,7 +865,12 @@ body .AppToolTip {
     line-height: normal;
     padding: 2px 5px 2px 5px;
 }
-
+.wmeditor .wmCheckboxSetItem .dijitReset {
+    float: left;
+}
+.wmeditor .wmCheckboxSetItem label {
+    display: block;
+}
 
 .wmSizeNode {
 display: inline-block;
@@ -1085,10 +1091,10 @@ height: 100%;
 }
 
 .wmlist-cell .wmDeleteColumnImage {
-background-position: -560px 0px;
 width: 16px !important;
 height: 16px !important;
-background-image: url(../../../../../images/silkIcons/silk.png);
+background-image: url(../../../../../images/common/smallx.png);
+background-position:50% 50%;
 background-repeat:no-repeat;
 }
 .wmlist-cell .wmDeleteColumn {

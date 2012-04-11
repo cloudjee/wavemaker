@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -220,7 +220,7 @@ wm.RelatedEditor.extend({
 			required: inFieldSchema.required,
 			lookupDisplay: ff.displayType || 'Text',
 			displayField: ff.dataIndex,
-			formField: ff.dataIndex
+			formField: ff.dataIndex || ""
 		};
 		props.name = wm.makeNameForProp(this.formField, "Lookup");
 		var lookupProps = this._getLookupFieldInfo(inFieldSchema);
@@ -270,7 +270,11 @@ wm.RelatedEditor.extend({
 	},
 	hasGrid: function() {
 		return wm.getMatchingFormWidgets(this, dojo.hitch(this, function(w) {
-			return ((w instanceof wm.DojoGrid) && w.getDataSet().getId() == this.dataSet.getId());
+		    return ((w instanceof wm.DojoGrid) && w.getDataSet().getId() == this.dataSet.getId());
+		    if (w instanceof wm.DojoGrid == false) return false;
+		    var dataSetId = w.$.binding.wires.dataSet.source;
+		    var formDataSetId = this.getParentForm().dataSet.getId();
+		    if (dataSetId && dataSetId.indexOf(formDataSetId + ".") == 0) return true;
 		})).length;
 	},
 	// return a grid with same dataSet id as the relatedEditor

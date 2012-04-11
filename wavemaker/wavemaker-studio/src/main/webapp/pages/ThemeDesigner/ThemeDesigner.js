@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2011 VMware, Inc. All rights reserved.
+ * Copyright (C) 2010-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -377,6 +377,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
                 dojo.stopEvent(event);
             });
         }));
+	this.themeselectChange(this.themeSelect);
     },
 
     initThemeGroupList: function() {
@@ -560,12 +561,16 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	    this.themePrototype =  dojo.fromJson(dojo.xhrGet({url:path + "Theme.js", sync:true, preventCache:true}).results[0]);
             for (var i in this.themePrototype) {
                 try {
-	        var propHash = this.themePrototype[i];
-	        var prototype = dojo.getObject(i).prototype;
-	        for (var j in propHash) {
-		    //console.log("SET " + i + "." + j + ": " + propHash[j]);
-		    prototype[j] = propHash[j];
-	        }
+	            var propHash = this.themePrototype[i];
+		    var obj = dojo.getObject(i);
+	            if (obj)
+			var prototype = obj.prototype;
+		    if (prototype) {
+			for (var j in propHash) {
+			    //console.log("SET " + i + "." + j + ": " + propHash[j]);
+			    prototype[j] = propHash[j];
+			}
+		    }
                 } catch(e) {
                     console.error("Failed to set prototype of " + i + ": " + e);
                 }
@@ -1133,7 +1138,10 @@ dojo.declare("ThemeDesigner", wm.Page, {
         }
         this._descConnections = [];
 
-        var groupName = inSender.selectedItem.getData().dataValue;
+	var selectedData = inSender.selectedItem.getData();
+	if (selectedData) {
+            var groupName = selectedData.dataValue;
+	}
 	if (!groupName) return;
 	if (groupName == "Basic") 
 	    return this.generateBasicEditor();

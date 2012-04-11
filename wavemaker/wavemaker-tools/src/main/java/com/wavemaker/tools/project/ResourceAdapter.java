@@ -1,7 +1,19 @@
+/*
+ *  Copyright (C) 2012 VMware, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 
 package com.wavemaker.tools.project;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,6 +25,7 @@ import org.springframework.core.io.WritableResource;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
+import com.wavemaker.tools.io.File;
 import com.wavemaker.tools.io.Folder;
 import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourcePath;
@@ -46,6 +59,9 @@ public class ResourceAdapter implements org.springframework.core.io.Resource, Wr
 
     @Override
     public InputStream getInputStream() throws IOException {
+        if (!exists()) {
+            throw new FileNotFoundException(this.path);
+        }
         return this.rootFolder.getFile(this.path).getContent().asInputStream();
     }
 
@@ -78,7 +94,7 @@ public class ResourceAdapter implements org.springframework.core.io.Resource, Wr
     public long contentLength() throws IOException {
         Resource resource = this.rootFolder.getExisting(this.path);
         if (resource instanceof File) {
-            return ((File) resource).length();
+            return ((File) resource).getSize();
         }
         throw new FileNotFoundException(getDescription() + " does not refer to a File");
     }
@@ -87,7 +103,7 @@ public class ResourceAdapter implements org.springframework.core.io.Resource, Wr
     public long lastModified() throws IOException {
         Resource resource = getExisting();
         if (resource instanceof File) {
-            return ((File) resource).lastModified();
+            return ((File) resource).getLastModified();
         }
         throw new FileNotFoundException(getDescription() + " cannot be resolved in the file system for resolving its last-modified timestamp");
     }
@@ -119,7 +135,7 @@ public class ResourceAdapter implements org.springframework.core.io.Resource, Wr
     }
 
     @Override
-    public File getFile() throws IOException {
+    public java.io.File getFile() throws IOException {
         throw new UnsupportedOperationException();
     }
 

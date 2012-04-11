@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2011 VMware, Inc. All rights reserved.
+ * Copyright (C) 2010-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,22 +19,25 @@ dojo.declare("NewLivePanelDialog", wm.Page, {
     options: null,
     start: function() {
 
-	var options = this.options = [{name: "wm.LiveVariable",
-				       img:""},
+	var options = this.options = [
+				      {name: this.getDictionaryItem("MENU"),
+				       img: "images/GridLiveFormLeft.png"},
 				       {name: this.getDictionaryItem("TRADITIONAL"),
 				       img: "images/GridLiveForm.png"},
 				      {name: this.getDictionaryItem("DIALOG"),
 				       img: "images/GridLiveFormDialog.png"},
 				      {name: this.getDictionaryItem("BREADCRUMB"),
-				       img: "images/GridLiveFormDialog.png"},
+				       img: "images/GridLiveFormBreadcrumbs.png"},
 				      {name: this.getDictionaryItem("GRID"),
-				       img: "images/GridLiveFormDialog.png"}];
+				       img: "images/GridLiveFormEditable.png"},
+	                              {name: this.getDictionaryItem("LIVEVARIABLE"),
+				       img:""},];
 	
         var i = 0; 
 
 	for (var i = 0; i < options.length; i++) {
             var option = options[i];
-            if (i % 4 == 0) {
+            if (i % 3 == 0) {
                 var panel = new wm.Panel({width: "100%", height: "128px", layoutKind: "left-to-right", parent: this.templatesInsertPanel, owner: this, name: "templateRow" + i});
             }
             var imgpanel = new wm.Panel({_classes: {domNode: ["SelectableTemplate"]}, 
@@ -50,7 +53,9 @@ dojo.declare("NewLivePanelDialog", wm.Page, {
 	    if (i == 0) 
 		var firstimgpanel = imgpanel;
             var img = new wm.Picture({width: "100%", 
-				      height: "100px", 
+				      height: "91px", 
+				      border: "1",
+				      borderColor: "#555555",
 				      parent: imgpanel, 
 				      owner: this, 
 				      name: "template"+ i});

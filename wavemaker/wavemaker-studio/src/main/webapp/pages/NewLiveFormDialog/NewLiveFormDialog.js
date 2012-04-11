@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2011 VMware, Inc. All rights reserved.
+ * Copyright (C) 2010-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -20,19 +20,28 @@ dojo.declare("NewLiveFormDialog", wm.Page, {
     },
     setForm: function(inForm) {
 	this.form = inForm;
+	this.root.clearData();
 	this.typeSelect.refreshOptions();
 	this.dataSetSelect.refreshOptions();
-	this.root.clearData();
+	this.formBehavior.setDataValue("standard");
+	this.readonlyManager.setDataValue(true);
     },
     onCancelClick: function() {
         this.owner.owner.dismiss();
 	this.form.destroy();
     },
+    dataSetSelectChange: function(inSender, inDataValue, inDisplayValue) {
+	var c = studio.page.getValueById(inDataValue);
+	if (c && c.type) {
+	    this.typeSelect.setDataValue(c.type);
+	}
+    },
     onOkClick: function(selectedName) {
-	this.form.setName(wm.decapitalize(this.typeSelect.getDisplayValue().replace(/^.*\./,"")) + "DBForm");
+	this.form.setName(studio.page.getUniqueName(wm.decapitalize(this.typeSelect.getDisplayValue().replace(/^.*\./,"")) + "DBForm"));
+	this.form.set_formBehavior(this.formBehavior.getDataValue());
 	if (this.typeSelect.getDataValue())
 	    this.form.set_type(this.typeSelect.getDataValue());
-	this.form.set_formBehavior(this.formBehavior.getDataValue());
+
 	this.form.set_readonlyManager(this.readonlyManager.getDataValue());
 	if (this.form.formBehavior != "insertOnly" && this.dataSetSelect.getDataValue()) {
 	    this.form.$.binding.addWire(null, "dataSet", this.dataSetSelect.getDataValue(), "");

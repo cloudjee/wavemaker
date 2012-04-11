@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ wm.convertValueToDate = function(inValue, inParams) {
 	{
 		return null;
 	}
-	else if (Number(v))
+        else if (Number(v) || typeof(v) == "number")
 	{
 		return new Date(Number(v));
 	}

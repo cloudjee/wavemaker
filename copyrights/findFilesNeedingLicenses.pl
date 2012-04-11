@@ -43,18 +43,23 @@ sub searchFolder{
 sub searchFile {
   my($file, $copyright) = @_;
 
+  if ($file =~ /\/ace/ || $file =~ /\/jsdoc-toolkit/) {
+    return;
+  }
+
   my $f = `cat $file`;
- if ($f =~ /Copyright \(C\) 20(\d\d)\-20\d\d WaveMaker/) {
-    $f =~ s/Copyright \(C\) 20(\d\d)\-20\d\d WaveMaker/Copyright (C) 20$1-2011 WaveMaker/;
+
+ if ($f =~ /Copyright \(C\) 20(\d\d)\-20\d\d (Infoteria Corporation and )?VMware/) {
+    $f =~ s/Copyright \(C\) 20(\d\d)\-20\d\d (Infoteria Corporation and )?VMware/Copyright (C) 20$1-2012 ${2}VMware/;
     open(FILE, ">$file");
     print FILE $f;
     close(FILE);
-  } elsif ($f =~ /Copyright \(C\) 20(\d\d) WaveMaker/ && $f !~ /Copyright \(C\) 2011 WaveMaker/) {
-    $f =~ s/Copyright \(C\) 20(\d\d) WaveMaker/Copyright (C) 20$1-2011 WaveMaker/;
+  } elsif ($f =~ /Copyright \(C\) 20(\d\d) (Infoteria Corporation and )?VMware/ && $f !~ /Copyright \(C\) 2012 (Infoteria Corporation and )?VMware/) {
+    $f =~ s/Copyright \(C\) 20(\d\d) (Infoteria Corporation and )?VMware/Copyright (C) 20$1-2012 ${2}VMware/;
     open(FILE, ">$file");
     print FILE $f;
     close(FILE);
-  } elsif ($f =~ /Copyright \(C\) (\d+\-)?2011 VMware/) {
+  } elsif ($f =~ /Copyright \(C\) (\d+\-)?2012 VMware/) {
     ;
   } elsif ($f =~ /(Copyright .*)/) {
     push(@FOREIGN, "$file has foreign copyright: $1");
@@ -86,3 +91,6 @@ if (-d $folder) {
 
 
 print("FOREIGN COPYRIGHTS:\n" . join("\n", @FOREIGN));
+
+
+print("\n\nTo scan the results, use\ngit diff |grep '^+'  | grep -v '^+++' |grep -v '^+ \*' |grep -v '^+/\*'\ngit diff | grep '^-'  |grep -v '^---'|grep -v '^- \*'\n");

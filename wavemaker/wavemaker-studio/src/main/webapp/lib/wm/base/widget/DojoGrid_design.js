@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2010-2011 VMware, Inc. All rights reserved.
+ * Copyright (C) 2010-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -209,6 +209,9 @@ wm.Object.extendSchema(wm.DojoGrid, {
     selectedItem: {ignore:1, bindSource: 1, simpleBindProp: true, doc: 1},
     emptySelection: { ignore: true, bindSource: 1, type: "Boolean",  doc: 1},
     isRowSelected: { ignore: true, bindSource: 1, type: "Boolean",   doc: 1},
+
+    /* Common Group */
+    manageHistory: {ignore:0},
 
     /* Event handlers */
     onSelectionChange:{order:3, advanced:1},

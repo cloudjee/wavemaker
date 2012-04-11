@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -91,6 +91,7 @@ dojo.declare("wm.Label", wm.Control, {
 		//this.doAutoSize();
 	},
 	setCaption: function(inCaption) {
+	    if (inCaption == undefined) inCaption = "";
             var innerHTML = this.sizeNode.innerHTML;
 	    if (inCaption && dojo.isArray(inCaption))
 		inCaption = inCaption.join(', ');

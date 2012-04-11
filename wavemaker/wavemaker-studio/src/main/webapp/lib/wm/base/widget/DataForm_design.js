@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2011-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -102,12 +102,19 @@ wm.FormPanel.extend({
 		if (typeDef.liveService) {
 		    dataSource = "liveData";
 		} else {
-		    var service = typeDef.service;
-		    var serviceList = studio.application.getServerComponents();
-		    for (var i = 0; i < serviceList.length; i++) {
-			if (service == serviceList[i].name) {
-			    dataSource = "compositeKey";
-			    break;
+		    /* If there is a parent form and its a liveService and this subform's type is NOT liveSource then its a composite key */
+		    var parentForm = this.getParentForm();
+		    if (parentForm) {
+			var parentTypeDef = parentForm.getTypeDef();
+		    }
+		    if (parentTypeDef && parentTypeDef.liveService) {
+			var service = typeDef.service;
+			var serviceList = studio.application.getServerComponents();
+			for (var i = 0; i < serviceList.length; i++) {
+			    if (service == serviceList[i].name) {
+				dataSource = "compositeKey";
+				break;
+			    }
 			}
 		    }
 		}
@@ -116,8 +123,8 @@ wm.FormPanel.extend({
 		this.isCompositeKey = dataSource == "compositeKey";
 		/* If its a composite key, see if there are any foreign keys, and change their types from int/string to the type of the foreign object */
 		if (dataSource == "compositeKey") {
-
-		    var def = studio.dataService.requestSync("getRelated", [service, this.getParentForm().serviceVariable.type.replace(/^.*\./,"")]);
+		    
+		    var def = studio.dataService.requestSync("getRelated", [service, parentForm.type.replace(/^.*\./,"")]);
 		    def.addCallback(dojo.hitch(this, function(inData) {
 			var relationshipsToDelete = [];
 			for (var i = 0; i < inData.length; i++) {
@@ -185,6 +192,7 @@ wm.FormPanel.extend({
 	var formField = this._getFormField(/*inFieldInfo.dataIndex */fieldName);
 	if (formField && !this._getEditorForField(formField)) {
 	    if (wm.typeManager.isStructuredType(inFieldInfo.type) || inFieldInfo.isList) {
+		if (inFieldInfo.isList && (this.formBehavior == 'insertOnly' || this.subFormOnly)) return;
 		return this.makeRelatedEditor(inFieldInfo, formField);
 	    } else {
 		return this.makeBasicEditor(inFieldInfo, formField);
@@ -229,13 +237,13 @@ wm.FormPanel.extend({
 
 	if (relatedTypeDef) {
 	    /* If its a liveService and its not a list type, create a wm.Lookup */
-	    if (relatedTypeDef.liveService && !inFieldInfo.isList) {
+	    if (relatedTypeDef.liveService && !inFieldInfo.isList && !this.subFormOnly) {
 		    props.name = wm.makeNameForProp(inFormField, "Lookup")
 		    var e = wm.createFieldEditor(this.getEditorParent(), fieldDef, props, {}, "wm.Lookup");
 	    }
 
 	    /* If its a liveService and it IS a list type, create a readonly grid related editor */
-	    else if (relatedTypeDef.liveService && inFieldInfo.isList) {
+	    else if (relatedTypeDef.liveService && inFieldInfo.isList ) {
 		var e = this.owner.loadComponent(wm.makeNameForProp(inFormField, "OneToMany"), this, "wm.OneToMany", props);
 		/* don't automatically add grids
 		    props.editingMode = "readonly";
@@ -247,6 +255,7 @@ wm.FormPanel.extend({
 	    /* Anything else, and  just get an editable subform for lack of a better idea */
 	    else {
 		props.editingMode = "one-to-one";
+		props.subFormOnly = this.subFormOnly;
 		var e = this.owner.loadComponent(wm.makeNameForProp(inFormField, "SubForm"), this, "wm.SubForm", props);
 		e.set_type(fieldDef.type);
 	    }
@@ -276,7 +285,7 @@ wm.FormPanel.extend({
 			e.setWidth(this.editorWidth);
                     else 
                         e.setWidth("100%"); // because its going to be 100% anyway so why confuse the user?
-		    e.setHeight(this.editorHeight);
+		    e.set_height(this.editorHeight);
 		    //console.log(this.name, "createEditor", arguments, e);
 		    return e;
 		}
@@ -344,13 +353,13 @@ wm.Object.extendSchema(wm.DataForm, {
 
     /* Editor group */
     dataOutput: {group: "widgetName", subgroup: "",  order: 3, readonly: 1, bindable: 1, advanced:1,  type: "wm.Variable", simpleBindProp: true, editor: "wm.prop.FieldGroupEditor"},
-    dataSet:    {group: "widgetName", subgroup: "", order: 2, readonly: 1, bindTarget: 1, type: "wm.Variable", editor: "wm.prop.DataSetSelect"},
+    dataSet:    {group: "widgetName", subgroup: "", order: 2, readonly: 1, bindTarget: 1, requiredGroup: 1, type: "wm.Variable", editor: "wm.prop.DataSetSelect"},
 
     /* Editor group; behavior subgroup */
     confirmChangeOnDirty:    {group: "widgetName", subgroup: "behavior", order: 100, advanced:1},
     setReadonlyOnPrimaryKeys:{group: "widgetName", subgroup: "behavior", order: 101, advanced:1},
-    generateInputBindings:   {group: "widgetName", subgroup: "behavior", order: 200, advanced:1},
-    generateOutputBindings:  {group: "widgetName", subgroup: "behavior", order: 201, advanced:1},
+    generateInputBindings:   {group: "widgetName", subgroup: "behavior", order: 200, advanced:1, ignore: 1},
+    generateOutputBindings:  {group: "widgetName", subgroup: "behavior", order: 201, advanced:1, ignore: 1},
 
 
     /* Operations gropu */
@@ -426,7 +435,12 @@ wm.DataForm.extend({
     afterPaletteDrop: function() {
 	this.inherited(arguments);
     },
-
+    afterPaletteChildDrop: function(inWidget) {
+	this.inherited(arguments);
+	if (inWidget instanceof wm.LiveFormBase) {
+	    app.alert("Using a " + inWidget.declaredClass + " in a DataForm is not supported.  Please use a wm.SubForm, wm.OneToMany or wm.Lookup instead");
+	}
+    },
 
     /****************
      * METHOD: set_type (DESIGN)
@@ -538,7 +552,7 @@ wm.DataForm.extend({
 	    if (!this.generateInputBindings) {
 		this.populateEditors();
 	    }
-	    this.setHeight(this.getPreferredFitToContentHeight() + "px");
+	    this.set_height(this.getPreferredFitToContentHeight() + "px");
 	    this.inherited(arguments);
 	},
 
@@ -548,7 +562,8 @@ wm.DataForm.extend({
 	},
 
 	addEditorToForm: function(inEditor) {
-		var e = inEditor, ff = e.formField && this.getViewDataIndex(e.formField || "");
+	    var e = inEditor;
+	    var ff = e.formField && this.getViewDataIndex(e.formField || "");
 		if (ff) {
                     if (wm.isInstanceType(e, wm.DataForm))
 			var f = this.addEditorToView(e, ff);
@@ -749,7 +764,7 @@ wm.DataForm.extend({
 
 
 
-	this.setHeight(this.getPreferredFitToContentHeight() + "px");
+	this.set_height(this.getPreferredFitToContentHeight() + "px");
 	    this.reflow();
 	    studio.refreshDesignTrees();
 	// reflow called by caller
@@ -840,7 +855,6 @@ wm.DBForm.extend({
     listProperties: function() {
 	var props = this.inherited(arguments);
 	props.dataSet.ignoretmp = this.formBehavior == "insertOnly";	
-	props.dataOutput.ignoretmp = !this.generateOutputBindings;
 	return props;
     },
 
@@ -1164,7 +1178,7 @@ wm.Object.extendSchema(wm.ServiceInputForm, {
     
 });
 wm.ServiceInputForm.extend({
-
+    subFormOnly: true,
     getTypeSchema: function() {
 	return this.serviceVariable._dataSchema;
     },
@@ -1187,6 +1201,8 @@ wm.ServiceInputForm.extend({
 		this._removeEditors();
 	    }
 	}
+	if (inVar)
+	    this.type = inVar.input.type;
     }
 });
 

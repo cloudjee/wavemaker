@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2011-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -185,8 +185,8 @@ wm.Object.extendSchema(wm.Application, {
     //IERoundedCorners: {ignore: true},
     dialogAnimationTime: {group: "widgetName", subgroup: "behavior", type: "number", order: 200},
     disableDirtyEditorTracking: {group: "widgetName", subgroup: "behavior", type: "boolean", order: 250},
-    manageURL: {group: "widgetName", subgroup: "behavior", type: "boolean", order: 50},
-    manageHistory: {group: "widgetName", subgroup: "behavior", type: "boolean", order: 51},
+    manageURL: {ignore:0},
+    manageHistory: {ignore:0},
     studioVersion: {group: "widgetName",  subgroup: "version", writeonly: true, type: "string", order: 105},
     projectVersion: {group: "widgetName",  subgroup: "version", type: "string", order: 100},
     projectSubVersion: {group: "widgetName", subgroup: "version", type: "string", order: 101},

@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2009-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -289,7 +289,7 @@ dojo.declare("wm.design.Mover", wm.DragDropper, {
 	},
 	isDesignable: function() {
 		var c = this.info.control || (dojo.getObject(this.info.type)).prototype;
-	    return c instanceof wm.Control && c instanceof wm.Dialog == false;
+	    return c instanceof wm.Control && c instanceof wm.Dialog == false || c instanceof wm.DataModelEntity;
 	}
 });
 

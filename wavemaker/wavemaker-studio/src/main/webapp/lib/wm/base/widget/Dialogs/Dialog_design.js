@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2011-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -33,6 +33,12 @@ wm.Dialog.extend({
 	    studio.designer.domNode.appendChild(this.domNode);
 	    this.show();
 	},
+    listProperties: function() {
+	var p = this.inherited(arguments);
+	p.minHeight.ignoretmp = false; // need these to control docking behavior
+	p.minWidth.ignoretmp = false; // need these to control docking behavior
+	return p;
+    },
     set_owner: function(inOwner) {
 	var oldOwner = this.owner;
 	this.inherited(arguments);
@@ -48,6 +54,18 @@ wm.Dialog.extend({
     set_containerPadding: function(inPadding) {
 	this.containerPadding = inPadding;
 	if (this.containerWidget) this.containerWidget.setPadding(inPadding);
+    },
+    /* Do not write showing=true to widgets.js */
+    write: function(inIndent, inOptions) {
+	if (!this.docked) {
+	    var showing = this.showing;
+	    this.showing = false;
+	    var result = this.inherited(arguments);
+	    this.showing = showing;
+	    return result;
+	} else {
+	    return this.inherited(arguments);
+	}
     }
 });
 
@@ -69,6 +87,8 @@ wm.Object.extendSchema(wm.Dialog, {
 
     /* Common group */
     owner: {ignore:0},
+    manageURL: {ignore:0},
+    manageHistory: {ignore:0},
 
     /* Styles group */
     titlebarBorder:      {group: "widgetName", subgroup: "style", order: 5},
@@ -248,9 +268,14 @@ wm.LoadingDialog.extend({
 	this.captionWidth = inWidth;
 	this._label.setWidth(inWidth);
 	this._label.doAutoSize();
+    },
+    set_image: function(inImage) {	
+	this.setImage(inImage);
+	this.connectOnce(this._picture.img, "onload", this, function() {
+	    this.setImageWidth(this._picture.img.naturalWidth + "px");
+	    this.setImageHeight(this._picture.img.naturalHeight + "px");
+	});
     }
-
-
 });
 
 wm.Object.extendSchema(wm.LoadingDialog, {

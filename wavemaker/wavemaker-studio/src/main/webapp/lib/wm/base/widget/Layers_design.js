@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -138,6 +138,10 @@ wm.Object.extendSchema(wm.Layers, {
     mobileHeaderHeight: {ignore:1, group: "widgetName", subgroup: "layout", order: 51, editor: "wm.prop.SizeEditor", editorProps: {pxOnly: 1}, advanced:1, hidden:1},
     desktopHeaderHeight: {ignore:1, group: "widgetName", subgroup: "layout", order: 51, editor: "wm.prop.SizeEditor", editorProps: {pxOnly: 1}, advanced:1, hidden:1},
 
+    /* Common Group */
+    manageURL: {ignore:0},
+    manageHistory: {ignore:0},
+
     /* Operations group */
     add: { group: "operation", order: 1, operation: 1 },
 
@@ -249,6 +253,13 @@ wm.Layers.extend({
             case "Layers":
                 newClass = "wm.Layers";
                 break;
+            case "Breadcrumb":
+                newClass = "wm.BreadcrumbLayers";
+                break;
+            case "Wizard":
+                newClass = "wm.WizardLayers";
+                break;
+
             }
             var widgetsjs = this.write("");
             widgetsjs = dojo.fromJson(widgetsjs.replace(/^.*?\:/,""));
@@ -320,7 +331,7 @@ wm.Layers.extend({
 		optionalSubmenuArray.push({label: "add",
 					   iconClass: "Studio_silkIconImageList_30",
 					   onClick: dojo.hitch(this, function() {
-					       this.editProp("add");
+					       this.addLayer();
 					   })});
 		dojo.forEach(data.children, function(i) {optionalSubmenuArray.push(i);});
 	    } else
@@ -423,6 +434,7 @@ wm.WizardLayers.extend({
 	this.generateBottomButtonEvents();
 
 	this.decorator.addFooter();
+
 	this.reflow();
 	studio.reinspect(true)
     },
@@ -445,7 +457,7 @@ wm.WizardLayers.extend({
 	var p = this.inherited(arguments);
 	var bottomButtons = this.bottomButtons ? this.bottomButtons.split(/\s*,\s*/) : [];
 	for (var i = 0; i < bottomButtons.length; i++) {
-	    p["onBottomButton" + i] = {isEvent:true};
+	    p["onBottom" + i + "Button"] = {isEvent:true};
 	}
 	return p;
     }

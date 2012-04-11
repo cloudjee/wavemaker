@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2009-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -123,13 +123,6 @@ wm.define("wm.Container", wm.Control, {
 		if (this.domNode && this.domNode.box)
 			delete this.domNode.box;
 		this.inherited(arguments);
-	},
-	// backward-compatibility fixups
-	afterPaletteDrop: function() {
-		if (this.verticalAlign == "justified")
-			this.verticalAlign = "top";
-		if (this.horizontalAlign == "justified")
-			this.horizontalAlign = "left";
 	},
 	bc: function() {
 		this.inherited(arguments);
@@ -740,7 +733,7 @@ wm.Container.extend({
 	this.setWidth(this.getPreferredFitToContentWidth() + "px");
     },
     setBestHeight: function() {
-	this.setHeight(this.getPreferredFitToContentHeight() + "px");
+	this[this._isDesignLoaded ? "set_height" : "setHeight"](this.getPreferredFitToContentHeight() + "px");
     },
 	getMinWidthProp: function() {
             if (this.fitToContentWidth)

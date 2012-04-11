@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
+ * Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -276,6 +276,12 @@
     "descTwitterFeed": "A twitter feed viewer",
     "descWeatherWidget": "Google widget for viewing weather",
     "descYouTubeWidget": "Widget for viewing YouTube videoes",
+    "descFaceBookLikeWidget": "A facebook like button",
+    "descFaceBookActivityWidget": "A panel of facebook activity",
+    "descTwitterFollowWidget": "A Twitter Follow button",
+    "descTwitterTweetWidget": "A Twitter Tweet button",
+    "descTwitterListWidget": "Show Twitter search or profile results",
+    "descMapsWidget": "Shows a map",
     "descFisheye": "Widget for zooming into images as the mouse moves over them",
     "descLightbox": "Popup for showing a set of photos",
     "descProgressBar": "Widget for showing a progress indicator",

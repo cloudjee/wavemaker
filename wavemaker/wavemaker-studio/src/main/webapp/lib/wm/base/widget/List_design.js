@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2011-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -28,6 +28,9 @@ wm.Object.extendSchema(wm.VirtualList, {
 
     /* Ignored Group */
     box: { ignore: 1 },
+
+    /* Common Group */
+    manageHistory: {ignore:0},
 
     /* Methods group */
     getCount: {method:1, returns: "Number"},

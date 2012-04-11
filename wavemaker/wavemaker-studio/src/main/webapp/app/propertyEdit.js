@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
+ * Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -410,7 +410,6 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
 				    width: "100%",
 				    height: "100%",
 				    name: "editor",
-				    disabled: this.disabled,
 				    readonly: this.readonly
 				   });
 	this.numberEditor = new wm.Text({owner: this,
@@ -419,7 +418,6 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
 					   width: "100%",
 					   name: "numberEditor",
 					   padding: "0,1,0,0",
-				    disabled: this.disabled,
 				    readonly: this.readonly
 					  });
 	this.typeEditor = new wm.SelectMenu({owner: this,
@@ -430,7 +428,6 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
 					     displayField: "dataValue",
 					     width: "55px",
 					     padding: "0",
-				    disabled: this.disabled,
 				    readonly: this.readonly
 					    });
 	if (this.pxOnly) {
@@ -467,6 +464,12 @@ dojo.declare("wm.prop.SizeEditor", wm.AbstractEditor, {
 	} else {
 	    this.numberEditor.setDataValue(100);
 	    this.typeEditor.setDataValue("px");
+	}
+    },
+    setDisabled: function(inDisabled) {
+	this.inherited(arguments);
+	if (this.editor) {
+	    this.editor.setDisabled(this.disabled);
 	}
     }
 });
@@ -556,7 +559,7 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
 	this.inherited(arguments)
 	var matchType = "";
 	if (this.matchComponentType) {
-	    var value =  this.inspected.getValue(this.propDef.name)
+	    var value =  this.inspected.getValue(this.propDef.fullName)
 	    if (value)
 		matchType = value.type;
 	}
@@ -574,9 +577,9 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
 	*/
 	if (this.widgetDataSets)
 	    wm.forEachWidget(sp.root, dojo.hitch(this, function(w) {
-		if (w !== this && !(w instanceof wm.LiveFormBase) && !(w instanceof wm.AbstractEditor && w.formField))
+		if (!(w instanceof wm.PageContainer) && w !== this && !(w instanceof wm.LiveFormBase) && !(w instanceof wm.AbstractEditor && w.formField))
 		    r = r.concat(this.getDataSets([w],matchType));
-	    }));
+	    }),true);
 	r = r.sort();
 	/* If called from something other than the property panel, then this.inspected may not exist */
 	if (this.inspected) {
@@ -587,10 +590,15 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
 
 
     getDataSets: function(inOwners, matchType) {
-	console.log("getDataSets: " + inOwners[0].toString());
 	    return wm.listMatchingComponentIds(inOwners, dojo.hitch(this, function(c) {
+		if (c instanceof wm.Property) return false;
 
-			if (!c.name || c.name.indexOf("_") === 0) return false;
+		// if its owner is not a page, then the owner is something like DojoGrid; in other words,
+		// c might be dojogrid1.dataSet.  If the owner is the thing being inspected (dojogrid1),
+		// then don't include its subcomponents as bindable.
+		if (c.owner instanceof wm.Page == false && c.owner == this.inspected) return false;
+
+		if (!c.name || c.name.indexOf("_") === 0) return false;
 
 		if (c.owner instanceof wm.LiveVariable && (c.name == "filter" || c.name == "sourceData"))
 		    return false;
@@ -628,7 +636,7 @@ dojo.declare("wm.prop.DataSetSelect", wm.prop.SelectMenu, {
 
 			    return true;
 			}
-	    }),true);
+	    }),true,true);
 	}
 });
 
@@ -719,6 +727,10 @@ dojo.declare("wm.prop.FieldList", wm.prop.CheckboxSet, {
 	this.beginEditUpdate();
 	this.setEditorValue(this.dataValue);
 	this.endEditUpdate();
+    },
+    reinspect: function() {
+	this.updateOptions();
+	return true;
     }
 	    
 });
@@ -787,7 +799,7 @@ dojo.declare("wm.prop.FormFieldSelect", wm.prop.SelectMenu, {
 		for (var i = 0; i < result.length; i++) {		    
 		    var type = fields[result[i]].type;
 		    var typeDef = wm.typeManager.getType(type);
-		    if (!typeDef || !typeDef.liveService) {
+		    if (!typeDef || !typeDef.liveService || this.relatedFields) {
 			newresults.push(result[i]);
 		    }
 		}
@@ -1069,11 +1081,14 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
     restrictValues: false,
     displayField: "name",
     dataField: "dataValue",*/
-/*
     setEditorValue: function(inValue) {
-	this.inherited(arguments);
+	if (this.isDestroyed) {
+	    this.dataValue = inValue;
+	    this.onchange();
+	} else {
+	    this.inherited(arguments);
+	}
     },
-    */
     _createEditor: function(inNode, inProps) {
 	var e =  new wm.prop.EventDijit(this.getEditorProps(inNode, inProps));
 	e.owner = this;
@@ -1451,8 +1466,10 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 			    addToArray.push(formSubmenu);
 			    formSubmenu.children.push({label: cname + ".editNewObject", onClick: dojo.hitch(this, "setEditorValue", rname + ".editNewObject")});
 			    formSubmenu.children.push({label: cname + ".editCurrentObject", onClick: dojo.hitch(this, "setEditorValue", rname + ".editCurrentObject")});
-			    formSubmenu.children.push({label: cname + ".saveData", onClick: dojo.hitch(this, "setEditorValue", rname + ".saveData")});
-			    formSubmenu.children.push({label: cname + ".deleteData", onClick: dojo.hitch(this, "setEditorValue", rname + ".deleteData")});
+			    if (obj instanceof wm.DBForm) {
+				formSubmenu.children.push({label: cname + ".saveData", onClick: dojo.hitch(this, "setEditorValue", rname + ".saveData")});
+				formSubmenu.children.push({label: cname + ".deleteData", onClick: dojo.hitch(this, "setEditorValue", rname + ".deleteData")});
+			    }
 			    formSubmenu.children.push({label: cname + ".cancelEdit", onClick: dojo.hitch(this, "setEditorValue", rname + ".cancelEdit")});
                         } else {
 			    addToArray.push({defaultLabel: cname,  onClick: dojo.hitch(this, "setEditorValue", rname)});
@@ -2026,17 +2043,19 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	this.editors = {};
 
 	/* Determine if this property should be shown or not */
+/*
 	if (this.propDef.advanced && !studio.inspector.isAdvancedMode()) {
 	    this.setShowing(false);
 	} else {
 	    this.setShowing(true); // wm.PropertyInspector will set this to hidden if the entire thing is bound assuming a bind-editor will be shown instead; not applicable for this particular editor
 	}
-
+	*/
 	this.generateEditors(this.inspected);
     },
     generateEditors: function(c) {
 	this.propDef.treeBindRoot = this.propDef.name;
 	var propDef = dojo.clone(this.propDef);	
+	propDef.advanced = false; // ComponentInspector's already taking care of this for us
 	propDef.editor = "wm.prop.DataSetSelect";
 	propDef.fullName = propDef.name;
 	if (!propDef.editorProps) {
@@ -2092,6 +2111,10 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 		}
 		/* dojo.mixin used this way insures we work on a copy of propDef and don't modify e.propDef before its onclick is fired */
 		propDef = this.getPropDef(propDef, fieldName, fullName,type, isStructured);
+		if (propDef.editor == "wm.prop.DataSetSelect" && propDef.editorProps)  {
+		    propDef.editorProps.widgetDataSets = true;
+		    propDef.editorProps.matchComponentType = true;
+		}
 		e = studio.inspector.generateEditor(inspected, /* Component we are editing (or subcomponent in our case) */
 						    propDef, /* Property we are editing within the component */
 						    panel, /* Parent panel */

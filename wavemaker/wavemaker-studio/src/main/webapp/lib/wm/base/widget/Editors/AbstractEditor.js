@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2011-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -40,6 +40,11 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
     changeKeycodes: [dojo.keys.ENTER, dojo.keys.NUMPAD_ENTER, dojo.keys.DELETE, dojo.keys.BACKSPACE],
     classNames: "wmeditor",
 
+    // default is to only evaluate bindings on the dataValue when in a form when doing an insert operation
+    // but designer can also can it to be reevaluated when doing an update operation
+    // possible values are "onInsert", "onUpdate", "both"
+    dataValueBindingEvaluated: "onInsert",
+
     /* Formating */
 	formatter: '',
 	height: "24px",    
@@ -76,7 +81,6 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
     /* Events */
         changeOnEnter: false,
         changeOnKey: false,
-        changeOnSetData: true, // change to false to only fire binding and onchange events when changes are made by the user
         _updating: 0,
 
     scrim: true,
@@ -154,11 +158,11 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	this.captionPosition = pos;
 	if ((oldPos == "left" || oldPos == "right") && (pos == "bottom" || pos == "top")) {
 	    if (this.height.match(/px/) && parseInt(this.height) < 48)
-		this.setHeight("48px");
+		this.setValue("height","48px");
 	    this.captionSize = "28px";
 	} else if ((pos == "left" || pos == "right") && (oldPos == "bottom" || oldPos == "top")) {
 	    if (this.bounds.h >= 48) {
-		this.setHeight(this.constructor.prototype.height);
+		this.setValue("height",this.constructor.prototype.height);
 	    }
 	    if (this.captionSize.match(/px/) && parseInt(this.captionSize) < 100) {
 		this.captionSize = "100px";
@@ -173,7 +177,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    this.setCaptionSize(liveform.captionSize);
 	    this.setCaptionAlign(liveform.captionAlign);
 	    if (this.constructor.prototype.height == wm.AbstractEditor.prototype.height)
-		this.setHeight(liveform.editorHeight);  // don't set height for large text areas/richtext areas based on editorHeight.
+		this.setValue("height",liveform.editorHeight);  // don't set height for large text areas/richtext areas based on editorHeight.
 	}
 	this.sizeEditor();
     },
@@ -248,7 +252,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	    this.startTimerWithName("CreateDijit", this.declaredClass);
 		this.editor = this._createEditor(n, inProps);
 	        dojo.attr(this.captionNode, "for", this.editor.id);
-	if (wm.isMobile && "ontouchstart" in this.editor.domNode) {
+	if (this.editor.domNode && wm.isMobile && "ontouchstart" in this.editor.domNode) {
 	    dojo.query(".dijitArrowButton", this.editor.domNode).connect("ontouchstart", this.editor, "openDropDown");
 	}
 /*
@@ -621,10 +625,12 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	if (this.editorChanged()) {
 	    var e = this.editor;
 	    if (!this._loading && !this.isUpdating() && !this.readonly && e && !this.isLoading())
-		this.onchange(this.getDisplayValue(), this.getDataValue());
+		
+
+		this.onchange(this.getDisplayValue(), this.getDataValue(), this._inSetDataValue);
 	}
     },
-    onchange: function(inDisplayValue, inDataValue) {},
+    onchange: function(inDisplayValue, inDataValue, inSetByCode) {},
 	_getValidatorNode: function() {
 		var n = this.editor && this.editor.domNode.firstChild;
 		if (!n)
@@ -845,12 +851,6 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
      * Added to prevent onblur from firing bindings and onchange events if onKeyPress already fired that change.
      */
 	editorChanged: function() {
-	    if (this._inSetDataValue && !this.changeOnSetData) {
-		this.displayValue = this.getDisplayValue();
-		this.dataValue = this.getDataValue();
-		return false;
-	    }
-
 	    var displayValue = this.getDisplayValue();
 	    var changed = false;
 	    if (this.displayValue != displayValue) {
@@ -1005,7 +1005,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	},
 	dokeypress: function(inEvent) {
 		if (this.changeOnKey || (this.changeOnEnter && inEvent.keyCode == dojo.keys.ENTER))
-			wm.onidle(this, "doChangeOnKey", arguments);
+		    wm.onidle(this, "doChangeOnKey", inEvent);
 	        if (inEvent.keyCode == dojo.keys.ENTER)
 		    wm.onidle(this, "onEnterKeyPress", [this]);
 	},

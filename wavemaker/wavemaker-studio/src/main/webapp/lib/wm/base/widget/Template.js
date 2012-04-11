@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -55,6 +55,7 @@ wm.Template.extend({
     // block wm.Panel's afterPaletteDrop
     afterPaletteDrop: function() {
         wm.Container.prototype.afterPaletteDrop.call(this); 
+	this.desktopHeight = this.height; // changed by Control_design.afterPaletteDrop
     }
 });
 wm.Template.description = "A set of built from a template.";

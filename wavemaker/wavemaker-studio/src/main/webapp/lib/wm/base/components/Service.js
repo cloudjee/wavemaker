@@ -1,5 +1,5 @@
  /*
- *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -160,8 +160,8 @@ wm.services = {
 		var ctor = dojo.getObject(s.ctor || defaultCtor);
 		// FIXME: we don't want to be streamed so don't include owner
 		// otoh without owner, we don't know how to resolve paths at designTime
-		var service = new ctor({name: inName, service: inName});
-		service.owner = dojo.getObject("studio.wip.app") || app;
+	   var service = new ctor({name: inName, service: inName, owner: dojo.getObject("studio.wip.app") || app});
+	   //service.owner = dojo.getObject("studio.wip.app") || app;
 		return service;
 	},
 	_destroyService: function(inService) {

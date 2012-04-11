@@ -1,3 +1,16 @@
+/*
+ *  Copyright (C) 2012 VMware, Inc. All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
 
 package com.wavemaker.studio.phonegap;
 
@@ -54,7 +67,7 @@ public class PhoneGapService {
     @ExposeToClient
     public void generateBuild(String serverName, int portNumb, String themeName) {
         Project currentProject = this.projectManager.getCurrentProject();
-	currentProject.getRootFolder().getFolder("phonegap").createIfMissing();
+        currentProject.getRootFolder().getFolder("phonegap").createIfMissing();
         getPhoneGapFolder(FolderLayout.PHONEGAP_BUILD_SERVICE).createIfMissing();
         setupPhonegapFiles(FolderLayout.PHONEGAP_BUILD_SERVICE);
         updatePhonegapFiles(serverName, portNumb, FolderLayout.PHONEGAP_BUILD_SERVICE, themeName);
@@ -78,7 +91,6 @@ public class PhoneGapService {
     public void setupPhonegapFiles() {
         for (FolderLayout layout : FolderLayout.values()) {
             if (layout != FolderLayout.PHONEGAP_BUILD_SERVICE) {
-		System.out.println("LAYOUT:" + layout);
                 setupPhonegapFiles(layout);
             }
         }
@@ -101,38 +113,34 @@ public class PhoneGapService {
 
     private void setupPhonegapFiles(FolderLayout layout) {
         Folder phoneGapWebFolder = getPhoneGapFolder(layout);
-	if (!phoneGapWebFolder.exists()) return;
-	System.out.println("ROOT:" + phoneGapWebFolder.toString());
-        Folder phoneGapLibFolder = phoneGapWebFolder.getFolder("lib");
-	System.out.println("LIB:" + phoneGapLibFolder.toString());
-        if (phoneGapLibFolder.exists()) {
-	    System.out.println("EXISTS:" + phoneGapLibFolder.toString());
+        if (!phoneGapWebFolder.exists()) {
             return;
         }
-	System.out.println("NOT EXISTS:" + phoneGapLibFolder.toString());
+        Folder phoneGapLibFolder = phoneGapWebFolder.getFolder("lib");
+        if (phoneGapLibFolder.exists()) {
+            return;
+        }
         setupPhonegapProjectFiles(phoneGapWebFolder, phoneGapLibFolder);
         purgeUnnecessarySetupFiles(phoneGapLibFolder);
     }
 
     private void setupPhonegapProjectFiles(final Folder phoneGapWebFolder, Folder phoneGapLibFolder) {
         this.fileSystem.getStudioWebAppRootFolder().getFolder("lib").copyContentsTo(phoneGapLibFolder);
-	System.out.println("AFTER COPY:" + phoneGapLibFolder.exists());
         this.projectManager.getCurrentProject().getRootFolder().getFolder("webapproot/pages").copyContentsTo(phoneGapWebFolder.getFolder("pages"));
         this.fileSystem.getCommonFolder().copyContentsTo(phoneGapWebFolder.getFolder("common"));
         Folder sourceFolder = this.projectManager.getCurrentProject().getWebAppRootFolder();
-        for (String filename : new String[] { /*"index.html", "login.html",*/ "config.js", "boot.js" }) {
+        for (String filename : new String[] { "config.js", "boot.js" }) {
             File sourceFile = sourceFolder.getFile(filename);
             File destinationFile = phoneGapWebFolder.getFile(filename);
             if (sourceFile.exists() && !destinationFile.exists()) {
                 destinationFile.getContent().write(sourceFile);
             }
         }
-	System.out.println("AFTER COPY2:" + phoneGapLibFolder.exists());
     }
 
     private void fixupXCodeFilesFollowingSetup() {
         Folder xcodePhoneGapFolder = getPhoneGapFolder(FolderLayout.XCODE);
-	String projectName = this.projectManager.getCurrentProject().getProjectName();
+        String projectName = this.projectManager.getCurrentProject().getProjectName();
         File mainViewControllerFile = xcodePhoneGapFolder.getFile("../" + projectName + "/Classes/MainViewController.m");
 
         if (mainViewControllerFile.exists()) {
@@ -190,10 +198,8 @@ public class PhoneGapService {
         String url = "http://" + host + ":" + port + "/" + this.projectManager.getCurrentProject().getProjectName();
 
         // Delete all pages, resources and project files so we can re-copy updated version of them
-        //ResourceAttributeFilter<Resource> skippedResources = ResourceFiltering.resourceNames().notMatching("index.html", "login.html", "config.js", "lib");
-	ResourceAttributeFilter<Resource> skippedResources = ResourceFiltering.resourceNames().notMatching("config.js", "lib");
+        ResourceAttributeFilter<Resource> skippedResources = ResourceFiltering.resourceNames().notMatching("config.js", "lib");
         phoneGapFolder.list(skippedResources.notStarting("cordova")).delete();
-	System.out.println("UPDATE2:" + phoneGapFolder.getFolder("lib").exists());
         // Copy project files for phonegap
         projectFolder.getFolder("webapproot").list(skippedResources.notMatching("WEB-INF")).copyTo(phoneGapFolder);
 
@@ -220,7 +226,6 @@ public class PhoneGapService {
     }
 
     private void updateHtmlFile(String phoneGapScript, File file) {
-	System.out.println("updateHtmlFile: " + file.toString() + " : " + file.exists());
         if (!file.exists()) {
             return;
         }
@@ -262,10 +267,7 @@ public class PhoneGapService {
     }
 
     private void fixupXCodeFilesFollowingUpdate() {
-        //
-
-	String projectName = this.projectManager.getCurrentProject().getProjectName();
-
+        String projectName = this.projectManager.getCurrentProject().getProjectName();
         Folder xcodePhoneGapFolder = getPhoneGapFolder(FolderLayout.XCODE);
         File file = xcodePhoneGapFolder.getFile("../" + projectName + "/PhoneGap.plist");
         if (file.exists()) {

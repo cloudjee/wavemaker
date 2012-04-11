@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -101,6 +101,7 @@ dojo.declare("wm.ServiceCall", null, {
 		this._setOperation(this.operation, 1); // update the operation's type; forceUpdate needed so that if the type name is the same but fields have changed it will still get updated
 
 		if (this._isDesignLoaded && this.service) {
+/*
 		    if (!this.findSubscription("ServiceTypeChanged-" +  this.service)) {
 			this.subscribe("ServiceTypeChanged-" +  this.service, dojo.hitch(this, function() {
 			    this._service = wm.services.getService(this.service, 	
@@ -109,11 +110,20 @@ dojo.declare("wm.ServiceCall", null, {
 			    this._setOperation(this.operation, 1); // update the operation's type; forceUpdate needed so that if the type name is the same but fields have changed it will still get updated
 			}));
 		    }
+		    */
 		}      
 	    } catch(e) {
 	    } finally {delete this._inSetService;}
 	    
 	},
+	wmTypesChanged: function() {
+	    var owner = this.getOwnerApp();
+	    this._service = wm.services.getService(this.service, 	
+						   owner && owner.declaredClass == "StudioApplication") || new wm.Service({});
+	    wm.fire(this._service, "setServiceCall", [this]);
+	    this._setOperation(this.operation, 1); // update the operation's type; forceUpdate needed so that if the type name is the same but fields have changed it will still get updated
+
+	},	    
 	//=======================================================
 	// Operation
 	//=======================================================
@@ -643,7 +653,7 @@ wm.ServiceCall.extend({
 		d.show();
 	},
 
-
+    /* Fails to trigger from ServiceCall_design for wm.ServiceVariable; appears to be dojo bug */
 	makePropEdit: function(inName, inValue, inEditorProps) {
 	    var prop = this.schema ? this.schema[inName] : null;
 	    var name =  (prop && prop.shortname) ? prop.shortname : inName;
@@ -666,6 +676,7 @@ wm.ServiceCall.extend({
 		}
 		return this.inherited(arguments);
 	}
+
 });
 	     
 //===========================================================================
@@ -681,6 +692,9 @@ wm.ServiceCall.extend({
 dojo.declare("wm.ServiceInput", wm.Variable, {
 	/** @lends wm.ServiceInput.prototype */
 	_allowLazyLoad: false,
+        _getSchemaForType: function(inType) {
+	    return this.owner && this.owner._operationInfo ? this.owner._operationInfo.parameters : null;
+	},
 	isDataProp: function(inProp) {
 		// Note: it's important we assume all properties are data properties unless _dataSchema is set
 		// Since the dataSchema is set externally, 

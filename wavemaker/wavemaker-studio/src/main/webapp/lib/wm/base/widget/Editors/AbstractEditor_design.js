@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2011-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -90,7 +90,7 @@ wm.AbstractEditor.extend({
 		this.setCaptionAlign(liveform.captionAlign);
 		this.setCaptionSize(liveform.captionSize);
 		if (this.height == wm.AbstractEditor.prototype.height)
-		    this.setHeight(liveform.editorHeight);
+		    this.setValue("height",liveform.editorHeight);
 		if (this.width == wm.AbstractEditor.prototype.width)
 		    this.setWidth(liveform.editorWidth);
 
@@ -108,12 +108,13 @@ wm.AbstractEditor.extend({
 	// note: these editor properties must be serialized in the editor.
 	listProperties: function() {
 	        var props = this.inherited(arguments);
-	    var hasForm = this.getParentForm() || this.formField;
+	    var hasForm = this.getParentForm();// || this.formField;
 	    
 	    props.formField.ignoretmp = !Boolean(hasForm);
 	    props.displayValue.readonly = this.formField;
-	    props.defaultInsert.ignoretmp = wm.LiveFormBase && !this.isAncestorInstanceOf(wm.LiveFormBase) && wm.DataForm && !this.isAncestorInstanceOf(wm.DataForm);
-	    props.ignoreParentReadonly.ignoretmp = props.defaultInsert.ignoretmp;
+	    props.defaultInsert.ignoretmp = !wm.LiveFormBase || !this.isAncestorInstanceOf(wm.LiveFormBase);
+	    props.ignoreParentReadonly.ignoretmp = !hasForm;
+	    props.dataValueBindingEvaluated.ignoretmp = !wm.DataForm || !this.isAncestorInstanceOf(wm.DataForm) || !this.$.binding.wires.dataValue;
 	    props.minEditorWidth.ignoretmp = this.captionPosition == "top" || this.captionPosition == "bottom" || this.captionSize.match(/px/);
 		return props;
 	},
@@ -247,6 +248,7 @@ wm.Object.extendSchema(wm.AbstractEditor, {
     /* Value subgroup */
     formField: {group: "editor", subgroup: "dataSet", order: 20, editor: "wm.prop.FormFieldSelect", editorProps: {relatedFields: false}, ignoreHint: "formField is only available when the editor is in a form", requiredGroup: 1},
     defaultInsert:{type: "String", bindTarget: 1, group: "editor", subgroup: "value", order: 21, ignoreHint: "defaultInsert is only relevant if the editor is in a form"},
+    dataValueBindingEvaluated: {type: "String", group: "editor", subgroup: "value", order: 21, ignoreHint: "dataValueBindingEvaluated is only relevant if the editor is in a DataForm/DataBase Form", options: ["onInsert", "onUpdate", "both"]},
     displayValue: {group: "editor", subgroup: "value", bindSource: 1, order: 10}, // use getDisplayValue()
     dataValue: {bindable: 1, group: "editor", subgroup: "value", order: 11, simpleBindProp: true, type: "String"}, // use getDataValue()
     emptyValue: {group: "editor", subgroup: "value",  order: 12, options: ["unset", "null", "emptyString", "false", "zero"]},

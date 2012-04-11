@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -46,7 +46,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	enableAnimation:true,
 	chartType: 'Columns',
 	includeGrid:false,
-	gap:2,
+	gap:4,
 	defaultXY:[{'wmDefaultX':'Jan', 'wmDefaultY':3}, {'wmDefaultX':'Feb', 'wmDefaultY':5}, {'wmDefaultX':'Mar', 'wmDefaultY':8}, {'wmDefaultX':'Apr', 'wmDefaultY':2}],
 	addedSeries:{},
 	aniHighlight:null,

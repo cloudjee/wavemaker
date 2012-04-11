@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -114,6 +114,7 @@ public abstract class ControllerBase extends AbstractController {
 
         ModelAndView ret;
         try {
+            runtimeAccess.setStartTime(System.currentTimeMillis());
             // add logging
             StringBuilder logEntry = new StringBuilder();
             HttpSession session = request.getSession(false);
@@ -145,6 +146,11 @@ public abstract class ControllerBase extends AbstractController {
                 message = t.getMessage();
             } else {
                 message = t.toString();
+            }
+
+            if (serviceResponse != null && !serviceResponse.isPollingRequest() && serviceResponse.getConnectionTimeout() > 0 &&
+                    (System.currentTimeMillis() - runtimeAccess.getStartTime() > (serviceResponse.getConnectionTimeout() * 1000))) {
+                serviceResponse.addError(t);
             }
 
             return handleError(message, t);
@@ -245,36 +251,28 @@ public abstract class ControllerBase extends AbstractController {
     protected TypedServiceReturn invokeMethod(ServiceWire sw, String method, JSONArray jsonArgs,
                           Map<String, Object[]> mapParams, ServiceResponse serviceResponse)
             throws WMException {
-        runtimeAccess.setStartTime(System.currentTimeMillis());
-        try {
-            if (jsonArgs != null && mapParams != null) {
-                throw new WMRuntimeException(MessageResource.BOTH_ARGUMENT_TYPES, jsonArgs, mapParams);
-            } else if (sw == null) {
-                throw new NullArgumentException("sw");
-            }
-
-            sw.getServiceType().setup(sw, this.internalRuntime, this.runtimeAccess);
-
-            JSONState jsonState = getInternalRuntime().getJSONState();
-
-            ParsedServiceArguments args;
-            if (mapParams != null) {
-                args = sw.getServiceType().parseServiceArgs(sw, method, mapParams, jsonState);
-            } else {
-                args = sw.getServiceType().parseServiceArgs(sw, method, jsonArgs, jsonState);
-            }
-
-            getInternalRuntime().setDeserializedProperties(args.getGettersCalled());
-
-            return ServerUtils.invokeMethodWithEvents(getServiceEventNotifier(), sw, method, args, jsonState, false,
-                                    serviceResponse);
-        } catch (WMRuntimeException ex) {
-            if (serviceResponse != null && !serviceResponse.isPollingRequest() && serviceResponse.getConnectionTimeout() > 0 &&
-                    (System.currentTimeMillis() - runtimeAccess.getStartTime() > (serviceResponse.getConnectionTimeout() * 1000))) {
-                serviceResponse.addError(ex);
-            }
-            throw ex;
+        
+        if (jsonArgs != null && mapParams != null) {
+            throw new WMRuntimeException(MessageResource.BOTH_ARGUMENT_TYPES, jsonArgs, mapParams);
+        } else if (sw == null) {
+            throw new NullArgumentException("sw");
         }
+
+        sw.getServiceType().setup(sw, this.internalRuntime, this.runtimeAccess);
+
+        JSONState jsonState = getInternalRuntime().getJSONState();
+
+        ParsedServiceArguments args;
+        if (mapParams != null) {
+            args = sw.getServiceType().parseServiceArgs(sw, method, mapParams, jsonState);
+        } else {
+            args = sw.getServiceType().parseServiceArgs(sw, method, jsonArgs, jsonState);
+        }
+
+        getInternalRuntime().setDeserializedProperties(args.getGettersCalled());
+
+        return ServerUtils.invokeMethodWithEvents(getServiceEventNotifier(), sw, method, args, jsonState, false,
+                                serviceResponse);
     }
 
     @SuppressWarnings("deprecation")

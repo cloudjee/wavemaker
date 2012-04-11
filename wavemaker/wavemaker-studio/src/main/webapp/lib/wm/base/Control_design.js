@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2009-2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2009-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -124,10 +124,12 @@ wm.Control.extend({
         if (this.designWrapper)
             this.designWrapper.controlNameChanged();
     },
+    afterPaletteChildDrop: function(inWidget) {
+    },
     afterPaletteDrop: function(){
 	this.inherited(arguments);
 	this.desktopHeight = this.constructor.prototype.height;
-	if (this.parent && this.parent.afterPaletteChildDrop) {
+	if (this.parent) {
 	    this.parent.afterPaletteChildDrop(this);
 	}
     },
@@ -302,6 +304,7 @@ wm.Control.extend({
 	p.autoSizeWidth.ignoretmp = (!this.isSizeable() && !this.autoSizeWidth) || (this.schema.autoSizeWidth && this.schema.autoSizeWidth.ignore);
 	p.autoSizeHeight.ignoretmp = (!this.isSizeable() && !this.autoSizeHeight) || (this.schema.autoSizeHeight && this.schema.autoSizeHeight.ignore);
         p.minWidth.ignoretmp = !this.schema.minWidth || this.schema.minWidth.ignore || (!this._percEx.w && !this.autoSizeWidth); // minWidth only applies if width is % or autosize is on
+        p.minHeight.ignoretmp = !this.schema.minHeight || this.schema.minHeight.ignore || (!this._percEx.h && !this.autoSizeHeight); // minWidth only applies if width is % or autosize is on
 	//p.width.ignore = p.width.writeonly = !this.isSizeable() || !this.canSetWidth();
 	//p.height.ignore = p.height.writeonly = !this.isSizeable() || !this.canSetHeight();
 	p.width.ignoretmp = p.width.writeonly = this.schema.width.ignore || !this.isSizeable() || this.autoSizeWidth;
@@ -416,6 +419,7 @@ wm.Control.extend({
 	p.setIndexInParent(index);
 	this.setParent(p);
 	this.setWidth("100%");
+	this.designWrapper.controlParentChanged();
 	parent.reflow();
 	studio.refreshDesignTrees();
 	studio.select(p);

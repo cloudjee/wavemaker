@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2011-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
 
 dojo.provide("wm.base.widget.Editors.Select_design");
 dojo.require("wm.base.widget.Editors.Select");
-dojo.require("wm.base.widget.Editors.AbstractEditor_design");
+dojo.require("wm.base.widget.Editors.DataSetEditor_design");
 
 
 // design only
@@ -118,19 +118,25 @@ wm.Lookup.extend({
 
 	listProperties: function() {
 		var props = this.inherited(arguments);
-		props.dataSet.ignoretmp = this.autoDataSet;
+	    var parentForm = this.getParentForm();
+	    props.autoDataSet.ignoretmp = !Boolean(parentForm);
+		props.dataSet.ignoretmp = parentForm && this.autoDataSet;
 		props.dataSet.bindTarget = !props.dataSet.ignoretmp;
 	        props.maxResults.ignoretmp = !this.autoDataSet;
 	        props.startUpdate.ignoretmp = !this.autoDataSet;
-	        props.displayExpression.ignoretmp = this.autoDataSet;
+	        props.displayExpression.ignoretmp = this.autoDataSet && parentForm;
 		return props;
 	},
 	set_formField: function(inFieldName) {
+	    var formFieldWas = this.formField;
 	    if (inFieldName) {
 		this.formField = inFieldName;
 		if (this.autoDataSet && this.formField)
 		    this.createDataSet();	    
 		this.inherited(arguments);
+		if (this.formField && this.formField != formFieldWas) {
+		    this._setDisplayField();
+		}
 	    } else {
 		delete this.formField; // undefined used in getFormEditorsArray
 	    }

@@ -1,5 +1,5 @@
 /* 
- *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -19,7 +19,8 @@ dojo.require("wm.base.Component");
 // (because studio has an app) and the runtimeService must be local to a project
 // get the app corresponding to the given component.
 wm.getRuntimeService = function(inComponent) {
-	var a = dojo.getObject("studio.wip.app") || app;
+    var a = dojo.getObject("studio.wip.app") || app;
+     
 	return wm.fire(a, "getRuntimeService");
 };
 
@@ -249,7 +250,7 @@ dojo.declare("wm.Variable", wm.Component, {
 			var d;
 			for (var i in this.data) {
 				d = this.data[i];
-				if (d instanceof wm.Variable)
+				if (d instanceof wm.Variable && !wm.typeManager.getLiveService(d.type))
 					d._clearData();
 				else
 					delete this.data[i];
@@ -997,8 +998,8 @@ dojo.declare("wm.Variable", wm.Component, {
 
     toString: function(inText) {   
 	var t = inText || "";
-	var hasData =  this.isEmpty();
-	t += "; " + wm.getDictionaryItem("wm.Variable.toString_TYPE", {type: this.type}) + "; " + wm.getDictionaryItem("wm.Variable.toString_ISEMPTY", {isEmpty: !hasData}); 
+	var isEmpty =  this.isEmpty();
+	t += "; " + wm.getDictionaryItem("wm.Variable.toString_TYPE", {type: this.type}) + "; " + wm.getDictionaryItem("wm.Variable.toString_ISEMPTY", {isEmpty: isEmpty}); 
 	return this.inherited(arguments, [t]);
     },
     _end: 0

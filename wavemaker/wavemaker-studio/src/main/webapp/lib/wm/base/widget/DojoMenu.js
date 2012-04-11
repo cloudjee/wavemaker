@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -544,8 +544,9 @@ dojo.declare("wm.DojoMenu", wm.Control, {
     },
     getItemChecked: function(inLabel) {
 	if (this._dijitHash[inLabel]) {
-	    this._dijitHash[inLabel].get("checked");
+	    return this._dijitHash[inLabel].get("checked");
 	}
+	return false;
     },
     setItemChecked: function(inLabel, inChecked) {
 	if (this._dijitHash[inLabel]) {

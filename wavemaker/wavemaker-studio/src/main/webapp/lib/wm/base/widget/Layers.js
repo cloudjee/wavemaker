@@ -1,5 +1,5 @@
 /*
- *  Copyright (C) 2008-2011 VMware, Inc. All rights reserved.
+ *  Copyright (C) 2008-2012 VMware, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -478,7 +478,7 @@ dojo.declare("wm.Layers", wm.Container, {
 	},
 	setLayerByCaption: function(inCaption) {
 		var p = this.captionMap[inCaption];
-		this.setLayerByName(p || inCaption);
+	    this.setLayerByName(p && p.name ? p.name : inCaption);
 	},
 	setLayerByName: function(inName) {
 		var l = this.client.widgets[inName];
