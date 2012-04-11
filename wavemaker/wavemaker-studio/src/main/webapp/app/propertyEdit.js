@@ -727,6 +727,10 @@ dojo.declare("wm.prop.FieldList", wm.prop.CheckboxSet, {
 	this.beginEditUpdate();
 	this.setEditorValue(this.dataValue);
 	this.endEditUpdate();
+    },
+    reinspect: function() {
+	this.updateOptions();
+	return true;
     }
 	    
 });
