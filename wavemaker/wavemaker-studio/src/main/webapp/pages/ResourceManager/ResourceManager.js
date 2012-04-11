@@ -190,6 +190,9 @@ dojo.declare("ResourceManager", wm.Page, {
     },
 
     start: function() {
+	this.uploadButton._serviceVariable._operationInfo = {parameters: wm.typeManager.getType("AnyData").fields};
+        this.uploadButton._serviceVariable.input.setType("AnyData");
+
 	this.subscribe("studio-saveProjectData", dojo.hitch(this, "loadResources"));
 	this.connect(studio, "projectChanged", this, function() {
 	    this.shortcutList.setDataValue("/webapproot/resources");
@@ -420,7 +423,7 @@ dojo.declare("ResourceManager", wm.Page, {
 
 	var itemName = this.selectedItem.itemName;
         var folder = (this.selectedItem instanceof wm.FolderResourceItem) ? this.selectedItem : this.tree.selected.parent.data;
-        this.uploadButton.input.setType("AnyData");
+        //this.uploadButton.input.setType("AnyData");
         this.uploadButton.input.setData({dataValue: {path: folder.getFilePath()}});
 	this.getReadmeFile(folder.getFilePath());
 
