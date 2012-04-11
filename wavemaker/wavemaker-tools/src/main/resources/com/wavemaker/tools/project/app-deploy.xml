@@ -54,9 +54,9 @@
     </path>
 
 	<available file="${orig.proj.dir}/webapproot/WEB-INF/application.xml" property="appXmlExists">
-		</available>
+	</available>
 
-    <target name="init" />
+    <target name="init"/>
 
     <target name="testrunclean" description="Clean build files"
             depends="init,undeploy,clean">
@@ -74,7 +74,6 @@
         <condition property="deploy-uptodate">
             <and>
                 <istrue value="${deploy-files-uptodate}"/>
-<!--                <http url="http://localhost:${tomcat.port}/${wavemaker.user.name}/${deploy.name}/${deploy.test.file.name}"/> -->
                 <http url="http://localhost:${tomcat.port}/${deploy.name}/${deploy.test.file.name}"/>
             </and>
         </condition>
@@ -89,7 +88,6 @@
         <taskdef name="undeploy"
             classname="org.apache.catalina.ant.UndeployTask"
             classpathref="studio.classpath"/>
-<!--            path="/${wavemaker.user.name}/${deploy.name}" -->
         <undeploy url="${tomcat.manager.url}"
             username="${tomcat.manager.username}"
             password="${tomcat.manager.password}"
@@ -110,7 +108,6 @@
         <taskdef name="deploy"
             classname="org.apache.catalina.ant.DeployTask"
             classpathref="studio.classpath"/>
-<!--            path="/${wavemaker.user.name}/${deploy.name}"-->
         <deploy url="${tomcat.manager.url}"
             username="${tomcat.manager.username}"
             password="${tomcat.manager.password}"
@@ -130,7 +127,6 @@
         <taskdef name="undeploy"
             classname="org.apache.catalina.ant.UndeployTask"
             classpathref="studio.classpath"/>
-<!--            path="/${wavemaker.user.name}/${deploy.name}" -->
         <undeploy url="${tomcat.manager.url}"
             username="${tomcat.manager.username}"
             password="${tomcat.manager.password}"
@@ -151,7 +147,6 @@
         <taskdef name="deploy"
             classname="org.apache.catalina.ant.DeployTask"
             classpathref="studio.classpath"/>
-<!--            path="/${wavemaker.user.name}/${deploy.name}"-->
         <deploy url="${tomcat.manager.url}"
             username="${tomcat.manager.username}"
             password="${tomcat.manager.password}"
@@ -164,7 +159,6 @@
         <taskdef name="undeploy"
             classname="org.apache.catalina.ant.UndeployTask"
             classpathref="studio.classpath"/>
-<!--            path="/${wavemaker.user.name}/${deploy.name}"-->
         <undeploy url="${tomcat.manager.url}"
             username="${tomcat.manager.username}"
             password="${tomcat.manager.password}"
@@ -226,12 +220,9 @@
 		</war>
     </target>
 
-	<target name="build-ear" if="appXmlExists">
-		<ear destfile="${ear.file.name}"
-			appxml="${build.app.webinf.dir}/application.xml">
-			<fileset dir="${orig.proj.dir}/dist">
-				<include name="*.war"/>
-			</fileset>
+	<target name="build-ear">
+		<ear destfile="${ear.file.name}" appxml="${build.app.webinf.dir}/application.xml">
+			<fileset file="${war.file.name}"/>
 		</ear>
 	</target>
 
@@ -239,7 +230,6 @@
         <taskdef name="deploy"
             classname="org.apache.catalina.ant.DeployTask"
             classpathref="studio.classpath"/>
-<!--	    path="/${wavemaker.user.name}/${deploy.name}"-->
         <deploy url="${tomcat.manager.url}"
             username="${tomcat.manager.username}"
             password="${tomcat.manager.password}"
@@ -254,6 +244,7 @@
                 <exclude name="**/.svn/**/*.*" />
                 <exclude name="WEB-INF/classes/**"/>
                 <exclude name="WEB-INF/lib/**"/>
+                <exclude name="WEB-INF/web.xml"/>
             </fileset>
         </copy>
         <mkdir dir="${build.app.webapproot.dir}/WEB-INF/classes"/>
@@ -391,22 +382,6 @@
             classname="com.wavemaker.tools.ant.MergeUserWebXmlTask"
             classpathref="studio.classpath"/>
         <mergeuserwebxml workdir="${build.app.webinf.dir}" />
-        <!--taskdef name="xmltask"
-                classname="com.oopsconsultancy.xmltask.ant.XmlTask"
-                classpathref="studio.classpath"/>
-
-        <xmltask source="${build.app.webinf.dir}/user-web.xml">
-            <copy path="/*/*" buffer="userWebBuffer" append="true"/>
-        </xmltask>
-        <xmltask source="${build.app.webinf.dir}/web.xml"
-                destbuffer="webxmlOutput">
-        </xmltask>
-        <xmltask sourcebuffer="webxmlOutput"
-                dest="${build.app.webinf.dir}/web.xml">
-			<remove path="/:web-app/:display-name"/> 
-			<remove path="/:web-app/:welcome-file-list"/> 
-            <insert path="/*/*[1]" position="before" buffer="userWebBuffer"/>
-        </xmltask-->
     </target>
 
 	<target name="set-application-name-in-xml" depends="init" if="appXmlExists">
@@ -446,19 +421,6 @@
             classpathref="studio.classpath"/>
         <mergeuserwebxml workdir="${build.app.webinf.dir}" />
 
-        <!--taskdef name="xmltask"
-                classname="com.oopsconsultancy.xmltask.ant.XmlTask"
-                classpathref="studio.classpath"/>
-        <xmltask source="${build.app.webinf.dir}/user-web.xml">
-            <copy path="/*/*" buffer="userWebBuffer" append="true"/>
-        </xmltask>
-        <xmltask source="${build.app.webinf.dir}/web.xml"
-                destbuffer="webxmlOutput">
-        </xmltask>
-        <xmltask sourcebuffer="webxmlOutput"
-                dest="${build.app.webinf.dir}/web.xml">
-            <insert path="/*/*[1]" position="before" buffer="userWebBuffer"/>
-        </xmltask-->
     </target>
 
     <target name="-generate-webxml-no-userxml-from-orig"
