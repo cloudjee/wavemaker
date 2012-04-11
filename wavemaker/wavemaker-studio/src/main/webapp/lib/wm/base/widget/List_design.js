@@ -29,6 +29,9 @@ wm.Object.extendSchema(wm.VirtualList, {
     /* Ignored Group */
     box: { ignore: 1 },
 
+    /* Common Group */
+    manageHistory: {ignore:0},
+
     /* Methods group */
     getCount: {method:1, returns: "Number"},
     getItem: {method:1, returns: "wm.ListItem"},
