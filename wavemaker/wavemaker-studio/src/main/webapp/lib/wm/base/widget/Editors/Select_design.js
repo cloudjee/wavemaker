@@ -15,7 +15,7 @@
 
 dojo.provide("wm.base.widget.Editors.Select_design");
 dojo.require("wm.base.widget.Editors.Select");
-dojo.require("wm.base.widget.Editors.AbstractEditor_design");
+dojo.require("wm.base.widget.Editors.DataSetEditor_design");
 
 
 // design only
@@ -124,7 +124,7 @@ wm.Lookup.extend({
 		props.dataSet.bindTarget = !props.dataSet.ignoretmp;
 	        props.maxResults.ignoretmp = !this.autoDataSet;
 	        props.startUpdate.ignoretmp = !this.autoDataSet;
-	        props.displayExpression.ignoretmp = this.autoDataSet;
+	        props.displayExpression.ignoretmp = this.autoDataSet && parentForm;
 		return props;
 	},
 	set_formField: function(inFieldName) {
