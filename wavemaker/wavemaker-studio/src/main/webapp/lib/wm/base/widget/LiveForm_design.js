@@ -346,7 +346,8 @@ wm.LiveFormBase.extend({
 		return;
 	    var name = inType.split('.').pop().toLowerCase();
   	    var lvar = r.createComponent(name + "LiveVariable1", "wm.LiveVariable", {type: inType});
-	    var lv = new wm.LiveView({owner: lvar, name: "liveView", service: ti.service, dataType: inType, _defaultView: true});
+	    //var lv = new wm.LiveView({owner: lvar, name: "liveView", service: ti.service, dataType: inType, _defaultView: true});
+	    var lv = lvar.liveView;
 	    lv.getRelatedFields(); // make sure its calculated its list of related fields before we create/fire a livevar
 	    lvar.setLiveView(lv);
 

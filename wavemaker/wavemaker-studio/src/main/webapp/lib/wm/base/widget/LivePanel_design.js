@@ -52,7 +52,7 @@ wm.LivePanel.extend({
 			wm.onidle(this, function() {
 			    switch(inName) {
 			    case studio.LivePanelTypeChooserDialog.page.getDictionaryItem("LIVEVARIABLE"):
-				var lvar = this.createLiveSource(this.liveSource);
+				var lvar = this.createLiveSource(this.liveSource, true);
 				studio.select(lvar);
 				studio.endWait();
 				var parent = this.parent;
@@ -330,16 +330,19 @@ wm.LivePanel.extend({
 	this.$.binding.addWire(null, "saveButton", this.saveButton.name, "");
     },
 
-	createLiveSource: function(inType) {
+    createLiveSource: function(inType, noLiveView) {
 	    var r = this.getRoot();
 	    var ti = wm.typeManager.getType(inType)
 	    if (!ti)
 		return;
 	    var name = inType.split('.').pop().toLowerCase();
   	    var lvar = r.createComponent(name + "LiveVariable1", "wm.LiveVariable", {type: inType});
-	    var lv = new wm.LiveView({owner: lvar, name: "liveView", service: ti.service, dataType: inType, _defaultView: true});
+	    //var lv = new wm.LiveView({owner: lvar, name: "liveView", service: ti.service, dataType: inType, _defaultView: true});
+	if (!noLiveView) {
+	    lv = lvar.liveView;
 	    lv.getRelatedFields(); // make sure its calculated its list of related fields before we create/fire a livevar
 	    lvar.setLiveView(lv);
+	}
 	    return lvar;
 	},
 
