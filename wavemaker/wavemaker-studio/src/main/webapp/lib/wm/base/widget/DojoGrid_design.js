@@ -210,6 +210,9 @@ wm.Object.extendSchema(wm.DojoGrid, {
     emptySelection: { ignore: true, bindSource: 1, type: "Boolean",  doc: 1},
     isRowSelected: { ignore: true, bindSource: 1, type: "Boolean",   doc: 1},
 
+    /* Common Group */
+    manageHistory: {ignore:0},
+
     /* Event handlers */
     onSelectionChange:{order:3, advanced:1},
     onSelect: {order: 1},

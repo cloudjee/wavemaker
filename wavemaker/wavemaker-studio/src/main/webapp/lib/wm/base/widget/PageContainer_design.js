@@ -283,6 +283,8 @@ wm.PageContainer.extend({
 })
 
 wm.Object.extendSchema(wm.PageContainer, {
+    manageURL: {ignore:0},
+    manageHistory: {ignore:0},
 /*
     pageName: {group: "display", subgroup: "misc", requiredGroup:1,bindable: 1, type: "string", order: 50, pageProperty: "page", editor: "wm.prop.PagesSelect"},
     deferLoad: {group: "display", subgroup: "misc", order: 100, type: "boolean"},

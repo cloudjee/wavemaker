@@ -1005,7 +1005,7 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 	},
 	dokeypress: function(inEvent) {
 		if (this.changeOnKey || (this.changeOnEnter && inEvent.keyCode == dojo.keys.ENTER))
-			wm.onidle(this, "doChangeOnKey", arguments);
+		    wm.onidle(this, "doChangeOnKey", inEvent);
 	        if (inEvent.keyCode == dojo.keys.ENTER)
 		    wm.onidle(this, "onEnterKeyPress", [this]);
 	},

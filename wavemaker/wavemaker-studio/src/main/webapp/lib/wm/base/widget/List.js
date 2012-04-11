@@ -501,7 +501,9 @@ dojo.declare("wm.List", wm.VirtualList, {
 
 	},
 	renderData: function(inData) {
-	    var selectedData = this.selectedItem.getData();
+	    if (this.selectedItem.type) {
+		var selectedData = this.selectedItem.getData();
+	    }
 	    this.clear(true);
 	    this._data = inData;
 	    if (!this.dataFields)

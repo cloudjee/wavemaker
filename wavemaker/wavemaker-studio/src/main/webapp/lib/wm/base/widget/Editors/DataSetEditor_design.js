@@ -55,7 +55,7 @@ wm.DataSetEditor.extend({
 
 		/* If there is no displayExpression, and either no displayField or an invalid displayField, get a new displayField */
 		if (!this.displayExpression && inDataSet && inDataSet.type &&
-		    (!this.displayField || !wm.typeManager.getType(inDataSet.type) || !wm.typeManager.getType(inDataSet.type).fields[this.displayField])) {
+		    (!this.displayField || !wm.typeManager.getType(inDataSet.type) || !wm.typeManager.getType(inDataSet.type).fields || !wm.typeManager.getType(inDataSet.type).fields[this.displayField])) {
                     this._setDisplayField();                                                                                
                 }
 

@@ -138,6 +138,10 @@ wm.Object.extendSchema(wm.Layers, {
     mobileHeaderHeight: {ignore:1, group: "widgetName", subgroup: "layout", order: 51, editor: "wm.prop.SizeEditor", editorProps: {pxOnly: 1}, advanced:1, hidden:1},
     desktopHeaderHeight: {ignore:1, group: "widgetName", subgroup: "layout", order: 51, editor: "wm.prop.SizeEditor", editorProps: {pxOnly: 1}, advanced:1, hidden:1},
 
+    /* Common Group */
+    manageURL: {ignore:0},
+    manageHistory: {ignore:0},
+
     /* Operations group */
     add: { group: "operation", order: 1, operation: 1 },
 
@@ -430,6 +434,7 @@ wm.WizardLayers.extend({
 	this.generateBottomButtonEvents();
 
 	this.decorator.addFooter();
+
 	this.reflow();
 	studio.reinspect(true)
     },
@@ -452,7 +457,7 @@ wm.WizardLayers.extend({
 	var p = this.inherited(arguments);
 	var bottomButtons = this.bottomButtons ? this.bottomButtons.split(/\s*,\s*/) : [];
 	for (var i = 0; i < bottomButtons.length; i++) {
-	    p["onBottomButton" + i] = {isEvent:true};
+	    p["onBottom" + i + "Button"] = {isEvent:true};
 	}
 	return p;
     }

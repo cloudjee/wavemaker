@@ -87,6 +87,8 @@ wm.Object.extendSchema(wm.Dialog, {
 
     /* Common group */
     owner: {ignore:0},
+    manageURL: {ignore:0},
+    manageHistory: {ignore:0},
 
     /* Styles group */
     titlebarBorder:      {group: "widgetName", subgroup: "style", order: 5},
