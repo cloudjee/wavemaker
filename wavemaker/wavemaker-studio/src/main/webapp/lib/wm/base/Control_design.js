@@ -419,6 +419,7 @@ wm.Control.extend({
 	p.setIndexInParent(index);
 	this.setParent(p);
 	this.setWidth("100%");
+	this.designWrapper.controlParentChanged();
 	parent.reflow();
 	studio.refreshDesignTrees();
 	studio.select(p);
