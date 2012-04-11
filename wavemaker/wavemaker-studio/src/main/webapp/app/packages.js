@@ -205,6 +205,7 @@
 [ bundlePackage.Non_Visual_Components, bundlePackage.ServiceVariable, "wm.ServiceVariable", "wm.base.components.ServiceVariable", "Studio_paletteImageList_43", "", {},false],
 [ bundlePackage.Non_Visual_Components, bundlePackage.LiveVariable, "wm.LiveVariable", "wm.base.components.LiveVariable", "Studio_paletteImageList_37", "", {},false],
 [ bundlePackage.Non_Visual_Components, bundlePackage.NavigationCall, "wm.NavigationCall", "wm.base.components.NavigationService", "Studio_paletteImageList_39", "", {},false],
+[ bundlePackage.Non_Visual_Components, bundlePackage.NotificationCall, "wm.NotificationCall", "wm.base.components.NotificationService", "Studio_paletteImageList_39", "", {},false],
 [ bundlePackage.Non_Visual_Components, "PhoneGapCall", "wm.PhoneGapCall", "wm.base.components.PhoneGapService", "Studio_paletteImageList_43", "", {},false],
 
 /*[ "Non-Visual Components", "SalesForceMonitorVariable", "wm.SalesForceMonitorVariable", "wm.base.components.SalesForceMonitorVariable", "images/wm/servicevar_24.png"],*/

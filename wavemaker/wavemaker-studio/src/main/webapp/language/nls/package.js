@@ -163,6 +163,7 @@
         "silkIconList": "Silk Icons ImageList",
         "booleanIconList": "Boolean Icons ImageList",
 	"NavigationCall" : "NavigationCall",
+	"NotificationCall" : "NotificationCall",
 	"LogoutVariable" : "LogoutVariable",
 	"Timer" : "Timer",
 	"TypeDefinition" : "TypeDefinition",

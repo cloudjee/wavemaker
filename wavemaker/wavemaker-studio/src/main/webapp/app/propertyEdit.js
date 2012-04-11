@@ -1103,8 +1103,10 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 		newService: {caption: studio.getDictionaryItem("wm.EventEditor.NEW_SERVICE")},
 		newLiveVar: {caption: studio.getDictionaryItem("wm.EventEditor.NEW_LIVEVAR")},
 		newNavigation: {caption: studio.getDictionaryItem("wm.EventEditor.NEW_NAVIGATION")},
+		newNotification: {caption: studio.getDictionaryItem("wm.EventEditor.NEW_NOTIFICATION")},
 		serviceVariables: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_SERVICE"), list: "serviceVariable"},
 		navigations: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_NAVIGATION"), list: "navigationCall"},
+		notifications: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_NOTIFICATION"), list: "notificationCall"},
 		existingCalls: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_SHARED_JAVASCRIPT"), list: "sharedEventHandlers"},
 		dialogs: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_DIALOGS"), list: "dialogs"},
 		layers: {caption: studio.getDictionaryItem("wm.EventEditor.LIST_LAYERS"), list: "layers"},
@@ -1313,6 +1315,7 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 	    var svarList = wm.listComponents([studio.application, studio.page], wm.ServiceVariable).sort();
 	    var lightboxList = wm.listComponents([studio.application, studio.page], wm.DojoLightbox);
 	    var navList = wm.listComponents([studio.application, studio.page], wm.NavigationCall).sort();
+	    var notificationList = wm.listComponents([studio.application, studio.page], wm.NotificationCall).sort();
 	    var sharedEventHandlers =  eventList(this.inspected.getSharedEventLookupName(this.propName), wm.isInstanceType(studio.selected.owner, wm.Application) ? studio.appsourceEditor : studio.editArea);
 	    var dialogList = wm.listComponents([studio.application, studio.page], wm.Dialog);
 	    dialogList = dialogList.concat(lightboxList);
@@ -1337,6 +1340,7 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 	    var svarList = wm.listComponents([inPage], wm.ServiceVariable).sort();
 	    var lightboxList = wm.listComponents([inPage], wm.DojoLightbox);
 	    var navList = wm.listComponents([inPage], wm.NavigationCall).sort();
+	    var notificationList = wm.listComponents([inPage], wm.NotificationCall).sort();
 	    var sharedEventHandlers = [];
 	    var dialogList = wm.listComponents([inPage], wm.Dialog);
 	    dialogList = dialogList.concat(lightboxList);
@@ -1377,6 +1381,11 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 		    if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "navigation") == -1) return;
 		    componentList = navList;
 		    break;
+		case "notificationCall":
+		    if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "notification") == -1) return;
+		    componentList = navList;
+		    break;
+
 		case "serviceVariable":
 		    if (eventSchema && eventSchema.events && dojo.indexOf(eventSchema.events, "service") == -1) return;
 		    componentList = svarList;
@@ -1512,6 +1521,10 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 		    case "newNavigation":
 			if (dojo.indexOf(eventSchema.events, "navigation") == -1) return;
 			break;
+		    case "newNotification":
+			if (dojo.indexOf(eventSchema.events, "notification") == -1) return;
+			break;
+
 		    }
 		//currentPageSize++;
 		inStructure.push({label: groupName, onClick: dojo.hitch(this, "setEditorValue", name)});
@@ -1576,6 +1589,11 @@ dojo.declare("wm.prop.EventEditor", wm.AbstractEditor, {
 				studio.newComponentButtonClick({componentType: "wm.NavigationCall"});
 		    this.setDisplayValue(studio.selected.name);
 				break;
+			case "newNotification":
+				studio.newComponentButtonClick({componentType: "wm.NotificationCall"});
+		    this.setDisplayValue(studio.selected.name);
+				break;
+
 		}
 	}
 });
