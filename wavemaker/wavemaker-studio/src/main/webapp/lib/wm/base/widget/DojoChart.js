@@ -46,7 +46,7 @@ dojo.declare("wm.DojoChart", wm.Control, {
 	enableAnimation:true,
 	chartType: 'Columns',
 	includeGrid:false,
-	gap:2,
+	gap:4,
 	defaultXY:[{'wmDefaultX':'Jan', 'wmDefaultY':3}, {'wmDefaultX':'Feb', 'wmDefaultY':5}, {'wmDefaultX':'Mar', 'wmDefaultY':8}, {'wmDefaultX':'Apr', 'wmDefaultY':2}],
 	addedSeries:{},
 	aniHighlight:null,
