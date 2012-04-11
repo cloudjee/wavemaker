@@ -69,6 +69,7 @@ dojo.declare("BindSourceDialog", wm.Page, {
 		propDef = tp.object._dataSchema[inTargetProps.targetProperty];
 	    }
 	}
+	if (!propDef) propDef = {};
 	this.binderSource.initBinding(noRegen,  propDef);
 	this.binderSource.updateUiForWire(w, tp.displayExpression ? tp.object.getProp(tp.targetProperty) : "");
 	
