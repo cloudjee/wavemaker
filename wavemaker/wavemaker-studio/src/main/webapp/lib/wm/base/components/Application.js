@@ -806,7 +806,7 @@ dojo.declare("wm.Application", wm.Component, {
     },
     warnOnce: function(inCookieName, inAlertText) {
 	var cookie = dojo.cookie(inCookieName);
-	if (cookie) return;
+	if (cookie) return false;
 	wm.require("wm.Checkbox");
 	this.alert(inAlertText);
 	var c = new wm.Checkbox({owner: this.alertDialog,
@@ -824,7 +824,7 @@ dojo.declare("wm.Application", wm.Component, {
 		dojo.cookie(inCookieName, true);
 	    c.destroy();
 	});
-				 
+	return true;
     },
         alert: function(inText, nonmodal) {
             if (!this.alertDialog) {
@@ -869,6 +869,7 @@ dojo.declare("wm.Application", wm.Component, {
                 this.confirmDialog.domNode.style.zIndex = 50;
                 this.confirmDialog.connect(this.confirmDialog, "onButton1Click", this,"confirmDialogOKClick");
                 this.confirmDialog.connect(this.confirmDialog, "onButton2Click", this,"confirmDialogCancelClick");
+                this.confirmDialog.connect(this.confirmDialog, "_onEsc", this,"confirmDialogCancelClick");
             }
 	    nonmodal = Boolean(nonmodal);
 	    this.confirmDialog.setUserPrompt(inText);

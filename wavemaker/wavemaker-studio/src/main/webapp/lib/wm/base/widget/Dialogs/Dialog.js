@@ -979,6 +979,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 	return true;
 
     },
+    _onEsc: function() {},
 	keydown: function(inEvent) {
 	    if (!this.canProcessKeyboardEvent(inEvent))
 		return true;
@@ -987,6 +988,7 @@ dojo.declare("wm.Dialog", wm.Container, {
 		if (this._isDesignLoaded && studio.selected.getParentDialog() == this) return;
 		if (this.showing) {
 		    this.callOnHideParent();
+		    this._onEsc();
 		    this.setShowing(false);
 		    this.onClose("cancel");
 		    if (!this._isDesignLoaded)
