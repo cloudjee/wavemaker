@@ -435,7 +435,7 @@ dojo.declare("wm.AceEditor", wm.Control, {
 					      caption: "Replace All",
 					      width: "100px",
 						    onclick: dojo.hitch(this, "onReplaceAllClick")});
-	    this._searchDialog.connect(this,_searchDialog, "onShow", this._searchEditor, "selectText");
+	    this._searchDialog.connect(this._searchDialog, "onShow", this._searchEditor, "selectText");
 	}
 	this._searchDialog.show();
 	this._searchEditor.focus();
