@@ -356,7 +356,7 @@ wm.define("wm.Container", wm.Control, {
 	    if (widget === this) {
 		;
 	    } else if (widget.parent === this.parent) {
-		delete wm.Container.delayedReflowWidgets[widgetId];
+		delete wm.Container.delayedReflowWidgets[widgetid];
 		delete 	wm.Container.delayedReflowWidgets[this.getRuntimeId()];
 		newParents.push(this.parent);
 	    } else if (this.isAncestor(widget)) {

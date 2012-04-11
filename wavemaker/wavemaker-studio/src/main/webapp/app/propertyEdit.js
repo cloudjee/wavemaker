@@ -2455,6 +2455,8 @@ dojo.declare("wm.prop.Diagnostics", wm.Container, {
 	    if (this.docsLayer.isActive()) {
 		if (!this.docsHtml.html) {
 		    this.update();
+		} else {
+		    this.docsHtml.scheduleAutoSize();
 		}
 	    } else if (this.descLayer.isActive()) {
 		this.descHtml.doAutoSize(true,true);
