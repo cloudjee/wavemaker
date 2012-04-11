@@ -387,7 +387,6 @@ wm.typeManager.addType("phonegap.Coordinates", {internal: false,
 
 
 dojo.declare("wm.PhoneGapCall", [wm.ServiceVariable], {
-	/** @lends wm.Variable.prototype */
     _deviceReady: false,
 	service: "phoneGapService",
     operation: "contacts_read",
