@@ -544,8 +544,9 @@ dojo.declare("wm.DojoMenu", wm.Control, {
     },
     getItemChecked: function(inLabel) {
 	if (this._dijitHash[inLabel]) {
-	    this._dijitHash[inLabel].get("checked");
+	    return this._dijitHash[inLabel].get("checked");
 	}
+	return false;
     },
     setItemChecked: function(inLabel, inChecked) {
 	if (this._dijitHash[inLabel]) {
