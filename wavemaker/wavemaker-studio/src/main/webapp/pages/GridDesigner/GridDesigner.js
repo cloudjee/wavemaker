@@ -244,7 +244,7 @@ dojo.declare("GridDesigner", wm.Page, {
 	this.changeItem("title", inDataValue);
     },
     onWidthChange: function(inSender, inDisplayValue, inDataValue) {
-	this.changeItem("width", this.widthSizeEditor.getDataValue() + this.widthTypeEditor.getDataValue());
+	this.changeItem("width", this.widthSizeEditor.getDataValue() + (this.widthTypeEditor.getDataValue() || "%"));
     },
     onAlignChange: function(inSender, inDisplayValue, inDataValue) {
 	this.changeItem("align", inDataValue);
