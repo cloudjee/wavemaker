@@ -189,7 +189,7 @@ wm.DojoGrid.extend({
 wm.Object.extendSchema(wm.DojoGrid, {
     /* widgetName group */
     dataSet:           {group: "widgetName", subgroup: "data", order: 1, requiredGroup: 1, bindTarget: 1, isList: true, simpleBindTarget: true, editor: "wm.prop.DataSetSelect", editorProps: {listMatch: true, widgetDataSets: true, allowAllTypes: true}},
-    editColumns:       {group: "widgetName", subgroup: "layout", order:5, requiredGroup: 1, contextMenu: true, operation: 1},
+    editColumns:       {group: "widgetName", subgroup: "data", order:5, shortname: "Edit Columns", requiredGroup: 1, contextMenu: true, operation: 1},
     deleteColumn:      {group: "widgetName", subgroup: "behavior",  order: 10, advanced:1},
     deleteConfirm:     {group: "widgetName", subgroup: "confirmation", order: 10, advanced:1},
     caseSensitiveSort: {group: "widgetName", subgroup: "behavior", order: 40, advanced:1},
