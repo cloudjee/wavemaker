@@ -922,6 +922,7 @@ dojo.declare("wm.prop.DataTypeSelect", wm.prop.SelectMenu, {
 
 dojo.declare("wm.prop.EventEditorSet", wm.Container, {
     noBindColumn: true,
+    noHelpButton: true,
     inspected: null,
     verticalAlign: "top",
     horizontalAlign: "left",
@@ -960,7 +961,20 @@ dojo.declare("wm.prop.EventEditorSet", wm.Container, {
 					    this.panel.setHeight(this.panel.getPreferredFitToContentHeight() + "px");
 					    this.setHeight(this.getPreferredFitToContentHeight() + "px");
 					    this.parent.setHeight(this.parent.getPreferredFitToContentHeight() + "px");
-					})});
+					})
+				       });
+	this.helpButton = wm.Label({owner: this,
+				    caption: "",
+				    parent: topPanel,
+				    width: "20px",
+				    height: "20px",
+				    margin: "0",
+				    onclick: dojo.hitch(this, function() {
+					studio.helpPopup = studio.inspector.getHelpDialog();
+					studio.inspector.beginHelp(this.propDef.name, this.domNode, this.inspected.declaredClass);
+				    }),
+				    _classes: {domNode: ["EditorHelpIcon"]}});
+
 	this.panel = new wm.Panel({owner: this,
 				   parent: this,
 				   width: "100%",
