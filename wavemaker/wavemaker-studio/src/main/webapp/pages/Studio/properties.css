@@ -61,6 +61,10 @@ body #studio_PIContents #studio_togglePropertiesButton2 {
     display: inline-block;
 }
 
+.wminspector .wminspector-boundvalue.Disabled input {
+    color: white;
+}
+
 .wminspector .wmeditor-caption {
     font-weight: normal;
     font-size: 11px;
