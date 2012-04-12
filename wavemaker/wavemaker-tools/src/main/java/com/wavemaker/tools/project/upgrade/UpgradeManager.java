@@ -23,7 +23,6 @@ import org.springframework.beans.factory.InitializingBean;
 
 import com.wavemaker.common.MessageResource;
 import com.wavemaker.common.WMRuntimeException;
-import com.wavemaker.tools.project.AbstractDeploymentManager;
 import com.wavemaker.tools.project.DeploymentManager;
 import com.wavemaker.tools.project.Project;
 import com.wavemaker.tools.project.StudioConfiguration;
@@ -64,7 +63,7 @@ public class UpgradeManager implements InitializingBean {
             throw new WMRuntimeException(MessageResource.PROJECT_NEWER_THAN_STUDIO, project.getProjectName(), projectVersion, projectMaxVersion);
         } else if (projectVersion < projectMaxVersion) {
             UpgradeInfo ret = new UpgradeInfo();
-            String exportName = AbstractDeploymentManager.EXPORT_DIR_DEFAULT + project.getProjectName() + "-upgrade-" + projectVersion + ".zip";
+            String exportName = project.getProjectName() + "-upgrade-" + projectVersion + ".zip";
             this.deploymentManager.exportProject(exportName);
             this.deploymentManager.testRunClean();
 
@@ -87,6 +86,17 @@ public class UpgradeManager implements InitializingBean {
             return ret;
         } else {
             return null;
+        }
+    }
+
+    /*
+     * Returns true if project upgrade is required to open in current version of studio, false otherwise
+     */
+    public boolean upgradeRequired(Project project) {
+        if (project.getProjectVersion() < getCurrentVersion()) {
+            return true;
+        } else {
+            return false;
         }
     }
 
