@@ -22,18 +22,12 @@ dojo.declare("StudioApplication", wm.Application, {
             pagesListVar: ["wm.Variable", {type: "StringData", isList: true}],
 	    projectListVar: ["wm.Variable", {type: "StringData", isList: true}]
 	},
-    init: function() {
 /*
-	if (dojo.isIE == 9) {
-	    dojo.require("wm.base.widget.EditArea_design");
-	    wm.loadScript(dojo.moduleUrl("wm.studio.app") + "edit_area/edit_area_loader.js", true);	    
-	    wm.AceEditor = wm.EditArea;
-	}
-	*/
+    init: function() {
 	this.inherited(arguments);
-	this.createDebugDialog();
 
     },
+    */
     confirm: function() {
         this.inherited(arguments);
 	dojo.addClass(this.confirmDialog.domNode, "studiodialog");
