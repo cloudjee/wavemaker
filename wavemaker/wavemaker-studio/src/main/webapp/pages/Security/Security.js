@@ -20,8 +20,8 @@ dojo.declare("Security", wm.Page, {
 	start: function() {
 	    this._defaultPanel1aHeight = this.panel1a.height;
 	    this._defaultPanelBottomHeight = this.panelBottom.height;
-    this.SELECT_ONE = this.getDictionaryItem("MENU_SELECT_ONE");
-    this.NO_VALUE   = this.getDictionaryItem("MENU_NO_VALUE");
+		this.SELECT_ONE = this.getDictionaryItem("MENU_SELECT_ONE");
+		this.NO_VALUE   = this.getDictionaryItem("MENU_NO_VALUE");
 		this.loginTemplateFolder = dojo.moduleUrl("wm.studio.app") + "templates/security/";
 		this.loginPageTemplateFolder = this.loginTemplateFolder + "pages/Login/";
 		this.populatingOptions = false;

@@ -278,6 +278,9 @@ public class MessageResource {
     @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
     public static final MessageResource INVALID_SERVICE_ID = new MessageResource("com.wavemaker.tools$InvalidServiceId");
 
+    @ResourceConstraint(numArgs = 2, hasDetailMsg = false)
+    public static final MessageResource INVALID_CLASS_NAME = new MessageResource("com.wavemaker.tools$InvalidClassName");
+
     @ResourceConstraint(numArgs = 1, hasDetailMsg = false)
     public static final MessageResource INVALID_SERVICE_DEF_NO_ID = new MessageResource("com.wavemaker.tools$InvalidServiceNoId");
 

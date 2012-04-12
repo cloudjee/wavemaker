@@ -1860,7 +1860,6 @@ Studio.extend({
 		this.saveProjectClick();
 	},
 	projectSettingsClick: function(inSender) {
-	    debugger;
 		var d = this.preferencesDialog;
 		if (d) {
 			d.page.update();
