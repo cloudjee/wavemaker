@@ -328,7 +328,15 @@ wm.onidleChain = function(functionList, stateObj) {
         f2(functionList,stateObj);
 
 }
-wm.job = function(inName, inDelay, inJob) {
+wm.job = function(inName, inDelay, inJob1, inJob2) {
+    var inJob;
+    if (inJob1 && inJob2) {
+	inJob = dojo.hitch(inJob1, inJob2);
+    } else if (inJob2) {
+	inJob = inJob2;
+    } else {
+	inJob = inJob1;
+    }
     wm.cancelJob(inName);
     if (app && app.debugDialog) {
 	var eventChain = app.debugDialog.cacheEventChain();
