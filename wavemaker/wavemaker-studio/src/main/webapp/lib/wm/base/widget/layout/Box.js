@@ -169,7 +169,6 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 		     */
 		    if (c._percEx[inFlowAxis] && !isNaN(tmpSize)) {
 			if (lastPercentSizedWidget == c) {
-			    console.log("ROUND:"+roundedSizeOffset + ", " + inContainer.getRuntimeId());
 			    tmpSize += roundedSizeOffset;
 			}
 		    }
