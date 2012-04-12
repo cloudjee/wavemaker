@@ -28,6 +28,31 @@
        * DESCRIPTION: Sets font, rounding, shadowing and background for the standard button state
        ************************************************************************************************/
 
+    .wm_template .wmtogglebuttonpanel .wmbutton:first-child {
+	border-radius-topleft: 8px !important; /* Document-ClickablesDefault-BorderStyle_Radius */
+	border-radius-bottomleft: 8px !important; /* Document-ClickablesDefault-BorderStyle_Radius */
+	
+	-webkit-border-top-left-radius: 8px !important; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-bottom-left-radius: 8px !important; /* Document-ClickablesDefault-BorderStyle_Radius */
+    }
+
+    .wm_template .wmtogglebuttonpanel .wmbutton:last-child {
+	border-radius-topright: 8px !important; /* Document-ClickablesDefault-BorderStyle_Radius */
+	border-radius-bottomright: 8px !important; /* Document-ClickablesDefault-BorderStyle_Radius */
+	
+	-webkit-border-top-right-radius: 8px !important; /* Document-ClickablesDefault-BorderStyle_Radius */
+	-webkit-border-bottom-right-radius: 8px !important; /* Document-ClickablesDefault-BorderStyle_Radius */
+    }
+
+    .wm_template .wmtogglebuttonpanel .wmbutton {
+	border-radius-topright: 0px !important;
+	border-radius-bottomright: 0px !important;
+	
+	-webkit-border-top-right-radius: 0px !important;
+	-webkit-border-bottom-right-radius: 0px !important;
+    }
+
+    .wm_template .wmtogglebuttonpanel,
     .wm_template   .wmbutton,
         .wm_template   .wmtogglebutton,
     .wm_template   .wmroundedbutton,
