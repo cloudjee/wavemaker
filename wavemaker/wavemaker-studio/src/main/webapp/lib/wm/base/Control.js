@@ -355,6 +355,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
     minHeight: 0, // number represents pixels    
     minWidth: 0,
     minMobileHeight: 0,
+    minDesktopHeight: 0,
     enableTouchHeight: false,
     //maxHeight: 0, // number represents pixels
     //maxWidth: 0,
