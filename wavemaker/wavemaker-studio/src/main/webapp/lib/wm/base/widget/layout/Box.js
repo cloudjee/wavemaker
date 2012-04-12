@@ -118,7 +118,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 		    if (this.inFlow(c)) {                
                         var size = c._percEx[inFlowAxis] ? (flowEx.ratio * c._percEx[inFlowAxis]) : 0;
 			if (c._percEx[inFlowAxis]) lastPercentSizedWidget = c;
-			roundedSizeOffset -= Math.floor(size);
+			roundedSizeOffset -= Math.floor(c._percEx[inFlowAxis] ? size : c.bounds[inFlowAxis]);
 			var minName = inFlowAxis == "w" ? "minWidth" : wm.isMobile ? "minMobileHeight" : "minHeight";
 			var min = c[minName];
                         if (size < min) 
@@ -169,9 +169,11 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 		     */
 		    if (c._percEx[inFlowAxis] && !isNaN(tmpSize)) {
 			if (lastPercentSizedWidget == c) {
+			    console.log("ROUND:"+roundedSizeOffset + ", " + inContainer.getRuntimeId());
 			    tmpSize += roundedSizeOffset;
 			}
 		    }
+
 		    b[inFlowAxis] = tmpSize;
 		    
 		    if (wm.isMobile && inFlowAxis == "w" && isNaN(b.w) ){
