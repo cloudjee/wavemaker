@@ -463,6 +463,19 @@ public class DesignServiceManager {
     }
 
     /**
+     * Validates a fqClassName.
+     * 
+     * @throws ConfigurationException is the Class or Package name is invalid.
+     */
+    public void validateFqClassName(String fqClassName) {
+        for (String token : fqClassName.split("\\.")) {
+            if (!StringUtils.isValidJavaIdentifier(token)) {
+                throw new InvalidClassNameException(token, "it can not contain reserved java keywords and must be a valid java identifier");
+            }
+        }
+    }
+
+    /**
      * Return the services directory.
      * 
      * @return
