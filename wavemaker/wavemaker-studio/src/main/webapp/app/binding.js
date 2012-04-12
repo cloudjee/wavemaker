@@ -62,7 +62,7 @@ addComponentTypeBinderNodes = function(inParent, inClass, inStrict, includePageC
 
 addWidgetBinderNodes = function(inParent, optionalWidgets) {
 
-    var types = [wm.AbstractEditor, wm.Composite, wm.DataGrid, wm.DojoGrid, wm.Editor, wm.List, wm.ToggleButton, wm.LiveForm, wm.dijit.Calendar ];
+    var types = [wm.AbstractEditor, wm.Composite, wm.DataGrid, wm.DojoGrid, wm.Editor, wm.List, wm.ToggleButton, wm.LiveForm, wm.dijit.Calendar, wm.ToggleButtonPanel ];
     var widgets = optionalWidgets || wm.listOfWidgetTypes(types);
     var page = inParent.page;   
 
