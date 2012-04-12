@@ -75,8 +75,6 @@ dojo.declare("wm.JsonStatus", wm.Control, {
 	}
     },
     onclick: function() {
-	if (djConfig.isDebug || window["studio"])
-	    app.debugDialog.show();
     }
 });
 
