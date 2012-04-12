@@ -269,6 +269,51 @@ wm.fullTemplates.topMenuTemplate = {
 		}]	
 	}]}
 }
+wm.fullTemplates.mobileLayout = {
+	displayName: bundlePackage.MobileTemplate,
+        thumbnail: "app/templates/widgetTemplateImages/topMenuTemplate.png",
+         destroyTemplate: true,
+	_template: {
+monthsVar: ["wm.Variable", {"isList":true,"json":"[{name: \"January\", dataValue: 0}, {name: \"February\", dataValue: 1},{name: \"March\", dataValue: 2},{name: \"April\", dataValue: 3},{name: \"May\", dataValue: 4},{name: \"June\", dataValue: 5},{name: \"July\", dataValue: 6},{name: \"August\", dataValue: 7},{name: \"September\", dataValue: 8},{name: \"October\", dataValue: 9},{name: \"November\", dataValue: 10},{name: \"December\", dataValue: 11}]","type":"EntryData"}, {}],
+	layoutBox1: ["wm.Layout", {"horizontalAlign":"left","margin":"0","verticalAlign":"top"}, {}, {
+		toggleButtonPanel1: ["wm.ToggleButtonPanel", {"horizontalAlign":"left","manageHistory":true,"manageURL":true,"margin":"0,5,0,2","verticalAlign":"top"}, {}, {
+			binding: ["wm.Binding", {}, {}, {
+				wire: ["wm.Wire", {"expression":undefined,"source":"navButton1","targetProperty":"currentButton"}, {}]
+			}],
+			navButton1: ["wm.Button", {"border":"0,1,0,0","caption":"Page One","desktopHeight":"100%","height":"40px","margin":"0","padding":"0","width":"100%"}, {"onclick":"layer1"}],
+			navButton2: ["wm.Button", {"border":"0,1,0,0","caption":"Page Two","desktopHeight":"100%","height":"40px","margin":"0","padding":"0","width":"100%"}, {"onclick":"layer2"}],
+			navButton3: ["wm.Button", {"border":"0","borderColor":"#ABB8CF","caption":"Page Three","desktopHeight":"100%","height":"40px","margin":"0","width":"100%"}, {"onclick":"layer3"}]
+		}],
+		layers1: ["wm.Layers", {"margin":"3,0,0,0"}, {}, {
+			layer1: ["wm.Layer", {"borderColor":"","caption":"layer1","horizontalAlign":"left","layoutKind":"left-to-right","margin":"0","padding":"0","themeStyleType":"","verticalAlign":"top"}, {}, {
+				dojoGrid1: ["wm.DojoGrid", {"columns":[{"show":true,"field":"name","title":"Name","width":"100%","align":"left","formatFunc":"","mobileColumn":false},{"show":false,"field":"dataValue","title":"DataValue","width":"100%","align":"left","formatFunc":"","mobileColumn":false}],"height":"100%","margin":"0","minHeight":0,"width":"150px"}, {}, {
+					binding: ["wm.Binding", {}, {}, {
+						wire: ["wm.Wire", {"expression":undefined,"source":"monthsVar","targetProperty":"dataSet"}, {}]
+					}]
+				}],
+				panel1: ["wm.Panel", {"height":"100%","horizontalAlign":"left","verticalAlign":"top","width":"100%"}, {}, {
+					label1: ["wm.Label", {"border":"0","caption":"Page One","padding":"4","styles":{"fontWeight":"bold","fontSize":"16px","textAlign":"center"},"width":"100%"}, {}],
+					dataForm1: ["wm.DataForm", {"border":"1","captionSize":"100px","desktopHeight":"56px","enableTouchHeight":true,"height":"76px","horizontalAlign":"left","isCompositeKey":false,"mobileHeight":"76px","type":"EntryData","verticalAlign":"top"}, {}, {
+						binding: ["wm.Binding", {}, {}, {
+							wire: ["wm.Wire", {"expression":undefined,"source":"dojoGrid1.selectedItem","targetProperty":"dataSet"}, {}]
+						}],
+						nameEditor1: ["wm.Text", {"caption":"Name","changeOnKey":true,"dataValue":"","desktopHeight":"26px","emptyValue":"emptyString","formField":"name","height":"35px","required":undefined,"width":"100%"}, {}],
+						dataValueEditor1: ["wm.Text", {"caption":"DataValue","changeOnKey":true,"dataValue":"","desktopHeight":"26px","emptyValue":"emptyString","formField":"dataValue","height":"35px","required":undefined,"width":"100%"}, {}]
+					}]
+				}]
+			}],
+			layer2: ["wm.Layer", {"borderColor":"","caption":"layer2","horizontalAlign":"left","margin":"0","padding":"0","themeStyleType":"","verticalAlign":"top"}, {}, {
+				label2: ["wm.Label", {"border":"0","caption":"Page Two","padding":"4","styles":{"fontWeight":"bold","fontSize":"16px","textAlign":"center"},"width":"100%"}, {}],
+				pageContainer2: ["wm.PageContainer", {"border":"0","deferLoad":true}, {}]
+			}],
+			layer3: ["wm.Layer", {"borderColor":"","caption":"layer3","horizontalAlign":"left","margin":"0","padding":"0","themeStyleType":"","verticalAlign":"top"}, {}, {
+				label3: ["wm.Label", {"border":"0","caption":"Page Three","padding":"4","styles":{"fontWeight":"bold","fontSize":"16px","textAlign":"center"},"width":"100%"}, {}],
+				pageContainer3: ["wm.PageContainer", {"border":"0","deferLoad":true}, {}]
+			}]
+		}]
+	}]
+	}
+};
 /*
 wm.fullTemplates.fancyCenteredTemplate = {
     layoutKind: "top-to-bottom",

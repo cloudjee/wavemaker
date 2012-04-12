@@ -116,6 +116,7 @@
 	"SideMenu" : "Menu on Side",
 	"TabsTemplate" : "Tabs Template",
 	"TopMenu" : "Menu on Top",
+	"MobileTemplate" : "Mobile Template",
 	"CenteredPageContainer" : "CenteredPageContainer",
 	"SubTemplates" : "Sub Templates",
 	"TitleBar" : "TitleBar",
