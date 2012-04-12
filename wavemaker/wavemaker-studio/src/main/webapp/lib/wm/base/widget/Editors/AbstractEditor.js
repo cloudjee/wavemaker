@@ -519,7 +519,15 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		    this.captionSize =  "20px";
 		    this.bounds.h = height+20;
 		    this.setBounds(this.bounds);
-		    this.parent.delayedReflow();
+		    wm.job(this.parent.getRuntimeId() + ".adjustForMobileEditorCaption", 1, this.parent, function() {
+			if (!this.isDestroyed) {
+			    this.setBestHeight();
+			    this._heightAdjustedForMobileCaption = true;
+			    if (this.bounds.h > this.parent.bounds.h) {
+				this.setAutoScroll(true);
+			    }
+			}
+		    });
 		}
 	    } else if (this._captionPosition) {
 		this.captionPosition = this._captionPosition;
@@ -538,7 +546,11 @@ dojo.declare("wm.AbstractEditor", wm.Control, {
 		    this.bounds.h = this._editorHeight;
 		    delete this._editorHeight;
 		    this.setBounds(this.bounds);
-		    this.parent.delayedReflow();
+		    wm.job(this.parent.getRuntimeId() + ".adjustForMobileEditorCaption", 1, this.parent, function() {
+			if (!this.isDestroyed && this._heightAdjustedForMobileCaption) {
+			    this.setBestHeight();
+			}
+		    });
 		}
 	    }
     },
