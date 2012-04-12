@@ -763,8 +763,8 @@
 
 	 return newprops;
      },
-     addSubGroupIndicator: function(inName, inParent) {
-	 this.subHeaderLabelList.push(new wm.Label({_classes: {domNode: ["wminspector-subgroupLabel"]}, parent: inParent,owner: this, caption:inName, width: "100%", border: "0,0,2,0", borderColor: "#959DAB"}));
+     addSubGroupIndicator: function(inName, inParent, inShowing) {
+	 this.subHeaderLabelList.push(new wm.Label({_classes: {domNode: ["wminspector-subgroupLabel"]}, parent: inParent,owner: this, caption:inName, width: "100%", border: "0,0,2,0", borderColor: "#959DAB", showing: inShowing}));
      },
      generateEditors: function(inComponent, inGroupName, inLayer) {
 	 var groupObj;
@@ -776,11 +776,13 @@
 		 }
 	     }
 	 }
+	 var self = this;
 	 if (groupObj) {
 	     for (var subgroupName in groupObj.subgroups) {		 
 		 var subgroup = groupObj.subgroups[subgroupName];
 		 if (subgroup.props.length) {
-		     this.addSubGroupIndicator(subgroup.displayName || subgroupName,inLayer);
+		     this.addSubGroupIndicator(subgroup.displayName || subgroupName,inLayer,  
+					       this.isAdvancedMode() || dojo.some(subgroup.props, function(prop) {return !prop.ignoretmp && self.isEditableProp(prop);}));
 		     this._generateEditors(inComponent, inLayer, subgroup.props);
 		 }
 	     }
