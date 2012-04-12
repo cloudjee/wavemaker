@@ -103,6 +103,12 @@ public class StudioService extends ClassLoader implements ApplicationEventPublis
         this.projectManager.closeProject();
     }
 
+    @ExposeToClient
+    public boolean projectUpgradeRequired(String projectName) throws IOException {
+        this.projectManager.openProject(projectName, true);
+        return getUpgradeManager().upgradeRequired(this.projectManager.getCurrentProject());
+    }
+
     /**
      * @see ProjectManager#openProject(String)
      * @return An OpenProjectReturn object containing the current web path, as well as any upgrades that were performed.
