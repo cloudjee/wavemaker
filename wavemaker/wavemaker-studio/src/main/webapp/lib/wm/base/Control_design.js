@@ -402,6 +402,21 @@ wm.Control.extend({
 		return props;
 	},
 	*/
+    writeProps: function(inOptions) {
+	var props = this.inherited(arguments);
+	if (this._percEx.h || !this.enableTouchHeight) {
+	    delete props.desktopHeight;
+	    delete props.mobileHeight;
+	}
+	if (this.desktopHeight == this.constructor.prototype.height) {
+	    delete props.desktopHeight;
+	}
+	if (this.mobileHeight == this.constructor.prototype.height) {
+	    delete props.mobileHeight;
+	}
+	
+	return props;
+    },
 	writeChildren: function(inNode, inIndent, inOptions) {
 		return [];
 	},
