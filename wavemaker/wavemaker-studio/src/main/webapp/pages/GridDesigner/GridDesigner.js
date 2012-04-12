@@ -107,9 +107,9 @@ dojo.declare("GridDesigner", wm.Page, {
 		    }
 		    if (value) {
 			if (!mobileExpr) {
-			    mobileExpr = "\"<div class='MobileRowTitle'>" + wm.capitalize(column.field) + ": \" + " + value +  " + \"</div>\"\n";
+			    mobileExpr = "\"<div class='MobileRowTitle'>" + wm.capitalize(column.title) + ": \" + " + value +  " + \"</div>\"\n";
 			} else {
-			    mobileExpr += "+ \"<div class='MobileRow'>" + wm.capitalize(column.field) + ": \" + " + value + " + \"</div>\"\n";
+			    mobileExpr += "+ \"<div class='MobileRow'>" + wm.capitalize(column.title) + ": \" + " + value + " + \"</div>\"\n";
 			}
 		    }
 		}
