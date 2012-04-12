@@ -57,6 +57,9 @@ dojo.declare("Studio", wm.Page, {
 	//=========================================================================
     start: function(inBackState, inLocationState) {   
 	    wm.applyFrameworkFixes();
+	this.progressDialog.titleButtonPanel.setShowing(true);
+	//this.progressDialog.titleClose.setShowing(true);
+
 	    studio.studioService.requestAsync("getStudioEnv", [], function(inResult) {
 		wm.studioConfig.environment = inResult;
 	    });
