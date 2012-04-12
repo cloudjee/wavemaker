@@ -15,6 +15,7 @@
 
 dojo.provide("wm.base.widget.Editors.Text_design");
 dojo.require("wm.base.widget.Editors.Text");
+dojo.require("wm.base.widget.Editors.ColorPicker");
 dojo.require("wm.base.widget.Editors.AbstractEditor_design");/* need parent class schema */
 
 
