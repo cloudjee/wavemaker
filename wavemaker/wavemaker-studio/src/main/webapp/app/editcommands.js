@@ -90,7 +90,14 @@ Studio.extend({
 	    return this.editArea.promptGotoLine();
 	    */
 	case ".":
-	    return this.listCompletions();
+	case " ":
+	    if (this.autoCompletionDialog && this.autoCompletionDialog.showing) {
+		for (var i = 0; i < this.autoCompletionList.dataSet.getCount() && this.autoCompletionList.dataSet.getItem(i).getValue("name").match(/\</); i++) {;}
+		this.autoCompletionList.select(i);
+		this.insertCompletedText();
+	    } else {
+		return this.listCompletions();
+	    }
 	}
     },
     appScriptEditorCtrlKey: function(inSender, letter) {
@@ -396,6 +403,11 @@ Studio.extend({
 	this._autoCompletionRemainder = remainder;
 	return object;
     },
+    updateAutoComplete: function(inSender, inValue) {
+	if (!inSender.isAncestorHidden()) {
+	    this.listCompletions();
+	}
+    },
     listCompletionsAuto: function() {
 	// commented this out; starting to get really really annoying...
 	//this.listCompletions(true);
@@ -682,27 +694,7 @@ Studio.extend({
 		}
 	    });
 	
-	    this.autoCompletionList.connect(this.autoCompletionList,"ondblclick", this, function() {
-		var data = this.autoCompletionList.selectedItem.getData();
-		if (data.description == "__") return;
-		var text = this._autoCompletionOriginalText;
-		text = text.substring(0,text.length-this._autoCompletionRemainder.length);
-		
-		var data = this.autoCompletionList.selectedItem.getData();
-		text = text.replace(/\.?\s*$/, "." + data.name + (data.params || ""));
-
-		if (!this.editArea.getSelectedText()) {
-		    var pos = this.editArea.getCursorPosition();
-		    this.editArea.setSelectionRange(pos.row, Math.max(0,pos.column - this._autoCompletionOriginalText.length), pos.row,pos.column);
-		    var replaceText = this.editArea.getSelectedText();
-		    var replaceTextTrim = replaceText.replace(/^\s*/,"");
-		    var range = this.editArea.getSelectionRange();
-		    this.editArea.setSelectionRange(range.start.row, range.start.column + replaceText.length-replaceTextTrim.length, range.end.row,range.end.column);
-		}
-
-		this.editArea.replaceSelectedText(text);
-		this.listCompletions();
-	    });
+	    this.autoCompletionList.connect(this.autoCompletionList,"ondblclick", this, "insertCompletedText");
 	    this.autoCompletionVariable = new wm.Variable({owner: this,
 						       name: "autoCompletionVariable",
 						       type: "com.wavemaker.editor.completions"});
@@ -726,6 +718,27 @@ Studio.extend({
 	this.autoCompletionDialog.setTitle(object && object.declaredClass && object instanceof wm.Page == false ? object.declaredClass : "Completions");
 	this.autoCompletionDialog.show();
 	window.setTimeout(dojo.hitch(this, "autoCompletionDialogAutoHide"), 5000);
+    },
+    insertCompletedText: function() {
+		var data = this.autoCompletionList.selectedItem.getData();
+		if (data.description == "__") return;
+		var text = this._autoCompletionOriginalText;
+		text = text.substring(0,text.length-this._autoCompletionRemainder.length);
+		
+		var data = this.autoCompletionList.selectedItem.getData();
+		text = text.replace(/\.?\s*$/, "." + data.name + (data.params || ""));
+
+		if (!this.editArea.getSelectedText()) {
+		    var pos = this.editArea.getCursorPosition();
+		    this.editArea.setSelectionRange(pos.row, Math.max(0,pos.column - this._autoCompletionOriginalText.length), pos.row,pos.column);
+		    var replaceText = this.editArea.getSelectedText();
+		    var replaceTextTrim = replaceText.replace(/^\s*/,"");
+		    var range = this.editArea.getSelectionRange();
+		    this.editArea.setSelectionRange(range.start.row, range.start.column + replaceText.length-replaceTextTrim.length, range.end.row,range.end.column);
+		}
+
+		this.editArea.replaceSelectedText(text);
+		this.listCompletions();
     },
     autoCompletionDialogAutoHide: function() {
 	if (this.autoCompletionDialog.showing) {
