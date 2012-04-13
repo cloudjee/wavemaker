@@ -1163,18 +1163,20 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	var fullGroupName = groupName;
 	var groupObj = (inSender == this.themeGroupList) ? this.themeGroupData[groupName] : this.themeGroupData[this.themeGroupList.selectedItem.getData().dataValue].subcategories[groupName];
 
-
-        var subcategories = groupObj.subcategories;
+	if (groupObj)
+            var subcategories = groupObj.subcategories;
 	if (subcategories) {
             var selectedSubGroupIndex = this.themeSubGroupList.getSelectedIndex();
             if (selectedSubGroupIndex < 0 || this.themeGroupList.getSelectedIndex() != this.themeSubGroupListCurrentGroup) selectedSubGroupIndex = 0;
             var subgroupList = [];
             for (var i in subcategories) {
-		subcategories[i].parentName = this.themeGroupList.selectedItem.getData().dataValue;
-                subgroupList.push({dataValue: i,
-                                   name: subcategories[i].displayName || i.replace(/-/g," "),
-                                   help: "<a>?</a>",
-                                   description: subcategories[i].description});
+		if (subcategories[i]) {
+		    subcategories[i].parentName = this.themeGroupList.selectedItem.getData().dataValue;
+                    subgroupList.push({dataValue: i,
+                                       name: subcategories[i].displayName || i.replace(/-/g," "),
+                                       help: "<a>?</a>",
+                                       description: subcategories[i].description});
+		}
             }	    
 	    this.themeSubGroupListVar.setData(subgroupList);
             this.themeSubGroupList.setDataSet(this.themeSubGroupListVar);
@@ -1214,7 +1216,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 
 	if (inSender != this.themeSubGroupList)
 	    this.themeSubGroupList.hide();
-	else
+	else if (groupObj) 
 	    fullGroupName = groupObj.parentName +"-" + groupName;
 
 	var labelHeading = "";
@@ -1228,8 +1230,7 @@ dojo.declare("ThemeDesigner", wm.Page, {
 	}
         new wm.Label({name: "editorsHeading", caption: labelHeading + fullGroupName, width: "100%", height: "24px", parent: this.widgetEditPanel, owner: this, backgroundColor: "black"});
 
-
-        dojo.forEach(groupObj.styles, dojo.hitch(this,function(styleGroupElement) {
+        dojo.forEach(groupObj ? groupObj.styles : [], dojo.hitch(this,function(styleGroupElement) {
             var subGroupName;
             var description = "";
             if (dojo.isString(styleGroupElement)) {

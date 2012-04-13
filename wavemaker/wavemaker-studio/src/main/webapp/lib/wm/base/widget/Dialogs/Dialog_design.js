@@ -206,15 +206,19 @@ wm.Object.extendSchema(wm.Toast, {
 wm.Toast.classList = ["wm_FontSizePx_16px","wm_TextDecoration_Bold"];
 
 wm.PageDialog.extend({
-    themeable: false
+    themeable: false,
+    afterPaletteDrop: function() {
+	this.inherited(arguments);
+	this.setTitle("PageDialog");
+    }
 });
 
 wm.Object.extendSchema(wm.PageDialog, {
-    pageName: {group: "display", subgroup: "misc", bindable: 1, type: "string", order: 54, pageProperty: "page", editor: "wm.prop.PagesSelect"},
-    deferLoad:{group: "display", subgroup: "misc", type: "boolean", order: 55},
-    hideControls: {group: "display", subgroup: "layout"},
-    footerBorder: {group: "style", order: 100},
-    footerBorderColor:  {group: "style", order: 101}
+    pageName: {group: "widgetName", subgroup: "behavior", bindable: 1, type: "string", order: 1, pageProperty: "page", editor: "wm.prop.PagesSelect"},
+    deferLoad:{group: "widgetName", subgroup: "behavior", type: "boolean", order: 2},
+    hideControls: {group: "widgetName", subgroup: "layout"},
+    footerBorder: {group: "widgetName", subgroup: "style", order: 100},
+    footerBorderColor:  {group: "widgetName", subgroup: "style", order: 101}
 });
 // design-time
 wm.Dialog.description = "Popup dialog.";

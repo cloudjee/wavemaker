@@ -970,7 +970,7 @@ dojo.declare("wm.studio.Project", null, {
 	    this.projectData = {};
 	    if (studio.application)
 		dojo.removeClass(studio.designer.domNode, studio.application.theme);
-	    if (studio.bindDialog.showing && !studio.bindDialog._hideAnimation) 
+	    if (studio.bindDialog && studio.bindDialog.showing && !studio.bindDialog._hideAnimation) 
 		studio.bindDialog.dismiss();
 	    this.closeAllServicesTabs();
 	    this.closeAllDialogs();

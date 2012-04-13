@@ -47,6 +47,22 @@ wm.getDefaultView = function(inTypeName, inPropertyPath) {
 		wm.forEach(fields, function(f) {
 			v.push(wm.getViewField(schema, (inPropertyPath ? inPropertyPath + "." : "") + f));
 		});
+
+                /* This block adds in related objects that aren't live types: That means it adds in composite keys */
+                fields = wm.typeManager.getStructuredPropNames(propSchema);
+                wm.forEach(fields, function(field) {
+		    var type = propSchema[field].type;
+		    var typeDef = wm.typeManager.getType(type);
+		    if (typeDef && !typeDef.liveService) {
+			v.push(wm.getViewField(schema, (inPropertyPath ? inPropertyPath + "." : "") + field));
+			var subfields = wm.typeManager.getSimplePropNames(typeDef.fields);
+			wm.forEach(subfields, function(f) {
+			    var path = (inPropertyPath ? inPropertyPath + "." : "") + field + "." + f;
+			    v.push(wm.getViewField(schema, path));
+			});
+		    }
+		});
+
 	return v;
 }
 

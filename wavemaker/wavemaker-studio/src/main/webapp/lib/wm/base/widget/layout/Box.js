@@ -110,11 +110,15 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
              *         TODO: Invalid assumption; a 50% widget can still be aligned as its not taking up the full 100% of the container.  
              *               Back in wm 4.x when flex size was used, containers were always filled.
              */
+	    var roundedSizeOffset = b[inFlowAxis]; // after we're done, value should be 0 if everything works nicely, between -1 and 1 if we have some rounding errors to fix
+	    var lastPercentSizedWidget = null;
 	    if (flowEx.free) {
                 var free = flowEx.free;
 	        for (var i=0, c; c=inContainer.c$[i]; i++) {
 		    if (this.inFlow(c)) {                
                         var size = c._percEx[inFlowAxis] ? (flowEx.ratio * c._percEx[inFlowAxis]) : 0;
+			if (c._percEx[inFlowAxis]) lastPercentSizedWidget = c;
+			roundedSizeOffset -= Math.floor(c._percEx[inFlowAxis] ? size : c.bounds[inFlowAxis]);
 			var minName = inFlowAxis == "w" ? "minWidth" : wm.isMobile ? "minMobileHeight" : "minHeight";
 			var min = c[minName];
                         if (size < min) 
@@ -150,6 +154,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
             */
             /* Step 7: Iterate over each widget in this container, calculate its size and call setBounds on it. */
 	    var maxFit = 0;
+	    var sizeSum = 0;	    
 	    for (var i=0, c; c=inContainer.c$[i]; i++) {
 		if (this.inFlow(c)) {
 
@@ -157,7 +162,19 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
                      * If its % sized: bounds.w or bounds.h is now the %size * our ratio multiplier that builds in amount of free space and normalizes % to total of 100%
                      *                 for all children.  
                      */
-		    b[inFlowAxis] = c._percEx[inFlowAxis] ? Math.round((flowEx.ratio * c._percEx[inFlowAxis])) : NaN;
+		    var tmpSize = c._percEx[inFlowAxis] ? Math.floor(flowEx.ratio * c._percEx[inFlowAxis]) : NaN;
+
+		    /* For the first percent size widget found, adjust its size to compensate for any rounding errors, else a panels widgets may be 1px off
+		     * in stretching the full width, and that pixel may look rather odd 
+		     */
+		    if (c._percEx[inFlowAxis] && !isNaN(tmpSize)) {
+			if (lastPercentSizedWidget == c && Math.abs(roundedSizeOffset) <= 1) {
+			    tmpSize += roundedSizeOffset;
+			}
+		    }
+
+		    b[inFlowAxis] = tmpSize;
+		    
 		    if (wm.isMobile && inFlowAxis == "w" && isNaN(b.w) ){
 			b.w = parseInt(c.width);
 		    }

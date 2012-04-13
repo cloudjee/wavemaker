@@ -88,6 +88,7 @@ wm.loadLibs([
 	"wm.base.components.LiveVariable",
 	"wm.base.components.LogoutVariable",
 	"wm.base.components.NavigationService",
+	"wm.base.components.NotificationService",
     //"wm.base.components.FunctionService",
 	"wm.base.components.TypeDefinition",
 	//"wm.base.components.FileTransferService",

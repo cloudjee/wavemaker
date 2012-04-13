@@ -273,6 +273,7 @@ dependencies = {
 
 			    /* Services */
 			    "wm.base.components.Service",
+			    "wm.base.components.ServiceCall",
 			    "wm.base.components.NavigationService",
 			    //"wm.base.components.FunctionService",
 			    "wm.base.components.PhoneGapService",
@@ -280,7 +281,6 @@ dependencies = {
 
 			    /* Variables/ServiceVariables */
 			    "wm.base.components.Variable",
-			    "wm.base.components.ServiceCall",
 			    "wm.base.components.ServiceVariable",
 			    "wm.base.components.LiveView",
 			    "wm.base.components.LiveVariable",
@@ -295,7 +295,6 @@ dependencies = {
 			    "wm.base.components.Property",
 			    "wm.base.components.ImageList",
 			    "wm.base.components.Binding",
-			    "wm.base.components.Property",
 			    "wm.base.components.TypeDefinition",
 
 
@@ -369,6 +368,7 @@ dependencies = {
 			    /* Services */
 			    "wm.base.components.Service",
 			    "wm.base.components.NavigationService",
+			    "wm.base.components.ServiceCall",
 			    //"wm.base.components.FunctionService",
 			    "wm.base.components.PhoneGapService",
 			    "wm.base.components.JsonRpcService",
@@ -376,7 +376,6 @@ dependencies = {
 
 			    /* Variables/ServiceVariables */
 			    "wm.base.components.Variable",
-			    "wm.base.components.ServiceCall",
 			    "wm.base.components.ServiceVariable",
 			    "wm.base.components.LiveView",
 			    "wm.base.components.LiveVariable",
@@ -392,7 +391,6 @@ dependencies = {
 			    "wm.base.components.Property",
 			    "wm.base.components.ImageList",
 			    "wm.base.components.Binding",
-			    "wm.base.components.Property",
 			    "wm.base.components.TypeDefinition",
 
 

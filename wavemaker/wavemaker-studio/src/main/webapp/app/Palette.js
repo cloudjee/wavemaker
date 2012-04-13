@@ -13,6 +13,7 @@
  */
  
 dojo.provide("wm.studio.app.Palette");
+dojo.require("wm.base.widget.Trees.DraggableTree");
 
 // creation sequence
 //	- mousedown on a palette button invokes start

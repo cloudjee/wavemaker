@@ -331,7 +331,16 @@ wm.LiveFormBase.extend({
 			    e.setWidth(this.editorWidth);
                         else 
                             e.setWidth("100%"); // because its going to be 100% anyway so why confuse the user?
-			e.set_height(this.editorHeight);
+		    if (studio.currentDevice == "desktop") {
+			e.setHeight(this.editorHeight);
+		    } else {
+			e.desktopHeight = this.editorHeight;
+			if (this.editorHeight.match(/px/) && e.mobileHeight.match(/px/) && parseInt(e.mobileHeight) > parseInt(this.editorHeight)) {
+			    e.setHeight(e.mobileHeight);
+			} else {
+			    e.setHeight(this.editorHeight);
+			}
+		    }
 			//console.log(this.name, "createEditor", arguments, e);
 			return e;
 		}
@@ -346,7 +355,8 @@ wm.LiveFormBase.extend({
 		return;
 	    var name = inType.split('.').pop().toLowerCase();
   	    var lvar = r.createComponent(name + "LiveVariable1", "wm.LiveVariable", {type: inType});
-	    var lv = new wm.LiveView({owner: lvar, name: "liveView", service: ti.service, dataType: inType, _defaultView: true});
+	    //var lv = new wm.LiveView({owner: lvar, name: "liveView", service: ti.service, dataType: inType, _defaultView: true});
+	    var lv = lvar.liveView;
 	    lv.getRelatedFields(); // make sure its calculated its list of related fields before we create/fire a livevar
 	    lvar.setLiveView(lv);
 

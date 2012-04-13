@@ -640,6 +640,8 @@
 		 e.setHint(inProp.ignoretmp && inProp.ignoretmp ? this.ignoreHintPrefix +  inProp.ignoreHint : "");
 	     } else if (e instanceof wm.Button) {
 		 e.setShowing(!inProp.ignoretmp);
+	     } else if (inProp.advanced && !e._showAllClicked) {
+		 ;
 	     } else {
 		 e.parent.setShowing(!inProp.ignoretmp);
 	     }
@@ -761,8 +763,8 @@
 
 	 return newprops;
      },
-     addSubGroupIndicator: function(inName, inParent) {
-	 this.subHeaderLabelList.push(new wm.Label({_classes: {domNode: ["wminspector-subgroupLabel"]}, parent: inParent,owner: this, caption:inName, width: "100%", border: "0,0,2,0", borderColor: "#959DAB"}));
+     addSubGroupIndicator: function(inName, inParent, inShowing) {
+	 this.subHeaderLabelList.push(new wm.Label({_classes: {domNode: ["wminspector-subgroupLabel"]}, parent: inParent,owner: this, caption:inName, width: "100%", border: "0,0,2,0", borderColor: "#959DAB", showing: inShowing}));
      },
      generateEditors: function(inComponent, inGroupName, inLayer) {
 	 var groupObj;
@@ -774,11 +776,13 @@
 		 }
 	     }
 	 }
+	 var self = this;
 	 if (groupObj) {
 	     for (var subgroupName in groupObj.subgroups) {		 
 		 var subgroup = groupObj.subgroups[subgroupName];
 		 if (subgroup.props.length) {
-		     this.addSubGroupIndicator(subgroup.displayName || subgroupName,inLayer);
+		     this.addSubGroupIndicator(subgroup.displayName || subgroupName,inLayer,  
+					       this.isAdvancedMode() || dojo.some(subgroup.props, function(prop) {return !prop.ignoretmp && self.isEditableProp(prop);}));
 		     this._generateEditors(inComponent, inLayer, subgroup.props);
 		 }
 	     }
@@ -801,7 +805,10 @@
 			   align: "right",
 			   width: "80px"});	 
 	     l.onclick = function() {
-		 dojo.forEach(inLayer.c$, function(w) {if (!w.showing) {w.show();}});
+		 dojo.forEach(inLayer.c$, function(w) {if (!w.showing) {
+		     w._showAllClicked = true;
+		     w.show();
+		 }});
 		 l.hide();
 	     }
 	     this.moreLabelList.push(l);
@@ -1727,12 +1734,14 @@
 	 }	 
      },
      toggleAdvancedPropertiesSome: function(inSender) {
+	 studio.propertySearchBar.setDataValue("");
 	 dojo.removeClass(studio.togglePropertiesButton2.domNode, "toggleButtonDown");
 	 dojo.addClass(studio.togglePropertiesButton.domNode, "toggleButtonDown");
 	 this.advancedMode = false;
 	 this.inspect(this.inspected, true);
      },
      toggleAdvancedPropertiesAll: function(inSender) {
+	 studio.propertySearchBar.setDataValue("");
 	 dojo.addClass(studio.togglePropertiesButton2.domNode, "toggleButtonDown");
 	 dojo.removeClass(studio.togglePropertiesButton.domNode, "toggleButtonDown");
 	 this.advancedMode = true;

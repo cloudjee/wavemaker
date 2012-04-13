@@ -54,7 +54,7 @@ dojo.declare("I18nDictionaryEditor", wm.Page, {
 	for (var i = 1; i < 100 && !isUnique; i++) {
 	    isUnique = true;
 	    newName = "SCRIPT_New Term" + i;
-	    for (var itemName in this.dictionaryHash.default) {
+	    for (var itemName in this.dictionaryHash["default"]) {
 		if (itemName == newName) {
 		    isUnique = false;
 		    break;
@@ -63,9 +63,9 @@ dojo.declare("I18nDictionaryEditor", wm.Page, {
 	}
 	if (isUnique) {
 	    this.dictionaryTermListVar.addItem({dataValue: newName});
-	    if (!this.dictionaryHash.default)
-		this.dictionaryHash.default = {};
-	    this.dictionaryHash.default[newName] = "";
+	    if (!this.dictionaryHash["default"])
+		this.dictionaryHash["default"] = {};
+	    this.dictionaryHash["default"][newName] = "";
 	}
 	this.dictionaryItemList.selectByIndex(this.dictionaryTermListVar.getCount()-1);
 	this.dictionaryItemSelect(this.dictionaryItemList);
@@ -108,7 +108,7 @@ dojo.declare("I18nDictionaryEditor", wm.Page, {
 		return;
 	    if (inValue.indexOf("SCRIPT_") != 0)
 		inValue = "SCRIPT_" + inValue;
-	    for (var itemName in this.dictionaryHash.default) {
+	    for (var itemName in this.dictionaryHash["default"]) {
 		if (itemName == inValue) {
 		    inSender.reset();
 		    app.toastError("That name is already taken");
@@ -160,7 +160,7 @@ dojo.declare("I18nDictionaryEditor", wm.Page, {
     },
     insertScriptClick: function(inSender) {
 	var name = this.dictionaryItemList.selectedItem.getValue("dataValue");	
-	var value = this.dictionaryHash.default[name];
+	var value = this.dictionaryHash["default"][name];
 	var results = value.match(/\$\{(.*?)\}/g);
 	if (results) {
 	    var text = "this.getDictionaryItem(\"" + name + "\",{"

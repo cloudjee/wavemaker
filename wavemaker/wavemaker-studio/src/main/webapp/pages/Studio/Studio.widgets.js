@@ -60,7 +60,7 @@ Studio.widgets = {
     newProjectDialog: ["wm.PageDialog", {_classes: {domNode: ["studiodialog"]}, width: "492px", height: "430px", title: "New Project", modal: true, hideControls: true, noEscape: false, pageName: "", border: "4", borderColor: "#222222", titlebarBorder: "1"}],
     helpDialog: ["wm.GenericDialog", {_classes: {domNode: ["studiodialog"]}, "height":"77px","modal":false,"noEscape":false,"title":"Help","userPrompt":"","width":"300px", modal: false,button1Caption: "OK", button1Close: true, corner: "tr"}, {}],
 
-    progressDialog: ["wm.DesignableDialog", {width: "350px", height: "100px", title: "", modal: true, noEscape: false}, {}, {
+    progressDialog: ["wm.DesignableDialog", {width: "350px", height: "100px", title: "Saving...", noMinify: true, noMaxify: true, modal: true, noEscape: false}, {}, {
 	progressDialogContainer: ["wm.Container", {"_classes":{"domNode":["wmdialogcontainer","MainContent"]},"height":"100%","horizontalAlign":"left","margin":"0","padding":"10","verticalAlign":"top","width":"100%"}, {}, {
 	    saveDialogProgress: ["wm.dijit.ProgressBar", {width: "100%", height: "48px", progress: 0}],
 	    saveDialogLabel: ["wm.Label", {width: "100%", height: "30px", align: "center"}]
@@ -395,13 +395,14 @@ Studio.widgets = {
 					desktopToggleButton: ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]}, "width": "100%", height: "100%", margin: "0", caption: "Desktop"}, {onclick: "designDesktopUI"}],
 					tabletToggleButton:  ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]},"width": "100%", height: "100%", margin: "0", caption: "Tablet"},  {onclick: "designTabletUI"}],
 					phoneToggleButton:   ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]},"width": "100%", height: "100%", margin: "0", caption: "Phone"},   {onclick: "designPhoneUIClick"}],
-					mobileFoldingToggleButton:   ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]},"width": "100%", height: "100%", margin: "0", caption: "Folding"},   {onclick: "designMobileFolding"}]
+					mobileFoldingToggleButton:   ["wm.Button", {_classes: {domNode: ["StudioButton","wmtogglebutton"]},"width": "100%", height: "100%", margin: "0", caption: "Folding", hint: "Enable this button by enabling mobile folding in your Page's properties in the services tab"},   {onclick: "designMobileFolding"}]
 				    }],
-				    deviceSizeSelect: ["wm.SelectMenu", {caption: "Size", margin:"4,0,4,15", width: "100%", height: "24px", captionSize: "50px", dataValue: "1150", displayField: "name", dataField: "dataValue"},{onchange: "deviceSizeSelectChanged"},{
+				    deviceSizeSelect: ["wm.SelectMenu", {caption: "Size", margin:"4,0,4,15", width: "180px", height: "24px", captionSize: "50px", dataValue: "1150", displayField: "name", dataField: "dataValue"},{onchange: "deviceSizeSelectChanged"},{
 					binding: ["wm.Binding",{},{}, {
 					    wire: ["wm.Wire", {"source":"deviceSizeVar","targetProperty":"dataSet"}, {}]
 					}]
 				    }],
+				    deviceSettingSpacer: ["wm.Spacer", {width: "100%"}],
 				    deviceBarHelpBtn: ["wm.ToolButton", {width: "20px", height: "20px", margin: "5,0,0,0", hint: "Help", _classes: {domNode: ["StudioHelpIcon"]}}, {onclick: "showDeviceBarHelp"}]
 				}],
 				}],

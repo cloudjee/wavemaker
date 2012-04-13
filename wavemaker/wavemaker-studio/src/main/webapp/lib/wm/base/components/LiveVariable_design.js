@@ -23,7 +23,7 @@ wm.Object.extendSchema(wm.LiveVariable, {
     /* Data group; type subgroup */
     operation: { group: "data", subgroup: "type"}, // do not try and set the options here; parent class overrides this usage by handling operation in makePropEdit
     liveSource: { group: "data", subgroup: "type", order: 1, editor: "wm.prop.DataTypeSelect", editorProps: {liveTypes: 1, includeLiveViews: true}, ignoreHint: "LiveSource is a deprecated property; it is only enabled for LiveVariables already using it"},
-    editView: {group: "data", subgroup: "type", operation:1, shortname: "Edit View", ignoreHint: "Set the type property before you can edit the view"},
+    editView: {group: "data", subgroup: "type", requiredGroup: 1, operation:1, shortname: "Edit View", ignoreHint: "Set the type property before you can edit the view"},
 
     /* Data group; custom subgroup */
     sourceData: {group: "data", readonly: 1, order: 3, bindTarget: 1, editor: "wm.prop.FieldGroupEditor"},

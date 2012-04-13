@@ -348,6 +348,8 @@ wm.Layers.extend({
     }
 });
 
+
+dojo.require("wm.base.widget.AccordionLayers");
 wm.AccordionLayers.extend({
     themeable: true,
     themeableProps: ["border","borderColor","layerBorder","captionHeight"],
@@ -421,6 +423,7 @@ wm.TabLayers.extend({
     }
 });
 
+dojo.require("wm.base.widget.WizardLayers");
 wm.WizardLayers.extend({
     themeable: true,
     themeableProps: ["border", "borderColor", "clientBorder", "clientBorderColor"],
@@ -464,6 +467,7 @@ wm.WizardLayers.extend({
 });
 
 
+dojo.require("wm.base.widget.BreadcrumbLayers");
 wm.BreadcrumbLayers.extend({
     themeable: true,
     themeableProps: ["border", "borderColor", "clientBorder", "clientBorderColor"],

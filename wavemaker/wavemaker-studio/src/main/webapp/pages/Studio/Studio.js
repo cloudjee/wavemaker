@@ -57,6 +57,9 @@ dojo.declare("Studio", wm.Page, {
 	//=========================================================================
     start: function(inBackState, inLocationState) {   
 	    wm.applyFrameworkFixes();
+	this.progressDialog.titleButtonPanel.setShowing(true);
+	//this.progressDialog.titleClose.setShowing(true);
+
 	    studio.studioService.requestAsync("getStudioEnv", [], function(inResult) {
 		wm.studioConfig.environment = inResult;
 	    });
@@ -494,6 +497,7 @@ dojo.declare("Studio", wm.Page, {
 		this.cssEditAreaFullPath.setCaption("webapproot/pages/" + inName + "/" + inName + ".css");
 		this.markupEditAreaFullPath.setCaption("webapproot/pages/" + inName + "/" + inName + ".html");
 	        this.mobileFoldingToggleButton.setDisabled(!studio.page || !studio.page.enableMobileFolding);
+	        dojo.attr(this.mobileFoldingToggleButton.domNode, "disabled", false); // disabled means no mouseover and no hint
 
 	        if (this.page) {
 		    this.select(this.page.root);
@@ -1537,7 +1541,7 @@ dojo.declare("Studio", wm.Page, {
 	    this.PIContents.setDocked(true);
 	var requestedCanvasWidth = inSender.getDataValue();
 	if (requestedCanvasWidth == "tiny") 
-	    requestedCanvasWidth = 300;
+	    requestedCanvasWidth = 220;
 	else if  (requestedCanvasWidth == "") {
 	    this.PIPanel.setWidth("250px");
 	    requestedCanvasWidth = 0;

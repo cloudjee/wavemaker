@@ -16,6 +16,10 @@
 		"border": "1", 
 		"borderColor": "#444444"
 	}, 
+	"wm.ToggleButtonPanel": {
+		"border": "1", 
+		"borderColor": "#444444"
+	}, 
 	"wm.Button": {
 		"border": "1", 
 		"borderColor": "#444444"

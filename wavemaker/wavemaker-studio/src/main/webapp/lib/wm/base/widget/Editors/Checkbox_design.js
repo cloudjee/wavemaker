@@ -15,6 +15,7 @@
 
 dojo.provide("wm.base.widget.Editors.Checkbox_design");
 dojo.require("wm.base.widget.Editors.Checkbox");
+dojo.require("wm.base.widget.Editors.Radiobutton");
 dojo.require("wm.base.widget.Editors.AbstractEditor_design");
 
 

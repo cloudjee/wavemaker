@@ -149,6 +149,7 @@ dojo.declare("wm.Application", wm.Component, {
 		19:'BREAK',
 		20:'CAPS',
 		27:'ESC',
+		32: ' ',
 		33:'PAGE UP',
 		34:'PAGE DOWN',
 		35:'END',
