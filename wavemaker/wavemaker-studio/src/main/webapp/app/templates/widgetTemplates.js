@@ -276,7 +276,7 @@ wm.fullTemplates.mobileLayout = {
 	_template: {
 monthsVar: ["wm.Variable", {"isList":true,"json":"[{name: \"January\", dataValue: 0}, {name: \"February\", dataValue: 1},{name: \"March\", dataValue: 2},{name: \"April\", dataValue: 3},{name: \"May\", dataValue: 4},{name: \"June\", dataValue: 5},{name: \"July\", dataValue: 6},{name: \"August\", dataValue: 7},{name: \"September\", dataValue: 8},{name: \"October\", dataValue: 9},{name: \"November\", dataValue: 10},{name: \"December\", dataValue: 11}]","type":"EntryData"}, {}],
 	layoutBox1: ["wm.Layout", {"horizontalAlign":"left","margin":"0","verticalAlign":"top"}, {}, {
-		toggleButtonPanel1: ["wm.ToggleButtonPanel", {"horizontalAlign":"left","manageHistory":true,"manageURL":true,"margin":"0,5,0,2","verticalAlign":"top"}, {}, {
+		toggleButtonPanel1: ["wm.ToggleButtonPanel", {"horizontalAlign":"left","manageHistory":true,"manageURL":true,"margin":"0,1,0,0","verticalAlign":"top"}, {}, {
 			binding: ["wm.Binding", {}, {}, {
 				wire: ["wm.Wire", {"expression":undefined,"source":"navButton1","targetProperty":"currentButton"}, {}]
 			}],
