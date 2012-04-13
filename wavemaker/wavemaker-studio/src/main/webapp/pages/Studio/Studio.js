@@ -1541,7 +1541,7 @@ dojo.declare("Studio", wm.Page, {
 	    this.PIContents.setDocked(true);
 	var requestedCanvasWidth = inSender.getDataValue();
 	if (requestedCanvasWidth == "tiny") 
-	    requestedCanvasWidth = 300;
+	    requestedCanvasWidth = 220;
 	else if  (requestedCanvasWidth == "") {
 	    this.PIPanel.setWidth("250px");
 	    requestedCanvasWidth = 0;
