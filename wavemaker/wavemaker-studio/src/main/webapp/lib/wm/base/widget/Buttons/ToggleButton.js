@@ -67,6 +67,7 @@ dojo.declare("wm.ToggleButton", wm.ToolButton, {
 });
 
 dojo.declare("wm.ToggleButtonPanel", wm.Container, {
+    border:"1",
     manageURL: false,
     manageHistory: false,
     classNames: "wmtogglebuttonpanel",
