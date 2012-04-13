@@ -28,6 +28,10 @@ import java.io.OutputStream;
  */
 public interface FileSystem<K> {
 
+    public enum ResourceOrigin {
+        FILE_SYSTEM, MONGO_DB
+    }
+
     /**
      * Return the key that should be used for the specified path.
      * 
@@ -121,5 +125,12 @@ public interface FileSystem<K> {
      * @return the new renamed key
      */
     K rename(K key, String name);
+
+    /**
+     * Returns an enum value that indicates the origin of the resource (eg. os file system or mongo db)
+     *
+     * @return a new jailed folder
+     */
+    ResourceOrigin getResourceOrigin();
 
 }

@@ -45,6 +45,8 @@ public class MongoFileSystem implements FileSystem<MongoFileSystemKey> {
 
     private static final String RESOURCE_TYPE = "resourceType";
 
+     private final ResourceOrigin resourceOrigin = ResourceOrigin.MONGO_DB;
+
     private final GridFS fs;
 
     public MongoFileSystem(DB db, String bucket) {
@@ -186,6 +188,11 @@ public class MongoFileSystem implements FileSystem<MongoFileSystemKey> {
         public Iterator<String> iterator() {
             return new FileListIterator(this.list.iterator());
         }
+    }
+
+    @Override
+    public ResourceOrigin getResourceOrigin() {
+        return this.resourceOrigin;
     }
 
     private static class FileListIterator implements Iterator<String> {

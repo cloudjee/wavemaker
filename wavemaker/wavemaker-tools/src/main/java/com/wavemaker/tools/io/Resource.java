@@ -16,6 +16,7 @@ package com.wavemaker.tools.io;
 
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
+import com.wavemaker.tools.io.filesystem.FileSystem.ResourceOrigin;
 
 /**
  * Base abstract for {@link File}s and {@link Folder}s that may be stored on a physical disk or using some other
@@ -123,5 +124,12 @@ public interface Resource {
      */
     @Override
     public boolean equals(Object obj);
+
+    /**
+     * Returns an enum value that indicates the origin of the resource (eg. os file system or mongo db)
+     *
+     * @return a new jailed folder
+     */
+    ResourceOrigin getResourceOrigin();
 
 }
