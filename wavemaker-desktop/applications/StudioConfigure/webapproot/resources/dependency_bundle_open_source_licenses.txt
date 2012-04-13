@@ -24,7 +24,7 @@ associated with each component.
 SECTION 1: GNU Lesser General Public License, V2.1
 
    >>> ace.ajax.org-0.1.6
-   >>> hibernate-3.2.4
+   >>> hibernate-3.2.4.sp1
    >>> hibernate-tools-3.2.0.ga
    >>> jtds-1.2.1
 
@@ -114,7 +114,7 @@ the provisions above, a recipient may use your version of this file under
 the terms of any one of the MPL, the GPL or the LGPL.
 
 
->>> hibernate-3.2.4
+>>> hibernate-3.2.4sp1
 
 This software is distributed under the terms of the FSF Lesser Gnu Public License (see lgpl.txt).
 

@@ -479,11 +479,15 @@
                         	<constructor-arg ref="fileSystem"/>
                         </bean>
                     </list>
-                				</entry>	
+   				</entry>	
                 <entry key="0.48">
                     <list>
-                        <bean class="com.wavemaker.tools.project.upgrade.six_dot_four_dot_three.MergeIEXUATagUpgradeTask">
-                        </bean>
+                        <bean class="com.wavemaker.tools.project.upgrade.six_dot_four_dot_three.MergeIEXUATagUpgradeTask" />
+                    </list>
+                </entry>
+                <entry key="0.49">
+                    <list>
+                        <bean class="com.wavemaker.tools.project.upgrade.six_dot_five_dot_zero.ProjSvcsUpgradeTask" />
                     </list>
                 </entry>
             </map>

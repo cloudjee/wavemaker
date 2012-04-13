@@ -78,7 +78,7 @@ dojo.declare("Main", wm.Page, {
 		      iframe = document.createElement("iframe");
 		      dojo.attr(iframe, {id: "downloadFrame",
 					 name: "downloadFrame",
-                     src: "https://github.com/wavemaker/WaveMaker-LGPL-Resources-6-4/blob/master/repo.zip?raw=true"}); 
+                     src: "https://github.com/wavemaker/WaveMaker-LGPL-Resources-6-4/raw/6.5/repo.zip"}); 
 		      dojo.style(iframe, {top: "1px",
 					  left: "1px",
 					  width: "1px",
