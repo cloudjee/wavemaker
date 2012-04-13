@@ -168,7 +168,7 @@ dojo.declare("wm.layout.Box", wm.layout.Base, {
 		     * in stretching the full width, and that pixel may look rather odd 
 		     */
 		    if (c._percEx[inFlowAxis] && !isNaN(tmpSize)) {
-			if (lastPercentSizedWidget == c) {
+			if (lastPercentSizedWidget == c && Math.abs(roundedSizeOffset) <= 1) {
 			    tmpSize += roundedSizeOffset;
 			}
 		    }
