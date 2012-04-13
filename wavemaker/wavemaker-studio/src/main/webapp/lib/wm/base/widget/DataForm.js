@@ -61,6 +61,7 @@ wm.getDataFormLiveView = function(inForm) {
 dojo.declare("wm.FormPanel", wm.Container, {
     margin: "0",
     padding: "2",
+    enableTouchHeight: true,
     editorHeight: "26px",
     editorWidth: "100%",
     captionSize: "150px",
@@ -68,7 +69,6 @@ dojo.declare("wm.FormPanel", wm.Container, {
     captionPosition: "left",
     height: "250px",
     width: "100%",
-    //fitToContent: true,
     layoutKind: "top-to-bottom",
     readonly: false,
 

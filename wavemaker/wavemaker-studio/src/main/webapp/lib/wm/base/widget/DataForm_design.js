@@ -285,7 +285,17 @@ wm.FormPanel.extend({
 			e.setWidth(this.editorWidth);
                     else 
                         e.setWidth("100%"); // because its going to be 100% anyway so why confuse the user?
-		    e.set_height(this.editorHeight);
+
+		    if (studio.currentDevice == "desktop") {
+			e.setHeight(this.editorHeight);
+		    } else {
+			e.desktopHeight = this.editorHeight;
+			if (this.editorHeight.match(/px/) && e.mobileHeight.match(/px/) && parseInt(e.mobileHeight) > parseInt(this.editorHeight)) {
+			    e.setHeight(e.mobileHeight);
+			} else {
+			    e.setHeight(this.editorHeight);
+			}
+		    }
 		    //console.log(this.name, "createEditor", arguments, e);
 		    return e;
 		}
@@ -552,7 +562,7 @@ wm.DataForm.extend({
 	    if (!this.generateInputBindings) {
 		this.populateEditors();
 	    }
-	    this.set_height(this.getPreferredFitToContentHeight() + "px");
+	    this.setFitToContentHeight(true);
 	    this.inherited(arguments);
 	},
 
@@ -764,7 +774,7 @@ wm.DataForm.extend({
 
 
 
-	this.set_height(this.getPreferredFitToContentHeight() + "px");
+	this.setHeight(this.getPreferredFitToContentHeight() + "px");
 	    this.reflow();
 	    studio.refreshDesignTrees();
 	// reflow called by caller
