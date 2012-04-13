@@ -133,6 +133,12 @@ wm.Control.extend({
 	    this.parent.afterPaletteChildDrop(this);
 	}
     },
+    setDesktopHeight: function(inHeight) {
+	if (inHeight.match(/px/)) {
+	    this.desktopHeight = inHeight;
+	}
+	this.setHeight(inHeight);
+    },
     set_height: function(inHeight) {
 	if (inHeight.match(/\%/)) {
 	    this.desktopHeight = this.mobileHeight = inHeight;
@@ -157,8 +163,8 @@ wm.Control.extend({
 	this.setSizeProp("height", this.height, height);
     },
     resetDesignHeight: function() {
-	this.setHeight(studio.currentDeviceType != "desktop" ? this.mobileHeight || this.desktopHeight : this.desktopHeight);
-	this.setMinHeight(studio.currentDeviceType != "desktop" ? this.minMobileHeight || this.minDesktopHeight : this.minDesktopHeight);
+	this.setHeight(studio.currentDeviceType != "desktop" ? this.mobileHeight || this.desktopHeight || this.height: this.desktopHeight || this.height);
+	this.setMinHeight(studio.currentDeviceType != "desktop" ? this.minMobileHeight || this.minDesktopHeight || this.minHeight : this.minDesktopHeight || this.minHeight);
     },
 	// Begin design border
 	/*
