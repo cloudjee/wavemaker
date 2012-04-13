@@ -22,7 +22,6 @@ import com.wavemaker.tools.io.Resource;
 import com.wavemaker.tools.io.ResourceStringFormat;
 import com.wavemaker.tools.io.exception.ResourceDoesNotExistException;
 import com.wavemaker.tools.io.exception.ResourceExistsException;
-import com.wavemaker.tools.io.filesystem.FileSystem.ResourceOrigin;
 
 /**
  * {@link Resource} implementation backed by a {@link FileSystem}.
@@ -143,8 +142,4 @@ public abstract class FileSystemResource<K> implements Resource {
         return ObjectUtils.nullSafeEquals(this.path, other.path);
     }
 
-    @Override
-    public ResourceOrigin getResourceOrigin() {
-        return this.fileSystem.getResourceOrigin();
-    }
 }
