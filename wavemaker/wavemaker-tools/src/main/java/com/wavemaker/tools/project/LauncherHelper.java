@@ -79,8 +79,14 @@ public class LauncherHelper {
         return false;
     }
 
-    public static void doUpgrade(Resource waveMakerHome) throws IOException {
-
+    /**
+     * NOTE: this method is called from the Launcher. DO NOT CHANGE TO NEW RESOURCE API.
+     * 
+     * @param waveMakerHome
+     * @throws IOException
+     */
+    public static void doUpgrade(java.io.File waveMakerHomeFile) throws IOException {
+        Resource waveMakerHome = new FileSystemResource(waveMakerHomeFile);
         VersionInfo vi = LocalStudioConfiguration.getCurrentVersionInfo();
         LocalStudioConfiguration.setRegisteredVersionInfo(vi);
 
