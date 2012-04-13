@@ -1,16 +1,3 @@
-/*
- *  Copyright (C) 2012 VMware, Inc. All rights reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *     http://www.apache.org/licenses/LICENSE-2.0
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
 Main.widgets = {
 	downloadAndInstallServiceVar: ["wm.ServiceVariable", {"operation":"DownloadPackages","service":"InstallService"}, {"onError":"downloadAndInstallServiceVarError","onSuccess":"downloadAndInstallServiceVarSuccess"}, {
 		input: ["wm.ServiceInput", {"type":"DownloadPackagesInputs"}, {}]
@@ -22,9 +9,9 @@ Main.widgets = {
 			}]
 		}]
 	}],
-	layoutBox: ["wm.Layout", {"height":"100%","horizontalAlign":"center","width":"100%"}, {}, {
+	layoutBox: ["wm.Layout", {"horizontalAlign":"center"}, {}, {
 		panel5: ["wm.Panel", {"_classes":{"domNode":["wm_Attribution_new"]},"height":"48px","horizontalAlign":"left","layoutKind":"left-to-right","verticalAlign":"top","width":"266px"}, {}],
-		loginMainPanel: ["wm.Panel", {"height":"100%","horizontalAlign":"center","minHeight":550,"padding":"20","verticalAlign":"middle","width":"100%"}, {}, {
+		loginMainPanel: ["wm.Panel", {"height":"100%","horizontalAlign":"center","padding":"20","verticalAlign":"middle","width":"100%"}, {}, {
 			wmTitle: ["wm.Label", {"_classes":{"domNode":["wm_FontSizePx_14px","wm_TextDecoration_Bold"]},"align":"center","border":"0","caption":"Complete Installation","height":"20px","padding":"4","width":"350px"}, {}, {
 				format: ["wm.DataFormatter", {}, {}]
 			}],
@@ -32,10 +19,10 @@ Main.widgets = {
 				layers1: ["wm.Layers", {"margin":"20","transition":"fade"}, {}, {
 					layer1: ["wm.Layer", {"borderColor":"","caption":"layer1","horizontalAlign":"right","verticalAlign":"top"}, {}, {
 						html2: ["wm.Html", {"autoScroll":false,"border":"0","height":"88px","html":"<p>NOTE: If it takes more than a minute for the install button to run, click on <a href='#' onclick='main.manualLabelClick()'>Proxy Problems?</a>.</p><p>WaveMaker has identified missing system requirements.  These dependencies can be resolved by downloading the WaveMaker System Requirements Bundle.  The WaveMaker System Requirements Bundle includes open source packages.  Your use of the WaveMaker System Requirements Bundle is subject to the following open source license(s):</p>","margin":"0,20"}, {}],
-						licenseHtml: ["wm.Html", {"_classes":{"domNode":["wm_BackgroundColor_LightGray","wm_FontColor_Black"]},"border":"0","height":"100%","html":"","padding":"10"}, {}],
+						licenseHtml: ["wm.Html", {"_classes":{"domNode":["wm_BackgroundColor_LightGray","wm_FontColor_Black"]},"border":"0","height":"100%","minHeight":0,"padding":"10"}, {}],
 						panel3: ["wm.Panel", {"height":"48px","horizontalAlign":"center","layoutKind":"left-to-right","verticalAlign":"top","width":"100%"}, {}, {
 							spacer1: ["wm.Spacer", {"height":"50px","width":"326px"}, {}],
-							downloadButton: ["wm.BusyButton", {"caption":"Download and Install","defaultIconUrl":"lib/wm/base/widget/themes/default/images/blank.gif","height":"34px","margin":"4","width":"257px"}, {}, {
+							downloadButton: ["wm.BusyButton", {"caption":"Download and Install","defaultIconUrl":"lib/dojo/dojo/../../../lib/dojo/dojo/../../../lib/dojo/dojo/../../../lib/dojo/dojo/../../../lib/wm/base/widget/themes/default/images/blank.gif","desktopHeight":"34px","height":"34px","margin":"4","width":"257px"}, {}, {
 								binding: ["wm.Binding", {}, {}, {
 									wire: ["wm.Wire", {"expression":undefined,"source":"downloadAndInstallServiceVar","targetProperty":"clickVariable"}, {}]
 								}]
@@ -76,7 +63,7 @@ Main.widgets = {
 						}]
 					}],
 					permissionsLayer: ["wm.Layer", {"borderColor":"","caption":"layer2","horizontalAlign":"right","verticalAlign":"top"}, {}, {
-						html1: ["wm.Html", {"_classes":{"domNode":["wm_BackgroundColor_LightGray","wm_FontColor_Black"]},"border":"0","height":"100%","html":"Unable to upload this file; this typically means that your system requires additional permissions to install. You can install these files yourself into studio/WEB-INF/lib.  For instructions go to <a class=\"wm_FontColor_Black\" href=\"#\" onclick=\"window.open('http://dev.wavemaker.com/wiki/bin/ThirdPartyJars')\">Installing Jars</a> on the wiki","padding":"10"}, {}],
+						html1: ["wm.Html", {"_classes":{"domNode":["wm_BackgroundColor_LightGray","wm_FontColor_Black"]},"border":"0","height":"100%","html":"Unable to upload this file; this typically means that your system requires additional permissions to install. You can install these files yourself into studio/WEB-INF/lib.  For instructions go to <a class=\"wm_FontColor_Black\" href=\"#\" onclick=\"window.open('http://dev.wavemaker.com/wiki/bin/ThirdPartyJars')\">Installing Jars</a> on the wiki","minHeight":0,"padding":"10"}, {}],
 						button1: ["wm.Button", {"caption":"Try Again","margin":"4","width":"107px"}, {"onclick":"layer1"}]
 					}]
 				}]
