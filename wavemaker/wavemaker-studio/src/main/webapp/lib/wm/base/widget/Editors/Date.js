@@ -582,6 +582,7 @@ dojo.declare("wm.DateTimePicker", wm.Container, {
 					width: "100%", 
 					height: "100%"});
 	wm.require("wm.dijit.Calendar");
+	wm.require("wm.List");
 	this.calendar = new wm.dijit.Calendar({owner: this,
 					       parent: this.mainPanel,
 					       name: "calendar",
@@ -690,12 +691,12 @@ dojo.declare("wm.DateTimePicker", wm.Container, {
 	this.ampm = new wm.ToggleButtonPanel({owner: this,
 					      parent: this.panel,
 					      name: "ampm",
-					      height: "100%",
+					      height: "100%", 
 					      width: "50px",
 					      layoutKind: "top-to-bottom",
 					      verticalAlign: "middle",
 					      margin: "0",
-					      padding: "80,5,80,5",
+					      margin: "80,5,80,5",
 					      onChange: onchange});
 	this.amButton = new wm.Button({owner: this,
 				       parent: this.ampm,
