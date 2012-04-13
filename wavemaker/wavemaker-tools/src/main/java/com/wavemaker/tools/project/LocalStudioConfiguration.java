@@ -73,6 +73,8 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration {
 
     private static final String VERSION_DEFAULT = "4.0.0";
 
+    private static final String DEMOHOME_KEY = "demoHome";
+
     private RuntimeAccess runtimeAccess;
 
     private final LocalStudioFileSystem fileSystem;
@@ -242,18 +244,6 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration {
         }
     }
 
-    /**
-     * @deprecated This method is here to support the launcher and should not be used internally anymore
-     */
-    @Deprecated
-    public File getWaveMakerHome() {
-        try {
-            return LocalStudioFileSystem.staticGetWaveMakerHome().getFile();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public static void setWaveMakerHome(Resource wmHome) throws FileAccessException {
         LocalStudioFileSystem.setWaveMakerHome(wmHome);
     }
@@ -277,4 +267,25 @@ public class LocalStudioConfiguration implements EmbeddedServerConfiguration {
     public void setCurrentUpgradeKey(double key) {
         ConfigurationStore.setPreference(UpgradeManager.class, STUDIO_VERSION_KEY, "" + key);
     }
+
+    /**
+     * @deprecated This method is here to support the launcher and should not be used internally anymore
+     */
+    @Deprecated
+    public File getWaveMakerHome() {
+        try {
+            return LocalStudioFileSystem.staticGetWaveMakerHome().getFile();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * @deprecated This method is here to support the launcher and should not be used internally anymore
+     */
+    @Deprecated
+    public void setDemoDir(File file) {
+        ConfigurationStore.setPreference(getClass(), DEMOHOME_KEY, file.getAbsolutePath());
+    }
+
 }
