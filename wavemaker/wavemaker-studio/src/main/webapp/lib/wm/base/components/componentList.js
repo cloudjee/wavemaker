@@ -121,14 +121,13 @@ wm.componentList = {
     'wm.FormPanel': ['build.Gzipped.wm_dataform'],
     'wm.SubForm': ['build.Gzipped.wm_dataform'],
     'wm.DBForm': ['build.Gzipped.wm_dataform'],
+    'wm.OneToMany': ['wm.compressed.wm_dataform'],
     'wm.ServiceInputForm': ['build.Gzipped.wm_dataform'],
     'wm.ServiceQueue': ['wm.base.components.ServiceQueue'],
 	//'wm.Picture': ["wm.base.widget.Picture"],
 	'wm.dijit.Calendar':["build.Gzipped.wm_editors"],
-	'wm.Html':['wm.base.widget.Html'],
 	'wm.Template':['wm.base.widget.Template'],
-	'wm.NavigationCall':["wm.base.components.NavigationCall"],
-	'wm.Property':["wm.base.components.Property"],
+
 	'wm.ComponentPublisher':["wm.base.components.Publisher"],
 	'wm.CompositePublisher':["wm.base.components.Publisher"],
 	'wm.TemplatePublisher':["wm.base.components.Publisher"],
@@ -141,17 +140,13 @@ wm.componentList = {
         'wm.DijitDesigner': ["wm.base.widget.dijit.Dijit"],
 
         //'wm.Popup':['wm.base.widget.Popup'],
-	'wm.Service':['wm.base.components.Service'],
-	'wm.ServiceCall':['wm.base.components.ServiceCall'],
-	'wm.ServiceInput':['wm.base.components.ServiceCall'],
 	'wm.FunctionService':['wm.base.components.FunctionService'],
 	'wm.List':["build.Gzipped.wm_list"],
 	'wm.IFrame':['wm.base.widget.IFrame'],
 	'wm.FeedList':['wm.base.widget.FeedList'],
 	'wm.ListViewer':['wm.base.widget.ListViewer'],
-	
-	'wm.LogoutVariable':['wm.base.components.LogoutVariable'],
-	'wm.Service':['wm.base.components.Service']
+        'wm.PhoneGapService': ['wm.base.components.PhoneGapService'],
+	'wm.LogoutVariable':['wm.base.components.LogoutVariable']
 }
 
 /* wm.require is the public version of wm.getComponentStructure; inCommon is optional parameter
