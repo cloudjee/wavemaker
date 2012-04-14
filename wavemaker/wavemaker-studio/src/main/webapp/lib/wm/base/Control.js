@@ -1319,7 +1319,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	getCssSplitter: function (value) {
 	    var splitter = ",";
 	    if (value) {
-	        value = dojo.string.trim(value);
+	        value = dojo.trim(String(value));
 		if (value.indexOf(",") == -1 && value.indexOf(" ") != -1)
 		{
 		    splitter = " ";
