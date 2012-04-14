@@ -165,6 +165,7 @@ dojo.declare("wm.studio.Project", null, {
 	// Open
 	//=========================================================================		 
 	openProject: function(inProjectName, inPageName) {
+	    var deferred = new dojo.Deferred();
 	    if (this.projectName && this.projectName != inProjectName)
 		this.closeProject();
 	    if (!inProjectName) {
@@ -172,7 +173,65 @@ dojo.declare("wm.studio.Project", null, {
 	    }
 	    studio.beginWait(studio.getDictionaryItem("wm.studio.Project.WAIT_OPEN_PROJECT"));
 	    studio.neededJars = {};
-	    var deferred = new dojo.Deferred();
+	    var d = studio.studioService.requestAsync("projectUpgradeRequired", [inProjectName]);
+	    d.addErrback(function(e) {
+		app.alert(err.toString() || "Failed to open project");
+	    });
+	    d.addCallback(dojo.hitch(this, function(inNeedsUpgrade) {
+		if (inNeedsUpgrade) {
+		    this.openProjectUpgradeDialog(inProjectName, inPageName, deferred);
+		    //deferred;
+		} else {
+		    studio.studioService.requestAsync("openProject", [inProjectName],
+						      dojo.hitch(this, function() {
+							  this.openProject1(inProjectName, inPageName, deferred);
+						      }),
+						      dojo.hitch(this, function(err) {
+							  studio.endWait(studio.getDictionaryItem("wm.studio.Project.WAIT_OPEN_PROJECT"));
+							  /* Localization: I assume we'll always have an error message */
+							  app.alert(err.toString() || "Failed to open project");
+							  this.closeProject();
+							  deferred.errback(err);
+						      }));
+		}
+	    }));
+
+	    deferred.addErrback(function() {
+		studio.endWait();
+	    });
+
+	    return deferred;
+	},
+    openProjectUpgradeDialog: function(inProjectName, inPageName, deferred) {
+	studio.openProjectOptionsDialog.show();
+	studio.endWait();
+	var d = new dojo.Deferred();
+	studio.openProjectOptionsDialog.page.setup(inProjectName, d);
+	d.addCallbacks(
+	    dojo.hitch(this, function(newProjectName) {
+		studio.beginWait(studio.getDictionaryItem("wm.studio.Project.WAIT_OPEN_PROJECT"));
+		if (newProjectName == inProjectName) {
+		    this.openProject1(inProjectName, inPageName, deferred);
+		} else {
+		    studio.studioService.requestAsync("copyProject", [inProjectName, newProjectName],
+						      dojo.hitch(this, function() {
+							  this.openProject1(newProjectName, inPageName, deferred);
+						      }),
+						      dojo.hitch(this, function(e) {
+							  deferred.errback(e);
+						      })						      
+						     );
+
+
+		}
+	    }),
+	    function(e) {
+		deferred.errback(e);
+	    }
+	);
+    },
+    openProject1: function(inProjectName, inPageName, deferred) {
+
 	    studio.studioService.requestAsync("openProject", [inProjectName],
 						      dojo.hitch(this, function(o) {
  							  studio.endWait(studio.getDictionaryItem("wm.studio.Project.WAIT_OPEN_PROJECT"));
