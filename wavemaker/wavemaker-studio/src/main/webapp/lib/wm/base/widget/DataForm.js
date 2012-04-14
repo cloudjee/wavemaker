@@ -913,7 +913,7 @@ dojo.declare("wm.DBForm", wm.DataForm, {
 	    this.serviceVariable.setLiveSource(inDataSet.liveSource);
 	}
 
-	if (!this.readonlyManager) {
+	if (!this.readonlyManager && !this._isDesignLoaded) { 
 	    this._editSomeObject();
 	}
     },

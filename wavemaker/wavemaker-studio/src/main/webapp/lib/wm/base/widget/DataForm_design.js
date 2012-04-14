@@ -238,8 +238,10 @@ wm.FormPanel.extend({
 	if (relatedTypeDef) {
 	    /* If its a liveService and its not a list type, create a wm.Lookup */
 	    if (relatedTypeDef.liveService && !inFieldInfo.isList && !this.subFormOnly) {
-		    props.name = wm.makeNameForProp(inFormField, "Lookup")
-		    var e = wm.createFieldEditor(this.getEditorParent(), fieldDef, props, {}, "wm.Lookup");
+		props.name = wm.makeNameForProp(inFormField, "Lookup")
+		var e = wm.createFieldEditor(this.getEditorParent(), fieldDef, props, {}, "wm.Lookup");
+		var ff = e.formField && this.getViewDataIndex(e.formField || "");
+		this.addEditorToView(e, ff);
 	    }
 
 	    /* If its a liveService and it IS a list type, create a readonly grid related editor */
@@ -252,7 +254,7 @@ wm.FormPanel.extend({
 		*/
 	    } 
 
-	    /* Anything else, and  just get an editable subform for lack of a better idea */
+	    /* Anything else, and  just get an editable subform for lack of a better idea */ 
 	    else {
 		props.editingMode = "one-to-one";
 		props.subFormOnly = this.subFormOnly;
