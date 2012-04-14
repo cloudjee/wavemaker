@@ -462,7 +462,9 @@ dojo.declare("wm.AceEditor", wm.Control, {
 
     _change: function() {
 	this.updateIsDirty();
-	this.onChange(this.getDataValue());
+	wm.job(this.getRuntimeId() + ".onChange", 1, this, function() {
+	    this.onChange(this.getDataValue());
+	});
     },
     _changeSelection: function() {
 	this.onChangeSelection(this.getSelectedText());
