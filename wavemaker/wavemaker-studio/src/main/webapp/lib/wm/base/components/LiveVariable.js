@@ -60,9 +60,6 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 		this.sourceData = new wm.Variable({name: "sourceData", owner: this, type: this.type || "any" });
 		this.subscribe(this.filter.getRuntimeId() + "-changed", this, "filterChanged");
 		this.subscribe(this.sourceData.getRuntimeId() + "-changed", this, "sourceDataChanged");
-	    if (this.refireOnDbChange) {
-		this.subscribe(this.type + "-changed", this, "updateOnDbChange");
-	    }
 	    // default assumption is that its a list until we have some actual
 	    // data to tell us otherwise
 	    if (this.isList === undefined && this.operation == "read") 
@@ -237,6 +234,14 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	    var newFilterType = this.filter.type + "|" + dojo.toJson(this.filter._dataSchema);
 	    if (!this._updating && !this._inLVPostInit && this.$.binding && (hasChanged || oldSourceType != newSourceType || oldFilterType != newFilterType))
 		this.$.binding.refresh();
+	    if (this.refireOnDbChange) {
+		if (this._updateOnDbSubscribe) {
+		    dojo.unsubscribe(this._updateOnDbSubscribe);
+		}
+		if (this.type) {
+		    this._updateOnDbSubscribe = this.subscribe(this.type + "-server-changed", this, "updateOnDbChange");
+		}
+	    }
 	},
 	_liveViewChanged: function() {
 		this.setType(this.liveView.dataType);
@@ -257,7 +262,8 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	operationChanged: function() {
 	},
     updateOnDbChange: function(inComponent) {
-	if (inComponent === this || !this.autoUpdate) return;
+	// If the component that changed is this component, we don't need to update
+	if (inComponent === this) return;
 	if (djConfig.isDebug) this.log("autoUpdate", "updateOnDbChange");
 	this.update();
     },
@@ -328,7 +334,7 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 	        this.dataSetCount = this._service.fullResult ? this._service.fullResult.dataSetSize : 0;
 		this.inherited(arguments);
 	        if (this.operation != "read") {
-		    dojo.publish(this.type + "-changed", [this]);
+		    dojo.publish(this.type + "-server-changed", [this]);
 		}
 	},
 	//===========================================================================

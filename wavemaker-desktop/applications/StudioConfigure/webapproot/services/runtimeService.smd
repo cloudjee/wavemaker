@@ -1,6 +1,7 @@
 {
 	"methods": [{
 		"name": "delete",
+		"operationType": null,
 		"parameters": [{
 			"name": "serviceName",
 			"type": "java.lang.String"
@@ -14,9 +15,10 @@
 		"returnType": null
 	}, {
 		"name": "echo",
+		"operationType": null,
 		"parameters": [{
 			"name": "contents",
-			"type": "java.io.InputStream"
+			"type": "java.lang.String"
 		}, {
 			"name": "contentType",
 			"type": "java.lang.String"
@@ -26,11 +28,18 @@
 		}],
 		"returnType": "com.wavemaker.runtime.server.DownloadResponse"
 	}, {
+		"name": "getInternalRuntime",
+		"operationType": null,
+		"parameters": null,
+		"returnType": "com.wavemaker.runtime.server.InternalRuntime"
+	}, {
 		"name": "getLocalHostIP",
+		"operationType": null,
 		"parameters": null,
 		"returnType": "java.lang.String"
 	}, {
 		"name": "getProperty",
+		"operationType": null,
 		"parameters": [{
 			"name": "instance",
 			"type": "java.lang.Object"
@@ -43,11 +52,44 @@
 		}],
 		"returnType": "java.lang.Object"
 	}, {
+		"name": "getRuntimeAccess",
+		"operationType": null,
+		"parameters": null,
+		"returnType": "com.wavemaker.runtime.RuntimeAccess"
+	}, {
+		"name": "getServiceEventNotifier",
+		"operationType": null,
+		"parameters": null,
+		"returnType": "com.wavemaker.runtime.service.events.ServiceEventNotifier"
+	}, {
+		"name": "getServiceManager",
+		"operationType": null,
+		"parameters": null,
+		"returnType": "com.wavemaker.runtime.service.ServiceManager"
+	}, {
+		"name": "getServiceWire",
+		"operationType": null,
+		"parameters": [{
+			"name": "serviceName",
+			"type": "java.lang.String"
+		}, {
+			"name": "typeName",
+			"type": "java.lang.String"
+		}],
+		"returnType": "com.wavemaker.runtime.service.ServiceWire"
+	}, {
 		"name": "getSessionId",
+		"operationType": null,
 		"parameters": null,
 		"returnType": "java.lang.String"
 	}, {
+		"name": "getTypeManager",
+		"operationType": null,
+		"parameters": null,
+		"returnType": "com.wavemaker.runtime.service.TypeManager"
+	}, {
 		"name": "insert",
+		"operationType": null,
 		"parameters": [{
 			"name": "serviceName",
 			"type": "java.lang.String"
@@ -58,9 +100,10 @@
 			"name": "objectToInsert",
 			"type": "java.lang.Object"
 		}],
-		"returnType": null
+		"returnType": "com.wavemaker.runtime.service.TypedServiceReturn"
 	}, {
 		"name": "read",
+		"operationType": null,
 		"parameters": [{
 			"name": "serviceName",
 			"type": "java.lang.String"
@@ -77,9 +120,58 @@
 			"name": "pagingOptions",
 			"type": "com.wavemaker.runtime.service.PagingOptions"
 		}],
+		"returnType": "com.wavemaker.runtime.service.TypedServiceReturn"
+	}, {
+		"name": "setInternalRuntime",
+		"operationType": null,
+		"parameters": [{
+			"name": "internalRuntime",
+			"type": "com.wavemaker.runtime.server.InternalRuntime"
+		}],
+		"returnType": null
+	}, {
+		"name": "setRuntimeAccess",
+		"operationType": null,
+		"parameters": [{
+			"name": "runtimeAccess",
+			"type": "com.wavemaker.runtime.RuntimeAccess"
+		}],
+		"returnType": null
+	}, {
+		"name": "setServiceEventNotifier",
+		"operationType": null,
+		"parameters": [{
+			"name": "serviceEventNotifier",
+			"type": "com.wavemaker.runtime.service.events.ServiceEventNotifier"
+		}],
+		"returnType": null
+	}, {
+		"name": "setServiceManager",
+		"operationType": null,
+		"parameters": [{
+			"name": "serviceManager",
+			"type": "com.wavemaker.runtime.service.ServiceManager"
+		}],
+		"returnType": null
+	}, {
+		"name": "setTypeManager",
+		"operationType": null,
+		"parameters": [{
+			"name": "typeManager",
+			"type": "com.wavemaker.runtime.service.TypeManager"
+		}],
+		"returnType": null
+	}, {
+		"name": "shiftDeserializedProperties",
+		"operationType": null,
+		"parameters": [{
+			"name": "index",
+			"type": "int"
+		}],
 		"returnType": null
 	}, {
 		"name": "update",
+		"operationType": null,
 		"parameters": [{
 			"name": "serviceName",
 			"type": "java.lang.String"
@@ -90,7 +182,7 @@
 			"name": "objectToUpdate",
 			"type": "java.lang.Object"
 		}],
-		"returnType": null
+		"returnType": "com.wavemaker.runtime.service.TypedServiceReturn"
 	}],
 	"serviceType": "JSON-RPC",
 	"serviceURL": "runtimeService.json"

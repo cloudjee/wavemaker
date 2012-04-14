@@ -56,7 +56,7 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
     public void DownloadPackages() throws Exception {
         File webapproot = new File(RuntimeAccess.getInstance().getSession().getServletContext().getRealPath(""));
 
-     URL url = new URL("https://github.com/wavemaker/WaveMaker-LGPL-Resources-6-4/blob/master/repo.zip?raw=true");
+     URL url = new URL("https://github.com/wavemaker/WaveMaker-LGPL-Resources-6-4/raw/6.5/repo.zip");
       URLConnection urlC = url.openConnection();
           // Copy resource to local file, use remote file
           // if no local file name specified
@@ -89,7 +89,7 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
          if (!versionFile.exists())
             throw new IOException("This repo.zip file is from the wrong version of studio");
          String s = IOUtils.read(versionFile);
-         if (s.indexOf("6.4") != 0)
+         if (s.indexOf("6.5") != 0)
             throw new IOException("This repo.zip file is from the wrong version of studio");
          File webapproot = new File(RuntimeAccess.getInstance().getSession().getServletContext().getRealPath(""));
 
@@ -101,14 +101,14 @@ public class StudioInstallService extends com.wavemaker.runtime.javaservice.Java
             System.out.println("FAILED TO WRITE: " + newAce.getAbsolutePath());
          }            
             
-         File h1 = new File(zipFolder, "hibernate-tools.jar");
-         if (!h1.renameTo(new File(webapproot, "../studio/WEB-INF/lib/hibernate-tools.jar"))) {
+         File h1 = new File(zipFolder, "hibernate-tools-3.2.4.GA.jar");
+         if (!h1.renameTo(new File(webapproot, "../studio/WEB-INF/lib/hibernate-tools-3.2.4.GA.jar"))) {
             result = false;
              System.out.println("FAILED TO WRITE: " + new File(webapproot, "../studio/WEB-INF/lib/hibernate-tools.jar").getAbsolutePath());
          }
 
-        File h2 = new File(zipFolder, "hibernate3.jar");
-         if (!h2.renameTo(new File(webapproot, "../studio/WEB-INF/lib/hibernate3.jar"))) {
+        File h2 = new File(zipFolder, "hibernate-3.2.4.sp1.jar");
+         if (!h2.renameTo(new File(webapproot, "../studio/WEB-INF/lib/hibernate-3.2.4.sp1.jar"))) {
             result = false;
             System.out.println("FAILED TO WRITE: " + new File(webapproot, "../studio/WEB-INF/lib/hibernate3.jar").getAbsolutePath());
          }
