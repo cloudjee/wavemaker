@@ -400,13 +400,13 @@ dojo.declare("wm.Dialog", wm.Container, {
 	this.setBorder("0");
 	this.setMargin("0");
 	if (!parent) {
-	    if (edge == "t" && app.dockTop) {
+	    if (edge == "t" && app.dockTop && !app.dockTop.isAncestorHidden()) {
 		parent = app.dockTop;
-	    } else if (edge == "b" && app.dockBottom) {
+	    } else if (edge == "b" && app.dockBottom && !app.dockBottom.isAncestorHidden()) {
 		parent = app.dockBottom;
-	    } else if (edge == "l" && app.dockLeft) {
+	    } else if (edge == "l" && app.dockLeft && !app.dockLeft.isAncestorHidden()) {
 		parent = app.dockLeft;
-	    } else if (edge == "r" && app.dockRight) {
+	    } else if (edge == "r" && app.dockRight && !app.dockRight.isAncestorHidden()) {
 		parent = app.dockRight;
 	    } else {
 		parent = app.appRoot;
@@ -422,7 +422,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 	    parent.show();
 	    parent.reflow();
 	}
+	this.onDock();
     },
+    onDock: function() {},
     _undock: function() {
 	this.docked = false;
 	if (!wm.isMobile) {
@@ -472,7 +474,9 @@ dojo.declare("wm.Dialog", wm.Container, {
 	} else {
 	    app.reflow();
 	}
+	this.onUndock();
     },
+    onUndock: function() {},
     minify: function() {
 	this._minified = true;
 	this.setShowing(false);
