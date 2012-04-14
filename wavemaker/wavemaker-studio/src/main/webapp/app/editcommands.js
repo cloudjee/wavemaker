@@ -334,8 +334,31 @@ Studio.extend({
     getListCompletionObject: function(text) {
 	var object = studio.page;
 
+	// we only care about any characters starting from the last space
+	// PROBLEM: There are other ways to start an expression:  ";this...."
+	if (text.indexOf(" ") != -1 ) {
+	    text = text.substring(text.lastIndexOf(" "));
+	}
+
+	// Strip out any trailing spaces
+	text.replace(/\s*$/,""); 
+
+	if (text == "") {
+	    return object;
+	} 
+
+	// if there is a "." then either its this. or app. or its unknown.  If unknown just quit now.
+	else if (text.indexOf(".") != -1 && !text.match(/(this|app)\./)) {
+	    return {};
+	}
+
 	/* Remove this. as we already assume "this" refers to studio.page, and studio.page.this is meaningless */
-	text = text.replace(/^this\.?/,"");
+	if (text.match(/^this\.?/)) {
+	    text = text.replace(/^this\.?/,"");
+	} else if (text.match(/^app\.?/)) {
+	    text = text.replace(/app\.?/,"");
+	    object = studio.application;
+	}
 
 	/* Remainder: text left unused */
 	var remainder = "";
@@ -413,7 +436,6 @@ Studio.extend({
 	//this.listCompletions(true);
     },
     listCompletions: function() {
-
 	/* Clear the description text if we're loading new completions */
 	if (this.autoCompletionHtml)
 	    this.autoCompletionHtml.setHtml("");
@@ -446,8 +468,8 @@ Studio.extend({
 		var p = props[i];
 		var params = "";
 		if (p.group != "operation" && (p.method || !p.ignore && !p.tmpignore || p.doc)) {
-		    if (p.method) {
 			if (!this._autoCompletionRemainder || i.indexOf(this._autoCompletionRemainder) == 0) {
+		    if (p.method) {
 			    var methodstring = String(object[i]).toString();
 			    var methodstringmatch = methodstring.match(/function\s*\(([^)]*)/);
 			    params = "()";
@@ -458,7 +480,7 @@ Studio.extend({
 			//	params = "";
 			  //  else
 			//	params = "("+params + ")";
-			}
+
 			showprops.push({name: i, 
 					description: "_",
 					returns: p.returns,
@@ -467,6 +489,7 @@ Studio.extend({
 			showprops.push({name: i,
 					description: "_"});
 		    }
+			}
 		}
 	    }
 
@@ -573,26 +596,30 @@ Studio.extend({
 		    "returns": {type: "String"},
 		    "params":{type: "String"}}});
 
-
 	    this.autoCompletionDialog = new wm.Dialog({_classes: {domNode: ["studiodialog"]},
 						       owner: this,
 						       _noAutoFocus: true,
+						       noTopBottomDocking: true,
 						       title: this.getDictionaryItem("AUTOCOMPLETION_TITLE_DIALOG"),
 						       name: "autoCompletionDialog",
 						       useContainerWidget: true,
 						       width: "350px",
 						       height: "650px",
 						       corner: "tr",
-						       modal: false});
+						       modal: false,
+						       onDock: dojo.hitch(this, "onAutoCompletionDock"),
+						       onUndock: dojo.hitch(this, "onAutoCompletionDock"),
+						       });
 	    this.autoCompletionDialog.containerWidget.setPadding("0,10,10,10");
 	    this.autoCompletionDialog.containerWidget.setBackgroundColor("#424959");
 	    var topPanel = new wm.Panel({owner: this,
 				      parent: this.autoCompletionDialog.containerWidget,
 				      layoutKind: "left-to-right",
 				      width: "100%",
-				      height: "50%"});
+				      height: "100%"});
 	    var listPanel = new wm.Panel({owner: this,
 					  parent: topPanel,
+					  name: "autoCompletionListPanel",
 				      layoutKind: "top-to-bottom",
 				      width: "150px",
 				      height: "100%"});
@@ -645,6 +672,7 @@ Studio.extend({
 					     caption: this.getDictionaryItem("AUTOCOMPLETION_LABEL_RETURN", {returns: ""})});
 
 	    new wm.Label({owner: this,
+			  name: "autoCompletionHtmlLabel",
 			  _classes:{domNode:["wm_FontColor_White"]},
 			  caption: this.getDictionaryItem("AUTOCOMPLETION_LABEL_DESCRIPTION"),
 			  padding: "4,4,4,10",
@@ -661,7 +689,7 @@ Studio.extend({
 						   borderColor: "#424959",
 
 						   width: "100%",
-						   height: "50%"});
+						   height: "100%"});
 
 	    this.autoCompletionDialog.connect(this.autoCompletionDialog, "onClose", this, function() {
 		if (!this.editArea.isAncestorHidden())
@@ -669,7 +697,9 @@ Studio.extend({
 	    });
 	
 	    this.autoCompletionList.connect(this.autoCompletionList,"onselect", this, function() {
+		if (this.autoCompletionList instanceof wm.Component == false) return;
 		var item =  this.autoCompletionList.selectedItem.getData();
+		if (!item) return;
 		var itemDef = this._autoCompletionObject.listProperties()[item.name];
 		var type;
 		if (item.params)
@@ -698,6 +728,8 @@ Studio.extend({
 	    this.autoCompletionVariable = new wm.Variable({owner: this,
 						       name: "autoCompletionVariable",
 						       type: "com.wavemaker.editor.completions"});
+
+	    this.autoCompletionDialog.setDocked(true, studio.dockLeftPanel);
 	}
 	this.autoCompletionHtml.setHtml("<b>" + this.getDictionaryItem("AUTOCOMPLETION_HTML") + "</b>");
 	//this.autoCompletionDialog.setTitle(object.toString().replace(/[\[\]]/g,""));
@@ -719,6 +751,17 @@ Studio.extend({
 	this.autoCompletionDialog.show();
 	window.setTimeout(dojo.hitch(this, "autoCompletionDialogAutoHide"), 5000);
     },
+    hideAutoComplete: function() {
+	if (this.autoCompletionDialog)
+	    this.autoCompletionDialog.hide();
+    },
+    onAutoCompletionDock: function() {
+	var show = !this.autoCompletionDialog.docked;
+	this.$.autoCompletePropPanel.setShowing(show);
+	this.autoCompletionHtml.setShowing(show);
+	this.$.autoCompletionHtmlLabel.setShowing(show);
+	this.$.autoCompletionListPanel.setWidth(show ? "150px" : "100%");
+    },
     insertCompletedText: function() {
 		var data = this.autoCompletionList.selectedItem.getData();
 		if (data.description == "__") return;
@@ -727,10 +770,13 @@ Studio.extend({
 		
 		var data = this.autoCompletionList.selectedItem.getData();
 		text = text.replace(/\.?\s*$/, "." + data.name + (data.params || ""));
-
+	if (!text.match(/^(this|app)/)) {
+	    var newtext = this._autoCompletionObject == studio.page ? "this" : "app";
+	    text = newtext + (text.indexOf(".") == 0 ? "" : ".") + text;
+	}
 		if (!this.editArea.getSelectedText()) {
 		    var pos = this.editArea.getCursorPosition();
-		    this.editArea.setSelectionRange(pos.row, Math.max(0,pos.column - this._autoCompletionOriginalText.length), pos.row,pos.column);
+		    this.editArea.setSelectionRange(pos.row, Math.max(0,pos.column - this._autoCompletionOriginalText.length - 1), pos.row,pos.column);
 		    var replaceText = this.editArea.getSelectedText();
 		    var replaceTextTrim = replaceText.replace(/^\s*/,"");
 		    var range = this.editArea.getSelectionRange();
