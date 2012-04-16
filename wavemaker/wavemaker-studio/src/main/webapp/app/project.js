@@ -734,7 +734,7 @@ dojo.declare("wm.studio.Project", null, {
     getPhonegapBuild: function() {
 	var d = studio.phoneGapService.requestAsync("getDefaultHost", []);
 	d.addCallback(dojo.hitch(this, function(inHost) {
-	    app.prompt("Enter the network name or IP address of the server that this application will connect to. Add a port number to the address if needed (e.g. host.mydomain.com:880)", inHost, dojo.hitch(this, function(inValue) {
+	    app.prompt("Enter the network name or IP address of the server that this application will connect to. Add a port number to the address if needed (e.g. host.mydomain.com:8080)", inHost, dojo.hitch(this, function(inValue) {
 		var serverName, portNumb;
 		inValue = inValue.replace(/^http.?\:\/\//,"");
 		var results = inValue.split(/\:/);
