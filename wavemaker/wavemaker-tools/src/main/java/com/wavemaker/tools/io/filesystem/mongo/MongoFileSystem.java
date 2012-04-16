@@ -45,6 +45,8 @@ public class MongoFileSystem implements FileSystem<MongoFileSystemKey> {
 
     private static final String RESOURCE_TYPE = "resourceType";
 
+    private final ResourceOrigin resourceOrigin = ResourceOrigin.MONGO_DB;
+
     private final GridFS fs;
 
     public MongoFileSystem(DB db, String bucket) {
@@ -130,6 +132,16 @@ public class MongoFileSystem implements FileSystem<MongoFileSystemKey> {
     @Override
     public MongoFileSystemKey rename(MongoFileSystemKey key, String name) {
         throw new UnsupportedOperationException(); // FIXME
+    }
+
+    @Override
+    public ResourceOrigin getResourceOrigin() {
+        return this.resourceOrigin;
+    }
+
+    @Override
+    public Object getOriginalResource() {
+        throw new UnsupportedOperationException();
     }
 
     private GridFSInputFile create(MongoFileSystemKey key, ResourceType type) {

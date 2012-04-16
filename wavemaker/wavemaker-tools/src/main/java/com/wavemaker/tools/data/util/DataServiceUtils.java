@@ -344,6 +344,10 @@ public class DataServiceUtils {
         return addPrefix(prefix, p);
     }
 
+    public static Resource createEmptyDataModel(StudioFileSystem fileSystem, Resource destDir, String serviceId, String packageName) {
+        return createEmptyDataModel(destDir, serviceId, packageName, packageName);
+    }
+
     public static Resource createEmptyDataModel(Resource destDir, String serviceId, String packageName, String dataPackage) {
 
         // File rtn = new File(destDir, getCfgFileName(serviceId));
@@ -362,6 +366,7 @@ public class DataServiceUtils {
             g.setPackage(packageName);
             g.setDataPackage(dataPackage);
             g.setServiceName(serviceId);
+
             // write some parsable values into
             // connection properties
             g.setDefaultDBType();
