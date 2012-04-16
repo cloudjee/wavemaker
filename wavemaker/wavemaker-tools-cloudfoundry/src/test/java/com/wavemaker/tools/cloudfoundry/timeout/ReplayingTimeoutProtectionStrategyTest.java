@@ -144,10 +144,10 @@ public class ReplayingTimeoutProtectionStrategyTest {
         @Override
         public void run() {
             try {
-                long startTime = System.currentTimeMillis();
+                long startTime = System.nanoTime();
                 ReplayingTimeoutProtectionStrategyTest.this.strategy.handlePoll(ReplayingTimeoutProtectionStrategyTest.this.request,
                     ReplayingTimeoutProtectionStrategyTest.this.response);
-                this.runtime = System.currentTimeMillis() - startTime;
+                this.runtime = (System.nanoTime() - startTime) / 1000000L;
             } catch (Exception e) {
                 this.exception = e;
             }
