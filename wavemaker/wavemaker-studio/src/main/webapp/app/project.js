@@ -521,7 +521,6 @@ dojo.declare("wm.studio.Project", null, {
 	return runtime ? 0 : 16;
     },
 	saveApplication: function(callback) {
-
 	    var f = [];
 
 	        try {
@@ -534,8 +533,14 @@ dojo.declare("wm.studio.Project", null, {
 	    
 	    var allProjectJS = "";
 
-	    var d = new dojo.Deferred();
-	    //d.addCallback(dojo.hitch(this, function() {
+
+	    /* Step 1: Make sure that the server knows which project is open, something that can be lost by restarting the server, clearing cookies, or 
+	     * losing a cookie by opening studio in another tab
+	     */
+	    var d = studio.studioService.requestAsync("openProject", [this.projectName]);
+
+	    var loadSMDDeferred = new dojo.Deferred();
+	    d.addCallback(dojo.hitch(this, function() {
 	        studio.incrementSaveProgressBar(1);
 		allProjectJS += "wm.JsonRpcService.smdCache['runtimeService.smd'] = " + this.loadProjectData("services/runtimeService.smd") + ";\n";
 		allProjectJS += "wm.JsonRpcService.smdCache['wavemakerService.smd'] = " + this.loadProjectData("services/wavemakerService.smd") + ";\n";
@@ -550,11 +555,11 @@ dojo.declare("wm.studio.Project", null, {
 		var bootJs = loadDataSync(bootJsPath);
 
 		var dlocal = this.saveProjectData("boot.js", bootJs,false,true);
-		dlocal.addCallback(function() {d.callback();});
-	//}));
+		dlocal.addCallback(function() {loadSMDDeferred.callback();});
+	    }));
 
 	    var d1 = new dojo.Deferred();
-	    d.addCallback(dojo.hitch(this, function() {
+	    loadSMDDeferred.addCallback(dojo.hitch(this, function() {
 		if (!studio.isCloud()) {
 		    studio.setSaveProgressBarMessage("Initializing PhoneGap (Please wait...)");
 		    var dlocal = studio.phoneGapService.requestAsync("setupPhonegapFiles", []);
