@@ -93,10 +93,11 @@
 								</copy>
 								
 								<!-- Version -->
-								<echo file="${project.build.directory}/VERSION.txt">Version: ${project.version}
-Build number: ${env.BUILD_NUMBER}
-Job name: ${env.JOB_NAME}
+								<echo file="${project.build.directory}/VERSION.txt">WaveMaker ${project.version} at commit:
         						</echo>
+								<exec executable="git" output="${project.build.directory}/VERSION.txt" append="true">
+									<arg line="rev-parse --verify HEAD"/>
+								</exec>	
 							</target>
 						</configuration>
 					</execution>
