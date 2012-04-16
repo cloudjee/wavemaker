@@ -19,7 +19,6 @@ dojo.require("wm.base.widget.Layers.TabsDecorator");
 dojo.require("wm.base.widget.Layers.AccordionDecorator");
 
 dojo.declare("wm.Layer", wm.Container, {
-    manageURL: false,
     height: "100%",
 	width: "100%",
 	caption: "",
@@ -169,14 +168,17 @@ dojo.declare("wm.Layer", wm.Container, {
 
 	this.activate();
 	return true;
-    },
+    },/*
     restoreFromLocationHash: function(inValue) {
 	this.activate();
     },
     generateStateUrl: function(stateObj) {
-	if (this.active && !this._mobileFoldingGenerated)
-	    stateObj[this.getRuntimeId()] = 1;
-    },
+	if (this.active && !this._mobileFoldingGenerated) {
+	    var index = this.getIndex();
+	    if (index == this.parent.defaultLayer || index === 0 && this.parent.defaultLayer === -1) return; 
+ 	    stateObj[this.getRuntimeId()] = 1;
+	}
+    },*/
     onTabDrop: function() {}
 });
 
@@ -745,8 +747,13 @@ dojo.declare("wm.Layers", wm.Container, {
 	}
     },
     generateStateUrl: function(stateObj) {
-	if (this.getActiveLayer() && this.layerIndex != this.defaultLayer && !this.getActiveLayer()._mobileFoldingGenerated && !this._isDesignLoaded)
-	    stateObj[this.getRuntimeId()] = this.layerIndex;
+	if (!this._isDesignLoaded && this.getActiveLayer()) {
+	    var defaultIndex = this.defaultLayer == -1 ? 0 : this.defaultLayer;
+	    var index = this.layerIndex;
+	    if (index != defaultIndex && !this.getActiveLayer()._mobileFoldingGenerated) {
+		stateObj[this.getRuntimeId()] = this.layerIndex;
+	    }
+	}
     }
 });
 

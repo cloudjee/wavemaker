@@ -299,7 +299,7 @@ Studio.widgets = {
 					designerSourceBtn: ["wm.ToolButton", {border: "0", borderColor: "#294473", margin: "0", padding: "0,6", height: "100%", width: "57px", caption: "", hint: bundleStudio.T_SourceTip}, {onclick: "navGotoSourceClick"}]
 				}],
 */
-			left: ["wm.TabLayers", {_classes: {domNode: ["wm-darksnazzy"]}, border: "0", width: "100%", height: "100%", headerHeight: "32px", clientBorder: "3,0,0,0",clientBorderColor: "#959DAB",manageURL: true}, {onchange: "leftTabsChange"}, {
+			left: ["wm.TabLayers", {_classes: {domNode: ["wm-darksnazzy"]}, border: "0", width: "100%", height: "100%", headerHeight: "32px", clientBorder: "3,0,0,0",clientBorderColor: "#959DAB"}, {onchange: "leftTabsChange"}, {
 				    mlpal: ["wm.Layer", {_classes: {domNode: ["wm-palette"]}, caption: "Palette"}, {onShow: "resetPaletteSearch"}, {
 					paletteSearch: ["wm.Text", {caption: "", width: "100%", height: "27px", placeHolder: "Find Component/Widget", padding: "2,5,2,5", margin: "2,0,2,0", changeOnKey: true, resetButton: true}, {onchange: "paletteSearchChange"}],
 					benchbevel6_6: ["wm.Bevel", {border: ""}, {}],
@@ -350,7 +350,7 @@ Studio.widgets = {
 			}]
 		}],
 			splitter1: ["wm.Splitter", {border: "0", layout: "left"}, {}],
-		tabs: ["wm.TabLayers", {conditionalTabButtons:true, border: "0", width: "100%", height: "100%", headerHeight: "32px",clientBorder: "3,0,0,0", clientBorderColor: "#959DAB",customCloseOrDestroy: "closeServiceParentTab",manageURL: true}, {oncanchange: "tabsCanChange", onchange: "tabsChange"}, {
+		tabs: ["wm.TabLayers", {conditionalTabButtons:true, border: "0", width: "100%", height: "100%", headerHeight: "32px",clientBorder: "3,0,0,0", clientBorderColor: "#959DAB",customCloseOrDestroy: "closeServiceParentTab"}, {oncanchange: "tabsCanChange", onchange: "tabsChange"}, { 
 		    workspace: ["wm.Layer", {caption: "Canvas", layoutKind: "top-to-bottom"}, {}, {
 			workspaceInner: ["wm.Panel", {width: "100%", height: "100%", layoutKind: "left-to-right"}, {}, {
 			    main: ["wm.Panel", {height: "100%", width: "100%", border: "", layoutKind: "top-to-bottom", borderColor: "#666E80"}, {}, {
