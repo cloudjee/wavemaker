@@ -193,7 +193,52 @@ public abstract class ResourceFiltering {
      * @return the filter
      */
     public static ResourceFilter<Resource> hiddenResources() {
+        return resourceNames().starting(".");
+    }
+
+    /**
+     * Filter all non-hidden resources (ie resource names not starting '.');
+     * 
+     * @return the filter
+     */
+    public static ResourceFilter<Resource> nonHiddenResources() {
         return resourceNames().notStarting(".");
+    }
+
+    /**
+     * Filter all hidden folders (ie folder names starting '.')
+     * 
+     * @return the filter
+     */
+    public static ResourceFilter<Folder> hiddenFolders() {
+        return folderNames().starting(".");
+    }
+
+    /**
+     * Filter all non-hidden folders (ie folder names not starting '.');
+     * 
+     * @return the filter
+     */
+    public static ResourceFilter<Folder> nonHiddenFolders() {
+        return folderNames().notStarting(".");
+    }
+
+    /**
+     * Filter all hidden files (ie file names starting '.')
+     * 
+     * @return the filter
+     */
+    public static ResourceFilter<File> hiddenFiles() {
+        return fileNames().starting(".");
+    }
+
+    /**
+     * Filter all non-hidden files (ie file names not starting '.');
+     * 
+     * @return the filter
+     */
+    public static ResourceFilter<File> nonHiddenFiles() {
+        return fileNames().notStarting(".");
     }
 
     /**
