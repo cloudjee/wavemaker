@@ -232,6 +232,45 @@ public class ResourceFilteringTest {
     @Test
     public void shouldFilterHiddenResources() throws Exception {
         ResourceFilter<Resource> filter = ResourceFiltering.hiddenResources();
+        assertThat(filter.include(fileWithName(".hidden")), is(true));
+        assertThat(filter.include(fileWithName("nothidden")), is(false));
+        assertThat(filter.include(folderWithName(".hidden")), is(true));
+        assertThat(filter.include(folderWithName("nothidden")), is(false));
+    }
+
+    @Test
+    public void shouldFilterNonHiddenResources() throws Exception {
+        ResourceFilter<Resource> filter = ResourceFiltering.nonHiddenResources();
+        assertThat(filter.include(fileWithName(".hidden")), is(false));
+        assertThat(filter.include(fileWithName("nothidden")), is(true));
+        assertThat(filter.include(folderWithName(".hidden")), is(false));
+        assertThat(filter.include(folderWithName("nothidden")), is(true));
+    }
+
+    @Test
+    public void shouldFilterHiddenFolders() throws Exception {
+        ResourceFilter<Folder> filter = ResourceFiltering.hiddenFolders();
+        assertThat(filter.include(folderWithName(".hidden")), is(true));
+        assertThat(filter.include(folderWithName("nothidden")), is(false));
+    }
+
+    @Test
+    public void shouldFilterNonHiddenFolders() throws Exception {
+        ResourceFilter<Folder> filter = ResourceFiltering.nonHiddenFolders();
+        assertThat(filter.include(folderWithName(".hidden")), is(false));
+        assertThat(filter.include(folderWithName("nothidden")), is(true));
+    }
+
+    @Test
+    public void shouldFilterHiddenFiles() throws Exception {
+        ResourceFilter<File> filter = ResourceFiltering.hiddenFiles();
+        assertThat(filter.include(fileWithName(".hidden")), is(true));
+        assertThat(filter.include(fileWithName("nothidden")), is(false));
+    }
+
+    @Test
+    public void shouldFilterNonHiddenFiles() throws Exception {
+        ResourceFilter<File> filter = ResourceFiltering.nonHiddenFiles();
         assertThat(filter.include(fileWithName(".hidden")), is(false));
         assertThat(filter.include(fileWithName("nothidden")), is(true));
     }

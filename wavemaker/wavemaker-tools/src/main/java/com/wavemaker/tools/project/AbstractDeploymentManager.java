@@ -41,6 +41,8 @@ import com.wavemaker.runtime.server.json.JSONUtils;
 import com.wavemaker.tools.compiler.ProjectCompiler;
 import com.wavemaker.tools.deployment.DeploymentInfo;
 import com.wavemaker.tools.deployment.Deployments;
+import com.wavemaker.tools.io.Folder;
+import com.wavemaker.tools.io.ResourceFiltering;
 
 public abstract class AbstractDeploymentManager implements DeploymentManager {
 
@@ -363,34 +365,23 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
         FileCopyUtils.copy(data, new OutputStreamWriter(this.fileSystem.getOutputStream(outputFile), ServerConstants.DEFAULT_ENCODING));
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String[] listThemes() throws IOException {
+        List<String> themes = new ArrayList<String>();
 
-        org.springframework.core.io.Resource themesDir = this.fileSystem.getCommonDir().createRelative(THEMES_DIR);
-
-        List<org.springframework.core.io.Resource> themesDirFiles = this.fileSystem.listChildren(themesDir);
-
-        org.springframework.core.io.Resource themesFolder = this.fileSystem.getStudioWebAppRoot().createRelative("lib/wm/base/widget/themes/");
-
-        List<org.springframework.core.io.Resource> widgetThemeFiles = this.fileSystem.listChildren(themesFolder, new ResourceFilter() {
-
-            @Override
-            public boolean accept(org.springframework.core.io.Resource resource) {
-                return resource.getFilename().indexOf("wm_") == 0;
-            }
-        });
-
-        themesDirFiles.addAll(widgetThemeFiles);
-
-        List<String> themeNames = new ArrayList<String>();
-        for (org.springframework.core.io.Resource theme : themesDirFiles) {
-            themeNames.add(theme.getFilename());
+        // Add common themes
+        Folder commonThemes = this.fileSystem.getCommonFolder().getFolder(THEMES_DIR);
+        for (Folder theme : commonThemes.list(ResourceFiltering.nonHiddenFolders())) {
+            themes.add(theme.getName());
         }
 
-        return themeNames.toArray(new String[themeNames.size()]);
+        // Add studio themes
+        Folder widgetThemes = this.fileSystem.getStudioWebAppRootFolder().getFolder("lib/wm/base/widget/themes/");
+        for (Folder theme : widgetThemes.list(ResourceFiltering.folderNames().starting("wm_"))) {
+            themes.add(theme.getName());
+        }
+
+        return themes.toArray(new String[themes.size()]);
     }
 
     /**
@@ -479,7 +470,7 @@ public abstract class AbstractDeploymentManager implements DeploymentManager {
             throw new WMRuntimeException(ex);
         }
         try {
-            List<org.springframework.core.io.Resource> files = this.fileSystem.listChildren(folder, new ResourceFilter() {
+            List<org.springframework.core.io.Resource> files = this.fileSystem.listChildren(folder, new com.wavemaker.tools.project.ResourceFilter() {
 
                 @Override
                 public boolean accept(org.springframework.core.io.Resource file) {
