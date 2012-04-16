@@ -21,11 +21,11 @@ wm.Object.extendSchema(wm.NavigationCall,{
 	startUpdate: {ignore: 1},
 	service: {ignore: 1, writeonly: 1},
     name: {requiredGroup: 0}, // hide the required group; too few properties to justify it
-    operation: { group: "data", order: 1},
+    operation: { group: "widgetName", order: 1},
 	updateNow: { ignore: 1},
     queue: { group: "operation", operation:1, order: 20},
     clearInput: { group: "operation", operation:1, order: 30},
-    input: {group: "data", order: 3, putWiresInSubcomponent: "input", bindTarget: 1, treeBindField: true, editor: "wm.prop.NavigationGroupEditor"},
+    input: {group: "widgetName", order: 3, putWiresInSubcomponent: "input", bindTarget: 1, treeBindField: true, editor: "wm.prop.NavigationGroupEditor"},
     inFlightBehavior: {ignore:1}
 });
 
