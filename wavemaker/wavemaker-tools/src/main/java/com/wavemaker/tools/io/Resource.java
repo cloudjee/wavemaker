@@ -128,14 +128,14 @@ public interface Resource {
     /**
      * Returns an enum value that indicates the origin of the resource (eg. os file system or mongo db)
      *
-     * @return a new jailed folder
+     * @return the origin of the resource
      */
     ResourceOrigin getResourceOrigin();
 
     /**
      * Returns the original resource object that can be casted to the appropriate rsource origin
      *
-     * @return a new jailed folder
+     * @return the original resource object
      */
     Object getOriginalResource();
 
