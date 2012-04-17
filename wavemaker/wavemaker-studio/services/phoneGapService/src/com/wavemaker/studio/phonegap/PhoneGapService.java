@@ -159,7 +159,7 @@ public class PhoneGapService {
         phoneGapLibFolder.getFolder("build/themes").list(ResourceFiltering.resourceNames().notEnding(".css").notMatching("tundra")).delete();
         phoneGapLibFolder.getFolder("build").list(ResourceFiltering.fileNames().ending(".js")).delete();
         phoneGapLibFolder.getFolder("images/boolean/").delete();
-        phoneGapLibFolder.getFolder("github/touchscroll").delete();
+        //phoneGapLibFolder.getFolder("github/touchscroll").delete();
         phoneGapLibFolder.getFile("github/beautify.js").delete();
         Folder dojo = phoneGapLibFolder.getFolder("dojo");
         dojo.getFolder("util").delete();
