@@ -607,7 +607,7 @@ dojo.declare("wm.Component", wm.Object, {
 	// Properties
 	//=======================================================
 	isEventProp: function(n) {
-		return dojo.isFunction(this._designee[n]) && (n.slice(0,2)=="on");
+	    return dojo.isFunction(this._designee[n] || this._designee[n.replace(/\d+$/,"")]) && (n.slice(0,2)=="on");
 	},
 	isCustomMethodProp: function(n) {
 		return dojo.isFunction(this.constructor.prototype[n]) && (n.slice(0,6)=="custom");
