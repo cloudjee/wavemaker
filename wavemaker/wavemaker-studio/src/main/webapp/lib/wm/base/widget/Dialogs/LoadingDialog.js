@@ -92,8 +92,11 @@ dojo.declare("wm.LoadingDialog", wm.Dialog, {
 	  }
     },
     setImage: function(inUrl) {
-	this.image = inUrl || dojo.moduleUrl("lib.wm.base.widget.themes.default.images").path + "loadingThrobber.gif";
-	this._setImage(this.image);
+	var image = this.image = inUrl;
+	if (!image) {
+	    image =  dojo.moduleUrl("lib.images.common").toString() +  "loadingThrobber.gif";
+	}
+	this._setImage(image);
     },
     _setImage: function(inUrl) {
 	
