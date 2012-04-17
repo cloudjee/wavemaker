@@ -26,7 +26,7 @@ dojo.declare("wm.AppRoot", wm.Container, {
 	    app.valueChanged("deviceSize",this.deviceSize); // bindable event
 	},
 	build: function() {
-	    this.domNode = dojo.byId(this.owner.domNode) || document.body;
+	    this.domNode = this.owner.domNode = dojo.byId(this.owner.domNode) || document.body;
 	    this.domNode.style.cssText += this.style + "overflow: hidden; position: relative;";
 	},
 	init: function() {
