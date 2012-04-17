@@ -954,6 +954,7 @@ dojo.declare("Studio", wm.Page, {
 		    if (s && !s.noInspector) {
 			    this.inspect(s, true);
 		    }
+		    this.propertySearchBar.clear();
 		} finally {
 		}
 		this.updateCutPasteUi();
