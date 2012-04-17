@@ -173,9 +173,7 @@ public abstract class BaseDataModelSetup {
 
     public BaseDataModelSetup(Project project) {
         this.project = project;
-        this.projectCompiler = (ProjectCompiler) RuntimeAccess.getInstance().getSpringBean("projectCompiler");
-        this.fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
-        this.exporterFactory = (ExporterFactory) RuntimeAccess.getInstance().getSpringBean("exporterFactory");
+        
     }
 
     private final WMHibernateToolTask parentTask = new WMHibernateToolTask();
