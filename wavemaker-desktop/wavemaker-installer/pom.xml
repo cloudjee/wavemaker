@@ -232,13 +232,17 @@
 										</move>
 
 									   <copy file="${project.build.directory}/LICENSE.txt" 
-											   tofile="${buildroot}/opt/wavemaker-${project.version}/COPYRIGHT" >
+											   tofile="${buildroot}/opt/wavemaker-${project.version}/LICENSE" >
 									   </copy>
 
 										<copy file="${project.build.directory}/NOTICE.txt" 
 												tofile="${buildroot}/opt/wavemaker-${project.version}/NOTICE" >
 										</copy>
 
+										<copy file="${project.build.directory}/NOTICE.txt" 
+												tofile="${buildroot}/opt/wavemaker-${project.version}/copyright" >
+										</copy>
+										
 									   <copy file="${project.build.directory}/VERSION.txt" 
 												tofile="${buildroot}/opt/wavemaker-${project.version}/VERSION" >
 										</copy>
