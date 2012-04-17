@@ -165,7 +165,7 @@ wm.FormPanel.extend({
 	    var editors = this.getEditorsArray();
 
 	    for (var i = 0; i < editors.length; i++) {
-		if (editors[i].formField && !fields[editors[i].formField])
+		if (editors[i].formField && dojo.indexOf(editors, editors[i].formField) == -1)
 		    editors[i].destroy();
 	    }
 	    if (fields) {
@@ -245,7 +245,7 @@ wm.FormPanel.extend({
 	    }
 
 	    /* If its a liveService and it IS a list type, create a readonly grid related editor */
-	    else if (relatedTypeDef.liveService && inFieldInfo.isList ) {
+	    else if (/*relatedTypeDef.liveService && */inFieldInfo.isList ) {
 		var e = this.owner.loadComponent(wm.makeNameForProp(inFormField, "OneToMany"), this, "wm.OneToMany", props);
 		/* don't automatically add grids
 		    props.editingMode = "readonly";
