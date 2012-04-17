@@ -501,7 +501,7 @@ dojo.declare("wm.Application", wm.Component, {
 		if (wm.isMobile) {
 		    dojo.addClass(document.body, "wmmobile")
 		}
-		if (window["PhoneGap"]) {
+		if (window["PhoneGap"] && navigator.userAgent.match(/(iphone|ipad)/i)) {
 		    this.appTitleBar = new wm.Panel({
 						 owner: this, 
 						 parent: this.appRoot,
