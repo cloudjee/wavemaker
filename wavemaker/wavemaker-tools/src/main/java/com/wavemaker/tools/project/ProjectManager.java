@@ -168,7 +168,7 @@ public class ProjectManager {
             RuntimeAccess.getInstance().getSession().setAttribute(DataServiceConstants.CURRENT_PROJECT_MANAGER, this);
             RuntimeAccess.getInstance().getSession().setAttribute(DataServiceConstants.CURRENT_PROJECT_NAME, project.getProjectName());
             RuntimeAccess.getInstance().getSession().setAttribute(DataServiceConstants.CURRENT_PROJECT_APP_ROOT,
-                project.getWebAppRoot().getURI().toString());
+                project.getWebAppRoot().getURI().getPath());
         }
 
         readProjectTenantInformation(project);
