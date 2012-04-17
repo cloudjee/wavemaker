@@ -38,7 +38,6 @@ import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.StringUtils;
-import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
@@ -51,7 +50,6 @@ import com.wavemaker.tools.data.reveng.MetaDataDialect;
 import com.wavemaker.tools.data.spring.SpringService;
 import com.wavemaker.tools.data.util.DataServiceUtils;
 import com.wavemaker.tools.project.ResourceFilter;
-import com.wavemaker.tools.project.StudioFileSystem;
 import com.wavemaker.tools.service.DefaultClassLoaderFactory;
 import com.wavemaker.tools.service.codegen.GenerationConfiguration;
 import com.wavemaker.tools.service.codegen.GenerationException;
@@ -127,9 +125,6 @@ public class ImportDB extends BaseDataModelSetup {
     public ImportDB() {
         // bootstrap has to be called before creating the Project instance
         this(bootstrap(), new Project(), true);
-        this.projectCompiler = (ProjectCompiler) RuntimeAccess.getInstance().getSpringBean("projectCompiler");
-        this.fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
-        this.exporterFactory = (ExporterFactory) RuntimeAccess.getInstance().getSpringBean("exporterFactory");
     }
 
     /**

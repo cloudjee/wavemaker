@@ -46,6 +46,7 @@ import com.wavemaker.runtime.data.dialect.MySQLDialect;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.data.util.DataServiceUtils;
 import com.wavemaker.runtime.data.util.JDBCUtils;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.data.reveng.DefaultRevengNamingStrategy;
 import com.wavemaker.tools.data.reveng.MSSQLRevengNamingStrategy;
@@ -172,6 +173,9 @@ public abstract class BaseDataModelSetup {
 
     public BaseDataModelSetup(Project project) {
         this.project = project;
+        this.projectCompiler = (ProjectCompiler) RuntimeAccess.getInstance().getSpringBean("projectCompiler");
+        this.fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
+        this.exporterFactory = (ExporterFactory) RuntimeAccess.getInstance().getSpringBean("exporterFactory");
     }
 
     private final WMHibernateToolTask parentTask = new WMHibernateToolTask();
