@@ -48,6 +48,8 @@ To build only WaveMaker studio and required libraries:
     mvn clean install
 </pre>  
   
+If git is in the path of the build environment, the commit SHA1 object name will be recorded in studio's boot.js and the installer's version file.
+  
 Dojo Build
 ----------
 Use the DojoBuild profile to build the gzip version of the libraries. This will enable you to run without ?debug
