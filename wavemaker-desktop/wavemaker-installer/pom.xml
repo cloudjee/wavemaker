@@ -95,7 +95,7 @@
 								<!-- Version -->
 								<echo file="${project.build.directory}/VERSION.txt">WaveMaker ${project.version} at commit:
         						</echo>
-								<exec executable="git" output="${project.build.directory}/VERSION.txt" append="true">
+								<exec executable="git" output="${project.build.directory}/VERSION.txt" append="true" failifexecutionfails="false">
 									<arg line="rev-parse --verify HEAD"/>
 								</exec>	
 							</target>
