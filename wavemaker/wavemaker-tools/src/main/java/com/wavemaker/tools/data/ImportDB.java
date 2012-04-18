@@ -38,11 +38,11 @@ import org.springframework.core.io.Resource;
 
 import com.wavemaker.common.WMRuntimeException;
 import com.wavemaker.common.util.StringUtils;
-import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.runtime.data.util.DataServiceConstants;
 import com.wavemaker.runtime.server.ServerConstants;
 import com.wavemaker.runtime.service.definition.DeprecatedServiceDefinition;
 import com.wavemaker.runtime.service.definition.ServiceDefinition;
+import com.wavemaker.runtime.RuntimeAccess;
 import com.wavemaker.tools.common.Bootstrap;
 import com.wavemaker.tools.common.ConfigurationException;
 import com.wavemaker.tools.compiler.ProjectCompiler;
@@ -127,9 +127,6 @@ public class ImportDB extends BaseDataModelSetup {
     public ImportDB() {
         // bootstrap has to be called before creating the Project instance
         this(bootstrap(), new Project(), true);
-        this.projectCompiler = (ProjectCompiler) RuntimeAccess.getInstance().getSpringBean("projectCompiler");
-        this.fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
-        this.exporterFactory = (ExporterFactory) RuntimeAccess.getInstance().getSpringBean("exporterFactory");
     }
 
     /**
@@ -157,6 +154,10 @@ public class ImportDB extends BaseDataModelSetup {
         this.jdbcConf.setDetectManyToMany(false);
 
         this.jdbcConf.setProject(project);
+
+        this.projectCompiler = (ProjectCompiler) RuntimeAccess.getInstance().getSpringBean("projectCompiler");
+        this.fileSystem = (StudioFileSystem) RuntimeAccess.getInstance().getSpringBean("fileSystem");
+        this.exporterFactory = (ExporterFactory) RuntimeAccess.getInstance().getSpringBean("exporterFactory");
     }
 
     private static boolean bootstrap() {
