@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.wavemaker</groupId>
 		<artifactId>wavemaker</artifactId>
-		<version>6.5.0.BUILD-SNAPSHOT</version>
+		<version>6.5.0.M1</version>
 	</parent>
 	<artifactId>wavemaker-studio</artifactId>
 	<packaging>war</packaging>
@@ -232,7 +232,7 @@
 						<configuration>
 							<target>
 								<!-- Write Version for Client -->
-								<exec executable="git" outputproperty="version.revision">
+								<exec executable="git" outputproperty="version.revision" failifexecutionfails="false">
 									<arg line="rev-parse --verify HEAD"/>
 								</exec>
 						        <replaceregexp file="${basedir}/src/main/webapp/app/config.js" match="studioVersion\: '(.*)'," replace="studioVersion: '${project.version}'," />
