@@ -129,15 +129,6 @@ wm.LivePanel.extend({
 				       name: studio.page.getUniqueName(this.liveDataName + "NewButton"),
 				       parent: gridButtonPanel,
 				       caption: studio.getDictionaryItem("wm.EditPanel.NEW_CAPTION")});
-	var updateButton = new wm.Button({owner: studio.page,
-					  name: studio.page.getUniqueName(this.liveDataName + "UpdateButton"),
-					  parent: gridButtonPanel,
-					  caption: studio.getDictionaryItem("wm.EditPanel.UPDATE_CAPTION")});
-	var deleteButton = new wm.Button({owner: studio.page,
-					  name: studio.page.getUniqueName(this.liveDataName + "DeleteButton"),
-				       parent: gridButtonPanel,
-				       caption: studio.getDictionaryItem("wm.EditPanel.DELETE_CAPTION")});
-
 	var detailsLayer = this.detailsLayer = this.breadcrumbs.addLayer("Edit " + wm.capitalize(this.liveDataName));
 	detailsLayer.setAutoScroll(true);
 
@@ -191,22 +182,25 @@ wm.LivePanel.extend({
 					  name: studio.page.getUniqueName(this.liveDataName + "CancelButton"),
 					  parent: formButtonPanel,
 					  caption: studio.getDictionaryItem("wm.EditPanel.CANCEL_CAPTION")});
+	var deleteButton = new wm.Button({owner: studio.page,
+					  name: studio.page.getUniqueName(this.liveDataName + "DeleteButton"),
+				       parent: formButtonPanel,
+				       caption: studio.getDictionaryItem("wm.EditPanel.DELETE_CAPTION")});
 					      
 
 	/* Generate all edit event handlers */
 	this.dataGrid.eventBindings.onSelect = this.name + ".popupLivePanelEdit";
 	newButton.eventBindings.onclick = this.name + ".popupLivePanelInsert";
-	updateButton.eventBindings.onclick = this.name + ".popupLivePanelEdit";
 	deleteButton.eventBindings.onclick = this.liveForm.name + ".deleteData";
+	deleteButton.eventBindings.onclick1 = this.gridLayer.name;
 	saveButton.eventBindings.onclick = this.liveForm.name + ".saveDataIfValid";
 	cancelButton.eventBindings.onclick = this.gridLayer.name;
-
+	this.gridLayer.eventBindings.onShow = this.dataGrid.name + ".deselectAll";
 	this.liveForm.eventBindings.onSuccess = this.name + ".popupLiveFormSuccess";
 	//this.liveForm.eventBindings.onResult = this.name + ".popupLiveFormResult";
 	//this.liveForm.eventBindings.onBeforeOperation = this.name + ".popupLiveFormBeforeOperation";
 
 	this.saveButton.$.binding.addWire(null, "disabled", "", "${" + this.liveForm.name + ".invalid} || !${" + this.liveForm.name + ".isDirty}");
-	updateButton.$.binding.addWire(null, "disabled", this.dataGrid.name + ".emptySelection","");
 	deleteButton.$.binding.addWire(null, "disabled", this.dataGrid.name + ".emptySelection","");
 	this.$.binding.addWire(null, "gridLayer", this.gridLayer.name, ""); // insures that if "gridLayer" is renamed, we will still know the name of our gridLayer
 	this.$.binding.addWire(null, "detailsLayer", this.detailsLayer.name, ""); // insures that if "detailsLayer" is renamed, we will still know the name of our detailsLayer
