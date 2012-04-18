@@ -372,7 +372,10 @@ public class Main {
             configuration.serialize(os);
             os.close();
         }
-
+        
+        File lib = new File(newCatalinaHome, "lib");
+        lib.mkdir();
+        
         File webapp = new File(newCatalinaHome, "webapps");
         webapp.mkdir();
 
