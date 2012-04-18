@@ -954,6 +954,7 @@ dojo.declare("Studio", wm.Page, {
 		    if (s && !s.noInspector) {
 			    this.inspect(s, true);
 		    }
+		    this.propertySearchBar.clear();
 		} finally {
 		}
 		this.updateCutPasteUi();
@@ -1988,5 +1989,8 @@ dojo.declare("Studio", wm.Page, {
     editPublishedProperties: function() {
 	this.publishedPropsDialog.show();
 	this.publishedPropsDialog.page.reset(this.selected);
+    },
+    showDeviceBarHelp: function() {
+	window.open("http://dev.wavemaker.com/wiki/bin/wmdoc_6.5/WM65RelNotes#HNewmobilesupport");
     }
 });

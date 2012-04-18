@@ -138,6 +138,7 @@
 [ bundlePackage.Templates + "/" + bundlePackage.PageLayoutTemplates, bundlePackage.SideMenu, "wm.Template", "wm.base.widget.Template", "Studio_paletteImageList_14",bundlePackage.descSideMenuTemplate, wm.fullTemplates.sideMenuTemplate, false],
 [ bundlePackage.Templates  + "/" + bundlePackage.PageLayoutTemplates, bundlePackage.TabsTemplate, "wm.Template", "wm.base.widget.Template", "Studio_paletteImageList_14", bundlePackage.descTabsTemplate, wm.fullTemplates.tabTemplate, false],
 [ bundlePackage.Templates + "/" + bundlePackage.PageLayoutTemplates, bundlePackage.TopMenu, "wm.Template", "wm.base.widget.Template", "Studio_paletteImageList_14", bundlePackage.descTopMenuTemplate, wm.fullTemplates.topMenuTemplate,false],
+[ bundlePackage.Templates + "/" + bundlePackage.PageLayoutTemplates, bundlePackage.MobileTemplate, "wm.Template", "wm.base.widget.Template", "Studio_paletteImageList_14", bundlePackage.descTopMenuTemplate, wm.fullTemplates.mobileLayout,false],
 
 [ bundlePackage.Templates + "/" + bundlePackage.PanelLayoutTemplates, bundlePackage.SecurityTemplate, "wm.Template", "wm.base.widget.Template", "Studio_paletteImageList_14", bundlePackage.descSecurityTemplate,  wm.widgetTemplates.securityTemplate, false],
 [ bundlePackage.Templates + "/" + bundlePackage.PanelLayoutTemplates, bundlePackage.TitleBar, "wm.Template", "wm.base.widget.Template", "Studio_paletteImageList_14", bundlePackage.descTitleBarTemplate, wm.widgetTemplates.titleBar, false],

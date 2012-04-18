@@ -28,7 +28,8 @@ dojo.declare("wm.LivePanel", wm.Panel, {
 	if (this.dialog) {
 	    this.dialog.hide();
 	} else if (this.gridLayer) {
-	    this.gridLayer.activate();
+	    this.dataGrid.deselectAll();
+	    this.gridLayer.activate();	    
 	}
 	this.dataGrid.getDataSet().update();
     },

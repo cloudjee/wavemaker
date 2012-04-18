@@ -580,8 +580,7 @@ dojo.declare("wm.CheckboxSet", wm.DataSetEditor, {
 dojo.declare("wm.ListSet", wm.DataSetEditor, {
     singleLine: false,
     showSearchBar: true,
-    _multiSelect: true,
-    _selectionMode: "",
+    selectionMode: "multiple",
     height: "100px",
     mobileHeight: "150px",
     editors: null,
@@ -589,13 +588,25 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
     deleteConfirm: "Are you sure you want to delete this?",
     prepare: function(inProps) {
 	if (inProps && inProps.readonly) delete inProps.readonly;
-	if (inProps && inProps._selectionMode && inProps._selectionMode != "multiple" && inProps._selectionMode != "checkbox")
-	    inProps._multiSelect = false;
+	this._multiSelect = this.selectionMode == "multiple" || this.selectionMode == "checkbox";
 	this.inherited(arguments);
+    },
+    setSelectionMode: function(inMode) {
+	this.selectionMode = inMode;
+	if (this.grid) this.grid.setSelectionMode(inMode);
+	this._multiSelect = this.selectionMode == "multiple" || this.selectionMode == "checkbox";
     },
     setOptions: function(inOptions) {
 	this._typeWas = this.dataSet ? this.dataSet.type : "";
 	this.inherited(arguments);
+	if (this._typeWas != this.type) {
+	    this.grid.setColumns([{show: true,
+				   width: "100%",
+				   isCustomField: Boolean(this.displayExpression),
+				   field: this.displayExpression ? "_name" : this.displayField,
+				   expression: this.displayExpression}]);
+	    this.grid.renderDojoObj();
+	}
 	delete this._typeWas;
     },
     /* If the type has changed, we need to either recreate the editor, or update the columns array.
@@ -699,7 +710,7 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 					 minWidth: 10,
 					 deleteColumn: this.deleteColumn,
 					 deleteConfirm: this.deleteConfirm,
-					 selectionMode: this._selectionMode ? this._selectionMode : this._multiSelect ? "multiple":"single"});
+				     selectionMode: this.selectionMode});
 
 
 	    this.grid.connect(this.grid, "renderDojoObj", this, "renderGrid");
@@ -744,6 +755,7 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 	this.grid.setSelectedRow(rowIndex);
     },
 
+/*
     setDisabled: function(inDisabled) {
 	this.disabled = Boolean(inDisabled);
 	var disabled = this.disabled || this._parentDisabled;
@@ -752,5 +764,6 @@ dojo.declare("wm.ListSet", wm.DataSetEditor, {
 	    this.grid.setSelectionMode(disabled ? "none" : "multiple");
 	}
     },
+    */
     onRowDeleted: function(rowId, rowData) {}
 });

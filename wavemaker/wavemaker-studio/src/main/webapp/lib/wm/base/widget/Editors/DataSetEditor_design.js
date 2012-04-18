@@ -160,6 +160,7 @@ wm.Object.extendSchema(wm.DataSetEditor, {
 
 
 wm.Object.extendSchema(wm.ListSet, {
+    selectionMode: {group: "editor", subgroup: "behavior", order: 101, options: ["single", "multiple", "checkbox", "radio"]},
     showSearchBar: {group: "editor", subgroup: "behavior", order: 100}, 
     deleteColumn:      {group: "editor", subgroup: "behavior",  order: 10, advanced:1},
     deleteConfirm:     {group: "editor", subgroup: "confirmation", order: 10, advanced:1},
