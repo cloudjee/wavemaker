@@ -48,7 +48,7 @@ To build only WaveMaker studio and required libraries:
     mvn clean install
 </pre>  
   
-If git is in the path of the build environment, the commit SHA1 object name will be recorded in studio's boot.js and the installer's version file.
+If git is in the path of the build environment, the last commit SHA1 object name will be recorded in boot.js and the installer's version file.
   
 Dojo Build
 ----------
