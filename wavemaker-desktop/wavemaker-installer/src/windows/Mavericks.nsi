@@ -131,7 +131,7 @@ SetDatablockOptimize on
 SetCompress Auto
 CRCCheck on
 XPStyle on
-Caption "${PRODUCT_NAME}(${VERSION}) Setup"
+Caption "${PRODUCT_NAME} (${VERSION}) Setup"
 BrandingText " "; Remove "NSIS Installer" branding.
 AllowRootDirInstall false
 ShowInstDetails show
