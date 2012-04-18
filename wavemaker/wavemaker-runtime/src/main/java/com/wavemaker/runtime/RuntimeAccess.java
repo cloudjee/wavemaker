@@ -181,6 +181,9 @@ public class RuntimeAccess {
     }
 
     public Object getSpringBean(String beanId) {
+        if (this.request == null) {
+            return null;
+        }
         ServletContext context = this.request.getSession().getServletContext();
         WebApplicationContext applicationContext = WebApplicationContextUtils.getWebApplicationContext(context);
 
