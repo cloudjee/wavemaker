@@ -28,7 +28,8 @@ if (location.search.indexOf("dojo.locale=") != -1) {
 }
     } catch(e) {}
 wm = window["wm"] || {};
-wm.version = '6.4.3RC';
+wm.version = 'UNKNOWN';
+wm.fullVersion = 'UNKNOWN';
 
 if (location.search.match(/(\?|\&)wmmobile=(.)/)) {
     wm.device = location.search.match(/(\?|\&)wmmobile=([^&]*)/)[2] || "desktop";
