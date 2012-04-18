@@ -1,14 +1,27 @@
 WaveMaker Studio on Linux
 
-To start WaveMaker:
+* First run after installation:
+
+It is recommended to run WaveMaker as root for the first use of an installation. 
+This allows the configuration tool to update the installation automatically.
+After installation of required components by the configuration tool, there is no need to run WaveMaker as root.
+
+Non-graphical, or remote users, will need to open the /ConfigurationTool to complete the component installation.
+See the documentation, http://dev.wavemaker.com/wiki/bin/wmdoc/WebHome, for more information on installing the 
+WaveMaker system dependencies bundle.
+
+* To start WaveMaker:
 
 Run the wavemaker.sh script to start WaveMaker.
 > /opt/wavemaker-@VERSION@/bin/wavemaker.sh start
 
 A graphical launcher control panel will launch, if using a graphical environment.
+Non-graphical users can directly open the studio URL, usually http://localhost:8094/wavemaker
 
+The start script saves the WaveMaker process PID as $HOME/wavemaker.pid
+Change the value of WAVEMAKER_PID in wavemaker.sh to use another location or file name.
 
-To stop WaveMaker:
+* To stop WaveMaker:
 
 Run the wavemaker.sh script with the stop parameter.
 > /opt/wavemaker-@VERSION@/bin/wavemaker.sh stop
