@@ -700,7 +700,7 @@ public class DataModelConfiguration {
             throw new IllegalArgumentException("entityName must be set");
         }
 
-        EntityInfo org = null;
+        EntityInfo orig;
 
         if (getEntityNames().contains(entityName)) {
 
@@ -719,9 +719,9 @@ public class DataModelConfiguration {
                 return;
             }
 
-            org = getEntity(entityName);
+            orig = getEntity(entityName);
 
-            if (org.isEqualTo(entity)) {
+            if (orig.isEqualTo(entity)) {
                 if (DataServiceLoggers.parserLogger.isDebugEnabled()) {
                     DataServiceLoggers.parserLogger.debug(entityName + " has not changed");
                 }
@@ -735,8 +735,8 @@ public class DataModelConfiguration {
 
             validateName(entityName);
 
-            org = new EntityInfo();
-            this.entityInfos.put(entityName, org);
+            orig = new EntityInfo();
+            this.entityInfos.put(entityName, orig);
             String path = StringUtils.packageToSrcFilePath(entity.getPackageName()) + "/" + entityName + DataServiceConstants.HBM_EXT;
             this.entityNameToPath.put(entityName, path);
 
@@ -755,14 +755,18 @@ public class DataModelConfiguration {
             }
         }
 
-        org.update(entity);
-        this.modifiedEntityInfos.add(org);
+        String origSchema = orig.getSchemaName();
+        String origCatalog = orig.getCatalogName();
+        String origPackage = orig.getPackageName();
 
-        propagateSchemaChange(org);
-        propagateCatalogChange(org);
-        propagatePackageChange(org);
+        orig.update(entity);
+        this.modifiedEntityInfos.add(orig);
 
-        setProperties(org);
+        propagateSchemaChange(orig, origSchema);
+        propagateCatalogChange(orig, origCatalog);
+        propagatePackageChange(orig, origPackage);
+
+        setProperties(orig);
     }
 
     public void updateColumns(String entityName, List<ColumnInfo> columns) {
@@ -1242,33 +1246,35 @@ public class DataModelConfiguration {
         this.springConfiguration.write();
     }
 
-    private void propagateSchemaChange(EntityInfo entity) {
+    private void propagateSchemaChange(EntityInfo entity, String origSchema) {
 
         for (EntityInfo other : getEntities()) {
             if (other == entity) {
                 continue;
             }
-            if (!String.valueOf(other.getSchemaName()).equals(String.valueOf(entity.getSchemaName()))) {
+            if (!String.valueOf(other.getSchemaName()).equals(String.valueOf(entity.getSchemaName())) &&
+                    String.valueOf(other.getSchemaName()).equals(String.valueOf(origSchema))) {
                 other.setSchemaName(entity.getSchemaName());
                 this.modifiedEntityInfos.add(other);
             }
         }
     }
 
-    private void propagateCatalogChange(EntityInfo entity) {
+    private void propagateCatalogChange(EntityInfo entity, String origCatalog) {
 
         for (EntityInfo other : getEntities()) {
             if (other == entity) {
                 continue;
             }
-            if (!String.valueOf(other.getCatalogName()).equals(String.valueOf(entity.getCatalogName()))) {
+            if (!String.valueOf(other.getCatalogName()).equals(String.valueOf(entity.getCatalogName())) &&
+                    String.valueOf(other.getSchemaName()).equals(String.valueOf(origCatalog))) {
                 other.setCatalogName(entity.getCatalogName());
                 this.modifiedEntityInfos.add(other);
             }
         }
     }
 
-    private void propagatePackageChange(EntityInfo entity) {
+    private void propagatePackageChange(EntityInfo entity, String origPackage) {
 
         this.dataPackage = entity.getPackageName();
 
@@ -1276,12 +1282,12 @@ public class DataModelConfiguration {
             if (other == entity) {
                 continue;
             }
-            if (!other.getPackageName().equals(entity.getPackageName())) {
+            if (!other.getPackageName().equals(entity.getPackageName()) &&
+                    other.getPackageName().equals(origPackage)) {
                 other.setPackageName(entity.getPackageName());
                 this.modifiedEntityInfos.add(other);
             }
         }
-
     }
 
     private void addQueryDocument(String path) {
