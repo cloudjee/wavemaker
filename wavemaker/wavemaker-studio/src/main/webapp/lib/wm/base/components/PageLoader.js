@@ -32,7 +32,7 @@ wm.load = function(inFile, allowCache,async) {
 // And you dont have to put this in try catch block either since that is taken care of.
 wm.dojoScriptLoader = function(uri){
 	try{
-		dojo._loadUri(uri);
+	        dojo._loadUri(uri);
 	}catch(e){
 		console.error(e);
 		return false; // Boolean
@@ -144,7 +144,7 @@ dojo.declare("wm.PageLoader", wm.Component, {
 	    if (!ctor)
 		ctor = this.loadController(inName, path);
 	    if (ctor) {
-		if (ctor.prototype._cssText === undefined)
+		if (ctor.prototype._cssText === undefined  || wm.isEmpty(ctor.widgets))
 		    this.loadSupport(ctor, path);
 		if (ctor.prototype.i18n) {
 			try {
