@@ -333,6 +333,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	    }));
 	    this.selectedItem.setData(data);
 	    this.setValue("emptySelection", this.selected.length == 0);
+	    this.setValue("isRowSelected", this.selected.length > 0);
 	} else {
 		this.selected = inItem;
 		var
@@ -345,6 +346,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 		else
 			s.clearData();
 		this.setValue("emptySelection", Boolean(!this.selected));
+	        this.setValue("isRowSelected", Boolean(this.selected));
 	    }
 	},
     _removeSelectedData: function(inItem) {
@@ -357,6 +359,7 @@ dojo.declare("wm.VirtualList", wm.Control, {
 	this.selected = this._selectionMode == "multiple" ? [] : null;
 	this.selectedItem.setData(null);
 	this.setValue("emptySelection", true);
+	this.setValue("isRowSelected", false);
     },
 
 	addToSelection: function(inItem) {
