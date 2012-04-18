@@ -184,7 +184,7 @@ wm.LiveFormBase.extend({
 	},
 	canAddEditors: function(inDataSet) {
 		if (!this._loading && this.isDesignLoaded()) {
-		        if (inDataSet && this.dataSet && inDataSet.type == this.dataSet.type) return false;
+		    if (inDataSet && this.dataSet && inDataSet.type == this.dataSet.type && this.getEditorsArray().length > 0) return false;
 			if (!wm.typeManager.isStructuredType((this.dataSet || 0).type)) {
 				wm.logging && console.log(this.name, "dataSet with known data type required before generating editors.");
 			} else
