@@ -707,7 +707,7 @@ dojo.declare("wm.studio.Project", null, {
 	    var d10 = new dojo.Deferred();
 	    d9.addCallback(dojo.hitch(this, function() {
 		studio.incrementSaveProgressBar(1);
-		var dlocal = this.saveProjectData("project.js", allProjectJS, false, true);
+		var dlocal = this.saveProjectData("project.a.js", allProjectJS, false, true);
 		dlocal.addCallback(function() {d10.callback();});
 	    }));
 
