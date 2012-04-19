@@ -1546,11 +1546,16 @@ dojo.declare("Studio", wm.Page, {
 	else if  (requestedCanvasWidth == "") {
 	    this.PIPanel.setWidth("250px");
 	    requestedCanvasWidth = 0;
+	} else if (requestedCanvasWidth == 1150) {
+	    requestedCanvasWidth = "100%";
 	} else {
 	    requestedCanvasWidth = parseInt(requestedCanvasWidth);
 	}
 	if (requestedCanvasWidth) {
-	    if  (requestedCanvasWidth >= this.designer.bounds.w) {
+	    if (requestedCanvasWidth == "100%") {
+		this.designer.setMargin("0");
+		this.designer.setWidth("100%");
+	    } else if  (requestedCanvasWidth >= this.designer.bounds.w) {
 		this.designer.setMargin("0");
 	    } else {
 		var margin = Math.floor((this.designer.bounds.w - requestedCanvasWidth)/2);
