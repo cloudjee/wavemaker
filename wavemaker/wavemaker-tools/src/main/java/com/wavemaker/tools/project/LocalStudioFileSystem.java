@@ -370,6 +370,7 @@ public class LocalStudioFileSystem extends AbstractStudioFileSystem {
         // we couldn't find a test value, a property, or a preference, so use
         // a default
         if (ret == null) {
+            System.out.println("INFO: Using default WaveMaker Home folder");
             ret = getDefaultWaveMakerHome();
         }
 
