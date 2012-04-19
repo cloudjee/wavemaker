@@ -231,7 +231,7 @@ wm.Object.extendSchema(wm.ToggleButtonPanel, {
     currentButtonCaption: {ignore:1,bindSource:true, doc:1},
     themeStyleType: {group: "style", order: 150},
     
-    setCurrentButton: {method:1},
+    setCurrentButton: {method:1}
     
 
 });

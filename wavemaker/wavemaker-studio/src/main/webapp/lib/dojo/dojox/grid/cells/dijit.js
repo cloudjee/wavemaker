@@ -202,8 +202,7 @@ dojo.require("dijit.Editor");
 		getWidgetProps: function(inDatum){
 		    var props = this.inherited(arguments);
 		    return props;
-		},
-
+		}
 	});
 	dgc.ValidationTextBox.markupFactory = function(node, cell){
 		dgc._Widget.markupFactory(node, cell);

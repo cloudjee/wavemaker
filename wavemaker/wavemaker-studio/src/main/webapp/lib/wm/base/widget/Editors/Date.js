@@ -360,7 +360,7 @@ dojo.declare("wm.DateTime", wm.Date, {
     handleBack: function(inOptions) {
 	this.editor.closeDropDown();
 	return true;
-    },
+    }
 
 
 });
@@ -702,13 +702,13 @@ dojo.declare("wm.DateTimePicker", wm.Container, {
 				       parent: this.ampm,
 				       height: "100%",
 				       caption: "AM",
-				       name: "amButton",
+				       name: "amButton"
 				      });
 	this.pmButton = new wm.Button({owner: this,
 				       parent: this.ampm,
 				       height: "100%",
 				       caption: "PM",
-				       name: "pmButton",
+				       name: "pmButton"
 				      });
 	this.buttonPanel = new wm.Panel({owner: this,
 				   parent: this,
@@ -729,7 +729,7 @@ dojo.declare("wm.DateTimePicker", wm.Container, {
 						parent: this.buttonPanel,
 						caption: "",
 						height: "100%",
-						   width: "100%",
+						   width: "100%"
 						  });
 
 

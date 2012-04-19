@@ -1761,7 +1761,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    if (this.parent) {
 		this.parent.update();
 	    }
-	},
+	}
 
     });
 

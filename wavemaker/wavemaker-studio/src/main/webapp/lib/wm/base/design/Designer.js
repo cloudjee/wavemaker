@@ -355,5 +355,5 @@ dojo.declare("wm.Designer", wm.Surface, {
 		dojo.publish("deviceSizeRecalc");
 	    }
 	}
-    },
+    }
 });
