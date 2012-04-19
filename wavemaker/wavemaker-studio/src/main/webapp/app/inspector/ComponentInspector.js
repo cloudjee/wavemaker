@@ -717,28 +717,28 @@
 	 if (isSubComponent && (inComponent.declaredClass == "wm.Variable" || inComponent.declaredClass == "wm.ServiceInput")) {
 	     var props = [];
 	     var propsHash = inComponent._dataSchema;
-	     for (var i in propsHash) {
-		 propsHash[i].name = i;
-		 props.push(propsHash[i]);
-	     }
+	     wm.forEachProperty(propsHash, function(p, i) {
+		 p.name = i;
+		 props.push(p);
+	     });
 	     return props;
 	 }
 
 	 var allProps = inComponent ? inComponent.listProperties() : {};
 	 var props = {};
-	 for (var i in allProps) {
-	     if (this.isEditableProp(allProps[i], true, true)) {	     
-		 var p = dojo.mixin({name: i}, allProps[i]);
-		 if (allProps[i].isEvent || inComponent.isEventProp(i)) {
+	 wm.forEachProperty(allProps, dojo.hitch(this, function(originalP,i) {
+	     if (this.isEditableProp(originalP, true, true)) {	     
+		 var p = dojo.mixin({name: i}, originalP);
+		 if (originalP.isEvent || inComponent.isEventProp(i)) {
 		     p.group = "events";
-		     if (i.match(/\d$/)) continue; // ignore events that end in numbers; these are the "and-then" events, which are handled by the event editor
-		 } else if (allProps[i].isCustomMethod) 
+		     if (i.match(/\d$/)) return; // ignore events that end in numbers; these are the "and-then" events, which are handled by the event editor
+		 } else if (originalP.isCustomMethod) 
 		     p.group = "custommethods";
-		 else if (!allProps[i].group) 
+		 else if (!originalP.group) 
 		     p.group = "Properties";
 		 props[i] = p;
 	     }
-	 }
+	 }));
 	 if (isSubComponent) {
 	     delete props.owner;
 	     delete props.name;
@@ -746,9 +746,9 @@
 	     delete props.generateDocumentation;
 	 }
 	 var newprops = [];
-	 for (var propName in props) {
-	     newprops.push(props[propName]);
-	 }
+	 wm.forEachProperty(props, function(p,propName) {
+	     newprops.push(p);
+	 });
 
 	 newprops = newprops.sort(function(a,b) {
 	     if (a.order !== undefined && b.order !== undefined)
@@ -778,14 +778,13 @@
 	 }
 	 var self = this;
 	 if (groupObj) {
-	     for (var subgroupName in groupObj.subgroups) {		 
-		 var subgroup = groupObj.subgroups[subgroupName];
+	     wm.forEachProperty(groupObj.subgroups, dojo.hitch(this, function(subgroup,subgroupName) {
 		 if (subgroup.props.length) {
 		     this.addSubGroupIndicator(subgroup.displayName || subgroupName,inLayer,  
 					       this.isAdvancedMode() || dojo.some(subgroup.props, function(prop) {return !prop.ignoretmp && self.isEditableProp(prop);}));
 		     this._generateEditors(inComponent, inLayer, subgroup.props);
 		 }
-	     }
+	     }));
 	     this.processingRequiredGroup = inGroupName == "required";
 	     this._generateEditors(inComponent, inLayer, groupObj.props);
 	     delete this.processingRequiredGroup;
@@ -1547,14 +1546,14 @@
 	     }));
 
 	     /* Build the groupsArray; make sure required group is first */
-	     for (var i in groups) {
+	     wm.forEachProperty(groups, function(group,i) {
 		 if (i == "required") {
 		     if (groups.required.props.length)
 			 groupsArray.unshift(groups.required);
 		 } else {
-		     groupsArray.push(groups[i]);
+		     groupsArray.push(group);
 		 }
-	     }
+	     });
 	     return groupsArray;
 	 },
 	 sortGroups: function(inGroups) {
@@ -1574,14 +1573,14 @@
 		     g.props.sort(mysort);
 		 if (g.subgroups && g.subgroups.sort)
 		     g.subgroups.sort(mysort);
-		 for (var subgroupName in g.subgroups) {
+		 wm.forEach(g.subgroups, function(subgroupName) {
 		     if (g.subgroups) {
 			 var subgroup = g.subgroups[subgroupName];
 			 if (subgroup && subgroup.props) {
 			     subgroup.props.sort(mysort);
 			 }
 		     }
-		 }
+		 });
 	     });
 
 	     return inGroups;
@@ -1629,8 +1628,7 @@
 
 	
 	 var props = this.props;
-	 for (var key in this.editorHash) { 
-	     var editor = this.editorHash[key];
+	 wm.forEachProperty(this.editorHash, dojo.hitch(this, function(editor,key) {
 	     var prop = editor.propDef;
 	     if (prop) {
 		 if (inDisplayValue === "") {
@@ -1660,7 +1658,7 @@
 		     }
 		 }
 	     }
-	 }
+	 }));
 
 	 dojo.forEach(this.moreLabelList, function(w) {
 	     var hiddenCount = 0;

@@ -1638,12 +1638,11 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
     ],
     search: function(inName) {
 	var props = this.inspected.listProperties();
-	for (var propName in props) {
-	    var p = props[propName];
+	wm.forEachProperty(props, function(p, propName) {
 	    /* TODO: Should test if isEditable prop */
 	    if (p.group == "style" && propName.toLowerCase().indexOf(inName.toLowerCase()) != -1)
 		return true;
-	}
+	});
 	return false;
     },
     postInit: function() {
@@ -1711,12 +1710,11 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 
 	var propsHash = this.inspected.listProperties();
 	var propsArray = [];
-	for (var propName in propsHash) {
-	    var prop = propsHash[propName];
+	wm.forEachProperty(propsHash, dojo.hitch(this, function(prop,propName) {
 	    if (prop.group == "style" && !prop.ignore && !prop.hidden && prop.editor != "wm.prop.StyleEditor" && (!prop.advanced || studio.inspector.isAdvancedMode())) {
 		propsArray.push(dojo.mixin({name: propName},prop));
 	    }
-	}
+	}));
 
 	     var mysort = function(a, b) {
 		 var o = a.order - b.order;
@@ -1804,10 +1802,10 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	    var cssText = "." + inClassName + " {\n";
 	    "You CAN set these styles for nodes inside of widgets, just not for the widgets themselves. */\n";
 	if (this.inspected.styles) {
-	    for (var styleName in this.inspected.styles) {
+	    wm.forEachProperty(this.inspected.styles, dojo.hitch(this, function(style, styleName) {
 		cssText += styleName.replace(/([A-Z])/g, function(inText) {return "-" + inText.toLowerCase();}) + ": " + this.inspected.styles[styleName] + ";\n";
 		delete this.inspected.styles[styleName];
-	    }
+	    }));
 	    this.setDataValue(this.inspected.styles);
 	}
 	    cssText += "\n}\n";
@@ -2207,30 +2205,28 @@ dojo.declare("wm.prop.FieldGroupEditor", wm.Container, {
 	    this.parent.setBestHeight();
 	} else {
 	    /* Else call reinspectEditor on each editor */
-	    for(var editorName in this.editors) {
-		var e = this.editors[editorName];
+	    wm.forEachProperty(this.editors, dojo.hitch(this, function(e,editorName) {
 		studio.inspector.reinspectEditor(editorName === "_ROOT" ? this.inspected || this.inspectedSubcomponent : inspected, /* Component we are editing */
 						 e, /* Editor used to edit this component property */
 						 null, /* Bind editor used to edit this component (wm.PropertyInspector will look this up) */
 						 e.propDef,/* Property Definition for the property we are editing */
 						 this.propDef.name /* Value to append to the name for avoiding naming colisions; used for looking up the editor in the editorHash/bindEditorHash */
 						);
-	    }
+	    }));
 	}
 	return true;
     },
     removeAllControls: function() {
-	    for(var editorName in this.editors) {
-		var e = this.editors[editorName];
+	wm.forEachProperty(this.editors, dojo.hitch(this, function(e,editorName) {
 		delete this.editors[editorName];
-		for (var editorName in studio.inspector.editorHash) {
+	    wm.forEachProperty(studio.inspector.editorHash, function(e2, editorName) {
 		    if (e == studio.inspector.editorHash[editorName]) {
 			delete studio.inspector.editorHash[editorName];
 			delete studio.inspector.bindEditorHash[editorName];
 		    }
-		}
+		});
 		e.parent.destroy();
-	    }
+	}));
 	this.inherited(arguments);
     }
 });
