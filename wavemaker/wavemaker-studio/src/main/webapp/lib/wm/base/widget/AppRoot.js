@@ -135,9 +135,9 @@ this._inResize = true;
 
 	    if (wm.isMobile) {
 		if (!width)
-		    width = Math.min(screen.width, window.innerWidth, pn.offsetWidth);
+		    width = Math.min(screen.width, window.innerWidth || 20000, pn.offsetWidth);
 		if (!height)
-		    height = Math.min(screen.height, window.innerHeight, pn.offsetHeight || 1000);
+		    height = Math.min(screen.height, window.innerHeight || 20000, pn.offsetHeight || 1000);
 	    } else {
 		width = pn.offsetWidth;
 		height = pn.offsetHeight;
