@@ -39,12 +39,10 @@ dojo.declare("wm.AppRoot", wm.Container, {
 	     */
 	    this._isOldAndroidBrowser = (navigator.vendor||"").match(/Google/i) && navigator.userAgent.match(/android/i);
 	    this._isIOS = navigator.userAgent.match(/(ipad|iphone)/i);
-	    if (this._isOldAndroidBrowser) {
-		window.addEventListener("resize", dojo.hitch(this,"resize"));
-	    } else if ("onorientationchange" in window) {
+	    if (!this._isOldAndroidBrowser && "onorientationchange" in window) {
 		window.addEventListener("orientationchange", dojo.hitch(this, "resize"));
 	    } else {
-		window.addEventListener("resize", dojo.hitch(this,"resize"));
+		this.subscribe("window-resize", this, "resize");
 	    }
 	},
     getRuntimeId: function() {return "approot";},
