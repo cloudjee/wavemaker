@@ -48,7 +48,7 @@ dojo.declare("wm.AccordionLayers", wm.Layers, {
     addLayer: function(inCaption, doNotSelect) {
         var result = this.inherited(arguments);
         result.setBorder(this.layerBorder);
-        result.setBorderColor(this.layerBorderColor);
+        result.setBorderColor(this.clientBorderColor);
 	return result;
     }
 });
