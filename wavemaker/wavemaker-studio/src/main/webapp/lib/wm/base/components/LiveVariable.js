@@ -58,13 +58,16 @@ dojo.declare("wm.LiveVariable", wm.ServiceVariable, {
 		this.inherited(arguments);
 		this.filter = new wm.Variable({name: "filter", owner: this, type: this.type || "any" });
 		this.sourceData = new wm.Variable({name: "sourceData", owner: this, type: this.type || "any" });
-		this.subscribe(this.filter.getRuntimeId() + "-changed", this, "filterChanged");
-		this.subscribe(this.sourceData.getRuntimeId() + "-changed", this, "sourceDataChanged");
+	    this.setupSubscriptions();
 	    // default assumption is that its a list until we have some actual
 	    // data to tell us otherwise
 	    if (this.isList === undefined && this.operation == "read") 
 		this.isList = true;
 	},
+    setupSubscriptions: function() {
+		this.subscribe(this.filter.getRuntimeId() + "-changed", this, "filterChanged");
+		this.subscribe(this.sourceData.getRuntimeId() + "-changed", this, "sourceDataChanged");
+    },
 	postInit: function() {
 	    this._inLVPostInit = true;
 		this.inherited(arguments);
