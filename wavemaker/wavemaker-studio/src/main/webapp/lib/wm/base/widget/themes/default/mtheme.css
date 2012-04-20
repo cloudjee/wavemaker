@@ -1093,7 +1093,7 @@ height: 100%;
 .wmlist-cell .wmDeleteColumnImage {
 width: 16px !important;
 height: 16px !important;
-background-image: url(images/smallx.png);
+background-image: url(../../../../../images/common/smallx.png);
 background-position:50% 50%;
 background-repeat:no-repeat;
 }

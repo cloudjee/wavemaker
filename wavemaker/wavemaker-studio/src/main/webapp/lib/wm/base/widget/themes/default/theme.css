@@ -1241,7 +1241,7 @@ body div.dojoxGridContent .dojoxGridCell .wmDeleteColumn,
 .wmlist-cell .wmDeleteColumn {
 width: 16px !important;
 height: 16px !important;
-background-image: url(images/smallx.png);
+background-image: url(../../../../../images/common/smallx.png);
 background-repeat:no-repeat;
 background-position:50% 50%;
 cursor: pointer;
