@@ -43,6 +43,11 @@ dojo.declare("wm.ColorPicker", wm.Text, {
 	    result = (dojo.fromJson(result));
 	}
 	return result;
+    },
+    setEditorValue: function(inValue) {
+	if (this.gradient && inValue && typeof inValue == "object")
+	    inValue = dojo.toJson(inValue);
+	this.inherited(arguments);
     }
 });
 
@@ -113,6 +118,7 @@ dojo.declare(
 		    this.domNode.style.color = "black";
 		}
 	    } else {
+		console.log(inValue);
 		if (typeof inValue == "string" && inValue.length) {
 		    inValue = dojo.fromJson(inValue);
 		}
@@ -129,6 +135,9 @@ dojo.declare(
 	    if (!this.dropDown) {
 		this.createDropDown();
 	    }
+	    if (this.owner.dataValue) {
+		this.dropDown.reset();
+	    }
 	    this.dropDown.setShowing(true);
 	    return dijit._HasDropDown.prototype.openDropDown.call(this, callback);
 	}
@@ -136,7 +145,7 @@ dojo.declare(
 
 
 dojo.declare("wm.ColorPickerPanel", wm.Container, {
-    dismissOnChange: false,
+
     colorPicker: null,  
     colorPickerSet: false,
     border: "0",
@@ -222,6 +231,9 @@ dojo.declare("wm.ColorPickerPanel", wm.Container, {
         this.dismiss();
     },
     */
+    reset: function() {
+	this.setDijitValue(this.owner.dataValue);
+    },
     getValue: function() {
         if (this.colorPicker) {
             return this.colorPicker.getValue();
@@ -343,6 +355,14 @@ dojo.declare("wm.GradientPickerPanel", wm.Container, {
 	    this._cupdating = false;
 	});	
     },
+    reset: function() {
+	this._cupdating = true;
+	this.startColor.setDataValue(this.owner.dataValue ? this.owner.dataValue.startColor : "");
+	this.endColor.setDataValue(this.owner.dataValue ? this.owner.dataValue.endColor : "");
+	this.direction.setDataValue(this.owner.dataValue ? this.owner.dataValue.direction : "");
+	this.colorStop.setDataValue(this.owner.dataValue ? (this.direction.getDataValue() == "vertical" ? 100 - this.owner.dataValue.colorStop : this.owner.dataValue.colorStop) : "");
+	this._cupdating = false;
+    },
     onExecute: function() {}, // if this doesn't exist, _HasDropDown dismisses dialog onChange
 /*
     textChange: function(inDisplayValue, inDataValue) {
@@ -373,6 +393,7 @@ dojo.declare("wm.GradientPickerPanel", wm.Container, {
 	this._onChange();
     },
     _onChange: function() {
+
 	var direction = this.direction.getDataValue();
 	var colorStop = direction == "vertical" ? 100 - this.colorStop.getDataValue() : this.colorStop.getDataValue();
 	var startColor = this.startColor.getDataValue();
