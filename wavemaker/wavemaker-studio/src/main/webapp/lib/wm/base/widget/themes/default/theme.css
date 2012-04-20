@@ -1333,3 +1333,7 @@ height: 100%;
 #app_DateTimePopup_calendar .dijitCalendarContainer {
     border-width: 0px;
 }
+
+.dijitSliderV {
+height: 100%;
+}

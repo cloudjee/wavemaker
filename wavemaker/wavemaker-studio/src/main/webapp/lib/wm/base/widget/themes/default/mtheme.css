@@ -1102,3 +1102,7 @@ background-repeat:no-repeat;
     height: 100%;
     cursor: pointer;
 }
+
+.dijitSliderV {
+height: 100%;
+}

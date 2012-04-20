@@ -743,3 +743,35 @@ wm.conditionalRequire = function(packageName, condition) {
     if (arguments.length == 1 || condition)
 	dojo["require"](packageName);
 }
+
+
+getBackgroundStyle = function(startColor, endColor, colorStop, direction, browser) {
+    if (!browser) {
+	if (dojo.isWebKit) {
+	    browser = "webkit";
+	} else if (dojo.isMoz) {
+	    browser = "moz";
+	} else if (dojo.isOpera) {
+	    browser = "opera";
+	} else if (dojo.isIE < 10) {
+	    browser = "ieold";
+	} else if (dojo.isIE >= 10) {
+	    browser = "ie10";
+	}
+    }
+    var result = "-linear-gradient(" + (direction == "vertical" ? "top" : "left") + ", " + startColor + " 0%," + endColor + " " + colorStop + "%," + endColor + " 100%)";
+	switch(browser) {
+	case "webkit":
+	    return  "-webkit" + result;
+	case "moz":
+	    return  "-moz" + result;
+	case "ieold":
+	    return  "progid:DXImageTransform.Microsoft.gradient( startColorstr='" + startColor + "', endColorstr='" + endColor + "',GradientType=" + (direction == "vertical" ? 0 : 1) + ")";
+	case "ie10":
+	    return  "-ms" + result;
+	case "opera":
+	    return "-o" + result;
+	}
+
+
+    }

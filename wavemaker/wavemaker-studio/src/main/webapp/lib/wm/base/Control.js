@@ -1285,7 +1285,15 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    if (wm.isMobile && dojo.isWebKit && (cssObj.overflowY == "auto"||cssObj.overflowY == "scroll")) {
 		cssTextItems.push("-webkit-overflow-scrolling: touch");
 	    }
-
+	    if (styleName == "backgroundGradient") {
+		var gradient = cssObj[styleName];
+		inValue = getBackgroundStyle(gradient.startColor,gradient.endColor,gradient.colorStop,gradient.direction, "");
+		if (dojo.isIE < 10) {
+		    cssTextItems.push("filter: " + inValue);
+		} else {
+		    cssTextItems.push("background: " +  inValue);
+		}
+	    }
 	    // why is it +=?  So that position: absolute isn't blown away; so that any custom widget styles aren't blown away.
 	    // How efficient is resetting cssText (cssText is "border:5", how efficient is cssText += ";border:10" handled?)
 	    this.domNode.style.cssText += cssTextItems.join(";");
@@ -1305,8 +1313,18 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 			    s.borderBottom = cssObj.borderBottomStyle + " " + cssObj.borderBottomWidth + " " + cssObj.borderBottomColor;
 			}
 		    } else if (this._appliedStyles[styleName] != cssObj[styleName]) {
-			s[styleName] = cssObj[styleName];
-			this._appliedStyles[styleName] = cssObj[styleName];
+			if (styleName == "backgroundGradient") {
+			    var gradient = cssObj[styleName];
+			    inValue = getBackgroundStyle(gradient.startColor,gradient.endColor,gradient.colorStop,gradient.direction, "");
+			    if (dojo.isIE < 10) {
+				s.filter = inValue;
+			    } else {
+				s.background = inValue;
+			    }
+			} else {
+			    s[styleName] = cssObj[styleName];
+			    this._appliedStyles[styleName] = cssObj[styleName];
+			}
 		    } 
 		    if (wm.isMobile && dojo.isWebKit && (s.overflowY == "scroll" || s.overflowY == "auto")) {
 			    s.WebkitOverflowScrolling = "touch";
@@ -1620,7 +1638,16 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    } else {
 		this.styles[inStyle] = inValue;
 	    }
-	    this.domNode.style[inStyle] = inValue;
+	    if (inStyle == "backgroundGradient" && inValue) {
+		inValue = getBackgroundStyle(inValue.startColor,inValue.endColor,inValue.colorStop,inValue.direction, "");
+		if (dojo.isIE < 10) {
+		    this.domNode.style.filter = inValue;
+		} else {
+		    this.domNode.style.background = inValue;
+		}
+	    } else {
+		this.domNode.style[inStyle] = inValue;
+	    }
 	},
     getStyle: function(inStyle) {
 	if (inStyle == "border" || inStyle == "borderColor" || inStyle == "margin" || inStyle == "padding") {

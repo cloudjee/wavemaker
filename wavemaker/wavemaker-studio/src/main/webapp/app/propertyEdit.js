@@ -1637,6 +1637,7 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	{name: "margin", editor: "wm.Text", layerName: "basicLayer"},
 	{name: "padding",editor: "wm.Text", layerName: "basicLayer"},*/
 	{name: "backgroundColor", editor: "wm.ColorPicker"},
+	{name: "backgroundGradient", editor: "wm.ColorPicker", editorProps: {gradient:1}},
 	{name: "backgroundImage", editor: "wm.Text"},
 	{name: "backgroundRepeat", editor: "wm.SelectMenu", editorProps: {options: ["no-repeat","repeat-x","repeat-y","repeat"]}, advanced:1},
 	{name: "color", editor: "wm.ColorPicker"},
