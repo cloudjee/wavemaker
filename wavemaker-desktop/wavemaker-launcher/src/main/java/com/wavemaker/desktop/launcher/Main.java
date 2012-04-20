@@ -382,6 +382,7 @@ public class Main {
 
         File lib = new File(newCatalinaHome, "lib");
         lib.mkdir();
+        copy(new File(oldCatalinaHome, "lib/servlet-api.jar"), new File(newCatalinaHome, "lib/servlet-api.jar"));
 
         File webapp = new File(newCatalinaHome, "webapps");
         webapp.mkdir();
