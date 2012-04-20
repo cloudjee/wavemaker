@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2008-2011 VMWare, Inc. All rights reserved.
+ * Copyright (C) 2008-2012 VMWare, Inc. All rights reserved.
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,7 +16,15 @@ package com.wavemaker.desktop.launcher;
 
 import java.awt.DisplayMode;
 import java.awt.GraphicsEnvironment;
-import java.io.*;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -29,7 +37,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.apache.catalina.startup.Catalina;
-import org.springframework.util.StringUtils;
 
 import com.wavemaker.desktop.launcher.ui.MainConsole;
 import com.wavemaker.desktop.launcher.ui.ProgressDialog;
@@ -56,13 +63,13 @@ public class Main {
 
     private static final String FOLDER_SEPARATOR = "/";
 
-	private static final String WINDOWS_FOLDER_SEPARATOR = "\\";
+    private static final String WINDOWS_FOLDER_SEPARATOR = "\\";
 
-	private static final String TOP_PATH = "..";
+    private static final String TOP_PATH = "..";
 
-	private static final String CURRENT_PATH = ".";
+    private static final String CURRENT_PATH = ".";
 
-	private static final char EXTENSION_SEPARATOR = '.';
+    private static final char EXTENSION_SEPARATOR = '.';
 
     public static File CatalinaHome;
 
@@ -372,10 +379,11 @@ public class Main {
             configuration.serialize(os);
             os.close();
         }
-        
+
         File lib = new File(newCatalinaHome, "lib");
         lib.mkdir();
-        
+        copy(new File(oldCatalinaHome, "lib/servlet-api.jar"), new File(newCatalinaHome, "lib/servlet-api.jar"));
+
         File webapp = new File(newCatalinaHome, "webapps");
         webapp.mkdir();
 
@@ -595,13 +603,12 @@ public class Main {
         File studioDir = new File(getStudioDir(), "WEB-INF/lib");
 
         File[] jars = studioDir.listFiles(new FilenameFilter() {
+
             @Override
             public boolean accept(File dir, String name) {
                 boolean accepted = false;
-                if (hasLength(getFilenameExtension(name))
-                        && getFilenameExtension(name).equals("jar")
-                        && getFilename(name).length() >= 15
-                        && getFilename(name).substring(0, 15).equals("hibernate-tools")) {
+                if (hasLength(getFilenameExtension(name)) && getFilenameExtension(name).equals("jar") && getFilename(name).length() >= 15
+                    && getFilename(name).substring(0, 15).equals("hibernate-tools")) {
                     accepted = true;
                 }
                 return accepted;
@@ -612,32 +619,32 @@ public class Main {
         return missing;
     }
 
-    //TODO: Hoprfully, the following three methods should be replaced the equivalence from Spring framework once
-    //TODO: the class load problem is resolved
+    // TODO: Hoprfully, the following three methods should be replaced the equivalence from Spring framework once
+    // TODO: the class load problem is resolved
     private static String getFilenameExtension(String path) {
-		if (path == null) {
-			return null;
-		}
-		int extIndex = path.lastIndexOf(EXTENSION_SEPARATOR);
-		if (extIndex == -1) {
-			return null;
-		}
-		int folderIndex = path.lastIndexOf(FOLDER_SEPARATOR);
-		if (folderIndex > extIndex) {
-			return null;
-		}
-		return path.substring(extIndex + 1);
-	}
+        if (path == null) {
+            return null;
+        }
+        int extIndex = path.lastIndexOf(EXTENSION_SEPARATOR);
+        if (extIndex == -1) {
+            return null;
+        }
+        int folderIndex = path.lastIndexOf(FOLDER_SEPARATOR);
+        if (folderIndex > extIndex) {
+            return null;
+        }
+        return path.substring(extIndex + 1);
+    }
 
     private static String getFilename(String path) {
-		if (path == null) {
-			return null;
-		}
-		int separatorIndex = path.lastIndexOf(FOLDER_SEPARATOR);
-		return (separatorIndex != -1 ? path.substring(separatorIndex + 1) : path);
-	}
+        if (path == null) {
+            return null;
+        }
+        int separatorIndex = path.lastIndexOf(FOLDER_SEPARATOR);
+        return separatorIndex != -1 ? path.substring(separatorIndex + 1) : path;
+    }
 
     private static boolean hasLength(CharSequence str) {
-		return (str != null && str.length() > 0);
-	}
+        return str != null && str.length() > 0;
+    }
 }
