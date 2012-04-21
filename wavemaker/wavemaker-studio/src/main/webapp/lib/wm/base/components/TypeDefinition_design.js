@@ -66,19 +66,33 @@ wm.TypeDefinition.extend({
     afterPaletteDrop: function() {
 	this.inherited(arguments);
 	this.setOwner(studio.application);
+	if (!studio.TypeDefinitionGeneratorDialog) {
+	    studio.TypeDefinitionGeneratorDialog = 
+		new wm.PageDialog({owner: studio,
+				   _classes: {domNode: ["studiodialog"]},
+				   name: "TypeDefinitionGeneratorDialog",
+				   pageName: "TypeDefinitionGeneratorDialog",
+				   width: "500px",
+				   height: "400px",
+				   border: "2",
+				   borderColor: "white",
+				   modal: false,
+				   hideControls: true});
+	    }
+	    studio.TypeDefinitionGeneratorDialog.show();
+	studio.TypeDefinitionGeneratorDialog.page.setTypeDefinition(this);
+	
     },
-
+    _isWriteableComponent: function(inName, inProperties) {return true;},
     set_name: function(inName) {
         this.doRemoveType();
         this.inherited(arguments);
         this.doAddType();
     },
     getCollection: function(inName) {
-        if (!this.fields) {
-            this.fields = [];
-            for (var i in this.$) {
-                this.fields.push(this.$[i]);
-            }
+        this.fields = [];
+        for (var i in this.$) {
+            this.fields.push(this.$[i]);
         }
         return this.fields;
     },
