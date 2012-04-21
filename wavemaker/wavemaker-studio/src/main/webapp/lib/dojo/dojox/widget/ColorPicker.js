@@ -149,6 +149,9 @@ dojo.require("dojo.i18n");
 			}
 			this._started = true;
 			this.set("value", this.value);
+		    /* Copyright (C) 2012 VMware, Inc. All rights reserved. Licensed under the Apache License 2.0 - http://www.apache.org/licenses/LICENSE-2.0 
+		     * WaveMaker: Comments out this and the subscription to /dnd/move/... below because it subscribes to ALL dnd/move/... commands
+		     * which means that any other widget that happens to use this will trigger color changes
 			this._mover = new d.dnd.move.boxConstrainedMoveable(this.cursorNode, {
 				box: {
 					t: -(this.PICKER_SAT_SELECTOR_H/2),
@@ -166,12 +169,13 @@ dojo.require("dojo.i18n");
 					h:this.PICKER_HUE_H
 				}
 			});
-			
+			*/		
 			this._subs = [];
 			// no dnd/move/move published ... use a timer:
+/*
 			this._subs.push(d.subscribe("/dnd/move/stop", d.hitch(this, "_clearTimer")));
 			this._subs.push(d.subscribe("/dnd/move/start", d.hitch(this, "_setTimer")));
-
+			*/
 			// Bind to up, down, left and right  arrows on the hue and saturation nodes.
 			this._keyListeners = [];
 			this._connects.push(dijit.typematic.addKeyListener(this.hueCursorNode,{
