@@ -168,6 +168,7 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
     color: white;
     border: 0px solid transparent;
     background: none;
+    height: 24px;
 }
 .StudioTabs > .wmtablayers-tabbar > .wmtablayers-selected {
 	-moz-border-radius-topleft: 8px; 
@@ -180,8 +181,6 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
 	border-bottom: 0px solid transparent;
 	background-color: #414B5C;
 	top: 3px;
-	font-size: 14px;
-	height: 24px;
 }
 .StudioTabs.StudioTabsInverted > .wmtablayers-tabbar > .wmtablayers-selected {
     background: -webkit-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
@@ -193,11 +192,14 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
 /* END 6.5 Tabs */
 
 /* Splitters */
+#studio_left_client,
+#studio_tabs_client,
 .Studio .StudioSplitter,
 .Studio .StudioSplitterPanel {
     background-color: #636f80;
 }
 /* END Splitters */
+
 
 /* Toolbars */
 .Studio .StudioToolBar {
@@ -208,8 +210,17 @@ table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
     color: white;
     font-weight: normal;
 }
+
+.Studio .StudioToolBar button {
+    cursor: pointer;
+}
+.Studio .StudioToolBar button.wmtoolbutton:hover img {
+    background-color:#344455 !important;
+}
+
 .Studio .StudioToolBar .wmtogglebuttonpanel .wmbutton,
 .Studio .StudioToolBar.wmtogglebuttonpanel .wmbutton {
+
     font-family: Arial, Geneva, Helvetica, sans-serif;    
     background-color: transparent;
     background-image: none;
