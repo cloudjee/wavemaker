@@ -315,7 +315,7 @@ dojo.declare("wm.Layers", wm.Container, {
 		name = name.replace(/\s/g,"_");
 		var
 	    defName = this.owner.getUniqueName(name);
-	    props = {width: "100%", height: "100%", caption: caption, parent: this, horizontalAlign: "left", verticalAlign: "top", themeStyleType: this.themeStyleType},
+	    props = {width: "100%", height: "100%", caption: caption, parent: this, horizontalAlign: "left", verticalAlign: "top", themeStyleType: this.themeStyleType, border: this.clientBorder, borderColor: this.clientBorderColor},
 			o = this.getRoot();
 		if (o)
 			return o.createComponent(defName, "wm.Layer", props);
