@@ -906,7 +906,7 @@ dojo.declare("Studio", wm.Page, {
 	    }
 	    if (this.selected == inComponent) {
 		/* Make sure the tree shows its selected */
-		if (!this.selected._studioTreeNode.selected) {
+		if (this.selected._studioTreeNode && !this.selected._studioTreeNode.selected) {
 		    this.selected._studioTreeNode.tree.eventSelect(this.selected._studioTreeNode);
 		}
 		return;
