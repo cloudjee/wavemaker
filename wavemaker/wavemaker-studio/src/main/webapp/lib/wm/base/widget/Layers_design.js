@@ -367,13 +367,9 @@ wm.Object.extendSchema(wm.AccordionLayers, {
     /* Display group; layout subgroup */
     captionHeight: {group: "widgetName", subgroup: "layout"},
 
-    /* Styles group */
-    layerBorder: {group: "widgetName", subgroup: "style", order: 1},
-
     /* Ignored group */
     transition: {ignore: true},
     captionBorder: {ignore: 1},
-    clientBorder: {ignore: 1}
 });
 wm.Object.extendSchema(wm.TabLayers, {
     dndTargetName:  {group: "widgetName", subgroup: "behavior", order: 500, advanced: 1},
