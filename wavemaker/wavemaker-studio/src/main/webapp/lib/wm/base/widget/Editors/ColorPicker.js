@@ -105,6 +105,8 @@ dojo.declare(
             });
 	},
 	onChange: function(inValue) {
+	    if (this._inColorChange) return;
+	    this._inColorChange = true;
 	    if (!this.owner.gradient) {
 		if (inValue) {
 		    this.domNode.style.backgroundColor = inValue;
@@ -130,6 +132,9 @@ dojo.declare(
 		    this.domNode.style.background = style;
 		}
 	    }
+	    wm.job(this.owner.getRuntimeId() + ".ClearInColorChange", 10, this, function() {
+		this._inColorChange = false;
+	    });
 	},
 	openDropDown: function(/*Function*/ callback){
 	    if (!this.dropDown) {
@@ -232,7 +237,9 @@ dojo.declare("wm.ColorPickerPanel", wm.Container, {
     },
     */
     reset: function() {
-	this.setDijitValue(this.owner.dataValue);
+	if (this.getValue() != this.owner.getDataValue()) {
+	    this.setDijitValue(this.owner.getDataValue());
+	}
     },
     getValue: function() {
         if (this.colorPicker) {
