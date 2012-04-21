@@ -36,8 +36,8 @@ dojo.declare("wm.AccordionDecorator", wm.LayersDecorator, {
 			showing: inLayer.showing,
 			parent: p,
 		        owner: p,
-		        border: this.captionBorder,
-		        borderColor: this.captionBorderColor
+		    border: this.decoree.captionBorder !== undefined ? this.decoree.captionBorder : this.captionBorder,
+		        borderColor: this.decoree.captionBorderColor !== undefined ? this.decoree.captionBorderColor : this.captionBorderColor
 		});
 	    h.domNode.appendChild(dojo.create("span", {innerHTML: "", className: "accordionArrowNode"}));
 		p.moveControl(h, inIndex*2);
