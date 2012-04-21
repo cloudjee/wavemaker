@@ -1822,13 +1822,22 @@ dojo.declare("wm.prop.StyleEditor", wm.Container, {
 	    if (!inClassName) return;
 	    var cssText = "." + inClassName + " {\n";
 	    "You CAN set these styles for nodes inside of widgets, just not for the widgets themselves. */\n";
-	if (this.inspected.styles) {
-	    for (var styleName in this.inspected.styles) {
-		cssText += styleName.replace(/([A-Z])/g, function(inText) {return "-" + inText.toLowerCase();}) + ": " + this.inspected.styles[styleName] + ";\n";
-		delete this.inspected.styles[styleName];
+	    if (this.inspected.styles) {
+		for (var styleName in this.inspected.styles) {
+		    var styleValue = this.inspected.styles[styleName];
+		    if (styleName == "backgroundGradient") {
+			cssText += "background: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "webkit") + ";\n";
+			cssText += "background: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "moz") + ";\n";
+			cssText += "background: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "opera") + ";\n";
+			cssText += "background: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ie10") + ";\n";
+			cssText += "filter: " + wm.getBackgroundStyle(styleValue.startColor, styleValue.endColor, styleValue.colorStop, styleValue.direction, "ieold") + ";\n";
+		    } else {
+			cssText += styleName.replace(/([A-Z])/g, function(inText) {return "-" + inText.toLowerCase();}) + ": " + styleValue + ";\n";
+		    }
+		    delete this.inspected.styles[styleName];
+		}
+		this.setDataValue(this.inspected.styles);
 	    }
-	    this.setDataValue(this.inspected.styles);
-	}
 	    cssText += "\n}\n";
 
 	    this.classListEditor.addClass(inClassName);

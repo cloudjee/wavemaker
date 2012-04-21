@@ -745,7 +745,7 @@ wm.conditionalRequire = function(packageName, condition) {
 }
 
 
-getBackgroundStyle = function(startColor, endColor, colorStop, direction, browser) {
+wm.getBackgroundStyle = function(startColor, endColor, colorStop, direction, browser) {
     if (!browser) {
 	if (dojo.isWebKit) {
 	    browser = "webkit";

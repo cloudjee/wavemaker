@@ -123,7 +123,7 @@ dojo.declare(
 		    inValue = dojo.fromJson(inValue);
 		}
 
-		var style = getBackgroundStyle(inValue.startColor,inValue.endColor,inValue.colorStop,inValue.direction, "");
+		var style = wm.getBackgroundStyle(inValue.startColor,inValue.endColor,inValue.colorStop,inValue.direction, "");
 		if (dojo.isIE < 10) {
 		    this.domNode.style.filter = style;
 		} else {
@@ -399,7 +399,7 @@ dojo.declare("wm.GradientPickerPanel", wm.Container, {
 	var startColor = this.startColor.getDataValue();
 	var endColor = this.endColor.getDataValue();
 	
-	var result = getBackgroundStyle(startColor,endColor,colorStop,direction, "");
+	var result = wm.getBackgroundStyle(startColor,endColor,colorStop,direction, "");
 	if (dojo.isIE < 10) {
 	    this.html.domNode.style.filter = result;
 	} else {

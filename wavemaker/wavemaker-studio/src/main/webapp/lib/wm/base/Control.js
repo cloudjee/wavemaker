@@ -1287,7 +1287,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    }
 	    if (styleName == "backgroundGradient") {
 		var gradient = cssObj[styleName];
-		inValue = getBackgroundStyle(gradient.startColor,gradient.endColor,gradient.colorStop,gradient.direction, "");
+		inValue = wm.getBackgroundStyle(gradient.startColor,gradient.endColor,gradient.colorStop,gradient.direction, "");
 		if (dojo.isIE < 10) {
 		    cssTextItems.push("filter: " + inValue);
 		} else {
@@ -1315,7 +1315,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		    } else if (this._appliedStyles[styleName] != cssObj[styleName]) {
 			if (styleName == "backgroundGradient") {
 			    var gradient = cssObj[styleName];
-			    inValue = getBackgroundStyle(gradient.startColor,gradient.endColor,gradient.colorStop,gradient.direction, "");
+			    inValue = wm.getBackgroundStyle(gradient.startColor,gradient.endColor,gradient.colorStop,gradient.direction, "");
 			    if (dojo.isIE < 10) {
 				s.filter = inValue;
 			    } else {
@@ -1639,7 +1639,7 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 		this.styles[inStyle] = inValue;
 	    }
 	    if (inStyle == "backgroundGradient" && inValue) {
-		inValue = getBackgroundStyle(inValue.startColor,inValue.endColor,inValue.colorStop,inValue.direction, "");
+		inValue = wm.getBackgroundStyle(inValue.startColor,inValue.endColor,inValue.colorStop,inValue.direction, "");
 		if (dojo.isIE < 10) {
 		    this.domNode.style.filter = inValue;
 		} else {
