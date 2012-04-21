@@ -1641,8 +1641,12 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    } else {
 		this.styles[inStyle] = inValue;
 	    }
-	    if (inStyle == "backgroundGradient" && inValue) {
-		inValue = wm.getBackgroundStyle(inValue.startColor,inValue.endColor,inValue.colorStop,inValue.direction, "");
+	    if (inStyle == "backgroundGradient") {
+		if (inValue) {
+		    inValue = wm.getBackgroundStyle(inValue.startColor,inValue.endColor,inValue.colorStop,inValue.direction, "");
+		} else {
+		    inValue = "";
+		}
 		if (dojo.isIE < 10) {
 		    this.domNode.style.filter = inValue;
 		} else {
