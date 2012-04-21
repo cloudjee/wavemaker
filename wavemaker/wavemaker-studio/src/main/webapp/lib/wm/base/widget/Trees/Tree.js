@@ -608,6 +608,9 @@ dojo.declare("wm.Tree", wm.Box, {
 			this.deselect();
 			this.addToSelection(inNode);
 			this.onselect(inNode);
+		} else if (this.selected && !this.selected.selected) {
+		    this.selected.selected = true;
+		    this.selected.styleContent();
 		}
 	},
 	// simple lazy loading
