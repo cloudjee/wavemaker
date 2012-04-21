@@ -1288,8 +1288,8 @@ wm.define("wm.Control", [wm.Component, wm.Bounds], {
 	    if (wm.isMobile && dojo.isWebKit && (cssObj.overflowY == "auto"||cssObj.overflowY == "scroll")) {
 		cssTextItems.push("-webkit-overflow-scrolling: touch");
 	    }
-	    if (styleName == "backgroundGradient") {
-		var gradient = cssObj[styleName];
+	    if (cssObj.backgroundGradient) {
+		var gradient = cssObj.backgroundGradient;
 		inValue = wm.getBackgroundStyle(gradient.startColor,gradient.endColor,gradient.colorStop,gradient.direction, "");
 		if (dojo.isIE < 10) {
 		    cssTextItems.push("filter: " + inValue);
