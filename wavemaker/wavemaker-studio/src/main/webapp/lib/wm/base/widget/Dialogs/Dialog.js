@@ -372,8 +372,10 @@ dojo.declare("wm.Dialog", wm.Container, {
 	this.docked = inDock;
 	if (inDock) {	    
 	    this._dock(optionalParent, optionalEdge);
+	    dojo.addClass(this.domNode, "Docked");
 	} else {
 	    this._undock();
+	    dojo.removeClass(this.domNode, "Docked");
 	}
     },
     _dock: function(parent, edge) {
