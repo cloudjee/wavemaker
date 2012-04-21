@@ -904,8 +904,13 @@ dojo.declare("Studio", wm.Page, {
                 this._lastBindSelect = null;
 		this.selected = null;
 	    }
-		if (this.selected == inComponent)
-			return;
+	    if (this.selected == inComponent) {
+		/* Make sure the tree shows its selected */
+		if (!this.selected._studioTreeNode.selected) {
+		    this.selected._studioTreeNode.tree.eventSelect(this.selected._studioTreeNode);
+		}
+		return;
+	    }
  
 	    // if its a dialog or a widget within a dialog dismiss the dialog
 	    // unless the new selection IS in the dialog as wel
