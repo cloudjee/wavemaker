@@ -2211,6 +2211,11 @@ Studio.extend({
     /* User selects the menu item for installing third party extensions */
     importPartnerService: function() {
 	this.ImportThirdPartyAPIDialog.show();
+    },
+
+    revertProjectClick: function(inSender) {
+	//studio.project.openProject1(studio.project.projectName, studio.project.pageName, new dojo.Deferred());
+	studio.revertProjectOptionsDialog.show();
     }
 });
 
