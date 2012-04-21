@@ -12,14 +12,280 @@
  *  limitations under the License.
  */
 
-/*
-.Studio .studioProjectRun, .Studio .studioProjectTest, .Studio .studioProjectCompile {
-    background-image: url(images/runapp_24.png);
-    width: 24px !important;
-    height: 24px !important;
-}
-*/
+/* 6.5 Retheming Effort */
 
+/* 6.5 Menu Bar */
+.Studio .StudioMenuBar {
+    font-family: Arial, Geneva, Helvetica, sans-serif;    
+    font-size: 12pt;
+    color: white;
+    background-color: #2B323D;
+    background: -webkit-linear-gradient(top, #91959a 0%,#2B323D 43%,#2B323D 100%);
+    background: -moz-linear-gradient(top, #91959a 0%,#2B323D 43%,#2B323D 100%);
+    background: -o-linear-gradient(top, #91959a 0%,#2B323D 43%,#2B323D 100%);
+    background: -ms-linear-gradient(top, #91959a 0%,#2B323D 43%,#2B323D 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#91959a', endColorstr='#2B323D',GradientType=0);    
+}
+
+/* Help button */
+.Studio-menuBarHelp .wmSizeNode {
+    border: solid 1px transparent;
+}
+
+.Studio-menuBarHelp .StudioHelpIcon {
+    float:right;
+    background-position: 0% 50%;
+    margin-left: 5px;
+}
+/* End help button */
+
+/* Buttons in the top navigation bar will render as text with no borders and no separate background color */
+.Studio .StudioMenuBar button {
+	border:none;
+	background-color: transparent;
+	color: inherit;
+	font-weight: inherit;
+	font-size: inherit;	
+}
+
+/* Inherit the parent panel's background color */
+.Studio .StudioMenuBar .dijitMenuBar {
+	background-color: transparent;
+}
+
+/* Menu Items in the top MenuBar */
+.Studio .StudioMenuBar .dijitMenuItemLabel {
+ 	background-color: transparent;
+	color: inherit;
+	font-weight: inherit;
+	font-size: inherit;
+}
+
+/* Last item in the menubar doesn't need a bit margin-right */
+.tundra .StudioMenuBar .dijitMenuBar .dijitMenuItem:last-child {
+   margin-right: 0px;
+   padding-right: 20px;
+}
+
+/* Hides down arrow for disabled menubar items */
+.Studio .StudioMenuBar .dijitMenuBar .dijitMenuItem.dijitMenuItemDisabled {
+  background-image: none;
+  color: #bbb;
+ }
+
+/* Styling for the navigation bar menus ONLY */
+.Studio .studio_navigationMenu_PopupMenu,
+.Studio .studio_navigationMenu_PopupMenu.dijitMenu,
+.Studio .studio_navigationMenu_PopupMenu.dijitMenu .dijitMenuItem {
+    background-color: #2B323D;
+	color: #FFF;
+}
+
+/* Hover styling for navigation bar menus ONLY */
+.Studio .studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemHover,
+.Studio .studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemSelected {
+  background-color: #586981;
+}
+
+/* Styling for all context menus and navigation menus in studio */
+.tundra .StudioMenuBar .dijitMenu, 
+.tundra .StudioMenuBar .dijitMenuBar .dijitMenuItem
+ {
+   border: solid 1px transparent;
+   background-image: url("images/dropArrow.png");
+   background-position: 90% 50%;
+   background-repeat: no-repeat;
+   padding: 4px 20px 4px 5px;
+   margin-right: 20px;
+}
+
+
+/* Hover effect for all menus, buttons and clickable labels in the menu bar */
+.StudioMenuBar .dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
+.StudioMenuBar .dijitMenuBar .dijitMenuItem.dijitMenuItemSelected,
+.Studio-menuBarHelp:hover .wmSizeNode,
+.Studio .StudioMenuBar .wmbutton:hover table 
+{
+   border: solid 1px rgb(40,40,40);
+   background-color: transparent;
+}
+
+/* Color/background for all context menus */
+table.studio_contextualMenu_CSS.dijitMenu,
+table.studio_contextualMenu_CSS .dijitMenuItem {
+	background-color: #6f798a;
+	color: #FFF;
+}
+
+/* Hover styling/selected style for all context menus */
+table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemHover,
+table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
+  background-color: #586981;
+}
+
+.dj_ie table.studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemDisabled,
+.dj_ie table.studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemDisabled *,
+.dj_ie table.studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemDisabled td,
+.dj_ie table.studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemDisabled .dijitMenuItemLabel {
+	filter: alpha(opacity=100) !important;
+	color:  rgb(140,140,140) !important;
+}
+
+
+/* Menu Item icons */
+.dijitMenuItemIcon {
+    vertical-align: middle;
+    -moz-background-clip: border;
+    -moz-background-origin: padding;
+    -moz-background-inline-policy: continuous;
+    width: 16px;
+    height: 16px;
+}
+
+/* END 6.5 Menus */
+
+/* 6.5 Tabs */
+/* Tab bar */
+.StudioTabs > .wmtablayers-tabbar,
+.Studio .StudioTabBarBackground {
+    background: -webkit-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
+    background: -moz-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
+    background: -o-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
+    background: -ms-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#798597', endColorstr='#636F80',GradientType=0);
+    border-bottom: 1px solid #c0c4ca;
+    padding-top: 8px;
+}
+.StudioTabs.StudioTabsInverted > .wmtablayers-tabbar {
+    background: none;
+    background-color: #414B5C;
+}
+/* Tab buttons */
+.StudioTabs > .wmtablayers-tabbar > .wmtablayers-tab,
+.StudioTabs > .wmtablayers-tabbar > .wmtablayers-selected {
+    cursor: pointer;
+    padding: 3px 10px;
+    color: white;
+    border: 0px solid transparent;
+    background: none;
+}
+.StudioTabs > .wmtablayers-tabbar > .wmtablayers-selected {
+	-moz-border-radius-topleft: 8px; 
+	-moz-border-radius-topright: 8px; 
+	-webkit-border-top-left-radius: 8px; 
+	-webkit-border-top-right-radius: 8px;
+	border-radius-topleft: 8px; 
+	border-radius-topright: 8px;
+	border: 1px solid #959DAB;
+	border-bottom: 0px solid transparent;
+	background-color: #414B5C;
+	top: 3px;
+	font-size: 14px;
+	height: 24px;
+}
+.StudioTabs.StudioTabsInverted > .wmtablayers-tabbar > .wmtablayers-selected {
+    background: -webkit-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
+    background: -moz-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
+    background: -o-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
+    background: -ms-linear-gradient(top, #798597 0%,#636F80 50%,#636F80 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#798597', endColorstr='#636F80',GradientType=0);
+}
+/* END 6.5 Tabs */
+
+/* Splitters */
+.Studio .StudioSplitter,
+.Studio .StudioSplitterPanel {
+    background-color: #636f80;
+}
+/* END Splitters */
+
+/* Toolbars */
+.Studio .StudioToolBar {
+	background-color: #414B5C;
+}
+.Studio .StudioToolBar .wmlabel,
+.Studio .StudioToolBar .wmeditor-caption {
+    color: white;
+    font-weight: normal;
+}
+.Studio .StudioToolBar .wmtogglebuttonpanel .wmbutton,
+.Studio .StudioToolBar.wmtogglebuttonpanel .wmbutton {
+    font-family: Arial, Geneva, Helvetica, sans-serif;    
+    background-color: transparent;
+    background-image: none;
+    font-weight: normal;
+    color: #bbb;
+}
+.Studio .StudioToolBar .wmtogglebuttonpanel .wmbutton.toggleButtonDown,
+.Studio .StudioToolBar.wmtogglebuttonpanel .wmbutton.toggleButtonDown {
+    font-weight: bold;
+    color: white;
+}
+.Studio .StudioToolBar .wmtogglebuttonpanel .wmbutton.wmbutton-disabled,
+.Studio .StudioToolBar .wmtogglebuttonpanel .wmbutton.wmbutton-disabled:hover {
+    opacity: 1;
+    filter:alpha(opacity=100);
+    background-color: transparent;
+    color: #66798c
+}
+
+/* End Toolbars */
+
+/* Palette/model/services */
+.StudioLeftLayer {
+    background-color: #414B5C;
+    color: white;
+}
+/* End Palette */
+
+/* Start Dialogs */
+.studiodialog .dialogtitlebar.Docked {
+        background-color: #414B5C;
+	color: #FFF;
+	text-align: left;
+	font-size: 100%;
+}
+.studiodialog .dialogtitlebar {
+        background-color: #414B5C;
+	color: #FFF;
+	border-bottom:1px #363b44 solid;
+	border-left: 1px solid #c0c4ca;
+	border-right: 1px solid #363b44;
+	font-size: 120%;
+	text-align: center;
+}
+/* End Dialogs */
+
+/* Start Inspector */
+.Studio .Inspector .wmlayer {
+    background-color: #2B323D;
+    -moz-border-radius: 4px; 
+    -webkit-border-radius: 4px; 
+    border-radius: 4px;
+}
+.Studio .Inspector .wmlabel,
+.Studio .Inspector .wmeditor-caption {
+    font-weight: normal;
+    font-size: 11pt;
+    font-family: Arial, Geneva, Helvetica, sans-serif;
+    color: white;
+}    
+.Studio .Inspector .wmaccordion-header {
+    font-size: 9pt;
+    border-color: #9FACC1 #333 #333 #9FACC1;
+	-moz-border-radius: 4px; 
+	-webkit-border-radius: 4px; 
+	border-radius: 4px; 
+	background-color: #959dab;
+	color: #FFF;	
+}
+.Studio .Inspector .wmaccordion-header.wmaccordion-collapsed {
+	background-color: #5e6678;
+}
+/* END 6.5 Retheming Effort */
+
+
+/* Start old Studio theme */
 
 .Studio .studioProjectRun, .Studio .studioProjectTest, .Studio .studioProjectCompile {
     width: 24px !important;
@@ -36,101 +302,7 @@
     background-image: url(images/compileapp_24.png);    	    
 }
 /* MenuBar */
-.wm-darksnazzy .dojoMenu {
-	background: url(images/navbar_bg.gif) bottom repeat-x;
-}
 
-.tundra .wm-darksnazzy .dijitMenu, .tundra .wm-darksnazzy .dijitMenuBar, #studio_navigationBar .dijitMenuItemLabel {
- 	background-color: transparent;
-	color: white;
-	font-weight: bold;
-	font-size: 12px;
-}
-
-.tundra .wm-darksnazzy .dijitMenu, .tundra .wm-darksnazzy .dijitMenuBar .dijitMenuItem.dijitMenuItemDisabled {
-  background-image: none;
- }
-.tundra .wm-darksnazzy .dijitMenu, 
-.tundra .wm-darksnazzy .dijitMenuBar .dijitMenuItem {
-   border: solid 1px transparent;
-   background-image: url("images/dropArrow.png");
-   background-position: 90% 50%;
-   background-repeat: no-repeat;
-   padding: 4px 20px 4px 5px;
-   margin-right: 20px;
-}
-.tundra .wm-darksnazzy .dijitMenuBar .dijitMenuItem:last-child {
-   margin-right: 0px;
-   padding-right: 20px;
-}
-.tundra .wm-darksnazzy .dijitMenu, .tundra .wm-darksnazzy .dijitMenuBar .dijitMenuItem.dijitMenuItemHover,
-.tundra .wm-darksnazzy .dijitMenu, .tundra .wm-darksnazzy .dijitMenuBar .dijitMenuItem.dijitMenuItemSelected {
-   border: solid 1px rgb(40,40,40);
-   background-color: transparent;
-}
-
-table.studio_navigationMenu_PopupMenu,
-table.studio_navigationMenu_PopupMenu.dijitMenu,
-table.studio_navigationMenu_PopupMenu .dijitMenuItem,
-table.studio_contextualMenu_CSS.dijitMenu,
-table.studio_contextualMenu_CSS .dijitMenuItem {
-	background-color: #6f798a;
-	color: #FFF;
-/*
-	font-size: 115%;
-	font-weight:bold;
-	filter:alpha(opacity=95);
-	-moz-opacity:.95;
-	opacity:.95;
-*/
-}
-
-
-
-table.studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemHover,
-table.studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemSelected,
-table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemHover,
-table.studio_contextualMenu_CSS .dijitMenuItem.dijitMenuItemSelected {
-  background-color: #586981;
-}
-/*
-table.studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemDisabled,
-table.studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemDisabled *,
-table.studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemDisabled td,
-table.studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemDisabled .dijitMenuItemLabel 
-{
-	background-color: #607080;
-}
-*/
-.dj_ie table.studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemDisabled,
-.dj_ie table.studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemDisabled *,
-.dj_ie table.studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemDisabled td,
-.dj_ie table.studio_navigationMenu_PopupMenu .dijitMenuItem.dijitMenuItemDisabled .dijitMenuItemLabel {
-	filter: alpha(opacity=100) !important;
-	color:  rgb(140,140,140) !important;
-}
-
-
-.tundra .wm-darksnazzy  .dijitMenu, .tundra .wm-darksnazzy  .dijitMenuBar {
-   border-width: 0px;
-}
-
-
-/* Popup Menu Items */
-
-table.studio_navigationMenu_PopupMenu .dijitMenuItem {
-  height: 20px;
-}
-
-/* Menu Items */
-.dijitMenuItemIcon {
-    vertical-align: middle;
-    -moz-background-clip: border;
-    -moz-background-origin: padding;
-    -moz-background-inline-policy: continuous;
-    width: 16px;
-    height: 16px;
-}
 
 .cutItem {
     background: transparent url(images/canvasToolbarBtns16.png) no-repeat scroll -32px 0px; 
@@ -408,49 +580,22 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
 
 
 
+/*
 #studio_splitter4 {
 	background:#737c8e url(images/h_splitter_handle.gif) no-repeat scroll 1px center;
 	border:none;
 	background-position: center;
 }
-
+*/
 .Studio-header {
 	background-image:url(images/topbar_bg.gif);
 	background-repeat:repeat-x;
 }
 
-.Studio-ribbon, .Studio-apiRibbon, .Studio-sourceRibbon, .Studio-leftToolbarButtons, 
-#studio_MenuDesignerDialog_menuDesigner_panel1 {
-/*
-	background-image:url(images/dark_toolbar_bg.gif);
-	background-repeat:repeat-x;
-       */
-	/*border-top:1px #FFFFFF solid;*/
-	border-bottom:1px #363b44 solid;
-	/*padding: 2px;*/
-}
 
-.Studio-navigationBar {
-	background: url(images/navbar_bg.gif) bottom repeat-x;
-}
 
 .Studio-logoTopHolder {
 	background: url(images/wmbug_top.gif) bottom no-repeat;
-}
-
-.Studio-studioToolbarButtons button, .Studio-componentsToolbar button, .Studio-servicesPane_services_servicesTopPanel button, .Studio-sourceRibbon button {
-/*
-	background-image:url(images/dark_toolbar_bg.gif);
-	background-repeat:repeat-x;
-       */
-	height: 24px;
-	text-align: center;
-}
-
-.Studio-studioToolbarButtons button:hover, .Studio-componentsToolbar button:hover, .Studio-sourceRibbon button:hover {
-	background-image:url(images/dark_toolbar_btn_sm_on.gif);
-	background-repeat: no-repeat;
-	height: 24px;
 }
 
 .Studio-ptoolbar button {
@@ -761,14 +906,6 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
 /**/
 
 
-.Studio-tabs .Studio-designer .wmtabbook-tabbar {
-	background-color: #fff;
-}
-
-.Studio-console {
-	height: 100px;
-	display: none;
-}
 
 .Studio-options, .Studio-inport {
 	padding: 8px;
@@ -785,11 +922,6 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
 	font-weight: bold;
 }
 
-.Studio-navBtnHolder button {
-	border:none;
-	background: url(images/navbar_bg.gif) bottom repeat-x;
-	cursor: pointer;
-}
 
 /* popup */
 .Studio .wmpopup {
@@ -828,6 +960,7 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
 	background-repeat: no-repeat;
 }
 
+/*
 #studio_splitter3 {
 	background:#959dab url(images/v_splitter_handle.gif) no-repeat scroll 1px center;
 	border-left: 1px solid #c0c4ca;
@@ -839,9 +972,6 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
 }
 
 #studio_splitter1 {
-/*	background: #959dab url(images/dark_toolbar_bg.gif) no-repeat scroll 0px top;
-	border-left: 1px solid #c0c4ca;
-	border-right: 1px solid #363b44;*/
 	cursor:e-resize;
 	overflow:hidden;
 	width:5px;
@@ -858,23 +988,24 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
 	z-index:9;
 	background-position: center;
 }
-
+*/
+/*
 #studio_benchbevel, #studio_benchbevel2, #studio_benchbevel3, #studio_benchbevel4, #studio_benchbevel12, #studio_themesbevel, .studio_tabs_bevel, #studio_benchbevel8882, #studio_benchbevel11_11s, #studio_benchbevel11, #studio_splitter1, #studio_docSplitter {
 	background-color: #959dab;
 	border-top: 1px solid #c0c4ca;
 	border-bottom: 1px solid #363b44;
 }
+*/
 #studio_themesPageHelpBtn {
     font-size: 14px;
 }
 
-
+/*
 #studio_benchbevel11 {
-/*	background: #959dab url(images/dark_toolbar_bg.gif) no-repeat scroll 0px top;*/
 	border-top: 1px solid #c0c4ca;
 	border-bottom: 1px solid #363b44;
 }
-
+*/
 /*.statusNameBox, .statusSizeBox, .statusMsgBox, .statusLoadingBox*/ 
 #studio_status.wmjsonstatus {
     opacity: 1.0 !important;
@@ -918,10 +1049,7 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
     height: 16px;
     cursor: pointer;
 }
-.Studio-menuBarHelp .StudioHelpIcon {
-    float:right;
-    background-position: 0% 50%;
-}
+
 
 .Studio-trackerImage {
     opacity: 0.1;
@@ -977,16 +1105,6 @@ table.studio_navigationMenu_PopupMenu img.dijitMenuItemIcon.PartnerService
 	-moz-outline: none;
 }
 
-.wmDialogTitleBar, .wmDialogTitleBar, .Studio > .wmdialog .dialogtitlebar,.wmdialog.studiodialog > .dialogtitlebar {
-	background-image:url(images/dark_toolbar_bg.gif);
-	background-repeat:repeat-x;
-	border-bottom:1px #363b44 solid;
-	color: #FFF;
-	border-left: 1px solid #c0c4ca;
-	border-right: 1px solid #363b44;
-	font-size: 120%;
-	text-align: center;
-}
 
 .wmDialogFooter,  .Studio > .wmdialog  .dialogfooter {
         background-image:url(images/dark_toolbar_bg.gif);
@@ -1081,11 +1199,12 @@ body .StudioButton.wmbutton-disabled,
 body .StudioButton.wmbutton-disabled:hover {
     cursor: default;
     color: #e0e0e0;
-    background-image: none !important;
-    background-color: #9CACC8 !important;
+    background-image: none;
+    background-color: #9CACC8;
     opacity: 0.65;
 }
 
+/*
 body .StudioButton.wmbutton.toggleButtonDown
  {
      color: black;
@@ -1106,7 +1225,7 @@ body .StudioButton.wmbutton.toggleButtonUp
  {
 	font-weight:normal;
 }
-
+*/
 body .StudioButton {
 	background-image:url(images/dark_btn_bg.gif);
 	background-repeat:repeat-x;
@@ -1185,9 +1304,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 }
 
 .Studio .Security-tabs > .wmtablayers-tabbar,
-#studio_left > .wmtablayers-tabbar,
 #studio_documentationTabs > .wmtablayers-tabbar,
-#studio_tabs > .wmtablayers-tabbar,
 #studio_themesPage_themeDesigner_demoPanelTabLayers .wmtablayers-tabbar,
 .JavaEditor-logTabs .wmtablayers-tabbar,
 #studio_JavaEditorSubTab > .wmtablayers-tabbar,
@@ -1195,10 +1312,8 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #studio_webServiceSubTab > .wmtablayers-tabbar,
 #studio_securitySubTab > .wmtablayers-tabbar,
 #app_importDatabase_panel1 > .wmtablayers-tabbar,
-#studio_sourceTabs .wmtablayers-tabbar,
 .ResourceManager .wmtablayers-tabbar,
-.EditVariable .EditVariable-tabs .wmtablayers-tabbar,
-#studio_inspectorToolbarOuter
+.EditVariable .EditVariable-tabs .wmtablayers-tabbar
  {
    /*
         background: -webkit-gradient(linear, left top, left bottom, from(#222222), to(#5D6778));
@@ -1211,9 +1326,7 @@ body.wm-darksnazzy .wmToolbar button:hover {
 }
 
 .Studio .Security-tabs > .wmtablayers-tabbar,
-#studio_left > .wmtablayers-tabbar,
 #studio_documentationTabs > .wmtablayers-tabbar,
-#studio_tabs > .wmtablayers-tabbar,
 #studio_themesPage_themeDesigner_demoPanelTabLayers .wmtablayers-tabbar,
 .JavaEditor-logTabs .wmtablayers-tabbar,
 #studio_JavaEditorSubTab > .wmtablayers-tabbar,
@@ -1221,7 +1334,6 @@ body.wm-darksnazzy .wmToolbar button:hover {
 #studio_webServiceSubTab > .wmtablayers-tabbar,
 #studio_securitySubTab > .wmtablayers-tabbar,
 #app_importDatabase_panel1 > .wmtablayers-tabbar,
-#studio_sourceTabs,
 .EditVariable .EditVariable-tabs .wmtablayers-tabbar,
 .DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-tabbar ,
 #studio_PIContents > .wmtablayers-tabbar,
@@ -1241,37 +1353,23 @@ body.wm-darksnazzy .wmToolbar button:hover {
 }
 */
 
-.Studio-tabs > .wmtablayers-tabbar > .wmtablayers-tab,
-.DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-tab {
-    font-size: 14px;
-    height: 24px;
-}
-.Studio-left > .wmtablayers-tabbar > .wmtablayers-tab {
-    height: 20px;
-    margin-top: 5px !important;
-}
+
 
 .Studio .Security-tabs > .wmtablayers-tabbar > .wmtablayers-tab,
-#studio_left > .wmtablayers-tabbar >  .wmtablayers-tab,
 #studio_documentationTabs > .wmtablayers-tabbar > .wmtablayers-tab,
 #studio_themesPage_themeDesigner_demoPanelTabLayers > .wmtablayers-tabbar > .wmtablayers-tab,
 .JavaEditor-logTabs .wmtablayers-tab,
-#studio_tabs > .wmtablayers-tabbar > .wmtablayers-tab,
 #studio_JavaEditorSubTab > .wmtablayers-tabbar > .wmtablayers-tab,
 #studio_databaseSubTab > .wmtablayers-tabbar > .wmtablayers-tab,
 #studio_webServiceSubTab > .wmtablayers-tabbar > .wmtablayers-tab,
 #studio_securitySubTab > .wmtablayers-tabbar > .wmtablayers-tab,
 #app_importDatabase_panel1 > .wmtablayers-tabbar > .wmtablayers-tab,
 #studio_inspectorLayers_Styles > .wmtablayers-tabbar > .wmtablayers-tab,
-#studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-tab,
 .EditVariable .EditVariable-tabs .wmtablayers-tab,
 .DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-tab,
 #studio_PIContents  .wmtablayers-tab,
-#studio_PIContents .wmtogglebutton,
 .ResourceManager .wmtablayers-tab,
-.GridDesigner .wmtablayers-tab,
-#studio_inspector .wmaccordion-header,
-.StudioButton.wmtogglebutton
+.GridDesigner .wmtablayers-tab
  {
 	-moz-border-radius-topleft: 4px; 
 	-moz-border-radius-topright: 4px; 
@@ -1292,29 +1390,19 @@ body.wm-darksnazzy .wmToolbar button:hover {
 	color: #FFF;
     padding: 2px 5px 3px 5px;
 }
+/*
 .StudioButton.wmtogglebutton {
 	-moz-border-radius: 0px; 
 	-webkit-border-radius: 0px; 
 	border-radius: 0px; 
 	background-image: none !important;
 }
-body #studio_inspector .wmaccordion-header,
-#studio_PIContents .wmtogglebutton {
-	-moz-border-radius: 4px; 
-	-webkit-border-radius: 4px; 
-	border-radius: 4px; 
-	background-color: #959dab;
-	color: #FFF;	
-}
-#studio_PIContents .wmtogglebutton,
-#studio_inspector .wmaccordion-header.wmaccordion-collapsed {
-	background-color: #5e6678;
-}
+*/
+
 
 .dj_ff3 .Studio .Security-tabs > .wmtablayers-tabbar,
 .dj_ff3 #studio_tabs > .wmtablayers-tab,
 .dj_ff3 #studio_left > .wmtablayers-tab,
-.dj_ff3 .#studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-tab,
 .df_ff3 #studio_themesPage_themeDesigner_demoPanelTabLayers > .wmtablayers-tabbar > .wmtablayers-tab,
 .df_ff3 #studio_JavaEditorSubTab > .wmtablayers-tabbar > .wmtablayers-tab,
 .df_ff3 #studio_databaseSubTab > .wmtablayers-tabbar > .wmtablayers-tab,
@@ -1329,9 +1417,7 @@ body #studio_inspector .wmaccordion-header,
 
 
 .Studio .Security-tabs > .wmtablayers-tabbar > .wmtablayers-selected,
-#studio_left > .wmtablayers-tabbar > .wmtablayers-selected,
 #studio_documentationTabs > .wmtablayers-tabbar > .wmtablayers-selected,
-#studio_tabs > .wmtablayers-tabbar >  .wmtablayers-selected,
 #studio_themesPage_themeDesigner_demoPanelTabLayers > .wmtablayers-tabbar > .wmtablayers-selected,
 .JavaEditor-logTabs .wmtablayers-selected,
  #studio_JavaEditorSubTab > .wmtablayers-tabbar > .wmtablayers-selected,
@@ -1339,14 +1425,11 @@ body #studio_inspector .wmaccordion-header,
  #studio_webServiceSubTab > .wmtablayers-tabbar > .wmtablayers-selected,
  #studio_securitySubTab > .wmtablayers-tabbar > .wmtablayers-selected,
 #app_importDatabase_panel1 > .wmtablayers-tabbar > .wmtablayers-selected,
-#studio_sourceTabs > .wmtablayers-tabbar > .wmtablayers-selected,
 .EditVariable .EditVariable-tabs .wmtablayers-selected,
 .DeploymentPage .DeploymentPage-MainDeploymentLayers .wmtablayers-selected,
 #studio_PIContents .wmtablayers-selected,
-#studio_PIContents .wmtogglebutton.toggleButtonDown,
 .ResourceManager .wmtablayers-selected,
-.GridDesigner .wmtablayers-selected,
-.StudioButton.wmtogglebutton.toggleButtonDown
+.GridDesigner .wmtablayers-selected
  {
 	border-top: 1px solid #c0c4ca;
 	border-right: 1px solid #363b44;
@@ -1677,28 +1760,6 @@ color: rgb(0,270,0);
     background: transparent url(images/wm/component_16.png) no-repeat;
 }
 
-.Studio-scriptRibbon, 
-.Studio-ribbon,
-.Studio-devicesRibbon,
-.Studio-themesRibbon,
-.Studio-cssRibbon,
-.Studio-markupRibbon,
-.Studio-appsrcRibbon,
-.Studio-appdocsRibbon,
-.JavaEditor-editorToolbar,
-#studio_MenuDesignerDialog_menuDesigner_panel1,
-#studio_editVariableDialog_editVariable_panel1,
-.DataObjectsEditor-editorToolbar,
-.QueryEditor-editorToolbar,
-.QueryEditor-editorToolbar2,
-.ResourceManager .ResourceEditor-scriptRibbon,
-.LiveViewEditor-managerToolbar {
-        background: -webkit-gradient(linear, left top, left bottom, from(#555555), to(#8E96A3));
-	background: -moz-linear-gradient(top,  #5B5B5B,  #8E96A3);
-	filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#5B5B5B', endColorstr='#8E96A3');
-/* background-color: #8E96A3;*/   
-}
-
 .StudioDirtyIcon {
     height: 12px;
     width: 12px;
@@ -1718,6 +1779,7 @@ color: rgb(0,270,0);
 	border-radius: 0px;
 }
 
+#studio_workspace .StudioDirtyIcon,
 #studio_sourceTabs .StudioDirtyIcon,
 #studio_JavaEditorSubTab .StudioDirtyIcon,
 #studio_databaseSubTab .StudioDirtyIcon,
